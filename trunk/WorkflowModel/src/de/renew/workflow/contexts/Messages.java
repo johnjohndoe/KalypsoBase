@@ -40,12 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package de.renew.workflow.contexts;
 
-import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+
+import org.apache.commons.lang3.ArrayUtils;
+import org.kalypso.contribs.java.i18n.I18nUtils;
 
 /**
  * @author schrage
- *
+ * 
  */
 class Messages
 {
@@ -57,15 +59,16 @@ class Messages
   {
   }
 
+  /**
+   * java reflections needs this method-signatur
+   */
   public static String getString( final String key )
   {
-    try
-    {
-      return RESOURCE_BUNDLE.getString( key );
-    }
-    catch( final MissingResourceException e )
-    {
-      return '!' + key + '!';
-    }
+    return getString( key, ArrayUtils.EMPTY_OBJECT_ARRAY );
+  }
+
+  public static String getString( final String key, final Object... args )
+  {
+    return I18nUtils.formatMessage( RESOURCE_BUNDLE, key, args );
   }
 }

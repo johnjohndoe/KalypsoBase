@@ -54,7 +54,9 @@ public class PerspectiveWatcher
         final IViewReference[] viewReferences = workbenchPage.getViewReferences();
         for( final IViewReference reference : viewReferences )
         {
-          if( !partsToKeep.contains( reference.getId() ) && !shouldKeepPart( reference ) )
+          final String viewID = formatViewId( reference );
+
+          if( !partsToKeep.contains( viewID ) && !shouldKeepPart( reference ) )
           {
             workbenchPage.hideView( reference );
           }
@@ -90,6 +92,17 @@ public class PerspectiveWatcher
     };
 
     job.schedule();
+  }
+
+  protected static String formatViewId( final IViewReference reference )
+  {
+    final String id = reference.getId();
+    final String secondaryId = reference.getSecondaryId();
+
+    if( secondaryId == null )
+      return id;
+
+    return String.format( "%s:%s", id, secondaryId );
   }
 
   /**

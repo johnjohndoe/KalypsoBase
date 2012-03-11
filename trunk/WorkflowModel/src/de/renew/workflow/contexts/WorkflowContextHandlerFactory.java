@@ -50,9 +50,6 @@ import org.eclipse.core.commands.IHandler;
  */
 public class WorkflowContextHandlerFactory implements IContextHandlerFactory
 {
-  /**
-   * @see org.kalypso.afgui.workflow.IContextHandlerFactory#getHandler(org.kalypso.afgui.workflow.ContextType)
-   */
   @Override
   public IHandler getHandler( final ContextType context )
   {
@@ -67,8 +64,7 @@ public class WorkflowContextHandlerFactory implements IContextHandlerFactory
     {
       final ViewContext viewContext = (ViewContext) context;
       final String viewId = viewContext.getPartId();
-      final ViewContextHandler viewContextHandler = new ViewContextHandler( viewId );
-      return viewContextHandler;
+      return new ViewContextHandler( viewId );
     }
     else if( context instanceof EditorContext )
     {
