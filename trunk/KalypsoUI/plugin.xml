@@ -57,6 +57,7 @@
 		<view allowMultiple="true" category="org.kalypso.ui.kalypso" class="org.kalypso.ui.editor.featureeditor.FeatureTemplateView" icon="icons/kalypso_gtt.gif" id="org.kalypso.ui.views.featuretemplateview" name="%view.name.1" reloadMapOnOpen="false" />
 		<view allowMultiple="false" category="org.kalypso.ui.kalypso" class="org.kalypso.ui.views.map.MapOverView" id="org.kalypso.ui.views.mapOverView" name="%view.name.2"/>
   <view
+        allowMultiple="true"
         category="org.kalypso.ui.kalypso"
         class="org.kalypso.ui.editor.gistableeditor.GttViewPart"
         icon="icons/kalypso_gtt.gif"
