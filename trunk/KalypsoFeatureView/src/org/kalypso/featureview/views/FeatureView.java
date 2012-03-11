@@ -574,7 +574,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
     }
   }
 
-  public GMLWorkspace getCurrentworkspace( )
+  public GMLWorkspace getCurrentWorkspace( )
   {
     final Feature feature = m_featureComposite.getFeature();
     return feature == null ? null : feature.getWorkspace();
@@ -608,7 +608,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
     m_toolkit = toolkit;
   }
 
-  protected CachedFeatureviewFactory getCachedFeatureViewFactory( )
+  public CachedFeatureviewFactory getCachedFeatureViewFactory( )
   {
     return m_cfvFactory;
   }
