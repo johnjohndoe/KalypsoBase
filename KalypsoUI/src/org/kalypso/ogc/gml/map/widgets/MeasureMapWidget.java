@@ -119,9 +119,6 @@ public class MeasureMapWidget extends DeprecatedMouseWidget
     reset();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractDelegateWidget#paint(java.awt.Graphics)
-   */
   @Override
   public void paint( final Graphics g )
   {
@@ -130,6 +127,9 @@ public class MeasureMapWidget extends DeprecatedMouseWidget
       return;
 
     final GeoTransform projection = mapPanel.getProjection();
+    if( projection == null )
+      return;
+
     m_delegate.builder.paint( g, projection, m_currentPoint );
 
     final Rectangle bounds = mapPanel.getScreenBounds();
@@ -203,6 +203,9 @@ public class MeasureMapWidget extends DeprecatedMouseWidget
 
   private void updateTooltip( final GM_Point currentPoint ) throws Exception
   {
+    if( currentPoint == null )
+      return;
+
     m_delegate.builder.addPoint( currentPoint );
     final GM_Object geometry = m_delegate.builder.finish();
     m_delegate.builder.removeLastPoint();

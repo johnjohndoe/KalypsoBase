@@ -173,7 +173,13 @@ public abstract class AbstractWidget implements IWidget
    */
   protected final GM_Envelope getBox( final double x, final double y, final double x2, final double y2 )
   {
+    if( m_mapPanel == null )
+      return null;
+
     final GeoTransform gt = m_mapPanel.getProjection();
+    if( gt == null )
+      return null;
+
     return GeometryFactory.createGM_Envelope( gt.getSourceX( x ), gt.getSourceY( y ), gt.getSourceX( x2 ), gt.getSourceY( y2 ), m_mapPanel.getMapModell().getCoordinatesSystem() );
   }
 

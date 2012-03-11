@@ -228,10 +228,6 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
     return new int[][] { xs, ys };
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.awt.Point)
-   */
   @Override
   public void paint( final Graphics g, final GeoTransform projection, final Point currentPoint )
   {
@@ -253,9 +249,6 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
     m_renderer.paint( g );
   }
 
-  /**
-   * @see org.kalypso.nofdpidss.ui.view.wizard.measure.construction.create.builders.geometry.IMyGeometryBuilder#removeLastPoint()
-   */
   @Override
   public void removeLastPoint( )
   {
@@ -263,9 +256,6 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
       m_points.remove( m_points.size() - 1 );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder#reset()
-   */
   @Override
   public void reset( )
   {
