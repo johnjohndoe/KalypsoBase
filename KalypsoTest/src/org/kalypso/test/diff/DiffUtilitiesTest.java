@@ -30,13 +30,12 @@
 package org.kalypso.test.diff;
 
 import java.io.File;
-import java.io.InputStream;
-import java.io.StringWriter;
 import java.net.URL;
 import java.util.logging.Level;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.kalypso.commons.diff.DiffUtils;
 import org.kalypso.commons.java.io.FileUtilities;
@@ -51,18 +50,21 @@ public class DiffUtilitiesTest extends TestCase
 {
   public void testZipDiff( ) throws Exception
   {
+    final File tmpDir = FileUtilities.createNewTempDir( "diffUtils" );
     try
     {
+      final File zipFile1 = new File( tmpDir, "test1.zip" );
+      final File zipFile2 = new File( tmpDir, "test2.zip" );
+
       final URL zipURL1 = getClass().getResource( "resources/test1.zip" );
-      final File zipFile1 = FileUtilities.makeFileFromUrl( false, "test1", ".zip", zipURL1, true );
+      FileUtils.copyURLToFile( zipURL1, zipFile1 );
+
       final URL zipURL2 = getClass().getResource( "resources/test2.zip" );
-      final File zipFile2 = FileUtilities.makeFileFromUrl( false, "test2", ".zip", zipURL2, true );
+      FileUtils.copyURLToFile( zipURL2, zipFile2 );
+
       final StringBuffer buffer = new StringBuffer();
       final ILogger logger = new ILogger()
       {
-        /**
-         * @see org.kalypso.contribs.java.util.logging.ILogger#log(java.util.logging.Level, int, java.lang.String)
-         */
         @Override
         public void log( final Level level, final int code, final String message )
         {
@@ -71,14 +73,15 @@ public class DiffUtilitiesTest extends TestCase
           buffer.append( "\n" );
         }
       };
-      DiffUtils.diffZips( logger, zipFile1, zipFile2, new String[0] );
-      final InputStream resourceAsStream = getClass().getResourceAsStream( "resources/difflog.txt" );
-      final StringWriter writer = new StringWriter();
-      IOUtils.copy( resourceAsStream, writer );
-      final String test = buffer.toString().replaceAll( "\\s", "" );
 
-      final String goal = writer.toString().replaceAll( "\\s", "" );
-      assertEquals( test, goal );
+      DiffUtils.diffZips( logger, zipFile1, zipFile2, new String[0] );
+
+      final String actual = buffer.toString().replaceAll( "\\s", "" );
+
+      final URL resource = getClass().getResource( "resources/difflog.txt" );
+      final String expected = IOUtils.toString( resource ).replaceAll( "\\s", "" );
+
+      assertEquals( actual, expected );
     }
     catch( final Exception e )
     {
