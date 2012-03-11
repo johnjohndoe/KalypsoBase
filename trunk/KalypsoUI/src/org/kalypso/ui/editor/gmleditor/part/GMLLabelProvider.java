@@ -63,9 +63,6 @@ public class GMLLabelProvider extends LabelProvider
    */
   private final Map<ImageDescriptor, Image> m_images = new HashMap<ImageDescriptor, Image>( 20 );
 
-  /**
-   * @see org.eclipse.jface.viewers.LabelProvider#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -81,9 +78,6 @@ public class GMLLabelProvider extends LabelProvider
     m_images.clear();
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
-   */
   @Override
   public Image getImage( final Object element )
   {
@@ -118,6 +112,9 @@ public class GMLLabelProvider extends LabelProvider
     final QName qname = getQName( element );
     if( qname != null )
     {
+      /* do we have a registered label provider? */
+      // FIXME: we should be able to delegate to a registered label provider
+
       /* Check the catalogs for this qname. */
       if( element instanceof LinkedFeatureElement )
       {
@@ -164,9 +161,6 @@ public class GMLLabelProvider extends LabelProvider
     return null;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
-   */
   @Override
   public String getText( final Object element )
   {
