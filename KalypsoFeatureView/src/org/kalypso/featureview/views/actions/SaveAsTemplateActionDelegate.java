@@ -107,16 +107,13 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
     m_view = view;
   }
 
-  /**
-   * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
-   */
   @Override
   public void run( final IAction action )
   {
     final FeatureView view = (FeatureView) m_view;
     final Shell shell = view.getSite().getShell();
 
-    final GMLWorkspace gmlWorkspace = view.getCurrentworkspace();
+    final GMLWorkspace gmlWorkspace = view.getCurrentWorkspace();
     final Feature feature = view.getCurrentFeature();
 
     if( gmlWorkspace == null || feature == null )
