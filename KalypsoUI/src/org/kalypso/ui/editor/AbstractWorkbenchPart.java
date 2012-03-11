@@ -41,6 +41,7 @@
 package org.kalypso.ui.editor;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -453,9 +454,6 @@ public abstract class AbstractWorkbenchPart extends WorkbenchPart implements IRe
     }
   }
 
-  /**
-   * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public void createPartControl( final Composite parent )
   {
@@ -466,9 +464,6 @@ public abstract class AbstractWorkbenchPart extends WorkbenchPart implements IRe
     actionBars.updateActionBars();
   }
 
-  /**
-   * @see org.eclipse.ui.IWorkbenchPart#setFocus()
-   */
   @Override
   public void setFocus( )
   {
@@ -492,21 +487,37 @@ public abstract class AbstractWorkbenchPart extends WorkbenchPart implements IRe
   }
 
   /**
-   * @see org.eclipse.ui.part.EditorPart#getTitleToolTip()
+   * Made public in order to allow clients to set the title of this part.
    */
+  @Override
+  public void setPartName( final String partName )
+  {
+    // TODO Auto-generated method stub
+    super.setPartName( partName );
+  }
+
+  /**
+   * Made public in order to allow clients to set tooltip.
+   */
+  @Override
+  public void setTitleToolTip( final String toolTip )
+  {
+    super.setTitleToolTip( toolTip );
+  }
+
   @Override
   public String getTitleToolTip( )
   {
+    final String titleToolTip = super.getTitleToolTip();
+    if( !StringUtils.isBlank( titleToolTip ) )
+      return titleToolTip;
+
     if( m_editorInput == null )
       return super.getTitleToolTip();
 
     return m_editorInput.getToolTipText();
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand,
-   *      java.lang.Runnable)
-   */
   @Override
   public void postCommand( final ICommand command, final Runnable runnable )
   {
@@ -518,9 +529,6 @@ public abstract class AbstractWorkbenchPart extends WorkbenchPart implements IRe
     return m_commandTarget;
   }
 
-  /**
-   * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
-   */
   @Override
   public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
