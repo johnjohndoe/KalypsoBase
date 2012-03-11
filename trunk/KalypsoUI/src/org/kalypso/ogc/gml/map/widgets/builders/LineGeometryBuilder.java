@@ -207,13 +207,12 @@ public class LineGeometryBuilder implements IGeometryBuilder
     return new int[][] { xs, ys };
   }
 
-  /**
-   * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform)
-   */
   @Override
   public void paint( final Graphics g, final GeoTransform projection, final Point currentPoint )
   {
+    if( projection == null )
+      return;
+
     // IMPORTANT: we remember GM_Points (not Point's) and re-transform them for painting
     // because the projection depends on the current map-extent, so this builder
     // is stable in regard to zoom in/out
