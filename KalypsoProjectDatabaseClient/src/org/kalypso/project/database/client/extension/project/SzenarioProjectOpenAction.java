@@ -47,8 +47,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IWorkbenchPage;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 
-import de.renew.workflow.connector.cases.IScenarioManager;
 import de.renew.workflow.connector.cases.IScenario;
+import de.renew.workflow.connector.cases.IScenarioManager;
 import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 
 /**
@@ -63,10 +63,6 @@ public class SzenarioProjectOpenAction extends AbstractModuleProjectOpenAction
     super( moduleID );
   }
 
-  /**
-   * @see org.kalypso.project.database.client.extension.project.AbstractModuleProjectOpenAction#doOpen(org.eclipse.ui.IWorkbenchPage,
-   *      org.eclipse.core.resources.IProject)
-   */
   @Override
   protected IStatus doOpen( final IWorkbenchPage page, final IProject project ) throws CoreException
   {
@@ -82,22 +78,15 @@ public class SzenarioProjectOpenAction extends AbstractModuleProjectOpenAction
     return Status.OK_STATUS;
   }
 
-  /**
-   * @see org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction#getFinalPerspective()
-   */
   @Override
   public String getFinalPerspective( )
   {
     return null;
   }
 
-  /**
-   * @see org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction#revealProjectInExplorer()
-   */
   @Override
   public boolean revealProjectInExplorer( )
   {
     return false;
   }
-
 }

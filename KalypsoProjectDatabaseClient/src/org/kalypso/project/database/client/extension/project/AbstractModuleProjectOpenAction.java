@@ -81,9 +81,6 @@ public abstract class AbstractModuleProjectOpenAction implements IKalypsoModuleP
     m_moduleID = moduleID;
   }
 
-  /**
-   * @see org.kalypso.project.database.client.extension.project.IKalypsoModuleProjectOpenAction#open(org.eclipse.core.resources.IProject)
-   */
   @Override
   public final IStatus open( final IProject project ) throws CoreException
   {
