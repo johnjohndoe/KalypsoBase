@@ -40,21 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.dialog;
 
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsPlugin;
 
 /**
  * @author Dirk Kuch
  */
-public class EnhancedTitleAreaDialog extends TitleAreaDialog
+public class EnhancedTrayDialog extends TrayDialog
 {
 
-  public EnhancedTitleAreaDialog( final Shell shell )
+  public EnhancedTrayDialog( final Shell shell )
   {
     super( shell );
   }
@@ -75,30 +73,6 @@ public class EnhancedTitleAreaDialog extends TitleAreaDialog
   {
     final IDialogSettings settings = EclipseRCPContributionsPlugin.getDefault().getDialogSettings();
     settings.put( parameter, String.format( "%d,%d", size.x, size.y ) );
-  }
-
-  @Override
-  public void setErrorMessage( final String newErrorMessage )
-  {
-    final Button button = getButton( IDialogConstants.OK_ID );
-    if( button != null )
-      if( newErrorMessage == null )
-      {
-        button.setEnabled( true );
-      }
-      else
-      {
-
-        button.setEnabled( false );
-      }
-
-    super.setErrorMessage( newErrorMessage );
-  }
-
-  @Override
-  public void setMessage( final String newMessage )
-  {
-    super.setMessage( newMessage );
   }
 
 }
