@@ -47,10 +47,14 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.IElementUpdater;
 import org.eclipse.ui.menus.UIElement;
 import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.core.table.model.view.ZmlViewResolutionFilter;
@@ -62,6 +66,33 @@ import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
  */
 public abstract class AbstractHourViewCommand extends AbstractHandler implements IElementUpdater
 {
+  private static final int MAX_ROWS = 10000;
+
+  protected boolean exceedsMaxSize( final ExecutionEvent event )
+  {
+    final IZmlTable table = ZmlHandlerUtil.getTable( event );
+    final ZmlModelViewport viewport = table.getModelViewport();
+    final IZmlModel model = viewport.getModel();
+
+    if( ArrayUtils.getLength( model.getRows() ) > MAX_ROWS )
+    {
+      return true;
+    }
+
+    return false;
+  }
+
+  protected boolean openExceedMaxSizeDialog( )
+  {
+    final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+
+    final StringBuilder builder = new StringBuilder();
+    builder.append( String.format( "Die Tablelle enthält mehr als %d Zeilen. ", MAX_ROWS ) );
+    builder.append( "Die Ausführung des Befehls kann viel Zeit beanspruchen.\n\n" );
+    builder.append( "Möchten Sie den Befehl wirklich ausführen?" );
+
+    return MessageDialog.openQuestion( shell, "Maximal zulässige Tabellenlänge überschritten", builder.toString() );
+  }
 
   protected IStatus updateResulution( final ExecutionEvent event, final int resultion, final boolean mode )
   {

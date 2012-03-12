@@ -43,6 +43,7 @@ package org.kalypso.zml.ui.table.commands.toolbar.view;
 import java.util.Map;
 
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.menus.UIElement;
 import org.kalypso.zml.core.table.model.view.ZmlViewResolutionFilter;
 
@@ -52,18 +53,18 @@ import org.kalypso.zml.core.table.model.view.ZmlViewResolutionFilter;
 public class ZmlCommandHourMinus extends AbstractHourViewCommand
 {
 
-  /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event )
   {
+    if( exceedsMaxSize( event ) )
+    {
+      if( !openExceedMaxSizeDialog() )
+        return Status.CANCEL_STATUS;
+    }
+
     return updateOffset( event, -1 );
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.commands.toolbar.view.AbstractHourViewCommand#isActive(org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter)
-   */
   @Override
   protected boolean isActive( final ZmlViewResolutionFilter filter )
   {
@@ -75,10 +76,6 @@ public class ZmlCommandHourMinus extends AbstractHourViewCommand
     return true;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.commands.toolbar.view.AbstractHourViewCommand#updateElement(org.eclipse.ui.menus.UIElement,
-   *      java.util.Map)
-   */
   @Override
   public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
   {

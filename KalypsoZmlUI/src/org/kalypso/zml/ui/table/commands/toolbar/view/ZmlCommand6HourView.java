@@ -55,6 +55,12 @@ public class ZmlCommand6HourView extends AbstractHourViewCommand
   @Override
   public Object execute( final ExecutionEvent event )
   {
+    if( exceedsMaxSize( event ) )
+    {
+      if( !openExceedMaxSizeDialog() )
+        return Status.CANCEL_STATUS;
+    }
+
     if( HandlerUtils.isSelected( event ) )
       return updateResulution( event, RESULUTION, false );
 
