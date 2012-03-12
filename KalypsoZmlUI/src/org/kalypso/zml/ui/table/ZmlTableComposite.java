@@ -84,7 +84,6 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
     m_toolkit = toolkit;
 
     final GridLayout layout = Layouts.createGridLayout();
-    layout.verticalSpacing = 0;
     setLayout( layout );
 
     toolkit.adapt( this );

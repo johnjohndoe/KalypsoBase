@@ -75,7 +75,7 @@ public class TableComposite extends Composite implements IUpdateable, IObservati
 
   public TableComposite( final Composite parent, final FormToolkit toolkit, final URL template )
   {
-    super( parent, SWT.BORDER );
+    super( parent, SWT.NULL );
 
     final GridLayout layout = Layouts.createGridLayout();
     layout.verticalSpacing = 0;
