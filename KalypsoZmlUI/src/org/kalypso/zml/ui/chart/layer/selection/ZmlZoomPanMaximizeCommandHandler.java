@@ -38,55 +38,27 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.chart.view;
+package org.kalypso.zml.ui.chart.layer.selection;
 
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.zml.core.diagram.base.IZmlLayer;
-import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
-import org.kalypso.zml.ui.chart.layer.themes.ZmlSelectionLayer;
-
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
-import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLayerVisitor;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.expressions.IEvaluationContext;
+import org.kalypso.chart.ui.editor.commandhandler.ZoomPanMaximizeCommandHandler;
+import org.kalypso.chart.ui.editor.mousehandler.ZoomPanMaximizeHandler;
 
 /**
  * @author Dirk Kuch
  */
-public class HideUnuseLayersVisitor extends AbstractChartLayerVisitor
+public class ZmlZoomPanMaximizeCommandHandler extends ZoomPanMaximizeCommandHandler
 {
-
   @Override
-  public void visit( final IChartLayer layer )
+  public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    layer.setVisible( isVisible( layer ) );
+    final Object status = super.execute( event );
+    final ZoomPanMaximizeHandler handler = getHandler();
+    if( handler != null )
+      handler.addListener( new ZmlChartSelectionChangedHandler( (IEvaluationContext) event.getApplicationContext() ) );
 
-  }
-
-  private boolean isVisible( final IChartLayer layer )
-  {
-
-    if( layer instanceof IZmlLayer )
-    {
-      final IZmlLayer zmlLayer = (IZmlLayer) layer;
-
-      final IZmlLayerDataHandler handler = zmlLayer.getDataHandler();
-      final IObservation observation = (IObservation) handler.getAdapter( IObservation.class );
-
-      return Objects.isNotNull( observation );
-    }
-    else if( layer instanceof ZmlSelectionLayer )
-      return true;
-
-    final ILayerManager manager = layer.getLayerManager();
-    final IChartLayer[] children = manager.getLayers();
-
-    for( final IChartLayer child : children )
-    {
-      if( isVisible( child ) )
-        return true;
-    }
-
-    return false;
+    return status;
   }
 }
