@@ -214,6 +214,7 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
     fireModelChanged( new ZmlModelColumnChangeType( STRUCTURE_CHANGE ) );
   }
 
+  @Override
   public void dispose( )
   {
     m_memento.dispose();
@@ -235,6 +236,8 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
   int m_stackEvent = 0;
 
   private Job m_fireModelChangedJob;
+
+  private IZmlModelRow[] m_rowsArray;
 
   private static final MutexRule MUTEX_FIRE_MODEL_CHANGED = new MutexRule( "mutex - fire zml model changed" );
 
@@ -353,9 +356,10 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
       {
         final ZmlRowBuilder builder = new ZmlRowBuilder( this );
         m_rows = builder.execute();
+        m_rowsArray = m_rows.values().toArray( new IZmlModelRow[] {} ); // *brrr* performance hack
       }
 
-      return m_rows.values().toArray( new IZmlModelRow[] {} );
+      return m_rowsArray;
     }
   }
 
@@ -369,7 +373,10 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
   public void modelColumnChangedEvent( final IZmlModelColumn column, final ZmlModelColumnChangeType event )
   {
     if( event.doForceChange() )
+    {
       m_rows.clear();
+      m_rowsArray = null;
+    }
 
     fireModelChanged( event );
   }

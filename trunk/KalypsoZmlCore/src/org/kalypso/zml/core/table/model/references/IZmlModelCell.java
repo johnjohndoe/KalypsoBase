@@ -63,7 +63,7 @@ public interface IZmlModelCell
 
   IZmlModelRow getRow( );
 
-  Integer getModelIndex( );
+  int getModelIndex( );
 
   ZmlCellRule[] findActiveRules( ZmlModelViewport viewport ) throws SensorException;
 

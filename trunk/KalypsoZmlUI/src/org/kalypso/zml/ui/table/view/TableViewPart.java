@@ -94,7 +94,7 @@ public class TableViewPart extends ViewPart implements ISelectionChangedListener
     layout.verticalSpacing = 0;
     base.setLayout( layout );
 
-    final URL template = getClass().getResource( "templates/base.kot" );
+    final URL template = getClass().getResource( "templates/base.kot" ); //$NON-NLS-1$
 
     m_tableComposite = new TableComposite( base, toolkit, template );
     m_tableComposite.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
