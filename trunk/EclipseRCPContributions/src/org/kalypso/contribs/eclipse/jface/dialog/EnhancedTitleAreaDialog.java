@@ -77,9 +77,6 @@ public class EnhancedTitleAreaDialog extends TitleAreaDialog
     settings.put( parameter, String.format( "%d,%d", size.x, size.y ) );
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.TitleAreaDialog#setErrorMessage(java.lang.String)
-   */
   @Override
   public void setErrorMessage( final String newErrorMessage )
   {
@@ -98,9 +95,6 @@ public class EnhancedTitleAreaDialog extends TitleAreaDialog
     super.setErrorMessage( newErrorMessage );
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.TitleAreaDialog#setMessage(java.lang.String)
-   */
   @Override
   public void setMessage( final String newMessage )
   {
