@@ -147,7 +147,6 @@ public class ZmlDiagramChartPartComposite extends ChartPartComposite
     final ILayerManager layerManager = getChartModel().getLayerManager();
     layerManager.accept( new RemoveClonedLayerVisitor() );
     layerManager.accept( new ResetZmlLayerVisitor() );
-
   }
 
 }
