@@ -129,7 +129,7 @@ public class ZmlModelViewport
     }
   }
 
-  protected void doClean( final ZmlModelColumnChangeType type )
+  protected synchronized void doClean( final ZmlModelColumnChangeType type )
   {
     if( type.doForceChange() )
     {
@@ -157,7 +157,7 @@ public class ZmlModelViewport
     return row.get( column );
   }
 
-  public IZmlModelColumn[] getColumns( )
+  public synchronized IZmlModelColumn[] getColumns( )
   {
     if( ArrayUtils.isNotEmpty( m_columns ) )
       return m_columns;
@@ -189,7 +189,7 @@ public class ZmlModelViewport
     return columns[index];
   }
 
-  public IZmlModelRow[] getRows( )
+  public synchronized IZmlModelRow[] getRows( )
   {
     if( ArrayUtils.isNotEmpty( m_rows ) )
       return m_rows;

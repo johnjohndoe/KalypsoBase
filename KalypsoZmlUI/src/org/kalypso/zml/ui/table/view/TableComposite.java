@@ -86,7 +86,7 @@ public class TableComposite extends Composite implements IUpdateable, IObservati
     draw( toolkit );
   }
 
-  private void init( final URL template )
+  protected void init( final URL template )
   {
     try
     {

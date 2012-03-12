@@ -80,7 +80,7 @@ public abstract class AbstractZmlCell implements IZmlModelCell
   }
 
   @Override
-  public Integer getModelIndex( )
+  public int getModelIndex( )
   {
     return m_tupleModelIndex;
   }
