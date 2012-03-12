@@ -4,15 +4,19 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.commons.command.ICommand;
+import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.maker.IFeatureviewFactory;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
@@ -31,6 +35,8 @@ public class SubFeatureControl extends AbstractFeatureControl
   private Composite m_container;
 
   private final IFeatureComposite m_parentFeatureComposite;
+
+  private ImageHyperlink m_deleteButton;
 
   public SubFeatureControl( final IPropertyType ftp, final IFeatureComposite parentFeatureComposite, final String selector )
   {
@@ -69,16 +75,18 @@ public class SubFeatureControl extends AbstractFeatureControl
       applyToolkit( toolkit, m_container );
     }
 
+    final IPropertyType ftp = getFeatureTypeProperty();
+    final Feature featureToSet = findFeatuereToSet();
+
     try
     {
-      final Feature featureToSet = findFeatuereToSet();
 
       /* create the control */
       if( featureToSet == null )
       {
         // TODO: If selector is present, just create an empty control
 
-        m_fc = new ButtonFeatureControl( getFeature(), getFeatureTypeProperty() );
+        m_fc = new ButtonFeatureControl( getFeature(), ftp );
       }
       else
       {
@@ -115,7 +123,15 @@ public class SubFeatureControl extends AbstractFeatureControl
     } );
 
     m_fc.createControl( toolkit, m_container, SWT.NONE );
+
+    if( featureToSet != null && (ftp.isNillable() || ftp.getMinOccurs() == 0) )
+    {
+      final Action deleteFeatureAction = new DeleteSubFeatureAction( this );
+      m_deleteButton = ActionHyperlink.createHyperlink( toolkit, m_container, SWT.None, deleteFeatureAction );
+    }
+
     // FIXME we should set the layout here, but the FeatureComposite does it itself, which it shouldn't
+
     return m_container;
   }
 
@@ -142,18 +158,12 @@ public class SubFeatureControl extends AbstractFeatureControl
     return featureToSet;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#dispose()
-   */
   @Override
   public void dispose( )
   {
     m_container.dispose();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#updateControl()
-   */
   @Override
   public void updateControl( )
   {
@@ -164,6 +174,13 @@ public class SubFeatureControl extends AbstractFeatureControl
     {
       // re-create control
       m_fc.dispose();
+
+      if( m_deleteButton != null )
+      {
+        m_deleteButton.dispose();
+        m_deleteButton = null;
+      }
+
       createControl( null, m_container, m_container.getStyle() );
       m_container.layout();
     }
@@ -172,9 +189,6 @@ public class SubFeatureControl extends AbstractFeatureControl
     m_fc.updateControl();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#isValid()
-   */
   @Override
   public boolean isValid( )
   {
@@ -205,4 +219,13 @@ public class SubFeatureControl extends AbstractFeatureControl
     return m_fc;
   }
 
+  void deleteSubFeature( )
+  {
+    final Feature feature = findFeatuereToSet();
+    if( feature == null )
+      return;
+
+    final DeleteFeatureCommand command = new DeleteFeatureCommand( feature );
+    fireFeatureChange( command );
+  }
 }
