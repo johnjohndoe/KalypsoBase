@@ -91,7 +91,7 @@ public class ZmlViewResolutionFilter
       calendar.setTime( index );
       calendar.add( Calendar.HOUR_OF_DAY, -1 );
 
-      m_baseIndex = ZmlViewResolutionFilter.ticksInHours( calendar.getTime() );
+      m_baseIndex = Double.valueOf( ZmlViewResolutionFilter.ticksInHours( calendar.getTime() ) ).intValue();
       m_model = model;
     }
   }
@@ -107,11 +107,11 @@ public class ZmlViewResolutionFilter
     m_model = model;
   }
 
-  protected static int ticksInHours( final Date date )
+  protected static double ticksInHours( final Date date )
   {
     final long time = date.getTime();
 
-    return (int) (time / 1000 / 60 / 60);
+    return time / 1000.0 / 60.0 / 60.0;
   }
 
   public boolean select( final IZmlModelRow row )
@@ -129,20 +129,20 @@ public class ZmlViewResolutionFilter
     }
 
     final Date index = row.getIndex();
-    final int ticks = ticksInHours( index );
+    final double ticks = ticksInHours( index );
 
     final int base = m_base.getBaseIndex( row.getModel() );
-    final int diff = Math.abs( base + m_offset - ticks );
+    final double diff = Math.abs( base + m_offset - ticks );
 
-    final int mod = diff % m_resolution;
+    final double mod = diff % m_resolution;
 
     if( m_stuetzstellenMode )
     {
-      if( hasStuetzstelle( row ) && mod == 0 )
+      if( hasStuetzstelle( row ) && mod == 0.0 )
         return true;
     }
 
-    return mod == 0;
+    return mod == 0.0;
   }
 
   private boolean hasStuetzstelle( final IZmlModelRow row )
