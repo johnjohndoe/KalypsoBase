@@ -45,17 +45,22 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.kalypso.core.i18n.Messages;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
@@ -68,92 +73,137 @@ public class NativeObservationGrapAdapter extends AbstractObservationImporter
 {
   private final DateFormat m_grapDateFormat = new SimpleDateFormat( "dd MM yyyy HH mm ss" ); //$NON-NLS-1$
 
-  public static Pattern GRAP_PATTERN = Pattern.compile( "([0-9]{1,2}.+?[0-9]{1,2}.+?[0-9]{2,4}.+?[0-9]{1,2}.+?[0-9]{1,2}.[0-9 ]{1,2})(.*-?[0-9\\.]+)" ); //$NON-NLS-1$
+  private static final Pattern GRAP_PATTERN = Pattern.compile( "([0-9]{1,2}.+?[0-9]{1,2}.+?[0-9]{2,4}.+?[0-9]{1,2}.+?[0-9]{1,2}.[0-9 ]{1,2})(.*-?[0-9\\.]+)" ); //$NON-NLS-1$
 
-  private final int MAX_NO_OF_ERRORS = 30;
+  private static final int MAX_NO_OF_ERRORS = 30;
+
+  final List<Date> m_dates = new ArrayList<Date>();
+
+  final List<Double> m_values = new ArrayList<Double>();
+
+  private int m_numberOfErrors = 0;
 
   @Override
-  public IObservation importTimeseries( final File source, final TimeZone timeZone, final String valueType, final boolean continueWithErrors ) throws Exception
+  public IStatus doImport( final File source, final TimeZone timeZone, final String valueType, final boolean continueWithErrors )
   {
-    final MetadataList metaDataList = new MetadataList();
 
     m_grapDateFormat.setTimeZone( timeZone );
 
-    final IAxis[] axis = createAxis( valueType );
-    final ITupleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
-    final SimpleObservation observation = new SimpleObservation( "href", "titel", metaDataList, tuppelModel ); //$NON-NLS-1$ //$NON-NLS-2$
-    return observation;
+    final List<IStatus> stati = new ArrayList<>();
+
+    try
+    {
+      Collections.addAll( stati, parse( source, continueWithErrors ) );
+    }
+    catch( final Exception ex )
+    {
+      final IStatus status = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), ex.getMessage() );
+      stati.add( status );
+    }
+
+    final MetadataList metaDataList = new MetadataList();
+
+    final ITupleModel tuppelModel = createTuppelModel( valueType );
+    setObservation( new SimpleObservation( "href", "titel", metaDataList, tuppelModel ) ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    return StatusUtilities.createStatus( stati, "Grap Observation Import" );
   }
 
-  private ITupleModel createTuppelModel( final File source, final IAxis[] axis, final boolean continueWithErrors ) throws IOException
+  private IStatus[] parse( final File source, final boolean continueWithErrors ) throws IOException
   {
+    final List<IStatus> stati = new ArrayList<>();
 
-    int numberOfErrors = 0;
-
-    final StringBuffer errorBuffer = new StringBuffer();
     final FileReader fileReader = new FileReader( source );
     final LineNumberReader reader = new LineNumberReader( fileReader );
-    final List<Date> dateCollector = new ArrayList<Date>();
-    final List<Double> valueCollector = new ArrayList<Double>();
-    String lineIn = null;
-    while( (lineIn = reader.readLine()) != null )
-    {
-      if( !continueWithErrors && numberOfErrors > MAX_NO_OF_ERRORS )
-        return null;
-      try
-      {
-        final Matcher matcher = GRAP_PATTERN.matcher( lineIn );
-        if( matcher.matches() )
-        {
-          final String dateString = matcher.group( 1 );
-          final Double value = new Double( matcher.group( 2 ) );
 
-          final String formatedDate = dateString.replaceAll( "[:\\.]", " " ); //$NON-NLS-1$ //$NON-NLS-2$
-          final Pattern datePattern = Pattern.compile( "([0-9 ]{2}) ([0-9 ]{2}) ([0-9]{4}) ([0-9 ]{2}) ([0-9 ]{2}) ([0-9 ]{2})" ); //$NON-NLS-1$
-          final Matcher dateMatcher = datePattern.matcher( formatedDate );
-          if( dateMatcher.matches() )
-          {
-            final StringBuffer buffer = new StringBuffer();
-            for( int i = 1; i <= dateMatcher.groupCount(); i++ )
-            {
-              if( i > 1 )
-                buffer.append( " " ); // separator //$NON-NLS-1$
-              buffer.append( dateMatcher.group( i ).replaceAll( " ", "0" ) ); // //$NON-NLS-1$ //$NON-NLS-2$
-              // correct
-              // empty
-              // fields
-            }
-            final String correctDate = buffer.toString();
-            final Date date = m_grapDateFormat.parse( correctDate );
-            dateCollector.add( date );
-            valueCollector.add( value );
-          }
-          else
-          {
-            errorBuffer.append( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter.14" ) + reader.getLineNumber() + Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter.15" ) + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-            numberOfErrors++;
-          }
-        }
-        else
-        {
-          errorBuffer.append( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter.17" ) + reader.getLineNumber() + Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter.18" ) + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-          numberOfErrors++;
-        }
-      }
-      catch( final Exception e )
-      {
-        errorBuffer.append( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter.20" ) + reader.getLineNumber() + Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter.21" ) + e.getLocalizedMessage() + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        numberOfErrors++;
-      }
-    }
-    final Object[][] tupelData = new Object[dateCollector.size()][2];
-    for( int i = 0; i < dateCollector.size(); i++ )
+    try
     {
-      tupelData[i][0] = dateCollector.get( i );
-      tupelData[i][1] = valueCollector.get( i );
+      String lineIn = null;
+
+      while( (lineIn = reader.readLine()) != null )
+      {
+        if( !continueWithErrors && m_numberOfErrors > MAX_NO_OF_ERRORS )
+          return stati.toArray( new IStatus[] {} );
+        try
+        {
+          final Matcher matcher = GRAP_PATTERN.matcher( lineIn );
+          if( !matcher.matches() )
+          {
+            final IStatus status = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), String.format( "Line not parsable: %s", lineIn ) );
+            throw new CoreException( status );
+          }
+
+          final Date date = parseDate( matcher.group( 1 ) );
+          final Double value = Double.valueOf( matcher.group( 2 ) );
+
+          m_dates.add( date );
+          m_values.add( value );
+        }
+        catch( final Throwable e )
+        {
+          final String message = e.getMessage();
+
+          if( m_numberOfErrors < MAX_NO_OF_ERRORS )
+            stati.add( new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), String.format( "Line #%d: %s", reader.getLineNumber(), message ) ) );
+
+          m_numberOfErrors++;
+        }
+      }
     }
-    // TODO handle error
-    System.out.println( errorBuffer.toString() );
+    finally
+    {
+      reader.close();
+    }
+
+    return stati.toArray( new IStatus[] {} );
+  }
+
+  private ITupleModel createTuppelModel( final String valueType )
+  {
+    final IAxis[] axis = createAxis( valueType );
+
+    final Object[][] tupelData = new Object[m_dates.size()][2];
+    for( int i = 0; i < m_dates.size(); i++ )
+    {
+      tupelData[i][0] = m_dates.get( i );
+      tupelData[i][1] = m_values.get( i );
+    }
+
+    m_dates.clear();
+    m_values.clear();
+
     return new SimpleTupleModel( axis, tupelData );
   }
+
+  private static final Pattern DATE_PATTERN = Pattern.compile( "([0-9 ]{2}) ([0-9 ]{2}) ([0-9]{4}) ([0-9 ]{2}) ([0-9 ]{2}) ([0-9 ]{2})" ); //$NON-NLS-1$
+
+  private Date parseDate( final String dateString ) throws ParseException, CoreException
+  {
+    final String formatedDate = dateString.replaceAll( "[:\\.]", " " ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    final Matcher dateMatcher = DATE_PATTERN.matcher( formatedDate );
+
+    if( !dateMatcher.matches() )
+    {
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), String.format( "Date not parsable: %s", dateString ) ) );
+    }
+
+    final StringBuffer buffer = new StringBuffer();
+    for( int i = 1; i <= dateMatcher.groupCount(); i++ )
+    {
+      if( i > 1 )
+        buffer.append( " " ); // separator //$NON-NLS-1$
+
+      buffer.append( dateMatcher.group( i ).replaceAll( " ", "0" ) ); // //$NON-NLS-1$ //$NON-NLS-2$
+      // correct
+      // empty
+      // fields
+    }
+
+    final String correctDate = buffer.toString();
+    final Date date = m_grapDateFormat.parse( correctDate );
+
+    return date;
+  }
+
 }

@@ -54,9 +54,11 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
@@ -69,20 +71,29 @@ public class NativeObservationEx2Adapter extends AbstractObservationImporter
 {
   private final DateFormat m_ex2DateFormat = new SimpleDateFormat( "dd MM yyyy HH" ); //$NON-NLS-1$
 
-  public static Pattern EX_2_PATTERN = Pattern.compile( "([0-9]{1,2}.+?[0-9]{1,2}.+?[0-9]{2,4}.+?[0-9]{1,2}).+?([-]?[0-9\\.]+)" ); //$NON-NLS-1$
+  public static final Pattern EX_2_PATTERN = Pattern.compile( "([0-9]{1,2}.+?[0-9]{1,2}.+?[0-9]{2,4}.+?[0-9]{1,2}).+?([-]?[0-9\\.]+)" ); //$NON-NLS-1$
 
-  private final int MAX_NO_OF_ERRORS = 30;
+  private static final int MAX_NO_OF_ERRORS = 30;
 
   @Override
-  public IObservation importTimeseries( final File source, final TimeZone timeZone, final String valueType, final boolean continueWithErrors ) throws Exception
+  public IStatus doImport( final File source, final TimeZone timeZone, final String valueType, final boolean continueWithErrors )
   {
-    final MetadataList metaDataList = new MetadataList();
+    try
+    {
+      final MetadataList metaDataList = new MetadataList();
 
-    m_ex2DateFormat.setTimeZone( timeZone );
+      m_ex2DateFormat.setTimeZone( timeZone );
 
-    final IAxis[] axis = createAxis( valueType );
-    final ITupleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
-    return new SimpleObservation( "href", "titel", metaDataList, tuppelModel ); //$NON-NLS-1$  //$NON-NLS-2$
+      final IAxis[] axis = createAxis( valueType );
+      final ITupleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
+      setObservation( new SimpleObservation( "href", "titel", metaDataList, tuppelModel ) ); //$NON-NLS-1$  //$NON-NLS-2$
+
+      return new Status( IStatus.OK, KalypsoCorePlugin.getID(), "EX2 Timeseries Import" );
+    }
+    catch( final Exception e )
+    {
+      return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), e.getMessage() );
+    }
   }
 
   private ITupleModel createTuppelModel( final File source, final IAxis[] axis, final boolean continueWithErrors ) throws IOException

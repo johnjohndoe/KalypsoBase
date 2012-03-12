@@ -53,11 +53,13 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
@@ -81,19 +83,27 @@ public class NativeObservationDVWKAdapter extends AbstractObservationImporter
   private TimeZone m_timeZone;
 
   @Override
-  public IObservation importTimeseries( final File source, final TimeZone timeZone, final String valueType, final boolean continueWithErrors ) throws Exception
+  public IStatus doImport( final File source, final TimeZone timeZone, final String valueType, final boolean continueWithErrors )
   {
-    final MetadataList metaDataList = new MetadataList();
-    metaDataList.put( IMetadataConstants.MD_ORIGIN, source.getAbsolutePath() );
+    try
+    {
+      final MetadataList metaDataList = new MetadataList();
+      metaDataList.put( IMetadataConstants.MD_ORIGIN, source.getAbsolutePath() );
 
-    m_timeZone = timeZone;
+      m_timeZone = timeZone;
 
-    final IAxis[] axis = createAxis( valueType );
-    final ITupleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
-    if( tuppelModel == null )
-      return null;
+      final IAxis[] axis = createAxis( valueType );
+      final ITupleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
+      if( tuppelModel == null )
+        return null;
 
-    return new SimpleObservation( "href", m_sname, metaDataList, tuppelModel ); //$NON-NLS-1$ //$NON-NLS-2$
+      setObservation( new SimpleObservation( "href", m_sname, metaDataList, tuppelModel ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      return new Status( IStatus.OK, KalypsoCorePlugin.getID(), "DVW Timeseries Import" );
+    }
+    catch( final IOException e )
+    {
+      return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), e.getMessage() );
+    }
   }
 
   private ITupleModel createTuppelModel( final File source, final IAxis[] axis, boolean continueWithErrors ) throws IOException

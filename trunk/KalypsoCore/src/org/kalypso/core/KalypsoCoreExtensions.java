@@ -47,6 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TreeMap;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -73,7 +74,7 @@ import org.kalypsodeegree.model.feature.IPropertiesFeatureVisitor;
 
 /**
  * Helper class to read extension-points of this plugin.
- *
+ * 
  * @author belger
  */
 public final class KalypsoCoreExtensions
@@ -306,7 +307,7 @@ public final class KalypsoCoreExtensions
 
   private static Map<String, INativeObservationAdapter> readImporters( )
   {
-    final Map<String, INativeObservationAdapter> importers = new HashMap<>();
+    final Map<String, INativeObservationAdapter> importers = new TreeMap<>();
 
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
 

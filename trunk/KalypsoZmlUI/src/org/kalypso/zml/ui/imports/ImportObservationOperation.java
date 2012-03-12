@@ -143,6 +143,7 @@ public class ImportObservationOperation implements ICoreRunnableWithProgress
     }
   }
 
+  @SuppressWarnings("deprecation")
   private IObservation createSourceObservation( ) throws CoreException
   {
     try
@@ -151,7 +152,9 @@ public class ImportObservationOperation implements ICoreRunnableWithProgress
       final TimeZone timezone = m_data.getTimezoneParsed();
       final INativeObservationAdapter nativaAdapter = m_data.getAdapter();
 
-      final IObservation srcObservation = nativaAdapter.createObservationFromSource( fileSource, timezone, false );
+      IStatus status = nativaAdapter.doImport( fileSource, timezone, false );
+
+      final IObservation srcObservation = nativaAdapter.getObservation();
       if( srcObservation != null )
         return srcObservation;
 
@@ -161,7 +164,8 @@ public class ImportObservationOperation implements ICoreRunnableWithProgress
       if( !MessageDialog.openQuestion( m_shell, title, message ) )
         return null;
 
-      return nativaAdapter.createObservationFromSource( fileSource, timezone, true );
+      status = nativaAdapter.doImport( fileSource, timezone, true );
+      return nativaAdapter.getObservation();
     }
     catch( final Exception e )
     {

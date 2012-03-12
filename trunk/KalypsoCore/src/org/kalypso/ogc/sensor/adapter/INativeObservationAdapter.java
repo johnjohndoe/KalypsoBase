@@ -43,6 +43,7 @@ package org.kalypso.ogc.sensor.adapter;
 import java.io.File;
 import java.util.TimeZone;
 
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 
@@ -60,12 +61,26 @@ public interface INativeObservationAdapter
   IAxis[] createAxis( final String valueType );
 
   /**
-   * @deprecated Use {@link #importTimeseries(File, TimeZone, String, boolean)} instead.
+   * @deprecated Use {@link #doImport(File, TimeZone, String, boolean)} instead.
    */
   @Deprecated
-  IObservation createObservationFromSource( File file, final TimeZone timeZone, boolean continueWithErrors ) throws Exception;
+  IStatus doImport( File file, final TimeZone timeZone, boolean continueWithErrors );
 
-  IObservation importTimeseries( final File source, final TimeZone timeZone, final String valueType, final boolean continueWithErrors ) throws Exception;
+  IStatus doImport( final File source, final TimeZone timeZone, final String valueType, final boolean continueWithErrors );
+
+  IObservation getObservation( );
+
+// /**
+// * @deprecated Use {@link #importTimeseries(File, TimeZone, String, boolean)} instead.
+// */
+// @Deprecated
+// IObservation createObservationFromSource( File file, final TimeZone timeZone, boolean continueWithErrors ) throws
+// Exception;
+//
+// IObservation importTimeseries( final File source, final TimeZone timeZone, final String valueType, final boolean
+// continueWithErrors ) throws Exception;
+
+  IStatus getStatus( );
 
   String getAxisTypeValue( );
 }
