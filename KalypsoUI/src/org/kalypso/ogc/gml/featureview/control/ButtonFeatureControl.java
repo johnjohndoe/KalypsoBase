@@ -133,9 +133,6 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
     return null;
   }
 
-  /**
-   * @see org.eclipse.swt.widgets.Widget#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -143,18 +140,12 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
       m_button.dispose();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
-   */
   @Override
   public Control createControl( final Composite parent, final int style )
   {
     m_button = new Button( parent, style );
     m_button.addSelectionListener( new SelectionAdapter()
     {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
@@ -231,9 +222,6 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
     updateControl();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#updateControl()
-   */
   @Override
   public void updateControl( )
   {
