@@ -53,21 +53,21 @@ public class ZmlCommand24HourView extends AbstractHourViewCommand
 
   private static final int RESULTION = 24;
 
-  /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event )
   {
+    if( exceedsMaxSize( event ) )
+    {
+      if( !openExceedMaxSizeDialog() )
+        return Status.CANCEL_STATUS;
+    }
+
     if( HandlerUtils.isSelected( event ) )
       return updateResulution( event, RESULTION, false );
 
     return Status.OK_STATUS;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.commands.toolbar.view.AbstractHourViewCommand#isActive(org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter)
-   */
   @Override
   protected boolean isActive( final ZmlViewResolutionFilter filter )
   {

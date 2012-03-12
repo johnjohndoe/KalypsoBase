@@ -50,21 +50,21 @@ import org.kalypso.zml.core.table.model.view.ZmlViewResolutionFilter;
  */
 public class ZmlCommandViewStuetzstellen extends AbstractHourViewCommand
 {
-  /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event )
   {
+    if( exceedsMaxSize( event ) )
+    {
+      if( !openExceedMaxSizeDialog() )
+        return Status.CANCEL_STATUS;
+    }
+
     if( HandlerUtils.isSelected( event ) )
       return updateResulution( event, 0, true );
 
     return Status.OK_STATUS;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.commands.toolbar.view.AbstractHourViewCommand#isActive(org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter)
-   */
   @Override
   protected boolean isActive( final ZmlViewResolutionFilter filter )
   {
