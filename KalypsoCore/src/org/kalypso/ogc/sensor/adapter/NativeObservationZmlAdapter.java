@@ -41,11 +41,11 @@
 package org.kalypso.ogc.sensor.adapter;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.util.TimeZone;
 
-import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.SensorException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 
 /**
@@ -54,8 +54,16 @@ import org.kalypso.ogc.sensor.zml.ZmlFactory;
 public class NativeObservationZmlAdapter extends AbstractObservationImporter
 {
   @Override
-  public IObservation importTimeseries( final File source, final TimeZone timeZone, final String valueType, final boolean continueWithErrors ) throws MalformedURLException, SensorException
+  public IStatus doImport( final File source, final TimeZone timeZone, final String valueType, final boolean continueWithErrors )
   {
-    return ZmlFactory.parseXML( source.toURI().toURL() );
+    try
+    {
+      setObservation( ZmlFactory.parseXML( source.toURI().toURL() ) );
+      return new Status( IStatus.OK, KalypsoCorePlugin.getID(), "DAT Timeseries Import" );
+    }
+    catch( final Exception e )
+    {
+      return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), e.getMessage() );
+    }
   }
 }

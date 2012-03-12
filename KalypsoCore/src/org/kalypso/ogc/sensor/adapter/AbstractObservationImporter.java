@@ -45,6 +45,7 @@ import java.util.TimeZone;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.core.runtime.IStatus;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
@@ -61,12 +62,25 @@ public abstract class AbstractObservationImporter implements INativeObservationA
 
   private String m_id;
 
+  private IObservation m_observation;
+
   @Override
   public final void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
     m_id = config.getAttribute( "id" ); //$NON-NLS-1$
     m_title = config.getAttribute( "label" ); //$NON-NLS-1$
     m_axisTypeValue = config.getAttribute( "axisType" ); //$NON-NLS-1$
+  }
+
+  protected void setObservation( final IObservation observation )
+  {
+    m_observation = observation;
+  }
+
+  @Override
+  public IObservation getObservation( )
+  {
+    return m_observation;
   }
 
   @Override
@@ -92,7 +106,6 @@ public abstract class AbstractObservationImporter implements INativeObservationA
   public final IAxis[] createAxis( final String valueType )
   {
     final IAxis dateAxis = TimeseriesUtils.createDefaultAxis( ITimeseriesConstants.TYPE_DATE, true );
-
     final IAxis valueAxis = TimeseriesUtils.createDefaultAxis( valueType );
 
     return new IAxis[] { dateAxis, valueAxis };
@@ -101,14 +114,23 @@ public abstract class AbstractObservationImporter implements INativeObservationA
   /**
    * Implemented for backwards compatibility, falls back to
    * {@link #importTimeseries(File, TimeZone, m_axisTypeValue, boolean)}.
-   *
+   * 
    * @see org.kalypso.ogc.sensor.adapter.INativeObservationAdapter#createObservationFromSource(java.io.File,
    *      java.util.TimeZone, boolean)
    */
   @Deprecated
   @Override
-  public final IObservation createObservationFromSource( final File file, final TimeZone timeZone, final boolean continueWithErrors ) throws Exception
+  public final IStatus doImport( final File file, final TimeZone timeZone, final boolean continueWithErrors )
   {
-    return importTimeseries( file, timeZone, m_axisTypeValue, continueWithErrors );
+    return doImport( file, timeZone, m_axisTypeValue, continueWithErrors );
+  }
+
+  /**
+   * @see org.kalypso.ogc.sensor.adapter.INativeObservationAdapter#getStatus()
+   */
+  @Override
+  public IStatus getStatus( )
+  {
+    return null;
   }
 }
