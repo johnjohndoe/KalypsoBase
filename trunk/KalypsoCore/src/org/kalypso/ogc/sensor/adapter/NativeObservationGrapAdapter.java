@@ -101,10 +101,7 @@ public class NativeObservationGrapAdapter extends AbstractObservationImporter
       stati.add( status );
     }
 
-    final MetadataList metaDataList = new MetadataList();
-
-    final ITupleModel tuppelModel = createTuppelModel( valueType );
-    setObservation( new SimpleObservation( "href", "titel", metaDataList, tuppelModel ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    setObservation( new SimpleObservation( "href", "titel", new MetadataList(), createTuppelModel( valueType ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return StatusUtilities.createStatus( stati, "Grap Observation Import" );
   }
