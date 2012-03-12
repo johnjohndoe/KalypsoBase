@@ -44,6 +44,7 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.zml.core.diagram.base.IZmlLayer;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
+import org.kalypso.zml.ui.chart.layer.themes.ZmlSelectionLayer;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
@@ -74,6 +75,8 @@ public class HideUnuseLayersVisitor extends AbstractChartLayerVisitor
 
       return Objects.isNotNull( observation );
     }
+    else if( layer instanceof ZmlSelectionLayer )
+      return true;
 
     final ILayerManager manager = layer.getLayerManager();
     final IChartLayer[] children = manager.getLayers();
