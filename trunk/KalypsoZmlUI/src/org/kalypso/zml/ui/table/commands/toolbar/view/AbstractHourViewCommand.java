@@ -136,7 +136,6 @@ public abstract class AbstractHourViewCommand extends AbstractHandler implements
   {
     final IServiceLocator locator = element.getServiceLocator();
     final IZmlTable table = ZmlHandlerUtil.getTable( locator );
-
     if( Objects.isNotNull( table ) )
     {
       final ZmlViewResolutionFilter filter = resolveFilter( table );

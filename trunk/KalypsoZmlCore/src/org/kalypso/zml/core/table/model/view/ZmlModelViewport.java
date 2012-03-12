@@ -274,6 +274,8 @@ public class ZmlModelViewport
       return null;
     else
     {
+
+      // FIXME helper class for type base data handling
       final DataColumnType dataColumnType = (DataColumnType) type;
       if( ITimeseriesConstants.TYPE_RAINFALL.equals( dataColumnType.getValueAxis() ) )
         return new SumValueEditingStrategy( this );
