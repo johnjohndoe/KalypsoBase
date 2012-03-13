@@ -60,7 +60,7 @@ import org.kalypso.ogc.sensor.status.KalypsoStati;
  */
 public class NativeObservationZrxAdapter extends AbstractObservationImporter
 {
-  public static final String SOURCE_ID = "source://native.observation.zrx.import";
+  public static final String SOURCE_ID = "source://native.observation.zrx.import"; //$NON-NLS-1$
 
   private static Pattern ZRX_HEADER_PATTERN = Pattern.compile( "#.*" ); //$NON-NLS-1$
 

@@ -64,7 +64,7 @@ import org.kalypso.ogc.sensor.status.KalypsoStati;
  */
 public class NativeObservationGrapAdapter extends AbstractObservationImporter
 {
-  public static final String SOURCE_ID = "source://native.observation.grap.import";
+  public static final String SOURCE_ID = "source://native.observation.grap.import"; //$NON-NLS-1$
 
   private static final Pattern GRAP_PATTERN = Pattern.compile( "([0-9]{1,2}.+?[0-9]{1,2}.+?[0-9]{2,4}.+?[0-9]{1,2}.+?[0-9]{1,2}.[0-9 ]{1,2})(.*-?[0-9\\.]+)" ); //$NON-NLS-1$
 
