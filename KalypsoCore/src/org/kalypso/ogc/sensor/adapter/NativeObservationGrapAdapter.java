@@ -87,6 +87,7 @@ public class NativeObservationGrapAdapter extends AbstractObservationImporter
   @Override
   public IStatus doImport( final File source, final TimeZone timeZone, final String valueType, final boolean continueWithErrors )
   {
+    reset();
 
     m_grapDateFormat.setTimeZone( timeZone );
 
@@ -105,6 +106,13 @@ public class NativeObservationGrapAdapter extends AbstractObservationImporter
     setObservation( new SimpleObservation( "href", "titel", new MetadataList(), createTuppelModel( valueType ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return StatusUtilities.createStatus( stati, "Grap Observation Import" );
+  }
+
+  private void reset( )
+  {
+    m_numberOfErrors = 0;
+    m_dates.clear();
+    m_values.clear();
   }
 
   private IStatus[] parse( final File source, final boolean continueWithErrors ) throws IOException
