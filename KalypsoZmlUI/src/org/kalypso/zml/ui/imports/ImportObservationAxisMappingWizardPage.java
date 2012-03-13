@@ -85,9 +85,6 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
     setDescription( Messages.getString( "org.kalypso.zml.ui.imports.ImportObservationAxisMappingWizardPage.0" ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public void createControl( final Composite parent )
   {

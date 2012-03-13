@@ -54,6 +54,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -61,6 +62,10 @@ import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
  */
 public class NativeObservationDVWKAdapter extends AbstractObservationImporter
 {
+  public static final String SOURCE_ID = "source://native.observation.dvwk.import";
+
+  public static final String SOURCE_ID_MISSING_VALUE = SOURCE_ID + MISSING_VALUE_POSTFIX;
+
   private static final Pattern PATTERN_LINE = Pattern.compile( "[A-Za-z0-9]{4}\\s([0-9\\s]{10})\\s*([0-9]{1,2})\\s*([0-9]{1,2})([A-Za-z\\s]{1})(.*)" ); //$NON-NLS-1$
 
   private static final Pattern SUB_PATTERN_DATA = Pattern.compile( "\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})" ); //$NON-NLS-1$
@@ -68,7 +73,6 @@ public class NativeObservationDVWKAdapter extends AbstractObservationImporter
   @Override
   protected void parse( final File source, final TimeZone timeZone, final boolean continueWithErrors, final IStatusCollector stati ) throws Exception
   {
-
     final FileReader fileReader = new FileReader( source );
     final LineNumberReader reader = new LineNumberReader( fileReader );
     String lineIn = null;
@@ -105,7 +109,7 @@ public class NativeObservationDVWKAdapter extends AbstractObservationImporter
           {
             while( previousNlineCalendar.compareTo( calendar ) < 0 )
             {
-              addDataSet( new NativeObservationDataSet( previousNlineCalendar.getTime(), 0.0 ) );
+              addDataSet( new NativeObservationDataSet( previousNlineCalendar.getTime(), 0.0, KalypsoStati.BIT_CHECK, SOURCE_ID_MISSING_VALUE ) );
 
               previousNlineCalendar.add( Calendar.MINUTE, 5 );
             }
@@ -141,7 +145,7 @@ public class NativeObservationDVWKAdapter extends AbstractObservationImporter
                 {
                   final double value = new Double( dataMatcher.group( i ) );
 
-                  addDataSet( new NativeObservationDataSet( calendar.getTime(), value ) );
+                  addDataSet( new NativeObservationDataSet( calendar.getTime(), value, KalypsoStati.BIT_OK, SOURCE_ID ) );
                 }
                 catch( final Exception e )
                 {

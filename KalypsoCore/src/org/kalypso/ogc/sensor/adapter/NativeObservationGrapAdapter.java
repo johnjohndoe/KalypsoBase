@@ -56,6 +56,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
 
 /**
  * @author doemming
@@ -63,6 +64,8 @@ import org.kalypso.core.KalypsoCorePlugin;
  */
 public class NativeObservationGrapAdapter extends AbstractObservationImporter
 {
+  public static final String SOURCE_ID = "source://native.observation.grap.import";
+
   private static final Pattern GRAP_PATTERN = Pattern.compile( "([0-9]{1,2}.+?[0-9]{1,2}.+?[0-9]{2,4}.+?[0-9]{1,2}.+?[0-9]{1,2}.[0-9 ]{1,2})(.*-?[0-9\\.]+)" ); //$NON-NLS-1$
 
   private static final Pattern DATE_PATTERN = Pattern.compile( "([0-9 ]{2}) ([0-9 ]{2}) ([0-9]{4}) ([0-9 ]{2}) ([0-9 ]{2}) ([0-9 ]{2})" ); //$NON-NLS-1$
@@ -91,7 +94,7 @@ public class NativeObservationGrapAdapter extends AbstractObservationImporter
           final Date date = parseDate( matcher.group( 1 ), sdf );
           final Double value = NumberUtils.parseDouble( matcher.group( 2 ) );
 
-          addDataSet( new NativeObservationDataSet( date, value ) );
+          addDataSet( new NativeObservationDataSet( date, value, KalypsoStati.BIT_OK, SOURCE_ID ) );
         }
         else
         {

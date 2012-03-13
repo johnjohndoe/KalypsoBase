@@ -42,9 +42,11 @@ package org.kalypso.ogc.sensor.adapter;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IStatus;
@@ -61,7 +63,11 @@ import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.IMetadataConstants;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
+import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
+import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
 
 /**
  * @author Gernot Belger
@@ -69,6 +75,8 @@ import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
  */
 public abstract class AbstractObservationImporter implements INativeObservationAdapter, IExecutableExtension
 {
+  protected static final String MISSING_VALUE_POSTFIX = "/missing.value";
+
   private String m_axisTypeValue;
 
   List<NativeObservationDataSet> m_datasets = new ArrayList<>();
@@ -90,28 +98,48 @@ public abstract class AbstractObservationImporter implements INativeObservationA
 
   @Deprecated
   @Override
-  public final IAxis[] createAxis( final String valueType )
+  public IAxis[] createAxis( final String valueType )
   {
     final IAxis dateAxis = TimeseriesUtils.createDefaultAxis( ITimeseriesConstants.TYPE_DATE, true );
     final IAxis valueAxis = TimeseriesUtils.createDefaultAxis( valueType );
+    final IAxis statusAxis = KalypsoStatusUtils.createStatusAxisFor( valueAxis, true );
+    final IAxis dataSrcAxis = DataSourceHelper.createSourceAxis( valueAxis );
 
-    return new IAxis[] { dateAxis, valueAxis };
+    return new IAxis[] { dateAxis, valueAxis, statusAxis, dataSrcAxis };
   }
 
-  protected ITupleModel createTuppelModel( final String valueType )
+  protected ITupleModel createTuppelModel( final MetadataList metadata, final String valueType )
   {
-    final IAxis[] axis = createAxis( valueType );
-    final Object[][] tupelData = new Object[m_datasets.size()][2];
+    final IAxis[] axes = createAxis( valueType );
+    final SimpleTupleModel model = new SimpleTupleModel( axes );
 
-    for( int index = 0; index < m_datasets.size(); index++ )
+    final DataSourceHandler handler = new DataSourceHandler( metadata );
+
+    final IAxis base = AxisUtils.findAxis( axes, valueType );
+
+    final int dateAxis = ArrayUtils.indexOf( axes, AxisUtils.findDateAxis( axes ) );
+    final int valueAxis = ArrayUtils.indexOf( axes, base );
+    final int statusAxis = ArrayUtils.indexOf( axes, AxisUtils.findStatusAxis( axes, base ) );
+    final int dataSourceAxis = ArrayUtils.indexOf( axes, AxisUtils.findDataSourceAxis( axes, base ) );
+
+    for( final NativeObservationDataSet dataset : m_datasets )
     {
-      final NativeObservationDataSet dataSet = m_datasets.get( index );
+      final Date date = dataset.getDate();
+      final Double value = dataset.getValue();
+      final int status = dataset.getStatus();
+      final String source = dataset.getSource();
+      final int dataSource = handler.addDataSource( source, source );
 
-      tupelData[index][0] = dataSet.getDate();
-      tupelData[index][1] = dataSet.getValue();
+      final Object[] data = new Object[] { axes.length };
+      data[dateAxis] = date;
+      data[valueAxis] = value;
+      data[statusAxis] = status;
+      data[dataSourceAxis] = dataSource;
+
+      model.addTuple( data );
     }
 
-    return new SimpleTupleModel( axis, tupelData );
+    return model;
   }
 
   /**
@@ -150,7 +178,7 @@ public abstract class AbstractObservationImporter implements INativeObservationA
     final MetadataList metadata = new MetadataList();
     metadata.put( IMetadataConstants.MD_ORIGIN, source.getAbsolutePath() );
 
-    final ITupleModel model = createTuppelModel( valueType );
+    final ITupleModel model = createTuppelModel( metadata, valueType );
     setObservation( new SimpleObservation( source.getAbsolutePath(), source.getName(), metadata, model ) );
 
     return StatusUtilities.createStatus( stati, "Observation Import" );

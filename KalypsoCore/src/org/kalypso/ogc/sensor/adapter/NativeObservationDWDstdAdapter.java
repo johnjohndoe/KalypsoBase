@@ -53,6 +53,7 @@ import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
 
 /**
  * @author Jessica Huebsch, <a href="mailto:j.huebsch@tuhh.de">j.huebsch@tuhh.de</a>
@@ -60,8 +61,9 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
  */
 public class NativeObservationDWDstdAdapter extends AbstractObservationImporter
 {
+  public static final String SOURCE_ID = "source://native.observation.dwd.std.import";
 
-  public static Pattern DWD_STD_PATTERN = Pattern.compile( "\\s\\s\\s\\s([0-9]{5})([0-9]{4}[0-9]{2}[0-9]{2})(.+?)" ); //$NON-NLS-1$
+  private static final Pattern DWD_STD_PATTERN = Pattern.compile( "\\s\\s\\s\\s([0-9]{5})([0-9]{4}[0-9]{2}[0-9]{2})(.+?)" ); //$NON-NLS-1$
 
   private String m_titel;
 
@@ -106,7 +108,7 @@ public class NativeObservationDWDstdAdapter extends AbstractObservationImporter
               final Double value = new Double( Double.parseDouble( valueString ) ) / 1000;
               final Date valueDate = new Date( startDate + i * 60 * 60 * 1000 );
 
-              addDataSet( new NativeObservationDataSet( valueDate, value ) );
+              addDataSet( new NativeObservationDataSet( valueDate, value, KalypsoStati.BIT_OK, SOURCE_ID ) );
             }
           }
           catch( final Exception e )

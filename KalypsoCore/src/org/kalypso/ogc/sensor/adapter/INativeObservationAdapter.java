@@ -70,15 +70,5 @@ public interface INativeObservationAdapter
 
   IObservation getObservation( );
 
-// /**
-// * @deprecated Use {@link #importTimeseries(File, TimeZone, String, boolean)} instead.
-// */
-// @Deprecated
-// IObservation createObservationFromSource( File file, final TimeZone timeZone, boolean continueWithErrors ) throws
-// Exception;
-//
-// IObservation importTimeseries( final File source, final TimeZone timeZone, final String valueType, final boolean
-// continueWithErrors ) throws Exception;
-
   String getAxisTypeValue( );
 }

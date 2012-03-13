@@ -52,6 +52,7 @@ import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
 
 /**
  * @author Jessica Huebsch, <a href="mailto:j.huebsch@tuhh.de">j.huebsch@tuhh.de</a>
@@ -59,6 +60,10 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
  */
 public class NativeObservationDWDmdAdapter extends AbstractObservationImporter
 {
+  public static final String SOURCE_ID = "source://native.observation.dwd.md.import";
+
+  public static final String SOURCE_ID_MISSING_VALUE = SOURCE_ID + MISSING_VALUE_POSTFIX;
+
   private static final Pattern DWD_MD_FIRST_HEADER_PATTERN = Pattern.compile( "[\\d]{5}[\\d\\w\\s]{15}(.{30}).+?" ); //$NON-NLS-1$
 
   private static final Pattern DWD_MD_SECOND_HEADER_PATTERN = Pattern.compile( ".{20}(.{5}).{4}([0-9]{1}).{28}(.{5}).+?" ); //$NON-NLS-1$
@@ -154,7 +159,7 @@ public class NativeObservationDWDmdAdapter extends AbstractObservationImporter
                   final Double value = new Double( Double.parseDouble( valueString ) ) / m_div;
                   final Date valueDate = new Date( startDate + i * m_intervall );
 
-                  addDataSet( new NativeObservationDataSet( valueDate, value ) );
+                  addDataSet( new NativeObservationDataSet( valueDate, value, KalypsoStati.BIT_OK, SOURCE_ID ) );
                 }
               }
               // No precipitation the whole day (24 hours * 12 values = 288 values)
@@ -166,7 +171,7 @@ public class NativeObservationDWDmdAdapter extends AbstractObservationImporter
                 {
                   final Date valueDate = new Date( startDate + i * m_intervall );
 
-                  addDataSet( new NativeObservationDataSet( valueDate, value ) );
+                  addDataSet( new NativeObservationDataSet( valueDate, value, KalypsoStati.BIT_CHECK, SOURCE_ID_MISSING_VALUE ) );
                 }
               }
               else if( "A".equals( label ) ) //$NON-NLS-1$
@@ -177,7 +182,7 @@ public class NativeObservationDWDmdAdapter extends AbstractObservationImporter
                 {
                   final Date valueDate = new Date( startDate + i * m_intervall );
 
-                  addDataSet( new NativeObservationDataSet( valueDate, value ) );
+                  addDataSet( new NativeObservationDataSet( valueDate, value, KalypsoStati.BIT_CHECK, SOURCE_ID_MISSING_VALUE ) );
                 }
               }
               else if( "E".equals( label ) ) //$NON-NLS-1$
