@@ -59,6 +59,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -131,7 +132,7 @@ public class NativeObservationGrapAdapter extends AbstractObservationImporter
           }
 
           final Date date = parseDate( matcher.group( 1 ) );
-          final Double value = Double.valueOf( matcher.group( 2 ) );
+          final Double value = NumberUtils.parseDouble( matcher.group( 2 ) );
 
           m_dates.add( date );
           m_values.add( value );
