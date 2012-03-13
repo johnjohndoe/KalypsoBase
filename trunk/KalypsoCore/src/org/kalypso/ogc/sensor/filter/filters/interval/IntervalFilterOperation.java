@@ -64,14 +64,14 @@ public class IntervalFilterOperation
 
   private final MetadataList m_targetMetadata;
 
-  private Period m_sourceTimestep;
+  private final Period m_sourceTimestep;
 
   public IntervalFilterOperation( final IObservation input, final IntervalDefinition definition )
   {
     m_input = input;
     m_definition = definition;
 
-    MetadataList sourceMetadata = m_input.getMetadataList();
+    final MetadataList sourceMetadata = m_input.getMetadataList();
 
     m_sourceTimestep = MetadataHelper.getTimestep( sourceMetadata );
 
@@ -92,7 +92,7 @@ public class IntervalFilterOperation
     // Maybe there should be one day a mean to determine, which is the right amount.
     final ITupleModel sourceModel = ObservationUtilities.requestBuffered( m_input, range, Calendar.DAY_OF_MONTH, 2 );
 
-    DataSourceHandler targetSourcesHandler = new DataSourceHandler( m_targetMetadata );
+    final DataSourceHandler targetSourcesHandler = new DataSourceHandler( m_targetMetadata );
 
     final IntervalValuesOperation valuesOp = new IntervalValuesOperation( sourceModel, m_sourceTimestep, targetSourcesHandler, m_definition );
     valuesOp.execute( range );

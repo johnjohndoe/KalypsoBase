@@ -49,7 +49,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * class RemoveRelationCommand Command to remove a normal relation created by
- *
+ * 
  * @author doemming (13.05.2005)
  */
 public class RemoveRelationCommand implements ICommand

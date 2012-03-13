@@ -72,7 +72,7 @@ import org.kalypsodeegree_impl.model.feature.FeaturePath;
  * GMLWorkspace container used by the LayerTableViewer. Implements {@link IKalypsoTheme} as this was used as a hack when
  * first implementing the LayerTableViewer. Should be refaktored as soon as we refaktor the LayerTableViewer.<br>
  * Copy/Pasted from the old {@link IKalypsoFeatureTheme}, in order to more easily refaktor that one.
- *
+ * 
  * @author Gernot Belger
  */
 public class KalypsoTableFeatureTheme extends AbstractKalypsoTheme implements IKalypsoFeatureTheme, ModellEventListener, IKalypsoStyleListener

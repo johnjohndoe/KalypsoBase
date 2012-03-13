@@ -44,7 +44,6 @@ import java.awt.image.BufferedImage;
 
 /**
  * @author barbarins
- *
  */
 public interface IMapPanelMTPaintListener
 {

@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.core.internal.layoutwizard.part;
 
-
 /**
  * @author Gernot Belger
  */

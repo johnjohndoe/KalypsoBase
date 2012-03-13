@@ -42,7 +42,6 @@ package org.kalypso.ogc.gml.map;
 
 /**
  * @author barbarins
- *
  */
 public interface IMTSceneChangedListener
 {

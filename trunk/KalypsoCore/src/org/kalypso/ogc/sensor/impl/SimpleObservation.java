@@ -52,6 +52,7 @@ import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.event.IObservationChangeEvent;
 import org.kalypso.ogc.sensor.event.IObservationListener;
 import org.kalypso.ogc.sensor.event.ObservationChangeType;
 import org.kalypso.ogc.sensor.event.ObservationEventAdapter;
@@ -174,7 +175,7 @@ public class SimpleObservation implements IObservation
       m_model = new SimpleTupleModel( m_model.getAxes() );
       m_model.addChangeListener( m_listener );
 
-      m_evtPrv.fireChangedEvent( null, new ObservationChangeType( IObservationListener.STRUCTURE_CHANGE ) );
+      m_evtPrv.fireChangedEvent( null, new ObservationChangeType( IObservationChangeEvent.STRUCTURE_CHANGE ) );
       return;
     }
 
@@ -183,7 +184,7 @@ public class SimpleObservation implements IObservation
       m_model = values;
       m_model.addChangeListener( m_listener );
 
-      m_evtPrv.fireChangedEvent( null, new ObservationChangeType( IObservationListener.STRUCTURE_CHANGE ) );
+      m_evtPrv.fireChangedEvent( null, new ObservationChangeType( IObservationChangeEvent.STRUCTURE_CHANGE ) );
       return;
     }
 
@@ -255,7 +256,7 @@ public class SimpleObservation implements IObservation
       }
     }
 
-    m_evtPrv.fireChangedEvent( null, new ObservationChangeType( IObservationListener.STRUCTURE_CHANGE ) );
+    m_evtPrv.fireChangedEvent( null, new ObservationChangeType( IObservationChangeEvent.STRUCTURE_CHANGE ) );
   }
 
   /**

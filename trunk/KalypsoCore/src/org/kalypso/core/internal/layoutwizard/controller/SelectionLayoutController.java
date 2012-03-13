@@ -53,7 +53,7 @@ import org.kalypso.core.layoutwizard.ILayoutPart;
 
 /**
  * Moves the selection from the observed {@link ILayoutPart} to another {@link ILayoutPart} (the consumer).
- *
+ * 
  * @author Gernot Belger
  */
 public class SelectionLayoutController implements ILayoutController

@@ -225,7 +225,7 @@ class ObservationMarshaller
 
   /**
    * Create an XML-Observation ready for marshalling.
-   *
+   * 
    * @param timezone
    *          the time zone into which dates should be converted before serialised
    */
@@ -399,11 +399,11 @@ class ObservationMarshaller
 
   /**
    * Parser for the type <code>date</code>. It uses following format string:
-   *
+   * 
    * <pre>
    *      yyyy-MM-dd'T'HH:mm:ss
    * </pre>
-   *
+   * 
    * FIXME: we should use {@link javax.xml.bind.DatatypeConverter} instead
    */
   private static DateParser getDateParser( final TimeZone timezone )

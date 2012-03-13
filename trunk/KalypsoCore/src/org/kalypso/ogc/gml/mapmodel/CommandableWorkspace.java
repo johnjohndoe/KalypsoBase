@@ -64,7 +64,7 @@ import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 /**
  * Decorator über einen Workspace, der diesen um die Fähigkeiten eines
  * {@link org.kalypso.commons.command.ICommandManager ICommandManagers}erweitert
- *
+ * 
  * @author Geront Belger
  */
 public class CommandableWorkspace implements GMLWorkspace, ICommandManager

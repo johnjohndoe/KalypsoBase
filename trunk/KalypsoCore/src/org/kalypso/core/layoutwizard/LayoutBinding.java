@@ -50,7 +50,7 @@ import org.kalypso.commons.bind.JaxbUtilities;
 
 /**
  * Utilities for bound layout schema.
- *
+ * 
  * @author Gernot Belger
  */
 public final class LayoutBinding

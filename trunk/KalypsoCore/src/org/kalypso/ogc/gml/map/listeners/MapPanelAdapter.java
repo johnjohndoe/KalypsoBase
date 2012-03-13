@@ -47,7 +47,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * Base implementation for the {@link IMapPanelListener}, implements everything empty.
- *
+ * 
  * @author Gernot Belger
  */
 public abstract class MapPanelAdapter implements IMapPanelListener

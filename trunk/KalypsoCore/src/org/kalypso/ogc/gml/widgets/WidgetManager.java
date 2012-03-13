@@ -68,7 +68,7 @@ import org.kalypso.ogc.gml.widgets.base.MouseWheelZoomWidget;
 
 /**
  * widget controller of map view
- *
+ * 
  * @author vdoemming
  * @author Dirk Kuch
  */

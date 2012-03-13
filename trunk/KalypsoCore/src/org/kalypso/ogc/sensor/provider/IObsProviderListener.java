@@ -1,6 +1,5 @@
 package org.kalypso.ogc.sensor.provider;
 
-
 /**
  * @author belger
  */

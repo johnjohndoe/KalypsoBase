@@ -157,13 +157,12 @@ public class LayoutParser
     return layoutPart;
   }
 
-
   /**
    * This function builds the layout part from the primary id. It will first check the extension point
    * 'layout#layoutPartFactory' for a layout part factory, which can create the layout part. If none could be found, it
    * will create a view layout part, which will check the view registry as well. If there is also no view with this
    * primary id registered, it will display an error.
-   *
+   * 
    * @param primaryId
    *          The first part of the complete id (e.g. gisMap from gisMap.1).
    * @param id

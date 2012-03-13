@@ -77,7 +77,7 @@ import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 /**
  * Helper-Klasse zum lesen und schreiben von GML <br>
  * TODO: Problem: reading/writing a shape will change the precision/size of the columns!
- *
+ * 
  * @author Gernot Belger
  */
 public final class ShapeSerializer
@@ -171,7 +171,7 @@ public final class ShapeSerializer
 
   /**
    * Creates to feature type for the root feature of a shape-file-based workspace.
-   *
+   * 
    * @param childFeatureType
    *          The feature type for the children (i.e. the shape-objects) of the root.
    * @return A newly created feature suitable for the root of a workspace. It has the following properties:
@@ -291,7 +291,7 @@ public final class ShapeSerializer
    * This function tries to load a prj file, which contains the coordinate system. If it exists and is a valid one, this
    * coordinate system is returned. If it is not found, the source coordinate system is returned (this should be the one
    * in the gmt). If it does also not exist, null will be returned.
-   *
+   * 
    * @param prjLocation
    *          Location of the .prj file.
    * @param defaultSrs

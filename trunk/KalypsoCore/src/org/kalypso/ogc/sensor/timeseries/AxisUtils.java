@@ -284,6 +284,7 @@ public final class AxisUtils implements ITimeseriesConstants
 
     return builder.isEquals();
   }
+
   /**
    * @param converter
    *          Needed to guess the right persistent axis for a non-persistent one.

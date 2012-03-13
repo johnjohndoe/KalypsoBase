@@ -5,7 +5,6 @@ import org.kalypso.commons.parser.IParser;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.TupleModelDataSet;
-import org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilter;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 
 public class LocalCalculationStackValue
@@ -57,7 +56,7 @@ public class LocalCalculationStackValue
       final Object defaultValue = parser.parse( filter.getDefaultValue() );
       final Integer status = filter.getDefaultStatus();
 
-      m_defaultValue = new TupleModelDataSet( m_axis, defaultValue, status, InterpolationFilter.DATA_SOURCE );
+      m_defaultValue = new TupleModelDataSet( m_axis, defaultValue, status, IInterpolationFilter.DATA_SOURCE );
 
       return m_defaultValue;
     }

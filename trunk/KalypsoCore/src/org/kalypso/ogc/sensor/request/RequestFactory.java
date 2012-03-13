@@ -62,7 +62,7 @@ import org.xml.sax.InputSource;
 
 /**
  * Factory-class for parsing Zml-Requests
- *
+ * 
  * @author schlienger (25.05.2005)
  */
 public final class RequestFactory
@@ -78,7 +78,7 @@ public final class RequestFactory
 
   /**
    * Parse an href (usually a Zml-Href) that might contain the request specification
-   *
+   * 
    * @throws SensorException
    *           if the href does not contain a valid request
    */
@@ -123,7 +123,7 @@ public final class RequestFactory
    * If there is an extension for org.kalypso.core.requestObsToMerge, then the observation delivered by the instance of
    * this extension is merged with the observation created here. You can use this for instance to have some default
    * W/Q-Table in the meta data.
-   *
+   * 
    * @return a new instance of SimpleObservation that will satisfy the request specification
    */
   public static SimpleObservation createDefaultObservation( final Request xmlReq )

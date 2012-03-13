@@ -60,7 +60,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  * Renders theme in background, but always keeps the last rendered tile.<br>
  * As long as painting is in progress, the last tile will be drawn (resized to fit its position).<br>
  * The map is only redrawn (via invalidateMap) after rendering has completely finished, so the theme appears suddenly.
- *
+ * 
  * @author Gernot Belger
  */
 public class BufferedRescaleMapLayer extends AbstractMapLayer

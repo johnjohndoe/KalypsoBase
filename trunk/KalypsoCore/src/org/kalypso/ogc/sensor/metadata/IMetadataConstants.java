@@ -79,7 +79,5 @@ public interface IMetadataConstants
   String WQ_BOUNDARY_W_MIN = String.format( WQ_BOUNDARY_FORMAT, "W_Min" ); //$NON-NLS-1$
 
   String WQ_BOUNDARY_W_MAX = String.format( WQ_BOUNDARY_FORMAT, "W_Max" ); //$NON-NLS-1$
-  
-  
 
 }

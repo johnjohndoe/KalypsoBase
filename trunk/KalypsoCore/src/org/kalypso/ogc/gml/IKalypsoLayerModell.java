@@ -47,7 +47,7 @@ import org.kalypso.template.types.StyledLayerType;
 /**
  * {@link IMapModell}s which implement additional methods to add {@link org.deegree.graphics.sld.StyledLayerDescriptor}
  * s.
- *
+ * 
  * @author Gernot Belger
  */
 public interface IKalypsoLayerModell extends IMapModell

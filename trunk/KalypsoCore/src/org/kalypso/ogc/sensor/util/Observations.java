@@ -85,7 +85,7 @@ public final class Observations
     }
     else
     {
-      for( int index = model.size()-1; index >= 0; index-- )
+      for( int index = model.size() - 1; index >= 0; index-- )
       {
         try
         {

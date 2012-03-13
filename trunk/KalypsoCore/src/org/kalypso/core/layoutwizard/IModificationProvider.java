@@ -42,7 +42,7 @@ package org.kalypso.core.layoutwizard;
 
 /**
  * FIXME: suspicious
- *
+ * 
  * @author Gernot Belger
  */
 public interface IModificationProvider
