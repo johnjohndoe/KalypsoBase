@@ -325,7 +325,7 @@ public final class KalypsoCoreExtensions
     return Collections.unmodifiableMap( importers );
   }
 
-  public static INativeObservationAdapter[] getObservationImporters( )
+  public static synchronized INativeObservationAdapter[] getObservationImporters( )
   {
     if( OBSERVATION_IMPORTERS == null )
       OBSERVATION_IMPORTERS = readImporters();
@@ -349,7 +349,7 @@ public final class KalypsoCoreExtensions
     return adapters.toArray( new INativeObservationAdapter[] {} );
   }
 
-  public static INativeObservationAdapter getObservationImporter( final String id ) throws CoreException
+  public static synchronized INativeObservationAdapter getObservationImporter( final String id ) throws CoreException
   {
     if( OBSERVATION_IMPORTERS == null )
       OBSERVATION_IMPORTERS = readImporters();

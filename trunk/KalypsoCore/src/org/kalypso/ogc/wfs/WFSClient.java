@@ -442,7 +442,7 @@ public class WFSClient
     }
     catch( final Exception e )
     {
-      final String message = String.format( "Failed to parse result GML", name, requestString );
+      final String message = String.format( "Failed to parse result GML: %s, %s", name, requestString );
       final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, message, e );
       throw new CoreException( status );
     }

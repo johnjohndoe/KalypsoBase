@@ -293,7 +293,7 @@ public class ResourcePool
       final ILoader loader = m_factory.getLoaderInstance( key.getType() );
       info2 = new KeyInfo( key, loader );
       final IStatus result = info2.loadObject( new NullProgressMonitor() );
-      if( (result.getSeverity() & IStatus.ERROR) == 1 )
+      if( (result.getSeverity() & IStatus.ERROR) != 0 )
         throw new CoreException( result );
 
       return info2.getObject();
