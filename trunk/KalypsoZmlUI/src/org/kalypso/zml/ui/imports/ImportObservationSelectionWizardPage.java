@@ -119,7 +119,7 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     setTitle( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationSelectionWizardPage1" ) ); //$NON-NLS-1$
     setPageComplete( false );
 
-    m_adapter = KalypsoCoreExtensions.createNativeAdapters();
+    m_adapter = KalypsoCoreExtensions.getObservationImporters();
     m_timezone = KalypsoCorePlugin.getDefault().getTimeZone();
   }
 
