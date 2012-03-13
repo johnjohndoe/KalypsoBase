@@ -47,6 +47,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -70,6 +71,7 @@ public class AddFeatureHandler extends AbstractHandler
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final Shell shell = HandlerUtil.getActiveShellChecked( event );
+    final String dialogTitle = HandlerUtils.getCommandName( event );
 
     final ISelection selection = HandlerUtil.getCurrentSelection( event );
 
@@ -87,11 +89,13 @@ public class AddFeatureHandler extends AbstractHandler
       return null;
 
     /* Do add the feature */
+    final CommandableWorkspace workspace = input.getWorkspace();
     final IRelationType parentRelation = featureProperty.getPropertyType();
-    final IFeatureType targetFeatureType = parentRelation.getTargetFeatureType();
     final Feature parentFeature = featureProperty.getOwner();
 
-    final CommandableWorkspace workspace = input.getWorkspace();
+    final IFeatureType targetFeatureType = AddFeatureHandlerUtil.chooseFeatureType( shell, dialogTitle, parentRelation, workspace );
+    if( targetFeatureType == null )
+      return null;
 
     final int position = findPosition( selection, featureProperty );
 

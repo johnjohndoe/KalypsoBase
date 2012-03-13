@@ -42,12 +42,24 @@ package org.kalypso.ogc.gml.util;
 
 import java.util.List;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.dialogs.ElementListSelectionDialog;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
+import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.gmlschema.IGMLSchema;
+import org.kalypso.gmlschema.annotation.IAnnotation;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.gml.filterdialog.model.FeatureTypeLabelProvider;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureRelation;
 
 /**
@@ -102,5 +114,54 @@ public final class AddFeatureHandlerUtil
       return false;
 
     return true;
+  }
+
+  public static IFeatureType chooseFeatureType( final Shell shell, final String dialogTitle, final IRelationType relationType, final GMLWorkspace workspace )
+  {
+    final IGMLSchema gmlSchema = workspace.getGMLSchema();
+
+    final IFeatureType targetFeatureType = relationType.getTargetFeatureType();
+    final IFeatureType[] substituts = GMLSchemaUtilities.getSubstituts( targetFeatureType, gmlSchema, false, true );
+
+    if( substituts.length == 0 )
+    {
+      // May only happen if the type is abstract
+      final String message = String.format( "No implementation(s) of type '%s' available.", getNewLabel( relationType ) );
+      MessageDialog.openWarning( shell, dialogTitle, message );
+      return null;
+    }
+
+    if( substituts.length == 1 )
+      return substituts[0];
+
+    /* Let user choose */
+    final String message = "Please select the type of the new feature:";
+
+    final ILabelProvider labelProvider = new FeatureTypeLabelProvider( IAnnotation.ANNO_NAME );
+// final TreeSingleSelectionDialog dialog = new TreeSingleSelectionDialog( shell, substituts, new
+// ArrayTreeContentProvider(), labelProvider, message );
+
+    final ElementListSelectionDialog dialog = new ElementListSelectionDialog( shell, labelProvider );
+
+    dialog.setMessage( message );
+    dialog.setEmptySelectionMessage( "" );
+    dialog.setTitle( dialogTitle );
+
+    dialog.setElements( substituts );
+    dialog.setDialogBoundsSettings( DialogSettingsUtils.getDialogSettings( KalypsoGisPlugin.getDefault(), AddFeatureHandlerUtil.class.getName() ), Dialog.DIALOG_PERSISTLOCATION
+        | Dialog.DIALOG_PERSISTLOCATION );
+    dialog.setAllowDuplicates( false );
+    dialog.setInitialSelections( new Object[] { substituts[0] } );
+    dialog.setMultipleSelection( false );
+
+    if( dialog.open() == Window.CANCEL )
+      return null;
+
+    return (IFeatureType) dialog.getResult()[0];
+  }
+
+  public static String getNewLabel( final IRelationType relationType )
+  {
+    return relationType.getTargetFeatureType().getAnnotation().getValue( IAnnotation.ANNO_NAME );
   }
 }
