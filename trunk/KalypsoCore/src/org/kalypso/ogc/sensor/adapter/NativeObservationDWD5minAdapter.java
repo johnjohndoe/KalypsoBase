@@ -50,15 +50,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
-import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.ogc.sensor.ITupleModel;
-import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
 
 /**
  * Adapter for Timeseries in 'dwd' format (5 minutes values dayly blocks) Kopfsatz 5-Minuten-Datei (neue Struktur)
@@ -83,6 +78,10 @@ import org.kalypso.ogc.sensor.metadata.MetadataList;
  */
 public class NativeObservationDWD5minAdapter extends AbstractObservationImporter
 {
+  public static final String SOURCE_ID = "source://native.observation.dwd.5min.import";
+
+  public static final String SOURCE_ID_MISSING_VALUE = SOURCE_ID + MISSING_VALUE_POSTFIX;
+
   private static final Pattern DWD_BLOCK_PATTERN = Pattern.compile( "[7]{2}\\s+([0-9]{5})\\s+([0-9]{6}).+?" ); //$NON-NLS-1$
 
   private static final Pattern DATE_PATTERN = Pattern.compile( "([0-9]{2})([0-9]{2})([0-9]{2})" ); //$NON-NLS-1$
@@ -92,30 +91,6 @@ public class NativeObservationDWD5minAdapter extends AbstractObservationImporter
   private static final int SEARCH_BLOCK_HEADER = 0;
 
   private static final int SEARCH_VALUES = 1;
-
-  @Override
-  public IStatus doImport( final File source, final TimeZone timeZone, final String valueType, final boolean continueWithErrors )
-  {
-
-    final IStatusCollector stati = new StatusCollector( KalypsoCorePlugin.getID() );
-
-    try
-    {
-      parse( source, timeZone, continueWithErrors, stati );
-    }
-    catch( final Exception ex )
-    {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), ex.getMessage() );
-      stati.add( status );
-    }
-
-    final MetadataList metadata = new MetadataList();
-    final ITupleModel model = createTuppelModel( valueType );
-    setObservation( new SimpleObservation( source.getAbsolutePath(), source.getName(), metadata, model ) );
-
-    return StatusUtilities.createStatus( stati, "Observation Import" );
-
-  }
 
   @Override
   protected void parse( final File source, final TimeZone timeZone, final boolean continueWithErrors, final IStatusCollector stati ) throws Exception
@@ -176,10 +151,13 @@ public class NativeObservationDWD5minAdapter extends AbstractObservationImporter
               final String valueString = lineIn.substring( i * 5, 5 * (i + 1) );
               Double value = new Double( Double.parseDouble( valueString ) ) / 1000;
               // TODO: Write status
+
+              String src = SOURCE_ID;
+
               if( value > 99.997 )
               {
-                System.out.println( "Messfehler" );
                 value = 0.0;
+                src = SOURCE_ID_MISSING_VALUE;
               }
               // Datenfilter für 0.0 - um Datenbank nicht mit unnötigen Werten zu füllen (Zur Zeit nicht verwendet, da
               // Rohdaten benötigt)
@@ -188,7 +166,7 @@ public class NativeObservationDWD5minAdapter extends AbstractObservationImporter
               final Date valueDate = new Date( startDate + i * m_timeStep + (valuesLine - 1) * 16 * m_timeStep );
               buffer.append( valueDate.toString() );
 
-              addDataSet( new NativeObservationDataSet( valueDate, value ) );
+              addDataSet( new NativeObservationDataSet( valueDate, value, toStatus( src ), src ) );
             }
             if( valuesLine == 18 )
             {
@@ -205,5 +183,13 @@ public class NativeObservationDWD5minAdapter extends AbstractObservationImporter
     {
       IOUtils.closeQuietly( reader );
     }
+  }
+
+  private int toStatus( final String src )
+  {
+    if( StringUtils.equals( SOURCE_ID, src ) )
+      return KalypsoStati.BIT_OK;
+
+    return KalypsoStati.BIT_CHECK;
   }
 }

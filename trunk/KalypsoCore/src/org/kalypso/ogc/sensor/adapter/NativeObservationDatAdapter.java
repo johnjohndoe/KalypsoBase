@@ -52,6 +52,7 @@ import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
 
 /**
  * @author huebsch
@@ -63,6 +64,8 @@ public class NativeObservationDatAdapter extends AbstractObservationImporter
   // 01.01.1971 07:30:00 0,1
   // 02.01.1971 07:30:00 0
   // 03.01.1971 07:30:00 0
+
+  public static final String SOURCE_ID = "source://native.observation.dat.import";
 
   private static final Pattern DATE_PATTERN = Pattern.compile( "([0-9]{2}\\.[0-9]{2}\\.[0-9]{4}\\s+[0-9]{2}:[0-9]{2}:[0-9]{2}).+?(-??[0-9\\.]+)" ); //$NON-NLS-1$
 
@@ -108,15 +111,14 @@ public class NativeObservationDatAdapter extends AbstractObservationImporter
               if( i > 1 )
                 buffer.append( " " ); // separator //$NON-NLS-1$
 
+              /* correct empty fields */
               buffer.append( dateMatcher.group( i ).replaceAll( " ", "0" ) ); // //$NON-NLS-1$ //$NON-NLS-2$
-              // correct
-              // empty
-              // fields
             }
+
             final String correctDate = buffer.toString();
             final Date date = sdf.parse( correctDate );
 
-            addDataSet( new NativeObservationDataSet( date, value ) );
+            addDataSet( new NativeObservationDataSet( date, value, KalypsoStati.BIT_OK, SOURCE_ID ) );
           }
           else
           {

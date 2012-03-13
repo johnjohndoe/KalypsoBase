@@ -52,6 +52,7 @@ import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
@@ -59,6 +60,8 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
  */
 public class NativeObservationZrxAdapter extends AbstractObservationImporter
 {
+  public static final String SOURCE_ID = "source://native.observation.zrx.import";
+
   private static Pattern ZRX_HEADER_PATTERN = Pattern.compile( "#.*" ); //$NON-NLS-1$
 
   private static Pattern ZRX_DATA_PATTERN = Pattern.compile( "([0-9]{12,14})\\s+(-??[0-9]+(.[0-9]*))\\s*" ); //$NON-NLS-1$
@@ -124,7 +127,7 @@ public class NativeObservationZrxAdapter extends AbstractObservationImporter
             tickErrorCount();
           }
 
-          addDataSet( new NativeObservationDataSet( date, value ) );
+          addDataSet( new NativeObservationDataSet( date, value, KalypsoStati.BIT_OK, SOURCE_ID ) );
         }
         else
         {

@@ -51,10 +51,16 @@ public class NativeObservationDataSet
 
   private final Double m_value;
 
-  public NativeObservationDataSet( final Date date, final Double value )
+  private final int m_status;
+
+  private final String m_source;
+
+  public NativeObservationDataSet( final Date date, final Double value, final int status, final String source )
   {
     m_date = date;
     m_value = value;
+    m_status = status;
+    m_source = source;
   }
 
   public Date getDate( )
@@ -65,6 +71,16 @@ public class NativeObservationDataSet
   public Double getValue( )
   {
     return m_value;
+  }
+
+  public int getStatus( )
+  {
+    return m_status;
+  }
+
+  public String getSource( )
+  {
+    return m_source;
   }
 
 }
