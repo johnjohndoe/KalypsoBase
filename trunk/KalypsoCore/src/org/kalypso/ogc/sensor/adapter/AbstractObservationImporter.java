@@ -41,6 +41,7 @@
 package org.kalypso.ogc.sensor.adapter;
 
 import java.io.File;
+import java.util.List;
 import java.util.TimeZone;
 
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -48,6 +49,8 @@ import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITupleModel;
+import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 
@@ -125,12 +128,20 @@ public abstract class AbstractObservationImporter implements INativeObservationA
     return doImport( file, timeZone, m_axisTypeValue, continueWithErrors );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.adapter.INativeObservationAdapter#getStatus()
-   */
-  @Override
-  public IStatus getStatus( )
+  protected ITupleModel createTuppelModel( final String valueType, final List<NativeObservationDataSet> datasets )
   {
-    return null;
+    final IAxis[] axis = createAxis( valueType );
+    final Object[][] tupelData = new Object[datasets.size()][2];
+
+    for( int index = 0; index < datasets.size(); index++ )
+    {
+      final NativeObservationDataSet dataSet = datasets.get( index );
+
+      tupelData[index][0] = dataSet.getDate();
+      tupelData[index][1] = dataSet.getValue();
+    }
+
+    return new SimpleTupleModel( axis, tupelData );
   }
+
 }

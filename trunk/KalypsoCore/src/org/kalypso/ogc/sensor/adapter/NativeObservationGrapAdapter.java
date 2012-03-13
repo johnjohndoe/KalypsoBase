@@ -44,7 +44,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -61,10 +60,8 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 
 /**
@@ -72,30 +69,21 @@ import org.kalypso.ogc.sensor.metadata.MetadataList;
  */
 public class NativeObservationGrapAdapter extends AbstractObservationImporter
 {
-  private final DateFormat m_grapDateFormat = new SimpleDateFormat( "dd MM yyyy HH mm ss" ); //$NON-NLS-1$
 
   private static final Pattern GRAP_PATTERN = Pattern.compile( "([0-9]{1,2}.+?[0-9]{1,2}.+?[0-9]{2,4}.+?[0-9]{1,2}.+?[0-9]{1,2}.[0-9 ]{1,2})(.*-?[0-9\\.]+)" ); //$NON-NLS-1$
 
   private static final int MAX_NO_OF_ERRORS = 30;
 
-  final List<Date> m_dates = new ArrayList<Date>();
-
-  final List<Double> m_values = new ArrayList<Double>();
-
-  private int m_numberOfErrors = 0;
-
   @Override
   public IStatus doImport( final File source, final TimeZone timeZone, final String valueType, final boolean continueWithErrors )
   {
-    reset();
-
-    m_grapDateFormat.setTimeZone( timeZone );
 
     final List<IStatus> stati = new ArrayList<>();
+    final List<NativeObservationDataSet> datasets = new ArrayList<>();
 
     try
     {
-      Collections.addAll( stati, parse( source, continueWithErrors ) );
+      Collections.addAll( stati, parse( source, timeZone, datasets, continueWithErrors ) );
     }
     catch( final Exception ex )
     {
@@ -103,20 +91,20 @@ public class NativeObservationGrapAdapter extends AbstractObservationImporter
       stati.add( status );
     }
 
-    setObservation( new SimpleObservation( "href", "titel", new MetadataList(), createTuppelModel( valueType ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    final MetadataList metadata = new MetadataList();
+    final ITupleModel model = createTuppelModel( valueType, datasets );
+    setObservation( new SimpleObservation( source.getAbsolutePath(), source.getName(), metadata, model ) );
 
     return StatusUtilities.createStatus( stati, "Grap Observation Import" );
   }
 
-  private void reset( )
+  private IStatus[] parse( final File source, final TimeZone timeZone, final List<NativeObservationDataSet> datasets, final boolean continueWithErrors ) throws IOException
   {
-    m_numberOfErrors = 0;
-    m_dates.clear();
-    m_values.clear();
-  }
+    final SimpleDateFormat sdf = new SimpleDateFormat( "dd MM yyyy HH mm ss" ); //$NON-NLS-1$
+    sdf.setTimeZone( timeZone );
 
-  private IStatus[] parse( final File source, final boolean continueWithErrors ) throws IOException
-  {
+    int numberOfErrors = 0;
+
     final List<IStatus> stati = new ArrayList<>();
 
     final FileReader fileReader = new FileReader( source );
@@ -128,7 +116,7 @@ public class NativeObservationGrapAdapter extends AbstractObservationImporter
 
       while( (lineIn = reader.readLine()) != null )
       {
-        if( !continueWithErrors && m_numberOfErrors > MAX_NO_OF_ERRORS )
+        if( !continueWithErrors && numberOfErrors > MAX_NO_OF_ERRORS )
           return stati.toArray( new IStatus[] {} );
         try
         {
@@ -139,20 +127,19 @@ public class NativeObservationGrapAdapter extends AbstractObservationImporter
             throw new CoreException( status );
           }
 
-          final Date date = parseDate( matcher.group( 1 ) );
+          final Date date = parseDate( matcher.group( 1 ), sdf );
           final Double value = NumberUtils.parseDouble( matcher.group( 2 ) );
 
-          m_dates.add( date );
-          m_values.add( value );
+          datasets.add( new NativeObservationDataSet( date, value ) );
         }
         catch( final Throwable e )
         {
           final String message = e.getMessage();
 
-          if( m_numberOfErrors < MAX_NO_OF_ERRORS )
+          if( numberOfErrors < MAX_NO_OF_ERRORS )
             stati.add( new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), String.format( "Line #%d: %s", reader.getLineNumber(), message ) ) );
 
-          m_numberOfErrors++;
+          numberOfErrors++;
         }
       }
     }
@@ -164,26 +151,9 @@ public class NativeObservationGrapAdapter extends AbstractObservationImporter
     return stati.toArray( new IStatus[] {} );
   }
 
-  private ITupleModel createTuppelModel( final String valueType )
-  {
-    final IAxis[] axis = createAxis( valueType );
-
-    final Object[][] tupelData = new Object[m_dates.size()][2];
-    for( int i = 0; i < m_dates.size(); i++ )
-    {
-      tupelData[i][0] = m_dates.get( i );
-      tupelData[i][1] = m_values.get( i );
-    }
-
-    m_dates.clear();
-    m_values.clear();
-
-    return new SimpleTupleModel( axis, tupelData );
-  }
-
   private static final Pattern DATE_PATTERN = Pattern.compile( "([0-9 ]{2}) ([0-9 ]{2}) ([0-9]{4}) ([0-9 ]{2}) ([0-9 ]{2}) ([0-9 ]{2})" ); //$NON-NLS-1$
 
-  private Date parseDate( final String dateString ) throws ParseException, CoreException
+  private Date parseDate( final String dateString, final SimpleDateFormat sdf ) throws ParseException, CoreException
   {
     final String formatedDate = dateString.replaceAll( "[:\\.]", " " ); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -207,7 +177,7 @@ public class NativeObservationGrapAdapter extends AbstractObservationImporter
     }
 
     final String correctDate = buffer.toString();
-    final Date date = m_grapDateFormat.parse( correctDate );
+    final Date date = sdf.parse( correctDate );
 
     return date;
   }
