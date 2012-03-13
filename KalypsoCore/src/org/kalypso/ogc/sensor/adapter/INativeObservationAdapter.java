@@ -80,7 +80,5 @@ public interface INativeObservationAdapter
 // IObservation importTimeseries( final File source, final TimeZone timeZone, final String valueType, final boolean
 // continueWithErrors ) throws Exception;
 
-  IStatus getStatus( );
-
   String getAxisTypeValue( );
 }

@@ -44,24 +44,23 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.i18n.Messages;
-import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 
 /**
@@ -79,11 +78,11 @@ import org.kalypso.ogc.sensor.metadata.MetadataList;
  */
 public class NativeObservationDWD5minAdapter extends AbstractObservationImporter
 {
-  private final Pattern m_dwdBlockPattern = Pattern.compile( "[7]{2}\\s+([0-9]{5})\\s+([0-9]{6}).+?" ); //$NON-NLS-1$
+  private static final Pattern DWD_BLOCK_PATTERN = Pattern.compile( "[7]{2}\\s+([0-9]{5})\\s+([0-9]{6}).+?" ); //$NON-NLS-1$
+
+  private static final Pattern DATE_PATTERN = Pattern.compile( "([0-9]{2})([0-9]{2})([0-9]{2})" ); //$NON-NLS-1$
 
   private final int m_timeStep = 300000;
-
-  private DateFormat m_dateFormat;
 
   private static final int SEARCH_BLOCK_HEADER = 0;
 
@@ -94,116 +93,150 @@ public class NativeObservationDWD5minAdapter extends AbstractObservationImporter
   @Override
   public IStatus doImport( final File source, final TimeZone timeZone, final String valueType, final boolean continueWithErrors )
   {
+    final List<IStatus> stati = new ArrayList<>();
+    final List<NativeObservationDataSet> datasets = new ArrayList<>();
+
     try
     {
-      final MetadataList metaDataList = new MetadataList();
-
-      m_dateFormat = new SimpleDateFormat( "yyMMdd" ); //$NON-NLS-1$
-      m_dateFormat.setTimeZone( timeZone );
-
-      final IAxis[] axis = createAxis( valueType );
-      final ITupleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
-      setObservation( new SimpleObservation( "href", "titel", metaDataList, tuppelModel ) ); //$NON-NLS-1$ //$NON-NLS-2$
-
-      return new Status( IStatus.OK, KalypsoCorePlugin.getID(), "DWD Timeseries Import" );
+      Collections.addAll( stati, parse( source, timeZone, datasets, continueWithErrors ) );
     }
-    catch( final Exception e )
+    catch( final Exception ex )
     {
-      return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), e.getMessage() );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), ex.getMessage() );
+      stati.add( status );
     }
+
+    final MetadataList metadata = new MetadataList();
+    final ITupleModel model = createTuppelModel( valueType, datasets );
+    setObservation( new SimpleObservation( source.getAbsolutePath(), source.getName(), metadata, model ) );
+
+    return StatusUtilities.createStatus( stati, "DWD Observation Import" );
+
   }
 
-  private ITupleModel createTuppelModel( final File source, final IAxis[] axis, final boolean continueWithErrors ) throws IOException, ParseException
+  private IStatus[] parse( final File source, final TimeZone timeZone, final List<NativeObservationDataSet> datasets, final boolean continueWithErrors ) throws IOException
   {
+    final SimpleDateFormat sdf = new SimpleDateFormat( "yyMMdd" ); //$NON-NLS-1$
+    sdf.setTimeZone( timeZone );
+
+    final List<IStatus> stati = new ArrayList<>();
+
     int numberOfErrors = 0;
 
-    final StringBuffer errorBuffer = new StringBuffer();
     final FileReader fileReader = new FileReader( source );
     final LineNumberReader reader = new LineNumberReader( fileReader );
-    final List<Date> dateCollector = new ArrayList<Date>();
-    final List<Double> valueCollector = new ArrayList<Double>();
-    String lineIn = null;
-    int valuesLine = 0;
-    int lineNumber = 0;
-    int step = SEARCH_BLOCK_HEADER;
-    final StringBuffer buffer = new StringBuffer();
-    long startDate = 0;
-    while( (lineIn = reader.readLine()) != null )
+
+    try
     {
-      if( !continueWithErrors && numberOfErrors > MAX_NO_OF_ERRORS )
-        return null;
-      lineNumber = reader.getLineNumber();
-      // System.out.println( "Lese Zeile:" + lineNumber );
-      switch( step )
+      String lineIn = null;
+      int valuesLine = 0;
+      int step = SEARCH_BLOCK_HEADER;
+      final StringBuffer buffer = new StringBuffer();
+      long startDate = 0;
+
+      while( (lineIn = reader.readLine()) != null )
       {
-        case SEARCH_BLOCK_HEADER:
-          final Matcher matcher = m_dwdBlockPattern.matcher( lineIn );
-          if( matcher.matches() )
+        if( !continueWithErrors && numberOfErrors > MAX_NO_OF_ERRORS )
+          return stati.toArray( new IStatus[] {} );
+
+        try
+        {
+          switch( step )
           {
-            // String DWDID = matcher.group( 1 );
-            final String startDateString = matcher.group( 2 );
-            final Pattern datePattern = Pattern.compile( "([0-9]{2})([0-9]{2})([0-9]{2})" ); //$NON-NLS-1$
-            final Matcher dateMatcher = datePattern.matcher( startDateString );
-            if( dateMatcher.matches() )
-            {
-              // System.out.println( "Startdatum Header:" + startDateString );
-              final Date parseDate = m_dateFormat.parse( startDateString );
-              startDate = parseDate.getTime();
-            }
-            else
-            {
-              System.out.println( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationDWD5minAdapter.9" ) + startDateString + Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationDWD5minAdapter.10" ) + datePattern.toString() ); //$NON-NLS-1$ //$NON-NLS-2$
-            }
+            case SEARCH_BLOCK_HEADER:
+              final Matcher matcher = DWD_BLOCK_PATTERN.matcher( lineIn );
+              if( matcher.matches() )
+              {
+                // String DWDID = matcher.group( 1 );
+                final String startDateString = matcher.group( 2 );
+
+                final Matcher dateMatcher = DATE_PATTERN.matcher( startDateString );
+                if( dateMatcher.matches() )
+                {
+                  // System.out.println( "Startdatum Header:" + startDateString );
+                  final Date parseDate = sdf.parse( startDateString );
+                  startDate = parseDate.getTime();
+                }
+                else
+                {
+                  final String msg = String.format( "Das Format des Headers (Startdatum) passt nicht. Input: %s, Pattern: %s", startDateString, DATE_PATTERN.toString() );
+
+                  final IStatus status = new Status( IStatus.INFO, KalypsoCorePlugin.getID(), msg );
+                  throw new CoreException( status );
+                }
+              }
+              else
+              {
+                final String msg = String.format( "Header not parsable: : %s", lineIn );
+
+                final IStatus status = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), msg );
+                throw new CoreException( status );
+              }
+
+              step++;
+              break;
+
+            case SEARCH_VALUES:
+              valuesLine = valuesLine + 1;
+              for( int i = 0; i < 16; i++ )
+              {
+                final String valueString = lineIn.substring( i * 5, 5 * (i + 1) );
+                Double value = new Double( Double.parseDouble( valueString ) ) / 1000;
+                // TODO: Write status
+                if( value > 99.997 )
+                {
+                  System.out.println( "Messfehler" );
+                  value = 0.0;
+                }
+                // Datenfilter für 0.0 - um Datenbank nicht mit unnötigen Werten zu füllen (Zur Zeit nicht verwendet, da
+                // Rohdaten benötigt)
+
+                buffer.append( " " ); // separator //$NON-NLS-1$
+                final Date valueDate = new Date( startDate + i * m_timeStep + (valuesLine - 1) * 16 * m_timeStep );
+                buffer.append( valueDate.toString() );
+
+                datasets.add( new NativeObservationDataSet( valueDate, value ) );
+              }
+              if( valuesLine == 18 )
+              {
+                step = SEARCH_BLOCK_HEADER;
+                valuesLine = 0;
+              }
+              break;
+            default:
+              break;
+          }
+        }
+        catch( final Exception e )
+        {
+          IStatus status;
+          if( e instanceof CoreException )
+          {
+            final CoreException coreException = (CoreException) e;
+            final IStatus status2 = coreException.getStatus();
+            if( IStatus.INFO != status2.getSeverity() )
+              numberOfErrors++;
+
+            status = new Status( status2.getSeverity(), KalypsoCorePlugin.getID(), String.format( "Line #%d: %s", reader.getLineNumber(), status2.getMessage() ) );
           }
           else
           {
-            errorBuffer.append( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationDWD5minAdapter.11" ) + lineNumber + Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationDWD5minAdapter.12" ) + lineIn + Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationDWD5minAdapter.13" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            final String message = e.getMessage();
+            status = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), String.format( "Line #%d: %s", reader.getLineNumber(), message ) );
+
             numberOfErrors++;
           }
-          step++;
-          break;
-        case SEARCH_VALUES:
-          valuesLine = valuesLine + 1;
-          for( int i = 0; i < 16; i++ )
-          {
-            final String valueString = lineIn.substring( i * 5, 5 * (i + 1) );
-            Double value = new Double( Double.parseDouble( valueString ) ) / 1000;
-            // TODO: Write status
-            if( value > 99.997 )
-            {
-              System.out.println( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationDWD5minAdapter.14" ) ); //$NON-NLS-1$
-              value = 0.0;
-            }
-            // Datenfilter für 0.0 - um Datenbank nicht mit unnötigen Werten zu füllen (Zur Zeit nicht verwendet, da
-            // Rohdaten benötigt)
-            // if( value != 0.0 )
-            // {
-            valueCollector.add( value );
 
-            buffer.append( " " ); // separator //$NON-NLS-1$
-            final Date valueDate = new Date( startDate + i * m_timeStep + (valuesLine - 1) * 16 * m_timeStep );
-            buffer.append( valueDate.toString() );
-            dateCollector.add( valueDate );
-            // }
-          }
-          if( valuesLine == 18 )
-          {
-            step = SEARCH_BLOCK_HEADER;
-            valuesLine = 0;
-          }
-          break;
-        default:
-          break;
+          if( numberOfErrors < MAX_NO_OF_ERRORS )
+            stati.add( status );
+        }
       }
     }
-    final Object[][] tupelData = new Object[dateCollector.size()][2];
-    for( int i = 0; i < dateCollector.size(); i++ )
+    finally
     {
-      tupelData[i][0] = dateCollector.get( i );
-      tupelData[i][1] = valueCollector.get( i );
+      IOUtils.closeQuietly( reader );
     }
-    // TODO handle error
-    System.out.println( errorBuffer.toString() );
-    return new SimpleTupleModel( axis, tupelData );
+
+    return stati.toArray( new IStatus[] {} );
   }
 }
