@@ -57,7 +57,7 @@ import com.google.common.collect.Multiset.Entry;
 
 /**
  * Helper class that guesses the timestep from a given timeseries.
- *
+ * 
  * @author Gernot Belger
  */
 class TimestepGuesser
@@ -76,8 +76,7 @@ class TimestepGuesser
 
   public Period execute( ) throws SensorException
   {
-    final int size = m_timeseries.size();
-    final int testSteps = Math.min( size, m_guessFromNumberOfTimesteps );
+    final int testSteps = getTestSteps();
 
     final IAxis dateAxis = AxisUtils.findDateAxis( m_timeseries.getAxes() );
     if( dateAxis == null )
@@ -108,5 +107,16 @@ class TimestepGuesser
 
     final Integer maxCount = orderedByCount.lastKey();
     return orderedByCount.get( maxCount );
+  }
+
+  private int getTestSteps( ) throws SensorException
+  {
+    final int size = m_timeseries.size();
+
+    if( m_guessFromNumberOfTimesteps == -1 )
+      return size;
+
+    /* Prevent timeseries is smaller then number of test steps */
+    return Math.min( size, m_guessFromNumberOfTimesteps );
   }
 }

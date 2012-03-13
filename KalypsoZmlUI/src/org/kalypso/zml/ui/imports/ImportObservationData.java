@@ -47,6 +47,7 @@ import java.util.Arrays;
 import java.util.TimeZone;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.kalypso.commons.databinding.swt.FileAndHistoryData;
 import org.kalypso.commons.java.util.AbstractModelObject;
@@ -107,19 +108,26 @@ public class ImportObservationData extends AbstractModelObject
 
   public void init( final IDialogSettings settings )
   {
-    if( settings == null )
-      return;
+    try
+    {
+      if( settings == null )
+        return;
 
-    m_sourceFileData.init( settings );
+      m_sourceFileData.init( settings );
 
-    setParameterType( DialogSettingsUtils.getString( settings, PROPERTY_PARAMETER_TYPE, m_parameterType ) );
+      setParameterType( DialogSettingsUtils.getString( settings, PROPERTY_PARAMETER_TYPE, m_parameterType ) );
 
-    /* Adapter */
-    final String currentAdapterId = m_adapter == null ? null : m_adapter.getId();
-    final String adapterId = DialogSettingsUtils.getString( settings, PROPERTY_ADAPTER, currentAdapterId );
-    setAdapter( KalypsoCoreExtensions.getObservationImporter( adapterId ) );
+      /* Adapter */
+      final String currentAdapterId = m_adapter == null ? null : m_adapter.getId();
+      final String adapterId = DialogSettingsUtils.getString( settings, PROPERTY_ADAPTER, currentAdapterId );
+      setAdapter( KalypsoCoreExtensions.getObservationImporter( adapterId ) );
 
-    setTimezone( DialogSettingsUtils.getString( settings, PROPERTY_TIMEZONE, m_timezone ) );
+      setTimezone( DialogSettingsUtils.getString( settings, PROPERTY_TIMEZONE, m_timezone ) );
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+    }
   }
 
   public void storeSettings( final IDialogSettings settings )

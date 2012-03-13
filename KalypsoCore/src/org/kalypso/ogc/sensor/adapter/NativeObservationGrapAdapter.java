@@ -181,5 +181,4 @@ public class NativeObservationGrapAdapter extends AbstractObservationImporter
 
     return date;
   }
-
 }

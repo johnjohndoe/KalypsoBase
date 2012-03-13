@@ -46,7 +46,6 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -57,6 +56,8 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -93,12 +94,13 @@ public class NativeObservationDWD5minAdapter extends AbstractObservationImporter
   @Override
   public IStatus doImport( final File source, final TimeZone timeZone, final String valueType, final boolean continueWithErrors )
   {
-    final List<IStatus> stati = new ArrayList<>();
     final List<NativeObservationDataSet> datasets = new ArrayList<>();
+
+    final IStatusCollector stati = new StatusCollector( KalypsoCorePlugin.getID() );
 
     try
     {
-      Collections.addAll( stati, parse( source, timeZone, datasets, continueWithErrors ) );
+      parse( source, timeZone, datasets, continueWithErrors, stati );
     }
     catch( final Exception ex )
     {
@@ -114,12 +116,10 @@ public class NativeObservationDWD5minAdapter extends AbstractObservationImporter
 
   }
 
-  private IStatus[] parse( final File source, final TimeZone timeZone, final List<NativeObservationDataSet> datasets, final boolean continueWithErrors ) throws IOException
+  private void parse( final File source, final TimeZone timeZone, final List<NativeObservationDataSet> datasets, final boolean continueWithErrors, final IStatusCollector stati ) throws IOException
   {
     final SimpleDateFormat sdf = new SimpleDateFormat( "yyMMdd" ); //$NON-NLS-1$
     sdf.setTimeZone( timeZone );
-
-    final List<IStatus> stati = new ArrayList<>();
 
     int numberOfErrors = 0;
 
@@ -137,7 +137,7 @@ public class NativeObservationDWD5minAdapter extends AbstractObservationImporter
       while( (lineIn = reader.readLine()) != null )
       {
         if( !continueWithErrors && numberOfErrors > MAX_NO_OF_ERRORS )
-          return stati.toArray( new IStatus[] {} );
+          return;
 
         try
         {
@@ -236,7 +236,5 @@ public class NativeObservationDWD5minAdapter extends AbstractObservationImporter
     {
       IOUtils.closeQuietly( reader );
     }
-
-    return stati.toArray( new IStatus[] {} );
   }
 }
