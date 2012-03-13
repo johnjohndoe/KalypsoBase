@@ -112,13 +112,13 @@ public class NativeObservationEx2Adapter extends AbstractObservationImporter
           }
           else
           {
-            stati.add( IStatus.ERROR, String.format( "Line %d: Date not parsable: %s", reader.getLineNumber(), lineIn ) );
+            stati.add( IStatus.WARNING, String.format( "Line %d: Date not parsable: %s", reader.getLineNumber(), lineIn ) );
             tickErrorCount();
           }
         }
         else
         {
-          stati.add( IStatus.ERROR, String.format( "Line %d: Line not parsable: %s", reader.getLineNumber(), lineIn ) );
+          stati.add( IStatus.WARNING, String.format( "Line %d: Line not parsable: %s", reader.getLineNumber(), lineIn ) );
           tickErrorCount();
         }
       }

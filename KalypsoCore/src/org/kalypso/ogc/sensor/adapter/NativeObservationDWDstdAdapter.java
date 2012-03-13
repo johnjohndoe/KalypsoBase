@@ -113,13 +113,13 @@ public class NativeObservationDWDstdAdapter extends AbstractObservationImporter
           }
           catch( final Exception e )
           {
-            stati.add( IStatus.ERROR, String.format( "Line %d: Value not parsable: %s", reader.getLineNumber(), lineIn ) );
+            stati.add( IStatus.WARNING, String.format( "Line %d: Value not parsable: %s", reader.getLineNumber(), lineIn ) );
             tickErrorCount();
           }
         }
         else
         {
-          stati.add( IStatus.ERROR, String.format( "Line %d: Line not parsable: %s", reader.getLineNumber(), lineIn ) );
+          stati.add( IStatus.WARNING, String.format( "Line %d: Line not parsable: %s", reader.getLineNumber(), lineIn ) );
           tickErrorCount();
         }
       }

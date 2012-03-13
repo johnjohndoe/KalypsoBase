@@ -137,7 +137,7 @@ public class NativeObservationDWD5minAdapter extends AbstractObservationImporter
             }
             else
             {
-              stati.add( IStatus.ERROR, String.format( "Line %d: Header not parsable: : %s", reader.getLineNumber(), lineIn ) );
+              stati.add( IStatus.WARNING, String.format( "Line %d: Header not parsable: : %s", reader.getLineNumber(), lineIn ) );
               tickErrorCount();
             }
 

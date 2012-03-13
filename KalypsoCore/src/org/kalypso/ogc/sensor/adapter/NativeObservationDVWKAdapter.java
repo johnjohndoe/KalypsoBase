@@ -149,7 +149,7 @@ public class NativeObservationDVWKAdapter extends AbstractObservationImporter
                 }
                 catch( final Exception e )
                 {
-                  stati.add( IStatus.ERROR, String.format( "Line %d: Value not parsable: %s", reader.getLineNumber(), lineIn ) );
+                  stati.add( IStatus.WARNING, String.format( "Line %d: Value not parsable: %s", reader.getLineNumber(), lineIn ) );
                   tickErrorCount();
                 }
                 calendar.add( Calendar.MINUTE, 5 );
