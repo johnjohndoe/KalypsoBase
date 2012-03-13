@@ -130,7 +130,7 @@ public abstract class AbstractObservationImporter implements INativeObservationA
       final String source = dataset.getSource();
       final int dataSource = handler.addDataSource( source, source );
 
-      final Object[] data = new Object[] { axes.length };
+      final Object[] data = new Object[axes.length];
       data[dateAxis] = date;
       data[valueAxis] = value;
       data[statusAxis] = status;

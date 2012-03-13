@@ -55,7 +55,7 @@ public class ObservationCache
 {
   private static ObservationCache INSTANCE = null;
 
-  public static ObservationCache getInstance( )
+  public static synchronized ObservationCache getInstance( )
   {
     if( INSTANCE == null )
     {

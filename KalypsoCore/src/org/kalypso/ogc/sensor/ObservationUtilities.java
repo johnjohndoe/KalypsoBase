@@ -53,6 +53,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.commons.java.lang.MathUtils;
 import org.kalypso.commons.parser.IParser;
@@ -200,6 +201,9 @@ public final class ObservationUtilities
    */
   public static IAxis[] findAxesByClass( final IAxis[] axes, final Class< ? > desired )
   {
+    if( ArrayUtils.isEmpty( axes ) )
+      return new IAxis[] {};
+
     final ArrayList<IAxis> list = new ArrayList<IAxis>( axes == null ? 0 : axes.length );
 
     for( final IAxis axe : axes )
@@ -221,6 +225,9 @@ public final class ObservationUtilities
    */
   public static IAxis[] findAxesByClasses( final IAxis[] axes, final Class< ? >[] desired )
   {
+    if( ArrayUtils.isEmpty( axes ) )
+      return new IAxis[] {};
+
     final List<IAxis> list = new ArrayList<IAxis>( axes == null ? 0 : axes.length );
 
     for( final IAxis axe : axes )

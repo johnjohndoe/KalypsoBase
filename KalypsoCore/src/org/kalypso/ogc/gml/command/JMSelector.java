@@ -213,6 +213,8 @@ public class JMSelector
         final GM_Point point = (GM_Point) geom;
         positions = new GM_Position[] { GeometryFactory.createGM_Position( point.getX(), point.getY() ) };
       }
+      else
+        positions = new GM_Position[] {};
     }
     catch( final GM_Exception e )
     {

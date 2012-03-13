@@ -49,6 +49,7 @@ import java.util.NoSuchElementException;
 
 import javax.swing.ImageIcon;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -274,6 +275,9 @@ public final class KalypsoStatusUtils
    */
   public static IAxis[] findAxesByClass( final IAxis[] axes, final Class< ? > desired, final boolean excludeStatusAxes ) throws NoSuchElementException
   {
+    if( ArrayUtils.isEmpty( axes ) )
+      return new IAxis[] {};
+
     final ArrayList<IAxis> list = new ArrayList<IAxis>( axes == null ? 0 : axes.length );
 
     for( int i = 0; i < axes.length; i++ )
