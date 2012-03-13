@@ -42,14 +42,10 @@ package org.kalypso.ogc.sensor.adapter;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.io.LineNumberReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -57,55 +53,25 @@ import java.util.regex.Pattern;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.ogc.sensor.ITupleModel;
-import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
 
 /**
  * @author doemming
+ * @author Dirk Kuch
  */
 public class NativeObservationGrapAdapter extends AbstractObservationImporter
 {
-
   private static final Pattern GRAP_PATTERN = Pattern.compile( "([0-9]{1,2}.+?[0-9]{1,2}.+?[0-9]{2,4}.+?[0-9]{1,2}.+?[0-9]{1,2}.[0-9 ]{1,2})(.*-?[0-9\\.]+)" ); //$NON-NLS-1$
 
-  private static final int MAX_NO_OF_ERRORS = 30;
+  private static final Pattern DATE_PATTERN = Pattern.compile( "([0-9 ]{2}) ([0-9 ]{2}) ([0-9]{4}) ([0-9 ]{2}) ([0-9 ]{2}) ([0-9 ]{2})" ); //$NON-NLS-1$
 
   @Override
-  public IStatus doImport( final File source, final TimeZone timeZone, final String valueType, final boolean continueWithErrors )
-  {
-
-    final List<IStatus> stati = new ArrayList<>();
-    final List<NativeObservationDataSet> datasets = new ArrayList<>();
-
-    try
-    {
-      Collections.addAll( stati, parse( source, timeZone, datasets, continueWithErrors ) );
-    }
-    catch( final Exception ex )
-    {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), ex.getMessage() );
-      stati.add( status );
-    }
-
-    final MetadataList metadata = new MetadataList();
-    final ITupleModel model = createTuppelModel( valueType, datasets );
-    setObservation( new SimpleObservation( source.getAbsolutePath(), source.getName(), metadata, model ) );
-
-    return StatusUtilities.createStatus( stati, "Grap Observation Import" );
-  }
-
-  private IStatus[] parse( final File source, final TimeZone timeZone, final List<NativeObservationDataSet> datasets, final boolean continueWithErrors ) throws IOException
+  protected void parse( final File source, final TimeZone timeZone, final boolean continueWithErrors, final IStatusCollector stati ) throws Exception
   {
     final SimpleDateFormat sdf = new SimpleDateFormat( "dd MM yyyy HH mm ss" ); //$NON-NLS-1$
     sdf.setTimeZone( timeZone );
-
-    int numberOfErrors = 0;
-
-    final List<IStatus> stati = new ArrayList<>();
 
     final FileReader fileReader = new FileReader( source );
     final LineNumberReader reader = new LineNumberReader( fileReader );
@@ -116,30 +82,21 @@ public class NativeObservationGrapAdapter extends AbstractObservationImporter
 
       while( (lineIn = reader.readLine()) != null )
       {
-        if( !continueWithErrors && numberOfErrors > MAX_NO_OF_ERRORS )
-          return stati.toArray( new IStatus[] {} );
-        try
-        {
-          final Matcher matcher = GRAP_PATTERN.matcher( lineIn );
-          if( !matcher.matches() )
-          {
-            final IStatus status = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), String.format( "Line not parsable: %s", lineIn ) );
-            throw new CoreException( status );
-          }
+        if( !continueWithErrors && getErrorCount() > getMaxErrorCount() )
+          return;
 
+        final Matcher matcher = GRAP_PATTERN.matcher( lineIn );
+        if( matcher.matches() )
+        {
           final Date date = parseDate( matcher.group( 1 ), sdf );
           final Double value = NumberUtils.parseDouble( matcher.group( 2 ) );
 
-          datasets.add( new NativeObservationDataSet( date, value ) );
+          addDataSet( new NativeObservationDataSet( date, value ) );
         }
-        catch( final Throwable e )
+        else
         {
-          final String message = e.getMessage();
-
-          if( numberOfErrors < MAX_NO_OF_ERRORS )
-            stati.add( new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), String.format( "Line #%d: %s", reader.getLineNumber(), message ) ) );
-
-          numberOfErrors++;
+          stati.add( IStatus.ERROR, String.format( "Line %d: Date not parsable: %s", reader.getLineNumber(), lineIn ) );
+          tickErrorCount();
         }
       }
     }
@@ -148,10 +105,7 @@ public class NativeObservationGrapAdapter extends AbstractObservationImporter
       reader.close();
     }
 
-    return stati.toArray( new IStatus[] {} );
   }
-
-  private static final Pattern DATE_PATTERN = Pattern.compile( "([0-9 ]{2}) ([0-9 ]{2}) ([0-9]{4}) ([0-9 ]{2}) ([0-9 ]{2}) ([0-9 ]{2})" ); //$NON-NLS-1$
 
   private Date parseDate( final String dateString, final SimpleDateFormat sdf ) throws ParseException, CoreException
   {

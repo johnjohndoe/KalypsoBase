@@ -42,18 +42,14 @@ package org.kalypso.ogc.sensor.adapter;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.io.LineNumberReader;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
@@ -65,17 +61,25 @@ import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 
 /**
- * @author huebsch adapter for Timeseries in 'dwd' format (5 minutes values dayly blocks) Kopfsatz 5-Minuten-Datei (neue
- *         Struktur) Feld-Nr. 1 2 3 4 5 Inhalt 77 Stations-nummer Datumjj/mm/tt gemesseneNiederschlagshöhe(in 1/10 mm)
- *         Tagessumme der 5-Min-Werte(in 1/1000 mm)Kalendertag! ch. v. b. 1-2 4-8 10-15 17-20 22-27 Anz. ch. 2 5 6 4 6
- *         Ein Datenblock besteht aus 18 Datensätzen: Datensatz 5-Minuten-Datei (neue Struktur) Feld-Nr. 1-16 Inhalt 16
- *         5-Minutenwerte der Niederschlagshöhe(in 1/1000 mm) ch. v. b. 1-80 Anz.ch. 80 example: 77 48558 960101 00 0 0
+ * Adapter for Timeseries in 'dwd' format (5 minutes values dayly blocks) Kopfsatz 5-Minuten-Datei (neue Struktur)
+ * Feld-Nr. 1 2 3 4 5 Inhalt 77 Stations-nummer Datumjj/mm/tt gemesseneNiederschlagshöhe(in 1/10 mm) Tagessumme der
+ * 5-Min-Werte(in 1/1000 mm)Kalendertag! ch. v. b. 1-2 4-8 10-15 17-20 22-27 Anz. ch. 2 5 6 4 6 Ein Datenblock besteht
+ * aus 18 Datensätzen: Datensatz 5-Minuten-Datei (neue Struktur) Feld-Nr. 1-16 Inhalt 16 5-Minutenwerte der
+ * Niederschlagshöhe(in 1/1000 mm) ch. v. b. 1-80 Anz.ch. 80 example:
+ * 
+ * <pre>
+ *         77 48558 960101 00 0
  *         0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
  *         0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
  *         0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
  *         0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
  *         0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
- *         0 0 0 0 0 0 0 0 0 0 0 0
+ *         0 0 0 0 0 0 0 0 0 0 0 0 0
+ * 
+ * </pre>
+ * 
+ * @author huebsch
+ * @author Dirk Kuch
  */
 public class NativeObservationDWD5minAdapter extends AbstractObservationImporter
 {
@@ -89,18 +93,15 @@ public class NativeObservationDWD5minAdapter extends AbstractObservationImporter
 
   private static final int SEARCH_VALUES = 1;
 
-  private static final int MAX_NO_OF_ERRORS = 30;
-
   @Override
   public IStatus doImport( final File source, final TimeZone timeZone, final String valueType, final boolean continueWithErrors )
   {
-    final List<NativeObservationDataSet> datasets = new ArrayList<>();
 
     final IStatusCollector stati = new StatusCollector( KalypsoCorePlugin.getID() );
 
     try
     {
-      parse( source, timeZone, datasets, continueWithErrors, stati );
+      parse( source, timeZone, continueWithErrors, stati );
     }
     catch( final Exception ex )
     {
@@ -109,19 +110,18 @@ public class NativeObservationDWD5minAdapter extends AbstractObservationImporter
     }
 
     final MetadataList metadata = new MetadataList();
-    final ITupleModel model = createTuppelModel( valueType, datasets );
+    final ITupleModel model = createTuppelModel( valueType );
     setObservation( new SimpleObservation( source.getAbsolutePath(), source.getName(), metadata, model ) );
 
-    return StatusUtilities.createStatus( stati, "DWD Observation Import" );
+    return StatusUtilities.createStatus( stati, "Observation Import" );
 
   }
 
-  private void parse( final File source, final TimeZone timeZone, final List<NativeObservationDataSet> datasets, final boolean continueWithErrors, final IStatusCollector stati ) throws IOException
+  @Override
+  protected void parse( final File source, final TimeZone timeZone, final boolean continueWithErrors, final IStatusCollector stati ) throws Exception
   {
     final SimpleDateFormat sdf = new SimpleDateFormat( "yyMMdd" ); //$NON-NLS-1$
     sdf.setTimeZone( timeZone );
-
-    int numberOfErrors = 0;
 
     final FileReader fileReader = new FileReader( source );
     final LineNumberReader reader = new LineNumberReader( fileReader );
@@ -136,99 +136,68 @@ public class NativeObservationDWD5minAdapter extends AbstractObservationImporter
 
       while( (lineIn = reader.readLine()) != null )
       {
-        if( !continueWithErrors && numberOfErrors > MAX_NO_OF_ERRORS )
+        if( !continueWithErrors && getErrorCount() > getMaxErrorCount() )
           return;
 
-        try
+        switch( step )
         {
-          switch( step )
-          {
-            case SEARCH_BLOCK_HEADER:
-              final Matcher matcher = DWD_BLOCK_PATTERN.matcher( lineIn );
-              if( matcher.matches() )
+          case SEARCH_BLOCK_HEADER:
+            final Matcher matcher = DWD_BLOCK_PATTERN.matcher( lineIn );
+            if( matcher.matches() )
+            {
+              // String DWDID = matcher.group( 1 );
+              final String startDateString = matcher.group( 2 );
+
+              final Matcher dateMatcher = DATE_PATTERN.matcher( startDateString );
+              if( dateMatcher.matches() )
               {
-                // String DWDID = matcher.group( 1 );
-                final String startDateString = matcher.group( 2 );
-
-                final Matcher dateMatcher = DATE_PATTERN.matcher( startDateString );
-                if( dateMatcher.matches() )
-                {
-                  // System.out.println( "Startdatum Header:" + startDateString );
-                  final Date parseDate = sdf.parse( startDateString );
-                  startDate = parseDate.getTime();
-                }
-                else
-                {
-                  final String msg = String.format( "Das Format des Headers (Startdatum) passt nicht. Input: %s, Pattern: %s", startDateString, DATE_PATTERN.toString() );
-
-                  final IStatus status = new Status( IStatus.INFO, KalypsoCorePlugin.getID(), msg );
-                  throw new CoreException( status );
-                }
+                // System.out.println( "Startdatum Header:" + startDateString );
+                final Date parseDate = sdf.parse( startDateString );
+                startDate = parseDate.getTime();
               }
               else
               {
-                final String msg = String.format( "Header not parsable: : %s", lineIn );
-
-                final IStatus status = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), msg );
-                throw new CoreException( status );
+                stati.add( IStatus.INFO, String.format( "Line %d: Das Format des Headers (Startdatum) passt nicht. Input: %s, Pattern: %s", reader.getLineNumber(), startDateString, DATE_PATTERN.toString() ) );
               }
+            }
+            else
+            {
+              stati.add( IStatus.ERROR, String.format( "Line %d: Header not parsable: : %s", reader.getLineNumber(), lineIn ) );
+              tickErrorCount();
+            }
 
-              step++;
-              break;
+            step++;
+            break;
 
-            case SEARCH_VALUES:
-              valuesLine = valuesLine + 1;
-              for( int i = 0; i < 16; i++ )
+          case SEARCH_VALUES:
+            valuesLine = valuesLine + 1;
+            for( int i = 0; i < 16; i++ )
+            {
+              final String valueString = lineIn.substring( i * 5, 5 * (i + 1) );
+              Double value = new Double( Double.parseDouble( valueString ) ) / 1000;
+              // TODO: Write status
+              if( value > 99.997 )
               {
-                final String valueString = lineIn.substring( i * 5, 5 * (i + 1) );
-                Double value = new Double( Double.parseDouble( valueString ) ) / 1000;
-                // TODO: Write status
-                if( value > 99.997 )
-                {
-                  System.out.println( "Messfehler" );
-                  value = 0.0;
-                }
-                // Datenfilter für 0.0 - um Datenbank nicht mit unnötigen Werten zu füllen (Zur Zeit nicht verwendet, da
-                // Rohdaten benötigt)
-
-                buffer.append( " " ); // separator //$NON-NLS-1$
-                final Date valueDate = new Date( startDate + i * m_timeStep + (valuesLine - 1) * 16 * m_timeStep );
-                buffer.append( valueDate.toString() );
-
-                datasets.add( new NativeObservationDataSet( valueDate, value ) );
+                System.out.println( "Messfehler" );
+                value = 0.0;
               }
-              if( valuesLine == 18 )
-              {
-                step = SEARCH_BLOCK_HEADER;
-                valuesLine = 0;
-              }
-              break;
-            default:
-              break;
-          }
-        }
-        catch( final Exception e )
-        {
-          IStatus status;
-          if( e instanceof CoreException )
-          {
-            final CoreException coreException = (CoreException) e;
-            final IStatus status2 = coreException.getStatus();
-            if( IStatus.INFO != status2.getSeverity() )
-              numberOfErrors++;
+              // Datenfilter für 0.0 - um Datenbank nicht mit unnötigen Werten zu füllen (Zur Zeit nicht verwendet, da
+              // Rohdaten benötigt)
 
-            status = new Status( status2.getSeverity(), KalypsoCorePlugin.getID(), String.format( "Line #%d: %s", reader.getLineNumber(), status2.getMessage() ) );
-          }
-          else
-          {
-            final String message = e.getMessage();
-            status = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), String.format( "Line #%d: %s", reader.getLineNumber(), message ) );
+              buffer.append( " " ); // separator //$NON-NLS-1$
+              final Date valueDate = new Date( startDate + i * m_timeStep + (valuesLine - 1) * 16 * m_timeStep );
+              buffer.append( valueDate.toString() );
 
-            numberOfErrors++;
-          }
-
-          if( numberOfErrors < MAX_NO_OF_ERRORS )
-            stati.add( status );
+              addDataSet( new NativeObservationDataSet( valueDate, value ) );
+            }
+            if( valuesLine == 18 )
+            {
+              step = SEARCH_BLOCK_HEADER;
+              valuesLine = 0;
+            }
+            break;
+          default:
+            break;
         }
       }
     }

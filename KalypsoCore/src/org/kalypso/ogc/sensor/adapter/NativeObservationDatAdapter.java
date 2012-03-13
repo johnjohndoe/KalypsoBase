@@ -42,34 +42,23 @@ package org.kalypso.ogc.sensor.adapter;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.io.LineNumberReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.i18n.Messages;
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.ITupleModel;
-import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 
 /**
  * @author huebsch
+ * @author Dirk Kuch
  */
 public class NativeObservationDatAdapter extends AbstractObservationImporter
 {
-  private final DateFormat m_grapDateFormat = new SimpleDateFormat( "dd MM yyyy HH mm ss" ); //$NON-NLS-1$
-
   // Tag1 Zeit1 N - Ombrometer Fuhlsbuettel [mm]
   // 01.01.1971 07:30:00 0,1
   // 02.01.1971 07:30:00 0
@@ -77,39 +66,16 @@ public class NativeObservationDatAdapter extends AbstractObservationImporter
 
   private static final Pattern DATE_PATTERN = Pattern.compile( "([0-9]{2}\\.[0-9]{2}\\.[0-9]{4}\\s+[0-9]{2}:[0-9]{2}:[0-9]{2}).+?(-??[0-9\\.]+)" ); //$NON-NLS-1$
 
-  private static final int MAX_NO_OF_ERRORS = 30;
+  private static final Pattern SECOND_DATE_PATTERN = Pattern.compile( "([0-9 ]{2}) ([0-9 ]{2}) ([0-9]{4}) ([0-9 ]{2}) ([0-9 ]{2}) ([0-9 ]{2})" ); //$NON-NLS-1$
 
   @Override
-  public IStatus doImport( final File source, final TimeZone timeZone, final String valueType, final boolean continueWithErrors )
+  protected void parse( final File source, final TimeZone timeZone, final boolean continueWithErrors, final IStatusCollector stati ) throws Exception
   {
-    try
-    {
+    final DateFormat sdf = new SimpleDateFormat( "dd MM yyyy HH mm ss" ); //$NON-NLS-1$
+    sdf.setTimeZone( timeZone );
 
-      final MetadataList metaDataList = new MetadataList();
-
-      m_grapDateFormat.setTimeZone( timeZone );
-
-      final IAxis[] axis = createAxis( valueType );
-      final ITupleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
-      setObservation( new SimpleObservation( "href", "titel", metaDataList, tuppelModel ) ); //$NON-NLS-1$ //$NON-NLS-2$
-
-      return new Status( IStatus.OK, KalypsoCorePlugin.getID(), "DAT Timeseries Import" );
-    }
-    catch( final IOException e )
-    {
-      return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), e.getMessage() );
-    }
-  }
-
-  private ITupleModel createTuppelModel( final File source, final IAxis[] axis, final boolean continueWithErrors ) throws IOException
-  {
-    int numberOfErrors = 0;
-
-    final StringBuffer errorBuffer = new StringBuffer();
     final FileReader fileReader = new FileReader( source );
     final LineNumberReader reader = new LineNumberReader( fileReader );
-    final List<Date> dateCollector = new ArrayList<Date>();
-    final List<Double> valueCollector = new ArrayList<Double>();
     String lineIn = null;
 
     // ignore first row (not data here, by DAT format)
@@ -117,8 +83,8 @@ public class NativeObservationDatAdapter extends AbstractObservationImporter
 
     while( (lineIn = reader.readLine()) != null )
     {
-      if( !continueWithErrors && numberOfErrors > MAX_NO_OF_ERRORS )
-        return null;
+      if( !continueWithErrors && getErrorCount() > getMaxErrorCount() )
+        return;
       try
       {
         final Matcher matcher = DATE_PATTERN.matcher( lineIn );
@@ -132,8 +98,8 @@ public class NativeObservationDatAdapter extends AbstractObservationImporter
           // Double value = new Double( matcher.group( 2 ) );
 
           final String formatedDate = dateString.replaceAll( "[:;\\.]", " " ); //$NON-NLS-1$ //$NON-NLS-2$
-          final Pattern datePattern = Pattern.compile( "([0-9 ]{2}) ([0-9 ]{2}) ([0-9]{4}) ([0-9 ]{2}) ([0-9 ]{2}) ([0-9 ]{2})" ); //$NON-NLS-1$
-          final Matcher dateMatcher = datePattern.matcher( formatedDate );
+
+          final Matcher dateMatcher = SECOND_DATE_PATTERN.matcher( formatedDate );
           if( dateMatcher.matches() )
           {
             final StringBuffer buffer = new StringBuffer();
@@ -148,36 +114,27 @@ public class NativeObservationDatAdapter extends AbstractObservationImporter
               // fields
             }
             final String correctDate = buffer.toString();
-            final Date date = m_grapDateFormat.parse( correctDate );
-            dateCollector.add( date );
-            valueCollector.add( value );
+            final Date date = sdf.parse( correctDate );
+
+            addDataSet( new NativeObservationDataSet( date, value ) );
           }
           else
           {
-            errorBuffer.append( "line " + reader.getLineNumber() + Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationDatAdapter.17" ) + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-            numberOfErrors++;
+            stati.add( IStatus.ERROR, String.format( "Line %d: Date not parsable: %s", reader.getLineNumber(), lineIn ) );
+            tickErrorCount();
           }
         }
         else
         {
-          errorBuffer.append( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationDatAdapter.19" ) + reader.getLineNumber() + Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationDatAdapter.20" ) + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-          numberOfErrors++;
+          stati.add( IStatus.ERROR, String.format( "Line %d: Line not parsable: %s", reader.getLineNumber(), lineIn ) );
+          tickErrorCount();
         }
       }
       catch( final Exception e )
       {
-        errorBuffer.append( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationDatAdapter.22" ) + reader.getLineNumber() + Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationDatAdapter.23" ) + e.getLocalizedMessage() + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        numberOfErrors++;
+        stati.add( IStatus.ERROR, String.format( "Line %d: Exception: %s", reader.getLineNumber(), e.getLocalizedMessage() ) );
+        tickErrorCount();
       }
     }
-    final Object[][] tupelData = new Object[dateCollector.size()][2];
-    for( int i = 0; i < dateCollector.size(); i++ )
-    {
-      tupelData[i][0] = dateCollector.get( i );
-      tupelData[i][1] = valueCollector.get( i );
-    }
-    // TODO handle error
-    System.out.println( errorBuffer.toString() );
-    return new SimpleTupleModel( axis, tupelData );
   }
 }
