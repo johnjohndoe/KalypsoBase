@@ -43,20 +43,14 @@ package org.kalypso.ogc.gml.featureview.dialog;
 import java.util.Collection;
 
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.contribs.eclipse.jface.viewers.ArrayTreeContentProvider;
-import org.kalypso.contribs.eclipse.ui.dialogs.TreeSingleSelectionDialog;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.IGMLSchema;
-import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
-import org.kalypso.ogc.gml.filterdialog.model.FeatureTypeLabelProvider;
+import org.kalypso.ogc.gml.util.AddFeatureHandlerUtil;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -87,14 +81,10 @@ public class CreateFeaturePropertyDialog implements IFeatureDialog
   public int open( final Shell shell )
   {
     final GMLWorkspace workspace = m_feature.getWorkspace();
-    final IGMLSchema gmlSchema = m_feature.getFeatureType().getGMLSchema();
 
     if( m_relationType.isInlineAble() && !m_relationType.isLinkAble() )
     {
-      final IFeatureType targetFeatureType = m_relationType.getTargetFeatureType();
-      final IFeatureType[] substituts = GMLSchemaUtilities.getSubstituts( targetFeatureType, gmlSchema, false, true );
-
-      final IFeatureType newFeatureType = chooseFeatureType( shell, substituts );
+      final IFeatureType newFeatureType = AddFeatureHandlerUtil.chooseFeatureType( shell, "New Feature", m_relationType, workspace );
       if( newFeatureType == null )
         return Window.CANCEL;
 
@@ -114,36 +104,6 @@ public class CreateFeaturePropertyDialog implements IFeatureDialog
     return Window.CANCEL;
   }
 
-  private IFeatureType chooseFeatureType( final Shell shell, final IFeatureType[] substituts )
-  {
-    if( substituts.length == 0 )
-    {
-      // May only happen if the type is abstract
-      final String message = String.format( "No implementation(s) of type '%s' available.", getNewLabel() );
-      MessageDialog.openWarning( shell, "New Feature", message );
-      return null;
-    }
-
-    if( substituts.length == 1 )
-      return substituts[0];
-
-    /* Let user choose */
-    final String message = "Please choose the type of the new feature:";
-
-    final ILabelProvider labelProvider = new FeatureTypeLabelProvider( IAnnotation.ANNO_NAME );
-    final TreeSingleSelectionDialog dialog = new TreeSingleSelectionDialog( shell, substituts, new ArrayTreeContentProvider(), labelProvider, message );
-// ListSelectionDialog dialog = new ListSelectionDialog( shell, substituts, new ArrayContentProvider(), labelProvider,
-// message );
-
-    if( dialog.open() == Window.CANCEL )
-      return null;
-
-    return (IFeatureType) dialog.getResult()[0];
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog#collectChanges(java.util.Collection)
-   */
   @Override
   public void collectChanges( final Collection<FeatureChange> c )
   {
@@ -170,8 +130,6 @@ public class CreateFeaturePropertyDialog implements IFeatureDialog
 
   protected String getNewLabel( )
   {
-    final String label = m_relationType.getTargetFeatureType().getAnnotation().getValue( IAnnotation.ANNO_NAME );
-    return label;
+    return AddFeatureHandlerUtil.getNewLabel( m_relationType );
   }
-
 }
