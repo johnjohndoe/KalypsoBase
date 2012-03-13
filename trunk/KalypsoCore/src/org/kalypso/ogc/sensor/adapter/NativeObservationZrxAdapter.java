@@ -42,39 +42,23 @@ package org.kalypso.ogc.sensor.adapter;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.io.LineNumberReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.MessageBox;
-import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.i18n.Messages;
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.ITupleModel;
-import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
-import org.kalypso.ogc.sensor.metadata.IMetadataConstants;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 
 /**
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
+ * @author Dirk Kuch
  */
 public class NativeObservationZrxAdapter extends AbstractObservationImporter
 {
-  private final DateFormat m_zrxDateFormat = new SimpleDateFormat( "yyyyMMddHHmm" ); //$NON-NLS-1$
-
-  private final DateFormat m_zrxDateFormatSec = new SimpleDateFormat( "yyyyMMddHHmmss" ); //$NON-NLS-1$
-
   private static Pattern ZRX_HEADER_PATTERN = Pattern.compile( "#.*" ); //$NON-NLS-1$
 
   private static Pattern ZRX_DATA_PATTERN = Pattern.compile( "([0-9]{12,14})\\s+(-??[0-9]+(.[0-9]*))\\s*" ); //$NON-NLS-1$
@@ -83,48 +67,22 @@ public class NativeObservationZrxAdapter extends AbstractObservationImporter
 
   private String m_sName = "titel"; //$NON-NLS-1$
 
-  private static final int MAX_NO_OF_ERRORS = 30;
-
   @Override
-  public IStatus doImport( final File source, final TimeZone timeZone, final String valueType, final boolean continueWithErrors )
+  protected void parse( final File source, final TimeZone timeZone, final boolean continueWithErrors, final IStatusCollector stati ) throws Exception
   {
-    try
-    {
-      final MetadataList metaDataList = new MetadataList();
-      metaDataList.put( IMetadataConstants.MD_ORIGIN, source.getAbsolutePath() );
+    final DateFormat sdf = new SimpleDateFormat( "yyyyMMddHHmm" ); //$NON-NLS-1$
+    final DateFormat sdf2 = new SimpleDateFormat( "yyyyMMddHHmmss" ); //$NON-NLS-1$
+    sdf.setTimeZone( timeZone );
+    sdf2.setTimeZone( timeZone );
 
-      m_zrxDateFormat.setTimeZone( timeZone );
-      m_zrxDateFormatSec.setTimeZone( timeZone );
-
-      final IAxis[] axis = createAxis( valueType );
-      final ITupleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
-      if( tuppelModel == null )
-        return null;
-
-      setObservation( new SimpleObservation( "href", m_sName, metaDataList, tuppelModel ) ); //$NON-NLS-1$
-
-      return new Status( IStatus.OK, KalypsoCorePlugin.getID(), "DAT Timeseries Import" );
-    }
-    catch( final Exception e )
-    {
-      return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), e.getMessage() );
-    }
-  }
-
-  private ITupleModel createTuppelModel( final File source, final IAxis[] axis, boolean continueWithErrors ) throws IOException
-  {
-    int numberOfErrors = 0;
-
-    final StringBuffer errorBuffer = new StringBuffer();
     final FileReader fileReader = new FileReader( source );
     final LineNumberReader reader = new LineNumberReader( fileReader );
-    final List<Date> dateCollector = new ArrayList<Date>();
-    final List<Double> valueCollector = new ArrayList<Double>();
+
     String lineIn = null;
     while( (lineIn = reader.readLine()) != null )
     {
-      if( !continueWithErrors && numberOfErrors > MAX_NO_OF_ERRORS )
-        return null;
+      if( !continueWithErrors && getErrorCount() > getMaxErrorCount() )
+        return;
       try
       {
         Matcher matcher = ZRX_DATA_PATTERN.matcher( lineIn );
@@ -136,24 +94,24 @@ public class NativeObservationZrxAdapter extends AbstractObservationImporter
           {
             try
             {
-              date = m_zrxDateFormatSec.parse( matcher.group( 1 ) );
+              date = sdf2.parse( matcher.group( 1 ) );
             }
             catch( final Exception e )
             {
-              errorBuffer.append( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.11" ) + reader.getLineNumber() + Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.12" ) + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-              numberOfErrors++;
+              stati.add( IStatus.ERROR, String.format( "Line %d: Date not parsable: %s", reader.getLineNumber(), lineIn ) );
+              tickErrorCount();
             }
           }
           else
           {
             try
             {
-              date = m_zrxDateFormat.parse( matcher.group( 1 ) );
+              date = sdf.parse( matcher.group( 1 ) );
             }
             catch( final Exception e )
             {
-              errorBuffer.append( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.14" ) + reader.getLineNumber() + Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.15" ) + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-              numberOfErrors++;
+              stati.add( IStatus.ERROR, String.format( "Line %d: Date not parsable: %s", reader.getLineNumber(), lineIn ) );
+              tickErrorCount();
             }
           }
           try
@@ -162,11 +120,11 @@ public class NativeObservationZrxAdapter extends AbstractObservationImporter
           }
           catch( final Exception e )
           {
-            errorBuffer.append( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.17" ) + reader.getLineNumber() + Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.18" ) + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-            numberOfErrors++;
+            stati.add( IStatus.ERROR, String.format( "Line %d: Value not parsable: %s", reader.getLineNumber(), lineIn ) );
+            tickErrorCount();
           }
-          dateCollector.add( date );
-          valueCollector.add( value );
+
+          addDataSet( new NativeObservationDataSet( date, value ) );
         }
         else
         {
@@ -179,37 +137,16 @@ public class NativeObservationZrxAdapter extends AbstractObservationImporter
           }
           else
           {
-            errorBuffer.append( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.20" ) + reader.getLineNumber() + Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.21" ) + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-            numberOfErrors++;
+            stati.add( IStatus.ERROR, String.format( "Line %d: Line not parsable: %s", reader.getLineNumber(), lineIn ) );
+            tickErrorCount();
           }
         }
       }
       catch( final Exception e )
       {
-        errorBuffer.append( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.23" ) + reader.getLineNumber() + Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.24" ) + e.getLocalizedMessage() + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        numberOfErrors++;
+        stati.add( IStatus.ERROR, String.format( "Line %d: Exception: %s", reader.getLineNumber(), e.getLocalizedMessage() ) );
+        tickErrorCount();
       }
     }
-    if( !continueWithErrors && numberOfErrors > MAX_NO_OF_ERRORS )
-    {
-
-      final MessageBox messageBox = new MessageBox( null, SWT.ICON_QUESTION | SWT.YES | SWT.NO );
-      messageBox.setMessage( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.26" ) ); //$NON-NLS-1$
-      messageBox.setText( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter.27" ) ); //$NON-NLS-1$
-      if( messageBox.open() == SWT.NO )
-        return null;
-      else
-        continueWithErrors = true;
-    }
-    // TODO handle error
-    System.out.println( errorBuffer.toString() );
-
-    final Object[][] tuppleData = new Object[dateCollector.size()][2];
-    for( int i = 0; i < dateCollector.size(); i++ )
-    {
-      tuppleData[i][0] = dateCollector.get( i );
-      tuppleData[i][1] = valueCollector.get( i );
-    }
-    return new SimpleTupleModel( axis, tuppleData );
   }
 }

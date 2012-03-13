@@ -45,6 +45,7 @@ import java.util.TimeZone;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 
@@ -65,5 +66,11 @@ public class NativeObservationZmlAdapter extends AbstractObservationImporter
     {
       return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), e.getMessage() );
     }
+  }
+
+  @Override
+  protected void parse( final File source, final TimeZone timeZone, final boolean continueWithErrors, final IStatusCollector stati ) throws Exception
+  {
+    // nothing to do
   }
 }

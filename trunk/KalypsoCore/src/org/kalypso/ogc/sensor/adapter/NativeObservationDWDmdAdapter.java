@@ -42,43 +42,28 @@ package org.kalypso.ogc.sensor.adapter;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.io.LineNumberReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.MessageBox;
-import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.i18n.Messages;
-import org.kalypso.ogc.sensor.IAxis;
-import org.kalypso.ogc.sensor.ITupleModel;
-import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 
 /**
  * @author Jessica Huebsch, <a href="mailto:j.huebsch@tuhh.de">j.huebsch@tuhh.de</a>
+ * @author Dirk Kuch
  */
 public class NativeObservationDWDmdAdapter extends AbstractObservationImporter
 {
-  private final DateFormat m_dwdMDDateFormat = new SimpleDateFormat( "ddMMyyyyHHmmss" ); //$NON-NLS-1$
+  private static final Pattern DWD_MD_FIRST_HEADER_PATTERN = Pattern.compile( "[\\d]{5}[\\d\\w\\s]{15}(.{30}).+?" ); //$NON-NLS-1$
 
-  public static Pattern DWD_MD_FIRST_HEADER_PATTERN = Pattern.compile( "[\\d]{5}[\\d\\w\\s]{15}(.{30}).+?" ); //$NON-NLS-1$
+  private static final Pattern DWD_MD_SECOND_HEADER_PATTERN = Pattern.compile( ".{20}(.{5}).{4}([0-9]{1}).{28}(.{5}).+?" ); //$NON-NLS-1$
 
-  public static Pattern DWD_MD_SECOND_HEADER_PATTERN = Pattern.compile( ".{20}(.{5}).{4}([0-9]{1}).{28}(.{5}).+?" ); //$NON-NLS-1$
-
-  public static Pattern DWD_MD_DATA_PATTERN = Pattern.compile( "([0-9]{5})([\\s\\d]{2}[\\s\\d]{2}[0-9]{4}[\\d\\s]{2}[\\d\\s]{2}[\\s\\d]{2})(.{1})(.+?)" ); //$NON-NLS-1$
-
-  private String m_name;
+  private static final Pattern DWD_MD_DATA_PATTERN = Pattern.compile( "([0-9]{5})([\\s\\d]{2}[\\s\\d]{2}[0-9]{4}[\\d\\s]{2}[\\d\\s]{2}[\\s\\d]{2})(.{1})(.+?)" ); //$NON-NLS-1$
 
   private int m_intervall;
 
@@ -86,59 +71,37 @@ public class NativeObservationDWDmdAdapter extends AbstractObservationImporter
 
   private int m_div;
 
+  private String m_name;
+
   private static final int SEARCH_BLOCK_HEADER = 0;
 
   private static final int SEARCH_VALUES = 1;
 
-  private static final int MAX_NO_OF_ERRORS = 30;
-
   @Override
-  public IStatus doImport( final File source, final TimeZone timeZone, final String valueType, final boolean continueWithErrors )
+  protected void parse( final File source, final TimeZone timeZone, final boolean continueWithErrors, final IStatusCollector stati ) throws Exception
   {
-    try
-    {
-      final MetadataList metaDataList = new MetadataList();
+    final DateFormat sdf = new SimpleDateFormat( "ddMMyyyyHHmmss" ); //$NON-NLS-1$
+    sdf.setTimeZone( timeZone );
 
-      m_dwdMDDateFormat.setTimeZone( timeZone );
-
-      final IAxis[] axis = createAxis( valueType );
-      final ITupleModel tuppelModel = createTuppelModel( source, axis, continueWithErrors );
-      if( tuppelModel == null )
-        return null;
-
-      setObservation( new SimpleObservation( "href", m_name, metaDataList, tuppelModel ) ); //$NON-NLS-1$ //$NON-NLS-2$
-
-      return new Status( IStatus.OK, KalypsoCorePlugin.getID(), "DWD Timeseries Import" );
-    }
-    catch( final Exception e )
-    {
-      return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), e.getMessage() );
-    }
-  }
-
-  private ITupleModel createTuppelModel( final File source, final IAxis[] axis, boolean continueWithErrors ) throws IOException
-  {
-
-    int numberOfErrors = 0;
-
-    final StringBuffer errorBuffer = new StringBuffer();
     final FileReader fileReader = new FileReader( source );
     final LineNumberReader reader = new LineNumberReader( fileReader );
-    final List<Date> dateCollector = new ArrayList<Date>();
-    final List<Double> valueCollector = new ArrayList<Double>();
     String lineIn = null;
+
     int step = SEARCH_BLOCK_HEADER;
+
     while( (lineIn = reader.readLine()) != null )
     {
-      if( !continueWithErrors && numberOfErrors > MAX_NO_OF_ERRORS )
-        return null;
+      if( !continueWithErrors && getErrorCount() > getMaxErrorCount() )
+        return;
+
       switch( step )
       {
         case SEARCH_BLOCK_HEADER:
           Matcher matcher = DWD_MD_FIRST_HEADER_PATTERN.matcher( lineIn );
           if( matcher.matches() )
           {
-            m_name = matcher.group( 1 ).trim();
+            m_name = matcher.group( 1 ).trim(); // TODO set as observation href or id
+
             lineIn = reader.readLine();
             matcher = DWD_MD_SECOND_HEADER_PATTERN.matcher( lineIn );
             if( matcher.matches() )
@@ -158,8 +121,8 @@ public class NativeObservationDWDmdAdapter extends AbstractObservationImporter
           }
           else
           {
-            errorBuffer.append( "line " + reader.getLineNumber() + Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationDWDmdAdapter.10" ) + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-            numberOfErrors++;
+            stati.add( IStatus.ERROR, String.format( "Line %d: Line not parsable: %s", reader.getLineNumber(), lineIn ) );
+            tickErrorCount();
           }
           step++;
           break;
@@ -171,12 +134,12 @@ public class NativeObservationDWDmdAdapter extends AbstractObservationImporter
             String valueLine = null;
             try
             {
-              date = m_dwdMDDateFormat.parse( matcher.group( 2 ) );
+              date = sdf.parse( matcher.group( 2 ) );
             }
             catch( final Exception e )
             {
-              errorBuffer.append( "line " + reader.getLineNumber() + Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationDWDmdAdapter.13" ) + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-              numberOfErrors++;
+              stati.add( IStatus.ERROR, String.format( "Line %d: Date not parsable: %s", reader.getLineNumber(), lineIn ) );
+              tickErrorCount();
             }
             try
             {
@@ -189,9 +152,9 @@ public class NativeObservationDWDmdAdapter extends AbstractObservationImporter
                 {
                   final String valueString = valueLine.substring( i * 5, 5 * (i + 1) );
                   final Double value = new Double( Double.parseDouble( valueString ) ) / m_div;
-                  valueCollector.add( value );
                   final Date valueDate = new Date( startDate + i * m_intervall );
-                  dateCollector.add( valueDate );
+
+                  addDataSet( new NativeObservationDataSet( valueDate, value ) );
                 }
               }
               // No precipitation the whole day (24 hours * 12 values = 288 values)
@@ -201,9 +164,9 @@ public class NativeObservationDWDmdAdapter extends AbstractObservationImporter
                 final long startDate = date.getTime();
                 for( int i = 0; i < 288; i++ )
                 {
-                  valueCollector.add( value );
                   final Date valueDate = new Date( startDate + i * m_intervall );
-                  dateCollector.add( valueDate );
+
+                  addDataSet( new NativeObservationDataSet( valueDate, value ) );
                 }
               }
               else if( "A".equals( label ) ) //$NON-NLS-1$
@@ -212,9 +175,9 @@ public class NativeObservationDWDmdAdapter extends AbstractObservationImporter
                 final long startDate = date.getTime();
                 for( int i = 0; i < 12; i++ )
                 {
-                  valueCollector.add( value );
                   final Date valueDate = new Date( startDate + i * m_intervall );
-                  dateCollector.add( valueDate );
+
+                  addDataSet( new NativeObservationDataSet( valueDate, value ) );
                 }
               }
               else if( "E".equals( label ) ) //$NON-NLS-1$
@@ -224,14 +187,14 @@ public class NativeObservationDWDmdAdapter extends AbstractObservationImporter
             }
             catch( final Exception e )
             {
-              errorBuffer.append( "line " + reader.getLineNumber() + Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationDWDmdAdapter.20" ) + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-              numberOfErrors++;
+              stati.add( IStatus.ERROR, String.format( "Line %d: Value not parsable: %s", reader.getLineNumber(), lineIn ) );
+              tickErrorCount();
             }
           }
           else
           {
-            errorBuffer.append( "line " + reader.getLineNumber() + Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationDWDmdAdapter.23" ) + lineIn + "\"\n" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-            numberOfErrors++;
+            stati.add( IStatus.ERROR, String.format( "Line %d: Line not parsable: %s", reader.getLineNumber(), lineIn ) );
+            tickErrorCount();
           }
           break;
         default:
@@ -239,26 +202,6 @@ public class NativeObservationDWDmdAdapter extends AbstractObservationImporter
       }
 
     }
-    if( !continueWithErrors && numberOfErrors > MAX_NO_OF_ERRORS )
-    {
 
-      final MessageBox messageBox = new MessageBox( null, SWT.ICON_QUESTION | SWT.YES | SWT.NO );
-      messageBox.setMessage( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationDWDmdAdapter.25" ) ); //$NON-NLS-1$
-      messageBox.setText( Messages.getString( "org.kalypso.ogc.sensor.adapter.NativeObservationDWDmdAdapter.26" ) ); //$NON-NLS-1$
-      if( messageBox.open() == SWT.NO )
-        return null;
-      else
-        continueWithErrors = true;
-    }
-    // TODO handle error
-    System.out.println( errorBuffer.toString() );
-
-    final Object[][] tuppleData = new Object[dateCollector.size()][2];
-    for( int i = 0; i < dateCollector.size(); i++ )
-    {
-      tuppleData[i][0] = dateCollector.get( i );
-      tuppleData[i][1] = valueCollector.get( i );
-    }
-    return new SimpleTupleModel( axis, tuppleData );
   }
 }

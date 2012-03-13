@@ -41,67 +41,51 @@
 package org.kalypso.ogc.sensor.adapter;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
+import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
+import org.kalypso.ogc.sensor.metadata.IMetadataConstants;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 
 /**
  * @author Gernot Belger
+ * @author Dirk Kuch
  */
 public abstract class AbstractObservationImporter implements INativeObservationAdapter, IExecutableExtension
 {
-  private String m_title;
-
   private String m_axisTypeValue;
+
+  List<NativeObservationDataSet> m_datasets = new ArrayList<>();
+
+  private int m_errorCount = 0;
 
   private String m_id;
 
   private IObservation m_observation;
 
-  @Override
-  public final void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
-  {
-    m_id = config.getAttribute( "id" ); //$NON-NLS-1$
-    m_title = config.getAttribute( "label" ); //$NON-NLS-1$
-    m_axisTypeValue = config.getAttribute( "axisType" ); //$NON-NLS-1$
-  }
+  private String m_title;
 
-  protected void setObservation( final IObservation observation )
-  {
-    m_observation = observation;
-  }
+  private static final int MAX_NO_OF_ERRORS = 30;
 
-  @Override
-  public IObservation getObservation( )
+  protected void addDataSet( final NativeObservationDataSet dataset )
   {
-    return m_observation;
-  }
-
-  @Override
-  public String getId( )
-  {
-    return m_id;
-  }
-
-  @Override
-  public final String toString( )
-  {
-    return m_title;
-  }
-
-  @Override
-  public final String getAxisTypeValue( )
-  {
-    return m_axisTypeValue;
+    m_datasets.add( dataset );
   }
 
   @Deprecated
@@ -112,6 +96,22 @@ public abstract class AbstractObservationImporter implements INativeObservationA
     final IAxis valueAxis = TimeseriesUtils.createDefaultAxis( valueType );
 
     return new IAxis[] { dateAxis, valueAxis };
+  }
+
+  protected ITupleModel createTuppelModel( final String valueType )
+  {
+    final IAxis[] axis = createAxis( valueType );
+    final Object[][] tupelData = new Object[m_datasets.size()][2];
+
+    for( int index = 0; index < m_datasets.size(); index++ )
+    {
+      final NativeObservationDataSet dataSet = m_datasets.get( index );
+
+      tupelData[index][0] = dataSet.getDate();
+      tupelData[index][1] = dataSet.getValue();
+    }
+
+    return new SimpleTupleModel( axis, tupelData );
   }
 
   /**
@@ -128,20 +128,86 @@ public abstract class AbstractObservationImporter implements INativeObservationA
     return doImport( file, timeZone, m_axisTypeValue, continueWithErrors );
   }
 
-  protected ITupleModel createTuppelModel( final String valueType, final List<NativeObservationDataSet> datasets )
+  /**
+   * @see org.kalypso.ogc.sensor.adapter.INativeObservationAdapter#doImport(java.io.File, java.util.TimeZone,
+   *      java.lang.String, boolean)
+   */
+  @Override
+  public IStatus doImport( final File source, final TimeZone timeZone, final String valueType, final boolean continueWithErrors )
   {
-    final IAxis[] axis = createAxis( valueType );
-    final Object[][] tupelData = new Object[datasets.size()][2];
+    final IStatusCollector stati = new StatusCollector( KalypsoCorePlugin.getID() );
 
-    for( int index = 0; index < datasets.size(); index++ )
+    try
     {
-      final NativeObservationDataSet dataSet = datasets.get( index );
-
-      tupelData[index][0] = dataSet.getDate();
-      tupelData[index][1] = dataSet.getValue();
+      parse( source, timeZone, continueWithErrors, stati );
+    }
+    catch( final Exception ex )
+    {
+      final IStatus status = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), ex.getMessage() );
+      stati.add( status );
     }
 
-    return new SimpleTupleModel( axis, tupelData );
+    final MetadataList metadata = new MetadataList();
+    metadata.put( IMetadataConstants.MD_ORIGIN, source.getAbsolutePath() );
+
+    final ITupleModel model = createTuppelModel( valueType );
+    setObservation( new SimpleObservation( source.getAbsolutePath(), source.getName(), metadata, model ) );
+
+    return StatusUtilities.createStatus( stati, "Observation Import" );
+  }
+
+  protected abstract void parse( File source, TimeZone timeZone, boolean continueWithErrors, IStatusCollector stati ) throws Exception;
+
+  @Override
+  public final String getAxisTypeValue( )
+  {
+    return m_axisTypeValue;
+  }
+
+  protected int getErrorCount( )
+  {
+    return m_errorCount;
+  }
+
+  @Override
+  public String getId( )
+  {
+    return m_id;
+  }
+
+  protected int getMaxErrorCount( )
+  {
+    return MAX_NO_OF_ERRORS;
+  }
+
+  @Override
+  public IObservation getObservation( )
+  {
+    return m_observation;
+  }
+
+  @Override
+  public final void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
+  {
+    m_id = config.getAttribute( "id" ); //$NON-NLS-1$
+    m_title = config.getAttribute( "label" ); //$NON-NLS-1$
+    m_axisTypeValue = config.getAttribute( "axisType" ); //$NON-NLS-1$
+  }
+
+  protected void setObservation( final IObservation observation )
+  {
+    m_observation = observation;
+  }
+
+  protected void tickErrorCount( )
+  {
+    m_errorCount++;
+  }
+
+  @Override
+  public final String toString( )
+  {
+    return m_title;
   }
 
 }
