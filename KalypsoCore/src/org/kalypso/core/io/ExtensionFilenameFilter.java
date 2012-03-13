@@ -55,7 +55,7 @@ public class ExtensionFilenameFilter implements FilenameFilter
   /**
    * The file extension.
    */
-  private String m_extension;
+  private final String m_extension;
 
   /**
    * The constructor.
@@ -63,7 +63,7 @@ public class ExtensionFilenameFilter implements FilenameFilter
    * @param extension
    *          The file extension.
    */
-  public ExtensionFilenameFilter( String extension )
+  public ExtensionFilenameFilter( final String extension )
   {
     m_extension = extension;
   }
@@ -72,10 +72,10 @@ public class ExtensionFilenameFilter implements FilenameFilter
    * @see java.io.FilenameFilter#accept(java.io.File, java.lang.String)
    */
   @Override
-  public boolean accept( File dir, String name )
+  public boolean accept( final File dir, final String name )
   {
     /* Get the extension. */
-    String extension = FilenameUtils.getExtension( name );
+    final String extension = FilenameUtils.getExtension( name );
     if( extension == null || extension.length() == 0 )
     {
       /* TRUE: File has no extension and none is wanted. */

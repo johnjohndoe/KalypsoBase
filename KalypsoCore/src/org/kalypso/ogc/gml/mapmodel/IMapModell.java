@@ -87,7 +87,7 @@ public interface IMapModell
 
   /**
    * This function returns the name of the coordinate system used.
-   *
+   * 
    * @return The name of the coordinate system.
    */
   String getCoordinatesSystem( );
@@ -118,7 +118,7 @@ public interface IMapModell
 
   /**
    * Iterates through all themes of this modell, starting at the given theme.
-   *
+   * 
    * @see #accept(KalypsoThemeVisitor, int).
    */
   void accept( final IKalypsoThemeVisitor visitor, final int depth, final IKalypsoTheme theme );
@@ -141,7 +141,7 @@ public interface IMapModell
    * Check if this map modell is still beeing filled with themes.<br>
    * Implementors must ensure, that this flag becomes eventually <code>true</code> (even if there are errors while
    * loading).
-   *
+   * 
    * @return <code>false</code> if this map modell is under construction (for example if many theme are about to be
    *         added in the near future...)
    */

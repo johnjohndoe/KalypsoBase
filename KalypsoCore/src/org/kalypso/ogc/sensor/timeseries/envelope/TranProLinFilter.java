@@ -81,7 +81,7 @@ public class TranProLinFilter extends AbstractObservationFilter
   private static final String FILTER_ID = "TranProLinFilter"; //$NON-NLS-1$
 
   final static String DATA_SOURCE = IDataSourceItem.FILTER_SOURCE + FILTER_ID;
-  
+
   private final double m_operandBegin;
 
   private final double m_operandEnd;
@@ -130,12 +130,12 @@ public class TranProLinFilter extends AbstractObservationFilter
       final IAxis[] sourceAxes = obs.getAxes();
       m_axes = buildTargetAxes( sourceAxes );
     }
-    
+
     m_metadata = MetadataHelper.clone( obs.getMetadataList() );
     final DataSourceHandler dataSourceHandler = new DataSourceHandler( m_metadata );
     m_dataSourceIndex = dataSourceHandler.addDataSource( DATA_SOURCE, DATA_SOURCE );
   }
-  
+
   @Override
   public MetadataList getMetadataList( )
   {
@@ -281,11 +281,11 @@ public class TranProLinFilter extends AbstractObservationFilter
   private void addTargetAxes( final IAxis[] sourceAxes, final Collection<IAxis> targetAxes, final IAxis axis )
   {
     addTargetAxis( targetAxes, axis );
-    
+
     final IAxis statusAxis = AxisUtils.findStatusAxis( sourceAxes, axis );
     if( statusAxis != null )
       addTargetAxis( targetAxes, statusAxis );
-    
+
     final IAxis sourceAxis = AxisUtils.findDataSourceAxis( sourceAxes, axis );
     if( sourceAxis != null )
       addTargetAxis( targetAxes, sourceAxis );
@@ -353,7 +353,7 @@ public class TranProLinFilter extends AbstractObservationFilter
       final double checkedValue = checkValue( type, changedValue );
       return new Double( checkedValue );
     }
-    else if(  AxisUtils.isDataSrcAxis( axis ) )
+    else if( AxisUtils.isDataSrcAxis( axis ) )
     {
       return m_dataSourceIndex;
     }

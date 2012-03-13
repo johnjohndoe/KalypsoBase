@@ -145,7 +145,7 @@ public abstract class AbstractLayoutPart implements ILayoutPart
 
   /**
    * Does nothing by default, overwrite to implement.
-   *
+   * 
    * @see org.kalypso.hwv.ui.wizards.calculation.modelpages.layout.ILayoutPart#refresh()
    */
   @Override
@@ -155,7 +155,7 @@ public abstract class AbstractLayoutPart implements ILayoutPart
 
   /**
    * Does nothing by default, overwrite to implement.
-   *
+   * 
    * @see org.kalypso.hwv.ui.wizards.calculation.modelpages.layout.ILayoutPart#activate()
    */
   @Override
@@ -166,7 +166,7 @@ public abstract class AbstractLayoutPart implements ILayoutPart
 
   /**
    * Does nothing by default, overwrite to implement.
-   *
+   * 
    * @see org.kalypso.hwv.ui.wizards.calculation.modelpages.layout.ILayoutPart#deactivate()
    */
   @Override
@@ -177,7 +177,7 @@ public abstract class AbstractLayoutPart implements ILayoutPart
 
   /**
    * Does nothing by default, overwrite to implement.
-   *
+   * 
    * @see org.kalypso.hwv.ui.wizards.calculation.modelpages.layout.ILayoutPart#restoreSelection(boolean)
    */
   @SuppressWarnings("unused")
@@ -189,7 +189,7 @@ public abstract class AbstractLayoutPart implements ILayoutPart
 
   /**
    * Does nothing by default, overwrite to implement.
-   *
+   * 
    * @see org.kalypso.hwv.ui.wizards.calculation.modelpages.layout.ILayoutPart#saveSelection()
    */
   @SuppressWarnings("unused")
@@ -201,7 +201,7 @@ public abstract class AbstractLayoutPart implements ILayoutPart
 
   /**
    * Does nothing by default, overwrite to implement.
-   *
+   * 
    * @see org.kalypso.hwv.ui.wizards.calculation.modelpages.layout.ILayoutPart#saveData(boolean)
    */
   @SuppressWarnings("unused")

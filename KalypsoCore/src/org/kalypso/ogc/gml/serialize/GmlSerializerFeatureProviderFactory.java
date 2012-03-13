@@ -47,7 +47,7 @@ import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 
 /**
  * A provider factory which directly loads the workspace.
- *
+ * 
  * @author Gernot Belger
  */
 public class GmlSerializerFeatureProviderFactory implements IFeatureProviderFactory

@@ -47,7 +47,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * This interface provides a set of functions for listeners, that should be notified in special events of the mapPanel.
- *
+ * 
  * @author Holger Albert
  */
 public interface IMapPanelListener
@@ -58,7 +58,7 @@ public interface IMapPanelListener
 
   /**
    * This function is invoked from the mapPanel, in cases its message has changed.
-   *
+   * 
    * @param message
    *          The new message, which is set in the mapPanel.
    */

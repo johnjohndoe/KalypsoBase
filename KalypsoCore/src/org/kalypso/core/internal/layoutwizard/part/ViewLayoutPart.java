@@ -58,7 +58,7 @@ import org.kalypso.core.layoutwizard.part.AbstractLayoutPart;
 
 /**
  * A layout part which checks for view ids.
- *
+ * 
  * @author Holger Albert, Gernot Belger
  */
 public class ViewLayoutPart extends AbstractLayoutPart

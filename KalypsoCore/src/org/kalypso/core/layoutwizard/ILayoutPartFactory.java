@@ -43,14 +43,14 @@ package org.kalypso.core.layoutwizard;
 /**
  * This interface provides functions to create layout parts. Will be used by the extension point
  * layout#layoutPartFactory.
- *
+ * 
  * @author Holger Albert
  */
 public interface ILayoutPartFactory
 {
   /**
    * This function creates the layout part.
-   *
+   * 
    * @param id
    *          The id of the layout part.
    * @param context

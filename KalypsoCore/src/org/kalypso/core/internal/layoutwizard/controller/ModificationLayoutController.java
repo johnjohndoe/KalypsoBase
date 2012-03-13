@@ -47,7 +47,7 @@ import org.kalypso.core.layoutwizard.IModificationProvider;
 
 /**
  * Updates the target part if the source part is modified.
- *
+ * 
  * @author Gernot Belger
  */
 public class ModificationLayoutController implements ILayoutController

@@ -47,7 +47,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * Some helper methods for easy handling of linked features.
- *
+ * 
  * @author Gernot Belger
  */
 public final class FeatureLinkUtils

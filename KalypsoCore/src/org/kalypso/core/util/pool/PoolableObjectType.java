@@ -60,7 +60,7 @@ public class PoolableObjectType implements IPoolableObjectType
 
   /**
    * Constructor. Defaults ignoreExceptions to false.
-   *
+   * 
    * @param type
    *          type of object to load
    * @param source
@@ -75,7 +75,7 @@ public class PoolableObjectType implements IPoolableObjectType
 
   /**
    * Constructor.
-   *
+   * 
    * @param type
    *          type of object to load
    * @param source

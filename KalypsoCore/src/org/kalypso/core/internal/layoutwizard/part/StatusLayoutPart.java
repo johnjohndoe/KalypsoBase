@@ -51,7 +51,7 @@ import org.kalypso.core.status.StatusComposite;
 /**
  * Delegates its content to another layout part, but shows a status composite if the initialisation of the delegated
  * part fails.
- *
+ * 
  * @author Gernot Belger
  */
 public class StatusLayoutPart extends AbstractLayoutPart

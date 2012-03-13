@@ -44,7 +44,7 @@ import java.net.URL;
 
 /**
  * Identifies an object than is eligible to be pooled.
- *
+ * 
  * @author schlienger
  */
 public interface IPoolableObjectType
