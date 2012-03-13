@@ -65,7 +65,7 @@ public class NativeObservationDatAdapter extends AbstractObservationImporter
   // 02.01.1971 07:30:00 0
   // 03.01.1971 07:30:00 0
 
-  public static final String SOURCE_ID = "source://native.observation.dat.import";
+  public static final String SOURCE_ID = "source://native.observation.dat.import"; //$NON-NLS-1$
 
   private static final Pattern DATE_PATTERN = Pattern.compile( "([0-9]{2}\\.[0-9]{2}\\.[0-9]{4}\\s+[0-9]{2}:[0-9]{2}:[0-9]{2}).+?(-??[0-9\\.]+)" ); //$NON-NLS-1$
 

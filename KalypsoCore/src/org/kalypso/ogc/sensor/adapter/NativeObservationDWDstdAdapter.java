@@ -61,7 +61,7 @@ import org.kalypso.ogc.sensor.status.KalypsoStati;
  */
 public class NativeObservationDWDstdAdapter extends AbstractObservationImporter
 {
-  public static final String SOURCE_ID = "source://native.observation.dwd.std.import";
+  public static final String SOURCE_ID = "source://native.observation.dwd.std.import"; //$NON-NLS-1$
 
   private static final Pattern DWD_STD_PATTERN = Pattern.compile( "\\s\\s\\s\\s([0-9]{5})([0-9]{4}[0-9]{2}[0-9]{2})(.+?)" ); //$NON-NLS-1$
 

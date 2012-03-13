@@ -181,7 +181,7 @@ public abstract class AbstractObservationImporter implements INativeObservationA
     final ITupleModel model = createTuppelModel( metadata, valueType );
     setObservation( new SimpleObservation( source.getAbsolutePath(), source.getName(), metadata, model ) );
 
-    return StatusUtilities.createStatus( stati, "Status Native Observation Adapter - Observation Import" );
+    return StatusUtilities.createStatus( stati, "Parsing of input file" );
   }
 
   protected abstract void parse( File source, TimeZone timeZone, boolean continueWithErrors, IStatusCollector stati ) throws Exception;

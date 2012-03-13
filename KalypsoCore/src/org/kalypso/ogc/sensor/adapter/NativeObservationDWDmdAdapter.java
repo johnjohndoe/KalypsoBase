@@ -60,7 +60,7 @@ import org.kalypso.ogc.sensor.status.KalypsoStati;
  */
 public class NativeObservationDWDmdAdapter extends AbstractObservationImporter
 {
-  public static final String SOURCE_ID = "source://native.observation.dwd.md.import";
+  public static final String SOURCE_ID = "source://native.observation.dwd.md.import"; //$NON-NLS-1$
 
   public static final String SOURCE_ID_MISSING_VALUE = SOURCE_ID + MISSING_VALUE_POSTFIX;
 
