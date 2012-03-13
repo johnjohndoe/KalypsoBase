@@ -63,8 +63,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * This dialog displays a list of elements and lets the user select them.
- *
+ * This dialog displays a list of elements and lets the user select them.<br/>
+ * TODO: comment, what is the difference to {@link org.eclipse.ui.dialogs.ListSelectionDialog}?
+ * 
  * @author Holger Albert
  */
 public class ListSelectionDialog<T> extends Dialog
