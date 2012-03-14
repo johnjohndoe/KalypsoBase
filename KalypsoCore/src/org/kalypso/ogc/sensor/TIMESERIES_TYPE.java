@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,50 +38,34 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model.references;
+package org.kalypso.ogc.sensor;
 
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.adapter.AbstractObservationImporter;
-import org.kalypso.ogc.sensor.status.KalypsoStati;
-import org.kalypso.repository.IDataSourceItem;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 
 /**
  * @author Dirk Kuch
  */
-public final class ZmlValues
+public enum TIMESERIES_TYPE
 {
-  private ZmlValues( )
+  eSumValue,
+  eCurrentValue,
+  eDateValue,
+  eBooleanValue;
+
+  public static TIMESERIES_TYPE getType( final String axisType )
   {
-  }
+    switch( axisType )
+    {
+      case ITimeseriesConstants.TYPE_RAINFALL:
+        return eSumValue;
+      case ITimeseriesConstants.TYPE_DATE:
+        return eDateValue;
+      case ITimeseriesConstants.TYPE_POLDER_CONTROL:
+        return eBooleanValue;
 
-  public static boolean isStuetzstelle( final IZmlModelValueCell reference ) throws SensorException
-  {
-    return isStuetzstelle( reference.getStatus(), reference.getDataSource() );
-  }
+      default:
+        return eCurrentValue;
+    }
 
-  public static boolean isStuetzstelle( final Number status, final String source )
-  {
-    if( Objects.allNull( status, source ) )
-      return false;
-    else if( Objects.isNotNull( status ) && (status.intValue() & KalypsoStati.BIT_USER_MODIFIED) != 0 )
-      return true;
-    else if( Objects.isNull( source ) )
-      return true;
-    else if( source.contains( AbstractObservationImporter.MISSING_VALUE_POSTFIX ) )
-      return false;
-
-    return !source.startsWith( IDataSourceItem.FILTER_SOURCE ); //$NON-NLS-1$
-  }
-
-  public static boolean isNullstelle( final Number value, final Number status, final String source )
-  {
-    if( isStuetzstelle( status, source ) )
-      return false;
-
-    if( Objects.isNull( value ) )
-      return false;
-
-    return value.doubleValue() == 0.0;
   }
 }

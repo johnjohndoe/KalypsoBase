@@ -50,7 +50,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -78,9 +77,8 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.TIMESERIES_TYPE;
 import org.kalypso.ogc.sensor.impl.DefaultAxis;
-import org.kalypso.ogc.sensor.impl.SimpleObservation;
-import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
@@ -129,22 +127,6 @@ public final class TimeseriesUtils implements ITimeseriesConstants
   private TimeseriesUtils( )
   {
     // no instantiation
-  }
-
-  /**
-   * Allows to overwrite the location of the config.properties file.<br>
-   * If international alternatives are present these will be used (i.e. config_de.properties instead of
-   * config.properties).
-   * 
-   * @param configUrl
-   *          Base location of the config file(s) (i.e. getClass().getResource("resources")).
-   * @param basename
-   *          base name of the config file (i.e. "config")
-   */
-  public static void setConfigUrl( final URL configUrl, final String basename )
-  {
-    CONFIG_BASE_URL = configUrl;
-    BASENAME = basename;
   }
 
   /**
@@ -391,22 +373,6 @@ public final class TimeseriesUtils implements ITimeseriesConstants
   }
 
   /**
-   * <p>
-   * Transforms physical units to TYPE-Constant used in Axis (best guess)
-   * </p>
-   * <p>
-   * Uses UNIT_TO_TYPE_ Keys in config.properties
-   * </p>
-   * 
-   * @param unit
-   * @return type
-   */
-  public static String getTypeForUnit( final String unit )
-  {
-    return getProperties().getProperty( "UNIT_TO_TYPE_" + unit, "" ); //$NON-NLS-1$ //$NON-NLS-2$
-  }
-
-  /**
    * @return true if the axis type is known to be a key axis
    */
   public static boolean isKey( final String type )
@@ -557,52 +523,6 @@ public final class TimeseriesUtils implements ITimeseriesConstants
   }
 
   /**
-   * Create a test time serie with a date axis and one default axis for each of the given axisTypes. A tupple-model is
-   * randomly generated.
-   * 
-   * @param axisTypes
-   *          as seen in TimeserieConstants.TYPE_*
-   * @param amountRows
-   *          amount of rows of the TuppleModel that is randomly created
-   * @throws SensorException
-   */
-  public static IObservation createTestTimeserie( final String[] axisTypes, final int amountRows, final boolean allowNegativeValues ) throws SensorException
-  {
-    final IAxis[] axes = new IAxis[axisTypes.length + 1];
-    axes[0] = TimeseriesUtils.createDefaultAxis( ITimeseriesConstants.TYPE_DATE, true );
-    for( int i = 0; i < axisTypes.length; i++ )
-    {
-      axes[i + 1] = TimeseriesUtils.createDefaultAxis( axisTypes[i] );
-    }
-
-    final SimpleObservation obs = new SimpleObservation( axes );
-    final SimpleTupleModel model = new SimpleTupleModel( axes );
-
-    final Calendar cal = Calendar.getInstance();
-    for( int i = 0; i < amountRows; i++ )
-    {
-      final Object[] tupple = new Object[axes.length];
-      tupple[0] = cal.getTime();
-
-      for( int j = 1; j < tupple.length; j++ )
-      {
-        if( allowNegativeValues )
-          tupple[j] = new Double( Math.random() * 100 * (Math.random() > .5 ? 1 : -1) );
-        else
-          tupple[j] = new Double( Math.random() * 100 );
-      }
-
-      model.addTuple( tupple );
-
-      cal.add( Calendar.DAY_OF_YEAR, 1 );
-    }
-
-    obs.setValues( model );
-
-    return obs;
-  }
-
-  /**
    * @param gkr
    *          the Gausskrüger Rechtswert as string
    * @return the corresponding Gausskrüger Coordinate System Name
@@ -656,11 +576,6 @@ public final class TimeseriesUtils implements ITimeseriesConstants
     return args.getDateRange();
   }
 
-  public static String getFormat( final String type )
-  {
-    return getProperties().getProperty( String.format( "FORMAT_%s", type ) );//$NON-NLS-1$
-  }
-
   /**
    * Guesses the timestep of a given timeseries from the first 10 timsteps.
    */
@@ -669,4 +584,10 @@ public final class TimeseriesUtils implements ITimeseriesConstants
     final TimestepGuesser timestepGuesser = new TimestepGuesser( timeseries, -1 );
     return timestepGuesser.execute();
   }
+
+  public static TIMESERIES_TYPE getType( final String axisType )
+  {
+    return TIMESERIES_TYPE.getType( axisType );
+  }
+
 }

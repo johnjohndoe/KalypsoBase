@@ -47,6 +47,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.ogc.sensor.TIMESERIES_TYPE;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.zml.core.table.model.IZmlColumnModelListener;
 import org.kalypso.zml.core.table.model.IZmlModel;
@@ -76,7 +77,6 @@ public class ZmlModelViewport
   // FIXME set as zml table base
   // FIXME IZmlModelListener change listener
   // FIXME caching
-  // FIXME zml time filter
 
   private final IZmlModel m_model;
 
@@ -274,15 +274,24 @@ public class ZmlModelViewport
       return null;
     else
     {
-
-      // FIXME helper class for type base data handling
       final DataColumnType dataColumnType = (DataColumnType) type;
-      if( ITimeseriesConstants.TYPE_RAINFALL.equals( dataColumnType.getValueAxis() ) )
-        return new SumValueEditingStrategy( this );
-      else if( ITimeseriesConstants.TYPE_WECHMANN_E.equals( dataColumnType.getValueAxis() ) )
-        return new ContinuedInterpolatedValueEditingStrategy( this );
-      else
-        return new InterpolatedValueEditingStrategy( this );
+
+      final String axis = dataColumnType.getValueAxis();
+      final TIMESERIES_TYPE timeSeriesType = TIMESERIES_TYPE.getType( axis );
+      switch( timeSeriesType )
+      {
+        case eSumValue:
+          return new SumValueEditingStrategy( this );
+
+        case eCurrentValue:
+          if( ITimeseriesConstants.TYPE_WECHMANN_E.equals( axis ) )
+            return new ContinuedInterpolatedValueEditingStrategy( this );
+
+          return new InterpolatedValueEditingStrategy( this );
+
+        default:
+          return new InterpolatedValueEditingStrategy( this );
+      }
     }
   }
 

@@ -62,7 +62,6 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
  */
 public class ZmlInterpolationWorker implements ICoreRunnableWithProgress
 {
-
   private final IAxis m_valueAxis;
 
   private final ITupleModel m_model;

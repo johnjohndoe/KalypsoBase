@@ -54,7 +54,7 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
-import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesTestUtils;
 
 /**
  * @author schlienger
@@ -63,7 +63,7 @@ public class TranProLinFilterTest extends TestCase
 {
   public void testGetValues( ) throws SensorException
   {
-    final IObservation obs = TimeseriesUtils.createTestTimeserie( new String[] { ITimeseriesConstants.TYPE_WATERLEVEL }, 10, false ); //$NON-NLS-1$
+    final IObservation obs = TimeseriesTestUtils.createTestTimeserie( new String[] { ITimeseriesConstants.TYPE_WATERLEVEL }, 10, false ); //$NON-NLS-1$
 
     final ITupleModel values = obs.getValues( null );
     assertEquals( 10, values.size() );
