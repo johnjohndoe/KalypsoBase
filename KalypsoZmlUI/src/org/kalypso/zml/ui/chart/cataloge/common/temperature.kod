@@ -85,7 +85,7 @@
       <Layer id="T">
         <Title>Temperatur</Title>
         <Layers>
-          <DerivedLayer id="Stuetzstellle" legend="false">
+          <DerivedLayer id="Stuetzstellle" legend="false" visible="false">
             <Description />
             <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:temperature#Temperatur"></LayerReference>
             <Parameters>
@@ -98,7 +98,7 @@
           </DerivedLayer>
 
 
-          <DerivedLayer id="Fehlwert" legend="false">
+          <DerivedLayer id="Fehlwert" legend="false" visible="false">
             <Description />
             <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:temperature#Temperatur"></LayerReference>
             <Parameters>

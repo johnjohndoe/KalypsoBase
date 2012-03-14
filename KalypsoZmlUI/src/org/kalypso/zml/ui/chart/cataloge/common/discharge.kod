@@ -90,7 +90,7 @@
         </Provider>
         <Title>Abfluss</Title>
         <Layers>
-          <DerivedLayer id="Stuetzstellle" legend="false">
+          <DerivedLayer id="Stuetzstellle" legend="false" visible="false">
             <Description />
             <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:discharge#Abfluss"></LayerReference>
             <Parameters>
@@ -103,7 +103,7 @@
           </DerivedLayer>
 
 
-          <DerivedLayer id="Fehlwert" legend="false">
+          <DerivedLayer id="Fehlwert" legend="false" visible="false">
             <Description />
             <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:discharge#Abfluss"></LayerReference>
             <Parameters>
