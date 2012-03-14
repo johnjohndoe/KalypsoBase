@@ -159,9 +159,9 @@ public class NativeObservationDWD5minAdapter extends AbstractObservationImporter
                 value = 0.0;
                 src = SOURCE_ID_MISSING_VALUE;
               }
+
               // Datenfilter für 0.0 - um Datenbank nicht mit unnötigen Werten zu füllen (Zur Zeit nicht verwendet, da
               // Rohdaten benötigt)
-
               buffer.append( " " ); // separator //$NON-NLS-1$
               final Date valueDate = new Date( startDate + i * m_timeStep + (valuesLine - 1) * 16 * m_timeStep );
               buffer.append( valueDate.toString() );

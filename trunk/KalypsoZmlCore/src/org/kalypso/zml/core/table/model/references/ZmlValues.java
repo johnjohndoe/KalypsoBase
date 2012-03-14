@@ -42,6 +42,7 @@ package org.kalypso.zml.core.table.model.references;
 
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.adapter.AbstractObservationImporter;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.repository.IDataSourceItem;
 
@@ -67,6 +68,8 @@ public final class ZmlValues
       return true;
     else if( Objects.isNull( source ) )
       return true;
+    else if( source.contains( AbstractObservationImporter.MISSING_VALUE_POSTFIX ) )
+      return false;
 
     return !source.startsWith( IDataSourceItem.FILTER_SOURCE ); //$NON-NLS-1$
   }
