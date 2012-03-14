@@ -18,17 +18,6 @@
           <Color>0000FF</Color>
         </FillColor>
       </PointStyle>
-      <PointStyle role="v_point_0">
-        <Width>5</Width>
-        <Height>5</Height>
-        <Stroke isVisible="true">
-          <Width>1</Width>
-          <LineColor>0000FF</LineColor>
-        </Stroke>
-        <FillColor>
-          <Color>0000FF</Color>
-        </FillColor>
-      </PointStyle>
       <LineStyle role="v_line_1">
         <Width>2</Width>
         <LineColor>769844</LineColor>
@@ -36,17 +25,6 @@
       <PointStyle role="v_singlePoint_1">
         <Width>10</Width>
         <Height>10</Height>
-        <Stroke isVisible="true">
-          <Width>1</Width>
-          <LineColor>769844</LineColor>
-        </Stroke>
-        <FillColor>
-          <Color>769844</Color>
-        </FillColor>
-      </PointStyle>
-      <PointStyle role="v_point_1">
-        <Width>5</Width>
-        <Height>5</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
           <LineColor>769844</LineColor>
@@ -70,17 +48,6 @@
           <Color>DFD0A7</Color>
         </FillColor>
       </PointStyle>
-      <PointStyle role="v_point_2">
-        <Width>5</Width>
-        <Height>5</Height>
-        <Stroke isVisible="true">
-          <Width>1</Width>
-          <LineColor>DFD0A7</LineColor>
-        </Stroke>
-        <FillColor>
-          <Color>DFD0A7</Color>
-        </FillColor>
-      </PointStyle>
       <LineStyle role="v_line_3">
         <Width>2</Width>
         <LineColor>4D3907</LineColor>
@@ -88,17 +55,6 @@
       <PointStyle role="v_singlePoint_3">
         <Width>10</Width>
         <Height>10</Height>
-        <Stroke isVisible="true">
-          <Width>1</Width>
-          <LineColor>4D3907</LineColor>
-        </Stroke>
-        <FillColor>
-          <Color>4D3907</Color>
-        </FillColor>
-      </PointStyle>
-      <PointStyle role="v_point_3">
-        <Width>5</Width>
-        <Height>5</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
           <LineColor>4D3907</LineColor>
@@ -122,17 +78,6 @@
           <Color>998652</Color>
         </FillColor>
       </PointStyle>
-      <PointStyle role="v_point_4">
-        <Width>5</Width>
-        <Height>5</Height>
-        <Stroke isVisible="true">
-          <Width>1</Width>
-          <LineColor>998652</LineColor>
-        </Stroke>
-        <FillColor>
-          <Color>998652</Color>
-        </FillColor>
-      </PointStyle>
 
 
     </Styles>
@@ -140,6 +85,30 @@
       <Layer id="V">
         <Title>Volumen</Title>
         <Layers>
+          <DerivedLayer id="Stuetzstellle" legend="false">
+            <Description />
+            <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:volume#Volumen"></LayerReference>
+            <Parameters>
+              <Parameter name="content.stuetzstelle" value="true" />
+              <Parameter name="filter" value="org.kalypso.chart.layer.filter.stuetzstelle" />
+            </Parameters>
+            <Styles>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:missing#stuetzstelle_point_0</StyleReference>
+            </Styles>
+          </DerivedLayer>
+
+          <DerivedLayer id="Fehlwert" legend="false">
+            <Description />
+            <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:volume#Volumen"></LayerReference>
+            <Parameters>
+              <Parameter name="content.fehlwert" value="true" />
+              <Parameter name="filter" value="org.kalypso.chart.layer.filter.fehlwerte" />
+            </Parameters>
+            <Styles>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:missing#fehlwert_point_0</StyleReference>
+            </Styles>
+          </DerivedLayer>
+
           <Layer id="Volumen" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider">
               <Parameters>
@@ -161,21 +130,6 @@
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:volume#v_singlePoint_4</StyleReference>
             </Styles>
           </Layer>
-
-          <DerivedLayer id="V_Stuetzstellle" legend="false">
-            <Description />
-            <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:volume#Volumen"></LayerReference>
-            <Parameters>
-              <Parameter name="content.stuetzstelle" value="true" />
-            </Parameters>
-            <Styles>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:discharge#v_point_0</StyleReference>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:discharge#v_point_1</StyleReference>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:discharge#v_point_2</StyleReference>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:discharge#v_point_3</StyleReference>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:discharge#v_point_4</StyleReference>
-            </Styles>
-          </DerivedLayer>
 
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
         </Layers>

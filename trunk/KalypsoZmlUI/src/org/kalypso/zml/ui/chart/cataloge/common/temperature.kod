@@ -17,17 +17,6 @@
           <Color>FF002E</Color>
         </FillColor>
       </PointStyle>
-      <PointStyle role="t_point_0">
-        <Width>5</Width>
-        <Height>5</Height>
-        <Stroke isVisible="true">
-          <Width>1</Width>
-          <LineColor>FF002E</LineColor>
-        </Stroke>
-        <FillColor>
-          <Color>FF002E</Color>
-        </FillColor>
-      </PointStyle>
       <LineStyle role="t_line_1">
         <Width>2</Width>
         <LineColor>C1006D</LineColor>
@@ -35,17 +24,6 @@
       <PointStyle role="t_singlePoint_1">
         <Width>10</Width>
         <Height>10</Height>
-        <Stroke isVisible="true">
-          <Width>1</Width>
-          <LineColor>C1006D</LineColor>
-        </Stroke>
-        <FillColor>
-          <Color>C1006D</Color>
-        </FillColor>
-      </PointStyle>
-      <PointStyle role="t_point_1">
-        <Width>5</Width>
-        <Height>5</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
           <LineColor>C1006D</LineColor>
@@ -69,17 +47,6 @@
           <Color>A7002B</Color>
         </FillColor>
       </PointStyle>
-      <PointStyle role="t_point_2">
-        <Width>5</Width>
-        <Height>5</Height>
-        <Stroke isVisible="true">
-          <Width>1</Width>
-          <LineColor>A7002B</LineColor>
-        </Stroke>
-        <FillColor>
-          <Color>A7002B</Color>
-        </FillColor>
-      </PointStyle>
       <LineStyle role="t_line_3">
         <Width>2</Width>
         <LineColor>B70030</LineColor>
@@ -87,17 +54,6 @@
       <PointStyle role="t_singlePoint_3">
         <Width>10</Width>
         <Height>10</Height>
-        <Stroke isVisible="true">
-          <Width>1</Width>
-          <LineColor>B70030</LineColor>
-        </Stroke>
-        <FillColor>
-          <Color>B70030</Color>
-        </FillColor>
-      </PointStyle>
-      <PointStyle role="t_point_3">
-        <Width>5</Width>
-        <Height>5</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
           <LineColor>B70030</LineColor>
@@ -121,17 +77,7 @@
           <Color>930030</Color>
         </FillColor>
       </PointStyle>
-      <PointStyle role="t_point_4">
-        <Width>5</Width>
-        <Height>5</Height>
-        <Stroke isVisible="true">
-          <Width>1</Width>
-          <LineColor>930030</LineColor>
-        </Stroke>
-        <FillColor>
-          <Color>930030</Color>
-        </FillColor>
-      </PointStyle>
+
 
 
     </Styles>
@@ -139,6 +85,32 @@
       <Layer id="T">
         <Title>Temperatur</Title>
         <Layers>
+          <DerivedLayer id="Stuetzstellle" legend="false">
+            <Description />
+            <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:temperature#Temperatur"></LayerReference>
+            <Parameters>
+              <Parameter name="content.stuetzstelle" value="true" />
+              <Parameter name="filter" value="org.kalypso.chart.layer.filter.stuetzstelle" />
+            </Parameters>
+            <Styles>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:missing#stuetzstelle_point_0</StyleReference>
+            </Styles>
+          </DerivedLayer>
+
+
+          <DerivedLayer id="Fehlwert" legend="false">
+            <Description />
+            <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:temperature#Temperatur"></LayerReference>
+            <Parameters>
+              <Parameter name="content.fehlwert" value="true" />
+              <Parameter name="filter" value="org.kalypso.chart.layer.filter.fehlwerte" />
+            </Parameters>
+            <Styles>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:missing#fehlwert_point_0</StyleReference>
+            </Styles>
+          </DerivedLayer>
+
+
           <Layer id="Temperatur" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider">
               <Parameters>
@@ -161,20 +133,6 @@
             </Styles>
           </Layer>
 
-          <DerivedLayer id="T_Stuetzstellle" legend="false">
-            <Description />
-            <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:temperature#Temperatur"></LayerReference>
-            <Parameters>
-              <Parameter name="content.stuetzstelle" value="true" />
-            </Parameters>
-            <Styles>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:temperature#t_point_0</StyleReference>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:temperature#t_point_1</StyleReference>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:temperature#t_point_2</StyleReference>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:temperature#t_point_3</StyleReference>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:temperature#t_point_4</StyleReference>
-            </Styles>
-          </DerivedLayer>
 
 
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />

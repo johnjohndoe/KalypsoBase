@@ -75,8 +75,34 @@
           <LineColor>000040</LineColor>
         </Stroke>
       </AreaStyle>
+
+
+      <PointStyle role="stuetzstelle_point_0">
+        <Width>6</Width>
+        <Height>6</Height>
+        <Stroke isVisible="true">
+          <Width>1</Width>
+          <LineColor>000000</LineColor>
+        </Stroke>
+        <FillColor>
+          <Color>DAFF6D</Color>
+        </FillColor>
+      </PointStyle>
+
+      <PointStyle role="fehlwert_point_0">
+        <Width>10</Width>
+        <Height>10</Height>
+        <Stroke isVisible="true">
+          <Width>2</Width>
+          <LineColor>FF2014</LineColor>
+        </Stroke>
+        <FillColor>
+          <Color>FFFFFF</Color>
+        </FillColor>
+      </PointStyle>
+
     </Styles>
-    
+
     <Layers>
       <Layer id="Fehlwerte" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="org.kalypso.zml.ui.chart.layer.provider.missing.zml.values" />
@@ -96,6 +122,6 @@
         </Styles>
       </Layer>
     </Layers>
-    
+
   </Chart>
 </ChartConfiguration>
