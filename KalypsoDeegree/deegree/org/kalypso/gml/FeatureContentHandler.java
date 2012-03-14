@@ -222,6 +222,12 @@ public class FeatureContentHandler extends AbstractGmlContentHandler implements 
   }
 
   @Override
+  public String getNamespaceURI( )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
   public String getLocalName( )
   {
     throw new UnsupportedOperationException();

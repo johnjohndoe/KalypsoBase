@@ -47,5 +47,7 @@ import org.kalypso.gmlschema.types.IGmlContentHandler;
  */
 public interface IGmlElementContentHandler extends IGmlContentHandler
 {
+  String getNamespaceURI( );
+
   String getLocalName( );
 }

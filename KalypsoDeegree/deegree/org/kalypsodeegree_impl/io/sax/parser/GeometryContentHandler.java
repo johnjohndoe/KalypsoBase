@@ -136,7 +136,7 @@ public class GeometryContentHandler extends GMLElementContentHandler implements 
     final IGmlElementContentHandler parent = (IGmlElementContentHandler) getParentContentHandler();
     final String parentTag = parent.getLocalName();
 
-    if( getUri().equals( uri ) && parentTag.equals( localName ) )
+    if( parent.getNamespaceURI().equals( uri ) && parentTag.equals( localName ) )
     {
       doEndElement( uri, localName, name );
       activateParent();

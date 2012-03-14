@@ -64,16 +64,16 @@ public class NullContentHandler extends GMLElementContentHandler
   @Override
   protected void doEndElement( final String uri, final String localName, final String name ) throws SAXException
   {
-    if( getUri().equals( uri ) && getLocalName().equals( localName ) )
+    if( getNamespaceURI().equals( uri ) && getLocalName().equals( localName ) )
       m_envelopeHandler.handle( null );
     else
-    throwSAXParseException( "Unexcpected content in Null element: %s", name );
+      throwSAXParseException( "Unexcpected content in Null element: %s", name );
   }
 
   @Override
   protected void doStartElement( final String uri, final String localName, final String name, final Attributes atts ) throws SAXParseException
   {
-    if( !getUri().equals( uri ) || !getLocalName().equals( localName ) )
+    if( !getNamespaceURI().equals( uri ) || !getLocalName().equals( localName ) )
       throwSAXParseException( "Unexcpected content in Null element: %s", name );
   }
 }
