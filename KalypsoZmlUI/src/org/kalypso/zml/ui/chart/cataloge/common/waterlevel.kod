@@ -18,17 +18,6 @@
           <Color>8FADDF</Color>
         </FillColor>
       </PointStyle>
-      <PointStyle role="w_point_0">
-        <Width>5</Width>
-        <Height>5</Height>
-        <Stroke isVisible="true">
-          <Width>1</Width>
-          <LineColor>8FADDF</LineColor>
-        </Stroke>
-        <FillColor>
-          <Color>8FADDF</Color>
-        </FillColor>
-      </PointStyle>
       <LineStyle role="w_line_1">
         <Width>2</Width>
         <LineColor>3460A9</LineColor>
@@ -36,17 +25,6 @@
       <PointStyle role="w_singlePoint_1">
         <Width>10</Width>
         <Height>10</Height>
-        <Stroke isVisible="true">
-          <Width>1</Width>
-          <LineColor>3460A9</LineColor>
-        </Stroke>
-        <FillColor>
-          <Color>3460A9</Color>
-        </FillColor>
-      </PointStyle>
-      <PointStyle role="w_point_1">
-        <Width>5</Width>
-        <Height>5</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
           <LineColor>3460A9</LineColor>
@@ -70,17 +48,6 @@
           <Color>BDD3F6</Color>
         </FillColor>
       </PointStyle>
-      <PointStyle role="w_point_2">
-        <Width>5</Width>
-        <Height>5</Height>
-        <Stroke isVisible="true">
-          <Width>1</Width>
-          <LineColor>BDD3F6</LineColor>
-        </Stroke>
-        <FillColor>
-          <Color>BDD3F6</Color>
-        </FillColor>
-      </PointStyle>
       <LineStyle role="w_line_3">
         <Width>2</Width>
         <LineColor>093689</LineColor>
@@ -88,17 +55,6 @@
       <PointStyle role="w_singlePoint_3">
         <Width>10</Width>
         <Height>10</Height>
-        <Stroke isVisible="true">
-          <Width>1</Width>
-          <LineColor>093689</LineColor>
-        </Stroke>
-        <FillColor>
-          <Color>093689</Color>
-        </FillColor>
-      </PointStyle>
-      <PointStyle role="w_point_3">
-        <Width>5</Width>
-        <Height>5</Height>
         <Stroke isVisible="true">
           <Width>1</Width>
           <LineColor>093689</LineColor>
@@ -122,17 +78,6 @@
           <Color>6186C3</Color>
         </FillColor>
       </PointStyle>
-      <PointStyle role="w_point_4">
-        <Width>5</Width>
-        <Height>5</Height>
-        <Stroke isVisible="true">
-          <Width>1</Width>
-          <LineColor>6186C3</LineColor>
-        </Stroke>
-        <FillColor>
-          <Color>6186C3</Color>
-        </FillColor>
-      </PointStyle>
 
 
     </Styles>
@@ -145,6 +90,30 @@
         </Provider>
         <Title>Wasserstand</Title>
         <Layers>
+          <DerivedLayer id="Stuetzstellle" legend="false">
+            <Description />
+            <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:waterlevel#Wasserstand"></LayerReference>
+            <Parameters>
+              <Parameter name="content.stuetzstelle" value="true" />
+              <Parameter name="filter" value="org.kalypso.chart.layer.filter.stuetzstelle" />
+            </Parameters>
+            <Styles>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:missing#stuetzstelle_point_0</StyleReference>
+            </Styles>
+          </DerivedLayer>
+
+          <DerivedLayer id="Fehlwert" legend="false">
+            <Description />
+            <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:waterlevel#Wasserstand"></LayerReference>
+            <Parameters>
+              <Parameter name="content.fehlwert" value="true" />
+              <Parameter name="filter" value="org.kalypso.chart.layer.filter.fehlwerte" />
+            </Parameters>
+            <Styles>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:missing#fehlwert_point_0</StyleReference>
+            </Styles>
+          </DerivedLayer>
+
           <Layer id="Wasserstand" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlLineLayerProvider">
               <Parameters>
@@ -172,13 +141,10 @@
             <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:waterlevel#Wasserstand"></LayerReference>
             <Parameters>
               <Parameter name="content.stuetzstelle" value="true" />
+              <Parameter name="filter" value="org.kalypso.chart.layer.filter.stuetzstelle" />
             </Parameters>
             <Styles>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:discharge#w_point_0</StyleReference>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:discharge#w_point_1</StyleReference>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:discharge#w_point_2</StyleReference>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:discharge#w_point_3</StyleReference>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:discharge#w_point_4</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:missing#stuetzstelle_point_0</StyleReference>
             </Styles>
           </DerivedLayer>
 

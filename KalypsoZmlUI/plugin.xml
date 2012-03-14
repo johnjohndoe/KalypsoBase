@@ -459,6 +459,10 @@
            filter="org.kalypso.zml.ui.chart.layer.filters.ZmlStuetzstellenChartLayerFilter"
            id="org.kalypso.chart.layer.filter.stuetzstelle">
      </filter>
+     <filter
+           filter="org.kalypso.zml.ui.chart.layer.filters.ZmlFehlwerteLayerFilter"
+           id="org.kalypso.chart.layer.filter.fehlwerte">
+     </filter>
  </extension>
  
  <extension
