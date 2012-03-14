@@ -98,6 +98,9 @@ public class ZmlTableSelectionLayer extends SelectionLayer implements IZmlTableS
       final Set<Integer> rows = range.getMembers();
       for( final Integer rowIndex : rows )
       {
+        if( rowIndex == -1 )
+          continue;
+
         if( ArrayUtils.getLength( modelRows ) > rowIndex )
           selection.add( modelRows[rowIndex] );
       }
