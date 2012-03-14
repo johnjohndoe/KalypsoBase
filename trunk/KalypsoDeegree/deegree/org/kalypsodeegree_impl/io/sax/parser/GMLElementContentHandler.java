@@ -135,14 +135,15 @@ public abstract class GMLElementContentHandler extends AbstractGmlContentHandler
   }
 
   @Override
+  public String getNamespaceURI( )
+  {
+    return m_uri;
+  }
+
+  @Override
   public String getLocalName( )
   {
     return m_localName;
-  }
-
-  protected String getUri( )
-  {
-    return m_uri;
   }
 
   protected String getDefaultSrs( )

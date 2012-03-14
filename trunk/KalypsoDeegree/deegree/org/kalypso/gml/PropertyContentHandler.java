@@ -229,18 +229,12 @@ public class PropertyContentHandler extends AbstractGmlContentHandler implements
     }
   }
 
-  /**
-   * @see org.kalypso.gmlschema.types.UnmarshallResultEater#unmarshallSuccesful(java.lang.Object)
-   */
   @Override
   public void unmarshallSuccesful( final Object value ) throws SAXParseException
   {
     ((UnmarshallResultEater) m_propertyHandler).unmarshallSuccesful( value );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.IGMLElementHandler#handle(java.lang.Object)
-   */
   @Override
   public void handle( final StringBuffer simpleContent ) throws SAXParseException
   {
@@ -266,13 +260,16 @@ public class PropertyContentHandler extends AbstractGmlContentHandler implements
     unmarshallSuccesful( feature );
   }
 
-  /**
-   * @see org.kalypso.gml.IPropertyHandler#setPropertyAsScope(org.kalypso.gmlschema.property.IPropertyType)
-   */
   @Override
   public void setPropertyAsScope( final IPropertyType property )
   {
     m_propertyHandler.setPropertyAsScope( property );
+  }
+
+  @Override
+  public String getNamespaceURI( )
+  {
+    return m_scopeProperty.getQName().getNamespaceURI();
   }
 
   @Override
