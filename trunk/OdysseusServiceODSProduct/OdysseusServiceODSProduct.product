@@ -3,7 +3,6 @@
 
 <product name="OdysseusServiceODSProduct" id="de.openali.odysseus.service.ods.product.product" application="de.openali.odysseus.service.ods.product.application" version="1.0.0.qualifier" useFeatures="true" includeLaunchers="true">
 
-
    <configIni use="default">
    </configIni>
 
@@ -13,14 +12,12 @@
 
    <windowImages/>
 
-
    <launcher>
       <solaris/>
       <win useIco="false">
          <bmp/>
       </win>
    </launcher>
-
 
    <vm>
    </vm>

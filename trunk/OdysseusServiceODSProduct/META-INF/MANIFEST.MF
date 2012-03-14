@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: OdysseusServiceODSProduct Plug-in
-Bundle-SymbolicName: de.openali.odysseus.service.ods.test;singleton:=true
+Bundle-SymbolicName: de.openali.odysseus.service.ods.product;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: de.openali.odysseus.service.ods.product.Activator
 Require-Bundle: de.openali.odysseus.service.ods,

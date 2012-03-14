@@ -2,7 +2,7 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         id="de.openali.odysseus.service.ods.test.application"
+         id="de.openali.odysseus.service.ods.product.application"
          point="org.eclipse.core.runtime.applications">
       <application>
          <run
@@ -14,7 +14,7 @@
          id="product"
          point="org.eclipse.core.runtime.products">
       <product
-            application="de.openali.odysseus.service.ods.test.application"
+            application="de.openali.odysseus.service.ods.product.application"
             name="OdysseusServiceODSProduct">
          <property
                name="appName"
