@@ -90,7 +90,7 @@
         </Provider>
         <Title>Wasserstand</Title>
         <Layers>
-          <DerivedLayer id="Stuetzstellle" legend="false">
+          <DerivedLayer id="Stuetzstellle" legend="false" visible="false">
             <Description />
             <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:waterlevel#Wasserstand"></LayerReference>
             <Parameters>
@@ -102,7 +102,7 @@
             </Styles>
           </DerivedLayer>
 
-          <DerivedLayer id="Fehlwert" legend="false">
+          <DerivedLayer id="Fehlwert" legend="false" visible="false">
             <Description />
             <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:waterlevel#Wasserstand"></LayerReference>
             <Parameters>
@@ -136,18 +136,7 @@
             </Styles>
           </Layer>
 
-          <DerivedLayer id="W_Stuetzstellle" legend="false">
-            <Description />
-            <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:waterlevel#Wasserstand"></LayerReference>
-            <Parameters>
-              <Parameter name="content.stuetzstelle" value="true" />
-              <Parameter name="filter" value="org.kalypso.chart.layer.filter.stuetzstelle" />
-            </Parameters>
-            <Styles>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:missing#stuetzstelle_point_0</StyleReference>
-            </Styles>
-          </DerivedLayer>
-
+        
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
         </Layers>
         <MapperRefs>

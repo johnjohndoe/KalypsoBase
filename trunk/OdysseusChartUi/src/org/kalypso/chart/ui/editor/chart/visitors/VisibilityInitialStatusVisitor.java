@@ -56,9 +56,6 @@ public class VisibilityInitialStatusVisitor extends AbstractParameterVisitor
     super( parameter );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
   @Override
   public void visit( final IChartLayer layer ) throws CancelVisitorException
   {
@@ -66,7 +63,6 @@ public class VisibilityInitialStatusVisitor extends AbstractParameterVisitor
       if( definesParameter( layer ) )
       {
         m_enabled = true;
-
         throw new CancelVisitorException();
       }
 
