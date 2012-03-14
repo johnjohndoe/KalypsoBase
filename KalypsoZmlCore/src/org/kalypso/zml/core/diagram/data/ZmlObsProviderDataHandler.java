@@ -125,6 +125,9 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
   {
     synchronized( this )
     {
+      if( provider == m_provider )
+        return;
+
       if( Objects.isNotNull( m_provider ) )
       {
         m_provider.removeListener( m_observationProviderListener );
