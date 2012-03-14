@@ -166,6 +166,23 @@
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:discharge#q_singlePoint_4</StyleReference>
             </Styles>
           </Layer>
+
+          <DerivedLayer id="Q_Stuetzstellle" legend="false">
+            <Description />
+            <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:discharge#Abfluss"></LayerReference>
+            <Parameters>
+              <Parameter name="content.stuetzstelle" value="true" />
+            </Parameters>
+            <Styles>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:discharge#q_point_0</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:discharge#q_point_1</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:discharge#q_point_2</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:discharge#q_point_3</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:discharge#q_point_4</StyleReference>
+            </Styles>
+          </DerivedLayer>
+
+
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
         </Layers>
         <MapperRefs>

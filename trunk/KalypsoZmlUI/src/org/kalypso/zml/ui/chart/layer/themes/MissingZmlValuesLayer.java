@@ -40,8 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.themes;
 
+import java.util.Date;
+
+import org.eclipse.swt.graphics.GC;
+
 import de.openali.odysseus.chart.ext.base.layer.AbstractBarLayer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
@@ -49,11 +54,10 @@ import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
 
 /**
  * @author Dirk Kuch
- * @author kimwerner
  */
-public class ZmlMissingValuesLayer extends AbstractBarLayer implements IChartLayer
+public class MissingZmlValuesLayer extends AbstractBarLayer implements IChartLayer
 {
-  public ZmlMissingValuesLayer( final ILayerProvider provider, final IStyleSet styleSet )
+  public MissingZmlValuesLayer( final ILayerProvider provider, final IStyleSet styleSet )
   {
     super( provider, styleSet );
   }
@@ -68,5 +72,18 @@ public class ZmlMissingValuesLayer extends AbstractBarLayer implements IChartLay
     final IAreaStyle style = visitor.visit( styleSet, IAreaStyle.class, index );
 
     return style;
+  }
+
+  @Override
+  public void paint( final GC gc )
+  {
+    final ILayerManager manger = getModel().getLayerManager();
+    final FindMissingValuesVisitor visitor = new FindMissingValuesVisitor();
+    manger.accept( visitor );
+
+    final Date[] missing = visitor.getMissingValues();
+
+    final int adsadsf = 0;
+
   }
 }
