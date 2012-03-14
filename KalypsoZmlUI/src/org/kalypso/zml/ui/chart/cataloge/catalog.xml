@@ -13,5 +13,6 @@
   <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:temperature" uri="common/temperature.kod" />
   <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:volume" uri="common/volume.kod" />
   <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:waterlevel" uri="common/waterlevel.kod" />
-
+  
+  <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:missing" uri="missing/missing_zml_values.kod" />
 </catalog:catalog>

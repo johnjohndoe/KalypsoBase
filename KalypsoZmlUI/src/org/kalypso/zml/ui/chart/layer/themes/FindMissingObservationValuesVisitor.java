@@ -38,37 +38,53 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.chart.layer.filters;
+package org.kalypso.zml.ui.chart.layer.themes;
 
+import java.util.Date;
+import java.util.Set;
+import java.util.TreeSet;
+
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
+import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
+import org.kalypso.zml.core.table.model.references.ZmlValues;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlStuetzstellenChartLayerFilter extends AbstractZmlChartLayerFilter
+public class FindMissingObservationValuesVisitor implements IObservationVisitor
 {
-  public static final String ID = "org.kalypso.chart.layer.filter.stuetzstelle"; // $NON-NLS-1$
+  Set<Date> m_missing = new TreeSet<>();
 
   @Override
-  public String getIdentifier( )
+  public void visit( final IObservationValueContainer container ) throws SensorException
   {
-    return ID;
+    final DataSourceHandler handler = new DataSourceHandler( container.getMetaData() );
+
+    final IAxis[] axes = container.getAxes();
+    final IAxis[] valueAxes = AxisUtils.findValueAxes( axes, true );
+    for( final IAxis valueAxis : valueAxes )
+    {
+      final IAxis statusAxis = AxisUtils.findStatusAxis( axes, valueAxis );
+      final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( axes, valueAxis );
+
+      final Number status = (Number) container.get( statusAxis );
+      final Number dataSourceIndex = (Number) container.get( dataSourceAxis );
+      final String dataSourceIdentifier = handler.getDataSourceIdentifier( dataSourceIndex.intValue() );
+
+      if( !ZmlValues.isStuetzstelle( status, dataSourceIdentifier ) )
+      {
+        final IAxis dateAxis = AxisUtils.findDateAxis( axes );
+        m_missing.add( (Date) container.get( dateAxis ) );
+      }
+    }
   }
 
-  @Override
-  protected boolean filter( final IObservationValueContainer container )
+  public Date[] getMissingValues( )
   {
-    try
-    {
-      final ContainerAsValue value = new ContainerAsValue( container );
-      return !value.isStuetzstelle();
-    }
-    catch( final SensorException e )
-    {
-      e.printStackTrace();
-
-      return false;
-    }
+    return m_missing.toArray( new Date[] {} );
   }
 }

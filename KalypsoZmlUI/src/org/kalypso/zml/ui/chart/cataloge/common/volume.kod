@@ -161,6 +161,22 @@
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:volume#v_singlePoint_4</StyleReference>
             </Styles>
           </Layer>
+
+          <DerivedLayer id="V_Stuetzstellle" legend="false">
+            <Description />
+            <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:volume#Volumen"></LayerReference>
+            <Parameters>
+              <Parameter name="content.stuetzstelle" value="true" />
+            </Parameters>
+            <Styles>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:discharge#v_point_0</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:discharge#v_point_1</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:discharge#v_point_2</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:discharge#v_point_3</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:discharge#v_point_4</StyleReference>
+            </Styles>
+          </DerivedLayer>
+
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
         </Layers>
         <MapperRefs>

@@ -42,7 +42,7 @@ package org.kalypso.zml.ui.chart.layer.provider;
 
 import java.net.URL;
 
-import org.kalypso.zml.ui.chart.layer.themes.ZmlMissingValuesLayer;
+import org.kalypso.zml.ui.chart.layer.themes.MissingZmlValuesLayer;
 
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -51,14 +51,14 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 /**
  * @author Dirk Kuch
  */
-public class ZmlMissingValuesProvider extends AbstractLayerProvider implements ILayerProvider
+public class MissingZmlValuesLayerProvider extends AbstractLayerProvider implements ILayerProvider
 {
-  public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlMissingValuesProvider"; //$NON-NLS-1$
+  public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.missing.zml.values"; //$NON-NLS-1$
 
   @Override
   public IChartLayer getLayer( final URL context )
   {
-    return new ZmlMissingValuesLayer( this, getStyleSet() );
+    return new MissingZmlValuesLayer( this, getStyleSet() );
   }
 
 }

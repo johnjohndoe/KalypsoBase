@@ -38,37 +38,70 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.chart.layer.filters;
+package org.kalypso.zml.ui.chart.layer.themes;
 
+import java.util.Collections;
+import java.util.Date;
+import java.util.Set;
+import java.util.TreeSet;
+
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
+import org.kalypso.zml.core.diagram.base.IZmlLayer;
+import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
+
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLayerVisitor;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlStuetzstellenChartLayerFilter extends AbstractZmlChartLayerFilter
+public class FindMissingValuesVisitor extends AbstractChartLayerVisitor
 {
-  public static final String ID = "org.kalypso.chart.layer.filter.stuetzstelle"; // $NON-NLS-1$
+  Set<Date> m_missing = new TreeSet<>();
 
   @Override
-  public String getIdentifier( )
+  public void visit( final IChartLayer layer )
   {
-    return ID;
-  }
+    if( !layer.isVisible() )
+      return;
+    if( !(layer instanceof IZmlLayer) )
+    {
+      final IChartLayer[] layers = layer.getLayerManager().getLayers();
+      for( final IChartLayer child : layers )
+      {
+        visit( child );
+      }
 
-  @Override
-  protected boolean filter( final IObservationValueContainer container )
-  {
+      return;
+    }
+
+    final IZmlLayer zml = (IZmlLayer) layer;
+    final IZmlLayerDataHandler handler = zml.getDataHandler();
+    if( Objects.isNull( handler ) )
+      return;
+
+    final IObservation observation = (IObservation) handler.getAdapter( IObservation.class );
+    if( Objects.isNull( observation ) )
+      return;
+
     try
     {
-      final ContainerAsValue value = new ContainerAsValue( container );
-      return !value.isStuetzstelle();
+      final FindMissingObservationValuesVisitor visitor = new FindMissingObservationValuesVisitor();
+      observation.accept( visitor, null, 1 );
+
+      Collections.addAll( m_missing, visitor.getMissingValues() );
     }
     catch( final SensorException e )
     {
       e.printStackTrace();
-
-      return false;
     }
   }
+
+  public Date[] getMissingValues( )
+  {
+    return m_missing.toArray( new Date[] {} );
+  }
+
 }
