@@ -3,13 +3,13 @@ Bundle-ManifestVersion: 2
 Bundle-Name: OdysseusServiceODSProduct Plug-in
 Bundle-SymbolicName: de.openali.odysseus.service.ods.test;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: de.openali.odysseus.service.ods.test.Activator
+Bundle-Activator: de.openali.odysseus.service.ods.product.Activator
 Require-Bundle: de.openali.odysseus.service.ods,
  org.eclipse.core.runtime,
  de.openali.odysseus.chart.factory,
  de.openali.odysseus.chart.ext.base,
  org.kalypso.zml.ui,
- org.kalypso.lippehydraulik.chart;bundle-version="1.0.0"
+ org.kalypso.hwv.core;bundle-version="11.11.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .

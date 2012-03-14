@@ -6,7 +6,7 @@
          point="org.eclipse.core.runtime.applications">
       <application>
          <run
-               class="de.openali.odysseus.service.ods.test.application.OdysseusServiceODSApplication">
+               class="de.openali.odysseus.service.ods.product.application.OdysseusServiceODSApplication">
          </run>
       </application>
    </extension>
@@ -25,13 +25,19 @@
    <extension
          point="de.openali.odysseus.chart.factory.LayerProvider">
       <provider
-            class="org.kalypso.lippehydraulik.chart.layer.provider.UVFLayerProviderServer"
-            id="org.kalypso.chart.lippehydraulik.layer.provider.UVFServer">
-      </provider>
-      <provider
             class="org.kalypso.zml.ui.chart.layer.provider.ZmlGridLayerProvider"
             id="org.kalypso.zml.ui.chart.layer.provider.ZmlGridLayerProvider">
       </provider>
+      <provider
+            class="de.openali.odysseus.chart.ext.base.layer.provider.UVFLayerProvider"
+            id="de.openali.odysseus.chart.ext.base.layer.provider.UVFLayerProvider">
+      </provider>
+   </extension>
+   <extension
+         point="org.kalypso.contribs.eclipsercp.fallbackConfigLocation">
+      <locationProvider
+            class="de.openali.odysseus.service.ods.product.DebugLocationProvider">
+      </locationProvider>
    </extension>
 
 </plugin>
