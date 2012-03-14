@@ -3,6 +3,7 @@ package de.openali.odysseus.service.ods.environment;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import org.apache.xmlbeans.XmlException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.osgi.FrameworkUtilities;
+import org.kalypso.contribs.eclipse.utils.ConfigUtils;
 import org.kalypso.ogc.core.exceptions.OWSException;
 import org.kalypso.ogc.core.operations.IOGCOperation;
 
@@ -117,15 +119,21 @@ public class ODSEnvironment implements IODSEnvironment
 
   private void checkConfigDir( ) throws IOException
   {
+    // absolute path
     final String pathString = FrameworkUtilities.getProperty( IODSConstants.ODS_CONFIG_PATH_KEY, IODSConstants.ODS_CONFIG_PATH_DEFAULT );
     final File path = new File( pathString );
-    if( !path.exists() )
-      throw new FileNotFoundException( "Path to config file doesn't exist: " + path.getAbsolutePath() );
+    if( path.exists() )
+    {
+      m_configDir = path;
+      return;
+    }
 
-    if( !path.canRead() )
-      throw new IOException( "Config dir is not readable: " + path.getAbsolutePath() );
-
-    m_configDir = path;
+    // relative search, fallback test
+    final String fileString = FrameworkUtilities.getProperty( IODSConstants.ODS_CONFIG_FILENAME_KEY, IODSConstants.ODS_CONFIG_FILENAME_DEFAULT );
+    final File relPath = new File( pathString, fileString );
+    final URL url = ConfigUtils.findCentralConfigLocation( relPath.toString() );
+    final File file = new File( url.getPath() );
+    m_configDir = file.getParentFile();
   }
 
   private void checkConfigFile( ) throws IOException
