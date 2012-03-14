@@ -66,6 +66,8 @@ public class NativeObservationGrapAdapter extends AbstractObservationImporter
 {
   public static final String SOURCE_ID = "source://native.observation.grap.import"; //$NON-NLS-1$
 
+  public static final String SOURCE_ID_MISSING_VALUE = SOURCE_ID + MISSING_VALUE_POSTFIX;
+
   private static final Pattern GRAP_PATTERN = Pattern.compile( "([0-9]{1,2}.+?[0-9]{1,2}.+?[0-9]{2,4}.+?[0-9]{1,2}.+?[0-9]{1,2}.[0-9 ]{1,2})(.*-?[0-9\\.]+)" ); //$NON-NLS-1$
 
   private static final Pattern DATE_PATTERN = Pattern.compile( "([0-9 ]{2}) ([0-9 ]{2}) ([0-9]{4}) ([0-9 ]{2}) ([0-9 ]{2}) ([0-9 ]{2})" ); //$NON-NLS-1$
@@ -94,7 +96,11 @@ public class NativeObservationGrapAdapter extends AbstractObservationImporter
           final Date date = parseDate( matcher.group( 1 ), sdf );
           final Double value = NumberUtils.parseDouble( matcher.group( 2 ) );
 
-          addDataSet( new NativeObservationDataSet( date, value, KalypsoStati.BIT_OK, SOURCE_ID ) );
+          if( isMissingValue( value ) )
+            addDataSet( new NativeObservationDataSet( date, value, KalypsoStati.BIT_CHECK, SOURCE_ID_MISSING_VALUE ) );
+          else
+            addDataSet( new NativeObservationDataSet( date, value, KalypsoStati.BIT_OK, SOURCE_ID ) );
+
         }
         else
         {
@@ -108,6 +114,18 @@ public class NativeObservationGrapAdapter extends AbstractObservationImporter
       reader.close();
     }
 
+  }
+
+  private boolean isMissingValue( final Double value )
+  {
+    if( Double.isNaN( value ) )
+      return true;
+    else if( Math.abs( -999.0 - value ) < 0.1 )
+      return true;
+    else if( Math.abs( -888.0 - value ) < 0.1 )
+      return true;
+
+    return false;
   }
 
   private Date parseDate( final String dateString, final SimpleDateFormat sdf ) throws ParseException, CoreException

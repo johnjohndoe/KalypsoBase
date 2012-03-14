@@ -75,7 +75,7 @@ import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
  */
 public abstract class AbstractObservationImporter implements INativeObservationAdapter, IExecutableExtension
 {
-  protected static final String MISSING_VALUE_POSTFIX = "/missing.value";
+  public static final String MISSING_VALUE_POSTFIX = "/missing.value";
 
   private String m_axisTypeValue;
 
