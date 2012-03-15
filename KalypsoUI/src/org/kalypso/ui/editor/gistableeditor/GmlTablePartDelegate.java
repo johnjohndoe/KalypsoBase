@@ -55,12 +55,14 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchPartSite;
+import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -123,20 +125,38 @@ public class GmlTablePartDelegate
 
   private void templateChanged( )
   {
-    if( m_layerTable == null )
+    final LayerTableViewer layerTable = m_layerTable;
+    if( layerTable == null )
       return;
 
-    final ILayerTableInput oldInput = m_layerTable.getInput();
+    final ILayerTableInput oldInput = layerTable.getInput();
+    final IFeaturesProviderListener featuresProviderListener = m_featuresProviderListener;
+
     if( oldInput != null )
-      oldInput.removeFeaturesProviderListener( m_featuresProviderListener );
+      oldInput.removeFeaturesProviderListener( featuresProviderListener );
 
     final Layer layer = m_tableTemplate == null ? null : m_tableTemplate.getLayer();
-    m_layerTable.setInput( layer, m_tableContext );
-    m_layerTable.applyLayer( layer, m_tableContext );
+    final URL tableContext = m_tableContext;
 
-    final ILayerTableInput newInput = m_layerTable.getInput();
-    if( newInput != null )
-      newInput.addFeaturesProviderListener( m_featuresProviderListener );
+    final Job job = new UIJob( "Template changed" ) //$NON-NLS-1$
+    {
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        if( layerTable.getControl().isDisposed() )
+          return Status.OK_STATUS;
+
+        layerTable.setInput( layer, tableContext );
+        layerTable.applyLayer( layer, tableContext );
+
+        final ILayerTableInput newInput = layerTable.getInput();
+        if( newInput != null )
+          newInput.addFeaturesProviderListener( featuresProviderListener );
+        return Status.OK_STATUS;
+      }
+    };
+    job.setSystem( true );
+    job.schedule();
   }
 
   public void load( final IStorageEditorInput input, final IProgressMonitor monitor ) throws CoreException
