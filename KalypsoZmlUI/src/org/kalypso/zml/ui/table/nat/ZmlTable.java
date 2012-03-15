@@ -189,7 +189,7 @@ public class ZmlTable extends Composite implements IZmlTable
 
     new ZmlTableTooltip( m_table, getModelViewport() );
 
-    m_table.addMouseListener( new NatTableContextMenuSupport( m_table, m_viewport ) );
+    m_table.addMouseListener( new NatTableContextMenuSupport( m_table, m_viewport, getSelection() ) );
     m_table.addLayerListener( new UpdateChartSelectionListener( getSelection() ) );
 
     m_pager = new ZmlTablePager( m_viewport, m_table, m_bodyLayer );
