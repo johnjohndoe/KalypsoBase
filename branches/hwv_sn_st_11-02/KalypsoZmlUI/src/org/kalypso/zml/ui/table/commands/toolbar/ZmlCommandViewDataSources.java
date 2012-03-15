@@ -52,6 +52,7 @@ import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.zml.core.table.binding.ZmlRuleResolver;
 import org.kalypso.zml.core.table.binding.rule.AbstractZmlRule;
 import org.kalypso.zml.core.table.model.event.IZmlModelColumnEvent;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.core.table.schema.RuleRefernceType;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
@@ -75,7 +76,8 @@ public class ZmlCommandViewDataSources extends AbstractHandler implements IEleme
     rule.setEnabled( HandlerUtils.isSelected( event ) );
 
     final IZmlTable table = ZmlHandlerUtil.getTable( event );
-    table.getModelViewport().fireModelChanged( IZmlModelColumnEvent.COLUMN_RULES_CHANGED );
+    final ZmlModelViewport viewport = table.getModelViewport();
+    viewport.fireModelChanged( IZmlModelColumnEvent.COLUMN_RULES_CHANGED );
 
     return Status.OK_STATUS;
   }
@@ -86,7 +88,7 @@ public class ZmlCommandViewDataSources extends AbstractHandler implements IEleme
     {
       final ZmlRuleResolver resolver = ZmlRuleResolver.getInstance();
       final RuleRefernceType reference = new RuleRefernceType();
-      reference.setUrl( "urn:org:kalypso:zml:ui:table:global#ruleDataSource" );
+      reference.setUrl( "urn:org:kalypso:zml:ui:table:global#ruleDataSource" ); //$NON-NLS-1$
 
       return resolver.findRule( null, reference );
     }
