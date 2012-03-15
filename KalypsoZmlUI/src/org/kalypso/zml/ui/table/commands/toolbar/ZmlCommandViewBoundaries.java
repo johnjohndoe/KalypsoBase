@@ -80,11 +80,8 @@ public class ZmlCommandViewBoundaries extends AbstractHandler implements IElemen
     }
 
     final IZmlTable table = ZmlHandlerUtil.getTable( event );
-
     final ZmlModelViewport viewport = table.getModelViewport();
     viewport.fireModelChanged( IZmlModelColumnEvent.COLUMN_RULES_CHANGED );
-
-// table.refresh( new ZmlModelColumnChangeType( IZmlModelColumnEvent.COLUMN_RULES_CHANGED ) );
 
     return Status.OK_STATUS;
   }
