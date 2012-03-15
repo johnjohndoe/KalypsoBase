@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,18 +38,32 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model.references;
+package org.kalypso.zml.ui.table.nat.editing;
 
-import org.eclipse.core.runtime.CoreException;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
+import net.sourceforge.nattable.data.validate.DataValidator;
+import net.sourceforge.nattable.data.validate.IDataValidator;
+
+import org.kalypso.contribs.java.lang.NumberUtils;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlLabelStrategy
+public class ZmlDefaultNumericDataValidator extends DataValidator implements IDataValidator
 {
-  String getText( ZmlModelViewport viewport, final IZmlModelValueCell cell ) throws SensorException, CoreException;
 
-  String getPlainText( ZmlModelViewport viewport, IZmlModelValueCell cell ) throws SensorException, CoreException;
+  @Override
+  public boolean validate( final int columnIndex, final int rowIndex, final Object newValue )
+  {
+    try
+    {
+      NumberUtils.parseDouble( newValue.toString() );
+    }
+    catch( final NumberFormatException e )
+    {
+      return false;
+    }
+
+    return true;
+  }
+
 }

@@ -49,4 +49,6 @@ import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 public interface IZmlModelCellLabelProvider extends IZmlCellLabelProvider
 {
   String getText( ZmlModelViewport viewport, IZmlModelValueCell cell );
+
+  String getPlainText( ZmlModelViewport viewport, IZmlModelValueCell cell );
 }

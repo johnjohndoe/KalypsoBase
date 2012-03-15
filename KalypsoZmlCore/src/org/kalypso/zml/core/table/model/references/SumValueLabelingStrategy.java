@@ -69,13 +69,25 @@ public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy
     final int resolution = viewport.getResolution();
     if( resolution == 0 )
     {
-      return getAsOriginValue( viewport, cell );
+      return getAsOriginValue( viewport, cell, true );
     }
 
-    return getAsAggregatedValue( viewport, cell );
+    return getAsAggregatedValue( viewport, cell, true );
   }
 
-  private String getAsAggregatedValue( final ZmlModelViewport viewport, final IZmlModelValueCell current ) throws CoreException, SensorException
+  @Override
+  public String getPlainText( final ZmlModelViewport viewport, final IZmlModelValueCell cell ) throws SensorException, CoreException
+  {
+    final int resolution = viewport.getResolution();
+    if( resolution == 0 )
+    {
+      return getAsOriginValue( viewport, cell, false );
+    }
+
+    return getAsAggregatedValue( viewport, cell, false );
+  }
+
+  private String getAsAggregatedValue( final ZmlModelViewport viewport, final IZmlModelValueCell current, final boolean doApplyRules ) throws CoreException, SensorException
   {
     final IZmlModel zml = viewport.getModel();
     final IZmlModelColumn column = current.getColumn();
@@ -108,6 +120,9 @@ public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy
     final CellStyle style = current.getStyle( viewport );
     String text = String.format( style.getTextFormat(), value );
 
+    if( !doApplyRules )
+      return text;
+
     final ZmlCellRule[] rules = current.findActiveRules( viewport );
     for( final ZmlCellRule rule : rules )
     {
@@ -125,11 +140,14 @@ public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy
     return text;
   }
 
-  private String getAsOriginValue( final ZmlModelViewport viewport, final IZmlModelValueCell cell ) throws CoreException, SensorException
+  private String getAsOriginValue( final ZmlModelViewport viewport, final IZmlModelValueCell cell, final boolean doApplyRules ) throws CoreException, SensorException
   {
     final CellStyle style = cell.getStyle( viewport );
 
     String text = String.format( style.getTextFormat(), cell.getValue() );
+
+    if( !doApplyRules )
+      return text;
 
     final ZmlCellRule[] rules = cell.findActiveRules( viewport );
     for( final ZmlCellRule rule : rules )
@@ -147,4 +165,5 @@ public class SumValueLabelingStrategy extends AbstractValueLabelingStrategy
 
     return text;
   }
+
 }

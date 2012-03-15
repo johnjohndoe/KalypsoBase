@@ -82,4 +82,13 @@ public class InstantaneousValueLabelingStrategy extends AbstractValueLabelingStr
     return text;
   }
 
+  @Override
+  public String getPlainText( final ZmlModelViewport viewport, final IZmlModelValueCell cell ) throws SensorException, CoreException
+  {
+    final CellStyle style = cell.getStyle( viewport );
+    final String text = String.format( style.getTextFormat(), cell.getValue() );
+
+    return text;
+  }
+
 }
