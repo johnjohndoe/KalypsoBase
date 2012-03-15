@@ -56,7 +56,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.zml.core.table.binding.ZmlRuleResolver;
 import org.kalypso.zml.core.table.binding.rule.AbstractZmlRule;
 import org.kalypso.zml.core.table.model.event.IZmlModelColumnEvent;
-import org.kalypso.zml.core.table.model.event.ZmlModelColumnChangeType;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.core.table.schema.RuleRefernceType;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 import org.kalypso.zml.ui.table.IZmlTable;
@@ -80,7 +80,11 @@ public class ZmlCommandViewBoundaries extends AbstractHandler implements IElemen
     }
 
     final IZmlTable table = ZmlHandlerUtil.getTable( event );
-    table.refresh( new ZmlModelColumnChangeType( IZmlModelColumnEvent.COLUMN_RULES_CHANGED ) );
+
+    final ZmlModelViewport viewport = table.getModelViewport();
+    viewport.fireModelChanged( IZmlModelColumnEvent.COLUMN_RULES_CHANGED );
+
+// table.refresh( new ZmlModelColumnChangeType( IZmlModelColumnEvent.COLUMN_RULES_CHANGED ) );
 
     return Status.OK_STATUS;
   }
