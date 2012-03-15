@@ -51,6 +51,7 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
+import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
 
 /**
  * @author Dirk Kuch
@@ -67,10 +68,13 @@ public class NatTableContextMenuSupport extends MouseAdapter
 
   public static int SELECTED_COLUMN;
 
-  public NatTableContextMenuSupport( final NatTable table, final ZmlModelViewport viewport )
+  private final IZmlTableSelection m_selection;
+
+  public NatTableContextMenuSupport( final NatTable table, final ZmlModelViewport viewport, final IZmlTableSelection selection )
   {
     m_table = table;
     m_viewport = viewport;
+    m_selection = selection;
 
     m_contextMenu = m_manager.createContextMenu( m_table );
     m_table.setMenu( m_contextMenu );
@@ -85,9 +89,10 @@ public class NatTableContextMenuSupport extends MouseAdapter
 
       final int column = m_table.getColumnPositionByX( e.x );
       final int row = m_table.getRowPositionByY( e.y );
-
-      if( column == -1 || row == -1 )
+      if( column < 0 || row < 0 )
         return;
+
+      m_selection.updateLastSelectedCellPosition( row, column - 1 );
 
       if( row == 0 )
       {
