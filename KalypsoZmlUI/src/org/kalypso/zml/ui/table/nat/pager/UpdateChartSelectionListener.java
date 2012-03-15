@@ -46,6 +46,7 @@ import java.util.TreeSet;
 
 import net.sourceforge.nattable.layer.ILayerListener;
 import net.sourceforge.nattable.layer.event.ILayerEvent;
+import net.sourceforge.nattable.selection.event.CellSelectionEvent;
 import net.sourceforge.nattable.selection.event.RowSelectionEvent;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -80,7 +81,7 @@ public class UpdateChartSelectionListener implements ILayerListener
   @Override
   public void handleLayerEvent( final ILayerEvent event )
   {
-    if( event instanceof RowSelectionEvent )
+    if( event instanceof RowSelectionEvent || event instanceof CellSelectionEvent )
     {
       final IServiceLocator serviceLocator = PlatformUI.getWorkbench();
       final IEvaluationService service = (IEvaluationService) serviceLocator.getService( IEvaluationService.class );
