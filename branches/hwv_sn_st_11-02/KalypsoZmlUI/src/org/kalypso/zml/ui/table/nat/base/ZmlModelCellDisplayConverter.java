@@ -44,6 +44,8 @@ import java.text.SimpleDateFormat;
 
 import net.sourceforge.nattable.data.convert.DisplayConverter;
 
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlModelIndexCell;
@@ -66,7 +68,9 @@ public class ZmlModelCellDisplayConverter extends DisplayConverter
   @Override
   public Object canonicalToDisplayValue( final Object canonicalValue )
   {
-    if( canonicalValue instanceof IZmlModelIndexCell )
+    if( Objects.isNull( canonicalValue ) )
+      return Strings.EMPTY;
+    else if( canonicalValue instanceof IZmlModelIndexCell )
     {
       final SimpleDateFormat sdf = new SimpleDateFormat();
       sdf.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
