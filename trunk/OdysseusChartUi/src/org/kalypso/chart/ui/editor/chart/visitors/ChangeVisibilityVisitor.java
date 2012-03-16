@@ -55,8 +55,8 @@ public class ChangeVisibilityVisitor extends AbstractParameterVisitor
   public ChangeVisibilityVisitor( final String parameter, final IChartLayerFilter[] filters, final boolean enabled )
   {
     super( parameter );
-    m_filters = filters;
 
+    m_filters = filters;
     m_enabled = enabled;
   }
 
@@ -79,5 +79,4 @@ public class ChangeVisibilityVisitor extends AbstractParameterVisitor
     else
       layer.removeFilter( m_filters );
   }
-
 }

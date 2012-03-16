@@ -45,6 +45,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -53,6 +54,7 @@ import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.editing.IZmlEditingStrategy;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
@@ -113,14 +115,46 @@ public class ZmlCommandPasteValue extends AbstractHandler
 
     final CSVReader reader = new CSVReader( new StringReader( data ), '\t' );
     final List<String[]> rows = reader.readAll();
+    if( rows.isEmpty() )
+      return new String[] {};
+
+    int index = getIndex( rows.get( 0 ) );
+    if( index == -1 )
+    {
+      rows.remove( 0 );// header row
+      if( !rows.isEmpty() )
+        index = getIndex( rows.get( 0 ) );
+    }
+
+    if( index == -1 )
+      throw new ExecutionException( "Eine Verarbeitung der Daten war nicht möglich! Ungültiges Datenformat" );
+
     for( final String[] row : rows )
     {
-      if( row.length != 1 )
-        throw new ExecutionException( "Ungültige Anzahl Spalten. Nur Verarbeitung von einer Spalte möglich!" );
-
-      strings.add( row[0] );
+      strings.add( row[index] );
     }
 
     return strings.toArray( new String[] {} );
+  }
+
+  private int getIndex( final String[] row )
+  {
+
+    for( int index = 0; index < ArrayUtils.getLength( row ); index++ )
+    {
+      try
+      {
+        final double value = NumberUtils.parseDouble( row[index] );
+        if( Double.isNaN( value ) )
+          continue;
+
+        return index;
+      }
+      catch( final Throwable t )
+      {
+      }
+    }
+
+    return -1;
   }
 }

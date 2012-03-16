@@ -42,6 +42,9 @@ package org.kalypso.zml.ui.chart.layer.visitor;
 
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITupleModel;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.core.diagram.base.IZmlLayer;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 
@@ -97,10 +100,26 @@ public class SingleGridVisibilityVisitor extends AbstractChartLayerVisitor
     if( Objects.isNull( handler ) )
       return false;
 
-    if( Objects.isNull( handler.getAdapter( IObservation.class ) ) )
+    final IObservation observation = (IObservation) handler.getAdapter( IObservation.class );
+    if( Objects.isNull( observation ) )
       return false;
 
-    return true;
+    try
+    {
+      final ITupleModel model = observation.getValues( null );
+      if( model.isEmpty() )
+        return false;
+
+      final String type = targetAxis.getIdentifier();
+
+      return Objects.isNotNull( AxisUtils.findAxis( model.getAxes(), type ) );
+    }
+    catch( final SensorException e )
+    {
+      e.printStackTrace();
+    }
+
+    return false;
   }
 
   private IZmlLayer findZmlLayer( final ILayerContainer plainLayer )
