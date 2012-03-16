@@ -4,7 +4,7 @@
     <Styles>
       <!-- N (bluish) styles (area) -->
       <AreaStyle role="fehlwert_area_0">
-        <Alpha>64</Alpha>
+        <Alpha>99</Alpha>
         <Fill>
           <ColorFill>
             <Color>FF4911</Color>
@@ -15,7 +15,7 @@
           <LineColor>093689</LineColor>
         </Stroke>
       </AreaStyle>
-
+     
       <PointStyle role="stuetzstelle_point_0">
         <Width>6</Width>
         <Height>6</Height>
@@ -44,10 +44,10 @@
 
     <Layers>
       <Layer id="Fehlwerte" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider epid="org.kalypso.zml.ui.chart.layer.provider.missing.zml.values">
-          <Parameters>
-            <Parameter name="content.stuetzstelle" value="true" />
-          </Parameters>
+        <Provider epid="org.kalypso.zml.ui.chart.layer.provider.missing.zml.values" >
+        <Parameters>
+          <Parameter name="content.fehlwert" value="true" />
+        </Parameters>
         </Provider>
         <Title>Fehlwerte</Title>
         <Description />
