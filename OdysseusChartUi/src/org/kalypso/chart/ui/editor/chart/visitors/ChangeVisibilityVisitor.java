@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.editor.chart.visitors;
 
-import de.openali.odysseus.chart.framework.model.ILayerContainer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
 
@@ -68,24 +67,9 @@ public class ChangeVisibilityVisitor extends AbstractParameterVisitor
     {
       layer.setVisible( m_enabled );
       applyFilters( layer );
-
-      doCheckParents( layer );
     }
     else
       layer.getLayerManager().accept( this );
-  }
-
-  private void doCheckParents( final IChartLayer layer )
-  {
-    ILayerContainer parent = layer.getParent();
-    while( parent instanceof IChartLayer )
-    {
-      final IChartLayer p = (IChartLayer) parent;
-      if( m_enabled && !p.isVisible() )
-        p.setVisible( m_enabled );
-
-      parent = p.getParent();
-    }
   }
 
   private void applyFilters( final IChartLayer layer )
