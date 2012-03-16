@@ -38,8 +38,8 @@
           id="org.kalypso.hwv.core.chart.layer.ZmlBoundaryLayerProvider">
     </provider>
     <provider
-          class="org.kalypso.zml.ui.chart.layer.provider.MissingZmlValuesLayerProvider"
-          id="org.kalypso.zml.ui.chart.layer.provider.missing.zml.values">
+          class="org.kalypso.zml.ui.chart.layer.provider.ZmlBarValueQualityLayerProvider"
+          id="org.kalypso.zml.ui.chart.layer.provider.bar.value.quaility.layer">
     </provider>
  </extension>
 
