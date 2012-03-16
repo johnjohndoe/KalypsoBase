@@ -53,9 +53,6 @@ public class ZmlCommandViewAll extends AbstractHourViewCommand
 
   private static final int RESULUTION = 0;
 
-  /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event )
   {
@@ -65,9 +62,6 @@ public class ZmlCommandViewAll extends AbstractHourViewCommand
     return Status.OK_STATUS;
   }
 
-  /**
-   * @see org.kalypso.zml.ui.table.commands.toolbar.view.AbstractHourViewCommand#isActive(org.kalypso.zml.ui.table.commands.toolbar.view.ZmlViewResolutionFilter)
-   */
   @Override
   protected boolean isActive( final ZmlViewResolutionFilter filter )
   {
