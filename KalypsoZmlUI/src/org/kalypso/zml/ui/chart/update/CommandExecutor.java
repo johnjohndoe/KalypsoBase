@@ -63,12 +63,9 @@ public class CommandExecutor implements Runnable
 {
   private final ICommandExecutionTrigger m_trigger;
 
-  private final boolean m_firstRun;
-
-  public CommandExecutor( final ICommandExecutionTrigger trigger, final boolean firstRun )
+  public CommandExecutor( final ICommandExecutionTrigger trigger )
   {
     m_trigger = trigger;
-    m_firstRun = firstRun;
   }
 
   /**
@@ -91,19 +88,16 @@ public class CommandExecutor implements Runnable
       {
         final String id = getCommandId( commandUri );
 
-        if( m_firstRun )
-        {
-          final Map<String, String> parameters = QueryUtilities.parse( commandUri );
+        final Map<String, String> parameters = QueryUtilities.parse( commandUri );
 
-          final Command command = commandService.getCommand( id );
-          final IHandler handler = command.getHandler();
+        final Command command = commandService.getCommand( id );
+        final IHandler handler = command.getHandler();
 
-          final ExecutionEvent event = new ExecutionEvent( command, parameters, this, context );
-          handler.execute( event );
+        final ExecutionEvent event = new ExecutionEvent( command, parameters, this, context );
+        handler.execute( event );
 
-          /** don't set parameters, otherwise the updateElement function of the command handler will not called */
-          commandService.refreshElements( id, parameters );
-        }
+        /** don't set parameters, otherwise the updateElement function of the command handler will not called */
+        commandService.refreshElements( id, parameters );
 
       }
       catch( final ExecutionException e )
