@@ -43,7 +43,6 @@ package org.kalypso.ui.editor.mapeditor;
 import java.awt.Component;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.swing.SwingUtilities;
@@ -51,7 +50,6 @@ import javax.swing.SwingUtilities;
 import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -73,8 +71,6 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-import org.kalypso.contribs.eclipse.core.resources.IStorageWithContext;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.i18n.Messages;
@@ -327,18 +323,6 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
     {
       monitor.done();
     }
-  }
-
-  private URL findContext( final IStorageEditorInput input ) throws MalformedURLException, CoreException
-  {
-    final IStorage storage = input.getStorage();
-    if( storage instanceof IStorageWithContext )
-      return ((IStorageWithContext) storage).getContext();
-
-    if( storage instanceof IResource )
-      return ResourceUtilities.createURL( (IResource) storage );
-
-    return null;
   }
 
   @Override

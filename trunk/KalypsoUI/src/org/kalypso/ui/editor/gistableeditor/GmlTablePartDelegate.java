@@ -44,6 +44,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.xml.bind.JAXBException;
@@ -64,7 +65,6 @@ import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.i18n.Messages;
@@ -78,6 +78,7 @@ import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.template.gistableview.Gistableview.Layer;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.editor.AbstractWorkbenchPart;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
@@ -168,11 +169,11 @@ public class GmlTablePartDelegate
       final IStorage storage = input.getStorage();
 
       m_tableTemplate = GisTemplateHelper.loadGisTableview( storage );
-      m_tableContext = findContext( storage );
+      m_tableContext = AbstractWorkbenchPart.findContext( input );
 
       templateChanged();
     }
-    catch( final JAXBException e )
+    catch( final JAXBException | MalformedURLException e )
     {
       final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), "Failed to load table template", e ); //$NON-NLS-1$
       throw new CoreException( status );
@@ -181,18 +182,6 @@ public class GmlTablePartDelegate
     {
       monitor.worked( 1000 );
     }
-  }
-
-  private URL findContext( final IStorage storage )
-  {
-    if( storage == null )
-      return null;
-
-    final IFile file = (IFile) storage.getAdapter( IFile.class );
-    if( file == null )
-      return null;
-
-    return ResourceUtilities.createQuietURL( file );
   }
 
   public void save( final IFile file, final IProgressMonitor monitor ) throws CoreException
