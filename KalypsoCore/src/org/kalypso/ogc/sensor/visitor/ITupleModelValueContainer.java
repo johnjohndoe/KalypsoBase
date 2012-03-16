@@ -57,4 +57,8 @@ public interface ITupleModelValueContainer
   boolean hasAxis( String... types );
 
   IAxis[] getAxes( );
+
+  Object getPrevious( IAxis axis ) throws SensorException;
+
+  Object getNext( IAxis axis ) throws SensorException;
 }
