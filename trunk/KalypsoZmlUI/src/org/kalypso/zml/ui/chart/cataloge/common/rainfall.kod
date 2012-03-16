@@ -10,7 +10,7 @@
             <Color>093689</Color>
           </ColorFill>
         </Fill>
-        <Stroke>
+        <Stroke isVisible="false">
           <Width>1</Width>
           <LineColor>093689</LineColor>
         </Stroke>
@@ -22,7 +22,7 @@
             <Color>6186C3</Color>
           </ColorFill>
         </Fill>
-        <Stroke>
+        <Stroke isVisible="false">
           <Width>1</Width>
           <LineColor>6186C3</LineColor>
         </Stroke>
@@ -34,7 +34,7 @@
             <Color>008000</Color>
           </ColorFill>
         </Fill>
-        <Stroke>
+        <Stroke isVisible="false">
           <Width>1</Width>
           <LineColor>008000</LineColor>
         </Stroke>
@@ -46,7 +46,7 @@
             <Color>FF8000</Color>
           </ColorFill>
         </Fill>
-        <Stroke>
+        <Stroke isVisible="false">
           <Width>1</Width>
           <LineColor>FF8000</LineColor>
         </Stroke>
@@ -58,7 +58,7 @@
             <Color>FF00FF</Color>
           </ColorFill>
         </Fill>
-        <Stroke>
+        <Stroke isVisible="false">
           <Width>1</Width>
           <LineColor>FF00FF</LineColor>
         </Stroke>
@@ -70,7 +70,7 @@
             <Color>000040</Color>
           </ColorFill>
         </Fill>
-        <Stroke>
+        <Stroke isVisible="false">
           <Width>1</Width>
           <LineColor>000040</LineColor>
         </Stroke>
@@ -87,12 +87,13 @@
         </Provider>
         <Title>Niederschlag</Title>
         <Layers>
+          <DerivedLayer id="Stuetzstellen" legend="false" visible="false">
+            <Description />
+            <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:quality#Stuetzstellen"></LayerReference>
+          </DerivedLayer>
           <DerivedLayer id="Fehlwert" legend="false" visible="false">
             <Description />
-            <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:missing#Fehlwerte"></LayerReference>
-            <Parameters>
-              <Parameter name="content.fehlwert" value="true" />
-            </Parameters>
+            <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:quality#Fehlwerte"></LayerReference>
           </DerivedLayer>
 
           <Layer id="Niederschlag" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
