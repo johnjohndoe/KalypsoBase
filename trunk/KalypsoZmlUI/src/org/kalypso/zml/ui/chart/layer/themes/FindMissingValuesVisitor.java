@@ -46,6 +46,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.diagram.base.IZmlLayer;
@@ -59,7 +60,7 @@ import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLaye
  */
 public class FindMissingValuesVisitor extends AbstractChartLayerVisitor
 {
-  Set<Date> m_missing = new TreeSet<>();
+  Set<DateRange> m_missing = new TreeSet<>();
 
   @Override
   public void visit( final IChartLayer layer )
@@ -68,12 +69,7 @@ public class FindMissingValuesVisitor extends AbstractChartLayerVisitor
       return;
     if( !(layer instanceof IZmlLayer) )
     {
-      final IChartLayer[] layers = layer.getLayerManager().getLayers();
-      for( final IChartLayer child : layers )
-      {
-        visit( child );
-      }
-
+      layer.getLayerManager().accept( this );
       return;
     }
 
@@ -99,9 +95,8 @@ public class FindMissingValuesVisitor extends AbstractChartLayerVisitor
     }
   }
 
-  public Date[] getMissingValues( )
+  public DateRange[] getMissingValues( )
   {
-    return m_missing.toArray( new Date[] {} );
+    return m_missing.toArray( new DateRange[] {} );
   }
-
 }

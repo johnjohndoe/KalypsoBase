@@ -40,14 +40,23 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.themes;
 
-import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.Range;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.ogc.sensor.DateRange;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractBarLayer;
+import de.openali.odysseus.chart.framework.model.ILayerContainer;
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
@@ -77,13 +86,88 @@ public class MissingZmlValuesLayer extends AbstractBarLayer implements IChartLay
   @Override
   public void paint( final GC gc )
   {
-    final ILayerManager manger = getModel().getLayerManager();
+    final DateRange[] missing = findMissingValues();
+    if( ArrayUtils.isEmpty( missing ) )
+      return;
+
+    final Rectangle[] rectangles = toRectangles( missing );
+    for( final Rectangle rectangle : rectangles )
+    {
+      paint( gc, rectangle );
+    }
+  }
+
+  private Rectangle[] toRectangles( final DateRange[] missing )
+  {
+    final ICoordinateMapper mapper = getCoordinateMapper();
+    final IAxis domainAxis = mapper.getDomainAxis();
+    final IAxis targetAxis = mapper.getTargetAxis();
+
+    final IDataRange<Number> domainRange = domainAxis.getNumericRange();
+    final IDataRange<Number> targetRange = targetAxis.getNumericRange();
+
+    final Number min = domainRange.getMin();
+    final Number max = domainRange.getMax();
+
+    final Set<Rectangle> rectangles = new LinkedHashSet<>();
+
+    for( final DateRange daterange : missing )
+    {
+      final Range<Long> range = Range.between( daterange.getFrom().getTime(), daterange.getTo().getTime() );
+      final Rectangle rectangle = toRectangle( range );
+      if( Objects.isNotNull( rectangle ) )
+        rectangles.add( rectangle );
+    }
+
+    return rectangles.toArray( new Rectangle[] {} );
+  }
+
+  private Rectangle toRectangle( final Range<Long> daterange )
+  {
+    final ICoordinateMapper mapper = getCoordinateMapper();
+    final IAxis domainAxis = mapper.getDomainAxis();
+    final IAxis targetAxis = mapper.getTargetAxis();
+
+    final Range<Long> domainRange = getRange( domainAxis.getNumericRange() );
+    final Range<Long> targetRange = getRange( targetAxis.getNumericRange() );
+    if( Objects.isNull( domainRange, targetRange ) )
+      return null;
+
+    if( !domainRange.isOverlappedBy( daterange ) )
+      return null;
+
+    final Range<Long> intersection = domainRange.intersectionWith( daterange );
+
+    final Integer x0 = Math.abs( domainAxis.numericToScreen( intersection.getMinimum() ) );
+    final Integer x1 = Math.abs( domainAxis.numericToScreen( intersection.getMaximum() ) );
+
+    final Integer y0 = targetAxis.numericToScreen( targetRange.getMinimum() );
+// final Integer y1 = targetAxis.numericToScreen( targetRange.getMaximum() );
+
+    return new Rectangle( x0, y0, x1 - x0, 10 );
+  }
+
+  private Range<Long> getRange( final IDataRange<Number> range )
+  {
+    final Number min = range.getMin();
+    final Number max = range.getMax();
+    if( Objects.isNull( min, max ) )
+      return null;
+
+    return Range.between( min.longValue(), max.longValue() );
+  }
+
+  private DateRange[] findMissingValues( )
+  {
+    final ILayerContainer parent = getParent();
+    if( !(parent instanceof IChartLayer) )
+      return new DateRange[] {};
+
+    final IChartLayer base = (IChartLayer) parent;
+
     final FindMissingValuesVisitor visitor = new FindMissingValuesVisitor();
-    manger.accept( visitor );
+    base.getLayerManager().accept( visitor );
 
-    final Date[] missing = visitor.getMissingValues();
-
-    final int adsadsf = 0;
-
+    return visitor.getMissingValues();
   }
 }

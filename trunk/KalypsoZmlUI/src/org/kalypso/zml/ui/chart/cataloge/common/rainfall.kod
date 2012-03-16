@@ -87,6 +87,14 @@
         </Provider>
         <Title>Niederschlag</Title>
         <Layers>
+          <DerivedLayer id="Fehlwert" legend="false" visible="false">
+            <Description />
+            <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:missing#Fehlwerte"></LayerReference>
+            <Parameters>
+              <Parameter name="content.fehlwert" value="true" />
+            </Parameters>
+          </DerivedLayer>
+
           <Layer id="Niederschlag" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlBarLayerProvider">
               <Parameters>
@@ -104,6 +112,11 @@
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:rainfall#n_area_5</StyleReference>
             </Styles>
           </Layer>
+
+
+
+
+
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
         </Layers>
         <MapperRefs>
