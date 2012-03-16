@@ -146,6 +146,9 @@ public class ZmlModelViewport
 
   public IZmlModelValueCell getCell( final IZmlModelRow row, final int columnIndex )
   {
+    if( Objects.isNull( row ) )
+      return null;
+
     if( columnIndex == -1 )
       return null;
 
@@ -316,9 +319,9 @@ public class ZmlModelViewport
     }
   }
 
+  // TODO caching?!?
   public IZmlModelValueCell[] getCells( final IZmlModelColumn column )
   {
-
     final Set<IZmlModelValueCell> cells = new LinkedHashSet<IZmlModelValueCell>();
 
     final IZmlModelRow[] rows = getRows();

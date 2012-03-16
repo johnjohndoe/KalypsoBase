@@ -46,6 +46,7 @@ import java.util.TreeSet;
 
 import net.sourceforge.nattable.layer.ILayerListener;
 import net.sourceforge.nattable.layer.event.ILayerEvent;
+import net.sourceforge.nattable.selection.event.CellSelectionEvent;
 import net.sourceforge.nattable.selection.event.RowSelectionEvent;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -80,7 +81,7 @@ public class UpdateChartSelectionListener implements ILayerListener
   @Override
   public void handleLayerEvent( final ILayerEvent event )
   {
-    if( event instanceof RowSelectionEvent )
+    if( isSelectionChangeEvent( event ) )
     {
       final IServiceLocator serviceLocator = PlatformUI.getWorkbench();
       final IEvaluationService service = (IEvaluationService) serviceLocator.getService( IEvaluationService.class );
@@ -89,7 +90,6 @@ public class UpdateChartSelectionListener implements ILayerListener
         return;
 
       final ILayerManager layerManager = chart.getChartModel().getLayerManager();
-
       final IZmlModelRow[] rows = m_selection.getSelectedRows();
       final Date[] selection = convert( rows );
 
@@ -101,6 +101,16 @@ public class UpdateChartSelectionListener implements ILayerListener
         doMultiSelection( layerManager, selection );
     }
 
+  }
+
+  private boolean isSelectionChangeEvent( final ILayerEvent event )
+  {
+    if( event instanceof RowSelectionEvent )
+      return true;
+    else if( event instanceof CellSelectionEvent )
+      return true;
+
+    return false;
   }
 
   private void doResetSelection( final ILayerManager layerManager )

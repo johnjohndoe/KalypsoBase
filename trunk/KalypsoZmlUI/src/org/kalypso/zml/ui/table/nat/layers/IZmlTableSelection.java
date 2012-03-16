@@ -59,4 +59,6 @@ public interface IZmlTableSelection
 
   IZmlModelValueCell[] getSelectedCells( IZmlModelColumn column );
 
+  void updateLastSelectedCellPosition( int row, int column );
+
 }

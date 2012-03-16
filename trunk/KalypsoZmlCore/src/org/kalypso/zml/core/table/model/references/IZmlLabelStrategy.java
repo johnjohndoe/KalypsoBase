@@ -50,4 +50,6 @@ import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 public interface IZmlLabelStrategy
 {
   String getText( ZmlModelViewport viewport, final IZmlModelValueCell cell ) throws SensorException, CoreException;
+
+  String getPlainText( ZmlModelViewport viewport, IZmlModelValueCell cell ) throws SensorException, CoreException;
 }

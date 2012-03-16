@@ -189,7 +189,7 @@ public class ZmlColumnHeaderCellPainter extends AbstractCellPainter
       final TextPainter painter = new TextPainter();
       width += painter.getPreferredWidth( cell, gc, configRegistry );
 
-      return width + 4;
+      return width + 20;
     }
 
     throw new UnsupportedOperationException();

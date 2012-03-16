@@ -84,4 +84,19 @@ public class ZmlModelCellLabelProvider extends AbstractCellLabelProvider impleme
     return "error";
   }
 
+  @Override
+  public String getPlainText( final ZmlModelViewport viewport, final IZmlModelValueCell cell )
+  {
+    try
+    {
+      return m_labeling.getPlainText( viewport, cell );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
+
+    return "error";
+  }
+
 }

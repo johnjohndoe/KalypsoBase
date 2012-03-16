@@ -243,7 +243,7 @@
           commandId="org.kalypso.zml.ui.table.commands.toolbar.view.hour.add">
        <activeWhen>
           <reference
-                definitionId="zml.table.shift.command.test.expression">
+                definitionId="zml.table.test.shift.command.isEnabled">
           </reference>
        </activeWhen>
     </handler>
@@ -252,7 +252,7 @@
           commandId="org.kalypso.zml.ui.table.commands.toolbar.view.hour.minus">
        <activeWhen>
           <reference
-                definitionId="zml.table.shift.command.test.expression">
+                definitionId="zml.table.test.shift.command.isEnabled">
           </reference>
        </activeWhen>
     </handler>
@@ -337,26 +337,26 @@
     </image>
  </extension>
  <extension
-       point="org.eclipse.core.expressions.propertyTesters">
-    <propertyTester
-          class="org.kalypso.zml.ui.table.commands.toolbar.view.ZmlPropertyTesterHourShiftCommand"
-          id="zml.table.shift.command.tester"
-          namespace="zml.table.command.shift"
-          properties="isActive"
-          type="org.kalypso.zml.ui.table.IZmlTableComposite">
-    </propertyTester>
- </extension>
- <extension
        point="org.eclipse.core.expressions.definitions">
     <definition
-          id="zml.table.shift.command.test.expression">
+          id="zml.table.test.shift.command.isEnabled">
        <with
              variable="activeTable">
           <test
-                property="zml.table.command.shift.isActive">
+                property="zml.table.shift.command.isActive">
           </test>
        </with>
     </definition>
+ </extension>
+ <extension
+       point="org.eclipse.core.expressions.propertyTesters">
+    <propertyTester
+          class="org.kalypso.zml.ui.table.commands.toolbar.view.ZmlHourShiftCommandsEnablePropertyTester"
+          id="zml.table.shift.command"
+          namespace="zml.table.shift.command"
+          properties="isActive"
+          type="org.kalypso.zml.ui.table.IZmlTableComposite">
+    </propertyTester>
  </extension>
  <extension
        point="org.eclipse.core.contenttype.contentTypes">

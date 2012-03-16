@@ -208,6 +208,7 @@ public class TableSourceProvider extends AbstractSourceProvider
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
         refreshElements();
+
         return Status.OK_STATUS;
       }
     };

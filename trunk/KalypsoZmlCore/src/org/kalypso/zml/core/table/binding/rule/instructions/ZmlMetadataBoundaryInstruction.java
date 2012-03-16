@@ -95,6 +95,8 @@ public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionTy
 
     final MetadataBoundary metaFrom = getBoundaryFrom( cell );
     final MetadataBoundary metaTo = getBoundaryTo( cell );
+    if( Objects.allNull( metaFrom, metaTo ) )
+      return false;
 
     final String boundaryType = findBoundaryType( metaFrom, metaTo );
 
@@ -132,22 +134,26 @@ public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionTy
   private MetadataBoundary getBoundary( final MetadataList metadata, final String property, final String propertyExtensionPoint, final BigDecimal defaultValue, final double factor )
   {
     if( Strings.isEmpty( propertyExtensionPoint ) )
-    {
-      final MetadataBoundary boundary = MetadataBoundary.getBoundary( metadata, property, defaultValue, factor );
-      return boundary;
-    }
+      return getBoundary( metadata, property, defaultValue, factor );
 
     final IZmlGrenzwertValue delegate = KalypsoZmlCoreExtensions.getInstance().findGrenzwertDelegate( propertyExtensionPoint );
     if( Objects.isNull( delegate ) )
-      return null;
+      return getBoundary( metadata, property, defaultValue, factor );
 
     final Double v = delegate.getValue( metadata, property );
     if( Objects.isNull( v ) )
-      return null;
+      return getBoundary( metadata, property, defaultValue, factor );
 
     final double value = v * factor;
 
     return new MetadataBoundary( property, BigDecimal.valueOf( value ) );
+  }
+
+  private MetadataBoundary getBoundary( final MetadataList metadata, final String property, final BigDecimal defaultValue, final double factor )
+  {
+    final MetadataBoundary boundary = MetadataBoundary.getBoundary( metadata, property, defaultValue, factor );
+
+    return boundary;
   }
 
   private MetadataBoundary getBoundaryTo( final IZmlModelValueCell reference )

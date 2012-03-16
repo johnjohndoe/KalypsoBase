@@ -89,6 +89,7 @@ public class ZmlRowHeaderCellPainter extends AbstractCellPainter
     {
       final Style style = getStyle( (IZmlModelRow) object );
       configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, style, DisplayMode.NORMAL, GridRegion.ROW_HEADER.toString() );
+      configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, style, DisplayMode.SELECT, GridRegion.ROW_HEADER.toString() );
 
       final TextPainter painter = new TextPainter();
       painter.paintCell( cell, gc, bounds, configRegistry );

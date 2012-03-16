@@ -101,6 +101,7 @@ public class ZmlBarLayerVisitor implements IObservationVisitor
       // don't draw empty lines only rectangles
       if( p1.y != m_baseLine.y )
       {
+        // TODO: performance: read only once from metadata?
         final Period timestep = MetadataHelper.getTimestep( container.getMetaData() );
 
         final int x0 = getX( p1, logicalDomain, timestep );
