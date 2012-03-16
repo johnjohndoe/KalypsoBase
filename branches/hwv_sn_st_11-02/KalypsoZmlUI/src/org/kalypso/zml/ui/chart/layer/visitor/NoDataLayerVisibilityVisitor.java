@@ -44,12 +44,15 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.core.diagram.base.IZmlLayer;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 
 import de.openali.odysseus.chart.ext.base.layer.DefaultTextLayer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
  * @author Dirk Kuch
@@ -110,7 +113,14 @@ public class NoDataLayerVisibilityVisitor implements IChartLayerVisitor
     try
     {
       final ITupleModel model = observation.getValues( null );
-      return !model.isEmpty();
+      if( model.isEmpty() )
+        return false;
+
+      final ICoordinateMapper mapper = layer.getCoordinateMapper();
+      final IAxis axis = mapper.getTargetAxis();
+      final String type = axis.getIdentifier();
+
+      return Objects.isNotNull( AxisUtils.findAxis( model.getAxes(), type ) );
     }
     catch( final SensorException e )
     {
