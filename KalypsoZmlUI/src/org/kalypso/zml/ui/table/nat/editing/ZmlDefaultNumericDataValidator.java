@@ -38,27 +38,32 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.nat.layers;
+package org.kalypso.zml.ui.table.nat.editing;
 
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.IZmlModelRow;
-import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import net.sourceforge.nattable.data.validate.DataValidator;
+import net.sourceforge.nattable.data.validate.IDataValidator;
+
+import org.kalypso.contribs.java.lang.NumberUtils;
 
 /**
  * @author Dirk Kuch
  */
-public interface IZmlTableSelection
+public class ZmlDefaultNumericDataValidator extends DataValidator implements IDataValidator
 {
-  IZmlModelColumn[] getSelectedColumns( );
 
-  IZmlModelRow[] getSelectedRows( );
+  @Override
+  public boolean validate( final int columnIndex, final int rowIndex, final Object newValue )
+  {
+    try
+    {
+      NumberUtils.parseDouble( newValue.toString() );
+    }
+    catch( final NumberFormatException e )
+    {
+      return false;
+    }
 
-  IZmlModelValueCell getFocusCell( );
-
-  IZmlModelValueCell[] getSelectedCells( );
-
-  IZmlModelValueCell[] getSelectedCells( IZmlModelColumn column );
-
-  void updateLastSelectedCellPosition( int row, int column );
+    return true;
+  }
 
 }

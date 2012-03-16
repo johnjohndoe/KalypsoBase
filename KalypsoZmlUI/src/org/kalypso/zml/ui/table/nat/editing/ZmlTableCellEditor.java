@@ -38,17 +38,13 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.table.nat.base;
+package org.kalypso.zml.ui.table.nat.editing;
 
-import java.text.SimpleDateFormat;
+import net.sourceforge.nattable.edit.editor.EditorSelectionEnum;
+import net.sourceforge.nattable.edit.editor.ICellEditor;
+import net.sourceforge.nattable.edit.editor.TextCellEditor;
 
-import net.sourceforge.nattable.data.convert.DisplayConverter;
-
-import org.apache.commons.lang3.StringUtils;
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.zml.core.table.model.IZmlModelColumn;
-import org.kalypso.zml.core.table.model.references.IZmlModelIndexCell;
+import org.eclipse.swt.widgets.Text;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.references.labeling.IZmlModelCellLabelProvider;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
@@ -56,48 +52,51 @@ import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 /**
  * @author Dirk Kuch
  */
-public class ZmlModelCellDisplayConverter extends DisplayConverter
+public class ZmlTableCellEditor extends TextCellEditor implements ICellEditor
 {
-  private final ZmlModelViewport m_model;
+  private final ZmlModelViewport m_viewport;
 
-  public ZmlModelCellDisplayConverter( final ZmlModelViewport model )
+  public ZmlTableCellEditor( final ZmlModelViewport viewport )
   {
-    m_model = model;
+    m_viewport = viewport;
   }
 
   @Override
-  public Object canonicalToDisplayValue( final Object canonicalValue )
+  public void setCanonicalValue( final Object canonicalValue )
   {
-    if( Objects.isNull( canonicalValue ) )
-      return StringUtils.EMPTY;
-    else if( canonicalValue instanceof IZmlModelIndexCell )
-    {
-      final SimpleDateFormat sdf = new SimpleDateFormat();
-      sdf.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
+    final Text text = getTextControl();
+    final String displayValue = toDisplayValue( canonicalValue );
 
-      return sdf.format( ((IZmlModelIndexCell) canonicalValue).getIndexValue() );
-    }
-    else if( canonicalValue instanceof IZmlModelValueCell )
-    {
-      final IZmlModelValueCell cell = (IZmlModelValueCell) canonicalValue;
-      final IZmlModelCellLabelProvider provider = cell.getStyleProvider();
-
-      return provider.getText( m_model, cell );
-    }
-    else if( canonicalValue instanceof IZmlModelColumn )
-    {
-      final IZmlModelColumn column = (IZmlModelColumn) canonicalValue;
-
-      return column.getLabel();
-    }
-
-    return canonicalValue.toString();
+    text.setText( displayValue != null && displayValue.length() > 0 ? displayValue.toString() : "" );
+    selectText();
   }
 
-  @Override
-  public Object displayToCanonicalValue( final Object displayValue )
+  private String toDisplayValue( final Object canonicalValue )
   {
-    return displayValue;
+    if( !(canonicalValue instanceof IZmlModelValueCell) )
+      return "";
+
+    final IZmlModelValueCell cell = (IZmlModelValueCell) canonicalValue;
+    final IZmlModelCellLabelProvider provider = cell.getStyleProvider();
+
+    return provider.getPlainText( m_viewport, cell );
   }
 
+  private void selectText( )
+  {
+    final Text text = getTextControl();
+    final int textLength = text.getText().length();
+    if( textLength > 0 )
+    {
+      final EditorSelectionEnum selectionMode = getSelectionMode();
+      if( selectionMode == EditorSelectionEnum.ALL )
+      {
+        text.setSelection( 0, textLength );
+      }
+      else if( selectionMode == EditorSelectionEnum.END )
+      {
+        text.setSelection( textLength, textLength );
+      }
+    }
+  }
 }

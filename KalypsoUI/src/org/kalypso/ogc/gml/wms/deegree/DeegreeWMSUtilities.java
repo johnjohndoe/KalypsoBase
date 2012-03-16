@@ -120,7 +120,6 @@ public class DeegreeWMSUtilities
       /* Load the capabilities xml. */
       doc.load( inputStream, XMLFragment.DEFAULT_URL );
 
-      inputStream.close();
 
       /* Create the capabilities. */
       final WMSCapabilities capabilities = (WMSCapabilities) doc.parseCapabilities();
@@ -144,6 +143,7 @@ public class DeegreeWMSUtilities
     }
     finally
     {
+      /* Close the input stream. */
       IOUtils.closeQuietly( inputStream );
     }
   }

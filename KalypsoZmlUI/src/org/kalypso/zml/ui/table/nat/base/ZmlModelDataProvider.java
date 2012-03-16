@@ -44,6 +44,7 @@ import net.sourceforge.nattable.data.IColumnAccessor;
 import net.sourceforge.nattable.data.IRowDataProvider;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 
@@ -71,7 +72,9 @@ public class ZmlModelDataProvider implements IRowDataProvider<IZmlModelRow>
   @Override
   public void setDataValue( final int columnIndex, final int rowIndex, final Object newValue )
   {
-    m_accessor.setDataValue( getRowObject( rowIndex ), columnIndex, newValue );
+    final IZmlModelRow row = getRowObject( rowIndex );
+    if( Objects.isNotNull( row ) )
+      m_accessor.setDataValue( row, columnIndex, newValue );
   }
 
   @Override

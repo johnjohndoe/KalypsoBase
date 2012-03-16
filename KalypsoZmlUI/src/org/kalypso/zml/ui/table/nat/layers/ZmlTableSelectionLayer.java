@@ -152,4 +152,10 @@ public class ZmlTableSelectionLayer extends SelectionLayer implements IZmlTableS
 
     return selection.toArray( new IZmlModelValueCell[] {} );
   }
+
+  @Override
+  public void updateLastSelectedCellPosition( final int row, final int column )
+  {
+    setLastSelectedCell( column, row );
+  }
 }

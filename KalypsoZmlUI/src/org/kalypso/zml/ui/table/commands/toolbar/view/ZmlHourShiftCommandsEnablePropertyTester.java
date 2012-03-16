@@ -3,19 +3,21 @@ package org.kalypso.zml.ui.table.commands.toolbar.view;
 import org.eclipse.core.expressions.PropertyTester;
 import org.kalypso.zml.core.table.model.view.ZmlViewResolutionFilter;
 import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.IZmlTableComposite;
 
-public class ZmlPropertyTesterHourShiftCommand extends PropertyTester
+public class ZmlHourShiftCommandsEnablePropertyTester extends PropertyTester
 {
-  public ZmlPropertyTesterHourShiftCommand( )
+  public ZmlHourShiftCommandsEnablePropertyTester( )
   {
   }
 
   @Override
   public boolean test( final Object receiver, final String property, final Object[] args, final Object expectedValue )
   {
-    if( receiver instanceof IZmlTable )
+    if( receiver instanceof IZmlTableComposite )
     {
-      final IZmlTable table = (IZmlTable) receiver;
+      final IZmlTableComposite composite = (IZmlTableComposite) receiver;
+      final IZmlTable table = composite.getTable();
       final ZmlViewResolutionFilter filter = AbstractHourViewCommand.resolveFilter( table );
       if( filter == null )
         return false;

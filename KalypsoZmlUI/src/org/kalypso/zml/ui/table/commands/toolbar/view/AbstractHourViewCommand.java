@@ -59,6 +59,8 @@ import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.core.table.model.view.ZmlViewResolutionFilter;
 import org.kalypso.zml.ui.table.IZmlTable;
+import org.kalypso.zml.ui.table.IZmlTableComposite;
+import org.kalypso.zml.ui.table.IZmlTableCompositeListener;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 
 /**
@@ -96,13 +98,16 @@ public abstract class AbstractHourViewCommand extends AbstractHandler implements
 
   protected IStatus updateResulution( final ExecutionEvent event, final int resultion, final boolean mode )
   {
-    final IZmlTable table = ZmlHandlerUtil.getTable( event );
+    final IZmlTableComposite composite = ZmlHandlerUtil.getTableComposite( event );
+    final IZmlTable table = composite.getTable();
 
     final ZmlModelViewport viewport = table.getModelViewport();
     final ZmlViewResolutionFilter filter = viewport.getFilter();
     doOffsetAdjustment( table, filter );
 
     filter.setParameters( resultion, mode );
+
+    composite.fireTableSourceChanged( IZmlTableCompositeListener.TYPE_REFRESH );
 
     return Status.OK_STATUS;
   }

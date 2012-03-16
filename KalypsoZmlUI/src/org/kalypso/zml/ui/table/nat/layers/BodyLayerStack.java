@@ -31,6 +31,7 @@ public class BodyLayerStack extends AbstractLayerTransform
     m_provider = new ZmlModelDataProvider( model, m_accessor );
 
     final DataLayer dataLayer = new DataLayer( m_provider );
+    dataLayer.setRowsResizableByDefault( false );
     m_selectionLayer = new ZmlTableSelectionLayer( model, dataLayer );
 
     m_viewportLayer = new ViewportLayer( getSelectionLayer() );
