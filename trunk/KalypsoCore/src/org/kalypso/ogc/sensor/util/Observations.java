@@ -135,6 +135,24 @@ public final class Observations
       }
 
       @Override
+      public Object getPrevious( final IAxis axis ) throws SensorException
+      {
+        if( index > 0 )
+          return model.get( index - 1, axis );
+
+        return null;
+      }
+
+      @Override
+      public Object getNext( final IAxis axis ) throws SensorException
+      {
+        if( index + 1 < model.size() )
+          return model.get( index + 1, axis );
+
+        return null;
+      }
+
+      @Override
       public MetadataList getMetaData( )
       {
         return observation.getMetadataList();

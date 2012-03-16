@@ -48,5 +48,4 @@ import org.kalypso.ogc.sensor.metadata.MetadataList;
 public interface IObservationValueContainer extends ITupleModelValueContainer
 {
   MetadataList getMetaData( );
-
 }

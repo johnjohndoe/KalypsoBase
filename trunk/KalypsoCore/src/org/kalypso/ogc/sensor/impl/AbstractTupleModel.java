@@ -154,6 +154,24 @@ public abstract class AbstractTupleModel implements ITupleModel
       }
 
       @Override
+      public Object getPrevious( final IAxis axis ) throws SensorException
+      {
+        if( index > 0 )
+          return AbstractTupleModel.this.get( index - 1, axis );
+
+        return null;
+      }
+
+      @Override
+      public Object getNext( final IAxis axis ) throws SensorException
+      {
+        if( index + 1 < AbstractTupleModel.this.size() )
+          return AbstractTupleModel.this.get( index + 1, axis );
+
+        return null;
+      }
+
+      @Override
       public boolean hasAxis( final String... types )
       {
         for( final String type : types )
