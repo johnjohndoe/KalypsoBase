@@ -3,8 +3,6 @@
  */
 package org.kalypso.afgui.handlers;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Properties;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -30,11 +28,8 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.part.FileEditorInput;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.i18n.Messages;
+import org.kalypso.afgui.scenarios.CatalogStorage;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.eclipse.core.resources.UrlStorage;
-import org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.widgets.IWidgetManager;
@@ -122,6 +117,8 @@ public class MapViewInputContextHandler extends AbstractHandler
 
   private IStorageEditorInput findInput( final IEvaluationContext context ) throws ExecutionException
   {
+    // TODO: move everything into a helper class, this could be used for all template types.
+
     if( m_url.startsWith( "project://" ) ) //$NON-NLS-1$
     {
       final String url = m_url.substring( 10 );
@@ -152,24 +149,7 @@ public class MapViewInputContextHandler extends AbstractHandler
 
     if( m_url.startsWith( "urn:" ) ) //$NON-NLS-1$
     {
-      final String resolvedUrl = KalypsoCorePlugin.getDefault().getCatalogManager().resolve( m_url, m_url );
-
-      try
-      {
-        final URL content = new URL( resolvedUrl );
-
-        final IContainer scenarioFolder = ScenarioHelper.getScenarioDataProvider().getScenarioFolder();
-        final URL scnearioContext = ResourceUtilities.createURL( scenarioFolder );
-
-        final UrlStorage storage = new UrlStorage( content, scnearioContext );
-        return new StorageEditorInput( storage );
-      }
-      catch( final MalformedURLException | CoreException e )
-      {
-        e.printStackTrace();
-        final String message = String.format( "Failed to resolve urn: %s", m_url );
-        throw new ExecutionException( message, e );
-      }
+      return createCatalogInput();
     }
 
     /* current scenario relative location */
@@ -186,5 +166,20 @@ public class MapViewInputContextHandler extends AbstractHandler
     // find file in active scenario folder
     final IFile file = folder.getFile( m_url );
     return new FileEditorInput( file );
+  }
+
+  private IStorageEditorInput createCatalogInput( ) throws ExecutionException
+  {
+    try
+    {
+      final IContainer scenarioFolder = ScenarioHelper.getScenarioDataProvider().getScenarioFolder();
+
+      return CatalogStorage.createEditorInput( m_url, scenarioFolder );
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+      throw new ExecutionException( e.getMessage(), e );
+    }
   }
 }

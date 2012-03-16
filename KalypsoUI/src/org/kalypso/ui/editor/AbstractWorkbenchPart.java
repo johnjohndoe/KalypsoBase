@@ -40,12 +40,17 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -78,6 +83,8 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
+import org.kalypso.contribs.eclipse.core.resources.IStorageWithContext;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
@@ -554,5 +561,27 @@ public abstract class AbstractWorkbenchPart extends WorkbenchPart implements IRe
     final IWorkbenchPart part = partRef.getPart( false );
     if( part == this )
       m_sourceProvider.fireSourceChanged();
+  }
+
+  public static URL findContext( final IStorageEditorInput input ) throws MalformedURLException, CoreException
+  {
+    if( input == null )
+      return null;
+
+    final IStorage storage = input.getStorage();
+    if( storage == null )
+      return null;
+
+    if( storage instanceof IStorageWithContext )
+      return ((IStorageWithContext) storage).getContext();
+
+    if( storage instanceof IResource )
+      return ResourceUtilities.createURL( (IResource) storage );
+
+    final IFile file = (IFile) storage.getAdapter( IFile.class );
+    if( file == null )
+      return null;
+
+    return ResourceUtilities.createQuietURL( file );
   }
 }
