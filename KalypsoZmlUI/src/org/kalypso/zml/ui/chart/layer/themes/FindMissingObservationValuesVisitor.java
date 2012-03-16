@@ -44,8 +44,12 @@ import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.joda.time.Period;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
@@ -57,12 +61,18 @@ import org.kalypso.zml.core.table.model.references.ZmlValues;
  */
 public class FindMissingObservationValuesVisitor implements IObservationVisitor
 {
-  Set<Date> m_missing = new TreeSet<>();
+  Set<DateRange> m_missing = new TreeSet<>();
 
   @Override
   public void visit( final IObservationValueContainer container ) throws SensorException
   {
     final DataSourceHandler handler = new DataSourceHandler( container.getMetaData() );
+
+    final Period timestep = MetadataHelper.getTimestep( container.getMetaData() );
+    if( Objects.isNull( timestep ) )
+      return;
+
+    final long timestepMs = timestep.toStandardSeconds().getSeconds() * 1000;
 
     final IAxis[] axes = container.getAxes();
     final IAxis[] valueAxes = AxisUtils.findValueAxes( axes, true );
@@ -78,13 +88,16 @@ public class FindMissingObservationValuesVisitor implements IObservationVisitor
       if( !ZmlValues.isStuetzstelle( status, dataSourceIdentifier ) )
       {
         final IAxis dateAxis = AxisUtils.findDateAxis( axes );
-        m_missing.add( (Date) container.get( dateAxis ) );
+        final Date to = (Date) container.get( dateAxis );
+        final Date from = new Date( to.getTime() - timestepMs );
+
+        m_missing.add( new DateRange( from, to ) );
       }
     }
   }
 
-  public Date[] getMissingValues( )
+  public DateRange[] getMissingValues( )
   {
-    return m_missing.toArray( new Date[] {} );
+    return m_missing.toArray( new DateRange[] {} );
   }
 }

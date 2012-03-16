@@ -7,7 +7,7 @@
         <Alpha>64</Alpha>
         <Fill>
           <ColorFill>
-            <Color>093689</Color>
+            <Color>FF4911</Color>
           </ColorFill>
         </Fill>
         <Stroke>
@@ -15,67 +15,6 @@
           <LineColor>093689</LineColor>
         </Stroke>
       </AreaStyle>
-      <AreaStyle role="fehlwert_area_1">
-        <Alpha>64</Alpha>
-        <Fill>
-          <ColorFill>
-            <Color>6186C3</Color>
-          </ColorFill>
-        </Fill>
-        <Stroke>
-          <Width>1</Width>
-          <LineColor>6186C3</LineColor>
-        </Stroke>
-      </AreaStyle>
-      <AreaStyle role="fehlwert_area_2">
-        <Alpha>64</Alpha>
-        <Fill>
-          <ColorFill>
-            <Color>008000</Color>
-          </ColorFill>
-        </Fill>
-        <Stroke>
-          <Width>1</Width>
-          <LineColor>008000</LineColor>
-        </Stroke>
-      </AreaStyle>
-      <AreaStyle role="fehlwert_area_3">
-        <Alpha>64</Alpha>
-        <Fill>
-          <ColorFill>
-            <Color>FF8000</Color>
-          </ColorFill>
-        </Fill>
-        <Stroke>
-          <Width>1</Width>
-          <LineColor>FF8000</LineColor>
-        </Stroke>
-      </AreaStyle>
-      <AreaStyle role="fehlwert_area_4">
-        <Alpha>64</Alpha>
-        <Fill>
-          <ColorFill>
-            <Color>FF00FF</Color>
-          </ColorFill>
-        </Fill>
-        <Stroke>
-          <Width>1</Width>
-          <LineColor>FF00FF</LineColor>
-        </Stroke>
-      </AreaStyle>
-      <AreaStyle role="fehlwert_area_5">
-        <Alpha>64</Alpha>
-        <Fill>
-          <ColorFill>
-            <Color>000040</Color>
-          </ColorFill>
-        </Fill>
-        <Stroke>
-          <Width>1</Width>
-          <LineColor>000040</LineColor>
-        </Stroke>
-      </AreaStyle>
-
 
       <PointStyle role="stuetzstelle_point_0">
         <Width>6</Width>
@@ -105,7 +44,11 @@
 
     <Layers>
       <Layer id="Fehlwerte" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Provider epid="org.kalypso.zml.ui.chart.layer.provider.missing.zml.values" />
+        <Provider epid="org.kalypso.zml.ui.chart.layer.provider.missing.zml.values">
+          <Parameters>
+            <Parameter name="content.stuetzstelle" value="true" />
+          </Parameters>
+        </Provider>
         <Title>Fehlwerte</Title>
         <Description />
         <MapperRefs>
@@ -114,11 +57,6 @@
         </MapperRefs>
         <Styles>
           <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:missing#fehlwert_area_0</StyleReference>
-          <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:missing#fehlwert_area_1</StyleReference>
-          <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:missing#fehlwert_area_2</StyleReference>
-          <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:missing#fehlwert_area_3</StyleReference>
-          <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:missing#fehlwert_area_4</StyleReference>
-          <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:missing#fehlwert_area_5</StyleReference>
         </Styles>
       </Layer>
     </Layers>
