@@ -7,7 +7,7 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.java.lang.NumberUtils;
 
 /**
- * On each modification, checks if widget contains an Integer-Text, if not, setForeground Color *
+ * On each modification, checks if widget contains an Integer-Text.
  * 
  * @author Holger Albert
  */
