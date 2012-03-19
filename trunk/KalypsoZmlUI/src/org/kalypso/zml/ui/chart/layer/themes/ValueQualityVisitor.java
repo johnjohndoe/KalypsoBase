@@ -48,6 +48,7 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.zml.core.diagram.base.IZmlLayer;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 
@@ -62,6 +63,13 @@ public class ValueQualityVisitor extends AbstractChartLayerVisitor
   Set<DateRange> m_fehlwerte = new TreeSet<>();
 
   Set<DateRange> m_stuetzstellen = new TreeSet<>();
+
+  private final DateRange m_daterange;
+
+  public ValueQualityVisitor( final DateRange daterange )
+  {
+    m_daterange = daterange;
+  }
 
   @Override
   public void visit( final IChartLayer layer )
@@ -86,7 +94,7 @@ public class ValueQualityVisitor extends AbstractChartLayerVisitor
     try
     {
       final ValueQualityObservationVisitor visitor = new ValueQualityObservationVisitor();
-      observation.accept( visitor, null, 1 );
+      observation.accept( visitor, new ObservationRequest( m_daterange ), 1 );
 
       Collections.addAll( m_fehlwerte, visitor.getFehlwerte() );
       Collections.addAll( m_stuetzstellen, visitor.getStuetzstellen() );
