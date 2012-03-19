@@ -10,7 +10,7 @@
             <Color>093689</Color>
           </ColorFill>
         </Fill>
-        <Stroke isVisible="false">
+        <Stroke>
           <Width>1</Width>
           <LineColor>093689</LineColor>
         </Stroke>
@@ -22,7 +22,7 @@
             <Color>6186C3</Color>
           </ColorFill>
         </Fill>
-        <Stroke isVisible="false">
+        <Stroke>
           <Width>1</Width>
           <LineColor>6186C3</LineColor>
         </Stroke>
@@ -34,7 +34,7 @@
             <Color>008000</Color>
           </ColorFill>
         </Fill>
-        <Stroke isVisible="false">
+        <Stroke>
           <Width>1</Width>
           <LineColor>008000</LineColor>
         </Stroke>
@@ -46,7 +46,7 @@
             <Color>FF8000</Color>
           </ColorFill>
         </Fill>
-        <Stroke isVisible="false">
+        <Stroke>
           <Width>1</Width>
           <LineColor>FF8000</LineColor>
         </Stroke>
@@ -58,7 +58,7 @@
             <Color>FF00FF</Color>
           </ColorFill>
         </Fill>
-        <Stroke isVisible="false">
+        <Stroke>
           <Width>1</Width>
           <LineColor>FF00FF</LineColor>
         </Stroke>
@@ -70,12 +70,11 @@
             <Color>000040</Color>
           </ColorFill>
         </Fill>
-        <Stroke isVisible="false">
+        <Stroke>
           <Width>1</Width>
           <LineColor>000040</LineColor>
         </Stroke>
       </AreaStyle>
-
 
     </Styles>
     <Layers>
@@ -113,10 +112,6 @@
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:rainfall#n_area_5</StyleReference>
             </Styles>
           </Layer>
-
-
-
-
 
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
         </Layers>
