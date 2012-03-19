@@ -112,6 +112,24 @@ public final class WspmClassifications
     return classification.findRoughnessClass( clazzName );
   }
 
+  public static IVegetationClass findVegetationClass( final IProfileRecord point )
+  {
+    final IProfil profile = point.getProfile();
+    final int componentVegetationClass = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS );
+    if( componentVegetationClass == -1 )
+      return null;
+
+    final IWspmClassification classification = WspmClassifications.getClassification( profile );
+    if( Objects.isNull( classification ) )
+      return null;
+
+    final String clazzName = (String) point.getValue( componentVegetationClass );
+    if( Strings.isEmpty( clazzName ) )
+      return null;
+
+    return classification.findVegetationClass( clazzName );
+  }
+
   public static Double findVegetationValue( final IProfileRecord point, final IComponent component, final Double plainValue )
   {
     final IProfil profile = point.getProfile();
