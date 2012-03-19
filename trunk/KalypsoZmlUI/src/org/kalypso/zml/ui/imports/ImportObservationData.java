@@ -92,7 +92,7 @@ public class ImportObservationData extends AbstractModelObject
 
   private IFile m_targetFile;
 
-  public ImportObservationData( final String[] allowedParameterTypes )
+  public ImportObservationData( final String... allowedParameterTypes )
   {
     m_adapters = KalypsoCoreExtensions.getObservationImporters();
     m_allowedParameterTypes = allowedParameterTypes;
