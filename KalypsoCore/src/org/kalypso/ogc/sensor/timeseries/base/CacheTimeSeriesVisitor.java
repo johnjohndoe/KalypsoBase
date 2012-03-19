@@ -48,14 +48,20 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.TupleModelDataSet;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 import org.kalypso.ogc.sensor.visitor.ITupleModelValueContainer;
 import org.kalypso.ogc.sensor.visitor.ITupleModelVisitor;
+
+import com.google.common.collect.Iterables;
 
 /**
  * @author Dirk Kuch
@@ -66,9 +72,24 @@ public class CacheTimeSeriesVisitor implements ITupleModelVisitor
 
   private final String m_source;
 
+  private final MetadataList m_metadata;
+
+  public CacheTimeSeriesVisitor( )
+  {
+    m_metadata = null;
+    m_source = null;
+  }
+
+  public CacheTimeSeriesVisitor( final MetadataList metadata )
+  {
+    m_metadata = metadata;
+    m_source = null;
+  }
+
   public CacheTimeSeriesVisitor( final String source )
   {
     m_source = source;
+    m_metadata = null;
   }
 
   public Map<Date, TupleModelDataSet[]> getValueMap( )
@@ -105,7 +126,7 @@ public class CacheTimeSeriesVisitor implements ITupleModelVisitor
         final Number value = (Number) container.get( getValueAxis( container ) );
         final Integer status = getStatus( container, valueAxis );
 
-        sets.add( new TupleModelDataSet( valueAxis, value, status, m_source ) );
+        sets.add( new TupleModelDataSet( valueAxis, value, status, getSource( container, valueAxis ) ) );
       }
 
       m_values.put( date, sets.toArray( new TupleModelDataSet[] {} ) );
@@ -114,6 +135,26 @@ public class CacheTimeSeriesVisitor implements ITupleModelVisitor
     {
       e.printStackTrace();
     }
+  }
+
+  private String getSource( final ITupleModelValueContainer container, final IAxis valueAxis ) throws SensorException
+  {
+    if( Objects.isNotNull( m_source ) )
+      return m_source;
+
+    if( Objects.isNull( m_metadata ) )
+      return StringUtils.EMPTY;
+
+    final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( container.getAxes(), valueAxis );
+    if( Objects.isNull( dataSourceAxis ) )
+      return StringUtils.EMPTY;
+
+    final DataSourceHandler handler = new DataSourceHandler( m_metadata );
+    final Object value = container.get( dataSourceAxis );
+    if( !(value instanceof Number) )
+      return StringUtils.EMPTY;
+
+    return handler.getDataSourceIdentifier( ((Number) value).intValue() );
   }
 
   private Integer getStatus( final ITupleModelValueContainer container, final IAxis valueAxis ) throws SensorException
@@ -206,5 +247,17 @@ public class CacheTimeSeriesVisitor implements ITupleModelVisitor
     }
 
     return null;
+  }
+
+  public DateRange getDateRange( )
+  {
+    final Set<Date> keys = m_values.keySet();
+    if( keys.isEmpty() )
+      return null;
+
+    final Date from = Iterables.getFirst( keys, null );
+    final Date to = Iterables.getLast( keys, null );
+
+    return new DateRange( from, to );
   }
 }
