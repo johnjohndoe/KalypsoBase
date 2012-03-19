@@ -48,7 +48,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * TODO: does not yet handle the label/tooltip properties of the template
- * 
+ *
  * @author Gernot Belger
  */
 public class SetColumnVisibleCommand implements ICommand
@@ -69,6 +69,8 @@ public class SetColumnVisibleCommand implements ICommand
 
   private final String m_modifier;
 
+  private final boolean m_wasSortEnabled;
+
   public SetColumnVisibleCommand( final LayerTableViewer viewer, final GMLXPath propertyPath, final String alignment, final String format, final boolean bVisible )
   {
     m_viewer = viewer;
@@ -79,6 +81,7 @@ public class SetColumnVisibleCommand implements ICommand
     m_bVisible = bVisible;
     m_wasEditable = viewer.isEditable( propertyPath );
     m_oldWidth = viewer.getWidth( propertyPath );
+    m_wasSortEnabled = viewer.isSortEnabled( propertyPath );
   }
 
   /**
@@ -90,25 +93,22 @@ public class SetColumnVisibleCommand implements ICommand
     return true;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#process()
-   */
   @Override
   public void process( ) throws Exception
   {
-    doIt( m_viewer, m_propertyPath, m_bVisible, 100, m_alignment, m_format, m_modifier, true );
+    doIt( m_viewer, m_propertyPath, m_bVisible, 100, m_alignment, m_format, m_modifier, true, true );
   }
 
   @Override
   public void redo( ) throws Exception
   {
-    doIt( m_viewer, m_propertyPath, m_bVisible, 100, m_alignment, m_format, m_modifier, true );
+    doIt( m_viewer, m_propertyPath, m_bVisible, 100, m_alignment, m_format, m_modifier, true, true );
   }
 
   @Override
   public void undo( ) throws Exception
   {
-    doIt( m_viewer, m_propertyPath, !m_bVisible, m_oldWidth, m_alignment, m_format, m_modifier, m_wasEditable );
+    doIt( m_viewer, m_propertyPath, !m_bVisible, m_oldWidth, m_alignment, m_format, m_modifier, m_wasEditable, m_wasSortEnabled );
   }
 
   @Override
@@ -117,7 +117,7 @@ public class SetColumnVisibleCommand implements ICommand
     return Messages.getString( "org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand.0" ) + m_propertyPath + "' " + (m_bVisible ? Messages.getString( "org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand.2" ) : Messages.getString( "org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand.3" )); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
   }
 
-  private void doIt( final LayerTableViewer viewer, final GMLXPath propertyPath, final boolean bVisible, final int width, final String alignment, final String format, final String modifier, final boolean editable )
+  private void doIt( final LayerTableViewer viewer, final GMLXPath propertyPath, final boolean bVisible, final int width, final String alignment, final String format, final String modifier, final boolean editable, final boolean isSortEnabled )
   {
     m_viewer.getControl().getDisplay().syncExec( new Runnable()
     {
@@ -125,7 +125,7 @@ public class SetColumnVisibleCommand implements ICommand
       public void run( )
       {
         if( bVisible )
-          viewer.addColumn( propertyPath, null, null, editable, width, alignment, format, modifier, true, new LayerTableStyle( null ) );
+          viewer.addColumn( propertyPath, null, null, editable, width, alignment, format, modifier, true, new LayerTableStyle( null ), isSortEnabled );
         else
           viewer.removeColumn( propertyPath );
       }

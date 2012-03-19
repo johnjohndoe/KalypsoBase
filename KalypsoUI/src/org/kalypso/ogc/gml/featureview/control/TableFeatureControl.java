@@ -241,10 +241,6 @@ public class TableFeatureControl extends AbstractToolbarFeatureControl implement
     super.dispose();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#setFeature(org.kalypsodeegree.model.feature.GMLWorkspace,
-   *      org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
   public void setFeature( final Feature feature )
   {
@@ -284,7 +280,7 @@ public class TableFeatureControl extends AbstractToolbarFeatureControl implement
       }
       else
       {
-        m_viewer.addColumn( null, null, null, false, 0, "SWT.CENTER", null, null, false, new LayerTableStyle( null ) ); //$NON-NLS-1$
+        m_viewer.addColumn( null, null, null, false, 0, "SWT.CENTER", null, null, false, new LayerTableStyle( null ), true ); //$NON-NLS-1$
 
         final IFeatureType featureType = m_viewer.getInput().getFeatureType();
         addDefaultColumns( featureType );
@@ -304,7 +300,7 @@ public class TableFeatureControl extends AbstractToolbarFeatureControl implement
         final String columnAlignment = findDefaultColumnAlignment( ftp );
 
         final GMLXPath columnPath = new GMLXPath( ftp.getQName() );
-        m_viewer.addColumn( columnPath, null, null, true, 100, columnAlignment, null, null, i == properties.length - 1, new LayerTableStyle( null ) ); //$NON-NLS-1$
+        m_viewer.addColumn( columnPath, null, null, true, 100, columnAlignment, null, null, i == properties.length - 1, new LayerTableStyle( null ), true ); //$NON-NLS-1$
       }
     }
   }

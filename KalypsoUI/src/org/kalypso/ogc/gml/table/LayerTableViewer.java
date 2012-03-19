@@ -145,6 +145,8 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
 
   private static final String COLUMN_PROP_EDITABLE = "columnEditable"; //$NON-NLS-1$
 
+  private static final String COLUMN_PROP_SORT_ENABLED = "columnSortEnabled"; //$NON-NLS-1$
+
   // FIXME: should not be visible
   public static final String COLUMN_PROP_WIDTH = "columnWidth"; //$NON-NLS-1$
 
@@ -412,8 +414,9 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
       final String format = ct.getFormat();
       final String modifier = ct.getModifier();
       final LayerTableStyle style = LayerTableStyleUtils.parseStyle( ct.getStyle(), globalStyle, context );
+      final boolean sortEnabled = ct.isSortEnabled();
 
-      addColumn( propertyPath, label, tooltip, editable, width, alignment, format, modifier, false, style );
+      addColumn( propertyPath, label, tooltip, editable, width, alignment, format, modifier, false, style, sortEnabled );
     }
   }
 
@@ -436,7 +439,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
       column.dispose();
   }
 
-  public void addColumn( final GMLXPath propertyPath, final String label, final String tooltip, final boolean isEditable, final int width, final String alignment, final String format, final String modifier, final boolean bRefreshColumns, final LayerTableStyle style )
+  public void addColumn( final GMLXPath propertyPath, final String label, final String tooltip, final boolean isEditable, final int width, final String alignment, final String format, final String modifier, final boolean bRefreshColumns, final LayerTableStyle style, final boolean sortEnabled )
   {
     Assert.isNotNull( style );
 
@@ -450,6 +453,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     tc.setData( COLUMN_PROP_LABEL, label );
     tc.setData( COLUMN_PROP_TOOLTIP, tooltip );
     tc.setData( COLUMN_PROP_EDITABLE, Boolean.valueOf( isEditable ) );
+    tc.setData( COLUMN_PROP_SORT_ENABLED, Boolean.valueOf( sortEnabled ) );
     // die Breite noch mal extra speichern, damit das Redo beim Resizen geht
     tc.setData( COLUMN_PROP_WIDTH, new Integer( width ) );
     tc.setData( COLUMN_PROP_FORMAT, format );
@@ -459,7 +463,9 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     tc.setWidth( width );
     setColumnText( tc );
 
-    tc.addSelectionListener( m_headerListener );
+    if( sortEnabled )
+      tc.addSelectionListener( m_headerListener );
+
     tc.addControlListener( m_headerControlListener );
 
     if( bRefreshColumns )
@@ -743,6 +749,12 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     return column == null ? false : ((Boolean) column.getData( COLUMN_PROP_EDITABLE )).booleanValue();
   }
 
+  public boolean isSortEnabled( final GMLXPath propertyPath )
+  {
+    final TableColumn column = getColumn( propertyPath );
+    return column == null ? true : ((Boolean) column.getData( COLUMN_PROP_SORT_ENABLED )).booleanValue();
+  }
+
   private TableColumn getColumn( final GMLXPath propertyPath )
   {
     final ILayerTableInput tableInput = getInput();
@@ -824,6 +836,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
       columnType.setLabel( (String) tc.getData( COLUMN_PROP_LABEL ) );
       columnType.setTooltip( (String) tc.getData( COLUMN_PROP_TOOLTIP ) );
       columnType.setEditable( ((Boolean) tc.getData( COLUMN_PROP_EDITABLE )).booleanValue() );
+      columnType.setSortEnabled( ((Boolean) tc.getData( COLUMN_PROP_SORT_ENABLED )).booleanValue() );
       columnType.setWidth( tc.getWidth() );
       columnType.setAlignment( "" + tc.getStyle() ); //$NON-NLS-1$
       columnType.setFormat( (String) tc.getData( COLUMN_PROP_FORMAT ) );
