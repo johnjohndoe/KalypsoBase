@@ -81,7 +81,7 @@ public class WorkflowLabelProvider extends ColumnLabelProvider
       try
       {
         final Command command = findCommand( (ITask) element );
-        if( command.isDefined() )
+        if( command != null && command.isDefined() )
           return command.getName();
       }
       catch( final NotDefinedException e )
@@ -147,7 +147,7 @@ public class WorkflowLabelProvider extends ColumnLabelProvider
         try
         {
           final Command command = findCommand( (ITask) element );
-          if( command.isDefined() )
+          if( command != null && command.isDefined() )
             return command.getDescription();
         }
         catch( final NotDefinedException e )
