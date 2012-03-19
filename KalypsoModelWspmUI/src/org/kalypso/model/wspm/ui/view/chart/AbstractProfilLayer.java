@@ -107,6 +107,11 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     createStyles( styleProvider, id );
   }
 
+  protected String getTargetProperty( )
+  {
+    return m_targetRangeProperty;
+  }
+
   @Override
   public EditInfo commitDrag( final Point point, final EditInfo dragStartData )
   {
@@ -364,6 +369,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     final int indexOfProperty = m_profil.indexOfProperty( m_targetRangeProperty );
     if( indexOfProperty < 0 )
       return null;
+
     return m_profil.getResult().getComponent( indexOfProperty );
   }
 
@@ -375,6 +381,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
         return -1;
       m_targetPropIndex = m_profil.getResult().indexOfComponent( m_targetRangeProperty );
     }
+
     return m_targetPropIndex;
   }
 
