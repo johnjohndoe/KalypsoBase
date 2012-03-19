@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.themes;
 
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -47,6 +48,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.Range;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
+import org.joda.time.Period;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.DateRange;
 
@@ -77,14 +79,14 @@ public class ZmlBarValueQualityLayer extends AbstractBarLayer implements IChartL
   {
     final IParameterContainer container = getProvider().getParameterContainer();
 
-    return Boolean.valueOf( container.getParameterValue( "content.stuetzstelle", "false" ) );
+    return Boolean.valueOf( container.getParameterValue( "content.stuetzstelle", "false" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private boolean isFehlwerteMode( )
   {
     final IParameterContainer container = getProvider().getParameterContainer();
 
-    return Boolean.valueOf( container.getParameterValue( "content.fehlwert", "false" ) );
+    return Boolean.valueOf( container.getParameterValue( "content.fehlwert", "false" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override
@@ -121,7 +123,8 @@ public class ZmlBarValueQualityLayer extends AbstractBarLayer implements IChartL
 
   private void paintFehlwerte( final GC gc )
   {
-    final ValueQualityVisitor visitor = new ValueQualityVisitor();
+
+    final ValueQualityVisitor visitor = new ValueQualityVisitor( getDateRange() );
     accept( visitor );
 
     final DateRange[] ranges = visitor.getFehlwerte();
@@ -135,9 +138,21 @@ public class ZmlBarValueQualityLayer extends AbstractBarLayer implements IChartL
     }
   }
 
+  private DateRange getDateRange( )
+  {
+    final ICoordinateMapper mapper = getCoordinateMapper();
+    final IAxis domainAxis = mapper.getDomainAxis();
+    final Range<Long> domainRange = getRange( domainAxis.getNumericRange() );
+
+    final Date date1 = new Date( domainRange.getMinimum() );
+    final Date date2 = new Date( domainRange.getMaximum() + Period.hours( 25 ).getMillis() ); // TODO + timestep
+
+    return new DateRange( date1, date2 );
+  }
+
   private void paintStuetzstellen( final GC gc )
   {
-    final ValueQualityVisitor visitor = new ValueQualityVisitor();
+    final ValueQualityVisitor visitor = new ValueQualityVisitor( getDateRange() );
     accept( visitor );
 
     final DateRange[] ranges = visitor.getStuetzstellen();
