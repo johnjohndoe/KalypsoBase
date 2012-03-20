@@ -39,8 +39,8 @@ Bundle-ClassPath: lib/jaxb_2_2_4/activation.jar,
  lib/pdf-renderer/PDFRenderer.jar,
  lib/jgraph/jgraphx_1_5_1_11.jar,
  lib/opencsv/opencsv-2.3.jar,
- lib/joda-time/joda-time-2.0.jar,
- lib/guava/guava-11.0.1.jar,
+ lib/guava/guava-11.0.2.jar,
+ lib/joda-time/joda-time-2.1.jar,
  .
 Bundle-Activator: org.kalypso.commons.KalypsoCommonsPlugin
 Bundle-Vendor: kalypsobase.sourceforge.net
