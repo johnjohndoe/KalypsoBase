@@ -141,7 +141,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
           else if( e.getClickCount() == 2 )
             actualWidget.doubleClickedLeft( e.getPoint() );
         }
-          break;
+        break;
 
         case MouseEvent.BUTTON2:
           m_middleWidget.leftClicked( e.getPoint() );
@@ -154,7 +154,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
           else if( e.getClickCount() == 2 )
             actualWidget.doubleClickedRight( e.getPoint() );
         }
-          break;
+        break;
 
         default:
           break;
@@ -172,8 +172,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
     if( !e.isConsumed() && actualWidget != null )
       actualWidget.moved( e.getPoint() );
 
-    if( m_mapPanel.isMultitouchEnabled() )
-      m_mapPanel.fireMouseMouveEvent( e.getX(), e.getY() );
+    m_mapPanel.fireMouseMouveEvent( e.getX(), e.getY() );
   }
 
   // MouseMotionAdapter:
@@ -448,10 +447,10 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
 
   protected boolean isInsideMapFrame( final Point p )
   {
-      final int THRESHOLD = 35; // pixel
-      if( p.getX() < THRESHOLD || p.getX() > m_mapPanel.getWidth() - THRESHOLD || p.getY() < THRESHOLD || p.getY() > m_mapPanel.getHeight() - THRESHOLD )
-        return false;
+    final int THRESHOLD = 35; // pixel
+    if( p.getX() < THRESHOLD || p.getX() > m_mapPanel.getWidth() - THRESHOLD || p.getY() < THRESHOLD || p.getY() > m_mapPanel.getHeight() - THRESHOLD )
+      return false;
 
-      return true;
+    return true;
   }
 }
