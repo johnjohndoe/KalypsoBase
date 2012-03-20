@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.views.map;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -67,12 +68,11 @@ import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterFinder;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.map.listeners.MapPanelAdapter;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
@@ -80,69 +80,48 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * 
  * @author Dirk Kuch
  */
-public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribution implements IAdapterEater<IMapPanel>, IMapPanelListener
+public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribution implements IAdapterEater<IMapPanel>
 {
-  private final class UpdateLabelJob extends UIJob
-  {
-    private GM_Point m_gmPoint;
-
-    public UpdateLabelJob( final String name )
-    {
-      super( name );
-    }
-
-    public void setGmPoint( final GM_Point gmPoint )
-    {
-      m_gmPoint = gmPoint;
-    }
-
-    @Override
-    public IStatus runInUIThread( final IProgressMonitor monitor )
-    {
-      /* Check twice, perhaps m_label was disposed */
-      if( m_gmPoint != null && !m_label.isDisposed() )
-      {
-        final double x = m_gmPoint.getX();
-        final double y = m_gmPoint.getY();
-
-        m_label.setText( String.format( MapCoordinateStatusLineItem.MAP_POSITION_TEXT, x, y ) );
-        m_label.getParent().layout();
-      }
-
-      return Status.OK_STATUS;
-    }
-  }
-
-  protected static String MAP_POSITION_TEXT = "%.2f / %.2f"; //$NON-NLS-1$
+  static String MAP_POSITION_TEXT = "%.2f / %.2f"; //$NON-NLS-1$
 
   private static final IAdapterFinder<IMapPanel> m_initFinder = new EditorFirstAdapterFinder<IMapPanel>();
 
-  protected final AdapterPartListener<IMapPanel> m_adapterListener = new AdapterPartListener<IMapPanel>( IMapPanel.class, this, m_initFinder, m_initFinder );
+  private final IMapPanelListener m_panelListener = new MapPanelAdapter()
+  {
+    @Override
+    public void onMouseMoveEvent( final IMapPanel source, final GM_Point gmPoint, final int mousex, final int mousey )
+    {
+      doScheduleUpdateLabelJob( gmPoint );
+    }
+  };
 
-  protected Label m_label;
+  private final AdapterPartListener<IMapPanel> m_adapterListener = new AdapterPartListener<IMapPanel>( IMapPanel.class, this, m_initFinder, m_initFinder );
+
+  private Label m_label;
 
   private Composite m_composite;
 
   private IMapPanel m_panel;
 
-  private UpdateLabelJob m_updateLabelJob;
+  private final UpdateItemJob m_updateLabelJob = new UpdateItemJob( "Updating position label ...", this ); //$NON-NLS-1$
 
-  /**
-   * @see org.eclipse.jface.action.ContributionItem#dispose()
-   */
+  private GM_Point m_gmPoint;
+
+  public MapCoordinateStatusLineItem( )
+  {
+    m_updateLabelJob.setSystem( true );
+  }
+
   @Override
   public void dispose( )
   {
     m_adapterListener.dispose();
     if( m_panel != null )
-      m_panel.removeMapPanelListener( this );
+      m_panel.removeMapPanelListener( m_panelListener );
 
     super.dispose();
   }
 
-  /**
-   * @see org.eclipse.jface.action.ControlContribution#createControl(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   protected Control createControl( final Composite parent )
   {
@@ -175,7 +154,7 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
       @Override
       public void widgetDisposed( final DisposeEvent e )
       {
-        m_adapterListener.dispose();
+        handleLabelDisposed();
       }
     } );
 
@@ -183,10 +162,33 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
     if( activePage != null )
       m_adapterListener.init( activePage );
 
-    m_updateLabelJob = new UpdateLabelJob( "Updating position label ..." ); //$NON-NLS-1$
-    m_updateLabelJob.setSystem( true );
-
     return m_composite;
+  }
+
+  protected void handleLabelDisposed( )
+  {
+    m_adapterListener.dispose();
+  }
+
+  @Override
+  public void update( )
+  {
+    /* Check twice, perhaps m_label was disposed */
+    if( m_label == null || m_label.isDisposed() )
+      return;
+
+    if( m_gmPoint == null )
+      m_label.setText( StringUtils.EMPTY );
+    else
+    {
+      final double x = m_gmPoint.getX();
+      final double y = m_gmPoint.getY();
+
+      m_label.setText( String.format( MapCoordinateStatusLineItem.MAP_POSITION_TEXT, x, y ) );
+      m_label.getParent().layout();
+    }
+
+    super.update();
   }
 
   private void startCrsInfoJob( final Label infoLabel )
@@ -196,9 +198,6 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
     /* Fetch CRS in separate, non-ui job, because it is a long running operation */
     final Job fetchCrsJob = new Job( "Fetching Kalypso CoordinateSystem" ) //$NON-NLS-1$
     {
-      /**
-       * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
-       */
       @Override
       protected IStatus run( final IProgressMonitor monitor )
       {
@@ -232,10 +231,6 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
     fetchCrsJob.schedule();
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater#setAdapter(org.eclipse.ui.IWorkbenchPart,
-   *      java.lang.Object)
-   */
   @Override
   public void setAdapter( final IWorkbenchPart part, final IMapPanel adapter )
   {
@@ -243,63 +238,22 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
       m_composite.setVisible( adapter != null );
 
     if( m_panel != null )
-      m_panel.removeMapPanelListener( this );
+      m_panel.removeMapPanelListener( m_panelListener );
 
     m_panel = adapter;
 
     if( m_panel != null )
-      m_panel.addMapPanelListener( this );
+      m_panel.addMapPanelListener( m_panelListener );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onExtentChanged(org.kalypso.ogc.gml.map.MapPanel,
-   *      org.kalypsodeegree.model.geometry.GM_Envelope, org.kalypsodeegree.model.geometry.GM_Envelope)
-   */
-  @Override
-  public void onExtentChanged( final IMapPanel source, final GM_Envelope oldExtent, final GM_Envelope newExtent )
+  protected void doScheduleUpdateLabelJob( final GM_Point gmPoint )
   {
-  }
+    m_gmPoint = gmPoint;
 
-  /**
-   * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onMapModelChanged(org.kalypso.ogc.gml.map.MapPanel,
-   *      org.kalypso.ogc.gml.mapmodel.IMapModell, org.kalypso.ogc.gml.mapmodel.IMapModell)
-   */
-  @Override
-  public void onMapModelChanged( final IMapPanel source, final IMapModell oldModel, final IMapModell newModel )
-  {
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onMessageChanged(org.kalypso.ogc.gml.map.MapPanel,
-   *      java.lang.String)
-   */
-  @Override
-  public void onMessageChanged( final IMapPanel source, final String message )
-  {
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onStatusChanged(org.kalypso.ogc.gml.map.IMapPanel)
-   */
-  @Override
-  public void onStatusChanged( final IMapPanel source )
-  {
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onMouseMoveEvent(org.kalypso.ogc.gml.map.IMapPanel,
-   *      org.kalypsodeegree.model.geometry.GM_Point, int, int)
-   */
-  @Override
-  public void onMouseMoveEvent( final IMapPanel source, final GM_Point gmPoint, final int mousex, final int mousey )
-  {
     if( m_updateLabelJob != null )
       m_updateLabelJob.cancel();
 
     if( m_label != null && !m_label.isDisposed() )
-    {
-      m_updateLabelJob.setGmPoint( gmPoint );
       m_updateLabelJob.schedule();
-    }
   }
 }
