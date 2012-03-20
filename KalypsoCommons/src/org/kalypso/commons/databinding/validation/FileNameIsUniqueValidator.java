@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.databinding.validation;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.io.IOCase;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -66,7 +66,7 @@ public class FileNameIsUniqueValidator extends TypedValidator<String>
   {
     for( final String string : m_strings )
     {
-      if( StringUtils.equalsIgnoreCase( string, value ) )
+      if( IOCase.SYSTEM.checkEquals( string, value ) )
         fail();
     }
 
