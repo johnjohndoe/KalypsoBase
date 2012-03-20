@@ -40,7 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.imports;
 
+import java.util.Comparator;
+
 import org.eclipse.jface.viewers.LabelProvider;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 
 /**
@@ -48,6 +51,21 @@ import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
  */
 public class ParameterTypeLabelProvider extends LabelProvider
 {
+  public static final Comparator<String> COMPARATOR = new Comparator<String>()
+  {
+
+    @Override
+    public int compare( final String s1, final String s2 )
+    {
+
+      final ParameterTypeLabelProvider provider = new ParameterTypeLabelProvider();
+      final String t1 = provider.getText( s1 );
+      final String t2 = provider.getText( s2 );
+
+      return Objects.firstNonNull( t1, s1 ).compareTo( Objects.firstNonNull( t2, s2 ) );
+    }
+  };
+
   @Override
   public String getText( final Object element )
   {
