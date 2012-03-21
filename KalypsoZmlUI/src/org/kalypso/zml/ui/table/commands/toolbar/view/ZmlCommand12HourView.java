@@ -42,8 +42,7 @@ package org.kalypso.zml.ui.table.commands.toolbar.view;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
-import org.kalypso.zml.core.table.model.view.ZmlViewResolutionFilter;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewportResolutionFilter;
 
 /**
  * @author Dirk Kuch
@@ -61,14 +60,14 @@ public class ZmlCommand12HourView extends AbstractHourViewCommand
         return Status.CANCEL_STATUS;
     }
 
-    if( HandlerUtils.isSelected( event ) )
-      return updateResulution( event, RESULUTION, false );
+// if( HandlerUtils.isSelected( event ) )
+    return updateResulution( event, RESULUTION, false );
 
-    return Status.OK_STATUS;
+// return Status.OK_STATUS;
   }
 
   @Override
-  protected boolean isActive( final ZmlViewResolutionFilter filter )
+  protected boolean isActive( final ZmlModelViewportResolutionFilter filter )
   {
     if( filter == null )
       return false;

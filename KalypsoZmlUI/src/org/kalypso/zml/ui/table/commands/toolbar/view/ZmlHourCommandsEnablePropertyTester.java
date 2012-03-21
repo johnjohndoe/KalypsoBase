@@ -3,13 +3,12 @@ package org.kalypso.zml.ui.table.commands.toolbar.view;
 import org.eclipse.core.expressions.PropertyTester;
 import org.joda.time.Period;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.zml.core.table.model.view.ZmlModelViewportResolutionFilter;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableComposite;
 
-public class ZmlHourShiftCommandsEnablePropertyTester extends PropertyTester
+public class ZmlHourCommandsEnablePropertyTester extends PropertyTester
 {
-  public ZmlHourShiftCommandsEnablePropertyTester( )
+  public ZmlHourCommandsEnablePropertyTester( )
   {
   }
 
@@ -20,15 +19,6 @@ public class ZmlHourShiftCommandsEnablePropertyTester extends PropertyTester
     {
       final IZmlTableComposite composite = (IZmlTableComposite) receiver;
       final IZmlTable table = composite.getTable();
-      final ZmlModelViewportResolutionFilter filter = AbstractHourViewCommand.resolveFilter( table );
-      if( filter == null )
-        return false;
-
-      if( filter.isStuetzstellenMode() )
-        return false;
-// if( filter.getResolution() == 0 )
-// return false;
-
       final Period period = HourViewCommands.getTimeStep( table );
       if( Objects.isNull( period ) )
         return false;

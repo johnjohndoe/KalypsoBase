@@ -45,7 +45,7 @@ import java.util.Map;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.menus.UIElement;
-import org.kalypso.zml.core.table.model.view.ZmlViewResolutionFilter;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewportResolutionFilter;
 
 /**
  * @author Dirk Kuch
@@ -66,7 +66,7 @@ public class ZmlCommandHourAdd extends AbstractHourViewCommand
   }
 
   @Override
-  protected boolean isActive( final ZmlViewResolutionFilter filter )
+  protected boolean isActive( final ZmlModelViewportResolutionFilter filter )
   {
     if( filter.isStuetzstellenMode() )
       return false;

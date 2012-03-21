@@ -223,18 +223,38 @@
     <handler
           class="org.kalypso.zml.ui.table.commands.toolbar.view.ZmlCommand3HourView"
           commandId="org.kalypso.zml.ui.table.commands.toolbar.view.3.hours">
+       <activeWhen>
+          <test
+                property="zml.table.test.hour.command.isEnabled">
+          </test>
+       </activeWhen>
     </handler>
     <handler
           class="org.kalypso.zml.ui.table.commands.toolbar.view.ZmlCommand6HourView"
           commandId="org.kalypso.zml.ui.table.commands.toolbar.view.6.hours">
+       <activeWhen>
+          <test
+                property="zml.table.test.hour.command.isEnabled">
+          </test>
+       </activeWhen>
     </handler>
     <handler
           class="org.kalypso.zml.ui.table.commands.toolbar.view.ZmlCommand12HourView"
           commandId="org.kalypso.zml.ui.table.commands.toolbar.view.12.hours">
+       <activeWhen>
+          <test
+                property="zml.table.test.hour.command.isEnabled">
+          </test>
+       </activeWhen>
     </handler>
     <handler
           class="org.kalypso.zml.ui.table.commands.toolbar.view.ZmlCommand24HourView"
           commandId="org.kalypso.zml.ui.table.commands.toolbar.view.24.hours">
+       <activeWhen>
+          <reference
+                definitionId="zml.table.test.hour.command.isEnabled">
+          </reference>
+       </activeWhen>
     </handler>
 
 
@@ -347,6 +367,15 @@
           </test>
        </with>
     </definition>
+    <definition
+          id="zml.table.test.hour.command.isEnabled">
+       <with
+             variable="activeTable">
+          <test
+                property="zml.table.hour.command.isActive">
+          </test>
+       </with>
+    </definition>
  </extension>
  <extension
        point="org.eclipse.core.expressions.propertyTesters">
@@ -354,6 +383,13 @@
           class="org.kalypso.zml.ui.table.commands.toolbar.view.ZmlHourShiftCommandsEnablePropertyTester"
           id="zml.table.shift.command"
           namespace="zml.table.shift.command"
+          properties="isActive"
+          type="org.kalypso.zml.ui.table.IZmlTableComposite">
+    </propertyTester>
+    <propertyTester
+          class="org.kalypso.zml.ui.table.commands.toolbar.view.ZmlHourCommandsEnablePropertyTester"
+          id="zml.table.hour.command"
+          namespace="zml.table.hour.command"
           properties="isActive"
           type="org.kalypso.zml.ui.table.IZmlTableComposite">
     </propertyTester>
