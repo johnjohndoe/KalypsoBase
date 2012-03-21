@@ -3,12 +3,12 @@ Bundle-ManifestVersion: 2
 Bundle-Name: KalypsoCommons Plug-in
 Bundle-SymbolicName: org.kalypso.commons;singleton:=true
 Bundle-Version: 11.6.5.qualifier
-Bundle-ClassPath: lib/jaxb_2_2_4/activation.jar,
- lib/jaxb_2_2_4/jaxb-api.jar,
- lib/jaxb_2_2_4/jaxb-impl.jar,
- lib/jaxb_2_2_4/jaxb-xjc.jar,
- lib/jaxb_2_2_4/jaxb1-impl.jar,
- lib/jaxb_2_2_4/jsr173_1.0_api.jar,
+Bundle-ClassPath: lib/jaxb_2_2_5/activation.jar,
+ lib/jaxb_2_2_5/jaxb-api.jar,
+ lib/jaxb_2_2_5/jaxb-impl.jar,
+ lib/jaxb_2_2_5/jaxb-xjc.jar,
+ lib/jaxb_2_2_5/jaxb1-impl.jar,
+ lib/jaxb_2_2_5/jsr173_1.0_api.jar,
  lib/xmlbeans-2.5/jsr173_1.0_api.jar,
  lib/xmlbeans-2.5/resolver.jar,
  lib/xmlbeans-2.5/xbean_xpath.jar,
