@@ -47,16 +47,16 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.table.model.IZmlModel;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.event.IZmlModelColumnEvent;
-import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.references.ZmlValues;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlViewResolutionFilter
+public class ZmlModelViewportResolutionFilter
 {
   private int m_resolution = 0;
 
@@ -91,7 +91,7 @@ public class ZmlViewResolutionFilter
       calendar.setTime( index );
       calendar.add( Calendar.HOUR_OF_DAY, -1 );
 
-      m_baseIndex = Double.valueOf( ZmlViewResolutionFilter.ticksInHours( calendar.getTime() ) ).intValue();
+      m_baseIndex = Double.valueOf( ZmlModelViewportResolutionFilter.ticksInHours( calendar.getTime() ) ).intValue();
       m_model = model;
     }
   }
@@ -102,7 +102,7 @@ public class ZmlViewResolutionFilter
 
   private final ZmlModelViewport m_model;
 
-  public ZmlViewResolutionFilter( final ZmlModelViewport model )
+  public ZmlModelViewportResolutionFilter( final ZmlModelViewport model )
   {
     m_model = model;
   }
@@ -116,14 +116,10 @@ public class ZmlViewResolutionFilter
 
   public boolean select( final IZmlModelRow row )
   {
-
     if( m_resolution == 0 )
     {
       if( m_stuetzstellenMode )
-      {
-
         return hasStuetzstelle( row );
-      }
 
       return true;
     }
@@ -147,15 +143,17 @@ public class ZmlViewResolutionFilter
 
   private boolean hasStuetzstelle( final IZmlModelRow row )
   {
-    final IZmlModelCell[] references = row.getCells();
-    for( final IZmlModelCell reference : references )
+    final IZmlModelValueCell[] cells = row.getCells();
+    for( final IZmlModelValueCell cell : cells )
     {
-      if( !(reference instanceof IZmlModelValueCell) )
+      final IZmlModelColumn column = cell.getColumn();
+      if( !column.isActive() )
         continue;
 
       try
       {
-        if( ZmlValues.isStuetzstelle( (IZmlModelValueCell) reference ) )
+
+        if( ZmlValues.isStuetzstelle( cell ) )
           return true;
       }
       catch( final Throwable t )

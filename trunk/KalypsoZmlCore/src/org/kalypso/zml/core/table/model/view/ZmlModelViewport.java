@@ -80,7 +80,7 @@ public class ZmlModelViewport
 
   private final IZmlModel m_model;
 
-  private final ZmlViewResolutionFilter m_filter;
+  private final ZmlModelViewportResolutionFilter m_filter;
 
   private IZmlModelRow[] m_rows;
 
@@ -89,7 +89,7 @@ public class ZmlModelViewport
   public ZmlModelViewport( final IZmlModel model )
   {
     m_model = model;
-    m_filter = new ZmlViewResolutionFilter( this );
+    m_filter = new ZmlModelViewportResolutionFilter( this );
 
     m_model.addListener( new IZmlColumnModelListener()
     {
@@ -298,7 +298,7 @@ public class ZmlModelViewport
     }
   }
 
-  public ZmlViewResolutionFilter getFilter( )
+  public ZmlModelViewportResolutionFilter getFilter( )
   {
     return m_filter;
   }

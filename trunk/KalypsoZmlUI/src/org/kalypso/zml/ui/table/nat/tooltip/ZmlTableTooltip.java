@@ -61,7 +61,7 @@ import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
-import org.kalypso.zml.core.table.model.view.ZmlViewResolutionFilter;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewportResolutionFilter;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.ui.KalypsoZmlUI;
@@ -177,7 +177,7 @@ public class ZmlTableTooltip extends DefaultToolTip
 
   private boolean isAggregated( )
   {
-    final ZmlViewResolutionFilter filter = m_viewport.getFilter();
+    final ZmlModelViewportResolutionFilter filter = m_viewport.getFilter();
     if( Objects.isNull( filter ) )
       return false;
 
