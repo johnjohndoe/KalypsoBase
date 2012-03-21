@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_5/activation.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_5/jaxb-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_5/jaxb-impl.jar" sourcepath="lib/jaxb_2_2_4/jaxb-impl.src.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_5/jaxb-xjc.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_5/jaxb1-impl.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_5/jsr173_1.0_api.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/joda-time/joda-time-2.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/guava/guava-11.0.2.jar" sourcepath="lib/guava/guava-11.0.1-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xstream/xstream-1.4.2.jar"/>
@@ -7,12 +13,6 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="srcext"/>
-	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_4/activation.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_4/jaxb-api.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_4/jaxb-impl.jar" sourcepath="lib/jaxb_2_2_4/jaxb-impl.src.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_4/jaxb-xjc.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_4/jaxb1-impl.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_4/jsr173_1.0_api.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xmlbeans-2.5/jsr173_1.0_api.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xmlbeans-2.5/resolver.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xmlbeans-2.5/xbean_xpath.jar"/>
