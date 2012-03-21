@@ -53,22 +53,14 @@ import org.eclipse.core.runtime.IProgressMonitor;
 public interface ICaseDataProvider<T extends Object>
 {
   /**
-   * Returns the data object corresponding to the given case data key.
-   *
-   * @deprecated Use {@link #getModel(String)} instead.
-   */
-  @Deprecated
-  <D extends T> D getModel( Class<D> modelClass ) throws CoreException;
-
-  /**
-   * Returns the data object corresponding to the given case data key.
+   * Returns the data object corresponding to the given case data key.<br/>
+   * The model must use a binding interface D, else we get a class cast exception (adaptgion does not work with this
+   * method).
    *
    * @param id
    *          Id of the queried data (probably the extension-id with which this data was registered)
-   * @param modelClass
-   *          The root feature of the gml-workspace must either adapt to or inherit from this class.
    */
-  <D extends T> D getModel( String id, Class<D> modelClass ) throws CoreException;
+  <D extends T> D getModel( final String id ) throws CoreException;
 
   /**
    * Saves all model data

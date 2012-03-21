@@ -427,30 +427,20 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     return null;
   }
 
-  /**
-   * Returns the feature wrapper corresponding to the given key. The class must be one of the known classes by this data
-   * provider.
-   * <p>
-   * This method blocks until the gml is loaded, which may take some time!
-   * </p>
-   */
+  @SuppressWarnings("unchecked")
   @Override
-  @Deprecated
-  public <T extends IModel> T getModel( final Class<T> modelClass ) throws CoreException
-  {
-    final CommandableWorkspace workspace = getCommandableWorkSpace( modelClass.getName() );
-    return adaptModel( modelClass, workspace );
-  }
-
-  @Override
-  public <D extends IModel> D getModel( final String id, final Class<D> modelClass ) throws CoreException
+  public <D extends IModel> D getModel( final String id ) throws CoreException
   {
     final CommandableWorkspace workspace = getCommandableWorkSpace( id );
-    return adaptModel( modelClass, workspace );
+    if( workspace == null )
+      return null;
+
+    final Feature rootFeature = workspace.getRootFeature();
+    return (D) rootFeature;
   }
 
   @SuppressWarnings("unchecked")
-  protected static <T> T adaptModel( final Class<T> modelClass, final GMLWorkspace workspace )
+  static <T> T adaptModel( final Class<T> modelClass, final GMLWorkspace workspace )
   {
     if( workspace == null )
       return null;
