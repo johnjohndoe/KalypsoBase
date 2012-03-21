@@ -22,7 +22,6 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.services.IEvaluationService;
 import org.kalypso.afgui.i18n.Messages;
-import org.kalypso.afgui.model.IModel;
 import org.kalypso.afgui.perspective.Perspective;
 import org.kalypso.afgui.scenarios.PerspectiveWatcher;
 import org.kalypso.afgui.scenarios.ScenarioDataChangeListenerExtension;
@@ -60,7 +59,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
 
   private ActiveWorkContext m_activeWorkContext;
 
-  private CaseHandlingSourceProvider<IModel> m_szenarioSourceProvider;
+  private CaseHandlingSourceProvider m_szenarioSourceProvider;
 
   private SzenarioDataProvider m_szenarioDataProvider;
 
@@ -171,7 +170,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     {
       // This can only be called if the platform has already been started
       m_szenarioDataProvider = new SzenarioDataProvider();
-      m_szenarioSourceProvider = new CaseHandlingSourceProvider<IModel>( m_activeWorkContext, m_szenarioDataProvider );
+      m_szenarioSourceProvider = new CaseHandlingSourceProvider( m_activeWorkContext, m_szenarioDataProvider );
 
       if( PlatformUI.isWorkbenchRunning() )
       {
@@ -195,9 +194,6 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     }
   }
 
-  /**
-   * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
-   */
   @Override
   public void stop( final BundleContext context ) throws Exception
   {

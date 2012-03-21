@@ -44,6 +44,8 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
+import de.renew.workflow.connector.cases.IModel;
+
 /**
  * @author kurzbach
  * 

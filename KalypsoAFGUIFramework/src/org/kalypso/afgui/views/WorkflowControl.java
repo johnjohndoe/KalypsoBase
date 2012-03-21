@@ -1,6 +1,3 @@
-/**
- *
- */
 package org.kalypso.afgui.views;
 
 import org.eclipse.core.runtime.IProgressMonitor;

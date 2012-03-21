@@ -156,9 +156,6 @@ public class ActiveWorkContext implements IResourceChangeListener
     fireActiveContextChanged( m_currentProjectNature, caze );
   }
 
-  /**
-   * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
-   */
   @Override
   public void resourceChanged( final IResourceChangeEvent event )
   {

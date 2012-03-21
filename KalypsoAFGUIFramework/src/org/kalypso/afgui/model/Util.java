@@ -59,7 +59,8 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
-import de.renew.workflow.connector.cases.ICaseDataProvider;
+import de.renew.workflow.connector.cases.IModel;
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
@@ -72,8 +73,6 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
  */
 public class Util
 {
-
-  @SuppressWarnings("unchecked")
   public static final CommandableWorkspace getCommandableWorkspace( final Class< ? extends IModel> modelClass )
   {
     try
@@ -81,7 +80,7 @@ public class Util
       final IWorkbench workbench = PlatformUI.getWorkbench();
       final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
       final IEvaluationContext currentState = service.getCurrentState();
-      final ICaseDataProvider<Feature> caseDataProvider = (ICaseDataProvider<Feature>) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+      final IScenarioDataProvider caseDataProvider = (IScenarioDataProvider) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
       if( caseDataProvider instanceof ICommandPoster )
         return ((ICommandPoster) caseDataProvider).getCommandableWorkSpace( modelClass.getName() );
       else
@@ -94,7 +93,6 @@ public class Util
     }
   }
 
-  @SuppressWarnings("unchecked")
   public static final void postCommand( final Class< ? extends IModel> modelClass, final ICommand command )
   {
     try
@@ -102,7 +100,7 @@ public class Util
       final IWorkbench workbench = PlatformUI.getWorkbench();
       final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
       final IEvaluationContext currentState = service.getCurrentState();
-      final ICaseDataProvider<IModel> caseDataProvider = (ICaseDataProvider<IModel>) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+      final IScenarioDataProvider caseDataProvider = (IScenarioDataProvider) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
       if( caseDataProvider instanceof ICommandPoster )
         ((ICommandPoster) caseDataProvider).postCommand( modelClass.getName(), command );
       else
@@ -125,8 +123,8 @@ public class Util
       final IWorkbench workbench = PlatformUI.getWorkbench();
       final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
       final IEvaluationContext currentState = service.getCurrentState();
-      @SuppressWarnings("unchecked")
-      final ICaseDataProvider<IModel> caseDataProvider = (ICaseDataProvider<IModel>) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+
+      final IScenarioDataProvider caseDataProvider = (IScenarioDataProvider) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
       return caseDataProvider.getModel( modelId );
     }
     catch( final Throwable th )
