@@ -118,7 +118,7 @@ public class Util
   /**
    * Gets the szenario model
    */
-  public static final <T extends IModel> T getModel( final String modelId, final Class<T> modelClass )
+  public static final <T extends IModel> T getModel( final String modelId )
   {
     try
     {
@@ -127,7 +127,7 @@ public class Util
       final IEvaluationContext currentState = service.getCurrentState();
       @SuppressWarnings("unchecked")
       final ICaseDataProvider<IModel> caseDataProvider = (ICaseDataProvider<IModel>) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
-      return caseDataProvider.getModel( modelId, modelClass );
+      return caseDataProvider.getModel( modelId );
     }
     catch( final Throwable th )
     {
