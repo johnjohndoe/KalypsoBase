@@ -60,6 +60,10 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public final class WspmClassifications
 {
+  private WspmClassifications( )
+  {
+  }
+
   public static IRoughnessClass findRoughnessClass( final IProfileRecord point )
   {
     final IProfil profile = point.getProfile();
@@ -236,7 +240,40 @@ public final class WspmClassifications
     return true;
   }
 
-  private WspmClassifications( )
+  public static Double getRoughnessValue( final IProfileRecord point, final String property )
   {
+    final Double factor = point.getRoughnessFactor();
+
+    final IComponent component = point.hasPointProperty( property );
+    if( Objects.isNotNull( component ) )
+    {
+      final Object value = point.getValue( component );
+      if( value instanceof Number )
+      {
+        final Number number = (Number) value;
+        return number.doubleValue() * factor;
+      }
+    }
+
+    final IRoughnessClass clazz = WspmClassifications.findRoughnessClass( point );
+    if( Objects.isNull( clazz ) )
+      return null;
+
+    switch( property )
+    {
+      case IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS:
+        final BigDecimal clazzKsValue = clazz.getKsValue();
+        if( Objects.isNotNull( clazzKsValue ) )
+          return clazzKsValue.doubleValue() * factor;
+
+      case IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST:
+        final BigDecimal clazzKstValue = clazz.getKstValue();
+        if( Objects.isNotNull( clazzKstValue ) )
+          return clazzKstValue.doubleValue() * factor;
+
+      default:
+        return null;
+    }
+
   }
 }
