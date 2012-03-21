@@ -60,40 +60,6 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public final class WspmClassifications
 {
-  private WspmClassifications( )
-  {
-  }
-
-  public static IWspmClassification getClassification( final IProfil profile )
-  {
-    final Object source = profile.getSource();
-    if( !(source instanceof Feature) )
-      return null;
-
-    final Feature feature = (Feature) source;
-    final GMLWorkspace workspace = feature.getWorkspace();
-    final Feature root = workspace.getRootFeature();
-    if( !(root instanceof WspmProject) )
-      return null;
-
-    final WspmProject project = (WspmProject) root;
-
-    return project.getClassificationMember();
-  }
-
-  public static Double findRoughnessValue( final IProfileRecord point, final IComponent component, final Double plainValue )
-  {
-    final IRoughnessClass clazz = findRoughnessClass( point );
-    if( Objects.isNull( clazz ) )
-      return plainValue;
-
-    final BigDecimal value = clazz.getValue( component.getId() );
-    if( Objects.isNotNull( value ) )
-      return value.doubleValue();
-
-    return plainValue;
-  }
-
   public static IRoughnessClass findRoughnessClass( final IProfileRecord point )
   {
     final IProfil profile = point.getProfile();
@@ -110,6 +76,19 @@ public final class WspmClassifications
       return null;
 
     return classification.findRoughnessClass( clazzName );
+  }
+
+  public static Double findRoughnessValue( final IProfileRecord point, final IComponent component, final Double plainValue )
+  {
+    final IRoughnessClass clazz = findRoughnessClass( point );
+    if( Objects.isNull( clazz ) )
+      return plainValue;
+
+    final BigDecimal value = clazz.getValue( component.getId() );
+    if( Objects.isNotNull( value ) )
+      return value.doubleValue();
+
+    return plainValue;
   }
 
   public static IVegetationClass findVegetationClass( final IProfileRecord point )
@@ -157,21 +136,77 @@ public final class WspmClassifications
     return plainValue;
   }
 
-  public static boolean hasVegetationProperties( final IProfil profile )
+  public static Double getAx( final IProfileRecord point )
   {
-    if( Objects.isNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX ) ) )
-      return false;
-    else if( Objects.isNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY ) ) )
-      return false;
-    else if( Objects.isNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP ) ) )
-      return false;
+    final Double bewuchs = point.getBewuchsDp();
+    if( Objects.isNotNull( bewuchs ) )
+      return bewuchs;
 
-    return true;
+    final IVegetationClass clazz = WspmClassifications.findVegetationClass( point );
+    if( Objects.isNotNull( clazz ) )
+    {
+      final BigDecimal decimal = clazz.getAx();
+      if( Objects.isNotNull( decimal ) )
+        return decimal.doubleValue();
+    }
+
+    return null;
   }
 
-  public static boolean hasVegetationClass( final IProfil profile )
+  public static Double getAy( final IProfileRecord point )
   {
-    return Objects.isNotNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS ) );
+    final Double bewuchs = point.getBewuchsDp();
+    if( Objects.isNotNull( bewuchs ) )
+      return bewuchs;
+
+    final IVegetationClass clazz = WspmClassifications.findVegetationClass( point );
+    if( Objects.isNotNull( clazz ) )
+    {
+      final BigDecimal decimal = clazz.getAy();
+      if( Objects.isNotNull( decimal ) )
+        return decimal.doubleValue();
+    }
+
+    return null;
+  }
+
+  public static IWspmClassification getClassification( final IProfil profile )
+  {
+    final Object source = profile.getSource();
+    if( !(source instanceof Feature) )
+      return null;
+
+    final Feature feature = (Feature) source;
+    final GMLWorkspace workspace = feature.getWorkspace();
+    final Feature root = workspace.getRootFeature();
+    if( !(root instanceof WspmProject) )
+      return null;
+
+    final WspmProject project = (WspmProject) root;
+
+    return project.getClassificationMember();
+  }
+
+  public static Double getDp( final IProfileRecord point )
+  {
+    final Double bewuchs = point.getBewuchsDp();
+    if( Objects.isNotNull( bewuchs ) )
+      return bewuchs;
+
+    final IVegetationClass clazz = WspmClassifications.findVegetationClass( point );
+    if( Objects.isNotNull( clazz ) )
+    {
+      final BigDecimal decimal = clazz.getDp();
+      if( Objects.isNotNull( decimal ) )
+        return decimal.doubleValue();
+    }
+
+    return null;
+  }
+
+  public static boolean hasRoughnessClass( final IProfil profile )
+  {
+    return Objects.isNotNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS ) );
   }
 
   public static boolean hasRoughnessProperties( final IProfil profile )
@@ -184,9 +219,24 @@ public final class WspmClassifications
     return false;
   }
 
-  public static boolean hasRoughnessClass( final IProfil profile )
+  public static boolean hasVegetationClass( final IProfil profile )
   {
-    return Objects.isNotNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS ) );
+    return Objects.isNotNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS ) );
   }
 
+  public static boolean hasVegetationProperties( final IProfil profile )
+  {
+    if( Objects.isNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX ) ) )
+      return false;
+    else if( Objects.isNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY ) ) )
+      return false;
+    else if( Objects.isNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP ) ) )
+      return false;
+
+    return true;
+  }
+
+  private WspmClassifications( )
+  {
+  }
 }

@@ -103,7 +103,7 @@ public class GuessVegetationClassesRunnable implements ICoreRunnableWithProgress
     final IProfileRecord[] points = m_profile.getPoints();
     for( final IProfileRecord point : points )
     {
-      if( UpdateVegetationProperties.isWritable( m_overwriteValues, point, propertyClazz ) )
+      if( !UpdateVegetationProperties.isWritable( m_overwriteValues, point, propertyClazz ) )
         continue;
 
       final Double ax = point.getBewuchsAx();
