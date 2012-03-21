@@ -87,6 +87,8 @@ public class LoadStyleJob extends Job
 
     try
     {
+      // FIXME: use SLDFactory readStyle instead
+
       final Document doc = XMLTools.parse( styleFile );
       final Element documentElement = doc.getDocumentElement();
       if( StyledLayerDescriptor.ELEMENT_STYLEDLAYERDESCRIPTOR.equals( documentElement.getLocalName() ) )
