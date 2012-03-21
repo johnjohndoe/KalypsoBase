@@ -95,7 +95,7 @@ public class GuessClassificationClassRunnable implements IProfileManipulator
 
   private IProfilChange[] doGuessRoughnessClasses( final IProfil profile, final IProgressMonitor monitor )
   {
-    if( WspmClassifications.hasRoughnessProperties( profile ) )
+    if( !WspmClassifications.hasRoughnessProperties( profile ) )
       return new IProfilChange[] {};
 
     if( !WspmClassifications.hasRoughnessClass( profile ) )
@@ -130,7 +130,7 @@ public class GuessClassificationClassRunnable implements IProfileManipulator
 
   private IProfilChange[] doGuessVegetationClasses( final IProfil profile, final IProgressMonitor monitor )
   {
-    if( WspmClassifications.hasVegetationProperties( profile ) )
+    if( !WspmClassifications.hasVegetationProperties( profile ) )
       return new IProfilChange[] {};
 
     if( !WspmClassifications.hasVegetationClass( profile ) )
