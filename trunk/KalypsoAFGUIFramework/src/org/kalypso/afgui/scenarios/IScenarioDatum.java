@@ -41,7 +41,8 @@
 package org.kalypso.afgui.scenarios;
 
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.afgui.model.IModel;
+
+import de.renew.workflow.connector.cases.IModel;
 
 /**
  * @author kurzbach

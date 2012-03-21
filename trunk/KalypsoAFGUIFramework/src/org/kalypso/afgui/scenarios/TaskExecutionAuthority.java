@@ -56,7 +56,7 @@ import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 import de.renew.workflow.base.ITask;
-import de.renew.workflow.connector.cases.ICaseDataProvider;
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 import de.renew.workflow.connector.worklist.ITaskExecutionAuthority;
 
 /**
@@ -64,13 +64,10 @@ import de.renew.workflow.connector.worklist.ITaskExecutionAuthority;
  */
 public class TaskExecutionAuthority implements ITaskExecutionAuthority
 {
-  /**
-   * @see de.renew.workflow.connector.ITaskExecutionAuthority#canStopTask(de.renew.workflow.base.Task)
-   */
   @Override
   public boolean canStopTask( final ITask task )
   {
-    final ICaseDataProvider< ? > dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
+    final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
     // TODO: Is this okay? Could there be situations, where the data provider is missing?
     if( dataProvider == null )
       return true;

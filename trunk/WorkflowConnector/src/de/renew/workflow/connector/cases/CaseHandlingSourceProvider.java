@@ -12,7 +12,7 @@ import org.eclipse.ui.AbstractSourceProvider;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
-public class CaseHandlingSourceProvider<D extends Object> extends AbstractSourceProvider implements ICaseHandlingSourceProvider
+public class CaseHandlingSourceProvider extends AbstractSourceProvider implements ICaseHandlingSourceProvider
 {
   private static final Logger LOGGER = Logger.getLogger( CaseHandlingSourceProvider.class.getName() );
 
@@ -30,9 +30,9 @@ public class CaseHandlingSourceProvider<D extends Object> extends AbstractSource
   protected ActiveWorkContext m_activeWorkContext;
 
   /** data provider for the current szenario */
-  private ICaseDataProvider<D> m_dataProvider;
+  private IScenarioDataProvider m_dataProvider;
 
-  public CaseHandlingSourceProvider( final ActiveWorkContext context, final ICaseDataProvider<D> dataProvider )
+  public CaseHandlingSourceProvider( final ActiveWorkContext context, final IScenarioDataProvider dataProvider )
   {
     m_activeWorkContext = context;
     m_dataProvider = dataProvider;
@@ -45,9 +45,6 @@ public class CaseHandlingSourceProvider<D extends Object> extends AbstractSource
     fireSourceChanged( 0, getCurrentState() );
   }
 
-  /**
-   * @see org.eclipse.ui.ISourceProvider#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -55,9 +52,6 @@ public class CaseHandlingSourceProvider<D extends Object> extends AbstractSource
     m_dataProvider = null;
   }
 
-  /**
-   * @see org.eclipse.ui.ISourceProvider#getCurrentState()
-   */
   @Override
   public Map<String, Object> getCurrentState( )
   {
@@ -68,9 +62,6 @@ public class CaseHandlingSourceProvider<D extends Object> extends AbstractSource
     return currentState;
   }
 
-  /**
-   * @see org.eclipse.ui.ISourceProvider#getProvidedSourceNames()
-   */
   @Override
   public String[] getProvidedSourceNames( )
   {
@@ -110,7 +101,7 @@ public class CaseHandlingSourceProvider<D extends Object> extends AbstractSource
     return currentProject.getProject().getFolder( projectPath );
   }
 
-  private ICaseDataProvider<D> getDataProvider( )
+  private IScenarioDataProvider getDataProvider( )
   {
     return m_dataProvider;
   }

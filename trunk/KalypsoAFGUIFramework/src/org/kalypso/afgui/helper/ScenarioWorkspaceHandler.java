@@ -46,11 +46,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.model.IModel;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
+import de.renew.workflow.connector.cases.IModel;
 import de.renew.workflow.connector.cases.IScenario;
 
 /**

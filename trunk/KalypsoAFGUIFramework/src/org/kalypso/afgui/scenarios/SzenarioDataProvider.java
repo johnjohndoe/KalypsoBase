@@ -34,7 +34,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.afgui.i18n.Messages;
 import org.kalypso.afgui.model.ICommandPoster;
-import org.kalypso.afgui.model.IModel;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -49,21 +48,18 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
-import de.renew.workflow.connector.cases.ICaseDataProvider;
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
+import de.renew.workflow.connector.cases.IModel;
 import de.renew.workflow.connector.cases.IScenario;
 import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 
 /**
  * Objects of this class are responsible for loading the gml-workspaces for the current selected simulation model and
  * provide them to the commands.
- * <p>
- * This is preliminary, because at the moment we assume that there is only one simulation model per project which is
- * always at the same place.
- * </p>
  *
  * @author Gernot Belger
  */
-public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommandPoster
+public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPoster
 {
   private static final class KeyPoolListener implements IPoolListener
   {
@@ -85,37 +81,23 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
       return m_key;
     }
 
-    /**
-     * @see org.kalypso.util.pool.IPoolListener#dirtyChanged(org.kalypso.util.pool.IPoolableObjectType, boolean)
-     */
     @Override
     public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
     {
     }
 
-    /**
-     * @see org.kalypso.util.pool.IPoolListener#isDisposed()
-     */
     @Override
     public boolean isDisposed( )
     {
       return false;
     }
 
-    /**
-     * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType,
-     *      java.lang.Object)
-     */
     @Override
     public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
     {
       System.out.println( Messages.getString( "org.kalypso.afgui.scenarios.SzenarioDataProvider.2" ) + key ); //$NON-NLS-1$
     }
 
-    /**
-     * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType,
-     *      java.lang.Object, org.eclipse.core.runtime.IStatus)
-     */
     @Override
     public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
     {
@@ -168,7 +150,7 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
    * <p>
    * At the moment this works, because each gml-file corresponds to exactly one (different) wrapper class.
    */
-  protected final Map<String, KeyPoolListener> m_keyMap = new HashMap<String, KeyPoolListener>();
+  final Map<String, KeyPoolListener> m_keyMap = new HashMap<String, KeyPoolListener>();
 
   private final Set<IScenarioDataListener> m_controller = new LinkedHashSet<IScenarioDataListener>();
 
@@ -194,9 +176,6 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     m_controller.remove( listener );
   }
 
-  /**
-   * @see de.renew.workflow.connector.cases.ICaseDataProvider#setCurrent(org.eclipse.core.resources.IContainer)
-   */
   @Override
   public void setCurrent( final IScenario scenario )
   {
@@ -237,9 +216,6 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
 
     final Job job = new Job( Messages.getString( "org.kalypso.afgui.scenarios.SzenarioDataProvider.4" ) ) //$NON-NLS-1$
     {
-      /**
-       * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
-       */
       @Override
       protected IStatus run( final IProgressMonitor monitor )
       {
@@ -466,9 +442,6 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     }
   }
 
-  /**
-   * @see de.renew.workflow.connector.cases.ICaseDataProvider#isDirty()
-   */
   @Override
   public boolean isDirty( )
   {
@@ -539,9 +512,6 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
     }
   }
 
-  /**
-   * @see de.renew.workflow.connector.cases.ICaseDataProvider#saveModel(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public synchronized void saveModel( final IProgressMonitor monitor ) throws CoreException
   {

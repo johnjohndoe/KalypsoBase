@@ -50,7 +50,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * @author Gernot Belger
  * @author Stefan Kurzbach
  */
-public interface ICaseDataProvider<T extends Object>
+public interface IScenarioDataProvider
 {
   /**
    * Returns the data object corresponding to the given case data key.<br/>
@@ -60,7 +60,7 @@ public interface ICaseDataProvider<T extends Object>
    * @param id
    *          Id of the queried data (probably the extension-id with which this data was registered)
    */
-  <D extends T> D getModel( final String id ) throws CoreException;
+  <D extends IModel> D getModel( final String id ) throws CoreException;
 
   /**
    * Saves all model data
