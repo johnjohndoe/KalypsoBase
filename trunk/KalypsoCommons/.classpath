@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_5/activation.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_5/jaxb-api.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_5/jaxb-impl.jar" sourcepath="lib/jaxb_2_2_4/jaxb-impl.src.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_5/jaxb-xjc.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_5/jaxb1-impl.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_5/jsr173_1.0_api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_4/activation.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_4/jaxb-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_4/jaxb-impl.jar" sourcepath="lib/jaxb_2_2_4/jaxb-impl.src.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxb_2_2_4/jaxb-xjc.jar" sourcepath="lib/jaxb_2_2_4/jaxb-xjc.src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/joda-time/joda-time-2.1.jar" sourcepath="lib/joda-time/joda-time-2.1-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/guava/guava-11.0.2.jar" sourcepath="lib/guava/guava-11.0.1-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xstream/xstream-1.4.2.jar"/>
@@ -42,5 +40,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/pdf-renderer/PDFRenderer.jar" sourcepath="lib/pdf-renderer/PDFRenderer-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/jgraph/jgraphx_1_5_1_11.jar" sourcepath="lib/jgraph/jpgrahpx_1_5_1_11-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/opencsv/opencsv-2.3.jar" sourcepath="lib/opencsv/opencsv-2.3.src.zip"/>
+	<classpathentry kind="lib" path="lib/jaxb_2_2_4/jaxb1-impl.jar"/>
+	<classpathentry kind="lib" path="lib/jaxb_2_2_4/jsr173_1.0_api.jar"/>
 	<classpathentry kind="output" path="build/bin"/>
 </classpath>
