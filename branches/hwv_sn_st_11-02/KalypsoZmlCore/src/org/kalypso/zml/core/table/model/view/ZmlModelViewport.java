@@ -186,7 +186,7 @@ public class ZmlModelViewport
       return null;
 
     final IZmlModelColumn[] columns = getColumns();
-    if( ArrayUtils.getLength( columns ) < index )
+    if( ArrayUtils.getLength( columns ) <= index )
       return null;
 
     return columns[index];
