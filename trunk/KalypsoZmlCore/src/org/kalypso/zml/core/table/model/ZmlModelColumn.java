@@ -80,7 +80,6 @@ import org.kalypso.zml.core.table.schema.DataColumnType;
  */
 public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnObservationListener
 {
-
   private IZmlModelColumnDataHandler m_handler;
 
   private final String m_identifier;
