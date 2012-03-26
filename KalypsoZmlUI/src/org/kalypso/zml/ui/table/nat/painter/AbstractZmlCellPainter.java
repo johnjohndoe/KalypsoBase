@@ -1,5 +1,3 @@
-package org.kalypso.zml.core.table.binding;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -7,7 +5,7 @@ package org.kalypso.zml.core.table.binding;
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -40,54 +38,44 @@ package org.kalypso.zml.core.table.binding;
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.zml.ui.table.nat.painter;
 
-import org.kalypso.zml.core.table.schema.AbstractColumnType;
-import org.kalypso.zml.core.table.schema.DataColumnType;
+import net.sourceforge.nattable.layer.cell.LayerCell;
+import net.sourceforge.nattable.painter.cell.AbstractCellPainter;
+
+import org.apache.commons.lang3.ArrayUtils;
+import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 
 /**
  * @author Dirk Kuch
  */
-public class DataColumn extends BaseColumn
+public abstract class AbstractZmlCellPainter extends AbstractCellPainter
 {
-  public DataColumn( final AbstractColumnType type )
+  private final ZmlModelViewport m_viewport;
+
+  public AbstractZmlCellPainter( final ZmlModelViewport viewport )
   {
-    super( type );
+    m_viewport = viewport;
   }
 
-  @Override
-  public DataColumnType getType( )
+  protected boolean isWrapped( final LayerCell cell )
   {
-    return (DataColumnType) super.getType();
+    final IZmlModelColumn[] columns = getViewport().getColumns();
+    final int columnIndex = cell.getColumnIndex();
+
+    if( columnIndex < 0 )
+      return false;
+    else if( columnIndex > ArrayUtils.getLength( columns ) )
+      return false;
+
+    final IZmlModelColumn column = columns[columnIndex];
+
+    return column.getDataColumn().isWrapped();
   }
 
-  public String getValueAxis( )
+  protected ZmlModelViewport getViewport( )
   {
-    final DataColumnType dataType = getType();
-    final String axis = dataType.getValueAxis();
-
-    return axis;
-  }
-
-  public String getIndexAxis( )
-  {
-    final DataColumnType dataType = getType();
-    final String axis = dataType.getIndexAxis();
-
-    return axis;
-  }
-
-  public boolean isMetadataSource( )
-  {
-    return getType().isMetadataSource();
-  }
-
-  public boolean isWrapped( )
-  {
-    return getType().isWrapText();
-  }
-
-  public int getWrap( )
-  {
-    return getType().getWrap();
+    return m_viewport;
   }
 }

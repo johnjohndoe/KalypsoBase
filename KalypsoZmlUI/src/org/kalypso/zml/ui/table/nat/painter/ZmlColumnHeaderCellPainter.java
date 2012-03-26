@@ -47,7 +47,6 @@ import net.sourceforge.nattable.config.CellConfigAttributes;
 import net.sourceforge.nattable.config.IConfigRegistry;
 import net.sourceforge.nattable.grid.GridRegion;
 import net.sourceforge.nattable.layer.cell.LayerCell;
-import net.sourceforge.nattable.painter.cell.AbstractCellPainter;
 import net.sourceforge.nattable.painter.cell.ICellPainter;
 import net.sourceforge.nattable.painter.cell.ImagePainter;
 import net.sourceforge.nattable.painter.cell.TextPainter;
@@ -75,14 +74,12 @@ import org.kalypso.zml.core.table.rules.AppliedRule;
 /**
  * @author Dirk Kuch
  */
-public class ZmlColumnHeaderCellPainter extends AbstractCellPainter
+public class ZmlColumnHeaderCellPainter extends AbstractZmlCellPainter
 {
-
-  private final ZmlModelViewport m_viewport;
 
   public ZmlColumnHeaderCellPainter( final ZmlModelViewport viewport )
   {
-    m_viewport = viewport;
+    super( viewport );
   }
 
   @Override
@@ -112,7 +109,7 @@ public class ZmlColumnHeaderCellPainter extends AbstractCellPainter
       configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, cellStyle, DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
 
       // TODO wrapped text painters increases column header size - how to shrink column header?
-      final ICellPainter painter = new TextPainter();
+      final ICellPainter painter = new TextPainter( isWrapped( cell ), true );
       painter.paintCell( cell, gc, ptr, configRegistry );
     }
     else
@@ -150,7 +147,7 @@ public class ZmlColumnHeaderCellPainter extends AbstractCellPainter
 
     final Set<Image> images = new LinkedHashSet<Image>();
 
-    final AppliedRule[] rules = ZmlModelColumns.findRules( m_viewport, column );
+    final AppliedRule[] rules = ZmlModelColumns.findRules( getViewport(), column );
     for( final AppliedRule rule : rules )
     {
       if( !rule.hasHeaderIcon() )
@@ -186,7 +183,7 @@ public class ZmlColumnHeaderCellPainter extends AbstractCellPainter
         width += image.getBounds().width;
       }
 
-      final TextPainter painter = new TextPainter();
+      final TextPainter painter = new TextPainter( isWrapped( cell ), true );
       width += painter.getPreferredWidth( cell, gc, configRegistry );
 
       return width + 20;
@@ -211,7 +208,7 @@ public class ZmlColumnHeaderCellPainter extends AbstractCellPainter
         height = Math.max( bounds.height, height );
       }
 
-      final TextPainter painter = new TextPainter();
+      final TextPainter painter = new TextPainter( isWrapped( cell ), true );
       height = Math.max( painter.getPreferredHeight( cell, gc, configRegistry ), height );
 
       return height;
