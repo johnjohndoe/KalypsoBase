@@ -91,9 +91,7 @@ public class ImportObservationOperation implements ICoreRunnableWithProgress
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     final IObservation srcObservation = createSourceObservation();
-
     final TargetObservation targetObservation = createTargetObservation();
-
     final IObservation newObservation = createNewObservation( srcObservation, targetObservation );
 
     writeResult( newObservation );

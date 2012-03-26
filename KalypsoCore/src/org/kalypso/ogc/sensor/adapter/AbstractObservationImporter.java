@@ -238,4 +238,10 @@ public abstract class AbstractObservationImporter implements INativeObservationA
     return m_title;
   }
 
+  @Override
+  public void clear( )
+  {
+    m_datasets.clear();
+  }
+
 }
