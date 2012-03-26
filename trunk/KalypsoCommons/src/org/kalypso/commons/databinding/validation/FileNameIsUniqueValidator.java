@@ -41,6 +41,7 @@
 package org.kalypso.commons.databinding.validation;
 
 import org.apache.commons.io.IOCase;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -60,12 +61,15 @@ public class FileNameIsUniqueValidator extends TypedValidator<String>
   {
     super( String.class, severity, message );
     m_strings = strings;
-    m_current = current;
+    m_current = current == null ? StringUtils.EMPTY : current;
   }
 
   @Override
   protected IStatus doValidate( final String value ) throws CoreException
   {
+    if( StringUtils.isEmpty( value ) )
+      return ValidationStatus.ok();
+
     for( final String string : m_strings )
     {
       if( IOCase.SYSTEM.checkEquals( m_current, string ) )
