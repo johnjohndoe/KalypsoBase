@@ -52,13 +52,15 @@ import org.eclipse.core.runtime.IStatus;
  */
 public class FileNameIsUniqueValidator extends TypedValidator<String>
 {
-
   private final String[] m_strings;
 
-  public FileNameIsUniqueValidator( final String[] strings, final int severity, final String message )
+  private final String m_current;
+
+  public FileNameIsUniqueValidator( final String[] strings, final String current, final int severity, final String message )
   {
     super( String.class, severity, message );
     m_strings = strings;
+    m_current = current;
   }
 
   @Override
@@ -66,6 +68,8 @@ public class FileNameIsUniqueValidator extends TypedValidator<String>
   {
     for( final String string : m_strings )
     {
+      if( IOCase.SYSTEM.checkEquals( m_current, string ) )
+        continue;
       if( IOCase.SYSTEM.checkEquals( string, value ) )
         fail();
     }
