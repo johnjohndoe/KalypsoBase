@@ -121,6 +121,7 @@ public class GenericShapeDataFactory
     return fields.toArray( new IDBFValue[fields.size()] );
   }
 
+
   private static DBFField findField( final IPropertyType property ) throws DBaseException
   {
     if( !(property instanceof IValuePropertyType) )
@@ -129,12 +130,19 @@ public class GenericShapeDataFactory
     if( property instanceof GeometryPropertyBuilder )
       return null;
 
-    if( property.isList() )
-      return null;
+    final IValuePropertyType vpt = (IValuePropertyType) property;
 
     final String fieldName = findFieldName( property );
 
-    final IValuePropertyType vpt = (IValuePropertyType) property;
+    /* Special handling for gml:name */
+    final QName propertyName = vpt.getQName();
+    if( Feature.QN_NAME.equals( propertyName ) )
+      return new DBFField( fieldName, FieldType.C, (byte) 127, (byte) 0 );
+
+    /* All other list cannot be exported */
+    if( vpt.isList() )
+      return null;
+
     final Class< ? > clazz = vpt.getValueClass();
 
     if( clazz == Integer.class )
@@ -150,7 +158,7 @@ public class GenericShapeDataFactory
       // TODO: Problem: reading/writing a shape will change the precision/size of the column!
       return new DBFField( fieldName, FieldType.N, (byte) 30, (byte) 10 );
 
-    if( (clazz == Double.class) || (clazz == Number.class) )
+    if( clazz == Double.class || clazz == Number.class )
       return new DBFField( fieldName, FieldType.N, (byte) 30, (byte) 10 );
 
     if( clazz == BigDecimal.class )
@@ -170,6 +178,7 @@ public class GenericShapeDataFactory
 
     return null;
   }
+
 
   private static String findFieldName( final IPropertyType property )
   {
