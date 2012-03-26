@@ -92,6 +92,8 @@ public class ImportObservationData extends AbstractModelObject
 
   private IFile m_targetFile;
 
+  private String[] m_existingTimeserieses;
+
   public ImportObservationData( final String... allowedParameterTypes )
   {
     m_adapters = KalypsoCoreExtensions.getObservationImporters();
@@ -164,7 +166,6 @@ public class ImportObservationData extends AbstractModelObject
   public void setTargetFile( final IFile targetFile )
   {
     final IFile oldValue = targetFile;
-
     m_targetFile = targetFile;
 
     firePropertyChange( PROPERTY_TARGET_FILE, oldValue, targetFile );
@@ -232,5 +233,15 @@ public class ImportObservationData extends AbstractModelObject
     m_parameterType = parameterType;
 
     firePropertyChange( PROPERTY_PARAMETER_TYPE, oldValue, parameterType );
+  }
+
+  public void setExistingTimeserieses( final String[] timeserieses )
+  {
+    m_existingTimeserieses = timeserieses;
+  }
+
+  public String[] getExistingTimeserieses( )
+  {
+    return m_existingTimeserieses;
   }
 }

@@ -85,9 +85,4 @@ public class DataColumn extends BaseColumn
   {
     return getType().isWrapText();
   }
-
-  public int getWrap( )
-  {
-    return getType().getWrap();
-  }
 }
