@@ -126,7 +126,8 @@ public class DataSetTupleModelBuilder implements ICoreRunnableWithProgress
         }
         else
         {
-          data[dataSourceAxis] = IDataSourceItem.SOURCE_UNKNOWN;
+          final int sourceIndex = sources.addDataSource( IDataSourceItem.SOURCE_UNKNOWN, IDataSourceItem.SOURCE_UNKNOWN );
+          data[dataSourceAxis] = sourceIndex;
         }
       }
 
