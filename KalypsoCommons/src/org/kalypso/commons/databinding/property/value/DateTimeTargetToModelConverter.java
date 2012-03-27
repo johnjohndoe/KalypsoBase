@@ -38,30 +38,34 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.commons.databinding.jface;
+package org.kalypso.commons.databinding.property.value;
+
+import java.util.Date;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.kalypso.commons.databinding.conversion.TypedConverter;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.java.util.DateUtilities;
 
 /**
  * @author Dirk Kuch
  */
-public class DateControlTargetToModelConverter extends TypedConverter<String, XMLGregorianCalendar>
+public class DateTimeTargetToModelConverter extends TypedConverter<Date, XMLGregorianCalendar>
 {
 
-  private final DateTimeControl m_control;
-
-  public DateControlTargetToModelConverter( final DateTimeControl control )
+  public DateTimeTargetToModelConverter( )
   {
-    super( String.class, XMLGregorianCalendar.class );
-    m_control = control;
+    super( Date.class, XMLGregorianCalendar.class );
   }
 
   @Override
-  public XMLGregorianCalendar convertTyped( final String fromObject )
+  public XMLGregorianCalendar convertTyped( final Date fromObject )
   {
-    return DateUtilities.toXMLGregorianCalendar( m_control.getDate() );
+    if( Objects.isNull( fromObject ) )
+      return null;
+
+    return DateUtilities.toXMLGregorianCalendar( fromObject );
   }
+
 }
