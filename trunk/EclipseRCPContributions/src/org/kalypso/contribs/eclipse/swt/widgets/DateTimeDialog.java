@@ -54,6 +54,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 
 /**
  * @author Dirk Kuch
@@ -98,9 +99,6 @@ public class DateTimeDialog extends Dialog
     m_windowTitle = title;
   }
 
-  /**
-   * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
-   */
   @Override
   protected void configureShell( final Shell newShell )
   {
@@ -109,19 +107,17 @@ public class DateTimeDialog extends Dialog
     newShell.setText( m_windowTitle );
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   protected Control createDialogArea( final Composite parent )
   {
     final Composite composite = (Composite) super.createDialogArea( parent );
+    composite.setLayout( Layouts.createGridLayout() );
 
     final Calendar preSettedTime = fetchPreSettedTime();
 
     /* date */
-    final DateTime calendar = createDateTime( composite, SWT.CALENDAR | SWT.BORDER, preSettedTime );
-    calendar.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+    final DateTime calendar = createDateTime( composite, SWT.CALENDAR, preSettedTime );
+    calendar.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     /* time of day */
     final DateTime time = createDateTime( composite, SWT.TIME | m_timeStyle, preSettedTime );
@@ -139,9 +135,6 @@ public class DateTimeDialog extends Dialog
 
     time.addSelectionListener( new SelectionAdapter()
     {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
