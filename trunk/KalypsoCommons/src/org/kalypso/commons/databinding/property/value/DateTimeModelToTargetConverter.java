@@ -38,45 +38,33 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.commons.databinding.jface;
+package org.kalypso.commons.databinding.property.value;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.apache.commons.lang3.StringUtils;
 import org.kalypso.commons.databinding.conversion.TypedConverter;
 import org.kalypso.commons.java.lang.Objects;
 
 /**
  * @author Dirk Kuch
  */
-public class DateControlModelToTargetConverter extends TypedConverter<XMLGregorianCalendar, String>
+public class DateTimeModelToTargetConverter extends TypedConverter<XMLGregorianCalendar, Date>
 {
-  private final TimeZone m_timezone;
 
-  public DateControlModelToTargetConverter( final TimeZone timezone )
+  public DateTimeModelToTargetConverter( )
   {
-    super( XMLGregorianCalendar.class, String.class );
-    m_timezone = timezone;
+    super( XMLGregorianCalendar.class, Date.class );
   }
 
   @Override
-  public String convertTyped( final XMLGregorianCalendar fromObject )
+  public Date convertTyped( final XMLGregorianCalendar fromObject )
   {
     if( Objects.isNull( fromObject ) )
-      return StringUtils.EMPTY;
+      return null;
 
-    final GregorianCalendar calendar = fromObject.toGregorianCalendar();
-    final Date time = calendar.getTime();
-
-    final SimpleDateFormat sdf = new SimpleDateFormat( "dd.MM.yyyy HH:mm:ss" ); //$NON-NLS-1$
-    sdf.setTimeZone( m_timezone );
-
-    return sdf.format( time );
+    return fromObject.toGregorianCalendar().getTime();
   }
 
 }
