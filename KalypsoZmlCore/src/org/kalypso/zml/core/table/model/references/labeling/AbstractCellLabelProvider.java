@@ -126,7 +126,6 @@ public abstract class AbstractCellLabelProvider implements IZmlCellLabelProvider
   @Override
   public Style getStyle( final ZmlModelViewport viewport, final IZmlModelCell cell )
   {
-
     final Style style = new Style();
 
     try
