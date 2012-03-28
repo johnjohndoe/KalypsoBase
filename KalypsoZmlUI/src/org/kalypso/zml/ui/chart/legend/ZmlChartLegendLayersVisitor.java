@@ -43,6 +43,10 @@ package org.kalypso.zml.ui.chart.legend;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.apache.commons.lang.ArrayUtils;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.zml.core.diagram.base.IZmlLayer;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 
@@ -98,11 +102,17 @@ public class ZmlChartLegendLayersVisitor extends AbstractChartLayerVisitor
     if( dataHandler == null )
       return false;
 
-    if( dataHandler.getObservation() == null )
+    final IObservation observation = dataHandler.getObservation();
+    if( Objects.isNull( observation ) )
       return false;
 
     // w/q relation defined?
-    if( dataHandler.getValueAxis() == null )
+    final IAxis valueAxis = dataHandler.getValueAxis();
+    if( valueAxis == null )
+      return false;
+
+    final IAxis[] axes = observation.getAxes();
+    if( !ArrayUtils.contains( axes, valueAxis ) )
       return false;
 
     return true;
