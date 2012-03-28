@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.nat.editing;
 
+import jregex.Pattern;
 import net.sourceforge.nattable.data.validate.DataValidator;
 import net.sourceforge.nattable.data.validate.IDataValidator;
 
@@ -56,7 +57,13 @@ public class ZmlDefaultNumericDataValidator extends DataValidator implements IDa
   {
     try
     {
-      NumberUtils.parseDouble( newValue.toString() );
+      final String string = newValue.toString();
+
+      final Pattern pattern = new Pattern( "[0-9.,]*" ); //$NON-NLS-1$
+      if( !pattern.matches( string ) )
+        return false;
+
+      NumberUtils.parseDouble( string );
     }
     catch( final NumberFormatException e )
     {
@@ -64,6 +71,7 @@ public class ZmlDefaultNumericDataValidator extends DataValidator implements IDa
     }
 
     return true;
+
   }
 
 }
