@@ -243,8 +243,7 @@ public class ZmlTable extends Composite implements IZmlTable
     m_updateJob.setSystem( true );
 
     m_updateJob.setRule( MUTEX_TABLE_UPDATE );
-    m_updateJob.schedule( 150 );
-
+    m_updateJob.schedule( 333 );
   }
 
   @Override

@@ -332,9 +332,9 @@ public class ZmlModelViewport
   public void setVisible( final String type, final boolean hide )
   {
     if( hide )
-      m_hiddenTypes.remove( type );
-    else
       m_hiddenTypes.add( type );
+    else
+      m_hiddenTypes.remove( type );
 
     fireModelChanged( ZmlModelColumnChangeType.IGNORE_TYPES_CHANGED );
   }
