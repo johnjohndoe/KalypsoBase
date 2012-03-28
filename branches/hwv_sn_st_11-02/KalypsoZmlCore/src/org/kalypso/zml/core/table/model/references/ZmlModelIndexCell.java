@@ -135,7 +135,7 @@ public class ZmlModelIndexCell extends AbstractZmlCell implements IZmlModelIndex
       CellStyleType baseType = m_base.getDefaultStyle().getType();
       for( final ZmlCellRule rule : rules )
       {
-        final CellStyle style = rule.getStyle( getRow(), m_base );
+        final CellStyle style = rule.getStyle( this );
         baseType = CellStyle.merge( baseType, style.getType() );
       }
 
