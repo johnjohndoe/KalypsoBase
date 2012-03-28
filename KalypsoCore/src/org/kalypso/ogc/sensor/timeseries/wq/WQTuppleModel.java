@@ -53,6 +53,7 @@ import org.kalypso.ogc.sensor.impl.ITupleModelChangeListener;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 
 /**
  * The WQTuppleModel computes W, Q, V, etc. on the fly, depending on the underlying axis type. It also manages the
@@ -155,25 +156,48 @@ public class WQTuppleModel extends AbstractTupleModel
     if( axis == null )
       return null;
 
-    final boolean bDestAxis = axis.equals( m_destAxis );
+    final Integer objIndex = Integer.valueOf( index );
 
-    if( bDestAxis || KalypsoStatusUtils.equals( axis, m_destStatusAxis ) )
+    if( axis.equals( m_destAxis ) || KalypsoStatusUtils.equals( axis, m_destStatusAxis ) )
     {
-      final Integer objIndex = Integer.valueOf( index );
       if( !m_values.containsKey( objIndex ) )
       {
         final Number[] res = read( index );
         m_values.put( objIndex, res[0] );
         m_stati.put( objIndex, res[1] );
       }
-
-      if( bDestAxis )
-        return m_values.get( objIndex );
-
-      return m_stati.get( objIndex );
     }
 
-    return m_model.get( index, axis );
+    if( axis.equals( m_destAxis ) )
+      return m_values.get( objIndex );
+    else if( KalypsoStatusUtils.equals( axis, m_destStatusAxis ) )
+    {
+      // return merged status (like user modified flag for an derived status axis)
+      final Number destStatus = m_stati.get( objIndex );
+      final Number sourceStatus = (Number) m_model.get( index, m_srcStatusAxis );
+
+      return destStatus.intValue() | sourceStatus.intValue();
+    }
+    else if( AxisUtils.isDataSrcAxis( axis ) )
+    {
+      final IAxis srcDataSource = AxisUtils.findDataSourceAxis( getAxes(), m_srcAxis );
+
+      // take data source from base value (Rule interpolated value)
+      if( Objects.isNotNull( srcDataSource ) )
+      {
+        return m_model.get( index, srcDataSource );
+      }
+
+      return m_model.get( index, axis );
+    }
+    else if( AxisUtils.isDataSrcAxis( axis ) )
+    {
+      final IAxis sourceDataSourceAxis = AxisUtils.findDataSourceAxis( getAxes(), m_srcAxis );
+
+      return m_model.get( index, sourceDataSourceAxis );
+    }
+    else
+      return m_model.get( index, axis );
   }
 
   private Number[] read( final int index ) throws SensorException
