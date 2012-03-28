@@ -259,7 +259,7 @@ public class ZmlLink
   }
 
   /**
-   * Returns the given property a s {@link TimeseriesLinkType}.<br>
+   * Returns the given property as {@link TimeseriesLinkType}.<br>
    * Links with a blank href are considered as not set.
    */
   public TimeseriesLinkType getTimeseriesLink( )
