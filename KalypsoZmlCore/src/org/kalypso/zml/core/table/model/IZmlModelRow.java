@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model;
 
+import java.util.Comparator;
 import java.util.Date;
 
 import org.kalypso.zml.core.table.model.references.IZmlModelIndexCell;
@@ -51,6 +52,15 @@ import org.kalypso.zml.core.table.schema.AbstractColumnType;
  */
 public interface IZmlModelRow
 {
+  Comparator<IZmlModelRow> COMPARATOR = new Comparator<IZmlModelRow>()
+  {
+    @Override
+    public int compare( final IZmlModelRow r1, final IZmlModelRow r2 )
+    {
+      return r1.getIndex().compareTo( r2.getIndex() );
+    }
+  };
+
   IZmlModelValueCell get( AbstractColumnType type );
 
   IZmlModelValueCell get( IZmlModelColumn column );
