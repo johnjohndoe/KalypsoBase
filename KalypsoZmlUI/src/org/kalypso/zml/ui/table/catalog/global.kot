@@ -177,6 +177,14 @@
     <Style id="wqBoundaryDeviationUpperExtreme">
       <property name="icon">urn:org:kalypso:zml:ui:table:icon:wq:boundary:deviation:upper:extreme</property>
     </Style>
+    
+    <!-- mean styles -->
+    <Style id="meanBaseCellStyle">
+      <baseStyle>
+        <reference>defaultCellStyle</reference>
+      </baseStyle>
+      <property name="textFormat">%.2f</property>
+    </Style>
   </StyleSet>
   <defaultStyle>
     <reference>defaultCellStyle</reference>
