@@ -14,5 +14,12 @@
   <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:volume" uri="common/volume.kod" />
   <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:waterlevel" uri="common/waterlevel.kod" />
   
+  
+  <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:mean:humidity" uri="common/mean_humidity.kod" />
+  <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:mean:sunshine:hours" uri="common/mean_sunshine_hours.kod" />
+  <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:mean:temperature" uri="common/mean_temperature.kod" />
+  <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:mean:wind:velocity" uri="common/mean_wind_velocity.kod" />
+  
+  
   <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:quality" uri="quality/quality.kod" />
 </catalog:catalog>

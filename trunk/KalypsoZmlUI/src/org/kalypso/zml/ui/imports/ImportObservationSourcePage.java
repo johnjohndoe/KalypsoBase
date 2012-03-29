@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.imports;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
@@ -49,6 +50,7 @@ import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -194,8 +196,24 @@ public class ImportObservationSourcePage extends WizardPage
     final ComboViewer parameterCombo = new ComboViewer( parent, SWT.DROP_DOWN | SWT.READ_ONLY );
     parameterCombo.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
+    final ParameterTypeLabelProvider labelProvider = new ParameterTypeLabelProvider();
+    parameterCombo.setLabelProvider( labelProvider );
     parameterCombo.setContentProvider( new ArrayContentProvider() );
-    parameterCombo.setLabelProvider( new ParameterTypeLabelProvider() );
+
+    parameterCombo.setSorter( new ViewerSorter()
+    {
+      @Override
+      public int compare( final org.eclipse.jface.viewers.Viewer viewer, final Object e1, final Object e2 )
+      {
+        final String l1 = labelProvider.getText( e1 );
+        final String l2 = labelProvider.getText( e2 );
+
+        if( StringUtils.isNotEmpty( l1 ) && StringUtils.isNotEmpty( l2 ) )
+          return l1.compareTo( l2 );
+
+        return super.compare( viewer, e1, e2 );
+      }
+    } );
 
     final String[] parameterTypes = m_data.getAllowedParameterTypes();
     parameterCombo.setInput( parameterTypes );
