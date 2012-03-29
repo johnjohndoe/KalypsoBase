@@ -136,15 +136,6 @@ public interface ITimeseriesConstants extends IMetadataConstants
 
   String TYPE_DESCRIPTION = "description"; //$NON-NLS-1$
 
-  /** Evaporation [mm] */
-  String TYPE_EVAPORATION = "E"; //$NON-NLS-1$
-
-  /** hours [h] */
-  String TYPE_HOURS = "H"; //$NON-NLS-1$
-
-  /** Humidity [%] */
-  String TYPE_HUMIDITY = "U"; //$NON-NLS-1$
-
   /** Der Korrekturwert der Verdunstung gegenüber der pot. Verdunstung in einem Nutzungszyklus [-] */
   String TYPE_KC = "KC"; //$NON-NLS-1$
 
@@ -179,9 +170,6 @@ public interface ITimeseriesConstants extends IMetadataConstants
 
   String TYPE_RUNOFF_RHB = "Qrhb"; //$NON-NLS-1$
 
-  /** Temperatur */
-  String TYPE_TEMPERATURE = "T"; //$NON-NLS-1$
-
   /** Velocity [m/s] */
   String TYPE_VELOCITY = "v"; //$NON-NLS-1$
 
@@ -203,5 +191,23 @@ public interface ITimeseriesConstants extends IMetadataConstants
 
   /** Die Wurzeltiefe in einem Nutzungszyklus [dm] */
   String TYPE_WT = "WT"; //$NON-NLS-1$
+
+  /** hours [h] */
+  String TYPE_HOURS = "H"; //$NON-NLS-1$
+
+  /** Evaporation [mm] */
+  String TYPE_EVAPORATION = "E"; //$NON-NLS-1$
+
+  /** Wind Velocity [m/s] */
+  String TYPE_WIND_VELOCITY = "WIND_VELOCITY"; //$NON-NLS-1$
+
+  /** Sunshine hours [h/d] */
+  String TYPE_SUNSHINE_HOURS = "SUNSHINE"; //$NON-NLS-1$
+
+  /** Humidity [%] */
+  String TYPE_HUMIDITY = "U"; //$NON-NLS-1$
+
+  /** Temperatur */
+  String TYPE_TEMPERATURE = "T"; //$NON-NLS-1$
 
 }
