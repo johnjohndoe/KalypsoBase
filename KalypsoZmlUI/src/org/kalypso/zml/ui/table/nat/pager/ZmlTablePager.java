@@ -87,7 +87,9 @@ public class ZmlTablePager
       {
         if( event instanceof ScrollEvent )
         {
-          final LayerCell cell = m_table.getCellByPosition( 1, 1 );
+          // choose last row and the table paging will be correct - in most cases :-)
+          final int rowCount = m_table.getRowCount();
+          final LayerCell cell = m_table.getCellByPosition( 1, rowCount );
           if( Objects.isNull( cell ) )
             return;
 
@@ -98,7 +100,6 @@ public class ZmlTablePager
             m_lastRow = modelCell.getIndexValue();
           }
         }
-
       }
     } );
   }

@@ -107,9 +107,15 @@ public final class DataSourceHelper
 
   public static IAxis createSourceAxis( final IAxis valueAxis )
   {
-    final String name = getDataSourceName( valueAxis );
+    return createSourceAxis( valueAxis, true );
 
-    final DefaultAxis axis = new DefaultAxis( name, ITimeseriesConstants.TYPE_DATA_SRC, StringUtils.EMPTY, Integer.class, false );
+  }
+
+  public static IAxis createSourceAxis( final IAxis valueAxis, final boolean persistable )
+  {
+    final String name = getDataSourceName( valueAxis );
+    final DefaultAxis axis = new DefaultAxis( name, ITimeseriesConstants.TYPE_DATA_SRC, StringUtils.EMPTY, Integer.class, false, persistable );
+
     return axis;
   }
 
@@ -127,4 +133,5 @@ public final class DataSourceHelper
   {
     return String.format( "_dataSource_%s", axisType ); //$NON-NLS-1$
   }
+
 }

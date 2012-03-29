@@ -186,7 +186,7 @@ public class ZmlModelViewport
       return null;
 
     final IZmlModelColumn[] columns = getColumns();
-    if( ArrayUtils.getLength( columns ) < index )
+    if( ArrayUtils.getLength( columns ) <= index )
       return null;
 
     return columns[index];
@@ -343,9 +343,9 @@ public class ZmlModelViewport
   public void setVisible( final String type, final boolean hide )
   {
     if( hide )
-      m_hiddenTypes.remove( type );
-    else
       m_hiddenTypes.add( type );
+    else
+      m_hiddenTypes.remove( type );
 
     fireModelChanged( ZmlModelColumnChangeType.IGNORE_TYPES_CHANGED );
   }

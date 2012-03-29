@@ -43,6 +43,9 @@ package org.kalypso.zml.ui.chart.legend;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.zml.core.diagram.base.IZmlLayer;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
@@ -58,9 +61,6 @@ public class ZmlChartLegendLayersVisitor extends AbstractChartLayerVisitor
 {
   private final Set<IChartLayer> m_layers = new LinkedHashSet<IChartLayer>();
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
   @Override
   public void visit( final IChartLayer layer )
   {
@@ -99,11 +99,17 @@ public class ZmlChartLegendLayersVisitor extends AbstractChartLayerVisitor
     if( dataHandler == null )
       return false;
 
-    if( dataHandler.getAdapter( IObservation.class ) == null )
+    final IObservation observation = (IObservation) dataHandler.getAdapter( IObservation.class );
+    if( Objects.isNull( observation ) )
       return false;
 
     // w/q relation defined?
-    if( dataHandler.getValueAxis() == null )
+    final IAxis valueAxis = dataHandler.getValueAxis();
+    if( valueAxis == null )
+      return false;
+
+    final IAxis[] axes = observation.getAxes();
+    if( !ArrayUtils.contains( axes, valueAxis ) )
       return false;
 
     return true;
