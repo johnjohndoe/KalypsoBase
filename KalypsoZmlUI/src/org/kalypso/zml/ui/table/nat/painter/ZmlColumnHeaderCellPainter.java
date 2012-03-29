@@ -109,7 +109,14 @@ public class ZmlColumnHeaderCellPainter extends AbstractZmlCellPainter
       configRegistry.registerConfigAttribute( CellConfigAttributes.CELL_STYLE, cellStyle, DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
 
       // TODO wrapped text painters increases column header size - how to shrink column header?
-      final ICellPainter painter = new TextPainter( isWrapped( cell ), true );
+      final ICellPainter painter = new TextPainter( isWrapped( cell ), true )
+      {
+        @Override
+        protected String getTextToDisplay( final LayerCell cell, final GC gc, final int availableLength, final String text )
+        {
+          return text;
+        }
+      };
       painter.paintCell( cell, gc, ptr, configRegistry );
     }
     else
@@ -123,11 +130,10 @@ public class ZmlColumnHeaderCellPainter extends AbstractZmlCellPainter
 
   private Style getStyle( )
   {
-
-    final Font font = GUIHelper.getFont( new FontData( "Verdana", 10, SWT.NORMAL ) );
+    final Font font = GUIHelper.getFont( new FontData( "Verdana", 10, SWT.NORMAL ) ); //$NON-NLS-1$
     final Color bgColor = GUIHelper.COLOR_WIDGET_BACKGROUND;
     final Color fgColor = GUIHelper.COLOR_WIDGET_FOREGROUND;
-    final HorizontalAlignmentEnum hAlign = HorizontalAlignmentEnum.RIGHT;
+    final HorizontalAlignmentEnum hAlign = HorizontalAlignmentEnum.LEFT;
     final VerticalAlignmentEnum vAlign = VerticalAlignmentEnum.MIDDLE;
     final BorderStyle borderStyle = null;
 

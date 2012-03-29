@@ -108,7 +108,7 @@ public class ZmlRowHeaderCellPainter extends AbstractZmlCellPainter
 
   private Style getDefaultStyle( )
   {
-    final Font font = GUIHelper.getFont( new FontData( "Verdana", 10, SWT.NORMAL ) );
+    final Font font = GUIHelper.getFont( new FontData( "Verdana", 10, SWT.NORMAL ) ); //$NON-NLS-1$
     final Color bgColor = GUIHelper.COLOR_WIDGET_BACKGROUND;
     final Color fgColor = GUIHelper.COLOR_WIDGET_FOREGROUND;
     final HorizontalAlignmentEnum hAlign = HorizontalAlignmentEnum.LEFT;
