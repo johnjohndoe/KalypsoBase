@@ -66,14 +66,6 @@ public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionTy
 {
   public static final String PATTERN_TEXT = "${text}"; //$NON-NLS-1$
 
-  private MetadataBoundary m_boundaryFrom;
-
-  private MetadataBoundary m_boundaryTo;
-
-  private IZmlModelColumn m_lastToColumn;
-
-  private IZmlModelColumn m_lastFromColumn;
-
   public ZmlMetadataBoundaryInstruction( final AbstractRuleInstructionType type )
   {
     super( type );
@@ -118,17 +110,12 @@ public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionTy
 
   private MetadataBoundary getBoundaryFrom( final IZmlModelValueCell reference )
   {
-    if( m_boundaryFrom == null || reference.getColumn() != m_lastFromColumn )
-    {
-      m_lastFromColumn = reference.getColumn();
-      final MetadataList metadata = m_lastFromColumn.getMetadata();
-      if( metadata == null )
-        return null;
+    final IZmlModelColumn column = reference.getColumn();
+    final MetadataList metadata = column.getMetadata();
+    if( metadata == null )
+      return null;
 
-      m_boundaryFrom = getBoundary( metadata, getType().getFrom(), getType().getFromExtensionPoint(), new BigDecimal( -Double.MAX_VALUE ), getType().getFactorFrom() );
-    }
-
-    return m_boundaryFrom;
+    return getBoundary( metadata, getType().getFrom(), getType().getFromExtensionPoint(), new BigDecimal( -Double.MAX_VALUE ), getType().getFactorFrom() );
   }
 
   private MetadataBoundary getBoundary( final MetadataList metadata, final String property, final String propertyExtensionPoint, final BigDecimal defaultValue, final double factor )
@@ -158,17 +145,12 @@ public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionTy
 
   private MetadataBoundary getBoundaryTo( final IZmlModelValueCell reference )
   {
-    if( m_boundaryTo == null || reference.getColumn() != m_lastToColumn )
-    {
-      m_lastToColumn = reference.getColumn();
-      final MetadataList metadata = m_lastToColumn.getMetadata();
-      if( Objects.isNull( metadata ) )
-        return null;
+    final IZmlModelColumn column = reference.getColumn();
+    final MetadataList metadata = column.getMetadata();
+    if( Objects.isNull( metadata ) )
+      return null;
 
-      m_boundaryTo = getBoundary( metadata, getType().getTo(), getType().getToExtensionPoint(), new BigDecimal( -Double.MAX_VALUE ), getType().getFactorTo() );
-    }
-
-    return m_boundaryTo;
+    return getBoundary( metadata, getType().getTo(), getType().getToExtensionPoint(), new BigDecimal( -Double.MAX_VALUE ), getType().getFactorTo() );
   }
 
   private String findBoundaryType( final MetadataBoundary metaFrom, final MetadataBoundary metaTo )
