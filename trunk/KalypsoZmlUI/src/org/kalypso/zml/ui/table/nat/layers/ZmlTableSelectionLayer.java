@@ -42,6 +42,7 @@ package org.kalypso.zml.ui.table.nat.layers;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import net.sourceforge.nattable.coordinate.PositionCoordinate;
 import net.sourceforge.nattable.coordinate.Range;
@@ -88,7 +89,7 @@ public class ZmlTableSelectionLayer extends SelectionLayer implements IZmlTableS
   @Override
   public IZmlModelRow[] getSelectedRows( )
   {
-    final Set<IZmlModelRow> selection = new LinkedHashSet<IZmlModelRow>();
+    final Set<IZmlModelRow> selection = new TreeSet<IZmlModelRow>( IZmlModelRow.COMPARATOR );
 
     final IZmlModelRow[] modelRows = m_model.getRows();
 

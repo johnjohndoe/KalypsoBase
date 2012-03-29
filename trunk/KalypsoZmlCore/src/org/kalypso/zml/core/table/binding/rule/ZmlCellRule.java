@@ -51,12 +51,11 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.KalypsoZmlCoreExtensions;
-import org.kalypso.zml.core.table.binding.BaseColumn;
 import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.rule.instructions.AbstractZmlRuleInstructionType;
 import org.kalypso.zml.core.table.binding.rule.instructions.ZmlMetadataBoundaryInstruction;
 import org.kalypso.zml.core.table.binding.rule.instructions.ZmlMetadataDaterangeInstruction;
-import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.rules.IZmlCellRuleImplementation;
 import org.kalypso.zml.core.table.schema.AbstractRuleInstructionType;
@@ -133,15 +132,14 @@ public class ZmlCellRule extends AbstractZmlRule
     return getRuleType().isSetHeaderIcon();
   }
 
-  public CellStyle getStyle( final IZmlModelRow row, final BaseColumn column ) throws CoreException
+  public CellStyle getStyle( final IZmlModelCell cell ) throws CoreException
   {
-    final IZmlModelValueCell reference = row.get( column.getType() );
-    if( Objects.isNull( reference ) )
+    if( Objects.isNull( cell ) )
       return getBaseStyle();
 
     CellStyleType base = getBaseStyle().getType();
 
-    final CellStyle implStyle = getImplementation().getCellStyle( this, reference );
+    final CellStyle implStyle = getImplementation().getCellStyle( this, cell );
     base = CellStyle.merge( base, implStyle.getType() );
 
     final AbstractZmlRuleInstructionType[] instructions = getInstructions();
@@ -149,9 +147,9 @@ public class ZmlCellRule extends AbstractZmlRule
     {
       try
       {
-        if( instruction.matches( reference ) )
+        if( instruction.matches( cell ) )
         {
-          final CellStyle style = instruction.getStyle( reference );
+          final CellStyle style = instruction.getStyle( cell );
           if( style != null )
             base = CellStyle.merge( base, style.getType() );
         }

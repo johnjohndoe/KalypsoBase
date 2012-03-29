@@ -249,7 +249,8 @@ public class ZmlModelValueCell extends AbstractZmlCell implements IZmlModelValue
       CellStyleType baseType = column.getDefaultStyle().getType();
       for( final ZmlCellRule rule : rules )
       {
-        final CellStyle style = rule.getStyle( getRow(), column );
+
+        final CellStyle style = rule.getStyle( this );
         baseType = CellStyle.merge( baseType, style.getType() );
       }
 
@@ -280,6 +281,7 @@ public class ZmlModelValueCell extends AbstractZmlCell implements IZmlModelValue
       if( m_rules != null )
         return m_rules;
 
+      m_style = null;
       m_rules = findSimpleActiveRules();
 
       m_oldRuleValue = value;

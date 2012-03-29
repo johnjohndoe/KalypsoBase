@@ -56,6 +56,7 @@ import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
+import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
 import org.kalypso.ogc.sensor.util.Observations;
 import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 
@@ -96,6 +97,12 @@ public class WQTimeserieProxy implements IObservation
 
   private ITupleModel m_cachedModel = null;
 
+  private IAxis m_srcDataSourceAxis;
+
+  private IAxis m_destDataSourceAxis;
+
+  private int m_destDataSourceAxisPos;
+
   /**
    * @param realAxisType
    *          type of the real axis that will be used to proxy another axis
@@ -116,7 +123,7 @@ public class WQTimeserieProxy implements IObservation
   private void configure( final IObservation obs )
   {
     final IAxis[] axes = obs.getAxes();
-    m_axes = new IAxis[axes.length + 2];
+    m_axes = new IAxis[axes.length + 3];
     for( int index = 0; index < axes.length; index++ )
     {
       m_axes[index] = axes[index];
@@ -129,14 +136,19 @@ public class WQTimeserieProxy implements IObservation
 
     m_srcAxis = AxisUtils.findAxis( axes, m_realAxisType );
     m_srcStatusAxis = AxisUtils.findStatusAxis( axes, m_srcAxis );
+    m_srcDataSourceAxis = AxisUtils.findDataSourceAxis( axes, m_srcAxis );
 
     m_destAxis = new DefaultAxis( name, m_proxyAxisType, unit, Double.class, false, false );
-    m_destAxisPos = m_axes.length - 2;
+    m_destAxisPos = m_axes.length - 3;
     m_axes[m_destAxisPos] = m_destAxis;
 
     m_destStatusAxis = KalypsoStatusUtils.createStatusAxisFor( m_destAxis, false );
-    m_destStatusAxisPos = m_axes.length - 1;
+    m_destStatusAxisPos = m_axes.length - 2;
     m_axes[m_destStatusAxisPos] = m_destStatusAxis;
+
+    m_destDataSourceAxis = DataSourceHelper.createSourceAxis( m_destAxis, false );
+    m_destDataSourceAxisPos = m_axes.length - 1;
+    m_axes[m_destDataSourceAxisPos] = m_destDataSourceAxis;
 
     if( name.length() == 0 )
       throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.timeseries.wq.WQTimeserieProxy.0" ) + m_proxyAxisType ); //$NON-NLS-1$

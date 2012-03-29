@@ -48,7 +48,6 @@ import org.kalypso.zml.core.table.binding.CellStyle;
 import org.kalypso.zml.core.table.binding.ZmlStyleResolver;
 import org.kalypso.zml.core.table.binding.rule.AbstractZmlRule;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
-import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.schema.AbstractRuleInstructionType;
 import org.kalypso.zml.core.table.schema.StyleReferenceType;
 
@@ -71,7 +70,7 @@ public abstract class AbstractZmlRuleInstructionType
     return m_type;
   }
 
-  public CellStyle getStyle( @SuppressWarnings("unused") final IZmlModelValueCell reference ) throws CoreException
+  public CellStyle getStyle( @SuppressWarnings("unused") final IZmlModelCell reference ) throws CoreException
   {
     if( Objects.isNotNull( m_style ) )
       return m_style;
