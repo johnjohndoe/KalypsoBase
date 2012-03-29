@@ -198,16 +198,21 @@ public interface ITimeseriesConstants extends IMetadataConstants
   /** Evaporation [mm] */
   String TYPE_EVAPORATION = "E"; //$NON-NLS-1$
 
-  /** Wind Velocity [m/s] */
-  String TYPE_WIND_VELOCITY = "WIND_VELOCITY"; //$NON-NLS-1$
-
-  /** Sunshine hours [h/d] */
-  String TYPE_SUNSHINE_HOURS = "SUNSHINE"; //$NON-NLS-1$
-
   /** Humidity [%] */
   String TYPE_HUMIDITY = "U"; //$NON-NLS-1$
 
-  /** Temperatur */
+  /** Temperature */
   String TYPE_TEMPERATURE = "T"; //$NON-NLS-1$
 
+  /** Mean Temperature */
+  String TYPE_MEAN_TEMPERATURE = "MEAN_TEMPERATURE"; //$NON-NLS-1$
+
+  /** Mean Wind Velocity [m/s] */
+  String TYPE_MEAN_WIND_VELOCITY = "MEAN_WIND_VELOCITY"; //$NON-NLS-1$
+
+  /** mean humidity % */
+  String TYPE_MEAN_HUMIDITY = "MEAN_HUMIDITY"; //$NON-NLS-1$
+
+  /** Sunshine hours [h/d] */
+  String TYPE_MEAN_SUNSHINE_HOURS = "MEAN_SUNSHINE"; //$NON-NLS-1$
 }

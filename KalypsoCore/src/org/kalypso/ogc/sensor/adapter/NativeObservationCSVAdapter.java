@@ -50,9 +50,12 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
+
+import au.com.bytecode.opencsv.CSVReader;
 
 /**
  * adapter for Timeseries in 'csv' format date format dd MM yyy hh mm value format comma seperator example: 02.06.2002
@@ -72,23 +75,23 @@ public class NativeObservationCSVAdapter extends AbstractObservationImporter
   @Override
   protected void parse( final File source, final TimeZone timeZone, final boolean continueWithErrors, final IStatusCollector stati ) throws Exception
   {
-    final DateFormat sdf = new SimpleDateFormat( "dd MM yyyy HH mm ss" ); //$NON-NLS-1$
+    final DateFormat sdf = new SimpleDateFormat( "dd MM yyyy HH mm" ); //$NON-NLS-1$
     sdf.setTimeZone( timeZone );
 
     final FileReader fileReader = new FileReader( source );
     final LineNumberReader reader = new LineNumberReader( fileReader );
-    String lineIn = null;
-    while( (lineIn = reader.readLine()) != null )
+    String[] lineIn = null;
+
+    final CSVReader csv = new CSVReader( reader, '\t' );
+
+    while( ArrayUtils.isNotEmpty( lineIn = csv.readNext() ) )
     {
-      if( !continueWithErrors && getErrorCount() > getMaxErrorCount() )
-        return;
       try
       {
-        final Matcher matcher = CSV_PATTERN.matcher( lineIn );
-        if( matcher.matches() )
+        if( ArrayUtils.getLength( lineIn ) == 2 )
         {
-          final String dateString = matcher.group( 1 );
-          final String valueString = matcher.group( 2 );
+          final String dateString = lineIn[0];
+          final String valueString = lineIn[1];
 
           final String formatedvalue = valueString.replaceAll( "\\,", "\\." ); //$NON-NLS-1$ //$NON-NLS-2$
           final Double value = new Double( Double.parseDouble( formatedvalue ) );

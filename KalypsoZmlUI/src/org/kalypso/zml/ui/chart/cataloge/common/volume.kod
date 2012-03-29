@@ -139,5 +139,6 @@
         </MapperRefs>
       </Layer>
     </Layers>
+    
   </Chart>
 </ChartConfiguration>
