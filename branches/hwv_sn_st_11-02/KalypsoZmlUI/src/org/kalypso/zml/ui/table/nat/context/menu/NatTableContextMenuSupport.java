@@ -106,9 +106,11 @@ public class NatTableContextMenuSupport extends MouseAdapter
       {
         /** table cell was selected */
         final LayerCell cell = m_table.getCellByPosition( column, row );
-        final IZmlModelValueCell modelCell = (IZmlModelValueCell) cell.getDataValue();
-        if( Objects.isNull( modelCell ) )
+        final Object objDataValue = cell.getDataValue();
+        if( !(objDataValue instanceof IZmlModelValueCell) )
           return;
+
+        final IZmlModelValueCell modelCell = (IZmlModelValueCell) objDataValue;
 
         final int columnIndexByPosition = m_table.getColumnIndexByPosition( column );
         final int rowIndexByPosition = m_table.getRowIndexByPosition( row );
@@ -117,7 +119,6 @@ public class NatTableContextMenuSupport extends MouseAdapter
 
         final ZmlTableContextMenuProvider menuProvider = new ZmlTableContextMenuProvider();
         menuProvider.fillMenu( modelCell.getColumn(), m_manager );
-
       }
 
       SELECTED_COLUMN = column - 1;
