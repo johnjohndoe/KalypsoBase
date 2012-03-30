@@ -125,7 +125,7 @@ public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionTy
 
     final IZmlGrenzwertValue delegate = KalypsoZmlCoreExtensions.getInstance().findGrenzwertDelegate( propertyExtensionPoint );
     if( Objects.isNull( delegate ) )
-      return getBoundary( metadata, property, defaultValue, factor );
+      return null;
 
     final Double v = delegate.getValue( metadata, property );
     if( Objects.isNull( v ) )
