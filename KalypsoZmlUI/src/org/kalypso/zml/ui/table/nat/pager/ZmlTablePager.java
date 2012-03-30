@@ -89,7 +89,7 @@ public class ZmlTablePager
         {
           // choose last row and the table paging will be correct - in most cases :-)
           final int rowCount = m_table.getRowCount();
-          final LayerCell cell = m_table.getCellByPosition( 1, rowCount );
+          final LayerCell cell = m_table.getCellByPosition( 1, rowCount - 1 );
           if( Objects.isNull( cell ) )
             return;
 
