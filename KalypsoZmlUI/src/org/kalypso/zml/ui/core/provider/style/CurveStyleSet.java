@@ -91,7 +91,7 @@ public class CurveStyleSet extends AbstractStyleSetProvider implements IStyleSet
 
   private RGB getRgb( final String color )
   {
-    final String[] colors = color.split( "\\;" );
+    final String[] colors = color.split( "\\;" ); //$NON-NLS-1$
     return new RGB( Integer.valueOf( colors[0] ), Integer.valueOf( colors[1] ), Integer.valueOf( colors[2] ) );
   }
 

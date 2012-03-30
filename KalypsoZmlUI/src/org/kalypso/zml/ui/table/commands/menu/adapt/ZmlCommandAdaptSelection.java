@@ -59,6 +59,7 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
+import org.kalypso.zml.ui.i18n.Messages;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
@@ -91,7 +92,7 @@ public class ZmlCommandAdaptSelection extends AbstractHandler
       final IZmlModelColumn column = focus.getColumn();
       final IZmlModelValueCell[] selected = selection.getSelectedCells( column );
       if( ArrayUtils.getLength( selected ) < 2 )
-        throw new ExecutionException( "Anschmiegen fehlgeschlagen - selektieren Sie eine zweite Zelle!" );
+        throw new ExecutionException( Messages.ZmlCommandAdaptSelection_0 );
 
       final IZmlModelValueCell base = selected[0];
 
@@ -113,7 +114,7 @@ public class ZmlCommandAdaptSelection extends AbstractHandler
     }
     catch( final SensorException e )
     {
-      throw new ExecutionException( "Anschmiegen fehlgeschlagen.", e );
+      throw new ExecutionException( Messages.ZmlCommandAdaptSelection_1, e );
     }
 
     return Status.OK_STATUS;

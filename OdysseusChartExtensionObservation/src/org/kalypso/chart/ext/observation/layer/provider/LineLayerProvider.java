@@ -19,11 +19,11 @@ public class LineLayerProvider extends AbstractLayerProvider
 
   protected TupleResultDomainValueData<Calendar, Double> getDataContainer( )
   {
-    final String href = getParameterContainer().getParameterValue( "href", null ); // $NON-NLS-1$
+    final String href = getParameterContainer().getParameterValue( "href", null ); //$NON-NLS-1$
 
-    final String observationId = getParameterContainer().getParameterValue( "observationId", null ); // $NON-NLS-1$
-    final String domainComponentName = getParameterContainer().getParameterValue( "domainComponent", null ); // $NON-NLS-1$
-    final String targetComponentName = getParameterContainer().getParameterValue( "targetComponent", null ); // $NON-NLS-1$
+    final String observationId = getParameterContainer().getParameterValue( "observationId", null ); //$NON-NLS-1$
+    final String domainComponentName = getParameterContainer().getParameterValue( "domainComponent", null ); //$NON-NLS-1$
+    final String targetComponentName = getParameterContainer().getParameterValue( "targetComponent", null ); //$NON-NLS-1$
 
     TupleResultDomainValueData<Calendar, Double> data = null;
     if( href != null && observationId != null && domainComponentName != null && targetComponentName != null )

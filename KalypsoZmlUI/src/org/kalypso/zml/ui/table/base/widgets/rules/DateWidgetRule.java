@@ -57,7 +57,7 @@ public class DateWidgetRule implements IWidgetRule<Date>
   @Override
   public String getFormatedString( final Date value )
   {
-    final SimpleDateFormat sdf = new SimpleDateFormat( "dd.MM.yyyy" );
+    final SimpleDateFormat sdf = new SimpleDateFormat( "dd.MM.yyyy" ); //$NON-NLS-1$
     sdf.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
 
     return sdf.format( value );

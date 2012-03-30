@@ -67,14 +67,14 @@ public class ZmlTableCellEditor extends TextCellEditor implements ICellEditor
     final Text text = getTextControl();
     final String displayValue = toDisplayValue( canonicalValue );
 
-    text.setText( displayValue != null && displayValue.length() > 0 ? displayValue.toString() : "" );
+    text.setText( displayValue != null && displayValue.length() > 0 ? displayValue.toString() : "" ); //$NON-NLS-1$
     selectText();
   }
 
   private String toDisplayValue( final Object canonicalValue )
   {
     if( !(canonicalValue instanceof IZmlModelValueCell) )
-      return "";
+      return ""; //$NON-NLS-1$
 
     final IZmlModelValueCell cell = (IZmlModelValueCell) canonicalValue;
     final IZmlModelCellLabelProvider provider = cell.getStyleProvider();

@@ -58,6 +58,7 @@ import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewportResolutionFilter;
+import org.kalypso.zml.ui.i18n.Messages;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableComposite;
 import org.kalypso.zml.ui.table.IZmlTableCompositeListener;
@@ -89,11 +90,11 @@ public abstract class AbstractHourViewCommand extends AbstractHandler implements
     final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
 
     final StringBuilder builder = new StringBuilder();
-    builder.append( String.format( "Die Tablelle enthält mehr als %d Zeilen. ", MAX_ROWS ) );
-    builder.append( "Die Ausführung des Befehls kann viel Zeit beanspruchen.\n\n" );
-    builder.append( "Möchten Sie den Befehl wirklich ausführen?" );
+    builder.append( String.format( Messages.AbstractHourViewCommand_0, MAX_ROWS ) );
+    builder.append( Messages.AbstractHourViewCommand_1 );
+    builder.append( Messages.AbstractHourViewCommand_2 );
 
-    return MessageDialog.openQuestion( shell, "Maximal zulässige Tabellenlänge überschritten", builder.toString() );
+    return MessageDialog.openQuestion( shell, Messages.AbstractHourViewCommand_3, builder.toString() );
   }
 
   protected IStatus updateResulution( final ExecutionEvent event, final int resultion, final boolean mode )

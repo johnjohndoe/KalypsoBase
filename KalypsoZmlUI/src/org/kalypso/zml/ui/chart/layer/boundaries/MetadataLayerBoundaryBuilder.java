@@ -58,6 +58,7 @@ import org.kalypso.ogc.sensor.metadata.IMetadataBoundary;
 import org.kalypso.ogc.sensor.metadata.MetadataBoundary;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.zml.ui.core.kod.KodUtils;
+import org.kalypso.zml.ui.i18n.Messages;
 
 import de.openali.odysseus.chart.factory.config.StyleFactory;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
@@ -120,12 +121,12 @@ public class MetadataLayerBoundaryBuilder implements ICoreRunnableWithProgress
       }
       catch( final Throwable t )
       {
-        final String msg = String.format( "Auswertung des Metadatums: \"%s\" fehlgeschlagen.", boundary.getName() );
+        final String msg = String.format( Messages.MetadataLayerBoundaryBuilder_0, boundary.getName() );
         statis.add( StatusUtilities.createExceptionalErrorStatus( msg, t ) );
       }
     }
 
-    return StatusUtilities.createStatus( statis, "Auflösen von Grenzwerten" );
+    return StatusUtilities.createStatus( statis, Messages.MetadataLayerBoundaryBuilder_1 );
   }
 
   private String getLabelTokenizer( )

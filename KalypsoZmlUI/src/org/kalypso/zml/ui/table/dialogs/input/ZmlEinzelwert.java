@@ -136,13 +136,13 @@ public class ZmlEinzelwert
     final StringBuffer buffer = new StringBuffer();
     if( m_date != null )
     {
-      final SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
-      buffer.append( String.format( "%s: ", sdf.format( m_date ) ) );
+      final SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" ); //$NON-NLS-1$
+      buffer.append( String.format( "%s: ", sdf.format( m_date ) ) ); //$NON-NLS-1$
     }
 
     if( m_value != null )
     {
-      buffer.append( String.format( "%.3f", m_value ) );
+      buffer.append( String.format( "%.3f", m_value ) ); //$NON-NLS-1$
     }
 
     return buffer.toString();

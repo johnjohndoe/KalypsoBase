@@ -86,43 +86,43 @@ public class DebugZmlModelLabelProvider extends LabelProvider implements IBaseLa
     {
       final IZmlModelColumn column = (IZmlModelColumn) element;
 
-      return String.format( "ZmlModelColumn: id=%s, label=%s", column.getIdentifier(), column.getLabel() );
+      return String.format( "ZmlModelColumn: id=%s, label=%s", column.getIdentifier(), column.getLabel() ); //$NON-NLS-1$
     }
     else if( element instanceof AbstractColumnType )
     {
       final AbstractColumnType type = (AbstractColumnType) element;
 
-      return String.format( "ColumnType: id=%s", type.getId() );
+      return String.format( "ColumnType: id=%s", type.getId() ); //$NON-NLS-1$
     }
     else if( element instanceof RuleRefernceType )
     {
       final RuleRefernceType reference = (RuleRefernceType) element;
 
-      return String.format( "Rule Reference: %s", reference.getUrl() );
+      return String.format( "Rule Reference: %s", reference.getUrl() ); //$NON-NLS-1$
     }
     else if( element instanceof IAxis )
     {
       final IAxis axis = (IAxis) element;
 
-      return String.format( "Achse: id=%s, label=%s, type=%s", axis.getType(), axis.getName(), axis.getUnit() );
+      return String.format( "Achse: id=%s, label=%s, type=%s", axis.getType(), axis.getName(), axis.getUnit() ); //$NON-NLS-1$
     }
     else if( element instanceof AbstractZmlRule )
     {
       final AbstractZmlRule rule = (AbstractZmlRule) element;
 
-      return String.format( "Regel: %s", rule.getIdentifier() );
+      return String.format( "Regel: %s", rule.getIdentifier() ); //$NON-NLS-1$
     }
     else if( element instanceof AbstractZmlRuleInstructionType )
     {
       final AbstractZmlRuleInstructionType instruction = (AbstractZmlRuleInstructionType) element;
 
-      return String.format( "Instruction: %s", instruction.getType().toString() );
+      return String.format( "Instruction: %s", instruction.getType().toString() ); //$NON-NLS-1$
     }
     else if( element instanceof AppliedRule )
     {
       final AppliedRule applied = (AppliedRule) element;
 
-      return String.format( "AppliedRule: %s", applied.getLabel() );
+      return String.format( "AppliedRule: %s", applied.getLabel() ); //$NON-NLS-1$
     }
     return super.getText( element );
   }

@@ -45,6 +45,7 @@ import java.net.URL;
 import org.kalypso.zml.core.base.request.IRequestHandler;
 import org.kalypso.zml.core.base.request.MetadataRequestHandler;
 import org.kalypso.zml.ui.chart.layer.themes.ZmlSelectionLayer;
+import org.kalypso.zml.ui.i18n.Messages;
 
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
@@ -55,7 +56,7 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
  */
 public class ZmlSelectionLayerProvider extends AbstractLayerProvider
 {
-  public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlSelectionLayerProvider";
+  public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlSelectionLayerProvider"; //$NON-NLS-1$
 
   @Override
   public IChartLayer getLayer( final URL context ) throws ConfigurationException
@@ -68,7 +69,7 @@ public class ZmlSelectionLayerProvider extends AbstractLayerProvider
     }
     catch( final Throwable t )
     {
-      throw new ConfigurationException( "Configuration of .kod line layer theme failed.", t );
+      throw new ConfigurationException( Messages.ZmlSelectionLayerProvider_1, t );
     }
   }
 

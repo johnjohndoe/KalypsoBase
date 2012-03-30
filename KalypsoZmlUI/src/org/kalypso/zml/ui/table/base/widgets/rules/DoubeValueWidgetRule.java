@@ -41,6 +41,7 @@
 package org.kalypso.zml.ui.table.base.widgets.rules;
 
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.zml.ui.i18n.Messages;
 
 /**
  * @author Dirk Kuch
@@ -53,7 +54,7 @@ public class DoubeValueWidgetRule implements ITextWidgetRule<Double>
 
   public DoubeValueWidgetRule( )
   {
-    this( "%.3f" ); // $NON-NLS-1$
+    this( "%.3f" ); //$NON-NLS-1$
   }
 
   public DoubeValueWidgetRule( final String format )
@@ -96,7 +97,7 @@ public class DoubeValueWidgetRule implements ITextWidgetRule<Double>
   {
     final boolean isDouble = NumberUtils.isDouble( text );
     if( !isDouble )
-      m_lastValidationMsg = "Ungültiger Zahlenwert";
+      m_lastValidationMsg = Messages.DoubeValueWidgetRule_0;
     else
       m_lastValidationMsg = null;
 

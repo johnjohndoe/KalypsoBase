@@ -132,12 +132,12 @@ public class DebugChartContentProvider implements ITreeContentProvider
 
       if( Objects.isNotNull( domainAxis ) )
       {
-        properties.add( String.format( "- domain axis: %s", domainAxis.getIdentifier() ) );
+        properties.add( String.format( "- domain axis: %s", domainAxis.getIdentifier() ) ); //$NON-NLS-1$
       }
 
       if( Objects.isNotNull( targetAxis ) )
       {
-        properties.add( String.format( "- target axis: %s", targetAxis.getIdentifier() ) );
+        properties.add( String.format( "- target axis: %s", targetAxis.getIdentifier() ) ); //$NON-NLS-1$
       }
     }
 
@@ -150,7 +150,7 @@ public class DebugChartContentProvider implements ITreeContentProvider
         final String[] keys = parameters.keys();
         for( final String key : keys )
         {
-          properties.add( String.format( "- parameter %s: %s", key, parameters.getParameterValue( key, "" ) ) );
+          properties.add( String.format( "- parameter %s: %s", key, parameters.getParameterValue( key, "" ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
     }
@@ -158,7 +158,7 @@ public class DebugChartContentProvider implements ITreeContentProvider
     final IChartLayerFilter[] filters = layer.getFilters();
     for( final IChartLayerFilter filter : filters )
     {
-      properties.add( String.format( "- filter: %s", filter.getClass().getSimpleName() ) );
+      properties.add( String.format( "- filter: %s", filter.getClass().getSimpleName() ) ); //$NON-NLS-1$
     }
 
     if( layer instanceof IZmlLayer )
@@ -167,18 +167,18 @@ public class DebugChartContentProvider implements ITreeContentProvider
       final IZmlLayerDataHandler handler = zmlLayer.getDataHandler();
       if( Objects.isNotNull( handler ) )
       {
-        properties.add( String.format( "- handler impl: %s", handler.getClass().getSimpleName() ) );
+        properties.add( String.format( "- handler impl: %s", handler.getClass().getSimpleName() ) ); //$NON-NLS-1$
 
         final IObservation observation = (IObservation) handler.getAdapter( IObservation.class );
         if( Objects.isNotNull( observation ) )
         {
-          properties.add( String.format( "   - observation: %s", observation.getHref() ) );
+          properties.add( String.format( "   - observation: %s", observation.getHref() ) ); //$NON-NLS-1$
         }
 
         final IRequestStrategy requestStrategy = handler.getRequestStrategy();
         if( Objects.isNotNull( requestStrategy ) )
         {
-          properties.add( String.format( "   - request strategy: %s", requestStrategy.getClass().getSimpleName() ) );
+          properties.add( String.format( "   - request strategy: %s", requestStrategy.getClass().getSimpleName() ) ); //$NON-NLS-1$
         }
       }
 

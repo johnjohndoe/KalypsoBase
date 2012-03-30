@@ -52,6 +52,7 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.references.labeling.ZmlModelCellLabelProvider;
+import org.kalypso.zml.ui.i18n.Messages;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.nat.base.ZmlModelRowHeaderDisplayConverter;
@@ -76,7 +77,7 @@ public class ZmlCommandCopyValue extends AbstractHandler
       final IZmlModelRow[] rows = selection.getSelectedRows();
 
       /** table header */
-      buffer.append( "Datum" );
+      buffer.append( Messages.ZmlCommandCopyValue_0 );
       buffer.append( "\t" ); //$NON-NLS-1$
 
       for( final IZmlModelColumn column : columns )
@@ -103,9 +104,9 @@ public class ZmlCommandCopyValue extends AbstractHandler
           buffer.append( provider.getText( table.getModelViewport(), cell ) );
 
           if( !Arrays.isLastItem( columns, column ) )
-            buffer.append( "\t" );
+            buffer.append( "\t" ); //$NON-NLS-1$
           else
-            buffer.append( "\n" );
+            buffer.append( "\n" ); //$NON-NLS-1$
         }
       }
 
@@ -118,7 +119,7 @@ public class ZmlCommandCopyValue extends AbstractHandler
     {
       ex.printStackTrace();
 
-      throw new ExecutionException( "Kopieren der Werte in die Zwischenablage fehlgeschlagen.", ex );
+      throw new ExecutionException( Messages.ZmlCommandCopyValue_3, ex );
     }
   }
 

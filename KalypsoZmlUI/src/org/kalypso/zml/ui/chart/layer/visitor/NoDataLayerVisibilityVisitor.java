@@ -59,7 +59,7 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
  */
 public class NoDataLayerVisibilityVisitor implements IChartLayerVisitor
 {
-  public static final String NO_DATA_LAYER = "noData";
+  public static final String NO_DATA_LAYER = "noData"; //$NON-NLS-1$
 
   boolean m_visible = true;
 

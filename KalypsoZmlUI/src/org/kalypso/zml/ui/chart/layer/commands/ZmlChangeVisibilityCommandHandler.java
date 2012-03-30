@@ -52,7 +52,7 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
  */
 public class ZmlChangeVisibilityCommandHandler extends ChangeVisibilityCommandHandler
 {
-  public static final String IDENTIFIER = "org.kalypso.zml.ui.chart.layer.commands.change.visibility"; // $NON-NLS-1$
+  public static final String IDENTIFIER = "org.kalypso.zml.ui.chart.layer.commands.change.visibility"; //$NON-NLS-1$
 
   @Override
   protected void callAdditionalVisitors( final ILayerManager layerManager )

@@ -45,6 +45,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.zml.ui.i18n.Messages;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedTextBox;
 import org.kalypso.zml.ui.table.base.widgets.IEnhancedTextBoxListener;
 import org.kalypso.zml.ui.table.base.widgets.rules.DoubeValueWidgetRule;
@@ -66,15 +67,15 @@ public class ShiftValueAdjustmentPage extends AbstractAdjustmentPage implements 
   @Override
   public String getLabel( )
   {
-    return "Werte um festen Wert verschieben (+/-)";
+    return Messages.ShiftValueAdjustmentPage_0;
   }
 
   @Override
   public void render( final Composite body, final FormToolkit toolkit )
   {
-    toolkit.createLabel( body, "" );// spacer
+    toolkit.createLabel( body, "" );// spacer //$NON-NLS-1$
 
-    toolkit.createLabel( body, "Wert" ).setFont( HEADING );
+    toolkit.createLabel( body, Messages.ShiftValueAdjustmentPage_2 ).setFont( HEADING );
     m_textBox = new EnhancedTextBox<Double>( body, toolkit, new DoubeValueWidgetRule() );
     m_textBox.setText( getShiftValue() );
     m_textBox.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );

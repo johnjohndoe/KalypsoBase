@@ -47,6 +47,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import org.kalypso.zml.ui.i18n.Messages;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.dialogs.input.ZmlEinzelwertDialog;
@@ -68,7 +69,7 @@ public class ZmlCommandOpenValueInputDialog extends AbstractHandler
     final IZmlTableSelection selection = table.getSelection();
     final IZmlModelValueCell active = selection.getFocusCell();
     if( active == null )
-      throw new IllegalStateException( "Konnte aktive Spalte nicht ermitteln. Bitte Linkklick in der zu bearbeitenden Spalte ausführen und Aktion erneut versuchen." );
+      throw new IllegalStateException( Messages.ZmlCommandOpenValueInputDialog_0 );
 
     final IZmlModelColumn column = active.getColumn();
 

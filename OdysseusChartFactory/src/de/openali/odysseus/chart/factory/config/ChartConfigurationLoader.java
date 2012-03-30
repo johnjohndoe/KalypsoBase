@@ -250,7 +250,7 @@ public class ChartConfigurationLoader implements IReferenceResolver
     final NamedNodeMap atts = node.getAttributes();
     if( atts != null )
     {
-      final Node idAtt = atts.getNamedItem( "id" ); // $NON-NLS-1$
+      final Node idAtt = atts.getNamedItem( "id" ); //$NON-NLS-1$
       if( idAtt != null )
       {
         try

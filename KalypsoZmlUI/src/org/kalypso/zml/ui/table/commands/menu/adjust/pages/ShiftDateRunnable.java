@@ -49,6 +49,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import org.kalypso.zml.ui.i18n.Messages;
 
 /**
  * @author Dirk Kuch
@@ -80,7 +81,7 @@ public class ShiftDateRunnable implements ICoreRunnableWithProgress
     }
     catch( final SensorException e )
     {
-      return StatusUtilities.createExceptionalErrorStatus( "Anpassen fehlgeschlagen", e );
+      return StatusUtilities.createExceptionalErrorStatus( Messages.ShiftDateRunnable_0, e );
     }
 
     return Status.OK_STATUS;

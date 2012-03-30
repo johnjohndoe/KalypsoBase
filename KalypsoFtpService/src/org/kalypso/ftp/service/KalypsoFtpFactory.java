@@ -116,7 +116,7 @@ public final class KalypsoFtpFactory
       factory.setPort( service.getPort().intValue() );
 
       // replace the default listener
-      serverFactory.addListener( "default", factory.createListener() ); // $NON-NLS-1$
+      serverFactory.addListener( "default", factory.createListener() ); //$NON-NLS-1$
 
       m_server = serverFactory.createServer();
       m_server.start();

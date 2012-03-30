@@ -74,6 +74,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.zml.ui.i18n.Messages;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedComboViewer;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedTextBox;
 import org.kalypso.zml.ui.table.base.widgets.IAbstractEnhancedWidget;
@@ -144,11 +145,11 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
     final Composite body = form.getBody();
     body.setLayout( Layouts.createGridLayout( 5 ) );
 
-    m_toolkit.createLabel( body, "Datum" );
-    m_toolkit.createLabel( body, "Uhrzeit" );
-    m_toolkit.createLabel( body, "" );
-    m_toolkit.createLabel( body, "Wert" );
-    m_toolkit.createLabel( body, "" );
+    m_toolkit.createLabel( body, Messages.ZmlEinzelwertComposite_0 );
+    m_toolkit.createLabel( body, Messages.ZmlEinzelwertComposite_1 );
+    m_toolkit.createLabel( body, "" ); //$NON-NLS-1$
+    m_toolkit.createLabel( body, Messages.ZmlEinzelwertComposite_3 );
+    m_toolkit.createLabel( body, "" ); //$NON-NLS-1$
 
     final ZmlEinzelwert[] rows = m_model.getRows();
     for( final ZmlEinzelwert row : rows )
@@ -235,7 +236,7 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
         }
       } );
 
-      toolkit.createLabel( base, "" ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
+      toolkit.createLabel( base, "" ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) ); //$NON-NLS-1$
 
       final EnhancedTextBox<Double> textBox = new EnhancedTextBox<Double>( base, toolkit, new DoubeValueWidgetRule() );
       textBox.addListener( this );
@@ -271,7 +272,7 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
 
     final ToolItem itemRemove = new ToolItem( toolBar, SWT.PUSH );
     itemRemove.setImage( IMG_REMOVE );
-    itemRemove.setToolTipText( "Eingabefeld entfernen" );
+    itemRemove.setToolTipText( Messages.ZmlEinzelwertComposite_6 );
 
     itemRemove.addSelectionListener( new SelectionAdapter()
     {
@@ -299,7 +300,7 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
 
     final ToolItem itemAdd = new ToolItem( toolBar, SWT.PUSH );
     itemAdd.setImage( IMG_ADD );
-    itemAdd.setToolTipText( "Eingabefeld hinzufügen" );
+    itemAdd.setToolTipText( Messages.ZmlEinzelwertComposite_7 );
 
     itemAdd.addSelectionListener( new SelectionAdapter()
     {
@@ -339,7 +340,7 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
 
     final ToolItem itemAddOne = new ToolItem( toolBar, SWT.PUSH );
     itemAddOne.setImage( IMG_ADD_ONE );
-    itemAddOne.setToolTipText( "Eingabefeld für nächsten Wert" );
+    itemAddOne.setToolTipText( Messages.ZmlEinzelwertComposite_8 );
 
     itemAddOne.addSelectionListener( new SelectionAdapter()
     {
@@ -414,7 +415,7 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
   @Override
   public void modelChangedEvent( )
   {
-    new UIJob( "" )
+    new UIJob( "" ) //$NON-NLS-1$
     {
       @Override
       public final IStatus runInUIThread( final IProgressMonitor monitor )

@@ -65,6 +65,7 @@ import org.kalypso.zml.core.table.model.view.ZmlModelViewportResolutionFilter;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
 import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.zml.ui.i18n.Messages;
 
 import com.google.common.base.Strings;
 
@@ -191,7 +192,7 @@ public class ZmlTableTooltip extends DefaultToolTip
       return null;
 
     final StringBuffer buffer = new StringBuffer();
-    buffer.append( "Anmerkung(en):\n" );
+    buffer.append( Messages.ZmlTableTooltip_0 );
 
     for( final ZmlCellRule rule : rules )
     {
@@ -212,10 +213,10 @@ public class ZmlTableTooltip extends DefaultToolTip
     final String valueAxis = type.getValueAxis();
 
     if( Objects.isNotNull( indexAxis ) )
-      buffer.append( buildInfoText( "Indexachse", indexAxis ) );
+      buffer.append( buildInfoText( Messages.ZmlTableTooltip_1, indexAxis ) );
 
     if( Objects.isNotNull( valueAxis ) )
-      buffer.append( buildInfoText( "Datenachse", valueAxis ) );
+      buffer.append( buildInfoText( Messages.ZmlTableTooltip_2, valueAxis ) );
 
     return StringUtils.chop( buffer.toString() );
   }
@@ -230,19 +231,19 @@ public class ZmlTableTooltip extends DefaultToolTip
 
       final boolean aggregated = isAggregated();
       if( !aggregated )
-        buffer.append( buildInfoText( "Wert", value.toString() ) );
+        buffer.append( buildInfoText( Messages.ZmlTableTooltip_3, value.toString() ) );
 
       final Integer status = cell.getStatus();
       if( Objects.isNotNull( status ) && !aggregated )
-        buffer.append( buildInfoText( "Status", getStatus( status ) ) );
+        buffer.append( buildInfoText( Messages.ZmlTableTooltip_4, getStatus( status ) ) );
 
       final String source = cell.getDataSource();
       if( Objects.isNotNull( source ) )
-        buffer.append( buildInfoText( "Wert-Quelle", source ) );
+        buffer.append( buildInfoText( Messages.ZmlTableTooltip_5, source ) );
 
       final String href = cell.getHref();
       if( Objects.isNotNull( href ) )
-        buffer.append( buildInfoText( "Daten-Quelle", href ) );
+        buffer.append( buildInfoText( Messages.ZmlTableTooltip_6, href ) );
 
     }
     catch( final SensorException e )

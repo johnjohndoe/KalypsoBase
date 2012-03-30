@@ -59,6 +59,7 @@ import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.references.labeling.ZmlModelCellLabelProvider;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
+import org.kalypso.zml.ui.i18n.Messages;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
@@ -123,7 +124,7 @@ public class ZmlCommandSetSelectedValues extends AbstractHandler
     }
     catch( final Exception e )
     {
-      throw new ExecutionException( "Aktualisieren der selektierten Werte fehlgeschlagen.", e );
+      throw new ExecutionException( Messages.ZmlCommandSetSelectedValues_0, e );
     }
   }
 }

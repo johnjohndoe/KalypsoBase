@@ -88,7 +88,7 @@ public class ZmlCommandViewBoundaries extends AbstractHandler implements IElemen
 
   private AbstractZmlRule[] findRules( @SuppressWarnings("rawtypes") final Map parameters )
   {
-    final String linkedRules = (String) parameters.get( "rules" ); // $NON-NLS-1$
+    final String linkedRules = (String) parameters.get( "rules" ); //$NON-NLS-1$
 
     final List<AbstractZmlRule> myRules = new ArrayList<AbstractZmlRule>();
     final ZmlRuleResolver resolver = ZmlRuleResolver.getInstance();
