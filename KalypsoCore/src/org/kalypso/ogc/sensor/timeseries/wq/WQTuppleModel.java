@@ -43,17 +43,22 @@ package org.kalypso.ogc.sensor.timeseries.wq;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.ogc.sensor.AxisSet;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.TupleModelDataSet;
 import org.kalypso.ogc.sensor.event.ObservationChangeType;
 import org.kalypso.ogc.sensor.impl.AbstractTupleModel;
 import org.kalypso.ogc.sensor.impl.ITupleModelChangeListener;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
-import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
+import org.kalypso.repository.IDataSourceItem;
 
 /**
  * The WQTuppleModel computes W, Q, V, etc. on the fly, depending on the underlying axis type. It also manages the
@@ -70,28 +75,16 @@ public class WQTuppleModel extends AbstractTupleModel
   private final IAxis m_dateAxis;
 
   /** source axis from the underlying model */
-  private final IAxis m_srcAxis;
-
-  /** source-status axis from the underlying model [Important: this one is optional and can be null] */
-  private final IAxis m_srcStatusAxis;
+  private final AxisSet m_source;
 
   /** generated axis */
-  private final IAxis m_destAxis;
+  private final AxisSet m_target;
 
-  /** generated status axis */
-  private final IAxis m_destStatusAxis;
-
-  /** backs the generated values for the dest axis */
-  private final Map<Integer, Number> m_values = new HashMap<Integer, Number>();
-
-  /** backs the stati for the dest status axis */
-  private final Map<Integer, Number> m_stati = new HashMap<Integer, Number>();
+  private final Map<Integer, TupleModelDataSet> m_values = new HashMap<Integer, TupleModelDataSet>();
 
   private final IWQConverter m_converter;
 
-  private final int m_destAxisPos;
-
-  private final int m_destStatusAxisPos;
+  private final MetadataList m_metadata;
 
   /**
    * Creates a <code>WQTuppleModel</code> that can generate either W or Q on the fly. It needs an existing model from
@@ -101,29 +94,27 @@ public class WQTuppleModel extends AbstractTupleModel
    * 
    * @param model
    *          base model delivering values of the given type
+   * @param metadata
+   *          needed for handling of data sources
    * @param axes
    *          axes of this WQ-model, usually the same as model plus destAxis
-   * @param srcAxis
-   *          source axis from which values are read
-   * @param srcStatusAxis
-   *          source status axis [optional, can be null]
-   * @param destAxis
-   *          destination axis for which values are computed
-   * @param destStatusAxis
-   *          status axis for the destAxis (destination axis)
-   * @param destStatusAxisPos
-   *          position of the axis in the array
-   * @param destAxisPos
-   *          position of the axis in the array
+   * @param src
+   *          source value, status and datasource axes
+   * @param target
+   *          target value, status and datasource axes
    */
-  public WQTuppleModel( final ITupleModel model, final IAxis[] axes, final IAxis dateAxis, final IAxis srcAxis, final IAxis srcStatusAxis, final IAxis destAxis, final IAxis destStatusAxis, final IWQConverter converter, final int destAxisPos, final int destStatusAxisPos )
+  public WQTuppleModel( final ITupleModel model, final MetadataList metadata, final IAxis[] axes, final AxisSet src, final AxisSet target, final IWQConverter converter )
   {
     super( axes );
+    m_metadata = metadata;
 
-    m_destAxisPos = destAxisPos;
-    m_destStatusAxisPos = destStatusAxisPos;
-    mapAxisToPos( destAxis, destAxisPos );
-    mapAxisToPos( destStatusAxis, destStatusAxisPos );
+    m_dateAxis = AxisUtils.findDateAxis( axes );
+    m_source = src;
+    m_target = target;
+
+    mapAxisToPos( m_target.getValueAxis(), ArrayUtils.indexOf( axes, m_target.getValueAxis() ) );
+    mapAxisToPos( m_target.getStatusAxis(), ArrayUtils.indexOf( axes, m_target.getStatusAxis() ) );
+    mapAxisToPos( m_target.getDatasourceAxis(), ArrayUtils.indexOf( axes, m_target.getDatasourceAxis() ) );
 
     m_model = model;
     m_model.addChangeListener( new ITupleModelChangeListener()
@@ -137,11 +128,21 @@ public class WQTuppleModel extends AbstractTupleModel
 
     m_converter = converter;
 
-    m_dateAxis = dateAxis;
-    m_srcAxis = srcAxis;
-    m_srcStatusAxis = srcStatusAxis;
-    m_destAxis = destAxis;
-    m_destStatusAxis = destStatusAxis;
+  }
+
+  public AxisSet getSourceAxes( )
+  {
+    return m_source;
+  }
+
+  public AxisSet getTargetAxes( )
+  {
+    return m_target;
+  }
+
+  public MetadataList getMetadata( )
+  {
+    return m_metadata;
   }
 
   @Override
@@ -158,157 +159,113 @@ public class WQTuppleModel extends AbstractTupleModel
 
     final Integer objIndex = Integer.valueOf( index );
 
-    if( axis.equals( m_destAxis ) || KalypsoStatusUtils.equals( axis, m_destStatusAxis ) )
+    if( m_target.hasAxis( axis ) )
     {
       if( !m_values.containsKey( objIndex ) )
       {
-        final Number[] res = read( index );
-        m_values.put( objIndex, res[0] );
-        m_stati.put( objIndex, res[1] );
+        final TupleModelDataSet dataSet = read( index );
+        m_values.put( objIndex, dataSet );
       }
-    }
 
-    if( axis.equals( m_destAxis ) )
-      return m_values.get( objIndex );
-    else if( KalypsoStatusUtils.equals( axis, m_destStatusAxis ) )
-    {
-      // return merged status (like user modified flag for an derived status axis)
-      final Number destStatus = m_stati.get( objIndex );
-      final Number sourceStatus = (Number) m_model.get( index, m_srcStatusAxis );
+      final TupleModelDataSet data = m_values.get( objIndex );
 
-      return destStatus.intValue() | sourceStatus.intValue();
-    }
-    else if( AxisUtils.isDataSrcAxis( axis ) )
-    {
-      final IAxis srcDataSource = AxisUtils.findDataSourceAxis( getAxes(), m_srcAxis );
-
-      // take data source from base value (Rule interpolated value)
-      if( Objects.isNotNull( srcDataSource ) )
+      if( Objects.equal( m_target.getValueAxis(), axis ) )
       {
-        return m_model.get( index, srcDataSource );
+        return data.getValue();
       }
-
-      return m_model.get( index, axis );
+      else if( Objects.equal( m_target.getStatusAxis(), axis ) )
+      {
+        return data.getStatus();
+      }
+      else if( Objects.equal( m_target.getDatasourceAxis(), axis ) )
+      {
+        final DataSourceHandler handler = new DataSourceHandler( m_metadata );
+        return handler.addDataSource( data.getSource(), data.getSource() );
+      }
     }
-    else if( AxisUtils.isDataSrcAxis( axis ) )
-    {
-      final IAxis sourceDataSourceAxis = AxisUtils.findDataSourceAxis( getAxes(), m_srcAxis );
 
-      return m_model.get( index, sourceDataSourceAxis );
-    }
-    else
-      return m_model.get( index, axis );
+    return m_model.get( index, axis );
   }
 
-  private Number[] read( final int index ) throws SensorException
+  private TupleModelDataSet read( final int index ) throws SensorException
   {
-    final Number srcValue = (Number) m_model.get( index, m_srcAxis );
-    final Number srcStatus = m_srcStatusAxis == null ? KalypsoStati.BIT_OK : (Number) m_model.get( index, m_srcStatusAxis );
-    if( Objects.isNull( srcValue, srcStatus ) )
-      return new Number[] { null, null };
+    final Number srcValue = (Number) m_model.get( index, m_source.getValueAxis() );
+    final Number srcStatus = (Number) m_model.get( index, m_source.getStatusAxis() );
+    final Number srcDataSource = (Number) m_model.get( index, m_source.getDatasourceAxis() );
+
+    if( Objects.isNull( srcValue ) )
+      return new TupleModelDataSet( m_target.getValueAxis(), srcValue, KalypsoStati.BIT_CHECK, IDataSourceItem.SOURCE_MISSING );
+
+    final String type = m_target.getValueAxis().getType();
+    final int status = KalypsoStati.STATUS_DERIVATED | (srcStatus == null ? KalypsoStati.BIT_CHECK : srcStatus.intValue());
+    final String source = getTargetDataSource( srcDataSource );
 
     try
     {
-      final String type = m_destAxis.getType();
-      final int status = KalypsoStati.STATUS_DERIVATED | srcStatus.intValue();
-
       if( type.equals( m_converter.getFromType() ) )
       {
         final double q = srcValue.doubleValue();
         final double w = m_converter.computeW( m_model, index, q );
 
-        return new Number[] { w, status };
+        return new TupleModelDataSet( m_target.getValueAxis(), w, status, source );
       }
       else if( type.equals( m_converter.getToType() ) )
       {
         final double w = srcValue.doubleValue();
         final double q = m_converter.computeQ( m_model, index, w );
 
-        return new Number[] { q, status };
+        return new TupleModelDataSet( m_target.getValueAxis(), q, status, source );
       }
 
-      return new Number[] { ZERO, KalypsoStati.STATUS_DERIVATION_ERROR };
+      return new TupleModelDataSet( m_target.getValueAxis(), ZERO, KalypsoStati.STATUS_DERIVATION_ERROR, IDataSourceItem.SOURCE_MISSING );
     }
     catch( final WQException e )
     {
-      return new Number[] { ZERO, KalypsoStati.STATUS_DERIVATION_ERROR };
+      return new TupleModelDataSet( m_target.getValueAxis(), ZERO, KalypsoStati.STATUS_DERIVATION_ERROR, IDataSourceItem.SOURCE_MISSING );
     }
+  }
+
+  private String getTargetDataSource( final Number index )
+  {
+    if( index == null )
+      return IDataSourceItem.SOURCE_UNKNOWN;
+
+    final DataSourceHandler handler = new DataSourceHandler( m_metadata );
+    return handler.getDataSourceIdentifier( index.intValue() );
   }
 
   @Override
   public void set( final int index, final IAxis axis, final Object element ) throws SensorException
   {
     final Integer objIndex = new Integer( index );
-    m_values.remove( objIndex );
-    m_stati.remove( objIndex );
-    if( axis.equals( m_destAxis ) )
-    {
-      Double value = null;
-      Integer status = null;
+    m_values.remove( objIndex ); // remove updated value from cache
 
+    if( m_target.hasAxis( axis ) )
+    {
       try
       {
-        final String type = axis.getType();
-        if( m_converter == null )
+        if( Objects.equal( m_target.getValueAxis(), axis ) )
         {
-          value = ZERO;
-          status = KalypsoStati.STATUS_CHECK;
+          final Double srcValue = toSourceValue( axis, index, (Number) element );
+          m_model.set( index, m_source.getValueAxis(), srcValue );
         }
-        else if( type.equals( m_converter.getFromType() ) )
+        else if( Objects.equal( m_target.getStatusAxis(), axis ) )
         {
-          final double w = ((Number) element).doubleValue();
-          value = new Double( m_converter.computeQ( m_model, index, w ) );
-          status = KalypsoStati.STATUS_USERMOD;
-        }
-        else if( type.equals( m_converter.getToType() ) )
-        {
-          final double q = ((Number) element).doubleValue();
-          value = new Double( m_converter.computeW( m_model, index, q ) );
-          status = KalypsoStati.STATUS_USERMOD;
-        }
-        else
-        {
-          value = ZERO;
-          status = KalypsoStati.STATUS_CHECK;
-        }
+          Number status = (Number) element;
+          if( (status.intValue() & KalypsoStati.BIT_DERIVATED) != 0 )
+            status = status.intValue() - KalypsoStati.BIT_DERIVATED;
 
-        // if( type.equals( TimeserieConstants.TYPE_WATERLEVEL ) )
-        // {
-        // final double w = ( (Number)element ).doubleValue();
-        // value = new Double( m_converter.computeQ( d, w ) );
-        // }
-        // else
-        // {
-        // final double q = ( (Number)element ).doubleValue();
-        // value = new Double( m_converter.computeW( d, q ) );
-        // }
-        //
-        // status = KalypsoStati.STATUS_USERMOD;
+          m_model.set( index, m_source.getStatusAxis(), status );
+        }
+        else if( Objects.equal( m_target.getDatasourceAxis(), axis ) )
+        {
+          m_model.set( index, m_source.getDatasourceAxis(), element );
+        }
       }
-      catch( final WQException e )
+      catch( final Exception e )
       {
-        // Logger.getLogger( getClass().getName() ).warning( "WQ-Konvertierungsproblem: " + e.getLocalizedMessage() );
-
-        value = ZERO;
-        status = KalypsoStati.STATUS_CHECK;
+        e.printStackTrace();
       }
-
-      m_model.set( index, m_srcAxis, value );
-      if( m_srcStatusAxis != null )
-        m_model.set( index, m_srcStatusAxis, status );
-    }
-    // TODO: ich glaube Gernot hatte geschrieben:
-    // "besser wäre eigentlich equals, aber das klappt bei status achsen nicht" und hatte == statt equals() benutzt. Ich
-    // bin der Meinung es sollte doch mit equals() klappen.
-    else if( axis.equals( m_destStatusAxis ) )
-    {
-      // einfach ignorieren
-
-      // Alte Kommentare:
-      // TODO: Marc: dieser Fall hat noch gefehlt. Bisher gabs einfach ne exception, wenn
-      // man versucht, die destStatusAxis zu beschreiben
-      // Was soll man tun?
-      // Dieser Fehler tauchte im tranPoLinFilter auf
     }
     else
     {
@@ -317,36 +274,33 @@ public class WQTuppleModel extends AbstractTupleModel
 
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.ITuppleModel#indexOf(java.lang.Object, org.kalypso.ogc.sensor.IAxis)
-   */
+  private Double toSourceValue( final IAxis axis, final int index, final Number element ) throws WQException, SensorException
+  {
+    final String type = axis.getType();
+
+    if( m_converter == null )
+      return ZERO;
+    else if( type.equals( m_converter.getFromType() ) )
+    {
+      final double w = (element).doubleValue();
+      return new Double( m_converter.computeQ( m_model, index, w ) );
+    }
+    else if( type.equals( m_converter.getToType() ) )
+    {
+      final double q = (element).doubleValue();
+      return new Double( m_converter.computeW( m_model, index, q ) );
+    }
+
+    return ZERO;
+  }
+
   @Override
   public int indexOf( final Object element, final IAxis axis ) throws SensorException
   {
-    if( axis.equals( m_destAxis ) )
+    if( m_target.hasAxis( axis ) )
       return -1; // indexOf only makes sense for key axes
 
     return m_model.indexOf( element, axis );
-  }
-
-  public IAxis getDestStatusAxis( )
-  {
-    return m_destStatusAxis;
-  }
-
-  public IAxis getDestAxis( )
-  {
-    return m_destAxis;
-  }
-
-  public IAxis getSrcAxis( )
-  {
-    return m_srcAxis;
-  }
-
-  public IAxis getSrcStatusAxis( )
-  {
-    return m_srcStatusAxis;
   }
 
   public IAxis getDateAxis( )
@@ -389,15 +343,5 @@ public class WQTuppleModel extends AbstractTupleModel
   public ITupleModel getBaseModel( )
   {
     return m_model;
-  }
-
-  public int getDestAxisPos( )
-  {
-    return m_destAxisPos;
-  }
-
-  public int getDestStatusAxisPos( )
-  {
-    return m_destStatusAxisPos;
   }
 }
