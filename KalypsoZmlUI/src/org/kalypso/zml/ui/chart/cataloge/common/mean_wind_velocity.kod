@@ -41,7 +41,7 @@
     </Styles>
     <Layers>
       <Layer id="MEAN_WIND_VELOCITY">
-        <Title>Tages-Windgeschwindigkeit [m/s]</Title>
+        <Title>Mittlere Windgeschwindigkeit [m/s]</Title>
         <Layers>
           <DerivedLayer id="Stuetzstellen" legend="false" visible="false">
             <Description />
@@ -59,7 +59,7 @@
                 <Parameter name="supportsMultiSelect" value="true" />
               </Parameters>
             </Provider>
-            <Title>Tages-Windgeschwindigkeit</Title>
+            <Title>Mittlere Windgeschwindigkeit</Title>
             <Description />
             <Styles>
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:mean:wind:velocity#mean_wind_velocity_area_0</StyleReference>
@@ -79,7 +79,7 @@
     <Mappers>
       <Axis id="MEAN_WIND_VELOCITY" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-        <Label>Tages-Windgeschwindigkeit [m/s]</Label>
+        <Label>Mittlere Windgeschwindigkeit [m/s]</Label>
         <Direction>POSITIVE</Direction>
         <Position>RIGHT</Position>
         <PreferredAdjustment before="0" range="50" after="50" fixMinRange="1.0" />

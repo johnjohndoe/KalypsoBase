@@ -84,7 +84,7 @@
             <Parameter name="content.niederschlag" value="true" />
           </Parameters>
         </Provider>
-        <Title>Tages-Niederschlag</Title>
+        <Title>Mittlerer Niederschlag</Title>
         <Layers>
           <DerivedLayer id="Stuetzstellen" legend="false" visible="false">
             <Description />
@@ -101,7 +101,7 @@
                 <Parameter name="supportsMultiSelect" value="true" />
               </Parameters>
             </Provider>
-            <Title>Tages-Niederschlag</Title>
+            <Title>Mittlerer Niederschlag</Title>
             <Description />
             <Styles>
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:mean:rainfall#mean_rainfall_area_0</StyleReference>
@@ -124,7 +124,7 @@
     <Mappers>
      <Axis id="MEAN_RAINFALL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-        <Label>Tages-Niederschlag [mm]</Label>
+        <Label>Mittlerer Niederschlag [mm]</Label>
         <Direction>NEGATIVE</Direction>
         <Position>RIGHT</Position>
         <PreferredAdjustment before="0" range="50" after="50" fixMinRange="1.0" />

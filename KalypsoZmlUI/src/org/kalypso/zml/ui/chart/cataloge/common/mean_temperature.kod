@@ -41,7 +41,7 @@
     </Styles>
     <Layers>
       <Layer id="MEAN_TEMPERATURE">
-        <Title>Tages-Temperatur [°C]</Title>
+        <Title>Mittlere Temperatur [°C]</Title>
         <Layers>
             <DerivedLayer id="Stuetzstellen" legend="false" visible="false">
             <Description />
@@ -58,7 +58,7 @@
                 <Parameter name="supportsMultiSelect" value="true" />
               </Parameters>
             </Provider>
-            <Title>Tages-Temperatur</Title>
+            <Title>Mittlere Temperatur</Title>
             <Description />
             <Styles>
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:mean:temperature#mean_temperature_area_0</StyleReference>
@@ -78,7 +78,7 @@
     <Mappers>
       <Axis id="MEAN_TEMPERATURE" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-        <Label>Tages-Temperatur [°C]</Label>
+        <Label>Mittlere Temperatur [°C]</Label>
         <Direction>POSITIVE</Direction>
         <Position>RIGHT</Position>
         <PreferredAdjustment before="0" range="50" after="50" fixMinRange="1.0" />
