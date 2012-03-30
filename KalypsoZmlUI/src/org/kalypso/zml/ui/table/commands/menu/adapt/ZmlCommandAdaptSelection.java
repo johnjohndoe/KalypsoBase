@@ -139,8 +139,8 @@ public class ZmlCommandAdaptSelection extends AbstractHandler
     if( observation instanceof WQTimeserieProxy )
     {
       final WQTimeserieProxy wqObservation = (WQTimeserieProxy) observation;
-      final IAxis destAxis = wqObservation.getDestAxis();
-      final IAxis srcAxis = wqObservation.getSrcAxis();
+      final IAxis destAxis = wqObservation.getTargetAxes().getValueAxis();
+      final IAxis srcAxis = wqObservation.getSourceAxes().getValueAxis();
 
       if( valueAxis == destAxis )
         return srcAxis;

@@ -42,6 +42,7 @@ package org.kalypso.ogc.sensor.timeseries.wq;
 
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.core.i18n.Messages;
+import org.kalypso.ogc.sensor.AxisSet;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -75,17 +76,9 @@ public class WQTimeserieProxy implements IObservation
 
   private IAxis m_dateAxis;
 
-  private IAxis m_srcAxis;
+  private AxisSet m_srcAxis;
 
-  private IAxis m_srcStatusAxis;
-
-  private IAxis m_destAxis;
-
-  private IAxis m_destStatusAxis;
-
-  private int m_destAxisPos;
-
-  private int m_destStatusAxisPos;
+  private AxisSet m_targetAxis;
 
   private final String m_proxyAxisType;
 
@@ -96,12 +89,6 @@ public class WQTimeserieProxy implements IObservation
   private IRequest m_cachedArgs = null;
 
   private ITupleModel m_cachedModel = null;
-
-  private IAxis m_srcDataSourceAxis;
-
-  private IAxis m_destDataSourceAxis;
-
-  private int m_destDataSourceAxisPos;
 
   /**
    * @param realAxisType
@@ -134,21 +121,17 @@ public class WQTimeserieProxy implements IObservation
     final String name = TimeseriesUtils.getName( m_proxyAxisType );
     final String unit = TimeseriesUtils.getUnit( m_proxyAxisType );
 
-    m_srcAxis = AxisUtils.findAxis( axes, m_realAxisType );
-    m_srcStatusAxis = AxisUtils.findStatusAxis( axes, m_srcAxis );
-    m_srcDataSourceAxis = AxisUtils.findDataSourceAxis( axes, m_srcAxis );
+    m_srcAxis = new AxisSet( m_axes, AxisUtils.findAxis( axes, m_realAxisType ) );
 
-    m_destAxis = new DefaultAxis( name, m_proxyAxisType, unit, Double.class, false, false );
-    m_destAxisPos = m_axes.length - 3;
-    m_axes[m_destAxisPos] = m_destAxis;
+    final IAxis targetAxis = new DefaultAxis( name, m_proxyAxisType, unit, Double.class, false, false );
+    final IAxis targetStatusAxis = KalypsoStatusUtils.createStatusAxisFor( targetAxis, false );
+    final IAxis targetDataSourceAxis = DataSourceHelper.createSourceAxis( targetAxis, false );
 
-    m_destStatusAxis = KalypsoStatusUtils.createStatusAxisFor( m_destAxis, false );
-    m_destStatusAxisPos = m_axes.length - 2;
-    m_axes[m_destStatusAxisPos] = m_destStatusAxis;
+    m_axes[m_axes.length - 3] = targetAxis;
+    m_axes[m_axes.length - 2] = targetStatusAxis;
+    m_axes[m_axes.length - 1] = targetDataSourceAxis;
 
-    m_destDataSourceAxis = DataSourceHelper.createSourceAxis( m_destAxis, false );
-    m_destDataSourceAxisPos = m_axes.length - 1;
-    m_axes[m_destDataSourceAxisPos] = m_destDataSourceAxis;
+    m_targetAxis = new AxisSet( targetAxis, targetStatusAxis, targetDataSourceAxis );
 
     if( name.length() == 0 )
       throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.timeseries.wq.WQTimeserieProxy.0" ) + m_proxyAxisType ); //$NON-NLS-1$
@@ -166,7 +149,7 @@ public class WQTimeserieProxy implements IObservation
     if( isValid( args ) )
       return m_cachedModel;
 
-    m_cachedModel = new WQTuppleModel( m_obs.getValues( args ), m_axes, m_dateAxis, m_srcAxis, m_srcStatusAxis, m_destAxis, m_destStatusAxis, getWQConverter(), m_destAxisPos, m_destStatusAxisPos );
+    m_cachedModel = new WQTuppleModel( m_obs.getValues( args ), m_obs.getMetadataList(), m_axes, m_srcAxis, m_targetAxis, getWQConverter() );
     m_cachedArgs = args;
 
     m_cachedModel.addChangeListener( new ITupleModelChangeListener()
@@ -208,12 +191,12 @@ public class WQTimeserieProxy implements IObservation
     return m_dateAxis;
   }
 
-  public IAxis getDestAxis( )
+  public AxisSet getTargetAxes( )
   {
-    return m_destAxis;
+    return m_targetAxis;
   }
 
-  public IAxis getSrcAxis( )
+  public AxisSet getSourceAxes( )
   {
     return m_srcAxis;
   }

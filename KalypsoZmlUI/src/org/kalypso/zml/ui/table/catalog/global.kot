@@ -300,7 +300,7 @@
             <reference>wqBoundaryDeviationLowerExtreme</reference>
           </styleReference>
         </MetadataBoundaryInstruction>
-        <MetadataBoundaryInstruction fromExtensionPoint="wq.extreme.value" from="WQ-Tabelle_W_Min" opFrom="&gt;" to="WQ-Tabelle_W_Min" opTo="&lt;" severity="1">
+        <MetadataBoundaryInstruction  from="WQ-Tabelle_W_Min" opFrom="&lt;" severity="1">
           <styleReference>
             <reference>wqBoundaryDeviationLower</reference>
           </styleReference>
@@ -316,7 +316,7 @@
             <reference>wqBoundaryDeviationUpperExtreme</reference>
           </styleReference>
         </MetadataBoundaryInstruction>
-        <MetadataBoundaryInstruction from="WQ-Tabelle_W_Max" opFrom="&gt;" toExtensionPoint="wq.extreme.value" to="WQ-Tabelle_W_Max" opTo="&lt;" severity="1">
+        <MetadataBoundaryInstruction from="WQ-Tabelle_W_Max" opFrom="&gt;" severity="1">
           <styleReference>
             <reference>wqBoundaryDeviationUpper</reference>
           </styleReference>
@@ -332,7 +332,7 @@
             <reference>wqBoundaryDeviationLowerExtreme</reference>
           </styleReference>
         </MetadataBoundaryInstruction>
-        <MetadataBoundaryInstruction fromExtensionPoint="wq.extreme.value" from="WQ-Tabelle_Q_Min" opFrom="&gt;" to="WQ-Tabelle_Q_Min" opTo="&lt;" severity="1">
+        <MetadataBoundaryInstruction from="WQ-Tabelle_Q_Min" opFrom="&lt;" to="WQ-Tabelle_Q_Min"  severity="1">
           <styleReference>
             <reference>wqBoundaryDeviationLower</reference>
           </styleReference>
@@ -348,7 +348,7 @@
             <reference>wqBoundaryDeviationUpperExtreme</reference>
           </styleReference>
         </MetadataBoundaryInstruction>
-        <MetadataBoundaryInstruction from="WQ-Tabelle_Q_Max" opFrom="&gt;" to="WQ-Tabelle_Q_Max" opTo="&lt;" toExtensionPoint="wq.extreme.value" severity="1">
+        <MetadataBoundaryInstruction from="WQ-Tabelle_Q_Max" opFrom="&gt;" severity="1">
           <styleReference>
             <reference>wqBoundaryDeviationUpper</reference>
           </styleReference>

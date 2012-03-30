@@ -40,7 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model.interpolation;
 
-import java.util.LinkedHashSet;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.kalypso.commons.java.lang.Objects;
@@ -59,7 +61,7 @@ import org.kalypso.zml.core.table.model.references.ZmlValues;
  */
 public class FindStuetzstellenVisitor implements ITupleModelVisitor
 {
-  private final Set<Integer> m_references = new LinkedHashSet<Integer>();
+  private final Map<IAxis, Set<Integer>> m_stuetzstellen = new HashMap<IAxis, Set<Integer>>();
 
   private DataSourceHandler m_dataSourceHandler;
 
@@ -96,10 +98,15 @@ public class FindStuetzstellenVisitor implements ITupleModelVisitor
 
         if( ZmlValues.isStuetzstelle( status, source ) )
         {
-          m_references.add( container.getIndex() );
-          return; // row is reference, now
-        }
+          Set<Integer> references = m_stuetzstellen.get( valueAxis );
+          if( Objects.isNull( references ) )
+          {
+            references = new HashSet<Integer>();
+            m_stuetzstellen.put( valueAxis, references );
+          }
 
+          references.add( container.getIndex() );
+        }
       }
 
     }
@@ -118,9 +125,13 @@ public class FindStuetzstellenVisitor implements ITupleModelVisitor
     return -1;
   }
 
-  public Integer[] getStuetzstellen( )
+  public Integer[] getStuetzstellen( final IAxis axis )
   {
-    return m_references.toArray( new Integer[] {} );
+    final Set<Integer> stuetzstellen = m_stuetzstellen.get( axis );
+    if( Objects.isNull( stuetzstellen ) )
+      return new Integer[] {};
+
+    return stuetzstellen.toArray( new Integer[] {} );
   }
 
   private DataSourceHandler getDataSourceHandler( )

@@ -47,6 +47,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.TupleModelDataSet;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.interpolation.InterpolationFilter;
 import org.kalypso.ogc.sensor.transaction.TupleModelTransaction;
@@ -74,8 +75,6 @@ public class ZmlCommandDeleteStuetzstellen extends AbstractHandler
       final IZmlTable table = ZmlHandlerUtil.getTable( event );
       final IZmlTableSelection selection = table.getSelection();
 
-      final String src = String.format( "%s%s", IDataSourceItem.FILTER_SOURCE, InterpolationFilter.FILTER_ID ); //$NON-NLS-1$
-
       final IZmlModelValueCell current = selection.getFocusCell();
       final IZmlModelColumn column = current.getColumn();
 
@@ -89,7 +88,7 @@ public class ZmlCommandDeleteStuetzstellen extends AbstractHandler
           final IZmlModelValueCell reference = cell;
           if( ZmlValues.isStuetzstelle( reference ) )
           {
-            final TupleModelDataSet dataset = new TupleModelDataSet( column.getValueAxis(), cell.getValue(), KalypsoStati.BIT_OK, src );
+            final TupleModelDataSet dataset = new TupleModelDataSet( column.getValueAxis(), cell.getValue(), KalypsoStati.BIT_OK, getSource( cell ) );
             transaction.add( new UpdateTupleModelDataSetCommand( cell.getModelIndex(), dataset, true ) );
           }
         }
@@ -118,5 +117,16 @@ public class ZmlCommandDeleteStuetzstellen extends AbstractHandler
 
     return Status.OK_STATUS;
 
+  }
+
+  private String getSource( final IZmlModelValueCell cell )
+  {
+    final String identifier = cell.getColumn().getIdentifier();
+    if( ITimeseriesConstants.TYPE_WECHMANN_E.equals( identifier ) )
+      return IDataSourceItem.SOURCE_INTERPOLATED_WECHMANN_VALUE;
+    else if( ITimeseriesConstants.TYPE_WECHMANN_SCHALTER_V.equals( identifier ) )
+      return IDataSourceItem.SOURCE_INTERPOLATED_WECHMANN_VALUE;
+
+    return String.format( "%s%s", IDataSourceItem.FILTER_SOURCE, InterpolationFilter.FILTER_ID ); //$NON-NLS-1$
   }
 }

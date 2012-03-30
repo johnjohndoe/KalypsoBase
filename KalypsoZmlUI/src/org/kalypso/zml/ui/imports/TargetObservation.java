@@ -87,7 +87,8 @@ public class TargetObservation
       final WQTuppleModel wq = (WQTuppleModel) m_targetModel;
       final Object[][] newValues = new Object[countSrc + m_countTarget][axesNew.length - 1];
       final ITupleModel model = new SimpleTupleModel( axesNew, newValues );
-      return new WQTuppleModel( model, axesNew, wq.getDateAxis(), wq.getSrcAxis(), wq.getSrcStatusAxis(), wq.getDestAxis(), wq.getDestStatusAxis(), wq.getConverter(), wq.getDestAxisPos(), wq.getDestStatusAxisPos() );
+
+      return new WQTuppleModel( model, wq.getMetadata(), axesNew, wq.getSourceAxes(), wq.getTargetAxes(), wq.getConverter() );
     }
 
     final Object[][] newValues = new Object[countSrc + m_countTarget][axesNew.length];
