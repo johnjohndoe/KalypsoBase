@@ -52,6 +52,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.TupleModelDataSet;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
@@ -66,7 +68,7 @@ import com.google.common.collect.Iterables;
 /**
  * @author Dirk Kuch
  */
-public class CacheTimeSeriesVisitor implements ITupleModelVisitor
+public class CacheTimeSeriesVisitor implements ITupleModelVisitor, ITimeseriesCache
 {
   private final Map<Date, TupleModelDataSet[]> m_values = new TreeMap<Date, TupleModelDataSet[]>();
 
@@ -259,5 +261,14 @@ public class CacheTimeSeriesVisitor implements ITupleModelVisitor
     final Date to = Iterables.getLast( keys, null );
 
     return new DateRange( from, to );
+  }
+
+  public static ITimeseriesCache cache( final IObservation observation ) throws SensorException
+  {
+    final ITupleModel model = observation.getValues( null );
+    final CacheTimeSeriesVisitor visitor = new CacheTimeSeriesVisitor( observation.getMetadataList() );
+    model.accept( visitor, 1 );
+
+    return visitor;
   }
 }
