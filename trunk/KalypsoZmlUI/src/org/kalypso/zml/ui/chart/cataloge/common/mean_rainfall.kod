@@ -104,12 +104,12 @@
             <Title>Tages-Niederschlag</Title>
             <Description />
             <Styles>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:mean:rainfall#n_area_0</StyleReference>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:mean:rainfall#n_area_1</StyleReference>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:mean:rainfall#n_area_2</StyleReference>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:mean:rainfall#n_area_3</StyleReference>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:mean:rainfall#n_area_4</StyleReference>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:mean:rainfall#n_area_5</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:mean:rainfall#mean_rainfall_area_0</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:mean:rainfall#mean_rainfall_area_1</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:mean:rainfall#mean_rainfall_area_2</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:mean:rainfall#mean_rainfall_area_3</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:mean:rainfall#mean_rainfall_area_4</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:mean:rainfall#mean_rainfall_area_5</StyleReference>
             </Styles>
           </Layer>
 
