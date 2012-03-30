@@ -578,7 +578,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
   }
 
   /**
-   * Guesses the timestep of a given timeseries from the first 10 timsteps.
+   * Guesses the timestep of a given timeseries from several timsteps.
    */
   public static Period guessTimestep( final ITupleModel timeseries ) throws SensorException
   {
