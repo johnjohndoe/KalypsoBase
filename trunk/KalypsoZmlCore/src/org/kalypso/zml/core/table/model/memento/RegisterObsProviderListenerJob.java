@@ -48,6 +48,7 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.provider.IObsProviderListener;
 import org.kalypso.zml.core.base.IZmlSourceElement;
+import org.kalypso.zml.core.i18n.Messages;
 
 /**
  * @author Dirk Kuch
@@ -60,7 +61,7 @@ public class RegisterObsProviderListenerJob extends Job
 
   public RegisterObsProviderListenerJob( final IZmlSourceElement source, final IObsProviderListener listener )
   {
-    super( String.format( "registering obs provider listener for zml source: %s", source.getIdentifier() ) );
+    super( String.format( Messages.RegisterObsProviderListenerJob_0, source.getIdentifier() ) );
     m_source = source;
     m_listener = listener;
 

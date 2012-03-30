@@ -81,7 +81,7 @@ public class ZmlModelCellLabelProvider extends AbstractCellLabelProvider impleme
       e.printStackTrace();
     }
 
-    return "error";
+    return "error"; //$NON-NLS-1$
   }
 
   @Override
@@ -96,7 +96,7 @@ public class ZmlModelCellLabelProvider extends AbstractCellLabelProvider impleme
       e.printStackTrace();
     }
 
-    return "error";
+    return "error"; //$NON-NLS-1$
   }
 
 }

@@ -64,6 +64,7 @@ import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.zml.core.base.IZmlSourceElement;
 import org.kalypso.zml.core.base.IndexedTsLink;
 import org.kalypso.zml.core.debug.KalypsoZmlCoreDebug;
+import org.kalypso.zml.core.i18n.Messages;
 import org.kalypso.zml.core.table.model.event.IZmlModelColumnListener;
 import org.kalypso.zml.core.table.model.event.ZmlModelColumnChangeType;
 import org.kalypso.zml.core.table.model.loader.ZmlModelColumnLoader;
@@ -191,7 +192,7 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
 
   public void doClean( )
   {
-    KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlTableModel - doClean()-ing model" );
+    KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( Messages.ZmlModel_0 );
     m_loader.cancel();
 
     /** remove cloned columns */
@@ -239,7 +240,7 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
 
   private IZmlModelRow[] m_rowsArray;
 
-  private static final MutexRule MUTEX_FIRE_MODEL_CHANGED = new MutexRule( "mutex - fire zml model changed" );
+  private static final MutexRule MUTEX_FIRE_MODEL_CHANGED = new MutexRule( Messages.ZmlModel_1 );
 
   @Override
   public synchronized void fireModelChanged( final ZmlModelColumnChangeType event )
@@ -254,7 +255,7 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
 
     m_stackEvent |= event.getEvent();
 
-    m_fireModelChangedJob = new Job( "firing zml model changes" )
+    m_fireModelChangedJob = new Job( Messages.ZmlModel_2 )
     {
       @Override
       protected IStatus run( final IProgressMonitor monitor )
@@ -391,7 +392,7 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
     if( ArrayUtils.isEquals( m_ignoreTypes, ignoreTypes ) )
       return;
 
-    KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlTableModel - Setting ignore types\n" );
+    KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( Messages.ZmlModel_3 );
     m_ignoreTypes = ignoreTypes;
 
     fireModelChanged( new ZmlModelColumnChangeType( IGNORE_TYPES_CHANGED ) );

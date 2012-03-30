@@ -55,6 +55,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.zml.core.debug.KalypsoZmlCoreDebug;
+import org.kalypso.zml.core.i18n.Messages;
 import org.kalypso.zml.core.table.binding.TableTypes;
 import org.kalypso.zml.core.table.model.utils.IClonedColumn;
 import org.kalypso.zml.core.table.schema.AbstractColumnType;
@@ -102,7 +103,7 @@ public class ZmlModelInitializer implements ICoreRunnableWithProgress
           if( index == 0 )
           {
             final String identifier = base.getId();
-            KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlTableModel - Adding element: %s, %s\n", identifier, href );
+            KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( Messages.ZmlModelInitializer_0, identifier, href );
 
             final ZmlDataSourceElement element = new ZmlDataSourceElement( identifier, href, m_model.getContext(), source.getLabel(), m_model.getMemento() );
             m_model.getLoader().load( element );
@@ -115,7 +116,7 @@ public class ZmlModelInitializer implements ICoreRunnableWithProgress
 
             appendColumnType( clone );
 
-            KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlTableModel - Adding element: %s, %s\n", multipleIdentifier, href );
+            KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( Messages.ZmlModelInitializer_1, multipleIdentifier, href );
             final ZmlDataSourceElement element = new ZmlDataSourceElement( multipleIdentifier, href, m_model.getContext(), source.getLabel(), m_model.getMemento() );
             m_model.getLoader().load( element );
           }

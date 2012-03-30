@@ -123,7 +123,7 @@ public class TSLinkWithName implements IZmlSourceElement
     final String href = m_obsLink.getHref();
     final String filter = m_property.getFilter();
     if( StringUtils.isNotEmpty( filter ) )
-      return href + "?" + filter;
+      return href + "?" + filter; //$NON-NLS-1$
 
     return href;
   }
@@ -223,7 +223,7 @@ public class TSLinkWithName implements IZmlSourceElement
   @Override
   public String toString( )
   {
-    return String.format( "link %s", getHref() );
+    return String.format( "link %s", getHref() ); //$NON-NLS-1$
   }
 
   @Override

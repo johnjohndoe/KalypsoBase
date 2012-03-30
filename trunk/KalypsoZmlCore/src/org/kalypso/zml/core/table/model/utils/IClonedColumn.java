@@ -47,12 +47,12 @@ import jregex.Pattern;
  */
 public interface IClonedColumn
 {
-  String CLONED_COLUMN_POSTFIX = "_clone_"; // $NON-NLS-1$
+  String CLONED_COLUMN_POSTFIX = "_clone_"; // $NON-NLS-1$ //$NON-NLS-1$
 
   /** example: baseLayerId _clone_ cloneNumber */
-  String CLONED_COLUMN_POSTFIX_FORMAT = "%s" + CLONED_COLUMN_POSTFIX + "%d"; // $NON-NLS-1$
+  String CLONED_COLUMN_POSTFIX_FORMAT = "%s" + CLONED_COLUMN_POSTFIX + "%d"; // $NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-2$
 
-  Pattern PATTERN_CLONED_COLUMN_IDENTIFIER = new Pattern( ".*_clone_\\d+$" ); // $NON-NLS-1$
+  Pattern PATTERN_CLONED_COLUMN_IDENTIFIER = new Pattern( ".*_clone_\\d+$" ); // $NON-NLS-1$ //$NON-NLS-1$
 
-  Pattern PATTERN_CLONED_COLUMN_TOKENIZER = new Pattern( "_clone_\\d+$" ); // $NON-NLS-1$
+  Pattern PATTERN_CLONED_COLUMN_TOKENIZER = new Pattern( "_clone_\\d+$" ); // $NON-NLS-1$ //$NON-NLS-1$
 }

@@ -57,6 +57,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.ICatalog;
+import org.kalypso.zml.core.i18n.Messages;
 import org.kalypso.zml.core.table.ZmlTableConfigurationLoader;
 import org.kalypso.zml.core.table.binding.rule.AbstractZmlRule;
 import org.kalypso.zml.core.table.binding.rule.ZmlCellRule;
@@ -116,7 +117,7 @@ public final class ZmlRuleResolver
         final String identifier = getAnchor( url );
 
         AbstractZmlRule rule;
-        if( plainUrl.startsWith( "urn:" ) )
+        if( plainUrl.startsWith( "urn:" ) ) //$NON-NLS-1$
           rule = findUrnRule( context, plainUrl, identifier );
         else
           rule = findUrlRule( context, plainUrl, identifier );
@@ -130,7 +131,7 @@ public final class ZmlRuleResolver
     }
     catch( final Throwable t )
     {
-      throw new CoreException( StatusUtilities.createExceptionalErrorStatus( "Resolving style failed", t ) );
+      throw new CoreException( StatusUtilities.createExceptionalErrorStatus( Messages.ZmlRuleResolver_1, t ) );
     }
     throw new IllegalStateException();
   }

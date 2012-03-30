@@ -215,22 +215,22 @@ public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionTy
 
     final BigDecimal compareValue = meta.getValue();
 
-    if( "<".equals( op ) )// $NON-NLS-1$
+    if( "<".equals( op ) )// $NON-NLS-1$ //$NON-NLS-1$
     {
       if( value.compareTo( compareValue ) < 0 )
         return true;
     }
-    else if( "<=".equals( op ) )// $NON-NLS-1$
+    else if( "<=".equals( op ) )// $NON-NLS-1$ //$NON-NLS-1$
     {
       if( value.compareTo( compareValue ) <= 0 )
         return true;
     }
-    else if( ">".equals( op ) )// $NON-NLS-1$
+    else if( ">".equals( op ) )// $NON-NLS-1$ //$NON-NLS-1$
     {
       if( value.compareTo( compareValue ) > 0 )
         return true;
     }
-    else if( ">=".equals( op ) ) // $NON-NLS-1$
+    else if( ">=".equals( op ) ) // $NON-NLS-1$ //$NON-NLS-1$
     {
       if( value.compareTo( compareValue ) >= 0 )
         return true;

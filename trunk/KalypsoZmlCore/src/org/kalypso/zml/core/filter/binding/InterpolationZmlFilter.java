@@ -57,29 +57,29 @@ public class InterpolationZmlFilter extends Feature_Impl implements IZmlFilter
   /**
    * The qname of the calendar amount.
    */
-  public static final QName QNAME_CALENDAR_AMOUNT = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "calendarAmount" );
+  public static final QName QNAME_CALENDAR_AMOUNT = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "calendarAmount" ); //$NON-NLS-1$
 
   /**
    * The qname of the calendar field.
    */
-  public static final QName QNAME_CALENDAR_FIELD = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "calendarField" );
+  public static final QName QNAME_CALENDAR_FIELD = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "calendarField" ); //$NON-NLS-1$
 
   /**
    * The qname of the default status.
    */
-  public static final QName QNAME_DEFAULT_STATUS = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "defaultStatus" );
+  public static final QName QNAME_DEFAULT_STATUS = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "defaultStatus" ); //$NON-NLS-1$
 
   /**
    * The qname of the default value.
    */
-  public static final QName QNAME_DEFAULT_VALUE = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "defaultValue" );
+  public static final QName QNAME_DEFAULT_VALUE = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "defaultValue" ); //$NON-NLS-1$
 
   /**
    * The qname of the force fill flag.
    */
-  public static final QName QNAME_FORCE_FILL = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "forceFill" );
+  public static final QName QNAME_FORCE_FILL = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "forceFill" ); //$NON-NLS-1$
 
-  public static final QName QNAME_INTERPOLATION_ZML_FILTER = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "InterpolationZmlFilter" );
+  public static final QName QNAME_INTERPOLATION_ZML_FILTER = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "InterpolationZmlFilter" ); //$NON-NLS-1$
 
   /**
    * The constructor.

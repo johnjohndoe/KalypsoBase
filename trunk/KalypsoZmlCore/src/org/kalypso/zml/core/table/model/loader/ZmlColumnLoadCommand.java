@@ -49,6 +49,7 @@ import org.kalypso.ogc.sensor.provider.IObsProviderListener;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.core.base.IZmlSourceElement;
 import org.kalypso.zml.core.debug.KalypsoZmlCoreDebug;
+import org.kalypso.zml.core.i18n.Messages;
 import org.kalypso.zml.core.table.binding.DataColumn;
 import org.kalypso.zml.core.table.binding.TableTypes;
 import org.kalypso.zml.core.table.model.IZmlModel;
@@ -84,12 +85,12 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
       final IObsProvider provider = m_source.getObsProvider();
       if( provider.isLoaded() )
       {
-        KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlColumnLoadCommand - doExecute(): %s (provider: %s)\n", m_source.getIdentifier(), ObjectUtils.identityToString( provider ) );
+        KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( Messages.ZmlColumnLoadCommand_0, m_source.getIdentifier(), ObjectUtils.identityToString( provider ) );
         doExcecute();
       }
       else
       {
-        KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlColumnLoadCommand - ObsProvider.addListener(): %s (provider: %s)\n", m_source.getIdentifier(), ObjectUtils.identityToString( provider ) );
+        KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( Messages.ZmlColumnLoadCommand_1, m_source.getIdentifier(), ObjectUtils.identityToString( provider ) );
         provider.addListener( this );
       }
     }
@@ -98,7 +99,7 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
   @Override
   public void observationReplaced( )
   {
-    KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlColumnLoadCommand.observationReplaced(): %s (provider: %s\n", m_source.getIdentifier(), ObjectUtils.identityToString( m_source.getObsProvider() ) );
+    KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( Messages.ZmlColumnLoadCommand_2, m_source.getIdentifier(), ObjectUtils.identityToString( m_source.getObsProvider() ) );
 
     // FIXME: this happens, if the zml does not exist.
     // It would be nice, to keep this listener,maybe it appears later....
@@ -120,13 +121,13 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
   @Override
   public void observationChanged( final Object source )
   {
-    KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlColumnLoadCommand.observationChanged(): %s\n", m_source.getIdentifier() );
+    KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( Messages.ZmlColumnLoadCommand_3, m_source.getIdentifier() );
     m_model.fireModelChanged( new ZmlModelColumnChangeType( IZmlModelColumnEvent.VALUE_CHANGED ) );
   }
 
   public synchronized void cancel( )
   {
-    KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlColumnLoadCommand.cancel(): %s\n", m_source.getIdentifier() );
+    KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( Messages.ZmlColumnLoadCommand_4, m_source.getIdentifier() );
 
     m_canceled = true;
 // m_source.getObsProvider().dispose();
@@ -134,11 +135,11 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
 
   private void doExcecute( )
   {
-    KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlColumnLoadCommand.doExecute(): %s\n", m_source.getIdentifier() );
+    KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( Messages.ZmlColumnLoadCommand_5, m_source.getIdentifier() );
 
     if( m_canceled )
     {
-      KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlColumnLoadCommand - Loading model column canceled: %s\n", m_source.getIdentifier() );
+      KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( Messages.ZmlColumnLoadCommand_6, m_source.getIdentifier() );
       return;
     }
 
@@ -157,7 +158,7 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
     IZmlModelColumn column = m_model.getColumn( m_source.getIdentifier() );
     if( Objects.isNull( column ) )
     {
-      KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( "ZmlColumnLoadCommand - Adding new model column: %s\n", m_source.getIdentifier() );
+      KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( Messages.ZmlColumnLoadCommand_7, m_source.getIdentifier() );
 
       column = new ZmlModelColumn( m_model, m_source.getIdentifier(), data );
       column.setDataHandler( handler );

@@ -75,7 +75,7 @@ public class SynchronousObservationProvider extends AbstractObsProvider
     catch( final Throwable t )
     {
       // FIXME: arrg! if this happens, the url is bad! Should be fixed elsewhere!
-      load( new URL( context.toURI().toString() + "/" + href ) );
+      load( new URL( context.toURI().toString() + "/" + href ) ); //$NON-NLS-1$
       // FIXME: the observation provider should never throw an exception?!
     }
   }
