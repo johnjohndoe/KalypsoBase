@@ -41,6 +41,7 @@
 package org.kalypso.zml.ui.table.base.widgets.rules;
 
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.zml.ui.i18n.Messages;
 
 /**
  * @author Dirk Kuch
@@ -53,7 +54,7 @@ public class IntegerValueWidgetRule implements ITextWidgetRule<Integer>
 
   public IntegerValueWidgetRule( )
   {
-    this( "%d" ); // $NON-NLS-1$
+    this( "%d" ); //$NON-NLS-1$
   }
 
   public IntegerValueWidgetRule( final String format )
@@ -84,7 +85,7 @@ public class IntegerValueWidgetRule implements ITextWidgetRule<Integer>
   {
     final boolean isInteger = NumberUtils.isInteger( text );
     if( !isInteger )
-      m_lastValidationMsg = "Ungültiger Zahlenwert";
+      m_lastValidationMsg = Messages.IntegerValueWidgetRule_0;
     else
       m_lastValidationMsg = null;
 

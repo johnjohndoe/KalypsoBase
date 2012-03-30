@@ -59,7 +59,7 @@ public final class ZmlLayerHelper
     if( !identifier.contains( IClonedLayer.CLONED_LAYER_POSTFIX ) )
       return 0;
 
-    final RETokenizer tokenizer = new RETokenizer( new Pattern( ".*" + IClonedLayer.CLONED_LAYER_POSTFIX ), identifier );
+    final RETokenizer tokenizer = new RETokenizer( new Pattern( ".*" + IClonedLayer.CLONED_LAYER_POSTFIX ), identifier ); //$NON-NLS-1$
     final String token = tokenizer.nextToken();
 
     return Integer.valueOf( token );

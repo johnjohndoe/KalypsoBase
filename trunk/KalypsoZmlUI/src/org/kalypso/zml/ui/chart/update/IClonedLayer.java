@@ -45,8 +45,8 @@ package org.kalypso.zml.ui.chart.update;
  */
 public interface IClonedLayer
 {
-  String CLONED_LAYER_POSTFIX = "_clone_";
+  String CLONED_LAYER_POSTFIX = "_clone_"; //$NON-NLS-1$
 
   /** example: baseLayerId _clone_ cloneNumber */
-  String CLONED_LAYER_POSTFIX_FORMAT = "%s" + CLONED_LAYER_POSTFIX + "%d";
+  String CLONED_LAYER_POSTFIX_FORMAT = "%s" + CLONED_LAYER_POSTFIX + "%d"; //$NON-NLS-1$ //$NON-NLS-2$
 }

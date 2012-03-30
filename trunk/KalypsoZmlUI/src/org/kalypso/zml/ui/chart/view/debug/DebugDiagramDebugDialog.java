@@ -81,7 +81,7 @@ public class DebugDiagramDebugDialog extends EnhancedTitleAreaDialog
   @Override
   protected final Control createDialogArea( final Composite parent )
   {
-    setTitle( "Diagram" );
+    setTitle( "Diagram" ); //$NON-NLS-1$
 // setMessage( "Benutzerrechte des aktuell am System angemeldeten Benutzers." );
 
     final FormToolkit toolkit = new FormToolkit( parent.getDisplay() );

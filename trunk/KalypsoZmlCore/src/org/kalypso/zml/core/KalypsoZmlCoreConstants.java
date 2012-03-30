@@ -47,7 +47,7 @@ package org.kalypso.zml.core;
  */
 public interface KalypsoZmlCoreConstants
 {
-  String NS_ZML_FILTER = "org.kalypso.zml.core.filter"; // $NON-NLS-1$ //$NON-NLS-1$
+  String NS_ZML_FILTER = "org.kalypso.zml.core.filter"; //$NON-NLS-1$ //$NON-NLS-1$
 
   String PREFIX_ZML_FILTER = "zf"; // //$NON-NLS-1$
 }

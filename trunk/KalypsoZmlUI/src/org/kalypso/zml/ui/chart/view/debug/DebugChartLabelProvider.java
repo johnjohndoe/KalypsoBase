@@ -63,23 +63,23 @@ public class DebugChartLabelProvider extends ChartTreeLabelProvider
       final IChartLayer layer = (IChartLayer) element;
       final String clazz = layer.getClass().getName();
 
-      return String.format( "%s (id=%s, class=%s)", layer.getTitle(), layer.getIdentifier(), clazz.substring( clazz.lastIndexOf( "." ) + 1 ) );
+      return String.format( "%s (id=%s, class=%s)", layer.getTitle(), layer.getIdentifier(), clazz.substring( clazz.lastIndexOf( "." ) + 1 ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     else if( element instanceof CoordinateMapper )
-      return "CoordinateMapper";
+      return "CoordinateMapper"; //$NON-NLS-1$
     else if( element instanceof IAxis )
     {
       final IAxis axis = (IAxis) element;
 
-      return String.format( "Achse: %s", axis.getIdentifier() );
+      return String.format( "Achse: %s", axis.getIdentifier() ); //$NON-NLS-1$
     }
     else if( element instanceof IZmlLayerDataHandler )
-      return "IZmlLayerDataHandler";
+      return "IZmlLayerDataHandler"; //$NON-NLS-1$
     else if( element instanceof IObservation )
     {
       final IObservation observation = (IObservation) element;
 
-      return String.format( "Observation: %s", observation.getHref() );
+      return String.format( "Observation: %s", observation.getHref() ); //$NON-NLS-1$
     }
 
     return super.getText( element );

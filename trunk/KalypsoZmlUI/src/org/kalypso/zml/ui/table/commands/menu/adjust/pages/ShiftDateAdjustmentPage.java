@@ -48,6 +48,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import org.kalypso.zml.ui.i18n.Messages;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedSpinner;
 import org.kalypso.zml.ui.table.base.widgets.IEnhancedTextBoxListener;
 
@@ -77,7 +78,7 @@ public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage
   @Override
   public String getLabel( )
   {
-    return "Datum verschieben (->)";
+    return Messages.ShiftDateAdjustmentPage_0;
   }
 
   /**
@@ -88,10 +89,10 @@ public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage
   public void render( final Composite body, final FormToolkit toolkit )
   {
 
-    toolkit.createLabel( body, "" ); // spacer
+    toolkit.createLabel( body, "" ); // spacer //$NON-NLS-1$
     final Integer offset = getOffset();
 
-    toolkit.createLabel( body, "Verschieben, um:" ).setFont( HEADING );
+    toolkit.createLabel( body, Messages.ShiftDateAdjustmentPage_2 ).setFont( HEADING );
 
     final Composite control = toolkit.createComposite( body );
     control.setLayout( Layouts.createGridLayout( 3 ) );
@@ -120,7 +121,7 @@ public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage
     addHourSpinner( control, toolkit );
 
     final Integer offset = getOffset();
-    final EnhancedSpinner spinnerMinutes = addSpinner( control, toolkit, "Minuten", 60, offset );
+    final EnhancedSpinner spinnerMinutes = addSpinner( control, toolkit, Messages.ShiftDateAdjustmentPage_3, 60, offset );
     spinnerMinutes.addListener( new IEnhancedTextBoxListener<Integer>()
     {
       @Override
@@ -136,7 +137,7 @@ public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage
 
   private EnhancedSpinner addHourSpinner( final Composite control, final FormToolkit toolkit )
   {
-    final EnhancedSpinner spinnerHour = addSpinner( control, toolkit, "Stunden", 24, 1 );
+    final EnhancedSpinner spinnerHour = addSpinner( control, toolkit, Messages.ShiftDateAdjustmentPage_4, 24, 1 );
     spinnerHour.addListener( new IEnhancedTextBoxListener<Integer>()
     {
       @Override
@@ -151,7 +152,7 @@ public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage
 
   private EnhancedSpinner addDaySpinner( final Composite control, final FormToolkit toolkit )
   {
-    final EnhancedSpinner spinnerDay = addSpinner( control, toolkit, "Tage", 30, 1 );
+    final EnhancedSpinner spinnerDay = addSpinner( control, toolkit, Messages.ShiftDateAdjustmentPage_5, 30, 1 );
     spinnerDay.addListener( new IEnhancedTextBoxListener<Integer>()
     {
       @Override
@@ -167,7 +168,7 @@ public class ShiftDateAdjustmentPage extends AbstractAdjustmentPage
   private EnhancedSpinner addSpinner( final Composite body, final FormToolkit toolkit, final String text, final int maximum, final int increment )
   {
     toolkit.createLabel( body, text );
-    toolkit.createLabel( body, "   " ); // spacer
+    toolkit.createLabel( body, "   " ); // spacer //$NON-NLS-1$
 
     final EnhancedSpinner spinner = new EnhancedSpinner( body, toolkit, new ShiftDateWidgetRule( m_base ) );
     spinner.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );

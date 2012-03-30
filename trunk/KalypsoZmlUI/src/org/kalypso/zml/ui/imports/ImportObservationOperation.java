@@ -109,7 +109,7 @@ public class ImportObservationOperation implements ICoreRunnableWithProgress
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoZmlUI.PLUGIN_ID, "Failed to write result file", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoZmlUI.PLUGIN_ID, Messages.getString("ImportObservationOperation.0"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }
@@ -136,7 +136,7 @@ public class ImportObservationOperation implements ICoreRunnableWithProgress
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoZmlUI.PLUGIN_ID, "Failed to read target observation", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoZmlUI.PLUGIN_ID, Messages.getString("ImportObservationOperation.1"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }
@@ -168,7 +168,7 @@ public class ImportObservationOperation implements ICoreRunnableWithProgress
     catch( final Exception e )
     {
       e.printStackTrace();
-      final String message = String.format( "Failed to import timeseries" );
+      final String message = String.format( Messages.getString("ImportObservationOperation.2") ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoZmlUI.PLUGIN_ID, message, e );
       throw new CoreException( status );
     }
@@ -192,7 +192,7 @@ public class ImportObservationOperation implements ICoreRunnableWithProgress
     catch( final SensorException e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoZmlUI.PLUGIN_ID, "Failed to access source data", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoZmlUI.PLUGIN_ID, Messages.getString("ImportObservationOperation.3"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }

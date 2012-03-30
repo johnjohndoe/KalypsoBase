@@ -46,6 +46,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.ui.i18n.Messages;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedTextBox;
 import org.kalypso.zml.ui.table.base.widgets.IEnhancedTextBoxListener;
 import org.kalypso.zml.ui.table.base.widgets.rules.DoubeValueWidgetRule;
@@ -68,16 +69,16 @@ public class MultiplyValueAdjustmentPage extends AbstractAdjustmentPage implemen
   @Override
   public String getLabel( )
   {
-    return "Werte multiplizieren (*)";
+    return Messages.MultiplyValueAdjustmentPage_0;
   }
 
   @Override
   public void render( final Composite body, final FormToolkit toolkit )
   {
-    toolkit.createLabel( body, "" );// spacer
+    toolkit.createLabel( body, "" );// spacer //$NON-NLS-1$
 
-    toolkit.createLabel( body, "Multiplikator" ).setFont( HEADING );
-    m_textBox = new EnhancedTextBox<Double>( body, toolkit, new DoubeValueWidgetRule( "%.02f" ) );
+    toolkit.createLabel( body, Messages.MultiplyValueAdjustmentPage_2 ).setFont( HEADING );
+    m_textBox = new EnhancedTextBox<Double>( body, toolkit, new DoubeValueWidgetRule( "%.02f" ) ); //$NON-NLS-1$
     m_textBox.setText( getMultiplier() );
     m_textBox.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     m_textBox.addListener( this );

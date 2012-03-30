@@ -57,6 +57,7 @@ import org.kalypso.zml.core.table.model.IZmlModelRow;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
+import org.kalypso.zml.ui.i18n.Messages;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
@@ -77,7 +78,7 @@ public class ZmlCommandInterpolateValues extends AbstractHandler
       final IZmlModelValueCell current = selection.getFocusCell();
       final IZmlModelValueCell[] cells = selection.getSelectedCells( current.getColumn() );
       if( ArrayUtils.getLength( cells ) < 2 )
-        throw new ExecutionException( "Interpolation fehlgeschlagen - selektieren Sie eine zweite Zelle!" );
+        throw new ExecutionException( Messages.ZmlCommandInterpolateValues_0 );
 
       final IZmlModelCell[] intervall = ZmlCommandUtils.findIntervall( cells );
       final IZmlModelValueCell intervallStart = (IZmlModelValueCell) intervall[0];
@@ -115,7 +116,7 @@ public class ZmlCommandInterpolateValues extends AbstractHandler
     }
     catch( final SensorException e )
     {
-      throw new ExecutionException( "Interpolation fehlgeschlagen.", e );
+      throw new ExecutionException( Messages.ZmlCommandInterpolateValues_1, e );
     }
   }
 

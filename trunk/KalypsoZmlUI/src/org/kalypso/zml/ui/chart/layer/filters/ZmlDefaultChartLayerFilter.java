@@ -47,7 +47,7 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
  */
 public class ZmlDefaultChartLayerFilter implements IChartLayerFilter
 {
-  public static final String ID = "org.kalypso.chart.layer.filter.default"; // $NON-NLS-1$
+  public static final String ID = "org.kalypso.chart.layer.filter.default"; //$NON-NLS-1$
 
   @Override
   public boolean isFiltered( final Object object )

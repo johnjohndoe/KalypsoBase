@@ -46,9 +46,9 @@ package org.kalypso.zml.ui.table;
  */
 public interface IZmlTableCompositeListener
 {
-  String TYPE_REFRESH = "refresh";
+  String TYPE_REFRESH = "refresh"; //$NON-NLS-1$
 
-  String TYPE_ACTIVE_RULE_CHANGED = "rule";
+  String TYPE_ACTIVE_RULE_CHANGED = "rule"; //$NON-NLS-1$
 
   void eventTableChanged( String type );
 

@@ -48,6 +48,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import org.kalypso.zml.ui.i18n.Messages;
 import org.kalypso.zml.ui.table.base.widgets.EnhancedTextBox;
 import org.kalypso.zml.ui.table.base.widgets.IEnhancedTextBoxListener;
 import org.kalypso.zml.ui.table.base.widgets.rules.DoubeValueWidgetRule;
@@ -70,7 +71,7 @@ public class ConstantValueAdjustmentPage extends AbstractAdjustmentPage implemen
   @Override
   public String getLabel( )
   {
-    return "Konstanten Wert setzen (=)";
+    return Messages.ConstantValueAdjustmentPage_0;
   }
 
   @Override
@@ -78,9 +79,9 @@ public class ConstantValueAdjustmentPage extends AbstractAdjustmentPage implemen
   {
     try
     {
-      toolkit.createLabel( body, "" );// spacer
+      toolkit.createLabel( body, "" );// spacer //$NON-NLS-1$
 
-      toolkit.createLabel( body, "Konstanter Wert" ).setFont( HEADING );
+      toolkit.createLabel( body, Messages.ConstantValueAdjustmentPage_2 ).setFont( HEADING );
       m_textBox = new EnhancedTextBox<Double>( body, toolkit, new DoubeValueWidgetRule() );
       m_textBox.setText( getConstantValue() );
       m_textBox.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );

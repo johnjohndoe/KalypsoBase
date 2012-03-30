@@ -51,13 +51,13 @@ import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
  */
 public interface IStyleSetProvider
 {
-  String POINT_PREFIX = "point_";
+  String POINT_PREFIX = "point_"; //$NON-NLS-1$
 
-  String LINE_PREFIX = "line_";
+  String LINE_PREFIX = "line_"; //$NON-NLS-1$
 
-  String TEXT_PREFIX = "text_";
+  String TEXT_PREFIX = "text_"; //$NON-NLS-1$
 
-  String AREA_PREFIX = "area_";
+  String AREA_PREFIX = "area_"; //$NON-NLS-1$
 
   ILineStyle getLineStyle( String id );
 

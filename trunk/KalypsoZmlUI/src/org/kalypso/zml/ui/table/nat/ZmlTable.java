@@ -75,6 +75,7 @@ import org.kalypso.zml.core.table.model.IZmlColumnModelListener;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.event.ZmlModelColumnChangeType;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
+import org.kalypso.zml.ui.i18n.Messages;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.IZmlTableListener;
 import org.kalypso.zml.ui.table.ZmlTableComposite;
@@ -104,7 +105,7 @@ public class ZmlTable extends Composite implements IZmlTable
 
   private UIJob m_updateJob;
 
-  private static final MutexRule MUTEX_TABLE_UPDATE = new MutexRule( "Aktualisiere Tabelle" ); // $NON-NLS-1$
+  private static final MutexRule MUTEX_TABLE_UPDATE = new MutexRule( "Aktualisiere Tabelle" ); //$NON-NLS-1$
 
   protected NatTable m_table;
 
@@ -215,7 +216,7 @@ public class ZmlTable extends Composite implements IZmlTable
 
     m_event |= event.getEvent();
 
-    m_updateJob = new UIJob( "Zeitreihen-Tabelle wird aktualisiert" )
+    m_updateJob = new UIJob( Messages.ZmlTable_0 )
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )

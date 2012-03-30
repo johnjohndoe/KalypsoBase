@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.nat.layers;
 
+import org.kalypso.zml.ui.i18n.Messages;
+
 import net.sourceforge.nattable.command.ILayerCommandHandler;
 import net.sourceforge.nattable.data.IDataProvider;
 import net.sourceforge.nattable.edit.command.UpdateDataCommand;
@@ -78,7 +80,7 @@ public class ZmlTableUpdateDataCommandHandler extends UpdateDataCommandHandler i
     catch( final UnsupportedOperationException e )
     {
       e.printStackTrace( System.err );
-      System.err.println( "Failed to update value to: " + command.getNewValue() );
+      System.err.println( Messages.ZmlTableUpdateDataCommandHandler_0 + command.getNewValue() );
       return false;
     }
   }

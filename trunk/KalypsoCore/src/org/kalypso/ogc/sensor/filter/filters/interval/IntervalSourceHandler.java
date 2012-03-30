@@ -53,7 +53,7 @@ import org.kalypso.repository.IDataSourceItem;
  */
 public final class IntervalSourceHandler
 {
-  public static final String SOURCE_EXTENDED = "source://extended"; // $NON-NLS-1$
+  public static final String SOURCE_EXTENDED = "source://extended"; //$NON-NLS-1$
 
   public static final String SOURCE_INITIAL_VALUE = IDataSourceItem.SOURCE_UNKNOWN;
 

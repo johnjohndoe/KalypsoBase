@@ -56,6 +56,7 @@ import org.kalypso.zml.core.table.model.utils.ZmlModelColumns;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.core.table.rules.AppliedRule;
 import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.zml.ui.i18n.Messages;
 
 /**
  * @author Dirk Kuch
@@ -88,7 +89,7 @@ public class ZmlTableHeaderContextMenuProvider
       @Override
       public String getText( )
       {
-        return "Details und zusätzliche Informationen:";
+        return Messages.ZmlTableHeaderContextMenuProvider_0;
       }
 
       @Override
@@ -136,7 +137,7 @@ public class ZmlTableHeaderContextMenuProvider
       @Override
       public String getText( )
       {
-        return String.format( "   %s", header.getLabel() );
+        return String.format( "   %s", header.getLabel() ); //$NON-NLS-1$
       }
 
       @Override
@@ -173,7 +174,7 @@ public class ZmlTableHeaderContextMenuProvider
       @Override
       public String getText( )
       {
-        return String.format( "   enthält: %s", rule.getLabel() );
+        return String.format( Messages.ZmlTableHeaderContextMenuProvider_2, rule.getLabel() );
       }
 
       @Override

@@ -56,6 +56,7 @@ import org.kalypso.ogc.sensor.transaction.TupleModelTransaction;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlModelCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import org.kalypso.zml.ui.i18n.Messages;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
@@ -91,7 +92,7 @@ public class ZmlCommandSplineInterpolation extends AbstractHandler
       final IZmlModelColumn column = focus.getColumn();
       final IZmlModelValueCell[] selected = selection.getSelectedCells( column );
       if( ArrayUtils.getLength( selected ) < 2 )
-        throw new ExecutionException( "Spline-Interpolation fehlgeschlagen - selektieren Sie eine zweite Zelle!" );
+        throw new ExecutionException( Messages.ZmlCommandSplineInterpolation_0 );
 
       final TupleModelTransaction transaction = new TupleModelTransaction( column.getTupleModel(), column.getMetadata() );
 
@@ -122,7 +123,7 @@ public class ZmlCommandSplineInterpolation extends AbstractHandler
     }
     catch( final SensorException e )
     {
-      throw new ExecutionException( "Spline-Interpolation fehlgeschlagen.", e );
+      throw new ExecutionException( Messages.ZmlCommandSplineInterpolation_1, e );
     }
     finally
     {

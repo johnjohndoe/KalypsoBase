@@ -64,11 +64,11 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
  */
 public class SetZmlFilterCommandHandler extends AbstractHandler implements IElementUpdater
 {
-  private static final String DISABLE_COMMAND = "disableCommand"; // $NON-NLS-1$
+  private static final String DISABLE_COMMAND = "disableCommand"; //$NON-NLS-1$
 
-  private static final String ENABLE_COMMAND = "enableCommand"; // $NON-NLS-1$
+  private static final String ENABLE_COMMAND = "enableCommand"; //$NON-NLS-1$
 
-  public static final String ID = "org.kalypso.chart.ui.commands.change.visibility"; // $NON-NLS-1$
+  public static final String ID = "org.kalypso.chart.ui.commands.change.visibility"; //$NON-NLS-1$
 
   @Override
   public Object execute( final ExecutionEvent event )

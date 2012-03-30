@@ -25,11 +25,11 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 public class ChangeVisibilityCommandHandler extends AbstractHandler implements IElementUpdater
 {
-  public static final String ID = "org.kalypso.chart.ui.commands.change.visibility"; // $NON-NLS-1$
+  public static final String ID = "org.kalypso.chart.ui.commands.change.visibility"; //$NON-NLS-1$
 
-  public static final String LAYER_PARAMETER = "layer.parameter"; // $NON-NLS-1$
+  public static final String LAYER_PARAMETER = "layer.parameter"; //$NON-NLS-1$
 
-  public static final String LAYER_FILTER = "layer.filter"; // $NON-NLS-1$
+  public static final String LAYER_FILTER = "layer.filter"; //$NON-NLS-1$
 
   @Override
   public Object execute( final ExecutionEvent event )

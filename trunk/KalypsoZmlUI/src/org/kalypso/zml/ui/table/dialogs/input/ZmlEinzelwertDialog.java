@@ -63,13 +63,14 @@ import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.zml.ui.i18n.Messages;
 
 /**
  * @author Dirk Kuch
  */
 public class ZmlEinzelwertDialog extends EnhancedTitleAreaDialog implements IZmlEinzelwertCompositeListener
 {
-  private static final String SCREEN_SIZE = "zml.input.dialog.screen.size"; // $NON-NLS-1$
+  private static final String SCREEN_SIZE = "zml.input.dialog.screen.size"; //$NON-NLS-1$
 
   private final ZmlEinzelwertModel m_model;
 
@@ -91,10 +92,10 @@ public class ZmlEinzelwertDialog extends EnhancedTitleAreaDialog implements IZml
   @Override
   protected final Control createDialogArea( final Composite parent )
   {
-    getShell().setText( "Eingabe von Einzelwerten" );
+    getShell().setText( Messages.ZmlEinzelwertDialog_0 );
 
-    setTitle( String.format( "Bearbeiten der Zeitreihe: \"%s\"", m_model.getLabel() ) );
-    setMessage( "In diesem Dialog können Sie Änderungen an bestehenden Werten vornehmen." );
+    setTitle( String.format( Messages.ZmlEinzelwertDialog_1, m_model.getLabel() ) );
+    setMessage( Messages.ZmlEinzelwertDialog_2 );
 
     final FormToolkit toolkit = new FormToolkit( parent.getDisplay() );
 
@@ -132,7 +133,7 @@ public class ZmlEinzelwertDialog extends EnhancedTitleAreaDialog implements IZml
   {
     if( !m_composite.isValid() )
     {
-      MessageDialog.openError( getParentShell(), "Ungültige Eingabe", "Eine Verarbeitung ist nicht möglich, da Tabelle eine ungültige Eingabe enthält." );
+      MessageDialog.openError( getParentShell(), Messages.ZmlEinzelwertDialog_3, Messages.ZmlEinzelwertDialog_4 );
       return;
     }
 

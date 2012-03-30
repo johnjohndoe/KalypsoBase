@@ -42,6 +42,8 @@ package org.kalypso.zml.ui.chart.layer.provider;
 
 import java.net.URL;
 
+import org.kalypso.zml.ui.i18n.Messages;
+
 import de.openali.odysseus.chart.ext.base.layer.DefaultTickRasterLayer;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
@@ -53,7 +55,7 @@ import de.openali.odysseus.chart.framework.model.style.IStyleSet;
  */
 public class ZmlGridLayerProvider extends AbstractLayerProvider
 {
-  public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlGridLayerProvider";
+  public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlGridLayerProvider"; //$NON-NLS-1$
 
   @Override
   public IChartLayer getLayer( final URL context ) throws ConfigurationException
@@ -70,7 +72,7 @@ public class ZmlGridLayerProvider extends AbstractLayerProvider
     }
     catch( final Throwable t )
     {
-      throw new ConfigurationException( "Configuring of .kod line layer theme failed.", t );
+      throw new ConfigurationException( Messages.ZmlGridLayerProvider_1, t );
     }
   }
 

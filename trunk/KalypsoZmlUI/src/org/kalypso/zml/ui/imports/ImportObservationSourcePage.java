@@ -123,7 +123,7 @@ public class ImportObservationSourcePage extends WizardPage
     // final INativeObservationAdapter[] adapters = m_data.getObservationAdapters();
     // FIXME: add filter from adapter
     // FIXME: get from helper
-    delegate.addFilter( "All Files (*.*)", "*.*" );
+    delegate.addFilter( Messages.getString("ImportObservationSourcePage.0"), "*.*" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final FileBinding fileBinding = new FileBinding( m_binding, modelFile, delegate );
 
@@ -191,7 +191,7 @@ public class ImportObservationSourcePage extends WizardPage
   private void createParameterTypeControl( final Composite parent )
   {
     final Label formatLabel = new Label( parent, SWT.NONE );
-    formatLabel.setText( "Parameter Type" );
+    formatLabel.setText( Messages.getString("ImportObservationSourcePage.2") ); //$NON-NLS-1$
 
     final ComboViewer parameterCombo = new ComboViewer( parent, SWT.DROP_DOWN | SWT.READ_ONLY );
     parameterCombo.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );

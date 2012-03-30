@@ -61,6 +61,7 @@ import org.kalypso.contribs.eclipse.ui.pager.ElementsComposite;
 import org.kalypso.contribs.eclipse.ui.pager.IElementPage;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.ui.i18n.Messages;
 import org.kalypso.zml.ui.table.commands.menu.adjust.pages.AbstractAdjustmentPage;
 import org.kalypso.zml.ui.table.commands.menu.adjust.pages.ConstantValueAdjustmentPage;
 import org.kalypso.zml.ui.table.commands.menu.adjust.pages.IAdjustmentPageProvider;
@@ -75,7 +76,7 @@ import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
  */
 public class ZmlAdjustSelectionDialog extends EnhancedTitleAreaDialog implements IZmlEinzelwertCompositeListener, IAdjustmentPageProvider
 {
-  private static final String SCREEN_SIZE = "zml.adjust.selection.dialog.screen.size"; // $NON-NLS-1$
+  private static final String SCREEN_SIZE = "zml.adjust.selection.dialog.screen.size"; //$NON-NLS-1$
 
   private final IZmlModelColumn m_column;
 
@@ -100,10 +101,10 @@ public class ZmlAdjustSelectionDialog extends EnhancedTitleAreaDialog implements
   @Override
   protected final Control createDialogArea( final Composite parent )
   {
-    getShell().setText( "Werkzeug Anpassen" );
+    getShell().setText( Messages.ZmlAdjustSelectionDialog_0 );
 
-    setTitle( String.format( "Anpassen der selektierten Werte der Zeitreihe: \"%s\"", m_column.getLabel() ) );
-    setMessage( "In diesem Dialog können Sie Änderungen an den selektierten Werten vornehmen." );
+    setTitle( String.format( Messages.ZmlAdjustSelectionDialog_1, m_column.getLabel() ) );
+    setMessage( Messages.ZmlAdjustSelectionDialog_2 );
 
     final FormToolkit toolkit = new FormToolkit( parent.getDisplay() );
 
@@ -150,13 +151,13 @@ public class ZmlAdjustSelectionDialog extends EnhancedTitleAreaDialog implements
     final AbstractAdjustmentPage page = (AbstractAdjustmentPage) m_composite.getSelectedPage();
     if( !page.isValid() )
     {
-      setErrorMessage( "Ungültige Werteingabe - bitte Wert korrigieren" );
+      setErrorMessage( Messages.ZmlAdjustSelectionDialog_3 );
 
       return;
     }
 
     final ICoreRunnableWithProgress runnable = page.getRunnable();
-    final IStatus status = ProgressUtilities.busyCursorWhile( runnable, "Anpassen fehlgeschlagen" );
+    final IStatus status = ProgressUtilities.busyCursorWhile( runnable, Messages.ZmlAdjustSelectionDialog_4 );
 
     if( status.isOK() )
       super.okPressed();

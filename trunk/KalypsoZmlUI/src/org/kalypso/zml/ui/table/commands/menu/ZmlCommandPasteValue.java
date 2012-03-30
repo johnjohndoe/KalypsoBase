@@ -59,6 +59,7 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.editing.IZmlEditingStrategy;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
+import org.kalypso.zml.ui.i18n.Messages;
 import org.kalypso.zml.ui.table.IZmlTable;
 import org.kalypso.zml.ui.table.commands.ZmlHandlerUtil;
 import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
@@ -100,7 +101,7 @@ public class ZmlCommandPasteValue extends AbstractHandler
     }
     catch( final Exception ex )
     {
-      throw new ExecutionException( "Einfügen des Wertes aus der Zwischenablage fehlgeschlagen.", ex );
+      throw new ExecutionException( Messages.ZmlCommandPasteValue_0, ex );
     }
 
   }
@@ -127,7 +128,7 @@ public class ZmlCommandPasteValue extends AbstractHandler
     }
 
     if( index == -1 )
-      throw new ExecutionException( "Eine Verarbeitung der Daten war nicht möglich! Ungültiges Datenformat" );
+      throw new ExecutionException( Messages.ZmlCommandPasteValue_1 );
 
     for( final String[] row : rows )
     {

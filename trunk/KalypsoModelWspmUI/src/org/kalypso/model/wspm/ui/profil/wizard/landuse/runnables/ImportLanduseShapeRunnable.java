@@ -88,8 +88,8 @@ public class ImportLanduseShapeRunnable implements IRunnableWithProgress
       final String lnkShapeFile = FilenameUtils.removeExtension( m_handler.getLnkShapeFile() );
 
       final String baseName = importShapeFile( landuse, lnkShapeFile, monitor );
-      writePropertyMappings( m_roughnessMapping, landuse, String.format( "%s.roughness.properties", baseName ), monitor ); // $NON-NLS-1$ //$NON-NLS-1$
-      writePropertyMappings( m_vegetationMapping, landuse, String.format( "%s.vegetation.properties", baseName ), monitor ); // $NON-NLS-1$ //$NON-NLS-1$
+      writePropertyMappings( m_roughnessMapping, landuse, String.format( "%s.roughness.properties", baseName ), monitor ); //$NON-NLS-1$ //$NON-NLS-1$
+      writePropertyMappings( m_vegetationMapping, landuse, String.format( "%s.vegetation.properties", baseName ), monitor ); //$NON-NLS-1$ //$NON-NLS-1$
 
       buildStyledLayerDescriptor( m_roughnessMapping, landuse, String.format( "%s.roughness.sld", baseName ), monitor ); //$NON-NLS-1$
       buildStyledLayerDescriptor( m_vegetationMapping, landuse, String.format( "%s.vegetation.sld", baseName ), monitor ); //$NON-NLS-1$
@@ -155,11 +155,11 @@ public class ImportLanduseShapeRunnable implements IRunnableWithProgress
   private IFolder getLanduseFolder( final IProgressMonitor monitor ) throws CoreException
   {
     final IProject project = m_handler.getProject();
-    final IFolder dataFolder = project.getFolder( "data" ); // $NON-NLS-1$ //$NON-NLS-1$
+    final IFolder dataFolder = project.getFolder( "data" ); //$NON-NLS-1$ //$NON-NLS-1$
     if( !dataFolder.exists() )
       dataFolder.create( true, true, monitor );
 
-    final IFolder landuseFolder = dataFolder.getFolder( "landuse" ); // $NON-NLS-1$ //$NON-NLS-1$
+    final IFolder landuseFolder = dataFolder.getFolder( "landuse" ); //$NON-NLS-1$ //$NON-NLS-1$
     if( !landuseFolder.exists() )
       landuseFolder.create( true, true, monitor );
 

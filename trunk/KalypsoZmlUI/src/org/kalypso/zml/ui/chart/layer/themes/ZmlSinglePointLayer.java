@@ -209,10 +209,10 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
       final IParameterContainer parameters = getProvider().getParameterContainer();
 
       final MetadataList metadata = observation.getMetadataList();
-      final Date position = ZmlLayerProviders.getMetadataDate( parameters, "position", metadata );
+      final Date position = ZmlLayerProviders.getMetadataDate( parameters, "position", metadata ); //$NON-NLS-1$
 
-      final Date start = ZmlLayerProviders.getMetadataDate( parameters, "start", metadata );
-      final Date end = ZmlLayerProviders.getMetadataDate( parameters, "end", metadata );
+      final Date start = ZmlLayerProviders.getMetadataDate( parameters, "start", metadata ); //$NON-NLS-1$
+      final Date end = ZmlLayerProviders.getMetadataDate( parameters, "end", metadata ); //$NON-NLS-1$
 
       final Double value = findValue( handler, position );
 
@@ -228,7 +228,7 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
       final ITextStyle textStyle = visitor.visit( styleSet, ITextStyle.class, 0 );
 
       // FIXME: label not implemented (always ""), but why a label at all? We should remove that code.
-      final ZmlSinglePointBean bean = new ZmlSinglePointBean( "", new Pair<Number, Number>( position.getTime(), value ), new DateRange( start, end ), pointStyle, textStyle, false );
+      final ZmlSinglePointBean bean = new ZmlSinglePointBean( "", new Pair<Number, Number>( position.getTime(), value ), new DateRange( start, end ), pointStyle, textStyle, false ); //$NON-NLS-1$
       m_descriptors = new ZmlSinglePointBean[] { bean };
     }
     catch( final SensorException e )

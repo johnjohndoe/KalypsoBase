@@ -56,6 +56,7 @@ import org.kalypso.ogc.sensor.transaction.UpdateTupleModelDataSetCommand;
 import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
+import org.kalypso.zml.ui.i18n.Messages;
 
 /**
  * @author Dirk Kuch
@@ -95,7 +96,7 @@ public abstract class AbstractValueRunnable implements ICoreRunnableWithProgress
         }
         catch( final Exception e )
         {
-          statis.add( StatusUtilities.createExceptionalErrorStatus( "Anpassen eines Wertes fehlgeschlagen", e ) );
+          statis.add( StatusUtilities.createExceptionalErrorStatus( Messages.AbstractValueRunnable_0, e ) );
         }
       }
 
@@ -106,7 +107,7 @@ public abstract class AbstractValueRunnable implements ICoreRunnableWithProgress
       e.printStackTrace();
     }
 
-    return StatusUtilities.createStatus( statis, "Anpassen" );
+    return StatusUtilities.createStatus( statis, Messages.AbstractValueRunnable_1 );
   }
 
   protected abstract Number getValue( final Number value );

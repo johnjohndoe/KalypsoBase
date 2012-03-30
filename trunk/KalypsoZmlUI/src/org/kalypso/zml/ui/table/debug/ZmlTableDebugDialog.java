@@ -82,7 +82,7 @@ public class ZmlTableDebugDialog extends EnhancedTitleAreaDialog
   @Override
   protected final Control createDialogArea( final Composite parent )
   {
-    setTitle( "Zml Table Debug View" );
+    setTitle( "Zml Table Debug View" ); //$NON-NLS-1$
 
     final FormToolkit toolkit = new FormToolkit( parent.getDisplay() );
 

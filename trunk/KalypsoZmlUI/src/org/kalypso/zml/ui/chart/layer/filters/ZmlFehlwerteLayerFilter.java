@@ -48,7 +48,7 @@ import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
  */
 public class ZmlFehlwerteLayerFilter extends AbstractZmlChartLayerFilter
 {
-  public static final String ID = "org.kalypso.chart.layer.filter.fehlwerte"; // $NON-NLS-1$
+  public static final String ID = "org.kalypso.chart.layer.filter.fehlwerte"; //$NON-NLS-1$
 
   @Override
   public String getIdentifier( )

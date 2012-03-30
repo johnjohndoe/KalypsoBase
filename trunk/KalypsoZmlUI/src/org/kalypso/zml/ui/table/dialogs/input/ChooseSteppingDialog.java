@@ -61,6 +61,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.zml.ui.i18n.Messages;
 
 /**
  * @author Dirk Kuch
@@ -93,8 +94,8 @@ public class ChooseSteppingDialog extends TitleAreaDialog
   {
     final Control control = super.createContents( parent );
 
-    setTitle( "Zeitschrittweite" );
-    setMessage( "Bestimmen Sie die Zeitschrittweite für das nächste Eingabefeld" );
+    setTitle( Messages.ChooseSteppingDialog_0 );
+    setMessage( Messages.ChooseSteppingDialog_1 );
 
     return control;
   }
@@ -110,11 +111,11 @@ public class ChooseSteppingDialog extends TitleAreaDialog
 
     if( ArrayUtils.isEmpty( m_steppings ) )
     {
-      m_toolkit.createLabel( composite, "Keine gültiegen Zeitschrittweiten gefunden" );
+      m_toolkit.createLabel( composite, Messages.ChooseSteppingDialog_2 );
       return composite;
     }
 
-    m_toolkit.createLabel( composite, "Zeitschrittweite" );
+    m_toolkit.createLabel( composite, Messages.ChooseSteppingDialog_3 );
     final ComboViewer viewer = new ComboViewer( composite, SWT.BORDER | SWT.READ_ONLY | SWT.SINGLE );
     viewer.getCombo().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
@@ -131,7 +132,7 @@ public class ChooseSteppingDialog extends TitleAreaDialog
 
         final SimpleDateFormat sdf = new SimpleDateFormat( "dd.MM.yyyy HH:mm" ); //$NON-NLS-1$
 
-        return String.format( "+ %02d Stunde(n)      (%s)", step, sdf.format( calendar.getTime() ) );
+        return String.format( Messages.ChooseSteppingDialog_4, step, sdf.format( calendar.getTime() ) );
       }
     } );
     viewer.setContentProvider( new ArrayContentProvider() );

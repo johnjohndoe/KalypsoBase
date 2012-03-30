@@ -41,6 +41,7 @@
 package org.kalypso.zml.ui.table.commands.menu.adjust.pages;
 
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.zml.ui.i18n.Messages;
 import org.kalypso.zml.ui.table.base.widgets.rules.ITextWidgetRule;
 
 /**
@@ -56,7 +57,7 @@ public class ShiftDateWidgetRule implements ITextWidgetRule<Integer>
 
   public ShiftDateWidgetRule( final int base )
   {
-    this( "%d", base ); // $NON-NLS-1$
+    this( "%d", base ); //$NON-NLS-1$
 
   }
 
@@ -90,7 +91,7 @@ public class ShiftDateWidgetRule implements ITextWidgetRule<Integer>
     final boolean isInteger = NumberUtils.isInteger( text );
     if( !isInteger )
     {
-      m_lastValidationMsg = "Ungültiger Zahlenwert";
+      m_lastValidationMsg = Messages.ShiftDateWidgetRule_0;
 
       return false;
     }
@@ -99,7 +100,7 @@ public class ShiftDateWidgetRule implements ITextWidgetRule<Integer>
       final Integer value = NumberUtils.parseQuietInteger( text );
       if( value % m_base != 0 )
       {
-        m_lastValidationMsg = String.format( "Ungültiger Zeitschritt - Zeitschritt muss Vielfaches von %d sein.", m_base );
+        m_lastValidationMsg = String.format( Messages.ShiftDateWidgetRule_1, m_base );
         return false;
       }
       else
