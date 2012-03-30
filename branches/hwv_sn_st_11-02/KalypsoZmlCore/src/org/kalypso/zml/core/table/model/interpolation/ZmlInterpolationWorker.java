@@ -99,7 +99,7 @@ public class ZmlInterpolationWorker implements ICoreRunnableWithProgress
         final FindStuetzstellenVisitor visitor = new FindStuetzstellenVisitor( m_metadata );
         m_model.accept( visitor, 1 );
 
-        final Integer[] stuetzstellen = visitor.getStuetzstellen();
+        final Integer[] stuetzstellen = visitor.getStuetzstellen( m_valueAxis );
 
         if( ArrayUtils.isEmpty( stuetzstellen ) )
         {
