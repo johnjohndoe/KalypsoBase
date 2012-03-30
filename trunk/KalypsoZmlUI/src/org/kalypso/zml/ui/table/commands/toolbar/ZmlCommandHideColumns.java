@@ -102,7 +102,7 @@ public class ZmlCommandHideColumns extends AbstractHandler implements IElementUp
   @Override
   public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
   {
-    // FIXME
+    // FIXME resolving zmlmodelviewport at this point is impossible
     final String[] types = getColumnTypes( parameters );
     for( final String type : types )
     {

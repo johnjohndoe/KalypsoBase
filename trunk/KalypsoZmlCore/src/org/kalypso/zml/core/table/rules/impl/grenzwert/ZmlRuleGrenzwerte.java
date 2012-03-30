@@ -94,7 +94,7 @@ public class ZmlRuleGrenzwerte extends AbstractZmlCellRuleImplementation
       try
       {
         if( instruction.matches( reference ) )
-          return instruction.getStyle( (IZmlModelValueCell) reference );
+          return instruction.getStyle( reference );
       }
       catch( final SensorException e )
       {

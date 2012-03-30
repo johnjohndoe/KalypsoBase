@@ -79,12 +79,6 @@ public class ZmlModelTransaction
         t.printStackTrace();
       }
     }
-
-    for( final IZmlModelColumn column : updated )
-    {
-      throw new UnsupportedOperationException();
-// column.fireColumnChangedEvent();
-    }
   }
 
   public void add( final IZmlModelValueCell target, final Number value, final String source, final int status )
