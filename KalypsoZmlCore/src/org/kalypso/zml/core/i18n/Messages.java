@@ -38,56 +38,64 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model.memento;
+package org.kalypso.zml.core.i18n;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.ogc.sensor.provider.IObsProvider;
-import org.kalypso.ogc.sensor.provider.IObsProviderListener;
-import org.kalypso.zml.core.base.IZmlSourceElement;
-import org.kalypso.zml.core.i18n.Messages;
+import org.eclipse.osgi.util.NLS;
 
 /**
- * @author Dirk Kuch
+ * @author kuch
+ *
  */
-public class RegisterObsProviderListenerJob extends Job
+public class Messages extends NLS
 {
-  private final IObsProviderListener m_listener;
+  private static final String BUNDLE_NAME = "org.kalypso.zml.core.i18n.messages"; //$NON-NLS-1$
 
-  private final IZmlSourceElement m_source;
+  public static String RegisterObsProviderListenerJob_0;
 
-  public RegisterObsProviderListenerJob( final IZmlSourceElement source, final IObsProviderListener listener )
+  public static String ZmlColumnLoadCommand_0;
+
+  public static String ZmlColumnLoadCommand_1;
+
+  public static String ZmlColumnLoadCommand_2;
+
+  public static String ZmlColumnLoadCommand_3;
+
+  public static String ZmlColumnLoadCommand_4;
+
+  public static String ZmlColumnLoadCommand_5;
+
+  public static String ZmlColumnLoadCommand_6;
+
+  public static String ZmlColumnLoadCommand_7;
+
+  public static String ZmlFilterWorker_0;
+
+  public static String ZmlInterpolationWorker_0;
+
+  public static String ZmlInterpolationWorker_1;
+
+  public static String ZmlModel_0;
+
+  public static String ZmlModel_1;
+
+  public static String ZmlModel_2;
+
+  public static String ZmlModel_3;
+
+  public static String ZmlModelInitializer_0;
+
+  public static String ZmlModelInitializer_1;
+
+  public static String ZmlRuleResolver_1;
+
+  public static String ZmlStyleResolver_1;
+  static
   {
-    super( String.format( Messages.RegisterObsProviderListenerJob_0, source.getIdentifier() ) );
-    m_source = source;
-    m_listener = listener;
-
-    setUser( false );
-    setSystem( true );
+    // initialize resource bundle
+    NLS.initializeMessages( BUNDLE_NAME, Messages.class );
   }
 
-  @Override
-  protected IStatus run( final IProgressMonitor monitor )
+  private Messages( )
   {
-    while( Objects.isNull( m_source.getObsProvider() ) )
-    {
-      try
-      {
-        Thread.sleep( 250 );
-      }
-      catch( final InterruptedException e )
-      {
-        // nothing to do
-      }
-    }
-
-    final IObsProvider provider = m_source.getObsProvider();
-    provider.addListener( m_listener );
-
-    return Status.OK_STATUS;
   }
-
 }

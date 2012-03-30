@@ -129,7 +129,7 @@ public class ZmlModelRow implements IZmlModelRow
   @Override
   public String toString( )
   {
-    return String.format( "%s, Index: %s", getClass().getName(), m_index.toString() );
+    return String.format( "%s, Index: %s", getClass().getName(), m_index.toString() ); //$NON-NLS-1$
   }
 
   @Override

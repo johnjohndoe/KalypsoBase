@@ -118,7 +118,7 @@ public class ZmlPlainObsProvider extends PlainObsProvider implements IZmlSourceE
       identifier = ZmlModelColumns.getClonedColumnBase( identifier );
     }
 
-    return String.format( "%s - %s", identifier, name );
+    return String.format( "%s - %s", identifier, name ); //$NON-NLS-1$
   }
 
   private boolean isEmpty( final String name )

@@ -163,6 +163,6 @@ public class MultipleTsLink implements IMultipleZmlSourceElement
   @Override
   public String toString( )
   {
-    return String.format( "multiple link(%d) - %s", m_links.size(), m_identifier );
+    return String.format( "multiple link(%d) - %s", m_links.size(), m_identifier ); //$NON-NLS-1$
   }
 }

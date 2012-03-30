@@ -53,6 +53,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.zml.core.i18n.Messages;
 import org.kalypso.zml.core.table.ZmlTableConfigurationLoader;
 import org.kalypso.zml.core.table.schema.CellStyleType;
 import org.kalypso.zml.core.table.schema.StyleReferenceType;
@@ -97,7 +98,7 @@ public final class ZmlStyleResolver
         /* If no reference is given, we assume the empty style */
         final CellStyleType emptyStyle = ZmlTableConfigurationLoader.OF.createCellStyleType();
         /* Set mandatory id, else we get NPEs */
-        emptyStyle.setId( "emptyStyle" );
+        emptyStyle.setId( "emptyStyle" ); //$NON-NLS-1$
         return new CellStyle( emptyStyle );
       }
 
@@ -128,7 +129,7 @@ public final class ZmlStyleResolver
     }
     catch( final Throwable t )
     {
-      throw new CoreException( StatusUtilities.createExceptionalErrorStatus( "Resolving style failed", t ) );
+      throw new CoreException( StatusUtilities.createExceptionalErrorStatus( Messages.ZmlStyleResolver_1, t ) );
     }
   }
 

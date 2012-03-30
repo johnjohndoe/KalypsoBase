@@ -220,7 +220,7 @@ public final class ZmlSelectionBuilder
         return 90;
     }
 
-    System.out.println( String.format( "ZmlSelectionBuilder.getPriority(String type) - missing type: %s", type ) );
+    System.out.println( String.format( "ZmlSelectionBuilder.getPriority(String type) - missing type: %s", type ) ); //$NON-NLS-1$
 
     return type.hashCode();
   }

@@ -112,7 +112,7 @@ public class ZmlRuleDataSource extends AbstractZmlCellRuleImplementation
       return null;
 
     final CellStyleType styleType = new CellStyleType();
-    styleType.setId( "RuleDataSourceBackgroundStyle" );
+    styleType.setId( "RuleDataSourceBackgroundStyle" ); //$NON-NLS-1$
 
     try
     {
@@ -122,7 +122,7 @@ public class ZmlRuleDataSource extends AbstractZmlCellRuleImplementation
       final StylePropertyType property = new StylePropertyType();
       final Map<QName, String> attributes = property.getOtherAttributes();
       attributes.put( TableTypes.PROPERTY_NAME, StylePropertyName.BACKGROUND_COLOR.value() );
-      property.setValue( String.format( "%2x%2x%2x", background.getRed(), background.getGreen(), background.getBlue() ) );
+      property.setValue( String.format( "%2x%2x%2x", background.getRed(), background.getGreen(), background.getBlue() ) ); //$NON-NLS-1$
       properties.add( property );
     }
     catch( final Exception e )

@@ -187,7 +187,7 @@ public class CellStyle implements Cloneable
     if( htmlColor == null )
       return null;
 
-    final String id = "foreground" + m_style.getId();
+    final String id = "foreground" + m_style.getId(); //$NON-NLS-1$
     final RGB rgb = RGBUtilities.decodeHtmlColor( htmlColor );
     COLOR_REGISTRY.put( id, rgb );
 
@@ -200,7 +200,7 @@ public class CellStyle implements Cloneable
     final String fontSize = TableTypes.findProperty( m_style, StylePropertyName.FONT_SIZE );
     final int fontWeight = TableTypes.toSWTFontWeight( TableTypes.findProperty( m_style, StylePropertyName.FONT_WEIGHT ) );
 
-    final FontData data = new FontData( fontFamily == null ? "Arial" : fontFamily, fontSize == null ? 10 : Integer.valueOf( fontSize ), fontWeight );
+    final FontData data = new FontData( fontFamily == null ? "Arial" : fontFamily, fontSize == null ? 10 : Integer.valueOf( fontSize ), fontWeight ); //$NON-NLS-1$
     FONT_REGISTRY.put( m_style.getId(), new FontData[] { data } );
 
     return FONT_REGISTRY.get( m_style.getId() );

@@ -57,29 +57,29 @@ public class IntervalZmlFilter extends Feature_Impl implements IZmlFilter
   /**
    * The qname of the mode.
    */
-  public static final QName PROPERTY_MODE = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "mode" );
+  public static final QName PROPERTY_MODE = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "mode" ); //$NON-NLS-1$
 
   /**
    * The qname of the calendar amount.
    */
-  public static final QName PROPERTY_CALENDAR_AMOUNT = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "calendarAmount" );
+  public static final QName PROPERTY_CALENDAR_AMOUNT = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "calendarAmount" ); //$NON-NLS-1$
 
   /**
    * The qname of the calendar field.
    */
-  public static final QName PROPERTY_CALENDAR_FIELD = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "calendarField" );
+  public static final QName PROPERTY_CALENDAR_FIELD = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "calendarField" ); //$NON-NLS-1$
 
   /**
    * The qname of the default status.
    */
-  public static final QName PROPERTY_DEFAULT_STATUS = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "defaultStatus" );
+  public static final QName PROPERTY_DEFAULT_STATUS = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "defaultStatus" ); //$NON-NLS-1$
 
   /**
    * The qname of the default value.
    */
-  public static final QName PROPERTY_DEFAULT_VALUE = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "defaultValue" );
+  public static final QName PROPERTY_DEFAULT_VALUE = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "defaultValue" ); //$NON-NLS-1$
 
-  public static final QName FEATURE_INTERVAL_ZML_FILTER = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "IntervalZmlFilter" );
+  public static final QName FEATURE_INTERVAL_ZML_FILTER = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "IntervalZmlFilter" ); //$NON-NLS-1$
 
   public IntervalZmlFilter( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {

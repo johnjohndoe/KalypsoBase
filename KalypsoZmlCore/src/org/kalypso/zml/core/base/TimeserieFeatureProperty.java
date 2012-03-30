@@ -88,7 +88,7 @@ public final class TimeserieFeatureProperty
 
   public static final String PROP_TS_TYPE = "visible"; //$NON-NLS-1$
 
-  public static final String DEFAULT_TS_TYPE = TS_TYPE_TABLE + "," + TS_TYPE_DIAGRAM + "," + TS_TYPE_RADIO; //$NON-NLS-1$
+  public static final String DEFAULT_TS_TYPE = TS_TYPE_TABLE + "," + TS_TYPE_DIAGRAM + "," + TS_TYPE_RADIO; //$NON-NLS-1$ //$NON-NLS-2$
 
   public static final String DEFAULT_NAMESTRING = "%obsname% (%axisname%)"; //$NON-NLS-1$
 

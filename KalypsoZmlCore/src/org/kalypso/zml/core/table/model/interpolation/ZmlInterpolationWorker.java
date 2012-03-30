@@ -55,6 +55,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.transaction.ITupleModelTransaction;
 import org.kalypso.ogc.sensor.transaction.TupleModelTransaction;
+import org.kalypso.zml.core.i18n.Messages;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 
 /**
@@ -140,9 +141,9 @@ public class ZmlInterpolationWorker implements ICoreRunnableWithProgress
     catch( final SensorException e )
     {
       e.printStackTrace();
-      stati.add( StatusUtilities.createExceptionalErrorStatus( "(Re)Interpolating values failed", e ) );
+      stati.add( StatusUtilities.createExceptionalErrorStatus( Messages.ZmlInterpolationWorker_0, e ) );
     }
 
-    return StatusUtilities.createStatus( stati, "ZML Interpolation Worker" );
+    return StatusUtilities.createStatus( stati, Messages.ZmlInterpolationWorker_1 );
   }
 }

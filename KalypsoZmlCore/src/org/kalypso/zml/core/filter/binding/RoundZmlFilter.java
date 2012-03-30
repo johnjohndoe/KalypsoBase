@@ -57,19 +57,19 @@ public class RoundZmlFilter extends Feature_Impl implements IZmlFilter
   /**
    * The qname of the factor.
    */
-  public static final QName QNAME_FACTOR = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "factor" );
+  public static final QName QNAME_FACTOR = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "factor" ); //$NON-NLS-1$
 
   /**
    * The qname of the mode.
    */
-  public static final QName QNAME_MODE = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "mode" );
+  public static final QName QNAME_MODE = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "mode" ); //$NON-NLS-1$
 
   /**
    * The qname of the axis type.
    */
-  public static final QName QNAME_AXIS_TYPE = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "axisType" );
+  public static final QName QNAME_AXIS_TYPE = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "axisType" ); //$NON-NLS-1$
 
-  public static final QName QNAME_ROUND_ZML_FILTER = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "RoundZmlFilter" );
+  public static final QName QNAME_ROUND_ZML_FILTER = new QName( KalypsoZmlCoreConstants.NS_ZML_FILTER, "RoundZmlFilter" ); //$NON-NLS-1$
 
   /**
    * The constructor.

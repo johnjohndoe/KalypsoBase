@@ -53,6 +53,7 @@ import org.kalypso.zml.core.filter.binding.IZmlFilter;
 import org.kalypso.zml.core.filter.binding.InterpolationZmlFilter;
 import org.kalypso.zml.core.filter.binding.IntervalZmlFilter;
 import org.kalypso.zml.core.filter.binding.RoundZmlFilter;
+import org.kalypso.zml.core.i18n.Messages;
 
 /**
  * Worker that applies one or more {@link org.kalypso.zml.core.filter.binding.IZmlFilter}s to existing
@@ -139,7 +140,7 @@ public final class ZmlFilterWorker
       return RoundFilterCreator.createFilter( roundZmlFilter.getFactor(), roundZmlFilter.getMode(), roundZmlFilter.getAxisType(), input, m_context );
     }
 
-    final String error = String.format( "Unsupported ZML-Filter: %s", filter );
+    final String error = String.format( Messages.ZmlFilterWorker_0, filter );
     throw new UnsupportedOperationException( error );
   }
 }
