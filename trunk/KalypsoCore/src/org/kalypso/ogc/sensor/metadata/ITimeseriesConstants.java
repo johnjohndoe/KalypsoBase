@@ -218,8 +218,4 @@ public interface ITimeseriesConstants extends IMetadataConstants
 
   /** Evaporation [mm] */
   String TYPE_MEAN_EVAPORATION = "MEAN_EVAPORATION"; //$NON-NLS-1$
-
-  /** Rainfall [mm] */
-  String TYPE_MEAN_RAINFALL = "MEAN_RAINFALL"; //$NON-NLS-1$
-
 }
