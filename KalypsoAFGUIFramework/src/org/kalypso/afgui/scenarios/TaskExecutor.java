@@ -46,6 +46,7 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.Category;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.IHandler;
@@ -76,6 +77,8 @@ import de.renew.workflow.contexts.WorkbenchSiteContext;
  */
 public class TaskExecutor implements ITaskExecutor
 {
+  private static final String TASK_COMMNAND_ROLE_ACTIVATE = StringUtils.EMPTY;
+
   private ITask m_activeTask;
 
   private final ITaskExecutionAuthority m_authority;
@@ -86,7 +89,7 @@ public class TaskExecutor implements ITaskExecutor
 
   private final IContextHandlerFactory m_contextHandlerFactory;
 
-  private final ArrayList<ITaskExecutionListener> m_taskChangeListeners;
+  private final List<ITaskExecutionListener> m_taskChangeListeners;
 
   public TaskExecutor( final IContextHandlerFactory contextHandlerFactory, final ITaskExecutionAuthority authority, final ICommandService commandService, final IHandlerService handlerService )
   {
@@ -103,26 +106,34 @@ public class TaskExecutor implements ITaskExecutor
     return m_activeTask;
   }
 
-  /**
-   * @see de.renew.workflow.connector.worklist.ITaskExecutor#stopActiveTask()
-   */
   @Override
   public boolean stopActiveTask( )
   {
-    if( m_activeTask != null && m_authority.canStopTask( m_activeTask ) )
-    {
-      /* Tell the listeners, that the task was stopped. */
-      fireTaskStopped( m_activeTask );
+    if( m_activeTask == null )
+      return true;
 
-      m_activeTask = null;
-    }
-    // if the active task is null it must have been stopped
-    return m_activeTask == null;
+    // // TODO: would be nice:
+    // // execute a Command (convention on command-id?) on task stop. Command might refuse to stop the task
+    // IStatus executeStatus = executeTaskCommand( m_activeTask, TASK_COMMNAND_ROLE_STOP );
+    // if( executeStatus.matches( IStatus.CANCEL ))
+    // return false;
+
+    // REMARK: this is used to ask the user, if the data should be saved or not
+    // It is a bit questionable if this is the right place...; should be reconsidered
+    if( !m_authority.canStopTask( m_activeTask ) )
+      return false;
+
+    /* Reset active task */
+    final ITask oldTask = m_activeTask;
+
+    m_activeTask = null;
+
+    /* Tell the listeners, that the task was stopped. */
+    fireActiveTaskChanged( null, oldTask, null );
+
+    return true;
   }
 
-  /**
-   * @see de.renew.workflow.connector.ITaskExecutor#execute(de.renew.workflow.base.Task)
-   */
   @Override
   public IStatus execute( final ITask task )
   {
@@ -131,28 +142,76 @@ public class TaskExecutor implements ITaskExecutor
       // if the same task is executed again, but it is asynchronous, don't do anything
       if( m_activeTask.getType() == EActivityType.ASYNCHRONOUS && m_activeTask == task )
         return Status.OK_STATUS;
+    }
 
-      // Try to stop the active task, if the task cannot be stopped, don't do anything
-      // REMARK: this is used to ask the user, if the data should be saved or not
-      // It is a bit questionable if this is the right place...; should be reconsidered
-      final boolean canStopTask = m_authority.canStopTask( m_activeTask );
-      if( !canStopTask )
+    final IStatus contextStatus = activateTaskContext( task );
+    // REMARK: we return AFTER closing all unnecessary views, else some open views may remain in case of errors
+    if( !contextStatus.isOK() )
+      return contextStatus;
+
+    /* Activate new task and execute */
+    final IStatus taskExecutionStatus = executeTaskCommand( task, TASK_COMMNAND_ROLE_ACTIVATE );
+    if( taskExecutionStatus.matches( IStatus.CANCEL ) )
+    {
+      // if command is not handled nothing is to do.
+      // This also prohibits the activation of task-groups that do nothing themselves
+      return taskExecutionStatus;
+    }
+
+    final ITask oldTask = m_activeTask;
+
+    // FIXME: different behaviour than before
+    if( task instanceof ITaskGroup )
+      m_activeTask = null;
+    else
+      m_activeTask = task;
+
+    /* Tell the listeners, that the task was executed. */
+    fireActiveTaskChanged( taskExecutionStatus, oldTask, task );
+
+    return taskExecutionStatus;
+  }
+
+  private IStatus executeTaskCommand( final ITask task, final String role )
+  {
+    final String commandID = String.format( "%s%s", task.getURI(), role );
+
+    final String categoryId = task instanceof ITaskGroup ? TaskExecutionListener.CATEGORY_TASKGROUP : TaskExecutionListener.CATEGORY_TASK;
+
+    final Command command = getCommand( m_commandService, commandID, categoryId );
+    if( !command.isHandled() )
+    {
+      // if command is not handled nothing is to do.
+      // This also prohibits the activation of task-groups that do nothing themselves
+      return Status.OK_STATUS;
+    }
+
+    try
+    {
+      final Object result = m_handlerService.executeCommand( command.getId(), null );
+      if( result instanceof IStatus )
+        return (IStatus) result;
+      else
         return Status.OK_STATUS;
     }
-
-    final String name = task.getURI();
-    final Command command = getCommand( m_commandService, name, task instanceof ITaskGroup ? TaskExecutionListener.CATEGORY_TASKGROUP : TaskExecutionListener.CATEGORY_TASK );
-
-    final ContextType context = task.getContext();
-
-    if( !command.isHandled() && context == null )
+    catch( final NotHandledException e )
     {
-      // if command is neither handled nor has a context nothing is to do.
-      // This also prohibits the activation of task-groups that do nothing themselves
-      return Status.CANCEL_STATUS;
+      // this just means that the command is not handled, so there is nothing else to do
+      return Status.OK_STATUS;
     }
+    catch( final Throwable e )
+    {
+      return StatusUtilities.statusFromThrowable( e );
+    }
+  }
 
-    final IStatus contextStatus = context == null ? Status.OK_STATUS : activateContext( context );
+  private IStatus activateTaskContext( final ITask task )
+  {
+    final ContextType context = task.getContext();
+    if( context == null )
+      return Status.OK_STATUS;
+
+    final IStatus contextStatus = activateContext( context );
 
     // collect the views that were just opened
     final Collection<String> partsToKeep = collectOpenedViews( context );
@@ -163,32 +222,7 @@ public class TaskExecutor implements ITaskExecutor
     final IWorkbench workbench = PlatformUI.getWorkbench();
     PerspectiveWatcher.cleanPerspective( workbench, partsToKeep );
 
-    // REMARK: we return AFTER closing all unnecessary views, else some open views may remain in case of errors
-    if( !contextStatus.isOK() )
-      return contextStatus;
-
-    IStatus taskExecutionStatus = Status.OK_STATUS;
-    try
-    {
-      final Object result = m_handlerService.executeCommand( command.getId(), null );
-      if( result instanceof IStatus )
-        taskExecutionStatus = (IStatus) result;
-    }
-    catch( final NotHandledException e )
-    {
-      // this just means that the command is not handled, so there is nothing else to do
-    }
-    catch( final Throwable e )
-    {
-      taskExecutionStatus = StatusUtilities.statusFromThrowable( e );
-    }
-
-    m_activeTask = task;
-
-    /* Tell the listeners, that the task was executed. */
-    fireTaskExecuted( taskExecutionStatus, task );
-
-    return taskExecutionStatus;
+    return contextStatus;
   }
 
   private Collection<String> collectOpenedViews( final ContextType context )
@@ -298,18 +332,12 @@ public class TaskExecutor implements ITaskExecutor
     return command;
   }
 
-  /**
-   * @see de.renew.workflow.connector.worklist.ITaskExecutor#addTaskChangeListener(de.renew.workflow.connector.worklist.ITaskChangeListener)
-   */
   @Override
   public void addTaskExecutionListener( final ITaskExecutionListener listener )
   {
     m_taskChangeListeners.add( listener );
   }
 
-  /**
-   * @see de.renew.workflow.connector.worklist.ITaskExecutor#removeTaskChangeListener(de.renew.workflow.connector.worklist.ITaskChangeListener)
-   */
   @Override
   public void removeTaskExecutionListener( final ITaskExecutionListener listener )
   {
@@ -324,27 +352,10 @@ public class TaskExecutor implements ITaskExecutor
    * @param task
    *          The final task, that was activated.
    */
-  private void fireTaskExecuted( final IStatus result, final ITask task )
+  private void fireActiveTaskChanged( final IStatus result, final ITask previouslyActive, final ITask activeTask )
   {
-    for( int i = 0; i < m_taskChangeListeners.size(); i++ )
-    {
-      final ITaskExecutionListener listener = m_taskChangeListeners.get( i );
-      listener.handleTaskExecuted( result, task );
-    }
-  }
-
-  /**
-   * This function notifies all registered listeners.
-   *
-   * @param task
-   *          The final task, that was activated.
-   */
-  private void fireTaskStopped( final ITask task )
-  {
-    for( int i = 0; i < m_taskChangeListeners.size(); i++ )
-    {
-      final ITaskExecutionListener listener = m_taskChangeListeners.get( i );
-      listener.handleTaskStopped( task );
-    }
+    final List<ITaskExecutionListener> listeners = m_taskChangeListeners;
+    for( final ITaskExecutionListener listener : listeners )
+      listener.handleActiveTaskChanged( result, previouslyActive, activeTask );
   }
 }

@@ -55,9 +55,9 @@ import de.renew.workflow.contexts.WorkflowSystemExtension;
 
 /**
  * A helper for the workflow.
- * 
+ *
  * @author Holger Albert
- * 
+ *
  */
 public class WorkflowHelper
 {
@@ -70,10 +70,10 @@ public class WorkflowHelper
 
   /**
    * This function returns the tasks of the workflow.
-   * 
+   *
    * @param project
    *          The project.
-   * 
+   *
    * @return The tasks of the workflow.
    */
   public static List<ITask> getWorkflowTasks( final IProject project ) throws CoreException
@@ -90,10 +90,10 @@ public class WorkflowHelper
 
   /**
    * This function returns the workflow.
-   * 
+   *
    * @param project
    *          The project.
-   * 
+   *
    * @return The workflow.
    */
   public static IWorkflow getWorkflow( final IProject project ) throws CoreException
@@ -111,10 +111,10 @@ public class WorkflowHelper
 
   /**
    * This function returns the tasks of the workflow with the given ID.
-   * 
+   *
    * @param workflow_id
    *          The ID of the workflow.
-   * 
+   *
    * @return The tasks of the workflow.
    */
   public static List<ITask> getWorkflowTasks( final String workflow_id )
@@ -128,10 +128,10 @@ public class WorkflowHelper
 
   /**
    * This function returns the workflow with the given ID.
-   * 
+   *
    * @param workflow_id
    *          The ID of the workflow.
-   * 
+   *
    * @return The workflow.
    */
   public static IWorkflow getWorkflow( final String workflow_id )
@@ -141,10 +141,10 @@ public class WorkflowHelper
 
   /**
    * This function returns default task of the workflow.
-   * 
+   *
    * @param workflow
    *          The workflow.
-   * 
+   *
    * @return The default task of the workflow.
    */
   public static ITask getDefaultTask( final IWorkflow workflow )
@@ -157,7 +157,7 @@ public class WorkflowHelper
 
   /**
    * This function returns the current active task.
-   * 
+   *
    * @return The active task or null, if no task is active.
    */
   public static ITask getActiveTask( )
@@ -170,29 +170,28 @@ public class WorkflowHelper
 
   /**
    * This function activates a task.
-   * 
+   *
    * @param task
    *          The task, which should be activated.
-   * 
+   *
    * @return The result of the execution.
    */
   public static IStatus activateTask( final ITask task )
   {
     final ITaskExecutor taskExecutor = KalypsoAFGUIFrameworkPlugin.getDefault().getTaskExecutor();
-    final IStatus result = taskExecutor.execute( task );
 
-    return result;
+    return taskExecutor.execute( task );
   }
 
   /**
    * This function tries to find the task group, which contains the given task. If it can find none, it will return
    * null.
-   * 
+   *
    * @param tasks
    *          All tasks available.
    * @param task
    *          The task, for which the task group should be searched.
-   * 
+   *
    * @return The task group, containing the task or null.
    */
   public static ITaskGroup findTaskGroup( final List<ITask> tasks, final ITask taskToFind )
@@ -227,7 +226,7 @@ public class WorkflowHelper
 
   /**
    * This function finds a workflow task by its URI.
-   * 
+   *
    * @param uri
    *          The task URI.
    * @return The task, or null if not found.

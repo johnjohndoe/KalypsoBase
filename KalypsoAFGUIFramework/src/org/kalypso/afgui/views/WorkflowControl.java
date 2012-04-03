@@ -151,10 +151,11 @@ public class WorkflowControl implements IWorklistChangeListener, ITaskExecutionL
     {
       m_treeViewer.setInput( workflow );
       m_treeViewer.collapseAll();
+
       final ITask activeTask = m_taskExecutor.getActiveTask();
       if( workflow != null && activeTask != null )
       {
-        setCurrentTask( workflow, activeTask );
+        selectTask( workflow, activeTask );
       }
     }
   }
@@ -182,38 +183,38 @@ public class WorkflowControl implements IWorklistChangeListener, ITaskExecutionL
   }
 
   @Override
-  public void handleTaskExecuted( final IStatus result, final ITask task )
+  public void handleActiveTaskChanged( final IStatus result, final ITask previouslyActive, final ITask activeTask )
   {
     final TreeViewer treeViewer = m_treeViewer;
-    if( treeViewer == null || treeViewer.getControl() == null || treeViewer.getControl().isDisposed() )
-    {
+    if( treeViewer == null )
       return;
-    }
+
+    final Control control = treeViewer.getControl();
+    if( control == null || control.isDisposed() )
+      return;
 
     new UIJob( "" ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        if( !treeViewer.getControl().isDisposed() )
-        {
-          final IWorkflow workflow = (IWorkflow) treeViewer.getInput();
-          if( workflow != null && task != null )
-          {
-            setCurrentTask( workflow, task );
-          }
+        if( control.isDisposed() )
+          return Status.OK_STATUS;
 
-          treeViewer.refresh();
-        }
+        final IWorkflow workflow = (IWorkflow) treeViewer.getInput();
+        if( workflow != null && activeTask != null )
+          selectTask( workflow, activeTask );
+
+        // TODO: heavy: alwys refresh complete tree?
+        if( previouslyActive != null )
+          treeViewer.update( previouslyActive, null );
+
+        if( activeTask != null )
+          treeViewer.update( activeTask, null );
+
         return Status.OK_STATUS;
       }
     }.schedule();
-  }
-
-  @Override
-  public void handleTaskStopped( final ITask task )
-  {
-
   }
 
   protected void handleSelectionChanged( final SelectionChangedEvent event )
@@ -258,7 +259,7 @@ public class WorkflowControl implements IWorklistChangeListener, ITaskExecutionL
     }
   }
 
-  protected void setCurrentTask( final IWorkflow workflow, final ITask task )
+  protected void selectTask( final IWorkflow workflow, final ITask task )
   {
     final TreePath findPart = TaskHelper.findPart( task.getURI(), workflow );
     if( findPart != null )
