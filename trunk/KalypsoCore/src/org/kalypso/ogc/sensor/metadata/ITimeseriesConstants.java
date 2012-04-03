@@ -90,6 +90,8 @@ public interface ITimeseriesConstants extends IMetadataConstants
 
   String MD_TIMESTEP = "Zeitschritt"; //$NON-NLS-1$
 
+  String MD_TIMESTAMP = "Zeitstempel"; //$NON-NLS-1$
+
   /**
    * Markierung für eine Vorhersage. Wenn die Property gesetzt ist (true), handelt es sich um eine Vorhersage Zeitreihe.
    * 

@@ -64,6 +64,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.joda.time.LocalTime;
 import org.joda.time.Period;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -577,7 +578,11 @@ public final class TimeseriesUtils implements ITimeseriesConstants
   }
 
   /**
-   * Guesses the timestep of a given timeseries from several timsteps.
+   * This function guesses the timestep of a given timeseries from several timsteps.
+   * 
+   * @param timeseries
+   *          The tuple model of a timeseries.
+   * @return The timestep or null.
    */
   public static Period guessTimestep( final ITupleModel timeseries ) throws SensorException
   {
@@ -585,9 +590,31 @@ public final class TimeseriesUtils implements ITimeseriesConstants
     return timestepGuesser.execute();
   }
 
+  /**
+   * This function guesses the timestamp of a given timeseries from several timsteps. Only timeseries with a timestep of
+   * 1 day do have a timestamp.
+   * 
+   * @param timeseries
+   *          The tuple model of a timeseries.
+   * @param timestep
+   *          The timestep of the timeseries.
+   * @return The timestamp or null.
+   */
+  public static LocalTime guessTimestamp( final ITupleModel timeseries, final Period timestep ) throws SensorException
+  {
+    /* The timestamp is only relevant for day values. */
+    if( timestep != null && timestep.toStandardMinutes().getMinutes() == 1440 )
+    {
+      /* Guess the timestamp of the timeseries. */
+      final TimestampGuesser guesser = new TimestampGuesser( timeseries, -1 );
+      return guesser.execute();
+    }
+
+    return null;
+  }
+
   public static TIMESERIES_TYPE getType( final String axisType )
   {
     return TIMESERIES_TYPE.getType( axisType );
   }
-
 }

@@ -49,7 +49,11 @@ import java.util.Set;
 import java.util.TimeZone;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTimeFieldType;
+import org.joda.time.LocalTime;
 import org.joda.time.Period;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormatterBuilder;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.commons.time.PeriodUtils;
@@ -271,6 +275,29 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
 
     final int field = CalendarUtilities.getCalendarField( fieldName );
     return PeriodUtils.getPeriod( field, amount );
+  }
+
+  public static void setTimestamp( final MetadataList metadata, final LocalTime timestamp )
+  {
+    final String timestampText = timestamp.toString( "HH:mm.Z" ); // $NON-NLS-1$
+    metadata.put( MD_TIMESTAMP, timestampText );
+  }
+
+  public static LocalTime getTimestamp( final MetadataList metadata )
+  {
+    final String property = metadata.getProperty( MD_TIMESTAMP, null );
+    if( StringUtils.isBlank( property ) )
+      return null;
+
+    final DateTimeFormatterBuilder bt = new DateTimeFormatterBuilder();
+    bt.appendFixedDecimal( DateTimeFieldType.hourOfDay(), 2 );
+    bt.appendLiteral( ':' ); // $NON-NLS-1$
+    bt.appendFixedDecimal( DateTimeFieldType.minuteOfHour(), 2 );
+    bt.appendLiteral( '.' ); // $NON-NLS-1$
+    bt.appendTimeZoneOffset( "Z", false, 2, 2 ); // $NON-NLS-1$
+
+    final DateTimeFormatter formatter = bt.toFormatter();
+    return formatter.parseLocalTime( property );
   }
 
   public static Date getAusgabeZeitpunkt( final MetadataList metadata ) throws ParseException

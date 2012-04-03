@@ -56,7 +56,6 @@ import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
  */
 public class FindTimeStepOperation implements ICoreRunnableWithProgress
 {
-
   private final IObservation m_observation;
 
   private Period m_timestep;
@@ -69,34 +68,23 @@ public class FindTimeStepOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
-    final String message = "Failed to determine timestep";
-
     try
     {
       m_timestep = TimeseriesUtils.guessTimestep( m_observation.getValues( null ) );
-
       if( m_timestep == null )
-      {
-        return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), message );
-      }
+        return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), "Failed to determine timestep..." );
 
+      return new Status( IStatus.OK, KalypsoCorePlugin.getID(), String.format( "Find Timeseries Timestep Operation successful - found time resultion: %s", PeriodUtils.formatDefault( m_timestep ) ) );
     }
     catch( final SensorException e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), message, e );
-
-      return status;
+      return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), "Failed to determine timestep...", e );
     }
-
-    final String resultion = PeriodUtils.formatDefault( m_timestep );
-
-    return new Status( IStatus.OK, KalypsoCorePlugin.getID(), String.format( "Find Timeseries Timestep Operation successful - found time resultion: %s", resultion ) );
   }
 
   public Period getTimestep( )
   {
     return m_timestep;
   }
-
 }
