@@ -43,8 +43,8 @@ package org.kalypso.ogc.sensor.util;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.joda.time.LocalTime;
 import org.joda.time.Period;
-import org.kalypso.commons.time.PeriodUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.IObservation;
@@ -52,39 +52,71 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 
 /**
- * @author Dirk Kuch
+ * This operation finds the timestamp.
+ * 
+ * @author Holger Albert
  */
-public class FindTimeStepOperation implements ICoreRunnableWithProgress
+public class FindTimestampOperation implements ICoreRunnableWithProgress
 {
+  /**
+   * The timeseries.
+   */
   private final IObservation m_observation;
 
-  private Period m_timestep;
+  /**
+   * The timestep of the timeseries.
+   */
+  private final Period m_timestep;
 
-  public FindTimeStepOperation( final IObservation observation )
+  /**
+   * The timestamp or null if this operation was not executed, an error occured or if the timeseries simply has no
+   * timestamp.
+   */
+  private LocalTime m_timestamp;
+
+  /**
+   * The constructor.
+   * 
+   * @param observation
+   *          The timeseries.
+   * @param timestep
+   *          The timestep of the timeseries.
+   */
+  public FindTimestampOperation( final IObservation observation, final Period timestep )
   {
     m_observation = observation;
+    m_timestep = timestep;
+    m_timestamp = null;
   }
 
+  /**
+   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
+   */
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
     try
     {
-      m_timestep = TimeseriesUtils.guessTimestep( m_observation.getValues( null ) );
-      if( m_timestep == null )
-        return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), "Failed to determine timestep..." );
+      /* Guess the timestamp. */
+      m_timestamp = TimeseriesUtils.guessTimestamp( m_observation.getValues( null ), m_timestep );
 
-      return new Status( IStatus.OK, KalypsoCorePlugin.getID(), String.format( "Find Timeseries Timestep Operation successful - found time resultion: %s", PeriodUtils.formatDefault( m_timestep ) ) );
+      return new Status( IStatus.OK, KalypsoCorePlugin.getID(), "Find Timeseries Timestamp Operation successful." );
     }
-    catch( final SensorException e )
+    catch( final SensorException ex )
     {
-      e.printStackTrace();
-      return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), "Failed to determine timestep...", e );
+      ex.printStackTrace();
+      return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), "Failed to determine timestamp...", ex );
     }
   }
 
-  public Period getTimestep( )
+  /**
+   * This function returns the timestamp.
+   * 
+   * @return The timestamp or null if this operation was not executed, an error occured or if the timeseries simply has
+   *         no timestamp.
+   */
+  public LocalTime getTimestamp( )
   {
-    return m_timestep;
+    return m_timestamp;
   }
 }
