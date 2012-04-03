@@ -84,9 +84,6 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     plugin = this;
   }
 
-  /**
-   * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
-   */
   @Override
   public void start( final BundleContext context ) throws Exception
   {
@@ -106,56 +103,58 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
 
       workbench.addWorkbenchListener( new IWorkbenchListener()
       {
-        /**
-         * @see org.eclipse.ui.IWorkbenchListener#postShutdown(org.eclipse.ui.IWorkbench)
-         */
         @Override
-        @SuppressWarnings("synthetic-access")
         public void postShutdown( final IWorkbench workbench2 )
         {
-          stopSzenarioSourceProvider();
+          handleWorkbenchPostShutdown();
         }
 
-        /**
-         * @see org.eclipse.ui.IWorkbenchListener#preShutdown(org.eclipse.ui.IWorkbench, boolean)
-         */
         @Override
-        @SuppressWarnings("synthetic-access")
         public boolean preShutdown( final IWorkbench workbench2, final boolean forced )
         {
-          if( !forced && m_taskExecutionAuthority.canStopTask( m_taskExecutor.getActiveTask() ) )
-          {
-            // IMPORTAN: only close views on workflow perspective
-            final IWorkbenchWindow window = workbench2.getActiveWorkbenchWindow();
-            if( Objects.isNull( window ) )
-              return true;
-
-            final IWorkbenchPage activePage = window.getActivePage();
-            if( Objects.isNull( activePage ) )
-              return true;
-
-            final IPerspectiveDescriptor perspective = activePage.getPerspective();
-            if( !ObjectUtils.equals( perspective.getId(), Perspective.ID ) )
-              return true;
-
-            // FIXME: check if this really is still needed. All views of workflow should not load any data upon start
-            // of workbench
-            // So the views may open, and the default task will close/open the needed views anyways.
-
-            // Close all views previously opened by any task in order to let them save themselves
-            final Collection<String> partsToKeep = new ArrayList<String>();
-            partsToKeep.add( WorkflowView.ID );
-            partsToKeep.add( PerspectiveWatcher.SCENARIO_VIEW_ID );
-            PerspectiveWatcher.cleanPerspective( workbench2, partsToKeep );
-
-            m_taskExecutor.stopActiveTask();
-            return true;
-          }
-          else
-            return false;
+          return handleWorkbenchPreShutdown( forced, workbench2 );
         }
       } );
     }
+  }
+
+  protected boolean handleWorkbenchPreShutdown( final boolean forced, final IWorkbench workbench2 )
+  {
+    if( forced )
+      return false;
+
+    if( !m_taskExecutor.stopActiveTask() )
+      return false;
+
+      // IMPORTAN: only close views on workflow perspective
+      final IWorkbenchWindow window = workbench2.getActiveWorkbenchWindow();
+      if( Objects.isNull( window ) )
+        return true;
+
+      final IWorkbenchPage activePage = window.getActivePage();
+      if( Objects.isNull( activePage ) )
+        return true;
+
+      final IPerspectiveDescriptor perspective = activePage.getPerspective();
+      if( !ObjectUtils.equals( perspective.getId(), Perspective.ID ) )
+        return true;
+
+      // FIXME: check if this really is still needed. All views of workflow should not load any data upon start
+      // of workbench
+      // So the views may open, and the default task will close/open the needed views anyways.
+
+      // Close all views previously opened by any task in order to let them save themselves
+      final Collection<String> partsToKeep = new ArrayList<String>();
+      partsToKeep.add( WorkflowView.ID );
+      partsToKeep.add( PerspectiveWatcher.SCENARIO_VIEW_ID );
+      PerspectiveWatcher.cleanPerspective( workbench2, partsToKeep );
+
+      return true;
+  }
+
+  protected void handleWorkbenchPostShutdown( )
+  {
+    stopSzenarioSourceProvider();
   }
 
   private void startActiveWorkContext( )
@@ -286,7 +285,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     m_activeWorkContext = null;
   }
 
-  // FIXME: move this into scenari oactivation code; should not be handled via listeners, probably only works because
+  // FIXME: move this into scenario activation code; should not be handled via listeners, probably only works because
   // this listener is always the first one to be executed...
   protected void handleScenarioChanged( final CaseHandlingProjectNature nature, final IScenario caze )
   {
