@@ -43,6 +43,7 @@ package org.kalypsodeegree_impl.io.sax.parser;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.types.AbstractGmlContentHandler;
 import org.kalypso.gmlschema.types.IGmlContentHandler;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -63,7 +64,9 @@ public abstract class GMLElementContentHandler extends AbstractGmlContentHandler
 
   protected final String m_localName;
 
-  protected String m_defaultSrs;
+  // TODO: hotfix, default srs is always kalypso. Think, if this is ok... Maybe we should define a default srs on
+// document basis?
+  protected String m_defaultSrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
   public GMLElementContentHandler( final XMLReader reader, final String uri, final String localName )
   {
