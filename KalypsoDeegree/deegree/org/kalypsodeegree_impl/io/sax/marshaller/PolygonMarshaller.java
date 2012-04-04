@@ -52,7 +52,7 @@ import org.xml.sax.XMLReader;
  * 
  * @author Felipe Maximino
  */
-public class PolygonMarshaller extends AbstractMarshaller<GM_Surface<GM_Polygon>>
+public class PolygonMarshaller extends GeometryMarshaller<GM_Surface<GM_Polygon>>
 {
   public static final String TAG_POLYGON = GMLConstants.QN_POLYGON.getLocalPart();
 
