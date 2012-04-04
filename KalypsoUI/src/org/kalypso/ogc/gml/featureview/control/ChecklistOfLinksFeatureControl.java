@@ -72,6 +72,7 @@ import org.kalypso.ui.editor.gmleditor.part.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.search.IReferenceCollectorStrategy;
 
@@ -80,7 +81,7 @@ import org.kalypsodeegree_impl.model.feature.search.IReferenceCollectorStrategy;
  * <ul>
  * <li>showSelectButtons : boolean - if true, 'selectAll' and 'deselecAll' buttons are shown
  * </ul>
- *
+ * 
  * @author Gernot Belger
  */
 public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl
@@ -89,20 +90,22 @@ public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl
 
   private final Set<ModifyListener> m_modifyListeners = new HashSet<ModifyListener>();
 
-// private final boolean m_showSelectButtons;
+  // private final boolean m_showSelectButtons;
 
   private CheckboxTableViewer m_linkChecklist;
 
   public ChecklistOfLinksFeatureControl( final Feature feature, final IPropertyType ftp, final boolean showSelectButtons )
   {
     super( feature, ftp );
-// m_showSelectButtons = showSelectButtons;
+
+    // m_showSelectButtons = showSelectButtons;
   }
 
   public ChecklistOfLinksFeatureControl( final IPropertyType pt, final boolean showSelectButtons )
   {
     super( pt );
-// m_showSelectButtons = showSelectButtons;
+
+    // m_showSelectButtons = showSelectButtons;
   }
 
   /**
@@ -140,10 +143,10 @@ public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl
   @Override
   public Control createControl( final Composite parent, final int style )
   {
-// final GC gc = new GC( parent );
-// gc.setFont( JFaceResources.getDialogFont() );
-// final FontMetrics fontMetrics = gc.getFontMetrics();
-// gc.dispose();
+    // final GC gc = new GC( parent );
+    // gc.setFont( JFaceResources.getDialogFont() );
+    // final FontMetrics fontMetrics = gc.getFontMetrics();
+    // gc.dispose();
 
     final Composite panel = new Composite( parent, style );
     panel.setLayout( Layouts.createGridLayout() );
@@ -154,11 +157,11 @@ public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl
     m_linkChecklist.setLabelProvider( new GMLLabelProvider() );
 
     // TODO: we never show the buttons, as they do not work properly yet
-// if( m_showSelectButtons && false )
-// {
-// final Composite buttonPanel = createSelectButtons( fontMetrics, panel, m_linkChecklist );
-// buttonPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-// }
+    // if( m_showSelectButtons && false )
+    // {
+    // final Composite buttonPanel = createSelectButtons( fontMetrics, panel, m_linkChecklist );
+    // buttonPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+    // }
 
     m_linkChecklist.addCheckStateListener( new ICheckStateListener()
     {
@@ -174,44 +177,45 @@ public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl
     return panel;
   }
 
-// private Composite createSelectButtons( final FontMetrics fontMetrics, final Composite panel, final
-// CheckboxTableViewer checkList )
-// {
-// final Composite buttonPanel = new Composite( panel, SWT.NONE );
-// final GridLayout layout = new GridLayout();
-// layout.numColumns = 1;
-// layout.marginWidth = 0;
-// layout.horizontalSpacing = Dialog.convertHorizontalDLUsToPixels( fontMetrics, IDialogConstants.HORIZONTAL_SPACING );
-// buttonPanel.setLayout( layout );
-//
-// /* Glue, to force butons to the right */
-// final Label label = new Label( buttonPanel, SWT.NONE );
-// label.setLayoutData( new GridData( SWT.FILL, SWT.LEFT, true, false ) );
-//
-// // TODO: the stuff below does not work yet, as the modell is not changed....
-//
-//    final Button selectButton = createButton( buttonPanel, IDialogConstants.SELECT_ALL_ID, "", fontMetrics ); //$NON-NLS-1$
-// selectButton.addSelectionListener( new SelectionAdapter()
-// {
-// @Override
-// public void widgetSelected( final SelectionEvent e )
-// {
-// checkList.setAllChecked( true );
-// }
-// } );
-//
-//    final Button deselectButton = createButton( buttonPanel, IDialogConstants.DESELECT_ALL_ID, "", fontMetrics ); //$NON-NLS-1$
-// deselectButton.addSelectionListener( new SelectionAdapter()
-// {
-// @Override
-// public void widgetSelected( final SelectionEvent e )
-// {
-// checkList.setAllChecked( false );
-// }
-// } );
-//
-// return buttonPanel;
-// }
+  // private Composite createSelectButtons( final FontMetrics fontMetrics, final Composite panel, final
+  // CheckboxTableViewer checkList )
+  // {
+  // final Composite buttonPanel = new Composite( panel, SWT.NONE );
+  // final GridLayout layout = new GridLayout();
+  // layout.numColumns = 1;
+  // layout.marginWidth = 0;
+  // layout.horizontalSpacing = Dialog.convertHorizontalDLUsToPixels( fontMetrics, IDialogConstants.HORIZONTAL_SPACING
+  // );
+  // buttonPanel.setLayout( layout );
+  //
+  // /* Glue, to force buttons to the right */
+  // final Label label = new Label( buttonPanel, SWT.NONE );
+  // label.setLayoutData( new GridData( SWT.FILL, SWT.LEFT, true, false ) );
+  //
+  // // TODO: the stuff below does not work yet, as the modell is not changed....
+  //
+  //    final Button selectButton = createButton( buttonPanel, IDialogConstants.SELECT_ALL_ID, "", fontMetrics ); //$NON-NLS-1$
+  // selectButton.addSelectionListener( new SelectionAdapter()
+  // {
+  // @Override
+  // public void widgetSelected( final SelectionEvent e )
+  // {
+  // checkList.setAllChecked( true );
+  // }
+  // } );
+  //
+  //    final Button deselectButton = createButton( buttonPanel, IDialogConstants.DESELECT_ALL_ID, "", fontMetrics ); //$NON-NLS-1$
+  // deselectButton.addSelectionListener( new SelectionAdapter()
+  // {
+  // @Override
+  // public void widgetSelected( final SelectionEvent e )
+  // {
+  // checkList.setAllChecked( false );
+  // }
+  // } );
+  //
+  // return buttonPanel;
+  // }
 
   /**
    * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#updateControl()
@@ -251,7 +255,7 @@ public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl
    * button will be accesible from <code>getOKButton()</code>. Note that the parent's layout is assumed to be a
    * <code>GridLayout</code> and the number of columns in this layout is incremented. Subclasses may override.
    * </p>
-   *
+   * 
    * @param parent
    *          the parent composite
    * @param id
@@ -284,43 +288,75 @@ public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl
 
   protected void handleFeatureChecked( final CheckStateChangedEvent event )
   {
+    /* Get the feature, relation type and list of links. */
     final Feature feature = getFeature();
     final IRelationType rt = (IRelationType) getFeatureTypeProperty();
     final FeatureList listOfLinks = (FeatureList) feature.getProperty( rt );
 
+    /* Get the checked element. */
     final Object checkedElement = event.getElement();
+
+    /* The composite command stores all commands, to be executed. */
     final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString( "org.kalypso.ogc.gml.featureview.control.ChecklistOfLinksFeatureControl.0" ) ); //$NON-NLS-1$
+
+    /* Create the commands. */
     if( event.getChecked() )
     {
       // TODO: implement case for external features
       if( checkedElement instanceof Feature )
-      {
         compositeCommand.addCommand( new AddRelationCommand( feature, rt, -1, (Feature) checkedElement ) );
-      }
     }
     else
     {
       for( final Object object : listOfLinks )
       {
+
+        final String id = getLinkId( object );
+
         // TODO: implement case for external features
         // TODO: potential performance problem
-        if( object instanceof String && checkedElement instanceof Feature )
+
+        if( id != null && checkedElement instanceof Feature )
         {
-          if( object.equals( ((Feature) checkedElement).getId() ) )
+          // FIXME: Remove does not work with the checked element.
+          // Cannot work, as a list of links can reference a feature twice; so it is not clear
+          // which link should be removed. Instead, the link or the position needs to be given to
+          // the command.
+          if( id.equals( ((Feature) checkedElement).getId() ) )
             compositeCommand.addCommand( new RemoveRelationCommand( feature, rt, (Feature) checkedElement ) );
         }
       }
     }
 
+    /* The modify listeners. */
     final ModifyListener[] listeners = m_modifyListeners.toArray( new ModifyListener[m_modifyListeners.size()] );
 
+    /* Create an event. */
     final Event e = new Event();
     e.widget = m_linkChecklist.getControl();
-    // do we need any other properties of e here?
+
+    /* Create an modify event. */
     final ModifyEvent me = new ModifyEvent( e );
+
+    /* Notify the modify listeners. */
     for( final ModifyListener modifyListener : listeners )
       modifyListener.modifyText( me );
 
+    /* Fire the feature change. */
     fireFeatureChange( compositeCommand );
+  }
+
+  private String getLinkId( final Object object )
+  {
+    if( object instanceof String )
+      return (String) object;
+
+    if( object instanceof IXLinkedFeature )
+    {
+      final IXLinkedFeature link = (IXLinkedFeature) object;
+      return link.getFeatureId();
+    }
+
+    return null;
   }
 }
