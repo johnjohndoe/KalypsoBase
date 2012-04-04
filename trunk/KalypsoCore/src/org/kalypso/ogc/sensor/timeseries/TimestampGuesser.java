@@ -42,9 +42,9 @@ package org.kalypso.ogc.sensor.timeseries;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.joda.time.LocalTime;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
@@ -101,10 +101,14 @@ public class TimestampGuesser
     /* Collect all timestamps. */
     for( int i = 0; i < testSteps; i++ )
     {
+      /* REMARK: The date of the timeseries should have a timezone. */
+      /* REMARK: We need UTC here. */
       final Date date = (Date) m_timeseries.get( i, dateAxis );
-      final Calendar calendar = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
+      final Calendar calendar = Calendar.getInstance( TimeZone.getTimeZone( "UTC" ) ); //$NON-NLS-1$
       calendar.setTime( date );
 
+      /* REMARK: The ISO Chronolgy used will have the UTC timezone set. */
+      /* REMARK: See the source code of the constructor. */
       final LocalTime timestamp = new LocalTime( calendar.get( Calendar.HOUR_OF_DAY ), calendar.get( Calendar.MINUTE ) );
       m_timestamps.add( timestamp );
     }

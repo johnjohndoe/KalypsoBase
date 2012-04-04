@@ -279,23 +279,25 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
 
   public static void setTimestamp( final MetadataList metadata, final LocalTime timestamp )
   {
-    final String timestampText = timestamp.toString( "HH:mm.Z" ); // $NON-NLS-1$
+    /* REMARK: We assume the values are in UTC. */
+    final String timestampText = timestamp.toString( "HH:mm" ); // $NON-NLS-1$
     metadata.put( MD_TIMESTAMP, timestampText );
   }
 
   public static LocalTime getTimestamp( final MetadataList metadata )
   {
+    /* Get the property. */
     final String property = metadata.getProperty( MD_TIMESTAMP, null );
     if( StringUtils.isBlank( property ) )
       return null;
 
+    /* Create the date time formatter builder. */
     final DateTimeFormatterBuilder bt = new DateTimeFormatterBuilder();
     bt.appendFixedDecimal( DateTimeFieldType.hourOfDay(), 2 );
     bt.appendLiteral( ':' ); // $NON-NLS-1$
     bt.appendFixedDecimal( DateTimeFieldType.minuteOfHour(), 2 );
-    bt.appendLiteral( '.' ); // $NON-NLS-1$
-    bt.appendTimeZoneOffset( "Z", false, 2, 2 ); // $NON-NLS-1$
 
+    /* REMARK: This will use the UTC timezone. */
     final DateTimeFormatter formatter = bt.toFormatter();
     return formatter.parseLocalTime( property );
   }

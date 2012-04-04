@@ -56,7 +56,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.CollectorVisitor;
 /**
  * Default implementation of {@link IReferenceCollectorStrategy}, represents the old generic way to find the references.<br/>
  * This strategy is used, if nothing else is specified.
- *
+ * 
  * @author Gernot Belger
  */
 public class DefaultReferenceCollectorStrategy implements IReferenceCollectorStrategy
@@ -85,7 +85,7 @@ public class DefaultReferenceCollectorStrategy implements IReferenceCollectorStr
     for( final IDocumentReference ref : refs )
       collectFromDocument( targetFeatureType, foundFeatures, ref );
 
-    /* Special case: if we already have a link, we may guess the referenced document */
+    /* Special case: If we already have a link, we may guess the referenced document. */
     final Object value = m_parentFeature.getProperty( m_parentRelation );
     if( value instanceof IXLinkedFeature )
     {
@@ -131,18 +131,35 @@ public class DefaultReferenceCollectorStrategy implements IReferenceCollectorStr
     final Feature[] features = collector.getResults( true );
     for( final Feature feature : features )
     {
+      /* Special Case: In some cases the parent feature contains links to features of the its own feature type. */
+      /* Special Case: But the parent feature should not be added to this list. */
+      final String id = feature.getId();
+      if( id != null && id.equals( m_parentFeature.getId() ) )
+        continue;
+
+      /* Same workspace. */
       if( workspace == m_workspace )
-        foundFeatures.add( feature );
-      else
       {
-        final String id = feature.getId();
-        // REMARK: id == null happens for xlinks, i.e. twice decending into xlinks does not work....
-        if( id != null )
+        /* Special Case: The link links into the same workspace. */
+        /* Special Case: It may be ignored, because its feature will be added directly. */
+        if( feature instanceof IXLinkedFeature )
         {
-          final String href = uri + "#" + id; //$NON-NLS-1$
-          final IXLinkedFeature linkedFeature = new XLinkedFeature_Impl( m_parentFeature, m_parentRelation, targetFeatureType, href );
-          foundFeatures.add( linkedFeature );
+          final IXLinkedFeature xlink = (IXLinkedFeature) feature;
+          final GMLWorkspace linkedWorkspace = xlink.getWorkspace();
+          if( linkedWorkspace == m_workspace )
+            continue;
         }
+
+        foundFeatures.add( feature );
+        continue;
+      }
+
+      // REMARK: id == null happens for xlinks, i.e. twice decending into xlinks does not work....
+      if( id != null )
+      {
+        final String href = uri + "#" + id; //$NON-NLS-1$
+        final IXLinkedFeature linkedFeature = new XLinkedFeature_Impl( m_parentFeature, m_parentRelation, targetFeatureType, href );
+        foundFeatures.add( linkedFeature );
       }
     }
   }

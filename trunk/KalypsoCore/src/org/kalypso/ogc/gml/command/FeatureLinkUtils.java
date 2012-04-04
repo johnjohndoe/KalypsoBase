@@ -75,7 +75,7 @@ public final class FeatureLinkUtils
     if( linkRelation.isList() )
     {
       final FeatureList list = (FeatureList) feature.getProperty( linkRelation );
-      list.insertLink( pos, linkedFeatureID );
+      list.insertLink( pos, href );
     }
     else
     {
