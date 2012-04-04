@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.view;
 
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IViewSite;
@@ -60,7 +62,9 @@ public class ChartView extends ViewPart implements IContentOutlineProvider
   @Override
   public void dispose( )
   {
-    m_chartPartComposite.dispose();
+    // REMARK: no, the composite is automatically disposed if the parent is disposed.
+    // Disposing it here might lead to an "Widget disposed too early for part" exception.
+    // m_chartPartComposite.dispose();
 
     super.dispose();
   }
@@ -86,7 +90,17 @@ public class ChartView extends ViewPart implements IContentOutlineProvider
   @Override
   public void createPartControl( final Composite parent )
   {
-    m_chartPartComposite.createControl( parent );
+    final ChartPartComposite partComposite = m_chartPartComposite;
+    final Composite control = partComposite.createControl( parent );
+    // REMARK: dispose chart when control is disposed, see above.
+    control.addDisposeListener( new DisposeListener()
+    {
+      @Override
+      public void widgetDisposed( final DisposeEvent e )
+      {
+        partComposite.dispose();
+      }
+    } );
 
     updatePartName();
   }
