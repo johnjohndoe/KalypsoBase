@@ -71,9 +71,6 @@ public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode
 {
   private final IKalypsoThemeListener m_themeListener = new KalypsoThemeAdapter()
   {
-    /**
-     * @see org.kalypso.ogc.gml.KalypsoThemeAdapter#statusChanged(org.kalypso.ogc.gml.IKalypsoTheme)
-     */
     @Override
     public void statusChanged( final IKalypsoTheme source )
     {
@@ -137,9 +134,6 @@ public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode
     return getElement();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.outline.AbstractThemeNode#getElementChildren()
-   */
   @Override
   protected Object[] getElementChildren( )
   {

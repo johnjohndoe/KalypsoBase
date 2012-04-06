@@ -43,6 +43,8 @@ package org.kalypso.ogc.gml.map.themes;
 import java.awt.Graphics;
 import java.awt.Image;
 
+import org.deegree.ogcwebservices.wms.capabilities.Layer;
+import org.deegree.ogcwebservices.wms.capabilities.WMSCapabilities;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -152,10 +154,10 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
       return Status.OK_STATUS;
 
     /* Initialize loader */
+    setStatus( INIT_STATUS );
     final IStatus initStatus = initializeLoader();
     if( !initStatus.isOK() )
     {
-      setStatus( INIT_STATUS );
       setStatus( initStatus );
       return initStatus;
     }
@@ -251,8 +253,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 
     if( m_legend == null )
     {
-      final ILegendProvider legendProvider = (ILegendProvider) m_provider;
-      m_legend = legendProvider.getLegendGraphic( null, false, font );
+      m_legend = m_provider.getLegendGraphic( font );
     }
 
     return m_legend;
@@ -324,5 +325,40 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     {
       monitor.done();
     }
+  }
+
+  public WMSCapabilities getCapabilities( )
+  {
+    if( m_provider == null )
+      return null;
+
+    return m_provider.getCapabilities();
+  }
+
+  public boolean isLayerVisible( final String name )
+  {
+    if( m_provider == null )
+      return false;
+
+    return m_provider.isLayerVisible( name );
+  }
+
+  public void setLayerVisible( final String name, final boolean visible )
+  {
+    if( m_provider == null )
+      return;
+
+    m_provider.setLayerVisible( name, visible );
+
+    fireStatusChanged( this );
+    fireRepaintRequested( getFullExtent() );
+  }
+
+  public String getStyle( final Layer layer )
+  {
+    if( m_provider == null )
+      return null;
+
+    return m_provider.getStyle( layer );
   }
 }
