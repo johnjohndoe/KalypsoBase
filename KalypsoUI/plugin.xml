@@ -269,7 +269,6 @@
 		<command categoryId="org.kalypso.ogc.gml.map.category" description="Selektiert das nächste Feature in der Karte" name="Nächstes" id="org.kalypso.ui.map.selectNextFeatureCommand" />
 		<command categoryId="org.kalypso.ogc.gml.map.category" description="Selektiert das vorhergehende Feature in der Karte" name="Vorhergehendes" id="org.kalypso.ui.map.selectPreviousFeatureCommand" />
 		<command categoryId="org.kalypso.ogc.gml.map.category" description="Selektiert das letzte Feature in der Karte" name="Letztes" id="org.kalypso.ui.map.selectLastFeatureCommand" />
-		<command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.WMSGetFeatureInfoCommand" name="%org.kalypso.ui.editor.mapeditor.actiondelegates.WMSGetfeatureInfoWidgetDelegate.label" />
 		<command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.MeasureMapCommand" name="%org.kalypso.ogc.gml.map.MeasureMapCommand.label" description="%org.kalypso.ogc.gml.map.MeasureMapCommand.tooltip"/>
 		<command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.FindElementMapCommand" name="%org.kalypso.ogc.gml.map.FindElementMapCommand.label" description="%org.kalypso.ogc.gml.map.FindElementMapCommand.tooltip"/>
 		<command categoryId="org.kalypso.ogc.gml.map.category" id="org.kalypso.ogc.gml.map.SelectFeatureCommand" name="%org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate.label" />
@@ -426,9 +425,6 @@
 				<command commandId="org.kalypso.ogc.gml.map.SelectFeatureCommand" label="%org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate.label" style="radio" tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.SelectWidgetDelegate.tooltip" />
 				<command commandId="org.kalypso.ogc.gml.map.MeasureMapCommand" style="radio" />
 				<command commandId="org.kalypso.ogc.gml.map.FindElementMapCommand" style="radio" />
-				<!-- Does not work any more...
-				<command commandId="org.kalypso.ogc.gml.map.WMSGetFeatureInfoCommand" label="%org.kalypso.ui.editor.mapeditor.actiondelegates.WMSGetfeatureInfoWidgetDelegate.label" style="radio" tooltip="%org.kalypso.ui.editor.mapeditor.actiondelegates.WMSGetfeatureInfoWidgetDelegate.tooltip" />
-				-->
 				<dynamic class="org.kalypso.ogc.gml.map.widgets.newfeature.NewFeatureToolbarContribution" id="org.kalypso.gis.newFeature.menuContribution" />
 				<separator name="widgetAdditions" visible="false">
 					<!-- Additional widgets (especially those which's visibility depends on a certain layer/datatype) should be
@@ -633,7 +629,6 @@
 		<image commandId="org.kalypso.ui.map.selectNextFeatureCommand" disabledIcon="icons/map/nextFeature_gray.gif" icon="icons/map/nextFeature.gif" />
 		<image commandId="org.kalypso.ui.map.selectPreviousFeatureCommand" disabledIcon="icons/map/prevFeature_gray.gif" icon="icons/map/prevFeature.gif" />
 		<image commandId="org.kalypso.ui.map.selectLastFeatureCommand" disabledIcon="icons/map/lastFeature_gray.gif" icon="icons/map/lastFeature.gif" />
-		<image commandId="org.kalypso.ogc.gml.map.WMSGetFeatureInfoCommand" disabledIcon="icons/map/wmsInfo_gray.gif" icon="icons/map/wmsInfo.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.MeasureMapCommand" disabledIcon="icons/map/measureTool_gray.gif" icon="icons/map/measureTool.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.FindElementMapCommand" disabledIcon="icons/map/earth_search_gray.gif" icon="icons/map/earth_search.gif" />
 		<image commandId="org.kalypso.ogc.gml.map.SelectFeatureCommand" icon="icons/map/select_feature.gif" />
@@ -1174,11 +1169,6 @@
           name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.plugin"
           value="org.kalypso.core">
     </parameter>
-			</class>
-		</handler>
-		<handler commandId="org.kalypso.ogc.gml.map.WMSGetFeatureInfoCommand">
-			<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
-				<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.ogc.gml.map.WMSGetFeatureInfoWidget"/>
 			</class>
 		</handler>
 		<handler commandId="org.kalypso.ogc.gml.map.MeasureMapCommand">
