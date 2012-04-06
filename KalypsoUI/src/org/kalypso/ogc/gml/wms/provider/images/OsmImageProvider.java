@@ -45,9 +45,12 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 
+import org.deegree.ogcwebservices.wms.capabilities.Layer;
+import org.deegree.ogcwebservices.wms.capabilities.WMSCapabilities;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.swt.graphics.Font;
 import org.kalypso.ogc.gml.wms.loader.ICapabilitiesLoader;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
@@ -106,5 +109,35 @@ public class OsmImageProvider implements IKalypsoImageProvider
   public ICapabilitiesLoader createCapabilitiesLoader( )
   {
     throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public org.eclipse.swt.graphics.Image getLegendGraphic( final Font font )
+  {
+    return null;
+  }
+
+  @Override
+  public WMSCapabilities getCapabilities( )
+  {
+    return null;
+  }
+
+  @Override
+  public boolean isLayerVisible( final String name )
+  {
+    return false;
+  }
+
+  @Override
+  public void setLayerVisible( final String name, final boolean visible )
+  {
+
+  }
+
+  @Override
+  public String getStyle( final Layer layer )
+  {
+    return null;
   }
 }

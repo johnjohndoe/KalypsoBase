@@ -46,8 +46,11 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.deegree.datatypes.QualifiedName;
 import org.deegree.model.metadata.iso19115.OnlineResource;
 import org.deegree.ogcwebservices.OGCWebServiceException;
@@ -74,18 +77,15 @@ import org.eclipse.swt.graphics.Font;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.variables.VariableUtils;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.outline.nodes.ILegendProvider;
 import org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities;
 import org.kalypso.ogc.gml.wms.loader.ICapabilitiesLoader;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
- * The base implementation of the deegree WMS client.
- *
  * @author Holger Albert
  */
-public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvider, ILegendProvider
+public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvider
 {
   /**
    * This variable stores the name of the theme.
@@ -193,18 +193,13 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
   }
 
   @Override
-  public synchronized org.eclipse.swt.graphics.Image getLegendGraphic( final String[] whiteList, final boolean onlyVisible, final Font font )
+  public synchronized org.eclipse.swt.graphics.Image getLegendGraphic( final Font font )
   {
-    /* We need a remote WMS. */
-    final RemoteWMService wms = getWms();
-    if( wms == null )
+    if( m_capabilities == null )
       return null;
 
-    /* Check, if there is a legend graphic available. */
-    final WMSCapabilities capabilities = (WMSCapabilities) wms.getCapabilities();
-
     /* Layers. */
-    final Layer[] layers = findLayer( capabilities );
+    final Layer[] layers = findLayer( m_capabilities );
 
     /* No layers, no legend graphic. */
     if( layers == null || layers.length == 0 )
@@ -487,5 +482,55 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     m_negotiatedSRS = null;
     m_getMapUrl = null;
     m_lastRequest = null;
+  }
+
+  @Override
+  public WMSCapabilities getCapabilities( )
+  {
+    return m_capabilities;
+  }
+
+  @Override
+  public boolean isLayerVisible( final String name )
+  {
+    return ArrayUtils.contains( m_layers, name );
+  }
+
+  @Override
+  public void setLayerVisible( final String name, final boolean visible )
+  {
+    if( m_capabilities == null )
+      return;
+
+    /* Prepare which-list */
+    final Map<String, String> layersAndStyles = new LinkedHashMap<>();
+    for( int i = 0; i < m_layers.length; i++ )
+      layersAndStyles.put( m_layers[i], m_styles[i] );
+
+    /* Change visibility of that one layer */
+    if( visible )
+      layersAndStyles.put( name, null );
+    else
+      layersAndStyles.remove( name );
+
+    final WMSLayerConfigurator configurator = new WMSLayerConfigurator( m_capabilities, layersAndStyles );
+
+    final String[] layers = configurator.getLayers();
+    final String[] styles = configurator.getStyles();
+
+    setLayers( layers, styles );
+  }
+
+  @Override
+  public synchronized String getStyle( final Layer layer )
+  {
+    final String name = layer.getName();
+    for( int i = 0; i < m_layers.length; i++ )
+    {
+      if( m_layers[i].equals( name ) )
+        return m_styles[i];
+    }
+
+    return null;
   }
 }

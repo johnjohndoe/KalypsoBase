@@ -57,9 +57,6 @@ public class ThemeNodeContentProvider implements ITreeContentProvider
 
   private boolean m_isCompact = true;
 
-  /**
-   * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -70,9 +67,6 @@ public class ThemeNodeContentProvider implements ITreeContentProvider
     return m_viewer;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
-   */
   @Override
   public Object[] getElements( final Object inputElement )
   {
@@ -90,9 +84,6 @@ public class ThemeNodeContentProvider implements ITreeContentProvider
     return node.getChildren();
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
-   */
   @Override
   public boolean hasChildren( final Object element )
   {
@@ -104,9 +95,6 @@ public class ThemeNodeContentProvider implements ITreeContentProvider
     return node.hasChildren();
   }
 
-  /**
-   * @see org.eclipse.ui.model.BaseWorkbenchContentProvider#getParent(java.lang.Object)
-   */
   @Override
   public Object getParent( final Object element )
   {

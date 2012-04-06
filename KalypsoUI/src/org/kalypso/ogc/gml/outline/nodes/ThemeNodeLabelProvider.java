@@ -111,9 +111,6 @@ public class ThemeNodeLabelProvider extends LabelProvider implements IFontProvid
     return (Image) getResourceManager().get( descriptor );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.IFontProvider#getFont(java.lang.Object)
-   */
   @Override
   public Font getFont( final Object element )
   {
@@ -121,9 +118,6 @@ public class ThemeNodeLabelProvider extends LabelProvider implements IFontProvid
     return ((IFontProvider) node).getFont( element );
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider#getTooltip(java.lang.Object)
-   */
   @Override
   public String getTooltip( final Object element )
   {

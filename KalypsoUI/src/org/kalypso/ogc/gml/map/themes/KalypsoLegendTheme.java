@@ -48,10 +48,9 @@ import java.awt.Insets;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Display;
@@ -70,7 +69,7 @@ import org.kalypso.util.themes.position.PositionUtilities;
 
 /**
  * The legend theme is able to display available legends for all or a subset of themes in a map.
- * 
+ *
  * @author Andreas Doemming (original)
  * @author Holger Albert (modifications)
  */
@@ -98,7 +97,7 @@ public class KalypsoLegendTheme extends AbstractImageTheme
 
   /**
    * The constructor
-   * 
+   *
    * @param name
    *          The name of the theme.
    * @param mapModel
@@ -115,18 +114,12 @@ public class KalypsoLegendTheme extends AbstractImageTheme
     m_fontSize = -1;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getDefaultIcon()
-   */
   @Override
   public ImageDescriptor getDefaultIcon( )
   {
     return KalypsoGisPlugin.getImageProvider().getImageDescriptor( ImageProvider.DESCRIPTORS.IMAGE_THEME_LEGEND );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.themes.AbstractImageTheme#updateImage(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   protected Image updateImage( IProgressMonitor monitor )
   {
@@ -157,30 +150,24 @@ public class KalypsoLegendTheme extends AbstractImageTheme
       final Display display = PlatformUI.getWorkbench().getDisplay();
       display.syncExec( new Runnable()
       {
-        /**
-         * @see java.lang.Runnable#run()
-         */
         @Override
         public void run( )
         {
+          if( m_backgroundColor == null )
+          {
+            image[0] = null;
+            return;
+          }
+
           try
           {
-            if( m_backgroundColor == null )
-            {
-              image[0] = null;
-              return;
-            }
-
             /* Create the legend. */
             final LegendExporter legendExporter = new LegendExporter();
             image[0] = legendExporter.exportLegends( m_themeIds, nodes, display, new Insets( m_insets, m_insets, m_insets, m_insets ), m_backgroundColor.getRGB(), -1, -1, true, m_fontSize, subMonitor );
           }
-          catch( final CoreException ex )
+          catch( final OperationCanceledException e )
           {
-            image[0] = null;
-
-            if( ex.getStatus().getSeverity() != IStatus.CANCEL )
-              ex.printStackTrace();
+            // ignored
           }
         }
       } );

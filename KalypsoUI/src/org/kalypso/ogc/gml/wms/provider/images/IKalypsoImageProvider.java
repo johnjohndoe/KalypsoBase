@@ -42,9 +42,12 @@ package org.kalypso.ogc.gml.wms.provider.images;
 
 import java.awt.Image;
 
+import org.deegree.ogcwebservices.wms.capabilities.Layer;
+import org.deegree.ogcwebservices.wms.capabilities.WMSCapabilities;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.swt.graphics.Font;
 import org.kalypso.ogc.gml.wms.loader.ICapabilitiesLoader;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
@@ -133,4 +136,13 @@ public interface IKalypsoImageProvider
    */
   ICapabilitiesLoader createCapabilitiesLoader( );
 
+  org.eclipse.swt.graphics.Image getLegendGraphic( Font font ) throws CoreException;
+
+  WMSCapabilities getCapabilities( );
+
+  boolean isLayerVisible( String name );
+
+  void setLayerVisible( String name, boolean visible );
+
+  String getStyle( Layer layer );
 }

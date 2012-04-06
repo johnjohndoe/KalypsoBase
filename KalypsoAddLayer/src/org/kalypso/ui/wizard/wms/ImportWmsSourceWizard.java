@@ -162,6 +162,8 @@ public class ImportWmsSourceWizard extends AbstractDataImportWizard
         if( providerID != null )
           provider.append( providerID );
 
+        // FIXME: should use label from capabilities instead of this ugly layerName
+
         final String layerName = "Multi" + source; //$NON-NLS-1$
         source.append( "#" ).append( layers.toString() ); //$NON-NLS-1$
         source.append( "#" ).append( styles.toString() ); //$NON-NLS-1$

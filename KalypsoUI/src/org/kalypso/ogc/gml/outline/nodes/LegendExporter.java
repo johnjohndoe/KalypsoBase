@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline.nodes;
 
@@ -67,14 +67,14 @@ import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * Helper for creating legend images for themes.
- * 
+ *
  * @author Gernot Belger
  */
 public class LegendExporter
 {
   /**
    * This function exports the legend of the given themes to a file. It seems that it has to be run in an UI-Thread.
-   * 
+   *
    * @param themes
    *          The themes to export.
    * @param file
@@ -143,7 +143,7 @@ public class LegendExporter
 
   /**
    * This function exports the legend of the given themes as swt image.<br>
-   * 
+   *
    * @param whiteList
    *          The ids of the nodes (themes), which are to be shown. May be empty or null. In these cases, all nodes
    *          (themes) will be shown.
@@ -169,7 +169,7 @@ public class LegendExporter
    *          A progress monitor.
    * @return The newly created image, must be disposed by the caller.
    */
-  public Image exportLegends( final String[] whiteList, final IThemeNode[] nodes, final Device device, Insets insets, final RGB backgroundRGB, final int sizeWidth, final int sizeHeight, final boolean onlyVisible, int fontSize, final IProgressMonitor monitor ) throws CoreException
+  public Image exportLegends( final String[] whiteList, final IThemeNode[] nodes, final Device device, Insets insets, final RGB backgroundRGB, final int sizeWidth, final int sizeHeight, final boolean onlyVisible, int fontSize, final IProgressMonitor monitor )
   {
     /* Set default insets, if none are given. */
     if( insets == null )

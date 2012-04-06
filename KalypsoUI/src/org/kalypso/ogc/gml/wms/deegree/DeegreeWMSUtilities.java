@@ -54,6 +54,8 @@ import org.deegree.model.spatialschema.Envelope;
 import org.deegree.model.spatialschema.Position;
 import org.deegree.ogcwebservices.wms.capabilities.Layer;
 import org.deegree.ogcwebservices.wms.capabilities.LayerBoundingBox;
+import org.deegree.ogcwebservices.wms.capabilities.LegendURL;
+import org.deegree.ogcwebservices.wms.capabilities.Style;
 import org.deegree.ogcwebservices.wms.capabilities.WMSCapabilities;
 import org.deegree.ogcwebservices.wms.operation.GetMap;
 import org.deegree.owscommon_new.DCP;
@@ -62,6 +64,7 @@ import org.deegree.owscommon_new.Operation;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.i18n.Messages;
@@ -423,5 +426,36 @@ public final class DeegreeWMSUtilities
   public static String env2bboxString( final GM_Envelope env )
   {
     return env.getMin().getX() + "," + env.getMin().getY() + "," + env.getMax().getX() + "," + env.getMax().getY(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+  }
+
+  public static ImageDescriptor getLegendImage( final Layer layer, final String style )
+  {
+    /* Get the URL of the legend. */
+    final LegendURL legendURL = findLegendURL( layer, style );
+    if( legendURL == null )
+      return null;
+
+    /* Get the real URL. */
+    final URL onlineResource = legendURL.getOnlineResource();
+
+    return ImageDescriptor.createFromURL( onlineResource );
+  }
+
+  private static LegendURL findLegendURL( final Layer layer, final String styleName )
+  {
+    if( styleName == null )
+      return null;
+
+    final Style style = layer.getStyleResource( styleName );
+    if( style == null )
+      return null;
+
+    /* Get the URLs for the legend. */
+    final LegendURL[] legendURLs = style.getLegendURL();
+    if( legendURLs.length == 0 )
+      return null;
+
+    // TODO: Only the first legend URL will be used for now.
+    return legendURLs[0];
   }
 }
