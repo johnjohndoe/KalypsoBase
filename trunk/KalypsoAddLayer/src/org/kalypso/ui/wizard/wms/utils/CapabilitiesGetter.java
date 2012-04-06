@@ -8,14 +8,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities;
 import org.kalypso.ogc.gml.wms.loader.ICapabilitiesLoader;
 import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
 import org.kalypso.ogc.gml.wms.utils.KalypsoWMSUtilities;
 
 /**
  * Small runnable, which loads the capabilities from a WMS.
- * 
+ *
  * @author Holger Albert
  */
 public class CapabilitiesGetter implements ICoreRunnableWithProgress
@@ -43,7 +42,7 @@ public class CapabilitiesGetter implements ICoreRunnableWithProgress
 
   /**
    * This function starts the loading of the capabilities.
-   * 
+   *
    * @param monitor
    *          A progress monitor.
    * @return A status containing the result.
@@ -58,22 +57,17 @@ public class CapabilitiesGetter implements ICoreRunnableWithProgress
     final IKalypsoImageProvider imageProvider = KalypsoWMSUtilities.getImageProvider( "", null, null, "", m_providerID, null ); //$NON-NLS-1$ //$NON-NLS-2$
 
     /* Get the loader. */
-    final ICapabilitiesLoader loader = imageProvider.getLoader();
-
-    /* Init the loader. */
-    loader.init( m_service );
+    final ICapabilitiesLoader loader = imageProvider.createCapabilitiesLoader();
 
     /* Load the capabilities. */
-    final WMSCapabilities capabilities = DeegreeWMSUtilities.loadCapabilities( loader, monitor );
-
-    m_capabilities = capabilities;
+    m_capabilities = loader.load( m_service, monitor );
 
     return Status.OK_STATUS;
   }
 
   /**
    * This function returns the last retrieved capabilities.
-   * 
+   *
    * @return The last retrieved capabilities.
    */
   public WMSCapabilities getCapabilities( )

@@ -124,9 +124,6 @@ public class URLGetter implements ICoreRunnableWithProgress
 
     final Thread thread = new Thread()
     {
-      /**
-       * @see java.lang.Thread#run()
-       */
       @Override
       public void run( )
       {

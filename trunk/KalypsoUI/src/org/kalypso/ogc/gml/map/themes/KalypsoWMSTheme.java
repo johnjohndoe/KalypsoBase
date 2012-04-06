@@ -42,22 +42,22 @@ package org.kalypso.ogc.gml.map.themes;
 
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Point;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Font;
 import org.kalypso.commons.i18n.I10nString;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.AbstractKalypsoTheme;
-import org.kalypso.ogc.gml.IGetFeatureInfoResultProcessor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.nodes.ILegendProvider;
-import org.kalypso.ogc.gml.wms.loader.images.KalypsoImageLoader;
 import org.kalypso.ogc.gml.wms.provider.images.AbstractDeegreeImageProvider;
 import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
 import org.kalypso.template.types.LayerType;
@@ -70,12 +70,14 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * This class implements the a theme, which loads images from a given provider.
- * 
+ *
  * @author Doemming, Kuepferle
  * @author Holger Albert
  */
 public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipProvider
 {
+  private static final IStatus INIT_STATUS = new Status( IStatus.INFO, KalypsoGisPlugin.PLUGIN_ID, "Fetching capabilities from server..." );
+
   /**
    * The source string. Do not remove this, because it is needed, when the template is saved. It should not be modified.
    */
@@ -85,6 +87,11 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
    * The layer.
    */
   private final LayerType m_layer;
+
+  /**
+   * This variable stores the result of the loading.
+   */
+  private Image m_buffer;
 
   /**
    * This variable stores the image provider.
@@ -108,8 +115,6 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   protected GM_Envelope m_extent;
 
   /**
-   * The constructor.
-   * 
    * @param source
    *          The source.
    * @param linktype
@@ -132,9 +137,6 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     m_legend = null;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#getFullExtent()
-   */
   @Override
   public GM_Envelope getFullExtent( )
   {
@@ -149,63 +151,51 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     if( selected != null && selected )
       return Status.OK_STATUS;
 
-    setStatus( AbstractKalypsoTheme.PAINT_STATUS );
-
-    // HACK: initialize the max-extend on first paint, because paint is the only method that is allowed to block
-    // FIXME: we should refaktor4 the whole image provider: it should immediately start loading the capas in a sepearate
-    // thread and should inform the theme when it has finished.
-    if( m_maxEnvLocalSRS == null )
-      m_maxEnvLocalSRS = m_provider.getFullExtent();
-
-    final int width = (int) p.getDestWidth();
-    final int height = (int) p.getDestHeight();
-    final GM_Envelope extent = p.getSourceRect();
-
-    // FIXME: no job needed here, directly call image provider
-    final KalypsoImageLoader loader = new KalypsoImageLoader( getLabel(), m_provider, width, height, extent );
-    final IStatus status = loader.run( monitor );
-    if( status.isOK() )
+    /* Initialize loader */
+    final IStatus initStatus = initializeLoader();
+    if( !initStatus.isOK() )
     {
-      /* HINT: The image loading can take a few seconds. */
-      /* HINT: If the theme was switched invisible during these seconds, it will still be drawn, until the next repaint. */
-      /* HINT: Hopefully this will avoid this. */
-      final Image buffer = loader.getBuffer();
-      if( isVisible() )
-        g.drawImage( buffer, 0, 0, null );
+      setStatus( INIT_STATUS );
+      setStatus( initStatus );
+      return initStatus;
     }
 
-    setStatus( status );
-    return status;
+    /* Paint image */
+    setStatus( AbstractKalypsoTheme.PAINT_STATUS );
+    final IStatus imageStatus = paintImage( g, p, monitor );
+    setStatus( imageStatus );
+
+    return imageStatus;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#dispose()
-   */
   @Override
   public void dispose( )
   {
-    /* Dispose the legend. */
-    if( m_legend != null )
+    synchronized( this )
     {
-      m_legend.dispose();
-      m_legend = null;
+      /* Dispose the legend. */
+      if( m_legend != null )
+      {
+        m_legend.dispose();
+        m_legend = null;
+      }
+
+      if( m_buffer != null )
+      {
+        m_buffer.flush();
+        m_buffer = null;
+      }
     }
 
     super.dispose();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#isLoaded()
-   */
   @Override
   public boolean isLoaded( )
   {
     return true;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider#getTooltip(java.lang.Object)
-   */
   @Override
   public String getTooltip( final Object element )
   {
@@ -219,7 +209,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 
   /**
    * This function returns the image provider of this theme.
-   * 
+   *
    * @return The image provider of this theme.
    */
   public IKalypsoImageProvider getImageProvider( )
@@ -227,83 +217,11 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     return m_provider;
   }
 
-  /**
-   * This function currently does nothing, because the info functionality of themes has to be refactored completely.
-   * 
-   * @param pointOfInterest
-   * @param format
-   * @param getFeatureInfoResultProcessor
-   * @throws Exception
-   */
-  @SuppressWarnings("unused")
-  public void performGetFeatureinfoRequest( final Point pointOfInterest, final String format, final IGetFeatureInfoResultProcessor getFeatureInfoResultProcessor ) throws Exception
-  {
-// KalypsoRemoteWMService remoteWMS = m_remoteWMS;
-// if( remoteWMS == null )
-// return;
-//
-// // check if nothing to request
-// if( m_maxEnvLocalSRS == null )
-// return;
-//
-// String id = "KalypsoWMSGetFeatureInfoRequest" + getName() + new Date().getTime();
-//
-// HashMap<String, String> parameterMap = remoteWMS.createGetFeatureinfoRequest( pointOfInterest, format );
-// parameterMap.put( "ID", id );
-//
-// // TODO: the WMSFeatureInfoRequest does not support Base URLs with query part. Fix this.
-// GetFeatureInfo getInfo = GetFeatureInfo.create( parameterMap );
-//
-// Object responseEvent = m_remoteWMS.doService( getInfo );
-// if( responseEvent == null )
-// return;
-//
-// if( !(responseEvent instanceof GetFeatureInfoResult) )
-// return;
-//
-// try
-// {
-// GetFeatureInfoResult featureInfoResponse = (GetFeatureInfoResult) responseEvent;
-// StringBuffer result = new StringBuffer();
-// String featureInfo = featureInfoResponse.getFeatureInfo();
-// if( featureInfo != null )
-// {
-// // String xsl="";
-// //
-// // XMLHelper.xslTransform(new InputSource(featureInfo), null);
-// result.append( featureInfo );
-// }
-// else
-// result.append( " keine oder fehlerhafte Antwort vom Server" );
-// OGCWebServiceException exception = featureInfoResponse.getException();
-// result.append( "\n\nFehlerMeldung: " );
-// if( exception != null )
-// result.append( "\n" + exception.toString() );
-// else
-// result.append( "keine" );
-// getFeatureInfoResultProcessor.write( result.toString() );
-// System.out.println( featureInfo );
-// }
-// catch( Exception e )
-// {
-// GetFeatureInfoResult featureInfoResponse = (GetFeatureInfoResult) responseEvent;
-// OGCWebServiceException exception = featureInfoResponse.getException();
-// if( exception != null )
-// System.out.println( "OGC_WMS_Exception:\n" + exception.toString() );
-// }
-
-    // This thing is disabled !!!
-    getFeatureInfoResultProcessor.write( "FIX ME" ); //$NON-NLS-1$
-  }
-
   public String getSource( )
   {
     return m_source;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getDefaultIcon()
-   */
   @Override
   public ImageDescriptor getDefaultIcon( )
   {
@@ -312,7 +230,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 
   /**
    * This function returns the last request or null.
-   * 
+   *
    * @return The last request or null.
    */
   public String getLastRequest( )
@@ -350,5 +268,61 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 
     final StyledLayerType styledLayer = (StyledLayerType) m_layer;
     return styledLayer.getStyle().toArray( new Style[] {} );
+  }
+
+  private IStatus initializeLoader( )
+  {
+    if( m_provider == null )
+      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString( "org.kalypso.ogc.gml.wms.loader.images.KalypsoImageLoader.1" ) ); //$NON-NLS-1$
+
+    return m_provider.checkInitialize( new NullProgressMonitor() );
+  }
+
+  private synchronized IStatus paintImage( final Graphics g, final GeoTransform p, final IProgressMonitor monitor )
+  {
+    /* Start the task. */
+    monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.wms.loader.images.KalypsoImageLoader.0" ), 1000 ); //$NON-NLS-1$
+
+    try
+    {
+      // HACK: initialize the max-extend on first paint, because paint is the only method that is allowed to block
+      // FIXME: we should refaktor the whole image provider: it should immediately start loading the capas in a
+      // sepearate thread and should inform the theme when it has finished.
+      if( m_maxEnvLocalSRS == null )
+        m_maxEnvLocalSRS = m_provider.getFullExtent();
+
+      /* Load the image. This could take a while. */
+      final int width = (int) p.getDestWidth();
+      final int height = (int) p.getDestHeight();
+      final GM_Envelope extent = p.getSourceRect();
+
+      m_buffer = m_provider.getImage( width, height, extent );
+
+      final IStatus status = new Status( IStatus.OK, KalypsoGisPlugin.getId(), Messages.getString( "org.kalypso.ogc.gml.wms.loader.images.KalypsoImageLoader.2" ) ); //$NON-NLS-1$
+      if( !status.isOK() )
+        return status;
+
+      if( monitor.isCanceled() )
+        return Status.CANCEL_STATUS;
+
+      // HINT: If the theme was switched invisible during these seconds, it will still be drawn, until the next repaint.
+      // Hopefully this will avoid this. */
+      if( isVisible() && m_buffer != null )
+        g.drawImage( m_buffer, 0, 0, null );
+
+      return status;
+    }
+    catch( final CoreException e )
+    {
+      return e.getStatus();
+    }
+    catch( final Throwable throwable )
+    {
+      return StatusUtilities.statusFromThrowable( throwable );
+    }
+    finally
+    {
+      monitor.done();
+    }
   }
 }

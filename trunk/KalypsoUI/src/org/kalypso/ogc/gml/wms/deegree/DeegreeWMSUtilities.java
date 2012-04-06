@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.wms.deegree;
 
-import java.awt.Point;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
@@ -50,9 +48,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.deegree.datatypes.QualifiedName;
-import org.deegree.framework.xml.XMLFragment;
 import org.deegree.model.spatialschema.Envelope;
 import org.deegree.model.spatialschema.Position;
 import org.deegree.ogcwebservices.wms.capabilities.Layer;
@@ -63,15 +60,11 @@ import org.deegree.owscommon_new.DCP;
 import org.deegree.owscommon_new.HTTP;
 import org.deegree.owscommon_new.Operation;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.eclipse.core.net.Proxy;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.wms.deegree.document.KalypsoWMSCapabilitiesDocument;
-import org.kalypso.ogc.gml.wms.loader.ICapabilitiesLoader;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -81,111 +74,19 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * This class provides functions for dealing with the WMS client from degree.
- * 
+ *
  * @author Holger Albert
  */
-public class DeegreeWMSUtilities
+public final class DeegreeWMSUtilities
 {
-  /**
-   * The constructor.
-   */
   private DeegreeWMSUtilities( )
   {
-  }
-
-  /**
-   * This function should load the capabilites for the given service.
-   * 
-   * @param loader
-   *          This loader will load the capabilities.
-   * @param monitor
-   *          A progress monitor.
-   */
-  public static WMSCapabilities loadCapabilities( final ICapabilitiesLoader loader, final IProgressMonitor monitor ) throws CoreException
-  {
-    /* The input stream. */
-    InputStream inputStream = null;
-
-    try
-    {
-      /* FIXME: HACK: Initialize once, to init the java-proxy settings, in case they are not set. */
-      Proxy.getProxyService( KalypsoGisPlugin.getDefault() );
-
-      /* Get the input stream of the capabilities. */
-      inputStream = loader.getCapabilitiesStream( monitor );
-
-      /* This is a capabilities document from deegree, which was overwritten by Kalypso. */
-      final KalypsoWMSCapabilitiesDocument doc = new KalypsoWMSCapabilitiesDocument();
-
-      /* Load the capabilities xml. */
-      doc.load( inputStream, XMLFragment.DEFAULT_URL );
-
-
-      /* Create the capabilities. */
-      final WMSCapabilities capabilities = (WMSCapabilities) doc.parseCapabilities();
-      if( capabilities == null )
-      {
-        final String messsage = Messages.getString( "org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities.0" ); //$NON-NLS-1$
-        throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), messsage ) );
-      }
-
-      return capabilities;
-    }
-    catch( final CoreException ex )
-    {
-      throw ex;
-    }
-    catch( final Exception ex )
-    {
-      // FIXME: we need better error handling
-      final String message = "Failed to load capabilities document";
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), message, ex ) );
-    }
-    finally
-    {
-      /* Close the input stream. */
-      IOUtils.closeQuietly( inputStream );
-    }
-  }
-
-  /**
-   * This function creates the get feature info request.
-   * 
-   * @param capabilities
-   *          The wms capabilities.
-   * @param layers
-   *          The layers.
-   * @param pointOfInterest
-   *          The point of interest.
-   * @param format
-   *          The format.
-   * @return The get feature info request.
-   */
-  public static HashMap<String, String> createGetFeatureinfoRequest( final WMSCapabilities capabilities, final String layers, final Point pointOfInterest, final String format ) throws CoreException
-  {
-    // TODO: does not work at the moment
-    final HashMap<String, String> parameterMap = prepareRequestParameters( capabilities, "GetFeatureInfo" ); //$NON-NLS-1$
-    parameterMap.put( "QUERY_LAYERS", layers ); //$NON-NLS-1$
-
-    if( format != null && format.length() > 0 )
-      parameterMap.put( "INFO_FORMAT", format ); //$NON-NLS-1$
-
-    parameterMap.put( "X", Integer.toString( pointOfInterest.x ) ); //$NON-NLS-1$
-    parameterMap.put( "Y", Integer.toString( pointOfInterest.y ) ); //$NON-NLS-1$
-
-    parameterMap.put( "LAYERS", "dummy" ); //$NON-NLS-1$ //$NON-NLS-2$
-    parameterMap.put( "FORMAT", "image/gif" ); //$NON-NLS-1$ //$NON-NLS-2$
-    parameterMap.put( "WIDTH", "100" ); //$NON-NLS-1$ //$NON-NLS-2$
-    parameterMap.put( "HEIGHT", "100" ); //$NON-NLS-1$ //$NON-NLS-2$
-    parameterMap.put( "SRS", "100" ); //$NON-NLS-1$ //$NON-NLS-2$
-    parameterMap.put( "BBOX", "100" ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    return parameterMap;
+    throw new UnsupportedOperationException();
   }
 
   /**
    * This function creates the get map request.
-   * 
+   *
    * @param capabilities
    *          The wms capabilities.
    * @param negotiatedSRS
@@ -212,7 +113,7 @@ public class DeegreeWMSUtilities
   {
     try
     {
-      final HashMap<String, String> wmsParameter = prepareRequestParameters( capabilities, "GetMap" ); //$NON-NLS-1$
+      final Map<String, String> wmsParameter = prepareRequestParameters( capabilities, "GetMap" ); //$NON-NLS-1$
 
       final String layerParam = Arrays.toString( layers, "," ); //$NON-NLS-1$
       wmsParameter.put( "LAYERS", layerParam ); //$NON-NLS-1$
@@ -270,7 +171,7 @@ public class DeegreeWMSUtilities
 
   /**
    * This function prepares the request parameter.
-   * 
+   *
    * @param capabilities
    *          The wms capabilities.
    * @param name
@@ -331,7 +232,7 @@ public class DeegreeWMSUtilities
 
   /**
    * Tries to find the operation.
-   * 
+   *
    * @param capabilities
    *          The wms capabilities.
    * @param name
@@ -344,7 +245,7 @@ public class DeegreeWMSUtilities
   {
     final Operation operation = capabilities.getOperationMetadata().getOperation( new QualifiedName( name ) );
     if( operation == null )
-      throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities.44" ) + name ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities.44" ) + name ) ); //$NON-NLS-1$
 
     return operation;
   }
@@ -353,7 +254,7 @@ public class DeegreeWMSUtilities
    * This method tries to find a common spatial reference system (srs) for a given set of layers. If all layers
    * coorespond to the local crs the local crs is returned, otherwise the srs of the top layer is returned and the
    * client must choose one to transform it to the local coordinate system
-   * 
+   *
    * @param localCRS
    *          The local spatial reference system.
    * @param capabilities
@@ -377,7 +278,7 @@ public class DeegreeWMSUtilities
 
   /**
    * This method tries to match the local coordinate system to a given layer selection.
-   * 
+   *
    * @param topLayer
    *          The top layer of the layer structur of a web map service.
    * @param layerSelection
@@ -389,17 +290,15 @@ public class DeegreeWMSUtilities
    */
   private static String matchCrs( final Layer topLayer, final String[] layerSelection, final String localCRS )
   {
-    final HashSet<Layer> collector = new HashSet<Layer>();
+    final Set<Layer> collector = new HashSet<Layer>();
 
     collect( collector, topLayer, layerSelection );
 
     for( final Layer layer : collector )
     {
       final String[] layerSRS = layer.getSrs();
-      if( contains( layerSRS, localCRS ) )
-        continue;
-
-      return null;
+      if( !ArrayUtils.contains( layerSRS, localCRS ) )
+        return null;
     }
 
     return localCRS;
@@ -409,7 +308,7 @@ public class DeegreeWMSUtilities
    * This method collects all layers (or the specified layers) from the top layer of a WMSCapabilites document. If the
    * parameter layerSeletion is empty or null the method collects all layers, otherwise returns all layers with the same
    * name as in the layerSelection.
-   * 
+   *
    * @param collector
    *          The set that collects the layers found.
    * @param layer
@@ -426,7 +325,7 @@ public class DeegreeWMSUtilities
         collect( collector, newLayer, layerSelection );
       else if( layerSelection != null )
       {
-        if( contains( layerSelection, newLayer.getName() ) )
+        if( ArrayUtils.contains( layerSelection, newLayer.getName() ) )
           collector.add( newLayer );
       }
       else
@@ -435,25 +334,8 @@ public class DeegreeWMSUtilities
   }
 
   /**
-   * This method checks an array of Strings for a given String to match.
-   * 
-   * @param array
-   *          Strings to check for a match.
-   * @param toMatch
-   *          The string to match.
-   * @return True, if the String is the array, false otherwise.
-   */
-  private static boolean contains( final String[] array, final String toMatch )
-  {
-    for( final String element : array )
-      if( element.equals( toMatch ) )
-        return true;
-    return false;
-  }
-
-  /**
    * This method gets the max bounding box of a wms layer.
-   * 
+   *
    * @param layers
    *          The layers in the map in an array.
    * @param srs
@@ -512,7 +394,7 @@ public class DeegreeWMSUtilities
 
   /**
    * This method collects all layers from a capabilites document.
-   * 
+   *
    * @param capabilites
    *          WMS capabilites document.
    * @param set
@@ -533,7 +415,7 @@ public class DeegreeWMSUtilities
 
   /**
    * This function converts an envelope to a string representation.
-   * 
+   *
    * @param envelope
    *          The envelope.
    * @return The string representation of the envelope.

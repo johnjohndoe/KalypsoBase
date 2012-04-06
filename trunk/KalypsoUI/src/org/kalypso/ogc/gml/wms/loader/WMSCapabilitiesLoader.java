@@ -41,7 +41,6 @@
 package org.kalypso.ogc.gml.wms.loader;
 
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.core.runtime.CoreException;
@@ -55,51 +54,24 @@ import org.kalypso.util.net.URLGetter;
 
 /**
  * This loader loads the capabilities.
- * 
+ *
  * @author Holger Albert
  */
-public class WMSCapabilitiesLoader implements ICapabilitiesLoader
+public class WMSCapabilitiesLoader extends AbstractWMSCapabilitiesLoader
 {
   /**
-   * The base URL of the service.
-   */
-  private URL m_baseURL;
-
-  /**
-   * The timeout for the access.
-   */
-  private final int m_timeout;
-
-  /**
-   * The conbstructor.
-   * 
    * @param timeout
    *          The timeout for the access.
    */
   public WMSCapabilitiesLoader( final int timeout )
   {
-    m_baseURL = null;
-    m_timeout = timeout;
+    super( timeout );
   }
 
-  /**
-   * TODO: should go into the constructor.
-   * 
-   * @see org.kalypso.ogc.gml.wms.loader.ICapabilitiesLoader#init(java.net.URL)
-   */
   @Override
-  public void init( final URL baseURL )
+  public InputStream openCapabilitiesStream( final URL serviceURL, final IProgressMonitor monitor ) throws CoreException
   {
-    m_baseURL = baseURL;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.wms.loader.ICapabilitiesLoader#getCapabilitiesStream(org.eclipse.core.runtime.IProgressMonitor)
-   */
-  @Override
-  public InputStream getCapabilitiesStream( final IProgressMonitor monitor ) throws CoreException
-  {
-    if( m_baseURL == null )
+    if( serviceURL == null )
       return null;
 
     monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.wms.loader.WMSCapabilitiesLoader.0" ), 100 ); //$NON-NLS-1$
@@ -109,16 +81,17 @@ public class WMSCapabilitiesLoader implements ICapabilitiesLoader
       monitor.subTask( Messages.getString( "org.kalypso.ogc.gml.wms.loader.WMSCapabilitiesLoader.1" ) ); //$NON-NLS-1$
 
       /* Create the capabilities URL. */
-      final URL capabilitiesURL = getCapabilitiesURL();
+      final URL capabilitiesURL = KalypsoWMSUtilities.createCapabilitiesRequest( serviceURL );
 
       monitor.worked( 25 );
       monitor.subTask( Messages.getString( "org.kalypso.ogc.gml.wms.loader.WMSCapabilitiesLoader.2" ) ); //$NON-NLS-1$
 
       // TODO: why this getter stuff? why not just open the stream of the url?
       // At least, please comment!
+      // FIXME: the whole CapabilitiesLoader should be execduted in an own thread, instead of usin the URL getter stuff
 
       /* Create a getter for retrieving the URL. */
-      final URLGetter getter = URLGetter.createURLGetter( capabilitiesURL, m_timeout, 0 );
+      final URLGetter getter = URLGetter.createURLGetter( capabilitiesURL, getTimeout(), 0 );
 
       monitor.worked( 25 );
       monitor.subTask( Messages.getString( "org.kalypso.ogc.gml.wms.loader.WMSCapabilitiesLoader.3" ) ); //$NON-NLS-1$
@@ -136,17 +109,11 @@ public class WMSCapabilitiesLoader implements ICapabilitiesLoader
     }
     catch( final Exception ex )
     {
-      throw new CoreException( new Status( IStatus.ERROR, "org.kalypso.ui", Messages.getString( "org.kalypso.ogc.gml.wms.loader.WMSCapabilitiesLoader.5" ) + m_baseURL.toExternalForm(), ex ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new CoreException( new Status( IStatus.ERROR, "org.kalypso.ui", Messages.getString( "org.kalypso.ogc.gml.wms.loader.WMSCapabilitiesLoader.5" ) + serviceURL.toExternalForm(), ex ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     finally
     {
       monitor.done();
     }
-  }
-
-  @Override
-  public URL getCapabilitiesURL( ) throws MalformedURLException
-  {
-    return KalypsoWMSUtilities.createCapabilitiesRequest( m_baseURL );
   }
 }

@@ -41,8 +41,6 @@
 package org.kalypso.ogc.gml.wms.provider.images;
 
 import java.awt.Image;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -50,8 +48,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
 import org.deegree.datatypes.QualifiedName;
+import org.deegree.model.metadata.iso19115.OnlineResource;
 import org.deegree.ogcwebservices.OGCWebServiceException;
 import org.deegree.ogcwebservices.OGCWebServiceRequest;
 import org.deegree.ogcwebservices.wms.RemoteWMService;
@@ -64,12 +62,14 @@ import org.deegree.ogcwebservices.wms.operation.GetMapResult;
 import org.deegree.owscommon_new.DCP;
 import org.deegree.owscommon_new.HTTP;
 import org.deegree.owscommon_new.Operation;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.swt.graphics.Device;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Font;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.variables.VariableUtils;
@@ -82,7 +82,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * The base implementation of the deegree WMS client.
- * 
+ *
  * @author Holger Albert
  */
 public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvider, ILegendProvider
@@ -118,11 +118,6 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
   private String m_sldBody;
 
   /**
-   * This variable stores the loader for the capabilities.
-   */
-  private final ICapabilitiesLoader m_loader;
-
-  /**
    * This variable stores the WMS service or is null.
    */
   private RemoteWMService m_wms;
@@ -134,37 +129,10 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
 
   private URL m_getMapUrl;
 
-  /**
-   * The last request.
-   */
   private String m_lastRequest;
 
-  /**
-   * The constructor.
-   * 
-   * @param loader
-   *          The loader for loading the capabilities.
-   */
-  public AbstractDeegreeImageProvider( final ICapabilitiesLoader loader )
-  {
-    m_themeName = null;
-    m_layers = null;
-    m_styles = null;
-    m_service = null;
-    m_localSRS = null;
-    m_sldBody = null;
+  private WMSCapabilities m_capabilities;
 
-    m_loader = loader;
-    m_wms = null;
-    m_negotiatedSRS = null;
-    m_getMapUrl = null;
-    m_lastRequest = null;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider#init(java.lang.String, java.lang.String[],
-   *      java.lang.String[], java.lang.String, java.lang.String, java.lang.String)
-   */
   @Override
   public void init( final String themeName, final String[] layers, final String[] styles, final String service, final String localSRS, final String sldBody )
   {
@@ -181,80 +149,129 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     m_lastRequest = null;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.wms.provider.IKalypsoImageProvider#getImage(int, int,
-   *      org.kalypsodeegree.model.geometry.GM_Envelope)
-   */
+  @Override
+  public synchronized IStatus checkInitialize( final IProgressMonitor monitor )
+  {
+    if( m_service == null )
+      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString( "org.kalypso.ogc.gml.wms.provider.images.AbstractDeegreeImageProvider.1" ) ); //$NON-NLS-1$
+
+    try
+    {
+      final WMSCapabilities wmsCaps = loadCapabilities();
+
+      /* Initialize the remote WMS, if it is not already done. */
+      return initializeRemoteWMS( wmsCaps );
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+      return new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, "Failed to load service capabilities", e );
+    }
+  }
+
+  private WMSCapabilities loadCapabilities( ) throws CoreException
+  {
+    if( m_capabilities != null )
+      return m_capabilities;
+
+    /* Create the service URL. */
+    final URL serviceURL = parseServiceUrl( m_service );
+
+    /* Init the loader. */
+    final ICapabilitiesLoader loader = createCapabilitiesLoader();
+    m_capabilities = loader.load( serviceURL, new NullProgressMonitor() );
+    return m_capabilities;
+  }
+
   @Override
   public Image getImage( final int width, final int height, final GM_Envelope bbox ) throws CoreException
   {
-    /* Initialize the remote WMS, if it is not already done. */
-    initializeRemoteWMS();
+    if( m_wms == null )
+      return null;
 
     return loadImage( width, height, bbox );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.outline.nodes.ILegendProvider#getLegendGraphic(java.lang.String[], boolean,
-   *      org.eclipse.swt.graphics.Font)
-   */
   @Override
-  public org.eclipse.swt.graphics.Image getLegendGraphic( final String[] whiteList, final boolean onlyVisible, final Font font ) throws CoreException
+  public synchronized org.eclipse.swt.graphics.Image getLegendGraphic( final String[] whiteList, final boolean onlyVisible, final Font font )
   {
-    /* Initialize the remote WMS, if it is not already done. */
-    initializeRemoteWMS();
+    /* We need a remote WMS. */
+    final RemoteWMService wms = getWms();
+    if( wms == null )
+      return null;
 
-    return loadLegendGraphic( font.getDevice() );
+    /* Check, if there is a legend graphic available. */
+    final WMSCapabilities capabilities = (WMSCapabilities) wms.getCapabilities();
+
+    /* Layers. */
+    final Layer[] layers = findLayer( capabilities );
+
+    /* No layers, no legend graphic. */
+    if( layers == null || layers.length == 0 )
+      return null;
+
+    /* Get the URL of the legend. */
+    final LegendURL legendURL = findLegendURL( layers );
+    if( legendURL == null )
+      return null;
+
+    /* Get the real URL. */
+    final URL onlineResource = legendURL.getOnlineResource();
+
+    final ImageDescriptor imageDescriptor = ImageDescriptor.createFromURL( onlineResource );
+    return imageDescriptor.createImage( font.getDevice() );
   }
 
   /**
-   * This function initialises the WMS and loads the Capabilities.
+   * This function initializes the WMS and loads the Capabilities.
    */
-  private void initializeRemoteWMS( ) throws CoreException
+  private IStatus initializeRemoteWMS( final WMSCapabilities wmsCaps )
   {
-    /* Cache the WMS, so that its capabilities are only initialized once. */
-    if( m_wms == null )
+    if( m_wms != null )
+      return Status.OK_STATUS;
+
+    /* Ask for the srs. */
+    m_negotiatedSRS = negotiateCRS( m_localSRS, wmsCaps, m_layers );
+
+    m_getMapUrl = findGetMapGetURL( wmsCaps );
+
+    /* Initialize the WMS. */
+    m_wms = createRemoteService( wmsCaps );
+
+    return Status.OK_STATUS;
+  }
+
+  private URL findGetMapGetURL( final WMSCapabilities wmsCaps )
+  {
+    final Operation operation = wmsCaps.getOperationMetadata().getOperation( new QualifiedName( "GetMap" ) ); //$NON-NLS-1$
+
+    final List<DCP> dcps = operation.getDCP();
+    for( final DCP dcp : dcps )
     {
-      if( m_service == null )
-        throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString( "org.kalypso.ogc.gml.wms.provider.images.AbstractDeegreeImageProvider.1" ) ) ); //$NON-NLS-1$
-
-      /* Create the service URL. */
-      final URL serviceURL = parseServiceUrl( m_service );
-
-      /* Init the loader. */
-      m_loader.init( serviceURL );
-
-      /* Create the capabilities. */
-      final WMSCapabilities wmsCaps = DeegreeWMSUtilities.loadCapabilities( m_loader, new NullProgressMonitor() );
-
-      /* Ask for the srs. */
-      m_negotiatedSRS = negotiateCRS( m_localSRS, wmsCaps, m_layers );
-      final Operation operation = wmsCaps.getOperationMetadata().getOperation( new QualifiedName( "GetMap" ) );
-      HTTP http = null;
-      final List<DCP> dcps = operation.getDCP();
-      for( final DCP dcp : dcps )
-        if( dcp instanceof HTTP )
-          http = (HTTP) dcp;
-      if( http != null )
-        m_getMapUrl = http.getLinks().get( 0 ).getLinkage().getHref();
-
-      /* Initialize the WMS. */
-      m_wms = getRemoteService( wmsCaps );
+      if( dcp instanceof HTTP )
+      {
+        final HTTP http = (HTTP) dcp;
+        final List<OnlineResource> links = http.getLinks();
+        if( links.size() > 0 )
+          return links.get( 0 ).getLinkage().getHref();
+      }
     }
+
+    return null;
   }
 
   /**
    * This function creates the remote service and returns it.
-   * 
+   *
    * @param capabilities
    *          The capabilites for the remote service.
    * @return The remote service.
    */
-  protected abstract RemoteWMService getRemoteService( WMSCapabilities capabilities );
+  protected abstract RemoteWMService createRemoteService( WMSCapabilities capabilities );
 
   /**
    * This function parses a String into an URL to the WMS service.
-   * 
+   *
    * @param service
    *          The String representation of the URL to the WMS service.
    * @return The URL to the WMS service.
@@ -263,7 +280,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
   {
     try
     {
-      String resolvedService = VariableUtils.resolveVariablesQuietly( service );
+      final String resolvedService = VariableUtils.resolveVariablesQuietly( service );
       return new URL( resolvedService );
     }
     catch( final MalformedURLException e )
@@ -276,7 +293,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
    * This method tries to find a common spatial reference system (srs) for a given set of layers. If all layers
    * coorespond to the local crs the local crs is returned, otherwise the srs of the top layer is returned and the
    * client must choose one to transform it to the local coordinate system
-   * 
+   *
    * @param localCRS
    *          The local spatial reference system.
    * @param capabilities
@@ -295,17 +312,11 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     return localSRS;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.themes.provider.IKalypsoImageProvider#getFullExtent()
-   */
   @Override
-  public GM_Envelope getFullExtent( )
+  public synchronized GM_Envelope getFullExtent( )
   {
     try
     {
-      /* Initialize the remote WMS, if it is not already done. */
-      initializeRemoteWMS();
-
       if( m_wms == null || m_layers == null )
         return null;
 
@@ -319,57 +330,32 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     return null;
   }
 
-  protected String getThemeName( )
+  private String getThemeName( )
   {
     return m_themeName;
   }
 
-  /**
-   * Needed for some childs that do implement an own load image function.
-   */
-  protected String[] getLayers( )
-  {
-    return m_layers;
-  }
-
-  /**
-   * Needed for some childs that do implement an own load image function.
-   */
-  protected String[] getStyles( )
-  {
-    return m_styles;
-  }
-
-  protected String getService( )
+  protected synchronized String getService( )
   {
     return m_service;
   }
 
-  protected String getLocalSRS( )
+  private String getLocalSRS( )
   {
     return m_localSRS;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.wms.provider.IKalypsoImageProvider#getLoader()
-   */
-  @Override
-  public ICapabilitiesLoader getLoader( )
-  {
-    return m_loader;
-  }
-
-  protected RemoteWMService getWms( )
+  private RemoteWMService getWms( )
   {
     return m_wms;
   }
 
-  protected String getNegotiatedSRS( )
+  private String getNegotiatedSRS( )
   {
     return m_negotiatedSRS;
   }
 
-  protected Image loadImage( final int width, final int height, final GM_Envelope bbox ) throws CoreException
+  private final Image loadImage( final int width, final int height, final GM_Envelope bbox ) throws CoreException
   {
     try
     {
@@ -431,57 +417,6 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     }
   }
 
-  protected org.eclipse.swt.graphics.Image loadLegendGraphic( final Device device ) throws CoreException
-  {
-    /* We need a remote WMS. */
-    final RemoteWMService wms = getWms();
-    if( wms == null )
-      return null;
-
-    /* Check, if there is a legend graphic available. */
-    final WMSCapabilities capabilities = (WMSCapabilities) wms.getCapabilities();
-
-    /* Layers. */
-    final Layer[] layers = findLayer( capabilities );
-
-    /* No layers, no legend graphic. */
-    if( layers == null || layers.length == 0 )
-      return null;
-
-    /* Get the URL of the legend. */
-    final LegendURL legendURL = findLegendURL( layers );
-    if( legendURL == null )
-      return null;
-
-    /* Get the real URL. */
-    final URL onlineResource = legendURL.getOnlineResource();
-
-    /* The input stream. */
-    InputStream inputStream = null;
-
-    try
-    {
-      /* Open the stream. */
-      inputStream = onlineResource.openStream();
-
-      /* The result image. */
-      final org.eclipse.swt.graphics.Image result = new org.eclipse.swt.graphics.Image( device, inputStream );
-
-      /* Close the stream. */
-      inputStream.close();
-
-      return result;
-    }
-    catch( final IOException e )
-    {
-      throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
-    }
-    finally
-    {
-      IOUtils.closeQuietly( inputStream );
-    }
-  }
-
   /**
    * Finds the layers this image provider represents.
    */
@@ -532,11 +467,25 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
 
   /**
    * This function returns the last request or null.
-   * 
+   *
    * @return The last request or null.
    */
-  public String getLastRequest( )
+  public synchronized String getLastRequest( )
   {
     return m_lastRequest;
+  }
+
+  public synchronized void setLayers( final String[] layers, final String[] styles )
+  {
+    Assert.isTrue( layers.length == styles.length );
+
+    m_layers = layers;
+    m_styles = styles;
+
+    /* Reset cached properties */
+    m_wms = null;
+    m_negotiatedSRS = null;
+    m_getMapUrl = null;
+    m_lastRequest = null;
   }
 }

@@ -78,11 +78,6 @@ import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
  */
 public class WmsThemeFactory implements IKalypsoThemeFactory
 {
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoThemeFactory#createTheme(org.kalypso.commons.i18n.I10nString,
-   *      org.kalypso.template.types.StyledLayerType, java.net.URL, org.kalypso.ogc.gml.mapmodel.IMapModell,
-   *      org.kalypso.ogc.gml.selection.IFeatureSelectionManager)
-   */
   @Override
   public IKalypsoTheme createTheme( final I10nString layerName, final StyledLayerType layerType, final URL context, final IMapModell mapModell, final IFeatureSelectionManager selectionManager ) throws CoreException
   {
@@ -109,9 +104,6 @@ public class WmsThemeFactory implements IKalypsoThemeFactory
       {
         final IUrlResolver2 resolver = new IUrlResolver2()
         {
-          /**
-           * @see org.kalypso.contribs.java.net.IUrlResolver2#resolveURL(java.lang.String)
-           */
           @Override
           public URL resolveURL( final String relativeOrAbsolute ) throws MalformedURLException
           {
@@ -143,10 +135,6 @@ public class WmsThemeFactory implements IKalypsoThemeFactory
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoThemeFactory#configureLayer(org.kalypso.ogc.gml.IKalypsoTheme, java.lang.String,
-   *      org.kalypsodeegree.model.geometry.GM_Envelope, java.lang.String)
-   */
   @Override
   public JAXBElement< ? extends StyledLayerType> configureLayer( final IKalypsoTheme theme, final String id, final GM_Envelope bbox, final String srsName )
   {
