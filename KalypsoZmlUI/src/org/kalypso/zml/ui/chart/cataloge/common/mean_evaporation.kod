@@ -40,13 +40,13 @@
       </AreaStyle>
     </Styles>
     <Layers>
-      <Layer id="MEAN_EVAPORATION">
+      <Layer id="MEAN_EVAPORATION_LAND_BASED">
         <Provider epid="">
           <Parameters>
             <Parameter name="content.evaporation" value="true" />
           </Parameters>
         </Provider>
-        <Title>Mittlere Verdunstung</Title>
+        <Title>Mittlere Grasverdunstung</Title>
         <Layers>
           <DerivedLayer id="Stuetzstellen" legend="false" visible="false">
             <Description />
@@ -63,7 +63,7 @@
                 <Parameter name="supportsMultiSelect" value="true" />
               </Parameters>
             </Provider>
-            <Title>Mittlere Verdunstung</Title>
+            <Title>Mittlere Grasverdunstung</Title>
             <Description />
             <Styles>
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:mean:evaporation#mean_evaporation_area_0</StyleReference>
@@ -75,14 +75,61 @@
         </Layers>
         <MapperRefs>
           <DomainAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#date" />
-          <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:common:mean:evaporation#MEAN_EVAPORATION" />
+          <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:common:mean:evaporation#MEAN_EVAPORATION_LAND_BASED" />
+        </MapperRefs>
+      </Layer>
+      <Layer id="MEAN_EVAPORATION_WATER_BASED">
+        <Provider epid="">
+          <Parameters>
+            <Parameter name="content.evaporation" value="true" />
+          </Parameters>
+        </Provider>
+        <Title>Mittlere Seeverdunstung</Title>
+        <Layers>
+          <DerivedLayer id="StuetzstellenSee" legend="false" visible="false">
+            <Description />
+            <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:quality#Stuetzstellen"></LayerReference>
+          </DerivedLayer>
+          <DerivedLayer id="FehlwertSee" legend="false" visible="false">
+            <Description />
+            <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:quality#Fehlwerte"></LayerReference>
+          </DerivedLayer>
+
+          <Layer id="EvaporationWater" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlBarLayerProvider">
+              <Parameters>
+                <Parameter name="supportsMultiSelect" value="true" />
+              </Parameters>
+            </Provider>
+            <Title>Mittlere Seeverdunstung</Title>
+            <Description />
+            <Styles>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:mean:evaporation#mean_evaporation_area_0</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:mean:evaporation#mean_evaporation_area_1</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:mean:evaporation#mean_evaporation_area_2</StyleReference>
+            </Styles>
+          </Layer>
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
+        </Layers>
+        <MapperRefs>
+          <DomainAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#date" />
+          <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:common:mean:evaporation#MEAN_EVAPORATION_WATER_BASED" />
         </MapperRefs>
       </Layer>
     </Layers>
     <Mappers>
-      <Axis id="MEAN_EVAPORATION" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <Axis id="MEAN_EVAPORATION_LAND_BASED" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-        <Label>Mittlere Verdunstung [mm]</Label>
+        <Label>Mittlere Grasverdunstung [mm]</Label>
+        <Direction>POSITIVE</Direction>
+        <Position>RIGHT</Position>
+        <PreferredAdjustment before="0" range="50" after="50" fixMinRange="1.0" />
+        <RendererRef ref="AutoNumberAxisRenderer" />
+        <AxisNumberRangeRestriction absoluteMinValue="0.0" minRange="0.1" fixMinValue="true" />
+      </Axis>
+      <Axis id="MEAN_EVAPORATION_WATER_BASED" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Label>Mittlere Seeverdunstung [mm]</Label>
         <Direction>POSITIVE</Direction>
         <Position>RIGHT</Position>
         <PreferredAdjustment before="0" range="50" after="50" fixMinRange="1.0" />
