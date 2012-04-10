@@ -42,7 +42,6 @@ package org.kalypso.ogc.sensor.timeseries.base;
 
 import java.util.Date;
 import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
@@ -70,7 +69,7 @@ import com.google.common.collect.Iterables;
  */
 public class CacheTimeSeriesVisitor implements ITupleModelVisitor, ITimeseriesCache
 {
-  private final Map<Date, TupleModelDataSet[]> m_values = new TreeMap<Date, TupleModelDataSet[]>();
+  private final TreeMap<Date, TupleModelDataSet[]> m_values = new TreeMap<Date, TupleModelDataSet[]>();
 
   private final String m_source;
 
@@ -94,11 +93,13 @@ public class CacheTimeSeriesVisitor implements ITupleModelVisitor, ITimeseriesCa
     m_metadata = null;
   }
 
-  public Map<Date, TupleModelDataSet[]> getValueMap( )
+  @Override
+  public TreeMap<Date, TupleModelDataSet[]> getValueMap( )
   {
     return m_values;
   }
 
+  @Override
   public DatedDataSets[] getValues( )
   {
     final Set<DatedDataSets> sets = new LinkedHashSet<DatedDataSets>();
@@ -182,11 +183,13 @@ public class CacheTimeSeriesVisitor implements ITupleModelVisitor, ITimeseriesCa
     return AxisUtils.findDateAxis( container.getAxes() );
   }
 
+  @Override
   public TupleModelDataSet[] getValue( final Date date )
   {
     return m_values.get( date );
   }
 
+  @Override
   public TupleModelDataSet getValue( final Date date, final IAxis valueAxis )
   {
     final TupleModelDataSet[] dataSets = m_values.get( date );
@@ -251,6 +254,7 @@ public class CacheTimeSeriesVisitor implements ITupleModelVisitor, ITimeseriesCa
     return null;
   }
 
+  @Override
   public DateRange getDateRange( )
   {
     final Set<Date> keys = m_values.keySet();

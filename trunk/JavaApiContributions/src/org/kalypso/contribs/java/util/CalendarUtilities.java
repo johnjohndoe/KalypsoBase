@@ -41,10 +41,12 @@
 package org.kalypso.contribs.java.util;
 
 import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * CalendarUtilities
- *
+ * 
  * @author schlienger
  */
 public final class CalendarUtilities
@@ -113,7 +115,7 @@ public final class CalendarUtilities
    * <p>
    * As last resort, if the fieldName does not represent a the literal name of a calendar field, it is assumed to be an
    * integer representing its java-internal value. Finally this value is returned.
-   *
+   * 
    * @param fieldName
    * @return Calendar.*
    * @see java.util.Calendar
@@ -133,7 +135,7 @@ public final class CalendarUtilities
 
   /**
    * Important note: this method is not localized and is designed to be used in a german environment.
-   *
+   * 
    * @return the string abbreviation of the given field. For instance if field is the java internal value HOUR_OF_DAY,
    *         'h' is returned
    */
@@ -194,6 +196,14 @@ public final class CalendarUtilities
       default:
         throw new IllegalArgumentException( "Unknown field: " + fieldValue );
     }
+  }
+
+  public static Calendar getCalendar( final Date date, final TimeZone timeZone )
+  {
+    final Calendar calendar = Calendar.getInstance( timeZone );
+    calendar.setTime( date );
+
+    return calendar;
   }
 
 }
