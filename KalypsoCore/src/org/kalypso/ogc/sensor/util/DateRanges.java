@@ -46,6 +46,7 @@ import java.util.Date;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.ogc.sensor.SensorException;
 
 /**
  * @author Dirk Kuch
@@ -88,4 +89,46 @@ public final class DateRanges
     return calendar.getTime();
   }
 
+  /**
+   * @return common range of date range d1 and d2.
+   */
+  public static DateRange intersect( final DateRange d1, final DateRange d2 ) throws SensorException
+  {
+    if( Objects.allNull( d1, d2 ) )
+      return new DateRange();
+    else if( Objects.isNull( d1 ) )
+      return d2;
+    else if( Objects.isNull( d2 ) )
+      return d1;
+
+    if( !d1.intersects( d2 ) || !d2.intersects( d1 ) )
+      throw new SensorException( "Date ranges doesn't intersects." );
+
+    final Long from = getMax( d1.getFrom(), d2.getFrom() );
+    final Long to = getMin( d1.getTo(), d2.getTo() );
+
+    return new DateRange( new Date( from ), new Date( to ) );
+  }
+
+  private static Long getMin( final Date date1, final Date date2 )
+  {
+    if( Objects.isNull( date1, date2 ) )
+      return Objects.firstNonNull( date1, date2 ).getTime();
+
+    final long time1 = date1.getTime();
+    final long time2 = date2.getTime();
+
+    return Math.min( time1, time2 );
+  }
+
+  private static Long getMax( final Date date1, final Date date2 )
+  {
+    if( Objects.isNull( date1, date2 ) )
+      return Objects.firstNonNull( date1, date2 ).getTime();
+
+    final long time1 = date1.getTime();
+    final long time2 = date2.getTime();
+
+    return Math.max( time1, time2 );
+  }
 }

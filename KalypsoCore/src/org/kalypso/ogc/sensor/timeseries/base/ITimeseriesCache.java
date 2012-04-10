@@ -40,10 +40,26 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.base;
 
+import java.util.Date;
+import java.util.TreeMap;
+
+import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.TupleModelDataSet;
+
 /**
  * @author Dirk Kuch
  */
 public interface ITimeseriesCache
 {
+  DateRange getDateRange( );
+
+  TupleModelDataSet[] getValue( Date date );
+
+  TupleModelDataSet getValue( Date date, IAxis valueAxis );
+
+  TreeMap<Date, TupleModelDataSet[]> getValueMap( );
+
+  DatedDataSets[] getValues( );
 
 }
