@@ -63,7 +63,7 @@
                 <Parameter name="supportsMultiSelect" value="true" />
               </Parameters>
             </Provider>
-            <Title>Mittlere Grasverdunstung</Title>
+            <Title>Grasverdunstung</Title>
             <Description />
             <Styles>
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:evaporation#evaporation_area_0</StyleReference>
@@ -101,7 +101,7 @@
                 <Parameter name="supportsMultiSelect" value="true" />
               </Parameters>
             </Provider>
-            <Title>Mittlere Seeverdunstung</Title>
+            <Title>Seeverdunstung</Title>
             <Description />
             <Styles>
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:evaporation#evaporation_area_0</StyleReference>
@@ -120,7 +120,7 @@
     <Mappers>
       <Axis id="E_LAND" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-        <Label>Mittlere Grasverdunstung [mm]</Label>
+        <Label>Grasverdunstung [mm]</Label>
         <Direction>POSITIVE</Direction>
         <Position>RIGHT</Position>
         <PreferredAdjustment before="0" range="50" after="50" fixMinRange="1.0" />
@@ -129,7 +129,7 @@
       </Axis>
       <Axis id="E_WATER" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-        <Label>Mittlere Seeverdunstung [mm]</Label>
+        <Label>Seeverdunstung [mm]</Label>
         <Direction>POSITIVE</Direction>
         <Position>RIGHT</Position>
         <PreferredAdjustment before="0" range="50" after="50" fixMinRange="1.0" />
