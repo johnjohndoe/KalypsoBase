@@ -2,7 +2,7 @@
 <ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/">
   <Chart id="volume">
     <Styles>
-      <AreaStyle role="mean_sunshine_area_0">
+      <AreaStyle role="sunshine_area_0">
         <Alpha>64</Alpha>
         <Fill>
           <ColorFill>
@@ -14,7 +14,7 @@
           <LineColor>FFDB3D</LineColor>
         </Stroke>
       </AreaStyle>
-      <AreaStyle role="mean_sunshine_area_1">
+      <AreaStyle role="sunshine_area_1">
         <Alpha>64</Alpha>
         <Fill>
           <ColorFill>
@@ -26,7 +26,7 @@
           <LineColor>CCAC30</LineColor>
         </Stroke>
       </AreaStyle>
-      <AreaStyle role="mean_sunshine_area_2">
+      <AreaStyle role="sunshine_area_2">
         <Alpha>64</Alpha>
         <Fill>
           <ColorFill>
@@ -40,8 +40,8 @@
       </AreaStyle>
     </Styles>
     <Layers>
-      <Layer id="MEAN_SUNSHINE">
-        <Title>Mittlere Sonnenscheindauer [h/d]</Title>
+      <Layer id="H_SUNSHINE">
+        <Title>Sonnenscheindauer [h/d]</Title>
         <Layers>
           <DerivedLayer id="Stuetzstellen" legend="false" visible="false">
             <Description />
@@ -59,12 +59,12 @@
                 <Parameter name="supportsMultiSelect" value="true" />
               </Parameters>
             </Provider>
-            <Title>Mittlere Sonnenscheindauer</Title>
+            <Title>Sonnenscheindauer</Title>
             <Description />
             <Styles>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:mean:sunshine:hours#mean_sunshine_area_0</StyleReference>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:mean:sunshine:hours#mean_sunshine_area_1</StyleReference>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:mean:sunshine:hours#mean_sunshine_area_2</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:sunshine:hours#sunshine_area_0</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:sunshine:hours#sunshine_area_1</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:sunshine:hours#sunshine_area_2</StyleReference>
             </Styles>
           </Layer>
 
@@ -72,14 +72,14 @@
         </Layers>
         <MapperRefs>
           <DomainAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#date" />
-          <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:common:mean:sunshine:hours#MEAN_SUNSHINE" />
+          <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:common:sunshine:hours#H_SUNSHINE" />
         </MapperRefs>
       </Layer>
     </Layers>
     <Mappers>
-      <Axis id="MEAN_SUNSHINE" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <Axis id="H_SUNSHINE" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-        <Label>Mittlere Sonnenscheindauer [h/d]</Label>
+        <Label>Sonnenscheindauer [h/d]</Label>
         <Direction>POSITIVE</Direction>
         <Position>RIGHT</Position>
         <PreferredAdjustment before="0" range="50" after="50" fixMinRange="1.0" />

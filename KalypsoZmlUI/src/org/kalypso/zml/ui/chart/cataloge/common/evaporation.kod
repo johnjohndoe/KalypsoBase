@@ -2,7 +2,7 @@
 <ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/">
   <Chart id="evaporation">
     <Styles>
-      <AreaStyle role="e_area_0">
+      <AreaStyle role="evaporation_area_0">
         <Alpha>64</Alpha>
         <Fill>
           <ColorFill>
@@ -14,7 +14,7 @@
           <LineColor>FF5A00</LineColor>
         </Stroke>
       </AreaStyle>
-      <AreaStyle role="e_area_1">
+      <AreaStyle role="evaporation_area_1">
         <Alpha>64</Alpha>
         <Fill>
           <ColorFill>
@@ -26,7 +26,7 @@
           <LineColor>FF744A</LineColor>
         </Stroke>
       </AreaStyle>
-      <AreaStyle role="e_area_2">
+      <AreaStyle role="evaporation_area_2">
         <Alpha>64</Alpha>
         <Fill>
           <ColorFill>
@@ -40,13 +40,13 @@
       </AreaStyle>
     </Styles>
     <Layers>
-      <Layer id="E">
+      <Layer id="E_LAND">
         <Provider epid="">
           <Parameters>
             <Parameter name="content.evaporation" value="true" />
           </Parameters>
         </Provider>
-        <Title>Verdunstung</Title>
+        <Title>Grasverdunstung</Title>
         <Layers>
           <DerivedLayer id="Stuetzstellen" legend="false" visible="false">
             <Description />
@@ -63,26 +63,73 @@
                 <Parameter name="supportsMultiSelect" value="true" />
               </Parameters>
             </Provider>
-            <Title>Verdunstung</Title>
+            <Title>Mittlere Grasverdunstung</Title>
             <Description />
             <Styles>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:evaporation#e_area_0</StyleReference>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:evaporation#e_area_1</StyleReference>
-              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:evaporation#e_area_2</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:evaporation#evaporation_area_0</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:evaporation#evaporation_area_1</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:evaporation#evaporation_area_2</StyleReference>
             </Styles>
           </Layer>
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
         </Layers>
         <MapperRefs>
           <DomainAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#date" />
-          <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:common:evaporation#E" />
+          <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:common:evaporation#E_LAND" />
+        </MapperRefs>
+      </Layer>
+      <Layer id="E_WATER">
+        <Provider epid="">
+          <Parameters>
+            <Parameter name="content.evaporation" value="true" />
+          </Parameters>
+        </Provider>
+        <Title>Seeverdunstung</Title>
+        <Layers>
+          <DerivedLayer id="StuetzstellenSee" legend="false" visible="false">
+            <Description />
+            <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:quality#Stuetzstellen"></LayerReference>
+          </DerivedLayer>
+          <DerivedLayer id="FehlwertSee" legend="false" visible="false">
+            <Description />
+            <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:quality#Fehlwerte"></LayerReference>
+          </DerivedLayer>
+
+          <Layer id="EvaporationWater" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <Provider epid="org.kalypso.zml.ui.chart.layer.provider.ZmlBarLayerProvider">
+              <Parameters>
+                <Parameter name="supportsMultiSelect" value="true" />
+              </Parameters>
+            </Provider>
+            <Title>Mittlere Seeverdunstung</Title>
+            <Description />
+            <Styles>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:evaporation#evaporation_area_0</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:evaporation#evaporation_area_1</StyleReference>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:evaporation#evaporation_area_2</StyleReference>
+            </Styles>
+          </Layer>
+          <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
+        </Layers>
+        <MapperRefs>
+          <DomainAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#date" />
+          <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:common:evaporation#E_WATER" />
         </MapperRefs>
       </Layer>
     </Layers>
     <Mappers>
-      <Axis id="E" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <Axis id="E_LAND" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
-        <Label>Verdunstung [mm]</Label>
+        <Label>Mittlere Grasverdunstung [mm]</Label>
+        <Direction>POSITIVE</Direction>
+        <Position>RIGHT</Position>
+        <PreferredAdjustment before="0" range="50" after="50" fixMinRange="1.0" />
+        <RendererRef ref="AutoNumberAxisRenderer" />
+        <AxisNumberRangeRestriction absoluteMinValue="0.0" minRange="0.1" fixMinValue="true" />
+      </Axis>
+      <Axis id="E_WATER" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Label>Mittlere Seeverdunstung [mm]</Label>
         <Direction>POSITIVE</Direction>
         <Position>RIGHT</Position>
         <PreferredAdjustment before="0" range="50" after="50" fixMinRange="1.0" />

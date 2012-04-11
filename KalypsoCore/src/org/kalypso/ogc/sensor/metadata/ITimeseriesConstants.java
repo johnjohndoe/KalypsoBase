@@ -216,10 +216,10 @@ public interface ITimeseriesConstants extends IMetadataConstants
   String TYPE_MEAN_HUMIDITY = "MEAN_HUMIDITY"; //$NON-NLS-1$
 
   /** Sunshine hours [h/d] */
-  String TYPE_MEAN_SUNSHINE_HOURS = "MEAN_SUNSHINE"; //$NON-NLS-1$
+  String TYPE_SUNSHINE_HOURS = "H_SUNSHINE"; //$NON-NLS-1$
 
   /** Evaporation water based [mm] / Seeverdunstung */
-  String TYPE_MEAN_EVAPORATION_WATER_BASED = "MEAN_EVAPORATION_WATER_BASED"; //$NON-NLS-1$
+  String TYPE_EVAPORATION_WATER_BASED = "E_WATER"; //$NON-NLS-1$
 
   /** Evaporation land based [mm] / Grasverdunstung */
   String TYPE_MEAN_EVAPORATION_LAND_BASED = "MEAN_EVAPORATION_LAND_BASED"; //$NON-NLS-1$
