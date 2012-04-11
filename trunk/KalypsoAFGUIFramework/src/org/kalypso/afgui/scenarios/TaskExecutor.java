@@ -144,6 +144,9 @@ public class TaskExecutor implements ITaskExecutor
         return Status.OK_STATUS;
     }
 
+    if( !stopActiveTask() )
+      return Status.OK_STATUS;
+
     final IStatus contextStatus = activateTaskContext( task );
     // REMARK: we return AFTER closing all unnecessary views, else some open views may remain in case of errors
     if( !contextStatus.isOK() )
