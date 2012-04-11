@@ -2,6 +2,7 @@ package org.kalypso.ui.wizard.wms.utils;
 
 import java.net.URL;
 
+import org.apache.commons.lang3.StringUtils;
 import org.deegree.ogcwebservices.wms.capabilities.WMSCapabilities;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -54,7 +55,7 @@ public class CapabilitiesGetter implements ICoreRunnableWithProgress
      * This image provider should do nothing, but create the necessary image loader, so we need not to provide anything,
      * except the providerID.
      */
-    final IKalypsoImageProvider imageProvider = KalypsoWMSUtilities.getImageProvider( "", null, null, "", m_providerID, null ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IKalypsoImageProvider imageProvider = KalypsoWMSUtilities.getImageProvider( StringUtils.EMPTY, new String[0], new String[0], StringUtils.EMPTY, m_providerID, null );
 
     /* Get the loader. */
     final ICapabilitiesLoader loader = imageProvider.createCapabilitiesLoader();

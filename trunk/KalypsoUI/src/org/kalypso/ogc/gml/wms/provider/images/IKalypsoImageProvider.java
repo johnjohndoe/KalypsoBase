@@ -94,7 +94,7 @@ public interface IKalypsoImageProvider
    * @param sldBody
    *          This is the content of a SLD, if we want the server to render the image with a specific style.
    */
-  void init( String themeName, String[] layers, String[] styles, String service, String localSRS, String sldBody );
+  void init( String providerID, String themeName, String[] layers, String[] styles, String service, String localSRS, String sldBody );
 
   /**
    * Check if this loader is already initialized and does it if not.<br/>
@@ -145,4 +145,6 @@ public interface IKalypsoImageProvider
   void setLayerVisible( String name, boolean visible );
 
   String getStyle( Layer layer );
+
+  String getSource( );
 }

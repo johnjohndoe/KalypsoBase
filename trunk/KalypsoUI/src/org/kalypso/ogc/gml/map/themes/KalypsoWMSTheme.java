@@ -80,14 +80,6 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 {
   private static final IStatus INIT_STATUS = new Status( IStatus.INFO, KalypsoGisPlugin.PLUGIN_ID, "Fetching capabilities from server..." );
 
-  /**
-   * The source string. Do not remove this, because it is needed, when the template is saved. It should not be modified.
-   */
-  private final String m_source;
-
-  /**
-   * The layer.
-   */
   private final LayerType m_layer;
 
   /**
@@ -117,23 +109,16 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   protected GM_Envelope m_extent;
 
   /**
-   * @param source
-   *          The source.
-   * @param linktype
-   *          The link type.
    * @param themeName
    *          The name of the theme.
    * @param imageProvider
    *          The image provider, which should be used. If it has also the type {@link ILegendProvider} also a legend
    *          can be shown.
-   * @param mapModel
-   *          The map modell.
    */
-  public KalypsoWMSTheme( final String source, final String linktype, final I10nString themeName, final LayerType layerType, final IKalypsoImageProvider imageProvider, final IMapModell mapModel )
+  public KalypsoWMSTheme( final String linktype, final I10nString themeName, final LayerType layerType, final IKalypsoImageProvider imageProvider, final IMapModell mapModel )
   {
     super( themeName, linktype.toUpperCase(), mapModel );
 
-    m_source = source;
     m_layer = layerType;
     m_provider = imageProvider;
     m_legend = null;
@@ -221,7 +206,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 
   public String getSource( )
   {
-    return m_source;
+    return m_provider.getSource();
   }
 
   @Override
