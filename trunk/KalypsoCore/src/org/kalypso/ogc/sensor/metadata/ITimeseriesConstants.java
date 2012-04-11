@@ -222,5 +222,5 @@ public interface ITimeseriesConstants extends IMetadataConstants
   String TYPE_EVAPORATION_WATER_BASED = "E_WATER"; //$NON-NLS-1$
 
   /** Evaporation land based [mm] / Grasverdunstung */
-  String TYPE_MEAN_EVAPORATION_LAND_BASED = "MEAN_EVAPORATION_LAND_BASED"; //$NON-NLS-1$
+  String TYPE_EVAPORATION_LAND_BASED = "E_LAND"; //$NON-NLS-1$
 }
