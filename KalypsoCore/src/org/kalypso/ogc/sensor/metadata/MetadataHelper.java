@@ -277,6 +277,14 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
     return PeriodUtils.getPeriod( field, amount );
   }
 
+  /**
+   * This function sets the timestamp into the metadata.
+   * 
+   * @param metadata
+   *          The metadata to update.
+   * @param timestamp
+   *          The timestamp in UTC.
+   */
   public static void setTimestamp( final MetadataList metadata, final LocalTime timestamp )
   {
     /* REMARK: We assume the values are in UTC. */
@@ -284,6 +292,13 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
     metadata.put( MD_TIMESTAMP, timestampText );
   }
 
+  /**
+   * This function returns the timestamp.
+   * 
+   * @param metadata
+   *          The metadata.
+   * @return The timestamp in UTC or null.
+   */
   public static LocalTime getTimestamp( final MetadataList metadata )
   {
     /* Get the property. */
