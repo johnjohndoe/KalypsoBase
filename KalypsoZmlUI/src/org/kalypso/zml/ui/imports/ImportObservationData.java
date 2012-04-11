@@ -59,7 +59,7 @@ import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
 /**
  * @author Gernot Belger
  */
-public class ImportObservationData extends AbstractModelObject
+public class ImportObservationData extends AbstractModelObject implements IStoreObservationData
 {
   static final String PROPERTY_TIMEZONE = "timezone"; //$NON-NLS-1$
 
