@@ -1408,11 +1408,6 @@
            label="Feature Theme (WFS)"
            type="wfs">
      </factory>
-    <factory
-          class="org.kalypso.ogc.gml.map.themes.OsmThemeFactory"
-          label="OpenStreetMap Theme"
-          type="openStreetMap">
-    </factory>
      <factory
            class="org.kalypso.ogc.gml.map.themes.PictureThemeFactory"
            label="Picture Theme"
