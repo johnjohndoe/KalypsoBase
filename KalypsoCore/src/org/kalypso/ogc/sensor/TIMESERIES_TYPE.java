@@ -57,7 +57,11 @@ public enum TIMESERIES_TYPE
     switch( axisType )
     {
       case ITimeseriesConstants.TYPE_RAINFALL:
+      case ITimeseriesConstants.TYPE_EVAPORATION:
+      case ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED:
+      case ITimeseriesConstants.TYPE_EVAPORATION_WATER_BASED:
         return eSumValue;
+
       case ITimeseriesConstants.TYPE_DATE:
         return eDateValue;
       case ITimeseriesConstants.TYPE_POLDER_CONTROL:
