@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.outline.nodes;
 
 import org.apache.commons.lang3.StringUtils;
 import org.deegree.ogcwebservices.wms.capabilities.Layer;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.commons.command.ICommand;
@@ -144,7 +145,7 @@ public class WMSLayerNode extends AbstractThemeNode<Layer>
   }
 
   @Override
-  public Image getLegendGraphic( final String[] whiteList, final boolean onlyVisible, final Font font )
+  public Image getLegendGraphic( final String[] whiteList, final boolean onlyVisible, final Font font ) throws CoreException
   {
     final Image image = m_legendImageJob.getImage();
     if( image != null )
@@ -154,7 +155,7 @@ public class WMSLayerNode extends AbstractThemeNode<Layer>
 // if( m_legendImageJob.getState() != Job.RUNNING )
 // m_legendImageJob.schedule( 250 );
 
-    return null;
+    return super.getLegendGraphic( whiteList, onlyVisible, font );
   }
 
   public String getStyle( )

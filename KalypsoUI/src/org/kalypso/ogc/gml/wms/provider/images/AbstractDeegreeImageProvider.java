@@ -51,6 +51,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.deegree.datatypes.QualifiedName;
 import org.deegree.model.metadata.iso19115.OnlineResource;
 import org.deegree.ogcwebservices.OGCWebServiceException;
@@ -133,9 +134,12 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
 
   private WMSCapabilities m_capabilities;
 
+  private String m_providerID;
+
   @Override
-  public void init( final String themeName, final String[] layers, final String[] styles, final String service, final String localSRS, final String sldBody )
+  public void init( final String providerID, final String themeName, final String[] layers, final String[] styles, final String service, final String localSRS, final String sldBody )
   {
+    m_providerID = providerID;
     m_themeName = themeName;
     m_layers = layers;
     m_styles = styles;
@@ -532,5 +536,14 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     }
 
     return null;
+  }
+
+  @Override
+  public String getSource( )
+  {
+    final String layers = StringUtils.join( m_layers, "," );
+    final String styles = StringUtils.join( m_styles, "," );
+
+    return String.format( "%s=%s#%s=%s#%s=%s#%s=%s", IKalypsoImageProvider.KEY_URL, m_service, IKalypsoImageProvider.KEY_PROVIDER, m_providerID, IKalypsoImageProvider.KEY_LAYERS, layers, IKalypsoImageProvider.KEY_STYLES, styles );
   }
 }
