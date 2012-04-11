@@ -40,13 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.module.conversion.internal;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.module.conversion.AbstractLoggingOperation;
 import org.kalypso.module.conversion.IProjectConversionOperation;
 import org.kalypso.module.conversion.IProjectConverter;
 import org.kalypso.module.internal.i18n.Messages;
@@ -54,7 +56,7 @@ import org.kalypso.module.internal.i18n.Messages;
 /**
  * @author Gernot Belger
  */
-public class ProjectConversionOperation extends AbstractLoggingOperation implements IProjectConversionOperation
+public class ProjectConversionOperation implements IProjectConversionOperation
 {
   private final IProjectConverter m_converter;
 
@@ -62,7 +64,7 @@ public class ProjectConversionOperation extends AbstractLoggingOperation impleme
 
   public ProjectConversionOperation( final IProject project, final IProjectConverter converter )
   {
-    super( Messages.getString( "ProjectConversionOperation.0" ) ); //$NON-NLS-1$
+    //super( Messages.getString( "ProjectConversionOperation.0" ) ); //$NON-NLS-1$
 
     m_project = project;
     m_converter = converter;
@@ -75,15 +77,14 @@ public class ProjectConversionOperation extends AbstractLoggingOperation impleme
   }
 
   @Override
-  protected void doExecute( final IProgressMonitor monitor ) throws Exception
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException, InterruptedException
   {
     final String taskName = String.format( Messages.getString( "ProjectConversionOperation.1" ), m_project.getName(), m_converter.getLabel() ); //$NON-NLS-1$
     monitor.beginTask( taskName, 100 );
 
     try
     {
-      final IStatus status = m_converter.execute( new SubProgressMonitor( monitor, 90 ) );
-      getLog().add( status );
+      return m_converter.execute( new SubProgressMonitor( monitor, 90 ) );
     }
     finally
     {
