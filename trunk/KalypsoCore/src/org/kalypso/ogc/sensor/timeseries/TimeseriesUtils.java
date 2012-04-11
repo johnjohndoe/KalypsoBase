@@ -599,7 +599,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
    *          The tuple model of a timeseries.
    * @param timestep
    *          The timestep of the timeseries.
-   * @return The timestamp or null.
+   * @return The timestamp in UTC or null.
    */
   public static LocalTime guessTimestamp( final ITupleModel timeseries, final Period timestep ) throws SensorException
   {

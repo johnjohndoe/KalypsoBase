@@ -88,6 +88,11 @@ public class TimestampGuesser
     m_testSteps = testSteps;
   }
 
+  /**
+   * This function gueses the timestamp.
+   * 
+   * @return The timestamp in UTC.
+   */
   public LocalTime execute( ) throws SensorException
   {
     /* Get the number of test steps. */
