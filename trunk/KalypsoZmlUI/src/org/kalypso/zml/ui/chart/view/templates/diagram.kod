@@ -8,7 +8,7 @@
       </CascadingParameters>
 
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:discharge#Q" />
-      <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:evaporation#E" />
+      <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:evaporation:old#E" />
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:rainfall#N" />
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:temperature#T" />
       <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:volume#V" />
