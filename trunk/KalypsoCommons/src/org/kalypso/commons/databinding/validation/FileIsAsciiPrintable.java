@@ -54,9 +54,9 @@ import org.eclipse.core.runtime.IStatus;
  * 
  * @author Gernot Belger
  */
-public class FileIsisAsciiPrintable extends TypedValidator<File>
+public class FileIsAsciiPrintable extends TypedValidator<File>
 {
-  public FileIsisAsciiPrintable( final int severity, final String message )
+  public FileIsAsciiPrintable( final int severity, final String message )
   {
     super( File.class, severity, message );
   }
