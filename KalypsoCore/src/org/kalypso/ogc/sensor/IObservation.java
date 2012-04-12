@@ -56,6 +56,7 @@ public interface IObservation extends IObservationEventProvider
    * @param direction
    *          >= 0 forward iteration, < 0 backward iteration
    */
+  // TODO: use enum for direction instead of int
   void accept( IObservationVisitor visitor, IRequest request, int direction ) throws SensorException;
 
   /**
