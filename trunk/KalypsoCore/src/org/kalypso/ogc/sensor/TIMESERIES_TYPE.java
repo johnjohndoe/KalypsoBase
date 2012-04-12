@@ -47,8 +47,11 @@ import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
  */
 public enum TIMESERIES_TYPE
 {
+  // FIXME: strange enumeration of type: mix of semantic (sum, current) and data types (boolean, date)
   eSumValue,
   eCurrentValue,
+  // TODO: add eMeanValue here
+  // FIXME: date and boolean are never used and make no sense here; remove
   eDateValue,
   eBooleanValue;
 
@@ -70,6 +73,5 @@ public enum TIMESERIES_TYPE
       default:
         return eCurrentValue;
     }
-
   }
 }

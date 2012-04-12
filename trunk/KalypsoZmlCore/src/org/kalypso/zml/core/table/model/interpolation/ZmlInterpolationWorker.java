@@ -59,6 +59,8 @@ import org.kalypso.zml.core.i18n.Messages;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 
 /**
+ * Recalculates f(x) values.
+ * 
  * @author Dirk Kuch
  */
 public class ZmlInterpolationWorker implements ICoreRunnableWithProgress

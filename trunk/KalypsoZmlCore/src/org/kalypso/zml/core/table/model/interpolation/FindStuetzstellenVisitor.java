@@ -41,9 +41,10 @@
 package org.kalypso.zml.core.table.model.interpolation;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IAxis;
@@ -61,7 +62,7 @@ import org.kalypso.zml.core.table.model.references.ZmlValues;
  */
 public class FindStuetzstellenVisitor implements ITupleModelVisitor
 {
-  private final Map<IAxis, Set<Integer>> m_stuetzstellen = new HashMap<IAxis, Set<Integer>>();
+  private final Map<IAxis, SortedSet<Integer>> m_stuetzstellen = new HashMap<IAxis, SortedSet<Integer>>();
 
   private DataSourceHandler m_dataSourceHandler;
 
@@ -98,12 +99,13 @@ public class FindStuetzstellenVisitor implements ITupleModelVisitor
 
         if( ZmlValues.isStuetzstelle( status, source ) )
         {
-          Set<Integer> references = m_stuetzstellen.get( valueAxis );
-          if( Objects.isNull( references ) )
+          if( !m_stuetzstellen.containsKey( valueAxis ) )
           {
-            references = new HashSet<Integer>();
-            m_stuetzstellen.put( valueAxis, references );
+            // REMARK: needs sorted set here, else order of indices is lost later
+            m_stuetzstellen.put( valueAxis, new TreeSet<Integer>() );
           }
+
+          final Set<Integer> references = m_stuetzstellen.get( valueAxis );
 
           references.add( container.getIndex() );
         }
