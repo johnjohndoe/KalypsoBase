@@ -79,6 +79,8 @@ public class TaskExecutor implements ITaskExecutor
 {
   private static final String TASK_COMMNAND_ROLE_ACTIVATE = StringUtils.EMPTY;
 
+  private final TaskPerspectiveStore m_perspectiveStore = new TaskPerspectiveStore();
+
   private ITask m_activeTask;
 
   private final ITaskExecutionAuthority m_authority;
@@ -123,6 +125,8 @@ public class TaskExecutor implements ITaskExecutor
     if( !m_authority.canStopTask( m_activeTask ) )
       return false;
 
+    m_perspectiveStore.saveTaskPerspective( m_activeTask );
+
     /* Reset active task */
     final ITask oldTask = m_activeTask;
 
@@ -147,7 +151,9 @@ public class TaskExecutor implements ITaskExecutor
     if( !stopActiveTask() )
       return Status.OK_STATUS;
 
-    final IStatus contextStatus = activateTaskContext( task );
+    final boolean isPerspectiveConfigured = m_perspectiveStore.restoreTaskPerspective( task );
+
+    final IStatus contextStatus = activateTaskContext( task, isPerspectiveConfigured );
     // REMARK: we return AFTER closing all unnecessary views, else some open views may remain in case of errors
     if( !contextStatus.isOK() )
       return contextStatus;
@@ -163,7 +169,7 @@ public class TaskExecutor implements ITaskExecutor
 
     final ITask oldTask = m_activeTask;
 
-    // FIXME: different behaviour than before
+    // FIXME: different behavior than before
     if( task instanceof ITaskGroup )
       m_activeTask = null;
     else
@@ -208,7 +214,7 @@ public class TaskExecutor implements ITaskExecutor
     }
   }
 
-  private IStatus activateTaskContext( final ITask task )
+  private IStatus activateTaskContext( final ITask task, final boolean isPerspectiveConfigured )
   {
     final ContextType context = task.getContext();
     if( context == null )
@@ -216,14 +222,20 @@ public class TaskExecutor implements ITaskExecutor
 
     final IStatus contextStatus = activateContext( context );
 
-    // collect the views that were just opened
-    final Collection<String> partsToKeep = collectOpenedViews( context );
-    partsToKeep.add( WorkflowView.ID );
-    partsToKeep.add( PerspectiveWatcher.SCENARIO_VIEW_ID );
+    if( !isPerspectiveConfigured )
+    {
+      // For backwards compatibility: open/close views according to context
+      // but only, if we do not have a preconfigured layout
 
-    // forks a new job for cleaning perspective
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    PerspectiveWatcher.cleanPerspective( workbench, partsToKeep );
+      // collect the views that were just opened
+      final Collection<String> partsToKeep = collectOpenedViews( context );
+      partsToKeep.add( WorkflowView.ID );
+      partsToKeep.add( PerspectiveWatcher.SCENARIO_VIEW_ID );
+
+      // forks a new job for cleaning perspective
+      final IWorkbench workbench = PlatformUI.getWorkbench();
+      PerspectiveWatcher.cleanPerspective( workbench, partsToKeep );
+    }
 
     return contextStatus;
   }
