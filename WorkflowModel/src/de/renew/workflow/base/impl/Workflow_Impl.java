@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package de.renew.workflow.base.impl;
 
+import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -56,49 +57,58 @@ public class Workflow_Impl extends TaskGroup_Impl implements IWorkflow
 {
   private ITask m_defaultTask;
 
+  private final URL m_context;
+
+  private final ResourceBundle m_resourceBundle;
+
   /**
    * @param i10nproperties
    *          Used to i10n this workflow. If any human-readable string in the wrapped binding objects starts with an
    *          '%', the value is interpreted as key of the given properties and the corresponding value will be returned.
+   * @param context
+   *          The context against which relative references within the workflow.xml are resolved. Tyically the location
+   *          where the workflow.xml is stored.
    */
-  public Workflow_Impl( final Workflow workflow, final ResourceBundle resourceBundle )
+  public Workflow_Impl( final Workflow workflow, final ResourceBundle resourceBundle, final URL context )
   {
-    super( workflow, resourceBundle );
+    super( workflow, null );
+
+    m_resourceBundle = resourceBundle;
+    m_context = context;
 
     final Task defaultTask = workflow.getDefaultTask();
-    m_defaultTask = defaultTask == null ? null : new Task_Impl( defaultTask, resourceBundle );
+    m_defaultTask = defaultTask == null ? null : new Task_Impl( defaultTask, this );
   }
 
-  protected Workflow getWorkflow( )
+  @Override
+  public URL getResourceContext( )
   {
-    return (Workflow) getTask();
+    return m_context;
   }
 
-  /**
-   * @see de.renew.workflow.base.IWorkflow#getDefaultTask()
-   */
+  @Override
+  public ResourceBundle getResourceBundle( )
+  {
+    return m_resourceBundle;
+  }
+
   @Override
   public ITask getDefaultTask( )
   {
     return m_defaultTask;
   }
 
-  /**
-   * @see de.renew.workflow.base.IWorkflow#setDefaultTask(de.renew.workflow.base.ITask)
-   */
   @Override
   public void setDefaultTask( final ITask task )
   {
     m_defaultTask = task;
   }
 
-  /**
-   * @see de.renew.workflow.base.IWorkflow#setDefaultTask(java.lang.String)
-   */
   @Override
   public synchronized void setDefaultTask( final String uri )
   {
-    final List<Task> tasks = getWorkflow().getTasks();
+    final TaskGroup workflow = (TaskGroup) getTask();
+    final List<Task> tasks = workflow.getTasks();
 
     setDefaultTask( tasks.toArray( new Task[] {} ), uri );
   }
@@ -117,11 +127,15 @@ public class Workflow_Impl extends TaskGroup_Impl implements IWorkflow
 
       if( task.getURI().equals( uri ) )
       {
-        m_defaultTask = new Task_Impl( task, getResourceBundle() );
+        m_defaultTask = new Task_Impl( task, this );
         return;
       }
     }
-
   }
 
+  @Override
+  public IWorkflow getWorkflow( )
+  {
+    return this;
+  }
 }

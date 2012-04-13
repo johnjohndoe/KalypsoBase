@@ -44,7 +44,7 @@ import de.renew.workflow.contexts.ContextType;
 
 /**
  * Represents one task of an {@link IWorkflow}.
- * 
+ *
  * @author Gernot Belger
  */
 public interface ITask
@@ -62,4 +62,6 @@ public interface ITask
    * Return <code>null</code> rather than the empty string, else we get ugly empty tooltips.
    */
   String getTooltip( );
+
+  IWorkflow getWorkflow( );
 }

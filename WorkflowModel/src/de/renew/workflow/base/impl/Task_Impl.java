@@ -48,6 +48,7 @@ import org.kalypso.commons.i18n.ResourceBundleUtils;
 import de.renew.workflow.base.EActivityType;
 import de.renew.workflow.base.ITask;
 import de.renew.workflow.base.ITaskHelp;
+import de.renew.workflow.base.IWorkflow;
 import de.renew.workflow.base.Task;
 import de.renew.workflow.base.Task.Help;
 import de.renew.workflow.contexts.ContextType;
@@ -61,15 +62,15 @@ public class Task_Impl implements ITask
 
   private final ITaskHelp m_help;
 
-  private final ResourceBundle m_resourceBundle;
+  private final IWorkflow m_workflow;
 
-  public Task_Impl( final Task task, final ResourceBundle resourceBundle )
+  public Task_Impl( final Task task, final IWorkflow workflow )
   {
     m_task = task;
-    m_resourceBundle = resourceBundle;
+    m_workflow = workflow;
 
     final Help help = m_task.getHelp();
-    m_help = help == null ? null : new TaskHelp_Impl( help, resourceBundle );
+    m_help = help == null ? null : new TaskHelp_Impl( help, getResourceBundle() );
   }
 
   protected Task getTask( )
@@ -77,27 +78,18 @@ public class Task_Impl implements ITask
     return m_task;
   }
 
-  /**
-   * @see de.renew.workflow.base.ITask#getURI()
-   */
   @Override
   public String getURI( )
   {
     return m_task.getURI();
   }
 
-  /**
-   * @see de.renew.workflow.base.ITask#getContext()
-   */
   @Override
   public ContextType getContext( )
   {
     return getTask().getContext();
   }
 
-  /**
-   * @see de.renew.workflow.base.ITask#getType()
-   */
   @Override
   public EActivityType getType( )
   {
@@ -108,7 +100,7 @@ public class Task_Impl implements ITask
   public String getName( )
   {
     final String name = getTask().getName();
-    return ResourceBundleUtils.getI18NString( name, m_resourceBundle );
+    return ResourceBundleUtils.getI18NString( name, getResourceBundle() );
   }
 
   @Override
@@ -121,12 +113,12 @@ public class Task_Impl implements ITask
     if( StringUtils.isBlank( value ) )
       return null;
 
-    return ResourceBundleUtils.getI18NString( value, m_resourceBundle );
+    return ResourceBundleUtils.getI18NString( value, getResourceBundle() );
   }
 
   protected ResourceBundle getResourceBundle( )
   {
-    return m_resourceBundle;
+    return getWorkflow().getResourceBundle();
   }
 
   @Override
@@ -152,5 +144,11 @@ public class Task_Impl implements ITask
   public String toString( )
   {
     return getURI().toString();
+  }
+
+  @Override
+  public IWorkflow getWorkflow( )
+  {
+    return m_workflow;
   }
 }

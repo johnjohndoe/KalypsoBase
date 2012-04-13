@@ -42,10 +42,10 @@ package de.renew.workflow.base.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import de.renew.workflow.base.ITask;
 import de.renew.workflow.base.ITaskGroup;
+import de.renew.workflow.base.IWorkflow;
 import de.renew.workflow.base.Task;
 import de.renew.workflow.base.TaskGroup;
 
@@ -60,28 +60,24 @@ public class TaskGroup_Impl extends Task_Impl implements ITaskGroup
    * @param i10nproperties
    *          See {@link Workflow_Impl#Workflow_Impl(de.renew.workflow.base.Workflow, Properties)}
    */
-  public TaskGroup_Impl( final TaskGroup taskGroup, final ResourceBundle resourceBundle )
+  public TaskGroup_Impl( final TaskGroup taskGroup, final IWorkflow workflow )
   {
-    super( taskGroup, resourceBundle );
+    super( taskGroup, workflow );
 
     final List<Task> tasks = taskGroup.getTasks();
     m_tasks = new ArrayList<ITask>( tasks.size() );
     for( final Task task : tasks )
     {
       if( task instanceof TaskGroup )
-        m_tasks.add( new TaskGroup_Impl( (TaskGroup) task, resourceBundle ) );
+        m_tasks.add( new TaskGroup_Impl( (TaskGroup) task, getWorkflow() ) );
       else
-        m_tasks.add( new Task_Impl( task, resourceBundle ) );
+        m_tasks.add( new Task_Impl( task, getWorkflow() ) );
     }
   }
 
-  /**
-   * @see de.renew.workflow.base.ITaskGroup#getTasks()
-   */
   @Override
   public List<ITask> getTasks( )
   {
     return m_tasks;
   }
-
 }
