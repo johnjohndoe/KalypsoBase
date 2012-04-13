@@ -65,7 +65,7 @@ import de.renew.workflow.base.impl.Workflow_Impl;
 
 /**
  * Helper class to read and cache workflow systems from extension point.
- * 
+ *
  * @author Stefan Kurzbach
  */
 public class WorkflowSystemExtension
@@ -85,7 +85,7 @@ public class WorkflowSystemExtension
     return map.get( id );
   }
 
-  private static Map<String, IWorkflow> getWorkflowMap( )
+  private synchronized static Map<String, IWorkflow> getWorkflowMap( )
   {
     if( THE_WORKFLOW_MAP == null )
     {
@@ -133,7 +133,7 @@ public class WorkflowSystemExtension
     {
       final Workflow workflow = (Workflow) JC.createUnmarshaller().unmarshal( location );
       final ResourceBundle resourceBundle = ResourceBundleUtils.loadResourceBundle( location );
-      return new Workflow_Impl( workflow, resourceBundle );
+      return new Workflow_Impl( workflow, resourceBundle, location );
     }
     catch( final Throwable e )
     {

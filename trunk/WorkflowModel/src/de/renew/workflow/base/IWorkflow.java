@@ -40,9 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package de.renew.workflow.base;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 /**
  * Represents one workflow.
- * 
+ *
  * @author Gernot Belger
  */
 public interface IWorkflow extends ITaskGroup
@@ -60,4 +63,12 @@ public interface IWorkflow extends ITaskGroup
    *          uri of task which will be the new default task
    */
   void setDefaultTask( String uri );
+
+  ResourceBundle getResourceBundle( );
+
+  /**
+   * Context against which relative references within the workflow should be resolved. Typically the location of the
+   * workflow.xml.
+   */
+  URL getResourceContext( );
 }

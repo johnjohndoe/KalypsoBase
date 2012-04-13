@@ -53,7 +53,7 @@ public interface ITaskExecutor
    * Called when a task needs to be executed<br>
    * This method MUST be called in the swt-thread.
    */
-  IStatus execute( final ITask task );
+  IStatus execute( ITask task );
 
   /**
    * Returns the active task or <code>null</code> if there is no active task.
