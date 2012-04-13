@@ -124,7 +124,7 @@ public class PointDialog extends Dialog
       m_label[i] = new Label( group, SWT.NONE );
       m_label[i].setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-      m_label[i].setText( Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.PointDialog.axis" ) + String.valueOf( i ) ); //$NON-NLS-1$
+      m_label[i].setText( getAxisLable( i ) ); //$NON-NLS-1$
       m_label[i].setToolTipText( "" ); //$NON-NLS-1$
 
       m_label[i].setAlignment( SWT.LEFT );
@@ -160,9 +160,6 @@ public class PointDialog extends Dialog
 
     crsPanel.addSelectionChangedListener( new CRSSelectionListener()
     {
-      /**
-       * @see org.kalypso.transformation.ui.CRSSelectionListener#selectionChanged(java.lang.String)
-       */
       @Override
       protected void selectionChanged( final String selectedCRS )
       {
@@ -171,6 +168,21 @@ public class PointDialog extends Dialog
     } );
 
     return panel;
+  }
+
+  private String getAxisLable( final int index )
+  {
+    switch( index )
+    {
+      case 0:
+        return String.format( "X-%s", Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.PointDialog.axis" ) );
+      case 1:
+        return String.format( "Y-%s", Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.PointDialog.axis" ) );
+      case 2:
+        return String.format( "Z-%s", Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.PointDialog.axis" ) );
+    }
+
+    throw new UnsupportedOperationException();
   }
 
   /**

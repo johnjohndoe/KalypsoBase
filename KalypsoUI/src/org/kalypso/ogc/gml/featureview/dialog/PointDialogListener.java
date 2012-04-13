@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml.featureview.dialog;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.contribs.java.lang.NumberUtils;
 
 /**
  * This is a listener for the EnvelopeDialog text fields. It parses the text to doubles and sets it to the corresponding
@@ -72,8 +73,7 @@ final class PointDialogListener implements ModifyListener
 
     try
     {
-      final double dbl = Double.parseDouble( content );
-
+      final double dbl = NumberUtils.parseDouble( content );
       values[m_whichText] = dbl;
 
       m_ptDialog.setValues( values );
