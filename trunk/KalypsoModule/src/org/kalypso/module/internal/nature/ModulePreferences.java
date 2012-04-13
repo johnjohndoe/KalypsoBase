@@ -78,18 +78,12 @@ public class ModulePreferences implements IModulePreferences
     }
   }
 
-  /**
-   * @see org.kalypso.module.nature.IModulePreferences#setModule(java.lang.String)
-   */
   @Override
   public void setModule( final String moduleID )
   {
     writePreference( PREFERENCE_MODULE, moduleID );
   }
 
-  /**
-   * @see org.kalypso.module.nature.IModulePreferences#getModule()
-   */
   @Override
   public String getModule( )
   {
@@ -104,9 +98,6 @@ public class ModulePreferences implements IModulePreferences
     }
   }
 
-  /**
-   * @see org.kalypso.module.nature.IModulePreferences#setVersion(org.osgi.framework.Version)
-   */
   @Override
   public void setVersion( final Version version )
   {
@@ -115,14 +106,10 @@ public class ModulePreferences implements IModulePreferences
     writePreference( PREFERENCE_VERSION, versionPref );
   }
 
-  /**
-   * @see org.kalypso.module.nature.IModulePreferences#getVersion()
-   */
   @Override
   public Version getVersion( )
   {
     final String property = m_node.get( PREFERENCE_VERSION, null );
     return ModuleUtils.parseVersion( property );
   }
-
 }
