@@ -68,7 +68,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 /**
  * Abstract implementation of IKalypsoTheme<br>
  * Implements common features to all KalypsoTheme's
- * 
+ *
  * @author Gernot Belger
  */
 public abstract class AbstractKalypsoTheme extends PlatformObject implements IKalypsoTheme
@@ -82,7 +82,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
   protected static final IStatus PAINT_STATUS = StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.ogc.gml.AbstractKalypsoTheme.0" ), null ); //$NON-NLS-1$
 
-  private final Collection<IKalypsoThemeListener> m_listeners = new HashSet<IKalypsoThemeListener>();
+  private final Collection<IKalypsoThemeListener> m_listeners = Collections.synchronizedSet( new HashSet<IKalypsoThemeListener>() );
 
   private final Map<String, String> m_properties = Collections.synchronizedMap( new HashMap<String, String>() );
 
@@ -128,7 +128,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
   /**
    * The constructor.
-   * 
+   *
    * @param name
    *          The name of the theme.
    * @param type
@@ -151,7 +151,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   }
 
   /**
-   * Runns the given runnable on every listener in a safe way.
+   * Runs the given runnable on every listener in a safe way.
    */
   protected void acceptListenersRunnable( final IListenerRunnable r )
   {
@@ -258,7 +258,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
   /**
    * Fire the given event to my registered listeners.<br>
-   * 
+   *
    * @param invalidExtent
    *          The extent that is no more valid; <code>null</code> indicating that the complete theme should be
    *          repainted.
@@ -281,7 +281,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
   /**
    * Returns the type of the theme by default. Override if needed.
-   * 
+   *
    * @see org.kalypso.ogc.gml.IKalypsoTheme#getContext()
    */
   @Override
@@ -296,7 +296,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
    * <strong>Note:</strong><br>
    * <br>
    * This has only an effect, if the user does not define an URL or URN and the theme has more then one style or rule.
-   * 
+   *
    * @return The default image descriptor.
    */
   @Override
@@ -487,7 +487,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * This function returns the URL or URN defined by the user for an icon, which should be displayed in a legend or an
    * outline.
-   * 
+   *
    * @return The URL or URN string. May be null.
    */
   @Override
@@ -515,7 +515,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
   /**
    * This function returns the context.
-   * 
+   *
    * @return The context, if the theme is part of a template loaded from a file. May be null.
    */
   @Override
@@ -527,7 +527,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
   /**
    * This function returns true, if the theme allows showing its children in an outline. Otherwise, it will return
    * false.
-   * 
+   *
    * @return True,if the theme allows showing its children in an outline. Otherwise, false.
    */
   @Override
