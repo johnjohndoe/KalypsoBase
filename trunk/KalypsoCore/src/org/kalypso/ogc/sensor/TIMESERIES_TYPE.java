@@ -47,13 +47,9 @@ import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
  */
 public enum TIMESERIES_TYPE
 {
-  // FIXME: strange enumeration of type: mix of semantic (sum, current) and data types (boolean, date)
-  eSumValue,
-  eCurrentValue,
   // TODO: add eMeanValue here
-  // FIXME: date and boolean are never used and make no sense here; remove
-  eDateValue,
-  eBooleanValue;
+  eSumValue,
+  eCurrentValue;
 
   public static TIMESERIES_TYPE getType( final String axisType )
   {
@@ -64,11 +60,6 @@ public enum TIMESERIES_TYPE
       case ITimeseriesConstants.TYPE_EVAPORATION_LAND_BASED:
       case ITimeseriesConstants.TYPE_EVAPORATION_WATER_BASED:
         return eSumValue;
-
-      case ITimeseriesConstants.TYPE_DATE:
-        return eDateValue;
-      case ITimeseriesConstants.TYPE_POLDER_CONTROL:
-        return eBooleanValue;
 
       default:
         return eCurrentValue;
