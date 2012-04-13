@@ -317,7 +317,7 @@ class TaskPerspectiveStore
 
     // TODO: check: what to do in the null case?
     /* Only use userDefinition if it is not outdated regarding its version number */
-    if( systemVersion != null && systemVersion.compareTo( userVersion ) < 0 )
+    if( systemVersion != null && systemVersion.compareTo( userVersion ) <= 0 )
       return userDefinition;
 
     return systemDefinition;
