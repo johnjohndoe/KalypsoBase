@@ -176,7 +176,7 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
 
       final Point anchor = getTextAnchor( config, iconSize.x, size.y, textSize );
 
-      gc.drawText( description == null ? "" : description, anchor.x, anchor.y, SWT.TRANSPARENT );
+      gc.drawText( description == null ? "" : description, anchor.x, anchor.y, SWT.TRANSPARENT | SWT.WRAP | SWT.DRAW_DELIMITER );
 
       return img.getImageData();
     }
