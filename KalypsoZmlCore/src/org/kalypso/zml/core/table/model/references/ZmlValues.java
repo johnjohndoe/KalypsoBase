@@ -62,7 +62,7 @@ public final class ZmlValues
 
   public static boolean isStuetzstelle( final Number status, final String source )
   {
-    if( Objects.allNull( status, source ) )
+    if( Objects.allNull( status, source ) ) // TODO correct
       return false;
     else if( Objects.isNotNull( status ) && (status.intValue() & KalypsoStati.BIT_USER_MODIFIED) != 0 )
       return true;

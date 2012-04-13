@@ -82,9 +82,9 @@
       <Layer id="MEAN_TEMPERATURE">
         <Title>Mittlere Temperature</Title>
         <Layers>
-          <DerivedLayer id="Stuetzstellle" legend="false" visible="false">
+            <DerivedLayer id="Stuetzstellle" legend="false" visible="false">
             <Description />
-            <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:temperature#Temperatur"></LayerReference>
+            <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:mean:temperature#temperature"></LayerReference>
             <Parameters>
               <Parameter name="content.stuetzstelle" value="true" />
               <Parameter name="filter" value="org.kalypso.chart.layer.filter.stuetzstelle" />
@@ -94,10 +94,9 @@
             </Styles>
           </DerivedLayer>
 
-
           <DerivedLayer id="Fehlwert" legend="false" visible="false">
             <Description />
-            <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:temperature#Temperatur"></LayerReference>
+            <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:mean:temperature#temperature"></LayerReference>
             <Parameters>
               <Parameter name="content.fehlwert" value="true" />
               <Parameter name="filter" value="org.kalypso.chart.layer.filter.fehlwerte" />
