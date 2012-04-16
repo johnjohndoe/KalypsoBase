@@ -49,11 +49,8 @@ import java.util.Set;
 import java.util.TimeZone;
 
 import org.apache.commons.lang3.StringUtils;
-import org.joda.time.DateTimeFieldType;
 import org.joda.time.LocalTime;
 import org.joda.time.Period;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.DateTimeFormatterBuilder;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.commons.time.PeriodUtils;
@@ -62,6 +59,7 @@ import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.DateRange;
+import org.kalypso.ogc.sensor.util.TimestampHelper;
 
 /**
  * @author Dirk Kuch
@@ -288,7 +286,7 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
   public static void setTimestamp( final MetadataList metadata, final LocalTime timestamp )
   {
     /* REMARK: We assume the values are in UTC. */
-    final String timestampText = timestamp.toString( "HH:mm" ); // $NON-NLS-1$
+    final String timestampText = TimestampHelper.toTimestampText( timestamp );
     metadata.put( MD_TIMESTAMP, timestampText );
   }
 
@@ -306,15 +304,8 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
     if( StringUtils.isBlank( property ) )
       return null;
 
-    /* Create the date time formatter builder. */
-    final DateTimeFormatterBuilder bt = new DateTimeFormatterBuilder();
-    bt.appendFixedDecimal( DateTimeFieldType.hourOfDay(), 2 );
-    bt.appendLiteral( ':' ); // $NON-NLS-1$
-    bt.appendFixedDecimal( DateTimeFieldType.minuteOfHour(), 2 );
-
-    /* REMARK: This will use the UTC timezone. */
-    final DateTimeFormatter formatter = bt.toFormatter();
-    return formatter.parseLocalTime( property );
+    /* Parse the timestamp. */
+    return TimestampHelper.parseTimestamp( property );
   }
 
   public static Date getAusgabeZeitpunkt( final MetadataList metadata ) throws ParseException
