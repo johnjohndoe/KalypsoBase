@@ -42,6 +42,7 @@ package org.kalypso.commons.junit;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.List;
 
@@ -62,11 +63,11 @@ public class FileAssert extends Assert
   {
     try
     {
-      final List< ? > actualLines = FileUtils.readLines( actual, null );
-      final List< ? > expectedLines = FileUtils.readLines( expected, null );
+      final List<String> actualLines = FileUtils.readLines( actual, (Charset) null );
+      final List<String> expectedLines = FileUtils.readLines( expected, (Charset) null );
 
-      final Iterator< ? > actualIt = actualLines.iterator();
-      final Iterator< ? > expectedIt = expectedLines.iterator();
+      final Iterator<String> actualIt = actualLines.iterator();
+      final Iterator<String> expectedIt = expectedLines.iterator();
 
       int count = 0;
       while( expectedIt.hasNext() && actualIt.hasNext() )
