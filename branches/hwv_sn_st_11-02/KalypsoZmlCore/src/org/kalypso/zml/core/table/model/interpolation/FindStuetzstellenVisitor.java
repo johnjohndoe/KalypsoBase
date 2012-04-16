@@ -77,7 +77,7 @@ public class FindStuetzstellenVisitor implements ITupleModelVisitor
   {
     try
     {
-      final IAxis[] valueAxes = AxisUtils.findValueAxes( container.getAxes() );
+      final IAxis[] valueAxes = AxisUtils.findValueAxes( container.getAxes(), false );
       for( final IAxis valueAxis : valueAxes )
       {
         final IAxis sourceAxis = AxisUtils.findDataSourceAxis( container.getAxes(), valueAxis );
