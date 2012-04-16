@@ -106,7 +106,6 @@ public class TimestampGuesser
     /* Collect all timestamps. */
     for( int i = 0; i < testSteps; i++ )
     {
-      /* REMARK: The date of the timeseries should have a timezone. */
       /* REMARK: We need UTC here. */
       final Date date = (Date) m_timeseries.get( i, dateAxis );
       final Calendar calendar = Calendar.getInstance( TimeZone.getTimeZone( "UTC" ) ); //$NON-NLS-1$
