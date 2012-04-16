@@ -59,7 +59,7 @@ public class ZmlDefaultNumericDataValidator extends DataValidator implements IDa
     {
       final String string = newValue.toString();
 
-      final Pattern pattern = new Pattern( "[0-9.,]*" ); //$NON-NLS-1$
+      final Pattern pattern = new Pattern( "[+-]?[0-9.,]*" ); //$NON-NLS-1$
       if( !pattern.matches( string ) )
         return false;
 
