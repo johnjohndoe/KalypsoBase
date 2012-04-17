@@ -244,12 +244,12 @@ public class WQTuppleModel extends AbstractTupleModel
     {
       try
       {
-        if( Objects.equal( m_target.getValueAxis(), axis ) )
+        if( AxisUtils.isEqual( m_target.getValueAxis(), axis ) )
         {
           final Double srcValue = toSourceValue( axis, index, (Number) element );
           m_model.set( index, m_source.getValueAxis(), srcValue );
         }
-        else if( Objects.equal( m_target.getStatusAxis(), axis ) )
+        else if( AxisUtils.isEqual( m_target.getStatusAxis(), axis ) )
         {
           Number status = (Number) element;
           if( (status.intValue() & KalypsoStati.BIT_DERIVATED) != 0 )
@@ -257,7 +257,7 @@ public class WQTuppleModel extends AbstractTupleModel
 
           m_model.set( index, m_source.getStatusAxis(), status );
         }
-        else if( Objects.equal( m_target.getDatasourceAxis(), axis ) )
+        else if( AxisUtils.isEqual( m_target.getDatasourceAxis(), axis ) )
         {
           m_model.set( index, m_source.getDatasourceAxis(), element );
         }

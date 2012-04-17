@@ -227,17 +227,13 @@ public class TSLinkWithName implements IZmlSourceElement
   }
 
   @Override
-  public PooledObsProvider getObsProvider( )
+  public synchronized PooledObsProvider getObsProvider( )
   {
+    if( Objects.isNotNull( m_provider ) )
+      return m_provider;
+
     final PoolableObjectType type = new PoolableObjectType( "zml", getHref(), getContext(), true ); //$NON-NLS-1$
-
-    synchronized( this )
-    {
-      if( Objects.isNotNull( m_provider ) )
-        return m_provider;
-
-      m_provider = new PooledObsProvider( type );
-    }
+    m_provider = new PooledObsProvider( type );
 
     return m_provider;
   }
@@ -285,11 +281,10 @@ public class TSLinkWithName implements IZmlSourceElement
   }
 
   @Override
-  public void dispose( )
+  public synchronized void dispose( )
   {
     if( Objects.isNotNull( m_provider ) )
       m_provider.dispose();
-
   }
 
   @Override
