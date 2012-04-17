@@ -152,6 +152,7 @@ public class ZmlCommandPasteValue extends AbstractHandler
       }
       catch( final Throwable t )
       {
+        // nothing to do
       }
     }
 
