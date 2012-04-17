@@ -55,7 +55,7 @@ import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
 /**
  * @author Dirk Kuch
  */
-public class ApplySplineValuesVisior implements IZmlModelColumnVisitor
+public class ApplySplineValuesVisitor implements IZmlModelColumnVisitor
 {
   private final IZmlModelValueCell m_s1;
 
@@ -73,7 +73,7 @@ public class ApplySplineValuesVisior implements IZmlModelColumnVisitor
    * @param stuetzstellen
    *          don't overwrite stuetzstellen
    */
-  public ApplySplineValuesVisior( final Splines splines, final IZmlModelValueCell s1, final IZmlModelValueCell s2, final ITupleModelTransaction transaction )
+  public ApplySplineValuesVisitor( final Splines splines, final IZmlModelValueCell s1, final IZmlModelValueCell s2, final ITupleModelTransaction transaction )
   {
     m_s1 = s1;
     m_s2 = s2;

@@ -86,6 +86,30 @@ public class ZmlTableSelectionLayer extends SelectionLayer implements IZmlTableS
     return selection.toArray( new IZmlModelColumn[] {} );
   }
 
+  public IZmlModelRow[] getSelectedRows( final IZmlModelColumn column )
+  {
+    final Set<IZmlModelRow> selection = new TreeSet<IZmlModelRow>( IZmlModelRow.COMPARATOR );
+
+    final IZmlModelRow[] modelRows = m_model.getRows();
+
+    final PositionCoordinate[] positions = getSelectedCellPositions();
+    for( final PositionCoordinate position : positions )
+    {
+      final IZmlModelColumn cellColumn = m_model.getColum( position.getColumnPosition() );
+      if( Objects.equal( column, cellColumn ) )
+      {
+        final int rowIndex = position.getRowPosition();
+        if( rowIndex == -1 )
+          continue;
+
+        if( ArrayUtils.getLength( modelRows ) > rowIndex )
+          selection.add( modelRows[rowIndex] );
+      }
+    }
+
+    return selection.toArray( new IZmlModelRow[] {} );
+  }
+
   @Override
   public IZmlModelRow[] getSelectedRows( )
   {
@@ -144,11 +168,12 @@ public class ZmlTableSelectionLayer extends SelectionLayer implements IZmlTableS
   public IZmlModelValueCell[] getSelectedCells( final IZmlModelColumn column )
   {
     final Set<IZmlModelCell> selection = new LinkedHashSet<IZmlModelCell>();
-
-    final IZmlModelRow[] rows = getSelectedRows();
+    final IZmlModelRow[] rows = getSelectedRows( column );
     for( final IZmlModelRow row : rows )
     {
-      selection.add( row.get( column ) );
+      final IZmlModelValueCell cell = row.get( column );
+      if( Objects.isNotNull( cell ) )
+        selection.add( cell );
     }
 
     return selection.toArray( new IZmlModelValueCell[] {} );
