@@ -107,11 +107,11 @@ public class AxisSet
 
   public boolean hasAxis( final IAxis axis )
   {
-    if( getValueAxis() == axis )
+    if( AxisUtils.isEqual( getValueAxis(), axis ) )
       return true;
-    else if( getStatusAxis() == axis )
+    else if( AxisUtils.isEqual( getStatusAxis(), axis ) )
       return true;
-    else if( getDatasourceAxis() == axis )
+    else if( AxisUtils.isEqual( getDatasourceAxis(), axis ) )
       return true;
 
     return false;
