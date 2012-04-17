@@ -144,7 +144,7 @@ public class WQWechmannBoundaryHandler implements ICoreRunnableWithProgress
 
   private Double getWMin( final WechmannSet set )
   {
-    final WechmannParams parameter = set.getMax();
+    final WechmannParams parameter = set.getMin();
 
     return parameter.getW1();
   }
