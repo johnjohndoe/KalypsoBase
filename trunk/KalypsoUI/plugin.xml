@@ -1622,5 +1622,12 @@
      <target extension="shp" wizardId="org.kalypso.ui.wizard.shape">
      </target>
   </extension>
+  <extension
+        point="org.kalypso.ui.typeHandlers">
+     <featureModifier
+           class="org.kalypso.ogc.gml.featureview.modfier.AnnotationFeatureModifier"
+           id="annotation">
+     </featureModifier>
+  </extension>
       
 </plugin>
