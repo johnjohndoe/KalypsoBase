@@ -44,7 +44,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
- * Decorater over any FeatureVisitor, but only visits features of a given type.<br/>
+ * Decorator over any FeatureVisitor, but only visits features of a given type.<br/>
  * Comparisaon is by name of the given type<br/>
  * 
  * @author Gernot Belger
