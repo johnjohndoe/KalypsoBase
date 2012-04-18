@@ -478,9 +478,6 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     fireStatusChanged( this );
   }
 
-  /**
-   * @see org.eclipse.core.runtime.PlatformObject#getAdapter(java.lang.Class)
-   */
   @Override
   public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {

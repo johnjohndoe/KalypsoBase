@@ -269,11 +269,6 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     super.dispose();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean,
-   *      org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IStatus paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
   {
@@ -290,9 +285,6 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     return Status.OK_STATUS;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.ITemplateTheme#saveFeatures(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public void saveFeatures( final IProgressMonitor monitor ) throws CoreException
   {
@@ -308,19 +300,12 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     }
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand,
-   *      java.lang.Runnable)
-   */
   @Override
   public void postCommand( final ICommand command, final Runnable runnable )
   {
     m_commandTarget.postCommand( command, runnable );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
-   */
   @Override
   public GM_Envelope getFullExtent( )
   {
@@ -329,10 +314,6 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     return null;
   }
 
-  /**
-   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object,
-   *      org.eclipse.core.runtime.IStatus)
-   */
   @Override
   public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {

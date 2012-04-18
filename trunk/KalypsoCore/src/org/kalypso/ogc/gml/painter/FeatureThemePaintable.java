@@ -102,9 +102,6 @@ public final class FeatureThemePaintable implements IStylePaintable
     return m_boundingBox;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.painter.IStylePaintable#shouldPaintFeature(org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
   public boolean shouldPaintFeature( final Feature feature )
   {
