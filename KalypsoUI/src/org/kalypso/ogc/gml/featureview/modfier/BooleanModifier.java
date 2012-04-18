@@ -40,6 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.modfier;
 
+import java.util.HashMap;
+
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
@@ -62,7 +64,7 @@ public class BooleanModifier extends AbstractFeatureModifier
 
   public BooleanModifier( final GMLXPath propertyPath, final IValuePropertyType ftp )
   {
-    init( propertyPath, ftp );
+    init( propertyPath, ftp, new HashMap<String, String>() );
 
     if( !(java.lang.Boolean.class == ftp.getValueClass()) )
       throw new IllegalArgumentException( "Only Booleans accepted by this Modifier" ); //$NON-NLS-1$

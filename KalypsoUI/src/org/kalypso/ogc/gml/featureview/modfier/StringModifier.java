@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.featureview.modfier;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.jface.viewers.CellEditor;
@@ -66,7 +67,7 @@ public class StringModifier extends AbstractFeatureModifier
 
   public StringModifier( final GMLXPath propertyPath, final IValuePropertyType ftp, final String format )
   {
-    init( propertyPath, ftp );
+    init( propertyPath, ftp, new HashMap<String, String>() );
 
     m_format = format;
 

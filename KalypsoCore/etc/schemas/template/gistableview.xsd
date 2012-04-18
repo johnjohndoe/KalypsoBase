@@ -32,6 +32,18 @@
                             </documentation>
                           </annotation>
                         </element>
+                        <element name="param" minOccurs="0" maxOccurs="unbounded">
+                          <annotation>
+                            <documentation>
+                              <p>Optional parameter, given to modifier implementation.</p>
+                            </documentation>
+                          </annotation>
+                          <complexType>
+                            <attribute name="key" type="string"/>
+                            <attribute name="value" type="string"/>
+                          </complexType>
+                        </element>
+
                       </sequence>
                       <attribute name="name" type="string" use="required" />
                       <attribute name="label" type="string" use="optional" />

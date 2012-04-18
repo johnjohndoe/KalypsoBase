@@ -40,6 +40,8 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.modfier;
 
+import java.util.HashMap;
+
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColorCellEditor;
 import org.eclipse.swt.graphics.Image;
@@ -60,7 +62,7 @@ public class ColorModifier extends AbstractFeatureModifier
 
   public ColorModifier( final GMLXPath propertyPath, final IValuePropertyType ftp )
   {
-    init( propertyPath, ftp );
+    init( propertyPath, ftp, new HashMap<String, String>() );
 
     // we need both registered type handler types
     final ITypeRegistry<IGuiTypeHandler> guiTypeRegistry = GuiTypeRegistrySingleton.getTypeRegistry();
