@@ -49,7 +49,7 @@ import org.kalypso.ogc.gml.featureview.toolbar.DeleteFeatureHandler;
 import org.kalypso.ogc.gml.featureview.toolbar.ToolbarHelper;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
-import org.kalypso.ogc.gml.table.LayerTableStyle;
+import org.kalypso.ogc.gml.table.ColumnDescriptor;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.template.featureview.Toolbar;
@@ -280,7 +280,11 @@ public class TableFeatureControl extends AbstractToolbarFeatureControl implement
       }
       else
       {
-        m_viewer.addColumn( null, null, null, false, 0, "SWT.CENTER", null, null, false, new LayerTableStyle( null ), true ); //$NON-NLS-1$
+        // FIXME: use special descriptor implementation instead; use to NOT tab-traverse (still a bug)
+        final ColumnDescriptor emptyColumn = new ColumnDescriptor( null );
+        emptyColumn.setWidth( 0 );
+        emptyColumn.setResizeable( false );
+        m_viewer.addColumn( emptyColumn, true );
 
         final IFeatureType featureType = m_viewer.getInput().getFeatureType();
         addDefaultColumns( featureType );
@@ -297,25 +301,29 @@ public class TableFeatureControl extends AbstractToolbarFeatureControl implement
       final QName qName = ftp.getQName();
       if( !ArrayUtils.contains( DEFAULT_INVISIBLE_PROPERTIES, qName ) )
       {
-        final String columnAlignment = findDefaultColumnAlignment( ftp );
+        final int columnAlignment = findDefaultColumnAlignment( ftp );
 
         final GMLXPath columnPath = new GMLXPath( ftp.getQName() );
-        m_viewer.addColumn( columnPath, null, null, true, 100, columnAlignment, null, null, i == properties.length - 1, new LayerTableStyle( null ), true ); //$NON-NLS-1$
+
+        final ColumnDescriptor column = new ColumnDescriptor( columnPath );
+        column.setAlignment( columnAlignment );
+
+        m_viewer.addColumn( column, i == properties.length - 1 );
       }
     }
   }
 
-  private String findDefaultColumnAlignment( final IPropertyType ftp )
+  private int findDefaultColumnAlignment( final IPropertyType ftp )
   {
     if( ftp instanceof IValuePropertyType )
     {
       final IValuePropertyType vpt = (IValuePropertyType) ftp;
       final Class< ? > valueClass = vpt.getValueClass();
       if( Number.class.isAssignableFrom( valueClass ) )
-        return "SWT.RIGHT"; //$NON-NLS-1$
+        return SWT.RIGHT;
     }
 
-    return "SWT.LEFT"; //$NON-NLS-1$
+    return SWT.LEFT;
   }
 
   /**

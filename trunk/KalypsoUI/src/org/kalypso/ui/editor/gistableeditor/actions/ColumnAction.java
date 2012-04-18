@@ -43,6 +43,8 @@ package org.kalypso.ui.editor.gistableeditor.actions;
 import org.eclipse.jface.action.Action;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.gmlschema.annotation.IAnnotation;
+import org.kalypso.ogc.gml.table.ColumnDescriptor;
+import org.kalypso.ogc.gml.table.IColumnDescriptor;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
@@ -53,36 +55,37 @@ public final class ColumnAction extends Action
 
   private final LayerTableViewer m_viewer;
 
-  private final String m_alignment;
-
-  private final String m_format;
-
-  private final GMLXPath m_propertyPath;
+  private final IColumnDescriptor m_column;
 
   public ColumnAction( final ICommandTarget commandTarget, final LayerTableViewer viewer, final GMLXPath propertyPath, final IAnnotation annotation )
   {
     super( propertyPath.toString() );
 
-    final int columnID = viewer.getColumnID( propertyPath );
-
-    m_alignment = viewer.getColumnAlignment( columnID );
-    m_format = viewer.getColumnFormat( columnID );
+    m_column = findColumn( viewer, propertyPath );
 
     if( annotation != null )
       setText( annotation.getLabel() );
 
     m_commandTarget = commandTarget;
     m_viewer = viewer;
-    m_propertyPath = propertyPath;
 
     final boolean columnExists = viewer.hasColumn( propertyPath );
     setChecked( columnExists );
   }
 
+  private IColumnDescriptor findColumn( final LayerTableViewer viewer, final GMLXPath propertyPath )
+  {
+    final int columnID = viewer.getColumnID( propertyPath );
+    if( columnID != -1 )
+      return viewer.getColumnDescriptor( columnID );
+
+    return new ColumnDescriptor( propertyPath );
+  }
+
   @Override
   public void run( )
   {
-    final SetColumnVisibleCommand setColumnVisibleCommand = new SetColumnVisibleCommand( m_viewer, m_propertyPath, m_alignment, m_format, isChecked() );
+    final SetColumnVisibleCommand setColumnVisibleCommand = new SetColumnVisibleCommand( m_viewer, m_column, isChecked() );
 
     m_commandTarget.postCommand( setColumnVisibleCommand, null );
   }

@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,19 +36,20 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table.command;
 
 import org.eclipse.swt.widgets.TableColumn;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.gml.table.IColumnDescriptor;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 
 /**
  * Kommando zum ändern der Spaltenbreite. Es wird davon ausgegangen, dass die Breite der Spalte (d.h. des Widgets)
  * bereits gesetzt wurde.
- * 
+ *
  * @author Belger
  */
 public class SetColumnWidthCommand implements ICommand
@@ -64,48 +65,34 @@ public class SetColumnWidthCommand implements ICommand
     m_tableColumn = tableColumn;
 
     m_newWidth = width;
-    m_oldWidth = ((Integer) tableColumn.getData( LayerTableViewer.COLUMN_PROP_WIDTH )).intValue();
+    final IColumnDescriptor column = LayerTableViewer.getDescriptor( tableColumn );
+    m_oldWidth = column.getWidth();
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
-   */
   @Override
   public boolean isUndoable( )
   {
     return true;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#process()
-   */
   @Override
   public void process( ) throws Exception
   {
     setWidth( m_newWidth, false );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#redo()
-   */
   @Override
   public void redo( ) throws Exception
   {
     setWidth( m_newWidth, true );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#undo()
-   */
   @Override
   public void undo( ) throws Exception
   {
     setWidth( m_oldWidth, true );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
-   */
   @Override
   public String getDescription( )
   {
@@ -122,7 +109,8 @@ public class SetColumnWidthCommand implements ICommand
         @Override
         public void run( )
         {
-          tableColumn.setData( LayerTableViewer.COLUMN_PROP_WIDTH, new Integer( width ) );
+          final IColumnDescriptor column = LayerTableViewer.getDescriptor( tableColumn );
+          column.setWidth( width );
           if( bSetControlWidth )
             tableColumn.setWidth( width );
         }
