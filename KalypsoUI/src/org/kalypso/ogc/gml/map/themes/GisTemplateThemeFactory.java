@@ -60,21 +60,12 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  */
 public class GisTemplateThemeFactory implements IKalypsoThemeFactory
 {
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoThemeFactory#createTheme(org.kalypso.commons.i18n.I10nString,
-   *      org.kalypso.template.types.StyledLayerType, java.net.URL, org.kalypso.ogc.gml.mapmodel.IMapModell,
-   *      org.kalypso.ogc.gml.selection.IFeatureSelectionManager)
-   */
   @Override
   public IKalypsoTheme createTheme( final I10nString layerName, final StyledLayerType layerType, final URL context, final IMapModell mapModell, final IFeatureSelectionManager selectionManager )
   {
     return new GisTemplateFeatureTheme( layerName, layerType, context, selectionManager, mapModell );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoThemeFactory#configureLayer(org.kalypso.ogc.gml.IKalypsoTheme, java.lang.String,
-   *      org.kalypsodeegree.model.geometry.GM_Envelope, java.lang.String)
-   */
   @Override
   public JAXBElement< ? extends StyledLayerType> configureLayer( final IKalypsoTheme theme, final String id, final GM_Envelope bbox, final String srsName )
   {

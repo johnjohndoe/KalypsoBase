@@ -42,20 +42,17 @@ package org.kalypso.ogc.gml.featureview.control;
 
 import java.util.Properties;
 
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Gernot Belger
  */
-public class ChecklistOfLinksFeatureviewControlFactory implements IExtensionsFeatureControlFactory
+public class ChecklistOfLinksFeatureviewControlFactory implements IExtensionsFeatureControlFactory2
 {
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureviewControlFactory#createFeatureControl(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypso.gmlschema.property.IPropertyType, java.util.Properties)
-   */
   @Override
-  public IFeatureControl createFeatureControl( final Feature feature, final IPropertyType pt, final Properties arguments )
+  public IFeatureControl createFeatureControl( final FormToolkit toolkit, final Feature feature, final IPropertyType pt, final Properties arguments )
   {
     final String showSelectButtonsStr = arguments.getProperty( ChecklistOfLinksFeatureControl.PARAM_SELECT_BUTTONS, "true" ); //$NON-NLS-1$
     final Boolean showSelectButtons = Boolean.parseBoolean( showSelectButtonsStr );
