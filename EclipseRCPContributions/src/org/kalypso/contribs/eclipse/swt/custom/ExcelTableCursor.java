@@ -27,6 +27,8 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -34,7 +36,7 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * TODO: merge code with TableCursor-Copy
- * 
+ *
  * @author Gernot Belger
  */
 public class ExcelTableCursor extends TableCursor
@@ -72,9 +74,6 @@ public class ExcelTableCursor extends TableCursor
    */
   private final MouseListener m_mouseListener = new MouseAdapter()
   {
-    /**
-     * @see org.eclipse.swt.events.MouseListener#mouseDown(org.eclipse.swt.events.MouseEvent)
-     */
     @Override
     public void mouseDown( final MouseEvent e )
     {
@@ -289,9 +288,6 @@ public class ExcelTableCursor extends TableCursor
 
   private final SelectionListener m_selectionListener = new SelectionListener()
   {
-    /**
-     * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-     */
     @Override
     public void widgetSelected( final SelectionEvent e )
     {
@@ -320,6 +316,15 @@ public class ExcelTableCursor extends TableCursor
     public void mouseDown( final MouseEvent e )
     {
       tableMouseDown( e );
+    }
+  };
+
+  private final Listener m_tableVisibilityListener = new Listener()
+  {
+    @Override
+    public void handleEvent( final Event event )
+    {
+      handleTableVisibilityChanged( event.type == SWT.Show );
     }
   };
 
@@ -357,6 +362,9 @@ public class ExcelTableCursor extends TableCursor
     table.addKeyListener( m_tableKeyListener );
     table.addFocusListener( m_tableFocusListener );
     table.addMouseListener( m_tableMouseListener );
+
+    table.addListener( SWT.Show, m_tableVisibilityListener );
+    // table.addListener( SWT.Hide, m_tableVisibilityListener );
 
     viewer.addSelectionChangedListener( m_tableSelectionListener );
 
@@ -575,7 +583,7 @@ public class ExcelTableCursor extends TableCursor
 
   /**
    * Advances the cursor position by the given delta.
-   * 
+   *
    * @param control
    *          If not null, the keyListener will be removed from this control, used by the key-listener itself.
    */
@@ -645,18 +653,21 @@ public class ExcelTableCursor extends TableCursor
   void tableFocusIn( )
   {
     if( DEBUG )
-      System.out.println( "tableFocusIn" );
+      System.out.println( "tableFocusIn" ); //$NON-NLS-1$
 
     if( isDisposed() )
       return;
-    if( isVisible() )
-      setFocus();
+
+    // BUGFIX: if the table receives focus, we force ourselfs to be visible
+    // Before, the cursor was not visible and selection did not change cursor position
+    setVisible( true );
+    setFocus();
   }
 
   void tableMouseDown( final MouseEvent event )
   {
     if( DEBUG )
-      System.out.println( "tableMouseDown" );
+      System.out.println( "tableMouseDown" ); //$NON-NLS-1$
 
     if( isDisposed() || !isVisible() )
       return;
@@ -755,4 +766,11 @@ public class ExcelTableCursor extends TableCursor
     super.setVisible( visible );
   }
 
+  protected void handleTableVisibilityChanged( final boolean madeVisible )
+  {
+    if( madeVisible )
+    {
+      setVisible( true );
+    }
+  }
 }
