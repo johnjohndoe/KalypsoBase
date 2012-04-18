@@ -46,18 +46,18 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.swt.SWT;
+import org.kalypso.ogc.gml.featureview.IFeatureModifier;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 
 /**
  * @author belger
  */
 public class LayerTableSorter extends ViewerSorter
 {
-  /** Die Features werden nach dieser Property sortiert */
-  private GMLXPath m_propertyPath = null;
+  /** Die Features werden nach dieser Spalte sortiert */
+  private IColumnDescriptor m_column = null;
 
   private boolean m_bInverse = false;
 
@@ -71,9 +71,9 @@ public class LayerTableSorter extends ViewerSorter
     super( cola );
   }
 
-  public final GMLXPath getPropertyPath( )
+  public final IColumnDescriptor getColumn( )
   {
-    return m_propertyPath;
+    return m_column;
   }
 
   public final boolean isInverse( )
@@ -86,9 +86,9 @@ public class LayerTableSorter extends ViewerSorter
     m_bInverse = bInverse;
   }
 
-  public final void setPropertyPath( final GMLXPath propertyPath )
+  public final void setColumn( final IColumnDescriptor column )
   {
-    m_propertyPath = propertyPath;
+    m_column = column;
   }
 
   @Override
@@ -97,12 +97,19 @@ public class LayerTableSorter extends ViewerSorter
     final Feature kf1 = (Feature) e1;
     final Feature kf2 = (Feature) e2;
 
-    final GMLXPath propertyPath = getPropertyPath();
-    if( propertyPath == null )
+    final IColumnDescriptor column = getColumn();
+    if( column == null )
       return 0;
 
-    final Object o1 = getProperty( kf1, propertyPath );
-    final Object o2 = getProperty( kf2, propertyPath );
+    final IFeatureModifier modifier = column.getModifier();
+    if( modifier == null )
+      return 0;
+
+    final Object o1 = modifier.getProperty( kf1 );
+    final Object o2 = modifier.getProperty( kf2 );
+
+// final Object o1 = getProperty( kf1, propertyPath );
+// final Object o2 = getProperty( kf2, propertyPath );
 
     final int sign = isInverse() ? -1 : 1;
     if( o1 == o2 )
@@ -112,22 +119,6 @@ public class LayerTableSorter extends ViewerSorter
     if( o2 == null )
       return -sign;
     return sign * compareObjects( o1, o2 );
-  }
-
-  private Object getProperty( final Feature feature, final GMLXPath propertyPath )
-  {
-    try
-    {
-      final Object value = GMLXPathUtilities.query( propertyPath, feature );
-      if( value != null )
-        return value;
-    }
-    catch( final GMLXPathException e )
-    {
-      e.printStackTrace();
-    }
-
-    return feature.getId();
   }
 
   private int compareObjects( final Object o1, final Object o2 )
@@ -168,6 +159,27 @@ public class LayerTableSorter extends ViewerSorter
   @Override
   public boolean isSorterProperty( final Object element, final String property )
   {
-    return property.equals( m_propertyPath );
+    final IColumnDescriptor column = getColumn();
+    if( column == null )
+      return false;
+
+    final GMLXPath propertyPath = column.getPropertyPath();
+    return property.equals( propertyPath );
+  }
+
+  public int getSortDirection( )
+  {
+    final IColumnDescriptor column = getColumn();
+    if( column == null )
+      return SWT.NONE;
+
+    final GMLXPath propertyPath = column.getPropertyPath();
+    if( propertyPath == null )
+      return SWT.NONE;
+
+    if( m_bInverse )
+      return SWT.UP;
+    else
+      return SWT.DOWN;
   }
 }
