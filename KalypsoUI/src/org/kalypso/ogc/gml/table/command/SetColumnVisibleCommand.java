@@ -42,51 +42,28 @@ package org.kalypso.ogc.gml.table.command;
 
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.table.LayerTableStyle;
+import org.kalypso.ogc.gml.table.IColumnDescriptor;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
- * TODO: does not yet handle the label/tooltip properties of the template
- *
  * @author Gernot Belger
  */
 public class SetColumnVisibleCommand implements ICommand
 {
-  private final GMLXPath m_propertyPath;
-
   private final boolean m_bVisible;
 
   private final LayerTableViewer m_viewer;
 
-  private final boolean m_wasEditable;
+  private final IColumnDescriptor m_column;
 
-  private final int m_oldWidth;
-
-  private final String m_alignment;
-
-  private final String m_format;
-
-  private final String m_modifier;
-
-  private final boolean m_wasSortEnabled;
-
-  public SetColumnVisibleCommand( final LayerTableViewer viewer, final GMLXPath propertyPath, final String alignment, final String format, final boolean bVisible )
+  public SetColumnVisibleCommand( final LayerTableViewer viewer, final IColumnDescriptor column, final boolean bVisible )
   {
     m_viewer = viewer;
-    m_propertyPath = propertyPath;
-    m_alignment = alignment;
-    m_format = format;
-    m_modifier = null;
+    m_column = column;
     m_bVisible = bVisible;
-    m_wasEditable = viewer.isEditable( propertyPath );
-    m_oldWidth = viewer.getWidth( propertyPath );
-    m_wasSortEnabled = viewer.isSortEnabled( propertyPath );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
-   */
   @Override
   public boolean isUndoable( )
   {
@@ -96,36 +73,41 @@ public class SetColumnVisibleCommand implements ICommand
   @Override
   public void process( ) throws Exception
   {
-    doIt( m_viewer, m_propertyPath, m_bVisible, 100, m_alignment, m_format, m_modifier, true, true );
+    doIt( m_bVisible );
   }
 
   @Override
   public void redo( ) throws Exception
   {
-    doIt( m_viewer, m_propertyPath, m_bVisible, 100, m_alignment, m_format, m_modifier, true, true );
+    doIt( m_bVisible );
   }
 
   @Override
   public void undo( ) throws Exception
   {
-    doIt( m_viewer, m_propertyPath, !m_bVisible, m_oldWidth, m_alignment, m_format, m_modifier, m_wasEditable, m_wasSortEnabled );
+    doIt( !m_bVisible );
   }
 
   @Override
   public String getDescription( )
   {
-    return Messages.getString( "org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand.0" ) + m_propertyPath + "' " + (m_bVisible ? Messages.getString( "org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand.2" ) : Messages.getString( "org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand.3" )); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    final GMLXPath propertyPath = m_column.getPropertyPath();
+    return Messages.getString( "org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand.0" ) + propertyPath + "' " + (m_bVisible ? Messages.getString( "org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand.2" ) : Messages.getString( "org.kalypso.ogc.gml.table.command.SetColumnVisibleCommand.3" )); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
   }
 
-  private void doIt( final LayerTableViewer viewer, final GMLXPath propertyPath, final boolean bVisible, final int width, final String alignment, final String format, final String modifier, final boolean editable, final boolean isSortEnabled )
+  private void doIt( final boolean bVisible )
   {
+    final LayerTableViewer viewer = m_viewer;
+    final IColumnDescriptor column = m_column;
+
     m_viewer.getControl().getDisplay().syncExec( new Runnable()
     {
       @Override
       public void run( )
       {
+        final GMLXPath propertyPath = column.getPropertyPath();
         if( bVisible )
-          viewer.addColumn( propertyPath, null, null, editable, width, alignment, format, modifier, true, new LayerTableStyle( null ), isSortEnabled );
+          viewer.addColumn( column, true );
         else
           viewer.removeColumn( propertyPath );
       }

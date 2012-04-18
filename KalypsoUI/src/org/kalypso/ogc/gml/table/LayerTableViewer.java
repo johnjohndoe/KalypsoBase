@@ -45,12 +45,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.namespace.NamespaceContext;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -109,6 +109,7 @@ import org.kalypso.ogc.gml.table.command.ChangeSortingCommand;
 import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.template.gistableview.Gistableview.Layer;
 import org.kalypso.template.gistableview.Gistableview.Layer.Column;
+import org.kalypso.template.gistableview.Gistableview.Layer.Column.Param;
 import org.kalypso.template.gistableview.Gistableview.Layer.Sort;
 import org.kalypso.template.gistableview.StyleType;
 import org.kalypso.template.types.LayerType;
@@ -128,37 +129,11 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
  */
 public class LayerTableViewer extends TableViewer implements ICellModifier
 {
-  // FIXME: should not be visible
-  public static final String COLUMN_PROP_PATH = "columnProperty"; //$NON-NLS-1$
-
-  /**
-   * Label Property. Feature-Annotation style format string. The context-feature in this case is the paretn feature of
-   * the shown list.
-   */
-  private static final String COLUMN_PROP_LABEL = "columnLabel"; //$NON-NLS-1$
-
-  /**
-   * Tooltip Property. Feature-Annotation style format string. The context-feature in this case is the paretn feature of
-   * the shown list.
-   */
-  private static final String COLUMN_PROP_TOOLTIP = "columnTooltip"; //$NON-NLS-1$
-
-  private static final String COLUMN_PROP_EDITABLE = "columnEditable"; //$NON-NLS-1$
-
-  private static final String COLUMN_PROP_SORT_ENABLED = "columnSortEnabled"; //$NON-NLS-1$
-
-  // FIXME: should not be visible
-  public static final String COLUMN_PROP_WIDTH = "columnWidth"; //$NON-NLS-1$
-
-  private static final String COLUMN_PROP_FORMAT = "columnFormat"; //$NON-NLS-1$
-
-  private static final String COLUMN_PROP_MODIFIER = "columnModifier"; //$NON-NLS-1$
-
-  private static final String COLUMN_PROP_STYLE = "columnStyle"; //$NON-NLS-1$
+  private static final String PROPERTY_COLUMN_DESCRIPTOR = "columnDescriptor"; //$NON-NLS-1$
 
   private final IFeatureModifierFactory m_featureModiferFactory;
 
-  private IFeatureModifier[] m_modifier;
+// private IFeatureModifier[] m_modifier;
 
   private final LayerTableSorter m_sorter = new LayerTableSorter();
 
@@ -242,17 +217,14 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
 
       final TableColumn tc = (TableColumn) e.widget;
 
-      // kann nicht rückgüngig gemacht werden, sorgt aber dafür, dass der Editor
-      // dirty ist
+      // kann nicht rückgüngig gemacht werden, sorgt aber dafür, dass der Editor dirty ist
       final int width = tc.getWidth();
-      if( width != ((Integer) tc.getData( COLUMN_PROP_WIDTH )).intValue() )
+
+      final IColumnDescriptor column = getDescriptor( tc );
+
+      if( width != column.getWidth() )
       {
         m_templateTarget.postCommand( new InvisibleCommand(), null );
-        // removeListener and again add listener may reduce some flickering
-        // effects ?? (doemming)
-        tc.removeControlListener( this );
-        tc.setData( COLUMN_PROP_WIDTH, new Integer( width ) );
-        tc.addControlListener( this );
       }
     }
   };
@@ -393,31 +365,52 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
 
   private void setSortAndColumns( final Sort sort, final List<Column> columnList, final LayerTableStyle globalStyle, final URL context )
   {
-    if( sort != null )
-    {
-      final String propertyName = sort.getPropertyName();
-      final GMLXPath sortPath = parseQuietXPath( propertyName );
-      m_sorter.setPropertyPath( sortPath );
-      m_sorter.setInverse( sort.isInverse() );
-    }
-
     for( final Column ct : columnList )
     {
-      final String propertyName = ct.getName();
-      final GMLXPath propertyPath = parseQuietXPath( propertyName );
+      final ColumnDescriptor cd = createColumnDescriptor( ct, globalStyle, context );
+      addColumn( cd, false );
 
-      final String label = ct.getLabel();
-      final String tooltip = ct.getTooltip();
-      final boolean editable = ct.isEditable();
-      final int width = ct.getWidth();
-      final String alignment = ct.getAlignment();
-      final String format = ct.getFormat();
-      final String modifier = ct.getModifier();
-      final LayerTableStyle style = LayerTableStyleUtils.parseStyle( ct.getStyle(), globalStyle, context );
-      final boolean sortEnabled = ct.isSortEnabled();
-
-      addColumn( propertyPath, label, tooltip, editable, width, alignment, format, modifier, false, style, sortEnabled );
+      /* Configure sorter, if any */
+      if( sort != null )
+      {
+        final String propertyName = sort.getPropertyName();
+        final GMLXPath sortPath = parseQuietXPath( propertyName );
+        if( ObjectUtils.equals( sortPath, cd.getPropertyPath() ) )
+        {
+          m_sorter.setColumn( cd );
+          m_sorter.setInverse( sort.isInverse() );
+        }
+      }
     }
+  }
+
+  private ColumnDescriptor createColumnDescriptor( final Column ct, final LayerTableStyle globalStyle, final URL context )
+  {
+    final String propertyName = ct.getName();
+    final GMLXPath propertyPath = parseQuietXPath( propertyName );
+
+    final ColumnDescriptor cd = new ColumnDescriptor( propertyPath );
+
+    final int alignmentInt = SWTUtilities.createStyleFromString( ct.getAlignment() );
+
+    cd.setLabel( ct.getLabel() );
+    cd.setTooltip( ct.getTooltip() );
+    cd.setEditable( ct.isEditable() );
+    cd.setWidth( ct.getWidth() );
+    cd.setAlignment( alignmentInt );
+    cd.setFormat( ct.getFormat() );
+    cd.setModifier( ct.getModifier() );
+
+    final List<Param> params = ct.getParam();
+    for( final Param param : params )
+      cd.setParam( param.getKey(), param.getValue() );
+
+    final LayerTableStyle style = LayerTableStyleUtils.parseStyle( ct.getStyle(), globalStyle, context );
+    cd.setStyle( style );
+
+    cd.setSortEnabled( ct.isSortEnabled() );
+
+    return cd;
   }
 
   private GMLXPath parseQuietXPath( final String propertyName )
@@ -439,58 +432,49 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
       column.dispose();
   }
 
-  public void addColumn( final GMLXPath propertyPath, final String label, final String tooltip, final boolean isEditable, final int width, final String alignment, final String format, final String modifier, final boolean bRefreshColumns, final LayerTableStyle style, final boolean sortEnabled )
+  public void addColumn( final IColumnDescriptor column, final boolean doRefreshColumns )
   {
-    Assert.isNotNull( style );
-
     final Table table = getTable();
 
-    final int alignmentInt = SWTUtilities.createStyleFromString( alignment );
-    final TableColumn tc = new TableColumn( table, alignmentInt );
-    tc.setAlignment( alignmentInt );
+    final int alignment = column.getAlignment();
 
-    tc.setData( COLUMN_PROP_PATH, propertyPath );
-    tc.setData( COLUMN_PROP_LABEL, label );
-    tc.setData( COLUMN_PROP_TOOLTIP, tooltip );
-    tc.setData( COLUMN_PROP_EDITABLE, Boolean.valueOf( isEditable ) );
-    tc.setData( COLUMN_PROP_SORT_ENABLED, Boolean.valueOf( sortEnabled ) );
-    // die Breite noch mal extra speichern, damit das Redo beim Resizen geht
-    tc.setData( COLUMN_PROP_WIDTH, new Integer( width ) );
-    tc.setData( COLUMN_PROP_FORMAT, format );
-    tc.setData( COLUMN_PROP_MODIFIER, modifier );
-    tc.setData( COLUMN_PROP_STYLE, style );
-    tc.setToolTipText( tooltip );
-    tc.setWidth( width );
+    // TODO: strange: alignment used as alignment and as style as well...
+    final TableColumn tc = new TableColumn( table, alignment );
+    tc.setAlignment( alignment );
+
+    tc.setData( PROPERTY_COLUMN_DESCRIPTOR, column );
+
+    tc.setWidth( column.getWidth() );
+    tc.setResizable( column.isResizeable() );
     setColumnText( tc );
 
-    if( sortEnabled )
+    if( column.isSortEnabled() )
       tc.addSelectionListener( m_headerListener );
 
+    /* synchronize width of tc and descriptor */
     tc.addControlListener( m_headerControlListener );
 
-    if( bRefreshColumns )
+    if( doRefreshColumns )
       refreshAll();
   }
 
   protected void setColumnText( final TableColumn tc )
   {
-    final GMLXPath propertyPath = (GMLXPath) tc.getData( COLUMN_PROP_PATH );
+    final IColumnDescriptor column = getDescriptor( tc );
+
+    tc.setToolTipText( column.getTooltip() );
+
+    // TODO: instead: delegate to column?
+    final GMLXPath propertyPath = column.getPropertyPath();
     if( propertyPath == null )
       return;
 
-    final String label = (String) tc.getData( COLUMN_PROP_LABEL );
-    final String tooltip = (String) tc.getData( COLUMN_PROP_TOOLTIP );
-
-    final GMLXPath sortPropertyPath = m_sorter.getPropertyPath();
+    final String label = column.getLabel();
+    final String tooltip = column.getTooltip();
 
     final String[] textAndTooltip = getLabelAndTooltip( label, tooltip, propertyPath );
 
-    final String text;
-    if( propertyPath.equals( sortPropertyPath ) )
-      text = textAndTooltip[0] + " " + (m_sorter.isInverse() ? "\u00ab" : "\u00bb"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    else
-      text = textAndTooltip[0];
-
+    final String text = textAndTooltip[0];
     final String tooltipText = textAndTooltip[1];
 
     tc.setText( text );
@@ -556,7 +540,8 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     {
       if( column != null )
       {
-        final GMLXPath propPath = (GMLXPath) column.getData( COLUMN_PROP_PATH );
+        final IColumnDescriptor cd = getDescriptor( column );
+        final GMLXPath propPath = cd.getPropertyPath();
         if( propPath != null )
         {
           final IPropertyType propertyType = findPropertyType( featureType, propPath );
@@ -613,14 +598,35 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     // FIXME: causes refresh to be called twice...
     checkColumns();
 
-    // die Namen der Spalten auffrischen, wegen der Sortierungs-Markierung
+    // Update header text, feature type may have changed
+    final TableColumn[] columns = getTable().getColumns();
+    for( final TableColumn element : columns )
+      setColumnText( element );
+
+    /* Update sort icon */
+    getTable().setSortDirection( m_sorter.getSortDirection() );
+    final IColumnDescriptor column = m_sorter.getColumn();
+    final TableColumn tc = getColumn( column );
+    getTable().setSortColumn( tc );
+
+    super.refresh();
+  }
+
+  private TableColumn getColumn( final IColumnDescriptor searchColumn )
+  {
+    final ILayerTableInput tableInput = getInput();
+    if( tableInput == null )
+      return null;
+
     final TableColumn[] columns = getTable().getColumns();
     for( final TableColumn element : columns )
     {
-      setColumnText( element );
+      final IColumnDescriptor column = getDescriptor( element );
+      if( searchColumn == column )
+        return element;
     }
 
-    super.refresh();
+    return null;
   }
 
   /**
@@ -628,7 +634,6 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
    */
   private void refreshCellEditors( )
   {
-    m_modifier = null;
     // dispose old modifiers
     final CellEditor[] oldEditors = getCellEditors();
     if( oldEditors != null )
@@ -655,35 +660,41 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     final IFeatureType featureType = featureProvider.getFeatureType();
     if( featureType == null )
       return;
+
     // set new modifiers, new celleditors and new cellvalidators
-    m_modifier = new IFeatureModifier[columns.length];
     for( int i = 0; i < editors.length; i++ )
     {
-      final GMLXPath propPath = (GMLXPath) columns[i].getData( COLUMN_PROP_PATH );
-      if( propPath != null )
-      {
-        final String format = (String) columns[i].getData( COLUMN_PROP_FORMAT );
-        final IPropertyType ftp = findPropertyType( featureType, propPath );
-        final String modifierId = (String) columns[i].getData( COLUMN_PROP_MODIFIER );
+      final IColumnDescriptor column = getDescriptor( columns[i] );
+      final IFeatureModifier modifier = createModifier( column, featureType );
+      column.setModifier( modifier );
 
-        m_modifier[i] = createModifier( format, ftp, modifierId, propPath );
-        if( m_modifier[i] != null )
-        {
-          editors[i] = m_modifier[i].createCellEditor( table );
-          editors[i].setValidator( m_modifier[i] );
-        }
+      if( modifier != null )
+      {
+        editors[i] = modifier.createCellEditor( table );
+        if( editors[i] != null )
+          editors[i].setValidator( modifier );
       }
     }
     setCellEditors( editors );
   }
 
-  private IFeatureModifier createModifier( final String format, final IPropertyType ftp, final String modifierId, final GMLXPath propertyPath )
+  // TODO: delegate to column?!
+  private IFeatureModifier createModifier( final IColumnDescriptor column, final IFeatureType featureType )
   {
-    if( modifierId != null && !modifierId.isEmpty() )
+    final GMLXPath propPath = column.getPropertyPath();
+    if( propPath == null )
+      return null;
+
+    final String format = column.getFormat();
+    final IPropertyType ftp = findPropertyType( featureType, propPath );
+    final String modifierId = column.getModifierID();
+
+    if( !StringUtils.isBlank( modifierId ) )
     {
       try
       {
-        final IFeatureModifier modifier = KalypsoUIExtensions.createFeatureModifier( propertyPath, ftp, modifierId );
+        final Map<String, String> params = column.getParameters();
+        final IFeatureModifier modifier = KalypsoUIExtensions.createFeatureModifier( propPath, ftp, modifierId, params );
         if( modifier == null )
           System.out.println( "No feature modifier with id: " + modifierId );
         else
@@ -696,7 +707,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
       }
     }
 
-    return m_featureModiferFactory.createFeatureModifier( propertyPath, ftp, format, m_selectionManager, m_fcl );
+    return m_featureModiferFactory.createFeatureModifier( propPath, ftp, format, m_selectionManager, m_fcl );
   }
 
   private void refreshColumnProperties( )
@@ -710,11 +721,8 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
 
     for( int i = 0; i < pathes.length; i++ )
     {
-      final GMLXPath path = (GMLXPath) columns[i].getData( COLUMN_PROP_PATH );
-      if( path == null )
-        pathes[i] = StringUtils.EMPTY;
-      else
-        pathes[i] = path.toString();
+      final IColumnDescriptor column = getDescriptor( columns[i] );
+      pathes[i] = column.getColumnProperty();
     }
 
     setColumnProperties( pathes );
@@ -725,39 +733,32 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     return getTable().isDisposed();
   }
 
-  public String getColumnAlignment( final int columnIndex )
+  public IColumnDescriptor getColumnDescriptor( final int columnIndex )
   {
     if( columnIndex == -1 )
-      return "SWT.LEAD"; //$NON-NLS-1$
-
-    final TableColumn column = getTable().getColumn( columnIndex );
-    return "" + column.getStyle(); //$NON-NLS-1$
-  }
-
-  public String getColumnFormat( final int columnIndex )
-  {
-    if( columnIndex == -1 )
+      // FIXME: does it ever happen?
       return null;
 
     final TableColumn column = getTable().getColumn( columnIndex );
-    return (String) column.getData( COLUMN_PROP_FORMAT );
+    return getDescriptor( column );
   }
 
-  public boolean isEditable( final GMLXPath propertyPath )
+  private boolean isEditable( final GMLXPath propertyPath )
   {
     final TableColumn column = getColumn( propertyPath );
-    return column == null ? false : ((Boolean) column.getData( COLUMN_PROP_EDITABLE )).booleanValue();
-  }
+    if( column == null )
+      return false;
 
-  public boolean isSortEnabled( final GMLXPath propertyPath )
-  {
-    final TableColumn column = getColumn( propertyPath );
-    return column == null ? true : ((Boolean) column.getData( COLUMN_PROP_SORT_ENABLED )).booleanValue();
+    final IColumnDescriptor cd = getDescriptor( column );
+    return cd.isEditable();
   }
 
   private TableColumn getColumn( final GMLXPath propertyPath )
   {
     final ILayerTableInput tableInput = getInput();
+    if( tableInput == null )
+      return null;
+
     final IFeatureType featureType = tableInput.getFeatureType();
 
     final IPropertyType searchType = findPropertyType( featureType, propertyPath );
@@ -765,7 +766,8 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     final TableColumn[] columns = getTable().getColumns();
     for( final TableColumn element : columns )
     {
-      final GMLXPath path = (GMLXPath) element.getData( COLUMN_PROP_PATH );
+      final IColumnDescriptor column = getDescriptor( element );
+      final GMLXPath path = column.getPropertyPath();
 
       // REMARK: we need to resolve the property type here, instead
       // of comparing the paths, because the path may not always be
@@ -773,9 +775,6 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
       final IPropertyType pt = findPropertyType( featureType, path );
       if( pt == searchType )
         return element;
-
-      // if( propertyPath.equals( path ) )
-      // return element;
     }
 
     return null;
@@ -786,21 +785,14 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     final TableColumn[] columns = getTable().getColumns();
     for( int i = 0; i < columns.length; i++ )
     {
-      final GMLXPath columnPath = (GMLXPath) columns[i].getData( COLUMN_PROP_PATH );
+      final IColumnDescriptor column = getDescriptor( columns[i] );
+
+      final GMLXPath columnPath = column.getPropertyPath();
       if( propertyPath.equals( columnPath ) )
         return i;
     }
 
     return -1;
-  }
-
-  public int getWidth( final GMLXPath propertyPath )
-  {
-    final TableColumn column = getColumn( propertyPath );
-    if( column != null )
-      return column.getWidth();
-
-    return 0;
   }
 
   public boolean hasColumn( final GMLXPath propertyPath )
@@ -830,29 +822,46 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     {
       final Column columnType = OF.createGistableviewLayerColumn();
 
-      final GMLXPath path = (GMLXPath) tc.getData( COLUMN_PROP_PATH );
+      final IColumnDescriptor column = getDescriptor( tc );
+
+      final GMLXPath path = column.getPropertyPath();
       final String name = ObjectUtils.toString( path, StringUtils.EMPTY );
       columnType.setName( name );
-      columnType.setLabel( (String) tc.getData( COLUMN_PROP_LABEL ) );
-      columnType.setTooltip( (String) tc.getData( COLUMN_PROP_TOOLTIP ) );
-      columnType.setEditable( ((Boolean) tc.getData( COLUMN_PROP_EDITABLE )).booleanValue() );
-      columnType.setSortEnabled( ((Boolean) tc.getData( COLUMN_PROP_SORT_ENABLED )).booleanValue() );
+      columnType.setLabel( column.getLabel() );
+      columnType.setTooltip( column.getTooltip() );
+      columnType.setEditable( column.isEditable() );
+      columnType.setSortEnabled( column.isSortEnabled() );
       columnType.setWidth( tc.getWidth() );
       columnType.setAlignment( "" + tc.getStyle() ); //$NON-NLS-1$
-      columnType.setFormat( (String) tc.getData( COLUMN_PROP_FORMAT ) );
+      columnType.setFormat( column.getFormat() );
 
-      final String modifiderID = (String) tc.getData( COLUMN_PROP_MODIFIER );
+      final String modifiderID = column.getModifierID();
       if( !StringUtils.isBlank( modifiderID ) )
         columnType.setModifier( modifiderID );
+
+      /* serialize parameters */
+      final List<Param> params = columnType.getParam();
+
+      final Map<String, String> columnParameters = column.getParameters();
+      final String[] keys = columnParameters.keySet().toArray( new String[columnParameters.size()] );
+      for( final String key : keys )
+      {
+        final Param param = OF.createGistableviewLayerColumnParam();
+        param.setKey( key );
+        param.setValue( column.getParam( key ) );
+
+        params.add( param );
+      }
 
       columns.add( columnType );
     }
 
     final LayerTableSorter sorter = (LayerTableSorter) getSorter();
-    final GMLXPath propertyPath = sorter.getPropertyPath();
-    if( propertyPath != null )
+    final IColumnDescriptor sortColumn = sorter.getColumn();
+    if( sortColumn != null )
     {
       final Sort sort = OF.createGistableviewLayerSort();
+      final GMLXPath propertyPath = sortColumn.getPropertyPath();
       final String sortPropertyName = ObjectUtils.toString( propertyPath, StringUtils.EMPTY );
       sort.setPropertyName( sortPropertyName );
       sort.setInverse( sorter.isInverse() );
@@ -945,7 +954,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
 
     final String[] firstLine = new String[columns.length];
     for( int j = 0; j < columns.length; j++ )
-      firstLine[j] = (String) columns[j].getData( COLUMN_PROP_LABEL );
+      firstLine[j] = columns[j].getText();
     lines.add( firstLine );
 
     for( final Object element : features )
@@ -963,7 +972,11 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
 
   public IFeatureModifier getModifier( final int columnIndex )
   {
-    return m_modifier == null ? null : m_modifier[columnIndex];
+    final IColumnDescriptor column = getColumnDescriptor( columnIndex );
+    if( column == null )
+      return null;
+
+    return column.getModifier();
   }
 
   @Override
@@ -1045,20 +1058,12 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
 
   private IFeatureModifier findModifier( final GMLXPath propertyPath )
   {
-    if( m_modifier == null )
+    final TableColumn tc = getColumn( propertyPath );
+    final IColumnDescriptor column = getDescriptor( tc );
+    if( column == null )
       return null;
 
-    for( final IFeatureModifier fm : m_modifier )
-    {
-      if( fm != null )
-      {
-        final GMLXPath modifierPath = fm.getPropertyPath();
-        if( modifierPath.equals( propertyPath ) )
-          return fm;
-      }
-    }
-
-    return null;
+    return column.getModifier();
   }
 
   @Override
@@ -1081,7 +1086,8 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     if( row != null && row.getData() instanceof Feature )
     {
       final Feature focusedFeature = row == null ? null : (Feature) row.getData();
-      final IFeatureModifier modifier = column < 0 || m_modifier == null || column > m_modifier.length - 1 ? null : m_modifier[column];
+
+      final IFeatureModifier modifier = getModifier( column );
 
       final IPropertyType focusedProperty = modifier == null ? null : modifier.getPropertyType();
 
@@ -1125,7 +1131,15 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     if( columnIndex < 0 || columnIndex > columns.length - 1 )
       return null;
 
-    final TableColumn column = columns[columnIndex];
-    return (LayerTableStyle) column.getData( COLUMN_PROP_STYLE );
+    final TableColumn tc = columns[columnIndex];
+
+    final IColumnDescriptor column = getDescriptor( tc );
+
+    return column.getStyle();
+  }
+
+  public static IColumnDescriptor getDescriptor( final TableColumn tc )
+  {
+    return (IColumnDescriptor) tc.getData( PROPERTY_COLUMN_DESCRIPTOR );
   }
 }
