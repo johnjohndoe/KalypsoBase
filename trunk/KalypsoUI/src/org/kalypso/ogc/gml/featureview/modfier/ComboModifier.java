@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.modfier;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -57,7 +58,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * A modifier which handles feature-value-properties which are enumerations: shows a combo-box as cell-editor.
- * 
+ *
  * @author Gernot Belger
  */
 public class ComboModifier extends AbstractFeatureModifier
@@ -70,7 +71,7 @@ public class ComboModifier extends AbstractFeatureModifier
 
   public ComboModifier( final GMLXPath propertyPath, final IValuePropertyType ftp )
   {
-    init( propertyPath, ftp );
+    init( propertyPath, ftp, new HashMap<String, String>() );
 
     m_comboEntries = createComboEntries( ftp );
   }

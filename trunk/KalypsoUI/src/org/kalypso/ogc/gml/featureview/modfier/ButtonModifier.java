@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.featureview.modfier;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.jface.viewers.CellEditor;
@@ -74,7 +75,7 @@ public class ButtonModifier extends AbstractFeatureModifier
 
   public ButtonModifier( final GMLXPath propertyPath, final IPropertyType ftp, final IFeatureChangeListener fcl )
   {
-    init( propertyPath, ftp );
+    init( propertyPath, ftp, new HashMap<String, String>() );
 
     m_fcl = fcl;
   }

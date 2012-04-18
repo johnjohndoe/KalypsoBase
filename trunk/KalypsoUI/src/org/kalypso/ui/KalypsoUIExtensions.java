@@ -67,7 +67,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * Within this class all extension-point from the KalypsoUI plug-in are handled.
- * 
+ *
  * @author Gernot Belger
  */
 public class KalypsoUIExtensions
@@ -239,7 +239,7 @@ public class KalypsoUIExtensions
     return factories.toArray( new ITypeHandlerFactory[factories.size()] );
   }
 
-  public static IFeatureModifier createFeatureModifier( final GMLXPath propertyPath, final IPropertyType ftp, final String id ) throws CoreException
+  public static IFeatureModifier createFeatureModifier( final GMLXPath propertyPath, final IPropertyType ftp, final String id, final Map<String, String> params ) throws CoreException
   {
     final IConfigurationElement ce = getFeatureModifierElement( id );
     if( ce == null )
@@ -248,7 +248,7 @@ public class KalypsoUIExtensions
     final IFeatureModifier modifier = (IFeatureModifier) ce.createExecutableExtension( "class" );
 
     if( modifier instanceof IFeatureModifierExtension )
-      ((IFeatureModifierExtension) modifier).init( propertyPath, ftp );
+      ((IFeatureModifierExtension) modifier).init( propertyPath, ftp, params );
 
     return modifier;
   }
@@ -277,7 +277,7 @@ public class KalypsoUIExtensions
 
   /**
    * This function creates and returns the {@link org.kalypso.ogc.gml.movie.IMovieImageProvider}s.
-   * 
+   *
    * @return The {@link org.kalypso.ogc.gml.movie.IMovieImageProvider}s.
    */
   public static IMovieImageProvider[] createMovieImageProviders( ) throws CoreException
@@ -308,7 +308,7 @@ public class KalypsoUIExtensions
 
   /**
    * This function creates and returns the {@link org.kalypso.ogc.gml.movie.IMovieImageProvider}.
-   * 
+   *
    * @param id
    *          The id of the {@link org.kalypso.ogc.gml.movie.IMovieImageProvider}.
    * @return The {@link org.kalypso.ogc.gml.movie.IMovieImageProvider} or null, if it cannot be found.

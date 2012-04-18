@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.featureview.modfier;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
@@ -65,7 +66,7 @@ import org.kalypsodeegree_impl.model.feature.search.IReferenceCollectorStrategy;
 
 /**
  * A modifier which handles feature-relations: shows a combo-box as cell-editor.
- * 
+ *
  * @author Gernot Belger
  */
 public class ComboBoxModifier extends AbstractFeatureModifier
@@ -80,7 +81,7 @@ public class ComboBoxModifier extends AbstractFeatureModifier
 
   public ComboBoxModifier( final GMLXPath propertyPath, final IRelationType ftp )
   {
-    init( propertyPath, ftp );
+    init( propertyPath, ftp, new HashMap<String, String>() );
   }
 
   @Override
