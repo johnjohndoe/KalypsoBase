@@ -67,6 +67,7 @@ import org.kalypso.commons.databinding.swt.FileBinding;
 import org.kalypso.commons.databinding.validation.TimezoneStringValidator;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateOpen;
 import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
+import org.kalypso.ogc.sensor.metadata.ParameterTypeLabelProvider;
 import org.kalypso.zml.ui.internal.i18n.Messages;
 
 /**
