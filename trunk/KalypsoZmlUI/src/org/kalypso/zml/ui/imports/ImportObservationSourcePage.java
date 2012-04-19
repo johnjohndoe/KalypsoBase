@@ -50,6 +50,9 @@ import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.observable.value.IValueChangeListener;
 import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
+import org.eclipse.core.databinding.validation.IValidator;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
@@ -72,6 +75,7 @@ import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.commons.databinding.swt.FileAndHistoryData;
 import org.kalypso.commons.databinding.swt.FileBinding;
 import org.kalypso.commons.databinding.validation.TimezoneStringValidator;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateOpen;
 import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
 import org.kalypso.ogc.sensor.metadata.ParameterTypeLabelProvider;
@@ -197,7 +201,21 @@ public class ImportObservationSourcePage extends WizardPage
     final IViewerObservableValue target = ViewersObservables.observeSinglePostSelection( formatCombo );
     final IObservableValue model = BeansObservables.observeValue( m_data, ImportObservationData.PROPERTY_ADAPTER );
 
-    m_binding.bindValue( target, model );
+    m_binding.bindValue( target, model, new IValidator()
+    {
+
+      @Override
+      public IStatus validate( final Object value )
+      {
+        if( Objects.isNull( value ) )
+        {
+          setErrorMessage( "Bitte wählen Sie ein Datenformat." );
+          return Status.CANCEL_STATUS;
+        }
+
+        return Status.OK_STATUS;
+      }
+    } );
   }
 
   private void createTimeZoneControl( final Composite parent )
