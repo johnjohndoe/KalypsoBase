@@ -88,11 +88,19 @@ public class ImportObservationSourcePage extends WizardPage
 
   private DatabindingWizardPage m_binding;
 
+  private final boolean m_updateMode;
+
   public ImportObservationSourcePage( final String pageName, final ImportObservationData data )
+  {
+    this( pageName, data, false );
+  }
+
+  public ImportObservationSourcePage( final String pageName, final ImportObservationData data, final boolean updateMode )
   {
     super( pageName, null, null );
 
     m_data = data;
+    m_updateMode = updateMode;
 
     setDescription( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationSelectionWizardPage0" ) ); //$NON-NLS-1$
     setTitle( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationSelectionWizardPage1" ) ); //$NON-NLS-1$
@@ -260,5 +268,8 @@ public class ImportObservationSourcePage extends WizardPage
     final IObservableValue model = BeansObservables.observeValue( m_data, ImportObservationData.PROPERTY_PARAMETER_TYPE );
 
     m_binding.bindValue( target, model );
+
+    if( m_updateMode )
+      parameterCombo.getCombo().setEnabled( false );
   }
 }
