@@ -57,6 +57,9 @@ public final class Objects
 
   public static boolean isNull( final Object... objects )
   {
+    if( objects == null )
+      return true;
+
     for( final Object object : objects )
     {
       if( object == null )
