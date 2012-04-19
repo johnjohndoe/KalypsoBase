@@ -40,9 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.imports;
 
+import java.io.File;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.core.databinding.observable.value.IValueChangeListener;
+import org.eclipse.core.databinding.observable.value.ValueChangeEvent;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
@@ -75,6 +82,8 @@ import org.kalypso.zml.ui.internal.i18n.Messages;
  */
 public class ImportObservationSourcePage extends WizardPage
 {
+  private final Set<IImportObservationSourceChangedListener> m_listeners = Collections.synchronizedSet( new LinkedHashSet<IImportObservationSourceChangedListener>() );
+
   private final ImportObservationData m_data;
 
   private DatabindingWizardPage m_binding;
@@ -88,6 +97,11 @@ public class ImportObservationSourcePage extends WizardPage
     setDescription( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationSelectionWizardPage0" ) ); //$NON-NLS-1$
     setTitle( Messages.getString( "org.kalypso.ui.wizard.sensor.ImportObservationSelectionWizardPage1" ) ); //$NON-NLS-1$
     setPageComplete( false );
+  }
+
+  public void addListener( final IImportObservationSourceChangedListener listener )
+  {
+    m_listeners.add( listener );
   }
 
   @Override
@@ -133,7 +147,27 @@ public class ImportObservationSourcePage extends WizardPage
 
     final Button searchButton = fileBinding.createFileSearchButton( parent, historyControl );
     setButtonLayoutData( searchButton );
+
+    modelFile.addValueChangeListener( new IValueChangeListener()
+    {
+      @Override
+      public void handleValueChange( final ValueChangeEvent event )
+      {
+        fireSourceFileChanged( sourceFileData.getFile() );
+      }
+    } );
+
     // fileBinding.applyBinding( m_binding );
+  }
+
+  protected void fireSourceFileChanged( final File file )
+  {
+    final IImportObservationSourceChangedListener[] listeners = m_listeners.toArray( new IImportObservationSourceChangedListener[] {} );
+    for( final IImportObservationSourceChangedListener listener : listeners )
+    {
+      listener.sourceFileChanged( file );
+    }
+
   }
 
   private void createFormatControl( final Composite parent )
