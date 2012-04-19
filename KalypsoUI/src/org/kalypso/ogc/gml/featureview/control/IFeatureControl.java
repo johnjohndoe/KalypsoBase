@@ -44,6 +44,7 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -62,7 +63,7 @@ public interface IFeatureControl
 
   /**
    * Render this control as string
-   *
+   * 
    * @return string
    */
   @Override
@@ -80,4 +81,7 @@ public interface IFeatureControl
   void addChangeListener( IFeatureChangeListener l );
 
   void removeChangeListener( IFeatureChangeListener l );
+
+  IPropertyType getFeatureTypeProperty( );
+
 }
