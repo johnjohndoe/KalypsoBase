@@ -286,7 +286,7 @@ public class ZmlModelViewport
         case eSumValue:
           return new SumValueEditingStrategy( this );
 
-        case eCurrentValue:
+        case eInstantaneousValue:
           if( ITimeseriesConstants.TYPE_WECHMANN_E.equals( axis ) )
             return new ContinuedInterpolatedValueEditingStrategy( this );
 
