@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.imports;
+package org.kalypso.ogc.sensor.metadata;
 
 import java.util.Comparator;
 
