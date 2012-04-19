@@ -147,8 +147,6 @@ public final class SLDFactory
 
   private static String NS_OGC = "http://www.opengis.net/ogc";//$NON-NLS-1$
 
-//  private static String NS_XLINK = "http://www.w3.org/1999/xlink";//$NON-NLS-1$
-
   private SLDFactory( )
   {
     throw new UnsupportedOperationException();
@@ -1127,6 +1125,7 @@ public final class SLDFactory
 
     // optional: several <Rule> / <SemanticTypeIdentifier>
     final NodeList nodelist = element.getChildNodes();
+
     final List<Rule> ruleList = new ArrayList<Rule>();
     final List<String> typeIdentifierList = new ArrayList<String>();
 
@@ -1138,20 +1137,25 @@ public final class SLDFactory
     for( int i = 0; i < nodelist.getLength(); i++ )
     {
       final Node item = nodelist.item( i );
-      parseFilter( urlResolver, ruleList, typeIdentifierList, filters, elseRules, item );
+      parseRuleOrSemanticTypeIdentifier( urlResolver, ruleList, typeIdentifierList, filters, elseRules, item );
     }
 
     // compute and set the ElseFilter for all ElseFilter-Rules
-    final Filter elseFilter = parseElseFilter( filters );
+    final Filter elseFilter = createElseFilter( filters );
     for( final Rule elseRule : elseRules )
+    {
+      // TODO: better API -> this make the Rule have elseFilter = true AND a filter element,
+      // which may lead to problems later
+      // TODO: we could have a class ElseFilter extends Filter that encapsulates this behavior
       elseRule.setFilter( elseFilter );
+    }
 
     final Rule[] rules = ruleList.toArray( new Rule[ruleList.size()] );
     final String[] typeIdentifiers = typeIdentifierList.toArray( new String[typeIdentifierList.size()] );
     return StyleFactory.createFeatureTypeStyle( name, title, description, featureTypeQName, typeIdentifiers, rules );
   }
 
-  private static void parseFilter( final IUrlResolver2 urlResolver, final List<Rule> ruleList, final List<String> typeIdentifierList, final List<Filter> filters, final List<Rule> elseRules, final Node item ) throws XMLParsingException
+  private static void parseRuleOrSemanticTypeIdentifier( final IUrlResolver2 urlResolver, final List<Rule> ruleList, final List<String> typeIdentifierList, final List<Filter> filters, final List<Rule> elseRules, final Node item ) throws XMLParsingException
   {
     if( item instanceof Element )
     {
@@ -1185,7 +1189,7 @@ public final class SLDFactory
     }
   }
 
-  private static Filter parseElseFilter( final List<Filter> filters )
+  private static Filter createElseFilter( final List<Filter> filters )
   {
     // a Rule exists with no Filter at all -> elseFilter = false
     if( filters.contains( null ) )
@@ -1238,31 +1242,28 @@ public final class SLDFactory
     final String description = XMLTools.getStringValue( "Abstract", CommonNamespaces.SLDNS.toString(), element, null );//$NON-NLS-1$
 
     // optional: <LegendGraphic>
-    LegendGraphic legendGraphic = null;
     final Element legendGraphicElement = XMLTools.getChildByName( "LegendGraphic", CommonNamespaces.SLDNS.toString(), element );//$NON-NLS-1$
 
-    if( legendGraphicElement != null )
-    {
+    final LegendGraphic legendGraphic;
+    if( legendGraphicElement == null )
+      legendGraphic = null;
+    else
       legendGraphic = SLDFactory.createLegendGraphic( urlResolver, legendGraphicElement );
-    }
 
     // optional: <Filter>
-    boolean isAnElseFilter = false;
-    Filter filter = null;
     final Element filterElement = XMLTools.getChildByName( "Filter", SLDFactory.NS_OGC, element );//$NON-NLS-1$
-    if( filterElement != null )
-    {
+
+    final Filter filter;
+    if( filterElement == null )
+      filter = null;
+    else
       filter = AbstractFilter.buildFromDOM( filterElement );
-    }
 
     // optional: <ElseFilter>
     final Element elseFilterElement = XMLTools.getChildByName( "ElseFilter", CommonNamespaces.SLDNS.toString(), element );//$NON-NLS-1$
-    if( elseFilterElement != null )
-    {
-      isAnElseFilter = true;
-    }
+    final boolean hasElseFilter = elseFilterElement != null;
 
-    if( filterElement != null && elseFilterElement != null )
+    if( filterElement != null && hasElseFilter )
       throw new XMLParsingException( "Element 'Rule' may contain a 'Filter'- or " + "an 'ElseFilter'-element, but not both!" );
 
     // optional: <MinScaleDenominator>
@@ -1286,7 +1287,7 @@ public final class SLDFactory
     }
 
     final Symbolizer[] symbolizers = symbolizerList.toArray( new Symbolizer[symbolizerList.size()] );
-    return StyleFactory.createRule( symbolizers, name, title, description, legendGraphic, filter, isAnElseFilter, min, max );
+    return StyleFactory.createRule( symbolizers, name, title, description, legendGraphic, filter, hasElseFilter, min, max );
   }
 
   /**
