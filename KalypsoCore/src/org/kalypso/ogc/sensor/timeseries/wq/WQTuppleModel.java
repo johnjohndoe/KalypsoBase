@@ -169,15 +169,15 @@ public class WQTuppleModel extends AbstractTupleModel
 
       final TupleModelDataSet data = m_values.get( objIndex );
 
-      if( Objects.equal( m_target.getValueAxis(), axis ) )
+      if( AxisUtils.isEqual( m_target.getValueAxis(), axis ) )
       {
         return data.getValue();
       }
-      else if( Objects.equal( m_target.getStatusAxis(), axis ) )
+      else if( AxisUtils.isEqual( m_target.getStatusAxis(), axis ) )
       {
         return data.getStatus();
       }
-      else if( Objects.equal( m_target.getDatasourceAxis(), axis ) )
+      else if( AxisUtils.isEqual( m_target.getDatasourceAxis(), axis ) )
       {
         final DataSourceHandler handler = new DataSourceHandler( m_metadata );
         return handler.addDataSource( data.getSource(), data.getSource() );
