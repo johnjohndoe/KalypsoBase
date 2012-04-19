@@ -49,7 +49,7 @@ public enum TIMESERIES_TYPE
 {
   // TODO: add eMeanValue here
   eSumValue,
-  eCurrentValue;
+  eInstantaneousValue;
 
   public static TIMESERIES_TYPE getType( final String axisType )
   {
@@ -62,7 +62,7 @@ public enum TIMESERIES_TYPE
         return eSumValue;
 
       default:
-        return eCurrentValue;
+        return eInstantaneousValue;
     }
   }
 }
