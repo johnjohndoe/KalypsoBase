@@ -221,6 +221,7 @@ public class ImportObservationData extends AbstractModelObject implements IStore
     return m_allowedParameterTypes;
   }
 
+  @Override
   public String getParameterType( )
   {
     return m_parameterType;
@@ -229,7 +230,6 @@ public class ImportObservationData extends AbstractModelObject implements IStore
   public void setParameterType( final String parameterType )
   {
     final String oldValue = m_parameterType;
-
     m_parameterType = parameterType;
 
     firePropertyChange( PROPERTY_PARAMETER_TYPE, oldValue, parameterType );
@@ -240,6 +240,7 @@ public class ImportObservationData extends AbstractModelObject implements IStore
     m_existingTimeserieses = timeserieses;
   }
 
+  @Override
   public String[] getExistingTimeserieses( )
   {
     return m_existingTimeserieses;
