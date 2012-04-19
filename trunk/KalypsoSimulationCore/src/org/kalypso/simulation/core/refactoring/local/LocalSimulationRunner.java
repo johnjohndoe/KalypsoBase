@@ -57,6 +57,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.simulation.core.ISimulation;
+import org.kalypso.simulation.core.KalypsoSimulationCoreDebug;
 import org.kalypso.simulation.core.KalypsoSimulationCorePlugin;
 import org.kalypso.simulation.core.SimulationDataPath;
 import org.kalypso.simulation.core.calccase.LocalSimulationFactory;
@@ -127,7 +128,8 @@ public class LocalSimulationRunner implements ISimulationRunner
     }
     finally
     {
-      FileUtils.deleteQuietly( tmpDir );
+      if( !KalypsoSimulationCoreDebug.KEEP_SIMULATION_FILES.isEnabled() )
+        FileUtils.deleteQuietly( tmpDir );
     }
   }
 

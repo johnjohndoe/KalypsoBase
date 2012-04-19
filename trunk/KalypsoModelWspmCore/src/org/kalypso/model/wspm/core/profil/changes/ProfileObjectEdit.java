@@ -55,28 +55,36 @@ public class ProfileObjectEdit implements IProfilChange
 
   private final Object m_newValue;
 
+  private final int m_rowIndex;
+
   public ProfileObjectEdit( final IProfileObject profileObject, final IComponent key, final Object newValue )
+  {
+    this( profileObject, key, 0, newValue );
+  }
+
+  public ProfileObjectEdit( final IProfileObject profileObject, final IComponent key, final int rowIndex, final Object newValue )
   {
     m_object = profileObject;
     m_property = key;
     m_newValue = newValue;
+    m_rowIndex = rowIndex;
   }
 
   @Override
   public IProfilChange doChange( )
   {
-    // FIXME at the moment we can only one value of the profile object tuple result
+    // FIXME rowIndex may change until rollback or undo
     final IObservation<TupleResult> observation = m_object.getObservation();
     final TupleResult result = observation.getResult();
     final int intCmp = result.indexOfComponent( m_property );
-    if( result.size() > 0 )
+    if( m_rowIndex < result.size() )
     {
-      final IRecord record = result.get( 0 );
+      final IRecord record = result.get( m_rowIndex );
 
       final Object oldValue = record.getValue( intCmp );
       record.setValue( intCmp, m_newValue );
 
-      return new ProfileObjectEdit( m_object, m_property, oldValue );
+      return new ProfileObjectEdit( m_object, m_property, m_rowIndex, oldValue );
     }
 
     return null;
