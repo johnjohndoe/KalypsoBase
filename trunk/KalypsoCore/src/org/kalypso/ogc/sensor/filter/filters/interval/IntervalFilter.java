@@ -100,7 +100,6 @@ public class IntervalFilter extends AbstractObservationFilter
   public void initFilter( final Object dummy, final IObservation baseObs, final URL context ) throws SensorException
   {
     m_baseobservation = baseObs;
-
     Assert.isNotNull( m_baseobservation );
 
     super.initFilter( dummy, baseObs, context );
