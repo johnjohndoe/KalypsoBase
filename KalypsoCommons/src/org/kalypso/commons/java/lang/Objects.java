@@ -59,6 +59,9 @@ public final class Objects
 
   public static boolean isNull( final Object... objects )
   {
+    if( objects == null )
+      return true;
+
     for( final Object object : objects )
     {
       if( object == null )
@@ -80,6 +83,9 @@ public final class Objects
 
   public static boolean allNull( final Object... objects )
   {
+    if( objects == null )
+      return true;
+
     for( final Object object : objects )
     {
       if( isNotNull( object ) )
@@ -91,6 +97,9 @@ public final class Objects
 
   public static boolean allNotNull( final Object... objects )
   {
+    if( objects == null )
+      return false;
+
     for( final Object object : objects )
     {
       if( isNull( object ) )

@@ -72,6 +72,7 @@
       </command>
       <command
             categoryId="org.kalypso.chart.ui.commands.category"
+            description="%org.kalypso.chart.ui.commands.export.description"
             id="org.kalypso.chart.ui.commands.export"
             name="%org.kalypso.chart.ui.commands.export.name">
       </command>

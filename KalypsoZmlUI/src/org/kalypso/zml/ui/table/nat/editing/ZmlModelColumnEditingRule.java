@@ -44,6 +44,8 @@ import net.sourceforge.nattable.config.EditableRule;
 
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
+import org.kalypso.zml.core.table.model.IZmlModelRow;
+import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 
 /**
@@ -66,6 +68,15 @@ public class ZmlModelColumnEditingRule extends EditableRule
     if( Objects.isNull( column ) )
       return false;
 
-    return column.getDataColumn().isEditable();
+    /** column is editable */
+    final boolean editable = column.getDataColumn().isEditable();
+    if( !editable )
+      return false;
+
+    /** cell exists? */
+    final IZmlModelRow row = m_viewport.getRow( rowIndex );
+    final IZmlModelValueCell cell = row.get( column );
+
+    return Objects.isNotNull( cell );
   }
 }
