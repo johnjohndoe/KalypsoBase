@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.zml;
 
@@ -51,12 +51,19 @@ import java.util.TimeZone;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.factory.FactoryException;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.java.util.PropertiesHelper;
 import org.kalypso.commons.parser.IParser;
 import org.kalypso.commons.parser.ParserException;
 import org.kalypso.commons.parser.impl.DateParser;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.java.xml.XMLUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -81,11 +88,15 @@ import org.xml.sax.InputSource;
 /**
  * @author Gernot Belger
  */
-class ObservationUnmarshaller
+class ObservationUnmarshaller implements ICoreRunnableWithProgress
 {
   private final InputSource m_source;
 
   private final URL m_context;
+
+  private IObservation m_observation;
+
+  private MetadataList m_metadata;
 
   ObservationUnmarshaller( final InputSource source, final URL context )
   {
@@ -93,74 +104,84 @@ class ObservationUnmarshaller
     m_context = context;
   }
 
-  public IObservation unmarshall( ) throws SensorException
+  @Override
+  public IStatus execute( final IProgressMonitor monitor )
   {
+    final StatusCollector stati = new StatusCollector( KalypsoCorePlugin.getID() );
+
     try
     {
       final Unmarshaller u = ZmlFactory.JC.createUnmarshaller();
       final Observation binding = (Observation) u.unmarshal( m_source );
-      return binding2Obs( binding );
+
+      m_observation = doConvert( binding, stati );
     }
-    catch( final SensorException se )
+    catch( final Exception ex )
     {
-      throw se;
+      ex.printStackTrace();
+
+      final String msg = "Error reading source observation";
+      stati.add( IStatus.ERROR, msg, ex );
     }
-    catch( final Exception e ) // generic exception caught for simplicity
+
+    return stati.asMultiStatus( "Parsing of zml source" );
+  }
+
+  public IObservation doConvert( final Observation binding, final StatusCollector stati )
+  {
+    try
     {
-      throw new SensorException( e );
+      // metadata
+      stati.add( readMetadata( binding ) );
+      final TimeZone timeZone = MetadataHelper.getTimeZone( m_metadata, "UTC" ); //$NON-NLS-1$
+
+      // axes and values
+      final List<AxisType> bindingAxes = binding.getAxis();
+      final Map<IAxis, IZmlValues> valuesMap = new HashMap<IAxis, IZmlValues>( bindingAxes.size() );
+
+      final String data = binding.getData(); // data is optional and can be null
+
+      for( int i = 0; i < bindingAxes.size(); i++ )
+      {
+        final AxisType bindingAxis = bindingAxes.get( i );
+        final IParser parser = createParser( bindingAxis, timeZone );
+        final IZmlValues values = binding2Values( bindingAxis, parser, data );
+        final IAxis axis = new DefaultAxis( bindingAxis.getName(), bindingAxis.getType(), bindingAxis.getUnit(), parser.getObjectClass(), bindingAxis.isKey() );
+
+        valuesMap.put( axis, values );
+      }
+
+      final ZmlTupleModel model = new ZmlTupleModel( valuesMap );
+
+      final String contextHref = m_context != null ? m_context.toExternalForm() : ""; //$NON-NLS-1$
+      return new SimpleObservation( contextHref, binding.getName(), m_metadata, model );
+    }
+    catch( final Exception ex )
+    {
+      ex.printStackTrace();
+      stati.add( IStatus.ERROR, "Error parsing zml source", ex );
+
+      return null;
     }
   }
 
-  private IObservation binding2Obs( final Observation obs ) throws SensorException, FactoryException, ParserException, IOException
+  private IStatus readMetadata( final Observation binding )
   {
-    // metadata
-    final MetadataList metadata = binding2Metadata( obs );
+    m_metadata = new MetadataList();
+    m_metadata.put( IMetadataConstants.MD_NAME, binding.getName() );
 
-    final TimeZone timeZone = MetadataHelper.getTimeZone( metadata, "UTC" ); //$NON-NLS-1$
-
-    // axes and values
-    final List<AxisType> bindingAxes = obs.getAxis();
-    final Map<IAxis, IZmlValues> valuesMap = new HashMap<IAxis, IZmlValues>( bindingAxes.size() );
-
-    final String data = obs.getData(); // data is optional and can be null
-
-    for( int i = 0; i < bindingAxes.size(); i++ )
+    final MetadataListType bindingMeta = binding.getMetadataList();
+    if( Objects.isNotNull( bindingMeta ) )
     {
-      final AxisType bindingAxis = bindingAxes.get( i );
-
-      final IParser parser = createParser( bindingAxis, timeZone );
-
-      final IZmlValues values = binding2Values( bindingAxis, parser, data );
-
-      final IAxis axis = new DefaultAxis( bindingAxis.getName(), bindingAxis.getType(), bindingAxis.getUnit(), parser.getObjectClass(), bindingAxis.isKey() );
-
-      valuesMap.put( axis, values );
+      final List<MetadataType> mdList = bindingMeta.getMetadata();
+      for( final MetadataType md : mdList )
+      {
+        final String value = guessMetaValue( md );
+        m_metadata.put( md.getName(), value );
+      }
     }
 
-    final ZmlTupleModel model = new ZmlTupleModel( valuesMap );
-
-    final String contextHref = m_context != null ? m_context.toExternalForm() : ""; //$NON-NLS-1$
-    return new SimpleObservation( contextHref, obs.getName(), metadata, model );
-  }
-
-  private static MetadataList binding2Metadata( final Observation obs )
-  {
-    final MetadataList metadata = new MetadataList();
-
-    metadata.put( IMetadataConstants.MD_NAME, obs.getName() );
-
-    final MetadataListType bindingMeta = obs.getMetadataList();
-    if( bindingMeta == null )
-      return metadata;
-
-    final List<MetadataType> mdList = bindingMeta.getMetadata();
-    for( final MetadataType md : mdList )
-    {
-      final String value = guessMetaValue( md );
-      metadata.put( md.getName(), value );
-    }
-
-    return metadata;
+    return new Status( IStatus.OK, KalypsoCorePlugin.getID(), "Reading meta data" );
   }
 
   private static String guessMetaValue( final MetadataType md )
@@ -218,4 +239,10 @@ class ObservationUnmarshaller
 
     throw new SensorException( Messages.getString( "org.kalypso.ogc.sensor.zml.ZmlFactory.14" ) + axisType.toString() ); //$NON-NLS-1$
   }
+
+  public IObservation getObservation( )
+  {
+    return m_observation;
+  }
+
 }
