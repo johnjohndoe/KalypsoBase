@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml.coverages;
 
@@ -66,7 +66,7 @@ import com.vividsolutions.jts.geom.LineString;
 /**
  * TODO: split this one up into two helpers: 1) extract points from grids 2) create profile from a coordinate array.<br>
  * This class should help handling coverages and profiles.
- * 
+ *
  * @author Holger Albert
  * @author kimwerner
  */
@@ -96,7 +96,7 @@ public final class CoverageProfile
    * </ol>
    * <br>
    * If you want to simplify the profile, use the result and the function {@link #thinProfile(IProfil)}.
-   * 
+   *
    * @param curve
    *          The curve, which represents the geometry on the map of the profile.
    * @return The new profile.
@@ -118,7 +118,7 @@ public final class CoverageProfile
 
   /**
    * This function calculates the points for the profile and creates the new profile.
-   * 
+   *
    * @param points
    *          All points of the new geo line.
    * @param csOfPoints
@@ -216,7 +216,7 @@ public final class CoverageProfile
 
   /**
    * Inserts new points into an existing profile.<br/>
-   * 
+   *
    * @param insertSign
    *          If -1, new points are inserted at the beginning of the profile, 'width' goes into negative direction.
    *          Else, points are inserted at the end of the profile with ascending width.
@@ -248,8 +248,9 @@ public final class CoverageProfile
           breite += distance;
         }
 
-        final IRecord newPoint = createPoint( profile, coordinate, breite );
-        newRecords.add( newPoint );
+        final IProfileRecord newPoint = createPoint( profile, coordinate, breite );
+        // REMARK: using record here beacuse we later directly insert into the TupleResult
+        newRecords.add( newPoint.getRecord() );
       }
 
       lastCrd = coordinate;
