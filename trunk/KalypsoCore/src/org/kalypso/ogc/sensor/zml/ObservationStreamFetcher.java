@@ -47,6 +47,9 @@ import java.net.URL;
 import java.util.zip.GZIPInputStream;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -76,9 +79,11 @@ public final class ObservationStreamFetcher
       // url handling.
 
       final ObservationUnmarshaller unmarshaller = new ObservationUnmarshaller( new InputSource( inputStream ), url );
-      final IObservation unmarshalled = unmarshaller.unmarshall();
+      final IStatus status = unmarshaller.execute( new NullProgressMonitor() );
+      if( status.getSeverity() == IStatus.ERROR )
+        throw new SensorException( "Error parsing zml input file", new CoreException( status ) );
 
-      return unmarshalled;
+      return unmarshaller.getObservation();
     }
     catch( final IOException e )
     {

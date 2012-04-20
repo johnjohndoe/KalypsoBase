@@ -49,6 +49,7 @@ import javax.xml.bind.JAXBContext;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.factory.FactoryException;
@@ -103,6 +104,7 @@ public final class ZmlFactory
   {
     final IObservation observation = readZml( url );
     final String href = url.toExternalForm();
+
     return decorateObservation( observation, href, url );
   }
 
@@ -127,9 +129,13 @@ public final class ZmlFactory
   public static IObservation parseXML( final InputSource source, final URL context ) throws SensorException
   {
     final ObservationUnmarshaller unmarshaller = new ObservationUnmarshaller( source, context );
-    final IObservation observation = unmarshaller.unmarshall();
+    final IStatus status = unmarshaller.execute( new NullProgressMonitor() );
+    if( status.getSeverity() == IStatus.ERROR )
+      throw new SensorException( "Error parsing zml input file", new CoreException( status ) );
 
+    final IObservation observation = unmarshaller.getObservation();
     final String href = observation.getHref();
+
     return decorateObservation( observation, href, context );
   }
 

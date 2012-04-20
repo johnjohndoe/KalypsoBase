@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 
 /**
@@ -59,8 +60,10 @@ public class NativeObservationZmlAdapter extends AbstractObservationImporter
   {
     try
     {
-      setObservation( ZmlFactory.parseXML( source.toURI().toURL() ) );
-      return new Status( IStatus.OK, KalypsoCorePlugin.getID(), "DAT Timeseries Import" );
+      final IObservation observation = ZmlFactory.parseXML( source.toURI().toURL() );
+      setObservation( observation );
+
+      return new Status( IStatus.OK, KalypsoCorePlugin.getID(), "ZML Timeseries Import" );
     }
     catch( final Exception e )
     {
