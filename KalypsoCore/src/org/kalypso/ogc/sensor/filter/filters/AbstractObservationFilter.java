@@ -64,12 +64,7 @@ public abstract class AbstractObservationFilter implements IObservationFilter
 {
   private IObservation m_obs = null;
 
-  /**
-   * @see org.kalypso.ogc.sensor.filter.IObservationFilter#initFilter(java.lang.Object,
-   *      org.kalypso.ogc.sensor.IObservation, java.net.URL)
-   */
   @Override
-  @SuppressWarnings("unused")
   // exception warning Ignored, else we got errors in implementors
   public void initFilter( final Object conf, final IObservation obs, final URL context ) throws SensorException
   {
