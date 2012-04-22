@@ -39,7 +39,7 @@ import org.kalypso.ui.i18n.Messages;
 
 public class CreateGisMapViewWizard extends Wizard implements INewWizard
 {
-  public final static String WIZARD_ID = "org.kalypso.ui.createGisMapView.CreateGisMapViewWizard";
+  public final static String WIZARD_ID = "org.kalypso.ui.createGisMapView.CreateGisMapViewWizard"; //$NON-NLS-1$
 
   private CreateGisMapViewWizardPage page;
 
