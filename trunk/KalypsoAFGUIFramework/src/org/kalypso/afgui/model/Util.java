@@ -47,7 +47,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
-import org.kalypso.afgui.i18n.Messages;
+import org.kalypso.afgui.internal.i18n.Messages;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
