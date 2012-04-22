@@ -59,13 +59,11 @@ import de.renew.workflow.contexts.WorkflowSystemExtension;
  * @author Holger Albert
  *
  */
-public class WorkflowHelper
+public final class WorkflowHelper
 {
-  /**
-   * The constructor.
-   */
   private WorkflowHelper( )
   {
+    throw new UnsupportedOperationException();
   }
 
   /**
