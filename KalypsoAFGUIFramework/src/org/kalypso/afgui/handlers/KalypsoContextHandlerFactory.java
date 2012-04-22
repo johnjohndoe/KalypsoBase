@@ -45,7 +45,7 @@ import java.util.Properties;
 
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.runtime.Assert;
-import org.kalypso.afgui.i18n.Messages;
+import org.kalypso.afgui.internal.i18n.Messages;
 
 import de.renew.workflow.contexts.ContextType;
 import de.renew.workflow.contexts.ExtensionContext;

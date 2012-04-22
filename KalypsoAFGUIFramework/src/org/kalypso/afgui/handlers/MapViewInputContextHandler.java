@@ -27,7 +27,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.part.FileEditorInput;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.i18n.Messages;
+import org.kalypso.afgui.internal.i18n.Messages;
 import org.kalypso.afgui.scenarios.CatalogStorage;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.ogc.gml.map.IMapPanel;
