@@ -49,7 +49,7 @@ import org.kalypso.contribs.java.i18n.I18nUtils;
  */
 public class Messages
 {
-  private static final String BUNDLE_NAME = "org.kalypso.afgui.i18n.messages"; //$NON-NLS-1$
+  private static final String BUNDLE_NAME = "org.kalypso.afgui.internal.i18n.messages"; //$NON-NLS-1$
 
   private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
 
