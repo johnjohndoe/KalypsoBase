@@ -58,9 +58,6 @@ class ColorMapEntryNode extends AbstractThemeNode<ColorMapEntry>
     super( parent, entry );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.outline.AbstractThemeNode#getElementChildren()
-   */
   @Override
   protected Object[] getElementChildren( )
   {
@@ -104,5 +101,4 @@ class ColorMapEntryNode extends AbstractThemeNode<ColorMapEntry>
 
     return resolveI18nString( label );
   }
-
 }

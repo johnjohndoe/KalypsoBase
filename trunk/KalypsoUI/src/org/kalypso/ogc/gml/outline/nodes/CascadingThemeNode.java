@@ -66,9 +66,6 @@ class CascadingThemeNode extends KalypsoThemeNode<IKalypsoCascadingTheme> implem
       refreshViewer( CascadingThemeNode.this );
     }
 
-    /**
-     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeOrderChanged(org.kalypso.ogc.gml.mapmodel.IMapModell)
-     */
     @Override
     public void themeOrderChanged( final IMapModell source )
     {
@@ -85,9 +82,6 @@ class CascadingThemeNode extends KalypsoThemeNode<IKalypsoCascadingTheme> implem
     theme.addMapModelListener( m_mapModellListener );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.outline.nodes.KalypsoThemeNode#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -96,9 +90,6 @@ class CascadingThemeNode extends KalypsoThemeNode<IKalypsoCascadingTheme> implem
     super.dispose();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.outline.AbstractThemeNode#getElementChildren()
-   */
   @Override
   protected Object[] getElementChildren( )
   {
@@ -106,18 +97,12 @@ class CascadingThemeNode extends KalypsoThemeNode<IKalypsoCascadingTheme> implem
     return theme.getAllThemes();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.outline.nodes.AbstractThemeNode#isCompactable()
-   */
   @Override
   public boolean isCompactable( )
   {
     return false;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.outline.nodes.AbstractThemeNode#doReverseChildren()
-   */
   @Override
   protected boolean doReverseChildren( )
   {

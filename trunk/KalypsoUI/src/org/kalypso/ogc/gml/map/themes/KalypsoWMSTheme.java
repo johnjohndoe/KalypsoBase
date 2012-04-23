@@ -52,14 +52,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.graphics.Font;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.AbstractKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.outline.nodes.ILegendProvider;
 import org.kalypso.ogc.gml.wms.provider.images.AbstractDeegreeImageProvider;
 import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
 import org.kalypso.template.types.LayerType;
@@ -93,11 +91,6 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   private final IKalypsoImageProvider m_provider;
 
   /**
-   * This variable stores the legend, if any.
-   */
-  private org.eclipse.swt.graphics.Image m_legend;
-
-  /**
    * This variable stores the max envelope of layer on WMS (local SRS).
    */
   protected GM_Envelope m_maxEnvLocalSRS;
@@ -121,7 +114,6 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 
     m_layer = layerType;
     m_provider = imageProvider;
-    m_legend = null;
   }
 
   @Override
@@ -161,12 +153,6 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     synchronized( this )
     {
       /* Dispose the legend. */
-      if( m_legend != null )
-      {
-        m_legend.dispose();
-        m_legend = null;
-      }
-
       if( m_buffer != null )
       {
         m_buffer.flush();
@@ -231,17 +217,15 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     return ((AbstractDeegreeImageProvider) m_provider).getLastRequest();
   }
 
-  public org.eclipse.swt.graphics.Image getLegendGraphic( final Font font ) throws CoreException
+  public ImageDescriptor getLegendGraphic( final String layer, final String style )
   {
-    if( m_provider == null || !(m_provider instanceof ILegendProvider) )
+    if( m_provider == null )
       return null;
 
-    if( m_legend == null )
-    {
-      m_legend = m_provider.getLegendGraphic( font );
-    }
+// if( m_legend == null )
+    return m_provider.getLegendGraphic( layer, style );
 
-    return m_legend;
+// return m_legend;
   }
 
   public Style[] getStyles( )

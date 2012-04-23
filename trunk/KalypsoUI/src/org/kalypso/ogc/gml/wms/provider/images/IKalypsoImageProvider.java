@@ -47,7 +47,7 @@ import org.deegree.ogcwebservices.wms.capabilities.WMSCapabilities;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.swt.graphics.Font;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.ogc.gml.wms.loader.ICapabilitiesLoader;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
@@ -136,7 +136,7 @@ public interface IKalypsoImageProvider
    */
   ICapabilitiesLoader createCapabilitiesLoader( );
 
-  org.eclipse.swt.graphics.Image getLegendGraphic( Font font ) throws CoreException;
+  ImageDescriptor getLegendGraphic( String layer, String style );
 
   WMSCapabilities getCapabilities( );
 

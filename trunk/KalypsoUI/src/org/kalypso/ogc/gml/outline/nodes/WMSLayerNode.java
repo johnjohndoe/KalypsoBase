@@ -42,9 +42,7 @@ package org.kalypso.ogc.gml.outline.nodes;
 
 import org.apache.commons.lang3.StringUtils;
 import org.deegree.ogcwebservices.wms.capabilities.Layer;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.Image;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
 
@@ -145,17 +143,28 @@ public class WMSLayerNode extends AbstractThemeNode<Layer>
   }
 
   @Override
-  public Image getLegendGraphic( final String[] whiteList, final boolean onlyVisible, final Font font ) throws CoreException
+  public boolean isLabelInImage( )
   {
-    final Image image = m_legendImageJob.getImage();
-    if( image != null )
-      return image;
+    // TODO: depends on WMS server
+    return true;
+  }
 
-    // FIXME
-// if( m_legendImageJob.getState() != Job.RUNNING )
-// m_legendImageJob.schedule( 250 );
+  @Override
+  public ImageDescriptor getLegendImage( )
+  {
+    /* Get the wms theme. */
+    final KalypsoWMSTheme element = getWMSTheme();
 
-    return super.getLegendGraphic( whiteList, onlyVisible, font );
+    /* Ask the theme for a legend. */
+    final Layer layer = getElement();
+    final String style = element.getStyle( layer );
+    final ImageDescriptor legendGraphic = element.getLegendGraphic( layer.getName(), style );
+
+    if( legendGraphic != null )
+      // return new Image( font.getDevice(), xxx, SWT.IMAGE_COPY );
+      return legendGraphic;
+
+    return super.getLegendImage();
   }
 
   public String getStyle( )

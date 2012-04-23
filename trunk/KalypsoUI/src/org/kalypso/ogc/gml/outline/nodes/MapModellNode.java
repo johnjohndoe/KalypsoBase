@@ -55,10 +55,6 @@ class MapModellNode extends AbstractThemeNode<IMapModell>
 {
   private final IMapModellListener m_modelListener = new MapModellAdapter()
   {
-    /**
-     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeActivated(org.kalypso.ogc.gml.mapmodel.IMapModell,
-     *      org.kalypso.ogc.gml.IKalypsoTheme, org.kalypso.ogc.gml.IKalypsoTheme)
-     */
     @Override
     public void themeActivated( final IMapModell source, final IKalypsoTheme previouslyActive, final IKalypsoTheme nowActive )
     {
@@ -67,29 +63,18 @@ class MapModellNode extends AbstractThemeNode<IMapModell>
       ViewerUtilities.update( getViewer(), elements, null, true );
     }
 
-    /**
-     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeAdded(org.kalypso.ogc.gml.mapmodel.IMapModell,
-     *      org.kalypso.ogc.gml.IKalypsoTheme)
-     */
     @Override
     public void themeAdded( final IMapModell source, final IKalypsoTheme theme )
     {
       refreshViewer( MapModellNode.this );
     }
 
-    /**
-     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeOrderChanged(org.kalypso.ogc.gml.mapmodel.IMapModell)
-     */
     @Override
     public void themeOrderChanged( final IMapModell source )
     {
       refreshViewer( MapModellNode.this );
     }
 
-    /**
-     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeRemoved(org.kalypso.ogc.gml.mapmodel.IMapModell,
-     *      org.kalypso.ogc.gml.IKalypsoTheme, boolean)
-     */
     @Override
     public void themeRemoved( final IMapModell source, final IKalypsoTheme theme, final boolean lastVisibility )
     {
@@ -108,9 +93,6 @@ class MapModellNode extends AbstractThemeNode<IMapModell>
     modell.addMapModelListener( m_modelListener );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.outline.AbstractThemeNode#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -119,18 +101,12 @@ class MapModellNode extends AbstractThemeNode<IMapModell>
     super.dispose();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.outline.IThemeNode#resolveI18nString(java.lang.String)
-   */
   @Override
   public String resolveI18nString( final String text )
   {
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.outline.AbstractThemeNode#getElementChildren()
-   */
   @Override
   protected Object[] getElementChildren( )
   {
@@ -139,9 +115,6 @@ class MapModellNode extends AbstractThemeNode<IMapModell>
     return themes;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.outline.AbstractThemeNode#hasChildrenCompact()
-   */
   @Override
   public boolean hasChildrenCompact( )
   {
@@ -160,9 +133,6 @@ class MapModellNode extends AbstractThemeNode<IMapModell>
     return getElement().getLabel();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.outline.AbstractThemeNode#getViewer()
-   */
   @Override
   protected TreeViewer getViewer( )
   {

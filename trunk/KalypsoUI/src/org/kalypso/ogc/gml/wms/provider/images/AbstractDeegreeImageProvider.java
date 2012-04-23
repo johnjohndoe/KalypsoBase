@@ -44,8 +44,6 @@ import java.awt.Image;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,7 +72,6 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.graphics.Font;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.variables.VariableUtils;
 import org.kalypso.i18n.Messages;
@@ -88,6 +85,8 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  */
 public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvider
 {
+  private static final ImageCache m_legendCache = new ImageCache();
+
   /**
    * This variable stores the name of the theme.
    */
@@ -196,29 +195,22 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     return loadImage( width, height, bbox );
   }
 
+
   @Override
-  public synchronized org.eclipse.swt.graphics.Image getLegendGraphic( final Font font )
+  public synchronized ImageDescriptor getLegendGraphic( final String layer, final String style )
   {
     if( m_capabilities == null )
       return null;
 
-    /* Layers. */
-    final Layer[] layers = findLayer( m_capabilities );
-
-    /* No layers, no legend graphic. */
-    if( layers == null || layers.length == 0 )
-      return null;
-
     /* Get the URL of the legend. */
-    final LegendURL legendURL = findLegendURL( layers );
+    final LegendURL legendURL = findLegendURL( layer, style );
     if( legendURL == null )
       return null;
 
     /* Get the real URL. */
     final URL onlineResource = legendURL.getOnlineResource();
 
-    final ImageDescriptor imageDescriptor = ImageDescriptor.createFromURL( onlineResource );
-    return imageDescriptor.createImage( font.getDevice() );
+    return m_legendCache.getImage( onlineResource );
   }
 
   /**
@@ -416,43 +408,14 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     }
   }
 
-  /**
-   * Finds the layers this image provider represents.
-   */
-  private Layer[] findLayer( final WMSCapabilities capabilities )
+  private LegendURL findLegendURL( final String layerName, final String styleName )
   {
-    if( m_layers == null )
+    final Layer layer = m_capabilities.getLayer( layerName );
+    if( layer == null )
       return null;
 
-    final List<Layer> result = new ArrayList<Layer>();
-    for( final String name : m_layers )
-    {
-      final Layer layer = capabilities.getLayer( name );
-      if( layer != null )
-        result.add( layer );
-    }
-
-    return result.toArray( new Layer[result.size()] );
-  }
-
-  private LegendURL findLegendURL( final Layer[] layers )
-  {
-    /* End recursion. */
-    if( layers == null || layers.length == 0 )
-      return null;
-
-    // TODO: we should show all styles of all layers as a tree in the outline
-    // TODO: Instead, we show the graphic of the first style of the first layer
-    final Style[] styles = layers[0].getStyles();
-    if( styles.length == 0 )
-      return findLegendURL( layers[0].getLayer() );
-
-    /* TODO Only the first style will be used for now. */
-    final Style style = styles[0];
-
-    /* Only use styles, denoted by m_styles. */
-    final List<String> styleList = Arrays.asList( m_styles );
-    if( !styleList.contains( style.getName() ) )
+    final Style style = findLegendStyle( layer, styleName );
+    if( style == null )
       return null;
 
     /* Get the URLs for the legend. */
@@ -462,6 +425,21 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
 
     // TODO: Only the first legend URL will be used for now.
     return legendURLs[0];
+  }
+
+  private Style findLegendStyle( final Layer layer, final String styleName )
+  {
+    if( styleName == null )
+    {
+      /* Happens if this layer is not visible -> show legend for first style */
+      final Style[] styles = layer.getStyles();
+      if( styles.length == 0 )
+        return null;
+
+      return styles[0];
+    }
+
+    return layer.getStyleResource( styleName );
   }
 
   /**

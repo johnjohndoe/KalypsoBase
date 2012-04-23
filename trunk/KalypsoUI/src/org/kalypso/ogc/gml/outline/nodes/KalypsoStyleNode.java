@@ -65,9 +65,6 @@ abstract class KalypsoStyleNode<T> extends AbstractThemeNode<T>
       ((IKalypsoStyle) element).addStyleListener( m_styleListener );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.outline.nodes.AbstractThemeNode#dispose()
-   */
   @Override
   public void dispose( )
   {
