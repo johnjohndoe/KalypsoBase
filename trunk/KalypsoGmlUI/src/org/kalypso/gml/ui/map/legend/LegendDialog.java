@@ -43,11 +43,11 @@ package org.kalypso.gml.ui.map.legend;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.PopupDialog;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
@@ -58,13 +58,14 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.ThemeUtilities;
 import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
 import org.kalypso.ogc.gml.outline.nodes.NodeFactory;
-import org.kalypso.util.themes.ThemeUtilities;
+import org.kalypso.ogc.gml.outline.nodes.NodeLegendBuilder;
 
 /**
  * A legend dialog that shows the legend for a set of given themes.
- * 
+ *
  * @author Holger Albert
  */
 public class LegendDialog extends PopupDialog
@@ -76,7 +77,7 @@ public class LegendDialog extends PopupDialog
 
   /**
    * The constructor.
-   * 
+   *
    * @param parentShell
    *          The parent shell.
    * @param themes
@@ -89,7 +90,7 @@ public class LegendDialog extends PopupDialog
 
   /**
    * The constructor.
-   * 
+   *
    * @param parentShell
    *          The parent shell.
    * @param title
@@ -104,9 +105,6 @@ public class LegendDialog extends PopupDialog
     m_themes = themes;
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.PopupDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   protected Control createDialogArea( final Composite parent )
   {
@@ -135,11 +133,9 @@ public class LegendDialog extends PopupDialog
       /* Create the theme node. */
       final IThemeNode themeNode = NodeFactory.createNode( null, theme );
 
-      /* This font will be used to generate the legend. */
-      final Font font = new Font( getShell().getDisplay(), JFaceResources.DIALOG_FONT, 10, SWT.NORMAL );
-
       /* Create the legend graphic. */
-      final Image legendGraphic = themeNode.getLegendGraphic( null, true, font );
+      final NodeLegendBuilder legendBuilder = new NodeLegendBuilder( null, true );
+      final Image legendGraphic = legendBuilder.createLegend( new IThemeNode[] { themeNode }, getShell().getDisplay(), null );
 
       /* Set the background image. */
       final Label label = new Label( main, SWT.NONE );
@@ -147,15 +143,21 @@ public class LegendDialog extends PopupDialog
       label.setImage( legendGraphic );
       label.addPaintListener( new PaintListener()
       {
-        /**
-         * @see org.eclipse.swt.events.PaintListener#paintControl(org.eclipse.swt.events.PaintEvent)
-         */
         @Override
         public void paintControl( final PaintEvent e )
         {
           final Label source = (Label) e.getSource();
           final Rectangle bounds = source.getBounds();
           e.gc.drawRectangle( new Rectangle( 0, 0, bounds.width - 1, bounds.height - 1 ) );
+        }
+      } );
+
+      label.addDisposeListener( new DisposeListener()
+      {
+        @Override
+        public void widgetDisposed( final DisposeEvent e )
+        {
+          legendGraphic.dispose();
         }
       } );
 

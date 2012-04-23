@@ -43,7 +43,7 @@ package org.kalypso.util.themes.image;
 import java.util.Locale;
 import java.util.Properties;
 
-import org.kalypso.util.themes.ThemeUtilities;
+import org.kalypso.ogc.gml.ThemeUtilities;
 import org.kalypso.util.themes.position.PositionUtilities;
 
 /**

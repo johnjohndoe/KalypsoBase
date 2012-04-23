@@ -52,18 +52,12 @@ import org.eclipse.ui.model.IWorkbenchAdapter2;
  */
 public class ThemeNodeWorkbenchAdapter implements IWorkbenchAdapter2, IWorkbenchAdapter
 {
-  /**
-   * @see org.eclipse.ui.model.IWorkbenchAdapter2#getBackground(java.lang.Object)
-   */
   @Override
   public RGB getBackground( final Object element )
   {
     return null;
   }
 
-  /**
-   * @see org.eclipse.ui.model.IWorkbenchAdapter2#getFont(java.lang.Object)
-   */
   @Override
   public FontData getFont( final Object element )
   {
@@ -74,49 +68,33 @@ public class ThemeNodeWorkbenchAdapter implements IWorkbenchAdapter2, IWorkbench
     return font.getFontData()[0];
   }
 
-  /**
-   * @see org.eclipse.ui.model.IWorkbenchAdapter2#getForeground(java.lang.Object)
-   */
   @Override
   public RGB getForeground( final Object element )
   {
     return null;
   }
 
-  /**
-   * @see org.eclipse.ui.model.IWorkbenchAdapter#getChildren(java.lang.Object)
-   */
   @Override
   public Object[] getChildren( final Object o )
   {
     return ((IThemeNode) o).getChildren();
   }
 
-  /**
-   * @see org.eclipse.ui.model.IWorkbenchAdapter#getImageDescriptor(java.lang.Object)
-   */
   @Override
   public ImageDescriptor getImageDescriptor( final Object object )
   {
     return ((IThemeNode) object).getImageDescriptor();
   }
 
-  /**
-   * @see org.eclipse.ui.model.IWorkbenchAdapter#getLabel(java.lang.Object)
-   */
   @Override
   public String getLabel( final Object o )
   {
     return ((IThemeNode) o).getLabel();
   }
 
-  /**
-   * @see org.eclipse.ui.model.IWorkbenchAdapter#getParent(java.lang.Object)
-   */
   @Override
   public Object getParent( final Object o )
   {
     return ((IThemeNode) o).getParent();
   }
-
 }

@@ -565,7 +565,7 @@
 			<separator name="navigation" visible="true"/>
 			<command commandId="org.kalypso.ui.map.outline.command.ZoomToSelectedTheme" style="push"/>
 			<separator name="style" visible="true"/>
-			<!-- FIXME: this already works fine, but we needs some more control wat the user can edit. I.e. introduce 
+			<!-- FIXME: this already works fine, but we needs some more control what the user can edit. I.e. introduce 
 			             parameter (on theme?) and/or command to control the followingf things:
 			                 - featureTypeStyle properties should never we allowed to be edited
 			                 - resolve i18n strings
@@ -576,9 +576,10 @@
 		</menuContribution>
 
 		<menuContribution locationURI="popup:org.kalypso.ui.views.mapView.outline">
-			<!-- Properties not allowed until they recognize how to handle non-editable themes
+		  <!-- FIXME -->
+			<!-- Properties not allowed until they recognize how to handle non-editable themes -->
+			
 			<command commandId="org.kalypso.ui.map.outline.command.NodeProperties" style="push"/>
-			-->
 			<command commandId="org.kalypso.ui.command.import" style="push"/>
 			<command commandId="org.kalypso.ui.command.export" style="push"/>
 			<separator name="additions" visible="false"/>
