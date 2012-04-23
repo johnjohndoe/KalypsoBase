@@ -41,10 +41,6 @@
 package org.kalypso.ogc.gml.outline.nodes;
 
 import org.deegree.ogcwebservices.wms.capabilities.WMSCapabilities;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.Image;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
 
 /**
@@ -76,25 +72,5 @@ public class WMSThemeNode extends KalypsoThemeNode<KalypsoWMSTheme>
       return super.getElementChildren();
 
     return new Object[] { capabilities.getLayer() };
-  }
-
-  @Override
-  public Image getLegendGraphic( final String[] whiteList, final boolean onlyVisible, final Font font ) throws CoreException
-  {
-    /* Check, if this theme is allowed. */
-    if( !checkWhiteList( whiteList ) )
-      return null;
-
-    /* Get the wms theme. */
-    final KalypsoWMSTheme element = getElement();
-
-    /* Ask the theme for a legend. */
-    final Image legendGraphic = element.getLegendGraphic( font );
-
-    /* Clone this image, the returned image will be disposed outside! */
-    if( legendGraphic != null )
-      return new Image( font.getDevice(), legendGraphic, SWT.IMAGE_COPY );
-
-    return super.getLegendGraphic( whiteList, onlyVisible, font );
   }
 }

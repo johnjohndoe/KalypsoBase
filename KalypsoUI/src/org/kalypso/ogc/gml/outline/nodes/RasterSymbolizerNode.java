@@ -56,9 +56,6 @@ class RasterSymbolizerNode extends SymbolizerNode
     super( parent, symbolizer );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.outline.SymbolizerNode#getElementChildren()
-   */
   @Override
   protected Object[] getElementChildren( )
   {
@@ -67,5 +64,4 @@ class RasterSymbolizerNode extends SymbolizerNode
     final Collection<ColorMapEntry> values = colorMap.values();
     return values.toArray( new ColorMapEntry[values.size()] );
   }
-
 }

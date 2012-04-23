@@ -80,5 +80,4 @@ public interface IThemeNode extends ICheckStateProvider, IFontProvider, ILegendP
   ICommand setVisible( boolean visible );
 
   boolean isCompactable( );
-
 }

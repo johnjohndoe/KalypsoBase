@@ -68,9 +68,6 @@ public class UserStyleNode extends KalypsoStyleNode<IKalypsoUserStyle>
     return style.toString();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.outline.AbstractThemeNode#getElementChildren()
-   */
   @Override
   protected Object[] getElementChildren( )
   {
@@ -87,9 +84,6 @@ public class UserStyleNode extends KalypsoStyleNode<IKalypsoUserStyle>
     return resolveI18nString( label );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.outline.nodes.AbstractThemeNode#getDescription()
-   */
   @Override
   public String getDescription( )
   {

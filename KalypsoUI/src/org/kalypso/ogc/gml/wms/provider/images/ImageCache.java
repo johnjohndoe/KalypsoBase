@@ -38,36 +38,51 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.util.themes.legend.listener;
+package org.kalypso.ogc.gml.wms.provider.images;
 
-import java.util.Properties;
+import java.net.URL;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
-import org.eclipse.swt.graphics.RGB;
+import org.eclipse.jface.resource.ImageDescriptor;
+
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.LoadingCache;
+
 
 /**
- * This interface provides functions for listener, which would like to be notified if a legend property has changed.
- *
- * @author Holger Albert
+ * Loads image in background and returns a missing image until the real image is loaded.<br/>
+ * TODO: move to more common place or use an existing solution
+ * 
+ * @author Gernot Belger
  */
-public interface ILegendChangedListener
+class ImageCache
 {
-  /**
-   * This function is notified, if a legend property has changed.
-   * 
-   * @param properties
-   *          A up to date properties object, containing all serialized legend properties.
-   * @param horizontal
-   *          The horizontal position.
-   * @param vertical
-   *          The vertical position.
-   * @param background
-   *          The background color.
-   * @param insets
-   *          The insets.
-   * @param themeIds
-   *          The ids of the selected themes.
-   * @param fontSize
-   *          The font size.
-   */
-  public void legendPropertyChanged( Properties properties, int horizontal, int vertical, RGB background, int insets, String[] themeIds, int fontSize );
+  private final ImageCacheLoader m_loader = new ImageCacheLoader( this );
+
+  private final LoadingCache<URL, ImageDescriptor> m_cache = CacheBuilder.newBuilder().maximumSize( 255 ).expireAfterWrite( 60, TimeUnit.MINUTES ).build( m_loader );
+
+  public void dispose( )
+  {
+    m_loader.dispose();
+    m_cache.invalidateAll();
+  }
+
+  public synchronized ImageDescriptor getImage( final URL onlineResource )
+  {
+    try
+    {
+      return m_cache.get( onlineResource );
+    }
+    catch( final ExecutionException e )
+    {
+      // will not happen, we do not throw an exception
+      return null;
+    }
+  }
+
+  synchronized void imageLoaded( final URL onlineResource, final ImageDescriptor image )
+  {
+    m_cache.put( onlineResource, image );
+  }
 }

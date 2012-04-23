@@ -80,9 +80,6 @@ public class RuleNode extends AbstractThemeNode<Rule>
     return "rule"; //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.outline.AbstractThemeNode#getElementChildren()
-   */
   @Override
   protected Object[] getElementChildren( )
   {
@@ -175,9 +172,6 @@ public class RuleNode extends AbstractThemeNode<Rule>
     return "Rule: neither 'title' nor 'name' defined.";
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.outline.nodes.AbstractThemeNode#getDescription()
-   */
   @Override
   public String getDescription( )
   {

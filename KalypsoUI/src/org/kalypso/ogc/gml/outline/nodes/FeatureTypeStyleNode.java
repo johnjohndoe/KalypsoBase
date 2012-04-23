@@ -65,9 +65,6 @@ public class FeatureTypeStyleNode extends KalypsoStyleNode<FeatureTypeStyle>
     return getElement();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.outline.AbstractThemeNode#getElementChildren()
-   */
   @Override
   protected Object[] getElementChildren( )
   {
@@ -81,9 +78,6 @@ public class FeatureTypeStyleNode extends KalypsoStyleNode<FeatureTypeStyle>
     return resolveI18nString( label );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.outline.nodes.AbstractThemeNode#getDescription()
-   */
   @Override
   public String getDescription( )
   {
@@ -91,9 +85,6 @@ public class FeatureTypeStyleNode extends KalypsoStyleNode<FeatureTypeStyle>
     return resolveI18nString( tooltip );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.outline.AbstractThemeNode#resolveI18nString(java.lang.String)
-   */
   @Override
   public String resolveI18nString( final String text )
   {

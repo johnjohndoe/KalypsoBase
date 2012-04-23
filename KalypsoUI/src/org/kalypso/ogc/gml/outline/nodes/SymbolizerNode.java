@@ -52,9 +52,6 @@ class SymbolizerNode extends AbstractThemeNode<Symbolizer>
     super( parent, symbolizer );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.outline.AbstractThemeNode#getElementChildren()
-   */
   @Override
   protected Object[] getElementChildren( )
   {

@@ -80,7 +80,8 @@ public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode
     @Override
     public void visibilityChanged( final IKalypsoTheme source, final boolean newVisibility )
     {
-      refreshViewer( KalypsoThemeNode.this );
+// updateViewer( KalypsoThemeNode.this );
+// refreshViewer( KalypsoThemeNode.this );
     }
   };
 
@@ -263,9 +264,6 @@ public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.outline.nodes.IThemeNode#getLabel()
-   */
   @Override
   public String getLabel( )
   {
@@ -285,9 +283,6 @@ public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode
     return sb.toString();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.outline.nodes.AbstractThemeNode#getDescription()
-   */
   @Override
   public String getDescription( )
   {
@@ -300,18 +295,12 @@ public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode
     return status.getMessage();
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ICheckStateProvider#isChecked(java.lang.Object)
-   */
   @Override
   public boolean isChecked( final Object element )
   {
     return getElement().isVisible();
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ICheckStateProvider#isGrayed(java.lang.Object)
-   */
   @Override
   public boolean isGrayed( final Object element )
   {
@@ -336,9 +325,6 @@ public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode
     return fontRegistry.get( JFaceResources.DIALOG_FONT );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.outline.AbstractThemeNode#setVisible(boolean)
-   */
   @Override
   public ICommand setVisible( final boolean visible )
   {
