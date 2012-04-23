@@ -469,22 +469,31 @@ public class ZipUtilities
     ZipFile zf = null;
     try
     {
-      zf = new ZipFile( new File( zipFileURL.toURI() ) );
-    }
-    catch( final URISyntaxException e )
-    {
-      e.printStackTrace();
+      /*
+       * Fix for ticket #821
+       * changed because of problem with possible white spaces in file name of zip archive
+       * */	
+      zf = new ZipFile( zipFileURL.getFile() );
     }
     catch( final ZipException e )
     {
       e.printStackTrace();
+      try
+      {
+        File fileZ = new File( zipFileURL.toURI() );
+        zf = new ZipFile( fileZ );
+      }
+      catch( final URISyntaxException e1 )
+      {
+        e1.printStackTrace();
+      }
     }
     catch( final IOException e )
     {
       e.printStackTrace();
     }
     final Enumeration< ? > entries = zf.entries();
-    ZipEntry ze;
+    ZipEntry ze = null;
     while( entries.hasMoreElements() )
     {
       ze = (ZipEntry) entries.nextElement();
