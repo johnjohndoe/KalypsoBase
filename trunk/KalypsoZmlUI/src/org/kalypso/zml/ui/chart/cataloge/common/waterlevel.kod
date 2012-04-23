@@ -110,6 +110,7 @@
               <Parameter name="filter" value="org.kalypso.chart.layer.filter.fehlwerte" />
             </Parameters>
             <Styles>
+              <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:quality#fehlwert_singlepoint_0</StyleReference>
               <StyleReference>urn:org:kalypso:zml:ui:diagramm:common:quality#fehlwert_point_0</StyleReference>
             </Styles>
           </DerivedLayer>
@@ -136,7 +137,7 @@
             </Styles>
           </Layer>
 
-        
+
           <LayerReference url="urn:org:kalypso:zml:ui:diagramm:grid#grid" />
         </Layers>
         <MapperRefs>
