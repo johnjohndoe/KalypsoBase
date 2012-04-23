@@ -52,7 +52,6 @@ import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
@@ -68,12 +67,12 @@ import org.kalypso.contribs.eclipse.swt.widgets.ImageCanvas;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.ThemeUtilities;
 import org.kalypso.ogc.gml.map.themes.KalypsoLegendTheme;
 import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
-import org.kalypso.ogc.gml.outline.nodes.LegendExporter;
 import org.kalypso.ogc.gml.outline.nodes.NodeFactory;
+import org.kalypso.ogc.gml.outline.nodes.NodeLegendBuilder;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.util.themes.ThemeUtilities;
 import org.kalypso.util.themes.legend.LegendUtilities;
 import org.kalypso.util.themes.legend.controls.LegendComposite;
 import org.kalypso.util.themes.legend.listener.ILegendChangedListener;
@@ -81,7 +80,7 @@ import org.kalypso.util.themes.position.PositionUtilities;
 
 /**
  * This page will show a legend for a theme, if one is available.
- * 
+ *
  * @author Holger Albert
  */
 public class LegendPropertyPage extends PropertyPage implements IWorkbenchPropertyPage
@@ -268,8 +267,8 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
   }
 
   /**
-   * This function creates the properties page for a other theme.
-   * 
+   * This function creates the properties page for another theme.
+   *
    * @param parent
    *          The parent composite.
    */
@@ -281,8 +280,10 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
       final Display display = parent.getDisplay();
 
       /* Get the legend graphic. */
-      final LegendExporter legendExporter = new LegendExporter();
-      final Image legendGraphic = legendExporter.exportLegends( null, new IThemeNode[] { m_node }, display, null, new RGB( 255, 255, 255 ), -1, -1, false, -1, null );
+      final NodeLegendBuilder legendBuilder = new NodeLegendBuilder( null, false );
+      legendBuilder.setBackground( new RGB( 255, 255, 255 ) );
+
+      final Image legendGraphic = legendBuilder.createLegend( new IThemeNode[] { m_node }, display, null );
       if( legendGraphic == null )
         throw new Exception( Messages.getString( "org.kalypso.ui.views.properties.LegendPropertyPage.2" ) );//$NON-NLS-1$
 
@@ -316,7 +317,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
 
   /**
    * This function creates the properties page for a legend theme.
-   * 
+   *
    * @param parent
    *          The parent composite.
    */
@@ -361,7 +362,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
 
   /**
    * This function creates the properties tab.
-   * 
+   *
    * @param parent
    *          The parent tab folder.
    */
@@ -380,7 +381,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
 
   /**
    * This function creates the properties composite.
-   * 
+   *
    * @param parent
    *          The parent tab folder.
    * @return The properties composite.
@@ -392,12 +393,8 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
     legendComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
     legendComposite.addLegendChangedListener( new ILegendChangedListener()
     {
-      /**
-       * @see org.kalypso.util.themes.legend.listener.ILegendChangedListener#legendPropertyChanged(java.util.Properties,
-       *      int, int, org.eclipse.swt.graphics.Color, int, java.lang.String[], int)
-       */
       @Override
-      public void legendPropertyChanged( final Properties properties, final int horizontal, final int vertical, final Color backgroundColor, final int insets, final String[] themeIds, final int fontSize )
+      public void legendPropertyChanged( final Properties properties, final int horizontal, final int vertical, final RGB background, final int insets, final String[] themeIds, final int fontSize )
       {
         /* Update the properties object. */
         m_properties = properties;
@@ -412,7 +409,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
 
   /**
    * This function creates the preview tab.
-   * 
+   *
    * @param parent
    *          The parent tab folder.
    */
@@ -431,7 +428,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
 
   /**
    * This function creates the preview composite.
-   * 
+   *
    * @param parent
    *          The parent tab folder.
    * @return The preview composite.
@@ -450,7 +447,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
 
   /**
    * This function creates the preview legend.
-   * 
+   *
    * @param parent
    *          The parent composite.
    */
@@ -468,10 +465,11 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
       final String fontSizeProperty = m_properties.getProperty( LegendUtilities.THEME_PROPERTY_FONT_SIZE );
 
       /* Check the properties. */
-      Color backgroundColor = ThemeUtilities.checkBackgroundColor( display, backgroundColorProperty );
+      RGB backgroundColor = ThemeUtilities.checkBackgroundColor( backgroundColorProperty );
       if( backgroundColor == null )
-        backgroundColor = display.getSystemColor( SWT.COLOR_WHITE );
+        backgroundColor = new RGB( 255, 255, 255 );
 
+      // FIXME: duplicate code from KalypsoLegendTheme; BAD!
       int insets = LegendUtilities.checkInsets( insetsProperty );
       if( insets == -1 )
         insets = 5;
@@ -487,8 +485,15 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
       final IThemeNode[] nodes = rootNode.getChildren();
 
       /* Get the legend graphic. */
-      final LegendExporter legendExporter = new LegendExporter();
-      final Image legendGraphic = legendExporter.exportLegends( themeIds.toArray( new String[] {} ), nodes, display, new Insets( insets, insets, insets, insets ), backgroundColor.getRGB(), -1, -1, false, fontSize, null );
+      final Insets legendInsets = new Insets( insets, insets, insets, insets );
+      final String[] whiteList = themeIds.toArray( new String[] {} );
+
+      final NodeLegendBuilder legendBuilder = new NodeLegendBuilder( whiteList, false );
+      legendBuilder.setBackground( backgroundColor );
+      legendBuilder.setInsets( legendInsets );
+      legendBuilder.setFontSize( fontSize );
+
+      final Image legendGraphic = legendBuilder.createLegend( nodes, display, null );
       if( legendGraphic == null )
         throw new Exception( Messages.getString( "org.kalypso.ui.views.properties.LegendPropertyPage.2" ) );//$NON-NLS-1$
 

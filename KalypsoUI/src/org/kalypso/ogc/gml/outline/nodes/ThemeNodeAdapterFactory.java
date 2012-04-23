@@ -52,9 +52,6 @@ public class ThemeNodeAdapterFactory implements IAdapterFactory
 {
   private static final ThemeNodeWorkbenchAdapter THEME_NODE_WORKBENCH_ADAPTER = new ThemeNodeWorkbenchAdapter();
 
-  /**
-   * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
-   */
   @Override
   public Object getAdapter( final Object adaptableObject, @SuppressWarnings("rawtypes") final Class adapterType )
   {
@@ -79,13 +76,9 @@ public class ThemeNodeAdapterFactory implements IAdapterFactory
     return null;
   }
 
-  /**
-   * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
-   */
   @Override
   public Class< ? >[] getAdapterList( )
   {
     return new Class[] { IWorkbenchAdapter2.class, IWorkbenchAdapter2.class };
   }
-
 }

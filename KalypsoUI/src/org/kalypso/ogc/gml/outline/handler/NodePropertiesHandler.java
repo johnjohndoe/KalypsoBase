@@ -60,9 +60,6 @@ import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
  */
 public class NodePropertiesHandler extends AbstractHandler
 {
-  /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
@@ -82,5 +79,4 @@ public class NodePropertiesHandler extends AbstractHandler
 
     return null;
   }
-
 }

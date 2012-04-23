@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.util.themes.text.controls;
 
@@ -48,6 +48,8 @@ import java.util.Properties;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -67,7 +69,7 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.Form;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
-import org.kalypso.util.themes.ThemeUtilities;
+import org.kalypso.ogc.gml.ThemeUtilities;
 import org.kalypso.util.themes.position.PositionUtilities;
 import org.kalypso.util.themes.position.controls.PositionComposite;
 import org.kalypso.util.themes.position.listener.IPositionChangedListener;
@@ -76,7 +78,7 @@ import org.kalypso.util.themes.text.listener.ITextChangedListener;
 
 /**
  * This composite edits the position.
- * 
+ *
  * @author Holger Albert
  */
 public class TextComposite extends Composite
@@ -109,7 +111,7 @@ public class TextComposite extends Composite
   /**
    * The background color.
    */
-  protected Color m_backgroundColor;
+  protected RGB m_backgroundColor;
 
   /**
    * The text, which should be shown.
@@ -128,7 +130,7 @@ public class TextComposite extends Composite
 
   /**
    * The constructor.
-   * 
+   *
    * @param parent
    *          A widget which will be the parent of the new instance (cannot be null).
    * @param style
@@ -179,7 +181,7 @@ public class TextComposite extends Composite
    * This function checks the provided properties object for properties this composite can edit. Found properties will
    * be checked for correct values. Then they are set to the members. If editable properties are missing or if existing
    * ones have wrong values, they will be set to the members with default values.
-   * 
+   *
    * @param properties
    *          The properties, containing the values.
    */
@@ -188,7 +190,7 @@ public class TextComposite extends Composite
     /* Default values. */
     m_horizontal = PositionUtilities.RIGHT;
     m_vertical = PositionUtilities.BOTTOM;
-    m_backgroundColor = new Color( getDisplay(), 255, 255, 255 );
+    m_backgroundColor = new RGB( 255, 255, 255 );
     m_text = null;
     m_fontSize = 10;
     m_transparency = false;
@@ -205,7 +207,7 @@ public class TextComposite extends Composite
    * This function checks the provided properties object for properties this composite can edit. Found properties will
    * be checked for correct values. Then they are set to the members. If editable properties are missing or if existing
    * ones have wrong values, the members will not be changed.
-   * 
+   *
    * @param properties
    *          The properties, containing the values.
    */
@@ -230,7 +232,7 @@ public class TextComposite extends Composite
       m_vertical = vertical;
 
     /* Check the background color. */
-    final Color backgroundColor = ThemeUtilities.checkBackgroundColor( getDisplay(), backgroundColorProperty );
+    final RGB backgroundColor = ThemeUtilities.checkBackgroundColor( backgroundColorProperty );
     if( backgroundColor != null )
       m_backgroundColor = backgroundColor;
 
@@ -289,7 +291,7 @@ public class TextComposite extends Composite
 
   /**
    * This function creates the content composite.
-   * 
+   *
    * @param parent
    *          The parent composite.
    * @return The content composite.
@@ -312,7 +314,7 @@ public class TextComposite extends Composite
 
   /**
    * This function creates the content internal composite.
-   * 
+   *
    * @param parent
    *          The parent composite.
    * @return The content internal composite.
@@ -336,7 +338,7 @@ public class TextComposite extends Composite
 
   /**
    * This function creates the position composite.
-   * 
+   *
    * @param parent
    *          The parent composite.
    * @return The position composite.
@@ -347,9 +349,6 @@ public class TextComposite extends Composite
     final PositionComposite positionComposite = new PositionComposite( parent, SWT.NONE, m_horizontal, m_vertical );
     positionComposite.addPositionChangedListener( new IPositionChangedListener()
     {
-      /**
-       * @see org.kalypso.util.themes.position.listener.IPositionChangedListener#positionChanged(int, int)
-       */
       @Override
       public void positionChanged( final int horizontal, final int vertical )
       {
@@ -366,7 +365,7 @@ public class TextComposite extends Composite
 
   /**
    * This function creates the text group.
-   * 
+   *
    * @param parent
    *          The parent composite.
    * @return The text group.
@@ -389,7 +388,16 @@ public class TextComposite extends Composite
     backgroundLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     backgroundLabel.setText( "Hintergrundfarbe" );
     backgroundLabel.setEnabled( !m_transparency );
-    backgroundLabel.setBackground( m_backgroundColor );
+    backgroundLabel.setBackground( new Color( parent.getDisplay(), m_backgroundColor ) );
+
+    backgroundLabel.addDisposeListener( new DisposeListener()
+    {
+      @Override
+      public void widgetDisposed( final DisposeEvent e )
+      {
+        backgroundLabel.getBackground().dispose();
+      }
+    } );
 
     /* Create a button. */
     final Button backgroundColorButton = new Button( textGroup, SWT.PUSH );
@@ -398,23 +406,21 @@ public class TextComposite extends Composite
     backgroundColorButton.setEnabled( !m_transparency );
     backgroundColorButton.addSelectionListener( new SelectionAdapter()
     {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
         final Shell shell = TextComposite.this.getShell();
 
         final ColorDialog dialog = new ColorDialog( shell );
-        dialog.setRGB( m_backgroundColor.getRGB() );
+        dialog.setRGB( m_backgroundColor );
         final RGB rgb = dialog.open();
         if( rgb == null )
           return;
 
-        m_backgroundColor.dispose();
-        m_backgroundColor = new Color( shell.getDisplay(), rgb );
-        backgroundLabel.setBackground( m_backgroundColor );
+        m_backgroundColor = rgb;
+
+        backgroundLabel.getBackground().dispose();
+        backgroundLabel.setBackground( new Color( shell.getDisplay(), m_backgroundColor ) );
 
         fireTextPropertyChanged( getProperties(), m_horizontal, m_vertical, m_backgroundColor, m_text, m_fontSize, m_transparency );
       }
@@ -500,7 +506,7 @@ public class TextComposite extends Composite
 
   /**
    * This function updates the composite.
-   * 
+   *
    * @param status
    *          A status, containing a message, which should be displayed in the upper area of the view. May be null.
    */
@@ -531,7 +537,7 @@ public class TextComposite extends Composite
 
   /**
    * This function fires a text property changed event.
-   * 
+   *
    * @param properties
    *          A up to date properties object, containing all serialized text properties.
    * @param horizontal
@@ -545,15 +551,15 @@ public class TextComposite extends Composite
    * @param transparency
    *          True, if the transparency is switched on.
    */
-  protected void fireTextPropertyChanged( final Properties properties, final int horizontal, final int vertical, final Color backgroundColor, final String text, final int fontSize, final boolean transparency )
+  protected void fireTextPropertyChanged( final Properties properties, final int horizontal, final int vertical, final RGB background, final String text, final int fontSize, final boolean transparency )
   {
     for( final ITextChangedListener listener : m_listener )
-      listener.textPropertyChanged( properties, horizontal, vertical, backgroundColor, text, fontSize, transparency );
+      listener.textPropertyChanged( properties, horizontal, vertical, background, text, fontSize, transparency );
   }
 
   /**
    * This function adds a text changed listener.
-   * 
+   *
    * @param listener
    *          The text changed listener to add.
    */
@@ -565,7 +571,7 @@ public class TextComposite extends Composite
 
   /**
    * This function removes a text changed listener.
-   * 
+   *
    * @param listener
    *          The text changed listener to remove.
    */
@@ -577,7 +583,7 @@ public class TextComposite extends Composite
 
   /**
    * This function returns a up to date properties object, containing all serialized text properties.
-   * 
+   *
    * @return A up to date properties object, containing all serialized text properties.
    */
   public Properties getProperties( )
@@ -588,7 +594,7 @@ public class TextComposite extends Composite
     /* Serialize the properties. */
     final String horizontalProperty = String.format( Locale.PRC, "%d", m_horizontal );
     final String verticalProperty = String.format( Locale.PRC, "%d", m_vertical );
-    final String backgroundColorProperty = String.format( Locale.PRC, "%d;%d;%d", m_backgroundColor.getRed(), m_backgroundColor.getGreen(), m_backgroundColor.getBlue() );
+    final String backgroundColorProperty = String.format( Locale.PRC, "%d;%d;%d", m_backgroundColor.red, m_backgroundColor.green, m_backgroundColor.blue );
     String textProperty = null;
     if( m_text != null )
       textProperty = String.format( Locale.PRC, "%s", m_text );

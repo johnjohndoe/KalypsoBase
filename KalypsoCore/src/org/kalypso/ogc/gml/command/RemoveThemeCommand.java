@@ -43,10 +43,11 @@ package org.kalypso.ogc.gml.command;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.ThemeUtilities;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public class RemoveThemeCommand implements ICommand
 {
@@ -72,9 +73,6 @@ public class RemoveThemeCommand implements ICommand
     m_force = force;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
-   */
   @Override
   public boolean isUndoable( )
   {
@@ -85,35 +83,25 @@ public class RemoveThemeCommand implements ICommand
   public void process( ) throws Exception
   {
     /* Check if deleteable, should never fail, all user actions should be aware of this flag. */
-    final String deleteableStr = m_theme.getProperty( IKalypsoTheme.PROPERTY_DELETEABLE, Boolean.toString( false ) );
-    final boolean deletable = Boolean.parseBoolean( deleteableStr );
+    final boolean deletable = ThemeUtilities.isDeletable( m_theme );
     if( !m_force && !deletable )
       throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.gml.command.RemoveThemeCommand.0" ) + m_theme.getName() ); //$NON-NLS-1$
 
     m_mapModell.removeTheme( m_theme );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#redo()
-   */
   @Override
   public void redo( ) throws Exception
   {
     m_mapModell.removeTheme( m_theme );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#undo()
-   */
   @Override
   public void undo( ) throws Exception
   {
     m_mapModell.addTheme( m_theme );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
-   */
   @Override
   public String getDescription( )
   {

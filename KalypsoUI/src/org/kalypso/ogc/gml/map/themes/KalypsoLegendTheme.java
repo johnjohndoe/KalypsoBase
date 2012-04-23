@@ -53,17 +53,18 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.swt.awt.ImageConverter;
+import org.kalypso.ogc.gml.ThemeUtilities;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
-import org.kalypso.ogc.gml.outline.nodes.LegendExporter;
 import org.kalypso.ogc.gml.outline.nodes.NodeFactory;
+import org.kalypso.ogc.gml.outline.nodes.NodeLegendBuilder;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.kalypso.util.themes.ThemeUtilities;
 import org.kalypso.util.themes.legend.LegendUtilities;
 import org.kalypso.util.themes.position.PositionUtilities;
 
@@ -75,29 +76,18 @@ import org.kalypso.util.themes.position.PositionUtilities;
  */
 public class KalypsoLegendTheme extends AbstractImageTheme
 {
-  /**
-   * The background color.
-   */
-  protected org.eclipse.swt.graphics.Color m_backgroundColor;
+  private RGB m_backgroundColor;
 
-  /**
-   * The insets.
-   */
-  protected int m_insets;
+  private int m_insets = -1;
 
   /**
    * The ids of the selected themes.
    */
-  protected String[] m_themeIds;
+  private String[] m_themeIds;
+
+  private int m_fontSize = -1;
 
   /**
-   * The font size.
-   */
-  protected int m_fontSize;
-
-  /**
-   * The constructor
-   *
    * @param name
    *          The name of the theme.
    * @param mapModel
@@ -106,12 +96,6 @@ public class KalypsoLegendTheme extends AbstractImageTheme
   public KalypsoLegendTheme( final I10nString name, final IMapModell mapModel )
   {
     super( name, "legend", mapModel ); //$NON-NLS-1$
-
-    /* Initialize. */
-    m_backgroundColor = null;
-    m_insets = -1;
-    m_themeIds = null;
-    m_fontSize = -1;
   }
 
   @Override
@@ -153,22 +137,7 @@ public class KalypsoLegendTheme extends AbstractImageTheme
         @Override
         public void run( )
         {
-          if( m_backgroundColor == null )
-          {
-            image[0] = null;
-            return;
-          }
-
-          try
-          {
-            /* Create the legend. */
-            final LegendExporter legendExporter = new LegendExporter();
-            image[0] = legendExporter.exportLegends( m_themeIds, nodes, display, new Insets( m_insets, m_insets, m_insets, m_insets ), m_backgroundColor.getRGB(), -1, -1, true, m_fontSize, subMonitor );
-          }
-          catch( final OperationCanceledException e )
-          {
-            // ignored
-          }
+          image[0] = doUpdateImage( nodes, display, subMonitor );
         }
       } );
 
@@ -210,21 +179,25 @@ public class KalypsoLegendTheme extends AbstractImageTheme
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.themes.AbstractImageTheme#dispose()
-   */
-  @Override
-  public void dispose( )
+  protected org.eclipse.swt.graphics.Image doUpdateImage( final IThemeNode[] nodes, final Display display, final SubProgressMonitor subMonitor )
   {
-    if( m_backgroundColor != null )
-      m_backgroundColor.dispose();
+    try
+    {
+      /* Create the legend. */
+      final Insets insets = new Insets( m_insets, m_insets, m_insets, m_insets );
 
-    m_backgroundColor = null;
-    m_insets = -1;
-    m_themeIds = null;
-    m_fontSize = -1;
+      final NodeLegendBuilder legendBuilder = new NodeLegendBuilder( m_themeIds, true );
+      legendBuilder.setBackground( m_backgroundColor );
+      legendBuilder.setInsets( insets );
+      legendBuilder.setFontSize( m_fontSize );
 
-    super.dispose();
+      return legendBuilder.createLegend( nodes, display, subMonitor );
+    }
+    catch( final OperationCanceledException e )
+    {
+      // ignored
+      return null;
+    }
   }
 
   /**
@@ -234,7 +207,7 @@ public class KalypsoLegendTheme extends AbstractImageTheme
   {
     /* Default values. */
     updatePosition( PositionUtilities.RIGHT, PositionUtilities.BOTTOM );
-    m_backgroundColor = new org.eclipse.swt.graphics.Color( Display.getCurrent(), 255, 255, 255 );
+    m_backgroundColor = new RGB( 255, 255, 255 );
     m_insets = 10;
     m_themeIds = new String[] {};
     m_fontSize = 10;
@@ -254,12 +227,9 @@ public class KalypsoLegendTheme extends AbstractImageTheme
       updatePosition( horizontal, vertical );
 
     /* Check the background color. */
-    final org.eclipse.swt.graphics.Color backgroundColor = ThemeUtilities.checkBackgroundColor( Display.getCurrent(), backgroundColorProperty );
+    final RGB backgroundColor = ThemeUtilities.checkBackgroundColor( backgroundColorProperty );
     if( backgroundColor != null )
-    {
-      m_backgroundColor.dispose();
       m_backgroundColor = backgroundColor;
-    }
 
     /* Check the insets. */
     final int insets = LegendUtilities.checkInsets( insetsProperty );

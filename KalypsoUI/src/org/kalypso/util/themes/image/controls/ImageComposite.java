@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.util.themes.image.controls;
 
@@ -52,6 +52,8 @@ import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -72,7 +74,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.Form;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
-import org.kalypso.util.themes.ThemeUtilities;
+import org.kalypso.ogc.gml.ThemeUtilities;
 import org.kalypso.util.themes.image.ImageUtilities;
 import org.kalypso.util.themes.image.listener.IImageChangedListener;
 import org.kalypso.util.themes.position.PositionUtilities;
@@ -81,7 +83,7 @@ import org.kalypso.util.themes.position.listener.IPositionChangedListener;
 
 /**
  * This composite edits the position.
- * 
+ *
  * @author Holger Albert
  */
 public class ImageComposite extends Composite
@@ -114,7 +116,7 @@ public class ImageComposite extends Composite
   /**
    * The background color.
    */
-  protected Color m_backgroundColor;
+  protected RGB m_background;
 
   /**
    * The URL of the image, which should be shown.
@@ -123,7 +125,7 @@ public class ImageComposite extends Composite
 
   /**
    * The constructor.
-   * 
+   *
    * @param parent
    *          A widget which will be the parent of the new instance (cannot be null).
    * @param style
@@ -205,7 +207,7 @@ public class ImageComposite extends Composite
    * This function checks the provided properties object for properties this composite can edit. Found properties will
    * be checked for correct values. Then they are set to the members. If editable properties are missing or if existing
    * ones have wrong values, they will be set to the members with default values.
-   * 
+   *
    * @param properties
    *          The properties, containing the values.
    */
@@ -214,7 +216,7 @@ public class ImageComposite extends Composite
     /* Default values. */
     m_horizontal = PositionUtilities.RIGHT;
     m_vertical = PositionUtilities.BOTTOM;
-    m_backgroundColor = new Color( getDisplay(), 255, 255, 255 );
+    m_background = new RGB( 255, 255, 255 );
     m_imageUrl = null;
 
     /* Do not change the default values, if no new properties are set. */
@@ -229,7 +231,7 @@ public class ImageComposite extends Composite
    * This function checks the provided properties object for properties this composite can edit. Found properties will
    * be checked for correct values. Then they are set to the members. If editable properties are missing or if existing
    * ones have wrong values, the members will not be changed.
-   * 
+   *
    * @param properties
    *          The properties, containing the values.
    */
@@ -252,9 +254,9 @@ public class ImageComposite extends Composite
       m_vertical = vertical;
 
     /* Check the background color. */
-    final Color backgroundColor = ThemeUtilities.checkBackgroundColor( getDisplay(), backgroundColorProperty );
+    final RGB backgroundColor = ThemeUtilities.checkBackgroundColor( backgroundColorProperty );
     if( backgroundColor != null )
-      m_backgroundColor = backgroundColor;
+      m_background = backgroundColor;
 
     /* Check the URL of the image. */
     if( imageUrlProperty != null && imageUrlProperty.length() > 0 )
@@ -263,7 +265,7 @@ public class ImageComposite extends Composite
 
   /**
    * This function creates the content composite.
-   * 
+   *
    * @param parent
    *          The parent composite.
    * @return The content composite.
@@ -283,7 +285,7 @@ public class ImageComposite extends Composite
 
   /**
    * This function creates the content internal composite.
-   * 
+   *
    * @param parent
    *          The parent composite.
    * @return The content internal composite.
@@ -307,7 +309,7 @@ public class ImageComposite extends Composite
 
   /**
    * This function creates the position composite.
-   * 
+   *
    * @param parent
    *          The parent composite.
    * @return The position composite.
@@ -318,16 +320,13 @@ public class ImageComposite extends Composite
     final PositionComposite positionComposite = new PositionComposite( parent, SWT.NONE, m_horizontal, m_vertical );
     positionComposite.addPositionChangedListener( new IPositionChangedListener()
     {
-      /**
-       * @see org.kalypso.util.themes.position.listener.IPositionChangedListener#positionChanged(int, int)
-       */
       @Override
       public void positionChanged( final int horizontal, final int vertical )
       {
         m_horizontal = horizontal;
         m_vertical = vertical;
 
-        fireImagePropertyChanged( getProperties(), m_horizontal, m_vertical, m_backgroundColor, m_imageUrl );
+        fireImagePropertyChanged( getProperties(), m_horizontal, m_vertical, m_background, m_imageUrl );
       }
     } );
 
@@ -337,7 +336,7 @@ public class ImageComposite extends Composite
 
   /**
    * This function creates the image group.
-   * 
+   *
    * @param parent
    *          The parent composite.
    * @return The image group.
@@ -359,7 +358,16 @@ public class ImageComposite extends Composite
     final Label backgroundLabel = new Label( imageGroup, SWT.BORDER );
     backgroundLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     backgroundLabel.setText( "Hintergrundfarbe" );
-    backgroundLabel.setBackground( m_backgroundColor );
+    backgroundLabel.setBackground( new Color( parent.getDisplay(), m_background ) );
+
+    backgroundLabel.addDisposeListener( new DisposeListener()
+    {
+      @Override
+      public void widgetDisposed( final DisposeEvent e )
+      {
+        backgroundLabel.getBackground().dispose();
+      }
+    } );
 
     /* Create a button. */
     final Button backgroundColorButton = new Button( imageGroup, SWT.PUSH );
@@ -367,25 +375,23 @@ public class ImageComposite extends Composite
     backgroundColorButton.setText( "..." );
     backgroundColorButton.addSelectionListener( new SelectionAdapter()
     {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
         final Shell shell = ImageComposite.this.getShell();
 
         final ColorDialog dialog = new ColorDialog( shell );
-        dialog.setRGB( m_backgroundColor.getRGB() );
+        dialog.setRGB( m_background );
         final RGB rgb = dialog.open();
         if( rgb == null )
           return;
 
-        m_backgroundColor.dispose();
-        m_backgroundColor = new Color( shell.getDisplay(), rgb );
-        backgroundLabel.setBackground( m_backgroundColor );
+        m_background = rgb;
 
-        fireImagePropertyChanged( getProperties(), m_horizontal, m_vertical, m_backgroundColor, m_imageUrl );
+        backgroundLabel.getBackground().dispose();
+        backgroundLabel.setBackground( new Color( parent.getDisplay(), m_background ) );
+
+        fireImagePropertyChanged( getProperties(), m_horizontal, m_vertical, m_background, m_imageUrl );
       }
     } );
 
@@ -426,7 +432,7 @@ public class ImageComposite extends Composite
           m_imageUrl = text;
 
         /* Fire the image property changed event. */
-        fireImagePropertyChanged( getProperties(), m_horizontal, m_vertical, m_backgroundColor, m_imageUrl );
+        fireImagePropertyChanged( getProperties(), m_horizontal, m_vertical, m_background, m_imageUrl );
       }
     } );
 
@@ -474,7 +480,7 @@ public class ImageComposite extends Composite
 
   /**
    * This function updates the composite.
-   * 
+   *
    * @param status
    *          A status, containing a message, which should be displayed in the upper area of the view. May be null.
    */
@@ -505,7 +511,7 @@ public class ImageComposite extends Composite
 
   /**
    * This function fires a image property changed event.
-   * 
+   *
    * @param properties
    *          A up to date properties object, containing all serialized image properties.
    * @param horizontal
@@ -515,7 +521,7 @@ public class ImageComposite extends Composite
    * @param imageUrl
    *          The URL of the image, which should be shown.
    */
-  protected void fireImagePropertyChanged( final Properties properties, final int horizontal, final int vertical, final Color backgroundColor, final String imageUrl )
+  protected void fireImagePropertyChanged( final Properties properties, final int horizontal, final int vertical, final RGB backgroundColor, final String imageUrl )
   {
     for( final IImageChangedListener listener : m_listener )
       listener.imagePropertyChanged( properties, horizontal, vertical, backgroundColor, imageUrl );
@@ -523,7 +529,7 @@ public class ImageComposite extends Composite
 
   /**
    * This function adds a image changed listener.
-   * 
+   *
    * @param listener
    *          The image changed listener to add.
    */
@@ -535,7 +541,7 @@ public class ImageComposite extends Composite
 
   /**
    * This function removes a image changed listener.
-   * 
+   *
    * @param listener
    *          The image changed listener to remove.
    */
@@ -547,7 +553,7 @@ public class ImageComposite extends Composite
 
   /**
    * This function returns a up to date properties object, containing all serialized image properties.
-   * 
+   *
    * @return A up to date properties object, containing all serialized image properties.
    */
   public Properties getProperties( )
@@ -558,7 +564,8 @@ public class ImageComposite extends Composite
     /* Serialize the properties. */
     final String horizontalProperty = String.format( Locale.PRC, "%d", m_horizontal );
     final String verticalProperty = String.format( Locale.PRC, "%d", m_vertical );
-    final String backgroundColorProperty = String.format( Locale.PRC, "%d;%d;%d", m_backgroundColor.getRed(), m_backgroundColor.getGreen(), m_backgroundColor.getBlue() );
+    // FIXME: put into ThemeUtilities; its always the same in every theme ;-(
+    final String backgroundColorProperty = String.format( Locale.PRC, "%d;%d;%d", m_background.red, m_background.green, m_background.blue );
     String imageUrlProperty = null;
     if( m_imageUrl != null )
       imageUrlProperty = String.format( Locale.PRC, "%s", m_imageUrl );

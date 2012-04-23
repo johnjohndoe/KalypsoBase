@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.util.themes.legend.controls;
 
@@ -54,6 +54,8 @@ import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -71,8 +73,8 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.forms.widgets.Form;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.ThemeUtilities;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.util.themes.ThemeUtilities;
 import org.kalypso.util.themes.legend.LegendUtilities;
 import org.kalypso.util.themes.legend.listener.ILegendChangedListener;
 import org.kalypso.util.themes.legend.provider.ThemeCheckStateProvider;
@@ -85,7 +87,7 @@ import org.kalypso.util.themes.position.listener.IPositionChangedListener;
 
 /**
  * This composite edits the position.
- * 
+ *
  * @author Holger Albert
  */
 public class LegendComposite extends Composite
@@ -123,7 +125,7 @@ public class LegendComposite extends Composite
   /**
    * The background color.
    */
-  protected Color m_backgroundColor;
+  protected RGB m_backgroundColor;
 
   /**
    * The insets.
@@ -142,7 +144,7 @@ public class LegendComposite extends Composite
 
   /**
    * The constructor.
-   * 
+   *
    * @param parent
    *          A widget which will be the parent of the new instance (cannot be null).
    * @param style
@@ -202,7 +204,7 @@ public class LegendComposite extends Composite
    * This function checks the provided properties object for properties this composite can edit. Found properties will
    * be checked for correct values. Then they are set to the members. If editable properties are missing or if existing
    * ones have wrong values, they will be set to the members with default values.
-   * 
+   *
    * @param properties
    *          The properties, containing the values.
    */
@@ -211,7 +213,7 @@ public class LegendComposite extends Composite
     /* Default values. */
     m_horizontal = PositionUtilities.RIGHT;
     m_vertical = PositionUtilities.BOTTOM;
-    m_backgroundColor = new Color( getDisplay(), 255, 255, 255 );
+    m_backgroundColor = new RGB( 255, 255, 255 );
     m_insets = 10;
     m_themeIds = new ArrayList<String>();
     m_fontSize = 10;
@@ -228,7 +230,7 @@ public class LegendComposite extends Composite
    * This function checks the provided properties object for properties this composite can edit. Found properties will
    * be checked for correct values. Then they are set to the members. If editable properties are missing or if existing
    * ones have wrong values, the members will not be changed.
-   * 
+   *
    * @param properties
    *          The properties, containing the values.
    */
@@ -253,7 +255,7 @@ public class LegendComposite extends Composite
       m_vertical = vertical;
 
     /* Check the background color. */
-    final Color backgroundColor = ThemeUtilities.checkBackgroundColor( getDisplay(), backgroundColorProperty );
+    final RGB backgroundColor = ThemeUtilities.checkBackgroundColor( backgroundColorProperty );
     if( backgroundColor != null )
       m_backgroundColor = backgroundColor;
 
@@ -315,7 +317,7 @@ public class LegendComposite extends Composite
 
   /**
    * This function creates the content composite.
-   * 
+   *
    * @param parent
    *          The parent composite.
    * @return The content composite.
@@ -338,7 +340,7 @@ public class LegendComposite extends Composite
 
   /**
    * This function creates the content internal composite.
-   * 
+   *
    * @param parent
    *          The parent composite.
    * @return The content internal composite.
@@ -362,7 +364,7 @@ public class LegendComposite extends Composite
 
   /**
    * This function creates the position composite.
-   * 
+   *
    * @param parent
    *          The parent composite.
    * @return The position composite.
@@ -392,7 +394,7 @@ public class LegendComposite extends Composite
 
   /**
    * This function creates the legend group.
-   * 
+   *
    * @param parent
    *          The parent composite.
    * @return The legend group.
@@ -414,7 +416,16 @@ public class LegendComposite extends Composite
     final Label backgroundLabel = new Label( legendGroup, SWT.BORDER );
     backgroundLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     backgroundLabel.setText( "Hintergrundfarbe" );
-    backgroundLabel.setBackground( m_backgroundColor );
+    backgroundLabel.setBackground( new Color( parent.getDisplay(), m_backgroundColor ) );
+
+    backgroundColorLabel.addDisposeListener( new DisposeListener()
+    {
+      @Override
+      public void widgetDisposed( final DisposeEvent e )
+      {
+        backgroundLabel.getBackground().dispose();
+      }
+    } );
 
     /* Create a button. */
     final Button backgroundColorButton = new Button( legendGroup, SWT.PUSH );
@@ -422,23 +433,21 @@ public class LegendComposite extends Composite
     backgroundColorButton.setText( "..." );
     backgroundColorButton.addSelectionListener( new SelectionAdapter()
     {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
         final Shell shell = LegendComposite.this.getShell();
 
         final ColorDialog dialog = new ColorDialog( shell );
-        dialog.setRGB( m_backgroundColor.getRGB() );
+        dialog.setRGB( m_backgroundColor );
         final RGB rgb = dialog.open();
         if( rgb == null )
           return;
 
-        m_backgroundColor.dispose();
-        m_backgroundColor = new Color( shell.getDisplay(), rgb );
-        backgroundLabel.setBackground( m_backgroundColor );
+        m_backgroundColor = rgb;
+
+        backgroundLabel.getBackground().dispose();
+        backgroundLabel.setBackground( new Color( parent.getDisplay(), m_backgroundColor ) );
 
         fireLegendPropertyChanged( getProperties(), m_horizontal, m_vertical, m_backgroundColor, m_insets, m_themeIds.toArray( new String[] {} ), m_fontSize );
       }
@@ -552,7 +561,7 @@ public class LegendComposite extends Composite
 
   /**
    * This function updates the composite.
-   * 
+   *
    * @param status
    *          A status, containing a message, which should be displayed in the upper area of the view. May be null.
    */
@@ -583,7 +592,7 @@ public class LegendComposite extends Composite
 
   /**
    * This function fires a legend property changed event.
-   * 
+   *
    * @param properties
    *          A up to date properties object, containing all serialized legend properties.
    * @param horizontal
@@ -599,15 +608,15 @@ public class LegendComposite extends Composite
    * @param fontSize
    *          The font size.
    */
-  protected void fireLegendPropertyChanged( final Properties properties, final int horizontal, final int vertical, final Color backgroundColor, final int insets, final String[] themeIds, final int fontSize )
+  protected void fireLegendPropertyChanged( final Properties properties, final int horizontal, final int vertical, final RGB background, final int insets, final String[] themeIds, final int fontSize )
   {
     for( final ILegendChangedListener listener : m_listener )
-      listener.legendPropertyChanged( properties, horizontal, vertical, backgroundColor, insets, themeIds, fontSize );
+      listener.legendPropertyChanged( properties, horizontal, vertical, background, insets, themeIds, fontSize );
   }
 
   /**
    * This function adds a legend changed listener.
-   * 
+   *
    * @param listener
    *          The legend changed listener to add.
    */
@@ -619,7 +628,7 @@ public class LegendComposite extends Composite
 
   /**
    * This function removes a legend changed listener.
-   * 
+   *
    * @param listener
    *          The legend changed listener to remove.
    */
@@ -631,7 +640,7 @@ public class LegendComposite extends Composite
 
   /**
    * This function returns a up to date properties object, containing all serialized legend properties.
-   * 
+   *
    * @return A up to date properties object, containing all serialized legend properties.
    */
   public Properties getProperties( )
@@ -642,7 +651,7 @@ public class LegendComposite extends Composite
     /* Serialize the properties. */
     final String horizontalProperty = String.format( Locale.PRC, "%d", m_horizontal );
     final String verticalProperty = String.format( Locale.PRC, "%d", m_vertical );
-    final String backgroundColorProperty = String.format( Locale.PRC, "%d;%d;%d", m_backgroundColor.getRed(), m_backgroundColor.getGreen(), m_backgroundColor.getBlue() );
+    final String backgroundColorProperty = String.format( Locale.PRC, "%d;%d;%d", m_backgroundColor.red, m_backgroundColor.green, m_backgroundColor.blue );
     final String insetsProperty = String.format( Locale.PRC, "%d", m_insets );
     final List<String> themeIds = new ArrayList<String>();
     for( int i = 0; i < m_themeIds.size(); i++ )
