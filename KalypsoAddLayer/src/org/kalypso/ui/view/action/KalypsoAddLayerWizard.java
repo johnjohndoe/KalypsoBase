@@ -45,6 +45,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.internal.IWorkbenchGraphicConstants;
 import org.eclipse.ui.internal.WorkbenchImages;
+import org.eclipse.ui.model.AdaptableList;
 import org.kalypso.ui.addlayer.MapExtensions;
 import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
 import org.kalypso.ui.i18n.Messages;
@@ -67,6 +68,14 @@ public class KalypsoAddLayerWizard extends Wizard
    */
   public KalypsoAddLayerWizard( final GisMapOutlinePage outlineviewer, final IStructuredSelection selection, final IWorkbench workbench )
   {
+    this( outlineviewer, selection, workbench, MapExtensions.getAvailableWizards() );
+  }
+
+  /**
+   * Returns the import wizards that are available for invocation.
+   */
+  public KalypsoAddLayerWizard( final GisMapOutlinePage outlineviewer, final IStructuredSelection selection, final IWorkbench workbench, final AdaptableList wizards )
+  {
     m_outlineviewer = outlineviewer;
     m_selection = selection;
     m_workbench = workbench;
@@ -76,7 +85,7 @@ public class KalypsoAddLayerWizard extends Wizard
     setNeedsProgressMonitor( true );
 
     final String message = Messages.getString( "org.kalypso.ui.view.action.KalypsoAddLayerWizard.0" ); //$NON-NLS-1$
-    final KalypsoWizardSelectionPage page = new KalypsoWizardSelectionPage( m_workbench, m_selection, MapExtensions.getAvailableWizards(), message, m_outlineviewer );
+    final KalypsoWizardSelectionPage page = new KalypsoWizardSelectionPage( m_workbench, m_selection, wizards, message, m_outlineviewer );
     page.setDescription( Messages.getString( "org.kalypso.ui.view.action.KalypsoAddLayerWizard.1" ) ); //$NON-NLS-1$
     addPage( page );
   }
