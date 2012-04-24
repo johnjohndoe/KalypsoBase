@@ -58,6 +58,7 @@ import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
+import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceProxyObservation;
 import org.kalypso.ogc.sensor.util.Observations;
 import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 
@@ -70,7 +71,7 @@ public class WQTimeserieProxy implements IObservation
 {
   private final ObservationEventAdapter m_eventAdapter = new ObservationEventAdapter( this );
 
-  private final IObservation m_obs;
+  private IObservation m_obs;
 
   private IAxis[] m_axes;
 
@@ -100,7 +101,7 @@ public class WQTimeserieProxy implements IObservation
    */
   public WQTimeserieProxy( final String realAxisType, final String proxyAxisType, final IObservation obs )
   {
-    m_obs = obs;
+
     m_realAxisType = realAxisType;
     m_proxyAxisType = proxyAxisType;
 
@@ -109,7 +110,19 @@ public class WQTimeserieProxy implements IObservation
 
   private void configure( final IObservation obs )
   {
-    final IAxis[] axes = obs.getAxes();
+    IAxis[] axes = obs.getAxes();
+
+    /** base observation defines source and status axis? */
+    final IAxis baseValueAxis = AxisUtils.findAxis( axes, m_realAxisType );
+    final IAxis baseDataSourceAxis = AxisUtils.findDataSourceAxis( axes, baseValueAxis );
+    if( Objects.isNull( baseDataSourceAxis ) )
+    {
+      m_obs = new DataSourceProxyObservation( obs, obs.getHref(), obs.getHref() );
+      axes = m_obs.getAxes();
+    }
+    else
+      m_obs = obs;
+
     m_axes = new IAxis[axes.length + 3];
     for( int index = 0; index < axes.length; index++ )
     {

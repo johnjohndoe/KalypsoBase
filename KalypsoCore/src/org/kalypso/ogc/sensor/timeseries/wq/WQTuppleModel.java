@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.wq;
 
@@ -190,15 +190,13 @@ public class WQTuppleModel extends AbstractTupleModel
   private TupleModelDataSet read( final int index ) throws SensorException
   {
     final Number srcValue = (Number) m_model.get( index, m_source.getValueAxis() );
-    final Number srcStatus = (Number) m_model.get( index, m_source.getStatusAxis() );
-    final Number srcDataSource = (Number) m_model.get( index, m_source.getDatasourceAxis() );
 
     if( Objects.isNull( srcValue ) )
       return new TupleModelDataSet( m_target.getValueAxis(), srcValue, KalypsoStati.BIT_CHECK, IDataSourceItem.SOURCE_MISSING );
 
     final String type = m_target.getValueAxis().getType();
-    final int status = KalypsoStati.STATUS_DERIVATED | (srcStatus == null ? KalypsoStati.BIT_CHECK : srcStatus.intValue());
-    final String source = getTargetDataSource( srcDataSource );
+    final int status = readStatus( index );
+    final String source = getTargetDataSource( index );
 
     try
     {
@@ -225,13 +223,29 @@ public class WQTuppleModel extends AbstractTupleModel
     }
   }
 
-  private String getTargetDataSource( final Number index )
+  private int readStatus( final int index ) throws SensorException
   {
-    if( index == null )
+    final IAxis statusAxis = m_source.getStatusAxis();
+    if( statusAxis == null )
+      return KalypsoStati.BIT_CHECK;
+
+    final Number srcStatus = (Number) m_model.get( index, statusAxis );
+
+    return KalypsoStati.STATUS_DERIVATED | (srcStatus == null ? KalypsoStati.BIT_CHECK : srcStatus.intValue());
+  }
+
+  private String getTargetDataSource( final int index ) throws SensorException
+  {
+    final IAxis datasourceAxis = m_source.getDatasourceAxis();
+    if( Objects.isNull( datasourceAxis ) )
+      return IDataSourceItem.SOURCE_UNKNOWN;
+
+    final Number srcDataSource = (Number) m_model.get( index, datasourceAxis );
+    if( srcDataSource == null )
       return IDataSourceItem.SOURCE_UNKNOWN;
 
     final DataSourceHandler handler = new DataSourceHandler( m_metadata );
-    return handler.getDataSourceIdentifier( index.intValue() );
+    return handler.getDataSourceIdentifier( srcDataSource.intValue() );
   }
 
   @Override
