@@ -45,9 +45,14 @@ import java.util.TimeZone;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceProxyObservation;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 
 /**
@@ -61,7 +66,17 @@ public class NativeObservationZmlAdapter extends AbstractObservationImporter
     try
     {
       final IObservation observation = ZmlFactory.parseXML( source.toURI().toURL() );
-      setObservation( observation );
+
+      final IAxis valueAxis = AxisUtils.findAxis( observation.getAxes(), valueType );
+      final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( observation.getAxes(), valueAxis );
+
+      if( Objects.isNull( dataSourceAxis ) )
+      {
+        final String dataSource = source.getAbsolutePath();
+        setObservation( new DataSourceProxyObservation( observation, dataSource, dataSource, KalypsoStati.BIT_OK ) );
+      }
+      else
+        setObservation( observation );
 
       return new Status( IStatus.OK, KalypsoCorePlugin.getID(), "ZML Timeseries Import" );
     }
