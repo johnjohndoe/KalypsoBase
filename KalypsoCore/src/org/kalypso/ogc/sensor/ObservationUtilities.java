@@ -56,6 +56,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.commons.java.lang.MathUtils;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.parser.IParser;
 import org.kalypso.commons.parser.ParserException;
 import org.kalypso.ogc.sensor.request.IRequest;
@@ -588,6 +589,8 @@ public final class ObservationUtilities
   {
 
     if( dateRange == null )
+      return baseObservation.getValues( null );
+    else if( Objects.isNull( dateRange.getFrom(), dateRange.getTo() ) )
       return baseObservation.getValues( null );
 
     final Date from = dateRange.getFrom();
