@@ -202,7 +202,7 @@ public class ComboFeatureControlFactory implements IFeatureControlFactory
     final String id = filter.getId();
     if( id == null || id.length() == 0 )
       return "org.kalypso.ui.featureview.filters.defaultFilter"; //$NON-NLS-1$
+
     return id;
   }
-
 }
