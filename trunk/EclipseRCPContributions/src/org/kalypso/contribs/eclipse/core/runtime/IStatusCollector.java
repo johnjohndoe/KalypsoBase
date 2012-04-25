@@ -81,12 +81,17 @@ public interface IStatusCollector extends Collection<IStatus>
 
   /**
    * Similar to {@link #asMultiStatus(String)}, but simply returns {@link org.eclipse.core.runtime.Status#OK_STATUS} if
-   * this collector is empty or contains only Ok-stati.
+   * this collector is empty or contains only OK stati.
    */
   IStatus asMultiStatusOrOK( String msg );
 
   /**
-   * Same as {@link #asMultiStatusOrOK(String)}, but returns a OK-Status with s specific message.
+   * Same as {@link #asMultiStatusOrOK(String)}, but returns a OK status with a specific message.
    */
   IStatus asMultiStatusOrOK( String msg, String okMessage );
+
+  /**
+   * Returns true, if all contained stati are OK stati.
+   */
+  boolean isOK( );
 }

@@ -106,6 +106,7 @@ public class PDFExporter
       final Image img = Image.getInstance( image, null );
 
       /* Monitor. */
+      monitor.worked( 500 );
       monitor.subTask( "Erzeuge PDF..." );
 
       /* Create the output stream. */
