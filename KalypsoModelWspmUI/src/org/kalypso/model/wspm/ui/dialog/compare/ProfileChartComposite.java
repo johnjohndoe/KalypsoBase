@@ -94,9 +94,6 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
     getPlotHandler().addPlotHandler( new MousePositionChartHandler( this ) );
   }
 
-  /**
-   * @see org.eclipse.swt.widgets.Widget#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -127,9 +124,6 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
     return this;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.chart.IProfilChartView#getProfil()
-   */
   @Override
   public IProfil getProfil( )
   {

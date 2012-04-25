@@ -195,7 +195,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     return Status.OK_STATUS;
   }
 
-  protected void handlePaint( final PaintEvent paintEvent )
+  protected synchronized void handlePaint( final PaintEvent paintEvent )
   {
     if( m_image == null )
       return;
@@ -213,7 +213,6 @@ public class ChartImageComposite extends Canvas implements IChartComposite
 
       // FIXME: makes no sense: why is there a transformation for the drag area and edit info?
       // Same for handlers: why should they paint with an active transformation?
-
       newTransform.translate( m_plotRect.x, m_plotRect.y );
       gc.setTransform( newTransform );
 

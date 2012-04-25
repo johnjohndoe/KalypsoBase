@@ -66,6 +66,7 @@ import de.openali.odysseus.chart.framework.util.img.legend.config.DefaultChartLe
  */
 public class ChartPainter
 {
+  Image m_image = null;
 
   final IChartModel m_model;
 
@@ -99,6 +100,14 @@ public class ChartPainter
     m_titlePainter = new ChartTitlePainter( model.getSettings().getTitles() );
   }
 
+  public Image init( )
+  {
+    final Device dev = ChartUtilities.getDisplay();
+    m_image = new Image( dev, m_size.width, m_size.height );
+
+    return m_image;
+  }
+
   public final Image createImage( )
   {
     return createImage( new Point( 0, 0 ) );
@@ -111,9 +120,11 @@ public class ChartPainter
 
     final Insets plotInsets = getPlotInsets();
     setAxesHeight( plotInsets, m_size );
-    final Device dev = ChartUtilities.getDisplay();
-    final Image image = new Image( dev, m_size.width, m_size.height );
-    final GC gc = new GC( image );
+
+    if( m_image == null )
+      init();
+
+    final GC gc = new GC( m_image );
     final Image legendImage = m_legendPainter.createImage();
     try
     {
@@ -146,7 +157,7 @@ public class ChartPainter
       gc.dispose();
     }
 
-    return image;
+    return m_image;
   }
 
   private int getAxesWidth( final IAxis[] axes )
