@@ -141,8 +141,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   @Override
   public void invalidate( )
   {
-
-    new UIJob( "invalidating" )
+    final UIJob job = new UIJob( "invalidating" )
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
@@ -153,8 +152,11 @@ public class ChartImageComposite extends Canvas implements IChartComposite
         m_invalidateChartJob.reschedule( getClientArea() );
         return Status.OK_STATUS;
       }
-    }.schedule();
+    };
 
+    job.setSystem( true );
+    job.setUser( false );
+    job.schedule();
   }
 
   protected IStatus doInvalidateChart( final Rectangle panel )

@@ -51,7 +51,6 @@ import org.eclipse.swt.graphics.Rectangle;
  */
 public class InvalidateChartImageCompositeJob extends Job
 {
-
   private final ChartImageComposite m_chart;
 
   private Rectangle m_panel;
