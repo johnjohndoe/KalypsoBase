@@ -5,7 +5,6 @@ import java.awt.Insets;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -43,23 +42,7 @@ import de.openali.odysseus.chart.framework.view.IChartHandlerManager;
  */
 public class ChartImageComposite extends Canvas implements IChartComposite
 {
-  private final class InvalidateChartJob extends UIJob
-  {
-    public InvalidateChartJob( )
-    {
-      super( "Invalidating Chart" );
-      setSystem( true );
-      setUser( false );
-    }
-
-    @Override
-    public IStatus runInUIThread( final IProgressMonitor monitor )
-    {
-      return doInvalidateChart();
-    }
-  }
-
-  private final InvalidateChartJob m_invalidateChartJob = new InvalidateChartJob();
+  protected final InvalidateChartImageCompositeJob m_invalidateChartJob = new InvalidateChartImageCompositeJob( this );
 
   private final ChartModelEventHandler m_chartModelEventHandler = new ChartModelEventHandler();
 
@@ -158,17 +141,23 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   @Override
   public void invalidate( )
   {
-    if( isDisposed() )
-      return;
 
-    // FIXME: why this check? Why not cancel in WAITING state?
-    if( m_invalidateChartJob.getState() == Job.SLEEPING )
-      m_invalidateChartJob.cancel();
+    new UIJob( "invalidating" )
+    {
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        if( isDisposed() )
+          return Status.CANCEL_STATUS;
 
-    m_invalidateChartJob.schedule( 50 );
+        m_invalidateChartJob.reschedule( getClientArea() );
+        return Status.OK_STATUS;
+      }
+    }.schedule();
+
   }
 
-  protected IStatus doInvalidateChart( )
+  protected IStatus doInvalidateChart( final Rectangle panel )
   {
     if( m_image != null && !m_image.isDisposed() )
     {
@@ -185,12 +174,21 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     if( mapperRegistry == null )
       return Status.OK_STATUS;
 
-    final Rectangle panel = getClientArea();
     final ChartPainter chartPainter = new ChartPainter( model, panel, m_insets );// ,new Insets(25,25,25,25));
     m_plotRect = RectangleUtils.inflateRect( panel, chartPainter.getPlotInsets() );
     m_image = chartPainter.createImage( m_panOffset );
 
-    redraw();
+    new UIJob( "null" )
+    {
+
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        redraw();
+
+        return Status.OK_STATUS;
+      }
+    }.schedule();
 
     return Status.OK_STATUS;
   }
