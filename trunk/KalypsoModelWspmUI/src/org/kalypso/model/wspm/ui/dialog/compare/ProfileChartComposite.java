@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.ui.dialog.compare;
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.commons.java.lang.Objects;
@@ -106,11 +107,8 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
     super.dispose();
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.view.impl.ChartImageComposite#doInvalidateChart()
-   */
   @Override
-  protected IStatus doInvalidateChart( )
+  protected IStatus doInvalidateChart( final Rectangle panel )
   {
     final IChartLayer layer = getChartModel().getLayerManager().findLayer( IWspmLayers.LAYER_GELAENDE );
 
@@ -120,7 +118,7 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
       getProfil().getSelection().setRange( point );
     }
 
-    return super.doInvalidateChart();
+    return super.doInvalidateChart( panel );
   }
 
   @Override
