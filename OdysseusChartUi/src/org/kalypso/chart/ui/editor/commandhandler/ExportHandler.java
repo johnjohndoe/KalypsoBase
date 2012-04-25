@@ -3,6 +3,7 @@ package org.kalypso.chart.ui.editor.commandhandler;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.ImageData;
@@ -44,9 +45,9 @@ public class ExportHandler extends AbstractHandler
     if( filename == null || filename.length() == 0 )
       return null;
 
-    final Rectangle bounds = ((Composite)chartComposite).getBounds();
+    final Rectangle bounds = ((Composite) chartComposite).getBounds();
     final ChartPainter chartPainter = new ChartPainter( chartComposite.getChartModel(), bounds );
-    final ImageData id = chartPainter.getImageData();
+    final ImageData id = chartPainter.getImageData( new NullProgressMonitor() );
 
     final ImageLoader il = new ImageLoader();
     il.data = new ImageData[] { id };

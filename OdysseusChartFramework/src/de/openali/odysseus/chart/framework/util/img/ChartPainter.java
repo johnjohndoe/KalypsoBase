@@ -42,6 +42,7 @@ package de.openali.odysseus.chart.framework.util.img;
 
 import java.awt.Insets;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
@@ -108,12 +109,12 @@ public class ChartPainter
     return m_image;
   }
 
-  public final Image createImage( )
+  public final Image createImage( final IProgressMonitor monitor )
   {
-    return createImage( new Point( 0, 0 ) );
+    return createImage( new Point( 0, 0 ), monitor );
   }
 
-  public final Image createImage( final Point panOffset )
+  public final Image createImage( final Point panOffset, final IProgressMonitor monitor )
   {
     if( m_size.width == 0 || m_size.height == 0 )
       return null;
@@ -124,6 +125,9 @@ public class ChartPainter
     if( m_image == null )
       init();
 
+    if( monitor.isCanceled() )
+      return m_image;
+
     final GC gc = new GC( m_image );
     final Image legendImage = m_legendPainter.createImage();
     try
@@ -132,23 +136,40 @@ public class ChartPainter
       gc.setTextAntialias( SWT.ON );
       gc.setAdvanced( true );
       m_titlePainter.paint( gc, new Rectangle( m_clientRect.x, m_clientRect.y, m_clientRect.width, m_titlePainter.getSize( m_clientRect.width ).y ) );
+      if( monitor.isCanceled() )
+        return m_image;
 
       // paint left Axes
       paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.LEFT ), gc, plotInsets.left, plotInsets.top, plotInsets.top, m_size.height, 90, false );
+      if( monitor.isCanceled() )
+        return m_image;
+
       // paint right Axes
       paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.RIGHT ), gc, m_size.width - plotInsets.right, plotInsets.top, plotInsets.top, m_size.height, 90, true );
+      if( monitor.isCanceled() )
+        return m_image;
+
       // paint top Axes
       paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.TOP ), gc, plotInsets.left, plotInsets.top, plotInsets.left, m_size.width, 0, true );
+      if( monitor.isCanceled() )
+        return m_image;
+
       // paint bottom Axes
       paintAxes( m_model.getMapperRegistry().getAxesAt( POSITION.BOTTOM ), gc, plotInsets.left, m_size.height - plotInsets.bottom, plotInsets.left, m_size.width, 0, false );
-      // paint plot
+      if( monitor.isCanceled() )
+        return m_image;
 
+      // paint plot
       if( legendImage != null )
         gc.drawImage( legendImage, m_chartInsets.left, m_size.height - m_legendPainter.getSize().height - m_chartInsets.bottom );
+      if( monitor.isCanceled() )
+        return m_image;
+
       final Rectangle plotRect = RectangleUtils.createInnerRectangle( m_size.width, m_size.height, plotInsets );
       // Layer könnten sonst in die Achsen zeichnen
       gc.setClipping( plotRect );
-      getPlotPainter().paint( gc, new Insets( plotInsets.top - panOffset.y, plotInsets.left - panOffset.x, plotInsets.bottom + panOffset.y, plotInsets.right + panOffset.x ) );
+
+      getPlotPainter().paint( gc, new Insets( plotInsets.top - panOffset.y, plotInsets.left - panOffset.x, plotInsets.bottom + panOffset.y, plotInsets.right + panOffset.x ), monitor );
     }
     finally
     {
@@ -174,9 +195,9 @@ public class ChartPainter
     return width;
   }
 
-  public final ImageData getImageData( )
+  public final ImageData getImageData( final IProgressMonitor monitor )
   {
-    final Image image = createImage();
+    final Image image = createImage( monitor );
     try
     {
       final ImageData imageData = image.getImageData();

@@ -3,6 +3,7 @@ package de.openali.odysseus.service.ods.operation;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.ogc.core.exceptions.ExceptionCode;
@@ -44,9 +45,9 @@ public class GetChart extends AbstractODSDisplayOperation implements Runnable
     final String reqHeight = req.getParameterValue( "HEIGHT" );
     final String reqName = req.getParameterValue( "NAME" );
 
-    if( (reqWidth != null) && !reqWidth.trim().equals( "" ) )
+    if( reqWidth != null && !reqWidth.trim().equals( "" ) )
       width = Integer.parseInt( reqWidth );
-    if( (reqHeight != null) && !reqWidth.trim().equals( "" ) )
+    if( reqHeight != null && !reqWidth.trim().equals( "" ) )
       height = Integer.parseInt( reqHeight );
     // der Name muss da sein, sonst kann kein Chart ausgewählt werden
     if( reqName != null )
@@ -58,8 +59,8 @@ public class GetChart extends AbstractODSDisplayOperation implements Runnable
       URL context = null;
       try
       {
-        context = new URL(ccl.getDocumentSource());
-        //context = getEnv().getConfigDir().toURI().toURL();
+        context = new URL( ccl.getDocumentSource() );
+        // context = getEnv().getConfigDir().toURI().toURL();
       }
       catch( final MalformedURLException e1 )
       {
@@ -89,13 +90,14 @@ public class GetChart extends AbstractODSDisplayOperation implements Runnable
       {
         ODSChartManipulation.manipulateChart( model, req );
       }
-      catch( OWSException e )
+      catch( final OWSException e )
       {
         setException( e );
         return;
       }
       final ChartPainter chartPainter = new ChartPainter( model, new Rectangle( 0, 0, width, height ) );
-      final ImageData id = chartPainter.getImageData();// ChartImageFactory.createChartImage( chart.getChartModel(),
+      final ImageData id = chartPainter.getImageData( new NullProgressMonitor() );// ChartImageFactory.createChartImage(
+// chart.getChartModel(),
       // new Point( width, height ) );
       if( id != null )
         ImageOutput.imageResponse( req, getResponse(), id );
