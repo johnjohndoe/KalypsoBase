@@ -50,7 +50,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmLayers;
-import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
@@ -59,7 +58,6 @@ import org.kalypso.model.wspm.ui.commands.MousePositionChartHandler;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChart;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartModel;
-import org.kalypso.observation.result.IRecord;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.IChartModelState;
@@ -165,14 +163,13 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
     if( activeDom == null || activeVal == null || getProfil() == null )
       return null;
 
-    for( final IRecord point : getProfil().getPoints() )
+    for( final IProfileRecord point : getProfil().getPoints() )
     {
-      final Double hoehe = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOEHE, point );
-      final Double breite = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, point );
+      final Double hoehe = point.getHoehe();
+      final Double breite = point.getBreite();
       if( hoehe.isNaN() || breite.isNaN() )
-      {
         continue;
-      }
+
       final Double deltaX = Math.abs( activeDom.getMin().doubleValue() - activeDom.getMax().doubleValue() );
       final IProfileRecord record = ProfilUtil.findPoint( getProfil(), activeDom.getMin().doubleValue() + deltaX / 2, deltaX );
 
@@ -193,10 +190,8 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
       return;
 
     // FIXME: bad and ugly! we should keep only one model, m_chartModel; not two references to the same thing
-
     final IChartModel oldModel = m_profilChartModel;
     final IProfil oldProfile = m_profilChartModel == null ? null : m_profilChartModel.getProfil();
-
     if( profile != null && profile == oldProfile )
       return;
 
