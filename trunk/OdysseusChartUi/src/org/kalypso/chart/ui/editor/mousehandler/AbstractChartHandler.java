@@ -33,6 +33,8 @@ public abstract class AbstractChartHandler implements IChartHandler
 
   private final ChartTooltipPainter m_tooltipPainter = new ChartTooltipPainter();
 
+  private UIJob m_job;
+
   public AbstractChartHandler( final IChartComposite chart )
   {
     m_chart = chart;
@@ -55,11 +57,17 @@ public abstract class AbstractChartHandler implements IChartHandler
 
   protected void forceRedrawEvent( )
   {
-    final UIJob job = new UIJob( "Redrawing chart tooltip" )
+    if( m_job != null )
+      m_job.cancel();
+
+    m_job = new UIJob( "Redrawing chart tooltip" )
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
+        if( monitor.isCanceled() )
+          return Status.CANCEL_STATUS;
+
         final Composite composite = (Composite) getChart();
         if( !composite.isDisposed() )
           composite.redraw();
@@ -68,10 +76,10 @@ public abstract class AbstractChartHandler implements IChartHandler
       }
     };
 
-    job.setUser( false );
-    job.setSystem( true );
+    m_job.setUser( false );
+    m_job.setSystem( true );
 
-    job.schedule();
+    m_job.schedule();
   }
 
   public IChartComposite getChart( )
