@@ -41,7 +41,9 @@
 package org.kalypso.model.wspm.ui.dialog.compare;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
@@ -105,8 +107,11 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
   }
 
   @Override
-  protected IStatus doInvalidateChart( final Rectangle panel )
+  protected IStatus doInvalidateChart( final Rectangle panel, final IProgressMonitor monitor )
   {
+    if( monitor.isCanceled() )
+      return Status.OK_STATUS;
+
     final IChartLayer layer = getChartModel().getLayerManager().findLayer( IWspmLayers.LAYER_GELAENDE );
 
     final IProfileRecord point = getSelectedPoint( layer );
@@ -115,7 +120,7 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
       getProfil().getSelection().setRange( point );
     }
 
-    return super.doInvalidateChart( panel );
+    return super.doInvalidateChart( panel, monitor );
   }
 
   @Override

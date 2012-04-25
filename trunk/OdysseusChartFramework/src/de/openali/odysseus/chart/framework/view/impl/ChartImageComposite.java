@@ -20,7 +20,6 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Transform;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 
 import de.openali.odysseus.chart.framework.OdysseusChartFramework;
@@ -42,8 +41,6 @@ import de.openali.odysseus.chart.framework.view.IChartHandlerManager;
  */
 public class ChartImageComposite extends Canvas implements IChartComposite
 {
-  protected final InvalidateChartImageCompositeJob m_invalidateChartJob = new InvalidateChartImageCompositeJob( this );
-
   private final ChartModelEventHandler m_chartModelEventHandler = new ChartModelEventHandler();
 
   private final ILayerManagerEventListener m_layerEventListener = new ChartImageLayerManagerEventListener( this );
@@ -65,6 +62,8 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   private final Insets m_insets;
 
   private final ChartImagePlotHandler m_plotHandler = new ChartImagePlotHandler( this );
+
+  private InvalidateChartJob m_invalidate;
 
   public ChartImageComposite( final Composite parent, final int style, final IChartModel model, final RGB backgroundRGB )
   {
@@ -141,60 +140,49 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   @Override
   public void invalidate( )
   {
-    final UIJob job = new UIJob( "invalidating" )
-    {
-      @Override
-      public IStatus runInUIThread( final IProgressMonitor monitor )
-      {
-        if( isDisposed() )
-          return Status.CANCEL_STATUS;
+    if( m_invalidate != null )
+      m_invalidate.cancel();
 
-        m_invalidateChartJob.reschedule( getClientArea() );
-        return Status.OK_STATUS;
-      }
-    };
-
-    job.setSystem( true );
-    job.setUser( false );
-    job.schedule();
+    m_invalidate = new InvalidateChartJob( this );
+    m_invalidate.schedule();
   }
 
-  protected IStatus doInvalidateChart( final Rectangle panel )
+  protected synchronized IStatus doInvalidateChart( final Rectangle panel, final IProgressMonitor monitor )
   {
+    if( isDisposed() )
+      return Status.OK_STATUS;
+
+    if( monitor.isCanceled() )
+      return Status.CANCEL_STATUS;
+
     if( m_image != null && !m_image.isDisposed() )
     {
       m_image.dispose();
       m_image = null;
     }
 
-    if( isDisposed() )
-      return Status.OK_STATUS;
-
     final IChartModel model = getChartModel();
-
     final IMapperRegistry mapperRegistry = model == null ? null : model.getMapperRegistry();
     if( mapperRegistry == null )
       return Status.OK_STATUS;
 
     final ChartPainter chartPainter = new ChartPainter( model, panel, m_insets );// ,new Insets(25,25,25,25));
+    m_image = chartPainter.init();
+    if( monitor.isCanceled() )
+      return Status.CANCEL_STATUS;
+
     m_plotRect = RectangleUtils.inflateRect( panel, chartPainter.getPlotInsets() );
-    m_image = chartPainter.createImage( m_panOffset );
+    if( monitor.isCanceled() )
+      return Status.CANCEL_STATUS;
 
-    new UIJob( "null" )
-    {
-
-      @Override
-      public IStatus runInUIThread( final IProgressMonitor monitor )
-      {
-        redraw();
-
-        return Status.OK_STATUS;
-      }
-    }.schedule();
+    m_image = chartPainter.createImage( m_panOffset, monitor );
 
     return Status.OK_STATUS;
   }
 
+  /**
+   * must be synchronized because of threaded painting of m_image
+   */
   protected synchronized void handlePaint( final PaintEvent paintEvent )
   {
     if( m_image == null )

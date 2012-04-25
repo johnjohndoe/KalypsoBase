@@ -43,6 +43,7 @@ package de.openali.odysseus.chart.framework.util.img;
 import java.awt.Insets;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -69,7 +70,7 @@ public class ChartPlotPainter
     m_size = size;
   }
 
-  public final Image createImage( )
+  public final Image createImage( final IProgressMonitor monitor )
   {
     if( m_size == null || m_size.x < 1 || m_size.y < 1 )
       return null;
@@ -78,7 +79,7 @@ public class ChartPlotPainter
     final GC gc = new GC( image );
     try
     {
-      paint( gc, new Insets( 0, 0, 0, 0 ) );
+      paint( gc, new Insets( 0, 0, 0, 0 ), monitor );
     }
     finally
     {
@@ -99,7 +100,7 @@ public class ChartPlotPainter
     return m_size;
   }
 
-  public void paint( final GC gc, final Insets plotInsets )
+  public void paint( final GC gc, final Insets plotInsets, final IProgressMonitor monitor )
   {
     final IChartLayer[] layers = getChartLayers();
     ArrayUtils.reverse( layers );
@@ -113,13 +114,18 @@ public class ChartPlotPainter
     try
     {
       transform.translate( plotInsets.left, plotInsets.top );
-
       gc.setTransform( transform );
 
       for( final IChartLayer layer : layers )
       {
         if( layer.isVisible() )
+        {
+          if( monitor.isCanceled() )
+            return;
+
           layer.paint( gc );
+        }
+
       }
     }
     finally
