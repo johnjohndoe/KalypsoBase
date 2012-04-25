@@ -80,7 +80,6 @@ public class InvalidateChartJob extends UIJob
       if( m_chart.isDisposed() )
         return Status.OK_STATUS;
 
-      // FIXME set monitor to cancel drawing
       m_chart.doInvalidateChart( m_panel, monitor );
 
       return Status.OK_STATUS;
@@ -117,12 +116,43 @@ public class InvalidateChartJob extends UIJob
       @Override
       public void done( final IJobChangeEvent event )
       {
+        m_done = true;
         doRepaint();
       }
     } );
+
+    doTriggerRepaint();
+
     drawer.schedule();
 
     return Status.OK_STATUS;
+  }
+
+  /**
+   * trigger repaints to have continuous construction of unfinished chart images
+   */
+  protected void doTriggerRepaint( )
+  {
+    final Job job = new Job( "Chart repaint trigger" )
+    {
+      @Override
+      protected IStatus run( final IProgressMonitor monitor )
+      {
+        if( !m_done )
+        {
+          doRepaint();
+          doTriggerRepaint();
+        }
+
+        return Status.OK_STATUS;
+      }
+
+    };
+
+    job.setSystem( true );
+    job.setUser( false );
+    job.schedule( 50 );
+
   }
 
   protected void doRepaint( )
