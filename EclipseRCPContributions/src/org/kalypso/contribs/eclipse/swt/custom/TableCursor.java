@@ -607,7 +607,14 @@ public class TableCursor extends Canvas
       {
         this.m_row = row;
         row.addListener( SWT.Dispose, m_disposeItemListener );
+
+        // Table automatically shows row if selection changes from outside.
+        // BUG: this leads to strange effect in rare cases: if the initial selection of the table
+        // is not the first row, the getBounds method below will still return the first row, regardless which row is is.
+        // So the cursor will sit on the first row and but shows the label of the selected row.
+        // Commenting out this line fixes the bug, but we loose the feature, that the table follows the cursor.
         m_table.showItem( row );
+
       }
       if( this.m_column != column && column != null )
       {
