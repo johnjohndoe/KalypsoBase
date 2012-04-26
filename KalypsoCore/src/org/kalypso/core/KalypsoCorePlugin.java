@@ -42,8 +42,10 @@
 package org.kalypso.core;
 
 import java.io.File;
+import java.util.Calendar;
 import java.util.TimeZone;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -185,6 +187,25 @@ public class KalypsoCorePlugin extends AbstractUIPlugin
    */
   public TimeZone getTimeZone( )
   {
+    final TimeZone timezone = getInternalTimeZone();
+
+    /** we want to get rid of daylight saving times and only support GMT based time zones! */
+    final String identifier = timezone.getID();
+    if( !StringUtils.containsIgnoreCase( identifier, "gmt" ) ) //$NON-NLS-1$
+    {
+      final Calendar calendar = Calendar.getInstance();
+      calendar.set( Calendar.MONTH, 0 ); // get offset from winter daylight saving time!
+      final int offset = timezone.getOffset( calendar.getTimeInMillis() );
+
+      return TimeZone.getTimeZone( String.format( "GMT%+d", offset ) ); //$NON-NLS-1$
+    }
+
+    return timezone;
+
+  }
+
+  private TimeZone getInternalTimeZone( )
+  {
     final String timeZoneID = getPreferenceStore().getString( IKalypsoCorePreferences.DISPLAY_TIMEZONE );
     if( IKalypsoCorePreferences.PREFS_OS_TIMEZONE.equals( timeZoneID ) )
       return TimeZone.getDefault();
@@ -209,6 +230,7 @@ public class KalypsoCorePlugin extends AbstractUIPlugin
 
       return TimeZone.getDefault();
     }
+
   }
 
   /**

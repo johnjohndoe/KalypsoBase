@@ -77,6 +77,7 @@ import org.kalypso.commons.databinding.swt.FileBinding;
 import org.kalypso.commons.databinding.validation.TimezoneStringValidator;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateOpen;
+import org.kalypso.contribs.java.util.TimezoneUtilities;
 import org.kalypso.ogc.sensor.adapter.INativeObservationAdapter;
 import org.kalypso.ogc.sensor.metadata.ParameterTypeLabelProvider;
 import org.kalypso.zml.ui.internal.i18n.Messages;
@@ -223,9 +224,9 @@ public class ImportObservationSourcePage extends WizardPage
     final Label timezoneLabel = new Label( parent, SWT.NONE );
     timezoneLabel.setText( Messages.getString( "ImportObservationSelectionWizardPage.0" ) ); //$NON-NLS-1$
 
-    final String[] tz = m_data.getAllTimezones();
+    final String[] tz = TimezoneUtilities.getSupportedTimezones();
 
-    final ComboViewer comboTimeZones = new ComboViewer( parent, SWT.BORDER | SWT.SINGLE );
+    final ComboViewer comboTimeZones = new ComboViewer( parent, SWT.BORDER | SWT.SINGLE | SWT.DROP_DOWN | SWT.READ_ONLY );
     comboTimeZones.getControl().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     comboTimeZones.setContentProvider( new ArrayContentProvider() );
