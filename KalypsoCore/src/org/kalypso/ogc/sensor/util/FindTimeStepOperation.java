@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.util;
 
-import java.util.Date;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -50,11 +48,9 @@ import org.kalypso.commons.time.PeriodUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.sensor.DateRange;
-import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 
 /**
@@ -83,11 +79,7 @@ public class FindTimeStepOperation implements ICoreRunnableWithProgress
       if( m_timestep == null )
         return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), "Failed to determine timestep..." );
 
-      final IAxis dateAxis = AxisUtils.findDateAxis( model.getAxes() );
-      final Date from = (Date) model.get( 0, dateAxis );
-      final Date to = (Date) model.get( model.size() - 1, dateAxis );
-
-      m_daterange = new DateRange( from, to );
+      m_daterange = Observations.findDateRange( model );
 
       return new Status( IStatus.OK, KalypsoCorePlugin.getID(), String.format( "Find Timeseries Timestep Operation successful - found time resultion: %s", PeriodUtils.formatDefault( m_timestep ) ) );
     }
