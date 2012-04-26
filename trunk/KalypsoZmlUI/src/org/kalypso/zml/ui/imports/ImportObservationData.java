@@ -43,7 +43,6 @@ package org.kalypso.zml.ui.imports;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.util.Arrays;
 import java.util.TimeZone;
 
 import org.eclipse.core.resources.IFile;
@@ -169,13 +168,6 @@ public class ImportObservationData extends AbstractModelObject implements IStore
     m_targetFile = targetFile;
 
     firePropertyChange( PROPERTY_TARGET_FILE, oldValue, targetFile );
-  }
-
-  public String[] getAllTimezones( )
-  {
-    final String[] tz = TimeZone.getAvailableIDs();
-    Arrays.sort( tz );
-    return tz;
   }
 
   public TimeZone getTimezoneParsed( )
