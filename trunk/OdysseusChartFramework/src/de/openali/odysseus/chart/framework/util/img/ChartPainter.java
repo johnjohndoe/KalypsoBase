@@ -104,7 +104,7 @@ public class ChartPainter
   public Image init( )
   {
     final Device dev = ChartUtilities.getDisplay();
-    m_image = new Image( dev, m_size.width, m_size.height );
+    m_image = new Image( dev, Math.max( m_size.width,1), Math.max(m_size.height,1) );
 
     return m_image;
   }

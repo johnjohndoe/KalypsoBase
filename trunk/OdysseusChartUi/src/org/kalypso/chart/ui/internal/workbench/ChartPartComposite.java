@@ -45,7 +45,9 @@ import java.net.URL;
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
@@ -59,6 +61,7 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
+import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
@@ -307,7 +310,25 @@ public class ChartPartComposite implements IChartPart
     m_dirty = dirty;
 
     if( m_part instanceof IPropertyPart )
-      ((IPropertyPart) m_part).firePropertyChange( IEditorPart.PROP_DIRTY );
+    {
+      /* force into ui threat */
+      UIJob job = new UIJob("")
+      {
+        @Override
+        public IStatus runInUIThread( IProgressMonitor monitor )
+        {
+          IPropertyPart part = (IPropertyPart) m_part;
+          part.firePropertyChange( IEditorPart.PROP_DIRTY );
+          
+          return Status.OK_STATUS;
+        }
+      };
+      job.setUser( false );
+      job.setSystem( true );
+      
+      job.schedule();
+    }
+      
   }
 
   public String getPartName( )

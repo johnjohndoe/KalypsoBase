@@ -75,8 +75,9 @@ public abstract class AbstractLineLayer extends AbstractChartLayer
       @Override
       public void paintSymbol( final GC gc, final Point size )
       {
+       
         /* Line Symbol */
-        if( ls.isVisible() && legendMode.contains( LEGEND_MODE_LINE ) )
+        if( ls != null && ls.isVisible() && legendMode.contains( LEGEND_MODE_LINE ) )
         {
           final int sizeX = size.x;
           final int sizeY = size.y;
@@ -92,7 +93,7 @@ public abstract class AbstractLineLayer extends AbstractChartLayer
           drawLine( gc, path );
         }
 
-        if( ps.isVisible() && legendMode.contains( LEGEND_MODE_POINT ) )
+        if(ps != null && ps.isVisible() && legendMode.contains( LEGEND_MODE_POINT ) )
         {
           final List<Point> path = new ArrayList<Point>();
           path.add( new Point( size.x / 2, size.y / 2 ) );
@@ -137,6 +138,7 @@ public abstract class AbstractLineLayer extends AbstractChartLayer
       lineStyle = getStyleSet().getStyle( "line" );// default style in older .kod's
     if( lineStyle == null )
       return getStyle( ILineStyle.class );
+    
     return (ILineStyle) lineStyle;
   }
 
