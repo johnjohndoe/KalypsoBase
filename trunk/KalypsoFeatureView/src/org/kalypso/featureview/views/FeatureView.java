@@ -450,7 +450,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
         {
           oldWorkspace.removeModellListener( FeatureView.this );
           // TODO: WHY?
-          // / getSite().setSelectionProvider( null );
+          // getSite().setSelectionProvider( null );
         }
         try
         {
@@ -529,7 +529,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
     // This is the way to do it, but still blocks the user interface.
     // If this is still too slow, split the job into ui and non-ui
     // parts and run the non-ui part in a non-blocking thread.
-    // NOTE: running via IProgrssSerive#runInUi gives a
+    // NOTE: running via IProgressService#runInUi gives a
     // ugly (and slow) modal pop-ups everytime the user changes the selection
     job.schedule();
 
