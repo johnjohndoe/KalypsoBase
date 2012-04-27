@@ -165,10 +165,15 @@ public abstract class AbstractProfilePointHandler extends AbstractChartHandler
 
     if( Objects.isNotNull( m_profile ) )
       m_profile.addProfilListener( m_listener );
+    onNewProfileSet();
   }
 
+  protected void onNewProfileSet( )
+  {
+  };
+
   @Override
-  public final void mouseMove( final MouseEvent e )
+  public void mouseMove( final MouseEvent e )
   {
     super.mouseMove( e );
 
@@ -176,7 +181,7 @@ public abstract class AbstractProfilePointHandler extends AbstractChartHandler
     final Rectangle bounds = chart.getPlotRect();
 
     final Point position = ChartHandlerUtilities.screen2plotPoint( new Point( e.x, e.y ), bounds );
-    if( !isValid( bounds, position ) )
+    if( !isValid( bounds, new Point( e.x, e.y ) ) )// position ) )
     {
       doReset();
 
@@ -223,13 +228,7 @@ public abstract class AbstractProfilePointHandler extends AbstractChartHandler
   {
     if( bounds == null || position == null )
       return false;
-
-    if( position.x < 0 )
-      return false;
-    else if( position.x > bounds.width )
-      return false;
-
-    return true;
+    return bounds.contains( position );
   }
 
   protected final boolean isOutOfRange( )
@@ -248,20 +247,11 @@ public abstract class AbstractProfilePointHandler extends AbstractChartHandler
     return false;
   }
 
-  protected boolean isOutOfRange( final Integer x )
-  {
-    final IChartComposite chart = getChart();
-    if( x < 0 )
-      return true;
-
-    return x > chart.getPlotRect().width;
-  }
-
   protected final void doReset( )
   {
-    setProfile( null );
+   // setProfile( null );
     setBreite( null );
-
+    setToolInfo( null );
     setCursor( SWT.CURSOR_ARROW );
   }
 
