@@ -54,13 +54,14 @@ import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 
 /**
- * Helper class that guesses the timestamp from a given timeseries.
+ * Helper class that guesses the timestamp from a given timeseries.<br/>
+ * REMARK: This class priorizes times in Winter, and only tests summer times, if no winter times are available at all.
+ * All/Most of the old projects have problematic timeseries.
  * 
  * @author Holger Albert
  */
 public class TimestampGuesser
 {
-
   /**
    * The tuple model of a timeseries.
    */
@@ -92,12 +93,8 @@ public class TimestampGuesser
    */
   public LocalTime execute( ) throws SensorException
   {
-
-    /**
-     * Used to determine the number of equal timestamps.
-     */
+    /* Used to determine the number of equal timestamps. */
     final Multiset<LocalTime> timestampsDSTWinter = HashMultiset.create();
-
     final Multiset<LocalTime> timestampsDSTSummer = HashMultiset.create();
 
     /* Get the number of test steps. */
@@ -113,19 +110,15 @@ public class TimestampGuesser
     {
       /* REMARK: We need UTC here. */
       final Date date = (Date) m_timeseries.get( i, dateAxis );
-
-      /*
-       * differ between daylight saving winter and summer times. old zml daylight saving summer times are possible
-       * broken!
-       */
-      final boolean dstWinterTime = CalendarUtilities.isDSTWinterTime( date );
-
       final Calendar calendar = Calendar.getInstance( TimeZone.getTimeZone( "UTC" ) ); //$NON-NLS-1$
       calendar.setTime( date );
 
+      /* Differ between daylight saving winter and summer times. */
+      /* Old zml daylight saving summer times are possible broken! */
+      final boolean dstWinterTime = CalendarUtilities.isDSTWinterTime( date );
+
       /* REMARK: The ISO Chronolgy used will have the UTC timezone set. */
       /* REMARK: See the source code of the constructor. */
-
       final LocalTime timestamp = new LocalTime( calendar.get( Calendar.HOUR_OF_DAY ), calendar.get( Calendar.MINUTE ) );
       if( dstWinterTime )
         timestampsDSTWinter.add( timestamp );
@@ -133,6 +126,7 @@ public class TimestampGuesser
         timestampsDSTSummer.add( timestamp );
     }
 
+    /* We want to use the one, with the most occurences. */
     final LocalTime timestamp = doGuessTimestamp( timestampsDSTWinter );
     if( timestamp != null )
       return timestamp;
@@ -140,14 +134,20 @@ public class TimestampGuesser
     return doGuessTimestamp( timestampsDSTSummer );
   }
 
-  private LocalTime doGuessTimestamp( final Multiset<LocalTime> set )
+  /**
+   * This function returns the timestamp with the most occurances.
+   * 
+   * @param timestamps
+   *          The timestamps
+   * @return The timestamp with the most occurances.
+   */
+  private LocalTime doGuessTimestamp( final Multiset<LocalTime> timestamps )
   {
-    /* We want to use the one, with the most occurences. */
     LocalTime foundTimestamp = null;
     int maxCount = 0;
-    for( final LocalTime timestamp : set )
+    for( final LocalTime timestamp : timestamps )
     {
-      final int count = set.count( timestamp );
+      final int count = timestamps.count( timestamp );
       if( count > maxCount )
       {
         foundTimestamp = timestamp;
