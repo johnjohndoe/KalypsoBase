@@ -614,7 +614,6 @@ public class TableCursor extends Canvas
         // So the cursor will sit on the first row and but shows the label of the selected row.
         // Commenting out this line fixes the bug, but we loose the feature, that the table follows the cursor.
         m_table.showItem( row );
-
       }
       if( this.m_column != column && column != null )
       {
@@ -627,7 +626,32 @@ public class TableCursor extends Canvas
       final int columnIndex = column == null ? 0 : m_table.indexOf( column );
       if( getVisible() )
       {
-        setBounds( row.getBounds( columnIndex ) );
+        final Rectangle bounds = row.getBounds( columnIndex );
+
+        // BUGFIX: for the above comment; we check if we are not scrolled,
+        // but the top index is != 0. IN this case we need to fix the y-position
+        // of the row bounds.
+        // Does not work for large tables, as they will be scrolled.
+        final int topIndex = m_table.getTopIndex();
+
+        final ScrollBar verticalBar = m_table.getVerticalBar();
+        final boolean visible = verticalBar.isVisible();
+
+        if( topIndex != 0 && !visible )
+        {
+          final Rectangle bounds0 = row.getBounds( 0 );
+          /*
+           * If topindex is not 0, but bound of our element are at position of the 0-element, something is wrong.
+           */
+          if( bounds0.y == bounds.y )
+          {
+            /* Recalculate bounds in this case only */
+            bounds.y += topIndex * m_table.getItemHeight();
+          }
+        }
+        // BUGFIX: end
+
+        setBounds( bounds );
         redraw();
       }
       if( notify )
