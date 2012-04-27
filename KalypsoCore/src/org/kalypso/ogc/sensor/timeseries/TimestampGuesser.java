@@ -89,7 +89,7 @@ public class TimestampGuesser
   }
 
   /**
-   * This function gueses the timestamp.
+   * This function guesses the timestamp.
    * 
    * @return The timestamp in UTC.
    */
