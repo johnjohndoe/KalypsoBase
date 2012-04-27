@@ -151,7 +151,7 @@ public class InvalidateChartJob extends UIJob
 
     job.setSystem( true );
     job.setUser( false );
-    job.schedule( 50 );
+    job.schedule( 200 );
 
   }
 

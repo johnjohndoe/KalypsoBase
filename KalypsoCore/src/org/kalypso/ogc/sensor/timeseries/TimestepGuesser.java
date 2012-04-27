@@ -80,8 +80,9 @@ class TimestepGuesser
 
     final IAxis dateAxis = AxisUtils.findDateAxis( m_timeseries.getAxes() );
     if( dateAxis == null )
-      throw new IllegalArgumentException( "Argument mus tbe a timeseries" ); //$NON-NLS-1$
+      throw new IllegalArgumentException( "Argument must be a timeseries" ); //$NON-NLS-1$
 
+    // TODO only guess time steps of daylight saving winter time
     for( int i = 0; i < testSteps - 1; i++ )
     {
       final Date date1 = (Date) m_timeseries.get( i, dateAxis );
