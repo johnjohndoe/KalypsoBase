@@ -43,17 +43,18 @@ package org.kalypso.model.wspm.ui.commands;
 import java.awt.Insets;
 
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.graphics.Transform;
-import org.eclipse.swt.widgets.Composite;
+import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
+import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 
+import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.FONTSTYLE;
@@ -84,27 +85,46 @@ public class MousePositionChartHandler extends AbstractProfilePointHandler
     title.setPositionVertical( ALIGNMENT.BOTTOM );
     title.setTextAnchorY( ALIGNMENT.BOTTOM );
 
-    // FIXME: use font of chart
-    final FontData fontData = JFaceResources.getTextFont().getFontData()[0];
-
-    final RGB rgbFill = new RGB( 255, 255, 255 );
-    final RGB rgbText = new RGB( 0, 0, 0 );
-    title.setTextStyle( new TextStyle( fontData.getHeight(), fontData.getName(), rgbText, rgbFill, FONTSTYLE.NORMAL, FONTWEIGHT.NORMAL, ALIGNMENT.LEFT, 255, true ) );
-
+    final IChartModel model = chart.getChartModel();
+    if( model == null )
+    {
+      final FontData fontData = JFaceResources.getTextFont().getFontData()[0];
+      final RGB rgbFill = new RGB( 255, 255, 255 );
+      final RGB rgbText = new RGB( 0, 0, 0 );
+      title.setTextStyle( new TextStyle( fontData.getHeight(), fontData.getName(), rgbText, rgbFill, FONTSTYLE.NORMAL, FONTWEIGHT.NORMAL, ALIGNMENT.LEFT, 255, true ) );
+    }
+    else
+    {
+      title.setTextStyle( model.getSettings().getTextStyle() );
+    }
     m_labelRenderer = new GenericChartLabelRenderer( title );
+  }
+
+  @Override
+  public void mouseMove( final MouseEvent e )
+  {
+    super.mouseMove( e );
+    final IChartComposite chart = getChart();
+    final AbstractProfilTheme theme = findProfileTheme( chart );
+    String msg = "";
+    if( !Objects.isNull( theme ) )
+    {
+      final Point position = ChartHandlerUtilities.screen2plotPoint( new Point( e.x, e.y ), chart.getPlotRect() );
+      final ICoordinateMapper mapper = theme.getCoordinateMapper();
+      final Number hoehe = mapper.getTargetAxis().screenToNumeric( position.y );
+      final Number breite = mapper.getDomainAxis().screenToNumeric( position.x );
+      msg = String.format( Messages.getString( "MousePositionChartHandler_0" ), breite, hoehe ); //$NON-NLS-1$
+    }
+    m_labelRenderer.getTitleTypeBean().setLabel( msg );
+    forceRedrawEvent();
   }
 
   @Override
   protected void doMouseMove( final AbstractProfilTheme theme, final Point position )
   {
-    final ICoordinateMapper mapper = theme.getCoordinateMapper();
-    final Number hoehe = mapper.getTargetAxis().screenToNumeric( position.y );
-
-    final String msg = String.format( Messages.getString( "MousePositionChartHandler_0" ), getBreite(), hoehe ); //$NON-NLS-1$
-
-    m_labelRenderer.getTitleTypeBean().setLabel( msg );
-
-    forceRedrawEvent();
+    /**
+     * Do nothing @see mouseMove( final MouseEvent e )
+     */
   }
 
   @Override
@@ -117,28 +137,7 @@ public class MousePositionChartHandler extends AbstractProfilePointHandler
   public void paintControl( final PaintEvent e )
   {
     final IChartComposite chart = getChart();
-
-    if( chart instanceof Composite )
-    {
-      // FIXME: it should not be necessary to cast in order to get the screen bounds
-      final Rectangle bounds = ((Composite) chart).getBounds();
-      final GC gc = e.gc;
-
-      // FIXME: necessary to reset the transformation because of the transformation in
-      // ChartImageComposite#handlePaint (which makes no sense, see comment there).
-
-      final Transform oldTransform = new Transform( gc.getDevice() );
-      final Transform transform = new Transform( gc.getDevice() );
-
-      gc.getTransform( oldTransform );
-      gc.setTransform( transform );
-
-      m_labelRenderer.paint( gc, bounds );
-
-      gc.setTransform( oldTransform );
-
-      oldTransform.dispose();
-      transform.dispose();
-    }
+    final Rectangle rect = chart.getPlotRect();
+    m_labelRenderer.paint( e.gc, new Rectangle( -rect.x, -rect.y, e.width, e.height ) );
   }
 }

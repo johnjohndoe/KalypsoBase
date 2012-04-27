@@ -93,8 +93,11 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
   @Override
   protected void doMouseMove( final AbstractProfilTheme theme, final Point position )
   {
+    if( isOutOfRange( position.x ) )
+    {
+      setToolInfo( null );
+    }
     final ICoordinateMapper mapper = theme.getCoordinateMapper();
-
     if( isSnapPoint( theme, position.x ) )
     {
       m_doMouseDown = false;
@@ -110,9 +113,6 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
       position.y = mapper.getTargetAxis().numericToScreen( hoehe );
 
       final String msg = String.format( CommonMessages.INSERT_POINT_TOOLTIP, getBreite(), hoehe ); //$NON-NLS-1$
-
-      // TODO: hide tooltip if mouse is not in chart
-
       final EditInfo info = new EditInfo( theme, null, null, getBreite(), msg, new Point( position.x + 5, position.y + 45 ) );
       setToolInfo( info );
 

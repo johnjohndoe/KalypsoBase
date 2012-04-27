@@ -91,7 +91,7 @@ public class ValidatorRuleSet
       {
         try
         {
-          KalypsoModelWspmCoreDebug.DEBUG_VALIDATION_MARKER.printf( " (validation_performance_check)    rule: %s, %s\n", rule.getID(), DateFormat.getTimeInstance().format( Calendar.getInstance().getTime() ) ); //$NON-NLS-1$
+          KalypsoModelWspmCoreDebug.DEBUG_VALIDATION_MARKER.printf( "rule: %s, %s\n", rule.getID(), DateFormat.getTimeInstance().format( Calendar.getInstance().getTime() ) ); //$NON-NLS-1$
 
           rule.validate( profil, collector );
 

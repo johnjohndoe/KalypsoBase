@@ -9,10 +9,12 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
@@ -141,7 +143,7 @@ public abstract class AbstractChartHandler implements IChartHandler
   @Override
   public void paintControl( final PaintEvent e )
   {
-    paintTooltipInfo( e.gc );
+     paintTooltipInfo( e.gc );
   }
 
   protected final void paintTooltipInfo( final GC gc )
@@ -159,6 +161,20 @@ public abstract class AbstractChartHandler implements IChartHandler
       m_tooltipPainter.setTooltip( m_tooltip.getText() );
       m_tooltipPainter.paint( gc, position );
     }
+  }
+
+  protected boolean isOutOfRange( final Integer x )
+  {
+    final IChartComposite chart = getChart();
+    final Rectangle rect = chart.getPlotRect();
+    return rect.contains( x, rect.y +1 ) == false;
+  }
+
+  protected boolean isOutOfRange( final Point screen )
+  {
+    final IChartComposite chart = getChart();
+    final Rectangle rect = RectangleUtils.inflateRect( chart.getPlotRect(), 1 );
+    return rect.contains( screen ) == false;
   }
 
   @Override
