@@ -107,7 +107,7 @@ public class ZmlCommandHideColumns extends AbstractHandler implements IElementUp
     final IZmlTable table = ZmlHandlerUtil.getTable( element );
     if( table == null )
     {
-      element.setChecked( true );
+// element.setChecked( true );
       return;
     }
 
