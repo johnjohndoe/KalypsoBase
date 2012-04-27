@@ -206,4 +206,20 @@ public final class CalendarUtilities
     return calendar;
   }
 
+  /**
+   * the given date is daylight saving winter time?
+   */
+  public static boolean isDSTWinterTime( final Date date )
+  {
+    final TimeZone timezone = TimeZone.getTimeZone( "Europe/Berlin" );
+    final Calendar calendar = Calendar.getInstance( timezone );
+    calendar.setTime( date );
+
+    final int current = timezone.getOffset( calendar.getTimeInMillis() );
+    calendar.set( Calendar.MONTH, 0 );
+    final int winter = timezone.getOffset( calendar.getTimeInMillis() );
+
+    return current == winter;
+  }
+
 }
