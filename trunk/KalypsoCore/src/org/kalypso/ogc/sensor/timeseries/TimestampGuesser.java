@@ -45,6 +45,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import org.joda.time.LocalTime;
+import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
@@ -59,10 +60,6 @@ import com.google.common.collect.Multiset;
  */
 public class TimestampGuesser
 {
-  /**
-   * Used to determine the number of equal timestamps.
-   */
-  private final Multiset<LocalTime> m_timestamps = HashMultiset.create();
 
   /**
    * The tuple model of a timeseries.
@@ -95,6 +92,14 @@ public class TimestampGuesser
    */
   public LocalTime execute( ) throws SensorException
   {
+
+    /**
+     * Used to determine the number of equal timestamps.
+     */
+    final Multiset<LocalTime> timestampsDSTWinter = HashMultiset.create();
+
+    final Multiset<LocalTime> timestampsDSTSummer = HashMultiset.create();
+
     /* Get the number of test steps. */
     final int testSteps = getTestSteps();
 
@@ -108,24 +113,41 @@ public class TimestampGuesser
     {
       /* REMARK: We need UTC here. */
       final Date date = (Date) m_timeseries.get( i, dateAxis );
+
+      /*
+       * differ between daylight saving winter and summer times. old zml daylight saving summer times are possible
+       * broken!
+       */
+      final boolean dstWinterTime = CalendarUtilities.isDSTWinterTime( date );
+
       final Calendar calendar = Calendar.getInstance( TimeZone.getTimeZone( "UTC" ) ); //$NON-NLS-1$
       calendar.setTime( date );
 
       /* REMARK: The ISO Chronolgy used will have the UTC timezone set. */
       /* REMARK: See the source code of the constructor. */
 
-      // FIXME only for dst winter (daylight saving time) values
-
       final LocalTime timestamp = new LocalTime( calendar.get( Calendar.HOUR_OF_DAY ), calendar.get( Calendar.MINUTE ) );
-      m_timestamps.add( timestamp );
+      if( dstWinterTime )
+        timestampsDSTWinter.add( timestamp );
+      else
+        timestampsDSTSummer.add( timestamp );
     }
 
+    final LocalTime timestamp = doGuessTimestamp( timestampsDSTWinter );
+    if( timestamp != null )
+      return timestamp;
+
+    return doGuessTimestamp( timestampsDSTSummer );
+  }
+
+  private LocalTime doGuessTimestamp( final Multiset<LocalTime> set )
+  {
     /* We want to use the one, with the most occurences. */
     LocalTime foundTimestamp = null;
     int maxCount = 0;
-    for( final LocalTime timestamp : m_timestamps )
+    for( final LocalTime timestamp : set )
     {
-      final int count = m_timestamps.count( timestamp );
+      final int count = set.count( timestamp );
       if( count > maxCount )
       {
         foundTimestamp = timestamp;
