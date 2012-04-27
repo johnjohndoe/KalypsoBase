@@ -48,7 +48,7 @@ import org.apache.commons.collections.ExtendedProperties;
 
 /**
  * Default implementation of the IPublishingConfiguration interface
- *
+ * 
  * @author schlienger
  */
 public class PublishingConfiguration extends ExtendedProperties
@@ -97,6 +97,9 @@ public class PublishingConfiguration extends ExtendedProperties
   @Override
   public synchronized Object put( final Object key, final Object value )
   {
+    if( value == null )
+      return null;
+
     final Object put = super.put( key, value );
 
     fireConfigurationChanged( (String) key );
