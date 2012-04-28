@@ -1,4 +1,4 @@
-package org.kalypso.ui.wizard.wms.utils;
+package org.kalypso.ui.addlayer.internal.wms;
 
 import java.net.URL;
 
@@ -18,7 +18,7 @@ import org.kalypso.ogc.gml.wms.utils.KalypsoWMSUtilities;
  *
  * @author Holger Albert
  */
-public class CapabilitiesGetter implements ICoreRunnableWithProgress
+class CapabilitiesGetter implements ICoreRunnableWithProgress
 {
   /**
    * The service URL.

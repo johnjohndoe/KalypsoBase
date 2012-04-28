@@ -27,7 +27,7 @@
  * 
  * ---------------------------------------------------------------------------------------------------
  */
-package org.kalypso.ui.wizard.wms.utils;
+package org.kalypso.ui.addlayer.internal.wms;
 
 import org.deegree.ogcwebservices.wms.capabilities.Layer;
 import org.deegree.ogcwebservices.wms.capabilities.WMSCapabilities;
@@ -35,25 +35,16 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 /**
- * TODO: insert type comment here
- * 
  * @author doemming
  */
 public class WMSCapabilitiesLabelProvider extends LabelProvider
 {
-
-  /**
-   * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
-   */
   @Override
   public Image getImage( final Object element )
   {
     return super.getImage( element );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
-   */
   @Override
   public String getText( final Object element )
   {
