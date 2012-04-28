@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.wizard.wms.pages;
+package org.kalypso.ui.addlayer.internal.wms;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -91,9 +91,6 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.i18n.Messages;
-import org.kalypso.ui.wizard.wms.utils.CapabilitiesGetter;
-import org.kalypso.ui.wizard.wms.utils.WMSCapabilitiesContentProvider;
-import org.kalypso.ui.wizard.wms.utils.WMSCapabilitiesLabelProvider;
 
 /**
  * This is a page for importing a WMS Layer.

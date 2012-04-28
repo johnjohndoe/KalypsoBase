@@ -43,25 +43,26 @@ package org.kalypso.ui.wizard.wms;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 
-import org.apache.commons.io.IOUtils;
 import org.deegree.ogcwebservices.wms.capabilities.Layer;
 import org.deegree.ogcwebservices.wms.capabilities.Style;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbench;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoAddLayerPlugin;
 import org.kalypso.ui.KalypsoServiceConstants;
 import org.kalypso.ui.action.AddThemeCommand;
+import org.kalypso.ui.addlayer.internal.wms.ImportWmsWizardPage;
 import org.kalypso.ui.i18n.Messages;
 import org.kalypso.ui.wizard.AbstractDataImportWizard;
-import org.kalypso.ui.wizard.wms.pages.ImportWmsWizardPage;
 
 /**
  * Wizard for importing WMS sources.
@@ -81,16 +82,10 @@ public class ImportWmsSourceWizard extends AbstractDataImportWizard
    */
   private ImportWmsWizardPage m_page;
 
-  /**
-   * Catalog.
-   */
-  private ArrayList<String> m_catalog;
+  private final List<String> m_catalog = new ArrayList<String>();
 
   public ImportWmsSourceWizard( )
   {
-    m_page = null;
-    m_catalog = new ArrayList<String>();
-
     setNeedsProgressMonitor( true );
 
     /* Get the dialog settings. */
@@ -99,22 +94,48 @@ public class ImportWmsSourceWizard extends AbstractDataImportWizard
     /* If not available, add a section inside the settings of the plugin. */
     if( dialogSettings == null )
     {
-      final IDialogSettings settings = KalypsoAddLayerPlugin.getDefault().getDialogSettings();
+      final IDialogSettings settings = DialogSettingsUtils.getDialogSettings( KalypsoAddLayerPlugin.getDefault(), IMPORT_WMS_WIZARD );
+      setDialogSettings( settings );
+    }
+  }
 
-      /* Cannot do anything, if even the plugin has no settings. */
-      if( settings == null )
-        return;
+  @Override
+  public void init( final IWorkbench workbench, final IStructuredSelection selection )
+  {
+    try (final InputStream is = getClass().getResourceAsStream( "resources/kalypsoOWS.catalog" )) //$NON-NLS-1$
+    {
+      // read service catalog file
+      readCatalog( is );
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
 
-      /* If available, check, if there is a section from this wizard. */
-      IDialogSettings section = settings.getSection( IMPORT_WMS_WIZARD );
-      if( section == null )
-      {
-        /* There is none available, add a new one. */
-        section = settings.addNewSection( IMPORT_WMS_WIZARD );
-      }
+      m_catalog.clear();
+    }
+  }
 
-      /* Finally set it. */
-      setDialogSettings( section );
+  @Override
+  public void addPages( )
+  {
+    m_page = new ImportWmsWizardPage( "WmsImportPage", Messages.getString( "org.kalypso.ui.wizard.wms.ImportWmsSourceWizard.0" ), ImageProvider.IMAGE_UTIL_UPLOAD_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
+    addPage( m_page );
+  }
+
+  private void readCatalog( final InputStream is ) throws IOException
+  {
+    m_catalog.clear();
+
+    // use properties to parse catalog: dont do everything yourself
+    // fixes bug with '=' inside of URLs
+    final Properties properties = new Properties();
+    properties.load( is );
+
+    final Set<Entry<Object, Object>> name = properties.entrySet();
+    for( final Entry<Object, Object> entry : name )
+    {
+      if( entry.getKey().toString().startsWith( KalypsoServiceConstants.WMS_LINK_TYPE ) )
+        m_catalog.add( entry.getValue().toString() );
     }
   }
 
@@ -207,50 +228,5 @@ public class ImportWmsSourceWizard extends AbstractDataImportWizard
     }
 
     return true;
-  }
-
-  @Override
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
-  {
-    // read service catalog file
-    final InputStream is = getClass().getResourceAsStream( "resources/kalypsoOWS.catalog" ); //$NON-NLS-1$
-    try
-    {
-      readCatalog( is );
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-
-      m_catalog.clear();
-    }
-    finally
-    {
-      IOUtils.closeQuietly( is );
-    }
-  }
-
-  @Override
-  public void addPages( )
-  {
-    m_page = new ImportWmsWizardPage( "WmsImportPage", Messages.getString( "org.kalypso.ui.wizard.wms.ImportWmsSourceWizard.0" ), ImageProvider.IMAGE_UTIL_UPLOAD_WIZ ); //$NON-NLS-1$ //$NON-NLS-2$
-    addPage( m_page );
-  }
-
-  public void readCatalog( final InputStream is ) throws IOException
-  {
-    m_catalog.clear();
-
-    // use properties to parse catalog: dont do everything yourself
-    // fixes bug with '=' inside of URLs
-    final Properties properties = new Properties();
-    properties.load( is );
-
-    final Set<Entry<Object, Object>> name = properties.entrySet();
-    for( final Entry<Object, Object> entry : name )
-    {
-      if( entry.getKey().toString().startsWith( KalypsoServiceConstants.WMS_LINK_TYPE ) )
-        m_catalog.add( entry.getValue().toString() );
-    }
   }
 }

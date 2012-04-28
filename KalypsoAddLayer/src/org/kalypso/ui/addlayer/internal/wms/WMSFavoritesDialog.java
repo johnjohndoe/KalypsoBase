@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.wizard.wms.pages;
+package org.kalypso.ui.addlayer.internal.wms;
 
 import java.util.LinkedList;
 import java.util.List;
