@@ -31,6 +31,8 @@ public final class AddLayerImages
 {
   public final static String ICON_REFRESH_CAPABILITIES = "icon/refreshCapabilities.gif"; //$NON-NLS-1$
 
+  public final static String ICON_OPEN_CAPABILITIES = "icon/openCapabilities.gif"; //$NON-NLS-1$
+
   public final static ImageDescriptor getImageDescriptor( final String path )
   {
     return AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoAddLayerPlugin.getId(), path );

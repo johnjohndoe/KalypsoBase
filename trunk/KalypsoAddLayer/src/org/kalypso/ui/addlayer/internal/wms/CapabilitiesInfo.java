@@ -22,6 +22,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.deegree.ogcwebservices.wms.capabilities.WMSCapabilities;
 import org.deegree.owscommon_new.ServiceIdentification;
 import org.eclipse.core.runtime.Assert;
@@ -37,6 +38,8 @@ import org.kalypso.ui.addlayer.internal.ImageProviderExtensions;
  */
 public class CapabilitiesInfo
 {
+  private static final String STR_INVALID_SERVER_ADDRESS = "Invalid server address";
+
   private static final String STR_NOT_LOADED = "<capabilities not loaded>";
 
   private IStatus m_status = new Status( IStatus.INFO, KalypsoAddLayerPlugin.getId(), STR_NOT_LOADED );
@@ -70,10 +73,13 @@ public class CapabilitiesInfo
     try
     {
       m_url = new URL( m_address );
+
+      if( !getValidAddress() )
+        m_status = new Status( IStatus.WARNING, KalypsoAddLayerPlugin.getId(), STR_INVALID_SERVER_ADDRESS, null );
     }
     catch( final MalformedURLException e )
     {
-      m_status = new Status( IStatus.WARNING, KalypsoAddLayerPlugin.getId(), "Invalid server address", e );
+      m_status = new Status( IStatus.WARNING, KalypsoAddLayerPlugin.getId(), STR_INVALID_SERVER_ADDRESS, e );
     }
   }
 
@@ -163,5 +169,18 @@ public class CapabilitiesInfo
 
     final ServiceIdentification identification = m_capabilities.getServiceIdentification();
     return identification.getAbstractString();
+  }
+
+  public boolean getValidAddress( )
+  {
+    final URL url = getURL();
+    if( url == null )
+      return false;
+
+    final String host = url.getHost();
+    if( StringUtils.isBlank( host ) )
+      return false;
+
+    return true;
   }
 }

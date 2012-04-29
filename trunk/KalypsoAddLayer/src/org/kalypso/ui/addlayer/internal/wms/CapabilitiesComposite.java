@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.databinding.swt.ISWTObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
@@ -35,7 +36,9 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.core.status.StatusCompositeValue;
 import org.kalypso.ui.addlayer.internal.ImageProviderExtensions;
@@ -65,7 +68,10 @@ public class CapabilitiesComposite extends Composite
   private void createContent( )
   {
     createStatusControls();
-    // createAddressControls();
+    // FIXME: triggger from outside
+    if( false )
+      createAddressControls();
+    createOpenCapabilitiesControls();
     createImageProviderControls();
     createTitleControls();
     createAbstractControls();
@@ -89,6 +95,22 @@ public class CapabilitiesComposite extends Composite
     final ISWTObservableValue targetAddress = SWTObservables.observeText( addressField, new int[] { SWT.FocusOut, SWT.DefaultSelection } );
     final IObservableValue modelAddress = BeansObservables.observeValue( m_data, ImportWmsData.PROPERTY_ADDRESS );
     m_binding.bindValue( targetAddress, modelAddress );
+  }
+
+  private void createOpenCapabilitiesControls( )
+  {
+    /* placeholder */
+    new Label( this, SWT.NONE );
+
+    /* Open capabilities in external browser */
+    final Action openCapabilitiesAction = new OpenCapabilitiesAction( m_data );
+    final ImageHyperlink link = ActionHyperlink.createHyperlink( null, this, getStyle(), openCapabilitiesAction );
+    link.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+    /* Binding */
+    final ISWTObservableValue targetEnablement = SWTObservables.observeEnabled( link );
+    final IObservableValue modelEnablement = BeansObservables.observeValue( m_data, ICapabilitiesData.PROPERTY_VALID_ADDRESS );
+    m_binding.bindValue( targetEnablement, modelEnablement );
   }
 
   private void createImageProviderControls( )
