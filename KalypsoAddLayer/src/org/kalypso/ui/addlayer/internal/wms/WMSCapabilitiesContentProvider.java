@@ -40,13 +40,12 @@ import org.eclipse.jface.viewers.Viewer;
  *
  * @author doemming
  */
-public class WMSCapabilitiesContentProvider implements ITreeContentProvider
+class WMSCapabilitiesContentProvider implements ITreeContentProvider
 {
   @Override
   public Object[] getElements( final Object inputElement )
   {
-    return new Object[] { inputElement };
-// return getChildren( inputElement );
+    return getChildren( inputElement );
   }
 
   @Override
@@ -75,7 +74,7 @@ public class WMSCapabilitiesContentProvider implements ITreeContentProvider
   @Override
   public Object getParent( final Object element )
   {
-    return null; // dont known
+    return null; // don't known
   }
 
   @Override

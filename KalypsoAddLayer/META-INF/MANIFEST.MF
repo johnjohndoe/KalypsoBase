@@ -21,10 +21,7 @@ Export-Package: org.kalypso.ui,
  org.kalypso.ui.wizard.wfs,
  org.kalypso.ui.wizard.wfs.resources,
  org.kalypso.ui.wizard.wfs.test,
- org.kalypso.ui.wizard.wms,
- org.kalypso.ui.wizard.wms.pages,
- org.kalypso.ui.wizard.wms.resources,
- org.kalypso.ui.wizard.wms.utils
+ org.kalypso.ui.wizard.wms
 Require-Bundle: org.kalypso.ui;visibility:=reexport,
  org.junit;resolution:=optional,
  org.eclipse.core.expressions
