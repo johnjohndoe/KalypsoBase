@@ -129,7 +129,8 @@ public class URLGetter implements ICoreRunnableWithProgress
       {
         try
         {
-          getHttpClient().executeMethod( method );
+          final HttpClient httpClient = getHttpClient();
+          httpClient.executeMethod( method );
           setResult( method.getResponseBodyAsStream() );
         }
         catch( final IOException e )

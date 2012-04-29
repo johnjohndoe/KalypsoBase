@@ -86,10 +86,6 @@ public class WMSCapabilitiesLoader extends AbstractWMSCapabilitiesLoader
       monitor.worked( 25 );
       monitor.subTask( Messages.getString( "org.kalypso.ogc.gml.wms.loader.WMSCapabilitiesLoader.2" ) ); //$NON-NLS-1$
 
-      // TODO: why this getter stuff? why not just open the stream of the url?
-      // At least, please comment!
-      // FIXME: the whole CapabilitiesLoader should be execduted in an own thread, instead of usin the URL getter stuff
-
       /* Create a getter for retrieving the URL. */
       final URLGetter getter = URLGetter.createURLGetter( capabilitiesURL, getTimeout(), 0 );
 
