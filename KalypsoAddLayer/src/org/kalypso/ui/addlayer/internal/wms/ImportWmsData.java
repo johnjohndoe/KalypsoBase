@@ -80,7 +80,7 @@ public class ImportWmsData extends AbstractModelObject implements ICapabilitiesD
   private final IObservableSet m_chosenLayers = new WritableSet();
 
   /**
-   * This function inits the variables from the dialog settings, if available.
+   * This function initializes the variables from the dialog settings, if available.
    */
   public void init( final IDialogSettings settings )
   {
@@ -160,6 +160,12 @@ public class ImportWmsData extends AbstractModelObject implements ICapabilitiesD
     return m_currentService.getAddress();
   }
 
+  @Override
+  public boolean getValidAddress( )
+  {
+    return m_currentService.getValidAddress();
+  }
+
   public void setCurrentService( final CapabilitiesInfo service )
   {
     Assert.isNotNull( service );
@@ -170,6 +176,7 @@ public class ImportWmsData extends AbstractModelObject implements ICapabilitiesD
     final boolean oldMultiLayerEnablement = getMultiLayerEnabled();
 
     final CapabilitiesInfo oldService = m_currentService;
+    final boolean oldValidAddress = getValidAddress();
 
     m_currentService = service;
 
@@ -178,6 +185,7 @@ public class ImportWmsData extends AbstractModelObject implements ICapabilitiesD
     firePropertyChange( PROPERTY_CURRENT_SERVICE, oldService, m_currentService );
 
     firePropertyChange( PROPERTY_ADDRESS, oldService.getAddress(), m_currentService.getAddress() );
+    firePropertyChange( PROPERTY_VALID_ADDRESS, oldValidAddress, getValidAddress() );
     firePropertyChange( PROPERTY_IMAGE_PROVIDER, oldService.getImageProvider(), m_currentService.getImageProvider() );
 
     firePropertyChange( PROPERTY_LOAD_STATUS, oldService.getStatus(), m_currentService.getStatus() );

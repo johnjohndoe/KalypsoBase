@@ -29,6 +29,9 @@ public interface ICapabilitiesData extends IModelObject
 {
   String PROPERTY_ADDRESS = "address"; //$NON-NLS-1$
 
+  /* Boolean property, true, if address can be parsed as URL */
+  String PROPERTY_VALID_ADDRESS = "validAddress"; //$NON-NLS-1$
+
   String PROPERTY_IMAGE_PROVIDER = "imageProvider"; //$NON-NLS-1$
 
   String PROPERTY_LOAD_STATUS = "loadStatus"; // //$NON-NLS-1$
@@ -41,6 +44,7 @@ public interface ICapabilitiesData extends IModelObject
   // <element ref="wms:Abstract" minOccurs="0"/>
   String PROPERTY_ABSTRACT = "abstract"; // //$NON-NLS-1$
 
+
   // TODO: <element ref="wms:KeywordList" minOccurs="0"/>
 
   // TODO: <element ref="wms:OnlineResource"/>
@@ -52,6 +56,8 @@ public interface ICapabilitiesData extends IModelObject
   // TODO: <element ref="wms:MaxHeight" minOccurs="0"/>
 
   String getAddress( );
+
+  boolean getValidAddress( );
 
   String getImageProvider( );
 

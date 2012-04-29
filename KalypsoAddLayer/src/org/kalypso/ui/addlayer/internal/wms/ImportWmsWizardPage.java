@@ -236,7 +236,14 @@ public class ImportWmsWizardPage extends WizardPage
      * Refresh button
      */
     final Action loadAction = new LoadCapabilitiesAction( m_data );
-    ActionButton.createButton( null, panel, loadAction );
+    /* final Button loadButton = */ActionButton.createButton( null, panel, loadAction );
+
+    // Strange, does not work,...?
+// /* Binding */
+// final ISWTObservableValue targetEnablement = SWTObservables.observeEnabled( loadButton );
+// final IObservableValue modelEnablement = BeansObservables.observeValue( m_data,
+// ICapabilitiesData.PROPERTY_VALID_ADDRESS );
+// m_binding.bindValue( targetEnablement, modelEnablement );
 
     /**
      * Favorites button
