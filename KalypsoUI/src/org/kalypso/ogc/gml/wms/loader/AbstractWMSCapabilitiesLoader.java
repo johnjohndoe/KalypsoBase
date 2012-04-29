@@ -40,10 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.wms.loader;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import org.deegree.framework.xml.XMLException;
 import org.deegree.framework.xml.XMLFragment;
+import org.deegree.ogcwebservices.getcapabilities.InvalidCapabilitiesException;
 import org.deegree.ogcwebservices.wms.capabilities.WMSCapabilities;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -53,6 +56,7 @@ import org.kalypso.contribs.eclipse.core.net.Proxy;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.wms.deegree.document.KalypsoWMSCapabilitiesDocument;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.xml.sax.SAXException;
 
 /**
  * This loader loads the capabilities.
@@ -61,6 +65,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
  */
 public abstract class AbstractWMSCapabilitiesLoader implements ICapabilitiesLoader
 {
+  private static final String STR_FAILED_TO_LOAD_CAPABILITIES_DOCUMENT = "Failed to load capabilities document";
   /**
    * The timeout for the access.
    */
@@ -96,6 +101,9 @@ public abstract class AbstractWMSCapabilitiesLoader implements ICapabilitiesLoad
     /* HACK: Initialize once, to init the java-proxy settings, in case they are not set. */
     Proxy.getProxyService( KalypsoGisPlugin.getDefault() );
 
+    // FIXME: if the server returns a bad document or an error document, this gets lost here.
+    // Instead, we should read the response as a string and then try to parse it.
+
     try (InputStream inputStream = openCapabilitiesStream( serviceURL, monitor ))
     {
       /* This is a capabilities document from deegree, which was overwritten by Kalypso. */
@@ -114,15 +122,22 @@ public abstract class AbstractWMSCapabilitiesLoader implements ICapabilitiesLoad
 
       return capabilities;
     }
-    catch( final CoreException ex )
+    // TODO: better/more specific error messages
+    catch( final IOException e )
     {
-      throw ex;
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), STR_FAILED_TO_LOAD_CAPABILITIES_DOCUMENT, e ) );
     }
-    catch( final Exception ex )
+    catch( final XMLException e )
     {
-      // FIXME: we need better error handling
-      final String message = "Failed to load capabilities document";
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), message, ex ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), STR_FAILED_TO_LOAD_CAPABILITIES_DOCUMENT, e ) );
+    }
+    catch( final SAXException e )
+    {
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), STR_FAILED_TO_LOAD_CAPABILITIES_DOCUMENT, e ) );
+    }
+    catch( final InvalidCapabilitiesException e )
+    {
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), STR_FAILED_TO_LOAD_CAPABILITIES_DOCUMENT, e ) );
     }
   }
 }
