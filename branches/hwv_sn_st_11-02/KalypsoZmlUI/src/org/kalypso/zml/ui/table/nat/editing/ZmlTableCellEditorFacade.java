@@ -74,7 +74,7 @@ public class ZmlTableCellEditorFacade implements ICellEditor
   public ZmlTableCellEditorFacade( final ZmlModelViewport viewport )
   {
     m_textBoxEditor = new ZmlTableTextCellEditor( viewport );
-    m_checkBoxEditor = new ZmlTableCheckBoxCellEditor( viewport );
+    m_checkBoxEditor = new ZmlTableCheckBoxCellEditor();
   }
 
   private IZmlTableCellEditor getCellEditor( final String type )

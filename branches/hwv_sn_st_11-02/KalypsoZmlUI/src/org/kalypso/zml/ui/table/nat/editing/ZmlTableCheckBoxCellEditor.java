@@ -48,60 +48,19 @@ import net.sourceforge.nattable.widget.EditModeEnum;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 
 /**
- * zml check box cell editor - at the moment only needed for the prognose elbe polder control page
+ * zml check box cell editor
  * 
  * @author Dirk Kuch
  */
 public class ZmlTableCheckBoxCellEditor extends CheckBoxCellEditor implements IZmlTableCellEditor
 {
-  private final ZmlModelViewport m_viewport;
-
-  public ZmlTableCheckBoxCellEditor( final ZmlModelViewport viewport )
-  {
-    m_viewport = viewport;
-  }
 
   @Override
-  public Control doActivateCell( final Composite parent, final Object originalCanonicalValue, final Character initialEditValue, final EditModeEnum editMode, final ICellEditHandler editHandler, final LayerCell cell, final IConfigRegistry configRegistry )
+  public Control doActivateCell( final Composite parent, final Object originalCanonicalValue, final Character initialEditValue, final EditModeEnum mode, final ICellEditHandler editHandler, final LayerCell cell, final IConfigRegistry registry )
   {
-    return super.activateCell( parent, originalCanonicalValue, initialEditValue, editMode, editHandler, cell, configRegistry );
+    return super.activateCell( parent, originalCanonicalValue, initialEditValue, mode, editHandler, cell, registry );
   }
 
-  @Override
-  public void setCanonicalValue( final Object canonicalValue )
-  {
-    super.setCanonicalValue( canonicalValue );
-  }
-//
-// private String toDisplayValue( final Object canonicalValue )
-// {
-// if( !(canonicalValue instanceof IZmlModelValueCell) )
-// return "";
-//
-// final IZmlModelValueCell cell = (IZmlModelValueCell) canonicalValue;
-// final IZmlModelCellLabelProvider provider = cell.getStyleProvider();
-//
-// return provider.getPlainText( m_viewport, cell );
-// }
-//
-// private void selectText( )
-// {
-// final Text text = getTextControl();
-// final int textLength = text.getText().length();
-// if( textLength > 0 )
-// {
-// final EditorSelectionEnum selectionMode = getSelectionMode();
-// if( selectionMode == EditorSelectionEnum.ALL )
-// {
-// text.setSelection( 0, textLength );
-// }
-// else if( selectionMode == EditorSelectionEnum.END )
-// {
-// text.setSelection( textLength, textLength );
-// }
-// }
-// }
 }

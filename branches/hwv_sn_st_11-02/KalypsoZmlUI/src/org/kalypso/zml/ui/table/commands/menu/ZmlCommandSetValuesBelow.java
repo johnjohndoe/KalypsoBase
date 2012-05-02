@@ -42,12 +42,15 @@ package org.kalypso.zml.ui.table.commands.menu;
 
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.TupleModelDataSet;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.transaction.TupleModelTransaction;
 import org.kalypso.ogc.sensor.transaction.UpdateTupleModelDataSetCommand;
@@ -118,13 +121,7 @@ public class ZmlCommandSetValuesBelow extends AbstractHandler
         column.getTupleModel().execute( transaction );
       }
 
-      /**
-       * re-interpolate complete observation because of table view filter (like 12h view, stueztstellen view, etc)
-       */
-      final ZmlInterpolationWorker interpolationWorker = new ZmlInterpolationWorker( column );
-      interpolationWorker.execute( new NullProgressMonitor() );
-
-      // TODO status handling
+      doInterpolation( column );
 
       return Status.OK_STATUS;
     }
@@ -132,5 +129,20 @@ public class ZmlCommandSetValuesBelow extends AbstractHandler
     {
       throw new ExecutionException( "Aktualisieren der Werte fehlgeschlagen.", e );
     }
+  }
+
+  private void doInterpolation( final IZmlModelColumn column ) throws SensorException
+  {
+    final String type = column.getDataColumn().getValueAxis();
+    if( StringUtils.equalsIgnoreCase( ITimeseriesConstants.TYPE_POLDER_CONTROL, type ) )
+      return;
+
+    /**
+     * re-interpolate complete observation because of table view filter (like 12h view, stueztstellen ansicht, etc)
+     */
+    final ZmlInterpolationWorker interpolationWorker = new ZmlInterpolationWorker( column );
+    interpolationWorker.execute( new NullProgressMonitor() );
+
+    // TODO status handling
   }
 }
