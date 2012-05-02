@@ -75,25 +75,25 @@ public abstract class AbstractLineLayer extends AbstractChartLayer
       @Override
       public void paintSymbol( final GC gc, final Point size )
       {
-       
+
         /* Line Symbol */
         if( ls != null && ls.isVisible() && legendMode.contains( LEGEND_MODE_LINE ) )
         {
           final int sizeX = size.x;
           final int sizeY = size.y;
 
-          final List<Point> path = new ArrayList<Point>();
-          path.add( new Point( 0, sizeX / 2 ) );
-          path.add( new Point( sizeX / 5, sizeY / 2 ) );
-          path.add( new Point( sizeX / 5 * 2, sizeY / 4 ) );
-          path.add( new Point( sizeX / 5 * 3, sizeY / 4 * 3 ) );
-          path.add( new Point( sizeX / 5 * 4, sizeY / 2 ) );
-          path.add( new Point( sizeX, sizeY / 2 ) );
+          final Point[] path = new Point[6];
+          path[0] = new Point( 0, sizeX / 2 );
+          path[1] = new Point( sizeX / 5, sizeY / 2 );
+          path[2] = new Point( sizeX / 5 * 2, sizeY / 4 );
+          path[3] = new Point( sizeX / 5 * 3, sizeY / 4 * 3 );
+          path[4] = new Point( sizeX / 5 * 4, sizeY / 2 );
+          path[5] = new Point( sizeX, sizeY / 2 );
 
           drawLine( gc, path );
         }
 
-        if(ps != null && ps.isVisible() && legendMode.contains( LEGEND_MODE_POINT ) )
+        if( ps != null && ps.isVisible() && legendMode.contains( LEGEND_MODE_POINT ) )
         {
           final List<Point> path = new ArrayList<Point>();
           path.add( new Point( size.x / 2, size.y / 2 ) );
@@ -104,12 +104,6 @@ public abstract class AbstractLineLayer extends AbstractChartLayer
     };
 
     return new ILegendEntry[] { le };
-  }
-
-  // FIXME: give Point[] instead of List<Point>
-  protected void drawLine( final GC gc, final List<Point> path )
-  {
-    drawLine( gc, path.toArray( new Point[] {} ) );
   }
 
   protected void drawLine( final GC gc, final Point... paths )
@@ -138,7 +132,7 @@ public abstract class AbstractLineLayer extends AbstractChartLayer
       lineStyle = getStyleSet().getStyle( "line" );// default style in older .kod's
     if( lineStyle == null )
       return getStyle( ILineStyle.class );
-    
+
     return (ILineStyle) lineStyle;
   }
 

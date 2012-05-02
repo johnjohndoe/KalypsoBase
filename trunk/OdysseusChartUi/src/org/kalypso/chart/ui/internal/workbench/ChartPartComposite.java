@@ -97,7 +97,7 @@ public class ChartPartComposite implements IChartPart
 
   private ChartPartListener m_chartPartListener;
 
-  private final IWorkbenchPart m_part;
+  protected final IWorkbenchPart m_part;
 
   private Composite m_composite = null;
 
