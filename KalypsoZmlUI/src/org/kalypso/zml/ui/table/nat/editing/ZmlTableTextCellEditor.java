@@ -56,7 +56,7 @@ import org.kalypso.zml.core.table.model.references.labeling.IZmlModelCellLabelPr
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 
 /**
- * zml text cell editor - to edit number and string values
+ * zml text cell editor - used for editing of number and string values
  * 
  * @author Dirk Kuch
  */
@@ -110,10 +110,10 @@ public class ZmlTableTextCellEditor extends TextCellEditor implements IZmlTableC
   }
 
   @Override
-  public Control doActivateCell( final Composite parent, final Object originalCanonicalValue, final Character initialEditValue, final EditModeEnum editMode, final ICellEditHandler editHandler, final LayerCell cell, final IConfigRegistry cr )
+  public Control doActivateCell( final Composite parent, final Object originalCanonicalValue, final Character initialEditValue, final EditModeEnum mode, final ICellEditHandler editHandler, final LayerCell cell, final IConfigRegistry cr )
   {
     /* disable obsolete edit context menu */
-    final Text text = (Text) super.activateCell( parent, originalCanonicalValue, initialEditValue, editMode, editHandler, cell, cr );
+    final Text text = (Text) super.activateCell( parent, originalCanonicalValue, initialEditValue, mode, editHandler, cell, cr );
     text.setMenu( new Menu( parent ) );
 
     return text;
