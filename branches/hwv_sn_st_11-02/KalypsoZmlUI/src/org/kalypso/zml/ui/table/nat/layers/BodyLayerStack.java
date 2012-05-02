@@ -12,6 +12,11 @@ import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 import org.kalypso.zml.ui.table.nat.base.ZmlModelDataProvider;
 import org.kalypso.zml.ui.table.nat.base.ZmlModelRowAccesor;
 
+/**
+ * Zml Table base layer.
+ * 
+ * @author Dirk Kuch
+ */
 public class BodyLayerStack extends AbstractLayerTransform
 {
   private final ZmlTableSelectionLayer m_selectionLayer;
@@ -39,7 +44,6 @@ public class BodyLayerStack extends AbstractLayerTransform
 
     dataLayer.unregisterCommandHandler( UpdateDataCommand.class );
     dataLayer.registerCommandHandler( new ZmlTableUpdateDataCommandHandler( dataLayer ) );
-
   }
 
   public ViewportLayer getViewportLayer( )

@@ -109,9 +109,9 @@ public class ZmlTableTextCellEditor extends TextCellEditor implements IZmlTableC
   }
 
   @Override
-  public Control doActivateCell( final Composite parent, final Object originalCanonicalValue, final Character initialEditValue, final EditModeEnum editMode, final ICellEditHandler editHandler, final LayerCell cell, final IConfigRegistry configRegistry )
+  public Control doActivateCell( final Composite parent, final Object originalCanonicalValue, final Character initialEditValue, final EditModeEnum editMode, final ICellEditHandler editHandler, final LayerCell cell, final IConfigRegistry cr )
   {
-    return super.activateCell( parent, originalCanonicalValue, initialEditValue, editMode, editHandler, cell, configRegistry );
+    return super.activateCell( parent, originalCanonicalValue, initialEditValue, editMode, editHandler, cell, cr );
   }
 
 }

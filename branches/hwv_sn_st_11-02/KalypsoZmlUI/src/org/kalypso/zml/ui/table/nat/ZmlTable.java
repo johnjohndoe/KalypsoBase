@@ -82,6 +82,7 @@ import org.kalypso.zml.ui.table.ZmlTableComposite;
 import org.kalypso.zml.ui.table.nat.base.ZmlModelCellDisplayConverter;
 import org.kalypso.zml.ui.table.nat.base.ZmlModelRowHeaderDisplayConverter;
 import org.kalypso.zml.ui.table.nat.context.menu.NatTableContextMenuSupport;
+import org.kalypso.zml.ui.table.nat.editing.ZmlEditBindings;
 import org.kalypso.zml.ui.table.nat.editing.ZmlModelColumnEditingRule;
 import org.kalypso.zml.ui.table.nat.editing.ZmlTableCellEditorFacade;
 import org.kalypso.zml.ui.table.nat.layers.BodyLayerStack;
@@ -162,6 +163,13 @@ public class ZmlTable extends Composite implements IZmlTable
       @Override
       protected void addAlternateRowColoringConfig( final CompositeLayer layer )
       {
+        // disable alternating row coloring
+      }
+
+      @Override
+      protected void addEditingUIConfig( )
+      {
+        addConfiguration( new ZmlEditBindings( m_viewport ) );
       }
     } );
 
