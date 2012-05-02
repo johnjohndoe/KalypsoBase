@@ -83,7 +83,7 @@ public class ZmlModelValueCell extends AbstractZmlCell implements IZmlModelValue
 
   private final ZmlModelCellLabelProvider m_styleProvider;
 
-  private Number m_oldRuleValue;
+  private Object m_oldRuleValue;
 
   private String m_oldRuleSource;
 
@@ -127,15 +127,15 @@ public class ZmlModelValueCell extends AbstractZmlCell implements IZmlModelValue
   }
 
   @Override
-  public Number getValue( ) throws SensorException
+  public Object getValue( ) throws SensorException
   {
-    return (Number) getColumn().get( getModelIndex(), getColumn().getValueAxis() );
+    return getColumn().get( getModelIndex(), getColumn().getValueAxis() );
   }
 
   @Override
-  public void doUpdate( final Number value, final String source, final Integer status ) throws SensorException
+  public void doUpdate( final Object value, final String source, final Integer status ) throws SensorException
   {
-    final Number oldValue = getValue();
+    final Object oldValue = getValue();
     if( Objects.equal( value, oldValue ) )
       return;
 
@@ -270,7 +270,7 @@ public class ZmlModelValueCell extends AbstractZmlCell implements IZmlModelValue
     final DataColumn column = getColumn().getDataColumn();
     if( isSimple( viewport, column ) )
     {
-      final Number value = getValue();
+      final Object value = getValue();
       if( Objects.notEqual( value, m_oldRuleValue ) )
         m_rules = null;
 

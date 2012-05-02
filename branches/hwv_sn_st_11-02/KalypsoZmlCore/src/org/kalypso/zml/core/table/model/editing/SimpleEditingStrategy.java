@@ -49,6 +49,8 @@ import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 
 /**
+ * simple editing strategy - at the moment only used for axis type POLDER_CONTROL (boolean type)
+ * 
  * @author Dirk Kuch
  */
 public class SimpleEditingStrategy extends AbstractEditingStrategy
@@ -63,7 +65,7 @@ public class SimpleEditingStrategy extends AbstractEditingStrategy
   {
     try
     {
-      final Number targetValue = getTargetValue( cell, value );
+      final Object targetValue = getTargetValue( cell, value );
       cell.doUpdate( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
     }
     catch( final SensorException e )
