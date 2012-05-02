@@ -64,7 +64,6 @@ import org.kalypso.zml.core.table.schema.DataColumnType;
  */
 public class ZmlTableCellEditorFacade implements ICellEditor
 {
-
   private final ZmlTableTextCellEditor m_textBoxEditor;
 
   private final ZmlTableCheckBoxCellEditor m_checkBoxEditor;
