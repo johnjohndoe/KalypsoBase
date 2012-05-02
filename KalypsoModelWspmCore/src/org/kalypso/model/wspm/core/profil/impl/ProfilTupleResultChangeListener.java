@@ -40,18 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.changes.PointMarkerSetPoint;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyAdd;
-import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfileRecord;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.ITupleResultChangedListener;
@@ -66,7 +58,7 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
 {
   private final AbstractProfil m_profil;
 
-  private IProfilChange m_onMarkerMovedDelete = null;
+ // private final IProfilChange m_onMarkerMovedDelete = null;
 
   public ProfilTupleResultChangeListener( final AbstractProfil profil )
   {
@@ -98,9 +90,6 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
   @Override
   public void recordsChanged( final IRecord[] records, final TYPE type )
   {
-    /*
-     * we only need a refresh here, so fire a "null-change"
-     */
     m_profil.fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.PROFILE_PROPERTY_CHANGED ) );
   }
 
@@ -109,50 +98,36 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
   {
     final ProfilChangeHint hint = new ProfilChangeHint();
 
-    final List<IProfilChange> profChanges = new ArrayList<IProfilChange>();
+    // final List<IProfilChange> profChanges = new ArrayList<IProfilChange>();
 
     for( final ValueChange change : changes )
     {
       final IComponent component = m_profil.getResult().getComponent( change.getComponent() );
 
+      /**
+       * if( m_profil.isPointMarker( component.getId() ) ) { final IRecord r = change.getRecord(); IProfilPointMarker
+       * marker = null; for( final IProfilPointMarker m : m_profil.getPointMarkerFor( r instanceof IProfileRecord ?
+       * (IProfileRecord) r : new ProfileRecord( m_profil, r ) ) ) { if( m.getComponent() == component ) { marker = m;
+       * break; } } if( marker == null ) { m_onMarkerMovedDelete = new PointPropertyEdit( m_profil, change.getRecord(),
+       * component, change.getNewValue() ); profChanges.add( m_onMarkerMovedDelete ); hint.setMarkerMoved(); } else {
+       * profChanges.add( m_onMarkerMovedDelete ); final IRecord record = change.getRecord(); profChanges.add( new
+       * PointMarkerSetPoint( marker, record instanceof IProfileRecord ? (IProfileRecord) record : new ProfileRecord(
+       * m_profil, record ) ) ); m_onMarkerMovedDelete = null; hint.setPointValuesChanged(); hint.setMarkerMoved(); } }
+       **/
       if( m_profil.isPointMarker( component.getId() ) )
       {
-        final IRecord r = change.getRecord();
-
-        IProfilPointMarker marker = null;
-        for( final IProfilPointMarker m : m_profil.getPointMarkerFor( r instanceof IProfileRecord ? (IProfileRecord) r : new ProfileRecord( m_profil, r ) ) )
-        {
-          if( m.getComponent() == component )
-          {
-            marker = m;
-            break;
-          }
-        }
-        if( marker == null )
-        {
-          m_onMarkerMovedDelete = new PointPropertyEdit( m_profil, change.getRecord(), component, change.getNewValue() );
-        }
-        else
-        {
-          profChanges.add( m_onMarkerMovedDelete );
-          final IRecord record = change.getRecord();
-
-          profChanges.add( new PointMarkerSetPoint( marker, record instanceof IProfileRecord ? (IProfileRecord) record : new ProfileRecord( m_profil, record ) ) );
-          m_onMarkerMovedDelete = null;
-          hint.setPointValuesChanged();
-          hint.setMarkerMoved();
-        }
+        hint.setMarkerMoved();
       }
       else
       {
-        profChanges.add( new PointPropertyEdit( m_profil, change.getRecord(), component, change.getNewValue() ) );
+        // profChanges.add( new PointPropertyEdit( m_profil, change.getRecord(), component, change.getNewValue() ) );
         hint.setPointValuesChanged();
       }
     }
-    if( profChanges.size() > 0 )
-    {
-      m_profil.fireProfilChanged( hint );
-    }
+    // if( profChanges.size() > 0 )
+    // {
+    m_profil.fireProfilChanged( hint );
+    // }
 
   }
 }
