@@ -64,7 +64,11 @@ import org.eclipse.swt.widgets.Shell;
 
 /**
  * This dialog displays a list of elements and lets the user select them.<br/>
- * TODO: comment, what is the difference to {@link org.eclipse.ui.dialogs.ListSelectionDialog}?
+ * Differences to {@link org.eclipse.ui.dialogs.ListSelectionDialog}:
+ * <ul>
+ * <li>A type can be defined (generics).</li>
+ * <li>OK button will be disabled, if nothing is selected.</li>
+ * </ul>
  * 
  * @author Holger Albert
  */
@@ -97,7 +101,7 @@ public class ListSelectionDialog<T> extends Dialog
 
   /**
    * The constructor.
-   *
+   * 
    * @param parentShell
    *          The parent shell, or null to create a top-level shell.
    * @param description
@@ -124,7 +128,7 @@ public class ListSelectionDialog<T> extends Dialog
 
   /**
    * The constructor.
-   *
+   * 
    * @param parentShell
    *          The object that returns the current parent shell.
    * @param description
@@ -254,7 +258,7 @@ public class ListSelectionDialog<T> extends Dialog
 
   /**
    * This function returns the selected elements.
-   *
+   * 
    * @return The selected elements.
    */
   public T[] getSelectedElements( )
