@@ -49,7 +49,6 @@ import net.sourceforge.nattable.widget.EditModeEnum;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.references.labeling.IZmlModelCellLabelProvider;
@@ -112,11 +111,8 @@ public class ZmlTableTextCellEditor extends TextCellEditor implements IZmlTableC
   @Override
   public Control doActivateCell( final Composite parent, final Object originalCanonicalValue, final Character initialEditValue, final EditModeEnum mode, final ICellEditHandler editHandler, final LayerCell cell, final IConfigRegistry cr )
   {
-    /* disable obsolete edit context menu */
     final Text text = (Text) super.activateCell( parent, originalCanonicalValue, initialEditValue, mode, editHandler, cell, cr );
-    text.setMenu( new Menu( parent ) );
 
     return text;
   }
-
 }

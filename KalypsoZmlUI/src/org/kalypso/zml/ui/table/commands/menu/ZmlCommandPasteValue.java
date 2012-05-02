@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -55,6 +56,7 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.editing.IZmlEditingStrategy;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
@@ -86,7 +88,7 @@ public class ZmlCommandPasteValue extends AbstractHandler
 
       IZmlModelValueCell ptr = cell;
 
-      final String[] data = getData();
+      final String[] data = getData( column );
       for( final String value : data )
       {
         if( Objects.isNull( ptr ) )
@@ -105,8 +107,10 @@ public class ZmlCommandPasteValue extends AbstractHandler
 
   }
 
-  private String[] getData( ) throws IOException, ExecutionException
+  private String[] getData( final IZmlModelColumn column ) throws IOException, ExecutionException
   {
+    final String type = column.getDataColumn().getValueAxis();
+
     final Clipboard clipboard = new Clipboard( PlatformUI.getWorkbench().getDisplay() );
     final TextTransfer transfer = TextTransfer.getInstance();
     final String data = (String) clipboard.getContents( transfer );
@@ -118,12 +122,12 @@ public class ZmlCommandPasteValue extends AbstractHandler
     if( rows.isEmpty() )
       return new String[] {};
 
-    int index = getIndex( rows.get( 0 ) );
+    int index = getIndex( rows.get( 0 ), type );
     if( index == -1 )
     {
       rows.remove( 0 );// header row
       if( !rows.isEmpty() )
-        index = getIndex( rows.get( 0 ) );
+        index = getIndex( rows.get( 0 ), type );
     }
 
     if( index == -1 )
@@ -137,18 +141,31 @@ public class ZmlCommandPasteValue extends AbstractHandler
     return strings.toArray( new String[] {} );
   }
 
-  private int getIndex( final String[] row )
+  private int getIndex( final String[] row, final String type )
   {
 
     for( int index = 0; index < ArrayUtils.getLength( row ); index++ )
     {
       try
       {
-        final double value = NumberUtils.parseDouble( row[index] );
-        if( Double.isNaN( value ) )
-          continue;
+        final String cell = row[index];
 
-        return index;
+        if( StringUtils.equalsIgnoreCase( ITimeseriesConstants.TYPE_POLDER_CONTROL, type ) )
+        {
+          if( StringUtils.equalsIgnoreCase( "true", cell ) ) //$NON-NLS-1$
+            return index;
+          else if( StringUtils.equalsIgnoreCase( "false", cell ) ) //$NON-NLS-1$
+            return index;
+        }
+        else
+        {
+          final double value = NumberUtils.parseDouble( cell );
+          if( Double.isNaN( value ) )
+            continue;
+
+          return index;
+        }
+
       }
       catch( final Throwable t )
       {
