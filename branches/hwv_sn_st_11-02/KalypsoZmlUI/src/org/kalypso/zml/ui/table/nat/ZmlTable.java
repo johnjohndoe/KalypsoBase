@@ -82,6 +82,7 @@ import org.kalypso.zml.ui.table.ZmlTableComposite;
 import org.kalypso.zml.ui.table.nat.base.ZmlModelCellDisplayConverter;
 import org.kalypso.zml.ui.table.nat.base.ZmlModelRowHeaderDisplayConverter;
 import org.kalypso.zml.ui.table.nat.context.menu.NatTableContextMenuSupport;
+import org.kalypso.zml.ui.table.nat.editing.ZmlDefaultNumericDataValidator;
 import org.kalypso.zml.ui.table.nat.editing.ZmlEditBindings;
 import org.kalypso.zml.ui.table.nat.editing.ZmlModelColumnEditingRule;
 import org.kalypso.zml.ui.table.nat.editing.ZmlTableCellEditorFacade;
@@ -193,9 +194,7 @@ public class ZmlTable extends Composite implements IZmlTable
     registry.registerConfigAttribute( EditConfigAttributes.CELL_EDITABLE_RULE, new ZmlModelColumnEditingRule( m_viewport ), DisplayMode.EDIT, GridRegion.BODY.toString() );
     registry.registerConfigAttribute( EditConfigAttributes.CELL_EDITOR, new ZmlTableCellEditorFacade( m_viewport ), DisplayMode.EDIT, GridRegion.BODY.toString() );
 
-    // FIXME
-    // registry.registerConfigAttribute( EditConfigAttributes.DATA_VALIDATOR, new ZmlDefaultNumericDataValidator(),
-// DisplayMode.EDIT, GridRegion.BODY.toString() );
+    registry.registerConfigAttribute( EditConfigAttributes.DATA_VALIDATOR, new ZmlDefaultNumericDataValidator(), DisplayMode.EDIT, GridRegion.BODY.toString() );
 
     new ZmlTableTooltip( m_table, getModelViewport() );
 
