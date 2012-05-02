@@ -66,6 +66,8 @@ import org.kalypso.zml.core.table.schema.DataColumnType;
 import org.kalypso.zml.core.table.schema.IndexColumnType;
 
 /**
+ * Visible zml table content of {@link org.kalypso.zml.core.table.model.ZmlModel}
+ * 
  * @author Dirk Kuch
  */
 public class ZmlModelViewport
@@ -115,7 +117,6 @@ public class ZmlModelViewport
           doClean( type );
         else if( type.ignoreTypeChanged() )
           doClean( type );
-
       }
     } );
 

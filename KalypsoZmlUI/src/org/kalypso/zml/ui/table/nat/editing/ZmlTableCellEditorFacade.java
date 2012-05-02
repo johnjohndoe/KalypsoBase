@@ -101,7 +101,6 @@ public class ZmlTableCellEditorFacade implements ICellEditor
       return editor.doActivateCell( parent, originalCanonicalValue, initialEditValue, editMode, editHandler, cell, configRegistry );
     }
 
-    // TODO Auto-generated method stub
     return null;
   }
 

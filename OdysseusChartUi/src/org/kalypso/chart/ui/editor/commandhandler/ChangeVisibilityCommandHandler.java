@@ -85,17 +85,15 @@ public class ChangeVisibilityCommandHandler extends AbstractHandler implements I
   {
     final IChartModel model = ChartHandlerUtilities.getModel( element );
     if( Objects.isNull( model ) )
-      element.setChecked( false );
-    else
-    {
-      final String parameter = (String) parameters.get( ChangeVisibilityCommandHandler.LAYER_PARAMETER );
-      final ILayerManager layerManager = model.getLayerManager();
+      return;
 
-      final VisibilityInitialStatusVisitor visitor = new VisibilityInitialStatusVisitor( parameter );
-      layerManager.accept( visitor );
+    final String parameter = (String) parameters.get( ChangeVisibilityCommandHandler.LAYER_PARAMETER );
+    final ILayerManager layerManager = model.getLayerManager();
 
-      element.setChecked( visitor.isEnabled() );
-    }
+    final VisibilityInitialStatusVisitor visitor = new VisibilityInitialStatusVisitor( parameter );
+    layerManager.accept( visitor );
+
+    element.setChecked( visitor.isEnabled() );
   }
 
 }
