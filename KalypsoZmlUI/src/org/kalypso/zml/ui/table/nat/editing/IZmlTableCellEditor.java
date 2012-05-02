@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestra√üe 22
+ *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -38,45 +38,23 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.core.table.model.editing;
+package org.kalypso.zml.ui.table.nat.editing;
 
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.status.KalypsoStati;
-import org.kalypso.repository.IDataSourceItem;
-import org.kalypso.zml.core.KalypsoZmlCore;
-import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
-import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
+import net.sourceforge.nattable.config.IConfigRegistry;
+import net.sourceforge.nattable.edit.ICellEditHandler;
+import net.sourceforge.nattable.edit.editor.ICellEditor;
+import net.sourceforge.nattable.layer.cell.LayerCell;
+import net.sourceforge.nattable.widget.EditModeEnum;
+
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
 /**
- * simple editing strategy - at the moment only used for axis type POLDER_CONTROL (boolean type)
- * 
  * @author Dirk Kuch
  */
-public class SimpleEditingStrategy extends AbstractEditingStrategy
+public interface IZmlTableCellEditor extends ICellEditor
 {
-  public SimpleEditingStrategy( final ZmlModelViewport model )
-  {
-    super( model );
-  }
+  /** needed because {@link net.sourceforge.nattable.edit.editor.AbstractCellEditor}.activateCell() is protected */
+  Control doActivateCell( final Composite parent, final Object originalCanonicalValue, final Character initialEditValue, final EditModeEnum editMode, final ICellEditHandler editHandler, final LayerCell cell, final IConfigRegistry configRegistry );
 
-  @Override
-  public void setValue( final IZmlModelValueCell cell, final String value )
-  {
-    try
-    {
-      final Object targetValue = getTargetValue( cell, value );
-      cell.doUpdate( targetValue, IDataSourceItem.SOURCE_MANUAL_CHANGED, KalypsoStati.BIT_USER_MODIFIED );
-    }
-    catch( final SensorException e )
-    {
-      KalypsoZmlCore.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-    }
-  }
-
-  @Override
-  public boolean isAggregated( )
-  {
-    return false;
-  }
 }

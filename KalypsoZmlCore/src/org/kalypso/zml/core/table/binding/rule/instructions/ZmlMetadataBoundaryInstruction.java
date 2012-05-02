@@ -199,11 +199,11 @@ public class ZmlMetadataBoundaryInstruction extends AbstractZmlRuleInstructionTy
    */
   private double getReferenceValue( final IZmlModelValueCell reference ) throws SensorException
   {
-    final Number value = reference.getValue();
-    if( Objects.isNull( value ) )
+    final Object value = reference.getValue();
+    if( !(value instanceof Number) )
       return Double.NaN;
 
-    return value.doubleValue();
+    return ((Number) value).doubleValue();
   }
 
   private boolean compareMeta( final MetadataBoundary meta, final String property, final BigDecimal value, final String op )

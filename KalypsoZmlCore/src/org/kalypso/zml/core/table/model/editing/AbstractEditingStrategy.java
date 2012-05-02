@@ -63,7 +63,7 @@ public abstract class AbstractEditingStrategy implements IZmlEditingStrategy
     return m_viewport;
   }
 
-  protected Number getTargetValue( final IZmlModelValueCell cell, final String value )
+  protected Object getTargetValue( final IZmlModelValueCell cell, final String value )
   {
     final IAxis axis = cell.getColumn().getValueAxis();
     final Class< ? > clazz = axis.getDataClass();
@@ -71,6 +71,10 @@ public abstract class AbstractEditingStrategy implements IZmlEditingStrategy
     if( Double.class == clazz )
     {
       return NumberUtils.parseDouble( value );
+    }
+    else if( Boolean.class == clazz )
+    {
+      return Boolean.valueOf( value );
     }
     else
       throw new NotImplementedException();
