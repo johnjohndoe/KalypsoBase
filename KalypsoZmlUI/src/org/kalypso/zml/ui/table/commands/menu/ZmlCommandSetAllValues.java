@@ -77,6 +77,8 @@ public class ZmlCommandSetAllValues extends AbstractHandler
     final ZmlModelViewport model = table.getModelViewport();
 
     final IZmlModelValueCell current = selection.getFocusCell();
+    if( current == null )
+      return Status.CANCEL_STATUS;
 
     try
     {

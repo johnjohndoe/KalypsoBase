@@ -77,6 +77,9 @@ public class ZmlCommandDeleteStuetzstellen extends AbstractHandler
       final IZmlTableSelection selection = table.getSelection();
 
       final IZmlModelValueCell current = selection.getFocusCell();
+      if( current == null )
+        return Status.CANCEL_STATUS;
+
       final IZmlModelColumn column = current.getColumn();
 
       final TupleModelTransaction transaction = new TupleModelTransaction( column.getTupleModel(), column.getMetadata() );
