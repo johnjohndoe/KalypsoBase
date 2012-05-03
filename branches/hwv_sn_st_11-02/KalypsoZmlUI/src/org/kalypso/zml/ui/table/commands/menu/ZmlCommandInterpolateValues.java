@@ -75,6 +75,9 @@ public class ZmlCommandInterpolateValues extends AbstractHandler
       final IZmlTableSelection selection = table.getSelection();
 
       final IZmlModelValueCell current = selection.getFocusCell();
+      if( current == null )
+        return Status.CANCEL_STATUS;
+
       final IZmlModelValueCell[] cells = selection.getSelectedCells( current.getColumn() );
       if( ArrayUtils.getLength( cells ) < 2 )
         throw new ExecutionException( "Interpolation fehlgeschlagen - selektieren Sie eine zweite Zelle!" );

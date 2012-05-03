@@ -80,6 +80,8 @@ public class ZmlCommandPasteValue extends AbstractHandler
       final IZmlTable table = ZmlHandlerUtil.getTable( event );
       final IZmlTableSelection selection = table.getSelection();
       final IZmlModelValueCell cell = selection.getFocusCell();
+      if( cell == null )
+        return Status.CANCEL_STATUS;
 
       final IZmlModelColumn column = cell.getColumn();
 

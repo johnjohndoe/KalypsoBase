@@ -81,6 +81,9 @@ public class ZmlCommandSetValuesBelow extends AbstractHandler
       final ZmlModelViewport model = table.getModelViewport();
       final IZmlTableSelection selection = table.getSelection();
       final IZmlModelValueCell active = selection.getFocusCell();
+      if( active == null )
+        return Status.CANCEL_STATUS;
+
       final IZmlModelColumn column = active.getColumn();
       final IZmlEditingStrategy strategy = model.getEditingStrategy( column );
 
