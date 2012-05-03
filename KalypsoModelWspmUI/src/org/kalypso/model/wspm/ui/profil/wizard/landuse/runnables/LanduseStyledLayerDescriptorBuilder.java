@@ -41,28 +41,17 @@
 package org.kalypso.model.wspm.ui.profil.wizard.landuse.runnables;
 
 import java.awt.Color;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.StringReader;
+import java.io.ByteArrayInputStream;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.commons.java.lang.Objects;
@@ -78,14 +67,14 @@ import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Fill;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Rule;
-import org.kalypsodeegree.xml.XMLTools;
 import org.kalypsodeegree_impl.filterencoding.ComplexFilter;
 import org.kalypsodeegree_impl.filterencoding.Literal;
 import org.kalypsodeegree_impl.filterencoding.PropertyIsLikeOperation;
 import org.kalypsodeegree_impl.filterencoding.PropertyName;
+import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
+
+import com.google.common.base.Charsets;
 
 /**
  * @author Dirk Kuch
@@ -103,9 +92,6 @@ public class LanduseStyledLayerDescriptorBuilder implements ICoreRunnableWithPro
     m_sldFile = sldFile;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
@@ -144,37 +130,45 @@ public class LanduseStyledLayerDescriptorBuilder implements ICoreRunnableWithPro
     return Status.OK_STATUS;
   }
 
-  private void writeXML( final FeatureTypeStyle style ) throws IOException, SAXException, TransformerException
+  private void writeXML( final FeatureTypeStyle style ) throws CoreException
   {
-    final Document doc = XMLTools.parse( new StringReader( style.exportAsXML() ) );
-    final Source source = new DOMSource( doc );
+    final String xml = SLDFactory.marshallObject( style, Charsets.UTF_8.name() );
+    final ByteArrayInputStream bis = new ByteArrayInputStream( xml.getBytes( Charsets.UTF_8 ) );
 
-    OutputStreamWriter os = null;
-    try
-    {
-      os = new FileWriter( m_sldFile.getLocation().toFile() );
-      final StreamResult result = new StreamResult( os );
-      final TransformerFactory factory = TransformerFactory.newInstance();
+    if( m_sldFile.exists() )
+      m_sldFile.setContents( bis, false, true, new NullProgressMonitor() );
+    else
+      m_sldFile.create( bis, false, new NullProgressMonitor() );
 
-      // Dejan: this works only with Java 1.5, in 1.4 it throws IllegalArgumentException
-      // also, indentation doesn't works with OutputStream, only with OutputStreamWriter :)
-      try
-      {
-        factory.setAttribute( "indent-number", new Integer( 4 ) ); //$NON-NLS-1$
-      }
-      catch( final IllegalArgumentException e )
-      {
-      }
-
-      final Transformer transformer = factory.newTransformer();
-      transformer.setOutputProperty( OutputKeys.ENCODING, "UTF-8" ); //$NON-NLS-1$
-      transformer.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
-      transformer.transform( source, result );
-    }
-    finally
-    {
-      IOUtils.closeQuietly( os );
-    }
+// final Document doc = XMLTools.parse( new StringReader( style.exportAsXML() ) );
+// final Source source = new DOMSource( doc );
+//
+// OutputStreamWriter os = null;
+// try
+// {
+// os = new FileWriter( m_sldFile.getLocation().toFile() );
+// final StreamResult result = new StreamResult( os );
+// final TransformerFactory factory = TransformerFactory.newInstance();
+//
+// // Dejan: this works only with Java 1.5, in 1.4 it throws IllegalArgumentException
+// // also, indentation doesn't works with OutputStream, only with OutputStreamWriter :)
+// try
+// {
+//        factory.setAttribute( "indent-number", new Integer( 4 ) ); //$NON-NLS-1$
+// }
+// catch( final IllegalArgumentException e )
+// {
+// }
+//
+// final Transformer transformer = factory.newTransformer();
+//      transformer.setOutputProperty( OutputKeys.ENCODING, "UTF-8" ); //$NON-NLS-1$
+//      transformer.setOutputProperty( OutputKeys.INDENT, "yes" ); //$NON-NLS-1$
+// transformer.transform( source, result );
+// }
+// finally
+// {
+// IOUtils.closeQuietly( os );
+// }
   }
 
   private Rule buildRule( final String column, final String property, final IClassificationClass clazz )

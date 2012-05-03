@@ -108,7 +108,7 @@ public final class ProfilUtil
 
   /**
    * Converts a double valued station into a BigDecimal with a scale of {@value #STATION_SCALE}.
-   * 
+   *
    * @see #STATION_SCALE
    */
   public static BigDecimal stationToBigDecimal( final double station )
@@ -246,6 +246,7 @@ public final class ProfilUtil
   {
     if( startPoint == null || endPoint == null )
       return null;
+
     final IProfileRecord point = profile.createProfilPoint();
     final IComponent[] properties = profile.getPointProperties();
 
@@ -349,6 +350,9 @@ public final class ProfilUtil
   public static IProfileRecord findPoint( final IProfil profil, final double breite, final double delta )
   {
     final IProfileRecord pkt = ProfileVisitors.findNearestPoint( profil, breite );
+    if( pkt == null )
+      return null;
+
     final double xpos = pkt.getBreite();
     return Math.abs( xpos - breite ) <= delta ? pkt : null;
   }
@@ -486,7 +490,7 @@ public final class ProfilUtil
 
   /**
    * This function returns the georeferenced points of a profile.
-   * 
+   *
    * @param profile
    *          The input profile.
    */
@@ -646,7 +650,7 @@ public final class ProfilUtil
   /**
    * Gets all values of the given component and interpolates missing values by the help of the 'BREITE' component.<br>
    * Works only for components with numeric values.
-   * 
+   *
    * @return All values of the profile of the given component. The length of the array is equal to the number of
    *         records.
    */
@@ -697,7 +701,7 @@ public final class ProfilUtil
 
   /**
    * This function thins the profile and removes unnecessary points. It uses the Douglas Peucker algorithm.
-   * 
+   *
    * @param profile
    *          The profile, which should be simplified.
    * @param allowedDistance
@@ -717,7 +721,7 @@ public final class ProfilUtil
 
   /**
    * This function thins the profile and removes unnecessary points. It uses the Douglas Peucker algorithm.
-   * 
+   *
    * @param profile
    *          The profile, which should be simplified.
    * @param allowedDistance
@@ -737,7 +741,7 @@ public final class ProfilUtil
 
   /**
    * Either gets and existing component, or creates it if it doesn't exist yet.
-   * 
+   *
    * @return The index of the component
    */
   public static int getOrCreateComponent( final IProfil profil, final String componentID )

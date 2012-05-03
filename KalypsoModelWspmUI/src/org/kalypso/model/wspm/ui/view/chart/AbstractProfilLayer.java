@@ -57,7 +57,6 @@ import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
 
 import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -106,6 +105,11 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     m_domainComponent = IWspmPointProperties.POINT_PROPERTY_BREITE;
     setIdentifier( id );
     createStyles( styleProvider, id );
+  }
+
+  protected String getTargetProperty( )
+  {
+    return m_targetRangeProperty;
   }
 
   @Override
@@ -224,7 +228,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   {
     if( !isVisible() || getProfil() == null )
       return null;
-    final IRecord[] profilPoints = getProfil().getPoints();
+    final IProfileRecord[] profilPoints = getProfil().getPoints();
     final int len = profilPoints.length;
     for( int i = 0; i < len; i++ )
     {
@@ -247,7 +251,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   }
 
   @SuppressWarnings("unused")
-  public Rectangle getHoverRect( final IRecord profilPoint )
+  public Rectangle getHoverRect( final IProfileRecord profilPoint )
   {
     return null;
   }
@@ -281,9 +285,9 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     return m_lineStyleHover;
   }
 
-  public IRecord getNextNonNull( final int index )
+  public IProfileRecord getNextNonNull( final int index )
   {
-    final IRecord[] points = getProfil().getPoints();
+    final IProfileRecord[] points = getProfil().getPoints();
     final int prop = getProfil().indexOfProperty( m_targetRangeProperty );
     for( int i = index + 1; i < points.length; i++ )
     {
@@ -295,7 +299,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   }
 
-  public Point2D getPoint2D( final IRecord point )
+  public Point2D getPoint2D( final IProfileRecord point )
   {
     final Double x = ProfilUtil.getDoubleValueFor( m_domainComponent, point );
     final Double y = ProfilUtil.getDoubleValueFor( getTargetPropertyIndex(), point );
@@ -337,9 +341,9 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     return m_pointStyleHover;
   }
 
-  public IRecord getPreviousNonNull( final int index )
+  public IProfileRecord getPreviousNonNull( final int index )
   {
-    final IRecord[] points = getProfil().getPoints();
+    final IProfileRecord[] points = getProfil().getPoints();
     final int prop = getProfil().indexOfProperty( m_targetRangeProperty );
     for( int i = index - 1; i > -1; i-- )
     {
@@ -365,6 +369,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     final int indexOfProperty = m_profil.indexOfProperty( m_targetRangeProperty );
     if( indexOfProperty < 0 )
       return null;
+
     return m_profil.getResult().getComponent( indexOfProperty );
   }
 
@@ -376,6 +381,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
         return -1;
       m_targetPropIndex = m_profil.getResult().indexOfComponent( m_targetRangeProperty );
     }
+
     return m_targetPropIndex;
   }
 
@@ -414,7 +420,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     return targetComponent.getName();
   }
 
-  public String getTooltipInfo( final IRecord point )
+  public String getTooltipInfo( final IProfileRecord point )
   {
     if( Objects.isNull( point, getTargetComponent(), getDomainComponent() ) )
       return ""; //$NON-NLS-1$
@@ -509,7 +515,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     return new Point2D.Double( x, y );
   }
 
-  public Point toScreen( final IRecord point )
+  public Point toScreen( final IProfileRecord point )
   {
     final ICoordinateMapper cm = getCoordinateMapper();
     if( Objects.isNull( cm ) )

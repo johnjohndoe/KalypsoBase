@@ -199,14 +199,14 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
     {
       // so, if the mouse enter event happens already somewhere inside the map panel frame - it's actually a finger tap
       // event
-      if( isInsideMapFrame( e.getPoint() ) )
-      {
-        // FIXME: leftPressed does not exist any more
-        // if( widget != null )
-        // widget.leftPressed( e.getPoint() );
-      }
-      else
-        widget.mouseEntered( e );
+// if( isInsideMapFrame( e.getPoint() ) )
+// {
+      // FIXME: leftPressed does not exist any more
+      // if( widget != null )
+      // widget.leftPressed( e.getPoint() );
+// }
+// else
+      widget.mouseEntered( e );
 
       if( e.isConsumed() )
         return;
@@ -222,14 +222,14 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
     {
       // so, if the mouse enter event happens already somewhere inside the map panel frame - it's actually a finger tap
       // event
-      if( isInsideMapFrame( e.getPoint() ) )
-      {
-        // FIXME: leftReleased does not exist any more
-        // if( widget != null )
-        // widget.leftReleased( e.getPoint() );
-      }
-      else
-        widget.mouseExited( e );
+// if( isInsideMapFrame( e.getPoint() ) )
+// {
+      // FIXME: leftReleased does not exist any more
+      // if( widget != null )
+      // widget.leftReleased( e.getPoint() );
+// }
+// else
+      widget.mouseExited( e );
 
       if( e.isConsumed() )
         return;

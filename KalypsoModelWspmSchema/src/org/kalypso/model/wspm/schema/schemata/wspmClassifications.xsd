@@ -76,7 +76,7 @@
         <sequence>
           <element type="decimal" name="ax" />
           <element type="decimal" name="ay" />
-          <element type="decimal" name="dx" />
+          <element type="decimal" name="dp" />
         </sequence>
       </extension>
     </complexContent>

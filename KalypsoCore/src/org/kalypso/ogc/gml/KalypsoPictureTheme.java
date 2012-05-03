@@ -103,12 +103,12 @@ public abstract class KalypsoPictureTheme extends AbstractKalypsoTheme
     return m_layerType.getHref();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#getBoundingBox()
-   */
   @Override
   public GM_Envelope getFullExtent( )
   {
+    if( m_domain == null )
+      return null;
+
     try
     {
       final GM_Envelope gmEnvelope = m_domain.getGM_Envelope( m_domain.getCoordinateSystem() );
@@ -189,8 +189,6 @@ public abstract class KalypsoPictureTheme extends AbstractKalypsoTheme
 
   protected URL loadImage( final String filePath )
   {
-    RenderedOp image = null;
-
     try
     {
       // UGLY HACK: replace backslashes with slashes. The add-picture-theme action seems to put backslashes (on windows)
@@ -201,11 +199,13 @@ public abstract class KalypsoPictureTheme extends AbstractKalypsoTheme
       final URL context = getContext();
       final URL imageUrl = UrlResolverSingleton.resolveUrl( context, filePathChecked );
 
-      image = JAI.create( "url", imageUrl ); //$NON-NLS-1$
+      // FIXME: use stream and close stream ouselfs in order to avoid resource leakage (jai bug)
+      // Problem: the stream must be closed when the image is disposed, so we need another class
+      final RenderedOp image = JAI.create( "url", imageUrl ); //$NON-NLS-1$
 
-      // FIXME we get out of memory here, as the whole image is loaded... we should instead access the tiles of the
-      // RenderdOp
-      setImage( new TiledImage( image, true ) );
+      final TiledImage tiledImage = new TiledImage( image, false );
+      setImage( tiledImage );
+
       return imageUrl;
     }
     catch( final MalformedURLException e )
@@ -223,11 +223,6 @@ public abstract class KalypsoPictureTheme extends AbstractKalypsoTheme
       // REMARK: this will happen if we load big images
       // It is safe to catch it here, as the heap will be freed immediately, if the image could not be loaded
       setStatus( error, "Unerwarteter Fehler beim Laden von Bild %s, vermutlich zu wenig Speicher. Versuchen Sie die Bildgröße zu verkleinern oder dem Programm mehr Speicher zuzuweisen.", filePath );
-    }
-    finally
-    {
-      if( image != null )
-        image.dispose();
     }
 
     return null;

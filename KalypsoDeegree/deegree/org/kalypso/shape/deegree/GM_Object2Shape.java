@@ -50,24 +50,20 @@ import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypso.shape.geometry.SHPNullShape;
 import org.kalypso.shape.geometry.SHPPoint;
 import org.kalypso.shape.geometry.SHPPointz;
-import org.kalypso.shape.geometry.SHPPolyLine;
-import org.kalypso.shape.geometry.SHPPolyLinez;
-import org.kalypso.shape.geometry.SHPPolygon;
-import org.kalypso.shape.geometry.SHPPolygonz;
+import org.kalypso.shape.tools.JTS2SHP;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_CurveSegment;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.algorithm.CGAlgorithms;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.LinearRing;
 
 /**
@@ -112,7 +108,9 @@ public class GM_Object2Shape
         if( ArrayUtils.isEmpty( curves ) )
           return new SHPNullShape();
 
-        return toPolyline( curves );
+        final Coordinate[][] lines = asLines( curves );
+
+        return JTS2SHP.toPolyline( lines );
       }
 
       case POLYGON:
@@ -121,11 +119,11 @@ public class GM_Object2Shape
         if( ArrayUtils.isEmpty( surfacePatches ) )
           return new SHPNullShape();
 
-        final GM_Curve[] curves = orientCurves( surfacePatches );
+        final Coordinate[][] curves = orientCurves( surfacePatches );
         if( ArrayUtils.isEmpty( curves ) )
           return new SHPNullShape();
 
-        return new SHPPolygon( toPolyline( curves ) );
+        return JTS2SHP.toPolygon( curves );
       }
 
       case POINTZ:
@@ -143,7 +141,9 @@ public class GM_Object2Shape
         if( ArrayUtils.isEmpty( curves ) )
           return new SHPNullShape();
 
-        return toPolylineZ( curves );
+        final Coordinate[][] lines = asLines( curves );
+
+        return JTS2SHP.toPolylineZ( lines );
       }
 
       case POLYGONZ:
@@ -152,8 +152,8 @@ public class GM_Object2Shape
         if( ArrayUtils.isEmpty( surfacePatches ) )
           return new SHPNullShape();
 
-        final GM_Curve[] curves = orientCurves( surfacePatches );
-        return new SHPPolygonz( toPolylineZ( curves ) );
+        final Coordinate[][] curves = orientCurves( surfacePatches );
+        return JTS2SHP.toPolygonZ( curves );
       }
 
       case MULTIPOINT:
@@ -246,6 +246,24 @@ public class GM_Object2Shape
     throw new IllegalStateException( "Unknown shape type: " + m_shapeType );
   }
 
+  private Coordinate[][] asLines( final GM_Curve[] curves ) throws ShapeDataException
+  {
+    try
+    {
+      final Coordinate[][] lines = new Coordinate[curves.length][];
+      for( int i = 0; i < lines.length; i++ )
+      {
+        final LineString line = (LineString) JTSAdapter.export( curves[i] );
+        lines[i] = line.getCoordinates();
+      }
+      return lines;
+    }
+    catch( final GM_Exception e )
+    {
+      throw new ShapeDataException( "Failed to export curve", e ); //$NON-NLS-1$
+    }
+  }
+
   private GM_Object getTransformedGeom( final GM_Object geom2 ) throws ShapeDataException
   {
     try
@@ -258,40 +276,35 @@ public class GM_Object2Shape
     }
   }
 
-  private static GM_Curve[] orientCurves( final GM_SurfacePatch[] surfacePatch ) throws ShapeDataException
+  private static Coordinate[][] orientCurves( final GM_SurfacePatch[] surfacePatch )
   {
-    final List<GM_Curve> curveList = new LinkedList<GM_Curve>();
+    final List<Coordinate[]> curveList = new LinkedList<>();
     for( final GM_SurfacePatch element : surfacePatch )
     {
-      try
+      /* Outer rings are clockwise */
+      final LinearRing exteriorRing = JTSAdapter.exportAsRing( element.getExteriorRing() );
+      final Coordinate[] exteriorPoses = exteriorRing.getCoordinates();
+      if( CGAlgorithms.isCCW( exteriorPoses ) )
+        ArrayUtils.reverse( exteriorPoses );
+
+      curveList.add( exteriorPoses );
+
+      final GM_Position[][] interiorRings = element.getInteriorRings();
+      if( interiorRings != null )
       {
-        // TODO: really necessary? why not also force positive orientation for interior rings below?
-        final LinearRing exteriorRing = JTSAdapter.exportAsRing( element.getExteriorRing() );
-        if( !CGAlgorithms.isCCW( exteriorRing.getCoordinates() ) )
-          exteriorRing.reverse();
-
-        final GM_Position[] poses = JTSAdapter.wrap( exteriorRing.getCoordinates() );
-
-        final GM_CurveSegment cs = GeometryFactory.createGM_CurveSegment( poses, element.getCoordinateSystem() );
-        curveList.add( GeometryFactory.createGM_Curve( cs ) );
-
-        final GM_Position[][] interiorRings = element.getInteriorRings();
-        if( interiorRings != null )
+        for( final GM_Position[] interiorRing : interiorRings )
         {
-          final GM_Curve[] rings = GeometryFactory.createGM_Curve( interiorRings, element.getCoordinateSystem() );
-          if( rings != null )
-          {
-            for( final GM_Curve ring : rings )
-              curveList.add( ring );
-          }
+          final LinearRing interiorJTSRing = JTSAdapter.exportAsRing( interiorRing );
+          final Coordinate[] interiorPoses = interiorJTSRing.getCoordinates();
+          if( !CGAlgorithms.isCCW( interiorPoses ) )
+            ArrayUtils.reverse( interiorPoses );
+
+          curveList.add( interiorPoses );
         }
       }
-      catch( final GM_Exception e )
-      {
-        throw new ShapeDataException( e );
-      }
     }
-    return curveList.toArray( new GM_Curve[curveList.size()] );
+
+    return curveList.toArray( new Coordinate[curveList.size()][] );
   }
 
   public ShapeType getShapeType( )
@@ -307,23 +320,23 @@ public class GM_Object2Shape
     final GM_SurfacePatch transformedPatch = getTransformedPatch( patch );
 
     final GM_SurfacePatch[] patches = new GM_SurfacePatch[] { transformedPatch };
-    final GM_Curve[] curves = orientCurves( patches );
+    final Coordinate[][] curves = orientCurves( patches );
     if( curves == null )
       return new SHPNullShape();
 
     switch( m_shapeType )
     {
       case POLYLINE:
-        return toPolyline( curves );
+        return JTS2SHP.toPolyline( curves );
 
       case POLYGON:
-        return new SHPPolygon( toPolyline( curves ) );
+        return JTS2SHP.toPolygon( curves );
 
       case POLYLINEZ:
-        return toPolylineZ( curves );
+        return JTS2SHP.toPolylineZ( curves );
 
       case POLYGONZ:
-        return new SHPPolygonz( toPolylineZ( curves ) );
+        return JTS2SHP.toPolygonZ( curves );
 
         // TODO: other conversions
 
@@ -344,59 +357,8 @@ public class GM_Object2Shape
     }
   }
 
-  private static SHPPolyLine toPolyline( final GM_Curve[] curves )
-  {
-    final int numParts = curves.length;
-
-    final SHPPoint[][] parts = new SHPPoint[numParts][];
-
-    try
-    {
-      for( int i = 0; i < numParts; i++ )
-      {
-        final GM_LineString ls = curves[i].getAsLineString();
-        parts[i] = new SHPPoint[ls.getNumberOfPoints()];
-        for( int j = 0; j < ls.getNumberOfPoints(); j++ )
-          parts[i][j] = new SHPPoint( ls.getPositionAt( j ) );
-      }
-    }
-    catch( final GM_Exception e )
-    {
-      System.out.println( "SHPPolyLine:: " + e );
-    }
-
-    return new SHPPolyLine( parts );
-  }
-
-  private static SHPPolyLinez toPolylineZ( final GM_Curve[] curve )
-  {
-    final int numParts = curve.length;
-
-    final SHPPointz[][] parts = new SHPPointz[numParts][];
-
-    try
-    {
-      for( int i = 0; i < numParts; i++ )
-      {
-        final GM_LineString ls = curve[i].getAsLineString();
-
-        parts[i] = new SHPPointz[ls.getNumberOfPoints()];
-
-        for( int j = 0; j < ls.getNumberOfPoints(); j++ )
-          parts[i][j] = new SHPPointz( ls.getPositionAt( j ) );
-      }
-    }
-    catch( final GM_Exception e )
-    {
-      System.out.println( "SHPPolyLineZ:: " + e );
-    }
-
-    return new SHPPolyLinez( parts );
-  }
-
   public String getCoordinateSystem( )
   {
     return m_transformer.getTarget();
   }
-
 }

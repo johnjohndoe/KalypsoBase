@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.table.handler;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
@@ -53,14 +56,13 @@ import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassification
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.gml.om.table.celleditor.ComboBoxViewerCellEditor;
-import org.kalypso.ogc.gml.om.table.handlers.AbstractComponentUiHandler;
 
 /**
  * Handles vegetation class values.
  * 
  * @author Dirk Kuch
  */
-public class VegetationClassUiHandler extends AbstractComponentUiHandler
+public class VegetationClassUiHandler extends AbstractComponentClassUiHandler
 {
   private final IProfil m_profile;
 
@@ -70,18 +72,12 @@ public class VegetationClassUiHandler extends AbstractComponentUiHandler
     m_profile = profile;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#createCellEditor(org.eclipse.swt.widgets.Table)
-   */
   @Override
   public CellEditor createCellEditor( final Table table )
   {
     return new ComboBoxViewerCellEditor( new ArrayContentProvider(), new ClassificationLabelProvider(), getVegetationClasses(), table, SWT.READ_ONLY | SWT.DROP_DOWN );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getStringRepresentation(org.kalypso.observation.result.IRecord)
-   */
   @Override
   public String getStringRepresentation( final IRecord record )
   {
@@ -92,7 +88,14 @@ public class VegetationClassUiHandler extends AbstractComponentUiHandler
     final IWspmClassification classification = WspmClassifications.getClassification( m_profile );
     final IVegetationClass clazz = classification.findVegetationClass( value.toString() );
     if( Objects.isNotNull( clazz ) )
-      return clazz.getDescription();
+    {
+      final List<String> parameters = new ArrayList<String>();
+      append( parameters, "AX=%.2f", clazz.getAx() );
+      append( parameters, "AY=%.2f", clazz.getAy() );
+      append( parameters, "DP=%.2f", clazz.getDp() );
+
+      return getStringRepresentation( clazz.getDescription(), parameters );
+    }
 
     return super.getStringRepresentation( record );
   }
@@ -108,9 +111,6 @@ public class VegetationClassUiHandler extends AbstractComponentUiHandler
     return vegetations;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#formatValue(java.lang.Object)
-   */
   @Override
   public Object doGetValue( final IRecord record )
   {
@@ -122,10 +122,6 @@ public class VegetationClassUiHandler extends AbstractComponentUiHandler
     return classification.findVegetationClass( (String) value );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#setValue(org.kalypso.observation.result.IRecord,
-   *      java.lang.Object)
-   */
   @Override
   public void doSetValue( final IRecord record, final Object value )
   {
@@ -136,19 +132,12 @@ public class VegetationClassUiHandler extends AbstractComponentUiHandler
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#parseValue(java.lang.String)
-   */
   @Override
   public Object parseValue( final String text )
   {
     return text;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#setValue(org.kalypso.observation.result.IRecord,
-   *      java.lang.Object)
-   */
   @Override
   public void setValue( final IRecord record, final Object value )
   {

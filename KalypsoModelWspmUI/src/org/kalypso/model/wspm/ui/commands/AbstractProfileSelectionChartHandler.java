@@ -110,8 +110,154 @@ public abstract class AbstractProfileSelectionChartHandler extends AbstractProfi
     final String msg = String.format( Messages.getString( "org.kalypso.model.wspm.ui.commands.AbstractProfileSelectionChartHandler.0" ), getBreite() ); //$NON-NLS-1$
     final EditInfo info = new EditInfo( theme, null, null, getBreite(), msg, position );
     setToolInfo( info );
+
     final IRangeSelection selection = getProfile().getSelection();
     selection.setCursor( breite );
+  }
+
+  @Override
+  protected void profileChanged( final ProfilChangeHint hint )
+  {
+    if( !hint.isSelectionChanged() || !hint.isSelectionCursorChanged() )
+      return;
+
+    forceRedrawEvent();
+  }
+
+  @Override
+  public void mouseDown( final MouseEvent e )
+  {
+    super.mouseDown( e );
+
+    if( m_viewMode )
+      return;
+    if( e.button != 1 )
+      return;
+
+    final IChartComposite chart = getChart();
+    final Rectangle bounds = chart.getPlotRect();
+
+    final Point position = ChartHandlerUtilities.screen2plotPoint( new Point( e.x, e.y ), bounds );
+    if( !isValid( bounds, new Point( e.x, e.y ) ) )// position ) )
+    {
+      return;
+    }
+
+    final IProfil profile = getProfile();
+
+    final double breite = getSelection( profile, position.x );
+    if( Double.isNaN( breite ) )
+      return;
+
+    if( (e.stateMask & SWT.SHIFT) == 0 )
+    {
+      m_p0 = breite;
+      m_p1 = null;
+    }
+    else
+    {
+      if( m_p0 == null )
+        m_p0 = breite;
+
+      m_p1 = breite;
+    }
+
+    final IRangeSelection selection = profile.getSelection();
+    selection.setRange( Range.is( snapToPoint( profile, position.x ) ) );
+
+    selection.setCursor( getBreite() );
+  }
+
+  private double getSelection( final IProfil profile, final int x )
+  {
+    final double snap = snapToPoint( profile, x );
+    if( Double.isNaN( snap ) )
+      return Double.NaN;
+
+    if( Objects.isNotNull( ProfileVisitors.findPoint( profile, snap ) ) )
+      return snap;
+
+    return profile.findPreviousPoint( snap ).getBreite();
+  }
+
+  private double snapToPoint( final IProfil profile, final int screenX )
+  {
+    if( profile == null )
+      return Double.NaN;
+
+    final AbstractProfilTheme theme = findProfileTheme( getChart() );
+    if( theme == null )
+      return Double.NaN;
+
+    final ICoordinateMapper mapper = theme.getCoordinateMapper();
+    final IAxis domainAxis = mapper.getDomainAxis();
+
+    final Number xPosition = domainAxis.screenToNumeric( screenX );
+    final Number xMin = domainAxis.screenToNumeric( screenX - 5 );
+    final Number xMax = domainAxis.screenToNumeric( screenX + 5 );
+
+    final FindClosestPointVisitor visitor = new FindClosestPointVisitor( xPosition.doubleValue() );
+    profile.accept( visitor, 1 );
+
+    final IProfileRecord point = visitor.getPoint();
+    final Range<Double> range = Range.between( xMin.doubleValue(), xMax.doubleValue() );
+
+    if( range.contains( point.getBreite() ) )
+      return point.getBreite();
+
+    return xPosition.doubleValue();
+  }
+
+  @Override
+  public void mouseUp( final MouseEvent e )
+  {
+    if( m_viewMode )
+      return;
+
+    if( (e.stateMask & SWT.SHIFT) == 0 )
+      return;
+
+    final IChartComposite chart = getChart();
+    final Rectangle bounds = chart.getPlotRect();
+
+    final Point position = ChartHandlerUtilities.screen2plotPoint( new Point( e.x, e.y ), bounds );
+    if( !isValid( bounds, new Point( e.x, e.y ) ) )// position ) )
+    {
+      return;
+    }
+
+    final AbstractProfilTheme theme = findProfileTheme( chart );
+    final ICoordinateMapper mapper = theme.getCoordinateMapper();
+
+    m_p1 = mapper.getDomainAxis().screenToNumeric( position.x ).doubleValue();
+
+    final IProfil profile = getProfile();
+
+    final IRangeSelection selection = profile.getSelection();
+    selection.setRange( Range.between( m_p0, m_p1 ) );
+  }
+
+  @Override
+  protected void onNewProfileSet( )
+  {
+    super.onNewProfileSet();
+
+    m_p0 = null;
+    m_p1 = null;
+  }
+
+  @Override
+  public void paintControl( final PaintEvent e )
+  {
+    super.paintControl( e );
+
+    final IProfil profile = getProfile();
+    if( Objects.isNull( profile ) )
+      return;
+
+    doPaintSelection( e, profile );
+    doPaintCursor( e, profile );
+
   }
 
   private void doPaintCursor( final PaintEvent e, final IProfil profile )
@@ -136,22 +282,6 @@ public abstract class AbstractProfileSelectionChartHandler extends AbstractProfi
     final PolylineFigure figure = getHoverFigure( x );
     figure.getStyle().setDash( 0F, new float[] { 2, 2, 2 } );
 
-    figure.paint( e.gc );
-  }
-
-  private void doPaintRange( final Range<Double> range, final PaintEvent e )
-  {
-    final IChartComposite chart = getChart();
-    final AbstractProfilTheme theme = findProfileTheme( chart );
-    if( Objects.isNull( theme ) )
-      return;
-
-    final ICoordinateMapper mapper = theme.getCoordinateMapper();
-
-    final Integer x0 = mapper.getDomainAxis().numericToScreen( range.getMinimum() );
-    final Integer x1 = mapper.getDomainAxis().numericToScreen( range.getMaximum() );
-
-    final IPaintable figure = getHoverFigure( x0, x1 );
     figure.paint( e.gc );
   }
 
@@ -186,18 +316,20 @@ public abstract class AbstractProfileSelectionChartHandler extends AbstractProfi
     figure.paint( e.gc );
   }
 
-  private PolylineFigure getHoverFigure( final Integer x0 )
+  private void doPaintRange( final Range<Double> range, final PaintEvent e )
   {
     final IChartComposite chart = getChart();
-    final Rectangle bounds = chart.getPlotRect();
+    final AbstractProfilTheme theme = findProfileTheme( chart );
+    if( Objects.isNull( theme ) )
+      return;
 
-    final PolylineFigure figure = new PolylineFigure();
-    final ILineStyle lineStyle = new LineStyle( 3, new RGB( 0x8D, 0xC3, 0xFC ), 180, 0F, null, LINEJOIN.MITER, LINECAP.ROUND, 1, true );
-    figure.setStyle( lineStyle );
+    final ICoordinateMapper mapper = theme.getCoordinateMapper();
 
-    figure.setPoints( new Point[] { new Point( x0, 0 ), new Point( x0, bounds.y + bounds.height ) } );
+    final Integer x0 = mapper.getDomainAxis().numericToScreen( range.getMinimum() );
+    final Integer x1 = mapper.getDomainAxis().numericToScreen( range.getMaximum() );
 
-    return figure;
+    final IPaintable figure = getHoverFigure( x0, x1 );
+    figure.paint( e.gc );
   }
 
   private IPaintable getHoverFigure( final Integer x0, final Integer x1 )
@@ -207,11 +339,11 @@ public abstract class AbstractProfileSelectionChartHandler extends AbstractProfi
 
     final int yMax = bounds.y + bounds.height;
 
-    final RGB rgb = new RGB( 0x8D, 0xC3, 0xFC );
+    final RGB rgb = new RGB( 0x54, 0xA7, 0xF9 );
 
     final ILineStyle lineStyle = new LineStyle( 3, rgb, 180, 0F, new float[] { 2, 2, 2 }, LINEJOIN.MITER, LINECAP.ROUND, 1, true );
 
-    final AreaStyle areaStyle = new AreaStyle( new ColorFill( rgb ), 60, lineStyle, true );
+    final AreaStyle areaStyle = new AreaStyle( new ColorFill( rgb ), 40, lineStyle, true );
     final PolygonFigure figure = new PolygonFigure();
     figure.setStyle( areaStyle );
 
@@ -226,149 +358,17 @@ public abstract class AbstractProfileSelectionChartHandler extends AbstractProfi
     return figure;
   }
 
-  private double getSelection( final IProfil profile, final int x )
+  private PolylineFigure getHoverFigure( final Integer x0 )
   {
-    final double snap = snapToPoint( profile, x );
-    if( Double.isNaN( snap ) )
-      return Double.NaN;
-
-    if( Objects.isNotNull( ProfileVisitors.findPoint( profile, snap ) ) )
-      return snap;
-
-    return profile.findPreviousPoint( snap ).getBreite();
-  }
-
-  @Override
-  public void mouseDown( final MouseEvent e )
-  {
-    super.mouseDown( e );
-
-    if( m_viewMode )
-      return;
-    if( e.button != 1 )
-      return;
-
     final IChartComposite chart = getChart();
     final Rectangle bounds = chart.getPlotRect();
 
-    final Point position = ChartHandlerUtilities.screen2plotPoint( new Point( e.x, e.y ), bounds );
-    if( !isValid( bounds, new Point( e.x, e.y )))//position ) )
-    {
-      return;
-    }
+    final PolylineFigure figure = new PolylineFigure();
+    final ILineStyle lineStyle = new LineStyle( 3, new RGB( 0x54, 0xA7, 0xF9 ), 240, 0F, null, LINEJOIN.MITER, LINECAP.ROUND, 1, true );
+    figure.setStyle( lineStyle );
 
-    final IProfil profile = getProfile();
+    figure.setPoints( new Point[] { new Point( x0, 0 ), new Point( x0, bounds.y + bounds.height ) } );
 
-    final double breite = getSelection( profile, position.x );
-    if( Double.isNaN( breite ) )
-      return;
-
-    if( (e.stateMask & SWT.SHIFT) == 0 )
-    {
-      m_p0 = breite;
-      m_p1 = null;
-    }
-    else
-    {
-      if( m_p0 == null )
-        m_p0 = breite;
-      m_p1 = breite;
-    }
-
-    final IRangeSelection selection = profile.getSelection();
-    selection.setRange( Range.is( snapToPoint( profile, position.x ) ) );
-
-    selection.setCursor( getBreite() );
-  }
-
-  @Override
-  public void mouseUp( final MouseEvent e )
-  {
-    if( m_viewMode )
-      return;
-
-    if( (e.stateMask & SWT.SHIFT) == 0 )
-      return;
-
-    final IChartComposite chart = getChart();
-    final Rectangle bounds = chart.getPlotRect();
-
-    final Point position = ChartHandlerUtilities.screen2plotPoint( new Point( e.x, e.y ), bounds );
-    if( !isValid( bounds,new Point( e.x, e.y )))// position ) )
-    {
-      return;
-    }
-
-    final AbstractProfilTheme theme = findProfileTheme( chart );
-    final ICoordinateMapper mapper = theme.getCoordinateMapper();
-
-    m_p1 = mapper.getDomainAxis().screenToNumeric( position.x ).doubleValue();
-
-    final IProfil profile = getProfile();
-
-    final IRangeSelection selection = profile.getSelection();
-    selection.setRange( Range.between( m_p0, m_p1 ) );
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.ui.commands.AbstractProfilePointHandler#onNewProfileSet()
-   */
-  @Override
-  protected void onNewProfileSet( )
-  {
-    super.onNewProfileSet();
-    m_p0 = null;
-    m_p1 = null;
-  }
-
-  @Override
-  public void paintControl( final PaintEvent e )
-  {
-    super.paintControl( e );
-
-    final IProfil profile = getProfile();
-    if( Objects.isNull( profile ) )
-      return;
-
-    doPaintSelection( e, profile );
-    doPaintCursor( e, profile );
-
-  }
-
-  @Override
-  protected void profileChanged( final ProfilChangeHint hint )
-  {
-    if( !hint.isSelectionChanged() || !hint.isSelectionCursorChanged() )
-      return;
-
-    forceRedrawEvent();
-  }
-
-  private double snapToPoint( final IProfil profile, final int screenX )
-  {
-    if( profile == null )
-      return Double.NaN;
-
-    final AbstractProfilTheme theme = findProfileTheme( getChart() );
-    if( theme == null )
-      return Double.NaN;
-
-    final ICoordinateMapper mapper = theme.getCoordinateMapper();
-    final IAxis domainAxis = mapper.getDomainAxis();
-
-    final Number xPosition = domainAxis.screenToNumeric( screenX );
-    final Number xMin = domainAxis.screenToNumeric( screenX - 5 );
-    final Number xMax = domainAxis.screenToNumeric( screenX + 5 );
-
-    final FindClosestPointVisitor visitor = new FindClosestPointVisitor( xPosition.doubleValue() );
-    profile.accept( visitor, 1 );
-
-    final IProfileRecord point = visitor.getPoint();
-    final Range<Double> range = Range.between( xMin.doubleValue(), xMax.doubleValue() );
-
-    if( range.contains( point.getBreite() ) )
-      return point.getBreite();
-
-    return xPosition.doubleValue();
+    return figure;
   }
 }

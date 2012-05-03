@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- * 
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,44 +36,47 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.core.gml.classifications;
+package org.kalypso.model.wspm.ui.profil.wizard.validateProfiles;
 
-import java.math.BigDecimal;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.model.wspm.core.IWspmNamespaces;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.profil.validator.IValidatorRule;
 
 /**
  * @author Dirk Kuch
  */
-public interface IVegetationClass extends Feature, IClassificationClass
+public final class ValidateProfileHelper
 {
-  QName FEATURE_VEGETATION_CLASS = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "VegetationClass" ); //$NON-NLS-1$
+  private ValidateProfileHelper( )
+  {
+  }
 
-  QName PROPERTY_AX = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "ax" ); //$NON-NLS-1$
+  public static IProfileFeature[] toProfiles( final Object[] objects )
+  {
+    final Set<IProfileFeature> profiles = new LinkedHashSet<IProfileFeature>();
+    for( final Object object : objects )
+    {
+      if( object instanceof IProfileFeature )
+        profiles.add( (IProfileFeature) object );
+    }
 
-  QName PROPERTY_AY = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "ay" ); //$NON-NLS-1$
+    return profiles.toArray( new IProfileFeature[] {} );
+  }
 
-  QName PROPERTY_DP = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "dp" ); //$NON-NLS-1$
+  public static IValidatorRule[] toRules( final Object[] objects )
+  {
+    final Set<IValidatorRule> rules = new LinkedHashSet<IValidatorRule>();
+    for( final Object object : objects )
+    {
+      if( object instanceof IValidatorRule )
+        rules.add( (IValidatorRule) object );
+    }
 
-  BigDecimal getAx( );
+    return rules.toArray( new IValidatorRule[] {} );
+  }
 
-  void setAx( BigDecimal value );
-
-  BigDecimal getAy( );
-
-  void setAy( BigDecimal value );
-
-  BigDecimal getDp( );
-
-  void setDp( BigDecimal value );
-
-  /**
-   * @return value for tuple result component id
-   */
-  BigDecimal getValue( String identifier );
 }

@@ -71,6 +71,8 @@ import org.kalypsodeegree_impl.model.feature.search.IReferenceCollectorStrategy;
  */
 public class ComboBoxModifier extends AbstractFeatureModifier
 {
+  private static final Object NO_LINK = new Object();
+
   private static final String NO_LINK_STRING = Messages.getString( "org.kalypso.ogc.gml.featureview.modfier.ComboBoxModifier.0" ); //$NON-NLS-1$
 
   final GMLLabelProvider m_cellEditorLabelProvider = new GMLLabelProvider();
@@ -115,7 +117,7 @@ public class ComboBoxModifier extends AbstractFeatureModifier
       /* Null entry to delete link if this is allowed */
       if( rt.isNillable() )
       {
-        input.add( null );
+        input.add( NO_LINK );
       }
 
       final GMLWorkspace workspace = m_feature.getWorkspace();
@@ -164,7 +166,7 @@ public class ComboBoxModifier extends AbstractFeatureModifier
     m_comboBoxCellEditor.setActivationStyle( ComboBoxViewerCellEditor.DROP_DOWN_ON_KEY_ACTIVATION | ComboBoxViewerCellEditor.DROP_DOWN_ON_MOUSE_ACTIVATION
         | ComboBoxViewerCellEditor.DROP_DOWN_ON_PROGRAMMATIC_ACTIVATION | ComboBoxViewerCellEditor.DROP_DOWN_ON_TRAVERSE_ACTIVATION );
 
-    m_comboBoxCellEditor.setContenProvider( new ArrayContentProvider() );
+    m_comboBoxCellEditor.setContentProvider( new ArrayContentProvider() );
 
     m_comboBoxCellEditor.setLabelProvider( new LabelProvider()
     {
@@ -180,7 +182,7 @@ public class ComboBoxModifier extends AbstractFeatureModifier
 
   protected String getCellEditorLabel( final Object element )
   {
-    if( element == null )
+    if( element == null || element == NO_LINK )
       return NO_LINK_STRING;
 
     final Feature foundFeature = findFeature( element );
@@ -219,7 +221,7 @@ public class ComboBoxModifier extends AbstractFeatureModifier
 
     if( ftp instanceof IRelationType )
     {
-      final Feature resolvedFeature = FeatureHelper.resolveLinkedFeature( f.getWorkspace(), fprop );
+      final Feature resolvedFeature = f.getMember( (IRelationType) ftp );
       if( resolvedFeature == null )
         return NO_LINK_STRING;
 
@@ -236,5 +238,14 @@ public class ComboBoxModifier extends AbstractFeatureModifier
   protected ViewerFilter createFilter( )
   {
     return null;
+  }
+
+  @Override
+  public Object parseInput( final Feature f, final Object value )
+  {
+    if( value == NO_LINK )
+      return null;
+
+    return super.parseInput( f, value );
   }
 }
