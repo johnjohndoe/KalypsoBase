@@ -76,6 +76,9 @@ public class ZmlCommandInterpolateValues extends AbstractHandler
       final IZmlTableSelection selection = table.getSelection();
 
       final IZmlModelValueCell current = selection.getFocusCell();
+      if( current == null )
+        return Status.CANCEL_STATUS;
+
       final IZmlModelValueCell[] cells = selection.getSelectedCells( current.getColumn() );
       if( ArrayUtils.getLength( cells ) < 2 )
         throw new ExecutionException( Messages.ZmlCommandInterpolateValues_0 );
@@ -90,7 +93,7 @@ public class ZmlCommandInterpolateValues extends AbstractHandler
       final double stepValue = valueDifference / indexDifference;
 
       final int baseIndex = intervallStart.getModelIndex();
-      final double baseValue = intervallStart.getValue().doubleValue();
+      final double baseValue = ((Number) intervallStart.getValue()).doubleValue();
 
       final IZmlModelColumn column = intervallStart.getColumn();
       final TupleModelTransaction transaction = new TupleModelTransaction( column.getTupleModel(), column.getMetadata() );
@@ -122,8 +125,8 @@ public class ZmlCommandInterpolateValues extends AbstractHandler
 
   private double getValueDifference( final IZmlModelValueCell intervallStart, final IZmlModelValueCell intervallEnd ) throws SensorException
   {
-    final Number valueStart = intervallStart.getValue();
-    final Number valueEnd = intervallEnd.getValue();
+    final Number valueStart = (Number) intervallStart.getValue();
+    final Number valueEnd = (Number) intervallEnd.getValue();
 
     return valueEnd.doubleValue() - valueStart.doubleValue();
   }

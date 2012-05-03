@@ -53,6 +53,8 @@ import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 
 /**
+ * editing strategy for sum values like rainfall
+ * 
  * @author Dirk Kuch
  */
 public class SumValueEditingStrategy extends AbstractEditingStrategy
@@ -67,7 +69,7 @@ public class SumValueEditingStrategy extends AbstractEditingStrategy
   {
     try
     {
-      final Number targetValue = getTargetValue( cell, value );
+      final Number targetValue = (Number) getTargetValue( cell, value );
 
       final IZmlModelValueCell previousCell = getViewport().findPreviousCell( cell );
 

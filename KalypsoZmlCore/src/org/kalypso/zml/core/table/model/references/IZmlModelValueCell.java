@@ -57,9 +57,9 @@ public interface IZmlModelValueCell extends IZmlModelCell
 
   Integer getStatus( ) throws SensorException;
 
-  Number getValue( ) throws SensorException;
+  Object getValue( ) throws SensorException;
 
-  void doUpdate( final Number value, final String source, final Integer status ) throws SensorException;
+  void doUpdate( final Object value, final String source, final Integer status ) throws SensorException;
 
   IZmlModelCellLabelProvider getStyleProvider( );
 

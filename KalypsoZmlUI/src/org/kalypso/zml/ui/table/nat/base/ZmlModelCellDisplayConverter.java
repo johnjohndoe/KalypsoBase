@@ -47,6 +47,8 @@ import net.sourceforge.nattable.data.convert.DisplayConverter;
 import org.apache.commons.lang3.StringUtils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.references.IZmlModelIndexCell;
 import org.kalypso.zml.core.table.model.references.IZmlModelValueCell;
@@ -80,6 +82,34 @@ public class ZmlModelCellDisplayConverter extends DisplayConverter
     else if( canonicalValue instanceof IZmlModelValueCell )
     {
       final IZmlModelValueCell cell = (IZmlModelValueCell) canonicalValue;
+       if( isPolderControl( cell ) )
+      {
+        try
+        {
+          return cell.getValue();
+        }
+        catch( final SensorException e )
+        {
+          e.printStackTrace();
+        }
+
+        return false;
+      }
+      
+      if( isPolderControl( cell ) )
+      {
+        try
+        {
+          return cell.getValue();
+        }
+        catch( final SensorException e )
+        {
+          e.printStackTrace();
+        }
+
+        return false;
+      }
+
       final IZmlModelCellLabelProvider provider = cell.getStyleProvider();
 
       return provider.getText( m_model, cell );
@@ -92,6 +122,17 @@ public class ZmlModelCellDisplayConverter extends DisplayConverter
     }
 
     return canonicalValue.toString();
+  }
+
+  private boolean isPolderControl( final IZmlModelValueCell cell )
+  {
+    final IZmlModelColumn column = cell.getColumn();
+    if( Objects.isNull( column ) )
+      return false;
+
+    final String type = column.getDataColumn().getValueAxis();
+
+    return StringUtils.equalsIgnoreCase( ITimeseriesConstants.TYPE_POLDER_CONTROL, type );
   }
 
   @Override

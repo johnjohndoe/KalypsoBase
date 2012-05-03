@@ -80,25 +80,20 @@ public class ChangeVisibilityCommandHandler extends AbstractHandler implements I
     return filters.toArray( new IChartLayerFilter[] {} );
   }
 
-  /**
-   * @see org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.menus.UIElement, java.util.Map)
-   */
   @Override
   public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
   {
     final IChartModel model = ChartHandlerUtilities.getModel( element );
     if( Objects.isNull( model ) )
-      element.setChecked( false );
-    else
-    {
-      final String parameter = (String) parameters.get( ChangeVisibilityCommandHandler.LAYER_PARAMETER );
-      final ILayerManager layerManager = model.getLayerManager();
+      return;
 
-      final VisibilityInitialStatusVisitor visitor = new VisibilityInitialStatusVisitor( parameter );
-      layerManager.accept( visitor );
+    final String parameter = (String) parameters.get( ChangeVisibilityCommandHandler.LAYER_PARAMETER );
+    final ILayerManager layerManager = model.getLayerManager();
 
-      element.setChecked( visitor.isEnabled() );
-    }
+    final VisibilityInitialStatusVisitor visitor = new VisibilityInitialStatusVisitor( parameter );
+    layerManager.accept( visitor );
+
+    element.setChecked( visitor.isEnabled() );
   }
 
 }

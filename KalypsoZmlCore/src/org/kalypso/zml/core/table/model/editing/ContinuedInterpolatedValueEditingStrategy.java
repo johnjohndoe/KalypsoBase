@@ -82,7 +82,7 @@ public class ContinuedInterpolatedValueEditingStrategy extends AbstractEditingSt
     try
     {
       /** update current cell */
-      final Number targetValue = getTargetValue( cell, value );
+      final Number targetValue = (Number) getTargetValue( cell, value );
 
       final IZmlModelColumn column = cell.getColumn();
       final TupleModelTransaction transaction = new TupleModelTransaction( column.getTupleModel(), column.getMetadata() );

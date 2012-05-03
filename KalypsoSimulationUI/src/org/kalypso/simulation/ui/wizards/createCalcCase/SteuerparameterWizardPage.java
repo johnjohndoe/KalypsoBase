@@ -40,7 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.simulation.ui.wizards.createCalcCase;
 
-import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -49,7 +48,8 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
@@ -62,7 +62,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.java.net.UrlUtilities;
-import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.IProjectProvider;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
@@ -71,6 +70,7 @@ import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
 import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.simulation.ui.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
@@ -78,7 +78,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * Wizard-Page zur Eingabe der Steuerparameter
- *
+ * 
  * @author belger
  */
 public class SteuerparameterWizardPage extends WizardPage
@@ -106,7 +106,6 @@ public class SteuerparameterWizardPage extends WizardPage
   public SteuerparameterWizardPage( final IProjectProvider pp, final ImageDescriptor image, final boolean canGoBack, final String controlPath )
   {
     super( "EditCalcCaseControlPage", Messages.getString( "org.kalypso.simulation.ui.wizards.createCalcCase.SteuerparameterWizardPage.0" ), image ); //$NON-NLS-1$ //$NON-NLS-2$
-
     m_canGoBack = canGoBack;
     m_controlPath = controlPath;
 
@@ -176,24 +175,37 @@ public class SteuerparameterWizardPage extends WizardPage
     if( m_workspace == null )
       return;
 
-    final GMLWorkspace workspace = m_workspace;
-    final SetContentHelper thread = new SetContentHelper()
-    {
-      @Override
-      public void write( final OutputStreamWriter w ) throws Throwable
-      {
-        GmlSerializer.serializeWorkspace( w, workspace );
-      }
-    };
-
     try
     {
-      thread.setFileContents( controlFile, false, false, new NullProgressMonitor() );
+      GmlSerializer.saveWorkspace( m_workspace, controlFile );
+    }
+    catch( final Exception e )
+    {
+      final IStatus status = new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), "Failed to save control model", e ); //$NON-NLS-1$
+      throw new CoreException( status );
     }
     finally
     {
       monitor.done();
     }
+
+// final SetContentHelper thread = new SetContentHelper()
+// {
+// @Override
+// public void write( final OutputStreamWriter w ) throws Throwable
+// {
+// GmlSerializer.serializeWorkspace( w, workspace );
+// }
+// };
+//
+// try
+// {
+// thread.setFileContents( controlFile, false, false, new NullProgressMonitor() );
+// }
+// finally
+// {
+// monitor.done();
+// }
   }
 
   public boolean isUpdate( )
@@ -223,7 +235,7 @@ public class SteuerparameterWizardPage extends WizardPage
   /**
    * Setzt die aktuelle Rechenvariante, ist dort schon eine .calculation vorhanden, wird diese geladen, sonst die
    * default.
-   *
+   * 
    * @param currentCalcCase
    */
   public void setFolder( final IFolder currentCalcCase )
