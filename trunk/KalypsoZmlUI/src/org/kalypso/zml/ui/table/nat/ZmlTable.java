@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.table.nat;
 
@@ -52,6 +52,7 @@ import net.sourceforge.nattable.grid.data.DefaultCornerDataProvider;
 import net.sourceforge.nattable.grid.layer.CornerLayer;
 import net.sourceforge.nattable.grid.layer.GridLayer;
 import net.sourceforge.nattable.grid.layer.config.DefaultGridLayerConfiguration;
+import net.sourceforge.nattable.layer.CompositeLayer;
 import net.sourceforge.nattable.layer.DataLayer;
 import net.sourceforge.nattable.layer.event.VisualRefreshEvent;
 import net.sourceforge.nattable.painter.cell.decorator.BeveledBorderDecorator;
@@ -83,8 +84,9 @@ import org.kalypso.zml.ui.table.nat.base.ZmlModelCellDisplayConverter;
 import org.kalypso.zml.ui.table.nat.base.ZmlModelRowHeaderDisplayConverter;
 import org.kalypso.zml.ui.table.nat.context.menu.NatTableContextMenuSupport;
 import org.kalypso.zml.ui.table.nat.editing.ZmlDefaultNumericDataValidator;
+import org.kalypso.zml.ui.table.nat.editing.ZmlEditBindings;
 import org.kalypso.zml.ui.table.nat.editing.ZmlModelColumnEditingRule;
-import org.kalypso.zml.ui.table.nat.editing.ZmlTableCellEditor;
+import org.kalypso.zml.ui.table.nat.editing.ZmlTableCellEditorFacade;
 import org.kalypso.zml.ui.table.nat.layers.BodyLayerStack;
 import org.kalypso.zml.ui.table.nat.layers.ColumnHeaderLayerStack;
 import org.kalypso.zml.ui.table.nat.layers.IZmlTableSelection;
@@ -161,8 +163,15 @@ public class ZmlTable extends Composite implements IZmlTable
     m_gridLayer.addConfiguration( new DefaultGridLayerConfiguration( m_gridLayer )
     {
       @Override
-      protected void addAlternateRowColoringConfig( final GridLayer gridLayer )
+      protected void addAlternateRowColoringConfig( final CompositeLayer layer )
       {
+        // disable alternating row coloring
+      }
+
+      @Override
+      protected void addEditingUIConfig( )
+      {
+        addConfiguration( new ZmlEditBindings( m_viewport ) );
       }
     } );
 
@@ -183,9 +192,9 @@ public class ZmlTable extends Composite implements IZmlTable
     registry.registerConfigAttribute( CellConfigAttributes.CELL_PAINTER, new BeveledBorderDecorator( new ZmlColumnHeaderCellPainter( m_viewport ) ), DisplayMode.NORMAL, GridRegion.COLUMN_HEADER.toString() );
 
     /** editing support */
-
     registry.registerConfigAttribute( EditConfigAttributes.CELL_EDITABLE_RULE, new ZmlModelColumnEditingRule( m_viewport ), DisplayMode.EDIT, GridRegion.BODY.toString() );
-    registry.registerConfigAttribute( EditConfigAttributes.CELL_EDITOR, new ZmlTableCellEditor( m_viewport ), DisplayMode.EDIT, GridRegion.BODY.toString() );
+    registry.registerConfigAttribute( EditConfigAttributes.CELL_EDITOR, new ZmlTableCellEditorFacade( m_viewport ), DisplayMode.EDIT, GridRegion.BODY.toString() );
+
     registry.registerConfigAttribute( EditConfigAttributes.DATA_VALIDATOR, new ZmlDefaultNumericDataValidator(), DisplayMode.EDIT, GridRegion.BODY.toString() );
 
     new ZmlTableTooltip( m_table, getModelViewport() );

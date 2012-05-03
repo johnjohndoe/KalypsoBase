@@ -262,7 +262,7 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
 
   /**
    * Creates a folder resource given the folder handle.
-   *
+   * 
    * @param folderHandle
    *          the folder handle to create a folder resource for
    * @param monitor
