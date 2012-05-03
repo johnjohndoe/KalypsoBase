@@ -57,7 +57,7 @@ import org.kalypso.ogc.gml.om.table.handlers.AbstractComponentUiHandler;
 
 /**
  * Handles profile point property "code" classifications
- * 
+ *
  * @author Dirk Kuch
  */
 public class CodeClassificationClassUiHandler extends AbstractComponentUiHandler
@@ -79,9 +79,6 @@ public class CodeClassificationClassUiHandler extends AbstractComponentUiHandler
     return new ComboBoxViewerCellEditor( new ArrayContentProvider(), new ClassificationLabelProvider(), getCodeClasses(), table, SWT.READ_ONLY | SWT.DROP_DOWN );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getStringRepresentation(org.kalypso.observation.result.IRecord)
-   */
   @Override
   public String getStringRepresentation( final IRecord record )
   {
@@ -90,6 +87,9 @@ public class CodeClassificationClassUiHandler extends AbstractComponentUiHandler
       return super.getStringRepresentation( record );
 
     final IWspmClassification classification = WspmClassifications.getClassification( m_profile );
+    if( classification == null )
+      return super.getStringRepresentation( record );
+
     final ICodeClass clazz = classification.findCodeClass( value.toString() );
     if( Objects.isNotNull( clazz ) )
       return clazz.getDescription();
@@ -100,6 +100,9 @@ public class CodeClassificationClassUiHandler extends AbstractComponentUiHandler
   private ICodeClass[] getCodeClasses( )
   {
     final IWspmClassification classification = WspmClassifications.getClassification( m_profile );
+    if( classification == null )
+      return new ICodeClass[0];
+
     return classification.getCodeClasses();
   }
 

@@ -44,6 +44,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -105,7 +106,7 @@ public abstract class AbstractProfil implements IProfil
 
   private String m_description;
 
-  private final Set<IProfilListener> m_listeners = new LinkedHashSet<IProfilListener>( 10 );
+  private final Set<IProfilListener> m_listeners = Collections.synchronizedSet( new LinkedHashSet<IProfilListener>( 10 ) );
 
   private final Map<Object, Object> m_additionalProfileSettings = new HashMap<Object, Object>();
 
@@ -119,7 +120,7 @@ public abstract class AbstractProfil implements IProfil
 
   private final RangeSelection m_selection;
 
-  private Object m_transactionLock;
+  private final Set<Object> m_transactionLock = new HashSet<>();
 
   private int m_transactionHint;
 
@@ -229,7 +230,7 @@ public abstract class AbstractProfil implements IProfil
 
   private void fireProblemMarkerChanged( )
   {
-    if( m_transactionLock != null )
+    if( !m_transactionLock.isEmpty() )
       return;
     // FIXME: check: fireProblemMarkerChanged after transaction?
 
@@ -251,7 +252,7 @@ public abstract class AbstractProfil implements IProfil
   void fireProfilChanged( final ProfilChangeHint hint )
   {
     // TODO: instead of ProfileOperation, we could combine the hints ourselfs during transaction mode
-    if( m_transactionLock != null )
+    if( !m_transactionLock.isEmpty() )
     {
       m_transactionHint |= hint.getEvent();
       return;
@@ -405,7 +406,7 @@ public abstract class AbstractProfil implements IProfil
 
   /**
    * CREATES A NEW POINT PROPERTY.
-   * 
+   *
    * @return a pointProperty from PointPropertyProvider, see
    *         {@code IProfilPointPropertyProvider#getPointProperty(String)}
    *         <p>
@@ -812,22 +813,15 @@ public abstract class AbstractProfil implements IProfil
   @Override
   public synchronized void startTransaction( final Object lock )
   {
-    if( m_transactionLock != null )
-      throw new IllegalStateException();
-
-    m_transactionLock = lock;
-    m_transactionHint = 0;
+    m_transactionLock.add( lock );
   }
 
   @Override
   public synchronized void stopTransaction( final Object lock )
   {
-    if( m_transactionLock == null )
-      throw new IllegalStateException();
-
     final int hint = m_transactionHint;
 
-    m_transactionLock = null;
+    m_transactionLock.remove( lock );
     m_transactionHint = 0;
 
     fireProfilChanged( new ProfilChangeHint( hint ) );

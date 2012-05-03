@@ -43,7 +43,6 @@ package org.kalypso.model.wspm.ui.action.base;
 import java.awt.Graphics;
 import java.net.URL;
 
-import org.eclipse.core.runtime.CoreException;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
@@ -53,6 +52,10 @@ import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.ogc.gml.map.widgets.advanced.utils.SLDPainter;
+import org.kalypso.transformation.transformer.JTSTransformer;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+import org.opengis.referencing.FactoryException;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -95,23 +98,41 @@ public final class ProfilePainter
     final IProfil iProfile = profile.getProfil();
     final IProfilPointMarkerProvider provider = KalypsoModelWspmCoreExtensions.getMarkerProviders( iProfile.getType() );
 
-    final IProfilPointMarker[] markers = iProfile.getPointMarkers();
-    for( final IProfilPointMarker marker : markers )
+    final String kalypsoSRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+    final String profileSRS = profile.getSrsName();
+
+    final int profileSRID = JTSAdapter.toSrid( profileSRS );
+    final int kalypsoSRID = JTSAdapter.toSrid( kalypsoSRS );
+
+    try
     {
-      try
+      final JTSTransformer transformer = new JTSTransformer( profileSRID, kalypsoSRID );
+
+      final IProfilPointMarker[] markers = iProfile.getPointMarkers();
+      for( final IProfilPointMarker marker : markers )
       {
-        final URL sld = provider.getSld( marker.getComponent().getId() );
-        final Coordinate coordinate = marker.getPoint().getCoordinate();
-        if( coordinate != null )
-          painter.paint( g, sld, coordinate );
-        // TODO: interpolate coordinate if coordinate of marker point is not there
-      }
-      catch( final CoreException e )
-      {
-        e.printStackTrace();
+        try
+        {
+          final URL sld = provider.getSld( marker.getComponent().getId() );
+          final Coordinate coordinate = marker.getPoint().getCoordinate();
+
+          if( coordinate != null )
+          {
+            final Coordinate transformedCrd = transformer.transform( coordinate );
+            painter.paint( g, sld, transformedCrd );
+          }
+          // TODO: interpolate coordinate if coordinate of marker point is not there
+        }
+        catch( final Exception e )
+        {
+          e.printStackTrace();
+        }
       }
     }
-
+    catch( final FactoryException e1 )
+    {
+      e1.printStackTrace();
+    }
   }
 
   public static void doPaintProfileCursor( final Graphics g, final SLDPainter painter, final IProfileFeature profileFeature, final URL sldLinePoint, final URL sldVertexPoint )

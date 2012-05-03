@@ -1,6 +1,6 @@
 package org.kalypso.gml.ui.commands.exportshape;
 
-import java.lang.reflect.InvocationTargetException;
+import java.io.IOException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -8,11 +8,14 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.shape.IShapeData;
+import org.kalypso.shape.ShapeDataException;
 import org.kalypso.shape.ShapeWriter;
 import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.deegree.IShapeDataFactory;
+import org.kalypso.shape.shp.SHPException;
 
 /**
  * @author Gernot Belger
@@ -33,7 +36,7 @@ public final class ExportShapeOperation implements ICoreRunnableWithProgress
   }
 
   @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException, InvocationTargetException
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( Messages.getString( "ExportShapeOperation_0" ), 100 ); //$NON-NLS-1$
     try
@@ -52,13 +55,15 @@ public final class ExportShapeOperation implements ICoreRunnableWithProgress
     {
       throw e;
     }
-    catch( final DBaseException e )
+    catch( final ShapeDataException e )
     {
-      throw new InvocationTargetException( e, "Failed to create default shape provider" ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoGmlUIPlugin.id(), "Failed to initialize shape writer", e );
+      throw new CoreException( status );
     }
-    catch( final Exception e )
+    catch( final SHPException | IOException | DBaseException e )
     {
-      throw new InvocationTargetException( e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoGmlUIPlugin.id(), "Failed to write shape date", e );
+      throw new CoreException( status );
     }
     finally
     {

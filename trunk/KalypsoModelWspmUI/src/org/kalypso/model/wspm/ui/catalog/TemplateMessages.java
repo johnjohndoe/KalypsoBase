@@ -38,53 +38,39 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.profil.wizard.centerline;
+package org.kalypso.model.wspm.ui.catalog;
 
-import org.eclipse.jface.dialogs.IDialogSettings;
-import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import java.util.ResourceBundle;
+
+import org.kalypso.contribs.java.i18n.I18nUtils;
 
 /**
+ * Provides translation for catalog registered templates of this plug-in.
+ * 
  * @author Gernot Belger
  */
-public class DeriveCenterlineData
+public final class TemplateMessages
 {
-  private WspmWaterBody[] m_selectedWaterBodies;
+  private static final String BUNDLE_NAME = "org.kalypso.model.wspm.ui.catalog.templatemessages"; //$NON-NLS-1$
 
-  private CommandableWorkspace m_workspace;
+  private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
 
-  public void init( final IDialogSettings settings )
+  private static final Object[] NO_ARGS = new Object[0];
+
+  private TemplateMessages( )
   {
-    if( settings == null )
-      return;
-
-    // TODO Auto-generated method stub
   }
 
-  public void storeSettings( final IDialogSettings settings )
+  /**
+   * java reflections needs this method-signatur
+   */
+  public static String getString( final String key )
   {
-    if( settings == null )
-      return;
-
+    return getString( key, NO_ARGS );
   }
 
-  public void setSelectedWaterBodies( final WspmWaterBody[] selectedWaterBodies )
+  public static String getString( final String key, final Object... args )
   {
-    m_selectedWaterBodies = selectedWaterBodies;
-  }
-
-  public WspmWaterBody[] getSelectedWaterBodies( )
-  {
-    return m_selectedWaterBodies;
-  }
-
-  public CommandableWorkspace getWorkspace( )
-  {
-    return m_workspace;
-  }
-
-  public void setWorkspace( final CommandableWorkspace workspace )
-  {
-    m_workspace = workspace;
+    return I18nUtils.formatMessage( RESOURCE_BUNDLE, key, args );
   }
 }

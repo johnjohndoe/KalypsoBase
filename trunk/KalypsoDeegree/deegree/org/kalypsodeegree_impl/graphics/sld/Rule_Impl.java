@@ -61,7 +61,7 @@ import org.kalypsodeegree.xml.Marshallable;
  * <p>
  * ----------------------------------------------------------------------
  * </p>
- * 
+ *
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @version $Revision$ $Date$
  */
@@ -104,7 +104,7 @@ public class Rule_Impl implements Rule, Marshallable
 
   /**
    * returns the name of the rule. this for machine interpreting.
-   * 
+   *
    * @return the name of the rule
    */
   @Override
@@ -115,7 +115,7 @@ public class Rule_Impl implements Rule, Marshallable
 
   /**
    * sets the name of the rule. this for machine interpreting.
-   * 
+   *
    * @param name
    *          the name of the rule
    */
@@ -127,7 +127,7 @@ public class Rule_Impl implements Rule, Marshallable
 
   /**
    * returns the human readable title of the rule
-   * 
+   *
    * @return the title of the rule
    */
   @Override
@@ -138,7 +138,7 @@ public class Rule_Impl implements Rule, Marshallable
 
   /**
    * sets the human readable title of the rule
-   * 
+   *
    * @param title
    *          the title of the rule
    */
@@ -150,7 +150,7 @@ public class Rule_Impl implements Rule, Marshallable
 
   /**
    * returns the human readable abstract of the rule
-   * 
+   *
    * @return the abstract of the rule
    */
   @Override
@@ -161,7 +161,7 @@ public class Rule_Impl implements Rule, Marshallable
 
   /**
    * sets the human readable abstract of the rule
-   * 
+   *
    * @param abstract_
    *          the abstract of the rule
    */
@@ -173,7 +173,7 @@ public class Rule_Impl implements Rule, Marshallable
 
   /**
    * The LegendGraphic element gives an optional explicit Graphic symbol to be displayed in a legend for this rule.
-   * 
+   *
    * @return the legendGraphic of the rule
    */
   @Override
@@ -184,7 +184,7 @@ public class Rule_Impl implements Rule, Marshallable
 
   /**
    * sets the LegendGraphic element
-   * 
+   *
    * @param legendGraphic
    *          the legendGraphic of the rule
    */
@@ -197,7 +197,7 @@ public class Rule_Impl implements Rule, Marshallable
   /**
    * The Filter element has a relatively straightforward meaning. The syntax of the Filter element is defined in the WFS
    * specification and allows both attribute (property) and spatial filtering.
-   * 
+   *
    * @return the filter element
    */
   @Override
@@ -208,7 +208,7 @@ public class Rule_Impl implements Rule, Marshallable
 
   /**
    * sets the <Filter>
-   * 
+   *
    * @param filter
    *          the filter element
    */
@@ -221,7 +221,7 @@ public class Rule_Impl implements Rule, Marshallable
   /**
    * The ElseFilter allows rules to be specified that are activated for features are not selected by any other rule in a
    * feature-type style.
-   * 
+   *
    * @return true if the rule has an elseFilter
    */
   @Override
@@ -232,7 +232,7 @@ public class Rule_Impl implements Rule, Marshallable
 
   /**
    * sets the <ElseFilter>
-   * 
+   *
    * @param elseFilter
    *          an elseFilter
    */
@@ -246,7 +246,7 @@ public class Rule_Impl implements Rule, Marshallable
    * The MinScaleDenominator and MaxScaleDenominator elements of a Rule define the range of map-rendering scales for
    * which the rule should be applied. The MinScaleDenominator and MaxScaleDenominator elements, as their names suggest,
    * are simply the minimum and maximum ranges of scale (denominators) of maps for which a rule should apply.
-   * 
+   *
    * @return the MinScaleDenominator for the rule
    */
   @Override
@@ -263,7 +263,7 @@ public class Rule_Impl implements Rule, Marshallable
 
   /**
    * sets the <MinScaleDenominator>
-   * 
+   *
    * @param minScaleDenominator
    *          the MinScaleDenominator for the rule
    */
@@ -277,7 +277,7 @@ public class Rule_Impl implements Rule, Marshallable
    * The MinScaleDenominator and MaxScaleDenominator elements of a Rule define the range of map-rendering scales for
    * which the rule should be applied. The MinScaleDenominator and MaxScaleDenominator elements, as their names suggest,
    * are simply the minimum and maximum ranges of scale (denominators) of maps for which a rule should apply.
-   * 
+   *
    * @return the MaxScaleDenominator for the rule
    */
   @Override
@@ -288,7 +288,7 @@ public class Rule_Impl implements Rule, Marshallable
 
   /**
    * sets the <MaxScaleDenominator>
-   * 
+   *
    * @param maxScaleDenominator
    *          the MaxScaleDenominator for the rule
    */
@@ -309,7 +309,7 @@ public class Rule_Impl implements Rule, Marshallable
    * The Symbolizers will be returned in the sequece of their occurence with in the rule definition. Its the users
    * function to determine what type of Symbolizer(s) are returned. This can be done for example by using the
    * <tt>instanceof</tt> operator of Java.
-   * 
+   *
    * @return the Symbolizer for the rule
    */
   @Override
@@ -320,7 +320,7 @@ public class Rule_Impl implements Rule, Marshallable
 
   /**
    * sets the <Symbolizer>
-   * 
+   *
    * @param symbolizers
    *          symbolizers for the rule
    */
@@ -340,7 +340,7 @@ public class Rule_Impl implements Rule, Marshallable
 
   /**
    * adds a <Symbolizer>
-   * 
+   *
    * @param symbolizer
    *          symbolizer to add
    */
@@ -353,7 +353,7 @@ public class Rule_Impl implements Rule, Marshallable
 
   /**
    * Removes a <Symbolizer>from a set of Symbolizers.
-   * 
+   *
    * @param symbolizer
    *          symbolizer to remove
    */
@@ -369,7 +369,7 @@ public class Rule_Impl implements Rule, Marshallable
 
   /**
    * exports the content of the Rule as XML formated String
-   * 
+   *
    * @return xml representation of the Rule
    */
   @Override
@@ -393,14 +393,19 @@ public class Rule_Impl implements Rule, Marshallable
     {
       sb.append( "<LegendGraphic>" ).append( m_legendGraphic ).append( "</LegendGraphic>" );
     }
-    if( m_filter != null )
-    {
-      sb.append( m_filter.toXML() );
-    }
+
     if( m_elseFilter )
     {
       sb.append( "<ElseFilter/>" );
     }
+    // REMARK: else here, because both is never allowed!
+    // Internally the filter is set to the inverse of all other filters, so we really get both elements here
+    // We always assume, that if ElseFilter is true, the filter element needs not to be written.
+    else if( m_filter != null )
+    {
+      sb.append( m_filter.toXML() );
+    }
+
     // TODO: only write min/max if they are really set
     sb.append( "<MinScaleDenominator>" ).append( m_minScaleDenominator );
     sb.append( "</MinScaleDenominator>" );

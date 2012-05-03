@@ -54,7 +54,6 @@ import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.observation.result.ComponentUtilities;
-import org.kalypso.observation.result.IRecord;
 
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
 import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
@@ -145,7 +144,7 @@ public class PointsLineLayer extends AbstractProfilLayer
   }
 
   @Override
-  public Rectangle getHoverRect( final IRecord profilPoint )
+  public Rectangle getHoverRect( final IProfileRecord profilPoint )
   {
     final ICoordinateMapper cm = getCoordinateMapper();
     return cm == null ? null : RectangleUtils.buffer( toScreen( profilPoint ) );

@@ -553,12 +553,17 @@ public final class JTSAdapter
    */
   private static GM_MultiPrimitive wrap( final GeometryCollection collection, final String crs ) throws GM_Exception
   {
-    final GM_MultiPrimitive multi = new GM_MultiPrimitive_Impl( crs );
-    for( int i = 0; i < collection.getNumGeometries(); i++ )
+    final int numGeometries = collection.getNumGeometries();
+    final GM_Object[] children = new GM_Object[numGeometries];
+
+    for( int i = 0; i < numGeometries; i++ )
     {
-      multi.add( wrap( collection.getGeometryN( i ) ) );
+      final GM_Object geom = wrap( collection.getGeometryN( i ) );
+      children[i] = geom;
     }
-    return multi;
+
+    // TODO: why multi primitive? shouldn't this be a Multi-Geometry instead?
+    return new GM_MultiPrimitive_Impl( children, crs );
   }
 
   /**
