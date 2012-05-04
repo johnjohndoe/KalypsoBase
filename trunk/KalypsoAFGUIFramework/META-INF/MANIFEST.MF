@@ -6,16 +6,16 @@ Bundle-Version: 11.6.5.qualifier
 Bundle-Activator: org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin
 Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-Localization: plugin
-Require-Bundle: org.kalypso.ui,
+Require-Bundle: de.openali.odysseus.chart.ui,
+ de.renew.workflow.connector;visibility:=reexport,
+ org.eclipse.core.expressions,
  org.eclipse.ui.intro;visibility:=reexport,
- de.openali.odysseus.chart.ui,
- org.kalypso.featureview,
  org.eclipse.ui.navigator,
  org.eclipse.ui.navigator.resources,
- org.eclipse.core.expressions,
- de.renew.workflow.connector;visibility:=reexport,
- org.kalypso.simulation.core,
+ org.kalypso.featureview,
  org.kalypso.module,
+ org.kalypso.simulation.core,
+ org.kalypso.ui,
  org.kalypso.ui.addlayer;bundle-version="11.6.5"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.afgui,
