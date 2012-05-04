@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.wq.wechmann;
 
@@ -102,9 +102,9 @@ public final class WechmannFunction
   /**
    * @see WechmannFunction#computeW(double, double, double, double)
    */
-  public static double computeW( final WechmannParams wp, final double Q ) throws WQException
+  public static double computeW( final WechmannParams wp, final double q ) throws WQException
   {
-    return computeW( wp.getW1(), Q, wp.getLNK1(), wp.getK2() );
+    return computeW( wp.getW1(), q, wp.getLNK1(), wp.getK2() );
   }
 
   /**
@@ -119,13 +119,13 @@ public final class WechmannFunction
    * @throws WQException
    *           when (K2 = 0) or (Q < 0)
    */
-  public static final double computeW( final double W1, final double Q, final double LNK1, final double K2 ) throws WQException
+  public static double computeW( final double w1, final double q, final double lnk1, final double k2 ) throws WQException
   {
-    if( K2 == 0 )
+    if( k2 == 0 )
       throw new WQException( Messages.getString( "org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFunction.1" ) ); //$NON-NLS-1$
-    if( Q < 0 )
+    if( q < 0 )
       throw new WQException( Messages.getString( "org.kalypso.ogc.sensor.timeseries.wq.wechmann.WechmannFunction.2" ) ); //$NON-NLS-1$
 
-    return W1 + Math.exp( (Math.log( Q ) - LNK1) / K2 );
+    return w1 + Math.exp( (Math.log( q ) - lnk1) / k2 );
   }
 }
