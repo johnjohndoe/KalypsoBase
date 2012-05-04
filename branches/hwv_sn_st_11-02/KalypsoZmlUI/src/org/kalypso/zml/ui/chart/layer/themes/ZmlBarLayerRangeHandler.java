@@ -45,12 +45,10 @@ import java.util.Date;
 import org.joda.time.Period;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
@@ -115,14 +113,7 @@ public class ZmlBarLayerRangeHandler
     if( Objects.isNull( timestep ) )
       return max;
 
-    final IZmlLayerDataHandler handler = m_layer.getDataHandler();
-    final IAxis valueAxis = handler.getValueAxis();
-
-    // don't substract timestep for polder timeseries because they are rendered positive
-    if( !ITimeseriesConstants.TYPE_POLDER_CONTROL.equals( valueAxis.getType() ) )
-      return max;
-
-    final long ms = timestep.toStandardSeconds().getSeconds() * 1000;
+    final long ms = Double.valueOf( timestep.toStandardSeconds().getSeconds() * 1000.0 * 2.0 ).longValue();
     return new Date( max.getTime() + ms );
   }
 
@@ -131,14 +122,7 @@ public class ZmlBarLayerRangeHandler
     if( Objects.isNull( timestep ) )
       return min;
 
-    final IZmlLayerDataHandler handler = m_layer.getDataHandler();
-    final IAxis valueAxis = handler.getValueAxis();
-
-    // don't substract timestep for polder timeseries because they are rendered positive
-    if( ITimeseriesConstants.TYPE_POLDER_CONTROL.equals( valueAxis.getType() ) )
-      return min;
-
-    final long ms = timestep.toStandardSeconds().getSeconds() * 1000;
+    final long ms = Double.valueOf( timestep.toStandardSeconds().getSeconds() * 1000.0 * 2.0 ).longValue();
     return new Date( min.getTime() - ms );
   }
 
