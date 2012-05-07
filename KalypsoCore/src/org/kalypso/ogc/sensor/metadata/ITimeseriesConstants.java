@@ -118,9 +118,9 @@ public interface ITimeseriesConstants extends IMetadataConstants
 
   String MD_WQ_WECHMANN = "WQ-Parameter"; //$NON-NLS-1$
 
-  String MD_WECHMANN_DEFAULT_E = "default Wechmann E"; //$NON-NLS-1$
-
-  String MD_WECHMANN_DEFAULT_V = "default Wechmann V"; //$NON-NLS-1$
+//  String MD_WECHMANN_DEFAULT_E = "default Wechmann E"; //$NON-NLS-1$
+//
+//  String MD_WECHMANN_DEFAULT_V = "default Wechmann V"; //$NON-NLS-1$
 
   /** AREA [m^2] */
   String TYPE_AREA = "A"; //$NON-NLS-1$
