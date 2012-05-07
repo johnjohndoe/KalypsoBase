@@ -42,6 +42,8 @@ package org.kalypso.ogc.sensor.visitor;
 
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.TupleModelDataSet;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 
 /**
  * @author Dirk Kuch
@@ -57,4 +59,6 @@ public interface ITupleModelValueContainer
   boolean hasAxis( String... types );
 
   IAxis[] getAxes( );
+
+  TupleModelDataSet getDataSetFor( MetadataList metadata, String valueAxis ) throws SensorException;
 }
