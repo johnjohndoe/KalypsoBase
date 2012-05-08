@@ -125,9 +125,6 @@ public class ValidationProfilListener implements IProfilListener
 
         final IMarker[] markers = collector.getMarkers();
         profile.setProblemMarker( markers );
-
-        KalypsoModelWspmCoreDebug.DEBUG_VALIDATION_MARKER.printf( " (validation_performance_check)    endValidation : %s\n", DateFormat.getTimeInstance().format( Calendar.getInstance().getTime() ) ); //$NON-NLS-1$
-
         return status;
       }
     };

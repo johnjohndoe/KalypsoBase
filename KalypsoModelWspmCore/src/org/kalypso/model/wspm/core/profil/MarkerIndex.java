@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.core.profil;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,9 +60,14 @@ import org.kalypso.observation.result.IRecord;
  */
 public class MarkerIndex
 {
-  private final Map<IRecord, Collection<IMarker>> m_recordIndex = new HashMap<IRecord, Collection<IMarker>>();
+  public IRecord[] getRecords( )
+  {
+    return m_recordIndex.keySet().toArray( new IRecord[] {} );
+  }
 
-  private final Map<Integer, Collection<IMarker>> m_severityIndex = new HashMap<Integer, Collection<IMarker>>();
+  private final Map<IRecord, Collection<IMarker>> m_recordIndex = Collections.synchronizedMap( new HashMap<IRecord, Collection<IMarker>>() );
+
+  private final Map<Integer, Collection<IMarker>> m_severityIndex = Collections.synchronizedMap( new HashMap<Integer, Collection<IMarker>>() );
 
   private final IMarker[] m_markers;
 

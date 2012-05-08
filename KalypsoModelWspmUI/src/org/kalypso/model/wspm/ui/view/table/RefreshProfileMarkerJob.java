@@ -47,9 +47,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.i18n.Messages;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author Dirk Kuch
@@ -74,14 +75,17 @@ public class RefreshProfileMarkerJob extends UIJob
     final IProfil profile = m_tableView.getProfil();
     if( Objects.isNull( profile ) )
       return Status.CANCEL_STATUS;
-
-    final IProfileRecord[] points = profile.getPoints();
+// TODO: nur die geänderten Marker neu zeichnen
+// MarkerIndex markers=profile.getProblemMarker();
+// final IRecord[] points=markers.getRecords();
+    final IRecord[] points = profile.getResult().toArray( new IRecord[] {} );
 
     if( ArrayUtils.isNotEmpty( points ) )
     {
       final TableViewer viewer = m_tableView.getTupleResultViewer();
       if( Objects.isNotNull( viewer ) && !viewer.getTable().isDisposed() )
-        viewer.update( points, new String[] { "" } ); //$NON-NLS-1$
+        // viewer.update( points, new String[] { "" } ); //$NON-NLS-1$
+        ViewerUtilities.update( viewer, points, new String[] { "" }, true );//$NON-NLS-1$
     }
 
     m_tableView.updateProblemView();
