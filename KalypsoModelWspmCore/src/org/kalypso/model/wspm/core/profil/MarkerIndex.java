@@ -60,11 +60,6 @@ import org.kalypso.observation.result.IRecord;
  */
 public class MarkerIndex
 {
-  public IRecord[] getRecords( )
-  {
-    return m_recordIndex.keySet().toArray( new IRecord[] {} );
-  }
-
   private final Map<IRecord, Collection<IMarker>> m_recordIndex = Collections.synchronizedMap( new HashMap<IRecord, Collection<IMarker>>() );
 
   private final Map<Integer, Collection<IMarker>> m_severityIndex = Collections.synchronizedMap( new HashMap<Integer, Collection<IMarker>>() );
@@ -123,11 +118,15 @@ public class MarkerIndex
   }
 
   /**
-   * Returns all markers contained in this index
+   * Return all markers associated to the given severity.
    */
-  public IMarker[] getMarkers( )
+  public IMarker[] get( final int severity )
   {
-    return m_markers;
+    final Collection<IMarker> markers = m_severityIndex.get( severity );
+    if( markers == null )
+      return new IMarker[] {};
+
+    return markers.toArray( new IMarker[markers.size()] );
   }
 
   /**
@@ -142,20 +141,21 @@ public class MarkerIndex
     return markers.toArray( new IMarker[markers.size()] );
   }
 
+  /**
+   * Returns all markers contained in this index
+   */
+  public IMarker[] getMarkers( )
+  {
+    return m_markers;
+  }
+
+  public IRecord[] getRecords( )
+  {
+    return m_recordIndex.keySet().toArray( new IRecord[] {} );
+  }
+
   public final boolean hasMarkers( )
   {
     return m_markers.length > 0;
-  }
-
-  /**
-   * Return all markers associated to the given severity.
-   */
-  public IMarker[] get( final int severity )
-  {
-    final Collection<IMarker> markers = m_severityIndex.get( severity );
-    if( markers == null )
-      return new IMarker[] {};
-
-    return markers.toArray( new IMarker[markers.size()] );
   }
 }
