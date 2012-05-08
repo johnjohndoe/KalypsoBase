@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,10 +36,11 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.wq;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -80,7 +81,7 @@ public class WQTuppleModel extends AbstractTupleModel
   /** generated axis */
   private final AxisSet m_target;
 
-  private final Map<Integer, TupleModelDataSet> m_values = new HashMap<Integer, TupleModelDataSet>();
+  private final Map<Integer, TupleModelDataSet> m_values = Collections.synchronizedMap( new HashMap<Integer, TupleModelDataSet>() );
 
   private final IWQConverter m_converter;
 
