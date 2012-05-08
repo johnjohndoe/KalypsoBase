@@ -42,12 +42,17 @@ package org.kalypso.zml.core.table.model.interpolation;
 
 import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.TupleModelDataSet;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 import org.kalypso.ogc.sensor.visitor.ITupleModelValueContainer;
 import org.kalypso.ogc.sensor.visitor.ITupleModelVisitor;
+import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.model.references.ZmlValues;
 
 /**
@@ -86,22 +91,43 @@ public class ContinousInterpolatedValueVisitor implements ITupleModelVisitor
     if( Objects.isNull( wechmannE, wechmannV ) )
       throw new CancelVisitorException();
 
-    if( ZmlValues.isStuetzstelle( wechmannE.getStatus(), wechmannE.getSource() ) )
+    if( isStuetzstelle( wechmannE ) )
     {
       m_eStuetzstelle = wechmannE;
     }
     else if( m_eStuetzstelle != null )
     {
-      container.set( m_eStuetzstelle.getValueAxis(), m_eStuetzstelle.getValue() );
+      apply( container, m_eStuetzstelle );
     }
 
-    if( ZmlValues.isStuetzstelle( wechmannV.getStatus(), wechmannV.getSource() ) )
+    if( isStuetzstelle( wechmannV ) )
     {
       m_vStuetzstelle = wechmannV;
     }
     else if( m_vStuetzstelle != null )
     {
-      container.set( m_vStuetzstelle.getValueAxis(), m_vStuetzstelle.getValue() );
+      apply( container, m_vStuetzstelle );
     }
+  }
+
+  private void apply( final ITupleModelValueContainer container, final TupleModelDataSet value ) throws SensorException
+  {
+    final IAxis valueAxis = value.getValueAxis();
+    final IAxis statusAxis = AxisUtils.findStatusAxis( container.getAxes(), valueAxis );
+    final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( container.getAxes(), valueAxis );
+
+    final DataSourceHandler handler = new DataSourceHandler( m_metadata );
+
+    container.set( valueAxis, value.getValue() );
+    container.set( statusAxis, KalypsoStati.BIT_OK );
+    container.set( dataSourceAxis, handler.addDataSource( IDataSourceItem.SOURCE_INTERPOLATED_WECHMANN_VALUE, IDataSourceItem.SOURCE_INTERPOLATED_WECHMANN_VALUE ) );
+  }
+
+  private boolean isStuetzstelle( final TupleModelDataSet value )
+  {
+    if( value.getValue() == null )
+      return false;
+
+    return ZmlValues.isStuetzstelle( value.getStatus(), value.getSource() );
   }
 }
