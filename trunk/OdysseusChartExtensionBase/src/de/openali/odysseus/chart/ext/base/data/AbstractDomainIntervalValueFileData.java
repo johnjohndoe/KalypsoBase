@@ -4,7 +4,6 @@ import java.net.URL;
 
 public abstract class AbstractDomainIntervalValueFileData<T_domain, T_target> extends AbstractDomainIntervalValueData<T_domain, T_target>
 {
-
   private URL m_url;
 
   public void setInputURL( final URL url )
@@ -16,5 +15,4 @@ public abstract class AbstractDomainIntervalValueFileData<T_domain, T_target> ex
   {
     return m_url;
   }
-
 }

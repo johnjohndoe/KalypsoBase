@@ -44,6 +44,7 @@ import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperat
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 import de.openali.odysseus.service.ods.environment.IODSChart;
 import de.openali.odysseus.service.ods.environment.IODSEnvironment;
+import de.openali.odysseus.service.ods.environment.ODSChartConfig;
 import de.openali.odysseus.service.ods.x020.AxesOfferingType;
 import de.openali.odysseus.service.ods.x020.AxisDirectionType;
 import de.openali.odysseus.service.ods.x020.AxisOfferingType;
@@ -93,7 +94,7 @@ public class CapabilitiesLoader
    * @param odsEnvironment
    *          The ODS environment.
    */
-  public CapabilitiesLoader( IODSEnvironment odsEnvironment ) throws OWSException
+  public CapabilitiesLoader( final IODSEnvironment odsEnvironment ) throws OWSException
   {
     m_odsEnvironment = odsEnvironment;
     createCapabilitiesDocument();
@@ -106,7 +107,7 @@ public class CapabilitiesLoader
   {
     m_odsCapabilities = ODSCapabilitiesDocument.Factory.newInstance();
 
-    ODSCapabilitiesType caps = m_odsCapabilities.addNewODSCapabilities();
+    final ODSCapabilitiesType caps = m_odsCapabilities.addNewODSCapabilities();
     caps.setServiceProvider( m_odsEnvironment.getConfigLoader().getServiceProvider() );
     caps.setServiceIdentification( m_odsEnvironment.getConfigLoader().getServiceIdentification() );
 
@@ -120,39 +121,39 @@ public class CapabilitiesLoader
    * @param metadata
    *          The operation metadata.
    */
-  private void createOperationsMetadata( OperationsMetadata metadata )
+  private void createOperationsMetadata( final OperationsMetadata metadata )
   {
     final Map<String, IConfigurationElement> installedOperations = OWSOperationExtensionLoader.getOperations();
     for( final Entry<String, IConfigurationElement> op : installedOperations.entrySet() )
     {
-      List<OperationParameter> parameter = OWSOperationExtensionLoader.getParametersForOperation( op.getKey() );
+      final List<OperationParameter> parameter = OWSOperationExtensionLoader.getParametersForOperation( op.getKey() );
 
-      Operation operation = metadata.addNewOperation();
+      final Operation operation = metadata.addNewOperation();
       operation.setName( op.getKey() );
 
-      DCP dcp = operation.addNewDCP();
-      HTTP http = dcp.addNewHTTP();
-      RequestMethodType get = http.addNewGet();
+      final DCP dcp = operation.addNewDCP();
+      final HTTP http = dcp.addNewHTTP();
+      final RequestMethodType get = http.addNewGet();
 
-      String href = m_odsEnvironment.getServiceUrl() + "?SERVICE=" + IODSConstants.ODS_SERVICE_SHORT + "&VERSION=" + IODSConstants.ODS_VERSION + "&REQUEST=" + op.getKey();
+      final String href = m_odsEnvironment.getServiceUrl() + "?SERVICE=" + IODSConstants.ODS_SERVICE_SHORT + "&VERSION=" + IODSConstants.ODS_VERSION + "&REQUEST=" + op.getKey();
       get.setHref( href );
 
       if( parameter != null )
       {
-        for( OperationParameter param : parameter )
+        for( final OperationParameter param : parameter )
         {
-          DomainType p = operation.addNewParameter();
+          final DomainType p = operation.addNewParameter();
           p.setName( param.getName() );
 
-          ODSMetaDataDocument omd = ODSMetaDataDocument.Factory.newInstance();
+          final ODSMetaDataDocument omd = ODSMetaDataDocument.Factory.newInstance();
           omd.setODSMetaData( param.getDescription() );
 
-          MetadataType md = p.addNewMetadata();
+          final MetadataType md = p.addNewMetadata();
           md.set( omd );
 
-          for( String value : param.getValues() )
+          for( final String value : param.getValues() )
           {
-            XmlString val = p.addNewValue();
+            final XmlString val = p.addNewValue();
             val.setStringValue( value );
           }
         }
@@ -166,11 +167,11 @@ public class CapabilitiesLoader
    * @param sceneId
    *          The scene id.
    */
-  public ODSCapabilitiesDocument getCapabilitiesDocument( String sceneId )
+  public ODSCapabilitiesDocument getCapabilitiesDocument( final String sceneId )
   {
-    ODSCapabilitiesDocument copy = (ODSCapabilitiesDocument) m_odsCapabilities.copy();
-    ODSCapabilitiesType capabilities = copy.getODSCapabilities();
-    ChartsOfferingType charts = capabilities.addNewCharts();
+    final ODSCapabilitiesDocument copy = (ODSCapabilitiesDocument) m_odsCapabilities.copy();
+    final ODSCapabilitiesType capabilities = copy.getODSCapabilities();
+    final ChartsOfferingType charts = capabilities.addNewCharts();
     charts.setChartArray( m_sceneOfferings.get( sceneId ) );
 
     return copy;
@@ -181,40 +182,53 @@ public class CapabilitiesLoader
    */
   private void createOfferings( ) throws OWSException
   {
-    String[] sceneIds = m_odsEnvironment.getConfigLoader().getSceneIds();
+    final String[] sceneIds = m_odsEnvironment.getConfigLoader().getSceneIds();
     m_sceneOfferings = new HashMap<String, ChartOfferingType[]>();
     for( final String sceneId : sceneIds )
       m_sceneOfferings.put( sceneId, createSceneOfferings( sceneId ) );
 
   }
 
-  public ChartOfferingType[] createSceneOfferings( String sceneId ) throws OWSException
+  public ChartOfferingType[] createSceneOfferings( final String sceneId ) throws OWSException
   {
-    List<IODSChart> charts = m_odsEnvironment.getScenes().get( sceneId );
+    /* Get the charts. */
+    final List<IODSChart> charts = m_odsEnvironment.getScenes().get( sceneId );
     if( charts == null )
       return new ChartOfferingType[] {};
 
-    List<ChartOfferingType> chartList = new ArrayList<ChartOfferingType>();
+    /* Get the ods chart config (which contains the file of the scene). */
+    final ODSChartConfig chartConfig = m_odsEnvironment.getConfigLoader().getChartConfig( sceneId );
 
-    for( IODSChart chart : charts )
+    /* The chart list. */
+    final List<ChartOfferingType> chartList = new ArrayList<ChartOfferingType>();
+
+    /* Loop all charts. */
+    for( final IODSChart chart : charts )
     {
-      ChartConfigurationLoader ccl = chart.getDefinitionType();
-      String[] chartIds = ccl.getChartIds();
-      for( String chartId : chartIds )
+      final ChartConfigurationLoader ccl = chart.getDefinitionType();
+      final String[] chartIds = ccl.getChartIds();
+      for( final String chartId : chartIds )
       {
         try
         {
-          IChartModel model = new ChartModel();
-          URL url = m_odsEnvironment.getConfigDir().toURI().toURL();
+          /* Create the chart model. */
+          final IChartModel model = new ChartModel();
+
+          /* The context must be the URL to the file of the scene. */
+          final URL url = chartConfig.getChartFile().toURI().toURL();
+
+          /* Configure the chart model. */
           ChartFactory.configureChartModel( model, ccl, chartId, ChartExtensionLoader.getInstance(), url );
+
+          /* Add to the chart list. */
           chartList.add( createChartOffering( model, sceneId ) );
         }
-        catch( MalformedURLException ex )
+        catch( final MalformedURLException ex )
         {
           /* Should not happen -> else, the ODSEnvironment would not be valid. */
           ex.printStackTrace();
         }
-        catch( ConfigurationException ex )
+        catch( final ConfigurationException ex )
         {
           ex.printStackTrace();
         }
@@ -226,61 +240,61 @@ public class CapabilitiesLoader
 
   public ChartOfferingType createChartOffering( final IChartModel model, final String scene ) throws OWSException
   {
-    ChartOfferingType xmlChart = ChartOfferingType.Factory.newInstance();
+    final ChartOfferingType xmlChart = ChartOfferingType.Factory.newInstance();
     xmlChart.setId( model.getIdentifier() );
     xmlChart.setDescription( model.getSettings().getDescription() );
 
-    TitleTypeBean[] titleBeans = model.getSettings().getTitles();
-    String[] titleArray = new String[titleBeans.length];
+    final TitleTypeBean[] titleBeans = model.getSettings().getTitles();
+    final String[] titleArray = new String[titleBeans.length];
     for( int i = 0; i < titleBeans.length; i++ )
       titleArray[i] = titleBeans[i].getText();
 
     xmlChart.setTitleArray( titleArray );
 
-    LayersOfferingType xmlLayers = xmlChart.addNewLayers();
-    for( IChartLayer layer : model.getLayerManager().getLayers() )
+    final LayersOfferingType xmlLayers = xmlChart.addNewLayers();
+    for( final IChartLayer layer : model.getLayerManager().getLayers() )
     {
-      LayerOfferingType xmlLayer = xmlLayers.addNewLayer();
+      final LayerOfferingType xmlLayer = xmlLayers.addNewLayer();
       xmlLayer.setId( layer.getIdentifier() );
       xmlLayer.setTitle( layer.getTitle() );
       xmlLayer.setDescription( layer.getDescription() );
 
-      DomainAxis domAxis = xmlLayer.addNewDomainAxis();
-      TargetAxis targetAxis = xmlLayer.addNewTargetAxis();
+      final DomainAxis domAxis = xmlLayer.addNewDomainAxis();
+      final TargetAxis targetAxis = xmlLayer.addNewTargetAxis();
 
-      ICoordinateMapper coordinateMapper = layer.getCoordinateMapper();
+      final ICoordinateMapper coordinateMapper = layer.getCoordinateMapper();
       if( coordinateMapper == null )
         throw new OWSException( "The coordinate mapper is missing. Is your configuration correct?", OWSUtilities.OWS_VERSION, "en", ExceptionCode.NO_APPLICABLE_CODE, null );
 
       domAxis.setRef( coordinateMapper.getDomainAxis().getIdentifier() );
       targetAxis.setRef( coordinateMapper.getTargetAxis().getIdentifier() );
 
-      SymbolsOfferingType xmlSymbols = xmlLayer.addNewSymbols();
-      ILegendEntry[] les = layer.getLegendEntries();
+      final SymbolsOfferingType xmlSymbols = xmlLayer.addNewSymbols();
+      final ILegendEntry[] les = layer.getLegendEntries();
       for( int i = 0; i < les.length; i++ )
       {
-        String symbolId = "symbol" + i;
+        final String symbolId = "symbol" + i;
         String desc = les[i].getDescription();
         if( desc == null )
           desc = "";
-        Point size = les[i].computeSize( new Point( 20, 20 ) );
+        final Point size = les[i].computeSize( new Point( 20, 20 ) );
 
-        SymbolOfferingType xmlSymbol = xmlSymbols.addNewSymbol();
+        final SymbolOfferingType xmlSymbol = xmlSymbols.addNewSymbol();
         xmlSymbol.setId( symbolId );
         xmlSymbol.setTitle( desc );
         xmlSymbol.setWidth( size.x );
         xmlSymbol.setHeight( size.y );
 
         /* Cache symbols. */
-        ImageData symbol = les[i].getSymbol( size );
+        final ImageData symbol = les[i].getSymbol( size );
         ODSUtils.writeSymbol( m_odsEnvironment.getTmpDir(), symbol, scene, model.getIdentifier(), layer.getIdentifier(), symbolId );
       }
     }
 
-    AxesOfferingType xmlAxes = xmlChart.addNewAxes();
-    for( IAxis axis : model.getMapperRegistry().getAxes() )
+    final AxesOfferingType xmlAxes = xmlChart.addNewAxes();
+    for( final IAxis axis : model.getMapperRegistry().getAxes() )
     {
-      AxisOfferingType xmlAxis = xmlAxes.addNewAxis();
+      final AxisOfferingType xmlAxis = xmlAxes.addNewAxis();
       xmlAxis.setId( axis.getIdentifier() );
       xmlAxis.setTitle( axis.getLabel() );
 
@@ -296,7 +310,7 @@ public class CapabilitiesLoader
       /* Position. */
       de.openali.odysseus.service.ods.x020.AxisPositionType.Enum xmlPos = AxisPositionType.BOTTOM;
 
-      POSITION pos = axis.getPosition();
+      final POSITION pos = axis.getPosition();
       if( pos.equals( POSITION.LEFT ) )
         xmlPos = AxisPositionType.LEFT;
       else if( pos.equals( POSITION.TOP ) )
@@ -305,37 +319,37 @@ public class CapabilitiesLoader
         xmlPos = AxisPositionType.RIGHT;
       xmlAxis.setPosition( xmlPos );
 
-      IDataRange<Number> numericRange = axis.getNumericRange();
-      Class< ? > clazz = axis.getDataClass();
+      final IDataRange<Number> numericRange = axis.getNumericRange();
+      final Class< ? > clazz = axis.getDataClass();
 
-      if(numericRange==null||numericRange.getMin()==null||numericRange.getMax()==null)
+      if( numericRange == null || numericRange.getMin() == null || numericRange.getMax() == null )
       {
-        //do nothing
+        // do nothing
       }
       else if( Number.class.isAssignableFrom( clazz ) )
       {
-        NumberRange range = xmlAxis.addNewNumberRange();
+        final NumberRange range = xmlAxis.addNewNumberRange();
         range.setMinValue( numericRange.getMin().doubleValue() );
         range.setMaxValue( numericRange.getMax().doubleValue() );
       }
       else if( Calendar.class.isAssignableFrom( clazz ) )
       {
-        IDataOperator<Calendar> dop = new DataOperatorHelper().getDataOperator( Calendar.class );
-        DateRange range = xmlAxis.addNewDateRange();
+        final IDataOperator<Calendar> dop = new DataOperatorHelper().getDataOperator( Calendar.class );
+        final DateRange range = xmlAxis.addNewDateRange();
         range.setMinValue( dop.numericToLogical( numericRange.getMin() ) );
         range.setMaxValue( dop.numericToLogical( numericRange.getMax() ) );
       }
       else if( String.class.isAssignableFrom( clazz ) )
       {
-        IDataOperator<String> dop = axis.getDataOperator( String.class );
+        final IDataOperator<String> dop = axis.getDataOperator( String.class );
 
-        StringRange range = xmlAxis.addNewStringRange();
+        final StringRange range = xmlAxis.addNewStringRange();
         range.setMinValue( dop.numericToLogical( numericRange.getMin() ) );
         range.setMaxValue( dop.numericToLogical( numericRange.getMax() ) );
 
         /* Alle einzelnen Werte angeben. */
-        IOrdinalDataOperator<String> odop = (IOrdinalDataOperator<String>) dop;
-        ValueSet valueSet = range.addNewValueSet();
+        final IOrdinalDataOperator<String> odop = (IOrdinalDataOperator<String>) dop;
+        final ValueSet valueSet = range.addNewValueSet();
         valueSet.setValueArray( odop.getValues() );
       }
     }

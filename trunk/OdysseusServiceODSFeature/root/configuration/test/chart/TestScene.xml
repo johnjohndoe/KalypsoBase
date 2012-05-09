@@ -2,7 +2,6 @@
 <ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/">
 	<Chart id="ods_test" legend="false">
 		<Title>ODS Test Chart</Title>
-
 		<Description></Description>
 		<Layers>
 			<Layer id="test_grid">
@@ -26,7 +25,7 @@
 				</Styles>
 			</Layer>
 			<Layer id="test_layer">
-				<Provider epid="de.openali.odysseus.chart.ext.base.layer.provider.UVFLayerProvider">
+				<Provider epid="org.kalypso.lippehydraulik.chart.layer.provider.UVFLayerProvider">
 					<Parameters>
 						<Parameter name="time" value="3600" />
 						<Parameter name="url" value="data/20012w-30t.uvf" />
@@ -102,11 +101,9 @@
 					<TextStyle role="tickLabel">
 						<Size>8</Size>
 						<TextColor>000000</TextColor>
-
 						<FontFamily>Arial</FontFamily>
 						<FontWeight>NORMAL</FontWeight>
 						<FontStyle>NORMAL</FontStyle>
-
 					</TextStyle>
 				</Styles>
 			</AxisRenderer>

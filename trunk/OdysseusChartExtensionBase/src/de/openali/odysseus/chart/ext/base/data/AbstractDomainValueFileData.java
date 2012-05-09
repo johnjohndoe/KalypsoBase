@@ -15,5 +15,4 @@ public abstract class AbstractDomainValueFileData<T_domain, T_target> extends Ab
   {
     return m_url;
   }
-
 }

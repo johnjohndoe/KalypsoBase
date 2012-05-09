@@ -6,9 +6,6 @@
       <provider
             class="de.openali.odysseus.chart.ext.base.layer.provider.GridLayerProvider"
             id="de.openali.odysseus.chart.ext.layer.provider.Grid"/>
-       <provider
-            class="de.openali.odysseus.chart.ext.base.layer.provider.UVFLayerProvider"
-            id="de.openali.odysseus.chart.ext.layer.provider.UVF"/>
       <provider
             class="de.openali.odysseus.chart.ext.base.layer.provider.DefaultTextLayerProvider"
             id="de.openali.odysseus.chart.ext.base.layer.provider.DefaultTextLayerProvider">

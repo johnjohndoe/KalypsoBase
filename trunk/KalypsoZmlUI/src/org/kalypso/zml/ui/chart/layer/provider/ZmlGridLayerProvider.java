@@ -63,17 +63,16 @@ public class ZmlGridLayerProvider extends AbstractLayerProvider
     try
     {
       final IStyleSet styleSet = getStyleSet();
-//      final StyleSetVisitor visitor = new StyleSetVisitor( false );
-//
-//      final ILineStyle lineStyle = visitor.visit( styleSet, ILineStyle.class, 0 );
-//      final IPointStyle pointStyle = visitor.visit( styleSet, IPointStyle.class, 0 );
 
-      return new DefaultTickRasterLayer( this,styleSet);// lineStyle, pointStyle );
+      // final StyleSetVisitor visitor = new StyleSetVisitor( false );
+      // final ILineStyle lineStyle = visitor.visit( styleSet, ILineStyle.class, 0 );
+      // final IPointStyle pointStyle = visitor.visit( styleSet, IPointStyle.class, 0 );
+
+      return new DefaultTickRasterLayer( this, styleSet );// lineStyle, pointStyle );
     }
     catch( final Throwable t )
     {
       throw new ConfigurationException( Messages.ZmlGridLayerProvider_1, t );
     }
   }
-
 }
