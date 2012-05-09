@@ -5,7 +5,7 @@
  * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraï¿½e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  * 
@@ -38,41 +38,60 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.chart.layer.provider;
+package de.openali.odysseus.service.ods.environment;
 
-import java.net.URL;
+import java.io.File;
 
-import org.kalypso.zml.ui.i18n.Messages;
-
-import de.openali.odysseus.chart.ext.base.layer.DefaultTickRasterLayer;
-import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
-import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.style.IStyleSet;
+import de.openali.odysseus.chartconfig.x020.ChartConfigurationDocument;
 
 /**
- * @author Dirk Kuch
+ * The ods chart config.
+ * 
+ * @author Holge Albert
  */
-public class ZmlGridLayerProvider extends AbstractLayerProvider
+public class ODSChartConfig
 {
-  public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlGridLayerProvider"; //$NON-NLS-1$
+  /**
+   * The chart file.
+   */
+  private final File m_chartFile;
 
-  @Override
-  public IChartLayer getLayer( final URL context ) throws ConfigurationException
+  /**
+   * The chart config doc.
+   */
+  private final ChartConfigurationDocument m_chartConfigDoc;
+
+  /**
+   * The constructor.
+   * 
+   * @param chartFile
+   *          The chart file.
+   * @param chartConfigDoc
+   *          The chart config doc.
+   */
+  public ODSChartConfig( final File chartFile, final ChartConfigurationDocument chartConfigDoc )
   {
-    try
-    {
-      final IStyleSet styleSet = getStyleSet();
+    m_chartFile = chartFile;
+    m_chartConfigDoc = chartConfigDoc;
+  }
 
-      // final StyleSetVisitor visitor = new StyleSetVisitor( false );
-      // final ILineStyle lineStyle = visitor.visit( styleSet, ILineStyle.class, 0 );
-      // final IPointStyle pointStyle = visitor.visit( styleSet, IPointStyle.class, 0 );
+  /**
+   * This function returns the chart file.
+   * 
+   * @return The chart file.
+   */
+  public File getChartFile( )
+  {
+    return m_chartFile;
+  }
 
-      return new DefaultTickRasterLayer( this, styleSet );// lineStyle, pointStyle );
-    }
-    catch( final Throwable t )
-    {
-      throw new ConfigurationException( Messages.ZmlGridLayerProvider_1, t );
-    }
+  /**
+   * This function returns the chart config doc.
+   * 
+   * @return The chart config doc.
+   */
+  public ChartConfigurationDocument getChartConfigDoc( )
+  {
+    return m_chartConfigDoc;
   }
 }

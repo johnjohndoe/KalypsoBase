@@ -22,7 +22,7 @@ import de.openali.odysseus.service.odsimpl.x020.ServiceParametersType;
 /**
  * Class which handles the configurations for the service and the individual scenes; if a scene does not define its own
  * ServiceProvider- and ServiceIdentification-Elements, they are inherited from the global configuration.
- *
+ * 
  * @author Alexander Burtscher
  */
 public class ODSConfigurationLoader
@@ -31,7 +31,7 @@ public class ODSConfigurationLoader
 
   private String m_defaultSceneId;
 
-  private Map<String, ChartConfigurationDocument> m_scenes = null;
+  private Map<String, ODSChartConfig> m_scenes = null;
 
   private ServiceIdentification m_serviceIdentification;
 
@@ -80,13 +80,13 @@ public class ODSConfigurationLoader
 
   /**
    * initializes (resets) the scenes map and fills it with ODSScene-objects generated from ScenesType references
-   *
+   * 
    * @param scenes
    * @throws ConfigurationException
    */
   private void createODSScenes( final ScenesType scenes )
   {
-    m_scenes = new HashMap<String, ChartConfigurationDocument>();
+    m_scenes = new HashMap<String, ODSChartConfig>();
     final SceneType defaultScene = scenes.getDefaultScene();
     m_defaultSceneId = defaultScene.getId();
     createODSScene( defaultScene );
@@ -98,35 +98,29 @@ public class ODSConfigurationLoader
   /**
    * adds one ODSScene to the Scenes-Map; if a scene does not have its own ServiceProvider and ServiceIdentifier, the
    * ones from the global configuration are used
-   *
+   * 
    * @param sceneRef
    * @throws ConfigurationException
    */
   private void createODSScene( final SceneType sceneRef )
   {
-    final String sceneId = sceneRef.getId();
-    ChartConfigurationDocument chartConfigDoc = null;
     try
     {
       final File chartFile = new File( m_configDir, sceneRef.getPath() );
-      chartConfigDoc = ChartConfigurationDocument.Factory.parse( chartFile );
-    }
-    catch( final XmlException e )
-    {
-      e.printStackTrace();
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-    }
 
-    if( chartConfigDoc != null )
-      m_scenes.put( sceneId, chartConfigDoc );
+      final ChartConfigurationDocument chartConfigDoc = ChartConfigurationDocument.Factory.parse( chartFile );
+      if( chartConfigDoc != null )
+        m_scenes.put( sceneRef.getId(), new ODSChartConfig( chartFile, chartConfigDoc ) );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
   }
 
   /**
    * rereads the configuration files
-   *
+   * 
    * @throws ConfigurationException
    * @throws IOException
    * @throws XmlException
@@ -147,7 +141,11 @@ public class ODSConfigurationLoader
     if( sceneId == null || sceneId.trim().equals( "" ) )
       usedSceneId = m_defaultSceneId;
 
-    return m_scenes.get( usedSceneId );
+    final ODSChartConfig odsChartConfig = m_scenes.get( usedSceneId );
+    if( odsChartConfig == null )
+      return null;
+
+    return odsChartConfig.getChartConfigDoc();
   }
 
   public synchronized ODSConfigurationDocument getConfigurationDocument( )
@@ -181,5 +179,10 @@ public class ODSConfigurationLoader
   public ServiceProvider getServiceProvider( )
   {
     return m_serviceProvider;
+  }
+
+  public ODSChartConfig getChartConfig( final String sceneId )
+  {
+    return m_scenes.get( sceneId );
   }
 }

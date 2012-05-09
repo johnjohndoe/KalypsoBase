@@ -23,17 +23,6 @@
       </product>
    </extension>
    <extension
-         point="de.openali.odysseus.chart.factory.LayerProvider">
-      <provider
-            class="org.kalypso.zml.ui.chart.layer.provider.ZmlGridLayerProvider"
-            id="org.kalypso.zml.ui.chart.layer.provider.ZmlGridLayerProvider">
-      </provider>
-      <provider
-            class="de.openali.odysseus.chart.ext.base.layer.provider.UVFLayerProvider"
-            id="de.openali.odysseus.chart.ext.base.layer.provider.UVFLayerProvider">
-      </provider>
-   </extension>
-   <extension
          point="org.kalypso.contribs.eclipsercp.fallbackConfigLocation">
       <locationProvider
             class="de.openali.odysseus.service.ods.product.DebugLocationProvider">

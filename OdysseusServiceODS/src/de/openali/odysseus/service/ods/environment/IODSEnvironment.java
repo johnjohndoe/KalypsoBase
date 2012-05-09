@@ -25,6 +25,8 @@ public interface IODSEnvironment
 
   public File getConfigDir( );
 
+  File getConfigFile( );
+
   boolean validateChartId( String sceneId, String chartId );
 
   boolean validateSceneId( String sceneId );

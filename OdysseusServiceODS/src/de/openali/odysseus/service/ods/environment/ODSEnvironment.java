@@ -260,6 +260,10 @@ public class ODSEnvironment implements IODSEnvironment
     return m_configDir;
   }
 
+  /**
+   * @see de.openali.odysseus.service.ods.environment.IODSEnvironment#getConfigFile()
+   */
+  @Override
   public File getConfigFile( )
   {
     return m_configFile;
