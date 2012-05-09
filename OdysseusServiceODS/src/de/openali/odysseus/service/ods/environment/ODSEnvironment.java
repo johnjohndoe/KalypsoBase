@@ -27,6 +27,7 @@ import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chartconfig.x020.ChartConfigurationDocument;
 import de.openali.odysseus.chartconfig.x020.ChartConfigurationType;
 import de.openali.odysseus.chartconfig.x020.ChartType;
+import de.openali.odysseus.chartconfig.x020.LayerRefernceType;
 import de.openali.odysseus.chartconfig.x020.LayerType;
 import de.openali.odysseus.service.ods.util.CapabilitiesLoader;
 import de.openali.odysseus.service.ods.util.IODSConstants;
@@ -328,6 +329,13 @@ public class ODSEnvironment implements IODSEnvironment
         for( final LayerType l : layerArray )
         {
           if( l.getId().equals( layerId ) )
+            return true;
+        }
+
+        final LayerRefernceType[] referenceArray = c.getLayers().getLayerReferenceArray();
+        for( final LayerRefernceType l : referenceArray )
+        {
+          if( l.getUrl().endsWith( layerId ) )
             return true;
         }
       }
