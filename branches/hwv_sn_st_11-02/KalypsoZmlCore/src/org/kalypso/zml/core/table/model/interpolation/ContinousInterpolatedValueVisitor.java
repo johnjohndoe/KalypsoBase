@@ -99,6 +99,10 @@ public class ContinousInterpolatedValueVisitor implements ITupleModelVisitor
     {
       apply( container, m_eStuetzstelle );
     }
+    else
+    {
+      apply( container, getMissing( container, ITimeseriesConstants.TYPE_WECHMANN_E ) );
+    }
 
     if( isStuetzstelle( wechmannV ) )
     {
@@ -108,6 +112,17 @@ public class ContinousInterpolatedValueVisitor implements ITupleModelVisitor
     {
       apply( container, m_vStuetzstelle );
     }
+    else
+    {
+      apply( container, getMissing( container, ITimeseriesConstants.TYPE_WECHMANN_SCHALTER_V ) );
+    }
+  }
+
+  private TupleModelDataSet getMissing( final ITupleModelValueContainer container, final String valueAxisType )
+  {
+    final IAxis valueAxis = AxisUtils.findAxis( container.getAxes(), valueAxisType );
+
+    return new TupleModelDataSet( valueAxis, 0.0, KalypsoStati.BIT_OK, IDataSourceItem.SOURCE_MISSING );
   }
 
   private void apply( final ITupleModelValueContainer container, final TupleModelDataSet value ) throws SensorException
