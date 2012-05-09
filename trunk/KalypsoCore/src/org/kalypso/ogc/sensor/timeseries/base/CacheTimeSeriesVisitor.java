@@ -126,7 +126,7 @@ public class CacheTimeSeriesVisitor implements ITupleModelVisitor, ITimeseriesCa
       final IAxis[] valueAxes = AxisUtils.findValueAxes( axes );
       for( final IAxis valueAxis : valueAxes )
       {
-        final Number value = (Number) container.get( getValueAxis( container ) );
+        final Number value = (Number) container.get( valueAxis );
         final Integer status = getStatus( container, valueAxis );
 
         sets.add( new TupleModelDataSet( valueAxis, value, status, getSource( container, valueAxis ) ) );
