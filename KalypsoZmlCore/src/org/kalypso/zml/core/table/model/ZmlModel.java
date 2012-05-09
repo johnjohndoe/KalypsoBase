@@ -158,7 +158,7 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
       if( source instanceof IndexedTsLink )
         index = ((IndexedTsLink) source).getIndex();
       else
-        index = findIndex();
+        index = findIndex( column );
 
       if( m_columns.containsKey( index ) )
       {
@@ -174,9 +174,20 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
     fireModelChanged( new ZmlModelColumnChangeType( STRUCTURE_CHANGE ) );
   }
 
-  private int findIndex( )
+  private int findIndex( final IZmlModelColumn column )
   {
     int base = m_columns.size();
+
+    /**
+     * normally this will happen if a column is pre-loaded by .kot <DataSources> elements. To keep the order of the .kot
+     * definition we have to guess the correct column index
+     */
+    if( ZmlModelColumns.isCloned( column ) )
+    {
+      base = ZmlModelColumns.getCloneIndex( column );
+    }
+    else
+      base = 0;
 
     while( m_columns.containsKey( base ) )
       base++;

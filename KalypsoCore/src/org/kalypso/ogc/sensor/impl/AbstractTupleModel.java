@@ -61,7 +61,9 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.TupleModelDataSet;
 import org.kalypso.ogc.sensor.event.ObservationChangeType;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.transaction.ITupleModelCommand;
 import org.kalypso.ogc.sensor.transaction.ITupleModelTransaction;
@@ -194,6 +196,13 @@ public abstract class AbstractTupleModel implements ITupleModel
       {
         AbstractTupleModel.this.set( index, axis, value );
       }
+
+      @Override
+      public TupleModelDataSet getDataSetFor( final MetadataList metadata, final String valueAxis ) throws SensorException
+      {
+        return TupleModelDataSet.toDataSet( this, metadata, valueAxis );
+      }
+
     } );
 
   }
