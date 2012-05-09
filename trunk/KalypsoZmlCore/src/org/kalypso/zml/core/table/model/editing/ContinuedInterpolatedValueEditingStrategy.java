@@ -54,7 +54,7 @@ import org.kalypso.zml.core.table.model.references.ZmlValues;
 import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 
 /**
- * updated value will be a new st�tzstelle. update all values between s_new and s_next. set updated values to s_new
+ * updated value will be a new stützstelle. update all values between s_new and s_next. set updated values to s_new
  * value
  * 
  * <pre>

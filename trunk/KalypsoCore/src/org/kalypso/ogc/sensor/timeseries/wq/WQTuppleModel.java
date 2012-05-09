@@ -40,6 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.timeseries.wq;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -80,7 +81,7 @@ public class WQTuppleModel extends AbstractTupleModel
   /** generated axis */
   private final AxisSet m_target;
 
-  private final Map<Integer, TupleModelDataSet> m_values = new HashMap<Integer, TupleModelDataSet>();
+  private final Map<Integer, TupleModelDataSet> m_values = Collections.synchronizedMap( new HashMap<Integer, TupleModelDataSet>() );
 
   private final IWQConverter m_converter;
 

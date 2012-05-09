@@ -265,17 +265,15 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
   {
     final Object srcValue = srcAxis == null ? null : srcModel.get( index, srcAxis );
 
-    // DO NOT MERGE
-    // FIXME: remove this check, shall never happen in 11-02
     if( srcValue == null )
     {
       final String type = destAxis.getType();
       if( ITimeseriesConstants.TYPE_WECHMANN_E.equals( type ) || ITimeseriesConstants.TYPE_WECHMANN_SCHALTER_V.equals( type ) )
       {
+        // should never happen: trace origin of problem!!!
         return 0.0;
       }
     }
-    // --DO NOT MERGE
 
     /* Special handling for status axes */
     if( AxisUtils.isStatusAxis( destAxis ) )

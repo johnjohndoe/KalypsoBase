@@ -158,15 +158,17 @@ public class ZmlColumnLoadCommand implements IObsProviderListener
     IZmlModelColumn column = m_model.getColumn( m_source.getIdentifier() );
     if( Objects.isNull( column ) )
     {
+      // add new column
       KalypsoZmlCoreDebug.DEBUG_TABLE_MODEL_INIT.printf( Messages.ZmlColumnLoadCommand_7, m_source.getIdentifier() );
 
       column = new ZmlModelColumn( m_model, m_source.getIdentifier(), data );
-      column.setDataHandler( handler );
-
       m_model.add( m_source, column );
+
+      column.setDataHandler( handler );
     }
     else
     {
+      // update data of existing column
       column.setDataHandler( handler );
     }
 

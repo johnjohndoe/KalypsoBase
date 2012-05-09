@@ -48,6 +48,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.TupleModelDataSet;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
@@ -165,6 +166,18 @@ public final class Observations
       public void set( final IAxis axis, final Object value ) throws SensorException
       {
         model.set( index, axis, value );
+      }
+
+      @Override
+      public TupleModelDataSet getDataSetFor( final String valueAxis ) throws SensorException
+      {
+        return getDataSetFor( getMetaData(), valueAxis );
+      }
+
+      @Override
+      public TupleModelDataSet getDataSetFor( final MetadataList metadata, final String valueAxis ) throws SensorException
+      {
+        return TupleModelDataSet.toDataSet( this, metadata, valueAxis );
       }
     } );
 

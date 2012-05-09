@@ -71,7 +71,7 @@ import org.kalypso.zml.core.table.schema.IndexColumnType;
  */
 public class ZmlModelViewport
 {
-  Set<IZmlColumnModelListener> m_listeners = Collections.synchronizedSet( new LinkedHashSet<IZmlColumnModelListener>() );
+  private final Set<IZmlColumnModelListener> m_listeners = Collections.synchronizedSet( new LinkedHashSet<IZmlColumnModelListener>() );
 
   protected final Set<String> m_hiddenTypes = Collections.synchronizedSet( new HashSet<String>() ); // FIXME
 
@@ -306,7 +306,7 @@ public class ZmlModelViewport
     return m_filter;
   }
 
-  public void addListener( final IZmlColumnModelListener listener )
+  public final void addListener( final IZmlColumnModelListener listener )
   {
     m_listeners.add( listener );
   }
