@@ -58,8 +58,9 @@ import org.kalypso.zml.core.table.model.references.ZmlValues;
 /**
  * update all values between between existing stuetzstellen and set 'em to the previous stuetstellen value<br>
  * <br>
- * REMARK: don't use for interpolationg values from manual zml table edits. in this case we can't handle
- * {@link IDataSourceItem.SOURCE_INTERPOLATED_WECHMANN_VALUE} as stuetzstelle!
+ * REMARK: don't use for interpolationg values from manual zml table edits. in this case we can't handle all
+ * {@link IDataSourceItem.SOURCE_INTERPOLATED_WECHMANN_VALUE} as stuetzstelle! (continous interpolation from changed
+ * value to the next real stuetzstelle! see {@link ContinuedInterpolatedValueEditingStrategy})
  * 
  * <pre>
  *                                 ( update too  )
@@ -74,16 +75,28 @@ import org.kalypso.zml.core.table.model.references.ZmlValues;
  */
 public class ContinousInterpolatedValueVisitor implements ITupleModelVisitor
 {
-
   private final MetadataList m_metadata;
 
   private TupleModelDataSet m_eStuetzstelle;
 
   private TupleModelDataSet m_vStuetzstelle;
 
+  private final boolean m_handleFilledValuesAsStuetzstelle;
+
   public ContinousInterpolatedValueVisitor( final MetadataList metadata )
   {
+    this( metadata, true );
+  }
+
+  /**
+   * @param handleFilledValuesAsStuetzstelle
+   *          filled wechmann values are generated from the psi time series repository adapter. Normally we handle
+   *          theses values like stuetzstellen
+   */
+  public ContinousInterpolatedValueVisitor( final MetadataList metadata, final boolean handleFilledValuesAsStuetzstelle )
+  {
     m_metadata = metadata;
+    m_handleFilledValuesAsStuetzstelle = handleFilledValuesAsStuetzstelle;
   }
 
   @Override
@@ -148,9 +161,12 @@ public class ContinousInterpolatedValueVisitor implements ITupleModelVisitor
 
     final boolean stuetzstelle = ZmlValues.isStuetzstelle( value.getStatus(), value.getSource() );
 
-    // value was set before (from psi) -> this is good enough for us
-    if( !stuetzstelle && IDataSourceItem.SOURCE_INTERPOLATED_WECHMANN_VALUE.equals( value.getSource() ) )
-      return true;
+    if( m_handleFilledValuesAsStuetzstelle )
+    {
+      // value was set before (from psi) -> this is good enough for us
+      if( !stuetzstelle && IDataSourceItem.SOURCE_INTERPOLATED_WECHMANN_VALUE.equals( value.getSource() ) )
+        return true;
+    }
 
     return stuetzstelle;
   }
