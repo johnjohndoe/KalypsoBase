@@ -56,7 +56,10 @@ import org.kalypso.repository.IDataSourceItem;
 import org.kalypso.zml.core.table.model.references.ZmlValues;
 
 /**
- * update all values between between existing stuetzstellen and set 'em to the previous stuetstellen value
+ * update all values between between existing stuetzstellen and set 'em to the previous stuetstellen value<br>
+ * <br>
+ * REMARK: don't use for interpolationg values from manual zml table edits. in this case we can't handle
+ * {@link IDataSourceItem.SOURCE_INTERPOLATED_WECHMANN_VALUE} as stuetzstelle!
  * 
  * <pre>
  *                                 ( update too  )
@@ -143,6 +146,12 @@ public class ContinousInterpolatedValueVisitor implements ITupleModelVisitor
     if( value.getValue() == null )
       return false;
 
-    return ZmlValues.isStuetzstelle( value.getStatus(), value.getSource() );
+    final boolean stuetzstelle = ZmlValues.isStuetzstelle( value.getStatus(), value.getSource() );
+
+    // value was set before (from psi) -> this is good enough for us
+    if( !stuetzstelle && IDataSourceItem.SOURCE_INTERPOLATED_WECHMANN_VALUE.equals( value.getSource() ) )
+      return true;
+
+    return stuetzstelle;
   }
 }
