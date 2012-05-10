@@ -149,6 +149,9 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
 
   private boolean isMoved( final Point currentPos )
   {
+    if( currentPos == null )
+      return false;
+
     return Math.abs( currentPos.x - m_startPos.x ) > m_trashHold || Math.abs( currentPos.y - m_startPos.y ) > 5;
   }
 

@@ -70,9 +70,6 @@ public class ChartOutlinePopupDialog extends PopupDialog
     m_chartPart = chartPart;
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   protected Control createDialogArea( final Composite parent )
   {
@@ -90,6 +87,7 @@ public class ChartOutlinePopupDialog extends PopupDialog
 
       return da;
     }
+
     return new Composite( parent, SWT.NONE );
   }
 
@@ -106,12 +104,14 @@ public class ChartOutlinePopupDialog extends PopupDialog
     return text;
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.PopupDialog#getDialogSettings()
-   */
   @Override
   protected IDialogSettings getDialogSettings( )
   {
     return PluginUtilities.getDialogSettings( KalypsoChartUiPlugin.getDefault(), ChartOutlinePopupDialog.class.getName() );
+  }
+
+  protected IChartPart getChartPart( )
+  {
+    return m_chartPart;
   }
 }

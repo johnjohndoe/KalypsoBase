@@ -43,9 +43,12 @@ package org.kalypso.contribs.eclipse.jface.wizard.view;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.Assert;
@@ -193,7 +196,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
   private final Map<Integer, String> m_buttonLabels = new HashMap<Integer, String>();
 
-  private final ListenerList m_pageChangedListeners = new ListenerList();
+  private final Set<IPageChangedListener> m_pageChangedListeners = Collections.synchronizedSet( new LinkedHashSet<IPageChangedListener>() );
 
   private final ListenerList m_pageChangingListeners = new ListenerList();
 
@@ -1726,16 +1729,16 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    */
   protected void firePageChanged( final PageChangedEvent event )
   {
-    final Object[] listeners = m_pageChangedListeners.getListeners();
-    for( int i = 0; i < listeners.length; ++i )
+    final IPageChangedListener[] listeners = m_pageChangedListeners.toArray( new IPageChangedListener[] {} );
+
+    for( final IPageChangedListener listener : listeners )
     {
-      final IPageChangedListener l = (IPageChangedListener) listeners[i];
       SafeRunnable.run( new SafeRunnable()
       {
         @Override
         public void run( )
         {
-          l.pageChanged( event );
+          listener.pageChanged( event );
         }
       } );
     }
