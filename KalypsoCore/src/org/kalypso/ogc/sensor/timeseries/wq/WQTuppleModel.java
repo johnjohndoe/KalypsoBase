@@ -192,14 +192,14 @@ public class WQTuppleModel extends AbstractTupleModel
   {
     final Number srcValue = (Number) m_model.get( index, m_source.getValueAxis() );
     final Number srcStatus = (Number) m_model.get( index, m_source.getStatusAxis() );
-    final Number srcDataSource = (Number) m_model.get( index, m_source.getDatasourceAxis() );
 
     if( Objects.isNull( srcValue ) )
       return new TupleModelDataSet( m_target.getValueAxis(), srcValue, KalypsoStati.BIT_CHECK, IDataSourceItem.SOURCE_MISSING );
 
+    final String source = getTargetDataSource( index );
+
     final String type = m_target.getValueAxis().getType();
     final int status = KalypsoStati.STATUS_DERIVATED | (srcStatus == null ? KalypsoStati.BIT_CHECK : srcStatus.intValue());
-    final String source = getTargetDataSource( srcDataSource );
 
     try
     {
@@ -226,13 +226,19 @@ public class WQTuppleModel extends AbstractTupleModel
     }
   }
 
-  private String getTargetDataSource( final Number index )
+  private String getTargetDataSource( final int modelIndex ) throws SensorException
   {
-    if( index == null )
+    final IAxis datasourceAxis = m_source.getDatasourceAxis();
+    if( datasourceAxis == null )
+      return IDataSourceItem.SOURCE_UNKNOWN;
+
+    final Number srcDataSource = (Number) m_model.get( modelIndex, datasourceAxis );
+
+    if( srcDataSource == null )
       return IDataSourceItem.SOURCE_UNKNOWN;
 
     final DataSourceHandler handler = new DataSourceHandler( m_metadata );
-    return handler.getDataSourceIdentifier( index.intValue() );
+    return handler.getDataSourceIdentifier( srcDataSource.intValue() );
   }
 
   @Override
