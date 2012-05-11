@@ -104,6 +104,11 @@ public abstract class AbstractWizardLayoutPart extends AbstractLayoutPart
     m_sourceProvider = createSourceProvider( context );
   }
 
+  public boolean isActivated( )
+  {
+    return m_sourceProvider != null;
+  }
+
   @Override
   public void deactivate( )
   {
