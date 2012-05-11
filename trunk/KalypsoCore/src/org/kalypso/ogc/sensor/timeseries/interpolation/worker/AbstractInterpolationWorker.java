@@ -53,8 +53,10 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.TupleModelDataSet;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
+import org.kalypso.repository.IDataSourceItem;
 
 /**
  * @author Dirk Kuch
@@ -215,7 +217,7 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
 
     final Number number = (Number) getBaseModel().get( index, valueAxis );
 
-    Integer status = null;
+    Integer status = KalypsoStati.BIT_OK;
     if( Objects.isNotNull( statusAxis ) )
     {
       final Number statusValue = (Number) getBaseModel().get( index, statusAxis );
@@ -223,11 +225,11 @@ public abstract class AbstractInterpolationWorker implements ICoreRunnableWithPr
         status = statusValue.intValue();
     }
 
-    String dataSource = null;
+    String dataSource = IDataSourceItem.SOURCE_UNKNOWN;
     if( Objects.isNotNull( dataSourceAxis ) )
     {
       final Number dataSrcIndex = (Number) getBaseModel().get( index, dataSourceAxis );
-      if( Objects.isNotNull( dataSourceAxis ) )
+      if( Objects.isNotNull( dataSrcIndex ) )
       {
         final DataSourceHandler handler = new DataSourceHandler( getFilter().getMetaDataList() );
         dataSource = handler.getDataSourceIdentifier( dataSrcIndex.intValue() );

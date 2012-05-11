@@ -94,7 +94,9 @@ public class ZmlCommandPasteValue extends AbstractHandler
       final String[] data = getData( column );
       for( final String value : data )
       {
-        if( Objects.isNull( ptr ) )
+        if( Objects.isNull( value ) )
+          break;
+        else if( StringUtils.isBlank( value ) )
           break;
 
         strategy.setValue( ptr, value );
