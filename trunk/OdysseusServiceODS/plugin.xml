@@ -87,6 +87,11 @@
             id="GetSymbol"
             isPublic="true">
       </owsoperation>
+      <owsoperation
+            class="de.openali.odysseus.service.ods.operation.GetAxesInfo"
+            id="GetAxesInfo"
+            isPublic="true">
+      </owsoperation>
    </extension>
    <extension
          point="de.openali.odysseus.chart.factory.LayerProvider">
@@ -134,6 +139,10 @@
          <operation
                class="de.openali.odysseus.service.ods.operation.GetSymbol"
                name="GetSymbol">
+         </operation>
+         <operation
+               class="de.openali.odysseus.service.ods.operation.GetAxesInfo"
+               name="GetAxesInfo">
          </operation>
       </service>
    </extension>
