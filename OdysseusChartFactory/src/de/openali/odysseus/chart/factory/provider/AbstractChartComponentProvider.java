@@ -90,5 +90,4 @@ public abstract class AbstractChartComponentProvider implements IChartComponentP
   {
     return m_id;
   }
-
 }

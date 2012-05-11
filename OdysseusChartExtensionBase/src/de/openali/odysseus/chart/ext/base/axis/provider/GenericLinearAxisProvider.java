@@ -52,7 +52,6 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
  */
 public class GenericLinearAxisProvider extends AbstractAxisProvider
 {
-
   /**
    * @see org.kalypso.chart.factory.provider.IAxisProvider#getAxis()
    */

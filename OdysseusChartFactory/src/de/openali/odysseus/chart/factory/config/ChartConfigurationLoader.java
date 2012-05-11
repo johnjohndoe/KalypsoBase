@@ -4,7 +4,9 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -32,8 +34,11 @@ import de.openali.odysseus.chartconfig.x020.ChartConfigurationDocument;
 import de.openali.odysseus.chartconfig.x020.ChartConfigurationType;
 import de.openali.odysseus.chartconfig.x020.ChartDocument;
 import de.openali.odysseus.chartconfig.x020.ChartType;
+import de.openali.odysseus.chartconfig.x020.DerivedLayerType;
 import de.openali.odysseus.chartconfig.x020.LayerDocument;
+import de.openali.odysseus.chartconfig.x020.LayerRefernceType;
 import de.openali.odysseus.chartconfig.x020.LayerType;
+import de.openali.odysseus.chartconfig.x020.LayersType;
 import de.openali.odysseus.chartconfig.x020.LineStyleDocument;
 import de.openali.odysseus.chartconfig.x020.LineStyleType;
 import de.openali.odysseus.chartconfig.x020.MapperDocument;
@@ -138,7 +143,32 @@ public class ChartConfigurationLoader implements IReferenceResolver
 
   public LayerType[] getLayers( final ChartType chart )
   {
-    return chart.getLayers().getLayerArray();
+    final LayersType layers = chart.getLayers();
+    final LayerType[] layerArray = layers.getLayerArray();
+    final DerivedLayerType[] derivedLayerArray = layers.getDerivedLayerArray();
+    final LayerRefernceType[] layerReferenceArray = layers.getLayerReferenceArray();
+
+    final List<LayerType> results = new ArrayList<LayerType>();
+
+    for( final LayerType layer : layerArray )
+      results.add( layer );
+
+    for( final DerivedLayerType derivedLayer : derivedLayerArray )
+    {
+      final LayerRefernceType layerReference = derivedLayer.getLayerReference();
+      final XmlObject layer = resolveReference( layerReference.getUrl().replace( "#", "" ) );
+      if( layer != null && layer instanceof LayerType )
+        results.add( (LayerType) layer );
+    }
+
+    for( final LayerRefernceType layerReference : layerReferenceArray )
+    {
+      final XmlObject layer = resolveReference( layerReference.getUrl().replace( "#", "" ) );
+      if( layer != null && layer instanceof LayerType )
+        results.add( (LayerType) layer );
+    }
+
+    return results.toArray( new LayerType[] {} );
   }
 
   public AxisType getDomainAxis( final LayerType layer )
