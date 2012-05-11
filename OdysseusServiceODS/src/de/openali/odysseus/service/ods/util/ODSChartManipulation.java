@@ -58,6 +58,7 @@ public class ODSChartManipulation
           layer.setVisible( true );
         }
       }
+
       final IChartLayer[] layers = manager.getLayers();
       for( int i = realReqLayers.size(); i < layers.length; i++ )
       {
@@ -69,7 +70,7 @@ public class ODSChartManipulation
 
   }
 
-  private static void setAxesRanges( final IMapperRegistry ar, final OGCRequest request ) throws OWSException
+  public static void setAxesRanges( final IMapperRegistry ar, final OGCRequest request ) throws OWSException
   {
     setAxesRanges( ar, request.getParameterValue( "AXES" ), request.getParameterValue( "AXES_MIN" ), request.getParameterValue( "AXES_MAX" ) );
   }

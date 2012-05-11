@@ -49,13 +49,14 @@ public class GetChart extends AbstractODSDisplayOperation implements Runnable
       width = Integer.parseInt( reqWidth );
     if( reqHeight != null && !reqWidth.trim().equals( "" ) )
       height = Integer.parseInt( reqHeight );
+
     // der Name muss da sein, sonst kann kein Chart ausgewählt werden
     if( reqName != null )
     {
       final String sceneId = req.getParameterValue( "SCENE" );
-
       final ChartConfigurationDocument scene = getEnv().getConfigLoader().getSceneById( sceneId );
       final ChartConfigurationLoader ccl = new ChartConfigurationLoader( scene );
+
       URL context = null;
       try
       {
@@ -67,8 +68,10 @@ public class GetChart extends AbstractODSDisplayOperation implements Runnable
         // this should not happen, otherwise the Env would not be valid
         e1.printStackTrace();
       }
+
       final IChartModel model = new ChartModel();
       final IExtensionLoader el = ChartExtensionLoader.getInstance();
+
       try
       {
         ChartFactory.configureChartModel( model, ccl, reqName, el, context );
@@ -86,6 +89,7 @@ public class GetChart extends AbstractODSDisplayOperation implements Runnable
          */
         e.printStackTrace();
       }
+
       try
       {
         ODSChartManipulation.manipulateChart( model, req );
@@ -95,9 +99,11 @@ public class GetChart extends AbstractODSDisplayOperation implements Runnable
         setException( e );
         return;
       }
+
       final ChartPainter chartPainter = new ChartPainter( model, new Rectangle( 0, 0, width, height ) );
-      final ImageData id = chartPainter.getImageData( new NullProgressMonitor() );// ChartImageFactory.createChartImage(
-// chart.getChartModel(),
+      final ImageData id = chartPainter.getImageData( new NullProgressMonitor() );
+      // ChartImageFactory.createChartImage(
+      // chart.getChartModel(),
       // new Point( width, height ) );
       if( id != null )
         ImageOutput.imageResponse( req, getResponse(), id );
