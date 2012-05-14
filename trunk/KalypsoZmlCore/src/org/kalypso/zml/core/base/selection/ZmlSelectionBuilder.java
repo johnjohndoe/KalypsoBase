@@ -120,6 +120,15 @@ public final class ZmlSelectionBuilder
           continue;
         }
       }
+      else if( obj instanceof IObservation )
+      {
+        final IZmlSourceElement[] sources = toSourceElement( (IObservation) obj, null );
+        if( ArrayUtils.isNotEmpty( sources ) )
+        {
+          Collections.addAll( items, sources );
+          continue;
+        }
+      }
       else if( obj instanceof IAdaptable )
       {
         final IAdaptable adapter = (IAdaptable) obj;
@@ -159,7 +168,6 @@ public final class ZmlSelectionBuilder
             continue;
           }
         }
-
       }
     }
 

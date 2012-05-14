@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.core.util.pool;
 
@@ -48,23 +48,23 @@ import org.kalypso.contribs.java.net.UrlResolver;
 
 public final class KeyComparator implements Comparator<IPoolableObjectType>
 {
-  private static final KeyComparator m_instance = new KeyComparator();
+  private static KeyComparator INSTANCE;
 
   public static KeyComparator getInstance( )
   {
-    return m_instance;
+    if( INSTANCE == null )
+      INSTANCE = new KeyComparator();
+
+    return INSTANCE;
   }
 
   private final UrlResolver m_urlResolver = new UrlResolver();
 
   private KeyComparator( )
   {
-    // ist a singleton
+    // is a singleton
   }
 
-  /**
-   * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-   */
   @Override
   public int compare( final IPoolableObjectType k1, final IPoolableObjectType k2 )
   {
