@@ -360,8 +360,8 @@
 
   <complexType name="AxisStringRangeType">
     <sequence>
-      <element name="MinValue" type="double"></element>
-      <element name="MaxValue" type="double"></element>
+      <element name="MinValue" type="string"></element>
+      <element name="MaxValue" type="string"></element>
       <element name="ValueSet">
         <complexType>
           <sequence>

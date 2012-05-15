@@ -12,12 +12,14 @@ import org.kalypso.ogc.core.utils.OWSUtilities;
 import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
 import de.openali.odysseus.chart.factory.config.ChartExtensionLoader;
 import de.openali.odysseus.chart.factory.provider.IAxisProvider;
+import de.openali.odysseus.chart.framework.exception.MalformedValueException;
+import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.registry.impl.MapperRegistry;
 import de.openali.odysseus.chartconfig.x020.AxisNumberRangeType;
+import de.openali.odysseus.chartconfig.x020.AxisStringRangeType;
 import de.openali.odysseus.chartconfig.x020.AxisType;
 import de.openali.odysseus.chartconfig.x020.AxisType.Direction.Enum;
 import de.openali.odysseus.chartconfig.x020.ChartConfigurationDocument;
@@ -34,6 +36,7 @@ import de.openali.odysseus.service.ods.x020.AxisDirectionType;
 import de.openali.odysseus.service.ods.x020.AxisOfferingType;
 import de.openali.odysseus.service.ods.x020.AxisPositionType;
 import de.openali.odysseus.service.ods.x020.NumberRangeDocument.NumberRange;
+import de.openali.odysseus.service.ods.x020.StringRangeDocument.StringRange;
 
 /**
  * The get axes info operation.
@@ -120,8 +123,9 @@ public class GetAxesInfo extends AbstractODSOperation implements IOGCOperation
     atInfo.setTitle( atConf.getLabel() );
 
     // Type
-    Class< ? > type = null;
+    Class type = null;
     IAxis axis = null;
+
     try
     {
       final String epId = atConf.getProvider().getEpid();
@@ -141,6 +145,8 @@ public class GetAxesInfo extends AbstractODSOperation implements IOGCOperation
       axis = provider.getAxis();
       m_mapperRegistry.addMapper( axis );
       type = provider.getAxis().getDataClass();
+      if( type == null )
+        type = Number.class;
     }
     catch( final Exception ex )
     {
@@ -171,27 +177,88 @@ public class GetAxesInfo extends AbstractODSOperation implements IOGCOperation
     else if( direction == AxisType.Direction.POSITIVE )
       atInfo.setDirection( AxisDirectionType.POSITIVE );
 
-    IDataRange<Number> dataRange = null;
+    setDataRange( atConf, atInfo, type, axis );
+  }
 
-    if( axis != null )
+  private void setDataRange( final AxisType atConf, final AxisOfferingType atInfo, final Class type, final IAxis axis )
+  {
+    final IDataOperator< ? > dataOperator = axis.getDataOperator( type );
+
+    final IDataRange<Number> dataRange = axis.getNumericRange();
+    if( dataRange == null || dataRange.getMin() == null || dataRange.getMax() == null )
     {
-      dataRange = axis.getNumericRange();
+      /* Set the data range from config. */
+      if( type.isAssignableFrom( Number.class ) )
+        setNumberDataRangeFromConf( atConf, atInfo );
+      else
+        setStringDataRangeFromConf( atConf, atInfo, dataOperator );
+
+      return;
     }
+
+    /* Set the data range from the axis. */
+    if( type.isAssignableFrom( Number.class ) )
+      setNumberDataRange( atInfo, dataRange );
     else
-    {
-      // Should never be the case - otherwise the configuration file has errors
-      final AxisNumberRangeType numberRange = atConf.getNumberRange();
-      dataRange = new DataRange<Number>( numberRange.getMinValue(), numberRange.getMaxValue() );
-    }
+      setStringDataRange( atInfo, dataRange, dataOperator );
+  }
 
+  private void setNumberDataRangeFromConf( final AxisType atConf, final AxisOfferingType atInfo )
+  {
+    final AxisNumberRangeType numberRange = atConf.getNumberRange();
+    final NumberRange range = atInfo.addNewNumberRange();
+
+    final Number min = numberRange.getMinValue();
+    range.setMinValue( min.doubleValue() );
+
+    final Number max = numberRange.getMaxValue();
+    range.setMaxValue( max.doubleValue() );
+  }
+
+  private void setStringDataRangeFromConf( final AxisType atConf, final AxisOfferingType atInfo, final IDataOperator dataOperator )
+  {
+    final AxisStringRangeType stringRange = atConf.getStringRange();
+    final StringRange range = atInfo.addNewStringRange();
+
+    try
+    {
+      final Object minLogical = dataOperator.stringToLogical( stringRange.getMinValue() );
+      final String minString = dataOperator.logicalToString( minLogical );
+      range.setMinValue( minString );
+
+      final Object maxLogical = dataOperator.stringToLogical( stringRange.getMaxValue() );
+      final String maxString = dataOperator.logicalToString( maxLogical );
+      range.setMaxValue( maxString );
+    }
+    catch( final MalformedValueException ex )
+    {
+      ex.printStackTrace();
+    }
+  }
+
+  private void setNumberDataRange( final AxisOfferingType atInfo, final IDataRange<Number> dataRange )
+  {
     final NumberRange numberRange = atInfo.addNewNumberRange();
 
     final Number min = dataRange.getMin();
-    if( min != null )
-      numberRange.setMinValue( min.doubleValue() );
+    numberRange.setMinValue( min.doubleValue() );
 
     final Number max = dataRange.getMax();
-    if( max != null )
-      numberRange.setMaxValue( max.doubleValue() );
+    numberRange.setMaxValue( max.doubleValue() );
+  }
+
+  private void setStringDataRange( final AxisOfferingType atInfo, final IDataRange<Number> dataRange, final IDataOperator dataOperator )
+  {
+    final StringRange stringRange = atInfo.addNewStringRange();
+
+    final Number min = dataRange.getMin();
+    final Object minLogical = dataOperator.numericToLogical( min );
+    final String minString = dataOperator.logicalToString( minLogical );
+    stringRange.setMinValue( minString );
+
+    final Number max = dataRange.getMax();
+    final Object maxLogical = dataOperator.numericToLogical( max );
+    final String maxString = dataOperator.logicalToString( maxLogical );
+    stringRange.setMaxValue( maxString );
   }
 }
