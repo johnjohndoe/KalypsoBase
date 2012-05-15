@@ -74,6 +74,8 @@ public class ZmlDiagramChartPartComposite extends ChartPartComposite
 {
   private final URL m_template;
 
+  private Job m_job;
+
   public ZmlDiagramChartPartComposite( final IWorkbenchPart part, final URL template )
   {
     super( part );
@@ -139,15 +141,26 @@ public class ZmlDiagramChartPartComposite extends ChartPartComposite
     final IChartModel model = getChartModel();
     DiagramCompositeSelection.doApply( model, selection );
 
-    final Job job = new Job( "Updating chart layer visiblities" )
+    if( m_job != null )
+      m_job.cancel();
+
+    m_job = new Job( "Updating chart layer visiblities" )
     {
 
       @Override
       protected IStatus run( final IProgressMonitor monitor )
       {
+        if( monitor.isCanceled() )
+          return Status.CANCEL_STATUS;
+
         final ILayerManager layerManager = model.getLayerManager();
-        layerManager.accept( new HideUnuseLayersVisitor() );
+        layerManager.accept( new HideUnusedLayersVisitor() );
+        if( monitor.isCanceled() )
+          return Status.CANCEL_STATUS;
+
         layerManager.accept( new SingleGridVisibilityVisitor() );
+        if( monitor.isCanceled() )
+          return Status.CANCEL_STATUS;
 
         model.autoscale();
 
@@ -155,10 +168,10 @@ public class ZmlDiagramChartPartComposite extends ChartPartComposite
       }
     };
 
-    job.setUser( false );
-    job.setSystem( true );
+    m_job.setUser( false );
+    m_job.setSystem( true );
 
-    job.schedule();
+    m_job.schedule( 150 );
   }
 
   public void reset( )

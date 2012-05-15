@@ -53,7 +53,7 @@ import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLaye
 /**
  * @author Dirk Kuch
  */
-public class HideUnuseLayersVisitor extends AbstractChartLayerVisitor
+public class HideUnusedLayersVisitor extends AbstractChartLayerVisitor
 {
 
   @Override
