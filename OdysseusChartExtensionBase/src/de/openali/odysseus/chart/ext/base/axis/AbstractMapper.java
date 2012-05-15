@@ -7,6 +7,7 @@ import java.util.Set;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.event.IMapperEventListener;
 import de.openali.odysseus.chart.framework.model.mapper.IMapper;
+import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
 
 /**
  * @author burtscher Abstract implementation of IAxis - implements some methods which are equal for all concrete
@@ -98,7 +99,8 @@ public abstract class AbstractMapper implements IMapper
     for( final Class c : m_dataOperators.keySet() )
       if( c.isAssignableFrom( clazz ) )
         return (IDataOperator<T>) m_dataOperators.get( c );
-    return null;
+
+    return new DataOperatorHelper().getDataOperator( clazz );
   }
 
   /**

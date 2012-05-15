@@ -53,6 +53,7 @@ import de.openali.odysseus.chart.factory.provider.IAxisProvider;
 import de.openali.odysseus.chart.factory.provider.IAxisRendererProvider;
 import de.openali.odysseus.chart.factory.util.AxisUtils;
 import de.openali.odysseus.chart.factory.util.IReferenceResolver;
+import de.openali.odysseus.chart.framework.exception.MalformedValueException;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
@@ -321,8 +322,8 @@ public class ChartMapperFactory extends AbstractChartFactory
    */
   private IDataRange<Number> getAxisRange( final IAxis axis, final AxisType at )
   {
-    final Number min;
-    final Number max;
+    Number min = null;
+    Number max = null;
     final DataOperatorHelper dataOperatorHelper = new DataOperatorHelper();
 
     if( at.isSetDateRange() )
@@ -342,15 +343,26 @@ public class ChartMapperFactory extends AbstractChartFactory
     }
     else if( at.isSetStringRange() )
     {
-      final AxisStringRangeType range = at.getStringRange();
-      min = range.getMinValue();
-      max = range.getMaxValue();
+      try
+      {
+        // TODO Was this used other than in ODS?
+        final AxisStringRangeType range = at.getStringRange();
+        final IDataOperator<Calendar> dataOperator = axis.getDataOperator( Calendar.class );
+        final String minValue = range.getMinValue();
+        min = dataOperator.logicalToNumeric( dataOperator.stringToLogical( minValue ) );
+        final String maxValue = range.getMaxValue();
+        max = dataOperator.logicalToNumeric( dataOperator.stringToLogical( maxValue ) );
+      }
+      catch( final MalformedValueException ex )
+      {
+        ex.printStackTrace();
+      }
     }
     else if( at.isSetDurationRange() )
     {
       final AxisDurationRangeType range = at.getDurationRange();
-      final IDataOperator<Calendar> dataOperator = dataOperatorHelper.getDataOperator( Calendar.class );// axis.getDataOperator(
-// Calendar.class );
+      final IDataOperator<Calendar> dataOperator = dataOperatorHelper.getDataOperator( Calendar.class );
+      // axis.getDataOperator( Calendar.class );
       final GDuration minDur = range.getMinValue();
       final Calendar now = Calendar.getInstance();
       final Calendar minValue = addDurationToCal( now, minDur );
@@ -391,16 +403,16 @@ public class ChartMapperFactory extends AbstractChartFactory
       return Number.class;
   }
 
-// private IAxisRenderer findRenderer( final IAxis[] axes, final String rendererID )
-// {
-// for( final IAxis axis : axes )
-// {
-// final IAxisRenderer renderer = axis.getRenderer();
-// if( renderer != null && renderer.getId().equals( rendererID ))
-// return renderer;
-// }
-// return null;
-// }
+  // private IAxisRenderer findRenderer( final IAxis[] axes, final String rendererID )
+  // {
+  // for( final IAxis axis : axes )
+  // {
+  // final IAxisRenderer renderer = axis.getRenderer();
+  // if( renderer != null && renderer.getId().equals( rendererID ))
+  // return renderer;
+  // }
+  // return null;
+  // }
 
   public void addMapper( final MapperType type, final ReferencableType... baseTypes )
   {

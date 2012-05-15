@@ -135,10 +135,10 @@ public final class ChartConfigurationSaver
           configRange.setMinValue( dop.numericToLogical( numericRange.getMin() ) );
           configRange.setMaxValue( dop.numericToLogical( numericRange.getMax() ) );
         }
-// else if( at.isSetDurationRange() )
-// {
-// // TODO: what to do now? either change to date range or leave range as it was
-// }
+        // else if( at.isSetDurationRange() )
+        // {
+        // // TODO: what to do now? either change to date range or leave range as it was
+        // }
         else if( at.isSetNumberRange() )
         {
           final AxisNumberRangeType configRange = at.getNumberRange();
@@ -148,10 +148,14 @@ public final class ChartConfigurationSaver
         }
         else if( at.isSetStringRange() )
         {
+          // TODO Was this used other than in ODS?
+          final IDataOperator<Calendar> dop = axis.getDataOperator( Calendar.class );
           final AxisStringRangeType configRange = at.getStringRange();
           final IDataRange<Number> numericRange = axis.getNumericRange();
-          configRange.setMinValue( numericRange.getMin().doubleValue() );
-          configRange.setMaxValue( numericRange.getMax().doubleValue() );
+          final Calendar minLogical = dop.numericToLogical( numericRange.getMin() );
+          final Calendar maxLogical = dop.numericToLogical( numericRange.getMax() );
+          configRange.setMinValue( dop.logicalToString( minLogical ) );
+          configRange.setMaxValue( dop.logicalToString( maxLogical ) );
         }
 
         axisTypes.put( axis.getIdentifier(), at );
