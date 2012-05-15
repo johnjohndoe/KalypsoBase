@@ -4,7 +4,7 @@ Bundle-Name: KalypsoModule
 Bundle-SymbolicName: org.kalypso.module;singleton:=true
 Bundle-Version: 11.6.2.qualifier
 Bundle-Activator: org.kalypso.module.internal.Module
-Bundle-Vendor: kalypso.sourceforge.net
+Bundle-Vendor: kalypsobase.sourceforge.net
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
