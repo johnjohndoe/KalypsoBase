@@ -1,6 +1,5 @@
 package de.openali.odysseus.service.ods.operation;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -18,7 +17,6 @@ import de.openali.odysseus.chart.factory.config.IExtensionLoader;
 import de.openali.odysseus.chart.factory.config.exception.ConfigChartNotFoundException;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.util.img.ChartPainter;
 import de.openali.odysseus.chartconfig.x020.ChartConfigurationDocument;
@@ -36,82 +34,59 @@ public class GetChart extends AbstractODSDisplayOperation implements Runnable
   @Override
   public void run( )
   {
-    Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "Accessing servlet: GetChart" );
-
-    int width = 500;
-    int height = 400;
-    final OGCRequest req = getRequest();
-    final String reqWidth = req.getParameterValue( "WIDTH" );
-    final String reqHeight = req.getParameterValue( "HEIGHT" );
-    final String reqName = req.getParameterValue( "NAME" );
-
-    if( reqWidth != null && !reqWidth.trim().equals( "" ) )
-      width = Integer.parseInt( reqWidth );
-    if( reqHeight != null && !reqWidth.trim().equals( "" ) )
-      height = Integer.parseInt( reqHeight );
-
-    // der Name muss da sein, sonst kann kein Chart ausgewählt werden
-    if( reqName != null )
+    try
     {
-      final String sceneId = req.getParameterValue( "SCENE" );
-      final ChartConfigurationDocument scene = getEnv().getConfigLoader().getSceneById( sceneId );
-      final ChartConfigurationLoader ccl = new ChartConfigurationLoader( scene );
+      Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "Accessing servlet: GetChart" );
 
-      URL context = null;
-      try
-      {
-        context = new URL( ccl.getDocumentSource() );
-        // context = getEnv().getConfigDir().toURI().toURL();
-      }
-      catch( final MalformedURLException e1 )
-      {
-        // this should not happen, otherwise the Env would not be valid
-        e1.printStackTrace();
-      }
+      int width = 500;
+      int height = 400;
+      final OGCRequest req = getRequest();
+      final String reqWidth = req.getParameterValue( "WIDTH" );
+      final String reqHeight = req.getParameterValue( "HEIGHT" );
+      final String reqName = req.getParameterValue( "NAME" );
 
-      final IChartModel model = new ChartModel();
-      final IExtensionLoader el = ChartExtensionLoader.getInstance();
+      if( reqWidth != null && !reqWidth.trim().equals( "" ) )
+        width = Integer.parseInt( reqWidth );
+      if( reqHeight != null && !reqWidth.trim().equals( "" ) )
+        height = Integer.parseInt( reqHeight );
 
-      try
+      // der Name muss da sein, sonst kann kein Chart ausgewählt werden
+      if( reqName != null )
       {
-        ChartFactory.configureChartModel( model, ccl, reqName, el, context );
-      }
-      catch( final ConfigChartNotFoundException e )
-      {
-        setException( new OWSException( "No chart available by NAME '" + reqName + "'", OWSUtilities.OWS_VERSION, "en", ExceptionCode.INVALID_PARAMETER_VALUE, null ) );
-        return;
-      }
-      catch( final ConfigurationException e )
-      {
-        /*
-         * This exception will not be handled - it should not occur as the ODSEnvironment already checked the
-         * correctness of the chartfile
-         */
-        e.printStackTrace();
-      }
+        final String sceneId = req.getParameterValue( "SCENE" );
+        final ChartConfigurationDocument scene = getEnv().getConfigLoader().getSceneById( sceneId );
+        final ChartConfigurationLoader ccl = new ChartConfigurationLoader( scene );
 
-      try
-      {
+        final URL context = new URL( ccl.getDocumentSource() );
+        final IChartModel model = new ChartModel();
+        final IExtensionLoader el = ChartExtensionLoader.getInstance();
+
+        try
+        {
+          ChartFactory.configureChartModel( model, ccl, reqName, el, context );
+        }
+        catch( final ConfigChartNotFoundException e )
+        {
+          throw new OWSException( "No chart available by NAME '" + reqName + "'", OWSUtilities.OWS_VERSION, "en", ExceptionCode.INVALID_PARAMETER_VALUE, null );
+        }
+
         ODSChartManipulation.manipulateChart( model, req );
-      }
-      catch( final OWSException e )
-      {
-        setException( e );
-        return;
-      }
 
-      final ChartPainter chartPainter = new ChartPainter( model, new Rectangle( 0, 0, width, height ) );
-      final ImageData id = chartPainter.getImageData( new NullProgressMonitor() );
-      // ChartImageFactory.createChartImage(
-      // chart.getChartModel(),
-      // new Point( width, height ) );
-      if( id != null )
+        final ChartPainter chartPainter = new ChartPainter( model, new Rectangle( 0, 0, width, height ) );
+        final ImageData id = chartPainter.getImageData( new NullProgressMonitor() );
+        if( id == null )
+          throw new OWSException( "", OWSUtilities.OWS_VERSION, "en", ExceptionCode.INVALID_PARAMETER_VALUE, null );
+
         ImageOutput.imageResponse( req, getResponse(), id );
-      else
-      {
-        setException( new OWSException( "", OWSUtilities.OWS_VERSION, "en", ExceptionCode.INVALID_PARAMETER_VALUE, null ) );
-        return;
       }
+    }
+    catch( final OWSException ex )
+    {
+      setException( ex );
+    }
+    catch( final Exception ex )
+    {
+      setException( new OWSException( ex.getLocalizedMessage(), OWSUtilities.OWS_VERSION, "en", ExceptionCode.NO_APPLICABLE_CODE, null ) );
     }
   }
 }
