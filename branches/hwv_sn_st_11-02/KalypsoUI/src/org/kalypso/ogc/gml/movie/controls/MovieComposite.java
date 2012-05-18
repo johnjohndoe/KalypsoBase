@@ -548,6 +548,9 @@ public class MovieComposite extends Composite
 
     updateImageCanvas( m_resolution.getWidth(), m_resolution.getHeight() );
 
+    if( isDisposed() )
+      return;
+
     final Display display = getDisplay();
     display.asyncExec( new Runnable()
     {
