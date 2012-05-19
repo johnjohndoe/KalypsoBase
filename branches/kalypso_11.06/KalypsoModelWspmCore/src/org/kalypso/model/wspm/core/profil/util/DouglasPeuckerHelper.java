@@ -49,7 +49,6 @@ import java.util.Set;
 
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.changes.PointRemove;
 import org.kalypso.observation.result.IRecord;
 
@@ -112,9 +111,6 @@ public final class DouglasPeuckerHelper
     }
   }
 
-  /**
-   * The constructor.
-   */
   private DouglasPeuckerHelper( )
   {
   }
@@ -129,17 +125,17 @@ public final class DouglasPeuckerHelper
    *          The profile points.
    * @param profil
    *          The profile.
-   * @return The profile changes.
+   * @return The profile change, <code>null</code>, if no point was removed.
    */
-  public static IProfilChange[] reduce( final double allowedDistance, final IRecord[] points, final IProfil profile )
+  public static PointRemove reduce( final double allowedDistance, final IRecord[] points, final IProfil profile )
   {
     /* Reduce points. */
     final IRecord[] pointsToKeep = profile.getMarkedPoints();
     final IRecord[] pointsToRemove = reducePoints( points, pointsToKeep, allowedDistance );
     if( pointsToRemove.length == 0 )
-      return new IProfilChange[] {};
+      return null;
 
-    return new IProfilChange[] { new PointRemove( profile, pointsToRemove ) };
+    return new PointRemove( profile, pointsToRemove );
   }
 
   /**
