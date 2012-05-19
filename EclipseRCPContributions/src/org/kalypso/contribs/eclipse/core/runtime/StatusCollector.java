@@ -50,7 +50,7 @@ import org.eclipse.core.runtime.Status;
 
 /**
  * Default implementation of {@link IStatusCollector}.
- * 
+ *
  * @author Gernot Belger
  */
 public class StatusCollector implements IStatusCollector
@@ -133,13 +133,10 @@ public class StatusCollector implements IStatusCollector
   @Override
   public IStatus asMultiStatusOrOK( final String msg, final String okMessage )
   {
-    for( final IStatus status : m_stati )
-    {
-      if( !status.isOK() )
-        return asMultiStatus( msg );
-    }
+    if( isOK() )
+      return new Status( IStatus.OK, m_pluginID, okMessage );
 
-    return new Status( IStatus.OK, m_pluginID, okMessage );
+    return asMultiStatus( msg );
   }
 
   @Override
@@ -236,6 +233,7 @@ public class StatusCollector implements IStatusCollector
     return m_stati.hashCode();
   }
 
+  @Override
   public boolean isOK( )
   {
     final IStatus[] stati = getAllStati();
