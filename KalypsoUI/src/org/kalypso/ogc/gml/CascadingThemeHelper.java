@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
+import org.apache.commons.lang.StringUtils;
 import org.jfree.util.ObjectUtils;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
@@ -48,6 +49,8 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
  */
 public class CascadingThemeHelper
 {
+  public static final String PROPERTY_THEME_ID = "themeId"; //$NON-NLS-1$
+
   /**
    * Finds Cascading theme with the given name from the map model. Searches only for instances of CascadingKalypsoTheme
    * 
@@ -81,7 +84,7 @@ public class CascadingThemeHelper
     final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
     for( final IKalypsoTheme kalypsoTheme : allThemes )
     {
-      final String themeProp = kalypsoTheme.getProperty( "themeId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+      final String themeProp = kalypsoTheme.getProperty( PROPERTY_THEME_ID, StringUtils.EMPTY );
 
       if( kalypsoTheme instanceof CascadingKalypsoTheme && kalypsoTheme.getName().getKey().equals( themeName ) )
         return (CascadingKalypsoTheme) kalypsoTheme;
@@ -101,15 +104,15 @@ public class CascadingThemeHelper
    * @param themeProperty
    * @return CascadingKalypsoTheme, or null if no theme with that name is found
    */
-  public static final CascadingKalypsoTheme getCascadingThemeByProperty( final IMapModell mapModell, final String themeID )
+  public static final IKalypsoCascadingTheme getCascadingThemeByProperty( final IMapModell mapModell, final String themeID )
   {
     final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
     for( final IKalypsoTheme kalypsoTheme : allThemes )
     {
-      final String themeProp = kalypsoTheme.getProperty( "themeId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+      final String themeProp = kalypsoTheme.getProperty( PROPERTY_THEME_ID, StringUtils.EMPTY );
 
-      if( kalypsoTheme instanceof CascadingKalypsoTheme && themeProp.equals( themeID ) )
-        return (CascadingKalypsoTheme) kalypsoTheme;
+      if( kalypsoTheme instanceof IKalypsoCascadingTheme && themeProp.equals( themeID ) )
+        return (IKalypsoCascadingTheme) kalypsoTheme;
     }
 
     return null;
