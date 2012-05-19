@@ -58,9 +58,7 @@ import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.observation.result.ComponentUtilities;
@@ -707,16 +705,13 @@ public final class ProfilUtil
    * @param allowedDistance
    *          The allowed distance [m].
    */
-  public static void simplifyProfile( final IProfil profile, final double allowedDistance ) throws IllegalProfileOperationException
+  public static void simplifyProfile( final IProfil profile, final double allowedDistance )
   {
     /* Get the profile changes. */
     final IProfileRecord[] pointsToSimplify = profile.getPoints();
 
-    final IProfilChange[] removeChanges = DouglasPeuckerHelper.reduce( allowedDistance, pointsToSimplify, profile );
-    for( final IProfilChange profilChange : removeChanges )
-    {
-      profilChange.doChange();
-    }
+    final IProfileRecord[] pointsToRemoved = DouglasPeuckerHelper.reduce( allowedDistance, pointsToSimplify, profile );
+    profile.removePoints( pointsToRemoved );
   }
 
   /**
@@ -727,16 +722,13 @@ public final class ProfilUtil
    * @param allowedDistance
    *          The allowed distance [m].
    */
-  public static void simplifyProfile( final IProfil profile, final double allowedDistance, final int startPoint, final int endPoint ) throws IllegalProfileOperationException
+  public static void simplifyProfile( final IProfil profile, final double allowedDistance, final int startPoint, final int endPoint )
   {
     /* Get the profile changes. */
     final IProfileRecord[] pointsToSimplify = profile.getPoints( startPoint, endPoint );
 
-    final IProfilChange[] removeChanges = DouglasPeuckerHelper.reduce( allowedDistance, pointsToSimplify, profile );
-    for( final IProfilChange profilChange : removeChanges )
-    {
-      profilChange.doChange();
-    }
+    final IProfileRecord[] pointsToRemove = DouglasPeuckerHelper.reduce( allowedDistance, pointsToSimplify, profile );
+    profile.removePoints( pointsToRemove );
   }
 
   /**

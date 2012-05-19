@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.util;
 
@@ -49,14 +49,12 @@ import java.util.Set;
 
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.changes.PointRemove;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.observation.result.IRecord;
 
 /**
  * Helper for thinning a profile with the Douglas Peucker algorithm.
- * 
+ *
  * @author Holger Albert
  * @author Thomas Jung
  */
@@ -121,31 +119,23 @@ public final class DouglasPeuckerHelper
   }
 
   /**
-   * This function starts the creation of the operation, which removes points from the profile. It uses the Douglas
-   * Peucker algorythm, for finding the point to remove.
+   * This function starts the creation of the operation, which removes points from the profile. It uses the
+   * Douglas.Peucker algorithm, for finding the point to remove.
    * 
    * @param allowedDistance
-   *          The allowed distance [m].
-   * @param points
-   *          The profile points.
-   * @param profil
-   *          The profile.
-   * @return The profile changes.
+   *          The maximal Douglas-Peucker distance [m].
+   * @return The point that should be removed from the profile.
    */
-  public static IProfilChange[] reduce( final double allowedDistance, final IProfileRecord[] points, final IProfil profile )
+  public static IProfileRecord[] reduce( final double allowedDistance, final IProfileRecord[] points, final IProfil profile )
   {
     /* Reduce points. */
     final IProfileRecord[] pointsToKeep = profile.getMarkedPoints();
-    final IProfileRecord[] pointsToRemove = reducePoints( points, pointsToKeep, allowedDistance );
-    if( pointsToRemove.length == 0 )
-      return new IProfilChange[] {};
-
-    return new IProfilChange[] { new PointRemove( profile, pointsToRemove ) };
+    return reducePoints( points, pointsToKeep, allowedDistance );
   }
 
   /**
    * This function finds all points, which must be removed.
-   * 
+   *
    * @param points
    *          All profile points.
    * @param pointsToKeep
@@ -269,7 +259,7 @@ public final class DouglasPeuckerHelper
   /**
    * gets the most important profile points by sequentially adding the points with the maximum distance to the segment
    * initially defined by the start and end point of the profile.
-   * 
+   *
    * @param points
    *          all profile points
    * @param allowedNumPoints

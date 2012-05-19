@@ -41,9 +41,7 @@
 package org.kalypso.model.wspm.ui.profil.dialogs.reducepoints;
 
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.operations.IOperationHistory;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -63,19 +61,15 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Spinner;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.IMessage;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
+import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationRunnable;
-import org.kalypso.model.wspm.core.profil.util.DouglasPeuckerHelper;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 
@@ -106,9 +100,9 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
 
   protected double m_distance = Double.NaN;
 
-  private ProfilOperation m_operation = null;
-
   private IDialogSettings m_dialogSettings;
+
+  private SimplifyProfileOperation m_operation;
 
   public DouglasPeuckerDialog( final Shell parentShell, final IProfil profile, final IPointsProvider[] pointsProviders )
   {
@@ -277,8 +271,9 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
 
   private Control createHelpArea( final FormToolkit toolkit, final Composite groupComposite )
   {
-    final Label label = toolkit.createLabel( groupComposite, Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.3" ), SWT.WRAP ); //$NON-NLS-1$
-    return label;
+    final String message = Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.3" ); //$NON-NLS-1$
+
+    return toolkit.createLabel( groupComposite, message, SWT.WRAP );
   }
 
   private Composite createPointProviderGroup( final FormToolkit toolkit, final Composite parent )
@@ -323,7 +318,6 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
         buttonToSelect = button;
         providerToSelect = provider;
       }
-
     }
 
     buttonToSelect.setSelection( true );
@@ -332,9 +326,6 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
     return section;
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-   */
   private Composite createDistanceGroup( final FormToolkit toolkit, final Composite parent )
   {
     final Section section = toolkit.createSection( parent, Section.DESCRIPTION | ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED );
@@ -348,6 +339,7 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
     section.setClient( sectionClient );
 
     toolkit.createLabel( section, Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.8" ), SWT.NONE ); //$NON-NLS-1$
+    // TODO tooltip
 
     final String lastDistanceStr = m_dialogSettings.get( SETTINGS_DISTANCE );
     m_distance = NumberUtils.parseQuietDouble( lastDistanceStr );
@@ -430,16 +422,17 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
     }
 
     // ausdünn again
-    final IStatus status = performReduce();
-    if( !status.isOK() )
-    {
-      setErrorMessage( status.getMessage() );
-    }
-    else
-    {
-      setErrorMessage( null );
-      setMessage( status.getMessage() );
-    }
+
+    // FIXME: we should be able to keep buildings here, but we do not have the dependency to TUHH stuff
+    // The whole feature should be moved to tuhh plugins
+    final String[] buildingComponents = new String[] {};
+
+    m_operation = new SimplifyProfileOperation( m_profile, m_provider, m_distance, buildingComponents );
+    final IStatus status = m_operation.doRemovePoints();
+    final IMessage message = MessageUtilitites.convertStatus( status );
+
+    setErrorMessage( null );
+    setMessage( message.getMessage(), message.getMessageType() );
   }
 
   @Override
@@ -454,47 +447,13 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
     }
   }
 
-  private IStatus performReduce( )
-  {
-    if( m_provider == null || Double.isNaN( m_distance ) )
-      return new Status( IStatus.WARNING, KalypsoModelWspmUIPlugin.ID, Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.11" ) ); //$NON-NLS-1$
-
-    /* Get important values. */
-    final double allowedDistance = m_distance;
-    final IProfileRecord[] points = m_provider.getPoints();
-
-    /* Get the profile changes. */
-    final IProfilChange[] removeChanges = DouglasPeuckerHelper.reduce( allowedDistance, points, m_profile );
-    if( removeChanges.length == 0 )
-      return new Status( IStatus.OK, KalypsoModelWspmUIPlugin.ID, Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.12" ) ); //$NON-NLS-1$
-
-    /* Create the profile operation. */
-    m_operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.13" ), m_profile, removeChanges, false ); //$NON-NLS-1$
-
-    /* Create the runnable. */
-    final ProfilOperationRunnable operationRunnable = new ProfilOperationRunnable( m_operation );
-
-    /* Execute the value. */
-    final IStatus operationStatus = operationRunnable.execute( new NullProgressMonitor() );
-    if( !operationStatus.isOK() )
-      return operationStatus;
-
-    /* Message for the user. */
-    final String message = String.format( Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.14" ), removeChanges.length, points.length ); //$NON-NLS-1$
-
-    return new Status( IStatus.OK, KalypsoModelWspmUIPlugin.ID, message );
-  }
-
   private IStatus resetState( ) throws ExecutionException
   {
-    if( m_operation != null )
-    {
-      final IOperationHistory operationHistory = PlatformUI.getWorkbench().getOperationSupport().getOperationHistory();
-      final IStatus status = operationHistory.undoOperation( m_operation, new NullProgressMonitor(), null );
-      m_operation = null;
-      return status;
-    }
+    if( m_operation == null )
+      return Status.OK_STATUS;
 
-    return Status.OK_STATUS;
+    final IStatus status = m_operation.resetLastOperation();
+    m_operation = null;
+    return status;
   }
 }
