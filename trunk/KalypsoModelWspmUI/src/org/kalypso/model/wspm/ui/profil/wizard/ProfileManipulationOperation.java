@@ -1,19 +1,20 @@
 package org.kalypso.model.wspm.ui.profil.wizard;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.math.BigDecimal;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.ui.plugin.AbstractUIPluginExt;
@@ -31,7 +32,6 @@ import org.kalypso.model.wspm.ui.i18n.Messages;
  */
 public final class ProfileManipulationOperation implements ICoreRunnableWithProgress
 {
-
   private final IProfileFeature[] m_profileFeatures;
 
   private final IProfileManipulator m_manipulator;
@@ -55,7 +55,8 @@ public final class ProfileManipulationOperation implements ICoreRunnableWithProg
   {
     monitor.beginTask( Messages.getString( "ProfileManipulationOperation_0" ), m_profileFeatures.length ); //$NON-NLS-1$
 
-    final Collection<IStatus> problems = new ArrayList<IStatus>();
+    final IStatusCollector problems = new StatusCollector( AbstractUIPluginExt.ID );
+
     for( final IProfileFeature profileFeature : m_profileFeatures )
     {
       try
@@ -66,10 +67,21 @@ public final class ProfileManipulationOperation implements ICoreRunnableWithProg
         monitor.subTask( subTask );
 
         final ProfilOperation operation = new ProfilOperation( "Performing profile operation", profile, true ); //$NON-NLS-1$
-        final IProfilChange[] changes = m_manipulator.performProfileManipulation( profile, new SubProgressMonitor( monitor, 1 ) );
+
+        final Pair<IProfilChange[], IStatus> result = m_manipulator.performProfileManipulation( profile, new SubProgressMonitor( monitor, 1 ) );
+        final IProfilChange[] changes = result.getKey();
         operation.addChange( changes );
 
         m_profileOperations.add( operation );
+
+        final IStatus status = result.getValue();
+
+        final BigDecimal station = profileFeature.getBigStation();
+        final String messageWithStation = Messages.getString( "ProfileManipulationOperation_3", station, status.getMessage() );
+
+        final IStatus statusWithStation = StatusUtilities.cloneStatus( status, messageWithStation );
+
+        problems.add( statusWithStation );
       }
       catch( final CoreException e )
       {
@@ -80,16 +92,11 @@ public final class ProfileManipulationOperation implements ICoreRunnableWithProg
         throw new InterruptedException();
     }
 
-    if( problems.size() == 0 )
-      return Status.OK_STATUS;
-
-    final IStatus[] problemStati = problems.toArray( new IStatus[problems.size()] );
-    return new MultiStatus( AbstractUIPluginExt.ID, 0, problemStati, Messages.getString( "ProfileManipulationOperation_2" ), null ); //$NON-NLS-1$
+    return problems.asMultiStatusOrOK( Messages.getString( "ProfileManipulationOperation_2" ) );
   }
 
   public boolean perform( )
   {
-
     final IStatus result = RunnableContextHelper.execute( m_wizardContainer, true, true, this );
 
     final boolean doContinue = checkResult( result );

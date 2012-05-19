@@ -40,7 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard.flipProfile;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.base.IProfileManipulator;
@@ -70,16 +73,17 @@ public class FlipProfileWizard extends ManipulateProfileWizard
     return new IProfileManipulator()
     {
       @Override
-      public IProfilChange[] performProfileManipulation( final IProfil profile, final IProgressMonitor monitor )
+      public Pair<IProfilChange[], IStatus> performProfileManipulation( final IProfil profile, final IProgressMonitor monitor )
       {
         monitor.beginTask( "", 1 ); //$NON-NLS-1$
 
+        // FIXME: directly changes profile here !!
         final FlipProfileTransaction transaction = new FlipProfileTransaction();
         profile.doTransaction( transaction );
 
         monitor.done();
 
-        return new IProfilChange[] {};
+        return Pair.of( new IProfilChange[] {}, Status.OK_STATUS );
       }
     };
   }

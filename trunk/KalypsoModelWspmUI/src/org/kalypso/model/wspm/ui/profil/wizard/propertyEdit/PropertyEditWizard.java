@@ -44,7 +44,10 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IPageChangeProvider;
 import org.eclipse.jface.dialogs.IPageChangedListener;
 import org.eclipse.jface.dialogs.PageChangedEvent;
@@ -197,7 +200,6 @@ public class PropertyEditWizard extends Wizard implements IWorkbenchWizard
 
   private boolean performFinishMultipleProfiles( )
   {
-    final Object[] choosenProperties = m_propertyChooserPage.getChoosen();
     final OperationChooserPage operationChooserPage = m_operationChooserPage;
 
     final Set<IProfileFeature> profiles = new LinkedHashSet<>();
@@ -212,13 +214,13 @@ public class PropertyEditWizard extends Wizard implements IWorkbenchWizard
     final IProfileManipulator manipulator = new IProfileManipulator()
     {
       @Override
-      public IProfilChange[] performProfileManipulation( final IProfil profile, final IProgressMonitor monitor )
+      public Pair<IProfilChange[], IStatus> performProfileManipulation( final IProfil profile, final IProgressMonitor monitor )
       {
         monitor.beginTask( "", 1 ); //$NON-NLS-1$
-        operationChooserPage.changeProfile( profile, choosenProperties );
+        operationChooserPage.changeProfile( profile, choosen );
         monitor.done();
 
-        return new IProfilChange[] {};
+        return Pair.of( new IProfilChange[] {}, Status.OK_STATUS );
       }
     };
 
