@@ -52,24 +52,16 @@ import de.openali.odysseus.chart.framework.model.style.ILineStyle;
  */
 public class EmptyRectangleFigure extends AbstractFigure<ILineStyle>
 {
-
   private Rectangle m_rect;
 
-  /**
-   * 
-   */
   public void setRectangle( final Rectangle rect )
   {
     m_rect = rect;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.figure.impl.AbstractFigure#paintFigure(org.eclipse.swt.graphics.GC)
-   */
   @Override
   protected void paintFigure( final GC gc )
   {
     gc.drawRectangle( m_rect );
   }
-
 }
