@@ -98,12 +98,14 @@ public class PointRemove implements IProfilChange
     }
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {
     return Messages.getString( "PointRemove_0" ); //$NON-NLS-1$
+  }
+
+  public IRecord[] getRemovedPoints( )
+  {
+    return m_points;
   }
 }

@@ -1185,11 +1185,9 @@ public final class ProfilUtil
     /* Get the profile changes. */
     final IRecord[] pointsToSimplify = profile.getPoints();
 
-    final IProfilChange[] removeChanges = DouglasPeuckerHelper.reduce( allowedDistance, pointsToSimplify, profile );
-    for( final IProfilChange profilChange : removeChanges )
-    {
-      profilChange.doChange( null );
-    }
+    final IProfilChange removeChange = DouglasPeuckerHelper.reduce( allowedDistance, pointsToSimplify, profile );
+    if( removeChange != null )
+      removeChange.doChange( null );
   }
 
   /**
@@ -1205,11 +1203,9 @@ public final class ProfilUtil
     /* Get the profile changes. */
     final IRecord[] pointsToSimplify = profile.getPoints( startPoint, endPoint );
 
-    final IProfilChange[] removeChanges = DouglasPeuckerHelper.reduce( allowedDistance, pointsToSimplify, profile );
-    for( final IProfilChange profilChange : removeChanges )
-    {
-      profilChange.doChange( null );
-    }
+    final IProfilChange removeChange = DouglasPeuckerHelper.reduce( allowedDistance, pointsToSimplify, profile );
+    if( removeChange != null )
+      removeChange.doChange( null );
   }
 
   /**
