@@ -54,7 +54,10 @@ import org.eclipse.swt.widgets.TableColumn;
  * DefaultTableViewer handles common functionality that you wish you had when working with a TableViewer.
  * 
  * @author Marc Schlienger
+ * @deprecated Not maintained any more. Directly use {@link TableViewer} and use {@link ColumnViewerUtil} to easily
+ *             create table columns instead.
  */
+@Deprecated
 public class DefaultTableViewer extends TableViewer
 {
   public static final String COLUMN_PROP_NAME = "columnName";
