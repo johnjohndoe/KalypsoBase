@@ -40,11 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml.processes.constDelaunay;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -246,63 +244,7 @@ public class ConstraintDelaunayHelper
     }
   }
 
-  public static IStatus writePolyFile( final BufferedOutputStream polyStream, final TrianglePolyFileData data )
-  {
-    final PrintWriter writer = new PrintWriter( new OutputStreamWriter( polyStream ) );
 
-    // node header
-    writer.print( data.getVertexHeader() );
-    writer.println();
-
-    // nodes
-    final List<TriangleVertex> nodeList = data.getNodeList();
-    for( int i = 0; i < nodeList.size(); i++ )
-    {
-      final TriangleVertex triangleVertex = nodeList.get( i );
-      writer.print( i + " " + triangleVertex.getLine() ); //$NON-NLS-1$
-      writer.println();
-    }
-
-    // segment header
-    writer.print( data.getSegmentHeader() );
-    writer.println();
-
-    // segments
-    final List<TriangleSegment> segmentList = data.getSegmentList();
-    for( int i = 0; i < segmentList.size(); i++ )
-    {
-      final TriangleSegment segment = segmentList.get( i );
-      writer.print( i + " " + segment.getLine() ); //$NON-NLS-1$
-      writer.println();
-
-    }
-
-    final List<TriangleHole> holeList = data.getHoleList();
-    if( holeList != null && holeList.size() > 0 )
-    {
-
-      // holes header
-      writer.print( data.getHoleHeader() );
-      writer.println();
-
-      // holes
-      for( int i = 0; i < holeList.size(); i++ )
-      {
-        final TriangleHole hole = holeList.get( i );
-        writer.print( i + " " + hole.getLine() ); //$NON-NLS-1$
-        writer.println();
-      }
-    }
-    else
-    {
-      writer.print( "0" ); //$NON-NLS-1$
-      writer.println();
-    }
-
-    writer.flush();
-
-    return Status.OK_STATUS;
-  }
 
   /**
    * writes out a polyfile of polygons for the console program Triangle.exe
@@ -612,7 +554,6 @@ public class ConstraintDelaunayHelper
     return triangulatePolygon( exterior, interiorPolygons, crs );
   }
 
-  @SuppressWarnings("unchecked")
   public static GM_Triangle[] triangulatePolygon( final GM_Position[] exterior, final GM_Curve[] breaklines, final String crs, final String... triangleArgs )
   {
     final File cmd = findTriangleExe();
@@ -622,10 +563,8 @@ public class ConstraintDelaunayHelper
     {
       return getTrianglesWithTriangulationDT( exterior, crs );
     }
+    // FIXME: move this stuff into a separate class, ths is too much for a simple helper method!
 
-    BufferedReader nodeReader = null;
-    BufferedReader eleReader = null;
-    PrintStream pwSimuLog;
 
     final List<GM_Triangle> triangles = new LinkedList<GM_Triangle>();
 
@@ -682,6 +621,10 @@ public class ConstraintDelaunayHelper
     // collect the data
     final TrianglePolyFileData trianglePolyFileData = new TrianglePolyFileData( nodeList, segmentList, null );
 
+    BufferedReader nodeReader = null;
+    BufferedReader eleReader = null;
+    PrintStream pwSimuLog;
+
     File tempDir = null;
     try
     {
@@ -692,6 +635,7 @@ public class ConstraintDelaunayHelper
       final String[] args = Arrays.copyOf( triangleArgs, triangleArgs.length + 2 );
       args[triangleArgs.length] = "-p"; //$NON-NLS-1$
       args[triangleArgs.length + 1] = polyFileName;
+
       final IProcess process = KalypsoCommonsExtensions.createProcess( IProcessFactory.DEFAULT_PROCESS_FACTORY_ID, "Triangle", cmd.getName(), args );//$NON-NLS-1$ 
 
       tempDir = new File( new URL( process.getSandboxDirectory() ).getFile() );
@@ -699,20 +643,15 @@ public class ConstraintDelaunayHelper
 
       final File polyfile = new File( tempDir, polyFileName );
 
-      BufferedOutputStream strmPolyInput = null;
-      strmPolyInput = new BufferedOutputStream( new FileOutputStream( polyfile ) );
-
       // prepare the polygon for output
-      final IStatus writeStatus = writePolyFile( strmPolyInput, trianglePolyFileData );
-      strmPolyInput.close();
-
+      final IStatus writeStatus = trianglePolyFileData.writePolyFile( polyfile );
+      // TODO: error handling?!
       if( writeStatus != Status.OK_STATUS )
         return null;
 
       // start Triangle
       process.startProcess( pwSimuLog, System.err, System.in, new ICancelable()
       {
-
         @Override
         public boolean isCanceled( )
         {
@@ -764,13 +703,15 @@ public class ConstraintDelaunayHelper
       IOUtils.closeQuietly( nodeReader );
       IOUtils.closeQuietly( eleReader );
       if( tempDir != null && tempDir.exists() )
+      {
         try
-      {
+        {
           FileUtils.deleteDirectory( tempDir );
-      }
-      catch( final IOException e )
-      {
-        e.printStackTrace();
+        }
+        catch( final IOException e )
+        {
+          e.printStackTrace();
+        }
       }
     }
   }
@@ -782,7 +723,5 @@ public class ConstraintDelaunayHelper
     lAlgorithmRunner.triangulate( lTriangulationDT );
     final List<GM_Triangle> lListActResults = lTriangulationDT.getListGMTriangles();
     return lListActResults.toArray( new GM_Triangle[lListActResults.size()] );
-
   }
-
 }
