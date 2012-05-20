@@ -82,27 +82,18 @@ public class TriangulatedSurfaceSinglePartShapeDataProvider implements IShapeDat
     m_gmObject2Shape = gmObject2Shape;
   }
 
-  /**
-   * @see org.kalypso.shape.IShapeData#getCharset()
-   */
   @Override
   public Charset getCharset( )
   {
     return m_charset;
   }
 
-  /**
-   * @see org.kalypso.shape.IShapeData#getCoordinateSystem()
-   */
   @Override
   public String getCoordinateSystem( )
   {
     return m_gmObject2Shape.getCoordinateSystem();
   }
 
-  /**
-   * @see org.kalypso.shape.IShapeData#getFields()
-   */
   @Override
   public IDBFValue[] getFields( )
   {
@@ -118,18 +109,12 @@ public class TriangulatedSurfaceSinglePartShapeDataProvider implements IShapeDat
     return m_fields;
   }
 
-  /**
-   * @see org.kalypso.shape.IShapeData#getShapeType()
-   */
   @Override
   public ShapeType getShapeType( )
   {
     return m_gmObject2Shape.getShapeType();
   }
 
-  /**
-   * @see org.kalypso.shape.IShapeData#size()
-   */
   @Override
   public int size( ) throws ShapeDataException
   {
@@ -139,20 +124,14 @@ public class TriangulatedSurfaceSinglePartShapeDataProvider implements IShapeDat
       for( final Feature feature : m_features )
       {
         final GM_TriangulatedSurface tin = TinIterator.getTin( m_geometry, feature );
-        if( tin == null )
-          m_total += 0;
-        else
+        if( tin != null )
           m_total += tin.size();
       }
-
     }
 
     return m_total;
   }
 
-  /**
-   * @see org.kalypso.shape.IShapeData#iterator()
-   */
   @Override
   public Iterator< ? > iterator( )
   {
@@ -168,31 +147,4 @@ public class TriangulatedSurfaceSinglePartShapeDataProvider implements IShapeDat
     final GM_Triangle triangle = tin.get( triangleIndex );
     return m_gmObject2Shape.convert( triangle );
   }
-
-// /**
-// * @see org.kalypso.shape.IShapeData#getData(java.lang.Object, int)
-// */
-// @Override
-// public Object getData( final Object element, final int field ) throws ShapeDataException
-// {
-// final TinPointer pointer = (TinPointer) element;
-// final Feature feature = m_features[pointer.getFeatureIndex()];
-//
-// try
-// {
-// final Map<DBFField, GMLXPath> dataMapping = getDataMapping();
-// final DBFField[] fields = getFields();
-// final GMLXPath xPath = dataMapping.get( fields[field] );
-// return GMLXPathUtilities.query( xPath, feature );
-// }
-// catch( final DBaseException e )
-// {
-// throw new ShapeDataException( e );
-// }
-// catch( final GMLXPathException e )
-// {
-//      final String message = String.format( "Unable to resolve data for feature %s, field %d", feature, field ); //$NON-NLS-1$
-// throw new ShapeDataException( message, e );
-// }
-// }
 }
