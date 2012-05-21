@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
@@ -59,4 +61,6 @@ public interface IGmlWorkspaceProvider
   void dispose( );
 
   void startLoading( );
+
+  void save( IProgressMonitor monitor ) throws CoreException;
 }

@@ -40,8 +40,21 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
+import java.io.File;
+import java.net.URL;
+
+import org.apache.commons.io.FileUtils;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
+import org.kalypso.ogc.gml.serialize.GmlSerializer;
+
+import com.google.common.base.Charsets;
 
 /**
  * @author Gernot Belger
@@ -55,12 +68,39 @@ public class GmlWorkspaceProvider extends AbstractGmlWorkspaceProvider
     m_workspace2 = workspace;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IGmlWorkspaceProvider#startLoading()
-   */
   @Override
   public void startLoading( )
   {
     setWorkspace( m_workspace2, Status.OK_STATUS );
+  }
+
+  @Override
+  public void save( final IProgressMonitor monitor ) throws CoreException
+  {
+    final CommandableWorkspace workspace = getWorkspace();
+    if( workspace == null )
+      return;
+
+    final URL context = workspace.getContext();
+    final IFile workspaceFile = ResourceUtilities.findFileFromURL( context );
+    final File javaFile = FileUtils.toFile( context );
+
+    try
+    {
+      if( workspaceFile != null )
+        GmlSerializer.saveWorkspace( workspace, workspaceFile );
+      else if( javaFile != null )
+        GmlSerializer.serializeWorkspace( javaFile, workspace, Charsets.UTF_8.name() );
+      else
+      {
+        // nothing to do, throw an exception?
+      }
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      final IStatus status = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), "Failed to save workspace", e );
+      throw new CoreException( status );
+    }
   }
 }
