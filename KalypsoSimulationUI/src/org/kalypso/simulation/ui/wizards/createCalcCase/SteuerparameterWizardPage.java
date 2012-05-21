@@ -43,8 +43,6 @@ package org.kalypso.simulation.ui.wizards.createCalcCase;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -63,17 +61,18 @@ import org.eclipse.swt.widgets.Composite;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.resources.IProjectProvider;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.ogc.gml.IGmlWorkspaceProvider;
+import org.kalypso.ogc.gml.IGmlWorkspaceProviderListener;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
 import org.kalypso.ogc.gml.featureview.maker.FeatureviewHelper;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
-import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.simulation.ui.KalypsoSimulationUIPlugin;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.simulation.ui.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * Wizard-Page zur Eingabe der Steuerparameter
@@ -82,7 +81,14 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class SteuerparameterWizardPage extends WizardPage
 {
-  private final IProjectProvider m_projectProvider;
+  private final IGmlWorkspaceProviderListener m_workspaceListener = new IGmlWorkspaceProviderListener()
+  {
+    @Override
+    public void workspaceChanged( final CommandableWorkspace oldWorkspace, final CommandableWorkspace newWorkspace )
+    {
+      handleWorkspaceChanged( newWorkspace );
+    }
+  };
 
   private final CachedFeatureviewFactory m_fvFactory = new CachedFeatureviewFactory( new FeatureviewHelper() );
 
@@ -92,17 +98,19 @@ public class SteuerparameterWizardPage extends WizardPage
 
   private Button m_checkUpdate;
 
-  protected GMLWorkspace m_workspace;
-
-  private IFolder m_currentCalcCase;
-
   private Composite m_panel;
 
   private final boolean m_canGoBack;
 
+  private IGmlWorkspaceProvider m_provider;
+
+  private final IProjectProvider m_projectProvider;
+
   public SteuerparameterWizardPage( final IProjectProvider pp, final ImageDescriptor image, final boolean canGoBack )
   {
     super( "EditCalcCaseControlPage", Messages.getString( "org.kalypso.simulation.ui.wizards.createCalcCase.SteuerparameterWizardPage.0" ), image ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    m_projectProvider = pp;
     m_canGoBack = canGoBack;
 
     final FeatureComposite featureComposite = m_featureComposite;
@@ -111,17 +119,7 @@ public class SteuerparameterWizardPage extends WizardPage
       @Override
       public void featureChanged( final ICommand changeCommand )
       {
-        try
-        {
-          changeCommand.process();
-          // We know that we are the only one who changes our workspace, so calling updateControl is enough
-          // else, we would have to register a workspace-listener
-          featureComposite.updateControl();
-        }
-        catch( final Exception e )
-        {
-          e.printStackTrace();
-        }
+        handleFeatureChanged( featureComposite, changeCommand );
       }
 
       @Override
@@ -129,79 +127,48 @@ public class SteuerparameterWizardPage extends WizardPage
       {
       }
     } );
-
-    m_projectProvider = pp;
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.IDialogPage#dispose()
-   */
   @Override
   public void dispose( )
   {
     if( m_featureComposite != null )
       m_featureComposite.dispose();
 
-    if( m_workspace != null )
-      m_workspace.dispose();
+    if( m_provider != null )
+    {
+      m_provider.removeListener( m_workspaceListener );
+      m_provider.dispose();
+      m_provider = null;
+    }
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public void createControl( final Composite parent )
   {
     m_panel = new Composite( parent, SWT.NONE );
     m_panel.setLayout( new GridLayout() );
 
-    createFeatureControl( m_panel );
-    m_panel.layout();
+    if( m_provider != null )
+      updateFeatureControl( m_panel, m_provider.getWorkspace() );
 
     setControl( m_panel );
   }
 
-  public void saveChanges( final IFolder folder, final IProgressMonitor monitor ) throws CoreException
+  public void saveChanges( final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( Messages.getString( "org.kalypso.simulation.ui.wizards.createCalcCase.SteuerparameterWizardPage.1" ), 1000 ); //$NON-NLS-1$
-
-    // SPEICHERN
-    final IFile controlFile = folder.getFile( ModelNature.CONTROL_NAME );
-
-    if( m_workspace == null )
+    if( m_provider == null )
       return;
 
     try
     {
-      GmlSerializer.saveWorkspace( m_workspace, controlFile );
+      m_provider.save( monitor );
     }
     catch( final Exception e )
     {
       final IStatus status = new Status( IStatus.ERROR, KalypsoSimulationUIPlugin.getID(), "Failed to save control model", e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
-    finally
-    {
-      monitor.done();
-    }
-
-// final SetContentHelper thread = new SetContentHelper()
-// {
-// @Override
-// public void write( final OutputStreamWriter w ) throws Throwable
-// {
-// GmlSerializer.serializeWorkspace( w, workspace );
-// }
-// };
-//
-// try
-// {
-// thread.setFileContents( controlFile, false, false, new NullProgressMonitor() );
-// }
-// finally
-// {
-// monitor.done();
-// }
   }
 
   public boolean isUpdate( )
@@ -217,51 +184,52 @@ public class SteuerparameterWizardPage extends WizardPage
 
       final Button checkUpdate = m_checkUpdate;
       if( checkUpdate != null && !checkUpdate.isDisposed() )
+      {
         checkUpdate.getDisplay().asyncExec( new Runnable()
         {
           @Override
           public void run( )
           {
-            checkUpdate.setSelection( update );
+            if( !checkUpdate.isDisposed() )
+              checkUpdate.setSelection( update );
           }
         } );
+      }
     }
   }
 
-  /**
-   * Setzt die aktuelle Rechenvariante, ist dort schon eine .calculation vorhanden, wird diese geladen, sonst die
-   * default.
-   * 
-   * @param currentCalcCase
-   */
-  public void setFolder( final IFolder currentCalcCase )
+  public void setWorkspace( final IGmlWorkspaceProvider provider )
   {
-    m_currentCalcCase = currentCalcCase;
+    if( m_provider != null )
+      m_provider.removeListener( m_workspaceListener );
 
+    m_provider = provider;
+
+    if( m_provider != null )
+      m_provider.addListener( m_workspaceListener );
+
+    final CommandableWorkspace workspace = m_provider == null ? null : m_provider.getWorkspace();
+    m_workspaceListener.workspaceChanged( null, workspace );
+  }
+
+  protected void handleWorkspaceChanged( final CommandableWorkspace newWorkspace )
+  {
     final Composite panel = m_panel;
-    if( panel != null && !panel.isDisposed() )
+    if( panel == null || panel.isDisposed() )
+      return;
+
+    m_panel.getDisplay().asyncExec( new Runnable()
     {
-      m_panel.getDisplay().asyncExec( new Runnable()
+      @Override
+      public void run( )
       {
-        @Override
-        public void run( )
-        {
-          createFeatureControl( panel );
-          panel.layout();
-        }
-      } );
-    }
+        updateFeatureControl( panel, newWorkspace );
+        panel.layout();
+      }
+    } );
   }
 
-  /**
-   * Returns the current calc case folder, <code>null</code>, if not yet set.
-   */
-  public IFolder getFolder( )
-  {
-    return m_currentCalcCase;
-  }
-
-  protected void createFeatureControl( final Composite panel )
+  protected void updateFeatureControl( final Composite panel, final CommandableWorkspace workspace )
   {
     // dispose old control
     m_featureComposite.disposeControl();
@@ -270,27 +238,14 @@ public class SteuerparameterWizardPage extends WizardPage
       m_checkUpdate.dispose();
       m_checkUpdate = null;
     }
+
     final IProject project = m_projectProvider.getProject();
     if( project == null )
       return;
 
-    // gleich mal den Workspace auf das default setzen
-    try
+    if( workspace != null )
     {
-      final ModelNature nature = (ModelNature) project.getNature( ModelNature.ID );
-      m_workspace = nature.loadOrCreateControl( m_currentCalcCase );
-    }
-    catch( final CoreException e )
-    {
-      // ignore, m_workspace stays null, this will be handle later
-      e.printStackTrace();
-
-      setErrorMessage( e.getLocalizedMessage() );
-    }
-
-    if( m_workspace != null )
-    {
-      final Feature f = m_workspace.getRootFeature();
+      final Feature f = workspace.getRootFeature();
       m_featureComposite.setFeature( f );
     }
 
@@ -306,11 +261,10 @@ public class SteuerparameterWizardPage extends WizardPage
       // ignore, its 'just' bad configured
     }
 
-    if( m_workspace == null )
-    {
-      setPageComplete( false );
+    setPageComplete( workspace != null );
+
+    if( workspace == null )
       return;
-    }
 
     m_featureComposite.createControl( panel, SWT.NONE );
 
@@ -323,9 +277,6 @@ public class SteuerparameterWizardPage extends WizardPage
 
     checkUpdate.addSelectionListener( new SelectionAdapter()
     {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
@@ -336,17 +287,37 @@ public class SteuerparameterWizardPage extends WizardPage
     final FeatureComposite featureComposite = m_featureComposite;
     if( featureComposite != null )
     {
-      featureComposite.setFeature( m_workspace.getRootFeature() );
+      featureComposite.setFeature( workspace.getRootFeature() );
       featureComposite.updateControl();
     }
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.WizardPage#getPreviousPage()
-   */
   @Override
   public IWizardPage getPreviousPage( )
   {
     return m_canGoBack ? super.getPreviousPage() : null;
+  }
+
+  protected void handleFeatureChanged( final FeatureComposite featureComposite, final ICommand changeCommand )
+  {
+    try
+    {
+      if( m_provider == null )
+        return;
+
+      final CommandableWorkspace workspace = m_provider.getWorkspace();
+      if( workspace == null )
+        return;
+
+      workspace.postCommand( changeCommand );
+
+      // We know that we are the only one who changes our workspace, so calling updateControl is enough
+      // else, we would have to register a workspace-listener
+      featureComposite.updateControl();
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
   }
 }

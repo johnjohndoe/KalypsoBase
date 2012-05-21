@@ -94,10 +94,10 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
 
   private static final int SIZING_CONTAINER_GROUP_HEIGHT = 250;
 
-  private final IStructuredSelection currentSelection;
+  private final IStructuredSelection m_currentSelection;
 
   // widgets
-  private ResourceAndContainerGroup resourceGroup;
+  private ResourceAndContainerGroup m_resourceGroup;
 
   /**
    * Creates a new folder creation wizard page. If the initial resource selection contains exactly one container
@@ -113,7 +113,7 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
     super( "newFolderPage1" );//$NON-NLS-1$
     setTitle( pageName );
     setDescription( IDEWorkbenchMessages.WizardNewFolderMainPage_description );
-    this.currentSelection = selection;
+    this.m_currentSelection = selection;
   }
 
   /**
@@ -133,11 +133,11 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
 
     //    WorkbenchHelp.setHelp( composite, IHelpContextIds.NEW_FOLDER_WIZARD_PAGE );
 
-    resourceGroup = new ResourceAndContainerGroup(
+    m_resourceGroup = new ResourceAndContainerGroup(
         composite,
         this,
         IDEWorkbenchMessages.WizardNewFolderMainPage_folderName, IDEWorkbenchMessages.WizardNewFolderMainPage_folderLabel, false, SIZING_CONTAINER_GROUP_HEIGHT );
-    resourceGroup.setAllowExistingResources( false );
+    m_resourceGroup.setAllowExistingResources( false );
     initializePage();
     validatePage();
     // Show description on opening
@@ -163,7 +163,7 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
    */
   protected void initializePage()
   {
-    final Iterator currSel = currentSelection.iterator();
+    final Iterator currSel = m_currentSelection.iterator();
     if( currSel.hasNext() )
     {
       final Object next = currSel.next();
@@ -181,7 +181,7 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
         if( selectedResource.getType() == IResource.FILE )
           selectedResource = selectedResource.getParent();
         if( selectedResource.isAccessible() )
-          resourceGroup.setContainerFullPath( selectedResource.getFullPath() );
+          m_resourceGroup.setContainerFullPath( selectedResource.getFullPath() );
       }
     }
 
@@ -197,7 +197,7 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
   {
     super.setVisible( visible );
     if( visible )
-      resourceGroup.setFocus();
+      m_resourceGroup.setFocus();
   }
 
   /**
@@ -210,7 +210,7 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
     boolean valid = true;
 
     final IWorkspace workspace = IDEWorkbenchPlugin.getPluginWorkspace();
-    final String folderName = resourceGroup.getResource();
+    final String folderName = m_resourceGroup.getResource();
 
     IStatus nameStatus = null;
     if( folderName.indexOf( IPath.SEPARATOR ) != -1 )
@@ -237,18 +237,17 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
       return false;
     }
 
-    if( !resourceGroup.areAllValuesValid() )
+    if( !m_resourceGroup.areAllValuesValid() )
     {
       // if blank name then fail silently
-      if( resourceGroup.getProblemType() == ResourceAndContainerGroup.PROBLEM_RESOURCE_EMPTY
-          || resourceGroup.getProblemType() == ResourceAndContainerGroup.PROBLEM_CONTAINER_EMPTY )
+      if( m_resourceGroup.getProblemType() == ResourceAndContainerGroup.PROBLEM_RESOURCE_EMPTY || m_resourceGroup.getProblemType() == ResourceAndContainerGroup.PROBLEM_CONTAINER_EMPTY )
       {
-        setMessage( resourceGroup.getProblemMessage() );
+        setMessage( m_resourceGroup.getProblemMessage() );
         setErrorMessage( null );
       }
       else
       {
-        setErrorMessage( resourceGroup.getProblemMessage() );
+        setErrorMessage( m_resourceGroup.getProblemMessage() );
       }
       valid = false;
     }
@@ -256,7 +255,7 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
     /* NEW */
     if( valid )
     {
-      final IPath containerPath = resourceGroup.getContainerFullPath();
+      final IPath containerPath = m_resourceGroup.getContainerFullPath();
 
       final String errorMsg = ModelNature.checkCanCreateCalculationCase( containerPath );
       valid = errorMsg == null;
@@ -273,13 +272,10 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
     return valid;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.core.resources.IProjectProvider#getProject()
-   */
   @Override
   public IProject getProject()
   {
-    final IPath containerPath = resourceGroup.getContainerFullPath();
+    final IPath containerPath = m_resourceGroup.getContainerFullPath();
 
     final IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember( containerPath );
     if( resource != null )
@@ -290,14 +286,13 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
 
   public ResourceAndContainerGroup getResourceGroup()
   {
-    return resourceGroup;
+    return m_resourceGroup;
   }
 
   public IFolder getFolder()
   {
-    final IPath containerPath = resourceGroup.getContainerFullPath();
-    final IPath newFolderPath = containerPath.append( resourceGroup.getResource() );
+    final IPath containerPath = m_resourceGroup.getContainerFullPath();
+    final IPath newFolderPath = containerPath.append( m_resourceGroup.getResource() );
     return IDEWorkbenchPlugin.getPluginWorkspace().getRoot().getFolder( newFolderPath );
   }
-
 }
