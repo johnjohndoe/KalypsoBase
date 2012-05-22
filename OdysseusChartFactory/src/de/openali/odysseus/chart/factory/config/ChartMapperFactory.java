@@ -345,7 +345,6 @@ public class ChartMapperFactory extends AbstractChartFactory
     {
       try
       {
-        // TODO Was this used other than in ODS?
         final AxisStringRangeType range = at.getStringRange();
         final IDataOperator<Calendar> dataOperator = axis.getDataOperator( Calendar.class );
         final String minValue = range.getMinValue();
