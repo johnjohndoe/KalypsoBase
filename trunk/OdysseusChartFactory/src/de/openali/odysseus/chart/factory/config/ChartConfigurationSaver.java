@@ -148,7 +148,6 @@ public final class ChartConfigurationSaver
         }
         else if( at.isSetStringRange() )
         {
-          // TODO Was this used other than in ODS?
           final IDataOperator<Calendar> dop = axis.getDataOperator( Calendar.class );
           final AxisStringRangeType configRange = at.getStringRange();
           final IDataRange<Number> numericRange = axis.getNumericRange();
