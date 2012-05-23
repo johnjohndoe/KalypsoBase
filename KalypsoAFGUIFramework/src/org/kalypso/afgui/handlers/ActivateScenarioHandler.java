@@ -54,7 +54,7 @@ public class ActivateScenarioHandler extends AbstractHandler
         }
       }
     }
+
     return Status.OK_STATUS;
   }
-
 }
