@@ -57,6 +57,7 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
 import org.kalypso.zml.core.diagram.base.ChartTypeHandler;
 import org.kalypso.zml.core.diagram.base.visitors.ResetZmlLayerVisitor;
+import org.kalypso.zml.ui.chart.layer.visitor.NoDataLayerVisibilityVisitor;
 import org.kalypso.zml.ui.chart.layer.visitor.SingleGridVisibilityVisitor;
 import org.kalypso.zml.ui.chart.update.RemoveClonedLayerVisitor;
 
@@ -159,6 +160,10 @@ public class ZmlDiagramChartPartComposite extends ChartPartComposite
           return Status.CANCEL_STATUS;
 
         layerManager.accept( new SingleGridVisibilityVisitor() );
+        if( monitor.isCanceled() )
+          return Status.CANCEL_STATUS;
+
+        layerManager.accept( new NoDataLayerVisibilityVisitor() );
         if( monitor.isCanceled() )
           return Status.CANCEL_STATUS;
 
