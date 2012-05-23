@@ -18,7 +18,6 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -45,8 +44,6 @@ public class WorkflowControl implements IWorklistChangeListener, ITaskExecutionL
 
   private final ITaskExecutor m_taskExecutor;
 
-  private Composite m_topControl;
-
   public WorkflowControl( final ITaskExecutor taskExecutor )
   {
     m_taskExecutor = taskExecutor;
@@ -59,15 +56,9 @@ public class WorkflowControl implements IWorklistChangeListener, ITaskExecutionL
     return m_taskExecutor;
   }
 
-  /**
-   * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
-   */
   public void createControl( final Composite parent )
   {
-    m_topControl = new Composite( parent, SWT.FILL );
-    m_topControl.setLayout( new FillLayout() );
-
-    m_treeViewer = new TreeViewer( m_topControl, SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION );
+    m_treeViewer = new TreeViewer( parent, SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION );
 
     // enable tooltips per cell
     ColumnViewerToolTipSupport.enableFor( m_treeViewer );
@@ -119,7 +110,7 @@ public class WorkflowControl implements IWorklistChangeListener, ITaskExecutionL
 
   public Control getControl( )
   {
-    return m_topControl;
+    return m_treeViewer.getControl();
   }
 
   final void doTask( final ITask task )

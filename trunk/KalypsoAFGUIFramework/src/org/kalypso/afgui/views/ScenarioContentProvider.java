@@ -21,10 +21,10 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
-import de.renew.workflow.connector.cases.IScenarioManager;
 import de.renew.workflow.connector.cases.ICaseManagerListener;
 import de.renew.workflow.connector.cases.IScenario;
 import de.renew.workflow.connector.cases.IScenarioList;
+import de.renew.workflow.connector.cases.IScenarioManager;
 import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 import de.renew.workflow.connector.context.IActiveScenarioChangeListener;
@@ -64,9 +64,6 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
     ResourcesPlugin.getWorkspace().addResourceChangeListener( m_resourceListener, IResourceChangeEvent.POST_CHANGE );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
-   */
   @Override
   public Object[] getChildren( final Object parentElement )
   {
@@ -176,18 +173,12 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
     super.inputChanged( viewer, oldInput, newInput );
   }
 
-  /**
-   * @see de.renew.workflow.connector.context.ICaseManagerListener#caseAdded(de.renew.workflow.cases.Case)
-   */
   @Override
   public void caseAdded( final IScenario caze )
   {
     refreshViewer( caze );
   }
 
-  /**
-   * @see de.renew.workflow.connector.context.ICaseManagerListener#caseRemoved(de.renew.workflow.cases.Case)
-   */
   @Override
   public void caseRemoved( final IScenario caze )
   {
@@ -238,9 +229,6 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
     }
   }
 
-  /**
-   * @see org.eclipse.ui.model.WorkbenchContentProvider#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -295,5 +283,26 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
       return true;
 
     return false;
+  }
+
+  @Override
+  public Object getParent( final Object element )
+  {
+    if( element instanceof IResource )
+    {
+      return ((IResource) element).getParent();
+    }
+
+    if( element instanceof IScenario )
+    {
+      final IScenario scenario = (IScenario) element;
+      final IScenario parentScenario = scenario.getParentScenario();
+      if( parentScenario != null )
+        return parentScenario;
+
+      return scenario.getProject();
+    }
+
+    return super.getParent( element );
   }
 }

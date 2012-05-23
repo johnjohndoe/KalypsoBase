@@ -1,11 +1,11 @@
 package org.kalypso.afgui.views;
 
-import java.util.logging.Logger;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
@@ -29,26 +29,14 @@ public class WorkflowView extends ViewPart
 {
   final static public String ID = "org.kalypso.kalypso1d2d.pjt.views.WorklistView"; //$NON-NLS-1$
 
-  static Logger LOGGER = Logger.getLogger( WorkflowView.class.getName() );
-
-  static
-  {
-    final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.kalypso1d2d.pjt/debug" ) ); //$NON-NLS-1$
-    if( !log )
-    {
-      LOGGER.setUseParentHandlers( false );
-    }
-  }
-
   private WorkflowControl m_workflowControl;
 
-  protected ActiveWorkContext m_activeWorkContext;
+  private ActiveWorkContext m_activeWorkContext;
+
+  private WorkflowBreadcrumbViewer m_breadcrumbViewer;
 
   private final IActiveScenarioChangeListener m_contextListener = new IActiveScenarioChangeListener()
   {
-    /**
-     * @see org.kalypso.kalypso1d2d.pjt.IActiveContextChangeListener#activeProjectChanged(org.eclipse.core.resources.IProject)
-     */
     @Override
     public void activeScenarioChanged( final CaseHandlingProjectNature newProject, final IScenario scenario )
     {
@@ -56,49 +44,47 @@ public class WorkflowView extends ViewPart
     }
   };
 
-  /**
-   * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
-   */
+
   @Override
   public void createPartControl( final Composite parent )
   {
-    m_workflowControl.createControl( parent );
+    final Composite panel = new Composite( parent, SWT.NONE );
+    GridLayoutFactory.fillDefaults().spacing( 0, 0 ).applyTo( panel );
+
+    m_breadcrumbViewer = new WorkflowBreadcrumbViewer( panel );
+    m_breadcrumbViewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
+    m_workflowControl.createControl( panel );
+    m_workflowControl.getControl().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+
     handleScenarioChanged( m_activeWorkContext.getCurrentProject(), m_activeWorkContext.getCurrentCase() );
   }
 
   protected void handleScenarioChanged( final CaseHandlingProjectNature newProject, final IScenario scenario )
   {
-    final String projectName = newProject == null ? null : newProject.getProject().getName();
-
-    final String contentDescription;
-    if( scenario == null || newProject == null )
-    {
-      contentDescription = Messages.getString( "org.kalypso.afgui.views.WorkflowView.0" ); //$NON-NLS-1$
-    }
-    else
-    {
-      contentDescription = Messages.getString( "org.kalypso.afgui.views.WorkflowView.1" ) + projectName; //$NON-NLS-1$
-    }
-
     final UIJob job = new UIJob( Messages.getString( "org.kalypso.afgui.views.WorkflowView.2" ) ) //$NON-NLS-1$
     {
-      @SuppressWarnings("synthetic-access")
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        setContentDescription( contentDescription );
-        final IWorkflow workflow = ScenarioHelper.findWorkflow( scenario, newProject );
-        m_workflowControl.setWorkflow( workflow );
+        doUpdateControls( newProject, scenario );
+
         return Status.OK_STATUS;
       }
     };
+
     job.setUser( false );
     job.schedule();
   }
 
-  /**
-   * @see org.eclipse.ui.part.WorkbenchPart#dispose()
-   */
+  void doUpdateControls( final CaseHandlingProjectNature newProject, final IScenario scenario )
+  {
+    m_breadcrumbViewer.setScenario( scenario );
+
+    final IWorkflow workflow = ScenarioHelper.findWorkflow( scenario, newProject );
+    m_workflowControl.setWorkflow( workflow );
+  }
+
   @Override
   public void dispose( )
   {
@@ -106,29 +92,16 @@ public class WorkflowView extends ViewPart
     super.dispose();
   }
 
-  /**
-   * @see org.eclipse.ui.part.ViewPart#init(org.eclipse.ui.IViewSite, org.eclipse.ui.IMemento)
-   */
   @Override
   public void init( final IViewSite site, final IMemento memento ) throws PartInitException
   {
     super.init( site, memento );
+
     m_activeWorkContext = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext();
     m_activeWorkContext.addActiveContextChangeListener( m_contextListener );
     m_workflowControl = new WorkflowControl( KalypsoAFGUIFrameworkPlugin.getDefault().getTaskExecutor() );
   }
 
-  /**
-   * @see org.eclipse.ui.part.ViewPart#saveState(org.eclipse.ui.IMemento)
-   */
-  @Override
-  public void saveState( final IMemento memento )
-  {
-  }
-
-  /**
-   * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
-   */
   @Override
   public void setFocus( )
   {

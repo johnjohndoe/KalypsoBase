@@ -65,6 +65,8 @@ import de.renew.workflow.base.IWorkflow;
 import de.renew.workflow.connector.WorkflowProjectNature;
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.connector.cases.IScenario;
+import de.renew.workflow.connector.context.ActiveWorkContext;
+import de.renew.workflow.connector.worklist.ITaskExecutor;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
@@ -202,4 +204,27 @@ public class ScenarioHelper
     return true;
   }
 
+  /**
+   * This function activates a given scenario.
+   * 
+   * @param scenario
+   *          The scenario.
+   */
+  public static void activateScenario( final IScenario scenario ) throws CoreException
+  {
+    final KalypsoAFGUIFrameworkPlugin plugin = KalypsoAFGUIFrameworkPlugin.getDefault();
+    final ActiveWorkContext context = plugin.getActiveWorkContext();
+
+    final ITaskExecutor executor = plugin.getTaskExecutor();
+
+    /* Only do it, if the scenario is not already active. */
+    if( context.getCurrentCase() != scenario )
+    {
+      if( executor.stopActiveTask() )
+      {
+        /* Activate the scenario. */
+        context.setCurrentCase( scenario );
+      }
+    }
+  }
 }
