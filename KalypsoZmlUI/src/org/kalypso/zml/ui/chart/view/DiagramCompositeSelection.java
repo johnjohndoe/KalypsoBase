@@ -100,7 +100,8 @@ public final class DiagramCompositeSelection
         update( layers, source, type, index );
 
         final IObsProvider provider = source.getObsProvider();
-        provider.dispose();
+        if( provider != null )
+          provider.dispose();
       }
     }
   }
