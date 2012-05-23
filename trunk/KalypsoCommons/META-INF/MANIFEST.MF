@@ -41,7 +41,8 @@ Bundle-ClassPath: lib/jaxb_2_2_4/activation.jar,
  lib/opencsv/opencsv-2.3.jar,
  lib/guava/guava-12.0.jar,
  lib/joda-time/joda-time-2.1.jar,
- .
+ .,
+ lib/breadcrumb/nu.bibi.breadcrumb.jar
 Bundle-Activator: org.kalypso.commons.KalypsoCommonsPlugin
 Bundle-Vendor: kalypsobase.sourceforge.net
 Bundle-Localization: plugin
@@ -171,6 +172,10 @@ Export-Package: au.com.bytecode.opencsv,
  javax.xml.stream.util,
  jregex,
  jregex.util.io,
+ nu.bibi.breadcrumb,
+ nu.bibi.breadcrumb.files,
+ nu.bibi.breadcrumb.views,
+ nu.bibi.breadcrumb.xml,
  org.apache.env,
  org.apache.poi,
  org.apache.poi.common.usermodel,
@@ -408,6 +413,7 @@ Export-Package: au.com.bytecode.opencsv,
  org.kalypso.commons.patternreplace,
  org.kalypso.commons.pdf,
  org.kalypso.commons.performance,
+ org.kalypso.commons.poi,
  org.kalypso.commons.process,
  org.kalypso.commons.resources,
  org.kalypso.commons.runtime,
