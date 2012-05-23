@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.visitor;
 
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -65,6 +66,8 @@ public class NoDataLayerVisibilityVisitor implements IChartLayerVisitor
 
   IChartLayer m_noDataLayer;
 
+  private IChartLayer m_selectionLayer;
+
   public NoDataLayerVisibilityVisitor( )
   {
 
@@ -89,6 +92,10 @@ public class NoDataLayerVisibilityVisitor implements IChartLayerVisitor
         m_visible = false;
         return;
       }
+    }
+    else if( StringUtils.equalsIgnoreCase( "selectionLayer", layer.getIdentifier() ) )
+    {
+      m_selectionLayer = layer;
     }
 
     layer.getLayerManager().accept( this );
@@ -137,5 +144,6 @@ public class NoDataLayerVisibilityVisitor implements IChartLayerVisitor
       return;
 
     m_noDataLayer.setVisible( m_visible );
+    m_selectionLayer.setVisible( !m_visible ); // hide date axis (for KalypsoHydrology diagram views)
   }
 }
