@@ -176,7 +176,7 @@ public class ZmlDiagramChartPartComposite extends ChartPartComposite
     m_job.setUser( false );
     m_job.setSystem( true );
 
-    m_job.schedule( 150 );
+    m_job.schedule( 600 );
   }
 
   public void reset( )

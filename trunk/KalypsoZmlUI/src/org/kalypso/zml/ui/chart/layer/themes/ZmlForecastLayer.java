@@ -136,7 +136,7 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
     final Integer y1 = targetAxis.numericToScreen( targetRange.getMax() );
 
     final PolylineFigure polylineFigure = new PolylineFigure();
-    polylineFigure.setStyle( getStyleSet().getStyle( "line",ILineStyle.class ) ); //$NON-NLS-1$
+    polylineFigure.setStyle( getStyleSet().getStyle( "line", ILineStyle.class ) ); //$NON-NLS-1$
     polylineFigure.setPoints( new Point[] { new Point( x, y0 ), new Point( x, y1 ) } );
     polylineFigure.paint( gc );
   }
@@ -209,8 +209,6 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
     if( m_provider != null )
       m_provider.dispose();
   }
-
-  
 
   @Override
   public void observationReplaced( )

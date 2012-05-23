@@ -25,4 +25,9 @@
   <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:sunshine:hours" uri="common/sunshine_hours.kod" />
 
   <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:quality" uri="quality/quality.kod" />
+
+  <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:rrm:evaporation:old" uri="hydrology/inputEvaporation.old.kod" />
+  <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:rrm:temperature" uri="hydrology/inputTemperature.kod" />
+  <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:rrm:rainfall" uri="hydrology/inputRainfall.kod" />
+
 </catalog:catalog>
