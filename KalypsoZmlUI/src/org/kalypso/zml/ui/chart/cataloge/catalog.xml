@@ -20,7 +20,6 @@
   <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:mean:humidity" uri="common/mean_humidity.kod" />
   <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:mean:temperature" uri="common/mean_temperature.kod" />
   <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:mean:wind:velocity" uri="common/mean_wind_velocity.kod" />
-  <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:mean:rainfall" uri="common/mean_rainfall.kod" />
 
   <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:sunshine:hours" uri="common/sunshine_hours.kod" />
 
