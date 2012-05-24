@@ -51,6 +51,7 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.afgui.internal.i18n.Messages;
@@ -73,7 +74,7 @@ public class WorkflowBreadcrumbViewer
 
   private void createControl( final Composite parent )
   {
-    m_viewer = new BreadcrumbViewer( parent )
+    m_viewer = new BreadcrumbViewer( parent, SWT.NONE )
     {
       @Override
       protected void configureDropDownViewer( final TreeViewer viewer, final Object selection )
