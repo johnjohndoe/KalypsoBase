@@ -329,9 +329,13 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
       public synchronized FWCls next( )
       {
         final Object next = m_it.next();
+
+        // FIXME: bad: external xlinks get returned, internal xlinks get resolved...
+        // we should always return xlinks if it is a link
+
         final Feature f = FeatureHelper.getFeature( m_workspace, next );
         if( f == null )
-          throw new RuntimeException( "Feature does not exists: " + next.toString() );
+          throw new RuntimeException( "Feature does not exist: " + next.toString() );
 
         final FWCls wrapper = getAdaptedFeature( f, defaultWrapperClass );
         if( wrapper == null )

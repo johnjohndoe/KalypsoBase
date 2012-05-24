@@ -65,9 +65,9 @@ import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.command.AddRelationCommand;
+import org.kalypso.ogc.gml.command.AddLinkCommand;
 import org.kalypso.ogc.gml.command.CompositeCommand;
-import org.kalypso.ogc.gml.command.RemoveRelationCommand;
+import org.kalypso.ogc.gml.command.RemoveLinkCommand;
 import org.kalypso.ui.editor.gmleditor.part.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -81,7 +81,7 @@ import org.kalypsodeegree_impl.model.feature.search.IReferenceCollectorStrategy;
  * <ul>
  * <li>showSelectButtons : boolean - if true, 'selectAll' and 'deselecAll' buttons are shown
  * </ul>
- * 
+ *
  * @author Gernot Belger
  */
 public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl
@@ -255,7 +255,7 @@ public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl
    * button will be accesible from <code>getOKButton()</code>. Note that the parent's layout is assumed to be a
    * <code>GridLayout</code> and the number of columns in this layout is incremented. Subclasses may override.
    * </p>
-   * 
+   *
    * @param parent
    *          the parent composite
    * @param id
@@ -304,7 +304,7 @@ public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl
     {
       // TODO: implement case for external features
       if( checkedElement instanceof Feature )
-        compositeCommand.addCommand( new AddRelationCommand( feature, rt, -1, (Feature) checkedElement ) );
+        compositeCommand.addCommand( new AddLinkCommand( feature, rt, -1, (Feature) checkedElement ) );
     }
     else
     {
@@ -323,7 +323,7 @@ public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl
           // which link should be removed. Instead, the link or the position needs to be given to
           // the command.
           if( id.equals( ((Feature) checkedElement).getId() ) )
-            compositeCommand.addCommand( new RemoveRelationCommand( feature, rt, (Feature) checkedElement ) );
+            compositeCommand.addCommand( new RemoveLinkCommand( feature, rt, (Feature) checkedElement ) );
         }
       }
     }

@@ -470,6 +470,30 @@ class XLinkedFeature_Impl extends PlatformObject implements IXLinkedFeature
   }
 
   @Override
+  public Feature resolveMember( final IRelationType relation )
+  {
+    return getFeature().resolveMember( relation );
+  }
+
+  @Override
+  public Feature resolveMember( final QName relation )
+  {
+    return getFeature().resolveMember( relation );
+  }
+
+  @Override
+  public Feature[] resolveMembers( final IRelationType relation )
+  {
+    return getFeature().resolveMembers( relation );
+  }
+
+  @Override
+  public Feature[] resolveMembers( final QName relation )
+  {
+    return getFeature().resolveMembers( relation );
+  }
+
+  @Override
   public IFeatureBindingCollection<Feature> getMemberList( final QName relationName )
   {
     return getFeature().getMemberList( relationName );
@@ -491,5 +515,17 @@ class XLinkedFeature_Impl extends PlatformObject implements IXLinkedFeature
   public <T extends Feature> IFeatureBindingCollection<T> getMemberList( final IRelationType relation, final Class<T> type )
   {
     return getFeature().getMemberList( relation, type );
+  }
+
+  @Override
+  public boolean removeMember( final QName relationName, final Feature toRemove )
+  {
+    return getFeature().removeMember( relationName, toRemove );
+  }
+
+  @Override
+  public boolean removeMember( final IRelationType relation, final Feature toRemove )
+  {
+    return getFeature().removeMember( relation, toRemove );
   }
 }

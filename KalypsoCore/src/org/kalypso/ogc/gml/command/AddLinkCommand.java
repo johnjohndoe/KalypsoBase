@@ -46,7 +46,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
-public class AddRelationCommand implements ICommand
+public class AddLinkCommand implements ICommand
 {
   private final Feature m_srcFE;
 
@@ -56,7 +56,7 @@ public class AddRelationCommand implements ICommand
 
   private final Feature m_linkFeature;
 
-  public AddRelationCommand( final Feature srcFE, final IRelationType propertyName, final int pos, final Feature destFE )
+  public AddLinkCommand( final Feature srcFE, final IRelationType propertyName, final int pos, final Feature destFE )
   {
     m_srcFE = srcFE;
     m_propName = propertyName;

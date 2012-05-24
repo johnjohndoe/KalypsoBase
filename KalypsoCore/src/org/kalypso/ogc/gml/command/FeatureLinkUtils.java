@@ -44,10 +44,11 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 
 /**
  * Some helper methods for easy handling of linked features.
- * 
+ *
  * @author Gernot Belger
  */
 public final class FeatureLinkUtils
@@ -59,7 +60,7 @@ public final class FeatureLinkUtils
 
   /**
    * Inserts or sets a link to a feature inside the same workspace.
-   * 
+   *
    * @param pos
    *          Insert position. If <code>-1</code> the new element is inserted at the end of the list.
    */
@@ -81,5 +82,32 @@ public final class FeatureLinkUtils
     {
       feature.setLink( linkRelation, href );
     }
+  }
+
+  /**
+   * @return position of link or -1 if relation does not exists
+   */
+  public static int indexOfLink( final Feature srcFE, final IRelationType relation, final Feature destFE )
+  {
+    if( !relation.isList() )
+      return -1;
+
+    if( destFE == null )
+      return -1;
+
+    final String targetID = destFE.getId();
+
+    final FeatureList list = (FeatureList) srcFE.getProperty( relation );
+    for( int i = 0; i < list.size(); i++ )
+    {
+      final Object object = list.get( i );
+      if( targetID.equals( object ) )
+        return i;
+
+      if( object instanceof IXLinkedFeature && ((IXLinkedFeature) object).getFeatureId().equals( object ) )
+        return i;
+    }
+
+    return -1;
   }
 }
