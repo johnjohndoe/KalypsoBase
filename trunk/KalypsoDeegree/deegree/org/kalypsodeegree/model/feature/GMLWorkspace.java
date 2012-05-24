@@ -71,9 +71,15 @@ public interface GMLWorkspace extends ModellEventProvider, IAdaptable
   Feature getFeature( String id );
 
   /**
-   * resolves the associationlink to a feature, maxOccurs >1
+   * resolves the associationlink to a feature, maxOccurs >1 <br/>
+   * FIXME: bad method name: links are not actually resolved but an IXlinkedFeature is still returned. Only local links
+   * are actually resolved to the actual feature. We should split this up into two different methods.
+   * 
+   * @deprecated Use either {@link Feature#resolveMember(IRelationType)} or {@link Feature#getMember(IRelationType)}.
+   *             ATTENTION: the contract of these methods is NOT 100% equal to this one, soe replace carefully.
    */
   // FIXME: move into feature api
+  @Deprecated
   Feature[] resolveLinks( Feature srcFeature, IRelationType linkProperty );
 
   URL getContext( );

@@ -529,21 +529,6 @@ public final class FeatureHelper
     return property == destFE;
   }
 
-  /**
-   * @return position of link or -1 if relation does not exists
-   */
-  public static int getPositionOfAssoziation( final Feature srcFE, final IRelationType linkProp, final Feature destFE )
-  {
-    if( !linkProp.isList() )
-      return 0;
-
-    final List list = (List) srcFE.getProperty( linkProp );
-    int pos = -1;
-    pos = list.indexOf( destFE );
-    if( pos > -1 )
-      return pos;
-    return list.indexOf( destFE.getId() );
-  }
 
   /**
    * Checks if one of the feature properties is a collection.

@@ -155,7 +155,6 @@ public interface Feature extends BaseFeature, Deegree2Feature, IAdaptable
    */
   IXLinkedFeature setLink( QName relation, String href, IFeatureType featureType );
 
-  // FIXME: do it!
   /**
    * Creates a sub-feature for the given relation and directly sets it to this property.<br/>
    * If this sub feature is already present, it is replaced by the newly created sub feature.<br/>
@@ -192,13 +191,13 @@ public interface Feature extends BaseFeature, Deegree2Feature, IAdaptable
   Feature createSubFeature( QName relationName );
 
   /**
-   * Resolves a related member feature.<br/>
+   * Returns a related member feature.<br/>
    * Inline feature gets returned, feature links are returned as xlinked-features.
    */
   Feature getMember( IRelationType relation );
 
   /**
-   * Resolves a related member feature.<br/>
+   * Returns a related member feature.<br/>
    * Inline feature gets returned, feature links are returned as xlinked-features.
    *
    * @param relation
@@ -207,6 +206,35 @@ public interface Feature extends BaseFeature, Deegree2Feature, IAdaptable
    *           If <code>relation</code> is not the name of a relation type.
    */
   Feature getMember( QName relation );
+
+  /**
+   * Resolves a related member feature.<br/>
+   * Unlike {@link #getMember()}, always a 'real' feature is returned. I.e. if the memebr is a link into another
+   * workspace, a feature from that workspace is returned.
+   *
+   * @param relation
+   *          A property with maxOccurs 1.
+   */
+  Feature resolveMember( IRelationType relation );
+
+  /**
+   * Same as {@link #resolveMember(QName)}.
+   *
+   * @param relation
+   *          Name of a property with maxOccurs 1.
+   */
+  Feature resolveMember( QName relation );
+
+  /**
+   * Same as {@link #resolveMember(IRelationType)}.
+   */
+  Feature[] resolveMembers( IRelationType relation );
+
+  /**
+   * Resolves related member features similar to the {@link #getMember(IRelationType)} method.<br/>
+   * This method works for properties with <code>maxOccurs=1</code> as well as <code>maxOccurs = unbounded</code>.
+   */
+  Feature[] resolveMembers( QName relation );
 
   /**
    * Gives access to an unbound property containing member features (either linked or inline).
@@ -231,4 +259,25 @@ public interface Feature extends BaseFeature, Deegree2Feature, IAdaptable
    *          All members of the list are assumed to be of this type; the appropriate typed list is returned.
    */
   <T extends Feature> IFeatureBindingCollection<T> getMemberList( IRelationType relation, Class<T> type );
+
+  /**
+   * Removes a member from a relation. The following cases are handled:
+   * <ul>
+   * <li>minOccurs=1 and inline feature equal to <code>toRemove</code>: property is set to <code>null</code>.</li>
+   * <li>minOccurs=1 and property contains a link that links to <code>toRemove</code>: property is set to
+   * <code>null</code></li>
+   * <li>minOccurs>1 and the list contains <code>toRemove</code>: item removed from the list.</li>
+   * <li>minOccurs>1 and the list contains a link that links to <code>toRemove</code>: link is removed from the list.</li>
+   * </ul>
+   *
+   * @return If one of the four cases holds, <code>true</code> is returned. <code>false</code> in all other cases.
+   */
+  boolean removeMember( IRelationType relation, Feature toRemove );
+
+  /**
+   * Same as {@link #removeMember(IRelationType, Feature)}
+   *
+   * @see #removeMember(IRelationType, Feature)
+   */
+  boolean removeMember( QName relationName, Feature toRemove );
 }

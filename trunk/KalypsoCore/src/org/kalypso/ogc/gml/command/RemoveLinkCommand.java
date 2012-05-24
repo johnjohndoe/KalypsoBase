@@ -44,60 +44,47 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * class RemoveRelationCommand Command to remove a normal relation created by
- * 
+ *
  * @author doemming (13.05.2005)
  */
-public class RemoveRelationCommand implements ICommand
+public class RemoveLinkCommand implements ICommand
 {
   private final Feature m_srcFE;
 
   private final Feature m_destFE;
 
-  private final IRelationType m_linkPropName;
-
-  private final boolean m_isComposition;
+  private final IRelationType m_linkRelation;
 
   private final int m_pos;
 
-  public RemoveRelationCommand( final Feature srcFE, final IRelationType linkPropName, final Feature destFE )
+  public RemoveLinkCommand( final Feature srcFE, final IRelationType linkPropName, final Feature destFE )
   {
     m_srcFE = srcFE;
-    m_linkPropName = linkPropName;
+    m_linkRelation = linkPropName;
     m_destFE = destFE;
-    // is composition
-    m_isComposition = FeatureHelper.isCompositionLink( srcFE, linkPropName, destFE );
-    m_pos = FeatureHelper.getPositionOfAssoziation( srcFE, linkPropName, destFE );
+    m_pos = FeatureLinkUtils.indexOfLink( srcFE, linkPropName, destFE );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
-   */
   @Override
   public boolean isUndoable( )
   {
     return true;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#process()
-   */
   @Override
   public void process( ) throws Exception
   {
     final GMLWorkspace workspace = m_srcFE.getWorkspace();
 
-    if( m_isComposition )
-      workspace.removeLinkedAsCompositionFeature( m_srcFE, m_linkPropName, m_destFE );
-    else
-      workspace.removeLinkedAsAggregationFeature( m_srcFE, m_linkPropName, m_destFE.getId() );
+    m_srcFE.removeMember( m_linkRelation, m_destFE );
 
     workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_srcFE, m_destFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
-    workspace.fireModellEvent( new FeatureChangeModellEvent( workspace, new FeatureChange[] { new FeatureChange( m_srcFE, m_linkPropName, null ) } ) );
+    workspace.fireModellEvent( new FeatureChangeModellEvent( workspace, new FeatureChange[] { new FeatureChange( m_srcFE, m_linkRelation, null ) } ) );
   }
 
   @Override
@@ -111,10 +98,15 @@ public class RemoveRelationCommand implements ICommand
   {
     final GMLWorkspace workspace = m_srcFE.getWorkspace();
 
-    if( m_isComposition )
-      workspace.addFeatureAsComposition( m_srcFE, m_linkPropName, m_pos, m_destFE );
+    if( m_linkRelation.isList() )
+    {
+      final IFeatureBindingCollection<Feature> memberList = m_srcFE.getMemberList( m_linkRelation );
+      memberList.insertLink( m_pos, m_destFE );
+    }
     else
-      FeatureLinkUtils.insertLink( m_srcFE, m_linkPropName, m_pos, m_destFE.getId() );
+    {
+      m_srcFE.setLink( m_linkRelation, getDescription() );
+    }
 
     workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_srcFE, m_destFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }

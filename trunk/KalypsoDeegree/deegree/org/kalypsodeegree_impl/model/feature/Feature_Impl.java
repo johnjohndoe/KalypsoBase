@@ -36,6 +36,7 @@
 package org.kalypsodeegree_impl.model.feature;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -508,13 +509,10 @@ public class Feature_Impl extends PlatformObject implements Feature
   }
 
   @Override
-  public Feature getMember( final QName relation )
+  public Feature getMember( final QName relationName )
   {
-    final IPropertyType property = getFeatureType().getProperty( relation );
-    if( !(property instanceof IRelationType) )
-      throw new IllegalArgumentException( String.format( "'%s' is not a relation", relation ) );
-
-    return getMember( (IRelationType) property );
+    final IRelationType relation = ensureRelation( relationName );
+    return getMember( relation );
   }
 
   @Override
@@ -527,13 +525,17 @@ public class Feature_Impl extends PlatformObject implements Feature
     if( linkValue instanceof Feature )
       return (Feature) linkValue;
 
-    // must be a reference
     final String linkID = (String) linkValue;
     final GMLWorkspace workspace = getWorkspace();
     if( workspace == null )
       return null;
 
-    return workspace.getFeature( linkID );
+    /* Create temporary xlink from string-link */
+    final String href = "#" + linkID; //$NON-NLS-1$
+    final Feature linkedFeature = workspace.getFeature( linkID );
+    final IFeatureType linkedType = linkedFeature == null ? relation.getTargetFeatureType() : linkedFeature.getFeatureType();
+
+    return new XLinkedFeature_Impl( this, relation, linkedType, href );
   }
 
   @Override
@@ -735,6 +737,73 @@ public class Feature_Impl extends PlatformObject implements Feature
   }
 
   @Override
+  public Feature resolveMember( final QName relationName )
+  {
+    final IRelationType relation = ensureRelation( relationName );
+    return resolveMember( relation );
+  }
+
+  @Override
+  public Feature resolveMember( final IRelationType relation )
+  {
+    final Object linkValue = getProperty( relation );
+    if( linkValue == null )
+      return null;
+
+    if( linkValue instanceof IXLinkedFeature )
+      return ((IXLinkedFeature) linkValue).getFeature();
+
+    if( linkValue instanceof Feature )
+      return (Feature) linkValue;
+
+    final String linkID = (String) linkValue;
+    final GMLWorkspace workspace = getWorkspace();
+    if( workspace == null )
+      return null;
+
+    return workspace.getFeature( linkID );
+  }
+
+  @Override
+  public Feature[] resolveMembers( final QName relationName )
+  {
+    final IRelationType relation = ensureRelation( relationName );
+    return resolveMembers( relation );
+  }
+
+  @Override
+  public Feature[] resolveMembers( final IRelationType relation )
+  {
+    if( relation.getMaxOccurs() > 1 )
+    {
+      final IFeatureBindingCollection<Feature> memberList = getMemberList( relation );
+      final Feature[] resolvedMembers = new Feature[memberList.size()];
+
+      for( int i = 0; i < memberList.size(); i++ )
+      {
+        Feature feature = memberList.get( i );
+
+        // TODO: this should not be necessary, but it is still not really clear what happens in the
+        // IFeatureBindingCollection; so just in case...
+        if( feature instanceof IXLinkedFeature )
+          feature = ((IXLinkedFeature) feature).getFeature();
+
+        resolvedMembers[i] = feature;
+      }
+
+      return resolvedMembers;
+    }
+    else
+    {
+      final Feature resolvedMember = resolveMember( relation );
+      if( resolvedMember == null )
+        return new Feature[] {};
+
+      return new Feature[] { resolvedMember };
+    }
+  }
+
+  @Override
   public IFeatureBindingCollection<Feature> getMemberList( final QName relationName )
   {
     return getMemberList( relationName, Feature.class );
@@ -765,5 +834,96 @@ public class Feature_Impl extends PlatformObject implements Feature
     }
 
     return new FeatureBindingCollection<>( this, type, relation.getQName() );
+  }
+
+  @Override
+  public boolean removeMember( final QName relationName, final Feature toRemove )
+  {
+    final IRelationType relation = ensureRelation( relationName );
+    return removeMember( relation, toRemove );
+  }
+
+  @Override
+  public boolean removeMember( final IRelationType relation, final Feature toRemove )
+  {
+    final int maxOccurs = relation.getMaxOccurs();
+    if( maxOccurs > 1 )
+      return removeListMember( relation, toRemove );
+    else
+      return removeNonListMember( relation, toRemove );
+  }
+
+  private boolean removeListMember( final IRelationType relation, final Feature toRemove )
+  {
+    final FeatureList members = (FeatureList) getProperty( relation );
+
+    final GMLWorkspace myWorkspace = getWorkspace();
+    final GMLWorkspace targetWorkspace = toRemove.getWorkspace();
+
+    final boolean isInWorkspace = myWorkspace != null && myWorkspace == targetWorkspace;
+
+    if( isInWorkspace )
+    {
+      if( members.remove( toRemove ) )
+      {
+        final GMLWorkspace workspace = getWorkspace();
+        if( workspace instanceof GMLWorkspace_Impl )
+          ((GMLWorkspace_Impl) workspace).unregisterFeature( toRemove );
+
+        return true;
+      }
+    }
+
+    // REMARK: no else: there might still be a link here that links against toRemove
+    for( final Iterator< ? > iterator = members.iterator(); iterator.hasNext(); )
+    {
+      final Object object = iterator.next();
+      if( object instanceof String && toRemove.getId().equals( object ) )
+      {
+        iterator.remove();
+        return true;
+      }
+      else if( object instanceof IXLinkedFeature && ((IXLinkedFeature) object).getId().equals( toRemove.getId() ) )
+      {
+        iterator.remove();
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  private boolean removeNonListMember( final IRelationType relation, final Feature toRemove )
+  {
+    final Object property = getProperty( relation );
+    if( property instanceof IXLinkedFeature )
+    {
+      final Feature feature = ((IXLinkedFeature) property).getFeature();
+      if( feature == toRemove )
+      {
+        setProperty( relation, null );
+        return true;
+      }
+    }
+    else if( property instanceof String )
+    {
+      if( property.equals( toRemove.getId() ) )
+      {
+        setProperty( relation, null );
+        return true;
+      }
+    }
+    else if( property == toRemove )
+    {
+      setProperty( relation, null );
+
+      final GMLWorkspace workspace = getWorkspace();
+      if( workspace instanceof GMLWorkspace_Impl )
+        ((GMLWorkspace_Impl) workspace).unregisterFeature( toRemove );
+
+      return true;
+    }
+
+    return false;
   }
 }
