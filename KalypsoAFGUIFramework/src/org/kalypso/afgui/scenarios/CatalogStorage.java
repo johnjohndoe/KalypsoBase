@@ -58,7 +58,7 @@ import org.kalypso.core.KalypsoCorePlugin;
 /**
  * A {@link org.kalypso.contribs.eclipse.core.resources.IStorageWithContext} implementation that is based on the
  * KalypsoCore catalog service.
- *
+ * 
  * @author Gernot Belger
  */
 public class CatalogStorage extends UrlStorage

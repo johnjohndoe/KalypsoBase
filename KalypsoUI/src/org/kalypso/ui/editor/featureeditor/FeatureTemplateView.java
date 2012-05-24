@@ -195,4 +195,16 @@ public class FeatureTemplateView extends ViewPart
     }
   }
 
+  @Override
+  public void setPartName( final String partName )
+  {
+    super.setPartName( partName );
+  }
+
+  @Override
+  public void setTitleToolTip( final String toolTip )
+  {
+    super.setTitleToolTip( toolTip );
+  }
+
 }
