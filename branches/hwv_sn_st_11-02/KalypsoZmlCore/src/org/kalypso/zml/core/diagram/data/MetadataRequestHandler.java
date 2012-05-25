@@ -49,6 +49,10 @@ import jregex.Pattern;
 import jregex.RETokenizer;
 
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.Period;
+import org.joda.time.format.ISOPeriodFormat;
+import org.joda.time.format.PeriodFormatter;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
@@ -70,9 +74,6 @@ public class MetadataRequestHandler implements IRequestHandler
     m_parameters = parameters;
   }
 
-  /**
-   * @see org.kalypso.hwv.core.chart.provider.observation.IRequestHandler#getArguments(org.kalypso.ogc.sensor.IObservation)
-   */
   @Override
   public IRequest getArguments( final MetadataList metadata )
   {
@@ -82,23 +83,60 @@ public class MetadataRequestHandler implements IRequestHandler
     final String keyStart = getKey( "start" ); //$NON-NLS-1$
     final String keyEnd = getKey( "end" ); //$NON-NLS-1$
 
-    if( keyStart != null )
-      from = getDate( metadata, keyStart );
+    if( StringUtils.isNotBlank( keyStart ) )
+      from = getDate( metadata, keyStart, "startOffset" ); //$NON-NLS-1$
 
-    if( keyEnd != null )
-      to = getDate( metadata, keyEnd );
+    if( StringUtils.isNotBlank( keyEnd ) )
+      to = getDate( metadata, keyEnd, "endOffset" ); //$NON-NLS-1$
 
     return new ObservationRequest( new DateRange( from, to ) );
   }
 
-  private Date getDate( final MetadataList metadata, final String key )
+  private Date getDate( final MetadataList metadata, final String key, final String offset )
   {
     if( key.startsWith( "metadata:" ) )//$NON-NLS-1$
     {
-      return getFromMetadata( metadata, key );
+      return doAdjust( getFromMetadata( metadata, key ), offset ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     return null;
+  }
+
+  private Date doAdjust( final Date base, final String offset )
+  {
+    final String strDuration = getKey( offset );
+    if( StringUtils.isBlank( strDuration ) )
+      return base;
+
+    final boolean positive = isPositiveOffset( strDuration );
+    final Period duration = getDuration( strDuration );
+
+    final DateTime adjusted = new DateTime( base.getTime() );
+    if( positive )
+      adjusted.plus( duration );
+    else
+      adjusted.minus( duration );
+
+    return adjusted.toDate();
+  }
+
+  private Period getDuration( final String strDuration )
+  {
+    final PeriodFormatter formater = ISOPeriodFormat.standard();
+    if( strDuration.startsWith( "-" ) ) //$NON-NLS-1$
+      return formater.parsePeriod( strDuration.substring( 1 ) );
+    else if( strDuration.startsWith( "+" ) ) //$NON-NLS-1$
+      return formater.parsePeriod( strDuration.substring( 1 ) );
+
+    return formater.parsePeriod( strDuration );
+  }
+
+  private boolean isPositiveOffset( final String strDuration )
+  {
+    if( strDuration.startsWith( "-" ) )
+      return false;
+
+    return true;
   }
 
   private Date getFromMetadata( final MetadataList metadata, final String url )
