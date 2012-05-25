@@ -95,13 +95,11 @@ public class ZmlBarLayerRangeHandler
       Date max = (Date) range.getUpper();
 
       // adjust min, because rainfalls time series values will be rendered int the past
-      final Period timestep = MetadataHelper.getTimestep( observation.getMetadataList() );
-
       final IAxis axis = m_layer.getDataHandler().getValueAxis();
       if( ITimeseriesConstants.TYPE_RAINFALL.equals( axis.getType() ) )
-        min = doAdjustMin( min, timestep );
+        min = doAdjustMin( observation, min );
       else if( ITimeseriesConstants.TYPE_POLDER_CONTROL.equals( axis.getType() ) )
-        max = doAdjustMax( max, timestep );
+        max = doAdjustMax( observation, max );
 
       return new DataRange<Number>( getDateDataOperator().logicalToNumeric( min ), getDateDataOperator().logicalToNumeric( max ) );
     }
@@ -113,8 +111,9 @@ public class ZmlBarLayerRangeHandler
     }
   }
 
-  private Date doAdjustMax( final Date max, final Period timestep )
+  private Date doAdjustMax( final IObservation observation, final Date max )
   {
+    final Period timestep = MetadataHelper.getTimestep( observation.getMetadataList() );
     if( Objects.isNull( timestep ) )
       return max;
 
@@ -123,8 +122,9 @@ public class ZmlBarLayerRangeHandler
     return new Date( max.getTime() + ms );
   }
 
-  private Date doAdjustMin( final Date min, final Period timestep )
+  private Date doAdjustMin( final IObservation observation, final Date min )
   {
+    final Period timestep = MetadataHelper.getTimestep( observation.getMetadataList() );
     if( Objects.isNull( timestep ) )
       return min;
 
