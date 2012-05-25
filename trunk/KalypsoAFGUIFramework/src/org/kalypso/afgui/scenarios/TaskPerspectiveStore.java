@@ -235,6 +235,8 @@ class TaskPerspectiveStore
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
     final WorkbenchPage page = (WorkbenchPage) window.getActivePage();
+    if( page == null )
+      return null;
 
     return page.getActivePerspective();
   }
@@ -248,8 +250,8 @@ class TaskPerspectiveStore
     final File taskPerspectiveFile = getUserFile( task );
 
     final Perspective perspective = getCurrentPerspective();
-
-    savePerspective( perspective, taskPerspectiveFile );
+    if( perspective != null )
+      savePerspective( perspective, taskPerspectiveFile );
   }
 
   private void savePerspective( final Perspective perspective, final File targetFile )
@@ -345,6 +347,9 @@ class TaskPerspectiveStore
   {
     final PerspectiveRegistry registry = getPerspectiveRegistry();
     final PerspectiveDescriptor desc = (PerspectiveDescriptor) perspective.getDesc();
+
+    System.out.println( "Apply custom perspective: " + desc.getId() );
+
     registry.saveCustomPersp( desc, memento );
 
     final IWorkbench workbench = PlatformUI.getWorkbench();
