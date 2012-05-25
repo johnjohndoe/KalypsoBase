@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * TODO: merge code with TableCursor-Copy
- *
+ * 
  * @author Gernot Belger
  */
 public class ExcelTableCursor extends TableCursor
@@ -583,7 +583,7 @@ public class ExcelTableCursor extends TableCursor
 
   /**
    * Advances the cursor position by the given delta.
-   *
+   * 
    * @param control
    *          If not null, the keyListener will be removed from this control, used by the key-listener itself.
    */
@@ -660,8 +660,11 @@ public class ExcelTableCursor extends TableCursor
 
     // BUGFIX: if the table receives focus, we force ourselfs to be visible
     // Before, the cursor was not visible and selection did not change cursor position
-    setVisible( true );
-    setFocus();
+    // FIXME: does not work: table selection does not work any more with this fix
+// setVisible( true );
+
+    if( isVisible() )
+      setFocus();
   }
 
   void tableMouseDown( final MouseEvent event )
