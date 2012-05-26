@@ -52,7 +52,6 @@ import de.renew.workflow.connector.cases.IModel;
  */
 public class UnversionedModel extends Feature_Impl implements IModel
 {
-
   public UnversionedModel( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
