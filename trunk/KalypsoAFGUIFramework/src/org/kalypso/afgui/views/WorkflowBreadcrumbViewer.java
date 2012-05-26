@@ -82,10 +82,8 @@ public class WorkflowBreadcrumbViewer
         viewer.setContentProvider( getContentProvider() );
 
         // REMARK: cannot reuse label provider of breadcrumb, because it gets disposed if drop-down is closed
-        final WorkflowBreadCrumbLabelProvider labelProvider = new WorkflowBreadCrumbLabelProvider();
-
-        viewer.setLabelProvider( labelProvider );
-        setToolTipLabelProvider( labelProvider );
+        viewer.setLabelProvider( new WorkflowBreadCrumbLabelProvider() );
+        setToolTipLabelProvider( new WorkflowBreadCrumbTooltipProvider() );
 
         // setComparator(FileViewerComparator.DEFAULT);
         viewer.setFilters( getFilters() );
@@ -94,9 +92,8 @@ public class WorkflowBreadcrumbViewer
 
     final BreadcrumbViewer viewer = m_viewer;
 
-    final WorkflowBreadCrumbLabelProvider labelProvider = new WorkflowBreadCrumbLabelProvider();
-    viewer.setLabelProvider( labelProvider );
-    viewer.setToolTipLabelProvider( labelProvider );
+    viewer.setLabelProvider( new WorkflowBreadCrumbLabelProvider() );
+    viewer.setToolTipLabelProvider( new WorkflowBreadCrumbTooltipProvider() );
 
     viewer.setContentProvider( new WorkflowBreadcrumbContentProvider() );
     viewer.setInput( ResourcesPlugin.getWorkspace().getRoot() );

@@ -40,14 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.afgui.views;
 
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+
+import de.renew.workflow.connector.cases.IScenario;
 
 /**
  * @author Gernot Belger
  */
-public class WorkflowBreadCrumbLabelProvider extends LabelProvider
+public class WorkflowBreadCrumbLabelProvider extends LabelProvider implements IFontProvider
 {
   private final WorkbenchLabelProvider m_labelProvider = new WorkbenchLabelProvider();
 
@@ -72,5 +78,15 @@ public class WorkflowBreadCrumbLabelProvider extends LabelProvider
       return (String) element;
 
     return m_labelProvider.getText( element );
+  }
+
+  @Override
+  public Font getFont( final Object element )
+  {
+    final IScenario currentScenario = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase();
+    if( element.equals( currentScenario ) )
+      return JFaceResources.getFontRegistry().getBold( JFaceResources.DEFAULT_FONT );
+
+    return null;
   }
 }
