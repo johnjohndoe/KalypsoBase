@@ -90,6 +90,18 @@ public class ScenarioHandler implements IScenario
   }
 
   @Override
+  public String getDescription( )
+  {
+    return m_scenario.getDescription();
+  }
+
+  @Override
+  public void setDescription( final String description )
+  {
+    m_scenario.setDescription( description );
+  }
+
+  @Override
   public String getURI( )
   {
     try

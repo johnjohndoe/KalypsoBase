@@ -70,11 +70,9 @@ public interface IScenario
    */
   Case getCase( );
 
-  /**
-   * @param name
-   *          name of workflow {@link Case}
-   */
   String getName( );
+
+  String getDescription( );
 
   /**
    * @return {@link IProject} of workflow {@link Case}
@@ -96,6 +94,8 @@ public interface IScenario
    *          name of workflow {@link Case}
    */
   void setName( String name );
+
+  void setDescription( String name );
 
   /**
    * @param uri
