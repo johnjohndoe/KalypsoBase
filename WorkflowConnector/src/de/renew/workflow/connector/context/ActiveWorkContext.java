@@ -5,17 +5,11 @@ import java.util.List;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
 
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.connector.cases.IScenario;
@@ -27,8 +21,10 @@ import de.renew.workflow.connector.internal.WorkflowConnectorPlugin;
  *
  * @author Stefan Kurzbach
  */
-public class ActiveWorkContext implements IResourceChangeListener
+public class ActiveWorkContext
 {
+  private final ActiveWorkContextResourceListener m_resourceListener = new ActiveWorkContextResourceListener( this );
+
   private CaseHandlingProjectNature m_currentProjectNature;
 
   private final List<IActiveScenarioChangeListener> m_activeContextChangeListeners = new ArrayList<IActiveScenarioChangeListener>();
@@ -45,7 +41,7 @@ public class ActiveWorkContext implements IResourceChangeListener
     // TODO: is this really the right place to do this stuff?
     // Probably better at least inside the afg-ui plug-in
     final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-    workspace.addResourceChangeListener( this );
+    workspace.addResourceChangeListener( m_resourceListener );
   }
 
   /**
@@ -154,134 +150,5 @@ public class ActiveWorkContext implements IResourceChangeListener
       newCaseManager.setCurrentCase( caze );
 
     fireActiveContextChanged( m_currentProjectNature, caze );
-  }
-
-  @Override
-  public void resourceChanged( final IResourceChangeEvent event )
-  {
-    // TODO:
-    // /* Set base case as current for the newly selected project */
-    // final T caseToActivate = m_caseManager == null ? null : m_caseManager.getCases().get( 0 );
-
-    if( event.getType() == IResourceChangeEvent.PRE_DELETE || event.getType() == IResourceChangeEvent.PRE_CLOSE )
-    {
-      // if the currently active project is deleted or closed
-      if( m_currentProjectNature != null && m_currentProjectNature.getProject().equals( event.getResource() ) )
-      {
-        try
-        {
-          // project was closed or deleted, deactivate the current case
-          setCurrentCase( null );
-        }
-        catch( final CoreException e )
-        {
-          final Display display = PlatformUI.getWorkbench().getDisplay();
-          final Shell activeShell = display.getActiveShell();
-          final IStatus status = e.getStatus();
-          ErrorDialog.openError( activeShell, "Problem beim Löschen des Projektes", "Projekt wurde nicht deaktiviert.", status );
-          WorkflowConnectorPlugin.getDefault().getLog().log( status );
-        }
-      }
-    }
-    else if( event.getType() == IResourceChangeEvent.POST_CHANGE )
-    {
-      // TODO: does not work for new projects (they are activated anyway!)
-      // Symptoms: dialog pops up, but is empty; NPE after that
-
-      // // post change event after some modifications
-      // final IResourceDelta delta = event.getDelta();
-      // final IResourceDelta[] openedChildren = delta.getAffectedChildren();
-      //
-      // if( openedChildren.length == 0 )
-      // return;
-      //
-      // final IResourceDelta resourceDelta = openedChildren[0];
-      // if( (resourceDelta.getFlags() & (IResourceDelta.OPEN | IResourceDelta.ADDED)) == 0 )
-      // return;
-      //
-      // // if the first affected resource was opened or added, remember this resource
-      // final IResource resource = resourceDelta.getResource();
-      // if( resource.getType() != IResource.PROJECT )
-      // return;
-      //
-      // // this is an opened or added resource, if it is a project that was opened or added, go on
-      // final IProject project = (IProject) resource;
-      // if( !project.isOpen() )
-      // return;
-      //
-      // IProjectNature nature = null;
-      // try
-      // {
-      // // get the case handling project nature if available
-      // nature = project.getNature( m_natureID );
-      // }
-      // catch( final CoreException e )
-      // {
-      // // nature does not exist or such, ignore
-      // return;
-      // }
-      //
-      // final CaseHandlingProjectNature caseHandlingNature = (CaseHandlingProjectNature) nature;
-      // if( caseHandlingNature == null && m_currentProjectNature != null && project.equals(
-      // m_currentProjectNature.getProject() ) )
-      // {
-      // try
-      // {
-      // // TODO: when does this ever happen? a new project was opened, and is already active
-      //
-      // // nature is null, so it must have been removed from this project: close the scenario
-      // setCurrentProject( null );
-      // }
-      // catch( final CoreException e )
-      // {
-      // final IStatus status = e.getStatus();
-      // WorkflowConnectorPlugin.getDefault().getLog().log( status );
-      // }
-      // return;
-      // }
-      //
-      // final UIJob job = new UIJob( "" )
-      // {
-      // @Override
-      // public IStatus runInUIThread( IProgressMonitor monitor )
-      // {
-      // final Shell shell = getDisplay().getActiveShell();
-      // {
-      // try
-      // {
-      // // A project was opened and has the right nature: ask user if it should be activated as well
-      //
-      // final WorkbenchContentProvider workbenchContentProvider = new WorkbenchContentProvider();
-      // final WorkbenchLabelProvider workbenchLabelProvider = new WorkbenchLabelProvider();
-      // final ListDialog dialog = new ListDialog( shell );
-      // dialog.setTitle( "Szenario-Projekt" );
-      // dialog.setMessage( String.format( "Das Projekt \"%s\" enthält Szenarien.\nMöchten Sie ein Szenario
-      // aktivieren?", project.getName() ) );
-      // dialog.setContentProvider( workbenchContentProvider );
-      // dialog.setLabelProvider( workbenchLabelProvider );
-      // dialog.setInput( caseHandlingNature );
-      // dialog.setBlockOnOpen( true );
-      //
-      // dialog.open();
-      // final Object[] result = dialog.getResult();
-      // if( result != null && result.length > 0 )
-      // {
-      // final T caze = (T) result[0];
-      // setCurrentProject( caseHandlingNature );
-      // setCurrentCase( caze );
-      // }
-      // }
-      // catch( final CoreException e )
-      // {
-      // final IStatus status = e.getStatus();
-      // ErrorDialog.openError( shell, "Problem beim Öffnen des Projektes", "Projekt wurde nicht aktiviert.", status );
-      // WorkflowConnectorPlugin.getDefault().getLog().log( status );
-      // }
-      // }
-      // return null;
-      // }
-      // };
-      // job.schedule();
-    }
   }
 }
