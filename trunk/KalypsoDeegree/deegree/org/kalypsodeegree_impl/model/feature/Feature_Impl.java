@@ -477,13 +477,33 @@ public class Feature_Impl extends PlatformObject implements Feature
     }
   }
 
-  protected boolean getBoolean( final QName property, final boolean defaultValue )
+  protected boolean getBooleanProperty( final QName property, final boolean defaultValue )
   {
     final Boolean value = getProperty( property, Boolean.class );
     if( value == null )
       return defaultValue;
 
     return value;
+  }
+
+  /**
+   * Returns a property that is represented by an enumeration.
+   */
+  protected <T extends Enum<T>> T getEnumProperty( final QName propertyName, final Class<T> enumType, final T defaultValue )
+  {
+    final String value = getProperty( propertyName, String.class );
+    if( StringUtils.isBlank( value ) )
+      return defaultValue;
+
+    try
+    {
+      return Enum.valueOf( enumType, value );
+    }
+    catch( final IllegalArgumentException e )
+    {
+      e.printStackTrace();
+      return defaultValue;
+    }
   }
 
   @Override
