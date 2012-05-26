@@ -6,14 +6,15 @@ package org.kalypso.afgui.handlers;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.scenarios.TaskExecutionAuthority;
 
+import de.renew.workflow.base.ITask;
 import de.renew.workflow.connector.cases.IScenario;
 
 /**
@@ -21,36 +22,44 @@ import de.renew.workflow.connector.cases.IScenario;
  */
 public class AddScenarioHandler extends AbstractHandler
 {
-  /**
-   * @see de.renew.workflow.WorkflowCommandHandler#executeInternal(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event )
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
     final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
     final ISelection selection = (ISelection) context.getVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME );
-    if( selection instanceof IStructuredSelection )
-    {
-      final IStructuredSelection structSel = (IStructuredSelection) selection;
+    if( !(selection instanceof IStructuredSelection) )
+      return null;
 
-      if( !structSel.isEmpty() )
-      {
-        final Object o = structSel.getFirstElement();
-        if( o instanceof IScenario )
-        {
-          final IScenario scenario = (IScenario) o;
-          final IProject project = scenario.getProject();
-          NewSimulationModelControlBuilder.startWizard( shell, scenario, project );
-        }
-        else if( o instanceof IResource )
-        {
-          final IResource res = (IResource) o;
-          final IProject project = res.getProject();
-          NewSimulationModelControlBuilder.startWizard( shell, null, project );
-        }
-      }
+    final IStructuredSelection structSel = (IStructuredSelection) selection;
+
+    if( structSel.isEmpty() )
+      return null;
+
+    final Object o = structSel.getFirstElement();
+    if( !(o instanceof IScenario) )
+      return null;
+
+    /* Stop current task */
+    final KalypsoAFGUIFrameworkPlugin plugin = KalypsoAFGUIFrameworkPlugin.getDefault();
+    final TaskExecutionAuthority taskExecutionAuthority = plugin.getTaskExecutionAuthority();
+    final ITask activeTask = plugin.getTaskExecutor().getActiveTask();
+    if( !taskExecutionAuthority.canStopTask( activeTask ) )
+    {
+      /* cancelled by user */
+      return null;
     }
-    return Status.OK_STATUS;
+
+    /* Show wizard */
+    final IScenario scenario = (IScenario) o;
+
+    final NewScenarioData data = new NewScenarioData( scenario );
+
+    final NewScenarioWizard wizard = new NewScenarioWizard( data );
+
+    final WizardDialog wd = new WizardDialog( shell, wizard );
+    wd.open();
+
+    return null;
   }
 }
