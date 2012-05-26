@@ -60,6 +60,7 @@ import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.eclipse.ui.dialogs.WizardNewProjectReferencePage;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
@@ -282,12 +283,9 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
     final IScenario caze = cases.get( 0 );
 
     if( m_activateScenario )
-      KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().setCurrentCase( caze );
+      ScenarioHelper.activateScenario( caze );
   }
 
-  /**
-   * @see org.kalypso.project.database.client.extension.pages.module.INewProjectWizard#disableProjectCreationUI()
-   */
   @Override
   public boolean disableProjectCreationUI( )
   {
