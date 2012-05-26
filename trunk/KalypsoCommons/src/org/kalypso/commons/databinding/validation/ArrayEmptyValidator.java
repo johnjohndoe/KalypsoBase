@@ -52,8 +52,6 @@ import org.eclipse.core.runtime.Status;
 public class ArrayEmptyValidator extends TypedValidator<Object[]>
 {
   /**
-   * The constructor.
-   * 
    * @param severity
    *          Severity of IStatus, will be used to create validation failures.
    * @param message
@@ -64,9 +62,6 @@ public class ArrayEmptyValidator extends TypedValidator<Object[]>
     super( Object[].class, severity, message );
   }
 
-  /**
-   * @see org.kalypso.commons.databinding.validation.TypedValidator#doValidate(java.lang.Object)
-   */
   @Override
   protected IStatus doValidate( final Object[] value ) throws CoreException
   {
