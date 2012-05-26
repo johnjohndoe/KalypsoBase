@@ -348,7 +348,8 @@ class TaskPerspectiveStore
     final PerspectiveRegistry registry = getPerspectiveRegistry();
     final PerspectiveDescriptor desc = (PerspectiveDescriptor) perspective.getDesc();
 
-    System.out.println( "Apply custom perspective: " + desc.getId() );
+    if( !desc.getId().equals( org.kalypso.afgui.perspective.Perspective.ID ) )
+      System.out.println( "Apply custom perspective: " + desc.getId() );
 
     registry.saveCustomPersp( desc, memento );
 
