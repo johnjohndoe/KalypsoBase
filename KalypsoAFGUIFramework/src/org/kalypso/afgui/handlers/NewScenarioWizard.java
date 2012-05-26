@@ -82,8 +82,8 @@ public class NewScenarioWizard extends Wizard
       final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
       final IScenarioManager scenarioManager = nature.getCaseManager();
 
-      final IScenario newScenario = scenarioManager.deriveScenario( name, parentScenario );
-      // FIXME: set comment to scenario
+      final IScenario newScenario = scenarioManager.deriveScenario( name, comment, parentScenario );
+
       ScenarioHelper.activateScenario( newScenario );
 
       return true;

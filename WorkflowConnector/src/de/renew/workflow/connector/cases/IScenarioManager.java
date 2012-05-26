@@ -120,7 +120,7 @@ public interface IScenarioManager
    *              <li>The name of this scenario is not valid (according to <code>IWorkspace.validateName</code>).</li>
    *              <li>There is a problem persisting the database. See {@link #persist()} for details.</li>
    */
-  IScenario deriveScenario( final String name, final IScenario parentScenario ) throws CoreException;
+  IScenario deriveScenario( final String name, String description, final IScenario parentScenario ) throws CoreException;
 
   /**
    * Saves the changes in the scenario structure to the database.

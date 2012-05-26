@@ -326,7 +326,7 @@ public class AbstractCaseManager implements IScenarioManager
   }
 
   @Override
-  public IScenario deriveScenario( final String name, final IScenario parentScenario ) throws CoreException
+  public IScenario deriveScenario( final String name, final String description, final IScenario parentScenario ) throws CoreException
   {
     /* Validate path first */
     final IFolder folder = parentScenario.getFolder();
@@ -348,6 +348,7 @@ public class AbstractCaseManager implements IScenarioManager
     }
 
     newScenario.setName( name );
+    newScenario.setDescription( description );
     newScenario.setParentScenario( parentScenario.getScenario() );
 
     ScenarioList derivedScenarios = parentScenario.getScenario().getDerivedScenarios();
@@ -363,6 +364,7 @@ public class AbstractCaseManager implements IScenarioManager
     final ScenarioHandler scenario = new ScenarioHandler( newScenario, m_project );
 
     fireCaseAdded( scenario );
+
     return scenario;
   }
 
@@ -387,7 +389,8 @@ public class AbstractCaseManager implements IScenarioManager
         }
       } );
 
-      final IScenario derived = deriveScenario( name, parentScenario );
+      final String description = toClone.getDescription();
+      final IScenario derived = deriveScenario( name, description, parentScenario );
       /** problem - project nature copies project files -> take data from toClone and not from parent!!! */
 
       final IFolder destinationFolder = derived.getFolder();
