@@ -45,7 +45,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IWorkbenchPage;
-import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 
 import de.renew.workflow.connector.cases.IScenario;
 import de.renew.workflow.connector.cases.IScenarioManager;
@@ -73,8 +73,8 @@ public class SzenarioProjectOpenAction extends AbstractModuleProjectOpenAction
       throw new CoreException( status );
 
     final IScenario caze = caseManager.getCases().get( 0 );
+    ScenarioHelper.activateScenario( caze );
 
-    KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().setCurrentCase( caze );
     return Status.OK_STATUS;
   }
 

@@ -136,6 +136,8 @@ public abstract class CaseHandlingProjectNature implements IProjectNature, ICase
   @Override
   public void caseAdded( final IScenario caze )
   {
+    // FIXME: does not belong here -> move into scenario framework; scenario should not be created in event handling
+
     final IFolder newFolder = m_project.getFolder( getRelativeProjectPath( caze ) );
 
     if( !newFolder.exists() )
