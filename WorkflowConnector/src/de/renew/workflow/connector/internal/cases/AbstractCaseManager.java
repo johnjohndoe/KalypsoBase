@@ -326,8 +326,15 @@ public class AbstractCaseManager implements IScenarioManager
   }
 
   @Override
-  public IScenario deriveScenario( final String name, final IScenario parentScenario )
+  public IScenario deriveScenario( final String name, final IScenario parentScenario ) throws CoreException
   {
+    /* Validate path first */
+    final IFolder folder = parentScenario.getFolder();
+
+    final IStatus validateStatus = folder.getWorkspace().validateName( name, IResource.FOLDER );
+    if( !validateStatus.isOK() )
+      throw new CoreException( validateStatus );
+
     final org.kalypso.afgui.scenarios.ObjectFactory of = new org.kalypso.afgui.scenarios.ObjectFactory();
     final Scenario newScenario = of.createScenario();
     try
@@ -336,8 +343,10 @@ public class AbstractCaseManager implements IScenarioManager
     }
     catch( final UnsupportedEncodingException e )
     {
-      WorkflowConnectorPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
+      throw new CoreException( status );
     }
+
     newScenario.setName( name );
     newScenario.setParentScenario( parentScenario.getScenario() );
 
