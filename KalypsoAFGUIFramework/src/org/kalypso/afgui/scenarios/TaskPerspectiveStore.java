@@ -128,12 +128,30 @@ class TaskPerspectiveStore
       if( IWorkbenchPage.CHANGE_RESET.equals( changeId ) )
         handlePerspectiveReset( perspective );
     }
+
+    @Override
+    public void perspectiveActivated( final IWorkbenchPage page, final IPerspectiveDescriptor perspective )
+    {
+      if( perspective.getId().equals( org.kalypso.afgui.perspective.Perspective.ID ) )
+        handleWorkflowPerspectiveActivated();
+    }
+
+    @Override
+    public void perspectivePreDeactivate( final IWorkbenchPage page, final IPerspectiveDescriptor perspective )
+    {
+      if( perspective.getId().equals( org.kalypso.afgui.perspective.Perspective.ID ) )
+        handleWorkflowPerspectivePreDeactivate();
+    }
   };
 
   private boolean m_resetInProgress = false;
 
-  public TaskPerspectiveStore( )
+  private final TaskExecutor m_executor;
+
+  public TaskPerspectiveStore( final TaskExecutor executor )
   {
+    m_executor = executor;
+
     final IWorkbench workbench = PlatformUI.getWorkbench();
 
     workbench.addWindowListener( m_windowListener );
@@ -258,6 +276,10 @@ class TaskPerspectiveStore
   {
     final XMLMemento memento = XMLMemento.createWriteRoot( "perspective" );//$NON-NLS-1$
 
+    final String id = perspective.getDesc().getId();
+    if( !org.kalypso.afgui.perspective.Perspective.ID.equals( id ) )
+      return;
+
     /* Persist current state */
     final IStatus status = perspective.saveState( memento );
     if( !status.isOK() )
@@ -349,7 +371,7 @@ class TaskPerspectiveStore
     final PerspectiveDescriptor desc = (PerspectiveDescriptor) perspective.getDesc();
 
     if( !desc.getId().equals( org.kalypso.afgui.perspective.Perspective.ID ) )
-      System.out.println( "Apply custom perspective: " + desc.getId() );
+      return;
 
     registry.saveCustomPersp( desc, memento );
 
@@ -421,5 +443,27 @@ class TaskPerspectiveStore
         e.printStackTrace();
       }
     }
+  }
+
+  /**
+   * Saves the layout for the currently active task. Necessary, because the user may close Kalypso after switching to
+   * another perspective.
+   */
+  protected void handleWorkflowPerspectivePreDeactivate( )
+  {
+    final ITask activeTask = m_executor.getActiveTask();
+    if( activeTask != null )
+      saveTaskPerspective( activeTask );
+  }
+
+  /**
+   * Restores the perspective settings for currently the active task.<br/>
+   * Necessary, because when a task is activated the perspective is sometimes not yet open.
+   */
+  protected void handleWorkflowPerspectiveActivated( )
+  {
+    final ITask activeTask = m_executor.getActiveTask();
+    if( activeTask != null )
+      restoreTaskPerspective( activeTask );
   }
 }

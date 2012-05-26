@@ -79,7 +79,7 @@ public class TaskExecutor implements ITaskExecutor
 {
   private static final String TASK_COMMNAND_ROLE_ACTIVATE = StringUtils.EMPTY;
 
-  private final TaskPerspectiveStore m_perspectiveStore = new TaskPerspectiveStore();
+  private final TaskPerspectiveStore m_perspectiveStore = new TaskPerspectiveStore( this );
 
   private ITask m_activeTask;
 
@@ -153,10 +153,11 @@ public class TaskExecutor implements ITaskExecutor
 
     final boolean isPerspectiveConfigured = m_perspectiveStore.restoreTaskPerspective( task );
 
-    final IStatus contextStatus = activateTaskContext( task, isPerspectiveConfigured );
     // REMARK: we return AFTER closing all unnecessary views, else some open views may remain in case of errors
+    final IStatus contextStatus = activateTaskContext( task, isPerspectiveConfigured );
     if( !contextStatus.isOK() )
       return contextStatus;
+
 
     /* Activate new task and execute */
     final IStatus taskExecutionStatus = executeTaskCommand( task, TASK_COMMNAND_ROLE_ACTIVATE );
