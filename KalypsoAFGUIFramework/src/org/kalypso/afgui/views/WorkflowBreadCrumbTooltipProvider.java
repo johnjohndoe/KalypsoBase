@@ -40,53 +40,26 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.afgui.views;
 
-import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jface.viewers.IFontProvider;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.model.WorkbenchLabelProvider;
-import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 
 import de.renew.workflow.connector.cases.IScenario;
 
 /**
  * @author Gernot Belger
  */
-public class WorkflowBreadCrumbLabelProvider extends LabelProvider implements IFontProvider
+public class WorkflowBreadCrumbTooltipProvider extends LabelProvider
 {
-  private final WorkbenchLabelProvider m_labelProvider = new WorkbenchLabelProvider();
-
-  @Override
-  public void dispose( )
-  {
-    m_labelProvider.dispose();
-
-    super.dispose();
-  }
-
-  @Override
-  public Image getImage( final Object element )
-  {
-    return m_labelProvider.getImage( element );
-  }
-
   @Override
   public String getText( final Object element )
   {
-    if( element instanceof String )
-      return (String) element;
+    if( element instanceof IResource )
+      return ((IProject) element).getName();
 
-    return m_labelProvider.getText( element );
-  }
+    if( element instanceof IScenario )
+      return ((IScenario) element).getDescription();
 
-  @Override
-  public Font getFont( final Object element )
-  {
-    final IScenario currentScenario = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase();
-    if( element.equals( currentScenario ) )
-      return JFaceResources.getFontRegistry().getBold( JFaceResources.DEFAULT_FONT );
-
-    return null;
+    return super.getText( element );
   }
 }
