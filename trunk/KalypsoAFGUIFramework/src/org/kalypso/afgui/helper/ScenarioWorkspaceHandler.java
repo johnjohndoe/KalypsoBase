@@ -54,29 +54,29 @@ import de.renew.workflow.connector.cases.IModel;
 import de.renew.workflow.connector.cases.IScenario;
 
 /**
- * Helper class for handling gml workspace of diffenerent IScenarios
+ * Helper class for handling gml workspace of different IScenarios
  *
  * @author Dirk Kuch
+ * @deprecated Use Scenario data to access data of scenario.
  */
+@Deprecated
 public class ScenarioWorkspaceHandler
 {
-
-  private final IScenario m_sceanrio;
+  private final IScenario m_scenario;
 
   private final String m_urlGmlFile;
 
   private GMLWorkspace m_workspace;
 
-  public ScenarioWorkspaceHandler( final IScenario sceanrio, final String urlGmlFile )
+  public ScenarioWorkspaceHandler( final IScenario scenario, final String urlGmlFile )
   {
-    m_sceanrio = sceanrio;
+    m_scenario = scenario;
     m_urlGmlFile = urlGmlFile;
   }
 
   public <T extends IModel> T getModel( final Class<T> modelType ) throws Exception
   {
-
-    final IFolder folder = m_sceanrio.getFolder();
+    final IFolder folder = m_scenario.getFolder();
     final IFile gmlFile = folder.getFile( m_urlGmlFile );
 
     if( !gmlFile.exists() )
