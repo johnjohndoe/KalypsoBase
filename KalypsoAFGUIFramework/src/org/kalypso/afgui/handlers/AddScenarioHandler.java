@@ -5,17 +5,19 @@ package org.kalypso.afgui.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.ISources;
+import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.TaskExecutionAuthority;
+import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 
 import de.renew.workflow.base.ITask;
 import de.renew.workflow.connector.cases.IScenario;
+import de.renew.workflow.connector.context.ActiveWorkContext;
 
 /**
  * @author Patrice Congo, Stefan Kurzbach
@@ -25,21 +27,46 @@ public class AddScenarioHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event )
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
-    final ISelection selection = (ISelection) context.getVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME );
-    if( !(selection instanceof IStructuredSelection) )
+    final Shell shell = HandlerUtil.getActiveShell( event );
+    final ISelection selection = HandlerUtil.getCurrentSelection( event );
+
+    /* Find scenario */
+    final IScenario scenario = findParentScenario( selection );
+    if( scenario == null )
+    {
+      final String commandName = HandlerUtils.getCommandName( event );
+      final String message = "Please active the scenario to derive from.";
+      MessageDialog.openInformation( shell, commandName, message );
       return null;
+    }
+
+    stopTaskAndOpenWizard( shell, scenario );
+
+    return null;
+  }
+
+  private IScenario findParentScenario( final ISelection selection )
+  {
+    final ActiveWorkContext context = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext();
+    final IScenario currentCase = context.getCurrentCase();
+
+    if( !(selection instanceof IStructuredSelection) )
+      return currentCase;
 
     final IStructuredSelection structSel = (IStructuredSelection) selection;
 
     if( structSel.isEmpty() )
-      return null;
+      return currentCase;
 
     final Object o = structSel.getFirstElement();
-    if( !(o instanceof IScenario) )
-      return null;
+    if( o instanceof IScenario )
+      return (IScenario) o;
 
+    return currentCase;
+  }
+
+  public static void stopTaskAndOpenWizard( final Shell shell, final IScenario parentScenario )
+  {
     /* Stop current task */
     final KalypsoAFGUIFrameworkPlugin plugin = KalypsoAFGUIFrameworkPlugin.getDefault();
     final TaskExecutionAuthority taskExecutionAuthority = plugin.getTaskExecutionAuthority();
@@ -47,19 +74,16 @@ public class AddScenarioHandler extends AbstractHandler
     if( !taskExecutionAuthority.canStopTask( activeTask ) )
     {
       /* cancelled by user */
-      return null;
+      return;
     }
 
     /* Show wizard */
-    final IScenario scenario = (IScenario) o;
 
-    final NewScenarioData data = new NewScenarioData( scenario );
+    final NewScenarioData data = new NewScenarioData( parentScenario );
 
     final NewScenarioWizard wizard = new NewScenarioWizard( data );
 
     final WizardDialog wd = new WizardDialog( shell, wizard );
     wd.open();
-
-    return null;
   }
 }

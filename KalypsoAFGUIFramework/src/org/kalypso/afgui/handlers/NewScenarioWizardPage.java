@@ -69,7 +69,7 @@ public class NewScenarioWizardPage extends WizardPage
 
     final Text parentTFE = new Text( panel, SWT.BORDER );
     parentTFE.setEditable( false );
-    parentTFE.setText( m_data.getParentScenarioName() );
+    parentTFE.setText( m_data.getParentScenarioPath() );
     parentTFE.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
 
     final Label commentLabel = new Label( panel, SWT.NONE );
