@@ -477,9 +477,28 @@ public class Feature_Impl extends PlatformObject implements Feature
     }
   }
 
+  protected String getStringProperty( final QName property, final String defaultValue )
+  {
+    final String value = getProperty( property, String.class );
+    if( value == null )
+      return defaultValue;
+
+    return value;
+  }
+
   protected boolean getBooleanProperty( final QName property, final boolean defaultValue )
   {
     final Boolean value = getProperty( property, Boolean.class );
+    if( value == null )
+      return defaultValue;
+
+    return value;
+  }
+
+  protected <T> T getProperty( final QName property, final T defaultValue )
+  {
+    @SuppressWarnings("unchecked")
+    final T value = (T) getProperty( property, defaultValue.getClass() );
     if( value == null )
       return defaultValue;
 
