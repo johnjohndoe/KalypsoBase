@@ -33,6 +33,8 @@ public class NewScenarioWizardPage extends WizardPage
 
   private final static String STR_ALREADY_EXISTS = Messages.getString( "org.kalypso.afgui.handlers.NewSimulationModelControlBuilder.1" ); //$NON-NLS-1$
 
+  private static final String STR_FORBIDDEN_FOLDER = "Name not allowed (name of a data folder)";
+
   private final NewScenarioData m_data;
 
   private IDataBinding m_binding;
@@ -85,7 +87,10 @@ public class NewScenarioWizardPage extends WizardPage
     final Set<String> existingNames = m_data.getExistingNames();
     final IValidator duplicateNameValidator = new AlreadyExistsValidator<>( String.class, existingNames, IStatus.ERROR, STR_ALREADY_EXISTS );
 
-    m_binding.bindValue( targetName, modelName, emptyNameValidator, duplicateNameValidator );
+    final Set<String> frobiddenNames = m_data.getExistingFolders();
+    final IValidator forbiddenNameValidator = new AlreadyExistsValidator<>( String.class, frobiddenNames, IStatus.ERROR, STR_FORBIDDEN_FOLDER );
+
+    m_binding.bindValue( targetName, modelName, emptyNameValidator, duplicateNameValidator, forbiddenNameValidator );
 
     final ISWTObservableValue targetComment = SWTObservables.observeText( commentField, SWT.Modify );
     final IObservableValue modelComment = BeansObservables.observeValue( m_data, NewScenarioData.PROPERTY_COMMENT );
