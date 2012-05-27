@@ -40,20 +40,34 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.afgui.views;
 
+
 import nu.bibi.breadcrumb.BreadcrumbViewer;
 import nu.bibi.breadcrumb.IMenuSelectionListener;
 import nu.bibi.breadcrumb.MenuSelectionEvent;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.MenuDetectEvent;
+import org.eclipse.swt.events.MenuDetectListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.IHandlerService;
+import org.eclipse.ui.menus.IMenuService;
+import org.eclipse.ui.services.IEvaluationService;
 import org.kalypso.afgui.internal.i18n.Messages;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.core.status.StatusDialog;
@@ -63,44 +77,87 @@ import de.renew.workflow.connector.cases.IScenario;
 /**
  * @author Gernot Belger
  */
-public class WorkflowBreadcrumbViewer
+public class WorkflowBreadcrumbViewer extends BreadcrumbViewer
 {
-  private BreadcrumbViewer m_viewer;
+  private final MenuManager m_itemMenuManager;
+
+  private final WorkflowBreadcrumbItemSourceProvider m_sourceProvider = new WorkflowBreadcrumbItemSourceProvider();
 
   public WorkflowBreadcrumbViewer( final Composite parent )
   {
-    createControl( parent );
+    super( parent, SWT.NONE );
+
+    setLabelProvider( new WorkflowBreadCrumbLabelProvider() );
+    setToolTipLabelProvider( new WorkflowBreadCrumbTooltipProvider() );
+
+    setContentProvider( new WorkflowBreadcrumbContentProvider() );
+    setInput( ResourcesPlugin.getWorkspace().getRoot() );
+
+    addFilter( new ScenarioViewerFilter() );
+
+    m_itemMenuManager = new MenuManager();
+    m_itemMenuManager.add( new Separator( "additions" ) );
+
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+
+    final IMenuService menuService = (IMenuService) workbench.getService( IMenuService.class );
+    menuService.populateContributionManager( m_itemMenuManager, "popup:org.kalypso.afgui.breadcrumbs" );
+
+    menuService.addSourceProvider( m_sourceProvider );
+    ((IEvaluationService) workbench.getService( IEvaluationService.class )).addSourceProvider( m_sourceProvider );
+    // ((IContextService) workbench.getService( IContextService.class )).addSourceProvider( m_sourceProvider );
+    ((IHandlerService) workbench.getService( IHandlerService.class )).addSourceProvider( m_sourceProvider );
+
+    hookListeners();
   }
 
-  private void createControl( final Composite parent )
+  void dispose( )
   {
-    m_viewer = new BreadcrumbViewer( parent, SWT.NONE )
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+
+    final IMenuService menuService = (IMenuService) workbench.getService( IMenuService.class );
+    menuService.releaseContributions( m_itemMenuManager );
+
+    menuService.removeSourceProvider( m_sourceProvider );
+    ((IEvaluationService) workbench.getService( IEvaluationService.class )).removeSourceProvider( m_sourceProvider );
+    // ((IContextService) workbench.getService( IContextService.class )).removeSourceProvider( m_sourceProvider );
+    ((IHandlerService) workbench.getService( IHandlerService.class )).removeSourceProvider( m_sourceProvider );
+
+    m_sourceProvider.dispose();
+    m_itemMenuManager.dispose();
+  }
+
+  @Override
+  protected void configureDropDownViewer( final TreeViewer viewer, final Object selection )
+  {
+    viewer.setContentProvider( getContentProvider() );
+
+    // REMARK: cannot reuse label provider of breadcrumb, because it gets disposed if drop-down is closed
+    viewer.setLabelProvider( new WorkflowBreadCrumbLabelProvider() );
+    setToolTipLabelProvider( new WorkflowBreadCrumbTooltipProvider() );
+
+    viewer.setFilters( getFilters() );
+
+    viewer.getTree().addMenuDetectListener( new MenuDetectListener()
     {
       @Override
-      protected void configureDropDownViewer( final TreeViewer viewer, final Object selection )
+      public void menuDetected( final MenuDetectEvent e )
       {
-        viewer.setContentProvider( getContentProvider() );
-
-        // REMARK: cannot reuse label provider of breadcrumb, because it gets disposed if drop-down is closed
-        viewer.setLabelProvider( new WorkflowBreadCrumbLabelProvider() );
-        setToolTipLabelProvider( new WorkflowBreadCrumbTooltipProvider() );
-
-        // setComparator(FileViewerComparator.DEFAULT);
-        viewer.setFilters( getFilters() );
+        final Object menuSelection = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
+        if( menuSelection instanceof IProject )
+        {
+          // REMARK / BUGFIX: see comment in DeleteBreadcrumbsHandler
+          handleItemMenuDetected( viewer.getControl(), e, null );
+        }
+        else
+        handleItemMenuDetected( viewer.getControl(), e, menuSelection );
       }
-    };
+    } );
+  }
 
-    final BreadcrumbViewer viewer = m_viewer;
-
-    viewer.setLabelProvider( new WorkflowBreadCrumbLabelProvider() );
-    viewer.setToolTipLabelProvider( new WorkflowBreadCrumbTooltipProvider() );
-
-    viewer.setContentProvider( new WorkflowBreadcrumbContentProvider() );
-    viewer.setInput( ResourcesPlugin.getWorkspace().getRoot() );
-
-    viewer.addFilter( new ScenarioViewerFilter() );
-
-    viewer.addMenuSelectionListener( new IMenuSelectionListener()
+  private void hookListeners( )
+  {
+    addMenuSelectionListener( new IMenuSelectionListener()
     {
       @Override
       public void menuSelect( final MenuSelectionEvent event )
@@ -110,34 +167,63 @@ public class WorkflowBreadcrumbViewer
       }
     } );
 
+    addMenuDetectListener( new MenuDetectListener()
+    {
+      @Override
+      public void menuDetected( final MenuDetectEvent e )
+      {
+        final Object selectedElement = getSelection().getFirstElement();
+        handleItemMenuDetected( getControl(), e, selectedElement );
+      }
+    } );
+
     // display drop-down menu
-    viewer.addDoubleClickListener( new IDoubleClickListener()
+    addDoubleClickListener( new IDoubleClickListener()
     {
       @Override
       public void doubleClick( final DoubleClickEvent event )
       {
         // get selection
-        final Object element = viewer.getSelection().getFirstElement();
+        final Object element = getSelection().getFirstElement();
         if( element == null )
         {
           return;
         }
 
         // get parent
-        final ITreeContentProvider contentProvider = viewer.getContentProvider();
+        final ITreeContentProvider contentProvider = getContentProvider();
         final Object parentElement = contentProvider.getParent( element );
 
         // open
-        viewer.openDropDownMenu( parentElement );
+        openDropDownMenu( parentElement );
       }
     } );
+
+    getControl().addDisposeListener( new DisposeListener()
+    {
+      @Override
+      public void widgetDisposed( final DisposeEvent e )
+      {
+        dispose();
+      }
+    } );
+  }
+
+  protected void handleItemMenuDetected( final Control control, final MenuDetectEvent e, final Object selectedElement )
+  {
+    final Menu contextMenu = m_itemMenuManager.createContextMenu( control );
+
+    m_sourceProvider.setSelectedItem( selectedElement );
+
+    contextMenu.setLocation( e.x, e.y );
+    contextMenu.setVisible( true );
   }
 
   protected void handleMenuSelection( final IStructuredSelection selection )
   {
     if( selection.isEmpty() )
     {
-      m_viewer.setFocus();
+      setFocus();
       return;
     }
 
@@ -149,38 +235,33 @@ public class WorkflowBreadcrumbViewer
       {
         // REMARK: without the next line, open the model dialog in stopTask (during activate Scenario)
         // will get a widget-disposed error
-        m_viewer.setFocus();
+        setFocus();
         ScenarioHelper.activateScenario( (IScenario) firstElement );
       }
       else if( firstElement instanceof String )
       {
         // REMARK: without the next line, open the model dialog in stopTask (during activate Scenario)
         // will get a widget-disposed error
-        m_viewer.setFocus();
+        setFocus();
         ScenarioHelper.activateScenario( null );
       }
     }
     catch( final CoreException e )
     {
       e.printStackTrace();
-      StatusDialog.open( m_viewer.getControl().getShell(), e.getStatus(), "Activate Scenario" );
+      StatusDialog.open( getControl().getShell(), e.getStatus(), "Activate Scenario" );
     }
 
     return;
   }
 
-  public Control getControl( )
-  {
-    return m_viewer.getControl();
-  }
-
   public void setScenario( final IScenario scenario )
   {
     if( scenario == null )
-      m_viewer.setInput( Messages.getString( "org.kalypso.afgui.views.WorkflowView.0" ) ); //$NON-NLS-1$
+      setInput( Messages.getString( "org.kalypso.afgui.views.WorkflowView.0" ) ); //$NON-NLS-1$
     else
-      m_viewer.setInput( scenario );
+      setInput( scenario );
 
-    m_viewer.refresh();
+    refresh();
   }
 }

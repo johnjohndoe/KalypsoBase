@@ -77,12 +77,30 @@ public class NewScenarioData extends AbstractModelObject
     m_parentScenario = parentScenario;
   }
 
-  public String getParentScenarioName( )
+  public String getParentScenarioPath( )
   {
     if( m_parentScenario == null )
       return Messages.getString( "org.kalypso.afgui.handlers.NewSimulationModelControlBuilder.6" ); //$NON-NLS-1$
 
-    return m_parentScenario.getName();
+    final StringBuilder path = new StringBuilder();
+
+    IScenario segment = m_parentScenario;
+    while( segment != null )
+    {
+      path.insert( 0, '/' );
+      path.insert( 0, segment.getName() );
+
+      final IScenario parentSegment = segment.getParentScenario();
+      if( parentSegment == null )
+      {
+        path.insert( 0, '/' );
+        path.insert( 0, segment.getProject().getName() );
+      }
+
+      segment = parentSegment;
+    }
+
+    return path.toString();
   }
 
   public String getName( )
