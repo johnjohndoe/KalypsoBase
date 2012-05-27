@@ -43,7 +43,6 @@ package org.kalypso.afgui.scenarios;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
@@ -83,9 +82,6 @@ public class CaseTreeContentAdapter extends WorkbenchAdapter
     m_activeFont = new FontData( dialogFontName, dialogFontHeight, SWT.BOLD );
   }
 
-  /**
-   * @see org.eclipse.ui.model.IWorkbenchAdapter#getChildren(java.lang.Object)
-   */
   @Override
   public Object[] getChildren( final Object o )
   {
@@ -98,9 +94,6 @@ public class CaseTreeContentAdapter extends WorkbenchAdapter
     return NO_CHILDREN;
   }
 
-  /**
-   * @see org.eclipse.ui.model.IWorkbenchAdapter#getImageDescriptor(java.lang.Object)
-   */
   @Override
   public ImageDescriptor getImageDescriptor( final Object o )
   {
@@ -117,9 +110,6 @@ public class CaseTreeContentAdapter extends WorkbenchAdapter
       return null;
   }
 
-  /**
-   * @see org.eclipse.ui.model.IWorkbenchAdapter#getLabel(java.lang.Object)
-   */
   @Override
   public String getLabel( final Object o )
   {
@@ -135,9 +125,6 @@ public class CaseTreeContentAdapter extends WorkbenchAdapter
     return null;
   }
 
-  /**
-   * @see org.eclipse.ui.model.WorkbenchAdapter#getFont(java.lang.Object)
-   */
   @Override
   public FontData getFont( final Object o )
   {
@@ -160,15 +147,8 @@ public class CaseTreeContentAdapter extends WorkbenchAdapter
         final String activeCaseURI = (String) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_URI_NAME );
         final IFolder activeCaseFolder = (IFolder) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
 
-        try
-        {
-          if( caze.getURI().equals( activeCaseURI ) && caze.getFolder().equals( activeCaseFolder ) )
-            return m_activeFont;
-        }
-        catch( final CoreException e )
-        {
-          e.printStackTrace();
-        }
+        if( caze.getURI().equals( activeCaseURI ) && caze.getFolder().equals( activeCaseFolder ) )
+          return m_activeFont;
       }
     }
     return null;

@@ -48,9 +48,9 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
-import de.renew.workflow.connector.cases.IScenarioDataProvider;
 import de.renew.workflow.connector.cases.IModel;
 import de.renew.workflow.connector.cases.IScenario;
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 
 /**
@@ -560,7 +560,7 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
   /**
    * Returns the current scenario's base folder
    */
-  public IContainer getScenarioFolder( ) throws CoreException
+  public IContainer getScenarioFolder( )
   {
     if( m_scenario != null )
       return m_scenario.getFolder();

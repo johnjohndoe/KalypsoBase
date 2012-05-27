@@ -42,7 +42,6 @@ package de.renew.workflow.connector.cases;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.kalypso.afgui.scenarios.Scenario;
 
 import de.renew.workflow.cases.Case;
@@ -82,7 +81,7 @@ public interface IScenario
   /**
    * @return working folder of this caze
    */
-  IFolder getFolder( ) throws CoreException;
+  IFolder getFolder( );
 
   /**
    * @return URI of workflow {@link Case}

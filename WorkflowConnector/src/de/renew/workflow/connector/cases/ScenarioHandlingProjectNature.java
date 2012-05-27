@@ -66,7 +66,7 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 
 import de.renew.workflow.connector.internal.WorkflowConnectorPlugin;
-import de.renew.workflow.connector.internal.cases.AbstractCaseManager;
+import de.renew.workflow.connector.internal.cases.ScenarioManager;
 import de.renew.workflow.connector.internal.i18n.Messages;
 
 
@@ -96,7 +96,7 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
   @Override
   public IScenarioManager createCaseManager( final IProject project )
   {
-    return new AbstractCaseManager( project );
+    return new ScenarioManager( project );
   }
 
   /**
@@ -124,9 +124,6 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
     }
   }
 
-  /**
-   * @see org.kalypso.kalypso1d2d.pjt.CaseHandlingProjectNature#scenarioAdded(de.renew.workflow.cases.Case)
-   */
   @Override
   public void caseAdded( final IScenario scenario )
   {
@@ -144,18 +141,10 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
       // this is a new derived scenario, so copy scenario contents of parent folder
       final IPath parentPath = getRelativeProjectPath( parentScenario );
       final List<IScenario> derivedScenarios = parentScenario.getDerivedScenarios().getScenarios();
+
       final List<IFolder> scenarioFolders = new ArrayList<IFolder>( derivedScenarios.size() );
-      try
-      {
-        for( final IScenario derivedScenario : derivedScenarios )
-        {
-          scenarioFolders.add( derivedScenario.getFolder() );
-        }
-      }
-      catch( final CoreException e )
-      {
-        resultStatus = e.getStatus();
-      }
+      for( final IScenario derivedScenario : derivedScenarios )
+        scenarioFolders.add( derivedScenario.getFolder() );
 
       if( !resultStatus.isOK() )
       {
