@@ -58,12 +58,13 @@ import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureProvider;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
  * @author Gernot Belger
  */
-public class AddFeatureCommand implements ICommand
+public class AddFeatureCommand implements ICommand, IFeatureProvider
 {
   private final Feature m_parentFeature;
 
@@ -269,5 +270,14 @@ public class AddFeatureCommand implements ICommand
   public void addProperty( final IPropertyType property, final Object value )
   {
     m_properties.put( property, value );
+  }
+
+  /**
+   * Returns the new feature after it has been created.
+   */
+  @Override
+  public Feature getFeature( )
+  {
+    return m_newFeature;
   }
 }

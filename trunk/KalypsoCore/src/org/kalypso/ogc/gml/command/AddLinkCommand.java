@@ -44,11 +44,13 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureProvider;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree_impl.model.feature.FeatureProvider;
 
 public class AddLinkCommand implements ICommand
 {
-  private final Feature m_srcFE;
+  private final IFeatureProvider m_srcFE;
 
   private int m_pos = 0;
 
@@ -58,7 +60,12 @@ public class AddLinkCommand implements ICommand
 
   public AddLinkCommand( final Feature srcFE, final IRelationType propertyName, final int pos, final Feature destFE )
   {
-    m_srcFE = srcFE;
+    this( new FeatureProvider( srcFE ), propertyName, pos, destFE );
+  }
+
+  public AddLinkCommand( final IFeatureProvider source, final IRelationType propertyName, final int pos, final Feature destFE )
+  {
+    m_srcFE = source;
     m_propName = propertyName;
     m_pos = pos;
     m_linkFeature = destFE;
@@ -73,12 +80,13 @@ public class AddLinkCommand implements ICommand
   @Override
   public void process( ) throws Exception
   {
-    final GMLWorkspace workspace = m_srcFE.getWorkspace();
+    final Feature source = m_srcFE.getFeature();
+    final GMLWorkspace workspace = source.getWorkspace();
 
-    FeatureLinkUtils.insertLink( m_srcFE, m_propName, m_pos, m_linkFeature.getId() );
+    FeatureLinkUtils.insertLink( source, m_propName, m_pos, m_linkFeature.getId() );
 
-    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_srcFE, m_linkFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-    workspace.fireModellEvent( new FeatureChangeModellEvent( workspace, new FeatureChange[] { new FeatureChange( m_srcFE, m_propName, null ) } ) );
+    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, source, m_linkFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    workspace.fireModellEvent( new FeatureChangeModellEvent( workspace, new FeatureChange[] { new FeatureChange( source, m_propName, null ) } ) );
   }
 
   @Override
@@ -93,9 +101,10 @@ public class AddLinkCommand implements ICommand
     if( m_linkFeature == null )
       return;
 
-    final GMLWorkspace workspace = m_srcFE.getWorkspace();
-    workspace.removeLinkedAsAggregationFeature( m_srcFE, m_propName, m_linkFeature.getId() );
-    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_srcFE, m_linkFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+    final Feature source = m_srcFE.getFeature();
+    final GMLWorkspace workspace = source.getWorkspace();
+    workspace.removeLinkedAsAggregationFeature( source, m_propName, m_linkFeature.getId() );
+    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, source, m_linkFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
 
   @Override

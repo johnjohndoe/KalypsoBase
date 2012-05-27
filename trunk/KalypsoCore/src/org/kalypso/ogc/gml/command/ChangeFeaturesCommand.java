@@ -55,7 +55,7 @@ public class ChangeFeaturesCommand implements ICommand
 
   protected final GMLWorkspace m_workspace;
 
-  public ChangeFeaturesCommand( final GMLWorkspace workspace, final FeatureChange[] changes )
+  public ChangeFeaturesCommand( final GMLWorkspace workspace, final FeatureChange... changes )
   {
     // just to avoid the exception...
     if( changes == null )
