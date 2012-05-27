@@ -74,7 +74,6 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
  */
 public class ScenarioHelper
 {
-
   /**
    * Retrieves the folder of the currently active scenario via the current evaluation context of the handler service.
    */

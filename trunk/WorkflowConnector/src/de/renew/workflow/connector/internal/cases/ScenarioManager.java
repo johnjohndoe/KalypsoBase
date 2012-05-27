@@ -48,7 +48,6 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBContext;
 
@@ -61,10 +60,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.progress.UIJob;
+import org.kalypso.afgui.scenarios.ObjectFactory;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.scenarios.ScenarioList;
 import org.kalypso.commons.bind.JaxbUtilities;
@@ -85,25 +84,15 @@ import de.renew.workflow.connector.internal.i18n.Messages;
 /**
  * @author Stefan Kurzbach
  */
-public class AbstractCaseManager implements IScenarioManager
+public class ScenarioManager implements IScenarioManager
 {
-  private static final Logger logger = Logger.getLogger( AbstractCaseManager.class.getName() );
-
-  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "org.kalypso.afgui/debug" ) ); //$NON-NLS-1$
-
-  static
-  {
-    if( !log )
-    {
-      logger.setUseParentHandlers( false );
-    }
-  }
-
   public static final String METADATA_FOLDER = ".metadata"; //$NON-NLS-1$
 
   public static final String METADATA_FILENAME = "cases.xml"; //$NON-NLS-1$
 
   private final JAXBContext m_jc = JaxbUtilities.createQuiet( org.kalypso.afgui.scenarios.ObjectFactory.class, de.renew.workflow.cases.ObjectFactory.class );
+
+  private static final ObjectFactory m_of = new org.kalypso.afgui.scenarios.ObjectFactory();
 
   private final List<ICaseManagerListener> m_listeners = Collections.synchronizedList( new ArrayList<ICaseManagerListener>() );
 
@@ -128,7 +117,7 @@ public class AbstractCaseManager implements IScenarioManager
    *              <li>The metadata folder is not accessible.</li>
    *              <li>There is a problem loading the database.</li>
    */
-  public AbstractCaseManager( final IProject project )
+  public ScenarioManager( final IProject project )
   {
     m_project = project;
 
@@ -314,12 +303,14 @@ public class AbstractCaseManager implements IScenarioManager
   @Override
   public IScenario createCase( final String name )
   {
-    final Scenario newScenario = new org.kalypso.afgui.scenarios.ObjectFactory().createScenario();
+    final Scenario newScenario = m_of.createScenario();
     newScenario.setName( name );
 
     final IScenario scenario = new ScenarioHandler( newScenario, m_project );
     internalAddCase( scenario );
+
     persist( null );
+
     fireCaseAdded( scenario );
 
     return scenario;
@@ -335,7 +326,15 @@ public class AbstractCaseManager implements IScenarioManager
     if( !validateStatus.isOK() )
       throw new CoreException( validateStatus );
 
-    final org.kalypso.afgui.scenarios.ObjectFactory of = new org.kalypso.afgui.scenarios.ObjectFactory();
+    final IFolder existingSubFolder = folder.getFolder( name );
+    if( existingSubFolder.exists() )
+    {
+      final String message = String.format( "Unable to create new scenario: Parent scenario already contains a folder with name '%s'", name );
+      final IStatus status = new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, message );
+      throw new CoreException( status );
+    }
+
+    final org.kalypso.afgui.scenarios.ObjectFactory of = m_of;
     final Scenario newScenario = of.createScenario();
     try
     {

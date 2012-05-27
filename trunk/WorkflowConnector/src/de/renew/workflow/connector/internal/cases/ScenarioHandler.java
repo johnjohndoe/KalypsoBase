@@ -188,7 +188,7 @@ public class ScenarioHandler implements IScenario
   }
 
   @Override
-  public IFolder getFolder( ) throws CoreException
+  public IFolder getFolder( )
   {
     final IFolder folder;
 
@@ -207,9 +207,17 @@ public class ScenarioHandler implements IScenario
     else
       throw new IllegalStateException();
 
-    if( !folder.exists() )
+    try
     {
-      folder.create( true, true, new NullProgressMonitor() );
+      // TODO: ugly: lazy folder creation here? Scenario creatio code should handle this!
+      if( !folder.exists() )
+      {
+        folder.create( true, true, new NullProgressMonitor() );
+      }
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
     }
 
     return folder;

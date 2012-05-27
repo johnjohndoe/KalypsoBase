@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package de.renew.workflow.connector.worklist;
 
-import java.util.logging.Logger;
-
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -49,7 +47,6 @@ import org.eclipse.core.commands.IExecutionListener;
 import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
@@ -66,16 +63,6 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
  */
 public class TaskExecutionListener implements IExecutionListener
 {
-  public static Logger logger = Logger.getLogger( TaskExecutionListener.class.getName() );
-
-  private static final boolean log = Boolean.parseBoolean( Platform.getDebugOption( "de.renew.workflow.connector/debug" ) );
-
-  static
-  {
-    if( !log )
-      logger.setUseParentHandlers( false );
-  }
-
   public static final String ACTIVITY_PARAMETER = "activityParameter";
 
   public static final String CATEGORY_CONTEXT = "de.renew.workflow.contexts.category";//$NON-NLS-1$

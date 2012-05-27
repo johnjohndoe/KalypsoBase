@@ -131,20 +131,13 @@ public class MapViewInputContextHandler extends AbstractHandler
     /* base scenario relative location */
     if( m_url.startsWith( "base://" ) ) //$NON-NLS-1$
     {
-      try
-      {
-        final String url = m_url.substring( 7 );
-        final IScenario caze = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase();
-        final IScenario root = ScenarioHelper.resolveRootScenario( caze );
+      final String url = m_url.substring( 7 );
+      final IScenario caze = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase();
+      final IScenario root = ScenarioHelper.resolveRootScenario( caze );
 
-        final IFolder rootFolder = root.getFolder();
-        final IFile file = rootFolder.getFile( url );
-        return new FileEditorInput( file );
-      }
-      catch( final CoreException e )
-      {
-        throw new ExecutionException( Messages.getString( "org.kalypso.afgui.handlers.MapViewInputContextHandler.3" ) ); //$NON-NLS-1$
-      }
+      final IFolder rootFolder = root.getFolder();
+      final IFile file = rootFolder.getFile( url );
+      return new FileEditorInput( file );
     }
 
     if( m_url.startsWith( "urn:" ) ) //$NON-NLS-1$
