@@ -85,28 +85,16 @@ public class ScenarioHelper
     return (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
   }
 
-  public static IScenario resolveRootScenario( final IScenario scenario )
-  {
-    if( scenario.getParentScenario() != null )
-    {
-      return resolveRootScenario( scenario.getParentScenario() );
-    }
-
-    return scenario;
-  }
-
   /**
-   * Find the oldest parent (=root) of the given scenario.<br>
+   * Find the root of the given scenario.<br>
    * If the scenario has no parent, itself is returned.
    */
   public static IScenario findRootScenario( final IScenario scenario )
   {
     final IScenario parentScenario = scenario.getParentScenario();
     if( parentScenario == null )
-    {
       return scenario;
-    }
-
+    else
     return findRootScenario( parentScenario );
   }
 
@@ -205,7 +193,7 @@ public class ScenarioHelper
 
   /**
    * This function activates a given scenario.
-   * 
+   *
    * @param scenario
    *          The scenario.
    */
@@ -225,5 +213,18 @@ public class ScenarioHelper
         context.setCurrentCase( scenario );
       }
     }
+  }
+
+  /**
+   * This function returns the active scenario.
+   * 
+   * @return The active scenario.
+   */
+  public static IScenario getActiveScenario( )
+  {
+    final KalypsoAFGUIFrameworkPlugin plugin = KalypsoAFGUIFrameworkPlugin.getDefault();
+    final ActiveWorkContext activeWorkContext = plugin.getActiveWorkContext();
+
+    return activeWorkContext.getCurrentCase();
   }
 }

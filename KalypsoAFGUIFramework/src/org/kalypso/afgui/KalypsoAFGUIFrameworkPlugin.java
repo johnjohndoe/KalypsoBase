@@ -96,8 +96,10 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
       final IWorkbench workbench = PlatformUI.getWorkbench();
       final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
       final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
+
       m_taskExecutionListener = new TaskExecutionListener();
       commandService.addExecutionListener( m_taskExecutionListener );
+
       m_taskExecutionAuthority = new TaskExecutionAuthority();
       m_taskExecutor = new TaskExecutor( workflowContextHandlerFactory, m_taskExecutionAuthority, commandService, handlerService );
 
