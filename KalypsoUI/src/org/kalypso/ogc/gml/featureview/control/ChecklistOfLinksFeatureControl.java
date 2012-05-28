@@ -304,13 +304,16 @@ public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl
     {
       // TODO: implement case for external features
       if( checkedElement instanceof Feature )
-        compositeCommand.addCommand( new AddLinkCommand( feature, rt, -1, (Feature) checkedElement ) );
+      {
+        final Feature checkedFeature = (Feature) checkedElement;
+        final String href = "#" + checkedFeature.getId(); //$NON-NLS-1$
+        compositeCommand.addCommand( new AddLinkCommand( feature, rt, -1, href ) );
+      }
     }
     else
     {
       for( final Object object : listOfLinks )
       {
-
         final String id = getLinkId( object );
 
         // TODO: implement case for external features

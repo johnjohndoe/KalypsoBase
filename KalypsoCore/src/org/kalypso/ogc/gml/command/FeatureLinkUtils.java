@@ -43,7 +43,6 @@ package org.kalypso.ogc.gml.command;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 
 /**
@@ -64,15 +63,8 @@ public final class FeatureLinkUtils
    * @param pos
    *          Insert position. If <code>-1</code> the new element is inserted at the end of the list.
    */
-  public static void insertLink( final Feature feature, final IRelationType linkRelation, final int pos, final String linkedFeatureID ) throws Exception
+  public static void insertLink( final Feature feature, final IRelationType linkRelation, final int pos, final String href ) throws Exception
   {
-    // test if feature exists in workspace
-    final GMLWorkspace workspace = feature.getWorkspace();
-    if( workspace.getFeature( linkedFeatureID ) == null )
-      throw new Exception( "tried to link a feature that does not exist in the workspace" ); //$NON-NLS-1$
-
-    final String href = "#" + linkedFeatureID; //$NON-NLS-1$
-
     if( linkRelation.isList() )
     {
       final FeatureList list = (FeatureList) feature.getProperty( linkRelation );

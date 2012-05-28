@@ -76,8 +76,6 @@ class RemoveBrokenLinksCommand implements ICommand
   public void process( ) throws Exception
   {
     m_workspace.removeLinkedAsAggregationFeature( m_parentFeature, m_ftp, m_childID );
-
-// m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, new Feature[] { m_parentFeature } ) );
   }
 
   @Override
@@ -89,9 +87,9 @@ class RemoveBrokenLinksCommand implements ICommand
   @Override
   public void undo( ) throws Exception
   {
-    FeatureLinkUtils.insertLink( m_parentFeature, m_ftp, m_pos, m_childID );
+    final String href = "#" + m_childID;
 
-// m_workspace.fireModellEvent( new FeaturesChangedModellEvent( m_workspace, new Feature[] { m_parentFeature } ) );
+    FeatureLinkUtils.insertLink( m_parentFeature, m_ftp, m_pos, href );
   }
 
   @Override
