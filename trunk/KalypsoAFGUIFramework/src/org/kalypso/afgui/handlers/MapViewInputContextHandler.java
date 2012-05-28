@@ -133,7 +133,7 @@ public class MapViewInputContextHandler extends AbstractHandler
     {
       final String url = m_url.substring( 7 );
       final IScenario caze = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase();
-      final IScenario root = ScenarioHelper.resolveRootScenario( caze );
+      final IScenario root = ScenarioHelper.findRootScenario( caze );
 
       final IFolder rootFolder = root.getFolder();
       final IFile file = rootFolder.getFile( url );
