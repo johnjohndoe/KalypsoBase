@@ -56,19 +56,19 @@ public class AddLinkCommand implements ICommand
 
   private final IRelationType m_propName;
 
-  private final Feature m_linkFeature;
+  private final String m_href;
 
-  public AddLinkCommand( final Feature srcFE, final IRelationType propertyName, final int pos, final Feature destFE )
+  public AddLinkCommand( final Feature srcFE, final IRelationType propertyName, final int pos, final String href )
   {
-    this( new FeatureProvider( srcFE ), propertyName, pos, destFE );
+    this( new FeatureProvider( srcFE ), propertyName, pos, href );
   }
 
-  public AddLinkCommand( final IFeatureProvider source, final IRelationType propertyName, final int pos, final Feature destFE )
+  public AddLinkCommand( final IFeatureProvider source, final IRelationType propertyName, final int pos, final String href )
   {
     m_srcFE = source;
     m_propName = propertyName;
     m_pos = pos;
-    m_linkFeature = destFE;
+    m_href = href;
   }
 
   @Override
@@ -83,9 +83,11 @@ public class AddLinkCommand implements ICommand
     final Feature source = m_srcFE.getFeature();
     final GMLWorkspace workspace = source.getWorkspace();
 
-    FeatureLinkUtils.insertLink( source, m_propName, m_pos, m_linkFeature.getId() );
+    FeatureLinkUtils.insertLink( source, m_propName, m_pos, m_href );
 
-    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, source, m_linkFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+
+    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, source, (Feature) null, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+
     workspace.fireModellEvent( new FeatureChangeModellEvent( workspace, new FeatureChange[] { new FeatureChange( source, m_propName, null ) } ) );
   }
 
@@ -98,13 +100,13 @@ public class AddLinkCommand implements ICommand
   @Override
   public void undo( ) throws Exception
   {
-    if( m_linkFeature == null )
-      return;
-
     final Feature source = m_srcFE.getFeature();
     final GMLWorkspace workspace = source.getWorkspace();
-    workspace.removeLinkedAsAggregationFeature( source, m_propName, m_linkFeature.getId() );
-    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, source, m_linkFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+
+    // FIXME:
+    // workspace.removeLinkedAsAggregationFeature( source, m_propName, m_linkFeature.getId() );
+
+    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, source, (Feature) null, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
   }
 
   @Override
