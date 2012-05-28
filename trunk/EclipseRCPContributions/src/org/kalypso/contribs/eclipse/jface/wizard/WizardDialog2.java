@@ -82,9 +82,6 @@ public class WizardDialog2 extends WizardDialog
     m_doRememberSize = doRemember;
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.Dialog#getDialogBoundsSettings()
-   */
   @Override
   protected IDialogSettings getDialogBoundsSettings( )
   {
