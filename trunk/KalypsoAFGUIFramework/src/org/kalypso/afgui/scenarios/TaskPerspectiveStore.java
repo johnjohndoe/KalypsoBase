@@ -451,6 +451,9 @@ class TaskPerspectiveStore
    */
   protected void handleWorkflowPerspectivePreDeactivate( )
   {
+    if( m_resetInProgress )
+      return;
+
     final ITask activeTask = m_executor.getActiveTask();
     if( activeTask != null )
       saveTaskPerspective( activeTask );
@@ -462,6 +465,9 @@ class TaskPerspectiveStore
    */
   protected void handleWorkflowPerspectiveActivated( )
   {
+    if( m_resetInProgress )
+      return;
+
     final ITask activeTask = m_executor.getActiveTask();
     if( activeTask != null )
       restoreTaskPerspective( activeTask );
