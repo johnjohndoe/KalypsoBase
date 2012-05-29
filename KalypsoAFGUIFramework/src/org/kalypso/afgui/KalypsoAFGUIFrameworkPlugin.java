@@ -21,14 +21,14 @@ import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.services.IEvaluationService;
+import org.kalypso.afgui.internal.PerspectiveWatcher;
+import org.kalypso.afgui.internal.SzenarioDataProvider;
+import org.kalypso.afgui.internal.TaskExecutionAuthority;
+import org.kalypso.afgui.internal.TaskExecutor;
 import org.kalypso.afgui.internal.i18n.Messages;
 import org.kalypso.afgui.perspective.Perspective;
-import org.kalypso.afgui.scenarios.PerspectiveWatcher;
 import org.kalypso.afgui.scenarios.ScenarioDataChangeListenerExtension;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
-import org.kalypso.afgui.scenarios.SzenarioDataProvider;
-import org.kalypso.afgui.scenarios.TaskExecutionAuthority;
-import org.kalypso.afgui.scenarios.TaskExecutor;
 import org.kalypso.afgui.views.WorkflowView;
 import org.kalypso.commons.java.lang.Objects;
 import org.osgi.framework.BundleContext;
@@ -38,9 +38,11 @@ import de.renew.workflow.base.IWorkflow;
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.cases.IScenario;
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 import de.renew.workflow.connector.context.IActiveScenarioChangeListener;
+import de.renew.workflow.connector.worklist.ITaskExecutionAuthority;
 import de.renew.workflow.connector.worklist.ITaskExecutor;
 import de.renew.workflow.connector.worklist.TaskExecutionListener;
 import de.renew.workflow.contexts.WorkflowContextHandlerFactory;
@@ -237,12 +239,12 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     return m_taskExecutor;
   }
 
-  public TaskExecutionAuthority getTaskExecutionAuthority( )
+  public ITaskExecutionAuthority getTaskExecutionAuthority( )
   {
     return m_taskExecutionAuthority;
   }
 
-  public SzenarioDataProvider getDataProvider( )
+  public IScenarioDataProvider getDataProvider( )
   {
     startActiveWorkContext();
     return m_szenarioDataProvider;
