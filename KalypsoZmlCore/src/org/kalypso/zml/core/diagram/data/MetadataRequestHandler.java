@@ -111,11 +111,12 @@ public class MetadataRequestHandler implements IRequestHandler
     final boolean positive = isPositiveOffset( strDuration );
     final Period duration = getDuration( strDuration );
 
-    final DateTime adjusted = new DateTime( base.getTime() );
+    final DateTime toAdjust = new DateTime( base.getTime() );
+    DateTime adjusted = null;
     if( positive )
-      adjusted.plus( duration );
+      adjusted = toAdjust.plus( duration );
     else
-      adjusted.minus( duration );
+      adjusted = toAdjust.minus( duration );
 
     return adjusted.toDate();
   }
