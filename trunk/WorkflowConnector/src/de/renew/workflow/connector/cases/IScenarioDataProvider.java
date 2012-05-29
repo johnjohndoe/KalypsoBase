@@ -40,8 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package de.renew.workflow.connector.cases;
 
+import java.lang.reflect.InvocationTargetException;
+
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.commons.command.ICommand;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 /**
  * The case data provider functions as a bridge between the abstract case data model and actual data objects. Generics
@@ -89,4 +94,20 @@ public interface IScenarioDataProvider
   void reloadModel( );
 
   void setCurrent( IScenario scenario );
+
+  CommandableWorkspace getCommandableWorkSpace( String name ) throws IllegalArgumentException, CoreException;
+
+  void addScenarioDataListener( IScenarioDataListener listener );
+
+  void removeScenarioDataListener( IScenarioDataListener listener );
+
+  void postCommand( String name, ICommand command ) throws InvocationTargetException;
+
+  // FIXME: remove
+  IScenario getScenario( );
+
+  // FIXME: remove
+  IContainer getScenarioFolder( );
+
+  boolean waitForModelToLoad( final String id, final int maxWaitTimeInMillis ) throws InterruptedException;
 }

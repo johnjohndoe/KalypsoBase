@@ -14,6 +14,8 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.internal.i18n.Messages;
+import org.kalypso.afgui.internal.ui.workflow.WorkflowBreadcrumbViewer;
+import org.kalypso.afgui.internal.ui.workflow.WorkflowControl;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 
 import de.renew.workflow.base.IWorkflow;
