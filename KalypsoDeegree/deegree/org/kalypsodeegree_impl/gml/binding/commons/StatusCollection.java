@@ -113,19 +113,8 @@ public class StatusCollection extends Feature_Impl implements IStatusCollection
     /* Add a new feature. */
     final IGeoStatus geoStatus = m_statusCollection.addNew( IGeoStatus.QNAME );
 
-    /* Set its properties. */
-    geoStatus.setSeverity( severity );
-    geoStatus.setPlugin( pluginId );
-    geoStatus.setCode( code );
-    geoStatus.setMessage( message );
-    geoStatus.setException( exception );
-    geoStatus.setLocation( location );
-
-    /* If a time was provided, use it. Otherwise set the current time. */
-    if( time != null )
-      geoStatus.setTime( time );
-    else
-      geoStatus.setTime( new Date() );
+    /* Set the values of the status. */
+    setStatusValues( severity, pluginId, code, message, exception, location, time, geoStatus );
 
     return geoStatus;
   }
@@ -153,19 +142,8 @@ public class StatusCollection extends Feature_Impl implements IStatusCollection
     /* Add a new feature. */
     final IGeoStatus multiGeoStatus = m_statusCollection.addNew( IGeoStatus.QNAME );
 
-    /* Set its properties. */
-    multiGeoStatus.setSeverity( status.getSeverity() );
-    multiGeoStatus.setPlugin( status.getPlugin() );
-    multiGeoStatus.setCode( status.getCode() );
-    multiGeoStatus.setMessage( status.getMessage() );
-    multiGeoStatus.setException( status.getException() );
-    multiGeoStatus.setLocation( location );
-
-    /* If a time was provided, use it. Otherwise set the current time. */
-    if( time != null )
-      multiGeoStatus.setTime( time );
-    else
-      multiGeoStatus.setTime( new Date() );
+    /* Copy the values of the status. */
+    copyStatusValues( status, location, time, multiGeoStatus );
 
     /* Get the children. */
     final IStatus[] children = status.getChildren();
@@ -184,19 +162,8 @@ public class StatusCollection extends Feature_Impl implements IStatusCollection
       /* Add a new feature. */
       final IGeoStatus geoStatus = childrenCollection.addNew( IGeoStatus.QNAME );
 
-      /* Set its properties. */
-      geoStatus.setSeverity( status.getSeverity() );
-      geoStatus.setPlugin( status.getPlugin() );
-      geoStatus.setCode( status.getCode() );
-      geoStatus.setMessage( status.getMessage() );
-      geoStatus.setException( status.getException() );
-      geoStatus.setLocation( location );
-
-      /* If a time was provided, use it. Otherwise set the current time. */
-      if( time != null )
-        geoStatus.setTime( time );
-      else
-        geoStatus.setTime( new Date() );
+      /* Copy the values of the status. */
+      copyStatusValues( status, location, time, geoStatus );
 
       return;
     }
@@ -204,19 +171,8 @@ public class StatusCollection extends Feature_Impl implements IStatusCollection
     /* Add a new feature. */
     final IGeoStatus multiGeoStatus = childrenCollection.addNew( IGeoStatus.QNAME );
 
-    /* Set its properties. */
-    multiGeoStatus.setSeverity( status.getSeverity() );
-    multiGeoStatus.setPlugin( status.getPlugin() );
-    multiGeoStatus.setCode( status.getCode() );
-    multiGeoStatus.setMessage( status.getMessage() );
-    multiGeoStatus.setException( status.getException() );
-    multiGeoStatus.setLocation( location );
-
-    /* If a time was provided, use it. Otherwise set the current time. */
-    if( time != null )
-      multiGeoStatus.setTime( time );
-    else
-      multiGeoStatus.setTime( new Date() );
+    /* Copy the values of the status. */
+    copyStatusValues( status, location, time, multiGeoStatus );
 
     /* Get the children. */
     final IStatus[] children = status.getChildren();
@@ -229,20 +185,8 @@ public class StatusCollection extends Feature_Impl implements IStatusCollection
     /* Add a new feature. */
     final IGeoStatus multiGeoStatus = m_statusCollection.addNew( IGeoStatus.QNAME );
 
-    /* Set its properties. */
-    multiGeoStatus.setSeverity( geoStatus.getSeverity() );
-    multiGeoStatus.setPlugin( geoStatus.getPlugin() );
-    multiGeoStatus.setCode( geoStatus.getCode() );
-    multiGeoStatus.setMessage( geoStatus.getMessage() );
-    multiGeoStatus.setException( geoStatus.getException() );
-    multiGeoStatus.setLocation( geoStatus.getLocation() );
-
-    /* If a time was provided, use it. Otherwise set the current time. */
-    final Date time = geoStatus.getTime();
-    if( time != null )
-      multiGeoStatus.setTime( time );
-    else
-      multiGeoStatus.setTime( new Date() );
+    /* Copy the values of the status. */
+    copyStatusValues( geoStatus, multiGeoStatus );
 
     /* Get the children. */
     final IStatus[] children = geoStatus.getChildren();
@@ -262,20 +206,8 @@ public class StatusCollection extends Feature_Impl implements IStatusCollection
       /* Add a new feature. */
       final IGeoStatus children = childrenCollection.addNew( IGeoStatus.QNAME );
 
-      /* Set its properties. */
-      children.setSeverity( geoStatus.getSeverity() );
-      children.setPlugin( geoStatus.getPlugin() );
-      children.setCode( geoStatus.getCode() );
-      children.setMessage( geoStatus.getMessage() );
-      children.setException( geoStatus.getException() );
-      children.setLocation( geoStatus.getLocation() );
-
-      /* If a time was provided, use it. Otherwise set the current time. */
-      final Date time = geoStatus.getTime();
-      if( time != null )
-        children.setTime( time );
-      else
-        children.setTime( new Date() );
+      /* Copy the values of the status. */
+      copyStatusValues( geoStatus, children );
 
       return;
     }
@@ -283,20 +215,8 @@ public class StatusCollection extends Feature_Impl implements IStatusCollection
     /* Add a new feature. */
     final IGeoStatus multiGeoStatus = childrenCollection.addNew( IGeoStatus.QNAME );
 
-    /* Set its properties. */
-    multiGeoStatus.setSeverity( geoStatus.getSeverity() );
-    multiGeoStatus.setPlugin( geoStatus.getPlugin() );
-    multiGeoStatus.setCode( geoStatus.getCode() );
-    multiGeoStatus.setMessage( geoStatus.getMessage() );
-    multiGeoStatus.setException( geoStatus.getException() );
-    multiGeoStatus.setLocation( geoStatus.getLocation() );
-
-    /* If a time was provided, use it. Otherwise set the current time. */
-    final Date time = geoStatus.getTime();
-    if( time != null )
-      multiGeoStatus.setTime( time );
-    else
-      multiGeoStatus.setTime( new Date() );
+    /* Copy the values of the status. */
+    copyStatusValues( geoStatus, multiGeoStatus );
 
     /* Get the children. */
     final IStatus[] children = geoStatus.getChildren();
@@ -332,4 +252,39 @@ public class StatusCollection extends Feature_Impl implements IStatusCollection
     return m_statusCollection;
   }
 
+  private void setStatusValues( final int severity, final String pluginId, final int code, final String message, final Throwable exception, final GM_Object location, final Date time, final IGeoStatus geoStatus )
+  {
+    /* Set its properties. */
+    geoStatus.setSeverity( severity );
+    geoStatus.setPlugin( pluginId );
+    geoStatus.setCode( code );
+    geoStatus.setMessage( message );
+    geoStatus.setException( exception );
+    geoStatus.setLocation( location );
+    geoStatus.setTime( time );
+  }
+
+  private void copyStatusValues( final IStatus status, final GM_Object location, final Date time, final IGeoStatus geoStatus )
+  {
+    /* Set its properties. */
+    geoStatus.setSeverity( status.getSeverity() );
+    geoStatus.setPlugin( status.getPlugin() );
+    geoStatus.setCode( status.getCode() );
+    geoStatus.setMessage( status.getMessage() );
+    geoStatus.setException( status.getException() );
+    geoStatus.setLocation( location );
+    geoStatus.setTime( time );
+  }
+
+  private void copyStatusValues( final IGeoStatus status, final IGeoStatus geoStatus )
+  {
+    /* Set its properties. */
+    geoStatus.setSeverity( status.getSeverity() );
+    geoStatus.setPlugin( status.getPlugin() );
+    geoStatus.setCode( status.getCode() );
+    geoStatus.setMessage( status.getMessage() );
+    geoStatus.setException( status.getException() );
+    geoStatus.setLocation( status.getLocation() );
+    geoStatus.setTime( status.getTime() );
+  }
 }
