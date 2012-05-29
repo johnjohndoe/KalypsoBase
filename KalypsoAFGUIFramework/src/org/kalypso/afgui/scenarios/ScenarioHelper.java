@@ -50,13 +50,17 @@ import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.internal.SzenarioDataProvider;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.EclipsePlatformContributionsExtensions;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
@@ -65,6 +69,7 @@ import de.renew.workflow.base.IWorkflow;
 import de.renew.workflow.connector.WorkflowProjectNature;
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.connector.cases.IScenario;
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 import de.renew.workflow.connector.worklist.ITaskExecutor;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
@@ -77,7 +82,7 @@ public class ScenarioHelper
   /**
    * Retrieves the folder of the currently active scenario via the current evaluation context of the handler service.
    */
-  public static SzenarioDataProvider getScenarioDataProvider( )
+  public static IScenarioDataProvider getScenarioDataProvider( )
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
@@ -217,7 +222,7 @@ public class ScenarioHelper
 
   /**
    * This function returns the active scenario.
-   * 
+   *
    * @return The active scenario.
    */
   public static IScenario getActiveScenario( )
@@ -227,4 +232,37 @@ public class ScenarioHelper
 
     return activeWorkContext.getCurrentCase();
   }
+
+  /**
+   * TODO: probably that does not belong here, move to ScenarioHelper instead? This method will try to find a model file
+   * in this scenario and its parent scenarios. Needs refactoring!
+   */
+  public static IFolder findModelContext( final IFolder szenarioFolder, final String modelFile )
+  {
+    if( szenarioFolder == null )
+      return null;
+
+    final Path path = new Path( modelFile );
+    if( szenarioFolder.getFile( path ).exists() )
+      return szenarioFolder;
+
+    final IContainer parent = szenarioFolder.getParent();
+    if( parent.getType() != IResource.PROJECT )
+      return findModelContext( (IFolder) parent, modelFile );
+
+    return null;
+  }
+
+  /**
+   * Returns the current scenario's base folder
+   */
+  public static IContainer getScenarioFolder( )
+  {
+    final IScenario scenario = getActiveScenario();
+    if( scenario != null )
+      return scenario.getFolder();
+
+    return null;
+  }
+
 }

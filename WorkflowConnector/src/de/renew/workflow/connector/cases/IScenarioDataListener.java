@@ -38,24 +38,19 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package de.renew.workflow.contexts;
+package de.renew.workflow.connector.cases;
 
-import org.eclipse.ui.ISourceProvider;
+import org.eclipse.core.runtime.IStatus;
+
 
 /**
- * Interface for case source provider
- *
  * @author Stefan Kurzbach
+ * 
+ *         Is notified when a model has been loaded and when the scenario data folder has changed
  */
-public interface ICaseHandlingSourceProvider extends ISourceProvider
+public interface IScenarioDataListener
 {
-  // FIXME: not everything here makes sense as source
+  void modelLoaded( final IModel model, final IStatus status );
 
-  public static final String ACTIVE_CASE_URI_NAME = "activeCaseUri";
-
-  public static final String ACTIVE_CASE_DATA_PROVIDER_NAME = "activeCaseDataProvider"; //$NON-NLS-1$
-
-  public static final String ACTIVE_CASE_FOLDER_NAME = "activeCaseBaseFolder"; //$NON-NLS-1$
-
-  public static final String ACTIVE_CASE_DATA_NAME = "activeCaseData"; //$NON-NLS-1$
+  void scenarioChanged( final IScenario caze );
 }

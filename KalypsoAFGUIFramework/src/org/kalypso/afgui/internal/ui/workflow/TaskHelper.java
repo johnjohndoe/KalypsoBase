@@ -38,24 +38,40 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package de.renew.workflow.contexts;
+package org.kalypso.afgui.internal.ui.workflow;
 
-import org.eclipse.ui.ISourceProvider;
+import java.util.List;
+
+import org.eclipse.jface.viewers.TreePath;
+
+import de.renew.workflow.base.ITask;
+import de.renew.workflow.base.ITaskGroup;
+import de.renew.workflow.base.IWorkflow;
 
 /**
- * Interface for case source provider
- *
  * @author Stefan Kurzbach
  */
-public interface ICaseHandlingSourceProvider extends ISourceProvider
+class TaskHelper
 {
-  // FIXME: not everything here makes sense as source
+  public static TreePath findPart( final String uri, final IWorkflow workflow )
+  {
+    return findPartInTaskGroups( uri, workflow.getTasks(), TreePath.EMPTY );
+  }
 
-  public static final String ACTIVE_CASE_URI_NAME = "activeCaseUri";
+  public static TreePath findPartInTaskGroups( final String uri, final List<ITask> taskOrTaskGroups, final TreePath prefix )
+  {
+    TreePath result = null;
+    for( final ITask taskOrTaskGroup : taskOrTaskGroups )
+    {
+      if( taskOrTaskGroup.getURI().equals( uri ) )
+        return prefix.createChildPath( taskOrTaskGroup );
 
-  public static final String ACTIVE_CASE_DATA_PROVIDER_NAME = "activeCaseDataProvider"; //$NON-NLS-1$
+      if( taskOrTaskGroup instanceof ITaskGroup )
+        result = findPartInTaskGroups( uri, ((ITaskGroup) taskOrTaskGroup).getTasks(), prefix.createChildPath( taskOrTaskGroup ) );
 
-  public static final String ACTIVE_CASE_FOLDER_NAME = "activeCaseBaseFolder"; //$NON-NLS-1$
-
-  public static final String ACTIVE_CASE_DATA_NAME = "activeCaseData"; //$NON-NLS-1$
+      if( result != null )
+        return result;
+    }
+    return result;
+  }
 }

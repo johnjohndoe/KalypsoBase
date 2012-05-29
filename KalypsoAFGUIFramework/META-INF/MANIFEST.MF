@@ -19,8 +19,8 @@ Require-Bundle: de.openali.odysseus.chart.ui,
  org.kalypso.ui.addlayer;bundle-version="11.6.5"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.afgui,
- org.kalypso.afgui.handlers,
  org.kalypso.afgui.helper,
+ org.kalypso.afgui.internal.handlers,
  org.kalypso.afgui.model,
  org.kalypso.afgui.perspective,
  org.kalypso.afgui.scenarios,

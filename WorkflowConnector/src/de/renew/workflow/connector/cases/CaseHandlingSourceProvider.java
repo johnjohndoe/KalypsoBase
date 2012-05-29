@@ -42,6 +42,7 @@ public class CaseHandlingSourceProvider extends AbstractSourceProvider implement
   {
     // FIXME: move into scenario activation code
     m_dataProvider.setCurrent( m_activeWorkContext.getCurrentCase() );
+
     fireSourceChanged( 0, getCurrentState() );
   }
 
