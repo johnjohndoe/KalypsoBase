@@ -326,7 +326,10 @@ public class GeoStatus extends Feature_Impl implements IGeoStatus
   public Date getTime( )
   {
     final XMLGregorianCalendar cal = getProperty( QNAME_PROP_STATUS_TIME, XMLGregorianCalendar.class );
-    return DateUtilities.toDate( cal );
+    if( cal != null )
+      return DateUtilities.toDate( cal );
+
+    return null;
   }
 
   /**
@@ -335,7 +338,12 @@ public class GeoStatus extends Feature_Impl implements IGeoStatus
   @Override
   public void setTime( final Date time )
   {
-    final XMLGregorianCalendar cal = DateUtilities.toXMLGregorianCalendar( time );
-    setProperty( QNAME_PROP_STATUS_TIME, cal );
+    if( time != null )
+    {
+      final XMLGregorianCalendar cal = DateUtilities.toXMLGregorianCalendar( time );
+      setProperty( QNAME_PROP_STATUS_TIME, cal );
+    }
+    else
+      setProperty( QNAME_PROP_STATUS_TIME, null );
   }
 }
