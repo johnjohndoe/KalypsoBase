@@ -119,9 +119,6 @@ public abstract class AbstractFeatureControl implements IFeatureControl
       toolkit.adapt( control, true, true );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#getFeature()
-   */
   @Override
   public Feature getFeature( )
   {
@@ -134,6 +131,7 @@ public abstract class AbstractFeatureControl implements IFeatureControl
     m_feature = feature;
   }
 
+  @Override
   public IPropertyType getFeatureTypeProperty( )
   {
     return m_ftp;
