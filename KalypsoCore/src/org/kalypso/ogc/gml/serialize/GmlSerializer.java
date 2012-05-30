@@ -510,11 +510,23 @@ public final class GmlSerializer
    */
   public static GMLWorkspace createGMLWorkspace( final IFile file, final IProgressMonitor monitor ) throws Exception
   {
+    return createGMLWorkspace( file, null, null, monitor );
+  }
+
+  /**
+   * This function loads a workspace from a {@link IFile}.
+   * 
+   * @param file
+   *          The file of the workspace.
+   * @return The workspace of the file.
+   */
+  public static GMLWorkspace createGMLWorkspace( final IFile file, final URL context, final IFeatureProviderFactory factory, final IProgressMonitor monitor ) throws Exception
+  {
     /* Create the url of the workspace. */
     final URL url = ResourceUtilities.createURL( file );
 
     /* Load the workspace and return it. */
-    return GmlSerializer.createGMLWorkspace( url, null, monitor );
+    return GmlSerializer.createGMLWorkspace( url, context, factory, monitor );
   }
 
   /**
