@@ -75,11 +75,6 @@ public class FeatureProviderWithCacheFactory implements IFeatureProviderFactory
 
     try
     {
-      if( uri == null )
-      {
-        System.out.println( "oups" );
-      }
-
       final URL contextURL = context == null ? null : context.getContext();
       final URL url = m_urlResolver.resolveURL( contextURL, uri );
 
