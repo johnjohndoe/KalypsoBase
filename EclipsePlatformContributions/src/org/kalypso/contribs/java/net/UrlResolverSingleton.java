@@ -47,7 +47,7 @@ public final class UrlResolverSingleton
 
   private UrlResolverSingleton( )
   {
-    // no instanciation
+    // no instantiation
   }
 
   public static IUrlResolver getDefault( )
