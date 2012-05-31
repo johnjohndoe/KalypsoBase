@@ -203,11 +203,6 @@ public class DeleteFeatureCommand implements ICommand
         m_listIndexMap.put( featureToRemove, new Integer( list.indexOf( featureToRemove ) ) );
       }
 
-      /* Remove from the selection, if it was selected. */
-      final IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
-      if( selectionManager.isSelected( featureToRemove ) )
-        selectionManager.changeSelection( new Feature[] { featureToRemove }, new EasyFeatureWrapper[] {} );
-
       /* Remove the feature. */
       workspace.removeLinkedAsCompositionFeature( parentFeature, parentRelationType, featureToRemove );
 
@@ -218,6 +213,10 @@ public class DeleteFeatureCommand implements ICommand
       final List<Feature> children = parentMap.get( parentFeature );
       children.add( featureToRemove );
     }
+
+    /* Remove from the selection, if it was selected. */
+    final IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
+    selectionManager.changeSelection( m_featuresToDelete, new EasyFeatureWrapper[] {} );
 
     final List<ModellEvent> linkEvents = new ArrayList<ModellEvent>();
 
