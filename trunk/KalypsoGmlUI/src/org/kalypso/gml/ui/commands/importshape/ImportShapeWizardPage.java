@@ -2,6 +2,7 @@ package org.kalypso.gml.ui.commands.importshape;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -264,5 +265,11 @@ public class ImportShapeWizardPage extends WizardPage
   public String getSelectedCRS( )
   {
     return m_selectedCRS;
+  }
+
+  public Charset getSelectedCharset( )
+  {
+    // TODO: for the moment we only allow the default charset of the platform.
+    return Charset.defaultCharset();
   }
 }
