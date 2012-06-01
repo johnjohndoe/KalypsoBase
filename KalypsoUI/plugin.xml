@@ -50,12 +50,49 @@
 		<category name="%category.name.0" id="org.kalypso.ui.kalypso"></category>
 		<view name="%org.kalypso.ui.repository.view.RepositoryExplorerPart" icon="icons/repository/repository.gif" category="org.kalypso.ui.kalypso" class="org.kalypso.ui.repository.view.RepositoryExplorerPart" id="org.kalypso.ui.repository.view.RepositoryExplorerPart"/>
 		<view name="%org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart" icon="icons/sldeditor/styleEditor.gif" category="org.kalypso.ui.kalypso" class="org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart" id="org.kalypso.ui.editor.mapeditor.views.styleeditor"/>
-		<view allowMultiple="false" icon="icons/kalypso16.gif" class="org.kalypso.ui.editor.mapeditor.views.MapWidgetView" category="org.kalypso.ui.kalypso" name="%org.kalypso.ui.editor.mapeditor.views.ActionOptionsView" id="org.kalypso.ui.editor.mapeditor.views.ActionOptionsView" />
+		<view
+        allowMultiple="false"
+        category="org.kalypso.ui.kalypso"
+        class="org.kalypso.ui.editor.mapeditor.views.MapWidgetView"
+        icon="icons/kalypso16.gif"
+        id="org.kalypso.ui.editor.mapeditor.views.ActionOptionsView"
+        name="%org.kalypso.ui.editor.mapeditor.views.ActionOptionsView"
+        restorable="false"/>
 		<view allowMultiple="false" category="org.kalypso.ui.kalypso" class="org.kalypso.ogc.gml.om.table.ObservationTableView" icon="icons/kalypso_ott.gif" id="org.kalypso.ogc.gml.om.table.ObservationTableView" name="%org.kalypso.ogc.gml.om.table.ObservationTableView" />
-		<view allowMultiple="true" category="org.kalypso.ui.kalypso" class="org.kalypso.ui.views.map.MapView" icon="icons/kalypso_gmt.gif" id="org.kalypso.ui.views.mapView" name="%view.name.0" saveMapOnClose="true" reloadMapOnOpen="false" />
-		<view allowMultiple="false" category="org.kalypso.ui.kalypso" class="org.kalypso.ogc.gml.outline.ViewContentOutline" icon="icons/kalypso_gmt.gif" id="org.kalypso.ui.views.outline" name="%org.kalypso.ui.views.outline" />
-		<view allowMultiple="true" category="org.kalypso.ui.kalypso" class="org.kalypso.ui.editor.featureeditor.FeatureTemplateView" icon="icons/kalypso_gtt.gif" id="org.kalypso.ui.views.featuretemplateview" name="%view.name.1" reloadMapOnOpen="false" />
-		<view allowMultiple="false" category="org.kalypso.ui.kalypso" class="org.kalypso.ui.views.map.MapOverView" id="org.kalypso.ui.views.mapOverView" name="%view.name.2"/>
+		<view
+        allowMultiple="true"
+        category="org.kalypso.ui.kalypso"
+        class="org.kalypso.ui.views.map.MapView"
+        icon="icons/kalypso_gmt.gif"
+        id="org.kalypso.ui.views.mapView"
+        name="%view.name.0"
+        reloadMapOnOpen="false"
+        restorable="false"
+        saveMapOnClose="true"/>
+		<view
+        allowMultiple="false"
+        category="org.kalypso.ui.kalypso"
+        class="org.kalypso.ogc.gml.outline.ViewContentOutline"
+        icon="icons/kalypso_gmt.gif"
+        id="org.kalypso.ui.views.outline"
+        name="%org.kalypso.ui.views.outline"
+        restorable="false"/>
+		<view
+        allowMultiple="true"
+        category="org.kalypso.ui.kalypso"
+        class="org.kalypso.ui.editor.featureeditor.FeatureTemplateView"
+        icon="icons/kalypso_gtt.gif"
+        id="org.kalypso.ui.views.featuretemplateview"
+        name="%view.name.1"
+        reloadMapOnOpen="false"
+        restorable="false"/>
+		<view
+        allowMultiple="false"
+        category="org.kalypso.ui.kalypso"
+        class="org.kalypso.ui.views.map.MapOverView"
+        id="org.kalypso.ui.views.mapOverView"
+        name="%view.name.2"
+        restorable="false"/>
   <view
         allowMultiple="true"
         category="org.kalypso.ui.kalypso"
@@ -63,7 +100,7 @@
         icon="icons/kalypso_gtt.gif"
         id="org.kalypso.ui.editor.gistableeditor.GttViewPart"
         name="Gis Table"
-        restorable="true">
+        restorable="false">
   </view>
 	</extension>
 	<extension id="editorActions" name="editorActions" point="org.eclipse.ui.editorActions">
@@ -543,13 +580,6 @@
           </command>
           <separator name="importExportEnd" visible="true"/>
           <command commandId="org.kalypso.ui.map.outline.command.NodeProperties" style="push">
-               <visibleWhen checkEnabled="true"/>
-          </command>
-        </menuContribution>
-        
-        <menuContribution
-              locationURI="popup:org.eclipse.ui.popup.any?after=additions">
-              <command commandId="org.kalypso.ui.map.outline.command.NodeProperties" style="push">
                <visibleWhen checkEnabled="true"/>
           </command>
         </menuContribution>
