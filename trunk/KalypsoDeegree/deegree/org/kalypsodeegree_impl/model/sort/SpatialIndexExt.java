@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
+ * interface-compatibility to deegree is wanted but not retained always.
  * 
- * If you intend to use this software in other ways than in kalypso 
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -47,9 +47,21 @@ import com.vividsolutions.jts.index.SpatialIndex;
  */
 public interface SpatialIndexExt extends SpatialIndex
 {
-  public void paint( final Graphics g, final GeoTransform geoTransform );
+  int size( );
 
-  public Envelope getBoundingBox( );
+  void paint( final Graphics g, final GeoTransform geoTransform );
 
-  public boolean contains( final Envelope itemEnv, Object item );
+  Envelope getBoundingBox( );
+
+  boolean contains( final Envelope itemEnv, Object item );
+
+  /**
+   * Set an arbitrary object as user data to this index.
+   */
+  void setUserData( Object userData );
+
+  /**
+   * Retrieve the object previously set with {@link #setUserData(Object)}
+   */
+  Object getUserData( );
 }

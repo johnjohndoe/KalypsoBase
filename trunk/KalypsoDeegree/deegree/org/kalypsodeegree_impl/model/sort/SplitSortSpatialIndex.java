@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
+ * interface-compatibility to deegree is wanted but not retained always.
  * 
- * If you intend to use this software in other ways than in kalypso 
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -54,14 +54,19 @@ public class SplitSortSpatialIndex implements SpatialIndexExt
 {
   private SplitSortContainer m_rootContainer = null;
 
+  private Object m_userData = null;
+
   public SplitSortSpatialIndex( final Envelope env )
   {
     m_rootContainer = new SplitSortContainer( null, env );
   }
 
-  /**
-   * @see com.vividsolutions.jts.index.SpatialIndex#insert(com.vividsolutions.jts.geom.Envelope, java.lang.Object)
-   */
+  @Override
+  public int size( )
+  {
+    return m_rootContainer.size();
+  }
+
   @Override
   public void insert( final Envelope env, final Object item )
   {
@@ -80,19 +85,12 @@ public class SplitSortSpatialIndex implements SpatialIndexExt
     }
   }
 
-  /**
-   * @see com.vividsolutions.jts.index.SpatialIndex#query(com.vividsolutions.jts.geom.Envelope)
-   */
   @Override
   public List<Object> query( final Envelope searchEnv )
   {
     return m_rootContainer.query( searchEnv, null );
   }
 
-  /**
-   * @see com.vividsolutions.jts.index.SpatialIndex#query(com.vividsolutions.jts.geom.Envelope,
-   *      com.vividsolutions.jts.index.ItemVisitor)
-   */
   @Override
   public void query( final Envelope searchEnv, final ItemVisitor visitor )
   {
@@ -106,9 +104,6 @@ public class SplitSortSpatialIndex implements SpatialIndexExt
     m_rootContainer = new SplitSortContainer( null, null );
   }
 
-  /**
-   * @see com.vividsolutions.jts.index.SpatialIndex#remove(com.vividsolutions.jts.geom.Envelope, java.lang.Object)
-   */
   @Override
   public boolean remove( final Envelope itemEnv, final Object item )
   {
@@ -127,14 +122,21 @@ public class SplitSortSpatialIndex implements SpatialIndexExt
     return m_rootContainer.getEnvelope();
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.sort.SpatialIndexExt#contains(com.vividsolutions.jts.geom.Envelope,
-   *      java.lang.Object)
-   */
   @Override
   public boolean contains( final Envelope itemEnv, final Object item )
   {
     return m_rootContainer.contains( itemEnv, item );
   }
 
+  @Override
+  public void setUserData( final Object userData )
+  {
+    m_userData = userData;
+  }
+
+  @Override
+  public Object getUserData( )
+  {
+    return m_userData;
+  }
 }
