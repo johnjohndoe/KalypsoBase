@@ -105,20 +105,31 @@ public class LayerTableSorter extends ViewerSorter
     if( modifier == null )
       return 0;
 
-    final Object o1 = modifier.getProperty( kf1 );
-    final Object o2 = modifier.getProperty( kf2 );
-
-// final Object o1 = getProperty( kf1, propertyPath );
-// final Object o2 = getProperty( kf2, propertyPath );
+    final Object o1 = getCompareValue( kf1, modifier );
+    final Object o2 = getCompareValue( kf2, modifier );
 
     final int sign = isInverse() ? -1 : 1;
     if( o1 == o2 )
       return 0;
+
     if( o1 == null )
       return sign;
+
     if( o2 == null )
       return -sign;
+
     return sign * compareObjects( o1, o2 );
+  }
+
+  private Object getCompareValue( final Feature feature, final IFeatureModifier modifier )
+  {
+    final Object value = modifier.getProperty( feature );
+    // BGUFIX: feature link combo always returns null for external features; we use the label in this case (that hat the
+    // user actually sees)
+    if( value == null )
+      return modifier.getLabel( feature );
+
+    return value;
   }
 
   private int compareObjects( final Object o1, final Object o2 )
