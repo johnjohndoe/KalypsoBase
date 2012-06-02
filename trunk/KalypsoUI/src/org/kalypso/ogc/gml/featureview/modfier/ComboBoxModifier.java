@@ -93,7 +93,7 @@ public class ComboBoxModifier extends AbstractFeatureModifier
 
     final Object property = super.getProperty( feature );
 
-    // HACK/BUGFIX: the xpath resolved value is always a feasture, not the 'stirng' reference id for local featurr
+    // HACK/BUGFIX: the xpath resolved value is always a feature, not the 'string' reference id for local feature
     // references.
     // Revert the value to the string reference for this case.
     if( property instanceof Feature )
