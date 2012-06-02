@@ -56,8 +56,7 @@
         class="org.kalypso.ui.editor.mapeditor.views.MapWidgetView"
         icon="icons/kalypso16.gif"
         id="org.kalypso.ui.editor.mapeditor.views.ActionOptionsView"
-        name="%org.kalypso.ui.editor.mapeditor.views.ActionOptionsView"
-        restorable="false"/>
+        name="%org.kalypso.ui.editor.mapeditor.views.ActionOptionsView"/>
 		<view allowMultiple="false" category="org.kalypso.ui.kalypso" class="org.kalypso.ogc.gml.om.table.ObservationTableView" icon="icons/kalypso_ott.gif" id="org.kalypso.ogc.gml.om.table.ObservationTableView" name="%org.kalypso.ogc.gml.om.table.ObservationTableView" />
 		<view
         allowMultiple="true"
@@ -67,7 +66,6 @@
         id="org.kalypso.ui.views.mapView"
         name="%view.name.0"
         reloadMapOnOpen="false"
-        restorable="false"
         saveMapOnClose="true"/>
 		<view
         allowMultiple="false"
@@ -75,8 +73,7 @@
         class="org.kalypso.ogc.gml.outline.ViewContentOutline"
         icon="icons/kalypso_gmt.gif"
         id="org.kalypso.ui.views.outline"
-        name="%org.kalypso.ui.views.outline"
-        restorable="false"/>
+        name="%org.kalypso.ui.views.outline"/>
 		<view
         allowMultiple="true"
         category="org.kalypso.ui.kalypso"
@@ -84,23 +81,20 @@
         icon="icons/kalypso_gtt.gif"
         id="org.kalypso.ui.views.featuretemplateview"
         name="%view.name.1"
-        reloadMapOnOpen="false"
-        restorable="false"/>
+        reloadMapOnOpen="false"/>
 		<view
         allowMultiple="false"
         category="org.kalypso.ui.kalypso"
         class="org.kalypso.ui.views.map.MapOverView"
         id="org.kalypso.ui.views.mapOverView"
-        name="%view.name.2"
-        restorable="false"/>
+        name="%view.name.2"/>
   <view
         allowMultiple="true"
         category="org.kalypso.ui.kalypso"
         class="org.kalypso.ui.editor.gistableeditor.GttViewPart"
         icon="icons/kalypso_gtt.gif"
         id="org.kalypso.ui.editor.gistableeditor.GttViewPart"
-        name="Gis Table"
-        restorable="false">
+        name="Gis Table">
   </view>
 	</extension>
 	<extension id="editorActions" name="editorActions" point="org.eclipse.ui.editorActions">
@@ -427,6 +421,7 @@
 			<command commandId="org.kalypso.ogc.gml.map.FindElementMapCommand" style="radio"/>
 			<separator name="actions" visible="true" />
 			<command commandId="org.kalypso.ogc.gml.map.FullExtentCommand" style="push" />
+			<command commandId="org.kalypso.ogc.gml.map.PanToSelectedFeatureCommand" style="push" />
 			<command commandId="org.kalypso.ogc.gml.map.ZoomToActiveLayerCommand" style="push" />
 			<command commandId="org.kalypso.ogc.gml.map.ZoomInStaticCommand" style="push" />
 			<command commandId="org.kalypso.ogc.gml.map.ZoomOutCommand" style="push" />
