@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
+ * interface-compatibility to deegree is wanted but not retained always.
  * 
- * If you intend to use this software in other ways than in kalypso 
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -64,15 +64,14 @@ public class QuadTreeIndex implements SpatialIndexExt
 
   private Envelope m_boundingBox = null;
 
+  private Object m_userData = null;
+
   public QuadTreeIndex( final IEnvelopeProvider envelopeProvider )
   {
     m_envelopeProvider = envelopeProvider;
     m_index = null;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.sort.SpatialIndexExt#clear()
-   */
   public void clear( )
   {
     m_items.clear();
@@ -86,9 +85,6 @@ public class QuadTreeIndex implements SpatialIndexExt
     return JTSAdapter.export( envelope );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.sort.SpatialIndexExt#getBoundingBox()
-   */
   @Override
   public Envelope getBoundingBox( )
   {
@@ -122,18 +118,12 @@ public class QuadTreeIndex implements SpatialIndexExt
     return bbox;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.sort.SpatialIndexExt#invalidate()
-   */
   public void invalidate( )
   {
     m_boundingBox = null;
     m_index = null;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.sort.SpatialIndexExt#invalidate(java.lang.Object)
-   */
   public void invalidate( final Object item )
   {
     revalidate();
@@ -174,27 +164,18 @@ public class QuadTreeIndex implements SpatialIndexExt
 // return new STRtree();
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.sort.SpatialIndexExt#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform)
-   */
   @Override
   public void paint( final Graphics g, final GeoTransform geoTransform )
   {
     // sorry, don't know how to paint a quadtree
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.sort.SpatialIndexExt#size()
-   */
+  @Override
   public int size( )
   {
     return m_items.size();
   }
 
-  /**
-   * @see com.vividsolutions.jts.index.SpatialIndex#insert(com.vividsolutions.jts.geom.Envelope, java.lang.Object)
-   */
   @Override
   public void insert( final Envelope itemEnv, final Object item )
   {
@@ -211,9 +192,6 @@ public class QuadTreeIndex implements SpatialIndexExt
     // TODO:check depth of quadtree, if too big, maybe we have to revalidate?
   }
 
-  /**
-   * @see com.vividsolutions.jts.index.SpatialIndex#query(com.vividsolutions.jts.geom.Envelope)
-   */
   @Override
   public List query( final Envelope searchEnv )
   {
@@ -222,10 +200,6 @@ public class QuadTreeIndex implements SpatialIndexExt
     return m_index.query( searchEnv );
   }
 
-  /**
-   * @see com.vividsolutions.jts.index.SpatialIndex#query(com.vividsolutions.jts.geom.Envelope,
-   *      com.vividsolutions.jts.index.ItemVisitor)
-   */
   @Override
   public void query( final Envelope searchEnv, final ItemVisitor visitor )
   {
@@ -234,9 +208,6 @@ public class QuadTreeIndex implements SpatialIndexExt
     m_index.query( searchEnv, visitor );
   }
 
-  /**
-   * @see com.vividsolutions.jts.index.SpatialIndex#remove(com.vividsolutions.jts.geom.Envelope, java.lang.Object)
-   */
   @Override
   public boolean remove( final Envelope itemEnv, final Object item )
   {
@@ -258,4 +229,15 @@ public class QuadTreeIndex implements SpatialIndexExt
     throw new UnsupportedOperationException();
   }
 
+  @Override
+  public void setUserData( final Object userData )
+  {
+    m_userData = userData;
+  }
+
+  @Override
+  public Object getUserData( )
+  {
+    return m_userData;
+  }
 }
