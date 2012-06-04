@@ -90,6 +90,8 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
   /** If middle was pressed down; prohibits dragging any other widget */
   private boolean m_middleDown = false;
 
+  private final boolean m_invertZoomOnWheelEvent = Boolean.getBoolean( "kalypso.model.product.invertZoomOnWheel" );
+
   public WidgetManager( final ICommandTarget commandTarget, final IMapPanel mapPanel )
   {
     m_mapPanel = mapPanel;
@@ -334,7 +336,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
 
     final int wheelRotation = e.getWheelRotation();
 
-    final boolean in = wheelRotation > 0 ? false : true;
+    final boolean in = (wheelRotation > 0 ? false : true) ^ m_invertZoomOnWheelEvent;
 
     GM_Envelope boundingBox = m_mapPanel.getBoundingBox();
     for( int i = 0; i < Math.abs( wheelRotation ); i++ )
