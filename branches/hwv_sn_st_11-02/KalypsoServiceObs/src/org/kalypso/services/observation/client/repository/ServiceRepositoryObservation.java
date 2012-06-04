@@ -44,9 +44,11 @@ import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang.StringUtils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -81,6 +83,8 @@ public class ServiceRepositoryObservation implements IObservation
   private IObservation m_observation = null;
 
   private final ObservationEventAdapter m_evtPrv = new ObservationEventAdapter( this );
+
+  private MetadataList m_beanMedatadata;
 
   public ServiceRepositoryObservation( final IObservationService service, final ObservationBean bean )
   {
@@ -148,15 +152,40 @@ public class ServiceRepositoryObservation implements IObservation
   public final MetadataList getMetadataList( )
   {
     if( Objects.isNotNull( m_observation ) )
+    {
+      /** merge metadata otherwise new properties will get lost */
+      if( m_beanMedatadata != null )
+        return merge( m_observation.getMetadataList(), m_beanMedatadata );
+
       return m_observation.getMetadataList();
+    }
+    else if( Objects.isNotNull( m_beanMedatadata ) )
+      return m_beanMedatadata;
 
-    final MetadataList metadata = new MetadataList();
-
+    m_beanMedatadata = new MetadataList();
     final Map<Object, Object> entries = m_bean.getMetadataList();
     for( final Entry<Object, Object> entry : entries.entrySet() )
-      metadata.put( entry.getKey(), entry.getValue() );
+      m_beanMedatadata.put( entry.getKey(), entry.getValue() );
 
-    return metadata;
+    return m_beanMedatadata;
+  }
+
+  /**
+   * appended "additional"/new properties from supplement to base meta data list
+   */
+  private MetadataList merge( final MetadataList base, final MetadataList supplement )
+  {
+    final Set<Entry<Object, Object>> entries = supplement.entrySet();
+    for( final Entry<Object, Object> entry : entries )
+    {
+      final String key = (String) entry.getKey();
+
+      final String property = base.getProperty( key, "" ); //$NON-NLS-1$
+      if( StringUtils.isEmpty( property ) )
+        base.setProperty( key, (String) entry.getValue() );
+    }
+
+    return base;
   }
 
   @Override
