@@ -73,13 +73,9 @@ public class CaseHandlingSourceProvider extends AbstractSourceProvider implement
   {
     final IScenario currentCase = m_activeWorkContext.getCurrentCase();
     if( currentCase == null )
-    {
       return null;
-    }
-    else
-    {
-      return currentCase.getURI();
-    }
+
+    return currentCase.getURI();
   }
 
   private IContainer getSzenarioFolder( )
@@ -87,17 +83,13 @@ public class CaseHandlingSourceProvider extends AbstractSourceProvider implement
     final IScenario currentCase = m_activeWorkContext.getCurrentCase();
     final CaseHandlingProjectNature currentProject = m_activeWorkContext.getCurrentProject();
     if( currentProject == null || currentCase == null )
-    {
       return null;
-    }
 
     // TODO: is this really up to date? We always assume that the scenarioFolder is a IFolder
     // TODO: comment why we need that
     final IPath projectPath = currentProject.getRelativeProjectPath( currentCase );
     if( projectPath.isEmpty() )
-    {
       return currentProject.getProject();
-    }
 
     return currentProject.getProject().getFolder( projectPath );
   }
