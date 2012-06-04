@@ -45,6 +45,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilChange;
 import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * @author kimwerner
@@ -89,5 +90,10 @@ public class PointRemove implements IProfilChange
   public String toString( )
   {
     return Messages.getString( "PointRemove_0" ); //$NON-NLS-1$
+  }
+
+  public IRecord[] getRemovedPoints( )
+  {
+    return m_points;
   }
 }

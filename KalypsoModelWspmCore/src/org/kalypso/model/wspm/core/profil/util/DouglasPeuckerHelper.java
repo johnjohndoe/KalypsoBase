@@ -113,9 +113,7 @@ public final class DouglasPeuckerHelper
     }
   }
 
-  /**
-   * The constructor.
-   */
+ 
   private DouglasPeuckerHelper( )
   {
   }
@@ -130,7 +128,7 @@ public final class DouglasPeuckerHelper
    *          The profile points.
    * @param profil
    *          The profile.
-   * @return The profile changes.
+   * @return The profile change, <code>null</code>, if no point was removed.
    */
   public static IProfilChange[] reduce( final double allowedDistance, final IProfileRecord[] points, final IProfil profile )
   {

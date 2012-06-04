@@ -1,11 +1,7 @@
 package org.kalypso.mt;
 
-import java.awt.Component;
 import java.awt.Point;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.util.Calendar;
-import java.util.Date;
 
 import org.kalypso.mt.input.MTMouseInput;
 import org.kalypso.mt.input.MouseEvents;

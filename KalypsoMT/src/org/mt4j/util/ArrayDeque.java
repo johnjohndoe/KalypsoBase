@@ -6,11 +6,7 @@ import java.io.ObjectOutputStream;
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Queue;
-import java.util.Stack;
 
 	/**
 	 * Resizable-array implementation of the {@link Deque} interface.  Array

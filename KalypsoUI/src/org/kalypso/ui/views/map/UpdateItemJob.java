@@ -38,47 +38,30 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package de.openali.odysseus.chart.framework.model.figure.impl;
+package org.kalypso.ui.views.map;
 
-import org.eclipse.swt.graphics.GC;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.ContributionItem;
+import org.eclipse.ui.progress.UIJob;
 
-import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-
-/**
- * @author Gernot Belger
- */
-public class EllipsisFigure extends AbstractFigure<IAreaStyle>
+final class UpdateItemJob extends UIJob
 {
-  private final int m_leftX;
+  private final ContributionItem m_item;
 
-  private final int m_upperY;
-
-  private final int m_width;
-
-  private final int m_height;
-
-  public EllipsisFigure( final int leftX, final int upperY, final int widht, final int height )
+  public UpdateItemJob( final String name, final ContributionItem item )
   {
-    m_leftX = leftX;
-    m_upperY = upperY;
-    m_width = widht;
-    m_height = height;
+    super( name );
+
+    m_item = item;
   }
 
   @Override
-  protected void paintFigure( final GC gc )
+  public IStatus runInUIThread( final IProgressMonitor monitor )
   {
-    final IAreaStyle style = getStyle();
+    m_item.update();
 
-    if( style.isFillVisible() )
-      gc.fillOval( m_leftX, m_upperY, m_width, m_height );
-
-    final ILineStyle stroke = style.getStroke();
-    if( stroke.isVisible() )
-    {
-      stroke.apply( gc );
-      gc.drawOval( m_leftX, m_upperY, m_width, m_height );
-    }
+    return Status.OK_STATUS;
   }
 }

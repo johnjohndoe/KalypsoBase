@@ -80,7 +80,7 @@ import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 
 /**
- * @author Belger
+ * @author Gernot Belger
  */
 public class DouglasPeuckerDialog extends TitleAreaDialog
 {
@@ -362,8 +362,8 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
     spinner.setLayoutData( gridData );
     spinner.setDigits( 2 );
     spinner.setMaximum( Integer.MAX_VALUE );
-    spinner.setIncrement( 10 );
-    spinner.setPageIncrement( 100 );
+    spinner.setIncrement( 1 );
+    spinner.setPageIncrement( 10 );
     spinner.setSelection( (int) (m_distance * 100) );
     spinner.addModifyListener( new ModifyListener()
     {

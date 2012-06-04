@@ -428,7 +428,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
     // FIXME: at least comment: where does this THRESHOLD come from?
     final int THRESHOLD = 35; // pixel
 
-    if( p.getX() < THRESHOLD || p.getX() > m_mapPanel.getHeight() - THRESHOLD || p.getY() < THRESHOLD || p.getY() > m_mapPanel.getWidth() - THRESHOLD )
+    if( p.getX() < THRESHOLD || p.getX() > m_mapPanel.getWidth() - THRESHOLD || p.getY() < THRESHOLD || p.getY() > m_mapPanel.getHeight() - THRESHOLD )
       return false;
 
     return true;

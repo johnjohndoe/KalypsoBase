@@ -45,8 +45,6 @@ import java.util.Collections;
 import java.util.HashSet;
 
 import org.eclipse.jface.util.SafeRunnable;
-import org.kalypso.core.layoutwizard.IModificationListener;
-import org.kalypso.core.layoutwizard.IModificationProvider;
 
 /**
  * Default implementation of {@link IModificationProvider}

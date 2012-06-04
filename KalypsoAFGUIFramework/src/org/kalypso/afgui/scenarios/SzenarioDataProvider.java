@@ -237,9 +237,6 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
 
     final Job job = new Job( Messages.getString( "org.kalypso.afgui.scenarios.SzenarioDataProvider.4" ) ) //$NON-NLS-1$
     {
-      /**
-       * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
-       */
       @Override
       protected IStatus run( final IProgressMonitor monitor )
       {
@@ -257,16 +254,8 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
                 final Class< ? extends IModel> wrapperClass = entry.getModelClass();
                 final String gmlLocation = entry.getModelPath();
 
-                /* @hack resolve "gloabal" gml file from parent scenario. */
                 final IFolder dataFolder = resolveFolder( scenario, gmlLocation );
-                if( dataFolder == null )
-                {
-                  resetKeyForProject( scenario.getFolder(), id, wrapperClass, gmlLocation );
-                }
-                else
-                {
-                  resetKeyForProject( dataFolder, id, wrapperClass, gmlLocation );
-                }
+                resetKeyForProject( dataFolder, id, wrapperClass, gmlLocation );
               }
               catch( final CoreException e )
               {
@@ -283,14 +272,18 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
       {
         final IFolder folder = scene.getFolder();
         final IFile file = folder.getFile( gmlLocation );
+
+        /* Only return existing files; we might not have the file, so we might want ot get it from the parent instead */
         if( file.exists() )
           return folder;
 
+        /* Recurse into parent to find the file */
         final IScenario parent = scene.getParentScenario();
         if( parent != null )
           return resolveFolder( parent, gmlLocation );
 
-        return null;
+        /* HACK: return scenario folder here, in order to support globally registered files */
+        return scene.getFolder();
       }
     };
 
@@ -371,8 +364,12 @@ public class SzenarioDataProvider implements ICaseDataProvider<IModel>, ICommand
 
     for( final KeyPoolListener listener : keys )
     {
-      final KeyInfo keyInfo = pool.getInfoForKey( listener.getKey() );
-      keyInfo.reload();
+      final IPoolableObjectType key = listener.getKey();
+      final KeyInfo keyInfo = pool.getInfoForKey( key );
+      if( keyInfo == null )
+        System.out.println( "Missing data for key: " + key );
+      else
+        keyInfo.reload();
     }
   }
 

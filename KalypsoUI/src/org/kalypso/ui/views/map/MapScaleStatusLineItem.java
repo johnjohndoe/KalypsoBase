@@ -44,9 +44,6 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -62,7 +59,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.menus.WorkbenchWindowControlContribution;
-import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
@@ -70,116 +66,90 @@ import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterFinder;
 import org.kalypso.i18n.Messages;
-import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
+import org.kalypso.ogc.gml.map.listeners.MapPanelAdapter;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * This class dipslays a small bar which enables the user to change the scale.
- *
+ * 
  * @author Holger Albert
  */
-public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution implements IAdapterEater<IMapPanel>, IMapPanelListener
+public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution implements IAdapterEater<IMapPanel>
 {
-  private class UpdateScaleJob extends UIJob
+  private final IMapPanelListener m_panelListener = new MapPanelAdapter()
   {
-    private double m_mapScale;
-
-    public UpdateScaleJob( final String name )
-    {
-      super( name );
-    }
-
-    public void setMapScale( final double mapScale )
-    {
-      m_mapScale = mapScale;
-    }
-
     @Override
-    public IStatus runInUIThread( final IProgressMonitor monitor )
+    public void onExtentChanged( final IMapPanel source, final GM_Envelope oldExtent, final GM_Envelope newExtent )
     {
-      if( m_text != null && !m_text.isDisposed() )
-      {
-        if( Double.isNaN( m_mapScale ) || Double.isInfinite( m_mapScale ) )
-          m_mapScale = 0;
-
-        final BigDecimal bigScale = new BigDecimal( m_mapScale, new MathContext( 3, RoundingMode.HALF_UP ) );
-        final String scaleString = bigScale.toPlainString();
-
-        m_text.setText( scaleString );
-      }
-
-      return Status.OK_STATUS;
+      doScheduleUpdateScale();
     }
-  }
+  };
 
-  private IAdapterFinder<IMapPanel> m_closeFinder;
+  private final IAdapterFinder<IMapPanel> m_closeFinder = new EditorFirstAdapterFinder<IMapPanel>();
 
-  private IAdapterFinder<IMapPanel> m_initFinder;
+  private final IAdapterFinder<IMapPanel> m_initFinder = m_closeFinder;
 
-  protected AdapterPartListener<IMapPanel> m_adapterListener;
+  private final AdapterPartListener<IMapPanel> m_adapterListener = new AdapterPartListener<IMapPanel>( IMapPanel.class, this, m_initFinder, m_closeFinder );
+
+  private final UpdateItemJob m_updateScaleJob = new UpdateItemJob( "Updating scale box ...", this ); //$NON-NLS-1$
 
   /**
    * The main composite.
    */
   private Composite m_composite;
 
-  /**
-   * The map panel.
-   */
-  protected IMapPanel m_panel;
+  private IMapPanel m_panel;
 
   /**
    * The text field for displaying and typing the scale.
    */
-  protected Text m_text;
-
-  private UpdateScaleJob m_updateScaleJob;
+  private Text m_text;
 
   /**
    * The constructor.
    */
   public MapScaleStatusLineItem( )
   {
-    /* Init everything. */
-    init();
-  }
-
-  /**
-   * The constructor.
-   *
-   * @param The
-   *          id of this contribution.
-   */
-  public MapScaleStatusLineItem( final String id )
-  {
-    super( id );
-
-    /* Init everything. */
-    init();
-  }
-
-  /**
-   * This function initializes the class.
-   */
-  private void init( )
-  {
-    m_closeFinder = new EditorFirstAdapterFinder<IMapPanel>();
-    m_initFinder = m_closeFinder;
-    m_adapterListener = new AdapterPartListener<IMapPanel>( IMapPanel.class, this, m_initFinder, m_closeFinder );
-
-    m_text = null;
-
-    m_updateScaleJob = new UpdateScaleJob( "Updating scale box ..." ); //$NON-NLS-1$
     m_updateScaleJob.setSystem( true );
   }
 
-  /**
-   * @see org.eclipse.jface.action.ControlContribution#createControl(org.eclipse.swt.widgets.Composite)
-   */
+  @Override
+  public void update( )
+  {
+    if( m_text == null || m_text.isDisposed() )
+      return;
+
+    final double mapScale = getCurrentScale();
+
+    if( Double.isNaN( mapScale ) || Double.isInfinite( mapScale ) )
+    {
+      m_text.setText( "<Invalid>" );
+      m_text.setEnabled( false );
+    }
+    else
+    {
+      final BigDecimal bigScale = new BigDecimal( mapScale, new MathContext( 3, RoundingMode.HALF_UP ) );
+      final String scaleString = bigScale.toPlainString();
+
+      m_text.setText( scaleString );
+      m_text.setEnabled( true );
+    }
+  }
+
+  private double getCurrentScale( )
+  {
+    // thread safe
+    final IMapPanel panel = m_panel;
+
+    if( panel == null )
+      return Double.NaN;
+
+    return panel.getCurrentScale();
+  }
+
   @Override
   protected Control createControl( final Composite parent )
   {
@@ -204,30 +174,11 @@ public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution i
     /* Add the selection listener. */
     m_text.addSelectionListener( new SelectionAdapter()
     {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
-       */
       @Override
       public void widgetDefaultSelected( final SelectionEvent e )
       {
         final Text source = (Text) e.getSource();
-
-        try
-        {
-          /* Get the contained text. */
-          final String text = source.getText();
-
-          /* Parse the text. It must be a double. */
-          final double scale = Double.parseDouble( text.replace( ",", "." ) ); //$NON-NLS-1$ //$NON-NLS-2$
-
-          /* Set the map scale. */
-          MapUtilities.setMapScale( m_panel, scale );
-        }
-        catch( final NumberFormatException ex )
-        {
-          /* Tell the user. */
-          ErrorDialog.openError( source.getShell(), Messages.getString( "org.kalypso.ui.views.map.MapScaleStatusLineItem.5" ), Messages.getString( "org.kalypso.ui.views.map.MapScaleStatusLineItem.6" ), StatusUtilities.statusFromThrowable( ex ) ); //$NON-NLS-1$ //$NON-NLS-2$
-        }
+        handleTextDefaultSelected( source );
       }
     } );
 
@@ -237,8 +188,7 @@ public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution i
       @Override
       public void widgetDisposed( final DisposeEvent e )
       {
-        /* Remove the adapter listener from the active page. */
-        m_adapterListener.dispose();
+        handleTextDisposed();
       }
     } );
 
@@ -250,10 +200,32 @@ public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution i
     return m_composite;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater#setAdapter(org.eclipse.ui.IWorkbenchPart,
-   *      java.lang.Object)
-   */
+  protected void handleTextDisposed( )
+  {
+    /* Remove the adapter listener from the active page. */
+    m_adapterListener.dispose();
+  }
+
+  protected void handleTextDefaultSelected( final Text source )
+  {
+    try
+    {
+      /* Get the contained text. */
+      final String text = source.getText();
+
+      /* Parse the text. It must be a double. */
+      final double scale = Double.parseDouble( text.replace( ",", "." ) ); //$NON-NLS-1$ //$NON-NLS-2$
+
+      /* Set the map scale. */
+      MapUtilities.setMapScale( m_panel, scale );
+    }
+    catch( final NumberFormatException ex )
+    {
+      /* Tell the user. */
+      ErrorDialog.openError( source.getShell(), Messages.getString( "org.kalypso.ui.views.map.MapScaleStatusLineItem.5" ), Messages.getString( "org.kalypso.ui.views.map.MapScaleStatusLineItem.6" ), StatusUtilities.statusFromThrowable( ex ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+  }
+
   @Override
   public void setAdapter( final IWorkbenchPart part, final IMapPanel adapter )
   {
@@ -261,87 +233,35 @@ public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution i
       m_composite.setVisible( adapter != null );
 
     if( m_panel != null )
-      m_panel.removeMapPanelListener( this );
+      m_panel.removeMapPanelListener( m_panelListener );
 
     m_panel = adapter;
 
     if( m_panel != null )
     {
-      m_panel.addMapPanelListener( this );
+      m_panel.addMapPanelListener( m_panelListener );
 
-      if( m_text != null )
-      {
-        double mapScale = m_panel.getCurrentScale();
-        if( Double.isNaN( mapScale ) || Double.isInfinite( mapScale ) )
-          mapScale = 0;
-
-        final BigDecimal bigScale = new BigDecimal( mapScale, new MathContext( 3, RoundingMode.HALF_UP ) );
-        final String scaleString = bigScale.toPlainString();
-
-        m_text.setText( scaleString );
-      }
+      doScheduleUpdateScale();
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onExtentChanged(org.kalypso.ogc.gml.map.IMapPanel,
-   *      org.kalypsodeegree.model.geometry.GM_Envelope, org.kalypsodeegree.model.geometry.GM_Envelope)
-   */
-  @Override
-  public void onExtentChanged( final IMapPanel source, final GM_Envelope oldExtent, final GM_Envelope newExtent )
-  {
-    if( m_updateScaleJob != null )
-      m_updateScaleJob.cancel();
-
-    if( m_text != null && !m_text.isDisposed() )
-    {
-      final double mapScale = source.getCurrentScale();
-      m_updateScaleJob.setMapScale( mapScale );
-      m_updateScaleJob.schedule();
-    }
-  }
-
-  @Override
-  public void onMapModelChanged( final IMapPanel source, final IKalypsoLayerModell oldModel, final IKalypsoLayerModell newModel )
-  {
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onMessageChanged(org.kalypso.ogc.gml.map.MapPanel,
-   *      java.lang.String)
-   */
-  @Override
-  public void onMessageChanged( final IMapPanel source, final String message )
-  {
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onStatusChanged(org.kalypso.ogc.gml.map.IMapPanel)
-   */
-  @Override
-  public void onStatusChanged( final IMapPanel source )
-  {
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onMouseMoveEvent(org.kalypso.ogc.gml.map.IMapPanel,
-   *      org.kalypsodeegree.model.geometry.GM_Point, int, int)
-   */
-  @Override
-  public void onMouseMoveEvent( final IMapPanel source, final GM_Point gmPoint, final int mousex, final int mousey )
-  {
-  }
-
-  /**
-   * @see org.eclipse.jface.action.ContributionItem#dispose()
-   */
   @Override
   public void dispose( )
   {
     m_adapterListener.dispose();
     if( m_panel != null )
-      m_panel.removeMapPanelListener( this );
+      m_panel.removeMapPanelListener( m_panelListener );
 
     super.dispose();
+  }
+
+  protected void doScheduleUpdateScale( )
+  {
+    m_updateScaleJob.cancel();
+
+    if( m_text == null || m_text.isDisposed() )
+      return;
+
+    m_updateScaleJob.schedule( 50 );
   }
 }
