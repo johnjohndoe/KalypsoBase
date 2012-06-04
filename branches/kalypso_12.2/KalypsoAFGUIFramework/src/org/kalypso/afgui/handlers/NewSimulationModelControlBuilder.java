@@ -26,8 +26,8 @@ import org.kalypso.afgui.scenarios.TaskExecutionAuthority;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 import de.renew.workflow.base.ITask;
-import de.renew.workflow.connector.cases.IScenarioManager;
 import de.renew.workflow.connector.cases.IScenario;
+import de.renew.workflow.connector.cases.IScenarioManager;
 import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 

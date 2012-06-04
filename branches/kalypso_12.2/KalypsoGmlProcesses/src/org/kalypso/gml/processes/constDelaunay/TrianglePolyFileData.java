@@ -40,7 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml.processes.constDelaunay;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.util.List;
+
+import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.gml.processes.KalypsoGmlProcessesPlugin;
 
 /**
  * Class for presenting a triangle.exe poly-file<BR>
@@ -143,4 +154,86 @@ public class TrianglePolyFileData
     return size.toString();
   }
 
+  public IStatus writePolyFile( final File polyFile  )
+  {
+    BufferedOutputStream os = null;
+
+    try
+    {
+      os = new BufferedOutputStream( new FileOutputStream( polyFile ) );
+
+      final IStatus status = writePolyFile( os );
+
+      os.close();
+
+      return status;
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+      return new Status(IStatus.ERROR, KalypsoGmlProcessesPlugin.PLUGIN_ID, "Failed to write poly file", e);
+    }
+    finally
+    {
+      IOUtils.closeQuietly( os );
+    }
+  }
+
+  public IStatus writePolyFile( final BufferedOutputStream polyStream )
+  {
+    final PrintWriter writer = new PrintWriter( new OutputStreamWriter( polyStream ) );
+
+    // node header
+    writer.print( getVertexHeader() );
+    writer.println();
+
+    // nodes
+    final List<TriangleVertex> nodeList = getNodeList();
+    for( int i = 0; i < nodeList.size(); i++ )
+    {
+      final TriangleVertex triangleVertex = nodeList.get( i );
+      writer.print( i + " " + triangleVertex.getLine() ); //$NON-NLS-1$
+      writer.println();
+    }
+
+    // segment header
+    writer.print( getSegmentHeader() );
+    writer.println();
+
+    // segments
+    final List<TriangleSegment> segmentList = getSegmentList();
+    for( int i = 0; i < segmentList.size(); i++ )
+    {
+      final TriangleSegment segment = segmentList.get( i );
+      writer.print( i + " " + segment.getLine() ); //$NON-NLS-1$
+      writer.println();
+
+    }
+
+    final List<TriangleHole> holeList = getHoleList();
+    if( holeList != null && holeList.size() > 0 )
+    {
+
+      // holes header
+      writer.print( getHoleHeader() );
+      writer.println();
+
+      // holes
+      for( int i = 0; i < holeList.size(); i++ )
+      {
+        final TriangleHole hole = holeList.get( i );
+        writer.print( i + " " + hole.getLine() ); //$NON-NLS-1$
+        writer.println();
+      }
+    }
+    else
+    {
+      writer.print( "0" ); //$NON-NLS-1$
+      writer.println();
+    }
+
+    writer.flush();
+
+    return Status.OK_STATUS;
+  }
 }

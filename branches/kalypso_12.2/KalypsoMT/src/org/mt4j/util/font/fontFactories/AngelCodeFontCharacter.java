@@ -11,7 +11,6 @@ import org.mt4j.util.opengl.GL10;
 import org.mt4j.util.opengl.GLTexture;
 import org.mt4j.util.opengl.GLTexture.EXPANSION_FILTER;
 import org.mt4j.util.opengl.GLTexture.SHRINKAGE_FILTER;
-import org.mt4j.util.opengl.GLTexture.WRAP_MODE;
 
 import processing.core.PApplet;
 import processing.core.PGraphics;

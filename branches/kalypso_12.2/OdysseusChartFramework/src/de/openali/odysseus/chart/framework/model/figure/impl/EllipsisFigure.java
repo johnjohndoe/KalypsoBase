@@ -43,6 +43,7 @@ package de.openali.odysseus.chart.framework.model.figure.impl;
 import org.eclipse.swt.graphics.GC;
 
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 
 /**
  * @author Gernot Belger
@@ -68,6 +69,16 @@ public class EllipsisFigure extends AbstractFigure<IAreaStyle>
   @Override
   protected void paintFigure( final GC gc )
   {
-    gc.fillOval( m_leftX, m_upperY, m_width, m_height );
+    final IAreaStyle style = getStyle();
+
+    if( style.isFillVisible() )
+      gc.fillOval( m_leftX, m_upperY, m_width, m_height );
+
+    final ILineStyle stroke = style.getStroke();
+    if( stroke.isVisible() )
+    {
+      stroke.apply( gc );
+      gc.drawOval( m_leftX, m_upperY, m_width, m_height );
+    }
   }
 }

@@ -47,7 +47,6 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.poi.util.ArrayUtil;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ogc.gml.widgets.WidgetManager;
 import org.mt4j.AbstractMTApplication;

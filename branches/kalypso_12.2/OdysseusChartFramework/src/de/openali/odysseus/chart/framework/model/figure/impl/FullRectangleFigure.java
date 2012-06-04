@@ -44,6 +44,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 
 /**
  * Draws a rectangle with fill
@@ -52,28 +53,26 @@ import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
  */
 public class FullRectangleFigure extends AbstractFigure<IAreaStyle>
 {
-
   private Rectangle m_rect;
 
-  /**
-   * 
-   */
   public void setRectangle( final Rectangle rect )
   {
     m_rect = rect;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.figure.impl.AbstractFigure#paintFigure(org.eclipse.swt.graphics.GC)
-   */
   @Override
   protected void paintFigure( final GC gc )
   {
-    if( getStyle().getStroke().isVisible() )
-      gc.drawRectangle( m_rect );
-    if( getStyle().isFillVisible() )
+    final IAreaStyle style = getStyle();
+
+    if( style.isFillVisible() )
       gc.fillRectangle( m_rect );
 
+    final ILineStyle stroke = style.getStroke();
+    if( stroke.isVisible() )
+    {
+      stroke.apply( gc );
+      gc.drawRectangle( m_rect );
+    }
   }
-
 }

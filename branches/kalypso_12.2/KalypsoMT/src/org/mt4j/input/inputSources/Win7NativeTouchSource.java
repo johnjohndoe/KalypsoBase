@@ -17,7 +17,6 @@
  ***********************************************************************/
 package org.mt4j.input.inputSources;
 
-import org.mt4j.input.inputSources.IWin7NativeTouchSourceProvider.Native_WM_TOUCH_Event;
 import org.mt4j.util.MT4jSettings;
 import org.mt4j.util.logging.ILogger;
 import org.mt4j.util.logging.MTLoggerFactory;

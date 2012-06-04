@@ -21,10 +21,10 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 
 import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
-import de.renew.workflow.connector.cases.IScenarioManager;
 import de.renew.workflow.connector.cases.ICaseManagerListener;
 import de.renew.workflow.connector.cases.IScenario;
 import de.renew.workflow.connector.cases.IScenarioList;
+import de.renew.workflow.connector.cases.IScenarioManager;
 import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 import de.renew.workflow.connector.context.IActiveScenarioChangeListener;
