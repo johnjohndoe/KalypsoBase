@@ -41,7 +41,7 @@ import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 /**
  * Loads a template file in the current map view. Requires that the current context contains the map view. Use a
  * {@link ViewContextHandler} for this purpose.
- *
+ * 
  * @author Stefan Kurzbach
  */
 public class MapViewInputContextHandler extends AbstractHandler
@@ -64,7 +64,6 @@ public class MapViewInputContextHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
     /* project absolute location */
@@ -118,7 +117,6 @@ public class MapViewInputContextHandler extends AbstractHandler
   private IStorageEditorInput findInput( final IEvaluationContext context ) throws ExecutionException
   {
     // TODO: move everything into a helper class, this could be used for all template types.
-
     if( m_url.startsWith( "project://" ) ) //$NON-NLS-1$
     {
       final String url = m_url.substring( 10 );

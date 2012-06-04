@@ -43,6 +43,7 @@ package de.renew.workflow.connector.cases;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -68,7 +69,6 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import de.renew.workflow.connector.internal.WorkflowConnectorPlugin;
 import de.renew.workflow.connector.internal.cases.ScenarioManager;
 import de.renew.workflow.connector.internal.i18n.Messages;
-
 
 /**
  * @author Stefan Kurzbach
@@ -111,17 +111,21 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
   /**
    * Static version of {@link #getRelativeProjectPath(Case)}.
    */
-  public static IPath getProjectRelativePath( final IScenario caze )
+  public static IPath getProjectRelativePath( final IScenario scenario )
   {
-    final IScenario scenario = caze;
+    final String uri = scenario.getURI();
+    if( uri != null )
+    {
+      if( StringUtils.startsWithIgnoreCase( uri, "scenario://" ) )
+        return new Path( StringUtils.substringAfter( uri, "://" ) );
+
+      return new Path( uri );
+    }
+
     if( scenario.getParentScenario() != null )
-    {
       return getProjectRelativePath( scenario.getParentScenario() ).append( scenario.getName() );
-    }
-    else
-    {
-      return new Path( scenario.getName() );
-    }
+
+    return new Path( scenario.getName() );
   }
 
   @Override
