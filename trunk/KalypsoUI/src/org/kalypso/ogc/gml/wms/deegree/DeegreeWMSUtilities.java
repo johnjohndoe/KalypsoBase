@@ -129,6 +129,10 @@ public final class DeegreeWMSUtilities
       // some WMS-themes use style name="" and when deegree makes "STYLES=default" out of this, this does not work
       // I think style name="" is also not valid (can we be flexible ?)
       // ask me ( v.doemming@tuhh.de )
+
+      // REMARK: empty style name is valid according to WMS spec i.e. STYLES=,, means three styles for three layers, all
+      // names are empty i.e. the GetMap implementation is not correct :-(
+
       wmsParameter.put( "FORMAT", "image/png" ); //$NON-NLS-1$ //$NON-NLS-2$
       wmsParameter.put( "TRANSPARENT", "TRUE" ); //$NON-NLS-1$ //$NON-NLS-2$
       wmsParameter.put( "WIDTH", "" + width ); //$NON-NLS-1$ //$NON-NLS-2$

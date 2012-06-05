@@ -62,7 +62,7 @@ class TinIterator implements Iterator<TinPointer>
   {
     m_geometry = geoemtry;
     m_tinFeatures = tinFeatures;
-    m_pointer = searchNext( new TinPointer( null, 0, 0, null ) );
+    m_pointer = searchNext( new TinPointer( null, 0, -1, null ) );
   }
 
   private TinPointer searchNext( final TinPointer start )
@@ -122,18 +122,12 @@ class TinIterator implements Iterator<TinPointer>
     }
   }
 
-  /**
-   * @see java.util.Iterator#hasNext()
-   */
   @Override
   public boolean hasNext( )
   {
     return m_pointer != null;
   }
 
-  /**
-   * @see java.util.Iterator#next()
-   */
   @Override
   public TinPointer next( )
   {
@@ -146,10 +140,6 @@ class TinIterator implements Iterator<TinPointer>
     return pointer;
   }
 
-  /**
-   * @see java.util.Iterator#remove()
-   * @throws UnsupportedOperationException
-   */
   @Override
   public void remove( )
   {

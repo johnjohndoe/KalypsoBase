@@ -22,7 +22,6 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-
 import org.mt4j.util.PlatformUtil;
 import org.mt4j.util.opengl.GL10;
 import org.mt4j.util.opengl.GL11Plus;

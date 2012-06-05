@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mt4j.AbstractMTApplication;
-import org.mt4j.util.PlatformUtil;
 import org.mt4j.util.MT4jSettings;
+import org.mt4j.util.PlatformUtil;
 import org.mt4j.util.logging.ILogger;
 import org.mt4j.util.logging.MTLoggerFactory;
 import org.mt4j.util.math.Tools3D;

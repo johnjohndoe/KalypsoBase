@@ -13,14 +13,10 @@ import java.util.Properties;
 import org.mt4j.AbstractMTApplication;
 import org.mt4j.MTApplication;
 import org.mt4j.input.inputSources.KeyboardInputSource;
-import org.mt4j.input.inputSources.MouseInputSource;
 import org.mt4j.input.inputSources.MultipleMiceInputSource;
 import org.mt4j.input.inputSources.Tuio2DCursorInputSource;
 import org.mt4j.input.inputSources.Tuio2dObjectInputSource;
-import org.mt4j.input.inputSources.Win7NativeTouchSource;
 import org.mt4j.util.MT4jSettings;
-import org.mt4j.util.logging.ILogger;
-import org.mt4j.util.logging.MTLoggerFactory;
 
 /**
  * The Class DesktopInputManager.
