@@ -48,7 +48,6 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.lang3.ObjectUtils;
-import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmConstants;
@@ -56,6 +55,7 @@ import org.kalypso.model.wspm.core.IWspmNamespaces;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.observation.IObservation;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
@@ -148,7 +148,8 @@ public final class ProfileFeatureFactory implements IWspmConstants
       final IRelationType profileObjectsRelationType = (IRelationType) featureType.getProperty( memberQName );
       final FeatureList profileObjectList = FeatureFactory.createFeatureList( targetFeature, profileObjectsRelationType, new Feature[] {} );
 
-      final IFeatureType profileObjectType = featureType.getGMLSchema().getFeatureType( new QName( NS.OM, "Observation" ) ); //$NON-NLS-1$
+  
+      final IFeatureType profileObjectType = featureType.getGMLSchema().getFeatureType(IObservation.QNAME_OBSERVATION ); 
       final IRelationType profileObjectParentRelation = profileObjectList.getPropertyType();
 
       final IProfileObject[] profileObjects = profile.getProfileObjects();
