@@ -108,7 +108,7 @@ public class ScenarioManager implements IScenarioManager
 
   /**
    * Initializes the {@link ICaseManager} on the given project
-   *
+   * 
    * @param project
    *          the project, must not be <code>null</code>
    * @exception CoreException
@@ -123,6 +123,7 @@ public class ScenarioManager implements IScenarioManager
 
     final IFolder folder = project.getFolder( METADATA_FOLDER );
     m_metaDataFile = folder.getFile( METADATA_FILENAME );
+
     /* Prepare for exception: case-list with not cases */
     m_cases = new CaseListHandler( new CaseList(), m_project );
 
@@ -130,6 +131,7 @@ public class ScenarioManager implements IScenarioManager
     {
       if( !folder.exists() )
         folder.create( false, true, null );
+
       loadModel();
     }
     catch( final CoreException e )

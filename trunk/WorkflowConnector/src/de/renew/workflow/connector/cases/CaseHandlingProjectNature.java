@@ -57,7 +57,7 @@ import de.renew.workflow.connector.internal.WorkflowConnectorPlugin;
 /**
  * This project nature add the possibility to handle cases inside the project and keep information about the current
  * workflow state of cases
- *
+ * 
  * @author Stefan Kurzbach
  */
 public abstract class CaseHandlingProjectNature implements IProjectNature, ICaseManagerListener
@@ -130,14 +130,13 @@ public abstract class CaseHandlingProjectNature implements IProjectNature, ICase
    */
   public IPath getRelativeProjectPath( @SuppressWarnings("unused") final IScenario caze )
   {
-    return Path.EMPTY;// caze.getName() );
+    return Path.EMPTY; // caze.getName() );
   }
 
   @Override
   public void caseAdded( final IScenario caze )
   {
     // FIXME: does not belong here -> move into scenario framework; scenario should not be created in event handling
-
     final IFolder newFolder = m_project.getFolder( getRelativeProjectPath( caze ) );
 
     if( !newFolder.exists() )
@@ -172,5 +171,4 @@ public abstract class CaseHandlingProjectNature implements IProjectNature, ICase
       WorkflowConnectorPlugin.getDefault().getLog().log( status );
     }
   }
-
 }
