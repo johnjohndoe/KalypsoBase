@@ -160,8 +160,7 @@ public interface IMapPanel extends ISelectionProvider
   // TODO: try this out when we are fare from deploying
   void setUseFullSelection( boolean useFullSelection );
 
-  public Object getMTObject( );
+  Object getMTObject( );
 
-  public boolean isMultitouchEnabled( );
-
+  boolean isMultitouchEnabled( );
 }

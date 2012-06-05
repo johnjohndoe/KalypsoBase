@@ -4,6 +4,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
 import de.openali.odysseus.chart.framework.util.FigureUtilities;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
@@ -19,8 +20,18 @@ public class PolygonFigure extends AbstractFigure<IAreaStyle>
       return;
 
     final int[] intArray = FigureUtilities.pointArrayToIntArray( m_points );
-    gc.fillPolygon( intArray );
-    gc.drawPolygon( intArray );
+
+    final IAreaStyle style = getStyle();
+
+    if( style.isFillVisible() )
+      gc.fillPolygon( intArray );
+
+    final ILineStyle stroke = style.getStroke();
+    if( stroke.isVisible() )
+    {
+      stroke.apply( gc );
+      gc.drawPolygon( intArray );
+    }
   }
 
   public void setPoints( final Point[] points )

@@ -25,9 +25,9 @@ import org.mt4j.input.inputProcessors.globalProcessors.AbstractGlobalInputProces
 import org.mt4j.input.inputProcessors.globalProcessors.InputRetargeter;
 import org.mt4j.sceneManagement.transition.ITransition;
 import org.mt4j.util.ArrayDeque;
-import org.mt4j.util.PlatformUtil;
 import org.mt4j.util.MT4jSettings;
 import org.mt4j.util.MTColor;
+import org.mt4j.util.PlatformUtil;
 import org.mt4j.util.camera.Icamera;
 import org.mt4j.util.camera.MTCamera;
 import org.mt4j.util.logging.ILogger;

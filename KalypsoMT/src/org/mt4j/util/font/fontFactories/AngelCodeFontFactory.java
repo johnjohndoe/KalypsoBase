@@ -13,9 +13,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.StringTokenizer;
 
-import org.mt4j.util.PlatformUtil;
 import org.mt4j.util.MT4jSettings;
 import org.mt4j.util.MTColor;
+import org.mt4j.util.PlatformUtil;
 import org.mt4j.util.font.IFont;
 import org.mt4j.util.logging.ILogger;
 import org.mt4j.util.logging.MTLoggerFactory;

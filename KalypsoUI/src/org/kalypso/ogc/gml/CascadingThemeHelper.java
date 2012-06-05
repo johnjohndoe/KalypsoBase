@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jfree.util.ObjectUtils;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
@@ -48,9 +49,11 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
  */
 public class CascadingThemeHelper
 {
+  public static final String PROPERTY_THEME_ID = "themeId"; //$NON-NLS-1$
+
   /**
    * Finds Cascading theme with the given name from the map model. Searches only for instances of CascadingKalypsoTheme
-   *
+   * 
    * @param mapModell
    * @param themeName
    * @return CascadingKalypsoTheme, or null if no theme with that name is found
@@ -70,7 +73,7 @@ public class CascadingThemeHelper
   /**
    * Finds Cascading theme with the given name or given theme property from the map model. Searches only for instances
    * of CascadingKalypsoTheme. This code is for old projects, in which the maps didn't have the property set.
-   *
+   * 
    * @param mapModell
    * @param themeName
    * @param themeProperty
@@ -81,7 +84,7 @@ public class CascadingThemeHelper
     final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
     for( final IKalypsoTheme kalypsoTheme : allThemes )
     {
-      final String themeProp = kalypsoTheme.getProperty( "themeId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+      final String themeProp = kalypsoTheme.getProperty( PROPERTY_THEME_ID, StringUtils.EMPTY );
 
       if( kalypsoTheme instanceof IKalypsoCascadingTheme && kalypsoTheme.getName().getKey().equals( themeName ) )
         return (IKalypsoCascadingTheme) kalypsoTheme;
@@ -96,7 +99,7 @@ public class CascadingThemeHelper
   /**
    * Finds Cascading theme where the property 'themeId' is set to the given value. Searches only for instances of
    * CascadingKalypsoTheme
-   *
+   * 
    * @param mapModell
    * @param themeProperty
    * @return CascadingKalypsoTheme, or null if no theme with that name is found
@@ -106,7 +109,7 @@ public class CascadingThemeHelper
     final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
     for( final IKalypsoTheme kalypsoTheme : allThemes )
     {
-      final String themeProp = kalypsoTheme.getProperty( "themeId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+      final String themeProp = kalypsoTheme.getProperty( PROPERTY_THEME_ID, StringUtils.EMPTY );
 
       if( kalypsoTheme instanceof IKalypsoCascadingTheme && themeProp.equals( themeID ) )
         return (IKalypsoCascadingTheme) kalypsoTheme;
@@ -117,7 +120,7 @@ public class CascadingThemeHelper
 
   /**
    * Search for a theme by its feature-path.
-   *
+   * 
    * @return The child-theme which is a {@link IKalypsoFeatureTheme} and whose feature-path corresponds to the given
    *         one.
    */

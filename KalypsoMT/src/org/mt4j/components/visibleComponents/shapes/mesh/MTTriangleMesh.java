@@ -19,8 +19,6 @@ package org.mt4j.components.visibleComponents.shapes.mesh;
 
 import java.nio.Buffer;
 import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,9 +26,9 @@ import org.mt4j.components.bounds.BoundingSphere;
 import org.mt4j.components.bounds.IBoundingShape;
 import org.mt4j.components.visibleComponents.shapes.AbstractShape;
 import org.mt4j.components.visibleComponents.shapes.GeometryInfo;
-import org.mt4j.util.PlatformUtil;
 import org.mt4j.util.MT4jSettings;
 import org.mt4j.util.MTColor;
+import org.mt4j.util.PlatformUtil;
 import org.mt4j.util.math.BezierVertex;
 import org.mt4j.util.math.Ray;
 import org.mt4j.util.math.Tools3D;

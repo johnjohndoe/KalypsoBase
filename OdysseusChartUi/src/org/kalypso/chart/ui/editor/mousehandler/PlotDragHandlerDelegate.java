@@ -42,8 +42,8 @@ package org.kalypso.chart.ui.editor.mousehandler;
 
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.IChartHandler;
-import de.openali.odysseus.chart.framework.view.IPlotDragHandlerDelegate;
 import de.openali.odysseus.chart.framework.view.IChartHandlerManager;
+import de.openali.odysseus.chart.framework.view.IPlotDragHandlerDelegate;
 
 /**
  * delegate to manage handlers for mouse dragging; only one handler is active at a time

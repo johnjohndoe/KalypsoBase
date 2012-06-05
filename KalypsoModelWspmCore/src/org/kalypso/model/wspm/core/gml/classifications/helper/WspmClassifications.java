@@ -140,11 +140,11 @@ public final class WspmClassifications
     return plainValue;
   }
 
-  public static Double getAx( final IProfileRecord point )
+  public static double getAx( final IProfileRecord point )
   {
     final Double bewuchs = point.getBewuchsDp();
     if( Objects.isNotNull( bewuchs ) )
-      return bewuchs;
+      return bewuchs.doubleValue();
 
     final IVegetationClass clazz = WspmClassifications.findVegetationClass( point );
     if( Objects.isNotNull( clazz ) )
@@ -154,14 +154,14 @@ public final class WspmClassifications
         return decimal.doubleValue();
     }
 
-    return null;
+    return Double.NaN;
   }
 
-  public static Double getAy( final IProfileRecord point )
+  public static double getAy( final IProfileRecord point )
   {
     final Double bewuchs = point.getBewuchsDp();
     if( Objects.isNotNull( bewuchs ) )
-      return bewuchs;
+      return bewuchs.doubleValue();
 
     final IVegetationClass clazz = WspmClassifications.findVegetationClass( point );
     if( Objects.isNotNull( clazz ) )
@@ -171,7 +171,7 @@ public final class WspmClassifications
         return decimal.doubleValue();
     }
 
-    return null;
+    return Double.NaN;
   }
 
   public static IWspmClassification getClassification( final IProfil profile )
@@ -191,11 +191,11 @@ public final class WspmClassifications
     return project.getClassificationMember();
   }
 
-  public static Double getDp( final IProfileRecord point )
+  public static double getDp( final IProfileRecord point )
   {
     final Double bewuchs = point.getBewuchsDp();
     if( Objects.isNotNull( bewuchs ) )
-      return bewuchs;
+      return bewuchs.doubleValue();
 
     final IVegetationClass clazz = WspmClassifications.findVegetationClass( point );
     if( Objects.isNotNull( clazz ) )
@@ -205,7 +205,7 @@ public final class WspmClassifications
         return decimal.doubleValue();
     }
 
-    return null;
+    return Double.NaN;
   }
 
   public static boolean hasRoughnessClass( final IProfil profile )

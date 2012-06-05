@@ -41,7 +41,6 @@
 package org.kalypso.commons.databinding.conversion;
 
 import org.eclipse.core.runtime.IPath;
-import org.kalypso.commons.databinding.conversion.TypedConverter;
 
 /**
  * @author Gernot Belger
