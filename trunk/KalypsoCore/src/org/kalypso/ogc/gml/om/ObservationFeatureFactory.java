@@ -91,7 +91,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
 {
   public static final QName GML_METADATA = new QName( NS.GML3, "metaDataProperty" ); //$NON-NLS-1$
 
-  public static final QName OM_OBSERVATION = new QName( NS.OM, "Observation" ); //$NON-NLS-1$
+  public static final QName OM_OBSERVATION = IObservation.QNAME_OBSERVATION; //$NON-NLS-1$
 
   public static final QName OM_OBSERVED_PROP = new QName( NS.OM, "observedProperty" ); //$NON-NLS-1$
 

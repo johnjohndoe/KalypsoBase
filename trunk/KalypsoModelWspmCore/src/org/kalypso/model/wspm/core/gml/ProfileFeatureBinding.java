@@ -40,6 +40,7 @@ import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -463,5 +464,24 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
   public void setProfile( final IProfil profile )
   {
     ProfileFeatureFactory.toFeature( profile, this );
+  }
+
+  @SuppressWarnings("unchecked")
+  public void addProfileObject(final IProfileObject profileObject)
+  {
+    IFeatureType featureType = getFeatureType();
+    final IFeatureType profileObjectType = featureType.getGMLSchema().getFeatureType(IObservation.QNAME_OBSERVATION ); 
+    final List< Feature > objects = (List< Feature >) getProperty( MEMBER_OBSERVATION );
+    if (objects == null)
+      throw new UnsupportedOperationException();
+    
+    
+    final IRelationType profileObjectParentRelation = ((FeatureList)objects).getPropertyType();
+    final Feature profileObjectFeature = getWorkspace().createFeature( this, profileObjectParentRelation, profileObjectType );
+    objects.add( profileObjectFeature );
+    
+    ObservationFeatureFactory.toFeature( profileObject.getObservation(), profileObjectFeature );
+    
+    //TODO event handling
   }
 }
