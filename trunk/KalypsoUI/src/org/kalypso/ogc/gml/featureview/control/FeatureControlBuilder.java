@@ -57,7 +57,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.commons.i18n.ITranslator;
-import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.ColorUtilities;
 import org.kalypso.contribs.eclipse.swt.SWTUtilities;
@@ -330,7 +329,6 @@ public class FeatureControlBuilder
     if( property.getNamespaceURI().equals( FEATUREVIEW_NAMESPACE ) )
     {
       final String localPart = property.getLocalPart();
-      PluginUtilities.logToPlugin( KalypsoGisPlugin.getDefault(), IStatus.WARNING, "Still using localPart for property-name '" + localPart + "'. Use QName instead.", null ); //$NON-NLS-1$ //$NON-NLS-2$
       return featureType.getProperty( localPart );
     }
 
