@@ -64,7 +64,7 @@ import org.kalypso.module.conversion.ProjectConversionPage;
  * FIXME: generalize: should be useable for all modules.<br/>
  * This wizard converts project of old KalypsoHydrology versions into the current Kalypso version by creating a new
  * project and copying the the old data to the right places.<br/>
- *
+ * 
  * @author Gernot Belger
  */
 public class ProjectConversionWizard extends NewProjectWizard
@@ -105,6 +105,15 @@ public class ProjectConversionWizard extends NewProjectWizard
   }
 
   @Override
+  public void openProject( final IProject project ) throws CoreException
+  {
+    if( m_handler == null )
+      super.openProject( project );
+    else
+      m_handler.openProject( project );
+  }
+
+  @Override
   public IStatus postCreateProject( final IProject project, final ProjectTemplate template, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( "Project conversion", 100 );
@@ -112,9 +121,9 @@ public class ProjectConversionWizard extends NewProjectWizard
     if( m_handler != null )
       m_handler.postCreateProject( project, template, new SubProgressMonitor( monitor, 10 ) );
 
-    // FIXME: we sometimes get a dead lock, if the pre-conversion operation returns too fast; eclipse still refreshes
-    // the workspace
-    // and we get a conflict when we start modifying resources. How can we wait for the refresh to finish??
+    // FIXME: We sometimes get a dead lock, if the pre-conversion operation returns too fast;
+    // Eclipse still refreshes the workspace and we get a conflict when we start modifying resources.
+    // How can we wait for the refresh to finish??
 
     final File inputDir = m_conversionPage.getProjectDir();
     return doConvertProject( inputDir, project, new SubProgressMonitor( monitor, 90 ) );
@@ -169,14 +178,5 @@ public class ProjectConversionWizard extends NewProjectWizard
     shell.getDisplay().syncExec( runnable );
 
     return status[0];
-  }
-
-  @Override
-  public void openProject( final IProject project ) throws CoreException
-  {
-    if( m_handler == null )
-      super.openProject( project );
-    else
-      m_handler.openProject( project );
   }
 }

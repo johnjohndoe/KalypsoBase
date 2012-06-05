@@ -235,8 +235,8 @@ public class GeoStatus extends Feature_Impl implements IGeoStatus
   public void setException( final Throwable t )
   {
     // REMARK: we do serialize the exception as a byte stream and write it as string into the gml
-
     ObjectOutputStream oos = null;
+
     try
     {
       final ByteArrayOutputStream bos = new ByteArrayOutputStream();
