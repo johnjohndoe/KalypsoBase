@@ -40,6 +40,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusWithTime;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -273,7 +274,12 @@ public class StatusCollection extends Feature_Impl implements IStatusCollection
     geoStatus.setMessage( status.getMessage() );
     geoStatus.setException( status.getException() );
     geoStatus.setLocation( location );
-    geoStatus.setTime( time );
+
+    /* Handle a status with time priorized. */
+    if( status instanceof IStatusWithTime )
+      geoStatus.setTime( ((IStatusWithTime) status).getTime() );
+    else
+      geoStatus.setTime( time );
   }
 
   private void copyStatusValues( final IGeoStatus status, final IGeoStatus geoStatus )
