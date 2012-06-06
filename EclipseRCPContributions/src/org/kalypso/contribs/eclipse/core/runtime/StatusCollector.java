@@ -50,7 +50,7 @@ import org.eclipse.core.runtime.Status;
 
 /**
  * Default implementation of {@link IStatusCollector}.
- *
+ * 
  * @author Gernot Belger
  */
 public class StatusCollector implements IStatusCollector
@@ -256,5 +256,10 @@ public class StatusCollector implements IStatusCollector
     }
 
     return false;
+  }
+
+  protected String getPluginID( )
+  {
+    return m_pluginID;
   }
 }
