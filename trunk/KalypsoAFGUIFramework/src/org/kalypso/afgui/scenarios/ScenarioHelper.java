@@ -100,7 +100,7 @@ public class ScenarioHelper
     if( parentScenario == null )
       return scenario;
     else
-    return findRootScenario( parentScenario );
+      return findRootScenario( parentScenario );
   }
 
   public static IWorkflow findWorkflow( final IScenario scenario, final CaseHandlingProjectNature newProject )
@@ -198,7 +198,7 @@ public class ScenarioHelper
 
   /**
    * This function activates a given scenario.
-   *
+   * 
    * @param scenario
    *          The scenario.
    */
@@ -222,7 +222,7 @@ public class ScenarioHelper
 
   /**
    * This function returns the active scenario.
-   *
+   * 
    * @return The active scenario.
    */
   public static IScenario getActiveScenario( )
@@ -264,5 +264,4 @@ public class ScenarioHelper
 
     return null;
   }
-
 }

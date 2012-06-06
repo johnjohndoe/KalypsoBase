@@ -70,8 +70,10 @@ import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.contribs.eclipse.core.resources.FolderUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
+import de.renew.workflow.base.IWorkflow;
 import de.renew.workflow.cases.Case;
 import de.renew.workflow.cases.CaseList;
+import de.renew.workflow.connector.WorkflowProjectNature;
 import de.renew.workflow.connector.cases.ICaseManagerListener;
 import de.renew.workflow.connector.cases.IDerivedScenarioCopyFilter;
 import de.renew.workflow.connector.cases.IScenario;
@@ -80,6 +82,7 @@ import de.renew.workflow.connector.cases.IScenarioManager;
 import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 import de.renew.workflow.connector.internal.WorkflowConnectorPlugin;
 import de.renew.workflow.connector.internal.i18n.Messages;
+import de.renew.workflow.utils.ScenarioConfiguration;
 
 /**
  * @author Stefan Kurzbach
@@ -90,9 +93,9 @@ public class ScenarioManager implements IScenarioManager
 
   public static final String METADATA_FILENAME = "cases.xml"; //$NON-NLS-1$
 
-  private final JAXBContext m_jc = JaxbUtilities.createQuiet( org.kalypso.afgui.scenarios.ObjectFactory.class, de.renew.workflow.cases.ObjectFactory.class );
+  private static final JAXBContext JC = JaxbUtilities.createQuiet( org.kalypso.afgui.scenarios.ObjectFactory.class, de.renew.workflow.cases.ObjectFactory.class );
 
-  private static final ObjectFactory m_of = new org.kalypso.afgui.scenarios.ObjectFactory();
+  private static final ObjectFactory OF = new org.kalypso.afgui.scenarios.ObjectFactory();
 
   private final List<ICaseManagerListener> m_listeners = Collections.synchronizedList( new ArrayList<ICaseManagerListener>() );
 
@@ -165,7 +168,7 @@ public class ScenarioManager implements IScenarioManager
       try
       {
         final URL url = m_metaDataFile.getRawLocationURI().toURL();
-        final CaseList cases = (CaseList) m_jc.createUnmarshaller().unmarshal( url );
+        final CaseList cases = (CaseList) JC.createUnmarshaller().unmarshal( url );
         m_cases = new CaseListHandler( cases, m_project );
       }
       catch( final Throwable e )
@@ -217,7 +220,7 @@ public class ScenarioManager implements IScenarioManager
         {
           monitor.beginTask( "Szenarien speichern.", 5000 );
           final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-          m_jc.createMarshaller().marshal( m_cases.getCaseList(), bos );
+          JC.createMarshaller().marshal( m_cases.getCaseList(), bos );
           bos.close();
           monitor.worked( 2000 );
           final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );
@@ -305,7 +308,7 @@ public class ScenarioManager implements IScenarioManager
   @Override
   public IScenario createCase( final String name )
   {
-    final Scenario newScenario = m_of.createScenario();
+    final Scenario newScenario = OF.createScenario();
     newScenario.setName( name );
 
     final IScenario scenario = new ScenarioHandler( newScenario, m_project );
@@ -319,54 +322,102 @@ public class ScenarioManager implements IScenarioManager
   }
 
   @Override
-  public IScenario deriveScenario( final String name, final String description, final IScenario parentScenario ) throws CoreException
+  public IScenario deriveScenario( final String scenarioName, final String scenarioDescription, final IScenario parentScenario ) throws CoreException
   {
-    /* Validate path first */
-    final IFolder folder = parentScenario.getFolder();
-
-    final IStatus validateStatus = folder.getWorkspace().validateName( name, IResource.FOLDER );
-    if( !validateStatus.isOK() )
-      throw new CoreException( validateStatus );
-
-    final IFolder existingSubFolder = folder.getFolder( name );
-    if( existingSubFolder.exists() )
-    {
-      final String message = String.format( "Unable to create new scenario: Parent scenario already contains a folder with name '%s'", name );
-      final IStatus status = new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, message );
-      throw new CoreException( status );
-    }
-
-    final org.kalypso.afgui.scenarios.ObjectFactory of = m_of;
-    final Scenario newScenario = of.createScenario();
     try
     {
-      newScenario.setURI( parentScenario.getURI() + "/" + URLEncoder.encode( name, "UTF-8" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      /* Validate the path first. */
+      final IFolder parentFolder = parentScenario.getFolder();
+      final IStatus validateStatus = parentFolder.getWorkspace().validateName( scenarioName, IResource.FOLDER );
+      if( !validateStatus.isOK() )
+        throw new CoreException( validateStatus );
+
+      /* Get the derived folder. */
+      final IFolder derivedFolder = getDerivedFolder( parentFolder );
+
+      /* Get the scenario folder. */
+      final IFolder scenarioFolder = getScenarioFolder( scenarioName, parentFolder, derivedFolder );
+      if( scenarioFolder.exists() )
+        throw new CoreException( new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, String.format( "Unable to create new scenario: Parent scenario already contains a folder with name '%s'", scenarioName ) ) );
+
+      /* Create the uri. */
+      final String uri = createUri( scenarioName, parentScenario, derivedFolder );
+
+      /* Create the new scenario. */
+      final Scenario newScenario = OF.createScenario();
+      newScenario.setURI( uri );
+      newScenario.setName( scenarioName );
+      newScenario.setDescription( scenarioDescription );
+      newScenario.setParentScenario( parentScenario.getScenario() );
+
+      /* Get the list of derived scenarios of the parent. */
+      final ScenarioList derivedScenarios = parentScenario.getScenario().getDerivedScenarios();
+      if( derivedScenarios == null )
+      {
+        final ScenarioList newDerivedScenarios = OF.createScenarioList();
+        newDerivedScenarios.getScenarios().add( newScenario );
+        parentScenario.getScenario().setDerivedScenarios( newDerivedScenarios );
+      }
+      else
+        derivedScenarios.getScenarios().add( newScenario );
+
+      /* Save. */
+      persist( null );
+
+      /* Create the scenario handler. */
+      final ScenarioHandler scenario = new ScenarioHandler( newScenario, m_project );
+
+      /* Fire the case added event. */
+      fireCaseAdded( scenario );
+
+      return scenario;
     }
-    catch( final UnsupportedEncodingException e )
+    catch( final Exception ex )
     {
-      final IStatus status = StatusUtilities.statusFromThrowable( e );
-      throw new CoreException( status );
+      throw new CoreException( StatusUtilities.statusFromThrowable( ex ) );
     }
+  }
 
-    newScenario.setName( name );
-    newScenario.setDescription( description );
-    newScenario.setParentScenario( parentScenario.getScenario() );
-
-    ScenarioList derivedScenarios = parentScenario.getScenario().getDerivedScenarios();
-    if( derivedScenarios == null )
+  private IFolder getDerivedFolder( final IFolder parentFolder )
+  {
+    try
     {
-      derivedScenarios = of.createScenarioList();
-      parentScenario.getScenario().setDerivedScenarios( derivedScenarios );
+      final WorkflowProjectNature workflowProjectNature = WorkflowProjectNature.toThisNature( m_project );
+      final IWorkflow workflow = workflowProjectNature.getCurrentWorklist();
+      final ScenarioConfiguration scenarioConfiguration = workflow.getScenarioConfiguration();
+      if( scenarioConfiguration == null )
+        return null;
+
+      final String derivedFolder = scenarioConfiguration.getDerivedFolder();
+      if( derivedFolder == null || derivedFolder.length() == 0 )
+        return null;
+
+      return parentFolder.getFolder( derivedFolder );
     }
-    derivedScenarios.getScenarios().add( newScenario );
+    catch( final CoreException ex )
+    {
+      ex.printStackTrace();
+      return null;
+    }
+  }
 
-    persist( null );
+  private IFolder getScenarioFolder( final String scenarioName, final IFolder parentFolder, final IFolder derivedFolder )
+  {
+    IFolder scenarioFolder = null;
+    if( derivedFolder != null )
+      scenarioFolder = derivedFolder.getFolder( scenarioName );
+    else
+      scenarioFolder = parentFolder.getFolder( scenarioName );
 
-    final ScenarioHandler scenario = new ScenarioHandler( newScenario, m_project );
+    return scenarioFolder;
+  }
 
-    fireCaseAdded( scenario );
+  private String createUri( final String scenarioName, final IScenario parentScenario, final IFolder derivedFolder ) throws UnsupportedEncodingException
+  {
+    if( derivedFolder != null )
+      return String.format( "%s/%s", parentScenario.getURI(), URLEncoder.encode( derivedFolder.getName() + "/" + scenarioName, "UTF-8" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-    return scenario;
+    return String.format( "%s/%s", parentScenario.getURI(), URLEncoder.encode( scenarioName, "UTF-8" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
@@ -439,18 +490,17 @@ public class ScenarioManager implements IScenarioManager
   public void removeCase( final IScenario scenario, IProgressMonitor monitor ) throws CoreException
   {
     if( monitor == null )
-    {
       monitor = new NullProgressMonitor();
-    }
+
     try
     {
       monitor.beginTask( Messages.getString( "org.kalypso.afgui.scenarios.ScenarioManager.4" ), 100 ); //$NON-NLS-1$
-      final IScenarioList derivedScenarios = scenario.getDerivedScenarios();
+
       // only remove if no derived scenarios
+      final IScenarioList derivedScenarios = scenario.getDerivedScenarios();
       if( derivedScenarios != null && !derivedScenarios.getScenarios().isEmpty() )
-      {
         throw new CoreException( new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.afgui.scenarios.ScenarioManager.5" ) ) ); //$NON-NLS-1$
-      }
+
       final IScenario parentScenario = scenario.getParentScenario();
       if( parentScenario == null )
       {
@@ -461,29 +511,30 @@ public class ScenarioManager implements IScenarioManager
       {
         parentScenario.getDerivedScenarios().getScenarios().remove( scenario );
       }
+
       monitor.worked( 5 );
+
       persist( null );
     }
     finally
     {
       monitor.done();
     }
+
     fireCaseRemoved( scenario );
   }
 
   @Override
   public IScenario getCase( final String id )
   {
-    IScenario result = null;
     for( final IScenario scenario : getCases() )
     {
-      result = findScenario( scenario, id );
+      final IScenario result = findScenario( scenario, id );
       if( result != null )
-      {
         return result;
-      }
     }
-    return result;
+
+    return null;
   }
 
   @Override
@@ -495,9 +546,7 @@ public class ScenarioManager implements IScenarioManager
     {
       final Case myCaze = caze.getCase();
       if( myCaze instanceof Scenario )
-      {
         resultList.add( new ScenarioHandler( (Scenario) myCaze, caze.getProject() ) );
-      }
     }
 
     return resultList;
@@ -508,30 +557,23 @@ public class ScenarioManager implements IScenarioManager
    */
   private IScenario findScenario( final IScenario parentScenario, final String id )
   {
-    IScenario result = null;
-    final IScenarioList derivedScenarios = parentScenario.getDerivedScenarios();
     if( parentScenario.getURI().equals( id ) )
-    {
-      result = parentScenario;
-    }
-    else if( derivedScenarios != null )
+      return parentScenario;
+
+    final IScenarioList derivedScenarios = parentScenario.getDerivedScenarios();
+    if( derivedScenarios != null )
     {
       for( final IScenario derivedScenario : derivedScenarios.getScenarios() )
       {
         if( derivedScenario.getURI().equals( id ) )
-        {
-          result = derivedScenario;
-        }
-        else
-        {
-          result = findScenario( derivedScenario, id );
-        }
+          return derivedScenario;
+
+        final IScenario result = findScenario( derivedScenario, id );
         if( result != null )
-        {
           return result;
-        }
       }
     }
-    return result;
+
+    return null;
   }
 }

@@ -35,7 +35,7 @@ public class AddScenarioHandler extends AbstractHandler
     if( scenario == null )
     {
       final String commandName = HandlerUtils.getCommandName( event );
-      final String message = "Please active the scenario to derive from.";
+      final String message = "Please activate the scenario to derive from.";
       MessageDialog.openInformation( shell, commandName, message );
       return null;
     }
@@ -73,16 +73,13 @@ public class AddScenarioHandler extends AbstractHandler
     final ITask activeTask = plugin.getTaskExecutor().getActiveTask();
     if( !taskExecutionAuthority.canStopTask( activeTask ) )
     {
-      /* cancelled by user */
+      /* Cancelled by user */
       return;
     }
 
     /* Show wizard */
-
     final NewScenarioData data = new NewScenarioData( parentScenario );
-
     final NewScenarioWizard wizard = new NewScenarioWizard( data );
-
     final WizardDialog wd = new WizardDialog( shell, wizard );
     wd.open();
   }

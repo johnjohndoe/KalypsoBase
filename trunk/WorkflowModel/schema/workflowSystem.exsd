@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="de.renew.workflow.model">
+<schema targetNamespace="de.renew.workflow.model" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appInfo>
          <meta.schema plugin="de.renew.workflow.model" id="workflowSystem" name="workflowSystem"/>
@@ -11,6 +11,11 @@
    </annotation>
 
    <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
       <complexType>
          <sequence>
             <element ref="workflowSystem" minOccurs="1" maxOccurs="unbounded"/>
@@ -49,6 +54,9 @@
          </appInfo>
       </annotation>
       <complexType>
+         <sequence>
+            <element ref="scenarioConfiguration" minOccurs="0" maxOccurs="1"/>
+         </sequence>
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
@@ -79,6 +87,27 @@
       </complexType>
    </element>
 
+   <element name="scenarioConfiguration">
+      <complexType>
+         <attribute name="derivedFolder" type="string" use="required">
+            <annotation>
+               <documentation>
+                  This attribute contains the name of the folder, where all derived scenarios will be saved within a parent scenario.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         [Enter API information here.]
+      </documentation>
+   </annotation>
+
    <annotation>
       <appInfo>
          <meta.section type="since"/>
@@ -99,15 +128,6 @@
 
    <annotation>
       <appInfo>
-         <meta.section type="apiInfo"/>
-      </appInfo>
-      <documentation>
-         [Enter API information here.]
-      </documentation>
-   </annotation>
-
-   <annotation>
-      <appInfo>
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
@@ -115,13 +135,5 @@
       </documentation>
    </annotation>
 
-   <annotation>
-      <appInfo>
-         <meta.section type="copyright"/>
-      </appInfo>
-      <documentation>
-         
-      </documentation>
-   </annotation>
 
 </schema>

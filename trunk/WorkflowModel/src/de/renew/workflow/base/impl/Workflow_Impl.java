@@ -49,32 +49,38 @@ import de.renew.workflow.base.IWorkflow;
 import de.renew.workflow.base.Task;
 import de.renew.workflow.base.TaskGroup;
 import de.renew.workflow.base.Workflow;
+import de.renew.workflow.utils.ScenarioConfiguration;
 
 /**
  * @author Gernot Belger
  */
 public class Workflow_Impl extends TaskGroup_Impl implements IWorkflow
 {
-  private ITask m_defaultTask;
-
   private final URL m_context;
 
   private final ResourceBundle m_resourceBundle;
 
   /**
-   * @param i10nproperties
-   *          Used to i10n this workflow. If any human-readable string in the wrapped binding objects starts with an
-   *          '%', the value is interpreted as key of the given properties and the corresponding value will be returned.
+   * The scenario configuration contains options for handling a scenario. May be null.
+   */
+  private final ScenarioConfiguration m_scenarioConfiguration;
+
+  private ITask m_defaultTask;
+
+  /**
    * @param context
    *          The context against which relative references within the workflow.xml are resolved. Tyically the location
    *          where the workflow.xml is stored.
+   * @param scenarioConfiguration
+   *          The scenario configuration contains options for handling a scenario. May be null.
    */
-  public Workflow_Impl( final Workflow workflow, final ResourceBundle resourceBundle, final URL context )
+  public Workflow_Impl( final Workflow workflow, final ResourceBundle resourceBundle, final URL context, final ScenarioConfiguration scenarioConfiguration )
   {
     super( workflow, null );
 
     m_resourceBundle = resourceBundle;
     m_context = context;
+    m_scenarioConfiguration = scenarioConfiguration;
 
     final Task defaultTask = workflow.getDefaultTask();
     m_defaultTask = defaultTask == null ? null : new Task_Impl( defaultTask, this );
@@ -90,6 +96,12 @@ public class Workflow_Impl extends TaskGroup_Impl implements IWorkflow
   public ResourceBundle getResourceBundle( )
   {
     return m_resourceBundle;
+  }
+
+  @Override
+  public ScenarioConfiguration getScenarioConfiguration( )
+  {
+    return m_scenarioConfiguration;
   }
 
   @Override
