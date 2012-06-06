@@ -2,77 +2,74 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- *
+ * 
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- *
+ * 
  *  and
- *
+ *  
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- *
+ * 
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- *
+ * 
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- *
+ * 
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * 
  *  Contact:
- *
+ * 
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *
+ *   
  *  ---------------------------------------------------------------------------*/
-package de.renew.workflow.base;
-
-import java.net.URL;
-import java.util.ResourceBundle;
-
-import de.renew.workflow.utils.ScenarioConfiguration;
+package de.renew.workflow.utils;
 
 /**
- * Represents one workflow.
+ * The scenario configuration.
  * 
- * @author Gernot Belger
+ * @author Holger Albert
  */
-public interface IWorkflow extends ITaskGroup
+public class ScenarioConfiguration
 {
   /**
-   * Context against which relative references within the workflow should be resolved. Typically the location of the
-   * workflow.xml.
+   * The derived folder. All derived scenarios will be saved in it within a parent scenario.
    */
-  URL getResourceContext( );
-
-  ResourceBundle getResourceBundle( );
-
-  ScenarioConfiguration getScenarioConfiguration( );
-
-  ITask getDefaultTask( );
+  private final String m_derivedFolder;
 
   /**
-   * @param task
-   *          task which will be the new default task
+   * The constructor.
+   * 
+   * @param derivedFolder
+   *          The derived folder. All derived scenarios will be saved in it within a parent scenario.
    */
-  void setDefaultTask( ITask task );
+  public ScenarioConfiguration( final String derivedFolder )
+  {
+    m_derivedFolder = derivedFolder;
+  }
 
   /**
-   * @param uri
-   *          uri of task which will be the new default task
+   * This function returns the derived folder. All derived scenarios will be saved in it within a parent scenario.
+   * 
+   * @return The derived folder. All derived scenarios will be saved in it within a parent scenario.
    */
-  void setDefaultTask( String uri );
+  public String getDerivedFolder( )
+  {
+    return m_derivedFolder;
+  }
 }

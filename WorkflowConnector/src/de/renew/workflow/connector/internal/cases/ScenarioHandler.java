@@ -47,8 +47,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
@@ -59,7 +57,7 @@ import de.renew.workflow.connector.internal.WorkflowConnectorPlugin;
 
 /**
  * Wrapper interface for handling {@link Case} Objects
- *
+ * 
  * @author Dirk Kuch
  */
 public class ScenarioHandler implements IScenario
@@ -206,19 +204,6 @@ public class ScenarioHandler implements IScenario
     }
     else
       throw new IllegalStateException();
-
-    try
-    {
-      // TODO: ugly: lazy folder creation here? Scenario creatio code should handle this!
-      if( !folder.exists() )
-      {
-        folder.create( true, true, new NullProgressMonitor() );
-      }
-    }
-    catch( final CoreException e )
-    {
-      e.printStackTrace();
-    }
 
     return folder;
   }

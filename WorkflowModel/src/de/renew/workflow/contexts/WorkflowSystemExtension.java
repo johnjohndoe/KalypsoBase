@@ -62,10 +62,11 @@ import org.osgi.framework.Bundle;
 import de.renew.workflow.base.IWorkflow;
 import de.renew.workflow.base.Workflow;
 import de.renew.workflow.base.impl.Workflow_Impl;
+import de.renew.workflow.utils.ScenarioConfiguration;
 
 /**
  * Helper class to read and cache workflow systems from extension point.
- *
+ * 
  * @author Stefan Kurzbach
  */
 public class WorkflowSystemExtension
@@ -75,6 +76,10 @@ public class WorkflowSystemExtension
   private static Map<String, IWorkflow> THE_WORKFLOW_MAP = null;
 
   private final static String WORKFLOW_SYSTEM_EXTENSION_POINT = "de.renew.workflow.model.workflowSystem";
+
+  private static final String WORKFLOW_SYSTEM_SCENARIO_CONFIGURATION_ELEMENT = "scenarioConfiguration";
+
+  private static final String WORKFLOW_SYSTEM_SCENARIO_CONFIGURATION_DERIVED_FOLDER = "derivedFolder";
 
   public static IWorkflow getWorkflow( final String id )
   {
@@ -105,7 +110,7 @@ public class WorkflowSystemExtension
           final URL location = bundle.getEntry( filePath );
           if( location != null )
           {
-            final IWorkflow workflow = loadModel( location );
+            final IWorkflow workflow = loadModel( location, getScenarioConfiguration( element ) );
             THE_WORKFLOW_MAP.put( id, workflow );
           }
           else
@@ -127,13 +132,42 @@ public class WorkflowSystemExtension
     return THE_WORKFLOW_MAP;
   }
 
-  private static IWorkflow loadModel( final URL location ) throws CoreException
+  /**
+   * This function returns the scenario configuration. May be null, if the configuration element contains no children or
+   * only children of the wrong type.
+   * 
+   * @param element
+   *          The configuration element.
+   * 
+   * @return The scenario configuration or null.
+   */
+  private static ScenarioConfiguration getScenarioConfiguration( final IConfigurationElement element )
+  {
+    /* Get all configuration elements. */
+    final IConfigurationElement[] configurationElements = element.getChildren();
+    for( final IConfigurationElement configurationElement : configurationElements )
+    {
+      /* If the configuration element is not the correct element, continue. */
+      if( !WORKFLOW_SYSTEM_SCENARIO_CONFIGURATION_ELEMENT.equals( configurationElement.getName() ) )
+        continue;
+
+      /* Get the attributes. */
+      final String derivedFolder = configurationElement.getAttribute( WORKFLOW_SYSTEM_SCENARIO_CONFIGURATION_DERIVED_FOLDER );
+
+      /* We know, that there is only one configuration element of that type. */
+      return new ScenarioConfiguration( derivedFolder );
+    }
+
+    return null;
+  }
+
+  private static IWorkflow loadModel( final URL location, final ScenarioConfiguration scenarioConfiguration ) throws CoreException
   {
     try
     {
       final Workflow workflow = (Workflow) JC.createUnmarshaller().unmarshal( location );
       final ResourceBundle resourceBundle = ResourceBundleUtils.loadResourceBundle( location );
-      return new Workflow_Impl( workflow, resourceBundle, location );
+      return new Workflow_Impl( workflow, resourceBundle, location, scenarioConfiguration );
     }
     catch( final Throwable e )
     {

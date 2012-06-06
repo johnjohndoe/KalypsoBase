@@ -145,7 +145,6 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
       // this is a new derived scenario, so copy scenario contents of parent folder
       final IPath parentPath = getRelativeProjectPath( parentScenario );
       final List<IScenario> derivedScenarios = parentScenario.getDerivedScenarios().getScenarios();
-
       final List<IFolder> scenarioFolders = new ArrayList<IFolder>( derivedScenarios.size() );
       for( final IScenario derivedScenario : derivedScenarios )
         scenarioFolders.add( derivedScenario.getFolder() );
@@ -159,7 +158,6 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
       final IFolder parentFolder = getProject().getFolder( parentPath );
       final WorkspaceModifyOperation copyScenarioContentsOperation = new WorkspaceModifyOperation( parentFolder )
       {
-
         @Override
         protected void execute( final IProgressMonitor monitor ) throws CoreException
         {
