@@ -75,8 +75,10 @@ public class StatusCollectorWithTime extends StatusCollector
   public MultiStatus asMultiStatus( final String msg )
   {
     final IStatus[] children = getAllStati();
-    final Date now = new Date();
+    Date time = new Date();
+    if( children != null && children.length > 0 && children[0] instanceof IStatusWithTime )
+      time = ((IStatusWithTime) children[0]).getTime();
 
-    return new MultiStatusWithTime( getPluginID(), IStatus.OK, children, msg, now, null );
+    return new MultiStatusWithTime( getPluginID(), IStatus.OK, children, msg, time, null );
   }
 }
