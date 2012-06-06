@@ -305,7 +305,7 @@ public final class WspmProfileHelper
    *          The profile.
    * @return Geo position as GM_Point (untransformed).
    */
-  private static GM_Point getGeoPositionInternal( final double width, final IProfil profile ) throws Exception
+  private static GM_Point getGeoPositionInternal( final double width, final IProfil profile )
   {
     /* If no or only one geo referenced points are found, return. */
     final IRecord[] geoReferencedPoints = ProfilUtil.getGeoreferencedPoints( profile );
