@@ -102,15 +102,15 @@ public class ProfileFetureValidationListener implements IProfileProviderListener
         m_listener = new ValidationProfilListener( m_profile, file, null, source.getId() );
         m_profile.addProfilListener( m_listener );
       }
-
     }
   }
 
   private IFile getFile( final IProfileFeature source )
   {
     final GMLWorkspace workspace = source.getWorkspace();
+    if( workspace == null )
+      return null;
 
     return ResourceUtilities.findFileFromURL( workspace.getContext() );
   }
-
 }
