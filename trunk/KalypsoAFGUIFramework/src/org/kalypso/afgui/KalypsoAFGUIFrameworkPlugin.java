@@ -35,7 +35,6 @@ import org.osgi.framework.BundleContext;
 
 import de.renew.workflow.base.ITask;
 import de.renew.workflow.base.IWorkflow;
-import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.cases.IScenario;
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
@@ -52,7 +51,6 @@ import de.renew.workflow.contexts.WorkflowContextHandlerFactory;
  */
 public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
 {
-
   // The plug-in ID
   public static final String PLUGIN_ID = "org.kalypso.afgui"; //$NON-NLS-1$
 
@@ -63,7 +61,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
 
   private CaseHandlingSourceProvider m_szenarioSourceProvider;
 
-  private SzenarioDataProvider m_szenarioDataProvider;
+  private SzenarioDataProvider m_scenarioDataProvider;
 
   private TaskExecutionAuthority m_taskExecutionAuthority;
 
@@ -75,7 +73,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
   private final IActiveScenarioChangeListener m_activeContextChangeListener = new IActiveScenarioChangeListener()
   {
     @Override
-    public void activeScenarioChanged( final CaseHandlingProjectNature newProject, final IScenario caze )
+    public void activeScenarioChanged( final ScenarioHandlingProjectNature newProject, final IScenario caze )
     {
       handleScenarioChanged( newProject, caze );
     }
@@ -130,30 +128,30 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     if( !m_taskExecutor.stopActiveTask() )
       return false;
 
-      // IMPORTAN: only close views on workflow perspective
-      final IWorkbenchWindow window = workbench2.getActiveWorkbenchWindow();
-      if( Objects.isNull( window ) )
-        return true;
-
-      final IWorkbenchPage activePage = window.getActivePage();
-      if( Objects.isNull( activePage ) )
-        return true;
-
-      final IPerspectiveDescriptor perspective = activePage.getPerspective();
-      if( !ObjectUtils.equals( perspective.getId(), Perspective.ID ) )
-        return true;
-
-      // FIXME: check if this really is still needed. All views of workflow should not load any data upon start
-      // of workbench
-      // So the views may open, and the default task will close/open the needed views anyways.
-
-      // Close all views previously opened by any task in order to let them save themselves
-      final Collection<String> partsToKeep = new ArrayList<String>();
-      partsToKeep.add( WorkflowView.ID );
-      partsToKeep.add( PerspectiveWatcher.SCENARIO_VIEW_ID );
-      PerspectiveWatcher.cleanPerspective( workbench2, partsToKeep );
-
+    // IMPORTAN: only close views on workflow perspective
+    final IWorkbenchWindow window = workbench2.getActiveWorkbenchWindow();
+    if( Objects.isNull( window ) )
       return true;
+
+    final IWorkbenchPage activePage = window.getActivePage();
+    if( Objects.isNull( activePage ) )
+      return true;
+
+    final IPerspectiveDescriptor perspective = activePage.getPerspective();
+    if( !ObjectUtils.equals( perspective.getId(), Perspective.ID ) )
+      return true;
+
+    // FIXME: check if this really is still needed. All views of workflow should not load any data upon start
+    // of workbench
+    // So the views may open, and the default task will close/open the needed views anyways.
+
+    // Close all views previously opened by any task in order to let them save themselves
+    final Collection<String> partsToKeep = new ArrayList<String>();
+    partsToKeep.add( WorkflowView.ID );
+    partsToKeep.add( PerspectiveWatcher.SCENARIO_VIEW_ID );
+    PerspectiveWatcher.cleanPerspective( workbench2, partsToKeep );
+
+    return true;
   }
 
   protected void handleWorkbenchPostShutdown( )
@@ -165,15 +163,15 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
   {
     if( m_activeWorkContext == null )
     {
-      m_activeWorkContext = new ActiveWorkContext( ScenarioHandlingProjectNature.ID );
+      m_scenarioDataProvider = new SzenarioDataProvider();
+      m_activeWorkContext = new ActiveWorkContext( ScenarioHandlingProjectNature.ID, m_scenarioDataProvider );
       m_activeWorkContext.addActiveContextChangeListener( m_activeContextChangeListener );
     }
 
     if( m_szenarioSourceProvider == null )
     {
       // This can only be called if the platform has already been started
-      m_szenarioDataProvider = new SzenarioDataProvider();
-      m_szenarioSourceProvider = new CaseHandlingSourceProvider( m_activeWorkContext, m_szenarioDataProvider );
+      m_szenarioSourceProvider = new CaseHandlingSourceProvider( m_activeWorkContext );
 
       if( PlatformUI.isWorkbenchRunning() )
       {
@@ -247,7 +245,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
   public IScenarioDataProvider getDataProvider( )
   {
     startActiveWorkContext();
-    return m_szenarioDataProvider;
+    return m_scenarioDataProvider;
   }
 
   /**
@@ -291,7 +289,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
 
   // FIXME: move this into scenario activation code; should not be handled via listeners, probably only works because
   // this listener is always the first one to be executed...
-  protected void handleScenarioChanged( final CaseHandlingProjectNature nature, final IScenario caze )
+  protected void handleScenarioChanged( final ScenarioHandlingProjectNature nature, final IScenario caze )
   {
     // First initialize the context (and loading of all the models); else the default task does not work
     // REMARK: normally, this should be done inside the scenario framework (for example at the activeWorkContext)

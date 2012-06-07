@@ -42,84 +42,57 @@ package de.renew.workflow.connector.internal;
 
 import de.renew.workflow.connector.IWorkflowConnector;
 import de.renew.workflow.connector.IWorklistChangeListener;
-import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.connector.cases.IScenario;
+import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 
 /**
  * @author Gernot Belger
  */
 public class DummyConnector implements IWorkflowConnector
 {
-  /**
-   * @see de.renew.workflow.connector.IWorkflowConnector#addWorklistChangeListener(de.renew.workflow.connector.IWorklistChangeListener)
-   */
   @Override
   public void addWorklistChangeListener( final IWorklistChangeListener worklistChangeListener )
   {
   }
 
-  /**
-   * @see de.renew.workflow.connector.IWorkflowConnector#canRequest(java.lang.String)
-   */
   @Override
   public boolean canRequest( final String id )
   {
     return false;
   }
 
-  /**
-   * @see de.renew.workflow.connector.IWorkflowConnector#cancel(java.lang.String)
-   */
   @Override
   public void cancel( final String id )
   {
   }
 
-  /**
-   * @see de.renew.workflow.connector.IWorkflowConnector#confirm(java.lang.String, java.lang.Object)
-   */
   @Override
   public void confirm( final String id, final Object result )
   {
   }
 
-  /**
-   * @see de.renew.workflow.connector.IWorkflowConnector#connect()
-   */
   @Override
   public void connect( )
   {
   }
 
-  /**
-   * @see de.renew.workflow.connector.IWorkflowConnector#isActive(java.lang.String)
-   */
   @Override
   public boolean isActive( final String id )
   {
     return false;
   }
 
-  /**
-   * @see de.renew.workflow.connector.IWorkflowConnector#isConnected()
-   */
   @Override
   public boolean isConnected( )
   {
     return false;
   }
 
-  /**
-   * @see de.renew.workflow.connector.IWorkflowConnector#removeWorklistChangeListener(de.renew.workflow.connector.IWorklistChangeListener)
-   */
   @Override
   public void removeWorklistChangeListener( final IWorklistChangeListener worklistChangeListener )
   {
   }
 
-  /**
-   * @see de.renew.workflow.connector.IWorkflowConnector#request(java.lang.String)
-   */
   @Override
   public Object request( final String id )
   {
@@ -127,7 +100,7 @@ public class DummyConnector implements IWorkflowConnector
   }
 
   @Override
-  public void activeScenarioChanged( final CaseHandlingProjectNature newProject, final IScenario caze )
+  public void activeScenarioChanged( final ScenarioHandlingProjectNature newProject, final IScenario caze )
   {
   }
 

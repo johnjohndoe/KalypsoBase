@@ -67,9 +67,9 @@ import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 
 import de.renew.workflow.base.IWorkflow;
 import de.renew.workflow.connector.WorkflowProjectNature;
-import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.connector.cases.IScenario;
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
+import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 import de.renew.workflow.connector.worklist.ITaskExecutor;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
@@ -103,7 +103,7 @@ public class ScenarioHelper
       return findRootScenario( parentScenario );
   }
 
-  public static IWorkflow findWorkflow( final IScenario scenario, final CaseHandlingProjectNature newProject )
+  public static IWorkflow findWorkflow( final IScenario scenario, final ScenarioHandlingProjectNature newProject )
   {
     try
     {
@@ -129,7 +129,7 @@ public class ScenarioHelper
   }
 
   // FIXME: probably (hopefully) not needed any more...; remove?
-  public static boolean ensureBackwardsCompatibility( final CaseHandlingProjectNature nature )
+  public static boolean ensureBackwardsCompatibility( final ScenarioHandlingProjectNature nature )
   {
     // FIXME: this is dirty fix only for this release 2.3
     // should be implemented in other way, we just do not have any time now
