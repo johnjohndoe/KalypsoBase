@@ -161,7 +161,7 @@ public final class WorkflowHelper
   public static ITask getActiveTask( )
   {
     /* Get the active task. */
-    final ITaskExecutor taskExecutor = KalypsoAFGUIFrameworkPlugin.getDefault().getTaskExecutor();
+    final ITaskExecutor taskExecutor = KalypsoAFGUIFrameworkPlugin.getTaskExecutor();
 
     return taskExecutor.getActiveTask();
   }
@@ -176,7 +176,7 @@ public final class WorkflowHelper
    */
   public static IStatus activateTask( final ITask task )
   {
-    final ITaskExecutor taskExecutor = KalypsoAFGUIFrameworkPlugin.getDefault().getTaskExecutor();
+    final ITaskExecutor taskExecutor = KalypsoAFGUIFrameworkPlugin.getTaskExecutor();
 
     return taskExecutor.execute( task );
   }

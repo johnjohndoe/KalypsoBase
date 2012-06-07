@@ -49,18 +49,13 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
-import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.internal.SzenarioDataProvider;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.EclipsePlatformContributionsExtensions;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
@@ -68,28 +63,15 @@ import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import de.renew.workflow.base.IWorkflow;
 import de.renew.workflow.connector.WorkflowProjectNature;
 import de.renew.workflow.connector.cases.IScenario;
-import de.renew.workflow.connector.cases.IScenarioDataProvider;
 import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 import de.renew.workflow.connector.worklist.ITaskExecutor;
-import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * @author Stefan Kurzbach
  */
 public class ScenarioHelper
 {
-  /**
-   * Retrieves the folder of the currently active scenario via the current evaluation context of the handler service.
-   */
-  public static IScenarioDataProvider getScenarioDataProvider( )
-  {
-    final IWorkbench workbench = PlatformUI.getWorkbench();
-    final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-    final IEvaluationContext context = handlerService.getCurrentState();
-    return (SzenarioDataProvider) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
-  }
-
   /**
    * Find the root of the given scenario.<br>
    * If the scenario has no parent, itself is returned.
@@ -204,19 +186,18 @@ public class ScenarioHelper
    */
   public static void activateScenario( final IScenario scenario ) throws CoreException
   {
-    final KalypsoAFGUIFrameworkPlugin plugin = KalypsoAFGUIFrameworkPlugin.getDefault();
-    final ActiveWorkContext context = plugin.getActiveWorkContext();
+    final ActiveWorkContext context = KalypsoAFGUIFrameworkPlugin.getActiveWorkContext();
 
-    final ITaskExecutor executor = plugin.getTaskExecutor();
+    final IScenario currentCase = context.getCurrentCase();
+    if( currentCase == scenario )
+      return;
 
-    /* Only do it, if the scenario is not already active. */
-    if( context.getCurrentCase() != scenario )
+    // TODO: move outside, task must be stopped by clients
+    final ITaskExecutor executor = KalypsoAFGUIFrameworkPlugin.getTaskExecutor();
+    if( executor.stopActiveTask() )
     {
-      if( executor.stopActiveTask() )
-      {
-        /* Activate the scenario. */
-        context.setCurrentCase( scenario );
-      }
+      /* Activate the scenario. */
+      context.setCurrentCase( scenario );
     }
   }
 
@@ -227,8 +208,7 @@ public class ScenarioHelper
    */
   public static IScenario getActiveScenario( )
   {
-    final KalypsoAFGUIFrameworkPlugin plugin = KalypsoAFGUIFrameworkPlugin.getDefault();
-    final ActiveWorkContext activeWorkContext = plugin.getActiveWorkContext();
+    final ActiveWorkContext activeWorkContext = KalypsoAFGUIFrameworkPlugin.getActiveWorkContext();
 
     return activeWorkContext.getCurrentCase();
   }

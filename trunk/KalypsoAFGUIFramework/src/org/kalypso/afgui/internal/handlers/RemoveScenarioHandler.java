@@ -72,7 +72,7 @@ public class RemoveScenarioHandler extends AbstractHandler
       return;
     }
 
-    if( KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase() == scenario )
+    if( KalypsoAFGUIFrameworkPlugin.getActiveWorkContext().getCurrentCase() == scenario )
     {
       MessageDialog.openInformation( shell, title, Messages.getString( "org.kalypso.afgui.handlers.RemoveScenarioHandler.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return;

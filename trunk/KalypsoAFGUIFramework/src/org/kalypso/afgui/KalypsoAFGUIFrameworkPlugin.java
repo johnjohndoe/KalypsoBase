@@ -120,7 +120,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     }
   }
 
-  protected boolean handleWorkbenchPreShutdown( final boolean forced, final IWorkbench workbench2 )
+  boolean handleWorkbenchPreShutdown( final boolean forced, final IWorkbench workbench2 )
   {
     if( forced )
       return false;
@@ -154,7 +154,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     return true;
   }
 
-  protected void handleWorkbenchPostShutdown( )
+  void handleWorkbenchPostShutdown( )
   {
     stopSzenarioSourceProvider();
   }
@@ -226,26 +226,41 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     super.stop( context );
   }
 
-  public ActiveWorkContext getActiveWorkContext( )
+  public static ActiveWorkContext getActiveWorkContext( )
   {
-    startActiveWorkContext();
-    return m_activeWorkContext;
+    if( plugin == null )
+      throw new IllegalStateException();
+
+    plugin.startActiveWorkContext();
+    return plugin.m_activeWorkContext;
   }
 
-  public ITaskExecutor getTaskExecutor( )
+  public static ITaskExecutor getTaskExecutor( )
   {
-    return m_taskExecutor;
+    if( plugin == null )
+      throw new IllegalStateException();
+
+    return plugin.m_taskExecutor;
   }
 
-  public ITaskExecutionAuthority getTaskExecutionAuthority( )
+  public static ITaskExecutionAuthority getTaskExecutionAuthority( )
   {
-    return m_taskExecutionAuthority;
+    if( plugin == null )
+      throw new IllegalStateException();
+
+    return plugin.m_taskExecutionAuthority;
   }
 
-  public IScenarioDataProvider getDataProvider( )
+  /**
+   * Retrieves the global data provider which gives access to the data of the current scenario.
+   */
+  public static IScenarioDataProvider getDataProvider( )
   {
-    startActiveWorkContext();
-    return m_scenarioDataProvider;
+    if( plugin == null )
+      throw new IllegalStateException();
+
+    plugin.startActiveWorkContext();
+    return plugin.m_scenarioDataProvider;
   }
 
   /**
@@ -289,7 +304,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
 
   // FIXME: move this into scenario activation code; should not be handled via listeners, probably only works because
   // this listener is always the first one to be executed...
-  protected void handleScenarioChanged( final ScenarioHandlingProjectNature nature, final IScenario caze )
+  void handleScenarioChanged( final ScenarioHandlingProjectNature nature, final IScenario caze )
   {
     // First initialize the context (and loading of all the models); else the default task does not work
     // REMARK: normally, this should be done inside the scenario framework (for example at the activeWorkContext)

@@ -120,7 +120,7 @@ public class MapViewInputContextHandler extends AbstractHandler
     if( m_url.startsWith( "project://" ) ) //$NON-NLS-1$
     {
       final String url = m_url.substring( 10 );
-      final IProject project = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase().getProject();
+      final IProject project = KalypsoAFGUIFrameworkPlugin.getActiveWorkContext().getCurrentCase().getProject();
 
       final IFile file = project.getFile( url );
       return new FileEditorInput( file );
@@ -130,7 +130,7 @@ public class MapViewInputContextHandler extends AbstractHandler
     if( m_url.startsWith( "base://" ) ) //$NON-NLS-1$
     {
       final String url = m_url.substring( 7 );
-      final IScenario caze = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase();
+      final IScenario caze = KalypsoAFGUIFrameworkPlugin.getActiveWorkContext().getCurrentCase();
       final IScenario root = ScenarioHelper.findRootScenario( caze );
 
       final IFolder rootFolder = root.getFolder();
@@ -163,7 +163,7 @@ public class MapViewInputContextHandler extends AbstractHandler
   {
     try
     {
-      final IContainer scenarioFolder = ScenarioHelper.getScenarioDataProvider().getScenarioFolder();
+      final IContainer scenarioFolder = KalypsoAFGUIFrameworkPlugin.getDataProvider().getScenarioFolder();
 
       return CatalogStorage.createEditorInput( m_url, scenarioFolder );
     }

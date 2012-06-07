@@ -47,7 +47,7 @@ public class AddScenarioHandler extends AbstractHandler
 
   private IScenario findParentScenario( final ISelection selection )
   {
-    final ActiveWorkContext context = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext();
+    final ActiveWorkContext context = KalypsoAFGUIFrameworkPlugin.getActiveWorkContext();
     final IScenario currentCase = context.getCurrentCase();
 
     if( !(selection instanceof IStructuredSelection) )
@@ -68,9 +68,8 @@ public class AddScenarioHandler extends AbstractHandler
   public static void stopTaskAndOpenWizard( final Shell shell, final IScenario parentScenario )
   {
     /* Stop current task */
-    final KalypsoAFGUIFrameworkPlugin plugin = KalypsoAFGUIFrameworkPlugin.getDefault();
-    final ITaskExecutionAuthority taskExecutionAuthority = plugin.getTaskExecutionAuthority();
-    final ITask activeTask = plugin.getTaskExecutor().getActiveTask();
+    final ITaskExecutionAuthority taskExecutionAuthority = KalypsoAFGUIFrameworkPlugin.getTaskExecutionAuthority();
+    final ITask activeTask = KalypsoAFGUIFrameworkPlugin.getTaskExecutor().getActiveTask();
     if( !taskExecutionAuthority.canStopTask( activeTask ) )
     {
       /* Cancelled by user */

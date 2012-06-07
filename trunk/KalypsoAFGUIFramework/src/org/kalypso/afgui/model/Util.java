@@ -42,11 +42,8 @@ package org.kalypso.afgui.model;
 
 import javax.xml.namespace.QName;
 
-import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.IHandlerService;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.internal.i18n.Messages;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.GMLSchemaException;
@@ -61,7 +58,6 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 import de.renew.workflow.connector.cases.IModel;
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
-import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * TODO: most of the methods should be moved into {@link FeatureHelper}.
@@ -77,10 +73,7 @@ public class Util
   {
     try
     {
-      final IWorkbench workbench = PlatformUI.getWorkbench();
-      final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
-      final IEvaluationContext currentState = service.getCurrentState();
-      final IScenarioDataProvider caseDataProvider = (IScenarioDataProvider) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+      final IScenarioDataProvider caseDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       if( caseDataProvider instanceof ICommandPoster )
         return ((ICommandPoster) caseDataProvider).getCommandableWorkSpace( modelClass.getName() );
       else
@@ -97,10 +90,7 @@ public class Util
   {
     try
     {
-      final IWorkbench workbench = PlatformUI.getWorkbench();
-      final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
-      final IEvaluationContext currentState = service.getCurrentState();
-      final IScenarioDataProvider caseDataProvider = (IScenarioDataProvider) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+      final IScenarioDataProvider caseDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       if( caseDataProvider instanceof ICommandPoster )
         ((ICommandPoster) caseDataProvider).postCommand( modelClass.getName(), command );
       else
@@ -120,11 +110,7 @@ public class Util
   {
     try
     {
-      final IWorkbench workbench = PlatformUI.getWorkbench();
-      final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
-      final IEvaluationContext currentState = service.getCurrentState();
-
-      final IScenarioDataProvider caseDataProvider = (IScenarioDataProvider) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_PROVIDER_NAME );
+      final IScenarioDataProvider caseDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       return caseDataProvider.getModel( modelId );
     }
     catch( final Throwable th )

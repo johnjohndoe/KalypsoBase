@@ -69,7 +69,7 @@ public class ScenarioDataChangeListenerExtension
 
   private void init( )
   {
-    final IScenarioDataProvider provider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
+    final IScenarioDataProvider provider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
 
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
     final IExtensionPoint extensionPoint = registry.getExtensionPoint( EXTENSION_POINT );

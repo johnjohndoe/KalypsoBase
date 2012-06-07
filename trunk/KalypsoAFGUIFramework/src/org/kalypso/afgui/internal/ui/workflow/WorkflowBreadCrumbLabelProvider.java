@@ -83,7 +83,7 @@ public class WorkflowBreadCrumbLabelProvider extends LabelProvider implements IF
   @Override
   public Font getFont( final Object element )
   {
-    final IScenario currentScenario = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext().getCurrentCase();
+    final IScenario currentScenario = KalypsoAFGUIFrameworkPlugin.getActiveWorkContext().getCurrentCase();
     if( element.equals( currentScenario ) )
       return JFaceResources.getFontRegistry().getBold( JFaceResources.DEFAULT_FONT );
 

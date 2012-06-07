@@ -56,7 +56,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
   {
     m_showResources = showResources;
 
-    final ActiveWorkContext activeWorkContext = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext();
+    final ActiveWorkContext activeWorkContext = KalypsoAFGUIFrameworkPlugin.getActiveWorkContext();
     activeWorkContext.addActiveContextChangeListener( this );
 
     ResourcesPlugin.getWorkspace().addResourceChangeListener( m_resourceListener, IResourceChangeEvent.POST_CHANGE );
@@ -223,7 +223,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
   @Override
   public void dispose( )
   {
-    final ActiveWorkContext activeWorkContext = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext();
+    final ActiveWorkContext activeWorkContext = KalypsoAFGUIFrameworkPlugin.getActiveWorkContext();
     activeWorkContext.removeActiveContextChangeListener( this );
     super.dispose();
   }
