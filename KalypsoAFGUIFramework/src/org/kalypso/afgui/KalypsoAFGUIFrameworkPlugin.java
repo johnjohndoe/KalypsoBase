@@ -20,7 +20,6 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
-import org.eclipse.ui.services.IEvaluationService;
 import org.kalypso.afgui.internal.PerspectiveWatcher;
 import org.kalypso.afgui.internal.SzenarioDataProvider;
 import org.kalypso.afgui.internal.TaskExecutionAuthority;
@@ -35,7 +34,6 @@ import org.osgi.framework.BundleContext;
 
 import de.renew.workflow.base.ITask;
 import de.renew.workflow.base.IWorkflow;
-import de.renew.workflow.connector.cases.CaseHandlingSourceProvider;
 import de.renew.workflow.connector.cases.IScenario;
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
 import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
@@ -58,8 +56,6 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
   private static KalypsoAFGUIFrameworkPlugin plugin;
 
   private ActiveWorkContext m_activeWorkContext;
-
-  private CaseHandlingSourceProvider m_szenarioSourceProvider;
 
   private SzenarioDataProvider m_scenarioDataProvider;
 
@@ -166,26 +162,16 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
       m_scenarioDataProvider = new SzenarioDataProvider();
       m_activeWorkContext = new ActiveWorkContext( ScenarioHandlingProjectNature.ID, m_scenarioDataProvider );
       m_activeWorkContext.addActiveContextChangeListener( m_activeContextChangeListener );
-    }
-
-    if( m_szenarioSourceProvider == null )
-    {
-      // This can only be called if the platform has already been started
-      m_szenarioSourceProvider = new CaseHandlingSourceProvider( m_activeWorkContext );
 
       if( PlatformUI.isWorkbenchRunning() )
       {
-        final IWorkbench workbench = PlatformUI.getWorkbench();
-        final IEvaluationService evalService = (IEvaluationService) workbench.getService( IEvaluationService.class );
         // FIXME: must be called in ui thread
-        evalService.addSourceProvider( m_szenarioSourceProvider );
-
         new WorkspaceJob( "" ) //$NON-NLS-1$
         {
           @Override
           public IStatus runInWorkspace( final IProgressMonitor monitor )
           {
-            // register sceanrio listeners
+            // register scenario listeners
             ScenarioDataChangeListenerExtension.getInstance();
 
             return Status.OK_STATUS;
@@ -208,16 +194,10 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
       final IWorkbench workbench = PlatformUI.getWorkbench();
       if( !workbench.isClosing() )
       {
-        final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-        if( handlerService != null )
-        {
-          handlerService.removeSourceProvider( m_szenarioSourceProvider );
-        }
         final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
         if( commandService != null )
-        {
           commandService.removeExecutionListener( m_taskExecutionListener );
-        }
+
         stopSzenarioSourceProvider();
       }
     }
@@ -265,7 +245,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
 
   /**
    * Returns the shared instance
-   *
+   * 
    * @return the shared instance
    */
   public static KalypsoAFGUIFrameworkPlugin getDefault( )
@@ -275,7 +255,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
 
   /**
    * Returns an image descriptor for the image file at the given plug-in relative path
-   *
+   * 
    * @param path
    *          the path
    * @return the image descriptor
@@ -306,12 +286,8 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
   // this listener is always the first one to be executed...
   void handleScenarioChanged( final ScenarioHandlingProjectNature nature, final IScenario caze )
   {
-    // First initialize the context (and loading of all the models); else the default task does not work
-    // REMARK: normally, this should be done inside the scenario framework (for example at the activeWorkContext)
-    // But this is not possible because of the current dependencies between these code parts
-    m_szenarioSourceProvider.resetCase();
-
-    // Then execute default task
+    // TODO: is this the good place to do this?
+    // Execute default task
     final IWorkflow workflow = ScenarioHelper.findWorkflow( caze, nature );
     // lazy check and insurance for backwards compatibility
     ScenarioHelper.ensureBackwardsCompatibility( nature );

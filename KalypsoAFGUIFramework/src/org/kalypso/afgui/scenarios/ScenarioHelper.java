@@ -217,7 +217,7 @@ public class ScenarioHelper
    * TODO: probably that does not belong here, move to ScenarioHelper instead? This method will try to find a model file
    * in this scenario and its parent scenarios. Needs refactoring!
    */
-  public static IFolder findModelContext( final IFolder szenarioFolder, final String modelFile )
+  public static IContainer findModelContext( final IContainer szenarioFolder, final String modelFile )
   {
     if( szenarioFolder == null )
       return null;
@@ -228,7 +228,7 @@ public class ScenarioHelper
 
     final IContainer parent = szenarioFolder.getParent();
     if( parent.getType() != IResource.PROJECT )
-      return findModelContext( (IFolder) parent, modelFile );
+      return findModelContext( parent, modelFile );
 
     return null;
   }
@@ -236,7 +236,7 @@ public class ScenarioHelper
   /**
    * Returns the current scenario's base folder
    */
-  public static IContainer getScenarioFolder( )
+  public static IFolder getScenarioFolder( )
   {
     final IScenario scenario = getActiveScenario();
     if( scenario != null )

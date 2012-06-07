@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.ISources;
@@ -36,7 +37,6 @@ import org.kalypso.ogc.gml.widgets.IWidgetManager;
 import org.kalypso.ui.views.map.MapView;
 
 import de.renew.workflow.connector.cases.IScenario;
-import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * Loads a template file in the current map view. Requires that the current context contains the map view. Use a
@@ -58,16 +58,13 @@ public class MapViewInputContextHandler extends AbstractHandler
     Assert.isNotNull( m_url, Messages.getString( "org.kalypso.afgui.handlers.MapViewInputContextHandler.0" ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
     /* project absolute location */
-    final IStorageEditorInput input = findInput( context );
+    final IStorageEditorInput input = findInput();
 
     // find map view
     final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
@@ -114,7 +111,7 @@ public class MapViewInputContextHandler extends AbstractHandler
     }
   }
 
-  private IStorageEditorInput findInput( final IEvaluationContext context ) throws ExecutionException
+  private IStorageEditorInput findInput( ) throws ExecutionException
   {
     // TODO: move everything into a helper class, this could be used for all template types.
     if( m_url.startsWith( "project://" ) ) //$NON-NLS-1$
@@ -144,7 +141,7 @@ public class MapViewInputContextHandler extends AbstractHandler
     }
 
     /* current scenario relative location */
-    final IFolder folder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+    final IContainer folder = ScenarioHelper.getScenarioFolder();
     if( folder == null )
     {
       throw new ExecutionException( Messages.getString( "org.kalypso.afgui.handlers.MapViewInputContextHandler.4" ) ); //$NON-NLS-1$
@@ -155,7 +152,7 @@ public class MapViewInputContextHandler extends AbstractHandler
     }
 
     // find file in active scenario folder
-    final IFile file = folder.getFile( m_url );
+    final IFile file = folder.getFile( Path.fromPortableString( m_url ) );
     return new FileEditorInput( file );
   }
 
