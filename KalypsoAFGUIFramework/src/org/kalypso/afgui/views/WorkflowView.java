@@ -19,8 +19,8 @@ import org.kalypso.afgui.internal.ui.workflow.WorkflowControl;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 
 import de.renew.workflow.base.IWorkflow;
-import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.connector.cases.IScenario;
+import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 import de.renew.workflow.connector.context.ActiveWorkContext;
 import de.renew.workflow.connector.context.IActiveScenarioChangeListener;
 
@@ -40,7 +40,7 @@ public class WorkflowView extends ViewPart
   private final IActiveScenarioChangeListener m_contextListener = new IActiveScenarioChangeListener()
   {
     @Override
-    public void activeScenarioChanged( final CaseHandlingProjectNature newProject, final IScenario scenario )
+    public void activeScenarioChanged( final ScenarioHandlingProjectNature newProject, final IScenario scenario )
     {
       handleScenarioChanged( newProject, scenario );
     }
@@ -62,7 +62,7 @@ public class WorkflowView extends ViewPart
     handleScenarioChanged( m_activeWorkContext.getCurrentProject(), m_activeWorkContext.getCurrentCase() );
   }
 
-  protected void handleScenarioChanged( final CaseHandlingProjectNature newProject, final IScenario scenario )
+  protected void handleScenarioChanged( final ScenarioHandlingProjectNature newProject, final IScenario scenario )
   {
     final UIJob job = new UIJob( Messages.getString( "org.kalypso.afgui.views.WorkflowView.2" ) ) //$NON-NLS-1$
     {
@@ -79,7 +79,7 @@ public class WorkflowView extends ViewPart
     job.schedule();
   }
 
-  void doUpdateControls( final CaseHandlingProjectNature newProject, final IScenario scenario )
+  void doUpdateControls( final ScenarioHandlingProjectNature newProject, final IScenario scenario )
   {
     m_breadcrumbViewer.setScenario( scenario );
 

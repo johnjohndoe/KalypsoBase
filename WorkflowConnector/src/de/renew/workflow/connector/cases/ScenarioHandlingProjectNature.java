@@ -44,22 +44,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -73,11 +70,15 @@ import de.renew.workflow.connector.internal.i18n.Messages;
 /**
  * @author Stefan Kurzbach
  */
-public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
+public class ScenarioHandlingProjectNature implements IProjectNature, ICaseManagerListener
 {
   public final static String ID = "org.kalypso.afgui.ScenarioHandlingProjectNature"; //$NON-NLS-1$
 
   public static final String PREFERENCE_ID = "org.kalypso.afgui"; //$NON-NLS-1$
+
+  private IScenarioManager m_caseManager;
+
+  private IProject m_project;
 
   IDerivedScenarioCopyFilter m_filter = new IDerivedScenarioCopyFilter()
   {
@@ -88,13 +89,53 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
     }
   };
 
+  @Override
+  public void configure( )
+  {
+    // does nothing by default
+  }
+
+  @Override
+  public void deconfigure( )
+  {
+    // does nothing by default
+  }
+
+  @Override
+  public IProject getProject( )
+  {
+    return m_project;
+  }
+
+  @Override
+  public void setProject( final IProject project )
+  {
+    if( m_caseManager != null )
+    {
+      m_caseManager.dispose();
+      m_caseManager = null;
+    }
+
+    m_project = project;
+
+    if( m_project != null )
+    {
+      m_caseManager = createCaseManager( m_project );
+      m_caseManager.addCaseManagerListener( this );
+    }
+  }
+
   public void setDerivedScenarioCopyFilter( final IDerivedScenarioCopyFilter filter )
   {
     m_filter = filter;
   }
 
-  @Override
-  public IScenarioManager createCaseManager( final IProject project )
+  public IScenarioManager getCaseManager( )
+  {
+    return m_caseManager;
+  }
+
+  private IScenarioManager createCaseManager( final IProject project )
   {
     return new ScenarioManager( project );
   }
@@ -102,16 +143,7 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
   /**
    * Constructs a path for the scenario relative to the project location.
    */
-  @Override
-  public IPath getRelativeProjectPath( final IScenario caze )
-  {
-    return getProjectRelativePath( caze );
-  }
-
-  /**
-   * Static version of {@link #getRelativeProjectPath(Case)}.
-   */
-  public static IPath getProjectRelativePath( final IScenario scenario )
+  private IPath getRelativeProjectPath( final IScenario scenario )
   {
     final String uri = scenario.getURI();
     if( uri != null )
@@ -123,7 +155,7 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
     }
 
     if( scenario.getParentScenario() != null )
-      return getProjectRelativePath( scenario.getParentScenario() ).append( scenario.getName() );
+      return getRelativeProjectPath( scenario.getParentScenario() ).append( scenario.getName() );
 
     return new Path( scenario.getName() );
   }
@@ -131,9 +163,23 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
   @Override
   public void caseAdded( final IScenario scenario )
   {
-    super.caseAdded( scenario );
-    final IPath projectPath = getRelativeProjectPath( scenario );
-    final IFolder newFolder = getProject().getFolder( projectPath );
+    // FIXME: does not belong here -> move into scenario framework; scenario should not be created in event handling
+    final IFolder newFolder = m_project.getFolder( getRelativeProjectPath( scenario ) );
+
+    if( !newFolder.exists() )
+    {
+      try
+      {
+        newFolder.create( false, true, null );
+      }
+      catch( final CoreException e )
+      {
+        final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+        final Status status = new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, 0, "", e );
+        ErrorDialog.openError( activeShell, "Problem", "Konnte neue Falldaten nicht erzeugen.", status );
+        WorkflowConnectorPlugin.getDefault().getLog().log( status );
+      }
+    }
 
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
@@ -156,78 +202,9 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
       }
 
       final IFolder parentFolder = getProject().getFolder( parentPath );
-      final WorkspaceModifyOperation copyScenarioContentsOperation = new WorkspaceModifyOperation( parentFolder )
-      {
-        @Override
-        protected void execute( final IProgressMonitor monitor ) throws CoreException
-        {
-          final SubMonitor submonitor = SubMonitor.convert( monitor, getTotalChildCount( parentFolder ) );
-          parentFolder.accept( new IResourceVisitor()
-          {
-            @Override
-            public boolean visit( final IResource resource ) throws CoreException
-            {
-              if( parentFolder.equals( resource ) )
-              {
-                return true;
-              }
-              else if( scenarioFolders.contains( resource ) )
-              {
-                // ignore scenario folder
-                return false;
-              }
 
-              if( m_filter.copy( resource ) )
-              {
-                final IPath parentFolderPath = parentFolder.getFullPath();
-                final IPath resourcePath = resource.getFullPath();
-
-                final IPath relativePath = resourcePath.removeFirstSegments( parentFolderPath.segments().length );
-
-                if( resource instanceof IFolder )
-                {
-                  newFolder.getFolder( relativePath ).create( true, true, submonitor.newChild( 1 ) );
-                }
-                else if( resource instanceof IFile )
-                {
-                  resource.copy( newFolder.getFullPath().append( relativePath ), true, submonitor.newChild( 1 ) );
-                }
-
-                return true;
-              }
-
-              if( !m_filter.copy( resource ) && resource instanceof IFolder )
-                return false;
-
-              return true;
-            }
-          } );
-        }
-
-        private int getTotalChildCount( final IContainer container )
-        {
-          IResource[] members;
-          try
-          {
-            members = container.members();
-          }
-          catch( final CoreException ex )
-          {
-            return 0;
-          }
-          int count = 0;
-          for( int i = 0; i < members.length; i++ )
-          {
-            if( !m_filter.copy( members[i] ) )
-              continue;
-            if( members[i].getType() == IResource.FILE )
-              count++;
-            else
-              count += getTotalChildCount( (IContainer) members[i] );
-          }
-          return count;
-        }
-      };
+      // FIXME: does not belong here: the code that creates the new scenario is responsible for its contents
+      final WorkspaceModifyOperation copyScenarioContentsOperation = new CopyScenarioContentsOperation( parentFolder, parentFolder, newFolder, scenarioFolders, m_filter );
 
       resultStatus = RunnableContextHelper.execute( window, true, true, copyScenarioContentsOperation );
       if( !resultStatus.isOK() )
@@ -235,6 +212,23 @@ public class ScenarioHandlingProjectNature extends CaseHandlingProjectNature
         ErrorDialog.openError( window.getShell(), Messages.getString( "org.kalypso.afgui.ScenarioHandlingProjectNature.1" ), Messages.getString( "org.kalypso.afgui.ScenarioHandlingProjectNature.2" ), resultStatus ); //$NON-NLS-1$ //$NON-NLS-2$
         WorkflowConnectorPlugin.getDefault().getLog().log( resultStatus );
       }
+    }
+  }
+
+  @Override
+  public void caseRemoved( final IScenario caze )
+  {
+    final IFolder folder = m_project.getFolder( getRelativeProjectPath( caze ) );
+    try
+    {
+      folder.delete( true, null );
+    }
+    catch( final CoreException e )
+    {
+      final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+      final Status status = new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, 0, "", e );
+      ErrorDialog.openError( activeShell, "Problem", "Konnte Falldaten nicht löschen.", status );
+      WorkflowConnectorPlugin.getDefault().getLog().log( status );
     }
   }
 

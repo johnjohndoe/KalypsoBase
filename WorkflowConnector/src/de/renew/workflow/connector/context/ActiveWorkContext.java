@@ -11,9 +11,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
-import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.connector.cases.IScenario;
+import de.renew.workflow.connector.cases.IScenarioDataProvider;
 import de.renew.workflow.connector.cases.IScenarioManager;
+import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 import de.renew.workflow.connector.internal.WorkflowConnectorPlugin;
 
 /**
@@ -25,18 +26,22 @@ public class ActiveWorkContext
 {
   private final ActiveWorkContextResourceListener m_resourceListener = new ActiveWorkContextResourceListener( this );
 
-  private CaseHandlingProjectNature m_currentProjectNature;
+  private ScenarioHandlingProjectNature m_currentProjectNature;
 
-  private final List<IActiveScenarioChangeListener> m_activeContextChangeListeners = new ArrayList<IActiveScenarioChangeListener>();
+  private final List<IActiveScenarioChangeListener> m_activeScenarioChangeListeners = new ArrayList<IActiveScenarioChangeListener>();
 
   private final String m_natureID;
+
+  /** data provider for the current scenario */
+  private final IScenarioDataProvider m_dataProvider;
 
   /**
    * Creates a new work context and restores the previous state from the given properties
    */
-  public ActiveWorkContext( final String natureID )
+  public ActiveWorkContext( final String natureID, final IScenarioDataProvider dataProvider )
   {
     m_natureID = natureID;
+    m_dataProvider = dataProvider;
 
     // TODO: is this really the right place to do this stuff?
     // Probably better at least inside the afg-ui plug-in
@@ -47,7 +52,7 @@ public class ActiveWorkContext
   /**
    * Sets the active case handling project
    */
-  private void setCurrentProject( final CaseHandlingProjectNature nature )
+  private void setCurrentProject( final ScenarioHandlingProjectNature nature )
   {
     if( m_currentProjectNature == nature )
       return;
@@ -72,7 +77,7 @@ public class ActiveWorkContext
     m_currentProjectNature = nature;
   }
 
-  public CaseHandlingProjectNature getCurrentProject( )
+  public ScenarioHandlingProjectNature getCurrentProject( )
   {
     return m_currentProjectNature;
   }
@@ -99,18 +104,18 @@ public class ActiveWorkContext
 
   public void addActiveContextChangeListener( final IActiveScenarioChangeListener l )
   {
-    m_activeContextChangeListeners.add( l );
+    m_activeScenarioChangeListeners.add( l );
   }
 
   public void removeActiveContextChangeListener( final IActiveScenarioChangeListener l )
   {
-    m_activeContextChangeListeners.remove( l );
+    m_activeScenarioChangeListeners.remove( l );
   }
 
-  protected void fireActiveContextChanged( final CaseHandlingProjectNature newProject, final IScenario caze )
+  protected void fireActiveContextChanged( final ScenarioHandlingProjectNature newProject, final IScenario caze )
   {
     // Convert to array to avoid concurrent modification exceptions
-    final IActiveScenarioChangeListener[] listeners = m_activeContextChangeListeners.toArray( new IActiveScenarioChangeListener[m_activeContextChangeListeners.size()] );
+    final IActiveScenarioChangeListener[] listeners = m_activeScenarioChangeListeners.toArray( new IActiveScenarioChangeListener[m_activeScenarioChangeListeners.size()] );
     for( final IActiveScenarioChangeListener l : listeners )
     {
       l.activeScenarioChanged( newProject, caze );
@@ -136,7 +141,7 @@ public class ActiveWorkContext
       final IProject project = caze.getProject();
       if( project.exists() && project.isOpen() )
       {
-        final CaseHandlingProjectNature nature = (CaseHandlingProjectNature) project.getNature( m_natureID );
+        final ScenarioHandlingProjectNature nature = (ScenarioHandlingProjectNature) project.getNature( m_natureID );
         setCurrentProject( nature );
       }
       else
@@ -149,6 +154,14 @@ public class ActiveWorkContext
     if( newCaseManager != null )
       newCaseManager.setCurrentCase( caze );
 
+    // FIXME: move into scenario activation code
+    m_dataProvider.setCurrent( getCurrentCase() );
+
     fireActiveContextChanged( m_currentProjectNature, caze );
+  }
+
+  public IScenarioDataProvider getDataProvider( )
+  {
+    return m_dataProvider;
   }
 }

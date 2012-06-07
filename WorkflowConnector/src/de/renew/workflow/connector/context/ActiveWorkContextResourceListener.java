@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
-import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
+import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 import de.renew.workflow.connector.internal.WorkflowConnectorPlugin;
 
 /**
@@ -73,7 +73,7 @@ public class ActiveWorkContextResourceListener implements IResourceChangeListene
     if( event.getType() == IResourceChangeEvent.PRE_DELETE || event.getType() == IResourceChangeEvent.PRE_CLOSE )
     {
       // if the currently active project is deleted or closed
-      final CaseHandlingProjectNature currentNature = m_activeWorkContext.getCurrentProject();
+      final ScenarioHandlingProjectNature currentNature = m_activeWorkContext.getCurrentProject();
       if( currentNature != null && currentNature.getProject().equals( event.getResource() ) )
       {
         try

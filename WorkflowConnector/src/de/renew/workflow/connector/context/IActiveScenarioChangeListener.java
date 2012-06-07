@@ -1,7 +1,7 @@
 package de.renew.workflow.connector.context;
 
-import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.connector.cases.IScenario;
+import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 
 /**
  * Interface to implement in order to be notified if the active scenario has changed.
@@ -10,5 +10,5 @@ import de.renew.workflow.connector.cases.IScenario;
  */
 public interface IActiveScenarioChangeListener
 {
-  void activeScenarioChanged( final CaseHandlingProjectNature newProject, final IScenario caze );
+  void activeScenarioChanged( final ScenarioHandlingProjectNature newProject, final IScenario caze );
 }

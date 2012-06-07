@@ -5,7 +5,6 @@ import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.AbstractSourceProvider;
 
@@ -29,20 +28,13 @@ public class CaseHandlingSourceProvider extends AbstractSourceProvider implement
 
   protected ActiveWorkContext m_activeWorkContext;
 
-  /** data provider for the current szenario */
-  private IScenarioDataProvider m_dataProvider;
-
-  public CaseHandlingSourceProvider( final ActiveWorkContext context, final IScenarioDataProvider dataProvider )
+  public CaseHandlingSourceProvider( final ActiveWorkContext context )
   {
     m_activeWorkContext = context;
-    m_dataProvider = dataProvider;
   }
 
   public void resetCase( )
   {
-    // FIXME: move into scenario activation code
-    m_dataProvider.setCurrent( m_activeWorkContext.getCurrentCase() );
-
     fireSourceChanged( 0, getCurrentState() );
   }
 
@@ -50,7 +42,6 @@ public class CaseHandlingSourceProvider extends AbstractSourceProvider implement
   public void dispose( )
   {
     m_activeWorkContext = null;
-    m_dataProvider = null;
   }
 
   @Override
@@ -58,7 +49,7 @@ public class CaseHandlingSourceProvider extends AbstractSourceProvider implement
   {
     final Map<String, Object> currentState = new TreeMap<String, Object>();
     currentState.put( ACTIVE_CASE_FOLDER_NAME, getSzenarioFolder() );
-    currentState.put( ACTIVE_CASE_DATA_PROVIDER_NAME, getDataProvider() );
+    currentState.put( ACTIVE_CASE_DATA_PROVIDER_NAME, m_activeWorkContext.getDataProvider() );
     currentState.put( ACTIVE_CASE_URI_NAME, getSzenarioUri() );
     return currentState;
   }
@@ -81,21 +72,9 @@ public class CaseHandlingSourceProvider extends AbstractSourceProvider implement
   private IContainer getSzenarioFolder( )
   {
     final IScenario currentCase = m_activeWorkContext.getCurrentCase();
-    final CaseHandlingProjectNature currentProject = m_activeWorkContext.getCurrentProject();
-    if( currentProject == null || currentCase == null )
+    if( currentCase == null )
       return null;
 
-    // TODO: is this really up to date? We always assume that the scenarioFolder is a IFolder
-    // TODO: comment why we need that
-    final IPath projectPath = currentProject.getRelativeProjectPath( currentCase );
-    if( projectPath.isEmpty() )
-      return currentProject.getProject();
-
-    return currentProject.getProject().getFolder( projectPath );
-  }
-
-  private IScenarioDataProvider getDataProvider( )
-  {
-    return m_dataProvider;
+    return currentCase.getFolder();
   }
 }

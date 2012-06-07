@@ -56,9 +56,9 @@ import org.eclipse.ui.model.WorkbenchAdapter;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 
-import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.connector.cases.IScenario;
 import de.renew.workflow.connector.cases.IScenarioManager;
+import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
@@ -85,9 +85,9 @@ public class CaseTreeContentAdapter extends WorkbenchAdapter
   @Override
   public Object[] getChildren( final Object o )
   {
-    if( o instanceof CaseHandlingProjectNature )
+    if( o instanceof ScenarioHandlingProjectNature )
     {
-      final CaseHandlingProjectNature nature = (CaseHandlingProjectNature) o;
+      final ScenarioHandlingProjectNature nature = (ScenarioHandlingProjectNature) o;
       final IScenarioManager caseManager = nature.getCaseManager();
       return caseManager.getCases().toArray();
     }
@@ -97,9 +97,9 @@ public class CaseTreeContentAdapter extends WorkbenchAdapter
   @Override
   public ImageDescriptor getImageDescriptor( final Object o )
   {
-    if( o instanceof CaseHandlingProjectNature )
+    if( o instanceof ScenarioHandlingProjectNature )
     {
-      final CaseHandlingProjectNature nature = (CaseHandlingProjectNature) o;
+      final ScenarioHandlingProjectNature nature = (ScenarioHandlingProjectNature) o;
       final IProject project = nature.getProject();
       final IWorkbenchAdapter adapter = (IWorkbenchAdapter) project.getAdapter( IWorkbenchAdapter.class );
       return adapter.getImageDescriptor( project );
@@ -113,9 +113,9 @@ public class CaseTreeContentAdapter extends WorkbenchAdapter
   @Override
   public String getLabel( final Object o )
   {
-    if( o instanceof CaseHandlingProjectNature )
+    if( o instanceof ScenarioHandlingProjectNature )
     {
-      final CaseHandlingProjectNature nature = (CaseHandlingProjectNature) o;
+      final ScenarioHandlingProjectNature nature = (ScenarioHandlingProjectNature) o;
       final IProject project = nature.getProject();
       final IWorkbenchAdapter adapter = (IWorkbenchAdapter) project.getAdapter( IWorkbenchAdapter.class );
       return adapter.getLabel( project );
@@ -128,9 +128,9 @@ public class CaseTreeContentAdapter extends WorkbenchAdapter
   @Override
   public FontData getFont( final Object o )
   {
-    if( o instanceof CaseHandlingProjectNature )
+    if( o instanceof ScenarioHandlingProjectNature )
     {
-      final CaseHandlingProjectNature nature = (CaseHandlingProjectNature) o;
+      final ScenarioHandlingProjectNature nature = (ScenarioHandlingProjectNature) o;
       final IProject project = nature.getProject();
       final IWorkbenchAdapter2 adapter = (IWorkbenchAdapter2) project.getAdapter( IWorkbenchAdapter2.class );
       return adapter.getFont( project );

@@ -19,7 +19,6 @@ import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 
-import de.renew.workflow.connector.cases.CaseHandlingProjectNature;
 import de.renew.workflow.connector.cases.ICaseManagerListener;
 import de.renew.workflow.connector.cases.IScenario;
 import de.renew.workflow.connector.cases.IScenarioList;
@@ -185,7 +184,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
   }
 
   @Override
-  public void activeScenarioChanged( final CaseHandlingProjectNature newProject, final IScenario caze )
+  public void activeScenarioChanged( final ScenarioHandlingProjectNature newProject, final IScenario caze )
   {
     refreshViewer( null );
   }

@@ -188,24 +188,22 @@ public class ScenarioHandler implements IScenario
   @Override
   public IFolder getFolder( )
   {
-    final IFolder folder;
-
     final String uri = getURI();
     if( uri.startsWith( OLD_CASE_BASE_URI ) )
     {
       final String base = uri.substring( OLD_CASE_BASE_URI.length() );
+
       final int cleaned = base.indexOf( "/" );
 
-      folder = getProject().getFolder( base.substring( cleaned + 1 ) );
+      return getProject().getFolder( base.substring( cleaned + 1 ) );
     }
-    else if( uri.startsWith( NEW_CASE_BASE_URI ) )
-    {
-      folder = getProject().getFolder( uri.substring( NEW_CASE_BASE_URI.length() ) );
-    }
-    else
-      throw new IllegalStateException();
 
-    return folder;
+    if( uri.startsWith( NEW_CASE_BASE_URI ) )
+    {
+      return getProject().getFolder( uri.substring( NEW_CASE_BASE_URI.length() ) );
+    }
+
+    throw new IllegalStateException();
   }
 
   @Override
