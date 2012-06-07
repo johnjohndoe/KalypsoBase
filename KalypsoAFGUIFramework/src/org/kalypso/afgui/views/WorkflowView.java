@@ -99,9 +99,9 @@ public class WorkflowView extends ViewPart
   {
     super.init( site, memento );
 
-    m_activeWorkContext = KalypsoAFGUIFrameworkPlugin.getDefault().getActiveWorkContext();
+    m_activeWorkContext = KalypsoAFGUIFrameworkPlugin.getActiveWorkContext();
     m_activeWorkContext.addActiveContextChangeListener( m_contextListener );
-    m_workflowControl = new WorkflowControl( KalypsoAFGUIFrameworkPlugin.getDefault().getTaskExecutor() );
+    m_workflowControl = new WorkflowControl( KalypsoAFGUIFrameworkPlugin.getTaskExecutor() );
   }
 
   @Override

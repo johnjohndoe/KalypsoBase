@@ -67,7 +67,7 @@ public class TaskExecutionAuthority implements ITaskExecutionAuthority
   @Override
   public boolean canStopTask( final ITask task )
   {
-    final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDefault().getDataProvider();
+    final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
     // TODO: Is this okay? Could there be situations, where the data provider is missing?
     if( dataProvider == null )
       return true;
@@ -78,7 +78,7 @@ public class TaskExecutionAuthority implements ITaskExecutionAuthority
 
     final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
     final MessageDialog confirmDialog = new MessageDialog( null, Messages.getString( "org.kalypso.afgui.scenarios.TaskExecutionAuthority.0" ), null, Messages.getString( "org.kalypso.afgui.scenarios.TaskExecutionAuthority.1" ), MessageDialog.QUESTION, new String[] { //$NON-NLS-1$ //$NON-NLS-2$
-        Messages.getString( "org.kalypso.afgui.scenarios.TaskExecutionAuthority.2" ), Messages.getString( "org.kalypso.afgui.scenarios.TaskExecutionAuthority.3" ), Messages.getString( "org.kalypso.afgui.scenarios.TaskExecutionAuthority.4" ) }, 1 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      Messages.getString( "org.kalypso.afgui.scenarios.TaskExecutionAuthority.2" ), Messages.getString( "org.kalypso.afgui.scenarios.TaskExecutionAuthority.3" ), Messages.getString( "org.kalypso.afgui.scenarios.TaskExecutionAuthority.4" ) }, 1 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     final boolean result;
     final int decision = confirmDialog.open();
     if( decision == 0 )
