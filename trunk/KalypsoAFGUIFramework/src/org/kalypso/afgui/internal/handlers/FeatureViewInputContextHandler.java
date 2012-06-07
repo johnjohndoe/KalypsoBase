@@ -10,11 +10,12 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.IEvaluationContext;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IViewPart;
@@ -29,8 +30,6 @@ import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.template.featureview.Featuretemplate.Layer;
 import org.kalypso.ui.editor.featureeditor.FeatureTemplateView;
-
-import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * Loads a template file in the current feature view. Requires that the current context contains the feature view. Use a
@@ -75,13 +74,13 @@ public class FeatureViewInputContextHandler extends AbstractHandler
   {
     final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
 
-    final IFolder szenarioFolder = (IFolder) context.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
+    final IContainer szenarioFolder = ScenarioHelper.getScenarioFolder();
     // TODO: that is strange and probably bug-prone. Why not just use scenario-relative paths for the .gft file?
-    final IFolder folder = m_featureViewInput == null ? null : ScenarioHelper.findModelContext( szenarioFolder, m_featureViewInput );
+    final IContainer folder = m_featureViewInput == null ? null : ScenarioHelper.findModelContext( szenarioFolder, m_featureViewInput );
     // TODO: directly throw exceptions if something is missing
     final IFile file;
     if( folder != null && m_featureViewInput != null )
-      file = folder.getFile( m_featureViewInput );
+      file = folder.getFile( Path.fromPortableString( m_featureViewInput ) );
     else
       file = null;
 

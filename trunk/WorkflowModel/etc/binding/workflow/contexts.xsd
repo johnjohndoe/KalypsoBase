@@ -62,16 +62,6 @@
 		</complexContent>
 	</complexType>
 
-	<element name="EditorContext" substitutionGroup="kwf:_WorkbenchPartContext">
-		<complexType>
-			<complexContent>
-				<extension base="kwf:WorkbenchPartContextType">								
-					<attribute name="input" type="string" />
-				</extension>
-			</complexContent>
-		</complexType>
-	</element>
-
 	<element name="ViewContext" substitutionGroup="kwf:_WorkbenchPartContext">
 		<complexType>
 			<complexContent>

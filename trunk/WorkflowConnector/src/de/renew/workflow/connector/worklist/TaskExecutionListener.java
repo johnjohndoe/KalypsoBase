@@ -46,13 +46,11 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IExecutionListener;
 import org.eclipse.core.commands.NotHandledException;
 import org.eclipse.core.commands.common.NotDefinedException;
-import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 
 import de.renew.workflow.connector.internal.WorkflowConnectorPlugin;
-import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * A {@link TaskExecutionListener} handles requesting and confirming work items for commands. This
@@ -81,47 +79,23 @@ public class TaskExecutionListener implements IExecutionListener
     m_commandService = commandService;
   }
 
-  /**
-   * @see org.eclipse.core.commands.IExecutionListener#preExecute(java.lang.String,
-   *      org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public void preExecute( final String commandId, final ExecutionEvent event )
   {
-    final Object parameter = requestWorkitem( commandId );
-    final Object applicationContext = event.getApplicationContext();
-    // for RCP applications applicationContext is always an IEvaluationContext
-    if( parameter != null && applicationContext instanceof IEvaluationContext )
-    {
-      // add only a non-null parameter
-      final IEvaluationContext context = (IEvaluationContext) applicationContext;
-      context.addVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_DATA_NAME, parameter );
-    }
   }
 
-  /**
-   * @see org.eclipse.core.commands.IExecutionListener#notHandled(java.lang.String,
-   *      org.eclipse.core.commands.NotHandledException)
-   */
   @Override
   public void notHandled( final String commandId, final NotHandledException exception )
   {
     requestWorkitem( commandId );
   }
 
-  /**
-   * @see org.eclipse.core.commands.IExecutionListener#postExecuteFailure(java.lang.String,
-   *      org.eclipse.core.commands.ExecutionException)
-   */
   @Override
   public void postExecuteFailure( final String commandId, final ExecutionException exception )
   {
     cancelWorkitem( commandId );
   }
 
-  /**
-   * @see org.eclipse.core.commands.IExecutionListener#postExecuteSuccess(java.lang.String, java.lang.Object)
-   */
   @Override
   public void postExecuteSuccess( final String commandId, final Object returnValue )
   {

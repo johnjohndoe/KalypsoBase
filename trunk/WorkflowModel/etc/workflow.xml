@@ -22,7 +22,6 @@
 				<con:ViewContext id="TaskView" partId="org.eclipse.ui.views.TaskList" parent="TaskAndProblemView"/>
 				<con:ViewContext id="ProblemView" partId="org.eclipse.ui.views.ProblemView" parent="TaskAndProblemView"/>				
 			</con:WorkbenchSiteContext>
-			<con:EditorContext id="Aufgabenbeschreibung" partId="org.eclipse.ui.DefaultTextEditor" input=".metadata/workflow.xml" parent="caseHandling"/>
 		</con:PerspectiveContext>	
 	</Perspectives>	
 </Workflow>

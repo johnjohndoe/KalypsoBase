@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.afgui.internal.ui;
 
-import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
@@ -49,17 +47,16 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.eclipse.ui.model.IWorkbenchAdapter2;
 import org.eclipse.ui.model.WorkbenchAdapter;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
 
 import de.renew.workflow.connector.cases.IScenario;
 import de.renew.workflow.connector.cases.IScenarioManager;
 import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
-import de.renew.workflow.contexts.ICaseHandlingSourceProvider;
 
 /**
  * TODO: is this really the right place? Shouldn't it better be moved to the AfgUi plug-in which already does all
@@ -141,13 +138,8 @@ public class CaseTreeContentAdapter extends WorkbenchAdapter
       final IWorkbench workbench = PlatformUI.getWorkbench();
       if( !workbench.isClosing() )
       {
-        final IHandlerService handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-        final IEvaluationContext currentState = handlerService.getCurrentState();
-
-        final String activeCaseURI = (String) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_URI_NAME );
-        final IFolder activeCaseFolder = (IFolder) currentState.getVariable( ICaseHandlingSourceProvider.ACTIVE_CASE_FOLDER_NAME );
-
-        if( caze.getURI().equals( activeCaseURI ) && caze.getFolder().equals( activeCaseFolder ) )
+        final IScenario activeScenario = ScenarioHelper.getActiveScenario();
+        if( activeScenario == caze )
           return m_activeFont;
       }
     }

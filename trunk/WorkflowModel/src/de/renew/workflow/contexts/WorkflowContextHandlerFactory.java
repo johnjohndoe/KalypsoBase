@@ -66,13 +66,6 @@ public class WorkflowContextHandlerFactory implements IContextHandlerFactory
       final String viewId = viewContext.getPartId();
       return new ViewContextHandler( viewId );
     }
-    else if( context instanceof EditorContext )
-    {
-      final EditorContext editorContext = (EditorContext) context;
-      final String editorId = editorContext.getPartId();
-      final String input = editorContext.getInput();
-      return new EditorContextHandler( editorId, input );
-    }
     else if( context instanceof WizardContext )
     {
       final WizardContext wizardContext = (WizardContext) context;
