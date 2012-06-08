@@ -21,6 +21,7 @@ Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.afgui,
  org.kalypso.afgui.helper,
  org.kalypso.afgui.internal.handlers,
+ org.kalypso.afgui.internal.ui.workflow,
  org.kalypso.afgui.model,
  org.kalypso.afgui.perspective,
  org.kalypso.afgui.scenarios,
