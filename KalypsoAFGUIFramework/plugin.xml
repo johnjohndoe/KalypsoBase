@@ -137,6 +137,30 @@
          </activeWhen>
       </handler>
       <handler commandId="org.kalypso.ui.map.outline.command.AddWorkflowTheme" class="org.kalypso.afgui.internal.map.AddWorkflowThemeHandler"/>
+      <handler
+            class="org.kalypso.afgui.internal.handlers.CopyScenarioHandler"
+            commandId="org.kalypso.afgui.commands.CopyScenarioCommand">
+         <activeWhen>
+            <with
+                  variable="workflowViewerMenuItemSelection">
+               <instanceof
+                     value="de.renew.workflow.connector.cases.IScenario">
+               </instanceof>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.kalypso.afgui.internal.handlers.SetAsBaseScenarioHandler"
+            commandId="org.kalypso.afgui.commands.SetAsBaseScenarioCommand">
+         <activeWhen>
+            <with
+                  variable="workflowViewerMenuItemSelection">
+               <instanceof
+                     value="de.renew.workflow.connector.cases.IScenario">
+               </instanceof>
+            </with>
+         </activeWhen>
+      </handler>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
@@ -167,6 +191,16 @@
       </command>
       
       <command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.AddWorkflowTheme" name="Add Layer"  description="Add a new layer to the map"/>
+      <command
+            categoryId="de.renew.workflow.tasks.category"
+            id="org.kalypso.afgui.commands.SetAsBaseScenarioCommand"
+            name="Set as base scenario...">
+      </command>
+      <command
+            categoryId="de.renew.workflow.tasks.category"
+            id="org.kalypso.afgui.commands.CopyScenarioCommand"
+            name="Copy scenario...">
+      </command>
    </extension>
    <extension point="org.eclipse.ui.commandImages">
       <image commandId="org.kalypso.afgui.command.newproject" icon="icons/project_add.gif"/>
@@ -175,6 +209,14 @@
       <image commandId="org.kalypso.afgui.commands.AddScenarioBreadcrumbs" icon="icons/scenario_add.gif"/>
       <image commandId="org.kalypso.ui.map.outline.command.AddWorkflowTheme" icon="icons/mapAddTheme.gif"/>
       <image commandId="org.kalypso.afgui.commands.DeleteBreadcrumbs" icon="icons/breadcrumb_delete.gif"/>
+      <image
+            commandId="org.kalypso.afgui.commands.SetAsBaseScenarioCommand"
+            icon="icons/export-simple-template.gif">
+      </image>
+      <image
+            commandId="org.kalypso.afgui.commands.CopyScenarioCommand"
+            icon="icons/copyScenario.gif">
+      </image>
    </extension>
    
    <extension point="org.eclipse.ui.menus">
@@ -190,6 +232,26 @@
             </visibleWhen>
          </command>
          <command commandId="org.eclipse.ui.edit.delete"/>
+         <separator
+               name="additions"
+               visible="false">
+         </separator>
+         <command
+               commandId="org.kalypso.afgui.commands.SetAsBaseScenarioCommand">
+            <visibleWhen>
+               <reference
+                     definitionId="oneScenario">
+               </reference>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.kalypso.afgui.commands.CopyScenarioCommand">
+            <visibleWhen>
+               <reference
+                     definitionId="oneScenario">
+               </reference>
+            </visibleWhen>
+         </command>
       </menuContribution>
       <menuContribution locationURI="toolbar:org.kalypso.kalypso1d2d.pjt.views.ScenarioView">
          <separator name="scenario" visible="true"/>
@@ -231,6 +293,22 @@
         </command>
         <command commandId="org.kalypso.afgui.commands.DeleteBreadcrumbs">
           <visibleWhen checkEnabled="true"/>
+        </command>
+        <separator
+              name="additions"
+              visible="false">
+        </separator>
+        <command
+              commandId="org.kalypso.afgui.commands.SetAsBaseScenarioCommand">
+           <visibleWhen
+                 checkEnabled="true">
+           </visibleWhen>
+        </command>
+        <command
+              commandId="org.kalypso.afgui.commands.CopyScenarioCommand">
+           <visibleWhen
+                 checkEnabled="true">
+           </visibleWhen>
         </command>
       </menuContribution>
    </extension>
