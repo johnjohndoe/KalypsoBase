@@ -58,13 +58,15 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.internal.i18n.Messages;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.EclipsePlatformContributionsExtensions;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
 
 import de.renew.workflow.base.IWorkflow;
@@ -207,7 +209,8 @@ public class ScenarioHelper
 
     final ICoreRunnableWithProgress operation = new ScenarioActivationOperation( scenario );
 
-    final IStatus status = ProgressUtilities.busyCursorWhile( operation );
+    final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
+    final IStatus status = RunnableContextHelper.execute( progressService, true, false, operation );
     if( !status.isOK() )
       StatusDialog.open( shell, status, Messages.getString( "org.kalypso.afgui.handlers.ActivateScenarioHandler.0" ) ); //$NON-NLS-1$
   }
