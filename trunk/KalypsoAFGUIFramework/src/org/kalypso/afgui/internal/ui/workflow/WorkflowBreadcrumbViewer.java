@@ -47,7 +47,6 @@ import nu.bibi.breadcrumb.MenuSelectionEvent;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -63,6 +62,7 @@ import org.eclipse.swt.events.MenuDetectListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -71,7 +71,6 @@ import org.eclipse.ui.services.IEvaluationService;
 import org.kalypso.afgui.internal.i18n.Messages;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.views.ScenarioViewerFilter;
-import org.kalypso.core.status.StatusDialog;
 
 import de.renew.workflow.connector.cases.IScenario;
 
@@ -151,7 +150,7 @@ public class WorkflowBreadcrumbViewer extends BreadcrumbViewer
           handleItemMenuDetected( viewer.getControl(), e, null );
         }
         else
-        handleItemMenuDetected( viewer.getControl(), e, menuSelection );
+          handleItemMenuDetected( viewer.getControl(), e, menuSelection );
       }
     } );
   }
@@ -222,35 +221,24 @@ public class WorkflowBreadcrumbViewer extends BreadcrumbViewer
 
   protected void handleMenuSelection( final IStructuredSelection selection )
   {
+    // REMARK: without the next line, open the model dialog in stopTask (during activate Scenario)
+    // will get a widget-disposed error
+    setFocus();
+
     if( selection.isEmpty() )
-    {
-      setFocus();
       return;
-    }
 
-    try
-    {
-      final Object firstElement = selection.getFirstElement();
+    final Shell shell = getControl().getShell();
 
-      if( firstElement instanceof IScenario )
-      {
-        // REMARK: without the next line, open the model dialog in stopTask (during activate Scenario)
-        // will get a widget-disposed error
-        setFocus();
-        ScenarioHelper.activateScenario( (IScenario) firstElement );
-      }
-      else if( firstElement instanceof String )
-      {
-        // REMARK: without the next line, open the model dialog in stopTask (during activate Scenario)
-        // will get a widget-disposed error
-        setFocus();
-        ScenarioHelper.activateScenario( null );
-      }
-    }
-    catch( final CoreException e )
+    final Object firstElement = selection.getFirstElement();
+
+    if( firstElement instanceof IScenario )
     {
-      e.printStackTrace();
-      StatusDialog.open( getControl().getShell(), e.getStatus(), "Activate Scenario" );
+      ScenarioHelper.activateScenario2( shell, (IScenario) firstElement );
+    }
+    else if( firstElement instanceof String )
+    {
+      ScenarioHelper.activateScenario2( shell, null );
     }
 
     return;

@@ -44,6 +44,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 
@@ -72,8 +73,11 @@ public class SzenarioProjectOpenAction extends AbstractModuleProjectOpenAction
     if( !status.isOK() )
       throw new CoreException( status );
 
+    final Shell shell = page.getWorkbenchWindow().getShell();
+
     final IScenario caze = caseManager.getCases().get( 0 );
-    ScenarioHelper.activateScenario( caze );
+
+    ScenarioHelper.activateScenario2( shell, caze );
 
     return Status.OK_STATUS;
   }

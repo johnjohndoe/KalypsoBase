@@ -67,13 +67,10 @@ public class ScenarioDatumProxy implements IScenarioDatum
     m_element = element;
   }
 
-  /**
-   * @see org.kalypso.afgui.scenarios.IScenarioDatum#getID()
-   */
   @Override
   public String getID( )
   {
-    // REMARK: For backwards compability: we use the clas-name if no id is given.
+    // REMARK: For backwards compability: we use the class-name if no id is given.
     final String id = m_element.getAttribute( ATTRIBUTE_ID );
     if( id == null )
       return m_element.getAttribute( ATTRIBUTE_CLASS_KEY );
@@ -81,9 +78,6 @@ public class ScenarioDatumProxy implements IScenarioDatum
     return id;
   }
 
-  /**
-   * @see org.kalypso.afgui.scenarios.IScenarioDatum#getModelClass()
-   */
   @Override
   @SuppressWarnings("unchecked")
   public Class< ? extends IModel> getModelClass( ) throws CoreException
@@ -93,8 +87,7 @@ public class ScenarioDatumProxy implements IScenarioDatum
     try
     {
       final String classKey = m_element.getAttribute( ATTRIBUTE_CLASS_KEY );
-      final Class< ? extends IModel> clazz = (Class< ? extends IModel>) bundle.loadClass( classKey );
-      return clazz;
+      return (Class< ? extends IModel>) bundle.loadClass( classKey );
     }
     catch( final InvalidRegistryObjectException e )
     {
@@ -106,14 +99,9 @@ public class ScenarioDatumProxy implements IScenarioDatum
     }
   }
 
-  /**
-   * @see org.kalypso.afgui.scenarios.IScenarioDatum#getModelPath()
-   */
   @Override
   public String getModelPath( )
   {
-    final String modelPath = m_element.getAttribute( ATTRIBUTE_MODEL_PATH );
-    return modelPath;
+    return m_element.getAttribute( ATTRIBUTE_MODEL_PATH );
   }
-
 }

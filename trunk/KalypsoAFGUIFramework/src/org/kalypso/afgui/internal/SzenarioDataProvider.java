@@ -6,15 +6,17 @@ package org.kalypso.afgui.internal;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -22,14 +24,10 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.internal.i18n.Messages;
 import org.kalypso.afgui.model.ICommandPoster;
 import org.kalypso.afgui.scenarios.IScenarioDatum;
@@ -38,7 +36,6 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.util.pool.IPoolListener;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.KeyInfo;
 import org.kalypso.core.util.pool.PoolableObjectType;
@@ -57,141 +54,49 @@ import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 /**
  * Objects of this class are responsible for loading the gml-workspaces for the current selected simulation model and
  * provide them to the commands.
- *
+ * 
  * @author Gernot Belger
  */
 public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPoster
 {
-  private static final class KeyPoolListener implements IPoolListener
-  {
-    private final IPoolableObjectType m_key;
-
-    private final Set<IScenarioDataListener> m_controller;
-
-    private final Class< ? extends IModel> m_modelClass;
-
-    public KeyPoolListener( final IPoolableObjectType key, final Set<IScenarioDataListener> controller, final Class< ? extends IModel> modelClass )
-    {
-      m_key = key;
-      m_controller = controller;
-      m_modelClass = modelClass;
-    }
-
-    public IPoolableObjectType getKey( )
-    {
-      return m_key;
-    }
-
-    @Override
-    public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
-    {
-    }
-
-    @Override
-    public boolean isDisposed( )
-    {
-      return false;
-    }
-
-    @Override
-    public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
-    {
-      System.out.println( Messages.getString( "org.kalypso.afgui.scenarios.SzenarioDataProvider.2" ) + key ); //$NON-NLS-1$
-    }
-
-    @Override
-    public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
-    {
-      if( newValue instanceof GMLWorkspace )
-      {
-        final GMLWorkspace workspace = (GMLWorkspace) newValue;
-
-        // Adapting directly to IModel is dangerous because the mapping is not unique
-        // (for example, 1d2d adapter factory as well as risk adapter factory are registered to adapt Feature to IModel)
-        // TODO remove mappings to IModel from the factories
-
-        final IModel model = adaptModel( m_modelClass, workspace );
-        if( model != null )
-        {
-          fireModelLoaded( model, status );
-        }
-
-        // notify user once about messages during loading
-        final IWorkbench workbench = PlatformUI.getWorkbench();
-        if( workbench != null && !workbench.isClosing() && !status.isOK() )
-        {
-          final Display display = workbench.getDisplay();
-          display.asyncExec( new Runnable()
-          {
-
-            @Override
-            public void run( )
-            {
-              final Shell activeShell = display.getActiveShell();
-              ErrorDialog.openError( activeShell, Messages.getString( "org.kalypso.afgui.scenarios.SzenarioDataProvider.0" ), Messages.getString( "org.kalypso.afgui.scenarios.SzenarioDataProvider.1" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
-            }
-          } );
-        }
-      }
-    }
-
-    private void fireModelLoaded( final IModel model, final IStatus status )
-    {
-      // REMARK: copy current listeners into array to avoid ConcurrentModificationException
-      final IScenarioDataListener[] listeners = m_controller.toArray( new IScenarioDataListener[m_controller.size()] );
-      for( final IScenarioDataListener listener : listeners )
-      {
-        listener.modelLoaded( model, status );
-      }
-    }
-  }
-
   /**
    * Maps the (adapted) feature-wrapper-classes onto the corresponding pool key.
    * <p>
    * At the moment this works, because each gml-file corresponds to exactly one (different) wrapper class.
    */
-  final Map<String, KeyPoolListener> m_keyMap = new HashMap<String, KeyPoolListener>();
+  final Map<String, ScenarioDataPoolListener> m_keyMap = new HashMap<String, ScenarioDataPoolListener>();
 
-  private final Set<IScenarioDataListener> m_controller = new LinkedHashSet<IScenarioDataListener>();
+  private final Set<IScenarioDataListener> m_controller = Collections.synchronizedSet( new LinkedHashSet<IScenarioDataListener>() );
 
   private IScenario m_scenario = null;
 
   private String m_dataSetScope;
 
-  /**
-   * Returns the current data set scope
-   */
-  public String getDataSetScope( )
-  {
-    return m_dataSetScope;
-  }
-
   @Override
-  public synchronized void addScenarioDataListener( final IScenarioDataListener listener )
+  public void addScenarioDataListener( final IScenarioDataListener listener )
   {
     m_controller.add( listener );
   }
 
   @Override
-  public synchronized void removeScenarioDataListener( final IScenarioDataListener listener )
+  public void removeScenarioDataListener( final IScenarioDataListener listener )
   {
     m_controller.remove( listener );
   }
 
   @Override
-  public void setCurrent( final IScenario scenario )
+  public void setCurrent( final IScenario scenario, final IProgressMonitor monitor )
   {
     /* Nothing to do if scenario folder stays the same */
     if( ObjectUtils.equals( m_scenario, scenario ) )
       return;
 
     /* Release current models && reset state */
-    reset();
-
-    // FIXME: this synchronized block is dubious! Probably, reset() should be synchronized as well...
+    final Map<IModel, IStatus> loadedModels;
     synchronized( this )
     {
+      reset();
+
       if( scenario != null )
       {
         final IProject project = scenario.getProject();
@@ -204,77 +109,85 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
       }
 
       m_scenario = scenario;
+
+      loadedModels = setDataScope( m_scenario, monitor );
     }
 
+    /* fire all events after synchronize block */
     fireCazeChanged( m_scenario );
-    setDataScope( m_scenario );
+
+    for( final Entry<IModel, IStatus> entry : loadedModels.entrySet() )
+    {
+      final IModel model = entry.getKey();
+      final IStatus status = entry.getValue();
+      fireModelLoaded( model, status );
+    }
   }
 
-  private void setDataScope( final IScenario scenario )
+  private Map<IModel, IStatus> setDataScope( final IScenario scenario, final IProgressMonitor monitor )
   {
+    final Map<IModel, IStatus> loadedModels = new LinkedHashMap<>();
+
     if( scenario == null || m_dataSetScope == null )
-      return;
+      return loadedModels;
 
-    final String dataSetScope = m_dataSetScope;
+    final Map<String, IScenarioDatum> locationMap = ScenarioDataExtension.getScenarioDataMap( m_dataSetScope );
+    if( locationMap == null )
+      return loadedModels;
 
-    final Job job = new Job( Messages.getString( "org.kalypso.afgui.scenarios.SzenarioDataProvider.4" ) ) //$NON-NLS-1$
+    monitor.beginTask( "Loading scenario data", locationMap.size() );
+
+    for( final IScenarioDatum entry : locationMap.values() )
     {
-      @Override
-      protected IStatus run( final IProgressMonitor monitor )
+      try
       {
-        final List<IStatus> statusList = new ArrayList<IStatus>();
-        final Map<String, IScenarioDatum> locationMap = ScenarioDataExtension.getScenarioDataMap( dataSetScope );
-        if( locationMap != null )
-        {
-          synchronized( m_keyMap )
-          {
-            for( final IScenarioDatum entry : locationMap.values() )
-            {
-              try
-              {
-                final String id = entry.getID();
-                final Class< ? extends IModel> wrapperClass = entry.getModelClass();
-                final String gmlLocation = entry.getModelPath();
+        final String id = entry.getID();
 
-                /* @hack resolve "gloabal" gml file from parent scenario. */
-                final IFolder dataFolder = resolveFolder( scenario, gmlLocation );
-                if( dataFolder == null )
-                {
-                  resetKeyForProject( scenario.getFolder(), id, wrapperClass, gmlLocation );
-                }
-                else
-                {
-                  resetKeyForProject( dataFolder, id, wrapperClass, gmlLocation );
-                }
-              }
-              catch( final CoreException e )
-              {
-                statusList.add( e.getStatus() );
-              }
-            }
-          }
-        }
+        monitor.subTask( String.format( "Loading model '%s'", id ) );
 
-        return StatusUtilities.createStatus( statusList, Messages.getString( "org.kalypso.afgui.scenarios.SzenarioDataProvider.5" ) ); //$NON-NLS-1$
+        final Class< ? extends IModel> wrapperClass = entry.getModelClass();
+        final String gmlLocation = entry.getModelPath();
+
+        final IFolder dataFolder = getDataFolder( scenario, gmlLocation );
+        final Pair<IModel, IStatus> result = loadModel( dataFolder, id, wrapperClass, gmlLocation );
+        if( result != null )
+          loadedModels.put( result.getKey(), result.getValue() );
+      }
+      catch( final CoreException e )
+      {
+        KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( e.getStatus() );
       }
 
-      private IFolder resolveFolder( final IScenario scene, final String gmlLocation ) throws CoreException
-      {
-        final IFolder folder = scene.getFolder();
-        final IFile file = folder.getFile( gmlLocation );
-        if( file.exists() )
-          return folder;
+      monitor.worked( 1 );
+    }
 
-        final IScenario parent = scene.getParentScenario();
-        if( parent != null )
-          return resolveFolder( parent, gmlLocation );
+    monitor.done();
 
-        return null;
-      }
-    };
+    return loadedModels;
+  }
 
-    job.setRule( scenario.getProject() );
-    job.schedule();
+  /** HACK: resolve "global" gml file from parent scenario. */
+  private IFolder getDataFolder( final IScenario scenario, final String gmlLocation )
+  {
+    final IFolder dataFolder = resolveFolder( scenario, gmlLocation );
+    if( dataFolder == null )
+      return scenario.getFolder();
+
+    return dataFolder;
+  }
+
+  private static IFolder resolveFolder( final IScenario scene, final String gmlLocation )
+  {
+    final IFolder folder = scene.getFolder();
+    final IFile file = folder.getFile( gmlLocation );
+    if( file.exists() )
+      return folder;
+
+    final IScenario parent = scene.getParentScenario();
+    if( parent != null )
+      return resolveFolder( parent, gmlLocation );
+
+    return null;
   }
 
   /**
@@ -285,16 +198,17 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
     m_scenario = null;
     m_dataSetScope = null;
 
-    KeyPoolListener[] keys;
-    synchronized( m_keyMap )
+    ScenarioDataPoolListener[] keys;
+
+    synchronized( this )
     {
-      final Collection<KeyPoolListener> values = m_keyMap.values();
-      keys = values.toArray( new KeyPoolListener[values.size()] );
+      final Collection<ScenarioDataPoolListener> values = m_keyMap.values();
+      keys = values.toArray( new ScenarioDataPoolListener[values.size()] );
       m_keyMap.clear();
     }
 
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
-    for( final KeyPoolListener key : keys )
+    for( final ScenarioDataPoolListener key : keys )
     {
       if( key != null )
       {
@@ -303,7 +217,7 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
     }
   }
 
-  private synchronized void fireCazeChanged( final IScenario scenario )
+  private void fireCazeChanged( final IScenario scenario )
   {
     for( final IScenarioDataListener listener : m_controller )
     {
@@ -313,7 +227,7 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
 
   /**
    * Reloads all models.
-   *
+   * 
    * @see de.renew.workflow.connector.cases.ICaseDataProvider#reloadModel()
    */
   @Override
@@ -321,14 +235,14 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
   {
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
 
-    final KeyPoolListener[] keys;
-    synchronized( m_keyMap )
+    final ScenarioDataPoolListener[] keys;
+    synchronized( this )
     {
-      final Collection<KeyPoolListener> values = m_keyMap.values();
-      keys = values.toArray( new KeyPoolListener[values.size()] );
+      final Collection<ScenarioDataPoolListener> values = m_keyMap.values();
+      keys = values.toArray( new ScenarioDataPoolListener[values.size()] );
     }
 
-    for( final KeyPoolListener listener : keys )
+    for( final ScenarioDataPoolListener listener : keys )
     {
       final KeyInfo keyInfo = pool.getInfoForKey( listener.getKey() );
       keyInfo.reload();
@@ -337,37 +251,44 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
 
   /**
    * Resets the pool-key for the given folder.
-   *
+   * 
    * @param szenarioFolder
    *          If <code>null</code>, just releases the existing key.
    */
-  /* protected */void resetKeyForProject( final IFolder szenarioFolder, final String id, final Class< ? extends IModel> wrapperClass, final String gmlLocation )
+  Pair<IModel, IStatus> loadModel( final IFolder szenarioFolder, final String id, final Class< ? extends IModel> wrapperClass, final String gmlLocation )
   {
     final IPoolableObjectType newKey = keyForLocation( szenarioFolder, gmlLocation );
 
-    /* If nothing changed, return */
-    final KeyPoolListener oldListener = m_keyMap.get( wrapperClass );
-    final IPoolableObjectType oldKey = oldListener == null ? null : oldListener.getKey();
-    if( ObjectUtils.equals( oldKey, newKey ) )
-      return;
-
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
 
+    /* If nothing changed, return */
+    final ScenarioDataPoolListener oldListener = m_keyMap.get( wrapperClass );
+    final IPoolableObjectType oldKey = oldListener == null ? null : oldListener.getKey();
+    // if( ObjectUtils.equals( oldKey, newKey ) )
+    // {
+    //
+    // return null;
+    // }
+
     if( oldKey != null )
-    {
       pool.removePoolListener( oldListener );
+
+    final ScenarioDataPoolListener newListener = new ScenarioDataPoolListener( this, newKey, wrapperClass );
+    m_keyMap.put( id, newListener );
+
+    try
+    {
+      final CommandableWorkspace workspace = (CommandableWorkspace) pool.loadObject( newListener, newKey );
+      final IModel model = (IModel) workspace.getRootFeature();
+      return Pair.of( model, Status.OK_STATUS );
+    }
+    catch( final CoreException e )
+    {
+      e.printStackTrace();
+      return null;
     }
 
-    if( newKey == null )
-    {
-      m_keyMap.put( id, null );
-    }
-    else
-    {
-      final KeyPoolListener newListener = new KeyPoolListener( newKey, m_controller, wrapperClass );
-      m_keyMap.put( id, newListener );
-      pool.addPoolListener( newListener, newKey );
-    }
+    // pool.addPoolListener( newListener, newKey );
   }
 
   private IPoolableObjectType keyForLocation( final IFolder szenarioFolder, final String gmlLocation )
@@ -381,9 +302,8 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
     {
       // should never happen
       e.printStackTrace();
+      return null;
     }
-
-    return null;
   }
 
   @SuppressWarnings("unchecked")
@@ -428,7 +348,7 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
   @Override
   public boolean isDirty( )
   {
-    synchronized( m_keyMap )
+    synchronized( this )
     {
       for( final String modelClass : m_keyMap.keySet() )
       {
@@ -442,7 +362,7 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
   @Override
   public boolean isDirty( final String id )
   {
-    final KeyPoolListener keyPoolListener = getKeyPoolListener( id );
+    final ScenarioDataPoolListener keyPoolListener = getKeyPoolListener( id );
 
     if( keyPoolListener == null )
       return false;
@@ -466,7 +386,7 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
   {
     final SubMonitor progress = SubMonitor.convert( monitor, Messages.getString( "org.kalypso.afgui.scenarios.SzenarioDataProvider.14" ) + id + Messages.getString( "org.kalypso.afgui.scenarios.SzenarioDataProvider.15" ), 110 ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    final KeyPoolListener keyPoolListener = getKeyPoolListener( id );
+    final ScenarioDataPoolListener keyPoolListener = getKeyPoolListener( id );
 
     try
     {
@@ -520,7 +440,7 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
     if( locationMap == null || !locationMap.containsKey( id ) )
       throw new IllegalArgumentException( Messages.getString( "org.kalypso.afgui.scenarios.SzenarioDataProvider.13" ) + id ); //$NON-NLS-1$
 
-    final KeyPoolListener keyPoolListener = getKeyPoolListener( id );
+    final ScenarioDataPoolListener keyPoolListener = getKeyPoolListener( id );
     if( keyPoolListener == null )
       return null;
 
@@ -532,12 +452,9 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
     return (CommandableWorkspace) pool.getObject( key );
   }
 
-  private KeyPoolListener getKeyPoolListener( final String id )
+  private synchronized ScenarioDataPoolListener getKeyPoolListener( final String id )
   {
-    synchronized( m_keyMap )
-    {
-      return m_keyMap.get( id );
-    }
+    return m_keyMap.get( id );
   }
 
   /**
@@ -563,9 +480,9 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
    * the pool, regardless of the success of that operation. throws {@link IllegalArgumentException} If the given data id
    * is not known.
    */
-  public synchronized boolean isLoaded( final String id )
+  private synchronized boolean isLoaded( final String id )
   {
-    final KeyPoolListener keyPoolListener = getKeyPoolListener( id );
+    final ScenarioDataPoolListener keyPoolListener = getKeyPoolListener( id );
     if( keyPoolListener == null )
     {
       final String msg = String.format( "Unknown data id '%s'", id ); //$NON-NLS-1$
@@ -608,4 +525,15 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
   {
     return "Active data set scope: [ " + m_dataSetScope + " ]";
   }
+
+  void fireModelLoaded( final IModel model, final IStatus status )
+  {
+    // REMARK: copy current listeners into array to avoid ConcurrentModificationException
+    final IScenarioDataListener[] listeners = m_controller.toArray( new IScenarioDataListener[m_controller.size()] );
+    for( final IScenarioDataListener listener : listeners )
+    {
+      listener.modelLoaded( model, status );
+    }
+  }
+
 }

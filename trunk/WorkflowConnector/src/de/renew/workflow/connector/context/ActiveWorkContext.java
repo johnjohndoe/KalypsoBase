@@ -8,6 +8,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
@@ -122,8 +123,7 @@ public class ActiveWorkContext
     }
   }
 
-  // TODO: do this in ui thread + monitor
-  public synchronized void setCurrentCase( final IScenario caze ) throws CoreException
+  public synchronized void setCurrentCase( final IScenario caze, final IProgressMonitor monitor ) throws CoreException
   {
     final IScenarioManager currentCaseManager = getCaseManager();
     final IScenario currentCase = currentCaseManager == null ? null : currentCaseManager.getCurrentCase();
@@ -146,7 +146,8 @@ public class ActiveWorkContext
       }
       else
       {
-        throw new CoreException( new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, "Das Projekt " + project.getName() + " für den Case " + caze.getName() + " existiert nicht." ) );
+        final String message = String.format( "Das Projekt %s für das Szenario %s existiert nicht.", project.getName(), caze.getName() );
+        throw new CoreException( new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, message ) );
       }
     }
 
@@ -154,8 +155,8 @@ public class ActiveWorkContext
     if( newCaseManager != null )
       newCaseManager.setCurrentCase( caze );
 
-    // FIXME: move into scenario activation code
-    m_dataProvider.setCurrent( getCurrentCase() );
+    /* Load data */
+    m_dataProvider.setCurrent( getCurrentCase(), monitor );
 
     fireActiveContextChanged( m_currentProjectNature, caze );
   }
