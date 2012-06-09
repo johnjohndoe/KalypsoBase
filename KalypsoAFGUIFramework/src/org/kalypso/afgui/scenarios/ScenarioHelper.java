@@ -54,11 +54,18 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.swt.widgets.Shell;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.internal.i18n.Messages;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.EclipsePlatformContributionsExtensions;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.core.status.StatusDialog;
 
 import de.renew.workflow.base.IWorkflow;
 import de.renew.workflow.connector.WorkflowProjectNature;
@@ -179,11 +186,40 @@ public class ScenarioHelper
   }
 
   /**
+   * This function activates a given scenario.<br/>
+   * Must be invoked in the swt thread.
+   * 
+   * @param scenario
+   *          The scenario to activate.
+   */
+  public static void activateScenario2( final Shell shell, final IScenario scenario )
+  {
+    final ActiveWorkContext context = KalypsoAFGUIFrameworkPlugin.getActiveWorkContext();
+
+    final IScenario currentCase = context.getCurrentCase();
+    if( currentCase == scenario )
+      return;
+
+    // TODO: maybe move this outside to make this more reusable
+    final ITaskExecutor executor = KalypsoAFGUIFrameworkPlugin.getTaskExecutor();
+    if( !executor.stopActiveTask() )
+      return;
+
+    final ICoreRunnableWithProgress operation = new ScenarioActivationOperation( scenario );
+
+    final IStatus status = ProgressUtilities.busyCursorWhile( operation );
+    if( !status.isOK() )
+      StatusDialog.open( shell, status, Messages.getString( "org.kalypso.afgui.handlers.ActivateScenarioHandler.0" ) ); //$NON-NLS-1$
+  }
+
+  /**
    * This function activates a given scenario.
    * 
    * @param scenario
    *          The scenario.
+   * @deprecated Use {@link #activateScenario2(IScenario)} instead.
    */
+  @Deprecated
   public static void activateScenario( final IScenario scenario ) throws CoreException
   {
     final ActiveWorkContext context = KalypsoAFGUIFrameworkPlugin.getActiveWorkContext();
@@ -197,7 +233,7 @@ public class ScenarioHelper
     if( executor.stopActiveTask() )
     {
       /* Activate the scenario. */
-      context.setCurrentCase( scenario );
+      context.setCurrentCase( scenario, new NullProgressMonitor() );
     }
   }
 

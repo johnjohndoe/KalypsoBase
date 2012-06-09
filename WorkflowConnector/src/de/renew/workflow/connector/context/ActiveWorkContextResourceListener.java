@@ -44,6 +44,7 @@ import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -68,7 +69,7 @@ public class ActiveWorkContextResourceListener implements IResourceChangeListene
   public void resourceChanged( final IResourceChangeEvent event )
   {
     // TODO:
-    // Handles cases where parts of a project (scenario folder, data files) are deleted
+    // Handle cases where parts of a project (scenario folder, data files) are deleted
 
     if( event.getType() == IResourceChangeEvent.PRE_DELETE || event.getType() == IResourceChangeEvent.PRE_CLOSE )
     {
@@ -79,7 +80,7 @@ public class ActiveWorkContextResourceListener implements IResourceChangeListene
         try
         {
           // project was closed or deleted, deactivate the current case
-          m_activeWorkContext.setCurrentCase( null );
+          m_activeWorkContext.setCurrentCase( null, new NullProgressMonitor() );
         }
         catch( final CoreException e )
         {
