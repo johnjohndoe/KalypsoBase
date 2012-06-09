@@ -8,6 +8,7 @@ import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IPerspectiveDescriptor;
@@ -24,7 +25,6 @@ import org.kalypso.afgui.internal.PerspectiveWatcher;
 import org.kalypso.afgui.internal.SzenarioDataProvider;
 import org.kalypso.afgui.internal.TaskExecutionAuthority;
 import org.kalypso.afgui.internal.TaskExecutor;
-import org.kalypso.afgui.internal.i18n.Messages;
 import org.kalypso.afgui.perspective.Perspective;
 import org.kalypso.afgui.scenarios.ScenarioDataChangeListenerExtension;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
@@ -271,7 +271,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     {
       try
       {
-        m_activeWorkContext.setCurrentCase( null );
+        m_activeWorkContext.setCurrentCase( null, new NullProgressMonitor() );
       }
       catch( final CoreException e )
       {
@@ -286,6 +286,9 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
   // this listener is always the first one to be executed...
   void handleScenarioChanged( final ScenarioHandlingProjectNature nature, final IScenario caze )
   {
+    if( PlatformUI.getWorkbench().isClosing() )
+      return;
+
     // TODO: is this the good place to do this?
     // Execute default task
     final IWorkflow workflow = ScenarioHelper.findWorkflow( caze, nature );
@@ -293,18 +296,16 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     ScenarioHelper.ensureBackwardsCompatibility( nature );
 
     final ITask defaultTask = workflow == null ? null : workflow.getDefaultTask();
-    if( defaultTask != null )
+    final UIJob job = new UIJob( "Activate taks" )
     {
-      final UIJob job = new UIJob( Messages.getString( "org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin.1" ) + nature.getProject().getName() + " - " + caze.getName() ) //$NON-NLS-1$ //$NON-NLS-2$
+      @Override
+      public final IStatus runInUIThread( final IProgressMonitor monitor )
       {
-        @Override
-        public IStatus runInUIThread( final IProgressMonitor monitor )
-        {
-          return getTaskExecutor().execute( defaultTask );
-        }
-      };
-      job.setUser( true );
-      job.schedule();
-    }
+        return getTaskExecutor().execute( defaultTask );
+      }
+    };
+    job.setUser( false );
+    job.setSystem( true );
+    job.schedule();
   }
 }
