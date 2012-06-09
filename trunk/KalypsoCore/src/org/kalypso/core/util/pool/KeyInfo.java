@@ -58,8 +58,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.progress.IProgressConstants;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCoreDebug;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.CatalogUtilities;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.loader.ILoader;
@@ -88,6 +88,8 @@ public final class KeyInfo extends Job
   private boolean m_hasNothingBlocked = false;
 
   private final Map<IPoolListener, Exception> m_addListenerTraces = Collections.synchronizedMap( new HashMap<IPoolListener, Exception>() );
+
+  private IStatus m_result;
 
   public KeyInfo( final IPoolableObjectType key, final ILoader loader )
   {
@@ -125,9 +127,9 @@ public final class KeyInfo extends Job
 
   public void addListener( final IPoolListener l )
   {
-    KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( "Adding Pool-Listener to key: %s%n", m_key ); //$NON-NLS-1$ 
+    KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( "Adding Pool-Listener to key: %s%n", m_key ); //$NON-NLS-1$
     final int state = getState();
-    KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( "Current Pool-Job state: %d%n", state ); //$NON-NLS-1$ 
+    KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( "Current Pool-Job state: %d%n", state ); //$NON-NLS-1$
 
     final Object o;
 
@@ -143,13 +145,10 @@ public final class KeyInfo extends Job
     {
       l.objectLoaded( m_key, o, Status.OK_STATUS );
     }
-    else
+    else if( state == Job.NONE )
     {
-      if( state == Job.NONE )
-      {
-        KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( "Scheduling Pool-Info for key: %s%n", m_key ); //$NON-NLS-1$ 
-        schedule();
-      }
+      KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( "Scheduling Pool-Info for key: %s%n", m_key ); //$NON-NLS-1$
+      schedule();
     }
   }
 
@@ -165,7 +164,7 @@ public final class KeyInfo extends Job
     if( isLocked() )
       return;
 
-    KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( "Reloading '%s'...%n", m_key ); //$NON-NLS-1$ 
+    KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( "Reloading '%s'...%n", m_key ); //$NON-NLS-1$
 
     synchronized( this )
     {
@@ -229,9 +228,6 @@ public final class KeyInfo extends Job
       element.dirtyChanged( m_key, isDirty );
   }
 
-  /**
-   * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   protected IStatus run( final IProgressMonitor monitor )
   {
@@ -240,53 +236,61 @@ public final class KeyInfo extends Job
     return status;
   }
 
-  /**
-   * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
-   */
-  protected IStatus loadObject( final IProgressMonitor monitor )
+  protected synchronized IStatus loadObject( final IProgressMonitor monitor )
   {
-    synchronized( this )
+    m_result = doLoadObject( monitor );
+    return m_result;
+  }
+
+  public IStatus getJobResult( )
+  {
+    return m_result;
+  }
+
+  private synchronized IStatus doLoadObject( final IProgressMonitor monitor )
+  {
+    try
     {
-      try
+      releaseObject();
+
+      KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( "Loading object for key: %s%n", m_key );//$NON-NLS-1$
+
+      m_object = m_loader.load( m_key, monitor );
+
+      if( monitor.isCanceled() )
       {
-        releaseObject();
-
-        KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( "Loading object for key: %s%n", m_key );//$NON-NLS-1$
-        final Object loadedObject = m_loader.load( m_key, monitor );
-        if( monitor.isCanceled() )
-          return Status.CANCEL_STATUS;
-
-        m_object = loadedObject;
+        m_object = null;
+        return Status.CANCEL_STATUS;
       }
-      catch( final CoreException ce )
-      {
-        final IStatus status = ce.getStatus();
-        if( m_key.isIgnoreExceptions() )
-          return Status.CANCEL_STATUS;
 
-        return status;
-      }
-      catch( final Throwable e )
-      {
-        if( m_key.isIgnoreExceptions() )
-          return Status.CANCEL_STATUS;
-
-        final Throwable cause = e.getCause();
-        if( cause instanceof CoreException )
-        {
-          final CoreException core = (CoreException) cause;
-          final IStatus status = core.getStatus();
-          if( status.matches( IStatus.CANCEL ) )
-            return status;
-        }
-
-        e.printStackTrace();
-
-        return StatusUtilities.createStatus( IStatus.ERROR, e.getLocalizedMessage(), null );
-      }
+      return m_loader.getStatus();
     }
+    catch( final CoreException ce )
+    {
+      final IStatus status = ce.getStatus();
+      if( m_key.isIgnoreExceptions() )
+        return Status.CANCEL_STATUS;
 
-    return m_loader.getStatus();
+      return status;
+    }
+    catch( final Throwable e )
+    {
+      if( m_key.isIgnoreExceptions() )
+        return Status.CANCEL_STATUS;
+
+      final Throwable cause = e.getCause();
+      if( cause instanceof CoreException )
+      {
+        final CoreException core = (CoreException) cause;
+        final IStatus status = core.getStatus();
+        if( status.matches( IStatus.CANCEL ) )
+          return status;
+      }
+
+      e.printStackTrace();
+
+      return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), e.getLocalizedMessage(), e );
+    }
   }
 
   private synchronized void releaseObject( )

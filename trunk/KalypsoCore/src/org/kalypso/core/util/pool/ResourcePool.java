@@ -254,6 +254,15 @@ public class ResourcePool
   }
 
   /**
+   * Registers a pool listener ANd directly loads the associated object. If the object was already loaded, only the
+   * listener is registered and the object is returned.
+   */
+  public Object loadObject( final IPoolListener listener, final IPoolableObjectType key ) throws CoreException
+  {
+    return getObject( key, listener );
+  }
+
+  /**
    * Specific method for synchron-loading. If the given key is already present, the associated object is returned. Else
    * a new key is temporary created for the purpose of loading. Once done, the key is disposed.
    * <p>
@@ -261,21 +270,42 @@ public class ResourcePool
    * <p>
    * Bear in mind that the pool-listener mechanism is bypassed here.
    */
-  public Object getObject( final IPoolableObjectType key ) throws CoreException// TODO: synchronize
+  public Object getObject( final IPoolableObjectType key ) throws CoreException
   {
-    final KeyInfo info = m_keyInfos.get( key );
-    if( info != null )
+    return getObject( key, null );
+  }
+
+  // TODO: synchronize
+  /**
+   * @param listener
+   *          If non-<code>null</code>, this listener will be registered and the freshly create info will not be
+   *          disposed.
+   */
+  private Object getObject( final IPoolableObjectType key, final IPoolListener listener ) throws CoreException
+  {
+    final KeyInfo existingInfo;
+
+    synchronized( m_keyInfos )
+    {
+      existingInfo = m_keyInfos.get( key );
+    }
+
+    if( existingInfo != null )
     {
       try
       {
         // wait for info
-        info.join();
+        existingInfo.join();
 
-        final IStatus result = info.getResult();
+        final IStatus result = existingInfo.getJobResult();
+
+        if( listener != null )
+          existingInfo.addListener( listener );
+
         if( !result.isOK() )
           throw new CoreException( result );
 
-        return info.getObject();
+        return existingInfo.getObject();
       }
       catch( final InterruptedException e )
       {
@@ -285,18 +315,30 @@ public class ResourcePool
       }
     }
 
-    // falls object nicht bereits da,
-    // einfach einen key nur fürs laden erzeugen, und gleich wieder disposen
-    KeyInfo info2 = null;
+    /**
+     * Create new key and load object. If listener is non-<code>null</code>, keep the info and object, else dispose
+     * everything.
+     */
+    KeyInfo newInfo = null;
     try
     {
       final ILoader loader = m_factory.getLoaderInstance( key.getType() );
-      info2 = new KeyInfo( key, loader );
-      final IStatus result = info2.loadObject( new NullProgressMonitor() );
+      newInfo = new KeyInfo( key, loader );
+      final IStatus result = newInfo.loadObject( new NullProgressMonitor() );
       if( (result.getSeverity() & IStatus.ERROR) != 0 )
         throw new CoreException( result );
 
-      return info2.getObject();
+      if( listener != null )
+      {
+        newInfo.addListener( listener );
+
+        synchronized( m_keyInfos )
+        {
+          m_keyInfos.put( key, newInfo );
+        }
+      }
+
+      return newInfo.getObject();
     }
     catch( final Exception e )
     {
@@ -304,8 +346,8 @@ public class ResourcePool
     }
     finally
     {
-      if( info2 != null )
-        info2.dispose();
+      if( newInfo != null && listener == null )
+        newInfo.dispose();
     }
   }
 
