@@ -84,9 +84,10 @@ abstract class AbstractThemeNode<T> extends PlatformObject implements IThemeNode
 
   protected void checkDisposed( )
   {
-    if( m_disposed )
+    // FIXME: we need to do something....
+// if( m_disposed )
 //throw new IllegalStateException( "this node has already been dispsoed" ); //$NON-NLS-1$
-      System.out.println( "this node has already been dispsoed" ); //$NON-NLS-1$
+//      System.out.println( "this node has already been dispsoed" ); //$NON-NLS-1$
   }
 
   @Override
