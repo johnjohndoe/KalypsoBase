@@ -160,8 +160,8 @@ class TaskPerspectiveStore
 
     workbench.addWindowListener( m_windowListener );
 
-    final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-    if( window != null )
+    final IWorkbenchWindow[] workbenchWindows = workbench.getWorkbenchWindows();
+    for( final IWorkbenchWindow window : workbenchWindows )
       handleWindowOpened( window );
   }
 

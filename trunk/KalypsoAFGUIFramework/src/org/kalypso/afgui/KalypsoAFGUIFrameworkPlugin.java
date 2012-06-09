@@ -166,6 +166,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
       if( PlatformUI.isWorkbenchRunning() )
       {
         // FIXME: must be called in ui thread
+        // TODO: why a workspace job at all??
         new WorkspaceJob( "" ) //$NON-NLS-1$
         {
           @Override
@@ -176,6 +177,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
 
             return Status.OK_STATUS;
           }
+          // TODO: why 5 sec?
         }.schedule( 5000 );
       }
     }
