@@ -158,7 +158,6 @@ public class TaskExecutor implements ITaskExecutor
     if( !contextStatus.isOK() )
       return contextStatus;
 
-
     /* Activate new task and execute */
     final IStatus taskExecutionStatus = executeTaskCommand( task, TASK_COMMNAND_ROLE_ACTIVATE );
     if( taskExecutionStatus.matches( IStatus.CANCEL ) )
@@ -170,7 +169,6 @@ public class TaskExecutor implements ITaskExecutor
 
     final ITask oldTask = m_activeTask;
 
-    // FIXME: different behavior than before
     if( task instanceof ITaskGroup )
       m_activeTask = null;
     else
@@ -184,6 +182,9 @@ public class TaskExecutor implements ITaskExecutor
 
   private IStatus executeTaskCommand( final ITask task, final String role )
   {
+    if( task == null )
+      return Status.OK_STATUS;
+
     final String commandID = String.format( "%s%s", task.getURI(), role );
 
     final String categoryId = task instanceof ITaskGroup ? TaskExecutionListener.CATEGORY_TASKGROUP : TaskExecutionListener.CATEGORY_TASK;
@@ -217,9 +218,7 @@ public class TaskExecutor implements ITaskExecutor
 
   private IStatus activateTaskContext( final ITask task, final boolean isPerspectiveConfigured )
   {
-    final ContextType context = task.getContext();
-    if( context == null )
-      return Status.OK_STATUS;
+    final ContextType context = task == null ? null : task.getContext();
 
     final IStatus contextStatus = activateContext( context );
 
@@ -279,6 +278,9 @@ public class TaskExecutor implements ITaskExecutor
    */
   private IStatus activateContext( final ContextType context )
   {
+    if( context == null )
+      return Status.OK_STATUS;
+
     final ContextType parentContext = context.getParent();
     if( parentContext != null )
     {

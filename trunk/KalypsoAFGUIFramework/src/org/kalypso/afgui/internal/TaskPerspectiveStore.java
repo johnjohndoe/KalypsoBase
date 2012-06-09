@@ -84,7 +84,7 @@ import de.renew.workflow.base.IWorkflow;
 
 /**
  * This class is responsible for loading / storing the perspective configuration for a task.
- *
+ * 
  * @author Gernot Belger
  */
 @SuppressWarnings("restriction")
@@ -148,6 +148,10 @@ class TaskPerspectiveStore
 
   private final TaskExecutor m_executor;
 
+  private boolean m_ignoreNextActivation = false;
+
+  private boolean m_ignoreNextDeactivation = false;
+
   public TaskPerspectiveStore( final TaskExecutor executor )
   {
     m_executor = executor;
@@ -167,16 +171,9 @@ class TaskPerspectiveStore
    */
   private XMLMemento loadSystemDefinition( final ITask task )
   {
-    if( task == null )
-      return null;
-
     try
     {
-      final IWorkflow workflow = task.getWorkflow();
-      final URL resourceContext = workflow.getResourceContext();
-
-      final String filename = getFilename( task );
-      final URL systemLocation = new URL( resourceContext, filename );
+      final URL systemLocation = getSystemLocation( task );
 
       try (Reader reader = new InputStreamReader( systemLocation.openStream(), Charsets.UTF_8 ))
       {
@@ -200,8 +197,24 @@ class TaskPerspectiveStore
     }
   }
 
+  private URL getSystemLocation( final ITask task ) throws MalformedURLException
+  {
+    if( task == null )
+      return getClass().getResource( "resources/no_task_persp.xml" ); //$NON-NLS-1$
+
+    final IWorkflow workflow = task.getWorkflow();
+    final URL resourceContext = workflow.getResourceContext();
+
+    final String filename = getFilename( task );
+
+    return new URL( resourceContext, filename );
+  }
+
   private XMLMemento loadUserDefinition( final ITask task )
   {
+    if( task == null )
+      return null;
+
     final File userFile = getUserFile( task );
     if( !userFile.exists() )
       return null;
@@ -224,8 +237,7 @@ class TaskPerspectiveStore
   {
     final File userDir = getUserArea();
     final String filename = getFilename( task );
-    final File taskPerspectiveFile = new File( userDir, filename );
-    return taskPerspectiveFile;
+    return new File( userDir, filename );
   }
 
   private String getFilename( final ITask task )
@@ -264,6 +276,10 @@ class TaskPerspectiveStore
    */
   void saveTaskPerspective( final ITask task )
   {
+    /* Never save empty task */
+    if( task == null )
+      return;
+
     /* Save current configuration to user file */
     final File taskPerspectiveFile = getUserFile( task );
 
@@ -410,6 +426,9 @@ class TaskPerspectiveStore
     if( m_resetInProgress )
       return;
 
+    m_ignoreNextActivation = true;
+    m_ignoreNextDeactivation = true;
+
     clearUserEntries();
     resetSystemSettings( (PerspectiveDescriptor) perspective );
   }
@@ -454,9 +473,14 @@ class TaskPerspectiveStore
     if( m_resetInProgress )
       return;
 
+    if( m_ignoreNextDeactivation )
+    {
+      m_ignoreNextDeactivation = false;
+      return;
+    }
+
     final ITask activeTask = m_executor.getActiveTask();
-    if( activeTask != null )
-      saveTaskPerspective( activeTask );
+    saveTaskPerspective( activeTask );
   }
 
   /**
@@ -468,8 +492,13 @@ class TaskPerspectiveStore
     if( m_resetInProgress )
       return;
 
+    if( m_ignoreNextActivation )
+    {
+      m_ignoreNextActivation = false;
+      return;
+    }
+
     final ITask activeTask = m_executor.getActiveTask();
-    if( activeTask != null )
-      restoreTaskPerspective( activeTask );
+    restoreTaskPerspective( activeTask );
   }
 }
