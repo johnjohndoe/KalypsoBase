@@ -40,15 +40,11 @@ package org.kalypsodeegree.model.typeHandler;
  */
 public class XsdBaseTypeHandlerFloat extends XsdBaseTypeHandler<Float>
 {
-
   public XsdBaseTypeHandlerFloat( )
   {
-    super( "float", Float.class );
+    super( "float", Float.class ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
-   */
   @Override
   public Float convertToJavaValue( final String xmlString )
   {
@@ -58,18 +54,12 @@ public class XsdBaseTypeHandlerFloat extends XsdBaseTypeHandler<Float>
     return Float.valueOf( xmlString );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(java.lang.Object)
-   */
   @Override
   public String convertToXMLString( final Float value )
   {
     return Float.toString( value );
   }
 
-  /**
-   * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-   */
   @Override
   public int compare( final Float o1, final Float o2 )
   {
@@ -84,5 +74,4 @@ public class XsdBaseTypeHandlerFloat extends XsdBaseTypeHandler<Float>
 
     return o1.compareTo( o2 );
   }
-
 }

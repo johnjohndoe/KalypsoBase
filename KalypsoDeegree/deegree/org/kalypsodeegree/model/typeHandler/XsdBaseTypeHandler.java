@@ -123,9 +123,6 @@ public abstract class XsdBaseTypeHandler<T> implements ISimpleMarshallingTypeHan
     return convertToJavaValue( xmlString );
   }
 
-  /**
-   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#parseType(java.lang.String)
-   */
   @Override
   public Object parseType( final String xmlString ) throws ParseException
   {

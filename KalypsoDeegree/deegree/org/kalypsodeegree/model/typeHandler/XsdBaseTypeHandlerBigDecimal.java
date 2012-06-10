@@ -44,12 +44,9 @@ public class XsdBaseTypeHandlerBigDecimal extends XsdBaseTypeHandler<BigDecimal>
 {
   public XsdBaseTypeHandlerBigDecimal( )
   {
-    super( "decimal", BigDecimal.class );
+    super( "decimal", BigDecimal.class ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
-   */
   @Override
   public BigDecimal convertToJavaValue( final String xmlString )
   {
@@ -59,9 +56,6 @@ public class XsdBaseTypeHandlerBigDecimal extends XsdBaseTypeHandler<BigDecimal>
     return new BigDecimal( xmlString.replace( ',', '.' ) );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
-   */
   @Override
   public String convertToXMLString( final BigDecimal value )
   {
@@ -73,9 +67,6 @@ public class XsdBaseTypeHandlerBigDecimal extends XsdBaseTypeHandler<BigDecimal>
     return value == null ? "" : value.toString();
   }
 
-  /**
-   * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-   */
   @Override
   public int compare( final BigDecimal o1, final BigDecimal o2 )
   {
