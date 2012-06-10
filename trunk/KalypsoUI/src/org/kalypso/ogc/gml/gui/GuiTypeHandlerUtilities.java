@@ -86,6 +86,8 @@ public class GuiTypeHandlerUtilities
     guiRegistry.registerTypeHandler( new XsdDateGuiTypeHandler( (XsdBaseTypeHandler< ? >) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "dateTime" ) ), XsdDateGuiTypeHandler.DF_DateTime, true ) ); //$NON-NLS-1$
     guiRegistry.registerTypeHandler( new XsdDateGuiTypeHandler( (XsdBaseTypeHandler< ? >) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "time" ) ), XsdDateGuiTypeHandler.DF_Time, false ) ); //$NON-NLS-1$
 
+    guiRegistry.registerTypeHandler( new XsdFloatGuiTypeHandler( (XsdBaseTypeHandler< ? >) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "float" ) ) ) ); //$NON-NLS-1$
+    guiRegistry.registerTypeHandler( new XsdDoubleGuiTypeHandler( (XsdBaseTypeHandler< ? >) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "double" ) ) ) ); //$NON-NLS-1$
     guiRegistry.registerTypeHandler( new XsdDecimalGuiTypeHandler( (XsdBaseTypeHandler< ? >) marshallingRegistry.getTypeHandlerForTypeName( new QName( NS.XSD_SCHEMA, "decimal" ) ) ) ); //$NON-NLS-1$
 
     guiRegistry.registerTypeHandler( new Gml3EnvelopeGuiTypeHandler() );

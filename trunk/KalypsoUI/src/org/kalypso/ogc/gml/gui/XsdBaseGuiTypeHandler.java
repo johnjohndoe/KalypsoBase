@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.gui;
 
@@ -81,20 +81,12 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
     m_handler = handler;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureDialog(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypso.gmlschema.property.IPropertyType)
-   */
   @Override
   public IFeatureDialog createFeatureDialog( final Feature feature, final IPropertyType ftp )
   {
     return new NotImplementedFeatureDialog();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureviewControl(javax.xml.namespace.QName,
-   *      org.kalypso.template.featureview.ObjectFactory)
-   */
   @Override
   public JAXBElement< ? extends ControlType> createFeatureviewControl( final IPropertyType property, final ObjectFactory factory )
   {
@@ -155,40 +147,28 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
     return new StringModifier( propertyPath, vpt, format );
   }
 
-  /**
-   * @see org.kalypso.gmlschema.types.ITypeHandler#getValueClass()
-   */
   @Override
   public Class< ? > getValueClass( )
   {
     return m_handler.getValueClass();
   }
 
-  /**
-   * @see org.kalypso.gmlschema.types.ITypeHandler#getTypeName()
-   */
   @Override
   public QName getTypeName( )
   {
     return m_handler.getTypeName();
   }
 
-  /**
-   * @see org.kalypso.gmlschema.types.ITypeHandler#isGeometry()
-   */
   @Override
   public boolean isGeometry( )
   {
     return m_handler.isGeometry();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#fromText(java.lang.String)
-   */
   @Override
   public Object parseText( final String text, final String formatHint ) throws ParseException
   {
-    // Standard is to use the parseType method from the corresponding marhsalling type handler
+    // Standard is to use the parseType method from the corresponding marshalling type handler
     // In future, this should be directly implemented at this point
     final IMarshallingTypeHandler marshallingHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerForTypeName( getTypeName() );
     return marshallingHandler.parseType( text );
