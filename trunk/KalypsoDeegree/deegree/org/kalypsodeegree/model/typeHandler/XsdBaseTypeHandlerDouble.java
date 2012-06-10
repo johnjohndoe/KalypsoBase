@@ -44,12 +44,9 @@ public class XsdBaseTypeHandlerDouble extends XsdBaseTypeHandler<Double>
 {
   public XsdBaseTypeHandlerDouble( )
   {
-    super( "double", Double.class );
+    super( "double", Double.class ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToJavaValue(java.lang.String)
-   */
   @Override
   public Double convertToJavaValue( final String xmlString )
   {
@@ -61,18 +58,12 @@ public class XsdBaseTypeHandlerDouble extends XsdBaseTypeHandler<Double>
     return Double.valueOf( xmlString.replace( ',', '.' ) );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.XsdBaseTypeHandler#convertToXMLString(T)
-   */
   @Override
   public String convertToXMLString( final Double value )
   {
     return Double.toString( value );
   }
 
-  /**
-   * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-   */
   @Override
   public int compare( final Double o1, final Double o2 )
   {
