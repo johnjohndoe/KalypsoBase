@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,12 +36,14 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.gui;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
@@ -102,5 +104,23 @@ public class XsdDecimalGuiTypeHandler extends XsdBaseGuiTypeHandler
     }
 
     return super.getText( element );
+  }
+
+  @Override
+  public Object parseText( final String text, final String formatHint ) throws ParseException
+  {
+    final String normalizedText = XsdFloatGuiTypeHandler.normalizeDecimalText( text );
+
+    if( StringUtils.isBlank( normalizedText ) )
+      return null;
+
+    try
+    {
+      return new BigDecimal( normalizedText );
+    }
+    catch( final NumberFormatException e )
+    {
+      throw new ParseException( e.getLocalizedMessage(), 0 );
+    }
   }
 }
