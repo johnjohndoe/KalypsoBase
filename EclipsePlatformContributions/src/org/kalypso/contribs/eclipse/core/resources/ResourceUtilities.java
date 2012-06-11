@@ -58,7 +58,7 @@ import org.kalypso.contribs.java.net.UrlUtilities;
 /**
  * ResourceUtilities
  * <p>
- *
+ * 
  * @author schlienger (14.06.2005)
  */
 @SuppressWarnings("restriction")
@@ -71,7 +71,7 @@ public final class ResourceUtilities
 
   /**
    * Gibt den IFile-Handler zurück, falls die URL eine Platform Url denotiert
-   *
+   * 
    * @see PlatformURLResourceConnection
    */
   public static IFile findFileFromURL( final URL u )
@@ -134,7 +134,7 @@ public final class ResourceUtilities
 
   /**
    * Resolves an absolute path (i.e. relative to IWorkspaceRoot) and returns its real location.
-   *
+   * 
    * @return A Java-File representing the resource, or null if file does not exists.
    */
   public static File makeFileFromPath( final IPath resource )
@@ -270,7 +270,7 @@ public final class ResourceUtilities
   /**
    * Creates an URL given a resource. Uses the eclipse scheme defined in
    * PlatformURLResourceConnection.RESOURCE_URL_STRING.
-   *
+   * 
    * @see PlatformURLResourceConnection#RESOURCE_URL_STRING
    * @param resource
    * @return platform URL
@@ -312,7 +312,7 @@ public final class ResourceUtilities
 
   /**
    * Creates the string representation of an URL given an IPath.
-   *
+   * 
    * @param path
    * @return platform URL
    */
@@ -323,7 +323,7 @@ public final class ResourceUtilities
 
   /**
    * Tries to get the parent project of this container.
-   *
+   * 
    * @return the parent project of the start container or null if the container is the WorkspaceRoot or itself if start
    *         is a Project.
    */
@@ -343,7 +343,7 @@ public final class ResourceUtilities
    * <br/>
    * First it tries to find the project and then iterates over all segments, getting the IFolder for it. At the last
    * segment, you get an IFile.
-   *
+   * 
    * @param path
    *          The path of the file. It must be relative to the workspace.
    * @return The Eclipse-File representing the path.
@@ -374,7 +374,7 @@ public final class ResourceUtilities
 
   /**
    * Returns all children of the given container.
-   *
+   * 
    * @param depth
    *          See {@link org.eclipse.core.resources.IResource}
    */
@@ -389,7 +389,7 @@ public final class ResourceUtilities
    * Returns all children of the given container.
    * <p>
    * If any exception is thrown, it is suppressed and an empty array of files is returned.
-   *
+   * 
    * @param depth
    *          See {@link org.eclipse.core.resources.IResource}
    */
@@ -412,7 +412,7 @@ public final class ResourceUtilities
    * returned.
    * <p>
    * If any exception is thrown, it is suppressed and an empty array of files is returned.
-   *
+   * 
    * @param depth
    *          See {@link org.eclipse.core.resources.IResource}
    * @param extension
@@ -435,7 +435,7 @@ public final class ResourceUtilities
 
   /**
    * check if the child file can be expressed as a relative path regarding to the given parent folder.
-   *
+   * 
    * @return The relative path (possibly using '..' notation, or <code>terrainModelFile#toFullPath</code> an absolute
    *         path if this is not possible.
    */
@@ -476,5 +476,24 @@ public final class ResourceUtilities
     dir.mkdirs();
 
     folder.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
+  }
+
+  public static void copyFolderContents( final IFolder sourceFolder, final IFolder targetFolder ) throws CoreException
+  {
+    /* Create the target folder. */
+    if( !targetFolder.exists() )
+      mkdirs( targetFolder );
+
+    /* Get all members. */
+    final IResource[] sourceMembers = sourceFolder.members();
+    for( final IResource sourceMember : sourceMembers )
+    {
+      /* Build the target member. */
+      final IPath fullPath = targetFolder.getFullPath();
+      final IPath targetMember = fullPath.append( sourceMember.getName() );
+
+      /* Copy this source member to the target folder. */
+      sourceMember.copy( targetMember, false, new NullProgressMonitor() );
+    }
   }
 }
