@@ -465,24 +465,11 @@ public final class ResourceUtilities
     return new URI( urlSpec );
   }
 
-  public static void mkdirs( final IContainer container ) throws CoreException
-  {
-    if( !(container instanceof IFolder) )
-      return;
-
-    final IFolder folder = (IFolder) container;
-
-    final File dir = folder.getFullPath().toFile();
-    dir.mkdirs();
-
-    folder.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
-  }
-
   public static void copyFolderContents( final IFolder sourceFolder, final IFolder targetFolder ) throws CoreException
   {
     /* Create the target folder. */
     if( !targetFolder.exists() )
-      mkdirs( targetFolder );
+      FolderUtilities.mkdirs( targetFolder );
 
     /* Get all members. */
     final IResource[] sourceMembers = sourceFolder.members();
