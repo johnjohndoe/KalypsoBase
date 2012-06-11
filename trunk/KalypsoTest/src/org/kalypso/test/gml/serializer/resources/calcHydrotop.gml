@@ -47,7 +47,6 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -191,7 +190,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -223,7 +222,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -268,7 +267,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -322,7 +321,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -354,7 +353,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -399,7 +398,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -431,7 +430,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -485,7 +484,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -517,7 +516,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -562,7 +561,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -634,7 +633,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -666,7 +665,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -698,7 +697,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -743,7 +742,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -788,7 +787,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -860,7 +859,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -892,7 +891,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -937,7 +936,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -969,7 +968,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -1001,7 +1000,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -1046,7 +1045,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -1078,7 +1077,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.0</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -1222,7 +1221,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -1254,7 +1253,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -1299,7 +1298,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -1331,7 +1330,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -1376,7 +1375,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -1408,7 +1407,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -1804,7 +1803,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -2002,7 +2001,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -2074,7 +2073,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -2119,7 +2118,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -2173,7 +2172,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -2218,7 +2217,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -2250,7 +2249,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -2282,7 +2281,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -2314,7 +2313,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -2395,7 +2394,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -2440,7 +2439,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -2494,7 +2493,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -2557,7 +2556,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -2589,7 +2588,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -2621,7 +2620,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -2837,7 +2836,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -2900,7 +2899,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -2932,7 +2931,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -2964,7 +2963,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">1.376</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -3027,7 +3026,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -3189,7 +3188,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -3234,7 +3233,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -3279,7 +3278,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -3311,7 +3310,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -3365,7 +3364,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -3397,7 +3396,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.0</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -3451,7 +3450,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -3483,7 +3482,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -3582,7 +3581,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -3699,7 +3698,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -3771,7 +3770,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -3825,7 +3824,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -3857,7 +3856,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -3889,7 +3888,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -3921,7 +3920,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -3953,7 +3952,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -3985,7 +3984,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -4057,7 +4056,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -4089,7 +4088,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -4121,7 +4120,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -4243,7 +4242,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -4324,7 +4323,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -4369,7 +4368,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -4423,7 +4422,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -4455,7 +4454,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -4487,7 +4486,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -4541,7 +4540,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -4573,7 +4572,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -4605,7 +4604,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -4637,7 +4636,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -4700,7 +4699,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -4732,7 +4731,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.269</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -4764,7 +4763,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -4796,7 +4795,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -4828,7 +4827,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -4860,7 +4859,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -4923,7 +4922,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -4968,7 +4967,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -5013,7 +5012,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -5045,7 +5044,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -5077,7 +5076,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -5109,7 +5108,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -5154,7 +5153,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -5217,7 +5216,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -5298,7 +5297,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -5370,7 +5369,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -5402,7 +5401,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">1.847</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -5434,7 +5433,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -5466,7 +5465,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -5498,7 +5497,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -5530,7 +5529,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -5584,7 +5583,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -5629,7 +5628,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -5661,7 +5660,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -5693,7 +5692,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -5959,7 +5958,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -6040,7 +6039,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -6112,7 +6111,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -6144,7 +6143,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -6176,7 +6175,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -6208,7 +6207,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -6240,7 +6239,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -6285,7 +6284,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -6317,7 +6316,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -6479,7 +6478,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -6511,7 +6510,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -6543,7 +6542,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -6575,7 +6574,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -6638,7 +6637,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -6728,7 +6727,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -6760,7 +6759,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -6792,7 +6791,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -6864,7 +6863,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -6954,7 +6953,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -6986,7 +6985,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -7018,7 +7017,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -7050,7 +7049,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -7082,7 +7081,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.269</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -7114,7 +7113,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -7159,7 +7158,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -7191,7 +7190,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -7236,7 +7235,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -7268,7 +7267,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -7313,7 +7312,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -7345,7 +7344,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -7377,7 +7376,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.269</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -7409,7 +7408,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -7441,7 +7440,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -7473,7 +7472,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -7505,7 +7504,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -7550,7 +7549,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.194</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -7582,7 +7581,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.269</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -7614,7 +7613,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -7646,7 +7645,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -7678,7 +7677,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -7710,7 +7709,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -7742,7 +7741,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -7796,7 +7795,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -7841,7 +7840,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -7904,7 +7903,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -7936,7 +7935,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -7968,7 +7967,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.0</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -8000,7 +7999,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -8032,7 +8031,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.102</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -8064,7 +8063,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -8109,7 +8108,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -8141,7 +8140,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -8186,7 +8185,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -8218,7 +8217,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -8250,7 +8249,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.0</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -8313,7 +8312,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -8345,7 +8344,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -8444,7 +8443,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -8498,7 +8497,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -8530,7 +8529,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -8575,7 +8574,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -8620,7 +8619,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -8652,7 +8651,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -8697,7 +8696,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -8814,7 +8813,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -8846,7 +8845,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.37</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -8900,7 +8899,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -8932,7 +8931,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -8977,7 +8976,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -9009,7 +9008,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -9041,7 +9040,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -9086,7 +9085,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -9185,7 +9184,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -9230,7 +9229,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -9275,7 +9274,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -9307,7 +9306,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -9339,7 +9338,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.0</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -9393,7 +9392,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -9425,7 +9424,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -9488,7 +9487,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -9704,7 +9703,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -9776,7 +9775,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -9821,7 +9820,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -9875,7 +9874,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -9929,7 +9928,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -9961,7 +9960,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -10024,7 +10023,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -10069,7 +10068,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -10101,7 +10100,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -10155,7 +10154,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -10200,7 +10199,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -10245,7 +10244,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -10452,7 +10451,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -10484,7 +10483,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -10516,7 +10515,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -10548,7 +10547,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -10580,7 +10579,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -10612,7 +10611,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.102</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -10644,7 +10643,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.0</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -10689,7 +10688,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -10788,7 +10787,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -10820,7 +10819,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -10852,7 +10851,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -10951,7 +10950,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -11077,7 +11076,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -11122,7 +11121,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -11154,7 +11153,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -11199,7 +11198,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -11244,7 +11243,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -11276,7 +11275,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -11308,7 +11307,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -11353,7 +11352,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -11385,7 +11384,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -11417,7 +11416,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -11449,7 +11448,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -11494,7 +11493,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -11526,7 +11525,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -11558,7 +11557,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -11590,7 +11589,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -11622,7 +11621,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -11654,7 +11653,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -11686,7 +11685,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -11749,7 +11748,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -11794,7 +11793,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -11826,7 +11825,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.194</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -11871,7 +11870,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -11903,7 +11902,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -11935,7 +11934,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -11967,7 +11966,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">1.62E-8</m_perkm>
 
@@ -11999,7 +11998,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">1.62E-8</m_perkm>
 
@@ -12062,7 +12061,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">1.62E-8</m_perkm>
 
@@ -12094,7 +12093,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">1.62E-8</m_perkm>
 
@@ -12126,7 +12125,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">1.62E-8</m_perkm>
 
@@ -12180,7 +12179,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">1.62E-8</m_perkm>
 
@@ -12225,7 +12224,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -12257,7 +12256,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -12302,7 +12301,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -12374,7 +12373,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -12406,7 +12405,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -12438,7 +12437,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -12470,7 +12469,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -12502,7 +12501,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -12534,7 +12533,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -12602,7 +12601,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -12634,7 +12633,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -12666,7 +12665,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -12698,7 +12697,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.0</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -12743,7 +12742,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -12775,7 +12774,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -12856,7 +12855,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -12888,7 +12887,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -12920,7 +12919,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -12952,7 +12951,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -13006,7 +13005,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -13051,7 +13050,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -13105,7 +13104,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -13159,7 +13158,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -13191,7 +13190,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -13223,7 +13222,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -13255,7 +13254,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.194</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -13287,7 +13286,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -13319,7 +13318,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -13351,7 +13350,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -13383,7 +13382,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -13415,7 +13414,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -13447,7 +13446,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -13506,7 +13505,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -13538,7 +13537,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -13570,7 +13569,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -13615,7 +13614,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -13647,7 +13646,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -13679,7 +13678,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -13711,7 +13710,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -13743,7 +13742,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -13775,7 +13774,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -13807,7 +13806,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.0</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -13839,7 +13838,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -13871,7 +13870,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -13903,7 +13902,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -13948,7 +13947,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -13980,7 +13979,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.078</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -14025,7 +14024,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -14070,7 +14069,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -14115,7 +14114,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -14160,7 +14159,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -14192,7 +14191,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -14237,7 +14236,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -14269,7 +14268,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -14301,7 +14300,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -14333,7 +14332,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -14378,7 +14377,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -14410,7 +14409,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -14442,7 +14441,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -14474,7 +14473,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -14506,7 +14505,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -14569,7 +14568,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -14668,7 +14667,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -14740,7 +14739,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -14772,7 +14771,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -14804,7 +14803,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -14836,7 +14835,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.194</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -14881,7 +14880,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -14913,7 +14912,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -14945,7 +14944,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -14990,7 +14989,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -15053,7 +15052,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -15085,7 +15084,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -15117,7 +15116,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -15162,7 +15161,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -15261,7 +15260,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -15293,7 +15292,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -15325,7 +15324,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -15388,7 +15387,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -15550,7 +15549,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -15595,7 +15594,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -15685,7 +15684,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -15748,7 +15747,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -15780,7 +15779,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -15812,7 +15811,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -15844,7 +15843,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -15889,7 +15888,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -15921,7 +15920,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -15953,7 +15952,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -15985,7 +15984,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -16017,7 +16016,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -16049,7 +16048,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -16103,7 +16102,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -16202,7 +16201,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -16301,7 +16300,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -16400,7 +16399,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -16432,7 +16431,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -16639,7 +16638,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -16783,7 +16782,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -16815,7 +16814,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -16869,7 +16868,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -16901,7 +16900,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -16946,7 +16945,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -17000,7 +16999,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -17063,7 +17062,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -17095,7 +17094,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -17158,7 +17157,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -17203,7 +17202,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -17325,7 +17324,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -17388,7 +17387,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -17420,7 +17419,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -17452,7 +17451,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -17515,7 +17514,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -17547,7 +17546,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -17579,7 +17578,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -17714,7 +17713,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -17777,7 +17776,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -17809,7 +17808,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -17841,7 +17840,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -17895,7 +17894,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -17927,7 +17926,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -17981,7 +17980,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -18062,7 +18061,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -18094,7 +18093,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -18126,7 +18125,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -18207,7 +18206,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -18252,7 +18251,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -18284,7 +18283,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -18316,7 +18315,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -18348,7 +18347,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -18380,7 +18379,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -18412,7 +18411,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.0</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -18457,7 +18456,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -18529,7 +18528,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -18561,7 +18560,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -18624,7 +18623,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -18678,7 +18677,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -18710,7 +18709,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -18755,7 +18754,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.194</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -18827,7 +18826,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -18859,7 +18858,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -18891,7 +18890,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -18923,7 +18922,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.0</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -18955,7 +18954,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -18987,7 +18986,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -19019,7 +19018,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.194</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -19051,7 +19050,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">2.8E-8</m_perkm>
 
@@ -19141,7 +19140,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -19173,7 +19172,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -19254,7 +19253,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -19362,7 +19361,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -19470,7 +19469,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -19502,7 +19501,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -19565,7 +19564,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -19673,7 +19672,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -19835,7 +19834,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -19952,7 +19951,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -19984,7 +19983,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -20016,7 +20015,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -20061,7 +20060,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -20142,7 +20141,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -20205,7 +20204,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -20237,7 +20236,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -20269,7 +20268,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -20332,7 +20331,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -20364,7 +20363,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -20517,7 +20516,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -20549,7 +20548,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -20783,7 +20782,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -20918,7 +20917,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -20950,7 +20949,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -20982,7 +20981,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -21014,7 +21013,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -21046,7 +21045,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -21091,7 +21090,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -21123,7 +21122,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -21204,7 +21203,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -21236,7 +21235,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -21268,7 +21267,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -21322,7 +21321,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -21484,7 +21483,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -21529,7 +21528,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -21561,7 +21560,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -21593,7 +21592,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -21674,7 +21673,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -21719,7 +21718,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -21773,7 +21772,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -21872,7 +21871,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -21904,7 +21903,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -22111,7 +22110,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -22237,7 +22236,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -22291,7 +22290,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -22323,7 +22322,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -22368,7 +22367,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -22400,7 +22399,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -22445,7 +22444,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -22544,7 +22543,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -22607,7 +22606,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -22639,7 +22638,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -22671,7 +22670,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -22779,7 +22778,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -22824,7 +22823,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -22856,7 +22855,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -22910,7 +22909,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -22942,7 +22941,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -23005,7 +23004,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -23037,7 +23036,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -23069,7 +23068,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -23123,7 +23122,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -23155,7 +23154,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -23209,7 +23208,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -23241,7 +23240,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -23273,7 +23272,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -23305,7 +23304,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -23337,7 +23336,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -23369,7 +23368,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -23423,7 +23422,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -23455,7 +23454,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -23699,7 +23698,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -23744,7 +23743,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -23807,7 +23806,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -23852,7 +23851,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -23884,7 +23883,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -23916,7 +23915,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -23970,7 +23969,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -24042,7 +24041,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -24123,7 +24122,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -24249,7 +24248,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -24303,7 +24302,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -24348,7 +24347,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -24380,7 +24379,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -24412,7 +24411,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -24502,7 +24501,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -24655,7 +24654,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -24687,7 +24686,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -24732,7 +24731,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -24764,7 +24763,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -24859,7 +24858,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -24922,7 +24921,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -24954,7 +24953,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -24986,7 +24985,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -25144,7 +25143,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -25207,7 +25206,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -25239,7 +25238,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -25271,7 +25270,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -25303,7 +25302,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -25348,7 +25347,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -25393,7 +25392,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -25456,7 +25455,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -25488,7 +25487,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.102</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -25533,7 +25532,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -25587,7 +25586,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -25619,7 +25618,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -25651,7 +25650,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -25683,7 +25682,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.0</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -25720,7 +25719,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -25752,7 +25751,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -25896,7 +25895,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -25950,7 +25949,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -25982,7 +25981,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -26045,7 +26044,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -26077,7 +26076,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -26109,7 +26108,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -26163,7 +26162,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -26195,7 +26194,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -26227,7 +26226,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -26259,7 +26258,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -26340,7 +26339,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -26385,7 +26384,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -26417,7 +26416,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -26449,7 +26448,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -26481,7 +26480,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -26535,7 +26534,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -26567,7 +26566,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -26599,7 +26598,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -26631,7 +26630,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -26663,7 +26662,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -26708,7 +26707,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -26740,7 +26739,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -26772,7 +26771,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -26804,7 +26803,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -26836,7 +26835,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">1.62E-4</m_perkm>
 
@@ -27007,7 +27006,7 @@
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
 
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
+
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
@@ -27087,8 +27086,6 @@
     <soiltype xmlns="http://www.tuhh.de/hydrotop">mS-Sl2_2</soiltype>
 
     <corrSealing xmlns="http://www.tuhh.de/hydrotop">0.381</corrSealing>
-
-    <drainageType xmlns="http://www.tuhh.de/hydrotop">besielt</drainageType>
 
     <m_perkm xmlns="http://www.tuhh.de/hydrotop">6.94E-9</m_perkm>
 
