@@ -245,7 +245,8 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
     for( final ScenarioDataPoolListener listener : keys )
     {
       final KeyInfo keyInfo = pool.getInfoForKey( listener.getKey() );
-      keyInfo.reload();
+      if( keyInfo != null )
+        keyInfo.reload();
     }
   }
 
@@ -398,11 +399,15 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
       {
         final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
         final KeyInfo infoForKey = pool.getInfoForKey( key );
+
         progress.worked( 10 );
-        if( infoForKey.isDirty() )
+
+        if( infoForKey != null && infoForKey.isDirty() )
         {
           infoForKey.saveObject( progress.newChild( 100 ) );
         }
+        else
+          progress.worked( 100 );
       }
     }
     catch( final LoaderException e )
