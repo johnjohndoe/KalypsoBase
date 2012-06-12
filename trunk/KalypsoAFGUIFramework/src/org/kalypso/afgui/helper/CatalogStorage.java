@@ -43,6 +43,7 @@ package org.kalypso.afgui.helper;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.apache.commons.httpclient.URIException;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -78,7 +79,7 @@ public class CatalogStorage extends UrlStorage
       final CatalogStorage storage = new CatalogStorage( content, scenarioContext );
       return new StorageEditorInput( storage );
     }
-    catch( final MalformedURLException e )
+    catch( final MalformedURLException | URIException e )
     {
       final String message = String.format( "Failed to resolve urn: %s", resource );
 

@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.httpclient.URIException;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.core.resources.IContainer;
@@ -299,7 +300,7 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
       final URL szenarioURL = ResourceUtilities.createURL( szenarioFolder );
       return new PoolableObjectType( "gml", gmlLocation, szenarioURL ); //$NON-NLS-1$
     }
-    catch( final MalformedURLException e )
+    catch( final MalformedURLException | URIException e )
     {
       // should never happen
       e.printStackTrace();

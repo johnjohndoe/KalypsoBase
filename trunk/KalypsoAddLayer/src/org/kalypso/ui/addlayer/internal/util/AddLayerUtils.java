@@ -20,6 +20,7 @@ package org.kalypso.ui.addlayer.internal.util;
 
 import java.net.URL;
 
+import org.apache.commons.httpclient.URIException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -57,8 +58,16 @@ public final class AddLayerUtils
     if( projectPath.isPrefixOf( path ) )
       return UrlResolver.createProjectPath( path );
 
-    /* No in same project: make platform path */
-    return ResourceUtilities.createURLSpec( path );
+    try
+    {
+      /* No in same project: make platform path */
+      return ResourceUtilities.createURLSpec( path );
+    }
+    catch( final URIException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   public static IPath getPathForMap( final IKalypsoLayerModell mapModell )
