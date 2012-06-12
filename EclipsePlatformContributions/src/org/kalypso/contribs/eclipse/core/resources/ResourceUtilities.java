@@ -37,6 +37,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 
+import org.apache.commons.httpclient.URIException;
 import org.eclipse.core.internal.boot.PlatformURLHandler;
 import org.eclipse.core.internal.resources.PlatformURLResourceConnection;
 import org.eclipse.core.internal.runtime.CommonMessages;
@@ -276,7 +277,7 @@ public final class ResourceUtilities
    * @return platform URL
    * @throws MalformedURLException
    */
-  public static URL createURL( final IResource resource ) throws MalformedURLException
+  public static URL createURL( final IResource resource ) throws MalformedURLException, URIException
   {
     final String strUrl = createURLSpec( resource );
     return new URL( strUrl );
@@ -291,14 +292,14 @@ public final class ResourceUtilities
     {
       return createURL( resource );
     }
-    catch( final MalformedURLException e )
+    catch( final MalformedURLException | URIException e )
     {
       e.printStackTrace();
       return null;
     }
   }
 
-  public static String createURLSpec( final IResource resource )
+  public static String createURLSpec( final IResource resource ) throws URIException
   {
     if( resource == null )
       return null;
@@ -316,9 +317,9 @@ public final class ResourceUtilities
    * @param path
    * @return platform URL
    */
-  public static String createURLSpec( final IPath path )
+  public static String createURLSpec( final IPath path ) throws URIException
   {
-    return PlatformURLResourceConnection.RESOURCE_URL_STRING + path.toString();
+    return PlatformURLResourceConnection.RESOURCE_URL_STRING + org.apache.commons.httpclient.util.URIUtil.encodePath( path.toString() );
   }
 
   /**
@@ -459,7 +460,7 @@ public final class ResourceUtilities
     return makeRelativ( parentFile.getParent(), childFile );
   }
 
-  public static URI toURI( final IResource resource ) throws URISyntaxException
+  public static URI toURI( final IResource resource ) throws URISyntaxException, URIException
   {
     final String urlSpec = createURLSpec( resource );
     return new URI( urlSpec );
