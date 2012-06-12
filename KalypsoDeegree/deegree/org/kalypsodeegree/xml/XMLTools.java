@@ -69,7 +69,7 @@ import org.xml.sax.SAXException;
 /**
  * XML Tools based on JAXP 1.1 for parsing documents and retrieving node values/node attributes.
  * <p>
- *
+ * 
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$
@@ -99,7 +99,7 @@ public final class XMLTools
    * <p>
    * The method is just proofed for a UTF-8 character encoding.
    * <p>
-   *
+   * 
    * @param cdata
    *          value to be used
    * @return the very same value (but escaped if necessary)
@@ -126,7 +126,7 @@ public final class XMLTools
    * Returns the specified child element of the given elemen. If there are more than one with the same name, the first
    * one is returned.
    * <p>
-   *
+   * 
    * @param name
    *          name of the child element
    * @param namespace
@@ -175,7 +175,7 @@ public final class XMLTools
    * Returns the specified child element of the given elemen. If there are more than one with the same name, the first
    * one is returned.
    * <p>
-   *
+   * 
    * @param name
    *          name of the child element
    * @param namespace
@@ -213,7 +213,7 @@ public final class XMLTools
   /**
    * Returns the specified child elements of the given element.
    * <p>
-   *
+   * 
    * @param name
    *          name of the child elements
    * @param namespace
@@ -256,7 +256,7 @@ public final class XMLTools
    * Returns the text contained in the specified element. The returned value is trimmed by calling the trim() method of
    * java.lang.String
    * <p>
-   *
+   * 
    * @param node
    *          current element
    * @return the textual contents of the element or null, if it is missing
@@ -282,7 +282,7 @@ public final class XMLTools
   /**
    * Returns the text contained in the specified child element of the given element.
    * <p>
-   *
+   * 
    * @param name
    *          name of the child element
    * @param namespace
@@ -350,7 +350,7 @@ public final class XMLTools
   /**
    * Returns the text contained in the specified child element of the given element.
    * <p>
-   *
+   * 
    * @param name
    *          name of the child element
    * @param namespace
@@ -369,7 +369,7 @@ public final class XMLTools
    * Returns the numerical value of the text contained in the specified child element of the given element as a double
    * (if it denotes a double).
    * <p>
-   *
+   * 
    * @param name
    *          name of the child element
    * @param namespace
@@ -404,7 +404,7 @@ public final class XMLTools
    * Returns the numerical value of the text contained in the specified child element of the given element as a double
    * (if it denotes a double).
    * <p>
-   *
+   * 
    * @param name
    *          name of the child element
    * @param namespace
@@ -434,7 +434,7 @@ public final class XMLTools
   /**
    * Returns the value of the specified node attribute or null if it is missing.
    * <p>
-   *
+   * 
    * @param name
    *          (local) name of attribute
    * @param node
@@ -461,7 +461,7 @@ public final class XMLTools
   /**
    * Returns the value of the specified node attribute.
    * <p>
-   *
+   * 
    * @param name
    *          (local) name of attribute
    * @param node
@@ -495,7 +495,7 @@ public final class XMLTools
    * Returns the value of the specified node attribute. // * FIXME: Due to apparent bugs in getNamedItemNS (name,
    * namespace), // * when used to find attribute nodes, the current implementation // * uses a workaround.
    * <p>
-   *
+   * 
    * @param name
    *          (local) name of attribute
    * @param namespace
@@ -625,7 +625,7 @@ public final class XMLTools
 
   /**
    * Parses a XML document and returns a DOM object.
-   *
+   * 
    * @param fileName
    *          the filename of the XML file to be parsed
    * @return a DOM object
@@ -680,7 +680,7 @@ public final class XMLTools
 
   /**
    * Parses a XML document and returns a DOM object.
-   *
+   * 
    * @param reader
    *          accessing the resource to parse
    * @return a DOM object
@@ -715,7 +715,7 @@ public final class XMLTools
    * Parses a XML document and returns a DOM object.
    * <p>
    * The stream is NOT closed by this method.
-   *
+   * 
    * @param reader
    *          accessing the resource to parse
    * @return a DOM object
