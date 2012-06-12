@@ -48,6 +48,7 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.httpclient.URIException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.resources.IContainer;
@@ -206,8 +207,8 @@ public class ImportGridUtilities
       @Override
       public String queryOverwrite( final String pathString )
       {
-        if( MessageDialog.openQuestion( shell, Messages.getString( "org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.5" ),//$NON-NLS-1$ 
-            Messages.getString( "org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.6", pathString ) ) ) //$NON-NLS-1$ 
+        if( MessageDialog.openQuestion( shell, Messages.getString( "org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.5" ),//$NON-NLS-1$
+            Messages.getString( "org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.6", pathString ) ) ) //$NON-NLS-1$
           return IOverwriteQuery.YES;
         return IOverwriteQuery.NO;
       }
@@ -258,7 +259,7 @@ public class ImportGridUtilities
 
       return newCoverage;
     }
-    catch( final MalformedURLException e )
+    catch( final MalformedURLException | URIException e )
     {
       e.printStackTrace();
       final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.7", gridFile.getFullPath().toOSString() ), e ); //$NON-NLS-1$
@@ -266,7 +267,7 @@ public class ImportGridUtilities
     }
   }
 
-  private static String createRelativeGridPath( final URL context, final IFile gridFile ) throws MalformedURLException
+  private static String createRelativeGridPath( final URL context, final IFile gridFile ) throws MalformedURLException, URIException
   {
     final IFile contextFile = ResourceUtilities.findFileFromURL( context );
     if( contextFile != null )
