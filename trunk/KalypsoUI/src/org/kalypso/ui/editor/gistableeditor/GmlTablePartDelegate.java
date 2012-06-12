@@ -50,6 +50,7 @@ import java.net.URL;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
+import org.apache.commons.httpclient.URIException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
@@ -85,7 +86,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
 
 /**
  * Implements some common code used by all {@link org.eclipse.ui.IWorkbenchPart} implementations that show a .gft file.
- *
+ * 
  * @author Gernot Belger
  */
 public class GmlTablePartDelegate
@@ -173,7 +174,7 @@ public class GmlTablePartDelegate
 
       templateChanged();
     }
-    catch( final JAXBException | MalformedURLException e )
+    catch( final JAXBException | MalformedURLException | URIException e )
     {
       final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), "Failed to load table template", e ); //$NON-NLS-1$
       throw new CoreException( status );

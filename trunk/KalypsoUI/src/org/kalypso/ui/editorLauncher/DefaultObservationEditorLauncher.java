@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,12 +36,13 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editorLauncher;
 
 import java.net.MalformedURLException;
 
+import org.apache.commons.httpclient.URIException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.ui.IEditorDescriptor;
@@ -90,9 +91,6 @@ public class DefaultObservationEditorLauncher implements IDefaultTemplateLaunche
     return editorRegistry.getDefaultEditor( getFilename() );
   }
 
-  /**
-   * @see org.kalypso.ui.editorLauncher.IDefaultTemplateLauncher#createInput(org.eclipse.core.resources.IFile)
-   */
   @Override
   public IEditorInput createInput( final IFile file )
   {
@@ -104,7 +102,7 @@ public class DefaultObservationEditorLauncher implements IDefaultTemplateLaunche
 
       return input;
     }
-    catch( final MalformedURLException e )
+    catch( final MalformedURLException | URIException e )
     {
       e.printStackTrace();
       return null;

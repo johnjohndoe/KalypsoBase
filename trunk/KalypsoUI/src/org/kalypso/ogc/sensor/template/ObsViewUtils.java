@@ -45,6 +45,7 @@ import java.net.URL;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.commons.httpclient.URIException;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.IPath;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
@@ -109,7 +110,7 @@ public final class ObsViewUtils
       final IPath relativPath = PathUtils.makeRelativ( contextPath, hrefPath );
       return relativPath.toString();
     }
-    catch( final MalformedURLException e )
+    catch( final MalformedURLException | URIException e )
     {
       return href;
     }
