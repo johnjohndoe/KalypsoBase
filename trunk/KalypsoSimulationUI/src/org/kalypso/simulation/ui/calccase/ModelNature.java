@@ -54,6 +54,7 @@ import java.util.TimeZone;
 
 import javax.xml.bind.DatatypeConverter;
 
+import org.apache.commons.httpclient.URIException;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -431,6 +432,11 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
       // should never happen
       e.printStackTrace();
     }
+    catch( final URIException e )
+    {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
 
     return attributes;
   }
@@ -539,7 +545,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   /**
    * Returns a metadatum associated with this nature.
-   *
+   * 
    * @param key
    *          One of the METADATA_KEY_ conmstants.
    * @return The value of the given key; or <code>null</code> if not set.
@@ -577,7 +583,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   /**
    * stellt fest, ob es sich um einen gültigen Zeitpunkt für den Start der Prognose handelt
-   *
+   * 
    * @param cal
    * @return true when time is valid
    */
@@ -599,7 +605,7 @@ public class ModelNature implements IProjectNature, IResourceChangeListener
 
   /**
    * Load the calculation and read the value for the given property
-   *
+   * 
    * @param calcCase
    * @param propertyName
    *          name of the property to read value for
