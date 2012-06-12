@@ -45,6 +45,7 @@ import java.util.Date;
 import org.joda.time.Period;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -142,12 +143,16 @@ public class ZmlBarLayerRangeHandler
 
       final ITupleModel model = observation.getValues( handler.getRequest() );
 
+      final IAxis valueAxis = handler.getValueAxis();
+      if( valueAxis == null )
+        return null;
+
       /** hack for polder control which consists of boolean values */
-      final Class< ? > dataClass = handler.getValueAxis().getDataClass();
+      final Class< ? > dataClass = valueAxis.getDataClass();
       if( Boolean.class.equals( dataClass ) )
         return new DataRange<Number>( 0, 1 );
 
-      final IAxisRange range = model.getRange( handler.getValueAxis() );
+      final IAxisRange range = model.getRange( valueAxis );
       if( range == null )
         return null;
 

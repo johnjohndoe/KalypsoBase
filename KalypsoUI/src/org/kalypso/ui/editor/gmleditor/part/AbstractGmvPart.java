@@ -11,6 +11,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.apache.commons.httpclient.URIException;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IEncodedStorage;
 import org.eclipse.core.resources.IFile;
@@ -49,7 +50,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 
 /**
  * Common code for parts showing a .gmv file.
- *
+ * 
  * @author Gernot Belger
  */
 public class AbstractGmvPart extends AbstractWorkbenchPart implements IGmvPart
@@ -212,7 +213,7 @@ public class AbstractGmvPart extends AbstractWorkbenchPart implements IGmvPart
     {
       return ResourceUtilities.createURL( file );
     }
-    catch( final MalformedURLException e )
+    catch( final MalformedURLException | URIException e )
     {
       e.printStackTrace();
       return null;

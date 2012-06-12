@@ -43,6 +43,7 @@ package org.kalypso.ui.editor;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.apache.commons.httpclient.URIException;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IFile;
@@ -563,7 +564,7 @@ public abstract class AbstractWorkbenchPart extends WorkbenchPart implements IRe
       m_sourceProvider.fireSourceChanged();
   }
 
-  public static URL findContext( final IStorageEditorInput input ) throws MalformedURLException, CoreException
+  public static URL findContext( final IStorageEditorInput input ) throws MalformedURLException, CoreException, URIException
   {
     if( input == null )
       return null;

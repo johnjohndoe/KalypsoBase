@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 
+import org.apache.commons.httpclient.URIException;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
@@ -152,7 +153,7 @@ public class GMLSchemaEditor extends EditorPart
     return m_viewer;
   }
 
-  protected IGMLSchema createSchemaFromInput( ) throws CoreException, MalformedURLException, GMLSchemaException
+  protected IGMLSchema createSchemaFromInput( ) throws CoreException, MalformedURLException, GMLSchemaException, URIException
   {
     final IEditorInput editorInput = getEditorInput();
     final URL context;
