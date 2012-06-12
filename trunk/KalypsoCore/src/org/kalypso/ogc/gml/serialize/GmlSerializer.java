@@ -72,6 +72,7 @@ import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.httpclient.URIException;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -430,7 +431,7 @@ public final class GmlSerializer
       contentHelper.setFileContents( targetFile, false, true, new SubProgressMonitor( monitor, 1 ) );
       monitor.worked( 1 );
     }
-    catch( final MalformedURLException e )
+    catch( final MalformedURLException | URIException e )
     {
       throw new CoreException( StatusUtilities.statusFromThrowable( e ) );
     }
