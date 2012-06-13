@@ -281,16 +281,20 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
     try
     {
       final CommandableWorkspace workspace = (CommandableWorkspace) pool.loadObject( newListener, newKey );
-      final IModel model = (IModel) workspace.getRootFeature();
-      return Pair.of( model, Status.OK_STATUS );
+      final Feature rootFeature = workspace.getRootFeature();
+      if( rootFeature instanceof IModel )
+      {
+        final IModel model = (IModel) rootFeature;
+        return Pair.of( model, Status.OK_STATUS );
+      }
+
+      throw new IllegalArgumentException();
     }
     catch( final CoreException e )
     {
       e.printStackTrace();
       return null;
     }
-
-    // pool.addPoolListener( newListener, newKey );
   }
 
   private IPoolableObjectType keyForLocation( final IFolder szenarioFolder, final String gmlLocation )

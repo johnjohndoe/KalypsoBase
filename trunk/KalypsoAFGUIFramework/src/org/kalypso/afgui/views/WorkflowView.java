@@ -17,6 +17,7 @@ import org.kalypso.afgui.internal.i18n.Messages;
 import org.kalypso.afgui.internal.ui.workflow.WorkflowBreadcrumbViewer;
 import org.kalypso.afgui.internal.ui.workflow.WorkflowControl;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
+import org.kalypso.contribs.eclipse.jface.viewers.SelectionProviderAdapter;
 
 import de.renew.workflow.base.IWorkflow;
 import de.renew.workflow.connector.cases.IScenario;
@@ -46,20 +47,22 @@ public class WorkflowView extends ViewPart
     }
   };
 
-
   @Override
   public void createPartControl( final Composite parent )
   {
     final Composite panel = new Composite( parent, SWT.NONE );
     GridLayoutFactory.fillDefaults().spacing( 0, 0 ).applyTo( panel );
 
-    m_breadcrumbViewer = new WorkflowBreadcrumbViewer( panel );
+    m_breadcrumbViewer = new WorkflowBreadcrumbViewer( panel, this );
     m_breadcrumbViewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
     m_workflowControl.createControl( panel );
     m_workflowControl.getControl().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     handleScenarioChanged( m_activeWorkContext.getCurrentProject(), m_activeWorkContext.getCurrentCase() );
+
+    final SelectionProviderAdapter selectionProvider = new SelectionProviderAdapter();
+    getSite().setSelectionProvider( selectionProvider );
   }
 
   protected void handleScenarioChanged( final ScenarioHandlingProjectNature newProject, final IScenario scenario )

@@ -283,7 +283,7 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
     final IScenario caze = cases.get( 0 );
 
     if( m_activateScenario )
-      ScenarioHelper.activateScenario( caze );
+      ScenarioHelper.activateScenario2( getShell(), caze );
   }
 
   @Override

@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,13 +36,12 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.afgui.internal.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 
 /**
  * A handler which sets a scenario as base scenario.
@@ -51,18 +50,8 @@ import org.eclipse.core.commands.ExecutionException;
  */
 public class SetAsBaseScenarioHandler extends AbstractHandler
 {
-  /**
-   * The constructor.
-   */
-  public SetAsBaseScenarioHandler( )
-  {
-  }
-
-  /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
-  public Object execute( final ExecutionEvent event ) throws ExecutionException
+  public Object execute( final ExecutionEvent event )
   {
     // TODO
 

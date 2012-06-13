@@ -22,7 +22,7 @@
 
  *  and
 
- *  
+ * 
 
  *  Bjoernsen Consulting Engineers (BCE)
 
@@ -74,7 +74,7 @@
 
  *  v.doemming@tuhh.de
 
- *   
+ * 
 
  *  ---------------------------------------------------------------------------*/
 
@@ -88,7 +88,6 @@ import java.util.Map;
 import org.eclipse.core.commands.Category;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.common.CommandException;
-import org.eclipse.core.commands.common.NotDefinedException;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.services.IServiceScopes;
@@ -134,14 +133,14 @@ public class CommandUtilities
     final List<Command> result = new ArrayList<Command>();
 
     final Category category = commandService.getCategory( categoryId );
-    if( category == null )
-      throw new NotDefinedException( "Unknown category: " + categoryId );
+// if( category == null )
+// throw new NotDefinedException( "Unknown category: " + categoryId );
 
     final Command[] commands = commandService.getDefinedCommands();
     for( final Command command : commands )
     {
       final Category cmdCat = command.getCategory();
-      if( cmdCat.equals( category ) )
+      if( category == null || cmdCat.equals( category ) )
         result.add( command );
     }
 

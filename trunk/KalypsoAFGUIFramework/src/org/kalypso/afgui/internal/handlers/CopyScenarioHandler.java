@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,13 +36,19 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.afgui.internal.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.handlers.HandlerUtil;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
+import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
+
+import de.renew.workflow.connector.cases.IScenario;
 
 /**
  * A handler which copies a scenario.
@@ -51,21 +57,48 @@ import org.eclipse.core.commands.ExecutionException;
  */
 public class CopyScenarioHandler extends AbstractHandler
 {
-  /**
-   * The constructor.
-   */
-  public CopyScenarioHandler( )
+  @Override
+  public Object execute( final ExecutionEvent event )
   {
+    final Shell shell = HandlerUtil.getActiveShell( event );
+    final String commandName = HandlerUtils.getCommandName( event );
+
+    /* Find scenario */
+    final IScenario scenario = AddScenarioHandler.findScenario( event );
+    if( scenario == null )
+    {
+      final String message = "Please select a scenario to copy.";
+      return showInformation( shell, commandName, message );
+    }
+
+    /* Do not allow active scenario to be renamed */
+    final IScenario currentCase = ScenarioHelper.getActiveScenario();
+    if( currentCase == scenario )
+    {
+      final String message = "Unable to copy active scenario. Please activate another scenario before copying.";
+      return showInformation( shell, commandName, message );
+    }
+
+    final IScenario parentScenario = scenario.getParentScenario();
+    if( parentScenario == null )
+    {
+      final String message = "Unable to copy base scenario.";
+      showInformation( shell, commandName, message );
+      return null;
+    }
+
+    /* show wizard */
+    final IScenarioOperation operation = new CreateScenarioOperation();
+    final ScenarioData data = new ScenarioData( parentScenario, scenario, operation, false );
+
+    ScenarioWizard.stopTaskAndOpenWizard( shell, data );
+
+    return null;
   }
 
-  /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
-  @Override
-  public Object execute( final ExecutionEvent event ) throws ExecutionException
+  private Object showInformation( final Shell shell, final String windowTitle, final String message )
   {
-    // TODO
-
+    MessageDialog.openInformation( shell, windowTitle, message );
     return null;
   }
 }

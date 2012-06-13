@@ -139,7 +139,7 @@ public class CaseTreeContentAdapter extends WorkbenchAdapter
       if( !workbench.isClosing() )
       {
         final IScenario activeScenario = ScenarioHelper.getActiveScenario();
-        if( activeScenario == caze )
+        if( caze.equals( activeScenario ) )
           return m_activeFont;
       }
     }

@@ -89,20 +89,6 @@ public interface IScenario
   String getURI( );
 
   /**
-   * @param name
-   *          name of workflow {@link Case}
-   */
-  void setName( String name );
-
-  void setDescription( String name );
-
-  /**
-   * @param uri
-   *          URI of workflow {@link Case}
-   */
-  void setURI( String uri );
-
-  /**
    * @return list of derived {@link IScenario}s of the workflow {@link IScenario}
    */
   IScenarioList getDerivedScenarios( );
@@ -119,4 +105,9 @@ public interface IScenario
    * @return hierarchical Level of IScenario
    */
   int getHierarchicalLevel( );
+
+  /**
+   * Gets the folder of a scenario where sub-scenarios are stored in.
+   */
+  IFolder getDerivedFolder( );
 }

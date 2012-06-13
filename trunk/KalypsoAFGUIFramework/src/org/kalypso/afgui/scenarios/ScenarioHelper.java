@@ -54,6 +54,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -282,5 +283,16 @@ public class ScenarioHelper
       return scenario.getFolder();
 
     return null;
+  }
+
+  public static boolean isSubScenario( final IScenario parentScenario, final IScenario subScenario )
+  {
+    final IFolder parentFolder = parentScenario.getFolder();
+    final IFolder subFolder = subScenario.getFolder();
+
+    final IPath parentPath = parentFolder.getFullPath();
+    final IPath subPath = subFolder.getFullPath();
+
+    return parentPath.isPrefixOf( subPath );
   }
 }

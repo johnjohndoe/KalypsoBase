@@ -1,12 +1,9 @@
-/**
- *
- */
 package org.kalypso.afgui.internal.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -14,44 +11,76 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.window.IShellProvider;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbenchSite;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.DeleteResourceAction;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.progress.UIJob;
-import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.internal.i18n.Messages;
+import org.kalypso.afgui.scenarios.ScenarioHelper;
+import org.kalypso.afgui.views.WorkflowView;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
+import org.kalypso.contribs.eclipse.jface.window.ShellProvider;
 
 import de.renew.workflow.connector.cases.IScenario;
 import de.renew.workflow.connector.cases.IScenarioList;
 import de.renew.workflow.connector.cases.IScenarioManager;
 import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 
-/**
- * @author Stefan Kurzbach
- */
-public class RemoveScenarioHandler extends AbstractHandler
+public class DeleteScenarioHandler extends AbstractHandler
 {
   @Override
-  public Object execute( final ExecutionEvent event ) throws ExecutionException
+  public Object execute( final ExecutionEvent event )
   {
     // REMARK: the shell from the context is already disposed, as the breadcrumb menu was closed
-    final IWorkbenchSite site = HandlerUtil.getActiveSite( event );
-    final Shell shell = site.getShell();
+    final IWorkbenchWindow window = PlatformUI.getWorkbench().getWorkbenchWindows()[0];
+    final IViewPart workflowView = window.getActivePage().findView( WorkflowView.ID );
+    final Shell shell = workflowView.getSite().getShell();
 
-    final ISelection selection = HandlerUtil.getCurrentSelectionChecked( event );
+    /* Find selection */
+    final Object itemSelection = getSelection( event );
+    if( itemSelection instanceof IScenario )
+    {
+      final String windowTitle = HandlerUtils.getCommandName( event );
+      deleteScenario( shell, (IScenario) itemSelection, windowTitle );
+      return null;
+    }
 
-    if( selection.isEmpty() || !(selection instanceof IStructuredSelection) )
+    // FIXME: does not work: for opened breadcrumb popup menu, the shell is always disposed, never mind where the shell
+    // is taken from
+
+    if( itemSelection instanceof IProject )
+    {
+      final IStructuredSelection selection = new StructuredSelection( itemSelection );
+
+      final IShellProvider shellProvider = new ShellProvider( shell );
+
+      final DeleteResourceAction deleteResourceAction = new DeleteResourceAction( shellProvider );
+      deleteResourceAction.selectionChanged( selection );
+      deleteResourceAction.run();
+      return Status.OK_STATUS;
+    }
+
+    return null;
+  }
+
+  private Object getSelection( final ExecutionEvent event )
+  {
+    final ISelection selection = HandlerUtil.getCurrentSelection( event );
+    if( !(selection instanceof IStructuredSelection) )
       return null;
 
-    final IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-    final Object firstElement = structuredSelection.getFirstElement();
-
-    if( !(firstElement instanceof IScenario) )
-      return null;
-
-    final String windowTitle = HandlerUtils.getCommandName( event );
-    deleteScenario( shell, (IScenario) firstElement, windowTitle );
+    final IStructuredSelection structSel = (IStructuredSelection) selection;
+    final Object[] array = structSel.toArray();
+    for( final Object element : array )
+    {
+      if( element instanceof IResource || element instanceof IScenario )
+        return element;
+    }
 
     return null;
   }
@@ -72,7 +101,7 @@ public class RemoveScenarioHandler extends AbstractHandler
       return;
     }
 
-    if( KalypsoAFGUIFrameworkPlugin.getActiveWorkContext().getCurrentCase() == scenario )
+    if( scenario.equals( ScenarioHelper.getActiveScenario() ) )
     {
       MessageDialog.openInformation( shell, title, Messages.getString( "org.kalypso.afgui.handlers.RemoveScenarioHandler.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return;

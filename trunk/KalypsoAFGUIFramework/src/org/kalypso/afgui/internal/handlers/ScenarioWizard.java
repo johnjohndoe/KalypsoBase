@@ -40,61 +40,74 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.afgui.internal.handlers;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.internal.i18n.Messages;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
 
+import de.renew.workflow.base.ITask;
 import de.renew.workflow.connector.cases.IScenario;
-import de.renew.workflow.connector.cases.IScenarioManager;
-import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
+import de.renew.workflow.connector.worklist.ITaskExecutionAuthority;
 
 /**
  * @author Gernot Belger
  */
-public class NewScenarioWizard extends Wizard
+public class ScenarioWizard extends Wizard
 {
-  private final NewScenarioData m_data;
+  private final ScenarioData m_data;
 
-  public NewScenarioWizard( final NewScenarioData data )
+  static void stopTaskAndOpenWizard( final Shell shell, final ScenarioData data )
+  {
+    /* Stop current task */
+    final ITaskExecutionAuthority taskExecutionAuthority = KalypsoAFGUIFrameworkPlugin.getTaskExecutionAuthority();
+    final ITask activeTask = KalypsoAFGUIFrameworkPlugin.getTaskExecutor().getActiveTask();
+    if( !taskExecutionAuthority.canStopTask( activeTask ) )
+    {
+      /* Cancelled by user */
+      return;
+    }
+
+    /* Show wizard */
+    final ScenarioWizard wizard = new ScenarioWizard( data );
+    final WizardDialog wd = new WizardDialog( shell, wizard );
+    wd.open();
+  }
+
+  public ScenarioWizard( final ScenarioData data )
   {
     m_data = data;
 
     final String title = Messages.getString( "org.kalypso.afgui.handlers.NewSimulationModelControlBuilder.13" ); //$NON-NLS-1$
     setWindowTitle( title );
 
-    addPage( new NewScenarioWizardPage( data ) );
+    setNeedsProgressMonitor( true );
+
+    addPage( new ScenarioWizardPage( data ) );
   }
 
   @Override
   public boolean performFinish( )
   {
-    final String name = m_data.getName();
-    final String comment = m_data.getComment();
-    final IProject project = m_data.getProject();
-    final IScenario parentScenario = m_data.getParentScenario();
+    final IScenarioOperation operation = m_data.getOperation();
+    final IStatus result = RunnableContextHelper.execute( getContainer(), true, false, operation );
 
-    try
-    {
-      final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
-      final IScenarioManager scenarioManager = nature.getCaseManager();
+    if( !result.isOK() )
+      StatusDialog.open( getShell(), result, getWindowTitle() );
 
-      final IScenario newScenario = scenarioManager.deriveScenario( name, comment, parentScenario );
-
-      ScenarioHelper.activateScenario( newScenario );
-
-      return true;
-    }
-    catch( final CoreException e )
-    {
-      final IStatus status = e.getStatus();
-      final String title = Messages.getString( "org.kalypso.afgui.handlers.NewSimulationModelControlBuilder.16" );
-      StatusDialog.open( getShell(), status, title );
-
+    if( result.matches( IStatus.ERROR ) )
       return false;
+
+    if( m_data.getActivateScenario() )
+    {
+      final IScenario scenarioToActivate = operation.getScenarioForActivation();
+      ScenarioHelper.activateScenario2( getShell(), scenarioToActivate );
     }
+
+    return true;
   }
 }
