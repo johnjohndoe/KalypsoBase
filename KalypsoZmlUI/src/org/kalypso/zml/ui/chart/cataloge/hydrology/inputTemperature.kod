@@ -45,7 +45,7 @@
         </Layers>
         <MapperRefs>
           <DomainAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#date" />
-          <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:common:temperature#T" />
+          <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:common:mean:temperature#MEAN_TEMPERATURE" />
         </MapperRefs>
       </Layer>
     </Layers>
