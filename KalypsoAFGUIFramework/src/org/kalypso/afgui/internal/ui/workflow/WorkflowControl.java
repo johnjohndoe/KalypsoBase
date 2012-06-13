@@ -151,9 +151,6 @@ public class WorkflowControl implements IWorklistChangeListener, ITaskExecutionL
     }
   }
 
-  /**
-   * @see de.renew.workflow.event.IWorklistChangeListener#worklistChanged()
-   */
   @Override
   public void worklistChanged( )
   {
@@ -258,5 +255,10 @@ public class WorkflowControl implements IWorklistChangeListener, ITaskExecutionL
       final TreeSelection newSelection = new TreeSelection( findPart );
       m_treeViewer.setSelection( newSelection, true );
     }
+  }
+
+  public TreeViewer getTreeViewer( )
+  {
+    return m_treeViewer;
   }
 }

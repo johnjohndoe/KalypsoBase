@@ -47,13 +47,19 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
+import com.google.common.base.Charsets;
+
+import de.renew.workflow.base.IWorkflow;
 import de.renew.workflow.cases.Case;
+import de.renew.workflow.connector.WorkflowProjectNature;
 import de.renew.workflow.connector.cases.IScenario;
 import de.renew.workflow.connector.cases.IScenarioList;
 import de.renew.workflow.connector.internal.WorkflowConnectorPlugin;
+import de.renew.workflow.utils.ScenarioConfiguration;
 
 /**
  * Wrapper interface for handling {@link Case} Objects
@@ -94,17 +100,11 @@ public class ScenarioHandler implements IScenario
   }
 
   @Override
-  public void setDescription( final String description )
-  {
-    m_scenario.setDescription( description );
-  }
-
-  @Override
   public String getURI( )
   {
     try
     {
-      return URLDecoder.decode( m_scenario.getURI(), "UTF-8" );
+      return URLDecoder.decode( m_scenario.getURI(), Charsets.UTF_8.name() );
     }
     catch( final UnsupportedEncodingException e )
     {
@@ -114,14 +114,7 @@ public class ScenarioHandler implements IScenario
     return m_scenario.getURI();
   }
 
-  @Override
-  public void setName( final String name )
-  {
-    m_scenario.setName( name );
-  }
-
-  @Override
-  public void setURI( final String uri )
+  private void setURI( final String uri )
   {
     m_scenario.setURI( uri );
   }
@@ -245,4 +238,31 @@ public class ScenarioHandler implements IScenario
   {
     return getName();
   }
+
+  @Override
+  public IFolder getDerivedFolder( )
+  {
+    final IFolder myFolder = getFolder();
+
+    try
+    {
+      final WorkflowProjectNature workflowProjectNature = WorkflowProjectNature.toThisNature( getProject() );
+      final IWorkflow workflow = workflowProjectNature.getCurrentWorklist();
+      final ScenarioConfiguration scenarioConfiguration = workflow.getScenarioConfiguration();
+      if( scenarioConfiguration == null )
+        return myFolder;
+
+      final String derivedFolder = scenarioConfiguration.getDerivedFolder();
+      if( derivedFolder == null || derivedFolder.length() == 0 )
+        return myFolder;
+
+      return myFolder.getFolder( derivedFolder );
+    }
+    catch( final CoreException ex )
+    {
+      ex.printStackTrace();
+      return myFolder;
+    }
+  }
+
 }

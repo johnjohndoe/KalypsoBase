@@ -40,19 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.afgui.internal.ui.workflow;
 
-
 import nu.bibi.breadcrumb.BreadcrumbViewer;
 import nu.bibi.breadcrumb.IMenuSelectionListener;
 import nu.bibi.breadcrumb.MenuSelectionEvent;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
@@ -60,17 +60,17 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MenuDetectEvent;
 import org.eclipse.swt.events.MenuDetectListener;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.menus.IMenuService;
-import org.eclipse.ui.services.IEvaluationService;
+import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.afgui.internal.i18n.Messages;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.views.ScenarioViewerFilter;
+import org.kalypso.afgui.views.WorkflowView;
 
 import de.renew.workflow.connector.cases.IScenario;
 
@@ -81,11 +81,13 @@ public class WorkflowBreadcrumbViewer extends BreadcrumbViewer
 {
   private final MenuManager m_itemMenuManager;
 
-  private final WorkflowBreadcrumbItemSourceProvider m_sourceProvider = new WorkflowBreadcrumbItemSourceProvider();
+  private final WorkflowView m_view;
 
-  public WorkflowBreadcrumbViewer( final Composite parent )
+  public WorkflowBreadcrumbViewer( final Composite parent, final WorkflowView view )
   {
     super( parent, SWT.NONE );
+
+    m_view = view;
 
     setLabelProvider( new WorkflowBreadCrumbLabelProvider() );
     setToolTipLabelProvider( new WorkflowBreadCrumbTooltipProvider() );
@@ -98,15 +100,10 @@ public class WorkflowBreadcrumbViewer extends BreadcrumbViewer
     m_itemMenuManager = new MenuManager();
     m_itemMenuManager.add( new Separator( "additions" ) );
 
-    final IWorkbench workbench = PlatformUI.getWorkbench();
+    final IServiceLocator locator = view.getSite();
 
-    final IMenuService menuService = (IMenuService) workbench.getService( IMenuService.class );
+    final IMenuService menuService = (IMenuService) locator.getService( IMenuService.class );
     menuService.populateContributionManager( m_itemMenuManager, "popup:org.kalypso.afgui.breadcrumbs" );
-
-    menuService.addSourceProvider( m_sourceProvider );
-    ((IEvaluationService) workbench.getService( IEvaluationService.class )).addSourceProvider( m_sourceProvider );
-    // ((IContextService) workbench.getService( IContextService.class )).addSourceProvider( m_sourceProvider );
-    ((IHandlerService) workbench.getService( IHandlerService.class )).addSourceProvider( m_sourceProvider );
 
     hookListeners();
   }
@@ -118,12 +115,6 @@ public class WorkflowBreadcrumbViewer extends BreadcrumbViewer
     final IMenuService menuService = (IMenuService) workbench.getService( IMenuService.class );
     menuService.releaseContributions( m_itemMenuManager );
 
-    menuService.removeSourceProvider( m_sourceProvider );
-    ((IEvaluationService) workbench.getService( IEvaluationService.class )).removeSourceProvider( m_sourceProvider );
-    // ((IContextService) workbench.getService( IContextService.class )).removeSourceProvider( m_sourceProvider );
-    ((IHandlerService) workbench.getService( IHandlerService.class )).removeSourceProvider( m_sourceProvider );
-
-    m_sourceProvider.dispose();
     m_itemMenuManager.dispose();
   }
 
@@ -144,13 +135,7 @@ public class WorkflowBreadcrumbViewer extends BreadcrumbViewer
       public void menuDetected( final MenuDetectEvent e )
       {
         final Object menuSelection = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
-        if( menuSelection instanceof IProject )
-        {
-          // REMARK / BUGFIX: see comment in DeleteBreadcrumbsHandler
-          handleItemMenuDetected( viewer.getControl(), e, null );
-        }
-        else
-          handleItemMenuDetected( viewer.getControl(), e, menuSelection );
+        handleItemMenuDetected( e, menuSelection );
       }
     } );
   }
@@ -173,7 +158,7 @@ public class WorkflowBreadcrumbViewer extends BreadcrumbViewer
       public void menuDetected( final MenuDetectEvent e )
       {
         final Object selectedElement = getSelection().getFirstElement();
-        handleItemMenuDetected( getControl(), e, selectedElement );
+        handleItemMenuDetected( e, selectedElement );
       }
     } );
 
@@ -209,11 +194,17 @@ public class WorkflowBreadcrumbViewer extends BreadcrumbViewer
     } );
   }
 
-  protected void handleItemMenuDetected( final Control control, final MenuDetectEvent e, final Object selectedElement )
+  protected void handleItemMenuDetected( final MenuDetectEvent e, final Object selectedElement )
   {
-    final Menu contextMenu = m_itemMenuManager.createContextMenu( control );
+    final IWorkbenchPartSite site = m_view.getSite();
+    final ISelectionProvider selectionProvider = site.getSelectionProvider();
 
-    m_sourceProvider.setSelectedItem( selectedElement );
+    // FIXME: works only partly: unfocus of the workflow view will disable all actions
+
+    final StructuredSelection selection = new StructuredSelection( selectedElement );
+    selectionProvider.setSelection( selection );
+
+    final Menu contextMenu = m_itemMenuManager.createContextMenu( getControl() );
 
     contextMenu.setLocation( e.x, e.y );
     contextMenu.setVisible( true );

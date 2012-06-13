@@ -38,17 +38,50 @@
  *  v.doemming@tuhh.de
  * 
  *  ---------------------------------------------------------------------------*/
-package de.renew.workflow.connector.cases;
+package org.kalypso.afgui.internal.handlers;
 
-import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+
+import de.renew.workflow.connector.cases.IScenario;
+import de.renew.workflow.connector.cases.IScenarioManager;
+import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 
 /**
- * Filter to derive / copy scenarios
- * 
- * @author Dirk Kuch
- * 
+ * @author Gernot Belger
  */
-public interface IDerivedScenarioCopyFilter
+public class RenameScenarioOperation implements IScenarioOperation
 {
-  boolean copy( IResource resource );
+  private ScenarioData m_data;
+
+  @Override
+  public void init( final ScenarioData data )
+  {
+    m_data = data;
+  }
+
+  @Override
+  public IScenario getScenarioForActivation( )
+  {
+    return m_data.getTemplateScenario();
+  }
+
+  @Override
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
+  {
+    final String name = m_data.getName();
+    final String comment = m_data.getComment();
+    final IProject project = m_data.getProject();
+    final IScenario templateScenario = m_data.getTemplateScenario();
+
+    final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( project );
+    final IScenarioManager scenarioManager = nature.getCaseManager();
+
+    scenarioManager.renameScenario( templateScenario, name, comment, monitor );
+
+    return Status.OK_STATUS;
+  }
 }

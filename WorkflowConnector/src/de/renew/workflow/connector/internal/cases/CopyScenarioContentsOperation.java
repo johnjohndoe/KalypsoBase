@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  * 
  *  ---------------------------------------------------------------------------*/
-package de.renew.workflow.connector.cases;
+package de.renew.workflow.connector.internal.cases;
 
 import java.util.List;
 
@@ -50,38 +50,39 @@ import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.eclipse.ui.actions.WorkspaceModifyOperation;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+
+import de.renew.workflow.connector.cases.IDerivedScenarioCopyFilter;
 
 /**
  * @author Gernot Belger
  */
-final class CopyScenarioContentsOperation extends WorkspaceModifyOperation
+final class CopyScenarioContentsOperation implements ICoreRunnableWithProgress
 {
-  private final IFolder m_parentFolder;
+  private final IFolder m_sourceFolder;
 
-  private final IFolder m_newFolder;
+  private final IFolder m_targetFolder;
 
-  private final List<IFolder> m_scenarioFolders;
+  private final List<IFolder> m_ignoreFolders;
 
   private final IDerivedScenarioCopyFilter m_filter;
 
-  CopyScenarioContentsOperation( final ISchedulingRule rule, final IFolder parentFolder, final IFolder newFolder, final List<IFolder> scenarioFolders, final IDerivedScenarioCopyFilter filter )
+  CopyScenarioContentsOperation( final IFolder sourceFolder, final IFolder targetFolder, final List<IFolder> ignoreFolders, final IDerivedScenarioCopyFilter filter )
   {
-    super( rule );
-
-    m_parentFolder = parentFolder;
-    m_newFolder = newFolder;
-    m_scenarioFolders = scenarioFolders;
+    m_sourceFolder = sourceFolder;
+    m_targetFolder = targetFolder;
+    m_ignoreFolders = ignoreFolders;
     m_filter = filter;
   }
 
   @Override
-  protected void execute( final IProgressMonitor monitor ) throws CoreException
+  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
   {
-    final SubMonitor submonitor = SubMonitor.convert( monitor, getTotalChildCount( m_parentFolder ) );
-    m_parentFolder.accept( new IResourceVisitor()
+    final SubMonitor submonitor = SubMonitor.convert( monitor, getTotalChildCount( m_sourceFolder ) );
+    m_sourceFolder.accept( new IResourceVisitor()
     {
       @Override
       public boolean visit( final IResource resource ) throws CoreException
@@ -89,15 +90,17 @@ final class CopyScenarioContentsOperation extends WorkspaceModifyOperation
         return doVisitResource( resource, submonitor );
       }
     } );
+
+    return Status.OK_STATUS;
   }
 
   protected boolean doVisitResource( final IResource resource, final SubMonitor submonitor ) throws CoreException
   {
-    if( m_parentFolder.equals( resource ) )
+    if( m_sourceFolder.equals( resource ) )
     {
       return true;
     }
-    else if( m_scenarioFolders.contains( resource ) )
+    else if( m_ignoreFolders.contains( resource ) )
     {
       // ignore scenario folder
       return false;
@@ -105,18 +108,18 @@ final class CopyScenarioContentsOperation extends WorkspaceModifyOperation
 
     if( m_filter.copy( resource ) )
     {
-      final IPath parentFolderPath = m_parentFolder.getFullPath();
+      final IPath parentFolderPath = m_sourceFolder.getFullPath();
       final IPath resourcePath = resource.getFullPath();
 
       final IPath relativePath = resourcePath.removeFirstSegments( parentFolderPath.segments().length );
 
       if( resource instanceof IFolder )
       {
-        m_newFolder.getFolder( relativePath ).create( true, true, submonitor.newChild( 1 ) );
+        m_targetFolder.getFolder( relativePath ).create( true, true, submonitor.newChild( 1 ) );
       }
       else if( resource instanceof IFile )
       {
-        resource.copy( m_newFolder.getFullPath().append( relativePath ), true, submonitor.newChild( 1 ) );
+        resource.copy( m_targetFolder.getFullPath().append( relativePath ), true, submonitor.newChild( 1 ) );
       }
 
       return true;

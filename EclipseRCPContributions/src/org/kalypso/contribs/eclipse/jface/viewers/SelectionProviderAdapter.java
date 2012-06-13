@@ -90,7 +90,6 @@ public class SelectionProviderAdapter implements IPostSelectionProvider
   @Override
   public ISelection getSelection( )
   {
-
     return m_selection;
   }
 

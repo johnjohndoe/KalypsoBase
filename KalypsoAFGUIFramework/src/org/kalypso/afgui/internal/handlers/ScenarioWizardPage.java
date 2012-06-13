@@ -15,6 +15,7 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -27,7 +28,7 @@ import org.kalypso.commons.databinding.validation.StringEmptyValidator;
 /**
  * @author Stefan Kurzbach
  */
-public class NewScenarioWizardPage extends WizardPage
+public class ScenarioWizardPage extends WizardPage
 {
   private final static String STR_NEW_NAME_MUST_NOT_BE_EMPTY = Messages.getString( "org.kalypso.afgui.handlers.NewSimulationModelControlBuilder.0" ); //$NON-NLS-1$
 
@@ -35,11 +36,11 @@ public class NewScenarioWizardPage extends WizardPage
 
   private static final String STR_FORBIDDEN_FOLDER = "Name not allowed (name of a data folder)";
 
-  private final NewScenarioData m_data;
+  private final ScenarioData m_data;
 
   private IDataBinding m_binding;
 
-  public NewScenarioWizardPage( final NewScenarioData data )
+  public ScenarioWizardPage( final ScenarioData data )
   {
     super( "newScenarioPage" ); //$NON-NLS-1$
 
@@ -64,13 +65,8 @@ public class NewScenarioWizardPage extends WizardPage
     final Text nameField = new Text( panel, SWT.BORDER );
     nameField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-    final Label parentLabel = new Label( panel, SWT.NONE );
-    parentLabel.setText( Messages.getString( "org.kalypso.afgui.handlers.NewSimulationModelControlBuilder.4" ) ); //$NON-NLS-1$
-
-    final Text parentTFE = new Text( panel, SWT.BORDER );
-    parentTFE.setEditable( false );
-    parentTFE.setText( m_data.getParentScenarioPath() );
-    parentTFE.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+    if( m_data.isDerivedVisible() )
+      createDerivedField( panel );
 
     final Label commentLabel = new Label( panel, SWT.NONE );
     commentLabel.setText( Messages.getString( "org.kalypso.afgui.handlers.NewSimulationModelControlBuilder.5" ) ); //$NON-NLS-1$
@@ -78,9 +74,16 @@ public class NewScenarioWizardPage extends WizardPage
     final Text commentField = new Text( panel, SWT.BORDER | SWT.WRAP | SWT.MULTI );
     commentField.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 1, 10 ) );
 
+    if( m_data.isCopySubScenariosVisible() )
+      createCopySubScenariosButton( panel );
+
+    final Button activateCheck = new Button( panel, SWT.CHECK );
+    activateCheck.setText( "Activate Scenario" );
+    activateCheck.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
+
     /* Bindings */
     final ISWTObservableValue targetName = SWTObservables.observeText( nameField, SWT.Modify );
-    final IObservableValue modelName = BeansObservables.observeValue( m_data, NewScenarioData.PROPERTY_NAME );
+    final IObservableValue modelName = BeansObservables.observeValue( m_data, ScenarioData.PROPERTY_NAME );
 
     final IValidator emptyNameValidator = new StringEmptyValidator( IStatus.ERROR, STR_NEW_NAME_MUST_NOT_BE_EMPTY );
 
@@ -93,7 +96,35 @@ public class NewScenarioWizardPage extends WizardPage
     m_binding.bindValue( targetName, modelName, emptyNameValidator, duplicateNameValidator, forbiddenNameValidator );
 
     final ISWTObservableValue targetComment = SWTObservables.observeText( commentField, SWT.Modify );
-    final IObservableValue modelComment = BeansObservables.observeValue( m_data, NewScenarioData.PROPERTY_COMMENT );
+    final IObservableValue modelComment = BeansObservables.observeValue( m_data, ScenarioData.PROPERTY_COMMENT );
     m_binding.bindValue( targetComment, modelComment );
+
+    final ISWTObservableValue targetActivate = SWTObservables.observeSelection( activateCheck );
+    final IObservableValue modelActivate = BeansObservables.observeValue( m_data, ScenarioData.PROPERTY_ACTIVATE_SCENARIO );
+    m_binding.bindValue( targetActivate, modelActivate );
+  }
+
+  private void createDerivedField( final Composite panel )
+  {
+    final Label parentLabel = new Label( panel, SWT.NONE );
+    parentLabel.setText( Messages.getString( "org.kalypso.afgui.handlers.NewSimulationModelControlBuilder.4" ) ); //$NON-NLS-1$
+
+    final Text parentTFE = new Text( panel, SWT.BORDER );
+    parentTFE.setEditable( false );
+    parentTFE.setText( m_data.getParentScenarioPath() );
+    parentTFE.setLayoutData( new GridData( GridData.FILL_HORIZONTAL ) );
+  }
+
+  private void createCopySubScenariosButton( final Composite panel )
+  {
+    final Button checkbox = new Button( panel, SWT.CHECK );
+    checkbox.setText( "Copy Sub-Scenarios" );
+    checkbox.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
+
+    checkbox.setEnabled( m_data.isCopySubScenariosEnabled() );
+
+    final ISWTObservableValue target = SWTObservables.observeSelection( checkbox );
+    final IObservableValue model = BeansObservables.observeValue( m_data, ScenarioData.PROPERTY_COPY_SUB_SCENARIOS );
+    m_binding.bindValue( target, model );
   }
 }

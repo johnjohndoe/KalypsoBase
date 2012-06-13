@@ -55,7 +55,7 @@ import de.renew.workflow.connector.cases.IScenario;
  * 
  * @author Holger Albert
  */
-public class CopyScenarioHandler extends AbstractHandler
+public class RenameScenarioHandler extends AbstractHandler
 {
   @Override
   public Object execute( final ExecutionEvent event )
@@ -67,7 +67,7 @@ public class CopyScenarioHandler extends AbstractHandler
     final IScenario scenario = AddScenarioHandler.findScenario( event );
     if( scenario == null )
     {
-      final String message = "Please select a scenario to copy.";
+      final String message = "Please select a scenario to rename.";
       return showInformation( shell, commandName, message );
     }
 
@@ -75,21 +75,30 @@ public class CopyScenarioHandler extends AbstractHandler
     final IScenario currentCase = ScenarioHelper.getActiveScenario();
     if( currentCase == scenario )
     {
-      final String message = "Unable to copy active scenario. Please activate another scenario before copying.";
+      final String message = "Unable to rename active scenario. Please activate another scenario before renaming.";
       return showInformation( shell, commandName, message );
     }
 
     final IScenario parentScenario = scenario.getParentScenario();
     if( parentScenario == null )
     {
-      final String message = "Unable to copy base scenario.";
+      final String message = "Unable to rename base scenario.";
       showInformation( shell, commandName, message );
       return null;
     }
 
-    /* show wizard */
-    final IScenarioOperation operation = new CreateScenarioOperation();
-    final ScenarioData data = new ScenarioData( parentScenario, scenario, operation, false );
+    if( currentCase != null && ScenarioHelper.isSubScenario( currentCase, scenario ) )
+    {
+      final String message = "Cannot renamem scenario while a sub.scenario is active. Please activate another scenario before renaming.";
+      return showInformation( shell, commandName, message );
+    }
+
+    /* Initialize data */
+    final IScenarioOperation operation = new RenameScenarioOperation();
+    final ScenarioData data = new ScenarioData( parentScenario, scenario, operation, null );
+    data.setDerivedVisible( false );
+    data.setName( scenario.getName() );
+    data.setComment( scenario.getDescription() );
 
     ScenarioWizard.stopTaskAndOpenWizard( shell, data );
 

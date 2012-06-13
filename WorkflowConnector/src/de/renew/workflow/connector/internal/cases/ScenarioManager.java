@@ -50,19 +50,19 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.ui.progress.UIJob;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.afgui.scenarios.ObjectFactory;
 import org.kalypso.afgui.scenarios.Scenario;
 import org.kalypso.afgui.scenarios.ScenarioList;
@@ -70,10 +70,8 @@ import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.contribs.eclipse.core.resources.FolderUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
-import de.renew.workflow.base.IWorkflow;
 import de.renew.workflow.cases.Case;
 import de.renew.workflow.cases.CaseList;
-import de.renew.workflow.connector.WorkflowProjectNature;
 import de.renew.workflow.connector.cases.ICaseManagerListener;
 import de.renew.workflow.connector.cases.IDerivedScenarioCopyFilter;
 import de.renew.workflow.connector.cases.IScenario;
@@ -82,7 +80,6 @@ import de.renew.workflow.connector.cases.IScenarioManager;
 import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 import de.renew.workflow.connector.internal.WorkflowConnectorPlugin;
 import de.renew.workflow.connector.internal.i18n.Messages;
-import de.renew.workflow.utils.ScenarioConfiguration;
 
 /**
  * @author Stefan Kurzbach
@@ -140,7 +137,7 @@ public class ScenarioManager implements IScenarioManager
     catch( final CoreException e )
     {
       // ignore
-      // evil: if this fails, the next step wil fail too, so we could also throw the exception...
+      // evil: if this fails, the next step will fail too, so we could also throw the exception...
       e.printStackTrace();
       m_status = e.getStatus();
     }
@@ -159,6 +156,8 @@ public class ScenarioManager implements IScenarioManager
   {
     if( !m_metaDataFile.exists() )
     {
+      // FIXME: should never be the case -> the project template must contain all necessary data, we should remove this
+      // stuff
       final CaseList cases = new de.renew.workflow.cases.ObjectFactory().createCaseList();
       m_cases = new CaseListHandler( cases, m_project );
       createCase( "Basis" );
@@ -206,48 +205,50 @@ public class ScenarioManager implements IScenarioManager
     return m_cases.getCases();
   }
 
-  @Override
-  public void persist( final IProgressMonitor monitor )
+  /**
+   * Saves the changes in the scenario structure to the database.
+   * 
+   * @param monitor
+   *          the progess monitor to report progress to or <code>null</code> if no progress reporting is desired
+   * @exception CoreException
+   *              if this method fails. Reasons include:
+   *              <ul>
+   *              <li>The database is not accessible or writable.</li>
+   *              <li>An error specific to the kind of database has occured. It will be included in the cause of the
+   *              exception.</li>
+   */
+  public void persist( final IProgressMonitor monitor ) throws CoreException
   {
-    // TODO: comment, why in a job?!
-    final Job job = new Job( "Szenarien speichern." )
+    try
     {
-      @SuppressWarnings("synthetic-access")
-      @Override
-      protected IStatus run( @SuppressWarnings("hiding") final IProgressMonitor monitor )
+      monitor.beginTask( "Szenarien speichern.", 5000 );
+      final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+      final Marshaller marshaller = JC.createMarshaller();
+      marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+      marshaller.marshal( m_cases.getCaseList(), bos );
+      bos.close();
+      monitor.worked( 2000 );
+      final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );
+      m_metaDataFile.refreshLocal( 0, null );
+      if( m_metaDataFile.exists() )
+        m_metaDataFile.setContents( bis, false, true, null );
+      else
       {
-        try
-        {
-          monitor.beginTask( "Szenarien speichern.", 5000 );
-          final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-          JC.createMarshaller().marshal( m_cases.getCaseList(), bos );
-          bos.close();
-          monitor.worked( 2000 );
-          final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );
-          m_metaDataFile.refreshLocal( 0, null );
-          if( m_metaDataFile.exists() )
-            m_metaDataFile.setContents( bis, false, true, null );
-          else
-          {
-            FolderUtilities.mkdirs( m_metaDataFile.getParent() );
-            m_metaDataFile.create( bis, false, null );
-          }
-
-          bis.close();
-        }
-        catch( final Exception e )
-        {
-          return new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, "", e );
-        }
-        finally
-        {
-          monitor.done();
-        }
-        return Status.OK_STATUS;
+        FolderUtilities.mkdirs( m_metaDataFile.getParent() );
+        m_metaDataFile.create( bis, false, null );
       }
-    };
-    job.setRule( m_metaDataFile.getParent().getParent() );
-    job.schedule();
+
+      bis.close();
+    }
+    catch( final Exception e )
+    {
+      final IStatus status = new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, "Failed to save scenario file", e ); //$NON-NLS-1$
+      throw new CoreException( status );
+    }
+    finally
+    {
+      monitor.done();
+    }
   }
 
   @Override
@@ -305,8 +306,7 @@ public class ScenarioManager implements IScenarioManager
     m_listeners.clear();
   }
 
-  @Override
-  public IScenario createCase( final String name )
+  private IScenario createCase( final String name ) throws CoreException
   {
     final Scenario newScenario = OF.createScenario();
     newScenario.setName( name );
@@ -314,176 +314,11 @@ public class ScenarioManager implements IScenarioManager
     final IScenario scenario = new ScenarioHandler( newScenario, m_project );
     internalAddCase( scenario );
 
-    persist( null );
+    persist( new NullProgressMonitor() );
 
     fireCaseAdded( scenario );
 
     return scenario;
-  }
-
-  @Override
-  public IScenario deriveScenario( final String scenarioName, final String scenarioDescription, final IScenario parentScenario ) throws CoreException
-  {
-    try
-    {
-      /* Validate the path first. */
-      final IFolder parentFolder = parentScenario.getFolder();
-      final IStatus validateStatus = parentFolder.getWorkspace().validateName( scenarioName, IResource.FOLDER );
-      if( !validateStatus.isOK() )
-        throw new CoreException( validateStatus );
-
-      /* Get the derived folder. */
-      final IFolder derivedFolder = getDerivedFolder( parentFolder );
-
-      /* Get the scenario folder. */
-      final IFolder scenarioFolder = getScenarioFolder( scenarioName, parentFolder, derivedFolder );
-      if( scenarioFolder.exists() )
-        throw new CoreException( new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, String.format( "Unable to create new scenario: Parent scenario already contains a folder with name '%s'", scenarioName ) ) );
-
-      /* Create the uri. */
-      final String uri = createUri( scenarioName, parentScenario, derivedFolder );
-
-      /* Create the new scenario. */
-      final Scenario newScenario = OF.createScenario();
-      newScenario.setURI( uri );
-      newScenario.setName( scenarioName );
-      newScenario.setDescription( scenarioDescription );
-      newScenario.setParentScenario( parentScenario.getScenario() );
-
-      /* Get the list of derived scenarios of the parent. */
-      final ScenarioList derivedScenarios = parentScenario.getScenario().getDerivedScenarios();
-      if( derivedScenarios == null )
-      {
-        final ScenarioList newDerivedScenarios = OF.createScenarioList();
-        newDerivedScenarios.getScenarios().add( newScenario );
-        parentScenario.getScenario().setDerivedScenarios( newDerivedScenarios );
-      }
-      else
-        derivedScenarios.getScenarios().add( newScenario );
-
-      /* Save. */
-      persist( null );
-
-      /* Create the scenario handler. */
-      final ScenarioHandler scenario = new ScenarioHandler( newScenario, m_project );
-
-      /* Fire the case added event. */
-      fireCaseAdded( scenario );
-
-      return scenario;
-    }
-    catch( final Exception ex )
-    {
-      throw new CoreException( StatusUtilities.statusFromThrowable( ex ) );
-    }
-  }
-
-  private IFolder getDerivedFolder( final IFolder parentFolder )
-  {
-    try
-    {
-      final WorkflowProjectNature workflowProjectNature = WorkflowProjectNature.toThisNature( m_project );
-      final IWorkflow workflow = workflowProjectNature.getCurrentWorklist();
-      final ScenarioConfiguration scenarioConfiguration = workflow.getScenarioConfiguration();
-      if( scenarioConfiguration == null )
-        return null;
-
-      final String derivedFolder = scenarioConfiguration.getDerivedFolder();
-      if( derivedFolder == null || derivedFolder.length() == 0 )
-        return null;
-
-      return parentFolder.getFolder( derivedFolder );
-    }
-    catch( final CoreException ex )
-    {
-      ex.printStackTrace();
-      return null;
-    }
-  }
-
-  private IFolder getScenarioFolder( final String scenarioName, final IFolder parentFolder, final IFolder derivedFolder )
-  {
-    IFolder scenarioFolder = null;
-    if( derivedFolder != null )
-      scenarioFolder = derivedFolder.getFolder( scenarioName );
-    else
-      scenarioFolder = parentFolder.getFolder( scenarioName );
-
-    return scenarioFolder;
-  }
-
-  private String createUri( final String scenarioName, final IScenario parentScenario, final IFolder derivedFolder ) throws UnsupportedEncodingException
-  {
-    if( derivedFolder != null )
-      return String.format( "%s/%s", parentScenario.getURI(), URLEncoder.encode( derivedFolder.getName() + "/" + scenarioName, "UTF-8" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
-    return String.format( "%s/%s", parentScenario.getURI(), URLEncoder.encode( scenarioName, "UTF-8" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-  }
-
-  /**
-   * FIXME handling of sub scenarios
-   */
-  @Override
-  public IScenario cloneScenario( final String name, final IScenario toClone ) throws CoreException
-  {
-    final IScenario parentScenario = toClone.getParentScenario();
-    try
-    {
-      final IProjectNature nature = toClone.getProject().getNature( ScenarioHandlingProjectNature.ID );
-      final ScenarioHandlingProjectNature scenarioNature = (ScenarioHandlingProjectNature) nature;
-      final IDerivedScenarioCopyFilter filter = scenarioNature.getDerivedScenarioCopyFilter();
-      scenarioNature.setDerivedScenarioCopyFilter( new IDerivedScenarioCopyFilter()
-      {
-        @Override
-        public boolean copy( final IResource resource )
-        {
-          return false;
-        }
-      } );
-
-      final String description = toClone.getDescription();
-      final IScenario derived = deriveScenario( name, description, parentScenario );
-      /** problem - project nature copies project files -> take data from toClone and not from parent!!! */
-
-      final IFolder destinationFolder = derived.getFolder();
-
-      // TODO works with subscenarios - i don't believe?!?
-      final IFolder srcFolder = toClone.getFolder();
-      final IResource[] members = srcFolder.members( false );
-      for( final IResource resource : members )
-      {
-        if( resource.getName().equals( destinationFolder.getName() ) )
-        {
-          // ignore scenario folder and .* resources
-          continue;
-        }
-        else
-        {
-          resource.copy( destinationFolder.getFullPath().append( resource.getName() ), false, null );
-        }
-      }
-
-      persist( null );
-
-      new UIJob( "" ) //$NON-NLS-1$
-      {
-        @Override
-        public IStatus runInUIThread( final IProgressMonitor monitor )
-        {
-          scenarioNature.setDerivedScenarioCopyFilter( filter );
-
-          return Status.OK_STATUS;
-        }
-      }.schedule( 250 );
-
-      return derived;
-    }
-    catch( final Exception e )
-    {
-      WorkflowConnectorPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-
-      throw new CoreException( new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.afgui.scenarios.ScenarioManager.3" ), e ) ); //$NON-NLS-1$
-    }
   }
 
   @Override
@@ -501,20 +336,21 @@ public class ScenarioManager implements IScenarioManager
       if( derivedScenarios != null && !derivedScenarios.getScenarios().isEmpty() )
         throw new CoreException( new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.afgui.scenarios.ScenarioManager.5" ) ) ); //$NON-NLS-1$
 
+      /* Only remove if not base scenario */
       final IScenario parentScenario = scenario.getParentScenario();
       if( parentScenario == null )
-      {
-        // base scenario
-        internalRemoveCase( scenario );
-      }
-      else
-      {
-        parentScenario.getDerivedScenarios().getScenarios().remove( scenario );
-      }
+        throw new CoreException( new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, "Cannot remove base scenario" ) ); //$NON-NLS-1$
+
+      parentScenario.getDerivedScenarios().getScenarios().remove( scenario );
+
+      /* Save scenario file */
+      persist( new NullProgressMonitor() );
 
       monitor.worked( 5 );
 
-      persist( null );
+      /* Delete scenario content */
+      final IFolder folder = scenario.getFolder();
+      folder.delete( true, null );
     }
     finally
     {
@@ -575,5 +411,137 @@ public class ScenarioManager implements IScenarioManager
     }
 
     return null;
+  }
+
+  private void validateScenarioName( final IScenario parentScenario, final String scenarioName ) throws CoreException
+  {
+    final IFolder parentFolder = parentScenario.getDerivedFolder();
+    final IStatus validateStatus = parentFolder.getWorkspace().validateName( scenarioName, IResource.FOLDER );
+    if( !validateStatus.isOK() )
+      throw new CoreException( validateStatus );
+  }
+
+  @Override
+  public IScenario createScenario( final IScenario parentScenario, final String scenarioName, final String scenarioDescription, final IScenario templateScenario, final boolean copySubScenarios, final IProgressMonitor monitor ) throws CoreException
+  {
+    if( parentScenario == null )
+    {
+      final IStatus status = new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, "Cannot clone base scenario" ); //$NON-NLS-1$
+      throw new CoreException( status );
+    }
+
+    /* Validate the path first. */
+    validateScenarioName( parentScenario, scenarioName );
+
+    /* Get the derived folder. */
+    final IFolder derivedFolder = parentScenario.getDerivedFolder();
+
+    /* Get the scenario folder. */
+    final IFolder scenarioFolder = derivedFolder.getFolder( scenarioName );
+    if( scenarioFolder.exists() )
+      throw new CoreException( new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, String.format( "Unable to create new scenario: Parent scenario already contains a folder with name '%s'", scenarioName ) ) );
+
+    monitor.beginTask( "Create new scenario", 100 );
+
+    /* First copy data, then register it to avoid registered scenarios without data */
+    copyScenarioData( templateScenario, scenarioFolder, copySubScenarios, new SubProgressMonitor( monitor, 90 ) );
+
+    /* Create the uri */
+    final String uri = createUri( scenarioName, parentScenario );
+
+    /* Create the new scenario in xml. */
+    final Scenario newScenario = OF.createScenario();
+    newScenario.setURI( uri );
+    newScenario.setName( scenarioName );
+    newScenario.setDescription( scenarioDescription );
+    newScenario.setParentScenario( parentScenario.getScenario() );
+
+    /* Add new scenario to list of derived scenarios of the parent */
+    final ScenarioList derivedScenarios = parentScenario.getScenario().getDerivedScenarios();
+    if( derivedScenarios == null )
+    {
+      final ScenarioList newDerivedScenarios = OF.createScenarioList();
+      newDerivedScenarios.getScenarios().add( newScenario );
+      parentScenario.getScenario().setDerivedScenarios( newDerivedScenarios );
+    }
+    else
+      derivedScenarios.getScenarios().add( newScenario );
+
+    /* Save scenario meta file */
+    persist( new SubProgressMonitor( monitor, 90 ) );
+
+    /* Create the scenario handler. */
+    final ScenarioHandler scenario = new ScenarioHandler( newScenario, m_project );
+
+    /* Fire the case added event. */
+    fireCaseAdded( scenario );
+
+    return scenario;
+  }
+
+  private void copyScenarioData( final IScenario templateScenario, final IFolder targetFolder, final boolean copySubScenarios, final IProgressMonitor monitor ) throws CoreException
+  {
+    FolderUtilities.mkdirs( targetFolder );
+
+    final List<IFolder> scenarioFolders = new ArrayList<IFolder>();
+
+    if( !copySubScenarios )
+    {
+      final List<IScenario> templateDerivedScenarios = templateScenario.getDerivedScenarios().getScenarios();
+      for( final IScenario derivedScenario : templateDerivedScenarios )
+        scenarioFolders.add( derivedScenario.getFolder() );
+    }
+
+    final IFolder templateFolder = templateScenario.getFolder();
+
+    final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( m_project );
+    final IDerivedScenarioCopyFilter filter = nature.getDerivedScenarioCopyFilter();
+
+    final CopyScenarioContentsOperation copyScenarioContentsOperation = new CopyScenarioContentsOperation( templateFolder, targetFolder, scenarioFolders, filter );
+    final IStatus status = copyScenarioContentsOperation.execute( monitor );
+    if( !status.isOK() )
+      throw new CoreException( status );
+  }
+
+  private String createUri( final String scenarioName, final IScenario parentScenario ) throws CoreException
+  {
+    try
+    {
+      final IFolder parentFolder = parentScenario.getFolder();
+      final IFolder derivedFolder = parentScenario.getDerivedFolder();
+
+      if( derivedFolder.equals( parentFolder ) )
+        return String.format( "%s/%s", parentScenario.getURI(), URLEncoder.encode( scenarioName, "UTF-8" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+
+      return String.format( "%s/%s", parentScenario.getURI(), URLEncoder.encode( derivedFolder.getName() + "/" + scenarioName, "UTF-8" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    }
+    catch( final UnsupportedEncodingException ex )
+    {
+      throw new CoreException( StatusUtilities.statusFromThrowable( ex ) );
+    }
+  }
+
+  @Override
+  public void renameScenario( final IScenario scenario, final String name, final String comment, final IProgressMonitor monitor ) throws CoreException
+  {
+    monitor.beginTask( "Rename scenario", 100 );
+
+    final IScenario parentScenario = scenario.getParentScenario();
+    validateScenarioName( parentScenario, name );
+
+    /* rename folder */
+    final IFolder folder = scenario.getFolder();
+    final IPath newPath = folder.getFullPath().removeLastSegments( 1 ).append( name );
+    folder.move( newPath, false, new SubProgressMonitor( monitor, 90 ) );
+
+    /* recreate scenario */
+    scenario.getScenario().setName( name );
+    scenario.getScenario().setDescription( comment );
+
+    /* Create the uri */
+    final String uri = createUri( name, parentScenario );
+    scenario.getScenario().setURI( uri );
+
+    persist( new SubProgressMonitor( monitor, 10 ) );
   }
 }
