@@ -117,6 +117,8 @@ public class ZmlModelViewport
           doClean( type );
         else if( type.ignoreTypeChanged() )
           doClean( type );
+        else if( type.structureChanged() )
+          doClean( type );
       }
     } );
 
@@ -233,7 +235,7 @@ public class ZmlModelViewport
 
     final IZmlModelRow[] rows = getRows();
 
-    if( ArrayUtils.getLength( rows ) < rowIndex )
+    if( ArrayUtils.getLength( rows ) <= rowIndex )
       return null;
 
     return rows[rowIndex];

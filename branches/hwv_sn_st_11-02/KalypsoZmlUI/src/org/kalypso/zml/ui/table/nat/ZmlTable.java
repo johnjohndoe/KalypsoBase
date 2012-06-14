@@ -239,6 +239,7 @@ public class ZmlTable extends Composite implements IZmlTable
         m_event = 0;
 
         m_table.fireLayerEvent( new VisualRefreshEvent( m_bodyLayer ) );
+        m_table.refresh();
 
         doResizeColumns();
 
