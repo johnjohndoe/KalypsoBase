@@ -45,6 +45,7 @@ import java.util.Date;
 
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.SensorException;
 
@@ -102,7 +103,7 @@ public final class DateRanges
       return d1;
 
     if( !d1.intersects( d2 ) || !d2.intersects( d1 ) )
-      throw new SensorException( "Date ranges doesn't intersects." );
+      throw new SensorException( Messages.getString("DateRanges_0") ); //$NON-NLS-1$
 
     final Long from = getMax( d1.getFrom(), d2.getFrom() );
     final Long to = getMin( d1.getTo(), d2.getTo() );

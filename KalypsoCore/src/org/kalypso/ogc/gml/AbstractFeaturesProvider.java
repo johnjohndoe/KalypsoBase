@@ -46,6 +46,7 @@ import java.util.HashSet;
 
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.util.SafeRunnable;
+import org.kalypso.core.i18n.Messages;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 /**
@@ -84,7 +85,7 @@ public abstract class AbstractFeaturesProvider implements IFeaturesProvider
     final IFeaturesProviderListener[] listeners = m_listeners.toArray( new IFeaturesProviderListener[m_listeners.size()] );
     for( final IFeaturesProviderListener listener : listeners )
     {
-      SafeRunner.run( new SafeRunnable( "Failed to inform listener" )
+      SafeRunner.run( new SafeRunnable( Messages.getString("AbstractFeaturesProvider_0") ) //$NON-NLS-1$
       {
         @Override
         public void run( ) throws Exception

@@ -427,7 +427,7 @@ public final class KalypsoStatusUtils
   public static String getTooltipFor( final int mask )
   {
     if( checkMask( mask, KalypsoStati.BIT_OK ) )
-      return "OK";
+      return "OK"; //$NON-NLS-1$
 
     if( checkMask( mask, KalypsoStati.BIT_CHECK ) )
       return Messages.getString( "org.kalypso.ogc.sensor.status.KalypsoStatusUtils.21" ); //$NON-NLS-1$
@@ -444,7 +444,7 @@ public final class KalypsoStatusUtils
     if( checkMask( mask, KalypsoStati.BIT_DERIVATED ) )
       return Messages.getString( "org.kalypso.ogc.sensor.status.KalypsoStatusUtils.25" ); //$NON-NLS-1$
 
-    return "";
+    return ""; //$NON-NLS-1$
   }
 
   /**

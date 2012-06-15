@@ -67,6 +67,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.contribs.eclipse.swt.SWTUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.core.internal.layoutwizard.LayoutExtensions;
 import org.kalypso.core.internal.layoutwizard.controller.ModificationLayoutController;
 import org.kalypso.core.internal.layoutwizard.controller.SelectionLayoutController;
@@ -83,9 +84,9 @@ import org.kalypso.core.internal.layoutwizard.part.ViewLayoutPart;
  */
 public class LayoutParser
 {
-  public static final Object TYPE_CONTROLLER_SELECTION = "selection";
+  public static final Object TYPE_CONTROLLER_SELECTION = "selection"; //$NON-NLS-1$
 
-  public static final Object TYPE_CONTROLLER_MODIFICATION = "modification";
+  public static final Object TYPE_CONTROLLER_MODIFICATION = "modification"; //$NON-NLS-1$
 
   private final ILayoutPageContext m_defaultContext;
 
@@ -142,7 +143,7 @@ public class LayoutParser
     }
     catch( final JAXBException e )
     {
-      final String message = String.format( "Fehler beim Parsen der Layoutkonfiguration" );
+      final String message = String.format( Messages.getString("LayoutParser_2") ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), message, e );
       throw new CoreException( status );
     }
@@ -172,7 +173,7 @@ public class LayoutParser
   private ILayoutPart buildPart( final AbstractPartType part ) throws CoreException
   {
     final String id = part.getId();
-    final String[] idSplit = id.split( "\\." );
+    final String[] idSplit = id.split( "\\." ); //$NON-NLS-1$
 
     final String primaryId = idSplit[0];
 
@@ -238,7 +239,7 @@ public class LayoutParser
       return gridData;
     }
 
-    throw new UnsupportedOperationException( String.format( "Unknown layout-data type '%s'", dataType.getClass().getName() ) );
+    throw new UnsupportedOperationException( String.format( Messages.getString("LayoutParser_4"), dataType.getClass().getName() ) ); //$NON-NLS-1$
   }
 
   private ILayoutContainer createContainer( final AbstractContainerType containerType )
@@ -290,7 +291,7 @@ public class LayoutParser
       return new TabItemContainer( id, text, tooltip, image );
     }
 
-    throw new UnsupportedOperationException( String.format( "Unknown container type '%s'", containerType.getClass().getName() ) );
+    throw new UnsupportedOperationException( String.format( Messages.getString("LayoutParser_5"), containerType.getClass().getName() ) ); //$NON-NLS-1$
   }
 
   private ILayoutController[] createControllers( final List<Controller> controllers )
@@ -304,11 +305,11 @@ public class LayoutParser
         final String type = controller.getType();
         final AbstractPartType sourcePart = (AbstractPartType) controller.getSourcePart();
         if( sourcePart == null )
-          throw new IllegalArgumentException( String.format( "Missing source part for controller - type: %s", type ) );
+          throw new IllegalArgumentException( String.format( Messages.getString("LayoutParser_6"), type ) ); //$NON-NLS-1$
 
         final AbstractPartType targetPart = (AbstractPartType) controller.getTargetPart();
         if( targetPart == null )
-          throw new IllegalArgumentException( String.format( "Missing target part for controller - type: %s", type ) );
+          throw new IllegalArgumentException( String.format( Messages.getString("LayoutParser_7"), type ) ); //$NON-NLS-1$
 
         final String sourceId = sourcePart.getId();
         final String targetId = targetPart.getId();
@@ -323,7 +324,7 @@ public class LayoutParser
       }
       catch( final Exception e )
       {
-        final String msg = String.format( "Failed to create controller: %s", e.toString() );
+        final String msg = String.format( Messages.getString("LayoutParser_8"), e.toString() ); //$NON-NLS-1$
         final IStatus status = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), msg, e );
         KalypsoCorePlugin.getDefault().getLog().log( status );
       }
@@ -336,19 +337,19 @@ public class LayoutParser
   {
     if( TYPE_CONTROLLER_SELECTION.equals( type ) )
     {
-      final ILayoutPart sourcePart = findPart( sourceId, "source" );
-      final ILayoutPart targetPart = findPart( targetId, "target" );
+      final ILayoutPart sourcePart = findPart( sourceId, "source" ); //$NON-NLS-1$
+      final ILayoutPart targetPart = findPart( targetId, "target" ); //$NON-NLS-1$
       return new SelectionLayoutController( sourcePart, targetPart );
     }
 
     if( TYPE_CONTROLLER_MODIFICATION.equals( type ) )
     {
-      final ILayoutPart sourcePart = findPart( sourceId, "source" );
-      final ILayoutPart targetPart = findPart( targetId, "target" );
+      final ILayoutPart sourcePart = findPart( sourceId, "source" ); //$NON-NLS-1$
+      final ILayoutPart targetPart = findPart( targetId, "target" ); //$NON-NLS-1$
       return new ModificationLayoutController( sourcePart, targetPart );
     }
 
-    throw new IllegalArgumentException( String.format( "Unknown controller type '%s", type ) );
+    throw new IllegalArgumentException( String.format( Messages.getString("LayoutParser_13"), type ) ); //$NON-NLS-1$
   }
 
   private ILayoutPart findPart( final String id, final String name ) throws CoreException
@@ -357,7 +358,7 @@ public class LayoutParser
     if( foundPart != null )
       return foundPart;
 
-    final String message = String.format( "No %s-part found with id '%s'", name, id );
+    final String message = String.format( Messages.getString("LayoutParser_14"), name, id ); //$NON-NLS-1$
     final Status status = new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), message );
     throw new CoreException( status );
   }

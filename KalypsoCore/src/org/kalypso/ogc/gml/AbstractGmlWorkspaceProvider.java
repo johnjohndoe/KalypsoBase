@@ -47,6 +47,7 @@ import java.util.HashSet;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.util.SafeRunnable;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 /**
@@ -120,7 +121,7 @@ public abstract class AbstractGmlWorkspaceProvider implements IGmlWorkspaceProvi
     final IGmlWorkspaceProviderListener[] listeners = m_listeners.toArray( new IGmlWorkspaceProviderListener[m_listeners.size()] );
     for( final IGmlWorkspaceProviderListener listener : listeners )
     {
-      SafeRunner.run( new SafeRunnable( "Failed to inform listener" )
+      SafeRunner.run( new SafeRunnable( Messages.getString("AbstractGmlWorkspaceProvider_0") ) //$NON-NLS-1$
       {
         @Override
         public void run( ) throws Exception

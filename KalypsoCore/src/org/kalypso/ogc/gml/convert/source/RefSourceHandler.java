@@ -9,6 +9,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import org.kalypso.contribs.java.net.IUrlResolver;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.gml.util.Refsource;
 import org.kalypso.gml.util.SourceType;
@@ -51,12 +52,12 @@ public class RefSourceHandler implements ISourceHandler
     }
     catch( final MalformedURLException e )
     {
-      final String message = String.format( "Quelle '%s' konnte nicht geladen werden", m_href );
+      final String message = String.format( Messages.getString("RefSourceHandler_0"), m_href ); //$NON-NLS-1$
       throw new GmlConvertException( message, e );
     }
     catch( final JAXBException e )
     {
-      final String message = String.format( "Quelle '%s' konnte nicht geladen werden", m_href );
+      final String message = String.format( Messages.getString("RefSourceHandler_1"), m_href ); //$NON-NLS-1$
       throw new GmlConvertException( message, e );
     }
   }

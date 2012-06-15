@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.core.layoutwizard.ILayoutContainer;
 import org.kalypso.core.layoutwizard.ILayoutPart;
 import org.kalypso.core.layoutwizard.ILayoutPartVisitor;
@@ -93,7 +94,7 @@ public abstract class AbstractLayoutContainer extends AbstractLayoutPart impleme
       catch( final Exception e )
       {
         // On failure, replace child by a status part that shows the error
-        final IStatus status = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), "Failed to initialize layout part", e );
+        final IStatus status = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), Messages.getString("AbstractLayoutContainer_0"), e ); //$NON-NLS-1$
         m_children.set( i, new StatusLayoutPart( child.getId(), child.getContext(), status ) );
         child.dispose();
       }

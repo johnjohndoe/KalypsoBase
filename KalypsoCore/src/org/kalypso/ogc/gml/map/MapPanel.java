@@ -254,7 +254,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   public MapPanel( final ICommandTarget viewCommandTarget, final IFeatureSelectionManager manager )
   {
-    if( "true".equals( System.getProperty( "org.kalypso.ogc.gml.mappanel.multitouch" ) ) )
+    if( "true".equals( System.getProperty( "org.kalypso.ogc.gml.mappanel.multitouch" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
       m_isMultitouchEnabled = true;
     else
       m_isMultitouchEnabled = false;

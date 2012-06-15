@@ -73,7 +73,7 @@ public class ZmlTest extends TestCase
 
   public ZmlTest( )
   {
-    m_df.setTimeZone( TimeZone.getTimeZone( "UTC" ) );
+    m_df.setTimeZone( TimeZone.getTimeZone( "UTC" ) ); //$NON-NLS-1$
     // TODO Auto-generated constructor stub
   }
 

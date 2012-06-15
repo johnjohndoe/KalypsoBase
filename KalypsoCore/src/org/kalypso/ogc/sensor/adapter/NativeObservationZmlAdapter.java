@@ -48,6 +48,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
@@ -78,7 +79,7 @@ public class NativeObservationZmlAdapter extends AbstractObservationImporter
       else
         setObservation( observation );
 
-      return new Status( IStatus.OK, KalypsoCorePlugin.getID(), "ZML Timeseries Import" );
+      return new Status( IStatus.OK, KalypsoCorePlugin.getID(), Messages.getString("NativeObservationZmlAdapter_0") ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {

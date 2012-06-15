@@ -149,7 +149,7 @@ public class DataSourceHandler
 
     if( containsFilter( source ) )
     {
-      final String[] parts = StringUtils.split( source, "\\?" );
+      final String[] parts = StringUtils.split( source, "\\?" ); //$NON-NLS-1$
       return parts[0];
     }
 
@@ -161,10 +161,10 @@ public class DataSourceHandler
    */
   private boolean containsFilter( final String source )
   {
-    if( source.contains( "?" ) )
+    if( source.contains( "?" ) ) //$NON-NLS-1$
     {
-      final String[] parts = StringUtils.split( source, "\\?" );
-      return parts[1].startsWith( "<" );
+      final String[] parts = StringUtils.split( source, "\\?" ); //$NON-NLS-1$
+      return parts[1].startsWith( "<" ); //$NON-NLS-1$
     }
 
     return false;

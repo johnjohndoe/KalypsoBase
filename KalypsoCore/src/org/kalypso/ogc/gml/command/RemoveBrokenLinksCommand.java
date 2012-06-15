@@ -87,7 +87,7 @@ class RemoveBrokenLinksCommand implements ICommand
   @Override
   public void undo( ) throws Exception
   {
-    final String href = "#" + m_childID;
+    final String href = "#" + m_childID; //$NON-NLS-1$
 
     FeatureLinkUtils.insertLink( m_parentFeature, m_ftp, m_pos, href );
   }

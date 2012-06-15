@@ -67,7 +67,7 @@ public class FindCustomLayerVisitor implements IKalypsoThemeVisitor
   @Override
   public boolean visit( final IKalypsoTheme theme )
   {
-    final String id = theme.getProperty( IKalypsoTheme.PROPERTY_CUSTOM_THEME_ID, "" );
+    final String id = theme.getProperty( IKalypsoTheme.PROPERTY_CUSTOM_THEME_ID, "" ); //$NON-NLS-1$
     if( Objects.equal( m_customId, id ) )
     {
       m_theme = theme;

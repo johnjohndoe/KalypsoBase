@@ -116,7 +116,7 @@ public final class KeyInfo extends Job
 
   public void dispose( )
   {
-    KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( "Disposing Info for key: %s%n", m_key );
+    KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( Messages.getString("KeyInfo.0"), m_key ); //$NON-NLS-1$
 
     m_listeners.clear();
 
@@ -169,7 +169,7 @@ public final class KeyInfo extends Job
     synchronized( this )
     {
       final int state = getState();
-      KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( "Current Job-State: %d%n", state );
+      KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( Messages.getString("KeyInfo.1"), state ); //$NON-NLS-1$
 
       cancel();
       schedule();
@@ -299,7 +299,7 @@ public final class KeyInfo extends Job
     if( m_object == null )
       return;
 
-    KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( "Releasing Pool-Objekt for Key: %s%n", m_key );
+    KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( Messages.getString("KeyInfo.2"), m_key ); //$NON-NLS-1$
 
     m_loader.release( m_object );
     m_object = null;
@@ -484,8 +484,8 @@ public final class KeyInfo extends Job
         final Object oldObject = m_object;
         if( oldObject != null )
         {
-          KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( "Pool-Resource was removed for Key: %s%n", m_key );
-          KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( "Releasing Pool-Objekt for Key: %s%n", m_key );
+          KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( Messages.getString("KeyInfo.3"), m_key ); //$NON-NLS-1$
+          KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( Messages.getString("KeyInfo.4"), m_key ); //$NON-NLS-1$
           m_loader.release( m_object );
           m_object = null;
           fireObjectInvalid( oldObject );
@@ -495,7 +495,7 @@ public final class KeyInfo extends Job
       case IResourceDelta.ADDED:
       case IResourceDelta.CHANGED:
       {
-        KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( "Pool-Resource was added/changed for Key: %s%n", m_key );
+        KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( Messages.getString("KeyInfo.5"), m_key ); //$NON-NLS-1$
         reloadInternal();
         return;
       }

@@ -64,6 +64,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
@@ -305,7 +306,7 @@ public class ZmlLink
     final File targetFile = getJavaFile();
     if( targetFile == null )
     {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), "Ziel-Link nicht gesetzt.", null );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), Messages.getString("ZmlLink_0"), null ); //$NON-NLS-1$
       throw new CoreException( status );
     }
 

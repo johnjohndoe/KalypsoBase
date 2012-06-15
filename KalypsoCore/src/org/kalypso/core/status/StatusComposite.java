@@ -345,7 +345,7 @@ public class StatusComposite extends Composite
   private String getStatusText( )
   {
     if( m_status == null )
-      return "";
+      return ""; //$NON-NLS-1$
 
     if( m_labelProvider != null )
     {
@@ -355,10 +355,10 @@ public class StatusComposite extends Composite
     }
 
     final String message = m_status.getMessage();
-    final String message1 = message.replace( "\r\n", " " );
-    final String message2 = message1.replace( "\r", " " );
-    final String message3 = message2.replace( "\n", " " );
-    final String message4 = message3.replace( "\t", " " );
+    final String message1 = message.replace( "\r\n", " " ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String message2 = message1.replace( "\r", " " ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String message3 = message2.replace( "\n", " " ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String message4 = message3.replace( "\t", " " ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return message4;
   }

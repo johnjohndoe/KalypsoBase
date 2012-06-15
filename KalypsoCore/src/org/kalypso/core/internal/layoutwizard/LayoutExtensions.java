@@ -57,13 +57,13 @@ import org.kalypso.core.layoutwizard.ILayoutPartFactory;
  */
 public class LayoutExtensions
 {
-  private static final String EXTENSION_POINT_LAYOUT = "org.kalypso.core.layout";
+  private static final String EXTENSION_POINT_LAYOUT = "org.kalypso.core.layout"; //$NON-NLS-1$
 
-  private static final String ELEMENT_LAYOUT_PART_FACTORY = "layoutPartFactory";
+  private static final String ELEMENT_LAYOUT_PART_FACTORY = "layoutPartFactory"; //$NON-NLS-1$
 
-  private static final String ATTRIBUTE_ID = "id";
+  private static final String ATTRIBUTE_ID = "id"; //$NON-NLS-1$
 
-  private static final String ATTRIBUTE_CLASS = "class";
+  private static final String ATTRIBUTE_CLASS = "class"; //$NON-NLS-1$
 
   /**
    * The cache of the layout part factories.

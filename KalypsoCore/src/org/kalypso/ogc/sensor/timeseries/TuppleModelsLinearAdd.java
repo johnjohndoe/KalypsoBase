@@ -43,6 +43,7 @@ package org.kalypso.ogc.sensor.timeseries;
 import java.util.Date;
 
 import org.eclipse.core.runtime.Assert;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationUtilities;
@@ -101,7 +102,7 @@ public class TuppleModelsLinearAdd
     {
       final ITupleModel values = tuppleModels[i];
       if( values.size() != firstTuppleModel.size() )
-        throw new SensorException( "The observations in the list must have a equal number of elements ..." );
+        throw new SensorException( Messages.getString("TuppleModelsLinearAdd_0") ); //$NON-NLS-1$
 
       final IAxis[] axisList = values.getAxes();
       valueAxes[i] = ObservationUtilities.findAxisByType( axisList, m_sourceValueType );

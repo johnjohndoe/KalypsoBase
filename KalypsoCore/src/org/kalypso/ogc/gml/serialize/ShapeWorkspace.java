@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.serialize;
 
 import java.io.File;
 
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -73,7 +74,7 @@ public class ShapeWorkspace implements IShapeWorkspace
     /* attention - eShape loading works only without fileextension */
     final String[] sShapes = file.toString().split( "\\." ); //$NON-NLS-1$
     if( sShapes == null || sShapes.length < 2 )
-      throw new IllegalStateException( String.format( "Invalid shape file - %s", file.getName() ) );
+      throw new IllegalStateException( String.format( Messages.getString("ShapeWorkspace_0"), file.getName() ) ); //$NON-NLS-1$
 
     final StringBuffer buffer = new StringBuffer();
     for( int i = 0; i < sShapes.length - 1; i++ )

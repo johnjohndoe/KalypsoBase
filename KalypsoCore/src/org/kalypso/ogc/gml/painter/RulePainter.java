@@ -61,9 +61,9 @@ import org.kalypsodeegree_impl.graphics.displayelements.ILabelPlacementStrategy;
  */
 class RulePainter implements IStylePainter
 {
-  private static final String STRING_PAINTING_RULE = Messages.getString( "org.kalypso.ogc.gml.painter.UserStylePainter.1" );
+  private static final String STRING_PAINTING_RULE = Messages.getString( "org.kalypso.ogc.gml.painter.UserStylePainter.1" ); //$NON-NLS-1$
 
-  private static final String STRING_PAINTING_FEATURES = Messages.getString( "org.kalypso.ogc.gml.painter.UserStylePainter.2" );
+  private static final String STRING_PAINTING_FEATURES = Messages.getString( "org.kalypso.ogc.gml.painter.UserStylePainter.2" ); //$NON-NLS-1$
 
   private final Rule m_rule;
 

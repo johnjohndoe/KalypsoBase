@@ -44,6 +44,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
@@ -104,10 +105,10 @@ public class UpdateTupleModelDataSetCommand implements ITupleModelCommand
     {
       e.printStackTrace();
 
-      return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), String.format( "updating tuple model dataset %d failed", m_index ) );
+      return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), String.format( Messages.getString("UpdateTupleModelDataSetCommand_0"), m_index ) ); //$NON-NLS-1$
     }
 
-    return new Status( IStatus.OK, KalypsoCorePlugin.getID(), String.format( "updated tuple model dataset %d", m_index ) );
+    return new Status( IStatus.OK, KalypsoCorePlugin.getID(), String.format( Messages.getString("UpdateTupleModelDataSetCommand_1"), m_index ) ); //$NON-NLS-1$
   }
 
   private boolean doUpdate( final ITupleModel model ) throws SensorException

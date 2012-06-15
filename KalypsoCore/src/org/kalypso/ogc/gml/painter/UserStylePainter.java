@@ -57,7 +57,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 class UserStylePainter implements IStylePainter
 {
-  private static final String STRING_PAINTING_USERSTYLE = Messages.getString( "org.kalypso.ogc.gml.painter.UserStylePainter.3" );
+  private static final String STRING_PAINTING_USERSTYLE = Messages.getString( "org.kalypso.ogc.gml.painter.UserStylePainter.3" ); //$NON-NLS-1$
 
   private final IKalypsoUserStyle m_style;
 

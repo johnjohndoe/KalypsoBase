@@ -160,7 +160,7 @@ public class IntervalTupleModel extends AbstractTupleModel
     final CalendarIterator iterator = new CalendarIterator( m_from, m_to, targetStepField, targetStepAmount );
     final int stepCount = iterator.size();
 
-    Assert.isTrue( stepCount > 0, String.format( "Empty intervall tuple model. Check from (%s)/to(%s).", m_from, m_to ) );
+    Assert.isTrue( stepCount > 0, String.format( Messages.getString("IntervalTupleModel.0"), m_from, m_to ) ); //$NON-NLS-1$
 
     final int rows = stepCount - 1;
     final ITupleModel intervalModel = createTuppleModell( axisList, rows );

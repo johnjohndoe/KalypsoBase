@@ -55,6 +55,7 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -75,7 +76,7 @@ import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
  */
 public abstract class AbstractObservationImporter implements INativeObservationAdapter, IExecutableExtension
 {
-  public static final String MISSING_VALUE_POSTFIX = "/missing.value";
+  public static final String MISSING_VALUE_POSTFIX = "/missing.value"; //$NON-NLS-1$
 
   private String m_axisTypeValue;
 
@@ -181,7 +182,7 @@ public abstract class AbstractObservationImporter implements INativeObservationA
     final ITupleModel model = createTuppelModel( metadata, valueType );
     setObservation( new SimpleObservation( source.getAbsolutePath(), source.getName(), metadata, model ) );
 
-    return StatusUtilities.createStatus( stati, "Parsing of input file" );
+    return StatusUtilities.createStatus( stati, Messages.getString("AbstractObservationImporter_1") ); //$NON-NLS-1$
   }
 
   protected abstract void parse( File source, TimeZone timeZone, boolean continueWithErrors, IStatusCollector stati ) throws Exception;

@@ -42,6 +42,7 @@ package org.kalypso.ogc.sensor.zml;
 
 import java.net.URL;
 
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.RequestFactory;
@@ -104,7 +105,7 @@ final class ObservationRepositoryFetcher
   {
     final IRepositoryItem item = repository.findItem( itemId );
     if( item == null )
-      throw new RepositoryException( String.format( "Unknown ID: %s", itemId ) );
+      throw new RepositoryException( String.format( Messages.getString("ObservationRepositoryFetcher_0"), itemId ) ); //$NON-NLS-1$
 
     return (IObservation) item.getAdapter( IObservation.class );
   }

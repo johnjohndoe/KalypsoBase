@@ -329,9 +329,9 @@ public final class MapUtilities
   public static String getNewId( final List<String> usedIds )
   {
     int count = 0;
-    String newId = "ID_" + count++;
+    String newId = "ID_" + count++; //$NON-NLS-1$
     while( usedIds.contains( newId ) )
-      newId = "ID_" + count++;
+      newId = "ID_" + count++; //$NON-NLS-1$
 
     return newId;
   }

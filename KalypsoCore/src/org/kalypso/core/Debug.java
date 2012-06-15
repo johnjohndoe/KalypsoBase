@@ -7,7 +7,7 @@ package org.kalypso.core;
  */
 public class Debug
 {
-  public static final org.kalypso.contribs.eclipse.core.runtime.Debug TOKEN_READER = new org.kalypso.contribs.eclipse.core.runtime.Debug( KalypsoCorePlugin.getDefault(), "/debug/token/reader" );
+  public static final org.kalypso.contribs.eclipse.core.runtime.Debug TOKEN_READER = new org.kalypso.contribs.eclipse.core.runtime.Debug( KalypsoCorePlugin.getDefault(), "/debug/token/reader" ); //$NON-NLS-1$
 
   /**
    * The constructor.

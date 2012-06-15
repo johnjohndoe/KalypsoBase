@@ -48,6 +48,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.core.internal.layoutwizard.ChildWizardContext;
 
 /**
@@ -86,7 +87,7 @@ public final class LayoutFactory
     final String relativeLayoutLocation = arguments.getProperty( PROP_LAYOUT_LOCATION );
     if( relativeLayoutLocation == null )
     {
-      final String message = String.format( "Layoutkonfiguration fehlt (Argument '%s')", PROP_LAYOUT_LOCATION );
+      final String message = String.format( Messages.getString("LayoutFactory_0"), PROP_LAYOUT_LOCATION ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), message );
       throw new CoreException( status );
     }
@@ -97,7 +98,7 @@ public final class LayoutFactory
     }
     catch( final MalformedURLException e )
     {
-      final String message = String.format( "Ungültige Layoutkonfiguration '%s'", relativeLayoutLocation );
+      final String message = String.format( Messages.getString("LayoutFactory_1"), relativeLayoutLocation ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), message, e );
       throw new CoreException( status );
     }

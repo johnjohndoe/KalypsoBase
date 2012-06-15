@@ -64,7 +64,7 @@ public final class ThemeUtilities
 
   public static RGB checkBackgroundColor( final String backgroundColorProperty )
   {
-    final String[] backgroundColor = StringUtils.split( backgroundColorProperty, ";" );
+    final String[] backgroundColor = StringUtils.split( backgroundColorProperty, ";" ); //$NON-NLS-1$
     if( backgroundColor != null && backgroundColor.length == 3 )
     {
       final Integer r = NumberUtils.parseQuietInteger( backgroundColor[0] );

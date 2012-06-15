@@ -59,6 +59,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.core.status.tree.listener.StatusDoubleClickListener;
 import org.kalypso.core.status.tree.provider.StatusContentProvider;
@@ -94,7 +95,7 @@ public class StatusDialog extends Dialog
     super( shell );
 
     /* Initialize. */
-    m_title = "Statusanzeige";
+    m_title = Messages.getString("StatusDialog_0"); //$NON-NLS-1$
     if( title != null )
       m_title = title;
     m_messages = messages;
@@ -113,7 +114,7 @@ public class StatusDialog extends Dialog
     super( parentShell );
 
     /* Initialize. */
-    m_title = "Statusanzeige";
+    m_title = Messages.getString("StatusDialog_1"); //$NON-NLS-1$
     if( title != null )
       m_title = title;
     m_messages = messages;
@@ -135,7 +136,7 @@ public class StatusDialog extends Dialog
 
     /* If no messages are available, create a default warning. */
     if( m_messages == null )
-      m_messages = new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), "Es wurde kein Ergebnis übergeben..." );
+      m_messages = new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), Messages.getString("StatusDialog_2") ); //$NON-NLS-1$
 
     /* Display a single message. */
     if( !m_messages.isMultiStatus() )
@@ -147,7 +148,7 @@ public class StatusDialog extends Dialog
     final Group resultGroup = new Group( main, SWT.NONE );
     resultGroup.setLayout( new GridLayout( 2, false ) );
     resultGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
-    resultGroup.setText( "Ergebnis" );
+    resultGroup.setText( Messages.getString("StatusDialog_3") ); //$NON-NLS-1$
 
     /* Create a label. */
     final Label imageLabel = new Label( resultGroup, SWT.NONE );
@@ -184,7 +185,7 @@ public class StatusDialog extends Dialog
     final Group messageGroup = new Group( parent, SWT.NONE );
     messageGroup.setLayout( new GridLayout( 1, false ) );
     messageGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
-    messageGroup.setText( "Nachricht" );
+    messageGroup.setText( Messages.getString("StatusDialog_4") ); //$NON-NLS-1$
 
     /* Create a label. */
     final Label messageLabel = new Label( messageGroup, SWT.WRAP );
@@ -224,7 +225,7 @@ public class StatusDialog extends Dialog
     final Group messagesGroup = new Group( parent, SWT.NONE );
     messagesGroup.setLayout( new GridLayout( 1, false ) );
     messagesGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
-    messagesGroup.setText( "Nachrichten" );
+    messagesGroup.setText( Messages.getString("StatusDialog_5") ); //$NON-NLS-1$
 
     /* Create a tree viewer. */
     final TreeViewer messagesViewer = new TreeViewer( messagesGroup, SWT.SINGLE | SWT.BORDER );
@@ -252,17 +253,17 @@ public class StatusDialog extends Dialog
     switch( severity )
     {
       case IStatus.OK:
-        return "OK";
+        return Messages.getString("StatusDialog_6"); //$NON-NLS-1$
       case IStatus.INFO:
-        return "Information";
+        return Messages.getString("StatusDialog_7"); //$NON-NLS-1$
       case IStatus.WARNING:
-        return "Warnung";
+        return Messages.getString("StatusDialog_8"); //$NON-NLS-1$
       case IStatus.ERROR:
-        return "Fehler";
+        return Messages.getString("StatusDialog_9"); //$NON-NLS-1$
       case IStatus.CANCEL:
-        return "Abbruch";
+        return Messages.getString("StatusDialog_10"); //$NON-NLS-1$
       default:
-        return "Information";
+        return Messages.getString("StatusDialog_11"); //$NON-NLS-1$
     }
   }
 }

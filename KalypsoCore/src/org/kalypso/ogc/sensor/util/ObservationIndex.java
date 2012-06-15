@@ -43,6 +43,7 @@ package org.kalypso.ogc.sensor.util;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
@@ -96,7 +97,7 @@ public class ObservationIndex
   {
     final Integer row = getRow( key );
     if( row == null )
-      throw new SensorException( String.format( "Unknown key: %s", key ) );
+      throw new SensorException( String.format( Messages.getString("ObservationIndex_0"), key ) ); //$NON-NLS-1$
 
     return m_data.get( row, valueAxis );
   }

@@ -252,7 +252,7 @@ public class WQTable
   public String toString( )
   {
     final DateFormat df = DateFormat.getDateTimeInstance();
-    return Messages.getString( "org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable.3", df.format( m_validity ), m_offset );
+    return Messages.getString( "org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTable.3", df.format( m_validity ), m_offset ); //$NON-NLS-1$
   }
 
   public WQPair[] getPairs( )

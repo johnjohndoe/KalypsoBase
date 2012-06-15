@@ -53,6 +53,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 
@@ -149,7 +150,7 @@ public class NativeObservationDVWKAdapter extends AbstractObservationImporter
                 }
                 catch( final Exception e )
                 {
-                  stati.add( IStatus.WARNING, String.format( "Line %d: Value not parsable: %s", reader.getLineNumber(), lineIn ) );
+                  stati.add( IStatus.WARNING, String.format( Messages.getString("NativeObservationDVWKAdapter_0"), reader.getLineNumber(), lineIn ) ); //$NON-NLS-1$
                   tickErrorCount();
                 }
                 calendar.add( Calendar.MINUTE, 5 );
@@ -162,7 +163,7 @@ public class NativeObservationDVWKAdapter extends AbstractObservationImporter
       }
       catch( final Exception e )
       {
-        stati.add( IStatus.ERROR, String.format( "Line %d: Exception: %s", reader.getLineNumber(), e.getLocalizedMessage() ) );
+        stati.add( IStatus.ERROR, String.format( Messages.getString("NativeObservationDVWKAdapter_1"), reader.getLineNumber(), e.getLocalizedMessage() ) ); //$NON-NLS-1$
         tickErrorCount();
       }
 
@@ -170,8 +171,8 @@ public class NativeObservationDVWKAdapter extends AbstractObservationImporter
       {
 
         final MessageBox messageBox = new MessageBox( null, SWT.ICON_QUESTION | SWT.YES | SWT.NO );
-        messageBox.setMessage( "Too many errors, probably wrong format selected. Continue (slow operation)?" );
-        messageBox.setText( "Import errors" );
+        messageBox.setMessage( Messages.getString("NativeObservationDVWKAdapter_2") ); //$NON-NLS-1$
+        messageBox.setText( Messages.getString("NativeObservationDVWKAdapter_3") ); //$NON-NLS-1$
         if( messageBox.open() == SWT.NO )
           return;
       }

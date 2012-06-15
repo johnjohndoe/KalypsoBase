@@ -171,7 +171,7 @@ public class StatusDialog extends AbstractStatusDialog
 
     final Section exceptionGroup = new Section( parent, ExpandableComposite.TREE_NODE );
     exceptionGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    exceptionGroup.setText( "Exception: " + shortException );
+    exceptionGroup.setText( "Exception: " + shortException ); //$NON-NLS-1$
 
     final Text stackText = new Text( exceptionGroup, SWT.MULTI | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL );
     stackText.setText( sw.toString() );

@@ -66,7 +66,7 @@ public final class LayoutBinding
 
   public static Unmarshaller createLayoutUnmarshaller( ) throws JAXBException
   {
-    return createUnmarshaller( "layout/layout.xsd" );
+    return createUnmarshaller( "layout/layout.xsd" ); //$NON-NLS-1$
   }
 
   // TODO: move these + schema-cache to common place

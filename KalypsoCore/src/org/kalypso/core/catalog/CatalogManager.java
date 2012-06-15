@@ -170,7 +170,7 @@ public class CatalogManager
     catch( final Exception e )
     {
       e.printStackTrace();
-      System.err.println( String.format( "Failed to load catalog from: %s", catalogURI ) );
+      System.err.println( String.format( Messages.getString("CatalogManager.0"), catalogURI ) ); //$NON-NLS-1$
       return null;
     }
   }

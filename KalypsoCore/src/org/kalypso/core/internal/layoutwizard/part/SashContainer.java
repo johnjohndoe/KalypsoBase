@@ -52,11 +52,11 @@ import org.kalypso.core.layoutwizard.ILayoutPart;
  */
 public class SashContainer extends AbstractLayoutContainer
 {
-  public static final String PROP_SASH_STYLE = "sashStyle";
+  public static final String PROP_SASH_STYLE = "sashStyle"; //$NON-NLS-1$
 
-  public static final String PROP_SASH_WEIGHT = "sashWeight";
+  public static final String PROP_SASH_WEIGHT = "sashWeight"; //$NON-NLS-1$
 
-  public static final String PROP_SASH_MAXIMIZED = "sashMaximized";
+  public static final String PROP_SASH_MAXIMIZED = "sashMaximized"; //$NON-NLS-1$
 
   private final SashConfiguration m_configuration;
 

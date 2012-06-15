@@ -53,7 +53,7 @@ public interface IMetadataConstants
 
   String BOUNDARY_FORMAT = BOUNDARY_PREFIX + "%s: %s"; //$NON-NLS-1$
 
-  String AUX_BOUNDARY_FORMAT = "DEBUG_AUXILARY_" + BOUNDARY_PREFIX + "%s: %s"; //$NON-NLS-1$
+  String AUX_BOUNDARY_FORMAT = "DEBUG_AUXILARY_" + BOUNDARY_PREFIX + "%s: %s"; //$NON-NLS-1$ //$NON-NLS-2$
 
   String LAST_UPDATE = "Letzte_Aktualisierung"; //$NON-NLS-1$
 

@@ -64,7 +64,7 @@ public abstract class StatusLabelProvider extends ColumnLabelProvider
   {
     final ViewerColumn severityColumn = ColumnViewerUtil.createViewerColumn( columnViewer, SWT.CENTER );
     final ViewerColumnItem severityCol = new ViewerColumnItem( severityColumn );
-    severityCol.setText( Messages.getString( "org.kalypso.util.swt.StatusLabelProvider.3" ) );
+    severityCol.setText( Messages.getString( "org.kalypso.util.swt.StatusLabelProvider.3" ) ); //$NON-NLS-1$
     severityCol.setWidth( 30 );
     severityCol.setResizable( true );
     severityCol.setMoveable( false );
@@ -78,7 +78,7 @@ public abstract class StatusLabelProvider extends ColumnLabelProvider
   {
     final ViewerColumn messageColumn = ColumnViewerUtil.createViewerColumn( columnViewer, SWT.LEFT );
     final ViewerColumnItem messageCol = new ViewerColumnItem( messageColumn );
-    messageCol.setText( Messages.getString( "org.kalypso.util.swt.StatusLabelProvider.4" ) );
+    messageCol.setText( Messages.getString( "org.kalypso.util.swt.StatusLabelProvider.4" ) ); //$NON-NLS-1$
     messageCol.setWidth( 500 );
     messageCol.setResizable( true );
     messageCol.setMoveable( false );
@@ -92,7 +92,7 @@ public abstract class StatusLabelProvider extends ColumnLabelProvider
   {
     final ViewerColumn timeColumn = ColumnViewerUtil.createViewerColumn( columnViewer, SWT.LEFT );
     final ViewerColumnItem timeCol = new ViewerColumnItem( timeColumn );
-    timeCol.setText( Messages.getString( "org.kalypso.util.swt.StatusLabelProvider.5" ) );
+    timeCol.setText( Messages.getString( "org.kalypso.util.swt.StatusLabelProvider.5" ) ); //$NON-NLS-1$
     timeCol.setWidth( 150 );
     timeCol.setResizable( false );
     timeCol.setMoveable( false );

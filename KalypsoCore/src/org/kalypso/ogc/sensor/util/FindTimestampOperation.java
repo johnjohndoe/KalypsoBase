@@ -47,6 +47,7 @@ import org.joda.time.LocalTime;
 import org.joda.time.Period;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
@@ -100,12 +101,12 @@ public class FindTimestampOperation implements ICoreRunnableWithProgress
       /* Guess the timestamp. */
       m_timestamp = TimeseriesUtils.guessTimestamp( m_observation.getValues( null ), m_timestep );
 
-      return new Status( IStatus.OK, KalypsoCorePlugin.getID(), "Find Timeseries Timestamp Operation successful." );
+      return new Status( IStatus.OK, KalypsoCorePlugin.getID(), Messages.getString("FindTimestampOperation_0") ); //$NON-NLS-1$
     }
     catch( final SensorException ex )
     {
       ex.printStackTrace();
-      return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), "Failed to determine timestamp...", ex );
+      return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), Messages.getString("FindTimestampOperation_1"), ex ); //$NON-NLS-1$
     }
   }
 

@@ -114,7 +114,7 @@ public class MapPanelPainter implements IPaintable
     monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.map.MapPanelPainter.1" ), m_layers.length + 1 ); //$NON-NLS-1$
 
     /* Draw background */
-    monitor.subTask( "Drawing Background" );
+    monitor.subTask( Messages.getString("MapPanelPainter.0") ); //$NON-NLS-1$
     final int screenWidth = (int) m_world2screen.getDestWidth();
     final int screenHeight = (int) m_world2screen.getDestHeight();
     // setClip, necessary, as some display element use the clip bounds to determine the screen-size
