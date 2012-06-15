@@ -379,7 +379,7 @@ public class ObservationPlot extends XYPlot
         if( !m_markers.containsKey( begin ) )
         {
           final long end = fr.getTo().getTime();
-          final Marker marker = createMarker( begin.doubleValue(), end, "Vorhersage", TimeseriesUtils.getColorForMD( ITimeseriesConstants.MD_VORHERSAGE ) );
+          final Marker marker = createMarker( begin.doubleValue(), end, Messages.getString("ObservationPlot.0"), TimeseriesUtils.getColorForMD( ITimeseriesConstants.MD_VORHERSAGE ) ); //$NON-NLS-1$
 
           addDomainMarker( marker, Layer.BACKGROUND );
 

@@ -154,7 +154,7 @@ public class MovieComposite extends Composite
     m_displayJAI = null;
     m_progressBar = null;
     m_progressLabel = null;
-    m_resolution = new MovieResolution( "default", 800, 600 );
+    m_resolution = new MovieResolution( "default", 800, 600 ); //$NON-NLS-1$
 
     /* Create the controls. */
     createControls();
@@ -312,7 +312,7 @@ public class MovieComposite extends Composite
     /* Create the progress label. */
     m_progressLabel = new Label( composite, SWT.NONE );
     m_progressLabel.setLayoutData( new GridData( SWT.FILL, SWT.TOP, true, false ) );
-    m_progressLabel.setText( "" );
+    m_progressLabel.setText( "" ); //$NON-NLS-1$
 
     /* Create a combo box. */
     final ComboViewer resolutionViewer = new ComboViewer( composite, SWT.READ_ONLY );

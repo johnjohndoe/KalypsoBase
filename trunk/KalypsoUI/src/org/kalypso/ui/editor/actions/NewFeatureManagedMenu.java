@@ -60,7 +60,7 @@ public class NewFeatureManagedMenu extends AbstractManagedMenu
 {
   public NewFeatureManagedMenu( final String menuPath )
   {
-    super( "newFeatureMenuManager", menuPath, Messages.getString( "org.kalypso.ui.editor.actions.FeatureActionUtilities.7" ) );//$NON-NLS-1$
+    super( "newFeatureMenuManager", menuPath, Messages.getString( "org.kalypso.ui.editor.actions.FeatureActionUtilities.7" ) );//$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**

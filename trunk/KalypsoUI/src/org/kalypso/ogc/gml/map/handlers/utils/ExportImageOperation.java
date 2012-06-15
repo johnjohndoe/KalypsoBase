@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.swt.graphics.ImageData;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ui.KalypsoGisPlugin;
 
@@ -90,8 +91,8 @@ public class ExportImageOperation implements ICoreRunnableWithProgress
     try
     {
       /* Monitor. */
-      monitor.beginTask( "Exportiere Kartenausschnitt als Bild...", 1000 );
-      monitor.subTask( "Exportiere Kartenausschnitt als Bild..." );
+      monitor.beginTask( Messages.getString("ExportImageOperation_0"), 1000 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString("ExportImageOperation_1") ); //$NON-NLS-1$
 
       /* Create the image exporter. */
       final ImageExporter exporter = new ImageExporter( m_mapPanel );

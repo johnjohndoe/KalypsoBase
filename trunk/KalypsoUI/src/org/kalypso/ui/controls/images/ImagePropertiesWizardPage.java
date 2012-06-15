@@ -47,6 +47,7 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.configuration.PublishingConfiguration;
 import org.kalypso.ui.controls.images.listener.IImagePropertyChangedListener;
 
@@ -61,32 +62,32 @@ public class ImagePropertiesWizardPage extends WizardPage
   /**
    * Key for the configuration: image width.
    */
-  public static final String CONFIG_IMAGE_WIDTH = "imageWidth";
+  public static final String CONFIG_IMAGE_WIDTH = "imageWidth"; //$NON-NLS-1$
 
   /**
    * Key for the configuration: image height.
    */
-  public static final String CONFIG_IMAGE_HEIGHT = "imageHeight";
+  public static final String CONFIG_IMAGE_HEIGHT = "imageHeight"; //$NON-NLS-1$
 
   /**
    * Key for the configuration: aspect ratio.
    */
-  public static final String CONFIG_KEEP_ASPECT_RATIO = "aspectRatio";
+  public static final String CONFIG_KEEP_ASPECT_RATIO = "aspectRatio"; //$NON-NLS-1$
 
   /**
    * Key for the configuration: insets.
    */
-  public static final String CONFIG_INSETS = "insets";
+  public static final String CONFIG_INSETS = "insets"; //$NON-NLS-1$
 
   /**
    * Key for the configuration: border.
    */
-  public static final String CONFIG_HAS_BORDER = "border";
+  public static final String CONFIG_HAS_BORDER = "border"; //$NON-NLS-1$
 
   /**
    * Key for the configuration: image format.
    */
-  public static final String CONFIG_IMAGE_FORMAT = "imageFormat";
+  public static final String CONFIG_IMAGE_FORMAT = "imageFormat"; //$NON-NLS-1$
 
   /**
    * The publishing configuration. May be null.
@@ -145,7 +146,7 @@ public class ImagePropertiesWizardPage extends WizardPage
    */
   public ImagePropertiesWizardPage( final String pageName, final PublishingConfiguration configuration, final int defaultWidth, final int defaultHeight, final boolean defaultAspectRatio, final Insets defaultInsets, final boolean defaultBorder, final String defaultFormat )
   {
-    this( pageName, "Bildeigenschaften", null, configuration, defaultWidth, defaultHeight, defaultAspectRatio, defaultInsets, defaultBorder, defaultFormat );
+    this( pageName, Messages.getString("ImagePropertiesWizardPage_6"), null, configuration, defaultWidth, defaultHeight, defaultAspectRatio, defaultInsets, defaultBorder, defaultFormat ); //$NON-NLS-1$
   }
 
   /**
@@ -186,7 +187,7 @@ public class ImagePropertiesWizardPage extends WizardPage
     m_format = defaultFormat;
 
     /* Initialize the page. */
-    setDescription( "Wählen Sie die Eigenschaften des Bildes." );
+    setDescription( Messages.getString("ImagePropertiesWizardPage_7") ); //$NON-NLS-1$
   }
 
   /**
@@ -255,21 +256,21 @@ public class ImagePropertiesWizardPage extends WizardPage
 
     if( m_width <= 0 )
     {
-      setErrorMessage( "Bitte geben Sie die Breite des Bildes an..." );
+      setErrorMessage( Messages.getString("ImagePropertiesWizardPage_8") ); //$NON-NLS-1$
       setPageComplete( false );
       return;
     }
 
     if( m_height <= 0 )
     {
-      setErrorMessage( "Bitte geben Sie die Höhe des Bildes an..." );
+      setErrorMessage( Messages.getString("ImagePropertiesWizardPage_9") ); //$NON-NLS-1$
       setPageComplete( false );
       return;
     }
 
     if( m_format == null || m_format.length() == 0 )
     {
-      setErrorMessage( "Bitte geben Sie das Format des Bildes an..." );
+      setErrorMessage( Messages.getString("ImagePropertiesWizardPage_10") ); //$NON-NLS-1$
       setPageComplete( false );
       return;
     }

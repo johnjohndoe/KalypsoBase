@@ -81,7 +81,7 @@ public abstract class AbstractImageFeatureControl extends AbstractFeatureControl
 
     final String uriString = (String) feature.getProperty( pt );
     if( uriString == null )
-      return "";
+      return ""; //$NON-NLS-1$
 
     return uriString;
   }

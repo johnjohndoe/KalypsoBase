@@ -163,7 +163,7 @@ public final class DeegreeWMSUtilities
       /* HACK: Recreate the request, using vendor specific parameters. */
       /* HACK: SLD_BODY is not handled correctly in deegree2. */
       final Map<String, String> vendorSpecificParameter = new HashMap<String, String>();
-      vendorSpecificParameter.put( "SLD_BODY", sldBody );
+      vendorSpecificParameter.put( "SLD_BODY", sldBody ); //$NON-NLS-1$
 
       return GetMap.create( request.getVersion(), request.getId(), request.getLayers(), request.getElevation(), request.getSampleDimension(), request.getFormat(), request.getWidth(), request.getHeight(), request.getSrs(), request.getBoundingBox(), request.getTransparency(), request.getBGColor(), request.getExceptions(), request.getTime(), request.getSLD_URL(), request.getStyledLayerDescriptor(), vendorSpecificParameter );
     }

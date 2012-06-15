@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.kalypso.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 
@@ -169,7 +170,7 @@ public class RuleNode extends AbstractThemeNode<Rule>
     if( name != null )
       return name;
 
-    return "Rule: neither 'title' nor 'name' defined.";
+    return Messages.getString("RuleNode_0"); //$NON-NLS-1$
   }
 
   @Override

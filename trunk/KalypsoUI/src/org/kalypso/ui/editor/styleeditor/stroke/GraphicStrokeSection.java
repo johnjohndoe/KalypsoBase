@@ -67,7 +67,7 @@ public class GraphicStrokeSection extends AbstractStyleElementSection<Stroke, Gr
   @Override
   protected String getTitle( )
   {
-    return "Graphic";
+    return "Graphic"; //$NON-NLS-1$
   }
 
   /**

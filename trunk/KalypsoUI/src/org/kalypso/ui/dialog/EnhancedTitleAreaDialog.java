@@ -74,7 +74,7 @@ public class EnhancedTitleAreaDialog extends TitleAreaDialog
   public void setScreenSize( final String parameter, final Point size )
   {
     final IDialogSettings settings = KalypsoGisPlugin.getDefault().getDialogSettings();
-    settings.put( parameter, String.format( "%d,%d", size.x, size.y ) );
+    settings.put( parameter, String.format( "%d,%d", size.x, size.y ) ); //$NON-NLS-1$
   }
 
   @Override

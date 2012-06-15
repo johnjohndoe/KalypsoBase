@@ -56,12 +56,12 @@ public class PositionUtilities
   /**
    * This constant defines the theme property, used to configure the horizontal position.
    */
-  public static final String THEME_PROPERTY_HORIZONTAL_POSITION = "horizontal_position";
+  public static final String THEME_PROPERTY_HORIZONTAL_POSITION = "horizontal_position"; //$NON-NLS-1$
 
   /**
    * This constant defines the theme property, used to configure the vertical position.
    */
-  public static final String THEME_PROPERTY_VERTICAL_POSITION = "vertical_position";
+  public static final String THEME_PROPERTY_VERTICAL_POSITION = "vertical_position"; //$NON-NLS-1$
 
   /**
    * This constant defines the left/west position.

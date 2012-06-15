@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities;
 
 /**
@@ -60,7 +61,7 @@ public class WMSLayerLegendJob extends Job
 
   public WMSLayerLegendJob( final WMSLayerNode layerNode )
   {
-    super( String.format( "Fetch legend image: %s", layerNode.getLabel() ) );
+    super( String.format( Messages.getString("WMSLayerLegendJob_0"), layerNode.getLabel() ) ); //$NON-NLS-1$
 
     m_layerNode = layerNode;
   }

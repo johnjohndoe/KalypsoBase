@@ -91,7 +91,7 @@ public class DumpExtendedHandler extends AbstractHandler
     final File structureFile = new File( directory, "structure.txt" ); //$NON-NLS-1$
     if( structureFile.exists() )
     {
-      if( !MessageDialog.openConfirm( shell, Messages.getString( "org.kalypso.ogc.sensor.view.DumpExtendedHandler.0" ), Messages.getString( "org.kalypso.ogc.sensor.view.DumpExtendedHandler.2" ) ) )
+      if( !MessageDialog.openConfirm( shell, Messages.getString( "org.kalypso.ogc.sensor.view.DumpExtendedHandler.0" ), Messages.getString( "org.kalypso.ogc.sensor.view.DumpExtendedHandler.2" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
         return null;
 
       try

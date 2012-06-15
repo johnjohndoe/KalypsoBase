@@ -84,21 +84,21 @@ public final class SymbolizerTabItem<S extends Symbolizer> implements ISymbolize
   {
     final S symbolizer = m_input.getData();
     if( symbolizer instanceof PointSymbolizer )
-      return "Point";
+      return "Point"; //$NON-NLS-1$
 
     if( symbolizer instanceof LineSymbolizer )
-      return "Line";
+      return "Line"; //$NON-NLS-1$
 
     if( symbolizer instanceof PolygonSymbolizer )
-      return "Polygon";
+      return "Polygon"; //$NON-NLS-1$
 
     if( symbolizer instanceof RasterSymbolizer )
-      return "Raster";
+      return "Raster"; //$NON-NLS-1$
 
     if( symbolizer instanceof TextSymbolizer )
-      return "Text";
+      return "Text"; //$NON-NLS-1$
 
-    return "<None>";
+    return "<None>"; //$NON-NLS-1$
   }
 
   @Override

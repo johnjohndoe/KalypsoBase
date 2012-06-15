@@ -54,6 +54,7 @@ import org.eclipse.core.runtime.Assert;
 import org.kalypso.commons.eclipse.jface.viewers.ITabItem;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.styleeditor.binding.StyleInput;
 import org.kalypso.ui.editor.styleeditor.tabs.AbstractTabList;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
@@ -134,7 +135,7 @@ public class RuleOrPatternCollection extends AbstractTabList<FeatureTypeStyle>
     // the name of a rule serves as key for the hashMap
     final String key = rule.getName();
     // it it is a pattern, add to ruleCollection
-    if( key == null || !key.startsWith( "-name-" ) )
+    if( key == null || !key.startsWith( "-name-" ) ) //$NON-NLS-1$
       return new RuleTabItem( new StyleInput<Rule>( rule, getInput() ) );
 
     // 1. check whether there is already a rule collection with this rule
@@ -178,7 +179,7 @@ public class RuleOrPatternCollection extends AbstractTabList<FeatureTypeStyle>
     else if( item instanceof RulePatternTabItem )
       removePatternRule( (RulePatternTabItem) item );
     else
-      throw new IllegalArgumentException( String.format( "Unknown tab item '%s'", item ) );
+      throw new IllegalArgumentException( String.format( Messages.getString("RuleOrPatternCollection_1"), item ) ); //$NON-NLS-1$
   }
 
   private void removeRule( final RuleTabItem item )

@@ -51,6 +51,7 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
+import org.kalypso.i18n.Messages;
 import org.kalypso.template.gistableview.StyleType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
@@ -107,14 +108,14 @@ public final class LayerTableStyleUtils
     /* Validate loaded object */
     if( style == null )
     {
-      final String message = String.format( "Failed to load table style: %s", key );
+      final String message = String.format( Messages.getString("LayerTableStyleUtils_0"), key ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), message );
       throw new CoreException( status );
     }
 
     if( !(style instanceof FeatureTypeStyle) )
     {
-      final String message = String.format( "Unsupported style element '%s', must be 'FeatureTypeStyle'", style.getClass().getName() );
+      final String message = String.format( Messages.getString("LayerTableStyleUtils_1"), style.getClass().getName() ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), message );
       throw new CoreException( status );
     }

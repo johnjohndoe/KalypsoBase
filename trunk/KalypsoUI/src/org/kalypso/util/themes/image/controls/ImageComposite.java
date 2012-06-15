@@ -74,6 +74,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.Form;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.ThemeUtilities;
 import org.kalypso.util.themes.image.ImageUtilities;
 import org.kalypso.util.themes.image.listener.IImageChangedListener;
@@ -346,18 +347,18 @@ public class ImageComposite extends Composite
     /* Create a group. */
     final Group imageGroup = new Group( parent, SWT.NONE );
     imageGroup.setLayout( new GridLayout( 3, false ) );
-    imageGroup.setText( "Optionen" );
+    imageGroup.setText( Messages.getString("ImageComposite_0") ); //$NON-NLS-1$
 
     /* Create a label. */
     final Label backgroundColorLabel = new Label( imageGroup, SWT.NONE );
     backgroundColorLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    backgroundColorLabel.setText( "Hintergrundfarbe" );
+    backgroundColorLabel.setText( Messages.getString("ImageComposite_1") ); //$NON-NLS-1$
     backgroundColorLabel.setAlignment( SWT.LEFT );
 
     /* Create a label. */
     final Label backgroundLabel = new Label( imageGroup, SWT.BORDER );
     backgroundLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    backgroundLabel.setText( "Hintergrundfarbe" );
+    backgroundLabel.setText( Messages.getString("ImageComposite_2") ); //$NON-NLS-1$
     backgroundLabel.setBackground( new Color( parent.getDisplay(), m_background ) );
 
     backgroundLabel.addDisposeListener( new DisposeListener()
@@ -372,7 +373,7 @@ public class ImageComposite extends Composite
     /* Create a button. */
     final Button backgroundColorButton = new Button( imageGroup, SWT.PUSH );
     backgroundColorButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    backgroundColorButton.setText( "..." );
+    backgroundColorButton.setText( "..." ); //$NON-NLS-1$
     backgroundColorButton.addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -398,7 +399,7 @@ public class ImageComposite extends Composite
     /* Create a label. */
     final Label imageUrlLabel = new Label( imageGroup, SWT.NONE );
     imageUrlLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    imageUrlLabel.setText( "Dateipfad" );
+    imageUrlLabel.setText( Messages.getString("ImageComposite_4") ); //$NON-NLS-1$
     imageUrlLabel.setAlignment( SWT.LEFT );
 
     /* Create a text field. */
@@ -439,7 +440,7 @@ public class ImageComposite extends Composite
     /* Create a button. */
     final Button imageUrlButton = new Button( imageGroup, SWT.PUSH );
     imageUrlButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    imageUrlButton.setText( "Dateisystem" );
+    imageUrlButton.setText( Messages.getString("ImageComposite_5") ); //$NON-NLS-1$
 
     /* Add a listener. */
     imageUrlButton.addSelectionListener( new SelectionAdapter()
@@ -454,9 +455,9 @@ public class ImageComposite extends Composite
         {
           /* Create a file dialog. */
           final FileDialog dialog = new FileDialog( ImageComposite.this.getShell(), SWT.OPEN );
-          dialog.setText( "Dateisystem" );
-          dialog.setFilterExtensions( new String[] { "*.bmp", "*.png", "*.gif", "*.jpg", "*.tif" } );
-          dialog.setFilterNames( new String[] { "BMP Datei (*.bmp)", "PNG Datei (*.png)", "GIF Datei (*.gif)", "JPG Datei (*jpg)", "TIF Datei (*.tif)" } );
+          dialog.setText( Messages.getString("ImageComposite_6") ); //$NON-NLS-1$
+          dialog.setFilterExtensions( new String[] { "*.bmp", "*.png", "*.gif", "*.jpg", "*.tif" } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+          dialog.setFilterNames( new String[] { Messages.getString("ImageComposite_12"), Messages.getString("ImageComposite_13"), Messages.getString("ImageComposite_14"), Messages.getString("ImageComposite_15"), Messages.getString("ImageComposite_16") } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
           /* Open the dialog. */
           final String file = dialog.open();
@@ -562,19 +563,19 @@ public class ImageComposite extends Composite
     final Properties properties = new Properties();
 
     /* Serialize the properties. */
-    final String horizontalProperty = String.format( Locale.PRC, "%d", m_horizontal );
-    final String verticalProperty = String.format( Locale.PRC, "%d", m_vertical );
+    final String horizontalProperty = String.format( Locale.PRC, "%d", m_horizontal ); //$NON-NLS-1$
+    final String verticalProperty = String.format( Locale.PRC, "%d", m_vertical ); //$NON-NLS-1$
     // FIXME: put into ThemeUtilities; its always the same in every theme ;-(
-    final String backgroundColorProperty = String.format( Locale.PRC, "%d;%d;%d", m_background.red, m_background.green, m_background.blue );
+    final String backgroundColorProperty = String.format( Locale.PRC, "%d;%d;%d", m_background.red, m_background.green, m_background.blue ); //$NON-NLS-1$
     String imageUrlProperty = null;
     if( m_imageUrl != null )
-      imageUrlProperty = String.format( Locale.PRC, "%s", m_imageUrl );
+      imageUrlProperty = String.format( Locale.PRC, "%s", m_imageUrl ); //$NON-NLS-1$
 
     /* Add the properties. */
     properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );
     properties.put( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, verticalProperty );
     properties.put( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR, backgroundColorProperty );
-    properties.put( ImageUtilities.THEME_PROPERTY_IMAGE_URL, "" );
+    properties.put( ImageUtilities.THEME_PROPERTY_IMAGE_URL, "" ); //$NON-NLS-1$
     if( imageUrlProperty != null )
       properties.put( ImageUtilities.THEME_PROPERTY_IMAGE_URL, imageUrlProperty );
 

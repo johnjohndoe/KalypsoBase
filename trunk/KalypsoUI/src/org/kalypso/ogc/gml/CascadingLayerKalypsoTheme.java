@@ -106,7 +106,7 @@ public class CascadingLayerKalypsoTheme extends AbstractCascadingLayerTheme
     int count = 0;
     for( final IKalypsoTheme theme : themes )
     {
-      final String layerId = id + "_" + count++;
+      final String layerId = id + "_" + count++; //$NON-NLS-1$
       final JAXBElement< ? extends StyledLayerType> layerElement = GisTemplateLayerHelper.configureLayer( theme, layerId, getFullExtent(), srsName, new SubProgressMonitor( monitor, 1 ) );
       layers.add( layerElement );
     }

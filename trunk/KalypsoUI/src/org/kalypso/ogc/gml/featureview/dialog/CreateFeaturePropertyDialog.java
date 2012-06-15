@@ -84,7 +84,7 @@ public class CreateFeaturePropertyDialog implements IFeatureDialog
 
     if( m_relationType.isInlineAble() && !m_relationType.isLinkAble() )
     {
-      final IFeatureType newFeatureType = AddFeatureHandlerUtil.chooseFeatureType( shell, "New Feature", m_relationType, workspace );
+      final IFeatureType newFeatureType = AddFeatureHandlerUtil.chooseFeatureType( shell, Messages.getString("CreateFeaturePropertyDialog.0"), m_relationType, workspace ); //$NON-NLS-1$
       if( newFeatureType == null )
         return Window.CANCEL;
 

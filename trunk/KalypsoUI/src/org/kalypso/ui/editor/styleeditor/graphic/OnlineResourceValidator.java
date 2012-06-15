@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.databinding.validation.TypedValidator;
 import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver2;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypsodeegree.graphics.sld.ExternalGraphic;
 
@@ -83,11 +84,11 @@ public class OnlineResourceValidator extends TypedValidator<String>
         return ValidationStatus.ok();
 
       if( !UrlUtilities.checkIsAccessible( location ) )
-        return ValidationStatus.warning( String.format( "Resource does not exist: %s", location ) );
+        return ValidationStatus.warning( String.format( Messages.getString("OnlineResourceValidator_0"), location ) ); //$NON-NLS-1$
     }
     catch( final MalformedURLException e )
     {
-      return ValidationStatus.error( "Invalid resource location", e );
+      return ValidationStatus.error( Messages.getString("OnlineResourceValidator_1"), e ); //$NON-NLS-1$
     }
 
     return ValidationStatus.ok();

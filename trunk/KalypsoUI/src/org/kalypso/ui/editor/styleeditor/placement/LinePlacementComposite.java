@@ -53,6 +53,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypso.ui.editor.styleeditor.binding.SLDBinding;
 import org.kalypso.ui.editor.styleeditor.symbolizer.LinePlacementPerpendicularOffsetValue;
@@ -91,7 +92,7 @@ public class LinePlacementComposite extends Composite
   {
     final FormToolkit toolkit = getToolkit();
 
-    toolkit.createLabel( parent, "Placement Type" );
+    toolkit.createLabel( parent, Messages.getString("LinePlacementComposite_0") ); //$NON-NLS-1$
 
     final ComboViewer typeViewer = new ComboViewer( parent, SWT.DROP_DOWN | SWT.READ_ONLY );
     typeViewer.getControl().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -107,7 +108,7 @@ public class LinePlacementComposite extends Composite
   {
     final FormToolkit toolkit = getToolkit();
 
-    toolkit.createLabel( parent, "Perpendicular Offset" );
+    toolkit.createLabel( parent, Messages.getString("LinePlacementComposite_1") ); //$NON-NLS-1$
 
     final Text offsetField = toolkit.createText( parent, StringUtils.EMPTY );
     offsetField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -121,7 +122,7 @@ public class LinePlacementComposite extends Composite
   {
     final FormToolkit toolkit = getToolkit();
 
-    toolkit.createLabel( parent, "Gap" );
+    toolkit.createLabel( parent, Messages.getString("LinePlacementComposite_2") ); //$NON-NLS-1$
 
     final Text gapField = toolkit.createText( parent, StringUtils.EMPTY );
     gapField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );

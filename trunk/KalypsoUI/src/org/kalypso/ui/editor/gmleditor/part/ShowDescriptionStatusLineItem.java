@@ -49,6 +49,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.ui.IEditorPart;
 import org.kalypso.gmlschema.annotation.IAnnotation;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypsodeegree.model.feature.Feature;
@@ -137,7 +138,7 @@ public class ShowDescriptionStatusLineItem extends StatusLineContributionItem
     {
       final int size = ((IStructuredSelection) selection).size();
       if( size > 1 )
-        return String.format( "%d items selected", size );
+        return String.format( Messages.getString("ShowDescriptionStatusLineItem_0"), size ); //$NON-NLS-1$
     }
 
     if( selection instanceof IFeatureSelection )

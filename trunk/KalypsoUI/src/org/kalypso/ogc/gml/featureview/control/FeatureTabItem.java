@@ -61,7 +61,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class FeatureTabItem
 {
-  private static final String DATA_ME = "me";
+  private static final String DATA_ME = "me"; //$NON-NLS-1$
 
   private final CTabItem m_item;
 

@@ -147,7 +147,7 @@ public class StrokeComposite extends Composite
     final Composite detailsPanel = toolkit.createComposite( m_lineDetailsSection );
     detailsPanel.setLayout( Layouts.createGridLayout( 3 ) );
     m_lineDetailsSection.setClient( detailsPanel );
-    m_lineDetailsSection.setText( "Line Style" );
+    m_lineDetailsSection.setText( Messages.getString("StrokeComposite.0") ); //$NON-NLS-1$
     m_lineDetailsSection.setExpanded( shouldExpand() );
 
     createLineJoinControl( toolkit, detailsPanel );
@@ -222,7 +222,7 @@ public class StrokeComposite extends Composite
 
   private void createLineJoinControl( final FormToolkit toolkit, final Composite parent )
   {
-    toolkit.createLabel( parent, "Line Join" );
+    toolkit.createLabel( parent, Messages.getString("StrokeComposite.1") ); //$NON-NLS-1$
 
     final ComboViewer lineJoinChooser = new ComboViewer( parent, SWT.DROP_DOWN | SWT.READ_ONLY );
     toolkit.adapt( lineJoinChooser.getControl(), true, true );
@@ -237,7 +237,7 @@ public class StrokeComposite extends Composite
 
   private void createLineCapControl( final FormToolkit toolkit, final Composite parent )
   {
-    toolkit.createLabel( parent, "Line Cap" );
+    toolkit.createLabel( parent, Messages.getString("StrokeComposite.2") ); //$NON-NLS-1$
 
     final ComboViewer lineCapChooser = new ComboViewer( parent, SWT.DROP_DOWN | SWT.READ_ONLY );
     toolkit.adapt( lineCapChooser.getControl(), true, true );
@@ -252,20 +252,20 @@ public class StrokeComposite extends Composite
 
   private void createDashArrayControl( final FormToolkit toolkit, final Composite parent )
   {
-    final String tooltip = "A list of values representing the dashing pattern.\n"
-        + "Alternate entries in the array represent the user space lengths of the opaque and transparent segments of the dashes.";
+    final String tooltip = Messages.getString("StrokeComposite.3") //$NON-NLS-1$
+        + Messages.getString("StrokeComposite.4"); //$NON-NLS-1$
 
     final Label label = toolkit.createLabel( parent, Messages.getString( "org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.2" ) ); //$NON-NLS-1$
     label.setToolTipText( tooltip );
 
     final Text strokeDashField = toolkit.createText( parent, StringUtils.EMPTY );
     strokeDashField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    strokeDashField.setMessage( "<Not Set>" );
+    strokeDashField.setMessage( Messages.getString("StrokeComposite.5") ); //$NON-NLS-1$
     strokeDashField.setToolTipText( tooltip );
 
     final IObservableValue target = SWTObservables.observeText( strokeDashField, SLDBinding.TEXT_DEFAULT_EVENTS );
     final StrokeDashArrayValue model = new StrokeDashArrayValue( m_input );
-    m_binding.bindValue( target, model, new StringToFloatArrayConverter(), new FloatArrayToStringConverter( "%.0f" ) );
+    m_binding.bindValue( target, model, new StringToFloatArrayConverter(), new FloatArrayToStringConverter( "%.0f" ) ); //$NON-NLS-1$
 
     final MenuManager menuManager = new MenuManager( StringUtils.EMPTY );
     for( final DashArrayType dash : DashArrayType.values() )
@@ -286,13 +286,13 @@ public class StrokeComposite extends Composite
 
   private void createDashOffsetControl( final FormToolkit toolkit, final Composite parent )
   {
-    final String tooltip = "Offset to the start of the dash array in pixels";
+    final String tooltip = Messages.getString("StrokeComposite.7"); //$NON-NLS-1$
 
-    toolkit.createLabel( parent, "Dash Offset" ).setToolTipText( tooltip );
+    toolkit.createLabel( parent, Messages.getString("StrokeComposite.8") ).setToolTipText( tooltip ); //$NON-NLS-1$
 
     final Text strokeDashControl = toolkit.createText( parent, StringUtils.EMPTY );
     strokeDashControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
-    strokeDashControl.setMessage( "<Not Set>" );
+    strokeDashControl.setMessage( Messages.getString("StrokeComposite.9") ); //$NON-NLS-1$
     strokeDashControl.setToolTipText( tooltip );
 
     final IObservableValue target = SWTObservables.observeText( strokeDashControl, SLDBinding.TEXT_DEFAULT_EVENTS );

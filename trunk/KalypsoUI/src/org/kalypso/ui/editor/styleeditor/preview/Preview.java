@@ -154,7 +154,7 @@ public abstract class Preview<DATA> extends Canvas
     final String title = Messages.getString( "org.kalypso.ui.editor.sldEditor.FillEditorComposite.20" ); //$NON-NLS-1$
 
     final Font oldFont = gc.getFont();
-    final FontData fd = new FontData( "SansSerif", (int) Math.ceil( height / 2 ), SWT.BOLD );
+    final FontData fd = new FontData( "SansSerif", (int) Math.ceil( height / 2 ), SWT.BOLD ); //$NON-NLS-1$
     final Font font = new Font( getDisplay(), fd );
     gc.setFont( font );
 

@@ -65,18 +65,18 @@ public class LegendUtilities
   /**
    * This constant defines the theme property, used to configure the insets of the legend.
    */
-  public static final String THEME_PROPERTY_INSETS = "insets";
+  public static final String THEME_PROPERTY_INSETS = "insets"; //$NON-NLS-1$
 
   /**
    * This constant defines the theme property, used to configure the ids of the themes, which should be included in the
    * legend.
    */
-  public static final String THEME_PROPERTY_THEME_IDS = "theme_ids";
+  public static final String THEME_PROPERTY_THEME_IDS = "theme_ids"; //$NON-NLS-1$
 
   /**
    * This constant defines the theme property, used to configure the font size of the legend.
    */
-  public static final String THEME_PROPERTY_FONT_SIZE = "font_size";
+  public static final String THEME_PROPERTY_FONT_SIZE = "font_size"; //$NON-NLS-1$
 
   /**
    * The constructor.
@@ -109,7 +109,7 @@ public class LegendUtilities
     if( themeIdsProperty != null )
     {
       final List<String> themes = new ArrayList<String>();
-      final String[] themeIds = StringUtils.split( themeIdsProperty, ";" );
+      final String[] themeIds = StringUtils.split( themeIdsProperty, ";" ); //$NON-NLS-1$
       for( final String themeId : themeIds )
       {
         final IKalypsoTheme theme = findThemeById( mapModel, themeId );
@@ -142,12 +142,12 @@ public class LegendUtilities
     final Properties properties = new Properties();
 
     /* Serialise the properties. */
-    final String horizontalProperty = String.format( Locale.PRC, "%d", PositionUtilities.RIGHT );
-    final String verticalProperty = String.format( Locale.PRC, "%d", PositionUtilities.BOTTOM );
-    final String backgroundColorProperty = String.format( Locale.PRC, "%d;%d;%d", 255, 255, 255 );
-    final String insetsProperty = String.format( Locale.PRC, "%d", 10 );
-    final String themeIdsProperty = "";
-    final String fontSizeProperty = "-1";
+    final String horizontalProperty = String.format( Locale.PRC, "%d", PositionUtilities.RIGHT ); //$NON-NLS-1$
+    final String verticalProperty = String.format( Locale.PRC, "%d", PositionUtilities.BOTTOM ); //$NON-NLS-1$
+    final String backgroundColorProperty = String.format( Locale.PRC, "%d;%d;%d", 255, 255, 255 ); //$NON-NLS-1$
+    final String insetsProperty = String.format( Locale.PRC, "%d", 10 ); //$NON-NLS-1$
+    final String themeIdsProperty = ""; //$NON-NLS-1$
+    final String fontSizeProperty = "-1"; //$NON-NLS-1$
 
     /* Add the properties. */
     properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );

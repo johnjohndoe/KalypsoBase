@@ -184,7 +184,7 @@ public class SLDComposite extends Composite
     {
       final String formTitle = style.getTitle();
       if( formTitle == null )
-        m_form.setText( "<Unknown Title>" );
+        m_form.setText( Messages.getString("SLDComposite.0") ); //$NON-NLS-1$
       else
         m_form.setText( formTitle );
     }

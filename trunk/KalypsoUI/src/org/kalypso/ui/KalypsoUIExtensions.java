@@ -245,7 +245,7 @@ public class KalypsoUIExtensions
     if( ce == null )
       return null;
 
-    final IFeatureModifier modifier = (IFeatureModifier) ce.createExecutableExtension( "class" );
+    final IFeatureModifier modifier = (IFeatureModifier) ce.createExecutableExtension( "class" ); //$NON-NLS-1$
 
     if( modifier instanceof IFeatureModifierExtension )
       ((IFeatureModifierExtension) modifier).init( propertyPath, ftp, params );
@@ -266,7 +266,7 @@ public class KalypsoUIExtensions
       {
         if( FEATURE_MODIFIER_ELEMENT_NAME.equals( element.getName() ) )
         {
-          final String id = element.getAttribute( "id" );
+          final String id = element.getAttribute( "id" ); //$NON-NLS-1$
           THE_FEATURE_MODIFIERS_MAP.put( id, element );
         }
       }

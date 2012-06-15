@@ -44,6 +44,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.ImageProvider;
 
 /**
@@ -55,7 +56,7 @@ public class DeleteSubFeatureAction extends Action
 
   public DeleteSubFeatureAction( final SubFeatureControl featureControl )
   {
-    super( String.format( "Delete '%s'", featureControl.getFeatureTypeProperty().getAnnotation().getLabel() ) );
+    super( String.format( Messages.getString("DeleteSubFeatureAction_0"), featureControl.getFeatureTypeProperty().getAnnotation().getLabel() ) ); //$NON-NLS-1$
 
     m_featureControl = featureControl;
 
@@ -67,7 +68,7 @@ public class DeleteSubFeatureAction extends Action
   {
     final Shell shell = event.widget.getDisplay().getActiveShell();
 
-    final String message = String.format( "Really delete this element?" );
+    final String message = String.format( Messages.getString("DeleteSubFeatureAction_1") ); //$NON-NLS-1$
     if( !MessageDialog.openConfirm( shell, getText(), message ) )
       return;
 

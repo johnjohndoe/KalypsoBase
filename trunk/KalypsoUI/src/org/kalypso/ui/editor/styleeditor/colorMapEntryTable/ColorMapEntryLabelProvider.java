@@ -95,7 +95,7 @@ public class ColorMapEntryLabelProvider extends LabelProvider implements ITableL
         break;
     }
 
-    return "";
+    return ""; //$NON-NLS-1$
   }
 
   /**

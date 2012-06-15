@@ -198,7 +198,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     if( m_updateControl != null )
       m_updateControl.cancel();
 
-    m_updateControl = new UIJob( "updating gml tree view" )
+    m_updateControl = new UIJob( Messages.getString("GmlTreeView.0") ) //$NON-NLS-1$
     {
 
       @Override

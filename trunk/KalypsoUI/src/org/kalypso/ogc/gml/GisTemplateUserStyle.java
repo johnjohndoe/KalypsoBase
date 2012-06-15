@@ -182,7 +182,7 @@ public class GisTemplateUserStyle extends AbstractTemplateStyle implements IKaly
 
     if( !(newValue instanceof StyledLayerDescriptor) )
     {
-      m_userStyle = createDummyStyle( Messages.getString( "org.kalypso.ogc.gml.GisTemplateUserStyle.3" ), "Top-Level element of .sld file must be 'StyledLayerDescriptor'" ); //$NON-NLS-1$
+      m_userStyle = createDummyStyle( Messages.getString( "org.kalypso.ogc.gml.GisTemplateUserStyle.3" ), Messages.getString("GisTemplateUserStyle.0") ); //$NON-NLS-1$ //$NON-NLS-2$
       return;
     }
 

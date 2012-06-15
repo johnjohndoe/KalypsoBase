@@ -76,7 +76,7 @@ public class HaloSection extends AbstractStyleElementSection<TextSymbolizer, Hal
   @Override
   protected String getTitle( )
   {
-    return "Halo";
+    return "Halo"; //$NON-NLS-1$
   }
 
   @Override

@@ -85,7 +85,7 @@ public class ExportAsFileWizard extends Wizard
   {
     super.addPages();
 
-    final String lastDirPath = getDialogSettings().get( "lastDir" );
+    final String lastDirPath = getDialogSettings().get( "lastDir" ); //$NON-NLS-1$
     File file;
     if( lastDirPath == null )
       file = new File( m_obs.getName() );
@@ -115,7 +115,7 @@ public class ExportAsFileWizard extends Wizard
     {
       final File file = new File( filePath );
 
-      getDialogSettings().put( "lastDir", file.getParent() );
+      getDialogSettings().put( "lastDir", file.getParent() ); //$NON-NLS-1$
 
       final ObservationRequest request = new ObservationRequest( dateRange );
       ZmlFactory.writeToFile( m_obs, file, request );

@@ -122,7 +122,7 @@ public class RepositoryDumper implements ICoreRunnableWithProgress
       monitor.worked( 800 );
 
       /* Create the result status. */
-      final IStatus status = m_stati.asMultiStatusOrOK( "Export mit Fehlern abgeschlossen", "Export erfolgreich abgeschlossen" );
+      final IStatus status = m_stati.asMultiStatusOrOK( Messages.getString("RepositoryDumper.0"), Messages.getString("RepositoryDumper.1") ); //$NON-NLS-1$ //$NON-NLS-2$
 
       /* Writes the log. */
       writeLogQuietly( status );
@@ -149,7 +149,7 @@ public class RepositoryDumper implements ICoreRunnableWithProgress
     try
     {
       /* Log the status, if possible. */
-      final GeoStatusLog log = new GeoStatusLog( new File( m_directory, "export.log" ) );
+      final GeoStatusLog log = new GeoStatusLog( new File( m_directory, "export.log" ) ); //$NON-NLS-1$
       log.log( status );
       log.serialize();
     }
@@ -252,7 +252,7 @@ public class RepositoryDumper implements ICoreRunnableWithProgress
     {
       ex.printStackTrace();
 
-      final String msg = String.format( "Fehler beim Abruf der Kinder von Element: %s", item.getName() );
+      final String msg = String.format( Messages.getString("RepositoryDumper.3"), item.getName() ); //$NON-NLS-1$
       m_stati.add( IStatus.ERROR, msg, ex );
     }
     finally
@@ -276,7 +276,7 @@ public class RepositoryDumper implements ICoreRunnableWithProgress
       {
         e.printStackTrace();
 
-        final String msg = String.format( "Fehler beim Schreiben von Zeitreihe: %s", item.getIdentifier() );
+        final String msg = String.format( Messages.getString("RepositoryDumper.4"), item.getIdentifier() ); //$NON-NLS-1$
         m_stati.add( IStatus.ERROR, msg, e );
         /* Not twice! */
         return;
@@ -286,7 +286,7 @@ public class RepositoryDumper implements ICoreRunnableWithProgress
         e.printStackTrace();
 
         final int severity = i == 0 ? IStatus.WARNING : IStatus.ERROR;
-        final String msg = String.format( "Fehler beim Abruf (%d. Versuch) einer Zeitreihe: %s", i + 1, item.getIdentifier() );
+        final String msg = String.format( Messages.getString("RepositoryDumper.5"), i + 1, item.getIdentifier() ); //$NON-NLS-1$
         m_stati.add( severity, msg, e );
       }
     }
@@ -329,7 +329,7 @@ public class RepositoryDumper implements ICoreRunnableWithProgress
   {
     final String identifier = item.getIdentifier();
 
-    final int index = identifier.indexOf( "://" );
+    final int index = identifier.indexOf( "://" ); //$NON-NLS-1$
     if( index == -1 )
       return identifier;
 

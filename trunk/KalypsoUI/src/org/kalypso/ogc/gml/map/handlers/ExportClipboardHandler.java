@@ -52,6 +52,7 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.handlers.utils.ExportImageOperation;
 
@@ -98,7 +99,7 @@ public class ExportClipboardHandler extends AbstractHandler
       /* If the export has failed, show an error to the user. */
       if( !status.isOK() )
       {
-        ErrorDialog.openError( shell, "Zwischenablage", "Der Export in die Zwischenablage ist fehlgeschlagen...", status );
+        ErrorDialog.openError( shell, Messages.getString("ExportClipboardHandler_0"), Messages.getString("ExportClipboardHandler_1"), status ); //$NON-NLS-1$ //$NON-NLS-2$
         return null;
       }
 

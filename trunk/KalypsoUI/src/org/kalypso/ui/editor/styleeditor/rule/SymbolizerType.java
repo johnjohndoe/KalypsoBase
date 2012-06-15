@@ -45,11 +45,11 @@ package org.kalypso.ui.editor.styleeditor.rule;
  */
 public enum SymbolizerType
 {
-  POINT("Point"),
-  LINE("Line"),
-  POLYGON("Polygon"),
-  TEXT("Text"),
-  RASTER("Raster");
+  POINT("Point"), //$NON-NLS-1$
+  LINE("Line"), //$NON-NLS-1$
+  POLYGON("Polygon"), //$NON-NLS-1$
+  TEXT("Text"), //$NON-NLS-1$
+  RASTER("Raster"); //$NON-NLS-1$
 
   private final String m_label;
 

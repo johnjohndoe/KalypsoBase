@@ -63,6 +63,7 @@ import org.kalypso.commons.java.util.PropertiesHelper;
 import org.kalypso.contribs.eclipse.swt.SWTUtilities;
 import org.kalypso.core.layoutwizard.ILayoutPageContext;
 import org.kalypso.core.util.pool.IPoolableObjectType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.IFeaturesProvider;
 import org.kalypso.ogc.gml.IFeaturesProviderListener;
@@ -85,7 +86,7 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
 public class FeatureViewLayoutPart extends AbstractWizardLayoutPart implements IFeatureProvider
 {
   /** Argument: Pfad auf Vorlage für die Feature-View (.gft Datei) */
-  private static final String PROP_FEATURETEMPLATE = "featureTemplate";
+  private static final String PROP_FEATURETEMPLATE = "featureTemplate"; //$NON-NLS-1$
 
   /**
    * Argument: SWT-Style für die Composite des Features. Default ist {@link SWT#BORDER} | {@link SWT#V_SCROLL}<br>
@@ -93,7 +94,7 @@ public class FeatureViewLayoutPart extends AbstractWizardLayoutPart implements I
    * @deprecated Use the style element from the .gft file instead (swtflags)
    */
   @Deprecated
-  private static final String PROP_FEATURE_VIEW_STYLE = "featureControlStyle";
+  private static final String PROP_FEATURE_VIEW_STYLE = "featureControlStyle"; //$NON-NLS-1$
 
   private final Runnable m_modificationRunnable = new Runnable()
   {
@@ -150,25 +151,25 @@ public class FeatureViewLayoutPart extends AbstractWizardLayoutPart implements I
     final Arguments arguments = context.getArguments();
 
     final String featureTemplateArgument = arguments.getProperty( PROP_FEATURETEMPLATE, null );
-    final String templateFileName = featureTemplateArgument == null ? null : featureTemplateArgument.replaceAll( "#.*", "" );
+    final String templateFileName = featureTemplateArgument == null ? null : featureTemplateArgument.replaceAll( "#.*", "" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    final String featureViewStyle = arguments.getProperty( PROP_FEATURE_VIEW_STYLE, "SWT.BORDER | SWT.V_SCROLL" );
+    final String featureViewStyle = arguments.getProperty( PROP_FEATURE_VIEW_STYLE, "SWT.BORDER | SWT.V_SCROLL" ); //$NON-NLS-1$
     m_viewStyle = SWTUtilities.createStyleFromString( featureViewStyle );
 
     if( templateFileName == null )
       return;
 
     final Properties featureTemplateProps = PropertiesHelper.parseFromString( featureTemplateArgument, '#' );
-    final String featurePath = featureTemplateProps.getProperty( "featurepath", "" );
-    final String href = featureTemplateProps.getProperty( "href", null );
-    final String linktype = featureTemplateProps.getProperty( "linktype", "gml" );
+    final String featurePath = featureTemplateProps.getProperty( "featurepath", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final String href = featureTemplateProps.getProperty( "href", null ); //$NON-NLS-1$
+    final String linktype = featureTemplateProps.getProperty( "linktype", "gml" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     try
     {
       final URL templateURL = context.resolveURI( templateFileName );
       if( templateURL == null )
       {
-        final String message = String.format( "Angegebene Vorlage '%s' existiert nicht. ", templateFileName );
+        final String message = String.format( Messages.getString("FeatureViewLayoutPart_10"), templateFileName ); //$NON-NLS-1$
         final Status status = new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, message );
         throw new CoreException( status );
       }
@@ -192,7 +193,7 @@ public class FeatureViewLayoutPart extends AbstractWizardLayoutPart implements I
 
   private CoreException createLoadFailedException( final String templateFileName, final Exception e )
   {
-    final String message = String.format( "Fehler beim Laden der Definitionsdatei '%s'.", templateFileName );
+    final String message = String.format( Messages.getString("FeatureViewLayoutPart_11"), templateFileName ); //$NON-NLS-1$
     final Status status = new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, message, e );
     return new CoreException( status );
   }

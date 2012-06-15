@@ -126,10 +126,10 @@ public abstract class AbstractObservationEditor extends AbstractWorkbenchPart im
     {
       final IFile file = ((IFileEditorInput) input).getFile();
       final String ext = file.getFileExtension();
-      if( "zml".equalsIgnoreCase( ext ) || "zmlz".equalsIgnoreCase( "zmlz" ) )//$NON-NLS-1$ //$NON-NLS-1$
+      if( "zml".equalsIgnoreCase( ext ) || "zmlz".equalsIgnoreCase( "zmlz" ) )//$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       {
         final IPath projectRelativePath = file.getProjectRelativePath();
-        final TemplateStorage storage = new TemplateStorage( file, ResourceUtilities.createQuietURL( file ), "project:/" + projectRelativePath );
+        final TemplateStorage storage = new TemplateStorage( file, ResourceUtilities.createQuietURL( file ), "project:/" + projectRelativePath ); //$NON-NLS-1$
         return new PseudoTemplateEditorInput( storage, m_extension );
       }
     }

@@ -226,7 +226,7 @@ public class KalypsoWMSUtilities
     {
       final String existingValue = existingEntry.getValue();
       if( !paramValue.equals( existingValue ) )
-        throw new IllegalArgumentException( String.format( "WMS-URL contains wrong parameter '%s': %s", paramKey, existingValue ) );
+        throw new IllegalArgumentException( String.format( Messages.getString("KalypsoWMSUtilities.0"), paramKey, existingValue ) ); //$NON-NLS-1$
     }
   }
 

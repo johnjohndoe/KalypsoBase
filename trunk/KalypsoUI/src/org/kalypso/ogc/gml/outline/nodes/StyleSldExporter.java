@@ -93,7 +93,7 @@ public class StyleSldExporter
       if( m_ftStyles.length == 1 )
         return m_ftStyles[0];
 
-      return (Marshallable) StyleFactory.createUserStyle( "userStyle", m_parentTitle, formatExportAbstract(), false, m_ftStyles );
+      return (Marshallable) StyleFactory.createUserStyle( "userStyle", m_parentTitle, formatExportAbstract(), false, m_ftStyles ); //$NON-NLS-1$
     }
 
     /** A bit hack: we put all feature type styles into one sub-user-style */
@@ -102,7 +102,7 @@ public class StyleSldExporter
       userStyles = m_userStyles;
     else
     {
-      final UserStyle userStyle = StyleFactory.createUserStyle( "topLevelFeatureTypeStyles", m_parentTitle, formatExportAbstract(), false, m_ftStyles );
+      final UserStyle userStyle = StyleFactory.createUserStyle( "topLevelFeatureTypeStyles", m_parentTitle, formatExportAbstract(), false, m_ftStyles ); //$NON-NLS-1$
       userStyles = new UserStyle[m_userStyles.length + 1];
       userStyles[0] = userStyle;
       System.arraycopy( m_userStyles, 0, userStyles, 1, m_userStyles.length );

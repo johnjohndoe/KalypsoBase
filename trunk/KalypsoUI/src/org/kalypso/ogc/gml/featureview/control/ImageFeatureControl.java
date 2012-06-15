@@ -184,7 +184,7 @@ public class ImageFeatureControl extends AbstractImageFeatureControl
         {
           final String baseType = mimeType.getBaseType();
           if( !MimeTypeMapper.isImageType( baseType ) )
-            return "This is not an image.";
+            return Messages.getString("ImageFeatureControl.0"); //$NON-NLS-1$
         }
       }
 
@@ -223,7 +223,7 @@ public class ImageFeatureControl extends AbstractImageFeatureControl
 // e1.printStackTrace();
 // }
 
-    final Job loadImageJob = new Job( "Load Image" )
+    final Job loadImageJob = new Job( Messages.getString("ImageFeatureControl.1") ) //$NON-NLS-1$
     {
       @Override
       protected IStatus run( final IProgressMonitor monitor )
@@ -231,7 +231,7 @@ public class ImageFeatureControl extends AbstractImageFeatureControl
         try
         {
           final Image waitingImage = KalypsoGisPlugin.getImageProvider().getImage( ImageProvider.DESCRIPTORS.WAIT_LOADING_OBJ );
-          setImageInUIJob( waitingImage, "Loading...", false );
+          setImageInUIJob( waitingImage, Messages.getString("ImageFeatureControl.2"), false ); //$NON-NLS-1$
 
           final ImageDescriptor imgDesc = ImageDescriptor.createFromURL( url );
           final Image image = imgDesc.createImage( false );
@@ -265,7 +265,7 @@ public class ImageFeatureControl extends AbstractImageFeatureControl
       return;
 
     final Display display = m_imgCanvas.getDisplay();
-    final UIJob uiJob = new UIJob( display, "Update image" )
+    final UIJob uiJob = new UIJob( display, Messages.getString("ImageFeatureControl.3") ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )

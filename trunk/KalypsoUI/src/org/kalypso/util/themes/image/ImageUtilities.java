@@ -56,7 +56,7 @@ public class ImageUtilities
   /**
    * This constant defines the theme property, used to configure the URL of the image, which should be shown.
    */
-  public static final String THEME_PROPERTY_IMAGE_URL = "image_url";
+  public static final String THEME_PROPERTY_IMAGE_URL = "image_url"; //$NON-NLS-1$
 
   /**
    * The constructor.
@@ -81,10 +81,10 @@ public class ImageUtilities
     final Properties properties = new Properties();
 
     /* Serialize the properties. */
-    final String horizontalProperty = String.format( Locale.PRC, "%d", PositionUtilities.RIGHT );
-    final String verticalProperty = String.format( Locale.PRC, "%d", PositionUtilities.BOTTOM );
-    final String backgroundColorProperty = String.format( Locale.PRC, "%d;%d;%d", 255, 255, 255 );
-    final String imageUrlProperty = "";
+    final String horizontalProperty = String.format( Locale.PRC, "%d", PositionUtilities.RIGHT ); //$NON-NLS-1$
+    final String verticalProperty = String.format( Locale.PRC, "%d", PositionUtilities.BOTTOM ); //$NON-NLS-1$
+    final String backgroundColorProperty = String.format( Locale.PRC, "%d;%d;%d", 255, 255, 255 ); //$NON-NLS-1$
+    final String imageUrlProperty = ""; //$NON-NLS-1$
 
     /* Add the properties. */
     properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );

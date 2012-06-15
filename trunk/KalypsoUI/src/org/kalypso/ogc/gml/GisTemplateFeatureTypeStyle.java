@@ -204,7 +204,7 @@ public class GisTemplateFeatureTypeStyle extends AbstractTemplateStyle implement
 
     if( !(newValue instanceof FeatureTypeStyle) )
     {
-      m_style = createDummyStyle( Messages.getString( "org.kalypso.ogc.gml.GisTemplateUserStyle.3" ), "Root element of .sld file must be of type 'FeatureTypeStyle'" ); //$NON-NLS-1$
+      m_style = createDummyStyle( Messages.getString( "org.kalypso.ogc.gml.GisTemplateUserStyle.3" ), Messages.getString("GisTemplateFeatureTypeStyle.0") ); //$NON-NLS-1$ //$NON-NLS-2$
       return;
     }
 

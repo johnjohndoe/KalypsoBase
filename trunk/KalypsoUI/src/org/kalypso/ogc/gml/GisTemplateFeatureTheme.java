@@ -212,7 +212,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       final PoolableObjectType sldPoolableObjectType = new PoolableObjectType( linktype, href, context );
       final boolean usedForSelection = style.isSelection();
 
-      if( userStyleName == null || href.startsWith( "urn" ) )
+      if( userStyleName == null || href.startsWith( "urn" ) ) //$NON-NLS-1$
         m_styles.add( new GisTemplateFeatureTypeStyle( sldPoolableObjectType, usedForSelection ) );
       else
         m_styles.add( new GisTemplateUserStyle( sldPoolableObjectType, userStyleName, usedForSelection ) );

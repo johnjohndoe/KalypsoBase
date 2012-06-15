@@ -68,6 +68,7 @@ import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.contribs.eclipse.jface.action.DelegateAction;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ui.ImageProvider;
@@ -275,7 +276,7 @@ public class DynamicTabFolderFeatureControl extends AbstractFeatureControl
 
     /* Content */
     final Group tabContent = new Group( m_tabFolder, SWT.NONE );
-    tabContent.setText( "Create New Element" );
+    tabContent.setText( Messages.getString("DynamicTabFolderFeatureControl_0") ); //$NON-NLS-1$
     GridLayoutFactory.swtDefaults().applyTo( tabContent );
     addItem.setControl( tabContent );
 
@@ -385,8 +386,8 @@ public class DynamicTabFolderFeatureControl extends AbstractFeatureControl
     final FeatureTabItem featureItem = FeatureTabItem.get( item );
 
     // ask user for deletion
-    final String message = String.format( "Delete '%s'?", item.getText() );
-    final boolean doDelete = MessageDialog.openConfirm( m_tabFolder.getShell(), "Delete Feature", message );
+    final String message = String.format( Messages.getString("DynamicTabFolderFeatureControl_1"), item.getText() ); //$NON-NLS-1$
+    final boolean doDelete = MessageDialog.openConfirm( m_tabFolder.getShell(), Messages.getString("DynamicTabFolderFeatureControl_2"), message ); //$NON-NLS-1$
     if( !doDelete )
       return false;
 

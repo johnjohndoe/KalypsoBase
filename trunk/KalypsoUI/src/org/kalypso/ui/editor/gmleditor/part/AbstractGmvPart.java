@@ -81,7 +81,7 @@ public class AbstractGmvPart extends AbstractWorkbenchPart implements IGmvPart
         return input;
 
       final String ext = file.getFileExtension();
-      if( "gml".equalsIgnoreCase( ext ) || "shp".equalsIgnoreCase( ext ) || "gmlz".equalsIgnoreCase( ext ) )
+      if( "gml".equalsIgnoreCase( ext ) || "shp".equalsIgnoreCase( ext ) || "gmlz".equalsIgnoreCase( ext ) ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       {
         try
         {

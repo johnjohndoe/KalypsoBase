@@ -107,6 +107,6 @@ public class RuleTabViewer extends AbstractManagedTabViewer<FeatureTypeStyle>
   @Override
   protected String getRemoveMessage( final String tabName )
   {
-    return String.format( "Remove rule '%s' from style?", tabName );
+    return String.format( Messages.getString("RuleTabViewer.0"), tabName ); //$NON-NLS-1$
   }
 }

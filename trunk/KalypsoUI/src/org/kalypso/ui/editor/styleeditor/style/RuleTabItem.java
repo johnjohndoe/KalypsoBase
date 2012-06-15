@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.eclipse.jface.viewers.ITabItem;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypso.ui.editor.styleeditor.rule.RuleComposite;
 import org.kalypsodeegree.graphics.sld.Rule;
@@ -85,7 +86,7 @@ public class RuleTabItem implements ITabItem
     if( name != null )
       return name;
 
-    return "<No Name>";
+    return Messages.getString("RuleTabItem_0"); //$NON-NLS-1$
   }
 
   /**

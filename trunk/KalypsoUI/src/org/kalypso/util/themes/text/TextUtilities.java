@@ -57,17 +57,17 @@ public class TextUtilities
   /**
    * This constant defines the theme property, used to configure the text, which should be shown.
    */
-  public static final String THEME_PROPERTY_TEXT = "text";
+  public static final String THEME_PROPERTY_TEXT = "text"; //$NON-NLS-1$
 
   /**
    * This constant defines the theme property, used to configure the font size of the text.
    */
-  public static final String THEME_PROPERTY_FONT_SIZE = "font_size";
+  public static final String THEME_PROPERTY_FONT_SIZE = "font_size"; //$NON-NLS-1$
 
   /**
    * This constant defines the theme property, used to configure the transparency of the background.
    */
-  public static final String THEME_PROPERTY_TRANSPARENCY = "transparency";
+  public static final String THEME_PROPERTY_TRANSPARENCY = "transparency"; //$NON-NLS-1$
 
   /**
    * The constructor.
@@ -109,12 +109,12 @@ public class TextUtilities
     final Properties properties = new Properties();
 
     /* Serialize the properties. */
-    final String horizontalProperty = String.format( Locale.PRC, "%d", PositionUtilities.RIGHT );
-    final String verticalProperty = String.format( Locale.PRC, "%d", PositionUtilities.BOTTOM );
-    final String backgroundColorProperty = String.format( Locale.PRC, "%d;%d;%d", 255, 255, 255 );
-    final String textProperty = "";
-    final String fontSizeProperty = "-1";
-    final String transparencyProperty = "false";
+    final String horizontalProperty = String.format( Locale.PRC, "%d", PositionUtilities.RIGHT ); //$NON-NLS-1$
+    final String verticalProperty = String.format( Locale.PRC, "%d", PositionUtilities.BOTTOM ); //$NON-NLS-1$
+    final String backgroundColorProperty = String.format( Locale.PRC, "%d;%d;%d", 255, 255, 255 ); //$NON-NLS-1$
+    final String textProperty = ""; //$NON-NLS-1$
+    final String fontSizeProperty = "-1"; //$NON-NLS-1$
+    final String transparencyProperty = "false"; //$NON-NLS-1$
 
     /* Add the properties. */
     properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );

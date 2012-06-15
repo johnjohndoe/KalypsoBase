@@ -54,6 +54,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
@@ -93,12 +94,12 @@ public class PlayMovieHandler extends AbstractHandler
       /* Get the workbench. */
       final IWorkbench workbench = PlatformUI.getWorkbench();
       if( workbench == null )
-        throw new Exception( "Es wurde keine Workbench gefunden..." );
+        throw new Exception( Messages.getString("PlayMovieHandler_0") ); //$NON-NLS-1$
 
       /* Get the progress service. */
       final IProgressService service = workbench.getProgressService();
       if( service == null )
-        throw new Exception( "Es wurde kein Progress-Service gefunden..." );
+        throw new Exception( Messages.getString("PlayMovieHandler_1") ); //$NON-NLS-1$
 
       /* Get the map panel. */
       final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
@@ -117,7 +118,7 @@ public class PlayMovieHandler extends AbstractHandler
         KalypsoGisPlugin.getDefault().getLog().log( status );
 
         /* Show an error, if the operation has failed. */
-        ErrorDialog.openError( shell, "Film starten", "Initialisierung des Films ist fehlgeschlagen...", status );
+        ErrorDialog.openError( shell, Messages.getString("PlayMovieHandler_2"), Messages.getString("PlayMovieHandler_3"), status ); //$NON-NLS-1$ //$NON-NLS-2$
 
         return null;
       }
@@ -139,7 +140,7 @@ public class PlayMovieHandler extends AbstractHandler
     catch( final Exception ex )
     {
       ex.printStackTrace();
-      MessageDialog.openError( shell, "Film starten", String.format( "Konnte den Film nicht abspielen: %s", ex.getLocalizedMessage() ) );
+      MessageDialog.openError( shell, Messages.getString("PlayMovieHandler_4"), String.format( Messages.getString("PlayMovieHandler_5"), ex.getLocalizedMessage() ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
       return null;
     }
@@ -150,7 +151,7 @@ public class PlayMovieHandler extends AbstractHandler
     /* Get the map model. */
     final IMapModell mapModel = mapPanel.getMapModell();
     if( !(mapModel instanceof GisTemplateMapModell) )
-      throw new IOException( "Ungültiges Karten-Modell..." );
+      throw new IOException( Messages.getString("PlayMovieHandler_6") ); //$NON-NLS-1$
 
     return MovieUtilities.cloneMapModel( (GisTemplateMapModell) mapModel, mapPanel.getBoundingBox() );
   }

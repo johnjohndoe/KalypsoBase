@@ -126,7 +126,7 @@ public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution i
 
     if( Double.isNaN( mapScale ) || Double.isInfinite( mapScale ) )
     {
-      m_text.setText( "<Invalid>" );
+      m_text.setText( Messages.getString("MapScaleStatusLineItem.0") ); //$NON-NLS-1$
       m_text.setEnabled( false );
     }
     else

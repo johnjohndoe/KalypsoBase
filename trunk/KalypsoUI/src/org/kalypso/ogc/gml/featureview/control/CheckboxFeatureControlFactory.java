@@ -49,6 +49,7 @@ import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.template.featureview.Checkbox;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -77,7 +78,7 @@ public class CheckboxFeatureControlFactory implements IFeatureControlFactory
     if( vpt == null )
     {
       final QName property = checkboxType.getProperty();
-      final String message = String.format( "Unknown property: %s", property );
+      final String message = String.format( Messages.getString("CheckboxFeatureControlFactory_0"), property ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), message );
       return new StatusFeatureControl( status );
     }

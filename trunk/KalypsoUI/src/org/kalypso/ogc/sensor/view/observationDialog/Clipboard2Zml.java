@@ -47,6 +47,7 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
@@ -84,7 +85,7 @@ public class Clipboard2Zml
       }
       catch( final Exception e )
       {
-        final String message = String.format( "Failed to parse row: %s", row );
+        final String message = String.format( Messages.getString("Clipboard2Zml_0"), row ); //$NON-NLS-1$
         final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), message, e );
         throw new CoreException( status );
       }

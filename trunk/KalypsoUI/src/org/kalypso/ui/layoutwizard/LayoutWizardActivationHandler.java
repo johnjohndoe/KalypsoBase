@@ -60,6 +60,7 @@ import org.kalypso.contribs.eclipse.jface.wizard.view.WizardView;
 import org.kalypso.core.layoutwizard.ILayoutPageContext;
 import org.kalypso.core.layoutwizard.ILayoutWizardPage;
 import org.kalypso.core.status.StatusDialog;
+import org.kalypso.i18n.Messages;
 
 /**
  * Handles activation / deactivation of ILayoutWizardPage when page changes in wizard.
@@ -196,7 +197,7 @@ public class LayoutWizardActivationHandler
     if( m_page == currentPage )
     {
       final IStatus status = StatusUtilities.statusFromThrowable( exception );
-      StatusDialog.open( m_page.getShell(), status, "Failed to execute command" );
+      StatusDialog.open( m_page.getShell(), status, Messages.getString("LayoutWizardActivationHandler_0") ); //$NON-NLS-1$
     }
   }
 

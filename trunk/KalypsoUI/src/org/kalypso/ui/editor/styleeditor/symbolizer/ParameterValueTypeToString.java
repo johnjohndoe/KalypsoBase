@@ -93,7 +93,7 @@ public class ParameterValueTypeToString extends TypedConverter<ParameterValueTyp
     else
     {
       // TODO: need to implement other expression types
-      sb.append( "TODO" );
+      sb.append( "TODO" ); //$NON-NLS-1$
     }
 
     sb.append( '>' );

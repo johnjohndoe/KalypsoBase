@@ -50,6 +50,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypsodeegree.graphics.sld.PointPlacement;
 
@@ -89,7 +90,7 @@ public class PointPlacementComposite extends Composite
   {
     final FormToolkit toolkit = getToolkit();
 
-    final Button autoButton = toolkit.createButton( parent, "Auto", SWT.CHECK );
+    final Button autoButton = toolkit.createButton( parent, Messages.getString("PointPlacementComposite_0"), SWT.CHECK ); //$NON-NLS-1$
     m_autoButton = autoButton;
     m_autoButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 3, 1 ) );
 
@@ -101,7 +102,7 @@ public class PointPlacementComposite extends Composite
   {
     final FormToolkit toolkit = getToolkit();
 
-    toolkit.createLabel( parent, "Displacement" );
+    toolkit.createLabel( parent, Messages.getString("PointPlacementComposite_1") ); //$NON-NLS-1$
 
     final Spinner displacementXField = new Spinner( parent, SWT.BORDER );
     displacementXField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -126,7 +127,7 @@ public class PointPlacementComposite extends Composite
   {
     final FormToolkit toolkit = getToolkit();
 
-    toolkit.createLabel( parent, "Anchor" );
+    toolkit.createLabel( parent, Messages.getString("PointPlacementComposite_2") ); //$NON-NLS-1$
 
     final Spinner anchorXField = new Spinner( parent, SWT.BORDER );
     anchorXField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -151,7 +152,7 @@ public class PointPlacementComposite extends Composite
   {
     final FormToolkit toolkit = getToolkit();
 
-    toolkit.createLabel( parent, "Rotation" );
+    toolkit.createLabel( parent, Messages.getString("PointPlacementComposite_3") ); //$NON-NLS-1$
 
     final Spinner rotationField = new Spinner( parent, SWT.BORDER );
     toolkit.adapt( rotationField, true, true );

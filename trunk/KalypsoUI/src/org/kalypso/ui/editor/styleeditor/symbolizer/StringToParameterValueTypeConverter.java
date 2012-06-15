@@ -76,7 +76,7 @@ public class StringToParameterValueTypeConverter extends TypedConverter<String, 
 
     final Collection<Object> components = new ArrayList<Object>();
 
-    final Pattern pattern = Pattern.compile( "\\<(.*?):(.*?)\\>" );
+    final Pattern pattern = Pattern.compile( "\\<(.*?):(.*?)\\>" ); //$NON-NLS-1$
     final Matcher matcher = pattern.matcher( text );
 
     while( matcher.find() )

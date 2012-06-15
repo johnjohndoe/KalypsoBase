@@ -21,6 +21,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.InformSuccessJobChangeAdapter;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.contribs.java.net.UrlResolver;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.convert.GmlConvertException;
 import org.kalypso.ogc.gml.convert.GmlConvertFactory;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -40,7 +41,7 @@ public class GmlConvertLauncher implements IEditorLauncher
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final Shell shell = workbench.getDisplay().getActiveShell();
 
-    final Job job = new Job( "GML Konvertieren" )
+    final Job job = new Job( Messages.getString("GmlConvertLauncher_0") ) //$NON-NLS-1$
     {
       @Override
       protected IStatus run( final IProgressMonitor monitor )
@@ -52,7 +53,7 @@ public class GmlConvertLauncher implements IEditorLauncher
 
           final IFile convertFile = root.getFileForLocation( filePath );
           if( convertFile == null )
-            throw new Exception( "Datei nicht im Workspace gefunden: " + filePath.toOSString() );
+            throw new Exception( Messages.getString("GmlConvertLauncher_1") + filePath.toOSString() ); //$NON-NLS-1$
 
           final InputStreamReader reader = new InputStreamReader( convertFile.getContents(), convertFile.getCharset() );
           final InputSource inputSource = new InputSource( reader );
@@ -72,12 +73,12 @@ public class GmlConvertLauncher implements IEditorLauncher
         {
           e.printStackTrace();
 
-          return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, "Fehler beim Konvertieren", e );
+          return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), 0, Messages.getString("GmlConvertLauncher_2"), e ); //$NON-NLS-1$
         }
       }
     };
     job.setUser( true );
-    job.addJobChangeListener( new InformSuccessJobChangeAdapter( shell, "GML Konvertierung", "GML-Konvertierung erfolgreich abgeschlossen." ) );
+    job.addJobChangeListener( new InformSuccessJobChangeAdapter( shell, Messages.getString("GmlConvertLauncher_3"), Messages.getString("GmlConvertLauncher_4") ) ); //$NON-NLS-1$ //$NON-NLS-2$
     job.schedule();
   }
 }

@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -109,7 +110,7 @@ public abstract class AbstractMovieImageProvider implements IMovieImageProvider
   public void initialize( final GisTemplateMapModell mapModel, final GM_Envelope boundingBox, final IProgressMonitor monitor ) throws Exception
   {
     /* Create a temporary directory. */
-    m_tmpDirectory = FileUtilities.createNewTempDir( "mov" );
+    m_tmpDirectory = FileUtilities.createNewTempDir( "mov" ); //$NON-NLS-1$
 
     /* Determine some needed information. */
     m_frames = preProcess( mapModel, boundingBox, monitor );
@@ -222,13 +223,13 @@ public abstract class AbstractMovieImageProvider implements IMovieImageProvider
       final IKalypsoTheme[] themes = movieTheme.getAllThemes();
 
       /* Monitor. */
-      monitor.beginTask( "Initialisiere den Film...", themes.length );
-      monitor.subTask( "Bereite Kartenthemen vor" );
+      monitor.beginTask( Messages.getString("AbstractMovieImageProvider_1"), themes.length ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString("AbstractMovieImageProvider_2") ); //$NON-NLS-1$
 
       for( final IKalypsoTheme theme : themes )
       {
         if( monitor.isCanceled() )
-          throw new CoreException( new Status( IStatus.CANCEL, KalypsoGisPlugin.getId(), "Der Film wurde abgebrochen..." ) );
+          throw new CoreException( new Status( IStatus.CANCEL, KalypsoGisPlugin.getId(), Messages.getString("AbstractMovieImageProvider_3") ) ); //$NON-NLS-1$
 
         /* Create the frame. */
         final String label = theme.getLabel();

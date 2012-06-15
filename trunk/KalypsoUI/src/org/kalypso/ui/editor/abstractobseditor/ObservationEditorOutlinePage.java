@@ -243,7 +243,7 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
     final IToolBarManager toolBarManager = actionBars.getToolBarManager();
     toolBarManager.add( m_setIgnoreTypesAction );
 
-    toolBarManager.add( new Separator( "curveActions" ) );
+    toolBarManager.add( new Separator( "curveActions" ) ); //$NON-NLS-1$
     if( m_editor instanceof ObservationDiagramEditor )
       toolBarManager.add( m_editThemeAction );
     toolBarManager.add( m_removeThemeAction );

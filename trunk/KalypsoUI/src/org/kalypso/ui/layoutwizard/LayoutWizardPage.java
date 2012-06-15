@@ -62,6 +62,7 @@ import org.kalypso.core.layoutwizard.ILayoutPart;
 import org.kalypso.core.layoutwizard.ILayoutWizardPage;
 import org.kalypso.core.layoutwizard.LayoutFactory;
 import org.kalypso.core.layoutwizard.LayoutParser;
+import org.kalypso.i18n.Messages;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 
 /**
@@ -170,7 +171,7 @@ public class LayoutWizardPage extends WizardPage implements ILayoutWizardPage
   @Override
   public IStatus saveData( final boolean doSaveGml, final IProgressMonitor monitor )
   {
-    monitor.beginTask( "Daten speichern", 2000 );
+    monitor.beginTask( Messages.getString("LayoutWizardPage_0"), 2000 ); //$NON-NLS-1$
 
     try
     {

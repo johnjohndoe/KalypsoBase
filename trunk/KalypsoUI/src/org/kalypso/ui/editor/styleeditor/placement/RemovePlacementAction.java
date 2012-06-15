@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.placement;
 
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypso.ui.editor.styleeditor.util.StyleElementAction;
@@ -57,7 +58,7 @@ public class RemovePlacementAction extends StyleElementAction<TextSymbolizer>
   {
     super( input );
 
-    setText( "Remove Placement" );
+    setText( Messages.getString("RemovePlacementAction_0") ); //$NON-NLS-1$
     setImageDescriptor( ImageProvider.IMAGE_STYLEEDITOR_REMOVE );
   }
 

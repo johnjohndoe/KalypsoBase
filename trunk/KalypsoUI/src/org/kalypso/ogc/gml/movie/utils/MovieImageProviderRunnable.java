@@ -97,7 +97,7 @@ public class MovieImageProviderRunnable implements ICoreRunnableWithProgress
       /* Create the image provider. */
       m_imageProvider = MovieUtilities.getImageProvider( m_mapModel, m_envelope, monitor );
 
-      return new Status( IStatus.OK, KalypsoGisPlugin.getId(), "OK" );
+      return new Status( IStatus.OK, KalypsoGisPlugin.getId(), "OK" ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {

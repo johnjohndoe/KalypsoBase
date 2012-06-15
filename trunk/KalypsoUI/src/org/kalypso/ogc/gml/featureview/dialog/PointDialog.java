@@ -175,11 +175,11 @@ public class PointDialog extends Dialog
     switch( index )
     {
       case 0:
-        return String.format( "X-%s", Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.PointDialog.axis" ) );
+        return String.format( "X-%s", Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.PointDialog.axis" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       case 1:
-        return String.format( "Y-%s", Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.PointDialog.axis" ) );
+        return String.format( "Y-%s", Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.PointDialog.axis" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       case 2:
-        return String.format( "Z-%s", Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.PointDialog.axis" ) );
+        return String.format( "Z-%s", Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.PointDialog.axis" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     throw new UnsupportedOperationException();

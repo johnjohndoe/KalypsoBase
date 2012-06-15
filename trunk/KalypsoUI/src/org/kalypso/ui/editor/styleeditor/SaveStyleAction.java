@@ -5,6 +5,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoStyle;
 import org.kalypso.ui.ImageProvider;
 
@@ -17,7 +18,7 @@ public final class SaveStyleAction extends Action
 
   public SaveStyleAction( final SLDComposite sldEditor )
   {
-    super( "Save", ImageProvider.IMAGE_STYLEEDITOR_SAVE );
+    super( Messages.getString("SaveStyleAction_0"), ImageProvider.IMAGE_STYLEEDITOR_SAVE ); //$NON-NLS-1$
 
     m_sldEditor = sldEditor;
 
@@ -31,8 +32,8 @@ public final class SaveStyleAction extends Action
     final IKalypsoStyle style = m_sldEditor.getKalypsoStyle();
 
     final IStatus result = style.save( shell );
-    final String errorMsg = String.format( "Failed to save style." );
-    ErrorDialog.openError( shell, "Save Style", errorMsg, result );
+    final String errorMsg = String.format( Messages.getString("SaveStyleAction_1") ); //$NON-NLS-1$
+    ErrorDialog.openError( shell, Messages.getString("SaveStyleAction_2"), errorMsg, result ); //$NON-NLS-1$
 
     m_sldEditor.updateActions();
   }

@@ -311,7 +311,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
       /* Create a status composite. */
       final StatusComposite statusComposite = new StatusComposite( parent, SWT.NONE );
       statusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-      statusComposite.setStatus( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), "Konnte die Legende nicht anzeigen...", ex ) );
+      statusComposite.setStatus( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString("LegendPropertyPage.0"), ex ) ); //$NON-NLS-1$
     }
   }
 
@@ -370,7 +370,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
   {
     /* Create a tab item. */
     m_propertiesTabItem = new CTabItem( parent, SWT.NONE );
-    m_propertiesTabItem.setText( "Eigenschaften" );
+    m_propertiesTabItem.setText( Messages.getString("LegendPropertyPage.1") ); //$NON-NLS-1$
 
     /* Create the properties composite. */
     final Composite propertiesComposite = createPropertiesComposite( parent );
@@ -417,7 +417,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
   {
     /* Create a tab item. */
     m_previewTabItem = new CTabItem( parent, SWT.NONE );
-    m_previewTabItem.setText( "Vorschau" );
+    m_previewTabItem.setText( Messages.getString("LegendPropertyPage.2") ); //$NON-NLS-1$
 
     /* Create the preview composite. */
     final Composite previewComposite = createPreviewComposite( parent );
@@ -476,7 +476,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
 
       final List<String> themeIds = LegendUtilities.verifyThemeIds( m_theme.getMapModell(), themeIdsProperty );
       if( themeIds == null || themeIds.size() == 0 )
-        throw new Exception( "Es wurden keine Themen ausgewählt..." );
+        throw new Exception( Messages.getString("LegendPropertyPage.3") ); //$NON-NLS-1$
 
       final int fontSize = LegendUtilities.checkFontSize( fontSizeProperty );
 
@@ -521,7 +521,7 @@ public class LegendPropertyPage extends PropertyPage implements IWorkbenchProper
       /* Create a status composite. */
       final StatusComposite statusComposite = new StatusComposite( parent, SWT.NONE );
       statusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-      statusComposite.setStatus( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), "Konnte die Legende nicht anzeigen...", ex ) );
+      statusComposite.setStatus( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString("LegendPropertyPage.4"), ex ) ); //$NON-NLS-1$
     }
   }
 

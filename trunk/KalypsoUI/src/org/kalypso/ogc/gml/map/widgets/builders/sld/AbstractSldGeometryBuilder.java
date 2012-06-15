@@ -50,6 +50,7 @@ import java.util.Set;
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.advanced.utils.SLDPainter;
@@ -96,8 +97,8 @@ public abstract class AbstractSldGeometryBuilder implements ISldGeometryBuilder
 
     if( ArrayUtils.isEmpty( slds ) )
     {
-      final URL urlLine = AbstractSldGeometryBuilder.class.getResource( "resources/default.line.sld" );
-      final URL urlPolygon = AbstractSldGeometryBuilder.class.getResource( "resources/default.polygon.sld" );
+      final URL urlLine = AbstractSldGeometryBuilder.class.getResource( Messages.getString("AbstractSldGeometryBuilder_0") ); //$NON-NLS-1$
+      final URL urlPolygon = AbstractSldGeometryBuilder.class.getResource( Messages.getString("AbstractSldGeometryBuilder_1") ); //$NON-NLS-1$
 
       slds = new URL[] { urlLine, urlPolygon };
     }

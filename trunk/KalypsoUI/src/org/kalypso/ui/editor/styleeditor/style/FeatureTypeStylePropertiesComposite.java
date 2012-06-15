@@ -66,6 +66,7 @@ import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypso.ui.editor.styleeditor.binding.SLDBinding;
@@ -107,8 +108,8 @@ public class FeatureTypeStylePropertiesComposite extends Composite
 
   private void createNameField( final FormToolkit toolkit, final Composite parent )
   {
-    final String tooltip = "Unique identifier of the style";
-    toolkit.createLabel( parent, "Name" ).setToolTipText( tooltip );
+    final String tooltip = Messages.getString("FeatureTypeStylePropertiesComposite_0"); //$NON-NLS-1$
+    toolkit.createLabel( parent, Messages.getString("FeatureTypeStylePropertiesComposite_1") ).setToolTipText( tooltip ); //$NON-NLS-1$
 
     final Text control = toolkit.createText( parent, StringUtils.EMPTY );
     control.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -122,8 +123,8 @@ public class FeatureTypeStylePropertiesComposite extends Composite
 
   private void createTitleField( final FormToolkit toolkit, final Composite parent )
   {
-    final String tooltip = "Title, used as label of the style";
-    toolkit.createLabel( parent, "Title" ).setToolTipText( tooltip );
+    final String tooltip = Messages.getString("FeatureTypeStylePropertiesComposite_2"); //$NON-NLS-1$
+    toolkit.createLabel( parent, Messages.getString("FeatureTypeStylePropertiesComposite_3") ).setToolTipText( tooltip ); //$NON-NLS-1$
 
     final Text control = toolkit.createText( parent, StringUtils.EMPTY );
     control.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
@@ -136,8 +137,8 @@ public class FeatureTypeStylePropertiesComposite extends Composite
 
   private void createAbstractField( final FormToolkit toolkit, final Composite parent )
   {
-    final String tooltip = "Description of the style";
-    toolkit.createLabel( parent, "Abstract" ).setToolTipText( tooltip );
+    final String tooltip = Messages.getString("FeatureTypeStylePropertiesComposite_4"); //$NON-NLS-1$
+    toolkit.createLabel( parent, Messages.getString("FeatureTypeStylePropertiesComposite_5") ).setToolTipText( tooltip ); //$NON-NLS-1$
 
     final Text control = toolkit.createText( parent, StringUtils.EMPTY );
     control.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -150,8 +151,8 @@ public class FeatureTypeStylePropertiesComposite extends Composite
 
   private void createFeatureTypeField( final FormToolkit toolkit, final Composite parent )
   {
-    final String tooltip = "FeatureType, used to restrict the visiblity of the style to specific feature types";
-    toolkit.createLabel( parent, "Feature Type" ).setToolTipText( tooltip );
+    final String tooltip = Messages.getString("FeatureTypeStylePropertiesComposite_6"); //$NON-NLS-1$
+    toolkit.createLabel( parent, Messages.getString("FeatureTypeStylePropertiesComposite_7") ).setToolTipText( tooltip ); //$NON-NLS-1$
 
     final ComboViewer viewer = new ComboViewer( parent, SWT.NONE );
     viewer.setContentProvider( new ArrayContentProvider() );

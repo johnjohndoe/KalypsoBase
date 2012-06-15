@@ -82,7 +82,7 @@ public class ExportSLDWizardPage extends WizardPage
     final String title = getWizard().getWindowTitle();
     final ExportFileControls exportFileControls = new ExportFileControls( m_data, m_binding, title );
 
-    final String gmlFilterName = "Styled Layer Descriptors (*.sld)";
+    final String gmlFilterName = "Styled Layer Descriptors (*.sld)"; //$NON-NLS-1$
     exportFileControls.addFilter( gmlFilterName, "*.sld" ); //$NON-NLS-1$
     exportFileControls.createControls( parent, 1 );
   }

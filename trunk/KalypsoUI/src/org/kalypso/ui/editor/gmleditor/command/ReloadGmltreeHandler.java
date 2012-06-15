@@ -73,7 +73,7 @@ public class ReloadGmltreeHandler extends AbstractHandler
 
     final String commandName = HandlerUtils.getCommandName( event );
 
-    if( !MessageDialog.openConfirm( shell, commandName, "Reload data and discard changes since last save?" ) )
+    if( !MessageDialog.openConfirm( shell, commandName, Messages.getString("ReloadGmltreeHandler.0") ) ) //$NON-NLS-1$
       return null;
 
     final IProgressService progressService = (IProgressService) site.getService( IProgressService.class );

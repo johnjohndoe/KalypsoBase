@@ -92,7 +92,7 @@ public class ClipboardExportAction extends AbstractObservationAction
     }
     catch( final SensorException e )
     {
-      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), "Failed to export table to clipboard", e );
+      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString("ClipboardExportAction.0"), e ); //$NON-NLS-1$
     }
 
     return Status.OK_STATUS;
@@ -136,7 +136,7 @@ public class ClipboardExportAction extends AbstractObservationAction
         }
         catch( final Exception e )
         {
-          result.append( Messages.getString( "org.kalypso.ogc.sensor.zml.ZmlFactory.34" ) ); //$NON-NLS-1$
+          result.append( "" ); //$NON-NLS-1$
           // ignore
         }
         if( col + 1 == sortedAxes.length )

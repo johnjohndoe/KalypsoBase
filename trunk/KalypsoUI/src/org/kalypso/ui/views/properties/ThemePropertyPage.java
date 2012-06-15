@@ -95,7 +95,7 @@ public class ThemePropertyPage extends PropertyPage implements IWorkbenchPropert
 
     /* Current Status */
     final Label statusLabel = new Label( composite, SWT.NONE );
-    statusLabel.setText( "Status" );
+    statusLabel.setText( Messages.getString("ThemePropertyPage.0") ); //$NON-NLS-1$
 
     final StatusComposite statusComposite = new StatusComposite( composite, StatusComposite.DETAILS );
     statusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );

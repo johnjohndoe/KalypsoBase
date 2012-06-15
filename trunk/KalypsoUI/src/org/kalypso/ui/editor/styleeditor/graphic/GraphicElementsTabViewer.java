@@ -47,6 +47,7 @@ import org.kalypso.commons.eclipse.jface.viewers.AbstractManagedTabViewer;
 import org.kalypso.commons.eclipse.jface.viewers.TabItemMoveBackwardsAction;
 import org.kalypso.commons.eclipse.jface.viewers.TabItemMoveForwardAction;
 import org.kalypso.commons.eclipse.jface.viewers.TabViewer;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
@@ -93,6 +94,6 @@ public class GraphicElementsTabViewer extends AbstractManagedTabViewer<Graphic>
   @Override
   protected String getRemoveMessage( final String tabName )
   {
-    return String.format( "Remove '%s' from this graphic?", tabName );
+    return String.format( Messages.getString("GraphicElementsTabViewer_0"), tabName ); //$NON-NLS-1$
   }
 }

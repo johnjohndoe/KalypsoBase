@@ -50,6 +50,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
 import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
 
@@ -75,7 +76,7 @@ public class RemoveNodeHandler extends AbstractHandler
     final WorkbenchLabelProvider labelProvider = new WorkbenchLabelProvider();
     try
     {
-      final ListSelectionDialog dialog = new ListSelectionDialog( shell, selectedNodes, new ArrayContentProvider(), labelProvider, "Please confirm deletion" );
+      final ListSelectionDialog dialog = new ListSelectionDialog( shell, selectedNodes, new ArrayContentProvider(), labelProvider, Messages.getString("RemoveNodeHandler_0") ); //$NON-NLS-1$
       dialog.setInitialSelections( selectedNodes );
       if( !(dialog.open() == Window.OK) )
         return null;

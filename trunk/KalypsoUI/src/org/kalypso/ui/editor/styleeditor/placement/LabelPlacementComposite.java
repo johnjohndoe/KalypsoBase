@@ -51,6 +51,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.kalypso.commons.databinding.forms.DatabindingForm;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypso.ui.editor.styleeditor.binding.StyleInput;
 import org.kalypsodeegree.graphics.sld.LabelPlacement;
@@ -136,14 +137,14 @@ public class LabelPlacementComposite extends Composite
     {
       final IStyleInput<PointPlacement> placementInput = new StyleInput<PointPlacement>( m_pointPlacement, m_input );
       new PointPlacementComposite( m_binding, m_contentGroup, placementInput );
-      return "Point Placement";
+      return Messages.getString("LabelPlacementComposite_0"); //$NON-NLS-1$
     }
 
     if( m_linePlacement != null )
     {
       final IStyleInput<LinePlacement> placementInput = new StyleInput<LinePlacement>( m_linePlacement, m_input );
       new LinePlacementComposite( m_binding, m_contentGroup, placementInput );
-      return "Line Placement";
+      return Messages.getString("LabelPlacementComposite_1"); //$NON-NLS-1$
     }
 
     return createNoPlacement();
@@ -155,9 +156,9 @@ public class LabelPlacementComposite extends Composite
     final Composite composite = getToolkit().createComposite( m_contentGroup );
     GridLayoutFactory.fillDefaults().applyTo( composite );
 
-    final Label label = getToolkit().createLabel( composite, "Placement is not defined" );
+    final Label label = getToolkit().createLabel( composite, Messages.getString("LabelPlacementComposite_2") ); //$NON-NLS-1$
     label.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, true, true ) );
 
-    return "No Placement";
+    return Messages.getString("LabelPlacementComposite_3"); //$NON-NLS-1$
   }
 }
