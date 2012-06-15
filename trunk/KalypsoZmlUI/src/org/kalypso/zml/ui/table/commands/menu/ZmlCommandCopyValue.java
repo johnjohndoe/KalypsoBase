@@ -100,7 +100,7 @@ public class ZmlCommandCopyValue extends AbstractHandler
         {
           final IZmlModelValueCell cell = row.get( column );
           if( cell == null )
-            buffer.append( " " );
+            buffer.append( " " ); //$NON-NLS-1$
           else
           {
             final ZmlModelCellLabelProvider provider = new ZmlModelCellLabelProvider( column );

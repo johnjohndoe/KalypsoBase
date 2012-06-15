@@ -145,7 +145,7 @@ public class ZmlDiagramChartPartComposite extends ChartPartComposite
     if( m_job != null )
       m_job.cancel();
 
-    m_job = new Job( "Updating chart layer visiblities" )
+    m_job = new Job( "Updating chart layer visiblities" ) //$NON-NLS-1$
     {
 
       @Override

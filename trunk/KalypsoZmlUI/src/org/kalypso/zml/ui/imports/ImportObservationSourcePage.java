@@ -210,7 +210,7 @@ public class ImportObservationSourcePage extends WizardPage
       {
         if( Objects.isNull( value ) )
         {
-          setErrorMessage( "Bitte wählen Sie ein Datenformat." );
+          setErrorMessage( Messages.getString("ImportObservationSourcePage.1") ); //$NON-NLS-1$
           return Status.CANCEL_STATUS;
         }
 
