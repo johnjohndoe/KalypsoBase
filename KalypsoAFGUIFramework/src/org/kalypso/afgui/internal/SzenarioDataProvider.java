@@ -73,6 +73,8 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
 
   private String m_dataSetScope;
 
+  private boolean m_fireModelLoaded = true;
+
   @Override
   public void addScenarioDataListener( final IScenarioDataListener listener )
   {
@@ -127,6 +129,9 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
 
   private Map<IModel, IStatus> setDataScope( final IScenario scenario, final IProgressMonitor monitor )
   {
+    // Prohibit events during initializing of model loading. Prevent event before new scenario is set.
+    m_fireModelLoaded = false;
+
     final Map<IModel, IStatus> loadedModels = new LinkedHashMap<>();
 
     if( scenario == null || m_dataSetScope == null )
@@ -163,6 +168,7 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
     }
 
     monitor.done();
+    m_fireModelLoaded = true;
 
     return loadedModels;
   }
@@ -538,6 +544,9 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
 
   void fireModelLoaded( final IModel model, final IStatus status )
   {
+    if( !m_fireModelLoaded )
+      return;
+
     // REMARK: copy current listeners into array to avoid ConcurrentModificationException
     final IScenarioDataListener[] listeners = m_controller.toArray( new IScenarioDataListener[m_controller.size()] );
     for( final IScenarioDataListener listener : listeners )
