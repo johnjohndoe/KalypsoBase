@@ -47,6 +47,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 
 /**
+ * TODO: this should probably not be used by normal client code but only internally in the scenario handling.
+ * 
  * @author Stefan Kurzbach
  */
 public interface IScenarioManager
@@ -119,4 +121,6 @@ public interface IScenarioManager
   IScenario createScenario( final IScenario parentScenario, final String scenarioName, final String scenarioDescription, final IScenario templateScenario, final boolean copySubScenarios, final IProgressMonitor monitor ) throws CoreException;
 
   void renameScenario( IScenario scenario, String newName, String newComment, IProgressMonitor monitor ) throws CoreException;
+
+  void resetCaseList( );
 }

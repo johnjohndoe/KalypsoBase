@@ -102,9 +102,7 @@ public class ScenarioHandlingProjectNature implements IProjectNature
     m_project = project;
 
     if( m_project != null )
-    {
-      m_caseManager = createCaseManager( m_project );
-    }
+      m_caseManager = new ScenarioManager( m_project );
   }
 
   public void setDerivedScenarioCopyFilter( final IDerivedScenarioCopyFilter filter )
@@ -115,11 +113,6 @@ public class ScenarioHandlingProjectNature implements IProjectNature
   public IScenarioManager getCaseManager( )
   {
     return m_caseManager;
-  }
-
-  private IScenarioManager createCaseManager( final IProject project )
-  {
-    return new ScenarioManager( project );
   }
 
   public static final ScenarioHandlingProjectNature toThisNature( final IProject project ) throws CoreException
