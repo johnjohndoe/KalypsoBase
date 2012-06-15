@@ -76,7 +76,7 @@ public final class ZmlModelColumns
 
   public static int getCloneIndex( final IZmlModelColumn column )
   {
-    final Pattern pattern = new Pattern( "^[A-Za-z_]*" ); // $NON-NLS-1$
+    final Pattern pattern = new Pattern( "^[A-Za-z_]*" ); // $NON-NLS-1$ //$NON-NLS-1$
     final String identifier = column.getIdentifier();
 
     final RETokenizer tokenizer = new RETokenizer( pattern, identifier );

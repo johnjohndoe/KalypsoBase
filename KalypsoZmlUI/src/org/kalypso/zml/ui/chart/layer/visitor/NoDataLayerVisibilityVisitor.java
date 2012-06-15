@@ -93,7 +93,7 @@ public class NoDataLayerVisibilityVisitor implements IChartLayerVisitor
         return;
       }
     }
-    else if( StringUtils.equalsIgnoreCase( "selectionLayer", layer.getIdentifier() ) )
+    else if( StringUtils.equalsIgnoreCase( "selectionLayer", layer.getIdentifier() ) ) //$NON-NLS-1$
     {
       m_selectionLayer = layer;
     }
