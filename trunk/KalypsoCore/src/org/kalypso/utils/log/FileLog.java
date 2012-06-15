@@ -135,7 +135,7 @@ public class FileLog implements ILog
     try
     {
       writer = new BufferedWriter( new FileWriter( file, true ) );
-      writer.write( String.format( "%S - %s%n", m_df.format( new Date() ), status.getMessage() ) );
+      writer.write( String.format( "%S - %s%n", m_df.format( new Date() ), status.getMessage() ) ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {

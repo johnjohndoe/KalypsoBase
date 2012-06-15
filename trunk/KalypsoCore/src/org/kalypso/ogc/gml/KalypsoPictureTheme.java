@@ -194,7 +194,7 @@ public abstract class KalypsoPictureTheme extends AbstractKalypsoTheme
       // UGLY HACK: replace backslashes with slashes. The add-picture-theme action seems to put backslashes (on windows)
       // in the relative URLs (which is even wrong in windows). Should be fixed there, but is fixed also here to support
       // older projects.
-      final String filePathChecked = filePath.replaceAll( "\\\\", "/" );
+      final String filePathChecked = filePath.replaceAll( "\\\\", "/" ); //$NON-NLS-1$ //$NON-NLS-2$
 
       final URL context = getContext();
       final URL imageUrl = UrlResolverSingleton.resolveUrl( context, filePathChecked );
@@ -210,19 +210,19 @@ public abstract class KalypsoPictureTheme extends AbstractKalypsoTheme
     }
     catch( final MalformedURLException e )
     {
-      setStatus( e, "Fehlerhafter Dateipfad %s", filePath );
+      setStatus( e, Messages.getString("KalypsoPictureTheme.2"), filePath ); //$NON-NLS-1$
     }
     catch( final OutOfMemoryError error )
     {
       // REMARK: this will happen if we load big images
       // It is safe to catch it here, as the heap will be freed immediately, if the image could not be loaded
-      setStatus( error, "Zu wenig Speicher zum Laden von Bild %s. Versuchen Sie die Bildgröße zu verkleinern oder dem Programm mehr Speicher zuzuweisen.", filePath );
+      setStatus( error, Messages.getString("KalypsoPictureTheme.3"), filePath ); //$NON-NLS-1$
     }
     catch( final Throwable error )
     {
       // REMARK: this will happen if we load big images
       // It is safe to catch it here, as the heap will be freed immediately, if the image could not be loaded
-      setStatus( error, "Unerwarteter Fehler beim Laden von Bild %s, vermutlich zu wenig Speicher. Versuchen Sie die Bildgröße zu verkleinern oder dem Programm mehr Speicher zuzuweisen.", filePath );
+      setStatus( error, Messages.getString("KalypsoPictureTheme.4"), filePath ); //$NON-NLS-1$
     }
 
     return null;

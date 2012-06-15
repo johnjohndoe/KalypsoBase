@@ -160,7 +160,7 @@ public class TupleModelDataSet
       return null;
 
     if( !AxisUtils.isValueAxis( valueAxis ) )
-      throw new SensorException( "TupleModelDataSet.toDataSet() only works for value axes!" );
+      throw new SensorException( "TupleModelDataSet.toDataSet() only works for value axes!" ); //$NON-NLS-1$
 
     final IAxis statusAxis = AxisUtils.findStatusAxis( container.getAxes(), valueAxis );
     final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( container.getAxes(), valueAxis );

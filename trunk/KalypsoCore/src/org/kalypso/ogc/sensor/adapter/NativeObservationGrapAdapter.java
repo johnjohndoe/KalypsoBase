@@ -56,6 +56,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 
 /**
@@ -104,7 +105,7 @@ public class NativeObservationGrapAdapter extends AbstractObservationImporter
         }
         else
         {
-          stati.add( IStatus.WARNING, String.format( "Line %d: Date not parsable: %s", reader.getLineNumber(), lineIn ) );
+          stati.add( IStatus.WARNING, String.format( Messages.getString("NativeObservationGrapAdapter_0"), reader.getLineNumber(), lineIn ) ); //$NON-NLS-1$
           tickErrorCount();
         }
       }
@@ -136,7 +137,7 @@ public class NativeObservationGrapAdapter extends AbstractObservationImporter
 
     if( !dateMatcher.matches() )
     {
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), String.format( "Date not parsable: %s", dateString ) ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), String.format( Messages.getString("NativeObservationGrapAdapter_1"), dateString ) ) ); //$NON-NLS-1$
     }
 
     final StringBuffer buffer = new StringBuffer();

@@ -83,19 +83,19 @@ public class GmlSerializerTest
 // @Test
   public void testLoadPerformance( ) throws Exception
   {
-    final URL zipResource = getClass().getResource( "resources/grandeGml.zip" );
+    final URL zipResource = getClass().getResource( "resources/grandeGml.zip" ); //$NON-NLS-1$
     final String externalForm = zipResource.toExternalForm();
-    final URL gmlUrl = new URL( "jar:" + externalForm + "!/discretisation.gml" );
+    final URL gmlUrl = new URL( "jar:" + externalForm + "!/discretisation.gml" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    final TimeLogger timeLogger = new TimeLogger( "GmlSerializer-Test" );
-    timeLogger.printCurrentInterim( "%nStep 1: start: " );
+    final TimeLogger timeLogger = new TimeLogger( "GmlSerializer-Test" ); //$NON-NLS-1$
+    timeLogger.printCurrentInterim( "%nStep 1: start: " ); //$NON-NLS-1$
     GmlSerializer.createGMLWorkspace( gmlUrl, null );
     timeLogger.takeInterimTime();
-    timeLogger.printCurrentInterim( "Step 1: finished: " );
-    timeLogger.printCurrentInterim( "Step 2: start: " );
+    timeLogger.printCurrentInterim( "Step 1: finished: " ); //$NON-NLS-1$
+    timeLogger.printCurrentInterim( "Step 2: start: " ); //$NON-NLS-1$
     GmlSerializer.createGMLWorkspace( gmlUrl, null );
     timeLogger.takeInterimTime();
-    timeLogger.printCurrentInterim( "Step 2: finished: " );
+    timeLogger.printCurrentInterim( "Step 2: finished: " ); //$NON-NLS-1$
   }
 
   /**
@@ -111,26 +111,26 @@ public class GmlSerializerTest
 // final URL zipResource = getClass().getResource( "resources/dgm2m.zip" );
 // final String externalForm = zipResource.toExternalForm();
 // final URL gmlUrl = new URL( "jar:" + externalForm + "!/dgm2m.gml" );
-    final URL zipResource = getClass().getResource( "resources/grandeGml.zip" );
+    final URL zipResource = getClass().getResource( "resources/grandeGml.zip" ); //$NON-NLS-1$
     final String externalForm = zipResource.toExternalForm();
-    final URL gmlUrl = new URL( "jar:" + externalForm + "!/discretisation.gml" );
+    final URL gmlUrl = new URL( "jar:" + externalForm + "!/discretisation.gml" ); //$NON-NLS-1$ //$NON-NLS-2$
 // final File outFile = File.createTempFile( "gmlSaveTest", ".gml" );
-    final File outFile = new File( "/tmp/gernot.gml" );
+    final File outFile = new File( "/tmp/gernot.gml" ); //$NON-NLS-1$
 
-    final TimeLogger timeLogger = new TimeLogger( "GmlSerializer-Test" );
-    timeLogger.printCurrentInterim( "Loading: " );
+    final TimeLogger timeLogger = new TimeLogger( "GmlSerializer-Test" ); //$NON-NLS-1$
+    timeLogger.printCurrentInterim( "Loading: " ); //$NON-NLS-1$
     final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( gmlUrl, null );
     timeLogger.takeInterimTime();
-    timeLogger.printCurrentInterim( "Loading finished: " );
-    System.out.println( "Saving to file: " + outFile.getAbsolutePath() );
-    timeLogger.printCurrentInterim( "Saving 1: " );
-    GmlSerializer.serializeWorkspace( outFile, workspace, "UTF-8" );
+    timeLogger.printCurrentInterim( "Loading finished: " ); //$NON-NLS-1$
+    System.out.println( "Saving to file: " + outFile.getAbsolutePath() ); //$NON-NLS-1$
+    timeLogger.printCurrentInterim( "Saving 1: " ); //$NON-NLS-1$
+    GmlSerializer.serializeWorkspace( outFile, workspace, "UTF-8" ); //$NON-NLS-1$
     timeLogger.takeInterimTime();
-    timeLogger.printCurrentInterim( "Saving 1: finished: " );
-    timeLogger.printCurrentInterim( "Saving 2: " );
-    GmlSerializer.serializeWorkspace( outFile, workspace, "UTF-8" );
+    timeLogger.printCurrentInterim( "Saving 1: finished: " ); //$NON-NLS-1$
+    timeLogger.printCurrentInterim( "Saving 2: " ); //$NON-NLS-1$
+    GmlSerializer.serializeWorkspace( outFile, workspace, "UTF-8" ); //$NON-NLS-1$
     timeLogger.takeInterimTime();
-    timeLogger.printCurrentInterim( "Saving 2: finished: " );
+    timeLogger.printCurrentInterim( "Saving 2: finished: " ); //$NON-NLS-1$
   }
 
 }

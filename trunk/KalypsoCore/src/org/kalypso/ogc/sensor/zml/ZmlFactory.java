@@ -55,6 +55,7 @@ import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.factory.FactoryException;
 import org.kalypso.commons.parser.IParser;
 import org.kalypso.commons.parser.ParserFactory;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -131,7 +132,7 @@ public final class ZmlFactory
     final ObservationUnmarshaller unmarshaller = new ObservationUnmarshaller( source, context );
     final IStatus status = unmarshaller.execute( new NullProgressMonitor() );
     if( status.getSeverity() == IStatus.ERROR )
-      throw new SensorException( "Error parsing zml input file", new CoreException( status ) );
+      throw new SensorException( Messages.getString("ZmlFactory_0"), new CoreException( status ) ); //$NON-NLS-1$
 
     final IObservation observation = unmarshaller.getObservation();
     final String href = observation.getHref();

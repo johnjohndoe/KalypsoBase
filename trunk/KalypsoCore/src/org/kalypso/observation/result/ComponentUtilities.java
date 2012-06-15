@@ -147,7 +147,7 @@ public final class ComponentUtilities
     if( unit == null )
       return name;
 
-    return String.format( "%s [%s]", name, unit );
+    return String.format( "%s [%s]", name, unit ); //$NON-NLS-1$
   }
 
   /**

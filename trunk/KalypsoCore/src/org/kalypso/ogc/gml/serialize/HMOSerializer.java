@@ -86,7 +86,7 @@ public class HMOSerializer
 
   public void formatPoint( final int id, final double x, final double y, final double z )
   {
-    m_formatter.format( Locale.US, "P:%10d%20.7f%20.7f%20.7f%n", id, x, y, z );
+    m_formatter.format( Locale.US, "P:%10d%20.7f%20.7f%20.7f%n", id, x, y, z ); //$NON-NLS-1$
   }
 
   public void finish( )
@@ -97,6 +97,6 @@ public class HMOSerializer
 
   public void formatTriangle( final int i, final int nodeID1, final int nodeID2, final int nodeID3 )
   {
-    m_formatter.format( "D:%10d%10d%10d%10d%n", i, nodeID1, nodeID2, nodeID3 );
+    m_formatter.format( "D:%10d%10d%10d%10d%n", i, nodeID1, nodeID2, nodeID3 ); //$NON-NLS-1$
   }
 }

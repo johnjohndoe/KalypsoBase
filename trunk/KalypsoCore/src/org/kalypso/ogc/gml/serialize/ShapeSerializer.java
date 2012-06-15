@@ -263,7 +263,7 @@ public final class ShapeSerializer
     }
     catch( final OperationCanceledException e )
     {
-      throw new GmlSerializeException( "Abbruch durch Benutzer", e );
+      throw new GmlSerializeException( Messages.getString("ShapeSerializer.0"), e ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {

@@ -120,11 +120,11 @@ class ObservationUnmarshaller implements ICoreRunnableWithProgress
     {
       ex.printStackTrace();
 
-      final String msg = "Error reading source observation";
+      final String msg = Messages.getString("ObservationUnmarshaller.0"); //$NON-NLS-1$
       stati.add( IStatus.ERROR, msg, ex );
     }
 
-    return stati.asMultiStatus( "Parsing of zml source" );
+    return stati.asMultiStatus( Messages.getString("ObservationUnmarshaller.1") ); //$NON-NLS-1$
   }
 
   public IObservation doConvert( final Observation binding, final StatusCollector stati )
@@ -159,7 +159,7 @@ class ObservationUnmarshaller implements ICoreRunnableWithProgress
     catch( final Exception ex )
     {
       ex.printStackTrace();
-      stati.add( IStatus.ERROR, "Error parsing zml source", ex );
+      stati.add( IStatus.ERROR, Messages.getString("ObservationUnmarshaller.2"), ex ); //$NON-NLS-1$
 
       return null;
     }
@@ -181,7 +181,7 @@ class ObservationUnmarshaller implements ICoreRunnableWithProgress
       }
     }
 
-    return new Status( IStatus.OK, KalypsoCorePlugin.getID(), "Reading meta data" );
+    return new Status( IStatus.OK, KalypsoCorePlugin.getID(), Messages.getString("ObservationUnmarshaller.3") ); //$NON-NLS-1$
   }
 
   private static String guessMetaValue( final MetadataType md )

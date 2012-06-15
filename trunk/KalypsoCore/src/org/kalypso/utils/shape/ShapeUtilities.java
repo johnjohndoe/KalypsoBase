@@ -52,6 +52,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.contribs.java.io.filter.BasenameFilenameFilter;
+import org.kalypso.core.i18n.Messages;
 
 /**
  * @author Holger Albert
@@ -81,11 +82,11 @@ public class ShapeUtilities
   {
     /* The shape parameter is not allowed to be a directory. */
     if( shapeFile.isDirectory() )
-      throw new IllegalArgumentException( "The provided shape path points to a directory..." );
+      throw new IllegalArgumentException( Messages.getString("ShapeUtilities_0") ); //$NON-NLS-1$
 
     /* The destination parameter must be a directory. */
     if( !destinationDirectory.isDirectory() )
-      throw new IllegalArgumentException( "The provided destination path points to a file..." );
+      throw new IllegalArgumentException( Messages.getString("ShapeUtilities_1") ); //$NON-NLS-1$
 
     /* Source. */
     final File shapeDirectory = new File( FilenameUtils.getFullPath( shapeFile.getAbsolutePath() ) );
@@ -105,7 +106,7 @@ public class ShapeUtilities
       if( destinationBasename != null && destinationBasename.length() > 0 )
       {
         final String extension = FilenameUtils.getExtension( filename );
-        destinationFilename = destinationBasename + "." + extension;
+        destinationFilename = destinationBasename + "." + extension; //$NON-NLS-1$
       }
 
       /* The files. */
@@ -164,7 +165,7 @@ public class ShapeUtilities
   {
     /* The shape parameter is not allowed to be a directory. */
     if( shapeFile.isDirectory() )
-      throw new IllegalArgumentException( "The provided shape path points to a directory..." );
+      throw new IllegalArgumentException( Messages.getString("ShapeUtilities_3") ); //$NON-NLS-1$
 
     /* The shape directory. */
     final File shapeDirectory = new File( FilenameUtils.getFullPath( shapeFile.getAbsolutePath() ) );

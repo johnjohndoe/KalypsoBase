@@ -192,7 +192,7 @@ public final class TemplateUtilities
   {
     final Element filterElement = ogcFilter.toDom();
     final Document doc = filterElement.getOwnerDocument();
-    final Element rootElement = doc.createElementNS( "gistableview.template.kalypso.org", "filter" );
+    final Element rootElement = doc.createElementNS( "gistableview.template.kalypso.org", "filter" ); //$NON-NLS-1$ //$NON-NLS-2$
     rootElement.appendChild( filterElement );
     layer.setFilter( rootElement );
   }

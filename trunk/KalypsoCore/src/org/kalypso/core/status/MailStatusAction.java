@@ -49,6 +49,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.kalypso.core.KalypsoCoreImages;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -61,7 +62,7 @@ public class MailStatusAction extends Action
   {
     m_data = CopyStatusClipboardAction.createClipboardString( status );
 
-    setToolTipText( "Send message via email" );
+    setToolTipText( Messages.getString("MailStatusAction_0") ); //$NON-NLS-1$
 
     final ImageDescriptor image = KalypsoCorePlugin.getImageProvider().getImageDescriptor( KalypsoCoreImages.DESCRIPTORS.STATUS_EMAIL );
     setImageDescriptor( image );
@@ -81,7 +82,7 @@ public class MailStatusAction extends Action
     if( StringUtils.isEmpty( m_data ) )
       return;
 
-    MessageDialog.openWarning( display.getActiveShell(), "Send Mail", "Sorry, not yet implemented." );
+    MessageDialog.openWarning( display.getActiveShell(), Messages.getString("MailStatusAction_1"), Messages.getString("MailStatusAction_2") ); //$NON-NLS-1$ //$NON-NLS-2$
 
     // open mail program with status text; how is this possible on all platforms?
 

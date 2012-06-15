@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.ILogListener;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection;
@@ -143,21 +144,21 @@ public class GeoStatusLog implements ILog
   {
     /* Without a log file, nothing can be done. */
     if( m_logFile == null )
-      throw new CoreException( new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), "No log file was provided..." ) );
+      throw new CoreException( new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), Messages.getString("GeoStatusLog_0") ) ); //$NON-NLS-1$
 
     /* Without workspace, nothing can be done. */
     if( m_workspace == null )
-      throw new CoreException( new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), "No workspace was created..." ) );
+      throw new CoreException( new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), Messages.getString("GeoStatusLog_1") ) ); //$NON-NLS-1$
 
     try
     {
       /* Serialize the workspace. */
-      GmlSerializer.serializeWorkspace( m_logFile, m_workspace, "UTF-8" );
+      GmlSerializer.serializeWorkspace( m_logFile, m_workspace, "UTF-8" ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      final String message = String.format( "Failed to write log file: %s", m_logFile );
+      final String message = String.format( Messages.getString("GeoStatusLog_3"), m_logFile ); //$NON-NLS-1$
       throw new CoreException( new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), message ) );
     }
   }

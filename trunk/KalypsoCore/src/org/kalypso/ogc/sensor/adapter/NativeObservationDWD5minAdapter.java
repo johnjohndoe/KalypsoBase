@@ -53,6 +53,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 
 /**
@@ -132,12 +133,12 @@ public class NativeObservationDWD5minAdapter extends AbstractObservationImporter
               }
               else
               {
-                stati.add( IStatus.INFO, String.format( "Line %d: Das Format des Headers (Startdatum) passt nicht. Input: %s, Pattern: %s", reader.getLineNumber(), startDateString, DATE_PATTERN.toString() ) );
+                stati.add( IStatus.INFO, String.format( Messages.getString("NativeObservationDWD5minAdapter_0"), reader.getLineNumber(), startDateString, DATE_PATTERN.toString() ) ); //$NON-NLS-1$
               }
             }
             else
             {
-              stati.add( IStatus.WARNING, String.format( "Line %d: Header not parsable: : %s", reader.getLineNumber(), lineIn ) );
+              stati.add( IStatus.WARNING, String.format( Messages.getString("NativeObservationDWD5minAdapter_1"), reader.getLineNumber(), lineIn ) ); //$NON-NLS-1$
               tickErrorCount();
             }
 

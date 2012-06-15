@@ -112,7 +112,7 @@ public final class LayerTypeUtilities
     catch( final URISyntaxException e )
     {
       e.printStackTrace();
-      final String message = String.format( "Illegal identifier: %s", href );
+      final String message = String.format( Messages.getString("LayerTypeUtilities.0"), href ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), message, e );
       throw new CoreException( status );
     }

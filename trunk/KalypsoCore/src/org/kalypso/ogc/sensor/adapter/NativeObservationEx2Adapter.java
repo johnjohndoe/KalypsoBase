@@ -53,6 +53,7 @@ import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 
 /**
@@ -112,19 +113,19 @@ public class NativeObservationEx2Adapter extends AbstractObservationImporter
           }
           else
           {
-            stati.add( IStatus.WARNING, String.format( "Line %d: Date not parsable: %s", reader.getLineNumber(), lineIn ) );
+            stati.add( IStatus.WARNING, String.format( Messages.getString("NativeObservationEx2Adapter_0"), reader.getLineNumber(), lineIn ) ); //$NON-NLS-1$
             tickErrorCount();
           }
         }
         else
         {
-          stati.add( IStatus.WARNING, String.format( "Line %d: Line not parsable: %s", reader.getLineNumber(), lineIn ) );
+          stati.add( IStatus.WARNING, String.format( Messages.getString("NativeObservationEx2Adapter_1"), reader.getLineNumber(), lineIn ) ); //$NON-NLS-1$
           tickErrorCount();
         }
       }
       catch( final Exception e )
       {
-        stati.add( IStatus.ERROR, String.format( "Line %d: Exception: %s", reader.getLineNumber(), e.getLocalizedMessage() ) );
+        stati.add( IStatus.ERROR, String.format( Messages.getString("NativeObservationEx2Adapter_2"), reader.getLineNumber(), e.getLocalizedMessage() ) ); //$NON-NLS-1$
         tickErrorCount();
       }
     }

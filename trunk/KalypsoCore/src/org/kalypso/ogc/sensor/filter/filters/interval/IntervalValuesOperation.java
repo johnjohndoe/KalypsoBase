@@ -52,6 +52,7 @@ import org.kalypso.commons.pair.IKeyValue;
 import org.kalypso.commons.pair.KeyValueFactory;
 import org.kalypso.commons.time.PeriodUtils;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -142,7 +143,7 @@ public class IntervalValuesOperation
       return null;
 
     // TODO: handle better?
-    final String message = String.format( "Quellzeitreihe muss Metadatum '%s' definieren.", ITimeseriesConstants.MD_TIMESTEP );
+    final String message = String.format( Messages.getString("IntervalValuesOperation_0"), ITimeseriesConstants.MD_TIMESTEP ); //$NON-NLS-1$
     throw new SensorException( message );
   }
 

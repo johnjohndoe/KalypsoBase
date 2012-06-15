@@ -49,6 +49,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.core.KalypsoCoreImages;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.i18n.Messages;
 
 /**
  * @author Dirk Kuch
@@ -85,7 +86,7 @@ public class AbstractStatusDialog extends MessageDialog
   private static IStatus tweakStatus( final IStatus status )
   {
     if( status == Status.CANCEL_STATUS )
-      return new Status( IStatus.CANCEL, KalypsoCorePlugin.getID(), "Cancelled" );
+      return new Status( IStatus.CANCEL, KalypsoCorePlugin.getID(), Messages.getString("AbstractStatusDialog_0") ); //$NON-NLS-1$
 
     return status;
   }

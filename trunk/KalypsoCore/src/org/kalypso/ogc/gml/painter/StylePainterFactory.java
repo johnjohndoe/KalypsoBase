@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.painter;
 
 import java.util.List;
 
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTypeStyle;
 import org.kalypso.ogc.gml.IKalypsoStyle;
@@ -70,7 +71,7 @@ public final class StylePainterFactory
     // hack, for speed only, is there any clearer
     // see RoughnessFilter and RoughnessRule
     // Evil: what will happen if another style with the same name is used?
-    if( "Roughness style".equals( userStyleName ) )
+    if( Messages.getString("StylePainterFactory_0").equals( userStyleName ) ) //$NON-NLS-1$
       return new RoughnessStylePainter( style, features );
 
     return new FeatureTypeStylePainter( style, features );

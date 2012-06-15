@@ -99,10 +99,10 @@ class ObservationMarshaller
    */
   private static final String XML_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";//$NON-NLS-1$
 
-  static final NamespacePrefixMap ZML_PREFIX_MAPPER = new NamespacePrefixMap( "zml.kalypso.org" );
+  static final NamespacePrefixMap ZML_PREFIX_MAPPER = new NamespacePrefixMap( "zml.kalypso.org" ); //$NON-NLS-1$
   static
   {
-    ZML_PREFIX_MAPPER.addMapping( "filters.zml.kalypso.org", "filters" );
+    ZML_PREFIX_MAPPER.addMapping( "filters.zml.kalypso.org", "filters" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   private static final Comparator<MetadataType> METADATA_COMPERATOR = new Comparator<MetadataType>()
@@ -193,7 +193,7 @@ class ObservationMarshaller
 
     /* Handle compressed zml */
     final String extension = FilenameUtils.getExtension( file.getName() );
-    if( "zmlz".equalsIgnoreCase( extension ) )
+    if( "zmlz".equalsIgnoreCase( extension ) ) //$NON-NLS-1$
     {
       final short bufferSize = Short.MAX_VALUE; // 32KB
       return new GZIPOutputStream( fileStream, bufferSize );

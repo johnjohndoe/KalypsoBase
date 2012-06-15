@@ -347,11 +347,11 @@ public abstract class AbstractTupleModel implements ITupleModel
         }
         catch( final Throwable t )
         {
-          stati.add( new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), "Transaction command failed" ) );
+          stati.add( new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), Messages.getString("AbstractTupleModel.0") ) ); //$NON-NLS-1$
         }
       }
 
-      return StatusUtilities.createStatus( stati, "ITupleModel Transaction" );
+      return StatusUtilities.createStatus( stati, Messages.getString("AbstractTupleModel.1") ); //$NON-NLS-1$
     }
     finally
     {
@@ -375,7 +375,7 @@ public abstract class AbstractTupleModel implements ITupleModel
     m_event = 0;
 
     // because of synchronized block execute(transaction)
-    new Job( "fire tuple model changed" )
+    new Job( Messages.getString("AbstractTupleModel.2") ) //$NON-NLS-1$
     {
       @Override
       protected IStatus run( final IProgressMonitor monitor )

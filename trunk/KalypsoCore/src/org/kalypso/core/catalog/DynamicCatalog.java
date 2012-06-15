@@ -379,7 +379,7 @@ public class DynamicCatalog implements ICatalog
       }
       else if( catalog == null )
       {
-        java.lang.System.out.println( "oups" );
+        java.lang.System.out.println( "oups" ); //$NON-NLS-1$
       }
       else
       {

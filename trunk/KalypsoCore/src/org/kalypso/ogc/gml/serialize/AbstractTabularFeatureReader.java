@@ -101,7 +101,7 @@ public abstract class AbstractTabularFeatureReader
       final IMarshallingTypeHandler typeHandler = typeRegistry.getTypeHandlerForTypeName( element.getType() );
 
       if( typeHandler == null )
-        throw new GmlConvertException( String.format( "No TypeHandler for '%s'with type '%s'", element.getName(), element.getType() ) );
+        throw new GmlConvertException( String.format( Messages.getString("AbstractTabularFeatureReader.0"), element.getName(), element.getType() ) ); //$NON-NLS-1$
 
       final IPropertyType ftp = GMLSchemaFactory.createValuePropertyType( qname, typeHandler, 0, 1, false );
       final boolean ignoreFormatExceptions = element.isIgnoreFormatExceptions();
@@ -177,7 +177,7 @@ public abstract class AbstractTabularFeatureReader
     catch( final FilterConstructionException e )
     {
       e.printStackTrace();
-      throw new GmlConvertException( "Failed to construct filter expression", e );
+      throw new GmlConvertException( Messages.getString("AbstractTabularFeatureReader.1"), e ); //$NON-NLS-1$
     }
   }
 

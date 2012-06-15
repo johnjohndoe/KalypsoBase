@@ -110,7 +110,7 @@ public class GmlTriSurface2HmoConverter extends Gml2HmoConverter
   {
     if( m_uniquePositions.isEmpty() )
     {
-      throw new GmlSerializeException( Messages.getString( "org.kalypso.ogc.gml.serialize.HMOSerializer.11" ) );
+      throw new GmlSerializeException( Messages.getString( "org.kalypso.ogc.gml.serialize.HMOSerializer.11" ) ); //$NON-NLS-1$
     }
 
     final HMOSerializer hmoSerializer = new HMOSerializer( hmoBaseFile );

@@ -52,6 +52,7 @@ import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 
 /**
@@ -101,7 +102,7 @@ public class NativeObservationZrxAdapter extends AbstractObservationImporter
             }
             catch( final Exception e )
             {
-              stati.add( IStatus.WARNING, String.format( "Line %d: Date not parsable: %s", reader.getLineNumber(), lineIn ) );
+              stati.add( IStatus.WARNING, String.format( Messages.getString("NativeObservationZrxAdapter_0"), reader.getLineNumber(), lineIn ) ); //$NON-NLS-1$
               tickErrorCount();
             }
           }
@@ -113,7 +114,7 @@ public class NativeObservationZrxAdapter extends AbstractObservationImporter
             }
             catch( final Exception e )
             {
-              stati.add( IStatus.WARNING, String.format( "Line %d: Date not parsable: %s", reader.getLineNumber(), lineIn ) );
+              stati.add( IStatus.WARNING, String.format( Messages.getString("NativeObservationZrxAdapter_1"), reader.getLineNumber(), lineIn ) ); //$NON-NLS-1$
               tickErrorCount();
             }
           }
@@ -123,7 +124,7 @@ public class NativeObservationZrxAdapter extends AbstractObservationImporter
           }
           catch( final Exception e )
           {
-            stati.add( IStatus.WARNING, String.format( "Line %d: Value not parsable: %s", reader.getLineNumber(), lineIn ) );
+            stati.add( IStatus.WARNING, String.format( Messages.getString("NativeObservationZrxAdapter_2"), reader.getLineNumber(), lineIn ) ); //$NON-NLS-1$
             tickErrorCount();
           }
 
@@ -140,14 +141,14 @@ public class NativeObservationZrxAdapter extends AbstractObservationImporter
           }
           else
           {
-            stati.add( IStatus.WARNING, String.format( "Line %d: Line not parsable: %s", reader.getLineNumber(), lineIn ) );
+            stati.add( IStatus.WARNING, String.format( Messages.getString("NativeObservationZrxAdapter_3"), reader.getLineNumber(), lineIn ) ); //$NON-NLS-1$
             tickErrorCount();
           }
         }
       }
       catch( final Exception e )
       {
-        stati.add( IStatus.ERROR, String.format( "Line %d: Exception: %s", reader.getLineNumber(), e.getLocalizedMessage() ) );
+        stati.add( IStatus.ERROR, String.format( Messages.getString("NativeObservationZrxAdapter_4"), reader.getLineNumber(), e.getLocalizedMessage() ) ); //$NON-NLS-1$
         tickErrorCount();
       }
     }

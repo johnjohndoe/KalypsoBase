@@ -58,6 +58,7 @@ import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.contribs.java.util.CalendarUtilities;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.util.TimestampHelper;
 
@@ -252,7 +253,7 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
   public static void setTimestep( final MetadataList metadata, final int calendarField, final int amount )
   {
     final String fieldName = CalendarUtilities.getName( calendarField );
-    final Object value = String.format( "%s#%d", fieldName, amount );
+    final Object value = String.format( "%s#%d", fieldName, amount ); //$NON-NLS-1$
     metadata.put( MD_TIMESTEP, value );
   }
 
@@ -262,7 +263,7 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
     if( StringUtils.isBlank( property ) )
       return null;
 
-    final String[] split = property.split( "#" );
+    final String[] split = property.split( "#" ); //$NON-NLS-1$
     if( split.length != 2 )
       return null;
 
@@ -328,7 +329,7 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
     }
 
     if( fieldCount > 1 )
-      throw new IllegalArgumentException( "Unable to set timestep with more than one field: " + timestep );
+      throw new IllegalArgumentException( Messages.getString("MetadataHelper_2") + timestep ); //$NON-NLS-1$
 
     int amount = -1;
     int calendarField = -1;
@@ -375,7 +376,7 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
     }
 
     if( amount == -1 )
-      throw new IllegalArgumentException( "Unable to set 0 timestep" );
+      throw new IllegalArgumentException( Messages.getString("MetadataHelper_3") ); //$NON-NLS-1$
 
     setTimestep( mdl, calendarField, amount );
 

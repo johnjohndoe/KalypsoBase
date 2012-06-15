@@ -52,6 +52,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -111,10 +112,10 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
     }
     catch( final SensorException e )
     {
-      statis.add( new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), 0, "Interpolating values failed", e ) );
+      statis.add( new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), 0, Messages.getString("ValueInterpolationWorker_0"), e ) ); //$NON-NLS-1$
     }
 
-    return StatusUtilities.createStatus( statis, "Interpolating values" );
+    return StatusUtilities.createStatus( statis, Messages.getString("ValueInterpolationWorker_1") ); //$NON-NLS-1$
   }
 
   /**

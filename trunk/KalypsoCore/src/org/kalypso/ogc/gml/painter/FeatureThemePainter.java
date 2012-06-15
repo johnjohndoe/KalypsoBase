@@ -61,7 +61,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  */
 class FeatureThemePainter implements IStylePainter
 {
-  private static final String STRING_PAINTING_STYLES = Messages.getString( "org.kalypso.ogc.gml.KalypsoFeatureTheme.1" );
+  private static final String STRING_PAINTING_STYLES = Messages.getString( "org.kalypso.ogc.gml.KalypsoFeatureTheme.1" ); //$NON-NLS-1$
 
   private final IKalypsoFeatureTheme m_theme;
 

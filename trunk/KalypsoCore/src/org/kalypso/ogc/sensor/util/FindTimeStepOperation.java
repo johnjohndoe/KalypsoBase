@@ -47,6 +47,7 @@ import org.joda.time.Period;
 import org.kalypso.commons.time.PeriodUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -77,16 +78,16 @@ public class FindTimeStepOperation implements ICoreRunnableWithProgress
       final ITupleModel model = m_observation.getValues( null );
       m_timestep = TimeseriesUtils.guessTimestep( model );
       if( m_timestep == null )
-        return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), "Failed to determine timestep..." );
+        return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), Messages.getString("FindTimeStepOperation_0") ); //$NON-NLS-1$
 
       m_daterange = Observations.findDateRange( model );
 
-      return new Status( IStatus.OK, KalypsoCorePlugin.getID(), String.format( "Find Timeseries Timestep Operation successful - found time resultion: %s", PeriodUtils.formatDefault( m_timestep ) ) );
+      return new Status( IStatus.OK, KalypsoCorePlugin.getID(), String.format( Messages.getString("FindTimeStepOperation_1"), PeriodUtils.formatDefault( m_timestep ) ) ); //$NON-NLS-1$
     }
     catch( final SensorException e )
     {
       e.printStackTrace();
-      return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), "Failed to determine timestep...", e );
+      return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), Messages.getString("FindTimeStepOperation_2"), e ); //$NON-NLS-1$
     }
   }
 

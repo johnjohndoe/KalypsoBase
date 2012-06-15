@@ -48,13 +48,13 @@ package org.kalypso.ogc.sensor.metadata;
 public interface ITimeseriesConstants extends IMetadataConstants
 {
 
-  String MD_PROPERTY_KEEP_METADATA_PREFEX = "reload_keepMetaData";
+  String MD_PROPERTY_KEEP_METADATA_PREFEX = "reload_keepMetaData"; //$NON-NLS-1$
 
   /** the alarm-level feature used to show the alarm-levels in some views */
   String FEATURE_ALARMLEVEL = "Alarmstufen"; //$NON-NLS-1$
 
   /** the forecast feature is used in some of the views to mark the forecast date-range */
-  String FEATURE_FORECAST = "Vorhersage";
+  String FEATURE_FORECAST = "Vorhersage"; //$NON-NLS-1$
 
   String MD_COORDSYS = "Koordinatensystem"; //$NON-NLS-1$
 
@@ -80,10 +80,10 @@ public interface ITimeseriesConstants extends IMetadataConstants
   String MD_PEGELNULLPUNKT = "Pegelnullpunkt"; //$NON-NLS-1$
 
   /** reference of the first call of a time series (the original source!) */
-  String MD_SRC_REPOSITORY = "Quell_Repository";
+  String MD_SRC_REPOSITORY = "Quell_Repository"; //$NON-NLS-1$
 
   /** reference of the first call of a time series (the original source!) */
-  String MD_SRC_TIMESERIES = "Quell_Zeitreihe";
+  String MD_SRC_TIMESERIES = "Quell_Zeitreihe"; //$NON-NLS-1$
 
   // METADATEN
   String MD_TIMEZONE = "Zeitzone"; //$NON-NLS-1$

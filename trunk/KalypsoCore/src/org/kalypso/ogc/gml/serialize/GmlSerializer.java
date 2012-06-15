@@ -585,7 +585,7 @@ public final class GmlSerializer
 
   public static void serializeWorkspace( final IFile targetFile, final GMLWorkspace workspace, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "Writing gml", 100 );
+    monitor.beginTask( Messages.getString("GmlSerializer.0"), 100 ); //$NON-NLS-1$
 
     String charset;
     if( targetFile.exists() )
@@ -606,7 +606,7 @@ public final class GmlSerializer
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus error = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), "Failed to write gml workspace", e );
+      final IStatus error = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), Messages.getString("GmlSerializer.1"), e ); //$NON-NLS-1$
       throw new CoreException( error );
     }
     finally

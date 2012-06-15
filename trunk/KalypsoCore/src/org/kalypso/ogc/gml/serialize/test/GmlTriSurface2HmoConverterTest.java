@@ -69,17 +69,17 @@ public class GmlTriSurface2HmoConverterTest extends Assert
   @Test
   public void testSerialize( ) throws Exception
   {
-    final URL gmlLocation = getClass().getResource( "resources/tinyTin.gml" );
+    final URL gmlLocation = getClass().getResource( "resources/tinyTin.gml" ); //$NON-NLS-1$
     assertNotNull( gmlLocation );
 
-    final URL hmoLocation = getClass().getResource( "resources/tinyTin.hmo" );
+    final URL hmoLocation = getClass().getResource( "resources/tinyTin.hmo" ); //$NON-NLS-1$
     assertNotNull( hmoLocation );
 
     final GMLWorkspace tinWorkspace = GmlSerializer.createGMLWorkspace( gmlLocation, null );
     final Feature rootFeature = tinWorkspace.getRootFeature();
-    final GM_TriangulatedSurface tin = (GM_TriangulatedSurface) rootFeature.getProperty( new QName( "org.kalypso.deegree.gmlparsertest", "triangularSurfaceMember" ) );
+    final GM_TriangulatedSurface tin = (GM_TriangulatedSurface) rootFeature.getProperty( new QName( "org.kalypso.deegree.gmlparsertest", "triangularSurfaceMember" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    final File result = FileUtilities.createNewUniqueFile( "hmoTest", FileUtilities.TMP_DIR );
+    final File result = FileUtilities.createNewUniqueFile( "hmoTest", FileUtilities.TMP_DIR ); //$NON-NLS-1$
 
     final Gml2HmoConverter conv = new GmlTriSurface2HmoConverter( tin );
     conv.writeHmo( result );
@@ -94,8 +94,8 @@ public class GmlTriSurface2HmoConverterTest extends Assert
     final String fileContent = FileUtils.readFileToString( new File( file.getAbsolutePath() ) );
     final String urlContent = UrlUtilities.toString( location, Charset.defaultCharset().name() );
 
-    final String fileContentClean = StringUtils.replaceChars( fileContent, "\r", null );
-    final String urlContentClean = StringUtils.replaceChars( urlContent, "\r", null );
+    final String fileContentClean = StringUtils.replaceChars( fileContent, "\r", null ); //$NON-NLS-1$
+    final String urlContentClean = StringUtils.replaceChars( urlContent, "\r", null ); //$NON-NLS-1$
 
     assertEquals( fileContentClean, urlContentClean );
   }

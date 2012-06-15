@@ -42,6 +42,7 @@ package org.kalypso.ogc.sensor.timeseries.interpolation;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
@@ -140,7 +141,7 @@ public class InterpolationFilter extends AbstractObservationFilter implements II
     }
     catch( final Exception ex )
     {
-      throw new SensorException( "Creating interpolated model failed.", ex );
+      throw new SensorException( Messages.getString("InterpolationFilter_0"), ex ); //$NON-NLS-1$
     }
   }
 

@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 
 /**
@@ -60,7 +61,7 @@ public class WaitForMapJob extends Job
 
   public WaitForMapJob( final IMapPanel mapPanel )
   {
-    super( "Map Loaded Job" );
+    super( Messages.getString("WaitForMapJob_0") ); //$NON-NLS-1$
     m_mapPanel = mapPanel;
   }
 
@@ -84,7 +85,7 @@ public class WaitForMapJob extends Job
     catch( final InvocationTargetException e )
     {
       e.printStackTrace();
-      return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), "Failed to wait for map", e.getTargetException() );
+      return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), Messages.getString("WaitForMapJob_1"), e.getTargetException() ); //$NON-NLS-1$
     }
     catch( final InterruptedException e )
     {

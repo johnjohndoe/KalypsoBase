@@ -65,7 +65,7 @@ public class DictionaryPhenomenon implements IPhenomenon
     if( feature != null )
       return feature.getDescription();
 
-    return "";
+    return ""; //$NON-NLS-1$
   }
 
   private Feature getFeature( )
@@ -100,6 +100,6 @@ public class DictionaryPhenomenon implements IPhenomenon
     if( feature != null )
       return feature.getDescription();
 
-    return "";
+    return ""; //$NON-NLS-1$
   }
 }

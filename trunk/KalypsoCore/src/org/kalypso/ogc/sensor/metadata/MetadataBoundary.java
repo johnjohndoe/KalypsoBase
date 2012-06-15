@@ -197,7 +197,7 @@ public final class MetadataBoundary implements IMetadataBoundary
   @Override
   public String toString( )
   {
-    return String.format( "%s (%s) - Value: %.2f", m_name, m_parameterType, m_value.doubleValue() );
+    return String.format( "%s (%s) - Value: %.2f", m_name, m_parameterType, m_value.doubleValue() ); //$NON-NLS-1$
   }
 
 }

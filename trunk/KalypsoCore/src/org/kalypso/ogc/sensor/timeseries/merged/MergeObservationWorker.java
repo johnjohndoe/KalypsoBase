@@ -54,6 +54,7 @@ import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -160,7 +161,7 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
       }
       catch( final Throwable t )
       {
-        final String msg = String.format( "Merging observation \"%s\" failed", srcObservation.getHref() );
+        final String msg = String.format( Messages.getString("MergeObservationWorker_0"), srcObservation.getHref() ); //$NON-NLS-1$
         final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, msg, t );
         // Log status here, because it is never seen again...
         KalypsoCorePlugin.getDefault().getLog().log( status );
@@ -172,7 +173,7 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
 
     m_result = new SimpleObservation( m_href, m_href, m_metadata, baseModel );
 
-    return StatusUtilities.createStatus( statis, "Combining tuple models." );
+    return StatusUtilities.createStatus( statis, Messages.getString("MergeObservationWorker_1") ); //$NON-NLS-1$
   }
 
   /**

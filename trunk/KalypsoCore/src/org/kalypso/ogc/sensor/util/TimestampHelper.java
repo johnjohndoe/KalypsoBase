@@ -94,9 +94,9 @@ public class TimestampHelper
   public static String toTimestampText( final LocalTime timestamp )
   {
     if( timestamp == null )
-      return "";
+      return ""; //$NON-NLS-1$
 
-    return timestamp.toString( "HH:mm" );
+    return timestamp.toString( "HH:mm" ); //$NON-NLS-1$
   }
 
   /**
@@ -110,17 +110,17 @@ public class TimestampHelper
   {
     /* Nothing to do. */
     if( timestampText == null || timestampText.length() == 0 )
-      return "";
+      return ""; //$NON-NLS-1$
 
     /* Get the timestamp in UTC. */
     final LocalTime timestamp = TimestampHelper.parseTimestamp( timestampText );
 
     /* Convert to a date with the kalypso timezone. */
     /* The date fields are ignored. */
-    final DateTime timestampUTC = timestamp.toDateTimeToday( DateTimeZone.forTimeZone( TimeZone.getTimeZone( "UTC" ) ) );
+    final DateTime timestampUTC = timestamp.toDateTimeToday( DateTimeZone.forTimeZone( TimeZone.getTimeZone( "UTC" ) ) ); //$NON-NLS-1$
     final DateTime timestampZone = new DateTime( timestampUTC.toDate(), DateTimeZone.forTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() ) );
 
-    return timestampZone.toString( "HH:mm" );
+    return timestampZone.toString( "HH:mm" ); //$NON-NLS-1$
   }
 
   /**

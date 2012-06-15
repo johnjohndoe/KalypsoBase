@@ -48,6 +48,7 @@ import java.util.LinkedList;
 import java.util.StringTokenizer;
 
 import org.apache.commons.io.IOUtils;
+import org.kalypso.core.i18n.Messages;
 
 /**
  * This class is a writer for tokens (very usable for csv files).
@@ -122,7 +123,7 @@ public class TokenWriter
         }
 
         /* End the line. */
-        bwr.write( "\n" );
+        bwr.write( "\n" ); //$NON-NLS-1$
       }
 
       /* Close the writer. */
@@ -147,10 +148,10 @@ public class TokenWriter
     final StringTokenizer tokenizer = new StringTokenizer( line, m_delim );
 
     if( tokenizer.countTokens() == 0 )
-      throw new Exception( "No tokens available with the delimiter of '" + m_delim + "'..." );
+      throw new Exception( Messages.getString("TokenWriter_1") + m_delim + "'..." ); //$NON-NLS-1$ //$NON-NLS-2$
 
     if( tokenizer.countTokens() != m_cnt )
-      throw new Exception( "Not enough or to much tokens, needs " + String.valueOf( m_cnt ) + " tokens..." );
+      throw new Exception( Messages.getString("TokenWriter_3") + String.valueOf( m_cnt ) + Messages.getString("TokenWriter_4") ); //$NON-NLS-1$ //$NON-NLS-2$
 
     final LinkedList<String> row = new LinkedList<String>();
     while( tokenizer.hasMoreTokens() )
@@ -168,10 +169,10 @@ public class TokenWriter
   public void addRow( final LinkedList<String> list ) throws Exception
   {
     if( list.size() == 0 )
-      throw new Exception( "No tokens available..." );
+      throw new Exception( Messages.getString("TokenWriter_5") ); //$NON-NLS-1$
 
     if( list.size() < m_cnt )
-      throw new Exception( "Not enough tokens, needs " + String.valueOf( m_cnt ) + " tokens..." );
+      throw new Exception( Messages.getString("TokenWriter_6") + String.valueOf( m_cnt ) + Messages.getString("TokenWriter_7") ); //$NON-NLS-1$ //$NON-NLS-2$
 
     m_allTokens.add( list );
   }

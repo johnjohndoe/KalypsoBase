@@ -67,11 +67,11 @@ public class WriteShapeTest extends TestCase
       workspace.addFeatureAsComposition( shapeRootFeature, shapeParentRelation, -1, feature );
     }
 
-    final File shapeFile = FileUtilities.createNewUniqueFile( "shapetest", FileUtilities.TMP_DIR );
+    final File shapeFile = FileUtilities.createNewUniqueFile( "shapetest", FileUtilities.TMP_DIR ); //$NON-NLS-1$
 
     ShapeSerializer.serialize( workspace, shapeFile.getAbsolutePath(), (String) null );
 
-    System.out.println( "Wrote shapeFile to:" + shapeFile.getAbsolutePath() );
+    System.out.println( "Wrote shapeFile to:" + shapeFile.getAbsolutePath() ); //$NON-NLS-1$
 
     final IOFileFilter prefixFileFilter = FileFilterUtils.prefixFileFilter( shapeFile.getName() );
     final File[] shapeParts = shapeFile.getParentFile().listFiles( (FilenameFilter) prefixFileFilter );

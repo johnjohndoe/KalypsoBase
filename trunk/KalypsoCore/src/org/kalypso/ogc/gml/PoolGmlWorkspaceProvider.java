@@ -58,7 +58,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
  */
 public class PoolGmlWorkspaceProvider extends AbstractGmlWorkspaceProvider implements ILoadStartable
 {
-  public static final IStatus LOADING_STATUS = new Status( IStatus.INFO, KalypsoCorePlugin.getID(), "Loading..." );
+  public static final IStatus LOADING_STATUS = new Status( IStatus.INFO, KalypsoCorePlugin.getID(), Messages.getString("PoolGmlWorkspaceProvider.0") ); //$NON-NLS-1$
 
   private final IPoolListener m_poolListener = new IPoolListener()
   {
@@ -116,7 +116,7 @@ public class PoolGmlWorkspaceProvider extends AbstractGmlWorkspaceProvider imple
     catch( final Exception e )
     {
       e.printStackTrace();
-      final String msg = Messages.getString( "org.kalypso.ogc.gml.PoolGmlWorkspaceProvider.4", m_poolKey.getLocation() );
+      final String msg = Messages.getString( "org.kalypso.ogc.gml.PoolGmlWorkspaceProvider.4", m_poolKey.getLocation() ); //$NON-NLS-1$
       setWorkspace( null, new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), msg, e ) );
     }
   }
@@ -136,7 +136,7 @@ public class PoolGmlWorkspaceProvider extends AbstractGmlWorkspaceProvider imple
       return;
 
     // clear the theme
-    setWorkspace( null, new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), Messages.getString( "org.kalypso.ogc.gml.PoolGmlWorkspaceProvider.2" ) ) ); //$NON-NLS-1$
+    setWorkspace( null, new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), "" ) ); //$NON-NLS-1$
   }
 
   public IPoolableObjectType getPoolKey( )

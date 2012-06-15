@@ -77,14 +77,14 @@ import org.xml.sax.InputSource;
  */
 public class IntervalFilterTest extends Assert
 {
-  private final DateFormat m_df = new SimpleDateFormat( "dd.MM.yyyy HH:mm" );
+  private final DateFormat m_df = new SimpleDateFormat( "dd.MM.yyyy HH:mm" ); //$NON-NLS-1$
 
   private final boolean m_useOldFilter = false;
 
   @Before
   public void init( )
   {
-    System.setProperty( IKalypsoCoreConstants.CONFIG_PROPERTY_TIMEZONE, "GMT+1" );
+    System.setProperty( IKalypsoCoreConstants.CONFIG_PROPERTY_TIMEZONE, "GMT+1" ); //$NON-NLS-1$
 
     m_df.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
   }
@@ -92,92 +92,92 @@ public class IntervalFilterTest extends Assert
   @Test
   public void testTargetWithinFirstSourceInterval( ) throws Throwable
   {
-    final Date start = m_df.parse( "18.03.2011 00:00" );
-    final Date end = m_df.parse( "05.04.2011 00:00" );
+    final Date start = m_df.parse( "18.03.2011 00:00" ); //$NON-NLS-1$
+    final Date end = m_df.parse( "05.04.2011 00:00" ); //$NON-NLS-1$
 
     final IntervalDefinition intervalDefinition = new IntervalDefinition( Calendar.HOUR_OF_DAY, 1, Double.NaN, KalypsoStati.BIT_CHECK );
     // FIXME: expected result is actually not correct; but we know the filter i buggy at the moment
     final String expectedZml;
     if( m_useOldFilter )
-      expectedZml = "expectedSourceTooSmallBUGGY.zml";
+      expectedZml = "expectedSourceTooSmallBUGGY.zml"; //$NON-NLS-1$
     else
-      expectedZml = "expectedSourceTooSmall.zml";
+      expectedZml = "expectedSourceTooSmall.zml"; //$NON-NLS-1$
 
-    doTestFilter( "days.zml", expectedZml, start, end, intervalDefinition );
+    doTestFilter( "days.zml", expectedZml, start, end, intervalDefinition ); //$NON-NLS-1$
   }
 
   @Test
   public void testFilterOnEmptySource( ) throws Throwable
   {
-    final Date start = m_df.parse( "04.04.2011 00:00" );
-    final Date end = m_df.parse( "05.04.2011 00:00" );
+    final Date start = m_df.parse( "04.04.2011 00:00" ); //$NON-NLS-1$
+    final Date end = m_df.parse( "05.04.2011 00:00" ); //$NON-NLS-1$
 
     final IntervalDefinition intervalDefinition = new IntervalDefinition( Calendar.HOUR_OF_DAY, 1, Double.NaN, KalypsoStati.BIT_CHECK );
-    doTestFilter( "empty.zml", "expectedFromEmpty.zml", start, end, intervalDefinition );
+    doTestFilter( "empty.zml", "expectedFromEmpty.zml", start, end, intervalDefinition ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Test
   public void testAggregation( ) throws Throwable
   {
-    final Date start = m_df.parse( "02.04.2011 07:00" );
-    final Date end = m_df.parse( "09.04.2011 07:00" );
+    final Date start = m_df.parse( "02.04.2011 07:00" ); //$NON-NLS-1$
+    final Date end = m_df.parse( "09.04.2011 07:00" ); //$NON-NLS-1$
 
     final IntervalDefinition intervalDefinition = new IntervalDefinition( Calendar.HOUR_OF_DAY, 24, Double.NaN, KalypsoStati.BIT_CHECK );
-    doTestFilter( "dresden-klotsche1h_7Tage.zml", "expectedFromDresden2Tage.zml", start, end, intervalDefinition );
+    doTestFilter( "dresden-klotsche1h_7Tage.zml", "expectedFromDresden2Tage.zml", start, end, intervalDefinition ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Test
   public void testBigAggregation( ) throws Throwable
   {
-    final Date start = m_df.parse( "01.03.2009 00:00" );
-    final Date end = m_df.parse( "01.03.2011 00:00" );
+    final Date start = m_df.parse( "01.03.2009 00:00" ); //$NON-NLS-1$
+    final Date end = m_df.parse( "01.03.2011 00:00" ); //$NON-NLS-1$
 
     final IntervalDefinition intervalDefinition = new IntervalDefinition( Calendar.HOUR_OF_DAY, 24, Double.NaN, KalypsoStati.BIT_CHECK );
 
     final String expectedZml;
     if( m_useOldFilter )
-      expectedZml = "expectedFromDresden777TageBUGGY.zml";
+      expectedZml = "expectedFromDresden777TageBUGGY.zml"; //$NON-NLS-1$
     else
-      expectedZml = "expectedFromDresden777Tage.zml";
+      expectedZml = "expectedFromDresden777Tage.zml"; //$NON-NLS-1$
 
-    doTestFilter( "dresden-klotsche1h_777Tage.zml", expectedZml, start, end, intervalDefinition );
+    doTestFilter( "dresden-klotsche1h_777Tage.zml", expectedZml, start, end, intervalDefinition ); //$NON-NLS-1$
   }
 
   @Test
   public void testDisaggregation( ) throws Throwable
   {
-    final Date start = m_df.parse( "04.04.2011 00:00" );
-    final Date end = m_df.parse( "05.04.2011 00:00" );
+    final Date start = m_df.parse( "04.04.2011 00:00" ); //$NON-NLS-1$
+    final Date end = m_df.parse( "05.04.2011 00:00" ); //$NON-NLS-1$
 
     final IntervalDefinition intervalDefinition = new IntervalDefinition( Calendar.HOUR_OF_DAY, 6, Double.NaN, KalypsoStati.BIT_CHECK );
-    doTestFilter( "days.zml", "expectedDaysTo6hours.zml", start, end, intervalDefinition );
+    doTestFilter( "days.zml", "expectedDaysTo6hours.zml", start, end, intervalDefinition ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Test
   public void testSourceHasHoles( ) throws Throwable
   {
-    final Date start = m_df.parse( "17.03.2011 06:00" );
-    final Date end = m_df.parse( "10.04.2011 06:00" );
+    final Date start = m_df.parse( "17.03.2011 06:00" ); //$NON-NLS-1$
+    final Date end = m_df.parse( "10.04.2011 06:00" ); //$NON-NLS-1$
 
     final IntervalDefinition intervalDefinition = new IntervalDefinition( Calendar.HOUR_OF_DAY, 1, Double.NaN, KalypsoStati.BIT_CHECK );
     // FIXME: expected result is actually not correct; but we know the filter i buggy at the moment
     String expectedZml;
     if( m_useOldFilter )
-      expectedZml = "expectedHasHoles24BUGGY.zml";
+      expectedZml = "expectedHasHoles24BUGGY.zml"; //$NON-NLS-1$
     else
-      expectedZml = "expectedHasHoles24.zml";
+      expectedZml = "expectedHasHoles24.zml"; //$NON-NLS-1$
 
-    doTestFilter( "hasHoles24h.zml", expectedZml, start, end, intervalDefinition );
+    doTestFilter( "hasHoles24h.zml", expectedZml, start, end, intervalDefinition ); //$NON-NLS-1$
   }
 
   @Test
   public void testSourceAndTargetIdentical( ) throws Throwable
   {
-    final Date start = m_df.parse( "17.03.2011 06:00" );
-    final Date end = m_df.parse( "08.04.2011 06:00" );
+    final Date start = m_df.parse( "17.03.2011 06:00" ); //$NON-NLS-1$
+    final Date end = m_df.parse( "08.04.2011 06:00" ); //$NON-NLS-1$
 
     final IntervalDefinition intervalDefinition = new IntervalDefinition( Calendar.HOUR_OF_DAY, 24, Double.NaN, KalypsoStati.BIT_CHECK );
-    doTestFilter( "days.zml", "days.zml", start, end, intervalDefinition );
+    doTestFilter( "days.zml", "days.zml", start, end, intervalDefinition ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Test
@@ -192,9 +192,9 @@ public class IntervalFilterTest extends Assert
   @Ignore
   public void testPerformanceFilterOften( ) throws Exception
   {
-    final IObservation sourceObservation = readZml( "dresden-klotsche1h_777Tage.zml" );
-    final Date start = m_df.parse( "01.03.2009 00:00" );
-    final Date end = m_df.parse( "01.03.2011 00:00" );
+    final IObservation sourceObservation = readZml( "dresden-klotsche1h_777Tage.zml" ); //$NON-NLS-1$
+    final Date start = m_df.parse( "01.03.2009 00:00" ); //$NON-NLS-1$
+    final Date end = m_df.parse( "01.03.2011 00:00" ); //$NON-NLS-1$
     final IntervalDefinition intervalDefinition = new IntervalDefinition( Calendar.HOUR_OF_DAY, 24, Double.NaN, KalypsoStati.BIT_CHECK );
 
     for( int i = 0; i < 1000; i++ )
@@ -259,7 +259,7 @@ public class IntervalFilterTest extends Assert
 
   private IObservation readZml( final String resource ) throws SensorException, MalformedURLException
   {
-    final URL location = resource == null ? new URL( "file://LEER" ) : getClass().getResource( "resources/" + resource );
+    final URL location = resource == null ? new URL( "file://LEER" ) : getClass().getResource( "resources/" + resource ); //$NON-NLS-1$ //$NON-NLS-2$
 
     assertNotNull( location );
 

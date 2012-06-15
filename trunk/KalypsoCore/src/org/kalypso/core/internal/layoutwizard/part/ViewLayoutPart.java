@@ -53,6 +53,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.views.IViewDescriptor;
 import org.eclipse.ui.views.IViewRegistry;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.core.layoutwizard.ILayoutPageContext;
 import org.kalypso.core.layoutwizard.part.AbstractLayoutPart;
 
@@ -82,7 +83,7 @@ public class ViewLayoutPart extends AbstractLayoutPart
     final IViewDescriptor viewDescriptor = viewRegistry.find( m_type );
     if( viewDescriptor == null )
     {
-      final String message = String.format( "Unbekannte View-ID '%s'", m_type );
+      final String message = String.format( Messages.getString("ViewLayoutPart_0"), m_type ); //$NON-NLS-1$
       throw new CoreException( new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), message, null ) );
     }
     m_view = viewDescriptor.createView();

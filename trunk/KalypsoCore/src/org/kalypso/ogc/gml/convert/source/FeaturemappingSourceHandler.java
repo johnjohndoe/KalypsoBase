@@ -104,7 +104,7 @@ public class FeaturemappingSourceHandler implements ISourceHandler
     }
     catch( final FilterConstructionException e )
     {
-      throw new GmlConvertException( "Failed to parse filter expression", e );
+      throw new GmlConvertException( Messages.getString("FeaturemappingSourceHandler.0"), e ); //$NON-NLS-1$
     }
   }
 

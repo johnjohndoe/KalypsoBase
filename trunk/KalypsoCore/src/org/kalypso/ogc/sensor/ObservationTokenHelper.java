@@ -64,7 +64,7 @@ public final class ObservationTokenHelper
 
   private ObservationTokenHelper( )
   {
-    throw new UnsupportedOperationException( "Helper class, do not instantiate" );
+    throw new UnsupportedOperationException( "Helper class, do not instantiate" ); //$NON-NLS-1$
   }
 
   /**

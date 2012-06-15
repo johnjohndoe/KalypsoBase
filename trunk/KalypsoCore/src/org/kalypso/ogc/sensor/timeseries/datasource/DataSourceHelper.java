@@ -59,7 +59,7 @@ import org.kalypso.repository.IDataSourceItem;
  */
 public final class DataSourceHelper
 {
-  private static final String PREFIX_SOURCE = "source_";
+  private static final String PREFIX_SOURCE = "source_"; //$NON-NLS-1$
 
   private DataSourceHelper( )
   {
@@ -75,16 +75,16 @@ public final class DataSourceHelper
     if( !isFiltered( reference ) )
       return new String[] { reference };
 
-    final String[] referenceParts = reference.split( "\\?" );
+    final String[] referenceParts = reference.split( "\\?" ); //$NON-NLS-1$
     if( referenceParts.length != 2 )
       return new String[] {};
 
     final List<String> sources = new ArrayList<String>();
 
-    final String[] parts = referenceParts[1].split( "\\&" );
+    final String[] parts = referenceParts[1].split( "\\&" ); //$NON-NLS-1$
     for( final String part : parts )
     {
-      final String[] sourceParts = part.split( "\\=" );
+      final String[] sourceParts = part.split( "\\=" ); //$NON-NLS-1$
       if( sourceParts.length == 2 && sourceParts[0].startsWith( PREFIX_SOURCE ) )
         sources.add( sourceParts[1] );
     }

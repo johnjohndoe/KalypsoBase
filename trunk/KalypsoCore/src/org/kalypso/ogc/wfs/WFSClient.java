@@ -436,13 +436,13 @@ public class WFSClient
       // TODO: we should distinguish parse errors and errors returned from wfs-requests.
       // But how in both cases, we get an GMLException...
 
-      final String message = String.format( "Failed to parse result GML for type <%s>. Request was: %s", name, requestString );
+      final String message = String.format( Messages.getString("WFSClient.0"), name, requestString ); //$NON-NLS-1$
       final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, message, e );
       throw new CoreException( status );
     }
     catch( final Exception e )
     {
-      final String message = String.format( "Failed to parse result GML: %s, %s", name, requestString );
+      final String message = String.format( Messages.getString("WFSClient.1"), name, requestString ); //$NON-NLS-1$
       final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, message, e );
       throw new CoreException( status );
     }

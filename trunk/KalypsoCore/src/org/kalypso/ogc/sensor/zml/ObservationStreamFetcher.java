@@ -81,7 +81,7 @@ public final class ObservationStreamFetcher
       final ObservationUnmarshaller unmarshaller = new ObservationUnmarshaller( new InputSource( inputStream ), url );
       final IStatus status = unmarshaller.execute( new NullProgressMonitor() );
       if( status.getSeverity() == IStatus.ERROR )
-        throw new SensorException( "Error parsing zml input file", new CoreException( status ) );
+        throw new SensorException( Messages.getString("ObservationStreamFetcher.0"), new CoreException( status ) ); //$NON-NLS-1$
 
       return unmarshaller.getObservation();
     }
@@ -101,7 +101,7 @@ public final class ObservationStreamFetcher
 
     /* Handle compressed data */
     final String file = url.getFile();
-    if( file.toLowerCase().endsWith( ".zmlz" ) )
+    if( file.toLowerCase().endsWith( ".zmlz" ) ) //$NON-NLS-1$
       return new GZIPInputStream( inputStream );
 
     return inputStream;

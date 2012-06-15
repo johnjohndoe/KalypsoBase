@@ -42,6 +42,7 @@ package org.kalypso.ogc.sensor.util;
 
 import junit.framework.Assert;
 
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -143,7 +144,7 @@ public class ObservationAssert extends Assert
 
       final String axisName = expectedAxis.getName();
       final IAxis actualAxis = ObservationUtilities.findAxisByName( actualAxes, axisName );
-      assertNotNull( String.format( "Missing axis: %s", axisName ), actualAxes );
+      assertNotNull( String.format( Messages.getString("ObservationAssert_0"), axisName ), actualAxes ); //$NON-NLS-1$
 
       assertAxisEqual( expectedAxis, actualAxis );
     }
@@ -172,7 +173,7 @@ public class ObservationAssert extends Assert
 
     final int expectedSize = expectedValues.size();
     final int actualSize = actualValues.size();
-    assertEquals( "Size of values is different", expectedSize, actualSize );
+    assertEquals( Messages.getString("ObservationAssert_1"), expectedSize, actualSize ); //$NON-NLS-1$
 
     /* Axes should already have been compared, so they are the same */
     final IAxis[] expectedAxes = m_expected.getAxes();
@@ -183,7 +184,7 @@ public class ObservationAssert extends Assert
     for( int i = 0; i < expectedSize; i++ )
     {
       final Object key = expectedValues.get( i, keyAxis );
-      final String msg = String.format( "Values different at index %d (%s)", i, key );
+      final String msg = String.format( Messages.getString("ObservationAssert_2"), i, key ); //$NON-NLS-1$
 
       for( final IAxis expectedAxis : expectedAxes )
       {
@@ -194,7 +195,7 @@ public class ObservationAssert extends Assert
         final Object expectedValue = expectedValues.get( i, expectedAxis );
         final Object actualValue = actualValues.get( i, actualAxis );
 
-        final String axisMsg = String.format( " (Axis %s)", expectedAxis );
+        final String axisMsg = String.format( Messages.getString("ObservationAssert_3"), expectedAxis ); //$NON-NLS-1$
         assertEquals( msg + axisMsg, expectedValue, actualValue );
       }
     }
