@@ -60,6 +60,9 @@ import org.kalypso.module.ModuleExtensions;
 import org.kalypso.module.conversion.IProjectConversionOperation;
 import org.kalypso.module.conversion.ProjectConversionPage;
 
+import de.renew.workflow.connector.cases.IScenarioManager;
+import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
+
 /**
  * FIXME: generalize: should be useable for all modules.<br/>
  * This wizard converts project of old KalypsoHydrology versions into the current Kalypso version by creating a new
@@ -157,6 +160,12 @@ public class ProjectConversionWizard extends NewProjectWizard
     catch( final InterruptedException e )
     {
       return Status.CANCEL_STATUS;
+    }
+    finally
+    {
+      final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNatureQuiet( targetProject );
+      final IScenarioManager caseManager = nature.getCaseManager();
+      caseManager.resetCaseList();
     }
   }
 

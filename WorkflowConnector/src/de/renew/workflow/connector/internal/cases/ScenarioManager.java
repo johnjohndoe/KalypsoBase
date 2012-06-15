@@ -96,7 +96,7 @@ public class ScenarioManager implements IScenarioManager
 
   private final List<ICaseManagerListener> m_listeners = Collections.synchronizedList( new ArrayList<ICaseManagerListener>() );
 
-  private ICaseList m_cases;
+  private ICaseList m_caseList = null;
 
   private IScenario m_currentCase;
 
@@ -123,69 +123,71 @@ public class ScenarioManager implements IScenarioManager
 
     final IFolder folder = project.getFolder( METADATA_FOLDER );
     m_metaDataFile = folder.getFile( METADATA_FILENAME );
+  }
 
-    /* Prepare for exception: case-list with not cases */
-    m_cases = new CaseListHandler( new CaseList(), m_project );
-
+  private ICaseList getCaseList( )
+  {
     try
     {
-      if( !folder.exists() )
-        folder.create( false, true, null );
+      if( m_caseList == null )
+        m_caseList = loadModel( m_metaDataFile, m_project );
 
-      loadModel();
+      m_status = Status.OK_STATUS;
+
+      return m_caseList;
     }
     catch( final CoreException e )
     {
       // ignore
       // evil: if this fails, the next step will fail too, so we could also throw the exception...
-      e.printStackTrace();
+      // e.printStackTrace();
       m_status = e.getStatus();
+
+      return new CaseListHandler( new CaseList(), m_project );
     }
   }
 
-  /**
-   * @see de.renew.workflow.connector.cases.ICaseManager#getStatus()
-   */
+  @Override
+  public void resetCaseList( )
+  {
+    m_caseList = null;
+  }
+
   @Override
   public IStatus getStatus( )
   {
     return m_status;
   }
 
-  private void loadModel( ) throws CoreException
+  private static CaseListHandler loadModel( final IFile metaDataFile, final IProject project ) throws CoreException
   {
-    if( !m_metaDataFile.exists() )
-    {
-      // FIXME: should never be the case -> the project template must contain all necessary data, we should remove this
-      // stuff
-      final CaseList cases = new de.renew.workflow.cases.ObjectFactory().createCaseList();
-      m_cases = new CaseListHandler( cases, m_project );
-      createCase( "Basis" );
-    }
-    else
+    if( metaDataFile.exists() )
     {
       try
       {
-        final URL url = m_metaDataFile.getRawLocationURI().toURL();
+        final URL url = metaDataFile.getRawLocationURI().toURL();
         final CaseList cases = (CaseList) JC.createUnmarshaller().unmarshal( url );
-        m_cases = new CaseListHandler( cases, m_project );
+        return new CaseListHandler( cases, project );
       }
       catch( final Throwable e )
       {
-        final IStatus status = new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, "", e );
+        final IStatus status = new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, "Failed to load case file", e ); //$NON-NLS-1$
         throw new CoreException( status );
       }
     }
+
+    final IStatus status = new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, "Failed to load case file" ); //$NON-NLS-1$
+    throw new CoreException( status );
   }
 
   protected final void internalAddCase( final IScenario caze )
   {
-    m_cases.getCaseList().getCases().add( caze.getCase() );
+    getCaseList().getCaseList().getCases().add( caze.getCase() );
   }
 
   protected final void internalRemoveCase( final IScenario caze )
   {
-    m_cases.getCaseList().getCases().remove( caze.getCase() );
+    getCaseList().getCaseList().getCases().remove( caze.getCase() );
   }
 
   @Override
@@ -202,7 +204,7 @@ public class ScenarioManager implements IScenarioManager
 
   protected List<IScenario> internalGetCases( )
   {
-    return m_cases.getCases();
+    return getCaseList().getCases();
   }
 
   /**
@@ -222,14 +224,19 @@ public class ScenarioManager implements IScenarioManager
     try
     {
       monitor.beginTask( "Szenarien speichern.", 5000 );
+
       final ByteArrayOutputStream bos = new ByteArrayOutputStream();
       final Marshaller marshaller = JC.createMarshaller();
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-      marshaller.marshal( m_cases.getCaseList(), bos );
+      marshaller.marshal( getCaseList().getCaseList(), bos );
       bos.close();
+
       monitor.worked( 2000 );
+
       final ByteArrayInputStream bis = new ByteArrayInputStream( bos.toByteArray() );
-      m_metaDataFile.refreshLocal( 0, null );
+
+      // m_metaDataFile.refreshLocal( 0, null );
+
       if( m_metaDataFile.exists() )
         m_metaDataFile.setContents( bis, false, true, null );
       else
@@ -304,21 +311,6 @@ public class ScenarioManager implements IScenarioManager
   public void dispose( )
   {
     m_listeners.clear();
-  }
-
-  private IScenario createCase( final String name ) throws CoreException
-  {
-    final Scenario newScenario = OF.createScenario();
-    newScenario.setName( name );
-
-    final IScenario scenario = new ScenarioHandler( newScenario, m_project );
-    internalAddCase( scenario );
-
-    persist( new NullProgressMonitor() );
-
-    fireCaseAdded( scenario );
-
-    return scenario;
   }
 
   @Override
