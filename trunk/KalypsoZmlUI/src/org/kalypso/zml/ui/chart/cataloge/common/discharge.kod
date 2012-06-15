@@ -144,9 +144,20 @@
         </Layers>
         <MapperRefs>
           <DomainAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#date" />
-          <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:global#Q" />
+          <TargetAxisRef url="urn:org:kalypso:zml:ui:diagramm:common:discharge#Q" />
         </MapperRefs>
       </Layer>
     </Layers>
+    <Mappers>
+      <Axis id="Q" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Label>Abfluss [m³]</Label>
+        <Direction>POSITIVE</Direction>
+        <Position>LEFT</Position>
+        <PreferredAdjustment before="5" range="85" after="10"  />
+        <RendererRef url="urn:org:kalypso:zml:ui:diagramm:global#AutoNumberAxisRenderer" />
+        <AxisNumberRangeRestriction absoluteMinValue="0.0" minRange="0.1" />
+      </Axis>
+    </Mappers>
   </Chart>
 </ChartConfiguration>
