@@ -75,9 +75,6 @@ class FieldFormatterNumber extends FieldFormatter
     return pattern.toString();
   }
 
-  /**
-   * @see org.kalypso.shape.dbf.FieldFormatter#fromString(java.lang.String)
-   */
   @Override
   public Object fromString( final String value ) throws DBaseException
   {
