@@ -45,25 +45,22 @@ import java.lang.reflect.InvocationTargetException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
+import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsPlugin;
 import org.kalypso.contribs.eclipse.jface.operation.CoreRunnableWrapper;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 
 /**
  * Helper class with utility methods to handle progress.
- *
+ * 
  * @author Gernot Belger
  */
 public final class ProgressUtilities
 {
-  public static final IStatus STATUS_OPERATION_CANCELLED = new Status( IStatus.CANCEL, EclipseRCPContributionsPlugin.ID, "Operation cancelled by user" );
-
   private ProgressUtilities( )
   {
     // helper class, do not instantiate
@@ -126,7 +123,9 @@ public final class ProgressUtilities
     }
     catch( final InterruptedException e )
     {
-      return STATUS_OPERATION_CANCELLED;
+      final IStatus status = StatusUtilities.statusFromThrowable( e, errorMessage );
+      EclipseRCPContributionsPlugin.getDefault().getLog().log( status );
+      return status;
     }
   }
 
@@ -134,18 +133,19 @@ public final class ProgressUtilities
    * Calls {@link IProgressMonitor#worked(int)} on the given monitor.
    * <p>
    * In addition, it checks if the monitor is canceled and throws an CoreException with CANCEL_STATUS if this is the
-   * case.
+   * cae.
+   * </p>
    * 
    * @see IProgressMonitor#worked(int)
    */
-  public static void worked( final IProgressMonitor monitor, final int work )
+  public static void worked( final IProgressMonitor monitor, final int work ) throws CoreException
   {
     if( monitor == null )
       return;
 
     monitor.worked( work );
     if( monitor.isCanceled() )
-      throw new OperationCanceledException();
+      throw new CoreException( Status.CANCEL_STATUS );
   }
 
   /**
@@ -154,7 +154,7 @@ public final class ProgressUtilities
    * In addition, it checks if the monitor is canceled and throws an CoreException with CANCEL_STATUS if this is the
    * cae.
    * </p>
-   *
+   * 
    * @see IProgressMonitor#done())
    */
   public static void done( final IProgressMonitor monitor ) throws CoreException

@@ -53,11 +53,11 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsPlugin;
+import org.kalypso.contribs.eclipse.EclipseRCPContributionsPlugin;
 
 /**
  * Helper methods for {@link org.eclipse.core.runtime.IStatus}.
- *
+ * 
  * @author thuel
  */
 public final class StatusUtilities
@@ -116,7 +116,7 @@ public final class StatusUtilities
   /**
    * Returns the message form the given status. If the status is a multi-status, it recursively creates a string with
    * all includes child-stati, separated by line-breaks
-   *
+   * 
    * @param currentDepth
    *          Amout of tabs with wich the message will be indentated
    */
@@ -167,7 +167,7 @@ public final class StatusUtilities
    * <p>
    * If the exception is a {@link CoreException}its status is returned.
    * </p>
-   *
+   * 
    * @throws NullPointerException
    *           If <code>t</code> is null.
    */
@@ -184,7 +184,7 @@ public final class StatusUtilities
    * <p>
    * If the exception is a {@link CoreException}its status is returned.
    * </p>
-   *
+   * 
    * @param message
    *          [optional] used as message for newly created status if specified
    * @throws NullPointerException
@@ -194,7 +194,7 @@ public final class StatusUtilities
   {
     if( message != null )
     {
-      final MultiStatus status = new MultiStatus( EclipseRCPContributionsPlugin.ID, 0, String.format( message, args ), null );
+      final MultiStatus status = new MultiStatus( EclipseRCPContributionsPlugin.getID(), 0, String.format( message, args ), null );
       status.add( statusFromThrowable( t ) );
       return status;
     }
@@ -215,7 +215,7 @@ public final class StatusUtilities
       msg = t.toString();// "<Keine weitere Information vorhanden>";
     }
 
-    return new Status( IStatus.ERROR, EclipseRCPContributionsPlugin.ID, 0, msg, t );
+    return new Status( IStatus.ERROR, EclipseRCPContributionsPlugin.getID(), 0, msg, t );
   }
 
   public static String messageFromThrowable( final Throwable t )
@@ -233,7 +233,7 @@ public final class StatusUtilities
    * Creates a status based on the list of stati. If the list is empty, it returns the <code>Status.OK_STATUS</code>. If
    * the list contains just one status, then it is returned. If the list contains more than one status, a MultiStatus is
    * returned.
-   *
+   * 
    * @param message
    *          only used when creating the MultiStatus
    */
@@ -245,14 +245,14 @@ public final class StatusUtilities
     if( stati.size() == 1 )
       return stati.iterator().next();
 
-    return new MultiStatus( EclipseRCPContributionsPlugin.ID, 0, stati.toArray( new IStatus[stati.size()] ), String.format( message, args ), null );
+    return new MultiStatus( EclipseRCPContributionsPlugin.getID(), 0, stati.toArray( new IStatus[stati.size()] ), String.format( message, args ), null );
   }
 
   /**
    * Creates a status based on the list of stati. If the list is empty, it returns the <code>Status.OK_STATUS</code>. If
    * the list contains just one status, then it is returned. If the list contains more than one status, a MultiStatus is
    * returned.
-   *
+   * 
    * @param message
    *          only used when creating the MultiStatus
    */
@@ -266,7 +266,7 @@ public final class StatusUtilities
    */
   public static IStatus createStatus( final int severity, final String message, final Throwable t )
   {
-    return new Status( severity, EclipseRCPContributionsPlugin.ID, -1, message, t );
+    return new Status( severity, EclipseRCPContributionsPlugin.getID(), -1, message, t );
   }
 
   /**
@@ -274,7 +274,7 @@ public final class StatusUtilities
    */
   public static IStatus createStatus( final int severity, final int code, final String message, final Throwable t )
   {
-    return new Status( severity, EclipseRCPContributionsPlugin.ID, code, message, t );
+    return new Status( severity, EclipseRCPContributionsPlugin.getID(), code, message, t );
   }
 
   public static IStatus createExceptionalErrorStatus( final String errorMessage, final Throwable t )
@@ -284,7 +284,7 @@ public final class StatusUtilities
 
   /**
    * Creates an error-status with given message and null throwable.
-   *
+   * 
    * @deprecated: Do not use! It is just too often misused... (using exception as argument does not add the exception
    *              into the status!). Use {@link Status#Status(int, String, String)} instead.
    */
@@ -314,7 +314,7 @@ public final class StatusUtilities
 
   /**
    * Creates a warning-status with given message and null throwable.
-   *
+   * 
    * @deprecated
    */
   @Deprecated
@@ -325,7 +325,7 @@ public final class StatusUtilities
 
   /**
    * Creates a ok-status with given message and null throwable.
-   *
+   * 
    * @deprecated Directly use Status constructor.
    */
   @Deprecated
@@ -337,7 +337,7 @@ public final class StatusUtilities
   /**
    * Wraps the given status in a new status with the given severity. If the given status has already the given severity,
    * then it is simply returned.
-   *
+   * 
    * @param status
    *          the status to wrap
    * @param severity
@@ -392,7 +392,7 @@ public final class StatusUtilities
 
   /**
    * Opens an error dialog on the given status.
-   *
+   * 
    * @param showMultipleDialogs
    *          If true, a multi-status will be shown within multiple message boxes, on e for each child of the
    *          multi-status. Else, only one dialog pops-up.
@@ -434,7 +434,7 @@ public final class StatusUtilities
 
   /**
    * Opens an error dialog on the given status. Tweaks the error message.
-   *
+   * 
    * @param showMultipleDialogs
    *          If true, a multi-status will be shown within multiple message boxes, on e for each child of the
    *          multi-status. Else, only one dialog pops-up.
@@ -483,20 +483,13 @@ public final class StatusUtilities
   }
 
   /**
-   * Returns an (internationalized) string corresponding to the severity of the given status.<br/>
+   * Returns an (internationalized) string corresponding to the severity of the given status.
+   * <p>
+   * TODO: internationalize it
    */
   public static String getLocalizedSeverity( final IStatus status )
   {
-    return getLocalizedSeverity( status.getSeverity() );
-  }
-
-  /**
-   * Returns an (internationalized) string corresponding to the severity of the given status.<br/>
-   * TODO: translate
-   */
-  public static String getLocalizedSeverity( final int severity )
-  {
-    switch( severity )
+    switch( status.getSeverity() )
     {
       case IStatus.OK:
         return "OK";
@@ -514,12 +507,12 @@ public final class StatusUtilities
   }
 
   /**
-   * Creates a copy of the given status, changing its severity to the given one.<br>
+   * Creates a copy of the given status, changeing its severity to the given one.<br>
    * As the severity of a {@link MultiStatus} is defined by the severity of its children, the severities of all children
    * of the cloned status are set to the given status.
-   *
-   * @param severity
-   *          One of {@link IStatus#OK}, ...
+   * 
+   * @param One
+   *          of {@link IStatus#OK}, ...
    */
   public static IStatus cloneStatus( final IStatus status, final int severity )
   {
@@ -535,20 +528,6 @@ public final class StatusUtilities
     }
 
     return new Status( severity, status.getPlugin(), status.getCode(), status.getMessage(), status.getException() );
-  }
-
-  /**
-   * Creates a copy of the given status, changing its message to the given one.<br>
-   */
-  public static IStatus cloneStatus( final IStatus status, final String newMessage )
-  {
-    if( status.isMultiStatus() )
-    {
-      final IStatus[] children = status.getChildren();
-      return new MultiStatus( status.getPlugin(), status.getCode(), children, newMessage, status.getException() );
-    }
-
-    return new Status( status.getSeverity(), status.getPlugin(), status.getCode(), newMessage, status.getException() );
   }
 
   public static boolean equals( final IStatus status1, final IStatus status2 )
@@ -585,4 +564,5 @@ public final class StatusUtilities
     final IStatus[] children2 = status2.getChildren();
     return Arrays.equals( children1, children2 );
   }
+
 }

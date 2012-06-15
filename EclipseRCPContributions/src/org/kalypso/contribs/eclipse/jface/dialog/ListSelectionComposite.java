@@ -67,7 +67,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.internal.WorkbenchMessages;
 import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerTooltipListener;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 
 /**
  * @author Gernot Belger
@@ -180,7 +179,9 @@ public class ListSelectionComposite
   private void addSelectionButtons( final CheckboxTableViewer checkboxViewer, final Composite composite )
   {
     final Composite buttonComposite = new Composite( composite, SWT.NONE );
-    final GridLayout layout = Layouts.createGridLayout();
+    final GridLayout layout = new GridLayout();
+    layout.numColumns = 0;
+    layout.marginWidth = 0;
 // layout.horizontalSpacing = convertHorizontalDLUsToPixels( IDialogConstants.HORIZONTAL_SPACING );
     layout.horizontalSpacing = IDialogConstants.HORIZONTAL_SPACING;
     buttonComposite.setLayout( layout );
