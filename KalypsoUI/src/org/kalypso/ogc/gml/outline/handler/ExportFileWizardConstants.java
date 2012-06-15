@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline.handler;
 
+import org.kalypso.i18n.Messages;
+
 /**
  * Some common constants for the various file export wizards of this package.
  * 
@@ -47,7 +49,7 @@ package org.kalypso.ogc.gml.outline.handler;
  */
 public interface ExportFileWizardConstants
 {
-  String STR_EXPORT_FILE_PAGE_TITLE = "Dateiauswahl";
+  String STR_EXPORT_FILE_PAGE_TITLE = Messages.getString("ExportFileWizardConstants_0"); //$NON-NLS-1$
 
-  String STR_EXPORT_FILE_PAGE_DESCRIPTION = "Wählen Sie die Exportdatei auf dieser Seite.";
+  String STR_EXPORT_FILE_PAGE_DESCRIPTION = Messages.getString("ExportFileWizardConstants_1"); //$NON-NLS-1$
 }

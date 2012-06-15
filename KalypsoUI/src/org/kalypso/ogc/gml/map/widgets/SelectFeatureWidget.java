@@ -117,7 +117,7 @@ public class SelectFeatureWidget extends DeprecatedMouseWidget
 {
   public static final int GRAB_RADIUS = 20;
 
-  private static final String SETTINGS_MODE = "selectionMode";
+  private static final String SETTINGS_MODE = "selectionMode"; //$NON-NLS-1$
 
   private IGeometryBuilder m_geometryBuilder;
 
@@ -268,7 +268,7 @@ public class SelectFeatureWidget extends DeprecatedMouseWidget
             if( Objects.isNotNull( m_selectOnHoverJob ) )
               m_selectOnHoverJob.cancel();
 
-            m_selectOnHoverJob = new UIJob( "Select on hover" )
+            m_selectOnHoverJob = new UIJob( Messages.getString("SelectFeatureWidget.1") ) //$NON-NLS-1$
             {
               @Override
               public IStatus runInUIThread( final IProgressMonitor monitor )
@@ -591,7 +591,7 @@ public class SelectFeatureWidget extends DeprecatedMouseWidget
       // TODO: fetch namespace context from map xml
       final NamespaceContext namespaceContext = null;
 
-      final String[] geomNames = selectionGeometries.split( "," );
+      final String[] geomNames = selectionGeometries.split( "," ); //$NON-NLS-1$
       final GMLXPath[] geomPathes = new GMLXPath[geomNames.length];
       for( int i = 0; i < geomPathes.length; i++ )
         geomPathes[i] = new GMLXPath( geomNames[i], namespaceContext );
@@ -746,7 +746,7 @@ public class SelectFeatureWidget extends DeprecatedMouseWidget
       if( m_currentMode == 2 )
         sb.append( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.4" ) ); //$NON-NLS-1$
       if( m_currentMode == 3 )
-        sb.append( "Punkt (Hover-Mode) <SPACE>" );
+        sb.append( Messages.getString("SelectFeatureWidget.3") ); //$NON-NLS-1$
     }
 
     if( m_addMode == true )

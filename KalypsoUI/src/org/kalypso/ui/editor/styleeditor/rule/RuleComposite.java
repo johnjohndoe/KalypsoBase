@@ -54,6 +54,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypsodeegree.filterencoding.Filter;
@@ -111,8 +112,8 @@ public class RuleComposite extends Composite
   {
     final Section section = toolkit.createSection( parent, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE | Section.DESCRIPTION );
 
-    section.setText( "Rule Properties" );
-    section.setDescription( "This section allows to edit general properties of the rule." );
+    section.setText( Messages.getString("RuleComposite_0") ); //$NON-NLS-1$
+    section.setDescription( Messages.getString("RuleComposite_1") ); //$NON-NLS-1$
 
     m_rulePropertiesComposite = new RulePropertiesComposite( toolkit, section, m_input );
     section.setClient( m_rulePropertiesComposite );
@@ -124,8 +125,8 @@ public class RuleComposite extends Composite
   {
     final Section tabsSection = toolkit.createSection( parent, ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED | Section.DESCRIPTION );
 
-    tabsSection.setText( "Symbolizers" );
-    tabsSection.setDescription( "Add, remove or edit the symbolizers of the rule." );
+    tabsSection.setText( Messages.getString("RuleComposite_2") ); //$NON-NLS-1$
+    tabsSection.setDescription( Messages.getString("RuleComposite_3") ); //$NON-NLS-1$
 
     m_symbolizerTabViewer = new SymbolizerTabViewer( toolkit, tabsSection, m_input );
 

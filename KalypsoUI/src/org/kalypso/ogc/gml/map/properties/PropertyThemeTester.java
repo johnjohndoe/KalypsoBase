@@ -70,7 +70,7 @@ public class PropertyThemeTester extends PropertyTester
     final IMapPanel mapPanel = (IMapPanel) receiver;
 
     /* Check the property. */
-    if( !"hasProperty".equals( property ) )
+    if( !"hasProperty".equals( property ) ) //$NON-NLS-1$
       return false;
 
     /* Check the args. */
@@ -97,6 +97,6 @@ public class PropertyThemeTester extends PropertyTester
     if( args == null || args.length == 0 )
       return true;
 
-    return new ThemeTester().test( themes[0], (String) args[0], new Object[] {}, "true" );
+    return new ThemeTester().test( themes[0], (String) args[0], new Object[] {}, "true" ); //$NON-NLS-1$
   }
 }

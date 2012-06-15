@@ -49,6 +49,7 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
+import org.kalypso.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -83,8 +84,8 @@ public class FeatureTypeStyleComposite extends Composite
   protected Section createPropertiesComposite( final FormToolkit toolkit )
   {
     final Section section = toolkit.createSection( this, ExpandableComposite.TITLE_BAR | ExpandableComposite.TWISTIE | Section.DESCRIPTION );
-    section.setText( "Style Properties" );
-    section.setDescription( "This section allows to edit general properties of the style." );
+    section.setText( Messages.getString("FeatureTypeStyleComposite_0") ); //$NON-NLS-1$
+    section.setDescription( Messages.getString("FeatureTypeStyleComposite_1") ); //$NON-NLS-1$
 
     m_propertiesComposite = new FeatureTypeStylePropertiesComposite( toolkit, section, m_input );
     section.setClient( m_propertiesComposite );
@@ -96,8 +97,8 @@ public class FeatureTypeStyleComposite extends Composite
   {
     final SectionPart tabSectionPart = new SectionPart( this, toolkit, ExpandableComposite.TITLE_BAR | Section.DESCRIPTION );
     final Section section = tabSectionPart.getSection();
-    section.setText( "Rules" );
-    section.setDescription( "Add, remove or edit the rules of the style." );
+    section.setText( Messages.getString("FeatureTypeStyleComposite_2") ); //$NON-NLS-1$
+    section.setDescription( Messages.getString("FeatureTypeStyleComposite_3") ); //$NON-NLS-1$
 
     m_ruleTabViewer = new RuleTabViewer( toolkit, section, m_input );
     section.setClient( m_ruleTabViewer.getControl() );

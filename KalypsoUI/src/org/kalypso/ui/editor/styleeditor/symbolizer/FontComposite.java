@@ -104,7 +104,7 @@ public class FontComposite extends Composite
     m_previewLabel = toolkit.createLabel( this, StringUtils.EMPTY, SWT.BORDER );
     m_previewLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_previewLabel.setAlignment( SWT.CENTER );
-    m_previewLabel.setText( "Demotext" );
+    m_previewLabel.setText( "Demotext" ); //$NON-NLS-1$
 
     final Button fontChooserButton = new Button( this, SWT.PUSH );
     fontChooserButton.setText( "..." ); //$NON-NLS-1$

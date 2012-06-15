@@ -42,6 +42,7 @@ package org.kalypso.ui.editor.styleeditor.symbolizer;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypso.ui.editor.styleeditor.binding.StyleInput;
 import org.kalypso.ui.editor.styleeditor.graphic.GraphicComposite;
@@ -63,7 +64,7 @@ public class GraphicSection extends AbstractStyleElementSection<PointSymbolizer,
   @Override
   protected String getTitle( )
   {
-    return "Graphic";
+    return "Graphic"; //$NON-NLS-1$
   }
 
   /**
@@ -72,7 +73,7 @@ public class GraphicSection extends AbstractStyleElementSection<PointSymbolizer,
   @Override
   protected String getDescription( )
   {
-    return "Edit the graphics element of the PointSymbolizer";
+    return Messages.getString("GraphicSection_1"); //$NON-NLS-1$
   }
 
   /**

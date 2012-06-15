@@ -126,7 +126,7 @@ public final class AddFeatureHandlerUtil
     if( substituts.length == 0 )
     {
       // May only happen if the type is abstract
-      final String message = String.format( "No implementation(s) of type '%s' available.", getNewLabel( relationType ) );
+      final String message = String.format( Messages.getString("AddFeatureHandlerUtil.0"), getNewLabel( relationType ) ); //$NON-NLS-1$
       MessageDialog.openWarning( shell, dialogTitle, message );
       return null;
     }
@@ -135,7 +135,7 @@ public final class AddFeatureHandlerUtil
       return substituts[0];
 
     /* Let user choose */
-    final String message = "Please select the type of the new feature:";
+    final String message = Messages.getString("AddFeatureHandlerUtil.1"); //$NON-NLS-1$
 
     final ILabelProvider labelProvider = new FeatureTypeLabelProvider( IAnnotation.ANNO_NAME );
 // final TreeSingleSelectionDialog dialog = new TreeSingleSelectionDialog( shell, substituts, new
@@ -144,7 +144,7 @@ public final class AddFeatureHandlerUtil
     final ElementListSelectionDialog dialog = new ElementListSelectionDialog( shell, labelProvider );
 
     dialog.setMessage( message );
-    dialog.setEmptySelectionMessage( "" );
+    dialog.setEmptySelectionMessage( "" ); //$NON-NLS-1$
     dialog.setTitle( dialogTitle );
 
     dialog.setElements( substituts );

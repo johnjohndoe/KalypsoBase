@@ -98,7 +98,7 @@ public class MarkComposite extends Composite
     final Composite panel = toolkit.createComposite( parent );
     GridLayoutFactory.fillDefaults().numColumns( 2 ).applyTo( panel );
 
-    toolkit.createLabel( panel, "Symbol" );
+    toolkit.createLabel( panel, "Symbol" ); //$NON-NLS-1$
 
     final ComboViewer wknChooser = new ComboViewer( panel, SWT.READ_ONLY | SWT.DROP_DOWN );
     m_wknChooser = wknChooser;

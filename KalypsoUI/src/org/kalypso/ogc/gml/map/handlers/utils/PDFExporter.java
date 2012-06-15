@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -95,8 +96,8 @@ public class PDFExporter
     try
     {
       /* Monitor. */
-      monitor.beginTask( "Exportiere PDF...", 1000 );
-      monitor.subTask( "Erzeuge Inhalt..." );
+      monitor.beginTask( Messages.getString("PDFExporter_0"), 1000 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString("PDFExporter_1") ); //$NON-NLS-1$
 
       /* Create the image. */
       final Insets insets = new Insets( 10, 10, 10, 10 );
@@ -107,7 +108,7 @@ public class PDFExporter
 
       /* Monitor. */
       monitor.worked( 500 );
-      monitor.subTask( "Erzeuge PDF..." );
+      monitor.subTask( Messages.getString("PDFExporter_2") ); //$NON-NLS-1$
 
       /* Create the output stream. */
       os = new BufferedOutputStream( new FileOutputStream( targetFile ) );
@@ -134,7 +135,7 @@ public class PDFExporter
       /* Monitor. */
       monitor.worked( 500 );
 
-      return new Status( IStatus.OK, KalypsoGisPlugin.getId(), "OK" );
+      return new Status( IStatus.OK, KalypsoGisPlugin.getId(), Messages.getString("PDFExporter_3") ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {

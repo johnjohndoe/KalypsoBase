@@ -76,7 +76,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  */
 public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipProvider
 {
-  private static final IStatus INIT_STATUS = new Status( IStatus.INFO, KalypsoGisPlugin.PLUGIN_ID, "Fetching capabilities from server..." );
+  private static final IStatus INIT_STATUS = new Status( IStatus.INFO, KalypsoGisPlugin.PLUGIN_ID, Messages.getString("KalypsoWMSTheme.0") ); //$NON-NLS-1$
 
   private final LayerType m_layer;
 

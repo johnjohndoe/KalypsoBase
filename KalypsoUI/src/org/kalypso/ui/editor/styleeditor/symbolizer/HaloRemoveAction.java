@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.symbolizer;
 
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypso.ui.editor.styleeditor.util.StyleElementAction;
@@ -54,7 +55,7 @@ public class HaloRemoveAction extends StyleElementAction<TextSymbolizer>
   {
     super( input );
 
-    setText( "Remove Halo" );
+    setText( Messages.getString("HaloRemoveAction_0") ); //$NON-NLS-1$
     setImageDescriptor( ImageProvider.IMAGE_STYLEEDITOR_REMOVE );
   }
 

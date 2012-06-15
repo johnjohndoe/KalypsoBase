@@ -56,6 +56,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.controls.files.FileChooserComposite;
 import org.kalypso.ui.controls.files.listener.IFileChooserListener;
@@ -238,7 +239,7 @@ public class ScreenshotDialog extends Dialog
     initializeDialogSettings();
 
     /* Set the title. */
-    getShell().setText( "Bildexport" );
+    getShell().setText( Messages.getString("ScreenshotDialog_0") ); //$NON-NLS-1$
 
     /* Create the main composite. */
     final Composite main = (Composite) super.createDialogArea( parent );
@@ -246,7 +247,7 @@ public class ScreenshotDialog extends Dialog
     main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Create the file chooser composite. */
-    m_fileComposite = new FileChooserComposite( main, SWT.NONE, null, null, "Zieldatei (ohne Endung)", m_targetPath );
+    m_fileComposite = new FileChooserComposite( main, SWT.NONE, null, null, Messages.getString("ScreenshotDialog_1"), m_targetPath ); //$NON-NLS-1$
     m_fileComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_fileComposite.addFileChooserListener( new IFileChooserListener()
     {
@@ -318,15 +319,15 @@ public class ScreenshotDialog extends Dialog
 
     /* Add the extension, if neccessary. */
     String pathname = m_targetPath;
-    if( !m_targetPath.toLowerCase().endsWith( "." + m_imageFormat.toLowerCase() ) )
-      pathname = m_targetPath + "." + m_imageFormat.toLowerCase();
+    if( !m_targetPath.toLowerCase().endsWith( "." + m_imageFormat.toLowerCase() ) ) //$NON-NLS-1$
+      pathname = m_targetPath + "." + m_imageFormat.toLowerCase(); //$NON-NLS-1$
 
     /* If the target exists already, give a warning and do only continue, if the user has confirmed it. */
     final File targetFile = new File( pathname );
     if( targetFile.exists() )
     {
       /* Ask the user. */
-      final boolean confirmed = MessageDialog.openConfirm( getShell(), "Bildexport", String.format( "Die Datei '%s' existiert bereits, möchten Sie sie überschreiben?", targetFile.getAbsolutePath() ) );
+      final boolean confirmed = MessageDialog.openConfirm( getShell(), Messages.getString("ScreenshotDialog_4"), String.format( Messages.getString("ScreenshotDialog_5"), targetFile.getAbsolutePath() ) ); //$NON-NLS-1$ //$NON-NLS-2$
       if( !confirmed )
         return;
     }
@@ -492,8 +493,8 @@ public class ScreenshotDialog extends Dialog
   public String getTargetPath( )
   {
     /* Add the extension, if neccessary. */
-    if( !m_targetPath.toLowerCase().endsWith( "." + m_imageFormat.toLowerCase() ) )
-      return m_targetPath + "." + m_imageFormat.toLowerCase();
+    if( !m_targetPath.toLowerCase().endsWith( "." + m_imageFormat.toLowerCase() ) ) //$NON-NLS-1$
+      return m_targetPath + "." + m_imageFormat.toLowerCase(); //$NON-NLS-1$
 
     return m_targetPath;
   }

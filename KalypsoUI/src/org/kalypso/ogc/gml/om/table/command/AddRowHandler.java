@@ -153,7 +153,7 @@ public class AddRowHandler extends AbstractHandler
 
   private double askForDouble( final Shell shell, final String title, final double min, final double max )
   {
-    final String initialValue = String.format( "%.4f", (max + min) / 2 );
+    final String initialValue = String.format( "%.4f", (max + min) / 2 ); //$NON-NLS-1$
     final IInputValidator validator = new IInputValidator()
     {
       @Override
@@ -161,16 +161,16 @@ public class AddRowHandler extends AbstractHandler
       {
         final double newValue = NumberUtils.parseQuietDouble( newText );
         if( Double.isNaN( newValue ) )
-          return "Please enter a decimal number";
+          return Messages.getString("AddRowHandler.1"); //$NON-NLS-1$
 
         if( newValue <= min || newValue >= max )
-          return String.format( "The new value must lie in the interval [%.4f, %.4f]", min, max );
+          return String.format( Messages.getString("AddRowHandler.2"), min, max ); //$NON-NLS-1$
 
         return null;
       }
     };
 
-    final InputDialog inputDialog = new InputDialog( shell, title, "Pleaser enter where to interpolate:", initialValue, validator );
+    final InputDialog inputDialog = new InputDialog( shell, title, Messages.getString("AddRowHandler.3"), initialValue, validator ); //$NON-NLS-1$
     if( inputDialog.open() == Window.CANCEL )
       return Double.NaN;
 

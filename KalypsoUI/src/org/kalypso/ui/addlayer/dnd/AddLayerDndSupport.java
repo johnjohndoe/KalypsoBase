@@ -58,6 +58,7 @@ import org.eclipse.ui.wizards.IWizardDescriptor;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.core.status.StatusDialog;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.outline.GisMapOutlineDropData;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.addlayer.IKalypsoDataImportWizard;
@@ -71,7 +72,7 @@ import org.kalypso.ui.addlayer.MapExtensions;
 @SuppressWarnings("restriction")
 public class AddLayerDndSupport
 {
-  private static final String WINDOW_TITLE = "Add Theme";
+  private static final String WINDOW_TITLE = Messages.getString("AddLayerDndSupport_0"); //$NON-NLS-1$
 
   private final IMapDropTarget[] m_dropTargets;
 
@@ -101,14 +102,14 @@ public class AddLayerDndSupport
 
     if( themeData.length > 1 )
     {
-      MessageDialog.openWarning( shell, WINDOW_TITLE, "Unable to add more than one element at once. Please drag only one element into the map." );
+      MessageDialog.openWarning( shell, WINDOW_TITLE, Messages.getString("AddLayerDndSupport_1") ); //$NON-NLS-1$
       return false;
     }
 
     final IMapDropTarget[] targets = findTargets( themeData[0] );
     if( targets.length == 0 )
     {
-      MessageDialog.openWarning( shell, WINDOW_TITLE, "Unable to drop this kind of element into the map" );
+      MessageDialog.openWarning( shell, WINDOW_TITLE, Messages.getString("AddLayerDndSupport_2") ); //$NON-NLS-1$
       return false;
     }
 
@@ -163,7 +164,7 @@ public class AddLayerDndSupport
     final WizardCollectionElement wizards = MapExtensions.getAvailableWizards();
     final IWizardDescriptor wizardDescriptor = wizards.findWizard( wizardId );
     if( wizardDescriptor == null )
-      throw new IllegalStateException( String.format( "Missing wizard: %s", wizardId ) );
+      throw new IllegalStateException( String.format( Messages.getString("AddLayerDndSupport_3"), wizardId ) ); //$NON-NLS-1$
 
     /* Create and initialize wizard */
     final IKalypsoDataImportWizard wizard = (IKalypsoDataImportWizard) wizardDescriptor.createWizard();

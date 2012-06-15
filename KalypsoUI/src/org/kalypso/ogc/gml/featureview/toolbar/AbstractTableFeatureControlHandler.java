@@ -45,6 +45,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.featureview.control.AbstractToolbarFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.TableFeatureControl;
 import org.kalypso.ogc.gml.om.table.command.ToolbarCommandUtils;
@@ -72,7 +73,7 @@ public abstract class AbstractTableFeatureControlHandler extends AbstractHandler
     final TableViewer tableViewer = ToolbarCommandUtils.findTableViewer( event );
     final ISelection sel = tableViewer.getSelection();
     if( !(sel instanceof IFeatureSelection) )
-      throw new ExecutionException( "Couldn't resolve feature selection" );
+      throw new ExecutionException( Messages.getString("AbstractTableFeatureControlHandler_0") ); //$NON-NLS-1$
 
     return (IFeatureSelection) sel;
   }

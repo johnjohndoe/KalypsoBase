@@ -254,7 +254,7 @@ public class ObservationViewer extends Composite
       }
     } );
 
-    final ChooseZmlAction chooseLocalZmlAction = new ChooseZmlAction( this, "Choose Local Observation" )
+    final ChooseZmlAction chooseLocalZmlAction = new ChooseZmlAction( this, Messages.getString("ObservationViewer.0") ) //$NON-NLS-1$
     {
       @Override
       protected IContainer getBaseDir( )
@@ -266,7 +266,7 @@ public class ObservationViewer extends Composite
     chooseLocalZmlAction.setText( Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewer.1" ) ); //$NON-NLS-1$
     ActionButton.createButton( null, header, chooseLocalZmlAction ).setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
 
-    final ChooseZmlAction chooseProjectZmlAction = new ChooseZmlAction( this, "Choose Observation from Project" )
+    final ChooseZmlAction chooseProjectZmlAction = new ChooseZmlAction( this, Messages.getString("ObservationViewer.1") ) //$NON-NLS-1$
     {
       @Override
       protected IContainer getBaseDir( )
@@ -274,7 +274,7 @@ public class ObservationViewer extends Composite
         return ResourceUtilities.findProjectFromURL( getContext() );
       }
     };
-    chooseProjectZmlAction.setText( "Projekt..." );
+    chooseProjectZmlAction.setText( Messages.getString("ObservationViewer.2") ); //$NON-NLS-1$
     ActionButton.createButton( null, header, chooseProjectZmlAction ).setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
 
     // 2. Anzeige

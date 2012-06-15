@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.outline.nodes;
 
 import org.deegree.ogcwebservices.wms.capabilities.Layer;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -63,7 +64,7 @@ public class NodeFactory
 {
   private NodeFactory( )
   {
-    throw new UnsupportedOperationException( "Factory, do not instantiate" );
+    throw new UnsupportedOperationException( Messages.getString("NodeFactory_0") ); //$NON-NLS-1$
   }
 
   public static IThemeNode[] createNodes( final IThemeNode parent, final Object[] elements )

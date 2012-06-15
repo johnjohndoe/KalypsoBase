@@ -102,7 +102,7 @@ public class WQRelationTableViewer extends Composite
     m_table.setVisible( true );
     m_table.setAutoResizeMode( JTable.AUTO_RESIZE_ALL_COLUMNS );
 
-    m_table.setDefaultRenderer( Number.class, new NumberTableCellRenderer( "%.3g" ) );
+    m_table.setDefaultRenderer( Number.class, new NumberTableCellRenderer( "%.3g" ) ); //$NON-NLS-1$
 
     final JTableHeader header = m_table.getTableHeader();
     header.setReorderingAllowed( false );

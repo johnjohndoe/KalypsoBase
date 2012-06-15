@@ -53,6 +53,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.contribs.eclipse.swt.widgets.SectionUtils;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 
 /**
@@ -177,7 +178,7 @@ public abstract class AbstractStyleElementSection<ELEMENT, ITEM, ITEMCONTROL>
     if( item == null )
     {
       m_itemControl = null;
-      getToolkit().createLabel( m_contentPanel, String.format( "'%s' not set", getTitle() ) );
+      getToolkit().createLabel( m_contentPanel, String.format( Messages.getString("AbstractStyleElementSection_0"), getTitle() ) ); //$NON-NLS-1$
     }
     else
       m_itemControl = createItemControl( m_contentPanel, item );

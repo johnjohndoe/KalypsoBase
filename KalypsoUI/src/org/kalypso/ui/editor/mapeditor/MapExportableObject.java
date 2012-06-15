@@ -137,9 +137,9 @@ public class MapExportableObject implements IExportableObject
   public String getPreferredDocumentName( )
   {
     final String baseName = FilenameUtils.removeExtension( m_preferredDocumentName );
-    final String fileName = String.format( "%s.%s", baseName, m_format );
+    final String fileName = String.format( "%s.%s", baseName, m_format ); //$NON-NLS-1$
 
-    return FileUtilities.validateName( fileName, "_" );
+    return FileUtilities.validateName( fileName, "_" ); //$NON-NLS-1$
   }
 
   /**

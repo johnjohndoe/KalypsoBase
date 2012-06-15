@@ -53,6 +53,7 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.java.io.FileUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
@@ -86,11 +87,11 @@ public final class MovieUtilities
   {
     final IKalypsoTheme[] themes = MapModellHelper.findThemeByProperty( mapModel, IKalypsoUIConstants.MOVIE_THEME_PROPERTY, IKalypsoThemeVisitor.DEPTH_ZERO );
     if( themes == null || themes.length == 0 )
-      throw new Exception( "Es wurde kein Filmthema in der aktiven Karte gefunden..." );
+      throw new Exception( Messages.getString("MovieUtilities_0") ); //$NON-NLS-1$
 
     final IKalypsoTheme theme = themes[0];
     if( !(theme instanceof IKalypsoCascadingTheme) )
-      throw new Exception( "Es wurde kein Filmthema in der aktiven Karte gefunden..." );
+      throw new Exception( Messages.getString("MovieUtilities_1") ); //$NON-NLS-1$
 
     return (IKalypsoCascadingTheme) theme;
   }
@@ -165,13 +166,13 @@ public final class MovieUtilities
       final Gismapview gisview = mapModel.createGismapTemplate( boundingBox, mapModel.getCoordinatesSystem(), new NullProgressMonitor() );
 
       /* Create the temporary file. */
-      tmpFile = FileUtilities.createNewUniqueFile( "mov", FileUtilities.TMP_DIR );
+      tmpFile = FileUtilities.createNewUniqueFile( "mov", FileUtilities.TMP_DIR ); //$NON-NLS-1$
 
       /* Create the output stream. */
       outputStream = new BufferedOutputStream( new FileOutputStream( tmpFile ) );
 
       /* Save the gis map view. */
-      GisTemplateHelper.saveGisMapView( gisview, outputStream, "UTF-8" );
+      GisTemplateHelper.saveGisMapView( gisview, outputStream, "UTF-8" ); //$NON-NLS-1$
 
       /* Close the output stream. */
       IOUtils.closeQuietly( outputStream );
@@ -187,7 +188,7 @@ public final class MovieUtilities
     }
     catch( final Exception ex )
     {
-      throw new IOException( "Konnte die Karte nicht kopieren...", ex );
+      throw new IOException( Messages.getString("MovieUtilities_4"), ex ); //$NON-NLS-1$
     }
     finally
     {
@@ -213,12 +214,12 @@ public final class MovieUtilities
     resolutions.add( new MovieResolution( null, 800, 600 ) );
     resolutions.add( new MovieResolution( null, 1024, 768 ) );
     resolutions.add( new MovieResolution( null, 1280, 1024 ) );
-    resolutions.add( new MovieResolution( "720p", 1280, 720 ) );
-    resolutions.add( new MovieResolution( "1080p", 1920, 1080 ) );
+    resolutions.add( new MovieResolution( "720p", 1280, 720 ) ); //$NON-NLS-1$
+    resolutions.add( new MovieResolution( "1080p", 1920, 1080 ) ); //$NON-NLS-1$
 
     /* The screen resolution. */
     final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    final MovieResolution screenResolution = new MovieResolution( "Bildschirm", screenSize.width, screenSize.height );
+    final MovieResolution screenResolution = new MovieResolution( Messages.getString("MovieUtilities_7"), screenSize.width, screenSize.height ); //$NON-NLS-1$
 
     /* Memory for the results. */
     final List<MovieResolution> results = new ArrayList<MovieResolution>();

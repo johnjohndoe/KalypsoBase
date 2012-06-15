@@ -64,7 +64,7 @@ public class GraphicFillSection extends AbstractStyleElementSection<Fill, Graphi
   @Override
   protected String getTitle( )
   {
-    return "Graphic";
+    return "Graphic"; //$NON-NLS-1$
   }
 
   @Override

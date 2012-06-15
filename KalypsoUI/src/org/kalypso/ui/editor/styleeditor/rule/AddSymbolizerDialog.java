@@ -55,6 +55,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 
 /**
@@ -96,7 +97,7 @@ public class AddSymbolizerDialog extends TitleAreaDialog
   @Override
   protected Control createDialogArea( final Composite parent )
   {
-    getShell().setText( "Style Editor" );
+    getShell().setText( Messages.getString("AddSymbolizerDialog_0") ); //$NON-NLS-1$
 
     final Composite composite = (Composite) super.createDialogArea( parent );
 
@@ -118,11 +119,11 @@ public class AddSymbolizerDialog extends TitleAreaDialog
     final boolean choicePossible = m_addComposite.isChoicePossible();
 
     okButton.setEnabled( choicePossible );
-    setTitle( "Create Symbolizer" );
-    setMessage( "Please choose geometry and type of the new symbolizer" );
+    setTitle( Messages.getString("AddSymbolizerDialog_1") ); //$NON-NLS-1$
+    setMessage( Messages.getString("AddSymbolizerDialog_2") ); //$NON-NLS-1$
 
     if( !choicePossible )
-      setMessage( "Unable to create a symbolizer for the current feature type: no valid geometry available.", IMessageProvider.WARNING );
+      setMessage( Messages.getString("AddSymbolizerDialog_3"), IMessageProvider.WARNING ); //$NON-NLS-1$
   }
 
   /**

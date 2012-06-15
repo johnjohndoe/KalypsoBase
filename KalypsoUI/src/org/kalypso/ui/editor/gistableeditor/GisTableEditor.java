@@ -170,7 +170,7 @@ public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart
 
   private void appendNewFeatureActions( final IMenuManager manager )
   {
-    final IMenuManager newFeatureMenu = new MenuManager( Messages.getString( "org.kalypso.ui.editor.actions.FeatureActionUtilities.7" ) );
+    final IMenuManager newFeatureMenu = new MenuManager( Messages.getString( "org.kalypso.ui.editor.actions.FeatureActionUtilities.7" ) ); //$NON-NLS-1$
     manager.add( newFeatureMenu );
     GisTableEditorActionBarContributor.fillNewFeatureMenu( newFeatureMenu, this );
   }

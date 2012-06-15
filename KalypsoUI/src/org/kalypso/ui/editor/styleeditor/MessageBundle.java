@@ -51,7 +51,7 @@ public interface MessageBundle
 
   String STYLE_EDITOR_STYLE = Messages.getString( "org.kalypso.ui.editor.styleeditor.MessageBundle.2" ); //$NON-NLS-1$
 
-  String STYLE_EDITOR_RESET_STYLE = "Resets the user defined style";
+  String STYLE_EDITOR_RESET_STYLE = Messages.getString("MessageBundle.0"); //$NON-NLS-1$
 
   String STYLE_EDITOR_SAVE_STYLE = Messages.getString( "org.kalypso.ui.editor.styleeditor.MessageBundle.3" ); //$NON-NLS-1$
 
@@ -263,7 +263,7 @@ public interface MessageBundle
 
   String STYLE_GET_GEOMETRY = Messages.getString( "org.kalypso.ui.editor.styleeditor.MessageBundle.107" ); //$NON-NLS-1$
 
-  String STYLE_EDITOR_FIELD_EMPTY = "<Empty>";
+  String STYLE_EDITOR_FIELD_EMPTY = "<Empty>"; //$NON-NLS-1$
 
-  String STYLE_EDITOR_FIELD_NOT_SET = "<Not Set>";
+  String STYLE_EDITOR_FIELD_NOT_SET = "<Not Set>"; //$NON-NLS-1$
 }

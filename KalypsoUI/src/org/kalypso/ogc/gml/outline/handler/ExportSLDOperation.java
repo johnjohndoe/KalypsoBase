@@ -54,6 +54,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.java.xml.XMLUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.xml.Marshallable;
 
@@ -92,7 +93,7 @@ public class ExportSLDOperation implements ICoreRunnableWithProgress
     }
     catch( final IOException e )
     {
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), "Failed to write sld", e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString("ExportSLDOperation_0"), e ) ); //$NON-NLS-1$
     }
     finally
     {

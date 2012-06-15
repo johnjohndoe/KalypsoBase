@@ -62,7 +62,7 @@ public class ExportLegendWizard extends Wizard implements IWorkbenchWizard
 
   public ExportLegendWizard( )
   {
-    setWindowTitle( Messages.getString( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.2" ) );
+    setWindowTitle( Messages.getString( "org.kalypso.ogc.gml.outline.handler.LegendExportHandler.2" ) ); //$NON-NLS-1$
 
     setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoGisPlugin.getDefault(), getClass().getName() ) );
   }

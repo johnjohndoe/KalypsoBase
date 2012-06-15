@@ -111,7 +111,7 @@ public class WMSThemePropertyPage extends PropertyPage implements IWorkbenchProp
 
     /* Last request */
     final Label lastRequestLabel = new Label( composite, SWT.NONE );
-    lastRequestLabel.setText( "Letzte Anfrage" );
+    lastRequestLabel.setText( Messages.getString("WMSThemePropertyPage.0") ); //$NON-NLS-1$
     lastRequestLabel.setLayoutData( new GridData( SWT.FILL, SWT.TOP, false, false ) );
 
     /* Read only, as WMS-Theme does not support changing the last request. */
@@ -121,7 +121,7 @@ public class WMSThemePropertyPage extends PropertyPage implements IWorkbenchProp
     lastRequestText.setLayoutData( lastRequestData );
     String lastRequest = theme.getLastRequest();
     if( lastRequest == null || lastRequest.length() == 0 )
-      lastRequest = "Unbekannt";
+      lastRequest = Messages.getString("WMSThemePropertyPage.1"); //$NON-NLS-1$
     lastRequestText.setText( lastRequest );
     lastRequestText.addModifyListener( new ModifyListener()
     {

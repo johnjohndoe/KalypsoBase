@@ -116,7 +116,7 @@ public class WfsLoader extends WorkspaceLoader
     {
       e.printStackTrace();
 
-      final String msg = String.format( "Failed to load GML from %s", baseURLAsString );
+      final String msg = String.format( Messages.getString("WfsLoader.0"), baseURLAsString ); //$NON-NLS-1$
       final MultiStatus multiStatus = new MultiStatus( KalypsoGisPlugin.getId(), -1, new IStatus[] { e.getStatus() }, msg, e );
       final LoaderException loaderException = new LoaderException( multiStatus );
       setStatus( multiStatus );

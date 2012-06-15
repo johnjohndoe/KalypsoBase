@@ -100,7 +100,7 @@ public class GisMapEditor extends AbstractMapPart implements IEditorPart
       page.addActionURI( OUTLINE_URI_MENU );
       // TODO: check we do not need the other popup-uri any more and should probably remove it
       page.addActionURI( OUTLINE_URI_POPUP );
-      page.addActionURI( "popup:org.eclipse.ui.popup.any" );
+      page.addActionURI( "popup:org.eclipse.ui.popup.any" ); //$NON-NLS-1$
 
       page.setMapPanel( getMapPanel() );
       return page;

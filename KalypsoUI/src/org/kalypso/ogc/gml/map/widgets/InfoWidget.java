@@ -56,13 +56,13 @@ public class InfoWidget extends AbstractThemeInfoWidget
 {
   private static final IKalypsoTheme[] EMPTY_THEMES = new IKalypsoTheme[0];
 
-  private static final String THEME_PROPERTY_INFO = "infoWidget.showInfo";
+  private static final String THEME_PROPERTY_INFO = "infoWidget.showInfo"; //$NON-NLS-1$
 
   public InfoWidget( )
   {
     super( Messages.getString( "org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget.0" ), Messages.getString( "org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    setNoThemesTooltip( "No Info-Themes configured" );
+    setNoThemesTooltip( Messages.getString("InfoWidget.1") ); //$NON-NLS-1$
   }
 
   public InfoWidget( final String name, final String toolTip )
@@ -97,7 +97,7 @@ public class InfoWidget extends AbstractThemeInfoWidget
     final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
     for( final IKalypsoTheme theme : allThemes )
     {
-      final String property = theme.getProperty( THEME_PROPERTY_INFO, "false" );
+      final String property = theme.getProperty( THEME_PROPERTY_INFO, "false" ); //$NON-NLS-1$
       if( Boolean.parseBoolean( property ) )
         themes.add( theme );
     }

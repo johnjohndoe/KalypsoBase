@@ -48,6 +48,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -77,7 +78,7 @@ public class FullExtentHandler extends AbstractHandler
 
       final Shell shell = HandlerUtil.getActiveShell( event );
       final String title = HandlerUtils.getCommandName( event );
-      MessageDialog.openWarning( shell, title, "Keine Karte vorhanden" );
+      MessageDialog.openWarning( shell, title, Messages.getString("FullExtentHandler_0") ); //$NON-NLS-1$
       return null;
     }
 

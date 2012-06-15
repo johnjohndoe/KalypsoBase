@@ -400,7 +400,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
       else if( isDateColumn( columnIndex ) )
         return;
       else if( !isEditable( columnIndex - 1 ) )
-        throw new IllegalStateException( "Trying to edit uneditable column" );
+        throw new IllegalStateException( Messages.getString("ObservationTableModel.0") ); //$NON-NLS-1$
 
       final TableViewColumn col = m_columns.get( columnIndex - 1 );
 

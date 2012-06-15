@@ -128,7 +128,7 @@ public class DiagViewUtils
   protected static Marshaller createMarshaller( ) throws JAXBException
   {
     final Map<String, String> prefixMapping = new HashMap<String, String>();
-    prefixMapping.put( NS.KALYPSO_OBSVIEW, "" );
+    prefixMapping.put( NS.KALYPSO_OBSVIEW, "" ); //$NON-NLS-1$
     return JaxbUtilities.createMarshaller( ODT_JC, true, prefixMapping );
   }
 
@@ -143,8 +143,8 @@ public class DiagViewUtils
       final Marshaller m = createMarshaller();
       String encoding = writer.getEncoding();
       // HACK: rename utf8 encoding, esle xml editor will not validate
-      if( "UTF8".equals( encoding ) )
-        encoding = "UTF-8";
+      if( "UTF8".equals( encoding ) ) //$NON-NLS-1$
+        encoding = "UTF-8"; //$NON-NLS-1$
 
       m.setProperty( Marshaller.JAXB_ENCODING, encoding );
 

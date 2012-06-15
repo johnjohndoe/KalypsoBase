@@ -45,9 +45,9 @@ import org.kalypsodeegree.graphics.sld.Stroke;
 enum LineJoin
 {
   // TODO: move into Stroke class and use it there
-  mitre(Stroke.LJ_MITRE, "Mitre"),
-  round(Stroke.LJ_ROUND, "Round"),
-  bevel(Stroke.LJ_BEVEL, "Bevel");
+  mitre(Stroke.LJ_MITRE, "Mitre"), //$NON-NLS-1$
+  round(Stroke.LJ_ROUND, "Round"), //$NON-NLS-1$
+  bevel(Stroke.LJ_BEVEL, "Bevel"); //$NON-NLS-1$
 
   private final int m_lineJoin;
 

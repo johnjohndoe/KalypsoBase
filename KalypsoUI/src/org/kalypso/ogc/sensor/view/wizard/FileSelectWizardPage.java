@@ -50,6 +50,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.i18n.Messages;
 
 /**
  * FileSelectWizardPage contains a simple FileFieldEditor that allows the user to enter the file name directly as a
@@ -80,10 +81,10 @@ public class FileSelectWizardPage extends WizardPage
     m_fileExtensions = fileExtensions;
 
     m_store = new PreferenceStore();
-    m_store.setDefault( "FILE", fileName );
+    m_store.setDefault( "FILE", fileName ); //$NON-NLS-1$
 
-    setTitle( "ZML Export" );
-    setDescription( "Bitte wählen Sie eine Datei zum Speichern aus." );
+    setTitle( Messages.getString("FileSelectWizardPage_1") ); //$NON-NLS-1$
+    setDescription( Messages.getString("FileSelectWizardPage_2") ); //$NON-NLS-1$
   }
 
   /**
@@ -108,7 +109,7 @@ public class FileSelectWizardPage extends WizardPage
   {
     final Composite sub = new Composite( parent, SWT.FILL );
 
-    m_ffe = new FileFieldEditor( "FILE", "Datei:", sub );
+    m_ffe = new FileFieldEditor( "FILE", Messages.getString("FileSelectWizardPage_4"), sub ); //$NON-NLS-1$ //$NON-NLS-2$
     m_ffe.setPreferenceStore( m_store );
     m_ffe.loadDefault();
     m_ffe.setEmptyStringAllowed( false );
@@ -116,10 +117,10 @@ public class FileSelectWizardPage extends WizardPage
 
     if( m_ffe.getStringValue() == null || m_ffe.getStringValue().length() == 0 )
     {
-      final String fileName = getDialogSettings().get( "FILE" );
+      final String fileName = getDialogSettings().get( "FILE" ); //$NON-NLS-1$
       if( fileName != null )
       {
-        m_store.setDefault( "FILE", fileName );
+        m_store.setDefault( "FILE", fileName ); //$NON-NLS-1$
         m_ffe.loadDefault();
       }
     }
@@ -131,7 +132,7 @@ public class FileSelectWizardPage extends WizardPage
     m_ffe.fillIntoGrid( sub, 4 );
 
     setControl( sub );
-    setDescription( "Geben Sie einen Dateiname ein" );
+    setDescription( Messages.getString("FileSelectWizardPage_7") ); //$NON-NLS-1$
 
     final Text textControl = m_ffe.getTextControl( sub );
     textControl.addModifyListener( new ModifyListener()
@@ -155,8 +156,8 @@ public class FileSelectWizardPage extends WizardPage
     }
 
     m_ffe.store();
-    final String fileName = m_store.getString( "FILE" );
-    getDialogSettings().put( "FILE", fileName );
+    final String fileName = m_store.getString( "FILE" ); //$NON-NLS-1$
+    getDialogSettings().put( "FILE", fileName ); //$NON-NLS-1$
 
     return fileName;
   }

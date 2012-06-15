@@ -68,7 +68,7 @@ public class GmlEditorActionBarContributor extends AbstractEditorActionBarContri
   {
     super.init( bars );
 
-    m_newFeatureManagedMenu.setGroupName( "selection" );
+    m_newFeatureManagedMenu.setGroupName( "selection" ); //$NON-NLS-1$
 
     m_featureSelectionActionGroup.addManagedMenu( m_newFeatureManagedMenu );
     m_featureSelectionActionGroup.setContext( new ActionContext( StructuredSelection.EMPTY ) );

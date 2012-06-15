@@ -67,7 +67,7 @@ public class MarkTabItem implements IGraphicElementItem
   @Override
   public String getItemLabel( )
   {
-    return "Mark";
+    return "Mark"; //$NON-NLS-1$
   }
 
   /**

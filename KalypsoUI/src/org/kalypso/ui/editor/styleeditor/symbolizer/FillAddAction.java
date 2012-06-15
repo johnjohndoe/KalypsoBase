@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.symbolizer;
 
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypso.ui.editor.styleeditor.util.StyleElementAction;
@@ -55,7 +56,7 @@ class FillAddAction extends StyleElementAction<PolygonSymbolizer>
   {
     super( input );
 
-    setText( "Create Fill" );
+    setText( Messages.getString("FillAddAction_0") ); //$NON-NLS-1$
     setImageDescriptor( ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE );
   }
 

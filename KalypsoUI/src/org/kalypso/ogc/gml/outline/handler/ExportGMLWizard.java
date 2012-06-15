@@ -63,7 +63,7 @@ public class ExportGMLWizard extends Wizard implements IWorkbenchWizard
 
   public ExportGMLWizard( )
   {
-    setWindowTitle( Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportGMLThemeHandler.2" ) );
+    setWindowTitle( Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportGMLThemeHandler.2" ) ); //$NON-NLS-1$
 
     setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoGisPlugin.getDefault(), getClass().getName() ) );
   }

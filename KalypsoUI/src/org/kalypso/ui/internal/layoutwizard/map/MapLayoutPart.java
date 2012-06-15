@@ -68,6 +68,7 @@ import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.core.layoutwizard.ILayoutPageContext;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.GisTemplateFeatureTheme;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
@@ -99,7 +100,7 @@ public class MapLayoutPart extends AbstractWizardLayoutPart implements IMapPanel
   /**
    * Argument: if present, a toolbar will be shown above the map <br>
    */
-  private static final String PROP_MAP_TOOLBAR = "mapToolbar";
+  private static final String PROP_MAP_TOOLBAR = "mapToolbar"; //$NON-NLS-1$
 
   /**
    * Sub-Argument (prefix) in mapToolbar: id of a menu-contribution that will be added to the map-toolbar <br>
@@ -108,41 +109,41 @@ public class MapLayoutPart extends AbstractWizardLayoutPart implements IMapPanel
   private static final String PROP_MAP_TOOLBAR_URI = "uri"; //$NON-NLS-1$
 
   /** Argument: Pfad auf Vorlage für die Karte (.gmt Datei) */
-  private static final String PROP_MAPTEMPLATE = "mapTemplate";
+  private static final String PROP_MAPTEMPLATE = "mapTemplate"; //$NON-NLS-1$
 
   /**
    * Argument: Full class name of the map-widget to use. Default is:
    * {@link org.kalypso.ogc.gml.map.widgets.SelectSingleFeatureWidget}. If empty, no widget will be selected initially.
    */
-  private static final String PROP_MAP_WIDGETCLASS = "mapWidgetClass";
+  private static final String PROP_MAP_WIDGETCLASS = "mapWidgetClass"; //$NON-NLS-1$
 
   /**
    * Argument: Plug-in id (symbolic name) of the plug.in containing the given widget class. If none if given,
    * 'org.kalypso.ui' is assumed.
    */
-  private static final String PROP_MAP_WIDGETPLUGIN = "mapWidgetPlugin";
+  private static final String PROP_MAP_WIDGETPLUGIN = "mapWidgetPlugin"; //$NON-NLS-1$
 
   /**
    * Argument: Falls true, wird der Context der Karte stets auf den CalcCaseFolder gesetzt. Ansonsten wie üblich auf die
    * .gtt Datei.
    */
-  public static final String PROP_MAPTEMPLATEISCALC = "mapTemplateContextIsCalcCase";
+  public static final String PROP_MAPTEMPLATEISCALC = "mapTemplateContextIsCalcCase"; //$NON-NLS-1$
 
   /**
    * Argument: Falls true, wird die Karte auf den FullExtent maximiert, sonst wird {@link #m_wishBoundingBox}angesetzt
    */
-  private static final String PROP_MAXIMIZEMAP = "maximizeMap";
+  private static final String PROP_MAXIMIZEMAP = "maximizeMap"; //$NON-NLS-1$
 
   /**
    * Argument: Falls gesetzt, wird das Feature mit dieser ID selektiert, nachdem die Karte geladen wurde. Ansonsten das
    * erste Feature
    */
-  private static final String PROP_FEATURE_TO_SELECT_ID = "selectFeatureID";
+  private static final String PROP_FEATURE_TO_SELECT_ID = "selectFeatureID"; //$NON-NLS-1$
 
   /**
    * Argument: feature with this id will be in the center of the map
    */
-  private static final String PROP_PAN_TO_FEATURE_ID = "pantoFeatureId";
+  private static final String PROP_PAN_TO_FEATURE_ID = "pantoFeatureId"; //$NON-NLS-1$
 
   private GisTemplateMapModell m_mapModell;
 
@@ -187,11 +188,11 @@ public class MapLayoutPart extends AbstractWizardLayoutPart implements IMapPanel
       final Arguments arguments = context.getArguments();
       final String mapFileName = arguments.getProperty( PROP_MAPTEMPLATE );
       if( StringUtils.isBlank( mapFileName ) )
-        throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), String.format( "Vorlagendatei nicht definiert: Eigenschaft '%s'", PROP_MAPTEMPLATE ) ) );
+        throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), String.format( Messages.getString("MapLayoutPart_8"), PROP_MAPTEMPLATE ) ) ); //$NON-NLS-1$
 
       final URL mapURL = context.resolveURI( mapFileName );
       if( mapURL == null )
-        throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), "Vorlagendatei existiert nicht: " + mapFileName ) );
+        throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString("MapLayoutPart_9") + mapFileName ) ); //$NON-NLS-1$
 
       final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapURL );
       final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
@@ -231,7 +232,7 @@ public class MapLayoutPart extends AbstractWizardLayoutPart implements IMapPanel
 
   private void throwMapLoadException( final Exception e ) throws CoreException
   {
-    final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), "Failed to load map file", e );
+    final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString("MapLayoutPart_10"), e ); //$NON-NLS-1$
     throw new CoreException( status );
   }
 

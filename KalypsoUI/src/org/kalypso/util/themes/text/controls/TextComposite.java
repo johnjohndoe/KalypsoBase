@@ -69,6 +69,7 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.Form;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.ThemeUtilities;
 import org.kalypso.util.themes.position.PositionUtilities;
 import org.kalypso.util.themes.position.controls.PositionComposite;
@@ -375,18 +376,18 @@ public class TextComposite extends Composite
     /* Create a group. */
     final Group textGroup = new Group( parent, SWT.NONE );
     textGroup.setLayout( new GridLayout( 3, false ) );
-    textGroup.setText( "Optionen" );
+    textGroup.setText( Messages.getString("TextComposite_0") ); //$NON-NLS-1$
 
     /* Create a label. */
     final Label backgroundColorLabel = new Label( textGroup, SWT.NONE );
     backgroundColorLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    backgroundColorLabel.setText( "Hintergrundfarbe" );
+    backgroundColorLabel.setText( Messages.getString("TextComposite_1") ); //$NON-NLS-1$
     backgroundColorLabel.setAlignment( SWT.LEFT );
 
     /* Create a label. */
     final Label backgroundLabel = new Label( textGroup, SWT.BORDER );
     backgroundLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    backgroundLabel.setText( "Hintergrundfarbe" );
+    backgroundLabel.setText( Messages.getString("TextComposite_2") ); //$NON-NLS-1$
     backgroundLabel.setEnabled( !m_transparency );
     backgroundLabel.setBackground( new Color( parent.getDisplay(), m_backgroundColor ) );
 
@@ -402,7 +403,7 @@ public class TextComposite extends Composite
     /* Create a button. */
     final Button backgroundColorButton = new Button( textGroup, SWT.PUSH );
     backgroundColorButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    backgroundColorButton.setText( "..." );
+    backgroundColorButton.setText( "..." ); //$NON-NLS-1$
     backgroundColorButton.setEnabled( !m_transparency );
     backgroundColorButton.addSelectionListener( new SelectionAdapter()
     {
@@ -429,7 +430,7 @@ public class TextComposite extends Composite
     /* Create a button. */
     final Button transparencyButton = new Button( textGroup, SWT.CHECK );
     transparencyButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 3, 1 ) );
-    transparencyButton.setText( "Hintergrund transparent" );
+    transparencyButton.setText( Messages.getString("TextComposite_4") ); //$NON-NLS-1$
     transparencyButton.setSelection( m_transparency );
     transparencyButton.addSelectionListener( new SelectionAdapter()
     {
@@ -450,7 +451,7 @@ public class TextComposite extends Composite
     /* Create a label. */
     final Label fontSizeLabel = new Label( textGroup, SWT.NONE );
     fontSizeLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    fontSizeLabel.setText( "Schriftgrad" );
+    fontSizeLabel.setText( Messages.getString("TextComposite_5") ); //$NON-NLS-1$
     fontSizeLabel.setAlignment( SWT.LEFT );
 
     /* Create a spinner. */
@@ -473,7 +474,7 @@ public class TextComposite extends Composite
     /* Create a label. */
     final Label textLabel = new Label( textGroup, SWT.NONE );
     textLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    textLabel.setText( "Text" );
+    textLabel.setText( Messages.getString("TextComposite_6") ); //$NON-NLS-1$
     textLabel.setAlignment( SWT.LEFT );
 
     /* Create a text field. */
@@ -483,7 +484,7 @@ public class TextComposite extends Composite
     textText.setLayoutData( textData );
     if( m_text != null )
       textText.setText( m_text );
-    textText.setMessage( "<Anzeigetext>" );
+    textText.setMessage( Messages.getString("TextComposite_7") ); //$NON-NLS-1$
 
     /* Add a listener. */
     textText.addModifyListener( new ModifyListener()
@@ -592,20 +593,20 @@ public class TextComposite extends Composite
     final Properties properties = new Properties();
 
     /* Serialize the properties. */
-    final String horizontalProperty = String.format( Locale.PRC, "%d", m_horizontal );
-    final String verticalProperty = String.format( Locale.PRC, "%d", m_vertical );
-    final String backgroundColorProperty = String.format( Locale.PRC, "%d;%d;%d", m_backgroundColor.red, m_backgroundColor.green, m_backgroundColor.blue );
+    final String horizontalProperty = String.format( Locale.PRC, "%d", m_horizontal ); //$NON-NLS-1$
+    final String verticalProperty = String.format( Locale.PRC, "%d", m_vertical ); //$NON-NLS-1$
+    final String backgroundColorProperty = String.format( Locale.PRC, "%d;%d;%d", m_backgroundColor.red, m_backgroundColor.green, m_backgroundColor.blue ); //$NON-NLS-1$
     String textProperty = null;
     if( m_text != null )
-      textProperty = String.format( Locale.PRC, "%s", m_text );
-    final String fontSizeProperty = String.format( Locale.PRC, "%d", m_fontSize );
+      textProperty = String.format( Locale.PRC, "%s", m_text ); //$NON-NLS-1$
+    final String fontSizeProperty = String.format( Locale.PRC, "%d", m_fontSize ); //$NON-NLS-1$
     final String transparencyProperty = Boolean.toString( m_transparency );
 
     /* Add the properties. */
     properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );
     properties.put( PositionUtilities.THEME_PROPERTY_VERTICAL_POSITION, verticalProperty );
     properties.put( ThemeUtilities.THEME_PROPERTY_BACKGROUND_COLOR, backgroundColorProperty );
-    properties.put( TextUtilities.THEME_PROPERTY_TEXT, "" );
+    properties.put( TextUtilities.THEME_PROPERTY_TEXT, "" ); //$NON-NLS-1$
     if( textProperty != null )
       properties.put( TextUtilities.THEME_PROPERTY_TEXT, textProperty );
     properties.put( TextUtilities.THEME_PROPERTY_FONT_SIZE, fontSizeProperty );

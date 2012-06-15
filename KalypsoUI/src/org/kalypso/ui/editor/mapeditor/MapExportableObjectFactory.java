@@ -45,6 +45,7 @@ import java.awt.Insets;
 import org.apache.commons.collections.ExtendedProperties;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizardPage;
+import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.IExportableObjectFactory;
 import org.kalypso.metadoc.configuration.PublishingConfiguration;
@@ -83,7 +84,7 @@ public class MapExportableObjectFactory implements IExportableObjectFactory
     final Insets insets = (Insets) conf.getProperty( ImagePropertiesWizardPage.CONFIG_INSETS );
     final boolean border = conf.getBoolean( ImagePropertiesWizardPage.CONFIG_HAS_BORDER, false );
     final int borderWidth = border ? 1 : 0;
-    final String format = conf.getString( ImagePropertiesWizardPage.CONFIG_IMAGE_FORMAT, "PNG" );
+    final String format = conf.getString( ImagePropertiesWizardPage.CONFIG_IMAGE_FORMAT, "PNG" ); //$NON-NLS-1$
 
     return new IExportableObject[] { new MapExportableObject( m_mapPanel, preferredDocumentName, width, height, insets, borderWidth, format ) };
   }
@@ -91,6 +92,6 @@ public class MapExportableObjectFactory implements IExportableObjectFactory
   @Override
   public IWizardPage[] createWizardPages( final PublishingConfiguration configuration, final ImageDescriptor defaultImage )
   {
-    return new IWizardPage[] { new ImagePropertiesWizardPage( "ImagePropertiesWizardPage", "Karteneigenschaften", defaultImage, configuration, -1, -1, false, null, false, "PNG" ) };
+    return new IWizardPage[] { new ImagePropertiesWizardPage( "ImagePropertiesWizardPage", Messages.getString("MapExportableObjectFactory_2"), defaultImage, configuration, -1, -1, false, null, false, "PNG" ) }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 }

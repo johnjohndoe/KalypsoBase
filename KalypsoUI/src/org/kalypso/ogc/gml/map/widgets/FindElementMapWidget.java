@@ -399,7 +399,7 @@ public class FindElementMapWidget extends DeprecatedMouseWidget implements IWidg
           {
             lStrPrefix = lPropType.getProperties()[i].getQName().getLocalPart() + ": "; //$NON-NLS-1$
           }
-          final String lPropTrim = ("" + prop).trim();
+          final String lPropTrim = ("" + prop).trim(); //$NON-NLS-1$
           if( !"".equals( lPropTrim ) ) { //$NON-NLS-1$ //$NON-NLS-2$
             if( lPropTrim.length() > m_maxStrLen )
             {
@@ -502,12 +502,12 @@ public class FindElementMapWidget extends DeprecatedMouseWidget implements IWidg
         @Override
         public void widgetSelected( final SelectionEvent e )
         {
-          m_gmlId.setText( "" );
+          m_gmlId.setText( "" ); //$NON-NLS-1$
           if( m_id != null && m_id.isVisible() )
-            m_id.setText( "" );
-          m_name.setText( "" );
-          m_posX.setText( "" );
-          m_posY.setText( "" );
+            m_id.setText( "" ); //$NON-NLS-1$
+          m_name.setText( "" ); //$NON-NLS-1$
+          m_posX.setText( "" ); //$NON-NLS-1$
+          m_posY.setText( "" ); //$NON-NLS-1$
           reset();
         }
 
@@ -618,7 +618,7 @@ public class FindElementMapWidget extends DeprecatedMouseWidget implements IWidg
   protected void showFound( ) throws ExecutionException
   {
     GM_Point centroid = null;
-    if( m_feature == null && m_boolFound || m_posX != null && m_posY != null && !"".equals( m_posX.getText() ) && !"".equals( m_posY.getText() ) )
+    if( m_feature == null && m_boolFound || m_posX != null && m_posY != null && !"".equals( m_posX.getText() ) && !"".equals( m_posY.getText() ) ) //$NON-NLS-1$ //$NON-NLS-2$
     {
       centroid = GeometryFactory.createGM_Point( NumberUtils.parseQuietDouble( m_posX.getText() ), NumberUtils.parseQuietDouble( m_posY.getText() ), m_defaultCrs );
     }
@@ -822,7 +822,7 @@ public class FindElementMapWidget extends DeprecatedMouseWidget implements IWidg
   @Override
   public String getPartName( )
   {
-    return Messages.getString( "org.kalypso.ogc.gml.map.widgets.FindElementMapWidget.1" );
+    return Messages.getString( "org.kalypso.ogc.gml.map.widgets.FindElementMapWidget.1" ); //$NON-NLS-1$
   }
 
   protected void doSearchOperation( )

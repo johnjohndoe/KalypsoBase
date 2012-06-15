@@ -72,7 +72,7 @@ public class RemoveThemeHandler extends AbstractHandler
     final Shell shell = HandlerUtil.getActiveShellChecked( event );
     final String commandName = HandlerUtils.getCommandName( event );
 
-    final String message = String.format( "Really remove theme(s)?" );
+    final String message = String.format( Messages.getString("RemoveThemeHandler.0") ); //$NON-NLS-1$
     if( !MessageDialog.openConfirm( shell, commandName, message ) )
       return null;
 

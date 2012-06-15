@@ -76,7 +76,7 @@ public class ImageProvider
     STATUS_LINE_SHOW_MAP_COORDS("icons/map/statusbarPosition.gif"), //$NON-NLS-1$
     STATUS_LINE_SHOW_CRS_INFO("icons/map/statusbarShowCRSInfo.gif"), //$NON-NLS-1$
 
-    SLD_RULE_TAB_ADD("icons/sldeditor/ruleTabAdd.gif"),
+    SLD_RULE_TAB_ADD("icons/sldeditor/ruleTabAdd.gif"), //$NON-NLS-1$
 
     MOVIE_PLAYER_STOP("icons/movie/player_stop.png"), //$NON-NLS-1$
     MOVIE_PLAYER_START("icons/movie/player_start.png"), //$NON-NLS-1$

@@ -92,6 +92,7 @@ import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.IFeaturesProvider;
 import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
@@ -696,7 +697,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
         final Map<String, String> params = column.getParameters();
         final IFeatureModifier modifier = KalypsoUIExtensions.createFeatureModifier( propPath, ftp, modifierId, params );
         if( modifier == null )
-          System.out.println( "No feature modifier with id: " + modifierId );
+          System.out.println( Messages.getString("LayerTableViewer_0") + modifierId ); //$NON-NLS-1$
         else
           return modifier;
       }
@@ -898,7 +899,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
 
     final IPoolableObjectType key = ((PoolLayerTableInput) input).getPoolKey();
 
-    layer.setId( "id" );
+    layer.setId( "id" ); //$NON-NLS-1$
     layer.setHref( key.getLocation() );
     layer.setLinktype( key.getType() );
     layer.setActuate( "onRequest" ); //$NON-NLS-1$

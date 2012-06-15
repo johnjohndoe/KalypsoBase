@@ -52,6 +52,7 @@ import org.kalypso.commons.i18n.NullTranslator;
 import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.FeatureviewType;
 import org.kalypso.template.featureview.GridDataType;
@@ -185,7 +186,7 @@ public class FeatureviewHelper implements IFeatureviewFactory
     /* Create a label. */
     final LabelType label = TemplateUtilities.OF_FEATUREVIEW.createLabelType();
     label.setStyle( "SWT.NONE" ); //$NON-NLS-1$
-    label.setText( "Kein Feature gefunden..." );
+    label.setText( Messages.getString("FeatureviewHelper_0") ); //$NON-NLS-1$
     label.setVisible( true );
 
     final GridDataType labelGridData = TemplateUtilities.OF_FEATUREVIEW.createGridDataType();

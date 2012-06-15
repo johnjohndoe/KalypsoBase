@@ -69,6 +69,7 @@ import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.styleeditor.StyleEditorHelper;
 import org.kalypsodeegree.graphics.sld.Graphic;
 import org.kalypsodeegree.graphics.sld.LinePlacement.PlacementType;
@@ -129,8 +130,8 @@ public class AddSymbolizerComposite extends Composite
 
   private boolean init( final Composite parent )
   {
-    new Label( parent, SWT.NONE ).setText( "Geometry" );
-    new Label( parent, SWT.NONE ).setText( "Symbolizer Type" );
+    new Label( parent, SWT.NONE ).setText( Messages.getString("AddSymbolizerComposite_0") ); //$NON-NLS-1$
+    new Label( parent, SWT.NONE ).setText( Messages.getString("AddSymbolizerComposite_1") ); //$NON-NLS-1$
     new Label( parent, SWT.NONE );
 
     // Geometry-Selection Combo

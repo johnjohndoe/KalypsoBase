@@ -87,7 +87,7 @@ public class ExtensionFeatureControlFactory extends AbstractFeatureControlFactor
     }
     catch( final CoreException ce )
     {
-      final String message = String.format( "%s%n%s", ce.getLocalizedMessage(), ExceptionUtils.getStackTrace( ce ) );
+      final String message = String.format( "%s%n%s", ce.getLocalizedMessage(), ExceptionUtils.getStackTrace( ce ) ); //$NON-NLS-1$
       return new LabelFeatureControl( feature, pt, message );
     }
   }

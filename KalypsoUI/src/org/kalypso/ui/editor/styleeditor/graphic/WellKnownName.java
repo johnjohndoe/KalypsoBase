@@ -5,13 +5,13 @@ package org.kalypso.ui.editor.styleeditor.graphic;
  */
 public enum WellKnownName
 {
-  square("square"),
-  circle("circle"),
-  triangle("triangle"),
-  star("star"),
-  cross("cross"),
-  kalypsoArrow("kalypsoArrow"),
-  x("x");
+  square("square"), //$NON-NLS-1$
+  circle("circle"), //$NON-NLS-1$
+  triangle("triangle"), //$NON-NLS-1$
+  star("star"), //$NON-NLS-1$
+  cross("cross"), //$NON-NLS-1$
+  kalypsoArrow("kalypsoArrow"), //$NON-NLS-1$
+  x("x"); //$NON-NLS-1$
 
   private final String m_label;
 

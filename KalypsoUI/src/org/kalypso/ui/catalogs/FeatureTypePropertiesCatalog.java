@@ -75,11 +75,11 @@ public final class FeatureTypePropertiesCatalog
 
   static
   {
-    DEFAULT_VALUES.setProperty( IFeatureTypePropertiesConstants.FEATURE_CREATION_DEPTH, "0" );
-    DEFAULT_VALUES.setProperty( IFeatureTypePropertiesConstants.GMLTREE_SHOW_CHILDREN, "true" );
-    DEFAULT_VALUES.setProperty( IFeatureTypePropertiesConstants.GMLTREE_NEW_MENU_ON_FEATURE, "true" );
-    DEFAULT_VALUES.setProperty( IFeatureTypePropertiesConstants.GMLTREE_NEW_MENU_SHOW_SUB_FEATURES, "false" );
-    DEFAULT_VALUES.setProperty( IFeatureTypePropertiesConstants.GMLTREE_SHOW_DUPLICATION_MENU, "true" );
+    DEFAULT_VALUES.setProperty( IFeatureTypePropertiesConstants.FEATURE_CREATION_DEPTH, "0" ); //$NON-NLS-1$
+    DEFAULT_VALUES.setProperty( IFeatureTypePropertiesConstants.GMLTREE_SHOW_CHILDREN, "true" ); //$NON-NLS-1$
+    DEFAULT_VALUES.setProperty( IFeatureTypePropertiesConstants.GMLTREE_NEW_MENU_ON_FEATURE, "true" ); //$NON-NLS-1$
+    DEFAULT_VALUES.setProperty( IFeatureTypePropertiesConstants.GMLTREE_NEW_MENU_SHOW_SUB_FEATURES, "false" ); //$NON-NLS-1$
+    DEFAULT_VALUES.setProperty( IFeatureTypePropertiesConstants.GMLTREE_SHOW_DUPLICATION_MENU, "true" ); //$NON-NLS-1$
     DEFAULT_VALUES.setProperty( IFeatureTypePropertiesConstants.THEME_INFO_ID, StringUtils.EMPTY );
   }
 

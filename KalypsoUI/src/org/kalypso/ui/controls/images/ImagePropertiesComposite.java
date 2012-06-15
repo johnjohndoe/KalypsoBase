@@ -68,6 +68,7 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.controls.images.listener.IImagePropertyChangedListener;
 
 /**
@@ -244,18 +245,18 @@ public class ImagePropertiesComposite extends Composite
     final Group imageGroup = new Group( main, SWT.NONE );
     imageGroup.setLayout( new GridLayout( 2, false ) );
     imageGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    imageGroup.setText( "Maße, Format" );
+    imageGroup.setText( Messages.getString("ImagePropertiesComposite_0") ); //$NON-NLS-1$
 
     /* Create a label. */
     final Label imageWidthLabel = new Label( imageGroup, SWT.NONE );
     imageWidthLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    imageWidthLabel.setText( "Breite [Pixel]" );
+    imageWidthLabel.setText( Messages.getString("ImagePropertiesComposite_1") ); //$NON-NLS-1$
 
     /* Create a text field. */
     m_imageWidthText = new Text( imageGroup, SWT.BORDER | SWT.RIGHT );
     m_imageWidthText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     if( m_imageWidth >= 0 )
-      m_imageWidthText.setText( String.format( "%d", m_imageWidth ) );
+      m_imageWidthText.setText( String.format( "%d", m_imageWidth ) ); //$NON-NLS-1$
     m_imageWidthText.addModifyListener( new ModifyListener()
     {
       /**
@@ -280,7 +281,7 @@ public class ImagePropertiesComposite extends Composite
 
             /* Calculate and set the adjusted height. */
             final int adjustedHeight = (int) Math.floor( m_imageWidth / m_aspectFactor );
-            m_imageHeightText.setText( String.format( "%d", adjustedHeight ) );
+            m_imageHeightText.setText( String.format( "%d", adjustedHeight ) ); //$NON-NLS-1$
 
             /* Reset the aspect ratio. */
             m_aspectRatio = true;
@@ -295,13 +296,13 @@ public class ImagePropertiesComposite extends Composite
     /* Create a label. */
     final Label imageHeightLabel = new Label( imageGroup, SWT.NONE );
     imageHeightLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    imageHeightLabel.setText( "Höhe [Pixel]" );
+    imageHeightLabel.setText( Messages.getString("ImagePropertiesComposite_4") ); //$NON-NLS-1$
 
     /* Create a text field. */
     m_imageHeightText = new Text( imageGroup, SWT.BORDER | SWT.RIGHT );
     m_imageHeightText.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     if( m_imageHeight >= 0 )
-      m_imageHeightText.setText( String.format( "%d", m_imageHeight ) );
+      m_imageHeightText.setText( String.format( "%d", m_imageHeight ) ); //$NON-NLS-1$
     m_imageHeightText.addModifyListener( new ModifyListener()
     {
       /**
@@ -326,7 +327,7 @@ public class ImagePropertiesComposite extends Composite
 
             /* Calculate and set the adjusted height. */
             final int adjustedWidth = (int) Math.floor( m_imageHeight * m_aspectFactor );
-            m_imageWidthText.setText( String.format( "%d", adjustedWidth ) );
+            m_imageWidthText.setText( String.format( "%d", adjustedWidth ) ); //$NON-NLS-1$
 
             /* Reset the aspect ratio. */
             m_aspectRatio = true;
@@ -341,7 +342,7 @@ public class ImagePropertiesComposite extends Composite
     /* Create a button. */
     m_aspectRatioButton = new Button( imageGroup, SWT.CHECK );
     m_aspectRatioButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false, 2, 1 ) );
-    m_aspectRatioButton.setText( "Seitenverhältnis beibehalten" );
+    m_aspectRatioButton.setText( Messages.getString("ImagePropertiesComposite_7") ); //$NON-NLS-1$
     m_aspectRatioButton.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -366,12 +367,12 @@ public class ImagePropertiesComposite extends Composite
     /* Separator. */
     final Label separator = new Label( imageGroup, SWT.HORIZONTAL );
     separator.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
-    separator.setText( "" );
+    separator.setText( "" ); //$NON-NLS-1$
 
     /* Create a label. */
     final Label insetsLabel = new Label( imageGroup, SWT.NONE );
     insetsLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    insetsLabel.setText( "Druckrand [Pixel]" );
+    insetsLabel.setText( Messages.getString("ImagePropertiesComposite_9") ); //$NON-NLS-1$
     insetsLabel.setAlignment( SWT.LEFT );
 
     /* Create a spinner. */
@@ -409,7 +410,7 @@ public class ImagePropertiesComposite extends Composite
     /* Create a button. */
     m_borderButton = new Button( imageGroup, SWT.CHECK );
     m_borderButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false, 2, 1 ) );
-    m_borderButton.setText( "Umrandung aktivieren" );
+    m_borderButton.setText( Messages.getString("ImagePropertiesComposite_10") ); //$NON-NLS-1$
     m_borderButton.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -433,19 +434,19 @@ public class ImagePropertiesComposite extends Composite
     /* Separator. */
     final Label separator1 = new Label( imageGroup, SWT.HORIZONTAL );
     separator1.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
-    separator1.setText( "" );
+    separator1.setText( "" ); //$NON-NLS-1$
 
     /* Create a label. */
     final Label imageFormatLabel = new Label( imageGroup, SWT.NONE );
     imageFormatLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    imageFormatLabel.setText( "Format" );
+    imageFormatLabel.setText( Messages.getString("ImagePropertiesComposite_12") ); //$NON-NLS-1$
 
     /* Create a combo viewer. */
     m_imageFormatViewer = new ComboViewer( imageGroup, SWT.READ_ONLY );
     m_imageFormatViewer.getCombo().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_imageFormatViewer.setContentProvider( new ArrayContentProvider() );
     m_imageFormatViewer.setLabelProvider( new LabelProvider() );
-    m_imageFormatViewer.setInput( new String[] { "GIF", "PNG" } );
+    m_imageFormatViewer.setInput( new String[] { "GIF", "PNG" } ); //$NON-NLS-1$ //$NON-NLS-2$
     m_imageFormatViewer.addSelectionChangedListener( new ISelectionChangedListener()
     {
       /**
@@ -554,9 +555,9 @@ public class ImagePropertiesComposite extends Composite
 
     /* The width of the image. */
     if( imageWidth > 0 )
-      m_imageWidthText.setText( String.format( "%d", imageWidth ) );
+      m_imageWidthText.setText( String.format( "%d", imageWidth ) ); //$NON-NLS-1$
     else
-      m_imageWidthText.setText( "640" );
+      m_imageWidthText.setText( "640" ); //$NON-NLS-1$
 
     /* Reset the aspect ratio. */
     m_aspectRatio = tmpAspectRatio;
@@ -579,9 +580,9 @@ public class ImagePropertiesComposite extends Composite
 
     /* The height of the image. */
     if( imageHeight > 0 )
-      m_imageHeightText.setText( String.format( "%d", imageHeight ) );
+      m_imageHeightText.setText( String.format( "%d", imageHeight ) ); //$NON-NLS-1$
     else
-      m_imageHeightText.setText( "480" );
+      m_imageHeightText.setText( "480" ); //$NON-NLS-1$
 
     /* Reset the aspect ratio. */
     m_aspectRatio = tmpAspectRatio;

@@ -103,13 +103,13 @@ public class WQTableModel extends AbstractTableModel implements TableModel
     if( columnIndex == 0 )
     {
       final String fromUnit = TimeseriesUtils.getUnit( m_fromType );
-      return String.format( "%s [%s]", m_fromType, fromUnit );
+      return String.format( "%s [%s]", m_fromType, fromUnit ); //$NON-NLS-1$
     }
 
 // final String toUnit = TimeseriesUtils.getUnit( m_toType );
 // return String.format( "%s%d [%s]", m_toType, columnIndex, toUnit );
     // TODO: makes the columns too big; instead we should show an info with 'all Q in m³/s' or similar
-    return String.format( "%s%d", m_toType, columnIndex );
+    return String.format( "%s%d", m_toType, columnIndex ); //$NON-NLS-1$
   }
 
   /**

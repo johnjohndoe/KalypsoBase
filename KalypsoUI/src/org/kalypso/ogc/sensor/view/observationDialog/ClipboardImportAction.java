@@ -85,7 +85,7 @@ public class ClipboardImportAction extends AbstractObservationAction
     final Clipboard clipboard = viewer.getClipboard();
     final Object content = clipboard.getContents( TextTransfer.getInstance() );
     if( content == null || !(content instanceof String) )
-      return new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), "Clipboard content is not of type text." );
+      return new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), Messages.getString("ClipboardImportAction.0") ); //$NON-NLS-1$
 
     try
     {

@@ -71,7 +71,7 @@ public class OpenStyleDialogHandler extends AbstractHandler
 
     try
     {
-      final IViewPart view = window.getActivePage().showView( "org.kalypso.ui.editor.mapeditor.views.styleeditor" );
+      final IViewPart view = window.getActivePage().showView( "org.kalypso.ui.editor.mapeditor.views.styleeditor" ); //$NON-NLS-1$
       // Might be an ErrorView instead
       if( view instanceof StyleEditorViewPart )
       {

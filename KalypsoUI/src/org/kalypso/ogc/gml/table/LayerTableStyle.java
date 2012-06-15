@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
@@ -90,7 +91,7 @@ public class LayerTableStyle
     }
     catch( final FilterEvaluationException e )
     {
-      final String message = String.format( "Bad feature style evaluation" );
+      final String message = String.format( Messages.getString("LayerTableStyle_0") ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), message, e );
       KalypsoGisPlugin.getDefault().getLog().log( status );
     }
@@ -113,7 +114,7 @@ public class LayerTableStyle
     }
     catch( final FilterEvaluationException e )
     {
-      final String message = String.format( "Bad feature style evaluation" );
+      final String message = String.format( Messages.getString("LayerTableStyle_1") ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), message, e );
       KalypsoGisPlugin.getDefault().getLog().log( status );
     }

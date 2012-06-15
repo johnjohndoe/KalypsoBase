@@ -86,7 +86,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class SelectSingleFeatureWidget extends DeprecatedMouseWidget implements MouseListener
 {
-  private static final String THEME_PROPERTY_SHOW_INFO = "singleSelectShowInfo";
+  private static final String THEME_PROPERTY_SHOW_INFO = "singleSelectShowInfo"; //$NON-NLS-1$
 
   private final IMapModellListener m_mapModellListener = new MapModellAdapter()
   {
@@ -278,7 +278,7 @@ public class SelectSingleFeatureWidget extends DeprecatedMouseWidget implements 
     m_tooltipRenderer.setTooltip( null );
     if( theme != null )
     {
-      final boolean showInfo = Boolean.parseBoolean( m_hoverTheme.getProperty( THEME_PROPERTY_SHOW_INFO, "false" ) );
+      final boolean showInfo = Boolean.parseBoolean( m_hoverTheme.getProperty( THEME_PROPERTY_SHOW_INFO, "false" ) ); //$NON-NLS-1$
       if( showInfo )
       {
         final String info = getInfo( theme, m_hoverFeature, position );
@@ -291,7 +291,7 @@ public class SelectSingleFeatureWidget extends DeprecatedMouseWidget implements 
   {
     final IKalypsoThemeInfo themeInfo = (IKalypsoThemeInfo) theme.getAdapter( IKalypsoThemeInfo.class );
     if( themeInfo == null )
-      return "No theme info konfigured";
+      return Messages.getString("SelectSingleFeatureWidget.2"); //$NON-NLS-1$
 
     final Formatter formatter = new Formatter();
     if( themeInfo instanceof IKalypsoFeatureThemeInfo )

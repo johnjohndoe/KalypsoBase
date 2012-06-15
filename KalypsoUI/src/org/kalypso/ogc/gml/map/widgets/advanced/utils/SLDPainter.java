@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.i18n.Messages;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
@@ -70,7 +71,7 @@ import com.vividsolutions.jts.geom.Point;
  */
 public class SLDPainter
 {
-  private static final String PAINTING_SLD_FAILED = "Painting sld failed.";
+  private static final String PAINTING_SLD_FAILED = Messages.getString("SLDPainter_0"); //$NON-NLS-1$
 
   private final Map<URL, Symbolizer> m_symbolizerMap = new HashMap<URL, Symbolizer>();
 
@@ -96,13 +97,13 @@ public class SLDPainter
       }
       catch( final Exception e )
       {
-        final String msg = String.format( "Painting coordinate (x=%.2f, y=%.2f) failed", coordinate.x, coordinate.y );
+        final String msg = String.format( Messages.getString("SLDPainter_1"), coordinate.x, coordinate.y ); //$NON-NLS-1$
         StatusUtilities.createExceptionalErrorStatus( msg, e );
       }
     }
 
     if( !statis.isEmpty() )
-      throw new CoreException( StatusUtilities.createStatus( statis, "Paintig of one ore more coordinates failed." ) );
+      throw new CoreException( StatusUtilities.createStatus( statis, Messages.getString("SLDPainter_2") ) ); //$NON-NLS-1$
   }
 
   public void paint( final Graphics g, final URL sld, final Coordinate coordinate ) throws CoreException

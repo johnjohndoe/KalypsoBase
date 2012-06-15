@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.placement;
 
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypso.ui.editor.styleeditor.util.StyleElementAction;
 import org.kalypsodeegree.graphics.sld.LabelPlacement;
@@ -56,8 +57,8 @@ public class LinePlacementAction extends StyleElementAction<TextSymbolizer>
   {
     super( input );
 
-    setText( "Line" );
-    setToolTipText( "Create Line Placement" );
+    setText( Messages.getString("LinePlacementAction_0") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString("LinePlacementAction_1") ); //$NON-NLS-1$
 
     update();
   }

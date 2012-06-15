@@ -7,6 +7,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.ImageProvider;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 
@@ -22,7 +23,7 @@ public final class AddSymbolizerItemAction extends Action
     m_list = list;
 
     setImageDescriptor( ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE );
-    setToolTipText( "Add Symbolizer" );
+    setToolTipText( Messages.getString("AddSymbolizerItemAction_0") ); //$NON-NLS-1$
   }
 
   /**

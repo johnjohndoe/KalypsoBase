@@ -56,6 +56,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.commons.i18n.I10nString;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.ThemeUtilities;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.ImageProvider;
@@ -90,7 +91,7 @@ public class KalypsoImageTheme extends AbstractImageTheme
    */
   public KalypsoImageTheme( final I10nString name, final IMapModell mapModell )
   {
-    super( name, "image", mapModell );
+    super( name, "image", mapModell ); //$NON-NLS-1$
 
     /* Initialize. */
     m_background = null;
@@ -122,15 +123,15 @@ public class KalypsoImageTheme extends AbstractImageTheme
     try
     {
       /* Monitor. */
-      monitor.beginTask( "Zeichne Bild...", 1000 );
-      monitor.subTask( "Initialisiere Thema..." );
+      monitor.beginTask( Messages.getString("KalypsoImageTheme_1"), 1000 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString("KalypsoImageTheme_2") ); //$NON-NLS-1$
 
       /* Initialize properties. */
       initFromProperties();
 
       /* Monitor. */
       monitor.worked( 500 );
-      monitor.subTask( "Erzeuge Bild..." );
+      monitor.subTask( Messages.getString("KalypsoImageTheme_3") ); //$NON-NLS-1$
 
       /* Create the input stream. */
       if( m_imageUrl == null )

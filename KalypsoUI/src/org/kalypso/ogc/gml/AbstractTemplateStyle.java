@@ -271,7 +271,7 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
   public IStatus save( final Shell shell )
   {
     final KeyInfo info = getPoolInfo();
-    final String title = String.format( "Save Style" );
+    final String title = String.format( Messages.getString("AbstractTemplateStyle.0") ); //$NON-NLS-1$
 
     if( info.isSaveable() )
     {
@@ -294,7 +294,7 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
           catch( final LoaderException e )
           {
             e.printStackTrace();
-            return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), "Failed to save style" );
+            return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString("AbstractTemplateStyle.1") ); //$NON-NLS-1$
           }
         }
       };
@@ -302,7 +302,7 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
       return ProgressUtilities.busyCursorWhile( operation );
     }
 
-    final String msg = "This style cannot be saved.";
+    final String msg = Messages.getString("AbstractTemplateStyle.2"); //$NON-NLS-1$
     return new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), msg );
   }
 
@@ -315,11 +315,11 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
     if( CatalogUtilities.isCatalogResource( location ) )
     {
       if( loader instanceof ISaveUrnLoader && !((ISaveUrnLoader) loader).isUserSaved( key ) )
-        return "This is a globally registered style. Save this style as user style?\nIf a style is saved as user style, "
-            + "the user style will replace the global style wherever used. You can reset the user style in the style editor.";
+        return Messages.getString("AbstractTemplateStyle.3") //$NON-NLS-1$
+            + Messages.getString("AbstractTemplateStyle.4"); //$NON-NLS-1$
     }
 
-    return String.format( "Save Style '%s'?", getLabel() );
+    return String.format( Messages.getString("AbstractTemplateStyle.5"), getLabel() ); //$NON-NLS-1$
   }
 
   @Override
@@ -451,7 +451,7 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
   public IStatus reset( final Shell shell )
   {
     if( !isResetable() )
-      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), "Unable to reset this style." );
+      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString("AbstractTemplateStyle.6") ); //$NON-NLS-1$
 
     final KeyInfo info = getPoolInfo();
     final ISaveUrnLoader loader = (ISaveUrnLoader) info.getLoader();

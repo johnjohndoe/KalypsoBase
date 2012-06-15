@@ -64,7 +64,7 @@ import org.kalypso.ui.editor.actions.TableFeatureControlUtils;
  */
 public class DeleteFeatureHandler extends AbstractTableFeatureControlHandler
 {
-  public static final String ID = "org.kalypso.ogc.gml.featureview.toolbar.DeleteFeatureHandler";
+  public static final String ID = "org.kalypso.ogc.gml.featureview.toolbar.DeleteFeatureHandler"; //$NON-NLS-1$
 
   /**
    * This function checks, if there are features, which can be deleted.

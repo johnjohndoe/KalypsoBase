@@ -280,7 +280,7 @@ public class SldLoader extends AbstractLoader implements ISaveUrnLoader
     catch( final IOException e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), "Failed to save SLD", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString("SldLoader.0"), e ); //$NON-NLS-1$
       throw new LoaderException( status );
     }
     finally

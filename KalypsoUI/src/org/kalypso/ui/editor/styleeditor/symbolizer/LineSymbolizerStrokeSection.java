@@ -43,6 +43,7 @@ package org.kalypso.ui.editor.styleeditor.symbolizer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypso.ui.editor.styleeditor.binding.StyleInput;
 import org.kalypso.ui.editor.styleeditor.stroke.StrokeComposite;
@@ -64,7 +65,7 @@ class LineSymbolizerStrokeSection extends AbstractStyleElementSection<LineSymbol
   @Override
   protected String getTitle( )
   {
-    return "Line";
+    return Messages.getString("LineSymbolizerStrokeSection_0"); //$NON-NLS-1$
   }
 
   @Override

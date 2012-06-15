@@ -100,7 +100,7 @@ public class ColorMapEntryTable
 
   public static final String[] COLUMN_NAMES = new String[] { LABEL_COLUMN, QUANTITY_COLUMN, COLOR_COLUMN, OPACITY_COLUMN };
 
-  private static final String[] COLUMN_LABLES = new String[] { "Bezeichnung", "Obere Grenze", "Farbe", "Transparenz" };
+  private static final String[] COLUMN_LABLES = new String[] { Messages.getString("ColorMapEntryTable.0"), Messages.getString("ColorMapEntryTable.1"), Messages.getString("ColorMapEntryTable.2"), Messages.getString("ColorMapEntryTable.3") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
   protected TableViewer m_tableViewer;
 
@@ -352,7 +352,7 @@ public class ColorMapEntryTable
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        m_entryList.addColorMapEntry( new ColorMapEntry_Impl( Color.WHITE, 1, 0, "" ) );
+        m_entryList.addColorMapEntry( new ColorMapEntry_Impl( Color.WHITE, 1, 0, "" ) ); //$NON-NLS-1$
       }
     } );
 
@@ -379,7 +379,7 @@ public class ColorMapEntryTable
     {
       /* Create the refresh button. */
       final Button refresh = new Button( parent, SWT.PUSH | SWT.CENTER );
-      refresh.setText( "&Aktualisieren" );
+      refresh.setText( Messages.getString("ColorMapEntryTable.5") ); //$NON-NLS-1$
       refresh.setLayoutData( new GridData( SWT.END, SWT.TOP, true, false ) );
       refresh.addSelectionListener( new SelectionAdapter()
       {
@@ -397,7 +397,7 @@ public class ColorMapEntryTable
     {
       /* Create a empty label. */
       final Label emptyLabel = new Label( parent, SWT.NONE );
-      emptyLabel.setText( "" );
+      emptyLabel.setText( "" ); //$NON-NLS-1$
       emptyLabel.setLayoutData( new GridData( SWT.END, SWT.TOP, true, false ) );
     }
   }
@@ -445,7 +445,7 @@ public class ColorMapEntryTable
         final ColorMapEntry entry = entries.get( i );
 
         if( colorMap.containsKey( new Double( entry.getQuantity() ) ) )
-          throw new Exception( Messages.getString( "org.kalypso.ui.editor.styleeditor.colorMapEntryTable.ColorMapEntryTable.12" ) );
+          throw new Exception( Messages.getString( "org.kalypso.ui.editor.styleeditor.colorMapEntryTable.ColorMapEntryTable.12" ) ); //$NON-NLS-1$
 
         colorMap.put( new Double( entry.getQuantity() ), entry.clone() );
       }
@@ -457,7 +457,7 @@ public class ColorMapEntryTable
     catch( final Exception ex )
     {
       /* Open a error dialog. */
-      ErrorDialog.openError( m_tableViewer.getTable().getShell(), "Error", "Es ist ein Fehler beim Aktualisieren aufgetreten...", new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), ex.getLocalizedMessage(), ex ) ); //$NON-NLS-1$ 
+      ErrorDialog.openError( m_tableViewer.getTable().getShell(), "Error", Messages.getString("ColorMapEntryTable.8"), new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), ex.getLocalizedMessage(), ex ) ); //$NON-NLS-1$ //$NON-NLS-2$ 
     }
   }
 

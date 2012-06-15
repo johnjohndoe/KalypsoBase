@@ -50,6 +50,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.sldEditor.RasterColorMapEditorComposite;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 
@@ -107,7 +108,7 @@ public class GenerateColorRangeDialog extends Dialog
   protected Control createDialogArea( final Composite parent )
   {
     /* Set the title. */
-    getShell().setText( "Eigenschaften Diagramm" );
+    getShell().setText( Messages.getString("GenerateColorRangeDialog_0") ); //$NON-NLS-1$
 
     /* Create the main composite. */
     final Composite main = (Composite) super.createDialogArea( parent );
@@ -142,8 +143,8 @@ public class GenerateColorRangeDialog extends Dialog
   {
     if( m_entries.length > 50 )
     {
-      final String dialogMessage = String.format( "Achtung. Sie versuchen einen Farbverlauf mit mehr als %d Elementen zu erzeugen. Dies kann in nachfolgenden Operationen zu sehr langen Wartezeiten führen. Falls Sie die Anzahl der Elemente verringern möchten, empfielt sich die Schrittweite zu erhöhen. Möchten Sie wirklich forfahren?", 50 );
-      final MessageDialog dialog = new MessageDialog( getShell(), getShell().getText(), null, dialogMessage, MessageDialog.WARNING, new String[] { "Fortfahren", "Abbrechen" }, 1 );
+      final String dialogMessage = String.format( Messages.getString("GenerateColorRangeDialog_1"), 50 ); //$NON-NLS-1$
+      final MessageDialog dialog = new MessageDialog( getShell(), getShell().getText(), null, dialogMessage, MessageDialog.WARNING, new String[] { Messages.getString("GenerateColorRangeDialog_2"), Messages.getString("GenerateColorRangeDialog_3") }, 1 ); //$NON-NLS-1$ //$NON-NLS-2$
       if( dialog.open() == Window.CANCEL )
         return;
     }

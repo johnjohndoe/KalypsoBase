@@ -60,6 +60,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.controls.files.listener.IFileChooserListener;
 
 /**
@@ -132,7 +133,7 @@ public class FileChooserComposite extends Composite
     m_names = names;
     m_title = title;
     if( m_title == null || m_title.length() == 0 )
-      m_title = "Pfad";
+      m_title = Messages.getString("FileChooserComposite_0"); //$NON-NLS-1$
     m_pathText = null;
     m_path = defaultPath;
 
@@ -190,7 +191,7 @@ public class FileChooserComposite extends Composite
     /* Create a button. */
     final Button pathButton = new Button( main, SWT.NONE );
     pathButton.setLayoutData( new GridData( SWT.END, SWT.CENTER, false, false ) );
-    pathButton.setText( "..." );
+    pathButton.setText( "..." ); //$NON-NLS-1$
 
     /* Add a listener. */
     pathButton.addSelectionListener( new SelectionAdapter()
@@ -209,7 +210,7 @@ public class FileChooserComposite extends Composite
         dialog.setText( m_title );
         final File f = new File( m_pathText.getText() );
         dialog.setFilterPath( f.getPath() );
-        dialog.setFileName( "" );
+        dialog.setFileName( "" ); //$NON-NLS-1$
 
         /* Only set the file extension filter, if one if available. */
         if( m_extensions != null && m_extensions.length > 0 )

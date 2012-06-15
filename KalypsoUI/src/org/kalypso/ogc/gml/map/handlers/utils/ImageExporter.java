@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.graphics.ImageData;
 import org.kalypso.contribs.eclipse.swt.udig.AWTSWTImageUtils;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -91,15 +92,15 @@ public class ImageExporter
     try
     {
       /* Monitor. */
-      monitor.beginTask( "Exportiere Kartenausschnitt als Bild...", 1000 );
-      monitor.subTask( "Erzeuge Bild..." );
+      monitor.beginTask( Messages.getString("ImageExporter_0"), 1000 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString("ImageExporter_1") ); //$NON-NLS-1$
 
       /* Create the image. */
       final BufferedImage image = MapModellHelper.createWellFormedImageFromModel( m_mapPanel, m_mapPanel.getWidth(), m_mapPanel.getHeight(), new Insets( 10, 10, 10, 10 ), 1 );
 
       /* Monitor. */
       monitor.worked( 500 );
-      monitor.subTask( "Konvertiere Bild ins SWT-Format..." );
+      monitor.subTask( Messages.getString("ImageExporter_2") ); //$NON-NLS-1$
 
       /* Convert to a SWT image data. */
       final ImageData imageData = AWTSWTImageUtils.createImageData( image );
@@ -110,7 +111,7 @@ public class ImageExporter
       /* Monitor. */
       monitor.worked( 500 );
 
-      return new Status( IStatus.OK, KalypsoGisPlugin.getId(), "OK" );
+      return new Status( IStatus.OK, KalypsoGisPlugin.getId(), Messages.getString("ImageExporter_3") ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {

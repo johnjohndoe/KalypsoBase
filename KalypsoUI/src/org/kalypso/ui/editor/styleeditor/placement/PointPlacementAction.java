@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.placement;
 
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypso.ui.editor.styleeditor.util.StyleElementAction;
 import org.kalypsodeegree.graphics.sld.LabelPlacement;
@@ -56,9 +57,9 @@ public class PointPlacementAction extends StyleElementAction<TextSymbolizer>
   {
     super( input );
 
-    setText( "Point" );
+    setText( Messages.getString("PointPlacementAction_0") ); //$NON-NLS-1$
 
-    setToolTipText( "Create Point Placement" );
+    setToolTipText( Messages.getString("PointPlacementAction_1") ); //$NON-NLS-1$
 
     update();
   }

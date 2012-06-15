@@ -116,9 +116,9 @@ public class MovieFrame implements IMovieFrame
       final File imageDirectory = getImageDirectory( width, height );
 
       /* The image file. */
-      final File imageFile = new File( imageDirectory, getLabel() + m_themeID + ".PNG" );
+      final File imageFile = new File( imageDirectory, getLabel() + m_themeID + ".PNG" ); //$NON-NLS-1$
       if( imageFile.exists() )
-        return JAI.create( "fileload", imageFile.getAbsolutePath() );
+        return JAI.create( "fileload", imageFile.getAbsolutePath() ); //$NON-NLS-1$
 
       /* Create the image. */
       final IMapModell model = createModel();
@@ -126,7 +126,7 @@ public class MovieFrame implements IMovieFrame
       model.dispose();
 
       /* Save the image. */
-      JAI.create( "filestore", image, imageFile.getAbsolutePath(), "PNG" );
+      JAI.create( "filestore", image, imageFile.getAbsolutePath(), "PNG" ); //$NON-NLS-1$ //$NON-NLS-2$
 
       return image;
     }
@@ -159,7 +159,7 @@ public class MovieFrame implements IMovieFrame
         /* Find/Add the legend theme. */
         final IKalypsoTheme[] legendThemes = MapModellHelper.findThemeByProperty( newMapModel, LegendUtilities.THEME_PROPERTY_THEME_IDS, IKalypsoThemeVisitor.DEPTH_ZERO );
         if( legendThemes != null && legendThemes.length > 0 )
-          legendThemes[0].setProperty( LegendUtilities.THEME_PROPERTY_THEME_IDS, ((IKalypsoTheme) movieTheme).getId() + ";" + theme.getId() );
+          legendThemes[0].setProperty( LegendUtilities.THEME_PROPERTY_THEME_IDS, ((IKalypsoTheme) movieTheme).getId() + ";" + theme.getId() ); //$NON-NLS-1$
 
         theme.setVisible( true );
       }
@@ -185,7 +185,7 @@ public class MovieFrame implements IMovieFrame
     if( !m_tmpDirectory.exists() )
       m_tmpDirectory.mkdirs();
 
-    final String sizeName = String.format( "%d_x_%d", width, height );
+    final String sizeName = String.format( "%d_x_%d", width, height ); //$NON-NLS-1$
     final File sizeDirectory = new File( m_tmpDirectory, sizeName );
     if( !sizeDirectory.exists() )
       sizeDirectory.mkdirs();

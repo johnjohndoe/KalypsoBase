@@ -54,6 +54,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
@@ -76,7 +77,7 @@ public class GetFeatureInfoDialog extends PopupDialog
    */
   public GetFeatureInfoDialog( final Shell parentShell, final URL requestUrl )
   {
-    super( parentShell, SWT.RESIZE, true, true, true, true, false, "Feature Info", null );
+    super( parentShell, SWT.RESIZE, true, true, true, true, false, Messages.getString("GetFeatureInfoDialog_0"), null ); //$NON-NLS-1$
 
     m_requestUrl = requestUrl;
   }
@@ -97,7 +98,7 @@ public class GetFeatureInfoDialog extends PopupDialog
       /* If there was no url provided show only a notice. */
       if( m_requestUrl == null )
       {
-        setTitleText( "Es wurde keine URL angegeben..." );
+        setTitleText( Messages.getString("GetFeatureInfoDialog_1") ); //$NON-NLS-1$
         return main;
       }
 
@@ -114,7 +115,7 @@ public class GetFeatureInfoDialog extends PopupDialog
       KalypsoGisPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), ex.getLocalizedMessage(), ex ) );
 
       /* Show the error message to the user. */
-      setTitleText( String.format( "Fehler: %s", ex.getLocalizedMessage() ) );
+      setTitleText( String.format( Messages.getString("GetFeatureInfoDialog_2"), ex.getLocalizedMessage() ) ); //$NON-NLS-1$
 
       return main;
     }

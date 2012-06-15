@@ -194,7 +194,7 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
   {
     super.objectFailed( key );
 
-    final String msg = String.format( "Zeitreihe konnte nicht geladen werden: %s", key.getLocation() );
+    final String msg = String.format( Messages.getString("DiagViewCurveXMLLoader.0"), key.getLocation() ); //$NON-NLS-1$
     return new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), msg );
   }
 

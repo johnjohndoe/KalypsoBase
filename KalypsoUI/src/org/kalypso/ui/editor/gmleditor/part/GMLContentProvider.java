@@ -52,6 +52,7 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.catalogs.FeatureTypePropertiesCatalog;
 import org.kalypso.ui.catalogs.IFeatureTypePropertiesConstants;
@@ -546,7 +547,7 @@ public class GMLContentProvider implements ITreeContentProvider
       if( m_featureStructureChangedJob != null )
         m_featureStructureChangedJob.cancel();
 
-      m_featureStructureChangedJob = new UIJob( "GMLContentProfvider feature structure update" )
+      m_featureStructureChangedJob = new UIJob( Messages.getString("GMLContentProvider_0") ) //$NON-NLS-1$
       {
         @Override
         public IStatus runInUIThread( final IProgressMonitor monitor )
@@ -579,7 +580,7 @@ public class GMLContentProvider implements ITreeContentProvider
       if( m_featureChangeJob != null )
         m_featureChangeJob.cancel();
 
-      m_featureChangeJob = new UIJob( "GMLContentProfvider feature update" )
+      m_featureChangeJob = new UIJob( Messages.getString("GMLContentProvider_1") ) //$NON-NLS-1$
       {
         @Override
         public IStatus runInUIThread( final IProgressMonitor monitor )

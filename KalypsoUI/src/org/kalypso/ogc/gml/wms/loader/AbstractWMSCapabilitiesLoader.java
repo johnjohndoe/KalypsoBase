@@ -65,7 +65,7 @@ import org.xml.sax.SAXException;
  */
 public abstract class AbstractWMSCapabilitiesLoader implements ICapabilitiesLoader
 {
-  private static final String STR_FAILED_TO_LOAD_CAPABILITIES_DOCUMENT = "Failed to load capabilities document";
+  private static final String STR_FAILED_TO_LOAD_CAPABILITIES_DOCUMENT = Messages.getString("AbstractWMSCapabilitiesLoader.0"); //$NON-NLS-1$
   /**
    * The timeout for the access.
    */

@@ -78,7 +78,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
  */
 public class GisTableEditorActionBarContributor extends AbstractEditorActionBarContributor
 {
-  private static final String GIS_TABLE_MENU_ID = "org.kalypso.ui.editors.tableeditor.menu";
+  private static final String GIS_TABLE_MENU_ID = "org.kalypso.ui.editors.tableeditor.menu"; //$NON-NLS-1$
 
   private static final String GROUP_SELECTION = "selection";//$NON-NLS-1$
 
@@ -143,7 +143,7 @@ public class GisTableEditorActionBarContributor extends AbstractEditorActionBarC
     if( existingMenu != null )
       return;
 
-    final MenuManager newFeatureMenu = new MenuManager( Messages.getString( "org.kalypso.ui.editor.actions.FeatureActionUtilities.7" ), NEW_FEATURE_MENU );
+    final MenuManager newFeatureMenu = new MenuManager( Messages.getString( "org.kalypso.ui.editor.actions.FeatureActionUtilities.7" ), NEW_FEATURE_MENU ); //$NON-NLS-1$
     menuManager.appendToGroup( GROUP_SELECTION, newFeatureMenu );
     newFeatureMenu.setRemoveAllWhenShown( true );
     newFeatureMenu.addMenuListener( new IMenuListener()

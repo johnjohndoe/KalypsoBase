@@ -168,7 +168,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     catch( final CoreException e )
     {
       e.printStackTrace();
-      return new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, "Failed to load service capabilities", e );
+      return new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, Messages.getString("AbstractDeegreeImageProvider.0"), e ); //$NON-NLS-1$
     }
   }
 
@@ -370,7 +370,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
       final GetMap request = DeegreeWMSUtilities.createGetMapRequest( (WMSCapabilities) remoteWMS.getCapabilities(), getNegotiatedSRS(), getThemeName(), m_layers, m_styles, width, height, bbox, getLocalSRS(), m_sldBody );
 
       /* Store the request, before actually asking the WMS for a response. */
-      m_lastRequest = URLDecoder.decode( String.format( "%s%s", m_getMapUrl, request.toString() ), "UTF-8" );
+      m_lastRequest = URLDecoder.decode( String.format( "%s%s", m_getMapUrl, request.toString() ), "UTF-8" ); //$NON-NLS-1$ //$NON-NLS-2$
 
       /* Do the request and wait, until the result is there. */
       final Object result = remoteWMS.doService( request );
@@ -519,9 +519,9 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
   @Override
   public String getSource( )
   {
-    final String layers = StringUtils.join( m_layers, "," );
-    final String styles = StringUtils.join( m_styles, "," );
+    final String layers = StringUtils.join( m_layers, "," ); //$NON-NLS-1$
+    final String styles = StringUtils.join( m_styles, "," ); //$NON-NLS-1$
 
-    return String.format( "%s=%s#%s=%s#%s=%s#%s=%s", IKalypsoImageProvider.KEY_URL, m_service, IKalypsoImageProvider.KEY_PROVIDER, m_providerID, IKalypsoImageProvider.KEY_LAYERS, layers, IKalypsoImageProvider.KEY_STYLES, styles );
+    return String.format( "%s=%s#%s=%s#%s=%s#%s=%s", IKalypsoImageProvider.KEY_URL, m_service, IKalypsoImageProvider.KEY_PROVIDER, m_providerID, IKalypsoImageProvider.KEY_LAYERS, layers, IKalypsoImageProvider.KEY_STYLES, styles ); //$NON-NLS-1$
   }
 }

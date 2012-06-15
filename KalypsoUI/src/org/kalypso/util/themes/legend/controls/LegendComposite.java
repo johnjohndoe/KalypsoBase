@@ -72,6 +72,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.forms.widgets.Form;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.ThemeUtilities;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -404,18 +405,18 @@ public class LegendComposite extends Composite
     /* Create a group. */
     final Group legendGroup = new Group( parent, SWT.NONE );
     legendGroup.setLayout( new GridLayout( 3, false ) );
-    legendGroup.setText( "Optionen" );
+    legendGroup.setText( Messages.getString("LegendComposite_0") ); //$NON-NLS-1$
 
     /* Create a label. */
     final Label backgroundColorLabel = new Label( legendGroup, SWT.NONE );
     backgroundColorLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    backgroundColorLabel.setText( "Hintergrundfarbe" );
+    backgroundColorLabel.setText( Messages.getString("LegendComposite_1") ); //$NON-NLS-1$
     backgroundColorLabel.setAlignment( SWT.LEFT );
 
     /* Create a label. */
     final Label backgroundLabel = new Label( legendGroup, SWT.BORDER );
     backgroundLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    backgroundLabel.setText( "Hintergrundfarbe" );
+    backgroundLabel.setText( Messages.getString("LegendComposite_2") ); //$NON-NLS-1$
     backgroundLabel.setBackground( new Color( parent.getDisplay(), m_backgroundColor ) );
 
     backgroundColorLabel.addDisposeListener( new DisposeListener()
@@ -430,7 +431,7 @@ public class LegendComposite extends Composite
     /* Create a button. */
     final Button backgroundColorButton = new Button( legendGroup, SWT.PUSH );
     backgroundColorButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    backgroundColorButton.setText( "..." );
+    backgroundColorButton.setText( "..." ); //$NON-NLS-1$
     backgroundColorButton.addSelectionListener( new SelectionAdapter()
     {
       @Override
@@ -456,7 +457,7 @@ public class LegendComposite extends Composite
     /* Create a label. */
     final Label fontSizeLabel = new Label( legendGroup, SWT.NONE );
     fontSizeLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    fontSizeLabel.setText( "Schriftgrad" );
+    fontSizeLabel.setText( Messages.getString("LegendComposite_4") ); //$NON-NLS-1$
     fontSizeLabel.setAlignment( SWT.LEFT );
 
     /* Create a spinner. */
@@ -479,7 +480,7 @@ public class LegendComposite extends Composite
     /* Create a label. */
     final Label insetsLabel = new Label( legendGroup, SWT.NONE );
     insetsLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    insetsLabel.setText( "Zwischenraum" );
+    insetsLabel.setText( Messages.getString("LegendComposite_5") ); //$NON-NLS-1$
     insetsLabel.setAlignment( SWT.LEFT );
 
     /* Create a spinner. */
@@ -502,7 +503,7 @@ public class LegendComposite extends Composite
     /* Create a label. */
     final Label availableThemesLabel = new Label( legendGroup, SWT.NONE );
     availableThemesLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 3, 1 ) );
-    availableThemesLabel.setText( "Verfügbare Themen" );
+    availableThemesLabel.setText( Messages.getString("LegendComposite_6") ); //$NON-NLS-1$
     availableThemesLabel.setAlignment( SWT.LEFT );
 
     /* Create a table viewer. */
@@ -517,13 +518,13 @@ public class LegendComposite extends Composite
     /* Create a column. */
     final TreeViewerColumn nameColumn = new TreeViewerColumn( availableThemesViewer, SWT.LEFT );
     nameColumn.setLabelProvider( new ThemeNameLabelProvider() );
-    nameColumn.getColumn().setText( "Name" );
+    nameColumn.getColumn().setText( Messages.getString("LegendComposite_7") ); //$NON-NLS-1$
     nameColumn.getColumn().setWidth( 250 );
 
     /* Create a column. */
     final TreeViewerColumn typeColumn = new TreeViewerColumn( availableThemesViewer, SWT.LEFT );
     typeColumn.setLabelProvider( new ThemeTypeLabelProvider() );
-    typeColumn.getColumn().setText( "Art" );
+    typeColumn.getColumn().setText( Messages.getString("LegendComposite_8") ); //$NON-NLS-1$
     typeColumn.getColumn().setWidth( 200 );
 
     /* Set a content provider. */
@@ -649,18 +650,18 @@ public class LegendComposite extends Composite
     final Properties properties = new Properties();
 
     /* Serialize the properties. */
-    final String horizontalProperty = String.format( Locale.PRC, "%d", m_horizontal );
-    final String verticalProperty = String.format( Locale.PRC, "%d", m_vertical );
-    final String backgroundColorProperty = String.format( Locale.PRC, "%d;%d;%d", m_backgroundColor.red, m_backgroundColor.green, m_backgroundColor.blue );
-    final String insetsProperty = String.format( Locale.PRC, "%d", m_insets );
+    final String horizontalProperty = String.format( Locale.PRC, "%d", m_horizontal ); //$NON-NLS-1$
+    final String verticalProperty = String.format( Locale.PRC, "%d", m_vertical ); //$NON-NLS-1$
+    final String backgroundColorProperty = String.format( Locale.PRC, "%d;%d;%d", m_backgroundColor.red, m_backgroundColor.green, m_backgroundColor.blue ); //$NON-NLS-1$
+    final String insetsProperty = String.format( Locale.PRC, "%d", m_insets ); //$NON-NLS-1$
     final List<String> themeIds = new ArrayList<String>();
     for( int i = 0; i < m_themeIds.size(); i++ )
     {
       final String id = m_themeIds.get( i );
       themeIds.add( id );
     }
-    final String themeIdsProperty = StringUtils.join( themeIds, ";" );
-    final String fontSizeProperty = String.format( Locale.PRC, "%d", m_fontSize );
+    final String themeIdsProperty = StringUtils.join( themeIds, ";" ); //$NON-NLS-1$
+    final String fontSizeProperty = String.format( Locale.PRC, "%d", m_fontSize ); //$NON-NLS-1$
 
     /* Add the properties. */
     properties.put( PositionUtilities.THEME_PROPERTY_HORIZONTAL_POSITION, horizontalProperty );

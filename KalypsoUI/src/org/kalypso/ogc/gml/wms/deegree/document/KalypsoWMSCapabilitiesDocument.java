@@ -120,9 +120,9 @@ public class KalypsoWMSCapabilitiesDocument extends WMSCapabilitiesDocument
 
       // REMARK: never validate and/or load external DTD. We do not need it and they are often badly configured with
       // existing WMS.
-      factory.setAttribute( "http://xml.org/sax/features/validation", Boolean.FALSE );
+      factory.setAttribute( "http://xml.org/sax/features/validation", Boolean.FALSE ); //$NON-NLS-1$
       // factory.setAttribute( "http://apache.org/xml/features/nonvalidating/load-dtd-grammar", Boolean.FALSE );
-      factory.setAttribute( "http://apache.org/xml/features/nonvalidating/load-external-dtd", Boolean.FALSE );
+      factory.setAttribute( "http://apache.org/xml/features/nonvalidating/load-external-dtd", Boolean.FALSE ); //$NON-NLS-1$
       // factory.setAttribute( "http://apache.org/xml/features/validation/schema", Boolean.FALSE );
       // factory.setAttribute( "http://xml.org/sax/features/external-general-entities", Boolean.FALSE );
       // factory.setAttribute( "http://xml.org/sax/features/external-parameter-entities", Boolean.FALSE );

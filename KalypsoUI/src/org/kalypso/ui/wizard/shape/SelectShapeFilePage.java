@@ -49,6 +49,7 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypso.i18n.Messages;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypso.transformation.ui.listener.CRSSelectionListener;
 import org.kalypso.ui.controls.files.FileChooserComposite;
@@ -117,7 +118,7 @@ public class SelectShapeFilePage extends WizardPage implements IShapeFileSelecti
     GridLayoutFactory.swtDefaults().applyTo( content );
 
     /* Create the file chooser composite. */
-    final FileChooserComposite fileComposite = new FileChooserComposite( content, FileChooserComposite.NO_GROUP, new String[] { "*.SHP", "*.*" }, new String[] { "ESRI Shape", "Alle Dateien" }, "Shape", m_shapeFile );
+    final FileChooserComposite fileComposite = new FileChooserComposite( content, FileChooserComposite.NO_GROUP, new String[] { "*.SHP", "*.*" }, new String[] { Messages.getString("SelectShapeFilePage_2"), Messages.getString("SelectShapeFilePage_3") }, Messages.getString("SelectShapeFilePage_4"), m_shapeFile ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
     fileComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     fileComposite.addFileChooserListener( new IFileChooserListener()
     {
@@ -177,7 +178,7 @@ public class SelectShapeFilePage extends WizardPage implements IShapeFileSelecti
 
     if( m_shapeFile == null || m_shapeFile.length() == 0 )
     {
-      setMessage( "Wählen Sie ein Shape aus...", ERROR );
+      setMessage( Messages.getString("SelectShapeFilePage_5"), ERROR ); //$NON-NLS-1$
       setPageComplete( false );
       return;
     }
@@ -185,14 +186,14 @@ public class SelectShapeFilePage extends WizardPage implements IShapeFileSelecti
     final File shapeFile = new File( m_shapeFile );
     if( !shapeFile.exists() )
     {
-      setMessage( String.format( "Die Datei '%s' existiert nicht...", shapeFile.getName() ), ERROR );
+      setMessage( String.format( Messages.getString("SelectShapeFilePage_6"), shapeFile.getName() ), ERROR ); //$NON-NLS-1$
       setPageComplete( false );
       return;
     }
 
     if( m_sourceCRS == null || m_sourceCRS.length() == 0 )
     {
-      setMessage( "Wählen Sie das Koordinaten-System des Shapes aus...", ERROR );
+      setMessage( Messages.getString("SelectShapeFilePage_7"), ERROR ); //$NON-NLS-1$
       setPageComplete( false );
       return;
     }

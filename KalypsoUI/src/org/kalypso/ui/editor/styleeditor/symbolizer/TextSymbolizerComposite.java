@@ -59,6 +59,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.commons.databinding.conversion.ITypedConverter;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypso.ui.editor.styleeditor.preview.SymbolizerPreview;
@@ -124,7 +125,7 @@ public class TextSymbolizerComposite extends AbstractSymbolizerComposite<TextSym
   private Control createFontAndLabelSection( final FormToolkit toolkit, final Composite parent )
   {
     final Section section = toolkit.createSection( parent, ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED );
-    section.setText( "Basic Properties" );
+    section.setText( Messages.getString("TextSymbolizerComposite_0") ); //$NON-NLS-1$
 
     m_commonForm = toolkit.createScrolledForm( section );
     m_commonForm.setExpandHorizontal( true );

@@ -55,6 +55,7 @@ import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.core.layoutwizard.ILayoutPageContext;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
@@ -73,12 +74,12 @@ import org.kalypsodeegree.model.feature.Feature;
 public class GisTableLayoutPart extends AbstractWizardLayoutPart
 {
   /** Argument: Pfad auf Vorlage für die Gis-Tabelle (.gtt Datei) */
-  private static final String PROP_TABLETEMPLATE = "tableTemplate";
+  private static final String PROP_TABLETEMPLATE = "tableTemplate"; //$NON-NLS-1$
 
   /**
    * Argument: Falls gesetzt, wird das Feature mit dieser ID selektiert, nachdem die Tabelle geladen wurde.
    */
-  private static final String PROP_FEATURE_TO_SELECT_ID = "selectFeatureID";
+  private static final String PROP_FEATURE_TO_SELECT_ID = "selectFeatureID"; //$NON-NLS-1$
 
   private LayerTableViewer m_gisTableViewer;
 
@@ -108,7 +109,7 @@ public class GisTableLayoutPart extends AbstractWizardLayoutPart
     final String templateFileName = getTemplateFileName( arguments );
     if( templateFileName == null )
     {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, "Kein Table-Template definiert" );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, Messages.getString("GisTableLayoutPart_2") ); //$NON-NLS-1$
       throw new CoreException( status );
     }
 
@@ -117,7 +118,7 @@ public class GisTableLayoutPart extends AbstractWizardLayoutPart
       final URL templateURL = context.resolveURI( templateFileName );
       if( templateURL == null )
       {
-        final String msg = String.format( "Table-Template existiert nicht %s", templateFileName );
+        final String msg = String.format( Messages.getString("GisTableLayoutPart_3"), templateFileName ); //$NON-NLS-1$
         final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, msg );
         throw new CoreException( status );
       }
@@ -131,7 +132,7 @@ public class GisTableLayoutPart extends AbstractWizardLayoutPart
     }
     catch( final Exception e )
     {
-      final String message = String.format( "Fehler beim Laden der Tabellendefinition '%s'", templateFileName );
+      final String message = String.format( Messages.getString("GisTableLayoutPart_4"), templateFileName ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, message, e );
       throw new CoreException( status );
     }

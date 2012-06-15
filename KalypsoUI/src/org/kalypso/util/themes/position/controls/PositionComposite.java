@@ -57,6 +57,7 @@ import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ui.forms.widgets.Form;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
+import org.kalypso.i18n.Messages;
 import org.kalypso.util.themes.position.PositionUtilities;
 import org.kalypso.util.themes.position.listener.IPositionChangedListener;
 
@@ -233,12 +234,12 @@ public class PositionComposite extends Composite
     /* Create a group. */
     final Group horizontalGroup = new Group( parent, SWT.NONE );
     horizontalGroup.setLayout( new GridLayout( 1, false ) );
-    horizontalGroup.setText( "Position Horizontal" );
+    horizontalGroup.setText( Messages.getString("PositionComposite_0") ); //$NON-NLS-1$
 
     /* Create a button. */
     final Button leftButton = new Button( horizontalGroup, SWT.RADIO );
     leftButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    leftButton.setText( "Links" );
+    leftButton.setText( Messages.getString("PositionComposite_1") ); //$NON-NLS-1$
     if( (m_horizontal & PositionUtilities.LEFT) != 0 )
       leftButton.setSelection( true );
     leftButton.addSelectionListener( new SelectionAdapter()
@@ -257,7 +258,7 @@ public class PositionComposite extends Composite
     /* Create a button. */
     final Button hCenterButton = new Button( horizontalGroup, SWT.RADIO );
     hCenterButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    hCenterButton.setText( "Zentriert" );
+    hCenterButton.setText( Messages.getString("PositionComposite_2") ); //$NON-NLS-1$
     if( (m_horizontal & PositionUtilities.H_CENTER) != 0 )
       hCenterButton.setSelection( true );
     hCenterButton.addSelectionListener( new SelectionAdapter()
@@ -276,7 +277,7 @@ public class PositionComposite extends Composite
     /* Create a button. */
     final Button rightButton = new Button( horizontalGroup, SWT.RADIO );
     rightButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    rightButton.setText( "Rechts" );
+    rightButton.setText( Messages.getString("PositionComposite_3") ); //$NON-NLS-1$
     if( (m_horizontal & PositionUtilities.RIGHT) != 0 )
       rightButton.setSelection( true );
     rightButton.addSelectionListener( new SelectionAdapter()
@@ -307,12 +308,12 @@ public class PositionComposite extends Composite
     /* Create a group. */
     final Group verticalGroup = new Group( parent, SWT.NONE );
     verticalGroup.setLayout( new GridLayout( 1, false ) );
-    verticalGroup.setText( "Position Vertikal" );
+    verticalGroup.setText( Messages.getString("PositionComposite_4") ); //$NON-NLS-1$
 
     /* Create a button. */
     final Button topButton = new Button( verticalGroup, SWT.RADIO );
     topButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    topButton.setText( "Oben" );
+    topButton.setText( Messages.getString("PositionComposite_5") ); //$NON-NLS-1$
     if( (m_vertical & PositionUtilities.TOP) != 0 )
       topButton.setSelection( true );
     topButton.addSelectionListener( new SelectionAdapter()
@@ -331,7 +332,7 @@ public class PositionComposite extends Composite
     /* Create a button. */
     final Button vCenterButton = new Button( verticalGroup, SWT.RADIO );
     vCenterButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    vCenterButton.setText( "Zentriert" );
+    vCenterButton.setText( Messages.getString("PositionComposite_6") ); //$NON-NLS-1$
     if( (m_vertical & PositionUtilities.V_CENTER) != 0 )
       vCenterButton.setSelection( true );
     vCenterButton.addSelectionListener( new SelectionAdapter()
@@ -350,7 +351,7 @@ public class PositionComposite extends Composite
     /* Create a button. */
     final Button bottomButton = new Button( verticalGroup, SWT.RADIO );
     bottomButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    bottomButton.setText( "Unten" );
+    bottomButton.setText( Messages.getString("PositionComposite_7") ); //$NON-NLS-1$
     if( (m_vertical & PositionUtilities.BOTTOM) != 0 )
       bottomButton.setSelection( true );
     bottomButton.addSelectionListener( new SelectionAdapter()
