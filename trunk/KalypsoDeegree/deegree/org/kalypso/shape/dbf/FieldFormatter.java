@@ -59,9 +59,6 @@ abstract class FieldFormatter
     m_pattern = pattern;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.shpapi.FieldFormatter#toBytes(java.lang.Object, java.lang.String)
-   */
   public byte[] toBytes( final Object value, final Charset charset ) throws DBaseException
   {
     if( value == null )
