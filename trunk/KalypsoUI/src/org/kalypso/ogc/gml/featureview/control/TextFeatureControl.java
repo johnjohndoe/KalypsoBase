@@ -92,44 +92,41 @@ public class TextFeatureControl extends AbstractFeatureControl implements Modell
     m_modifier = new StringModifier( propertyPath, ftp, format );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
-   */
   @Override
   public Control createControl( final Composite parent, final int style )
   {
     m_text = new Text( parent, style );
     m_text.setEditable( m_editable );
 
-    m_text.addModifyListener( new ModifyListener()
+    if( m_editable )
     {
-      @Override
-      public void modifyText( final ModifyEvent e )
+      m_text.addModifyListener( new ModifyListener()
       {
-        onTextModified();
-      }
-    } );
+        @Override
+        public void modifyText( final ModifyEvent e )
+        {
+          onTextModified();
+        }
+      } );
 
-    m_text.addFocusListener( new FocusAdapter()
-    {
-      @Override
-      public void focusLost( final FocusEvent e )
+      m_text.addFocusListener( new FocusAdapter()
       {
-        fireFeatureChange( getChanges() );
-      }
-    } );
+        @Override
+        public void focusLost( final FocusEvent e )
+        {
+          fireFeatureChange( getChanges() );
+        }
+      } );
 
-    m_text.addSelectionListener( new SelectionAdapter()
-    {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
-       */
-      @Override
-      public void widgetDefaultSelected( final SelectionEvent e )
+      m_text.addSelectionListener( new SelectionAdapter()
       {
-        fireFeatureChange( getChanges() );
-      }
-    } );
+        @Override
+        public void widgetDefaultSelected( final SelectionEvent e )
+        {
+          fireFeatureChange( getChanges() );
+        }
+      } );
+    }
 
     updateControl();
 
