@@ -148,11 +148,10 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
       try
       {
         final String id = entry.getID();
-
-        monitor.subTask( String.format( "Loading model '%s'", id ) );
-
         final Class< ? extends IModel> wrapperClass = entry.getModelClass();
         final String gmlLocation = entry.getModelPath();
+
+        monitor.subTask( String.format( "Loading model '%s'", gmlLocation ) );
 
         final IFolder dataFolder = getDataFolder( scenario, gmlLocation );
         final Pair<IModel, IStatus> result = loadModel( dataFolder, id, wrapperClass, gmlLocation );
