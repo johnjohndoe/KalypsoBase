@@ -214,9 +214,6 @@ public class FeatureView extends ViewPart implements ModellEventListener
 
   private final IPartListener2 m_partListener = new PartAdapter2()
   {
-    /**
-     * @see org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2#partClosed(org.eclipse.ui.IWorkbenchPartReference)
-     */
     @Override
     public void partClosed( final IWorkbenchPartReference partRef )
     {
