@@ -207,10 +207,8 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
     m_loader.cancel();
 
     /** remove cloned columns */
-    final Object[] entries = m_columns.entrySet().toArray();
-    for( final Object objEntry : entries )
+    for( final Map.Entry<Integer, IZmlModelColumn> entry : m_columns.entrySet() )
     {
-      final Map.Entry<Integer, IZmlModelColumn> entry = (Entry<Integer, IZmlModelColumn>) objEntry;
       final IZmlModelColumn column = entry.getValue();
       column.dispose();
 
@@ -274,7 +272,7 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
         if( monitor.isCanceled() )
           return Status.CANCEL_STATUS;
 
-        final IZmlModelColumn[] changed = m_stack.toArray( new IZmlModelColumn[] {} );
+        // final IZmlModelColumn[] changed = m_stack.toArray( new IZmlModelColumn[] {} );
         m_stack.clear();
 
         final int e = m_stackEvent;

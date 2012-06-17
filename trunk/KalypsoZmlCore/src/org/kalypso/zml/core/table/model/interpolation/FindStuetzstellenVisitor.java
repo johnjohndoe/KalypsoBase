@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,14 +36,13 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model.interpolation;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.kalypso.commons.java.lang.Objects;
@@ -99,7 +98,7 @@ public class FindStuetzstellenVisitor implements ITupleModelVisitor
 
         if( ZmlValues.isStuetzstelle( status, source ) )
         {
-         TreeSet<Integer> references = m_stuetzstellen.get( valueAxis );
+          TreeSet<Integer> references = m_stuetzstellen.get( valueAxis );
           if( Objects.isNull( references ) )
           {
             references = new TreeSet<Integer>();

@@ -125,7 +125,6 @@ public class ZmlModelInitializer implements ICoreRunnableWithProgress
         }
       }
     }
-
   }
 
   private void appendColumnType( final AbstractColumnType type )
