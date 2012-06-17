@@ -54,8 +54,6 @@ public class SplitSortSpatialIndex implements SpatialIndexExt
 {
   private SplitSortContainer m_rootContainer = null;
 
-  private Object m_userData = null;
-
   public SplitSortSpatialIndex( final Envelope env )
   {
     m_rootContainer = new SplitSortContainer( null, env );
@@ -126,17 +124,5 @@ public class SplitSortSpatialIndex implements SpatialIndexExt
   public boolean contains( final Envelope itemEnv, final Object item )
   {
     return m_rootContainer.contains( itemEnv, item );
-  }
-
-  @Override
-  public void setUserData( final Object userData )
-  {
-    m_userData = userData;
-  }
-
-  @Override
-  public Object getUserData( )
-  {
-    return m_userData;
   }
 }
