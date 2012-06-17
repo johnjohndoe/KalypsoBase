@@ -43,8 +43,8 @@ package org.kalypsodeegree_impl.graphics.displayelements;
 import java.util.List;
 
 import org.kalypsodeegree.graphics.displayelements.Label;
+import org.kalypsodeegree_impl.model.sort.JSISpatialIndex;
 import org.kalypsodeegree_impl.model.sort.SpatialIndexExt;
-import org.kalypsodeegree_impl.model.sort.SplitSortSpatialIndex;
 
 import com.vividsolutions.jts.geom.Envelope;
 
@@ -59,7 +59,7 @@ public class SimpleLabelPlacementStrategy implements ILabelPlacementStrategy
 
   public SimpleLabelPlacementStrategy( final Envelope screenRect )
   {
-    m_index = new SplitSortSpatialIndex( screenRect );
+    m_index = new JSISpatialIndex();
   }
 
   @Override

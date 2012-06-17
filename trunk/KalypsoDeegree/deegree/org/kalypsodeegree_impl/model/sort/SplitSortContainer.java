@@ -65,10 +65,6 @@ public class SplitSortContainer
       return m_envelope;
     }
 
-    /**
-     * @see org.kalypsodeegree_impl.model.sort.SplitSortContainer.Visitor#visit(java.lang.Object,
-     *      com.vividsolutions.jts.geom.Envelope)
-     */
     @Override
     public void visit( final Object item, final Envelope env )
     {
