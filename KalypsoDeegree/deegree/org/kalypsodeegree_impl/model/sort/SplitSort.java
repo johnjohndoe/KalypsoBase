@@ -130,8 +130,9 @@ public class SplitSort implements FeatureList
 
   private SpatialIndexExt createIndex( final Envelope env )
   {
-    return new SplitSortSpatialIndex( env );
-    // m_index = new QuadTreeIndex( env );
+// return new SplitSortSpatialIndex( env );
+    return new JSISpatialIndex();
+// m_index = new QuadTreeIndex( env );
   }
 
   /**
@@ -148,6 +149,7 @@ public class SplitSort implements FeatureList
 
     if( m_index == null )
     {
+// // FIXME:
       // Recalculate the bounding box
       Envelope bbox = null;
       for( final Object item : m_items )
@@ -163,7 +165,7 @@ public class SplitSort implements FeatureList
       synchronized( this )
       {
         // create index
-        m_index = createIndex( bbox );
+        m_index = createIndex( null /* bbox */);
         // insert all elements
         for( final Object item : m_items )
         {
@@ -708,9 +710,6 @@ public class SplitSort implements FeatureList
     return m_parentFeatureTypeProperty;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#invalidate()
-   */
   @Override
   public void invalidate( )
   {
@@ -720,17 +719,16 @@ public class SplitSort implements FeatureList
     }
   }
 
-  /**
-   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#invalidate(java.lang.Object)
-   */
   @Override
   public void invalidate( final Object o )
   {
+    final Envelope envelope = getEnvelope( o );
+
     synchronized( this )
     {
       if( m_index != null )
       {
-        m_index.remove( null, o );
+        m_index.remove( envelope, o );
 
         // TODO: not nice: invalidating the object immediately causes the envelope to be recalulated
         // This causes problems with cached geometries...
@@ -741,9 +739,6 @@ public class SplitSort implements FeatureList
     }
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#first()
-   */
   @Override
   public Object first( )
   {
@@ -755,9 +750,6 @@ public class SplitSort implements FeatureList
     }
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#searchFeatures(org.kalypsodeegree.model.geometry.GM_Object)
-   */
   @Override
   public List<Feature> searchFeatures( final GM_Object geometry )
   {

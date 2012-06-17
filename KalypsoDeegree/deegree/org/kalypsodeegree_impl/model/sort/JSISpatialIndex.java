@@ -44,6 +44,7 @@ import gnu.trove.TIntProcedure;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -77,9 +78,12 @@ public class JSISpatialIndex implements SpatialIndexExt
     final int index = m_items.size();
     m_items.add( item );
 
-    final Rectangle rectangle = toRectangle( itemEnv );
+    if( itemEnv != null )
+    {
+      final Rectangle rectangle = toRectangle( itemEnv );
 
-    m_index.add( rectangle, index );
+      m_index.add( rectangle, index );
+    }
   }
 
   static Rectangle toRectangle( final Envelope itemEnv )
@@ -94,6 +98,9 @@ public class JSISpatialIndex implements SpatialIndexExt
   @Override
   public List< ? > query( final Envelope searchEnv )
   {
+    if( searchEnv == null )
+      return Collections.unmodifiableList( m_items );
+
     final Rectangle searchBox = toRectangle( searchEnv );
 
     final List<Object> result = new LinkedList<>();
@@ -143,6 +150,7 @@ public class JSISpatialIndex implements SpatialIndexExt
     if( index == -1 )
       return false;
 
+    m_items.remove( bounds );
     return m_index.delete( bounds, index );
   }
 
@@ -176,6 +184,9 @@ public class JSISpatialIndex implements SpatialIndexExt
   @Override
   public boolean contains( final Envelope itemEnv, final Object item )
   {
+    if( itemEnv == null )
+      return m_items.contains( item );
+
     final Rectangle rectangle = toRectangle( itemEnv );
 
     final int index = findItem( rectangle, item );
