@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml.mapmodel;
 import java.awt.Graphics;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Vector;
 
@@ -74,11 +75,11 @@ public class MapModell implements IMapModell
 {
   private final Vector<IKalypsoTheme> m_themes = new Vector<IKalypsoTheme>();
 
-  private final Collection<IMapModellListener> m_listeners = new HashSet<IMapModellListener>();
+  private final Collection<IMapModellListener> m_listeners = Collections.synchronizedCollection( new HashSet<IMapModellListener>() );
 
   private final String m_coordinatesSystem;
 
-  // TODO: this is problematik now, as we are using cascaded themes
+  // TODO: this is problematic now, as we are using cascaded themes
   // Probably it would be much better to put the active theme int the MapPanel! this would probably solve all problems
   // at once...
   private IKalypsoTheme m_activeTheme = null;
