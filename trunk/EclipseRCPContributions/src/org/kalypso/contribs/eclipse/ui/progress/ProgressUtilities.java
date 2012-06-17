@@ -57,7 +57,7 @@ import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 
 /**
  * Helper class with utility methods to handle progress.
- *
+ * 
  * @author Gernot Belger
  */
 public final class ProgressUtilities
@@ -149,12 +149,42 @@ public final class ProgressUtilities
   }
 
   /**
+   * Progress the given monitor, but only for every n-th step (for performance reasons, stepping too often is too
+   * costly).<br/>
+   * 
+   * @param monitor
+   *          The monitor to progress
+   * @param counter
+   *          The current step count. Used as first argument to the format string.
+   * @param maxCounter
+   *          The size the counter will eventually reach. Used as second argument to the format string.
+   * @param stepSize
+   *          The step the monitor will progress, if <code>counter % stepSize == 0</code>.
+   * @param subTaskFormat
+   *          Message set as sub task to the monitor. Must contain two '%d' placeholders (for counter and maxCounter).
+   *          May be <code>null</code>.
+   */
+  public static void workedModulo( final IProgressMonitor monitor, final int counter, final int maxCounter, final int stepSize, final String subTaskFormat )
+  {
+    if( counter % stepSize == 0 )
+    {
+      if( subTaskFormat != null )
+      {
+        final String msg = String.format( subTaskFormat, counter + 1, maxCounter );
+        monitor.subTask( msg );
+      }
+
+      worked( monitor, stepSize );
+    }
+  }
+
+  /**
    * Calls {@link IProgressMonitor#done()} on the given monitor.
    * <p>
    * In addition, it checks if the monitor is canceled and throws an CoreException with CANCEL_STATUS if this is the
    * cae.
    * </p>
-   *
+   * 
    * @see IProgressMonitor#done())
    */
   public static void done( final IProgressMonitor monitor ) throws CoreException
@@ -166,4 +196,5 @@ public final class ProgressUtilities
     if( monitor.isCanceled() )
       throw new CoreException( Status.CANCEL_STATUS );
   }
+
 }
