@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.serialize.test;
 
@@ -60,6 +60,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 
 /**
  * @author Gernot Belger
@@ -68,9 +69,6 @@ public class SpatialIndexTest extends TestCase
 {
   private final List<File> m_filesToDelete = new ArrayList<File>();
 
-  /**
-   * @see junit.framework.TestCase#tearDown()
-   */
   @Override
   protected void tearDown( ) throws Exception
   {
@@ -125,7 +123,38 @@ public class SpatialIndexTest extends TestCase
     logger.takeInterimTime();
     logger.printCurrentInterim( "Index queried again in: " ); //$NON-NLS-1$
 
+    queryOften( sort, boundingBox );
+    logger.takeInterimTime();
+    logger.printCurrentInterim( "Index queried often in: " ); //$NON-NLS-1$
+
     logger.printCurrentTotal( "Total: " ); //$NON-NLS-1$
+  }
+
+  private void queryOften( final FeatureList sort, final GM_Envelope boundingBox )
+  {
+    final double bMinX = boundingBox.getMinX();
+    final double bMinY = boundingBox.getMinY();
+    final double bMaxX = boundingBox.getMaxX();
+    final double bMaxY = boundingBox.getMaxY();
+
+    final double xRange = Math.abs( bMaxX - bMinX );
+    final double yRange = Math.abs( bMaxY - bMinY );
+
+    int maxSize = 0;
+
+    for( int i = 0; i < 100000; i++ )
+    {
+      final double minX = bMinX + Math.random() * xRange;
+      final double minY = bMinY + Math.random() * yRange;
+      final double maxX = bMinX + Math.random() * xRange;
+      final double maxY = bMinY + Math.random() * yRange;
+
+      final GM_Envelope_Impl env = new GM_Envelope_Impl( minX, minY, maxX, maxY, boundingBox.getCoordinateSystem() );
+      final List< ? > result = sort.query( env, null );
+      maxSize = Math.max( result.size(), maxSize );
+    }
+
+    System.out.println( "Max result size: " + maxSize );
   }
 
   private GMLWorkspace loadWorkspace( final String relativeResourcePath, final String filename ) throws Exception
