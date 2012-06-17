@@ -100,7 +100,7 @@ public class InterpolatedValueEditingStrategy extends AbstractEditingStrategy
 
   private void interpolate( final IZmlModelValueCell before, final IZmlModelValueCell current, final int direction ) throws SensorException
   {
-    final IZmlModelValueCell base = (IZmlModelValueCell) Objects.firstNonNull( before, current );
+    final IZmlModelValueCell base = Objects.firstNonNull( before, current );
     final IZmlModelColumn column = base.getColumn();
 
     final TupleModelTransaction transaction = new TupleModelTransaction( column.getTupleModel(), column.getMetadata() );
