@@ -54,14 +54,4 @@ public interface SpatialIndexExt extends SpatialIndex
   Envelope getBoundingBox( );
 
   boolean contains( final Envelope itemEnv, Object item );
-
-  /**
-   * Set an arbitrary object as user data to this index.
-   */
-  void setUserData( Object userData );
-
-  /**
-   * Retrieve the object previously set with {@link #setUserData(Object)}
-   */
-  Object getUserData( );
 }

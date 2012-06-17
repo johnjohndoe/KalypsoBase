@@ -64,8 +64,6 @@ public class QuadTreeIndex implements SpatialIndexExt
 
   private Envelope m_boundingBox = null;
 
-  private Object m_userData = null;
-
   public QuadTreeIndex( final IEnvelopeProvider envelopeProvider )
   {
     m_envelopeProvider = envelopeProvider;
@@ -193,7 +191,7 @@ public class QuadTreeIndex implements SpatialIndexExt
   }
 
   @Override
-  public List query( final Envelope searchEnv )
+  public List< ? > query( final Envelope searchEnv )
   {
     revalidate();
 
@@ -227,17 +225,5 @@ public class QuadTreeIndex implements SpatialIndexExt
   public boolean contains( final Envelope itemEnv, final Object item )
   {
     throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void setUserData( final Object userData )
-  {
-    m_userData = userData;
-  }
-
-  @Override
-  public Object getUserData( )
-  {
-    return m_userData;
   }
 }
