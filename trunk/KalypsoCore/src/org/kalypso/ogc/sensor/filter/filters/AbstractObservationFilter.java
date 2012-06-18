@@ -198,4 +198,11 @@ public abstract class AbstractObservationFilter implements IObservationFilter
   {
     Observations.accept( this, visitor, request, direction );
   }
+
+  @Override
+  public boolean isEmpty( )
+  {
+    // TODO
+    return false;
+  }
 }

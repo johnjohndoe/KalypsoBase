@@ -274,4 +274,9 @@ public class WQTimeserieProxy implements IObservation
     Observations.accept( this, visitor, request, direction );
   }
 
+  @Override
+  public boolean isEmpty( )
+  {
+    return m_obs.isEmpty();
+  }
 }

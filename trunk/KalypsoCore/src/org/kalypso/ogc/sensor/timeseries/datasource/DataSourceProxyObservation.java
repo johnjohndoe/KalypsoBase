@@ -255,4 +255,11 @@ public class DataSourceProxyObservation implements IObservation
   {
     Observations.accept( this, visitor, request, direction );
   }
+
+  @Override
+  public boolean isEmpty( )
+  {
+    // TODO
+    return false;
+  }
 }
