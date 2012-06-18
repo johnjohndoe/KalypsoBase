@@ -149,7 +149,6 @@ public class SplitSort implements FeatureList
 
     if( m_index == null )
     {
-// // FIXME:
       // Recalculate the bounding box
       Envelope bbox = null;
       for( final Object item : m_items )
@@ -181,6 +180,9 @@ public class SplitSort implements FeatureList
       for( final Object item : m_invalidObjects )
       {
         final Envelope envelope = getEnvelope( item );
+
+        m_index.remove( envelope, item );
+
         m_index.insert( envelope, item );
       }
 
@@ -188,9 +190,6 @@ public class SplitSort implements FeatureList
     }
   }
 
-  /**
-   * @see java.util.List#add(java.lang.Object)
-   */
   @Override
   public boolean add( final Object object )
   {
@@ -222,10 +221,6 @@ public class SplitSort implements FeatureList
     }
   }
 
-  /**
-   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#query(org.kalypsodeegree.model.geometry.GM_Envelope,
-   *      java.util.List)
-   */
   @Override
   public List< ? > query( final GM_Envelope queryEnv, final List result )
   {
@@ -722,17 +717,13 @@ public class SplitSort implements FeatureList
   @Override
   public void invalidate( final Object o )
   {
-    final Envelope envelope = getEnvelope( o );
-
     synchronized( this )
     {
       if( m_index != null )
       {
-        m_index.remove( envelope, o );
-
         // TODO: not nice: invalidating the object immediately causes the envelope to be recalulated
-        // This causes problems with cached geometries...
-        // It would be better, to put the element into a serparate list, and put them into
+        // This causes problems with cached geometries... -> endless loop
+        // It would be better, to put the element into a separate list, and put them into
         // the index when it is accessed
         m_invalidObjects.add( o );
       }
