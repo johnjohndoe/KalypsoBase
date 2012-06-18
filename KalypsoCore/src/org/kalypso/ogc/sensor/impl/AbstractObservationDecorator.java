@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.impl;
 
@@ -149,5 +149,12 @@ public class AbstractObservationDecorator implements IObservation
   public void accept( final IObservationVisitor visitor, final IRequest request, final int direction ) throws SensorException
   {
     Observations.accept( this, visitor, request, direction );
+  }
+
+  @Override
+  public boolean isEmpty( )
+  {
+    // TODO
+    return false;
   }
 }

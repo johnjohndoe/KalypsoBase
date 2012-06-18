@@ -324,4 +324,22 @@ public class SimpleObservation implements IObservation
   {
     Observations.accept( this, visitor, request, direction );
   }
+
+  @Override
+  public boolean isEmpty( )
+  {
+    if( m_model == null )
+      return true;
+
+    try
+    {
+      return m_model.isEmpty();
+    }
+    catch( final SensorException e )
+    {
+      e.printStackTrace();
+    }
+
+    return true;
+  }
 }

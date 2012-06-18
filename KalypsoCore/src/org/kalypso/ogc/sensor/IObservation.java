@@ -67,7 +67,7 @@ public interface IObservation extends IObservationEventProvider
   String getName( );
 
   /**
-   * Returns the list of Metadata.
+   * Returns the list of Meta data.
    * 
    * @return metadata
    */
@@ -100,11 +100,16 @@ public interface IObservation extends IObservationEventProvider
   void setValues( final ITupleModel values ) throws SensorException;
 
   /**
-   * Returns the localisation of the base file behind this observation.<br/>
+   * Returns the localization of the base file behind this observation.<br/>
    * Also may serve as identifier.
    * 
    * @return href
    */
   String getHref( );
+
+  /**
+   * @return IObservation contains values
+   */
+  boolean isEmpty( );
 
 }
