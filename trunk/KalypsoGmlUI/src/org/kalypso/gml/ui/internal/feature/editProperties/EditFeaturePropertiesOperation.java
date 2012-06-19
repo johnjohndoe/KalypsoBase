@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml.ui.internal.feature.editProperties;
 
@@ -98,7 +98,7 @@ public class EditFeaturePropertiesOperation implements ICoreRunnableWithProgress
 
   private FeatureChange createChange( final Feature feature, final IPropertyType property, final Object value, final FeaturePropertyOperation operation )
   {
-    if( m_data.getNumeric() )
+    if( m_data.getNumeric() && value != null )
     {
       final Number val = (Number) value;
       return new RelativeFeatureChange( feature, (IValuePropertyType) property, operation.toString(), val.doubleValue() );
