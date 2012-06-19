@@ -45,7 +45,7 @@ import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.IZmlModelRow;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public abstract class AbstractZmlCell implements IZmlModelCell
 {

@@ -46,7 +46,7 @@ import org.kalypso.model.wspm.core.gml.IProfileProvider;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public interface IProfileFeatureSelectionListener extends IViewPart, IAdapterEater<IFeatureSelection>
 {

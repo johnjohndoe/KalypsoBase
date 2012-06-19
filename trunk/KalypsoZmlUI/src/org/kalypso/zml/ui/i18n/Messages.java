@@ -43,7 +43,7 @@ package org.kalypso.zml.ui.i18n;
 import org.eclipse.osgi.util.NLS;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  *
  */
 public class Messages extends NLS

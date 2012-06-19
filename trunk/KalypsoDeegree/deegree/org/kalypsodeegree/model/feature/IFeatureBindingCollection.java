@@ -59,7 +59,7 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
   /**
    * Creates and Adds a new element of the specified type into the feature collection at the end of the feature
    * collection
-   *
+   * 
    * @param newChildType
    *          the type of the element to add
    * @throws IllegalArgumentException
@@ -80,7 +80,7 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
 
   /**
    * Creates and Adds a new element of the specified type into the feature collection at the specified position
-   *
+   * 
    * @param index
    *          index at which the specified element is to be inserted.
    * @param newChildType
@@ -101,7 +101,7 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
 
   /**
    * Add this feature as reference to this list
-   *
+   * 
    * @param toAdd
    *          a wrapper wrapping the feature to be added as list
    * @return true if the feature has been added
@@ -114,7 +114,7 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
 
   /**
    * Answer all feature wrappers overlapping the selected zone
-   *
+   * 
    * @param selectionSurface
    *          the selection surface
    * @param qname
@@ -135,7 +135,7 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
 
   /**
    * Answer all feature wrappers overlaping the given envelope
-   *
+   * 
    * @param envelope
    *          the envelope specifying the selection area
    * @return a list of feature overlaping the given surface
@@ -145,7 +145,7 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
 
   /**
    * Answer all feature wrappers containing the given position
-   *
+   * 
    * @param selectionSurface
    *          the selection surface
    * @return a list of feature overlaping the given surface

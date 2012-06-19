@@ -64,7 +64,7 @@ import org.kalypso.model.wspm.core.util.vegetation.GuessVegetationClassesRunnabl
 import org.kalypso.observation.result.IComponent;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class GuessClassificationClassRunnable implements IProfileManipulator
 {
