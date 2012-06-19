@@ -60,7 +60,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 
 /**
- * @author kuch
+ * @author Dirk Kuch
  */
 public class ProfileFeatureSeletionHandler
 {
