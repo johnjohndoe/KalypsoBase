@@ -121,6 +121,8 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
    */
   private Image m_featureThemeIcon;
 
+  private GM_Envelope m_fullExtent;
+
   public KalypsoFeatureTheme( final CommandableWorkspace workspace, final String featurePath, final I10nString name, final IFeatureSelectionManager selectionManager, final IMapModell mapModel )
   {
     super( name, "FeatureTheme", mapModel ); //$NON-NLS-1$
@@ -177,7 +179,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
   private void setDirty( )
   {
-    fireRepaintRequested( getFullExtent() );
+    requestRepaint( getFullExtent() );
   }
 
   @Override
@@ -349,7 +351,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
           if( invalidBox != null )
           {
             // TODO: buffer: does not work well for points, or fat-lines
-            fireRepaintRequested( invalidBox );
+            requestRepaint( invalidBox );
           }
         }
       }
@@ -384,15 +386,27 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     }
   }
 
+  private void requestRepaint( final GM_Envelope invalidEnvelope )
+  {
+    /* Also invalidate the current full extent: my features have changed */
+    m_fullExtent = null;
+
+    /* Request the repaint event */
+    fireRepaintRequested( invalidEnvelope );
+  }
+
   @Override
   public GM_Envelope getFullExtent( )
   {
-    // TODO: Very slow on large themes. We should cache the extent.
+    if( m_fullExtent != null )
+      return m_fullExtent;
+
     final FeatureList visibleFeatures = getFeatureListVisible( null );
     if( visibleFeatures == null )
       return null;
 
-    return visibleFeatures.getBoundingBox();
+    m_fullExtent = visibleFeatures.getBoundingBox();
+    return m_fullExtent;
   }
 
   @Override
@@ -410,7 +424,6 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     /* Use complete bounding box if search envelope is not set. */
     final GM_Envelope env = searchEnvelope == null ? m_featureList.getBoundingBox() : searchEnvelope;
 
-    // Put features in set in order to avoid duplicates
     final VisibleFeaturesPaintable paintDelegate = new VisibleFeaturesPaintable( env );
 
     final IProgressMonitor monitor = new NullProgressMonitor();
