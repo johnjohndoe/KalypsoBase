@@ -322,8 +322,7 @@
          <run class="de.renew.workflow.connector.cases.ScenarioHandlingProjectNature"/>
       </runtime>
    </extension>
-   <extension
-         point="org.kalypso.ui.addLayerWizard">
+   <extension point="org.kalypso.ui.addLayerWizard">
       <wizardSelection description="Add layer wizard selection for the workflow map." id="org.kalypso.afgui.addlayer.wizardselection.workflow">
          <wizardRef wizardId="org.kalypso.ui.wizard.wms"/>
          <wizardRef wizardId="org.kalypso.ui.wizard.wfs"/>
@@ -332,6 +331,9 @@
          <wizardRef wizardId="org.kalypso.ui.wizard.others.ScaleThemeWizard"/>
          <wizardRef wizardId="org.kalypso.ui.wizard.others.ImageThemeWizard"/>
          <wizardRef wizardId="org.kalypso.ui.wizard.others.TextThemeWizard"/>
+         <!-- FIXME: bad dependency -->
+         <wizardRef wizardId="shapeImportWorkflow"/>
+         <wizardRef wizardId="imageImportWorkflow"/>
       </wizardSelection>
    </extension>
 </plugin>
