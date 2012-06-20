@@ -13,9 +13,7 @@
             icon="icon/file_shp.GIF"
             id="org.kalypso.ui.wizard.shape"
             name="%org.kalypso.ui.wizard.shape.name">
-         <description>
-            Eine ESRI Shape Datei als Thema hinufügen.
-         </description>
+         <description>Eine ESRI Shape Datei als Thema hinufügen.</description>
       </wizard>
       <wizard
             class="org.kalypso.ui.wizard.wms.ImportWmsSourceWizard"
@@ -58,9 +56,7 @@
             icon="icon/file_image.gif"
             id="org.kalypso.ui.wizard.image"
             name="%org.kalypso.ui.wizard.image.name">
-         <description>
-            Eine georeferenziertes Bild (.tiff, .jpg, .png, ...) als Thema hinzufügen.
-         </description>
+         <description>Eine georeferenziertes Bild (.tiff, .jpg, .png, ...) als Thema hinzufügen.</description>
       </wizard>
       <wizard
             class="org.kalypso.ui.wizard.others.LegendThemeWizard"
