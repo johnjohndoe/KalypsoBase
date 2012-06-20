@@ -40,7 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.eclipse.jface.viewers.ViewerDropAdapter;
+import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
+import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
 
 /**
  * @author Gernot Belger
@@ -65,5 +71,58 @@ public class GisMapOutlineDropData
   public int getInsertionIndex( )
   {
     return m_insertionIndex;
+  }
+
+  public static GisMapOutlineDropData fromCurrentSelection( final IKalypsoLayerModell mapModel, final Object currentTarget, final int currentLocation )
+  {
+    final int defaultInsertionIndex = 0;
+
+    if( currentLocation == ViewerDropAdapter.LOCATION_NONE )
+      return new GisMapOutlineDropData( mapModel, defaultInsertionIndex );
+
+    final IKalypsoTheme theme = findCurrentTheme( currentTarget );
+    if( theme == null )
+      return null;
+
+    if( theme instanceof IKalypsoCascadingTheme && currentLocation == ViewerDropAdapter.LOCATION_ON )
+      return new GisMapOutlineDropData( (IKalypsoCascadingTheme) theme, defaultInsertionIndex );
+
+    final IMapModell model = theme.getMapModell();
+    if( model instanceof IKalypsoLayerModell )
+    {
+      final int insertionIndex = findIndexOf( model, theme, currentLocation );
+      return new GisMapOutlineDropData( (IKalypsoLayerModell) model, insertionIndex );
+    }
+
+    return null;
+  }
+
+  private static int findIndexOf( final IMapModell model, final IKalypsoTheme theme, final int currentLocation )
+  {
+    final IKalypsoTheme[] allThemes = model.getAllThemes();
+    final int index = ArrayUtils.indexOf( allThemes, theme );
+    if( index == -1 )
+      return 0;
+
+    if( currentLocation == ViewerDropAdapter.LOCATION_AFTER )
+      return index + 1;
+
+    return index;
+  }
+
+  private static IKalypsoTheme findCurrentTheme( final Object currentTarget )
+  {
+    if( currentTarget instanceof IKalypsoTheme )
+      return (IKalypsoTheme) currentTarget;
+
+    if( currentTarget instanceof IThemeNode )
+    {
+      final IThemeNode node = (IThemeNode) currentTarget;
+      final Object element = node.getElement();
+      if( element instanceof IKalypsoTheme )
+        return (IKalypsoTheme) element;
+    }
+
+    return null;
   }
 }
