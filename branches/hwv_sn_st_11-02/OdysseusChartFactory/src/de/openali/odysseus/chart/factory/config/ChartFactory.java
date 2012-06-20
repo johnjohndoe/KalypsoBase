@@ -1,6 +1,9 @@
 package de.openali.odysseus.chart.factory.config;
 
+import java.awt.Insets;
 import java.net.URL;
+
+import org.eclipse.core.runtime.CoreException;
 
 import de.openali.odysseus.chart.factory.config.exception.ConfigChartNotFoundException;
 import de.openali.odysseus.chart.factory.config.resolver.ChartTypeResolver;
@@ -9,10 +12,17 @@ import de.openali.odysseus.chart.factory.util.IReferenceResolver;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.impl.settings.CHART_DATA_LOADER_STRATEGY;
+import de.openali.odysseus.chart.framework.model.impl.settings.IBasicChartSettings;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 import de.openali.odysseus.chartconfig.x020.AbstractStyleType;
 import de.openali.odysseus.chartconfig.x020.ChartType;
+import de.openali.odysseus.chartconfig.x020.InsetType;
+import de.openali.odysseus.chartconfig.x020.LineStyleType;
+import de.openali.odysseus.chartconfig.x020.PlotFrameStyle;
+import de.openali.odysseus.chartconfig.x020.PlotFrameStyle.Edge;
 import de.openali.odysseus.chartconfig.x020.TextStyleType;
 import de.openali.odysseus.chartconfig.x020.TitleType;
 
@@ -56,6 +66,33 @@ public final class ChartFactory
     doConfiguration( model, configurationLoader, dt, extLoader, context );
   }
 
+  private static void addInsets( final IBasicChartSettings settings, final InsetType insetType )
+  {
+    settings.addInsets( insetType.getId(), new Insets( insetType.getTop(), insetType.getLeft(), insetType.getBottom(), insetType.getRight() ) );
+  }
+
+  private static void setPlotFrame( final IBasicChartSettings settings, final URL context, final Edge[] plotFrameEdges )
+  {
+    final ChartTypeResolver chartTypeResolver = ChartTypeResolver.getInstance();
+    for( final Edge edge : plotFrameEdges )
+    {
+      AbstractStyleType styleType = edge.getLineStyle();
+      if( edge.isSetStyleReference() )
+      {
+        try
+        {
+          styleType = chartTypeResolver.findStyleType( edge.getStyleReference(), context );
+        }
+        catch( final CoreException e )
+        {
+          e.printStackTrace();
+        }
+      }
+      final ILineStyle style = StyleFactory.createLineStyle( (LineStyleType) styleType );
+      settings.addPlotFrameStyle( POSITION.valueOf( edge.getPosition().toString() ), style );
+    }
+  }
+
   public static void doConfiguration( final IChartModel model, final IReferenceResolver resolver, final ChartType chartType, final IExtensionLoader extLoader, final URL context )
   {
     model.setIdentifier( chartType.getId() );
@@ -68,7 +105,7 @@ public final class ChartFactory
       {
         final AbstractStyleType styleType = chartTypeResolver.findStyleType( type.getStyleref(), context );
         final ITextStyle style = StyleFactory.createTextStyle( (TextStyleType) styleType );
-        final TitleTypeBean title = StyleHelper.getTitleTypeBean(type, style );
+        final TitleTypeBean title = StyleHelper.getTitleTypeBean( type, style );
         model.getSettings().addTitles( title );
       }
       catch( final Throwable t )
@@ -76,7 +113,23 @@ public final class ChartFactory
         t.printStackTrace();
       }
     }
-
+    if( chartType.isSetChartInsets() )
+    {
+      addInsets( model.getSettings(), chartType.getChartInsets() );
+    }
+    if( chartType.isSetPlotInsets() )
+    {
+      addInsets( model.getSettings(), chartType.getPlotInsets() );
+    }
+    if( chartType.isSetPlotFrame() )
+    {
+      final PlotFrameStyle plotFrameStyle = chartType.getPlotFrame();
+      final Edge[] plotFrameEdges = plotFrameStyle.getEdgeArray();
+      if( plotFrameEdges.length > 0 )
+      {
+        setPlotFrame( model.getSettings(), context, plotFrameEdges );
+      }
+    }
     model.getSettings().setDescription( chartType.getDescription() );
 
     model.getBehaviour().setHideLegend( !chartType.getLegend() );

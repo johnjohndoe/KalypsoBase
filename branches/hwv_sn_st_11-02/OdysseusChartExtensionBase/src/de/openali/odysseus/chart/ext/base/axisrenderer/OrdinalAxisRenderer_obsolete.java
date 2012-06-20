@@ -281,7 +281,7 @@ public class OrdinalAxisRenderer_obsolete implements IAxisRenderer
 
     final IChartLabelRenderer tickRenderer = getTickLabelRenderer( axis );
     tickRenderer.getTitleTypeBean().setLabel( m_contentProvider.getLabel( 0 ) );
-    int maxWidth = 0;//getTickLabelRenderer( axis ).getSize().y;
+    int maxWidth = 0;// getTickLabelRenderer( axis ).getSize().y;
 
     for( int i = range.getMin().intValue(); i <= range.getMax().intValue(); i++ )
     {
@@ -444,6 +444,15 @@ public class OrdinalAxisRenderer_obsolete implements IAxisRenderer
   public void setTickStyle( final ITextStyle tickStyle )
   {
     m_tickStyle = tickStyle;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer#getLineStyle()
+   */
+  @Override
+  public ILineStyle getLineStyle( )
+  {
+    return m_config.axisLineStyle;
   }
 
 }

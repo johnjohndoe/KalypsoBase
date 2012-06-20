@@ -100,7 +100,7 @@ public class ExtendedAxisRenderer extends AbstractGenericAxisRenderer
         continue;
       final int oldAlias = gc.getAntialias();
       gc.setAntialias( SWT.OFF );
-      gc.drawLine( tickPos, getGap() + inset.top, tickPos, getGap() + inset.top + getTickLength() + getLineStyle().getWidth() );
+      gc.drawLine( tickPos, getGap() + inset.top + getLineStyle().getWidth(), tickPos, getGap() + inset.top + getTickLength() + getLineStyle().getWidth() );
       gc.setAntialias( oldAlias );
       // draw Ticklabel
       labelRenderer.getTitleTypeBean().setLabel( getLabelCreator().getLabel( ticks, i, axis.getNumericRange() ) );
@@ -108,13 +108,17 @@ public class ExtendedAxisRenderer extends AbstractGenericAxisRenderer
       // hide cut
       if( isHideCut() )
       {
-        if( isIntervallLabeledTick() || (tickPos + textSize.x > 0 && tickPos + textSize.x + textSize.width < axis.getScreenHeight()) )
+        if( isIntervallLabeledTick() || (tickPos + inset.left + textSize.x > 0 && tickPos + textSize.x + textSize.width < axis.getScreenHeight()) )
           labelRenderer.paint( gc, new Rectangle( tickPos, (getLineStyle().getWidth() + getGap() + getTickLength() + inset.top), tickDistance, -1 ) );
+        // else
+        // labelRenderer.paint( gc, new Rectangle( tickPos, (getLineStyle().getWidth() + getGap() + getTickLength() +
+// inset.top), tickDistance, -1 ) );
       }
       else
       {
-        if( tickPos + textSize.x > -inset.left && tickPos + textSize.x + textSize.width < axis.getScreenHeight() + inset.right )
-          labelRenderer.paint( gc, new Rectangle( tickPos, (getLineStyle().getWidth() + getGap() + getTickLength() + inset.top), tickDistance, -1 ) );
+        // if( tickPos + textSize.x > -inset.left && tickPos + textSize.x + textSize.width < axis.getScreenHeight() +
+// inset.right )
+        labelRenderer.paint( gc, new Rectangle( tickPos, (getLineStyle().getWidth() + getGap() + getTickLength() + inset.top), tickDistance, -1 ) );
       }
 
     }
@@ -135,10 +139,19 @@ public class ExtendedAxisRenderer extends AbstractGenericAxisRenderer
 
     // Else: Calculate
     // check nullValue first
-    final String axisLabel = axis.getLabel();
     final TitleTypeBean[] axisLabels = axis.getLabels();
-    final boolean labelEmpty = axisLabel != null && axisLabel != null && (axisLabels.length == 0 ? true : axisLabel.trim().equals( "" ));
-
+    boolean labelEmpty = axisLabels.length == 0;
+    if( !labelEmpty )
+    {
+      for( final TitleTypeBean titleType : axisLabels )
+      {
+        if( titleType.getText().trim().length() > 0 )
+        {
+          labelEmpty = false;
+          break;
+        }
+      }
+    }
     int width = 0;
     final int gap = getGap();
     final int lineWidth = getLineStyle().getWidth();
@@ -220,7 +233,7 @@ public class ExtendedAxisRenderer extends AbstractGenericAxisRenderer
       gc.setAntialias( SWT.OFF );
       getLineStyle().apply( gc );
       // gc.drawLine( screen.x, getGap() + screen.y, screen.width, getGap() + screen.y );
-      final int posY = getGap() + screen.y + (getLineStyle().getWidth() / 2) - 1/* Pixel */;
+      final int posY = getGap() + screen.y + (getLineStyle().getWidth());// / 2);// - 1/* Pixel */;
       gc.drawLine( 0, posY, axis.getScreenHeight(), posY );
       gc.setAntialias( oldAlias );
       drawTicks( gc, screen, axis, getTicks( axis, gc ) );

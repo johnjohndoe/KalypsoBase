@@ -41,7 +41,7 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
   {
     m_id = id;
     m_axisConfig = axisConfig;
-   }
+  }
 
   public AbstractGenericAxisRenderer( final String id, final IChartLabelRenderer axisLabelRenderer, final IChartLabelRenderer tickLabelRenderer, final AxisRendererConfig axisConfig )
   {
@@ -133,6 +133,7 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
     return getAxisLabelRenderer().getTitleTypeBean().getTextStyle();
   }
 
+  @Override
   public ILineStyle getLineStyle( )
   {
     return m_axisConfig.axisLineStyle;

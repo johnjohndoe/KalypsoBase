@@ -43,12 +43,18 @@ package de.openali.odysseus.chart.framework.model.impl.settings;
 import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.openali.odysseus.chart.framework.OdysseusChartFramework;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
+import de.openali.odysseus.chart.framework.util.img.ChartPlotFrame;
+import de.openali.odysseus.chart.framework.util.img.ChartPlotFrameEdge;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 import de.openali.odysseus.chart.framework.util.img.legend.renderer.CompactChartLegendRenderer;
 import de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegendRenderer;
@@ -65,6 +71,10 @@ public class BasicChartSettings implements IBasicChartSettings
   private String m_renderer;
 
   private ITextStyle m_textStyle = null;
+
+  private final ChartPlotFrame m_plotFrame = new ChartPlotFrame();
+
+  private final Map<String, Insets> m_insets = new HashMap<String, Insets>();
 
   private final List<TitleTypeBean> m_title = new ArrayList<TitleTypeBean>();
 
@@ -174,5 +184,45 @@ public class BasicChartSettings implements IBasicChartSettings
   public CHART_DATA_LOADER_STRATEGY getDataLoaderStrategy( )
   {
     return m_strategy;
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.impl.settings.IBasicChartSettings#addInsets(java.lang.String,
+   *      java.awt.Insets)
+   */
+  @Override
+  public void addInsets( final String id, final Insets insets )
+  {
+    m_insets.put( id, insets );
+
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.impl.settings.IBasicChartSettings#getInsets(java.lang.String)
+   */
+  @Override
+  public Insets getInsets( final String id )
+  {
+    return m_insets.get( id );
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.impl.settings.IBasicChartSettings#addPlotFrameStyle(java.lang.String,
+   *      de.openali.odysseus.chart.framework.model.style.ILineStyle)
+   */
+  @Override
+  public void addPlotFrameStyle( final POSITION position, final ILineStyle lineStyle )
+  {
+    m_plotFrame.setFrame( new ChartPlotFrameEdge( lineStyle ), position );
+
+  }
+
+  /**
+   * @see de.openali.odysseus.chart.framework.model.impl.settings.IBasicChartSettings#getPlotFrame()
+   */
+  @Override
+  public ChartPlotFrame getPlotFrame( )
+  {
+    return m_plotFrame;
   }
 }
