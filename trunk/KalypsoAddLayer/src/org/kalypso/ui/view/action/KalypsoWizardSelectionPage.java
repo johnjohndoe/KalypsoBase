@@ -40,21 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.view.action;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.IWizardNode;
-import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.internal.dialogs.WorkbenchWizardElement;
 import org.eclipse.ui.internal.dialogs.WorkbenchWizardListSelectionPage;
-import org.eclipse.ui.internal.dialogs.WorkbenchWizardNode;
 import org.eclipse.ui.model.AdaptableList;
-import org.kalypso.ogc.gml.IKalypsoLayerModell;
-import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ui.addlayer.IKalypsoDataImportWizard;
 import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
 
 /**
@@ -63,9 +55,9 @@ import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
 @SuppressWarnings("restriction")
 public class KalypsoWizardSelectionPage extends WorkbenchWizardListSelectionPage
 {
-  protected GisMapOutlinePage m_outline;
+  private final GisMapOutlinePage m_outline;
 
-  protected ISelection m_selection;
+  private final ISelection m_selection;
 
   public KalypsoWizardSelectionPage( final IWorkbench aWorkbench, final IStructuredSelection selection, final AdaptableList wizardElts, final String message, final GisMapOutlinePage outlineview )
   {
@@ -75,43 +67,10 @@ public class KalypsoWizardSelectionPage extends WorkbenchWizardListSelectionPage
     m_selection = selection;
   }
 
-  /**
-   * @see org.eclipse.ui.internal.dialogs.WorkbenchWizardListSelectionPage#createWizardNode(org.eclipse.ui.internal.dialogs.WorkbenchWizardElement)
-   */
   @Override
   protected IWizardNode createWizardNode( final WorkbenchWizardElement element )
   {
-    return new WorkbenchWizardNode( this, element )
-    {
-      @Override
-      public IWorkbenchWizard createWizard( ) throws CoreException
-      {
-        /* Find the right map modell */
-        final IKalypsoLayerModell mapModell = findMapModell();
-
-        final IKalypsoDataImportWizard newWizard = (IKalypsoDataImportWizard) element.createWizard();
-        newWizard.setCommandTarget( m_outline );
-        newWizard.setMapModel( mapModell );
-        if( newWizard instanceof Wizard )
-          ((Wizard) newWizard).setWindowTitle( KalypsoWizardSelectionPage.this.getWizard().getWindowTitle() );
-        return newWizard;
-      }
-
-      private IKalypsoLayerModell findMapModell( )
-      {
-        if( m_selection instanceof StructuredSelection )
-        {
-          final Object firstElement = ((IStructuredSelection) m_selection).getFirstElement();
-          if( firstElement instanceof IKalypsoLayerModell )
-            return (IKalypsoLayerModell) firstElement;
-
-          if( firstElement instanceof IKalypsoTheme )
-            return (IKalypsoLayerModell) ((IKalypsoTheme) firstElement).getMapModell();
-        }
-
-        /* Without valid selection, new themes go top-level */
-        return m_outline.getMapPanel().getMapModell();
-      }
-    };
+    final String windowTitle = KalypsoWizardSelectionPage.this.getWizard().getWindowTitle();
+    return new KalypsoAddLayerWizardNode( this, element, windowTitle, m_outline, m_selection );
   }
 }

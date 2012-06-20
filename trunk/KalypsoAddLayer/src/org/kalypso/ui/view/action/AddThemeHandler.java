@@ -57,6 +57,8 @@ import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
  */
 public class AddThemeHandler extends AbstractHandler
 {
+  private static final String WIZARD_SELECTION_DEFAULT = "org.kalypso.ui.addlayer.wizardselection.default"; //$NON-NLS-1$
+
   @Override
   public Object execute( final ExecutionEvent event )
   {
@@ -68,7 +70,8 @@ public class AddThemeHandler extends AbstractHandler
     final GisMapOutlinePage viewer = MapHandlerUtils.getMapOutline( context );
 
     final IWorkbench workbench = activeWorkbenchWindow.getWorkbench();
-    final KalypsoAddLayerWizard wizard = new KalypsoAddLayerWizard( viewer, selection, workbench );
+
+    final KalypsoAddLayerWizard wizard = new KalypsoAddLayerWizard( viewer, selection, workbench, WIZARD_SELECTION_DEFAULT );
     wizard.setForcePreviousAndNextButtons( true );
     final WizardDialog dialog = new WizardDialog( shell, wizard );
     dialog.open();
