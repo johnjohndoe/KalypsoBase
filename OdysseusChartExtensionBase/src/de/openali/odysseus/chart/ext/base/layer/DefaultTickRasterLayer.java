@@ -42,17 +42,13 @@ package de.openali.odysseus.chart.ext.base.layer;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
-import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
-import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
 
 /**
  * @author kimwerner
@@ -127,14 +123,16 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
       drawLine( gc, p1, p2 );
     }
 
-    final FullRectangleFigure figureRect = new FullRectangleFigure();
-    final IPointStyle pointStyle = getPointFigure().getStyle();
-    if( pointStyle.isVisible() )
-    {
-      figureRect.setStyle( new AreaStyle( new ColorFill( pointStyle.getInlineColor() ), pointStyle.getAlpha(), pointStyle.getStroke(), pointStyle.isFillVisible() ) );
-      figureRect.setRectangle( new Rectangle( 1, 1, width, heigth ) );
-      figureRect.paint( gc );
-    }
+    // TODO Rahmenelement zeichnet ins chart
+// final FullRectangleFigure figureRect = new FullRectangleFigure();
+// final IPointStyle pointStyle = getPointFigure().getStyle();
+// if( pointStyle.isVisible() )
+// {
+// figureRect.setStyle( new AreaStyle( new ColorFill( pointStyle.getInlineColor() ), pointStyle.getAlpha(),
+// pointStyle.getStroke(), pointStyle.isFillVisible() ) );
+// figureRect.setRectangle( new Rectangle( -1, -1, width + 5, heigth + 5 ) );
+// figureRect.paint( gc );
+// }
   }
 
   /**
