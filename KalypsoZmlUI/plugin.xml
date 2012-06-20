@@ -457,6 +457,10 @@
           id="org.kalypso.zml.ui.chart.layer.commands.debug.dialog"
           name="Debug-Dialog">
     </command>
+    <command
+          id="org.kalypso.ui.rrm.internal.open.diagramm.with.grafik.exe"
+          name="Zeige Diagramm mit grafik.exe">
+    </command>
  </extension>
  <extension
        point="org.eclipse.ui.handlers">
@@ -472,6 +476,10 @@
           class="org.kalypso.zml.ui.chart.view.debug.OpenDiagramDebugDialogHandler"
           commandId="org.kalypso.zml.ui.chart.layer.commands.debug.dialog">
     </handler>
+    <handler
+            class="org.kalypso.zml.ui.chart.grafik.OpenDiagrammInGrafikExeHandler"
+            commandId="org.kalypso.ui.rrm.internal.open.diagramm.with.grafik.exe">
+    </handler>
  </extension>
  <extension
        point="org.eclipse.ui.commandImages">
@@ -479,8 +487,12 @@
           commandId="org.kalypso.zml.ui.chart.layer.commands.debug.dialog"
           icon="icons/table/debug.png">
     </image>
+    <image
+          commandId="org.kalypso.ui.rrm.internal.open.diagramm.with.grafik.exe"
+          icon="icons/chart/graphic.png">
+    </image>
  </extension>
- 
+
  <extension
        point="de.openali.odysseus.chart.framework.ChartLayerFilter">
     	<filter
@@ -500,7 +512,7 @@
            id="org.kalypso.chart.layer.filter.fehlwerte">
      </filter>
  </extension>
- 
+
  <extension
          point="org.eclipse.ui.importWizards">
       <wizard
@@ -510,7 +522,7 @@
             id="KalypsoNA_UI.wizard1"
             name="%KalypsoNA_UI.wizard1.name"/>
    </extension>
- 
+
   <extension
        point="org.eclipse.ui.menus">
     <menuContribution
