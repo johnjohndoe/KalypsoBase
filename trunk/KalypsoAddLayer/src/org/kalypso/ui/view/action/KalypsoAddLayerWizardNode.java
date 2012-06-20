@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.internal.dialogs.WorkbenchWizardElement;
@@ -29,6 +30,7 @@ import org.eclipse.ui.internal.dialogs.WorkbenchWizardNode;
 import org.eclipse.ui.internal.dialogs.WorkbenchWizardSelectionPage;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
+import org.kalypso.ogc.gml.outline.GisMapOutlineDropData;
 import org.kalypso.ui.addlayer.IKalypsoDataImportWizard;
 import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
 
@@ -61,12 +63,28 @@ final class KalypsoAddLayerWizardNode extends WorkbenchWizardNode
 
     final IKalypsoDataImportWizard newWizard = (IKalypsoDataImportWizard) getWizardElement().createWizard();
     newWizard.setCommandTarget( m_outline );
-    newWizard.setMapModel( mapModell );
+
+    final Object selectedTheme = getSelectedTheme();
+
+    final GisMapOutlineDropData data = GisMapOutlineDropData.fromCurrentSelection( mapModell, selectedTheme, ViewerDropAdapter.LOCATION_ON );
+
+    newWizard.setMapModel( data.getLayerModel(), data.getInsertionIndex() );
 
     if( newWizard instanceof Wizard )
       ((Wizard) newWizard).setWindowTitle( m_windowTitle );
 
     return newWizard;
+  }
+
+  private Object getSelectedTheme( )
+  {
+    if( m_selection instanceof IStructuredSelection )
+    {
+      final IStructuredSelection sel = (IStructuredSelection) m_selection;
+      return sel.getFirstElement();
+    }
+
+    return null;
   }
 
   private IKalypsoLayerModell findMapModell( )
