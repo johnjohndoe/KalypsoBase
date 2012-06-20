@@ -94,6 +94,11 @@
    </element>
 
    <element name="description" type="string">
+      <annotation>
+         <appInfo>
+            <meta.element translatable="true"/>
+         </appInfo>
+      </annotation>
    </element>
 
    <element name="wizardSelection">
@@ -146,15 +151,6 @@ For example, the outline of the workflow map view only shows a specific selectio
 
    <annotation>
       <appInfo>
-         <meta.section type="apiInfo"/>
-      </appInfo>
-      <documentation>
-         [Enter API information here.]
-      </documentation>
-   </annotation>
-
-   <annotation>
-      <appInfo>
          <meta.section type="since"/>
       </appInfo>
       <documentation>
@@ -180,5 +176,14 @@ For example, the outline of the workflow map view only shows a specific selectio
       </documentation>
    </annotation>
 
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         [Enter API information here.]
+      </documentation>
+   </annotation>
 
 </schema>
