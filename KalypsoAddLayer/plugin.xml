@@ -94,13 +94,32 @@
             icon="icon/imageTheme.gif"
             id="org.kalypso.ui.wizard.others.ImageThemeWizard"
             name="Bild">
+         <description>
+            This layer adds an non-georeferenced image (e.g. a logo) to the map.
+         </description>
       </wizard>
       <wizard
             class="org.kalypso.ui.wizard.others.TextThemeWizard"
             icon="icon/textTheme.gif"
             id="org.kalypso.ui.wizard.others.TextThemeWizard"
             name="Text">
+         <description>
+            This layer adds an arbitrary text (e.g. a title) to the map.
+         </description>
       </wizard>
+      <wizardSelection description="Default selection used for the map editor." id="org.kalypso.ui.addlayer.wizardselection.default">
+         <wizardRef wizardId="org.kalypso.ui.wizard.shape"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.wms"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.wfs"/>
+         <wizardRef wizardId="gml"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.raster"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.image"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.others.LegendThemeWizard"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.others.CascadingThemeWizard"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.others.ScaleThemeWizard"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.others.ImageThemeWizard"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.others.TextThemeWizard"/>
+      </wizardSelection>
    </extension>
    <extension
          point="org.eclipse.ui.newWizards">

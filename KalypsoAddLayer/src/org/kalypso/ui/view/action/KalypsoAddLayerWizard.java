@@ -66,19 +66,13 @@ public class KalypsoAddLayerWizard extends Wizard
   /**
    * Returns the import wizards that are available for invocation.
    */
-  public KalypsoAddLayerWizard( final GisMapOutlinePage outlineviewer, final IStructuredSelection selection, final IWorkbench workbench )
-  {
-    this( outlineviewer, selection, workbench, MapExtensions.getAvailableWizards() );
-  }
-
-  /**
-   * Returns the import wizards that are available for invocation.
-   */
-  public KalypsoAddLayerWizard( final GisMapOutlinePage outlineviewer, final IStructuredSelection selection, final IWorkbench workbench, final AdaptableList wizards )
+  public KalypsoAddLayerWizard( final GisMapOutlinePage outlineviewer, final IStructuredSelection selection, final IWorkbench workbench, final String wizardSelectionId )
   {
     m_outlineviewer = outlineviewer;
     m_selection = selection;
     m_workbench = workbench;
+
+    final AdaptableList wizards = MapExtensions.getAvailableWizards( wizardSelectionId );
 
     setWindowTitle( Messages.getString( "org.kalypso.ui.view.action.KalypsoAddLayerWizard.2" ) ); //$NON-NLS-1$
     setDefaultPageImageDescriptor( WorkbenchImages.getImageDescriptor( IWorkbenchGraphicConstants.IMG_WIZBAN_IMPORT_WIZ ) );

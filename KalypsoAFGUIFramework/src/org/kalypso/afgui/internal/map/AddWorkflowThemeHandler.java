@@ -49,11 +49,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.internal.dialogs.WizardCollectionElement;
-import org.eclipse.ui.wizards.IWizardCategory;
-import org.eclipse.ui.wizards.IWizardDescriptor;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
-import org.kalypso.ui.addlayer.MapExtensions;
 import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
 import org.kalypso.ui.view.action.KalypsoAddLayerWizard;
 
@@ -63,9 +59,10 @@ import org.kalypso.ui.view.action.KalypsoAddLayerWizard;
  *
  * @author Gernot Belger
  */
-@SuppressWarnings("restriction")
 public class AddWorkflowThemeHandler extends AbstractHandler
 {
+  private static final String WIZARD_SELECTION_WORKFLOW = "org.kalypso.afgui.addlayer.wizardselection.workflow"; //$NON-NLS-1$
+
   @Override
   public Object execute( final ExecutionEvent event )
   {
@@ -78,45 +75,12 @@ public class AddWorkflowThemeHandler extends AbstractHandler
 
     final IWorkbench workbench = activeWorkbenchWindow.getWorkbench();
 
-    final WizardCollectionElement wizards = configureWizards();
-
-    final KalypsoAddLayerWizard wizard = new KalypsoAddLayerWizard( viewer, selection, workbench, wizards );
+    final KalypsoAddLayerWizard wizard = new KalypsoAddLayerWizard( viewer, selection, workbench, WIZARD_SELECTION_WORKFLOW );
 
     wizard.setForcePreviousAndNextButtons( true );
     final WizardDialog dialog = new WizardDialog( shell, wizard );
     dialog.open();
 
     return null;
-  }
-
-  private WizardCollectionElement configureWizards( )
-  {
-    final WizardCollectionElement wizards = MapExtensions.getAvailableWizards();
-
-    // TODO: not nice and durable -> use some kind of extension mechanism instead
-
-    /* Remove all wizards that show the project structure to the user */
-    removeWizard( wizards, "gml" ); //$NON-NLS-1$
-    removeWizard( wizards, "org.kalypso.ui.wizard.shape" ); //$NON-NLS-1$
-    removeWizard( wizards, "org.kalypso.ui.wizard.raster" ); //$NON-NLS-1$
-    removeWizard( wizards, "org.kalypso.ui.wizard.image" ); //$NON-NLS-1$
-
-    /* TODO: add wizards that import data and add theme at the same moment */
-
-    return wizards;
-  }
-
-  private void removeWizard( final WizardCollectionElement wizards, final String id )
-  {
-    final IWizardDescriptor badWizard = wizards.findWizard( id );
-    if( badWizard == null )
-      return;
-
-    final IWizardCategory category = badWizard.getCategory();
-    if( !(category instanceof WizardCollectionElement) )
-      return;
-
-    final WizardCollectionElement collection = (WizardCollectionElement) category;
-    collection.remove( badWizard );
   }
 }

@@ -42,12 +42,21 @@ package org.kalypso.ui.addlayer;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.internal.dialogs.WizardCollectionElement;
 import org.eclipse.ui.internal.registry.WizardsRegistryReader;
+import org.eclipse.ui.wizards.IWizardCategory;
+import org.eclipse.ui.wizards.IWizardDescriptor;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.addlayer.dnd.IMapDropTarget;
 import org.kalypso.ui.addlayer.internal.dnd.MapDropTarget;
@@ -66,15 +75,96 @@ public final class MapExtensions
 
   private static final String EXTENSION_TARGET = "target"; //$NON-NLS-1$
 
+  private static final Object ELEMENT_WIZARD_SELECTION = "wizardSelection"; //$NON-NLS-1$
+
+  private static final String ATTRIBUTE_ID = "id"; //$NON-NLS-1$
+
+  private static final String ELEMENT_WIZARD_REF = "wizardRef"; //$NON-NLS-1$
+
+  private static final String ATTRIBUTE_WIZARD_ID = "wizardId"; //$NON-NLS-1$
+
   private MapExtensions( )
   {
     throw new UnsupportedOperationException();
   }
 
-  public static WizardCollectionElement getAvailableWizards( )
+  /**
+   * @param wizardSelectionId
+   *          The id of the wizard selection that should restrict the returned set of wizards. If <code>null</code>, all
+   *          available wizards are returned.
+   */
+  public static WizardCollectionElement getAvailableWizards( final String wizardSelectionId )
   {
     final WizardsRegistryReader reader = new WizardsRegistryReader( KalypsoGisPlugin.PLUGIN_ID, EXTENSION_POINT_ADD_LAYER_WIZARD );
-    return reader.getWizardElements();
+    final WizardCollectionElement wizardElements = reader.getWizardElements();
+
+    if( wizardSelectionId == null )
+      return wizardElements;
+
+    final Set<String> positiveList = getWizardSelection( wizardSelectionId );
+    return filterWizardElements( wizardElements, positiveList );
+  }
+
+  private static Set<String> getWizardSelection( final String wizardSelectionId )
+  {
+    final Set<String> selectedWizards = new LinkedHashSet<>();
+
+    final IConfigurationElement selectionElement = findWizardSelection( wizardSelectionId );
+    final IConfigurationElement[] children = selectionElement.getChildren( ELEMENT_WIZARD_REF );
+    for( final IConfigurationElement child : children )
+    {
+      final String wizardId = child.getAttribute( ATTRIBUTE_WIZARD_ID );
+      selectedWizards.add( wizardId );
+    }
+
+    return Collections.unmodifiableSet( selectedWizards );
+  }
+
+  private static IConfigurationElement findWizardSelection( final String wizardSelectionId )
+  {
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+    final IExtensionPoint extensionPoint = registry.getExtensionPoint( KalypsoGisPlugin.PLUGIN_ID, EXTENSION_POINT_ADD_LAYER_WIZARD );
+    final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
+    for( final IConfigurationElement element : configurationElements )
+    {
+      if( ELEMENT_WIZARD_SELECTION.equals( element.getName() ) )
+      {
+        final String id = element.getAttribute( ATTRIBUTE_ID );
+        if( id.equals( wizardSelectionId ) )
+          return element;
+      }
+    }
+
+    final String message = String.format( "Failed to find wizardSelection with id: %s", wizardSelectionId );
+    final IStatus status = new Status( IStatus.WARNING, KalypsoGisPlugin.PLUGIN_ID, message );
+    KalypsoGisPlugin.getDefault().getLog().log( status );
+
+    return null;
+  }
+
+  private static WizardCollectionElement filterWizardElements( final WizardCollectionElement wizardElements, final Set<String> positiveList )
+  {
+    final Set<String> allWizards = new HashSet<>();
+    findAllWizardIds( wizardElements, allWizards );
+
+    for( final String wizardId : allWizards )
+    {
+      if( !positiveList.contains( wizardId ) )
+        removeWizard( wizardElements, wizardId );
+    }
+
+    return wizardElements;
+  }
+
+  private static void findAllWizardIds( final WizardCollectionElement wizardElements, final Set<String> allWizards )
+  {
+    final IWizardDescriptor[] wizards = wizardElements.getWizards();
+    for( final IWizardDescriptor descriptor : wizards )
+      allWizards.add( descriptor.getId() );
+
+    final WizardCollectionElement[] collectionElements = wizardElements.getCollectionElements();
+    for( final WizardCollectionElement collectionElement : collectionElements )
+      findAllWizardIds( collectionElement, allWizards );
   }
 
   public static IMapDropTarget[] getDropTargets( )
@@ -91,5 +181,19 @@ public final class MapExtensions
     }
 
     return targets.toArray( new IMapDropTarget[targets.size()] );
+  }
+
+  private static void removeWizard( final WizardCollectionElement wizards, final String id )
+  {
+    final IWizardDescriptor badWizard = wizards.findWizard( id );
+    if( badWizard == null )
+      return;
+
+    final IWizardCategory category = badWizard.getCategory();
+    if( !(category instanceof WizardCollectionElement) )
+      return;
+
+    final WizardCollectionElement collection = (WizardCollectionElement) category;
+    collection.remove( badWizard );
   }
 }

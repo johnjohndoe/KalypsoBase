@@ -161,7 +161,7 @@ public class AddLayerDndSupport
   {
     final String wizardId = target.getWizardId();
 
-    final WizardCollectionElement wizards = MapExtensions.getAvailableWizards();
+    final WizardCollectionElement wizards = MapExtensions.getAvailableWizards( null );
     final IWizardDescriptor wizardDescriptor = wizards.findWizard( wizardId );
     if( wizardDescriptor == null )
       throw new IllegalStateException( String.format( Messages.getString("AddLayerDndSupport_3"), wizardId ) ); //$NON-NLS-1$
