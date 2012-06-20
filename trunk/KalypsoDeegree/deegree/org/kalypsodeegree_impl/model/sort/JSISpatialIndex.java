@@ -178,7 +178,7 @@ public class JSISpatialIndex implements SpatialIndexExt
     final float x2 = bounds.maxX;
     final float y2 = bounds.maxY;
 
-    return new Envelope( x1, y1, x2, y2 );
+    return new Envelope( x1, x2, y1, y2 );
   }
 
   @Override
