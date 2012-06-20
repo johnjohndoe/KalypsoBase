@@ -40,12 +40,9 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview.grafik;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -105,11 +102,10 @@ import org.kalypso.template.obsdiagview.Obsdiagview;
 import org.kalypso.template.obsdiagview.TypeCurve;
 import org.kalypso.template.obsdiagview.TypeObservation;
 import org.kalypso.ui.KalypsoGisPlugin;
-import org.xml.sax.InputSource;
 
 /**
  * GrafikLauncher
- *
+ * 
  * @author schlienger
  */
 public class GrafikLauncher
@@ -139,11 +135,11 @@ public class GrafikLauncher
   /**
    * Opens the grafik tool using an observation template file. Note: this method should be called using a
    * WorkspaceModifyOperation.
-   *
+   * 
    * @return the created tpl file
    * @throws SensorException
    */
-  public static IStatus startGrafikODT( final IFile odtFile, final IFolder dest, final IProgressMonitor monitor ) throws SensorException
+  public static IStatus startGrafikODT( final IFile odtFile, final IFolder dest, final IProgressMonitor monitor ) throws SensorException, CoreException
   {
     final Obsdiagview odt;
     try
@@ -192,14 +188,14 @@ public class GrafikLauncher
   /**
    * Opens the grafik tool using an observation template xml object. Note: this method should be called using a
    * WorkspaceModifyOperation.
-   *
+   * 
    * @param fileName
    *          the filename to use for the grafik template file
    * @param odt
    *          the xml binding object
    * @throws SensorException
    */
-  public static IStatus startGrafikODT( final String fileName, final Obsdiagview odt, final IFolder dest, final IProgressMonitor monitor ) throws SensorException
+  public static IStatus startGrafikODT( final String fileName, final Obsdiagview odt, final IFolder dest, final IProgressMonitor monitor ) throws SensorException, CoreException
   {
     final List<RememberForSync> sync = new Vector<RememberForSync>();
     StringWriter strWriter = null;
@@ -241,6 +237,9 @@ public class GrafikLauncher
     }
     catch( final Throwable e ) // generic exception caught
     {
+      if( e instanceof CoreException )
+        throw (CoreException) e;
+
       throw new SensorException( e );
     }
     finally
@@ -254,7 +253,7 @@ public class GrafikLauncher
 
   /**
    * Starts the grafik.exe with an eclipse IFile tpl-File.
-   *
+   * 
    * @param tplFile
    *          the Grafik-Vorlage
    * @throws SensorException
@@ -330,7 +329,7 @@ public class GrafikLauncher
   public static File getGrafikProgramPath( ) throws IOException
   {
     // create the grafik exe
-    final File grafikExe = makeFileFromStream( "grafik", ".exe", GrafikLauncher.class.getResourceAsStream( "/org/kalypso/ui/resources/exe/grafik.exe_" ), true ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    final File grafikExe = makeFileFromURL( "grafik", ".exe", GrafikLauncher.class.getResource( "/org/kalypso/ui/resources/exe/grafik.exe_" ), true ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     grafikExe.deleteOnExit();
 
     // also create the help file if not already existing
@@ -338,7 +337,7 @@ public class GrafikLauncher
     grafikHelp.deleteOnExit();
     if( !grafikHelp.exists() )
     {
-      final File tmp = makeFileFromStream( "grafik", ".hlp", GrafikLauncher.class.getResourceAsStream( "/org/kalypso/ui/resources/exe/grafik.hlp" ), true ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      final File tmp = makeFileFromURL( "grafik", ".hlp", GrafikLauncher.class.getResource( "/org/kalypso/ui/resources/exe/grafik.hlp" ), true ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
       // the help must have the same name as the exe (except file-extension)
       FileUtils.copyFile( tmp, grafikHelp );
@@ -351,7 +350,7 @@ public class GrafikLauncher
   /**
    * Creates a new temporary file given its pathName and an InputStream. The content from the InputStream is written
    * into the file. The file will be deleted after the VM shuts down
-   *
+   * 
    * @param charMode
    * @param prefix
    *          prefix of file name
@@ -365,7 +364,7 @@ public class GrafikLauncher
    * @throws IOException
    *           problems reading from stream or writing to temp. file
    */
-  private static File makeFileFromStream( final String prefix, final String suffix, final InputStream ins, final boolean useCache ) throws IOException
+  private static File makeFileFromURL( final String prefix, final String suffix, final URL input, final boolean useCache ) throws IOException
   {
     if( useCache )
     {
@@ -384,8 +383,7 @@ public class GrafikLauncher
     final File tmp = File.createTempFile( prefix, suffix );
     tmp.deleteOnExit();
 
-    final BufferedOutputStream out = new BufferedOutputStream( new FileOutputStream( tmp ) );
-    IOUtils.copy( ins, out );
+    FileUtils.copyURLToFile( input, tmp );
 
     return tmp;
   }
@@ -393,7 +391,7 @@ public class GrafikLauncher
   /**
    * Looks in the given path if a file with the given prefix and suffix exists. Returns the file in the positive. If
    * more than one such file is found, returns the first of them.
-   *
+   * 
    * @param prefix
    *          name of the file should begin with this prefix
    * @param suffix
@@ -478,13 +476,10 @@ public class GrafikLauncher
 
       final IObservation obs;
       final ITupleModel values;
-      InputStream ins = null;
       try
       {
-        ins = zmlFile.getContents();
-        obs = ZmlFactory.parseXML( new InputSource( ins ), context );
-        ins.close();
 
+        obs = ZmlFactory.parseXML( zmlFile.getLocationURI().toURL() );
         values = obs.getValues( null );
       }
       catch( final Exception e )
@@ -493,10 +488,6 @@ public class GrafikLauncher
         logger.warning( msg );
         stati.add( IStatus.WARNING, msg, e );
         continue;
-      }
-      finally
-      {
-        IOUtils.closeQuietly( ins );
       }
 
       // find out which axes to use
@@ -669,7 +660,7 @@ public class GrafikLauncher
 
   /**
    * mini helper class for storing a value and a color
-   *
+   * 
    * @author schlienger
    */
   private final static class ValueAndColor

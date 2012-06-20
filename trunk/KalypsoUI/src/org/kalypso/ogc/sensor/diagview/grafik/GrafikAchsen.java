@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview.grafik;
 
@@ -45,9 +45,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.diagview.DiagramAxis;
 import org.kalypso.template.obsdiagview.TypeAxis;
+import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * @author schlienger
@@ -73,7 +77,7 @@ public class GrafikAchsen
 
   private boolean m_invertedAchseCreated = false;
 
-  public GrafikAchsen( final List<TypeAxis> taxList )
+  public GrafikAchsen( final List<TypeAxis> taxList ) throws CoreException
   {
     for( final TypeAxis ta : taxList )
     {
@@ -117,7 +121,7 @@ public class GrafikAchsen
       return null;
   }
 
-  private GrafikAchse createRightAchse( final int axisnr, final String name )
+  private GrafikAchse createRightAchse( final int axisnr, final String name ) throws CoreException
   {
     if( !m_rightAchseCreated )
     {
@@ -131,7 +135,7 @@ public class GrafikAchsen
       return null;
   }
 
-  private GrafikAchse createLeftAchse( final int axisnr, final String name )
+  private GrafikAchse createLeftAchse( final int axisnr, final String name ) throws CoreException
   {
     if( !m_leftAchseCreated )
     {
@@ -142,7 +146,7 @@ public class GrafikAchsen
     else if( !m_rightAchseCreated )
       return createRightAchse( axisnr, name );
     else
-      return null;
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, String.format( "Achse '%s' kann nicht zum Diagramm hinzugefügt werden.%nBitte überprüfen Sie, ob Sie mehr als zwei y-Achsen ausgewählt haben.", name ) ) );
   }
 
   private int axisnrByType( final TypeAxis ta )
