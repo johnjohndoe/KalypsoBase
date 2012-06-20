@@ -52,6 +52,8 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollectorWithTime;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
+import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 
 /**
  * @author Holger Albert
@@ -62,17 +64,17 @@ public class FeatureListComparator
 
   private final Feature m_selectedFeature;
 
-  private final QName m_listProperty;
+  private final GMLXPath m_listPath;
 
   private final QName m_uniqueProperty;
 
   private final Map<Object, FeaturePair> m_hash;
 
-  public FeatureListComparator( final Feature referenceFeature, final Feature selectedFeature, final QName listProperty, final QName uniqueProperty )
+  public FeatureListComparator( final Feature referenceFeature, final Feature selectedFeature, final GMLXPath listPath, final QName uniqueProperty )
   {
     m_referenceFeature = referenceFeature;
     m_selectedFeature = selectedFeature;
-    m_listProperty = listProperty;
+    m_listPath = listPath;
     m_uniqueProperty = uniqueProperty;
     m_hash = new HashMap<Object, FeaturePair>();
   }
@@ -83,8 +85,14 @@ public class FeatureListComparator
     final IStatusCollector collector = new StatusCollectorWithTime( KalypsoCorePlugin.getID() );
 
     /* Get the feature lists. */
-    final FeatureList referenceList = (FeatureList) m_referenceFeature.getProperty( m_listProperty );
-    final FeatureList selectedList = (FeatureList) m_selectedFeature.getProperty( m_listProperty );
+    final Object referenceQuery = GMLXPathUtilities.query( m_listPath, m_referenceFeature );
+    final Object selectedQuery = GMLXPathUtilities.query( m_listPath, m_selectedFeature );
+    if( !(referenceQuery instanceof FeatureList && selectedQuery instanceof FeatureList) )
+      throw new IllegalArgumentException( String.format( "GMLXPath '%s' does not point to a feature list...", m_listPath.toString() ) );
+
+    /* Cast. */
+    final FeatureList referenceList = (FeatureList) referenceQuery;
+    final FeatureList selectedList = (FeatureList) selectedQuery;
 
     /* Fill the reference (feature one) into the hash. */
     for( final Object object : referenceList )
@@ -93,7 +101,10 @@ public class FeatureListComparator
 
       final Object referenceKey = referenceFeature.getProperty( m_uniqueProperty );
       if( m_hash.containsKey( referenceKey ) )
-        throw new Exception( String.format( "The property '%s' of elements in the reference list has no unique values...", m_uniqueProperty.getLocalPart() ) );
+      {
+        collector.add( new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), String.format( "The property '%s' of elements in the reference list has no unique values...", m_uniqueProperty.getLocalPart() ) ) );
+        continue;
+      }
 
       m_hash.put( referenceKey, new FeaturePair( referenceFeature, null ) );
     }
@@ -112,7 +123,10 @@ public class FeatureListComparator
 
       final FeaturePair featurePair = m_hash.get( selectedKey );
       if( featurePair.getTwo() != null )
-        throw new Exception( String.format( "The property '%s' of elements in the reference list has no unique values...", m_uniqueProperty.getLocalPart() ) );
+      {
+        collector.add( new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), String.format( "The property '%s' of elements in the reference list has no unique values...", m_uniqueProperty.getLocalPart() ) ) );
+        continue;
+      }
 
       featurePair.setTwo( selectedFeature );
     }
@@ -151,6 +165,6 @@ public class FeatureListComparator
       // TODO
     }
 
-    return collector.asMultiStatusOrOK( String.format( "%s", m_listProperty.getLocalPart() ) );
+    return collector.asMultiStatusOrOK( String.format( "%s", m_listPath.toString() ) );
   }
 }
