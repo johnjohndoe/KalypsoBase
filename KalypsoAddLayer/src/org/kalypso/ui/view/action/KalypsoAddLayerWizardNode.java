@@ -66,7 +66,7 @@ final class KalypsoAddLayerWizardNode extends WorkbenchWizardNode
 
     final Object selectedTheme = getSelectedTheme();
 
-    final GisMapOutlineDropData data = GisMapOutlineDropData.fromCurrentSelection( mapModell, selectedTheme, ViewerDropAdapter.LOCATION_ON );
+    final GisMapOutlineDropData data = GisMapOutlineDropData.fromCurrentSelectionNonNull( mapModell, selectedTheme, ViewerDropAdapter.LOCATION_ON );
 
     newWizard.setMapModel( data.getLayerModel(), data.getInsertionIndex() );
 
