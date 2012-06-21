@@ -76,7 +76,7 @@ public class ChartPainter
 
   final Rectangle m_size;
 
-  private final Insets m_plotInsets = null;
+  private Insets m_plotInsets = null;
 
   final ChartTitlePainter m_titlePainter;
 
@@ -225,7 +225,7 @@ public class ChartPainter
     }
   }
 
-  private final ILineStyle getStyleFromAxes( final IAxis[] axes )
+  private ILineStyle getStyleFromAxes( final IAxis[] axes )
   {
     for( final IAxis axis : axes )
     {
@@ -284,6 +284,7 @@ public class ChartPainter
           plotFrame.getFrameEdge( position ).setLineStyle( style );
         }
       }
+      m_plotInsets = new Insets( insets.get( POSITION.TOP ), insets.get( POSITION.LEFT ), insets.get( POSITION.BOTTOM ), insets.get( POSITION.RIGHT ) );
     }
 
     return m_plotInsets;
