@@ -39,7 +39,7 @@ public class ChartModel implements IChartModel
 
   /**
    * automatically scales all given axes; scaling means here: show all available values
-   *
+   * 
    * @param axes
    *          axes == null -> update all chart model axes
    */
@@ -57,8 +57,6 @@ public class ChartModel implements IChartModel
   @Override
   public void clear( )
   {
-    m_settings.clearTitles();
-
     getLayerManager().clear();
     getMapperRegistry().clear();
   }

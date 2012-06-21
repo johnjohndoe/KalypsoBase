@@ -154,6 +154,9 @@ public class PoolGmlWorkspaceProvider extends AbstractGmlWorkspaceProvider imple
   public void save( final IProgressMonitor monitor ) throws CoreException
   {
     final KeyInfo info = getInfo();
+     if( info == null )
+      return;
+      
     if( info.isDirty() )
       info.saveObject( monitor );
   }

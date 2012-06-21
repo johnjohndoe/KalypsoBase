@@ -43,7 +43,10 @@ package de.openali.odysseus.chart.framework.model.impl.settings;
 import java.awt.Insets;
 
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
+import de.openali.odysseus.chart.framework.util.img.ChartPlotFrame;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 import de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegendRenderer;
 
@@ -52,25 +55,32 @@ import de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegend
  */
 public interface IBasicChartSettings
 {
-  void clearTitles( );
+  void addInsets( final String id, final Insets insets );
 
-  String getDescription( );
+  void addPlotFrameStyle( final POSITION position, final ILineStyle lineStyle );
 
-  TitleTypeBean[] getTitles( );
-
-  ITextStyle getTextStyle( );
-
-  void setDescription( String description );
+  ChartPlotFrame getPlotFrame( );
 
   void addTitles( TitleTypeBean... titles );
 
-  void setTitle( String title, ALIGNMENT position, ITextStyle textStyle, Insets insets );
+  CHART_DATA_LOADER_STRATEGY getDataLoaderStrategy( );
 
-  void setLegendRenderer( String renderer );
+  String getDescription( );
+
+  Insets getInsets( final String id );
 
   IChartLegendRenderer getLegendRenderer( );
 
+  ITextStyle getTextStyle( );
+
+  TitleTypeBean[] getTitles( );
+
   void setDataLoaderStrategy( CHART_DATA_LOADER_STRATEGY convert );
 
-  CHART_DATA_LOADER_STRATEGY getDataLoaderStrategy( );
+  void setDescription( String description );
+
+  void setLegendRenderer( String renderer );
+
+  void setTitle( String title, ALIGNMENT position, ITextStyle textStyle, Insets insets );
+
 }

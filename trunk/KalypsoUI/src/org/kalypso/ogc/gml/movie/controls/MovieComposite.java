@@ -543,7 +543,13 @@ public class MovieComposite extends Composite
    */
   public void updateControls( )
   {
+    if( isDisposed() )
+      return;
+
     updateImageCanvas( m_resolution.getWidth(), m_resolution.getHeight() );
+
+    if( isDisposed() )
+      return;
 
     final Display display = getDisplay();
     display.asyncExec( new Runnable()

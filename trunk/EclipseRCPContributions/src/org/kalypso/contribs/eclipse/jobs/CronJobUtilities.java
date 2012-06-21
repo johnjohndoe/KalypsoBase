@@ -100,6 +100,11 @@ public final class CronJobUtilities
    */
   public static void startAllCronJobs( ) throws CoreException
   {
+    /* Get all cron jobs. */
+    final List<CronJob> cronJobs = getCronJobs();
+    if( cronJobs.size() == 0 )
+      return;
+
     /* TODO: This is only quick and dirty. */
     /* The resources plugin is activated later by one cron job and can not be started, */
     /* because its activation uses a different rule than the cron job (mutex rule). */
@@ -108,11 +113,7 @@ public final class CronJobUtilities
     // REMARK: It is slow however, so this method should be called in a separate job.
     ResourcesPlugin.getPlugin();
 
-    /* Get all cron jobs. */
-    final List<CronJob> cronJobs = getCronJobs();
-    if( cronJobs.size() == 0 )
-      return;
-
+    /* Start all cron jobs. */
     for( int i = 0; i < cronJobs.size(); i++ )
     {
       /* Get the cron job. */

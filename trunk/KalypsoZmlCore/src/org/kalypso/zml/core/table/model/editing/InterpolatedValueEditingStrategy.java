@@ -112,7 +112,7 @@ public class InterpolatedValueEditingStrategy extends AbstractEditingStrategy
       {
         ZmlInterpolation.fillValue( transaction, column.getValueAxis(), 0, current.getModelIndex(), defaultValue );
       }
-      else if( direction > 0 && current == null )
+      else if( direction >= 0 && current == null )
       {
         if( ZmlInterpolation.isSetLastValidValue( column.getMetadata() ) )
         {

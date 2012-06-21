@@ -43,12 +43,18 @@ package de.openali.odysseus.chart.framework.model.impl.settings;
 import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.openali.odysseus.chart.framework.OdysseusChartFramework;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
+import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
+import de.openali.odysseus.chart.framework.util.img.ChartPlotFrame;
+import de.openali.odysseus.chart.framework.util.img.ChartPlotFrameEdge;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 import de.openali.odysseus.chart.framework.util.img.legend.renderer.CompactChartLegendRenderer;
 import de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegendRenderer;
@@ -66,50 +72,32 @@ public class BasicChartSettings implements IBasicChartSettings
 
   private ITextStyle m_textStyle = null;
 
+  private final ChartPlotFrame m_plotFrame = new ChartPlotFrame();
+
+  private final Map<String, Insets> m_insets = new HashMap<String, Insets>();
+
   private final List<TitleTypeBean> m_title = new ArrayList<TitleTypeBean>();
 
   private CHART_DATA_LOADER_STRATEGY m_strategy = CHART_DATA_LOADER_STRATEGY.eAsynchrone;
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.IChartModel#setTitle(java.lang.String)
-   */
   @Override
   public void addTitles( final TitleTypeBean... titles )
   {
     Collections.addAll( m_title, titles );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.impl.settings.IBasicChartSettings#clearTitles()
-   */
-  @Override
-  public void clearTitles( )
-  {
-    m_title.clear();
-
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.impl.IBasicChartSettings#getDataLoaderStrategy()
-   */
   @Override
   public CHART_DATA_LOADER_STRATEGY getDataLoaderStrategy( )
   {
     return m_strategy;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.IChartModel#getDescription()
-   */
   @Override
   public String getDescription( )
   {
     return m_description;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.IChartModel#getLegendRenderer()
-   */
   @Override
   public IChartLegendRenderer getLegendRenderer( )
   {
@@ -128,36 +116,24 @@ public class BasicChartSettings implements IBasicChartSettings
     return m_textStyle;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.IChartModel#getTitle()
-   */
   @Override
   public TitleTypeBean[] getTitles( )
   {
     return m_title.toArray( new TitleTypeBean[] {} );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.impl.IBasicChartSettings#setDataLoaderStrategy(de.openali.odysseus.chart.framework.model.impl.CHART_DATA_LOADER_STRATEGY)
-   */
   @Override
   public void setDataLoaderStrategy( final CHART_DATA_LOADER_STRATEGY strategy )
   {
     m_strategy = strategy;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.IChartModel#setDescription(java.lang.String)
-   */
   @Override
   public void setDescription( final String description )
   {
     m_description = description;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.IChartModel#setLegendRenderer(java.lang.String)
-   */
   @Override
   public void setLegendRenderer( final String renderer )
   {
@@ -169,11 +145,6 @@ public class BasicChartSettings implements IBasicChartSettings
     m_textStyle = textStyle;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.IChartModel#setTitle(java.lang.String,
-   *      de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.LABEL_POSITION,
-   *      de.openali.odysseus.chart.framework.model.style.ITextStyle, java.awt.Insets)
-   */
   @Override
   public void setTitle( final String title, final ALIGNMENT position, final ITextStyle textStyle, final Insets insets )
   {
@@ -184,5 +155,31 @@ public class BasicChartSettings implements IBasicChartSettings
     titleType.setTextStyle( textStyle );
     m_title.clear();
     m_title.add( titleType );
+  }
+
+  @Override
+  public void addInsets( final String id, final Insets insets )
+  {
+    m_insets.put( id, insets );
+
+  }
+
+  @Override
+  public Insets getInsets( final String id )
+  {
+    return m_insets.get( id );
+  }
+
+  @Override
+  public void addPlotFrameStyle( final POSITION position, final ILineStyle lineStyle )
+  {
+    m_plotFrame.setFrame( new ChartPlotFrameEdge( lineStyle ), position );
+
+  }
+
+  @Override
+  public ChartPlotFrame getPlotFrame( )
+  {
+    return m_plotFrame;
   }
 }

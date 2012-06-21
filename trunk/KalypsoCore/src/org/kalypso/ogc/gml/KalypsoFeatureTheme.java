@@ -98,6 +98,8 @@ import com.vividsolutions.jts.geom.Envelope;
  */
 public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalypsoFeatureTheme, ModellEventListener, IKalypsoStyleListener
 {
+  private final VisibleFeaturesCache m_visibleFeaturesCache = new VisibleFeaturesCache( this );
+
   private final List<IKalypsoStyle> m_styles = Collections.synchronizedList( new ArrayList<IKalypsoStyle>() );
 
   private CommandableWorkspace m_workspace;
@@ -174,6 +176,8 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     if( m_featureThemeIcon != null )
       m_featureThemeIcon.dispose();
 
+    m_visibleFeaturesCache.clear();
+
     super.dispose();
   }
 
@@ -188,18 +192,12 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     return m_workspace;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeatureType()
-   */
   @Override
   public IFeatureType getFeatureType( )
   {
     return m_featureType;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeaturePath()
-   */
   @Override
   public String getFeaturePath( )
   {
@@ -274,6 +272,8 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   {
     m_styles.add( style );
 
+    m_visibleFeaturesCache.clear();
+
     styleAdded( style );
   }
 
@@ -290,6 +290,8 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   {
     style.removeStyleListener( this );
     m_styles.remove( style );
+
+    m_visibleFeaturesCache.clear();
 
     // HACKY: in order to refresh (not update) the outline, fire a visibility event
     fireVisibilityChanged( isVisible() );
@@ -418,32 +420,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   @Override
   public FeatureList getFeatureListVisible( final GM_Envelope searchEnvelope )
   {
-    if( m_featureList == null )
-      return null;
-
-    /* Use complete bounding box if search envelope is not set. */
-    final GM_Envelope env = searchEnvelope == null ? m_featureList.getBoundingBox() : searchEnvelope;
-
-    final VisibleFeaturesPaintable paintDelegate = new VisibleFeaturesPaintable( env );
-
-    final IProgressMonitor monitor = new NullProgressMonitor();
-
-    try
-    {
-      final IStylePainter painter = StylePainterFactory.create( this, null );
-      painter.paint( paintDelegate, monitor );
-    }
-    catch( final CoreException e )
-    {
-      KalypsoCorePlugin.getDefault().getLog().log( e.getStatus() );
-    }
-
-    final Feature parentFeature = m_featureList.getOwner();
-    final IRelationType parentFTP = m_featureList.getPropertyType();
-    final FeatureList resultList = FeatureFactory.createFeatureList( parentFeature, parentFTP );
-    final Collection<Feature> visibleFeatures = paintDelegate.getVisibleFeatures();
-    resultList.addAll( visibleFeatures );
-    return resultList;
+    return m_visibleFeaturesCache.getVisibleFeatures( searchEnvelope );
   }
 
   @Override
@@ -487,6 +464,8 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   @Override
   public void styleChanged( )
   {
+    m_visibleFeaturesCache.clear();
+
     setDirty();
     fireStatusChanged( this );
   }
@@ -550,4 +529,34 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     return infoId;
   }
 
+  FeatureList calculateFeatureListVisible( final GM_Envelope searchEnvelope )
+  {
+    if( m_featureList == null )
+      return null;
+
+    /* Use complete bounding box if search envelope is not set. */
+    final GM_Envelope env = searchEnvelope == null ? m_featureList.getBoundingBox() : searchEnvelope;
+
+    // Put features in set in order to avoid duplicates
+    final VisibleFeaturesPaintable paintDelegate = new VisibleFeaturesPaintable( env );
+
+    final IProgressMonitor monitor = new NullProgressMonitor();
+
+    try
+    {
+      final IStylePainter painter = StylePainterFactory.create( this, null );
+      painter.paint( paintDelegate, monitor );
+    }
+    catch( final CoreException e )
+    {
+      KalypsoCorePlugin.getDefault().getLog().log( e.getStatus() );
+    }
+
+    final Feature parentFeature = m_featureList.getOwner();
+    final IRelationType parentFTP = m_featureList.getPropertyType();
+    final FeatureList resultList = FeatureFactory.createFeatureList( parentFeature, parentFTP );
+    final Collection<Feature> visibleFeatures = paintDelegate.getVisibleFeatures();
+    resultList.addAll( visibleFeatures );
+    return resultList;
+  }
 }

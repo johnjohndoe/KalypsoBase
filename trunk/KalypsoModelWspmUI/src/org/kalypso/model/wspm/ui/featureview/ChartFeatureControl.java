@@ -285,7 +285,6 @@ public class ChartFeatureControl extends AbstractFeatureControl
       {
         lm.removeLayer( chartLayer );
       }
-      chartModel.getSettings().clearTitles();
 
       /* Configure. */
       ChartFactory.doConfiguration( chartModel, m_ccl, m_chartTypes[i], ChartExtensionLoader.getInstance(), m_context );

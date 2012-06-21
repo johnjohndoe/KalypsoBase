@@ -134,6 +134,7 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
     return getAxisLabelRenderer().getTitleTypeBean().getTextStyle();
   }
 
+  @Override
   public ILineStyle getLineStyle( )
   {
     return m_axisConfig.axisLineStyle;

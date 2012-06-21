@@ -50,6 +50,7 @@ import org.kalypso.ogc.sensor.IAxisRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
@@ -94,10 +95,11 @@ public class ZmlBarLayerRangeHandler
       Date max = (Date) range.getUpper();
 
       // adjust min, because rainfalls time series values will be rendered int the past
-      final Period timestep = MetadataHelper.getTimestep( observation.getMetadataList() );
-
-      min = doAdjustMin( min, timestep );
-      max = doAdjustMax( max, timestep );
+      final IAxis axis = m_layer.getDataHandler().getValueAxis();
+      if( ITimeseriesConstants.TYPE_RAINFALL.equals( axis.getType() ) )
+        min = doAdjustMin( observation, min );
+      else if( ITimeseriesConstants.TYPE_POLDER_CONTROL.equals( axis.getType() ) )
+        max = doAdjustMax( observation, max );
 
       return new DataRange<Number>( getDateDataOperator().logicalToNumeric( min ), getDateDataOperator().logicalToNumeric( max ) );
     }
@@ -109,21 +111,25 @@ public class ZmlBarLayerRangeHandler
     }
   }
 
-  private Date doAdjustMax( final Date max, final Period timestep )
+  private Date doAdjustMax( final IObservation observation, final Date max )
   {
+    final Period timestep = MetadataHelper.getTimestep( observation.getMetadataList() );
     if( Objects.isNull( timestep ) )
       return max;
 
-    final long ms = Double.valueOf( timestep.toStandardSeconds().getSeconds() * 1000.0 * 2.0 ).longValue();
+    final long ms = Double.valueOf( timestep.toStandardSeconds().getSeconds() * 1000.0 ).longValue();
+
     return new Date( max.getTime() + ms );
   }
 
-  private Date doAdjustMin( final Date min, final Period timestep )
+  private Date doAdjustMin( final IObservation observation, final Date min )
   {
+    final Period timestep = MetadataHelper.getTimestep( observation.getMetadataList() );
     if( Objects.isNull( timestep ) )
       return min;
 
-    final long ms = Double.valueOf( timestep.toStandardSeconds().getSeconds() * 1000.0 * 2.0 ).longValue();
+    final long ms = Double.valueOf( timestep.toStandardSeconds().getSeconds() * 1000.0 ).longValue();
+
     return new Date( min.getTime() - ms );
   }
 

@@ -47,6 +47,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceStatus;
 import org.eclipse.core.runtime.CoreException;
@@ -66,23 +67,27 @@ import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ogc.gml.GmlWorkspaceProvider;
+import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.simulation.ui.actions.CalcCaseHelper;
 import org.kalypso.simulation.ui.calccase.ModelNature;
 import org.kalypso.simulation.ui.i18n.Messages;
 import org.kalypso.ui.ImageProvider;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
+@SuppressWarnings("restriction")
 public class NewCalculationCaseWizard extends BasicNewResourceWizard
 {
   private NewCalculationCaseCreateFolderPage m_createFolderPage;
 
   private SteuerparameterWizardPage m_createControlPage;
 
-  private IFolder m_newFolderHandle;
+  protected IFolder m_newFolderHandle;
 
-  private final String m_controlPath;
+  protected final String m_controlPath;
 
   public NewCalculationCaseWizard( final String controlPath )
   {
@@ -97,21 +102,41 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
     setNeedsProgressMonitor( true );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.IWizard#addPages()
-   */
   @Override
   public void addPages( )
   {
     super.addPages();
     m_createFolderPage = new NewCalculationCaseCreateFolderPage( Messages.getString( "org.kalypso.simulation.ui.wizards.createCalcCase.NewCalculationCaseWizard.1" ), getSelection() ); //$NON-NLS-1$
-    m_createControlPage = new SteuerparameterWizardPage( m_createFolderPage, ImageProvider.IMAGE_KALYPSO_ICON_BIG, false, m_controlPath )
+    final NewCalculationCaseCreateFolderPage createFolderPage = m_createFolderPage;
+
+    m_createControlPage = new SteuerparameterWizardPage( createFolderPage, ImageProvider.IMAGE_KALYPSO_ICON_BIG, false )
     {
       @Override
       public void createControl( final Composite parent )
       {
-        final IFolder newFolderHandle = handleCreateControl();
-        setFolder( newFolderHandle );
+        m_newFolderHandle = createCalculationCase();
+
+        try
+        {
+          final IProject project = createFolderPage.getProject();
+          final ModelNature nature = (ModelNature) project.getNature( ModelNature.ID );
+
+          /* Make sure the control file exists */
+          final GMLWorkspace workspace = nature.loadOrCreateControl( m_newFolderHandle, m_controlPath );
+          final CommandableWorkspace commandableWorkspace = new CommandableWorkspace( workspace );
+
+          /* Give to page */
+          final GmlWorkspaceProvider provider = new GmlWorkspaceProvider( commandableWorkspace );
+          setWorkspace( provider );
+          provider.startLoading();
+        }
+        catch( final CoreException e )
+        {
+          // ignore, m_workspace stays null, this will be handle later
+          e.printStackTrace();
+
+          setErrorMessage( e.getLocalizedMessage() );
+        }
 
         super.createControl( parent );
       }
@@ -121,13 +146,6 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
 
     addPage( m_createFolderPage );
     addPage( m_createControlPage );
-  }
-
-  protected IFolder handleCreateControl( )
-  {
-    m_newFolderHandle = createCalculationCase();
-
-    return m_newFolderHandle;
   }
 
   @Override
@@ -145,7 +163,19 @@ public class NewCalculationCaseWizard extends BasicNewResourceWizard
         monitor.beginTask( Messages.getString( "NewCalculationCaseWizard.0" ), 1000 ); //$NON-NLS-1$
         monitor.subTask( StringUtils.EMPTY ); // Hack, else the begin task will not be set here
 
-        controlPage.saveChanges( newFolderHandle, new SubProgressMonitor( monitor, 100 ) );
+        controlPage.saveChanges( new SubProgressMonitor( monitor, 100 ) );
+
+        if( controlPage.isUpdate() )
+        {
+          final ModelNature nature = (ModelNature) newFolderHandle.getProject().getNature( ModelNature.ID );
+          final IStatus updateStatus = nature.updateCalcCase( newFolderHandle, new SubProgressMonitor( monitor, 900 ) );
+          if( !updateStatus.isOK() )
+            throw new CoreException( updateStatus );
+        }
+        else
+        {
+          monitor.worked( 1000 );
+        }
       }
     };
 
