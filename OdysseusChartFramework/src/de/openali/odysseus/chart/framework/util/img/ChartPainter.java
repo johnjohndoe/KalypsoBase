@@ -199,7 +199,7 @@ public class ChartPainter
   private int getAxesWidth( final IAxis[] axes )
   {
     int width = 0; /* pixel */
-    ;
+
     for( final IAxis axis : axes )
     {
       if( axis.isVisible() )
