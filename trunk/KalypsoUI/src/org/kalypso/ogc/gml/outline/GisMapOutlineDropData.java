@@ -73,6 +73,15 @@ public class GisMapOutlineDropData
     return m_insertionIndex;
   }
 
+  public static GisMapOutlineDropData fromCurrentSelectionNonNull( final IKalypsoLayerModell mapModel, final Object currentTarget, final int currentLocation )
+  {
+    final GisMapOutlineDropData data = fromCurrentSelection( mapModel, currentTarget, currentLocation );
+    if( data != null )
+      return data;
+
+    return new GisMapOutlineDropData( mapModel, 0 );
+  }
+
   public static GisMapOutlineDropData fromCurrentSelection( final IKalypsoLayerModell mapModel, final Object currentTarget, final int currentLocation )
   {
     final int defaultInsertionIndex = 0;
