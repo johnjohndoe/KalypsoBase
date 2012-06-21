@@ -490,6 +490,8 @@ public class ImagePropertiesComposite extends Composite
     /* Set the initial selection. */
     if( m_imageFormat != null && m_imageFormat.length() > 0 )
       m_imageFormatViewer.setSelection( new StructuredSelection( m_imageFormat ) );
+    else
+      m_imageFormatViewer.setSelection( new StructuredSelection( "PNG" ) );
   }
 
   /**

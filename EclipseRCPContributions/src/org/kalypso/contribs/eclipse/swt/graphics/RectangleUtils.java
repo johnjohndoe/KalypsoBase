@@ -26,10 +26,10 @@ public final class RectangleUtils
 
   public static Rectangle createInnerRectangle( final int width, final int height, final Insets inset )
   {
-    final int x = inset.left + 1;
-    final int y = inset.top + 1;
-    final int w = width - inset.left - inset.right - 2;
-    final int h = height - inset.top - inset.bottom - 2;
+    final int x = inset.left;
+    final int y = inset.top;
+    final int w = width - inset.left - inset.right;
+    final int h = height - inset.top - inset.bottom;
 
     return new Rectangle( x, y, w, h );
   }
@@ -48,6 +48,8 @@ public final class RectangleUtils
   {
     if( rect == null )
       return null;
+    if( insets == null )
+      return rect;
     return new Rectangle( rect.x + insets.left, rect.y + insets.top, rect.width - insets.left - insets.right, rect.height - insets.bottom - insets.top );
   }
 

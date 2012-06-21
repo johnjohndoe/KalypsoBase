@@ -41,14 +41,11 @@
 
 package org.kalypso.metadoc.ui;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -56,11 +53,11 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.lang.DisposeHelper;
 import org.kalypso.metadoc.IExportTarget;
-import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.IExportableObjectFactory;
 import org.kalypso.metadoc.KalypsoMetaDocPlugin;
 import org.kalypso.metadoc.configuration.PublishingConfiguration;
@@ -98,74 +95,36 @@ public final class ExportWizard extends Wizard
     setDialogSettings( section );
 
     // use the target image as default image for this wizard
-    final IWizardPage[] factoryPages = factory.createWizardPages( configuration, defaultImage );
-    final IWizardPage[] targetPages = target.createWizardPages( configuration );
-    for( final IWizardPage factoryPage : factoryPages )
-      addPage( factoryPage );
-    for( final IWizardPage targetPage : targetPages )
-      addPage( targetPage );
 
-    // operation which will be called for finish
-    m_operation = new WorkspaceModifyOperation()
+    final ICoreRunnableWithProgress initOperation = new ICoreRunnableWithProgress()
     {
       @Override
-      protected void execute( final IProgressMonitor monitor ) throws CoreException, InterruptedException
+      public IStatus execute( final IProgressMonitor monitor ) throws CoreException
       {
-        final List<IStatus> stati = new ArrayList<IStatus>();
+        monitor.beginTask( "Initialisiere Dokumente", IProgressMonitor.UNKNOWN );
 
-        try
-        {
-          final IExportableObject[] objects = factory.createExportableObjects( configuration );
+        // TODO: slow
+        final IWizardPage[] factoryPages = factory.createWizardPages( configuration, defaultImage );
 
-          monitor.beginTask( "Export", objects.length );
+        final IWizardPage[] targetPages = target.createWizardPages( configuration );
+        for( final IWizardPage factoryPage : factoryPages )
+          addPage( factoryPage );
+        for( final IWizardPage targetPage : targetPages )
+          addPage( targetPage );
 
-          for( final IExportableObject exportableObject : objects )
-          {
-            if( monitor.isCanceled() )
-              throw new InterruptedException();
+        monitor.done();
 
-            monitor.subTask( exportableObject.getPreferredDocumentName() );
-
-            IStatus status;
-            try
-            {
-              status = target.commitDocument( exportableObject, configuration, new SubProgressMonitor( monitor, 1 ) );
-            }
-            catch( final Exception e )
-            {
-              status = StatusUtilities.statusFromThrowable( e );
-
-              KalypsoMetaDocPlugin.getDefault().getLog().log( status );
-            }
-
-            stati.add( status );
-          }
-        }
-        catch( final CoreException e )
-        {
-          KalypsoMetaDocPlugin.getDefault().getLog().log( e.getStatus() );
-
-          stati.add( e.getStatus() );
-        }
-        finally
-        {
-          monitor.done();
-        }
-
-        final IStatus status;
-        if( stati.size() == 0 )
-          status = new Status( IStatus.INFO, KalypsoMetaDocPlugin.getId(), 0, "Es wurden keine Dokumente erzeugt.", null );
-        else
-          status = StatusUtilities.createStatus( stati, "Siehe Details" );
-        if( !status.isOK() )
-          throw new CoreException( status );
+        return Status.OK_STATUS;
       }
     };
+    final IStatus status = ProgressUtilities.busyCursorWhile( initOperation );
+    if( !status.isOK() )
+      throw new CoreException( status );
+
+    // operation which will be called for finish
+    m_operation = new ExportDocumentsOperation( factory, configuration, target );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#dispose()
-   */
   @Override
   public void dispose( )
   {

@@ -1,7 +1,5 @@
 package de.openali.odysseus.chart.framework.view.impl;
 
-import java.awt.Insets;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -59,18 +57,11 @@ public class ChartImageComposite extends Canvas implements IChartComposite
 
   private EditInfo m_editInfo = null;
 
-  private final Insets m_insets;
-
   private final ChartImagePlotHandler m_plotHandler = new ChartImagePlotHandler( this );
 
   private InvalidateChartJob m_invalidate;
 
   public ChartImageComposite( final Composite parent, final int style, final IChartModel model, final RGB backgroundRGB )
-  {
-    this( parent, style, model, backgroundRGB, new Insets( 3, 3, 3, 3 ) );
-  }
-
-  public ChartImageComposite( final Composite parent, final int style, final IChartModel model, final RGB backgroundRGB, final Insets insets )
   {
     super( parent, style | SWT.DOUBLE_BUFFERED );
 
@@ -100,8 +91,6 @@ public class ChartImageComposite extends Canvas implements IChartComposite
         invalidate();
       }
     } );
-
-    m_insets = insets;
 
     setBackground( OdysseusChartFramework.getDefault().getColorRegistry().getResource( parent.getDisplay(), backgroundRGB ) );
     setChartModel( model );
@@ -166,7 +155,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     if( mapperRegistry == null )
       return Status.OK_STATUS;
 
-    final ChartPainter chartPainter = new ChartPainter( model, panel, m_insets );// ,new Insets(25,25,25,25));
+    final ChartPainter chartPainter = new ChartPainter( model, panel );// ,new Insets(25,25,25,25));
     m_image = chartPainter.init();
     if( monitor.isCanceled() )
       return Status.CANCEL_STATUS;

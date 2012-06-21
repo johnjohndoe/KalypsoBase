@@ -59,6 +59,9 @@
           <element name="Description" type="string" minOccurs="0" />
           <element ref="ods:Styles" minOccurs="0" />
           <element ref="ods:Layers" minOccurs="0" />
+          <element name="ChartInsets" type="ods:InsetType" minOccurs="0" />
+          <element name="PlotInsets" type="ods:InsetType" minOccurs="0" />
+          <element name="PlotFrame" type="ods:PlotFrameStyle" minOccurs="0" />
           <element name="Mappers" minOccurs="0">
             <complexType>
               <sequence>
@@ -81,6 +84,7 @@
         <attribute name="legend" type="boolean" use="optional" default="true" />
         <attribute name="legendRenderer" type="string" use="optional" default="de.openali.odysseus.chart.legend.render.combined" />
         <attribute name="loader" type="ods:DataLoadingStrategy" default="asynchrone" />
+
       </extension>
     </complexContent>
   </complexType>
@@ -462,7 +466,32 @@
       </extension>
     </simpleContent>
   </complexType>
+  <complexType name="InsetType">
+    <complexContent>
+      <extension base="ods:ReferencableType">
+        <attribute name="top" type="int" use="optional" default="0" />
+        <attribute name="left" type="int" use="optional" default="0" />
+        <attribute name="bottom" type="int" use="optional" default="0" />
+        <attribute name="right" type="int" use="optional" default="0" />
+      </extension>
+    </complexContent>
+  </complexType>
 
+  <complexType name="PlotFrameStyle">
+    <sequence minOccurs="0" maxOccurs="4">
+      <element name="edge">
+        <complexType>
+          <sequence>
+            <element name="position" type="ods:PositionType"></element>
+            <choice>
+              <element ref="ods:LineStyle" />
+              <element name="StyleReference" type="string" />
+            </choice>
+          </sequence>
+        </complexType>
+      </element>
+    </sequence>
+  </complexType>
   <!-- <complexType name="StylesType"> <choice maxOccurs="unbounded"> <element name="LineStyleRef" type="ods:RoleReferencingType"/> <element name="PointStyleRef" type="ods:RoleReferencingType"/> <element name="AreaStyleRef" type="ods:RoleReferencingType"/> <element name="TextStyleRef" type="ods:RoleReferencingType"/> </choice> </complexType> -->
 
 </schema>

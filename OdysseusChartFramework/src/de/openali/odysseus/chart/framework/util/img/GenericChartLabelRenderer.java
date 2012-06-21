@@ -449,7 +449,6 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
       newTransform.scale( m_titleBean.isMirrorHorizontal() ? -1 : 1, m_titleBean.isMirrorVertical() ? -1 : 1 );
       newTransform.translate( -(fitRect.x + fitRect.width / 2), -(fitRect.y + fitRect.height / 2) );
       gc.setTransform( newTransform );
-
       if( isImageURL( m_titleBean.getText() ) )
       {
         // draw image

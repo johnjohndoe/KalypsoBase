@@ -61,45 +61,30 @@ public abstract class AbstractGmlWorkspaceProvider implements IGmlWorkspaceProvi
 
   private IStatus m_status;
 
-  /**
-   * @see org.kalypso.ogc.gml.IGmlWorkspaceProvider#dispose()
-   */
   @Override
   public void dispose( )
   {
     m_listeners.clear();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IGmlWorkspaceProvider#addListener(org.kalypso.ogc.gml.IGmlWorkspaceProviderListener)
-   */
   @Override
   public final void addListener( final IGmlWorkspaceProviderListener l )
   {
     m_listeners.add( l );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IGmlWorkspaceProvider#removeListener(org.kalypso.ogc.gml.IGmlWorkspaceProviderListener)
-   */
   @Override
   public final void removeListener( final IGmlWorkspaceProviderListener l )
   {
     m_listeners.remove( l );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IFeaturesProvider#getWorkspace()
-   */
   @Override
   public final CommandableWorkspace getWorkspace( )
   {
     return m_workspace;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IGmlWorkspaceProvider#getStatus()
-   */
   @Override
   public final IStatus getStatus( )
   {
@@ -131,5 +116,4 @@ public abstract class AbstractGmlWorkspaceProvider implements IGmlWorkspaceProvi
       } );
     }
   }
-
 }

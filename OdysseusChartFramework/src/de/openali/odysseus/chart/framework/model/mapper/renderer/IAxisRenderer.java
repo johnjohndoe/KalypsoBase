@@ -4,6 +4,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
 
 /**
@@ -67,5 +68,7 @@ public interface IAxisRenderer
   void setLabelStyle( ITextStyle style );
 
   void setTickLabelStyle( ITextStyle style );
+
+  ILineStyle getLineStyle( );
 
 }

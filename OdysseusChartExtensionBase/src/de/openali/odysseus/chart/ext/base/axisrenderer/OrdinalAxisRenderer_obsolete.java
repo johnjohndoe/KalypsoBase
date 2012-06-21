@@ -446,4 +446,13 @@ public class OrdinalAxisRenderer_obsolete implements IAxisRenderer
     m_tickStyle = tickStyle;
   }
 
+  /**
+   * @see de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer#getLineStyle()
+   */
+  @Override
+  public ILineStyle getLineStyle( )
+  {
+    return m_config.axisLineStyle;
+  }
+
 }
