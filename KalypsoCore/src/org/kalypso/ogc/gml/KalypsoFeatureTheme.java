@@ -291,7 +291,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     style.removeStyleListener( this );
     m_styles.remove( style );
 
-    m_visibleFeaturesCache.clear();
+    setDirty();
 
     // HACKY: in order to refresh (not update) the outline, fire a visibility event
     fireVisibilityChanged( isVisible() );
@@ -390,8 +390,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
   private void requestRepaint( final GM_Envelope invalidEnvelope )
   {
-    /* Also invalidate the current full extent: my features have changed */
+    /* Also invalidate the cached extents: my features have changed */
     m_fullExtent = null;
+    m_visibleFeaturesCache.clear();
 
     /* Request the repaint event */
     fireRepaintRequested( invalidEnvelope );
@@ -464,8 +465,6 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   @Override
   public void styleChanged( )
   {
-    m_visibleFeaturesCache.clear();
-
     setDirty();
     fireStatusChanged( this );
   }

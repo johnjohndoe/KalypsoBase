@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml;
 
+import java.util.concurrent.ExecutionException;
+
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
@@ -63,9 +65,8 @@ class VisibleFeaturesCache
 
   VisibleFeaturesCache( final KalypsoFeatureTheme theme )
   {
-
     final CacheLoader<GM_Envelope, FeatureList> cacheLoader = new CacheLoader<GM_Envelope, FeatureList>()
-    {
+        {
       @Override
       public FeatureList load( final GM_Envelope input )
       {
@@ -74,9 +75,9 @@ class VisibleFeaturesCache
         else
           return theme.calculateFeatureListVisible( input );
       }
-    };
+        };
 
-    m_cache = CacheBuilder.newBuilder().weakKeys().maximumSize( 33 ).build( cacheLoader );
+        m_cache = CacheBuilder.newBuilder().weakKeys().maximumSize( 33 ).build( cacheLoader );
 
   }
 
@@ -87,9 +88,17 @@ class VisibleFeaturesCache
 
   public FeatureList getVisibleFeatures( final GM_Envelope searchEnvelope )
   {
-    if( searchEnvelope == null )
-      return m_cache.asMap().get( FULL_EXTENT );
-    else
-      return m_cache.asMap().get( searchEnvelope );
+    try
+    {
+      if( searchEnvelope == null )
+        return m_cache.get( FULL_EXTENT );
+      else
+        return m_cache.get( searchEnvelope );
+    }
+    catch( final ExecutionException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
 }
