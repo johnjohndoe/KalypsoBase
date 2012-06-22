@@ -45,11 +45,15 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollectorWithTime;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.gmlschema.annotation.IAnnotation;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
@@ -60,6 +64,9 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
  */
 public class FeatureListComparator
 {
+  /* If used as unique property, the element number is used as unique key. */
+  public static final QName PROPERTY_COUNTER = new QName( StringUtils.EMPTY );
+
   private final Feature m_referenceFeature;
 
   private final Feature m_selectedFeature;
@@ -95,14 +102,14 @@ public class FeatureListComparator
     final FeatureList selectedList = (FeatureList) selectedQuery;
 
     /* Fill the reference (feature one) into the hash. */
-    for( final Object object : referenceList )
+    for( int i = 0; i < referenceList.size(); i++ )
     {
-      final Feature referenceFeature = (Feature) object;
+      final Feature referenceFeature = (Feature) referenceList.get( i );
 
-      final Object referenceKey = referenceFeature.getProperty( m_uniqueProperty );
+      final Object referenceKey = resolveKeyProperty( referenceFeature, i );
       if( m_hash.containsKey( referenceKey ) )
       {
-        collector.add( new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), String.format( "The property '%s' of elements in the reference list has no unique values...", m_uniqueProperty.getLocalPart() ) ) );
+        collector.add( new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), String.format( "Element '%s' is duplicate in the reference list.", referenceKey ) ) );
         continue;
       }
 
@@ -110,11 +117,11 @@ public class FeatureListComparator
     }
 
     /* Fill the selected (feature two) into the hash. */
-    for( final Object object : selectedList )
+    for( int i = 0; i < selectedList.size(); i++ )
     {
-      final Feature selectedFeature = (Feature) object;
+      final Feature selectedFeature = (Feature) selectedList.get( i );
 
-      final Object selectedKey = selectedFeature.getProperty( m_uniqueProperty );
+      final Object selectedKey = resolveKeyProperty( selectedFeature, i );
       if( !m_hash.containsKey( selectedKey ) )
       {
         m_hash.put( selectedKey, new FeaturePair( null, selectedFeature ) );
@@ -124,7 +131,7 @@ public class FeatureListComparator
       final FeaturePair featurePair = m_hash.get( selectedKey );
       if( featurePair.getTwo() != null )
       {
-        collector.add( new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), String.format( "The property '%s' of elements in the reference list has no unique values...", m_uniqueProperty.getLocalPart() ) ) );
+        collector.add( new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), String.format( "Element '%s' is duplicate in the compared list.", selectedKey ) ) );
         continue;
       }
 
@@ -165,6 +172,18 @@ public class FeatureListComparator
       // TODO
     }
 
-    return collector.asMultiStatusOrOK( String.format( "%s", m_listPath.toString() ) );
+    final IFeatureType featureType = m_referenceFeature.getFeatureType();
+    final IPropertyType property = (IPropertyType) GMLXPathUtilities.query( m_listPath, featureType );
+    final IAnnotation annotation = property.getAnnotation();
+    final String label = annotation.getLabel();
+    return collector.asMultiStatusOrOK( label );
+  }
+
+  private Object resolveKeyProperty( final Feature referenceFeature, final int i )
+  {
+    if( m_uniqueProperty == PROPERTY_COUNTER )
+      return String.format( "%d. Element", i );
+
+    return referenceFeature.getProperty( m_uniqueProperty );
   }
 }
