@@ -55,6 +55,7 @@ import org.kalypso.shape.deegree.GenericShapeDataFactory;
 import org.kalypso.ui.KalypsoAddLayerPlugin;
 import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.addlayer.internal.util.AddLayerUtils;
+import org.kalypso.ui.i18n.Messages;
 import org.kalypso.ui.wizard.shape.ImportShapeFileData.StyleImport;
 import org.kalypsodeegree.xml.Marshallable;
 import org.kalypsodeegree.xml.XMLParsingException;
@@ -90,7 +91,7 @@ public class ImportShapeOperation
     final IFile sldFile = PathUtils.toFile( m_sldPath );
     if( sldFile.exists() && styleImportType == StyleImport.generateDefault )
     {
-      final String message = String.format( "A style file with the same name (%s) already exists and will be overwritten.\nContinue?", sldFile.getName() );
+      final String message = String.format( Messages.getString("ImportShapeOperation_0"), sldFile.getName() ); //$NON-NLS-1$
       if( !MessageDialog.openConfirm( shell, windowTitle, message ) )
         return false;
     }
@@ -123,7 +124,7 @@ public class ImportShapeOperation
     }
     catch( final Exception e )
     {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoAddLayerPlugin.getId(), "Unexpected error while adding a style", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoAddLayerPlugin.getId(), Messages.getString("ImportShapeOperation_1"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }

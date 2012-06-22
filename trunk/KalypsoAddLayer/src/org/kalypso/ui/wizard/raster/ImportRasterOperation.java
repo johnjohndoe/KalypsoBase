@@ -24,6 +24,7 @@ import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.KalypsoAddLayerPlugin;
 import org.kalypso.ui.action.AddThemeCommand;
+import org.kalypso.ui.i18n.Messages;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
 /**
@@ -61,7 +62,7 @@ public final class ImportRasterOperation implements ICoreRunnableWithProgress
   {
     try
     {
-      monitor.beginTask( "Create Grid Theme", 100 );
+      monitor.beginTask( Messages.getString("ImportRasterOperation_0"), 100 ); //$NON-NLS-1$
 
       createCoverageFile( new SubProgressMonitor( monitor, 10 ) );
 
@@ -107,7 +108,7 @@ public final class ImportRasterOperation implements ICoreRunnableWithProgress
 
     try
     {
-      final URL templateSLD = getClass().getResource( "resources/emptyRasterSymbolizer.sld" );
+      final URL templateSLD = getClass().getResource( "resources/emptyRasterSymbolizer.sld" ); //$NON-NLS-1$
       final File file = m_styleFile.getLocation().toFile();
       FileUtils.copyURLToFile( templateSLD, file );
       m_styleFile.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
@@ -118,7 +119,7 @@ public final class ImportRasterOperation implements ICoreRunnableWithProgress
     }
     catch( final IOException e )
     {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoAddLayerPlugin.getId(), "Failed to create sld file", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoAddLayerPlugin.getId(), Messages.getString("ImportRasterOperation_2"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }
@@ -143,7 +144,7 @@ public final class ImportRasterOperation implements ICoreRunnableWithProgress
     }
     catch( final GMLSchemaException e )
     {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoAddLayerPlugin.getId(), "Failed to create data file", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoAddLayerPlugin.getId(), Messages.getString("ImportRasterOperation_3"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }

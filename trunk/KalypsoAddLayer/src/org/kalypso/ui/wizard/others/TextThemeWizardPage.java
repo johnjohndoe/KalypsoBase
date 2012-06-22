@@ -52,6 +52,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.ogc.gml.ThemeUtilities;
+import org.kalypso.ui.i18n.Messages;
 import org.kalypso.util.themes.position.PositionUtilities;
 import org.kalypso.util.themes.text.TextUtilities;
 import org.kalypso.util.themes.text.controls.TextComposite;
@@ -81,8 +82,8 @@ public class TextThemeWizardPage extends WizardPage
 
     m_properties = new HashMap<String, String>();
 
-    setTitle( "Texteigenschaften" );
-    setDescription( "Wählen Sie die Eigenschaften des Textes." );
+    setTitle( Messages.getString("TextThemeWizardPage_0") ); //$NON-NLS-1$
+    setDescription( Messages.getString("TextThemeWizardPage_1") ); //$NON-NLS-1$
   }
 
   /**
@@ -101,7 +102,7 @@ public class TextThemeWizardPage extends WizardPage
 
     m_properties = new HashMap<String, String>();
 
-    setDescription( "Wählen Sie die Eigenschaften des Textes." );
+    setDescription( Messages.getString("TextThemeWizardPage_2") ); //$NON-NLS-1$
   }
 
   /**
@@ -167,7 +168,7 @@ public class TextThemeWizardPage extends WizardPage
     final String text = m_properties.get( TextUtilities.THEME_PROPERTY_TEXT );
     if( text == null || text.length() == 0 )
     {
-      setErrorMessage( "Bitte geben Sie den anzuzeigenden Text an..." );
+      setErrorMessage( Messages.getString("TextThemeWizardPage_3") ); //$NON-NLS-1$
       setPageComplete( false );
       return;
     }

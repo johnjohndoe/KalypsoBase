@@ -37,7 +37,7 @@ public class WMSFavoritesAction extends Action
   {
     m_data = data;
 
-    setText( "Favoriten" );
+    setText( Messages.getString("WMSFavoritesAction.0") ); //$NON-NLS-1$
     setToolTipText( Messages.getString( "org.kalypso.ui.wizard.wms.pages.ImportWmsWizardPage.6" ) ); //$NON-NLS-1$
   }
 

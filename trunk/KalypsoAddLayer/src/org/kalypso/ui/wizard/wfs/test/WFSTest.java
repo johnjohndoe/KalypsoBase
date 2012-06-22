@@ -44,9 +44,9 @@ import junit.framework.TestCase;
 
 public class WFSTest extends TestCase
 {
-  final String[] layers = { "hq10_gesamt", "hq50_gesamt", "hq100_gesamt", "Haltungen" };
+  final String[] layers = { "hq10_gesamt", "hq50_gesamt", "hq100_gesamt", "Haltungen" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-  final String base = "http://134.28.87.71:8080/deegreewms/wfs";
+  final String base = "http://134.28.87.71:8080/deegreewms/wfs"; //$NON-NLS-1$
 
   public void testLayers( ) // throws MalformedURLException, GMLSchemaException
   {

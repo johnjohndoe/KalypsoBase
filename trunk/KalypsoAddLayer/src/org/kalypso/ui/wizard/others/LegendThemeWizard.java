@@ -81,7 +81,7 @@ public class LegendThemeWizard extends AbstractOtherThemeWizard
     super.addPages();
 
     /* Add the legend theme wizard page. */
-    m_legendThemeWizardPage = new LegendThemeWizardPage( "LegendThemeWizardPage", getMapModel() );
+    m_legendThemeWizardPage = new LegendThemeWizardPage( "LegendThemeWizardPage", getMapModel() ); //$NON-NLS-1$
     addPage( m_legendThemeWizardPage );
   }
 

@@ -39,9 +39,9 @@ public class ImportShapeFileData extends AbstractModelObject
 {
   public enum StyleImport
   {
-    useDefault("Use default", "Use a style from the default style registry. You will be not able to change this style later on."),
-    generateDefault(Messages.getString( "org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.9" ), "Copy a style from the default style registry next to the shape file."), //$NON-NLS-1$
-    selectExisting("Select existing", "Select an existing SLD-File from your project.");
+    useDefault(Messages.getString("ImportShapeFileData.0"), Messages.getString("ImportShapeFileData.1")), //$NON-NLS-1$ //$NON-NLS-2$
+    generateDefault(Messages.getString( "org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.9" ), Messages.getString("ImportShapeFileData.2")), //$NON-NLS-1$ //$NON-NLS-2$
+    selectExisting(Messages.getString("ImportShapeFileData.3"), Messages.getString("ImportShapeFileData.4")); //$NON-NLS-1$ //$NON-NLS-2$
 
     private final String m_label;
 
@@ -67,9 +67,9 @@ public class ImportShapeFileData extends AbstractModelObject
 
   static final String EXTENSIONS_SLD = "sld"; //$NON-NLS-1$
 
-  static final String[] EMPTY_STYLES = new String[] { "<No style file selected>" };
+  static final String[] EMPTY_STYLES = new String[] { Messages.getString("ImportShapeFileData.5") }; //$NON-NLS-1$
 
-  static final String[] FEATURETYPE_STYLES = new String[] { "<FeatureTypeStyle - contains only one style>" };
+  static final String[] FEATURETYPE_STYLES = new String[] { Messages.getString("ImportShapeFileData.6") }; //$NON-NLS-1$
 
   public static final String PROPERTY_SRS = "srs"; //$NON-NLS-1$
 

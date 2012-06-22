@@ -92,7 +92,7 @@ public class ImportRasterSourceWizardPage extends WizardPage
 
     setTitle( Messages.getString( "org.kalypso.ui.wizard.raster.ImportRasterSourceWizard.0" ) ); //$NON-NLS-1$
     final String radioLabel = Messages.getString( "org.kalypso.ui.wizard.raster.ImportRasterSourceWizardPage.7" ); //$NON-NLS-1$
-    setDescription( String.format( "Please choose an existing .sld file or check '%s' to create a new one next to the data file.", radioLabel ) );
+    setDescription( String.format( Messages.getString("ImportRasterSourceWizardPage.0"), radioLabel ) ); //$NON-NLS-1$
     setImageDescriptor( ImageProvider.IMAGE_KALYPSO_ICON_BIG );
 
     setPageComplete( true );
@@ -301,8 +301,8 @@ public class ImportRasterSourceWizardPage extends WizardPage
     catch( final Exception e )
     {
       e.printStackTrace();
-      final Status status = new Status( IStatus.ERROR, KalypsoAddLayerPlugin.getId(), "Failed to read SLD file", e );
-      new StatusDialog( getShell(), status, "Select Style" ).open();
+      final Status status = new Status( IStatus.ERROR, KalypsoAddLayerPlugin.getId(), Messages.getString("ImportRasterSourceWizardPage.1"), e ); //$NON-NLS-1$
+      new StatusDialog( getShell(), status, Messages.getString("ImportRasterSourceWizardPage.2") ).open(); //$NON-NLS-1$
     }
 
     validate();

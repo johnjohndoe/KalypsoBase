@@ -46,6 +46,7 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.action.AddThemeCommand;
+import org.kalypso.ui.i18n.Messages;
 
 /**
  * The wizard for a image theme.
@@ -64,7 +65,7 @@ public class ImageThemeWizard extends AbstractOtherThemeWizard
    */
   public ImageThemeWizard( )
   {
-    super( new ThemeNameWizardPage( "themeNamePage", "Bild", ImageProvider.IMAGE_KALYPSO_ICON_BIG, "Bild" ) );
+    super( new ThemeNameWizardPage( "themeNamePage", Messages.getString("ImageThemeWizard_1"), ImageProvider.IMAGE_KALYPSO_ICON_BIG, Messages.getString("ImageThemeWizard_2") ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     m_imageThemeWizardPage = null;
   }
@@ -79,7 +80,7 @@ public class ImageThemeWizard extends AbstractOtherThemeWizard
     super.addPages();
 
     /* Add the image theme wizard page. */
-    m_imageThemeWizardPage = new ImageThemeWizardPage( "ImageThemeWizardPage" );
+    m_imageThemeWizardPage = new ImageThemeWizardPage( "ImageThemeWizardPage" ); //$NON-NLS-1$
     addPage( m_imageThemeWizardPage );
   }
 
@@ -91,7 +92,7 @@ public class ImageThemeWizard extends AbstractOtherThemeWizard
   protected ICommand createCommand( final IKalypsoLayerModell mapModell, final String themeName )
   {
     /* Create the add theme command. */
-    final AddThemeCommand command = new AddThemeCommand( mapModell, themeName, "image", "", "" );
+    final AddThemeCommand command = new AddThemeCommand( mapModell, themeName, "image", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     /* Add the selected properties. */
     final Map<String, String> properties = m_imageThemeWizardPage.getProperties();

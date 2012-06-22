@@ -52,6 +52,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.ogc.gml.ThemeUtilities;
+import org.kalypso.ui.i18n.Messages;
 import org.kalypso.util.themes.image.ImageUtilities;
 import org.kalypso.util.themes.image.controls.ImageComposite;
 import org.kalypso.util.themes.image.listener.IImageChangedListener;
@@ -81,8 +82,8 @@ public class ImageThemeWizardPage extends WizardPage
 
     m_properties = new HashMap<String, String>();
 
-    setTitle( "Bildeigenschaften" );
-    setDescription( "Wählen Sie die Eigenschaften des Bildes." );
+    setTitle( Messages.getString("ImageThemeWizardPage_0") ); //$NON-NLS-1$
+    setDescription( Messages.getString("ImageThemeWizardPage_1") ); //$NON-NLS-1$
   }
 
   /**
@@ -101,7 +102,7 @@ public class ImageThemeWizardPage extends WizardPage
 
     m_properties = new HashMap<String, String>();
 
-    setDescription( "Wählen Sie die Eigenschaften des Bildes." );
+    setDescription( Messages.getString("ImageThemeWizardPage_2") ); //$NON-NLS-1$
   }
 
   /**
@@ -163,7 +164,7 @@ public class ImageThemeWizardPage extends WizardPage
     final String imageUrl = m_properties.get( ImageUtilities.THEME_PROPERTY_IMAGE_URL );
     if( imageUrl == null || imageUrl.length() == 0 )
     {
-      setErrorMessage( "Bitte geben Sie die URL zu dem Bild an..." );
+      setErrorMessage( Messages.getString("ImageThemeWizardPage_3") ); //$NON-NLS-1$
       setPageComplete( false );
       return;
     }

@@ -53,6 +53,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.ThemeUtilities;
+import org.kalypso.ui.i18n.Messages;
 import org.kalypso.util.themes.legend.LegendUtilities;
 import org.kalypso.util.themes.legend.controls.LegendComposite;
 import org.kalypso.util.themes.legend.listener.ILegendChangedListener;
@@ -90,8 +91,8 @@ public class LegendThemeWizardPage extends WizardPage
     m_mapModell = mapModell;
     m_properties = new HashMap<String, String>();
 
-    setTitle( "Legendeneigenschaften" );
-    setDescription( "Wählen Sie die Eigenschaften der Legende." );
+    setTitle( Messages.getString("LegendThemeWizardPage_0") ); //$NON-NLS-1$
+    setDescription( Messages.getString("LegendThemeWizardPage_1") ); //$NON-NLS-1$
   }
 
   /**
@@ -113,7 +114,7 @@ public class LegendThemeWizardPage extends WizardPage
     m_mapModell = mapModell;
     m_properties = new HashMap<String, String>();
 
-    setDescription( "Wählen Sie die Eigenschaften der Legende." );
+    setDescription( Messages.getString("LegendThemeWizardPage_2") ); //$NON-NLS-1$
   }
 
   /**

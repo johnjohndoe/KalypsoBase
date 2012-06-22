@@ -87,11 +87,11 @@ public class ImportRasterSourceWizard extends AbstractDataImportWizard
     final IContainer mapContainer = m_mapFile == null ? null : m_mapFile.getParent();
     final IStructuredSelection selection = mapContainer == null ? StructuredSelection.EMPTY : new StructuredSelection( mapContainer );
 
-    m_gmlFilePage = new WizardNewFileCreationPage( "gmlFile", selection );
-    m_gmlFilePage.setFileExtension( "gml" );
+    m_gmlFilePage = new WizardNewFileCreationPage( "gmlFile", selection ); //$NON-NLS-1$
+    m_gmlFilePage.setFileExtension( "gml" ); //$NON-NLS-1$
     m_gmlFilePage.setAllowExistingResources( true );
-    m_gmlFilePage.setTitle( "Coverage Data File" );
-    m_gmlFilePage.setDescription( "Please choose where to store the data file containing the grid coverages. You may also enter an existing filename." );
+    m_gmlFilePage.setTitle( Messages.getString("ImportRasterSourceWizard.2") ); //$NON-NLS-1$
+    m_gmlFilePage.setDescription( Messages.getString("ImportRasterSourceWizard.3") ); //$NON-NLS-1$
     addPage( m_gmlFilePage );
 
     m_page = new ImportRasterSourceWizardPage( "Add RasterDataModel" ); //$NON-NLS-1$
@@ -128,7 +128,7 @@ public class ImportRasterSourceWizard extends AbstractDataImportWizard
     {
       final String gmlName = coverageFile.getName().toString();
       final String basicName = FilenameUtils.removeExtension( gmlName );
-      final String sldName = basicName + ".sld";
+      final String sldName = basicName + ".sld"; //$NON-NLS-1$
       return coverageFile.getParent().getFile( new Path( sldName ) );
     }
 
@@ -140,8 +140,8 @@ public class ImportRasterSourceWizard extends AbstractDataImportWizard
   {
     final IPath containerFullPath = m_gmlFilePage.getContainerFullPath();
     String fileName = m_gmlFilePage.getFileName();
-    if( !FilenameUtils.isExtension( fileName.toLowerCase(), "gml" ) )
-      fileName += ".gml";
+    if( !FilenameUtils.isExtension( fileName.toLowerCase(), "gml" ) ) //$NON-NLS-1$
+      fileName += ".gml"; //$NON-NLS-1$
 
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
     final IResource folder = root.findMember( containerFullPath );
