@@ -13,95 +13,77 @@
             icon="icon/file_shp.GIF"
             id="org.kalypso.ui.wizard.shape"
             name="%org.kalypso.ui.wizard.shape.name">
-         <description>Eine ESRI Shape Datei als Thema hinufügen.</description>
+         <description>%org.kalypso.ui.wizard.shape.description</description>
       </wizard>
       <wizard
             class="org.kalypso.ui.wizard.wms.ImportWmsSourceWizard"
             icon="icon/Datastore_WMS.gif"
             id="org.kalypso.ui.wizard.wms"
             name="%org.kalypso.ui.wizard.wms.name">
-         <description>
-            Ein Thema aus einem externen WebMapService auswählen.
-         </description>
+         <description>%org.kalypso.ui.wizard.wms.description</description>
       </wizard>
       <wizard
             class="org.kalypso.ui.wizard.wfs.ImportWfsSourceWizard"
             icon="icon/Datastore_WFS.gif"
             id="org.kalypso.ui.wizard.wfs"
             name="%org.kalypso.ui.wizard.wfs.name">
-         <description>
-            Daten von einem externen WebFeatureService als Thema hinzufügen.
-         </description>
+         <description>%org.kalypso.ui.wizard.wfs.description</description>
       </wizard>
       <wizard
             class="org.kalypso.ui.wizard.gml.KalypsoGmlImportWizard"
             icon="icon/fileGml.gif"
             id="gml"
             name="%gml.name">
-         <description>
-            Eine GML Datei als Thema hinzufügen.
-         </description>
+         <description>%org.kalypso.ui.wizard.gml.description</description>
       </wizard>
       <wizard
             class="org.kalypso.ui.wizard.raster.ImportRasterSourceWizard"
             icon="icon/raster.GIF"
             id="org.kalypso.ui.wizard.raster"
             name="%org.kalypso.ui.wizard.raster.name">
-         <description>
-            Eine Rasterdatei (.asc) als Thema hinzufügen.
-         </description>
+         <description>%org.kalypso.ui.wizard.raster.description</description>
       </wizard>
       <wizard
             class="org.kalypso.ui.wizard.image.ImportImageSourceWizard"
             icon="icon/file_image.gif"
             id="org.kalypso.ui.wizard.image"
             name="%org.kalypso.ui.wizard.image.name">
-         <description>Eine georeferenziertes Bild (.tiff, .jpg, .png, ...) als Thema hinzufügen.</description>
+         <description>%org.kalypso.ui.wizard.image.description</description>
       </wizard>
       <wizard
             class="org.kalypso.ui.wizard.others.LegendThemeWizard"
             icon="icon/legendTheme.gif"
             id="org.kalypso.ui.wizard.others.LegendThemeWizard"
-            name="Legende">
-         <description>
-            Eine in die Karte eingeblendete Legende hinzufügen.
-         </description>
+            name="%org.kalypso.ui.wizard.legend.theme.name">
+         <description>%org.kalypso.ui.wizard.legend.theme.description</description>
       </wizard>
       <wizard
             class="org.kalypso.ui.wizard.others.CascadingThemeWizard"
             icon="icon/cascadingTheme.gif"
             id="org.kalypso.ui.wizard.others.CascadingThemeWizard"
-            name="Verzeichnisthema">
-         <description>
-            Ein Thema, welches andere Themen als Unterthemen enthält, hinzufügen.
-         </description>
+            name="%org.kalypso.ui.wizard.dir.theme.name">
+         <description>%org.kalypso.ui.wizard.dir.theme.description</description>
       </wizard>
       <wizard
             class="org.kalypso.ui.wizard.others.ScaleThemeWizard"
             icon="icon/scaleTheme.gif"
             id="org.kalypso.ui.wizard.others.ScaleThemeWizard"
-            name="Maßstab">
-         <description>
-            Dieses Theme fügt einen Maßstabsbalken der Karte hinzu.
-         </description>
+            name="%org.kalypso.ui.wizard.scale.theme.name">
+         <description>%org.kalypso.ui.wizard.scale.theme.description</description>
       </wizard>
       <wizard
             class="org.kalypso.ui.wizard.others.ImageThemeWizard"
             icon="icon/imageTheme.gif"
             id="org.kalypso.ui.wizard.others.ImageThemeWizard"
-            name="Bild">
-         <description>
-            This layer adds an non-georeferenced image (e.g. a logo) to the map.
-         </description>
+            name="%org.kalypso.ui.wizard.image.theme.name">
+         <description>%org.kalypso.ui.wizard.image.theme.description</description>
       </wizard>
       <wizard
             class="org.kalypso.ui.wizard.others.TextThemeWizard"
             icon="icon/textTheme.gif"
             id="org.kalypso.ui.wizard.others.TextThemeWizard"
-            name="Text">
-         <description>
-            This layer adds an arbitrary text (e.g. a title) to the map.
-         </description>
+            name="%org.kalypso.ui.wizard.text.theme.name">
+         <description>%org.kalypso.ui.wizard.text.theme.description</description>
       </wizard>
       <wizardSelection description="Default selection used for the map editor." id="org.kalypso.ui.addlayer.wizardselection.default">
          <wizardRef wizardId="org.kalypso.ui.wizard.shape"/>
@@ -143,9 +125,9 @@
 	<extension point="org.eclipse.ui.commands">
 		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.AddTheme" name="Add Layer"  description="Add new Layer to Map"/>
 
-        <command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.OpenShapeWizardCommand" 
+        <command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.OpenShapeWizardCommand"
             name="%org.kalypso.ui.map.outline.command.OpenShapeWizardCommand.name" description="%org.kalypso.ui.map.outline.command.OpenShapeWizardCommand..description"/>
-        <command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.OpenWmsWizardCommand" 
+        <command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.OpenWmsWizardCommand"
             name="%org.kalypso.ui.map.outline.command.OpenWmsWizardCommand.name" description="%org.kalypso.ui.map.outline.command.OpenShapeWizardCommand..description">
       </command>
 	</extension>
@@ -177,5 +159,5 @@
        </newWizardShortcut>
     </perspectiveExtension>
  </extension>
-   
+
 </plugin>
