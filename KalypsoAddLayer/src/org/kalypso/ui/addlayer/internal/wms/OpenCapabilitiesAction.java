@@ -34,6 +34,7 @@ import org.kalypso.core.status.StatusDialog;
 import org.kalypso.ogc.gml.wms.utils.KalypsoWMSUtilities;
 import org.kalypso.ui.KalypsoAddLayerPlugin;
 import org.kalypso.ui.addlayer.internal.AddLayerImages;
+import org.kalypso.ui.i18n.Messages;
 
 /**
  * Opens the capabilities document in an external browser.
@@ -50,8 +51,8 @@ public class OpenCapabilitiesAction extends Action
   {
     m_data = data;
 
-    setText( "Open Capabilities" );
-    setToolTipText( "Open the capabilities in an external browser" );
+    setText( Messages.getString("OpenCapabilitiesAction_0") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString("OpenCapabilitiesAction_1") ); //$NON-NLS-1$
     setImageDescriptor( AddLayerImages.getImageDescriptor( AddLayerImages.ICON_OPEN_CAPABILITIES ) );
 
     m_externalBrowser = initBrowserSupport();
@@ -94,7 +95,7 @@ public class OpenCapabilitiesAction extends Action
     catch( final MalformedURLException e )
     {
       final Shell shell = event.display.getActiveShell();
-      final IStatus status = new Status( IStatus.WARNING, KalypsoAddLayerPlugin.getId(), "Invalid service address", e );
+      final IStatus status = new Status( IStatus.WARNING, KalypsoAddLayerPlugin.getId(), Messages.getString("OpenCapabilitiesAction_2"), e ); //$NON-NLS-1$
       StatusDialog.open( shell, status, getText() );
     }
   }

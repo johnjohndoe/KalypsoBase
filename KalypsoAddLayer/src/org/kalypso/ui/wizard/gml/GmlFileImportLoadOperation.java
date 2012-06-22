@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.KalypsoAddLayerPlugin;
+import org.kalypso.ui.i18n.Messages;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -61,7 +62,7 @@ public class GmlFileImportLoadOperation implements ICoreRunnableWithProgress
     catch( final Exception e )
     {
       e.printStackTrace();
-      return new Status( IStatus.WARNING, KalypsoAddLayerPlugin.getId(), "Failed to load gml file", e );
+      return new Status( IStatus.WARNING, KalypsoAddLayerPlugin.getId(), Messages.getString("GmlFileImportLoadOperation_0"), e ); //$NON-NLS-1$
     }
   }
 }

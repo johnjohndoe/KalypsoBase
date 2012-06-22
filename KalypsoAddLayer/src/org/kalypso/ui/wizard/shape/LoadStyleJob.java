@@ -33,6 +33,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.ui.KalypsoAddLayerPlugin;
+import org.kalypso.ui.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Layer;
 import org.kalypsodeegree.graphics.sld.Style;
@@ -53,7 +54,7 @@ public class LoadStyleJob extends Job
 
   public LoadStyleJob( final ImportShapeFileData data )
   {
-    super( "Load style" );
+    super( Messages.getString("LoadStyleJob_0") ); //$NON-NLS-1$
 
     m_data = data;
   }
@@ -114,7 +115,7 @@ public class LoadStyleJob extends Job
     }
     catch( final Exception e )
     {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoAddLayerPlugin.getId(), "Failed to sld file", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoAddLayerPlugin.getId(), Messages.getString("LoadStyleJob_1"), e ); //$NON-NLS-1$
       KalypsoAddLayerPlugin.getDefault().getLog().log( status );
       throw new CoreException( status );
     }

@@ -105,7 +105,7 @@ public class ImportWmsWizardPage extends WizardPage
     /* The page is not complete in the beginning. */
     setPageComplete( false );
 
-    setDescription( "Please enter the base address of the WebMapService and choose what layers to display initially." );
+    setDescription( Messages.getString("ImportWmsWizardPage.0") ); //$NON-NLS-1$
   }
 
   @Override
@@ -269,7 +269,7 @@ public class ImportWmsWizardPage extends WizardPage
   private Control createCapabilitiesInfo( final Composite parent )
   {
     final Group infoGroup = new Group( parent, SWT.NONE );
-    infoGroup.setText( "Info - Capabilities" );
+    infoGroup.setText( Messages.getString("ImportWmsWizardPage.1") ); //$NON-NLS-1$
     infoGroup.setLayout( new FillLayout() );
 
     new CapabilitiesComposite( infoGroup, m_data, m_binding );

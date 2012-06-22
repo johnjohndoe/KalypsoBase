@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.ui.KalypsoAddLayerPlugin;
 import org.kalypso.ui.addlayer.internal.ImageProviderExtensions;
+import org.kalypso.ui.i18n.Messages;
 
 /**
  * Wrapper for capabilities used in wms page for easier access.
@@ -38,9 +39,9 @@ import org.kalypso.ui.addlayer.internal.ImageProviderExtensions;
  */
 public class CapabilitiesInfo
 {
-  private static final String STR_INVALID_SERVER_ADDRESS = "Invalid server address";
+  private static final String STR_INVALID_SERVER_ADDRESS = Messages.getString("CapabilitiesInfo_0"); //$NON-NLS-1$
 
-  private static final String STR_NOT_LOADED = "<capabilities not loaded>";
+  private static final String STR_NOT_LOADED = Messages.getString("CapabilitiesInfo_1"); //$NON-NLS-1$
 
   private IStatus m_status = new Status( IStatus.INFO, KalypsoAddLayerPlugin.getId(), STR_NOT_LOADED );
 

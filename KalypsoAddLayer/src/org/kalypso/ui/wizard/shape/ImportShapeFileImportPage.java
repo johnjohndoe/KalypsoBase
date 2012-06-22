@@ -165,7 +165,7 @@ public class ImportShapeFileImportPage extends WizardPage
     final IObservableValue modelFile = BeansObservables.observeValue( shapeFile, FileAndHistoryData.PROPERTY_PATH );
     final IObservableValue modelHistory = BeansObservables.observeValue( shapeFile, FileAndHistoryData.PROPERTY_HISTORY );
 
-    final String dialogMessage = Messages.getString( "org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.14" );
+    final String dialogMessage = Messages.getString( "org.kalypso.ui.wizard.shape.ImportShapeFileImportPage.14" ); //$NON-NLS-1$
     final String[] extensions = new String[] { "shp" }; //$NON-NLS-1$
 
     final WorkspaceFileBinding fileBinding = new WorkspaceFileBinding( m_binding, modelFile, dialogMessage, extensions );
@@ -187,7 +187,7 @@ public class ImportShapeFileImportPage extends WizardPage
     final IObservableValue target = m_crsPanel.observe();
     final IObservableValue model = BeansObservables.observeValue( m_data, ImportShapeFileData.PROPERTY_SRS );
 
-    final NotNullValidator<String> notNullValidator = new NotNullValidator<String>( String.class, IStatus.ERROR, "Please choose a valid source coordinate system" );
+    final NotNullValidator<String> notNullValidator = new NotNullValidator<String>( String.class, IStatus.ERROR, Messages.getString("ImportShapeFileImportPage.1") ); //$NON-NLS-1$
 
     m_binding.bindValue( target, model, notNullValidator, new CRSInputValidator() );
   }

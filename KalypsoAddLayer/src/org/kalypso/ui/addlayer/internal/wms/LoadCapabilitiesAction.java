@@ -21,6 +21,7 @@ package org.kalypso.ui.addlayer.internal.wms;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Event;
 import org.kalypso.ui.addlayer.internal.AddLayerImages;
+import org.kalypso.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -33,8 +34,8 @@ public class LoadCapabilitiesAction extends Action
   {
     m_data = data;
 
-    setText( "Reload" );
-    setToolTipText( "(Re-)load the capabilities from the map server" );
+    setText( Messages.getString("LoadCapabilitiesAction_0") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString("LoadCapabilitiesAction_1") ); //$NON-NLS-1$
     setImageDescriptor( AddLayerImages.getImageDescriptor( AddLayerImages.ICON_REFRESH_CAPABILITIES ) );
   }
 

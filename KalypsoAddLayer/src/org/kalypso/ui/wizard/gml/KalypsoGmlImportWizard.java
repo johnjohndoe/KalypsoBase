@@ -184,7 +184,7 @@ public class KalypsoGmlImportWizard extends AbstractDataImportWizard
       final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, null, false, true );
 
       final IAnnotation annotation = ftp.getAnnotation();
-      final String linkLabel = annotation == null ? "" : annotation.getLabel();
+      final String linkLabel = annotation == null ? "" : annotation.getLabel(); //$NON-NLS-1$
 
       // TODO: this is very often not what is wanted...
       // We should show a dialog to the user and ask what we really want to add here...
@@ -196,7 +196,7 @@ public class KalypsoGmlImportWizard extends AbstractDataImportWizard
         else
         {
           final String ftLabel = FeatureActionUtilities.newFeatureActionLabel( ft );
-          title = String.format( "%s [%s]", linkLabel, ftLabel );
+          title = String.format( "%s [%s]", linkLabel, ftLabel ); //$NON-NLS-1$
         }
 
         final String ftpName = ftp.getQName().getLocalPart();

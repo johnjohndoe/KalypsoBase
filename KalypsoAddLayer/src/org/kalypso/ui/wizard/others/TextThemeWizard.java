@@ -61,7 +61,7 @@ public class TextThemeWizard extends AbstractOtherThemeWizard
 
   public TextThemeWizard( )
   {
-    super( new ThemeNameWizardPage( "themeNamePage", "Text", ImageProvider.IMAGE_KALYPSO_ICON_BIG, "Text" ) );
+    super( new ThemeNameWizardPage( "themeNamePage", "Text", ImageProvider.IMAGE_KALYPSO_ICON_BIG, "Text" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     m_textThemeWizardPage = null;
   }
@@ -73,7 +73,7 @@ public class TextThemeWizard extends AbstractOtherThemeWizard
     super.addPages();
 
     /* Add the text theme wizard page. */
-    m_textThemeWizardPage = new TextThemeWizardPage( "TextThemeWizardPage" );
+    m_textThemeWizardPage = new TextThemeWizardPage( "TextThemeWizardPage" ); //$NON-NLS-1$
     addPage( m_textThemeWizardPage );
   }
 
@@ -81,7 +81,7 @@ public class TextThemeWizard extends AbstractOtherThemeWizard
   protected ICommand createCommand( final IKalypsoLayerModell mapModell, final String themeName )
   {
     /* Create the add theme command. */
-    final AddThemeCommand command = new AddThemeCommand( mapModell, themeName, "text", "", "" );
+    final AddThemeCommand command = new AddThemeCommand( mapModell, themeName, "text", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     /* Add the selected properties. */
     final Map<String, String> properties = m_textThemeWizardPage.getProperties();

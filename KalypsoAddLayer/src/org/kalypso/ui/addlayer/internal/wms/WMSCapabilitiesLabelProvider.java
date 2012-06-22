@@ -68,7 +68,7 @@ public class WMSCapabilitiesLabelProvider extends LabelProvider
       if( StringUtils.isBlank( description ) )
         return title;
 
-      return String.format( "%s (%s)", title, description );
+      return String.format( "%s (%s)", title, description ); //$NON-NLS-1$
     }
 
     return super.getText( element );

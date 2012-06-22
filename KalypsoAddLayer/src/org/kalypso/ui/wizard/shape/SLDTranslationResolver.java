@@ -84,8 +84,8 @@ public class SLDTranslationResolver
 
   private void replaceTranslationStrings( final Object sldElement )
   {
-    replaceTranslationProperty( sldElement, "Title" );
-    replaceTranslationProperty( sldElement, "Abstract" );
+    replaceTranslationProperty( sldElement, "Title" ); //$NON-NLS-1$
+    replaceTranslationProperty( sldElement, "Abstract" ); //$NON-NLS-1$
   }
 
   private void replaceTranslationProperty( final Object sldElement, final String property )
@@ -93,8 +93,8 @@ public class SLDTranslationResolver
     try
     {
       final Class< ? extends Object> type = sldElement.getClass();
-      final Method getter = type.getMethod( "get" + property );
-      final Method setter = type.getMethod( "set" + property, String.class );
+      final Method getter = type.getMethod( "get" + property ); //$NON-NLS-1$
+      final Method setter = type.getMethod( "set" + property, String.class ); //$NON-NLS-1$
 
       final Object value = getter.invoke( sldElement );
       if( value instanceof String )
