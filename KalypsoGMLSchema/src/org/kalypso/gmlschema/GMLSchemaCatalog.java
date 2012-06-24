@@ -49,7 +49,7 @@ public final class GMLSchemaCatalog
    * 
    * @return null, wenn schema nicht geladen werden konnte
    */
-  public GMLSchema getSchema( final String gmlVersion, final URL schemaLocation )
+  public IGMLSchema getSchema( final String gmlVersion, final URL schemaLocation )
   {
     Debug.CATALOG.printf( "Loading schema into cache for gmlVersion %s and schemaLocation %s%n", gmlVersion, schemaLocation ); //$NON-NLS-1$
 
