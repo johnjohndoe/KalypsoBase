@@ -78,6 +78,7 @@ import org.kalypso.mapserver.utils.exceptions.MapServerException;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
+import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.tools.GMLConstants;
@@ -379,7 +380,7 @@ public class MapFileUtilities
   public static Layer createLayerForShape( final String wmsURL, final File mapFile, final String layerName, final String data, final QName geoemtryType, final GM_Envelope envelope, final String sourceCRS, final String[] otherCRSs ) throws MapServerException
   {
     String shapeType = "POLYGON";
-    if( GM_Point.POINT_ELEMENT.equals( geoemtryType ) || GMLConstants.QN_MULTI_POINT.equals( geoemtryType ) )
+    if( GM_Point.POINT_ELEMENT.equals( geoemtryType ) || GM_MultiPoint.MULTI_POINT_ELEMENT.equals( geoemtryType ) )
       shapeType = "POINT";
     else if( GM_Curve.CURVE_ELEMENT.equals( geoemtryType ) || GM_MultiCurve.MULTI_CURVE_ELEMENT.equals( geoemtryType ) )
       shapeType = "LINE";

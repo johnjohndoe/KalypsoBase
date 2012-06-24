@@ -48,40 +48,35 @@ import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler2;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
-import org.kalypsodeegree_impl.io.sax.marshaller.PolygonMarshaller;
-import org.kalypsodeegree_impl.io.sax.parser.SurfaceContentHandler;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree_impl.io.sax.marshaller.LineStringMarshaller;
+import org.kalypsodeegree_impl.io.sax.parser.CurveContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
  * @author Felipe Maximino
  */
-public class SurfaceHandler implements IMarshallingTypeHandler2
+public class CurveHandler implements IMarshallingTypeHandler2
 {
   @Override
   public IGmlContentHandler createContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final UnmarshallResultEater resultEater )
   {
-    return new SurfaceContentHandler( reader, resultEater, parentContentHandler, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+    return new CurveContentHandler( reader, resultEater, parentContentHandler, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
   }
 
   @Override
   public Object cloneObject( final Object objectToClone, final String gmlVersion ) throws CloneNotSupportedException
   {
-    final GM_Surface< ? > surface = (GM_Surface< ? >) objectToClone;
-    return surface.clone();
+    throw new CloneNotSupportedException();
   }
 
   @Override
   public void marshal( final Object value, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
   {
-    final GM_Surface< ? extends GM_SurfacePatch> surface = (GM_Surface< ? extends GM_SurfacePatch>) value;
-
-    // TODO: we can only marshal Surface's as polygons at the moment
-    // However we should at least check, if it is really a Polygon
-    new PolygonMarshaller( reader ).marshall( (GM_Surface<GM_Polygon>) surface );
+    // TODO: we can only marshal Curve's as line strings at the moment
+    // However we should at least check, if it is really a LineString
+    new LineStringMarshaller( reader ).marshall( (GM_Curve) value );
   }
 
   @Override
@@ -99,13 +94,13 @@ public class SurfaceHandler implements IMarshallingTypeHandler2
   @Override
   public QName getTypeName( )
   {
-    return GM_Surface.SURFACE_ELEMENT;
+    return GM_Curve.CURVE_ELEMENT;
   }
 
   @Override
   public Class< ? > getValueClass( )
   {
-    return GM_Surface.class;
+    return GM_Curve.class;
   }
 
   @Override
