@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.shape.tools;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypso.shape.geometry.SHPPoint;
 import org.kalypso.shape.geometry.SHPPointz;
@@ -49,6 +52,9 @@ import org.kalypso.shape.geometry.SHPPolygon;
 import org.kalypso.shape.geometry.SHPPolygonz;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Converts jts geometries into shape geometries.
@@ -123,5 +129,44 @@ public final class JTS2SHP
   public static ISHPGeometry toPolygonZ( final Coordinate[][] curves )
   {
     return new SHPPolygonz( JTS2SHP.toPolylineZ( curves ) );
+  }
+
+  public static ISHPGeometry toShape( final Geometry geometry )
+  {
+    if( geometry instanceof Polygon )
+    {
+      final Polygon polygon = (Polygon) geometry;
+      return toPolygon( polygon );
+    }
+
+    throw new UnsupportedOperationException();
+  }
+
+  private static ISHPGeometry toPolygon( final Polygon polygon )
+  {
+    return toPolygon( new Polygon[] { polygon } );
+  }
+
+  private static ISHPGeometry toPolygon( final Polygon[] polygons )
+  {
+    final List<Coordinate[]> parts = new LinkedList<>();
+
+    for( final Polygon polygon : polygons )
+    {
+      final LineString exteriorRing = polygon.getExteriorRing();
+      parts.add( exteriorRing.getCoordinates() );
+
+      final int numInteriorRing = polygon.getNumInteriorRing();
+      for( int i = 0; i < numInteriorRing; i++ )
+      {
+        final LineString interiorRing = polygon.getInteriorRingN( i );
+        final Coordinate[] coordinates = interiorRing.getCoordinates();
+        // FIXME: handle orientation?
+        parts.add( coordinates );
+      }
+    }
+
+    final Coordinate[][] crds = parts.toArray( new Coordinate[parts.size()][] );
+    return toPolygon( crds );
   }
 }
