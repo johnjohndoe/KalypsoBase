@@ -39,7 +39,6 @@ import java.net.URL;
 
 import org.kalypsodeegree.graphics.sld.RemoteOWS;
 import org.kalypsodeegree.xml.Marshallable;
-import org.kalypsodeegree_impl.tools.NetWorker;
 
 /**
  * Since a layer is defined as a collection of potentially mixed-type features, the UserLayer element must provide the
@@ -131,7 +130,7 @@ class RemoteOWS_Impl implements RemoteOWS, Marshallable
     sb.append( "<Service>" ).append( m_service ).append( "</Service>" );
     sb.append( "<OnlineResource xmlns:xlink='http://www.w3.org/1999/xlink' " );
     sb.append( "xlink:type='simple' xlink:href='" );
-    sb.append( NetWorker.url2String( m_onlineResource ) + "'/>" );
+    sb.append( m_onlineResource.toString() + "'/>" );
     sb.append( "</RemoteOWS>" );
 
     return sb.toString();

@@ -44,6 +44,7 @@ import org.kalypso.shape.geometry.ISHPParts;
 import org.kalypso.shape.geometry.ISHPPoint;
 import org.kalypso.shape.geometry.SHPMultiPoint;
 import org.kalypso.shape.geometry.SHPMultiPointz;
+import org.kalypso.shape.geometry.SHPNullShape;
 import org.kalypso.shape.geometry.SHPPoint;
 import org.kalypso.shape.geometry.SHPPointz;
 import org.kalypso.shape.geometry.SHPPolyLine;
@@ -277,6 +278,9 @@ public final class SHP2GM_Object
 
   public static GM_Object transform( final String crs, final ISHPGeometry shpGeom )
   {
+    if( shpGeom instanceof SHPNullShape )
+      return null;
+
     if( shpGeom instanceof SHPPoint )
       return SHP2GM_Object.transformPoint( crs, (SHPPoint) shpGeom );
 

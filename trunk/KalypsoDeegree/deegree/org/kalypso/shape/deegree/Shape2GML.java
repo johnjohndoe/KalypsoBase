@@ -43,68 +43,161 @@ package org.kalypso.shape.deegree;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Formatter;
 import java.util.regex.Pattern;
 
 import javax.xml.namespace.QName;
 
 import org.apache.commons.io.FileUtils;
-import org.kalypso.commons.java.net.UrlUtilities;
+import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
-import org.kalypso.gmlschema.GMLSchema;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
-import org.kalypso.gmlschema.GMLSchemaFactory;
+import org.kalypso.gmlschema.GMLSchemaException;
+import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
+import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.dbf.FieldType;
 import org.kalypso.shape.dbf.IDBFField;
+import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree_impl.gml.binding.shape.AbstractShape;
+import org.kalypsodeegree_impl.gml.binding.shape.ShapeCollection;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+
+import com.google.common.base.Charsets;
 
 /**
- * FIXME: move to KalypsoCore
- *
- * @author albert
+ * @author Holer Albert
+ * @author Gernot Belger
  */
 public final class Shape2GML
 {
-  public static final String SHP_NAMESPACE_URI = "org.kalypso.shape";
-
   private Shape2GML( )
   {
     throw new UnsupportedOperationException();
   }
 
+  public static ShapeCollection convertShp2Gml( final String featureTypeKey, final ShapeFile shape, final String shapeSRS, final IProgressMonitor monitor ) throws Exception
+  {
+    final int count = shape.getNumRecords();
+
+    monitor.beginTask( "Converting shape entries", count );
+
+    final IFeatureType featureType = createFeatureType( featureTypeKey, shape );
+
+    final GMLWorkspace workspace = createShapeWorkspace( shape.getShapeType() );
+    final ShapeCollection collection = (ShapeCollection) workspace.getRootFeature();
+
+    final IRelationType listRelation = (IRelationType) collection.getFeatureType().getProperty( ShapeCollection.MEMBER_FEATURE );
+
+    final int fieldCount = shape.getFields().length;
+
+    for( int i = 0; i < count; i++ )
+    {
+      ProgressUtilities.workedModulo( monitor, i, count, 100, "reading feature %d / %d" );
+
+      /* directly create feature from row values -> we know the feature type fits the specification */
+      final String featureId = Integer.toString( i );
+
+      /* get values */
+      final Object[] propertiesWithGeom = new Object[fieldCount + 1];
+      if( shape.readRow( i, propertiesWithGeom ) )
+      {
+        /* convert geometry */
+        final ISHPGeometry geometry = shape.getShape( i );
+        final GM_Object geom = SHP2GM_Object.transform( shapeSRS, geometry );
+
+        /* Build properties including geometry, we know that geom is at pos 0 */
+        propertiesWithGeom[fieldCount] = geom;
+
+        final AbstractShape newFeature = (AbstractShape) FeatureFactory.createFeature( collection, listRelation, featureId, featureType, propertiesWithGeom );
+
+        /* add to workspace */
+        workspace.addFeatureAsComposition( collection, listRelation, -1, newFeature );
+      }
+    }
+
+    return collection;
+  }
+
+  public static IFeatureType createFeatureType( final String key, final ShapeFile shape )
+  {
+    final ShapeType shapeType = shape.getShapeType();
+    final IDBFField[] fields = shape.getFields();
+    return createFeatureType( key, shapeType, fields );
+  }
+
+  /**
+   * REMARK: key: was formerly (in dbase file) m_suffix = "" + m_fname.hashCode()
+   */
   public static IFeatureType createFeatureType( final String key, final ShapeType shapeType, final IDBFField[] fields )
   {
-    final String customNamespaceURI = "org.kalypso.shape.custom_" + key;
-
-    final StringBuilder elementsString = new StringBuilder();
-
-    final IValuePropertyType[] fieldTypes = new IValuePropertyType[fields.length];
-
-    for( int i = 0; i < fields.length; i++ )
+    try
     {
-      final IDBFField field = fields[i];
+      final String targetNamespace = ShapeCollection.SHP_NAMESPACE_URI + ".custom_" + key;
 
+      /* geometry property: overwrites the one defined in '_Shape' */
+      final String geometryPropertyTypeString = createGeometryPropertyType( shapeType );
+
+      /* The value properties */
+      final String propertyElementsSchemaFragment = buildValueElementsDefinition( fields );
+
+      /* Read schema template and replace placeholders */
+      final URL resource = Shape2GML.class.getResource( "resources/shapeCustomTemplate.xsd" );
+
+      String schemaString = IOUtils.toString( resource, Charsets.UTF_8.name() );
+      schemaString = schemaString.replaceAll( Pattern.quote( "${CUSTOM_NAMESPACE_SUFFIX}" ), key );
+      schemaString = schemaString.replaceAll( Pattern.quote( "${CUSTOM_FEATURE_GEOMETRY_PROPERTY_TYPE}" ), geometryPropertyTypeString );
+      schemaString = schemaString.replaceAll( Pattern.quote( "${CUSTOM_FEATURE_PROPERTY_ELEMENTS}" ), propertyElementsSchemaFragment );
+
+      final File tempFile = TempFileUtilities.createTempFile( KalypsoDeegreePlugin.getDefault(), "temporaryCustomSchemas", "customSchema", ".xsd" );
+      tempFile.deleteOnExit();
+
+      // TODO: why write this file to disk? Why not directly parse the schema from it and add the schema to the cache?
+      FileUtils.writeStringToFile( tempFile, schemaString, Charsets.UTF_8.name() );
+
+      /* read schema via catalog and retrieve the feature type from the freshly loaded schema */
+      final GMLSchemaCatalog catalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
+      final IGMLSchema schema = catalog.getSchema( "3.1.1", tempFile.toURI().toURL() ); //$NON-NLS-1$
+
+      final QName memberFeatureType = new QName( targetNamespace, "Shape" ); //$NON-NLS-1$
+      return schema.getFeatureType( memberFeatureType );
+    }
+    catch( final IOException e )
+    {
+      // This should never happen, as we always are allowed to access plugin state.
+      // Encapsulate into runtime exception, so we do not need to catch it everywhere.
+      e.printStackTrace();
+      throw new IllegalStateException( e );
+    }
+  }
+
+  private static String buildValueElementsDefinition( final IDBFField[] fields )
+  {
+    final Formatter formatter = new Formatter();
+
+    for( final IDBFField field : fields )
+    {
       final IMarshallingTypeHandler th = findTypeHandler( field );
 
       final String name = field.getName();
-      fieldTypes[i] = GMLSchemaFactory.createValuePropertyType( new QName( customNamespaceURI, name ), th, 1, 1, false );
+      final String type = th.getTypeName().getLocalPart();
 
-      final String elementFragment = String.format( "<xs:element name=\"%s\" type=\"xs:%s\"/>%n", name, th.getTypeName().getLocalPart() );
-      elementsString.append( elementFragment );
+      formatter.format( "<element name='%s' type='%s'/>%n", name, type );
     }
 
-    final IValuePropertyType geomType = createGeometryPropertyType( shapeType, customNamespaceURI );
-    final String schemaFragment = elementsString.toString();
-
-    return createTemporaryFeatureType( key, customNamespaceURI, geomType, fieldTypes, schemaFragment );
+    return formatter.toString();
   }
 
   private static IMarshallingTypeHandler findTypeHandler( final IDBFField field )
@@ -151,55 +244,24 @@ public final class Shape2GML
     }
   }
 
-  private static IValuePropertyType createGeometryPropertyType( final ShapeType shapeType, final String customNamespaceURI )
+  private static String createGeometryPropertyType( final ShapeType shapeType )
   {
     final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
 
     final QName geometryType = GenericShapeDataFactory.findGeometryType( shapeType );
     final IMarshallingTypeHandler geoTH = registry.getTypeHandlerForTypeName( geometryType );
 
-    return GMLSchemaFactory.createValuePropertyType( new QName( customNamespaceURI, "GEOM" ), geoTH, 1, 1, false );
+    final String geomTag = geoTH.getTypeName().getLocalPart();
+    return "gml:" + geomTag;
   }
 
-  private static IFeatureType createTemporaryFeatureType( final String key, final String customNamespaceURI, final IValuePropertyType geomType, final IValuePropertyType[] fieldTypes, final String elementsString )
+  private static GMLWorkspace createShapeWorkspace( final ShapeType shapeFileType ) throws GMLSchemaException
   {
-    try
-    {
-      final String geomTag = geomType.getTypeHandler().getTypeName().getLocalPart();
-      final String geometryPropertyTypeString = "gml:" + geomTag;
+    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( ShapeCollection.FEATURE_SHAPE_COLLECTION, null, null );
+    final ShapeCollection collection = (ShapeCollection) workspace.getRootFeature();
 
-      // TODO: comment! Why is this all needed etc.?
-      final URL resource = Shape2GML.class.getResource( "resources/shapeCustomTemplate.xsd" );
+    collection.setShapeType( shapeFileType );
 
-      String schemaString = UrlUtilities.toString( resource, "UTF-8" );
-      schemaString = schemaString.replaceAll( Pattern.quote( "${CUSTOM_NAMESPACE_SUFFIX}" ), key );
-      schemaString = schemaString.replaceAll( Pattern.quote( "${CUSTOM_FEATURE_GEOMETRY_PROPERTY_TYPE}" ), geometryPropertyTypeString );
-      schemaString = schemaString.replaceAll( Pattern.quote( "${CUSTOM_FEATURE_PROPERTY_ELEMENTS}" ), elementsString );
-
-      final File tempFile = TempFileUtilities.createTempFile( KalypsoDeegreePlugin.getDefault(), "temporaryCustomSchemas", "customSchema", ".xsd" );
-      tempFile.deleteOnExit();
-
-      // TODO: why write this file to disk? Why not directly parse the schema from it and add the schema to the cache?
-      FileUtils.writeStringToFile( tempFile, schemaString, "UTF8" );
-
-      final GMLSchemaCatalog catalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-      final GMLSchema schema = catalog.getSchema( "3.1.1", tempFile.toURI().toURL() );
-
-      /* Combine types into one array */
-      final IPropertyType[] propertyTypes = new IPropertyType[fieldTypes.length + 1];
-      System.arraycopy( fieldTypes, 0, propertyTypes, 0, fieldTypes.length );
-      propertyTypes[fieldTypes.length] = geomType;
-
-      final QName memberQName = new QName( customNamespaceURI, "featureMember" );
-
-      return GMLSchemaFactory.createFeatureType( memberQName, propertyTypes, schema, new QName( SHP_NAMESPACE_URI, "_Shape" ) );
-    }
-    catch( final IOException e )
-    {
-      // This should never happen, as we always are allowed to access plugin state.
-      // Encapsulate into runtime exception, so we do not need to catch it everywhere.
-      e.printStackTrace();
-      throw new IllegalStateException( e );
-    }
+    return workspace;
   }
 }

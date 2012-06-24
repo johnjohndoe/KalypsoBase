@@ -64,6 +64,7 @@ import org.kalypso.shape.dbf.FieldType;
 import org.kalypso.shape.dbf.IDBFField;
 import org.kalypso.shape.dbf.IDBFValue;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_MultiPoint;
@@ -71,8 +72,9 @@ import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.gml.binding.shape.AbstractShape;
+import org.kalypsodeegree_impl.gml.binding.shape.ShapeCollection;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
-import org.kalypsodeegree_impl.tools.GMLConstants;
 
 /**
  * A {@link org.kalypso.shape.IShapeDataProvider} that simulates the old ShapeSerializer behaviour.
@@ -85,20 +87,21 @@ public final class GenericShapeDataFactory
   {
   }
 
-  public static IShapeData createDefaultData( final List<Feature> features, final Charset charset, final String coordinateSystem )
+  public static IShapeData createDefaultData( final ShapeCollection collection, final Charset charset, final String coordinateSystem )
   {
-    if( features.isEmpty() )
-      return new FeatureShapeData( features, new IDBFValue[0], null, charset, new GM_Object2Shape( ShapeType.NULL, coordinateSystem ) );
+    final IFeatureBindingCollection<AbstractShape> shapes = collection.getShapes();
+    if( shapes.isEmpty() )
+      return new FeatureShapeData( shapes, new IDBFValue[0], null, charset, new GM_Object2Shape( ShapeType.NULL, coordinateSystem ) );
 
-    final IFeatureType type = findLeastCommonType( features );
+    final IFeatureType type = findLeastCommonType( shapes );
 
-    final ShapeType shapeType = findShapeType( type );
-    final GMLXPath geometry = findGeometry( type );
+    final ShapeType shapeType = collection.getShapeType();
+    final GMLXPath geometry = new GMLXPath( AbstractShape.PROPERTY_GEOM );
     final IDBFValue[] fields = findFields( type );
 
     final GM_Object2Shape shapeConverter = new GM_Object2Shape( shapeType, coordinateSystem );
 
-    return new FeatureShapeData( features, fields, geometry, charset, shapeConverter );
+    return new FeatureShapeData( shapes, fields, geometry, charset, shapeConverter );
   }
 
   public static IDBFValue[] findFields( final IFeatureType type )
@@ -133,7 +136,11 @@ public final class GenericShapeDataFactory
     return fields.toArray( new IDBFValue[fields.size()] );
   }
 
-  private static IDBFField findField( final IPropertyType property ) throws DBaseException
+  /**
+   * Creates field definitions in a generic way from property types. Behaves (more or less) like the old shape API of
+   * deegree 1.
+   */
+  public static IDBFField findField( final IPropertyType property ) throws DBaseException
   {
     if( !(property instanceof IValuePropertyType) )
       return null;
@@ -252,7 +259,7 @@ public final class GenericShapeDataFactory
 
       case MULTIPOINT:
       case MULTIPOINTZ:
-        return GMLConstants.QN_MULTI_POINT;
+        return GM_MultiPoint.MULTI_POINT_ELEMENT;
 
       case POLYLINE:
       case POLYLINEZ:
@@ -260,7 +267,7 @@ public final class GenericShapeDataFactory
 
       case POLYGON:
       case POLYGONZ:
-        return GMLConstants.QN_SURFACE;
+        return GM_Surface.SURFACE_ELEMENT;
     }
 
     return GM_Object.GEOMETRY_ELEMENT;
@@ -271,9 +278,8 @@ public final class GenericShapeDataFactory
     return findLeastCommonType( Arrays.asList( features ) );
   }
 
-  public static IFeatureType findLeastCommonType( final List<Feature> features )
+  public static IFeatureType findLeastCommonType( final List< ? extends Feature> features )
   {
     return features.get( 0 ).getFeatureType();
   }
-
 }

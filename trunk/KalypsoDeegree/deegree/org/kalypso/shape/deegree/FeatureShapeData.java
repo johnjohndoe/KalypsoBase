@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.shape.deegree;
 
@@ -61,7 +61,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
  */
 public class FeatureShapeData implements IShapeData
 {
-  private final List<Feature> m_features;
+  private final List< ? extends Feature> m_features;
 
   private final GM_Object2Shape m_gmObject2Shape;
 
@@ -71,7 +71,7 @@ public class FeatureShapeData implements IShapeData
 
   private final IDBFValue[] m_fields;
 
-  public FeatureShapeData( final List<Feature> features, final IDBFValue[] fields, final GMLXPath geometry, final Charset shapeCharset, final GM_Object2Shape gmObject2Shape )
+  public FeatureShapeData( final List< ? extends Feature> features, final IDBFValue[] fields, final GMLXPath geometry, final Charset shapeCharset, final GM_Object2Shape gmObject2Shape )
   {
     m_features = features;
     m_fields = fields;

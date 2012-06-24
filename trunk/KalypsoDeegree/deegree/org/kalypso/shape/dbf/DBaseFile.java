@@ -36,6 +36,7 @@
 package org.kalypso.shape.dbf;
 
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -59,7 +60,7 @@ import org.kalypso.shape.FileMode;
  * <br>
  * Original Author: Andreas Poth
  */
-public class DBaseFile
+public class DBaseFile implements Closeable
 {
   private final RandomAccessFile m_raf;
 
@@ -106,6 +107,7 @@ public class DBaseFile
     m_fileMode = mode;
   }
 
+  @Override
   public void close( ) throws IOException
   {
     if( m_fileMode == FileMode.WRITE )

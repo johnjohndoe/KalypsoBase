@@ -46,8 +46,8 @@ import org.kalypso.shape.IShapeData;
 import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.deegree.GM_Object2Shape;
 import org.kalypso.shape.deegree.IShapeDataFactory;
+import org.kalypso.shape.deegree.TriangulatedSurfaceSinglePartShapeDataProvider;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.io.shpapi.dataprovider.TriangulatedSurfaceSinglePartShapeDataProvider;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
