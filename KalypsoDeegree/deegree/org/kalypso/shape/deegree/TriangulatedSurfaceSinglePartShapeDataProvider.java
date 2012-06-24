@@ -33,7 +33,7 @@
  * lat/lon GmbH
  * http://www.lat-lon.de
  */
-package org.kalypsodeegree_impl.io.shpapi.dataprovider;
+package org.kalypso.shape.deegree;
 
 import java.nio.charset.Charset;
 import java.util.Iterator;
@@ -43,8 +43,6 @@ import org.kalypso.shape.IShapeData;
 import org.kalypso.shape.ShapeDataException;
 import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.dbf.IDBFValue;
-import org.kalypso.shape.deegree.GM_Object2Shape;
-import org.kalypso.shape.deegree.GenericShapeDataFactory;
 import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Triangle;

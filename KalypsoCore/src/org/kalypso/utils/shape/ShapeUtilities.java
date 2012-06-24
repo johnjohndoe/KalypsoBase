@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,12 +36,13 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.utils.shape;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +54,13 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.contribs.java.io.filter.BasenameFilenameFilter;
 import org.kalypso.core.i18n.Messages;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.shape.FileMode;
+import org.kalypso.shape.ShapeFile;
+import org.kalypso.shape.ShapeType;
+import org.kalypso.shape.dbf.DBaseException;
+import org.kalypso.shape.dbf.IDBFField;
+import org.kalypso.shape.deegree.Shape2GML;
 
 /**
  * @author Holger Albert
@@ -181,6 +189,45 @@ public class ShapeUtilities
 
       /* Delete. */
       file.delete();
+    }
+  }
+
+  /**
+   * Fetches the names of all attributes from a shape file. Closes the shape afterwards.
+   * 
+   * @param shapeBasePath
+   *          The full path to the shape file (without .shp extension).
+   */
+  public static String[] readShapeAttributes( final String shapeBasePath ) throws IOException, DBaseException
+  {
+    try (final ShapeFile shape = new ShapeFile( shapeBasePath, Charset.defaultCharset(), FileMode.READ ))
+    {
+      final IDBFField[] fields = shape.getFields();
+      final String[] propertyNames = new String[fields.length];
+      for( int i = 0; i < propertyNames.length; i++ )
+        propertyNames[i] = fields[i].getName();
+      return propertyNames;
+    }
+  }
+
+  /**
+   * This function loads the shape and returns the feature type of its features.
+   * 
+   * @param shapeFile
+   *          The path of the shape file without extension.
+   * @return The feature type.
+   */
+  public static IFeatureType findFeatureType( final String shapeFile ) throws IOException, DBaseException
+  {
+    try (ShapeFile sf = new ShapeFile( shapeFile, Charset.defaultCharset(), FileMode.READ ))
+    {
+      final ShapeType shapeType = sf.getShapeType();
+      final IDBFField[] fields = sf.getFields();
+
+      // TODO: as before, but this is still strange
+      final String key = Integer.toString( shapeFile.hashCode() );
+
+      return Shape2GML.createFeatureType( key, shapeType, fields );
     }
   }
 }

@@ -38,18 +38,49 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.io.shpapi;
+package org.kalypso.shape.deegree;
+
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 
 /**
  * @author Gernot Belger
  */
-public interface ISHPPoint extends ISHPGeometry
+public class TinPointer
 {
-  public double getX( );
+  private final int m_featureIndex;
 
-  public double getY( );
+  private final int m_triangleIndex;
 
-  public double getZ( );
+  private final GM_TriangulatedSurface m_tin;
 
-  public double getM( );
+  private final Feature m_feature;
+
+  public TinPointer( final Feature feature, final int featureIndex, final int triangleIndex, final GM_TriangulatedSurface tin )
+  {
+    m_feature = feature;
+    m_featureIndex = featureIndex;
+    m_triangleIndex = triangleIndex;
+    m_tin = tin;
+  }
+
+  public int getFeatureIndex( )
+  {
+    return m_featureIndex;
+  }
+
+  public int getTriangleIndex( )
+  {
+    return m_triangleIndex;
+  }
+
+  public GM_TriangulatedSurface getTin( )
+  {
+    return m_tin;
+  }
+
+  public Feature getFeature( )
+  {
+    return m_feature;
+  }
 }

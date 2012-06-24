@@ -38,18 +38,49 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.io.shpapi;
+package org.kalypso.shape.deegree;
 
-/**
- * Common interface for all shape geometries that consist of parts.
- * 
- * @author Gernot Belger
- */
-public interface ISHPParts extends ISHPGeometry
+import org.kalypso.shape.ShapeDataException;
+import org.kalypso.shape.dbf.IDBFField;
+import org.kalypso.shape.dbf.IDBFValue;
+import org.kalypsodeegree.model.feature.Feature;
+
+public class TinValue implements IDBFValue
 {
-  public int getNumParts( );
+  private final IDBFValue m_delegate;
 
-  public int getNumPoints( );
+  public TinValue( final IDBFValue delegate )
+  {
+    m_delegate = delegate;
+  }
 
-  public ISHPPoint[][] getPoints( );
+  /**
+   * @see org.kalypso.shape.dbf.IDBFValue#getField()
+   */
+  @Override
+  public IDBFField getField( ) throws ShapeDataException
+  {
+    return m_delegate.getField();
+  }
+
+  /**
+   * @see org.kalypso.shape.dbf.IDBFValue#getValue(java.lang.Object)
+   */
+  @Override
+  public Object getValue( final Object element ) throws ShapeDataException
+  {
+    final TinPointer pointer = (TinPointer) element;
+    final Feature feature = pointer.getFeature();
+    return m_delegate.getValue( feature );
+  }
+
+  /**
+   * @see org.kalypso.shape.dbf.IDBFValue#getLabel()
+   */
+  @Override
+  public String getLabel( )
+  {
+    return m_delegate.getLabel();
+  }
+
 }

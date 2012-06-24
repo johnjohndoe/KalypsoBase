@@ -43,41 +43,34 @@ package org.kalypso.ogc.gml.serialize;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubMonitor;
-import org.kalypso.commons.java.net.UrlUtilities;
-import org.kalypso.commons.xml.XmlTypes;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.i18n.Messages;
-import org.kalypso.gmlschema.GMLSchema;
-import org.kalypso.gmlschema.GMLSchemaFactory;
-import org.kalypso.gmlschema.IGMLSchema;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
-import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
+import org.kalypso.shape.FileMode;
+import org.kalypso.shape.IShapeData;
+import org.kalypso.shape.ShapeDataException;
+import org.kalypso.shape.ShapeFile;
+import org.kalypso.shape.ShapeWriter;
+import org.kalypso.shape.dbf.DBaseException;
+import org.kalypso.shape.deegree.GenericShapeDataFactory;
+import org.kalypso.shape.deegree.Shape2GML;
+import org.kalypso.shape.shp.SHPException;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.io.shpapi.DBaseFile;
-import org.kalypsodeegree_impl.io.shpapi.ShapeFile;
-import org.kalypsodeegree_impl.io.shpapi.dataprovider.IShapeDataProvider;
-import org.kalypsodeegree_impl.io.shpapi.dataprovider.StandardShapeDataProvider;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
+import org.kalypsodeegree_impl.gml.binding.shape.ShapeCollection;
+
+import com.google.common.base.Charsets;
 
 /**
  * Helper-Klasse zum lesen und schreiben von GML <br>
  * TODO: Problem: reading/writing a shape will change the precision/size of the columns!
- *
+ * 
  * @author Gernot Belger
  */
 public final class ShapeSerializer
@@ -85,22 +78,25 @@ public final class ShapeSerializer
   /** The default charset of a shape (really the .dbf) is IBM850. */
   private static final String SHAPE_DEFAULT_CHARSET_IBM850 = "IBM850"; //$NON-NLS-1$
 
-  public static final String SHP_NAMESPACE_URI = DBaseFile.SHP_NAMESPACE_URI;
+  /**
+   * @deprecated Use {@link ShapeCollection} instead
+   */
+  @Deprecated
+  public static final String SHP_NAMESPACE_URI = ShapeCollection.SHP_NAMESPACE_URI;
 
-  public static final QName ROOT_FEATURETYPE = new QName( SHP_NAMESPACE_URI, "ShapeCollection" ); //$NON-NLS-1$
-
-  public static final QName PROPERTY_FEATURE_MEMBER = new QName( DBaseFile.SHP_NAMESPACE_URI, "featureMember" ); //$NON-NLS-1$
-
-  private static final QName PROPERTY_NAME = new QName( SHP_NAMESPACE_URI, "name" ); //$NON-NLS-1$
-
-  public static final QName PROPERTY_TYPE = new QName( SHP_NAMESPACE_URI, "type" ); //$NON-NLS-1$
-
-  public static final String PROPERTY_GEOM = "GEOM";//$NON-NLS-1$
+  /**
+   * The list property of the shape root feature containing the features.
+   * 
+   * @deprecated Use {@link ShapeCollection} instead
+   */
+  @Deprecated
+  public static final QName PROPERTY_FEATURE_MEMBER = new QName( SHP_NAMESPACE_URI, "featureMember" ); //$NON-NLS-1$
 
   /**
    * Pseudo QNAME, placeholder for the gml-id to be written.
    */
   public static final QName QNAME_GMLID = new QName( ShapeSerializer.class.getName() + "gmlid" ); //$NON-NLS-1$
+
 
   private ShapeSerializer( )
   {
@@ -114,97 +110,48 @@ public final class ShapeSerializer
   @Deprecated
   public static void serialize( final GMLWorkspace workspace, final String filenameBase, final String targetSrs ) throws GmlSerializeException
   {
-    serialize( workspace, filenameBase, null, targetSrs );
+    final ShapeCollection collection = (ShapeCollection) workspace.getRootFeature();
+    serialize( collection, filenameBase, targetSrs );
   }
 
   /**
-   * @deprecated Use {@link org.kalypso.shape.ShapeWriter} and {@link org.kalypso.shape.deegree.GenericShapeDataFactory}
-   *             instead.
+   * Saves the given shape into a shape file, using the kalypso coordinate system.
    */
-  @Deprecated
-  public static void serialize( final GMLWorkspace workspace, final String filenameBase, final IShapeDataProvider shapeDataProvider ) throws GmlSerializeException
+  public static void serialize( final ShapeCollection collection, final String filenameBase ) throws GmlSerializeException
   {
     final String defaultSrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-    serialize( workspace, filenameBase, shapeDataProvider, defaultSrs );
+    serialize( collection, filenameBase, defaultSrs );
   }
 
   /**
-   * @deprecated Use {@link org.kalypso.shape.ShapeWriter} and {@link org.kalypso.shape.deegree.GenericShapeDataFactory}
-   *             instead.
+   * Saves the given shape into a shape file.
    */
-  @Deprecated
-  private static void serialize( final GMLWorkspace workspace, final String filenameBase, IShapeDataProvider shapeDataProvider, final String targetSrs ) throws GmlSerializeException
+  public static void serialize( final ShapeCollection collection, final String filenameBase, final String targetSrs ) throws GmlSerializeException
   {
-    final Feature rootFeature = workspace.getRootFeature();
-    final List<Feature> features = (List<Feature>) rootFeature.getProperty( PROPERTY_FEATURE_MEMBER );
-
     try
     {
-      final ShapeFile shapeFile = new ShapeFile( filenameBase, "rw" ); //$NON-NLS-1$
+      final IShapeData data = GenericShapeDataFactory.createDefaultData( collection, getShapeDefaultCharset(), targetSrs );
+      final ShapeWriter shapeWriter = new ShapeWriter( data );
 
-      // if no dataProvider is set take the StandardProvider
-      if( shapeDataProvider == null )
-      {
-        shapeDataProvider = new StandardShapeDataProvider( features.toArray( new Feature[features.size()] ), targetSrs );
-      }
-
-      shapeFile.writeShape( shapeDataProvider );
-      shapeFile.close();
+      final IProgressMonitor monitor = new NullProgressMonitor();
+      shapeWriter.write( filenameBase, monitor );
     }
-    catch( final Exception e )
+    catch( IOException | DBaseException | SHPException | ShapeDataException e )
     {
       e.printStackTrace();
-
       throw new GmlSerializeException( Messages.getString( "org.kalypso.ogc.gml.serialize.ShapeSerializer.7" ), e ); //$NON-NLS-1$
     }
-  }
-
-  public static Feature createWorkspaceRootFeature( final IFeatureType featureType, final int shapeFileType )
-  {
-    final IGMLSchema schema = featureType.getGMLSchema();
-    final Feature rootFeature = ShapeSerializer.createShapeRootFeature( featureType );
-    final String schemaLocation = schema instanceof GMLSchema ? ((GMLSchema) schema).getContext().toExternalForm() : null;
-    new GMLWorkspace_Impl( schema, rootFeature, null, null, schemaLocation, null );
-    rootFeature.setProperty( ShapeSerializer.PROPERTY_TYPE, new Integer( shapeFileType ) );
-    return rootFeature;
-  }
-
-  /**
-   * Creates to feature type for the root feature of a shape-file-based workspace.
-   *
-   * @param childFeatureType
-   *          The feature type for the children (i.e. the shape-objects) of the root.
-   * @return A newly created feature suitable for the root of a workspace. It has the following properties:
-   *         <ul>
-   *         <li>name : String [1] - some meaningful name</li>
-   *         <li>type : int [1] - the shape-geometry-type</li>
-   *         <li>featureMember : inline-feature with type childFeatureType [0,n]</li>
-   *         </ul>
-   */
-  public static Feature createShapeRootFeature( final IFeatureType childFeatureType )
-  {
-    final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
-    final IMarshallingTypeHandler stringTH = registry.getTypeHandlerForTypeName( XmlTypes.XS_STRING );
-    final IMarshallingTypeHandler intTH = registry.getTypeHandlerForTypeName( XmlTypes.XS_INT );
-
-    final IPropertyType nameProp = GMLSchemaFactory.createValuePropertyType( ShapeSerializer.PROPERTY_NAME, stringTH, 1, 1, false );
-    final IPropertyType typeProp = GMLSchemaFactory.createValuePropertyType( ShapeSerializer.PROPERTY_TYPE, intTH, 1, 1, false );
-    final IRelationType memberProp = GMLSchemaFactory.createRelationType( PROPERTY_FEATURE_MEMBER, childFeatureType, 0, IPropertyType.UNBOUND_OCCURENCY, false );
-    final IPropertyType[] ftps = new IPropertyType[] { nameProp, typeProp, memberProp };
-    final QName fcQName = new QName( "http://www.opengis.net/gml", "_FeatureCollection" ); //$NON-NLS-1$ //$NON-NLS-2$
-    final IFeatureType collectionFT = GMLSchemaFactory.createFeatureType( ShapeSerializer.ROOT_FEATURETYPE, ftps, childFeatureType.getGMLSchema(), fcQName );
-    return FeatureFactory.createFeature( null, null, "root", collectionFT, true ); //$NON-NLS-1$
   }
 
   /**
    * Same as {@link #deserialize(String, String, new NullProgressMonitor())}
    */
-  public static GMLWorkspace deserialize( final String fileBase, final String sourceCrs ) throws GmlSerializeException
+  public static ShapeCollection deserialize( final String fileBase, final String sourceCrs ) throws GmlSerializeException
   {
     return deserialize( fileBase, sourceCrs, new NullProgressMonitor() );
   }
 
-  public static GMLWorkspace deserialize( final String fileBase, final String sourceCrs, final IProgressMonitor monitor ) throws GmlSerializeException
+  public static ShapeCollection deserialize( final String fileBase, final String sourceCrs, final IProgressMonitor monitor ) throws GmlSerializeException
   {
     final Charset charset = getShapeDefaultCharset();
     return deserialize( fileBase, sourceCrs, charset, monitor );
@@ -227,63 +174,25 @@ public final class ShapeSerializer
     return Charset.defaultCharset();
   }
 
-  public static GMLWorkspace deserialize( final String fileBase, final String sourceCrs, final Charset charset, final IProgressMonitor monitor ) throws GmlSerializeException
+  public static ShapeCollection deserialize( final String fileBase, final String sourceCrs, final Charset charset, final IProgressMonitor monitor ) throws GmlSerializeException
   {
     final String taskName = Messages.getString( "org.kalypso.ogc.gml.serialize.ShapeSerializer.2", fileBase ); //$NON-NLS-1$
     final SubMonitor moni = SubMonitor.convert( monitor, taskName, 100 );
 
-    ShapeFile sf = null;
-
-    try
+    try (ShapeFile sf = new ShapeFile( fileBase, charset, FileMode.READ ))
     {
-      sf = new ShapeFile( fileBase, charset );
-      final IFeatureType featureType = sf.getFeatureType();
-      final int fileShapeType = sf.getFileShapeType();
+      // TODO: as before, but still ugly
+      final String key = Integer.toString( fileBase.hashCode() );
 
-      final Feature rootFeature = ShapeSerializer.createWorkspaceRootFeature( featureType, fileShapeType );
-      final GMLWorkspace workspace = rootFeature.getWorkspace();
-
-      final IRelationType listRelation = (IRelationType) rootFeature.getFeatureType().getProperty( PROPERTY_FEATURE_MEMBER );
-
-      final int count = sf.getRecordNum();
-
-      moni.setWorkRemaining( count );
-      for( int i = 0; i < count; i++ )
-      {
-        if( i % 100 == 0 )
-          moni.subTask( String.format( "%d / %d", i, count ) ); //$NON-NLS-1$
-        final Feature fe = sf.getFeatureByRecNo( rootFeature, listRelation, i + 1, sourceCrs );
-        workspace.addFeatureAsComposition( rootFeature, listRelation, -1, fe );
-
-        if( i % 100 == 0 )
-          ProgressUtilities.worked( moni, 100 );
-      }
-
-      return workspace;
+      return Shape2GML.convertShp2Gml( key, sf, sourceCrs, moni );
     }
     catch( final OperationCanceledException e )
     {
-      throw new GmlSerializeException( Messages.getString("ShapeSerializer.0"), e ); //$NON-NLS-1$
+      throw new GmlSerializeException( Messages.getString( "ShapeSerializer.0" ), e ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
       throw new GmlSerializeException( Messages.getString( "org.kalypso.ogc.gml.serialize.ShapeSerializer.19" ), e ); //$NON-NLS-1$
-    }
-    finally
-    {
-      if( sf != null )
-      {
-        try
-        {
-          sf.close();
-        }
-        catch( final IOException e )
-        {
-          throw new GmlSerializeException( Messages.getString( "org.kalypso.ogc.gml.serialize.ShapeSerializer.20" ), e ); //$NON-NLS-1$
-        }
-      }
-
-      moni.done();
     }
   }
 
@@ -291,7 +200,7 @@ public final class ShapeSerializer
    * This function tries to load a prj file, which contains the coordinate system. If it exists and is a valid one, this
    * coordinate system is returned. If it is not found, the source coordinate system is returned (this should be the one
    * in the gmt). If it does also not exist, null will be returned.
-   *
+   * 
    * @param prjLocation
    *          Location of the .prj file.
    * @param defaultSrs
@@ -304,7 +213,7 @@ public final class ShapeSerializer
     {
       // TODO: Should in the first instance interpret the prj content ...
       // Does not work now because we must create a coordinate system instance then, but we use string codes right now
-      final String prjString = UrlUtilities.toString( prjLocation, "UTF-8" ); //$NON-NLS-1$
+      final String prjString = IOUtils.toString( prjLocation, Charsets.UTF_8.name() );
       if( prjString.startsWith( "EPSG:" ) ) //$NON-NLS-1$
         return prjString;
 
