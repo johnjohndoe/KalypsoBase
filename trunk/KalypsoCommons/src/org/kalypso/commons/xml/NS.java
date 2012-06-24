@@ -111,8 +111,6 @@ public interface NS
 
   public static final String COMMON = "org.kalypso.gml.common"; //$NON-NLS-1$
 
-  public static final String COMMON_SHP = "org.kalypso.gml.common.shape"; //$NON-NLS-1$
-
   public static final String COMMON_MATH = "org.kalypso.gml.common.math"; //$NON-NLS-1$
 
   public static final String SWE_EXTENSIONS = "org.kalypso.swe.ext"; //$NON-NLS-1$

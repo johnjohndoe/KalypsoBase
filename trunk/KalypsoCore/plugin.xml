@@ -114,14 +114,6 @@
             axisType="W"/>
    </extension>
    <extension
-         id="org.kalypso.core.urlcatalog.extentsion"
-         name="Url Catalog"
-         point="org.kalypso.contribs.java.urlCatalog">
-      <catalog
-            class="org.kalypso.core.KalypsoCoreUrlCatalog"
-            id="org.kalypso.core.urlcatalog"/>
-   </extension>
-   <extension
          id="org.kalypso.core.adapters"
          name="Kalypso Core Adapter Factories"
          point="org.eclipse.core.runtime.adapters">

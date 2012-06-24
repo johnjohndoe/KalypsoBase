@@ -51,7 +51,7 @@ import org.kalypso.simulation.core.ant.copyobservation.target.ICopyObservationTa
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogUpdateObservationMapping;
+import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
@@ -85,14 +85,14 @@ public class CopyObservationMappingHelper
   public static GMLWorkspace createMappingWorkspace( final URL context ) throws GMLSchemaException
   {
     final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-    final GMLSchema schema = schemaCatalog.getSchema( UrlCatalogUpdateObservationMapping.NS, (String) null );
+    final GMLSchema schema = schemaCatalog.getSchema( DeegreeUrlCatalog.NS_UPDATE_OBSERVATION_MAPPING, (String) null );
     if( schema == null )
     {
-      System.err.println( "Failed to load schema with namespace: " + UrlCatalogUpdateObservationMapping.NS );
+      System.err.println( "Failed to load schema with namespace: " + DeegreeUrlCatalog.NS_UPDATE_OBSERVATION_MAPPING );
       return null;
     }
 
-    final IFeatureType mapColFT = schema.getFeatureType( UrlCatalogUpdateObservationMapping.QNAME_MAPPING_COLLECTION );
+    final IFeatureType mapColFT = schema.getFeatureType( DeegreeUrlCatalog.QNAME_MAPPING_COLLECTION );
     final Feature rootFE = FeatureFactory.createFeature( null, null, "1", mapColFT, true );
     return new GMLWorkspace_Impl( schema, rootFE, context, null, null, null );
   }
@@ -111,22 +111,22 @@ public class CopyObservationMappingHelper
   {
     final org.kalypso.zml.obslink.ObjectFactory obsLinkFac = new org.kalypso.zml.obslink.ObjectFactory();
 
-    final IFeatureType mapFT = GMLSchemaUtilities.getFeatureTypeQuiet( UrlCatalogUpdateObservationMapping.QNAME_MAPPING_OBSERVATION );
+    final IFeatureType mapFT = GMLSchemaUtilities.getFeatureTypeQuiet( DeegreeUrlCatalog.QNAME_MAPPING_OBSERVATION );
     final Feature rootFeature = workspace.getRootFeature();
 
     // in
-    final IRelationType pt3 = (IRelationType) rootFeature.getFeatureType().getProperty( UrlCatalogUpdateObservationMapping.RESULT_LIST_PROP );
+    final IRelationType pt3 = (IRelationType) rootFeature.getFeatureType().getProperty( DeegreeUrlCatalog.RESULT_LIST_PROP );
     final Feature mapFE = workspace.createFeature( rootFeature, pt3, mapFT );
     final TimeseriesLinkType inLink = obsLinkFac.createTimeseriesLinkType();
     final String finalHref = "#" + FRAGMENT_USEASCONTEXT + "?" + filterInline;
     inLink.setHref( finalHref );
-    final IPropertyType inLinkPT = mapFT.getProperty( UrlCatalogUpdateObservationMapping.RESULT_TS_IN_PROP );
+    final IPropertyType inLinkPT = mapFT.getProperty( DeegreeUrlCatalog.RESULT_TS_IN_PROP );
     mapFE.setProperty( inLinkPT, inLink );
 
     // out
     final TimeseriesLinkType outLink = obsLinkFac.createTimeseriesLinkType();
     outLink.setHref( outHref );
-    final IPropertyType pt2 = mapFT.getProperty( UrlCatalogUpdateObservationMapping.RESULT_TS_OUT_PROP );
+    final IPropertyType pt2 = mapFT.getProperty( DeegreeUrlCatalog.RESULT_TS_OUT_PROP );
     mapFE.setProperty( pt2, outLink );
     workspace.addFeatureAsComposition( rootFeature, pt3, 0, mapFE );
   }
@@ -144,13 +144,13 @@ public class CopyObservationMappingHelper
        * Note: the order is important for the ForecastFilter! so we put the target-observation in the first place since
        * it is the first element that will be backed by the forecast-filter forecast and measured
        */
-      sources = new Source[] { new Source( null, UrlCatalogUpdateObservationMapping.RESULT_TS_OUT_PROP.getLocalPart(), doNotOverwriteRange, null ),
-          new Source( null, UrlCatalogUpdateObservationMapping.RESULT_TS_IN_PROP.getLocalPart(), measuredRange, null ) };
+      sources = new Source[] { new Source( null, DeegreeUrlCatalog.RESULT_TS_OUT_PROP.getLocalPart(), doNotOverwriteRange, null ),
+          new Source( null, DeegreeUrlCatalog.RESULT_TS_IN_PROP.getLocalPart(), measuredRange, null ) };
     }
     else
     {
       // measured
-      sources = new Source[] { new Source( null, UrlCatalogUpdateObservationMapping.RESULT_TS_IN_PROP.getLocalPart(), measuredRange, null ), };
+      sources = new Source[] { new Source( null, DeegreeUrlCatalog.RESULT_TS_IN_PROP.getLocalPart(), measuredRange, null ), };
     }
 
     /*
@@ -160,11 +160,11 @@ public class CopyObservationMappingHelper
      */
     final DateRange completeRange = new DateRange( measuredRange.getFrom(), doNotOverwriteRange.getTo() );
 
-    final GMLXPath targetPath = new GMLXPath( UrlCatalogUpdateObservationMapping.RESULT_TS_OUT_PROP );
+    final GMLXPath targetPath = new GMLXPath( DeegreeUrlCatalog.RESULT_TS_OUT_PROP );
     final ICopyObservationTarget timeSeriesLink = CopyObservationTargetFactory.getLink( srcContext, targetPath, null, completeRange, forecastRange );
     final ICopyObservationSource source = new FeatureCopyObservationSource( srcContext, sources, null );
 
     final CopyObservationFeatureVisitor visitor = new CopyObservationFeatureVisitor( source, timeSeriesLink, new MetadataList(), logger );
-    workspace.accept( visitor, UrlCatalogUpdateObservationMapping.RESULT_LIST_PROP.getLocalPart(), 1 );
+    workspace.accept( visitor, DeegreeUrlCatalog.RESULT_LIST_PROP.getLocalPart(), 1 );
   }
 }
