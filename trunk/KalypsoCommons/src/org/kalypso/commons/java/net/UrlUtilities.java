@@ -72,7 +72,9 @@ public class UrlUtilities
    * Opens a stream on the given url and copies its content into a string.
    * 
    * @throws IOException
+   * @deprecated Use {@link IOUtils#toString(URL, java.nio.charset.Charset)} instead.
    */
+  @Deprecated
   public static String toString( final URL url, final String encoding ) throws IOException
   {
     InputStream is = null;
@@ -93,7 +95,9 @@ public class UrlUtilities
    * Opens a stream on the given url and copies its content into a byte array.
    * 
    * @throws IOException
+   * @deprecated Use {@link IOUtils#toByteArray(URL)} instead.
    */
+  @Deprecated
   public static byte[] toByteArray( final URL url ) throws IOException
   {
     InputStream is = null;
