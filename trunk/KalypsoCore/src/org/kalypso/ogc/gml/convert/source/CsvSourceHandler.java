@@ -4,6 +4,7 @@ import java.net.URL;
 
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.gml.util.CsvSourceType;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.ogc.gml.convert.GmlConvertException;
 import org.kalypso.ogc.gml.serialize.CsvFeatureReader;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -27,7 +28,7 @@ public class CsvSourceHandler implements ISourceHandler
   }
 
   @Override
-  public GMLWorkspace getWorkspace( ) throws GmlConvertException
+  public GMLWorkspace getWorkspace( ) throws GmlConvertException, GMLSchemaException
   {
     final CsvFeatureReader reader = new CsvFeatureReader( m_type, m_resolver, m_context );
     reader.read();

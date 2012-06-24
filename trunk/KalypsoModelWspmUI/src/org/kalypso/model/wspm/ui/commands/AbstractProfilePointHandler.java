@@ -170,7 +170,7 @@ public abstract class AbstractProfilePointHandler extends AbstractChartHandler
 
   protected void onNewProfileSet( )
   {
-  };
+  }
 
   @Override
   public void mouseMove( final MouseEvent e )
@@ -252,7 +252,7 @@ public abstract class AbstractProfilePointHandler extends AbstractChartHandler
 
   protected final void doReset( )
   {
-   // setProfile( null );
+    // setProfile( null );
     setBreite( null );
     setToolInfo( null );
     setCursor( SWT.CURSOR_ARROW );

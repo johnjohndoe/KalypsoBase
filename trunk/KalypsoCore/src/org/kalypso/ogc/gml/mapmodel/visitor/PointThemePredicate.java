@@ -49,15 +49,15 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
+import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree_impl.tools.GMLConstants;
 
 /**
  * @author Monika Thuel
  */
 public class PointThemePredicate extends LineThemePredicater implements IKalypsoThemePredicate
 {
-  private static final QName[] ACCEPTED_GEOMETRIES = new QName[] { GMLConstants.QN_MULTI_POINT, GM_Point.POINT_ELEMENT };
+  private static final QName[] ACCEPTED_GEOMETRIES = new QName[] { GM_MultiPoint.MULTI_POINT_ELEMENT, GM_Point.POINT_ELEMENT };
 
   /**
    * @see org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate#decide(org.kalypso.ogc.gml.IKalypsoTheme)

@@ -94,58 +94,39 @@ public class IntersectRoughnessesLanduseDelegate implements IApplyLanduseData
     m_assignment = new AssignmentBinder( assignmentWorkspace );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.worker.IApplyLanduseData#getProfiles()
-   */
   @Override
   public IProfileFeature[] getProfiles( )
   {
     return m_profiles;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.worker.IApplyLanduseData#getFilter()
-   */
   @Override
   public IProfilePointFilter getFilter( )
   {
     return m_pointFilters;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.worker.IApplyLanduseData#getPolyonFeatureList()
-   */
   @Override
   public FeatureList getPolyonFeatureList( )
   {
     return m_polygoneFeatures;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.worker.IApplyLanduseData#getGeometryPropertyType()
-   */
   @Override
   public IPropertyType getGeometryPropertyType( )
   {
     return m_polygoneGeomType;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.worker.IApplyLanduseData#getValuePropertyType()
-   */
   @Override
   public IPropertyType getValuePropertyType( )
   {
     return m_polygoneValueType;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.worker.IApplyLanduseData#getAssignmentsFor(java.lang.String)
-   */
   @Override
   public Map<String, Object> getAssignmentsFor( final String string )
   {
     return m_assignment.getAssignmentsFor( string );
   }
-
 }

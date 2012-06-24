@@ -12,6 +12,7 @@ import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.gml.util.CsvSourceType;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.convert.GmlConvertException;
@@ -36,7 +37,7 @@ public final class CsvFeatureReader extends AbstractTabularFeatureReader
 
   private final String m_href;
 
-  public CsvFeatureReader( final CsvSourceType type, final IUrlResolver resolver, final URL context ) throws GmlConvertException
+  public CsvFeatureReader( final CsvSourceType type, final IUrlResolver resolver, final URL context ) throws GmlConvertException, GMLSchemaException
   {
     super( type, resolver, context );
 

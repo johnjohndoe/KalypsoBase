@@ -11,6 +11,7 @@ import org.kalypso.gml.util.ShpSourceType;
 import org.kalypso.ogc.gml.convert.GmlConvertException;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.gml.binding.shape.ShapeCollection;
 
 /**
  * @author belger
@@ -35,7 +36,6 @@ public class ShpSourceHandler implements ISourceHandler
 
   /**
    * @throws GmlConvertException
-   * @see org.kalypso.ogc.gml.convert.source.ISourceHandler#getWorkspace()
    */
   @Override
   public GMLWorkspace getWorkspace( ) throws GmlConvertException
@@ -48,7 +48,8 @@ public class ShpSourceHandler implements ISourceHandler
       final String absolutePath = file.getLocation().toFile().getAbsolutePath();
       final String shapeBase = FileUtilities.nameWithoutExtension( absolutePath );
 
-      return ShapeSerializer.deserialize( shapeBase, m_crs );
+      final ShapeCollection shapeCollection = ShapeSerializer.deserialize( shapeBase, m_crs );
+      return shapeCollection.getWorkspace();
     }
     catch( final Exception e )
     {

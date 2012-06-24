@@ -44,8 +44,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import javax.xml.namespace.QName;
+import java.nio.charset.Charset;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -59,7 +58,6 @@ import org.eclipse.core.runtime.Path;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
-import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.gml.processes.raster2vector.Raster2Lines;
 import org.kalypso.gml.processes.raster2vector.Raster2LinesWalkingStrategy;
@@ -67,33 +65,32 @@ import org.kalypso.gml.processes.raster2vector.collector.CollectorDataProvider;
 import org.kalypso.gml.processes.raster2vector.collector.LineStringCollector;
 import org.kalypso.gml.processes.raster2vector.collector.PolygonCollector;
 import org.kalypso.gml.processes.raster2vector.collector.SegmentCollector;
-import org.kalypso.gmlschema.GMLSchemaFactory;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
-import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
 import org.kalypso.grid.ConvertAscii2Binary;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.IGeoGrid;
-import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
-import org.kalypso.ogc.gml.serialize.ShapeSerializer;
+import org.kalypso.shape.ShapeDataException;
+import org.kalypso.shape.ShapeFile;
+import org.kalypso.shape.ShapeType;
+import org.kalypso.shape.dbf.DBFField;
+import org.kalypso.shape.dbf.DBaseException;
+import org.kalypso.shape.dbf.FieldType;
+import org.kalypso.shape.dbf.IDBFField;
+import org.kalypso.shape.deegree.GM_Object2Shape;
+import org.kalypso.shape.geometry.ISHPGeometry;
+import org.kalypso.shape.shp.SHPException;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.coverage.RangeSetFile;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
-import org.kalypsodeegree_impl.io.shpapi.ShapeConst;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypsodeegree_impl.tools.GMLConstants;
 
 import com.vividsolutions.jts.geom.GeometryFactory;
 
@@ -147,86 +144,66 @@ public class TestGrid2Shp
 
   }
 
-  private void writeLineShape( final CollectorDataProvider[] data, final IFolder importDataFolder ) throws Exception, GmlSerializeException
+  private void writeLineShape( final CollectorDataProvider[] data, final IFolder importDataFolder ) throws DBaseException, IOException, ShapeDataException, SHPException
   {
-    /* Create feature type which describes what data the shape file contains */
-    final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final IDBFField doubleField = new DBFField( "ID", FieldType.N, (short) 10, (short) 3 );
+    final IDBFField stringField = new DBFField( "NAME", FieldType.C, (short) 100, (short) 0 );
+    final IDBFField[] fields = new IDBFField[] { doubleField, stringField };
 
-    final IMarshallingTypeHandler doubleTypeHandler = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_DOUBLE );
-    final IMarshallingTypeHandler stringTypeHandler = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_STRING );
-    final IMarshallingTypeHandler lineTypeHandler = typeRegistry.getTypeHandlerForTypeName( GMLConstants.QN_LINE_STRING );
-
-    final QName shapeTypeQName = new QName( "anyNS", "shapeType" ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    final IValuePropertyType doubleType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "id" ), doubleTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
-    final IValuePropertyType stringType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "name" ), stringTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
-    final IValuePropertyType lineType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "aGeometry" ), lineTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    final IPropertyType[] properties = new IPropertyType[] { lineType, doubleType, stringType };
-    final IFeatureType shapeFT = GMLSchemaFactory.createFeatureType( shapeTypeQName, properties );
-
-    /* Create the shape root feature, we need it to create the children. */
-    final Feature shapeRootFeature = ShapeSerializer.createWorkspaceRootFeature( shapeFT, ShapeConst.SHAPE_TYPE_POLYLINEZ );
-    final GMLWorkspace shapeWorkspace = shapeRootFeature.getWorkspace();
-    final IRelationType shapeParentRelation = (IRelationType) shapeRootFeature.getFeatureType().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
-
-    for( int i = 0; i < data.length; i++ )
-    {
-      final GM_Curve line = (GM_Curve) data[i].getGeometry();
-      final Double id = data[i].getId();
-      final String[] name = data[i].getName();
-
-      final Object[] shapeData = new Object[] { line, id, name[0] };
-      final Feature feature = FeatureFactory.createFeature( shapeRootFeature, shapeParentRelation, "FeatureID" + i, shapeFT, shapeData ); //$NON-NLS-1$
-      shapeWorkspace.addFeatureAsComposition( shapeRootFeature, shapeParentRelation, -1, feature );
-    }
-
+    final ShapeType shapeType = ShapeType.POLYLINEZ;
     final String shapeBase = importDataFolder.getLocation() + "export_isoline"; //$NON-NLS-1$
-    ShapeSerializer.serialize( shapeWorkspace, shapeBase, (String) null );
+
+    try (final ShapeFile shape = ShapeFile.create( shapeBase, shapeType, Charset.defaultCharset(), fields ))
+    {
+      final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+      final GM_Object2Shape gm2shp = new GM_Object2Shape( shapeType, crs );
+
+      for( final CollectorDataProvider element : data )
+      {
+        final GM_Curve line = (GM_Curve) element.getGeometry();
+        final ISHPGeometry geom = gm2shp.convert( line );
+
+        final Double id = element.getId();
+        final String[] name = element.getName();
+
+        final Object[] shapeData = new Object[] { id, name[0] };
+        shape.addFeature( geom, shapeData );
+      }
+    }
   }
 
-  private void writePolygonShape( final CollectorDataProvider[] data, final IFolder importDataFolder ) throws Exception, GmlSerializeException
+  private void writePolygonShape( final CollectorDataProvider[] data, final IFolder importDataFolder ) throws DBaseException, IOException, ShapeDataException, SHPException
   {
-    /* Create feature type which describes what data the shape file contains */
-    final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    final IDBFField doubleField = new DBFField( "ID", FieldType.N, (short) 10, (short) 3 );
+    final IDBFField fromField = new DBFField( "FROM", FieldType.N, (short) 10, (short) 3 );
+    final IDBFField toField = new DBFField( "TO", FieldType.N, (short) 10, (short) 3 );
+    final IDBFField rangeField = new DBFField( "RANGE", FieldType.C, (short) 100, (short) 0 );
+    final IDBFField internalField = new DBFField( "INTERNALID", FieldType.C, (short) 100, (short) 0 );
+    final IDBFField[] fields = new IDBFField[] { doubleField, fromField, toField, rangeField, internalField };
 
-    final IMarshallingTypeHandler doubleTypeHandler = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_DOUBLE );
-    final IMarshallingTypeHandler stringTypeHandler = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_STRING );
-    final IMarshallingTypeHandler polygonTypeHandler = typeRegistry.getTypeHandlerForTypeName( GM_Polygon.POLYGON_ELEMENT );
-
-    final QName shapeTypeQName = new QName( "anyNS", "shapeType" ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    final IValuePropertyType doubleTypeId = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "id" ), doubleTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
-    final IValuePropertyType doubleTypeFrom = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "from" ), doubleTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
-    final IValuePropertyType doubleTypeTo = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "to" ), doubleTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
-    final IValuePropertyType stringTypeRange = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "range" ), stringTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
-    final IValuePropertyType stringTypeId = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "internalId" ), stringTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
-    final IValuePropertyType polygonType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "geometry" ), polygonTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
-
-    final IPropertyType[] properties = new IPropertyType[] { polygonType, doubleTypeId, doubleTypeFrom, doubleTypeTo, stringTypeRange, stringTypeId };
-    final IFeatureType shapeFT = GMLSchemaFactory.createFeatureType( shapeTypeQName, properties );
-
-    /* Create the shape root feature, we need it to create the children. */
-    final Feature shapeRootFeature = ShapeSerializer.createWorkspaceRootFeature( shapeFT, ShapeConst.SHAPE_TYPE_POLYGONZ );
-    final GMLWorkspace shapeWorkspace = shapeRootFeature.getWorkspace();
-    final IRelationType shapeParentRelation = (IRelationType) shapeRootFeature.getFeatureType().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
-
-    for( int i = 0; i < data.length; i++ )
-    {
-      final GM_Surface< ? > line = (GM_Surface< ? >) data[i].getGeometry();
-      final Double id = data[i].getId();
-      final Double[] borders = data[i].getBorders();
-      final Double from = borders[0];
-      final Double to = borders[1];
-      final String[] name = data[i].getName();
-
-      final Object[] shapeData = new Object[] { line, id, from, to, name[0], name[1] };
-      final Feature feature = FeatureFactory.createFeature( shapeRootFeature, shapeParentRelation, "FeatureID" + i, shapeFT, shapeData ); //$NON-NLS-1$
-      shapeWorkspace.addFeatureAsComposition( shapeRootFeature, shapeParentRelation, -1, feature );
-    }
-
+    final ShapeType shapeType = ShapeType.POLYGONZ;
     final String shapeBase = importDataFolder.getLocation() + "export_polygon_"; //$NON-NLS-1$
-    ShapeSerializer.serialize( shapeWorkspace, shapeBase, (String) null );
+
+    try (final ShapeFile shape = ShapeFile.create( shapeBase, shapeType, Charset.defaultCharset(), fields ))
+    {
+      final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+      final GM_Object2Shape gm2shp = new GM_Object2Shape( shapeType, crs );
+
+      for( final CollectorDataProvider element : data )
+      {
+        final GM_Surface< ? > line = (GM_Surface< ? >) element.getGeometry();
+        final ISHPGeometry geom = gm2shp.convert( line );
+
+        final Double id = element.getId();
+        final Double[] borders = element.getBorders();
+        final Double from = borders[0];
+        final Double to = borders[1];
+        final String[] name = element.getName();
+
+        final Object[] shapeData = new Object[] { id, from, to, name[0], name[1] };
+        shape.addFeature( geom, shapeData );
+      }
+    }
   }
 
   private IGeoGrid getTestGrid( final IFolder importDataFolder ) throws Exception, MalformedURLException, IOException

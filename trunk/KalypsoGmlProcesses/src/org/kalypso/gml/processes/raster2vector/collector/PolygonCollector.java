@@ -59,11 +59,6 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
 
   }
 
-  /**
-   * @see org.kalypso.gml.processes.raster2vector.collector.SegmentCollector#addSegment(int,
-   *      org.kalypso.gml.processes.raster2vector.LinkedCoordinate,
-   *      org.kalypso.gml.processes.raster2vector.LinkedCoordinate)
-   */
   @Override
   public void addSegment( final int index, final LinkedCoordinate lc0, final LinkedCoordinate lc1 ) throws LinkedCoordinateException
   {
@@ -161,9 +156,6 @@ public class PolygonCollector implements SegmentCollector, RingTreeWalker
 
   }
 
-  /**
-   * @see com.bce.gis.operation.raster2vector.collector.ringtree.RingTreeWalker#operate(com.bce.gis.operation.raster2vector.collector.ringtree.RingTreeElement)
-   */
   @Override
   public void operate( final RingTreeElement element )
   {

@@ -13,6 +13,7 @@ import org.kalypso.core.i18n.Messages;
 import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.gml.util.Refsource;
 import org.kalypso.gml.util.SourceType;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.ogc.gml.convert.GmlConvertException;
 import org.kalypso.ogc.gml.convert.GmlConvertFactory;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -39,7 +40,7 @@ public class RefSourceHandler implements ISourceHandler
   }
 
   @Override
-  public GMLWorkspace getWorkspace( ) throws GmlConvertException
+  public GMLWorkspace getWorkspace( ) throws GmlConvertException, GMLSchemaException
   {
     try
     {
