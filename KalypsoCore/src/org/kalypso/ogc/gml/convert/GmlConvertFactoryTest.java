@@ -14,6 +14,7 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.core.i18n.Messages;
+import org.kalypso.gmlschema.GMLSchemaException;
 
 /**
  * @author belger
@@ -24,7 +25,7 @@ public class GmlConvertFactoryTest extends Assert
 
   // Invalid test, depends on KalypsoModelSaale
 // @Test
-  public void testConvertXml( ) throws IOException, JAXBException, GmlConvertException
+  public void testConvertXml( ) throws IOException, JAXBException, GmlConvertException, GMLSchemaException
   {
     final File tmpdir = FileUtilities.createNewTempDir( getClass().getName() );
 
@@ -68,11 +69,10 @@ public class GmlConvertFactoryTest extends Assert
     return file;
   }
 
-  private void doGmc( final String filename, final File dir ) throws IOException, JAXBException, GmlConvertException
+  private void doGmc( final String filename, final File dir ) throws IOException, JAXBException, GmlConvertException, GMLSchemaException
   {
     final File file = new File( dir, filename );
     final URL url = file.toURI().toURL();
     assertTrue( Messages.getString( "org.kalypso.ogc.gml.convert.GmlConvertFactoryTest.10" ), GmlConvertFactory.convertXml( url, m_urlUtilities, new HashMap<Object, Object>() ).isOK() ); //$NON-NLS-1$
   }
-
 }

@@ -16,6 +16,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.gml.util.Excelsource;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.convert.GmlConvertException;
@@ -35,7 +36,7 @@ public final class ExcelFeatureReader extends AbstractTabularFeatureReader
 {
   private final String m_href;
 
-  public ExcelFeatureReader( final Excelsource type, final IUrlResolver resolver, final URL context ) throws GmlConvertException
+  public ExcelFeatureReader( final Excelsource type, final IUrlResolver resolver, final URL context ) throws GmlConvertException, GMLSchemaException
   {
     super( type, resolver, context );
 

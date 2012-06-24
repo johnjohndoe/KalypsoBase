@@ -29,6 +29,7 @@ import org.kalypso.gml.util.RegisterSourceType;
 import org.kalypso.gml.util.ShpSourceType;
 import org.kalypso.gml.util.SourceType;
 import org.kalypso.gml.util.TargetType;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.ogc.gml.convert.source.ChangeSourceTypeHandler;
 import org.kalypso.ogc.gml.convert.source.CsvSourceHandler;
 import org.kalypso.ogc.gml.convert.source.ExcelSourceHandler;
@@ -64,7 +65,7 @@ public final class GmlConvertFactory
    * @throws GmlConvertException
    * @throws JAXBException
    */
-  public static IStatus convertXml( final URL url, final IUrlResolver resolver, final Map< ? , ? > externData ) throws IOException, JAXBException, GmlConvertException
+  public static IStatus convertXml( final URL url, final IUrlResolver resolver, final Map< ? , ? > externData ) throws IOException, JAXBException, GmlConvertException, GMLSchemaException
   {
     return convertXml( url, resolver, url, externData );
   }
@@ -78,7 +79,7 @@ public final class GmlConvertFactory
    * @throws GmlConvertException
    * @throws JAXBException
    */
-  public static IStatus convertXml( final URL url, final IUrlResolver resolver, final URL context, final Map< ? , ? > externData ) throws IOException, JAXBException, GmlConvertException
+  public static IStatus convertXml( final URL url, final IUrlResolver resolver, final URL context, final Map< ? , ? > externData ) throws IOException, JAXBException, GmlConvertException, GMLSchemaException
   {
     final URLConnection connection = url.openConnection();
     final String contentEncoding = connection.getContentEncoding();
@@ -99,7 +100,7 @@ public final class GmlConvertFactory
    * @throws JAXBException
    * @throws GmlConvertException
    */
-  public static IStatus convertXml( final InputSource inputSource, final IUrlResolver resolver, final URL context, final Map< ? , ? > externData ) throws JAXBException, GmlConvertException
+  public static IStatus convertXml( final InputSource inputSource, final IUrlResolver resolver, final URL context, final Map< ? , ? > externData ) throws JAXBException, GmlConvertException, GMLSchemaException
   {
     final Unmarshaller unmarshaller = TemplateUtilities.JC_GMC.createUnmarshaller();
     final Gmlconvert convert = (Gmlconvert) unmarshaller.unmarshal( inputSource );
@@ -115,7 +116,7 @@ public final class GmlConvertFactory
    * 
    * @throws GmlConvertException
    */
-  public static GMLWorkspace loadSource( final IUrlResolver resolver, final URL context, final SourceType source, final Map< ? , ? > externData ) throws GmlConvertException
+  public static GMLWorkspace loadSource( final IUrlResolver resolver, final URL context, final SourceType source, final Map< ? , ? > externData ) throws GmlConvertException, GMLSchemaException
   {
     // switch over source-type
     final ISourceHandler handler = createSourceHandler( resolver, context, source, externData );

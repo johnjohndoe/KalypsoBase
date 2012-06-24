@@ -59,6 +59,7 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree_impl.gml.binding.shape.ShapeCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 
@@ -80,7 +81,7 @@ public class SpatialIndexTest extends TestCase
 
   public void testBigShape( ) throws Exception
   {
-    doTheTest( "resources/bigShape.zip", "mod", ShapeSerializer.PROPERTY_FEATURE_MEMBER ); //$NON-NLS-1$ //$NON-NLS-2$
+    doTheTest( "resources/bigShape.zip", "mod", ShapeCollection.MEMBER_FEATURE ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   // invalid test, depends on KalypsoModel1d2d
@@ -170,10 +171,10 @@ public class SpatialIndexTest extends TestCase
     if( filename.toLowerCase().endsWith( ".gml" ) ) //$NON-NLS-1$
       return GmlSerializer.createGMLWorkspace( fileBase.toURI().toURL(), null );
 
-    final GMLWorkspace workspace = ShapeSerializer.deserialize( fileBase.getAbsolutePath(), KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+    final ShapeCollection shapes = ShapeSerializer.deserialize( fileBase.getAbsolutePath(), KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
 
     FileUtils.deleteDirectory( unzipDir );
 
-    return workspace;
+    return shapes.getWorkspace();
   }
 }

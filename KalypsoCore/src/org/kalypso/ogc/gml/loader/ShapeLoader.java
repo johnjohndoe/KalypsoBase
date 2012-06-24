@@ -69,6 +69,7 @@ import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.gml.binding.shape.ShapeCollection;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
 /**
@@ -87,10 +88,6 @@ public class ShapeLoader extends WorkspaceLoader
     return "ESRI Shape"; //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.loader.AbstractLoader#loadIntern(java.lang.String, java.net.URL,
-   *      org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   protected CommandableWorkspace loadIntern( final IPoolableObjectType key, final IProgressMonitor monitor ) throws LoaderException
   {
@@ -154,7 +151,9 @@ public class ShapeLoader extends WorkspaceLoader
       final String targetCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
       // FIXME: we also need to specify the shape charset
-      final GMLWorkspace gmlWorkspace = ShapeSerializer.deserialize( sourceFile.getAbsolutePath(), sourceCrs, moni.newChild( 70, SubMonitor.SUPPRESS_BEGINTASK ) );
+      final ShapeCollection shapeCollection = ShapeSerializer.deserialize( sourceFile.getAbsolutePath(), sourceCrs, moni.newChild( 70, SubMonitor.SUPPRESS_BEGINTASK ) );
+      final GMLWorkspace gmlWorkspace = shapeCollection.getWorkspace();
+
       final CommandableWorkspace workspace = new CommandableWorkspace( gmlWorkspace );
 
       try

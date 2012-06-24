@@ -55,6 +55,7 @@ import org.kalypso.core.i18n.Messages;
 import org.kalypso.gml.util.ChangeSourceType;
 import org.kalypso.gml.util.ChangeSourceType.Visitor;
 import org.kalypso.gml.util.ChangeSourceType.Visitor.Argument;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.ogc.gml.convert.GmlConvertException;
 import org.kalypso.ogc.gml.convert.GmlConvertFactory;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
@@ -83,11 +84,8 @@ public class ChangeSourceTypeHandler implements ISourceHandler
     m_externData = externData;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.convert.source.ISourceHandler#getWorkspace()
-   */
   @Override
-  public GMLWorkspace getWorkspace( ) throws GmlConvertException
+  public GMLWorkspace getWorkspace( ) throws GmlConvertException, GMLSchemaException
   {
     try
     {

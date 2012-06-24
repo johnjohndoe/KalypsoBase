@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,10 +36,11 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard.classification.landuse;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -47,12 +48,14 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
@@ -60,31 +63,36 @@ import org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.model.Appl
 import org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.worker.IApplyLanduseData;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ILanduseModel;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.LanduseProperties;
-import org.kalypso.ogc.gml.serialize.ShapeWorkspace;
+import org.kalypso.ogc.gml.serialize.GmlSerializeException;
+import org.kalypso.ogc.gml.serialize.ShapeSerializer;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree_impl.gml.binding.shape.ShapeCollection;
 
 /**
  * @author Dirk Kuch
  */
 public class ApplyLanduseDelegate implements IApplyLanduseData
 {
-
   private final ILanduseModel m_model;
-
-  private final ShapeWorkspace m_workspace;
 
   private final ProfilesChooserPage m_profilePage;
 
   private IPropertyType m_value;
 
-  public ApplyLanduseDelegate( final ILanduseModel model, final ProfilesChooserPage profilePage ) throws Exception
+  private final ShapeCollection m_shapeCollection;
+
+  public ApplyLanduseDelegate( final ILanduseModel model, final ProfilesChooserPage profilePage ) throws GmlSerializeException
   {
     m_model = model;
     m_profilePage = profilePage;
 
     final IFile file = model.getLanduseShape();
-    m_workspace = new ShapeWorkspace( file.getLocation().toFile() );
+
+    final File shapeFile = file.getLocation().toFile();
+    final String shapeBase = FilenameUtils.removeExtension( shapeFile.getAbsolutePath() );
+    m_shapeCollection = ShapeSerializer.deserialize( shapeBase, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
   }
 
   @Override
@@ -102,9 +110,6 @@ public class ApplyLanduseDelegate implements IApplyLanduseData
     return profiles.toArray( new IProfileFeature[] {} );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.worker.IApplyLanduseData#getFilter()
-   */
   @Override
   public IProfilePointFilter getFilter( )
   {
@@ -116,18 +121,17 @@ public class ApplyLanduseDelegate implements IApplyLanduseData
   @Override
   public FeatureList getPolyonFeatureList( )
   {
-    return m_workspace.getFeatureList();
+    return m_shapeCollection.getShapes().getFeatureList();
   }
 
   @Override
   public IPropertyType getGeometryPropertyType( )
   {
-    return m_workspace.getGeometryPropertyType();
+    final IRelationType propertyType = m_shapeCollection.getShapes().getFeatureList().getPropertyType();
+    final IFeatureType targetFeatureType = propertyType.getTargetFeatureType();
+    return targetFeatureType.getDefaultGeometryProperty();
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.worker.IApplyLanduseData#getValuePropertyType()
-   */
   @Override
   public IPropertyType getValuePropertyType( )
   {
@@ -175,7 +179,6 @@ public class ApplyLanduseDelegate implements IApplyLanduseData
 
   public void dispose( )
   {
-    m_workspace.dispose();
+    m_shapeCollection.getWorkspace().dispose();
   }
-
 }

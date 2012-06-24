@@ -41,35 +41,22 @@
 package org.kalypso.model.wspm.core.profil.sobek.utils.hw;
 
 import java.io.File;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.xml.namespace.QName;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.commons.xml.XmlTypes;
-import org.kalypso.gmlschema.GMLSchemaFactory;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
-import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
-import org.kalypso.ogc.gml.serialize.GmlSerializeException;
-import org.kalypso.ogc.gml.serialize.ShapeSerializer;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree_impl.io.shpapi.ShapeConst;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-import org.kalypsodeegree_impl.tools.GMLConstants;
+import org.kalypso.shape.ShapeFile;
+import org.kalypso.shape.ShapeType;
+import org.kalypso.shape.dbf.DBFField;
+import org.kalypso.shape.dbf.FieldType;
+import org.kalypso.shape.dbf.IDBFField;
+import org.kalypso.shape.geometry.ISHPGeometry;
+import org.kalypso.shape.tools.JTS2SHP;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -271,45 +258,22 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
   {
     try
     {
-      /* Create feature type which describes what data the shape file contains */
-      final ITypeRegistry<IMarshallingTypeHandler> typeRegistry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+      final IDBFField nameField = new DBFField( "NAME", FieldType.C, (short) 100, (short) 0 );
+      final IDBFField validField = new DBFField( "VALID", FieldType.C, (short) 10, (short) 0 );
+      final IDBFField[] fields = new IDBFField[] { nameField, validField };
 
-      final IMarshallingTypeHandler nameTypeHandler = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_STRING );
-      final IMarshallingTypeHandler validTypeHandler = typeRegistry.getTypeHandlerForTypeName( XmlTypes.XS_STRING );
-      final IMarshallingTypeHandler lineTypeHandler = typeRegistry.getTypeHandlerForTypeName( GMLConstants.QN_LINE_STRING );
-
-      final QName shapeTypeQName = new QName( "anyNS", "shapeType" ); //$NON-NLS-1$ //$NON-NLS-2$
-
-      final IValuePropertyType nameType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "name" ), nameTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
-      final IValuePropertyType validType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "valid" ), validTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
-      final IValuePropertyType lineType = GMLSchemaFactory.createValuePropertyType( new QName( "anyNS", "aGeometry" ), lineTypeHandler, 1, 1, false ); //$NON-NLS-1$ //$NON-NLS-2$
-
-      final IPropertyType[] properties = new IPropertyType[] { lineType, nameType, validType };
-      final IFeatureType shapeFT = GMLSchemaFactory.createFeatureType( shapeTypeQName, properties );
-
-      /* Create the shape root feature, we need it to create the children. */
-      final Feature shapeRootFeature = ShapeSerializer.createWorkspaceRootFeature( shapeFT, ShapeConst.SHAPE_TYPE_POINT );
-      final GMLWorkspace workspace = shapeRootFeature.getWorkspace();
-      final IRelationType shapeParentRelation = (IRelationType) shapeRootFeature.getFeatureType().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
-
-      /* Now create some features of this type */
-      final GM_Curve aCurve = (GM_Curve) JTSAdapter.wrap( shell );
-
-      final Object[] data = new Object[] { aCurve, getName(), Boolean.toString( valid ) };
-      final Feature feature = FeatureFactory.createFeature( shapeRootFeature, shapeParentRelation, "FeatureID" + 0, shapeFT, data ); //$NON-NLS-1$
-      workspace.addFeatureAsComposition( shapeRootFeature, shapeParentRelation, -1, feature );
-
+      final ShapeType shapeType = ShapeType.POLYLINE;
       final File shapeFile = new File( m_tempDir, m_parentName + "_" + getName() ); //$NON-NLS-1$
+      final String shapeBase = shapeFile.getAbsolutePath();
 
-      ShapeSerializer.serialize( workspace, shapeFile.getAbsolutePath(), (String) null );
-    }
-    catch( final GM_Exception e )
-    {
-      e.printStackTrace();
-    }
-    catch( final GmlSerializeException e )
-    {
-      e.printStackTrace();
+      try (final ShapeFile shape = ShapeFile.create( shapeBase, shapeType, Charset.defaultCharset(), fields ))
+      {
+        /* Now create some features of this type */
+        final ISHPGeometry geom = JTS2SHP.toPolyline( new Coordinate[][] { shell.getCoordinates() } );
+
+        final Object[] row = new Object[] { getName(), Boolean.toString( valid ) };
+        shape.addFeature( geom, row );
+      }
     }
     catch( final Exception e )
     {

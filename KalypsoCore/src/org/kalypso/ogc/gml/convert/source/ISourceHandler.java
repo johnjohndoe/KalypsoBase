@@ -1,5 +1,6 @@
 package org.kalypso.ogc.gml.convert.source;
 
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.ogc.gml.convert.GmlConvertException;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -8,5 +9,5 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public interface ISourceHandler
 {
-  GMLWorkspace getWorkspace( ) throws GmlConvertException;
+  GMLWorkspace getWorkspace( ) throws GmlConvertException, GMLSchemaException;
 }

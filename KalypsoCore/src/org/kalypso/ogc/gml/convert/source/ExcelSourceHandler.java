@@ -4,6 +4,7 @@ import java.net.URL;
 
 import org.kalypso.contribs.java.net.IUrlResolver;
 import org.kalypso.gml.util.Excelsource;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.ogc.gml.convert.GmlConvertException;
 import org.kalypso.ogc.gml.serialize.ExcelFeatureReader;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -27,7 +28,7 @@ public class ExcelSourceHandler implements ISourceHandler
   }
 
   @Override
-  public GMLWorkspace getWorkspace( ) throws GmlConvertException
+  public GMLWorkspace getWorkspace( ) throws GmlConvertException, GMLSchemaException
   {
     final ExcelFeatureReader reader = new ExcelFeatureReader( m_type, m_resolver, m_context );
     reader.read();

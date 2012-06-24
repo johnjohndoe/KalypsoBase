@@ -15,6 +15,7 @@ import org.kalypso.gml.util.ChangeFeaturesMappingType;
 import org.kalypso.gml.util.FeaturemappingSourceType;
 import org.kalypso.gml.util.MappingType;
 import org.kalypso.gml.util.SourceType;
+import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.ogc.gml.convert.GmlConvertException;
 import org.kalypso.ogc.gml.convert.GmlConvertFactory;
@@ -55,7 +56,7 @@ public class FeaturemappingSourceHandler implements ISourceHandler
    * @see org.kalypso.ogc.gml.convert.source.ISourceHandler#getWorkspace()
    */
   @Override
-  public GMLWorkspace getWorkspace( ) throws GmlConvertException
+  public GMLWorkspace getWorkspace( ) throws GmlConvertException, GMLSchemaException
   {
     final List<JAXBElement< ? extends SourceType>> sourceList = m_source.getSource();
 
