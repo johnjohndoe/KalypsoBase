@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
+ * interface-compatibility to deegree is wanted but not retained always.
  * 
- * If you intend to use this software in other ways than in kalypso 
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -72,7 +72,7 @@ public class RangeSet
   /**
    * @return Returns the rangeSetData.
    */
-  public Vector getRangeSetData( )
+  public Vector<Vector<Double>> getRangeSetData( )
   {
     return m_rangeSetData;
   }
@@ -113,12 +113,12 @@ public class RangeSet
     double min = Double.MAX_VALUE;
     for( int i = 0; i < m_rangeSetData.size(); i++ )
     {
-      final Vector rowData = m_rangeSetData.get( i );
+      final Vector<Double> rowData = m_rangeSetData.get( i );
       for( int j = 0; j < rowData.size(); j++ )
       {
         if( rowData.get( j ) != null )
         {
-          final double actualValue = ((Double) rowData.get( j )).doubleValue();
+          final double actualValue = rowData.get( j ).doubleValue();
           if( actualValue < min )
           {
             min = actualValue;
@@ -139,12 +139,12 @@ public class RangeSet
     double max = -Double.MAX_VALUE;
     for( int i = 0; i < m_rangeSetData.size(); i++ )
     {
-      final Vector rowData = m_rangeSetData.get( i );
+      final Vector<Double> rowData = m_rangeSetData.get( i );
       for( int j = 0; j < rowData.size(); j++ )
       {
         if( rowData.get( j ) != null )
         {
-          final double actualValue = ((Double) rowData.get( j )).doubleValue();
+          final double actualValue = rowData.get( j ).doubleValue();
           if( actualValue > max )
           {
             max = actualValue;
