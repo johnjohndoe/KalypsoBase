@@ -35,6 +35,7 @@
  */
 package org.kalypso.shape;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -62,13 +63,13 @@ import org.kalypso.shape.shx.SHXRecord;
  * @version 17.10.2001
  * @author Andreas Poth
  */
-public class ShapeFile
+public class ShapeFile implements Closeable
 {
-  public static final String EXTENSION_DBF = ".dbf";
+  public static final String EXTENSION_DBF = ".dbf"; //$NON-NLS-1$
 
-  public static final String EXTENSION_SHX = ".shx";
+  public static final String EXTENSION_SHX = ".shx"; //$NON-NLS-1$
 
-  public static final String EXTENSION_SHP = ".shp";
+  public static final String EXTENSION_SHP = ".shp"; //$NON-NLS-1$
 
   private final String m_filePath;
 
@@ -80,8 +81,6 @@ public class ShapeFile
    * aggregated Instance-variables
    */
   private final SHPFile m_shp;
-
-// private final RTree m_rti;
 
   /**
    * Create a new shape file and opens it for writing.<br>
@@ -108,22 +107,7 @@ public class ShapeFile
     m_shp = new SHPFile( new File( filePath + EXTENSION_SHP ), mode );
     m_shx = new SHXFile( new File( filePath + EXTENSION_SHX ), mode );
     m_dbf = new DBaseFile( new File( filePath + EXTENSION_DBF ), mode, charset );
-// m_rti = initRTreeFile( filePath + ".rti" );
   }
-
-// private static RTree initRTreeFile( final String filePath )
-// {
-// try
-// {
-// return new RTree( filePath );
-// }
-// catch( final RTreeException e )
-// {
-// // Ignore: in most cases, the file is not present
-// // e.printStackTrace();
-// return null;
-// }
-// }
 
   public void accept( final IShapeFileVisitor visitor ) throws DBaseException, IOException
   {
@@ -133,24 +117,12 @@ public class ShapeFile
     }
   }
 
+  @Override
   public void close( ) throws IOException
   {
     m_shp.close();
     m_shx.close();
     m_dbf.close();
-
-// if( m_rti != null )
-// {
-// try
-// {
-// m_rti.close();
-// }
-// catch( final RTreeException e )
-// {
-// final String msg = String.format( "Failed to close RTree" );
-// throw new IOException( msg, e );
-// }
-// }
   }
 
   /**
@@ -167,15 +139,7 @@ public class ShapeFile
    */
   public SHPEnvelope getFileMBR( )
   {
-    final SHPEnvelope mbr = m_shp.getMBR();
-
-// final double xmin = mbr.west;
-// final double xmax = mbr.east;
-// final double ymin = mbr.south;
-// final double ymax = mbr.north;
-//
-// return GeometryFactory.createGM_Envelope( xmin, ymin, xmax, ymax, null );
-    return mbr;
+    return m_shp.getMBR();
   }
 
   /**
@@ -203,6 +167,16 @@ public class ShapeFile
   public Object[] getRow( final int rowNo ) throws DBaseException, IOException
   {
     return m_dbf.getRecord( rowNo );
+  }
+
+  /**
+   * Reads a row of data of the shape file and writes it into the given container.
+   * 
+   * @return <code>false</code>, if the row is marked as deleted.
+   */
+  public boolean readRow( final int rowNo, final Object[] container ) throws DBaseException, IOException
+  {
+    return m_dbf.readRecord( rowNo, container );
   }
 
   public IDBFField[] getFields( )
@@ -234,5 +208,4 @@ public class ShapeFile
   {
     return m_filePath;
   }
-
 }

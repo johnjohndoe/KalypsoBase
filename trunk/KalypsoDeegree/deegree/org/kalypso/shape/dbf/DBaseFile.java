@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
+ * interface-compatibility to deegree is wanted but not retained always.
  * 
- * If you intend to use this software in other ways than in kalypso 
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -133,13 +133,31 @@ public class DBaseFile
    */
   public Object[] getRecord( final int recordIndex ) throws DBaseException, IOException
   {
+    final int columns = getFields().length;
+    final Object[] container = new Object[columns];
+
+    final boolean isNotDeleted = readRecord( recordIndex, container );
+    if( !isNotDeleted )
+      return null;
+
+    return container;
+  }
+
+  /**
+   * Reads a record of the dbase file into a given container. Returns <code>null</code>, if the record is marked as
+   * deleted.
+   * 
+   * @return <code>false</code>, if the record is marked for deletion. The data is not read in this case.
+   */
+  public boolean readRecord( final int recordIndex, final Object[] container ) throws DBaseException, IOException
+  {
     if( recordIndex < 0 || recordIndex >= m_numRecords )
       throw new DBaseException( "Invalid index: " + recordIndex );
 
     seekRecord( recordIndex );
 
     final DBFFields fields = m_header.getFields();
-    return fields.readRecord( m_raf, m_charset );
+    return fields.readRecord( m_raf, m_charset, container );
   }
 
   public Object getValue( final int recordIndex, final String field ) throws DBaseException, IOException

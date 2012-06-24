@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.shape.dbf;
 
@@ -117,15 +117,16 @@ class DBFFields
   /**
    * Reads a record from the data input.<br>
    * 
-   * @return <code>null</code>, if the record is marked as deleted.
+   * @return <code>false</code>, if the record is marked as deleted.
    */
-  public Object[] readRecord( final DataInput input, final Charset charset ) throws DBaseException, IOException
+  public boolean readRecord( final DataInput input, final Charset charset, final Object[] row ) throws DBaseException, IOException
   {
-    final Object[] row = new Object[m_fields.length];
+    if( row.length < m_fields.length )
+      throw new DBaseException( "Invalid data container size: " + row.length ); //$NON-NLS-1$
 
     final byte deletedFlag = input.readByte();
     if( deletedFlag == 0x2a )
-      return null;
+      return false;
 
     for( int i = 0; i < m_fields.length; i++ )
     {
@@ -133,7 +134,7 @@ class DBFFields
       row[i] = field.readValue( input, charset );
     }
 
-    return row;
+    return true;
   }
 
   public IDBFField[] getFields( )
