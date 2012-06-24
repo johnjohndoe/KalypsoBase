@@ -9,4 +9,5 @@
 
   <uri name="http://org.kalypso.updateObservationMapping" uri="updateObservationMapping/V1.0/updateObservationMapping.xsd" />
 
+  <uri name="org.kalypso.shape" uri="shape/shape.xsd" />
 </catalog>
