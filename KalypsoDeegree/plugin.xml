@@ -12,14 +12,8 @@
          name="UrlCatalog"
          point="org.kalypso.contribs.java.urlCatalog">
       <catalog
-              class="org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogOGC"
-              id="org.kalypso.deegree.catalog.URLCatalogOGC"/>     
-      <catalog
             class="org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog"
             id="org.kalypso.deegree.catalog.deegreeUrlCatalog"/>
-      <catalog
-            class="org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogUpdateObservationMapping"
-            id="org.kalypso.deegree.catalog.urlCatalogUpdateOpservatsionMapping"/>
    </extension>
      <extension
            point="org.kalypso.deegree.functionProperty">
@@ -218,5 +212,16 @@
            class="org.kalypsodeegree_impl.gml.binding.commons.StatusCollection"
            qname="{org.kalypso.gml.common}StatusCollection">
      </feature>
+   </extension>
+   <extension
+         point="org.kalypso.deegree.featureBinding">
+      <feature
+            class="org.kalypsodeegree_impl.gml.binding.shape.ShapeCollection"
+            qname="{org.kalypso.shape}ShapeCollection">
+      </feature>
+      <feature
+            class="org.kalypsodeegree_impl.gml.binding.shape.AbstractShape"
+            qname="{org.kalypso.shape}_Shape">
+      </feature>
    </extension>
 </plugin>
