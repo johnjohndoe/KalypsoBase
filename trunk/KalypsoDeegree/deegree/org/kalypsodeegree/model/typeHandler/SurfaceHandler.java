@@ -53,7 +53,6 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.io.sax.marshaller.PolygonMarshaller;
 import org.kalypsodeegree_impl.io.sax.parser.SurfaceContentHandler;
-import org.kalypsodeegree_impl.tools.GMLConstants;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
@@ -62,8 +61,6 @@ import org.xml.sax.XMLReader;
  */
 public class SurfaceHandler implements IMarshallingTypeHandler2
 {
-  private static final QName QNAME_TYPE = GMLConstants.QN_SURFACE;
-
   @Override
   public IGmlContentHandler createContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final UnmarshallResultEater resultEater )
   {
@@ -102,7 +99,7 @@ public class SurfaceHandler implements IMarshallingTypeHandler2
   @Override
   public QName getTypeName( )
   {
-    return QNAME_TYPE;
+    return GM_Surface.SURFACE_ELEMENT;
   }
 
   @Override

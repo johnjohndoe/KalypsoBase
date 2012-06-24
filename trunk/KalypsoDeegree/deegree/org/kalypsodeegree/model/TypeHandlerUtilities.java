@@ -42,6 +42,7 @@ import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.TypeRegistryException;
 import org.kalypsodeegree.model.typeHandler.BoundingShapeTypeHandler;
+import org.kalypsodeegree.model.typeHandler.CurveHandler;
 import org.kalypsodeegree.model.typeHandler.GeometryHandler;
 import org.kalypsodeegree.model.typeHandler.LineStringHandler;
 import org.kalypsodeegree.model.typeHandler.MultiCurveHandler;
@@ -232,6 +233,8 @@ public final class TypeHandlerUtilities
     registry.registerTypeHandler( new PointHandler() );
     registry.registerTypeHandler( new MultiPointHandler() );
 
+    registry.registerTypeHandler( new CurveHandler() );
+    registry.registerTypeHandler( new LineStringHandler() );
     registry.registerTypeHandler( new LineStringHandler() );
     registry.registerTypeHandler( new MultiLineStringHandler() );
     registry.registerTypeHandler( new MultiCurveHandler() );

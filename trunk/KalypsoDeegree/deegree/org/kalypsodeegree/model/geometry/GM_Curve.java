@@ -52,7 +52,7 @@ import org.kalypso.commons.xml.NS;
  */
 public interface GM_Curve extends GM_OrientableCurve, GM_GenericCurve
 {
-  QName CURVE_ELEMENT = new QName( NS.GML3, "_Curve" );
+  QName CURVE_ELEMENT = new QName( NS.GML3, "_Curve" ); //$NON-NLS-1$
 
   /**
    * returns the number of segments building the curve
@@ -84,5 +84,4 @@ public interface GM_Curve extends GM_OrientableCurve, GM_GenericCurve
    * deletes the segment at the submitted index
    */
   void deleteCurveSegmentAt( int index ) throws GM_Exception;
-
 }

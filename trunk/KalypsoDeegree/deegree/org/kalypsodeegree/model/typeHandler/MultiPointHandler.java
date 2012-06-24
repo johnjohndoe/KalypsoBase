@@ -51,7 +51,6 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree_impl.io.sax.marshaller.MultiPointMarshaller;
 import org.kalypsodeegree_impl.io.sax.parser.MultiPointContentHandler;
-import org.kalypsodeegree_impl.tools.GMLConstants;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
@@ -60,8 +59,6 @@ import org.xml.sax.XMLReader;
  */
 public class MultiPointHandler implements IMarshallingTypeHandler2
 {
-  private static final QName QNAME_TYPE = GMLConstants.QN_MULTI_POINT;
-
   @Override
   public IGmlContentHandler createContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final UnmarshallResultEater resultEater )
   {
@@ -95,7 +92,7 @@ public class MultiPointHandler implements IMarshallingTypeHandler2
   @Override
   public QName getTypeName( )
   {
-    return QNAME_TYPE;
+    return GM_MultiPoint.MULTI_POINT_ELEMENT;
   }
 
   @Override

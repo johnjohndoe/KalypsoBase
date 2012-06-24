@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
+ * interface-compatibility to deegree is wanted but not retained always.
  * 
- * If you intend to use this software in other ways than in kalypso 
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -35,6 +35,10 @@
  */
 
 package org.kalypsodeegree.model.geometry;
+
+import javax.xml.namespace.QName;
+
+import org.kalypso.commons.xml.NS;
 
 /**
  * The interface defines the access to a aggregations of <tt>GM_Point</tt> objects.
@@ -48,6 +52,8 @@ package org.kalypsodeegree.model.geometry;
  */
 public interface GM_MultiPoint extends GM_MultiPrimitive
 {
+  QName MULTI_POINT_ELEMENT = new QName( NS.GML3, "MultiPoint" ); //$NON-NLS-1$
+
   /**
    * @link aggregation
    * @clientCardinality 0..*
