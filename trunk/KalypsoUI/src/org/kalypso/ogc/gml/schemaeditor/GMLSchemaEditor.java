@@ -27,7 +27,6 @@ import org.eclipse.ui.IURIEditorInput;
 import org.eclipse.ui.part.EditorPart;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.gmlschema.GMLSchema;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaFactory;
@@ -202,7 +201,7 @@ public class GMLSchemaEditor extends EditorPart
       {
         // this does not load the schema from the cache but puts it at least into the cache
         final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-        final GMLSchema schema = schemaCatalog.getSchema( null, context );
+        final IGMLSchema schema = schemaCatalog.getSchema( null, context );
         if( schema == null )
           throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.gml.schemaeditor.GMLSchemaEditor.4" ) + context.toExternalForm(), null ) ); //$NON-NLS-1$
         return schema;

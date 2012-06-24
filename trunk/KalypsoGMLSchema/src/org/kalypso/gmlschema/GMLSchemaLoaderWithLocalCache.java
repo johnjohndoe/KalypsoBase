@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gmlschema;
 
@@ -136,7 +136,7 @@ public class GMLSchemaLoaderWithLocalCache
     return loadSchemaFromCatalog( namespace, m_version, null );
   }
 
-  private GMLSchema loadSchemaFromCatalog( final String gmlVersion, final URL schemaLocation )
+  private IGMLSchema loadSchemaFromCatalog( final String gmlVersion, final URL schemaLocation )
   {
     final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
     return schemaCatalog.getSchema( gmlVersion, schemaLocation );
@@ -158,7 +158,7 @@ public class GMLSchemaLoaderWithLocalCache
   {
     // the main schema is the schema defining the root elements namespace
     // REMARK: schemaLocationHint only used for main schema
-    final GMLSchema gmlSchema = loadSchema( uri, null, schemaLocationString, locationHint, context );
+    final IGMLSchema gmlSchema = loadSchema( uri, null, schemaLocationString, locationHint, context );
     m_version = gmlSchema == null ? null : gmlSchema.getGMLVersion();
     if( gmlSchema != null )
     {
@@ -184,10 +184,10 @@ public class GMLSchemaLoaderWithLocalCache
         if( !xmlnsUri.equals( uri ) && !xmlnsUri.equals( NS.XSD ) )
         {
           // make sure that all dependent schemas are loaded
-          final GMLSchema additionalSchema = loadSchema( xmlnsUri, m_version, schemaLocationString, locationHint, context );
+          final GMLSchema additionalSchema = (GMLSchema) loadSchema( xmlnsUri, m_version, schemaLocationString, locationHint, context );
           if( gmlSchema != null )
           {
-            gmlSchema.addAdditionalSchema( additionalSchema );
+            ((GMLSchema) gmlSchema).addAdditionalSchema( additionalSchema );
             m_localSchemaCache.put( xmlnsUri, additionalSchema );
           }
         }
@@ -197,11 +197,11 @@ public class GMLSchemaLoaderWithLocalCache
     return gmlSchema;
   }
 
-  private GMLSchema loadSchema( final String uri, final String gmlVersion, final String schemaLocationString, final URL schemaLocationHint, final URL context ) throws SAXException
+  private IGMLSchema loadSchema( final String uri, final String gmlVersion, final String schemaLocationString, final URL schemaLocationHint, final URL context ) throws SAXException
   {
     final MultiException schemaNotFoundExceptions = new MultiException();
 
-    GMLSchema schema = null;
+    IGMLSchema schema = null;
     try
     {
       // 1. try : use hint
