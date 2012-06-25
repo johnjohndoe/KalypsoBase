@@ -88,6 +88,9 @@ public class JSISpatialIndex implements SpatialIndexExt
 
   static Rectangle toRectangle( final Envelope itemEnv )
   {
+    if( itemEnv == null )
+      return null;
+
     final float x1 = (float) itemEnv.getMinX();
     final float y1 = (float) itemEnv.getMinY();
     final float x2 = (float) itemEnv.getMaxX();
