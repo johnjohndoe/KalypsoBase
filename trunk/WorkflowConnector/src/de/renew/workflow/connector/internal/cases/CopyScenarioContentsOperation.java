@@ -97,14 +97,11 @@ final class CopyScenarioContentsOperation implements ICoreRunnableWithProgress
   protected boolean doVisitResource( final IResource resource, final SubMonitor submonitor ) throws CoreException
   {
     if( m_sourceFolder.equals( resource ) )
-    {
       return true;
-    }
-    else if( m_ignoreFolders.contains( resource ) )
-    {
-      // ignore scenario folder
+
+    // ignore scenario folder
+    if( m_ignoreFolders.contains( resource ) )
       return false;
-    }
 
     if( m_filter.copy( resource ) )
     {

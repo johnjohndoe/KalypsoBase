@@ -121,7 +121,8 @@ public class ScenarioWizardPage extends WizardPage
     checkbox.setText( "Copy Sub-Scenarios" );
     checkbox.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
 
-    checkbox.setEnabled( m_data.isCopySubScenariosEnabled() );
+    // FIXME Copied derived scenarios are not written into the cases.xml...
+    checkbox.setEnabled( false );
 
     final ISWTObservableValue target = SWTObservables.observeSelection( checkbox );
     final IObservableValue model = BeansObservables.observeValue( m_data, ScenarioData.PROPERTY_COPY_SUB_SCENARIOS );

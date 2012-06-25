@@ -475,8 +475,12 @@ public class ScenarioManager implements IScenarioManager
   {
     FolderUtilities.mkdirs( targetFolder );
 
+    /* This are the folders, to be ignored. */
+    /* The target folder should always be ignored. */
     final List<IFolder> scenarioFolders = new ArrayList<IFolder>();
+    scenarioFolders.add( targetFolder );
 
+    /* If no sub scenarios should be copied, ignore these as well. */
     if( !copySubScenarios )
     {
       final List<IScenario> templateDerivedScenarios = templateScenario.getDerivedScenarios().getScenarios();
