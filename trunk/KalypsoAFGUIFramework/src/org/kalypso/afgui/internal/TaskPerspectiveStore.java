@@ -328,7 +328,8 @@ class TaskPerspectiveStore
     try
     {
       final Perspective perspective = getCurrentPerspective();
-      applyPerspectiveConfiguration( perspective, configuration );
+      if( perspective != null )
+        applyPerspectiveConfiguration( perspective, configuration );
       return true;
     }
     catch( final IOException e )
