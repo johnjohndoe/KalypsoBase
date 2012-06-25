@@ -67,7 +67,7 @@ import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogUpdateObservationMapping;
+import org.kalypsodeegree_impl.gml.schema.schemata.DeegreeUrlCatalog;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
@@ -204,7 +204,7 @@ public class KrigingTask extends Task
     try
     {
       final Logger logger = Logger.getAnonymousLogger();
-      logger.info( "load mapping schema NS=" + UrlCatalogUpdateObservationMapping.NS );
+      logger.info( "load mapping schema NS=" + DeegreeUrlCatalog.NS_UPDATE_OBSERVATION_MAPPING );
 
       final GMLWorkspace resultWorkspace = CopyObservationMappingHelper.createMappingWorkspace( m_context );
       logger.info( "check coordinatessystem" );
