@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: com.vividsolutions.jts
 Bundle-SymbolicName: com.vividsolutions.jts
-Bundle-Version: 1.12
+Bundle-Version: 1.12.0
 Bundle-Vendor: http://sourceforge.net/projects/jts-topo-suite/
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: lib/jts-1.12.jar,
