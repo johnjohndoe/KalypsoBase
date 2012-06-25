@@ -49,6 +49,7 @@ import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 
 import de.renew.workflow.connector.cases.IScenario;
+import de.renew.workflow.connector.cases.IScenarioList;
 
 /**
  * A handler which copies a scenario.
@@ -87,9 +88,16 @@ public class RenameScenarioHandler extends AbstractHandler
       return null;
     }
 
-    if( currentCase != null && ScenarioHelper.isSubScenario( currentCase, scenario ) )
+    if( currentCase != null && ScenarioHelper.isSubScenario( scenario, currentCase ) )
     {
-      final String message = "Cannot renamem scenario while a sub.scenario is active. Please activate another scenario before renaming.";
+      final String message = "Cannot rename scenario while a sub-scenario is active. Please activate another scenario before renaming.";
+      return showInformation( shell, commandName, message );
+    }
+
+    final IScenarioList derivedScenarios = scenario.getDerivedScenarios();
+    if( derivedScenarios != null && derivedScenarios.getScenarios().size() > 0 )
+    {
+      final String message = "Cannot rename scenario with sub-scenarios.";
       return showInformation( shell, commandName, message );
     }
 
