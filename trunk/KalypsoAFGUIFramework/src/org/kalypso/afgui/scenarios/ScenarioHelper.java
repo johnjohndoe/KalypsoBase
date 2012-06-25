@@ -58,11 +58,16 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.internal.i18n.Messages;
+import org.kalypso.afgui.perspective.Perspective;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
 import org.kalypso.contribs.eclipse.EclipsePlatformContributionsExtensions;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
@@ -208,9 +213,26 @@ public class ScenarioHelper
     if( !executor.stopActiveTask() )
       return;
 
+    /* Make sure the workflow perspective is visible */
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+    if( scenario != null && !workbench.isClosing() )
+    {
+      try
+      {
+        final IWorkbenchWindow activeWindow = workbench.getActiveWorkbenchWindow();
+        workbench.showPerspective( Perspective.ID, activeWindow );
+      }
+      catch( final WorkbenchException e )
+      {
+        final IStatus status = new Status( IStatus.ERROR, KalypsoAFGUIFrameworkPlugin.PLUGIN_ID, "Failed to axtivate workflow perspective", e );
+        KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
+      }
+    }
+
+    /* load and activate scenario */
     final ICoreRunnableWithProgress operation = new ScenarioActivationOperation( scenario );
 
-    final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
+    final IProgressService progressService = workbench.getProgressService();
     final IStatus status = RunnableContextHelper.execute( progressService, true, false, operation );
     if( !status.isOK() )
       StatusDialog.open( shell, status, Messages.getString( "org.kalypso.afgui.handlers.ActivateScenarioHandler.0" ) ); //$NON-NLS-1$
