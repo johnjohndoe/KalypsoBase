@@ -49,6 +49,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
+import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -202,18 +203,7 @@ public class ScenarioHelper
    */
   public static void activateScenario2( final Shell shell, final IScenario scenario )
   {
-    final ActiveWorkContext context = KalypsoAFGUIFrameworkPlugin.getActiveWorkContext();
-
-    final IScenario currentCase = context.getCurrentCase();
-    if( currentCase == scenario )
-      return;
-
-    // TODO: maybe move this outside to make this more reusable
-    final ITaskExecutor executor = KalypsoAFGUIFrameworkPlugin.getTaskExecutor();
-    if( !executor.stopActiveTask() )
-      return;
-
-    /* Make sure the workflow perspective is visible */
+    /* Always make sure the workflow perspective is visible, even if the scenario does not change */
     final IWorkbench workbench = PlatformUI.getWorkbench();
     if( scenario != null && !workbench.isClosing() )
     {
@@ -228,6 +218,17 @@ public class ScenarioHelper
         KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
       }
     }
+
+    final ActiveWorkContext context = KalypsoAFGUIFrameworkPlugin.getActiveWorkContext();
+
+    final IScenario currentCase = context.getCurrentCase();
+    if( ObjectUtils.equals( currentCase, scenario ) )
+      return;
+
+    // TODO: maybe move this outside to make this more reusable
+    final ITaskExecutor executor = KalypsoAFGUIFrameworkPlugin.getTaskExecutor();
+    if( !executor.stopActiveTask() )
+      return;
 
     /* load and activate scenario */
     final ICoreRunnableWithProgress operation = new ScenarioActivationOperation( scenario );
