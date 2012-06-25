@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: net.sourceforge.nattable
 Bundle-SymbolicName: net.sourceforge.nattable;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 2.3.2
 Bundle-Activator: net.sourceforge.nattable.rcp.NatTableActivator
 Require-Bundle: org.eclipse.core.runtime;visibility:=reexport,
  org.eclipse.swt;visibility:=reexport,
