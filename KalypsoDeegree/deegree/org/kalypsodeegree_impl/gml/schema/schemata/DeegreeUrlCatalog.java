@@ -69,7 +69,7 @@ public class DeegreeUrlCatalog extends AbstractUrlCatalog
 
   public static final String NAMESPACE_ZML_OBSLINK = "obslink.zml.kalypso.org"; //$NON-NLS-1$
 
-  private static final String NAMESPACE_ZML_INLINE = "inline.zml.kalypso.org"; //$NON-NLS-1$
+  public static final String NAMESPACE_ZML_INLINE = "inline.zml.kalypso.org"; //$NON-NLS-1$
 
   @Override
   protected void fillCatalog( final Class< ? > myClass, final Map<String, URL> catalog, final Map<String, String> prefixes )
