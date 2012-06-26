@@ -43,6 +43,7 @@ package org.kalypso.afgui.wizards;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Locale;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -81,7 +82,7 @@ public class ProjectConversionWizard extends NewProjectWizard
   // FIXME the module should know the project template
   public ProjectConversionWizard( final String moduleID, final String projectTemplate )
   {
-    super( new ProjectTemplatePage( "Projektvorlage", "Bitte wählen Sie, welche Projektvorlage verwendet werden soll", projectTemplate ), true, moduleID );
+    super( new ProjectTemplatePage( "Projektvorlage", "Bitte wählen Sie, welche Projektvorlage verwendet werden soll", projectTemplate ), false, moduleID );
 
     m_moduleID = moduleID;
 
@@ -91,6 +92,14 @@ public class ProjectConversionWizard extends NewProjectWizard
     setHelpAvailable( false );
     setNeedsProgressMonitor( true );
     setWindowTitle( "Projekt konvertieren" ); //$NON-NLS-1$
+
+    final ProjectTemplatePage templatePage = getTemplatePage();
+
+    /**
+     * Automatically choose language by current settings. It is not so important any more.
+     */
+    final String language = Locale.getDefault().getLanguage();
+    templatePage.selectTemplate( language );
   }
 
   @Override
