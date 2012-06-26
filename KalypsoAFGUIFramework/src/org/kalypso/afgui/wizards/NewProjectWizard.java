@@ -119,9 +119,6 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
     m_activateScenario = activate;
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#setContainer(org.eclipse.jface.wizard.IWizardContainer)
-   */
   @Override
   public void setContainer( final IWizardContainer wizardContainer )
   {
@@ -135,9 +132,6 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
       ((WizardDialog) wizardContainer).addPageChangingListener( m_pageChangeingListener );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -148,9 +142,6 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
     super.dispose();
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#createPageControls(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public void createPageControls( final Composite pageContainer )
   {
@@ -192,9 +183,6 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
     return nextPage;
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#getPreviousPage(org.eclipse.jface.wizard.IWizardPage)
-   */
   @Override
   public IWizardPage getPreviousPage( final IWizardPage page )
   {
@@ -290,5 +278,10 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
   public boolean disableProjectCreationUI( )
   {
     return false;
+  }
+
+  protected ProjectTemplatePage getTemplatePage( )
+  {
+    return m_templateProjectPage;
   }
 }
