@@ -53,6 +53,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gml.ui.i18n.Messages;
+import org.kalypso.gml.ui.internal.feature.marker.IDuplicateFeatureMarker;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
@@ -104,9 +105,12 @@ public class DuplicateFeatureHandler extends AbstractHandler
       final IFeatureSelectionManager selectionManager = featureSelection.getSelectionManager();
       final Feature newFeature = FeatureHelper.cloneFeature( parent, rt, feature );
       final int pos = list.indexOf( feature ) + 1;
-      final AddFeatureCommand command = new AddFeatureCommand( workspace, parent, rt, pos, newFeature, selectionManager, true, false );
 
+      final AddFeatureCommand command = new AddFeatureCommand( workspace, parent, rt, pos, newFeature, selectionManager, true, false );
       workspace.postCommand( command );
+
+      if( newFeature instanceof IDuplicateFeatureMarker )
+        ((IDuplicateFeatureMarker) newFeature).postDuplicated( workspace );
     }
     catch( final Exception e )
     {
