@@ -18,7 +18,6 @@ import java.util.Set;
 import org.apache.commons.httpclient.URIException;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -476,7 +475,7 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
    * Returns the current scenario's base folder
    */
   @Override
-  public IContainer getScenarioFolder( )
+  public IFolder getScenarioFolder( )
   {
     if( m_scenario != null )
       return m_scenario.getFolder();
