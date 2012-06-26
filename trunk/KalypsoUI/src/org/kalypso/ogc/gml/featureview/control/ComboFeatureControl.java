@@ -44,6 +44,7 @@ package org.kalypso.ogc.gml.featureview.control;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -112,6 +113,8 @@ public class ComboFeatureControl extends AbstractFeatureControl
 
     if( entries != null )
       m_fixedEntries.putAll( entries );
+
+//    Assert.isNotNull( ftp );
 
     m_comparator = comparator;
     m_filter = filter;
