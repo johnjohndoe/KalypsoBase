@@ -114,9 +114,6 @@ public class ProjectTemplatePage extends WizardPage
     }
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public void createControl( final Composite parent )
   {
@@ -130,18 +127,12 @@ public class ProjectTemplatePage extends WizardPage
     tableViewer.setContentProvider( new ArrayContentProvider() );
     tableViewer.setLabelProvider( new LabelProvider()
     {
-      /**
-       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
-       */
       @Override
       public String getText( final Object element )
       {
         return ((ProjectTemplate) element).getLabel();
       }
 
-      /**
-       * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
-       */
       @Override
       public Image getImage( final Object element )
       {
@@ -210,4 +201,18 @@ public class ProjectTemplatePage extends WizardPage
     return m_selectedProject;
   }
 
+  public void selectTemplate( final String templateId )
+  {
+    for( final ProjectTemplate template : m_projectTemplates )
+    {
+      final String id = template.getId();
+      if( templateId.equals( id ) )
+      {
+        setSelectedProject( template );
+        return;
+      }
+    }
+
+    System.out.format( "No template for id '%s'%n", templateId ); //$NON-NLS-1$
+  }
 }
