@@ -1,5 +1,3 @@
-package org.kalypso.zml.core.table.rules.impl;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -40,6 +38,8 @@ package org.kalypso.zml.core.table.rules.impl;
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
+
+package org.kalypso.zml.core.table.rules.impl;
 
 import java.util.ArrayList;
 import java.util.List;
