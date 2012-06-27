@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.kalypso.chart.ui.editor.ChartEditor"
+            default="true"
+            extensions="kod"
+            icon="icons/obj16/kalypso_odt.gif"
+            id="org.kalypso.chart.ui.editor.ChartEditor"
+            name="Chart Editor"/>
+   </extension>
+   <extension point="org.eclipse.ui.views">
+      <view
+            allowMultiple="false"
+            category="org.kalypso.ui.kalypso"
+            class="org.kalypso.chart.ui.view.ChartView"
+            restorable="false"
+            icon="icons/obj16/kalypso_odt.gif"
+            id="org.kalypso.chart.ui.view.ChartView"
+            name="Chart View">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="org.kalypso.chart.ui.commands.category"
+            name="ChartUI commands">
+      </category>
+      <command
+            categoryId="org.kalypso.chart.ui.commands.category"
+            id="org.kalypso.chart.ui.commands.zoomIn"
+            name="%org.kalypso.chart.ui.commands.zoomIn.name">
+      </command>
+      <command
+            categoryId="org.kalypso.chart.ui.commands.category"
+            id="org.kalypso.chart.ui.commands.zoom_pan_maximize"
+            name="%org.kalypso.chart.ui.commands.zoom_pan_maximize.name">
+         <commandParameter
+               id="direction"
+               name="direction"
+               optional="true">
+         </commandParameter>
+      </command>
+      <command categoryId="org.kalypso.chart.ui.commands.category" id="org.kalypso.chart.ui.commands.pan" name="%org.kalypso.chart.ui.commands.pan.name"/>
+      <command
+            categoryId="org.kalypso.chart.ui.commands.category"
+            id="org.kalypso.chart.ui.commands.maximize"
+            name="%org.kalypso.chart.ui.commands.maximize.name">
+      </command>
+      <command
+            categoryId="org.kalypso.chart.ui.commands.category"
+            id="org.kalypso.chart.ui.commands.maximizeView"
+            name="%org.kalypso.chart.ui.commands.maximize.name">
+      </command>
+      <command
+            categoryId="org.kalypso.chart.ui.commands.category"
+            id="org.kalypso.chart.ui.commands.edit"
+            name="%org.kalypso.chart.ui.commands.edit.name">
+      </command>
+      <command
+            categoryId="org.kalypso.chart.ui.commands.category"
+            id="org.kalypso.chart.ui.commands.openOutline"
+            name="%org.kalypso.chart.ui.commands.openOutline.name">
+      </command>
+      <command
+             categoryId="org.kalypso.chart.ui.commands.category"
+             description="%org.kalypso.chart.ui.commands.ExportClipboardCommand.description"
+             id="org.kalypso.chart.ui.commands.ExportClipboardCommand"
+             name="%org.kalypso.chart.ui.commands.ExportClipboardCommand.name">
+      </command>
+      <command
+            categoryId="org.kalypso.chart.ui.commands.category"
+            description="%org.kalypso.chart.ui.commands.export.description"
+            id="org.kalypso.chart.ui.commands.export"
+            name="%org.kalypso.chart.ui.commands.export.name">
+      </command>
+      <command
+            categoryId="org.kalypso.chart.ui.commands.category"
+            id="org.kalypso.chart.ui.commands.change.visibility"
+            name="Change Visibility">
+         <commandParameter
+               id="layer.parameter"
+               name="Layer defines parameter &apos;x&apos;"
+               optional="false">
+         </commandParameter>
+         <commandParameter
+               id="layer.filter"
+               name="apply filter referenced filters (seperator &apos;;&apos;)"
+               optional="true">
+         </commandParameter>
+      </command>
+      <command
+            categoryId="org.kalypso.chart.ui.commands.category"
+            description="Updates IAxis Selection"
+            id="org.kalypso.chart.ui.command.axis.selection"
+            name="Set Selection">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commandImages">
+      <image
+            commandId="org.kalypso.chart.ui.commands.zoomIn"
+            icon="icons/elcl16/chart_zoom_in.gif">
+      </image>
+      <image commandId="org.kalypso.chart.ui.commands.pan" icon="icons/elcl16/chart_pan.gif"/>
+      <image
+            commandId="org.kalypso.chart.ui.commands.maximize"
+            icon="icons/elcl16/chart_maximize.gif">
+      </image>
+      <image
+            commandId="org.kalypso.chart.ui.commands.zoom_pan_maximize"
+            icon="icons/elcl16/chart_zoom_pan_maximize.gif">
+      </image>
+      <image
+            commandId="org.kalypso.chart.ui.commands.edit"
+            icon="icons/elcl16/chart_edit.gif">
+      </image>
+      <image
+            commandId="org.kalypso.chart.ui.commands.openOutline"
+            icon="icons/elcl16/show_outline.gif">
+      </image>
+      <image
+            commandId="org.kalypso.chart.ui.commands.ExportClipboardCommand"
+            icon="icons/elcl16/exportClipboard.gif">
+      </image>
+      <image
+            commandId="org.kalypso.chart.ui.commands.export"
+            icon="icons/elcl16/chart_export_img.gif">
+      </image>
+      <image
+            commandId="org.kalypso.chart.ui.command.axis.selection"
+            icon="icons/commands/select.png">
+      </image>
+      <image
+            commandId="org.kalypso.chart.ui.commands.maximizeView"
+            icon="icons/commands/chart_maximize.gif">
+      </image>
+   </extension>
+   <extension point="org.eclipse.ui.handlers">
+      <handler class="org.kalypso.chart.ui.editor.commandhandler.ZoomInHandler"
+            commandId="org.kalypso.chart.ui.commands.zoomIn">
+      </handler>
+      <handler class="org.kalypso.chart.ui.editor.commandhandler.PanHandler" commandId="org.kalypso.chart.ui.commands.pan"/>
+      <!-- FIXME: why two maximize handlers?? -->
+      <handler
+            class="org.kalypso.chart.ui.editor.commandhandler.MaximizeHandler"
+            commandId="org.kalypso.chart.ui.commands.maximize">
+      </handler>
+      <handler
+            class="org.kalypso.chart.ui.editor.commandhandler.MaximizeViewHandler"
+            commandId="org.kalypso.chart.ui.commands.maximizeView">
+      </handler>
+      <handler
+            class="org.kalypso.chart.ui.editor.commandhandler.EditHandler"
+            commandId="org.kalypso.chart.ui.commands.edit">
+      </handler>
+      <handler
+            class="org.kalypso.chart.ui.editor.commandhandler.OpenOutlineHandler"
+            commandId="org.kalypso.chart.ui.commands.openOutline">
+      </handler>
+      <handler
+            class="org.kalypso.chart.ui.editor.commandhandler.ExportClipboardHandler"
+            commandId="org.kalypso.chart.ui.commands.ExportClipboardCommand">
+      </handler>
+      <handler
+            class="org.kalypso.chart.ui.editor.commandhandler.ExportHandler"
+            commandId="org.kalypso.chart.ui.commands.export">
+      </handler>
+      <handler
+            class="org.kalypso.chart.ui.editor.commandhandler.ZoomPanMaximizeCommandHandler"
+            commandId="org.kalypso.chart.ui.commands.zoom_pan_maximize">
+      </handler>
+      <handler
+            class="org.kalypso.chart.ui.editor.commandhandler.ChangeVisibilityCommandHandler"
+            commandId="org.kalypso.chart.ui.commands.change.visibility">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar id="org.kalypso.chart.ui.editor.toolbar">
+         <command
+               commandId="org.kalypso.chart.ui.commands.zoom_pan_maximize"
+               label="%org.kalypso.chart.ui.commands.zoom_pan_maximize.name"
+               style="radio">
+               <visibleWhen
+               checkEnabled="true">
+            <reference
+                  definitionId="org.kalypso.chart.ui.chartEditorActive">
+            </reference>
+         </visibleWhen>
+         </command>
+           <command commandId="org.kalypso.chart.ui.commands.pan" id="panId" style="radio">
+                <visibleWhen checkEnabled="false">
+                    <!-- FIXME: this check is pretty nonsense... the handler should check for the chart and thats it 
+                    same for all other handlers
+                    -->
+                      <reference definitionId="org.kalypso.chart.ui.chartEditorActive"/>
+                </visibleWhen>
+            </command>
+         
+         <separator name="radioEnd" visible="true"/>
+         
+         <command
+               commandId="org.kalypso.chart.ui.commands.maximize"
+               label="%org.kalypso.chart.ui.commands.maximize.name"
+               style="push">
+               <visibleWhen
+               checkEnabled="true">
+            <reference
+                  definitionId="org.kalypso.chart.ui.chartEditorActive">
+            </reference>
+         </visibleWhen>
+         </command>
+         <command
+               commandId="org.kalypso.chart.ui.commands.export"
+               label="%org.kalypso.chart.ui.commands.export.name"
+               style="push">
+               <visibleWhen
+               checkEnabled="true">
+            <reference
+                  definitionId="org.kalypso.chart.ui.chartEditorActive">
+            </reference>
+         </visibleWhen>
+         </command>
+         <separator
+               name="additions">
+         </separator>
+         <visibleWhen
+               checkEnabled="true">
+            <reference
+                  definitionId="org.kalypso.chart.ui.chartEditorActive">
+            </reference>
+         </visibleWhen>
+         </toolbar>
+      </menuContribution>
+      <menuContribution locationURI="toolbar:org.kalypso.chart.ui.view.ChartView">
+         <command commandId="org.kalypso.chart.ui.commands.zoom_pan_maximize" style="radio"/>
+         <command commandId="org.kalypso.chart.ui.commands.pan" id="panId" style="radio"/>
+         
+         <separator name="radioEnd" visible="true"/>
+         
+         <command commandId="org.kalypso.chart.ui.commands.maximize" style="push"/>
+         <command commandId="org.kalypso.chart.ui.commands.export" style="push"/>
+         <command commandId="org.kalypso.chart.ui.commands.openOutline" style="push"/>
+      </menuContribution>
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+         <menu id="org.kalypso.chart.ui.editor.menu" label="Chart">
+            <visibleWhen checkEnabled="true">
+               <reference definitionId="org.kalypso.chart.ui.chartEditorActive"/>
+            </visibleWhen>
+            
+             <command commandId="org.kalypso.chart.ui.commands.zoom_pan_maximize" style="radio"/>
+             <command commandId="org.kalypso.chart.ui.commands.pan" style="radio"/>
+             
+             <separator name="radioEnd" visible="true"/>
+             
+             <command commandId="org.kalypso.chart.ui.commands.maximize" style="push"/>
+             <command commandId="org.kalypso.chart.ui.commands.export" style="push"/>
+    
+             <separator name="additions"/>
+         </menu>
+      </menuContribution>
+      
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.definitions">
+      <definition
+            id="org.kalypso.chart.ui.chartEditorActive">
+         <with variable="activeEditorId">
+               <equals value="org.kalypso.chart.ui.editor.ChartEditor"/>
+         </with>
+      </definition>
+   </extension>
+   
+   	<extension point="org.eclipse.ui.contexts">
+		<context id="de.openali.odysseus.chart.ui.context" name="Chart" parentId="org.eclipse.ui.contexts.window" />
+	</extension>
+    <extension
+          point="org.eclipse.core.contenttype.contentTypes">
+       <file-association
+             content-type="org.eclipse.core.runtime.xml"
+             file-extensions="kod">
+       </file-association>
+    </extension>
+</plugin>
