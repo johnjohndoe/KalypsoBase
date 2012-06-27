@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="http://www.opengis.net/sldExt"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:ogc="http://www.opengis.net/ogc"
+	xmlns:sld="http://www.opengis.net/sld"
+	xmlns="http://www.opengis.net/sldExt" elementFormDefault="qualified">
+	<xsd:import namespace="http://www.opengis.net/sld" />
+	<!-- *********************************************************************** -->
+	<xsd:annotation>
+		<xsd:documentation>
+			Kalypso-Extensions for STYLED LAYER DESCRIPTOR version 1.0.0
+			(2002-09-21)
+		</xsd:documentation>
+	</xsd:annotation>
+
+	<xsd:element name="SurfaceLineSymbolizer"
+		substitutionGroup="sld:Symbolizer">
+		<xsd:annotation>
+			<xsd:documentation>
+				A SurfaceLineSymbolizer is used to render a "stroke"
+				along isolines of a triangulated surface geometry.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="sld:SymbolizerType">
+					<xsd:sequence>
+						<xsd:element ref="sld:Geometry" minOccurs="0" />
+						<xsd:element ref="LineColorMap" />
+					</xsd:sequence>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="SurfacePolygonSymbolizer"
+		substitutionGroup="sld:Symbolizer">
+		<xsd:annotation>
+			<xsd:documentation>
+				A SurfacePolygonSymbolizer is used to render the
+				"isoareas" of a triangulated surface geometry with the
+				specified fill.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="sld:SymbolizerType">
+					<xsd:sequence>
+						<xsd:element ref="sld:Geometry" minOccurs="0" />
+						<xsd:element ref="PolygonColorMap" />
+					</xsd:sequence>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="LineColorMap">
+		<xsd:annotation>
+			<xsd:documentation>
+				A "LineColorMap" defines the colors of isolines.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:choice minOccurs="0" maxOccurs="unbounded">
+				<xsd:element ref="LineColorMapEntry" />
+			</xsd:choice>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="LineColorMapEntry">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="label" type="sld:ParameterValueType" />
+				<xsd:element name="quantity" type="sld:ParameterValueType"/>
+				<xsd:element ref="sld:Stroke" minOccurs="0"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="PolygonColorMap">
+		<xsd:annotation>
+			<xsd:documentation>
+				A "PolygonColorMap" defines the fill colors and intervall of "isoareas".
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:choice minOccurs="0" maxOccurs="unbounded">
+				<xsd:element ref="PolygonColorMapEntry" />
+			</xsd:choice>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="PolygonColorMapEntry">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="label" type="sld:ParameterValueType"/>
+				<xsd:element name="from" type="sld:ParameterValueType"/>
+				<xsd:element name="to" type="sld:ParameterValueType"/>
+				<xsd:element ref="sld:Stroke" minOccurs="0"/>
+				<xsd:element ref="sld:Fill" minOccurs="0"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+</xsd:schema>
