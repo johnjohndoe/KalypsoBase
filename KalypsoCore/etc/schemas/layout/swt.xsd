@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.sourceforge.net/projects/kalypsobase/swt" xmlns:swt="http://www.sourceforge.net/projects/kalypsobase/swt" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="http://www.w3.org/2001/XMLSchema">
+
+  <element name="_Data" type="swt:AbstractDataType" abstract="true" />
+  <complexType name="AbstractDataType" abstract="true" />
+
+  <element name="GridData" substitutionGroup="swt:_Data">
+    <complexType>
+      <complexContent>
+        <extension base="swt:AbstractDataType">
+          <attribute name="grabExcessHorizontalSpace" type="boolean" default="false" />
+          <attribute name="grabExcessVerticalSpace" type="boolean" default="false" />
+          <attribute name="horizontalAlignment" type="string" default="SWT.BEGINNING" />
+          <attribute name="verticalAlignment" type="string" default="SWT.BEGINNING" />
+          <attribute name="horizontalSpan" type="int" default="1" />
+          <attribute name="verticalSpan" type="int" default="1" />
+          <attribute name="widthHint" type="int" default="-1" />
+          <attribute name="heightHint" type="int" default="-1" />
+          <attribute name="horizontalIndent" type="int" default="0" />
+          <attribute name="verticalIndent" type="int" default="0" />
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <attributeGroup name="sashAttributes">
+    <attribute name="weights" type="swt:weightsType" />
+  </attributeGroup>
+
+  <attributeGroup name="gridLayoutAttributes">
+    <attribute name="marginHeight" type="int" default="5" />
+    <attribute name="marginWidth" type="int" default="5" />
+    <attribute name="marginLeft" type="int" default="0" />
+    <attribute name="marginRight" type="int" default="0" />
+    <attribute name="marginTop" type="int" default="0" />
+    <attribute name="marginBottom" type="int" default="0" />
+    
+    <attribute name="numColumns" type="int" default="1" />
+    <attribute name="makeColumnsEqualWidth" type="boolean" default="false" />
+    
+    <attribute name="horizontalSpacing" type="int" default="5" />
+    <attribute name="verticalSpacing" type="int" default="5" />
+  </attributeGroup>
+
+  <!-- helper -->
+  <simpleType name="weightsType">
+    <list itemType="int" />
+  </simpleType>
+
+</schema>
