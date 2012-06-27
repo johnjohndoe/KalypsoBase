@@ -1,0 +1,1 @@
+Testfile for the unittest of writing a file to a webdav using the apache commons vfs.
