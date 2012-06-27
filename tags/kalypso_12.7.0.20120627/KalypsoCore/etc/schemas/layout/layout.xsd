@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.sourceforge.net/projects/kalypsobase/layout" xmlns:layout="http://www.sourceforge.net/projects/kalypsobase/layout" xmlns:swt="http://www.sourceforge.net/projects/kalypsobase/swt"
+  elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns="http://www.w3.org/2001/XMLSchema">
+
+  <import namespace="http://www.sourceforge.net/projects/kalypsobase/swt" schemaLocation="swt.xsd" />
+
+  <element name="Page">
+    <complexType>
+      <sequence>
+        <element ref="layout:_AbstractPart" minOccurs="1" maxOccurs="1" />
+        <element ref="layout:Controller" minOccurs="0" maxOccurs="unbounded" />
+      </sequence>
+    </complexType>
+  </element>
+
+  <element name="_AbstractPart" type="layout:AbstractPartType" abstract="true" />
+  <complexType name="AbstractPartType" abstract="true">
+    <sequence>
+      <element ref="swt:_Data" minOccurs="0" maxOccurs="1" />
+    </sequence>
+    <attribute name="id" type="ID" use="required" />
+    <attribute name="style" type="string" default="SWT.NONE" />
+  </complexType>
+
+  <element name="Part" substitutionGroup="layout:_AbstractPart">
+    <complexType>
+      <complexContent>
+        <extension base="layout:AbstractPartType" />
+      </complexContent>
+    </complexType>
+  </element>
+
+  <element name="_Container" type="layout:AbstractContainerType" abstract="true" substitutionGroup="layout:_AbstractPart" />
+  <complexType name="AbstractContainerType" abstract="true">
+    <complexContent>
+      <extension base="layout:AbstractPartType">
+        <sequence>
+          <element ref="layout:_AbstractPart" minOccurs="0" maxOccurs="unbounded" />
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <element name="GridContainer" substitutionGroup="layout:_Container">
+    <complexType>
+      <complexContent>
+        <extension base="layout:AbstractContainerType">
+          <attributeGroup ref="swt:gridLayoutAttributes" />
+          <attribute name="text" type="string" use="optional">
+            <annotation>
+              <documentation>If set, the container creates a org.eclipse.swt.widgets.Group instead of a plain composite. The value of the attribute is set as the groups label. If 'text' is the empty
+                string, a group without label is created.</documentation>
+            </annotation>
+          </attribute>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <element name="TabFolder" substitutionGroup="layout:_Container">
+    <complexType>
+      <complexContent>
+        <restriction base="layout:AbstractContainerType">
+          <sequence>
+            <element ref="swt:_Data" minOccurs="0" maxOccurs="1" />
+            <element ref="layout:_TabItemBase" minOccurs="0" maxOccurs="unbounded" />
+          </sequence>
+          <attribute name="id" type="ID" use="required" />
+          <attribute name="style" type="string" default="SWT.TOP" />
+        </restriction>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <element name="_TabItemBase" abstract="true" substitutionGroup="layout:_Container" />
+  <complexType name="AbstractSingleContainerType" abstract="true">
+    <complexContent>
+      <restriction base="layout:AbstractContainerType">
+        <sequence>
+          <element ref="swt:_Data" minOccurs="0" maxOccurs="1" />
+          <element ref="layout:_AbstractPart" minOccurs="1" maxOccurs="1" />
+        </sequence>
+        <attribute name="id" type="ID" use="required" />
+        <attribute name="style" type="string" default="SWT.NONE" />
+      </restriction>
+    </complexContent>
+  </complexType>
+
+  <element name="TabItem" substitutionGroup="layout:_TabItemBase">
+    <complexType>
+      <complexContent>
+        <extension base="layout:AbstractSingleContainerType">
+          <attribute name="text" type="string" use="required" />
+          <attribute name="tooltip" type="string" use="optional" />
+          <attribute name="image" type="anyURI" use="optional" />
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <element name="SashContainer" substitutionGroup="layout:_Container">
+    <complexType>
+      <complexContent>
+        <extension base="layout:AbstractContainerType">
+          <attributeGroup ref="swt:sashAttributes"></attributeGroup>
+          <attribute name="maximizedChild" type="IDREF" />
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <!-- Controller -->
+  <element name="Controller">
+    <complexType>
+      <attribute name="type" type="string" />
+      <attribute name="sourcePart" type="IDREF" />
+      <attribute name="targetPart" type="IDREF" />
+    </complexType>
+
+  </element>
+
+</schema>
