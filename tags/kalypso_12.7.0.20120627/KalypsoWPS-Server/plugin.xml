@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.kalypso.ogc.core.service">
+      <service
+            class="org.kalypso.wps.server.service.WPSService"
+            name="WPS"
+            version="1.0.0">
+         <operation
+               class="org.kalypso.wps.server.operations.GetCapabilitiesOperation"
+               name="GetCapabilities">
+         </operation>
+         <operation
+               class="org.kalypso.wps.server.operations.DescribeProcessOperation"
+               name="DescribeProcess">
+         </operation>
+         <operation
+               class="org.kalypso.wps.server.operations.ExecuteOperation"
+               name="Execute">
+         </operation>
+      </service>
+   </extension>
+
+</plugin>
