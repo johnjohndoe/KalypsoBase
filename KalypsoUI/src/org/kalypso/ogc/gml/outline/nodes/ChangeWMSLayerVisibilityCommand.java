@@ -51,14 +51,14 @@ public class ChangeWMSLayerVisibilityCommand implements ICommand
 {
   private final KalypsoWMSTheme m_wmsTheme;
 
-  private final String m_layer;
+  private final String[] m_layer;
 
   private final boolean m_visible;
 
-  public ChangeWMSLayerVisibilityCommand( final KalypsoWMSTheme wmsTheme, final String name, final boolean visible )
+  public ChangeWMSLayerVisibilityCommand( final KalypsoWMSTheme wmsTheme, final String[] names, final boolean visible )
   {
     m_wmsTheme = wmsTheme;
-    m_layer = name;
+    m_layer = names;
     m_visible = visible;
   }
 

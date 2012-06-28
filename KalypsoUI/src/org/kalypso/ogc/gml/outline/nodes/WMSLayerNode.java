@@ -40,11 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.outline.nodes;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+
 import org.apache.commons.lang3.StringUtils;
 import org.deegree.ogcwebservices.wms.capabilities.Layer;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.graphics.ImageData;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
+import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * @author Gernot Belger
@@ -82,6 +89,22 @@ public class WMSLayerNode extends AbstractThemeNode<Layer>
   }
 
   @Override
+  public ImageDescriptor getImageDescriptor( )
+  {
+    final ImageDescriptor legendImage = getLegendImage();
+    if( legendImage == null )
+      return null;
+
+    final ImageData data = legendImage.getImageData();
+
+    if( data.width <= 16 && data.height <= 16 )
+      return legendImage;
+
+    final ImageData scaledData = data.scaledTo( 16, 16 );
+    return ImageDescriptor.createFromImageData( scaledData );
+  }
+
+  @Override
   public String getDescription( )
   {
     final Layer element = getElement();
@@ -109,7 +132,23 @@ public class WMSLayerNode extends AbstractThemeNode<Layer>
       return false;
     }
 
-    return theme.isLayerVisible( getElement().getName() );
+    final Layer layer = getElement();
+    final String name = layer.getName();
+
+    if( name == null )
+    {
+      /* cascading themes are checked, if one child is visible */
+      final IThemeNode[] children = getChildren();
+      for( final IThemeNode childNode : children )
+      {
+        if( childNode.isChecked( childNode ) )
+          return true;
+      }
+
+      return false;
+    }
+
+    return theme.isLayerVisible( name );
   }
 
   @Override
@@ -120,8 +159,28 @@ public class WMSLayerNode extends AbstractThemeNode<Layer>
       return super.setVisible( visible );
 
     final Layer element = getElement();
+
+    final String[] layersToSet = findLayerNames( element );
+
+    return new ChangeWMSLayerVisibilityCommand( wmsTheme, layersToSet, visible );
+  }
+
+  private String[] findLayerNames( final Layer element )
+  {
     final String name = element.getName();
-    return new ChangeWMSLayerVisibilityCommand( wmsTheme, name, visible );
+    if( name != null )
+      return new String[] { name };
+
+    /* hide/show all children for container layers */
+    final Collection<String> names = new ArrayList<>();
+    final Layer[] children = element.getLayer();
+    for( final Layer child : children )
+    {
+      final String[] childNames = findLayerNames( child );
+      names.addAll( Arrays.asList( childNames ) );
+    }
+
+    return names.toArray( new String[names.size()] );
   }
 
   private KalypsoWMSTheme getWMSTheme( )
@@ -139,7 +198,24 @@ public class WMSLayerNode extends AbstractThemeNode<Layer>
   @Override
   public boolean isGrayed( final Object element )
   {
+    final Layer layer = getElement();
+    final String name = layer.getName();
+    if( name == null )
+      return !isAllChildrenChecked();
+
     return false;
+  }
+
+  private boolean isAllChildrenChecked( )
+  {
+    final IThemeNode[] children = getChildren();
+    for( final IThemeNode node : children )
+    {
+      if( !node.isChecked( node ) )
+        return false;
+    }
+
+    return true;
   }
 
   @Override
@@ -157,6 +233,14 @@ public class WMSLayerNode extends AbstractThemeNode<Layer>
 
     /* Ask the theme for a legend. */
     final Layer layer = getElement();
+
+    /* Cotnainer layer -> tree icon */
+    final String name = layer.getName();
+    if( name == null )
+    {
+      return KalypsoGisPlugin.getImageProvider().getImageDescriptor( ImageProvider.DESCRIPTORS.IMAGE_THEME_CASCADING );
+    }
+
     final String style = element.getStyle( layer );
     final ImageDescriptor legendGraphic = element.getLegendGraphic( layer.getName(), style );
 
@@ -164,7 +248,7 @@ public class WMSLayerNode extends AbstractThemeNode<Layer>
       // return new Image( font.getDevice(), xxx, SWT.IMAGE_COPY );
       return legendGraphic;
 
-    return super.getLegendImage();
+    return null;
   }
 
   public String getStyle( )

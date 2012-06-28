@@ -142,7 +142,7 @@ public interface IKalypsoImageProvider
 
   boolean isLayerVisible( String name );
 
-  void setLayerVisible( String name, boolean visible );
+  void setLayerVisible( String[] name, boolean visible );
 
   String getStyle( Layer layer );
 
