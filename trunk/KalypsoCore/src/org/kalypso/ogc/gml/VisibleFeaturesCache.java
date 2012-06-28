@@ -58,7 +58,7 @@ import com.google.common.cache.LoadingCache;
  */
 class VisibleFeaturesCache
 {
-  /** Marker for full extnet (map does not support <code>null</code> keys). */
+  /** Marker for full extent (map does not support <code>null</code> keys). */
   static final GM_Envelope FULL_EXTENT = new GM_Envelope_Impl();
 
   private final LoadingCache<GM_Envelope, FeatureList> m_cache;
@@ -78,12 +78,11 @@ class VisibleFeaturesCache
         };
 
         m_cache = CacheBuilder.newBuilder().weakKeys().maximumSize( 33 ).build( cacheLoader );
-
   }
 
   void clear( )
   {
-    m_cache.cleanUp();
+    m_cache.invalidateAll();
   }
 
   public FeatureList getVisibleFeatures( final GM_Envelope searchEnvelope )
