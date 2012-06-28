@@ -479,7 +479,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
   }
 
   @Override
-  public void setLayerVisible( final String name, final boolean visible )
+  public void setLayerVisible( final String[] names, final boolean visible )
   {
     if( m_capabilities == null )
       return;
@@ -490,10 +490,13 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
       layersAndStyles.put( m_layers[i], m_styles[i] );
 
     /* Change visibility of that one layer */
-    if( visible )
-      layersAndStyles.put( name, null );
-    else
-      layersAndStyles.remove( name );
+    for( final String name : names )
+    {
+      if( visible )
+        layersAndStyles.put( name, null );
+      else
+        layersAndStyles.remove( name );
+    }
 
     final WMSLayerConfigurator configurator = new WMSLayerConfigurator( m_capabilities, layersAndStyles );
 

@@ -312,12 +312,12 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     return m_provider.isLayerVisible( name );
   }
 
-  public void setLayerVisible( final String name, final boolean visible )
+  public void setLayerVisible( final String[] names, final boolean visible )
   {
     if( m_provider == null )
       return;
 
-    m_provider.setLayerVisible( name, visible );
+    m_provider.setLayerVisible( names, visible );
 
     fireStatusChanged( this );
     fireRepaintRequested( getFullExtent() );
