@@ -47,10 +47,14 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.deegree.i18n.Messages;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree_impl.graphics.sld.ColorMapEntry_Impl;
 
 /**
@@ -169,29 +173,46 @@ public class SldHelper
     return null;
   }
 
-  public static ColorMapEntry[] createColorMap( final Color fromColor, final Color toColor, final BigDecimal stepWidth, final BigDecimal minValue, final BigDecimal maxValue )
+  /**
+   * @param maxEntries
+   *          If non-<code>null</code> and the number of color entries that will be created exceeds this limit, a
+   *          {@link CoreException} with a suitable warning message will be thrown.
+   * @throws {@link CoreException}, if the number of color entries exceeds <code>maxEntries</code>
+   */
+  public static ColorMapEntry[] createColorMap( final Color fromColor, final Color toColor, final BigDecimal stepWidth, final BigDecimal minValue, final BigDecimal maxValue, final Integer maxEntries ) throws CoreException
   {
     final List<ColorMapEntry> colorMapList = new LinkedList<ColorMapEntry>();
 
     final double opacityFrom = fromColor.getAlpha() / 255.0;
     final double opacityTo = toColor.getAlpha() / 255.0;
 
-    // get rounded values below min and above max (rounded by first decimal)
-    final BigDecimal minDecimal = minValue.setScale( 2, BigDecimal.ROUND_FLOOR );
-    final BigDecimal maxDecimal = maxValue.setScale( 2, BigDecimal.ROUND_CEILING );
+    // Using the maximum of all scales given
+    final int maxScale = Math.max( stepWidth.scale(), Math.max( minValue.scale(), maxValue.scale() ) );
 
-    final BigDecimal rasterStepWidth = stepWidth.setScale( 2, BigDecimal.ROUND_FLOOR );
+    // get rounded values below min and above max (rounded by first decimal)
+    final BigDecimal minDecimal = minValue.setScale( maxScale, BigDecimal.ROUND_FLOOR );
+    final BigDecimal maxDecimal = maxValue.setScale( maxScale, BigDecimal.ROUND_CEILING );
+
+    final BigDecimal rasterStepWidth = stepWidth.setScale( maxScale, BigDecimal.ROUND_FLOOR );
+
     final int numOfClasses = maxDecimal.subtract( minDecimal ).divide( rasterStepWidth ).intValue() + 1;
 
-    // as quantity represents UPPER BOUNDARY of the class, we should define the behaviour for the values below
-    final BigDecimal belowMinQuantity = new BigDecimal( minDecimal.doubleValue() ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+    if( maxEntries != null && numOfClasses > maxEntries )
+    {
+      final String message = String.format( "This settings will create more than %d colour classes which will lead to serious performance problems. Please change your settings.", maxEntries );
+      final IStatus status = new Status( IStatus.WARNING, KalypsoDeegreePlugin.getID(), message );
+      throw new CoreException( status );
+    }
+
+    // as quantity represents UPPER BOUNDARY of the class, we should define the behavior for the values below
+    final BigDecimal belowMinQuantity = new BigDecimal( minDecimal.doubleValue() ).setScale( maxScale, BigDecimal.ROUND_HALF_UP );
     final Color belowMinColor = new Color( 255, 255, 255 );
     final ColorMapEntry belowMinEntry = new ColorMapEntry_Impl( belowMinColor, 0.0, belowMinQuantity.doubleValue(), Messages.getString( "org.kalypsodeegree.graphics.sld.SldHelper.0" ) ); //$NON-NLS-1$
     colorMapList.add( belowMinEntry );
 
     for( int currentClass = 1; currentClass < numOfClasses; currentClass++ )
     {
-      final BigDecimal quantity = new BigDecimal( minDecimal.doubleValue() + currentClass * rasterStepWidth.doubleValue() ).setScale( 2, BigDecimal.ROUND_HALF_UP );
+      final BigDecimal quantity = new BigDecimal( minDecimal.doubleValue() + currentClass * rasterStepWidth.doubleValue() ).setScale( maxScale, BigDecimal.ROUND_HALF_UP );
 
       // Color
       final Color color = SldHelper.interpolateColor( fromColor, toColor, currentClass, numOfClasses );
