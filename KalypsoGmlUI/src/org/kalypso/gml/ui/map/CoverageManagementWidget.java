@@ -42,6 +42,7 @@ package org.kalypso.gml.ui.map;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -131,7 +132,7 @@ import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.ui.editor.gmleditor.command.MoveFeatureCommand;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypso.ui.editor.styleeditor.viewer.ColorMapViewer;
@@ -164,7 +165,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * 
  * @author Thomas Jung
  */
-public class CoverageManagementWidget extends DeprecatedMouseWidget implements IWidgetWithOptions
+public class CoverageManagementWidget extends AbstractWidget implements IWidgetWithOptions
 {
   /** Allows to define on the theme, if the user is allowed to change the grid folde for this theme */
   private static final String THEME_PROPERTY_ALLOW_USER_CHANGE_GRID_FOLDER = "allowUserChangeGridFolder"; //$NON-NLS-1$
@@ -1046,17 +1047,24 @@ public class CoverageManagementWidget extends DeprecatedMouseWidget implements I
       return;
 
     final SortedMap<Double, ColorMapEntry> colorMap = symb.getColorMap();
-    if( colorMap.isEmpty() )
+    if( !colorMap.isEmpty() )
+      return;
+
+    try
     {
-      /* IN order to show anything to the user, create a default color map, if no colors have been defined yet */
+      /* In order to show anything to the user, create a default color map, if no colors have been defined yet */
       final Range<BigDecimal> minMax = GeoGridUtilities.calculateRange( m_coverages.getCoverages() );
       final BigDecimal min = minMax.getMinimum();
       final BigDecimal max = minMax.getMaximum();
       final BigDecimal stepWidth = new BigDecimal( 0.1 );
       final Color fromColor = new Color( 0, 255, 0, 200 );
       final Color toColor = new Color( 255, 0, 0, 200 );
-      final ColorMapEntry[] colors = SldHelper.createColorMap( fromColor, toColor, stepWidth, min, max );
+      final ColorMapEntry[] colors = SldHelper.createColorMap( fromColor, toColor, stepWidth, min, max, null );
       updateRasterSymbolizer( colors );
+    }
+    catch( final CoreException e )
+    {
+      // will not happen, as we do not define a class limit in createColorMap
     }
   }
 
@@ -1167,20 +1175,12 @@ public class CoverageManagementWidget extends DeprecatedMouseWidget implements I
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#moved(java.awt.Point)
-   */
   @Override
-  public void moved( final java.awt.Point p )
+  public void mouseMoved( final MouseEvent e )
   {
-    super.moved( p );
-
-    m_infoWidget.moved( p );
+    m_infoWidget.mouseMoved( e );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
-   */
   @Override
   public void paint( final Graphics g )
   {
@@ -1191,7 +1191,6 @@ public class CoverageManagementWidget extends DeprecatedMouseWidget implements I
       try
       {
         /* Paint bbox of selected coverage */
-// final GM_Envelope envelope = m_selectedCoverage.getEnvelope();
         final GM_Surface< ? > surface = GeoGridUtilities.createSurface( GeoGridUtilities.toGrid( m_selectedCoverage ), KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
         final GM_Envelope envelope = surface.getEnvelope();
 

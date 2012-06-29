@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.colorMapEntryTable;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.IShellProvider;
@@ -50,6 +51,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.sldEditor.RasterColorMapEditorComposite;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
@@ -64,12 +66,12 @@ public class GenerateColorRangeDialog extends Dialog
   /**
    * The color map entries.
    */
-  protected ColorMapEntry[] m_entries;
+  private ColorMapEntry[] m_entries;
 
   /**
    * The raster color map editor composite.
    */
-  protected RasterColorMapEditorComposite m_rasterComponent;
+  private RasterColorMapEditorComposite m_rasterComponent;
 
   /**
    * The constructor.
@@ -101,9 +103,6 @@ public class GenerateColorRangeDialog extends Dialog
     m_entries = entries;
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   protected Control createDialogArea( final Composite parent )
   {
@@ -118,14 +117,10 @@ public class GenerateColorRangeDialog extends Dialog
     /* Create the raster color map editor composite. */
     m_rasterComponent = new RasterColorMapEditorComposite( main, SWT.NONE, m_entries, null, null, false )
     {
-      /**
-       * @see org.kalypso.ui.editor.sldEditor.RasterColorMapEditorComposite#colorMapChanged()
-       */
       @Override
       protected void colorMapChanged( )
       {
-        /* Store the changed entries. */
-        m_entries = m_rasterComponent.getColorMap();
+        handleColorMapChanged();
       }
     };
 
@@ -135,9 +130,19 @@ public class GenerateColorRangeDialog extends Dialog
     return main;
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.Dialog#okPressed()
-   */
+  protected void handleColorMapChanged( )
+  {
+    try
+    {
+      /* Store the changed entries. */
+      m_entries = m_rasterComponent.getColorMap();
+    }
+    catch( final CoreException e )
+    {
+      StatusDialog.open( getParentShell(), e.getStatus(), getParentShell().getText() );
+    }
+  }
+
   @Override
   protected void okPressed( )
   {
