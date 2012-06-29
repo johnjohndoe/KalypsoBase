@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,12 +36,13 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.MouseEvent;
 import java.util.Formatter;
 
 import org.kalypso.i18n.Messages;
@@ -49,7 +50,7 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeInfo;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
@@ -61,7 +62,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
  * 
  * @author Gernot Belger
  */
-public abstract class AbstractThemeInfoWidget extends DeprecatedMouseWidget
+public abstract class AbstractThemeInfoWidget extends AbstractWidget
 {
   private final ToolTipRenderer m_tooltipRenderer = new ToolTipRenderer();
 
@@ -81,18 +82,20 @@ public abstract class AbstractThemeInfoWidget extends DeprecatedMouseWidget
     m_themes = themes;
 
     if( getMapPanel() != null )
-      moved( getCurrentPoint() );
+      setCurrentPoint( getCurrentPoint() );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#moved(java.awt.Point)
-   */
   @Override
-  public void moved( final Point p )
+  public void mouseMoved( final MouseEvent e )
   {
     if( getMapPanel() == null )
       return;
 
+    setCurrentPoint( e.getPoint() );
+  }
+
+  private void setCurrentPoint( final Point p )
+  {
     m_point = p;
 
     // May happen, if called from selection change
@@ -167,5 +170,4 @@ public abstract class AbstractThemeInfoWidget extends DeprecatedMouseWidget
   {
     m_noThemesTooltip = noThemesTooltip;
   }
-
 }
