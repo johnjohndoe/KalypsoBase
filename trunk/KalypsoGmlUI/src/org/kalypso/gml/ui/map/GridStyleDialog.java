@@ -42,12 +42,14 @@ package org.kalypso.gml.ui.map;
 
 import java.math.BigDecimal;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.ui.editor.sldEditor.RasterColorMapEditorComposite;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
@@ -79,9 +81,6 @@ public class GridStyleDialog extends TitleAreaDialog
     m_globalMax = max;
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   protected Control createDialogArea( final Composite parent )
   {
@@ -104,13 +103,21 @@ public class GridStyleDialog extends TitleAreaDialog
     return panel;
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.Dialog#okPressed()
-   */
   @Override
   protected void okPressed( )
   {
-    m_colorMap = m_rasterComponent.getColorMap();
+    try
+    {
+      m_colorMap = m_rasterComponent.getColorMap();
+    }
+    catch( final CoreException e )
+    {
+      final Shell parentShell = getParentShell();
+      StatusDialog.open( parentShell, e.getStatus(), parentShell.getText() );
+
+      // do not close
+      return;
+    }
 
     super.okPressed();
   }

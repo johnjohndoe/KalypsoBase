@@ -47,6 +47,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
@@ -464,14 +465,14 @@ public abstract class RasterColorMapEditorComposite extends Composite
     } );
   }
 
-  public ColorMapEntry[] getColorMap( )
+  public ColorMapEntry[] getColorMap( ) throws CoreException
   {
     return createColorMap( m_fromEntry, m_toEntry, m_stepWidth, m_minValue, m_maxValue );
   }
 
   protected abstract void colorMapChanged( );
 
-  protected static ColorMapEntry[] createColorMap( final ColorMapEntry fromEntry, final ColorMapEntry toEntry, final BigDecimal stepWidth, final BigDecimal minValue, final BigDecimal maxValue )
+  protected static ColorMapEntry[] createColorMap( final ColorMapEntry fromEntry, final ColorMapEntry toEntry, final BigDecimal stepWidth, final BigDecimal minValue, final BigDecimal maxValue ) throws CoreException
   {
     final Color fromColor = fromEntry.getColor();
     final Color toColor = toEntry.getColor();
@@ -488,7 +489,9 @@ public abstract class RasterColorMapEditorComposite extends Composite
     final Color fromColorAlpha = new Color( fromColor.getRed(), fromColor.getGreen(), fromColor.getBlue(), fromAlpha );
     final Color toColorAlpha = new Color( toColor.getRed(), toColor.getGreen(), toColor.getBlue(), toAlpha );
 
-    return SldHelper.createColorMap( fromColorAlpha, toColorAlpha, stepWidth, minValue, maxValue );
+    final int maxEntries = 250;
+
+    return SldHelper.createColorMap( fromColorAlpha, toColorAlpha, stepWidth, minValue, maxValue, maxEntries );
   }
 
   private static boolean checkValue( final double value )
