@@ -36,7 +36,10 @@ public class ImageConverter
     if( palette.isDirect )
     {
       if( data.getTransparencyType() != 0 )
-        System.out.println( "Autsch!" );
+      {
+        // System.out.println( "Autsch!" );
+        // TODO: handle transparent images as well
+      }
 
       final ColorModel colorModel = new DirectColorModel( data.depth, palette.redMask, palette.greenMask, palette.blueMask );
       final BufferedImage bufferedImage = new BufferedImage( colorModel, colorModel.createCompatibleWritableRaster( data.width, data.height ), false, null );
