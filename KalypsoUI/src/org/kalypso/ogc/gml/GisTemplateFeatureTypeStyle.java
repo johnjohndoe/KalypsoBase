@@ -172,9 +172,6 @@ public class GisTemplateFeatureTypeStyle extends AbstractTemplateStyle implement
     m_style.removeSemanticTypeIdentifier( semanticTypeIdentifier );
   }
 
-  /**
-   * @see org.kalypsodeegree.graphics.sld.FeatureTypeStyle#setFeatureTypeName(javax.xml.namespace.QName)
-   */
   @Override
   public void setFeatureTypeName( final QName featureTypeQName )
   {
