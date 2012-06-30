@@ -35,9 +35,17 @@
  */
 package org.kalypsodeegree_impl.tools;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.awt.image.FilteredImageSource;
+import java.awt.image.ImageFilter;
+import java.awt.image.ImageProducer;
+import java.awt.image.RGBImageFilter;
 
 import javax.media.jai.TiledImage;
 
@@ -152,6 +160,10 @@ public class TransformationUtilities
     /* Get the required subImage according to the gridExtent (size of the screen). */
     final TiledImage image = rasterImage.getSubImage( minX, minY, width, height );
 
+    // ColorModel oldCM = image.getColorModel();
+// ColorModel newCM = new IndexColorModel( minY, width, null, height, false );
+// image.getAsBufferedImage( null, newCM );
+
     /* If the requested sub image is not on the screen (map panel) nothing to display. */
     if( image == null )
       return;
@@ -215,15 +227,48 @@ public class TransformationUtilities
     if( width2 <= 0 || height2 <= 0 )
       return;
 
-    // TODO: maybe this code was used to support transparent tiffs (like TK); check it that worked before; if not leave
-    // it or introduce flag
-// BufferedImage buffer = new BufferedImage( width2, height2, BufferedImage.TYPE_INT_ARGB );
-// Graphics2D bufferGraphics = (Graphics2D) buffer.getGraphics();
-    /* Draw a transparent background on the bufferedImage. Why !? */
-// bufferGraphics.setColor( new Color( 255, 255, 255, 0 ) );
-// bufferGraphics.fillRect( 0, 0, width2, height2 );
-// bufferGraphics.drawRenderedImage( image, trafo );
-// g2d.drawImage( buffer, (int) buffImageEnv.getMin().getX(), (int) buffImageEnv.getMin().getY(), null );
+// final BufferedImage asBufferedImage = image.getAsBufferedImage();
+// final Image transparentImage = makeColorTransparent( asBufferedImage, new Color( 0, 0, 0 ) );
+// final BufferedImage transparentBufferedImage = imageToBufferedImage( transparentImage );
+// g2d.drawRenderedImage( transparentBufferedImage, trafo );
+
     g2d.drawRenderedImage( image, trafo );
+  }
+
+  static BufferedImage imageToBufferedImage( final Image image )
+  {
+    final BufferedImage bufferedImage = new BufferedImage( image.getWidth( null ), image.getHeight( null ), BufferedImage.TYPE_INT_ARGB );
+    final Graphics2D g2 = bufferedImage.createGraphics();
+    g2.drawImage( image, 0, 0, null );
+    g2.dispose();
+
+    return bufferedImage;
+  }
+
+  static Image makeColorTransparent( final BufferedImage im, final Color color )
+  {
+    final ImageFilter filter = new RGBImageFilter()
+    {
+      // the color we are looking for... Alpha bits are set to opaque
+      public int markerRGB = color.getRGB() | 0xFF000000;
+
+      @Override
+      public final int filterRGB( final int x, final int y, final int rgb )
+      {
+        if( (rgb | 0xFF000000) == markerRGB )
+        {
+          // Mark the alpha bits as zero - transparent
+          return 0x00FFFFFF & rgb;
+        }
+        else
+        {
+          // nothing to do
+          return rgb;
+        }
+      }
+    };
+
+    final ImageProducer ip = new FilteredImageSource( im.getSource(), filter );
+    return Toolkit.getDefaultToolkit().createImage( ip );
   }
 }
