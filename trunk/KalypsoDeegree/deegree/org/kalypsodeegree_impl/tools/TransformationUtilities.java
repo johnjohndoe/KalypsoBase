@@ -46,6 +46,7 @@ import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
 import java.awt.image.ImageProducer;
 import java.awt.image.RGBImageFilter;
+import java.awt.image.RenderedImage;
 
 import javax.media.jai.TiledImage;
 
@@ -160,13 +161,11 @@ public class TransformationUtilities
     /* Get the required subImage according to the gridExtent (size of the screen). */
     final TiledImage image = rasterImage.getSubImage( minX, minY, width, height );
 
-    // ColorModel oldCM = image.getColorModel();
-// ColorModel newCM = new IndexColorModel( minY, width, null, height, false );
-// image.getAsBufferedImage( null, newCM );
-
     /* If the requested sub image is not on the screen (map panel) nothing to display. */
     if( image == null )
       return;
+
+    final RenderedImage paintImage = derivePaintImage( image );
 
     /* Get the destinationSurface in target coordinates. */
     final GM_Surface< ? > destSurface = gridDomain.getGM_Surface( lowX, lowY, highX, highY, targetCS );
@@ -191,8 +190,8 @@ public class TransformationUtilities
       return;
 
     /* Calculate the scaling factors for the transformation. */
-    final double scaleX = destImageWidth / image.getWidth();
-    final double scaleY = destImageHeight / image.getHeight();
+    final double scaleX = destImageWidth / paintImage.getWidth();
+    final double scaleY = destImageHeight / paintImage.getHeight();
 
     /* Calculate the shear parameters for the transformation. */
     final double shearX = pixel_llCorner.getX() - pixel_ulCorner.getX();
@@ -210,7 +209,7 @@ public class TransformationUtilities
     trafo.translate( (int) buffImageEnv.getMin().getX(), (int) buffImageEnv.getMin().getY() );
 
     /* Translate the image, so that the subImage is at the right position. */
-    trafo.translate( -image.getMinX() * scaleX, -image.getMinY() * scaleY );
+    trafo.translate( -paintImage.getMinX() * scaleX, -paintImage.getMinY() * scaleY );
 
     /* Scale the image. */
     trafo.scale( scaleX, scaleY );
@@ -227,12 +226,23 @@ public class TransformationUtilities
     if( width2 <= 0 || height2 <= 0 )
       return;
 
-// final BufferedImage asBufferedImage = image.getAsBufferedImage();
-// final Image transparentImage = makeColorTransparent( asBufferedImage, new Color( 0, 0, 0 ) );
-// final BufferedImage transparentBufferedImage = imageToBufferedImage( transparentImage );
-// g2d.drawRenderedImage( transparentBufferedImage, trafo );
+    g2d.drawRenderedImage( paintImage, trafo );
+  }
 
-    g2d.drawRenderedImage( image, trafo );
+  private static RenderedImage derivePaintImage( final TiledImage image )
+  {
+    return image;
+
+    // TODO: example code that turns all white pixels transparent (nice for tiffs without transparent color)
+
+    // This is probably heavy and should only be used as an option on the theme -> introduce option for 'transparent
+    // color'
+
+// final BufferedImage asBufferedImage = image.getAsBufferedImage();
+// final Image transparentImage = makeColorTransparent( asBufferedImage, new Color( 255, 255, 255 ) );
+// final BufferedImage paintImage = imageToBufferedImage( transparentImage );
+//
+// return paintImage;
   }
 
   static BufferedImage imageToBufferedImage( final Image image )
