@@ -83,9 +83,6 @@ public abstract class KalypsoPictureTheme extends AbstractKalypsoTheme
     m_layerType = layerType;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -139,11 +136,6 @@ public abstract class KalypsoPictureTheme extends AbstractKalypsoTheme
     return m_layerType;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean,
-   *      org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IStatus paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
   {
@@ -199,7 +191,7 @@ public abstract class KalypsoPictureTheme extends AbstractKalypsoTheme
       final URL context = getContext();
       final URL imageUrl = UrlResolverSingleton.resolveUrl( context, filePathChecked );
 
-      // FIXME: use stream and close stream ouselfs in order to avoid resource leakage (jai bug)
+      // FIXME: use stream and close stream ouselfs in oto avoid resource leakage (jai bug)
       // Problem: the stream must be closed when the image is disposed, so we need another class
       final RenderedOp image = JAI.create( "url", imageUrl ); //$NON-NLS-1$
 
@@ -210,19 +202,19 @@ public abstract class KalypsoPictureTheme extends AbstractKalypsoTheme
     }
     catch( final MalformedURLException e )
     {
-      setStatus( e, Messages.getString("KalypsoPictureTheme.2"), filePath ); //$NON-NLS-1$
+      setStatus( e, Messages.getString( "KalypsoPictureTheme.2" ), filePath ); //$NON-NLS-1$
     }
     catch( final OutOfMemoryError error )
     {
       // REMARK: this will happen if we load big images
       // It is safe to catch it here, as the heap will be freed immediately, if the image could not be loaded
-      setStatus( error, Messages.getString("KalypsoPictureTheme.3"), filePath ); //$NON-NLS-1$
+      setStatus( error, Messages.getString( "KalypsoPictureTheme.3" ), filePath ); //$NON-NLS-1$
     }
     catch( final Throwable error )
     {
       // REMARK: this will happen if we load big images
       // It is safe to catch it here, as the heap will be freed immediately, if the image could not be loaded
-      setStatus( error, Messages.getString("KalypsoPictureTheme.4"), filePath ); //$NON-NLS-1$
+      setStatus( error, Messages.getString( "KalypsoPictureTheme.4" ), filePath ); //$NON-NLS-1$
     }
 
     return null;
@@ -236,5 +228,4 @@ public abstract class KalypsoPictureTheme extends AbstractKalypsoTheme
     setStatus( status );
     return status;
   }
-
 }
