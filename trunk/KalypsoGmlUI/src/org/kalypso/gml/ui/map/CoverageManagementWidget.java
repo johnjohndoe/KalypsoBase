@@ -47,6 +47,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -117,6 +118,7 @@ import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTypeStyle;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.IKalypsoStyle;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoUserStyle;
@@ -602,28 +604,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     final IMapModell mapModell = mapPanel == null ? null : mapPanel.getMapModell();
     final IKalypsoTheme activeTheme = mapModell == null ? null : mapModell.getActiveTheme();
 
-    final List<IKalypsoTheme> themesForCombo = new ArrayList<IKalypsoTheme>();
-
-    if( COVERAGE_PREDICATE.decide( activeTheme ) )
-      themesForCombo.add( activeTheme );
-    else if( activeTheme instanceof IMapModell )
-    {
-      final IKalypsoTheme[] allThemes = ((IMapModell) activeTheme).getAllThemes();
-      for( final IKalypsoTheme kalypsoTheme : allThemes )
-      {
-        if( COVERAGE_PREDICATE.decide( kalypsoTheme ) )
-          themesForCombo.add( kalypsoTheme );
-      }
-    }
-    else
-    {
-      final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
-      for( final IKalypsoTheme kalypsoTheme : allThemes )
-      {
-        if( COVERAGE_PREDICATE.decide( kalypsoTheme ) )
-          themesForCombo.add( kalypsoTheme );
-      }
-    }
+    final IKalypsoTheme[] themesForCombo = findThemesForCombo( mapModell, activeTheme );
 
     final Control control = m_themeCombo.getControl();
     final ComboViewer themeCombo = m_themeCombo;
@@ -637,11 +618,38 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
         themeCombo.setInput( themesForCombo );
 
-        if( themesForCombo.size() > 0 )
-          themeCombo.setSelection( new StructuredSelection( themesForCombo.get( 0 ) ) );
+        if( themesForCombo.length > 0 )
+          themeCombo.setSelection( new StructuredSelection( themesForCombo[0] ) );
       }
     } );
 
+  }
+
+  private IKalypsoFeatureTheme[] findThemesForCombo( final IMapModell mapModell, final IKalypsoTheme activeTheme )
+  {
+    final List<IKalypsoFeatureTheme> themesForCombo = new ArrayList<IKalypsoFeatureTheme>();
+
+    if( COVERAGE_PREDICATE.decide( activeTheme ) )
+      themesForCombo.add( (IKalypsoFeatureTheme) activeTheme );
+    else if( activeTheme instanceof IMapModell )
+    {
+      final IKalypsoTheme[] allThemes = ((IMapModell) activeTheme).getAllThemes();
+      for( final IKalypsoTheme kalypsoTheme : allThemes )
+      {
+        if( COVERAGE_PREDICATE.decide( kalypsoTheme ) )
+          themesForCombo.add( (IKalypsoFeatureTheme) kalypsoTheme );
+      }
+    }
+    else
+    {
+      final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
+      for( final IKalypsoTheme kalypsoTheme : allThemes )
+      {
+        if( COVERAGE_PREDICATE.decide( kalypsoTheme ) )
+          themesForCombo.add( (IKalypsoFeatureTheme) kalypsoTheme );
+      }
+    }
+    return themesForCombo.toArray( new IKalypsoFeatureTheme[themesForCombo.size()] );
   }
 
   protected void handleThemeComboSelected( final SelectionChangedEvent event )
@@ -815,18 +823,32 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     final IKalypsoStyle[] styles = m_theme.getStyles();
 
+    /* Find all relevant styles */
+    final Set<IKalypsoStyle> allStyles = new HashSet<>();
+
+    final IKalypsoLayerModell mapModell = getMapPanel().getMapModell();
+
+    final IKalypsoFeatureTheme[] allThemes = findThemesForCombo( mapModell, mapModell.getActiveTheme() );
+    for( final IKalypsoFeatureTheme theme : allThemes )
+    {
+      final IKalypsoStyle[] themeStyles = theme.getStyles();
+      allStyles.addAll( Arrays.asList( themeStyles ) );
+    }
+
     final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
     {
       @Override
       public IStatus execute( final IProgressMonitor monitor ) throws CoreException
       {
-        monitor.beginTask( Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.5" ), styles.length ); //$NON-NLS-1$
+        monitor.beginTask( Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.5" ), allStyles.size() ); //$NON-NLS-1$
 
         for( final IKalypsoStyle style : styles )
-        {
-          // HACK: also fire style change in order to update the map
-          style.fireStyleChanged();
           style.save( new SubProgressMonitor( monitor, 1 ) );
+
+        // HACK: also fire style change in order to update the map
+        for( final IKalypsoStyle style : allStyles )
+        {
+          style.fireStyleChanged();
         }
 
         return Status.OK_STATUS;
