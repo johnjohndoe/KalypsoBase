@@ -821,8 +821,6 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     if( m_theme == null )
       return;
 
-    final IKalypsoStyle[] styles = m_theme.getStyles();
-
     /* Find all relevant styles */
     final Set<IKalypsoStyle> allStyles = new HashSet<>();
 
@@ -842,13 +840,10 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       {
         monitor.beginTask( Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.5" ), allStyles.size() ); //$NON-NLS-1$
 
-        for( final IKalypsoStyle style : styles )
-          style.save( new SubProgressMonitor( monitor, 1 ) );
-
-        // HACK: also fire style change in order to update the map
         for( final IKalypsoStyle style : allStyles )
         {
           style.fireStyleChanged();
+          style.save( new SubProgressMonitor( monitor, 1 ) );
         }
 
         return Status.OK_STATUS;
