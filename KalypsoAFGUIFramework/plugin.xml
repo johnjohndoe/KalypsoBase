@@ -107,15 +107,23 @@
       <handler class="org.kalypso.afgui.internal.handlers.NewProjectHandler" commandId="org.kalypso.afgui.command.newproject"/>
       <handler class="org.kalypso.afgui.internal.handlers.DeleteScenarioHandler" commandId="org.eclipse.ui.edit.delete">
          <activeWhen>
-                <with variable="selection">
-                   <count value="1"/>
-                   <iterate ifEmpty="false" operator="and">
-                       <or>
-                          <instanceof value="de.renew.workflow.connector.cases.IScenario"/>
-                          <instanceof value="org.eclipse.core.resources.IProject"/>
-                       </or>
-                   </iterate>
-                </with>
+                <and>
+                    <with variable="activePartId">
+                        <or>
+                            <equals value="org.kalypso.kalypso1d2d.pjt.views.WorklistView"/>
+                            <equals value="org.kalypso.kalypso1d2d.pjt.views.ScenarioView"/>
+                        </or>
+                    </with>
+                    <with variable="selection">
+                       <count value="1"/>
+                       <iterate ifEmpty="false" operator="and">
+                           <or>
+                              <instanceof value="de.renew.workflow.connector.cases.IScenario"/>
+                              <instanceof value="org.eclipse.core.resources.IProject"/>
+                           </or>
+                       </iterate>
+                    </with>
+                </and>
          </activeWhen>
       </handler>
       <handler commandId="org.kalypso.ui.map.outline.command.AddWorkflowTheme" class="org.kalypso.afgui.internal.map.AddWorkflowThemeHandler"/>
