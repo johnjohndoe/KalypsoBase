@@ -202,9 +202,6 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
     return widths;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.profile.importer.hw.IHeightWidthResult#formatOut(java.util.Formatter)
-   */
   @Override
   public void formatOut( final Formatter formatter )
   {
@@ -219,8 +216,9 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
       maxWidth = Math.max( maxWidth, mWidth );
     }
 
-    final String id = m_id + "_" + getName(); //$NON-NLS-1$
-    final String name = m_name + "_" + getName(); //$NON-NLS-1$
+    // FIXME: strange...
+    final String id = m_id; //$NON-NLS-1$
+    final String name = m_name; //$NON-NLS-1$
 
     formatter.format( "CRDS id '%s' nm '%s' ty 0 wm %f w1 0 w2 0 sw 0 gl 0 gu 0 lt lw%n", id, name, maxWidth ); //$NON-NLS-1$
     formatter.format( "TBLE%n" ); //$NON-NLS-1$
@@ -231,13 +229,11 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
       final double relHeight = height - m_heights[0];
       formatter.format( "%f %f %f <%n", relHeight, width, width ); //$NON-NLS-1$
     }
+
     formatter.format( "tble%n" ); //$NON-NLS-1$
     formatter.format( "crds%n" ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.profile.importer.hw.ProblemResult#formatErr(java.util.Formatter)
-   */
   @Override
   public void formatLog( final Formatter formatter )
   {
