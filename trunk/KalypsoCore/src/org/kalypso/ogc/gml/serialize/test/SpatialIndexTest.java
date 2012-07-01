@@ -142,8 +142,9 @@ public class SpatialIndexTest extends TestCase
     final double yRange = Math.abs( bMaxY - bMinY );
 
     int maxSize = 0;
+    final int numberOfQueries = 1000;
 
-    for( int i = 0; i < 100000; i++ )
+    for( int i = 0; i < numberOfQueries; i++ )
     {
       final double minX = bMinX + Math.random() * xRange;
       final double minY = bMinY + Math.random() * yRange;

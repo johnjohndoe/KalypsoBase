@@ -5,10 +5,10 @@
     <metadata value="Niederschlag - N - Dresden-Klotzsche (N)" name="Beschreibung"/>
     <metadata value="wiski://HVZ_Modelle_Saale.Saale_Prio_1.41524.N" name="Datenabruf_Quelle_0"/>
     <metadata value="filter://IntervalFilter?source_0=wiski://HVZ_Modelle_Saale.Saale_Prio_1.41524.N" name="Datenabruf_Quelle_1"/>
-    <metadata value="source://unknown" name="Datenabruf_Quelle_2"/>
+    <metadata value="filter://IntervalFilter" name="Datenabruf_Quelle_2"/>
     <metadata value="Wiski" name="Datenabruf_Repository_Quelle_0"/>
     <metadata value="filter://IntervalFilter?source_0=wiski://HVZ_Modelle_Saale.Saale_Prio_1.41524.N" name="Datenabruf_Repository_Quelle_1"/>
-    <metadata value="source://unknown" name="Datenabruf_Repository_Quelle_2"/>
+    <metadata value="filter://IntervalFilter" name="Datenabruf_Repository_Quelle_2"/>
     <metadata value="Wiski" name="Entstehung"/>
     <metadata value="Schwarze Elster" name="Gewässer"/>
     <metadata value="1048860168" name="Hilfsattribut: Kalypso_O_ATNr"/>
