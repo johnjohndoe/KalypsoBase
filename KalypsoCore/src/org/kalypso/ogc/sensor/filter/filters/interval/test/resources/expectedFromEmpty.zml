@@ -2,8 +2,8 @@
 <observation xmlns="zml.kalypso.org">
   <name>Blankenburg.N.M.P.TSum.0600</name>
   <metadataList>
-    <metadata value="source://unknown" name="Datenabruf_Quelle_0" />
-    <metadata value="source://unknown" name="Datenabruf_Repository_Quelle_0" />
+    <metadata name="Datenabruf_Quelle_0" value="filter://IntervalFilter"/>
+    <metadata name="Datenabruf_Repository_Quelle_0" value="filter://IntervalFilter"/>
     <metadata value="Blankenburg.N.M.P.TSum.0600" name="Name" />
     <metadata value="GMT+01:00" name="Zeitzone" />
     <metadata value="HOUR_OF_DAY#1" name="Zeitschritt"/>

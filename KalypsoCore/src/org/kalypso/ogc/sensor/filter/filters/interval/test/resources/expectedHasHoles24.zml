@@ -3,10 +3,10 @@
   <name>Altmörbitz TS.DWD.SRDL85.24h</name>
   <metadataList>
     <metadata value="wiski://HVZ_Modelle_Saale.Saale_Prio_1.43451.N" name="Datenabruf_Quelle_0"/>
-    <metadata value="source://unknown" name="Datenabruf_Quelle_1"/>
+    <metadata value="filter://IntervalFilter" name="Datenabruf_Quelle_1"/>
     <metadata value="filter://IntervalFilter?source_0=wiski://HVZ_Modelle_Saale.Saale_Prio_1.43451.N" name="Datenabruf_Quelle_2"/>
     <metadata value="Wiski" name="Datenabruf_Repository_Quelle_0"/>
-    <metadata value="source://unknown" name="Datenabruf_Repository_Quelle_1"/>
+    <metadata value="filter://IntervalFilter" name="Datenabruf_Repository_Quelle_1"/>
     <metadata value="filter://IntervalFilter?source_0=wiski://HVZ_Modelle_Saale.Saale_Prio_1.43451.N" name="Datenabruf_Repository_Quelle_2"/>
     <metadata value="Altmörbitz TS.DWD.SRDL85.24h" name="Name"/>
     <metadata value="Wiski" name="Quell_Repository"/>

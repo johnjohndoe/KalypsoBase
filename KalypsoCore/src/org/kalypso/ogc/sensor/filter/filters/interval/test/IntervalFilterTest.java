@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters.interval.test;
 
@@ -96,7 +96,7 @@ public class IntervalFilterTest extends Assert
     final Date end = m_df.parse( "05.04.2011 00:00" ); //$NON-NLS-1$
 
     final IntervalDefinition intervalDefinition = new IntervalDefinition( Calendar.HOUR_OF_DAY, 1, Double.NaN, KalypsoStati.BIT_CHECK );
-    // FIXME: expected result is actually not correct; but we know the filter i buggy at the moment
+    // FIXME: expected result is actually not correct; but we know the filter is buggy at the moment
     final String expectedZml;
     if( m_useOldFilter )
       expectedZml = "expectedSourceTooSmallBUGGY.zml"; //$NON-NLS-1$
@@ -268,8 +268,6 @@ public class IntervalFilterTest extends Assert
 
   private void doCompareObservations( final IObservation expectedObservation, final IObservation actualObservation ) throws Throwable
   {
-    // System.out.println( ObservationUtilities.dump( filteredObservation.getValues( null ), "\t" ) );
-
     try
     {
       final ObservationAssert obsAssert = new ObservationAssert( expectedObservation, actualObservation );
