@@ -33,100 +33,38 @@
  * lat/lon GmbH
  * http://www.lat-lon.de
  */
-
 package org.kalypso.shape.geometry;
 
-import java.io.DataOutput;
-import java.io.IOException;
-
 import org.kalypso.shape.ShapeType;
-import org.kalypso.shape.tools.DataUtils;
-import org.kalypsodeegree.model.geometry.ByteUtils;
+
+import com.vividsolutions.jts.util.Assert;
 
 /**
- * @author Andreas Poth
+ * @author Thomas Jung
  */
-public class SHPPoint implements ISHPPoint
+public class SHPPolyLinem extends AbstractSHPPolyLine
 {
-  private final double m_x;
-
-  private final double m_y;
-
-  private final SHPEnvelope m_envelope;
-
-  public SHPPoint( final byte[] recBuf )
+  public SHPPolyLinem( final ISHPMultiPoint points, final int[] parts )
   {
-    this( recBuf, 4 );
+    super( points, parts, ShapeType.POLYLINEM );
+
+    Assert.isTrue( points instanceof SHPMultiPointm );
   }
 
-  public SHPPoint( final byte[] recBuf, final int xStart )
+  public SHPPolyLinem( final byte[] recBuf )
   {
-    m_x = ByteUtils.readLEDouble( recBuf, xStart );
-    m_y = ByteUtils.readLEDouble( recBuf, xStart + 8 );
-
-    m_envelope = new SHPEnvelope( m_x, m_x, m_y, m_y );
-  }
-
-  public SHPPoint( final double x, final double y )
-  {
-    m_x = x;
-    m_y = y;
-
-    m_envelope = new SHPEnvelope( x, x, y, y );
+    super( recBuf, ShapeType.POLYLINEM );
   }
 
   @Override
-  public SHPEnvelope getEnvelope( )
+  protected ISHPMultiPoint readPoints( final byte[] recBuf, final SHPEnvelope envelope, final int numParts, final int numPoints )
   {
-    return m_envelope;
-  }
-
-  @Override
-  public void write( final DataOutput output ) throws IOException
-  {
-    DataUtils.writeLEDouble( output, m_x );
-    DataUtils.writeLEDouble( output, m_y );
-  }
-
-  @Override
-  public ShapeType getType( )
-  {
-    return ShapeType.POINT;
+    return SHPMultiPointm.read( recBuf, 36 + 4 + 4 + numParts * 4, envelope, numPoints );
   }
 
   @Override
   public int length( )
   {
-    return 16;
-  }
-
-  @Override
-  public String toString( )
-  {
-    return "SHPPOINT" + "[" + m_x + "; " + m_y + "]";
-  }
-
-  @Override
-  public double getX( )
-  {
-    return m_x;
-  }
-
-  @Override
-  public double getY( )
-  {
-    return m_y;
-  }
-
-  @Override
-  public double getZ( )
-  {
-    return Double.NaN;
-  }
-
-  @Override
-  public double getM( )
-  {
-    return Double.NaN;
+    return 32 + 4 + 4 + getNumParts() * 4 + getNumPoints() * 16 + 16 + getNumPoints() * 8;
   }
 }

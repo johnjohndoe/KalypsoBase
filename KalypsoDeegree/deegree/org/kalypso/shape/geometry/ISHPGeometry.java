@@ -33,7 +33,6 @@
  * lat/lon GmbH
  * http://www.lat-lon.de
  */
-
 package org.kalypso.shape.geometry;
 
 import java.io.DataOutput;
@@ -42,21 +41,8 @@ import java.io.IOException;
 import org.kalypso.shape.ShapeType;
 
 /**
- * Class representing basic Geometry for geometries read from a shape-file.
- * <p>
- * <B>Last changes <B>: <BR>
- * 12.01.2000 ap: constructor re-declared <BR>
- * 13.01.2000 ap: all methods removed <BR>
- * 13.01.2000 ap: all variables except reBuffer removed <BR>
- * 16.08.2000 ap: field enevlope added <BR>
- * 16.08.2000 ap: method getEnvelope() added <BR>
- * 26.01.2007 Thomas Jung: method getZRange() added <BR>
- * * <!---------------------------------------------------------------------------->
- * 
  * @author Andreas Poth
- * @version 16.08.2000
  */
-
 public interface ISHPGeometry
 {
   /** Writes this shape as bytes. Starts after the shape type (byte 4 of the record contents) */

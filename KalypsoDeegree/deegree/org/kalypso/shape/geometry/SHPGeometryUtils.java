@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.shape.geometry;
 
@@ -94,36 +94,57 @@ public final class SHPGeometryUtils
     return count;
   }
 
-  public static SHPZRange createZRange( final ISHPPoint[][] parts )
+  public static SHPRange createZRange( final ISHPPoint[] points )
   {
     double zmin = Double.MAX_VALUE;
     double zmax = -Double.MAX_VALUE;
 
-    for( final ISHPPoint[] points : parts )
+    for( final ISHPPoint point : points )
     {
-      for( final ISHPPoint point : points )
-      {
-        final double z = point.getZ();
+      final double z = point.getZ();
 
-        zmin = Math.min( zmin, z );
-        zmax = Math.min( zmax, z );
-      }
-
+      zmin = Math.min( zmin, z );
+      zmax = Math.min( zmax, z );
     }
 
-    return new SHPZRange( zmin, zmax );
+    return new SHPRange( zmin, zmax );
+  }
+
+  public static SHPRange createMRange( final ISHPPoint[] points )
+  {
+    double mmin = Double.MAX_VALUE;
+    double mmax = -Double.MAX_VALUE;
+
+    for( final ISHPPoint point : points )
+    {
+      final double m = point.getM();
+
+      mmin = Math.min( mmin, m );
+      mmax = Math.min( mmax, m );
+    }
+
+    return new SHPRange( mmin, mmax );
   }
 
   /**
    * Due to the shape specification, any line/polygon must contain at least of one part.<br>
    * Each part consists at least of two points.
    */
-  public static void checkParts( final ISHPPoint[][] parts )
+  public static void checkParts( final ISHPMultiPoint multiPoint, final int[] partIndices )
   {
-    Assert.isTrue( parts.length > 0, "At least one part must be present." );
+    Assert.isTrue( partIndices[0] == 0, "First part must start at 0" );
 
-    for( final ISHPPoint[] points : parts )
-      Assert.isTrue( points.length > 1, "Part must contain at least two points." );
+    Assert.isTrue( partIndices.length > 0, "At least one part must be present." );
+
+    for( int i = 0; i < partIndices.length - 1; i++ )
+    {
+      final int currentPart = partIndices[i];
+      final int nextPart = partIndices[i + 1];
+
+      Assert.isTrue( nextPart - currentPart > 1, "Each part must contain at least two points." );
+    }
+
+    /* Also the last part must have length > 1 */
+    Assert.isTrue( partIndices[partIndices.length - 1] < multiPoint.length() - 1, "Each part must contain at least two points." );
   }
-
 }

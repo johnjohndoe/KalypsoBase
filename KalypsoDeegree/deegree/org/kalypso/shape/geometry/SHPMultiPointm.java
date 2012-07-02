@@ -43,32 +43,37 @@ import org.kalypso.shape.tools.DataUtils;
 import org.kalypsodeegree.model.geometry.ByteUtils;
 
 /**
- * @author Andreas Poth
+ * @author Thomas Jung
  */
-public class SHPMultiPoint implements ISHPMultiPoint
+public class SHPMultiPointm implements ISHPMultiPoint
 {
-  private final ISHPPoint[] m_points;
+  public final ISHPPoint[] m_points;
+
+  public final SHPRange m_mrange;
 
   private final SHPEnvelope m_envelope;
 
-  static ISHPPoint[] readPoints( final byte[] recBuf, final int offset, final int numPoints )
+  private static ISHPPoint[] readPoints( final byte[] recBuf, final int offset, final int numPoints )
   {
     final ISHPPoint[] points = new ISHPPoint[numPoints];
 
+    final int mOffset = offset + numPoints * 16;
+
     for( int i = 0; i < numPoints; i++ )
     {
-      final int pointOffset = offset + i * 16;
+      final double x = ByteUtils.readLEDouble( recBuf, offset + i * 16 );
+      final double y = ByteUtils.readLEDouble( recBuf, offset + i * 16 + 8 );
 
-      final double x = ByteUtils.readLEDouble( recBuf, pointOffset );
-      final double y = ByteUtils.readLEDouble( recBuf, pointOffset + 8 );
+      final int mPos = mOffset + 16 + 8 * i;
+      final double m = ByteUtils.readLEDouble( recBuf, mPos );
 
-      points[i] = new SHPPoint( x, y );
+      points[i] = new SHPPointm( x, y, m );
     }
 
     return points;
   }
 
-  public static SHPMultiPoint read( final byte[] recBuf )
+  public static SHPMultiPointm read( final byte[] recBuf )
   {
     final SHPEnvelope envelope = new SHPEnvelope( recBuf, 4 );
     final int numPoints = ByteUtils.readLEInt( recBuf, 36 );
@@ -76,24 +81,27 @@ public class SHPMultiPoint implements ISHPMultiPoint
     return read( recBuf, 40, envelope, numPoints );
   }
 
-  public static SHPMultiPoint read( final byte[] recBuf, final int offset, final SHPEnvelope envelope, final int numPoints )
+  public static SHPMultiPointm read( final byte[] recBuf, final int offset, final SHPEnvelope envelope, final int numPoints )
   {
     final ISHPPoint[] points = readPoints( recBuf, offset, numPoints );
 
-    return new SHPMultiPoint( envelope, points );
+    final int mOffset = offset + numPoints * 16;
+    final SHPRange mrange = new SHPRange( recBuf, mOffset );
+
+    return new SHPMultiPointm( envelope, points, mrange );
   }
 
-  public SHPMultiPoint( final SHPEnvelope envelope, final ISHPPoint[] points )
+  public SHPMultiPointm( final SHPEnvelope envelope, final ISHPPoint[] points, final SHPRange mRange )
   {
     m_envelope = envelope;
     m_points = points;
+    m_mrange = mRange;
   }
 
   @Override
   public void write( final DataOutput output ) throws IOException
   {
     m_envelope.writeLESHPEnvelope( output );
-
     DataUtils.writeLEInt( output, m_points.length );
 
     writePoints( output );
@@ -102,26 +110,29 @@ public class SHPMultiPoint implements ISHPMultiPoint
   @Override
   public void writePoints( final DataOutput output ) throws IOException
   {
-    for( final ISHPPoint point : m_points )
+    for( final ISHPPoint element : m_points )
     {
-      DataUtils.writeLEDouble( output, point.getX() );
-      DataUtils.writeLEDouble( output, point.getY() );
+      DataUtils.writeLEDouble( output, element.getX() );
+      DataUtils.writeLEDouble( output, element.getY() );
     }
+
+    /* write z */
+    m_mrange.write( output );
+
+    for( final ISHPPoint element : m_points )
+      DataUtils.writeLEDouble( output, element.getM() );
   }
 
   @Override
   public ShapeType getType( )
   {
-    return ShapeType.MULTIPOINT;
+    return ShapeType.MULTIPOINTM;
   }
 
-  /**
-   * returns the size of the multipoint shape in bytes <BR>
-   */
   @Override
   public int length( )
   {
-    return 40 + m_points.length * 16;
+    return 36 + 8 + m_points.length * 16 + 16 + 8 * m_points.length;
   }
 
   @Override
@@ -135,6 +146,7 @@ public class SHPMultiPoint implements ISHPMultiPoint
   {
     return m_points;
   }
+
   @Override
   public int getNumPoints( )
   {

@@ -40,13 +40,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.kalypso.shape.geometry.ISHPGeometry;
+import org.kalypso.shape.geometry.ISHPMultiPoint;
 import org.kalypso.shape.geometry.ISHPParts;
 import org.kalypso.shape.geometry.ISHPPoint;
-import org.kalypso.shape.geometry.SHPMultiPoint;
-import org.kalypso.shape.geometry.SHPMultiPointz;
 import org.kalypso.shape.geometry.SHPNullShape;
 import org.kalypso.shape.geometry.SHPPoint;
-import org.kalypso.shape.geometry.SHPPointz;
 import org.kalypso.shape.geometry.SHPPolyLine;
 import org.kalypso.shape.geometry.SHPPolyLinez;
 import org.kalypso.shape.geometry.SHPPolygon;
@@ -91,23 +89,12 @@ public final class SHP2GM_Object
   }
 
   /**
-   * method: GM_Point transformPoint(CS_CoordinateSystem srs, <BR>
-   * SHPPoint shppoint)) <BR>
-   * transforms a SHPPoint to a WKSGeometry <BR>
-   * gets a point that should be transformed <BR>
-   */
-  public static GM_Point transformPoint( final String crs, final SHPPoint shppoint )
-  {
-    return GeometryFactory.createGM_Point( shppoint.getX(), shppoint.getY(), crs );
-  }
-
-  /**
    * method: GM_Point transformPointz(CS_CoordinateSystem srs, <BR>
    * SHPPointz shppointz)) <BR>
    * transforms a SHPPointz to a WKSGeometry <BR>
    * gets a pointz that should be transformed <BR>
    */
-  public static GM_Point transformPointz( final String crs, final SHPPointz shppointz )
+  public static GM_Point transformPoint( final String crs, final ISHPPoint shppointz )
   {
     return GeometryFactory.createGM_Point( shppointz.getX(), shppointz.getY(), shppointz.getZ(), crs );
   }
@@ -118,9 +105,9 @@ public final class SHP2GM_Object
    * transforms a SHPMultiPoint to a WKSGeometry <BR>
    * gets a multipoint that should be transformed <BR>
    */
-  public static GM_Point[] transformMultiPoint( final String crs, final SHPMultiPoint shpmultipoint )
+  public static GM_Point[] transformMultiPoint( final String crs, final ISHPMultiPoint shpmultipoint )
   {
-    final SHPPoint[] points = shpmultipoint.getPoints();
+    final ISHPPoint[] points = shpmultipoint.getPoints();
     final GM_Point[] gm_points = new GM_Point[points.length];
 
     for( int i = 0; i < points.length; i++ )
@@ -129,49 +116,51 @@ public final class SHP2GM_Object
     return gm_points;
   }
 
-  /**
-   * method: GM_Point[] transformMultiPointz(CS_CoordinateSystem srs, <BR>
-   * SHPMultiPointz shpmultipointz)) <BR>
-   * transforms a SHPMultiPointz to a WKSGeometry <BR>
-   * gets a multipointz that should be transformed <BR>
-   */
-  public static GM_Point[] transformMultiPointz( final String crs, final SHPMultiPointz shpmultipointz )
+  public static GM_Position[][] transformParts( final ISHPParts partGeometry )
   {
-    final SHPPointz[] points = shpmultipointz.getPoints();
-    final GM_Point[] gm_points = new GM_Point[points.length];
+    final int[] parts = partGeometry.getParts();
+    final ISHPPoint[] points = partGeometry.getPoints();
 
-    for( int i = 0; i < points.length; i++ )
-      gm_points[i] = transformPointz( crs, points[i] );
+    final GM_Position[][] sequences = new GM_Position[parts.length][];
 
-    return gm_points;
+    for( int i = 0; i < parts.length; i++ )
+    {
+      final int start = parts[i];
+      final int end = i == parts.length - 1 ? points.length : parts[i + 1];
+
+      sequences[i] = new GM_Position[end - start];
+
+      for( int p = start; p < end; p++ )
+      {
+        final ISHPPoint point = points[p];
+        sequences[i][p - start] = GeometryFactory.createGM_Position( point.getX(), point.getY(), point.getZ() );
+      }
+    }
+
+    return sequences;
   }
 
   /**
-   * method: GM_Point[][] transformPolyLinez(CS_CoordinateSystem srs, <BR>
-   * SHPPolyLinez shppolylinez)) <BR>
-   * transforms a SHPPolyLinez to a WKSGeometry <BR>
-   * gets a polylinez that should be transformed <BR>
+   * Transforms a SHPPolyLinez to a WKSGeometry
    */
   public static GM_Curve[] transformPolyLine( final String crs, final ISHPParts shpPolyLine )
   {
-    final GM_Curve[] curve = new GM_Curve[shpPolyLine.getNumParts()];
+    final GM_Position[][] parts = transformParts( shpPolyLine );
+
+    final GM_Curve[] curve = new GM_Curve[parts.length];
 
     try
     {
-      for( int j = 0; j < shpPolyLine.getNumParts(); j++ )
+      for( int i = 0; i < parts.length; i++ )
       {
-        final ISHPPoint[][] pointsz = shpPolyLine.getPoints();
-        final GM_Position[] gm_points = new GM_Position[pointsz[j].length];
-
-        for( int i = 0; i < pointsz[j].length; i++ )
-          gm_points[i] = GeometryFactory.createGM_Position( pointsz[j][i].getX(), pointsz[j][i].getY(), pointsz[j][i].getZ() );
+        final GM_Position[] gm_points = parts[i];
 
         final GM_CurveSegment cs = GeometryFactory.createGM_CurveSegment( gm_points, crs );
-        curve[j] = GeometryFactory.createGM_Curve( cs );
-        curve[j].setCoordinateSystem( crs );
+        curve[i] = GeometryFactory.createGM_Curve( cs );
+        curve[i].setCoordinateSystem( crs );
       }
     }
-    catch( final Exception e )
+    catch( final GM_Exception e )
     {
       System.out.println( "SHP2WKS::" + e );
     }
@@ -180,22 +169,18 @@ public final class SHP2GM_Object
   }
 
   /**
-   * transforms the SHPPolygon to a WKSGeometry <BR>
-   * gets the polygon that should be transformed <BR>
+   * Transforms the SHPPolygon to a WKSGeometry
    */
   public static GM_Surface<GM_SurfacePatch>[] transformPolygon( final String crs, final ISHPParts shppolygon )
   {
-    final List<GM_Position[]> outerRings = new ArrayList<GM_Position[]>( shppolygon.getNumParts() );
-    final List<GM_Position[]> innerRings = new ArrayList<GM_Position[]>( shppolygon.getNumParts() );
+    final GM_Position[][] parts = transformParts( shppolygon );
 
-    for( int i = 0; i < shppolygon.getNumParts(); i++ )
+    final List<GM_Position[]> outerRings = new ArrayList<GM_Position[]>( parts.length );
+    final List<GM_Position[]> innerRings = new ArrayList<GM_Position[]>( parts.length );
+
+    for( final GM_Position[] part : parts )
     {
-      final ISHPPoint[][] pointsz = shppolygon.getPoints();
-
-      final GM_Position[] ring = new GM_Position[pointsz[i].length];
-
-      for( int k = 0; k < pointsz[i].length; k++ )
-        ring[k] = GeometryFactory.createGM_Position( pointsz[i][k].getX(), pointsz[i][k].getY(), pointsz[i][k].getZ() );
+      final GM_Position[] ring = part;
 
       // note: esris (unmathemathic) definition of positive area is clockwise => outer ring, negative => inner ring
       final double esriArea = -GeometryUtilities.calcSignedAreaOfRing( ring );
@@ -281,12 +266,12 @@ public final class SHP2GM_Object
     if( shpGeom instanceof SHPNullShape )
       return null;
 
-    if( shpGeom instanceof SHPPoint )
+    if( shpGeom instanceof ISHPPoint )
       return SHP2GM_Object.transformPoint( crs, (SHPPoint) shpGeom );
 
-    if( shpGeom instanceof SHPMultiPoint )
+    if( shpGeom instanceof ISHPMultiPoint )
     {
-      final GM_Point[] points = SHP2GM_Object.transformMultiPoint( crs, (SHPMultiPoint) shpGeom );
+      final GM_Point[] points = SHP2GM_Object.transformMultiPoint( crs, (ISHPMultiPoint) shpGeom );
       if( points == null )
         return null;
 
@@ -310,9 +295,6 @@ public final class SHP2GM_Object
 
       return GeometryFactory.createGM_MultiSurface( polygons, crs );
     }
-
-    if( shpGeom instanceof SHPPointz )
-      return SHP2GM_Object.transformPointz( crs, (SHPPointz) shpGeom );
 
     if( shpGeom instanceof SHPPolyLinez )
     {

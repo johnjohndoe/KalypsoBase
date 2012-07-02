@@ -33,100 +33,63 @@
  * lat/lon GmbH
  * http://www.lat-lon.de
  */
-
 package org.kalypso.shape.geometry;
 
 import java.io.DataOutput;
 import java.io.IOException;
 
-import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.tools.DataUtils;
 import org.kalypsodeegree.model.geometry.ByteUtils;
 
 /**
- * @author Andreas Poth
+ * @author Thomas Jung
  */
-public class SHPPoint implements ISHPPoint
+public class SHPRange
 {
-  private final double m_x;
+  private final double m_min;
 
-  private final double m_y;
+  private final double m_max;
 
-  private final SHPEnvelope m_envelope;
-
-  public SHPPoint( final byte[] recBuf )
+  /**
+   * Create {@link SHPRange} from raw bytes.<br>
+   * Reads the min. and max. value of a shp-file (as double).
+   * 
+   * @param b
+   *          the raw data buffer
+   * @param off
+   *          the offset into the buffer where the values resides
+   */
+  public SHPRange( final byte[] b, final int off )
   {
-    this( recBuf, 4 );
+    m_min = ByteUtils.readLEDouble( b, off );
+    m_max = ByteUtils.readLEDouble( b, off + 8 );
   }
 
-  public SHPPoint( final byte[] recBuf, final int xStart )
+  public SHPRange( final double min, final double max )
   {
-    m_x = ByteUtils.readLEDouble( recBuf, xStart );
-    m_y = ByteUtils.readLEDouble( recBuf, xStart + 8 );
-
-    m_envelope = new SHPEnvelope( m_x, m_x, m_y, m_y );
+    m_min = min;
+    m_max = max;
   }
 
-  public SHPPoint( final double x, final double y )
-  {
-    m_x = x;
-    m_y = y;
-
-    m_envelope = new SHPEnvelope( x, x, y, y );
-  }
-
-  @Override
-  public SHPEnvelope getEnvelope( )
-  {
-    return m_envelope;
-  }
-
-  @Override
   public void write( final DataOutput output ) throws IOException
   {
-    DataUtils.writeLEDouble( output, m_x );
-    DataUtils.writeLEDouble( output, m_y );
-  }
-
-  @Override
-  public ShapeType getType( )
-  {
-    return ShapeType.POINT;
-  }
-
-  @Override
-  public int length( )
-  {
-    return 16;
+    DataUtils.writeLEDouble( output, m_min );
+    DataUtils.writeLEDouble( output, m_max );
   }
 
   @Override
   public String toString( )
   {
-    return "SHPPOINT" + "[" + m_x + "; " + m_y + "]";
+    return "RANGE" + "\n[min: " + m_min + "]" + "\n[max: " + m_max + "]" + "]";
   }
 
-  @Override
-  public double getX( )
+  public double getMin( )
   {
-    return m_x;
+    return m_min;
   }
 
-  @Override
-  public double getY( )
+  public double getMax( )
   {
-    return m_y;
-  }
-
-  @Override
-  public double getZ( )
-  {
-    return Double.NaN;
-  }
-
-  @Override
-  public double getM( )
-  {
-    return Double.NaN;
+    return m_max;
   }
 }

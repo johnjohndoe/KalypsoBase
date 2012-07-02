@@ -33,79 +33,112 @@
  * lat/lon GmbH
  * http://www.lat-lon.de
  */
-
 package org.kalypso.shape.geometry;
 
 import java.io.DataOutput;
 import java.io.IOException;
 
-import org.kalypso.shape.ShapeConst;
 import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.tools.DataUtils;
 import org.kalypsodeegree.model.geometry.ByteUtils;
 
 /**
- * Class representig a collection of pointsz <BR>
- * <B>Last changes <B>: <BR>
- * <!---------------------------------------------------------------------------->
- * 
- * @version 16.01.2007
  * @author Thomas Jung
  */
 public class SHPMultiPointz implements ISHPMultiPoint
 {
-  public final SHPPointz[] m_pointsz;
+  private final ISHPPoint[] m_points;
 
-  public final SHPZRange m_zrange;
+  private final SHPRange m_zrange;
+
+  private final SHPRange m_mrange;
 
   private final SHPEnvelope m_envelope;
 
-  /**
-   * constructor: recieves a stream <BR>
-   */
-  public SHPMultiPointz( final byte[] recBuf )
+  private static ISHPPoint[] readPoints( final byte[] recBuf, final int offset, final int numPoints )
   {
-    m_envelope = new SHPEnvelope( recBuf, 4 );
+    final ISHPPoint[] points = new ISHPPoint[numPoints];
 
-    final int numPoints = ByteUtils.readLEInt( recBuf, 36 );
-
-    m_pointsz = new SHPPointz[numPoints];
+    final int zOffset = offset + numPoints * 16;
+    final int mOffset = offset + numPoints * 16 + 16 + 8 * numPoints;
 
     for( int i = 0; i < numPoints; i++ )
     {
-      final double x = ByteUtils.readLEDouble( recBuf, 40 + i * 16 );
-      final double y = ByteUtils.readLEDouble( recBuf, 40 + i * 16 + 8 );
+      final double x = ByteUtils.readLEDouble( recBuf, offset + i * 16 );
+      final double y = ByteUtils.readLEDouble( recBuf, offset + i * 16 + 8 );
 
-      final int byteposition = ShapeConst.SHAPE_FILE_RECORD_HEADER_LENGTH + 40 + numPoints * 16 + 16 + 8 * numPoints + 8 * i;
-      final double z = ByteUtils.readLEDouble( recBuf, byteposition );
+      final int zPos = zOffset + 16 + 8 * i;
+      final double z = ByteUtils.readLEDouble( recBuf, zPos );
 
-      m_pointsz[i] = new SHPPointz( x, y, z, 0.0 );
+      final int mPos = mOffset + 16 + 8 * i;
+      final double m = ByteUtils.readLEDouble( recBuf, mPos );
+
+      points[i] = new SHPPointz( x, y, z, m );
     }
 
-    m_zrange = new SHPZRange( recBuf, 40 + numPoints * 16 );
+    return points;
+  }
+
+  public static SHPMultiPointz read( final byte[] recBuf )
+  {
+    final SHPEnvelope envelope = new SHPEnvelope( recBuf, 4 );
+    final int numPoints = ByteUtils.readLEInt( recBuf, 36 );
+
+    return read( recBuf, 40, envelope, numPoints );
+  }
+
+  public static SHPMultiPointz read( final byte[] recBuf, final int offset, final SHPEnvelope envelope, final int numPoints )
+  {
+    final ISHPPoint[] points = readPoints( recBuf, offset, numPoints );
+
+    final int zOffset = offset + numPoints * 16;
+    final SHPRange zrange = new SHPRange( recBuf, zOffset );
+
+    final int mOffset = offset + numPoints * 16 + 16 + 8 * numPoints;
+    final SHPRange mrange = new SHPRange( recBuf, mOffset );
+
+    return new SHPMultiPointz( envelope, points, zrange, mrange );
+  }
+
+  public SHPMultiPointz( final SHPEnvelope envelope, final ISHPPoint[] points, final SHPRange zRange, final SHPRange mRange )
+  {
+    m_envelope = envelope;
+    m_points = points;
+    m_zrange = zRange;
+    m_mrange = mRange;
   }
 
   @Override
   public void write( final DataOutput output ) throws IOException
   {
     m_envelope.writeLESHPEnvelope( output );
-    DataUtils.writeLEInt( output, m_pointsz.length );
+    DataUtils.writeLEInt( output, m_points.length );
 
-    for( final SHPPointz element : m_pointsz )
+    writePoints( output );
+  }
+
+  @Override
+  public void writePoints( final DataOutput output ) throws IOException
+  {
+    for( final ISHPPoint element : m_points )
     {
       DataUtils.writeLEDouble( output, element.getX() );
       DataUtils.writeLEDouble( output, element.getY() );
     }
 
-    m_zrange.writeLESHPRange( output );
+    /* write z */
+    m_zrange.write( output );
 
-    for( final SHPPointz element : m_pointsz )
+    for( final ISHPPoint element : m_points )
       DataUtils.writeLEDouble( output, element.getZ() );
+
+    /* write m */
+    m_mrange.write( output );
+
+    for( final ISHPPoint element : m_points )
+      DataUtils.writeLEDouble( output, element.getM() );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.shpapi.ISHPGeometry#getType()
-   */
   @Override
   public ShapeType getType( )
   {
@@ -115,12 +148,9 @@ public class SHPMultiPointz implements ISHPMultiPoint
   @Override
   public int length( )
   {
-    return 36 + m_pointsz.length * 16 + 16 + 8 * m_pointsz.length;
+    return 36 + 8 + m_points.length * 16 + 16 + 8 * m_points.length + 16 + 8 * m_points.length;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.shpapi.SHPGeometry#getEnvelope()
-   */
   @Override
   public SHPEnvelope getEnvelope( )
   {
@@ -128,9 +158,14 @@ public class SHPMultiPointz implements ISHPMultiPoint
   }
 
   @Override
-  public SHPPointz[] getPoints( )
+  public ISHPPoint[] getPoints( )
   {
-    return m_pointsz;
+    return m_points;
   }
 
+  @Override
+  public int getNumPoints( )
+  {
+    return m_points.length;
+  }
 }

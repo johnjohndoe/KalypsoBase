@@ -255,18 +255,22 @@ public final class GenericShapeDataFactory
 
       case POINT:
       case POINTZ:
+      case POINTM:
         return GM_Point.POINT_ELEMENT;
 
       case MULTIPOINT:
       case MULTIPOINTZ:
+      case MULTIPOINTM:
         return GM_MultiPoint.MULTI_POINT_ELEMENT;
 
       case POLYLINE:
       case POLYLINEZ:
+      case POLYLINEM:
         return GM_Curve.CURVE_ELEMENT;
 
       case POLYGON:
       case POLYGONZ:
+      case POLYGONM:
         return GM_Surface.SURFACE_ELEMENT;
     }
 

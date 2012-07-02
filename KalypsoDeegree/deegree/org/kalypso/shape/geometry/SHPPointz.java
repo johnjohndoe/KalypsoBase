@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
+ * interface-compatibility to deegree is wanted but not retained always.
  * 
- * If you intend to use this software in other ways than in kalypso 
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -42,90 +42,62 @@ import java.io.IOException;
 import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.tools.DataUtils;
 import org.kalypsodeegree.model.geometry.ByteUtils;
-import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
- * Class representig a three dimensional point <BR>
- * <B>Last changes <B>: <BR>
- * 16.01.07 Jung: class createtd <BR>
- * <!---------------------------------------------------------------------------->
- * 
- * @version 16.01.07
  * @author Thomas Jung
  */
 public class SHPPointz implements ISHPPoint
 {
-  private final double x;
+  private final double m_x;
 
-  private final double y;
+  private final double m_y;
 
-  private final double z;
+  private final double m_z;
 
-  private final double m;
+  private final double m_m;
 
   private final SHPEnvelope m_envelope;
 
-  /**
-   * constructor: gets a stream and the start index <BR>
-   * of point on it <BR>
-   */
   public SHPPointz( final byte[] recBuf )
   {
     this( recBuf, 4 );
   }
 
-  /**
-   * constructor: gets a stream and the start index <BR>
-   * of point on it <BR>
-   */
-  public SHPPointz( final byte[] recBuf, final int off )
+  private SHPPointz( final byte[] recBuf, final int off )
   {
-    // get x out of recordbuffer
-    x = ByteUtils.readLEDouble( recBuf, off );
-    // get y out of recordbuffer
-    y = ByteUtils.readLEDouble( recBuf, off + 8 );
-    // get z out of recordbuffer
-    z = ByteUtils.readLEDouble( recBuf, off + 16 );
-    // get measure m out of recordbuffer
-    m = ByteUtils.readLEDouble( recBuf, off + 24 );
+    m_x = ByteUtils.readLEDouble( recBuf, off );
+    m_y = ByteUtils.readLEDouble( recBuf, off + 8 );
+    m_z = ByteUtils.readLEDouble( recBuf, off + 16 );
+    m_m = ByteUtils.readLEDouble( recBuf, off + 24 );
 
-    m_envelope = new SHPEnvelope( x, x, y, y );
+    m_envelope = new SHPEnvelope( m_x, m_x, m_y, m_y );
   }
 
-  /**
-   * constructor: creates a SHPPoint from a WKS Geometrie <BR>
-   */
-  public SHPPointz( final GM_Position position )
-  {
-    this( position.getX(), position.getY(), position.getZ(), Double.NaN );
-  }
-
-  @SuppressWarnings("hiding")
   public SHPPointz( final double x, final double y, final double z, final double m )
   {
-    this.x = x;
-    this.y = y;
-    this.z = z;
-    this.m = m;
+    m_x = x;
+    m_y = y;
+    m_z = z;
+    m_m = m;
 
     m_envelope = new SHPEnvelope( x, x, y, y );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.shpapi.AbstractShape#writeContent(java.io.DataOutput)
-   */
+  @Override
+  public SHPEnvelope getEnvelope( )
+  {
+    return m_envelope;
+  }
+
   @Override
   public void write( final DataOutput output ) throws IOException
   {
-    DataUtils.writeLEDouble( output, x );
-    DataUtils.writeLEDouble( output, y );
-    DataUtils.writeLEDouble( output, z );
-    DataUtils.writeLEDouble( output, m );
+    DataUtils.writeLEDouble( output, m_x );
+    DataUtils.writeLEDouble( output, m_y );
+    DataUtils.writeLEDouble( output, m_z );
+    DataUtils.writeLEDouble( output, m_m );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.shpapi.ISHPGeometry#getType()
-   */
   @Override
   public ShapeType getType( )
   {
@@ -144,37 +116,30 @@ public class SHPPointz implements ISHPPoint
   @Override
   public String toString( )
   {
-    return "SHPPOINTZ" + "[" + x + "; " + y + "; " + z + "; " + m + "]";
+    return "SHPPOINTZ" + "[" + m_x + "; " + m_y + "; " + m_z + "; " + m_m + "]";
   }
 
   @Override
   public double getX( )
   {
-    return x;
+    return m_x;
   }
 
   @Override
   public double getY( )
   {
-    return y;
+    return m_y;
   }
 
   @Override
   public double getZ( )
   {
-    return z;
+    return m_z;
   }
 
   @Override
   public double getM( )
   {
-    return m;
+    return m_m;
   }
-
-  @Override
-  public SHPEnvelope getEnvelope( )
-  {
-    return m_envelope;
-  }
-
 }

@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.shape;
 
@@ -55,13 +55,12 @@ public enum ShapeType
   POINTZ(11, "PointZ"),
   POLYLINEZ(13, "PolyLineZ"),
   POLYGONZ(15, "PolygonZ"),
-  MULTIPOINTZ(18, "MultiPointZ");
-
-// "PointM";
-// "PolyLineM";
-// "PolygonM";
-// "MultiPointM";
-// "MultiPatch";
+  MULTIPOINTZ(18, "MultiPointZ"),
+  POINTM(21, "PointM"),
+  POLYLINEM(23, "PolyLineM"),
+  POLYGONM(25, "PolygonM"),
+  MULTIPOINTM(28, "MultiPointM");
+// MULTIPATCH(31, "MultiPatch");
 
   private final int m_shpValue;
 

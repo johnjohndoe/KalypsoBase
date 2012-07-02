@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.shape;
 
@@ -54,6 +54,10 @@ import org.kalypso.shape.dbf.DBaseException;
 import org.kalypso.shape.dbf.FieldType;
 import org.kalypso.shape.dbf.IDBFField;
 import org.kalypso.shape.geometry.ISHPGeometry;
+import org.kalypso.shape.geometry.ISHPMultiPoint;
+import org.kalypso.shape.geometry.SHPEnvelope;
+import org.kalypso.shape.geometry.SHPGeometryUtils;
+import org.kalypso.shape.geometry.SHPMultiPoint;
 import org.kalypso.shape.geometry.SHPNullShape;
 import org.kalypso.shape.geometry.SHPPoint;
 import org.kalypso.shape.geometry.SHPPointz;
@@ -211,7 +215,14 @@ public class ShapeFileTest extends Assert
 
   private ISHPGeometry[] createGoodShapes( )
   {
-    final ISHPGeometry shapeNormalLine = new SHPPolyLine( new SHPPoint[][] { new SHPPoint[] { new SHPPoint( 1, 2 ), new SHPPoint( 2, 3 ), new SHPPoint( 3, 4 ) } } );
+    final int[] parts = new int[] { 0 };
+    final SHPPoint[] points = new SHPPoint[] { new SHPPoint( 1, 2 ), new SHPPoint( 2, 3 ), new SHPPoint( 3, 4 ) };
+
+    final SHPEnvelope envelope = SHPGeometryUtils.createEnvelope( points );
+
+    final ISHPMultiPoint multiPoint = new SHPMultiPoint( envelope, points );
+
+    final ISHPGeometry shapeNormalLine = new SHPPolyLine( multiPoint, parts );
     final ISHPGeometry shapeNullShape = new SHPNullShape();
 
     final Collection<ISHPGeometry> shapes = new ArrayList<ISHPGeometry>();
@@ -234,5 +245,4 @@ public class ShapeFileTest extends Assert
 
     return shapes.toArray( new ISHPGeometry[shapes.size()] );
   }
-
 }

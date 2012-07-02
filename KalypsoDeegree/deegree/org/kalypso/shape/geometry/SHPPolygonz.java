@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
+ * interface-compatibility to deegree is wanted but not retained always.
  * 
- * If you intend to use this software in other ways than in kalypso 
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -33,111 +33,28 @@
  * lat/lon GmbH
  * http://www.lat-lon.de
  */
-
 package org.kalypso.shape.geometry;
-
-import java.io.DataOutput;
-import java.io.IOException;
 
 import org.kalypso.shape.ShapeType;
 
 /**
- * Class representing a three dimensional ESRI Polygonz <BR>
- * 
- * @version 26.01.2007
  * @author Thomas Jung
  */
-
-public class SHPPolygonz implements ISHPParts
+public class SHPPolygonz extends AbstractSHPPolygon
 {
-  private final SHPPolyLinez m_rings;
-
-  /**
-   * constructor: receives a stream <BR>
-   */
   public SHPPolygonz( final byte[] recBuf )
   {
-    this( new SHPPolyLinez( recBuf ) );
-  }
-
-  public SHPPolygonz( final SHPPointz[][] pointz )
-  {
-    this( new SHPPolyLinez( pointz ) );
+    super( new SHPPolyLinez( recBuf ) );
   }
 
   public SHPPolygonz( final SHPPolyLinez rings )
   {
-    m_rings = rings;
+    super( rings );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.shpapi.ISHPGeometry#writeContent(java.io.DataOutput)
-   */
-  @Override
-  public void write( final DataOutput output ) throws IOException
-  {
-    m_rings.write( output );
-  }
-
-  /**
-   * @see org.kalypsodeegree_impl.io.shpapi.ISHPGeometry#getType()
-   */
   @Override
   public ShapeType getType( )
   {
     return ShapeType.POLYGONZ;
   }
-
-  /**
-   * returns the polygonz shape size in bytes <BR>
-   */
-  @Override
-  public int length( )
-  {
-    return m_rings.length();
-  }
-
-  @Override
-  public String toString( )
-  {
-    return "WKBPOLYGON" + " numRings: " + m_rings.getNumParts();
-  }
-
-  @Override
-  public SHPEnvelope getEnvelope( )
-  {
-    return m_rings.getEnvelope();
-  }
-
-  @Override
-  public int getNumParts( )
-  {
-    return m_rings.getNumParts();
-  }
-
-  @Override
-  public int getNumPoints( )
-  {
-    return m_rings.getNumPoints();
-  }
-
-  /**
-   * @see org.kalypsodeegree_impl.io.shpapi.ISHPParts#getPoints()
-   */
-  @Override
-  public ISHPPoint[][] getPoints( )
-  {
-    return m_rings.getPoints();
-  }
-
-  public SHPPolyLinez getRings( )
-  {
-    return m_rings;
-  }
-
-  public SHPZRange getZrange( )
-  {
-    return m_rings.getZrange();
-  }
-
 }

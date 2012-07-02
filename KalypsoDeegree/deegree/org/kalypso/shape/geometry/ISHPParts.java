@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.shape.geometry;
 
@@ -47,9 +47,11 @@ package org.kalypso.shape.geometry;
  */
 public interface ISHPParts extends ISHPGeometry
 {
-  public int getNumParts( );
+  int getNumParts( );
 
-  public int getNumPoints( );
+  int[] getParts( );
 
-  public ISHPPoint[][] getPoints( );
+  int getNumPoints( );
+
+  ISHPPoint[] getPoints( );
 }

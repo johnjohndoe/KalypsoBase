@@ -50,9 +50,10 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Plugin;
 import org.kalypso.commons.xml.XmlTypes;
-import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.GMLSchemaException;
@@ -161,7 +162,7 @@ public final class Shape2GML
       schemaString = schemaString.replaceAll( Pattern.quote( "${CUSTOM_FEATURE_GEOMETRY_PROPERTY_TYPE}" ), geometryPropertyTypeString );
       schemaString = schemaString.replaceAll( Pattern.quote( "${CUSTOM_FEATURE_PROPERTY_ELEMENTS}" ), propertyElementsSchemaFragment );
 
-      final File tempFile = TempFileUtilities.createTempFile( KalypsoDeegreePlugin.getDefault(), "temporaryCustomSchemas", "customSchema", ".xsd" );
+      final File tempFile = createTempFile( KalypsoDeegreePlugin.getDefault(), "temporaryCustomSchemas", "customSchema", ".xsd" );
       tempFile.deleteOnExit();
 
       // TODO: why write this file to disk? Why not directly parse the schema from it and add the schema to the cache?
@@ -181,6 +182,28 @@ public final class Shape2GML
       e.printStackTrace();
       throw new IllegalStateException( e );
     }
+  }
+
+  /**
+   * Create a temp file in the subDirName of the plugin's state location (where files can be created, deleted, etc.).
+   * Uses File.createTempFile() so as written in the File javadoc, you should call .deleteOnExit() on the returned file
+   * instance to make it a real 'temp' file.
+   */
+  private static File createTempFile( final Plugin plugin, final String subDirName, String prefix, final String suffix ) throws IOException
+  {
+    if( prefix.length() < 3 )
+      prefix += "___";
+
+    final IPath path = plugin.getStateLocation();
+    final File dir = new File( path.toFile(), subDirName );
+    if( !dir.exists() )
+      dir.mkdir();
+
+    // TODO as org.kalypso.commons.java.io.FileUtilities.validateName() should be moved to JavaApiContribs and could be
+    // used here
+    final String cleanPrefix = prefix.replaceAll( "[\\\\/:\\*\\?\"<>|]", "_" );
+
+    return File.createTempFile( cleanPrefix, suffix, dir );
   }
 
   private static String buildValueElementsDefinition( final IDBFField[] fields )

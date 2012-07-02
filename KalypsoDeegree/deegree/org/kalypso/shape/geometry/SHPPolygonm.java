@@ -33,100 +33,28 @@
  * lat/lon GmbH
  * http://www.lat-lon.de
  */
-
 package org.kalypso.shape.geometry;
 
-import java.io.DataOutput;
-import java.io.IOException;
-
 import org.kalypso.shape.ShapeType;
-import org.kalypso.shape.tools.DataUtils;
-import org.kalypsodeegree.model.geometry.ByteUtils;
 
 /**
  * @author Andreas Poth
  */
-public class SHPPoint implements ISHPPoint
+public class SHPPolygonm extends AbstractSHPPolygon
 {
-  private final double m_x;
-
-  private final double m_y;
-
-  private final SHPEnvelope m_envelope;
-
-  public SHPPoint( final byte[] recBuf )
+  public SHPPolygonm( final byte[] recBuf )
   {
-    this( recBuf, 4 );
+    super( new SHPPolyLinem( recBuf ) );
   }
 
-  public SHPPoint( final byte[] recBuf, final int xStart )
+  public SHPPolygonm( final SHPPolyLinem rings )
   {
-    m_x = ByteUtils.readLEDouble( recBuf, xStart );
-    m_y = ByteUtils.readLEDouble( recBuf, xStart + 8 );
-
-    m_envelope = new SHPEnvelope( m_x, m_x, m_y, m_y );
-  }
-
-  public SHPPoint( final double x, final double y )
-  {
-    m_x = x;
-    m_y = y;
-
-    m_envelope = new SHPEnvelope( x, x, y, y );
-  }
-
-  @Override
-  public SHPEnvelope getEnvelope( )
-  {
-    return m_envelope;
-  }
-
-  @Override
-  public void write( final DataOutput output ) throws IOException
-  {
-    DataUtils.writeLEDouble( output, m_x );
-    DataUtils.writeLEDouble( output, m_y );
+    super( rings );
   }
 
   @Override
   public ShapeType getType( )
   {
-    return ShapeType.POINT;
-  }
-
-  @Override
-  public int length( )
-  {
-    return 16;
-  }
-
-  @Override
-  public String toString( )
-  {
-    return "SHPPOINT" + "[" + m_x + "; " + m_y + "]";
-  }
-
-  @Override
-  public double getX( )
-  {
-    return m_x;
-  }
-
-  @Override
-  public double getY( )
-  {
-    return m_y;
-  }
-
-  @Override
-  public double getZ( )
-  {
-    return Double.NaN;
-  }
-
-  @Override
-  public double getM( )
-  {
-    return Double.NaN;
+    return ShapeType.POLYGONM;
   }
 }

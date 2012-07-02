@@ -44,33 +44,37 @@ import org.kalypso.shape.tools.DataUtils;
 import org.kalypsodeegree.model.geometry.ByteUtils;
 
 /**
- * @author Andreas Poth
+ * @author Thomas Jung
  */
-public class SHPPoint implements ISHPPoint
+public class SHPPointm implements ISHPPoint
 {
   private final double m_x;
 
   private final double m_y;
 
+  private final double m_m;
+
   private final SHPEnvelope m_envelope;
 
-  public SHPPoint( final byte[] recBuf )
+  public SHPPointm( final byte[] recBuf )
   {
     this( recBuf, 4 );
   }
 
-  public SHPPoint( final byte[] recBuf, final int xStart )
+  private SHPPointm( final byte[] recBuf, final int off )
   {
-    m_x = ByteUtils.readLEDouble( recBuf, xStart );
-    m_y = ByteUtils.readLEDouble( recBuf, xStart + 8 );
+    m_x = ByteUtils.readLEDouble( recBuf, off );
+    m_y = ByteUtils.readLEDouble( recBuf, off + 8 );
+    m_m = ByteUtils.readLEDouble( recBuf, off + 16 );
 
     m_envelope = new SHPEnvelope( m_x, m_x, m_y, m_y );
   }
 
-  public SHPPoint( final double x, final double y )
+  public SHPPointm( final double x, final double y, final double m )
   {
     m_x = x;
     m_y = y;
+    m_m = m;
 
     m_envelope = new SHPEnvelope( x, x, y, y );
   }
@@ -86,24 +90,28 @@ public class SHPPoint implements ISHPPoint
   {
     DataUtils.writeLEDouble( output, m_x );
     DataUtils.writeLEDouble( output, m_y );
+    DataUtils.writeLEDouble( output, m_m );
   }
 
   @Override
   public ShapeType getType( )
   {
-    return ShapeType.POINT;
+    return ShapeType.POINTM;
   }
 
+  /**
+   * returns the size of the point shape in bytes <BR>
+   */
   @Override
   public int length( )
   {
-    return 16;
+    return 24;
   }
 
   @Override
   public String toString( )
   {
-    return "SHPPOINT" + "[" + m_x + "; " + m_y + "]";
+    return "SHPPOINTM" + "[" + m_x + "; " + m_y + "; " + m_m + "]";
   }
 
   @Override
@@ -127,6 +135,6 @@ public class SHPPoint implements ISHPPoint
   @Override
   public double getM( )
   {
-    return Double.NaN;
+    return m_m;
   }
 }

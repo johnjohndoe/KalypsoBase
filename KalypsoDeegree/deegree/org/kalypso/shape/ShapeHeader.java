@@ -41,7 +41,7 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 import org.kalypso.shape.geometry.SHPEnvelope;
-import org.kalypso.shape.geometry.SHPZRange;
+import org.kalypso.shape.geometry.SHPRange;
 import org.kalypso.shape.tools.DataUtils;
 
 /**
@@ -170,7 +170,7 @@ public class ShapeHeader
     else
       m_mbr.writeLESHPEnvelope( output );
     // TODO: ShapeHEader supports z- and m-ranges, we should do so also.
-    new SHPZRange( 0.0, 0.0 ).writeLESHPRange( output ); // Z-Range
-    new SHPZRange( 0.0, 0.0 ).writeLESHPRange( output ); // M-Range
+    new SHPRange( 0.0, 0.0 ).write( output ); // Z-Range
+    new SHPRange( 0.0, 0.0 ).write( output ); // M-Range
   }
 }

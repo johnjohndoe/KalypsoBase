@@ -33,100 +33,78 @@
  * lat/lon GmbH
  * http://www.lat-lon.de
  */
-
 package org.kalypso.shape.geometry;
 
 import java.io.DataOutput;
 import java.io.IOException;
 
-import org.kalypso.shape.ShapeType;
-import org.kalypso.shape.tools.DataUtils;
-import org.kalypsodeegree.model.geometry.ByteUtils;
-
 /**
- * @author Andreas Poth
+ * @author Gernot Belger
  */
-public class SHPPoint implements ISHPPoint
+abstract class AbstractSHPPolygon implements ISHPParts
 {
-  private final double m_x;
+  private final AbstractSHPPolyLine m_rings;
 
-  private final double m_y;
-
-  private final SHPEnvelope m_envelope;
-
-  public SHPPoint( final byte[] recBuf )
+  public AbstractSHPPolygon( final byte[] recBuf )
   {
-    this( recBuf, 4 );
+    this( new SHPPolyLine( recBuf ) );
   }
 
-  public SHPPoint( final byte[] recBuf, final int xStart )
+  public AbstractSHPPolygon( final ISHPMultiPoint points, final int[] parts )
   {
-    m_x = ByteUtils.readLEDouble( recBuf, xStart );
-    m_y = ByteUtils.readLEDouble( recBuf, xStart + 8 );
-
-    m_envelope = new SHPEnvelope( m_x, m_x, m_y, m_y );
+    this( new SHPPolyLine( points, parts ) );
   }
 
-  public SHPPoint( final double x, final double y )
+  public AbstractSHPPolygon( final AbstractSHPPolyLine rings )
   {
-    m_x = x;
-    m_y = y;
-
-    m_envelope = new SHPEnvelope( x, x, y, y );
-  }
-
-  @Override
-  public SHPEnvelope getEnvelope( )
-  {
-    return m_envelope;
+    m_rings = rings;
   }
 
   @Override
   public void write( final DataOutput output ) throws IOException
   {
-    DataUtils.writeLEDouble( output, m_x );
-    DataUtils.writeLEDouble( output, m_y );
-  }
-
-  @Override
-  public ShapeType getType( )
-  {
-    return ShapeType.POINT;
+    m_rings.write( output );
   }
 
   @Override
   public int length( )
   {
-    return 16;
+    return m_rings.length();
   }
 
   @Override
   public String toString( )
   {
-    return "SHPPOINT" + "[" + m_x + "; " + m_y + "]";
+    return m_rings.toString();
   }
 
   @Override
-  public double getX( )
+  public SHPEnvelope getEnvelope( )
   {
-    return m_x;
+    return m_rings.getEnvelope();
   }
 
   @Override
-  public double getY( )
+  public int getNumParts( )
   {
-    return m_y;
+    return m_rings.getNumParts();
   }
 
   @Override
-  public double getZ( )
+  public int getNumPoints( )
   {
-    return Double.NaN;
+    return m_rings.getNumPoints();
   }
 
   @Override
-  public double getM( )
+  public ISHPPoint[] getPoints( )
   {
-    return Double.NaN;
+    return m_rings.getPoints();
+  }
+
+  @Override
+  public int[] getParts( )
+  {
+    return m_rings.getParts();
   }
 }

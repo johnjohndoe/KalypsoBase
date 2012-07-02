@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
+ * interface-compatibility to deegree is wanted but not retained always.
  * 
- * If you intend to use this software in other ways than in kalypso 
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -33,170 +33,38 @@
  * lat/lon GmbH
  * http://www.lat-lon.de
  */
-
 package org.kalypso.shape.geometry;
 
-import java.io.DataOutput;
-import java.io.IOException;
-
-import org.kalypso.shape.ShapeConst;
 import org.kalypso.shape.ShapeType;
-import org.kalypso.shape.tools.DataUtils;
-import org.kalypsodeegree.model.geometry.ByteUtils;
+
+import com.vividsolutions.jts.util.Assert;
 
 /**
- * Class representig a two dimensional ESRI PolyLine <BR>
- * <B>Last changes <B>: <BR>
- * 12.01.2000 ap: constructor re-declared <BR>
- * 25.01.2000 ap: public variables numRings and numPoints declared <BR>
- * 21.03.2000 ap: parameter list of the second constructor modified <BR>
- * 14.08.2000 ap: constructor SHPPolyLine(GM_Point[][] gm_points) added <BR>
- * 14.08.2000 ap: method writeSHPPolyline(..) added <BR>
- * 14.08.2000 ap: method size() added <BR>
- * 16.08.2000 ap: constructor SHPPolyLine(GM_Point[][] gm_points) modified <BR>
- * <!---------------------------------------------------------------------------->
- * 
- * @version 16.08.2000
  * @author Andreas Poth
  */
-public class SHPPolyLine implements ISHPParts
+public class SHPPolyLine extends AbstractSHPPolyLine
 {
-  private final int m_numPoints;
-
-  private final ISHPPoint[][] m_parts;
-
-  private final SHPEnvelope m_envelope;
-
-  /**
-   * @param parts
-   *          REMARK: using class {@link SHPPoint} explicitely (not {@link ISHPPoint}, as we are not 3D.
-   */
-  public SHPPolyLine( final SHPPoint[][] parts )
+  public SHPPolyLine( final ISHPMultiPoint points, final int[] parts )
   {
-    SHPGeometryUtils.checkParts( parts );
+    super( points, parts, ShapeType.POLYLINE );
 
-    m_parts = parts;
-    m_numPoints = SHPGeometryUtils.countPoints( parts );
-    m_envelope = SHPGeometryUtils.createEnvelope( parts );
+    Assert.isTrue( points instanceof SHPMultiPoint );
   }
 
-  /**
-   * constructor: gets a stream <BR>
-   */
   public SHPPolyLine( final byte[] recBuf )
   {
-    m_envelope = new SHPEnvelope( recBuf, 4 );
-
-    final int numParts = ByteUtils.readLEInt( recBuf, 36 );
-    m_numPoints = ByteUtils.readLEInt( recBuf, 40 );
-
-    final int pointsStart = ShapeConst.PARTS_START + numParts * 4;
-
-    m_parts = new SHPPoint[numParts][];
-    for( int j = 0; j < numParts; j++ )
-    {
-      // get number of first point of current part out of ESRI shape Record:
-      final int firstPointNo = ByteUtils.readLEInt( recBuf, ShapeConst.PARTS_START + j * 4 );
-
-      // calculate offset of part in bytes, count from the beginning of
-      // recordbuffer
-      final int offset = pointsStart + firstPointNo * 16;
-
-      // get number of first point of next part ...
-      int nextFirstPointNo = 0;
-      if( j < numParts - 1 )
-      {
-        // ... usually out of ESRI shape Record
-        nextFirstPointNo = ByteUtils.readLEInt( recBuf, ShapeConst.PARTS_START + (j + 1) * 4 );
-      }
-      // ... for the last part as total number of points
-      else if( j == numParts - 1 )
-      {
-        nextFirstPointNo = m_numPoints;
-      }
-
-      // calculate number of points per part due to distance and
-      // calculate some checksum for the total number of points to be worked
-      final int lnumPoints = nextFirstPointNo - firstPointNo;
-
-      // allocate memory for the j-th part
-      m_parts[j] = new SHPPoint[lnumPoints];
-
-      // create the points of the j-th part from the buffer
-      for( int i = 0; i < lnumPoints; i++ )
-      {
-        m_parts[j][i] = new SHPPoint( recBuf, offset + i * 16 );
-      }
-    }
-
-    SHPGeometryUtils.checkParts( m_parts );
+    super( recBuf, ShapeType.POLYLINE );
   }
 
   @Override
-  public void write( final DataOutput output ) throws IOException
+  protected ISHPMultiPoint readPoints( final byte[] recBuf, final SHPEnvelope envelope, final int numParts, final int numPoints )
   {
-    writePart( output, m_envelope, m_numPoints, m_parts );
-  }
-
-  static void writePart( final DataOutput output, final SHPEnvelope envelope, final int numPoints, final ISHPPoint[][] parts ) throws IOException
-  {
-    envelope.writeLESHPEnvelope( output );
-    DataUtils.writeLEInt( output, parts.length );
-    DataUtils.writeLEInt( output, numPoints );
-
-    int partIndex = 0;
-    for( final ISHPPoint[] part : parts )
-    {
-      DataUtils.writeLEInt( output, partIndex );
-      partIndex += part.length;
-    }
-
-    for( final ISHPPoint[] part : parts )
-    {
-      for( final ISHPPoint point : part )
-      {
-        DataUtils.writeLEDouble( output, point.getX() );
-        DataUtils.writeLEDouble( output, point.getY() );
-      }
-    }
-  }
-
-  /**
-   * @see org.kalypsodeegree_impl.io.shpapi.ISHPGeometry#getType()
-   */
-  @Override
-  public ShapeType getType( )
-  {
-    return ShapeType.POLYLINE;
+    return SHPMultiPoint.read( recBuf, 36 + 4 + 4 + numParts * 4, envelope, numPoints );
   }
 
   @Override
   public int length( )
   {
-    return 40 + m_parts.length * 4 + m_numPoints * 16;
-  }
-
-  @Override
-  public SHPEnvelope getEnvelope( )
-  {
-    return m_envelope;
-  }
-
-  @Override
-  public int getNumParts( )
-  {
-    return m_parts.length;
-  }
-
-  @Override
-  public int getNumPoints( )
-  {
-    return m_numPoints;
-  }
-
-  @Override
-  public ISHPPoint[][] getPoints( )
-  {
-    return m_parts;
+    return 32 + 4 + 4 + getNumParts() * 4 + getNumPoints() * 16;
   }
 }

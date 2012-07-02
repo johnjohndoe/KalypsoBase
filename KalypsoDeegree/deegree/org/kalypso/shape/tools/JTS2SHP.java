@@ -44,12 +44,22 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.kalypso.shape.geometry.ISHPGeometry;
+import org.kalypso.shape.geometry.ISHPMultiPoint;
+import org.kalypso.shape.geometry.ISHPPoint;
+import org.kalypso.shape.geometry.SHPEnvelope;
+import org.kalypso.shape.geometry.SHPGeometryUtils;
+import org.kalypso.shape.geometry.SHPMultiPoint;
+import org.kalypso.shape.geometry.SHPMultiPointm;
+import org.kalypso.shape.geometry.SHPMultiPointz;
 import org.kalypso.shape.geometry.SHPPoint;
 import org.kalypso.shape.geometry.SHPPointz;
 import org.kalypso.shape.geometry.SHPPolyLine;
+import org.kalypso.shape.geometry.SHPPolyLinem;
 import org.kalypso.shape.geometry.SHPPolyLinez;
 import org.kalypso.shape.geometry.SHPPolygon;
+import org.kalypso.shape.geometry.SHPPolygonm;
 import org.kalypso.shape.geometry.SHPPolygonz;
+import org.kalypso.shape.geometry.SHPRange;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -63,62 +73,74 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 public final class JTS2SHP
 {
-  public static SHPPoint[][] toParts( final Coordinate[][] curves )
+  public static int[] toParts( final Coordinate[][] curves )
   {
     final int numParts = curves.length;
 
-    final SHPPoint[][] parts = new SHPPoint[numParts][];
+    final int[] parts = new int[numParts];
 
+    int partIndex = 0;
     for( int i = 0; i < numParts; i++ )
     {
       final Coordinate[] ls = curves[i];
 
-      parts[i] = new SHPPoint[ls.length];
+      parts[i] = partIndex;
 
-      for( int j = 0; j < ls.length; j++ )
-      {
-        final Coordinate crd = ls[j];
-        // TODO: handle coordinates with m
-        parts[i][j] = new SHPPoint( crd.x, crd.y );
-      }
+      partIndex += ls.length;
     }
 
     return parts;
   }
 
-  public static SHPPointz[][] toPartsZ( final Coordinate[][] curves )
+  public static ISHPPoint[] toPoints( final Coordinate[][] curves )
   {
-    final int numParts = curves.length;
+    int numPoints = 0;
+    for( final Coordinate[] coordinates : curves )
+      numPoints += coordinates.length;
 
-    final SHPPointz[][] parts = new SHPPointz[numParts][];
+    final ISHPPoint[] points = new ISHPPoint[numPoints];
 
-    for( int i = 0; i < numParts; i++ )
+    int pointIndex = 0;
+    for( final Coordinate[] part : curves )
     {
-      final Coordinate[] ls = curves[i];
-
-      parts[i] = new SHPPointz[ls.length];
-
-      for( int j = 0; j < ls.length; j++ )
+      for( final Coordinate crd : part )
       {
-        final Coordinate crd = ls[j];
-        // TODO: handle coordinates with m
-        parts[i][j] = new SHPPointz( crd.x, crd.y, crd.z, Double.NaN );
+        final double z = crd.z;
+
+        if( Double.isNaN( z ) )
+          points[pointIndex++] = new SHPPoint( crd.x, crd.y );
+        else
+          points[pointIndex++] = new SHPPointz( crd.x, crd.y, crd.z, Double.NaN );
       }
     }
 
-    return parts;
+    return points;
   }
 
   public static SHPPolyLine toPolyline( final Coordinate[][] curves )
   {
-    final SHPPoint[][] parts = JTS2SHP.toParts( curves );
-    return new SHPPolyLine( parts );
+    final int[] parts = toParts( curves );
+    final ISHPPoint[] points = toPoints( curves );
+
+    final SHPEnvelope box = SHPGeometryUtils.createEnvelope( points );
+
+    final ISHPMultiPoint multiPoint = new SHPMultiPoint( box, points );
+    return new SHPPolyLine( multiPoint, parts );
   }
 
   public static SHPPolyLinez toPolylineZ( final Coordinate[][] curves )
   {
-    final SHPPointz[][] parts = JTS2SHP.toPartsZ( curves );
-    return new SHPPolyLinez( parts );
+    final int[] parts = toParts( curves );
+    final ISHPPoint[] points = toPoints( curves );
+
+    final SHPEnvelope box = SHPGeometryUtils.createEnvelope( points );
+
+    final SHPRange zrange = SHPGeometryUtils.createZRange( points );
+    final SHPRange mrange = SHPGeometryUtils.createMRange( points );
+
+    final ISHPMultiPoint multiPoint = new SHPMultiPointz( box, points, zrange, mrange );
+
+    return new SHPPolyLinez( multiPoint, parts );
   }
 
   public static ISHPGeometry toPolygon( final Coordinate[][] curves )
@@ -168,5 +190,24 @@ public final class JTS2SHP
 
     final Coordinate[][] crds = parts.toArray( new Coordinate[parts.size()][] );
     return toPolygon( crds );
+  }
+
+  public static SHPPolyLinem toPolylineM( final Coordinate[][] curves )
+  {
+    final int[] parts = toParts( curves );
+    final ISHPPoint[] points = toPoints( curves );
+
+    final SHPEnvelope box = SHPGeometryUtils.createEnvelope( points );
+
+    final SHPRange mrange = SHPGeometryUtils.createMRange( points );
+
+    final ISHPMultiPoint multiPoint = new SHPMultiPointm( box, points, mrange );
+
+    return new SHPPolyLinem( multiPoint, parts );
+  }
+
+  public static ISHPGeometry toPolygonM( final Coordinate[][] curves )
+  {
+    return new SHPPolygonm( JTS2SHP.toPolylineM( curves ) );
   }
 }

@@ -49,11 +49,14 @@ import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypso.shape.geometry.SHPEnvelope;
 import org.kalypso.shape.geometry.SHPMultiPoint;
+import org.kalypso.shape.geometry.SHPMultiPointm;
 import org.kalypso.shape.geometry.SHPMultiPointz;
 import org.kalypso.shape.geometry.SHPNullShape;
 import org.kalypso.shape.geometry.SHPPoint;
+import org.kalypso.shape.geometry.SHPPointm;
 import org.kalypso.shape.geometry.SHPPointz;
 import org.kalypso.shape.geometry.SHPPolyLine;
+import org.kalypso.shape.geometry.SHPPolyLinem;
 import org.kalypso.shape.geometry.SHPPolyLinez;
 import org.kalypso.shape.geometry.SHPPolygon;
 import org.kalypso.shape.geometry.SHPPolygonz;
@@ -163,8 +166,10 @@ public class SHPFile
     m_raf.readFully( recBuf );
 
     final ShapeType shpType = ShapeType.valueOf( ByteUtils.readLEInt( recBuf, 0 ) );
+    if( shpType == ShapeType.NULL )
+      return new SHPNullShape();
 
-    // create a geometry out of record buffer with shapetype
+    // create a geometry out of record buffer with shape type
     switch( shpType )
     {
       case NULL:
@@ -172,7 +177,7 @@ public class SHPFile
       case POINT:
         return new SHPPoint( recBuf );
       case MULTIPOINT:
-        return new SHPMultiPoint( recBuf );
+        return SHPMultiPoint.read( recBuf );
       case POLYLINE:
         return new SHPPolyLine( recBuf );
       case POLYGON:
@@ -184,10 +189,18 @@ public class SHPFile
       case POLYGONZ:
         return new SHPPolygonz( recBuf );
       case MULTIPOINTZ:
-        return new SHPMultiPointz( recBuf );
-      default:
-        throw new UnsupportedOperationException( "Unknown shape type: " + shpType );
+        return SHPMultiPointz.read( recBuf );
+      case POINTM:
+        return new SHPPointm( recBuf );
+      case MULTIPOINTM:
+        return SHPMultiPointm.read( recBuf );
+      case POLYLINEM:
+        return new SHPPolyLinem( recBuf );
+      case POLYGONM:
+        return new SHPPolyLinem( recBuf );
     }
+
+    throw new UnsupportedOperationException( "Unknown shape type: " + shpType );
   }
 
   public ShapeType getShapeType( )
@@ -240,6 +253,7 @@ public class SHPFile
     DataUtils.writeLEInt( os, shape.getType().getType() );
     shape.write( os );
 
+    // TODO: why flush here?
     os.flush();
 
     final byte[] byteArray = out.toByteArray();
@@ -263,5 +277,4 @@ public class SHPFile
   {
     return m_mode == FileMode.WRITE;
   }
-
 }
