@@ -169,6 +169,11 @@ public class FeatureListComparator
 
       /* HINT: Here both features exist. */
       /* Compare the features. */
+      one.getFeatureType().getProperties();
+      two.getFeatureType().getProperties();
+
+      // Types müssen gleich sein, dann ersten benutzen...
+      // Über QName holen, da feature property types an das feature gebunden sind...
       // TODO
     }
 
