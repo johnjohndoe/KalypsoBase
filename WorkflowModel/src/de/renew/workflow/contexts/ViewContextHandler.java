@@ -69,7 +69,7 @@ public class ViewContextHandler extends AbstractHandler implements IExecutableEx
     try
     {
       /* final IViewPart view = */
-      workbenchPage.showView( m_viewIDprimary, m_viewIDsecondary, IWorkbenchPage.VIEW_VISIBLE );
+      workbenchPage.showView( m_viewIDprimary, m_viewIDsecondary, IWorkbenchPage.VIEW_CREATE );
       return Status.OK_STATUS;
     }
     catch( final PartInitException e )
