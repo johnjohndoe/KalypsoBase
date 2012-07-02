@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
+ * interface-compatibility to deegree is wanted but not retained always.
  * 
- * If you intend to use this software in other ways than in kalypso 
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -39,7 +39,6 @@ package org.kalypso.shape.geometry;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
-import java.io.Serializable;
 
 import org.kalypso.shape.tools.DataUtils;
 
@@ -58,35 +57,22 @@ import org.kalypso.shape.tools.DataUtils;
  * @author Andreas Poth
  */
 
-public class SHPEnvelope implements Serializable
+public class SHPEnvelope
 {
-  /**
-   * this order: west, east, north, south
-   */
+  private double m_west;
 
-  // each double 8 byte distance, offset due to position in .shp-file-record
-  public static int recWest = 4;
+  private double m_east;
 
-  public static int recSouth = 12;
+  private double m_north;
 
-  public static int recEast = 20;
-
-  public static int recNorth = 28;
-
-  public double west;
-
-  public double east;
-
-  public double north;
-
-  public double south;
+  private double m_south;
 
   public SHPEnvelope( )
   {
-    west = 0.0;
-    east = 0.0;
-    north = 0.0;
-    south = 0.0;
+    m_west = 0.0;
+    m_east = 0.0;
+    m_north = 0.0;
+    m_south = 0.0;
   }
 
   /**
@@ -106,10 +92,10 @@ public class SHPEnvelope implements Serializable
 
   public SHPEnvelope( final double westbc, final double eastbc, final double northbc, final double southbc )
   {
-    west = westbc;
-    east = eastbc;
-    north = northbc;
-    south = southbc;
+    m_west = westbc;
+    m_east = eastbc;
+    m_north = northbc;
+    m_south = southbc;
   }
 
   /**
@@ -117,10 +103,10 @@ public class SHPEnvelope implements Serializable
    */
   public SHPEnvelope( final ISHPPoint min, final ISHPPoint max )
   {
-    west = min.getX();
-    east = max.getX();
-    north = max.getY();
-    south = min.getY();
+    m_west = min.getX();
+    m_east = max.getX();
+    m_north = max.getY();
+    m_south = min.getY();
   }
 
   /**
@@ -128,32 +114,32 @@ public class SHPEnvelope implements Serializable
    */
   public SHPEnvelope( final SHPEnvelope env )
   {
-    west = env.west;
-    east = env.east;
-    north = env.north;
-    south = env.south;
+    m_west = env.m_west;
+    m_east = env.m_east;
+    m_north = env.m_north;
+    m_south = env.m_south;
   }
 
   public SHPEnvelope( final DataInput input ) throws IOException
   {
-    west = DataUtils.readLEDouble( input );
-    south = DataUtils.readLEDouble( input );
-    east = DataUtils.readLEDouble( input );
-    north = DataUtils.readLEDouble( input );
+    m_west = DataUtils.readLEDouble( input );
+    m_south = DataUtils.readLEDouble( input );
+    m_east = DataUtils.readLEDouble( input );
+    m_north = DataUtils.readLEDouble( input );
   }
 
   public void writeLESHPEnvelope( final DataOutput output ) throws IOException
   {
-    DataUtils.writeLEDouble( output, west );
-    DataUtils.writeLEDouble( output, south );
-    DataUtils.writeLEDouble( output, east );
-    DataUtils.writeLEDouble( output, north );
+    DataUtils.writeLEDouble( output, m_west );
+    DataUtils.writeLEDouble( output, m_south );
+    DataUtils.writeLEDouble( output, m_east );
+    DataUtils.writeLEDouble( output, m_north );
   }
 
   @Override
   public String toString( )
   {
-    return "RECTANGLE" + "\n[west: " + west + "]" + "\n[east: " + east + "]" + "\n[north: " + north + "]" + "\n[south: " + south + "]";
+    return "RECTANGLE" + "\n[west: " + m_west + "]" + "\n[east: " + m_east + "]" + "\n[north: " + m_north + "]" + "\n[south: " + m_south + "]";
   }
 
   public SHPEnvelope expand( final SHPEnvelope mbr )
@@ -162,16 +148,35 @@ public class SHPEnvelope implements Serializable
       return this;
 
     // actualize mbr
-    if( west > mbr.west )
-      west = mbr.west;
-    if( east < mbr.east )
-      east = mbr.east;
-    if( south > mbr.south )
-      south = mbr.south;
-    if( north < mbr.north )
-      north = mbr.north;
+    if( m_west > mbr.m_west )
+      m_west = mbr.m_west;
+    if( m_east < mbr.m_east )
+      m_east = mbr.m_east;
+    if( m_south > mbr.m_south )
+      m_south = mbr.m_south;
+    if( m_north < mbr.m_north )
+      m_north = mbr.m_north;
 
     return this;
   }
 
+  public double getWest( )
+  {
+    return m_west;
+  }
+
+  public double getEast( )
+  {
+    return m_east;
+  }
+
+  public double getNorth( )
+  {
+    return m_north;
+  }
+
+  public double getSouth( )
+  {
+    return m_south;
+  }
 }

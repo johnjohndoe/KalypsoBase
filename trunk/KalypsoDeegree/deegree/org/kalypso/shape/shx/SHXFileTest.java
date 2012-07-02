@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.shape.shx;
 
@@ -112,10 +112,10 @@ public class SHXFileTest extends Assert
     assertEquals( 10, record2.getLength() );
 
     final SHPEnvelope mbr = readShxFile.getHeader().getMBR();
-    assertEquals( 0.1, mbr.west, 0.0001 );
-    assertEquals( 2, mbr.east, 0.0001 );
-    assertEquals( 3, mbr.north, 0.0001 );
-    assertEquals( 0.4, mbr.south, 0.0001 );
+    assertEquals( 0.1, mbr.getWest(), 0.0001 );
+    assertEquals( 2, mbr.getEast(), 0.0001 );
+    assertEquals( 3, mbr.getNorth(), 0.0001 );
+    assertEquals( 0.4, mbr.getSouth(), 0.0001 );
 
     readShxFile.close();
   }

@@ -49,6 +49,7 @@ import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypso.shape.geometry.SHPNullShape;
 import org.kalypso.shape.geometry.SHPPoint;
+import org.kalypso.shape.geometry.SHPPointm;
 import org.kalypso.shape.geometry.SHPPointz;
 import org.kalypso.shape.tools.JTS2SHP;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
@@ -99,7 +100,7 @@ public class GM_Object2Shape
         if( point == null )
           return null;
         else
-          return new SHPPoint( point );
+          return new SHPPoint( point.getX(), point.getY() );
       }
 
       case POLYLINE:
@@ -132,7 +133,7 @@ public class GM_Object2Shape
         if( point == null )
           return null;
         else
-          return new SHPPointz( point.getX(), point.getY(), point.getZ(), 0.0 );
+          return new SHPPointz( point.getX(), point.getY(), point.getZ(), Double.NaN );
       }
 
       case POLYLINEZ:
@@ -157,6 +158,9 @@ public class GM_Object2Shape
       }
 
       case MULTIPOINT:
+        // TODO
+
+
         // /**
         // * constructor: recieves an array of gm_points
         // */
@@ -194,6 +198,8 @@ public class GM_Object2Shape
         break;
 
       case MULTIPOINTZ:
+        // TODO
+
         // /**
         // * constructor: recieves an array of gm_points
         // */
@@ -240,6 +246,40 @@ public class GM_Object2Shape
         // m_zrange = new SHPZRange( zmin, zmax );
         // m_envelope = new SHPEnvelope( xmin, xmax, ymin, ymax );
         // }
+        break;
+
+      case POINTM:
+      {
+        final GM_Point point = (GM_Point) transformedGeom.getAdapter( GM_Point.class );
+        if( point == null )
+          return null;
+        else
+          return new SHPPointm( point.getX(), point.getY(), point.getZ() );
+      }
+
+      case POLYLINEM:
+      {
+        final GM_Curve[] curves = (GM_Curve[]) transformedGeom.getAdapter( GM_Curve[].class );
+        if( ArrayUtils.isEmpty( curves ) )
+          return new SHPNullShape();
+
+        final Coordinate[][] lines = asLines( curves );
+
+        return JTS2SHP.toPolylineM( lines );
+      }
+
+      case POLYGONM:
+      {
+        final GM_SurfacePatch[] surfacePatches = (GM_SurfacePatch[]) transformedGeom.getAdapter( GM_SurfacePatch[].class );
+        if( ArrayUtils.isEmpty( surfacePatches ) )
+          return new SHPNullShape();
+
+        final Coordinate[][] curves = orientCurves( surfacePatches );
+        return JTS2SHP.toPolygonM( curves );
+      }
+
+      case MULTIPOINTM:
+        // TODO
         break;
     }
 
@@ -338,7 +378,11 @@ public class GM_Object2Shape
       case POLYGONZ:
         return JTS2SHP.toPolygonZ( curves );
 
-        // TODO: other conversions
+      case POLYLINEM:
+        return JTS2SHP.toPolylineM( curves );
+
+      case POLYGONM:
+        return JTS2SHP.toPolygonM( curves );
 
       default:
         throw new IllegalStateException( "Illegal shape type for patch: " + m_shapeType );

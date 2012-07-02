@@ -40,10 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.shape.geometry;
 
+import java.io.DataOutput;
+import java.io.IOException;
+
 /**
  * @author Gernot Belger
  */
 public interface ISHPMultiPoint extends ISHPGeometry
 {
   ISHPPoint[] getPoints( );
+
+  int getNumPoints( );
+
+  void writePoints( DataOutput output ) throws IOException;
 }

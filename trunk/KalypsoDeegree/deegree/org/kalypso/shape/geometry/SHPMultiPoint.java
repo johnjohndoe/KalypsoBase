@@ -33,7 +33,6 @@
  * lat/lon GmbH
  * http://www.lat-lon.de
  */
-
 package org.kalypso.shape.geometry;
 
 import java.io.DataOutput;
@@ -44,43 +43,52 @@ import org.kalypso.shape.tools.DataUtils;
 import org.kalypsodeegree.model.geometry.ByteUtils;
 
 /**
- * Class representig a collection of points <BR>
- * <B>Last changes <B>: <BR>
- * 21.03.2000 ap: constructor declared and implemented <BR>
- * 14.08.2000 ap: constructor SHPMultiPoint(GM_Point[] gm_points) added <BR>
- * 14.08.2000 ap: method writeSHPMultiPoint(..) added <BR>
- * 14.08.2000 ap: import clause added <BR>
- * 16.08.2000 ap: constructor SHPMultiPoint(GM_Point[] gm_points) modified <BR>
- * <!---------------------------------------------------------------------------->
- * 
- * @version 16.08.2000
  * @author Andreas Poth
  */
-
 public class SHPMultiPoint implements ISHPMultiPoint
 {
-  private final SHPPoint[] m_points;
+  private final ISHPPoint[] m_points;
 
   private final SHPEnvelope m_envelope;
 
-  /**
-   * constructor: recieves a stream <BR>
-   */
-  public SHPMultiPoint( final byte[] recBuf )
+  static ISHPPoint[] readPoints( final byte[] recBuf, final int offset, final int numPoints )
   {
-    m_envelope = new SHPEnvelope( recBuf, 4 );
-
-    final int numPoints = ByteUtils.readLEInt( recBuf, 36 );
-
-    m_points = new SHPPoint[numPoints];
+    final ISHPPoint[] points = new ISHPPoint[numPoints];
 
     for( int i = 0; i < numPoints; i++ )
-      m_points[i] = new SHPPoint( recBuf, 40 + i * 16 );
+    {
+      final int pointOffset = offset + i * 16;
+
+      final double x = ByteUtils.readLEDouble( recBuf, pointOffset );
+      final double y = ByteUtils.readLEDouble( recBuf, pointOffset + 8 );
+
+      points[i] = new SHPPoint( x, y );
+    }
+
+    return points;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.shpapi.AbstractShape#writeContent(java.io.DataOutput)
-   */
+  public static SHPMultiPoint read( final byte[] recBuf )
+  {
+    final SHPEnvelope envelope = new SHPEnvelope( recBuf, 4 );
+    final int numPoints = ByteUtils.readLEInt( recBuf, 36 );
+
+    return read( recBuf, 40, envelope, numPoints );
+  }
+
+  public static SHPMultiPoint read( final byte[] recBuf, final int offset, final SHPEnvelope envelope, final int numPoints )
+  {
+    final ISHPPoint[] points = readPoints( recBuf, offset, numPoints );
+
+    return new SHPMultiPoint( envelope, points );
+  }
+
+  public SHPMultiPoint( final SHPEnvelope envelope, final ISHPPoint[] points )
+  {
+    m_envelope = envelope;
+    m_points = points;
+  }
+
   @Override
   public void write( final DataOutput output ) throws IOException
   {
@@ -88,22 +96,19 @@ public class SHPMultiPoint implements ISHPMultiPoint
 
     DataUtils.writeLEInt( output, m_points.length );
 
-    for( final SHPPoint point : m_points )
+    writePoints( output );
+  }
+
+  @Override
+  public void writePoints( final DataOutput output ) throws IOException
+  {
+    for( final ISHPPoint point : m_points )
     {
       DataUtils.writeLEDouble( output, point.getX() );
       DataUtils.writeLEDouble( output, point.getY() );
     }
   }
 
-  @Override
-  public SHPPoint[] getPoints( )
-  {
-    return m_points;
-  }
-
-  /**
-   * @see org.kalypsodeegree_impl.io.shpapi.ISHPGeometry#getType()
-   */
   @Override
   public ShapeType getType( )
   {
@@ -116,16 +121,23 @@ public class SHPMultiPoint implements ISHPMultiPoint
   @Override
   public int length( )
   {
-    return 36 + m_points.length * 16;
+    return 40 + m_points.length * 16;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.shpapi.SHPGeometry#getEnvelope()
-   */
   @Override
   public SHPEnvelope getEnvelope( )
   {
     return m_envelope;
   }
 
+  @Override
+  public ISHPPoint[] getPoints( )
+  {
+    return m_points;
+  }
+  @Override
+  public int getNumPoints( )
+  {
+    return m_points.length;
+  }
 }

@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.shape.shp;
 
@@ -117,10 +117,10 @@ public class SHPFileTest extends Assert
 
     final SHPFile readShpFile = new SHPFile( file, FileMode.READ );
     final SHPEnvelope mbr = readShpFile.getMBR();
-    assertEquals( 1, mbr.west, 0.0001 );
-    assertEquals( 10, mbr.east, 0.0001 );
-    assertEquals( 2, mbr.south, 0.0001 );
-    assertEquals( 20, mbr.north, 0.0001 );
+    assertEquals( 1, mbr.getWest(), 0.0001 );
+    assertEquals( 10, mbr.getEast(), 0.0001 );
+    assertEquals( 2, mbr.getSouth(), 0.0001 );
+    assertEquals( 20, mbr.getNorth(), 0.0001 );
 
     final SHPPointz point0 = (SHPPointz) readShpFile.getShape( record0 );
     final ISHPGeometry point1 = readShpFile.getShape( record1 );

@@ -53,6 +53,7 @@ import com.vividsolutions.jts.algorithm.CGAlgorithms;
 import com.vividsolutions.jts.algorithm.PointInRing;
 import com.vividsolutions.jts.algorithm.SimplePointInRing;
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.CoordinateSequence;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryCollection;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -60,6 +61,7 @@ import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.impl.CoordinateArraySequence;
 
 /**
  * Transforms {@link ISHPGeometry}s to JTS {@link com.vividsolutions.jts.geom.Geometry}s.
@@ -92,29 +94,42 @@ public final class SHP2JTS
     return jtsPoints;
   }
 
+  public CoordinateSequence[] transformParts( final ISHPParts partGeometry )
+  {
+    final int[] parts = partGeometry.getParts();
+    final ISHPPoint[] points = partGeometry.getPoints();
+
+    final CoordinateSequence[] sequences = new CoordinateSequence[parts.length];
+
+    for( int i = 0; i < parts.length; i++ )
+    {
+      final int start = parts[i];
+      final int end = i == parts.length - 1 ? points.length : parts[i + 1];
+
+      final Coordinate[] crds = new Coordinate[end - start];
+
+      for( int p = start; p < end; p++ )
+      {
+        final ISHPPoint point = points[p];
+        crds[i] = new Coordinate( point.getX(), point.getY(), point.getZ() );
+      }
+
+      sequences[i] = new CoordinateArraySequence( crds );
+    }
+
+    return sequences;
+  }
+
   public LineString[] transformPolyLine( final ISHPParts shpPolyLine )
   {
-    final LineString[] curve = new LineString[shpPolyLine.getNumParts()];
 
-    try
-    {
-      for( int j = 0; j < shpPolyLine.getNumParts(); j++ )
-      {
-        final ISHPPoint[][] pointsz = shpPolyLine.getPoints();
-        final Coordinate[] crds = new Coordinate[pointsz[j].length];
+    final CoordinateSequence[] sequences = transformParts( shpPolyLine );
+    final LineString[] curves = new LineString[sequences.length];
 
-        for( int i = 0; i < pointsz[j].length; i++ )
-          crds[i] = new Coordinate( pointsz[j][i].getX(), pointsz[j][i].getY(), pointsz[j][i].getZ() );
+    for( int i = 0; i < curves.length; i++ )
+      curves[i] = m_factory.createLineString( sequences[i] );
 
-        curve[j] = m_factory.createLineString( crds );
-      }
-    }
-    catch( final Exception e )
-    {
-      System.out.println( "SHP2WKS::" + e );
-    }
-
-    return curve;
+    return curves;
   }
 
   /**
@@ -123,23 +138,21 @@ public final class SHP2JTS
    */
   public Polygon[] transformPolygon( final ISHPParts shppolygon )
   {
-    // FIXME: why num parts?
-    final List<LinearRing> outerRings = new ArrayList<LinearRing>( shppolygon.getNumParts() );
-    final List<LinearRing> innerRings = new ArrayList<LinearRing>( shppolygon.getNumParts() );
+    /* convert to jts */
+    final CoordinateSequence[] sequences = transformParts( shppolygon );
 
-    for( int i = 0; i < shppolygon.getNumParts(); i++ )
+    /* sort into inner and outer rings */
+    final List<LinearRing> outerRings = new ArrayList<LinearRing>( sequences.length );
+    final List<LinearRing> innerRings = new ArrayList<LinearRing>( sequences.length );
+
+    for( final CoordinateSequence part : sequences )
     {
-      final ISHPPoint[][] pointsz = shppolygon.getPoints();
+      final LinearRing ring = m_factory.createLinearRing( part );
 
-      final Coordinate[] ringCrds = new Coordinate[pointsz[i].length];
+      final Coordinate[] ringCrds = ring.getCoordinates();
 
-      for( int k = 0; k < pointsz[i].length; k++ )
-        ringCrds[k] = new Coordinate( pointsz[i][k].getX(), pointsz[i][k].getY(), pointsz[i][k].getZ() );
-
-      final LinearRing ring = m_factory.createLinearRing( ringCrds );
-
-      // note: esri's (un - mathematically) definition of positive area is clockwise => outer ring, negative => inner
-      // ring
+      // note: esri's (un - mathematically) definition of positive area is clockwise => outer ring,
+      // negative => inner ring
       final boolean ccw = CGAlgorithms.isCCW( ringCrds );
       if( !ccw )
         outerRings.add( ring );
@@ -147,6 +160,7 @@ public final class SHP2JTS
         innerRings.add( ring );
     }
 
+    /* build polygons and determine which ring is inside which polyogn */
     final List<Polygon> polygons = new ArrayList<Polygon>();
 
     for( final LinearRing out_ring : outerRings )

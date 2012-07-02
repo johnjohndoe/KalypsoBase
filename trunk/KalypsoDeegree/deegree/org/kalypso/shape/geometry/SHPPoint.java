@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
+ * interface-compatibility to deegree is wanted but not retained always.
  * 
- * If you intend to use this software in other ways than in kalypso 
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -42,20 +42,10 @@ import java.io.IOException;
 import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.tools.DataUtils;
 import org.kalypsodeegree.model.geometry.ByteUtils;
-import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
- * Class representing a two dimensional point <BR>
- * <B>Last changes <B>: <BR>
- * 25.05.00 chm: method writeSHPPoint implemented <BR>
- * 14.08.00 ap: import clause added <BR>
- * <!---------------------------------------------------------------------------->
- * 
- * @version 14.08.2000
  * @author Andreas Poth
  */
-
 public class SHPPoint implements ISHPPoint
 {
   private final double m_x;
@@ -64,13 +54,17 @@ public class SHPPoint implements ISHPPoint
 
   private final SHPEnvelope m_envelope;
 
-  /**
-   * constructor: gets a stream and the start index <BR>
-   * of point on it <BR>
-   */
   public SHPPoint( final byte[] recBuf )
   {
     this( recBuf, 4 );
+  }
+
+  public SHPPoint( final byte[] recBuf, final int xStart )
+  {
+    m_x = ByteUtils.readLEDouble( recBuf, xStart );
+    m_y = ByteUtils.readLEDouble( recBuf, xStart + 8 );
+
+    m_envelope = new SHPEnvelope( m_x, m_x, m_y, m_y );
   }
 
   public SHPPoint( final double x, final double y )
@@ -79,31 +73,6 @@ public class SHPPoint implements ISHPPoint
     m_y = y;
 
     m_envelope = new SHPEnvelope( x, x, y, y );
-  }
-
-  /**
-   * constructor: gets a stream and the start index <BR>
-   * of point on it <BR>
-   */
-  public SHPPoint( final byte[] recBuf, final int xStart )
-  {
-    this( ByteUtils.readLEDouble( recBuf, xStart ), ByteUtils.readLEDouble( recBuf, xStart + 8 ) );
-  }
-
-  /**
-   * constructor: creates a SHPPoint from a WKS Geometrie <BR>
-   */
-  public SHPPoint( final GM_Position position )
-  {
-    this( position.getX(), position.getY() );
-  }
-
-  /**
-   * constructor: creates a SHPPoint from a GM_Point <BR>
-   */
-  public SHPPoint( final GM_Point point )
-  {
-    this( point.getX(), point.getY() );
   }
 
   @Override
@@ -119,9 +88,6 @@ public class SHPPoint implements ISHPPoint
     DataUtils.writeLEDouble( output, m_y );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.shpapi.ISHPGeometry#getType()
-   */
   @Override
   public ShapeType getType( )
   {
@@ -152,22 +118,15 @@ public class SHPPoint implements ISHPPoint
     return m_y;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.shpapi.ISHPPoint#getZ()
-   */
   @Override
   public double getZ( )
   {
     return Double.NaN;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.shpapi.ISHPPoint#getM()
-   */
   @Override
   public double getM( )
   {
     return Double.NaN;
   }
-
 }
