@@ -430,7 +430,28 @@ class TaskPerspectiveStore
     m_ignoreNextActivation = true;
     m_ignoreNextDeactivation = true;
 
+    /* Delete user definition for the current task */
+    final ITask activeTask = m_executor.getActiveTask();
+    final File userFile = getUserFile( activeTask );
+    FileUtils.deleteQuietly( userFile );
+
+    /* Reset definition for the active task */
+    resetSystemSettings( (PerspectiveDescriptor) perspective );
+  }
+
+  // TODO: not used, but this it how it is done; would be nice to have a menu to reset the whole definition
+  void resetAll( final IPerspectiveDescriptor perspective )
+  {
+    if( m_resetInProgress )
+      return;
+
+    m_ignoreNextActivation = true;
+    m_ignoreNextDeactivation = true;
+
+    /* Delete all user definitions */
     clearUserEntries();
+
+    /* Reset definition for the active task */
     resetSystemSettings( (PerspectiveDescriptor) perspective );
   }
 
