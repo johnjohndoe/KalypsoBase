@@ -62,7 +62,7 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 
 /**
  * TODO: replaces FeatureWrapperCollection.... refaktor and use this stuff instead<br>
- *
+ * 
  * @author Gernot Belger
  * @author Dirk Kuch
  */
@@ -101,7 +101,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
 
   /**
    * Creates a new {@link FeatureWrapperCollection} wrapping the provided feature
-   *
+   * 
    * @param featureCol
    *          the feature or feature collection with a list property to wrap
    * @param fwClass
@@ -314,7 +314,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
     final Class<FWCls> defaultWrapperClass = m_defaultWrapperClass;
 
     return new Iterator<FWCls>()
-    {
+        {
       private final Iterator< ? > m_it = getFeatureList().iterator();
 
       private final GMLWorkspace m_workspace = parentFeature.getWorkspace();
@@ -338,9 +338,18 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
           throw new RuntimeException( "Feature does not exist: " + next.toString() );
 
         final FWCls wrapper = getAdaptedFeature( f, defaultWrapperClass );
-        if( wrapper == null )
-          throw new RuntimeException( "Feature " + f + " could not be adapted: " + f.getId() );
-        return wrapper;
+        if( wrapper != null )
+          return wrapper;
+
+        if( f instanceof IXLinkedFeature )
+        {
+          final Feature resolved = ((IXLinkedFeature) f).getFeature();
+          final FWCls resolvedWrapper = getAdaptedFeature( resolved, defaultWrapperClass );
+          if( resolvedWrapper != null )
+            return resolvedWrapper;
+        }
+
+        throw new RuntimeException( "Feature " + f + " could not be adapted: " + f.getId() );
       }
 
       @Override
@@ -348,7 +357,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
       {
         m_it.remove();
       }
-    };
+        };
   }
 
   @Override
@@ -373,7 +382,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
     final Class<FWCls> defaultWrapperClass = m_defaultWrapperClass;
 
     return new ListIterator<FWCls>()
-    {
+        {
       private final ListIterator<Object> m_lit = getFeatureList().listIterator( index );
 
       @Override
@@ -434,7 +443,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
         m_lit.set( o );
       }
 
-    };
+        };
   }
 
   @Override
