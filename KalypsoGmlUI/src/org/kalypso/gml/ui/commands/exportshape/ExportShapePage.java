@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml.ui.commands.exportshape;
 
@@ -70,7 +70,7 @@ import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
- * @author belger
+ * @author Gernot Belger
  */
 public class ExportShapePage extends WizardPage
 {
@@ -102,9 +102,6 @@ public class ExportShapePage extends WizardPage
     m_fileDelegate.addFilter( Messages.getString( "ExportShapePage_4" ), "*.dbf" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public void createControl( final Composite parent )
   {
