@@ -43,15 +43,18 @@ package org.kalypso.gml.ui.commands.exportshape;
 import java.nio.charset.Charset;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardContainer;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.java.util.Arrays;
 import org.kalypso.core.status.StatusDialog;
+import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.gml.ui.internal.util.GenericFeatureSelection;
 import org.kalypso.gml.ui.jface.FeatureSelectionPage;
@@ -77,6 +80,9 @@ public class ExportShapeWizard extends Wizard implements IWorkbenchWizard
   {
     setNeedsProgressMonitor( true );
     setWindowTitle( Messages.getString( "ExportShapeWizard_0" ) ); //$NON-NLS-1$
+
+    final IDialogSettings settings = DialogSettingsUtils.getDialogSettings( KalypsoGmlUIPlugin.getDefault(), getClass().getName() );
+    setDialogSettings( settings );
   }
 
   protected ShapeSignature createSignature( final Feature[] featureArray )
