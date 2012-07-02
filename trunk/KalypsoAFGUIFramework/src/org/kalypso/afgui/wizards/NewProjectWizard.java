@@ -42,6 +42,7 @@ package org.kalypso.afgui.wizards;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -58,6 +59,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.eclipse.ui.dialogs.WizardNewProjectReferencePage;
+import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
@@ -271,7 +273,17 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
     final IScenario caze = cases.get( 0 );
 
     if( m_activateScenario )
-      ScenarioHelper.activateScenario2( getShell(), caze );
+    {
+      new UIJob( StringUtils.EMPTY )
+      {
+        @Override
+        public IStatus runInUIThread( final IProgressMonitor monitor )
+        {
+          ScenarioHelper.activateScenario2( getShell(), caze );
+          return Status.OK_STATUS;
+        }
+      }.schedule();
+    }
   }
 
   @Override
