@@ -432,8 +432,11 @@ class TaskPerspectiveStore
 
     /* Delete user definition for the current task */
     final ITask activeTask = m_executor.getActiveTask();
-    final File userFile = getUserFile( activeTask );
-    FileUtils.deleteQuietly( userFile );
+    if( activeTask != null )
+    {
+      final File userFile = getUserFile( activeTask );
+      FileUtils.deleteQuietly( userFile );
+    }
 
     /* Reset definition for the active task */
     resetSystemSettings( (PerspectiveDescriptor) perspective );
