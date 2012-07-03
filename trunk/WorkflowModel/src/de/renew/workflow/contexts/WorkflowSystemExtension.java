@@ -41,7 +41,9 @@
 package de.renew.workflow.contexts;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -62,6 +64,7 @@ import org.osgi.framework.Bundle;
 import de.renew.workflow.base.IWorkflow;
 import de.renew.workflow.base.Workflow;
 import de.renew.workflow.base.impl.Workflow_Impl;
+import de.renew.workflow.utils.IgnoreFolder;
 import de.renew.workflow.utils.ScenarioConfiguration;
 
 /**
@@ -80,6 +83,12 @@ public class WorkflowSystemExtension
   private static final String WORKFLOW_SYSTEM_SCENARIO_CONFIGURATION_ELEMENT = "scenarioConfiguration";
 
   private static final String WORKFLOW_SYSTEM_SCENARIO_CONFIGURATION_DERIVED_FOLDER = "derivedFolder";
+
+  private static final String WORKFLOW_SYSTEM_SCENARIO_CONFIGURATION_IGNORE_FOLDER_ELEMENT = "ignoreFolder";
+
+  private static final String WORKFLOW_SYSTEM_SCENARIO_CONFIGURATION_IGNORE_FOLDER_ROLE_NAME = "roleName";
+
+  private static final String WORKFLOW_SYSTEM_SCENARIO_CONFIGURATION_IGNORE_FOLDER_FOLDER_NAME = "folderName";
 
   public static IWorkflow getWorkflow( final String id )
   {
@@ -122,9 +131,6 @@ public class WorkflowSystemExtension
         {
           // in this moment logger is not available...
           e.printStackTrace();
-          // final IStatus status = new Status( Status.ERROR, "de.renew.workflow.model",
-          // "Failed to create workflowSystem extension for id: " + id, e );
-          // WorkflowModelPlugin.getInstance().getLog().log( status );
         }
       }
     }
@@ -154,8 +160,21 @@ public class WorkflowSystemExtension
       /* Get the attributes. */
       final String derivedFolder = configurationElement.getAttribute( WORKFLOW_SYSTEM_SCENARIO_CONFIGURATION_DERIVED_FOLDER );
 
+      /* The ignore folders. */
+      final List<IgnoreFolder> ignoreFolders = new ArrayList<IgnoreFolder>();
+
+      /* Get the configuration element for the ignore folders. */
+      final IConfigurationElement[] children = configurationElement.getChildren( WORKFLOW_SYSTEM_SCENARIO_CONFIGURATION_IGNORE_FOLDER_ELEMENT );
+      for( final IConfigurationElement oneChildren : children )
+      {
+        final String roleName = oneChildren.getAttribute( WORKFLOW_SYSTEM_SCENARIO_CONFIGURATION_IGNORE_FOLDER_ROLE_NAME );
+        final String folderName = oneChildren.getAttribute( WORKFLOW_SYSTEM_SCENARIO_CONFIGURATION_IGNORE_FOLDER_FOLDER_NAME );
+
+        ignoreFolders.add( new IgnoreFolder( roleName, folderName ) );
+      }
+
       /* We know, that there is only one configuration element of that type. */
-      return new ScenarioConfiguration( derivedFolder );
+      return new ScenarioConfiguration( derivedFolder, ignoreFolders.toArray( new IgnoreFolder[] {} ) );
     }
 
     return null;

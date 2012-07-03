@@ -53,14 +53,22 @@ public class ScenarioConfiguration
   private final String m_derivedFolder;
 
   /**
+   * The ignore folders. This folders should be ignored, according to their given role.
+   */
+  private final IgnoreFolder[] m_ignoreFolders;
+
+  /**
    * The constructor.
    * 
    * @param derivedFolder
    *          The derived folder. All derived scenarios will be saved in it within a parent scenario.
+   * @param ignoreFolders
+   *          The ignore folders. This folders should be ignored, according to their given role.
    */
-  public ScenarioConfiguration( final String derivedFolder )
+  public ScenarioConfiguration( final String derivedFolder, final IgnoreFolder[] ignoreFolders )
   {
     m_derivedFolder = derivedFolder;
+    m_ignoreFolders = ignoreFolders;
   }
 
   /**
@@ -71,5 +79,15 @@ public class ScenarioConfiguration
   public String getDerivedFolder( )
   {
     return m_derivedFolder;
+  }
+
+  /**
+   * This function returns the ignore folders. This folders should be ignored, according to their given role.
+   * 
+   * @return The ignore folders. This folders should be ignored, according to their given role.
+   */
+  public IgnoreFolder[] getIgnoreFolders( )
+  {
+    return m_ignoreFolders;
   }
 }

@@ -58,7 +58,7 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
  * Enhances the existing class by the following features:
  * </p>
  * <ul>
- * <li>remember the size of the dialog in the wizard' s dialog settings</li>
+ * <li>remember the size of the dialog in the wizard's dialog settings</li>
  * <li>allow access to buttons</li>
  * <li>allow running operations without blocking the user interface</li>
  * </ul>

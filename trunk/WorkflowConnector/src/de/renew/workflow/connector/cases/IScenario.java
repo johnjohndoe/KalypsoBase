@@ -48,7 +48,7 @@ import de.renew.workflow.cases.Case;
 
 /**
  * Wrapper Class of workflow {@link Case}
- *
+ * 
  * @author Dirk Kuch
  */
 public interface IScenario
@@ -101,7 +101,7 @@ public interface IScenario
   /**
    * Hierarchical Level of IScenario. Base/Root Scenario returns 0, SubScenarion returns 1, SubSubScenario returns 2,
    * aso
-   *
+   * 
    * @return hierarchical Level of IScenario
    */
   int getHierarchicalLevel( );
@@ -110,4 +110,9 @@ public interface IScenario
    * Gets the folder of a scenario where sub-scenarios are stored in.
    */
   IFolder getDerivedFolder( );
+
+  /**
+   * Gets the folders of a scenario, which should be ignored when the scenario is set as a base scenario.
+   */
+  IFolder[] getSetAsBaseScenarioBlackList( );
 }

@@ -42,6 +42,8 @@ package de.renew.workflow.connector.internal.cases;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -59,6 +61,7 @@ import de.renew.workflow.connector.WorkflowProjectNature;
 import de.renew.workflow.connector.cases.IScenario;
 import de.renew.workflow.connector.cases.IScenarioList;
 import de.renew.workflow.connector.internal.WorkflowConnectorPlugin;
+import de.renew.workflow.utils.IgnoreFolder;
 import de.renew.workflow.utils.ScenarioConfiguration;
 
 /**
@@ -265,4 +268,35 @@ public class ScenarioHandler implements IScenario
     }
   }
 
+  @Override
+  public IFolder[] getSetAsBaseScenarioBlackList( )
+  {
+    try
+    {
+      final WorkflowProjectNature workflowProjectNature = WorkflowProjectNature.toThisNature( getProject() );
+      final IWorkflow workflow = workflowProjectNature.getCurrentWorklist();
+      final ScenarioConfiguration scenarioConfiguration = workflow.getScenarioConfiguration();
+      if( scenarioConfiguration == null )
+        return new IFolder[] {};
+
+      final IgnoreFolder[] ignoreFolders = scenarioConfiguration.getIgnoreFolders();
+      if( ignoreFolders.length == 0 )
+        return new IFolder[] {};
+
+      final List<IFolder> results = new ArrayList<IFolder>();
+
+      for( final IgnoreFolder ignoreFolder : ignoreFolders )
+      {
+        if( "SetAsBaseScenario".equals( ignoreFolder.getRoleName() ) )
+          results.add( getFolder().getFolder( ignoreFolder.getFolderName() ) );
+      }
+
+      return results.toArray( new IFolder[] {} );
+    }
+    catch( final CoreException ex )
+    {
+      ex.printStackTrace();
+      return new IFolder[] {};
+    }
+  }
 }

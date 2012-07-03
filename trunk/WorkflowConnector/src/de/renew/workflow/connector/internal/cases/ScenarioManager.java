@@ -72,6 +72,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 
 import de.renew.workflow.cases.Case;
 import de.renew.workflow.cases.CaseList;
+import de.renew.workflow.connector.cases.CopyScenarioContentsOperation;
 import de.renew.workflow.connector.cases.ICaseManagerListener;
 import de.renew.workflow.connector.cases.IDerivedScenarioCopyFilter;
 import de.renew.workflow.connector.cases.IScenario;
@@ -493,7 +494,7 @@ public class ScenarioManager implements IScenarioManager
     final ScenarioHandlingProjectNature nature = ScenarioHandlingProjectNature.toThisNature( m_project );
     final IDerivedScenarioCopyFilter filter = nature.getDerivedScenarioCopyFilter();
 
-    final CopyScenarioContentsOperation copyScenarioContentsOperation = new CopyScenarioContentsOperation( templateFolder, targetFolder, scenarioFolders, filter );
+    final CopyScenarioContentsOperation copyScenarioContentsOperation = new CopyScenarioContentsOperation( templateFolder, targetFolder, scenarioFolders.toArray( new IFolder[] {} ), filter );
     final IStatus status = copyScenarioContentsOperation.execute( monitor );
     if( !status.isOK() )
       throw new CoreException( status );

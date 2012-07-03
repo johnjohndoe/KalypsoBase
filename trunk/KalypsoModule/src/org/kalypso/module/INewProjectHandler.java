@@ -48,7 +48,7 @@ import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 
 /**
  * Handles specific stuff after the project has been created.
- *
+ * 
  * @author Gernot Belger
  */
 public interface INewProjectHandler
