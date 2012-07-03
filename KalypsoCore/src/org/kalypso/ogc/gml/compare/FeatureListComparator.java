@@ -40,13 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.compare;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -56,20 +54,11 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.gmlschema.property.virtual.IFunctionPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
-import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
-import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-
-import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * @author Holger Albert
@@ -184,7 +173,8 @@ public class FeatureListComparator
         continue;
 
       /* Compare the features. */
-      final IStatus compareStatus = compareProperties( one, two, key );
+      final FeatureComparator comparator = new FeatureComparator( one, two );
+      final IStatus compareStatus = comparator.compareFeatures( key );
       if( !compareStatus.isOK() )
         collector.add( compareStatus );
     }
@@ -203,145 +193,5 @@ public class FeatureListComparator
       return String.format( "%d. Element", i );
 
     return referenceFeature.getProperty( m_uniqueProperty );
-  }
-
-  private IStatus compareProperties( final Feature one, final Feature two, final Object labelKey ) throws Exception
-  {
-    /* The types should be equal. */
-    final IFeatureType oneFeatureType = one.getFeatureType();
-    final IFeatureType twoFeatureType = two.getFeatureType();
-    if( !oneFeatureType.equals( twoFeatureType ) )
-      return new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), "The feature type of the two features do not match." );
-
-    /* The status collector. */
-    final IStatusCollector collector = new StatusCollectorWithTime( KalypsoCorePlugin.getID() );
-
-    /* So we can use the feature type of feature one. */
-    final IPropertyType[] oneProperties = oneFeatureType.getProperties();
-    for( final IPropertyType onePropertyType : oneProperties )
-    {
-      /* This values are calculated from other values. */
-      if( onePropertyType instanceof IFunctionPropertyType )
-        continue;
-
-      /* Get the property via the qname, because the feature property types are bound to the feature. */
-      final QName oneName = onePropertyType.getQName();
-
-      /* Compare the list. */
-      final boolean isList = onePropertyType.isList();
-      final boolean isRelation = onePropertyType instanceof IRelationType;
-
-      if( isList )
-        compareList( one, two, collector, onePropertyType, oneName, isRelation );
-      else
-        compareValue( one, two, collector, onePropertyType, oneName, isRelation );
-    }
-
-    return collector.asMultiStatus( String.format( "%s", labelKey ) );
-  }
-
-  private void compareList( final Feature one, final Feature two, final IStatusCollector collector, final IPropertyType onePropertyType, final QName oneName, final boolean isRelation ) throws Exception
-  {
-    if( isRelation )
-    {
-      final FeatureListComparator comparator = new FeatureListComparator( one, two, new GMLXPath( oneName ), PROPERTY_COUNTER );
-      final IStatus compareStatus = comparator.compareList();
-      collector.add( compareStatus );
-
-      return;
-    }
-
-    /* Get the properties. */
-    final Object oneProperty = one.getProperty( oneName );
-    final Object twoProperty = two.getProperty( oneName );
-    if( oneProperty == null && twoProperty == null )
-      return;
-
-    final IValuePropertyType oneValueType = (IValuePropertyType) onePropertyType;
-    if( oneValueType.isGeometry() )
-    {
-      if( oneProperty == null || twoProperty == null )
-      {
-        // TODO
-
-        return;
-      }
-
-      // TODO
-
-      return;
-    }
-  }
-
-  private void compareValue( final Feature one, final Feature two, final IStatusCollector collector, final IPropertyType onePropertyType, final QName oneName, final boolean isRelation ) throws GMLXPathException, GM_Exception
-  {
-    /* Nothing to do. */
-    if( isRelation )
-      return;
-
-    /* Get the properties. */
-    final Object oneProperty = one.getProperty( oneName );
-    final Object twoProperty = two.getProperty( oneName );
-    if( oneProperty == null && twoProperty == null )
-      return;
-
-    final IValuePropertyType oneValueType = (IValuePropertyType) onePropertyType;
-    if( oneValueType.isGeometry() )
-    {
-      if( oneProperty == null || twoProperty == null )
-      {
-        // TODO
-
-        return;
-      }
-
-      /* Convert to JTS geometries. */
-      final Geometry oneGeometry = JTSAdapter.export( (GM_Object) oneProperty );
-      final Geometry twoGeometry = JTSAdapter.export( (GM_Object) twoProperty );
-
-      /* Compare the geometries. */
-      if( !oneGeometry.equalsExact( twoGeometry ) )
-      {
-        /* The geometries are not equal. */
-        final IFeatureType oneFeatureType = one.getFeatureType();
-        final IPropertyType property = (IPropertyType) GMLXPathUtilities.query( new GMLXPath( oneName ), oneFeatureType );
-        final IAnnotation annotation = property.getAnnotation();
-        final String label = annotation.getLabel();
-
-        final Status compareStatus = new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), String.format( "The geometries of the property '%s' does not match.", label ) );
-        collector.add( compareStatus );
-
-        return;
-      }
-
-      /* The geometries are equal. */
-      return;
-    }
-
-    /* Simple types. */
-    if( oneProperty instanceof String || oneProperty instanceof Character || oneProperty instanceof Byte || oneProperty instanceof Number || oneProperty instanceof Date
-        || oneProperty instanceof Boolean )
-    {
-      /* Compare the simple properties. */
-      if( !ObjectUtils.equals( oneProperty, twoProperty ) )
-      {
-        /* The properties are not equal. */
-        final IFeatureType oneFeatureType = one.getFeatureType();
-        final IPropertyType property = (IPropertyType) GMLXPathUtilities.query( new GMLXPath( oneName ), oneFeatureType );
-        final IAnnotation annotation = property.getAnnotation();
-        final String label = annotation.getLabel();
-
-        final Status compareStatus = new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), String.format( "The property '%s' does not match (V1: %s V2: %s).", label, oneProperty, twoProperty ) );
-        collector.add( compareStatus );
-
-        return;
-      }
-
-      /* The properties are equal. */
-      return;
-    }
-
-    /* Complex types. */
-    // TODO
   }
 }
