@@ -89,6 +89,9 @@
 
    <element name="scenarioConfiguration">
       <complexType>
+         <sequence>
+            <element ref="ignoreFolder" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
          <attribute name="derivedFolder" type="string" use="required">
             <annotation>
                <documentation>
@@ -99,14 +102,24 @@
       </complexType>
    </element>
 
-   <annotation>
-      <appInfo>
-         <meta.section type="apiInfo"/>
-      </appInfo>
-      <documentation>
-         [Enter API information here.]
-      </documentation>
-   </annotation>
+   <element name="ignoreFolder">
+      <complexType>
+         <attribute name="roleName" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="folderName" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Must be relative to the scenario.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
 
    <annotation>
       <appInfo>
@@ -135,5 +148,14 @@
       </documentation>
    </annotation>
 
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         [Enter API information here.]
+      </documentation>
+   </annotation>
 
 </schema>

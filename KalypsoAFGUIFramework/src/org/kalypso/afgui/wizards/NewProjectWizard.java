@@ -76,7 +76,7 @@ import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 /**
  * Basic wizard implementation for the various workflow/scenario based projects.<br>
  * Normally, only the location of the project-template (-zip) should be enough.<br>
- *
+ * 
  * @author Gernot Belger
  */
 public class NewProjectWizard extends BasicNewProjectResourceWizard implements INewProjectWizard, INewProjectHandler
@@ -295,5 +295,10 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
   protected ProjectTemplatePage getTemplatePage( )
   {
     return m_templateProjectPage;
+  }
+
+  protected String getModuleID( )
+  {
+    return m_moduleID;
   }
 }

@@ -41,53 +41,29 @@
 package de.renew.workflow.utils;
 
 /**
- * The scenario configuration.
+ * The ignore folder.
  * 
  * @author Holger Albert
  */
-public class ScenarioConfiguration
+public class IgnoreFolder
 {
-  /**
-   * The derived folder. All derived scenarios will be saved in it within a parent scenario.
-   */
-  private final String m_derivedFolder;
+  private final String m_roleName;
 
-  /**
-   * The ignore folders. This folders should be ignored, according to their given role.
-   */
-  private final IgnoreFolder[] m_ignoreFolders;
+  private final String m_folderName;
 
-  /**
-   * The constructor.
-   * 
-   * @param derivedFolder
-   *          The derived folder. All derived scenarios will be saved in it within a parent scenario.
-   * @param ignoreFolders
-   *          The ignore folders. This folders should be ignored, according to their given role.
-   */
-  public ScenarioConfiguration( final String derivedFolder, final IgnoreFolder[] ignoreFolders )
+  public IgnoreFolder( final String roleName, final String folderName )
   {
-    m_derivedFolder = derivedFolder;
-    m_ignoreFolders = ignoreFolders;
+    m_roleName = roleName;
+    m_folderName = folderName;
   }
 
-  /**
-   * This function returns the derived folder. All derived scenarios will be saved in it within a parent scenario.
-   * 
-   * @return The derived folder. All derived scenarios will be saved in it within a parent scenario.
-   */
-  public String getDerivedFolder( )
+  public String getRoleName( )
   {
-    return m_derivedFolder;
+    return m_roleName;
   }
 
-  /**
-   * This function returns the ignore folders. This folders should be ignored, according to their given role.
-   * 
-   * @return The ignore folders. This folders should be ignored, according to their given role.
-   */
-  public IgnoreFolder[] getIgnoreFolders( )
+  public String getFolderName( )
   {
-    return m_ignoreFolders;
+    return m_folderName;
   }
 }

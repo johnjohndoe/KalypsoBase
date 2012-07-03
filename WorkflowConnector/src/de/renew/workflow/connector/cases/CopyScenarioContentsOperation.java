@@ -38,9 +38,11 @@
  *  v.doemming@tuhh.de
  * 
  *  ---------------------------------------------------------------------------*/
-package de.renew.workflow.connector.internal.cases;
+package de.renew.workflow.connector.cases;
 
-import java.util.List;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -51,30 +53,29 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 
-import de.renew.workflow.connector.cases.IDerivedScenarioCopyFilter;
-
 /**
  * @author Gernot Belger
  */
-final class CopyScenarioContentsOperation implements ICoreRunnableWithProgress
+public final class CopyScenarioContentsOperation implements ICoreRunnableWithProgress
 {
   private final IFolder m_sourceFolder;
 
   private final IFolder m_targetFolder;
 
-  private final List<IFolder> m_ignoreFolders;
+  private final Set<IFolder> m_ignoreFolders = new HashSet<>();
 
   private final IDerivedScenarioCopyFilter m_filter;
 
-  CopyScenarioContentsOperation( final IFolder sourceFolder, final IFolder targetFolder, final List<IFolder> ignoreFolders, final IDerivedScenarioCopyFilter filter )
+  public CopyScenarioContentsOperation( final IFolder sourceFolder, final IFolder targetFolder, final IFolder[] ignoreFolders, final IDerivedScenarioCopyFilter filter )
   {
     m_sourceFolder = sourceFolder;
     m_targetFolder = targetFolder;
-    m_ignoreFolders = ignoreFolders;
+    m_ignoreFolders.addAll( Arrays.asList( ignoreFolders ) );
     m_filter = filter;
   }
 
@@ -99,11 +100,10 @@ final class CopyScenarioContentsOperation implements ICoreRunnableWithProgress
     if( m_sourceFolder.equals( resource ) )
       return true;
 
-    // ignore scenario folder
     if( m_ignoreFolders.contains( resource ) )
       return false;
 
-    if( m_filter.copy( resource ) )
+    if( m_filter == null || m_filter.copy( resource ) )
     {
       final IPath parentFolderPath = m_sourceFolder.getFullPath();
       final IPath resourcePath = resource.getFullPath();
@@ -112,20 +112,22 @@ final class CopyScenarioContentsOperation implements ICoreRunnableWithProgress
 
       if( resource instanceof IFolder )
       {
-        m_targetFolder.getFolder( relativePath ).create( true, true, submonitor.newChild( 1 ) );
+        if( !resource.exists() )
+          m_targetFolder.getFolder( relativePath ).create( true, true, submonitor.newChild( 1 ) );
       }
       else if( resource instanceof IFile )
       {
+        final IFile targetFile = m_targetFolder.getFile( relativePath );
+        if( targetFile.exists() )
+          targetFile.delete( true, new NullProgressMonitor() );
+
         resource.copy( m_targetFolder.getFullPath().append( relativePath ), true, submonitor.newChild( 1 ) );
       }
 
       return true;
     }
 
-    if( !m_filter.copy( resource ) && resource instanceof IFolder )
-      return false;
-
-    return true;
+    return false;
   }
 
   private int getTotalChildCount( final IContainer container )
@@ -136,7 +138,7 @@ final class CopyScenarioContentsOperation implements ICoreRunnableWithProgress
       int count = 0;
       for( int i = 0; i < members.length; i++ )
       {
-        if( !m_filter.copy( members[i] ) )
+        if( m_filter != null && !m_filter.copy( members[i] ) )
           continue;
 
         if( members[i].getType() == IResource.FILE )

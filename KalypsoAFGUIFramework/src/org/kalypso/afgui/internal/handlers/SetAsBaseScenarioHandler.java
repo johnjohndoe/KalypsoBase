@@ -42,6 +42,22 @@ package org.kalypso.afgui.internal.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.HandlerUtil;
+import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.wizards.SetAsBaseScenarioWizard;
+import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
+import org.kalypso.module.IKalypsoModule;
+import org.kalypso.module.ModuleExtensions;
+import org.kalypso.module.nature.ModuleNature;
+
+import de.renew.workflow.base.ITask;
+import de.renew.workflow.connector.cases.IScenario;
+import de.renew.workflow.connector.worklist.ITaskExecutionAuthority;
 
 /**
  * A handler which sets a scenario as base scenario.
@@ -53,8 +69,43 @@ public class SetAsBaseScenarioHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event )
   {
-    // TODO
+    /* Get the shell. */
+    final Shell shell = HandlerUtil.getActiveShell( event );
 
+    /* Find scenario. */
+    final IScenario scenario = AddScenarioHandler.findScenario( event );
+    if( scenario == null )
+      return showInformation( shell, HandlerUtils.getCommandName( event ), "Please select a scenario." );
+
+    /* Stop current task. */
+    final ITaskExecutionAuthority taskExecutionAuthority = KalypsoAFGUIFrameworkPlugin.getTaskExecutionAuthority();
+    final ITask activeTask = KalypsoAFGUIFrameworkPlugin.getTaskExecutor().getActiveTask();
+    if( !taskExecutionAuthority.canStopTask( activeTask ) )
+    {
+      /* Cancelled by user. */
+      return null;
+    }
+
+    /* Get the module id and the category id. */
+    final IProject project = scenario.getProject();
+    final ModuleNature nature = ModuleNature.toThisNature( project );
+    final String moduleID = nature.getModule();
+    final IKalypsoModule module = ModuleExtensions.getKalypsoModule( moduleID );
+    final String categoryId = module.getNewProjectCategoryId();
+
+    /* Show wizard. */
+    final SetAsBaseScenarioWizard wizard = new SetAsBaseScenarioWizard( categoryId, moduleID, scenario );
+    wizard.init( PlatformUI.getWorkbench(), null );
+
+    final WizardDialog wd = new WizardDialog( shell, wizard );
+    wd.open();
+
+    return null;
+  }
+
+  private Object showInformation( final Shell shell, final String windowTitle, final String message )
+  {
+    MessageDialog.openInformation( shell, windowTitle, message );
     return null;
   }
 }
