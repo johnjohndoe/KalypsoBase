@@ -91,4 +91,6 @@ public interface IKalypsoModule
   INewProjectHandler getNewProjectHandler( );
 
   String getNewProjectCategoryId( );
+
+  ISetAsBaseScenarioHandler getSetAsBaseScenarioHandler( );
 }

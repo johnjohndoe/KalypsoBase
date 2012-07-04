@@ -56,6 +56,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
+import org.kalypso.contribs.eclipse.core.resources.FolderUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 
 /**
@@ -117,9 +118,15 @@ public final class CopyScenarioContentsOperation implements ICoreRunnableWithPro
       }
       else if( resource instanceof IFile )
       {
+        /* REMARK: Overwriting does not work with IFiles... */
         final IFile targetFile = m_targetFolder.getFile( relativePath );
         if( targetFile.exists() )
           targetFile.delete( true, new NullProgressMonitor() );
+
+        /* REMARK: Why does the parent not exist here? How does this visitor visit the resources? */
+        final IContainer targetParent = targetFile.getParent();
+        if( !targetParent.exists() )
+          FolderUtilities.mkdirs( targetParent );
 
         resource.copy( m_targetFolder.getFullPath().append( relativePath ), true, submonitor.newChild( 1 ) );
       }

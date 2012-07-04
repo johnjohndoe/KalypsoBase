@@ -55,6 +55,7 @@ import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
 import org.kalypso.module.IKalypsoModule;
 import org.kalypso.module.INewProjectHandler;
+import org.kalypso.module.ISetAsBaseScenarioHandler;
 import org.kalypso.module.ModuleExtensions;
 
 import de.renew.workflow.connector.cases.CopyScenarioContentsOperation;
@@ -90,9 +91,14 @@ public class SetAsBaseScenarioWizard extends NewProjectWizard
     {
       final String moduleID = getModuleID();
       final IKalypsoModule module = ModuleExtensions.getKalypsoModule( moduleID );
-      final INewProjectHandler handler = module.getNewProjectHandler();
-      if( handler != null )
-        handler.postCreateProject( project, template, new SubProgressMonitor( monitor, 10 ) );
+
+      final INewProjectHandler newHandler = module.getNewProjectHandler();
+      if( newHandler != null )
+        newHandler.postCreateProject( project, template, new SubProgressMonitor( monitor, 100 ) );
+
+      final ISetAsBaseScenarioHandler setAsHandler = module.getSetAsBaseScenarioHandler();
+      if( setAsHandler != null )
+        setAsHandler.postCreateProject( m_scenario.getProject(), project, new SubProgressMonitor( monitor, 100 ) );
 
       final IFolder sourceFolder = m_scenario.getFolder();
       final IFolder derivedFolder = m_scenario.getDerivedFolder();
@@ -103,7 +109,7 @@ public class SetAsBaseScenarioWizard extends NewProjectWizard
         ignoreFolders = ArrayUtils.add( ignoreFolders, derivedFolder );
 
       final CopyScenarioContentsOperation operation = new CopyScenarioContentsOperation( sourceFolder, targetFolder, ignoreFolders, null );
-      return operation.execute( new SubProgressMonitor( monitor, 1000 ) );
+      return operation.execute( new SubProgressMonitor( monitor, 800 ) );
     }
     catch( final Exception ex )
     {
