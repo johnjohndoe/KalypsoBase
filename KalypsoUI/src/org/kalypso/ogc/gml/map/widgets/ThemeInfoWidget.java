@@ -99,7 +99,8 @@ public class ThemeInfoWidget extends AbstractThemeInfoWidget
       return;
     }
 
-    final IMapPanel outlineMapPanel = FindElementMapWidget.findMapPanel( outlineView );
+    // REMARK: we get selection from outline, so outlines mapPanel should be the same as the widgets ones
+    final IMapPanel outlineMapPanel = FindElementMapWidget.findOutlineMapPanel( outlineView );
     if( outlineMapPanel != mapPanel )
     {
       mapPanel.setMessage( Messages.getString( "org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget.4" ) ); //$NON-NLS-1$
@@ -112,9 +113,6 @@ public class ThemeInfoWidget extends AbstractThemeInfoWidget
     handleSelectionChanged( m_selectionProvider.getSelection() );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#finish()
-   */
   @Override
   public void finish( )
   {

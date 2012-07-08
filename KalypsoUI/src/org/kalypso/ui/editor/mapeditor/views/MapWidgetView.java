@@ -69,7 +69,7 @@ import org.kalypso.ogc.gml.widgets.IWidgetChangeListener;
 /**
  * ActionOptionsView is a view on the selected widget of an active map view. It provides a panel where the selected
  * widgets can place GUI elements for their options.
- * 
+ *
  * @author doemming
  */
 public class MapWidgetView extends ViewPart
@@ -159,9 +159,6 @@ public class MapWidgetView extends ViewPart
    * TODO update view when model changes (on selected modellevents)
    */
 
-  /**
-   * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
-   */
   @Override
   public void setFocus( )
   {
@@ -169,9 +166,6 @@ public class MapWidgetView extends ViewPart
       m_group.setFocus();
   }
 
-  /**
-   * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public void createPartControl( final Composite parent )
   {
@@ -194,7 +188,7 @@ public class MapWidgetView extends ViewPart
 
   /**
    * Sets to widget to show in this view for the given panel.
-   * 
+   *
    * @param action
    *          If the given action is non-null, it will be activated if the widget is reactivated.
    */
@@ -279,9 +273,6 @@ public class MapWidgetView extends ViewPart
     m_group.layout( true, true );
   }
 
-  /**
-   * @see org.eclipse.ui.IWorkbenchPart#dispose()
-   */
   @Override
   public void dispose( )
   {
