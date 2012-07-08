@@ -36,7 +36,7 @@ public abstract class AbstractLineLayer extends AbstractChartLayer
   static final String LEGEND_MODE_POINT = "point";
 
   /** Possible value for for parameter 'legendMode': draw both (line and point) symbols */
-  static final String LEGEND_MODE_BOTH = "line&point";
+  static final String LEGEND_MODE_BOTH = "line+point";
 
   private ILegendEntry[] m_legendEntries;
 
@@ -75,7 +75,6 @@ public abstract class AbstractLineLayer extends AbstractChartLayer
       @Override
       public void paintSymbol( final GC gc, final Point size )
       {
-
         /* Line Symbol */
         if( ls != null && ls.isVisible() && legendMode.contains( LEGEND_MODE_LINE ) )
         {
