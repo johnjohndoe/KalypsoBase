@@ -71,19 +71,12 @@ public abstract class AbstractKalypsoModule implements IKalypsoModule, IExecutab
 {
   private Version m_version;
 
-  /**
-   * @see org.kalypso.module.IKalypsoModule#getVersion()
-   */
   @Override
   public final Version getVersion( )
   {
     return m_version;
   }
 
-  /**
-   * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
-   *      java.lang.String, java.lang.Object)
-   */
   @Override
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
@@ -116,9 +109,6 @@ public abstract class AbstractKalypsoModule implements IKalypsoModule, IExecutab
     }
   }
 
-  /**
-   * @see org.kalypso.project.database.client.extension.IKalypsoModule#getProjectActions()
-   */
   @Override
   public IAction[] getProjectActions( )
   {
