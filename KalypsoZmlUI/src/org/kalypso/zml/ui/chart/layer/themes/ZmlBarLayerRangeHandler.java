@@ -179,5 +179,4 @@ public class ZmlBarLayerRangeHandler
   {
     return m_numberDataOperator;
   }
-
 }

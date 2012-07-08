@@ -196,19 +196,6 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
     m_labelDescriptor = labelDescriptor;
   }
 
-// @Override
-// protected FullRectangleFigure getRectangleFigure( )
-// {
-// if( m_polygonFigure == null )
-// {
-// final IAreaStyle as = getAreaStyle();
-// m_polygonFigure = new PolygonFigure();
-// m_polygonFigure.setStyle( as );
-// }
-//
-// return m_polygonFigure;
-// }
-
   private void setup( final URL context )
   {
     final IZmlLayerProvider provider = getProvider();
@@ -224,10 +211,4 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
 
     setDataHandler( handler );
   }
-
-// @Override
-// protected IStyleSet getStyleSet( )
-// {
-// return m_styleSet;
-// }
 }
