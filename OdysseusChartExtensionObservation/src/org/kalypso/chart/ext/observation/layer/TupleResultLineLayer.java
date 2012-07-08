@@ -13,7 +13,9 @@ import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.TupleResult;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
+import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
@@ -22,9 +24,9 @@ import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 
 public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipChartLayer
 {
-  private final TupleResultDomainValueData< ? , ? > m_valueData;
+  private static String TOOLTIP_FORMAT = "%-12s %s %n%-12s %s"; //$NON-NLS-1$
 
-  final public static String TOOLTIP_FORMAT = "%-12s %s %n%-12s %s"; //$NON-NLS-1$
+  private final TupleResultDomainValueData< ? , ? > m_valueData;
 
   public TupleResultLineLayer( final ILayerProvider provider, final TupleResultDomainValueData< ? , ? > data, final IStyleSet styleSet )
   {
@@ -38,12 +40,24 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
   {
     if( getValueData() == null || getDomainAxis() == null )
       return null;
+
     final IDataRange< ? > dataRange = getValueData().getDomainRange();
     final Object min = dataRange.getMin();
     final Object max = dataRange.getMax();
     if( min == null || max == null )
       return null;
-    return dataRange;
+
+    // FIXME: bad and ugly hack: getDomainRange must return numeric values
+    final Number numericMin = toNumeric( min );
+    final Number numericMax = toNumeric( max );
+    return new DataRange<Number>( numericMin, numericMax );
+  }
+
+  // FIXME: awful -> should not be necessary!
+  private Number toNumeric( final Object value )
+  {
+    final IDataOperator<Object> dop = (IDataOperator<Object>) getCoordinateMapper().getDataOperator( value.getClass() );
+    return dop.logicalToNumeric( value );
   }
 
   @Override
