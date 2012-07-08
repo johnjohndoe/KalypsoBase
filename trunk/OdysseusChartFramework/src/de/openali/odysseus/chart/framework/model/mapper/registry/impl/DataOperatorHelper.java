@@ -57,7 +57,7 @@ import de.openali.odysseus.chart.framework.model.data.impl.NumberDataOperator;
 /**
  * all dataoperators for data types which have a unambiguous relation to real numbers should be stored here, so all
  * mappers can access them.
- * 
+ *
  * @author burtscher1
  */
 public class DataOperatorHelper
@@ -78,8 +78,11 @@ public class DataOperatorHelper
   public <T> IDataOperator<T> getDataOperator( final Class<T> clazz )
   {
     for( final Class< ? > c : m_dataOperators.keySet() )
+    {
       if( c.isAssignableFrom( clazz ) )
         return m_dataOperators.get( c );
+    }
+
     return new DummyDataOperator<T>();
   }
 }

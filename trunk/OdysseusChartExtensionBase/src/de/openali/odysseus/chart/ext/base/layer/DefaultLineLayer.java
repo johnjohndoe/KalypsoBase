@@ -21,20 +21,14 @@ import de.openali.odysseus.chart.framework.model.style.IStyleSet;
  */
 public class DefaultLineLayer extends AbstractLineLayer
 {
-
   private final ITabularDataContainer< ? , ? > m_dataContainer;
 
   public DefaultLineLayer( final ILayerProvider provider, final ITabularDataContainer< ? , ? > data, final IStyleSet styleSet )
   {
     super( provider, styleSet );
     m_dataContainer = data;
-
   }
 
-  /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC,
-   *      org.eclipse.swt.graphics.Device)
-   */
   @Override
   public void paint( final GC gc )
   {
@@ -75,9 +69,6 @@ public class DefaultLineLayer extends AbstractLineLayer
     return m_dataContainer;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
-   */
   @Override
   @SuppressWarnings({ "rawtypes", "unchecked" })
   public IDataRange< ? > getDomainRange( )
@@ -89,9 +80,6 @@ public class DefaultLineLayer extends AbstractLineLayer
     return new DataRange<Number>( dop.logicalToNumeric( domainRange.getMin() ), dop.logicalToNumeric( domainRange.getMax() ) );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
-   */
   @Override
   @SuppressWarnings({ "rawtypes", "unchecked" })
   public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
@@ -102,5 +90,4 @@ public class DefaultLineLayer extends AbstractLineLayer
     final IDataOperator top = new DataOperatorHelper().getDataOperator( getTargetAxis().getDataClass() );
     return new DataRange<Number>( top.logicalToNumeric( targetRange.getMin() ), top.logicalToNumeric( targetRange.getMax() ) );
   }
-
 }

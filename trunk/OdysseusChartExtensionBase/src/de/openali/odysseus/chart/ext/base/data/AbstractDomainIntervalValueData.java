@@ -8,7 +8,6 @@ import de.openali.odysseus.chart.framework.model.data.IDataContainer;
 
 public abstract class AbstractDomainIntervalValueData<T_domain, T_target> implements IDataContainer<T_domain, T_target>
 {
-
   private boolean m_isOpen = false;
 
   private List<T_domain> m_domainIntervalStartValues = new ArrayList<T_domain>();

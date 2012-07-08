@@ -8,7 +8,6 @@ import de.openali.odysseus.chart.framework.model.data.ITabularDataContainer;
 
 public abstract class AbstractDomainValueData<T_domain, T_target> implements ITabularDataContainer<T_domain, T_target>
 {
-
   private boolean m_isOpen = false;
 
   private boolean m_isLoading = false;

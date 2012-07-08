@@ -45,9 +45,7 @@ package de.openali.odysseus.chart.framework.model.data;
  */
 public interface ITabularDataContainer<T_domain, T_target> extends IDataContainer<T_domain, T_target>
 {
-
   T_domain[] getDomainValues( );
 
   T_target[] getTargetValues( );
-
 }

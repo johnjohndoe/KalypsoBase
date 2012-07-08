@@ -84,27 +84,18 @@ public class DataRange<T> implements IDataRange<T>
     }
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.layer.IDataRange#getMin()
-   */
   @Override
   public T getMin( )
   {
     return m_min;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.layer.IDataRange#getMax()
-   */
   @Override
   public T getMax( )
   {
     return m_max;
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {

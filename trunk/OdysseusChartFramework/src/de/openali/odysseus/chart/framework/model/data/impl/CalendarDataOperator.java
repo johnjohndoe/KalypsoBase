@@ -110,9 +110,6 @@ public class CalendarDataOperator extends AbstractDataOperator<Calendar>
     return new ComparableDataRange<Calendar>( new Calendar[] { today, tomorrow } );
   }
 
-  /**
-   * @see org.kalypso.chart.framework.model.data.IDataOperator#getFormat(org.kalypso.chart.framework.model.data.IDataRange)
-   */
   @Override
   public Format getFormat( final IDataRange<Number> range )
   {

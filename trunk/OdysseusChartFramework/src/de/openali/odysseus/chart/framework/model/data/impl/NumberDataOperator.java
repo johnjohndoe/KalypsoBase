@@ -10,7 +10,6 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 
 public class NumberDataOperator extends AbstractDataOperator<Number>
 {
-
   public NumberDataOperator( final Comparator<Number> comparator )
   {
     super( comparator );

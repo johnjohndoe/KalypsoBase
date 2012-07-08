@@ -52,7 +52,6 @@ public final class ChartUtilities
    */
   public static IDataRange<Number> mergeDataRanges( final IDataRange< ? >[] ranges )
   {
-
     // if there are no input ranges, we return null
     if( ranges.length == 0 )
     {
@@ -64,23 +63,15 @@ public final class ChartUtilities
 
     for( final IDataRange< ? > element : ranges )
     {
-      try
-      {
-        final double eltMin = element.getMin() == null ? Double.NaN : ((Number) element.getMin()).doubleValue();
-        if( Double.isNaN( eltMin ) )
-          continue;
-        final double eltMax = element.getMax() == null ? Double.NaN : ((Number) element.getMax()).doubleValue();
-        if( Double.isNaN( eltMax ) )
-          continue;
+      final double eltMin = element.getMin() == null ? Double.NaN : ((Number) element.getMin()).doubleValue();
+      if( Double.isNaN( eltMin ) )
+        continue;
+      final double eltMax = element.getMax() == null ? Double.NaN : ((Number) element.getMax()).doubleValue();
+      if( Double.isNaN( eltMax ) )
+        continue;
 
-        min = Math.min( min, eltMin );
-        max = Math.max( max, eltMax );
-      }
-      catch( final ClassCastException e )
-      {
-        e.printStackTrace();
-        // System.out.println();
-      }
+      min = Math.min( min, eltMin );
+      max = Math.max( max, eltMax );
     }
 
     return new ComparableDataRange<Number>( new Number[] { min, max } );
@@ -127,7 +118,7 @@ public final class ChartUtilities
 
   /**
    * This function returns the display.
-   * 
+   *
    * @return The display.
    */
   public static Display getDisplay( )

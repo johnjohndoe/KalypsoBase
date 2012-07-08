@@ -25,10 +25,6 @@ public class DomainIntervalBarLayer extends AbstractBarLayer
     m_dataContainer = data;
   }
 
-  /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC,
-   *      org.eclipse.swt.graphics.Device)
-   */
   @Override
   @SuppressWarnings({ "rawtypes" })
   public void paint( final GC gc )
