@@ -58,11 +58,9 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
- * A chart layer which displays Polynomial1D's.
- * <p>
- * All polynomial given in the constructor are displayed according to their validity.
- * </p>
- * 
+ * A chart layer which displays Polynomial1D's. <br/>>
+ * All polynomial given in the constructor are displayed according to their validity. <br/>
+ *
  * @author Gernot Belger
  */
 public class PolynomeChartLayer extends AbstractLineLayer
@@ -86,10 +84,6 @@ public class PolynomeChartLayer extends AbstractLineLayer
     m_data = dataContainer;
   }
 
-  /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.kalypso.contribs.eclipse.swt.graphics.GCWrapper,
-   *      org.eclipse.swt.graphics.Device)
-   */
   @Override
   public void paint( final GC gc )
   {
@@ -98,10 +92,10 @@ public class PolynomeChartLayer extends AbstractLineLayer
     final double max = (Double) domainRange.getMax();
 
     final PolylineFigure plf = new PolylineFigure();
-    final ILineStyle pls = (ILineStyle) getStyleSet().getStyle( "line_style" ); //$NON-NLS-1$
+    final ILineStyle pls = (ILineStyle) getStyleSet().getStyle( "line" ); //$NON-NLS-1$
     plf.setStyle( pls );
     final PointFigure pf = new PointFigure();
-    final IPointStyle ps = (IPointStyle) getStyleSet().getStyle( "point_style" ); //$NON-NLS-1$
+    final IPointStyle ps = (IPointStyle) getStyleSet().getStyle( "point" ); //$NON-NLS-1$
     pf.setStyle( ps );
 
     final ArrayList<Point> path = new ArrayList<Point>();
@@ -141,22 +135,15 @@ public class PolynomeChartLayer extends AbstractLineLayer
 
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
-   */
   @Override
   public IDataRange< ? > getDomainRange( )
   {
     return m_data.getDomainRange();
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getTargetRange()
-   */
   @Override
   public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
   {
     return m_data.getTargetRange();
   }
-
 }
