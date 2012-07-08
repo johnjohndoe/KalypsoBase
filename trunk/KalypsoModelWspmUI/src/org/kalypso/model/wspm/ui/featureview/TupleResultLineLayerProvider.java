@@ -55,6 +55,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
+import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 
 /**
  * Layer provider which provides a {@link TupleResultLineChartLayer} on a feature based observation.
@@ -67,19 +68,18 @@ import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
  * <li>propertyName: QName. If non null, the observation feature is found at that property of the given feature. Else
  * the given feature must be an observation itself.</li>
  * </ul>
- * 
+ *
  * @author Gernot Belger
  */
 public class TupleResultLineLayerProvider extends AbstractLayerProvider
 {
-  /**
-   * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayers()
-   */
   @Override
   public IChartLayer getLayer( final URL context )
   {
-    final TupleResultLineLayer icl = new TupleResultLineLayer( this, getDataContainer(), getStyleSet());
-    return icl;
+    final IStyleSet styleSet = getStyleSet();
+    final TupleResultDomainValueData< ? , ? > dataContainer = getDataContainer();
+
+    return new TupleResultLineLayer( this, dataContainer, styleSet );
   }
 
   private TupleResultDomainValueData< ? , ? > getDataContainer( )
@@ -89,11 +89,11 @@ public class TupleResultLineLayerProvider extends AbstractLayerProvider
       return null;
 
     final IParameterContainer pc1 = getParameterContainer();
-    // final TupleResult result = obs.getResult();
+
     final String domainComponentId = pc1.getParameterValue( "domainComponentId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
     final String valueComponentId = pc1.getParameterValue( "valueComponentId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
-    final TupleResultDomainValueData< ? , ? > data = new TupleResultDomainValueData<Object, Object>( observation, domainComponentId, valueComponentId );
-    return data;
+
+    return new TupleResultDomainValueData<Object, Object>( observation, domainComponentId, valueComponentId );
   }
 
   protected IObservation<TupleResult> getObservation( )
