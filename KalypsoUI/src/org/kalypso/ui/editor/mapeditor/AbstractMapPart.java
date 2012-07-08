@@ -45,8 +45,6 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.net.URL;
 
-import javax.swing.SwingUtilities;
-
 import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -239,28 +237,9 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
   public void setFocus( )
   {
     if( m_control != null && !m_control.isDisposed() )
-    {
       m_control.setFocus();
-      final IMapPanel mapPanel = m_mapPanel;
-      if( mapPanel instanceof Component )
-      {
-        SwingUtilities.invokeLater( new Runnable()
-        {
-          @Override
-          public void run( )
-          {
-            ((Component) mapPanel).requestFocusInWindow();
-          }
-        } );
-      }
-      else
-        m_control.setFocus();
-    }
   }
 
-  /**
-   * @see org.eclipse.ui.IViewPart#getViewSite()
-   */
   public IViewSite getViewSite( )
   {
     return (IViewSite) getSite();
@@ -457,9 +436,6 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
     return m_mapPanel;
   }
 
-  /**
-   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-   */
   @Override
   public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
