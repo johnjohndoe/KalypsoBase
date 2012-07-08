@@ -361,7 +361,6 @@ public class ChartMapperFactory extends AbstractChartFactory
     {
       final AxisDurationRangeType range = at.getDurationRange();
       final IDataOperator<Calendar> dataOperator = dataOperatorHelper.getDataOperator( Calendar.class );
-      // axis.getDataOperator( Calendar.class );
       final GDuration minDur = range.getMinValue();
       final Calendar now = Calendar.getInstance();
       final Calendar minValue = addDurationToCal( now, minDur );
@@ -375,8 +374,8 @@ public class ChartMapperFactory extends AbstractChartFactory
       min = null;
       max = null;
     }
-    final IDataRange<Number> range = new ComparableDataRange<Number>( new Number[] { min, max } );
-    return range;
+
+    return new ComparableDataRange<Number>( new Number[] { min, max } );
   }
 
   private Calendar addDurationToCal( final Calendar cal, final GDuration dur )

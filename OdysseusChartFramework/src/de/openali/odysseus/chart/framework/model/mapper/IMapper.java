@@ -33,5 +33,4 @@ public interface IMapper extends IEventProvider<IMapperEventListener>
    * instance
    */
   <T> void addDataOperator( Class<T> clazz, IDataOperator<T> dataOperator );
-
 }

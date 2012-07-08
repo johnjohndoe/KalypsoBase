@@ -22,23 +22,15 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
  * @author alibu
  * @deprecated not used
  */
-
 @Deprecated
 public class CSVLineLayerProvider extends AbstractLayerProvider
 {
-
-  /**
-   * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayer(java.net.URL)
-   */
   @Override
   public IChartLayer getLayer( final URL context )
   {
     return new DefaultLineLayer( this, getDataContainer(), getStyleSet());
   }
 
-  /**
-   * @see org.kalypso.chart.factory.provider.ILayerProvider#getDataContainer()
-   */
   public AbstractDomainValueFileData getDataContainer( )
   {
     final AbstractDomainValueFileData data = new AbstractDomainValueFileData()

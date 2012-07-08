@@ -2,6 +2,7 @@ package de.openali.odysseus.chart.ext.base.axis;
 
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
@@ -15,21 +16,14 @@ import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperat
  */
 public abstract class AbstractMapper implements IMapper
 {
-
   private final Set<IMapperEventListener> m_listeners = new LinkedHashSet<IMapperEventListener>();
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#addListener(java.lang.Object)
-   */
   @Override
   public void addListener( final IMapperEventListener listener )
   {
     m_listeners.add( listener );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.event.IEventProvider#removeListener(java.lang.Object)
-   */
   @Override
   public void removeListener( final IMapperEventListener listener )
   {
@@ -42,10 +36,9 @@ public abstract class AbstractMapper implements IMapper
   /**
    * Hashmap to store arbitrary key value pairs
    */
-  private final HashMap<String, Object> m_data = new HashMap<String, Object>();
+  private final Map<String, Object> m_data = new HashMap<>();
 
-  @SuppressWarnings("rawtypes")
-  private final HashMap<Class, IDataOperator> m_dataOperators = new HashMap<Class, IDataOperator>();
+  private final Map<Class< ? >, IDataOperator< ? >> m_dataOperators = new HashMap<>();
 
   public AbstractMapper( final String id )
   {
@@ -92,13 +85,15 @@ public abstract class AbstractMapper implements IMapper
    * returns a data converter which may be used to convert data to numbers which can directly be used by the mapper (and
    * vice versa)
    */
+  @SuppressWarnings("unchecked")
   @Override
-  @SuppressWarnings({ "cast", "unchecked" })
   public <T> IDataOperator<T> getDataOperator( final Class<T> clazz )
   {
-    for( final Class c : m_dataOperators.keySet() )
+    for( final Class< ? > c : m_dataOperators.keySet() )
+    {
       if( c.isAssignableFrom( clazz ) )
         return (IDataOperator<T>) m_dataOperators.get( c );
+    }
 
     return new DataOperatorHelper().getDataOperator( clazz );
   }

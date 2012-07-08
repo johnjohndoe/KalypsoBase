@@ -8,5 +8,4 @@ public interface IDataRange<T>
   T getMin( );
 
   T getMax( );
-
 }

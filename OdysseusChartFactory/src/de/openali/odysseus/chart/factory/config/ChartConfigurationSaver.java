@@ -71,7 +71,7 @@ import de.openali.odysseus.chartconfig.x020.TitleType;
 
 /**
  * saves a chart to an XML document
- * 
+ *
  * @author burtscher1
  */
 public final class ChartConfigurationSaver
@@ -116,15 +116,16 @@ public final class ChartConfigurationSaver
    */
   private static Map<String, AxisType> extractAxes( final IMapperRegistry registry )
   {
-
     final Map<String, AxisType> axisTypes = new HashMap<String, AxisType>();
     final IAxis[] axes = registry.getAxes();
     for( final IAxis axis : axes )
     {
+
+      // FIXME: this is completely awful!
+
       final AxisType at = (AxisType) axis.getData( AbstractChartFactory.CONFIGURATION_TYPE_KEY );
       if( at != null )
       {
-
         // only set new range
         // TODO: Die Achsen schreiben ihre range nur in die .kod wenn das Element vorher schon angelegt war
         if( at.isSetDateRange() )

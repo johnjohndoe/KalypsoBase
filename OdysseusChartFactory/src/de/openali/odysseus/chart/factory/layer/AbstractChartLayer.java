@@ -163,9 +163,6 @@ public abstract class AbstractChartLayer implements IChartLayer
     m_mapperMap.put( role, mapper );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -178,18 +175,12 @@ public abstract class AbstractChartLayer implements IChartLayer
     return m_coordinateMapper;
   }
 
-  /**
-   * @see org.kalypso.chart.framework.model.layer.IChartLayer#getData()
-   */
   @Override
   public Object getData( final String id )
   {
     return m_data.get( id );
   }
 
-  /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getDescription()
-   */
   @Override
   public String getDescription( )
   {
@@ -226,9 +217,6 @@ public abstract class AbstractChartLayer implements IChartLayer
     return m_filters.toArray( new IChartLayerFilter[] {} );
   }
 
-  /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getId()
-   */
   @Override
   public String getIdentifier( )
   {
@@ -406,7 +394,7 @@ public abstract class AbstractChartLayer implements IChartLayer
     }
   }
 
-  protected void setAutoScale( boolean isAutoScale )
+  protected void setAutoScale( final boolean isAutoScale )
   {
     m_isAutoScale = isAutoScale;
   }
@@ -484,7 +472,7 @@ public abstract class AbstractChartLayer implements IChartLayer
     m_parent = parent;
   }
 
-  protected void setStyleSet( IStyleSet styleSet )
+  protected void setStyleSet( final IStyleSet styleSet )
   {
     m_styleSet = styleSet;
   }

@@ -58,7 +58,6 @@ import de.openali.odysseus.chart.framework.model.style.impl.ImageMarker;
  */
 public class MarkerIconMapper extends AbstractRetinalMapper
 {
-
   private final Map<Number, ImageDescriptor> m_mapping = new HashMap<Number, ImageDescriptor>();
 
   public MarkerIconMapper( final String id, final LinkedHashMap<String, ImageDescriptor> mapping )
