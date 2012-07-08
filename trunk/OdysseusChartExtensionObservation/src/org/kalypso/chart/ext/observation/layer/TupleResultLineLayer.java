@@ -16,7 +16,6 @@ import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
-import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
@@ -34,9 +33,6 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
     m_valueData = data;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
-   */
   @Override
   public IDataRange< ? > getDomainRange( )
   {
@@ -50,9 +46,6 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
     return dataRange;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer#getHover(org.eclipse.swt.graphics.Point)
-   */
   @Override
   public EditInfo getHover( final Point pos )
   {
@@ -89,15 +82,9 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
     return null;
   }
 
-  protected Rectangle getHoverRect( final Point screen, final int index )
+  private Rectangle getHoverRect( final Point screen, final int index )
   {
     return RectangleUtils.buffer( screen );
-  }
-
-  @Override
-  public synchronized ILegendEntry[] getLegendEntries( )
-  {
-    return super.getLegendEntries();
   }
 
   public IObservation<TupleResult> getObservation( )
@@ -174,9 +161,6 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
     return m_valueData;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#init()
-   */
   @Override
   public void init( )
   {
