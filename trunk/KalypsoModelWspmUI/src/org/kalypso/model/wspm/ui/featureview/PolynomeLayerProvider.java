@@ -70,10 +70,6 @@ import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
  */
 public class PolynomeLayerProvider extends AbstractLayerProvider
 {
-
-  /**
-   * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayers()
-   */
   @Override
   public PolynomeChartLayer getLayer( final URL context )
   {
@@ -83,9 +79,6 @@ public class PolynomeLayerProvider extends AbstractLayerProvider
     return new PolynomeChartLayer( this, getDataContainer(), pixelsPerTick, getStyleSet(), showPoints ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
-  /**
-   * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#getDataContainer()
-   */
   private PolynomDataContainer getDataContainer( )
   {
     final IParameterContainer pc = getParameterContainer();
@@ -111,5 +104,4 @@ public class PolynomeLayerProvider extends AbstractLayerProvider
     final IPolynomial1D[] polyArray = polys.toArray( new IPolynomial1D[polys.size()] );
     return new PolynomDataContainer( polyArray );
   }
-
 }
