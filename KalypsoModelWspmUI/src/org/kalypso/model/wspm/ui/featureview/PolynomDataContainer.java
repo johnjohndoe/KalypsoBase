@@ -43,16 +43,14 @@ package org.kalypso.model.wspm.ui.featureview;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
 import org.kalypsodeegree_impl.gml.binding.math.PolynomialUtilities;
 
-import de.openali.odysseus.chart.framework.model.data.IDataContainer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 
 /**
  * @author burtscher1
  */
-public class PolynomDataContainer implements IDataContainer<Number, Number>
+class PolynomDataContainer
 {
-
   private final IPolynomial1D[] m_polyArray;
 
   public PolynomDataContainer( final IPolynomial1D[] polyArray )
@@ -60,14 +58,6 @@ public class PolynomDataContainer implements IDataContainer<Number, Number>
     m_polyArray = polyArray;
   }
 
-  @Override
-  public void close( )
-  {
-    // not needed; data is always opened, so it cannot be closed
-
-  }
-
-  @Override
   public IDataRange<Number> getDomainRange( )
   {
     double min = Double.POSITIVE_INFINITY;
@@ -98,13 +88,6 @@ public class PolynomDataContainer implements IDataContainer<Number, Number>
     return dataRange;
   }
 
-  public Double[] getDomainValues( )
-  {
-    // TODO implement me
-    return null;
-  }
-
-  @Override
   public IDataRange<Number> getTargetRange( )
   {
     double min = Double.POSITIVE_INFINITY;
@@ -167,28 +150,8 @@ public class PolynomDataContainer implements IDataContainer<Number, Number>
     return dataRange;
   }
 
-  public Double[] getTargetValues( )
-  {
-    // TODO implement me
-    return null;
-  }
-
-  @Override
-  public boolean isOpen( )
-  {
-    // data is always opened
-    return true;
-  }
-
-  @Override
-  public void open( )
-  {
-    // Not implemented; data is always opened
-  }
-
   public IPolynomial1D[] getPolyArray( )
   {
     return m_polyArray;
   }
-
 }
