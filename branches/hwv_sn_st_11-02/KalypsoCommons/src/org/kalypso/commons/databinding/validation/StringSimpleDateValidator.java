@@ -91,7 +91,7 @@ public class StringSimpleDateValidator extends TypedValidator<String>
     try
     {
       if( value == null || value.length() == 0 )
-        return new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), "Bitte geben Sie ein Datum ein..." );
+        return new Status( IStatus.OK, KalypsoCommonsPlugin.getID(), "OK" );
 
       m_dateFormat.parse( value );
 

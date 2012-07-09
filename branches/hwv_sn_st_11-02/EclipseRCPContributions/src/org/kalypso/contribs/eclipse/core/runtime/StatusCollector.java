@@ -237,4 +237,17 @@ public class StatusCollector implements IStatusCollector
   {
     return m_stati.hashCode();
   }
+
+  @Override
+  public boolean isOK( )
+  {
+    final IStatus[] stati = getAllStati();
+    for( final IStatus status : stati )
+    {
+      if( !status.isOK() )
+        return false;
+    }
+
+    return true;
+  }
 }
