@@ -472,15 +472,7 @@ public class ConstraintDelaunayHelper
               continue;
             }
           }
-          if( lTriangle.getOrientation() == -1 )
-          {
-            triangleList.add( GeometryFactory.createGM_Triangle( lTriangle.getExteriorRing()[0], lTriangle.getExteriorRing()[2], lTriangle.getExteriorRing()[1], crs ) );
-
-          }
-          else
-          {
-            triangleList.add( lTriangle );
-          }
+          triangleList.add( lTriangle );
         }
       }
     }
