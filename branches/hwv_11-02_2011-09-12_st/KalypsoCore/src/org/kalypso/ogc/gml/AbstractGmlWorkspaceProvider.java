@@ -117,9 +117,11 @@ public abstract class AbstractGmlWorkspaceProvider implements IGmlWorkspaceProvi
 
   protected final void fireOnWorkspaceChanged( final CommandableWorkspace oldWorkspace, final CommandableWorkspace workspace )
   {
-    final IGmlWorkspaceProviderListener[] listeners = m_listeners.toArray( new IGmlWorkspaceProviderListener[m_listeners.size()] );
-    for( final IGmlWorkspaceProviderListener listener : listeners )
+    final Object[] listeners = m_listeners.toArray(  );
+    for( final Object element : listeners )
     {
+      final IGmlWorkspaceProviderListener listener = (IGmlWorkspaceProviderListener) element;
+      
       SafeRunner.run( new SafeRunnable( "Failed to inform listener" )
       {
         @Override
@@ -130,5 +132,4 @@ public abstract class AbstractGmlWorkspaceProvider implements IGmlWorkspaceProvi
       } );
     }
   }
-
 }
