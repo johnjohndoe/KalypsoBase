@@ -40,11 +40,13 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.commons.resources;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
+import java.util.Date;
 import java.util.zip.GZIPOutputStream;
 
 import org.apache.commons.io.IOUtils;
@@ -69,16 +71,21 @@ import org.kalypso.contribs.java.lang.CatchRunnable;
  */
 public abstract class SetContentHelper
 {
+  private static final String BCKUP_SUFFIX = "_bckup_"; //$NON-NLS-1$
+
+  final boolean doNotBackUp = Boolean.getBoolean( "kalypso.model.product.doNotMakeBckupsOnSave" ); //$NON-NLS-1$
+
   private String m_newCharset;
+
   private final String m_title;
 
   private String m_oldCharset;
 
   private boolean m_doCompress;
 
-  public SetContentHelper()
+  public SetContentHelper( )
   {
-    this( Messages.getString("org.kalypso.commons.resources.SetContentHelper.0") ); //$NON-NLS-1$
+    this( Messages.getString( "org.kalypso.commons.resources.SetContentHelper.0" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -90,15 +97,13 @@ public abstract class SetContentHelper
     m_title = title;
   }
 
-  public void setFileContents( final IFile file, final boolean force, final boolean keepHistory,
-      final IProgressMonitor monitor ) throws CoreException
-      {
+  public void setFileContents( final IFile file, final boolean force, final boolean keepHistory, final IProgressMonitor monitor ) throws CoreException
+  {
     setFileContents( file, force, keepHistory, monitor, null );
-      }
+  }
 
-  public void setFileContents( final IFile file, final boolean force, final boolean keepHistory,
-      final IProgressMonitor monitor, final String charset ) throws CoreException
-      {
+  public void setFileContents( final IFile file, final boolean force, final boolean keepHistory, final IProgressMonitor monitor, final String charset ) throws CoreException
+  {
     m_oldCharset = findCurrentCharset( file );
     m_newCharset = findNewCharset( file, charset, m_oldCharset );
 
@@ -116,7 +121,7 @@ public abstract class SetContentHelper
       final CatchRunnable innerRunnable = new CatchRunnable()
       {
         @Override
-        protected void runIntern() throws Throwable
+        protected void runIntern( ) throws Throwable
         {
           OutputStreamWriter outputStreamWriter = null;
           try
@@ -142,7 +147,43 @@ public abstract class SetContentHelper
 
       // set file contents
       if( file.exists() )
-        file.setContents( m_pis, force, keepHistory, new SubProgressMonitor( monitor, 1000 ) );
+      {
+        String bckupFileName = ""; //$NON-NLS-1$
+        if( !doNotBackUp )
+        {
+          bckupFileName = createBckup( new File( file.getLocationURI() ) );
+          file.refreshLocal( 0, monitor );
+          file.setContents( m_pis, force, keepHistory, new SubProgressMonitor( monitor, 1000 ) );
+          file.refreshLocal( 0, monitor );
+        }
+        else
+        {
+          file.setContents( m_pis, force, keepHistory, new SubProgressMonitor( monitor, 1000 ) );
+        }
+        /*
+         * if the operation finished successfully remove the backup copy
+         */
+        if( !doNotBackUp )
+        {
+          try
+          {
+            File bckupFile = new File( bckupFileName );
+            try
+            {
+              bckupFile.delete();
+            }
+            catch( Exception e )
+            {
+              bckupFile.deleteOnExit();
+            }
+          }
+          catch( Exception e )
+          {
+            // TODO: handle exception
+          }
+        }
+
+      }
       else
       {
         file.create( m_pis, force, new SubProgressMonitor( monitor, 1000 ) );
@@ -166,7 +207,7 @@ public abstract class SetContentHelper
 
       final Throwable thrown = innerRunnable.getThrown();
       if( thrown != null )
-        throw new CoreException( StatusUtilities.statusFromThrowable( thrown, Messages.getString("org.kalypso.commons.resources.SetContentHelper.2") ) ); //$NON-NLS-1$
+        throw new CoreException( StatusUtilities.statusFromThrowable( thrown, Messages.getString( "org.kalypso.commons.resources.SetContentHelper.2" ) ) ); //$NON-NLS-1$
     }
     catch( final CoreException e )
     {
@@ -192,7 +233,7 @@ public abstract class SetContentHelper
     catch( final IOException e )
     {
       e.printStackTrace();
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getString("org.kalypso.commons.resources.SetContentHelper.3"), e ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.commons.resources.SetContentHelper.3" ), e ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -204,7 +245,7 @@ public abstract class SetContentHelper
 
     // enclose in finally?
     monitor.done();
-      }
+  }
 
   private String findNewCharset( final IFile file, final String charset, final String currentCharset ) throws CoreException
   {
@@ -215,6 +256,30 @@ public abstract class SetContentHelper
       return currentCharset;
 
     return file.getParent().getDefaultCharset();
+  }
+
+  /**
+   * rename the existing original file, save return the name of this renamed file, create empty file to replace original
+   * one
+   * 
+   * @param gmlFile
+   *          original file to create a backup from
+   * @return file name of created backup file
+   */
+  private String createBckup( final File gmlFile )
+  {
+    String fileName = gmlFile.getAbsolutePath();
+    String bckupFileName = fileName + BCKUP_SUFFIX + (new Date()).getTime();
+    gmlFile.renameTo( new File( bckupFileName ) );
+    try
+    {
+      gmlFile.createNewFile();
+    }
+    catch( IOException e )
+    {
+      e.printStackTrace();
+    }
+    return bckupFileName;
   }
 
   private String findCurrentCharset( final IFile file ) throws CoreException
