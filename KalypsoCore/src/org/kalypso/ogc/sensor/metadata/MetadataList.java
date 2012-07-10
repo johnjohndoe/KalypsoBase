@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.metadata;
 
@@ -46,7 +46,7 @@ import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 
 /**
  * Metadata for Observations.
- * 
+ *
  * @author schlienger
  */
 public class MetadataList extends Properties
@@ -61,9 +61,9 @@ public class MetadataList extends Properties
   }
 
   /** REMARK: Sets the given properties as default values. It doesn't mean 'putAll'! */
-  public MetadataList( final Properties arg0 )
+  public MetadataList( final Properties defaultProperties )
   {
-    super( arg0 );
+    super( defaultProperties );
 
     m_sourceHandler = new DataSourceHandler( this );
   }
@@ -77,18 +77,12 @@ public class MetadataList extends Properties
     return m_sourceHandler;
   }
 
-  /**
-   * @see java.util.Properties#setProperty(java.lang.String, java.lang.String)
-   */
   @Override
   public synchronized Object setProperty( final String key, final String value )
   {
     return super.setProperty( key, value );
   }
 
-  /**
-   * @see java.util.Hashtable#put(java.lang.Object, java.lang.Object)
-   */
   @Override
   public synchronized Object put( final Object key, final Object value )
   {
