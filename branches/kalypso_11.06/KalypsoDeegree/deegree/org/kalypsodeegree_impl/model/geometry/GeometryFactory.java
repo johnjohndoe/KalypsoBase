@@ -405,9 +405,9 @@ final public class GeometryFactory
    *          patches that build the surface
    */
   public static GM_Surface< ? extends GM_SurfacePatch> createGM_Surface( final GM_SurfacePatch patch ) throws GM_Exception
-      {
+  {
     return new GM_Surface_Impl<GM_SurfacePatch>( patch );
-      }
+  }
 
   /**
    * creates a GM_Surface from a wkb.
@@ -420,7 +420,7 @@ final public class GeometryFactory
    *          GM_SurfaceInterpolation
    */
   public static GM_Surface< ? extends GM_SurfacePatch> createGM_Surface( final byte[] wkb, final String crs ) throws GM_Exception
-      {
+  {
     int wkbtype = -1;
     int numRings = 0;
     int numPoints = 0;
@@ -561,7 +561,7 @@ final public class GeometryFactory
     final GM_SurfacePatch patch = GeometryFactory.createGM_SurfacePatch( externalBoundary, internalBoundaries, crs );
 
     return GeometryFactory.createGM_Surface( patch );
-      }
+  }
 
   /**
    * Creates a <tt>GM_Surface</tt> from a <tt>GM_Envelope</tt>.
@@ -575,14 +575,14 @@ final public class GeometryFactory
    * @throws GM_Exception
    */
   public static GM_Surface< ? extends GM_SurfacePatch> createGM_Surface( final GM_Envelope bbox, final String crs ) throws GM_Exception
-      {
+  {
     final GM_Position min = bbox.getMin();
     final GM_Position max = bbox.getMax();
 
     final GM_Position[] exteriorRing = new GM_Position[] { min, new GM_Position2D_Impl( max.getX(), min.getY() ), max, new GM_Position2D_Impl( min.getX(), max.getY() ), min };
 
     return GeometryFactory.createGM_Surface( exteriorRing, null, crs );
-      }
+  }
 
   /**
    * Creates a <tt>GM_Surface</tt> from the ordinates of the exterior ring and the the interior rings
@@ -594,7 +594,7 @@ final public class GeometryFactory
    * @throws GM_Exception
    */
   public static GM_Surface< ? extends GM_SurfacePatch> createGM_Surface( final double[] exterior, final double[][] interior, final int dim, final String crs ) throws GM_Exception
-      {
+  {
     // get exterior ring
     final GM_Position[] ext = positionsFromDoubles( exterior, dim );
 
@@ -610,7 +610,7 @@ final public class GeometryFactory
     }
 
     return GeometryFactory.createGM_Surface( ext, in, crs );
-      }
+  }
 
   private static GM_Position[] positionsFromDoubles( final double[] exterior, final int dim )
   {
@@ -1092,12 +1092,17 @@ final public class GeometryFactory
     if( pos.length != 3 )
       return null;
 
-    return new GM_Triangle_Impl( pos[0], pos[1], pos[2], crs );
+    return createGM_Triangle( pos[0], pos[1], pos[2], crs );
   }
 
   public static GM_Triangle createGM_Triangle( final GM_Position pos1, final GM_Position pos2, final GM_Position pos3, final String crs ) throws GM_Exception
   {
-    return new GM_Triangle_Impl( pos1, pos2, pos3, crs );
+    GM_Triangle triangle = new GM_Triangle_Impl( pos1, pos2, pos3, crs );
+    if( triangle.getOrientation() == -1 )
+    {
+      triangle = new GM_Triangle_Impl( pos1, pos3, pos2, crs );
+    }
+    return triangle;
   }
 
   public static GM_TriangulatedSurface createGM_TriangulatedSurface( final String crs ) throws GM_Exception
