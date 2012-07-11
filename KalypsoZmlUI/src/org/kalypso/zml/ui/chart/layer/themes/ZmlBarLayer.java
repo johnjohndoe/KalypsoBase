@@ -151,6 +151,8 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
   @Override
   public void onObservationChanged( )
   {
+    m_range.invalidateRange();
+
     getEventHandler().fireLayerContentChanged( this );
   }
 

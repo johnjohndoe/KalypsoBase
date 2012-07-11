@@ -64,7 +64,7 @@ import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperat
 /**
  * @author Dirk Kuch
  */
-public class ZmlBarLayerRangeHandler
+class ZmlBarLayerRangeHandler
 {
   private final ZmlBarLayer m_layer;
 
@@ -72,12 +72,24 @@ public class ZmlBarLayerRangeHandler
 
   private final IDataOperator<Number> m_numberDataOperator = new DataOperatorHelper().getDataOperator( Number.class );
 
+  private IDataRange<Number> m_targetRange;
+
+  private IDataRange<Number> m_domainRange;
+
   public ZmlBarLayerRangeHandler( final ZmlBarLayer layer )
   {
     m_layer = layer;
   }
 
-  public IDataRange<Number> getDomainRange( )
+  public synchronized IDataRange<Number> getDomainRange( )
+  {
+    if( m_domainRange == null )
+      m_domainRange = calculateDomainRange();
+
+    return m_domainRange;
+  }
+
+  private IDataRange<Number> calculateDomainRange( )
   {
     try
     {
@@ -138,7 +150,15 @@ public class ZmlBarLayerRangeHandler
     return m_dateDataOperator;
   }
 
-  public IDataRange<Number> getTargetRange( )
+  public synchronized IDataRange<Number> getTargetRange( )
+  {
+    if( m_targetRange == null )
+      m_targetRange = calculateTargetRange();
+
+    return m_targetRange;
+  }
+
+  private IDataRange<Number> calculateTargetRange( )
   {
     try
     {
@@ -179,5 +199,11 @@ public class ZmlBarLayerRangeHandler
   public IDataOperator<Number> getNumberDataOperator( )
   {
     return m_numberDataOperator;
+  }
+
+  public synchronized void invalidateRange( )
+  {
+    m_domainRange = null;
+    m_targetRange = null;
   }
 }
