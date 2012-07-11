@@ -12,8 +12,18 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
  */
 public interface ILayerManager extends IEventProvider<ILayerManagerEventListener>
 {
+  /**
+   * @deprecated Use {@link #accept(IChartLayerVisitor2)} instead. This implementation does not recurse and is hence
+   *             rubbish.
+   */
+  @Deprecated
   void accept( IChartLayerVisitor visitor );
 
+  /**
+   * @deprecated Use {@link ILayerContainer#accept(IChartLayerVisitor2)} instead. This implementation does not recurse
+   *             and is hence rubbish.
+   */
+  @Deprecated
   void accept( IChartLayerVisitor... visitors );
 
   void addLayer( IChartLayer... layer );
@@ -31,7 +41,7 @@ public interface ILayerManager extends IEventProvider<ILayerManagerEventListener
   /**
    * Gibt eine Liste aller vorhandenen Layer zurück. Die List ist geordnet in der Reihenfolge, in der die Layer
    * gezeichnet werden.
-   * 
+   *
    * @return
    */
   IChartLayer[] getLayers( );

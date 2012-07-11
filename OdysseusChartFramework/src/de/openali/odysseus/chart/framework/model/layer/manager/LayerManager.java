@@ -25,9 +25,6 @@ public class LayerManager implements ILayerManager
 
   private final ILayerEventListener m_layerListener = new AbstractLayerEventListener()
   {
-    /**
-     * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerEventListener#onActiveLayerChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-     */
     @Override
     public void onActiveLayerChanged( final IChartLayer layer )
     {
@@ -56,9 +53,6 @@ public class LayerManager implements ILayerManager
       return null;
     }
 
-    /**
-     * @see de.openali.odysseus.chart.framework.impl.model.event.AbstractLayerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-     */
     @Override
     public void onLayerContentChanged( final IChartLayer layer )
     {
@@ -69,9 +63,6 @@ public class LayerManager implements ILayerManager
         parentHandler.fireLayerContentChanged( (IChartLayer) getContainer() );
     }
 
-    /**
-     * @see de.openali.odysseus.chart.framework.impl.model.event.AbstractLayerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-     */
     @Override
     public void onLayerVisibilityChanged( final IChartLayer layer )
     {
@@ -81,7 +72,6 @@ public class LayerManager implements ILayerManager
       if( parentHandler != null )
         parentHandler.fireLayerVisibilityChanged( (IChartLayer) getContainer() );
     }
-
   };
 
   /**
@@ -132,12 +122,11 @@ public class LayerManager implements ILayerManager
         {
           return;
         }
-
       }
     }
     finally
     {
-      // only finalise chart model visitors (recursion!)
+      // only finalize chart model visitors (recursion!)
       if( m_container instanceof IChartModel )
         visitor.doFinialize();
     }
@@ -255,9 +244,6 @@ public class LayerManager implements ILayerManager
     return m_layers.size();
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.ILayerManager#getLayers(de.openali.odysseus.chart.framework.model.mapper.IAxis)
-   */
   @Override
   public IChartLayer[] getLayers( final IAxis axis, final boolean recursive )
   {

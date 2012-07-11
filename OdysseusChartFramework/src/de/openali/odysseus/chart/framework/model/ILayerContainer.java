@@ -41,6 +41,7 @@
 package de.openali.odysseus.chart.framework.model;
 
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
+import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor2;
 
 /**
  * @author Dirk Kuch
@@ -56,4 +57,6 @@ public interface ILayerContainer
   void setIdentifier( String identifier );
 
   IChartModel getModel( );
+
+  void accept( IChartLayerVisitor2 visitor );
 }

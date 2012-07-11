@@ -3,6 +3,7 @@ package de.openali.odysseus.chart.framework.model.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.commons.java.lang.Arrays;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
@@ -12,7 +13,9 @@ import de.openali.odysseus.chart.framework.model.impl.settings.IBasicChartSettin
 import de.openali.odysseus.chart.framework.model.impl.utils.ChartModelLayerEventListener;
 import de.openali.odysseus.chart.framework.model.impl.visitors.AutoScaleVisitor;
 import de.openali.odysseus.chart.framework.model.impl.visitors.DisposeLayersVisitor;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
+import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor2;
 import de.openali.odysseus.chart.framework.model.layer.manager.LayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
@@ -39,7 +42,7 @@ public class ChartModel implements IChartModel
 
   /**
    * automatically scales all given axes; scaling means here: show all available values
-   * 
+   *
    * @param axes
    *          axes == null -> update all chart model axes
    */
@@ -135,5 +138,20 @@ public class ChartModel implements IChartModel
   public Object setData( final String key, final Object value )
   {
     return m_dataMap.put( key, value );
+  }
+
+  @Override
+  public void accept( final IChartLayerVisitor2 visitor )
+  {
+    try
+    {
+      final IChartLayer[] layers = getLayerManager().getLayers();
+      for( final IChartLayer layer : layers )
+        layer.accept( visitor );
+    }
+    catch( final CancelVisitorException e )
+    {
+      // simply stop recursion
+    }
   }
 }
