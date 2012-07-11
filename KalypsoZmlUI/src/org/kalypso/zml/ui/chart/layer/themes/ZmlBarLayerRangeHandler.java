@@ -154,6 +154,7 @@ public class ZmlBarLayerRangeHandler
         return null;
 
       /** hack for polder control which consists of boolean values */
+      // FIXME: the axis is responsible for that!
       final Class< ? > dataClass = valueAxis.getDataClass();
       if( Boolean.class.equals( dataClass ) )
         return new DataRange<Number>( 0, 1 );
@@ -162,10 +163,10 @@ public class ZmlBarLayerRangeHandler
       if( range == null )
         return null;
 
+      final Number min = getNumberDataOperator().logicalToNumeric( (Number) range.getLower() );
       final Number max = getNumberDataOperator().logicalToNumeric( (Number) range.getUpper() );
 
-      final IDataRange<Number> numRange = new DataRange<Number>( 0, Math.max( 1.0, max.doubleValue() ) );
-      return numRange;
+      return new DataRange<Number>( min, max );
     }
     catch( final SensorException e )
     {
