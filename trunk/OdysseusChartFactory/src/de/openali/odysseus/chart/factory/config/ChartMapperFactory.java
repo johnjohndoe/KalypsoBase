@@ -281,17 +281,17 @@ public class ChartMapperFactory extends AbstractChartFactory
 
   private AxisAdjustment getAxisAdjustment( final AxisType at )
   {
-    AxisAdjustment aa = null;
     if( at.isSetPreferredAdjustment() )
     {
       final PreferredAdjustment pa = at.getPreferredAdjustment();
 
-      aa = new AxisAdjustment( pa.getBefore(), pa.getRange(), pa.getAfter(), pa.getFixMinRange() == null ? 0.0 : pa.getFixMinRange(), pa.getFixMaxRange() == null ? Double.MAX_VALUE
-          : pa.getFixMaxRange() );
+      final Number minValue = pa.getFixMinRange() == null ? 0.0 : pa.getFixMinRange();
+      final Number maxValue = pa.getFixMaxRange() == null ? Double.MAX_VALUE : pa.getFixMaxRange();
+
+      return new AxisAdjustment( pa.getBefore(), pa.getRange(), pa.getAfter(), minValue, maxValue );
     }
     else
-      aa = new AxisAdjustment( 0, 1, 0 );
-    return aa;
+      return new AxisAdjustment( 0, 1, 0 );
   }
 
   private DataRangeRestriction<Number> getRangeRestriction( final AxisType at )
