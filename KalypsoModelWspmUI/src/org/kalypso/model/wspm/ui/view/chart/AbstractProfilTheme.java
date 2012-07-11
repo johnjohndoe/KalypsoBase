@@ -50,7 +50,6 @@ import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.observation.result.IComponent;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
@@ -231,26 +230,15 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
     return layer == null ? null : layer.getDomainComponent();
   }
 
+  /**
+   * Always returns null: Important: do not recurse into children, they may have different axes, so merging those ranges
+   * is just wrong.<br/>
+   * The caller of getDomainRange is responsible for recursion.
+   */
   @Override
   public IDataRange< ? > getDomainRange( )
   {
-    Double min = null;
-    Double max = null;
-    for( final IChartLayer layer : getLayerManager().getLayers() )
-    {
-      final IDataRange< ? > dr = layer.getDomainRange();
-      if( dr != null )
-      {
-        final double drMax = ((Number) dr.getMax()).doubleValue();
-        final double drMin = ((Number) dr.getMin()).doubleValue();
-
-        max = max == null ? drMax : Math.max( max, drMax );
-        min = min == null ? drMin : Math.min( min, drMin );
-      }
-    }
-    if( min == null || max == null )
-      return null;
-    return new DataRange<Number>( min, max );
+    return null;
   }
 
   @Override
@@ -283,12 +271,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
     return m_id;
   }
 
-// @Override
-// public final ILayerManager getLayerManager( )
-// {
-// return m_layerManager;
-// }
-
   @Override
   public IComponent getTargetComponent( )
   {
@@ -296,39 +278,15 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
     return layer == null ? null : layer.getTargetComponent();
   }
 
+  /**
+   * Always returns null: Important: do not recurse into children, they may have different axes, so merging those ranges
+   * is just wrong.<br/>
+   * The caller of getDomainRange is responsible for recursion.
+   */
   @Override
   public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
   {
-    Double min = null;
-    Double max = null;
-    for( final IChartLayer layer : getLayerManager().getLayers() )
-    {
-      final IDataRange< ? > dr = layer.getTargetRange( null );
-      if( dr != null )
-      {
-        if( max == null )
-        {
-          max = ((Number) dr.getMax()).doubleValue();
-        }
-        else
-        {
-          max = Math.max( max, ((Number) dr.getMax()).doubleValue() );
-        }
-        if( min == null )
-        {
-          min = ((Number) dr.getMin()).doubleValue();
-        }
-        else
-        {
-          min = Math.min( min, ((Number) dr.getMin()).doubleValue() );
-        }
-      }
-    }
-    if( min == null || max == null )
-      return null;
-// if( min == max )
-// min = 0.9 * max;
-    return new DataRange<Number>( min, max );
+    return null;
   }
 
   @Override
