@@ -84,7 +84,7 @@ public abstract class AbstractBarLayer extends AbstractChartLayer
   }
 
   /**
-   * @deprecated: Bad: leads to memory problems for big data. Inline and diretly paint each rectangle
+   * @deprecated: Bad: leads to memory problems for big data. Inline and directly paint each rectangle
    */
   @Deprecated
   protected final void paint( final GC gc, final Rectangle... rectangles )
