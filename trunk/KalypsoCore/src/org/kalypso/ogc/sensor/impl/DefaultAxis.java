@@ -113,63 +113,42 @@ public final class DefaultAxis extends AbstractAxis
     this( axis.getName(), axis.getType(), axis.getUnit(), axis.getDataClass(), axis.isKey(), axis.isPersistable() );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IAxis#getUnit()
-   */
   @Override
   public String getUnit( )
   {
     return m_unit;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IAxis#getName()
-   */
   @Override
   public String getName( )
   {
     return m_label;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IAxis#getDataClass()
-   */
   @Override
   public Class< ? > getDataClass( )
   {
     return m_dataClass;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IAxis#getType()
-   */
   @Override
   public String getType( )
   {
     return m_type;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IAxis#isKey()
-   */
   @Override
   public boolean isKey( )
   {
     return m_isKey;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.IAxis#isPersistable()
-   */
   @Override
   public boolean isPersistable( )
   {
     return m_persistable;
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.impl.AbstractAxis#hashCode()
-   */
   @Override
   public int hashCode( )
   {
