@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.zml.values;
 
@@ -50,7 +50,7 @@ import org.kalypso.ogc.sensor.impl.AbstractTupleModel;
 
 /**
  * A specific TuppleModel that can deal with values coming from Zml-Files.
- * 
+ *
  * @author schlienger
  */
 public class ZmlTupleModel extends AbstractTupleModel
@@ -59,7 +59,7 @@ public class ZmlTupleModel extends AbstractTupleModel
 
   /**
    * Constructor
-   * 
+   *
    * @param valuesMap
    */
   public ZmlTupleModel( final Map<IAxis, IZmlValues> valuesMap )
@@ -98,8 +98,10 @@ public class ZmlTupleModel extends AbstractTupleModel
       throw new IllegalStateException( Messages.getString( "org.kalypso.ogc.sensor.zml.values.ZmlTuppleModel.1" ) ); //$NON-NLS-1$
 
     final IZmlValues values = m_valuesMap.get( axis );
+
     if( values == null )
-      return new Double( 0 );
+      throw new SensorException( String.format( "Unknwon axis: %s", axis.getName() ) );
+    // return new Double( 0 );
 
     return values.getElement( index );
   }
