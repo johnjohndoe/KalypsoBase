@@ -11,6 +11,8 @@ public interface IAreaStyle extends IStyle
 
   boolean isFillVisible( );
 
+  void setFillVisible( boolean visible );
+
   void setFill( IFill fill );
 
   void setStroke( ILineStyle stroke );

@@ -12,7 +12,7 @@ public class AreaStyle extends AbstractStyle implements IAreaStyle
 
   private IFill m_fill;
 
-  private final boolean m_isFillVisible;
+  private boolean m_isFillVisible;
 
   public AreaStyle( final IFill fill, final int alpha, final ILineStyle stroke, final boolean isFillVisible )
   {
@@ -25,7 +25,7 @@ public class AreaStyle extends AbstractStyle implements IAreaStyle
 
   /**
    * copy constructor
-   * 
+   *
    * @param style
    *          template style
    */
@@ -78,13 +78,15 @@ public class AreaStyle extends AbstractStyle implements IAreaStyle
     return m_stroke;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.style.IAreaStyle#isFillVisible()
-   */
   @Override
   public boolean isFillVisible( )
   {
     return m_isFillVisible;
   }
 
+  @Override
+  public void setFillVisible( final boolean visible )
+  {
+    m_isFillVisible = visible;
+  }
 }
