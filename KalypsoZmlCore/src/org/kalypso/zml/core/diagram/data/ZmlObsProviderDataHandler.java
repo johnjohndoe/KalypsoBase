@@ -125,6 +125,8 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
   {
     synchronized( this )
     {
+      m_valueAxis = null;
+
       if( provider == m_provider )
         return;
 
@@ -151,16 +153,19 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
   @Override
   public IAxis getValueAxis( )
   {
-    if( m_valueAxis == null )
+    synchronized( this )
     {
-      m_valueAxis = ZmlLayerProviders.getValueAxis( m_provider, m_targetAxisId );
-    }
+      if( m_valueAxis == null )
+        m_valueAxis = ZmlLayerProviders.getValueAxis( m_provider, m_targetAxisId );
 
-    return m_valueAxis;
+      return m_valueAxis;
+    }
   }
 
   protected void onObservationLoaded( )
   {
+    m_valueAxis = null;
+
     m_layer.onObservationChanged();
   }
 
@@ -235,15 +240,13 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
         final String plainHref = ZmlContext.resolvePlainHref( href );
 
         final PooledObsProvider obsProvider = new PooledObsProvider( new PoolableObjectType( "zml", plainHref, localContext, true ) ); //$NON-NLS-1$
-        setObsProvider( obsProvider ); //$NON-NLS-1$ 
+        setObsProvider( obsProvider ); //$NON-NLS-1$
       }
     }
-
   }
 
   public IZmlLayer getLayer( )
   {
     return m_layer;
   }
-
 }
