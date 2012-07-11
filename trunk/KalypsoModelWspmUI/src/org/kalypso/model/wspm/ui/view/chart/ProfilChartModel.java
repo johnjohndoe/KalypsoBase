@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.ProfilListenerAdapter;
@@ -49,10 +48,8 @@ import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.model.impl.ChartModelState;
-import de.openali.odysseus.chart.framework.model.impl.visitors.AutoScaleVisitor;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 
 /**
  * @author kimwerner
@@ -114,22 +111,6 @@ public class ProfilChartModel extends ChartModel
       m_layerProvider.registerAxis( getMapperRegistry() );
       // getSettings().addTitles( ChartTitleTester.getTitleTypes() );
       updateLayers();
-    }
-  }
-
-  /**
-   * automatically scales all given axes; scaling means here: show all available values
-   */
-  @Override
-  public void autoscale( final IAxis... axes )
-  {
-    final AutoScaleVisitor visitor = new AutoScaleVisitor( this );
-
-    // TODO ?!? auto scaled axes will be updated when?!? strange behavior
-    final IAxis[] autoscaledAxes = ArrayUtils.isEmpty( axes ) ? getMapperRegistry().getAxes() : axes;
-    for( final IAxis axis : autoscaledAxes )
-    {
-      visitor.visit( axis );
     }
   }
 
