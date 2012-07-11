@@ -45,14 +45,9 @@ package de.openali.odysseus.chart.framework.model.layer.manager;
  */
 public abstract class AbstractChartLayerVisitor implements IChartLayerVisitor
 {
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#doFinialize()
-   */
   @Override
   public void doFinialize( )
   {
     // nothing to do
   }
-
 }

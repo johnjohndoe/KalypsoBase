@@ -56,7 +56,6 @@ import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisito
  */
 public class ForecastLayerChartModelVisitor implements IChartLayerVisitor
 {
-
   private ZmlForecastLayer m_foreCastLayer;
 
   private IZmlLayerDataHandler m_handler;

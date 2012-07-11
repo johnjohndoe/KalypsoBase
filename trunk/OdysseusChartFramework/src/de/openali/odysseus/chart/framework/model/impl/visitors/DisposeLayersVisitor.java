@@ -48,14 +48,10 @@ import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLaye
  */
 public class DisposeLayersVisitor extends AbstractChartLayerVisitor
 {
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
   @Override
   public void visit( final IChartLayer layer )
   {
     layer.getLayerManager().accept( this );
     layer.dispose();
   }
-
 }

@@ -88,5 +88,4 @@ public class FindAxisLayerVisitor extends AbstractChartLayerVisitor
   {
     return m_layers.toArray( new IChartLayer[] {} );
   }
-
 }
