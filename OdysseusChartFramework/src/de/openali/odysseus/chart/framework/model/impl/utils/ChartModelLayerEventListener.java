@@ -53,7 +53,6 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
  */
 public class ChartModelLayerEventListener extends AbstractLayerManagerEventListener
 {
-
   private final ChartModel m_model;
 
   public ChartModelLayerEventListener( final ChartModel model )
@@ -61,9 +60,6 @@ public class ChartModelLayerEventListener extends AbstractLayerManagerEventListe
     m_model = model;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onActivLayerChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
   @Override
   public void onActivLayerChanged( final IChartLayer layer )
   {
@@ -80,11 +76,6 @@ public class ChartModelLayerEventListener extends AbstractLayerManagerEventListe
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * @see
-   * org.kalypso.chart.framework.model.IChartModel#onLayerAdded(org.kalypso.chart.framework.model.layer.IChartLayer)
-   */
   @Override
   public void onLayerAdded( final IChartLayer layer )
   {
@@ -112,9 +103,6 @@ public class ChartModelLayerEventListener extends AbstractLayerManagerEventListe
     behaviour.hideUnusedAxis( axes );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerContentChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
   @Override
   public void onLayerContentChanged( final IChartLayer layer )
   {
@@ -129,11 +117,6 @@ public class ChartModelLayerEventListener extends AbstractLayerManagerEventListe
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * @see
-   * org.kalypso.chart.framework.model.IChartModel#onLayerRemoved(org.kalypso.chart.framework.model.layer.IChartLayer )
-   */
   @Override
   public void onLayerRemoved( final IChartLayer layer )
   {
@@ -144,9 +127,6 @@ public class ChartModelLayerEventListener extends AbstractLayerManagerEventListe
       doAutoscale( layer );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerManagerEventListener#onLayerVisibilityChanged(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
   @Override
   public void onLayerVisibilityChanged( final IChartLayer layer )
   {
