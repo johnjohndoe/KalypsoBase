@@ -34,20 +34,14 @@ public class ArrayContentAxis extends AbstractAxis
     this( id, position, new OrdinalAxisRenderer( id + "_axisRenderer", new AxisRendererConfig(), contentProvider ), contentProvider, fixedWidth );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#normalizedToScreen(double)
-   */
   @Override
   public int normalizedToScreen( final double d )
   {
     throw new UnsupportedOperationException( "use numericToScreen instead" );
   }
 
-  /**
-   * @see org.kalypso.chart.framework.model.mapper.IAxis#numericToScreen(java.lang.Number)
-   */
   @Override
-  public Integer numericToScreen( final Number value )
+  public int numericToScreen( final Number value )
   {
     final int start = getNumericRange().getMin().intValue();
     return (value.intValue() - start) * m_fixedWidth;
@@ -60,18 +54,12 @@ public class ArrayContentAxis extends AbstractAxis
     return m_contentProvider.getContent( index );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#screenToNormalized(int)
-   */
   @Override
   public double screenToNormalized( final int value )
   {
     throw new UnsupportedOperationException( "use screenToNumeric instead" );
   }
 
-  /**
-   * @see org.kalypso.chart.framework.model.mapper.IAxis#screenToNumeric(int)
-   */
   @Override
   public Number screenToNumeric( final int value )
   {

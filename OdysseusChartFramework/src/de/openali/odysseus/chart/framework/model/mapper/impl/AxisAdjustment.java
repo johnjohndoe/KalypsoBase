@@ -93,22 +93,15 @@ public class AxisAdjustment implements IAxisAdjustment
     return m_after;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.mapper.IAxisAdjustment#getMinValue()
-   */
   @Override
   public Number getMinValue( )
   {
     return m_minValue;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.mapper.IAxisAdjustment#getMaxValue()
-   */
   @Override
   public Number getMaxValue( )
   {
     return m_maxValue;
   }
-
 }

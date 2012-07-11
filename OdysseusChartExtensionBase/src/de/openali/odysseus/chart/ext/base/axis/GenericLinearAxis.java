@@ -10,12 +10,11 @@ import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 
 /**
  * logical and numerical range are identical;
- * 
+ *
  * @author burtscher Concrete IAxis implementation - to be used for numeric data
  */
 public class GenericLinearAxis extends AbstractAxis
 {
-
   public GenericLinearAxis( final String id, final POSITION pos )
   {
     super( id, pos, Number.class, new ExtendedAxisRenderer( id + "_RENDERER", pos, new NumberLabelCreator( "%s" ), new GenericNumberTickCalculator(), new AxisRendererConfig() ) );//$NON-NLS-1$ //$NON-NLS-2$
@@ -51,38 +50,37 @@ public class GenericLinearAxis extends AbstractAxis
 
   /**
    * Uses the widgets' complete extension to calculate the screen value in correspondence to a normalized value
-   * 
+   *
    * @see de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent#normalizedToScreen(double)
    */
   @Override
   public int normalizedToScreen( final double normValue )
   {
     final int range = getScreenHeight();
-    return (int) (range * (isInverted() ? 1 - normValue : normValue));
+    final double screen = (range * (isInverted() ? 1 - normValue : normValue));
+
+    // REMARK: using floor here, so all values are rounded to the same direction
+    return (int) screen;
   }
 
-  public double numericToNormalized( final Number value )
+  private double numericToNormalized( final Number value )
   {
     final IDataRange<Number> dataRange = getNumericRange();
     if( dataRange.getMax() == null || dataRange.getMin() == null )
       return Double.NaN;
     final double r = dataRange.getMax().doubleValue() - dataRange.getMin().doubleValue();
-    final double norm = (value.doubleValue() - dataRange.getMin().doubleValue()) / r;
-    return norm;
+    return (value.doubleValue() - dataRange.getMin().doubleValue()) / r;
   }
 
-  /**
-   * @see org.kalypso.chart.framework.model.mapper.IAxis#numericToScreen(java.lang.Number)
-   */
   @Override
-  public Integer numericToScreen( final Number value )
+  public int numericToScreen( final Number value )
   {
     return normalizedToScreen( numericToNormalized( value ) );
   }
 
   /**
    * Uses the widgets' complete extension to allocates the normalized value in correspondence to a screen value
-   * 
+   *
    * @see de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent#screenToNormalized(int)
    */
   @Override
@@ -95,9 +93,6 @@ public class GenericLinearAxis extends AbstractAxis
     return isInverted() ? 1 - normValue : normValue;
   }
 
-  /**
-   * @see org.kalypso.chart.framework.model.mapper.IAxis#screenToNumeric(int)
-   */
   @Override
   public Number screenToNumeric( final int value )
   {

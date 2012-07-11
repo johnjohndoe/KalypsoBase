@@ -185,5 +185,4 @@ public class ZmlDiagramChartPartComposite extends ChartPartComposite
     layerManager.accept( new RemoveClonedLayerVisitor() );
     layerManager.accept( new ResetZmlLayerVisitor() );
   }
-
 }

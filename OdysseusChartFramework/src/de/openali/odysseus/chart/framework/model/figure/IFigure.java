@@ -7,5 +7,4 @@ public interface IFigure<T_style extends IStyle> extends IPaintable
   void setStyle( T_style style );
 
   T_style getStyle( );
-
 }
