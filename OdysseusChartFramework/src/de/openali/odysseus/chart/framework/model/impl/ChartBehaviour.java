@@ -107,27 +107,18 @@ public class ChartBehaviour implements IChartBehaviour
     return m_hideLegend;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.IChartModel#isHideTitle()
-   */
   @Override
   public boolean isHideTitle( )
   {
     return m_hideTitle;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.IChartModel#isHideUnusedAxes()
-   */
   @Override
   public boolean isHideUnusedAxes( )
   {
     return m_hideUnusedAxes;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.impl.IChartBehaviour#isSetAutoscale()
-   */
   @Override
   public boolean isSetAutoscale( )
   {
