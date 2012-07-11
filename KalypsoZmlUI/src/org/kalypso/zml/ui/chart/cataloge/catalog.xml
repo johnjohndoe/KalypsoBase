@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <catalog:catalog id="urn:" ns0:base="urn:" xmlns:ns0="xml" xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
 
+<!--  FIXME: move everything exclusively used by hwv product to KalypsoHwv... -->
+<!--  FIXME: move everything exclusively used by kalypso product to KalypsoSimulationBase -->
+
   <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:grid" uri="grid.kod" />
   <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:global" uri="global.kod" />
   <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:alarmstufen" uri="grenzwerte/alarmstufen.kod" />
@@ -24,10 +27,5 @@
   <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:sunshine:hours" uri="common/sunshine_hours.kod" />
 
   <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:quality" uri="quality/quality.kod" />
-
-  <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:rrm:evaporation:old" uri="hydrology/inputEvaporation.old.kod" />
-  <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:rrm:evaporation:input" uri="hydrology/inputEvaporation.kod" />
-  <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:rrm:temperature" uri="hydrology/inputTemperature.kod" />
-  <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:rrm:rainfall" uri="hydrology/inputRainfall.kod" />
 
 </catalog:catalog>
