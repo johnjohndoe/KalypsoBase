@@ -43,7 +43,6 @@ package org.kalypso.zml.ui.chart.layer.themes;
 import java.net.URL;
 
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IObservation;
@@ -57,7 +56,9 @@ import org.kalypso.zml.ui.KalypsoZmlUI;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractBarLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
+import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
@@ -79,6 +80,7 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
   public ZmlBarLayer( final IZmlLayerProvider layerProvider, final IStyleSet styleSet, final URL context )
   {
     super( layerProvider, styleSet );
+
     setup( context );
   }
 
@@ -100,9 +102,7 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
     final int index = ZmlLayerHelper.getLayerIndex( getIdentifier() );
 
     final StyleSetVisitor visitor = new StyleSetVisitor( true );
-    final IAreaStyle style = visitor.visit( styleSet, IAreaStyle.class, index );
-
-    return style;
+    return visitor.visit( styleSet, IAreaStyle.class, index );
   }
 
   @Override
@@ -163,15 +163,12 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
       if( Objects.isNull( observation ) )
         return;
 
-      final ZmlBarLayerVisitor visitor = new ZmlBarLayerVisitor( this, m_range );
+      final FullRectangleFigure figure = getRectangleFigure();
+
+      final ICoordinateMapper mapper = getCoordinateMapper();
+
+      final ZmlBarLayerVisitor visitor = new ZmlBarLayerVisitor( mapper, m_range, gc, figure, observation );
       observation.accept( visitor, m_handler.getRequest(), 1 );
-
-      final Rectangle[] rects = visitor.getRectangles();
-      for( final Rectangle rect : rects )
-      {
-        paint( gc, rect );
-      }
-
     }
     catch( final SensorException e )
     {
@@ -183,9 +180,7 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
   public void setDataHandler( final IZmlLayerDataHandler handler )
   {
     if( m_handler != null )
-    {
       m_handler = handler;
-    }
 
     m_handler = handler;
   }

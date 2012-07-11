@@ -40,16 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.themes;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.joda.time.Period;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
@@ -58,33 +58,55 @@ import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
 import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
+import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
+import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+
 /**
  * @author Dirk Kuch
  */
-public class ZmlBarLayerVisitor implements IObservationVisitor
+class ZmlBarLayerVisitor implements IObservationVisitor
 {
-  @Deprecated
-  /** @deprecated don't use m_lastScreen anymore. calcualte polygone by timestep of timeseries */
-  Point m_lastScreen;
+  private Integer m_lastScreenX = null;
 
-  IAxis m_dateAxis;
+  private final IAxis m_dateAxis;
 
-  private IAxis m_valueAxis;
+  private final IAxis m_valueAxis;
 
   private final ZmlBarLayerRangeHandler m_range;
 
-  private final ZmlBarLayer m_layer;
+  private final int m_baseLine;
 
-  List<Rectangle> m_rectangles = new ArrayList<Rectangle>();
+  private final FullRectangleFigure m_figure;
 
-  private final Point m_baseLine;
+  private final GC m_gc;
 
-  public ZmlBarLayerVisitor( final ZmlBarLayer layer, final ZmlBarLayerRangeHandler range )
+  private final ICoordinateMapper m_mapper;
+
+  private final Period m_timestep;
+
+  private int m_barWidth = 0;
+
+  private boolean m_initDone = false;
+
+  final Rectangle m_rectangle = new Rectangle( 0, 0, 0, 0 );
+
+  public ZmlBarLayerVisitor( final ICoordinateMapper mapper, final ZmlBarLayerRangeHandler range, final GC gc, final FullRectangleFigure figure, final IObservation observation )
   {
-    m_layer = layer;
+    m_mapper = mapper;
     m_range = range;
+    m_gc = gc;
+    m_figure = figure;
 
-    m_baseLine = m_layer.getCoordinateMapper().numericToScreen( 0.0, 0.0 );
+    m_figure.setRectangle( m_rectangle );
+
+    m_timestep = MetadataHelper.getTimestep( observation.getMetadataList() );
+
+    m_valueAxis = AxisUtils.findValueAxis( observation.getAxes() );
+    m_dateAxis = AxisUtils.findDateAxis( observation.getAxes() );
+
+    m_baseLine = mapper.numericToScreen( 0.0, 0.0 ).y;
+    m_rectangle.y = m_baseLine;
   }
 
   @Override
@@ -92,27 +114,43 @@ public class ZmlBarLayerVisitor implements IObservationVisitor
   {
     try
     {
-      final Object domainValue = container.get( getDateAxis( container ) );
+      final Object domainValue = container.get( m_dateAxis );
       final Object targetValue = getTargetValue( container );
       if( Objects.isNull( domainValue, targetValue ) )
         return;
 
-      final Number logicalDomain = m_range.getDateDataOperator().logicalToNumeric( (Date) domainValue );
-      final Number logicalTarget = m_range.getNumberDataOperator().logicalToNumeric( (Number) targetValue );
-      final Point p1 = m_layer.getCoordinateMapper().numericToScreen( logicalDomain, logicalTarget );
+      final Number numericDomain = m_range.getDateDataOperator().logicalToNumeric( (Date) domainValue );
+      final Number numericTarget = m_range.getNumberDataOperator().logicalToNumeric( (Number) targetValue );
+      final Point screenCurrent = m_mapper.numericToScreen( numericDomain, numericTarget );
 
-      // don't draw empty lines only rectangles
-      if( p1.y != m_baseLine.y )
+      final boolean isFirstvisit = !m_initDone;
+
+      if( isFirstvisit )
+        initFirstValue( screenCurrent.x, numericDomain );
+
+      final int width = getCurrentWidth( screenCurrent.x, numericDomain );
+
+      if( isFirstvisit )
+        adjustLinevisibilty( m_rectangle.width );
+
+      m_rectangle.x = screenCurrent.x;
+      m_rectangle.height = screenCurrent.y - m_baseLine;
+      m_rectangle.width = width;
+
+      // REAMRK: adjust widht a bit, because else rounding leads to ugly artifacts
+      if( m_lastScreenX != null && m_lastScreenX - m_rectangle.width != screenCurrent.x && Math.abs( width ) > 1 )
       {
-        // TODO: performance: read only once from metadata?
-        final Period timestep = MetadataHelper.getTimestep( container.getMetaData() );
-
-        final int x0 = getX( p1, logicalDomain, timestep );
-
-        m_rectangles.add( new Rectangle( x0, p1.y, p1.x - x0, m_baseLine.y - p1.y ) );
+        final int diff = m_lastScreenX - width - screenCurrent.x;
+        if( Math.abs( diff ) <= 1 )
+        {
+          m_rectangle.width += diff;
+        }
       }
 
-      m_lastScreen = p1;
+      m_figure.paint( m_gc );
+
+      // FIXME: remove
+      m_lastScreenX = screenCurrent.x;
     }
     catch( final Throwable t )
     {
@@ -120,85 +158,88 @@ public class ZmlBarLayerVisitor implements IObservationVisitor
     }
   }
 
-  public Rectangle[] getRectangles( )
+  private int getCurrentWidth( final int screenTimeCurrent, final Number numericTimeCurrent )
   {
-    return m_rectangles.toArray( new Rectangle[] {} );
+    // If width determined by timestep, just return this value
+    if( m_barWidth != 0 )
+      return m_barWidth;
+
+    // Else, calculate by last value (backwards compatibility)
+    final int lastX = getLastX( screenTimeCurrent );
+    return Math.max( 1, screenTimeCurrent - lastX );
+  }
+
+  private void initFirstValue( final int screenTimeCurrent, final Number numericTimeCurrent )
+  {
+    if( m_timestep != null )
+    {
+      final long widthMillis = m_timestep.toStandardSeconds().getSeconds() * 1000;
+
+      final long numericTimeNext = numericTimeCurrent.longValue() + widthMillis;
+      final int screenTimeNext = m_mapper.numericToScreen( numericTimeNext, 0 ).x;
+
+      final int basicWidth = screenTimeNext - screenTimeCurrent;
+
+      /* width must have at least 1 pixel */
+
+      // TODO/REMARK: are there other better strategies to paint elements below one pixel width (building mean value or
+      // similar?)
+
+      final int widthWithoutSign = basicWidth == 0 ? 1 : basicWidth;
+
+      /* depending on data type, forward/backward */
+      if( isForward() )
+        m_barWidth = widthWithoutSign;
+      else
+        m_barWidth = -widthWithoutSign;
+
+      m_rectangle.width = m_barWidth;
+    }
+
+    m_initDone = true;
+  }
+
+  /** Sets line visibility dependent on width (else we get only lines if width is too small) */
+  private void adjustLinevisibilty( final int width )
+  {
+    /* We only use the first width once, because width may vary due to rounding */
+    final ILineStyle stroke = m_figure.getStyle().getStroke();
+    stroke.setVisible( Math.abs( width ) > 4 );
   }
 
   private Object getTargetValue( final IObservationValueContainer container ) throws SensorException
   {
-    Object value = container.get( getValueAxis( container ) );
+    final Object value = container.get( m_valueAxis );
+
+    // FIXME + ugly! logicalToNumeric should take care of that!
 
     /** @hack for polder control */
     if( value instanceof Boolean )
     {
       if( Boolean.valueOf( (Boolean) value ) )
-        value = 1;
+        return 1;
       else
-        value = 0;
+        return 0;
     }
 
     return value;
   }
 
-  private int getX( final Point point, final Number logicalTime, final Period timestep )
+  private boolean isForward( )
   {
+    // FIXME: bad and ugly!
     final String parameterType = m_valueAxis.getType();
-    if( ITimeseriesConstants.TYPE_POLDER_CONTROL.equals( parameterType ) )
-      return getForwardX( point, logicalTime, timestep );
-
-    return getBackwardX( point, logicalTime, timestep );
-
+    return ITimeseriesConstants.TYPE_POLDER_CONTROL.equals( parameterType );
   }
 
-  private int getForwardX( final Point point, final Number logicalTime, final Period timestep )
+  /**
+   * TODO old projects don't define time step. not removed because of backward compatibility of old projects.
+   */
+  private int getLastX( final int currentX )
   {
-    if( Objects.isNotNull( timestep ) )
-    {
-      final long ms = timestep.toStandardSeconds().getSeconds() * 1000;
+    if( m_lastScreenX != null )
+      return m_lastScreenX;
 
-      final long x0 = logicalTime.longValue() + ms;
-      final Point screen = m_layer.getCoordinateMapper().numericToScreen( x0, 0 );
-
-      return screen.x;
-    }
-
-    return point.x;
-  }
-
-  private int getBackwardX( final Point point, final Number logicalTime, final Period timestep )
-  {
-    if( Objects.isNotNull( timestep ) )
-    {
-      final long ms = timestep.toStandardSeconds().getSeconds() * 1000;
-
-      final long x0 = logicalTime.longValue() - ms;
-      final Point screen = m_layer.getCoordinateMapper().numericToScreen( x0, 0 );
-
-      return screen.x;
-    }
-    /**
-     * TODO old projects doesn't define time step. not removed because of backward compatibility of old projects.
-     */
-    else if( Objects.isNotNull( m_lastScreen ) )
-      return m_lastScreen.x;
-
-    return point.x;
-  }
-
-  private IAxis getValueAxis( final IObservationValueContainer container )
-  {
-    if( Objects.isNull( m_valueAxis ) )
-      m_valueAxis = AxisUtils.findValueAxis( container.getAxes() );
-
-    return m_valueAxis;
-  }
-
-  private IAxis getDateAxis( final IObservationValueContainer container )
-  {
-    if( Objects.isNull( m_dateAxis ) )
-      m_dateAxis = AxisUtils.findDateAxis( container.getAxes() );
-
-    return m_dateAxis;
+    return currentX;
   }
 }
