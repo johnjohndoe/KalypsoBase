@@ -40,20 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.model.impl.visitors;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.impl.IAxisVisitorBehavior;
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisAdjustment;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IAxisVisitor;
-import de.openali.odysseus.chart.framework.util.ChartUtilities;
 
 /**
  * @author Dirk Kuch
@@ -70,14 +63,11 @@ public class AutoScaleVisitor implements IAxisVisitor
   @Override
   public void visit( final IAxis axis )
   {
-    final IChartLayer[] layers = m_model.getLayerManager().getLayers( axis, true );
     final IAxisVisitorBehavior visitorBehavior = axis.getAxisVisitorBehavior();
     if( visitorBehavior != null && !visitorBehavior.isAutoscaleEnabled() )
       return;
 
-    final IDataRange< ? >[] chartRanges = getChartRanges( axis, layers );
-
-    final IDataRange<Number> mergedDataRange = mergeChartRanges( axis, chartRanges );
+    final IDataRange<Number> mergedDataRange = getChartRanges( axis );
     if( mergedDataRange == null )
       return;
 
@@ -128,75 +118,12 @@ public class AutoScaleVisitor implements IAxisVisitor
     return new ComparableDataRange<Number>( new Number[] { newMin, newMax } );
   }
 
-  private IDataRange<Number> mergeChartRanges( final IAxis axis, final IDataRange< ? >[] chartRanges )
+  private IDataRange<Number> getChartRanges( final IAxis axis )
   {
+    final AxisRangeVisitor visitor = new AxisRangeVisitor( axis );
 
-// final IDataRange<Number>[] numericRanges = toNumeric( axis, chartRanges );
+    m_model.accept( visitor );
 
-    final IDataRange<Number> mergedDataRange = ChartUtilities.mergeDataRanges( chartRanges );
-    if( mergedDataRange != null )
-      return mergedDataRange;
-
-    // if mergedDataRange is null, we keep the old range - if there is any
-    if( axis.getNumericRange() != null )
-      return null;
-
-    // otherwise, we use a default range
-    return new ComparableDataRange<Number>( new Number[] { 0, 1 } );
-  }
-
-  private IDataRange<Number>[] toNumeric( final IAxis axis, final IDataRange< ? >[] chartRanges )
-  {
-    final IDataRange<Number>[] numericRanges = new IDataRange[chartRanges.length];
-
-    // FIXME: awful design, needs to be fixed: the axis should know which data type it works on, we cannot decide it
-    // from outside!
-    // It MUSt be possible to calc the numeric values from a generic axis!
-
-    final IDataOperator<Object> dataOperator = axis.getDataOperator( null );
-
-    for( int i = 0; i < numericRanges.length; i++ )
-    {
-      final IDataRange< ? > logicalRange = chartRanges[i];
-
-      final Number numMin = dataOperator.logicalToNumeric( logicalRange.getMin() );
-      final Number numMax = dataOperator.logicalToNumeric( logicalRange.getMax() );
-
-      numericRanges[i] = new DataRange<Number>( numMin, numMax );
-    }
-
-    return numericRanges;
-  }
-
-  private IDataRange< ? >[] getChartRanges( final IAxis axis, final IChartLayer[] layers )
-  {
-    final List<IDataRange< ? >> ranges = new ArrayList<IDataRange< ? >>( layers.length );
-    for( final IChartLayer layer : layers )
-    {
-      if( layer.isVisible() && layer.isAutoScale() )
-      {
-        final IDataRange< ? > range = getRangeFor( layer, axis );
-        if( range != null )
-        {
-          ranges.add( range );
-        }
-      }
-    }
-
-    return ranges.toArray( new IDataRange[ranges.size()] );
-  }
-
-  /**
-   * @return DataRange of all domain or target data available in the given layer
-   */
-  private IDataRange< ? > getRangeFor( final IChartLayer layer, final IAxis axis )
-  {
-    if( axis == layer.getCoordinateMapper().getDomainAxis() )
-      return layer.getDomainRange();
-
-    if( axis == layer.getCoordinateMapper().getTargetAxis() )
-      return layer.getTargetRange( null );
-
-    return null;
+    return visitor.getRange();
   }
 }
