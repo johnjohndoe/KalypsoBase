@@ -32,5 +32,4 @@ public abstract class AbstractFigure<T_style extends IStyle> implements IFigure<
   }
 
   protected abstract void paintFigure( GC gc );
-
 }

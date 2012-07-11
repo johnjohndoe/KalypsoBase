@@ -28,17 +28,17 @@ public class BooleanAxis extends AbstractAxis
 
   public BooleanAxis( final String id, final POSITION pos )
   {
-    super( id, pos, Number.class, new ExtendedAxisRenderer( id + "_RENDERER", pos, new BooleanLabelCreator(), TICK_CALCULATOR, new AxisRendererConfig() ) );//$NON-NLS-1$ 
+    super( id, pos, Number.class, new ExtendedAxisRenderer( id + "_RENDERER", pos, new BooleanLabelCreator(), TICK_CALCULATOR, new AxisRendererConfig() ) );//$NON-NLS-1$
   }
 
   public BooleanAxis( final String id, final POSITION pos, final AxisRendererConfig config )
   {
-    super( id, pos, Number.class, new ExtendedAxisRenderer( id + "_RENDERER", pos, new BooleanLabelCreator(), TICK_CALCULATOR, config ) );//$NON-NLS-1$ 
+    super( id, pos, Number.class, new ExtendedAxisRenderer( id + "_RENDERER", pos, new BooleanLabelCreator(), TICK_CALCULATOR, config ) );//$NON-NLS-1$
   }
 
   public BooleanAxis( final String id, final POSITION pos, final Class< ? > clazz )
   {
-    super( id, pos, clazz, new ExtendedAxisRenderer( id + "_RENDERER", pos, new BooleanLabelCreator(), TICK_CALCULATOR, new AxisRendererConfig() ) ); //$NON-NLS-1$ 
+    super( id, pos, clazz, new ExtendedAxisRenderer( id + "_RENDERER", pos, new BooleanLabelCreator(), TICK_CALCULATOR, new AxisRendererConfig() ) ); //$NON-NLS-1$
   }
 
   public BooleanAxis( final String id, final POSITION pos, final Class< ? > clazz, final IAxisRenderer renderer )
@@ -61,7 +61,7 @@ public class BooleanAxis extends AbstractAxis
 
   /**
    * Uses the widgets' complete extension to calculate the screen value in correspondence to a normalized value
-   * 
+   *
    * @see de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent#normalizedToScreen(double)
    */
   @Override
@@ -71,25 +71,24 @@ public class BooleanAxis extends AbstractAxis
     return (int) (range * (isInverted() ? 1 - normValue : normValue));
   }
 
-  public double numericToNormalized( final Number value )
+  private double numericToNormalized( final Number value )
   {
     final IDataRange<Number> dataRange = getNumericRange();
     if( dataRange.getMax() == null || dataRange.getMin() == null )
       return Double.NaN;
     final double r = dataRange.getMax().doubleValue() - dataRange.getMin().doubleValue();
-    final double norm = (value.doubleValue() - dataRange.getMin().doubleValue()) / r;
-    return norm;
+    return (value.doubleValue() - dataRange.getMin().doubleValue()) / r;
   }
 
   @Override
-  public Integer numericToScreen( final Number value )
+  public int numericToScreen( final Number value )
   {
     return normalizedToScreen( numericToNormalized( value ) );
   }
 
   /**
    * Uses the widgets' complete extension to allocates the normalized value in correspondence to a screen value
-   * 
+   *
    * @see de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent#screenToNormalized(int)
    */
   @Override

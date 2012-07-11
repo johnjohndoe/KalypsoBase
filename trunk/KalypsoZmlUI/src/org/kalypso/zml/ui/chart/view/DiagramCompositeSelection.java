@@ -81,7 +81,6 @@ public final class DiagramCompositeSelection
 
     for( final IMultipleZmlSourceElement element : selection )
     {
-
       final String type = element.getType();
 
       final ParameterTypeLayerVisitor visitor = new ParameterTypeLayerVisitor( type );
