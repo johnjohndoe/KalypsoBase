@@ -3,9 +3,7 @@ package de.openali.odysseus.chart.ext.base.layer;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 
@@ -60,57 +58,35 @@ public abstract class AbstractBarLayer extends AbstractChartLayer
     return entries.toArray( new ILegendEntry[] {} );
   }
 
-  @Override
-  public void dispose( )
-  {
-  }
-
-  /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#drawIcon(org.eclipse.swt.graphics.Image, int, int)
-   */
-  public void drawIcon( final Image img )
-  {
-
-    final Rectangle bounds = img.getBounds();
-    final int height = bounds.height;
-    final int width = bounds.width;
-    final GC gc = new GC( img );
-    paint( gc, new Rectangle( 0, height / 2, width / 2, height / 2 ) );
-    paint( gc, new Rectangle( width / 2, 0, width, 0 ) );
-
-    gc.dispose();
-  }
-
   protected IAreaStyle getAreaStyle( )
   {
     final IStyleSet styleSet = getStyleSet();
     return styleSet.getStyle( "area", IAreaStyle.class );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.factory.layer.AbstractChartLayer#getLegendEntries()
-   */
   @Override
   public synchronized ILegendEntry[] getLegendEntries( )
   {
-
-    if( ArrayUtils.isEmpty( m_legendEntries ) )
-    {
+    if( m_legendEntries == null )
       m_legendEntries = createLegendEntries();
-    }
+
     return m_legendEntries;
   }
 
   protected FullRectangleFigure getRectangleFigure( )
   {
-
     final IAreaStyle as = getAreaStyle();
     final FullRectangleFigure rectangleFigure = new FullRectangleFigure();
+
     rectangleFigure.setStyle( as );
 
     return rectangleFigure;
   }
 
+  /**
+   * @deprecated: Bad: leads to memory problems for big data. Inline and diretly paint each rectangle
+   */
+  @Deprecated
   protected final void paint( final GC gc, final Rectangle... rectangles )
   {
     final FullRectangleFigure rf = getRectangleFigure();
