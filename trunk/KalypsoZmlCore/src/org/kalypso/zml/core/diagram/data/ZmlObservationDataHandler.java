@@ -121,6 +121,8 @@ public class ZmlObservationDataHandler implements IZmlLayerDataHandler, IObserva
   {
     synchronized( this )
     {
+      m_valueAxis = null;
+
       if( m_observation != null )
       {
         m_observation.removeListener( this );
