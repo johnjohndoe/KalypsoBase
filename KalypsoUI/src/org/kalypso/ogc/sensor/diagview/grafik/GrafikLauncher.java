@@ -201,6 +201,8 @@ public class GrafikLauncher
     monitor.beginTask( taskName, 100 );
     monitor.setTaskName( taskName );
 
+    monitor.subTask( "Cancel to return to Kalypso. If cancelled, changes in grafik.exe will not be copied to Kalypso." );
+
     try
     {
       if( !dest.exists() )
