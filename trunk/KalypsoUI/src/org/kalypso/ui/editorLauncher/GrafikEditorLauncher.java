@@ -41,8 +41,6 @@
 
 package org.kalypso.ui.editorLauncher;
 
-import java.util.Vector;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -64,15 +62,14 @@ import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher;
+import org.kalypso.ogc.sensor.diagview.grafik.RememberForSync;
+import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * @author schlienger
  */
 public class GrafikEditorLauncher implements IEditorLauncher
 {
-  /**
-   * @see org.eclipse.ui.IEditorLauncher#open(org.eclipse.core.runtime.IPath)
-   */
   @Override
   public void open( final IPath path )
   {
@@ -86,7 +83,6 @@ public class GrafikEditorLauncher implements IEditorLauncher
       {
         IStatus status = Status.OK_STATUS;
 
-        monitor.beginTask( Messages.getString( "org.kalypso.ui.editorLauncher.GrafikEditorLauncher.0" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
         try
         {
           final IContainer parent = file.getParent();
@@ -96,11 +92,11 @@ public class GrafikEditorLauncher implements IEditorLauncher
           if( path.getFileExtension().equalsIgnoreCase( DiagViewUtils.ODT_FILE_EXTENSION ) )
             status = GrafikLauncher.startGrafikODT( file, folder, monitor );
           else if( file.getFileExtension().equalsIgnoreCase( GrafikLauncher.TPL_FILE_EXTENSION ) )
-            status = GrafikLauncher.startGrafikTPL( file, new Vector() );
+            status = GrafikLauncher.startGrafikTPL( file, new RememberForSync[0], monitor );
           else if( file.getFileExtension().equalsIgnoreCase( "zml" ) ) //$NON-NLS-1$
             status = GrafikLauncher.startGrafikZML( file, folder, monitor );
           else
-            status = StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.ui.editorLauncher.GrafikEditorLauncher.3" ) ); //$NON-NLS-1$
+            status = new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ui.editorLauncher.GrafikEditorLauncher.3" ) ); //$NON-NLS-1$
         }
         catch( final SensorException e )
         {
@@ -108,8 +104,6 @@ public class GrafikEditorLauncher implements IEditorLauncher
         }
         finally
         {
-          monitor.done();
-
           if( !status.isOK() )
             throw new CoreException( status );
         }

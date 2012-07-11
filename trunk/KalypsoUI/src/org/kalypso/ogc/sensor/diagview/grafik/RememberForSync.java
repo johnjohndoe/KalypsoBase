@@ -27,10 +27,10 @@ import org.xml.sax.InputSource;
 
 /**
  * RememberForSync: remembers which zml file belongs to which grafik dat file for a given axis
- * 
+ *
  * @author schlienger
  */
-final class RememberForSync
+public final class RememberForSync
 {
   private final IFile m_zmlFile;
 
