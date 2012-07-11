@@ -102,8 +102,16 @@ public class LineStyle extends AbstractStyle implements ILineStyle
     final int lineCap = m_lineCap.toSWT();
     final int lineJoin = m_lineJoin.toSWT();
 
-    final LineAttributes la = new LineAttributes( m_width, lineCap, lineJoin, SWT.LINE_CUSTOM, m_dashArray, m_dashOffset, m_miterLimit );
-    gc.setLineAttributes( la );
+    if( m_dashArray == null )
+    {
+      final LineAttributes la = new LineAttributes( m_width, lineCap, lineJoin );
+      gc.setLineAttributes( la );
+    }
+    else
+    {
+      final LineAttributes la = new LineAttributes( m_width, lineCap, lineJoin, SWT.LINE_CUSTOM, m_dashArray, m_dashOffset, m_miterLimit );
+      gc.setLineAttributes( la );
+    }
   }
 
   @Override
