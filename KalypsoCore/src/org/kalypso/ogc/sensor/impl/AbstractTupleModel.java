@@ -77,7 +77,7 @@ import org.kalypso.ogc.sensor.visitor.ITupleModelVisitor;
  * <li>mapAxisToPos( IAxis, int )</li>
  * <li>getRangeFor( IAxis )</li>
  * </ul>
- * 
+ *
  * @author schlienger
  */
 public abstract class AbstractTupleModel implements ITupleModel
@@ -250,55 +250,50 @@ public abstract class AbstractTupleModel implements ITupleModel
    * <p>
    * The assuption here that the order is already ok is tricky. And the case where the axis denotes numbers is not so
    * nice, even not really performant.
-   * 
+   *
    * @see org.kalypso.ogc.sensor.ITuppleModel#getRangeFor(org.kalypso.ogc.sensor.IAxis)
    */
   @Override
   public IAxisRange getRange( final IAxis axis ) throws SensorException
   {
-    if( size() > 0 )
+    if( size() == 0 )
+      return null;
+
+    // for numbers we need to step through all the
+    // rows in order to find the range
+    if( Number.class.isAssignableFrom( axis.getDataClass() ) )
     {
-      // for numbers we need to step through all the
-      // rows in order to find the range
-      if( Number.class.isAssignableFrom( axis.getDataClass() ) )
+      Number lower = new Double( Double.MAX_VALUE );
+      Number upper = new Double( -Double.MAX_VALUE );
+
+      final DoubleComparator dc = new DoubleComparator( 0.000001 );
+      for( int i = 0; i < size(); i++ )
       {
-        Number lower = new Double( Double.MAX_VALUE );
-        Number upper = new Double( -Double.MAX_VALUE );
-
-        final DoubleComparator dc = new DoubleComparator( 0.000001 );
-        for( int i = 0; i < size(); i++ )
+        final Number value = (Number) get( i, axis );
+        if( value == null )
         {
-          final Number value = (Number) get( i, axis );
-          if( value == null )
-          {
-            System.out.println( String.format( "AbstractTupleModel.getRange() - found invalid NULL value - index: %d", i ) ); //$NON-NLS-1$
-            continue;
-          }
-
-          if( dc.compare( value, lower ) < 0 )
-            lower = value;
-
-          if( dc.compare( value, upper ) > 0 )
-            upper = value;
+          System.out.println( String.format( "AbstractTupleModel.getRange() - found invalid NULL value - index: %d", i ) ); //$NON-NLS-1$
+          continue;
         }
 
-        return new DefaultAxisRange( lower, upper );
+        if( dc.compare( value, lower ) < 0 )
+          lower = value;
+
+        if( dc.compare( value, upper ) > 0 )
+          upper = value;
       }
 
-      // else we assume that the order is already correct
-      // and simply take the first and the last element
-      final Object begin = get( 0, axis );
-      final Object end = get( size() - 1, axis );
-
-      return new DefaultAxisRange( begin, end );
+      return new DefaultAxisRange( lower, upper );
     }
 
-    return null;
+    // else we assume that the order is already correct
+    // and simply take the first and the last element
+    final Object begin = get( 0, axis );
+    final Object end = get( size() - 1, axis );
+
+    return new DefaultAxisRange( begin, end );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.ITupleModel#isEmpty()
-   */
   @Override
   public boolean isEmpty( ) throws SensorException
   {
