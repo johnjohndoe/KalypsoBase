@@ -1,42 +1,35 @@
 package org.kalypso.commons.java.io;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.Writer;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.NullOutputStream;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.commons.process.StreamStreamer;
 
 /**
  * Wraps a process and allows to wait until execution is terminated or has been cancelled.
  * <p>
  * Clients may inherit from this class and perform specific business in processCanceled() and/or processTerminated().
- * 
+ *
  * @author schlienger
  */
 public abstract class ProcessWraper
 {
   private final Process m_proc;
 
-  private final Writer m_logWriter;
-
-  private boolean m_canceled = false;
+  private final OutputStream m_logWriter;
 
   private int m_ms;
 
   /**
-   * Construct a wraper over the given process with the given logWriter
-   * 
+   * Construct a wrapper over the given process with the given logWriter
+   *
    * @param proc
    * @param logWriter
    *          [optional, can be null]
    */
-  public ProcessWraper( final Process proc, final Writer logWriter )
+  public ProcessWraper( final Process proc, final OutputStream logWriter )
   {
     m_proc = proc;
     m_logWriter = logWriter;
@@ -44,7 +37,7 @@ public abstract class ProcessWraper
 
   /**
    * Sets the sleep time in milliseconds for a loop cycle
-   * 
+   *
    * @param ms
    */
   public synchronized void setCycleSleepTime( final int ms )
@@ -53,38 +46,36 @@ public abstract class ProcessWraper
   }
 
   /**
-   * Force the underlying process to stop
-   */
-  public synchronized void cancel( )
-  {
-    m_canceled = true;
-  }
-
-  /**
    * Starts to wait for the given process
-   * 
+   *
+   * @param killProcessOnCancel
+   *          If <code>true</code>, the process will be killed, if the monitor is cancelled.
+   * @param monitor
+   *          If this monitor is cancelled while waiting, the method returns.
    * @throws IOException
    * @throws InterruptedException
    */
-  public synchronized void waitForProcess( ) throws IOException, InterruptedException
+  public synchronized void waitForProcess( final boolean killProcessOnCancel, final IProgressMonitor monitor ) throws InterruptedException
   {
+    final String taskName = String.format( "Waiting for process: %s", m_proc );
+
+    monitor.beginTask( taskName, IProgressMonitor.UNKNOWN );
+
     final OutputStream nul_dev = new NullOutputStream();
-    final Writer log;
+    final OutputStream log;
     if( m_logWriter == null )
-      log = new BufferedWriter( new OutputStreamWriter( new NullOutputStream() ) );
+      log = new NullOutputStream();
     else
-      log = new BufferedWriter( m_logWriter );
+      log = m_logWriter;
 
     try
     {
-      final Reader inStream = new BufferedReader( new InputStreamReader( m_proc.getInputStream() ) );
-      final Reader errStream = new BufferedReader( new InputStreamReader( m_proc.getErrorStream() ) );
+      new StreamStreamer( m_proc.getInputStream(), log );
+      new StreamStreamer( m_proc.getErrorStream(), nul_dev );
+      // new StreamStreamer( rIn, process.getOutputStream() );
 
       while( true )
       {
-        IOUtils.copy( inStream, log );
-        IOUtils.copy( errStream, nul_dev );
-
         try
         {
           final int rc = m_proc.exitValue();
@@ -98,14 +89,17 @@ public abstract class ProcessWraper
           // noch nicht fertig
         }
 
-        if( m_canceled )
+        if( monitor.isCanceled() )
         {
-          m_proc.destroy();
+          if( killProcessOnCancel )
+            m_proc.destroy();
 
           processCanceled();
 
           return;
         }
+
+        monitor.worked( 1 );
 
         Thread.sleep( m_ms );
       }
@@ -125,7 +119,7 @@ public abstract class ProcessWraper
 
   /**
    * Called after the process has stopped execution
-   * 
+   *
    * @param returnCode
    *          the return code of the process
    */

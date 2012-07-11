@@ -59,18 +59,17 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.TreeSet;
-import java.util.Vector;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.io.ProcessWraper;
 import org.kalypso.commons.resources.SetContentHelper;
@@ -105,7 +104,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * GrafikLauncher
- * 
+ *
  * @author schlienger
  */
 public class GrafikLauncher
@@ -135,7 +134,7 @@ public class GrafikLauncher
   /**
    * Opens the grafik tool using an observation template file. Note: this method should be called using a
    * WorkspaceModifyOperation.
-   * 
+   *
    * @return the created tpl file
    * @throws SensorException
    */
@@ -188,7 +187,7 @@ public class GrafikLauncher
   /**
    * Opens the grafik tool using an observation template xml object. Note: this method should be called using a
    * WorkspaceModifyOperation.
-   * 
+   *
    * @param fileName
    *          the filename to use for the grafik template file
    * @param odt
@@ -197,78 +196,67 @@ public class GrafikLauncher
    */
   public static IStatus startGrafikODT( final String fileName, final Obsdiagview odt, final IFolder dest, final IProgressMonitor monitor ) throws SensorException, CoreException
   {
-    final List<RememberForSync> sync = new Vector<RememberForSync>();
-    StringWriter strWriter = null;
+    final String taskName = "Starting grafik.exe";
+
+    monitor.beginTask( taskName, 100 );
+    monitor.setTaskName( taskName );
+
     try
     {
       if( !dest.exists() )
-        dest.create( true, true, monitor );
+        dest.create( true, true, new SubProgressMonitor( monitor, 5 ) );
 
       final IFile tplFile = dest.getFile( FileUtilities.nameWithoutExtension( fileName ) + ".tpl" ); //$NON-NLS-1$
 
-      strWriter = new StringWriter();
-      final IStatus status = odt2tpl( odt, dest, strWriter, monitor, sync );
+      final StringWriter strWriter = new StringWriter();
+      final RememberForSync[] syncs = odt2tpl( odt, dest, strWriter, new SubProgressMonitor( monitor, 5 ) );
       strWriter.close();
 
-      // status might not be ok but we still want to start the grafik tool
-      // so inform the use here with the current info
-      if( !status.isOK() )
-        return status;
-
-      // redeclared final for being used in SetContentHelper
-      final StringWriter schWriter = strWriter;
-
-      // use the windows encoding for the vorlage because of the grafik tool
+      // use the windows encoding for the Vorlage because of the grafik tool
       // which uses it when reading...
       final SetContentHelper sch = new SetContentHelper( Messages.getString( "org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.5" ) ) //$NON-NLS-1$
       {
         @Override
         protected void write( final OutputStreamWriter writer ) throws Throwable
         {
-          writer.write( schWriter.toString() );
+          writer.write( strWriter.toString() );
         }
       };
 
-      sch.setFileContents( tplFile, false, false, new NullProgressMonitor(), GRAFIK_ENCODING );
+      sch.setFileContents( tplFile, false, false, new SubProgressMonitor( monitor, 5 ), GRAFIK_ENCODING );
 
-      startGrafikTPL( tplFile, sync );
+      startGrafikTPL( tplFile, syncs, new SubProgressMonitor( monitor, 85, SubMonitor.SUPPRESS_NONE ) );
 
       return Status.OK_STATUS;
     }
+    catch( final CoreException e )
+    {
+      throw e;
+    }
     catch( final Throwable e ) // generic exception caught
     {
-      if( e instanceof CoreException )
-        throw (CoreException) e;
-
       throw new SensorException( e );
-    }
-    finally
-    {
-      IOUtils.closeQuietly( strWriter );
-
-      if( sync != null )
-        sync.clear();
     }
   }
 
   /**
    * Starts the grafik.exe with an eclipse IFile tpl-File.
-   * 
+   *
    * @param tplFile
    *          the Grafik-Vorlage
    * @throws SensorException
    */
-  public static IStatus startGrafikTPL( final IFile tplFile, final List<RememberForSync> sync ) throws SensorException
+  public static IStatus startGrafikTPL( final IFile tplFile, final RememberForSync[] syncs, final IProgressMonitor monitor ) throws SensorException
   {
     final File file = ResourceUtilities.makeFileFromPath( tplFile.getFullPath() );
 
-    return startGrafikTPL( file, sync );
+    return startGrafikTPL( file, syncs, monitor );
   }
 
   /**
    * Starts the grafik with a java.lang.File tpl-File.
    */
-  private static IStatus startGrafikTPL( final File tplFile, final List<RememberForSync> sync ) throws SensorException
+  private static IStatus startGrafikTPL( final File tplFile, final RememberForSync[] syncs, final IProgressMonitor monitor ) throws SensorException
   {
     try
     {
@@ -294,7 +282,7 @@ public class GrafikLauncher
 
         private void synchroniseZml( )
         {
-          for( final RememberForSync rfs : sync )
+          for( final RememberForSync rfs : syncs )
           {
             try
             {
@@ -312,7 +300,7 @@ public class GrafikLauncher
       };
 
       // wait for grafik to finish and eventually synchronize data
-      wraper.waitForProcess();
+      wraper.waitForProcess( false, monitor );
 
       return stati.asMultiStatusOrOK( Messages.getString( "org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.7" ) ); //$NON-NLS-1$
     }
@@ -350,7 +338,7 @@ public class GrafikLauncher
   /**
    * Creates a new temporary file given its pathName and an InputStream. The content from the InputStream is written
    * into the file. The file will be deleted after the VM shuts down
-   * 
+   *
    * @param charMode
    * @param prefix
    *          prefix of file name
@@ -391,7 +379,7 @@ public class GrafikLauncher
   /**
    * Looks in the given path if a file with the given prefix and suffix exists. Returns the file in the positive. If
    * more than one such file is found, returns the first of them.
-   * 
+   *
    * @param prefix
    *          name of the file should begin with this prefix
    * @param suffix
@@ -427,8 +415,10 @@ public class GrafikLauncher
    * tool. As a conclusion: when a template file is meant to be used with the grafik tool, then curves need to be
    * explicitely specified in the xml.
    */
-  private static IStatus odt2tpl( final Obsdiagview odt, final IFolder dest, final Writer writer, final IProgressMonitor monitor, final List<RememberForSync> sync ) throws CoreException, IOException
+  private static RememberForSync[] odt2tpl( final Obsdiagview odt, final IFolder dest, final Writer writer, final IProgressMonitor monitor ) throws CoreException, IOException
   {
+    final List<RememberForSync> sync = new ArrayList<>();
+
     final UrlResolver urlRes = new UrlResolver();
     final URL context = ResourceUtilities.createURL( dest.getParent() );
 
@@ -445,6 +435,7 @@ public class GrafikLauncher
     // set the timezone of the dateformat
     if( odt.getTimezone() != null && odt.getTimezone().length() > 0 )
     {
+      // FIXME: changing static data here....
       final TimeZone timeZone = TimeZone.getTimeZone( odt.getTimezone() );
       GRAFIK_DF.setTimeZone( timeZone );
     }
@@ -457,9 +448,6 @@ public class GrafikLauncher
     final TypeObservation[] tobs = odt.getObservation().toArray( new TypeObservation[0] );
     for( final TypeObservation element : tobs )
     {
-      if( monitor.isCanceled() )
-        return Status.CANCEL_STATUS;
-
       // now try to locate observation file
       final URL url = urlRes.resolveURL( context, element.getHref() );
       final IFile zmlFile = ResourceUtilities.findFileFromURL( url );
@@ -478,7 +466,6 @@ public class GrafikLauncher
       final ITupleModel values;
       try
       {
-
         obs = ZmlFactory.parseXML( zmlFile.getLocationURI().toURL() );
         values = obs.getValues( null );
       }
@@ -613,7 +600,6 @@ public class GrafikLauncher
       final String strDate = element.toString();
       writer.write( "Senkrechte:" + strDate + '\n' ); //$NON-NLS-1$
     }
-    xLines.clear();
 
     // constant horizontal lines...
     for( final Object element : yLines.keySet() )
@@ -621,9 +607,13 @@ public class GrafikLauncher
       final ValueAndColor vac = yLines.get( element );
       writer.write( "yKonst:" + GRAFIK_NF_W.format( vac.value ) + " " + vac.label + '\n' ); //$NON-NLS-1$ //$NON-NLS-2$
     }
-    yLines.clear();
 
-    return stati.asMultiStatusOrOK( Messages.getString( "org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.17" ) ); //$NON-NLS-1$
+    final IStatus status = stati.asMultiStatusOrOK( Messages.getString( "org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.17" ) ); //$NON-NLS-1$
+    if( !status.isOK() )
+      throw new CoreException( status );
+
+    final RememberForSync[] syncs = sync.toArray( new RememberForSync[sync.size()] );
+    return syncs;
   }
 
   /**
@@ -660,7 +650,7 @@ public class GrafikLauncher
 
   /**
    * mini helper class for storing a value and a color
-   * 
+   *
    * @author schlienger
    */
   private final static class ValueAndColor

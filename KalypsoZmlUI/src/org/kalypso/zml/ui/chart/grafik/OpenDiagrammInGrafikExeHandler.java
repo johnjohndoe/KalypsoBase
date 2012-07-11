@@ -40,38 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.grafik;
 
-import java.net.URI;
-import java.net.URL;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.URIUtil;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
-import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.ogc.sensor.IObservation;
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.diagview.DiagView;
-import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
-import org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher;
-import org.kalypso.ogc.sensor.provider.PlainObsProvider;
-import org.kalypso.ogc.sensor.template.ObsView;
-import org.kalypso.template.obsdiagview.Obsdiagview;
-import org.kalypso.zml.ui.KalypsoZmlUI;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
@@ -81,8 +63,6 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
  */
 public class OpenDiagrammInGrafikExeHandler extends AbstractHandler
 {
-
-  @SuppressWarnings("deprecation")
   @Override
   public Object execute( final ExecutionEvent event )
   {
@@ -96,68 +76,18 @@ public class OpenDiagrammInGrafikExeHandler extends AbstractHandler
     if( ArrayUtils.isEmpty( observations ) )
       return Status.CANCEL_STATUS;
 
+    final WorkspaceModifyOperation operation = new OpenDiagramInGrafikExeOperation( observations );
 
-    try
+    final IStatus status = ProgressUtilities.busyCursorWhile( operation, null );
+    if( !status.isOK() )
     {
-      IFolder tempFolder = null;
-
-      final DiagView diagView = new DiagView( "Diagramm View", "no legend", false );
-      for( final IObservation observation : observations )
-      {
-        diagView.addObservation( new PlainObsProvider( observation, null ), observation.getName(), ObsView.DEFAULT_ITEM_DATA );
-
-        if( tempFolder == null )
-          tempFolder = getTempFolder( observation.getHref() );
-      }
-
-      final Obsdiagview odt = DiagViewUtils.buildDiagramTemplateXML( diagView, null );
-      return GrafikLauncher.startGrafikODT( "Diagramm", odt, tempFolder, new NullProgressMonitor() );
-    }
-    catch( final SensorException e )
-    {
-      e.printStackTrace();
-
-    }
-    catch( final CoreException e )
-    {
+      final String commandLabel = HandlerUtils.getCommandName( event );
       final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-      final StatusDialog2 dialog = new StatusDialog2( shell, e.getStatus(), "Fehler" );
-      dialog.open();
 
-      e.printStackTrace();
+      StatusDialog.open( shell, status, commandLabel );
     }
 
-    return Status.CANCEL_STATUS;
-  }
-
-  private IFolder getTempFolder( final String href ) throws CoreException
-  {
-    try
-    {
-      final IPath grafikPath = Path.fromOSString( "grafik" ); //$NON-NLS-1$
-
-      final URI uri = URIUtil.fromString( href );
-      final URL url = uri.toURL();
-
-      final IFile eclipseFile = ResourceUtilities.findFileFromURL( url );
-      if( eclipseFile != null )
-        return eclipseFile.getParent().getFolder( grafikPath );
-
-      final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-      final IFile[] files = root.findFilesForLocationURI( uri );
-      for( final IFile file : files )
-      {
-        final IFolder folder = (IFolder) file.getParent();
-        return folder.getFolder( grafikPath );
-      }
-
-      return null;
-    }
-    catch( final Exception e )
-    {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoZmlUI.PLUGIN_ID, "Failed to create temp folder for grafik.exe", e );
-      throw new CoreException( status );
-    }
+    return null;
   }
 
   private IObservation[] doCollectObservations( final IChartModel chartModel )
