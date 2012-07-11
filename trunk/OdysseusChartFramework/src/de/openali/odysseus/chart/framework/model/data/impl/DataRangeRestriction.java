@@ -68,7 +68,6 @@ public class DataRangeRestriction<T> implements IDataRange<T>
     m_minRange = minRange;
     m_fixMinValue = fixMinValue;
     m_fixMaxValue = fixMaxValue;
-
   }
 
   @Override
@@ -102,5 +101,4 @@ public class DataRangeRestriction<T> implements IDataRange<T>
   {
     return m_fixMinValue;
   }
-
 }
