@@ -128,7 +128,7 @@ class ZmlBarLayerVisitor implements IObservationVisitor
       if( isFirstvisit )
         initFirstValue( screenCurrent.x, numericDomain );
 
-      final int width = getCurrentWidth( screenCurrent.x, numericDomain );
+      final int width = getCurrentWidth( screenCurrent.x );
 
       if( isFirstvisit )
         adjustLinevisibilty( m_rectangle.width );
@@ -158,7 +158,7 @@ class ZmlBarLayerVisitor implements IObservationVisitor
     }
   }
 
-  private int getCurrentWidth( final int screenTimeCurrent, final Number numericTimeCurrent )
+  private int getCurrentWidth( final int screenTimeCurrent )
   {
     // If width determined by timestep, just return this value
     if( m_barWidth != 0 )
@@ -202,9 +202,15 @@ class ZmlBarLayerVisitor implements IObservationVisitor
   /** Sets line visibility dependent on width (else we get only lines if width is too small) */
   private void adjustLinevisibilty( final int width )
   {
-    /* We only use the first width once, because width may vary due to rounding */
     final ILineStyle stroke = m_figure.getStyle().getStroke();
-    stroke.setVisible( Math.abs( width ) > 4 );
+
+    /* We only use the first width once, because width may vary due to rounding */
+    if( stroke != null && stroke.isVisible() )
+      m_figure.getStyle().setFillVisible( Math.abs( width ) > 1 );
+    else
+      m_figure.getStyle().setFillVisible( true );
+
+    // stroke.setVisible( Math.abs( width ) > 4 );
   }
 
   private Object getTargetValue( final IObservationValueContainer container ) throws SensorException
