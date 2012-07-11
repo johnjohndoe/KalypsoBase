@@ -26,6 +26,7 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
+import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor2;
 import de.openali.odysseus.chart.framework.model.layer.manager.LayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
@@ -40,25 +41,22 @@ import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
  */
 public abstract class AbstractChartLayer implements IChartLayer
 {
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#init()
-   */
   @Override
   public void init( )
   {
     // TODO Auto-generated method stub
-    //FIXME remove from here, this is an abstract class
-    
+    // FIXME remove from here, this is an abstract class
+
   }
 
   private ICoordinateMapper m_coordinateMapper;
 
-  Set<IChartLayerFilter> m_filters = new LinkedHashSet<IChartLayerFilter>();
+  private final Set<IChartLayerFilter> m_filters = new LinkedHashSet<IChartLayerFilter>();
 
   /**
    * hash map to store arbitrary key value pairs
    */
-  private final HashMap<String, Object> m_data = new HashMap<String, Object>();
+  private final Map<String, Object> m_data = new HashMap<String, Object>();
 
   private String m_description = "";
 
@@ -196,14 +194,14 @@ public abstract class AbstractChartLayer implements IChartLayer
   }
 
   /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getDomainRange()
+   * Always returns null: Important: do not recurse into children, they may have different axes, so merging those ranges
+   * is just wrong.<br/>
+   * The caller of getDomainRange is responsible for recursion.
    */
   @Override
   public IDataRange< ? > getDomainRange( )
   {
-    final LayerDomainRangeVisitor rangeVisitor = new LayerDomainRangeVisitor();
-    getLayerManager().accept( rangeVisitor );
-    return rangeVisitor.getRange();
+    return null;
   }
 
   public LayerEventHandler getEventHandler( )
@@ -230,10 +228,10 @@ public abstract class AbstractChartLayer implements IChartLayer
   }
 
   @Override
-  //TODO:FIXME remove from here. This is an abstract class
+  // TODO:FIXME remove from here. This is an abstract class
   public synchronized ILegendEntry[] getLegendEntries( )
   {
-    return new ILegendEntry[]{};
+    return new ILegendEntry[] {};
   }
 
   protected IRetinalMapper getMapper( final String role )
@@ -286,14 +284,14 @@ public abstract class AbstractChartLayer implements IChartLayer
   }
 
   /**
-   * @see org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer#getTargetRange()
+   * Always returns null: Important: do not recurse into children, they may have different axes, so merging those ranges
+   * is just wrong.<br/>
+   * The caller of getDomainRange is responsible for recursion.
    */
   @Override
   public IDataRange< ? > getTargetRange( final IDataRange< ? > intervall )
   {
-    final LayerTargetRangeVisitor rangeVisitor = new LayerTargetRangeVisitor();
-    getLayerManager().accept( rangeVisitor );
-    return rangeVisitor.getRange();
+    return null;
   }
 
   /**
@@ -466,7 +464,7 @@ public abstract class AbstractChartLayer implements IChartLayer
     m_legendIsVisible = isVisible;
   }
 
-   @Override
+  @Override
   public void setParent( final ILayerContainer parent )
   {
     m_parent = parent;
@@ -477,9 +475,6 @@ public abstract class AbstractChartLayer implements IChartLayer
     m_styleSet = styleSet;
   }
 
-  /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#setTitle(java.lang.String)
-   */
   @Override
   public void setTitle( final String title )
   {
@@ -503,4 +498,15 @@ public abstract class AbstractChartLayer implements IChartLayer
     return String.format( "IChartLayer - id: %s, visible: %s", getIdentifier(), Boolean.valueOf( isVisible() ).toString() );
   }
 
+  @Override
+  public void accept( final IChartLayerVisitor2 visitor )
+  {
+    final boolean doRecurse = visitor.visit( this );
+    if( !doRecurse )
+      return;
+
+    final IChartLayer[] children = getLayerManager().getLayers();
+    for( final IChartLayer child : children )
+      child.accept( visitor );
+  }
 }
