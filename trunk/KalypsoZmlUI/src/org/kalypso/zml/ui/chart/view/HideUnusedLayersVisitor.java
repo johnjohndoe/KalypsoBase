@@ -55,17 +55,14 @@ import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLaye
  */
 public class HideUnusedLayersVisitor extends AbstractChartLayerVisitor
 {
-
   @Override
   public void visit( final IChartLayer layer )
   {
     layer.setVisible( isVisible( layer ) );
-
   }
 
   private boolean isVisible( final IChartLayer layer )
   {
-
     if( layer instanceof IZmlLayer )
     {
       final IZmlLayer zmlLayer = (IZmlLayer) layer;
