@@ -44,7 +44,6 @@ package org.kalypso.ogc.gml.featureview.control;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -159,9 +158,9 @@ public class ComboFeatureControl extends AbstractFeatureControl
         {
           final String featureLabel = labelProvider.getText( foundFeature );
           if( foundFeature instanceof IXLinkedFeature )
-            m_entries.put( foundFeature, featureLabel );
+            m_entries.put( ((IXLinkedFeature) foundFeature).getFeature(), featureLabel );
           else
-            m_entries.put( foundFeature.getId(), featureLabel );
+            m_entries.put( foundFeature, featureLabel );
         }
       }
     }
@@ -176,9 +175,6 @@ public class ComboFeatureControl extends AbstractFeatureControl
     return new DefaultReferenceCollectorStrategy( workspace, parentFeature, parentRelation );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -260,7 +256,7 @@ public class ComboFeatureControl extends AbstractFeatureControl
 
     if( currentFeatureValue == null && m_entries.containsKey( NULL_LINK ) )
       m_comboViewer.setSelection( new StructuredSelection( NULL_LINK ), true );
-    else
+    else if( currentFeatureValue != null )
     {
       final String entry = m_entries.get( currentFeatureValue );
       if( entry != null )
@@ -271,7 +267,22 @@ public class ComboFeatureControl extends AbstractFeatureControl
   /** Returns the current value of the feature as string. */
   private Object getCurrentFeatureValue( )
   {
-    return getFeature().getProperty( getFeatureTypeProperty() );
+    final IPropertyType propertyType = getFeatureTypeProperty();
+
+    final Feature feature = getFeature();
+
+    if( propertyType instanceof IRelationType )
+    {
+      // REMARK: always fully resolve the linked feature, we will do the same with the combo entries: this makes sure,
+      // comparing the features will work later.
+      final Feature member = feature.getMember( (IRelationType) propertyType );
+      if( member instanceof IXLinkedFeature )
+        return ((IXLinkedFeature) member).getFeature();
+      else
+        return member;
+    }
+
+    return feature.getProperty( propertyType );
   }
 
   @Override
