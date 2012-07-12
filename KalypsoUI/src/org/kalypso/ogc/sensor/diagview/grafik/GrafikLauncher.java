@@ -264,7 +264,9 @@ public class GrafikLauncher
     {
       final File grafikExe = getGrafikProgramPath();
 
-      final Process proc = Runtime.getRuntime().exec( grafikExe.getAbsolutePath() + " /V\"" + tplFile.getAbsolutePath() + '"', null, grafikExe.getParentFile() ); //$NON-NLS-1$
+      final String cmdLine = '"' + grafikExe.getAbsolutePath() + "\" /V\"" + tplFile.getAbsolutePath() + '"';
+
+      final Process proc = Runtime.getRuntime().exec( cmdLine, null, grafikExe.getParentFile() ); //$NON-NLS-1$
 
       final IStatusCollector stati = new StatusCollector( KalypsoGisPlugin.getId() );
 
@@ -360,8 +362,7 @@ public class GrafikLauncher
     {
       try
       {
-        final File existingFile = fileExistsInDir( prefix, suffix, System.getProperty( FileUtilities.JAVA_IO_TMPDIR ) );
-        return existingFile;
+        return fileExistsInDir( prefix, suffix, System.getProperty( FileUtilities.JAVA_IO_TMPDIR ) );
       }
       catch( final FileNotFoundException ignored )
       {
