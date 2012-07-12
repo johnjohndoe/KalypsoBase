@@ -57,11 +57,11 @@
         <sequence>
           <element name="Title" type="ods:TitleType" minOccurs="0" maxOccurs="unbounded" />
           <element name="Description" type="string" minOccurs="0" />
-          <element ref="ods:Styles" minOccurs="0" />
-          <element ref="ods:Layers" minOccurs="0" />
           <element name="ChartInsets" type="ods:InsetType" minOccurs="0" />
           <element name="PlotInsets" type="ods:InsetType" minOccurs="0" />
           <element name="PlotFrame" type="ods:PlotFrameStyle" minOccurs="0" />
+          <element ref="ods:Styles" minOccurs="0" />
+          <element ref="ods:Layers" minOccurs="0" />
           <element name="Mappers" minOccurs="0">
             <complexType>
               <sequence>
