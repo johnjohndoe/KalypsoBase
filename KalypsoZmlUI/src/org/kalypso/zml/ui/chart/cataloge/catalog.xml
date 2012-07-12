@@ -2,7 +2,6 @@
 <catalog:catalog id="urn:" ns0:base="urn:" xmlns:ns0="xml" xmlns:catalog="urn:oasis:names:tc:entity:xmlns:xml:catalog">
 
 <!--  FIXME: move everything exclusively used by hwv product to KalypsoHwv... -->
-<!--  FIXME: move everything exclusively used by kalypso product to KalypsoSimulationBase -->
 
   <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:grid" uri="grid.kod" />
   <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:global" uri="global.kod" />
@@ -19,12 +18,6 @@
 
   <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:evaporation" uri="common/evaporation.kod" />
   <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:evaporation:old" uri="common/evaporation.old.kod" />
-
-  <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:mean:humidity" uri="common/mean_humidity.kod" />
-  <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:mean:temperature" uri="common/mean_temperature.kod" />
-  <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:mean:wind:velocity" uri="common/mean_wind_velocity.kod" />
-
-  <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:sunshine:hours" uri="common/sunshine_hours.kod" />
 
   <catalog:system systemId="urn:org:kalypso:zml:ui:diagramm:common:quality" uri="quality/quality.kod" />
 
