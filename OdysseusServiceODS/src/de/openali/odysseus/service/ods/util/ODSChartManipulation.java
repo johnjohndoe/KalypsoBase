@@ -10,8 +10,9 @@ import org.kalypso.ogc.core.utils.OWSUtilities;
 
 import de.openali.odysseus.chart.framework.exception.MalformedValueException;
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
-import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
@@ -19,7 +20,7 @@ import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry
 
 /**
  * Helper class for chart stuff concerning request parameters.
- * 
+ *
  * @author Alexander Burtscher
  */
 public class ODSChartManipulation
@@ -105,7 +106,7 @@ public class ODSChartManipulation
   /**
    * sets range for an individual axis; set to public so an axis can be re-ranged widthout the need for a complete
    * chartmodel (e.g. by GetAxesInfo, GetAxis)
-   * 
+   *
    * @param iaxis
    *          the axis whose range to set
    * @param clazz
@@ -139,7 +140,7 @@ public class ODSChartManipulation
       throw new OWSException( "Value '" + maxString + "' is not appropriate for Axis '" + iaxis.getIdentifier() + "'", OWSUtilities.OWS_VERSION, "en", ExceptionCode.INVALID_PARAMETER_VALUE, null );
     }
 
-    final DataRange<Number> dr = new DataRange<Number>( min, max );
+    final IDataRange<Number> dr = DataRange.create( min, max );
     iaxis.setNumericRange( dr );
   }
 }
