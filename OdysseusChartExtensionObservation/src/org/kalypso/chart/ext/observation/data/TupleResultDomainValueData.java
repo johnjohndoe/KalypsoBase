@@ -52,9 +52,9 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
+import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataContainer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 
 public class TupleResultDomainValueData<T_domain, T_target> implements IDataContainer<T_domain, T_target>
 {
@@ -129,13 +129,13 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
   {
     final T_domain[] domainValues = getDomainValues();
 
-    return new ComparableDataRange<T_domain>( domainValues );
+    return DataRange.createFromComparable( domainValues );
   }
 
   @Override
   public IDataRange<T_target> getTargetRange( )
   {
-    return new ComparableDataRange<T_target>( getTargetValues() );
+    return DataRange.createFromComparable( getTargetValues() );
   }
 
   public T_domain[] getDomainValues( )
