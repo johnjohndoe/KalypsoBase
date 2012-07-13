@@ -56,9 +56,9 @@ import de.openali.odysseus.chart.factory.util.IReferenceResolver;
 import de.openali.odysseus.chart.framework.exception.MalformedValueException;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRangeRestriction;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
@@ -375,7 +375,7 @@ public class ChartMapperFactory extends AbstractChartFactory
       max = null;
     }
 
-    return new ComparableDataRange<Number>( new Number[] { min, max } );
+    return DataRange.createFromComparable( min, max );
   }
 
   private Calendar addDurationToCal( final Calendar cal, final GDuration dur )
