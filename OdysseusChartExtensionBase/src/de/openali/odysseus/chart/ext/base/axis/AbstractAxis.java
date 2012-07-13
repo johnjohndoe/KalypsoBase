@@ -4,6 +4,8 @@ import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.ObjectUtils;
+
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRangeRestriction;
@@ -24,36 +26,6 @@ import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
  */
 public abstract class AbstractAxis extends AbstractMapper implements IAxis
 {
-  /**
-   * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#setActiveRange(de.openali.odysseus.chart.framework.model.data.IDataRange)
-   */
-  @Override
-  public void setSelection( final DataRange<Number> range )
-  {
-    if( m_activeRange == range )
-      return;
-    m_activeRange = range;
-    fireMapperChanged( this );
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#getActiveRange()
-   */
-  @Override
-  public DataRange<Number> getSelection( )
-  {
-    return m_activeRange;
-  }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.model.mapper.IAxis#getAxisVisitorBehavior()
-   */
-  @Override
-  public IAxisVisitorBehavior getAxisVisitorBehavior( )
-  {
-    return new AxisVisitorBehavior( m_allowZoom, true, true );
-  }
-
   private final Class< ? > m_dataClass;
 
   private DIRECTION m_dir = DIRECTION.POSITIVE;
@@ -83,16 +55,6 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     this( id, pos, dataClass, null );
   }
 
-  public boolean isAllowZoom( )
-  {
-    return m_allowZoom;
-  }
-
-  public void setAllowZoom( final boolean allowZoom )
-  {
-    m_allowZoom = allowZoom;
-  }
-
   public AbstractAxis( final String id, final POSITION pos, final Class< ? > dataClass, final IAxisRenderer renderer )
   {
     super( id );
@@ -107,7 +69,6 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
   public void addLabel( final TitleTypeBean title )
   {
     m_axisLabels.add( title );
-
   }
 
   @Override
@@ -341,5 +302,38 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     }
 
     return new DataRange<Number>( newRangeMin, newRangeMax );
+  }
+
+  @Override
+  public void setSelection( final DataRange<Number> range )
+  {
+    if( ObjectUtils.equals( m_activeRange, range ) )
+      return;
+
+    m_activeRange = range;
+
+    fireMapperChanged( this );
+  }
+
+  @Override
+  public DataRange<Number> getSelection( )
+  {
+    return m_activeRange;
+  }
+
+  @Override
+  public IAxisVisitorBehavior getAxisVisitorBehavior( )
+  {
+    return new AxisVisitorBehavior( m_allowZoom, true, true );
+  }
+
+  public boolean isAllowZoom( )
+  {
+    return m_allowZoom;
+  }
+
+  public void setAllowZoom( final boolean allowZoom )
+  {
+    m_allowZoom = allowZoom;
   }
 }

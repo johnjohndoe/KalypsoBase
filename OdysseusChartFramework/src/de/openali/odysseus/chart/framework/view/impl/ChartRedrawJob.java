@@ -2,74 +2,94 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.view.impl;
 
-import de.openali.odysseus.chart.framework.model.event.impl.AbstractMapperRegistryEventListener;
-import de.openali.odysseus.chart.framework.model.mapper.IMapper;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.IJobChangeListener;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.ui.progress.UIJob;
 
 /**
- * @author kimwerner
+ * @author Gernot Belger
  */
-public class ChartImageMapperRegistryEventListener extends AbstractMapperRegistryEventListener
+final class ChartRedrawJob extends UIJob
 {
-  private final ChartImageComposite m_chartImageComposite;
-
-  public ChartImageMapperRegistryEventListener( final ChartImageComposite composite )
+  private final IJobChangeListener m_changeListener = new JobChangeAdapter()
   {
-    m_chartImageComposite = composite;
+    @Override
+    public void done( final IJobChangeEvent event )
+    {
+      handleJobDone();
+    }
+  };
+
+  private final ChartImageComposite m_chart;
+
+  private final ChartPaintJob m_chartPaintJob;
+
+  ChartRedrawJob( final ChartImageComposite chart, final ChartPaintJob chartPaintJob )
+  {
+    super( "Redraw chart" ); //$NON-NLS-1$
+
+    m_chart = chart;
+    m_chartPaintJob = chartPaintJob;
+
+    addJobChangeListener( m_changeListener );
   }
 
   @Override
-  public void onMapperAdded( final IMapper mapper )
+  public IStatus runInUIThread( final IProgressMonitor monitor )
   {
-    m_chartImageComposite.invalidate();
+    if( m_chart.isDisposed() )
+      return Status.CANCEL_STATUS;
+
+    m_chart.redraw();
+
+    return Status.OK_STATUS;
   }
 
-  @Override
-  public void onMapperChanged( final IMapper mapper )
+  void handleJobDone( )
   {
-    m_chartImageComposite.invalidate();
-  }
-
-  @Override
-  public void onMapperRemoved( final IMapper mapper )
-  {
-    m_chartImageComposite.invalidate();
+    if( m_chartPaintJob.isDoRedraw() )
+      schedule( 50 );
   }
 }

@@ -65,5 +65,4 @@ public class ComparableDataRange<T> implements IDataRange<T>
       }
     }
   }
-
 }

@@ -106,10 +106,6 @@ public class DragPanHandler extends AbstractChartDragHandler
     }
   }
 
-  /**
-   * @see org.kalypso.chart.ui.editor.mousehandler.AbstractChartDragHandler#doMouseUpAction(org.eclipse.swt.graphics.Point,
-   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
-   */
   @Override
   public void doMouseUpAction( final Point start, final EditInfo editInfo )
   {

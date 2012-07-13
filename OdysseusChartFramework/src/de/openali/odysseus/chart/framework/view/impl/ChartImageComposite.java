@@ -1,8 +1,5 @@
 package de.openali.odysseus.chart.framework.view.impl;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -28,8 +25,6 @@ import de.openali.odysseus.chart.framework.model.event.IMapperRegistryEventListe
 import de.openali.odysseus.chart.framework.model.event.impl.ChartModelEventHandler;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
-import de.openali.odysseus.chart.framework.util.img.ChartPainter;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.IChartHandler;
 import de.openali.odysseus.chart.framework.view.IChartHandlerManager;
@@ -47,10 +42,6 @@ public class ChartImageComposite extends Canvas implements IChartComposite
 
   private IChartModel m_model;
 
-  private Image m_image = null;
-
-  private Rectangle m_plotRect = null;
-
   private Rectangle m_dragArea = null;
 
   private Point m_panOffset = new Point( 0, 0 );
@@ -59,7 +50,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
 
   private final ChartImagePlotHandler m_plotHandler = new ChartImagePlotHandler( this );
 
-  private InvalidateChartJob m_invalidate;
+  private final ChartPaintJob m_paintJob = new ChartPaintJob( this );
 
   public ChartImageComposite( final Composite parent, final int style, final IChartModel model, final RGB backgroundRGB )
   {
@@ -88,12 +79,20 @@ public class ChartImageComposite extends Canvas implements IChartComposite
       @Override
       public void controlResized( final ControlEvent arg0 )
       {
+        updateClientArea();
         invalidate();
       }
     } );
 
+
+    updateClientArea();
     setBackground( OdysseusChartFramework.getDefault().getColorRegistry().getResource( parent.getDisplay(), backgroundRGB ) );
     setChartModel( model );
+  }
+
+  void updateClientArea( )
+  {
+    m_paintJob.setClientArea( getClientArea() );
   }
 
   @Override
@@ -101,16 +100,9 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   {
     unregisterListener();
 
-    synchronized( this )
-    {
-      if( m_image != null )
-      {
-        m_image.dispose();
-        m_image = null;
-      }
+    m_plotHandler.dispose();
 
-      m_plotHandler.dispose();
-    }
+    m_paintJob.dispose();
 
     super.dispose();
   }
@@ -121,73 +113,35 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     return m_model;
   }
 
-  public EditInfo getEditInfo( )
-  {
-    return m_editInfo;
-  }
-
   @Override
   public final Rectangle getPlotRect( )
   {
-    return m_plotRect;
+    return m_paintJob.getPlotRect();
   }
 
   @Override
   public void invalidate( )
   {
-    if( m_invalidate != null )
-      m_invalidate.cancel();
+    System.out.println( "Invalidate chart" );
 
-    m_invalidate = new InvalidateChartJob( this );
-    m_invalidate.schedule();
+    m_paintJob.cancel();
+
+    m_paintJob.schedule( 250 );
   }
 
-  protected synchronized IStatus doInvalidateChart( final Rectangle panel, final IProgressMonitor monitor )
+  final void handlePaint( final PaintEvent paintEvent )
   {
-    if( isDisposed() )
-      return Status.OK_STATUS;
+    final Image plotImage = m_paintJob.getPlotImage();
+    final Rectangle plotRect = m_paintJob.getPlotRect();
+    final Point panOffset = m_panOffset;
+    final Rectangle dragArea = m_dragArea;
+    final EditInfo editInfo = m_editInfo;
 
-    if( monitor.isCanceled() )
-      return Status.CANCEL_STATUS;
-
-    if( m_image != null && !m_image.isDisposed() )
-    {
-      m_image.dispose();
-      m_image = null;
-    }
-
-    final IChartModel model = getChartModel();
-    final IMapperRegistry mapperRegistry = model == null ? null : model.getMapperRegistry();
-    if( mapperRegistry == null )
-      return Status.OK_STATUS;
-
-    final ChartPainter chartPainter = new ChartPainter( model, panel );// ,new Insets(25,25,25,25));
-
-    m_plotRect = RectangleUtils.inflateRect( panel, chartPainter.getPlotInsets() );
-    if( monitor.isCanceled() )
-      return Status.CANCEL_STATUS;
-
-    final Image image = chartPainter.createImage( m_panOffset, monitor );
-    if( isDisposed() )
-    {
-      image.dispose();
-    }
-    else
-      m_image = image;
-
-    return Status.OK_STATUS;
-  }
-
-  /**
-   * must be synchronized because of threaded painting of m_image
-   */
-  protected synchronized void handlePaint( final PaintEvent paintEvent )
-  {
-    if( m_image == null )
+    if( plotImage == null )
       return;
 
     final GC gc = paintEvent.gc;
-    gc.drawImage( m_image, 0, 0 );// -m_panOffset.x, -m_panOffset.y );
+    gc.drawImage( plotImage, -panOffset.x, -panOffset.y );
 
     final Transform oldTransform = new Transform( gc.getDevice() );
     final Transform newTransform = new Transform( gc.getDevice() );
@@ -199,11 +153,11 @@ public class ChartImageComposite extends Canvas implements IChartComposite
 
       // FIXME: makes no sense: why is there a transformation for the drag area and edit info?
       // Same for handlers: why should they paint with an active transformation?
-      newTransform.translate( m_plotRect.x, m_plotRect.y );
+      newTransform.translate( plotRect.x, plotRect.y );
       gc.setTransform( newTransform );
 
-      paintDragArea( gc );
-      paintEditInfo( gc );
+      paintDragArea( gc, dragArea );
+      paintEditInfo( gc, editInfo );
 
       final IChartHandlerManager manager = getPlotHandler();
       final IChartHandler[] handlers = manager.getActiveHandlers();
@@ -219,35 +173,37 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     }
   }
 
-  protected void paintDragArea( final GC gcw )
+  private static void paintDragArea( final GC gcw, final Rectangle dragArea )
   {
     // Wenn ein DragRectangle da ist, dann muss nur das gezeichnet werden
-    if( m_dragArea != null )
-    {
-      gcw.setLineWidth( 1 );
-      gcw.setForeground( gcw.getDevice().getSystemColor( SWT.COLOR_BLACK ) );
+    if( dragArea == null )
+      return;
 
-      gcw.setBackground( gcw.getDevice().getSystemColor( SWT.COLOR_BLUE ) );
-      final Rectangle r = RectangleUtils.createNormalizedRectangle( m_dragArea );
+    gcw.setLineWidth( 1 );
+    gcw.setForeground( gcw.getDevice().getSystemColor( SWT.COLOR_BLACK ) );
 
-      gcw.setAlpha( 50 );
-      gcw.fillRectangle( r );
-      gcw.setAlpha( 255 );
-      gcw.setLineStyle( SWT.LINE_DASH );
-      gcw.drawRectangle( r );
-    }
+    gcw.setBackground( gcw.getDevice().getSystemColor( SWT.COLOR_BLUE ) );
+    final Rectangle r = RectangleUtils.createNormalizedRectangle( dragArea );
+
+    gcw.setAlpha( 50 );
+    gcw.fillRectangle( r );
+    gcw.setAlpha( 255 );
+    gcw.setLineStyle( SWT.LINE_DASH );
+    gcw.drawRectangle( r );
   }
 
-  protected final void paintEditInfo( final GC gc )
+  private static final void paintEditInfo( final GC gc, final EditInfo editInfo )
   {
-    if( m_editInfo == null )
+    if( editInfo == null )
       return;
+
     // draw hover shape
-    if( m_editInfo.getHoverFigure() != null )
-      m_editInfo.getHoverFigure().paint( gc );
+    if( editInfo.getHoverFigure() != null )
+      editInfo.getHoverFigure().paint( gc );
+
     // draw edit shape
-    if( m_editInfo.getEditFigure() != null )
-      m_editInfo.getEditFigure().paint( gc );
+    if( editInfo.getEditFigure() != null )
+      editInfo.getEditFigure().paint( gc );
 
   }
 
@@ -255,9 +211,9 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   {
     if( m_model == null )
       return;
+
     m_model.getLayerManager().addListener( m_layerEventListener );
     m_model.getMapperRegistry().addListener( m_mapperListener );
-
   }
 
   public void setChartModel( final IChartModel model )
@@ -267,11 +223,12 @@ public class ChartImageComposite extends Canvas implements IChartComposite
 
   protected final void setChartModel( final IChartModel oldModel, final IChartModel newModel )
   {
-    if( m_model != null )
-      unregisterListener();
+    unregisterListener();
 
     m_model = newModel;
+
     registerListener();
+
     invalidate();
 
     m_chartModelEventHandler.fireModelChanged( oldModel, newModel );
@@ -282,6 +239,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   {
     if( m_dragArea == null && dragArea == null )
       return;
+
     m_dragArea = dragArea;
     redraw();
   }
@@ -291,7 +249,9 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   {
     if( m_editInfo == null && editInfo == null )
       return;
+
     m_editInfo = editInfo;
+
     redraw();
   }
 
@@ -299,15 +259,14 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   public final void setPanOffset( final IAxis[] axes, final Point start, final Point end )
   {
     if( start == null || end == null )
-    {
       m_panOffset = new Point( 0, 0 );
-      return;
-    }
-    m_panOffset = new Point( end.x - start.x, end.y - start.y );
-    invalidate();
+    else
+      m_panOffset = new Point( end.x - start.x, end.y - start.y );
+
+    redraw();
   }
 
-  protected final void unregisterListener( )
+  private final void unregisterListener( )
   {
     if( m_model == null )
       return;
