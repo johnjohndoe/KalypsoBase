@@ -59,7 +59,7 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
  * This handler copies the contents of the chart to the clipboard.
- * 
+ *
  * @author Holger Albert
  */
 public class ExportClipboardHandler extends AbstractHandler
@@ -86,8 +86,7 @@ public class ExportClipboardHandler extends AbstractHandler
 
       /* Create the image. */
       final Rectangle bounds = ((Composite) chartComposite).getBounds();
-      final ChartPainter chartPainter = new ChartPainter( chartComposite.getChartModel(), bounds );
-      final ImageData imageData = chartPainter.getImageData( new NullProgressMonitor() );
+      final ImageData imageData = ChartPainter.createChartImageData( chartComposite.getChartModel(), bounds, new NullProgressMonitor() );
 
       /* Create a new clipboard. */
       clipboard = new Clipboard( shell.getDisplay() );

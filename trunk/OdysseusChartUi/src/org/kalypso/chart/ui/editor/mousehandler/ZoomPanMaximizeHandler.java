@@ -254,7 +254,6 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
 
   private void doMouseUpClick( final Point start )
   {
-
     final SetActivePointVisitor visitor = new SetActivePointVisitor( start, 10 );
 
     final IChartModel model = getChart().getChartModel();

@@ -72,8 +72,9 @@ public class GetChart extends AbstractODSDisplayOperation implements Runnable
 
         ODSChartManipulation.manipulateChart( model, req );
 
-        final ChartPainter chartPainter = new ChartPainter( model, new Rectangle( 0, 0, width, height ) );
-        final ImageData id = chartPainter.getImageData( new NullProgressMonitor() );
+        final Rectangle bounds = new Rectangle( 0, 0, width, height );
+
+        final ImageData id = ChartPainter.createChartImageData( model, bounds, new NullProgressMonitor() );
         if( id == null )
           throw new OWSException( "", OWSUtilities.OWS_VERSION, "en", ExceptionCode.INVALID_PARAMETER_VALUE, null );
 

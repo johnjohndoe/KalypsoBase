@@ -68,9 +68,6 @@ public class PanToVisitor implements IAxisVisitor
     m_end = end;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.mapper.registry.IAxisVisitor#visit(de.openali.odysseus.chart.framework.model.mapper.IAxis)
-   */
   @Override
   public void visit( final IAxis axis )
   {

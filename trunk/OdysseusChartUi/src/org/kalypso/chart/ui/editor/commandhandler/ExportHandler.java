@@ -46,8 +46,7 @@ public class ExportHandler extends AbstractHandler
       return null;
 
     final Rectangle bounds = ((Composite) chartComposite).getBounds();
-    final ChartPainter chartPainter = new ChartPainter( chartComposite.getChartModel(), bounds );
-    final ImageData id = chartPainter.getImageData( new NullProgressMonitor() );
+    final ImageData id = ChartPainter.createChartImageData( chartComposite.getChartModel(), bounds, new NullProgressMonitor() );
 
     final ImageLoader il = new ImageLoader();
     il.data = new ImageData[] { id };

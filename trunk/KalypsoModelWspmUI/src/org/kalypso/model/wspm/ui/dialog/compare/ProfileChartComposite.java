@@ -41,15 +41,10 @@
 package org.kalypso.model.wspm.ui.dialog.compare;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.model.wspm.core.IWspmLayers;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
@@ -103,22 +98,24 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
     super.dispose();
   }
 
-  @Override
-  protected IStatus doInvalidateChart( final Rectangle panel, final IProgressMonitor monitor )
-  {
-    if( monitor.isCanceled() )
-      return Status.OK_STATUS;
-
-    final IChartLayer layer = getChartModel().getLayerManager().findLayer( IWspmLayers.LAYER_GELAENDE );
-
-    final IProfileRecord point = getSelectedPoint( layer );
-    if( point != null )
-    {
-      getProfil().getSelection().setRange( point );
-    }
-
-    return super.doInvalidateChart( panel, monitor );
-  }
+  // FIXME: what is the meaning of this? highly dubious
+// @Override
+// protected IStatus doInvalidateChart( final Rectangle panel, final IProgressMonitor monitor )
+// {
+// if( monitor.isCanceled() )
+// return Status.OK_STATUS;
+//
+//
+// final IChartLayer layer = getChartModel().getLayerManager().findLayer( IWspmLayers.LAYER_GELAENDE );
+//
+// final IProfileRecord point = getSelectedPoint( layer );
+// if( point != null )
+// {
+// getProfil().getSelection().setRange( point );
+// }
+//
+// return super.doInvalidateChart( panel, monitor );
+// }
 
   @Override
   public IChartComposite getChartComposite( )
@@ -151,7 +148,7 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
     return m_profilLayerProvider;
   }
 
-  final IProfileRecord getSelectedPoint( final IChartLayer layer )
+  private final IProfileRecord getSelectedPoint( final IChartLayer layer )
   {
     if( Objects.isNull( layer, getProfil() ) )
       return null;

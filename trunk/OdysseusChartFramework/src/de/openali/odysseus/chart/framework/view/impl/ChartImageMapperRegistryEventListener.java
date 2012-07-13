@@ -52,7 +52,6 @@ public class ChartImageMapperRegistryEventListener extends AbstractMapperRegistr
 
   public ChartImageMapperRegistryEventListener( final ChartImageComposite composite )
   {
-    super();
     m_chartImageComposite = composite;
   }
 
@@ -68,11 +67,6 @@ public class ChartImageMapperRegistryEventListener extends AbstractMapperRegistr
     m_chartImageComposite.invalidate();
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.axis.IMapperRegistryEventListener#onMapperRemoved(de.openali.odysseus.chart.framework.axis.IAxis)
-   *      TODO: not implemented yet (or is it? - right now there's no way to remove an axis, so this should be checked
-   *      in the future)
-   */
   @Override
   public void onMapperRemoved( final IMapper mapper )
   {
