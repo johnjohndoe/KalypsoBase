@@ -56,9 +56,9 @@ import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
+import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
 
 /**
@@ -116,7 +116,7 @@ class ZmlBarLayerRangeHandler
       else if( ITimeseriesConstants.TYPE_POLDER_CONTROL.equals( axis.getType() ) )
         max = doAdjustMax( observation, max );
 
-      return new DataRange<Number>( getDateDataOperator().logicalToNumeric( min ), getDateDataOperator().logicalToNumeric( max ) );
+      return DataRange.create( getDateDataOperator().logicalToNumeric( min ), getDateDataOperator().logicalToNumeric( max ) );
     }
     catch( final SensorException e )
     {
@@ -189,7 +189,7 @@ class ZmlBarLayerRangeHandler
       final Number min = getNumberDataOperator().logicalToNumeric( (Number) range.getLower() );
       final Number max = getNumberDataOperator().logicalToNumeric( (Number) range.getUpper() );
 
-      return new DataRange<Number>( min, max );
+      return DataRange.create( min, max );
     }
     catch( final SensorException e )
     {

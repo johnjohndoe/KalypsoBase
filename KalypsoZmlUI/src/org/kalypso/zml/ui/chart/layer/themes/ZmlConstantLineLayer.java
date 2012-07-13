@@ -70,8 +70,8 @@ import org.kalypso.zml.ui.chart.layer.boundaries.KodBoundaryLayerProvider;
 import org.kalypso.zml.ui.chart.layer.boundaries.MetadataLayerBoundaryBuilder;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
+import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
@@ -181,7 +181,7 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
       }
     }
 
-    return new DataRange<Number>( min, max );
+    return DataRange.create( min, max );
   }
 
   @Override
@@ -260,7 +260,7 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
     {
       try
       {
-        final URL url = ConfigUtils.findCentralConfigLocation( "layers/grenzwerte/alarmstufen.kod" ); //$NON-NLS-1$    
+        final URL url = ConfigUtils.findCentralConfigLocation( "layers/grenzwerte/alarmstufen.kod" ); //$NON-NLS-1$
 
         final KodBoundaryLayerProvider provider = new KodBoundaryLayerProvider( metadata, url, getDataHandler().getTargetAxisId() );
         final IMetadataLayerBoundary[] boundaries = provider.getBoundaries();
