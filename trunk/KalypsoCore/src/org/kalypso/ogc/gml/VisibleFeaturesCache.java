@@ -53,7 +53,7 @@ import com.google.common.cache.LoadingCache;
 /**
  * A cache for results of the method
  * {@link IKalypsoFeatureTheme#getFeatureListVisible(org.kalypsodeegree.model.geometry.GM_Envelope)}.
- * 
+ *
  * @author Gernot Belger
  */
 class VisibleFeaturesCache
@@ -66,7 +66,7 @@ class VisibleFeaturesCache
   VisibleFeaturesCache( final KalypsoFeatureTheme theme )
   {
     final CacheLoader<GM_Envelope, FeatureList> cacheLoader = new CacheLoader<GM_Envelope, FeatureList>()
-        {
+    {
       @Override
       public FeatureList load( final GM_Envelope input )
       {
@@ -75,9 +75,9 @@ class VisibleFeaturesCache
         else
           return theme.calculateFeatureListVisible( input );
       }
-        };
+    };
 
-        m_cache = CacheBuilder.newBuilder().weakKeys().maximumSize( 33 ).build( cacheLoader );
+    m_cache = CacheBuilder.newBuilder().weakKeys().maximumSize( 33 ).build( cacheLoader );
   }
 
   void clear( )
