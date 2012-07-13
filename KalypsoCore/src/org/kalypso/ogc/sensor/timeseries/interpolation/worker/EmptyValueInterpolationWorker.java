@@ -48,6 +48,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
@@ -80,7 +81,7 @@ public class EmptyValueInterpolationWorker extends AbstractInterpolationWorker i
       {
         try
         {
-          final Calendar calendar = Calendar.getInstance();
+          final Calendar calendar = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
           calendar.setTime( getDateRange().getFrom() );
 
           final IAxis dateAxis = getDateAxis();
@@ -100,13 +101,13 @@ public class EmptyValueInterpolationWorker extends AbstractInterpolationWorker i
         }
         catch( final SensorException e )
         {
-          final String msg = String.format( Messages.getString("EmptyValueInterpolationWorker_0") ); //$NON-NLS-1$
+          final String msg = String.format( Messages.getString( "EmptyValueInterpolationWorker_0" ) ); //$NON-NLS-1$
           statis.add( StatusUtilities.createErrorStatus( msg, e ) );
         }
       }
     }
 
-    return StatusUtilities.createStatus( statis, Messages.getString("EmptyValueInterpolationWorker_1") ); //$NON-NLS-1$
+    return StatusUtilities.createStatus( statis, Messages.getString( "EmptyValueInterpolationWorker_1" ) ); //$NON-NLS-1$
   }
 
 }

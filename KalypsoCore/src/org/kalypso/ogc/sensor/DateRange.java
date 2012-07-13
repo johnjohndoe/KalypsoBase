@@ -191,6 +191,7 @@ public class DateRange implements Comparable<DateRange>
     if( pastDays == 0 )
       return null;
 
+    // FIXME: Timezone?
     final Calendar cal = Calendar.getInstance();
     cal.set( Calendar.SECOND, 0 );
     cal.set( Calendar.MILLISECOND, 0 );
