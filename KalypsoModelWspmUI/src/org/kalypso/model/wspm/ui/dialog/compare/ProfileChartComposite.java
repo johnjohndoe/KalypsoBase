@@ -56,7 +56,7 @@ import org.kalypso.model.wspm.ui.view.chart.ProfilChartModel;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.IChartModelState;
-import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.impl.ChartModelState;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
@@ -159,8 +159,8 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
     if( Objects.isNull( domAxis, valAxis ) )
       return null;
 
-    final DataRange<Number> activeDom = domAxis.getSelection();
-    final DataRange<Number> activeVal = valAxis.getSelection();
+    final IDataRange<Number> activeDom = domAxis.getSelection();
+    final IDataRange<Number> activeVal = valAxis.getSelection();
     if( Objects.isNull( activeDom, activeVal ) )
       return null;
 

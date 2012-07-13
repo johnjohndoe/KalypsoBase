@@ -59,8 +59,8 @@ import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 
 import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
+import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
@@ -220,7 +220,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     if( Objects.isNull( min, max ) )
       return null;
 
-    return new DataRange<Number>( (Number) min.getValue( domain ), (Number) max.getValue( domain ) );
+    return DataRange.create( (Number) min.getValue( domain ), (Number) max.getValue( domain ) );
   }
 
   @Override
@@ -405,9 +405,9 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     final Number maxValue = (Number) max.getValue( target );
 
     if( Math.abs( minValue.doubleValue() - maxValue.doubleValue() ) < 0.001 )
-      return new DataRange<Number>( minValue.doubleValue() - 1, minValue.doubleValue() + 1 );
+      return DataRange.create( minValue.doubleValue() - 1, minValue.doubleValue() + 1 );
 
-    return new DataRange<Number>( minValue, maxValue );
+    return DataRange.create( minValue, maxValue );
   }
 
   @Override

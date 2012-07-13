@@ -43,8 +43,8 @@ package org.kalypso.model.wspm.ui.featureview;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
 import org.kalypsodeegree_impl.gml.binding.math.PolynomialUtilities;
 
+import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 
 /**
  * @author burtscher1
@@ -83,9 +83,7 @@ class PolynomDataContainer
       }
     }
 
-    IDataRange<Number> dataRange = null;
-    dataRange = new ComparableDataRange<Number>( new Number[] { min, max } );
-    return dataRange;
+    return DataRange.createFromComparable( (Number) min, (Number) max );
   }
 
   public IDataRange<Number> getTargetRange( )
@@ -146,8 +144,7 @@ class PolynomDataContainer
       }
     }
 
-    final IDataRange<Number> dataRange = new ComparableDataRange<Number>( new Number[] { min, max } );
-    return dataRange;
+    return DataRange.createFromComparable( (Number) min, (Number) max );
   }
 
   public IPolynomial1D[] getPolyArray( )
