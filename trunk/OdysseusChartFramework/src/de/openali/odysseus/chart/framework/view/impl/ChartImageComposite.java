@@ -101,10 +101,16 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   {
     unregisterListener();
 
-    if( m_image != null )
-      m_image.dispose();
+    synchronized( this )
+    {
+      if( m_image != null )
+      {
+        m_image.dispose();
+        m_image = null;
+      }
 
-    m_plotHandler.dispose();
+      m_plotHandler.dispose();
+    }
 
     super.dispose();
   }
@@ -156,15 +162,18 @@ public class ChartImageComposite extends Canvas implements IChartComposite
       return Status.OK_STATUS;
 
     final ChartPainter chartPainter = new ChartPainter( model, panel );// ,new Insets(25,25,25,25));
-    m_image = chartPainter.init();
-    if( monitor.isCanceled() )
-      return Status.CANCEL_STATUS;
 
     m_plotRect = RectangleUtils.inflateRect( panel, chartPainter.getPlotInsets() );
     if( monitor.isCanceled() )
       return Status.CANCEL_STATUS;
 
-    m_image = chartPainter.createImage( m_panOffset, monitor );
+    final Image image = chartPainter.createImage( m_panOffset, monitor );
+    if( isDisposed() )
+    {
+      image.dispose();
+    }
+    else
+      m_image = image;
 
     return Status.OK_STATUS;
   }
