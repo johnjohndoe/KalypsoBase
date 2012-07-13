@@ -44,8 +44,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.Interval;
 import org.joda.time.Period;
 import org.kalypso.commons.pair.IKeyValue;
@@ -77,6 +79,8 @@ public class IntervalValuesOperation
   private final ITupleModel m_sourceModel;
 
   private final Period m_sourceTimestep;
+
+  private final TimeZone m_timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
 
   /**
    * @param sourceTimestep
@@ -118,11 +122,13 @@ public class IntervalValuesOperation
 
     final Period step = findStep();
 
+    final DateTimeZone zone = DateTimeZone.forTimeZone( m_timeZone );
+
     for( int i = 0; i < m_sourceModel.size(); i++ )
     {
       final Date date = (Date) m_sourceModel.get( i, dateAxis );
 
-      final DateTime to = new DateTime( date );
+      final DateTime to = new DateTime( date, zone );
       final DateTime from = to.minus( step );
       final Interval sourceInterval = new Interval( from, to );
 
@@ -143,7 +149,7 @@ public class IntervalValuesOperation
       return null;
 
     // TODO: handle better?
-    final String message = String.format( Messages.getString("IntervalValuesOperation_0"), ITimeseriesConstants.MD_TIMESTEP ); //$NON-NLS-1$
+    final String message = String.format( Messages.getString( "IntervalValuesOperation_0" ), ITimeseriesConstants.MD_TIMESTEP ); //$NON-NLS-1$
     throw new SensorException( message );
   }
 
@@ -250,8 +256,10 @@ public class IntervalValuesOperation
   {
     final DateRange adjustedRange = adjustRange( range );
 
-    final DateTime fromTime = new DateTime( adjustedRange.getFrom() );
-    final DateTime toTime = new DateTime( adjustedRange.getTo() );
+    final DateTimeZone zone = DateTimeZone.forTimeZone( m_timeZone );
+
+    final DateTime fromTime = new DateTime( adjustedRange.getFrom(), zone );
+    final DateTime toTime = new DateTime( adjustedRange.getTo(), zone );
 
     final Period step = PeriodUtils.getPeriod( calendarField, amount );
 
@@ -261,7 +269,7 @@ public class IntervalValuesOperation
   private DateRange adjustRange( final DateRange range )
   {
     final Date from = range.getFrom();
-    final Calendar start = Calendar.getInstance( KalypsoCorePlugin.getDefault().getTimeZone() );
+    final Calendar start = Calendar.getInstance( m_timeZone );
     start.setTime( from );
 
     m_definition.adjustStart( start );

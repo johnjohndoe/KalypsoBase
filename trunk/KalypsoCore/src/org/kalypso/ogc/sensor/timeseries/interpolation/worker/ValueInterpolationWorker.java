@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -67,9 +68,13 @@ import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
  */
 public class ValueInterpolationWorker extends AbstractInterpolationWorker
 {
+  private final TimeZone m_timeZone;
+
   public ValueInterpolationWorker( final IInterpolationFilter filter, final ITupleModel values, final DateRange dateRange )
   {
     super( filter, values, dateRange );
+
+    m_timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
   }
 
   @Override
@@ -82,9 +87,7 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
       final DateRange dateRange = getDateRange();
       final IAxis[] valueAxes = getValueAxes();
 
-      // FIXME: time zone is missing! So we might get unexpected time steps
-      // Which one to use here? We cannot change it globally, in order to make it backwards compatible
-      final Calendar calendar = Calendar.getInstance();
+      final Calendar calendar = Calendar.getInstance( m_timeZone );
 
       final LocalCalculationStack stack = new LocalCalculationStack();
       for( final IAxis valueAxis : valueAxes )
@@ -112,10 +115,10 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
     }
     catch( final SensorException e )
     {
-      statis.add( new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), 0, Messages.getString("ValueInterpolationWorker_0"), e ) ); //$NON-NLS-1$
+      statis.add( new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), 0, Messages.getString( "ValueInterpolationWorker_0" ), e ) ); //$NON-NLS-1$
     }
 
-    return StatusUtilities.createStatus( statis, Messages.getString("ValueInterpolationWorker_1") ); //$NON-NLS-1$
+    return StatusUtilities.createStatus( statis, Messages.getString( "ValueInterpolationWorker_1" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -129,7 +132,7 @@ public class ValueInterpolationWorker extends AbstractInterpolationWorker
     final LocalCalculationStackValue[] values = stack.getValues();
 
     final Date timeSeriesStartDate = (Date) getBaseModel().get( 0, dateAxis );
-    final Calendar timeSeriesStart = Calendar.getInstance();
+    final Calendar timeSeriesStart = Calendar.getInstance( m_timeZone );
     timeSeriesStart.setTime( timeSeriesStartDate );
 
     if( getDateRange() != null && isFilled() )
