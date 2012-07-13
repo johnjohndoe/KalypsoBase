@@ -58,8 +58,8 @@ import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
+import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.TextFigure;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
@@ -139,7 +139,7 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
       max = Math.max( dateRange.getTo().getTime(), max );
     }
 
-    return new DataRange<Number>( min, max );
+    return DataRange.create( min, max );
   }
 
   @Override
@@ -157,7 +157,7 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
       min = Math.min( max.doubleValue(), descriptor.getValue().getTarget().doubleValue() );
     }
 
-    return new DataRange<Number>( min, max );
+    return DataRange.create( min, max );
   }
 
   @Override

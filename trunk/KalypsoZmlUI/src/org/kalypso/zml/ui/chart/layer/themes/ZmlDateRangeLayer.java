@@ -55,16 +55,16 @@ import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 
 import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
+import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
 
 /**
  * ensures a specific domain date range for a chart diagram
- * 
+ *
  * @author Dirk Kuch
  */
 public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
@@ -124,8 +124,7 @@ public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
     if( Objects.isNull( min, max ) )
       return null;
 
-    final IDataRange<Number> numRange = new DataRange<Number>( m_dateDataOperator.logicalToNumeric( min ), m_dateDataOperator.logicalToNumeric( max ) );
-    return numRange;
+    return DataRange.create( m_dateDataOperator.logicalToNumeric( min ), m_dateDataOperator.logicalToNumeric( max ) );
   }
 
   @Override
