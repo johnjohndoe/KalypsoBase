@@ -70,8 +70,13 @@ public class SHPMultiPointz implements ISHPMultiPoint
       final int zPos = zOffset + 16 + 8 * i;
       final double z = ByteUtils.readLEDouble( recBuf, zPos );
 
+      // REMARK: m values seem to be optional, although this is not really described in the white paper
+      final double m;
       final int mPos = mOffset + 16 + 8 * i;
-      final double m = ByteUtils.readLEDouble( recBuf, mPos );
+      if( mPos < recBuf.length )
+        m = ByteUtils.readLEDouble( recBuf, mPos );
+      else
+        m = Double.NaN;
 
       points[i] = new SHPPointz( x, y, z, m );
     }
@@ -94,8 +99,13 @@ public class SHPMultiPointz implements ISHPMultiPoint
     final int zOffset = offset + numPoints * 16;
     final SHPRange zrange = new SHPRange( recBuf, zOffset );
 
+    // REMARK: m values seem to be optional, although this is not really described in the white paper
+    final SHPRange mrange;
     final int mOffset = offset + numPoints * 16 + 16 + 8 * numPoints;
-    final SHPRange mrange = new SHPRange( recBuf, mOffset );
+    if( mOffset < recBuf.length )
+      mrange = new SHPRange( recBuf, mOffset );
+    else
+      mrange = null;
 
     return new SHPMultiPointz( envelope, points, zrange, mrange );
   }
