@@ -162,7 +162,8 @@ public class ZmlChartSelectionChangedHandler extends AbstractChartSelectionListe
         if( layer instanceof ZmlSelectionLayer )
         {
           final ZmlSelectionLayer selection = (ZmlSelectionLayer) layer;
-          selection.setSelection( row.getIndex() );
+          if( row != null )
+            selection.setSelection( row.getIndex() );
         }
 
         return true;

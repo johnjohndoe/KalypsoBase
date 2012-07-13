@@ -45,6 +45,7 @@ import java.net.URL;
 import org.eclipse.swt.graphics.GC;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.SensorException;
@@ -145,7 +146,11 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
     if( observation == null )
       return m_labelDescriptor;
 
-    return ObservationTokenHelper.replaceTokens( m_labelDescriptor, observation, getDataHandler().getValueAxis() );
+    final IAxis valueAxis = getDataHandler().getValueAxis();
+    if( valueAxis == null )
+      return m_labelDescriptor;
+
+    return ObservationTokenHelper.replaceTokens( m_labelDescriptor, observation, valueAxis );
   }
 
   @Override
