@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import de.openali.odysseus.chart.framework.exception.MalformedValueException;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
+import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 
 public class CalendarDataOperator extends AbstractDataOperator<Calendar>
@@ -48,7 +49,7 @@ public class CalendarDataOperator extends AbstractDataOperator<Calendar>
     for( long d = longFixedPoint; d > longVal; d += dirFactor * longIntervalWidth )
       min = longFixedPoint + d;
     max = min + dirFactor * longIntervalWidth;
-    return new ComparableDataRange<Calendar>( new Calendar[] { numericToLogical( Math.min( min, max ) ), numericToLogical( Math.max( min, max ) ) } );
+    return DataRange.createFromComparable( numericToLogical( Math.min( min, max ) ), numericToLogical( Math.max( min, max ) ) );
   }
 
   @Override
@@ -89,7 +90,7 @@ public class CalendarDataOperator extends AbstractDataOperator<Calendar>
 
   /**
    * generates a DataRange beginning today at 0:00 and ending tomorrow 0:00
-   * 
+   *
    * @see org.kalypso.chart.framework.model.data.IDataOperator#getDefaultRange()
    */
   public IDataRange<Calendar> getDefaultRange( )
@@ -107,7 +108,7 @@ public class CalendarDataOperator extends AbstractDataOperator<Calendar>
     tomorrow.set( Calendar.MILLISECOND, 0 );
     tomorrow.add( Calendar.DAY_OF_MONTH, 1 );
 
-    return new ComparableDataRange<Calendar>( new Calendar[] { today, tomorrow } );
+    return DataRange.createFromComparable( today, tomorrow );
   }
 
   @Override

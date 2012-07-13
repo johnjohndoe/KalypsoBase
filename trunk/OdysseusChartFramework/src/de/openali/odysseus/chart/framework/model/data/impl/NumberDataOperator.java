@@ -6,6 +6,7 @@ import java.text.NumberFormat;
 import java.util.Comparator;
 
 import de.openali.odysseus.chart.framework.exception.MalformedValueException;
+import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 
 public class NumberDataOperator extends AbstractDataOperator<Number>
@@ -36,8 +37,7 @@ public class NumberDataOperator extends AbstractDataOperator<Number>
     }
     max = min + dirFactor * doubleIntervalWidth;
 
-    final IDataRange<Number> dataRange = new ComparableDataRange<Number>( new Number[] { min, max } );
-    return dataRange;
+    return DataRange.createFromComparable( (Number) min, (Number) max );
   }
 
   @Override
