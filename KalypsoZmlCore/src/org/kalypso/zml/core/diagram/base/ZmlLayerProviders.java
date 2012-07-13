@@ -69,6 +69,9 @@ public final class ZmlLayerProviders
 
   public static IAxis getValueAxis( final IObsProvider provider, final String type )
   {
+    if( provider == null )
+      return null;
+
     final IAxis[] axes = provider.getObservation().getAxes();
     return AxisUtils.findAxis( axes, type );
   }
