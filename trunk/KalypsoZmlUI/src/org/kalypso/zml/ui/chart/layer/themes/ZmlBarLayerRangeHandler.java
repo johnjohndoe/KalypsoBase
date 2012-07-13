@@ -106,8 +106,11 @@ class ZmlBarLayerRangeHandler
       Date min = (Date) range.getLower();
       Date max = (Date) range.getUpper();
 
-      // adjust min, because rainfalls time series values will be rendered int the past
       final IAxis axis = m_layer.getDataHandler().getValueAxis();
+      if( axis == null )
+        return null;
+
+      // adjust min, because rainfalls time series values will be rendered int the past
       if( ITimeseriesConstants.TYPE_RAINFALL.equals( axis.getType() ) )
         min = doAdjustMin( observation, min );
       else if( ITimeseriesConstants.TYPE_POLDER_CONTROL.equals( axis.getType() ) )

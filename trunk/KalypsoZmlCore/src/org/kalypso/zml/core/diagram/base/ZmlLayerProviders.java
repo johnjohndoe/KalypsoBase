@@ -50,6 +50,7 @@ import jregex.RETokenizer;
 
 import org.apache.commons.lang3.StringUtils;
 import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
@@ -72,7 +73,11 @@ public final class ZmlLayerProviders
     if( provider == null )
       return null;
 
-    final IAxis[] axes = provider.getObservation().getAxes();
+    final IObservation observation = provider.getObservation();
+    if( observation == null )
+      return null;
+
+    final IAxis[] axes = observation.getAxes();
     return AxisUtils.findAxis( axes, type );
   }
 
