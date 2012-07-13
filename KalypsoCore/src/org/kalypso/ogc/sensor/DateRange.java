@@ -250,7 +250,7 @@ public class DateRange implements Comparable<DateRange>
     if( m_from.after( other.m_from ) )
       return false;
 
-    if( m_to.after( other.m_to ) )
+    if( m_to.before( other.m_to ) )
       return false;
 
     return true;
