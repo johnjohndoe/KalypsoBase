@@ -13,9 +13,9 @@ import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.TupleResult;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
+import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
@@ -50,7 +50,7 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
     // FIXME: bad and ugly hack: getDomainRange must return numeric values
     final Number numericMin = toNumeric( min );
     final Number numericMax = toNumeric( max );
-    return new DataRange<Number>( numericMin, numericMax );
+    return DataRange.create( numericMin, numericMax );
   }
 
   // FIXME: awful -> should not be necessary!
