@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
+import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 import de.openali.odysseus.chart.framework.model.event.IMapperEventListener;
 import de.openali.odysseus.chart.framework.model.event.IMapperRegistryEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractMapperEventListener;
@@ -232,7 +232,7 @@ public class MapperRegistry implements IMapperRegistry
     for( final IAxis axis : axes )
     {
       final IDataRange<Number> nr = axis.getNumericRange();
-      axisMap.put( axis, new ComparableDataRange<Number>( new Number[] { nr.getMin(), nr.getMax() } ) );
+      axisMap.put( axis, DataRange.createFromComparable( nr.getMin(), nr.getMax() ) );
     }
     return axisMap;
   }

@@ -1,7 +1,6 @@
 package de.openali.odysseus.chart.framework.model.mapper;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRangeRestriction;
 import de.openali.odysseus.chart.framework.model.impl.IAxisVisitorBehavior;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
@@ -127,10 +126,9 @@ public interface IAxis extends IMapper
 
   void setVisible( final boolean visible );
 
-  void setSelection( DataRange<Number> range );
+  void setSelection( IDataRange<Number> range );
 
-  DataRange<Number> getSelection( );
+  IDataRange<Number> getSelection( );
 
   IAxisVisitorBehavior getAxisVisitorBehavior( );
-
 }

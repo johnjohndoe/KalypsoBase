@@ -43,8 +43,8 @@ package de.openali.odysseus.chart.framework.model.impl.visitors;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.graphics.Point;
 
+import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 import de.openali.odysseus.chart.framework.model.impl.IAxisVisitorBehavior;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
@@ -100,7 +100,7 @@ public class PanToVisitor implements IAxisVisitor
     newmin = initRange.getMin().doubleValue() + diff;
     newmax = initRange.getMax().doubleValue() + diff;
 
-    final IDataRange<Number> newRange = new ComparableDataRange<Number>( new Number[] { new Double( newmin ), new Double( newmax ) } );
+    final IDataRange<Number> newRange = DataRange.createFromComparable( (Number) newmin, (Number) newmax );
     axis.setNumericRange( newRange );
   }
 }

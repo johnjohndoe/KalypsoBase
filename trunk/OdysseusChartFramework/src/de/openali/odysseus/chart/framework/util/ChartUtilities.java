@@ -7,8 +7,8 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
@@ -74,7 +74,7 @@ public final class ChartUtilities
       max = Math.max( max, eltMax );
     }
 
-    return new ComparableDataRange<Number>( new Number[] { min, max } );
+    return DataRange.createFromComparable( (Number) min, (Number) max );
   }
 
   /**
@@ -113,7 +113,7 @@ public final class ChartUtilities
       }
     }
 
-    return new ComparableDataRange<Integer>( new Integer[] { min, max } );
+    return DataRange.createFromComparable( min, max );
   }
 
   /**

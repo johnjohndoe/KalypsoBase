@@ -45,8 +45,8 @@ import java.util.List;
 
 import org.kalypso.commons.exception.CancelVisitorException;
 
+import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor2;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
@@ -133,30 +133,6 @@ public class AxisRangeVisitor implements IChartLayerVisitor2
       return null;
 
     // otherwise, we use a default range
-    return new ComparableDataRange<Number>( new Number[] { 0, 1 } );
+    return DataRange.createFromComparable( (Number) 0, (Number) 1 );
   }
-
-// private IDataRange<Number>[] toNumeric( final IAxis axis, final IDataRange< ? >[] chartRanges )
-// {
-// final IDataRange<Number>[] numericRanges = new IDataRange[chartRanges.length];
-//
-// // FIXME: awful design, needs to be fixed: the axis should know which data type it works on, we cannot decide it
-// // from outside!
-// // It MUST be possible to calc the numeric values from a generic axis!
-//
-// final IDataOperator<Object> dataOperator = axis.getDataOperator( null );
-//
-// for( int i = 0; i < numericRanges.length; i++ )
-// {
-// final IDataRange< ? > logicalRange = chartRanges[i];
-//
-// final Number numMin = dataOperator.logicalToNumeric( logicalRange.getMin() );
-// final Number numMax = dataOperator.logicalToNumeric( logicalRange.getMax() );
-//
-// numericRanges[i] = new DataRange<Number>( numMin, numMax );
-// }
-//
-// return numericRanges;
-// }
-
 }
