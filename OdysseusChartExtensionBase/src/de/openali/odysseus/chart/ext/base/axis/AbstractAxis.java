@@ -6,8 +6,8 @@ import java.util.List;
 
 import org.apache.commons.lang3.ObjectUtils;
 
+import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRangeRestriction;
 import de.openali.odysseus.chart.framework.model.impl.AxisVisitorBehavior;
 import de.openali.odysseus.chart.framework.model.impl.IAxisVisitorBehavior;
@@ -32,11 +32,11 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
 
   private int m_height = 1;
 
-  private DataRange<Number> m_activeRange = null;
+  private IDataRange<Number> m_activeRange = null;
 
   private final List<TitleTypeBean> m_axisLabels = new ArrayList<TitleTypeBean>();
 
-  private IDataRange<Number> m_numericRange = new DataRange<Number>( null, null );
+  private IDataRange<Number> m_numericRange = DataRange.create( null, null );
 
   private final POSITION m_pos;
 
@@ -174,8 +174,8 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     if( !getLabel().equals( label ) )
     {
       m_axisLabels.clear();
-      m_axisLabels.add( ChartLabelRendererFactory.getAxisLabelType( getPosition(), label, new Insets( 1, 1, 1, 1 ), null ) );// new
-// TitleTypeBean( label ) );
+      m_axisLabels.add( ChartLabelRendererFactory.getAxisLabelType( getPosition(), label, new Insets( 1, 1, 1, 1 ), null ) );
+
       fireMapperChanged( this );
     }
   }
@@ -189,7 +189,7 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     if( rangeMax == m_numericRange.getMax() && rangeMin == m_numericRange.getMin() )
       return;
     if( rangeMin == null || rangeMax == null )
-      m_numericRange = new DataRange<Number>( rangeMin, rangeMax );
+      m_numericRange = DataRange.create( rangeMin, rangeMax );
     else
       m_numericRange = validateDataRange( range, getRangeRestriction() );
 
@@ -291,21 +291,21 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
       final double delta = newRangeSize - newRestrictionMaxRange;
       final double min = Math.max( newRangeMin + delta / 2.0, newRestrictionMin );
       final double max = Math.min( min + newRestrictionMaxRange, newRestrictionMax );
-      return new DataRange<Number>( min, max );
+      return DataRange.create( (Number) min, (Number) max );
     }
     if( newRangeSize < newRestrictionMinRange )
     {
       final double delta = newRestrictionMinRange - newRangeSize;
       final double min = Math.max( newRangeMin - delta / 2.0, newRestrictionMin );
       final double max = Math.min( min + newRestrictionMinRange, newRestrictionMax );
-      return new DataRange<Number>( min, max );
+      return DataRange.create( (Number) min, (Number) max );
     }
 
-    return new DataRange<Number>( newRangeMin, newRangeMax );
+    return DataRange.create( (Number) newRangeMin, (Number) newRangeMax );
   }
 
   @Override
-  public void setSelection( final DataRange<Number> range )
+  public void setSelection( final IDataRange<Number> range )
   {
     if( ObjectUtils.equals( m_activeRange, range ) )
       return;
@@ -316,7 +316,7 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
   }
 
   @Override
-  public DataRange<Number> getSelection( )
+  public IDataRange<Number> getSelection( )
   {
     return m_activeRange;
   }

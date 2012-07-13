@@ -7,10 +7,10 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
+import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.ITabularDataContainer;
-import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
@@ -77,7 +77,7 @@ public class DefaultLineLayer extends AbstractLineLayer
     if( domainRange == null )
       return null;
     final IDataOperator dop = new DataOperatorHelper().getDataOperator( getDomainAxis().getDataClass() );
-    return new DataRange<Number>( dop.logicalToNumeric( domainRange.getMin() ), dop.logicalToNumeric( domainRange.getMax() ) );
+    return DataRange.create( dop.logicalToNumeric( domainRange.getMin() ), dop.logicalToNumeric( domainRange.getMax() ) );
   }
 
   @Override
@@ -88,6 +88,6 @@ public class DefaultLineLayer extends AbstractLineLayer
     if( targetRange == null )
       return null;
     final IDataOperator top = new DataOperatorHelper().getDataOperator( getTargetAxis().getDataClass() );
-    return new DataRange<Number>( top.logicalToNumeric( targetRange.getMin() ), top.logicalToNumeric( targetRange.getMax() ) );
+    return DataRange.create( top.logicalToNumeric( targetRange.getMin() ), top.logicalToNumeric( targetRange.getMax() ) );
   }
 }

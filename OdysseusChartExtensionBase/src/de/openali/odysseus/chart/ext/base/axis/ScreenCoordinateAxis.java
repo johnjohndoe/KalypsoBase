@@ -1,7 +1,7 @@
 package de.openali.odysseus.chart.ext.base.axis;
 
+import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.IScreenAxis;
 
@@ -15,9 +15,6 @@ public class ScreenCoordinateAxis extends AbstractAxis implements IScreenAxis
     super( id, pos, Double.class, null );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.ext.base.axis.AbstractAxis#isVisible()
-   */
   @Override
   public boolean isVisible( )
   {
@@ -25,9 +22,6 @@ public class ScreenCoordinateAxis extends AbstractAxis implements IScreenAxis
     return false;
   }
 
-  /**
-   * @see org.kalypso.chart.framework.model.mapper.IAxis#getNumericRange()
-   */
   @Override
   public IDataRange<Number> getNumericRange( )
   {
@@ -49,9 +43,6 @@ public class ScreenCoordinateAxis extends AbstractAxis implements IScreenAxis
     return screenToNormalized( value );
   }
 
-  /**
-   * @see org.kalypso.chart.framework.model.mapper.IAxis#setNumericRange(org.kalypso.chart.framework.model.data.IDataRange)
-   */
   @SuppressWarnings("rawtypes")
   @Override
   public void setNumericRange( final IDataRange range )

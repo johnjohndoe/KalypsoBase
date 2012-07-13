@@ -14,8 +14,8 @@ import de.openali.odysseus.chart.ext.base.data.AbstractDomainValueFileData;
 import de.openali.odysseus.chart.ext.base.layer.DefaultLineLayer;
 import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
+import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
 /**
@@ -104,13 +104,13 @@ public class CSVLineLayerProvider extends AbstractLayerProvider
       @Override
       public IDataRange getDomainRange( )
       {
-        return new ComparableDataRange<Object>( getDomainValues() );
+        return DataRange.createFromComparable( getDomainValues() );
       }
 
       @Override
       public IDataRange getTargetRange( )
       {
-        return new ComparableDataRange<Object>( getTargetValues() );
+        return DataRange.createFromComparable( getTargetValues() );
       }
 
     };

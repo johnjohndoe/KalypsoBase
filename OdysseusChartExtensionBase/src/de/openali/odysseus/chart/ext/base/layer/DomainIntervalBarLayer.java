@@ -5,9 +5,9 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.ext.base.data.AbstractDomainIntervalValueData;
+import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
@@ -62,7 +62,6 @@ public class DomainIntervalBarLayer extends AbstractBarLayer
   }
 
   @Override
-  @SuppressWarnings({ "unchecked", "rawtypes" })
   public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
   {
     final IDataRange< ? > targetRange = getDataContainer().getTargetRange();
@@ -70,21 +69,16 @@ public class DomainIntervalBarLayer extends AbstractBarLayer
     if( targetRange == null )
       return null;
     final IDataOperator dop = new DataOperatorHelper().getDataOperator( getTargetAxis().getDataClass() );
-    return new DataRange<Number>( dop.logicalToNumeric( targetRange.getMin() ), dop.logicalToNumeric( targetRange.getMax() ) );
+    return DataRange.create( dop.logicalToNumeric( targetRange.getMin() ), dop.logicalToNumeric( targetRange.getMax() ) );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#getDomainRange()
-   */
   @Override
-  @SuppressWarnings({ "unchecked", "rawtypes" })
   public IDataRange< ? > getDomainRange( )
   {
     final IDataRange< ? > domainRange = getDataContainer().getDomainRange();
     if( domainRange == null )
       return null;
     final IDataOperator dop = new DataOperatorHelper().getDataOperator( getDomainAxis().getDataClass() );
-    return new DataRange<Number>( dop.logicalToNumeric( domainRange.getMin() ), dop.logicalToNumeric( domainRange.getMax() ) );
+    return DataRange.create( dop.logicalToNumeric( domainRange.getMin() ), dop.logicalToNumeric( domainRange.getMax() ) );
   }
-
 }
