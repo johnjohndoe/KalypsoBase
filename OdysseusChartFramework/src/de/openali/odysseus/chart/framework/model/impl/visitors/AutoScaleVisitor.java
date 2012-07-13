@@ -41,8 +41,8 @@
 package de.openali.odysseus.chart.framework.model.impl.visitors;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 import de.openali.odysseus.chart.framework.model.impl.IAxisVisitorBehavior;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisAdjustment;
@@ -115,7 +115,7 @@ public class AutoScaleVisitor implements IAxisVisitor
     final double newMin = rangeMin - rangeSize * adjBefore / adjRange;
     final double newMax = rangeMax + rangeSize * adjAfter / adjRange;
 
-    return new ComparableDataRange<Number>( new Number[] { newMin, newMax } );
+    return DataRange.createFromComparable( (Number) newMin, (Number) newMax );
   }
 
   private IDataRange<Number> getChartRanges( final IAxis axis )

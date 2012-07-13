@@ -42,8 +42,8 @@ package de.openali.odysseus.chart.framework.model.impl.visitors;
 
 import org.eclipse.swt.graphics.Point;
 
+import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 import de.openali.odysseus.chart.framework.model.impl.IAxisVisitorBehavior;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IAxisVisitor;
@@ -126,7 +126,7 @@ public class ZoomOutVisitor implements IAxisVisitor
         final double newFrom = oldmin - Math.abs( from - oldmin ) / oldrange * newrange;
         final double newTo = oldmax + Math.abs( to - oldmax ) / oldrange * newrange;
 
-        axis.setNumericRange( new ComparableDataRange<Number>( new Number[] { new Double( newFrom ), new Double( newTo ) } ) );
+        axis.setNumericRange( DataRange.createFromComparable( (Number) new Double( newFrom ), (Number) new Double( newTo ) ) );
       }
     }
   }
