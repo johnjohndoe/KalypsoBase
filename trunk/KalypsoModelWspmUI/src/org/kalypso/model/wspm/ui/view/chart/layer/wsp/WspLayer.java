@@ -60,8 +60,8 @@ import org.kalypso.model.wspm.ui.view.chart.layer.wsp.utils.WaterLevelFilter;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
+import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.DataRange;
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
@@ -72,7 +72,7 @@ import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 
 /**
  * Displays constant wsp lines in the cross section.
- * 
+ *
  * @author Gernot Belger
  * @author Holger Albert
  */
@@ -146,7 +146,7 @@ public class WspLayer extends AbstractProfilTheme
 
   /**
    * This function returns the wsp layer data.
-   * 
+   *
    * @return The wsp layer data.
    */
   public IWspLayerData getData( )
@@ -207,7 +207,7 @@ public class WspLayer extends AbstractProfilTheme
 
     final Double min = values.first();
     final Double max = values.last();
-    return new DataRange<Number>( min, max );
+    return DataRange.create( min, max );
   }
 
   @Override
