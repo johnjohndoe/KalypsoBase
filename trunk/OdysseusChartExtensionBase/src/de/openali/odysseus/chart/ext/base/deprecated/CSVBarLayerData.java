@@ -52,8 +52,8 @@ import java.util.List;
 import java.util.TimeZone;
 
 import de.openali.odysseus.chart.ext.base.data.AbstractDomainIntervalValueData;
+import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.impl.ComparableDataRange;
 
 /**
  * @author Gernot Belger
@@ -213,12 +213,12 @@ final class CSVBarLayerData extends AbstractDomainIntervalValueData
       merged[i] = domainStart[i];
       merged[i + domainStart.length] = domainEnd[i];
     }
-    return new ComparableDataRange<Object>( merged );
+    return DataRange.createFromComparable( merged );
   }
 
   @Override
   public IDataRange<Object> getTargetRange( )
   {
-    return new ComparableDataRange<Object>( getTargetValues() );
+    return DataRange.createFromComparable( getTargetValues() );
   }
 }

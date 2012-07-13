@@ -11,7 +11,6 @@ import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
  */
 public class ArrayContentAxis extends AbstractAxis
 {
-
   private IAxisContentProvider m_contentProvider = null;
 
   private int m_fixedWidth = -1;
@@ -19,7 +18,6 @@ public class ArrayContentAxis extends AbstractAxis
   public ArrayContentAxis( final String id, final IAxisContentProvider contentProvider, final int fixedWidth )
   {
     this( id, POSITION.BOTTOM, contentProvider, fixedWidth );
-
   }
 
   public ArrayContentAxis( final String id, final POSITION position, final IAxisRenderer axisRenderer, final IAxisContentProvider contentProvider, final int fixedWidth )

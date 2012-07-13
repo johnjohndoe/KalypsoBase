@@ -410,29 +410,18 @@ public class OrdinalAxisRenderer_obsolete implements IAxisRenderer
 
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer#setData(java.lang.String,
-   *      java.lang.Object)
-   */
   @Override
   public void setData( final String identifier, final Object data )
   {
     m_dataMap.put( identifier, data );
-
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer#setLabelStyle(de.openali.odysseus.chart.framework.model.style.ITextStyle)
-   */
   @Override
   public void setLabelStyle( final ITextStyle style )
   {
     m_labelRenderer.getTitleTypeBean().setTextStyle( style );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer#setTickLabelStyle(de.openali.odysseus.chart.framework.model.style.ITextStyle)
-   */
   @Override
   public void setTickLabelStyle( final ITextStyle style )
   {
@@ -446,13 +435,9 @@ public class OrdinalAxisRenderer_obsolete implements IAxisRenderer
     m_tickStyle = tickStyle;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer#getLineStyle()
-   */
   @Override
   public ILineStyle getLineStyle( )
   {
     return m_config.axisLineStyle;
   }
-
 }
