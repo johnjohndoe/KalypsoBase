@@ -421,6 +421,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   @Override
   public FeatureList getFeatureListVisible( final GM_Envelope searchEnvelope )
   {
+    if( m_featureList == null )
+      return null;
+
     return m_visibleFeaturesCache.getVisibleFeatures( searchEnvelope );
   }
 
