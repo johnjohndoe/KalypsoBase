@@ -47,6 +47,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
@@ -185,7 +186,7 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
   }
 
   @Override
-  public void paint( final GC gc )
+  public void paint( final GC gc, IProgressMonitor monitor )
   {
     try
     {

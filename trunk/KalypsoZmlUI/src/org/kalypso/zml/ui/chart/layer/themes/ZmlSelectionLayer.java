@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.commons.java.lang.Objects;
@@ -84,7 +85,7 @@ public class ZmlSelectionLayer extends AbstractChartLayer
   }
 
   @Override
-  public void paint( final GC gc )
+  public void paint( final GC gc, IProgressMonitor monitor )
   {
     if( Objects.allNull( m_selection, m_selectedDateRange ) )
       return;

@@ -40,17 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.themes;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.eclipse.swt.graphics.GC;
-
 import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
 import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
-import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
-import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
 
 /**
@@ -76,34 +70,33 @@ public class ZmlThemeBackGroundRaster extends AbstractChartLayer
     return false;
   }
 
-  @Override
-  public void paint( final GC gc )
-  {
-    final IMapperRegistry registry = m_model.getMapperRegistry();
-    final IAxis[] axes = registry.getAxes();
-    final IAxis targetAxis = findTargetAxis( axes );
-
-    /**
-     * don't draw multiple background grids - first visible child layer (grid) wins
-     */
-    final IChartLayer[] layers = getLayerManager().getLayers();
-    for( final IChartLayer layer : layers )
-    {
-
-      final ICoordinateMapper mapper = layer.getCoordinateMapper();
-      final IAxis layerTargetAxis = mapper.getTargetAxis();
-
-      if( equals( targetAxis, layerTargetAxis ) )
-      {
-        layer.paint( gc );
-        return;
-      }
-    }
-
-    if( ArrayUtils.isNotEmpty( layers ) )
-      layers[0].paint( gc );
-
-  }
+  // FIXME: strange code, not clear what it really does. Solve in a different way
+// @Override
+// public void paint( final GC gc, final IProgressMonitor monitor )
+// {
+// final IMapperRegistry registry = m_model.getMapperRegistry();
+// final IAxis[] axes = registry.getAxes();
+// final IAxis targetAxis = findTargetAxis( axes );
+//
+// /**
+// * don't draw multiple background grids - first visible child layer (grid) wins
+// */
+// final IChartLayer[] layers = getLayerManager().getLayers();
+// for( final IChartLayer layer : layers )
+// {
+// final ICoordinateMapper mapper = layer.getCoordinateMapper();
+// final IAxis layerTargetAxis = mapper.getTargetAxis();
+//
+// if( equals( targetAxis, layerTargetAxis ) )
+// {
+// layer.paint( gc, xxx );
+// return;
+// }
+// }
+//
+// if( ArrayUtils.isNotEmpty( layers ) )
+// layers[0].paint( gc, xxx );
+// }
 
   private boolean equals( final IAxis a1, final IAxis a2 )
   {
@@ -122,11 +115,12 @@ public class ZmlThemeBackGroundRaster extends AbstractChartLayer
     for( final IAxis axis : axes )
     {
       if( axis.isVisible() )
+      {
         if( ORIENTATION.VERTICAL.equals( axis.getPosition().getOrientation() ) )
           lastTargetAxis = axis;
+      }
     }
 
     return lastTargetAxis;
   }
-
 }

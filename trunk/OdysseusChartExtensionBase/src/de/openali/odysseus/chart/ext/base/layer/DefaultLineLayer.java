@@ -3,6 +3,7 @@ package de.openali.odysseus.chart.ext.base.layer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 
@@ -30,7 +31,7 @@ public class DefaultLineLayer extends AbstractLineLayer
   }
 
   @Override
-  public void paint( final GC gc )
+  public void paint( final GC gc, IProgressMonitor monitor )
   {
     final ITabularDataContainer< ? , ? > dataContainer = getDataContainer();
     if( dataContainer == null )

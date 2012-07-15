@@ -44,8 +44,12 @@ import java.awt.geom.Rectangle2D;
 import java.net.URL;
 import java.util.Date;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
+import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.DateRange;
@@ -161,7 +165,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   @Override
   public IDataRange<Number> getTargetRange( final IDataRange< ? > domainIntervall )
   {
-    return m_range.getTargetRange( (IDataRange<Number>) domainIntervall );
+    return m_range.getTargetRange();
   }
 
   @Override
@@ -182,15 +186,21 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   }
 
   @Override
-  public void paint( final GC gc )
+  public void paint( final GC gc, final IProgressMonitor monitor )
   {
     try
     {
-      final IPair<Number, Number>[] points = getFilteredPoints( null );
+      monitor.beginTask( "Painting line layer", 100 );
+
+      final IPair<Number, Number>[] points = getFilteredPoints( null, new SubProgressMonitor( monitor, 50 ) );
       if( points.length == 1 )
         paintSinglePoint( gc, points[0] );
       else if( points.length > 1 )
-        paintPoints( gc, points );
+        paintPoints( gc, points, new SubProgressMonitor( monitor, 50 ) );
+    }
+    catch( final CancelVisitorException e )
+    {
+      throw new OperationCanceledException();
     }
     catch( final SensorException e )
     {
@@ -199,13 +209,13 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   }
 
   @SuppressWarnings("unchecked")
-  IPair<Number, Number>[] getFilteredPoints( final IDataRange<Number> domainIntervall ) throws SensorException
+  IPair<Number, Number>[] getFilteredPoints( final IDataRange<Number> domainIntervall, final IProgressMonitor monitor ) throws SensorException
   {
     final IObservation observation = (IObservation) m_dataHandler.getAdapter( IObservation.class );
     if( observation == null )
       return new IPair[0];
 
-    final LineLayerModelVisitor visitor = new LineLayerModelVisitor( this, getFilters(), domainIntervall );
+    final LineLayerModelVisitor visitor = new LineLayerModelVisitor( this, getFilters(), domainIntervall, monitor );
     observation.accept( visitor, m_dataHandler.getRequest(), 1 );
 
     return visitor.getPoints();
@@ -230,7 +240,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     pf.paint( gc );
   }
 
-  private void paintPoints( final GC gc, final IPair<Number, Number>[] points )
+  private void paintPoints( final GC gc, final IPair<Number, Number>[] points, final IProgressMonitor monitor )
   {
     final ClipHelper helper = new ClipHelper( getClip() );
     final IPair<Number, Number>[][] clippedPoints = helper.clipAsLine( points );
@@ -238,6 +248,9 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     {
       final Point[] screenPoints = toScreen( subPoints );
       paintFigures( gc, screenPoints );
+
+      if( monitor.isCanceled() )
+        throw new OperationCanceledException();
     }
   }
 
@@ -368,7 +381,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     return m_lineStyle;
   }
 
-  private Point[] toScreen( final IPair<Number, Number>... points )
+  private Point[] toScreen( @SuppressWarnings("unchecked") final IPair<Number, Number>... points )
   {
     final ICoordinateMapper coordinateMapper = getCoordinateMapper();
     final Point[] screenPoints = new Point[points.length];

@@ -3,6 +3,7 @@ package de.openali.odysseus.chart.ext.base.layer;
 import java.util.ArrayList;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -201,7 +202,7 @@ public class GridLayer extends AbstractChartLayer
    *      org.eclipse.swt.graphics.Device)
    */
   @Override
-  public void paint( final GC gc )
+  public void paint( final GC gc, IProgressMonitor monitor )
   {
 
     gc.setLineWidth( 5 );

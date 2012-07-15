@@ -42,7 +42,10 @@ package org.kalypso.zml.ui.chart.layer.themes;
 
 import java.net.URL;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.swt.graphics.GC;
+import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IAxis;
@@ -162,7 +165,7 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
   }
 
   @Override
-  public void paint( final GC gc )
+  public void paint( final GC gc, final IProgressMonitor monitor )
   {
     try
     {
@@ -174,8 +177,12 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
 
       final ICoordinateMapper mapper = getCoordinateMapper();
 
-      final ZmlBarLayerVisitor visitor = new ZmlBarLayerVisitor( mapper, m_range, gc, figure, observation );
+      final ZmlBarLayerVisitor visitor = new ZmlBarLayerVisitor( mapper, m_range, gc, figure, observation, monitor );
       observation.accept( visitor, m_handler.getRequest(), 1 );
+    }
+    catch( final CancelVisitorException e )
+    {
+      throw new OperationCanceledException();
     }
     catch( final SensorException e )
     {

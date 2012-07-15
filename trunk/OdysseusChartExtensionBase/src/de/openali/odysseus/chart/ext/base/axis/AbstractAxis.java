@@ -312,6 +312,9 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
 
     m_activeRange = range;
 
+    // FIXME: generally repainting the chart is bad; only elements that really paint the range should be informed and
+    // those should trigger a paint event (i.e. the selection layer)
+
     fireMapperChanged( this );
   }
 

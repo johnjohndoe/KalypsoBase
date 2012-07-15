@@ -47,7 +47,6 @@ import org.kalypso.model.wspm.core.profil.IProfil;
  */
 public class ComponentLayer extends AbstractProfilLayer
 {
-
   private final boolean m_isAutoScale;
 
   public ComponentLayer( final IProfil profil, final String targetRangeProperty )
@@ -61,13 +60,9 @@ public class ComponentLayer extends AbstractProfilLayer
     m_isAutoScale = isAutoScale;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.factory.layer.AbstractChartLayer#isAutoScale()
-   */
   @Override
   public boolean isAutoScale( )
   {
     return m_isAutoScale;
   }
-
 }

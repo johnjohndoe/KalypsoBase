@@ -43,6 +43,7 @@ package org.kalypso.zml.ui.chart.layer.themes;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -100,7 +101,7 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
   }
 
   @Override
-  public void paint( final GC gc )
+  public void paint( final GC gc, IProgressMonitor monitor )
   {
     if( m_provider == null )
       return;

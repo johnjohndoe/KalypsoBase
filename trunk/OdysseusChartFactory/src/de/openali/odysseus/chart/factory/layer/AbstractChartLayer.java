@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.kalypso.commons.java.lang.Objects;
 
@@ -41,14 +42,6 @@ import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
  */
 public abstract class AbstractChartLayer implements IChartLayer
 {
-  @Override
-  public void init( )
-  {
-    // TODO Auto-generated method stub
-    // FIXME remove from here, this is an abstract class
-
-  }
-
   private ICoordinateMapper m_coordinateMapper;
 
   private final Set<IChartLayerFilter> m_filters = new LinkedHashSet<IChartLayerFilter>();
@@ -137,7 +130,13 @@ public abstract class AbstractChartLayer implements IChartLayer
     {
       m_styleSet = styleSet;
     }
+  }
 
+  @Override
+  public void init( )
+  {
+    // TODO Auto-generated method stub
+    // FIXME remove from here, this is an abstract class
   }
 
   @Override
@@ -330,9 +329,6 @@ public abstract class AbstractChartLayer implements IChartLayer
     return m_legendIsVisible;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#isVisible()
-   */
   @Override
   public boolean isVisible( )
   {
@@ -340,25 +336,13 @@ public abstract class AbstractChartLayer implements IChartLayer
   }
 
   /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
+   * Default implementation does nothing.
    */
   @Override
-  // FIXME the layer should paint itself, nothing else.
-  public void paint( final GC gc )
+  public void paint( final GC gc, final IProgressMonitor monitor )
   {
-    final IChartLayer[] layers = getLayerManager().getLayers();
-    ArrayUtils.reverse( layers );
-
-    for( final IChartLayer layer : layers )
-    {
-      if( layer.isVisible() )
-        layer.paint( gc );
-    }
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#removeFilter(de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter[])
-   */
   @Override
   public void removeFilter( final IChartLayerFilter... filters )
   {
