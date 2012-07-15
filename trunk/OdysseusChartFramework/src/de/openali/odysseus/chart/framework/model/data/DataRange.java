@@ -41,6 +41,8 @@
 package de.openali.odysseus.chart.framework.model.data;
 
 import org.apache.commons.collections.comparators.ComparableComparator;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * @author Gernot Belger
@@ -73,6 +75,33 @@ public class DataRange<T> implements IDataRange<T>
   public String toString( )
   {
     return String.format( "[%s,%s]", m_min, m_max ); //$NON-NLS-1$
+  }
+
+  @Override
+  public int hashCode( )
+  {
+    return new HashCodeBuilder( 17, 7 ).append( m_min ).append( m_max ).toHashCode();
+  }
+
+  @Override
+  public boolean equals( final Object obj )
+  {
+    if( obj == null )
+    {
+      return false;
+    }
+    if( obj == this )
+    {
+      return true;
+    }
+    if( obj.getClass() != getClass() )
+    {
+      return false;
+    }
+
+    final DataRange< ? > other = (DataRange< ? >) obj;
+
+    return new EqualsBuilder().append( m_min, other.m_min ).append( m_min, other.m_min ).isEquals();
   }
 
   // FIXME: dieser ganze ausgleichskram gehört nicht in diese Klasse! -> das sollte dort (vielleich mit Hilfer einer
