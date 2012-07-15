@@ -45,6 +45,8 @@ import java.util.Collection;
 import java.util.Date;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.DateRange;
@@ -81,11 +83,14 @@ public class LineLayerModelVisitor implements IObservationVisitor
 
   private Date m_from;
 
-  public LineLayerModelVisitor( final ZmlLineLayer layer, final IChartLayerFilter[] filters, final IDataRange<Number> domainIntervall )
+  private final IProgressMonitor m_monitor;
+
+  public LineLayerModelVisitor( final ZmlLineLayer layer, final IChartLayerFilter[] filters, final IDataRange<Number> domainIntervall, final IProgressMonitor monitor )
   {
     m_layer = layer;
     m_filters = filters;
     m_domainIntervall = domainIntervall;
+    m_monitor = monitor;
   }
 
   private IAxis getValueAxis( )
@@ -115,6 +120,9 @@ public class LineLayerModelVisitor implements IObservationVisitor
   @Override
   public void visit( final IObservationValueContainer container )
   {
+    if( m_monitor.isCanceled() )
+      throw new CancelVisitorException();
+
     try
     {
       final IAxis dateAxis = getDateAxis();

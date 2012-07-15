@@ -326,16 +326,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
   }
 
   @Override
-  public void paint( final GC gc )
-  {
-    for( final IChartLayer layer : getLayerManager().getLayers() )
-      if( layer.isVisible() )
-      {
-        layer.paint( gc );
-      }
-  }
-
-  @Override
   public void removeYourself( )
   {
     throw new UnsupportedOperationException( Messages.getString( "org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme.0" ) ); //$NON-NLS-1$

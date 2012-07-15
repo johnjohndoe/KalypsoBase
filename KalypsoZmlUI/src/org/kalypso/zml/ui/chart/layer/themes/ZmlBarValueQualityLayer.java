@@ -46,6 +46,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.Range;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 import org.joda.time.Period;
@@ -68,7 +69,7 @@ import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
 /**
  * @author Dirk Kuch
  */
-public class ZmlBarValueQualityLayer extends AbstractBarLayer implements IChartLayer
+public class ZmlBarValueQualityLayer extends AbstractBarLayer
 {
   public ZmlBarValueQualityLayer( final ILayerProvider provider, final IStyleSet styleSet )
   {
@@ -102,7 +103,7 @@ public class ZmlBarValueQualityLayer extends AbstractBarLayer implements IChartL
   }
 
   @Override
-  public void paint( final GC gc )
+  public void paint( final GC gc, IProgressMonitor monitor )
   {
     if( isStuetzstellenMode() )
       paintStuetzstellen( gc );

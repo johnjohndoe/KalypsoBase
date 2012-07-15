@@ -3,6 +3,7 @@ package org.kalypso.chart.ext.observation.layer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -187,7 +188,7 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
   }
 
   @Override
-  public void paint( final GC gc )
+  public void paint( final GC gc, IProgressMonitor monitor )
   {
     final TupleResultDomainValueData< ? , ? > data = getValueData();
     if( data == null )

@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart.layer;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -92,11 +93,8 @@ public class StationLineLayer extends ComponentLayer
     return Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.StationLineLayer.1" ); //$NON-NLS-1$
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
-   */
   @Override
-  public void paint( final GC gc )
+  public void paint( final GC gc, final IProgressMonitor monitor )
   {
     final IProfil profil = getProfil();
 

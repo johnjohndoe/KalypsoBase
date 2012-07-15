@@ -44,6 +44,7 @@ import java.net.URL;
 import java.util.Date;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.commons.java.lang.Objects;
@@ -161,7 +162,7 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
   }
 
   @Override
-  public void paint( final GC gc )
+  public void paint( final GC gc, IProgressMonitor monitor )
   {
     if( ArrayUtils.isEmpty( m_descriptors ) )
       return;

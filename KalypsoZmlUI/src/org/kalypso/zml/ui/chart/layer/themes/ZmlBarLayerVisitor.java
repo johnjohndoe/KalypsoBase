@@ -42,10 +42,12 @@ package org.kalypso.zml.ui.chart.layer.themes;
 
 import java.util.Date;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.joda.time.Period;
+import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IAxis;
@@ -91,12 +93,15 @@ class ZmlBarLayerVisitor implements IObservationVisitor
 
   final Rectangle m_rectangle = new Rectangle( 0, 0, 0, 0 );
 
-  public ZmlBarLayerVisitor( final ICoordinateMapper mapper, final ZmlBarLayerRangeHandler range, final GC gc, final FullRectangleFigure figure, final IObservation observation )
+  private final IProgressMonitor m_monitor;
+
+  public ZmlBarLayerVisitor( final ICoordinateMapper mapper, final ZmlBarLayerRangeHandler range, final GC gc, final FullRectangleFigure figure, final IObservation observation, final IProgressMonitor monitor )
   {
     m_mapper = mapper;
     m_range = range;
     m_gc = gc;
     m_figure = figure;
+    m_monitor = monitor;
 
     m_figure.setRectangle( m_rectangle );
 
@@ -112,6 +117,9 @@ class ZmlBarLayerVisitor implements IObservationVisitor
   @Override
   public void visit( final IObservationValueContainer container )
   {
+    if( m_monitor.isCanceled() )
+      throw new CancelVisitorException();
+
     try
     {
       final Object domainValue = container.get( m_dateAxis );
@@ -149,7 +157,6 @@ class ZmlBarLayerVisitor implements IObservationVisitor
 
       m_figure.paint( m_gc );
 
-      // FIXME: remove
       m_lastScreenX = screenCurrent.x;
     }
     catch( final Throwable t )

@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.ext.base.layer;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 
@@ -83,7 +84,7 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
    */
   @Override
-  public void paint( final GC gc )
+  public void paint( final GC gc, IProgressMonitor monitor )
   {
     final IAxis targetAxis = getTargetAxis();
     final IAxis domainAxis = getDomainAxis();

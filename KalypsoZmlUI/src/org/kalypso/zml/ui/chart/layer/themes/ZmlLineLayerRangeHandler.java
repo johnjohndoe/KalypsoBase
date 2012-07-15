@@ -46,6 +46,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.pair.IKeyValue;
 import org.kalypso.commons.pair.KeyValueFactory;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -65,24 +66,44 @@ import de.openali.odysseus.chart.framework.util.resource.Pair;
  */
 public class ZmlLineLayerRangeHandler
 {
-  private final ZmlLineLayer m_layer;
-
   private final IDataOperator<Date> m_dateDataOperator = new DataOperatorHelper().getDataOperator( Date.class );
 
   private final IDataOperator<Number> m_numberDataOperator = new DataOperatorHelper().getDataOperator( Number.class );
+
+  private final ZmlLineLayer m_layer;
+
+  private IDataRange<Number> m_domainRange = null;
+
+  private IDataRange<Number> m_targetRange = null;
 
   public ZmlLineLayerRangeHandler( final ZmlLineLayer layer )
   {
     m_layer = layer;
   }
 
-  public IDataRange<Number> getDomainRange( )
+  public synchronized IDataRange<Number> getDomainRange( )
+  {
+    if( m_domainRange == null )
+      recalculateRanges();
+
+    return m_domainRange;
+  }
+
+  public synchronized IDataRange<Number> getTargetRange( )
+  {
+    if( m_targetRange == null )
+      recalculateRanges();
+
+    return m_targetRange;
+  }
+
+  private void recalculateRanges( )
   {
     try
     {
-      final IPair<Number, Number>[] points = getClippedPoints( null );
+      final IPair<Number, Number>[] points = getClippedPoints();
       if( points.length == 0 )
-        return null;
+        return;
 
       final IKeyValue<IPair<Number, Number>, IPair<Number, Number>> minMax = calculateMinMax( points );
       final IPair<Number, Number> min = minMax.getKey();
@@ -91,35 +112,17 @@ public class ZmlLineLayerRangeHandler
       final Number minDomain = min.getDomain();
       final Number maxDomain = max.getDomain();
 
-      return DataRange.create( minDomain, maxDomain );
+      final Number minTarget = min.getTarget();
+      final Number maxTarget = max.getTarget();
+
+      m_domainRange = DataRange.create( minDomain, maxDomain );
+      m_targetRange = DataRange.create( minTarget, maxTarget );
     }
     catch( final SensorException e )
     {
       KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
 
-      return null;
-    }
-  }
-
-  public IDataRange<Number> getTargetRange( final IDataRange<Number> domainIntervall )
-  {
-    try
-    {
-      final IPair<Number, Number>[] points = getClippedPoints( domainIntervall );
-      if( points.length == 0 )
-        return null;
-
-      final IKeyValue<IPair<Number, Number>, IPair<Number, Number>> minMax = calculateMinMax( points );
-      final IPair<Number, Number> min = minMax.getKey();
-      final IPair<Number, Number> max = minMax.getValue();
-
-      return DataRange.create( min.getTarget(), max.getTarget() );
-    }
-    catch( final SensorException e )
-    {
-      KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-
-      return null;
+      return;
     }
   }
 
@@ -142,10 +145,14 @@ public class ZmlLineLayerRangeHandler
 
     for( final IPair<Number, Number> point : points )
     {
-      minX = Math.min( point.getDomain().doubleValue(), minX );
-      minY = Math.min( point.getTarget().doubleValue(), minY );
-      maxX = Math.max( point.getDomain().doubleValue(), maxX );
-      maxY = Math.max( point.getTarget().doubleValue(), maxY );
+      final double domainValue = point.getDomain().doubleValue();
+
+      minX = Math.min( domainValue, minX );
+      maxX = Math.max( domainValue, maxX );
+
+      final double targetValue = point.getTarget().doubleValue();
+      minY = Math.min( targetValue, minY );
+      maxY = Math.max( targetValue, maxY );
     }
 
     minX = Double.isInfinite( minX ) ? null : minX;
@@ -159,9 +166,9 @@ public class ZmlLineLayerRangeHandler
   }
 
   @SuppressWarnings("unchecked")
-  private IPair<Number, Number>[] getClippedPoints( final IDataRange<Number> domainIntervall ) throws SensorException
+  private IPair<Number, Number>[] getClippedPoints( ) throws SensorException
   {
-    final IPair<Number, Number>[] filteredPoints = m_layer.getFilteredPoints( domainIntervall );
+    final IPair<Number, Number>[] filteredPoints = m_layer.getFilteredPoints( null, new NullProgressMonitor() );
     final Rectangle2D clip = m_layer.getClip();
     if( clip == null )
       return filteredPoints;

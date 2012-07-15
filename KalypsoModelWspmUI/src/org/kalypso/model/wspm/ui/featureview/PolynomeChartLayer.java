@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.ui.featureview;
 
 import java.util.ArrayList;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D;
@@ -85,7 +86,7 @@ public class PolynomeChartLayer extends AbstractLineLayer
   }
 
   @Override
-  public void paint( final GC gc )
+  public void paint( final GC gc, IProgressMonitor monitor )
   {
     final IDataRange<Number> domainRange = m_data.getDomainRange();
     final double min = (Double) domainRange.getMin();

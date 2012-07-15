@@ -1,5 +1,6 @@
 package de.openali.odysseus.chart.framework.model.layer;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 
 import de.openali.odysseus.chart.framework.model.ILayerContainer;
@@ -66,7 +67,7 @@ public interface IChartLayer extends ILayerContainer, IEventProvider<ILayerEvent
   /**
    * draws the layer using the given GC and Device
    */
-  void paint( final GC gc );
+  void paint( final GC gc, IProgressMonitor monitor );
 
   void setActive( boolean isActive );
 

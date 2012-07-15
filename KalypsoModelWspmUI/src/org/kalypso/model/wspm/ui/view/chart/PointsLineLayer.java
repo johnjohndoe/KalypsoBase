@@ -44,6 +44,7 @@ import java.awt.geom.Point2D;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -188,7 +189,7 @@ public class PointsLineLayer extends AbstractProfilLayer
   }
 
   @Override
-  public void paint( final GC gc )
+  public void paint( final GC gc, IProgressMonitor monitor )
   {
     final IProfil profil = getProfil();
     if( profil == null )

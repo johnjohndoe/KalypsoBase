@@ -43,6 +43,7 @@ package org.kalypso.zml.ui.chart.layer.themes;
 import java.net.URL;
 import java.util.Date;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.sensor.DateRange;
@@ -108,7 +109,7 @@ public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
   }
 
   @Override
-  public void paint( final GC gc )
+  public void paint( final GC gc, IProgressMonitor monitor )
   {
     // nothing to do
   }
