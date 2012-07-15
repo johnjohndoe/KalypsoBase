@@ -74,6 +74,8 @@ final class ChartRedrawJob extends UIJob
     m_chartPaintJob = chartPaintJob;
 
     addJobChangeListener( m_changeListener );
+
+    setPriority( INTERACTIVE );
   }
 
   @Override
@@ -90,6 +92,6 @@ final class ChartRedrawJob extends UIJob
   void handleJobDone( )
   {
     if( m_chartPaintJob.isDoRedraw() )
-      schedule( 50 );
+      schedule( 100 );
   }
 }
