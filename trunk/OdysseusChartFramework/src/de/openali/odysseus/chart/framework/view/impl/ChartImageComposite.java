@@ -54,7 +54,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
 
   public ChartImageComposite( final Composite parent, final int style, final IChartModel model, final RGB backgroundRGB )
   {
-    super( parent, style | SWT.DOUBLE_BUFFERED );
+    super( parent, style | SWT.DOUBLE_BUFFERED | SWT.NO_MERGE_PAINTS );
 
     addPaintListener( new PaintListener()
     {
@@ -122,11 +122,9 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   @Override
   public void invalidate( )
   {
-    System.out.println( "Invalidate chart" );
-
     m_paintJob.cancel();
 
-    m_paintJob.schedule( 250 );
+    m_paintJob.schedule( 150 );
   }
 
   final void handlePaint( final PaintEvent paintEvent )
