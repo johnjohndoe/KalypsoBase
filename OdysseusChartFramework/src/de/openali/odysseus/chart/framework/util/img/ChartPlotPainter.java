@@ -42,18 +42,15 @@ package de.openali.odysseus.chart.framework.util.img;
 
 import java.awt.Insets;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.swt.graphics.Device;
+import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Transform;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
-import de.openali.odysseus.chart.framework.util.ChartUtilities;
 
 /**
  * @author kimwerner
@@ -70,29 +67,13 @@ public class ChartPlotPainter
     m_size = size;
   }
 
-  public final Image createImage( final IProgressMonitor monitor )
+  private IChartLayer[] getLayersForPaint( )
   {
-    if( m_size == null || m_size.x < 1 || m_size.y < 1 )
-      return null;
-    final Device dev = ChartUtilities.getDisplay();
-    final Image image = new Image( dev, m_size.x, m_size.y );
-    final GC gc = new GC( image );
-    try
-    {
-      paint( gc, new Insets( 0, 0, 0, 0 ), monitor );
-    }
-    finally
-    {
-      gc.dispose();
-    }
-    return image;
-  }
+    final PaintableLayersVisitor collector = new PaintableLayersVisitor();
 
-  private IChartLayer[] getChartLayers( )
-  {
-    final ILayerManager manager = m_chartModel.getLayerManager();
+    m_chartModel.accept( collector );
 
-    return manager.getLayers();
+    return collector.getLayers();
   }
 
   public final Point getSize( )
@@ -102,8 +83,7 @@ public class ChartPlotPainter
 
   public void paint( final GC gc, final Insets plotInsets, final IProgressMonitor monitor )
   {
-    final IChartLayer[] layers = getChartLayers();
-    ArrayUtils.reverse( layers );
+    final IChartLayer[] layers = getLayersForPaint();
 
     final Transform oldTransform = new Transform( gc.getDevice() );
     final Transform transform = new Transform( gc.getDevice() );
@@ -116,16 +96,15 @@ public class ChartPlotPainter
       transform.translate( plotInsets.left, plotInsets.top );
       gc.setTransform( transform );
 
+      monitor.beginTask( "Painting layers", layers.length );
+
       for( final IChartLayer layer : layers )
       {
         if( layer.isVisible() )
-        {
-          if( monitor.isCanceled() )
-            return;
+          layer.paint( gc, new SubProgressMonitor( monitor, 1 ) );
 
-          layer.paint( gc );
-        }
-
+        if( monitor.isCanceled() )
+          throw new OperationCanceledException();
       }
     }
     finally
@@ -136,5 +115,4 @@ public class ChartPlotPainter
       transform.dispose();
     }
   }
-
 }
