@@ -44,12 +44,16 @@ public final class RectangleUtils
     return new Rectangle( x, y, w, h );
   }
 
+  /**
+   * Reduces the size of an rectangle by some given insets.
+   */
   public static Rectangle inflateRect( final Rectangle rect, final Insets insets )
   {
     if( rect == null )
       return null;
     if( insets == null )
       return rect;
+
     return new Rectangle( rect.x + insets.left, rect.y + insets.top, rect.width - insets.left - insets.right, rect.height - insets.bottom - insets.top );
   }
 
