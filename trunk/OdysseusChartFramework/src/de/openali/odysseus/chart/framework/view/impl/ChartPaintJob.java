@@ -81,6 +81,7 @@ public class ChartPaintJob extends Job
 
     setSystem( true );
     setUser( false );
+    setPriority( Job.LONG );
   }
 
   @Override
@@ -142,12 +143,7 @@ public class ChartPaintJob extends Job
 
     final IChartModel model = m_chart.getChartModel();
 
-    // FIXME: move into painter
-// final IMapperRegistry mapperRegistry = model == null ? null : model.getMapperRegistry();
-// if( mapperRegistry == null )
-// return Status.OK_STATUS;
-
-    final ChartPainter chartPainter = new ChartPainter( model, bounds );
+    final ChartPainter chartPainter = new ChartPainter( model, m_plotImage );
 
     final Rectangle plotRect = RectangleUtils.inflateRect( bounds, chartPainter.getPlotInsets() );
     setPlotRect( plotRect );
@@ -155,9 +151,7 @@ public class ChartPaintJob extends Job
     if( monitor.isCanceled() )
       return Status.CANCEL_STATUS;
 
-    chartPainter.paintImage( plotImage, monitor );
-
-    return Status.OK_STATUS;
+    return chartPainter.paintImage( monitor );
   }
 
   private synchronized void setPlotRect( final Rectangle plotRect )
