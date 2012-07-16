@@ -202,6 +202,7 @@ public class ChartPainter
     {
       if( legendImage != null )
         legendImage.dispose();
+
       gc.dispose();
     }
   }

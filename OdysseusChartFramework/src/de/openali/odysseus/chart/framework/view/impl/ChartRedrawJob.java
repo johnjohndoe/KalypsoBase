@@ -62,15 +62,12 @@ final class ChartRedrawJob extends UIJob
     }
   };
 
-  private final ChartImageComposite m_chart;
-
   private final ChartPaintJob m_chartPaintJob;
 
-  ChartRedrawJob( final ChartImageComposite chart, final ChartPaintJob chartPaintJob )
+  ChartRedrawJob( final ChartPaintJob chartPaintJob )
   {
     super( "Redraw chart" ); //$NON-NLS-1$
 
-    m_chart = chart;
     m_chartPaintJob = chartPaintJob;
 
     addJobChangeListener( m_changeListener );
@@ -81,10 +78,7 @@ final class ChartRedrawJob extends UIJob
   @Override
   public IStatus runInUIThread( final IProgressMonitor monitor )
   {
-    if( m_chart.isDisposed() )
-      return Status.CANCEL_STATUS;
-
-    m_chart.redraw();
+    m_chartPaintJob.redraw();
 
     return Status.OK_STATUS;
   }
@@ -92,6 +86,6 @@ final class ChartRedrawJob extends UIJob
   void handleJobDone( )
   {
     if( m_chartPaintJob.isDoRedraw() )
-      schedule( 100 );
+      schedule( 250 );
   }
 }

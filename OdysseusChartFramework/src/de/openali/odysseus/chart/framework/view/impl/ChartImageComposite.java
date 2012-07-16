@@ -9,6 +9,7 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
@@ -54,7 +55,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
 
   public ChartImageComposite( final Composite parent, final int style, final IChartModel model, final RGB backgroundRGB )
   {
-    super( parent, style | SWT.DOUBLE_BUFFERED | SWT.NO_MERGE_PAINTS );
+    super( parent, style | SWT.DOUBLE_BUFFERED );
 
     addPaintListener( new PaintListener()
     {
@@ -83,7 +84,6 @@ public class ChartImageComposite extends Canvas implements IChartComposite
         invalidate();
       }
     } );
-
 
     updateClientArea();
     setBackground( OdysseusChartFramework.getDefault().getColorRegistry().getResource( parent.getDisplay(), backgroundRGB ) );
@@ -129,45 +129,56 @@ public class ChartImageComposite extends Canvas implements IChartComposite
 
   final void handlePaint( final PaintEvent paintEvent )
   {
-    final Image plotImage = m_paintJob.getPlotImage();
+    final ImageData plotData = m_paintJob.getPlotImageData();
     final Rectangle plotRect = m_paintJob.getPlotRect();
     final Point panOffset = m_panOffset;
     final Rectangle dragArea = m_dragArea;
     final EditInfo editInfo = m_editInfo;
 
-    if( plotImage == null )
+    if( plotData == null )
       return;
 
-    final GC gc = paintEvent.gc;
-    gc.drawImage( plotImage, -panOffset.x, -panOffset.y );
+    final GC paintGC = paintEvent.gc;
 
-    final Transform oldTransform = new Transform( gc.getDevice() );
-    final Transform newTransform = new Transform( gc.getDevice() );
-
+    Transform oldTransform = null;
+    Transform newTransform = null;
     try
     {
-      gc.getTransform( oldTransform );
-      gc.getTransform( newTransform );
+      if( plotData != null )
+      {
+        final Image plotImage = new Image( paintEvent.display, plotData );
+        paintGC.drawImage( plotImage, -panOffset.x, -panOffset.y );
+        plotImage.dispose();
+      }
+
+      oldTransform = new Transform( paintGC.getDevice() );
+      newTransform = new Transform( paintGC.getDevice() );
+
+      paintGC.getTransform( oldTransform );
+      paintGC.getTransform( newTransform );
 
       // FIXME: makes no sense: why is there a transformation for the drag area and edit info?
       // Same for handlers: why should they paint with an active transformation?
       newTransform.translate( plotRect.x, plotRect.y );
-      gc.setTransform( newTransform );
+      paintGC.setTransform( newTransform );
 
-      paintDragArea( gc, dragArea );
-      paintEditInfo( gc, editInfo );
+      paintDragArea( paintGC, dragArea );
+      paintEditInfo( paintGC, editInfo );
 
       final IChartHandlerManager manager = getPlotHandler();
       final IChartHandler[] handlers = manager.getActiveHandlers();
       for( final IChartHandler handler : handlers )
         handler.paintControl( paintEvent );
+
+      paintGC.setTransform( oldTransform );
     }
     finally
     {
-      gc.setTransform( oldTransform );
+      if( oldTransform != null )
+        newTransform.dispose();
 
-      oldTransform.dispose();
-      newTransform.dispose();
+      if( newTransform != null )
+        newTransform.dispose();
     }
   }
 
@@ -239,6 +250,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
       return;
 
     m_dragArea = dragArea;
+
     redraw();
   }
 
