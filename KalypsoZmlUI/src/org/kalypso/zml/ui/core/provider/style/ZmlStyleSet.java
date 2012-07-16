@@ -58,7 +58,6 @@ import de.openali.odysseus.chart.framework.model.style.impl.PointStyle;
  */
 public class ZmlStyleSet extends AbstractStyleSetProvider implements IStyleSetProvider
 {
-
   public ZmlStyleSet( final ItemData data )
   {
     buildLineStyles( data );
