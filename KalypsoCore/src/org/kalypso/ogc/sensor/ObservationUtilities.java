@@ -59,14 +59,21 @@ import org.kalypso.commons.java.lang.MathUtils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.parser.IParser;
 import org.kalypso.commons.parser.ParserException;
+import org.kalypso.ogc.sensor.impl.SimpleObservation;
+import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
+import org.kalypso.ogc.sensor.metadata.MetadataHelper;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.request.ObservationRequest;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
+import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHelper;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 
 /**
  * Utilities around IObservation.
- * 
+ *
  * @author schlienger
  */
 public final class ObservationUtilities
@@ -82,7 +89,7 @@ public final class ObservationUtilities
 
   /**
    * Finds the axis of the given observation that has the given name.
-   * 
+   *
    * @param axes
    *          the list of axes to scan
    * @param axisName
@@ -105,7 +112,7 @@ public final class ObservationUtilities
   /**
    * Find an axis with the given name, if it could not be found, tries to find it by type. If it still could not be
    * found, then a NoSuchElementException is thrown
-   * 
+   *
    * @see ObservationUtilities#findAxisByName(IAxis[], String)
    * @see ObservationUtilities#findAxisByType(IAxis[], String)
    * @throws NoSuchElementException
@@ -125,7 +132,7 @@ public final class ObservationUtilities
 
   /**
    * returns null when no axis found instead of throwing an exception
-   * 
+   *
    * @return axis or null if not found
    * @see ObservationUtilities#findAxisByName(IAxis[], String)
    */
@@ -143,7 +150,7 @@ public final class ObservationUtilities
 
   /**
    * Finds the axis of the given observation that has the given type.
-   * 
+   *
    * @param axes
    *          the list of axes to scan
    * @param axisType
@@ -163,7 +170,7 @@ public final class ObservationUtilities
 
   /**
    * Finds the axis of the given observation that has the given type.
-   * 
+   *
    * @param axes
    *          the list of axes to scan
    * @param axisType
@@ -197,7 +204,7 @@ public final class ObservationUtilities
 
   /**
    * Returns the axes that are compatible with the desired Dataclass
-   * 
+   *
    * @return all axes which are compatible with desired Classtype
    */
   public static IAxis[] findAxesByClass( final IAxis[] axes, final Class< ? > desired )
@@ -221,7 +228,7 @@ public final class ObservationUtilities
 
   /**
    * Returns the axes that are compatible with the desired Dataclasses
-   * 
+   *
    * @return all axes which are compatible with desired Classtype
    */
   public static IAxis[] findAxesByClasses( final IAxis[] axes, final Class< ? >[] desired )
@@ -384,7 +391,7 @@ public final class ObservationUtilities
 
   /**
    * Dumps the tupple at given index using sep as separator.
-   * 
+   *
    * @return string representation of the given line (tupple)
    */
   public static String dump( final ITupleModel model, final String sep, final int index, final boolean excludeStatusAxes ) throws SensorException
@@ -435,7 +442,7 @@ public final class ObservationUtilities
   /**
    * Returns the given row. Creates a new array containing the references to the values in the tuppleModel for that row
    * and these columns
-   * 
+   *
    * @param row
    *          row index for which objects will be taken
    * @param axisList
@@ -452,7 +459,7 @@ public final class ObservationUtilities
 
   /**
    * Hashes the values of one axis into a map.
-   * 
+   *
    * @return Map <Object, Integer>: value to its index
    */
   public static Map<Object, Integer> hashValues( final ITupleModel tuples, final IAxis axis ) throws SensorException
@@ -481,7 +488,7 @@ public final class ObservationUtilities
 
   /**
    * AxisSortComparator: sorts the axes according to their types
-   * 
+   *
    * @author schlienger (02.06.2005)
    */
   public static class AxisSortComparator implements Comparator<IAxis>
@@ -580,7 +587,7 @@ public final class ObservationUtilities
 
   /**
    * Request value from an observation , but buffers (i.e enlarges the request it by a given amount.
-   * 
+   *
    * @param dateRange
    *          If <code>null</code>, request the values from the baseObservation with a <code>null</code> request.
    * @throws SensorException
@@ -608,4 +615,63 @@ public final class ObservationUtilities
     return baseObservation.getValues( bufferedRequest );
   }
 
+  public static IObservation forceParameterType( final IObservation observation, final String forcedParmaterType ) throws SensorException
+  {
+    /* Force the parameter type for evaporation and temperature */
+    final ITupleModel tupleModel = observation.getValues( null );
+    final Object[][] rawData = ObservationUtilities.getRawData( tupleModel );
+
+    /* Exchange old value type with forced parameter type */
+    final IAxis[] axes = tupleModel.getAxes();
+    final IAxis[] forcedAxes = new IAxis[axes.length];
+    for( int i = 0; i < forcedAxes.length; i++ )
+      forcedAxes[i] = getForcedParameterAxes( axes[i], forcedParmaterType );
+
+    final SimpleTupleModel newModel = new SimpleTupleModel( forcedAxes, rawData );
+
+    /* Create and return new obs */
+    final String name = observation.getName();
+    final String href = observation.getHref();
+    final MetadataList metadata = MetadataHelper.clone( observation.getMetadataList() );
+    return new SimpleObservation( href, name, metadata, newModel );
+  }
+
+  private static Object[][] getRawData( final ITupleModel tupleModel ) throws SensorException
+  {
+    final int size = tupleModel.size();
+    final IAxis[] axes = tupleModel.getAxes();
+
+    final Object[][] rawData = new Object[size][];
+
+    for( int i = 0; i < rawData.length; i++ )
+    {
+      rawData[i] = new Object[axes.length];
+
+      for( int a = 0; a < axes.length; a++ )
+        rawData[i][a] = tupleModel.get( i, axes[a] );
+    }
+
+    return rawData;
+  }
+
+  private static IAxis getForcedParameterAxes( final IAxis axis, final String forcedParmaterType )
+  {
+    if( AxisUtils.isValueAxis( axis ) )
+      return TimeseriesUtils.createDefaultAxis( forcedParmaterType );
+
+    if( AxisUtils.isStatusAxis( axis ) )
+    {
+      final IAxis tempAxis = TimeseriesUtils.createDefaultAxis( forcedParmaterType );
+      return KalypsoStatusUtils.createStatusAxisFor( tempAxis, true );
+    }
+
+    if( AxisUtils.isDataSrcAxis( axis ) )
+    {
+      final IAxis tempAxis = TimeseriesUtils.createDefaultAxis( forcedParmaterType );
+      return DataSourceHelper.createSourceAxis( tempAxis );
+    }
+
+    /* Default: do nothing */
+    return axis;
+  }
 }
