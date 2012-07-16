@@ -41,6 +41,8 @@
 package org.kalypso.ogc.sensor.adapter;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TimeZone;
 
 import org.eclipse.core.runtime.IStatus;
@@ -51,6 +53,8 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ObservationUtilities;
+import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceProxyObservation;
@@ -68,16 +72,19 @@ public class NativeObservationZmlAdapter extends AbstractObservationImporter
     {
       final IObservation observation = ZmlFactory.parseXML( source.toURI().toURL() );
 
-      final IAxis valueAxis = AxisUtils.findAxis( observation.getAxes(), valueType );
-      final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( observation.getAxes(), valueAxis );
+      /* Enforce parameter type */
+      final IObservation obsWithRightType = fixParameterType( observation, valueType );
+
+      final IAxis valueAxis = AxisUtils.findAxis( obsWithRightType.getAxes(), valueType );
+      final IAxis dataSourceAxis = AxisUtils.findDataSourceAxis( obsWithRightType.getAxes(), valueAxis );
 
       if( Objects.isNull( dataSourceAxis ) )
       {
         final String dataSource = source.getAbsolutePath();
-        setObservation( new DataSourceProxyObservation( observation, dataSource, dataSource, KalypsoStati.BIT_OK ) );
+        setObservation( new DataSourceProxyObservation( obsWithRightType, dataSource, dataSource, KalypsoStati.BIT_OK ) );
       }
       else
-        setObservation( observation );
+        setObservation( obsWithRightType );
 
       return new Status( IStatus.OK, KalypsoCorePlugin.getID(), Messages.getString("NativeObservationZmlAdapter_0") ); //$NON-NLS-1$
     }
@@ -87,9 +94,24 @@ public class NativeObservationZmlAdapter extends AbstractObservationImporter
     }
   }
 
-  @Override
-  protected void parse( final File source, final TimeZone timeZone, final boolean continueWithErrors, final IStatusCollector stati ) throws Exception
+  private IObservation fixParameterType( final IObservation observation, final String valueType ) throws SensorException
   {
-    // nothing to do
+    final IAxis valueAxis = AxisUtils.findValueAxis( observation.getAxes() );
+    if( valueAxis == null )
+    {
+      // TODO: can this ever happen?
+      return observation;
+    }
+
+    if( valueAxis.getType().equals( valueType ) )
+      return observation;
+
+    return ObservationUtilities.forceParameterType( observation, valueType );
+  }
+
+  @Override
+  protected List<NativeObservationDataSet> parse( final File source, final TimeZone timeZone, final boolean continueWithErrors, final IStatusCollector stati ) throws Exception
+  {
+    return new ArrayList<>();
   }
 }

@@ -45,7 +45,9 @@ import java.io.FileReader;
 import java.io.LineNumberReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -77,15 +79,15 @@ public class NativeObservationDWDmdAdapter extends AbstractObservationImporter
 
   private int m_div;
 
-  private String m_name;
-
   private static final int SEARCH_BLOCK_HEADER = 0;
 
   private static final int SEARCH_VALUES = 1;
 
   @Override
-  protected void parse( final File source, final TimeZone timeZone, final boolean continueWithErrors, final IStatusCollector stati ) throws Exception
+  protected List<NativeObservationDataSet> parse( final File source, final TimeZone timeZone, final boolean continueWithErrors, final IStatusCollector stati ) throws Exception
   {
+    final List<NativeObservationDataSet> datasets = new ArrayList<>();
+
     final DateFormat sdf = new SimpleDateFormat( "ddMMyyyyHHmmss" ); //$NON-NLS-1$
     sdf.setTimeZone( timeZone );
 
@@ -98,7 +100,7 @@ public class NativeObservationDWDmdAdapter extends AbstractObservationImporter
     while( (lineIn = reader.readLine()) != null )
     {
       if( !continueWithErrors && getErrorCount() > getMaxErrorCount() )
-        return;
+        return datasets;
 
       switch( step )
       {
@@ -106,7 +108,7 @@ public class NativeObservationDWDmdAdapter extends AbstractObservationImporter
           Matcher matcher = DWD_MD_FIRST_HEADER_PATTERN.matcher( lineIn );
           if( matcher.matches() )
           {
-            m_name = matcher.group( 1 ).trim(); // TODO set as observation href or id
+            // String name = matcher.group( 1 ).trim(); // TODO set as observation href or id
 
             lineIn = reader.readLine();
             matcher = DWD_MD_SECOND_HEADER_PATTERN.matcher( lineIn );
@@ -160,7 +162,7 @@ public class NativeObservationDWDmdAdapter extends AbstractObservationImporter
                   final Double value = new Double( Double.parseDouble( valueString ) ) / m_div;
                   final Date valueDate = new Date( startDate + i * m_intervall );
 
-                  addDataSet( new NativeObservationDataSet( valueDate, value, KalypsoStati.BIT_OK, SOURCE_ID ) );
+                  datasets.add( new NativeObservationDataSet( valueDate, value, KalypsoStati.BIT_OK, SOURCE_ID ) );
                 }
               }
               // No precipitation the whole day (24 hours * 12 values = 288 values)
@@ -172,7 +174,7 @@ public class NativeObservationDWDmdAdapter extends AbstractObservationImporter
                 {
                   final Date valueDate = new Date( startDate + i * m_intervall );
 
-                  addDataSet( new NativeObservationDataSet( valueDate, value, KalypsoStati.BIT_CHECK, SOURCE_ID_MISSING_VALUE ) );
+                  datasets.add( new NativeObservationDataSet( valueDate, value, KalypsoStati.BIT_CHECK, SOURCE_ID_MISSING_VALUE ) );
                 }
               }
               else if( "A".equals( label ) ) //$NON-NLS-1$
@@ -183,7 +185,7 @@ public class NativeObservationDWDmdAdapter extends AbstractObservationImporter
                 {
                   final Date valueDate = new Date( startDate + i * m_intervall );
 
-                  addDataSet( new NativeObservationDataSet( valueDate, value, KalypsoStati.BIT_CHECK, SOURCE_ID_MISSING_VALUE ) );
+                  datasets.add( new NativeObservationDataSet( valueDate, value, KalypsoStati.BIT_CHECK, SOURCE_ID_MISSING_VALUE ) );
                 }
               }
               else if( "E".equals( label ) ) //$NON-NLS-1$
@@ -206,8 +208,8 @@ public class NativeObservationDWDmdAdapter extends AbstractObservationImporter
         default:
           break;
       }
-
     }
 
+    return datasets;
   }
 }

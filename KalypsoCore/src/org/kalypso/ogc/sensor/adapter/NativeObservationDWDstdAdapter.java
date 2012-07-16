@@ -46,7 +46,9 @@ import java.io.FileReader;
 import java.io.LineNumberReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -66,11 +68,11 @@ public class NativeObservationDWDstdAdapter extends AbstractObservationImporter
 
   private static final Pattern DWD_STD_PATTERN = Pattern.compile( "\\s\\s\\s\\s([0-9]{5})([0-9]{4}[0-9]{2}[0-9]{2})(.+?)" ); //$NON-NLS-1$
 
-  private String m_titel;
-
   @Override
-  protected void parse( final File source, final TimeZone timeZone, final boolean continueWithErrors, final IStatusCollector stati ) throws Exception
+  protected List<NativeObservationDataSet> parse( final File source, final TimeZone timeZone, final boolean continueWithErrors, final IStatusCollector stati ) throws Exception
   {
+    final List<NativeObservationDataSet> datasets = new ArrayList<>();
+
     final DateFormat sdf = new SimpleDateFormat( "yyyyMMdd" ); //$NON-NLS-1$
     sdf.setTimeZone( timeZone );
 
@@ -81,7 +83,7 @@ public class NativeObservationDWDstdAdapter extends AbstractObservationImporter
     while( (lineIn = reader.readLine()) != null )
     {
       if( !continueWithErrors && getErrorCount() > getMaxErrorCount() )
-        return;
+        return datasets;
       try
       {
         final Matcher matcher = DWD_STD_PATTERN.matcher( lineIn );
@@ -91,7 +93,7 @@ public class NativeObservationDWDstdAdapter extends AbstractObservationImporter
           String valueLine = null;
           try
           {
-            m_titel = matcher.group( 1 ); // TODO use title for result observation
+            // m_titel = matcher.group( 1 ); // TODO use title for result observation
             date = sdf.parse( matcher.group( 2 ) );
           }
           catch( final Exception e )
@@ -109,7 +111,7 @@ public class NativeObservationDWDstdAdapter extends AbstractObservationImporter
               final Double value = new Double( Double.parseDouble( valueString ) ) / 1000;
               final Date valueDate = new Date( startDate + i * 60 * 60 * 1000 );
 
-              addDataSet( new NativeObservationDataSet( valueDate, value, KalypsoStati.BIT_OK, SOURCE_ID ) );
+              datasets.add( new NativeObservationDataSet( valueDate, value, KalypsoStati.BIT_OK, SOURCE_ID ) );
             }
           }
           catch( final Exception e )
@@ -130,5 +132,7 @@ public class NativeObservationDWDstdAdapter extends AbstractObservationImporter
         tickErrorCount();
       }
     }
+
+    return datasets;
   }
 }

@@ -43,8 +43,10 @@ package org.kalypso.ogc.sensor.adapter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.LineNumberReader;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -72,8 +74,10 @@ public class NativeObservationDVWKAdapter extends AbstractObservationImporter
   private static final Pattern SUB_PATTERN_DATA = Pattern.compile( "\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})\\s*([0-9]{1,5})" ); //$NON-NLS-1$
 
   @Override
-  protected void parse( final File source, final TimeZone timeZone, final boolean continueWithErrors, final IStatusCollector stati ) throws Exception
+  protected List<NativeObservationDataSet> parse( final File source, final TimeZone timeZone, final boolean continueWithErrors, final IStatusCollector stati ) throws Exception
   {
+    final List<NativeObservationDataSet> datasets = new ArrayList<>();
+
     final FileReader fileReader = new FileReader( source );
     final LineNumberReader reader = new LineNumberReader( fileReader );
     String lineIn = null;
@@ -81,10 +85,10 @@ public class NativeObservationDVWKAdapter extends AbstractObservationImporter
     while( (lineIn = reader.readLine()) != null )
     {
       if( !continueWithErrors && getErrorCount() > getMaxErrorCount() )
-        return;
+        return datasets;
+
       try
       {
-
         final Matcher matcher = PATTERN_LINE.matcher( lineIn );
         if( matcher.matches() )
         {
@@ -103,14 +107,13 @@ public class NativeObservationDVWKAdapter extends AbstractObservationImporter
             continue;
 
           final GregorianCalendar calendar = new GregorianCalendar( timeZone );
-// final GregorianCalendar calendar = new GregorianCalendar( TimeZone.getTimeZone( "UTC" ) );
           calendar.set( year, month - 1, day, hour, 0, 0 );
 
           if( previousNlineCalendar != null )
           {
             while( previousNlineCalendar.compareTo( calendar ) < 0 )
             {
-              addDataSet( new NativeObservationDataSet( previousNlineCalendar.getTime(), 0.0, KalypsoStati.BIT_CHECK, SOURCE_ID_MISSING_VALUE ) );
+              datasets.add( new NativeObservationDataSet( previousNlineCalendar.getTime(), 0.0, KalypsoStati.BIT_CHECK, SOURCE_ID_MISSING_VALUE ) );
 
               previousNlineCalendar.add( Calendar.MINUTE, 5 );
             }
@@ -126,13 +129,6 @@ public class NativeObservationDVWKAdapter extends AbstractObservationImporter
             // all zeros until the next entry!
             previousNlineCalendar = calendar;
             continue;
-
-// for( int i = 0; i < 12; i++ )
-// {
-// dateCollector.add( calendar.getTime() );
-// valueCollector.add( 0.0 );
-// calendar.add( GregorianCalendar.MINUTE, 5 );
-// }
           }
           else
           {
@@ -146,7 +142,7 @@ public class NativeObservationDVWKAdapter extends AbstractObservationImporter
                 {
                   final double value = new Double( dataMatcher.group( i ) );
 
-                  addDataSet( new NativeObservationDataSet( calendar.getTime(), value, KalypsoStati.BIT_OK, SOURCE_ID ) );
+                  datasets.add( new NativeObservationDataSet( calendar.getTime(), value, KalypsoStati.BIT_OK, SOURCE_ID ) );
                 }
                 catch( final Exception e )
                 {
@@ -169,14 +165,14 @@ public class NativeObservationDVWKAdapter extends AbstractObservationImporter
 
       if( !continueWithErrors && getErrorCount() > getMaxErrorCount() )
       {
-
         final MessageBox messageBox = new MessageBox( null, SWT.ICON_QUESTION | SWT.YES | SWT.NO );
         messageBox.setMessage( Messages.getString("NativeObservationDVWKAdapter_2") ); //$NON-NLS-1$
         messageBox.setText( Messages.getString("NativeObservationDVWKAdapter_3") ); //$NON-NLS-1$
         if( messageBox.open() == SWT.NO )
-          return;
+          return null;
       }
     }
 
+    return datasets;
   }
 }
