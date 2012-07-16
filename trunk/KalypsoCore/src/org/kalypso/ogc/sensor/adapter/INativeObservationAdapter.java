@@ -71,6 +71,4 @@ public interface INativeObservationAdapter
   IObservation getObservation( );
 
   String getAxisTypeValue( );
-
-  void clear( );
 }

@@ -44,7 +44,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.LineNumberReader;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -62,7 +64,7 @@ import org.kalypso.ogc.sensor.status.KalypsoStati;
  * 5-Min-Werte(in 1/1000 mm)Kalendertag! ch. v. b. 1-2 4-8 10-15 17-20 22-27 Anz. ch. 2 5 6 4 6 Ein Datenblock besteht
  * aus 18 Datensätzen: Datensatz 5-Minuten-Datei (neue Struktur) Feld-Nr. 1-16 Inhalt 16 5-Minutenwerte der
  * Niederschlagshöhe(in 1/1000 mm) ch. v. b. 1-80 Anz.ch. 80 example:
- * 
+ *
  * <pre>
  *         77 48558 960101 00 0
  *         0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
@@ -71,9 +73,9 @@ import org.kalypso.ogc.sensor.status.KalypsoStati;
  *         0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
  *         0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
  *         0 0 0 0 0 0 0 0 0 0 0 0 0
- * 
+ *
  * </pre>
- * 
+ *
  * @author huebsch
  * @author Dirk Kuch
  */
@@ -94,8 +96,10 @@ public class NativeObservationDWD5minAdapter extends AbstractObservationImporter
   private static final int SEARCH_VALUES = 1;
 
   @Override
-  protected void parse( final File source, final TimeZone timeZone, final boolean continueWithErrors, final IStatusCollector stati ) throws Exception
+  protected List<NativeObservationDataSet> parse( final File source, final TimeZone timeZone, final boolean continueWithErrors, final IStatusCollector stati ) throws Exception
   {
+    final List<NativeObservationDataSet> datasets = new ArrayList<>();
+
     final SimpleDateFormat sdf = new SimpleDateFormat( "yyMMdd" ); //$NON-NLS-1$
     sdf.setTimeZone( timeZone );
 
@@ -113,7 +117,7 @@ public class NativeObservationDWD5minAdapter extends AbstractObservationImporter
       while( (lineIn = reader.readLine()) != null )
       {
         if( !continueWithErrors && getErrorCount() > getMaxErrorCount() )
-          return;
+          return datasets;
 
         switch( step )
         {
@@ -167,7 +171,7 @@ public class NativeObservationDWD5minAdapter extends AbstractObservationImporter
               final Date valueDate = new Date( startDate + i * m_timeStep + (valuesLine - 1) * 16 * m_timeStep );
               buffer.append( valueDate.toString() );
 
-              addDataSet( new NativeObservationDataSet( valueDate, value, toStatus( src ), src ) );
+              datasets.add( new NativeObservationDataSet( valueDate, value, toStatus( src ), src ) );
             }
             if( valuesLine == 18 )
             {
@@ -184,6 +188,8 @@ public class NativeObservationDWD5minAdapter extends AbstractObservationImporter
     {
       IOUtils.closeQuietly( reader );
     }
+
+    return datasets;
   }
 
   private int toStatus( final String src )

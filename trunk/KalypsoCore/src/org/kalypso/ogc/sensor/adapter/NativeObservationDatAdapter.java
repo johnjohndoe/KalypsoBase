@@ -45,7 +45,9 @@ import java.io.FileReader;
 import java.io.LineNumberReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -73,8 +75,10 @@ public class NativeObservationDatAdapter extends AbstractObservationImporter
   private static final Pattern SECOND_DATE_PATTERN = Pattern.compile( "([0-9 ]{2}) ([0-9 ]{2}) ([0-9]{4}) ([0-9 ]{2}) ([0-9 ]{2}) ([0-9 ]{2})" ); //$NON-NLS-1$
 
   @Override
-  protected void parse( final File source, final TimeZone timeZone, final boolean continueWithErrors, final IStatusCollector stati ) throws Exception
+  protected List<NativeObservationDataSet> parse( final File source, final TimeZone timeZone, final boolean continueWithErrors, final IStatusCollector stati ) throws Exception
   {
+    final List<NativeObservationDataSet> datasets = new ArrayList<>();
+
     final DateFormat sdf = new SimpleDateFormat( "dd MM yyyy HH mm ss" ); //$NON-NLS-1$
     sdf.setTimeZone( timeZone );
 
@@ -88,7 +92,7 @@ public class NativeObservationDatAdapter extends AbstractObservationImporter
     while( (lineIn = reader.readLine()) != null )
     {
       if( !continueWithErrors && getErrorCount() > getMaxErrorCount() )
-        return;
+        return datasets;
       try
       {
         final Matcher matcher = DATE_PATTERN.matcher( lineIn );
@@ -119,7 +123,7 @@ public class NativeObservationDatAdapter extends AbstractObservationImporter
             final String correctDate = buffer.toString();
             final Date date = sdf.parse( correctDate );
 
-            addDataSet( new NativeObservationDataSet( date, value, KalypsoStati.BIT_OK, SOURCE_ID ) );
+            datasets.add( new NativeObservationDataSet( date, value, KalypsoStati.BIT_OK, SOURCE_ID ) );
           }
           else
           {
@@ -139,5 +143,7 @@ public class NativeObservationDatAdapter extends AbstractObservationImporter
         tickErrorCount();
       }
     }
+
+    return datasets;
   }
 }

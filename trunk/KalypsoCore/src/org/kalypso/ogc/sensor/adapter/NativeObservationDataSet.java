@@ -82,5 +82,4 @@ public class NativeObservationDataSet
   {
     return m_source;
   }
-
 }

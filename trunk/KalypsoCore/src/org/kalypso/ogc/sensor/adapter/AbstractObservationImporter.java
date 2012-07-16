@@ -41,7 +41,6 @@
 package org.kalypso.ogc.sensor.adapter;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -78,9 +77,9 @@ public abstract class AbstractObservationImporter implements INativeObservationA
 {
   public static final String MISSING_VALUE_POSTFIX = "/missing.value"; //$NON-NLS-1$
 
-  private String m_axisTypeValue;
+  private static final int MAX_NO_OF_ERRORS = 30;
 
-  List<NativeObservationDataSet> m_datasets = new ArrayList<>();
+  private String m_axisTypeValue;
 
   private int m_errorCount = 0;
 
@@ -89,13 +88,6 @@ public abstract class AbstractObservationImporter implements INativeObservationA
   private IObservation m_observation;
 
   private String m_title;
-
-  private static final int MAX_NO_OF_ERRORS = 30;
-
-  protected void addDataSet( final NativeObservationDataSet dataset )
-  {
-    m_datasets.add( dataset );
-  }
 
   @Deprecated
   @Override
@@ -109,7 +101,7 @@ public abstract class AbstractObservationImporter implements INativeObservationA
     return new IAxis[] { dateAxis, valueAxis, statusAxis, dataSrcAxis };
   }
 
-  protected ITupleModel createTuppelModel( final MetadataList metadata, final String valueType )
+  protected ITupleModel createTuppelModel( final MetadataList metadata, final String valueType, final List<NativeObservationDataSet> datasets )
   {
     final IAxis[] axes = createAxis( valueType );
     final SimpleTupleModel model = new SimpleTupleModel( axes );
@@ -123,7 +115,7 @@ public abstract class AbstractObservationImporter implements INativeObservationA
     final int statusAxis = ArrayUtils.indexOf( axes, AxisUtils.findStatusAxis( axes, base ) );
     final int dataSourceAxis = ArrayUtils.indexOf( axes, AxisUtils.findDataSourceAxis( axes, base ) );
 
-    for( final NativeObservationDataSet dataset : m_datasets )
+    for( final NativeObservationDataSet dataset : datasets )
     {
       final Date date = dataset.getDate();
       final Double value = dataset.getValue();
@@ -146,7 +138,7 @@ public abstract class AbstractObservationImporter implements INativeObservationA
   /**
    * Implemented for backwards compatibility, falls back to
    * {@link #importTimeseries(File, TimeZone, m_axisTypeValue, boolean)}.
-   * 
+   *
    * @see org.kalypso.ogc.sensor.adapter.INativeObservationAdapter#createObservationFromSource(java.io.File,
    *      java.util.TimeZone, boolean)
    */
@@ -157,10 +149,6 @@ public abstract class AbstractObservationImporter implements INativeObservationA
     return doImport( file, timeZone, m_axisTypeValue, continueWithErrors );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.adapter.INativeObservationAdapter#doImport(java.io.File, java.util.TimeZone,
-   *      java.lang.String, boolean)
-   */
   @Override
   public IStatus doImport( final File source, final TimeZone timeZone, final String valueType, final boolean continueWithErrors )
   {
@@ -168,24 +156,25 @@ public abstract class AbstractObservationImporter implements INativeObservationA
 
     try
     {
-      parse( source, timeZone, continueWithErrors, stati );
+      final List<NativeObservationDataSet> datasets = parse( source, timeZone, continueWithErrors, stati );
+      if( datasets != null )
+      {
+        final MetadataList metadata = new MetadataList();
+        metadata.put( IMetadataConstants.MD_ORIGIN, source.getAbsolutePath() );
+
+        final ITupleModel model = createTuppelModel( metadata, valueType, datasets );
+        setObservation( new SimpleObservation( source.getAbsolutePath(), source.getName(), metadata, model ) );
+      }
+
+      return StatusUtilities.createStatus( stati, Messages.getString( "AbstractObservationImporter_1" ) ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), ex.getMessage() );
-      stati.add( status );
+      return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), ex.getMessage() );
     }
-
-    final MetadataList metadata = new MetadataList();
-    metadata.put( IMetadataConstants.MD_ORIGIN, source.getAbsolutePath() );
-
-    final ITupleModel model = createTuppelModel( metadata, valueType );
-    setObservation( new SimpleObservation( source.getAbsolutePath(), source.getName(), metadata, model ) );
-
-    return StatusUtilities.createStatus( stati, Messages.getString("AbstractObservationImporter_1") ); //$NON-NLS-1$
   }
 
-  protected abstract void parse( File source, TimeZone timeZone, boolean continueWithErrors, IStatusCollector stati ) throws Exception;
+  protected abstract List<NativeObservationDataSet> parse( File source, TimeZone timeZone, boolean continueWithErrors, IStatusCollector stati ) throws Exception;
 
   @Override
   public final String getAxisTypeValue( )
@@ -238,11 +227,4 @@ public abstract class AbstractObservationImporter implements INativeObservationA
   {
     return m_title;
   }
-
-  @Override
-  public void clear( )
-  {
-    m_datasets.clear();
-  }
-
 }

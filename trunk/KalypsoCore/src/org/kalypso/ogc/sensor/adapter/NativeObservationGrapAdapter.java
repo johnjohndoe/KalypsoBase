@@ -45,7 +45,9 @@ import java.io.FileReader;
 import java.io.LineNumberReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -74,8 +76,10 @@ public class NativeObservationGrapAdapter extends AbstractObservationImporter
   private static final Pattern DATE_PATTERN = Pattern.compile( "([0-9 ]{2}) ([0-9 ]{2}) ([0-9]{4}) ([0-9 ]{2}) ([0-9 ]{2}) ([0-9 ]{2})" ); //$NON-NLS-1$
 
   @Override
-  protected void parse( final File source, final TimeZone timeZone, final boolean continueWithErrors, final IStatusCollector stati ) throws Exception
+  protected List<NativeObservationDataSet> parse( final File source, final TimeZone timeZone, final boolean continueWithErrors, final IStatusCollector stati ) throws Exception
   {
+    final List<NativeObservationDataSet> datasets = new ArrayList<>();
+
     final SimpleDateFormat sdf = new SimpleDateFormat( "dd MM yyyy HH mm ss" ); //$NON-NLS-1$
     sdf.setTimeZone( timeZone );
 
@@ -89,7 +93,7 @@ public class NativeObservationGrapAdapter extends AbstractObservationImporter
       while( (lineIn = reader.readLine()) != null )
       {
         if( !continueWithErrors && getErrorCount() > getMaxErrorCount() )
-          return;
+          return datasets;
 
         final Matcher matcher = GRAP_PATTERN.matcher( lineIn );
         if( matcher.matches() )
@@ -98,10 +102,9 @@ public class NativeObservationGrapAdapter extends AbstractObservationImporter
           final Double value = NumberUtils.parseDouble( matcher.group( 2 ) );
 
           if( isMissingValue( value ) )
-            addDataSet( new NativeObservationDataSet( date, value, KalypsoStati.BIT_CHECK, SOURCE_ID_MISSING_VALUE ) );
+            datasets.add( new NativeObservationDataSet( date, value, KalypsoStati.BIT_CHECK, SOURCE_ID_MISSING_VALUE ) );
           else
-            addDataSet( new NativeObservationDataSet( date, value, KalypsoStati.BIT_OK, SOURCE_ID ) );
-
+            datasets.add( new NativeObservationDataSet( date, value, KalypsoStati.BIT_OK, SOURCE_ID ) );
         }
         else
         {
@@ -115,6 +118,7 @@ public class NativeObservationGrapAdapter extends AbstractObservationImporter
       reader.close();
     }
 
+    return datasets;
   }
 
   private boolean isMissingValue( final Double value )
