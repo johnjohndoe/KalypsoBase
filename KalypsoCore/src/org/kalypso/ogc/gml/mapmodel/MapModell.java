@@ -173,7 +173,7 @@ public class MapModell implements IMapModell
 
   /**
    * Tries to activate the given theme within this modell.
-   * 
+   *
    * @return <code>true</code>, if the given theme is contained within this modell and was activated. <code>false</code>
    *         otherwise.
    */
@@ -463,15 +463,16 @@ public class MapModell implements IMapModell
    */
   private void acceptListenersRunnable( final IListenerRunnable r )
   {
-    final IMapModellListener[] listeners = m_listeners.toArray( new IMapModellListener[m_listeners.size()] );
-    for( final IMapModellListener l : listeners )
+    // REMARK: fetch via untyped method, else we get sync. problems
+    final Object[] listeners = m_listeners.toArray();
+    for( final Object l : listeners )
     {
       final ISafeRunnable code = new SafeRunnable()
       {
         @Override
         public void run( ) throws Exception
         {
-          r.visit( l );
+          r.visit( (IMapModellListener) l );
         }
       };
 
