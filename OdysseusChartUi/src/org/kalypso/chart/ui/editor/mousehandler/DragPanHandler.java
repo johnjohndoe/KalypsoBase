@@ -84,9 +84,6 @@ public class DragPanHandler extends AbstractChartDragHandler
     }
   }
 
-  /**
-   * @see org.kalypso.chart.ui.editor.mousehandler.AbstractChartDragHandler#keyPressed(org.eclipse.swt.events.KeyEvent)
-   */
   @Override
   public void keyPressed( final KeyEvent e )
   {
@@ -122,10 +119,6 @@ public class DragPanHandler extends AbstractChartDragHandler
     updateSelection( editInfo );
   }
 
-  /**
-   * @see org.kalypso.chart.ui.editor.mousehandler.AbstractChartDragHandler#doMouseMoveAction(org.eclipse.swt.graphics.Point,
-   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
-   */
   @Override
   public void doMouseMoveAction( final Point start, final EditInfo editInfo )
   {
