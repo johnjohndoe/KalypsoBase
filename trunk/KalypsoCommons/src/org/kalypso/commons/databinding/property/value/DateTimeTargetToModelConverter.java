@@ -53,7 +53,6 @@ import org.kalypso.contribs.java.util.DateUtilities;
  */
 public class DateTimeTargetToModelConverter extends TypedConverter<Date, XMLGregorianCalendar>
 {
-
   public DateTimeTargetToModelConverter( )
   {
     super( Date.class, XMLGregorianCalendar.class );
@@ -67,5 +66,4 @@ public class DateTimeTargetToModelConverter extends TypedConverter<Date, XMLGreg
 
     return DateUtilities.toXMLGregorianCalendar( fromObject );
   }
-
 }
