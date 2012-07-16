@@ -192,4 +192,10 @@ public class ZmlLineLayerRangeHandler
       return points.toArray( new IPair[points.size()] );
     }
   }
+
+  public synchronized void clearRanges( )
+  {
+    m_domainRange = null;
+    m_targetRange = null;
+  }
 }
