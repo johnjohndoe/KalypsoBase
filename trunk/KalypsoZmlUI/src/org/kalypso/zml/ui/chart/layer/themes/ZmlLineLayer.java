@@ -126,6 +126,8 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   @Override
   public void onObservationChanged( )
   {
+    m_range.clearRanges();
+
     getEventHandler().fireLayerContentChanged( this );
   }
 
