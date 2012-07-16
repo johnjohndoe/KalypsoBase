@@ -45,9 +45,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
+
+import com.vividsolutions.jts.util.Assert;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.util.img.ChartPainter;
@@ -69,13 +72,15 @@ public class ChartPaintJob extends Job
 
   private boolean m_doRedraw;
 
+  private ImageData m_plotData;
+
   public ChartPaintJob( final ChartImageComposite chart )
   {
     super( "Painting chart" );
 
     m_chart = chart;
 
-    m_redrawJob = new ChartRedrawJob( chart, this );
+    m_redrawJob = new ChartRedrawJob( this );
     m_redrawJob.setUser( false );
     m_redrawJob.setSystem( true );
 
@@ -141,17 +146,31 @@ public class ChartPaintJob extends Job
     if( plotImage == null )
       return Status.OK_STATUS;
 
-    final IChartModel model = m_chart.getChartModel();
+    try
+    {
+      final IChartModel model = m_chart.getChartModel();
 
-    final ChartPainter chartPainter = new ChartPainter( model, m_plotImage );
+      final ChartPainter chartPainter = new ChartPainter( model, plotImage );
 
-    final Rectangle plotRect = RectangleUtils.inflateRect( bounds, chartPainter.getPlotInsets() );
-    setPlotRect( plotRect );
+      final Rectangle plotRect = RectangleUtils.inflateRect( bounds, chartPainter.getPlotInsets() );
+      setPlotRect( plotRect );
 
-    if( monitor.isCanceled() )
-      return Status.CANCEL_STATUS;
+      if( monitor.isCanceled() )
+        return Status.CANCEL_STATUS;
 
-    return chartPainter.paintImage( monitor );
+      return chartPainter.paintImage( monitor );
+    }
+    finally
+    {
+      synchronized( this )
+      {
+        m_plotImage = null;
+
+        m_plotData = plotImage.getImageData();
+
+        plotImage.dispose();
+      }
+    }
   }
 
   private synchronized void setPlotRect( final Rectangle plotRect )
@@ -159,23 +178,14 @@ public class ChartPaintJob extends Job
     m_plotRect = plotRect;
   }
 
-  public synchronized Image getPlotImage( )
-  {
-    return m_plotImage;
-  }
-
   public synchronized Rectangle getPlotRect( )
   {
     return m_plotRect;
   }
 
-  synchronized Image createPlotImage( final Rectangle bounds )
+  private synchronized Image createPlotImage( final Rectangle bounds )
   {
-    if( m_plotImage != null )
-    {
-      m_plotImage.dispose();
-      m_plotImage = null;
-    }
+    Assert.isTrue( m_plotImage == null );
 
     if( bounds.width > 0 && bounds.height > 0 )
       m_plotImage = new Image( m_chart.getDisplay(), bounds.width, bounds.height );
@@ -187,12 +197,27 @@ public class ChartPaintJob extends Job
   {
     cancel();
 
-    // FIXME: probably need to wait for job to end?
+    m_doRedraw = false;
 
-    if( m_plotImage != null )
+    m_plotData = null;
+  }
+
+  void redraw( )
+  {
+    if( m_chart.isDisposed() )
+      return;
+
+    synchronized( this )
     {
-      m_plotImage.dispose();
-      m_plotImage = null;
+      if( m_plotImage != null )
+        m_plotData = m_plotImage.getImageData();
     }
+
+    m_chart.redraw();
+  }
+
+  public synchronized ImageData getPlotImageData( )
+  {
+    return m_plotData;
   }
 }
