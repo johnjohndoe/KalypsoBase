@@ -52,6 +52,7 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 import org.kalypso.zml.core.diagram.base.IZmlLayer;
 import org.kalypso.zml.core.diagram.base.IZmlLayerProvider;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
@@ -177,7 +178,8 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
 
       final ICoordinateMapper mapper = getCoordinateMapper();
 
-      final ZmlBarLayerVisitor visitor = new ZmlBarLayerVisitor( mapper, m_range, gc, figure, observation, monitor );
+      final IObservationVisitor visitor = createVisitor( observation, mapper, gc, figure, monitor );
+
       observation.accept( visitor, m_handler.getRequest(), 1 );
     }
     catch( final CancelVisitorException e )
@@ -188,6 +190,13 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
     {
       KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
     }
+  }
+
+  private IObservationVisitor createVisitor( final IObservation observation, final ICoordinateMapper mapper, final GC gc, final FullRectangleFigure figure, final IProgressMonitor monitor )
+  {
+    return new ZmlBarLayerBackwardsVisitor( mapper, m_range, gc, figure, observation, monitor );
+
+    // FIXME: implement forwards
   }
 
   @Override
