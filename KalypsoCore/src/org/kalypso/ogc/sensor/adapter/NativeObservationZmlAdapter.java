@@ -41,7 +41,6 @@
 package org.kalypso.ogc.sensor.adapter;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -86,7 +85,7 @@ public class NativeObservationZmlAdapter extends AbstractObservationImporter
       else
         setObservation( obsWithRightType );
 
-      return new Status( IStatus.OK, KalypsoCorePlugin.getID(), Messages.getString("NativeObservationZmlAdapter_0") ); //$NON-NLS-1$
+      return new Status( IStatus.OK, KalypsoCorePlugin.getID(), Messages.getString( "NativeObservationZmlAdapter_0" ) ); //$NON-NLS-1$
     }
     catch( final Exception e )
     {
@@ -112,6 +111,6 @@ public class NativeObservationZmlAdapter extends AbstractObservationImporter
   @Override
   protected List<NativeObservationDataSet> parse( final File source, final TimeZone timeZone, final boolean continueWithErrors, final IStatusCollector stati ) throws Exception
   {
-    return new ArrayList<>();
+    throw new UnsupportedOperationException();
   }
 }
