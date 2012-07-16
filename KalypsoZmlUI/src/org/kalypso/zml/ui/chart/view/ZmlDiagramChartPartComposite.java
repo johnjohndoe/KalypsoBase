@@ -100,15 +100,8 @@ public class ZmlDiagramChartPartComposite extends ChartPartComposite
       t.printStackTrace();
     }
 
-    /**
-     * update data handler and visibility
-     */
-// final ILayerManager layerManager = getChartModel().getLayerManager();
-    // FIXME set visibility
-
     updateControl();
     setDirty( false );
-
   }
 
   @Override
