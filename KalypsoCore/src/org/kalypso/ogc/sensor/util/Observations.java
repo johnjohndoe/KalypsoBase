@@ -48,11 +48,8 @@ import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.TupleModelDataSet;
-import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
-import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
 import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 
 /**
@@ -106,80 +103,7 @@ public final class Observations
 
   private static void doVisit( final IObservationVisitor visitor, final IObservation observation, final ITupleModel model, final int index ) throws CancelVisitorException, SensorException
   {
-    visitor.visit( new IObservationValueContainer()
-    {
-      @Override
-      public boolean hasAxis( final String... types )
-      {
-        for( final String type : types )
-        {
-          if( AxisUtils.findAxis( model.getAxes(), type ) == null )
-            return false;
-        }
-
-        return true;
-      }
-
-      @Override
-      public int getIndex( )
-      {
-        return index;
-      }
-
-      @Override
-      public IAxis[] getAxes( )
-      {
-        return model.getAxes();
-      }
-
-      @Override
-      public Object get( final IAxis axis ) throws SensorException
-      {
-        return model.get( index, axis );
-      }
-
-      @Override
-      public Object getPrevious( final IAxis axis ) throws SensorException
-      {
-        if( index > 0 )
-          return model.get( index - 1, axis );
-
-        return null;
-      }
-
-      @Override
-      public Object getNext( final IAxis axis ) throws SensorException
-      {
-        if( index + 1 < model.size() )
-          return model.get( index + 1, axis );
-
-        return null;
-      }
-
-      @Override
-      public MetadataList getMetaData( )
-      {
-        return observation.getMetadataList();
-      }
-
-      @Override
-      public void set( final IAxis axis, final Object value ) throws SensorException
-      {
-        model.set( index, axis, value );
-      }
-
-      @Override
-      public TupleModelDataSet getDataSetFor( final String valueAxis ) throws SensorException
-      {
-        return getDataSetFor( getMetaData(), valueAxis );
-      }
-
-      @Override
-      public TupleModelDataSet getDataSetFor( final MetadataList metadata, final String valueAxis ) throws SensorException
-      {
-        return TupleModelDataSet.toDataSet( this, metadata, valueAxis );
-      }
-    } );
+    visitor.visit( new ObservationValueContainer( model, index, observation ) );
 
   }
 
