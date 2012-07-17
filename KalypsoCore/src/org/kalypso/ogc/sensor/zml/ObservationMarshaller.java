@@ -173,17 +173,43 @@ class ObservationMarshaller
     }
   }
 
-  public void marshall( final File file ) throws SensorException
+  public void marshall( final File targetFile ) throws SensorException
   {
-    try (OutputStream outs = openOutputStream( file ))
+    final String name = targetFile.getName();
+    final File dir = targetFile.getParentFile();
+
+    final File saveFile = new File( dir, name + ".saving" ); //$NON-NLS-1$
+    final File backupFile = new File( dir, name + "~" ); //$NON-NLS-1$
+
+    /* Delete old backup file if it still exists */
+    FileUtils.deleteQuietly( backupFile );
+
+    try (OutputStream outs = openOutputStream( saveFile ))
     {
       marshall( outs );
+
+      /* Explicitly close, else next move fails */
+      outs.close();
+
+      /* backup old target */
+      if( targetFile.exists() )
+        FileUtils.moveFile( targetFile, backupFile );
+
+      /* rename saved file to target */
+      FileUtils.moveFile( saveFile, targetFile );
+
+      /* delete backup, we have successfully saved the file */
+      FileUtils.deleteQuietly( backupFile );
     }
-    catch( final IOException e )
+    catch( final IOException | OutOfMemoryError e )
     {
       LOG.log( Level.WARNING, Messages.getString( "org.kalypso.ogc.sensor.zml.ZmlFactory.30" ), e ); //$NON-NLS-1$
 
       throw new SensorException( e );
+    }
+    finally
+    {
+      FileUtils.deleteQuietly( saveFile );
     }
   }
 
@@ -225,7 +251,7 @@ class ObservationMarshaller
 
   /**
    * Create an XML-Observation ready for marshalling.
-   * 
+   *
    * @param timezone
    *          the time zone into which dates should be converted before serialised
    */
@@ -399,11 +425,11 @@ class ObservationMarshaller
 
   /**
    * Parser for the type <code>date</code>. It uses following format string:
-   * 
+   *
    * <pre>
    *      yyyy-MM-dd'T'HH:mm:ss
    * </pre>
-   * 
+   *
    * FIXME: we should use {@link javax.xml.bind.DatatypeConverter} instead
    */
   private static DateParser getDateParser( final TimeZone timezone )

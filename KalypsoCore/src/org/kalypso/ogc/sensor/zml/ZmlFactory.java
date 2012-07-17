@@ -77,7 +77,7 @@ import org.xml.sax.InputSource;
  * </ul>
  * The block-inlined Format is used with valueLink elements and if the Href-Attribute is not specified, is empty, or
  * contains "#data".
- * 
+ *
  * @author schlienger
  */
 public final class ZmlFactory
@@ -90,7 +90,7 @@ public final class ZmlFactory
 
   /**
    * Parses the XML and creates an IObservation object.
-   * 
+   *
    * @see ZmlFactory#parseXML(InputSource, String, URL)
    * @param url
    *          the url specification of the zml
@@ -121,7 +121,7 @@ public final class ZmlFactory
   /**
    * FIXME: check: why do we have two parse methods? There should be only one access point...! <br/>
    * Parse the XML and create an IObservation instance.
-   * 
+   *
    * @param source
    *          contains the zml
    * @param context
@@ -132,7 +132,7 @@ public final class ZmlFactory
     final ObservationUnmarshaller unmarshaller = new ObservationUnmarshaller( source, context );
     final IStatus status = unmarshaller.execute( new NullProgressMonitor() );
     if( status.getSeverity() == IStatus.ERROR )
-      throw new SensorException( Messages.getString("ZmlFactory_0"), new CoreException( status ) ); //$NON-NLS-1$
+      throw new SensorException( Messages.getString( "ZmlFactory_0" ), new CoreException( status ) ); //$NON-NLS-1$
 
     final IObservation observation = unmarshaller.getObservation();
     final String href = observation.getHref();
@@ -161,7 +161,7 @@ public final class ZmlFactory
 
   /**
    * Helper: may create a proxy observation depending on the information coded in the url.
-   * 
+   *
    * @return proxy or original observation
    */
   private static IObservation createProxyFrom( final String href, final IObservation baseObs ) throws SensorException
@@ -189,7 +189,7 @@ public final class ZmlFactory
 
   /**
    * Helper method for simply writing the observation to an IFile
-   * 
+   *
    * @throws SensorException
    *           if an IOException or a FactoryException is thrown internally
    */
@@ -200,19 +200,25 @@ public final class ZmlFactory
 
   /**
    * Helper method for simply writing the observation to an IFile
-   * 
+   *
    * @throws SensorException
    *           if an IOException or a FactoryException is thrown internally
    */
   public static void writeToFile( final IObservation obs, final IFile file, final IRequest request ) throws SensorException, CoreException
   {
-    writeToFile( obs, file.getLocation().toFile(), request );
-    file.refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
+    try
+    {
+      writeToFile( obs, file.getLocation().toFile(), request );
+    }
+    finally
+    {
+      file.refreshLocal( IResource.DEPTH_ONE, new NullProgressMonitor() );
+    }
   }
 
   /**
    * Helper method for simply writing the observation to a file
-   * 
+   *
    * @throws SensorException
    *           if an IOException or a FactoryException is thrown internally
    */
@@ -222,18 +228,21 @@ public final class ZmlFactory
   }
 
   /**
-   * Helper method for simply writing the observation to a file
-   * 
+   * Helper method for simply writing the observation to a file.<br/>
+   * To avoid loss of data (i.e. if a file already exists), we save into a separate file and move the file over the
+   * existing one only if saving was successful.
+   *
    * @param request
    *          If non-<code>null</code>, this request will be applied to the access to the values of the given
    *          observation.
    * @throws SensorException
    *           if an IOException or a FactoryException is thrown internally
    */
-  public static void writeToFile( final IObservation obs, final File file, final IRequest request ) throws SensorException
+  public static void writeToFile( final IObservation obs, final File targetFile, final IRequest request ) throws SensorException
   {
+    /* First, save into separate file, the old file stays untouched */
     final ObservationMarshaller marshaller = new ObservationMarshaller( obs, request );
-    marshaller.marshall( file );
+    marshaller.marshall( targetFile );
   }
 
   /**

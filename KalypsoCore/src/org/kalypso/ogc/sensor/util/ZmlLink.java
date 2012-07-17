@@ -150,7 +150,7 @@ public class ZmlLink
   /**
    * Fetches the observation from the kalypso resource pool, using
    * {@link ResourcePool#getObject(org.kalypso.core.util.pool.IPoolableObjectType)}.
-   * 
+   *
    * @see ResourcePool#getObject(org.kalypso.core.util.pool.IPoolableObjectType.
    */
   public IObservation getObservationFromPool( )
@@ -176,9 +176,8 @@ public class ZmlLink
       return null;
 
     final String href = timeseriesLink.getHref();
-    final PoolableObjectType key = new PoolableObjectType( "zml", href, m_context, false ); //$NON-NLS-1$
 
-    return key;
+    return new PoolableObjectType( "zml", href, m_context, false ); //$NON-NLS-1$
   }
 
   /**
@@ -311,6 +310,7 @@ public class ZmlLink
     }
 
     targetFile.getParentFile().mkdirs();
+
     ZmlFactory.writeToFile( obs, targetFile, request );
 
     /* If the local file is mapped into the workspace, refresh it. */
