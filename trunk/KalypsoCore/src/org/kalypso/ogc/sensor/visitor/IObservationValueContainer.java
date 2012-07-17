@@ -50,5 +50,6 @@ import org.kalypso.ogc.sensor.metadata.MetadataList;
 public interface IObservationValueContainer extends ITupleModelValueContainer
 {
   MetadataList getMetaData( );
+
   TupleModelDataSet getDataSetFor( String valueAxis ) throws SensorException;
 }
