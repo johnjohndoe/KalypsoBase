@@ -46,6 +46,7 @@ import java.io.File;
 import java.util.TimeZone;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -166,11 +167,16 @@ public class ImportObservationData extends AbstractModelObject implements IStore
 
   private INativeObservationAdapter findAdapterByExtension( final String extension )
   {
-    // TODO: adapter does not know the preffered extension, we need to extend the extension point.
-    // final INativeObservationAdapter[] allAdapters = getObservationAdapters();
-    // for( final INativeObservationAdapter adapter : allAdapters )
-    // {
-    // }
+    if( StringUtils.isBlank( extension ) )
+      return null;
+
+    final INativeObservationAdapter[] allAdapters = getObservationAdapters();
+    for( final INativeObservationAdapter adapter : allAdapters )
+    {
+      final String defaultExtension = adapter.getDefaultExtension();
+      if( !StringUtils.isBlank( defaultExtension ) && extension.compareToIgnoreCase( defaultExtension ) == 0 )
+        return adapter;
+    }
 
     return null;
   }
