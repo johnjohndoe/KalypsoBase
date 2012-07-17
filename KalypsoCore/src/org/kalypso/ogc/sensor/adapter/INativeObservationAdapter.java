@@ -54,6 +54,9 @@ public interface INativeObservationAdapter
 {
   String getId( );
 
+  /** Default extension for this format; used to guess the right adapter for a given file */
+  String getDefaultExtension( );
+
   /**
    * @deprecated Do not use, this is an implementation detail.
    */
