@@ -42,17 +42,24 @@ package org.kalypso.zml.ui.chart.layer.themes;
 
 import java.net.URL;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
+import org.joda.time.Period;
 import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
+import org.kalypso.ogc.sensor.metadata.MetadataHelper;
+import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.zml.core.diagram.base.IZmlLayer;
 import org.kalypso.zml.core.diagram.base.IZmlLayerProvider;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
@@ -61,8 +68,11 @@ import org.kalypso.zml.ui.KalypsoZmlUI;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractBarLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.figure.IPaintable;
 import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
+import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
@@ -72,7 +82,7 @@ import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
  * @author Dirk Kuch
  * @author kimwerner
  */
-public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
+public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer, ITooltipChartLayer
 {
   private IZmlLayerDataHandler m_handler;
 
@@ -81,6 +91,8 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
   private final ZmlBarLayerLegendEntry m_legend = new ZmlBarLayerLegendEntry( this );
 
   private final ZmlBarLayerRangeHandler m_range = new ZmlBarLayerRangeHandler( this );
+
+  private BarLayerRectangleIndex m_rectangleIndex;
 
   public ZmlBarLayer( final IZmlLayerProvider layerProvider, final IStyleSet styleSet, final URL context )
   {
@@ -178,9 +190,16 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
 
       final ICoordinateMapper mapper = getCoordinateMapper();
 
-      final IObservationVisitor visitor = createVisitor( observation, mapper, gc, figure, monitor );
+      final IRequest request = m_handler.getRequest();
+      final Period timestep = findtimestep( observation, request );
 
-      observation.accept( visitor, m_handler.getRequest(), 1 );
+      final ZmlBarLayerBackwardsVisitor visitor = createVisitor( observation, timestep, mapper, gc, figure, monitor );
+
+      observation.accept( visitor, request, 1 );
+
+      visitor.paintLast();
+
+      m_rectangleIndex = visitor.getRectangles();
     }
     catch( final CancelVisitorException e )
     {
@@ -192,9 +211,22 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
     }
   }
 
-  private IObservationVisitor createVisitor( final IObservation observation, final ICoordinateMapper mapper, final GC gc, final FullRectangleFigure figure, final IProgressMonitor monitor )
+  private Period findtimestep( final IObservation observation, final IRequest request ) throws SensorException
   {
-    return new ZmlBarLayerBackwardsVisitor( mapper, m_range, gc, figure, observation, monitor );
+    final Period timestep = MetadataHelper.getTimestep( observation.getMetadataList() );
+    if( timestep != null )
+      return timestep;
+
+    // REMARK: we assume here that only old and short timeseries have no timstep, else we would get a performance
+    // problem here
+    final ITupleModel values = observation.getValues( request );
+
+    return TimeseriesUtils.guessTimestep( values );
+  }
+
+  private ZmlBarLayerBackwardsVisitor createVisitor( final IObservation observation, final Period timestep, final ICoordinateMapper mapper, final GC gc, final FullRectangleFigure figure, final IProgressMonitor monitor )
+  {
+    return new ZmlBarLayerBackwardsVisitor( mapper, m_range, gc, figure, observation, timestep, monitor );
 
     // FIXME: implement forwards
   }
@@ -228,5 +260,21 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
     }
 
     setDataHandler( handler );
+  }
+
+  @Override
+  public EditInfo getHover( final Point pos )
+  {
+    final Pair<Rectangle, Integer> element = m_rectangleIndex.findElement( pos );
+    if( element == null )
+      return null;
+
+    // TODO: highlight rectangle
+    final IPaintable hoverFigure = null;
+    final IPaintable editFigure = null;
+    final Object editData = element.getValue();
+    final String editText = "" + element.getValue();
+
+    return new EditInfo( this, hoverFigure, editFigure, editData, editText, pos );
   }
 }

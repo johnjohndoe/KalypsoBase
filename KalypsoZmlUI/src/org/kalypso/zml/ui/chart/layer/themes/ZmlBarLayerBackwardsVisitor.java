@@ -53,7 +53,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
 import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
@@ -62,13 +61,14 @@ import org.kalypso.zml.ui.KalypsoZmlUI;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 
 /**
  * @author Dirk Kuch
  */
 class ZmlBarLayerBackwardsVisitor implements IObservationVisitor
 {
+  private final BarLayerRectangleIndex m_index = new BarLayerRectangleIndex();
+
   private final IAxis m_dateAxis;
 
   private final IAxis m_valueAxis;
@@ -83,33 +83,25 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor
 
   private final ICoordinateMapper m_mapper;
 
-  final Rectangle m_rectangle = new Rectangle( 0, 0, 0, 0 );
+  private Rectangle m_currentRectangle;
 
   private final IProgressMonitor m_monitor;
 
-  private boolean m_isFirst = true;
-
   private final Period m_timestep;
 
-  private int m_lastX;
-
-  public ZmlBarLayerBackwardsVisitor( final ICoordinateMapper mapper, final ZmlBarLayerRangeHandler range, final GC gc, final FullRectangleFigure figure, final IObservation observation, final IProgressMonitor monitor )
+  public ZmlBarLayerBackwardsVisitor( final ICoordinateMapper mapper, final ZmlBarLayerRangeHandler range, final GC gc, final FullRectangleFigure figure, final IObservation observation, final Period timestep, final IProgressMonitor monitor )
   {
     m_mapper = mapper;
     m_range = range;
     m_gc = gc;
     m_figure = figure;
+    m_timestep = timestep;
     m_monitor = monitor;
-
-    m_figure.setRectangle( m_rectangle );
 
     m_valueAxis = AxisUtils.findValueAxis( observation.getAxes() );
     m_dateAxis = AxisUtils.findDateAxis( observation.getAxes() );
 
-    m_timestep = MetadataHelper.getTimestep( observation.getMetadataList() );
-
     m_baseLine = mapper.numericToScreen( 0.0, 0.0 ).y;
-    m_rectangle.y = m_baseLine;
   }
 
   @Override
@@ -134,21 +126,48 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor
       final Point screenCurrent = m_mapper.numericToScreen( numericDomain, numericTarget );
 
       final int currentX = screenCurrent.x;
+      final int currentY = screenCurrent.y;
 
-      if( m_isFirst )
-        initFirst( domainValue, currentX );
+      initRectangleFirstTime( domainValue, currentX );
 
-      final int width = Math.max( 1, Math.abs( currentX - m_lastX ) );
+      /* construct new rectangle */
+      final int newX = screenCurrent.x;
+      final int newY = Math.min( m_baseLine, currentY );
+      final int newHeight = Math.abs( currentY - m_baseLine );
+      final Rectangle rectangle = new Rectangle( newX, newY, 0, newHeight );
 
-      adjustLinevisibilty( width );
+      // REMARK: union needed to be sure negative/positive bars are both correctly handled
 
-      m_rectangle.x = currentX;
-      m_rectangle.height = screenCurrent.y - m_baseLine;
-      m_rectangle.width = width;
+      m_currentRectangle.add( rectangle );
 
-      m_figure.paint( m_gc );
+      /* Paint or store last rectangle */
+      if( m_currentRectangle.width > 0 )
+      {
+        if( m_currentRectangle.height == 0 )
+          m_currentRectangle.height = 1;
 
-      m_lastX = currentX;
+        final Rectangle clipping = m_gc.getClipping();
+        if( clipping.intersects( m_currentRectangle ) )
+        {
+          m_index.addElement( m_currentRectangle, container.getIndex() );
+
+          m_figure.paint( m_gc );
+        }
+
+        /* reset rectangle */
+        m_currentRectangle.x = m_currentRectangle.x + m_currentRectangle.width;
+        m_currentRectangle.y = m_baseLine;
+        m_currentRectangle.width = 0;
+        m_currentRectangle.height = 0;
+      }
+      else
+      {
+        /*
+         * nothing: just store rectangle for next paint: x stays at old place -> we cummulate rectangles until we have
+         * at least 1px to paint
+         */
+      }
+
     }
     catch( final Throwable t )
     {
@@ -156,38 +175,45 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor
     }
   }
 
-  private void initFirst( final Date currentTime, final int screenCurrent )
+  /**
+   * (Re-)Paint the last rectangle, for the case that is has not yet been painted yet. Even if we paint it a second
+   * time, this does not cost much, but the user is always able to see the last value.
+   */
+  public void paintLast( )
   {
-    m_isFirst = false;
-
-    if( m_timestep == null )
-    {
-      m_lastX = screenCurrent - 1;
-      return;
-    }
-
-    final long widthMillis = m_timestep.toStandardSeconds().getSeconds() * 1000;
-
-    final Date prevTime = new Date( currentTime.getTime() - widthMillis );
-
-    final IDataOperator<Date> dateDataOperator = m_range.getDateDataOperator();
-    final Number numericPrev = dateDataOperator.logicalToNumeric( prevTime );
-
-    m_lastX = m_mapper.numericToScreen( numericPrev, 0 ).x;
+    m_figure.paint( m_gc );
   }
 
-  /** Sets line visibility dependent on width (else we get only lines if width is too small) */
-  private void adjustLinevisibilty( final int width )
+  private void initRectangleFirstTime( final Date currentTime, final int screenCurrentX )
   {
-    final ILineStyle stroke = m_figure.getStyle().getStroke();
+    if( m_currentRectangle == null )
+    {
+      final int lastX = calculateFirstX( currentTime, screenCurrentX );
 
-    /* We only use the first width once, because width may vary due to rounding */
-    if( stroke != null && stroke.isVisible() )
-      m_figure.getStyle().setFillVisible( width > 1 );
+      m_currentRectangle = new Rectangle( lastX, m_baseLine, 0, 0 );
+      m_figure.setRectangle( m_currentRectangle );
+    }
+  }
+
+  private int calculateFirstX( final Date currentTime, final int screenCurrentX )
+  {
+    if( m_timestep == null )
+    {
+      // REMARK: should now happen very seldom: no timestep known, just use -2 pixel for first value
+      return screenCurrentX - 2;
+    }
     else
-      m_figure.getStyle().setFillVisible( true );
+    {
+      /* Calculate lastX from timestep */
+      final long widthMillis = m_timestep.toStandardSeconds().getSeconds() * 1000;
 
-    // stroke.setVisible( Math.abs( width ) > 4 );
+      final Date prevTime = new Date( currentTime.getTime() - widthMillis );
+
+      final IDataOperator<Date> dateDataOperator = m_range.getDateDataOperator();
+      final Number numericPrev = dateDataOperator.logicalToNumeric( prevTime );
+
+      return m_mapper.numericToScreen( numericPrev, 0 ).x;
+    }
   }
 
   private Object getTargetValue( final IObservationValueContainer container ) throws SensorException
@@ -205,5 +231,10 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor
     }
 
     return value;
+  }
+
+  public BarLayerRectangleIndex getRectangles( )
+  {
+    return m_index;
   }
 }
