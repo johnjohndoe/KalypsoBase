@@ -110,11 +110,15 @@ class ZmlBarLayerRangeHandler
       if( axis == null )
         return null;
 
-      // adjust min, because rainfalls time series values will be rendered int the past
-      if( ITimeseriesConstants.TYPE_RAINFALL.equals( axis.getType() ) )
-        min = doAdjustMin( observation, min );
-      else if( ITimeseriesConstants.TYPE_POLDER_CONTROL.equals( axis.getType() ) )
+      // FIXME: instead using parameter type, distinguish between 'forward' and 'backward' sums
+
+      final boolean isForward = ITimeseriesConstants.TYPE_POLDER_CONTROL.equals( axis.getType() );
+
+      // The domain range is a bit longer, because we are working with sum values
+      if( isForward )
         max = doAdjustMax( observation, max );
+      else
+        min = doAdjustMin( observation, min );
 
       return DataRange.create( getDateDataOperator().logicalToNumeric( min ), getDateDataOperator().logicalToNumeric( max ) );
     }
