@@ -169,18 +169,13 @@ public class ImportObservationSourcePage extends WizardPage
         fireSourceFileChanged( sourceFileData.getFile() );
       }
     } );
-
-    // fileBinding.applyBinding( m_binding );
   }
 
   protected void fireSourceFileChanged( final File file )
   {
     final IImportObservationSourceChangedListener[] listeners = m_listeners.toArray( new IImportObservationSourceChangedListener[] {} );
     for( final IImportObservationSourceChangedListener listener : listeners )
-    {
       listener.sourceFileChanged( file );
-    }
-
   }
 
   private void createFormatControl( final Composite parent )

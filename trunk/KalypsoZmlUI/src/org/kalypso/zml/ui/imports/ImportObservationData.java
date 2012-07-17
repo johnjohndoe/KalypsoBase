@@ -45,6 +45,7 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.TimeZone;
 
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -146,10 +147,32 @@ public class ImportObservationData extends AbstractModelObject implements IStore
     settings.put( PROPERTY_TIMEZONE, m_timezone );
   }
 
-  protected void handleSourceFileChanged( @SuppressWarnings("unused") final File newSourceFile )
+  protected void handleSourceFileChanged( final File newSourceFile )
   {
+    /* Guess best importer by file extension */
+    if( newSourceFile == null )
+      return;
+
+    final String extension = FilenameUtils.getExtension( newSourceFile.getName() );
+    final INativeObservationAdapter guessedAdapter = findAdapterByExtension( extension );
+
+    if( guessedAdapter != null )
+      setAdapter( guessedAdapter );
+
+    /* load data and show preview */
     // this is probably too slow for big timeseries, so we cannot show a preview?
     // IObservation sourceObservation = ZmlFactory.parseXML( newSourceFile.toURI().toURL() );
+  }
+
+  private INativeObservationAdapter findAdapterByExtension( final String extension )
+  {
+    // TODO: adapter does not know the preffered extension, we need to extend the extension point.
+    // final INativeObservationAdapter[] allAdapters = getObservationAdapters();
+    // for( final INativeObservationAdapter adapter : allAdapters )
+    // {
+    // }
+
+    return null;
   }
 
   public FileAndHistoryData getSourceFileData( )
