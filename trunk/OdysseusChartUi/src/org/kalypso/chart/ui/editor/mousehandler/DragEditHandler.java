@@ -11,12 +11,12 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.manager.visitors.EditableChartLayerVisitor;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 
+// FIXME: separate drag and hover
 /**
  * @author kimwerner
  */
 public class DragEditHandler extends AbstractChartDragHandler
 {
-
   EditInfo m_editInfo = null;
 
   public DragEditHandler( final IChartComposite chart )
@@ -52,9 +52,9 @@ public class DragEditHandler extends AbstractChartDragHandler
   @Override
   public void doMouseMoveAction( final Point start, final EditInfo editInfo )
   {
-
     if( m_editInfo == null )
       m_editInfo = editInfo;
+
     if( m_editInfo.getLayer() != null )
     {
       if( ((IEditableChartLayer) editInfo.getLayer()).isLocked() )

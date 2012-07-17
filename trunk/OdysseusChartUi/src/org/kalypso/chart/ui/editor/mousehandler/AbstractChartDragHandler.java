@@ -15,9 +15,9 @@ import de.openali.odysseus.chart.framework.model.layer.manager.visitors.Editable
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
- * FIXME: using the eidt info here in order to save the click-state is dubious. Separate editing and dragging (i.e.
+ * FIXME: using the edit info here in order to save the click-state is dubious. Separate editing and dragging (i.e.
  * separate this into different helper classes or remove the edit stuff from this class).
- * 
+ *
  * @author kimwerner
  */
 public abstract class AbstractChartDragHandler extends AbstractChartHandler
@@ -159,7 +159,7 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
     {
       if( m_editInfo != null )
       {
-        Point position = new Point( up.x - m_deltaSnapX, up.y - m_deltaSnapY );
+        final Point position = new Point( up.x - m_deltaSnapX, up.y - m_deltaSnapY );
         final Point plotPoint = ChartHandlerUtilities.screen2plotPoint( position, getChart().getPlotRect() );
         doMouseUpAction( plotPoint, m_editInfo );
       }
