@@ -89,6 +89,14 @@ public abstract class AbstractObservationImporter implements INativeObservationA
 
   private String m_title;
 
+  private String m_defaultExtension;
+
+  @Override
+  public String getDefaultExtension( )
+  {
+    return m_defaultExtension;
+  }
+
   @Deprecated
   @Override
   public IAxis[] createAxis( final String valueType )
@@ -208,6 +216,7 @@ public abstract class AbstractObservationImporter implements INativeObservationA
   public final void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
     m_id = config.getAttribute( "id" ); //$NON-NLS-1$
+    m_defaultExtension = config.getAttribute( "extension" ); //$NON-NLS-1$
     m_title = config.getAttribute( "label" ); //$NON-NLS-1$
     m_axisTypeValue = config.getAttribute( "axisType" ); //$NON-NLS-1$
   }

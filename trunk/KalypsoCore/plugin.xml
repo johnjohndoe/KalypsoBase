@@ -14,16 +14,16 @@
    <extension-point id="layout" name="layout" schema="schema/layout.exsd"/>
 
    <extension point="org.kalypso.core.observationImporter">
-    <importer  id="grap" label="Grap" class="org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter" />
-    <importer id="csv" label="CSV" class="org.kalypso.ogc.sensor.adapter.NativeObservationCSVAdapter" />
-    <importer id="ex2" label="EX2" class="org.kalypso.ogc.sensor.adapter.NativeObservationEx2Adapter" />
+    <importer  id="grap" label="Grap" class="org.kalypso.ogc.sensor.adapter.NativeObservationGrapAdapter" extension="grap" />
+    <importer id="csv" label="CSV" class="org.kalypso.ogc.sensor.adapter.NativeObservationCSVAdapter" extension="csv" />
+    <importer id="ex2" label="EX2" class="org.kalypso.ogc.sensor.adapter.NativeObservationEx2Adapter" extension="ex2" />
     <importer id="dwd-5min" label="DWD-5min" class="org.kalypso.ogc.sensor.adapter.NativeObservationDWD5minAdapter" />
     <importer id="dwd-std" label="DWD-std" class="org.kalypso.ogc.sensor.adapter.NativeObservationDWDstdAdapter" />
     <importer id="dwd-md" label="DWD-md" class="org.kalypso.ogc.sensor.adapter.NativeObservationDWDmdAdapter" />
     <importer id="dwdk" label="DVWK" class="org.kalypso.ogc.sensor.adapter.NativeObservationDVWKAdapter" />
-    <importer id="dat" label="DAT" class="org.kalypso.ogc.sensor.adapter.NativeObservationDatAdapter" />
-    <importer id="zrx" label="ZRX" class="org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter" />
-    <importer id="zml" label="ZML" class="org.kalypso.ogc.sensor.adapter.NativeObservationZmlAdapter" />
+    <importer id="dat" label="DAT" class="org.kalypso.ogc.sensor.adapter.NativeObservationDatAdapter" extension="dat"/>
+    <importer id="zrx" label="ZRX" class="org.kalypso.ogc.sensor.adapter.NativeObservationZrxAdapter" extension="zrx"/>
+    <importer id="zml" label="ZML" class="org.kalypso.ogc.sensor.adapter.NativeObservationZmlAdapter" extension="zml"/>
    </extension>
 
    <extension

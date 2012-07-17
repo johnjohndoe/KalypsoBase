@@ -81,17 +81,15 @@
                </appInfo>
             </annotation>
          </attribute>
+         <attribute name="extension" type="string">
+            <annotation>
+               <documentation>
+                  The default extension for files that this importer will import. Only a hint.
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
-
-   <annotation>
-      <appInfo>
-         <meta.section type="apiInfo"/>
-      </appInfo>
-      <documentation>
-         [Enter API information here.]
-      </documentation>
-   </annotation>
 
    <annotation>
       <appInfo>
@@ -120,5 +118,14 @@
       </documentation>
    </annotation>
 
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         [Enter API information here.]
+      </documentation>
+   </annotation>
 
 </schema>
