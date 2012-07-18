@@ -94,8 +94,6 @@ public final class KalypsoCoreExtensions
 
   private static Map<String, IConfigurationElement> THE_THEME_INFO_MAP = null;
 
-  private static Map<String, IConfigurationElement> OBSERVATION_IMPORTERS = null;
-
   /* GmlSourceProvider Extension-Point */
   private static final String GML_SOURCE_PROVIDER_EXTENSION_POINT = "org.kalypso.core.gmlSourceProvider"; //$NON-NLS-1$
 
@@ -327,12 +325,11 @@ public final class KalypsoCoreExtensions
 
   public static synchronized INativeObservationAdapter[] getObservationImporters( )
   {
-    if( OBSERVATION_IMPORTERS == null )
-      OBSERVATION_IMPORTERS = readImporters();
+    final Map<String, IConfigurationElement> importers = readImporters();
 
     final List<INativeObservationAdapter> adapters = new ArrayList<>();
 
-    final Set<Entry<String, IConfigurationElement>> entries = OBSERVATION_IMPORTERS.entrySet();
+    final Set<Entry<String, IConfigurationElement>> entries = importers.entrySet();
     for( final Entry<String, IConfigurationElement> entry : entries )
     {
       try
@@ -351,14 +348,12 @@ public final class KalypsoCoreExtensions
 
   public static synchronized INativeObservationAdapter getObservationImporter( final String id ) throws CoreException
   {
-    if( OBSERVATION_IMPORTERS == null )
-      OBSERVATION_IMPORTERS = readImporters();
+    final Map<String, IConfigurationElement> importers = readImporters();
 
-    final IConfigurationElement element = OBSERVATION_IMPORTERS.get( id );
+    final IConfigurationElement element = importers.get( id );
     if( Objects.isNull( element ) )
       return null;
 
-    final INativeObservationAdapter adapter = (INativeObservationAdapter) element.createExecutableExtension( "class" ); //$NON-NLS-1$
-    return adapter;
+    return (INativeObservationAdapter) element.createExecutableExtension( "class" ); //$NON-NLS-1$
   }
 }

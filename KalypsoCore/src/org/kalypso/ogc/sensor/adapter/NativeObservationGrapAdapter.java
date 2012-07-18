@@ -93,10 +93,7 @@ public class NativeObservationGrapAdapter extends AbstractObservationImporter
       while( (lineIn = reader.readLine()) != null )
       {
         if( !continueWithErrors && getErrorCount() > getMaxErrorCount() )
-        {
-          resetErrorCount();
           return datasets;
-        }
 
         final Matcher matcher = GRAP_PATTERN.matcher( lineIn );
         if( matcher.matches() )

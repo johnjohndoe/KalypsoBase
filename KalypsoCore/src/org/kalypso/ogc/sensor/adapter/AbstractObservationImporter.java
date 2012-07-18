@@ -230,11 +230,6 @@ public abstract class AbstractObservationImporter implements INativeObservationA
     m_errorCount++;
   }
 
-  protected void resetErrorCount( )
-  {
-    m_errorCount = 0;
-  }
-
   @Override
   public final String toString( )
   {
