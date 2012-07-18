@@ -100,7 +100,10 @@ public class NativeObservationDWDmdAdapter extends AbstractObservationImporter
     while( (lineIn = reader.readLine()) != null )
     {
       if( !continueWithErrors && getErrorCount() > getMaxErrorCount() )
+      {
+        resetErrorCount();
         return datasets;
+      }
 
       switch( step )
       {
@@ -129,7 +132,7 @@ public class NativeObservationDWDmdAdapter extends AbstractObservationImporter
           }
           else
           {
-            stati.add( IStatus.ERROR, String.format( Messages.getString("NativeObservationDWDmdAdapter_0"), reader.getLineNumber(), lineIn ) ); //$NON-NLS-1$
+            stati.add( IStatus.ERROR, String.format( Messages.getString( "NativeObservationDWDmdAdapter_0" ), reader.getLineNumber(), lineIn ) ); //$NON-NLS-1$
             tickErrorCount();
           }
           step++;
@@ -146,7 +149,7 @@ public class NativeObservationDWDmdAdapter extends AbstractObservationImporter
             }
             catch( final Exception e )
             {
-              stati.add( IStatus.ERROR, String.format( Messages.getString("NativeObservationDWDmdAdapter_1"), reader.getLineNumber(), lineIn ) ); //$NON-NLS-1$
+              stati.add( IStatus.ERROR, String.format( Messages.getString( "NativeObservationDWDmdAdapter_1" ), reader.getLineNumber(), lineIn ) ); //$NON-NLS-1$
               tickErrorCount();
             }
             try
@@ -195,13 +198,13 @@ public class NativeObservationDWDmdAdapter extends AbstractObservationImporter
             }
             catch( final Exception e )
             {
-              stati.add( IStatus.WARNING, String.format( Messages.getString("NativeObservationDWDmdAdapter_2"), reader.getLineNumber(), lineIn ) ); //$NON-NLS-1$
+              stati.add( IStatus.WARNING, String.format( Messages.getString( "NativeObservationDWDmdAdapter_2" ), reader.getLineNumber(), lineIn ) ); //$NON-NLS-1$
               tickErrorCount();
             }
           }
           else
           {
-            stati.add( IStatus.WARNING, String.format( Messages.getString("NativeObservationDWDmdAdapter_3"), reader.getLineNumber(), lineIn ) ); //$NON-NLS-1$
+            stati.add( IStatus.WARNING, String.format( Messages.getString( "NativeObservationDWDmdAdapter_3" ), reader.getLineNumber(), lineIn ) ); //$NON-NLS-1$
             tickErrorCount();
           }
           break;

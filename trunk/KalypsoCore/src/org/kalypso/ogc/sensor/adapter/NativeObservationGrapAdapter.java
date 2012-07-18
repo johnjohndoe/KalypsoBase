@@ -93,7 +93,10 @@ public class NativeObservationGrapAdapter extends AbstractObservationImporter
       while( (lineIn = reader.readLine()) != null )
       {
         if( !continueWithErrors && getErrorCount() > getMaxErrorCount() )
+        {
+          resetErrorCount();
           return datasets;
+        }
 
         final Matcher matcher = GRAP_PATTERN.matcher( lineIn );
         if( matcher.matches() )
@@ -108,7 +111,7 @@ public class NativeObservationGrapAdapter extends AbstractObservationImporter
         }
         else
         {
-          stati.add( IStatus.WARNING, String.format( Messages.getString("NativeObservationGrapAdapter_0"), reader.getLineNumber(), lineIn ) ); //$NON-NLS-1$
+          stati.add( IStatus.WARNING, String.format( Messages.getString( "NativeObservationGrapAdapter_0" ), reader.getLineNumber(), lineIn ) ); //$NON-NLS-1$
           tickErrorCount();
         }
       }
@@ -141,7 +144,7 @@ public class NativeObservationGrapAdapter extends AbstractObservationImporter
 
     if( !dateMatcher.matches() )
     {
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), String.format( Messages.getString("NativeObservationGrapAdapter_1"), dateString ) ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), String.format( Messages.getString( "NativeObservationGrapAdapter_1" ), dateString ) ) ); //$NON-NLS-1$
     }
 
     final StringBuffer buffer = new StringBuffer();

@@ -64,7 +64,7 @@ import org.kalypso.ogc.sensor.status.KalypsoStati;
  * 5-Min-Werte(in 1/1000 mm)Kalendertag! ch. v. b. 1-2 4-8 10-15 17-20 22-27 Anz. ch. 2 5 6 4 6 Ein Datenblock besteht
  * aus 18 Datensätzen: Datensatz 5-Minuten-Datei (neue Struktur) Feld-Nr. 1-16 Inhalt 16 5-Minutenwerte der
  * Niederschlagshöhe(in 1/1000 mm) ch. v. b. 1-80 Anz.ch. 80 example:
- *
+ * 
  * <pre>
  *         77 48558 960101 00 0
  *         0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
@@ -73,9 +73,9 @@ import org.kalypso.ogc.sensor.status.KalypsoStati;
  *         0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
  *         0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
  *         0 0 0 0 0 0 0 0 0 0 0 0 0
- *
+ * 
  * </pre>
- *
+ * 
  * @author huebsch
  * @author Dirk Kuch
  */
@@ -117,7 +117,10 @@ public class NativeObservationDWD5minAdapter extends AbstractObservationImporter
       while( (lineIn = reader.readLine()) != null )
       {
         if( !continueWithErrors && getErrorCount() > getMaxErrorCount() )
+        {
+          resetErrorCount();
           return datasets;
+        }
 
         switch( step )
         {
@@ -137,12 +140,12 @@ public class NativeObservationDWD5minAdapter extends AbstractObservationImporter
               }
               else
               {
-                stati.add( IStatus.INFO, String.format( Messages.getString("NativeObservationDWD5minAdapter_0"), reader.getLineNumber(), startDateString, DATE_PATTERN.toString() ) ); //$NON-NLS-1$
+                stati.add( IStatus.INFO, String.format( Messages.getString( "NativeObservationDWD5minAdapter_0" ), reader.getLineNumber(), startDateString, DATE_PATTERN.toString() ) ); //$NON-NLS-1$
               }
             }
             else
             {
-              stati.add( IStatus.WARNING, String.format( Messages.getString("NativeObservationDWD5minAdapter_1"), reader.getLineNumber(), lineIn ) ); //$NON-NLS-1$
+              stati.add( IStatus.WARNING, String.format( Messages.getString( "NativeObservationDWD5minAdapter_1" ), reader.getLineNumber(), lineIn ) ); //$NON-NLS-1$
               tickErrorCount();
             }
 

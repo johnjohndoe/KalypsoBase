@@ -85,7 +85,10 @@ public class NativeObservationDVWKAdapter extends AbstractObservationImporter
     while( (lineIn = reader.readLine()) != null )
     {
       if( !continueWithErrors && getErrorCount() > getMaxErrorCount() )
+      {
+        resetErrorCount();
         return datasets;
+      }
 
       try
       {
@@ -146,7 +149,7 @@ public class NativeObservationDVWKAdapter extends AbstractObservationImporter
                 }
                 catch( final Exception e )
                 {
-                  stati.add( IStatus.WARNING, String.format( Messages.getString("NativeObservationDVWKAdapter_0"), reader.getLineNumber(), lineIn ) ); //$NON-NLS-1$
+                  stati.add( IStatus.WARNING, String.format( Messages.getString( "NativeObservationDVWKAdapter_0" ), reader.getLineNumber(), lineIn ) ); //$NON-NLS-1$
                   tickErrorCount();
                 }
                 calendar.add( Calendar.MINUTE, 5 );
@@ -159,15 +162,15 @@ public class NativeObservationDVWKAdapter extends AbstractObservationImporter
       }
       catch( final Exception e )
       {
-        stati.add( IStatus.ERROR, String.format( Messages.getString("NativeObservationDVWKAdapter_1"), reader.getLineNumber(), e.getLocalizedMessage() ) ); //$NON-NLS-1$
+        stati.add( IStatus.ERROR, String.format( Messages.getString( "NativeObservationDVWKAdapter_1" ), reader.getLineNumber(), e.getLocalizedMessage() ) ); //$NON-NLS-1$
         tickErrorCount();
       }
 
       if( !continueWithErrors && getErrorCount() > getMaxErrorCount() )
       {
         final MessageBox messageBox = new MessageBox( null, SWT.ICON_QUESTION | SWT.YES | SWT.NO );
-        messageBox.setMessage( Messages.getString("NativeObservationDVWKAdapter_2") ); //$NON-NLS-1$
-        messageBox.setText( Messages.getString("NativeObservationDVWKAdapter_3") ); //$NON-NLS-1$
+        messageBox.setMessage( Messages.getString( "NativeObservationDVWKAdapter_2" ) ); //$NON-NLS-1$
+        messageBox.setText( Messages.getString( "NativeObservationDVWKAdapter_3" ) ); //$NON-NLS-1$
         if( messageBox.open() == SWT.NO )
           return null;
       }
