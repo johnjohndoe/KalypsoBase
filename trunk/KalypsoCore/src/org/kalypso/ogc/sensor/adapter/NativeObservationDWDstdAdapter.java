@@ -83,10 +83,7 @@ public class NativeObservationDWDstdAdapter extends AbstractObservationImporter
     while( (lineIn = reader.readLine()) != null )
     {
       if( !continueWithErrors && getErrorCount() > getMaxErrorCount() )
-      {
-        resetErrorCount();
         return datasets;
-      }
 
       try
       {

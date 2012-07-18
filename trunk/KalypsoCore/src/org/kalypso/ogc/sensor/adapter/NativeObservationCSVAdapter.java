@@ -63,7 +63,7 @@ import au.com.bytecode.opencsv.CSVReader;
 /**
  * adapter for Timeseries in 'csv' format date format dd MM yyy hh mm value format comma seperator example: 02.06.2002
  * 16:30;0,0010
- *
+ * 
  * @author huebsch
  * @author Dirk Kuch
  */
@@ -71,24 +71,30 @@ public class NativeObservationCSVAdapter extends AbstractObservationImporter
 {
   public static final String SOURCE_ID = "source://native.observation.csv.import"; //$NON-NLS-1$
 
-  private static final Pattern DATE_PATTERN = Pattern.compile( "([0-9 ]{2}) ([0-9 ]{2}) ([0-9]{4}) ([0-9 ]{2}) ([0-9 ]{2})" ); //$NON-NLS-1$
+  private static final Pattern DATE_PATTERN = Pattern.compile( "([0-9 ]{2}) ([0-9 ]{2}) ([0-9]{2,4}) ([0-9 ]{2}) ([0-9 ]{2})" ); //$NON-NLS-1$
 
   @Override
   protected List<NativeObservationDataSet> parse( final File source, final TimeZone timeZone, final boolean continueWithErrors, final IStatusCollector stati ) throws Exception
   {
     final List<NativeObservationDataSet> datasets = new ArrayList<>();
 
-    final DateFormat sdf = new SimpleDateFormat( "dd MM yyyy HH mm" ); //$NON-NLS-1$
-    sdf.setTimeZone( timeZone );
+    final DateFormat sdf2 = new SimpleDateFormat( "dd MM yy HH mm" ); //$NON-NLS-1$
+    sdf2.setTimeZone( timeZone );
+
+    final DateFormat sdf4 = new SimpleDateFormat( "dd MM yyyy HH mm" ); //$NON-NLS-1$
+    sdf4.setTimeZone( timeZone );
 
     final FileReader fileReader = new FileReader( source );
     final LineNumberReader reader = new LineNumberReader( fileReader );
     String[] lineIn = null;
 
-    final CSVReader csv = new CSVReader( reader, '\t' );
+    final CSVReader csv = new CSVReader( reader, ';' );
 
     while( ArrayUtils.isNotEmpty( lineIn = csv.readNext() ) )
     {
+      if( !continueWithErrors && getErrorCount() > getMaxErrorCount() )
+        return datasets;
+
       try
       {
         if( ArrayUtils.getLength( lineIn ) == 2 )
@@ -105,17 +111,26 @@ public class NativeObservationCSVAdapter extends AbstractObservationImporter
           if( dateMatcher.matches() )
           {
             final StringBuffer buffer = new StringBuffer();
+
+            DateFormat sdf = sdf2;
             for( int i = 1; i <= dateMatcher.groupCount(); i++ )
             {
+              // separator
               if( i > 1 )
-                buffer.append( " " ); // separator //$NON-NLS-1$
+                buffer.append( " " ); //$NON-NLS-1$
 
-              buffer.append( dateMatcher.group( i ).replaceAll( " ", "0" ) ); // //$NON-NLS-1$ //$NON-NLS-2$
-              // correct
-              // empty
-              // fields
+              /* Get the group. */
+              final String group = dateMatcher.group( i );
+              if( i == 3 && group.length() == 4 )
+                sdf = sdf4;
+
+              // correct empty fields
+              buffer.append( group.replaceAll( " ", "0" ) ); // //$NON-NLS-1$ //$NON-NLS-2$
             }
+
+            // FIXME: Why add the 00 here? Seconds do not appear in the pattern or is this the timezone?
             buffer.append( " 00" ); //$NON-NLS-1$
+
             final String correctDate = buffer.toString();
             final Date date = sdf.parse( correctDate );
 
@@ -123,19 +138,19 @@ public class NativeObservationCSVAdapter extends AbstractObservationImporter
           }
           else
           {
-            stati.add( IStatus.WARNING, String.format( Messages.getString("NativeObservationCSVAdapter_0"), reader.getLineNumber(), lineIn ) ); //$NON-NLS-1$
+            stati.add( IStatus.WARNING, String.format( Messages.getString( "NativeObservationCSVAdapter_0" ), reader.getLineNumber(), lineIn ) ); //$NON-NLS-1$
             tickErrorCount();
           }
         }
         else
         {
-          stati.add( IStatus.WARNING, String.format( Messages.getString("NativeObservationCSVAdapter_1"), reader.getLineNumber(), lineIn ) ); //$NON-NLS-1$
+          stati.add( IStatus.WARNING, String.format( Messages.getString( "NativeObservationCSVAdapter_1" ), reader.getLineNumber(), lineIn ) ); //$NON-NLS-1$
           tickErrorCount();
         }
       }
       catch( final Exception e )
       {
-        stati.add( IStatus.ERROR, String.format( Messages.getString("NativeObservationCSVAdapter_2"), reader.getLineNumber(), e.getLocalizedMessage() ) ); //$NON-NLS-1$
+        stati.add( IStatus.ERROR, String.format( Messages.getString( "NativeObservationCSVAdapter_2" ), reader.getLineNumber(), e.getLocalizedMessage() ) ); //$NON-NLS-1$
         tickErrorCount();
       }
     }
