@@ -52,7 +52,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
@@ -174,7 +173,7 @@ public abstract class AbstractObservationImporter implements INativeObservationA
         setObservation( new SimpleObservation( source.getAbsolutePath(), source.getName(), metadata, model ) );
       }
 
-      return StatusUtilities.createStatus( stati, Messages.getString( "AbstractObservationImporter_1" ) ); //$NON-NLS-1$
+      return stati.asMultiStatus( Messages.getString( "AbstractObservationImporter_1" ) ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {
