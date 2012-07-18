@@ -55,6 +55,7 @@ import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.PropertyUtils;
@@ -65,6 +66,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.model.feature.DefaultReferenceCollectorStrategy;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.search.IReferenceCollectorStrategy;
 
 /**
@@ -72,7 +74,7 @@ import org.kalypsodeegree_impl.model.feature.search.IReferenceCollectorStrategy;
  * <p>
  * Today only properties with String type are supported.
  * </p>
- *
+ * 
  * @author Gernot Belger
  */
 public class ComboFeatureControl extends AbstractFeatureControl
@@ -113,7 +115,7 @@ public class ComboFeatureControl extends AbstractFeatureControl
     if( entries != null )
       m_fixedEntries.putAll( entries );
 
-//    Assert.isNotNull( ftp );
+// Assert.isNotNull( ftp );
 
     m_comparator = comparator;
     m_filter = filter;
@@ -150,17 +152,14 @@ public class ComboFeatureControl extends AbstractFeatureControl
         final GMLWorkspace workspace = feature.getWorkspace();
 
         final IReferenceCollectorStrategy strategy = createSearchStrategy( workspace, feature, rt );
-        final Feature[] features = strategy.collectReferences();
+        final IXLinkedFeature[] features = strategy.collectReferences();
 
         final GMLLabelProvider labelProvider = new GMLLabelProvider();
 
-        for( final Feature foundFeature : features )
+        for( final IXLinkedFeature foundFeature : features )
         {
           final String featureLabel = labelProvider.getText( foundFeature );
-          if( foundFeature instanceof IXLinkedFeature )
-            m_entries.put( ((IXLinkedFeature) foundFeature).getFeature(), featureLabel );
-          else
-            m_entries.put( foundFeature, featureLabel );
+          m_entries.put( foundFeature, featureLabel );
         }
       }
     }
@@ -235,6 +234,7 @@ public class ComboFeatureControl extends AbstractFeatureControl
     if( newValue == null && oldValue != null || !newValue.equals( oldValue ) )
     {
       m_ignoreNextUpdate = true;
+
       fireFeatureChange( new ChangeFeatureCommand( feature, pt, newValue ) );
     }
   }
@@ -273,13 +273,22 @@ public class ComboFeatureControl extends AbstractFeatureControl
 
     if( propertyType instanceof IRelationType )
     {
-      // REMARK: always fully resolve the linked feature, we will do the same with the combo entries: this makes sure,
-      // comparing the features will work later.
-      final Feature member = feature.getMember( (IRelationType) propertyType );
-      if( member instanceof IXLinkedFeature )
-        return ((IXLinkedFeature) member).getFeature();
-      else
-        return member;
+      final Object property = feature.getProperty( propertyType );
+      if( property instanceof IXLinkedFeature )
+        return property;
+
+      if( property instanceof String )
+      {
+        final IRelationType relationType = (IRelationType) propertyType;
+        final IFeatureType targetType = relationType.getTargetFeatureType();
+        final String href = String.format( "#%s", property );
+        return FeatureFactory.createXLink( getFeature(), relationType, targetType, href );
+      }
+
+      if( property == null )
+        return null;
+
+      throw new IllegalStateException();
     }
 
     return feature.getProperty( propertyType );

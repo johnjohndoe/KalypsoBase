@@ -43,6 +43,7 @@ package org.kalypsodeegree_impl.model.feature;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IDocumentReference;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -75,11 +76,11 @@ public class DefaultReferenceCollectorStrategy implements IReferenceCollectorStr
   }
 
   @Override
-  public Feature[] collectReferences( )
+  public IXLinkedFeature[] collectReferences( )
   {
     final IFeatureType targetFeatureType = m_parentRelation.getTargetFeatureType();
 
-    final List<Feature> foundFeatures = new ArrayList<Feature>();
+    final List<IXLinkedFeature> foundFeatures = new ArrayList<>();
 
     final IDocumentReference[] refs = m_parentRelation.getDocumentReferences();
     for( final IDocumentReference ref : refs )
@@ -98,10 +99,10 @@ public class DefaultReferenceCollectorStrategy implements IReferenceCollectorStr
         collectFromWorkspace( targetFeatureType, foundFeatures, uri, linkedFeature.getWorkspace() );
     }
 
-    return foundFeatures.toArray( new Feature[foundFeatures.size()] );
+    return foundFeatures.toArray( new IXLinkedFeature[foundFeatures.size()] );
   }
 
-  private void collectFromDocument( final IFeatureType targetFeatureType, final List<Feature> foundFeatures, final IDocumentReference ref )
+  private void collectFromDocument( final IFeatureType targetFeatureType, final List<IXLinkedFeature> foundFeatures, final IDocumentReference ref )
   {
     final String uri = ref.getReference();
 
@@ -118,7 +119,7 @@ public class DefaultReferenceCollectorStrategy implements IReferenceCollectorStr
     return m_workspace.getLinkedWorkspace( uri );
   }
 
-  private void collectFromWorkspace( final IFeatureType targetFeatureType, final List<Feature> foundFeatures, final String uri, final GMLWorkspace workspace )
+  private void collectFromWorkspace( final IFeatureType targetFeatureType, final List<IXLinkedFeature> foundFeatures, final String uri, final GMLWorkspace workspace )
   {
     if( workspace == null )
       return;
@@ -137,27 +138,15 @@ public class DefaultReferenceCollectorStrategy implements IReferenceCollectorStr
       if( id != null && id.equals( m_parentFeature.getId() ) )
         continue;
 
-      /* Same workspace. */
-      if( workspace == m_workspace )
-      {
-        /* Special Case: The link links into the same workspace. */
-        /* Special Case: It may be ignored, because its feature will be added directly. */
-        if( feature instanceof IXLinkedFeature )
-        {
-          final IXLinkedFeature xlink = (IXLinkedFeature) feature;
-          final GMLWorkspace linkedWorkspace = xlink.getWorkspace();
-          if( linkedWorkspace == m_workspace )
-            continue;
-        }
-
-        foundFeatures.add( feature );
+      if( feature instanceof IXLinkedFeature )
         continue;
-      }
 
       // REMARK: id == null happens for xlinks, i.e. twice decending into xlinks does not work....
       if( id != null )
       {
-        final String href = uri + "#" + id; //$NON-NLS-1$
+        final String uriRef = workspace == m_workspace ? StringUtils.EMPTY : uri;
+
+        final String href = uriRef + "#" + id; //$NON-NLS-1$
         final IXLinkedFeature linkedFeature = new XLinkedFeature_Impl( m_parentFeature, m_parentRelation, targetFeatureType, href );
         foundFeatures.add( linkedFeature );
       }

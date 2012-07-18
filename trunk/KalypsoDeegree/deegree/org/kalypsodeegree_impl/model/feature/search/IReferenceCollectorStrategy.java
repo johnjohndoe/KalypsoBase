@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.feature.search;
 
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IXLinkedFeature;
 
 /**
  * Collects references to features of a given relation type.<br/>
@@ -51,5 +51,5 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public interface IReferenceCollectorStrategy
 {
-  Feature[] collectReferences( );
+  IXLinkedFeature[] collectReferences( );
 }
