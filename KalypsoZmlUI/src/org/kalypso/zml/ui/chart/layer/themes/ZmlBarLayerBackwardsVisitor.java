@@ -181,7 +181,8 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor
    */
   public void paintLast( )
   {
-    m_figure.paint( m_gc );
+    if( m_currentRectangle != null )
+      m_figure.paint( m_gc );
   }
 
   private void initRectangleFirstTime( final Date currentTime, final int screenCurrentX )
