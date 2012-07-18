@@ -86,7 +86,11 @@ public class NativeObservationEx2Adapter extends AbstractObservationImporter
     while( (lineIn = reader.readLine()) != null )
     {
       if( !continueWithErrors && getErrorCount() > getMaxErrorCount() )
+      {
+        resetErrorCount();
         return datasets;
+      }
+
       try
       {
         final Matcher matcher = EX_2_PATTERN.matcher( lineIn );
@@ -117,19 +121,19 @@ public class NativeObservationEx2Adapter extends AbstractObservationImporter
           }
           else
           {
-            stati.add( IStatus.WARNING, String.format( Messages.getString("NativeObservationEx2Adapter_0"), reader.getLineNumber(), lineIn ) ); //$NON-NLS-1$
+            stati.add( IStatus.WARNING, String.format( Messages.getString( "NativeObservationEx2Adapter_0" ), reader.getLineNumber(), lineIn ) ); //$NON-NLS-1$
             tickErrorCount();
           }
         }
         else
         {
-          stati.add( IStatus.WARNING, String.format( Messages.getString("NativeObservationEx2Adapter_1"), reader.getLineNumber(), lineIn ) ); //$NON-NLS-1$
+          stati.add( IStatus.WARNING, String.format( Messages.getString( "NativeObservationEx2Adapter_1" ), reader.getLineNumber(), lineIn ) ); //$NON-NLS-1$
           tickErrorCount();
         }
       }
       catch( final Exception e )
       {
-        stati.add( IStatus.ERROR, String.format( Messages.getString("NativeObservationEx2Adapter_2"), reader.getLineNumber(), e.getLocalizedMessage() ) ); //$NON-NLS-1$
+        stati.add( IStatus.ERROR, String.format( Messages.getString( "NativeObservationEx2Adapter_2" ), reader.getLineNumber(), e.getLocalizedMessage() ) ); //$NON-NLS-1$
         tickErrorCount();
       }
     }

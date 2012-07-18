@@ -145,7 +145,7 @@ public abstract class AbstractObservationImporter implements INativeObservationA
   /**
    * Implemented for backwards compatibility, falls back to
    * {@link #importTimeseries(File, TimeZone, m_axisTypeValue, boolean)}.
-   *
+   * 
    * @see org.kalypso.ogc.sensor.adapter.INativeObservationAdapter#createObservationFromSource(java.io.File,
    *      java.util.TimeZone, boolean)
    */
@@ -228,6 +228,11 @@ public abstract class AbstractObservationImporter implements INativeObservationA
   protected void tickErrorCount( )
   {
     m_errorCount++;
+  }
+
+  protected void resetErrorCount( )
+  {
+    m_errorCount = 0;
   }
 
   @Override
