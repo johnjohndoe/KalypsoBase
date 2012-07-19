@@ -45,10 +45,10 @@ import java.net.URL;
 import java.util.Date;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Point;
 import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -65,10 +65,9 @@ import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
+import de.openali.odysseus.chart.ext.base.layer.LinePaintManager;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.ClipHelper;
-import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
-import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
@@ -223,7 +222,6 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     return visitor.getPoints();
   }
 
-  @SuppressWarnings("unchecked")
   private void paintSinglePoint( final GC gc, final IPair<Number, Number> point )
   {
     final IPointStyle pointStyle = getSinglePointStyle();
@@ -234,47 +232,32 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     if( clip != null && !clip.contains( point.getDomain().doubleValue(), point.getTarget().doubleValue() ) )
       return;
 
-    final Point[] screenPoints = toScreen( point );
+    @SuppressWarnings("unchecked")
+    final IPair<Number,Number>[] points = new IPair[]{point};
 
-    final PointFigure pf = new PointFigure();
-    pf.setStyle( pointStyle );
-    pf.setPoints( screenPoints );
-    pf.paint( gc );
+    final ICoordinateMapper mapper = getCoordinateMapper();
+
+    final LinePaintManager paintManager = new LinePaintManager( mapper, gc, pointStyle );
+    paintManager.paintPoints( points, new NullProgressMonitor() );
   }
 
   private void paintPoints( final GC gc, final IPair<Number, Number>[] points, final IProgressMonitor monitor )
   {
-    final ClipHelper helper = new ClipHelper( getClip() );
+    final Rectangle2D clip = getClip();
+
+    /* Find point clipped to current range or all */
+    final ClipHelper helper = new ClipHelper( clip );
     final IPair<Number, Number>[][] clippedPoints = helper.clipAsLine( points );
-    for( final IPair<Number, Number>[] subPoints : clippedPoints )
-    {
-      final Point[] screenPoints = toScreen( subPoints );
-      paintFigures( gc, screenPoints );
 
-      if( monitor.isCanceled() )
-        throw new OperationCanceledException();
-    }
-  }
-
-  private void paintFigures( final GC gc, final Point[] points )
-  {
     final ILineStyle lineStyle = getMyLineStyle();
-    if( lineStyle != null )
-    {
-      final PolylineFigure lf = new PolylineFigure();
-      lf.setStyle( lineStyle );
-      lf.setPoints( points );
-      lf.paint( gc );
-    }
-
     final IPointStyle pointStyle = getMyPointStyle();
-    if( pointStyle != null )
-    {
-      final PointFigure pf = new PointFigure();
-      pf.setStyle( pointStyle );
-      pf.setPoints( points );
-      pf.paint( gc );
-    }
+
+    final ICoordinateMapper mapper = getCoordinateMapper();
+
+    final LinePaintManager paintManager = new LinePaintManager( mapper, gc, lineStyle, pointStyle );
+
+    for( final IPair<Number, Number>[] subPoints : clippedPoints )
+      paintManager.paintPoints( subPoints, monitor );
   }
 
   Rectangle2D getClip( )
@@ -282,6 +265,8 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     final DateRange range = getRange();
     if( range == null || range.getFrom() == null && range.getTo() == null )
       return null;
+
+    // TODO: we might intersect with the current domain range, to speed up painting of long timeseries
 
     final Date from = Objects.isNotNull( range.getFrom() ) ? range.getFrom() : null;
     final Date to = Objects.isNotNull( range.getTo() ) ? range.getTo() : null;
@@ -381,14 +366,5 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     m_lineStyle = visitor.visit( styleSet, ILineStyle.class, index );
 
     return m_lineStyle;
-  }
-
-  private Point[] toScreen( @SuppressWarnings("unchecked") final IPair<Number, Number>... points )
-  {
-    final ICoordinateMapper coordinateMapper = getCoordinateMapper();
-    final Point[] screenPoints = new Point[points.length];
-    for( int i = 0; i < screenPoints.length; i++ )
-      screenPoints[i] = coordinateMapper.numericToScreen( points[i].getDomain(), points[i].getTarget() );
-    return screenPoints;
   }
 }

@@ -27,7 +27,7 @@ public abstract class AbstractBarLayer extends AbstractChartLayer implements ITo
 {
   private ILegendEntry[] m_legendEntries;
 
-  private BarLayerRectangleIndex m_index;
+  private RectangleIndex<BarRectangle> m_index;
 
   public AbstractBarLayer( final ILayerProvider provider, final IStyleSet styleSet )
   {

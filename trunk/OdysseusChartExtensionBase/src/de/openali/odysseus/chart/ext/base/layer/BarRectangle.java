@@ -49,7 +49,7 @@ import org.eclipse.swt.graphics.Rectangle;
 /**
  * @author Gernot Belger
  */
-public class BarRectangle
+public class BarRectangle implements IRectangleProvider
 {
   private final Rectangle m_rectangle;
 
@@ -69,6 +69,7 @@ public class BarRectangle
     m_styleNames.addAll( Arrays.asList( styles ) );
   }
 
+  @Override
   public Rectangle getRectangle( )
   {
     return m_rectangle;
