@@ -46,7 +46,6 @@ import java.util.Calendar;
 
 import org.apache.xmlbeans.GDuration;
 
-import de.openali.odysseus.chart.factory.config.parameters.impl.AxisDirectionParser;
 import de.openali.odysseus.chart.factory.config.parameters.impl.AxisPositionParser;
 import de.openali.odysseus.chart.factory.config.resolver.ChartTypeResolver;
 import de.openali.odysseus.chart.factory.provider.IAxisProvider;
@@ -84,6 +83,7 @@ import de.openali.odysseus.chartconfig.x020.AxisType;
 import de.openali.odysseus.chartconfig.x020.AxisType.PreferredAdjustment;
 import de.openali.odysseus.chartconfig.x020.ChartType;
 import de.openali.odysseus.chartconfig.x020.ChartType.Mappers;
+import de.openali.odysseus.chartconfig.x020.DirectionType.Enum;
 import de.openali.odysseus.chartconfig.x020.MapperType;
 import de.openali.odysseus.chartconfig.x020.PositionType;
 import de.openali.odysseus.chartconfig.x020.ReferencableType;
@@ -155,11 +155,15 @@ public class ChartMapperFactory extends AbstractChartFactory
             axisProvider.init( getModel(), axisId, container, getContext(), dataClass, axisPosition, valueList );
 
             final IAxis axis = axisProvider.getAxis();
-            axis.setData( ChartFactory.AXIS_PROVIDER_KEY, axisProvider ); // Provider in Element setzen - fürs speichern
-// benötigt
-            axis.setData( CONFIGURATION_TYPE_KEY, axisType ); // save configuration type so it can be used for saving to
-// chartfile
-            axis.setDirection( getAxisDirection( axisType ) );
+
+            // Provider in Element setzen - fürs speichern benötigt
+            axis.setData( ChartFactory.AXIS_PROVIDER_KEY, axisProvider );
+
+            // save configuration type so it can be used for saving to chartfile
+            axis.setData( CONFIGURATION_TYPE_KEY, axisType );
+
+            axis.setDirection( getAxisDirection( axisType.getDirection() ) );
+
             final TitleType[] titles = axisType.isSetLabels() ? axisType.getLabels().getTitleTypeArray() : new TitleType[] {};
             final ChartTypeResolver chartTypeResolver = ChartTypeResolver.getInstance();
             for( final TitleType title : titles )
@@ -240,43 +244,49 @@ public class ChartMapperFactory extends AbstractChartFactory
 
   public IAxis addScreenAxis( final ScreenAxisType screenAxisType )
   {
+    if( screenAxisType == null )
+      return null;
+
     final IMapperRegistry mapperRegistry = getModel().getMapperRegistry();
-    if( screenAxisType != null )
-    {
-      /* screen axis already exists? */
-      if( mapperRegistry.getAxis( screenAxisType.getId() ) != null )
-        return null;
 
-      final String providerId = screenAxisType.getProvider().getEpid();
-      if( providerId != null && !providerId.trim().isEmpty() )
-      {
-        final IAxisProvider provider = getLoader().getExtension( IAxisProvider.class, providerId );
+    /* screen axis already exists? */
+    if( mapperRegistry.getAxis( screenAxisType.getId() ) != null )
+      return null;
 
-        final IAxis screenAxis = provider.getScreenAxis( screenAxisType.getId(), getAxisPosition( screenAxisType.getPosition() ) );
-        mapperRegistry.addMapper( screenAxis );
+    final String providerId = screenAxisType.getProvider().getEpid();
+    if( providerId == null || providerId.trim().isEmpty() )
+      return null;
 
-        return screenAxis;
-      }
-    }
+    // FIXME: does the provider really make sense for the screen axis?!
 
-    return null;
+    final IAxisProvider provider = getLoader().getExtension( IAxisProvider.class, providerId );
+
+    final IAxis screenAxis = provider.getScreenAxis( screenAxisType.getId(), getAxisPosition( screenAxisType.getPosition() ) );
+
+    // FIXME: what about the 'position' declared in the xml?
+
+    /* DIRECTION */
+    screenAxis.setDirection( getAxisDirection( screenAxisType.getDirection() ) );
+
+    mapperRegistry.addMapper( screenAxis );
+
+    return screenAxis;
   }
 
-  private DIRECTION getAxisDirection( final AxisType at )
+  private DIRECTION getAxisDirection( final Enum directionType )
   {
-    final AxisDirectionParser app = new AxisDirectionParser();
-    final String direction = at.getDirection().toString();
-    final DIRECTION dir = app.stringToLogical( direction );
-    return dir;
+    if( directionType == null )
+      return DIRECTION.POSITIVE;
+
+    final String direction = directionType.toString();
+    return DIRECTION.valueOf( direction );
   }
 
   private POSITION getAxisPosition( final PositionType.Enum positionType )
   {
     final AxisPositionParser app = new AxisPositionParser();
     final String position = positionType.toString();
-    final POSITION pos = app.stringToLogical( position );
-
-    return pos;
+    return app.stringToLogical( position );
   }
 
   private AxisAdjustment getAxisAdjustment( final AxisType at )
@@ -400,17 +410,6 @@ public class ChartMapperFactory extends AbstractChartFactory
     else
       return Number.class;
   }
-
-  // private IAxisRenderer findRenderer( final IAxis[] axes, final String rendererID )
-  // {
-  // for( final IAxis axis : axes )
-  // {
-  // final IAxisRenderer renderer = axis.getRenderer();
-  // if( renderer != null && renderer.getId().equals( rendererID ))
-  // return renderer;
-  // }
-  // return null;
-  // }
 
   public void addMapper( final MapperType type, final ReferencableType... baseTypes )
   {

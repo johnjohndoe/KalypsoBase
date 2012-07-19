@@ -212,14 +212,7 @@
             </annotation>
           </element>
           <element name="Labels" type="ods:TitleTypes" minOccurs="0" />
-          <element name="Direction" minOccurs="1">
-            <simpleType>
-              <restriction base="string">
-                <enumeration value="POSITIVE" />
-                <enumeration value="NEGATIVE" />
-              </restriction>
-            </simpleType>
-          </element>
+          <element name="Direction" type="ods:DirectionType" minOccurs="1"/>
           <element name="Position" type="ods:PositionType" minOccurs="1" />
           <choice minOccurs="0">
             <element ref="ods:DateRange" />
@@ -287,6 +280,7 @@
     <complexContent>
       <extension base="ods:MapperType">
         <sequence>
+          <element name="Direction" type="ods:DirectionType" minOccurs="0" default="POSITIVE" />
           <element name="Position" type="ods:PositionType" minOccurs="1" />
         </sequence>
       </extension>
@@ -299,6 +293,13 @@
       <enumeration value="RIGHT" />
       <enumeration value="BOTTOM" />
       <enumeration value="TOP" />
+    </restriction>
+  </simpleType>
+
+  <simpleType name="DirectionType">
+    <restriction base="string">
+      <enumeration value="POSITIVE" />
+      <enumeration value="NEGATIVE" />
     </restriction>
   </simpleType>
 
