@@ -69,7 +69,6 @@ import org.kalypso.zml.ui.table.nat.ZmlTable;
  */
 public class ZmlTableComposite extends Composite implements IZmlTableComposite
 {
-
   private final Set<IZmlTableCompositeListener> m_listeners = new LinkedHashSet<IZmlTableCompositeListener>();
 
   private final FormToolkit m_toolkit;

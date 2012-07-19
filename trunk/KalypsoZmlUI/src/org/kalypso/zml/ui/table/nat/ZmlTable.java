@@ -63,6 +63,7 @@ import net.sourceforge.nattable.util.GCFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -71,7 +72,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.zml.core.table.model.IZmlColumnModelListener;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.event.ZmlModelColumnChangeType;
@@ -135,7 +135,7 @@ public class ZmlTable extends Composite implements IZmlTable
       }
     } );
 
-    final GridLayout layout = Layouts.createGridLayout();
+    final GridLayout layout = GridLayoutFactory.fillDefaults().create();
     layout.verticalSpacing = 0;
     setLayout( layout );
 
