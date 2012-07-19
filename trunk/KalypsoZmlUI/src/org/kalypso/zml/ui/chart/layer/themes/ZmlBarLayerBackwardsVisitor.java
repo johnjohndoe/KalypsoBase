@@ -40,10 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.themes;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.swt.graphics.GC;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.joda.time.Period;
@@ -53,21 +57,31 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
+import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
 import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
+import de.openali.odysseus.chart.ext.base.layer.BarPaintManager;
+import de.openali.odysseus.chart.ext.base.layer.BarRectangle;
+import de.openali.odysseus.chart.ext.base.layer.IBarLayerPainter;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
-import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
+ * Supported parameters
+ * <ul>
+ * <li>fixedHeight: replaces the value of the target axis with a fixed value</li>
+ * </ul>
+ * 
  * @author Dirk Kuch
+ * @author Gernot Belger
  */
-class ZmlBarLayerBackwardsVisitor implements IObservationVisitor
+class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPainter
 {
-  private final BarLayerRectangleIndex m_index = new BarLayerRectangleIndex();
+  private final Map<String, IChartLayerFilter> m_filters = new HashMap<String, IChartLayerFilter>();
 
   private final IAxis m_dateAxis;
 
@@ -77,31 +91,63 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor
 
   private final int m_baseLine;
 
-  private final FullRectangleFigure m_figure;
-
-  private final GC m_gc;
-
   private final ICoordinateMapper m_mapper;
 
-  private Rectangle m_currentRectangle;
-
-  private final IProgressMonitor m_monitor;
+  private BarRectangle m_currentBar;
 
   private final Period m_timestep;
 
-  public ZmlBarLayerBackwardsVisitor( final ICoordinateMapper mapper, final ZmlBarLayerRangeHandler range, final GC gc, final FullRectangleFigure figure, final IObservation observation, final Period timestep, final IProgressMonitor monitor )
+  private final IObservation m_observation;
+
+  private final IRequest m_request;
+
+  private IProgressMonitor m_monitor;
+
+  private final BarPaintManager m_paintManager;
+
+  private final String[] m_styleNames;
+
+  private final Double m_fixedHeight;
+
+  private final ZmlBarLayer m_layer;
+
+  public ZmlBarLayerBackwardsVisitor( final ZmlBarLayer layer, final BarPaintManager paintManager, final ZmlBarLayerRangeHandler range, final IObservation observation, final IRequest request, final Period timestep, final String[] styleNames )
   {
-    m_mapper = mapper;
+    m_layer = layer;
+    m_paintManager = paintManager;
+    m_mapper = layer.getCoordinateMapper();
+
     m_range = range;
-    m_gc = gc;
-    m_figure = figure;
+    m_observation = observation;
+    m_request = request;
     m_timestep = timestep;
-    m_monitor = monitor;
+    m_styleNames = styleNames;
+    m_fixedHeight = layer.getFixedHeight();
 
     m_valueAxis = AxisUtils.findValueAxis( observation.getAxes() );
     m_dateAxis = AxisUtils.findDateAxis( observation.getAxes() );
 
-    m_baseLine = mapper.numericToScreen( 0.0, 0.0 ).y;
+    m_baseLine = m_mapper.numericToScreen( 0.0, 0.0 ).y;
+  }
+
+  @Override
+  public void execute( final IProgressMonitor monitor )
+  {
+    try
+    {
+      m_monitor = monitor;
+      m_observation.accept( this, m_request, 1 );
+
+      paintLast();
+    }
+    catch( final CancelVisitorException e )
+    {
+      throw new OperationCanceledException();
+    }
+    catch( final SensorException e )
+    {
+      KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
   }
 
   @Override
@@ -113,11 +159,11 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor
     try
     {
       final Date domainValue = (Date) container.get( m_dateAxis );
-      final Object targetValue = getTargetValue( container );
+      final Number targetValue = getTargetValue( container );
       if( Objects.isNull( domainValue, targetValue ) )
         return;
 
-      final Number numericTarget = m_range.getNumberDataOperator().logicalToNumeric( (Number) targetValue );
+      final Number numericTarget = m_range.getNumberDataOperator().logicalToNumeric( targetValue );
 
       /* current x */
       final IDataOperator<Date> dateDataOperator = m_range.getDateDataOperator();
@@ -130,6 +176,18 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor
 
       initRectangleFirstTime( domainValue, currentX );
 
+      /* set data to current bar: the absolute max wins */
+      final IObservationValueContainer oldContainer = (IObservationValueContainer) m_currentBar.getData();
+      final IObservationValueContainer currentMaxData = calculateCurrentMaxData( oldContainer, container, targetValue );
+
+      /* update current bar */
+      final Rectangle currentRectangle = m_currentBar.getRectangle();
+
+      final String[] currentStyles = getCurrentStyles( container );
+
+      m_currentBar.addStyle( currentStyles );
+      m_currentBar.setData( currentMaxData );
+
       /* construct new rectangle */
       final int newX = screenCurrent.x;
       final int newY = Math.min( m_baseLine, currentY );
@@ -138,27 +196,23 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor
 
       // REMARK: union needed to be sure negative/positive bars are both correctly handled
 
-      m_currentRectangle.add( rectangle );
+      currentRectangle.add( rectangle );
 
       /* Paint or store last rectangle */
-      if( m_currentRectangle.width > 0 )
+      if( currentRectangle.width > 0 )
       {
-        if( m_currentRectangle.height == 0 )
-          m_currentRectangle.height = 1;
+        if( currentRectangle.height == 0 )
+          currentRectangle.height = 1;
 
-        final Rectangle clipping = m_gc.getClipping();
-        if( clipping.intersects( m_currentRectangle ) )
-        {
-          m_index.addElement( m_currentRectangle, container.getIndex() );
-
-          m_figure.paint( m_gc );
-        }
+        m_paintManager.addRectangle( m_currentBar );
 
         /* reset rectangle */
-        m_currentRectangle.x = m_currentRectangle.x + m_currentRectangle.width;
-        m_currentRectangle.y = m_baseLine;
-        m_currentRectangle.width = 0;
-        m_currentRectangle.height = 0;
+        currentRectangle.x = currentRectangle.x + currentRectangle.width;
+        currentRectangle.y = m_baseLine;
+        currentRectangle.width = 0;
+        currentRectangle.height = 0;
+
+        m_currentBar = new BarRectangle( null, m_currentBar.getRectangle(), new String[] {} );
       }
       else
       {
@@ -167,11 +221,61 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor
          * at least 1px to paint
          */
       }
-
     }
     catch( final Throwable t )
     {
       KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( t ) );
+    }
+  }
+
+  private Number getTargetValue( final IObservationValueContainer container ) throws SensorException
+  {
+    if( m_fixedHeight != null )
+      return m_fixedHeight;
+
+    return (Number) container.get( m_valueAxis );
+  }
+
+  private String[] getCurrentStyles( final IObservationValueContainer container )
+  {
+    final Collection<String> styles = new ArrayList<>( m_styleNames.length );
+
+    for( final String style : m_styleNames )
+    {
+      final IChartLayerFilter filter = getFilter( style );
+      if( filter == null || filter.isFiltered( container ) )
+        styles.add( style );
+    }
+
+    return styles.toArray( new String[styles.size()] );
+  }
+
+  private IChartLayerFilter getFilter( final String style )
+  {
+    if( !m_filters.containsKey( style ) )
+    {
+      final IChartLayerFilter filter = m_layer.getStyleFilter( style );
+
+      m_filters.put( style, filter );
+    }
+
+    return m_filters.get( style );
+  }
+
+  private IObservationValueContainer calculateCurrentMaxData( final IObservationValueContainer oldContainer, final IObservationValueContainer container, final Number targetValue ) throws SensorException
+  {
+    if( oldContainer == null )
+      return container;
+    else
+    {
+      final Number oldValue = getTargetValue( oldContainer );
+      final double oldDouble = oldValue.doubleValue();
+      final double currentDouble = targetValue.doubleValue();
+
+      if( Math.abs( currentDouble ) > Math.abs( oldDouble ) )
+        return container;
+      else
+        return oldContainer;
     }
   }
 
@@ -181,18 +285,21 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor
    */
   public void paintLast( )
   {
-    if( m_currentRectangle != null )
-      m_figure.paint( m_gc );
+    if( m_currentBar != null )
+    {
+      // FIXME: use real data object
+      m_paintManager.addRectangle( m_currentBar );
+    }
   }
 
   private void initRectangleFirstTime( final Date currentTime, final int screenCurrentX )
   {
-    if( m_currentRectangle == null )
+    if( m_currentBar == null )
     {
       final int lastX = calculateFirstX( currentTime, screenCurrentX );
 
-      m_currentRectangle = new Rectangle( lastX, m_baseLine, 0, 0 );
-      m_figure.setRectangle( m_currentRectangle );
+      final Rectangle currentRectangle = new Rectangle( lastX, m_baseLine, 0, 0 );
+      m_currentBar = new BarRectangle( null, currentRectangle, new String[] {} );
     }
   }
 
@@ -215,27 +322,5 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor
 
       return m_mapper.numericToScreen( numericPrev, 0 ).x;
     }
-  }
-
-  private Object getTargetValue( final IObservationValueContainer container ) throws SensorException
-  {
-    final Object value = container.get( m_valueAxis );
-
-    // FIXME + ugly! logicalToNumeric should take care of that!
-
-    if( value instanceof Boolean )
-    {
-      if( Boolean.valueOf( (Boolean) value ) )
-        return 1;
-      else
-        return 0;
-    }
-
-    return value;
-  }
-
-  public BarLayerRectangleIndex getRectangles( )
-  {
-    return m_index;
   }
 }

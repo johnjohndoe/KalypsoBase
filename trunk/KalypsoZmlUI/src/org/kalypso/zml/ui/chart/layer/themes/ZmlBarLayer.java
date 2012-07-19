@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraï¿½e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -41,17 +41,19 @@
 package org.kalypso.zml.ui.chart.layer.themes;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.tuple.Pair;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.swt.graphics.GC;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.joda.time.Period;
-import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -67,14 +69,16 @@ import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractBarLayer;
+import de.openali.odysseus.chart.ext.base.layer.BarPaintManager;
+import de.openali.odysseus.chart.ext.base.layer.BarRectangle;
+import de.openali.odysseus.chart.ext.base.layer.IBarLayerPainter;
+import de.openali.odysseus.chart.framework.OdysseusChartFramework;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
-import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
-import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
-import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
-import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
+import de.openali.odysseus.chart.framework.model.style.IStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
 
@@ -82,17 +86,19 @@ import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
  * @author Dirk Kuch
  * @author kimwerner
  */
-public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer, ITooltipChartLayer
+public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer // , ITooltipChartLayer
 {
+  private static final String PARAMETER_FIXED_HEIGHT = "fixedHeight"; //$NON-NLS-1$
+
+  private final Pattern m_styleIndexPattern = Pattern.compile( "(.*?)(\\d*)" ); //$NON-NLS-1$
+
+  private final Pattern m_styleWithIndexPattern = Pattern.compile( "(.*)([0-9]+)" ); //$NON-NLS-1$
+
   private IZmlLayerDataHandler m_handler;
 
   private String m_labelDescriptor;
 
-  private final ZmlBarLayerLegendEntry m_legend = new ZmlBarLayerLegendEntry( this );
-
   private final ZmlBarLayerRangeHandler m_range = new ZmlBarLayerRangeHandler( this );
-
-  private BarLayerRectangleIndex m_rectangleIndex;
 
   public ZmlBarLayer( final IZmlLayerProvider layerProvider, final IStyleSet styleSet, final URL context )
   {
@@ -115,6 +121,8 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer, ITooltip
   @Override
   protected IAreaStyle getAreaStyle( )
   {
+    // TODO: hmmm.....
+
     final IStyleSet styleSet = getStyleSet();
     final int index = ZmlLayerHelper.getLayerIndex( getIdentifier() );
 
@@ -132,12 +140,6 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer, ITooltip
   public IDataRange< ? > getDomainRange( )
   {
     return m_range.getDomainRange();
-  }
-
-  @Override
-  public synchronized ILegendEntry[] getLegendEntries( )
-  {
-    return m_legend.createLegendEntries( getRectangleFigure() );
   }
 
   @Override
@@ -178,37 +180,104 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer, ITooltip
   }
 
   @Override
-  public void paint( final GC gc, final IProgressMonitor monitor )
+  protected IBarLayerPainter createPainter( final BarPaintManager paintManager )
   {
+    final IObservation observation = (IObservation) m_handler.getAdapter( IObservation.class );
+    if( Objects.isNull( observation ) )
+      return null;
+
     try
     {
-      final IObservation observation = (IObservation) m_handler.getAdapter( IObservation.class );
-      if( Objects.isNull( observation ) )
-        return;
-
-      final FullRectangleFigure figure = getRectangleFigure();
-
-      final ICoordinateMapper mapper = getCoordinateMapper();
+      final String[] styleNames = findStyleNames();
 
       final IRequest request = m_handler.getRequest();
       final Period timestep = findtimestep( observation, request );
 
-      final ZmlBarLayerBackwardsVisitor visitor = createVisitor( observation, timestep, mapper, gc, figure, monitor );
-
-      observation.accept( visitor, request, 1 );
-
-      visitor.paintLast();
-
-      m_rectangleIndex = visitor.getRectangles();
-    }
-    catch( final CancelVisitorException e )
-    {
-      throw new OperationCanceledException();
+      // TODO: implement forwards
+      return new ZmlBarLayerBackwardsVisitor( this, paintManager, m_range, observation, request, timestep, styleNames );
     }
     catch( final SensorException e )
     {
       KalypsoZmlUI.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+      return null;
     }
+  }
+
+  Double getFixedHeight( )
+  {
+    final String textValue = getProvider().getParameterContainer().getParameterValue( PARAMETER_FIXED_HEIGHT, null );
+    final double fixedHeight = NumberUtils.parseQuietDouble( textValue );
+    if( Double.isNaN( fixedHeight ) )
+      return null;
+
+    return fixedHeight;
+  }
+
+  // FIXME: too special for this layer, make more general...
+  private String[] findStyleNames( )
+  {
+    final int index = ZmlLayerHelper.getLayerIndex( getIdentifier() );
+
+    final String[] defaultStyles = findDefaultStyles();
+
+    /* find all styles for this index */
+    final String[] styleNames = findStyles( index );
+
+    if( styleNames.length != 0 )
+      return ArrayUtils.addAll( styleNames, defaultStyles );
+
+    // reuse styles of index 0 if no styles are defined for this index
+    return ArrayUtils.addAll( findStyles( 0 ), defaultStyles );
+  }
+
+  /**
+   * Finds all styles without index
+   */
+  private String[] findDefaultStyles( )
+  {
+    final Collection<String> styleNames = new ArrayList<>();
+
+    final IStyleSet styleSet = getStyleSet();
+
+    final Map<String, IStyle> styles = styleSet.getStyles();
+
+    for( final String styleName : styles.keySet() )
+    {
+      final IStyle style = styles.get( styleName );
+      if( style instanceof IAreaStyle )
+      {
+        if( !m_styleWithIndexPattern.matcher( styleName ).matches() )
+          styleNames.add( styleName );
+      }
+    }
+
+    return styleNames.toArray( new String[styleNames.size()] );
+  }
+
+  /**
+   * Find all style for a given layer index
+   */
+  private String[] findStyles( final int layerIndex )
+  {
+    final Collection<String> styleNames = new ArrayList<>();
+
+    final IStyleSet styleSet = getStyleSet();
+
+    final Map<String, IStyle> styles = styleSet.getStyles();
+
+    final String styleSuffig = "_" + layerIndex; //$NON-NLS-1$
+
+    for( final String styleName : styles.keySet() )
+    {
+      final IStyle style = styles.get( styleName );
+      if( style instanceof IAreaStyle )
+      {
+        if( styleName.endsWith( styleSuffig ) )
+          styleNames.add( styleName );
+      }
+    }
+
+    return styleNames.toArray( new String[styleNames.size()] );
   }
 
   private Period findtimestep( final IObservation observation, final IRequest request ) throws SensorException
@@ -222,13 +291,6 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer, ITooltip
     final ITupleModel values = observation.getValues( request );
 
     return TimeseriesUtils.guessTimestep( values );
-  }
-
-  private ZmlBarLayerBackwardsVisitor createVisitor( final IObservation observation, final Period timestep, final ICoordinateMapper mapper, final GC gc, final FullRectangleFigure figure, final IProgressMonitor monitor )
-  {
-    return new ZmlBarLayerBackwardsVisitor( mapper, m_range, gc, figure, observation, timestep, monitor );
-
-    // FIXME: implement forwards
   }
 
   @Override
@@ -263,18 +325,33 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer, ITooltip
   }
 
   @Override
-  public EditInfo getHover( final Point pos )
+  protected EditInfo getEditInfo( final BarRectangle bar, final Point pos )
   {
-    final Pair<Rectangle, Integer> element = m_rectangleIndex.findElement( pos );
-    if( element == null )
-      return null;
-
     // TODO: highlight rectangle
     final IPaintable hoverFigure = null;
     final IPaintable editFigure = null;
-    final Object editData = element.getValue();
-    final String editText = "" + element.getValue();
+    final Object editData = bar.getData();
+
+    // TODO: get value via data index and format text
+    final String editText = "" + editData;
 
     return new EditInfo( this, hoverFigure, editFigure, editData, editText, pos );
+  }
+
+  public IChartLayerFilter getStyleFilter( final String styleName )
+  {
+    final Matcher matcher = m_styleIndexPattern.matcher( styleName );
+    if( !matcher.matches() || matcher.groupCount() < 1 )
+      return null;
+
+    final String baseName = matcher.group( 1 );
+
+    final String filterParameter = "styleFilter." + baseName; //$NON-NLS-1$
+
+    final String filterId = getProvider().getParameterContainer().getParameterValue( filterParameter, null );
+    if( StringUtils.isBlank( filterId ) )
+      return null;
+
+    return OdysseusChartFramework.getDefault().findFilter( filterId );
   }
 }

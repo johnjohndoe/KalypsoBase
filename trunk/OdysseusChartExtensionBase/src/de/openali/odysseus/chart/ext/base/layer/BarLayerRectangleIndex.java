@@ -38,11 +38,13 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.chart.layer.themes;
+package de.openali.odysseus.chart.ext.base.layer;
 
 import gnu.trove.TIntProcedure;
 
-import org.apache.commons.lang3.tuple.Pair;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 
@@ -56,41 +58,48 @@ public class BarLayerRectangleIndex
 {
   private final SpatialIndex m_index = new RTree();
 
+  private final List<BarRectangle> m_elements = new ArrayList<>();
+
   public BarLayerRectangleIndex( )
   {
     m_index.init( null );
   }
 
-  public void addElement( final Rectangle rect, final int id )
+  public void addElement( final BarRectangle paintRectangle )
   {
+    final int id = m_elements.size();
+
+    m_elements.add( paintRectangle );
+
+    final Rectangle rect = paintRectangle.getRectangle();
+
     final com.infomatiq.jsi.Rectangle jsiRect = new com.infomatiq.jsi.Rectangle( rect.x, rect.y, rect.x + rect.width, rect.y + rect.height );
     m_index.add( jsiRect, id );
   }
 
-  public Pair<Rectangle, Integer> findElement( final Point pos )
+  public BarRectangle findElement( final Point pos )
   {
     final com.infomatiq.jsi.Point searchPoint = new com.infomatiq.jsi.Point( pos.x, pos.y );
 
     // Everything is in pixels here, so we directly use 5px
     final float snapDist = 5.0f;
 
-    final int[] result = new int[] { -1 };
-    final TIntProcedure v = new TIntProcedure()
+    final BarRectangle[] result = new BarRectangle[] { null };
+
+    final List<BarRectangle> elements = m_elements;
+
+    final TIntProcedure receiver = new TIntProcedure()
     {
       @Override
       public boolean execute( final int index )
       {
-        result[0] = index;
+        result[0] = elements.get( index );
         return false;
       }
     };
 
-    m_index.nearest( searchPoint, v, snapDist );
+    m_index.nearest( searchPoint, receiver, snapDist );
 
-    if( result[0] == -1 )
-      return null;
-
-    // TODO: where to get rectangle from?
-    return Pair.of( null, result[0] );
+    return result[0];
   }
 }

@@ -4,41 +4,41 @@ package de.openali.odysseus.chart.ext.base.layer.provider;
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestra�e 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 
 import java.net.URL;
@@ -58,34 +58,30 @@ import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
  */
 public class DefaultTextLayerProvider extends AbstractLayerProvider
 {
-  public static final String ID = "de.openali.odysseus.chart.ext.base.layer.provider.DefaultTextLayerProvider";
+  public static final String ID = "de.openali.odysseus.chart.ext.base.layer.provider.DefaultTextLayerProvider"; //$NON-NLS-1$
 
-  public static final String PROPERTY_TEXT = "text";
+  public static final String PROPERTY_TEXT = "text"; //$NON-NLS-1$
 
-  public static final String PROPERTY_ALIGNMENT_HORIZONTAL = "alignment.horizontal";
+  public static final String PROPERTY_ALIGNMENT_HORIZONTAL = "alignment.horizontal"; //$NON-NLS-1$
 
-  public static final String PROPERTY_ALIGNMENT_VERTICAL = "alignment.vertical";
+  public static final String PROPERTY_ALIGNMENT_VERTICAL = "alignment.vertical"; //$NON-NLS-1$
 
-  public static final String PROPERTY_TEXT_ANCHOR_X = "text.anchor.x";
+  public static final String PROPERTY_TEXT_ANCHOR_X = "text.anchor.x"; //$NON-NLS-1$
 
-  public static final String PROPERTY_TEXT_ANCHOR_Y = "text.anchor.y";
+  public static final String PROPERTY_TEXT_ANCHOR_Y = "text.anchor.y"; //$NON-NLS-1$
 
-  /**
-   * @see de.openali.odysseus.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)
-   */
   @Override
   public IChartLayer getLayer( final URL context ) throws ConfigurationException
   {
     try
     {
       final TitleTypeBean bean = getTitleBean();
-      final DefaultTextLayer layer = new DefaultTextLayer( this, getId(), bean );
 
-      return layer;
+      return new DefaultTextLayer( this, getId(), bean );
     }
     catch( final Throwable t )
     {
-      throw new ConfigurationException( "Configuring of .kod line layer theme failed.", t );
+      throw new ConfigurationException( "Configuring of .kod line layer theme failed.", t ); //$NON-NLS-1$
     }
   }
 
@@ -117,5 +113,4 @@ public class DefaultTextLayerProvider extends AbstractLayerProvider
 
     return bean;
   }
-
 }

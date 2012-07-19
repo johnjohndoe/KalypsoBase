@@ -5,7 +5,8 @@ Bundle-SymbolicName: de.openali.odysseus.chart.ext.base;singleton:=true
 Bundle-Version: 12.7.0.qualifier
 Require-Bundle: org.kalypso.contribs.java,
  de.openali.odysseus.chart.factory;visibility:=reexport,
- org.kalypso.core
+ org.kalypso.core,
+ com.infomatiq.jsi;bundle-version="1.0.0"
 Bundle-Activator: de.openali.odysseus.chart.ext.base.Activator
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: kalypsobase.sourceforge.net

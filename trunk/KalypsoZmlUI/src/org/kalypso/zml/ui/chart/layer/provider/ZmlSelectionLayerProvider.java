@@ -63,8 +63,6 @@ public class ZmlSelectionLayerProvider extends AbstractLayerProvider
   {
     try
     {
-      
-
       return new ZmlSelectionLayer( this, getStyleSet() );
     }
     catch( final Throwable t )
@@ -77,5 +75,4 @@ public class ZmlSelectionLayerProvider extends AbstractLayerProvider
   {
     return new MetadataRequestHandler( getParameterContainer() );
   }
-
 }
