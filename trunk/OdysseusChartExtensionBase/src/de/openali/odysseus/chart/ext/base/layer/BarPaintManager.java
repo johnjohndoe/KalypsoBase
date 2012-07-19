@@ -43,7 +43,6 @@ package de.openali.odysseus.chart.ext.base.layer;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 
@@ -73,12 +72,21 @@ public class BarPaintManager
     m_styles = styles;
   }
 
+  /**
+   * Checks if the given rectangle is visible on the screen.<br/>
+   * Public, because sometimes we want to check before the rectangle is added to this manager.
+   */
+  public boolean isInScreen( final Rectangle rectangle )
+  {
+    final Rectangle clipping = m_gc.getClipping();
+    return clipping.intersects( rectangle );
+  }
+
   public void addRectangle( final BarRectangle paintRectangle )
   {
     final Rectangle rectangle = paintRectangle.getRectangle();
 
-    final Rectangle clipping = m_gc.getClipping();
-    if( clipping.intersects( rectangle ) )
+    if( isInScreen( rectangle ) )
     {
       /* index this element */
       m_index.addElement( paintRectangle );
@@ -108,14 +116,6 @@ public class BarPaintManager
     }
 
     return m_figures.get( styleName );
-  }
-
-  public void paint( final IProgressMonitor monitor )
-  {
-    // paint priorised elements
-
-    // TODO Auto-generated method stub
-
   }
 
   public BarLayerRectangleIndex getIndex( )

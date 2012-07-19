@@ -120,8 +120,6 @@ public abstract class AbstractBarLayer extends AbstractChartLayer implements ITo
       if( monitor.isCanceled() )
         return;
 
-      paintManager.paint( new SubProgressMonitor( monitor, 50 ) );
-
       m_index = paintManager.getIndex();
     }
     catch( final OperationCanceledException e )
