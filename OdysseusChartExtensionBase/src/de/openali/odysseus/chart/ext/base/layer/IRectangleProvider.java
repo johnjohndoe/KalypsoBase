@@ -40,53 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.ext.base.layer;
 
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import org.eclipse.swt.graphics.Rectangle;
 
 /**
  * @author Gernot Belger
  */
-public class BarRectangle implements IRectangleProvider
+public interface IRectangleProvider
 {
-  private final Rectangle m_rectangle;
-
-  private Object m_data;
-
-  private final Set<String> m_styleNames = new LinkedHashSet<>();
-
-  public BarRectangle( final Object data, final Rectangle rectangle, final String[] styleNames )
-  {
-    m_data = data;
-    m_rectangle = rectangle;
-    m_styleNames.addAll( Arrays.asList( styleNames ) );
-  }
-
-  public void addStyle( final String... styles )
-  {
-    m_styleNames.addAll( Arrays.asList( styles ) );
-  }
-
-  @Override
-  public Rectangle getRectangle( )
-  {
-    return m_rectangle;
-  }
-
-  public String[] getStyles( )
-  {
-    return m_styleNames.toArray( new String[m_styleNames.size()] );
-  }
-
-  public Object getData( )
-  {
-    return m_data;
-  }
-
-  public void setData( final Object data )
-  {
-    m_data = data;
-  }
+  Rectangle getRectangle( );
 }

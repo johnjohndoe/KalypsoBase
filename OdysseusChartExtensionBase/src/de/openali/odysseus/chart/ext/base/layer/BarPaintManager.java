@@ -58,7 +58,7 @@ import de.openali.odysseus.chart.framework.model.style.IStyleSet;
  */
 public class BarPaintManager
 {
-  private final BarLayerRectangleIndex m_index = new BarLayerRectangleIndex();
+  private final RectangleIndex<BarRectangle> m_index = new RectangleIndex<>();
 
   private final Map<String, FullRectangleFigure> m_figures = new HashMap<>();
 
@@ -118,7 +118,7 @@ public class BarPaintManager
     return m_figures.get( styleName );
   }
 
-  public BarLayerRectangleIndex getIndex( )
+  public RectangleIndex<BarRectangle> getIndex( )
   {
     return m_index;
   }

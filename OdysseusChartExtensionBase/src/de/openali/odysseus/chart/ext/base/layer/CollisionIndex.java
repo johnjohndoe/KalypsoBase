@@ -40,53 +40,59 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.ext.base.layer;
 
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import gnu.trove.TIntProcedure;
 
 import org.eclipse.swt.graphics.Rectangle;
 
+import com.infomatiq.jsi.SpatialIndex;
+import com.infomatiq.jsi.rtree.RTree;
+
 /**
+ * Index that checks for collisions between painted markers.
+ *
  * @author Gernot Belger
  */
-public class BarRectangle implements IRectangleProvider
+public class CollisionIndex
 {
-  private final Rectangle m_rectangle;
+  private final SpatialIndex m_index = new RTree();
 
-  private Object m_data;
-
-  private final Set<String> m_styleNames = new LinkedHashSet<>();
-
-  public BarRectangle( final Object data, final Rectangle rectangle, final String[] styleNames )
+  public CollisionIndex( )
   {
-    m_data = data;
-    m_rectangle = rectangle;
-    m_styleNames.addAll( Arrays.asList( styleNames ) );
+    m_index.init( null );
   }
 
-  public void addStyle( final String... styles )
+  /**
+   * Check if an collision occurs, and adds a new element to the index if no collision has occured.
+   *
+   * @return <code>true</code> if the element was added and no collision occured.
+   */
+  public boolean addAndCheck( final Rectangle rect, final int id )
   {
-    m_styleNames.addAll( Arrays.asList( styles ) );
+    final com.infomatiq.jsi.Rectangle indexRect = new com.infomatiq.jsi.Rectangle( rect.x, rect.y, rect.x + rect.width, rect.y + rect.height );
+
+    if( checkCollission( indexRect ) )
+      return false;
+
+    m_index.add( indexRect, id );
+    return true;
   }
 
-  @Override
-  public Rectangle getRectangle( )
+  private boolean checkCollission( final com.infomatiq.jsi.Rectangle indexRect )
   {
-    return m_rectangle;
-  }
+    final boolean[] result = new boolean[] { false };
 
-  public String[] getStyles( )
-  {
-    return m_styleNames.toArray( new String[m_styleNames.size()] );
-  }
+    final TIntProcedure ip = new TIntProcedure()
+    {
+      @Override
+      public boolean execute( final int id )
+      {
+        result[0] = true;
+        return false;
+      }
+    };
 
-  public Object getData( )
-  {
-    return m_data;
-  }
+    m_index.intersects( indexRect, ip );
 
-  public void setData( final Object data )
-  {
-    m_data = data;
+    return result[0];
   }
 }

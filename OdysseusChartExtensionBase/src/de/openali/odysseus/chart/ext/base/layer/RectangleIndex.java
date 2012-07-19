@@ -54,18 +54,18 @@ import com.infomatiq.jsi.rtree.RTree;
 /**
  * @author Gernot Belger
  */
-public class BarLayerRectangleIndex
+public class RectangleIndex<DATA extends IRectangleProvider>
 {
   private final SpatialIndex m_index = new RTree();
 
-  private final List<BarRectangle> m_elements = new ArrayList<>();
+  private final List<DATA> m_elements = new ArrayList<>();
 
-  public BarLayerRectangleIndex( )
+  public RectangleIndex( )
   {
     m_index.init( null );
   }
 
-  public void addElement( final BarRectangle paintRectangle )
+  public void addElement( final DATA paintRectangle )
   {
     final int id = m_elements.size();
 
@@ -77,29 +77,29 @@ public class BarLayerRectangleIndex
     m_index.add( jsiRect, id );
   }
 
-  public BarRectangle findElement( final Point pos )
+  public DATA findElement( final Point pos )
   {
     final com.infomatiq.jsi.Point searchPoint = new com.infomatiq.jsi.Point( pos.x, pos.y );
 
     // Everything is in pixels here, so we directly use 5px
     final float snapDist = 5.0f;
 
-    final BarRectangle[] result = new BarRectangle[] { null };
+    final List<DATA> result = new ArrayList<>( 1 );
 
-    final List<BarRectangle> elements = m_elements;
+    final List<DATA> elements = m_elements;
 
     final TIntProcedure receiver = new TIntProcedure()
     {
       @Override
       public boolean execute( final int index )
       {
-        result[0] = elements.get( index );
+        result.set( 0, elements.get( index ) );
         return false;
       }
     };
 
     m_index.nearest( searchPoint, receiver, snapDist );
 
-    return result[0];
+    return result.get( 0 );
   }
 }
