@@ -50,17 +50,14 @@ public class GenericLinearAxis extends AbstractAxis
 
   /**
    * Uses the widgets' complete extension to calculate the screen value in correspondence to a normalized value
-   *
-   * @see de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent#normalizedToScreen(double)
    */
-  @Override
-  public int normalizedToScreen( final double normValue )
+  private int normalizedToScreen( final double normValue )
   {
     final int range = getScreenHeight();
     final double screen = (range * (isInverted() ? 1 - normValue : normValue));
 
     // REMARK: using floor here, so all values are rounded to the same direction
-    return (int) screen;
+    return (int) Math.floor( screen );
   }
 
   private double numericToNormalized( final Number value )
@@ -83,8 +80,7 @@ public class GenericLinearAxis extends AbstractAxis
    *
    * @see de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent#screenToNormalized(int)
    */
-  @Override
-  public double screenToNormalized( final int screenValue )
+  private double screenToNormalized( final int screenValue )
   {
     final int range = getScreenHeight();
     if( range == 0 )

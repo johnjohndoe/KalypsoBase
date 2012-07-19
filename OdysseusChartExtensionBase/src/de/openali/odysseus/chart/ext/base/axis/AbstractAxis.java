@@ -58,10 +58,10 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
   public AbstractAxis( final String id, final POSITION pos, final Class< ? > dataClass, final IAxisRenderer renderer )
   {
     super( id );
-    // m_id = id;
+
     m_pos = pos;
-    // m_dir = pos.getOrientation() == ORIENTATION.VERTICAL ? DIRECTION.NEGATIVE : DIRECTION.POSITIVE;
     m_dataClass = dataClass;
+
     setRenderer( renderer );
   }
 

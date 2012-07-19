@@ -23,6 +23,7 @@ public class ArrayContentAxis extends AbstractAxis
   public ArrayContentAxis( final String id, final POSITION position, final IAxisRenderer axisRenderer, final IAxisContentProvider contentProvider, final int fixedWidth )
   {
     super( id, position, Integer.class, axisRenderer );
+
     m_contentProvider = contentProvider;
     m_fixedWidth = fixedWidth;
   }
@@ -30,12 +31,6 @@ public class ArrayContentAxis extends AbstractAxis
   public ArrayContentAxis( final String id, final POSITION position, final IAxisContentProvider contentProvider, final int fixedWidth )
   {
     this( id, position, new OrdinalAxisRenderer( id + "_axisRenderer", new AxisRendererConfig(), contentProvider ), contentProvider, fixedWidth );
-  }
-
-  @Override
-  public int normalizedToScreen( final double d )
-  {
-    throw new UnsupportedOperationException( "use numericToScreen instead" );
   }
 
   @Override
@@ -50,12 +45,6 @@ public class ArrayContentAxis extends AbstractAxis
     if( m_contentProvider == null )
       return null;
     return m_contentProvider.getContent( index );
-  }
-
-  @Override
-  public double screenToNormalized( final int value )
-  {
-    throw new UnsupportedOperationException( "use screenToNumeric instead" );
   }
 
   @Override
