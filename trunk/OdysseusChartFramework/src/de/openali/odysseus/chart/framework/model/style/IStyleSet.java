@@ -59,5 +59,4 @@ public interface IStyleSet
   <T extends IStyle> T getStyle( String id, Class<T> styleClass );
 
   Map<String, IStyle> getStyles( );
-
 }
