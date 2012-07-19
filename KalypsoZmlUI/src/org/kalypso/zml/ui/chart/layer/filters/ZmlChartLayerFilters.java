@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraï¿½e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -40,26 +40,36 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.filters;
 
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.IObservation;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
+
+import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
 
 /**
- * @author Dirk Kuch
+ * @author Gernot Belger
  */
-public class ZmlNotNullChartLayerFilter extends AbstractZmlChartLayerFilter
+public final class ZmlChartLayerFilters
 {
-  @Override
-  protected boolean filter( final IObservationValueContainer container )
+  private ZmlChartLayerFilters( )
   {
-    try
-    {
-      return getAccessor().isNullstelle( container );
-    }
-    catch( final SensorException e )
-    {
-      e.printStackTrace();
+    throw new UnsupportedOperationException();
+  }
 
-      return false;
+  /**
+   * Makes sure that {@link IZmlChartLayerFilter}s are initialized with the given observation.
+   */
+  public static void initializeFilters( final IObservation observation, final IChartLayerFilter[] filters )
+  {
+    for( final IChartLayerFilter filter : filters )
+    {
+      if( filter instanceof IZmlChartLayerFilter )
+      {
+        final MetadataList metadata = observation.getMetadataList();
+        final IAxis[] axes = observation.getAxes();
+
+        ((IZmlChartLayerFilter) filter).init( metadata, axes );
+      }
     }
   }
 }

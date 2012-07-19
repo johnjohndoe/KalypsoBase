@@ -57,12 +57,14 @@ import org.kalypso.zml.core.diagram.base.IZmlLayerProvider;
 import org.kalypso.zml.core.diagram.base.ZmlLayerProviders;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
+import org.kalypso.zml.ui.chart.layer.filters.ZmlChartLayerFilters;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
 import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.TextFigure;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
@@ -162,7 +164,7 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
   }
 
   @Override
-  public void paint( final GC gc, IProgressMonitor monitor )
+  public void paint( final GC gc, final IProgressMonitor monitor )
   {
     if( ArrayUtils.isEmpty( m_descriptors ) )
       return;
@@ -243,7 +245,10 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
   {
     final IObservation observation = (IObservation) provider.getAdapter( IObservation.class );
 
-    final ZmlSinglePointLayerVisitor visitor = new ZmlSinglePointLayerVisitor( position, getFilters() );
+    final IChartLayerFilter[] filters = getFilters();
+    ZmlChartLayerFilters.initializeFilters( observation, filters );
+
+    final ZmlSinglePointLayerVisitor visitor = new ZmlSinglePointLayerVisitor( position, filters );
     observation.accept( visitor, provider.getRequest(), 1 );
 
     return visitor.getValue();

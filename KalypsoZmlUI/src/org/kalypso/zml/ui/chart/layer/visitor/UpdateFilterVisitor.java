@@ -67,5 +67,4 @@ public class UpdateFilterVisitor extends AbstractChartLayerVisitor
 
     layer.getLayerManager().accept( this );
   }
-
 }

@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraï¿½e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -40,26 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.filters;
 
-import org.kalypso.ogc.sensor.SensorException;
-import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
+
+import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
 
 /**
- * @author Dirk Kuch
+ * @author Gernot Belger
  */
-public class ZmlNotNullChartLayerFilter extends AbstractZmlChartLayerFilter
+public interface IZmlChartLayerFilter extends IChartLayerFilter
 {
-  @Override
-  protected boolean filter( final IObservationValueContainer container )
-  {
-    try
-    {
-      return getAccessor().isNullstelle( container );
-    }
-    catch( final SensorException e )
-    {
-      e.printStackTrace();
-
-      return false;
-    }
-  }
+  void init( MetadataList metadata, IAxis[] axes );
 }

@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.layer.filters;
 
+import org.kalypso.ogc.sensor.IAxis;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
 
 import de.openali.odysseus.chart.framework.model.layer.AbstractChartFilter;
@@ -47,8 +49,21 @@ import de.openali.odysseus.chart.framework.model.layer.AbstractChartFilter;
 /**
  * @author Dirk Kuch
  */
-public abstract class AbstractZmlChartLayerFilter extends AbstractChartFilter
+public abstract class AbstractZmlChartLayerFilter extends AbstractChartFilter implements IZmlChartLayerFilter
 {
+  private ContainerAccessor m_accessor;
+
+  @Override
+  public void init( final MetadataList metadata, final IAxis[] axes )
+  {
+    m_accessor = new ContainerAccessor( metadata, axes );
+  }
+
+  public ContainerAccessor getAccessor( )
+  {
+    return m_accessor;
+  }
+
   @Override
   public final boolean isFiltered( final Object object )
   {

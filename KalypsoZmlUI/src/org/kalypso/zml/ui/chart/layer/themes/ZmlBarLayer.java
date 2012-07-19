@@ -60,6 +60,7 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
+import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.zml.core.diagram.base.IZmlLayer;
@@ -67,6 +68,7 @@ import org.kalypso.zml.core.diagram.base.IZmlLayerProvider;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.zml.ui.chart.layer.filters.IZmlChartLayerFilter;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractBarLayer;
 import de.openali.odysseus.chart.ext.base.layer.BarPaintManager;
@@ -338,7 +340,7 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer // , IToo
     return new EditInfo( this, hoverFigure, editFigure, editData, editText, pos );
   }
 
-  public IChartLayerFilter getStyleFilter( final String styleName )
+  IChartLayerFilter getStyleFilter( final String styleName, final IObservation observation )
   {
     final Matcher matcher = m_styleIndexPattern.matcher( styleName );
     if( !matcher.matches() || matcher.groupCount() < 1 )
@@ -352,6 +354,14 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer // , IToo
     if( StringUtils.isBlank( filterId ) )
       return null;
 
-    return OdysseusChartExtensions.createFilter( filterId );
+    final IChartLayerFilter filter = OdysseusChartExtensions.createFilter( filterId );
+    if( filter instanceof IZmlChartLayerFilter )
+    {
+      final MetadataList metadata = observation.getMetadataList();
+      final IAxis[] axes = observation.getAxes();
+      ((IZmlChartLayerFilter) filter).init( metadata, axes );
+    }
+
+    return filter;
   }
 }

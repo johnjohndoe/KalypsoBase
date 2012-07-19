@@ -260,7 +260,7 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPaint
   {
     if( !m_filters.containsKey( style ) )
     {
-      final IChartLayerFilter filter = m_layer.getStyleFilter( style );
+      final IChartLayerFilter filter = m_layer.getStyleFilter( style, m_observation );
 
       m_filters.put( style, filter );
     }

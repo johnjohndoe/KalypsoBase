@@ -63,11 +63,13 @@ import org.kalypso.zml.core.diagram.base.IZmlLayerProvider;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 import org.kalypso.zml.core.diagram.data.ZmlObsProviderDataHandler;
 import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.zml.ui.chart.layer.filters.ZmlChartLayerFilters;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
 import de.openali.odysseus.chart.ext.base.layer.LinePaintManager;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.ClipHelper;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
@@ -216,7 +218,10 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     if( observation == null )
       return new IPair[0];
 
-    final LineLayerModelVisitor visitor = new LineLayerModelVisitor( this, getFilters(), domainIntervall, monitor );
+    final IChartLayerFilter[] filters = getFilters();
+    ZmlChartLayerFilters.initializeFilters( observation, filters );
+
+    final LineLayerModelVisitor visitor = new LineLayerModelVisitor( this, filters, domainIntervall, monitor );
     observation.accept( visitor, m_dataHandler.getRequest(), 1 );
 
     return visitor.getPoints();
