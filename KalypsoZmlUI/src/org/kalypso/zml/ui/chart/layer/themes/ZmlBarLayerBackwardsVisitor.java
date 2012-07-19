@@ -75,7 +75,7 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
  * <ul>
  * <li>fixedHeight: replaces the value of the target axis with a fixed value</li>
  * </ul>
- * 
+ *
  * @author Dirk Kuch
  * @author Gernot Belger
  */
@@ -178,15 +178,9 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPaint
 
       /* set data to current bar: the absolute max wins */
       final IObservationValueContainer oldContainer = (IObservationValueContainer) m_currentBar.getData();
-      final IObservationValueContainer currentMaxData = calculateCurrentMaxData( oldContainer, container, targetValue );
 
       /* update current bar */
       final Rectangle currentRectangle = m_currentBar.getRectangle();
-
-      final String[] currentStyles = getCurrentStyles( container );
-
-      m_currentBar.addStyle( currentStyles );
-      m_currentBar.setData( currentMaxData );
 
       /* construct new rectangle */
       final int newX = screenCurrent.x;
@@ -194,8 +188,20 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPaint
       final int newHeight = Math.abs( currentY - m_baseLine );
       final Rectangle rectangle = new Rectangle( newX, newY, 0, newHeight );
 
-      // REMARK: union needed to be sure negative/positive bars are both correctly handled
+      /* Only check for style if rectangle is visible at all */
+      if( m_paintManager.isInScreen( rectangle ) )
+      {
+        /* find styles and set current max data */
+        final String[] currentStyles = getCurrentStyles( container );
+        m_currentBar.addStyle( currentStyles );
 
+        final IObservationValueContainer currentMaxData = calculateCurrentMaxData( oldContainer, container, targetValue );
+        m_currentBar.setData( currentMaxData );
+      }
+
+      // TODO: we continue even offscreen, in order to correctly handle the first rectangle
+
+      // REMARK: union needed to be sure negative/positive bars are both correctly handled
       currentRectangle.add( rectangle );
 
       /* Paint or store last rectangle */
