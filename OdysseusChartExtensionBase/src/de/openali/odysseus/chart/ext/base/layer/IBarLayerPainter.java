@@ -5,7 +5,7 @@
  *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
- *  Denickestraï¿½e 22
+ *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
  *
@@ -38,41 +38,16 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.zml.ui.chart.layer.provider;
+package de.openali.odysseus.chart.ext.base.layer;
 
-import java.net.URL;
-
-import org.kalypso.zml.core.base.request.IRequestHandler;
-import org.kalypso.zml.core.base.request.MetadataRequestHandler;
-import org.kalypso.zml.ui.chart.layer.themes.ZmlSelectionLayer;
-import org.kalypso.zml.ui.i18n.Messages;
-
-import de.openali.odysseus.chart.factory.provider.AbstractLayerProvider;
-import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
- * @author Dirk Kuch
+ * Creates rectangles for painting
+ *
+ * @author Gernot Belger
  */
-public class ZmlSelectionLayerProvider extends AbstractLayerProvider
+public interface IBarLayerPainter
 {
-  public static final String ID = "org.kalypso.zml.ui.chart.layer.provider.ZmlSelectionLayerProvider"; //$NON-NLS-1$
-
-  @Override
-  public IChartLayer getLayer( final URL context ) throws ConfigurationException
-  {
-    try
-    {
-      return new ZmlSelectionLayer( this, getStyleSet() );
-    }
-    catch( final Throwable t )
-    {
-      throw new ConfigurationException( Messages.ZmlSelectionLayerProvider_1, t );
-    }
-  }
-
-  protected IRequestHandler getRequestHandler( )
-  {
-    return new MetadataRequestHandler( getParameterContainer() );
-  }
+  void execute( IProgressMonitor monitor );
 }

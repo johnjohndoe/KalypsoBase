@@ -78,14 +78,14 @@ public class ZmlSelectionLayer extends AbstractChartLayer
   public ZmlSelectionLayer( final ILayerProvider layerProvider, final IStyleSet styleSet )
   {
     super( layerProvider ,styleSet);
+
     final StyleSetVisitor visitor = new StyleSetVisitor( false );
     m_lineStyle = visitor.visit( getStyleSet(), ILineStyle.class, 0 );
     m_areaStyle = visitor.visit( getStyleSet(), IAreaStyle.class, 0 );
-   
   }
 
   @Override
-  public void paint( final GC gc, IProgressMonitor monitor )
+  public void paint( final GC gc, final IProgressMonitor monitor )
   {
     if( Objects.allNull( m_selection, m_selectedDateRange ) )
       return;
@@ -201,5 +201,5 @@ public class ZmlSelectionLayer extends AbstractChartLayer
     return null;
   }
 
- 
+
 }

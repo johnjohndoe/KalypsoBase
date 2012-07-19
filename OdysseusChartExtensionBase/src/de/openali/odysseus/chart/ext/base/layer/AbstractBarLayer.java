@@ -3,31 +3,31 @@ package de.openali.odysseus.chart.ext.base.layer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
 import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
+import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
-import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
 
 /**
  * @author alibu
  */
-public abstract class AbstractBarLayer extends AbstractChartLayer
+public abstract class AbstractBarLayer extends AbstractChartLayer implements ITooltipChartLayer
 {
   private ILegendEntry[] m_legendEntries;
 
-  public AbstractBarLayer( final ILayerProvider provider, final IAreaStyle areaStyle )
-  {
-    super( provider, new StyleSet() );
-    getStyleSet().addStyle( "area", areaStyle );
-  }
+  private BarLayerRectangleIndex m_index;
 
   public AbstractBarLayer( final ILayerProvider provider, final IStyleSet styleSet )
   {
@@ -37,10 +37,10 @@ public abstract class AbstractBarLayer extends AbstractChartLayer
   private ILegendEntry[] createLegendEntries( )
   {
     final List<ILegendEntry> entries = new ArrayList<ILegendEntry>();
+    // TODO: use all styles that are available
     final FullRectangleFigure pf = getRectangleFigure();
     if( pf.getStyle().isVisible() )
     {
-
       final LegendEntry entry = new LegendEntry( this, getTitle() )
       {
         @Override
@@ -73,6 +73,10 @@ public abstract class AbstractBarLayer extends AbstractChartLayer
     return m_legendEntries;
   }
 
+  /**
+   * @deprecated This is just too simple...
+   */
+  @Deprecated
   protected FullRectangleFigure getRectangleFigure( )
   {
     final IAreaStyle as = getAreaStyle();
@@ -95,5 +99,54 @@ public abstract class AbstractBarLayer extends AbstractChartLayer
       rf.setRectangle( rect );
       rf.paint( gc );
     }
+  }
+
+  @Override
+  public void paint( final GC gc, final IProgressMonitor monitor )
+  {
+    final String taskName = String.format( "Painting %s", getTitle() );
+    monitor.beginTask( taskName, 100 );
+
+    try
+    {
+      final BarPaintManager paintManager = new BarPaintManager( gc, getStyleSet() );
+
+      final IBarLayerPainter painter = createPainter( paintManager );
+      if( painter == null )
+        return;
+
+      painter.execute( new SubProgressMonitor( monitor, 50 ) );
+
+      if( monitor.isCanceled() )
+        return;
+
+      paintManager.paint( new SubProgressMonitor( monitor, 50 ) );
+
+      m_index = paintManager.getIndex();
+    }
+    catch( final OperationCanceledException e )
+    {
+      return;
+    }
+  }
+
+  protected abstract IBarLayerPainter createPainter( final BarPaintManager paintManager );
+
+  @Override
+  public EditInfo getHover( final Point pos )
+  {
+    final BarRectangle bar = m_index.findElement( pos );
+    if( bar == null )
+      return null;
+
+    return getEditInfo( bar, pos );
+  }
+
+  /**
+   * Overwrite to implement tooltip and edit behavior
+   */
+  protected EditInfo getEditInfo( @SuppressWarnings("unused") final BarRectangle bar, @SuppressWarnings("unused") final Point pos )
+  {
+    return null;
   }
 }

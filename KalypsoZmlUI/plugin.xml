@@ -37,12 +37,7 @@
           class="org.kalypso.zml.ui.chart.layer.provider.ZmlConstantLineLayerProvider"
           id="org.kalypso.hwv.core.chart.layer.ZmlBoundaryLayerProvider">
     </provider>
-    <provider
-          class="org.kalypso.zml.ui.chart.layer.provider.ZmlBarValueQualityLayerProvider"
-          id="org.kalypso.zml.ui.chart.layer.provider.bar.value.quaility.layer">
-    </provider>
  </extension>
-
 
  <extension point="org.kalypso.core.catalogContribution">
     <catalogContribution class="org.kalypso.zml.ui.table.catalog.ZmlTableCatalogContribution"
