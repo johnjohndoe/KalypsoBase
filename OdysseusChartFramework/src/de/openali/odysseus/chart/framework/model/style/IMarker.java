@@ -1,7 +1,6 @@
 package de.openali.odysseus.chart.framework.model.style;
 
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Point;
 
 public interface IMarker
 {
@@ -12,5 +11,5 @@ public interface IMarker
   /**
    * assumes that the style is already set
    */
-  void paint( GC gc, Point p, int width, int height, boolean drawForeground, boolean drawBackground );
+  void paint( GC gc, int x, int y, int width, int height, boolean drawForeground, boolean drawBackground );
 }

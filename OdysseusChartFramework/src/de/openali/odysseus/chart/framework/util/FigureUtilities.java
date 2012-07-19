@@ -18,7 +18,7 @@ public final class FigureUtilities
 
   /**
    * creates an array of integer values containing alternately x and y position of the given points
-   * 
+   *
    * @param points
    * @return
    */
@@ -39,7 +39,7 @@ public final class FigureUtilities
    * Transforms a position assumed to be the center of a rectangle (by given width and height) to a position
    * representing the left top of the rectangle. Warning: if width or height are straight numbers, the returned position
    * will be displaced by one half pixel to the left or top
-   * 
+   *
    * @param point
    *          Point representing the center of the rectangle
    * @param width
@@ -57,7 +57,7 @@ public final class FigureUtilities
 
   /**
    * Translates a polygon to a position
-   * 
+   *
    * @param points
    *          array of points describing the polygon where x and y are greater than zero
    * @param pos
@@ -81,7 +81,7 @@ public final class FigureUtilities
   /**
    * inverts the y-Coordinates of the points; the vertical screen coordinates are counted from top to bottom; users
    * think in coordinate systems which count from bottom to top
-   * 
+   *
    * @param points
    * @param pos
    * @return Array of inverted points
@@ -102,7 +102,7 @@ public final class FigureUtilities
 
   /**
    * moves a polygon to the origin and resizes it to fit into a rectangle by the given width and height
-   * 
+   *
    * @param points
    *          points describing the polygon
    * @param width
