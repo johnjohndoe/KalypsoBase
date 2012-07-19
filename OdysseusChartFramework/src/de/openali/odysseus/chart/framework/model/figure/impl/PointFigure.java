@@ -9,11 +9,15 @@ import de.openali.odysseus.chart.framework.model.style.impl.PointStyle;
 import de.openali.odysseus.chart.framework.util.FigureUtilities;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
 
+/**
+ * Use {@link MarkerFigure} instead.
+ *
+ * @author Gernot
+ */
+@Deprecated
 public class PointFigure extends AbstractFigure<IPointStyle>
 {
   private Point[] m_centerPoints;
-
-  private Point[] m_leftTopPoints;
 
   /**
    * @param points
@@ -22,8 +26,6 @@ public class PointFigure extends AbstractFigure<IPointStyle>
   public void setPoints( final Point[] points )
   {
     m_centerPoints = points;
-    m_leftTopPoints = null;
-
   }
 
   @Override
@@ -32,30 +34,20 @@ public class PointFigure extends AbstractFigure<IPointStyle>
     final IPointStyle style = getStyle();
     if( style != null && m_centerPoints != null )
     {
-      if( m_leftTopPoints == null )
-      {
-        m_leftTopPoints = new Point[m_centerPoints.length];
-        for( int i = 0; i < m_centerPoints.length; i++ )
-        {
-          final Point centerPoint = m_centerPoints[i];
-          m_leftTopPoints[i] = FigureUtilities.centerToLeftTop( centerPoint, style.getWidth(), style.getHeight() );
-        }
-      }
-
-      // FIXME: was already aplied by super.paint; why again?
-      style.apply( gc );
-
       IMarker marker = style.getMarker();
       if( marker == null )
         marker = IDefaultStyles.DEFAULT_MARKER;
 
-      final boolean fillVisible = style.isFillVisible();
       final int width = style.getWidth();
       final int height = style.getHeight();
+      final boolean fillVisible = style.isFillVisible();
       final boolean strokeVisible = style.getStroke().isVisible();
 
-      for( final Point p : m_leftTopPoints )
-        marker.paint( gc, p, width, height, strokeVisible, fillVisible );
+      for( final Point centerPoint : m_centerPoints )
+      {
+        final Point leftTopPoint = FigureUtilities.centerToLeftTop( centerPoint, width, height );
+        marker.paint( gc, leftTopPoint.x, leftTopPoint.y, width, height, strokeVisible, fillVisible );
+      }
     }
   }
 
@@ -71,12 +63,4 @@ public class PointFigure extends AbstractFigure<IPointStyle>
     else
       return StyleUtils.getDefaultStyle( PointStyle.class );
   }
-
-  @Override
-  public void setStyle( final IPointStyle ps )
-  {
-    super.setStyle( ps );
-    m_leftTopPoints = null;
-  }
-
 }
