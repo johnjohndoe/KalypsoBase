@@ -1196,6 +1196,11 @@
         <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
         <Position>LEFT</Position>
       </ScreenAxis>
+      <ScreenAxis id="screenAxisYinverted">
+        <Provider epid="de.openali.odysseus.chart.ext.axis.provider.GenericLinear" />
+        <Direction>NEGATIVE</Direction>
+        <Position>LEFT</Position>
+      </ScreenAxis>
     </Mappers>
     <Renderers>
       <AxisRenderer id="NumberAxisRenderer">
