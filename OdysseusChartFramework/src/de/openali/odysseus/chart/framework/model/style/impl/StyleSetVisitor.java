@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.model.style.impl;
 
-import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -60,12 +59,6 @@ public class StyleSetVisitor
 {
   private final boolean m_defaultLineStyle;
 
-  @Deprecated
-  public StyleSetVisitor( )
-  {
-    this( false );
-  }
-
   public StyleSetVisitor( final boolean defaultLineStyle )
   {
     m_defaultLineStyle = defaultLineStyle;
@@ -80,12 +73,10 @@ public class StyleSetVisitor
     }
 
     final Map<String, IStyle> map = styleSet.getStyles();
-    final Collection<IStyle> styles = map.values();
-
     int styleIndex = 0;
     IStyle lastItem = null;
 
-    for( final IStyle style : styles )
+    for( final IStyle style : map.values() )
     {
       if( clazz.isAssignableFrom( style.getClass() ) )
       {

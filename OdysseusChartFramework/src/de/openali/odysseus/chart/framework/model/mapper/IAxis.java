@@ -75,19 +75,9 @@ public interface IAxis extends IMapper
   boolean isVisible( );
 
   /**
-   * converts a double value into the corresponding screen value
-   */
-  int normalizedToScreen( double d );
-
-  /**
    * transforms a numeric value into a screen position
    */
   int numericToScreen( Number value );
-
-  /**
-   * converts a screen value into a normalized value
-   */
-  double screenToNormalized( int value );
 
   /**
    * transforms a screen position into a numeric value
