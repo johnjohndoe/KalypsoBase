@@ -69,7 +69,6 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
  */
 public class PointsLineLayer extends AbstractProfilLayer
 {
-
   public PointsLineLayer( final String id, final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
   {
     super( id, profil, targetRangeProperty, styleProvider );
@@ -189,7 +188,7 @@ public class PointsLineLayer extends AbstractProfilLayer
   }
 
   @Override
-  public void paint( final GC gc, IProgressMonitor monitor )
+  public void paint( final GC gc, final IProgressMonitor monitor )
   {
     final IProfil profil = getProfil();
     if( profil == null )
