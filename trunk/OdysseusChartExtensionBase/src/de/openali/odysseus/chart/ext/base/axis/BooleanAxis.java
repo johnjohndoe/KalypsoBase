@@ -61,11 +61,8 @@ public class BooleanAxis extends AbstractAxis
 
   /**
    * Uses the widgets' complete extension to calculate the screen value in correspondence to a normalized value
-   *
-   * @see de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent#normalizedToScreen(double)
    */
-  @Override
-  public int normalizedToScreen( final double normValue )
+  private int normalizedToScreen( final double normValue )
   {
     final int range = getScreenHeight();
     return (int) (range * (isInverted() ? 1 - normValue : normValue));
@@ -91,8 +88,7 @@ public class BooleanAxis extends AbstractAxis
    *
    * @see de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent#screenToNormalized(int)
    */
-  @Override
-  public double screenToNormalized( final int screenValue )
+  private double screenToNormalized( final int screenValue )
   {
     final int range = getScreenHeight();
     if( range == 0 )
