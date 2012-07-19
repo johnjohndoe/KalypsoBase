@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,14 +36,14 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.zml.ui.chart.view;
 
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IViewSite;
@@ -51,14 +51,13 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.ui.repository.view.RepositoryExplorerPart;
 import org.kalypso.zml.core.base.selection.ZmlSelectionBuilder;
 
 /**
  * Diagram QuickView.
- * 
+ *
  * @author Dirk Kuch
  */
 public class DiagramViewPart extends ViewPart implements ISelectionChangedListener, IPartListener
@@ -73,9 +72,7 @@ public class DiagramViewPart extends ViewPart implements ISelectionChangedListen
     final FormToolkit toolkit = ToolkitUtils.createToolkit( parent );
 
     final Composite base = toolkit.createComposite( parent, SWT.RIGHT | SWT.EMBEDDED | SWT.BORDER );
-    final GridLayout layout = Layouts.createGridLayout();
-    layout.verticalSpacing = 0;
-    base.setLayout( layout );
+    GridLayoutFactory.fillDefaults().spacing( 0, 0 ).applyTo( base );
 
     m_chartPart.createControl( base );
 
