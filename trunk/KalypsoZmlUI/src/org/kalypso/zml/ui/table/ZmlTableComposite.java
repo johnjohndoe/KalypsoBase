@@ -47,6 +47,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -56,7 +57,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.zml.core.table.model.IZmlModel;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 import org.kalypso.zml.core.table.model.event.ZmlModelColumnChangeType;
@@ -71,6 +71,8 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
 {
   private final Set<IZmlTableCompositeListener> m_listeners = new LinkedHashSet<IZmlTableCompositeListener>();
 
+  private final Set<IZmlModelColumn> m_stackColumns = Collections.synchronizedSet( new LinkedHashSet<IZmlModelColumn>() );
+
   private final FormToolkit m_toolkit;
 
   protected ZmlTable m_table;
@@ -80,9 +82,10 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
   public ZmlTableComposite( final Composite parent, final FormToolkit toolkit )
   {
     super( parent, SWT.NULL );
+
     m_toolkit = toolkit;
 
-    final GridLayout layout = Layouts.createGridLayout();
+    final GridLayout layout = GridLayoutFactory.fillDefaults().create();
     layout.verticalSpacing = 0;
     setLayout( layout );
 
@@ -101,7 +104,7 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
       if( hasToolbar( tableType ) )
       {
         toolbar = m_toolkit.createComposite( this );
-        toolbar.setLayout( Layouts.createGridLayout() );
+        toolbar.setLayout( GridLayoutFactory.fillDefaults().create() );
         toolbar.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
       }
 
@@ -166,25 +169,22 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
     return references.toArray( new String[] {} );
   }
 
-  final Set<IZmlModelColumn> m_stackColumns = Collections.synchronizedSet( new LinkedHashSet<IZmlModelColumn>() );
-
   @Override
   public void refresh( final ZmlModelColumnChangeType type, final IZmlModelColumn... cols )
   {
     synchronized( this )
     {
-
       // FIXME move to getModel().refresh()?
-// table.getModel().reset();
+      // table.getModel().reset();
       // FIXME stack columns in table model
       Collections.addAll( m_stackColumns, cols );
 
-// final IZmlModelColumn[] missing = ZmlTableColumns.findMissingColumns( getMainTable(), getModel().getColumns() );
-// ZmlTableColumns.buildTableColumns( this, ZmlTableColumns.toBaseColumns( missing ) );
+      // final IZmlModelColumn[] missing = ZmlTableColumns.findMissingColumns( getMainTable(), getModel().getColumns()
+	  // );
+      // ZmlTableColumns.buildTableColumns( this, ZmlTableColumns.toBaseColumns( missing ) );
 
       // FIXME don't refresh all columns!!!!
       m_table.refresh( type );
-
     }
   }
 
@@ -215,5 +215,4 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
   {
     return m_table;
   }
-
 }

@@ -124,8 +124,8 @@ public class ZmlTable extends Composite implements IZmlTable
   public ZmlTable( final ZmlTableComposite table, final IZmlModel model, final FormToolkit toolkit )
   {
     super( table, SWT.BORDER );
-    m_viewport = new ZmlModelViewport( model );
 
+    m_viewport = new ZmlModelViewport( model );
     m_viewport.addListener( new IZmlColumnModelListener()
     {
       @Override
