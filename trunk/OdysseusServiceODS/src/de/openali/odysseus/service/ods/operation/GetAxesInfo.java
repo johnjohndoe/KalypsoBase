@@ -21,10 +21,10 @@ import de.openali.odysseus.chart.framework.model.mapper.registry.impl.MapperRegi
 import de.openali.odysseus.chartconfig.x020.AxisNumberRangeType;
 import de.openali.odysseus.chartconfig.x020.AxisStringRangeType;
 import de.openali.odysseus.chartconfig.x020.AxisType;
-import de.openali.odysseus.chartconfig.x020.AxisType.Direction.Enum;
 import de.openali.odysseus.chartconfig.x020.ChartConfigurationDocument;
 import de.openali.odysseus.chartconfig.x020.ChartConfigurationType;
 import de.openali.odysseus.chartconfig.x020.ChartType;
+import de.openali.odysseus.chartconfig.x020.DirectionType;
 import de.openali.odysseus.chartconfig.x020.LayerType;
 import de.openali.odysseus.chartconfig.x020.PositionType;
 import de.openali.odysseus.service.ods.environment.ODSConfigurationLoader;
@@ -40,7 +40,7 @@ import de.openali.odysseus.service.ods.x020.StringRangeDocument.StringRange;
 
 /**
  * The get axes info operation.
- * 
+ *
  * @author Holger Albert
  */
 public class GetAxesInfo extends AbstractODSOperation implements IOGCOperation
@@ -171,10 +171,10 @@ public class GetAxesInfo extends AbstractODSOperation implements IOGCOperation
       atInfo.setPosition( AxisPositionType.TOP );
 
     // Direction
-    final Enum direction = atConf.getDirection();
-    if( direction == AxisType.Direction.NEGATIVE )
+    final de.openali.odysseus.chartconfig.x020.DirectionType.Enum direction = atConf.getDirection();
+    if( direction == DirectionType.NEGATIVE )
       atInfo.setDirection( AxisDirectionType.NEGATIVE );
-    else if( direction == AxisType.Direction.POSITIVE )
+    else if( direction == DirectionType.POSITIVE )
       atInfo.setDirection( AxisDirectionType.POSITIVE );
 
     setDataRange( atConf, atInfo, type, axis );
