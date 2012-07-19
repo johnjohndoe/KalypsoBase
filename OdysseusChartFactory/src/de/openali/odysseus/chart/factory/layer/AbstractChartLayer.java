@@ -14,7 +14,7 @@ import org.kalypso.commons.java.lang.Objects;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 
-import de.openali.odysseus.chart.framework.OdysseusChartFramework;
+import de.openali.odysseus.chart.framework.OdysseusChartExtensions;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.ILayerContainer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -427,7 +427,7 @@ public abstract class AbstractChartLayer implements IChartLayer
     final Iterable<String> filters = Splitter.on( ";" ).split( property ); //$NON-NLS-1$
     for( final String reference : filters )
     {
-      final IChartLayerFilter filter = OdysseusChartFramework.getDefault().findFilter( reference );
+      final IChartLayerFilter filter = OdysseusChartExtensions.createFilter( reference );
       if( Objects.isNotNull( filter ) )
         addFilter( filter );
     }

@@ -17,7 +17,7 @@ import org.kalypso.commons.java.lang.Objects;
 
 import com.google.common.base.Strings;
 
-import de.openali.odysseus.chart.framework.OdysseusChartFramework;
+import de.openali.odysseus.chart.framework.OdysseusChartExtensions;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
@@ -72,7 +72,7 @@ public class ChangeVisibilityCommandHandler extends AbstractHandler implements I
     final String[] parameters = parameter.split( ";" ); //$NON-NLS-1$
     for( final String filterIdentifier : parameters )
     {
-      final IChartLayerFilter filter = OdysseusChartFramework.getDefault().findFilter( filterIdentifier );
+      final IChartLayerFilter filter = OdysseusChartExtensions.createFilter( filterIdentifier );
       if( Objects.isNotNull( filter ) )
         filters.add( filter );
     }
