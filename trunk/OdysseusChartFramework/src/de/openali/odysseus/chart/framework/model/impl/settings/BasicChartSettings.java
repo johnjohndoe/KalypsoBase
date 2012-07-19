@@ -47,7 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.openali.odysseus.chart.framework.OdysseusChartFramework;
+import de.openali.odysseus.chart.framework.OdysseusChartExtensions;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
@@ -61,7 +61,7 @@ import de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegend
 
 /**
  * Basic chart model parameters like title, styling, description, ...
- * 
+ *
  * @author Dirk Kuch
  */
 public class BasicChartSettings implements IBasicChartSettings
@@ -104,7 +104,7 @@ public class BasicChartSettings implements IBasicChartSettings
     if( m_renderer == null )
       m_renderer = CompactChartLegendRenderer.ID;
 
-    return OdysseusChartFramework.getDefault().getRenderers( m_renderer );
+    return OdysseusChartExtensions.getRenderers( m_renderer );
   }
 
   @Override

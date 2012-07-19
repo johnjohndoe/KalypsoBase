@@ -72,7 +72,7 @@ import de.openali.odysseus.chart.ext.base.layer.AbstractBarLayer;
 import de.openali.odysseus.chart.ext.base.layer.BarPaintManager;
 import de.openali.odysseus.chart.ext.base.layer.BarRectangle;
 import de.openali.odysseus.chart.ext.base.layer.IBarLayerPainter;
-import de.openali.odysseus.chart.framework.OdysseusChartFramework;
+import de.openali.odysseus.chart.framework.OdysseusChartExtensions;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
@@ -352,6 +352,6 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer // , IToo
     if( StringUtils.isBlank( filterId ) )
       return null;
 
-    return OdysseusChartFramework.getDefault().findFilter( filterId );
+    return OdysseusChartExtensions.createFilter( filterId );
   }
 }
