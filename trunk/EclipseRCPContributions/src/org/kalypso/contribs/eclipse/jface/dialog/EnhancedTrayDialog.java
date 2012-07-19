@@ -51,7 +51,6 @@ import org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsPlugin;
  */
 public class EnhancedTrayDialog extends TrayDialog
 {
-
   public EnhancedTrayDialog( final Shell shell )
   {
     super( shell );
@@ -74,5 +73,4 @@ public class EnhancedTrayDialog extends TrayDialog
     final IDialogSettings settings = EclipseRCPContributionsPlugin.getDefault().getDialogSettings();
     settings.put( parameter, String.format( "%d,%d", size.x, size.y ) );
   }
-
 }
