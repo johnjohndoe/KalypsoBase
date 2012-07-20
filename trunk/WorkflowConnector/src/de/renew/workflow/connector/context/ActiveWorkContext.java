@@ -17,6 +17,7 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 import de.renew.workflow.connector.cases.IScenarioManager;
 import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 import de.renew.workflow.connector.internal.WorkflowConnectorPlugin;
+import de.renew.workflow.connector.internal.cases.ScenarioCompatibilityHelper;
 
 /**
  * Represents the work context for a user.
@@ -76,6 +77,11 @@ public class ActiveWorkContext
     }
 
     m_currentProjectNature = nature;
+
+    /* ensure backwards compatibility */
+    // FIXME: still a bad place, but at least this happens now only once
+    // lazy check and insurance for backwards compatibility
+    ScenarioCompatibilityHelper.ensureBackwardsCompatibility( m_currentProjectNature );
   }
 
   public ScenarioHandlingProjectNature getCurrentProject( )

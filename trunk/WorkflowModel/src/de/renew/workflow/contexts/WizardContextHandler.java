@@ -108,10 +108,6 @@ public class WizardContextHandler extends AbstractHandler implements IExecutable
     return Status.OK_STATUS;
   }
 
-  /**
-   * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
-   *      java.lang.String, java.lang.Object)
-   */
   @Override
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {

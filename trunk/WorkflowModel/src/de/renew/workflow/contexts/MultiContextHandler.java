@@ -65,9 +65,6 @@ public class MultiContextHandler extends AbstractHandler
     m_contextHandlerFactory = contextHandlerFactory;
   }
 
-  /**
-   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
@@ -79,5 +76,4 @@ public class MultiContextHandler extends AbstractHandler
     }
     return null;
   }
-
 }

@@ -261,4 +261,13 @@ public class WorkflowControl implements IWorklistChangeListener, ITaskExecutionL
   {
     return m_treeViewer;
   }
+
+  public IWorkflow getWorkflow( )
+  {
+    final Object input = m_treeViewer.getInput();
+    if( input instanceof IWorkflow )
+      return (IWorkflow) input;
+
+    return null;
+  }
 }
