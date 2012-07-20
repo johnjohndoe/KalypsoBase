@@ -101,9 +101,10 @@ public class ZmlDiagramLayerListener extends AbstractLayerManagerEventListener
   }
 
   @Override
-  public void onLayerContentChanged( final IChartLayer layer )
+  public void onLayerContentChanged( final IChartLayer layer, final ContentChangeType type )
   {
-    reschedule();
+    if( type == ContentChangeType.all )
+      reschedule();
   }
 
   @Override
@@ -111,7 +112,7 @@ public class ZmlDiagramLayerListener extends AbstractLayerManagerEventListener
   {
   }
 
-  private void reschedule( )
+  void reschedule( )
   {
     m_job.cancel();
     m_job.schedule( 0 );

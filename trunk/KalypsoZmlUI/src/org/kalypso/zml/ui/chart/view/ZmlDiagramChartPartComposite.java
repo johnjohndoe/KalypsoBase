@@ -58,7 +58,6 @@ import org.kalypso.zml.ui.chart.update.RemoveClonedLayerVisitor;
 import de.openali.odysseus.chart.factory.config.ChartExtensionLoader;
 import de.openali.odysseus.chart.factory.config.ChartFactory;
 import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.IChartHandlerManager;
@@ -70,7 +69,7 @@ public class ZmlDiagramChartPartComposite extends ChartPartComposite
 {
   private final URL m_template;
 
-  private final ILayerManagerEventListener m_layerManagerListener;
+  private final ZmlDiagramLayerListener m_layerManagerListener;
 
   public ZmlDiagramChartPartComposite( final IWorkbenchPart part, final URL template )
   {
@@ -118,6 +117,7 @@ public class ZmlDiagramChartPartComposite extends ChartPartComposite
     loadInput( null );
 
     final Composite control = super.createControl( parent );
+
     control.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     final IChartComposite chartComposite = getChartComposite();
@@ -142,6 +142,9 @@ public class ZmlDiagramChartPartComposite extends ChartPartComposite
 
     final IChartModel model = getChartModel();
     DiagramCompositeSelection.doApply( model, selection );
+
+    /* initially update noData layer once */
+    m_layerManagerListener.reschedule();
   }
 
   private void reset( )
