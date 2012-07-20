@@ -63,6 +63,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 
 import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
@@ -212,7 +213,7 @@ public class WspLayer extends AbstractProfilTheme
   }
 
   @Override
-  public void paint( final GC gc, IProgressMonitor monitor )
+  public void paint( final GC gc, final IProgressMonitor monitor )
   {
     final ILineStyle lineStyle = getLineStyle();
 
@@ -250,12 +251,15 @@ public class WspLayer extends AbstractProfilTheme
     super.onProfilChanged( hint );
   }
 
-  // TODO: all layers should have this method; instead, the event heandler should not be visible fro moutside
+  // TODO: all layers should have this method; instead, the event handler should not be visible from outside
+  /**
+   * Do not use, only needed for {@link org.kalypso.model.wspm.ui.view.chart.layer.wsp.utils.WaterLevelResultTree}.
+   */
   public void invalidate( )
   {
     m_renderData = null;
 
-    fireLayerContentChanged();
+    fireLayerContentChanged( ContentChangeType.value );
   }
 
   protected void handlePreferencesChanged( )

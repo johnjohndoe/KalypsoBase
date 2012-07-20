@@ -61,6 +61,7 @@ import org.kalypso.zml.core.diagram.base.IZmlLayerProvider;
 import org.kalypso.zml.core.diagram.base.ZmlLayerProviders;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
 import de.openali.odysseus.chart.framework.model.impl.settings.CHART_DATA_LOADER_STRATEGY;
 import de.openali.odysseus.chart.framework.model.impl.settings.IBasicChartSettings;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
@@ -147,7 +148,7 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
       }
     }
 
-    m_layer.onObservationChanged();
+    m_layer.onObservationChanged( ContentChangeType.all );
   }
 
   @Override
@@ -166,12 +167,12 @@ public class ZmlObsProviderDataHandler implements IZmlLayerDataHandler
   {
     m_valueAxis = null;
 
-    m_layer.onObservationChanged();
+    m_layer.onObservationChanged( ContentChangeType.all );
   }
 
   protected void onObservationChanged( )
   {
-    m_layer.onObservationChanged();
+    m_layer.onObservationChanged( ContentChangeType.value );
   }
 
   @Override

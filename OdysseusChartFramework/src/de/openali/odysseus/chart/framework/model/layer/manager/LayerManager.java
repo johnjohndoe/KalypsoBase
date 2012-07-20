@@ -11,6 +11,7 @@ import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.ILayerContainer;
 import de.openali.odysseus.chart.framework.model.event.ILayerEventListener;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
+import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
 import de.openali.odysseus.chart.framework.model.event.impl.AbstractLayerEventListener;
 import de.openali.odysseus.chart.framework.model.event.impl.LayerManagerEventHandler;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -52,13 +53,13 @@ public class LayerManager implements ILayerManager
     }
 
     @Override
-    public void onLayerContentChanged( final IChartLayer layer )
+    public void onLayerContentChanged( final IChartLayer layer, final ContentChangeType type )
     {
-      m_handler.fireLayerContentChanged( layer );
+      m_handler.fireLayerContentChanged( layer, type );
 
       final LayerManagerEventHandler parentHandler = findParentHandler();
       if( parentHandler != null )
-        parentHandler.fireLayerContentChanged( (IChartLayer) getContainer() );
+        parentHandler.fireLayerContentChanged( (IChartLayer) getContainer(), type );
     }
 
     @Override

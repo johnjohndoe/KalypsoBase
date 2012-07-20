@@ -7,6 +7,15 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
  */
 public interface ILayerManagerEventListener
 {
+  public enum ContentChangeType
+  {
+    /** all content has changed, i.e. the complete data object */
+    all,
+
+    /** one or more value have changed, but the underlying data object is still the same */
+    value;
+  }
+
   /**
    * called when layer was added to layer stack
    */
@@ -29,12 +38,14 @@ public interface ILayerManagerEventListener
 
   /**
    * called when layer content has changed
+   *
+   * @param type
+   *          Gives a hint what really has changed.
    */
-  void onLayerContentChanged( IChartLayer layer );
+  void onLayerContentChanged( IChartLayer layer, ContentChangeType type );
 
   /**
    * called when active layer changed
    */
   void onActivLayerChanged( IChartLayer layer );
-
 }

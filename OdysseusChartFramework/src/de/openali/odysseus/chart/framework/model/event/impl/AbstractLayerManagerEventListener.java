@@ -92,7 +92,7 @@ public abstract class AbstractLayerManagerEventListener implements ILayerManager
    * not implemented - override in subclass if needed
    */
   @Override
-  public void onLayerContentChanged( final IChartLayer layer )
+  public void onLayerContentChanged( final IChartLayer layer, final ContentChangeType type )
   {
   }
 }

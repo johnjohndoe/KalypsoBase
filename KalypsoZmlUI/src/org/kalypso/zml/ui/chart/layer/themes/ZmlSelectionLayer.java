@@ -52,6 +52,7 @@ import org.kalypso.ogc.sensor.DateRange;
 
 import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolygonFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
@@ -170,7 +171,7 @@ public class ZmlSelectionLayer extends AbstractChartLayer
     m_selection = selection;
     m_selectedDateRange = null;
 
-    getEventHandler().fireLayerContentChanged( this );
+    getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
   }
 
   public void setSelection( final DateRange dateRange )
@@ -178,7 +179,7 @@ public class ZmlSelectionLayer extends AbstractChartLayer
     m_selection = null;
     m_selectedDateRange = dateRange;
 
-    getEventHandler().fireLayerContentChanged( this );
+    getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
   }
 
   public void purgeSelection( )
@@ -186,7 +187,7 @@ public class ZmlSelectionLayer extends AbstractChartLayer
     m_selection = null;
     m_selectedDateRange = null;
 
-    getEventHandler().fireLayerContentChanged( this );
+    getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
   }
 
   @Override
@@ -200,6 +201,4 @@ public class ZmlSelectionLayer extends AbstractChartLayer
   {
     return null;
   }
-
-
 }

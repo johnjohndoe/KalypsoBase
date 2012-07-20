@@ -135,7 +135,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     final Rectangle dragArea = m_dragArea;
     final EditInfo editInfo = m_editInfo;
 
-    if( plotData == null )
+    if( plotData == null || plotRect == null )
       return;
 
     final GC paintGC = paintEvent.gc;

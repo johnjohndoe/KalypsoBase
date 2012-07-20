@@ -149,7 +149,7 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
       }
 
       @Override
-      public void onLayerContentChanged( final IChartLayer layer )
+      public void onLayerContentChanged( final IChartLayer layer, final ContentChangeType type )
       {
         refreshTreeViewer();
       }
