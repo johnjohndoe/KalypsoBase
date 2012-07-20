@@ -62,18 +62,12 @@ public class NoDataLayerVisibilityVisitor implements IChartLayerVisitor
 {
   public static final String NO_DATA_LAYER = "noData"; //$NON-NLS-1$
 
-  boolean m_visible = true;
+  private boolean m_visible = true;
 
-  IChartLayer m_noDataLayer;
+  private IChartLayer m_noDataLayer;
 
   private IChartLayer m_selectionLayer;
 
-  public NoDataLayerVisibilityVisitor( )
-  {
-
-  }
-
-  // <Parameter name="hideOnMultiSelect" value="true" />
   @Override
   public void visit( final IChartLayer layer )
   {
