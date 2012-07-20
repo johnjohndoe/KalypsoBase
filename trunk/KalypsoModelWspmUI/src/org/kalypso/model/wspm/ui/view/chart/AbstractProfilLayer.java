@@ -61,6 +61,7 @@ import org.kalypso.observation.result.IComponent;
 import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
 import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
@@ -459,7 +460,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
     if( hint.isSelectionChanged() )
     {
-      getEventHandler().fireLayerContentChanged( this );
+      getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
     }
   }
 

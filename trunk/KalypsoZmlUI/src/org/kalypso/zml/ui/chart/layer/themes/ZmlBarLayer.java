@@ -76,6 +76,7 @@ import de.openali.odysseus.chart.ext.base.layer.BarRectangle;
 import de.openali.odysseus.chart.ext.base.layer.IBarLayerPainter;
 import de.openali.odysseus.chart.framework.OdysseusChartExtensions;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
@@ -174,11 +175,11 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer // , IToo
   }
 
   @Override
-  public void onObservationChanged( )
+  public void onObservationChanged( final ContentChangeType type )
   {
     m_range.invalidateRange();
 
-    getEventHandler().fireLayerContentChanged( this );
+    getEventHandler().fireLayerContentChanged( this, type );
   }
 
   @Override

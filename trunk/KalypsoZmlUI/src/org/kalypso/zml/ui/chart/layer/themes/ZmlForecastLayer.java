@@ -57,6 +57,7 @@ import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
 import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
@@ -101,7 +102,7 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
   }
 
   @Override
-  public void paint( final GC gc, IProgressMonitor monitor )
+  public void paint( final GC gc, final IProgressMonitor monitor )
   {
     if( m_provider == null )
       return;
@@ -215,12 +216,12 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
   public void observationReplaced( )
   {
     setVisible( true );
-    getEventHandler().fireLayerContentChanged( this );
+    getEventHandler().fireLayerContentChanged( this, ContentChangeType.all );
   }
 
   @Override
   public void observationChanged( final Object source )
   {
-    getEventHandler().fireLayerContentChanged( this );
+    getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
   }
 }

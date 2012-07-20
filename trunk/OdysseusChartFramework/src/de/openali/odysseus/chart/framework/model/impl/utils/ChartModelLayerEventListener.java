@@ -104,7 +104,7 @@ public class ChartModelLayerEventListener extends AbstractLayerManagerEventListe
   }
 
   @Override
-  public void onLayerContentChanged( final IChartLayer layer )
+  public void onLayerContentChanged( final IChartLayer layer, final ContentChangeType type )
   {
     if( m_model.getBehaviour().isHideUnusedAxes() )
     {

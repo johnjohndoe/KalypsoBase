@@ -62,6 +62,7 @@ import org.kalypso.zml.ui.chart.layer.filters.ZmlChartLayerFilters;
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
 import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
 import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.TextFigure;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
@@ -120,9 +121,9 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
   }
 
   @Override
-  public void onObservationChanged( )
+  public void onObservationChanged( final ContentChangeType type )
   {
-    getEventHandler().fireLayerContentChanged( this );
+    getEventHandler().fireLayerContentChanged( this, type );
   }
 
   @Override

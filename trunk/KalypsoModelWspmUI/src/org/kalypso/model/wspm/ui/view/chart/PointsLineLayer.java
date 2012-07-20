@@ -56,6 +56,7 @@ import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.observation.result.ComponentUtilities;
 
+import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
 import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
@@ -126,7 +127,7 @@ public class PointsLineLayer extends AbstractProfilLayer
       final IProfil profil = getProfil();
       final IProfileRecord profilPoint = profil.getPoint( pos );
       final Integer hoehe = profil.indexOfProperty( getTargetComponent() );
-// final Integer breite = profil.indexOfProperty( getDomainComponent() );
+      // final Integer breite = profil.indexOfProperty( getDomainComponent() );
       final ICoordinateMapper cm = getCoordinateMapper();
 
       // Object editMode = getData( IProfilChartLayer.VIEW_DATA_KEY );
@@ -139,7 +140,8 @@ public class PointsLineLayer extends AbstractProfilLayer
       profilPoint.setValue( hoehe, y );
 
       profil.getSelection().setRange( profilPoint );
-      getEventHandler().fireLayerContentChanged( this );
+
+      getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
     }
   }
 
@@ -183,7 +185,7 @@ public class PointsLineLayer extends AbstractProfilLayer
   {
     if( hint.isPointsChanged() || hint.isPointValuesChanged() )
     {
-      getEventHandler().fireLayerContentChanged( this );
+      getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
     }
   }
 

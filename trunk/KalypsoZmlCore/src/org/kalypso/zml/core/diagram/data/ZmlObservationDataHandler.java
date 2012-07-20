@@ -55,6 +55,8 @@ import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.zml.core.base.request.IRequestStrategy;
 import org.kalypso.zml.core.diagram.base.IZmlLayer;
 
+import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
+
 /**
  * @author Dirk Kuch
  * @deprecated Do not use, all observations should be provided by an IObservationProvider -> do only use the other
@@ -132,7 +134,7 @@ public class ZmlObservationDataHandler implements IZmlLayerDataHandler, IObserva
       m_observation.addListener( this );
     }
 
-    m_layer.onObservationChanged();
+    m_layer.onObservationChanged( ContentChangeType.all );
   }
 
   public void setDateRange( final DateRange dateRange )

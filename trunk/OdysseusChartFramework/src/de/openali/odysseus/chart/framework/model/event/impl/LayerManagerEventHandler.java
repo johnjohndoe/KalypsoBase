@@ -1,6 +1,7 @@
 package de.openali.odysseus.chart.framework.model.event.impl;
 
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
+import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
 /**
@@ -48,12 +49,11 @@ public class LayerManagerEventHandler extends AbstractEventProvider<ILayerManage
     }
   }
 
-  public void fireLayerContentChanged( final IChartLayer layer )
+  public void fireLayerContentChanged( final IChartLayer layer, final ContentChangeType type )
   {
     for( final ILayerManagerEventListener l : getListeners( ILayerManagerEventListener.class ) )
     {
-      l.onLayerContentChanged( layer );
+      l.onLayerContentChanged( layer, type );
     }
   }
-
 }

@@ -50,6 +50,7 @@ import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.observation.result.IComponent;
 
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
@@ -208,9 +209,9 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
     }
   }
 
-  protected final void fireLayerContentChanged( )
+  protected final void fireLayerContentChanged( final ContentChangeType type )
   {
-    getEventHandler().fireLayerContentChanged( this );
+    getEventHandler().fireLayerContentChanged( this, type );
   }
 
   private IProfilChartLayer getActiveLayer( )
@@ -311,7 +312,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
   {
     if( hint.isSelectionChanged() )
     {
-      fireLayerContentChanged();
+      fireLayerContentChanged( ContentChangeType.value );
     }
     else
     {

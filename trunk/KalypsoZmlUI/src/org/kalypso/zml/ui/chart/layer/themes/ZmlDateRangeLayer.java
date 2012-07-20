@@ -59,6 +59,7 @@ import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
 import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
@@ -103,13 +104,13 @@ public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
   }
 
   @Override
-  public void onObservationChanged( )
+  public void onObservationChanged( final ContentChangeType type )
   {
-    getEventHandler().fireLayerContentChanged( this );
+    getEventHandler().fireLayerContentChanged( this, type );
   }
 
   @Override
-  public void paint( final GC gc, IProgressMonitor monitor )
+  public void paint( final GC gc, final IProgressMonitor monitor )
   {
     // nothing to do
   }

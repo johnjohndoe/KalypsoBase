@@ -42,6 +42,7 @@ package org.kalypso.zml.core.diagram.base;
 
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
 
+import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
 import de.openali.odysseus.chart.framework.model.event.impl.LayerEventHandler;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
@@ -61,5 +62,5 @@ public interface IZmlLayer extends IChartLayer
 
   void setLabelDescriptor( String labelDescriptor );
 
-  void onObservationChanged( );
+  void onObservationChanged( ContentChangeType type );
 }

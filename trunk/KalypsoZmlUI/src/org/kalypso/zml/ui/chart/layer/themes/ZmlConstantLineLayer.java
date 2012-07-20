@@ -73,6 +73,7 @@ import org.kalypso.zml.ui.chart.layer.boundaries.MetadataLayerBoundaryBuilder;
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
 import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
@@ -135,10 +136,11 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
   }
 
   @Override
-  public void onObservationChanged( )
+  public void onObservationChanged( final ContentChangeType type )
   {
     updateDescriptors();
-    getEventHandler().fireLayerContentChanged( this );
+
+    getEventHandler().fireLayerContentChanged( this, type );
   }
 
   public boolean isCalculateRange( )
@@ -186,7 +188,7 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
   }
 
   @Override
-  public void paint( final GC gc, IProgressMonitor monitor )
+  public void paint( final GC gc, final IProgressMonitor monitor )
   {
     try
     {

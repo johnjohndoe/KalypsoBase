@@ -20,6 +20,7 @@ import de.openali.odysseus.chart.framework.model.ILayerContainer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.event.ILayerEventListener;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
+import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
 import de.openali.odysseus.chart.framework.model.event.impl.LayerEventHandler;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
@@ -88,13 +89,17 @@ public abstract class AbstractChartLayer implements IChartLayer
     @Override
     public void onLayerAdded( final IChartLayer layer )
     {
-      getEventHandler().fireLayerContentChanged( AbstractChartLayer.this );
+      // TODO: check: strange: why is the content of this layer changed if a sub-layer is added
+      getEventHandler().fireLayerContentChanged( AbstractChartLayer.this, ContentChangeType.all );
     }
 
     @Override
-    public void onLayerContentChanged( final IChartLayer layer )
+    public void onLayerContentChanged( final IChartLayer layer, final ContentChangeType type )
     {
-      getEventHandler().fireLayerContentChanged( AbstractChartLayer.this );
+      // TODO: check: strange: why is the content of this layer changed if a sub-layer is changed?
+
+      // TODO: shouldn't we give layer as argument instead of this?
+      getEventHandler().fireLayerContentChanged( AbstractChartLayer.this, ContentChangeType.all );
     }
 
     @Override
@@ -106,7 +111,8 @@ public abstract class AbstractChartLayer implements IChartLayer
     @Override
     public void onLayerRemoved( final IChartLayer layer )
     {
-      getEventHandler().fireLayerContentChanged( AbstractChartLayer.this );
+      // TODO: check: strange: why is trhe content of this layer changed if a sub-layer is removed
+      getEventHandler().fireLayerContentChanged( AbstractChartLayer.this, ContentChangeType.all );
     }
 
     @Override
@@ -146,7 +152,7 @@ public abstract class AbstractChartLayer implements IChartLayer
       return;
 
     Collections.addAll( m_filters, filters );
-    getEventHandler().fireLayerContentChanged( this );
+    getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
   }
 
   @Override
@@ -354,7 +360,7 @@ public abstract class AbstractChartLayer implements IChartLayer
       m_filters.remove( filter );
     }
 
-    getEventHandler().fireLayerContentChanged( this );
+    getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
   }
 
   @Override
@@ -405,7 +411,7 @@ public abstract class AbstractChartLayer implements IChartLayer
     m_filters.clear();
     Collections.addAll( m_filters, filters );
 
-    getEventHandler().fireLayerContentChanged( this );
+    getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
   }
 
   private void setFilters( )
