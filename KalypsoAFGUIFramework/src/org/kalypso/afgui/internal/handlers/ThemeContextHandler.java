@@ -40,9 +40,6 @@ public class ThemeContextHandler extends AbstractHandler
     Assert.isNotNull( m_featureType, Messages.getString( "org.kalypso.afgui.handlers.ThemeContextHandler.0" ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.eclipse.core.commands.AbstractHandler#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -52,9 +49,6 @@ public class ThemeContextHandler extends AbstractHandler
     super.dispose();
   }
 
-  /**
-   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event )
   {

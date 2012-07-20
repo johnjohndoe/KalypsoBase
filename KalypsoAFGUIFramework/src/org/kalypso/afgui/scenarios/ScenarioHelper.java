@@ -40,21 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.afgui.scenarios;
 
-import java.io.File;
-import java.net.URL;
-import java.util.Collection;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.filefilter.IOFileFilter;
-import org.apache.commons.io.filefilter.TrueFileFilter;
-import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -69,9 +59,6 @@ import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.internal.i18n.Messages;
 import org.kalypso.afgui.perspective.Perspective;
-import org.kalypso.commons.java.util.zip.ZipUtilities;
-import org.kalypso.contribs.eclipse.EclipsePlatformContributionsExtensions;
-import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
@@ -126,78 +113,10 @@ public class ScenarioHelper
     return null;
   }
 
-  // FIXME: probably (hopefully) not needed any more...; remove?
-  public static boolean ensureBackwardsCompatibility( final ScenarioHandlingProjectNature nature )
-  {
-    // FIXME: this is dirty fix only for this release 2.3
-    // should be implemented in other way, we just do not have any time now
-    try
-    {
-      if( nature != null && nature.getProject().hasNature( "org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature" ) )
-      {
-        final ProjectTemplate[] lTemplate = EclipsePlatformContributionsExtensions.getProjectTemplates( "org.kalypso.kalypso1d2d.pjt.projectTemplate" );
-        try
-        {
-          /* Unpack project from template */
-          final File destinationDir = nature.getProject().getLocation().toFile();
-          final URL data = lTemplate[0].getData();
-          final String location = data.toString();
-          final String extension = FilenameUtils.getExtension( location );
-          if( "zip".equalsIgnoreCase( extension ) )
-          {
-            try
-            {
-              ZipUtilities.unzip( data.openStream(), destinationDir, false );
-            }
-            finally
-            {
-            }
-          }
-          else
-          {
-            final URL fileURL = FileLocator.toFileURL( data );
-            final File dataDir = FileUtils.toFile( fileURL );
-            if( dataDir == null )
-            {
-              return false;
-            }
-            final IOFileFilter lFileFilter = new WildcardFileFilter( new String[] { "wind.gml" } );
-            final IOFileFilter lDirFilter = TrueFileFilter.INSTANCE;
-            final Collection< ? > windFiles = FileUtils.listFiles( destinationDir, lFileFilter, lDirFilter );
-
-            if( dataDir.isDirectory() && (windFiles == null || windFiles.size() == 0) )
-            {
-              final WildcardFileFilter lCopyFilter = new WildcardFileFilter( new String[] { "*asis", "models", "wind.gml" } );
-              FileUtils.copyDirectory( dataDir, destinationDir, lCopyFilter );
-            }
-            else
-            {
-              return true;
-            }
-          }
-        }
-        catch( final Throwable t )
-        {
-          t.printStackTrace();
-          return false;
-        }
-        nature.getProject().refreshLocal( IResource.DEPTH_INFINITE, null );
-      }
-    }
-    catch( final CoreException e )
-    {
-      KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( e.getStatus() );
-      e.printStackTrace();
-      return false;
-    }
-
-    return true;
-  }
-
   /**
    * This function activates a given scenario.<br/>
    * Must be invoked in the swt thread.
-   * 
+   *
    * @param scenario
    *          The scenario to activate.
    */
@@ -241,7 +160,7 @@ public class ScenarioHelper
 
   /**
    * This function activates a given scenario.
-   * 
+   *
    * @param scenario
    *          The scenario.
    * @deprecated Use {@link #activateScenario2(IScenario)} instead.
@@ -266,7 +185,7 @@ public class ScenarioHelper
 
   /**
    * This function returns the active scenario.
-   * 
+   *
    * @return The active scenario.
    */
   public static IScenario getActiveScenario( )

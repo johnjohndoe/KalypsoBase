@@ -51,5 +51,4 @@ import java.util.List;
 public interface ITaskGroup extends ITask
 {
   List<ITask> getTasks( );
-
 }

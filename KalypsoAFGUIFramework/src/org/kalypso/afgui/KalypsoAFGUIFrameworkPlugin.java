@@ -20,25 +20,19 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.ui.progress.UIJob;
 import org.kalypso.afgui.internal.PerspectiveWatcher;
 import org.kalypso.afgui.internal.SzenarioDataProvider;
 import org.kalypso.afgui.internal.TaskExecutionAuthority;
 import org.kalypso.afgui.internal.TaskExecutor;
 import org.kalypso.afgui.perspective.Perspective;
 import org.kalypso.afgui.scenarios.ScenarioDataChangeListenerExtension;
-import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.views.WorkflowView;
 import org.kalypso.commons.java.lang.Objects;
 import org.osgi.framework.BundleContext;
 
-import de.renew.workflow.base.ITask;
-import de.renew.workflow.base.IWorkflow;
-import de.renew.workflow.connector.cases.IScenario;
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
 import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 import de.renew.workflow.connector.context.ActiveWorkContext;
-import de.renew.workflow.connector.context.IActiveScenarioChangeListener;
 import de.renew.workflow.connector.worklist.ITaskExecutionAuthority;
 import de.renew.workflow.connector.worklist.ITaskExecutor;
 import de.renew.workflow.connector.worklist.TaskExecutionListener;
@@ -64,16 +58,6 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
   private ITaskExecutor m_taskExecutor;
 
   private TaskExecutionListener m_taskExecutionListener;
-
-  // Executes the default task as soon as the scenario was activated
-  private final IActiveScenarioChangeListener m_activeContextChangeListener = new IActiveScenarioChangeListener()
-  {
-    @Override
-    public void activeScenarioChanged( final ScenarioHandlingProjectNature newProject, final IScenario caze )
-    {
-      handleScenarioChanged( newProject, caze );
-    }
-  };
 
   public KalypsoAFGUIFrameworkPlugin( )
   {
@@ -161,7 +145,6 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     {
       m_scenarioDataProvider = new SzenarioDataProvider();
       m_activeWorkContext = new ActiveWorkContext( ScenarioHandlingProjectNature.ID, m_scenarioDataProvider );
-      m_activeWorkContext.addActiveContextChangeListener( m_activeContextChangeListener );
 
       if( PlatformUI.isWorkbenchRunning() )
       {
@@ -186,11 +169,6 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
   @Override
   public void stop( final BundleContext context ) throws Exception
   {
-    if( m_activeWorkContext != null )
-    {
-      m_activeWorkContext.removeActiveContextChangeListener( m_activeContextChangeListener );
-    }
-
     if( PlatformUI.isWorkbenchRunning() )
     {
       final IWorkbench workbench = PlatformUI.getWorkbench();
@@ -247,7 +225,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
 
   /**
    * Returns the shared instance
-   * 
+   *
    * @return the shared instance
    */
   public static KalypsoAFGUIFrameworkPlugin getDefault( )
@@ -257,7 +235,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
 
   /**
    * Returns an image descriptor for the image file at the given plug-in relative path
-   * 
+   *
    * @param path
    *          the path
    * @return the image descriptor
@@ -282,32 +260,5 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     }
 
     m_activeWorkContext = null;
-  }
-
-  // FIXME: move this into scenario activation code; should not be handled via listeners, probably only works because
-  // this listener is always the first one to be executed...
-  void handleScenarioChanged( final ScenarioHandlingProjectNature nature, final IScenario caze )
-  {
-    if( PlatformUI.getWorkbench().isClosing() )
-      return;
-
-    // TODO: is this the good place to do this?
-    // Execute default task
-    final IWorkflow workflow = ScenarioHelper.findWorkflow( caze, nature );
-    // lazy check and insurance for backwards compatibility
-    ScenarioHelper.ensureBackwardsCompatibility( nature );
-
-    final ITask defaultTask = workflow == null ? null : workflow.getDefaultTask();
-    final UIJob job = new UIJob( "Activate taks" )
-    {
-      @Override
-      public final IStatus runInUIThread( final IProgressMonitor monitor )
-      {
-        return getTaskExecutor().execute( defaultTask );
-      }
-    };
-    job.setUser( false );
-    job.setSystem( true );
-    job.schedule();
   }
 }

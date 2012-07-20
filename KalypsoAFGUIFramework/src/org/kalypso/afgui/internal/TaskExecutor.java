@@ -141,6 +141,8 @@ public class TaskExecutor implements ITaskExecutor
   @Override
   public IStatus execute( final ITask task )
   {
+    System.out.println( String.format( "Activating task: %s", task ) );
+
     if( m_activeTask != null )
     {
       // if the same task is executed again, but it is asynchronous, don't do anything
@@ -173,6 +175,8 @@ public class TaskExecutor implements ITaskExecutor
       m_activeTask = null;
     else
       m_activeTask = task;
+
+    System.out.println( String.format( "Fire task: %s", task ) );
 
     /* Tell the listeners, that the task was executed. */
     fireActiveTaskChanged( taskExecutionStatus, oldTask, task );

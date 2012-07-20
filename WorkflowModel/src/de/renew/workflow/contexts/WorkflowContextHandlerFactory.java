@@ -57,8 +57,7 @@ public class WorkflowContextHandlerFactory implements IContextHandlerFactory
     {
       final PerspectiveContextType perspectiveContext = (PerspectiveContextType) context;
       final String perspectiveId = perspectiveContext.getPerspectiveId();
-      final PerspectiveContextHandler perspectiveContextHandler = new PerspectiveContextHandler( perspectiveId );
-      return perspectiveContextHandler;
+      return new PerspectiveContextHandler( perspectiveId );
     }
     else if( context instanceof ViewContext )
     {
@@ -76,8 +75,7 @@ public class WorkflowContextHandlerFactory implements IContextHandlerFactory
     else if( context instanceof WorkbenchSiteContext )
     {
       final WorkbenchSiteContext multiContext = (WorkbenchSiteContext) context;
-      final MultiContextHandler contextHandler = new MultiContextHandler( multiContext, this );
-      return contextHandler;
+      return new MultiContextHandler( multiContext, this );
     }
     else if( context instanceof ExtensionContext )
     {
