@@ -42,10 +42,6 @@ package org.kalypso.zml.ui.chart.view;
 
 import java.net.URL;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
@@ -57,13 +53,12 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
 import org.kalypso.zml.core.diagram.base.ChartTypeHandler;
 import org.kalypso.zml.core.diagram.base.visitors.ResetZmlLayerVisitor;
-import org.kalypso.zml.ui.chart.layer.visitor.NoDataLayerVisibilityVisitor;
-import org.kalypso.zml.ui.chart.layer.visitor.SingleGridVisibilityVisitor;
 import org.kalypso.zml.ui.chart.update.RemoveClonedLayerVisitor;
 
 import de.openali.odysseus.chart.factory.config.ChartExtensionLoader;
 import de.openali.odysseus.chart.factory.config.ChartFactory;
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.IChartHandlerManager;
@@ -75,13 +70,26 @@ public class ZmlDiagramChartPartComposite extends ChartPartComposite
 {
   private final URL m_template;
 
-  private Job m_job;
+  private final ILayerManagerEventListener m_layerManagerListener;
 
   public ZmlDiagramChartPartComposite( final IWorkbenchPart part, final URL template )
   {
     super( part );
 
     m_template = template;
+
+    m_layerManagerListener = new ZmlDiagramLayerListener( getChartModel() );
+
+    final IChartModel model = getChartModel();
+    model.getLayerManager().getEventHandler().addListener( m_layerManagerListener );
+  }
+
+  @Override
+  public void dispose( )
+  {
+    getChartModel().getLayerManager().getEventHandler().removeListener( m_layerManagerListener );
+
+    super.dispose();
   }
 
   @Override
@@ -134,45 +142,9 @@ public class ZmlDiagramChartPartComposite extends ChartPartComposite
 
     final IChartModel model = getChartModel();
     DiagramCompositeSelection.doApply( model, selection );
-
-    if( m_job != null )
-      m_job.cancel();
-
-    m_job = new Job( "Updating chart layer visiblities" ) //$NON-NLS-1$
-    {
-
-      @Override
-      protected IStatus run( final IProgressMonitor monitor )
-      {
-        if( monitor.isCanceled() )
-          return Status.CANCEL_STATUS;
-
-        final ILayerManager layerManager = model.getLayerManager();
-        layerManager.accept( new HideUnusedLayersVisitor() );
-        if( monitor.isCanceled() )
-          return Status.CANCEL_STATUS;
-
-        layerManager.accept( new SingleGridVisibilityVisitor() );
-        if( monitor.isCanceled() )
-          return Status.CANCEL_STATUS;
-
-        layerManager.accept( new NoDataLayerVisibilityVisitor() );
-        if( monitor.isCanceled() )
-          return Status.CANCEL_STATUS;
-
-        model.autoscale();
-
-        return Status.OK_STATUS;
-      }
-    };
-
-    m_job.setUser( false );
-    m_job.setSystem( true );
-
-    m_job.schedule( 600 );
   }
 
-  public void reset( )
+  private void reset( )
   {
     final ILayerManager layerManager = getChartModel().getLayerManager();
     layerManager.accept( new RemoveClonedLayerVisitor() );
