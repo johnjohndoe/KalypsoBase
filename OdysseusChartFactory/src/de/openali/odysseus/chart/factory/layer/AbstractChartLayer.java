@@ -363,9 +363,6 @@ public abstract class AbstractChartLayer implements IChartLayer
     m_eventHandler.removeListener( listener );
   }
 
-  /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#isActive()
-   */
   @Override
   public void setActive( final boolean isActive )
   {

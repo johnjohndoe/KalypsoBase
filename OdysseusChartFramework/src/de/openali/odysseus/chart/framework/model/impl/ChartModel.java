@@ -67,7 +67,9 @@ public class ChartModel implements IChartModel
   @Override
   public void dispose( )
   {
+    // TODO: dispose layer manager instead
     getLayerManager().accept( new DisposeLayersVisitor() );
+
     m_dataMap.clear();
   }
 
