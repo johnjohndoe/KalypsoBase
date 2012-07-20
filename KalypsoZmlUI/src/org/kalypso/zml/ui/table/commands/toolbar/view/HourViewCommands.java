@@ -71,6 +71,9 @@ public final class HourViewCommands
 
   public static Period getTimeStep( final IZmlTable table )
   {
+    if( table == null )
+      return null;
+
     final ZmlModelViewport viewport = table.getModelViewport();
 
     final IZmlModelColumn[] columns = viewport.getColumns();

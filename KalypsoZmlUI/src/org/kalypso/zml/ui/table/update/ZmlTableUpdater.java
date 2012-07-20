@@ -123,12 +123,10 @@ public class ZmlTableUpdater implements Runnable
       return baseTypeIdentifier;
 
     return String.format( IClonedColumn.CLONED_COLUMN_POSTFIX_FORMAT, baseTypeIdentifier, index );
-
   }
 
   public void setSingleSelectionMode( final boolean single )
   {
     m_singleSelect = single;
   }
-
 }

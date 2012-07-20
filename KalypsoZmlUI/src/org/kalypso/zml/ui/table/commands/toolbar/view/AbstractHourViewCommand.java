@@ -135,6 +135,9 @@ public abstract class AbstractHourViewCommand extends AbstractHandler implements
 
   public static ZmlModelViewportResolutionFilter resolveFilter( final IZmlTable table )
   {
+    if( table == null )
+      return null;
+
     final ZmlModelViewport model = table.getModelViewport();
     return model.getFilter();
   }

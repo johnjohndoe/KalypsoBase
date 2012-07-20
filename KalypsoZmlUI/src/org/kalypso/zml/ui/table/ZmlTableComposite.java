@@ -180,7 +180,7 @@ public class ZmlTableComposite extends Composite implements IZmlTableComposite
       Collections.addAll( m_stackColumns, cols );
 
       // final IZmlModelColumn[] missing = ZmlTableColumns.findMissingColumns( getMainTable(), getModel().getColumns()
-	  // );
+      // );
       // ZmlTableColumns.buildTableColumns( this, ZmlTableColumns.toBaseColumns( missing ) );
 
       // FIXME don't refresh all columns!!!!
