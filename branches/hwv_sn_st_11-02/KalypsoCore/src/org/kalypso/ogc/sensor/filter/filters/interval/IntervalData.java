@@ -47,7 +47,7 @@ import org.kalypso.ogc.sensor.TupleModelDataSet;
 /**
  * @author doemming, Dirk Kuch
  */
-public class IntervalData
+public class IntervalData implements IIntervalProvider
 {
   private final Interval m_interval;
 
@@ -59,6 +59,7 @@ public class IntervalData
     m_datasets = datasets;
   }
 
+  @Override
   public Interval getInterval( )
   {
     return m_interval;

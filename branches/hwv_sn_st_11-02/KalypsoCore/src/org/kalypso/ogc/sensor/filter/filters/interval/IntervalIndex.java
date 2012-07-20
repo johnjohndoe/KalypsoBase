@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters.interval;
 
+import java.lang.reflect.Array;
+
 import org.joda.time.Interval;
 
 import com.vividsolutions.jts.index.intervalrtree.SortedPackedIntervalRTree;
@@ -47,26 +49,37 @@ import com.vividsolutions.jts.index.intervalrtree.SortedPackedIntervalRTree;
 /**
  * @author Gernot Belger
  */
-public class IntervalIndex
+public class IntervalIndex<DATA extends IIntervalProvider>
 {
   private final SortedPackedIntervalRTree m_sourceTree = new SortedPackedIntervalRTree();
 
   private int m_itemCount = 0;
 
-  public void insert( final IntervalData sourceData )
+  private final Class<DATA> m_dataClass;
+
+  public IntervalIndex( final Class<DATA> dataClass )
+  {
+    m_dataClass = dataClass;
+  }
+
+  public void insert( final DATA sourceData )
   {
     final Interval interval = sourceData.getInterval();
     m_sourceTree.insert( interval.getStartMillis(), interval.getEndMillis(), sourceData );
     m_itemCount++;
   }
 
-  public IntervalData[] query( final Interval targetInterval )
+  public DATA[] query( final Interval targetInterval )
   {
     // BUGFIX: SortedPackedIntervalRTree runs into endless loop if queried when empty
     if( m_itemCount == 0 )
-      return new IntervalData[0];
+    {
+      @SuppressWarnings("unchecked")
+      final DATA[] result = (DATA[]) Array.newInstance( m_dataClass, 0 );
+      return result;
+    }
 
-    final ItemCollector visitor = new ItemCollector();
+    final ItemCollector<DATA> visitor = new ItemCollector<DATA>( m_dataClass );
     m_sourceTree.query( targetInterval.getStartMillis(), targetInterval.getEndMillis(), visitor );
     return visitor.getItems();
   }

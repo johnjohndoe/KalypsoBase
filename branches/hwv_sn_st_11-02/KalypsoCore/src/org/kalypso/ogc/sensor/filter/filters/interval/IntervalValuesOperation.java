@@ -103,14 +103,14 @@ public class IntervalValuesOperation
 
   public void execute( final DateRange range ) throws SensorException
   {
-    final IntervalIndex index = buildSourceIndex();
+    final IntervalIndex<IntervalData> index = buildSourceIndex();
 
     buildValues( index, range );
   }
 
-  private IntervalIndex buildSourceIndex( ) throws SensorException
+  private IntervalIndex<IntervalData> buildSourceIndex( ) throws SensorException
   {
-    final IntervalIndex index = new IntervalIndex();
+    final IntervalIndex<IntervalData> index = new IntervalIndex<IntervalData>( IntervalData.class );
 
     final IAxis[] axes = m_sourceModel.getAxes();
     final IAxis dateAxis = AxisUtils.findDateAxis( axes );
@@ -146,7 +146,7 @@ public class IntervalValuesOperation
     throw new SensorException( message );
   }
 
-  private void buildValues( final IntervalIndex index, final DateRange range ) throws SensorException
+  private void buildValues( final IntervalIndex<IntervalData> index, final DateRange range ) throws SensorException
   {
     final int amount = m_definition.getAmount();
     final int calendarField = m_definition.getCalendarField();
@@ -166,7 +166,7 @@ public class IntervalValuesOperation
     }
   }
 
-  private IKeyValue<IntervalData, IntervalData>[] findSourceIntervals( final IntervalIndex index, final Interval targetInterval )
+  private IKeyValue<IntervalData, IntervalData>[] findSourceIntervals( final IntervalIndex<IntervalData> index, final Interval targetInterval )
   {
     final IntervalData[] items = index.query( targetInterval );
     return findOverlappingSourceIntervals( targetInterval, items );
