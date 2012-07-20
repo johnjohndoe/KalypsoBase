@@ -203,14 +203,13 @@ public class ZmlTable extends Composite implements IZmlTable
     m_table.addLayerListener( new UpdateChartSelectionListener( getSelection() ) );
 
     m_pager = new ZmlTablePager( m_viewport, m_table, m_bodyLayer );
-
   }
 
   @Override
   public void dispose( )
   {
     m_table.dispose();
-// m_viewport.dispose(); TODO
+    // m_viewport.dispose(); TODO
 
     super.dispose();
   }
@@ -290,5 +289,4 @@ public class ZmlTable extends Composite implements IZmlTable
   {
     return m_bodyLayer.getSelection();
   }
-
 }

@@ -42,13 +42,13 @@ package org.kalypso.zml.ui.table.view;
 
 import java.net.URL;
 
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.event.IObservationListener;
 import org.kalypso.ogc.sensor.event.ObservationChangeType;
@@ -68,7 +68,6 @@ import org.kalypso.zml.ui.table.update.ZmlTableUpdater;
  */
 public class TableComposite extends Composite implements IUpdateable, IObservationListener
 {
-
   private ZmlModel m_model;
 
   protected ZmlTableComposite m_table;
@@ -77,12 +76,11 @@ public class TableComposite extends Composite implements IUpdateable, IObservati
   {
     super( parent, SWT.NULL );
 
-    final GridLayout layout = Layouts.createGridLayout();
+    final GridLayout layout = GridLayoutFactory.fillDefaults().create();
     layout.verticalSpacing = 0;
     setLayout( layout );
 
     init( template );
-
     draw( toolkit );
   }
 
@@ -99,18 +97,16 @@ public class TableComposite extends Composite implements IUpdateable, IObservati
     {
       t.printStackTrace();
     }
-
   }
 
   private void draw( final FormToolkit toolkit )
   {
     m_table = new ZmlTableComposite( this, toolkit );
+    m_table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     m_table.doInitialize( m_model );
 
-    m_table.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     final IZmlColumnModelListener listener = new IZmlColumnModelListener()
     {
-
       @Override
       public void modelChanged( final ZmlModelColumnChangeType type )
       {
