@@ -40,33 +40,37 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters.interval;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
-
-import org.eclipse.core.runtime.Assert;
 
 import com.vividsolutions.jts.index.ItemVisitor;
 
 /**
  * @author Gernot Belger
  */
-public class ItemCollector implements ItemVisitor
+public class ItemCollector<DATA extends IIntervalProvider> implements ItemVisitor
 {
-  private final Collection<IntervalData> m_items = new ArrayList<IntervalData>();
+  private final Collection<Object> m_items = new ArrayList<Object>();
 
-  /**
-   * @see com.vividsolutions.jts.index.ItemVisitor#visitItem(java.lang.Object)
-   */
+  private final Class<DATA> m_dataClass;
+
+  public ItemCollector( final Class<DATA> dataClass )
+  {
+    m_dataClass = dataClass;
+  }
+
   @Override
   public void visitItem( final Object item )
   {
-    Assert.isTrue( item instanceof IntervalData );
-
-    m_items.add( (IntervalData) item );
+    m_items.add( item );
   }
 
-  public IntervalData[] getItems( )
+  public DATA[] getItems( )
   {
-    return m_items.toArray( new IntervalData[m_items.size()] );
+    @SuppressWarnings("unchecked")
+    final DATA[] newInstance = (DATA[]) Array.newInstance( m_dataClass, m_items.size() );
+
+    return m_items.toArray( newInstance );
   }
 }

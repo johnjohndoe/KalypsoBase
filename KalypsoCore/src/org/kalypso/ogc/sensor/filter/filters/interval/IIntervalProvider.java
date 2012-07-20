@@ -40,53 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.filter.filters.interval;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.joda.time.Interval;
-import org.kalypso.ogc.sensor.TupleModelDataSet;
 
 /**
- * @author doemming, Dirk Kuch
+ * @author albert
  */
-public class IntervalData implements IIntervalProvider
+public interface IIntervalProvider
 {
-  private final Interval m_interval;
-
-  private final TupleModelDataSet[] m_datasets;
-
-  public IntervalData( final Interval interval, final TupleModelDataSet[] datasets )
-  {
-    m_interval = interval;
-    m_datasets = datasets;
-  }
-
-  @Override
-  public Interval getInterval( )
-  {
-    return m_interval;
-  }
-
-  public TupleModelDataSet[] getDataSets( )
-  {
-    return m_datasets;
-  }
-
-  public IntervalData plus( final IntervalData sourceData )
-  {
-    final TupleModelDataSet[] dataSets = sourceData.getDataSets();
-    final TupleModelDataSet[] newDataSets = new TupleModelDataSet[ArrayUtils.getLength( dataSets )];
-
-    for( int index = 0; index < newDataSets.length; index++ )
-    {
-      final TupleModelDataSet base = m_datasets[index];
-      final TupleModelDataSet other = dataSets[index];
-
-      final double value = ((Number) base.getValue()).doubleValue() + ((Number) other.getValue()).doubleValue();
-      final int status = base.getStatus() | other.getStatus();
-      final String source = IntervalSourceHandler.mergeSourceReference( base.getSource(), other.getSource() );
-
-      newDataSets[index] = new TupleModelDataSet( base.getValueAxis(), value, status, source );
-    }
-
-    return new IntervalData( m_interval, newDataSets );
-  }
+  Interval getInterval( );
 }
