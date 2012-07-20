@@ -44,9 +44,7 @@ public class LayerManager implements ILayerManager
         if( parent != null )
         {
           final ILayerManager parentLayerManager = parent.getLayerManager();
-          final LayerManagerEventHandler handler = parentLayerManager.getEventHandler();
-
-          return handler;
+          return parentLayerManager.getEventHandler();
         }
       }
 
@@ -138,9 +136,6 @@ public class LayerManager implements ILayerManager
     return m_handler;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.layer.ILayerManager#addLayer(de.openali.odysseus.chart.framework.layer.IChartLayer)
-   */
   @Override
   public void addLayer( final IChartLayer... layers )
   {
@@ -182,18 +177,12 @@ public class LayerManager implements ILayerManager
     return visitor.getLayer();
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.ILayerManager#getLayerPosition(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
   @Override
   public int getLayerPosition( final IChartLayer layer )
   {
     return m_layers.indexOf( layer );
   }
 
-  /**
-   * @return List of all ChartLayer objects
-   */
   @Override
   public IChartLayer[] getLayers( )
   {
@@ -213,10 +202,6 @@ public class LayerManager implements ILayerManager
     m_handler.fireLayerMoved( layer );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.layer.ILayerManager#removeLayer(de.openali.odysseus.chart.framework.layer.IChartLayer)
-   *      removes layer from chart
-   */
   @Override
   public void removeLayer( final IChartLayer layer )
   {
@@ -235,9 +220,6 @@ public class LayerManager implements ILayerManager
     m_handler.removeListener( l );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.ILayerManager#getSize()
-   */
   @Override
   public int size( )
   {
