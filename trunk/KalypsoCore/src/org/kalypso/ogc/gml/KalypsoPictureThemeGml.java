@@ -43,6 +43,8 @@ package org.kalypso.ogc.gml;
 import java.awt.Graphics;
 import java.net.URL;
 
+import javax.media.jai.TiledImage;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -107,16 +109,13 @@ public class KalypsoPictureThemeGml extends KalypsoPictureTheme
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.KalypsoPictureTheme#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean,
-   *      org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IStatus paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
   {
     /** image creation removed from constructor, so not visible themes will not be loaded! */
-    if( getImage() == null )
+    final ImageHolder imageHolder = getImage();
+    final TiledImage image = imageHolder.getImage();
+    if( image == null )
     {
       final IFeatureBindingCollection<ICoverage> coverages = m_coverages.getCoverages();
       for( final ICoverage coverage : coverages )
