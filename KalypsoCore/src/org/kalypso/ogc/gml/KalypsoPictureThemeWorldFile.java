@@ -85,7 +85,9 @@ public class KalypsoPictureThemeWorldFile extends KalypsoPictureTheme
 
       final URL imageUrl = loadImage( relativeURL );
 
-      final TiledImage image = getImage();
+      final ImageHolder imageHolder = getImage();
+      final TiledImage image = imageHolder.getImage();
+
       if( image != null && GridFileVerifier.verify( imageUrl ) )
       {
         final IGridMetaReader reader = GridFileVerifier.getRasterMetaReader( imageUrl, null );

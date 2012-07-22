@@ -30,12 +30,9 @@
 package org.kalypso.ogc.gml;
 
 import java.awt.Graphics;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Logger;
 
-import javax.media.jai.JAI;
-import javax.media.jai.RenderedOp;
 import javax.media.jai.TiledImage;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -43,8 +40,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.java.net.UrlResolverSingleton;
-import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.template.types.StyledLayerType;
@@ -60,7 +55,7 @@ import org.kalypsodeegree_impl.tools.TransformationUtilities;
  * KalypsoPictureTheme
  * <p>
  * created by
- * 
+ *
  * @author kuepfer (20.05.2005)
  */
 public abstract class KalypsoPictureTheme extends AbstractKalypsoTheme
@@ -68,7 +63,7 @@ public abstract class KalypsoPictureTheme extends AbstractKalypsoTheme
   // TODO: use tracing instead
   private static final Logger LOGGER = Logger.getLogger( KalypsoPictureTheme.class.getName() );
 
-  private TiledImage m_image = null;
+  private final ImageHolder m_image = new ImageHolder();
 
   private RectifiedGridDomain m_domain;
 
@@ -87,10 +82,7 @@ public abstract class KalypsoPictureTheme extends AbstractKalypsoTheme
   public void dispose( )
   {
     if( m_image != null )
-    {
       m_image.dispose();
-      m_image = null;
-    }
 
     super.dispose();
   }
@@ -121,7 +113,7 @@ public abstract class KalypsoPictureTheme extends AbstractKalypsoTheme
     return null;
   }
 
-  protected TiledImage getImage( )
+  protected ImageHolder getImage( )
   {
     return m_image;
   }
@@ -145,7 +137,8 @@ public abstract class KalypsoPictureTheme extends AbstractKalypsoTheme
     if( m_domain == null )
       return Status.OK_STATUS;
 
-    if( m_image == null )
+    final TiledImage image = m_image.getImage();
+    if( image == null )
       return Status.OK_STATUS;
 
     try
@@ -153,7 +146,9 @@ public abstract class KalypsoPictureTheme extends AbstractKalypsoTheme
       final String pictureCrs = m_domain.getCoordinateSystem();
       final GM_Envelope envelope = m_domain.getGM_Envelope( pictureCrs );
       final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-      TransformationUtilities.transformImage( m_image, envelope, crs, p, g );
+
+      TransformationUtilities.transformImage( image, envelope, crs, p, g );
+
       return Status.OK_STATUS;
     }
     catch( final Exception e )
@@ -163,15 +158,6 @@ public abstract class KalypsoPictureTheme extends AbstractKalypsoTheme
       setStatus( status );
       return status;
     }
-
-  }
-
-  protected void setImage( final TiledImage image )
-  {
-    if( m_image != null )
-      m_image.dispose();
-
-    m_image = image;
   }
 
   protected void setRectifiedGridDomain( final RectifiedGridDomain domain )
@@ -179,53 +165,11 @@ public abstract class KalypsoPictureTheme extends AbstractKalypsoTheme
     m_domain = domain;
   }
 
-  protected URL loadImage( final String filePath )
+  protected final URL loadImage( final String filePath )
   {
-    try
-    {
-      // UGLY HACK: replace backslashes with slashes. The add-picture-theme action seems to put backslashes (on windows)
-      // in the relative URLs (which is even wrong in windows). Should be fixed there, but is fixed also here to support
-      // older projects.
-      final String filePathChecked = filePath.replaceAll( "\\\\", "/" ); //$NON-NLS-1$ //$NON-NLS-2$
-
-      final URL context = getContext();
-      final URL imageUrl = UrlResolverSingleton.resolveUrl( context, filePathChecked );
-
-      // FIXME: use stream and close stream ouselfs in oto avoid resource leakage (jai bug)
-      // Problem: the stream must be closed when the image is disposed, so we need another class
-      final RenderedOp image = JAI.create( "url", imageUrl ); //$NON-NLS-1$
-
-      final TiledImage tiledImage = new TiledImage( image, false );
-      setImage( tiledImage );
-
-      return imageUrl;
-    }
-    catch( final MalformedURLException e )
-    {
-      setStatus( e, Messages.getString( "KalypsoPictureTheme.2" ), filePath ); //$NON-NLS-1$
-    }
-    catch( final OutOfMemoryError error )
-    {
-      // REMARK: this will happen if we load big images
-      // It is safe to catch it here, as the heap will be freed immediately, if the image could not be loaded
-      setStatus( error, Messages.getString( "KalypsoPictureTheme.3" ), filePath ); //$NON-NLS-1$
-    }
-    catch( final Throwable error )
-    {
-      // REMARK: this will happen if we load big images
-      // It is safe to catch it here, as the heap will be freed immediately, if the image could not be loaded
-      setStatus( error, Messages.getString( "KalypsoPictureTheme.4" ), filePath ); //$NON-NLS-1$
-    }
-
-    return null;
-  }
-
-  private IStatus setStatus( final Throwable e, final String formatString, final Object... formatArguments )
-  {
-    e.printStackTrace();
-    final String msg = String.format( formatString, formatArguments );
-    final IStatus status = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), msg, e );
+    final IStatus status = m_image.loadImage( filePath, getContext() );
     setStatus( status );
-    return status;
+
+    return m_image.getImageURL();
   }
 }
