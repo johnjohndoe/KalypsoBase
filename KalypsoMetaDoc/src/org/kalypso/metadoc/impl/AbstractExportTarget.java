@@ -76,7 +76,7 @@ public abstract class AbstractExportTarget implements IExportTarget
    *      java.lang.String, java.lang.Object)
    */
   @Override
-  public final void setInitializationData( final IConfigurationElement config, final String propertyName, Object data )
+  public final void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
     m_name = config.getAttribute( "name" );
     m_desc = config.getAttribute( "description" );
@@ -136,7 +136,7 @@ public abstract class AbstractExportTarget implements IExportTarget
   }
 
   /**
-   * @return the properties of this target. Should only be used internally, or by subclasses.
+   * @return The properties of this target. Should only be used internally, or by subclasses.
    */
   protected Configuration getProperties( )
   {

@@ -46,7 +46,6 @@ import java.util.List;
 import org.apache.commons.configuration.Configuration;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.metadoc.IExportableObject;
@@ -62,7 +61,7 @@ public class ExportDocumentsObjectFactory implements IExportableObjectFactory
 {
   private final IExporter[] m_exporter;
 
-  private ExportableTreePage m_page;
+  private ExportAndSendPage m_page;
 
   public ExportDocumentsObjectFactory( final IExporter[] exporter )
   {
@@ -73,7 +72,7 @@ public class ExportDocumentsObjectFactory implements IExportableObjectFactory
    * @see org.kalypso.metadoc.IExportableObjectFactory#createExportableObjects(org.apache.commons.configuration.Configuration)
    */
   @Override
-  public IExportableObject[] createExportableObjects( final Configuration configuration ) 
+  public IExportableObject[] createExportableObjects( final Configuration configuration )
   {
     final Object[] checkedElements = m_page.getCheckedElements();
     final List<IExportableObject> result = new ArrayList<IExportableObject>( checkedElements.length );
@@ -105,17 +104,8 @@ public class ExportDocumentsObjectFactory implements IExportableObjectFactory
 
     final ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoMetaDocPlugin.getId(), "icons/metadoc_wiz.gif" );
 
-    m_page = new ExportableTreePage( "templatePage", "Wählen Sie die zu exportierenden Dokumente", imageDescriptor );
-    m_page.setViewerSorter( new ViewerSorter() );
-    m_page.setInput( exportItems );
-
-    final List<ExportableTreeItem> checkedItems = new ArrayList<ExportableTreeItem>();
-    final List<ExportableTreeItem> grayedItems = new ArrayList<ExportableTreeItem>();
-    ExportableTreeItem.filterChecked( exportItems, checkedItems, grayedItems );
-    m_page.setChecked( checkedItems.toArray( new Object[checkedItems.size()] ) );
-    m_page.setGrayed( grayedItems.toArray( new Object[grayedItems.size()] ) );
+    m_page = new ExportAndSendPage( "templatePage", "Wählen Sie die zu exportierenden Dokumente", imageDescriptor, exportItems );
 
     return new IWizardPage[] { m_page };
   }
-
 }

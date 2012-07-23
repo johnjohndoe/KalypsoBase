@@ -53,7 +53,7 @@ import org.jfree.chart.title.TextTitle;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.i18n.Messages;
-import org.kalypso.metadoc.IExportableObject;
+import org.kalypso.metadoc.AbstractExportableObject;
 import org.kalypso.ogc.sensor.ExportUtilities;
 
 /**
@@ -61,7 +61,7 @@ import org.kalypso.ogc.sensor.ExportUtilities;
  * 
  * @author schlienger
  */
-public class ExportableChart implements IExportableObject
+public class ExportableChart extends AbstractExportableObject
 {
   public final static String DEFAULT_FORMAT = "png"; //$NON-NLS-1$
 
@@ -87,7 +87,7 @@ public class ExportableChart implements IExportableObject
   {
     // WORKAROUND: we use another PNG-encoder, there seem to be a memory leak in the JVM when using
     // the default encoder which is shipped with it.
-    // 
+    //
     // From a Bugreport-Topic of JFreeChart:
     // -------------------------------------
     // After analysing the source code of javax.imageio.ImageIO and some googeling I found

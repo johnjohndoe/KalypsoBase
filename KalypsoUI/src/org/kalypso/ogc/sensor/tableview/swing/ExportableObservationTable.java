@@ -51,7 +51,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.i18n.Messages;
-import org.kalypso.metadoc.IExportableObject;
+import org.kalypso.metadoc.AbstractExportableObject;
 import org.kalypso.ogc.sensor.ExportUtilities;
 import org.kalypso.ogc.sensor.tableview.swing.tablemodel.ObservationTableModel;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -61,7 +61,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
  * 
  * @author schlienger
  */
-public class ExportableObservationTable implements IExportableObject
+public class ExportableObservationTable extends AbstractExportableObject
 {
   private final ObservationTable m_table;
 

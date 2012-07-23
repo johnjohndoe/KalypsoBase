@@ -50,7 +50,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.io.CSV;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.i18n.Messages;
-import org.kalypso.metadoc.IExportableObject;
+import org.kalypso.metadoc.AbstractExportableObject;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 
 /**
@@ -58,7 +58,7 @@ import org.kalypso.ogc.gml.table.LayerTableViewer;
  * 
  * @author schlienger
  */
-public class ExportableLayerTable implements IExportableObject
+public class ExportableLayerTable extends AbstractExportableObject
 {
   private final LayerTableViewer m_layerTable;
 

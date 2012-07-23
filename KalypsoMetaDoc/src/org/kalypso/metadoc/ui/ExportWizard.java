@@ -130,7 +130,8 @@ public final class ExportWizard extends Wizard
   @Override
   public void dispose( )
   {
-    new DisposeHelper( getPages() ).dispose();
+    DisposeHelper disposeHelper = new DisposeHelper( getPages() );
+    disposeHelper.dispose();
 
     super.dispose();
   }
