@@ -59,12 +59,12 @@ import org.kalypso.contribs.eclipse.jface.wizard.TreeSelectionPage;
  */
 public class ExportableTreePage extends TreeSelectionPage
 {
-  public ExportableTreePage( String pageName )
+  public ExportableTreePage( final String pageName )
   {
     super( pageName, new ExportableContentProvider(), new LabelProvider() );
   }
 
-  public ExportableTreePage( String pageName, String title, ImageDescriptor titleImage )
+  public ExportableTreePage( final String pageName, final String title, final ImageDescriptor titleImage )
   {
     super( pageName, title, titleImage, new ExportableContentProvider(), new LabelProvider() );
   }
@@ -73,21 +73,21 @@ public class ExportableTreePage extends TreeSelectionPage
    * @see org.kalypso.simulation.ui.wizards.exporter.featureWithTemplate.TreeSelectionPage#createControl(org.eclipse.swt.widgets.Composite)
    */
   @Override
-  public void createControl( Composite parent )
+  public void createControl( final Composite parent )
   {
     super.createControl( parent );
 
     final Display display = getControl().getDisplay();
 
     final Font font = getFont();
-    Font grayedFont = font;
+    final Font grayedFont = font;
 
     final CheckboxTreeViewer viewer = getViewer();
 
     // Change color of grayed elements
     final Color grayedForeground = display.getSystemColor( SWT.COLOR_GRAY );
     final Color grayedBackground = viewer.getControl().getBackground();
-    ExportableLabelProvider labelProvider = new ExportableLabelProvider( grayedFont, grayedForeground, grayedBackground );
+    final ExportableLabelProvider labelProvider = new ExportableLabelProvider( grayedFont, grayedForeground, grayedBackground );
 
     viewer.setLabelProvider( labelProvider );
 
@@ -95,7 +95,7 @@ public class ExportableTreePage extends TreeSelectionPage
     viewer.addCheckStateListener( new ICheckStateListener()
     {
       @Override
-      public void checkStateChanged( CheckStateChangedEvent event )
+      public void checkStateChanged( final CheckStateChangedEvent event )
       {
         final Object element = event.getElement();
         final boolean checked = event.getChecked();
@@ -111,11 +111,11 @@ public class ExportableTreePage extends TreeSelectionPage
    * @see org.kalypso.simulation.ui.wizards.exporter.featureWithTemplate.TreeSelectionPage#updateState(org.eclipse.jface.viewers.CheckboxTreeViewer)
    */
   @Override
-  protected void updateState( CheckboxTreeViewer viewer )
+  protected void updateState( final CheckboxTreeViewer viewer )
   {
     // Uncheck all grayed elements
-    ITreeContentProvider treeContentProvider = (ITreeContentProvider)viewer.getContentProvider();
-    Object[] elements = treeContentProvider.getElements( viewer.getInput() );
+    final ITreeContentProvider treeContentProvider = (ITreeContentProvider) viewer.getContentProvider();
+    final Object[] elements = treeContentProvider.getElements( viewer.getInput() );
     uncheckGrayed( viewer, treeContentProvider, elements );
 
     super.updateState( viewer );
@@ -126,15 +126,15 @@ public class ExportableTreePage extends TreeSelectionPage
    * @param viewer
    * @param elements
    */
-  private void uncheckGrayed( CheckboxTreeViewer viewer, ITreeContentProvider treeContentProvider, Object[] elements )
+  private void uncheckGrayed( final CheckboxTreeViewer viewer, final ITreeContentProvider treeContentProvider, final Object[] elements )
   {
     for( int i = 0; i < elements.length; i++ )
     {
-      Object object = elements[i];
+      final Object object = elements[i];
       if( viewer.getGrayed( object ) )
         viewer.setChecked( object, false );
 
-      Object[] children = treeContentProvider.getChildren( object );
+      final Object[] children = treeContentProvider.getChildren( object );
       uncheckGrayed( viewer, treeContentProvider, children );
     }
   }
@@ -145,7 +145,7 @@ public class ExportableTreePage extends TreeSelectionPage
    * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
    */
   @Override
-  public boolean isPageComplete()
+  public boolean isPageComplete( )
   {
     final boolean isPageComplete = super.isPageComplete();
     if( !isPageComplete )
@@ -154,7 +154,7 @@ public class ExportableTreePage extends TreeSelectionPage
     final Object[] checkedElements = getCheckedElements();
     for( int i = 0; i < checkedElements.length; i++ )
     {
-      ExportableTreeItem item = (ExportableTreeItem)checkedElements[i];
+      final ExportableTreeItem item = (ExportableTreeItem) checkedElements[i];
       if( item.getExportableObject() != null )
         return true;
     }

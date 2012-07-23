@@ -53,7 +53,9 @@ import org.eclipse.swt.graphics.Font;
 public class ExportableLabelProvider extends LabelProvider implements IFontProvider, IColorProvider
 {
   private final Color m_grayedForeground;
+
   private final Color m_grayedBackground;
+
   private final Font m_grayedFont;
 
   public ExportableLabelProvider( final Font grayedFont, final Color grayedForeground, final Color grayedBackground )
@@ -62,17 +64,17 @@ public class ExportableLabelProvider extends LabelProvider implements IFontProvi
     m_grayedForeground = grayedForeground;
     m_grayedBackground = grayedBackground;
   }
-  
+
   /**
    * @see org.eclipse.jface.viewers.IFontProvider#getFont(java.lang.Object)
    */
   @Override
-  public Font getFont( Object element )
+  public Font getFont( final Object element )
   {
-    final ExportableTreeItem item = (ExportableTreeItem)element;
+    final ExportableTreeItem item = (ExportableTreeItem) element;
     if( item.isGrayed() )
       return m_grayedFont;
-    
+
     return null;
   }
 
@@ -80,12 +82,12 @@ public class ExportableLabelProvider extends LabelProvider implements IFontProvi
    * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
    */
   @Override
-  public Color getForeground( Object element )
+  public Color getForeground( final Object element )
   {
-    final ExportableTreeItem item = (ExportableTreeItem)element;
+    final ExportableTreeItem item = (ExportableTreeItem) element;
     if( item.isGrayed() )
       return m_grayedForeground;
-    
+
     return null;
   }
 
@@ -93,13 +95,12 @@ public class ExportableLabelProvider extends LabelProvider implements IFontProvi
    * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
    */
   @Override
-  public Color getBackground( Object element )
+  public Color getBackground( final Object element )
   {
-    final ExportableTreeItem item = (ExportableTreeItem)element;
+    final ExportableTreeItem item = (ExportableTreeItem) element;
     if( item.isGrayed() )
       return m_grayedBackground;
-    
+
     return null;
   }
-
 }

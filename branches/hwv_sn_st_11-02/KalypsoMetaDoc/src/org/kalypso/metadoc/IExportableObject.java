@@ -42,6 +42,9 @@
 package org.kalypso.metadoc;
 
 import java.io.OutputStream;
+import java.util.Map;
+
+import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -57,19 +60,19 @@ public interface IExportableObject
    * @return a unique identifier for this exportable object. The identifier should be unique within the scope of its
    *         exporter.
    */
-  public String getIdentifier( );
+  String getIdentifier( );
 
   /**
    * @return a category describing what kind of document it is (in end-user terms). The category can be used to classify
    *         the documents.
    */
-  public String getCategory( );
+  String getCategory( );
 
   /**
    * @return a name which is suitable as filename for this document. The name should have a filename-like structure with
    *         <code>basename.extension</code>.
    */
-  public String getPreferredDocumentName( );
+  String getPreferredDocumentName( );
 
   /**
    * Called by the metadoc framework when this object should be exported.
@@ -82,10 +85,27 @@ public interface IExportableObject
    * possible
    * </ul>
    */
-  public IStatus exportObject( final OutputStream output, final IProgressMonitor monitor );
+  IStatus exportObject( final OutputStream output, final IProgressMonitor monitor );
 
   /**
    * This function returns a ;-seperated list of stations associated with this object.
    */
-  public String getStationIDs( );
+  String getStationIDs( );
+
+  /**
+   * This function returns the document specific properties.
+   * 
+   * @return The document specific properties.
+   */
+  Map<QName, Object> getProperties( );
+
+  /**
+   * This function sets a the document specific property.
+   * 
+   * @param qname
+   *          The qname of the document specific property.
+   * @param property
+   *          The document specific property.
+   */
+  void setProperty( QName key, Object value );
 }

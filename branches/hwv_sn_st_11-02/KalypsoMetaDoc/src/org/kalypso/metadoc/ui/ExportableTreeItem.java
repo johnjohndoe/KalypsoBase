@@ -47,23 +47,27 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.metadoc.IExportableObject;
 
 /**
- * 
  * Tree items for the tree.
  * 
  * @author Gernot Belger
  */
 public class ExportableTreeItem
 {
-  private String m_label;
+  private final String m_label;
+
   private ExportableTreeItem[] m_children;
-  private ExportableTreeItem m_parent;
+
+  private final ExportableTreeItem m_parent;
+
   private final IExportableObject m_exportableObject;
+
   private final boolean m_checked;
+
   private final boolean m_grayed;
+
   private final ImageDescriptor m_imageDescriptor;
 
-  public ExportableTreeItem( final String label, final ImageDescriptor imageDescriptor, final ExportableTreeItem parent,
-      final IExportableObject exportableObject, final boolean checked, final boolean grayed)
+  public ExportableTreeItem( final String label, final ImageDescriptor imageDescriptor, final ExportableTreeItem parent, final IExportableObject exportableObject, final boolean checked, final boolean grayed )
   {
     m_imageDescriptor = imageDescriptor;
     m_exportableObject = exportableObject;
@@ -72,26 +76,26 @@ public class ExportableTreeItem
     m_parent = parent;
     m_checked = checked;
     m_grayed = grayed;
-    
+
     m_children = new ExportableTreeItem[] {};
   }
 
-  public void setChildren( ExportableTreeItem[] children )
+  public void setChildren( final ExportableTreeItem[] children )
   {
     m_children = children;
   }
 
-  public IExportableObject getExportableObject()
+  public IExportableObject getExportableObject( )
   {
     return m_exportableObject;
   }
 
-  public ExportableTreeItem getParent()
+  public ExportableTreeItem getParent( )
   {
     return m_parent;
   }
 
-  public ExportableTreeItem[] getChildren()
+  public ExportableTreeItem[] getChildren( )
   {
     return m_children;
   }
@@ -100,22 +104,22 @@ public class ExportableTreeItem
    * @see java.lang.Object#toString()
    */
   @Override
-  public String toString()
+  public String toString( )
   {
     return m_label;
   }
 
-  public ImageDescriptor getImage()
+  public ImageDescriptor getImage( )
   {
     return m_imageDescriptor;
   }
-  
-  public boolean isChecked()
+
+  public boolean isChecked( )
   {
     return m_checked;
   }
 
-  public boolean isGrayed()
+  public boolean isGrayed( )
   {
     return m_grayed;
   }
@@ -133,6 +137,4 @@ public class ExportableTreeItem
       filterChecked( item.getChildren(), checkedItems, grayedItems );
     }
   }
-
-  
 }
