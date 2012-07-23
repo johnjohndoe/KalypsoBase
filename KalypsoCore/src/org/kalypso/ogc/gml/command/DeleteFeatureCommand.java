@@ -92,36 +92,24 @@ public class DeleteFeatureCommand implements ICommand
       m_featuresToDelete[i] = wrappers[i].getFeature();
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
-   */
   @Override
   public boolean isUndoable( )
   {
     return true;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#process()
-   */
   @Override
   public void process( ) throws Exception
   {
     delete();
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#redo()
-   */
   @Override
   public void redo( ) throws Exception
   {
     delete();
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#undo()
-   */
   @Override
   public void undo( ) throws Exception
   {
@@ -166,9 +154,6 @@ public class DeleteFeatureCommand implements ICommand
       command.undo();
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
-   */
   @Override
   public String getDescription( )
   {
@@ -279,9 +264,6 @@ public class DeleteFeatureCommand implements ICommand
     }
 
     // checks all properties for broken links
-    /**
-     * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
-     */
     @Override
     public boolean visit( final Feature f )
     {

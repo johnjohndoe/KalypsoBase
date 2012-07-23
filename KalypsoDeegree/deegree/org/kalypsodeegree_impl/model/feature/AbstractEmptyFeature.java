@@ -342,13 +342,13 @@ public abstract class AbstractEmptyFeature implements Feature
   }
 
   @Override
-  public boolean removeMember( final QName relationName, final Feature toRemove )
+  public int removeMember( final QName relationName, final Object toRemove )
   {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public boolean removeMember( final IRelationType relation, final Feature toRemove )
+  public int removeMember( final IRelationType relation, final Object toRemove )
   {
     throw new UnsupportedOperationException();
   }

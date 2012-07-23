@@ -99,10 +99,6 @@ public class FeatureContentHandler extends AbstractGmlContentHandler implements 
     m_featureHandler = featureHandler;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler#endElement(java.lang.String, java.lang.String,
-   *      java.lang.String)
-   */
   @Override
   public void endElement( final String uri, final String localName, final String qName ) throws SAXException
   {
@@ -121,10 +117,6 @@ public class FeatureContentHandler extends AbstractGmlContentHandler implements 
       throwSAXParseException( "Unexpected end element: {%s}%s = %s - should be {%s}%s", uri, localName, qName, m_scopeFeature.getQualifiedName().getNamespaceURI(), m_scopeFeature.getQualifiedName().getLocalPart() );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.DelegatingContentHandler#startElement(java.lang.String,
-   *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
-   */
   @Override
   public void startElement( final String uri, final String localName, final String qName, final Attributes atts ) throws SAXException
   {
@@ -144,9 +136,6 @@ public class FeatureContentHandler extends AbstractGmlContentHandler implements 
     }
   }
 
-  /**
-   * @see org.kalypso.gmlschema.types.UnmarshallResultEater#unmarshallSuccesful(java.lang.Object)
-   */
   @Override
   public void unmarshallSuccesful( final Object value )
   {

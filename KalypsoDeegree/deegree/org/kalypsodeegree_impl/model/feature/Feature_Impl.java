@@ -36,7 +36,6 @@
 package org.kalypsodeegree_impl.model.feature;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -190,15 +189,19 @@ public class Feature_Impl extends PlatformObject implements Feature
       final String message = String.format( "Feature[%s] does not know this property %s", toString(), pt.getQName().toString() );
       throw new RuntimeException( new GMLSchemaException( message ) );
     }
-    else
-    {
-      final IFeaturePropertyHandler fsh = getPropertyHandler();
-      m_properties[pos] = fsh.setValue( this, pt, value );
 
-      if( fsh.invalidateEnvelope( pt ) )
-      {
-        setEnvelopesUpdated();
-      }
+    final IFeaturePropertyHandler fsh = getPropertyHandler();
+    final Object newValue = fsh.setValue( this, pt, value );
+
+    /* Make sure, inline features are always unregistered */
+    final Object oldValue = m_properties[pos];
+    unregisterSubFeature( oldValue );
+
+    m_properties[pos] = newValue;
+
+    if( fsh.invalidateEnvelope( pt ) )
+    {
+      setEnvelopesUpdated();
     }
   }
 
@@ -747,13 +750,13 @@ public class Feature_Impl extends PlatformObject implements Feature
     unregisterSubFeature( oldFeature );
 
     /* Create and set new feature */
-    // Using null id here, it will be created when the feature is registered into the workspace.
-    final String id = null;
+    final GMLWorkspace_Impl workspace = (GMLWorkspace_Impl) getWorkspace();
+    final String id = workspace.createFeatureId( featureType );
+
     final Feature newFeature = FeatureFactory.createFeature( this, relation, id, featureType, true, -1 );
     setProperty( relation, newFeature );
 
     /* Register new feature into workspace */
-    final GMLWorkspace_Impl workspace = (GMLWorkspace_Impl) getWorkspace();
     workspace.accept( new RegisterVisitor( workspace ), newFeature, FeatureVisitor.DEPTH_INFINITE );
 
     return newFeature;
@@ -766,6 +769,9 @@ public class Feature_Impl extends PlatformObject implements Feature
 
     /* Nothing to do for linked featrues */
     if( oldValue instanceof String || oldValue instanceof IXLinkedFeature )
+      return;
+
+    if( !(oldValue instanceof Feature) )
       return;
 
     final Feature oldFeature = (Feature) oldValue;
@@ -876,93 +882,64 @@ public class Feature_Impl extends PlatformObject implements Feature
   }
 
   @Override
-  public boolean removeMember( final QName relationName, final Feature toRemove )
+  public int removeMember( final QName relationName, final Object toRemove )
   {
     final IRelationType relation = ensureRelation( relationName );
     return removeMember( relation, toRemove );
   }
 
   @Override
-  public boolean removeMember( final IRelationType relation, final Feature toRemove )
+  public int removeMember( final IRelationType relation, final Object toRemove )
   {
-    final int maxOccurs = relation.getMaxOccurs();
-    if( maxOccurs > 1 )
+    if( relation.isList() )
       return removeListMember( relation, toRemove );
     else
       return removeNonListMember( relation, toRemove );
   }
 
-  private boolean removeListMember( final IRelationType relation, final Feature toRemove )
+  private int removeListMember( final IRelationType relation, final Object toRemove )
   {
     final FeatureList members = (FeatureList) getProperty( relation );
 
-    final GMLWorkspace myWorkspace = getWorkspace();
-    final GMLWorkspace targetWorkspace = toRemove.getWorkspace();
+    final int posToRemove = findMemberToRemove( members, toRemove );
+    if( posToRemove == -1 )
+      return -1;
 
-    final boolean isInWorkspace = myWorkspace != null && myWorkspace == targetWorkspace;
+    final Object removedElement = members.remove( posToRemove );
 
-    if( isInWorkspace )
-    {
-      if( members.remove( toRemove ) )
-      {
-        final GMLWorkspace workspace = getWorkspace();
-        if( workspace instanceof GMLWorkspace_Impl )
-          ((GMLWorkspace_Impl) workspace).unregisterFeature( toRemove );
+    unregisterSubFeature( removedElement );
 
-        return true;
-      }
-    }
-
-    // REMARK: no else: there might still be a link here that links against toRemove
-    for( final Iterator< ? > iterator = members.iterator(); iterator.hasNext(); )
-    {
-      final Object object = iterator.next();
-      if( object instanceof String && toRemove.getId().equals( object ) )
-      {
-        iterator.remove();
-        return true;
-      }
-      else if( object instanceof IXLinkedFeature && ((IXLinkedFeature) object).getId().equals( toRemove.getId() ) )
-      {
-        iterator.remove();
-        return true;
-      }
-    }
-
-    return false;
+    return posToRemove;
   }
 
-  private boolean removeNonListMember( final IRelationType relation, final Feature toRemove )
+  private int findMemberToRemove( final FeatureList members, final Object toRemove )
+  {
+    for( int i = 0; i < members.size(); i++ )
+    {
+      final Object element = members.get( i );
+
+      /* In other cases, check for identity */
+      if( element == toRemove )
+        return i;
+    }
+
+    /* nothing found */
+    return -1;
+  }
+
+  private int removeNonListMember( final IRelationType relation, final Object toRemove )
   {
     final Object property = getProperty( relation );
-    if( property instanceof IXLinkedFeature )
-    {
-      final Feature feature = ((IXLinkedFeature) property).getFeature();
-      if( feature == toRemove )
-      {
-        setProperty( relation, null );
-        return true;
-      }
-    }
-    else if( property instanceof String )
-    {
-      if( property.equals( toRemove.getId() ) )
-      {
-        setProperty( relation, null );
-        return true;
-      }
-    }
-    else if( property == toRemove )
+    if( property == toRemove )
     {
       setProperty( relation, null );
 
-      final GMLWorkspace workspace = getWorkspace();
-      if( workspace instanceof GMLWorkspace_Impl )
-        ((GMLWorkspace_Impl) workspace).unregisterFeature( toRemove );
+      /* Unregister inline feature */
+      unregisterSubFeature( property );
 
-      return true;
+      return 0;
     }
 
-    return false;
+    return -1;
   }
 }
