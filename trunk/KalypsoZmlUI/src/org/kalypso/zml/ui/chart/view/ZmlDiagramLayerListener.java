@@ -112,7 +112,7 @@ public class ZmlDiagramLayerListener extends AbstractLayerManagerEventListener
   {
   }
 
-  void reschedule( )
+  public void reschedule( )
   {
     m_job.cancel();
     m_job.schedule( 0 );
