@@ -71,10 +71,6 @@ public abstract class WorkspaceLoader extends AbstractLoader
     }
   };
 
-  /**
-   * @see org.kalypso.loader.ILoader#load(org.kalypso.core.util.pool.IPoolableObjectType,
-   *      org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public Object load( final IPoolableObjectType key, final IProgressMonitor monitor ) throws LoaderException
   {
