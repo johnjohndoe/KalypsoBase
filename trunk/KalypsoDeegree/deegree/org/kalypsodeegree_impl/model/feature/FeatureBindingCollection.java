@@ -62,7 +62,7 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 
 /**
  * TODO: replaces FeatureWrapperCollection.... refaktor and use this stuff instead<br>
- * 
+ *
  * @author Gernot Belger
  * @author Dirk Kuch
  */
@@ -101,7 +101,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
 
   /**
    * Creates a new {@link FeatureWrapperCollection} wrapping the provided feature
-   * 
+   *
    * @param featureCol
    *          the feature or feature collection with a list property to wrap
    * @param fwClass
@@ -314,7 +314,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
     final Class<FWCls> defaultWrapperClass = m_defaultWrapperClass;
 
     return new Iterator<FWCls>()
-        {
+    {
       private final Iterator< ? > m_it = getFeatureList().iterator();
 
       private final GMLWorkspace m_workspace = parentFeature.getWorkspace();
@@ -357,7 +357,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
       {
         m_it.remove();
       }
-        };
+    };
   }
 
   @Override
@@ -382,7 +382,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
     final Class<FWCls> defaultWrapperClass = m_defaultWrapperClass;
 
     return new ListIterator<FWCls>()
-        {
+    {
       private final ListIterator<Object> m_lit = getFeatureList().listIterator( index );
 
       @Override
@@ -443,7 +443,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
         m_lit.set( o );
       }
 
-        };
+    };
   }
 
   @Override

@@ -40,10 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.command;
 
+import org.apache.commons.lang3.ObjectUtils;
+import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * Some helper methods for easy handling of linked features.
@@ -79,27 +82,83 @@ public final class FeatureLinkUtils
   /**
    * @return position of link or -1 if relation does not exists
    */
-  public static int indexOfLink( final Feature srcFE, final IRelationType relation, final Feature destFE )
+  public static int indexOfLink( final Feature srcFE, final IRelationType relation, final IXLinkedFeature destLink )
   {
     if( !relation.isList() )
       return -1;
 
-    if( destFE == null )
+    if( destLink == null )
       return -1;
-
-    final String targetID = destFE.getId();
 
     final FeatureList list = (FeatureList) srcFE.getProperty( relation );
     for( int i = 0; i < list.size(); i++ )
     {
       final Object object = list.get( i );
-      if( targetID.equals( object ) )
-        return i;
+      final IXLinkedFeature asXLink = asXLink( destLink, relation, object );
 
-      if( object instanceof IXLinkedFeature && ((IXLinkedFeature) object).getFeatureId().equals( object ) )
+      if( ObjectUtils.equals( destLink, asXLink ) )
         return i;
     }
 
     return -1;
+  }
+
+  /**
+   * Resolved a property valeu as an xlink.<br>
+   * If the property is already a link, just return it.<br/>
+   * If the property is a String, returns an internal xlink.<br/>
+   *
+   * @throws IllegalStateException
+   *           If the property is not a link.
+   */
+  public static IXLinkedFeature asXLink( final Feature feature, final IRelationType relationType, final Object property )
+  {
+    if( property instanceof IXLinkedFeature )
+      return (IXLinkedFeature) property;
+
+    if( property instanceof String )
+    {
+      final IFeatureType targetType = relationType.getTargetFeatureType();
+      final String href = String.format( "#%s", property );
+      return FeatureFactory.createXLink( feature, relationType, targetType, href );
+    }
+
+    if( property == null )
+      return null;
+
+    throw new IllegalStateException();
+  }
+
+  public static Object findMember( final Feature sourceFeature, final IRelationType relation, final Feature targetFeature )
+  {
+    if( relation.isList() )
+    {
+
+    }
+    else
+    {
+      final Object property = sourceFeature.getProperty( relation );
+      if( isSameOrLinkTo( targetFeature, property ) )
+        return property;
+    }
+
+    return null;
+  }
+
+  /**
+   * Checks if a property is a link to or the same thing as a given feature.
+   */
+  public static boolean isSameOrLinkTo( final Feature feature, final Object property )
+  {
+    if( feature == property )
+      return true;
+
+    if( property instanceof String )
+      return feature.getId().equals( property );
+
+    if( property instanceof IXLinkedFeature )
+      return ((IXLinkedFeature) property).getFeature() == feature;
+
+    return false;
   }
 }

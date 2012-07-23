@@ -43,31 +43,30 @@ package org.kalypso.ogc.gml.command;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 
 /**
- * class RemoveRelationCommand Command to remove a normal relation created by
+ * Command that wraps {@link Feature#removeMember(IRelationType, Feature)}
  *
- * @author doemming (13.05.2005)
+ * @author Gernot Belger
  */
-public class RemoveLinkCommand implements ICommand
+public class RemoveMemberCommand implements ICommand
 {
   private final Feature m_srcFE;
 
-  private final Feature m_destFE;
+  private final Object m_member;
 
   private final IRelationType m_linkRelation;
 
-  private final int m_pos;
+  private int m_pos;
 
-  public RemoveLinkCommand( final Feature srcFE, final IRelationType linkPropName, final Feature destFE )
+  public RemoveMemberCommand( final Feature srcFE, final IRelationType linkPropName, final Object member )
   {
     m_srcFE = srcFE;
     m_linkRelation = linkPropName;
-    m_destFE = destFE;
-    m_pos = FeatureLinkUtils.indexOfLink( srcFE, linkPropName, destFE );
+    m_member = member;
   }
 
   @Override
@@ -81,9 +80,11 @@ public class RemoveLinkCommand implements ICommand
   {
     final GMLWorkspace workspace = m_srcFE.getWorkspace();
 
-    m_srcFE.removeMember( m_linkRelation, m_destFE );
+    m_pos = m_srcFE.removeMember( m_linkRelation, m_member );
 
-    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_srcFE, m_destFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+    final Feature removedElement = m_member instanceof Feature ? (Feature) m_member : null;
+    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_srcFE, removedElement, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE ) );
+
     workspace.fireModellEvent( new FeatureChangeModellEvent( workspace, new FeatureChange[] { new FeatureChange( m_srcFE, m_linkRelation, null ) } ) );
   }
 
@@ -100,15 +101,16 @@ public class RemoveLinkCommand implements ICommand
 
     if( m_linkRelation.isList() )
     {
-      final IFeatureBindingCollection<Feature> memberList = m_srcFE.getMemberList( m_linkRelation );
-      memberList.insertLink( m_pos, m_destFE );
+      final FeatureList memberList = (FeatureList) m_srcFE.getProperty( m_linkRelation );
+      memberList.add( m_pos, m_member );
     }
     else
     {
-      m_srcFE.setLink( m_linkRelation, getDescription() );
+      m_srcFE.setProperty( m_linkRelation, m_member );
     }
 
-    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_srcFE, m_destFE, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
+    final Feature addedElement = m_member instanceof Feature ? (Feature) m_member : null;
+    workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, m_srcFE, addedElement, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
   }
 
   @Override

@@ -361,13 +361,13 @@ public class DictionaryFeature implements Feature
   }
 
   @Override
-  public boolean removeMember( final IRelationType relation, final Feature toRemove )
+  public int removeMember( final IRelationType relation, final Object toRemove )
   {
     throw new UnsupportedOperationException( DICTIONARY_ENTRIES_MAY_NOT_BE_CHANGED );
   }
 
   @Override
-  public boolean removeMember( final QName relationName, final Feature toRemove )
+  public int removeMember( final QName relationName, final Object toRemove )
   {
     throw new UnsupportedOperationException( DICTIONARY_ENTRIES_MAY_NOT_BE_CHANGED );
   }

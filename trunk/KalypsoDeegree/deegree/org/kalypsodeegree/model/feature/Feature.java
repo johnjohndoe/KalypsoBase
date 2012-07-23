@@ -263,21 +263,20 @@ public interface Feature extends BaseFeature, Deegree2Feature, IAdaptable
   /**
    * Removes a member from a relation. The following cases are handled:
    * <ul>
-   * <li>minOccurs=1 and inline feature equal to <code>toRemove</code>: property is set to <code>null</code>.</li>
-   * <li>minOccurs=1 and property contains a link that links to <code>toRemove</code>: property is set to
-   * <code>null</code></li>
-   * <li>minOccurs>1 and the list contains <code>toRemove</code>: item removed from the list.</li>
-   * <li>minOccurs>1 and the list contains a link that links to <code>toRemove</code>: link is removed from the list.</li>
+   * <li>minOccurs=1 and inline: property value is identical to <code>toRemove</code>: property is set to
+   * <code>null</code>
+   * <li>minOccurs>1 and the list contains <code>toRemove</code> (identity check): item removed from the list.</li>
    * </ul>
    *
-   * @return If one of the four cases holds, <code>true</code> is returned. <code>false</code> in all other cases.
+   * @return The index of the successfully removed member, 0 in case of non-list relations. -1, if no member was
+   *         removed.
    */
-  boolean removeMember( IRelationType relation, Feature toRemove );
+  int removeMember( IRelationType relation, Object toRemove );
 
   /**
    * Same as {@link #removeMember(IRelationType, Feature)}
    *
    * @see #removeMember(IRelationType, Feature)
    */
-  boolean removeMember( QName relationName, Feature toRemove );
+  int removeMember( QName relationName, Object toRemove );
 }

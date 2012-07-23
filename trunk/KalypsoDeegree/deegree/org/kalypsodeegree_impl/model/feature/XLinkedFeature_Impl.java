@@ -62,7 +62,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
  * <p>
  * Cannot be used as workspace root.
  * </p>
- * 
+ *
  * @author Gernot Belger
  */
 class XLinkedFeature_Impl extends PlatformObject implements IXLinkedFeature
@@ -173,7 +173,7 @@ class XLinkedFeature_Impl extends PlatformObject implements IXLinkedFeature
 
   /**
    * format of name if "namespace:name" or just "name" - both will work
-   * 
+   *
    * @return array of properties, properties with maxoccurency>0 (as defined in applicationschema) will be embedded in
    *         java.util.List-objects
    * @see org.kalypsodeegree.model.feature.Feature#getProperty(java.lang.String)
@@ -236,7 +236,7 @@ class XLinkedFeature_Impl extends PlatformObject implements IXLinkedFeature
 
   /**
    * Returns the workspace of the linked feature.
-   * 
+   *
    * @see org.kalypsodeegree.model.feature.Feature#getWorkspace()
    */
   @Override
@@ -518,13 +518,13 @@ class XLinkedFeature_Impl extends PlatformObject implements IXLinkedFeature
   }
 
   @Override
-  public boolean removeMember( final QName relationName, final Feature toRemove )
+  public int removeMember( final QName relationName, final Object toRemove )
   {
     return getFeature().removeMember( relationName, toRemove );
   }
 
   @Override
-  public boolean removeMember( final IRelationType relation, final Feature toRemove )
+  public int removeMember( final IRelationType relation, final Object toRemove )
   {
     return getFeature().removeMember( relation, toRemove );
   }

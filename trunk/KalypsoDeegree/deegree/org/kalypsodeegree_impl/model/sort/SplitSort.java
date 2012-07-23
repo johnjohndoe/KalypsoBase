@@ -251,8 +251,6 @@ public class SplitSort implements FeatureList
 
   /**
    * This is slow: TODO: better comment
-   *
-   * @see java.util.List#remove(java.lang.Object)
    */
   @Override
   public boolean remove( final Object object )
@@ -270,6 +268,7 @@ public class SplitSort implements FeatureList
       else if( m_index != null )
         m_index.remove( env, object );
 
+      // FIXME: move into helper
       if( object instanceof Feature )
       {
         final Feature f = (Feature) object;
@@ -288,10 +287,6 @@ public class SplitSort implements FeatureList
     return JTSAdapter.export( envelope );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform)
-   */
   @Override
   public void paint( final Graphics g, final GeoTransform geoTransform )
   {
@@ -320,9 +315,6 @@ public class SplitSort implements FeatureList
     }
   }
 
-  /**
-   * @see java.util.List#size()
-   */
   @Override
   public int size( )
   {
@@ -332,12 +324,11 @@ public class SplitSort implements FeatureList
     }
   }
 
-  /**
-   * @see java.util.List#clear()
-   */
   @Override
   public void clear( )
   {
+    // FIXME: needs to unregister inline feature from the workspace
+
     synchronized( this )
     {
       m_items.clear();
@@ -345,18 +336,12 @@ public class SplitSort implements FeatureList
     }
   }
 
-  /**
-   * @see java.util.List#isEmpty()
-   */
   @Override
   public boolean isEmpty( )
   {
     return size() == 0;
   }
 
-  /**
-   * @see java.util.List#toArray()
-   */
   @Override
   public Object[] toArray( )
   {
@@ -366,9 +351,6 @@ public class SplitSort implements FeatureList
     }
   }
 
-  /**
-   * @see java.util.List#get(int)
-   */
   @Override
   public Object get( final int index )
   {
@@ -378,18 +360,17 @@ public class SplitSort implements FeatureList
     }
   }
 
-  /**
-   * @see java.util.List#remove(int)
-   */
   @Override
   public Object remove( final int index )
   {
+    // FIXME: unregister feature from workspace
+
     synchronized( this )
     {
       final Object removedItem = m_items.remove( index );
       if( m_index != null )
-        // FIXME: We remove with null envelope here, else we would break the synchronized code by calling getEnvelope()
-// here
+        // FIXME: We remove with null envelope here, else we would break the synchronized code by calling
+        // getEnvelope() here
         m_index.remove( null, removedItem );
       return removedItem;
     }
@@ -429,8 +410,6 @@ public class SplitSort implements FeatureList
 
   /**
    * WARNING SLOW TODO: better comment
-   *
-   * @see java.util.List#lastIndexOf(java.lang.Object)
    */
   @Override
   public int lastIndexOf( final Object item )
@@ -457,9 +436,6 @@ public class SplitSort implements FeatureList
     }
   }
 
-  /**
-   * @see java.util.List#addAll(int, java.util.Collection)
-   */
   @Override
   public boolean addAll( final int index, final Collection c )
   {
@@ -481,9 +457,6 @@ public class SplitSort implements FeatureList
     }
   }
 
-  /**
-   * @see java.util.List#addAll(java.util.Collection)
-   */
   @Override
   public boolean addAll( final Collection c )
   {
@@ -505,9 +478,6 @@ public class SplitSort implements FeatureList
     }
   }
 
-  /**
-   * @see java.util.List#containsAll(java.util.Collection)
-   */
   @Override
   public boolean containsAll( final Collection c )
   {
@@ -527,6 +497,7 @@ public class SplitSort implements FeatureList
       for( final Entry<Object, Envelope> entry : newItems.entrySet() )
         if( !m_index.contains( entry.getValue(), entry.getKey() ) )
           return false;
+
       return true;
     }
   }
@@ -539,7 +510,6 @@ public class SplitSort implements FeatureList
   @Override
   public boolean removeAll( final Collection c )
   {
-
     boolean result = false;
     synchronized( this )
     {
@@ -549,22 +519,17 @@ public class SplitSort implements FeatureList
         if( m_index != null )
           m_index.remove( env, lObj );
       }
+
+      // FIXME: unregister features
+
       result = m_items.removeAll( c );
     }
-
-    // VERY SLOW! removes elements from ArrayList one by one
-    // which causes re-creation and copying of the whole array every time
-// boolean result = false;
-// for( final Object object : c )
-// result |= remove( object );
 
     return result;
   }
 
   /**
    * NOT IMPLEMENTED
-   *
-   * @see java.util.List#retainAll(java.util.Collection)
    */
   @Override
   public boolean retainAll( final Collection c )
@@ -576,11 +541,9 @@ public class SplitSort implements FeatureList
   /**
    * ATTENTION: do not remove object via this iterator, it will break the geo-index<br>
    * TODO: wrap iterator in order to maintain the index's consistency
-   *
-   * @see java.util.List#iterator()
    */
   @Override
-  public Iterator iterator( )
+  public Iterator< ? > iterator( )
   {
     // TODO: what about synchronization?
 
@@ -593,7 +556,7 @@ public class SplitSort implements FeatureList
    * @see java.util.List#subList(int, int)
    */
   @Override
-  public List subList( final int fromIndex, final int toIndex )
+  public List< ? > subList( final int fromIndex, final int toIndex )
   {
     throw new UnsupportedOperationException();
   }
@@ -601,11 +564,9 @@ public class SplitSort implements FeatureList
   /**
    * ATTENTION: do not remove object via this iterator, it will break the geo-index<br>
    * TODO: wrap iterator in order to maintain the index's consistency
-   *
-   * @see java.util.List#listIterator()
    */
   @Override
-  public ListIterator listIterator( )
+  public ListIterator< ? > listIterator( )
   {
     // TODO: what about synchronization?
     return m_items.listIterator();
@@ -614,19 +575,14 @@ public class SplitSort implements FeatureList
   /**
    * ATTENTION: do not remove object via this iterator, it will break the geo-index<br>
    * TODO: wrap iterator in order to maintain the index's consistency
-   *
-   * @see java.util.List#listIterator(int)
    */
   @Override
-  public ListIterator listIterator( final int index )
+  public ListIterator< ? > listIterator( final int index )
   {
     // TODO: what about synchronization?
     return m_items.listIterator( index );
   }
 
-  /**
-   * @see java.util.List#set(int, java.lang.Object)
-   */
   @Override
   public Object set( final int index, final Object newItem )
   {
@@ -655,9 +611,6 @@ public class SplitSort implements FeatureList
     }
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#toFeatures()
-   */
   @Override
   public Feature[] toFeatures( )
   {
@@ -668,9 +621,6 @@ public class SplitSort implements FeatureList
     }
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#accept(org.kalypsodeegree.model.feature.FeatureVisitor)
-   */
   @Override
   public void accept( final FeatureVisitor visitor )
   {
@@ -684,6 +634,7 @@ public class SplitSort implements FeatureList
     final Feature parentFeature = getOwner();
     final GMLWorkspace workspace = parentFeature == null ? null : parentFeature.getWorkspace();
     for( final Object object : m_items )
+    {
       if( workspace != null && depth == FeatureVisitor.DEPTH_INFINITE_LINKS )
       {
         final Feature linkedFeature = FeatureHelper.resolveLinkedFeature( workspace, object );
@@ -691,6 +642,7 @@ public class SplitSort implements FeatureList
       }
       else if( object instanceof Feature )
         visitor.visit( (Feature) object );
+    }
   }
 
   @Override
