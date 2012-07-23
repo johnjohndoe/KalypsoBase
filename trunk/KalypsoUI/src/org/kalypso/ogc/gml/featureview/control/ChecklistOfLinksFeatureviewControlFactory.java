@@ -54,10 +54,6 @@ public class ChecklistOfLinksFeatureviewControlFactory implements IExtensionsFea
   @Override
   public IFeatureControl createFeatureControl( final FormToolkit toolkit, final Feature feature, final IPropertyType pt, final Properties arguments )
   {
-    final String showSelectButtonsStr = arguments.getProperty( ChecklistOfLinksFeatureControl.PARAM_SELECT_BUTTONS, "true" ); //$NON-NLS-1$
-    final Boolean showSelectButtons = Boolean.parseBoolean( showSelectButtonsStr );
-
-    return new ChecklistOfLinksFeatureControl( feature, pt, showSelectButtons );
+    return new ChecklistOfLinksFeatureControl( feature, pt );
   }
-
 }

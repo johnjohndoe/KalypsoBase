@@ -40,40 +40,34 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Collection;
 
-import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.graphics.FontMetrics;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
+import org.eclipse.swt.widgets.Table;
+import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.AddLinkCommand;
 import org.kalypso.ogc.gml.command.CompositeCommand;
-import org.kalypso.ogc.gml.command.RemoveLinkCommand;
+import org.kalypso.ogc.gml.command.FeatureLinkUtils;
+import org.kalypso.ogc.gml.command.RemoveMemberCommand;
 import org.kalypso.ui.editor.gmleditor.part.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.search.IReferenceCollectorStrategy;
 
 /**
@@ -86,49 +80,39 @@ import org.kalypsodeegree_impl.model.feature.search.IReferenceCollectorStrategy;
  */
 public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl
 {
-  public static final String PARAM_SELECT_BUTTONS = "showSelectButtons"; //$NON-NLS-1$
+  private final class ChangeCheckstateAction extends Action
+  {
+    private final boolean m_checkState;
 
-  private final Set<ModifyListener> m_modifyListeners = new HashSet<ModifyListener>();
+    public ChangeCheckstateAction( final String text, final boolean checkState )
+    {
+      super( text );
 
-  // private final boolean m_showSelectButtons;
+      m_checkState = checkState;
+    }
+
+    @Override
+    public void run( )
+    {
+      final IStructuredSelection selection = (IStructuredSelection) getViewer().getSelection();
+      changeCheckState( selection.toArray(), m_checkState );
+    }
+  }
 
   private CheckboxTableViewer m_linkChecklist;
 
-  public ChecklistOfLinksFeatureControl( final Feature feature, final IPropertyType ftp, final boolean showSelectButtons )
+  public ChecklistOfLinksFeatureControl( final Feature feature, final IPropertyType ftp )
   {
     super( feature, ftp );
-
-    // m_showSelectButtons = showSelectButtons;
   }
 
-  public ChecklistOfLinksFeatureControl( final IPropertyType pt, final boolean showSelectButtons )
+  public StructuredViewer getViewer( )
   {
-    super( pt );
-
-    // m_showSelectButtons = showSelectButtons;
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#addModifyListener(org.eclipse.swt.events.ModifyListener)
-   */
-  @Override
-  public void addModifyListener( final ModifyListener l )
-  {
-    m_modifyListeners.add( l );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#removeModifyListener(org.eclipse.swt.events.ModifyListener)
-   */
-  @Override
-  public void removeModifyListener( final ModifyListener l )
-  {
-    m_modifyListeners.remove( l );
+    return m_linkChecklist;
   }
 
   /**
    * @return Always <code>true</code>
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#isValid()
    */
   @Override
   public boolean isValid( )
@@ -137,229 +121,137 @@ public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl
     return true;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#createControl(org.eclipse.swt.widgets.Composite, int)
-   */
   @Override
   public Control createControl( final Composite parent, final int style )
   {
-    // final GC gc = new GC( parent );
-    // gc.setFont( JFaceResources.getDialogFont() );
-    // final FontMetrics fontMetrics = gc.getFontMetrics();
-    // gc.dispose();
-
-    final Composite panel = new Composite( parent, style );
-    panel.setLayout( Layouts.createGridLayout() );
-
-    m_linkChecklist = CheckboxTableViewer.newCheckList( panel, SWT.BORDER );
-    m_linkChecklist.getControl().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    m_linkChecklist = CheckboxTableViewer.newCheckList( parent, style | SWT.MULTI | SWT.FULL_SELECTION );
     m_linkChecklist.setContentProvider( new ArrayContentProvider() );
     m_linkChecklist.setLabelProvider( new GMLLabelProvider() );
-
-    // TODO: we never show the buttons, as they do not work properly yet
-    // if( m_showSelectButtons && false )
-    // {
-    // final Composite buttonPanel = createSelectButtons( fontMetrics, panel, m_linkChecklist );
-    // buttonPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    // }
 
     m_linkChecklist.addCheckStateListener( new ICheckStateListener()
     {
       @Override
       public void checkStateChanged( final CheckStateChangedEvent event )
       {
-        handleFeatureChecked( event );
+        final IXLinkedFeature[] elements = new IXLinkedFeature[] { (IXLinkedFeature) event.getElement() };
+        handleCheckStateChanged( elements, event.getChecked() );
       }
     } );
 
+    /* Configure context menu */
+    final MenuManager manager = new MenuManager();
+    manager.add( new ChangeCheckstateAction( "&Check selected", true ) );
+    manager.add( new ChangeCheckstateAction( "&Uncheck selected", false ) ); //$NON-NLS-1$
+
+    final Table table = m_linkChecklist.getTable();
+    table.setMenu( manager.createContextMenu( table ) );
+
     updateControl();
 
-    return panel;
+    return table;
   }
 
-  // private Composite createSelectButtons( final FontMetrics fontMetrics, final Composite panel, final
-  // CheckboxTableViewer checkList )
-  // {
-  // final Composite buttonPanel = new Composite( panel, SWT.NONE );
-  // final GridLayout layout = new GridLayout();
-  // layout.numColumns = 1;
-  // layout.marginWidth = 0;
-  // layout.horizontalSpacing = Dialog.convertHorizontalDLUsToPixels( fontMetrics, IDialogConstants.HORIZONTAL_SPACING
-  // );
-  // buttonPanel.setLayout( layout );
-  //
-  // /* Glue, to force buttons to the right */
-  // final Label label = new Label( buttonPanel, SWT.NONE );
-  // label.setLayoutData( new GridData( SWT.FILL, SWT.LEFT, true, false ) );
-  //
-  // // TODO: the stuff below does not work yet, as the modell is not changed....
-  //
-  //    final Button selectButton = createButton( buttonPanel, IDialogConstants.SELECT_ALL_ID, "", fontMetrics ); //$NON-NLS-1$
-  // selectButton.addSelectionListener( new SelectionAdapter()
-  // {
-  // @Override
-  // public void widgetSelected( final SelectionEvent e )
-  // {
-  // checkList.setAllChecked( true );
-  // }
-  // } );
-  //
-  //    final Button deselectButton = createButton( buttonPanel, IDialogConstants.DESELECT_ALL_ID, "", fontMetrics ); //$NON-NLS-1$
-  // deselectButton.addSelectionListener( new SelectionAdapter()
-  // {
-  // @Override
-  // public void widgetSelected( final SelectionEvent e )
-  // {
-  // checkList.setAllChecked( false );
-  // }
-  // } );
-  //
-  // return buttonPanel;
-  // }
+  protected void changeCheckState( final Object[] objects, final boolean check )
+  {
+    final Collection<IXLinkedFeature> toToggle = new ArrayList<>();
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#updateControl()
-   */
+    for( final Object object : objects )
+    {
+      final boolean checked = m_linkChecklist.getChecked( object );
+      if( checked != check )
+      {
+        toToggle.add( (IXLinkedFeature) object );
+      }
+    }
+
+    final IXLinkedFeature[] elementsToCheck = toToggle.toArray( new IXLinkedFeature[toToggle.size()] );
+    if( elementsToCheck.length > 0 )
+    {
+      handleCheckStateChanged( elementsToCheck, check );
+    }
+  }
+
   @Override
   public void updateControl( )
   {
-    /* Set all referenceable features as input */
+    /* Set all referencable features as input */
     final Feature feature = getFeature();
     final IRelationType rt = (IRelationType) getFeatureTypeProperty();
     final GMLWorkspace workspace = feature.getWorkspace();
 
     final IReferenceCollectorStrategy strategy = ComboFeatureControl.createSearchStrategy( workspace, feature, rt );
-    final Feature[] features = strategy.collectReferences();
+    final IXLinkedFeature[] features = strategy.collectReferences();
 
+    m_linkChecklist.setCheckedElements( new Object[0] );
     m_linkChecklist.setInput( features );
 
     /* check all currently set links */
     final FeatureList linkList = (FeatureList) feature.getProperty( rt );
     for( final Object object : linkList )
     {
-      final Feature linkedFeature = FeatureHelper.getFeature( workspace, object );
-      m_linkChecklist.setChecked( linkedFeature, true );
+      final IXLinkedFeature xLink = FeatureLinkUtils.asXLink( feature, rt, object );
+      m_linkChecklist.setChecked( xLink, true );
     }
   }
 
-  /**
-   * REMARK: COPIED FROM {@link Dialog}.
-   * <p>
-   * Creates a new button with the given id.
-   * </p>
-   * <p>
-   * The <code>Dialog</code> implementation of this framework method creates a standard push button, registers it for
-   * selection events including button presses, and registers default buttons with its shell. The button id is stored as
-   * the button's client data. If the button id is <code>IDialogConstants.CANCEL_ID</code>, the new button will be
-   * accessible from <code>getCancelButton()</code>. If the button id is <code>IDialogConstants.OK_ID</code>, the new
-   * button will be accesible from <code>getOKButton()</code>. Note that the parent's layout is assumed to be a
-   * <code>GridLayout</code> and the number of columns in this layout is incremented. Subclasses may override.
-   * </p>
-   *
-   * @param parent
-   *          the parent composite
-   * @param id
-   *          the id of the button (see <code>IDialogConstants.*_ID</code> constants for standard dialog button ids)
-   * @param label
-   *          the label from the button
-   * @param defaultButton
-   *          <code>true</code> if the button is to be the default button, and <code>false</code> otherwise
-   * @return the new button
-   * @see #getCancelButton
-   * @see #getOKButton()
-   */
-  protected Button createButton( final Composite parent, final int id, final String label, final FontMetrics fontMetrics )
+  protected void handleCheckStateChanged( final IXLinkedFeature[] elementsToCheck, final boolean checked )
   {
-    // increment the number of columns in the button bar
-    ((GridLayout) parent.getLayout()).numColumns++;
-    final Button button = new Button( parent, SWT.PUSH );
-    button.setText( label );
-    button.setFont( JFaceResources.getDialogFont() );
-    button.setData( new Integer( id ) );
+    final Feature feature = getFeature();
 
-    final GridData data = new GridData( GridData.HORIZONTAL_ALIGN_FILL );
-    final int widthHint = Dialog.convertHorizontalDLUsToPixels( fontMetrics, IDialogConstants.BUTTON_WIDTH );
-    final Point minSize = button.computeSize( SWT.DEFAULT, SWT.DEFAULT, true );
-    data.widthHint = Math.max( widthHint, minSize.x );
-    button.setLayoutData( data );
+    final ICommand changeCommand = createCommand( feature, elementsToCheck, checked );
 
-    return button;
+    /* Fire the feature change. */
+    fireFeatureChange( changeCommand );
   }
 
-  protected void handleFeatureChecked( final CheckStateChangedEvent event )
+  private ICommand createCommand( final Feature feature, final IXLinkedFeature[] elementsToCheck, final boolean checked )
   {
-    /* Get the feature, relation type and list of links. */
-    final Feature feature = getFeature();
     final IRelationType rt = (IRelationType) getFeatureTypeProperty();
-    final FeatureList listOfLinks = (FeatureList) feature.getProperty( rt );
-
-    /* Get the checked element. */
-    final Object checkedElement = event.getElement();
 
     /* The composite command stores all commands, to be executed. */
     final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString( "org.kalypso.ogc.gml.featureview.control.ChecklistOfLinksFeatureControl.0" ) ); //$NON-NLS-1$
 
     /* Create the commands. */
-    if( event.getChecked() )
+    if( checked )
     {
-      // TODO: implement case for external features
-      if( checkedElement instanceof Feature )
+      for( final IXLinkedFeature checkedElement : elementsToCheck )
       {
-        final Feature checkedFeature = (Feature) checkedElement;
-        final String href = "#" + checkedFeature.getId(); //$NON-NLS-1$
+        final String href = checkedElement.getHref();
         compositeCommand.addCommand( new AddLinkCommand( feature, rt, -1, href ) );
       }
     }
     else
     {
-      for( final Object object : listOfLinks )
-      {
-        final String id = getLinkId( object );
-
-        // TODO: implement case for external features
-        // TODO: potential performance problem
-
-        if( id != null && checkedElement instanceof Feature )
-        {
-          // FIXME: Remove does not work with the checked element.
-          // Cannot work, as a list of links can reference a feature twice; so it is not clear
-          // which link should be removed. Instead, the link or the position needs to be given to
-          // the command.
-          if( id.equals( ((Feature) checkedElement).getId() ) )
-            compositeCommand.addCommand( new RemoveLinkCommand( feature, rt, (Feature) checkedElement ) );
-        }
-      }
+      for( final IXLinkedFeature checkedElement : elementsToCheck )
+        createRemoveCommand( compositeCommand, feature, rt, checkedElement );
     }
 
-    /* The modify listeners. */
-    final ModifyListener[] listeners = m_modifyListeners.toArray( new ModifyListener[m_modifyListeners.size()] );
-
-    /* Create an event. */
-    final Event e = new Event();
-    e.widget = m_linkChecklist.getControl();
-
-    /* Create an modify event. */
-    final ModifyEvent me = new ModifyEvent( e );
-
-    /* Notify the modify listeners. */
-    for( final ModifyListener modifyListener : listeners )
-      modifyListener.modifyText( me );
-
-    /* Fire the feature change. */
-    fireFeatureChange( compositeCommand );
+    return compositeCommand;
   }
 
-  private String getLinkId( final Object object )
+  private void createRemoveCommand( final CompositeCommand compositeCommand, final Feature feature, final IRelationType rt, final IXLinkedFeature checkedElement )
   {
-    if( object instanceof String )
-      return (String) object;
+    final Feature targetFeature = checkedElement.getFeature();
 
-    if( object instanceof IXLinkedFeature )
+    final FeatureList listOfLinks = (FeatureList) feature.getProperty( rt );
+
+    for( final Object object : listOfLinks )
     {
-      final IXLinkedFeature link = (IXLinkedFeature) object;
-      return link.getFeatureId();
-    }
+      final IXLinkedFeature xlink = FeatureLinkUtils.asXLink( feature, rt, object );
 
-    return null;
+      if( xlink == null )
+      {
+        // should never happen, null object in list
+        continue;
+      }
+
+      // REMARK: we remove all elements that link to the checked element, i.e. multiple links in one list are not
+      // supported
+      final boolean sameOrLinksTo = FeatureLinkUtils.isSameOrLinkTo( targetFeature, object );
+      if( sameOrLinksTo )
+      {
+        compositeCommand.addCommand( new RemoveMemberCommand( feature, rt, object ) );
+      }
+    }
   }
 }

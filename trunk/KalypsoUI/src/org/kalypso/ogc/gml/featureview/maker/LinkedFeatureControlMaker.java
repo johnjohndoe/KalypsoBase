@@ -71,10 +71,6 @@ public class LinkedFeatureControlMaker extends AbstractValueControlMaker
     m_showButton = showButton;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.maker.AbstractValueControlMaker#createControlType(org.kalypso.gmlschema.property.IPropertyType,
-   *      javax.xml.bind.JAXBElement)
-   */
   @Override
   protected JAXBElement< ? extends ControlType> createControlType( final Feature feature, final IFeatureType ft, final IPropertyType pt, final GridDataType griddata )
   {
