@@ -59,6 +59,9 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.afgui.views.WorkflowView;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.util.command.WaitForFeatureChanges;
 
 import de.renew.workflow.base.EActivityType;
 import de.renew.workflow.base.ITask;
@@ -119,6 +122,10 @@ public class TaskExecutor implements ITaskExecutor
     // IStatus executeStatus = executeTaskCommand( m_activeTask, TASK_COMMNAND_ROLE_STOP );
     // if( executeStatus.matches( IStatus.CANCEL ))
     // return false;
+
+    /* BUGFIX: some feature may still be in progress to be changed, we wait for every feature command to finish */
+    final ICoreRunnableWithProgress commandWaiter = new WaitForFeatureChanges();
+    ProgressUtilities.busyCursorWhile( commandWaiter );
 
     // REMARK: this is used to ask the user, if the data should be saved or not
     // It is a bit questionable if this is the right place...; should be reconsidered
