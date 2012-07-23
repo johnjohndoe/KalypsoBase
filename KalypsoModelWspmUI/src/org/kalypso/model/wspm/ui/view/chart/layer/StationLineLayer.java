@@ -64,9 +64,6 @@ public class StationLineLayer extends ComponentLayer
     super( profil, targetRangeProperty );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.ext.base.layer.AbstractChartLayer#getLegendEntries()
-   */
   @Override
   public synchronized ILegendEntry[] getLegendEntries( )
   {
@@ -100,6 +97,7 @@ public class StationLineLayer extends ComponentLayer
 
     if( profil == null )
       return;
+
     final IProfileRecord[] profilPoints = profil.getPoints();
 
     final IAxis targetAxis = getCoordinateMapper().getTargetAxis();
@@ -124,5 +122,4 @@ public class StationLineLayer extends ComponentLayer
     pf.setPoints( new Point[] { new Point( lineX, clipping.height ), new Point( lineX, clipping.y ) } );
     pf.paint( gc );
   }
-
 }
