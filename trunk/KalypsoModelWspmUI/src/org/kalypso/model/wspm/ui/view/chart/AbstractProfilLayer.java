@@ -62,6 +62,7 @@ import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
 import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
+import de.openali.odysseus.chart.framework.model.figure.impl.MarkerFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
@@ -171,8 +172,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   @Override
   public EditInfo drag( final Point newPos, final EditInfo dragStartData )
   {
-    // override this method
-    return dragStartData;// return new EditInfo( this, null, null, dragStartData.m_data, "", newPos );
+    return dragStartData;
   }
 
   @Override
@@ -229,11 +229,11 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   {
     if( !isVisible() || getProfil() == null )
       return null;
+
     final IProfileRecord[] profilPoints = getProfil().getPoints();
     final int len = profilPoints.length;
     for( int i = 0; i < len; i++ )
     {
-
       final Rectangle hover = getHoverRect( profilPoints[i] );
       if( hover == null )
       {
@@ -245,7 +245,12 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
         final Point target = toScreen( profilPoints[i] );
         if( target == null )
           return new EditInfo( this, null, null, i, getTooltipInfo( profilPoints[i] ), RectangleUtils.getCenterPoint( hover ) );
-        return new EditInfo( this, null, null, i, getTooltipInfo( profilPoints[i] ), target );
+
+        final IPointStyle pointStyleHover = getPointStyleHover();
+        final MarkerFigure hoverFigure = new MarkerFigure( pointStyleHover );
+        hoverFigure.setCenterPoint( target.x, target.y );
+
+        return new EditInfo( this, hoverFigure, null, i, getTooltipInfo( profilPoints[i] ), target );
       }
     }
     return null;
@@ -336,8 +341,11 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     if( m_pointStyleHover == null )
     {
       m_pointStyleHover = getPointStyle().clone();
+      m_pointStyleHover.setWidth( m_pointStyleHover.getWidth() * 2 );
+      m_pointStyleHover.setHeight( m_pointStyleHover.getHeight() * 2 );
+
       m_pointStyleHover.setStroke( getLineStyleHover().clone() );
-      m_pointStyleHover.setFillVisible( false );
+      m_pointStyleHover.setFillVisible( true );
     }
     return m_pointStyleHover;
   }
