@@ -123,15 +123,10 @@ public class ComboBoxModifier extends AbstractFeatureModifier
       final GMLWorkspace workspace = m_feature.getWorkspace();
 
       final IReferenceCollectorStrategy strategy = ComboFeatureControl.createSearchStrategy( workspace, m_feature, rt );
-      final Feature[] features = strategy.collectReferences();
+      final IXLinkedFeature[] features = strategy.collectReferences();
 
-      for( final Feature foundFeature : features )
-      {
-        if( foundFeature instanceof IXLinkedFeature )
+      for( final IXLinkedFeature foundFeature : features )
           input.add( foundFeature );
-        else
-          input.add( foundFeature.getId() );
-      }
     }
 
     return input;
@@ -158,8 +153,8 @@ public class ComboBoxModifier extends AbstractFeatureModifier
       {
         super.setInput( input );
 
-        final Object selected = doGetValue();
-        doSetValue( selected );
+        final IXLinkedFeature xlink = getCurrentAsXLink();
+        doSetValue( xlink );
       }
     };
 
@@ -178,6 +173,12 @@ public class ComboBoxModifier extends AbstractFeatureModifier
     } );
 
     return m_comboBoxCellEditor;
+  }
+
+  IXLinkedFeature getCurrentAsXLink( )
+  {
+    final IRelationType relationType = (IRelationType) getPropertyType();
+    return ComboFeatureControl.getXLink( m_feature, relationType );
   }
 
   protected String getCellEditorLabel( final Object element )

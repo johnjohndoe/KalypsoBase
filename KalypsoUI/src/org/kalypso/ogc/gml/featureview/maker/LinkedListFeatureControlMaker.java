@@ -47,11 +47,9 @@ import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.ogc.gml.featureview.control.ChecklistOfLinksFeatureControl;
 import org.kalypso.ogc.gml.featureview.control.ChecklistOfLinksFeatureviewControlFactory;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.Extensioncontrol;
-import org.kalypso.template.featureview.Extensioncontrol.Param;
 import org.kalypso.template.featureview.GridDataType;
 import org.kalypso.template.featureview.GridLayout;
 import org.kalypso.template.featureview.Group;
@@ -59,24 +57,16 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Creates feature controls for lists of linked features
- * 
+ *
  * @author Gernot Belger
  */
 public class LinkedListFeatureControlMaker extends AbstractValueControlMaker
 {
-  private final boolean m_showSelectButtons;
-
-  public LinkedListFeatureControlMaker( final boolean addValidator, final boolean showSelectButtons )
+  public LinkedListFeatureControlMaker( final boolean addValidator )
   {
     super( addValidator );
-
-    m_showSelectButtons = showSelectButtons;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.maker.AbstractValueControlMaker#createControlType(org.kalypso.gmlschema.property.IPropertyType,
-   *      javax.xml.bind.JAXBElement)
-   */
   @Override
   protected JAXBElement< ? extends ControlType> createControlType( final Feature feature, final IFeatureType ft, final IPropertyType pt, final GridDataType griddata )
   {
@@ -97,22 +87,17 @@ public class LinkedListFeatureControlMaker extends AbstractValueControlMaker
 
     /* Create the UI components */
     final GridDataType listData = TemplateUtilities.OF_FEATUREVIEW.createGridDataType();
-    listData.setHorizontalAlignment( "GridData.FILL" ); //$NON-NLS-1$
-    listData.setVerticalAlignment( "GridData.FILL" ); //$NON-NLS-1$
+    listData.setHorizontalAlignment( "SWT.FILL" ); //$NON-NLS-1$
+    listData.setVerticalAlignment( "SWT.FILL" ); //$NON-NLS-1$
     listData.setGrabExcessHorizontalSpace( true );
 
     final Extensioncontrol extensioncontrol = TemplateUtilities.OF_FEATUREVIEW.createExtensioncontrol();
     extensioncontrol.setEnabled( true );
     extensioncontrol.setExtensionId( ChecklistOfLinksFeatureviewControlFactory.class.getName() );
     extensioncontrol.setLayoutData( TemplateUtilities.OF_FEATUREVIEW.createGridData( listData ) );
-    extensioncontrol.setStyle( "SWT.NONE" ); //$NON-NLS-1$
+    extensioncontrol.setStyle( "SWT.BORDER" ); //$NON-NLS-1$
     extensioncontrol.setVisible( true );
     extensioncontrol.setProperty( qname );
-
-    final Param selectParam = TemplateUtilities.OF_FEATUREVIEW.createExtensioncontrolParam();
-    selectParam.setName( ChecklistOfLinksFeatureControl.PARAM_SELECT_BUTTONS );
-    selectParam.setValue( Boolean.toString( m_showSelectButtons ) );
-    extensioncontrol.getParam().add( selectParam );
 
     final GridLayout groupLayout = TemplateUtilities.OF_FEATUREVIEW.createGridLayout();
 

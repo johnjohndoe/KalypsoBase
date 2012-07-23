@@ -55,18 +55,17 @@ import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.PropertyUtils;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
+import org.kalypso.ogc.gml.command.FeatureLinkUtils;
 import org.kalypso.ui.editor.gmleditor.part.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.model.feature.DefaultReferenceCollectorStrategy;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.search.IReferenceCollectorStrategy;
 
 /**
@@ -74,7 +73,7 @@ import org.kalypsodeegree_impl.model.feature.search.IReferenceCollectorStrategy;
  * <p>
  * Today only properties with String type are supported.
  * </p>
- * 
+ *
  * @author Gernot Belger
  */
 public class ComboFeatureControl extends AbstractFeatureControl
@@ -271,27 +270,21 @@ public class ComboFeatureControl extends AbstractFeatureControl
 
     final Feature feature = getFeature();
 
+
     if( propertyType instanceof IRelationType )
     {
-      final Object property = feature.getProperty( propertyType );
-      if( property instanceof IXLinkedFeature )
-        return property;
-
-      if( property instanceof String )
-      {
-        final IRelationType relationType = (IRelationType) propertyType;
-        final IFeatureType targetType = relationType.getTargetFeatureType();
-        final String href = String.format( "#%s", property );
-        return FeatureFactory.createXLink( getFeature(), relationType, targetType, href );
-      }
-
-      if( property == null )
-        return null;
-
-      throw new IllegalStateException();
+      final IRelationType relationType = (IRelationType) propertyType;
+      return getXLink( feature, relationType );
     }
 
     return feature.getProperty( propertyType );
+  }
+
+  // TODO: probably move into feature api
+  public static IXLinkedFeature getXLink( final Feature feature, final IRelationType relationType )
+  {
+    final Object property = feature.getProperty( relationType );
+    return FeatureLinkUtils.asXLink( feature, relationType, property );
   }
 
   @Override

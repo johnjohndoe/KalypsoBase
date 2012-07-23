@@ -195,18 +195,12 @@ public class SubFeatureControl extends AbstractFeatureControl
     return m_fc.isValid();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#addModifyListener(org.eclipse.swt.events.ModifyListener)
-   */
   @Override
   public void addModifyListener( final ModifyListener l )
   {
     m_fc.addModifyListener( l );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#removeModifyListener(org.eclipse.swt.events.ModifyListener)
-   */
   @Override
   public void removeModifyListener( final ModifyListener l )
   {

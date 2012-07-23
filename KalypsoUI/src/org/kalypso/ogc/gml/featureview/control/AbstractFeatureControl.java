@@ -143,9 +143,6 @@ public abstract class AbstractFeatureControl implements IFeatureControl
     m_listeners.add( l );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#removeModifyListener(org.eclipse.swt.events.ModifyListener)
-   */
   @Override
   public void removeModifyListener( final ModifyListener l )
   {
@@ -159,18 +156,12 @@ public abstract class AbstractFeatureControl implements IFeatureControl
       listener.modifyText( e );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#addChangeListener(org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
-   */
   @Override
   public final void addChangeListener( final IFeatureChangeListener l )
   {
     m_changelisteners.add( l );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#removeChangeListener(org.kalypso.ogc.gml.featureview.IFeatureChangeListener)
-   */
   @Override
   public final void removeChangeListener( final IFeatureChangeListener l )
   {
