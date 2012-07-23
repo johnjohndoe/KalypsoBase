@@ -268,7 +268,7 @@ public final class KeyInfo extends Job
     catch( final CoreException ce )
     {
       final IStatus status = ce.getStatus();
-      if( m_key.isIgnoreExceptions() )
+      if( status.matches( IStatus.CANCEL ) || m_key.isIgnoreExceptions() )
         return Status.CANCEL_STATUS;
 
       return status;
@@ -412,7 +412,7 @@ public final class KeyInfo extends Job
 
   /**
    * Reloads the pool object.
-   * 
+   *
    * @param force
    *          If <code>false</code>, the object only is reloaded if it is dirty.
    */
