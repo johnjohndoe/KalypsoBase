@@ -73,14 +73,7 @@ public class LayerManager implements ILayerManager
     }
   };
 
-  /**
-   * TODO implement as hash set and overwrite equals() and hash() methods of IChartLayer instances - to prevent multiple
-   * adding of layers with the same id. (see method getLayerById())
-   */
-  /**
-   * FIXME HashSet instead of list?!?
-   */
-  private final List<IChartLayer> m_layers = new ArrayList<IChartLayer>();
+  private final List<IChartLayer> m_layers = Collections.synchronizedList( new ArrayList<IChartLayer>() );
 
   private final ILayerContainer m_container;
 
