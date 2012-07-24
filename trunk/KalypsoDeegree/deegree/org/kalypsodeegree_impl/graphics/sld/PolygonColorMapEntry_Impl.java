@@ -67,9 +67,6 @@ public class PolygonColorMapEntry_Impl implements PolygonColorMapEntry
     m_stroke = stroke;
   }
 
-  /**
-   * @see org.kalypsodeegree.graphics.sld.PolygonColorMapEntry#exportAsXML()
-   */
   @Override
   public String exportAsXML( )
   {

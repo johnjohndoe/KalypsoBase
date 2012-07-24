@@ -65,6 +65,7 @@ import org.kalypsodeegree.graphics.sld.Mark;
 import org.kalypsodeegree.graphics.sld.ParameterValueType;
 import org.kalypsodeegree.graphics.sld.PointPlacement;
 import org.kalypsodeegree.graphics.sld.PointSymbolizer;
+import org.kalypsodeegree.graphics.sld.PolygonColorMapEntry;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
 import org.kalypsodeegree.graphics.sld.Rule;
@@ -1956,7 +1957,7 @@ public final class StyleFactory
    *          to value of the entry
    * @return {@link PolygonColorMapEntry_Impl}
    */
-  public static PolygonColorMapEntry_Impl createPolygonColorMapEntry( final Color fillColor, final Color strokeColor, final BigDecimal fromValue, final BigDecimal toValue )
+  public static PolygonColorMapEntry createPolygonColorMapEntry( final Color fillColor, final Color strokeColor, final BigDecimal fromValue, final BigDecimal toValue )
   {
     // fill
     final Fill defaultFill = StyleFactory.createFill( fillColor );
@@ -1981,5 +1982,4 @@ public final class StyleFactory
 
     return new Geometry_Impl( geometryPropertyName );
   }
-
 }
