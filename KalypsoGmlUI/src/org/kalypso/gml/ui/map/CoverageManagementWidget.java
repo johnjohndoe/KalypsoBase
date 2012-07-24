@@ -164,7 +164,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * A widget with option pane, which allows the user to edit a coverage collection.<BR>
  * The user can add / remove raster data to / from the collection and change the order of the elements of the
  * collection. In addition he can jump to the extent of an collection element in the map.
- * 
+ *
  * @author Thomas Jung
  */
 public class CoverageManagementWidget extends AbstractWidget implements IWidgetWithOptions
@@ -290,7 +290,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   /**
    * The constructor.
-   * 
+   *
    * @param name
    *          The name of the widget.
    * @param tooltip
@@ -303,7 +303,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   /**
    * The constructor.
-   * 
+   *
    * @param name
    *          The name of the widget.
    * @param tooltip
@@ -729,7 +729,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   /**
    * returns the first {@link RasterSymbolizer} from the given user styles
-   * 
+   *
    * @param styles
    *          The styles in which the raster symbolizer is
    * @return a {@link RasterSymbolizer}
@@ -1073,7 +1073,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       final Range<BigDecimal> minMax = GeoGridUtilities.calculateRange( m_coverages.getCoverages() );
       final BigDecimal min = minMax.getMinimum();
       final BigDecimal max = minMax.getMaximum();
-      final BigDecimal stepWidth = new BigDecimal( 0.1 );
+      final BigDecimal stepWidth = new BigDecimal( "0.1" ); //$NON-NLS-1$
       final Color fromColor = new Color( 0, 255, 0, 200 );
       final Color toColor = new Color( 255, 0, 0, 200 );
       final ColorMapEntry[] colors = SldHelper.createColorMap( fromColor, toColor, stepWidth, min, max, null );
@@ -1269,7 +1269,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   /**
    * This function returns the selected feature theme.
-   * 
+   *
    * @return The selected feature theme.
    */
   public IKalypsoFeatureTheme getSelectedTheme( )
