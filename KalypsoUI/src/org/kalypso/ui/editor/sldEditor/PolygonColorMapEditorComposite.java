@@ -106,8 +106,8 @@ public abstract class PolygonColorMapEditorComposite extends Composite
     m_fromEntry = from;
     m_toEntry = to;
 
-    final BigDecimal globalMin = minGlobalValue == null ? new BigDecimal( m_fromEntry.getFrom( null ) ).setScale( 2, BigDecimal.ROUND_HALF_UP ) : minGlobalValue.setScale( 2, BigDecimal.ROUND_HALF_UP );
-    final BigDecimal globalMax = maxGlobalValue == null ? new BigDecimal( m_toEntry.getFrom( null ) ).setScale( 2, BigDecimal.ROUND_HALF_UP ) : maxGlobalValue.setScale( 2, BigDecimal.ROUND_HALF_UP );
+    final BigDecimal globalMin = gettGlobalValue( m_fromEntry, minGlobalValue );
+    final BigDecimal globalMax = gettGlobalValue( m_toEntry, maxGlobalValue );
 
     m_globalMin = minGlobalValue == null ? "<Unknown>" : globalMin.toPlainString(); //$NON-NLS-1$
     m_globalMax = minGlobalValue == null ? "<Unknown>" : globalMax.toPlainString(); //$NON-NLS-1$
@@ -126,6 +126,19 @@ public abstract class PolygonColorMapEditorComposite extends Composite
     m_stepWidth = new BigDecimal( m_fromEntry.getTo( null ) - m_fromEntry.getFrom( null ) ).setScale( 2, BigDecimal.ROUND_HALF_UP );
 
     createControl();
+  }
+
+  private static final BigDecimal gettGlobalValue( final PolygonColorMapEntry entry, final BigDecimal globalValue )
+  {
+    if( globalValue != null )
+      return globalValue.setScale( 2, BigDecimal.ROUND_HALF_UP );
+
+    if( entry == null )
+      return null;
+
+    final double from = entry.getFrom( null );
+
+    return new BigDecimal( from ).setScale( 2, BigDecimal.ROUND_HALF_UP );
   }
 
   /**
