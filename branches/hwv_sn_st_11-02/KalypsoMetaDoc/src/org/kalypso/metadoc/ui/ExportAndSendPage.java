@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.metadoc.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -58,6 +61,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 
 /**
@@ -69,9 +73,11 @@ public class ExportAndSendPage extends WizardPage
 {
   private final ExportableTreeItem[] m_input;
 
-  private CheckboxTreeViewer m_leftTree;
+  protected CheckboxTreeViewer m_leftTree;
 
-  private CheckboxTreeViewer m_rightTree;
+  protected CheckboxTreeViewer m_rightTree;
+
+  protected Object[] m_checkedElements;
 
   public ExportAndSendPage( final String pageName, final ExportableTreeItem[] input )
   {
@@ -85,6 +91,7 @@ public class ExportAndSendPage extends WizardPage
     m_input = input;
     m_leftTree = null;
     m_rightTree = null;
+    m_checkedElements = null;
   }
 
   @Override
@@ -93,6 +100,16 @@ public class ExportAndSendPage extends WizardPage
     /* Create the main composite. */
     final Composite main = new Composite( parent, SWT.NONE );
     main.setLayout( new GridLayout( 2, true ) );
+
+    /* Create a label. */
+    final Label leftLabel = new Label( main, SWT.NONE );
+    leftLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    leftLabel.setText( "Bericht(e) ablegen" );
+
+    /* Create a label. */
+    final Label rightLabel = new Label( main, SWT.NONE );
+    rightLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    rightLabel.setText( "Bericht(e) versenden" );
 
     /* Create the layout data for the scrolled form. */
     final GridData scrolledFormData = new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 );
@@ -109,38 +126,86 @@ public class ExportAndSendPage extends WizardPage
     GridLayoutFactory.fillDefaults().numColumns( 2 ).equalWidth( true ).applyTo( body );
 
     /* Create the both tree viewers. */
-    m_leftTree = createTreeViewer( body, m_input );
-    m_rightTree = createTreeViewer( body, m_input );
+    m_leftTree = createTreeViewer( body, true, m_input );
+    m_rightTree = createTreeViewer( body, false, m_input );
 
     /* Create the selection buttons. */
-    createSelectionButtons( main, m_leftTree );
-    createSelectionButtons( main, m_rightTree );
+    createSelectionButtons( main, m_leftTree, true );
+    createSelectionButtons( main, m_rightTree, false );
 
-    /* Set the control. */
-    setControl( main );
-  }
-
-  private CheckboxTreeViewer createTreeViewer( final Composite parent, final ExportableTreeItem[] input )
-  {
-    final CheckboxTreeViewer viewer = new CheckboxTreeViewer( parent, SWT.BORDER );
-    viewer.getTree().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-    viewer.setContentProvider( new ExportableContentProvider() );
-    viewer.setLabelProvider( getLabelProvider( viewer ) );
-    viewer.setSorter( new ViewerSorter() );
-    viewer.setInput( input );
-    viewer.addCheckStateListener( new ICheckStateListener()
+    /* Add a listener. */
+    m_leftTree.addCheckStateListener( new ICheckStateListener()
     {
       @Override
       public void checkStateChanged( final CheckStateChangedEvent event )
       {
-        final Object element = event.getElement();
-        final boolean checked = event.getChecked();
-        // TODO
-        viewer.setSubtreeChecked( element, checked );
+        /* Set the check state. */
+        setCheckState( new ExportableTreeItem[] { (ExportableTreeItem) event.getElement() }, true, event.getChecked() );
+
+        /* Update the checked elements. */
+        updateCheckedElements();
+
+        /* Check, if the page can be completed. */
+        checkPageComplete();
       }
     } );
 
-    // TODO expand listener to sync expanding states...
+    /* Add a listener. */
+    m_rightTree.addCheckStateListener( new ICheckStateListener()
+    {
+      @Override
+      public void checkStateChanged( final CheckStateChangedEvent event )
+      {
+        /* Set the check state. */
+        setCheckState( new ExportableTreeItem[] { (ExportableTreeItem) event.getElement() }, false, event.getChecked() );
+
+        /* Update the checked elements. */
+        updateCheckedElements();
+
+        /* Check, if the page can be completed. */
+        checkPageComplete();
+      }
+    } );
+
+    /* Add listeners to synchronize the expanded states. */
+    m_leftTree.addTreeListener( new ExportAndSendTreeViewerListener( m_rightTree ) );
+    m_rightTree.addTreeListener( new ExportAndSendTreeViewerListener( m_leftTree ) );
+
+    /* Add listeners to update the scrolled form. */
+    m_leftTree.addTreeListener( new ExportAndSendUpdateTreeViewerListener( scrolledForm ) );
+    m_rightTree.addTreeListener( new ExportAndSendUpdateTreeViewerListener( scrolledForm ) );
+
+    /* Set the control. */
+    setControl( main );
+
+    /* Update the checked elements. */
+    updateCheckedElements();
+
+    /* Check, if the page can be completed. */
+    checkPageComplete();
+  }
+
+  /**
+   * This function creates one tree viewer.
+   * 
+   * @param parent
+   *          The parent composite.
+   * @param export
+   *          True, if the check state provider should be used for the export tree. False, if the check state provider
+   *          should be used for the send tree.
+   * @param input
+   *          The input.
+   * @return The tree viewer.
+   */
+  private CheckboxTreeViewer createTreeViewer( final Composite parent, final boolean export, final ExportableTreeItem[] input )
+  {
+    final CheckboxTreeViewer viewer = new CheckboxTreeViewer( parent, SWT.BORDER | SWT.NO_SCROLL );
+    viewer.getTree().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
+    viewer.setContentProvider( new ExportableContentProvider() );
+    viewer.setLabelProvider( getLabelProvider( viewer ) );
+    viewer.setCheckStateProvider( new ExportAndSendCheckStateProvider( export ) );
+    viewer.setSorter( new ViewerSorter() );
+    viewer.setInput( input );
 
     return viewer;
   }
@@ -154,7 +219,7 @@ public class ExportAndSendPage extends WizardPage
     return new ExportableLabelProvider( grayedFont, grayedForeground, grayedBackground );
   }
 
-  private void createSelectionButtons( final Composite composite, final CheckboxTreeViewer viewer )
+  private void createSelectionButtons( final Composite composite, final CheckboxTreeViewer viewer, final boolean export )
   {
     final Composite buttonComposite = new Composite( composite, SWT.NONE );
     buttonComposite.setLayout( new GridLayout( 2, false ) );
@@ -166,7 +231,14 @@ public class ExportAndSendPage extends WizardPage
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        handleSelectAll( viewer );
+        /* Set the check state. */
+        handleSelectAll( viewer, export );
+
+        /* Update the checked elements. */
+        updateCheckedElements();
+
+        /* Check, if the page can be completed. */
+        checkPageComplete();
       }
     } );
 
@@ -176,12 +248,19 @@ public class ExportAndSendPage extends WizardPage
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        handleDeselectAll( viewer );
+        /* Set the check state. */
+        handleDeselectAll( viewer, export );
+
+        /* Update the checked elements. */
+        updateCheckedElements();
+
+        /* Check, if the page can be completed. */
+        checkPageComplete();
       }
     } );
   }
 
-  protected Button createButton( final Composite parent, final String label )
+  private Button createButton( final Composite parent, final String label )
   {
     final Button button = new Button( parent, SWT.PUSH );
     button.setText( label );
@@ -191,37 +270,117 @@ public class ExportAndSendPage extends WizardPage
     return button;
   }
 
-  protected void handleSelectAll( final CheckboxTreeViewer viewer )
+  protected void handleSelectAll( final CheckboxTreeViewer viewer, final boolean export )
   {
-    viewer.expandAll();
-
     final ITreeContentProvider contentProvider = (ITreeContentProvider) viewer.getContentProvider();
-    final Object[] items = contentProvider.getElements( viewer.getInput() );
-    for( int i = 0; i < items.length; i++ )
+    final Object[] elements = contentProvider.getElements( viewer.getInput() );
+
+    setCheckState( elements, export, true );
+  }
+
+  protected void handleDeselectAll( final CheckboxTreeViewer viewer, final boolean export )
+  {
+    final ITreeContentProvider contentProvider = (ITreeContentProvider) viewer.getContentProvider();
+    final Object[] elements = contentProvider.getElements( viewer.getInput() );
+
+    setCheckState( elements, export, false );
+  }
+
+  protected void setCheckState( final Object[] elements, final boolean export, final boolean checked )
+  {
+    for( final Object object : elements )
     {
-      final Object item = items[i];
-      viewer.setSubtreeChecked( item, true );
+      final ExportableTreeItem item = (ExportableTreeItem) object;
+
+      if( export )
+        setCheckState( item, checked );
+      else
+        setCheckStateSend( item, checked );
+
+      final ExportableTreeItem[] children = item.getChildren();
+      setCheckState( children, export, checked );
     }
   }
 
-  protected void handleDeselectAll( final CheckboxTreeViewer viewer )
+  private void setCheckState( final ExportableTreeItem item, final boolean checked )
   {
-    viewer.expandAll();
+    item.setChecked( checked );
+    m_leftTree.update( item, null );
+    m_rightTree.update( item, null );
+  }
 
-    final ITreeContentProvider contentProvider = (ITreeContentProvider) viewer.getContentProvider();
-    final Object[] items = contentProvider.getElements( viewer.getInput() );
-    for( int i = 0; i < items.length; i++ )
+  private void setCheckStateSend( final ExportableTreeItem item, final boolean checked )
+  {
+    /* Is the item in the left tree checked? */
+    if( item.isChecked() )
+      item.setCheckedSend( checked );
+    else
     {
-      final Object item = items[i];
-      // TODO Set checkstate for all exportable tree items and update the tree (recursive)...
-      // TODO Use checkstate provider
-      viewer.setSubtreeChecked( item, false );
+      /* SPECIAL CASE: We always set both elements to true. */
+      /* The user sees only the tree states (not the model states). */
+      /* If the element in the left tree is not checked, */
+      /* the right tree will always show this element unchecked to, */
+      /* regardless of the state in the data model. */
+      item.setChecked( true );
+      item.setCheckedSend( true );
+    }
+
+    m_leftTree.update( item, null );
+    m_rightTree.update( item, null );
+  }
+
+  protected void updateCheckedElements( )
+  {
+    final ITreeContentProvider contentProvider = (ITreeContentProvider) m_leftTree.getContentProvider();
+    final Object[] children = contentProvider.getElements( m_leftTree.getInput() );
+
+    final List<Object> checkedElements = new ArrayList<Object>();
+
+    collectCheckedElements( children, checkedElements );
+
+    m_checkedElements = checkedElements.toArray( new Object[] {} );
+  }
+
+  private void collectCheckedElements( final Object[] children, final List<Object> checkedElements )
+  {
+    if( children == null || children.length == 0 )
+      return;
+
+    for( final Object object : children )
+    {
+      final ExportableTreeItem item = (ExportableTreeItem) object;
+      if( item.isChecked() )
+      {
+        checkedElements.add( item );
+        collectCheckedElements( item.getChildren(), checkedElements );
+      }
     }
   }
 
-  public Object[] getCheckedElements( )
+  protected void checkPageComplete( )
   {
-    // Get items from tree...
-    return null;
+    setPageComplete( m_checkedElements != null && m_checkedElements.length > 0 );
+  }
+
+  /**
+   * This function returns the checked elements, which should be exported. It will filter checked and grayed elements.
+   * 
+   * @return The selected elements.
+   */
+  public ExportableTreeItem[] getSelectedElements( )
+  {
+    if( m_checkedElements == null )
+      return new ExportableTreeItem[] {};
+
+    final List<ExportableTreeItem> items = new ArrayList<ExportableTreeItem>();
+
+    for( final Object element : m_checkedElements )
+    {
+      final ExportableTreeItem item = (ExportableTreeItem) element;
+      if( item.isChecked() && !item.isGrayed() )
+        items.add( item );
+    }
+
+    return items.toArray( new ExportableTreeItem[] {} );
   }
 }

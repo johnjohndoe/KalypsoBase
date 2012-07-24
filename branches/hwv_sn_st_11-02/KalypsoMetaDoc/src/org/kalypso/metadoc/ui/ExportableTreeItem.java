@@ -41,7 +41,7 @@
 
 package org.kalypso.metadoc.ui;
 
-import java.util.List;
+import javax.xml.namespace.QName;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.metadoc.IExportableObject;
@@ -55,39 +55,40 @@ public class ExportableTreeItem
 {
   private final String m_label;
 
-  private ExportableTreeItem[] m_children;
+  private final ImageDescriptor m_imageDescriptor;
 
   private final ExportableTreeItem m_parent;
 
   private final IExportableObject m_exportableObject;
 
-  private final boolean m_checked;
+  private boolean m_checked;
 
-  private final boolean m_grayed;
+  private boolean m_grayed;
 
-  private final ImageDescriptor m_imageDescriptor;
+  private boolean m_checkedSend;
+
+  private ExportableTreeItem[] m_children;
 
   public ExportableTreeItem( final String label, final ImageDescriptor imageDescriptor, final ExportableTreeItem parent, final IExportableObject exportableObject, final boolean checked, final boolean grayed )
   {
-    m_imageDescriptor = imageDescriptor;
-    m_exportableObject = exportableObject;
-
     m_label = label;
+    m_imageDescriptor = imageDescriptor;
     m_parent = parent;
+    m_exportableObject = exportableObject;
     m_checked = checked;
     m_grayed = grayed;
-
+    m_checkedSend = false;
     m_children = new ExportableTreeItem[] {};
   }
 
-  public void setChildren( final ExportableTreeItem[] children )
+  public String getLabel( )
   {
-    m_children = children;
+    return m_label;
   }
 
-  public IExportableObject getExportableObject( )
+  public ImageDescriptor getImageDescriptor( )
   {
-    return m_exportableObject;
+    return m_imageDescriptor;
   }
 
   public ExportableTreeItem getParent( )
@@ -95,9 +96,63 @@ public class ExportableTreeItem
     return m_parent;
   }
 
+  public IExportableObject getExportableObject( )
+  {
+    return m_exportableObject;
+  }
+
+  public boolean isChecked( )
+  {
+    return m_checked;
+  }
+
+  public void setChecked( final boolean checked )
+  {
+    m_checked = checked;
+  }
+
+  public boolean isGrayed( )
+  {
+    return m_grayed;
+  }
+
+  public void setGrayedExport( final boolean grayed )
+  {
+    m_grayed = grayed;
+  }
+
+  public boolean isCheckedSend( )
+  {
+    return m_checkedSend;
+  }
+
+  public void setCheckedSend( final boolean checkedSend )
+  {
+    m_checkedSend = checkedSend;
+
+    if( m_exportableObject == null )
+      return;
+
+    if( checkedSend )
+    {
+      m_exportableObject.setProperty( new QName( "org.kalypso.hwv.services.metadoc.psi", "Versenden" ), "1" );
+      m_exportableObject.setProperty( new QName( "org.kalypso.hwv.services.metadoc.psi", "LHWZIntern" ), "0" );
+    }
+    else
+    {
+      m_exportableObject.setProperty( new QName( "org.kalypso.hwv.services.metadoc.psi", "Versenden" ), "0" );
+      m_exportableObject.setProperty( new QName( "org.kalypso.hwv.services.metadoc.psi", "LHWZIntern" ), "1" );
+    }
+  }
+
   public ExportableTreeItem[] getChildren( )
   {
     return m_children;
+  }
+
+  public void setChildren( final ExportableTreeItem[] children )
+  {
+    m_children = children;
   }
 
   /**
@@ -107,34 +162,5 @@ public class ExportableTreeItem
   public String toString( )
   {
     return m_label;
-  }
-
-  public ImageDescriptor getImage( )
-  {
-    return m_imageDescriptor;
-  }
-
-  public boolean isChecked( )
-  {
-    return m_checked;
-  }
-
-  public boolean isGrayed( )
-  {
-    return m_grayed;
-  }
-
-  public static void filterChecked( final ExportableTreeItem[] items, final List<ExportableTreeItem> checkedItems, final List<ExportableTreeItem> grayedItems )
-  {
-    for( final ExportableTreeItem item : items )
-    {
-      if( item.isChecked() )
-        checkedItems.add( item );
-
-      if( item.isGrayed() )
-        grayedItems.add( item );
-
-      filterChecked( item.getChildren(), checkedItems, grayedItems );
-    }
   }
 }
