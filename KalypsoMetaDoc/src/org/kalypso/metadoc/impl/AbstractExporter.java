@@ -73,7 +73,7 @@ public abstract class AbstractExporter implements IExporter
    *      java.lang.String, java.lang.Object)
    */
   @Override
-  public final void setInitializationData( final IConfigurationElement config, final String propertyName, Object data )
+  public final void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
     m_name = config.getAttribute( "name" );
     m_desc = config.getAttribute( "description" );
@@ -183,6 +183,4 @@ public abstract class AbstractExporter implements IExporter
   {
     return FileUtilities.validateName( documentName, "_" );
   }
-
-  
 }

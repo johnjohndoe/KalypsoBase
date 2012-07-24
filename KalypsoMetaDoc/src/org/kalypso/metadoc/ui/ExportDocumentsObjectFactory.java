@@ -74,7 +74,7 @@ public class ExportDocumentsObjectFactory implements IExportableObjectFactory
   @Override
   public IExportableObject[] createExportableObjects( final Configuration configuration )
   {
-    final Object[] checkedElements = m_page.getCheckedElements();
+    final Object[] checkedElements = m_page.getSelectedElements();
     final List<IExportableObject> result = new ArrayList<IExportableObject>( checkedElements.length );
     for( final Object object : checkedElements )
     {
