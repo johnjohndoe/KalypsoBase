@@ -90,11 +90,6 @@ public class ZmlDiagramLayerListener extends AbstractLayerManagerEventListener
   }
 
   @Override
-  public void onLayerMoved( final IChartLayer layer )
-  {
-  }
-
-  @Override
   public void onLayerVisibilityChanged( final IChartLayer layer )
   {
     reschedule();
@@ -105,11 +100,6 @@ public class ZmlDiagramLayerListener extends AbstractLayerManagerEventListener
   {
     if( type == ContentChangeType.all )
       reschedule();
-  }
-
-  @Override
-  public void onActivLayerChanged( final IChartLayer layer )
-  {
   }
 
   public void reschedule( )

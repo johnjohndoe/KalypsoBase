@@ -51,10 +51,10 @@ public class ExtendedAxisRenderer extends AbstractGenericAxisRenderer
 
   public Point calcTickLabelSize( final IAxis axis )
   {
-
     final IDataRange<Number> range = axis.getNumericRange();
     if( range.getMin() == null || range.getMax() == null )
       return new Point( 0, 0 );
+
     final String logicalfrom = getLabelCreator().getLabel( range.getMin(), range );
     final String logicalto = getLabelCreator().getLabel( range.getMax(), range );
     final IChartLabelRenderer labelRenderer = getTickLabelRenderer();

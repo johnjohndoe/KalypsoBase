@@ -53,7 +53,6 @@ import de.openali.odysseus.chart.framework.model.mapper.registry.IAxisVisitor;
  */
 public class ZoomInVisitor implements IAxisVisitor
 {
-
   private final Point m_start;
 
   private final Point m_end;
@@ -64,9 +63,6 @@ public class ZoomInVisitor implements IAxisVisitor
     m_end = end;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.mapper.registry.IAxisVisitor#visit(de.openali.odysseus.chart.framework.model.mapper.IAxis)
-   */
   @Override
   public void visit( final IAxis axis )
   {

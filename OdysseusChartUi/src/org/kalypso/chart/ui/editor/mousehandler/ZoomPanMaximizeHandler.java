@@ -122,9 +122,6 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
     return -1;
   }
 
-  /**
-   * @see org.eclipse.swt.events.MouseMoveListener#mouseMove(org.eclipse.swt.events.MouseEvent)
-   */
   @Override
   public void mouseMove( final MouseEvent e )
   {

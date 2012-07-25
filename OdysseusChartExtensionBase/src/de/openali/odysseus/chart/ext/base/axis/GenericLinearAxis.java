@@ -40,12 +40,11 @@ public class GenericLinearAxis extends AbstractAxis
     final IDataRange<Number> dataRange = getNumericRange();
 
     if( dataRange.getMax() == null || dataRange.getMin() == null )
-      return Double.NaN;
+      return null;
+
     final double r = dataRange.getMax().doubleValue() - dataRange.getMin().doubleValue();
 
-    final double logical = value * r + dataRange.getMin().doubleValue();
-
-    return logical;
+    return value * r + dataRange.getMin().doubleValue();
   }
 
   /**
