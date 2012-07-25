@@ -51,13 +51,9 @@ public class ZoomPanMaximizeCommandHandler extends AbstractHandler implements IE
     return DIRECTION.getDirection( parameter );
   }
 
-  /**
-   * @see org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.menus.UIElement, java.util.Map)
-   */
   @Override
   public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
   {
     ElementUpdateHelper.updateElement( element, ZoomPanMaximizeHandler.class );
   }
-
 }

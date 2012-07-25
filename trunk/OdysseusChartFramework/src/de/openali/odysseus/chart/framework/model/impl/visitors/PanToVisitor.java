@@ -42,6 +42,7 @@ package de.openali.odysseus.chart.framework.model.impl.visitors;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.graphics.Point;
+import org.kalypso.commons.java.lang.Objects;
 
 import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -92,6 +93,10 @@ public class PanToVisitor implements IAxisVisitor
       nowNum = axis.screenToNumeric( m_end.y );
       startNum = axis.screenToNumeric( m_start.y );
     }
+
+    if( Objects.isNull( nowNum, startNum ) )
+      return;
+
     final double diff = nowNum.doubleValue() - startNum.doubleValue();
     if( Double.isNaN( diff ) )
       return;

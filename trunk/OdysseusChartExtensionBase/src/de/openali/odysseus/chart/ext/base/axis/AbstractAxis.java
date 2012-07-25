@@ -223,6 +223,7 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
   {
     if( m_height == height )
       return;
+
     m_height = height;
 
     fireMapperChanged( this );
@@ -233,6 +234,7 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
   {
     if( visible == m_visible )
       return;
+
     m_visible = visible;
 
     fireMapperChanged( this );

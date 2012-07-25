@@ -64,7 +64,7 @@ import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 /**
  * Class for charts inserted as tabs into the chart feature control; this has to be isolated in a seperate class as each
  * IChartPart can only return one ChartComposite and one ChartDragHandler
- * 
+ *
  * @author burtscher1
  */
 public class ChartTabItem extends Composite implements IChartPart
@@ -72,6 +72,10 @@ public class ChartTabItem extends Composite implements IChartPart
   private final ChartImageComposite m_chartComposite;
 
   private final EmbeddedSourceToolbarManager m_sourceManager;
+
+  private final IChartModel m_chartModel;
+
+  // private final ZmlDiagramLayerListener m_layerManagerListener;
 
   public ChartTabItem( final String featureKeyName, final Feature feature, final Composite parent, final int style, final Map<String, Integer> commands )
   {
@@ -82,11 +86,18 @@ public class ChartTabItem extends Composite implements IChartPart
     final ToolBarManager manager = new ToolBarManager( SWT.HORIZONTAL | SWT.FLAT );
     final ToolBar toolBar = manager.createControl( this );
 
-    final IChartModel chartModel = new ChartModel();
-    // remember the feature from the feature control
-    chartModel.setData( featureKeyName, feature );
+    m_chartModel = new ChartModel();
 
-    m_chartComposite = new ChartImageComposite( this, SWT.BORDER, chartModel, new RGB( 255, 255, 255 ) );
+    // FIXME: only works for zml layers... -> we need a beeter concept
+    // m_layerManagerListener = new ZmlDiagramLayerListener( m_chartModel );
+    // m_chartModel.getLayerManager().getEventHandler().addListener( m_layerManagerListener );
+
+    m_chartModel.dispose();
+
+    // remember the feature from the feature control
+    m_chartModel.setData( featureKeyName, feature );
+
+    m_chartComposite = new ChartImageComposite( this, SWT.BORDER, m_chartModel, new RGB( 255, 255, 255 ) );
     m_chartComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     final IWorkbench sourceLocator = PlatformUI.getWorkbench();
@@ -113,8 +124,9 @@ public class ChartTabItem extends Composite implements IChartPart
     m_sourceManager.dispose();
 
     if( m_chartComposite != null && !m_chartComposite.isDisposed() )
-    {
       m_chartComposite.dispose();
-    }
+
+    // m_chartModel.getLayerManager().getEventHandler().removeListener( m_layerManagerListener );
+    m_chartModel.dispose();
   }
 }
