@@ -15,11 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- * 
+ *
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -50,9 +50,8 @@ import org.kalypsodeegree.model.geometry.IPlainGridVisitable;
 import org.kalypsodeegree.model.geometry.IPlainGridVisitor;
 
 /**
+ * FIXME: Does NOT belong in KalypsoDeegree plugin, this is specialized code for 1d2d.<br/>
  * Provide display mechanism for wind data models
- * 
- * @author
  */
 public class GridVisitableDisplayElement<P extends GM_Curve> implements DisplayElementDecorator
 {
@@ -76,6 +75,7 @@ public class GridVisitableDisplayElement<P extends GM_Curve> implements DisplayE
   public GridVisitableDisplayElement( final Feature feature, final IPlainGridVisitable<P> gridVisitable, final IGridVisitorFactory<P> visitorFactory )
   {
     m_visitorFactory = visitorFactory;
+
     Assert.isNotNull( gridVisitable, "GridVisitableDisplayElement" ); //$NON-NLS-1$
 
     m_feature = feature;
@@ -83,18 +83,12 @@ public class GridVisitableDisplayElement<P extends GM_Curve> implements DisplayE
     m_plainGridVisitable = gridVisitable;
   }
 
-  /**
-   * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#getFeature()
-   */
   @Override
   public Feature getFeature( )
   {
     return m_feature;
   }
 
-  /**
-   * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#isHighlighted()
-   */
   @Override
   public boolean isHighlighted( )
   {
@@ -108,9 +102,6 @@ public class GridVisitableDisplayElement<P extends GM_Curve> implements DisplayE
     }
   }
 
-  /**
-   * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#isSelected()
-   */
   @Override
   public boolean isSelected( )
   {
@@ -124,9 +115,6 @@ public class GridVisitableDisplayElement<P extends GM_Curve> implements DisplayE
     }
   }
 
-  /**
-   * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#setHighlighted(boolean)
-   */
   @Override
   public void setHighlighted( final boolean highlighted )
   {
@@ -136,9 +124,6 @@ public class GridVisitableDisplayElement<P extends GM_Curve> implements DisplayE
     this.m_isHighlighted = highlighted;
   }
 
-  /**
-   * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#setSelected(boolean)
-   */
   @Override
   public void setSelected( final boolean selected )
   {
@@ -169,22 +154,15 @@ public class GridVisitableDisplayElement<P extends GM_Curve> implements DisplayE
     }
   }
 
-  /**
-   * @see org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator#getDecorated()
-   */
   @Override
   public DisplayElement getDecorated( )
   {
     return m_decorated;
   }
 
-  /**
-   * @see org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator#setDecorated(org.kalypsodeegree.graphics.displayelements.DisplayElement)
-   */
   @Override
   public void setDecorated( final DisplayElement decorated )
   {
     m_decorated = decorated;
   }
-
 }
