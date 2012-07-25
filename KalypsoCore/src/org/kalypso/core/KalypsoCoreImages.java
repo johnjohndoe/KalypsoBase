@@ -59,7 +59,8 @@ public final class KalypsoCoreImages
     STATUS_IMAGE_OK("icons/status/ok.gif"), //$NON-NLS-1$
     STATUS_IMAGE_OK_32("icons/status/ok_32.png"), //$NON-NLS-1$
     STATUS_COPY_CLIPBOARD("icons/status/paste_clipboard.gif"), //$NON-NLS-1$
-    STATUS_EMAIL("icons/status/email.png"); //$NON-NLS-1$
+    STATUS_EMAIL("icons/status/email.png"), //$NON-NLS-1$
+    OPEN_STATUS_LOG_ACTION("icons/status/openStatusLogAction.gif"); //$NON-NLS-1$
 
     private final String m_imagePath;
 
@@ -78,13 +79,18 @@ public final class KalypsoCoreImages
     }
   }
 
-  public static ImageDescriptor id( final String pluginID, final String location )
+  public static final ImageDescriptor id( final DESCRIPTORS key )
   {
-    return AbstractUIPlugin.imageDescriptorFromPlugin( pluginID, location );
+    return id( key.getImagePath() );
   }
 
-  public static ImageDescriptor id( final String location )
+  public static final ImageDescriptor id( final String location )
   {
-    return KalypsoCoreImages.id( "org.kalypso.core", location ); //$NON-NLS-1$
+    return id( KalypsoCorePlugin.getID(), location );
+  }
+
+  public static final ImageDescriptor id( final String pluginID, final String location )
+  {
+    return AbstractUIPlugin.imageDescriptorFromPlugin( pluginID, location );
   }
 }
