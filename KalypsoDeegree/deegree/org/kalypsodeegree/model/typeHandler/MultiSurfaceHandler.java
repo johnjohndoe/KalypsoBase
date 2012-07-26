@@ -51,7 +51,6 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree_impl.io.sax.marshaller.MultiSurfaceMarshaller;
 import org.kalypsodeegree_impl.io.sax.parser.MultiSurfaceContentHandler;
-import org.kalypsodeegree_impl.tools.GMLConstants;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
@@ -60,7 +59,7 @@ import org.xml.sax.XMLReader;
  */
 public class MultiSurfaceHandler implements IMarshallingTypeHandler2
 {
-  private static final QName QNAME_TYPE = GMLConstants.QN_MULTI_SURFACE;
+  private static final QName QNAME_TYPE = GM_MultiSurface.MULTI_SURFACE_ELEMENT;
 
   @Override
   public IGmlContentHandler createContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final UnmarshallResultEater resultEater )
