@@ -40,43 +40,96 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.mapmodel.visitor;
 
-import java.util.Arrays;
-
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
-import org.kalypsodeegree_impl.tools.GMLConstants;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_MultiCurve;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * @author Thomas Jung
  */
 public class LineThemePredicater implements IKalypsoThemePredicate
 {
-  private static final QName[] ACCEPTED_GEOMETRIES = new QName[] { GMLConstants.QN_MULTI_LINE_STRING, GMLConstants.QN_LINE_STRING };
+  private static final QName[] ACCEPTED_GEOMETRIES = new QName[] { GM_Curve.CURVE_ELEMENT, GM_MultiCurve.MULTI_CURVE_ELEMENT };
 
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate#decide(org.kalypso.ogc.gml.IKalypsoTheme)
-   */
   @Override
   public boolean decide( final IKalypsoTheme theme )
   {
-    if( theme instanceof IKalypsoFeatureTheme )
-    {
-      final IKalypsoFeatureTheme fTheme = (IKalypsoFeatureTheme) theme;
-      final IFeatureType featureType = fTheme.getFeatureType();
-      if( featureType == null )
-        return false;
+    if( !(theme instanceof IKalypsoFeatureTheme) )
+      return false;
 
-      final IValuePropertyType[] allGeomtryProperties = featureType.getAllGeomteryProperties();
-      if( allGeomtryProperties.length > 0 && Arrays.asList( ACCEPTED_GEOMETRIES ).contains( allGeomtryProperties[0].getValueQName() ) )
-        return true;
-    }
-    return false;
+    final IKalypsoFeatureTheme fTheme = (IKalypsoFeatureTheme) theme;
+    final IFeatureType featureType = fTheme.getFeatureType();
 
+    final FeatureList featureList = fTheme.getFeatureList();
+    if( featureList == null || featureType == null )
+      return false;
+
+    /* First check via feature type */
+    if( hasAcceptedProperty( featureType ) )
+      return true;
+
+    /*
+     * Feature type check is not enough, we can have single features that still contain line, even if the list type is
+     * more general
+     */
+    return hasLineElements( featureList );
   }
 
+
+  private boolean hasLineElements( final FeatureList featureList )
+  {
+    final Feature owner = featureList.getOwner();
+    if( owner == null )
+    {
+      /*
+       * This only happens, if the theme contains a singleton feature. In that case, the first type check was already
+       * enough
+       */
+      return false;
+    }
+
+    final GMLWorkspace workspace = owner.getWorkspace();
+
+    int count = 0;
+
+    for( final Object element : featureList )
+    {
+      final Feature feature = FeatureHelper.getFeature( workspace, element );
+      if( feature != null )
+      {
+        final IFeatureType featureType = feature.getFeatureType();
+        if( hasAcceptedProperty( featureType ) )
+          return true;
+      }
+
+      /* look at maximal 1000 elements, if those have no line, we can assume no one has a line */
+      if( count++ > 1000 )
+        return false;
+    }
+
+    return false;
+  }
+
+  private boolean hasAcceptedProperty( final IFeatureType featureType )
+  {
+    final IValuePropertyType[] allGeomtryProperties = featureType.getAllGeometryProperties();
+    for( final IValuePropertyType vpt : allGeomtryProperties )
+    {
+      if( ArrayUtils.contains( ACCEPTED_GEOMETRIES, vpt.getValueQName() ) )
+        return true;
+    }
+
+    return false;
+  }
 }
