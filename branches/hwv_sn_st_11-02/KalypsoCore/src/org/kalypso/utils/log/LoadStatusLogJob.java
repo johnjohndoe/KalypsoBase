@@ -63,13 +63,16 @@ public class LoadStatusLogJob extends Job
 {
   private final IFile m_statusLogFile;
 
+  private final String m_statuslabel;
+
   private IStatus m_statusLog;
 
-  public LoadStatusLogJob( final IFile statusLogFile )
+  public LoadStatusLogJob( final IFile statusLogFile, final String statusLabel )
   {
     super( String.format( "Loading log file '%s'", statusLogFile.getName() ) );
 
     m_statusLogFile = statusLogFile;
+    m_statuslabel = statusLabel == null ? "Status log" : statusLabel;
 
     setUser( false );
     setPriority( Job.LONG );
@@ -93,7 +96,11 @@ public class LoadStatusLogJob extends Job
   {
     try
     {
-      /* Get the file. */
+      /* Was the status log file provided? */
+      if( m_statusLogFile == null )
+        throw new IllegalArgumentException( "No log file given..." );
+
+      /* Get the status log file. */
       final File statusLogFile = m_statusLogFile.getLocation().toFile();
 
       /* Check if the status log file exists. */
@@ -134,7 +141,7 @@ public class LoadStatusLogJob extends Job
     for( final IGeoStatus geoStatus : stati )
       results.add( geoStatus );
 
-    return results.asMultiStatus( "Status log" );
+    return results.asMultiStatus( m_statuslabel );
   }
 
   public IFile getStatusLogFile( )
