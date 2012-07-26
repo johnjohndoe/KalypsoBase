@@ -193,7 +193,6 @@ public class WorkflowControl implements IWorklistChangeListener, ITaskExecutionL
         if( workflow != null && activeTask != null )
           selectTask( workflow, activeTask );
 
-        // TODO: heavy: alwys refresh complete tree?
         if( previouslyActive != null )
           treeViewer.update( previouslyActive, null );
 

@@ -45,9 +45,9 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import de.renew.workflow.base.ITask;
+import de.renew.workflow.base.ITaskGroup;
 import de.renew.workflow.base.IWorkflow;
 import de.renew.workflow.base.Task;
-import de.renew.workflow.base.TaskGroup;
 import de.renew.workflow.base.Workflow;
 import de.renew.workflow.utils.ScenarioConfiguration;
 
@@ -83,7 +83,8 @@ public class Workflow_Impl extends TaskGroup_Impl implements IWorkflow
     m_scenarioConfiguration = scenarioConfiguration;
 
     final Task defaultTask = workflow.getDefaultTask();
-    m_defaultTask = defaultTask == null ? null : new Task_Impl( defaultTask, this );
+    if( defaultTask != null )
+      changeDefaultTask( defaultTask.getURI() );
   }
 
   @Override
@@ -111,38 +112,29 @@ public class Workflow_Impl extends TaskGroup_Impl implements IWorkflow
   }
 
   @Override
-  public void setDefaultTask( final ITask task )
+  public synchronized void changeDefaultTask( final String uri )
   {
-    m_defaultTask = task;
+    final ITask defaultTask = findDefaultTask( this, uri );
+    m_defaultTask = defaultTask;
   }
 
-  @Override
-  public synchronized void setDefaultTask( final String uri )
+  private ITask findDefaultTask( final ITask task, final String uri )
   {
-    final TaskGroup workflow = (TaskGroup) getTask();
-    final List<Task> tasks = workflow.getTasks();
+    if( task.getURI().equals( uri ) )
+      return task;
 
-    setDefaultTask( tasks.toArray( new Task[] {} ), uri );
-  }
-
-  private synchronized void setDefaultTask( final Task[] tasks, final String uri )
-  {
-    for( final Task task : tasks )
+    if( task instanceof ITaskGroup )
     {
-      if( task instanceof TaskGroup )
+      final List<ITask> children = ((ITaskGroup) task).getTasks();
+      for( final ITask child : children )
       {
-        final TaskGroup group = (TaskGroup) task;
-        final List<Task> myTasks = group.getTasks();
-
-        setDefaultTask( myTasks.toArray( new Task[] {} ), uri );
-      }
-
-      if( task.getURI().equals( uri ) )
-      {
-        m_defaultTask = new Task_Impl( task, this );
-        return;
+        final ITask childDefaultTask = findDefaultTask( child, uri );
+        if( childDefaultTask != null )
+          return childDefaultTask;
       }
     }
+
+    return null;
   }
 
   @Override
