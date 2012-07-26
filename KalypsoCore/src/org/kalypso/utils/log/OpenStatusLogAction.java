@@ -195,7 +195,7 @@ public class OpenStatusLogAction extends Action implements IUpdateable
     } );
   }
 
-  private void handleResourceChanged( final IResourceChangeEvent event )
+  protected void handleResourceChanged( final IResourceChangeEvent event )
   {
     if( m_statusLogFile == null )
       return;
