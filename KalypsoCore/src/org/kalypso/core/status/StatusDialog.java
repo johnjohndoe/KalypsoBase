@@ -60,6 +60,7 @@ import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.Section;
+import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
 
 /**
  * A dialog showing a status in full details.<br>
@@ -78,6 +79,16 @@ public class StatusDialog extends AbstractStatusDialog
   private final Collection<IAction> m_actions = new ArrayList<IAction>();
 
   private boolean m_showAsTree = true;
+
+  /**
+   * Show the {@link StatusDialog} from a non swt thread.
+   */
+  public static void openInSwtThread( final IStatus status, final String title )
+  {
+    final Shell shell = SWT_AWT_Utilities.findActiveShell();
+    final StatusDialog statusDialog = new StatusDialog( shell, status, title );
+    SWT_AWT_Utilities.openSwtWindow( statusDialog );
+  }
 
   public static void open( final Shell parentShell, final IStatus status, final String dialogTitle )
   {
