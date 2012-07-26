@@ -40,20 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.afgui.internal;
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.internal.i18n.Messages;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.core.status.StatusDialog;
 
 import de.renew.workflow.base.ITask;
 import de.renew.workflow.connector.cases.IScenarioDataProvider;
@@ -68,64 +66,63 @@ public class TaskExecutionAuthority implements ITaskExecutionAuthority
   public boolean canStopTask( final ITask task )
   {
     final IScenarioDataProvider dataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
-    // TODO: Is this okay? Could there be situations, where the data provider is missing?
-    if( dataProvider == null )
-      return true;
 
     // check if any model is dirty
     if( !dataProvider.isDirty() )
       return true;
 
     final Shell activeShell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-    final MessageDialog confirmDialog = new MessageDialog( null, Messages.getString( "org.kalypso.afgui.scenarios.TaskExecutionAuthority.0" ), null, Messages.getString( "org.kalypso.afgui.scenarios.TaskExecutionAuthority.1" ), MessageDialog.QUESTION, new String[] { //$NON-NLS-1$ //$NON-NLS-2$
-      Messages.getString( "org.kalypso.afgui.scenarios.TaskExecutionAuthority.2" ), Messages.getString( "org.kalypso.afgui.scenarios.TaskExecutionAuthority.3" ), Messages.getString( "org.kalypso.afgui.scenarios.TaskExecutionAuthority.4" ) }, 1 ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    final boolean result;
+    final String[] dialogButtonLabels = new String[] { Messages.getString( "org.kalypso.afgui.scenarios.TaskExecutionAuthority.2" ), //$NON-NLS-1$
+        Messages.getString( "org.kalypso.afgui.scenarios.TaskExecutionAuthority.3" ), //$NON-NLS-1$
+        Messages.getString( "org.kalypso.afgui.scenarios.TaskExecutionAuthority.4" ) //$NON-NLS-1$
+    };
+
+    final String dialogTitle = Messages.getString( "org.kalypso.afgui.scenarios.TaskExecutionAuthority.0" ); //$NON-NLS-1$
+    final String dialogMessage = Messages.getString( "org.kalypso.afgui.scenarios.TaskExecutionAuthority.1" ); //$NON-NLS-1$
+
+    final MessageDialog confirmDialog = new MessageDialog( null, dialogTitle, null, dialogMessage, MessageDialog.QUESTION, dialogButtonLabels, 2 );
+
     final int decision = confirmDialog.open();
-    if( decision == 0 )
+    if( decision != 0 && decision != 1 )
+      return false;
+
+    final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
     {
-      try
+      @Override
+      public IStatus execute( final IProgressMonitor monitor ) throws CoreException
       {
-        final IRunnableWithProgress op = new IRunnableWithProgress()
+        switch( decision )
         {
-          @Override
-          public void run( final IProgressMonitor monitor ) throws InvocationTargetException
-          {
-            try
+          case 0:
+            dataProvider.saveModel( monitor );
+            break;
+
+          case 1:
+            if( PlatformUI.getWorkbench().isClosing() )
             {
-              dataProvider.saveModel( monitor );
+              /* clear dirty state, so kalypso won't ask for saving the gml files and just releases them */
+              dataProvider.resetDirty();
             }
-            catch( final CoreException e )
+            else
             {
-              throw new InvocationTargetException( e );
+              // reload model and thus dischard changes
+              dataProvider.reloadModel();
             }
-          }
-        };
-        new ProgressMonitorDialog( activeShell ).run( true, true, op );
+            break;
+        }
+        return Status.OK_STATUS;
       }
-      catch( final InvocationTargetException e )
-      {
-        final IStatus status = StatusUtilities.statusFromThrowable( e );
-        ErrorDialog.openError( activeShell, Messages.getString( "org.kalypso.afgui.scenarios.TaskExecutionAuthority.5" ), Messages.getString( "org.kalypso.afgui.scenarios.TaskExecutionAuthority.6" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
-        KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
-      }
-      catch( final InterruptedException e )
-      {
-        // TODO handle cancelation
-      }
-      result = true;
-    }
-    else if( decision == 1 )
+    };
+
+    final IStatus status = ProgressUtilities.busyCursorWhile( op );
+
+    if( !status.isOK() )
     {
-      // discard changes, reload model
-      dataProvider.reloadModel();
-      result = true;
-    }
-    else
-    {
-      result = false;
+      StatusDialog.open( activeShell, status, dialogTitle );
+
+      KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
     }
 
-    return result;
+    return true;
   }
-
 }

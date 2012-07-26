@@ -176,9 +176,9 @@ public class TaskExecutor implements ITaskExecutor
 
     final ITask oldTask = m_activeTask;
 
-    if( task instanceof ITaskGroup )
-      m_activeTask = null;
-    else
+    // if( task instanceof ITaskGroup )
+    // m_activeTask = null;
+    // else
       m_activeTask = task;
 
     /* Tell the listeners, that the task was executed. */

@@ -6,6 +6,7 @@ package org.kalypso.afgui.internal;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -54,7 +55,7 @@ import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 /**
  * Objects of this class are responsible for loading the gml-workspaces for the current selected simulation model and
  * provide them to the commands.
- * 
+ *
  * @author Gernot Belger
  */
 public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPoster
@@ -231,13 +232,11 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
   }
 
   /**
-   * Reloads all models.
-   * 
-   * @see de.renew.workflow.connector.cases.ICaseDataProvider#reloadModel()
+   * Find all pool key-infos for our currently held data models.
    */
-  @Override
-  public void reloadModel( )
+  private KeyInfo[] findKeyInfos( )
   {
+    final Collection<KeyInfo> result = new ArrayList<>();
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
 
     final ScenarioDataPoolListener[] keys;
@@ -251,13 +250,37 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
     {
       final KeyInfo keyInfo = pool.getInfoForKey( listener.getKey() );
       if( keyInfo != null )
-        keyInfo.reload();
+        result.add( keyInfo );
     }
+
+    return result.toArray( new KeyInfo[result.size()] );
+  }
+
+  /**
+   * Reloads all models.
+   */
+  @Override
+  public void reloadModel( )
+  {
+    final KeyInfo[] infos = findKeyInfos();
+    for( final KeyInfo info : infos )
+      info.reload();
+  }
+
+  /**
+   * Resets the dirty state of all data models. Only used internally, when the model should be released during platform
+   * shutdown.
+   */
+  public void resetDirty( )
+  {
+    final KeyInfo[] infos = findKeyInfos();
+    for( final KeyInfo info : infos )
+      info.setDirty( false );
   }
 
   /**
    * Resets the pool-key for the given folder.
-   * 
+   *
    * @param szenarioFolder
    *          If <code>null</code>, just releases the existing key.
    */
