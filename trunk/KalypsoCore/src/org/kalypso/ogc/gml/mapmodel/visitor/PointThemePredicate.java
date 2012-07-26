@@ -59,9 +59,6 @@ public class PointThemePredicate extends LineThemePredicater implements IKalypso
 {
   private static final QName[] ACCEPTED_GEOMETRIES = new QName[] { GM_MultiPoint.MULTI_POINT_ELEMENT, GM_Point.POINT_ELEMENT };
 
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate#decide(org.kalypso.ogc.gml.IKalypsoTheme)
-   */
   @Override
   public boolean decide( final IKalypsoTheme theme )
   {
@@ -72,7 +69,7 @@ public class PointThemePredicate extends LineThemePredicater implements IKalypso
       if( featureType == null )
         return false;
 
-      final IValuePropertyType[] allGeomtryProperties = featureType.getAllGeomteryProperties();
+      final IValuePropertyType[] allGeomtryProperties = featureType.getAllGeometryProperties();
       if( allGeomtryProperties.length > 0 && Arrays.asList( ACCEPTED_GEOMETRIES ).contains( allGeomtryProperties[0].getValueQName() ) )
         return true;
     }

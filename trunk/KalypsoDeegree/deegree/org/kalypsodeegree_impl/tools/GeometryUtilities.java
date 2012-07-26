@@ -679,7 +679,7 @@ public final class GeometryUtilities
   public static IValuePropertyType findGeometryProperty( final IFeatureType featureType, final Class< ? > aPreferedGeometryClass )
   {
     final QName defaultGeometryPropertyQName = new QName( NS.GML3, "location" );
-    final IValuePropertyType[] allGeomteryProperties = featureType.getAllGeomteryProperties();
+    final IValuePropertyType[] allGeomteryProperties = featureType.getAllGeometryProperties();
 
     IValuePropertyType geometryProperty = null;
     for( final IValuePropertyType property : allGeomteryProperties )
@@ -832,7 +832,7 @@ public final class GeometryUtilities
 
     if( geomQNames == null )
     {
-      final IValuePropertyType[] properties = feature.getFeatureType().getAllGeomteryProperties();
+      final IValuePropertyType[] properties = feature.getFeatureType().getAllGeometryProperties();
       return toQNames( properties );
     }
 

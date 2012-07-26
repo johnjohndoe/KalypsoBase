@@ -140,7 +140,7 @@ public class GeometryValue<S extends Symbolizer> extends InputWithContextObserva
     if( featureType == null )
       return null;
 
-    final IPropertyType[] geometryProperties = featureType.getAllGeomteryProperties();
+    final IPropertyType[] geometryProperties = featureType.getAllGeometryProperties();
     final QName[] comboInput = new QName[geometryProperties.length + 1];
     comboInput[0] = ELEMENT_NOT_SET;
     for( int i = 0; i < geometryProperties.length; i++ )

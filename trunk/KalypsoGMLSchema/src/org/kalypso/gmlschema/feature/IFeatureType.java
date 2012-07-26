@@ -99,7 +99,7 @@ public interface IFeatureType extends IInitialize
    * 
    * @return all geometry properties including the ones are array
    */
-  public IValuePropertyType[] getAllGeomteryProperties( );
+  public IValuePropertyType[] getAllGeometryProperties( );
 
   /**
    * To get the default geometry. This method may return a virtual function geometry property as default geometry

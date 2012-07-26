@@ -68,7 +68,7 @@ public class PolygonHandlesProvider implements IHandlesProvider
   {
     final ArrayList<IHandle> list = new ArrayList<IHandle>();
 
-    final IValuePropertyType[] allGeomteryProperties = feature.getFeatureType().getAllGeomteryProperties();
+    final IValuePropertyType[] allGeomteryProperties = feature.getFeatureType().getAllGeometryProperties();
 
     for( final IValuePropertyType geoVpt : allGeomteryProperties )
     {

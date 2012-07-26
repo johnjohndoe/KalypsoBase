@@ -65,7 +65,7 @@ public class PointHandlesProvider implements IHandlesProvider
   {
     final ArrayList<IHandle> list = new ArrayList<IHandle>();
 
-    final IValuePropertyType[] allGeomteryProperties = feature.getFeatureType().getAllGeomteryProperties();
+    final IValuePropertyType[] allGeomteryProperties = feature.getFeatureType().getAllGeometryProperties();
     for( final IValuePropertyType type : allGeomteryProperties )
     {
       final GM_Object object = (GM_Object) feature.getProperty( type );

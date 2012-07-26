@@ -85,7 +85,7 @@ public class NewFeatureHandler extends AbstractHandler implements IHandler
     {
       if( ft.getQName().toString().equals( parameterFeatureType ) )
       {
-        final IValuePropertyType[] allGeomteryProperties = ft.getAllGeomteryProperties();
+        final IValuePropertyType[] allGeomteryProperties = ft.getAllGeometryProperties();
         final List<QName> geomPropertiesQName = new ArrayList<QName>();
 
         for( final IValuePropertyType prop : allGeomteryProperties )

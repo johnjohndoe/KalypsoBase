@@ -583,7 +583,7 @@ public class GMLSchemaUtilities
   public static String[] createFeaturePathes( final IGMLSchema gmlSchma, final String pathToHere, final IFeatureType featureType )
   {
     final List<String> result = new ArrayList<String>();
-    if( featureType.getAllGeomteryProperties().length > 0 )
+    if( featureType.getAllGeometryProperties().length > 0 )
       result.add( pathToHere );
     final IPropertyType[] props = featureType.getProperties();
     for( final IPropertyType pt : props )
@@ -598,7 +598,7 @@ public class GMLSchemaUtilities
 
         for( final IFeatureType type : targetFeatureTypes )
         {
-          if( rt.isList() && type.getAllGeomteryProperties().length > 0 )
+          if( rt.isList() && type.getAllGeometryProperties().length > 0 )
             result.add( newPath + "[" + type.getQName().getLocalPart() + "]" ); //$NON-NLS-1$ //$NON-NLS-2$
           // final String[] strings = createFeaturePathes( gmlSchma, newPath + "[" + type.getQName().getLocalPart() +
           // "]", type );

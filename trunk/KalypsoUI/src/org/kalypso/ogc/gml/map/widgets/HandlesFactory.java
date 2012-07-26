@@ -75,7 +75,7 @@ public class HandlesFactory
 
   private static List<Handle> createHandles( final Feature feature, final List<Handle> collector, final GM_Envelope envelope )
   {
-    final IValuePropertyType[] geometryProperties = feature.getFeatureType().getAllGeomteryProperties();
+    final IValuePropertyType[] geometryProperties = feature.getFeatureType().getAllGeometryProperties();
     for( final IValuePropertyType propType : geometryProperties )
     {
       final GM_Object geometry = (GM_Object) feature.getProperty( propType );

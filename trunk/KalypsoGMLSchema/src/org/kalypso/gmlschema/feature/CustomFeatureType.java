@@ -245,7 +245,7 @@ public class CustomFeatureType extends QualifiedElement implements IFeatureType
    * @see org.kalypso.gmlschema.feature.IFeatureType#getAllGeomteryProperties()
    */
   @Override
-  public IValuePropertyType[] getAllGeomteryProperties( )
+  public IValuePropertyType[] getAllGeometryProperties( )
   {
     return m_allGeometryPTS;
   }
