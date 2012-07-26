@@ -150,7 +150,7 @@ public class AddSymbolizerComposite extends Composite
       }
     } );
 
-    final IValuePropertyType[] geomProperties = m_featureType.getAllGeomteryProperties();
+    final IValuePropertyType[] geomProperties = m_featureType.getAllGeometryProperties();
     geometryChooser.setInput( geomProperties );
 
     geometryChooser.addSelectionChangedListener( new ISelectionChangedListener()

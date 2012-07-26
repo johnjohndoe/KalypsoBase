@@ -274,7 +274,7 @@ public class RuleOrPatternCollection extends AbstractTabList<FeatureTypeStyle>
     final IPropertyType prop = numericProperties[0];
     final PropertyName propertyName = new PropertyName( prop.getQName() );
 
-    final IPropertyType[] geometryProperties = featureType.getAllGeomteryProperties();
+    final IPropertyType[] geometryProperties = featureType.getAllGeometryProperties();
 
     if( geometryProperties.length > 0 )
     {

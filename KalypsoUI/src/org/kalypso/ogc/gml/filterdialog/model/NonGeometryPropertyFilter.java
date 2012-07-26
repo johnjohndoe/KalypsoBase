@@ -61,7 +61,7 @@ public class NonGeometryPropertyFilter extends ViewerFilter
     if( element instanceof IFeatureType )
     {
       final IFeatureType ft = (IFeatureType) element;
-      final IValuePropertyType[] allGeomteryProperties = ft.getAllGeomteryProperties();
+      final IValuePropertyType[] allGeomteryProperties = ft.getAllGeometryProperties();
       if( allGeomteryProperties == null )
         return true;
     }

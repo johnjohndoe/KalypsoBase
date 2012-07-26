@@ -616,7 +616,7 @@ public class SelectFeatureWidget extends DeprecatedMouseWidget
 
   public static GMLXPath[] findGeometryPathes( final IFeatureType targetFeatureType )
   {
-    final IValuePropertyType[] geomProperties = targetFeatureType.getAllGeomteryProperties();
+    final IValuePropertyType[] geomProperties = targetFeatureType.getAllGeometryProperties();
     final GMLXPath[] result = new GMLXPath[geomProperties.length];
     for( int i = 0; i < geomProperties.length; i++ )
       result[i] = new GMLXPath( geomProperties[i].getQName() );
