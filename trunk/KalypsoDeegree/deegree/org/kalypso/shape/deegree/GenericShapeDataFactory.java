@@ -266,12 +266,12 @@ public final class GenericShapeDataFactory
       case POLYLINE:
       case POLYLINEZ:
       case POLYLINEM:
-        return GM_Curve.CURVE_ELEMENT;
+        return GM_MultiCurve.MULTI_CURVE_ELEMENT;
 
       case POLYGON:
       case POLYGONZ:
       case POLYGONM:
-        return GM_Surface.SURFACE_ELEMENT;
+        return GM_MultiSurface.MULTI_SURFACE_ELEMENT;
     }
 
     return GM_Object.GEOMETRY_ELEMENT;
