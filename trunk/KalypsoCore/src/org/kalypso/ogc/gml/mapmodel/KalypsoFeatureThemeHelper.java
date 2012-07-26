@@ -65,6 +65,7 @@ public final class KalypsoFeatureThemeHelper
     final IMapModell mapModell = panel.getMapModell();
     if( mapModell == null )
       return null;
+
     final LineThemePredicater predicate = new LineThemePredicater();
     final KalypsoThemeVisitor visitor = new KalypsoThemeVisitor( predicate );
     mapModell.accept( visitor, FeatureVisitor.DEPTH_INFINITE );
