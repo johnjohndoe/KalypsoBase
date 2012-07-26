@@ -352,10 +352,6 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
     return m_baseMapSchedulingRule;
   }
 
-  /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor,
-   *      org.eclipse.core.resources.IFile)
-   */
   @Override
   protected synchronized void doSaveInternal( final IProgressMonitor monitor, final IFile file ) throws CoreException
   {
