@@ -93,6 +93,8 @@ public interface IScenarioDataProvider
 
   void reloadModel( );
 
+  void resetDirty( );
+
   void setCurrent( IScenario scenario, IProgressMonitor monitor );
 
   CommandableWorkspace getCommandableWorkSpace( String name ) throws IllegalArgumentException, CoreException;
