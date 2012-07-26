@@ -46,7 +46,6 @@ import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree_impl.tools.GMLConstants;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
@@ -57,7 +56,7 @@ import org.xml.sax.XMLReader;
  */
 public class MultiSurfaceMarshaller extends GeometryMarshaller<GM_MultiSurface>
 {
-  public static final String TAG_MULTI_SURFACE = GMLConstants.QN_MULTI_SURFACE.getLocalPart();
+  public static final String TAG_MULTI_SURFACE = GM_MultiSurface.MULTI_SURFACE_ELEMENT.getLocalPart();
 
   public MultiSurfaceMarshaller( final XMLReader reader )
   {

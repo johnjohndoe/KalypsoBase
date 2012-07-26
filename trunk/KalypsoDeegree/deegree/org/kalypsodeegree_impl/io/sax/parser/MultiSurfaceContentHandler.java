@@ -52,7 +52,6 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.io.sax.parser.geometrySpec.MultiSurfaceSpecification;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.tools.GMLConstants;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -65,7 +64,7 @@ import org.xml.sax.XMLReader;
  */
 public class MultiSurfaceContentHandler extends GMLElementContentHandler implements ISurfaceHandler<GM_Polygon>
 {
-  public static final String ELEMENT_MULTI_SURFACE = GMLConstants.QN_MULTI_SURFACE.getLocalPart();
+  public static final String ELEMENT_MULTI_SURFACE = GM_MultiSurface.MULTI_SURFACE_ELEMENT.getLocalPart();
 
   private final List<GM_Surface< ? extends GM_SurfacePatch>> m_surfaces = new ArrayList<GM_Surface< ? extends GM_SurfacePatch>>();
 

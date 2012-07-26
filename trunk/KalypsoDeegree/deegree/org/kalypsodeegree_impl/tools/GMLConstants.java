@@ -69,8 +69,6 @@ public final class GMLConstants
 
   public static final QName QN_MULTI_POLYGON = new QName( NS.GML3, "MultiPolygon" );
 
-  public static final QName QN_MULTI_SURFACE = new QName( NS.GML3, "MultiSurface" );
-
   public static final QName QN_LOCATION = new QName( NS.GML3, "location" );
 
   public static final QName QN_DIRECTION = new QName( NS.GML3, "direction" );
