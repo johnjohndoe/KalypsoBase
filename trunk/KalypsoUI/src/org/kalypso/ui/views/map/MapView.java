@@ -65,7 +65,7 @@ import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
  * <p>
  * Shows a map of all themes. The sources of the themes can be edited.
  * </p>
- * 
+ *
  * @author Stefan Kurzbach
  * @author Gernot Belger
  */
@@ -119,9 +119,6 @@ public class MapView extends AbstractMapPart implements IViewPart, IContentOutli
     }
   }
 
-  /**
-   * @see org.kalypso.ui.editor.mapeditor.AbstractMapPart#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -133,6 +130,8 @@ public class MapView extends AbstractMapPart implements IViewPart, IContentOutli
     {
       try
       {
+        setSaving( true );
+
         final IStorageEditorInput editorInput = getEditorInput();
         if( editorInput instanceof IFileEditorInput )
           doSaveInternal( new NullProgressMonitor(), ((IFileEditorInput) editorInput).getFile() );
@@ -140,6 +139,10 @@ public class MapView extends AbstractMapPart implements IViewPart, IContentOutli
       catch( final CoreException e )
       {
         KalypsoGisPlugin.getDefault().getLog().log( e.getStatus() );
+      }
+      finally
+      {
+        setSaving( false );
       }
     }
 
