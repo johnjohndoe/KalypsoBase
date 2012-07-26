@@ -40,12 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.utils.log;
 
+import java.util.Collection;
+import java.util.LinkedList;
+
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
@@ -60,7 +70,22 @@ import org.kalypso.core.status.StatusDialog;
  */
 public class OpenStatusLogAction extends Action implements IUpdateable
 {
-  private final LoadStatusLogJob m_loadJob;
+  private final IResourceChangeListener m_resourceChangeListener = new IResourceChangeListener()
+  {
+    @Override
+    public void resourceChanged( final IResourceChangeEvent event )
+    {
+      handleResourceChanged( event );
+    }
+  };
+
+  protected final IFile m_statusLogFile;
+
+  private final Collection<IAction> m_actions;
+
+  private final String m_dialogTitle;
+
+  protected final LoadStatusLogJob m_loadJob;
 
   /**
    * @param text
@@ -69,16 +94,19 @@ public class OpenStatusLogAction extends Action implements IUpdateable
    *          The tooltip text.
    * @param statusLogFile
    *          The status log file.
+   * @param statusLabel
+   *          The status label.
    */
-  public OpenStatusLogAction( final String text, final String tooltipText, final IFile statusLogFile )
+  public OpenStatusLogAction( final String text, final String tooltipText, final IFile statusLogFile, final String statusLabel )
   {
-    super( text );
-
-    setImageDescriptor( KalypsoCoreImages.id( KalypsoCoreImages.DESCRIPTORS.OPEN_STATUS_LOG_ACTION ) );
+    super( text, KalypsoCoreImages.id( KalypsoCoreImages.DESCRIPTORS.OPEN_STATUS_LOG_ACTION ) );
 
     setToolTipText( tooltipText );
 
-    m_loadJob = new LoadStatusLogJob( statusLogFile );
+    m_statusLogFile = statusLogFile;
+    m_actions = new LinkedList<IAction>();
+    m_dialogTitle = text;
+    m_loadJob = new LoadStatusLogJob( statusLogFile, statusLabel );
     m_loadJob.addJobChangeListener( new JobChangeAdapter()
     {
       @Override
@@ -87,15 +115,9 @@ public class OpenStatusLogAction extends Action implements IUpdateable
         handleStatusLoaded();
       }
     } );
-  }
 
-  void handleStatusLoaded( )
-  {
-    final IStatus statusLog = m_loadJob.getStatusLog();
-
-    final ImageDescriptor imageDescriptor = StatusComposite.getStatusImageDescriptor( statusLog.getSeverity() );
-
-    setImageDescriptor( imageDescriptor );
+    final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+    workspace.addResourceChangeListener( m_resourceChangeListener );
   }
 
   @Override
@@ -105,12 +127,15 @@ public class OpenStatusLogAction extends Action implements IUpdateable
     {
       m_loadJob.join();
 
+      final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
       final IStatus statusLog = m_loadJob.getStatusLog();
 
-      /* Always show dialog. */
-      final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
-      final String dialogTitle = getText();
-      final StatusDialog statusDialog = new StatusDialog( shell, statusLog, dialogTitle );
+      final StatusDialog statusDialog = new StatusDialog( shell, statusLog, m_dialogTitle );
+      statusDialog.setShowAsTree( true );
+
+      for( final IAction action : m_actions )
+        statusDialog.addAction( action );
+
       statusDialog.open();
     }
     catch( final InterruptedException ex )
@@ -122,16 +147,73 @@ public class OpenStatusLogAction extends Action implements IUpdateable
   @Override
   public void update( )
   {
-    final IFile m_statusLogFile = m_loadJob.getStatusLogFile();
+    final IFile statusLogFile = m_loadJob.getStatusLogFile();
 
-    if( m_statusLogFile.exists() )
+    if( statusLogFile != null && statusLogFile.exists() )
       setEnabled( true );
     else
       setEnabled( false );
+
+    for( final IAction action : m_actions )
+    {
+      if( action instanceof IUpdateable )
+      {
+        final IUpdateable updateableAction = (IUpdateable) action;
+        updateableAction.update();
+      }
+    }
+  }
+
+  public void dispose( )
+  {
+    final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+    workspace.removeResourceChangeListener( m_resourceChangeListener );
+  }
+
+  public void addAction( final IAction action )
+  {
+    m_actions.add( action );
   }
 
   public void updateStatus( )
   {
     m_loadJob.schedule();
+  }
+
+  protected void handleStatusLoaded( )
+  {
+    final Display display = PlatformUI.getWorkbench().getDisplay();
+    display.asyncExec( new Runnable()
+    {
+      @Override
+      public void run( )
+      {
+        final IStatus statusLog = m_loadJob.getStatusLog();
+        final ImageDescriptor imageDescriptor = StatusComposite.getStatusImageDescriptor( statusLog.getSeverity() );
+        setImageDescriptor( imageDescriptor );
+      }
+    } );
+  }
+
+  private void handleResourceChanged( final IResourceChangeEvent event )
+  {
+    if( m_statusLogFile == null )
+      return;
+
+    final Display display = PlatformUI.getWorkbench().getDisplay();
+    display.asyncExec( new Runnable()
+    {
+      @Override
+      public void run( )
+      {
+        final IResourceDelta rootDelta = event.getDelta();
+        final IResourceDelta fileDelta = rootDelta.findMember( m_statusLogFile.getFullPath() );
+        if( fileDelta != null )
+        {
+          update();
+          updateStatus();
+        }
+      }
+    } );
   }
 }
