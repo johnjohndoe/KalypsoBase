@@ -149,6 +149,16 @@ public interface FeatureList extends List, JMSpatialIndex, IFeatureRelation
    */
   IXLinkedFeature insertLink( int index, String href, IFeatureType featureType ) throws IllegalArgumentException, IllegalStateException;
 
+  /**
+   * Removes a link from this list that links to the given feature.<br/>
+   * If more than one element links to the given feature, only the first will be removed.
+   *
+   * @return <code>true</code> If the list was changed by this operation.
+   * @throws IllegalArgumentException
+   *           If the given feature is an {@link IXLinkedFeature}.
+   */
+  boolean removeLink( Feature targetFeature );
+
   // TODO: uncomment only if implemented
 
 // /**

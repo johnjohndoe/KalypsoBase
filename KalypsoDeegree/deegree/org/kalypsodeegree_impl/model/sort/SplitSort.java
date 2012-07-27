@@ -69,6 +69,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
+import org.kalypsodeegree_impl.model.feature.FeatureLinkUtils;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -268,17 +269,25 @@ public class SplitSort implements FeatureList
       else if( m_index != null )
         m_index.remove( env, object );
 
-      // FIXME: move into helper
-      if( object instanceof Feature )
-      {
-        final Feature f = (Feature) object;
-        final GMLWorkspace workspace = f.getWorkspace();
-        if( workspace instanceof GMLWorkspace_Impl )
-          ((GMLWorkspace_Impl) workspace).unregisterFeature( f );
-      }
+      if( removed )
+        unregisterFeature( object );
 
       return removed;
     }
+  }
+
+  private void unregisterFeature( final Object object )
+  {
+    /* Only inline features needs to be unregistered from the workspace */
+    if( object instanceof IXLinkedFeature )
+      return;
+    if( !(object instanceof Feature) )
+      return;
+
+    final Feature f = (Feature) object;
+    final GMLWorkspace workspace = f.getWorkspace();
+    if( workspace instanceof GMLWorkspace_Impl )
+      ((GMLWorkspace_Impl) workspace).unregisterFeature( f );
   }
 
   private Envelope getEnvelope( final Object object )
@@ -327,11 +336,13 @@ public class SplitSort implements FeatureList
   @Override
   public void clear( )
   {
-    // FIXME: needs to unregister inline feature from the workspace
-
     synchronized( this )
     {
+      for( final Object element : m_items )
+        unregisterFeature( element );
+
       m_items.clear();
+
       m_index = null;
     }
   }
@@ -363,15 +374,18 @@ public class SplitSort implements FeatureList
   @Override
   public Object remove( final int index )
   {
-    // FIXME: unregister feature from workspace
-
     synchronized( this )
     {
       final Object removedItem = m_items.remove( index );
       if( m_index != null )
+      {
         // FIXME: We remove with null envelope here, else we would break the synchronized code by calling
         // getEnvelope() here
         m_index.remove( null, removedItem );
+      }
+
+      unregisterFeature( removedItem );
+
       return removedItem;
     }
   }
@@ -504,8 +518,6 @@ public class SplitSort implements FeatureList
 
   /**
    * SLOW: TODO: better comment, make deprecated in interface! FAST TODO: check the comments
-   *
-   * @see java.util.List#removeAll(java.util.Collection)
    */
   @Override
   public boolean removeAll( final Collection c )
@@ -518,9 +530,10 @@ public class SplitSort implements FeatureList
         final Envelope env = getEnvelope( lObj );
         if( m_index != null )
           m_index.remove( env, lObj );
-      }
 
-      // FIXME: unregister features
+        // FIXME: we should check if the unregistered elements are really objects of this list
+        unregisterFeature( lObj );
+      }
 
       result = m_items.removeAll( c );
     }
@@ -841,5 +854,26 @@ public class SplitSort implements FeatureList
 
     if( maxOccurs != IPropertyType.UNBOUND_OCCURENCY && size() >= maxOccurs )
       throw new IllegalArgumentException( "Adding a new element violates maxOccurs" ); //$NON-NLS-1$
+  }
+
+  @Override
+  public boolean removeLink( final Feature targetFeature )
+  {
+    if( targetFeature instanceof IXLinkedFeature )
+      throw new IllegalArgumentException( "targetFeature may only be an inline feature" ); //$NON-NLS-1$
+
+    for( int i = 0; i < size(); i++ )
+    {
+      final Object element = get( i );
+
+      if( FeatureLinkUtils.isSameOrLinkTo( targetFeature, element ) )
+      {
+        remove( i );
+        return true;
+      }
+    }
+
+    /* not found */
+    return false;
   }
 }
