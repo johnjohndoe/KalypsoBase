@@ -185,7 +185,7 @@ public abstract class AbstractWidget implements IWidget
 
   /**
    * This function returns the parameter value for the given paramater key.
-   * 
+   *
    * @param key
    *          The parameter key.
    * @return The parameter value, or null, if the parameter does not exist.
@@ -205,7 +205,7 @@ public abstract class AbstractWidget implements IWidget
 
   /**
    * TODO: give World2Screen Transformation into paint method
-   * 
+   *
    * @see org.kalypso.ogc.gml.widgets.IWidget#paint(java.awt.Graphics)
    */
   @Override
@@ -268,19 +268,19 @@ public abstract class AbstractWidget implements IWidget
   }
 
   @Override
-  public void keyPressed( final KeyEvent e )
+  public void keyPressed( final KeyEvent event )
   {
     // not implemented by default
   }
 
   @Override
-  public void keyReleased( final KeyEvent e )
+  public void keyReleased( final KeyEvent event )
   {
     // not implemented by default
   }
 
   @Override
-  public void keyTyped( final KeyEvent e )
+  public void keyTyped( final KeyEvent event )
   {
     // not implemented by default
   }
@@ -292,49 +292,49 @@ public abstract class AbstractWidget implements IWidget
   }
 
   @Override
-  public void mouseClicked( final MouseEvent e )
+  public void mouseClicked( final MouseEvent event )
   {
     // not implemented by default
   }
 
   @Override
-  public void mouseDragged( final MouseEvent e )
+  public void mouseDragged( final MouseEvent event )
   {
     // not implemented by default
   }
 
   @Override
-  public void mouseEntered( final MouseEvent e )
+  public void mouseEntered( final MouseEvent event )
   {
     // not implemented by default
   }
 
   @Override
-  public void mouseExited( final MouseEvent e )
+  public void mouseExited( final MouseEvent event )
   {
     // not implemented by default
   }
 
   @Override
-  public void mouseMoved( final MouseEvent e )
+  public void mouseMoved( final MouseEvent event )
   {
     // not implemented by default
   }
 
   @Override
-  public void mousePressed( final MouseEvent e )
+  public void mousePressed( final MouseEvent event )
   {
     // not implemented by default
   }
 
   @Override
-  public void mouseReleased( final MouseEvent e )
+  public void mouseReleased( final MouseEvent event )
   {
     // not implemented by default
   }
 
   @Override
-  public void mouseWheelMoved( final MouseWheelEvent e )
+  public void mouseWheelMoved( final MouseWheelEvent event )
   {
     // not implemented by default
   }
