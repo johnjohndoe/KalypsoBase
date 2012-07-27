@@ -516,4 +516,10 @@ public class FilteredFeatureList implements FeatureList
   {
     return m_original.insertLink( index, href, featureType );
   }
+
+  @Override
+  public boolean removeLink( final Feature targetFeature )
+  {
+    return m_original.removeLink( targetFeature );
+  }
 }
