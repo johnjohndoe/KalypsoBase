@@ -44,6 +44,7 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree_impl.model.feature.FeatureLinkUtils;
 
 class RemoveBrokenLinksCommand implements ICommand
 {
