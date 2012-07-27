@@ -61,13 +61,13 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.AddLinkCommand;
 import org.kalypso.ogc.gml.command.CompositeCommand;
-import org.kalypso.ogc.gml.command.FeatureLinkUtils;
 import org.kalypso.ogc.gml.command.RemoveMemberCommand;
 import org.kalypso.ui.editor.gmleditor.part.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
+import org.kalypsodeegree_impl.model.feature.FeatureLinkUtils;
 import org.kalypsodeegree_impl.model.feature.search.IReferenceCollectorStrategy;
 
 /**
