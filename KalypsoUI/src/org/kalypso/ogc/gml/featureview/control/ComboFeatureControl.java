@@ -60,12 +60,12 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.PropertyUtils;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.command.ChangeFeatureCommand;
-import org.kalypso.ogc.gml.command.FeatureLinkUtils;
 import org.kalypso.ui.editor.gmleditor.part.GMLLabelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.model.feature.DefaultReferenceCollectorStrategy;
+import org.kalypsodeegree_impl.model.feature.FeatureLinkUtils;
 import org.kalypsodeegree_impl.model.feature.search.IReferenceCollectorStrategy;
 
 /**
