@@ -110,7 +110,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * ADD (on via pressed 'SHIFT' key):<br>
  * the new selection is added to the current selection. INTERSECT / CONTAINS (via 'ALT' key):<br>
  * If pressed selection is done by using INTERSECT-method.
- * 
+ *
  * @author Thomas Jung
  */
 public class SelectFeatureWidget extends DeprecatedMouseWidget
@@ -165,6 +165,7 @@ public class SelectFeatureWidget extends DeprecatedMouseWidget
   public SelectFeatureWidget( final String name, final String toolTip, final QName qnamesToSelect[], final QName geomQName )
   {
     super( name, toolTip );
+
     m_qnamesToSelect = qnamesToSelect;
     m_geomQName = geomQName;
   }
@@ -403,6 +404,8 @@ public class SelectFeatureWidget extends DeprecatedMouseWidget
 
     switch( keyCode )
     {
+    // FIXME: ugly: the mpuse event known if shift/ctrl etc. are pressed right at the moment; it is bad practice to keep
+      // our own flags
     // "SHFT": Add mode
       case KeyEvent.VK_SHIFT:
         m_addMode = true;
@@ -571,7 +574,7 @@ public class SelectFeatureWidget extends DeprecatedMouseWidget
    * Finds the geometry properties to select from.<br>
    * If a default type is specified, this will always be used.<br>
    * Else, all geometry properties of the target type of the list will be taken.
-   * 
+   *
    * @param propertyName
    *          The property of the theme, that may provide the geometry pathes.
    * @param feature
