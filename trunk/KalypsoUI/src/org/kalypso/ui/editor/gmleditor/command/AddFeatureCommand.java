@@ -177,18 +177,12 @@ public class AddFeatureCommand implements ICommand, IFeatureProvider
     m_depth = -1;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
-   */
   @Override
   public boolean isUndoable( )
   {
     return true;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#process()
-   */
   @Override
   public void process( ) throws Exception
   {
@@ -214,18 +208,12 @@ public class AddFeatureCommand implements ICommand, IFeatureProvider
       m_selectionManager.setSelection( new EasyFeatureWrapper[] { new EasyFeatureWrapper( (CommandableWorkspace) m_workspace, m_newFeature ) } );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#redo()
-   */
   @Override
   public void redo( ) throws Exception
   {
     process();
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#undo()
-   */
   @Override
   public void undo( ) throws Exception
   {
