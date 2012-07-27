@@ -46,6 +46,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureProvider;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
+import org.kalypsodeegree_impl.model.feature.FeatureLinkUtils;
 import org.kalypsodeegree_impl.model.feature.FeatureProvider;
 
 public class AddLinkCommand implements ICommand
@@ -84,7 +85,6 @@ public class AddLinkCommand implements ICommand
     final GMLWorkspace workspace = source.getWorkspace();
 
     FeatureLinkUtils.insertLink( source, m_propName, m_pos, m_href );
-
 
     workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, source, (Feature) null, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
