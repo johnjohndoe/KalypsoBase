@@ -77,7 +77,7 @@ import org.kalypsodeegree.model.feature.IPropertiesFeatureVisitor;
 
 /**
  * Helper class to read extension-points of this plugin.
- * 
+ *
  * @author belger
  */
 public final class KalypsoCoreExtensions
@@ -355,5 +355,38 @@ public final class KalypsoCoreExtensions
       return null;
 
     return (INativeObservationAdapter) element.createExecutableExtension( "class" ); //$NON-NLS-1$
+  }
+
+  /**
+   * @deprecated Use {@link #getObservationImporters()} instead; BUT: solve problems with axis types first.
+   */
+  @Deprecated
+  public static INativeObservationAdapter[] createNativeAdaptersOldStyle( )
+  {
+    final List<INativeObservationAdapter> adapters = new ArrayList<INativeObservationAdapter>();
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+
+    final IExtensionPoint extensionPoint = registry.getExtensionPoint( "org.kalypso.core.nativeObsAdapter" ); //$NON-NLS-1$
+
+    final IExtension[] extensions = extensionPoint.getExtensions();
+    for( final IExtension extension : extensions )
+    {
+      final IConfigurationElement[] elements = extension.getConfigurationElements();
+
+      for( final IConfigurationElement element : elements )
+      {
+        try
+        {
+          final INativeObservationAdapter adapter = (INativeObservationAdapter) element.createExecutableExtension( "class" ); //$NON-NLS-1$
+          adapters.add( adapter );
+        }
+        catch( final CoreException e )
+        {
+          e.printStackTrace();
+        }
+      }
+    }
+
+    return adapters.toArray( new INativeObservationAdapter[adapters.size()] );
   }
 }

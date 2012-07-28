@@ -131,7 +131,9 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
 
     m_fileTarget = selection.getFileTarget();
 
-    final IAxis[] axisSrc = m_nativeAdapter.createAxis( m_nativeAdapter.getAxisTypeValue() );
+    final String axisTypeValue = m_nativeAdapter.getAxisTypeValue();
+
+    final IAxis[] axisSrc = m_nativeAdapter.createAxis( axisTypeValue );
     IAxis[] axisDest = axisSrc;
     if( m_fileTarget != null && m_fileTarget.exists() )
     {

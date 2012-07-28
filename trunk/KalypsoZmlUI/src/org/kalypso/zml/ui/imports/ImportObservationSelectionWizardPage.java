@@ -461,9 +461,6 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     m_selectionListener.add( listener );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
-   */
   @Override
   public ISelection getSelection( )
   {
@@ -476,18 +473,12 @@ public class ImportObservationSelectionWizardPage extends WizardPage implements 
     return new ObservationImportSelection( sourceFile, targetFile, (INativeObservationAdapter) formatSelection.getFirstElement(), m_buttonAppend.getSelection(), m_buttonRetainMeta.getSelection(), m_timezone );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
-   */
   @Override
   public void removeSelectionChangedListener( final ISelectionChangedListener listener )
   {
     m_selectionListener.remove( listener );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
-   */
   @Override
   public void setSelection( final ISelection selection )
   {

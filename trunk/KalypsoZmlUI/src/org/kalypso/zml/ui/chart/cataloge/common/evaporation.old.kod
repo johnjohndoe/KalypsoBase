@@ -50,7 +50,7 @@
         <Layers>
           <DerivedLayer id="quality.rainfall" legend="false" visible="false">
             <Description />
-            <LayerReference url=urn:org:kalypso:zml:ui:diagramm:common:quality#quality.barlayer "></LayerReference>
+            <LayerReference url="urn:org:kalypso:zml:ui:diagramm:common:quality#quality.barlayer"></LayerReference>
           </DerivedLayer>
           
           <Layer id="Evaporation" visible="true" legend="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
