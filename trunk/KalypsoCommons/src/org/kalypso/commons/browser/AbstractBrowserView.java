@@ -28,11 +28,10 @@ import org.eclipse.ui.part.ViewPart;
 import org.kalypso.commons.browser.actions.DefaultHtmlProvider;
 import org.kalypso.commons.browser.actions.IHtmlProvider;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.eclipse.ui.MementoWithUrlResolver;
 
 /**
  * This abstract class is a facade for the eclipse browser view.
- * 
+ *
  * @see org.eclipse.ui.internal.browser.BrowserViewer Supports the IMemento for persistance and context for relative
  *      references MementoWithUrlResolver.
  * @author kuepfer
@@ -113,30 +112,14 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
   {
     final String urlAsString = memento.getString( TAG_URL );
 
-    if( memento instanceof MementoWithUrlResolver )
+    try
     {
-      try
-      {
-        final MementoWithUrlResolver m = (MementoWithUrlResolver) memento;
-        final URL url = m.getURLResolver().resolveURL( urlAsString );
-        changeContext( url );
-        final String externalForm = url.toExternalForm();
-        handleSetUrl( externalForm );
-      }
-      catch( final MalformedURLException e )
-      {
-        e.printStackTrace();
-      }
+      handleSetUrl( urlAsString );
     }
-    else
-      try
-      {
-        handleSetUrl( urlAsString );
-      }
-      catch( final MalformedURLException e )
-      {
-        e.printStackTrace();
-      }
+    catch( final MalformedURLException e )
+    {
+      e.printStackTrace();
+    }
 
     final IMemento scrollbars = memento.getChild( TAG_SCROLLBARS );
     if( scrollbars == null )
@@ -274,7 +257,7 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
 
   /**
    * Return true if the filename has a "web" extension.
-   * 
+   *
    * @param name
    *          The filename.
    * @return True if the filename has a "web" extension.
