@@ -312,7 +312,8 @@ public class ExportAndSendPage extends WizardPage
   private void setCheckStateSend( final ExportableTreeItem item, final boolean checked )
   {
     /* Is the item in the left tree checked? */
-    if( item.isChecked() )
+    /* If so, simply set the check state of the item in the right tree. */
+    if( item.isChecked() || !checked )
       item.setCheckedSend( checked );
     else
     {
