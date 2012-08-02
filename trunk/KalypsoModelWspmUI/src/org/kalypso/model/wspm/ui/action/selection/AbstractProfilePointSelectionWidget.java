@@ -46,35 +46,30 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 import org.apache.commons.lang3.Range;
+import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.jts.JTSConverter;
-import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.model.wspm.ui.action.base.AbstractProfileWidget;
 import org.kalypso.model.wspm.ui.action.base.ProfilePainter;
+import org.kalypso.model.wspm.ui.action.base.ProfileWidgetHelper;
 import org.kalypso.model.wspm.ui.action.base.ProfileWidgetMapPanelListener;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
-import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.advanced.utils.SLDPainter;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.LineString;
 
 /**
  * @author Dirk Kuch
  */
 public abstract class AbstractProfilePointSelectionWidget extends AbstractProfileWidget
 {
-  private final ProfileWidgetMapPanelListener m_mapPanelListener = new ProfileWidgetMapPanelListener( this );
+  private final ProfileWidgetMapPanelListener m_mapPanelListener;
 
   private final boolean m_viewMode;
 
@@ -83,7 +78,10 @@ public abstract class AbstractProfilePointSelectionWidget extends AbstractProfil
   public AbstractProfilePointSelectionWidget( final boolean viewMode )
   {
     super( "", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    m_mapPanelListener = new ProfileWidgetMapPanelListener( this );
     m_viewMode = viewMode;
+    m_p0 = null;
   }
 
   @Override
@@ -91,9 +89,15 @@ public abstract class AbstractProfilePointSelectionWidget extends AbstractProfil
   {
     super.activate( commandPoster, mapPanel );
 
+    /* Add myself as selection changed listener. */
     mapPanel.addSelectionChangedListener( m_mapPanelListener );
-    onSelectionChange( m_mapPanelListener.doSelection( mapPanel.getSelection() ) );
 
+    /* Initialize widget with the selection. */
+    final ISelection selection = mapPanel.getSelection();
+    final IProfileFeature[] profiles = ProfileWidgetHelper.getProfiles( selection );
+    setSelection( profiles );
+
+    /* Reset. */
     reset();
 
     /* init the cursor. */
@@ -104,9 +108,13 @@ public abstract class AbstractProfilePointSelectionWidget extends AbstractProfil
   @Override
   public void finish( )
   {
+    /* Remove myself as selection changed listener. */
     getMapPanel().removeSelectionChangedListener( m_mapPanelListener );
-    onSelectionChange( new IProfileFeature[] {} ); // purge profile change listener
 
+    /* Reset the selection within this widget. */
+    setSelection( new IProfileFeature[] {} ); // purge profile change listener
+
+    /* Reset & repaint. */
     reset();
     repaintMap();
 
@@ -176,10 +184,9 @@ public abstract class AbstractProfilePointSelectionWidget extends AbstractProfil
 
     ProfilePainter.paintProfilePoints( g, painter, profile );
     ProfilePainter.paintProfilePointMarkers( g, painter, profile );
+    ProfilePainter.paintProfileCursor( g, painter, profile, getClass().getResource( "symbolization/selection.snap.point.sld" ), getClass().getResource( "symbolization/selection.snap.vertex.point.sld" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    doPaintSelection( g, painter );
-
-    ProfilePainter.doPaintProfileCursor( g, painter, profile, getClass().getResource( "symbolization/selection.snap.point.sld" ), getClass().getResource( "symbolization/selection.snap.vertex.point.sld" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    ProfilePainter.paintSelection( getMapPanel(), profile, g, painter );
 
     paintTooltip( g );
   }
@@ -199,60 +206,7 @@ public abstract class AbstractProfilePointSelectionWidget extends AbstractProfil
 
     final double hoehe = Profiles.getHoehe( profile, cursor );
 
-    return String.format( Messages.getString("AbstractProfilePointSelectionWidget_0"), cursor, hoehe ); //$NON-NLS-1$
-  }
-
-  private void doPaintSelection( final Graphics g, final SLDPainter painter )
-  {
-    try
-    {
-      final IProfileFeature profile = getProfile();
-      if( Objects.isNull( profile ) )
-        return;
-
-      final IProfil iProfil = profile.getProfil();
-      final IRangeSelection selection = iProfil.getSelection();
-      if( selection.isEmpty() )
-        return;
-
-      final Geometry geometry = toGeometry( profile, selection );
-      if( geometry instanceof com.vividsolutions.jts.geom.Point )
-      {
-        final com.vividsolutions.jts.geom.Point point = (com.vividsolutions.jts.geom.Point) geometry;
-        painter.paint( g, getClass().getResource( "symbolization/selection.points.sld" ), point ); //$NON-NLS-1$
-      }
-      else if( geometry instanceof LineString )
-      {
-        final LineString lineString = (LineString) geometry;
-        final Geometry selectionGeometry = lineString.buffer( MapUtilities.calculateWorldDistance( getMapPanel(), 8 ) );
-
-        painter.paint( g, getClass().getResource( "symbolization/selection.line.sld" ), selectionGeometry ); //$NON-NLS-1$
-      }
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-  }
-
-  private Geometry toGeometry( final IProfileFeature profile, final IRangeSelection selection ) throws Exception
-  {
-    final Range<Double> range = selection.getRange();
-    final Double minimum = range.getMinimum();
-    final Double maximum = range.getMaximum();
-
-    if( Objects.equal( minimum, maximum ) )
-    {
-      final Coordinate coorinate = Profiles.getJtsPosition( profile.getProfil(), minimum );
-      return JTSConverter.toPoint( coorinate );
-    }
-    else
-    {
-      final Coordinate c1 = Profiles.getJtsPosition( profile.getProfil(), minimum );
-      final Coordinate c2 = Profiles.getJtsPosition( profile.getProfil(), maximum );
-
-      return JTSUtilities.createLineString( profile.getJtsLine(), JTSConverter.toPoint( c1 ), JTSConverter.toPoint( c2 ) );
-    }
+    return String.format( Messages.getString( "AbstractProfilePointSelectionWidget_0" ), cursor, hoehe ); //$NON-NLS-1$
   }
 
   @Override
@@ -266,5 +220,4 @@ public abstract class AbstractProfilePointSelectionWidget extends AbstractProfil
         break;
     }
   }
-
 }

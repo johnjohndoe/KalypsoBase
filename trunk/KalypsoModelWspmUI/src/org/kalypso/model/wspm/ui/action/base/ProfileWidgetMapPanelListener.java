@@ -40,18 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.action.base;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
-import org.kalypso.ogc.gml.map.MapPanelSelection;
-import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
-import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
-import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Dirk Kuch
@@ -70,48 +62,8 @@ public class ProfileWidgetMapPanelListener implements ISelectionChangedListener
   public void selectionChanged( final SelectionChangedEvent event )
   {
     final ISelection selection = event.getSelection();
-    final IProfileFeature[] profiles = doSelection( selection );
+    final IProfileFeature[] profiles = ProfileWidgetHelper.getProfiles( selection );
 
-    m_widget.onSelectionChange( profiles );
+    m_widget.setSelection( profiles );
   }
-
-  public IProfileFeature[] doSelection( final ISelection selection )
-  {
-    if( selection instanceof MapPanelSelection )
-    {
-      final MapPanelSelection mapPanelSelection = (MapPanelSelection) selection;
-      final EasyFeatureWrapper[] features = mapPanelSelection.getAllFeatures();
-
-      return resovleProfiles( features );
-    }
-    else if( selection instanceof FeatureSelectionManager2 )
-    {
-      final FeatureSelectionManager2 manager = (FeatureSelectionManager2) selection;
-      final EasyFeatureWrapper[] features = manager.getAllFeatures();
-
-      return resovleProfiles( features );
-    }
-
-    return new IProfileFeature[] {};
-  }
-
-  private IProfileFeature[] resovleProfiles( final EasyFeatureWrapper[] features )
-  {
-    final Set<IProfileFeature> profiles = new LinkedHashSet<>();
-    for( final EasyFeatureWrapper eft : features )
-    {
-      final Feature feature = eft.getFeature();
-      if( feature instanceof ProfileFeatureBinding )
-        profiles.add( (ProfileFeatureBinding) feature );
-      else
-      {
-        final Object adapter = feature.getAdapter( IProfileFeature.class );
-        if( adapter instanceof IProfileFeature )
-          profiles.add( (IProfileFeature) adapter );
-      }
-    }
-
-    return profiles.toArray( new IProfileFeature[] {} );
-  }
-
 }

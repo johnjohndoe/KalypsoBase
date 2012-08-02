@@ -69,8 +69,6 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.linearref.LinearLocation;
 import com.vividsolutions.jts.linearref.LocationIndexedLine;
@@ -84,7 +82,6 @@ public class AbstractProfileWidget extends AbstractWidget implements IProfilePro
 
   private final IProfilListener m_listener = new ProfilListenerAdapter()
   {
-    @SuppressWarnings("synthetic-access")
     @Override
     public void onProfilChanged( final ProfilChangeHint hint )
     {
@@ -175,11 +172,10 @@ public class AbstractProfileWidget extends AbstractWidget implements IProfilePro
     return null;
   }
 
-  public final void onSelectionChange( final IProfileFeature[] profiles )
+  public final void setSelection( final IProfileFeature[] profiles )
   {
     if( ArrayUtils.getLength( profiles ) > 1 )
       return;
-// throw new UnsupportedOperationException();
 
     if( ArrayUtils.isEmpty( profiles ) )
       doSelectionChange( null );
@@ -191,7 +187,6 @@ public class AbstractProfileWidget extends AbstractWidget implements IProfilePro
   protected void doSelectionChange( final IProfileFeature profile )
   {
     // always set and reset profile listener, because of changed underlying iprofile!
-
     if( Objects.isNotNull( m_profile ) )
     {
       m_profile.removeProfilProviderListener( this );
@@ -224,7 +219,7 @@ public class AbstractProfileWidget extends AbstractWidget implements IProfilePro
   }
 
   /**
-   * The position of the tool tip to be painted in screen coordinates. Defaults to the lower right corner.<br/>
+   * The position of the tooltip to be painted in screen coordinates. Defaults to the lower right corner.<br/>
    * Overwrite to change position.
    */
   protected Point getTooltipPosition( final Rectangle screenBounds )
@@ -235,24 +230,11 @@ public class AbstractProfileWidget extends AbstractWidget implements IProfilePro
     return new Point( x, y );
   }
 
-  protected final boolean isVertexPoint( final Geometry geometry, final Coordinate point )
-  {
-    final Coordinate[] coordinates = geometry.getCoordinates();
-    for( final Coordinate c : coordinates )
-    {
-      if( c.distance( point ) < 0.001 )
-        return true;
-    }
-
-    return false;
-  }
-
   @Override
   public void onProfilProviderChanged( final IProfileProvider provider )
   {
     final Job job = new Job( "Forcing repaint event" ) //$NON-NLS-1$
     {
-      @SuppressWarnings("synthetic-access")
       @Override
       protected IStatus run( final IProgressMonitor monitor )
       {
@@ -269,7 +251,11 @@ public class AbstractProfileWidget extends AbstractWidget implements IProfilePro
     job.setUser( false );
 
     job.schedule();
-
   }
 
+  @Override
+  protected void repaintMap( )
+  {
+    super.repaintMap();
+  }
 }

@@ -802,6 +802,18 @@
           point="org.eclipse.ui.commands">
        <command
              categoryId="org.kalypso.ogc.gml.map.category"
+             description="%org.kalypso.ogc.gml.map.widgets.straighten.profile.description"
+             id="org.kalypso.ogc.gml.map.widgets.straighten.profile"
+             name="%org.kalypso.ogc.gml.map.widgets.straighten.profile.name">
+       </command>
+       <command
+             categoryId="org.kalypso.ogc.gml.map.category"
+             description="%org.kalypso.ogc.gml.map.widgets.insert.profile.point.description"
+             id="org.kalypso.ogc.gml.map.widgets.insert.profile.point"
+             name="%org.kalypso.ogc.gml.map.widgets.insert.profile.point.name">
+       </command>
+       <command
+             categoryId="org.kalypso.ogc.gml.map.category"
              description="%org.kalypso.ogc.gml.map.widgets.select.profile.point.description"
              id="org.kalypso.ogc.gml.map.widgets.select.profile.point"
              name="%org.kalypso.ogc.gml.map.widgets.select.profile.point.name">
@@ -812,15 +824,17 @@
              id="org.kalypso.ogc.gml.map.widgets.display.profile.selection"
              name="%org.kalypso.ogc.gml.map.widgets.display.profile.selection.name">
        </command>
-       <command
-             categoryId="org.kalypso.ogc.gml.map.category"
-             description="%org.kalypso.ogc.gml.map.widgets.insert.profile.point.description"
-             id="org.kalypso.ogc.gml.map.widgets.insert.profile.point"
-             name="%org.kalypso.ogc.gml.map.widgets.insert.profile.point.name">
-       </command>
     </extension>
     <extension
           point="org.eclipse.ui.commandImages">
+       <image
+             commandId="org.kalypso.ogc.gml.map.widgets.straighten.profile"
+             icon="icons/elcl16/empty.gif">
+       </image>
+       <image
+             commandId="org.kalypso.ogc.gml.map.widgets.insert.profile.point"
+             icon="icons/obj16/insert_profile_point.png">
+       </image>
        <image
              commandId="org.kalypso.ogc.gml.map.widgets.select.profile.point"
              icon="icons/obj16/select-point.png">
@@ -829,13 +843,39 @@
              commandId="org.kalypso.ogc.gml.map.widgets.display.profile.selection"
              icon="icons/obj16/update_point_cursor.png">
        </image>
-       <image
-             commandId="org.kalypso.ogc.gml.map.widgets.insert.profile.point"
-             icon="icons/obj16/insert_profile_point.png">
-       </image>
     </extension>
     <extension
           point="org.eclipse.ui.handlers">
+       <handler
+             commandId="org.kalypso.ogc.gml.map.widgets.straighten.profile">
+          <class
+                class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+             <parameter
+                   name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+                   value="org.kalypso.model.wspm.ui.action.straighten.StraightenProfileWidget">
+             </parameter>
+          </class>
+          <enabledWhen>
+             <reference
+                   definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent">
+             </reference>
+          </enabledWhen>
+       </handler>
+       <handler
+             commandId="org.kalypso.ogc.gml.map.widgets.insert.profile.point">
+          <class
+                class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
+             <parameter
+                   name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
+                   value="org.kalypso.model.wspm.ui.action.insert.point.InsertProfilePointWidget">
+             </parameter>
+          </class>
+          <enabledWhen>
+             <reference
+                   definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent">
+             </reference>
+          </enabledWhen>
+       </handler>
        <handler
              commandId="org.kalypso.ogc.gml.map.widgets.select.profile.point">
           <class
@@ -858,21 +898,6 @@
              <parameter
                    name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
                    value="org.kalypso.model.wspm.ui.action.selection.DisplayProfileSelectionWidget">
-             </parameter>
-          </class>
-          <enabledWhen>
-             <reference
-                   definitionId="org.kalypso.model.wspm.tuhh.ui.definition.profileThemePresent">
-             </reference>
-          </enabledWhen>
-       </handler>
-       <handler
-             commandId="org.kalypso.ogc.gml.map.widgets.insert.profile.point">
-          <class
-                class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
-             <parameter
-                   name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget"
-                   value="org.kalypso.model.wspm.ui.action.insert.point.InsertProfilePointWidget">
              </parameter>
           </class>
           <enabledWhen>

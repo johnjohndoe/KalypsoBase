@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
@@ -60,6 +61,7 @@ import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.model.wspm.ui.action.base.AbstractProfileWidget;
 import org.kalypso.model.wspm.ui.action.base.ProfilePainter;
+import org.kalypso.model.wspm.ui.action.base.ProfileWidgetHelper;
 import org.kalypso.model.wspm.ui.action.base.ProfileWidgetMapPanelListener;
 import org.kalypso.model.wspm.ui.i18n.CommonMessages;
 import org.kalypso.observation.result.IInterpolationHandler;
@@ -75,11 +77,13 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
  */
 public class InsertProfilePointWidget extends AbstractProfileWidget
 {
-  private final ProfileWidgetMapPanelListener m_mapPanelListener = new ProfileWidgetMapPanelListener( this );
+  private final ProfileWidgetMapPanelListener m_mapPanelListener;
 
   public InsertProfilePointWidget( )
   {
     super( "", "" ); //$NON-NLS-1$ //$NON-NLS-2$
+
+    m_mapPanelListener = new ProfileWidgetMapPanelListener( this );
   }
 
   @Override
@@ -87,9 +91,15 @@ public class InsertProfilePointWidget extends AbstractProfileWidget
   {
     super.activate( commandPoster, mapPanel );
 
+    /* Add myself as selection changed listener. */
     mapPanel.addSelectionChangedListener( m_mapPanelListener );
-    onSelectionChange( m_mapPanelListener.doSelection( mapPanel.getSelection() ) );
 
+    /* Initialize widget with the selection. */
+    final ISelection selection = mapPanel.getSelection();
+    final IProfileFeature[] profiles = ProfileWidgetHelper.getProfiles( selection );
+    setSelection( profiles );
+
+    /* Reset. */
     reset();
 
     /* Init the cursor. */
@@ -100,9 +110,13 @@ public class InsertProfilePointWidget extends AbstractProfileWidget
   @Override
   public void finish( )
   {
+    /* Remove myself as selection changed listener. */
     getMapPanel().removeSelectionChangedListener( m_mapPanelListener );
-    onSelectionChange( new IProfileFeature[] {} ); // purge profile change listener
 
+    /* Reset the selection within this widget. */
+    setSelection( new IProfileFeature[] {} ); // purge profile change listener
+
+    /* Reset & repaint. */
     reset();
     repaintMap();
 
@@ -118,11 +132,11 @@ public class InsertProfilePointWidget extends AbstractProfileWidget
     try
     {
       final IProfileFeature profileFeature = getProfile();
-      final com.vividsolutions.jts.geom.Point snapped = getSnapPoint();
-      if( Objects.isNull( profileFeature, profileFeature ) )
+      if( Objects.isNull( profileFeature ) )
         return;
 
-      if( isVertexPoint( profileFeature.getJtsLine(), snapped.getCoordinate() ) )
+      final com.vividsolutions.jts.geom.Point snapped = getSnapPoint();
+      if( ProfileWidgetHelper.isVertexPoint( profileFeature.getJtsLine(), snapped.getCoordinate() ) )
         return;
 
       final IProfil profile = profileFeature.getProfil();
@@ -159,6 +173,7 @@ public class InsertProfilePointWidget extends AbstractProfileWidget
           return Status.OK_STATUS;
         }
       };
+
       job.setSystem( true );
       job.setUser( false );
 
@@ -168,7 +183,6 @@ public class InsertProfilePointWidget extends AbstractProfileWidget
     {
       e.printStackTrace();
     }
-
   }
 
   @Override
@@ -182,7 +196,7 @@ public class InsertProfilePointWidget extends AbstractProfileWidget
     // TODO: different symbolization if snap not possible
     ProfilePainter.paintProfilePoints( g, painter, profile );
     ProfilePainter.paintProfilePointMarkers( g, painter, profile );
-    ProfilePainter.doPaintProfileCursor( g, painter, profile, getClass().getResource( "symbolization/selection.snap.point.sld" ), getClass().getResource( "symbolization/selection.snap.vertex.point.sld" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    ProfilePainter.paintProfileCursor( g, painter, profile, getClass().getResource( "symbolization/selection.snap.point.sld" ), getClass().getResource( "symbolization/selection.snap.vertex.point.sld" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     paintTooltip( g );
   }
@@ -237,5 +251,4 @@ public class InsertProfilePointWidget extends AbstractProfileWidget
         break;
     }
   }
-
 }

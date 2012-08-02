@@ -43,7 +43,10 @@ package org.kalypso.model.wspm.ui.action.base;
 import java.awt.Graphics;
 import java.net.URL;
 
+import org.apache.commons.lang3.Range;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.jts.JTSConverter;
+import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
@@ -51,6 +54,8 @@ import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
 import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
+import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.advanced.utils.SLDPainter;
 import org.kalypso.transformation.transformer.JTSTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -135,7 +140,7 @@ public final class ProfilePainter
     }
   }
 
-  public static void doPaintProfileCursor( final Graphics g, final SLDPainter painter, final IProfileFeature profileFeature, final URL sldLinePoint, final URL sldVertexPoint )
+  public static void paintProfileCursor( final Graphics g, final SLDPainter painter, final IProfileFeature profileFeature, final URL sldLinePoint, final URL sldVertexPoint )
   {
     try
     {
@@ -152,7 +157,7 @@ public final class ProfilePainter
       if( position == null )
         return;
 
-      if( isVertexPoint( profileFeature.getJtsLine(), position ) )
+      if( ProfileWidgetHelper.isVertexPoint( profileFeature.getJtsLine(), position ) )
         painter.paint( g, sldVertexPoint, position ); //$NON-NLS-1$
       else
         painter.paint( g, sldLinePoint, position ); //$NON-NLS-1$
@@ -163,18 +168,55 @@ public final class ProfilePainter
     }
   }
 
-  private static boolean isVertexPoint( final Geometry geometry, final Coordinate point )
+  public static void paintSelection( final IMapPanel mapPanel, final IProfileFeature profile, final Graphics g, final SLDPainter painter )
   {
-    if( point == null )
-      return false;
-
-    final Coordinate[] coordinates = geometry.getCoordinates();
-    for( final Coordinate c : coordinates )
+    try
     {
-      if( c.distance( point ) < 0.001 )
-        return true;
-    }
+      if( Objects.isNull( profile ) )
+        return;
 
-    return false;
+      final IProfil iProfil = profile.getProfil();
+      final IRangeSelection selection = iProfil.getSelection();
+      if( selection.isEmpty() )
+        return;
+
+      final Geometry geometry = toGeometry( profile, selection );
+      if( geometry instanceof com.vividsolutions.jts.geom.Point )
+      {
+        final com.vividsolutions.jts.geom.Point point = (com.vividsolutions.jts.geom.Point) geometry;
+        painter.paint( g, ProfilePainter.class.getResource( "symbolization/selection.points.sld" ), point ); //$NON-NLS-1$
+      }
+      else if( geometry instanceof LineString )
+      {
+        final LineString lineString = (LineString) geometry;
+        final Geometry selectionGeometry = lineString.buffer( MapUtilities.calculateWorldDistance( mapPanel, 8 ) );
+
+        painter.paint( g, ProfilePainter.class.getResource( "symbolization/selection.line.sld" ), selectionGeometry ); //$NON-NLS-1$
+      }
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
+  }
+
+  private static Geometry toGeometry( final IProfileFeature profile, final IRangeSelection selection ) throws Exception
+  {
+    final Range<Double> range = selection.getRange();
+    final Double minimum = range.getMinimum();
+    final Double maximum = range.getMaximum();
+
+    if( Objects.equal( minimum, maximum ) )
+    {
+      final Coordinate coorinate = Profiles.getJtsPosition( profile.getProfil(), minimum );
+      return JTSConverter.toPoint( coorinate );
+    }
+    else
+    {
+      final Coordinate c1 = Profiles.getJtsPosition( profile.getProfil(), minimum );
+      final Coordinate c2 = Profiles.getJtsPosition( profile.getProfil(), maximum );
+
+      return JTSUtilities.createLineString( profile.getJtsLine(), JTSConverter.toPoint( c1 ), JTSConverter.toPoint( c2 ) );
+    }
   }
 }
