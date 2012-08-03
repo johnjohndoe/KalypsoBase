@@ -49,9 +49,17 @@ import java.awt.event.MouseEvent;
 import java.net.URL;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.window.Window;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
+import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
@@ -59,6 +67,8 @@ import org.kalypso.model.wspm.ui.action.base.AbstractProfileWidget;
 import org.kalypso.model.wspm.ui.action.base.ProfilePainter;
 import org.kalypso.model.wspm.ui.action.base.ProfileWidgetHelper;
 import org.kalypso.model.wspm.ui.action.base.ProfileWidgetMapPanelListener;
+import org.kalypso.model.wspm.ui.dialog.straighten.StraightenProfileDialog;
+import org.kalypso.model.wspm.ui.dialog.straighten.StraightenProfileOperation;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.advanced.utils.SLDPainter;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -159,6 +169,17 @@ public class StraightenProfileWidget extends AbstractProfileWidget
       }
 
       m_secondPoint = snapPoint;
+
+      final Shell shell = SWT_AWT_Utilities.findActiveShell();
+      final Display display = shell.getDisplay();
+      display.syncExec( new Runnable()
+      {
+        @Override
+        public void run( )
+        {
+          perfomStraightening( shell );
+        }
+      } );
     }
     catch( final Exception ex )
     {
@@ -240,6 +261,31 @@ public class StraightenProfileWidget extends AbstractProfileWidget
       case KeyEvent.VK_ESCAPE:
         finish();
         break;
+    }
+  }
+
+  protected void perfomStraightening( final Shell shell )
+  {
+    try
+    {
+      /* Open the straighten profile dialog. */
+      final StraightenProfileDialog straightenDialog = new StraightenProfileDialog( shell, getProfile(), m_firstPoint, m_secondPoint );
+      if( straightenDialog.open() != Window.OK )
+        return;
+
+      /* Execute the straighten profile operation. */
+      final StraightenProfileOperation operation = new StraightenProfileOperation( straightenDialog.getData() );
+      final ProgressMonitorDialog progressDialog = new ProgressMonitorDialog( shell );
+      final IStatus status = RunnableContextHelper.execute( progressDialog, true, true, operation );
+
+      /* Open the status dialog. */
+      final StatusDialog statusDialog = new StatusDialog( shell, status, "Profil begradigen" );
+      statusDialog.open();
+    }
+    finally
+    {
+      m_firstPoint = null;
+      m_secondPoint = null;
     }
   }
 
