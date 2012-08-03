@@ -42,7 +42,17 @@ package org.kalypso.model.wspm.ui.dialog.straighten;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.dialog.straighten.data.CORRECT_POINTS_AMOUNT;
+import org.kalypso.model.wspm.ui.dialog.straighten.data.CORRECT_POINTS_ENABLEMENT;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Point;
 
 /**
  * This operation straightens a profile between two points.
@@ -71,10 +81,86 @@ public class StraightenProfileOperation implements ICoreRunnableWithProgress
    * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public IStatus execute( final IProgressMonitor monitor )
+  public IStatus execute( IProgressMonitor monitor )
   {
+    /* Monitor. */
+    if( monitor == null )
+      monitor = new NullProgressMonitor();
+
+    try
+    {
+      /* Monitor. */
+      monitor.beginTask( "Straightening profile", 1000 );
+      monitor.subTask( "Defining straight line..." );
+
+      /* Define straight line. */
+      defineLine( m_data );
+
+      /* Monitor. */
+      monitor.worked( 300 );
+      monitor.subTask( "Projecting all points to the line..." );
+
+      /* Project all points to the line. */
+      projectPoints( m_data );
+
+      /* Monitor. */
+      monitor.worked( 400 );
+      monitor.subTask( "Recalculating the width of the points..." );
+
+      /* Recalculate the width of the points. */
+      if( m_data.getCorrectPointsEnablement() == CORRECT_POINTS_ENABLEMENT.ON )
+        recalculateWidth( m_data );
+
+      /* Monitor. */
+      monitor.worked( 300 );
+
+      return new Status( IStatus.OK, KalypsoModelWspmUIPlugin.ID, "Straightening successfull." );
+    }
+    catch( final Exception ex )
+    {
+      return new Status( IStatus.ERROR, KalypsoModelWspmUIPlugin.ID, ex.getLocalizedMessage(), ex );
+    }
+    finally
+    {
+      /* Monitor. */
+      monitor.done();
+    }
+  }
+
+  private void defineLine( final StraightenProfileData data )
+  {
+    /* Get the first and the second point. */
+    final Point firstPoint = data.getFirstPoint();
+    final Point secondPoint = data.getSecondPoint();
+
+    /* Create a straight line. */
+    final GeometryFactory factory = new GeometryFactory( firstPoint.getPrecisionModel(), firstPoint.getSRID() );
+    final LineString straightLine = factory.createLineString( new Coordinate[] { firstPoint.getCoordinate(), secondPoint.getCoordinate() } );
+
+    // TODO
+  }
+
+  private void projectPoints( final StraightenProfileData data )
+  {
+    /* Add the first and second point to the profile, if equivalents do not exist there. */
     // TODO
 
-    return null;
+    /* Find all points in the profile between the first and the second point. */
+    // TODO
+
+    /* Project them to the straight line and adjust the x/y coordinates. */
+    // TODO
+  }
+
+  private void recalculateWidth( final StraightenProfileData data )
+  {
+    /* Corrent only the points found between the first and the second point. */
+    if( m_data.getCorrectPointsAmount() == CORRECT_POINTS_AMOUNT.BETWEEN )
+    {
+      // TODO
+    }
+
+    /* Correct all points of the profile. */
+    // TODO
   }
 }
