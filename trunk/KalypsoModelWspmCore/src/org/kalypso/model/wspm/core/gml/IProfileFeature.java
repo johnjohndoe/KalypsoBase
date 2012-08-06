@@ -94,11 +94,21 @@ public interface IProfileFeature extends Feature, IProfileProvider
   IProfil getProfil( );
 
   /**
-   * Returns the profile geometry.<br>
-   * IMPORTANT: this geometry is (in contrast to {@link #getSrsName()} always in the Kalypso-Coorindate-System.
+   * Returns the profile geometry.<br/>
+   * <br/>
+   * <strong>IMPORTANT:</strong> This geometry is (in contrast to {@link #getSrsName()} always in the Kalypso coordinate
+   * system.
+   * 
+   * @return The profile geometry.
    */
   GM_Curve getLine( );
 
+  /**
+   * This function returns the profile geometry in the JTS format. It will be build from the profile records and be
+   * transformed into the Kalypso coordinate system.
+   * 
+   * @return The profile geometry in the JTS format.
+   */
   LineString getJtsLine( ) throws GM_Exception;
 
   String getSrsName( );
