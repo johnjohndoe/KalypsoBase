@@ -286,6 +286,8 @@ public class StraightenProfileWidget extends AbstractProfileWidget
     {
       m_firstPoint = null;
       m_secondPoint = null;
+
+      repaintMap();
     }
   }
 

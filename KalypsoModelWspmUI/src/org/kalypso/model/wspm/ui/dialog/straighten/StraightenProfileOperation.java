@@ -45,7 +45,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
+import org.kalypso.model.wspm.core.gml.WspmProject;
+import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
@@ -56,10 +61,14 @@ import org.kalypso.model.wspm.ui.dialog.straighten.data.CORRECT_POINTS_ENABLEMEN
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree_impl.model.feature.FeatureFactory;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -67,6 +76,7 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineSegment;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
+import com.vividsolutions.jts.linearref.LengthIndexedLine;
 
 /**
  * This operation straightens a profile between two points.<br />
@@ -112,19 +122,29 @@ public class StraightenProfileOperation implements ICoreRunnableWithProgress
     try
     {
       /* Monitor. */
-      monitor.beginTask( "Straightening profile", 1000 );
+      monitor.beginTask( "Straightening profile", 1250 );
       monitor.subTask( "Inspecting profile..." );
 
+      /* Get the profile. */
+      final IProfileFeature profile = m_data.getProfile();
+
+      /* Create a temporary profile to work on, in case something wents wrong. */
+      final IProfileFeature tmpProfile = createTmpProfile( profile );
+
+      /* Get the first and second point. */
+      final Point firstPoint = m_data.getFirstPoint();
+      final Point secondPoint = m_data.getSecondPoint();
+
       /* Add the first and second point to the profile, if equivalents do not exist there. */
-      checkAnchorPoint( m_data.getProfile(), m_data.getFirstPoint() );
-      checkAnchorPoint( m_data.getProfile(), m_data.getSecondPoint() );
+      checkAnchorPoint( tmpProfile, firstPoint );
+      checkAnchorPoint( tmpProfile, secondPoint );
 
       /* Monitor. */
       monitor.worked( 250 );
       monitor.subTask( "Collecting all points between the first and the second point..." );
 
       /* Find all points in the profile between the first and the second point. */
-      final IProfileRecord[] points = findPoints( m_data );
+      final IProfileRecord[] points = findPoints( tmpProfile, firstPoint, secondPoint );
       if( points.length == 0 )
         throw new IllegalStateException( "There are no points between the first and second point..." );
 
@@ -133,7 +153,7 @@ public class StraightenProfileOperation implements ICoreRunnableWithProgress
       monitor.subTask( "Projecting all points to the line..." );
 
       /* Project them and adjust the x/y coordinates. */
-      projectPoints( m_data, points );
+      projectPoints( tmpProfile, firstPoint, secondPoint, points );
 
       /* Monitor. */
       monitor.worked( 250 );
@@ -141,7 +161,17 @@ public class StraightenProfileOperation implements ICoreRunnableWithProgress
 
       /* Recalculate the width of the points. */
       if( m_data.getCorrectPointsEnablement() == CORRECT_POINTS_ENABLEMENT.ON )
-        recalculateWidth( m_data, points );
+        recalculateWidth( tmpProfile, points );
+
+      /* Monitor. */
+      monitor.worked( 250 );
+      monitor.subTask( "Applying changes..." );
+
+      /* Copy data of the temporary profile feature to the profile feature. */
+      final ProfileFeatureBinding profileBinding = (ProfileFeatureBinding) profile;
+      profileBinding.setProfile( tmpProfile.getProfil() );
+      // TODO How to make workspace dirty?
+      // TODO Is this ok?
 
       /* Monitor. */
       monitor.worked( 250 );
@@ -157,6 +187,26 @@ public class StraightenProfileOperation implements ICoreRunnableWithProgress
       /* Monitor. */
       monitor.done();
     }
+  }
+
+  private IProfileFeature createTmpProfile( final IProfileFeature profile ) throws Exception
+  {
+    /* Get the feature type of the root feature of the workspace. */
+    final GMLWorkspace workspace = profile.getWorkspace();
+    final Feature rootFeature = workspace.getRootFeature();
+    final IFeatureType rootFeatureType = rootFeature.getFeatureType();
+
+    /* Create temporary workspace. */
+    final GMLWorkspace tmpWorkspace = FeatureFactory.createGMLWorkspace( rootFeatureType, workspace.getContext(), workspace.getFeatureProviderFactory() );
+    final Feature tmpRootFeature = tmpWorkspace.getRootFeature();
+    final IFeatureType tmpRootFeatureType = tmpRootFeature.getFeatureType();
+    final IRelationType tmpWaterBodyRelation = (IRelationType) tmpRootFeatureType.getProperty( WspmProject.QN_MEMBER_WATER_BODY );
+    final IFeatureType tmpWaterBodyFeatureType = tmpWaterBodyRelation.getTargetFeatureType();
+    final IRelationType tmpProfileRelation = (IRelationType) tmpWaterBodyFeatureType.getProperty( WspmWaterBody.MEMBER_PROFILE );
+    final Feature tmpWaterBody = workspace.createFeature( tmpRootFeature, tmpWaterBodyRelation, tmpWaterBodyFeatureType );
+    final IProfileFeature tmpProfile = (IProfileFeature) FeatureHelper.cloneFeature( tmpWaterBody, tmpProfileRelation, profile );
+
+    return tmpProfile;
   }
 
   private void checkAnchorPoint( final IProfileFeature profile, final Point anchorPoint ) throws Exception
@@ -202,14 +252,9 @@ public class StraightenProfileOperation implements ICoreRunnableWithProgress
     profil.addPoint( index, point );
   }
 
-  private IProfileRecord[] findPoints( final StraightenProfileData data ) throws GM_Exception
+  private IProfileRecord[] findPoints( final IProfileFeature profile, final Point firstPoint, final Point secondPoint ) throws GM_Exception
   {
-    /* Get the profile. */
-    final IProfileFeature profile = data.getProfile();
-
-    /* Get the first and the second point. */
-    final Point firstPoint = data.getFirstPoint();
-    final Point secondPoint = data.getSecondPoint();
+    /* Check the first and second point. */
     if( firstPoint.equals( secondPoint ) || firstPoint.distance( secondPoint ) < 0.001 )
       throw new IllegalStateException( "The first and second point are the same or too near to each other..." );
 
@@ -243,15 +288,8 @@ public class StraightenProfileOperation implements ICoreRunnableWithProgress
     return profil.getPoints( startIndex, endIndex );
   }
 
-  private void projectPoints( final StraightenProfileData data, final IProfileRecord[] points ) throws Exception
+  private void projectPoints( final IProfileFeature profile, final Point firstPoint, final Point secondPoint, final IProfileRecord[] points ) throws Exception
   {
-    /* Get the profile. */
-    final IProfileFeature profile = data.getProfile();
-
-    /* Get the first and the second point. */
-    final Point firstPoint = data.getFirstPoint();
-    final Point secondPoint = data.getSecondPoint();
-
     /* Create the straight line. */
     final GeometryFactory factory = new GeometryFactory( firstPoint.getPrecisionModel(), firstPoint.getSRID() );
     final LineString straightLine = factory.createLineString( new Coordinate[] { firstPoint.getCoordinate(), secondPoint.getCoordinate() } );
@@ -259,7 +297,7 @@ public class StraightenProfileOperation implements ICoreRunnableWithProgress
 
     /* Transform the straight line into the coordinate system of the profile. */
     final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( profile.getSrsName() );
-    final GM_Curve gmTransformedLine = (GM_Curve) geoTransformer.transform( gmStraighteLine );
+    final GM_Object gmTransformedLine = geoTransformer.transform( gmStraighteLine );
     final LineString transformedLine = (LineString) JTSAdapter.export( gmTransformedLine );
 
     /* Create a line segment. */
@@ -284,7 +322,7 @@ public class StraightenProfileOperation implements ICoreRunnableWithProgress
     }
   }
 
-  private void recalculateWidth( final StraightenProfileData data, final IProfileRecord[] points ) throws GM_Exception
+  private void recalculateWidth( final IProfileFeature profile, final IProfileRecord[] points ) throws Exception
   {
     /* The points to correct. */
     IProfileRecord[] pointsToCorrect;
@@ -298,21 +336,43 @@ public class StraightenProfileOperation implements ICoreRunnableWithProgress
     else
     {
       /* Correct all points of the profile. */
-      final IProfileFeature profile = data.getProfile();
       final IProfil profil = profile.getProfil();
       pointsToCorrect = profil.getPoints();
     }
 
     /* Get the profile. */
-    final IProfileFeature profile = data.getProfile();
+    final IProfil profil = profile.getProfil();
+
+    /* Get the geo transformer. */
+    final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( profile.getSrsName() );
 
     /* Get the line of the profile (must be build from the records). */
-    final LineString profileLine = profile.getJtsLine();
+    final GM_Curve gmProfileLine = profile.getLine();
+    final GM_Object gmTransformedLine = geoTransformer.transform( gmProfileLine );
+    final LineString transformedLine = (LineString) JTSAdapter.export( gmTransformedLine );
+
+    /* The position for width zero. */
+    /* HINT: Remember, the line is already modified. */
+    /* HINT: This position should be calculated by the new geo coordinates. */
+    final GM_Point gmZeroWidthPoint = Profiles.getPosition( profil, 0 );
+    final GM_Object gmTransformedPoint = geoTransformer.transform( gmZeroWidthPoint );
+    final Point transformedPoint = (Point) JTSAdapter.export( gmTransformedPoint );
+
+    /* Get the distance of the zero width point on the line. */
+    final LengthIndexedLine lengthIndex = new LengthIndexedLine( transformedLine );
+    final double zeroDistance = lengthIndex.indexOf( transformedPoint.getCoordinate() );
 
     /* Loop the points. */
     for( final IProfileRecord point : pointsToCorrect )
     {
-      // TODO
+      /* Get the coordinate. */
+      final Coordinate coordinate = point.getCoordinate();
+
+      /* 200 (point distance) - 500 (zero width distance) = -300 (width). */
+      /* 500 (point distance) - 500 (zero width distance) = 0 (width). */
+      /* 700 (point distance) - 500 (zero width distance) = 200 (width). */
+      final double pointDistance = lengthIndex.indexOf( coordinate );
+      point.setBreite( pointDistance - zeroDistance );
     }
   }
 }
