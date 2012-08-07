@@ -96,8 +96,8 @@ public interface IProfileFeature extends Feature, IProfileProvider
   /**
    * Returns the profile geometry.<br/>
    * <br/>
-   * <strong>IMPORTANT:</strong> This geometry is (in contrast to {@link #getSrsName()} always in the Kalypso coordinate
-   * system.
+   * <strong>IMPORTANT:</strong> This geometry is (in contrast to {@link #getSrsName()}) always in the Kalypso
+   * coordinate system.
    * 
    * @return The profile geometry.
    */
