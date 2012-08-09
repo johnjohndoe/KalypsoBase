@@ -77,7 +77,7 @@ public class GetFeatureInfoDialog extends PopupDialog
    */
   public GetFeatureInfoDialog( final Shell parentShell, final URL requestUrl )
   {
-    super( parentShell, SWT.RESIZE, true, true, true, true, false, Messages.getString("GetFeatureInfoDialog_0"), null ); //$NON-NLS-1$
+    super( parentShell, SWT.RESIZE, true, true, true, true, false, Messages.getString( "GetFeatureInfoDialog_0" ), null ); //$NON-NLS-1$
 
     m_requestUrl = requestUrl;
   }
@@ -98,11 +98,14 @@ public class GetFeatureInfoDialog extends PopupDialog
       /* If there was no url provided show only a notice. */
       if( m_requestUrl == null )
       {
-        setTitleText( Messages.getString("GetFeatureInfoDialog_1") ); //$NON-NLS-1$
+        setTitleText( Messages.getString( "GetFeatureInfoDialog_1" ) ); //$NON-NLS-1$
         return main;
       }
 
       /* Load the url in the browser. */
+      // TODO Add a job that loads the URL asynchronly...
+      // TODO Then we can do better errorhandling, if no html or text is returned...
+      // TODO Set the text here directly, after the job has finished...
       final Browser browser = new Browser( main, SWT.BORDER );
       browser.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
       browser.setUrl( m_requestUrl.toExternalForm() );
@@ -115,7 +118,7 @@ public class GetFeatureInfoDialog extends PopupDialog
       KalypsoGisPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), ex.getLocalizedMessage(), ex ) );
 
       /* Show the error message to the user. */
-      setTitleText( String.format( Messages.getString("GetFeatureInfoDialog_2"), ex.getLocalizedMessage() ) ); //$NON-NLS-1$
+      setTitleText( String.format( Messages.getString( "GetFeatureInfoDialog_2" ), ex.getLocalizedMessage() ) ); //$NON-NLS-1$
 
       return main;
     }

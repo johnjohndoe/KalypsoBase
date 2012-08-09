@@ -40,15 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
 
-import java.awt.Point;
+import java.awt.event.MouseEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.dialogs.ListDialog;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
 import org.kalypso.contribs.java.net.UrlUtilities;
@@ -59,23 +64,20 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
 import org.kalypso.ogc.gml.map.widgets.dialogs.GetFeatureInfoDialog;
+import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 
 /**
  * This widget executes a feature info request.
  * 
  * @author Holger Albert
  */
-public class GetFeatureInfoWidget extends DeprecatedMouseWidget
+public class GetFeatureInfoWidget extends AbstractWidget
 {
-  /**
-   * The property of the theme, with with we want to do the get feature info request.
-   */
-  private String m_themeProperty;
-
   /**
    * The wms theme.
    */
@@ -86,9 +88,8 @@ public class GetFeatureInfoWidget extends DeprecatedMouseWidget
    */
   public GetFeatureInfoWidget( )
   {
-    super( "GetFeatureInfo", Messages.getString("GetFeatureInfoWidget_1") ); //$NON-NLS-1$ //$NON-NLS-2$
+    super( "GetFeatureInfo", Messages.getString( "GetFeatureInfoWidget_1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    m_themeProperty = null;
     m_wmsTheme = null;
   }
 
@@ -105,10 +106,10 @@ public class GetFeatureInfoWidget extends DeprecatedMouseWidget
   }
 
   /**
-   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#leftClicked(java.awt.Point)
+   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#mouseClicked(java.awt.event.MouseEvent)
    */
   @Override
-  public void leftClicked( final Point p )
+  public void mouseClicked( final MouseEvent event )
   {
     try
     {
@@ -124,7 +125,7 @@ public class GetFeatureInfoWidget extends DeprecatedMouseWidget
       /* Get the last request. */
       final String lastRequest = m_wmsTheme.getLastRequest();
       if( lastRequest == null || lastRequest.length() == 0 )
-        throw new IllegalStateException( Messages.getString("GetFeatureInfoWidget_2") ); //$NON-NLS-1$
+        throw new IllegalStateException( Messages.getString( "GetFeatureInfoWidget_2" ) ); //$NON-NLS-1$
 
       /* Get the parameter of the last request. */
       final URL lastRequestUrl = new URL( lastRequest );
@@ -135,9 +136,10 @@ public class GetFeatureInfoWidget extends DeprecatedMouseWidget
       final Map<String, String> parameters = new HashMap<String, String>();
       parameters.put( "REQUEST", "GetFeatureInfo" ); //$NON-NLS-1$ //$NON-NLS-2$
       parameters.put( "QUERY_LAYERS", lastRequestParams.get( "LAYERS" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      parameters.put( "X", String.format( Locale.PRC, "%.0f", p.getX() ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      parameters.put( "Y", String.format( Locale.PRC, "%.0f", p.getY() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      parameters.put( "X", String.format( Locale.PRC, "%.0f", event.getPoint().getX() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      parameters.put( "Y", String.format( Locale.PRC, "%.0f", event.getPoint().getY() ) ); //$NON-NLS-1$ //$NON-NLS-2$
       parameters.put( "INFO_FORMAT", "text/html" ); //$NON-NLS-1$ //$NON-NLS-2$
+      parameters.put( "VERSION", lastRequestParams.get( "VERSION" ) );
 
       /* Adjust the request. */
       final URL newRequestUrl = UrlUtilities.addQuery( lastRequestUrl, parameters );
@@ -189,23 +191,19 @@ public class GetFeatureInfoWidget extends DeprecatedMouseWidget
     try
     {
       /* Get the theme property. */
-      m_themeProperty = getParameter( "getFeatureInfoProperty" ); //$NON-NLS-1$
+      final String themeProperty = getParameter( "getFeatureInfoProperty" ); //$NON-NLS-1$
 
       /* Get the map model. */
       final IMapModell mapModel = mapPanel.getMapModell();
       if( !(mapModel instanceof GisTemplateMapModell) )
-        throw new IllegalStateException( Messages.getString("GetFeatureInfoWidget_14") ); //$NON-NLS-1$
+        throw new IllegalStateException( Messages.getString( "GetFeatureInfoWidget_14" ) ); //$NON-NLS-1$
 
       /* Find the theme. */
-      final IKalypsoTheme theme = findTheme( (GisTemplateMapModell) mapModel );
-
-      /* Check, if it is a WMS theme. */
-      m_wmsTheme = checkIfWmsTheme( theme );
+      m_wmsTheme = findTheme( (GisTemplateMapModell) mapModel, themeProperty );
     }
     catch( final IllegalStateException ex )
     {
       ex.printStackTrace();
-      m_themeProperty = null;
       m_wmsTheme = null;
     }
   }
@@ -217,13 +215,21 @@ public class GetFeatureInfoWidget extends DeprecatedMouseWidget
    *          The map model.
    * @return The {@link IKalypsoTheme} or null.
    */
-  private IKalypsoTheme findTheme( final GisTemplateMapModell mapModel ) throws IllegalStateException
+  private KalypsoWMSTheme findTheme( final GisTemplateMapModell mapModel, final String themeProperty ) throws IllegalStateException
   {
-    final IKalypsoTheme[] themes = MapModellHelper.findThemeByProperty( mapModel, m_themeProperty, IKalypsoThemeVisitor.DEPTH_ZERO );
-    if( themes == null || themes.length == 0 )
-      throw new IllegalStateException( String.format( Messages.getString("GetFeatureInfoWidget_15"), m_themeProperty ) ); //$NON-NLS-1$
+    if( !StringUtils.isEmpty( themeProperty ) )
+      return findThemeWithProperty( mapModel, themeProperty );
 
-    return themes[0];
+    return findThemeByUserSelection( mapModel );
+  }
+
+  private KalypsoWMSTheme findThemeWithProperty( final GisTemplateMapModell mapModel, final String themeProperty )
+  {
+    final IKalypsoTheme[] themes = MapModellHelper.findThemeByProperty( mapModel, themeProperty, IKalypsoThemeVisitor.DEPTH_ZERO );
+    if( themes == null || themes.length == 0 )
+      throw new IllegalStateException( String.format( Messages.getString( "GetFeatureInfoWidget_15" ), themeProperty ) ); //$NON-NLS-1$
+
+    return checkIfWmsTheme( themes[0] );
   }
 
   private KalypsoWMSTheme checkIfWmsTheme( final IKalypsoTheme theme ) throws IllegalStateException
@@ -234,7 +240,7 @@ public class GetFeatureInfoWidget extends DeprecatedMouseWidget
     if( theme instanceof IKalypsoCascadingTheme && theme.isVisible() )
       return findFirstVisibleWmsTheme( (IKalypsoCascadingTheme) theme );
 
-    throw new IllegalStateException( Messages.getString("GetFeatureInfoWidget_16") ); //$NON-NLS-1$
+    throw new IllegalStateException( Messages.getString( "GetFeatureInfoWidget_16" ) ); //$NON-NLS-1$
   }
 
   private KalypsoWMSTheme findFirstVisibleWmsTheme( final IKalypsoCascadingTheme cascadingTheme ) throws IllegalStateException
@@ -246,6 +252,50 @@ public class GetFeatureInfoWidget extends DeprecatedMouseWidget
         return (KalypsoWMSTheme) theme;
     }
 
-    throw new IllegalStateException( Messages.getString("GetFeatureInfoWidget_17") ); //$NON-NLS-1$
+    throw new IllegalStateException( Messages.getString( "GetFeatureInfoWidget_17" ) ); //$NON-NLS-1$
+  }
+
+  private KalypsoWMSTheme findThemeByUserSelection( final GisTemplateMapModell mapModel )
+  {
+    /* Find all wms themes. */
+    final IKalypsoTheme[] wmsThemes = findWmsThemes( mapModel, IKalypsoThemeVisitor.DEPTH_INFINITE );
+
+    /* Create the dialog. */
+    final ListDialog dialog = new ListDialog( SWT_AWT_Utilities.findActiveShell() );
+    dialog.setTitle( getName() );
+    dialog.setMessage( "Select WMS theme" );
+    dialog.setLabelProvider( new LabelProvider() );
+    dialog.setContentProvider( new ArrayContentProvider() );
+
+    /* Set the input. */
+    dialog.setInput( wmsThemes );
+
+    /* Open the dialog. */
+    final int open = SWT_AWT_Utilities.openSwtWindow( dialog );
+    if( open != Window.OK )
+      return null;
+
+    final Object[] result = dialog.getResult();
+
+    return (KalypsoWMSTheme) result[0];
+  }
+
+  public IKalypsoTheme[] findWmsThemes( final IMapModell mapModel, final int depth )
+  {
+    final IKalypsoThemePredicate predicate = new IKalypsoThemePredicate()
+    {
+      @Override
+      public boolean decide( final IKalypsoTheme theme )
+      {
+        if( theme instanceof KalypsoWMSTheme )
+          return true;
+
+        return false;
+      }
+    };
+
+    final KalypsoThemeVisitor visitor = new KalypsoThemeVisitor( predicate );
+    mapModel.accept( visitor, depth );
+    return visitor.getFoundThemes();
   }
 }
