@@ -168,7 +168,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     catch( final CoreException e )
     {
       e.printStackTrace();
-      return new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, Messages.getString("AbstractDeegreeImageProvider.0"), e ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, Messages.getString( "AbstractDeegreeImageProvider.0" ), e ); //$NON-NLS-1$
     }
   }
 
@@ -194,7 +194,6 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
 
     return loadImage( width, height, bbox );
   }
-
 
   @Override
   public synchronized ImageDescriptor getLegendGraphic( final String layer, final String style )
@@ -253,7 +252,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
 
   /**
    * This function creates the remote service and returns it.
-   *
+   * 
    * @param capabilities
    *          The capabilites for the remote service.
    * @return The remote service.
@@ -262,7 +261,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
 
   /**
    * This function parses a String into an URL to the WMS service.
-   *
+   * 
    * @param service
    *          The String representation of the URL to the WMS service.
    * @return The URL to the WMS service.
@@ -284,7 +283,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
    * This method tries to find a common spatial reference system (srs) for a given set of layers. If all layers
    * coorespond to the local crs the local crs is returned, otherwise the srs of the top layer is returned and the
    * client must choose one to transform it to the local coordinate system
-   *
+   * 
    * @param localCRS
    *          The local spatial reference system.
    * @param capabilities
@@ -369,8 +368,20 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
       /* Create the GetMap request. */
       final GetMap request = DeegreeWMSUtilities.createGetMapRequest( (WMSCapabilities) remoteWMS.getCapabilities(), getNegotiatedSRS(), getThemeName(), m_layers, m_styles, width, height, bbox, getLocalSRS(), m_sldBody );
 
+      /* HACK: Some wms servers seems to be wrongly configured. */
+      String getMapUrl = m_getMapUrl.toExternalForm();
+      final int indexOf = getMapUrl.indexOf( "?" );
+      if( indexOf > -1 )
+        getMapUrl = getMapUrl.substring( 0, indexOf );
+
+      /* HACK: The deegree class GetMap returns two different types of requests (regarding the wms version). */
+      /* HACK: One with & at the beginning and one without. */
+      String requestParameters = request.toString();
+      if( requestParameters.startsWith( "&" ) )
+        requestParameters = requestParameters.replaceFirst( "&", "" );
+
       /* Store the request, before actually asking the WMS for a response. */
-      m_lastRequest = URLDecoder.decode( String.format( "%s%s", m_getMapUrl, request.toString() ), "UTF-8" ); //$NON-NLS-1$ //$NON-NLS-2$
+      m_lastRequest = URLDecoder.decode( String.format( "%s?%s", getMapUrl, requestParameters ), "UTF-8" ); //$NON-NLS-1$ //$NON-NLS-2$
 
       /* Do the request and wait, until the result is there. */
       final Object result = remoteWMS.doService( request );
@@ -444,7 +455,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
 
   /**
    * This function returns the last request or null.
-   *
+   * 
    * @return The last request or null.
    */
   public synchronized String getLastRequest( )

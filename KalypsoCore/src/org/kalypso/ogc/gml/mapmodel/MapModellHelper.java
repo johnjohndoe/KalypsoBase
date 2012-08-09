@@ -382,12 +382,12 @@ public final class MapModellHelper
   /**
    * Finds all themes with the given theme property from the map model.
    * 
-   * @param depth
-   *          One of the {@link IKalypsoThemeVisitor#DEPTH_} constants.
    * @param mapModel
    *          This model is searched
    * @param themeProperty
    *          This where this property is set are found
+   * @param depth
+   *          One of the {@link IKalypsoThemeVisitor#DEPTH_} constants.
    */
   public static IKalypsoTheme[] findThemeByProperty( final IMapModell mapModel, final String themeProperty, final int depth )
   {
@@ -405,5 +405,4 @@ public final class MapModellHelper
     mapModel.accept( visitor, depth );
     return visitor.getFoundThemes();
   }
-
 }
