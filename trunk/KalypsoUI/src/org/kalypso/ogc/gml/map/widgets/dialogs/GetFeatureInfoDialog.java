@@ -42,8 +42,13 @@ package org.kalypso.ogc.gml.map.widgets.dialogs;
 
 import java.net.URL;
 
+import org.apache.commons.httpclient.StatusLine;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.IJobChangeListener;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.PopupDialog;
 import org.eclipse.swt.SWT;
@@ -52,7 +57,10 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.commons.net.HttpResponse;
+import org.kalypso.commons.net.SendHttpGetRequestJob;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -65,13 +73,32 @@ import org.kalypso.ui.KalypsoGisPlugin;
 public class GetFeatureInfoDialog extends PopupDialog
 {
   /**
+   * The job change listener.
+   */
+  private final IJobChangeListener m_listener = new JobChangeAdapter()
+  {
+    @Override
+    public void done( final IJobChangeEvent event )
+    {
+      handleJobDone( event );
+    }
+  };
+
+  /**
    * The request URL.
    */
   private final URL m_requestUrl;
 
   /**
+   * The browser.
+   */
+  private Browser m_browser;
+
+  /**
    * The constructor.
    * 
+   * @param parentShell
+   *          The parent shell.
    * @param requestUrl
    *          The request Url.
    */
@@ -80,6 +107,7 @@ public class GetFeatureInfoDialog extends PopupDialog
     super( parentShell, SWT.RESIZE, true, true, true, true, false, Messages.getString( "GetFeatureInfoDialog_0" ), null ); //$NON-NLS-1$
 
     m_requestUrl = requestUrl;
+    m_browser = null;
   }
 
   /**
@@ -93,35 +121,17 @@ public class GetFeatureInfoDialog extends PopupDialog
     main.setLayout( new GridLayout( 1, false ) );
     main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    try
-    {
-      /* If there was no url provided show only a notice. */
-      if( m_requestUrl == null )
-      {
-        setTitleText( Messages.getString( "GetFeatureInfoDialog_1" ) ); //$NON-NLS-1$
-        return main;
-      }
+    /* Set the title text. */
+    setTitleText( "Loading..." );
 
-      /* Load the url in the browser. */
-      // TODO Add a job that loads the URL asynchronly...
-      // TODO Then we can do better errorhandling, if no html or text is returned...
-      // TODO Set the text here directly, after the job has finished...
-      final Browser browser = new Browser( main, SWT.BORDER );
-      browser.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-      browser.setUrl( m_requestUrl.toExternalForm() );
+    /* Create the browser. */
+    m_browser = new Browser( main, SWT.BORDER );
+    m_browser.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-      return main;
-    }
-    catch( final Exception ex )
-    {
-      /* Log the error message. */
-      KalypsoGisPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), ex.getLocalizedMessage(), ex ) );
+    /* Initialize. */
+    initialize();
 
-      /* Show the error message to the user. */
-      setTitleText( String.format( Messages.getString( "GetFeatureInfoDialog_2" ), ex.getLocalizedMessage() ) ); //$NON-NLS-1$
-
-      return main;
-    }
+    return main;
   }
 
   /**
@@ -131,5 +141,92 @@ public class GetFeatureInfoDialog extends PopupDialog
   protected IDialogSettings getDialogSettings( )
   {
     return DialogSettingsUtils.getDialogSettings( KalypsoGisPlugin.getDefault(), getClass().getCanonicalName() );
+  }
+
+  /**
+   * This function initalizes the dialog.
+   */
+  private void initialize( )
+  {
+    /* If there was no url provided show only a notice. */
+    if( m_requestUrl == null )
+    {
+      setTitleText( Messages.getString( "GetFeatureInfoDialog_1" ) ); //$NON-NLS-1$
+      return;
+    }
+
+    /* Create the send http get request job. */
+    final SendHttpGetRequestJob job = new SendHttpGetRequestJob( m_requestUrl );
+    job.setSystem( true );
+    job.addJobChangeListener( m_listener );
+
+    /* Schedule it. */
+    job.schedule();
+  }
+
+  protected void handleJobDone( final IJobChangeEvent event )
+  {
+    if( m_browser == null || m_browser.isDisposed() )
+      return;
+
+    final Display display = m_browser.getDisplay();
+    display.asyncExec( new Runnable()
+    {
+      @Override
+      public void run( )
+      {
+        handleJobDoneInternal( event );
+      }
+    } );
+  }
+
+  protected void handleJobDoneInternal( final IJobChangeEvent event )
+  {
+    /* Get the result. */
+    final IStatus result = event.getResult();
+    if( !result.isOK() )
+    {
+      setText( "text/plain", result.getMessage() );
+      return;
+    }
+
+    /* Get the job. */
+    final Job job = event.getJob();
+    if( !(job instanceof SendHttpGetRequestJob) )
+      return;
+
+    /* Cast. */
+    final SendHttpGetRequestJob task = (SendHttpGetRequestJob) job;
+
+    /* Get the response. */
+    final HttpResponse response = task.getResponse();
+    final StatusLine statusLine = response.getStatusLine();
+    if( statusLine.getStatusCode() != 200 )
+    {
+      setText( "text/plain", statusLine.toString() );
+      return;
+    }
+
+    /* Get the response text. */
+    final String responseText = response.getResponse();
+    if( responseText == null )
+    {
+      setText( "text/plain", "There was no result returned by the server." );
+      return;
+    }
+
+    /* Set the response text into the browser. */
+    setText( response.getMimeType(), responseText );
+  }
+
+  private void setText( final String mimeType, final String text )
+  {
+    if( m_browser == null || m_browser.isDisposed() )
+      return;
+
+    if( mimeType != null && mimeType.contains( "xml" ) )
+      m_browser.setText( StringEscapeUtils.escapeHtml4( text ) );
+    else
+      m_browser.setText( text );
   }
 }

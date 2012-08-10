@@ -48,7 +48,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 
+import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
@@ -79,18 +81,18 @@ public class HttpClientUtilities
    * @param targetFile
    *          The target file.
    */
-  // FIXME: do not use generic exceptions!
   public static void requestFileFromServer( final URL sourceUrl, final File targetFile ) throws CoreException
   {
+    /* The streams. */
     InputStream is = null;
     OutputStream os = null;
 
     try
     {
-      /* Get a http client. */
+      /* Create the client. */
       final HttpClient httpClient = ProxyUtilities.getConfiguredHttpClient( 10000, sourceUrl, 0 );
 
-      /* Build the get method. */
+      /* Build the method. */
       final GetMethod method = new GetMethod( sourceUrl.toString() );
       method.setDoAuthentication( true );
 
@@ -126,8 +128,67 @@ public class HttpClientUtilities
     }
     finally
     {
+      /* Close the streams. */
       IOUtils.closeQuietly( is );
       IOUtils.closeQuietly( os );
+    }
+  }
+
+  /**
+   * This function is sends a get request.
+   * 
+   * @param url
+   *          The address of the server.
+   * @return The response as string.
+   */
+  public static HttpResponse sendGet( final String url ) throws HttpException, IOException
+  {
+    /* The input stream. */
+    InputStream is = null;
+
+    try
+    {
+      /* Create the client. */
+      final HttpClient client = ProxyUtilities.getConfiguredHttpClient( 10000, new URL( url ), 0 );
+
+      /* Build the method. */
+      final GetMethod get = new GetMethod( url );
+      get.setDoAuthentication( true );
+
+      /* Execute the method. */
+      final int status = client.executeMethod( get );
+      if( status != 200 )
+        return new HttpResponse( get.getStatusLine(), null, null );
+
+      /* Get the response. */
+      is = get.getResponseBodyAsStream();
+      if( is == null )
+        return new HttpResponse( get.getStatusLine(), null, null );
+
+      /* Get the content type. */
+      final Header contentType = get.getResponseHeader( "Content-Type" );
+
+      /* Parse the content type, if available. */
+      String mimeType = null;
+      String encoding = null;
+      if( contentType != null )
+      {
+        final String contentTypeValue = contentType.getValue();
+        final String[] contentTypeSplit = contentTypeValue.split( ";" );
+        mimeType = contentTypeSplit[0].trim();
+        if( contentTypeSplit.length > 1 )
+          encoding = contentTypeSplit[1].trim();
+      }
+
+      /* Read the response. */
+      final String response = IOUtils.toString( is, encoding );
+
+      return new HttpResponse( get.getStatusLine(), mimeType, response );
+    }
+    finally
+    {
+      /* Close the input stream. */
+      IOUtils.closeQuietly( is );
     }
   }
 }

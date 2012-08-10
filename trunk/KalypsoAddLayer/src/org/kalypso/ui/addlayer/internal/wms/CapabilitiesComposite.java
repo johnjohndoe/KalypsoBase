@@ -68,7 +68,7 @@ public class CapabilitiesComposite extends Composite
   private void createContent( )
   {
     createStatusControls();
-    // FIXME: triggger from outside
+    // FIXME: trigger from outside
     if( false )
       createAddressControls();
     createOpenCapabilitiesControls();
@@ -119,7 +119,7 @@ public class CapabilitiesComposite extends Composite
 
     final Label label = new Label( this, SWT.NONE );
     // TODO: better label?
-    label.setText( Messages.getString("CapabilitiesComposite.0") ); //$NON-NLS-1$
+    label.setText( Messages.getString( "CapabilitiesComposite.0" ) ); //$NON-NLS-1$
     label.setToolTipText( toolTipText );
 
     final ComboViewer imageProviderViewer = new ComboViewer( this, SWT.READ_ONLY );
@@ -158,7 +158,7 @@ public class CapabilitiesComposite extends Composite
   private void createStatusControls( )
   {
     final Label label = new Label( this, SWT.NONE );
-    label.setText( Messages.getString("CapabilitiesComposite.1") ); //$NON-NLS-1$
+    label.setText( Messages.getString( "CapabilitiesComposite.1" ) ); //$NON-NLS-1$
 
     final StatusComposite statusControl = new StatusComposite( this, StatusComposite.DETAILS );
     statusControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -175,7 +175,7 @@ public class CapabilitiesComposite extends Composite
   {
     final Label label = new Label( this, SWT.NONE );
 
-    label.setText( Messages.getString("CapabilitiesComposite.2") ); //$NON-NLS-1$
+    label.setText( Messages.getString( "CapabilitiesComposite.2" ) ); //$NON-NLS-1$
 
     final Text field = new Text( this, SWT.BORDER );
     field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -191,7 +191,7 @@ public class CapabilitiesComposite extends Composite
   {
     final Label label = new Label( this, SWT.NONE );
 
-    label.setText( Messages.getString("CapabilitiesComposite.3") ); //$NON-NLS-1$
+    label.setText( Messages.getString( "CapabilitiesComposite.3" ) ); //$NON-NLS-1$
 
     final Text field = new Text( this, SWT.BORDER );
     field.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );

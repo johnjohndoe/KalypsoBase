@@ -153,7 +153,7 @@ public class WPSUtilities
   /**
    * This function is responsible for sending a request to a server.
    * 
-   * @param body
+   * @param xml
    *          The XML string to be send.
    * @param url
    *          The address of the server.
