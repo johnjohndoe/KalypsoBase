@@ -60,6 +60,7 @@ import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
+import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
@@ -67,6 +68,7 @@ import org.kalypso.ogc.gml.map.widgets.dialogs.GetFeatureInfoDialog;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
@@ -78,6 +80,49 @@ import org.kalypso.ogc.gml.widgets.AbstractWidget;
  */
 public class GetFeatureInfoWidget extends AbstractWidget
 {
+  /**
+   * The map model listener.
+   */
+  private final IMapModellListener m_listener = new IMapModellListener()
+  {
+    @Override
+    public void themeVisibilityChanged( final IMapModell source, final IKalypsoTheme theme, final boolean visibility )
+    {
+      handleThemeChanged( theme );
+    }
+
+    @Override
+    public void themeStatusChanged( final IMapModell source, final IKalypsoTheme theme )
+    {
+    }
+
+    @Override
+    public void themeRemoved( final IMapModell source, final IKalypsoTheme theme, final boolean lastVisibility )
+    {
+      handleThemeChanged( theme );
+    }
+
+    @Override
+    public void themeOrderChanged( final IMapModell source )
+    {
+    }
+
+    @Override
+    public void themeContextChanged( final IMapModell source, final IKalypsoTheme theme )
+    {
+    }
+
+    @Override
+    public void themeAdded( final IMapModell source, final IKalypsoTheme theme )
+    {
+    }
+
+    @Override
+    public void themeActivated( final IMapModell source, final IKalypsoTheme previouslyActive, final IKalypsoTheme nowActive )
+    {
+    }
+  };
+
   /**
    * The wms theme.
    */
@@ -103,6 +148,9 @@ public class GetFeatureInfoWidget extends AbstractWidget
     super.activate( commandPoster, mapPanel );
 
     initialize( mapPanel );
+
+    final IKalypsoLayerModell mapModell = mapPanel.getMapModell();
+    mapModell.addMapModelListener( m_listener );
   }
 
   /**
@@ -116,8 +164,19 @@ public class GetFeatureInfoWidget extends AbstractWidget
       /* We need a wms theme. */
       if( m_wmsTheme == null )
       {
+        /* Initialize from configuration or user selection. */
         initialize( getMapPanel() );
 
+        /* HINT 1: If the theme property is not set, the dialog was open. */
+        /* HINT 1: So do not proceed, regardless if there is a theme. */
+        /* HINT 1: This prevents from opening the feature info right after the dialog was open. */
+        final String themeProperty = getParameter( "getFeatureInfoProperty" ); //$NON-NLS-1$
+        if( StringUtils.isEmpty( themeProperty ) )
+          return;
+
+        /* HINT 2: If the theme property is set, the widget should configure itself without a dialog. */
+        /* HINT 2: So the user was not interupted, so only leave, if there is no theme. */
+        /* HINT 2: If there is a theme, show the feature info. */
         if( m_wmsTheme == null )
           return;
       }
@@ -276,17 +335,22 @@ public class GetFeatureInfoWidget extends AbstractWidget
       return null;
 
     final Object[] result = dialog.getResult();
+    if( result == null || result.length == 0 )
+      return null;
 
     return (KalypsoWMSTheme) result[0];
   }
 
-  public IKalypsoTheme[] findWmsThemes( final IMapModell mapModel, final int depth )
+  private IKalypsoTheme[] findWmsThemes( final IMapModell mapModel, final int depth )
   {
     final IKalypsoThemePredicate predicate = new IKalypsoThemePredicate()
     {
       @Override
       public boolean decide( final IKalypsoTheme theme )
       {
+        if( !theme.isVisible() )
+          return false;
+
         if( theme instanceof KalypsoWMSTheme )
           return true;
 
@@ -297,5 +361,16 @@ public class GetFeatureInfoWidget extends AbstractWidget
     final KalypsoThemeVisitor visitor = new KalypsoThemeVisitor( predicate );
     mapModel.accept( visitor, depth );
     return visitor.getFoundThemes();
+  }
+
+  protected void handleThemeChanged( final IKalypsoTheme theme )
+  {
+    if( m_wmsTheme == null )
+      return;
+
+    if( !m_wmsTheme.equals( theme ) )
+      return;
+
+    m_wmsTheme = null;
   }
 }
