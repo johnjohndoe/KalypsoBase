@@ -79,10 +79,6 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
-import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
-import org.kalypsodeegree.model.feature.event.IGMLWorkspaceModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -96,11 +92,20 @@ import com.vividsolutions.jts.geom.Envelope;
 /**
  * @author Andreas von Dömming
  */
-public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalypsoFeatureTheme, ModellEventListener, IKalypsoStyleListener
+public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalypsoFeatureTheme, IKalypsoStyleListener
 {
   private final VisibleFeaturesCache m_visibleFeaturesCache = new VisibleFeaturesCache( this );
 
   private final List<IKalypsoStyle> m_styles = Collections.synchronizedList( new ArrayList<IKalypsoStyle>() );
+
+  private final ModellEventListener m_modelListener = new ModellEventListener()
+  {
+    @Override
+    public void onModellChange( final ModellEvent event )
+    {
+      handleModelChanged( event );
+    }
+  };
 
   private CommandableWorkspace m_workspace;
 
@@ -157,7 +162,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       setStatus( StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "org.kalypso.ogc.gml.KalypsoFeatureTheme.0" ) + featurePath, null ) ); //$NON-NLS-1$
     }
 
-    m_workspace.addModellListener( this );
+    m_workspace.addModellListener( m_modelListener );
   }
 
   @Override
@@ -169,7 +174,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
     if( m_workspace != null )
     {
-      m_workspace.removeModellListener( this );
+      m_workspace.removeModellListener( m_modelListener );
       m_workspace = null;
     }
 
@@ -179,11 +184,6 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     m_visibleFeaturesCache.clear();
 
     super.dispose();
-  }
-
-  private void setDirty( )
-  {
-    requestRepaint( getFullExtent() );
   }
 
   @Override
@@ -291,7 +291,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     style.removeStyleListener( this );
     m_styles.remove( style );
 
-    setDirty();
+    requestInvalidation( new FeatureThemeInvalidation( getFullExtent(), true ) );
 
     // HACKY: in order to refresh (not update) the outline, fire a visibility event
     fireVisibilityChanged( isVisible() );
@@ -303,99 +303,34 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     return m_styles.toArray( new IKalypsoStyle[m_styles.size()] );
   }
 
-  @Override
-  public void onModellChange( final ModellEvent modellEvent )
+  protected void handleModelChanged( final ModellEvent event )
   {
     if( m_featureList == null )
       return;
 
-    if( modellEvent instanceof IGMLWorkspaceModellEvent )
-    {
-      // my workspace ?
-      final GMLWorkspace changedWorkspace = ((IGMLWorkspaceModellEvent) modellEvent).getGMLWorkspace();
-      if( m_workspace != null && changedWorkspace != m_workspace && changedWorkspace != m_workspace.getWorkspace() )
-        return; // not my workspace
+    final FeatureThemeInvalidation invalidation = ThemeModelEventHandler.calculateInvalidation( this, event );
 
-      if( modellEvent instanceof FeaturesChangedModellEvent )
-      {
-        final FeaturesChangedModellEvent featuresChangedModellEvent = (FeaturesChangedModellEvent) modellEvent;
-        final Feature[] features = featuresChangedModellEvent.getFeatures();
-
-        // HACK: for single-feature lists (see flag), we must invalidate the list ourselves.
-        if( m_isSingleFeature )
-        {
-          // TODO: we do not know which one of the changed features is the right one... (ses FIXME below)
-          // So we just invalidate all features in this list
-          for( final Feature feature : features )
-            m_featureList.invalidate( feature );
-        }
-
-        if( features.length > 100 )
-        {
-          // OPTIMIZATION: as List#contains is quite slow, we generally repaint if the number of changed features
-          // is too large.
-          setDirty();
-        }
-        else
-        {
-          GM_Envelope invalidBox = null;
-          for( final Feature feature : features )
-          {
-            if( m_featureList.contains( feature ) || m_featureList.contains( feature.getId() ) )
-            {
-              final GM_Envelope envelope = feature.getEnvelope();
-              if( invalidBox == null )
-                invalidBox = envelope;
-              else
-                invalidBox = invalidBox.getMerged( envelope );
-            }
-          }
-          if( invalidBox != null )
-          {
-            // TODO: buffer: does not work well for points, or fat-lines
-            requestRepaint( invalidBox );
-          }
-        }
-      }
-      else if( modellEvent instanceof FeatureStructureChangeModellEvent )
-      {
-        final FeatureStructureChangeModellEvent fscme = (FeatureStructureChangeModellEvent) modellEvent;
-        final Feature[] parents = fscme.getParentFeatures();
-        for( final Feature parent : parents )
-        {
-          if( m_featureList.getOwner() == parent )
-          {
-            switch( fscme.getChangeType() )
-            {
-              case FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD:
-                // fall through
-              case FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_DELETE:
-                // fall through
-              case FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_MOVE:
-                setDirty();
-                break;
-              default:
-                setDirty();
-            }
-          }
-        }
-      }
-    }
-    else
-    {
-      // unknown event, set dirty
-      setDirty();
-    }
+    requestInvalidation( invalidation );
   }
 
-  private void requestRepaint( final GM_Envelope invalidEnvelope )
+  private void requestInvalidation( final FeatureThemeInvalidation invalidation )
   {
-    /* Also invalidate the cached extents: my features have changed */
-    m_fullExtent = null;
-    m_visibleFeaturesCache.clear();
+    if( invalidation == null )
+      return;
 
-    /* Request the repaint event */
-    fireRepaintRequested( invalidEnvelope );
+    if( invalidation.shouldInvalidateExtents() )
+    {
+      /* Also invalidate the cached extents: my features have changed */
+      m_fullExtent = null;
+      m_visibleFeaturesCache.clear();
+    }
+
+    final GM_Envelope invalidBox = invalidation.getInvalidBox();
+    if( invalidBox != null )
+    {
+      /* Request the repaint event */
+      fireRepaintRequested( invalidBox );
+    }
   }
 
   @Override
@@ -418,6 +353,9 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     return m_featureList;
   }
 
+  // FIXME: returning a featureList here is problemativ, becauce this recreates the geo index which cost much time.
+  // Make deprecated and return a list of features instead.<br/>
+  // Client should either use the simple list; or do a query on the original list instead
   @Override
   public FeatureList getFeatureListVisible( final GM_Envelope searchEnvelope )
   {
@@ -468,7 +406,8 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   @Override
   public void styleChanged( )
   {
-    setDirty();
+    requestInvalidation( new FeatureThemeInvalidation( getFullExtent(), true ) );
+
     fireStatusChanged( this );
   }
 
@@ -536,6 +475,11 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     if( m_featureList == null )
       return null;
 
+    // FIXME: why do we create need to iterate through all features ourselfs here?
+    // Instead it would be better to do a query on the geo index instead...
+    // TODO: but: we need to resolve the problem, that the geo index does not know which geometries of the feature are
+    // painted
+
     /* Use complete bounding box if search envelope is not set. */
     final GM_Envelope env = searchEnvelope == null ? m_featureList.getBoundingBox() : searchEnvelope;
 
@@ -560,5 +504,10 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     final Collection<Feature> visibleFeatures = paintDelegate.getVisibleFeatures();
     resultList.addAll( visibleFeatures );
     return resultList;
+  }
+
+  boolean isSingleFeature( )
+  {
+    return m_isSingleFeature;
   }
 }
