@@ -78,9 +78,6 @@ public class ModellEvent
     return m_eventSource;
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {
@@ -103,30 +100,5 @@ public class ModellEvent
     {
       buf.append( "FEATURE_CHANGE " );
     }
-
-// if( (STYLE_CHANGE & bitmask) == bitmask )
-// {
-// buf.append( "STYLE_CHANGE " );
-// }
-//
-// if( (WIDGET_CHANGE & bitmask) == bitmask )
-// {
-// buf.append( "WIDGET_CHANGE " );
-// }
-//
-// if( (FULL_CHANGE & bitmask) == bitmask )
-// {
-// buf.append( "FULL_CHANGE " );
-// }
-//
-// if( (THEME_ADDED & bitmask) == bitmask )
-// {
-// buf.append( "THEME_ADDED " );
-// }
-//
-// if( (LEGEND_UPDATED & bitmask) == bitmask )
-// {
-// buf.append( "LEGEND_UPDATED" );
-// }
   }
 }
