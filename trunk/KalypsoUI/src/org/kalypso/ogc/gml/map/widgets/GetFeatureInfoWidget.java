@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
 
+import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -64,11 +66,13 @@ import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
+import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.map.widgets.dialogs.GetFeatureInfoDialog;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemePredicate;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
+import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
@@ -83,7 +87,7 @@ public class GetFeatureInfoWidget extends AbstractWidget
   /**
    * The map model listener.
    */
-  private final IMapModellListener m_listener = new IMapModellListener()
+  private final IMapModellListener m_listener = new MapModellAdapter()
   {
     @Override
     public void themeVisibilityChanged( final IMapModell source, final IKalypsoTheme theme, final boolean visibility )
@@ -92,36 +96,16 @@ public class GetFeatureInfoWidget extends AbstractWidget
     }
 
     @Override
-    public void themeStatusChanged( final IMapModell source, final IKalypsoTheme theme )
-    {
-    }
-
-    @Override
     public void themeRemoved( final IMapModell source, final IKalypsoTheme theme, final boolean lastVisibility )
     {
       handleThemeChanged( theme );
     }
-
-    @Override
-    public void themeOrderChanged( final IMapModell source )
-    {
-    }
-
-    @Override
-    public void themeContextChanged( final IMapModell source, final IKalypsoTheme theme )
-    {
-    }
-
-    @Override
-    public void themeAdded( final IMapModell source, final IKalypsoTheme theme )
-    {
-    }
-
-    @Override
-    public void themeActivated( final IMapModell source, final IKalypsoTheme previouslyActive, final IKalypsoTheme nowActive )
-    {
-    }
   };
+
+  /**
+   * The tooltip renderer.
+   */
+  private final ToolTipRenderer m_toolTipRenderer;
 
   /**
    * The wms theme.
@@ -135,6 +119,7 @@ public class GetFeatureInfoWidget extends AbstractWidget
   {
     super( "GetFeatureInfo", Messages.getString( "GetFeatureInfoWidget_1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
+    m_toolTipRenderer = new ToolTipRenderer();
     m_wmsTheme = null;
   }
 
@@ -213,9 +198,6 @@ public class GetFeatureInfoWidget extends AbstractWidget
       final Shell shell = dialog.getShell();
       shell.getDisplay().syncExec( new Runnable()
       {
-        /**
-         * @see java.lang.Runnable#run()
-         */
         @Override
         public void run( )
         {
@@ -232,6 +214,33 @@ public class GetFeatureInfoWidget extends AbstractWidget
     {
       ex.printStackTrace();
     }
+  }
+
+  /**
+   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#paint(java.awt.Graphics)
+   */
+  @Override
+  public void paint( final Graphics g )
+  {
+    super.paint( g );
+
+    /* HINT: If the theme property is set, the widget should configure itself without a dialog. */
+    final String themeProperty = getParameter( "getFeatureInfoProperty" ); //$NON-NLS-1$
+    if( !StringUtils.isEmpty( themeProperty ) )
+      return;
+
+    /* Get the map panel. */
+    final IMapPanel panel = getMapPanel();
+    if( panel == null )
+      return;
+
+    /* Prepare the tooltip. */
+    final java.awt.Rectangle bounds = panel.getScreenBounds();
+    final String tooltip = m_wmsTheme == null ? "Click or hit space to select a WMS theme" : String.format( "Theme: %s", m_wmsTheme.getName().getValue() );
+
+    /* Draw the tooltip. */
+    m_toolTipRenderer.setTooltip( tooltip ); //$NON-NLS-1$
+    m_toolTipRenderer.paintToolTip( new Point( 5, bounds.height - 5 ), g, bounds );
   }
 
   /**
@@ -259,11 +268,15 @@ public class GetFeatureInfoWidget extends AbstractWidget
 
       /* Find the theme. */
       m_wmsTheme = findTheme( (GisTemplateMapModell) mapModel, themeProperty );
+
+      /* Repaint the map. */
+      repaintMap();
     }
     catch( final IllegalStateException ex )
     {
       ex.printStackTrace();
       m_wmsTheme = null;
+      repaintMap();
     }
   }
 
@@ -319,6 +332,14 @@ public class GetFeatureInfoWidget extends AbstractWidget
     /* Find all wms themes. */
     final IKalypsoTheme[] wmsThemes = findWmsThemes( mapModel, IKalypsoThemeVisitor.DEPTH_INFINITE );
 
+    /* No wms themes available. */
+    if( wmsThemes.length == 0 )
+      return null;
+
+    /* If there is only one wms theme available, we do not need to have selected one by the user. */
+    if( wmsThemes.length == 1 )
+      return (KalypsoWMSTheme) wmsThemes[0];
+
     /* Create the dialog. */
     final ListDialog dialog = new ListDialog( SWT_AWT_Utilities.findActiveShell() );
     dialog.setTitle( getName() );
@@ -328,6 +349,9 @@ public class GetFeatureInfoWidget extends AbstractWidget
 
     /* Set the input. */
     dialog.setInput( wmsThemes );
+
+    /* Preselect the first wms theme. */
+    dialog.setInitialSelections( new IKalypsoTheme[] { wmsThemes[0] } );
 
     /* Open the dialog. */
     final int open = SWT_AWT_Utilities.openSwtWindow( dialog );

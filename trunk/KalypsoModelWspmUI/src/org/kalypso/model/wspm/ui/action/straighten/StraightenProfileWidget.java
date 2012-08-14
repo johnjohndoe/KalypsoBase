@@ -63,9 +63,9 @@ import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
+import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.action.base.AbstractProfileWidget;
 import org.kalypso.model.wspm.ui.action.base.ProfilePainter;
-import org.kalypso.model.wspm.ui.action.base.ProfileWidgetHelper;
 import org.kalypso.model.wspm.ui.action.base.ProfileWidgetMapPanelListener;
 import org.kalypso.model.wspm.ui.dialog.straighten.StraightenProfileDialog;
 import org.kalypso.model.wspm.ui.dialog.straighten.StraightenProfileOperation;
@@ -108,10 +108,6 @@ public class StraightenProfileWidget extends AbstractProfileWidget
     m_secondPoint = null;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.map.IMapPanel)
-   */
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
@@ -122,20 +118,13 @@ public class StraightenProfileWidget extends AbstractProfileWidget
 
     /* Initialize widget with the selection. */
     final ISelection selection = mapPanel.getSelection();
-    final IProfileFeature[] profiles = ProfileWidgetHelper.getProfiles( selection );
-    setSelection( profiles );
-
-    /* Reset. */
-    reset();
+    setSelection( new ProfileSelection( selection ) );
 
     /* Init the cursor. */
     final Cursor cursor = Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR );
     mapPanel.setCursor( cursor );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#finish()
-   */
   @Override
   public void finish( )
   {
@@ -143,11 +132,10 @@ public class StraightenProfileWidget extends AbstractProfileWidget
     getMapPanel().removeSelectionChangedListener( m_mapPanelListener );
 
     /* Reset the selection within this widget. */
-    setSelection( new IProfileFeature[] {} );
+    setSelection( (ProfileSelection) null );
 
     /* Reset & repaint. */
     reset();
-    repaintMap();
 
     super.finish();
   }
@@ -158,33 +146,26 @@ public class StraightenProfileWidget extends AbstractProfileWidget
     if( MouseEvent.BUTTON1 != event.getButton() )
       return;
 
-    try
-    {
-      final com.vividsolutions.jts.geom.Point snapPoint = getSnapPoint();
+    final com.vividsolutions.jts.geom.Point snapPoint = getSnapPoint();
 
-      if( m_firstPoint == null )
+    if( m_firstPoint == null )
+    {
+      m_firstPoint = snapPoint;
+      return;
+    }
+
+    m_secondPoint = snapPoint;
+
+    final Shell shell = SWT_AWT_Utilities.findActiveShell();
+    final Display display = shell.getDisplay();
+    display.syncExec( new Runnable()
+    {
+      @Override
+      public void run( )
       {
-        m_firstPoint = snapPoint;
-        return;
+        perfomStraightening( shell );
       }
-
-      m_secondPoint = snapPoint;
-
-      final Shell shell = SWT_AWT_Utilities.findActiveShell();
-      final Display display = shell.getDisplay();
-      display.syncExec( new Runnable()
-      {
-        @Override
-        public void run( )
-        {
-          perfomStraightening( shell );
-        }
-      } );
-    }
-    catch( final Exception ex )
-    {
-      ex.printStackTrace();
-    }
+    } );
   }
 
   @Override
@@ -227,9 +208,6 @@ public class StraightenProfileWidget extends AbstractProfileWidget
     return super.getTooltipPosition( screenBounds );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#getToolTip()
-   */
   @Override
   public String getToolTip( )
   {
@@ -249,9 +227,6 @@ public class StraightenProfileWidget extends AbstractProfileWidget
     return String.format( "Width %.4f m, Height %.4f m", cursor, hoehe );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#keyReleased(java.awt.event.KeyEvent)
-   */
   @Override
   public void keyReleased( final KeyEvent e )
   {
@@ -269,14 +244,14 @@ public class StraightenProfileWidget extends AbstractProfileWidget
     try
     {
       /* Open the straighten profile dialog. */
-      final StraightenProfileDialog straightenDialog = new StraightenProfileDialog( shell, getProfile(), m_firstPoint, m_secondPoint );
+      final StraightenProfileDialog straightenDialog = new StraightenProfileDialog( shell, getSelection(), getProfile(), m_firstPoint, m_secondPoint );
       if( straightenDialog.open() != Window.OK )
         return;
 
       /* Execute the straighten profile operation. */
       final StraightenProfileOperation operation = new StraightenProfileOperation( straightenDialog.getData() );
       final ProgressMonitorDialog progressDialog = new ProgressMonitorDialog( shell );
-      final IStatus status = RunnableContextHelper.execute( progressDialog, true, true, operation );
+      final IStatus status = RunnableContextHelper.execute( progressDialog, true, false, operation );
 
       /* Open the status dialog. */
       final StatusDialog statusDialog = new StatusDialog( shell, status, "Profil begradigen" );

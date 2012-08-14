@@ -95,8 +95,11 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
     @Override
     public int compare( final IWidget w1, final IWidget w2 )
     {
+      // FIXME: does not work: same widget may be in toolbar twice (with different parameters)
       final String n1 = w1.getClass().getName();
       final String n2 = w2.getClass().getName();
+
+// ObjectUtils.identityToString( object );
 
       if( WIDGET_TYPE.eRadio.equals( w1 ) && WIDGET_TYPE.eRadio.equals( w2 ) )
       {
@@ -187,7 +190,6 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
       if( e.isConsumed() )
         return;
     }
-
   }
 
   @Override
@@ -199,13 +201,13 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
     {
       // so, if the mouse enter event happens already somewhere inside the map panel frame - it's actually a finger tap
       // event
-// if( isInsideMapFrame( e.getPoint() ) )
-// {
+      // if( isInsideMapFrame( e.getPoint() ) )
+      // {
       // FIXME: leftPressed does not exist any more
       // if( widget != null )
       // widget.leftPressed( e.getPoint() );
-// }
-// else
+      // }
+      // else
       widget.mouseEntered( e );
 
       if( e.isConsumed() )
@@ -222,13 +224,13 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
     {
       // so, if the mouse enter event happens already somewhere inside the map panel frame - it's actually a finger tap
       // event
-// if( isInsideMapFrame( e.getPoint() ) )
-// {
+      // if( isInsideMapFrame( e.getPoint() ) )
+      // {
       // FIXME: leftReleased does not exist any more
       // if( widget != null )
       // widget.leftReleased( e.getPoint() );
-// }
-// else
+      // }
+      // else
       widget.mouseExited( e );
 
       if( e.isConsumed() )
@@ -330,11 +332,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
     for( final IWidget widget : widgets )
     {
       if( WIDGET_TYPE.eRadio.equals( widget.getType() ) )
-      {
-        m_widgets.remove( widget );
-
-        widget.finish();
-      }
+        removeWidget( widget );
     }
   }
 
@@ -416,8 +414,11 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
     {
       final String c = w.getClass().getName();
       if( StringUtils.equals( clazz, c ) )
+      {
         m_widgets.remove( w );
 
+        w.finish();
+      }
     }
 
     fireWidgetChangeEvent( null );

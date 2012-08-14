@@ -104,7 +104,7 @@ public class GetFeatureInfoDialog extends PopupDialog
    */
   public GetFeatureInfoDialog( final Shell parentShell, final URL requestUrl )
   {
-    super( parentShell, SWT.RESIZE, true, true, true, true, false, Messages.getString( "GetFeatureInfoDialog_0" ), null ); //$NON-NLS-1$
+    super( parentShell, SWT.RESIZE, true, true, true, false, false, Messages.getString( "GetFeatureInfoDialog_0" ), null ); //$NON-NLS-1$
 
     m_requestUrl = requestUrl;
     m_browser = null;
@@ -182,6 +182,8 @@ public class GetFeatureInfoDialog extends PopupDialog
 
   protected void handleJobDoneInternal( final IJobChangeEvent event )
   {
+    setTitleText( "Request successfull" );
+
     /* Get the result. */
     final IStatus result = event.getResult();
     if( !result.isOK() )
@@ -224,6 +226,8 @@ public class GetFeatureInfoDialog extends PopupDialog
     if( m_browser == null || m_browser.isDisposed() )
       return;
 
+    // TODO Parse xml message and create nice html...
+    // TODO Wrap html response into get feature info response...
     if( mimeType != null && mimeType.contains( "xml" ) )
       m_browser.setText( StringEscapeUtils.escapeHtml4( text ) );
     else

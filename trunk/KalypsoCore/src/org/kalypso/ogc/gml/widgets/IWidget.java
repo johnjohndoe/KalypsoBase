@@ -56,6 +56,7 @@ import org.kalypso.ogc.gml.map.IMapPanel;
  */
 public interface IWidget extends MouseListener, MouseMotionListener, MouseWheelListener
 {
+  // FIXME: nonsene; makes everything more dificult: instead: keep different lists for different types of widgets
   public enum WIDGET_TYPE
   {
     eBackground,

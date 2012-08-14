@@ -42,8 +42,10 @@ package org.kalypso.model.wspm.ui.action;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -77,6 +79,12 @@ public class ProfileSelection
 
   private final ISelection m_selection;
 
+  /**
+   * Mapping between found featurs and the really selected element (not always the feature itself, but sometimes the
+   * ProfileReachSegment).
+   */
+  private final Map<IProfileFeature, Feature> m_profiles2Items = new HashMap<>();
+
   public ProfileSelection( final ISelection selection )
   {
     m_selection = selection;
@@ -109,7 +117,7 @@ public class ProfileSelection
       {
         final IProfileFeature sisterProfile = AdapterUtils.getAdapter( sister, IProfileFeature.class );
         if( sisterProfile != null )
-          addProfile( sisterProfile );
+          addProfile( sisterProfile, sister );
       }
     }
   }
@@ -156,6 +164,9 @@ public class ProfileSelection
     m_selectedProfiles.add( profile );
 
     if( item instanceof Feature )
+      m_profiles2Items.put( profile, (Feature) item );
+
+    if( item instanceof Feature )
     {
       final Feature itemParent = ((Feature) item).getOwner();
       final IRelationType parentRelation = ((Feature) item).getParentRelation();
@@ -177,30 +188,31 @@ public class ProfileSelection
       m_containingList = (FeatureList) container.getProperty( parentRelation );
   }
 
-  private void addProfile( final IProfileFeature... profiles )
+  private void addProfile( final IProfileFeature profile, final Object item )
   {
-    m_foundProfiles.addAll( Arrays.asList( profiles ) );
+    m_foundProfiles.add( profile );
+
+    if( item instanceof Feature )
+      m_profiles2Items.put( profile, (Feature) item );
 
     /* Set the first commandable workspace we find */
-    for( final IProfileFeature profile : profiles )
+    if( m_workspace != null )
+      return;
+
+    if( m_selection instanceof IFeatureSelection )
     {
-      if( m_workspace != null )
-        return;
-
-      if( m_selection instanceof IFeatureSelection )
-      {
-        m_workspace = ((IFeatureSelection) m_selection).getWorkspace( profile );
-      }
+      m_workspace = ((IFeatureSelection) m_selection).getWorkspace( profile );
     }
-
   }
 
   private void addProfileSelectionProvider( final IProfileSelectionProvider item, final IRelationType selectionHint )
   {
     final IProfileFeature[] selectedProfiles = item.getSelectedProfiles( selectionHint );
-    final List<IProfileFeature> asList = Arrays.asList( selectedProfiles );
-    addProfile( selectedProfiles );
-    m_selectedProfiles.addAll( asList );
+
+    for( final IProfileFeature selectedProfile : selectedProfiles )
+      addProfile( selectedProfile, null );
+
+    m_selectedProfiles.addAll( Arrays.asList( selectedProfiles ) );
   }
 
   private void addFeatureProperty( final IFeatureRelation featureList )
@@ -242,5 +254,14 @@ public class ProfileSelection
   public Feature getContainer( )
   {
     return m_container;
+  }
+
+  /**
+   * Returns the really (selected) element for the 'selected' profile.<br/>
+   * Often, this is the profile itself, but sometimes it it a containing element (like ProfileReachSegment).
+   */
+  public Feature getItem( final IProfileFeature profile )
+  {
+    return m_profiles2Items.get( profile );
   }
 }
