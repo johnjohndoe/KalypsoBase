@@ -55,7 +55,6 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.FilteredFeatureVisitor;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeatureTypeFilter;
@@ -418,36 +417,9 @@ public class FilteredFeatureList implements FeatureList
   }
 
   @Override
-  public void invalidate( )
-  {
-    m_original.invalidate();
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#invalidate(java.lang.Object)
-   */
-  @Override
   public void invalidate( final Object o )
   {
     m_original.invalidate( o );
-  }
-
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#first()
-   */
-  @Override
-  public Object first( )
-  {
-    final Feature[] features = toFeatures();
-    if( features.length == 0 )
-      return null;
-    return features[0];
-  }
-
-  @Override
-  public List<Feature> searchFeatures( final GM_Object geometry )
-  {
-    return filterList( m_original.searchFeatures( geometry ) );
   }
 
   @Override

@@ -56,13 +56,13 @@ final class RegisterVisitor implements FeatureVisitor
   public boolean visit( final Feature f )
   {
     String id = f.getId();
+
     // ACHTUNG!!! bitte BEIDE Zeilen ein- und auskommentieren!
     // if( m_indexMap.containsKey( id ) )
     // System.out.println( "Workspace already contains a feature with id: " +
     // id );
-    // if( id != null && id.equals( "a816c00e010a02356c64000000086e20" ) )
-    // System.out.println( "found" );
 
+    // if( !(f instanceof IXLinkedFeature) && (id == null || id.length() == 0 ))
     if( id == null || id.length() == 0 )
     {
       // FIXME: should never happen!
@@ -71,7 +71,7 @@ final class RegisterVisitor implements FeatureVisitor
     }
 
     // TODO: better generate new ids and remember wich ones are generated (because
-    // we dont want to write the gernerated ones)
+    // we dont want to write the generated ones)
     // IDEA: put an prefix before the generated id (a 'strong' prefix which will not be in any other id)
     // When writing the gml, we then can quickly determine if the id is generated
 

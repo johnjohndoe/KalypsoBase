@@ -32,7 +32,7 @@ Require-Bundle: org.junit4;resolution:=optional,
  org.kalypso.deegree2;visibility:=reexport,
  org.kalypso.geotools;visibility:=reexport,
  org.kalypso.gmlschema;visibility:=reexport,
- com.infomatiq.jsi;bundle-version="1.0.0"
+ com.infomatiq.jsi;bundle-version="1.0.0";visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.kalypsodeegree.KalypsoDeegreePlugin
 Export-Package: org.kalypso.deegree.binding.gml,

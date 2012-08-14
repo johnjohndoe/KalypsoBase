@@ -123,7 +123,12 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
   public FeatureList getFeatureList( )
   {
     if( m_featureLst == null )
+    {
       m_featureLst = (FeatureList) m_parentFeature.getProperty( m_featureMemberProp );
+
+      if( m_featureLst == null )
+        System.out.println( "oups!" );
+    }
 
     return m_featureLst;
   }

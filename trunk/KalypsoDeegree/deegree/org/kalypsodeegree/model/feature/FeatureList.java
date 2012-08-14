@@ -40,7 +40,6 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.sort.JMSpatialIndex;
 
 /**
@@ -71,18 +70,6 @@ public interface FeatureList extends List, JMSpatialIndex, IFeatureRelation
    */
   @Override
   Feature getOwner( );
-
-  /**
-   * Returns the first element of the list.
-   *
-   * @return <code>null</code> if the list is empty.
-   */
-  Object first( );
-
-  /**
-   * Find all features that intersect with the given geometry.<br>
-   */
-  List<Feature> searchFeatures( final GM_Object geometry );
 
   /**
    * Same as {@link #insertRef(size(), Feature)}
