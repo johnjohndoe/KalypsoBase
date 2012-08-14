@@ -44,7 +44,6 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -112,13 +111,14 @@ public class TransformVisitor implements FeatureVisitor
   {
     final IFeatureType featureType = f.getFeatureType();
 
+    boolean wasTransformed = false;
+
     final IPropertyType[] ftps = featureType.getProperties();
     for( final IPropertyType ftp : ftps )
-    {
-      final boolean wasTransformed = transformProperty( f, ftp );
-      if( wasTransformed )
-        invalidateFeatureList( f );
-    }
+      wasTransformed |= transformProperty( f, ftp );
+
+    if( wasTransformed )
+      f.setEnvelopesUpdated();
   }
 
   private boolean transformProperty( final Feature f, final IPropertyType ftp ) throws Exception
@@ -165,18 +165,18 @@ public class TransformVisitor implements FeatureVisitor
     return wasTransformed;
   }
 
-  private void invalidateFeatureList( final Feature f )
-  {
-    // HACK: we invalidate the complete geo-index, in order to make sure the complete bbox of the list is
-    // correctly set.
-    final Feature parent = f.getOwner();
-    if( parent == null )
-      return;
-
-    final Object parentList = parent.getProperty( f.getParentRelation() );
-    if( parentList instanceof FeatureList )
-      ((FeatureList) parentList).invalidate();
-  }
+// private void invalidateFeatureList( final Feature f )
+// {
+// // HACK: we invalidate the complete geo-index, in order to make sure the complete bbox of the list is
+// // correctly set.
+// final Feature parent = f.getOwner();
+// if( parent == null )
+// return;
+//
+// final Object parentList = parent.getProperty( f.getParentRelation() );
+// if( parentList instanceof FeatureList )
+// ((FeatureList) parentList).invalidate();
+// }
 
   private GM_Object transformProperty( final GM_Object object ) throws Exception
   {

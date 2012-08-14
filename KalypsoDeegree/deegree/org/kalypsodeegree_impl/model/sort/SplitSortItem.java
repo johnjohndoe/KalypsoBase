@@ -38,45 +38,85 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.model.feature;
+package org.kalypsodeegree_impl.model.sort;
 
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureVisitor;
+import com.infomatiq.jsi.Rectangle;
 
-final class RegisterVisitor implements FeatureVisitor
+/**
+ * Elements of the {@link SplitSort}.
+ *
+ * @author Gernot Belger
+ */
+class SplitSortItem
 {
-  private final GMLWorkspace_Impl m_workspace;
+  private final Object m_data;
 
-  public RegisterVisitor( final GMLWorkspace_Impl workspace )
+  private final int m_id;
+
+  private Rectangle m_envelope;
+
+  /**
+   * Number of instance of the data object in the main list.
+   */
+  private int m_refCount = 1;
+
+  public SplitSortItem( final Object data, final int id )
   {
-    m_workspace = workspace;
+    m_data = data;
+    m_id = id;
   }
 
-  @Override
-  public boolean visit( final Feature f )
+  public int getId( )
   {
-    String id = f.getId();
+    return m_id;
+  }
 
-    // ACHTUNG!!! bitte BEIDE Zeilen ein- und auskommentieren!
-    // if( m_indexMap.containsKey( id ) )
-    // System.out.println( "Workspace already contains a feature with id: " +
-    // id );
+  public Object getData( )
+  {
+    return m_data;
+  }
 
-    // if( !(f instanceof IXLinkedFeature) && (id == null || id.length() == 0 ))
-    if( id == null || id.length() == 0 )
+  /**
+   * Increases the reference counter by one.
+   */
+  public void increaseRef( )
+  {
+    m_refCount++;
+  }
+
+  /**
+   * Decreases the reference counter by one and returns the new value.
+   */
+  public int decreaseRef( )
+  {
+    return --m_refCount;
+  }
+
+  /**
+   * @return <code>true</code> iff the previous envelope was different form the new one.
+   */
+  public boolean setEnvelope( final Rectangle envelope )
+  {
+    if( m_envelope == null )
     {
-      // FIXME: should never happen!
-      id = m_workspace.createFeatureId( f.getFeatureType() );
-      System.out.println( "Feature has no id: " + f );
+      if( envelope == null )
+        return false;
+
+      m_envelope = envelope;
+      return true;
     }
+    else
+    {
+      if( m_envelope.equals( envelope ) )
+        return false;
 
-    // TODO: better generate new ids and remember wich ones are generated (because
-    // we dont want to write the generated ones)
-    // IDEA: put an prefix before the generated id (a 'strong' prefix which will not be in any other id)
-    // When writing the gml, we then can quickly determine if the id is generated
+      m_envelope = envelope;
+      return true;
+    }
+  }
 
-    // TODO: do not put null-ids into this map ? What sideeffects do we expect
-    m_workspace.register( f, id );
-    return true;
+  public Rectangle getEnvelope( )
+  {
+    return m_envelope;
   }
 }

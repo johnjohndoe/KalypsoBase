@@ -273,16 +273,17 @@ public class GMLWorkspace_Impl extends PlatformObject implements GMLWorkspace
   {
     for( final Object next : features )
     {
-      if( next instanceof String )
+      if( next instanceof String && depth == FeatureVisitor.DEPTH_INFINITE_LINKS )
       {
-        // ACHTUNG LINK!
-        if( depth == FeatureVisitor.DEPTH_INFINITE_LINKS )
-        {
           final Feature f = getFeature( (String) next );
           accept( fv, f, depth );
-        }
       }
-      else if( next instanceof Feature )
+      else if( next instanceof IXLinkedFeature && depth == FeatureVisitor.DEPTH_INFINITE_LINKS )
+      {
+        final Feature f = ((IXLinkedFeature) next).getFeature();
+        accept( fv, f, depth );
+      }
+      else if( !(next instanceof IXLinkedFeature) && next instanceof Feature )
         accept( fv, (Feature) next, depth );
     }
   }
