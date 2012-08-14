@@ -123,7 +123,9 @@
 
 	<!-- Commands for the map outline -->
 	<extension point="org.eclipse.ui.commands">
-		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.AddTheme" name="Add Layer"  description="Add new Layer to Map"/>
+		<command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.AddTheme" name="Add Layer"  description="Add new Layer to Map">
+		  <commandParameter id="wizardSelectioinId" name="ID of wizardSelection" optional="true"></commandParameter>
+		</command>
 
         <command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.OpenShapeWizardCommand"
             name="%org.kalypso.ui.map.outline.command.OpenShapeWizardCommand.name" description="%org.kalypso.ui.map.outline.command.OpenShapeWizardCommand..description"/>
