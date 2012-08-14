@@ -126,7 +126,6 @@
                 </and>
          </activeWhen>
       </handler>
-      <handler commandId="org.kalypso.ui.map.outline.command.AddWorkflowTheme" class="org.kalypso.afgui.internal.map.AddWorkflowThemeHandler"/>
       <handler class="org.kalypso.afgui.internal.handlers.CopyScenarioHandler" commandId="org.eclipse.ui.edit.copy">
          <activeWhen>
             <reference definitionId="oneScenario"/>
@@ -161,7 +160,6 @@
             name="%http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ActivateScenario.name">
       </command>
       
-      <command categoryId="org.kalypso.ui.map.outline.category" id="org.kalypso.ui.map.outline.command.AddWorkflowTheme" name="Add Layer"  description="Add a new layer to the map"/>
       <command
             categoryId="de.renew.workflow.tasks.category"
             id="org.kalypso.afgui.commands.SetAsBaseScenarioCommand"
@@ -172,7 +170,6 @@
       <image commandId="org.kalypso.afgui.command.newproject" icon="icons/project_add.gif"/>
       <image commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__ActivateScenario" icon="icons/scenario_activate.gif"/>
       <image commandId="http___www.tu-harburg.de_wb_kalypso_kb_workflow_test__AddScenario" icon="icons/scenario_add.gif"/>
-      <image commandId="org.kalypso.ui.map.outline.command.AddWorkflowTheme" icon="icons/mapAddTheme.gif"/>
       <image commandId="org.kalypso.afgui.commands.SetAsBaseScenarioCommand" icon="icons/export-simple-template.gif"/>
    </extension>
    
@@ -215,7 +212,9 @@
       </menuContribution>
       
       <menuContribution locationURI="toolbar:org.kalypso.ui.views.mapView.outline?after=theme">
-          <command commandId="org.kalypso.ui.map.outline.command.AddWorkflowTheme" style="push"/>
+          <command commandId="org.kalypso.ui.map.outline.command.AddTheme" style="push">
+            <parameter name="wizardSelectioinId" value="org.kalypso.afgui.addlayer.wizardselection.workflow"/>
+          </command>
       </menuContribution>
       
       <menuContribution locationURI="toolbar:org.kalypso.kalypso1d2d.pjt.views.WorklistView">
