@@ -79,9 +79,6 @@ public class MapView extends AbstractMapPart implements IViewPart, IContentOutli
 
   private static final String MEMENTO_FILE = "mapFile"; //$NON-NLS-1$
 
-  /**
-   * @see org.eclipse.ui.IViewPart#init(org.eclipse.ui.IViewSite, org.eclipse.ui.IMemento)
-   */
   @Override
   public void init( final IViewSite site, final IMemento memento )
   {
@@ -100,9 +97,6 @@ public class MapView extends AbstractMapPart implements IViewPart, IContentOutli
     }
   }
 
-  /**
-   * @see org.eclipse.ui.part.ViewPart#saveState(org.eclipse.ui.IMemento)
-   */
   @Override
   public void saveState( final IMemento memento )
   {
@@ -171,5 +165,4 @@ public class MapView extends AbstractMapPart implements IViewPart, IContentOutli
 
     return super.getAdapter( adapter );
   }
-
 }
