@@ -59,7 +59,7 @@ import com.vividsolutions.jts.geom.LineString;
 public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IProfileFeature
 {
   // HACK: we define a pseudo qname that simulates a property. We use this property to cache the generated IProfil.
-  private static final QName PROPERTY_PSEUDO_PROFILE = new QName( "--", "--" ); //$NON-NLS-1$ //$NON-NLS-2$
+  public static final QName PROPERTY_PSEUDO_PROFILE = new QName( "--", "--" ); //$NON-NLS-1$ //$NON-NLS-2$
 
   private static final FeatureCacheDefinition CACHE_DEFINITION = new FeatureCacheDefinition();
   static
@@ -368,40 +368,40 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
 
   protected void handleCachedProfileChanged( final ProfilChangeHint hint )
   {
-    final IProfil profile = getProfil();
-    if( profile == null )
-      return;
-
-    final CommandableWorkspace workspace = findCommanableWorkspace();
-    if( workspace == null )
-      return;
-
-    try
+    if( (hint.getEvent() & ProfilChangeHint.DATA_CHANGED) != 0 )
     {
-      if( (hint.getEvent() & ProfilChangeHint.DATA_CHANGED) != 0 )
+      final IProfil profile = getProfil();
+      if( profile == null )
+        return;
+
+      try
       {
+        final CommandableWorkspace workspace = findCommanableWorkspace();
+        if( workspace == null )
+          return;
+
         final FeatureChange[] featureChanges = ProfileFeatureFactory.toFeatureAsChanges( profile, this );
 
         /*
          * Remark: the line and envelope must always be recalculated on every data change. We need to do this ourselves,
          * because dirty-cache is locked for changes
          */
-        setDirtyProperty( PROPERTY_LINE );
+        setDirtyProperty( new QName[] { PROPERTY_LINE } );
 
         lockCache();
 
         final ChangeFeaturesCommand command = new ChangeFeaturesCommand( workspace, featureChanges );
         workspace.postCommand( command );
       }
-    }
-    catch( final Exception e )
-    {
-      final IStatus status = StatusUtilities.statusFromThrowable( e );
-      KalypsoModelWspmCorePlugin.getDefault().getLog().log( status );
-    }
-    finally
-    {
-      unlockCache();
+      catch( final Exception e )
+      {
+        final IStatus status = StatusUtilities.statusFromThrowable( e );
+        KalypsoModelWspmCorePlugin.getDefault().getLog().log( status );
+      }
+      finally
+      {
+        unlockCache();
+      }
     }
   }
 
@@ -466,22 +466,66 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     ProfileFeatureFactory.toFeature( profile, this );
   }
 
-  @SuppressWarnings("unchecked")
-  public void addProfileObject(final IProfileObject profileObject)
+  /**
+   * This function updates this profile with the data from the {@link IProfil} given. It locks the cache during the
+   * changes, but does unlock it, before fireing the events.
+   * 
+   * @param profile
+   *          The {@link IProfil}.
+   */
+  public void updateWithProfile( final IProfil profile )
   {
-    IFeatureType featureType = getFeatureType();
-    final IFeatureType profileObjectType = featureType.getGMLSchema().getFeatureType(IObservation.QNAME_OBSERVATION ); 
-    final List< Feature > objects = (List< Feature >) getProperty( MEMBER_OBSERVATION );
-    if (objects == null)
+    try
+    {
+      final CommandableWorkspace workspace = findCommanableWorkspace();
+      if( workspace == null )
+        return;
+
+      final FeatureChange[] featureChanges = ProfileFeatureFactory.toFeatureAsChanges( profile, this );
+
+      final ChangeProfileCommand command = new ChangeProfileCommand( this, workspace, featureChanges );
+      workspace.postCommand( command );
+    }
+    catch( final Exception e )
+    {
+      final IStatus status = StatusUtilities.statusFromThrowable( e );
+      KalypsoModelWspmCorePlugin.getDefault().getLog().log( status );
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  public void addProfileObject( final IProfileObject profileObject )
+  {
+    final IFeatureType featureType = getFeatureType();
+    final IFeatureType profileObjectType = featureType.getGMLSchema().getFeatureType( IObservation.QNAME_OBSERVATION );
+    final List<Feature> objects = (List<Feature>) getProperty( MEMBER_OBSERVATION );
+    if( objects == null )
       throw new UnsupportedOperationException();
-    
-    
-    final IRelationType profileObjectParentRelation = ((FeatureList)objects).getPropertyType();
+
+    final IRelationType profileObjectParentRelation = ((FeatureList) objects).getPropertyType();
     final Feature profileObjectFeature = getWorkspace().createFeature( this, profileObjectParentRelation, profileObjectType );
     objects.add( profileObjectFeature );
-    
+
     ObservationFeatureFactory.toFeature( profileObject.getObservation(), profileObjectFeature );
-    
-    //TODO event handling
+
+    // TODO event handling
+  }
+
+  @Override
+  protected void setDirtyProperty( final QName[] cachedProperties )
+  {
+    super.setDirtyProperty( cachedProperties );
+  }
+
+  @Override
+  protected synchronized void lockCache( )
+  {
+    super.lockCache();
+  }
+
+  @Override
+  protected synchronized void unlockCache( )
+  {
+    super.unlockCache();
   }
 }

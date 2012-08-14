@@ -47,7 +47,6 @@ import org.kalypso.commons.command.ICommandTarget;
  */
 public interface IWidgetManager
 {
-
   void dispose( );
 
   ICommandTarget getCommandTarget( );
@@ -61,5 +60,4 @@ public interface IWidgetManager
   void removeWidgetChangeListener( final IWidgetChangeListener listener );
 
   void removeWidget( IWidget widget );
-
 }

@@ -41,10 +41,11 @@
 package org.kalypso.model.wspm.ui.dialog.straighten;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.UpdateValueStrategy;
+import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -55,15 +56,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
-import org.kalypso.model.wspm.ui.dialog.straighten.binding.CorrectPointsAmountValue;
-import org.kalypso.model.wspm.ui.dialog.straighten.binding.CorrectPointsEnablementValue;
-import org.kalypso.model.wspm.ui.dialog.straighten.binding.CorrentPointsEnablementModelToTargetConverter;
-import org.kalypso.model.wspm.ui.dialog.straighten.data.CORRECT_POINTS_AMOUNT;
+import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.dialog.straighten.data.CORRECT_POINTS_ENABLEMENT;
-import org.kalypso.model.wspm.ui.dialog.straighten.provider.CorrectPointsAmountLabelProvider;
 import org.kalypso.model.wspm.ui.dialog.straighten.provider.CorrectPointsEnablementLabelProvider;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 
@@ -77,6 +76,11 @@ import com.vividsolutions.jts.geom.Point;
  */
 public class StraightenProfileDialog extends TitleAreaDialog
 {
+  /**
+   * The dialog settings.
+   */
+  private IDialogSettings m_settings;
+
   /**
    * The straighten profile data.
    */
@@ -92,6 +96,8 @@ public class StraightenProfileDialog extends TitleAreaDialog
    * 
    * @param parentShell
    *          The parent SWT shell.
+   * @param profileSelection
+   *          The selection, which contains the profile.
    * @param profile
    *          The profile.
    * @param firstPoint
@@ -99,11 +105,11 @@ public class StraightenProfileDialog extends TitleAreaDialog
    * @param secondPoint
    *          The second point.
    */
-  public StraightenProfileDialog( final Shell parentShell, final IProfileFeature profile, final Point firstPoint, final Point secondPoint )
+  public StraightenProfileDialog( final Shell parentShell, final ProfileSelection profileSelection, final IProfileFeature profile, final Point firstPoint, final Point secondPoint )
   {
     super( parentShell );
 
-    initializeData( profile, firstPoint, secondPoint );
+    initializeData( profileSelection, profile, firstPoint, secondPoint );
 
     m_bindingContext = new DataBindingContext();
   }
@@ -141,18 +147,29 @@ public class StraightenProfileDialog extends TitleAreaDialog
     viewer1.setInput( CORRECT_POINTS_ENABLEMENT.values() );
 
     /* Create a combo viewer. */
-    final ComboViewer viewer2 = new ComboViewer( main, SWT.READ_ONLY );
-    viewer2.getCombo().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    viewer2.setLabelProvider( new CorrectPointsAmountLabelProvider() );
-    viewer2.setContentProvider( new ArrayContentProvider() );
-    viewer2.setInput( CORRECT_POINTS_AMOUNT.values() );
+    // final ComboViewer viewer2 = new ComboViewer( main, SWT.READ_ONLY );
+    // viewer2.getCombo().setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+    // viewer2.setLabelProvider( new CorrectPointsAmountLabelProvider() );
+    // viewer2.setContentProvider( new ArrayContentProvider() );
+    // viewer2.setInput( CORRECT_POINTS_AMOUNT.values() );
 
     /* Do the data binding. */
     bindViewer1( viewer1 );
-    bindViewer2( viewer2 );
-    bindEnablement( viewer1, viewer2 );
+    // bindViewer2( viewer2 );
+    // bindEnablement( viewer2 );
 
     return main;
+  }
+
+  /**
+   * @see org.eclipse.jface.dialogs.Dialog#okPressed()
+   */
+  @Override
+  protected void okPressed( )
+  {
+    m_data.storeSettings( m_settings );
+
+    super.okPressed();
   }
 
   /**
@@ -167,6 +184,8 @@ public class StraightenProfileDialog extends TitleAreaDialog
   /**
    * This function initializes the points.
    * 
+   * @param profileSelection
+   *          The selection, which contains the profile.
    * @param profile
    *          The profile.
    * @param firstPoint
@@ -174,7 +193,7 @@ public class StraightenProfileDialog extends TitleAreaDialog
    * @param secondPoint
    *          The second point.
    */
-  private void initializeData( final IProfileFeature profile, final Point firstPoint, final Point secondPoint )
+  private void initializeData( final ProfileSelection profileSelection, final IProfileFeature profile, final Point firstPoint, final Point secondPoint )
   {
     try
     {
@@ -185,15 +204,20 @@ public class StraightenProfileDialog extends TitleAreaDialog
       final double firstWidth = Profiles.getWidth( profil, firstPoint );
       final double secondWidth = Profiles.getWidth( profil, secondPoint );
 
+      /* Get the dialog settings. */
+      m_settings = DialogSettingsUtils.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getName() );
+
       /* The first point lies before the second point in the profile. */
       if( firstWidth <= secondWidth )
       {
-        m_data = new StraightenProfileData( profile, firstPoint, secondPoint, firstWidth, secondWidth );
+        m_data = new StraightenProfileData( profileSelection, profile, firstPoint, secondPoint, firstWidth, secondWidth );
+        m_data.loadSettings( m_settings );
         return;
       }
 
       /* Switch the points. */
-      m_data = new StraightenProfileData( profile, secondPoint, firstPoint, secondWidth, firstWidth );
+      m_data = new StraightenProfileData( profileSelection, profile, secondPoint, firstPoint, secondWidth, firstWidth );
+      m_data.loadSettings( m_settings );
     }
     catch( final GM_Exception ex )
     {
@@ -211,7 +235,7 @@ public class StraightenProfileDialog extends TitleAreaDialog
   {
     /* The values. */
     final IObservableValue comboValue = ViewersObservables.observeSingleSelection( viewer );
-    final IObservableValue typeValue = new CorrectPointsEnablementValue( m_data );
+    final IObservableValue typeValue = BeansObservables.observeValue( m_data, StraightenProfileData.PROPERTY_CORRECT_POINTS_ENABLEMENT );
 
     /* Bind the value. */
     m_bindingContext.bindValue( comboValue, typeValue );
@@ -223,11 +247,12 @@ public class StraightenProfileDialog extends TitleAreaDialog
    * @param viewer
    *          The viewer to bind.
    */
+  @SuppressWarnings("unused")
   private void bindViewer2( final ComboViewer viewer )
   {
     /* The values. */
     final IObservableValue comboValue = ViewersObservables.observeSingleSelection( viewer );
-    final IObservableValue typeValue = new CorrectPointsAmountValue( m_data );
+    final IObservableValue typeValue = BeansObservables.observeValue( m_data, StraightenProfileData.PROPERTY_CORRECT_POINTS_AMOUNT );
 
     /* Bind the value. */
     m_bindingContext.bindValue( comboValue, typeValue );
@@ -236,23 +261,18 @@ public class StraightenProfileDialog extends TitleAreaDialog
   /**
    * This function enables/disables the second viewer, according to the state of the first viewer.
    * 
-   * @param viewer1
-   *          The first viewer.
    * @param viewer2
    *          The second viewer.
    */
-  private void bindEnablement( final ComboViewer viewer1, final ComboViewer viewer2 )
+  @SuppressWarnings("unused")
+  private void bindEnablement( final ComboViewer viewer2 )
   {
     /* The values. */
-    final IObservableValue viewer2Value = SWTObservables.observeEnabled( viewer2.getCombo() );
-    final IObservableValue viewer1Value = ViewersObservables.observeSingleSelection( viewer1 );
-
-    /* Create the update value strategy. */
-    final UpdateValueStrategy modelToTarget = new UpdateValueStrategy();
-    modelToTarget.setConverter( new CorrentPointsEnablementModelToTargetConverter() );
+    final IObservableValue targetEnablement = SWTObservables.observeEnabled( viewer2.getCombo() );
+    final IObservableValue modelEnablement = BeansObservables.observeValue( m_data, StraightenProfileData.PROPERTY_CORRECT_POINTS_AMOUNT_ENABLED );
 
     /* Bind the value. */
-    m_bindingContext.bindValue( viewer2Value, viewer1Value, null, modelToTarget );
+    m_bindingContext.bindValue( targetEnablement, modelEnablement );
   }
 
   /**

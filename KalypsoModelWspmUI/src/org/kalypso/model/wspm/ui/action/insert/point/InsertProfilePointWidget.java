@@ -59,6 +59,7 @@ import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
+import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.action.base.AbstractProfileWidget;
 import org.kalypso.model.wspm.ui.action.base.ProfilePainter;
 import org.kalypso.model.wspm.ui.action.base.ProfileWidgetHelper;
@@ -96,8 +97,7 @@ public class InsertProfilePointWidget extends AbstractProfileWidget
 
     /* Initialize widget with the selection. */
     final ISelection selection = mapPanel.getSelection();
-    final IProfileFeature[] profiles = ProfileWidgetHelper.getProfiles( selection );
-    setSelection( profiles );
+    setSelection( new ProfileSelection( selection ) );
 
     /* Reset. */
     reset();
@@ -114,7 +114,7 @@ public class InsertProfilePointWidget extends AbstractProfileWidget
     getMapPanel().removeSelectionChangedListener( m_mapPanelListener );
 
     /* Reset the selection within this widget. */
-    setSelection( new IProfileFeature[] {} ); // purge profile change listener
+    setSelection( (ProfileSelection) null ); // purge profile change listener
 
     /* Reset & repaint. */
     reset();

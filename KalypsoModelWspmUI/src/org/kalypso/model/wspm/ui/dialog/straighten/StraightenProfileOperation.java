@@ -55,6 +55,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.action.base.ProfileWidgetHelper;
 import org.kalypso.model.wspm.ui.dialog.straighten.data.CORRECT_POINTS_AMOUNT;
 import org.kalypso.model.wspm.ui.dialog.straighten.data.CORRECT_POINTS_ENABLEMENT;
@@ -63,6 +64,7 @@ import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -109,9 +111,6 @@ public class StraightenProfileOperation implements ICoreRunnableWithProgress
     m_data = data;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IStatus execute( IProgressMonitor monitor )
   {
@@ -169,9 +168,15 @@ public class StraightenProfileOperation implements ICoreRunnableWithProgress
 
       /* Copy data of the temporary profile feature to the profile feature. */
       final ProfileFeatureBinding profileBinding = (ProfileFeatureBinding) profile;
-      profileBinding.setProfile( tmpProfile.getProfil() );
-      // TODO How to make workspace dirty?
-      // TODO Is this ok?
+      profileBinding.updateWithProfile( tmpProfile.getProfil() );
+      final ProfileSelection profileSelection = m_data.getProfileSelection();
+      final Feature item = profileSelection.getItem( profile );
+      if( item != null )
+      {
+        /* HINT: Needed to make the feature layer redraw, if there is a container element in it. */
+        final GMLWorkspace workspace = item.getWorkspace();
+        workspace.fireModellEvent( new FeaturesChangedModellEvent( workspace, new Feature[] { item } ) );
+      }
 
       /* Monitor. */
       monitor.worked( 250 );
@@ -352,15 +357,27 @@ public class StraightenProfileOperation implements ICoreRunnableWithProgress
     final LineString transformedLine = (LineString) JTSAdapter.export( gmTransformedLine );
 
     /* The position for width zero. */
+    final GM_Point zeroWidthPoint = Profiles.getPosition( profil, 0.0 );
+
+    final double fixedWidth;
+    if( zeroWidthPoint == null )
+    {
+      /* SPECIAL CASE: Zero does not lie on line - > use first point as fixed-point. */
+      final IProfileRecord firstPoint = profil.getPoint( 0 );
+      fixedWidth = firstPoint.getBreite();
+    }
+    else
+      fixedWidth = 0.0;
+
     /* HINT: Remember, the line is already modified. */
     /* HINT: This position should be calculated by the new geo coordinates. */
-    final GM_Point gmZeroWidthPoint = Profiles.getPosition( profil, 0 );
-    final GM_Object gmTransformedPoint = geoTransformer.transform( gmZeroWidthPoint );
-    final Point transformedPoint = (Point) JTSAdapter.export( gmTransformedPoint );
+    final GM_Point fixedWidthPoint = Profiles.getPosition( profil, fixedWidth );
+    final GM_Object gmFixedTransformedPoint = geoTransformer.transform( fixedWidthPoint );
+    final Point fixedTransformedPoint = (Point) JTSAdapter.export( gmFixedTransformedPoint );
 
     /* Get the distance of the zero width point on the line. */
     final LengthIndexedLine lengthIndex = new LengthIndexedLine( transformedLine );
-    final double zeroDistance = lengthIndex.indexOf( transformedPoint.getCoordinate() );
+    final double fixedDistance = lengthIndex.indexOf( fixedTransformedPoint.getCoordinate() );
 
     /* Loop the points. */
     for( final IProfileRecord point : pointsToCorrect )
@@ -372,7 +389,7 @@ public class StraightenProfileOperation implements ICoreRunnableWithProgress
       /* 500 (point distance) - 500 (zero width distance) = 0 (width). */
       /* 700 (point distance) - 500 (zero width distance) = 200 (width). */
       final double pointDistance = lengthIndex.indexOf( coordinate );
-      point.setBreite( pointDistance - zeroDistance );
+      point.setBreite( fixedWidth + (pointDistance - fixedDistance) );
     }
   }
 }

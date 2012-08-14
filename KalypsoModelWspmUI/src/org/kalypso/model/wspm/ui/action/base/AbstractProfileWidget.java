@@ -46,11 +46,11 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.jts.JTSConverter;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
@@ -62,6 +62,7 @@ import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.core.profil.ProfilListenerAdapter;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
+import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
@@ -89,6 +90,8 @@ public class AbstractProfileWidget extends AbstractWidget implements IProfilePro
     }
   };
 
+  private ProfileSelection m_selection;
+
   private IProfileFeature m_profile;
 
   private com.vividsolutions.jts.geom.Point m_snapPoint;
@@ -96,6 +99,10 @@ public class AbstractProfileWidget extends AbstractWidget implements IProfilePro
   public AbstractProfileWidget( final String name, final String toolTip )
   {
     super( name, toolTip );
+
+    m_selection = null;
+    m_profile = null;
+    m_snapPoint = null;
   }
 
   protected void reset( )
@@ -172,20 +179,12 @@ public class AbstractProfileWidget extends AbstractWidget implements IProfilePro
     return null;
   }
 
-  public final void setSelection( final IProfileFeature[] profiles )
+  public void setSelection( final ProfileSelection selection )
   {
-    if( ArrayUtils.getLength( profiles ) > 1 )
+    final IProfileFeature profile = selection == null || selection.getSelectedProfiles().length < 1 ? null : selection.getSelectedProfiles()[0];
+    if( m_profile == profile )
       return;
 
-    if( ArrayUtils.isEmpty( profiles ) )
-      doSelectionChange( null );
-    else
-      doSelectionChange( profiles[0] );
-
-  }
-
-  protected void doSelectionChange( final IProfileFeature profile )
-  {
     // always set and reset profile listener, because of changed underlying iprofile!
     if( Objects.isNotNull( m_profile ) )
     {
@@ -193,6 +192,7 @@ public class AbstractProfileWidget extends AbstractWidget implements IProfilePro
       m_profile.getProfil().removeProfilListener( m_listener );
     }
 
+    m_selection = selection;
     m_profile = profile;
 
     if( Objects.isNotNull( m_profile ) )
@@ -202,6 +202,11 @@ public class AbstractProfileWidget extends AbstractWidget implements IProfilePro
     }
 
     repaintMap();
+  }
+
+  protected ProfileSelection getSelection( )
+  {
+    return m_selection;
   }
 
   protected IProfileFeature getProfile( )
@@ -239,9 +244,9 @@ public class AbstractProfileWidget extends AbstractWidget implements IProfilePro
       protected IStatus run( final IProgressMonitor monitor )
       {
         if( provider instanceof IProfileFeature )
-          doSelectionChange( (IProfileFeature) provider );
-
-        repaintMap();
+          setSelection( new ProfileSelection( new StructuredSelection( provider ) ) );
+        else
+          repaintMap();
 
         return Status.OK_STATUS;
       }

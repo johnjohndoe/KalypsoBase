@@ -54,7 +54,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 
 /**
  * Feature with cache for properties.
- *
+ * 
  * @author Gernot Belger
  */
 public class AbstractCachedFeature2 extends Feature_Impl
@@ -89,33 +89,32 @@ public class AbstractCachedFeature2 extends Feature_Impl
       return;
 
     final QName[] cachedProperties = m_cacheDefinition.getDirtyProperties( changedProperty );
-    for( final QName cachedProperty : cachedProperties )
-      setDirtyProperty( cachedProperty );
-
-    dirtyChanged( cachedProperties );
-
+    setDirtyProperty( cachedProperties );
   }
 
   /**
    * Set the given property dirty, it will be recalculated on next access.
    */
-  protected void setDirtyProperty( final QName cachedProperty )
+  protected void setDirtyProperty( final QName[] cachedProperties )
   {
-    // TODO: firePropertyChange for dirty properties...
-
-    m_dirty.add( cachedProperty );
-
-    final IPropertyType property = getFeatureType().getProperty( cachedProperty );
-    if( property instanceof IValuePropertyType )
+    for( final QName cachedProperty : cachedProperties )
     {
-      if( ((IValuePropertyType) property).isGeometry() )
-        setEnvelopesUpdated();
+      m_dirty.add( cachedProperty );
+
+      final IPropertyType property = getFeatureType().getProperty( cachedProperty );
+      if( property instanceof IValuePropertyType )
+      {
+        if( ((IValuePropertyType) property).isGeometry() )
+          setEnvelopesUpdated();
+      }
     }
+
+    dirtyChanged( cachedProperties );
   }
 
   /**
    * Allows implementors to react to dirty changes to cached properties.<br/>
-   *
+   * 
    * @param cachedProperties
    *          The properties that got dirty and need to be recalculated next time getProperty is called.
    */
