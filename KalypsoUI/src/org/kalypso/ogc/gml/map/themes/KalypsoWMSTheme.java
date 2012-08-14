@@ -43,6 +43,7 @@ package org.kalypso.ogc.gml.map.themes;
 import java.awt.Graphics;
 import java.awt.Image;
 
+import org.deegree.ogcwebservices.OGCWebServiceException;
 import org.deegree.ogcwebservices.wms.capabilities.Layer;
 import org.deegree.ogcwebservices.wms.capabilities.WMSCapabilities;
 import org.eclipse.core.runtime.Assert;
@@ -70,13 +71,13 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * This class implements the a theme, which loads images from a given provider.
- *
+ * 
  * @author Doemming, Kuepferle
  * @author Holger Albert
  */
 public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipProvider
 {
-  private static final IStatus INIT_STATUS = new Status( IStatus.INFO, KalypsoGisPlugin.PLUGIN_ID, Messages.getString("KalypsoWMSTheme.0") ); //$NON-NLS-1$
+  private static final IStatus INIT_STATUS = new Status( IStatus.INFO, KalypsoGisPlugin.PLUGIN_ID, Messages.getString( "KalypsoWMSTheme.0" ) ); //$NON-NLS-1$
 
   private final LayerType m_layer;
 
@@ -182,7 +183,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 
   /**
    * This function returns the image provider of this theme.
-   *
+   * 
    * @return The image provider of this theme.
    */
   public IKalypsoImageProvider getImageProvider( )
@@ -203,7 +204,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
 
   /**
    * This function returns the last request or null.
-   *
+   * 
    * @return The last request or null.
    */
   public String getLastRequest( )
@@ -217,15 +218,23 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     return ((AbstractDeegreeImageProvider) m_provider).getLastRequest();
   }
 
+  public String getFeatureInfo( final double x, final double y ) throws OGCWebServiceException
+  {
+    if( m_provider == null )
+      return null;
+
+    if( !(m_provider instanceof AbstractDeegreeImageProvider) )
+      return null;
+
+    return ((AbstractDeegreeImageProvider) m_provider).getFeatureInfo( x, y );
+  }
+
   public ImageDescriptor getLegendGraphic( final String layer, final String style )
   {
     if( m_provider == null )
       return null;
 
-// if( m_legend == null )
     return m_provider.getLegendGraphic( layer, style );
-
-// return m_legend;
   }
 
   public Style[] getStyles( )
