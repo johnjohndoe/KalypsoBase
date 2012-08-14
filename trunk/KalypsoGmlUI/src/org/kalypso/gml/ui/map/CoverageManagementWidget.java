@@ -71,6 +71,7 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -102,7 +103,6 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.ResourcePool;
@@ -206,20 +206,12 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       refreshThemeCombo();
     }
 
-    /**
-     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeAdded(org.kalypso.ogc.gml.mapmodel.IMapModell,
-     *      org.kalypso.ogc.gml.IKalypsoTheme)
-     */
     @Override
     public void themeAdded( final IMapModell source, final IKalypsoTheme theme )
     {
       refreshThemeCombo();
     }
 
-    /**
-     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeRemoved(org.kalypso.ogc.gml.mapmodel.IMapModell,
-     *      org.kalypso.ogc.gml.IKalypsoTheme, boolean)
-     */
     @Override
     public void themeRemoved( final IMapModell source, final IKalypsoTheme theme, final boolean lastVisibility )
     {
@@ -336,10 +328,6 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     m_partName = partName;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.map.IMapPanel)
-   */
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
@@ -441,8 +429,10 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     /* Theme selection combo */
     final Composite themeSelectionPanel = toolkit.createComposite( panel, SWT.NONE );
-    themeSelectionPanel.setLayout( new GridLayout( 2, false ) );
+    GridLayoutFactory.fillDefaults().numColumns( 2 ).applyTo( themeSelectionPanel );
+
     themeSelectionPanel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
+
     toolkit.createLabel( themeSelectionPanel, Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.2" ), SWT.NONE ); //$NON-NLS-1$
     m_themeCombo = new ComboViewer( themeSelectionPanel, SWT.READ_ONLY | SWT.DROP_DOWN );
     final GridData comboGridData = new GridData( SWT.FILL, SWT.CENTER, true, false );
@@ -452,7 +442,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     final Composite coveragePanel = toolkit.createComposite( panel, SWT.NONE );
     // REMEARK: no height hint needed: we never need more height than the toolbar on the left.
     coveragePanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
-    coveragePanel.setLayout( Layouts.createGridLayout( 2 ) );
+    GridLayoutFactory.fillDefaults().numColumns( 2 ).applyTo( coveragePanel );
 
     m_coverageViewer = new ListViewer( coveragePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER );
 
@@ -468,7 +458,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     /* Info view */
     final Group coverageInfoGroup = new Group( panel, SWT.H_SCROLL );
-    coverageInfoGroup.setLayout( new GridLayout() );
+    GridLayoutFactory.swtDefaults().applyTo( coverageInfoGroup );
     final GridData infoGroupData = new GridData( SWT.FILL, SWT.CENTER, true, false );
     coverageInfoGroup.setLayoutData( infoGroupData );
     toolkit.adapt( coverageInfoGroup );
@@ -497,11 +487,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     /* Color Map table */
     final Composite colormapPanel = toolkit.createComposite( panel, SWT.NONE );
-    final GridLayout colormapPanelLayout = Layouts.createGridLayout();
-    colormapPanelLayout.numColumns = 2;
-    colormapPanelLayout.makeColumnsEqualWidth = false;
+    GridLayoutFactory.fillDefaults().numColumns( 2 ).equalWidth( false ).applyTo( colormapPanel );
 
-    colormapPanel.setLayout( colormapPanelLayout );
     final GridData colormapPanelData = new GridData( SWT.FILL, SWT.FILL, true, true );
     colormapPanelData.exclude = !m_showStyle;
     colormapPanel.setVisible( m_showStyle );
