@@ -75,7 +75,8 @@ import com.vividsolutions.jts.index.quadtree.Quadtree;
  */
 public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_OrientableSurface_Impl implements GM_PolyhedralSurface<T>
 {
-  protected SpatialIndex m_index = new Quadtree();
+  // FIXME: use jsi instead
+  private SpatialIndex m_index = new Quadtree();
 
   private final List<T> m_items;
 
@@ -644,5 +645,10 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
       polygons[i] = (T) get( i ).transform( targetCRS );
 
     return GeometryFactory.createGM_PolyhedralSurface( polygons, targetCRS );
+  }
+
+  protected SpatialIndex getIndex( )
+  {
+    return m_index;
   }
 }
