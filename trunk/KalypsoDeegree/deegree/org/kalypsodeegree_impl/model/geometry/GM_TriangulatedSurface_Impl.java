@@ -15,11 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- * 
+ *
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -94,15 +94,12 @@ public class GM_TriangulatedSurface_Impl extends GM_PolyhedralSurface_Impl<GM_Tr
     return getValue( position );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.geometry.GM_TriangulatedSurface#getValue(org.kalypsodeegree.model.geometry.GM_Position)
-   */
   @Override
   @SuppressWarnings("unchecked")
   public double getValue( final GM_Position position )
   {
     final Envelope searchEnv = new Envelope( position.getX(), position.getX(), position.getY(), position.getY() );
-    final List<GM_Triangle> query = m_index.query( searchEnv );
+    final List<GM_Triangle> query = getIndex().query( searchEnv );
     for( final GM_Triangle triangle : query )
     {
       if( triangle.contains( position ) )
@@ -117,7 +114,7 @@ public class GM_TriangulatedSurface_Impl extends GM_PolyhedralSurface_Impl<GM_Tr
   public GM_Triangle getTriangle( final GM_Position position )
   {
     final Envelope searchEnv = new Envelope( position.getX(), position.getX(), position.getY(), position.getY() );
-    final List<GM_Triangle> query = m_index.query( searchEnv );
+    final List<GM_Triangle> query = getIndex().query( searchEnv );
     for( final GM_Triangle triangle : query )
     {
       if( triangle.contains( position ) )
@@ -129,7 +126,7 @@ public class GM_TriangulatedSurface_Impl extends GM_PolyhedralSurface_Impl<GM_Tr
 
   /**
    * Must override, else the wrong type is created.
-   * 
+   *
    * @see org.kalypsodeegree_impl.model.geometry.GM_PolyhedralSurface_Impl#transform(java.lang.String)
    */
   @Override
