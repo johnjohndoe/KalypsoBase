@@ -44,11 +44,6 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -59,7 +54,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ListDialog;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
-import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
@@ -167,30 +161,8 @@ public class GetFeatureInfoWidget extends AbstractWidget
           return;
       }
 
-      /* Get the last request. */
-      final String lastRequest = m_wmsTheme.getLastRequest();
-      if( lastRequest == null || lastRequest.length() == 0 )
-        throw new IllegalStateException( Messages.getString( "GetFeatureInfoWidget_2" ) ); //$NON-NLS-1$
-
-      /* Get the parameter of the last request. */
-      final URL lastRequestUrl = new URL( lastRequest );
-      final Map<String, String> lastRequestParams = UrlUtilities.parseQuery( lastRequestUrl );
-
-      /* Greate the additional parameters. */
-      /* May be existing ones, which will be replaced. */
-      final Map<String, String> parameters = new HashMap<String, String>();
-      parameters.put( "REQUEST", "GetFeatureInfo" ); //$NON-NLS-1$ //$NON-NLS-2$
-      parameters.put( "QUERY_LAYERS", lastRequestParams.get( "LAYERS" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      parameters.put( "X", String.format( Locale.PRC, "%.0f", event.getPoint().getX() ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      parameters.put( "Y", String.format( Locale.PRC, "%.0f", event.getPoint().getY() ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      parameters.put( "INFO_FORMAT", "text/html" ); //$NON-NLS-1$ //$NON-NLS-2$
-      parameters.put( "VERSION", lastRequestParams.get( "VERSION" ) );
-
-      /* Adjust the request. */
-      final URL newRequestUrl = UrlUtilities.addQuery( lastRequestUrl, parameters );
-
       /* Create the dialog. */
-      final GetFeatureInfoDialog dialog = new GetFeatureInfoDialog( SWT_AWT_Utilities.findActiveShell(), newRequestUrl );
+      final GetFeatureInfoDialog dialog = new GetFeatureInfoDialog( SWT_AWT_Utilities.findActiveShell(), m_wmsTheme, event.getPoint().getX(), event.getPoint().getY() );
 
       /* Open the dialog. */
       SWT_AWT_Utilities.openSwtWindow( dialog );
@@ -211,7 +183,7 @@ public class GetFeatureInfoWidget extends AbstractWidget
         }
       } );
     }
-    catch( final MalformedURLException ex )
+    catch( final Exception ex )
     {
       ex.printStackTrace();
     }

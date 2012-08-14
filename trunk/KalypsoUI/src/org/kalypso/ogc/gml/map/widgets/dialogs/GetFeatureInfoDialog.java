@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets.dialogs;
 
-import java.net.URL;
-
-import org.apache.commons.httpclient.StatusLine;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
@@ -59,10 +56,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.commons.net.HttpResponse;
-import org.kalypso.commons.net.SendHttpGetRequestJob;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
@@ -85,9 +81,19 @@ public class GetFeatureInfoDialog extends PopupDialog
   };
 
   /**
-   * The request URL.
+   * The WMS theme.
    */
-  private final URL m_requestUrl;
+  private final KalypsoWMSTheme m_wmsTheme;
+
+  /**
+   * The x coordinate.
+   */
+  private final double m_x;
+
+  /**
+   * The y coordinate.
+   */
+  private final double m_y;
 
   /**
    * The browser.
@@ -99,14 +105,20 @@ public class GetFeatureInfoDialog extends PopupDialog
    * 
    * @param parentShell
    *          The parent shell.
-   * @param requestUrl
-   *          The request Url.
+   * @param wmsTheme
+   *          The WMS theme.
+   * @param x
+   *          The x coordinate.
+   * @param y
+   *          The y coordinate.
    */
-  public GetFeatureInfoDialog( final Shell parentShell, final URL requestUrl )
+  public GetFeatureInfoDialog( final Shell parentShell, final KalypsoWMSTheme wmsTheme, final double x, final double y )
   {
     super( parentShell, SWT.RESIZE, true, true, true, false, false, Messages.getString( "GetFeatureInfoDialog_0" ), null ); //$NON-NLS-1$
 
-    m_requestUrl = requestUrl;
+    m_wmsTheme = wmsTheme;
+    m_x = x;
+    m_y = y;
     m_browser = null;
   }
 
@@ -148,15 +160,15 @@ public class GetFeatureInfoDialog extends PopupDialog
    */
   private void initialize( )
   {
-    /* If there was no url provided show only a notice. */
-    if( m_requestUrl == null )
+    /* If there was no WMS theme provided show only a notice. */
+    if( m_wmsTheme == null )
     {
       setTitleText( Messages.getString( "GetFeatureInfoDialog_1" ) ); //$NON-NLS-1$
       return;
     }
 
-    /* Create the send http get request job. */
-    final SendHttpGetRequestJob job = new SendHttpGetRequestJob( m_requestUrl );
+    /* Create the job. */
+    final GetFeatureInfoJob job = new GetFeatureInfoJob( m_wmsTheme, m_x, m_y );
     job.setSystem( true );
     job.addJobChangeListener( m_listener );
 
@@ -194,31 +206,22 @@ public class GetFeatureInfoDialog extends PopupDialog
 
     /* Get the job. */
     final Job job = event.getJob();
-    if( !(job instanceof SendHttpGetRequestJob) )
+    if( !(job instanceof GetFeatureInfoJob) )
       return;
 
     /* Cast. */
-    final SendHttpGetRequestJob task = (SendHttpGetRequestJob) job;
+    final GetFeatureInfoJob task = (GetFeatureInfoJob) job;
 
-    /* Get the response. */
-    final HttpResponse response = task.getResponse();
-    final StatusLine statusLine = response.getStatusLine();
-    if( statusLine.getStatusCode() != 200 )
-    {
-      setText( "text/plain", statusLine.toString() );
-      return;
-    }
-
-    /* Get the response text. */
-    final String responseText = response.getResponse();
-    if( responseText == null )
+    /* Get the feature info. */
+    final String featureInfo = task.getFeatureInfo();
+    if( featureInfo == null )
     {
       setText( "text/plain", "There was no result returned by the server." );
       return;
     }
 
     /* Set the response text into the browser. */
-    setText( response.getMimeType(), responseText );
+    setText( "text/html", featureInfo );
   }
 
   private void setText( final String mimeType, final String text )

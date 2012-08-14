@@ -41,9 +41,11 @@
 package org.kalypso.ogc.gml.wms.provider.images;
 
 import java.awt.Image;
+import java.awt.Point;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +61,8 @@ import org.deegree.ogcwebservices.wms.capabilities.Layer;
 import org.deegree.ogcwebservices.wms.capabilities.LegendURL;
 import org.deegree.ogcwebservices.wms.capabilities.Style;
 import org.deegree.ogcwebservices.wms.capabilities.WMSCapabilities;
+import org.deegree.ogcwebservices.wms.operation.GetFeatureInfo;
+import org.deegree.ogcwebservices.wms.operation.GetFeatureInfoResult;
 import org.deegree.ogcwebservices.wms.operation.GetMap;
 import org.deegree.ogcwebservices.wms.operation.GetMapResult;
 import org.deegree.owscommon_new.DCP;
@@ -129,7 +133,11 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
 
   private URL m_getMapUrl;
 
+  private URL m_getFeatureInfoUrl;
+
   private String m_lastRequest;
+
+  private GetMap m_lastGetMap;
 
   private WMSCapabilities m_capabilities;
 
@@ -149,7 +157,9 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     m_wms = null;
     m_negotiatedSRS = null;
     m_getMapUrl = null;
+    m_getFeatureInfoUrl = null;
     m_lastRequest = null;
+    m_lastGetMap = null;
   }
 
   @Override
@@ -223,7 +233,9 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     /* Ask for the srs. */
     m_negotiatedSRS = negotiateCRS( m_localSRS, wmsCaps, m_layers );
 
-    m_getMapUrl = findGetMapGetURL( wmsCaps );
+    /* Find some URLs. */
+    m_getMapUrl = findGetMapURL( wmsCaps );
+    m_getFeatureInfoUrl = findGetFeatureInfoURL( wmsCaps );
 
     /* Initialize the WMS. */
     m_wms = createRemoteService( wmsCaps );
@@ -231,9 +243,28 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     return Status.OK_STATUS;
   }
 
-  private URL findGetMapGetURL( final WMSCapabilities wmsCaps )
+  private URL findGetMapURL( final WMSCapabilities wmsCaps )
   {
     final Operation operation = wmsCaps.getOperationMetadata().getOperation( new QualifiedName( "GetMap" ) ); //$NON-NLS-1$
+
+    final List<DCP> dcps = operation.getDCP();
+    for( final DCP dcp : dcps )
+    {
+      if( dcp instanceof HTTP )
+      {
+        final HTTP http = (HTTP) dcp;
+        final List<OnlineResource> links = http.getLinks();
+        if( links.size() > 0 )
+          return links.get( 0 ).getLinkage().getHref();
+      }
+    }
+
+    return null;
+  }
+
+  private URL findGetFeatureInfoURL( final WMSCapabilities wmsCaps )
+  {
+    final Operation operation = wmsCaps.getOperationMetadata().getOperation( new QualifiedName( "GetFeatureInfo" ) ); //$NON-NLS-1$
 
     final List<DCP> dcps = operation.getDCP();
     for( final DCP dcp : dcps )
@@ -351,6 +382,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     {
       /* Reset the request. */
       m_lastRequest = null;
+      m_lastGetMap = null;
 
       /* Check if nothing to request. */
       if( bbox == null )
@@ -382,6 +414,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
 
       /* Store the request, before actually asking the WMS for a response. */
       m_lastRequest = URLDecoder.decode( String.format( "%s?%s", getMapUrl, requestParameters ), "UTF-8" ); //$NON-NLS-1$ //$NON-NLS-2$
+      m_lastGetMap = request;
 
       /* Do the request and wait, until the result is there. */
       final Object result = remoteWMS.doService( request );
@@ -475,6 +508,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     m_negotiatedSRS = null;
     m_getMapUrl = null;
     m_lastRequest = null;
+    m_lastGetMap = null;
   }
 
   @Override
@@ -537,5 +571,43 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     final String styles = StringUtils.join( m_styles, "," ); //$NON-NLS-1$
 
     return String.format( "%s=%s#%s=%s#%s=%s#%s=%s", IKalypsoImageProvider.KEY_URL, m_service, IKalypsoImageProvider.KEY_PROVIDER, m_providerID, IKalypsoImageProvider.KEY_LAYERS, layers, IKalypsoImageProvider.KEY_STYLES, styles ); //$NON-NLS-1$
+  }
+
+  public String getFeatureInfo( final double x, final double y ) throws OGCWebServiceException
+  {
+    /* One request must be done. */
+    if( m_lastGetMap == null )
+      return null;
+
+    /* Copy. */
+    final GetMap lastGetMap = m_lastGetMap;
+
+    /* Work locally against a copy of the reference, because it may change any time... */
+    final RemoteWMService remoteWMS = getWms();
+    if( remoteWMS == null )
+      return null;
+
+    /* Collect the layers. */
+    final List<String> layers = new ArrayList<String>();
+    final org.deegree.ogcwebservices.wms.operation.GetMap.Layer[] allLayers = lastGetMap.getLayers();
+    for( final org.deegree.ogcwebservices.wms.operation.GetMap.Layer layer : allLayers )
+      layers.add( layer.getName() );
+
+    /* Create the GetFeatureInfo request. */
+    final GetFeatureInfo featureInfoRequest = GetFeatureInfo.create( lastGetMap.getVersion(), lastGetMap.getId(), layers.toArray( new String[] {} ), lastGetMap, "text/html", 1, new Point( (int) x, (int) y ), lastGetMap.getExceptions(), lastGetMap.getStyledLayerDescriptor(), lastGetMap.getVendorSpecificParameters() );
+
+    /* Do the request and wait, until the result is there. */
+    final Object result = remoteWMS.doService( featureInfoRequest );
+    if( result == null )
+      return null;
+
+    /* Wrong result. */
+    if( !(result instanceof GetFeatureInfoResult) )
+      return null;
+
+    /* Cast. */
+    final GetFeatureInfoResult featureInfoResponse = (GetFeatureInfoResult) result;
+
+    return featureInfoResponse.getFeatureInfo();
   }
 }
