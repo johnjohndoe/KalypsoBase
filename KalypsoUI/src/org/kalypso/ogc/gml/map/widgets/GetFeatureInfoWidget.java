@@ -42,6 +42,7 @@ package org.kalypso.ogc.gml.map.widgets;
 
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -217,6 +218,24 @@ public class GetFeatureInfoWidget extends AbstractWidget
   }
 
   /**
+   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#keyPressed(java.awt.event.KeyEvent)
+   */
+  @Override
+  public void keyPressed( final KeyEvent event )
+  {
+    /* Get the key code. */
+    final int keyCode = event.getKeyCode();
+    switch( keyCode )
+    {
+      case KeyEvent.VK_SPACE:
+      {
+        openDialog();
+        break;
+      }
+    }
+  }
+
+  /**
    * @see org.kalypso.ogc.gml.widgets.AbstractWidget#paint(java.awt.Graphics)
    */
   @Override
@@ -385,6 +404,22 @@ public class GetFeatureInfoWidget extends AbstractWidget
     final KalypsoThemeVisitor visitor = new KalypsoThemeVisitor( predicate );
     mapModel.accept( visitor, depth );
     return visitor.getFoundThemes();
+  }
+
+  private void openDialog( )
+  {
+    /* HINT: If the theme property is set, the widget should configure itself without a dialog. */
+    final String themeProperty = getParameter( "getFeatureInfoProperty" ); //$NON-NLS-1$
+    if( !StringUtils.isEmpty( themeProperty ) )
+      return;
+
+    /* Get the map panel. */
+    final IMapPanel mapPanel = getMapPanel();
+    if( mapPanel == null )
+      return;
+
+    /* Initialize. */
+    initialize( mapPanel );
   }
 
   protected void handleThemeChanged( final IKalypsoTheme theme )
