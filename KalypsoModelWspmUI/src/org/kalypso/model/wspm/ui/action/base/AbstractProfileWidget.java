@@ -46,11 +46,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.jts.JTSConverter;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
@@ -77,7 +72,7 @@ import com.vividsolutions.jts.linearref.LocationIndexedLine;
 /**
  * @author Dirk Kuch
  */
-public class AbstractProfileWidget extends AbstractWidget implements IProfileProviderListener
+public class AbstractProfileWidget extends AbstractWidget
 {
   private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();
 
@@ -90,18 +85,29 @@ public class AbstractProfileWidget extends AbstractWidget implements IProfilePro
     }
   };
 
+  private final IProfileProviderListener m_providerListener = new IProfileProviderListener()
+  {
+    @Override
+    public void onProfilProviderChanged( final IProfileProvider provider )
+    {
+      handleOnProfilProviderChanged( provider );
+    }
+  };
+
   private ProfileSelection m_selection;
 
-  private IProfileFeature m_profile;
+  private IProfileFeature m_profileFeature;
 
   private com.vividsolutions.jts.geom.Point m_snapPoint;
+
+  private IProfil m_profile;
 
   public AbstractProfileWidget( final String name, final String toolTip )
   {
     super( name, toolTip );
 
     m_selection = null;
-    m_profile = null;
+    m_profileFeature = null;
     m_snapPoint = null;
   }
 
@@ -182,26 +188,21 @@ public class AbstractProfileWidget extends AbstractWidget implements IProfilePro
   public void setSelection( final ProfileSelection selection )
   {
     final IProfileFeature profile = selection == null || selection.getSelectedProfiles().length < 1 ? null : selection.getSelectedProfiles()[0];
-    if( m_profile == profile )
+
+    if( m_profileFeature == profile )
       return;
 
     // always set and reset profile listener, because of changed underlying iprofile!
-    if( Objects.isNotNull( m_profile ) )
-    {
-      m_profile.removeProfilProviderListener( this );
-      m_profile.getProfil().removeProfilListener( m_listener );
-    }
+    if( Objects.isNotNull( m_profileFeature ) )
+      m_profileFeature.removeProfilProviderListener( m_providerListener );
 
     m_selection = selection;
-    m_profile = profile;
+    m_profileFeature = profile;
 
-    if( Objects.isNotNull( m_profile ) )
-    {
-      m_profile.addProfilProviderListener( this );
-      m_profile.getProfil().addProfilListener( m_listener );
-    }
+    if( Objects.isNotNull( m_profileFeature ) )
+      m_profileFeature.addProfilProviderListener( m_providerListener );
 
-    repaintMap();
+    handleOnProfilProviderChanged( m_profileFeature );
   }
 
   protected ProfileSelection getSelection( )
@@ -211,7 +212,7 @@ public class AbstractProfileWidget extends AbstractWidget implements IProfilePro
 
   protected IProfileFeature getProfile( )
   {
-    return m_profile;
+    return m_profileFeature;
   }
 
   protected void paintTooltip( final Graphics g )
@@ -235,27 +236,19 @@ public class AbstractProfileWidget extends AbstractWidget implements IProfilePro
     return new Point( x, y );
   }
 
-  @Override
-  public void onProfilProviderChanged( final IProfileProvider provider )
+  protected void handleOnProfilProviderChanged( final IProfileProvider provider )
   {
-    final Job job = new Job( "Forcing repaint event" ) //$NON-NLS-1$
-    {
-      @Override
-      protected IStatus run( final IProgressMonitor monitor )
-      {
-        if( provider instanceof IProfileFeature )
-          setSelection( new ProfileSelection( new StructuredSelection( provider ) ) );
-        else
-          repaintMap();
+    if( m_profile != null )
+      m_profile.removeProfilListener( m_listener );
+    m_profile = null;
 
-        return Status.OK_STATUS;
-      }
-    };
+    if( provider != null )
+      m_profile = provider.getProfil();
 
-    job.setSystem( true );
-    job.setUser( false );
+    if( m_profile != null )
+      m_profile.addProfilListener( m_listener );
 
-    job.schedule();
+    repaintMap();
   }
 
   @Override

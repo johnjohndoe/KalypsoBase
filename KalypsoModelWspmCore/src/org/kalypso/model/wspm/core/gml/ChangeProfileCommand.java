@@ -40,8 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml;
 
-import javax.xml.namespace.QName;
-
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.command.FeatureChangeModellEvent;
@@ -53,15 +51,12 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class ChangeProfileCommand implements ICommand
 {
-  private final ProfileFeatureBinding m_profile;
-
   private final GMLWorkspace m_workspace;
 
   private final FeatureChange[] m_changes;
 
-  public ChangeProfileCommand( final ProfileFeatureBinding profile, final GMLWorkspace workspace, final FeatureChange... changes )
+  public ChangeProfileCommand( final GMLWorkspace workspace, final FeatureChange... changes )
   {
-    m_profile = profile;
     m_workspace = workspace;
     m_changes = changes == null ? new FeatureChange[0] : changes;
   }
@@ -101,16 +96,8 @@ public class ChangeProfileCommand implements ICommand
 
   protected void applyChanges( final FeatureChange[] changes )
   {
-    m_profile.setDirtyProperty( new QName[] { ProfileFeatureBinding.PROPERTY_PSEUDO_PROFILE, IProfileFeature.PROPERTY_LINE } );
-
-    m_profile.lockCache();
-
     for( final FeatureChange change : changes )
       change.getFeature().setProperty( change.getProperty(), change.getNewValue() );
-
-    m_profile.unlockCache();
-
-    m_profile.setDirtyProperty( new QName[] { ProfileFeatureBinding.PROPERTY_PSEUDO_PROFILE, IProfileFeature.PROPERTY_LINE } );
 
     if( m_workspace != null )
       m_workspace.fireModellEvent( new FeatureChangeModellEvent( m_workspace, changes ) );
