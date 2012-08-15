@@ -829,7 +829,7 @@
           point="org.eclipse.ui.commandImages">
        <image
              commandId="org.kalypso.ogc.gml.map.widgets.straighten.profile"
-             icon="icons/elcl16/empty.gif">
+             icon="icons/obj16/straighten_profile.gif">
        </image>
        <image
              commandId="org.kalypso.ogc.gml.map.widgets.insert.profile.point"
