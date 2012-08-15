@@ -237,6 +237,18 @@ public class StraightenProfileWidget extends AbstractProfileWidget
     }
   }
 
+  /**
+   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#setSelection(org.eclipse.jface.viewers.ISelection)
+   */
+  @Override
+  public void setSelection( final ISelection selection )
+  {
+    m_firstPoint = null;
+    m_secondPoint = null;
+
+    super.setSelection( selection );
+  }
+
   protected void perfomStraightening( final Shell shell )
   {
     try
