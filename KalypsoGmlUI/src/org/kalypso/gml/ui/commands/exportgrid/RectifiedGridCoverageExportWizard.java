@@ -89,10 +89,6 @@ public class RectifiedGridCoverageExportWizard extends Wizard implements IImport
     setWindowTitle( Messages.getString( "org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageExportWizard.0" ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
-   *      org.eclipse.jface.viewers.IStructuredSelection)
-   */
   @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
@@ -131,9 +127,6 @@ public class RectifiedGridCoverageExportWizard extends Wizard implements IImport
     super.addPages();
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#performFinish()
-   */
   @Override
   public boolean performFinish( )
   {
@@ -141,8 +134,10 @@ public class RectifiedGridCoverageExportWizard extends Wizard implements IImport
     final Object format = m_saveFileWizardPage.getDestinationFormat();
     final String path = m_saveFileWizardPage.getDestinationValue();
 
+    // FIXME: move into own class
     if( format == FMT_ASC )
     {
+      // FIXME: handle more than one coverage
       final ICoverage coverage = m_coverages[0];
       final ICoreRunnableWithProgress op = new ICoreRunnableWithProgress()
       {

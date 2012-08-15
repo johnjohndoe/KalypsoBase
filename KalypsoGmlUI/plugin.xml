@@ -203,7 +203,7 @@
    <extension
          point="org.kalypso.core.themeInfo">
       <themeInfo
-            class="org.kalypso.gml.ui.map.CoverageThemeInfo"
+            class="org.kalypso.gml.ui.coverage.CoverageThemeInfo"
             id="org.kalypso.gml.ui.map.CoverageThemeInfo">
       </themeInfo>
    </extension>

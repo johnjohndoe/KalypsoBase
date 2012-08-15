@@ -228,7 +228,7 @@ public abstract class AbstractWidget implements IWidget
     }
   }
 
-  protected final IMapPanel getMapPanel( )
+  public final IMapPanel getMapPanel( )
   {
     return m_mapPanel;
   }
