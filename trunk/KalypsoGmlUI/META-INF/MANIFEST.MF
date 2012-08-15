@@ -19,6 +19,6 @@ Export-Package: org.kalypso.gml.ui,
  org.kalypso.gml.ui.commands.importshape,
  org.kalypso.gml.ui.internal.feature.marker,
  org.kalypso.gml.ui.jface,
- org.kalypso.gml.ui.map,
+ org.kalypso.gml.ui.coverage,
  org.kalypso.gml.ui.map.legend,
  org.kalypso.gml.ui.util

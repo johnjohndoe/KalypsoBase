@@ -56,16 +56,16 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * Feature-Binding for common:Image type.
- * 
+ *
  * @author Gernot Belger
  */
 public class Image extends Feature_Impl
 {
-  public static final QName FEATURE_IMAGE = new QName( NS.COMMON, "Image" );
+  public static final QName FEATURE_IMAGE = new QName( NS.COMMON, "Image" ); //$NON-NLS-1$
 
-  private static final QName PROPERTY_MIME_TYPE = new QName( NS.COMMON, "mimeType" );
+  private static final QName PROPERTY_MIME_TYPE = new QName( NS.COMMON, "mimeType" ); //$NON-NLS-1$
 
-  public static final QName PROPERTY_URI = new QName( NS.COMMON, "uri" );
+  public static final QName PROPERTY_URI = new QName( NS.COMMON, "uri" ); //$NON-NLS-1$
 
   public Image( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {

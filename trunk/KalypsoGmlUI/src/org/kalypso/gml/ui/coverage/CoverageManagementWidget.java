@@ -38,39 +38,24 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml.ui.map;
+package org.kalypso.gml.ui.coverage;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
-import java.lang.reflect.InvocationTargetException;
-import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
-import org.apache.commons.lang3.Range;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -82,47 +67,38 @@ import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.commons.command.EmptyCommand;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
-import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.util.pool.ResourcePool;
-import org.kalypso.gml.ui.commands.exportgrid.RectifiedGridCoverageExportWizard;
-import org.kalypso.gml.ui.commands.importgrid.AddRectifiedGridCoveragesWizard;
 import org.kalypso.gml.ui.i18n.Messages;
+import org.kalypso.gml.ui.internal.coverage.AddCoverageAction;
+import org.kalypso.gml.ui.internal.coverage.CoverageColorRangeAction;
+import org.kalypso.gml.ui.internal.coverage.CoverageColormapHandler;
+import org.kalypso.gml.ui.internal.coverage.ExportCoverageAction;
+import org.kalypso.gml.ui.internal.coverage.JumpToCoverageAction;
+import org.kalypso.gml.ui.internal.coverage.MoveCoverageDownAction;
+import org.kalypso.gml.ui.internal.coverage.MoveCoverageUpAction;
+import org.kalypso.gml.ui.internal.coverage.RemoveCoverageAction;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
-import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
-import org.kalypso.ogc.gml.IKalypsoFeatureTypeStyle;
-import org.kalypso.ogc.gml.IKalypsoLayerModell;
-import org.kalypso.ogc.gml.IKalypsoStyle;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.IKalypsoUserStyle;
-import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.FeatureComposite;
 import org.kalypso.ogc.gml.featureview.maker.CachedFeatureviewFactory;
@@ -140,11 +116,7 @@ import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypso.ui.editor.styleeditor.viewer.ColorMapViewer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
-import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
-import org.kalypsodeegree.graphics.sld.Rule;
-import org.kalypsodeegree.graphics.sld.SldHelper;
-import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -157,19 +129,18 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * A widget with option pane, which allows the user to edit a coverage collection.<BR>
- * The user can add / remove raster data to / from the collection and change the order of the elements of the
+ * The user can add / remove coverage data to / from the collection and change the order of the elements of the
  * collection. In addition he can jump to the extent of an collection element in the map.
  *
  * @author Thomas Jung
+ * @author Gernot Belger
  */
 public class CoverageManagementWidget extends AbstractWidget implements IWidgetWithOptions
 {
-  /** Allows to define on the theme, if the user is allowed to change the grid folde for this theme */
+  /** Allows to define on the theme, if the user is allowed to change the grid folder for this theme */
   private static final String THEME_PROPERTY_ALLOW_USER_CHANGE_GRID_FOLDER = "allowUserChangeGridFolder"; //$NON-NLS-1$
 
   public static final IKalypsoThemePredicate COVERAGE_PREDICATE = new IKalypsoThemePredicate()
@@ -232,14 +203,14 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   private ICoverage m_selectedCoverage;
 
-  /** If set, grids get imported by default into this folder */
-  private IFolder m_gridFolder;
+  /** If set, data files get imported by default into this folder */
+  private IFolder m_dataFolder;
 
   /**
-   * If set to <code>true</code>, the user is allowed to change the grid import folder, where grids are imported.<br>
-   * Will default to <code>true</code>, if {@link #m_gridFolder} is <code>null</code>.
+   * If set to <code>true</code>, the user is allowed to change the data import folder, where data files are imported.<br>
+   * Will default to <code>true</code>, if {@link #m_dataFolder} is <code>null</code>.
    */
-  private boolean m_allowUserChangeGridFolder = true;
+  private boolean m_allowUserChangeDataFolder = true;
 
   protected ListViewer m_coverageViewer;
 
@@ -272,17 +243,12 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   private final String m_partName;
 
-  /**
-   * The constructor.
-   */
   public CoverageManagementWidget( )
   {
     this( Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.0" ), Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
-   * The constructor.
-   *
    * @param name
    *          The name of the widget.
    * @param tooltip
@@ -294,8 +260,6 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   }
 
   /**
-   * The constructor.
-   *
    * @param name
    *          The name of the widget.
    * @param tooltip
@@ -342,9 +306,6 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     m_infoWidget.activate( commandPoster, mapPanel );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#finish()
-   */
   @Override
   public void finish( )
   {
@@ -417,10 +378,6 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     }
   }
 
-  /**
-   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#createControl(org.eclipse.swt.widgets.Composite,
-   *      org.eclipse.ui.forms.widgets.FormToolkit)
-   */
   @Override
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {
@@ -475,7 +432,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       public void featureChanged( final ICommand changeCommand )
       {
         m_theme.postCommand( changeCommand, null );
-        updateGridProperties();
+        updateCoverageProperties();
         updateButtons();
       }
 
@@ -557,13 +514,12 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     updateButtons();
   }
 
-  protected void updateGridProperties( )
+  protected void updateCoverageProperties( )
   {
     if( m_theme == null )
       m_infoWidget.setThemes( null );
     else
       m_infoWidget.setThemes( new IKalypsoTheme[] { m_theme } );
-
   }
 
   private void initializeThemeCombo( )
@@ -587,11 +543,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     if( m_themeCombo == null || m_themeCombo.getControl().isDisposed() )
       return;
 
-    final IMapPanel mapPanel = getMapPanel();
-    final IMapModell mapModell = mapPanel == null ? null : mapPanel.getMapModell();
-    final IKalypsoTheme activeTheme = mapModell == null ? null : mapModell.getActiveTheme();
-
-    final IKalypsoTheme[] themesForCombo = findThemesForCombo( mapModell, activeTheme );
+    final IKalypsoTheme[] themesForCombo = findThemesForCombo();
 
     final Control control = m_themeCombo.getControl();
     final ComboViewer themeCombo = m_themeCombo;
@@ -612,8 +564,12 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   }
 
-  private IKalypsoFeatureTheme[] findThemesForCombo( final IMapModell mapModell, final IKalypsoTheme activeTheme )
+  public IKalypsoFeatureTheme[] findThemesForCombo( )
   {
+    final IMapPanel mapPanel = getMapPanel();
+    final IMapModell mapModell = mapPanel == null ? null : mapPanel.getMapModell();
+    final IKalypsoTheme activeTheme = mapModell == null ? null : mapModell.getActiveTheme();
+
     final List<IKalypsoFeatureTheme> themesForCombo = new ArrayList<IKalypsoFeatureTheme>();
 
     if( COVERAGE_PREDICATE.decide( activeTheme ) )
@@ -652,7 +608,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
       final String property = ft.getProperty( THEME_PROPERTY_ALLOW_USER_CHANGE_GRID_FOLDER, null );
       if( property != null )
-        m_allowUserChangeGridFolder = Boolean.valueOf( property );
+        m_allowUserChangeDataFolder = Boolean.valueOf( property );
 
       final FeatureList featureList = ft.getFeatureList();
       final Feature coveragesFeature = featureList == null ? null : featureList.getOwner();
@@ -677,11 +633,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       parent.layout( true, true );
     }
 
-    // final Point size = panel.computeSize( SWT.DEFAULT, SWT.DEFAULT );
-    // panel.setSize( size );
-    // sc.setMinHeight( size.y );
+    repaintMap();
 
-    getMapPanel().repaintMap();
     updateButtons();
   }
 
@@ -704,60 +657,21 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   /**
    * sets the input of the style panel by fetching the style from the selected theme
    */
-  protected void updateStylePanel( )
+  public void updateStylePanel( )
   {
     if( m_colorMapViewer == null )
       return;
 
-    final RasterSymbolizer symb = findRasterSymbolizer();
+    if( m_theme == null )
+      return;
+
+    final IKalypsoFeatureTheme[] allCoverageThemes = findThemesForCombo();
+
+    final CoverageColormapHandler colormapHandler = new CoverageColormapHandler( m_theme, allCoverageThemes );
+
+    final RasterSymbolizer symb = colormapHandler.getRasterSymbolizer();
     if( symb != null )
       m_colorMapViewer.setInput( symb.getColorMap().values().toArray( new ColorMapEntry[] {} ) );
-  }
-
-  /**
-   * returns the first {@link RasterSymbolizer} from the given user styles
-   *
-   * @param styles
-   *          The styles in which the raster symbolizer is
-   * @return a {@link RasterSymbolizer}
-   */
-  private RasterSymbolizer findRasterSymbolizer( )
-  {
-    if( m_theme == null )
-      return null;
-
-    final IKalypsoStyle[] styles = m_theme.getStyles();
-
-    for( final IKalypsoStyle style : styles )
-    {
-      final FeatureTypeStyle[] featureTypeStyles = findFeatureTypeStyles( style );
-      for( final FeatureTypeStyle fts : featureTypeStyles )
-      {
-        final Rule[] rules = fts.getRules();
-        for( final Rule rule : rules )
-        {
-          final Symbolizer[] symbolizers = rule.getSymbolizers();
-          for( final Symbolizer symbolizer : symbolizers )
-          {
-            if( symbolizer instanceof RasterSymbolizer )
-              return (RasterSymbolizer) symbolizer;
-          }
-        }
-      }
-    }
-
-    return null;
-  }
-
-  private FeatureTypeStyle[] findFeatureTypeStyles( final IKalypsoStyle style )
-  {
-    if( style instanceof IKalypsoUserStyle )
-      return ((IKalypsoUserStyle) style).getFeatureTypeStyles();
-
-    if( style instanceof IKalypsoFeatureTypeStyle )
-      return new FeatureTypeStyle[] { (FeatureTypeStyle) style };
-
-    return new FeatureTypeStyle[] {};
   }
 
   /**
@@ -770,119 +684,12 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     manager.update( true );
   }
 
-  /**
-   * handles the creation of a RasterColorMap via a {@link GridStyleDialog}
-   */
-  // TODO: move into action
-  void handleGenerateColorMap( final Event event )
-  {
-    final RasterSymbolizer symb = findRasterSymbolizer();
-    if( symb == null )
-    {
-      MessageDialog.openWarning( event.display.getActiveShell(), Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.4" ), Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.6" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      return;
-    }
-
-    final SortedMap<Double, ColorMapEntry> input = symb.getColorMap();
-
-    if( input != null )
-    {
-      // convert map into an array
-      final Collection<ColorMapEntry> values = input.values();
-      final ColorMapEntry[] entries = values.toArray( new ColorMapEntry[values.size()] );
-
-      final Range<BigDecimal> minMax = GeoGridUtilities.calculateRange( m_coverages.getCoverages() );
-
-      final BigDecimal min = minMax.getMinimum();
-      final BigDecimal max = minMax.getMaximum();
-
-      // open dialog
-      final GridStyleDialog dialog = new GridStyleDialog( event.display.getActiveShell(), entries, min, max );
-      if( dialog.open() == Window.OK )
-        updateRasterSymbolizer( dialog.getColorMap() );
-    }
-  }
-
-  private void saveStyle( )
-  {
-    if( m_theme == null )
-      return;
-
-    /* Find all relevant styles */
-    final Set<IKalypsoStyle> allStyles = new HashSet<>();
-
-    final IKalypsoLayerModell mapModell = getMapPanel().getMapModell();
-
-    final IKalypsoFeatureTheme[] allThemes = findThemesForCombo( mapModell, mapModell.getActiveTheme() );
-    for( final IKalypsoFeatureTheme theme : allThemes )
-    {
-      final IKalypsoStyle[] themeStyles = theme.getStyles();
-      allStyles.addAll( Arrays.asList( themeStyles ) );
-    }
-
-    final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
-    {
-      @Override
-      public IStatus execute( final IProgressMonitor monitor ) throws CoreException
-      {
-        monitor.beginTask( Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.5" ), allStyles.size() ); //$NON-NLS-1$
-
-        for( final IKalypsoStyle style : allStyles )
-        {
-          style.fireStyleChanged();
-          style.save( new SubProgressMonitor( monitor, 1 ) );
-        }
-
-        return Status.OK_STATUS;
-      }
-    };
-
-    final IStatus result = ProgressUtilities.busyCursorWhile( operation );
-    final Shell shell = m_themeCombo.getControl().getShell();
-    ErrorDialog.openError( shell, Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.7" ), Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.8" ), result ); //$NON-NLS-1$ //$NON-NLS-2$
-  }
-
-  /**
-   * update the colorMap of the {@link RasterSymbolizer}
-   */
-  private void updateRasterSymbolizer( final ColorMapEntry[] entries )
-  {
-    final RasterSymbolizer symb = findRasterSymbolizer();
-    final TreeMap<Double, ColorMapEntry> new_colorMap = new TreeMap<Double, ColorMapEntry>();
-
-    try
-    {
-      // FIXME: move this code to the place, where the entries are created
-      for( final ColorMapEntry colorMapEntry : entries )
-      {
-        // WHY? why do we not just ignore duplicate entries
-        if( !new_colorMap.containsKey( new Double( colorMapEntry.getQuantity() ) ) )
-          new_colorMap.put( new Double( colorMapEntry.getQuantity() ), colorMapEntry.clone() );
-        else
-        {
-          throw new Exception();
-        }
-      }
-    }
-    catch( final Exception e )
-    {
-      MessageDialog.openError( m_themeCombo.getControl().getShell(), Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.9" ), Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.10" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    }
-
-    symb.setColorMap( new_colorMap );
-
-    saveStyle();
-
-    final ColorMapEntry[] newEntries = new_colorMap.values().toArray( new ColorMapEntry[new_colorMap.size()] );
-    m_colorMapViewer.setInput( newEntries );
-  }
-
   private void initalizeCoverageActions( final IToolBarManager manager, final IAction[] customActions )
   {
     if( m_showAddRemoveButtons )
     {
-      addAction( manager, new AddCoverageAction( this ) );
-      addAction( manager, new RemoveCoverageAction( this ) );
+      addAction( manager, new AddCoverageAction( this, m_refreshCoverageViewerRunnable ) );
+      addAction( manager, new RemoveCoverageAction( this, m_refreshCoverageViewerRunnable ) );
     }
 
     addAction( manager, new ExportCoverageAction( this ) );
@@ -915,31 +722,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     manager.add( action );
   }
 
-  // TODO: move into action
-  void handleCoverageJumpTo( )
-  {
-    if( m_selectedCoverage == null )
-      return;
-
-    try
-    {
-      // final GM_Envelope envelope = m_selectedCoverage.getEnvelope();
-      final GM_Surface< ? > surface = GeoGridUtilities.createSurface( GeoGridUtilities.toGrid( m_selectedCoverage ), KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
-      final GM_Envelope scaledBox = GeometryUtilities.scaleEnvelope( surface.getEnvelope(), 1.05 );
-      getMapPanel().setBoundingBox( scaledBox );
-    }
-    catch( final GeoGridException e )
-    {
-      e.printStackTrace();
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-    }
-  }
-
-  // TODO: move into actions
-  void handleCoverageMove( final int step )
+  public void handleCoverageMove( final int step )
   {
     if( m_selectedCoverage == null )
       return;
@@ -958,64 +741,10 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     m_theme.postCommand( command, m_refreshCoverageViewerRunnable );
   }
 
-  // FIXME: move into action
-  void handleCoverageAdd( final Shell shell )
+  public IContainer findGridFolder( )
   {
-    final IKalypsoFeatureTheme theme = m_theme;
-    final ICoverageCollection coverages = m_coverages;
-    final Runnable refreshRunnable = m_refreshCoverageViewerRunnable;
-
-    final IContainer gridFolder = determineGridFolder();
-
-    final AddRectifiedGridCoveragesWizard wizard = new AddRectifiedGridCoveragesWizard();
-    wizard.init( coverages, gridFolder, m_allowUserChangeGridFolder );
-    final WizardDialog wizardDialog = new WizardDialog( shell, wizard );
-    if( wizardDialog.open() != Window.OK )
-      return;
-
-    final ICoverage[] newCoverages = wizard.getNewCoverages();
-    final GM_Envelope bbox = FeatureHelper.getEnvelope( newCoverages );
-
-    final GM_Envelope scaledBox = GeometryUtilities.scaleEnvelope( bbox, 1.05 );
-    getMapPanel().setBoundingBox( scaledBox );
-
-    // TODO: move into finish method? / very slow, because all the tins are saved as well...
-    final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
-    {
-      @Override
-      public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
-      {
-        try
-        {
-          /* save the model */
-          monitor.beginTask( Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.17" ), IProgressMonitor.UNKNOWN ); //$NON-NLS-1$
-          // we cannot allow the model not to be saved, as the underlying files will then not be deleted
-          theme.postCommand( new EmptyCommand( "", false ), refreshRunnable ); //$NON-NLS-1$
-          final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
-          final CommandableWorkspace workspace = theme.getWorkspace();
-          pool.saveObject( workspace, monitor );
-
-          return Status.OK_STATUS;
-        }
-        catch( final LoaderException e )
-        {
-          e.printStackTrace();
-
-          throw new InvocationTargetException( e );
-        }
-      }
-    };
-
-    handleCoveragesAdded( newCoverages );
-
-    final IStatus status = ProgressUtilities.busyCursorWhile( operation );
-    ErrorDialog.openError( shell, Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.11" ), Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.19" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
-  }
-
-  private IContainer determineGridFolder( )
-  {
-    if( m_gridFolder != null )
-      return m_gridFolder;
+    if( m_dataFolder != null )
+      return m_dataFolder;
 
     if( m_theme == null )
       return null;
@@ -1040,110 +769,18 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     return null;
   }
 
-  private void handleCoveragesAdded( final ICoverage[] newCoverages )
+  public void handleCoveragesAdded( final ICoverage[] newCoverages )
   {
     // set selection to new coverages
     final StructuredSelection selection = new StructuredSelection( newCoverages );
     m_coverageViewer.setSelection( selection );
 
-    final RasterSymbolizer symb = findRasterSymbolizer();
-    if( symb == null )
+    if( m_theme == null )
       return;
 
-    final SortedMap<Double, ColorMapEntry> colorMap = symb.getColorMap();
-    if( !colorMap.isEmpty() )
-      return;
+    final CoverageColormapHandler colormapHandler = new CoverageColormapHandler( m_theme, findThemesForCombo() );
 
-    try
-    {
-      /* In order to show anything to the user, create a default color map, if no colors have been defined yet */
-      final Range<BigDecimal> minMax = GeoGridUtilities.calculateRange( m_coverages.getCoverages() );
-      final BigDecimal min = minMax.getMinimum();
-      final BigDecimal max = minMax.getMaximum();
-      final BigDecimal stepWidth = new BigDecimal( "0.1" ); //$NON-NLS-1$
-      final Color fromColor = new Color( 0, 255, 0, 200 );
-      final Color toColor = new Color( 255, 0, 0, 200 );
-      final ColorMapEntry[] colors = SldHelper.createColorMap( fromColor, toColor, stepWidth, min, max, null );
-      updateRasterSymbolizer( colors );
-    }
-    catch( final CoreException e )
-    {
-      // will not happen, as we do not define a class limit in createColorMap
-    }
-  }
-
-  // TODO: move to action
-  void handleCoverageExport( final Event event )
-  {
-    if( m_selectedCoverage == null )
-      return;
-
-    // open wizard to locate destination
-    final RectifiedGridCoverageExportWizard wizard = new RectifiedGridCoverageExportWizard();
-    wizard.init( PlatformUI.getWorkbench(), new StructuredSelection( m_selectedCoverage ) );
-
-    final WizardDialog wizardDialog = new WizardDialog( event.display.getActiveShell(), wizard );
-    wizardDialog.open();
-  }
-
-  // TODO: move into action
-  void handleCoverageRemove( final Shell shell )
-  {
-    if( m_selectedCoverage == null )
-      return;
-
-    final ICoverage selectedCoverage = m_selectedCoverage;
-    final IKalypsoFeatureTheme theme = m_theme;
-    final Runnable refreshRunnable = m_refreshCoverageViewerRunnable;
-
-    final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
-    {
-      @Override
-      public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
-      {
-        try
-        {
-          final CommandableWorkspace workspace = theme.getWorkspace();
-
-          /* Delete coverage from collection */
-          final Feature coverageFeature = selectedCoverage;
-
-          final DeleteFeatureCommand command = new DeleteFeatureCommand( coverageFeature );
-          theme.postCommand( command, refreshRunnable );
-
-          /* save the model */
-          final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
-          pool.saveObject( workspace, monitor );
-
-          /*
-           * Delete underlying grid file: we do it in a job, later, in order to let the map give-up the handle to the
-           * file
-           */
-          final Job job = new Job( Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.20" ) ) //$NON-NLS-1$
-          {
-            @Override
-            protected IStatus run( final IProgressMonitor progress )
-            {
-              return CoverageManagementHelper.deleteGridFile( selectedCoverage );
-            }
-          };
-          job.setUser( false );
-          job.setSystem( true );
-          job.schedule( 5000 );
-
-          return Status.OK_STATUS;
-        }
-        catch( final LoaderException e )
-        {
-          e.printStackTrace();
-
-          throw new InvocationTargetException( e );
-        }
-      }
-    };
-
-    final IStatus status = ProgressUtilities.busyCursorWhile( operation );
-    ErrorDialog.openError( shell, Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.12" ), Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.22" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
+    colormapHandler.guessInitialColormap( getShell(), getCoverages() );
   }
 
   private void initalizeCoverageViewer( final StructuredViewer viewer )
@@ -1151,9 +788,6 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     viewer.setContentProvider( new ArrayContentProvider() );
     viewer.setLabelProvider( new LabelProvider()
     {
-      /**
-       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
-       */
       @Override
       public String getText( final Object element )
       {
@@ -1165,9 +799,6 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       viewer.setInput( m_coverages.getCoverages() );
   }
 
-  /**
-   * @see org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions#disposeControl()
-   */
   @Override
   public void disposeControl( )
   {
@@ -1246,12 +877,12 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   public void setGridFolder( final IFolder gridFolder )
   {
-    m_gridFolder = gridFolder;
+    m_dataFolder = gridFolder;
   }
 
   public void setAllowUserChangeGridFolder( final boolean allowUserChangeGridFolder )
   {
-    m_allowUserChangeGridFolder = allowUserChangeGridFolder;
+    m_allowUserChangeDataFolder = allowUserChangeGridFolder;
   }
 
   /**
@@ -1282,7 +913,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     return m_partName;
   }
 
-  ICoverage[] getCoverages( )
+  public ICoverage[] getCoverages( )
   {
     if( m_coverages == null )
       return new ICoverage[0];
@@ -1294,11 +925,26 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     return coverages.toArray( new ICoverage[coverages.size()] );
   }
 
-  ICoverage[] getSelectedCoverages( )
+  public ICoverage[] getSelectedCoverages( )
   {
     if( m_selectedCoverage == null )
       return new ICoverage[0];
 
     return new ICoverage[] { m_selectedCoverage };
+  }
+
+  public Shell getShell( )
+  {
+    return m_themeCombo.getControl().getShell();
+  }
+
+  public boolean isAllowUserChangeDataFolder( )
+  {
+    return m_allowUserChangeDataFolder;
+  }
+
+  public ICoverageCollection getCoverageCollection( )
+  {
+    return m_coverages;
   }
 }

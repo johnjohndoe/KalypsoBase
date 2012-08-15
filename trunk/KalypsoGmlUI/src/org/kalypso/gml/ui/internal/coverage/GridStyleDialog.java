@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml.ui.map;
+package org.kalypso.gml.ui.internal.coverage;
 
 import java.math.BigDecimal;
 

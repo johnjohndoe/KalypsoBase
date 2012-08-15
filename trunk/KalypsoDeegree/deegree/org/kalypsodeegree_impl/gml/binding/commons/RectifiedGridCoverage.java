@@ -122,9 +122,6 @@ public class RectifiedGridCoverage extends Feature_Impl implements ICoverage
     setProperty( RectifiedGridCoverage.QNAME_PROP_RANGE_SET, rangeSet );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.gml.binding.commons.ICoverage#getEnvelope()
-   */
   @Override
   public GM_Envelope getEnvelope( )
   {

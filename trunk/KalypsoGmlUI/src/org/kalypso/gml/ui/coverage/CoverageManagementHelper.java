@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml.ui.map;
+package org.kalypso.gml.ui.coverage;
 
 import java.io.File;
 import java.net.MalformedURLException;

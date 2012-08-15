@@ -45,7 +45,6 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.util.Collection;
 
 import javax.media.jai.TiledImage;
 
@@ -98,7 +97,7 @@ import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Helper class for {@link IGeoGrid}s.
- * 
+ *
  * @author Gernot Belger
  */
 public final class GeoGridUtilities
@@ -110,7 +109,7 @@ public final class GeoGridUtilities
 
   /**
    * Calclates the geo-position of the given cell.
-   * 
+   *
    * @param c
    *          If c is null, a new coordinate is returned, else its values are changed.
    */
@@ -136,7 +135,7 @@ public final class GeoGridUtilities
   /**
    * Calculates the cell within a {@link IGeoGrid} from a geo position. We use a grid point as a center point
    * representation.
-   * 
+   *
    * @param pos
    *          The search position, must be in the same coordinate system as the grid.
    * @return The grid cell that contains the given position. Always returns a value, even if the position is not
@@ -205,7 +204,7 @@ public final class GeoGridUtilities
 
   /**
    * Opens a {@link IGeoGrid} for a resource of a given mime-type.
-   * 
+   *
    * @param writeable
    *          if <code>true</code>, the grid is opened for write-access. In that case a {@link IWriteableGeoGrid} will
    *          be returned.
@@ -260,7 +259,7 @@ public final class GeoGridUtilities
 
   /**
    * This function creates the surface of a grid.
-   * 
+   *
    * @param grid
    *          The grid.
    * @param targetCRS
@@ -316,7 +315,7 @@ public final class GeoGridUtilities
   /**
    * This function creates the cell at the given (cell-)coordinates in a grid. We interpret the grid cell as a surface
    * with the grid point as center point of the surface.
-   * 
+   *
    * @param grid
    *          The grid.
    * @param x
@@ -416,7 +415,7 @@ public final class GeoGridUtilities
    * geometry.<br>
    * Calls {@link IGeoGridWalker#start(IGeoGrid)} for every visited grid. <br>
    * ATTENTION: this does not work for every walker implementation! *
-   * 
+   *
    * @param walkingArea
    *          If non-<code>null</code>, Only grid cells are visited that lie inside this geometry.
    */
@@ -444,7 +443,7 @@ public final class GeoGridUtilities
 
   /**
    * This function creates a writable geo grid.
-   * 
+   *
    * @param mimeType
    *          The mime type for this grid (e.g. "image/bin").
    * @param file
@@ -482,7 +481,7 @@ public final class GeoGridUtilities
   /**
    * Reads values from the given {@link IGeoGrid} and write it out with the scale factor of two (i.e. rounding to two
    * important digits) into a new file which is then added as a new coverage to the outputCoverages.
-   * 
+   *
    * @param coverages
    *          The new coverage will be added to this collection.
    * @param grid
@@ -509,7 +508,7 @@ public final class GeoGridUtilities
   /**
    * Reads values from the given {@link IGeoGrid} and write it out into a new file which is then added as a new coverage
    * to the outputCoverages.
-   * 
+   *
    * @param coverages
    *          The new coverage will be added to this collection.
    * @param grid
@@ -602,7 +601,7 @@ public final class GeoGridUtilities
   /**
    * Reads values from the given {@link IGeoGrid} and write it out with the scale factor of two (i.e. rounding to two
    * important digits) into a new file which is referenced by given coverage
-   * 
+   *
    * @param coverage
    *          The coverage that refers the grid
    * @param grid
@@ -628,7 +627,7 @@ public final class GeoGridUtilities
 
   /**
    * Reads values from the given {@link IGeoGrid} and write it out into a new file which is referenced by given coverage
-   * 
+   *
    * @param coverage
    *          The coverage that refers the grid
    * @param grid
@@ -676,7 +675,7 @@ public final class GeoGridUtilities
 
   /**
    * This function creates a binary grid using the given file as target and sets the value from the grid to it.
-   * 
+   *
    * @param grid
    *          The values of the binary grid will be read from this grid.
    * @param scale
@@ -725,7 +724,7 @@ public final class GeoGridUtilities
 
   /**
    * This function creates a TIFF using the given file as target and sets the value from the grid to it.
-   * 
+   *
    * @param grid
    *          The values of the TIFF will be read from this grid.
    * @param file
@@ -939,7 +938,7 @@ public final class GeoGridUtilities
 
   /**
    * This function transforms the coordinate from its coordinate system to the grid coordinate system.
-   * 
+   *
    * @param grid
    *          The grid.
    * @param coordinate
@@ -987,7 +986,7 @@ public final class GeoGridUtilities
 
   /**
    * calculates the common envelope for an array of {@link ICoverageCollection}s.
-   * 
+   *
    * @param collections
    *          the collections
    * @param intersection
@@ -1056,7 +1055,7 @@ public final class GeoGridUtilities
 
   /**
    * Flattens several grids into one grid, that has the value set for the category as cell value
-   * 
+   *
    * @param gridCategories
    *          the categories with which the grid get flattened
    * @param intersection
@@ -1136,7 +1135,7 @@ public final class GeoGridUtilities
   /**
    * This function creates the cell at the given (cell-)coordinates in a grid. We interpret the grid cell as a polygon
    * with the grid point as center point of the polygon.
-   * 
+   *
    * @param grid
    *          The grid.
    * @param x
@@ -1175,7 +1174,7 @@ public final class GeoGridUtilities
   /**
    * Returns the value of a grid at a given position. Returns {@link Double#NaN} if the coordinate is outside the
    * bounding box.
-   * 
+   *
    * @see IGeoGrid#getValueChecked(int, int)
    */
   public static double getValueChecked( final IGeoGrid grid, final Coordinate crd ) throws GeoGridException
@@ -1186,7 +1185,7 @@ public final class GeoGridUtilities
 
   /**
    * Writes a value to the grid at a specified position. The value is written to the cell covering the given coordinate.
-   * 
+   *
    * @return <code>true</code>, if and only if the coordinate lies within the grid and the value could be written.
    * @see #cellFromPosition(IGeoGrid, Coordinate)
    */
@@ -1203,7 +1202,7 @@ public final class GeoGridUtilities
     return true;
   }
 
-  public static Range<BigDecimal> calculateRange( final Collection<ICoverage> coverages )
+  public static Range<BigDecimal> calculateRange( final ICoverage[] coverages )
   {
     // get min / max
     BigDecimal min = new BigDecimal( Double.MAX_VALUE );

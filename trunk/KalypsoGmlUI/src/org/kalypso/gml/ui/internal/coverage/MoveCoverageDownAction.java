@@ -38,43 +38,45 @@
  *  v.doemming@tuhh.de
  * 
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml.ui.map;
+package org.kalypso.gml.ui.internal.coverage;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Shell;
+import org.jfree.util.ObjectUtils;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.gml.ui.KalypsoGmlUiImages;
+import org.kalypso.gml.ui.coverage.CoverageManagementWidget;
 import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 
 /**
  * @author Gernot Belger
  */
-class AddCoverageAction extends Action implements IUpdateable
+public class MoveCoverageDownAction extends Action implements IUpdateable
 {
   private final CoverageManagementWidget m_widget;
 
-  AddCoverageAction( final CoverageManagementWidget widget )
+  public MoveCoverageDownAction( final CoverageManagementWidget widget )
   {
     m_widget = widget;
 
-    setText( Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.11" ) );
-    setImageDescriptor( KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_ADD ) );
+    setText( Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.15" ) ); //$NON-NLS-1$
+    setImageDescriptor( KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_DOWN ) );
   }
 
   @Override
-  public void runWithEvent( final Event event )
+  public void run( )
   {
-    final Shell shell = event.display.getActiveShell();
-    m_widget.handleCoverageAdd( shell );
+    m_widget.handleCoverageMove( 1 );
   }
 
   @Override
   public void update( )
   {
     final ICoverage[] allCoverages = m_widget.getCoverages();
-    setEnabled( allCoverages != null );
+    final ICoverage[] selectedCoverages = m_widget.getSelectedCoverages();
+
+    setEnabled( allCoverages != null && selectedCoverages.length > 0 && allCoverages.length > 0
+        && !ObjectUtils.equal( selectedCoverages[selectedCoverages.length - 1], allCoverages[allCoverages.length - 1] ) );
   }
 }
