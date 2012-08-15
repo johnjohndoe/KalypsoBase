@@ -79,7 +79,9 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.variables.VariableUtils;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.core.exceptions.ExceptionCode;
 import org.kalypso.ogc.core.exceptions.OWSException;
+import org.kalypso.ogc.core.utils.OWSUtilities;
 import org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities;
 import org.kalypso.ogc.gml.wms.loader.ICapabilitiesLoader;
 import org.kalypso.ogc.gml.wms.utils.KalypsoWMSUtilities;
@@ -593,7 +595,14 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     final List<String> layers = new ArrayList<String>();
     final org.deegree.ogcwebservices.wms.operation.GetMap.Layer[] allLayers = lastGetMap.getLayers();
     for( final org.deegree.ogcwebservices.wms.operation.GetMap.Layer layer : allLayers )
-      layers.add( layer.getName() );
+    {
+      if( isQueryable( layer, m_capabilities ) )
+        layers.add( layer.getName() );
+    }
+
+    /* There were no queryable layers. */
+    if( layers.size() == 0 )
+      throw new OWSException( "There were no queryable layers...", OWSUtilities.OWS_VERSION, "en", ExceptionCode.NO_APPLICABLE_CODE, null );
 
     /* Create the GetFeatureInfo request. */
     final GetFeatureInfo featureInfoRequest = GetFeatureInfo.create( lastGetMap.getVersion(), "GetFeatureInfo", layers.toArray( new String[] {} ), lastGetMap, "text/html", 1, new Point( (int) x, (int) y ), lastGetMap.getExceptions(), lastGetMap.getStyledLayerDescriptor(), lastGetMap.getVendorSpecificParameters() );
@@ -617,5 +626,14 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     KalypsoWMSUtilities.checkForOwsException( featureInfo );
 
     return featureInfo;
+  }
+
+  private boolean isQueryable( final org.deegree.ogcwebservices.wms.operation.GetMap.Layer layer, final WMSCapabilities capabilities )
+  {
+    final Layer capabilitiesLayer = capabilities.getLayer( layer.getName() );
+    if( capabilitiesLayer == null )
+      return false;
+
+    return capabilitiesLayer.isQueryable();
   }
 }
