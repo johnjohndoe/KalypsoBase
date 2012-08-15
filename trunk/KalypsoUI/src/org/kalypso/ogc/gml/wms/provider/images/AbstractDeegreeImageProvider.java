@@ -600,9 +600,9 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
         layers.add( layer.getName() );
     }
 
-    /* There were no queryable layers. */
+    /* There are no queryable layers. */
     if( layers.size() == 0 )
-      throw new OWSException( "There were no queryable layers...", OWSUtilities.OWS_VERSION, "en", ExceptionCode.NO_APPLICABLE_CODE, null );
+      throw new OWSException( "There are no queryable layers...", OWSUtilities.OWS_VERSION, "en", ExceptionCode.NO_APPLICABLE_CODE, null );
 
     /* Create the GetFeatureInfo request. */
     final GetFeatureInfo featureInfoRequest = GetFeatureInfo.create( lastGetMap.getVersion(), "GetFeatureInfo", layers.toArray( new String[] {} ), lastGetMap, "text/html", 1, new Point( (int) x, (int) y ), lastGetMap.getExceptions(), lastGetMap.getStyledLayerDescriptor(), lastGetMap.getVendorSpecificParameters() );
