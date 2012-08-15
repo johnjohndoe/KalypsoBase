@@ -40,11 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.wms.utils;
 
+import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import net.opengis.ows._1.ExceptionReport;
+import net.opengis.ows._1.ExceptionType;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
@@ -55,6 +60,9 @@ import org.eclipse.core.runtime.Platform;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.UrlUtilities;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.core.exceptions.ExceptionCode;
+import org.kalypso.ogc.core.exceptions.OWSException;
+import org.kalypso.ogc.core.utils.OWSUtilities;
 import org.kalypso.ogc.gml.wms.provider.images.AbstractDeegreeImageProvider;
 import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
 import org.kalypso.ogc.gml.wms.provider.images.WMSImageProvider;
@@ -63,7 +71,7 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
  * This is a helper class, providing functions for dealing with a WMS.
- *
+ * 
  * @author Holger Albert
  */
 public class KalypsoWMSUtilities
@@ -88,7 +96,7 @@ public class KalypsoWMSUtilities
    * This function should return an image provider for the given source. It chooses with the PROVIDER attribute and
    * returns the specific provider. If none could be found using that source of information, an default one (
    * {@link org.kalypso.ogc.gml.map.themes.provider.KalypsoWMSImageProvider} will be returned.
-   *
+   * 
    * @param themeName
    *          The name of the theme. Will be used to initialize the image provider.
    * @param layers
@@ -156,7 +164,7 @@ public class KalypsoWMSUtilities
 
   /**
    * This function returns the default wms image provider. It initializes it, too.
-   *
+   * 
    * @param themeName
    *          The name of the theme.
    * @param layers
@@ -180,7 +188,7 @@ public class KalypsoWMSUtilities
 
   /**
    * This function creates an URL for a get capabilities request from the given base URL.
-   *
+   * 
    * @param baseURL
    *          The base URL.
    * @return The get capabilities request URL.
@@ -188,20 +196,6 @@ public class KalypsoWMSUtilities
   public static URL createCapabilitiesRequest( final URL baseURL ) throws MalformedURLException
   {
     final Map<String, String> params = UrlUtilities.parseQuery( baseURL );
-
-// /* Transform all keys to upper-case, else this wont work. */
-// // TODO: it would be nice to preserve the original keys instead; what is the easiest way to do it?
-// final Transformer capitalizeTransformer = new Transformer()
-// {
-// @Override
-// public Object transform( final Object input )
-// {
-// return ((String) input).toUpperCase();
-// }
-// };
-// @SuppressWarnings("unchecked")
-// final Map<String, String> paramsCapitalized = TransformedMap.decorateTransform( params, capitalizeTransformer, null
-// );
 
     /* Check if necessary parameters already exists; if yes they must fit else we have a problem */
     checkParameter( params, URL_PARAM_SERVICE, SERVICE_WMS );
@@ -226,7 +220,7 @@ public class KalypsoWMSUtilities
     {
       final String existingValue = existingEntry.getValue();
       if( !paramValue.equals( existingValue ) )
-        throw new IllegalArgumentException( String.format( Messages.getString("KalypsoWMSUtilities.0"), paramKey, existingValue ) ); //$NON-NLS-1$
+        throw new IllegalArgumentException( String.format( Messages.getString( "KalypsoWMSUtilities.0" ), paramKey, existingValue ) ); //$NON-NLS-1$
     }
   }
 
@@ -239,6 +233,72 @@ public class KalypsoWMSUtilities
       if( entry.getKey().equalsIgnoreCase( key ) )
         return entry;
     }
+
+    return null;
+  }
+
+  public static void checkForOwsException( final String xml ) throws OWSException
+  {
+    /* Try to parse the xml as exception report. */
+    final ExceptionReport exceptionReport = parseExceptionReport( xml );
+
+    /* Build the OWS exception. */
+    OWSException owsException = buildOwsException( exceptionReport );
+    if( owsException != null )
+      throw owsException;
+
+    /* If that was not possible, try a text search. */
+    owsException = buildOwsException( xml );
+    if( owsException != null )
+      throw owsException;
+  }
+
+  private static ExceptionReport parseExceptionReport( final String xml )
+  {
+    try
+    {
+      final Object xmlObject = OWSUtilities.unmarshall( new StringReader( xml ) );
+      if( xmlObject instanceof ExceptionReport )
+        return (ExceptionReport) xmlObject;
+
+      return null;
+    }
+    catch( final Exception ex )
+    {
+      return null;
+    }
+  }
+
+  private static OWSException buildOwsException( final ExceptionReport exceptionReport )
+  {
+    if( exceptionReport == null )
+      return null;
+
+    final List<ExceptionType> exceptions = exceptionReport.getException();
+    if( exceptions.size() == 0 )
+      return null;
+
+    final StringBuilder errorText = new StringBuilder();
+    for( final ExceptionType exception : exceptions )
+    {
+      final List<String> exceptionTexts = exception.getExceptionText();
+      if( exceptionTexts.size() == 0 )
+        continue;
+
+      final StringBuilder text = new StringBuilder();
+      for( final String exceptionText : exceptionTexts )
+        text.append( String.format( "%s%n", exceptionText ) );
+
+      errorText.append( String.format( "CODE: %s%nEXCEPTION:%n%s%n%n", exception.getExceptionCode(), text.toString() ) );
+    }
+
+    return new OWSException( errorText.toString(), exceptionReport.getVersion(), exceptionReport.getLang(), ExceptionCode.NO_APPLICABLE_CODE, null );
+  }
+
+  private static OWSException buildOwsException( final String xml )
+  {
+    if( xml.contains( "ExceptionReport" ) )
+      return new OWSException( xml, OWSUtilities.OWS_VERSION, "en", ExceptionCode.NO_APPLICABLE_CODE, null );
 
     return null;
   }

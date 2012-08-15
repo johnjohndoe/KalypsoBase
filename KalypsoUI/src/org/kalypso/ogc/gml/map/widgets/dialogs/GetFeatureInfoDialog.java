@@ -56,6 +56,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.progress.IProgressConstants;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
@@ -170,6 +171,8 @@ public class GetFeatureInfoDialog extends PopupDialog
     /* Create the job. */
     final GetFeatureInfoJob job = new GetFeatureInfoJob( m_wmsTheme, m_x, m_y );
     job.setSystem( true );
+    job.setProperty( IProgressConstants.NO_IMMEDIATE_ERROR_PROMPT_PROPERTY, true );
+    job.setProperty( IProgressConstants.KEEP_PROPERTY, false );
     job.addJobChangeListener( m_listener );
 
     /* Schedule it. */
@@ -200,7 +203,7 @@ public class GetFeatureInfoDialog extends PopupDialog
     final IStatus result = event.getResult();
     if( !result.isOK() )
     {
-      setText( "text/plain", result.getMessage() );
+      setErrorText( result.getMessage() );
       return;
     }
 
@@ -216,24 +219,28 @@ public class GetFeatureInfoDialog extends PopupDialog
     final String featureInfo = task.getFeatureInfo();
     if( featureInfo == null )
     {
-      setText( "text/plain", "There was no result returned by the server." );
+      setErrorText( "There was no result returned by the server." );
       return;
     }
 
     /* Set the response text into the browser. */
-    setText( "text/html", featureInfo );
+    setHtmlText( featureInfo );
   }
 
-  private void setText( final String mimeType, final String text )
+  private void setErrorText( final String text )
   {
     if( m_browser == null || m_browser.isDisposed() )
       return;
 
-    // TODO Parse xml message and create nice html...
-    // TODO Wrap html response into get feature info response...
-    if( mimeType != null && mimeType.contains( "xml" ) )
-      m_browser.setText( StringEscapeUtils.escapeHtml4( text ) );
-    else
-      m_browser.setText( text );
+    // TODO Make nice html...
+    m_browser.setText( StringEscapeUtils.escapeHtml4( text ) );
+  }
+
+  private void setHtmlText( final String text )
+  {
+    if( m_browser == null || m_browser.isDisposed() )
+      return;
+
+    m_browser.setText( text );
   }
 }

@@ -115,7 +115,7 @@ public class OWSUtilities
    * system ID.
    * 
    * @param reader
-   *          The Reader to unmarshal XML data from.
+   *          The reader to unmarshal XML data from.
    * @return The newly created root object of the java content tree.
    * @see Unmarshaller#unmarshal(java.io.Reader)
    */

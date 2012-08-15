@@ -57,6 +57,7 @@ import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.ITooltipProvider;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.core.exceptions.OWSException;
 import org.kalypso.ogc.gml.AbstractKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.wms.provider.images.AbstractDeegreeImageProvider;
@@ -218,7 +219,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     return ((AbstractDeegreeImageProvider) m_provider).getLastRequest();
   }
 
-  public String getFeatureInfo( final double x, final double y ) throws OGCWebServiceException
+  public String getFeatureInfo( final double x, final double y ) throws OGCWebServiceException, OWSException
   {
     if( m_provider == null )
       return null;

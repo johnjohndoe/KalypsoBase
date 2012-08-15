@@ -79,8 +79,10 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.variables.VariableUtils;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ogc.core.exceptions.OWSException;
 import org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities;
 import org.kalypso.ogc.gml.wms.loader.ICapabilitiesLoader;
+import org.kalypso.ogc.gml.wms.utils.KalypsoWMSUtilities;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
@@ -573,7 +575,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     return String.format( "%s=%s#%s=%s#%s=%s#%s=%s", IKalypsoImageProvider.KEY_URL, m_service, IKalypsoImageProvider.KEY_PROVIDER, m_providerID, IKalypsoImageProvider.KEY_LAYERS, layers, IKalypsoImageProvider.KEY_STYLES, styles ); //$NON-NLS-1$
   }
 
-  public String getFeatureInfo( final double x, final double y ) throws OGCWebServiceException
+  public String getFeatureInfo( final double x, final double y ) throws OGCWebServiceException, OWSException
   {
     /* One request must be done. */
     if( m_lastGetMap == null )
@@ -594,7 +596,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
       layers.add( layer.getName() );
 
     /* Create the GetFeatureInfo request. */
-    final GetFeatureInfo featureInfoRequest = GetFeatureInfo.create( lastGetMap.getVersion(), lastGetMap.getId(), layers.toArray( new String[] {} ), lastGetMap, "text/html", 1, new Point( (int) x, (int) y ), lastGetMap.getExceptions(), lastGetMap.getStyledLayerDescriptor(), lastGetMap.getVendorSpecificParameters() );
+    final GetFeatureInfo featureInfoRequest = GetFeatureInfo.create( lastGetMap.getVersion(), "GetFeatureInfo", layers.toArray( new String[] {} ), lastGetMap, "text/html", 1, new Point( (int) x, (int) y ), lastGetMap.getExceptions(), lastGetMap.getStyledLayerDescriptor(), lastGetMap.getVendorSpecificParameters() );
 
     /* Do the request and wait, until the result is there. */
     final Object result = remoteWMS.doService( featureInfoRequest );
@@ -608,6 +610,12 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     /* Cast. */
     final GetFeatureInfoResult featureInfoResponse = (GetFeatureInfoResult) result;
 
-    return featureInfoResponse.getFeatureInfo();
+    /* Get the response. */
+    final String featureInfo = featureInfoResponse.getFeatureInfo();
+
+    /* Check, if there was an error. */
+    KalypsoWMSUtilities.checkForOwsException( featureInfo );
+
+    return featureInfo;
   }
 }
