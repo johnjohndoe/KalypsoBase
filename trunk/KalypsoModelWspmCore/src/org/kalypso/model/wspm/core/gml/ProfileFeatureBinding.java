@@ -339,10 +339,13 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
   @Override
   public LineString getJtsLine( ) throws GM_Exception
   {
-    final GM_Curve profileCurve = WspmGeometryUtilities.createProfileSegment( getProfil() );
-    final LineString profileLineString = (LineString) JTSAdapter.export( profileCurve );
+    final IProfil profil = getProfil();
+    if( profil == null )
+      return null;
 
-    return profileLineString;
+    final GM_Curve profileCurve = WspmGeometryUtilities.createProfileSegment( profil );
+
+    return (LineString) JTSAdapter.export( profileCurve );
   }
 
   @Override
@@ -483,7 +486,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
 
       final FeatureChange[] featureChanges = ProfileFeatureFactory.toFeatureAsChanges( profile, this );
 
-      final ChangeProfileCommand command = new ChangeProfileCommand( this, workspace, featureChanges );
+      final ChangeProfileCommand command = new ChangeProfileCommand( workspace, featureChanges );
       workspace.postCommand( command );
     }
     catch( final Exception e )
@@ -509,23 +512,5 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     ObservationFeatureFactory.toFeature( profileObject.getObservation(), profileObjectFeature );
 
     // TODO event handling
-  }
-
-  @Override
-  protected void setDirtyProperty( final QName[] cachedProperties )
-  {
-    super.setDirtyProperty( cachedProperties );
-  }
-
-  @Override
-  protected synchronized void lockCache( )
-  {
-    super.lockCache();
-  }
-
-  @Override
-  protected synchronized void unlockCache( )
-  {
-    super.unlockCache();
   }
 }

@@ -137,8 +137,6 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
 
   private URL m_getMapUrl;
 
-  private URL m_getFeatureInfoUrl;
-
   private String m_lastRequest;
 
   private GetMap m_lastGetMap;
@@ -161,7 +159,6 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     m_wms = null;
     m_negotiatedSRS = null;
     m_getMapUrl = null;
-    m_getFeatureInfoUrl = null;
     m_lastRequest = null;
     m_lastGetMap = null;
   }
@@ -239,7 +236,6 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
 
     /* Find some URLs. */
     m_getMapUrl = findGetMapURL( wmsCaps );
-    m_getFeatureInfoUrl = findGetFeatureInfoURL( wmsCaps );
 
     /* Initialize the WMS. */
     m_wms = createRemoteService( wmsCaps );
@@ -250,25 +246,6 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
   private URL findGetMapURL( final WMSCapabilities wmsCaps )
   {
     final Operation operation = wmsCaps.getOperationMetadata().getOperation( new QualifiedName( "GetMap" ) ); //$NON-NLS-1$
-
-    final List<DCP> dcps = operation.getDCP();
-    for( final DCP dcp : dcps )
-    {
-      if( dcp instanceof HTTP )
-      {
-        final HTTP http = (HTTP) dcp;
-        final List<OnlineResource> links = http.getLinks();
-        if( links.size() > 0 )
-          return links.get( 0 ).getLinkage().getHref();
-      }
-    }
-
-    return null;
-  }
-
-  private URL findGetFeatureInfoURL( final WMSCapabilities wmsCaps )
-  {
-    final Operation operation = wmsCaps.getOperationMetadata().getOperation( new QualifiedName( "GetFeatureInfo" ) ); //$NON-NLS-1$
 
     final List<DCP> dcps = operation.getDCP();
     for( final DCP dcp : dcps )

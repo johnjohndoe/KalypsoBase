@@ -1047,18 +1047,12 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     return m_status;
   }
 
-  /**
-   * @see java.awt.Component#repaint()
-   */
   @Override
   public void repaintMap( )
   {
     repaint( 50 );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.IMapPanel#getMapImage()
-   */
   @Override
   public BufferedImage getMapImage( )
   {

@@ -50,11 +50,12 @@ import java.net.URL;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
@@ -185,9 +186,6 @@ public class StraightenProfileWidget extends AbstractProfileWidget
     paintTooltip( g );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.action.base.AbstractProfileWidget#getTooltipPosition(java.awt.Rectangle)
-   */
   @Override
   protected Point getTooltipPosition( final Rectangle screenBounds )
   {
@@ -250,8 +248,8 @@ public class StraightenProfileWidget extends AbstractProfileWidget
 
       /* Execute the straighten profile operation. */
       final StraightenProfileOperation operation = new StraightenProfileOperation( straightenDialog.getData() );
-      final ProgressMonitorDialog progressDialog = new ProgressMonitorDialog( shell );
-      final IStatus status = RunnableContextHelper.execute( progressDialog, true, false, operation );
+      final IProgressService progressService = (IProgressService) PlatformUI.getWorkbench().getService( IProgressService.class );
+      final IStatus status = RunnableContextHelper.execute( progressService, true, false, operation );
 
       /* Open the status dialog. */
       final StatusDialog statusDialog = new StatusDialog( shell, status, "Profil begradigen" );
@@ -261,6 +259,9 @@ public class StraightenProfileWidget extends AbstractProfileWidget
     {
       m_firstPoint = null;
       m_secondPoint = null;
+
+      /* Reset selection in order to reset listeners to IProfile; else strange effekt (nothing moves anymore) */
+      setSelection( getSelection() );
 
       repaintMap();
     }
