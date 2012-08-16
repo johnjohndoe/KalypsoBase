@@ -51,6 +51,7 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxViewerCellEditor;
 import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.widgets.Table;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
@@ -105,8 +106,12 @@ public class VegetationClassUiHandler extends AbstractComponentClassUiHandler
       public void applyEditorValue( )
       {
         handleApplyEditorValue( cellEditor.getValue() );
+        cellEditor.setInput( getVegetationClasses() );
       }
     } );
+
+    final CCombo control = (CCombo) cellEditor.getControl();
+    control.setVisibleItemCount( 20 );
 
     return cellEditor;
   }
@@ -170,7 +175,7 @@ public class VegetationClassUiHandler extends AbstractComponentClassUiHandler
       record.setValue( getComponent(), value );
   }
 
-  private Object[] getVegetationClasses( )
+  protected Object[] getVegetationClasses( )
   {
     /* Get the classification. */
     final IWspmClassification classification = WspmClassifications.getClassification( m_profile );
