@@ -54,7 +54,7 @@ import com.sun.media.jai.codec.SeekableStream;
 
 /**
  * Helper class for handling of grid files.
- * 
+ *
  * @author Dirk Kuch
  */
 public class GridFileVerifier
@@ -149,7 +149,6 @@ public class GridFileVerifier
         else
           /* only a simple image */
           return RASTER_TYPE.eImage;
-
     }
 
     if( isAsciGrid( urlImage ) )
@@ -163,7 +162,7 @@ public class GridFileVerifier
 
   private static boolean isBinGrid( final URL urlImage )
   {
-    return urlImage.getFile().toLowerCase().endsWith( ".bin" );
+    return urlImage.getFile().toLowerCase().endsWith( ".bin" ); //$NON-NLS-1$
   }
 
   private static boolean isAsciGrid( final URL urlImage )
@@ -172,7 +171,7 @@ public class GridFileVerifier
       throw new IllegalStateException();
 
     // TODO: mke a real inspection of file
-    final String[] ascExtensions = new String[] { "asc", "dat", "asg" };
+    final String[] ascExtensions = new String[] { "asc", "dat", "asg" }; //$NON-NLS-1$
 
     final String file = urlImage.toString().toLowerCase();
     final int index = file.lastIndexOf( "." );
@@ -211,7 +210,7 @@ public class GridFileVerifier
     return false;
   }
 
-  private static URL getWorldFile( final URL urlImage )
+  public static URL getWorldFile( final URL urlImage )
   {
     if( urlImage == null )
       throw new IllegalStateException();

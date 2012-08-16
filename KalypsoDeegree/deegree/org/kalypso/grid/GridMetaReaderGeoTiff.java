@@ -54,6 +54,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.grid.GridFileVerifier.IMAGE_TYPE;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain.OffsetVector;
 import org.kalypsodeegree_impl.model.cv.GridRange_Impl;
@@ -64,10 +65,10 @@ import com.sun.media.jai.codec.SeekableStream;
 
 /**
  * {@link IGridMetaReader} implementation for Geo-Tiffs.
- * 
+ *
  * @author Dirk Kuch
  */
-public class GridMetaReaderGeoTiff implements IGridMetaReader
+public class GridMetaReaderGeoTiff extends AbstractGridMetaReader
 {
   /**
    * GeoTiff differs between PixelIsArea and PixelIsRaster representation
@@ -189,16 +190,12 @@ public class GridMetaReaderGeoTiff implements IGridMetaReader
     }
   }
 
-  /**
-   * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getCoverage(org.kalypsodeegree_impl.model.cv.RectifiedGridDomain.OffsetVector,
-   *      org.kalypsodeegree_impl.model.cv.RectifiedGridDomain.OffsetVector, java.lang.Double[],
-   *      org.opengis.cs.CS_CoordinateSystem)
-   */
   @Override
-  public RectifiedGridDomain getCoverage( final OffsetVector offsetX, final OffsetVector offsetY, final Double[] upperLeftCorner, final String crs ) throws Exception
+  public RectifiedGridDomain getDomain( final String crs )
   {
-    if( offsetX == null || offsetY == null || upperLeftCorner == null || upperLeftCorner.length != 2 || crs == null )
-      throw new IllegalStateException();
+    // FIXME: JAI bug: stream is not always disposed; open own stream and dipose it
+    // SeekableStream seekStream;
+    // m_inputStream = new FileSeekableStream( imageFile );
 
     final RenderedOp image = JAI.create( "url", m_urlImage );
     final TiledImage tiledImage = new TiledImage( image, true );
@@ -211,70 +208,54 @@ public class GridMetaReaderGeoTiff implements IGridMetaReader
     final double[] highs = new double[] { width, height };
 
     final GridRange gridRange = new GridRange_Impl( lows, highs );
-    final GM_Point origin = GeometryFactory.createGM_Point( upperLeftCorner[0], upperLeftCorner[1], crs );
+
+    final OffsetVector offsetX = getOffsetX();
+    final OffsetVector offsetY = getOffsetY();
+    final GM_Position upperLeftCorner = getUpperLeftCorner();
+
+    final GM_Point origin = GeometryFactory.createGM_Point( upperLeftCorner, crs );
 
     tiledImage.dispose();
 
     return new RectifiedGridDomain( origin, offsetX, offsetY, gridRange );
   }
 
-  /**
-   * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getUpperLeftCornerX()
-   */
   @Override
   public double getOriginCornerX( )
   {
     return m_tiepoints[3];
   }
 
-  /**
-   * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getLowerLeftCornerY()
-   */
   @Override
   public double getOriginCornerY( )
   {
     return m_tiepoints[4];
   }
 
-  /**
-   * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getPixelDx()
-   */
   @Override
   public double getVectorXx( )
   {
     return m_pixelScales[0];
   }
 
-  /**
-   * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getPhiX()
-   */
   @Override
   public double getVectorXy( )
   {
     return 0.0;
   }
 
-  /**
-   * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getPhiY()
-   */
   @Override
   public double getVectorYx( )
   {
     return 0.0;
   }
 
-  /**
-   * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getPixelDy()
-   */
   @Override
   public double getVectorYy( )
   {
     return m_pixelScales[1] * -1.0;
   }
 
-  /**
-   * @see org.kalypso.grid.IGridMetaReader#isValid()
-   */
   @Override
   public IStatus isValid( )
   {

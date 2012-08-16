@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain.OffsetVector;
 import org.kalypsodeegree_impl.model.cv.GridRange_Impl;
@@ -54,10 +55,10 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * {@link IGridMetaReader} implementation for ESRI Ascii Grids.
- * 
+ *
  * @author Dirk Kuch
  */
-public class GridMetaReaderAscii implements IGridMetaReader
+public class GridMetaReaderAscii extends AbstractGridMetaReader
 {
   private final String m_cs;
 
@@ -89,45 +90,30 @@ public class GridMetaReaderAscii implements IGridMetaReader
 
   }
 
-  /**
-   * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getPhiX()
-   */
   @Override
   public double getVectorXy( )
   {
     return m_domain.getOffsetX().getGeoY();
   }
 
-  /**
-   * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getPhiY()
-   */
   @Override
   public double getVectorYx( )
   {
     return m_domain.getOffsetY().getGeoX();
   }
 
-  /**
-   * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getPixelDx()
-   */
   @Override
   public double getVectorXx( )
   {
     return m_domain.getOffsetX().getGeoX();
   }
 
-  /**
-   * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getPixelDy()
-   */
   @Override
   public double getVectorYy( )
   {
     return m_domain.getOffsetY().getGeoY();
   }
 
-  /**
-   * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getUpperLeftCornerX()
-   */
   @Override
   public double getOriginCornerX( )
   {
@@ -147,9 +133,6 @@ public class GridMetaReaderAscii implements IGridMetaReader
     return Double.NaN;
   }
 
-  /**
-   * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getLowerLeftCornerY()
-   */
   @Override
   public double getOriginCornerY( )
   {
@@ -169,22 +152,18 @@ public class GridMetaReaderAscii implements IGridMetaReader
     return Double.NaN;
   }
 
-  /**
-   * @see org.kalypso.grid.IGridMetaReader#getCoverage(org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain.OffsetVector,
-   *      org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain.OffsetVector, java.lang.Double[],
-   *      java.lang.String)
-   */
   @Override
-  public RectifiedGridDomain getCoverage( final OffsetVector offsetX, final OffsetVector offsetY, final Double[] upperLeftCorner, final String crs ) throws Exception
+  public RectifiedGridDomain getDomain( final String crs )
   {
-    if( offsetX == null || offsetY == null || upperLeftCorner == null || upperLeftCorner.length != 2 || crs == null )
-      throw new IllegalStateException();
+    final OffsetVector offsetX = getOffsetX();
+    final OffsetVector offsetY = getOffsetY();
+    final GM_Position upperLeftCorner = getUpperLeftCorner();
 
     final double[] lows = new double[] { 0, 0 };
     final double[] highs = new double[] { m_domain.getNumColumns(), m_domain.getNumRows() };
 
     final GridRange gridRange = new GridRange_Impl( lows, highs );
-    final GM_Point origin = GeometryFactory.createGM_Point( upperLeftCorner[0], upperLeftCorner[1], crs );
+    final GM_Point origin = GeometryFactory.createGM_Point( upperLeftCorner, crs );
 
     return new RectifiedGridDomain( origin, offsetX, offsetY, gridRange );
   }
@@ -194,9 +173,6 @@ public class GridMetaReaderAscii implements IGridMetaReader
     return m_noDataValue;
   }
 
-  /**
-   * @see org.kalypso.grid.IGridMetaReader#isValid()
-   */
   @Override
   public IStatus isValid( )
   {
