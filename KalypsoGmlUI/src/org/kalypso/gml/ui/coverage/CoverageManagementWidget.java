@@ -422,7 +422,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     coverageInfoGroup.setText( Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.3" ) ); //$NON-NLS-1$
 
     final CachedFeatureviewFactory featureviewFactory = new CachedFeatureviewFactory( new FeatureviewHelper() );
-    featureviewFactory.addView( getClass().getResource( m_featureTemplateGft ) );
+    featureviewFactory.addView( AddCoverageAction.class.getResource( m_featureTemplateGft ) );
     final FeatureComposite featureComposite = new FeatureComposite( null, null, featureviewFactory );
     featureComposite.setFormToolkit( toolkit );
 

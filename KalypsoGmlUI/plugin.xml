@@ -2,25 +2,9 @@
 <?eclipse version="3.0"?>
 <plugin>
    <extension-point id="toolWizards" name="toolWizards" schema="schema/toolWizards.exsd"/>
-   <extension
-         point="org.eclipse.ui.importWizards">
-      <wizard
-            category="org.kalypso.ui.importwizards.kalypso"
-            class="org.kalypso.gml.ui.commands.importgrid.RectifiedGridCoverageImportWizard"
-            icon="icons/obj16/gridImport.gif"
-            id="org.kalypso.gml.ui.wizard.imports.RectifiedGridCoverageImportWizard"
-            name="Rasterdaten">
-         <selection
-               class="org.eclipse.core.resources.IContainer">
-         </selection>
-         <description>%org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageImportWizard.description</description>
-      </wizard>
-   </extension>
-   <extension
-         point="org.kalypso.core.catalogContribution">
-      <catalogContribution
-            class="org.kalypso.gml.ui.catalog.GmlFeatureTypeStyleCatalogContribution"
-            name="GML Style Catalog"/>
+   
+   <extension point="org.kalypso.core.catalogContribution">
+      <catalogContribution class="org.kalypso.gml.ui.catalog.GmlFeatureTypeStyleCatalogContribution" name="GML Style Catalog"/>
    </extension>
    
    <extension point="org.eclipse.ui.commands">
@@ -83,7 +67,7 @@
    <extension point="org.eclipse.ui.handlers">
 		<handler commandId="org.kalypso.ogc.gml.map.CoverageManagementCommand">
 			<class class="org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler">
-				<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.gml.ui.map.CoverageManagementWidget" />
+				<parameter name="org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand.widget" value="org.kalypso.gml.ui.coverage.CoverageManagementWidget" />
 			</class>
 			<enabledWhen>
 				<and>
@@ -421,7 +405,7 @@
     <extension
           point="org.kalypso.ui.importWizards">
        <wizard
-             class="org.kalypso.gml.ui.commands.importgrid.AddRectifiedGridCoveragesWizard"
+             class="org.kalypso.gml.ui.internal.coverage.imports.ImportCoveragesWizard"
              id="org.kalypso.gml.ui.commands.importgrid.AddRectifiedGridCoveragesWizard"
              icon="icons/obj16/gridImport.gif"
              name="Raster importieren">
