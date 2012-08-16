@@ -51,6 +51,7 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxViewerCellEditor;
 import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.widgets.Table;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
@@ -108,6 +109,9 @@ public class RoughnessClassUiHandler extends AbstractComponentClassUiHandler
         cellEditor.setInput( getRoughnessClasses() );
       }
     } );
+
+    final CCombo control = (CCombo) cellEditor.getControl();
+    control.setVisibleItemCount( 20 );
 
     return cellEditor;
   }
@@ -215,7 +219,6 @@ public class RoughnessClassUiHandler extends AbstractComponentClassUiHandler
     if( !(value instanceof IRoughnessClass) )
       return;
 
-    System.out.println( "Roughness changed..." );
     final IRoughnessClass roughnessClass = (IRoughnessClass) value;
     final String name = roughnessClass.getName();
     FavoritesUtilities.updateDialogSettings( m_dialogSettings, name );

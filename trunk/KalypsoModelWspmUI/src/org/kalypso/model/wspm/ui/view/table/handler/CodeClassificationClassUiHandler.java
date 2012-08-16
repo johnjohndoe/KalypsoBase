@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.ui.view.table.handler;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -51,6 +50,7 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxViewerCellEditor;
 import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.widgets.Table;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
@@ -109,8 +109,12 @@ public class CodeClassificationClassUiHandler extends AbstractComponentUiHandler
       public void applyEditorValue( )
       {
         handleApplyEditorValue( cellEditor.getValue() );
+        cellEditor.setInput( getCodeClasses() );
       }
     } );
+
+    final CCombo control = (CCombo) cellEditor.getControl();
+    control.setVisibleItemCount( 20 );
 
     return cellEditor;
   }
@@ -170,7 +174,7 @@ public class CodeClassificationClassUiHandler extends AbstractComponentUiHandler
       record.setValue( getComponent(), value );
   }
 
-  private Object[] getCodeClasses( )
+  protected Object[] getCodeClasses( )
   {
     /* Get the classification. */
     final IWspmClassification classification = WspmClassifications.getClassification( m_profile );
@@ -179,9 +183,6 @@ public class CodeClassificationClassUiHandler extends AbstractComponentUiHandler
 
     /* Get the code classes. */
     final ICodeClass[] codeClasses = classification.getCodeClasses();
-
-    /* Sort the code classes. */
-    Arrays.sort( codeClasses, new CodeClassComparator() );
 
     /* Find the most used code classes and put them up the list. */
     final String[] names = FavoritesUtilities.getNames( codeClasses );
