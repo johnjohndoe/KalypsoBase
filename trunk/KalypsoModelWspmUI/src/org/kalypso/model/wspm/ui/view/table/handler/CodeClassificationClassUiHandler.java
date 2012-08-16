@@ -40,34 +40,47 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.table.handler;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.commons.lang3.ObjectUtils;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ComboBoxViewerCellEditor;
+import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
 import org.kalypso.model.wspm.core.gml.classifications.ICodeClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.observation.result.IRecord;
-import org.kalypso.ogc.gml.om.table.celleditor.ComboBoxViewerCellEditor;
 import org.kalypso.ogc.gml.om.table.handlers.AbstractComponentUiHandler;
 
 /**
  * Handles profile point property "code" classifications
- *
+ * 
  * @author Dirk Kuch
+ * @author Holger Albert
  */
 public class CodeClassificationClassUiHandler extends AbstractComponentUiHandler
 {
   private final IProfil m_profile;
 
+  private final IDialogSettings m_dialogSettings;
+
   public CodeClassificationClassUiHandler( final int component, final boolean editable, final boolean resizeable, final boolean moveable, final String columnLabel, final int columnWidth, final int columnWidthPercent, final IProfil profile )
   {
     super( component, editable, resizeable, moveable, columnLabel, SWT.NONE, columnWidth, columnWidthPercent, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
     m_profile = profile;
+    m_dialogSettings = DialogSettingsUtils.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getCanonicalName() );
   }
 
   /**
@@ -76,7 +89,30 @@ public class CodeClassificationClassUiHandler extends AbstractComponentUiHandler
   @Override
   public CellEditor createCellEditor( final Table table )
   {
-    return new ComboBoxViewerCellEditor( new ArrayContentProvider(), new ClassificationLabelProvider(), getCodeClasses(), table, SWT.READ_ONLY | SWT.DROP_DOWN );
+    final ComboBoxViewerCellEditor cellEditor = new ComboBoxViewerCellEditor( table, SWT.READ_ONLY | SWT.DROP_DOWN );
+    cellEditor.setContentProvider( new ArrayContentProvider() );
+    cellEditor.setLabelProvider( new ClassificationLabelProvider() );
+    cellEditor.setInput( getCodeClasses() );
+    cellEditor.addListener( new ICellEditorListener()
+    {
+      @Override
+      public void editorValueChanged( final boolean oldValidState, final boolean newValidState )
+      {
+      }
+
+      @Override
+      public void cancelEditor( )
+      {
+      }
+
+      @Override
+      public void applyEditorValue( )
+      {
+        handleApplyEditorValue( cellEditor.getValue() );
+      }
+    } );
+
+    return cellEditor;
   }
 
   @Override
@@ -95,15 +131,6 @@ public class CodeClassificationClassUiHandler extends AbstractComponentUiHandler
       return clazz.getDescription();
 
     return super.getStringRepresentation( record );
-  }
-
-  private ICodeClass[] getCodeClasses( )
-  {
-    final IWspmClassification classification = WspmClassifications.getClassification( m_profile );
-    if( classification == null )
-      return new ICodeClass[0];
-
-    return classification.getCodeClasses();
   }
 
   @Override
@@ -141,5 +168,55 @@ public class CodeClassificationClassUiHandler extends AbstractComponentUiHandler
 
     if( !ObjectUtils.equals( value, oldValue ) )
       record.setValue( getComponent(), value );
+  }
+
+  private Object[] getCodeClasses( )
+  {
+    /* Get the classification. */
+    final IWspmClassification classification = WspmClassifications.getClassification( m_profile );
+    if( classification == null )
+      return new ICodeClass[] {};
+
+    /* Get the code classes. */
+    final ICodeClass[] codeClasses = classification.getCodeClasses();
+
+    /* Sort the code classes. */
+    Arrays.sort( codeClasses, new CodeClassComparator() );
+
+    /* Find the most used code classes and put them up the list. */
+    final String[] names = FavoritesUtilities.getNames( codeClasses );
+
+    /* Find the most used items. */
+    final FavoriteItem[] usedItems = FavoritesUtilities.findMostUsedItems( names, m_dialogSettings );
+    if( usedItems.length == 0 )
+      return codeClasses;
+
+    /* Add the most used classes. */
+    final List<Object> adjustedClasses = new ArrayList<Object>();
+    for( final FavoriteItem usedItem : usedItems )
+    {
+      final ICodeClass usedClass = classification.findCodeClass( usedItem.getName() );
+      if( usedClass != null )
+        adjustedClasses.add( usedClass );
+    }
+
+    /* Add a separator. */
+    adjustedClasses.add( "----------" );
+
+    /* Add all classes. */
+    for( final ICodeClass codeClass : codeClasses )
+      adjustedClasses.add( codeClass );
+
+    return adjustedClasses.toArray( new Object[] {} );
+  }
+
+  protected void handleApplyEditorValue( final Object value )
+  {
+    if( !(value instanceof ICodeClass) )
+      return;
+
+    final ICodeClass codeClass = (ICodeClass) value;
+    final String name = codeClass.getName();
+    FavoritesUtilities.updateDialogSettings( m_dialogSettings, name );
   }
 }

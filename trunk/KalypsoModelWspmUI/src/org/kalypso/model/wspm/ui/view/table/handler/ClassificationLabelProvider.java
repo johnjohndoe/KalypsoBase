@@ -48,11 +48,9 @@ import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
  */
 public class ClassificationLabelProvider extends LabelProvider
 {
-
   @Override
   public String getText( final Object element )
   {
-
     if( element instanceof IClassificationClass )
     {
       final IClassificationClass clazz = (IClassificationClass) element;
@@ -62,5 +60,4 @@ public class ClassificationLabelProvider extends LabelProvider
 
     return super.getText( element );
   }
-
 }
