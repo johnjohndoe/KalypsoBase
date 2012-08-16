@@ -256,6 +256,7 @@ public final class StatusUtilities
    * @param message
    *          only used when creating the MultiStatus
    */
+  @Deprecated
   public static IStatus createStatus( final IStatus[] stati, final String message, final Object... args )
   {
     return createStatus( Arrays.asList( stati ), String.format( message, args ) );
@@ -263,7 +264,10 @@ public final class StatusUtilities
 
   /**
    * Creates a status with given severity, message, and throwable
+   *
+   * @deprecated Directly use {@link Status#Status(int, String, String)} instead.
    */
+  @Deprecated
   public static IStatus createStatus( final int severity, final String message, final Throwable t )
   {
     return new Status( severity, EclipseRCPContributionsPlugin.ID, -1, message, t );
@@ -271,12 +275,18 @@ public final class StatusUtilities
 
   /**
    * Creates a status with given severity, message, code and throwable
+   * @deprecated Directly use {@link Status#Status(int, String, String)} instead.
    */
+  @Deprecated
   public static IStatus createStatus( final int severity, final int code, final String message, final Throwable t )
   {
     return new Status( severity, EclipseRCPContributionsPlugin.ID, code, message, t );
   }
 
+  /**
+   * @deprecated Directly use {@link Status#Status(int, String, String)} instead.
+   */
+  @Deprecated
   public static IStatus createExceptionalErrorStatus( final String errorMessage, final Throwable t )
   {
     return createStatus( IStatus.ERROR, errorMessage, t );
