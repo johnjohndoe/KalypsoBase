@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.grid;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 
@@ -48,7 +49,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
  * TODO: Refaktor: these classes are nice.. but can only be used from the user interface they where written for. Better:
  * return values as doubles in gml-style (or even just a RectifiedGridDomain); trhe user interface should decide how to
  * show it to the user.
- * 
+ *
  * @author Dirk Kuch
  */
 public interface IGridMetaReader
@@ -65,17 +66,11 @@ public interface IGridMetaReader
 
   public double getOriginCornerY( );
 
-  /**
-   * TODO: PLEASE! Bitte nicht am .asc format orientieren sondern an GML! d.h. es gibt keine Upper-Left Corner! Bitte
-   * auch im user interface vom 'Origin' reden und nicht von diesen seltsamen .asc konstrukten....<br>
-   * Der Effekt hier ist: wir pressen alles (d.h auch geotiffs usw.) in die '.asc' logik und konvertieren dann alles
-   * wieder nach gml...
-   */
-  public RectifiedGridDomain getCoverage( RectifiedGridDomain.OffsetVector offsetX, RectifiedGridDomain.OffsetVector offsetY, Double[] upperLeftCorner, String crs ) throws Exception;
+  public RectifiedGridDomain getDomain( String crs ) throws CoreException;
 
   /**
    * Check if the metadata could be correctly read.<br>
-   * 
+   *
    * @return <code>Status.OK</code> if everything is fine, else an error message.
    */
   public IStatus isValid( );

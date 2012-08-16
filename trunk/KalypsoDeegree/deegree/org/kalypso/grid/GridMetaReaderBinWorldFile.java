@@ -45,11 +45,13 @@ import java.io.InputStream;
 import java.net.URL;
 
 import org.apache.commons.io.IOUtils;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain.OffsetVector;
 import org.kalypsodeegree_impl.model.cv.GridRange_Impl;
@@ -59,10 +61,10 @@ import com.vividsolutions.jts.geom.Coordinate;
 
 /**
  * {@link IGridMetaReader} implementation for World-Files.
- * 
+ *
  * @author Dirk Kuch
  */
-public class GridMetaReaderBinWorldFile implements IGridMetaReader
+public class GridMetaReaderBinWorldFile extends AbstractGridMetaReader
 {
   private final URL m_worldFile;
 
@@ -84,7 +86,7 @@ public class GridMetaReaderBinWorldFile implements IGridMetaReader
     if( m_worldFile == null )
     {
       final String msg = String.format( "No world file found for %s", m_binFile );
-      return StatusUtilities.createStatus( IStatus.ERROR, msg, null );
+      return new Status( IStatus.ERROR, KalypsoDeegreePlugin.getID(), msg, null );
     }
 
     InputStream is = null;
@@ -98,7 +100,7 @@ public class GridMetaReaderBinWorldFile implements IGridMetaReader
     {
       e.printStackTrace();
       final String msg = String.format( "Failed to access world file %s: %s", m_worldFile, e.toString() );
-      return StatusUtilities.createStatus( IStatus.ERROR, msg, e );
+      return new Status( IStatus.ERROR, KalypsoDeegreePlugin.getID(), msg, e );
     }
     finally
     {
@@ -107,71 +109,45 @@ public class GridMetaReaderBinWorldFile implements IGridMetaReader
 
   }
 
-  /**
-   * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getLowerLeftCornerY()
-   */
   @Override
   public double getOriginCornerY( )
   {
     return m_world.getUlcy();
   }
 
-  /**
-   * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getPhiX()
-   */
   @Override
   public double getVectorXy( )
   {
     return m_world.getRasterXGeoY();
   }
 
-  /**
-   * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getPhiY()
-   */
   @Override
   public double getVectorYx( )
   {
     return m_world.getRasterYGeoX();
   }
 
-  /**
-   * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getPixelDx()
-   */
   @Override
   public double getVectorXx( )
   {
     return m_world.getRasterXGeoX();
   }
 
-  /**
-   * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getPixelDy()
-   */
   @Override
   public double getVectorYy( )
   {
     return m_world.getRasterYGeoY();
   }
 
-  /**
-   * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getUpperLeftCornerX()
-   */
   @Override
   public double getOriginCornerX( )
   {
     return m_world.getUlcx();
   }
 
-  /**
-   * @see org.kalypso.gml.ui.wizard.imports.IRasterMetaReader#getCoverage(org.kalypsodeegree_impl.model.cv.RectifiedGridDomain.OffsetVector,
-   *      org.kalypsodeegree_impl.model.cv.RectifiedGridDomain.OffsetVector, java.lang.Double[],
-   *      org.opengis.cs.CS_CoordinateSystem)
-   */
   @Override
-  public RectifiedGridDomain getCoverage( final OffsetVector offsetX, final OffsetVector offsetY, final Double[] upperLeftCorner, final String crs ) throws Exception
+  public RectifiedGridDomain getDomain( final String crs ) throws CoreException
   {
-    if( offsetX == null || offsetY == null || upperLeftCorner == null || upperLeftCorner.length != 2 || crs == null )
-      throw new IllegalStateException();
-
     BinaryGeoGrid grid = null;
     try
     {
@@ -184,9 +160,19 @@ public class GridMetaReaderBinWorldFile implements IGridMetaReader
       final double[] highs = new double[] { width, height };
 
       final GridRange gridRange = new GridRange_Impl( lows, highs );
-      final GM_Point origin = GeometryFactory.createGM_Point( upperLeftCorner[0], upperLeftCorner[1], crs );
+
+      final OffsetVector offsetX = getOffsetX();
+      final OffsetVector offsetY = getOffsetY();
+      final GM_Position upperLeftCorner = getUpperLeftCorner();
+
+      final GM_Point origin = GeometryFactory.createGM_Point( upperLeftCorner, crs );
 
       return new RectifiedGridDomain( origin, offsetX, offsetY, gridRange );
+    }
+    catch( final IOException e )
+    {
+      final IStatus status = new Status( IStatus.ERROR, KalypsoDeegreePlugin.getID(), "Failed to open grid file" );
+      throw new CoreException( status );
     }
     finally
     {
@@ -195,9 +181,6 @@ public class GridMetaReaderBinWorldFile implements IGridMetaReader
     }
   }
 
-  /**
-   * @see org.kalypso.grid.IGridMetaReader#isValid()
-   */
   @Override
   public IStatus isValid( )
   {
