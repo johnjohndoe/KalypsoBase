@@ -1144,7 +1144,7 @@ final public class GeometryFactory
     return ringList.toArray( new GM_Ring[ringList.size()] );
   }
 
-  public static GM_Ring_Impl createGM_Ring( final GM_Position[] positions, final String crs ) throws GM_Exception
+  public static GM_Ring createGM_Ring( final GM_Position[] positions, final String crs ) throws GM_Exception
   {
     return new GM_Ring_Impl( positions, crs );
   }
