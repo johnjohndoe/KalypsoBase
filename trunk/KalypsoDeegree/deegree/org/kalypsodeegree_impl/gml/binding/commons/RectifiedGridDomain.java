@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -50,7 +50,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Class which holds the GridDomainData of a RectifiedGridCoverage
- * 
+ *
  * @author N. Peiler
  */
 public class RectifiedGridDomain
@@ -114,12 +114,12 @@ public class RectifiedGridDomain
 
   /**
    * constructs a RectifiedGridDomain with the given origin, offset and gridRange
-   * 
+   *
    * @param origin
    * @param offset
    * @param gridRange
    */
-  public RectifiedGridDomain( final GM_Point origin, final OffsetVector offsetX, final OffsetVector offsetY, final GridRange gridRange ) throws Exception
+  public RectifiedGridDomain( final GM_Point origin, final OffsetVector offsetX, final OffsetVector offsetY, final GridRange gridRange )
   {
     m_origin = origin;
     m_offsetX = offsetX;
@@ -128,9 +128,17 @@ public class RectifiedGridDomain
     m_rasterBoundaryAsSurface = getGM_Surface( origin.getCoordinateSystem() );
   }
 
-  public GM_Surface< ? extends GM_SurfacePatch> getGM_Surface( final String crs ) throws Exception
+  public GM_Surface< ? extends GM_SurfacePatch> getGM_Surface( final String crs )
   {
-    return RectifiedGridDomain.calculateSurface( m_origin, m_offsetX, m_offsetY, 0, 0, getNumColumns(), getNumRows(), crs );
+    try
+    {
+      return RectifiedGridDomain.calculateSurface( m_origin, m_offsetX, m_offsetY, 0, 0, getNumColumns(), getNumRows(), crs );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   private static GM_Surface< ? extends GM_SurfacePatch> calculateSurface( final GM_Point origin, final OffsetVector offsetX, final OffsetVector offsetY, final int minX, final int minY, final int maxX, final int maxY, final String cs ) throws Exception
