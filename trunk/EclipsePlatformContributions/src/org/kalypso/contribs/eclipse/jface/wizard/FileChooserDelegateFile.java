@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.wizard;
 
@@ -49,6 +49,7 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
+import org.kalypso.contribs.java.io.FilePattern;
 
 public abstract class FileChooserDelegateFile implements IFileChooserDelegate
 {
@@ -97,6 +98,12 @@ public abstract class FileChooserDelegateFile implements IFileChooserDelegate
     m_filterExtensions.add( extension );
   }
 
+  public void addFilter( final FilePattern extension )
+  {
+    m_filterNames.add( extension.getFilterLabel() );
+    m_filterExtensions.add( extension.getPattern() );
+  }
+
   private String[] getFilterExtensions( )
   {
     return m_filterExtensions.toArray( new String[m_filterExtensions.size()] );
@@ -135,13 +142,19 @@ public abstract class FileChooserDelegateFile implements IFileChooserDelegate
 
     final int index = dialog.getFilterIndex();
     if( index < 0 )
-      return new File( filename );
+      return new File( newFilename );
 
-    // FIXME: assumes that all filter start with '*.'
-    final String suffix = dialog.getFilterExtensions()[index].substring( 2 );
+    /* FIXME: probably buggy and does not always what was intended.... */
+    if( this instanceof FileChooserDelegateSave )
+    {
+      // FIXME: assumes that all filters start with '*.'
+      final String suffix = dialog.getFilterExtensions()[index].substring( 2 );
 
-    final String updatedFilename = updateFileName( newFilename, suffix );
-    return new File( updatedFilename );
+      final String updatedFilename = updateFileName( newFilename, suffix );
+      return new File( updatedFilename );
+    }
+
+    return new File( newFilename );
   }
 
   private String getFileName( final File currentFile )
