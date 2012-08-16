@@ -41,44 +41,75 @@
 package org.kalypso.model.wspm.ui.view.table.handler;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ComboBoxViewerCellEditor;
+import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
 import org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.observation.result.IRecord;
-import org.kalypso.ogc.gml.om.table.celleditor.ComboBoxViewerCellEditor;
 
 /**
  * Handles roughness class values.
  * 
  * @author Dirk Kuch
+ * @author Holger Albert
  */
 public class RoughnessClassUiHandler extends AbstractComponentClassUiHandler
 {
   private final IProfil m_profile;
 
+  private final IDialogSettings m_dialogSettings;
+
   public RoughnessClassUiHandler( final int component, final boolean editable, final boolean resizeable, final boolean moveable, final String columnLabel, final int columnWidth, final int columnWidthPercent, final IProfil profile )
   {
     super( component, editable, resizeable, moveable, columnLabel, SWT.NONE, columnWidth, columnWidthPercent, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
     m_profile = profile;
+    m_dialogSettings = DialogSettingsUtils.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getCanonicalName() );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#createCellEditor(org.eclipse.swt.widgets.Table)
-   */
   @Override
   public CellEditor createCellEditor( final Table table )
   {
-    return new ComboBoxViewerCellEditor( new ArrayContentProvider(), new ClassificationLabelProvider(), getRoughnessClasses(), table, SWT.READ_ONLY | SWT.DROP_DOWN );
+    final ComboBoxViewerCellEditor cellEditor = new ComboBoxViewerCellEditor( table, SWT.READ_ONLY | SWT.DROP_DOWN );
+    cellEditor.setContentProvider( new ArrayContentProvider() );
+    cellEditor.setLabelProvider( new ClassificationLabelProvider() );
+    cellEditor.setInput( getRoughnessClasses() );
+    cellEditor.addListener( new ICellEditorListener()
+    {
+      @Override
+      public void editorValueChanged( final boolean oldValidState, final boolean newValidState )
+      {
+      }
+
+      @Override
+      public void cancelEditor( )
+      {
+      }
+
+      @Override
+      public void applyEditorValue( )
+      {
+        handleApplyEditorValue( cellEditor.getValue() );
+        cellEditor.setInput( getRoughnessClasses() );
+      }
+    } );
+
+    return cellEditor;
   }
 
   @Override
@@ -100,17 +131,6 @@ public class RoughnessClassUiHandler extends AbstractComponentClassUiHandler
     }
 
     return super.getStringRepresentation( record );
-  }
-
-  private IRoughnessClass[] getRoughnessClasses( )
-  {
-    final IWspmClassification classification = WspmClassifications.getClassification( m_profile );
-    if( Objects.isNull( classification ) )
-      return new IRoughnessClass[] {};
-
-    final IRoughnessClass[] roughnesses = classification.getRoughnessClasses();
-
-    return roughnesses;
   }
 
   @Override
@@ -148,5 +168,56 @@ public class RoughnessClassUiHandler extends AbstractComponentClassUiHandler
 
     if( !ObjectUtils.equals( value, oldValue ) )
       record.setValue( getComponent(), value );
+  }
+
+  protected Object[] getRoughnessClasses( )
+  {
+    /* Get the classification. */
+    final IWspmClassification classification = WspmClassifications.getClassification( m_profile );
+    if( Objects.isNull( classification ) )
+      return new IRoughnessClass[] {};
+
+    /* Get the roughness classes. */
+    final IRoughnessClass[] roughnessClasses = classification.getRoughnessClasses();
+
+    /* Sort the roughness classes. */
+    Arrays.sort( roughnessClasses, new RoughnessClassComparator() );
+
+    /* Find the most used roughness classes and put them up the list. */
+    final String[] names = FavoritesUtilities.getNames( roughnessClasses );
+
+    /* Find the most used items. */
+    final FavoriteItem[] usedItems = FavoritesUtilities.findMostUsedItems( names, m_dialogSettings );
+    if( usedItems.length == 0 )
+      return roughnessClasses;
+
+    /* Add the most used classes. */
+    final List<Object> adjustedClasses = new ArrayList<Object>();
+    for( final FavoriteItem usedItem : usedItems )
+    {
+      final IRoughnessClass usedClass = classification.findRoughnessClass( usedItem.getName() );
+      if( usedClass != null )
+        adjustedClasses.add( usedClass );
+    }
+
+    /* Add a separator. */
+    adjustedClasses.add( "----------" );
+
+    /* Add all classes. */
+    for( final IRoughnessClass roughnessClass : roughnessClasses )
+      adjustedClasses.add( roughnessClass );
+
+    return adjustedClasses.toArray( new Object[] {} );
+  }
+
+  protected void handleApplyEditorValue( final Object value )
+  {
+    if( !(value instanceof IRoughnessClass) )
+      return;
+
+    System.out.println( "Roughness changed..." );
+    final IRoughnessClass roughnessClass = (IRoughnessClass) value;
+    final String name = roughnessClass.getName();
+    FavoritesUtilities.updateDialogSettings( m_dialogSettings, name );
   }
 }

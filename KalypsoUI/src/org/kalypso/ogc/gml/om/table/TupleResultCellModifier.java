@@ -94,7 +94,7 @@ public class TupleResultCellModifier implements ICellModifier
    * 
    * @return the component which was modified, <code>null</code> if the record was not changed.
    */
-  public void modifyRecord( final IRecord record, final String handlerId, final Object value )
+  private void modifyRecord( final IRecord record, final String handlerId, final Object value )
   {
     final IComponentUiHandler compHandler = m_contentProvider.getHandler( handlerId );
 

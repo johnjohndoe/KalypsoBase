@@ -40,24 +40,34 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.table.handler;
 
-import org.eclipse.jface.viewers.LabelProvider;
-import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
-
 /**
- * @author Dirk Kuch
+ * @author Holger Albert
  */
-public class ClassificationLabelProvider extends LabelProvider
+public class FavoriteItem implements Comparable<FavoriteItem>
 {
-  @Override
-  public String getText( final Object element )
+  private final String m_name;
+
+  private final int m_amount;
+
+  public FavoriteItem( final String name, final int amount )
   {
-    if( element instanceof IClassificationClass )
-    {
-      final IClassificationClass clazz = (IClassificationClass) element;
+    m_name = name;
+    m_amount = amount;
+  }
 
-      return clazz.getDescription();
-    }
+  @Override
+  public int compareTo( final FavoriteItem o )
+  {
+    return -1 * Integer.compare( m_amount, o.getAmount() );
+  }
 
-    return super.getText( element );
+  public String getName( )
+  {
+    return m_name;
+  }
+
+  public int getAmount( )
+  {
+    return m_amount;
   }
 }

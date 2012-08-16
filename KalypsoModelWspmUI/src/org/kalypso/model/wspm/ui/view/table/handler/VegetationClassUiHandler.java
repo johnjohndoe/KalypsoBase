@@ -41,41 +41,74 @@
 package org.kalypso.model.wspm.ui.view.table.handler;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ComboBoxViewerCellEditor;
+import org.eclipse.jface.viewers.ICellEditorListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
 import org.kalypso.model.wspm.core.gml.classifications.IVegetationClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.observation.result.IRecord;
-import org.kalypso.ogc.gml.om.table.celleditor.ComboBoxViewerCellEditor;
 
 /**
  * Handles vegetation class values.
  * 
  * @author Dirk Kuch
+ * @author Holger Albert
  */
 public class VegetationClassUiHandler extends AbstractComponentClassUiHandler
 {
   private final IProfil m_profile;
 
+  private final IDialogSettings m_dialogSettings;
+
   public VegetationClassUiHandler( final int component, final boolean editable, final boolean resizeable, final boolean moveable, final String columnLabel, final int columnWidth, final int columnWidthPercent, final IProfil profile )
   {
     super( component, editable, resizeable, moveable, columnLabel, SWT.NONE, columnWidth, columnWidthPercent, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
     m_profile = profile;
+    m_dialogSettings = DialogSettingsUtils.getDialogSettings( KalypsoModelWspmUIPlugin.getDefault(), getClass().getCanonicalName() );
   }
 
   @Override
   public CellEditor createCellEditor( final Table table )
   {
-    return new ComboBoxViewerCellEditor( new ArrayContentProvider(), new ClassificationLabelProvider(), getVegetationClasses(), table, SWT.READ_ONLY | SWT.DROP_DOWN );
+    final ComboBoxViewerCellEditor cellEditor = new ComboBoxViewerCellEditor( table, SWT.READ_ONLY | SWT.DROP_DOWN );
+    cellEditor.setContentProvider( new ArrayContentProvider() );
+    cellEditor.setLabelProvider( new ClassificationLabelProvider() );
+    cellEditor.setInput( getVegetationClasses() );
+    cellEditor.addListener( new ICellEditorListener()
+    {
+      @Override
+      public void editorValueChanged( final boolean oldValidState, final boolean newValidState )
+      {
+      }
+
+      @Override
+      public void cancelEditor( )
+      {
+      }
+
+      @Override
+      public void applyEditorValue( )
+      {
+        handleApplyEditorValue( cellEditor.getValue() );
+      }
+    } );
+
+    return cellEditor;
   }
 
   @Override
@@ -98,17 +131,6 @@ public class VegetationClassUiHandler extends AbstractComponentClassUiHandler
     }
 
     return super.getStringRepresentation( record );
-  }
-
-  private IVegetationClass[] getVegetationClasses( )
-  {
-    final IWspmClassification classification = WspmClassifications.getClassification( m_profile );
-    if( Objects.isNull( classification ) )
-      return new IVegetationClass[] {};
-
-    final IVegetationClass[] vegetations = classification.getVegetationClasses();
-
-    return vegetations;
   }
 
   @Override
@@ -146,5 +168,55 @@ public class VegetationClassUiHandler extends AbstractComponentClassUiHandler
 
     if( !ObjectUtils.equals( value, oldValue ) )
       record.setValue( getComponent(), value );
+  }
+
+  private Object[] getVegetationClasses( )
+  {
+    /* Get the classification. */
+    final IWspmClassification classification = WspmClassifications.getClassification( m_profile );
+    if( Objects.isNull( classification ) )
+      return new IVegetationClass[] {};
+
+    /* Get the vegetation classes. */
+    final IVegetationClass[] vegetationClasses = classification.getVegetationClasses();
+
+    /* Sort the vegetation classes. */
+    Arrays.sort( vegetationClasses, new VegetationClassComparator() );
+
+    /* Find the most used vegetation classes and put them up the list. */
+    final String[] names = FavoritesUtilities.getNames( vegetationClasses );
+
+    /* Find the most used items. */
+    final FavoriteItem[] usedItems = FavoritesUtilities.findMostUsedItems( names, m_dialogSettings );
+    if( usedItems.length == 0 )
+      return vegetationClasses;
+
+    /* Add the most used classes. */
+    final List<Object> adjustedClasses = new ArrayList<Object>();
+    for( final FavoriteItem usedItem : usedItems )
+    {
+      final IVegetationClass usedClass = classification.findVegetationClass( usedItem.getName() );
+      if( usedClass != null )
+        adjustedClasses.add( usedClass );
+    }
+
+    /* Add a separator. */
+    adjustedClasses.add( "----------" );
+
+    /* Add all classes. */
+    for( final IVegetationClass vegetationClass : vegetationClasses )
+      adjustedClasses.add( vegetationClass );
+
+    return adjustedClasses.toArray( new Object[] {} );
+  }
+
+  protected void handleApplyEditorValue( final Object value )
+  {
+    if( !(value instanceof IVegetationClass) )
+      return;
+
+    final IVegetationClass vegetationClass = (IVegetationClass) value;
+    final String name = vegetationClass.getName();
+    FavoritesUtilities.updateDialogSettings( m_dialogSettings, name );
   }
 }

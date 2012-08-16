@@ -40,24 +40,38 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.table.handler;
 
-import org.eclipse.jface.viewers.LabelProvider;
-import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
+import java.util.Comparator;
+
+import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.model.wspm.core.gml.classifications.IVegetationClass;
 
 /**
- * @author Dirk Kuch
+ * @author Holger Albert
  */
-public class ClassificationLabelProvider extends LabelProvider
+public class VegetationClassComparator implements Comparator<IVegetationClass>
 {
-  @Override
-  public String getText( final Object element )
+  /**
+   * The constructor.
+   */
+  public VegetationClassComparator( )
   {
-    if( element instanceof IClassificationClass )
-    {
-      final IClassificationClass clazz = (IClassificationClass) element;
+  }
 
-      return clazz.getDescription();
-    }
+  /**
+   * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+   */
+  @Override
+  public int compare( final IVegetationClass o1, final IVegetationClass o2 )
+  {
+    final String name1 = o1.getName();
+    final String name2 = o2.getName();
 
-    return super.getText( element );
+    final Integer int1 = NumberUtils.parseQuietInteger( name1 );
+    final Integer int2 = NumberUtils.parseQuietInteger( name2 );
+
+    if( int1 != null && int2 != null )
+      return int1.compareTo( int2 );
+
+    return name1.compareTo( name2 );
   }
 }

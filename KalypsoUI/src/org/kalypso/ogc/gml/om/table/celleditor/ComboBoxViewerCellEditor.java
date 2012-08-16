@@ -63,7 +63,7 @@ import org.eclipse.swt.widgets.Listener;
 
 /**
  * @author Dirk Kuch
- * @deprecated Use {@link org.eclipse.jface.viewers.ComboBoxCellEditor} instead.
+ * @deprecated Use {@link org.eclipse.jface.viewers.ComboBoxViewerCellEditor} instead.
  */
 @Deprecated
 public class ComboBoxViewerCellEditor extends CellEditor
@@ -88,7 +88,7 @@ public class ComboBoxViewerCellEditor extends CellEditor
     }
   }
 
-  protected ComboViewer m_viewer;
+  private ComboViewer m_viewer;
 
   private final IInputProvider m_inputProvider;
 
@@ -159,15 +159,6 @@ public class ComboBoxViewerCellEditor extends CellEditor
           e.doit = false;
       }
     } );
-
-// m_viewer.getCombo().addFocusListener( new FocusAdapter()
-// {
-// @Override
-// public void focusLost( final FocusEvent e )
-// {
-// ComboBoxViewerCellEditor.this.focusLost();
-// }
-// } );
 
     m_viewer.getCombo().layout();
 
@@ -241,15 +232,8 @@ public class ComboBoxViewerCellEditor extends CellEditor
       m_viewer.setSelection( StructuredSelection.EMPTY );
   }
 
-// /**
-// * @see org.eclipse.jface.viewers.CellEditor#focusLost()
-// */
-// @Override
-// protected void focusLost( )
-// {
-// if( isActivated() )
-// {
-// applyEditorValueAndDeactivate();
-// }
-// }
+  public ComboViewer getViewer( )
+  {
+    return m_viewer;
+  }
 }
