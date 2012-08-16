@@ -60,9 +60,9 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.gml.ui.KalypsoGmlUiImages;
-import org.kalypso.gml.ui.commands.importgrid.AddRectifiedGridCoveragesWizard;
 import org.kalypso.gml.ui.coverage.CoverageManagementWidget;
 import org.kalypso.gml.ui.i18n.Messages;
+import org.kalypso.gml.ui.internal.coverage.imports.ImportCoveragesWizard;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -102,7 +102,7 @@ public class AddCoverageAction extends Action implements IUpdateable
 
     final IContainer gridFolder = m_widget.findGridFolder();
 
-    final AddRectifiedGridCoveragesWizard wizard = new AddRectifiedGridCoveragesWizard();
+    final ImportCoveragesWizard wizard = new ImportCoveragesWizard();
     wizard.init( coverages, gridFolder, m_allowUserChangeDataFolder );
     final WizardDialog wizardDialog = new WizardDialog( shell, wizard );
     if( wizardDialog.open() != Window.OK )
@@ -110,9 +110,11 @@ public class AddCoverageAction extends Action implements IUpdateable
 
     final ICoverage[] newCoverages = wizard.getNewCoverages();
     final GM_Envelope bbox = FeatureHelper.getEnvelope( newCoverages );
-
-    final GM_Envelope scaledBox = GeometryUtilities.scaleEnvelope( bbox, 1.05 );
-    m_widget.getMapPanel().setBoundingBox( scaledBox );
+    if( bbox != null )
+    {
+      final GM_Envelope scaledBox = GeometryUtilities.scaleEnvelope( bbox, 1.05 );
+      m_widget.getMapPanel().setBoundingBox( scaledBox );
+    }
 
     // TODO: move into finish method? / very slow, because all the tins are converted as well...
     final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
