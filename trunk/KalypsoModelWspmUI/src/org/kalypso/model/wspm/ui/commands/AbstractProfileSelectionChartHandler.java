@@ -58,13 +58,11 @@ import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.visitors.FindClosestPointVisitor;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolygonFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
-import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
@@ -107,9 +105,9 @@ public abstract class AbstractProfileSelectionChartHandler extends AbstractProfi
     if( Double.isNaN( breite ) )
       return;
 
-    final String msg = String.format( Messages.getString( "org.kalypso.model.wspm.ui.commands.AbstractProfileSelectionChartHandler.0" ), getBreite() ); //$NON-NLS-1$
-    final EditInfo info = new EditInfo( theme, null, null, getBreite(), msg, position );
-    setToolInfo( info );
+    // final String msg = String.format( Messages.getString( "org.kalypso.model.wspm.ui.commands.AbstractProfileSelectionChartHandler.0" ), getBreite() ); //$NON-NLS-1$
+    // final EditInfo info = new EditInfo( theme, null, null, getBreite(), msg, position );
+    // setToolInfo( info );
 
     final IRangeSelection selection = getProfile().getSelection();
     selection.setCursor( breite );
