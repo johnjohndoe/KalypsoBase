@@ -45,42 +45,66 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
 /**
- * This validator fails if a number is provided and it is smaller than 0.0
- * 
+ * This validator fails if a number is provided but is outside a validity range
+ *
  * @author Holger Albert
  */
-public class NumberNotNegativeValidator extends TypedValidator<Number>
+public class NumberRangeValidator extends TypedValidator<Number>
 {
   public static final String DEFAULT_MESSAGE = "Value should not be negative.";
 
-  /**
-   * Same as {@link #NumberNotNegativeValidator(int, String)}, but uses a default message.
-   *
-   * @param severity
-   *          Severity of IStatus, will be used to create validation failures.
-   */
-  public NumberNotNegativeValidator( final int severity )
+  private final double m_minValue;
+
+  private final double m_maxValue;
+
+  public NumberRangeValidator( final int severity, final double minValue, final double maxValue )
   {
-    this( severity, DEFAULT_MESSAGE );
+    this( severity, minValue, maxValue, null );
   }
 
   /**
    * @param severity
    *          Severity of IStatus, will be used to create validation failures.
-   * @param message
-   *          Will be used as message for a status, if validation fails.
+   * @param minValue
+   *          Minimal allowed value (inclusive)
+   * @param maxValue
+   *          Maximal allowed value (inclusive)
    */
-  public NumberNotNegativeValidator( final int severity, final String message )
+  public NumberRangeValidator( final int severity, final double minValue, final double maxValue, final String message )
   {
     super( Number.class, severity, message );
+
+    m_minValue = minValue;
+    m_maxValue = maxValue;
   }
 
   @Override
   protected IStatus doValidate( final Number value ) throws CoreException
   {
-    if( value != null && value.doubleValue() < 0.0 )
+    final boolean isValid = isValid( value );
+    if( isValid )
+      return Status.OK_STATUS;
+
+    if( hasMessage() )
       fail();
 
-    return Status.OK_STATUS;
+    final String message = String.format( "Value outside valid range [%f - %f]", m_minValue, m_maxValue );
+    fail( message );
+    return null;
+  }
+
+  private boolean isValid( final Number value )
+  {
+    if( value == null )
+      return true;
+
+    final double dblVal = value.doubleValue();
+    if( !Double.isNaN( m_minValue ) && dblVal < m_minValue )
+      return false;
+
+    if( !Double.isNaN( m_maxValue ) && dblVal > m_maxValue )
+      return false;
+
+    return true;
   }
 }
