@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- * 
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.tools.refinement;
 
@@ -50,10 +50,10 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
-import org.kalypsodeegree_impl.model.geometry.GM_Ring_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
@@ -65,7 +65,7 @@ import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * TODO: move to the utils of JTS, deegree...
- * 
+ *
  * @author jung
  */
 public final class RefinementUtils
@@ -83,7 +83,7 @@ public final class RefinementUtils
    * Cut geom into pieces at the given line segment. <br>
    * This is a hack: we subtract a thin polygon from the given geom, and so will introduce a small gap between polygons.
    * Further, if the segment ends inside the polygon, this will introduce a thin slot.
-   * 
+   *
    * @author http://lists.jump-project.org/pipermail/jts-devel/2002-October/000119.html
    */
   public static Geometry chop( final Geometry geom, final Coordinate[] coords )
@@ -190,7 +190,7 @@ public final class RefinementUtils
       /* close ring */
       posList.add( posList.get( 0 ) );
       final GM_Position[] poses = posList.toArray( new GM_Position[posList.size()] );
-      final GM_Ring_Impl origRing = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Ring( poses, crs );
+      final GM_Ring origRing = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Ring( poses, crs );
       final GM_SurfacePatch patch = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_SurfacePatch( origRing, null, crs );
       return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Surface( patch );
     }
@@ -200,7 +200,7 @@ public final class RefinementUtils
 
   public static GM_Surface<GM_SurfacePatch> getSurface( final GM_Position[] poses, final String crs ) throws GM_Exception
   {
-    final GM_Ring_Impl ring = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Ring( poses, crs );
+    final GM_Ring ring = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Ring( poses, crs );
 
     final GM_SurfacePatch patch = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_SurfacePatch( ring, null, crs );
 
@@ -261,7 +261,7 @@ public final class RefinementUtils
   /**
    * Examines if a point lies on or very close to a curve (given by its positions) and interpolates the z value for the
    * given point.
-   * 
+   *
    * @param point
    *          The point for which we like to interpolate the z value
    * @param poses
@@ -297,7 +297,7 @@ public final class RefinementUtils
   /**
    * Splits a {@link GM_SurfacePatch} with a line, that is defined by the positions of its intersection points with the
    * hull of the patch.
-   * 
+   *
    * @param surfacePatch
    *          the surface patch
    * @param poses

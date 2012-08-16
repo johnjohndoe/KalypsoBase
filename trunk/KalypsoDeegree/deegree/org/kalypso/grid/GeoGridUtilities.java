@@ -84,7 +84,6 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain.OffsetVector;
 import org.kalypsodeegree_impl.model.cv.GridRange_Impl;
-import org.kalypsodeegree_impl.model.geometry.GM_Ring_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
@@ -288,7 +287,7 @@ public final class GeoGridUtilities
       final GM_Position c4 = GeometryFactory.createGM_Position( x1, y2 );
 
       /* Create the outer ring. */
-      final GM_Ring_Impl shell = GeometryFactory.createGM_Ring( new GM_Position[] { c1, c2, c3, c4, c1 }, grid.getSourceCRS() );
+      final GM_Ring shell = GeometryFactory.createGM_Ring( new GM_Position[] { c1, c2, c3, c4, c1 }, grid.getSourceCRS() );
 
       /* Create the surface patch. */
       final GM_SurfacePatch patch = GeometryFactory.createGM_SurfacePatch( shell, new GM_Ring[] {}, grid.getSourceCRS() );
@@ -349,7 +348,7 @@ public final class GeoGridUtilities
       final GM_Position c4 = GeometryFactory.createGM_Position( cellX1, cellY2 );
 
       /* Create the outer ring. */
-      final GM_Ring_Impl shell = GeometryFactory.createGM_Ring( new GM_Position[] { c1, c2, c3, c4, c1 }, grid.getSourceCRS() );
+      final GM_Ring shell = GeometryFactory.createGM_Ring( new GM_Position[] { c1, c2, c3, c4, c1 }, grid.getSourceCRS() );
 
       /* Create the surface patch. */
       final GM_SurfacePatch patch = GeometryFactory.createGM_SurfacePatch( shell, new GM_Ring[] {}, grid.getSourceCRS() );
@@ -1019,7 +1018,7 @@ public final class GeoGridUtilities
         final GM_Position c4 = GeometryFactory.createGM_Position( minX, maxY );
 
         /* Create the outer ring. */
-        final GM_Ring_Impl shell = GeometryFactory.createGM_Ring( new GM_Position[] { c1, c2, c3, c4, c1 }, grid.getSourceCRS() );
+        final GM_Ring shell = GeometryFactory.createGM_Ring( new GM_Position[] { c1, c2, c3, c4, c1 }, grid.getSourceCRS() );
 
         /* Create the surface patch. */
         final GM_SurfacePatch patch = GeometryFactory.createGM_SurfacePatch( shell, new GM_Ring[] {}, grid.getSourceCRS() );

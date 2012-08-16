@@ -41,8 +41,8 @@ import java.util.List;
 import org.kalypso.commons.xml.NS;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree_impl.io.sax.parser.geometrySpec.LinearRingSpecification;
-import org.kalypsodeegree_impl.model.geometry.GM_Ring_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -103,7 +103,7 @@ public class LinearRingContentHandler extends GMLElementContentHandler implement
 
     try
     {
-      final GM_Ring_Impl ring = GeometryFactory.createGM_Ring( poses, m_srs );
+      final GM_Ring ring = GeometryFactory.createGM_Ring( poses, m_srs );
       m_lineaRingHandler.handle( ring );
     }
     catch( final GM_Exception e )
