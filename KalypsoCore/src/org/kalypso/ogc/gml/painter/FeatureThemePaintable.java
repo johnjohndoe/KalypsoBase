@@ -5,6 +5,7 @@ import java.awt.Rectangle;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
@@ -61,6 +62,10 @@ public final class FeatureThemePaintable implements IStylePaintable
         return;
 
       displayElement.paint( m_graphics, m_p, monitor );
+    }
+    catch( final OperationCanceledException e )
+    {
+      return;
     }
     catch( final CoreException e )
     {
