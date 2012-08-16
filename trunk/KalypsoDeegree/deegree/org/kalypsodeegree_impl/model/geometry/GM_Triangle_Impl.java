@@ -73,18 +73,17 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
     final double y = position.getY();
 
     final GM_Position[] exteriorRing = getExteriorRing();
-    final Coordinate c0 = JTSAdapter.export( exteriorRing[0] );
-    final Coordinate c1 = JTSAdapter.export( exteriorRing[1] );
-    final Coordinate c2 = JTSAdapter.export( exteriorRing[2] );
+    final GM_Position c0 = exteriorRing[0];
+    final GM_Position c1 = exteriorRing[1];
+    final GM_Position c2 = exteriorRing[2];
 
-    // FIXME: use apache commons math Plane instead
     // FIXME: was cached before; check if this is needed; memory consumption!
     final Plane plane = new Plane();
-    final Point3d p0 = new Point3d( c0.x, c0.y, c0.z );
-    final Point3d p1 = new Point3d( c1.x, c1.y, c1.z );
-    final Point3d p2 = new Point3d( c2.x, c2.y, c2.z );
+    final Point3d p0 = new Point3d( c0.getX(), c0.getY(), c0.getZ() );
+    final Point3d p1 = new Point3d( c1.getX(), c1.getY(), c1.getZ() );
+    final Point3d p2 = new Point3d( c2.getX(), c2.getY(), c2.getZ() );
     plane.setPlane( p0, p1, p2 );
-    
+
     return plane.z( x, y );
   }
 
@@ -93,7 +92,7 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
   {
     final LinearRing exterior = JTSAdapter.exportAsRing( getExteriorRing() );
     final SimplePointInRing pir = new SimplePointInRing( exterior );
-    
+
     return pir.isInside( new Coordinate( position.getX(), position.getY() ) );
   }
 
