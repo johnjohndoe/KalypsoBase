@@ -94,7 +94,7 @@ public class CoverageThemeInfo implements IKalypsoThemeInfo
     m_theme = (IKalypsoFeatureTheme) theme;
 
     final IFeatureType featureType = m_theme.getFeatureType();
-    Assert.isLegal( GMLSchemaUtilities.substitutes( featureType, ICoverage.QNAME ) );
+    Assert.isLegal( GMLSchemaUtilities.substitutes( featureType, ICoverage.FEATURE__COVERAGE ) );
     m_formatString = initFormatString( props );
   }
 

@@ -43,41 +43,27 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.model.coverage.RangeSetFile;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * TODO: add setters/getters for the coverage-function
  *
  * @author Dejan Antanaskovic, Gernot Belger
  */
-public class RectifiedGridCoverage extends Feature_Impl implements ICoverage
+public class RectifiedGridCoverage extends AbstractCoverage implements ICoverage
 {
-  public static final QName QNAME = new QName( NS.GML3, "RectifiedGridCoverage" );
+  public static final QName QNAME = new QName( NS.GML3, "RectifiedGridCoverage" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_GRID_DOMAIN = new QName( NS.GML3, "rectifiedGridDomain" );
-
-  private static final QName QNAME_PROP_RANGE_SET = new QName( NS.GML3, "rangeSet" );
-
-  private static final QName QNAME_PROP_BOUNDED_BY = new QName( NS.GML3, "boundedBy" );
+  public static final QName QNAME_PROP_GRID_DOMAIN = new QName( NS.GML3, "rectifiedGridDomain" ); //$NON-NLS-1$
 
   public RectifiedGridCoverage( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  public static String getNameStatic( )
-  {
-    return "RectifiedGridCoverage";
-  }
-
-  /**
-   * @return Returns the gridDomain.
-   */
   public RectifiedGridDomain getGridDomain( )
   {
-    return getProperty( RectifiedGridCoverage.QNAME_PROP_GRID_DOMAIN, RectifiedGridDomain.class );
+    return getProperty( QNAME_PROP_GRID_DOMAIN, RectifiedGridDomain.class );
   }
 
   /**
@@ -88,12 +74,12 @@ public class RectifiedGridCoverage extends Feature_Impl implements ICoverage
    */
   public void setGridDomain( final RectifiedGridDomain gridDomain )
   {
-    setProperty( RectifiedGridCoverage.QNAME_PROP_GRID_DOMAIN, gridDomain );
+    setProperty( QNAME_PROP_GRID_DOMAIN, gridDomain );
 
     try
     {
       final GM_Envelope envelope = gridDomain.getGM_Envelope( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
-      setProperty( QNAME_PROP_BOUNDED_BY, envelope );
+      setProperty( QN_BOUNDED_BY, envelope );
       setEnvelopesUpdated();
     }
     catch( final Exception e )
@@ -102,32 +88,13 @@ public class RectifiedGridCoverage extends Feature_Impl implements ICoverage
     }
   }
 
-  /**
-   * @return Returns the rangeSet. Can be one of {@link FileType}; TODO: support others
-   */
-  public Object getRangeSet( )
-  {
-    return getProperty( RectifiedGridCoverage.QNAME_PROP_RANGE_SET );
-  }
-
-  /**
-   * @param rangeSet
-   *          Choice can be a {@link ogc31.www.opengis.net.gml.FileType} or XXX TODO, not yet supported
-   */
-  public void setRangeSet( final Object rangeSet )
-  {
-    if( !(rangeSet instanceof RangeSetFile) )
-      throw new IllegalArgumentException();
-
-    setProperty( RectifiedGridCoverage.QNAME_PROP_RANGE_SET, rangeSet );
-  }
-
+  // TODO: find a general solution within the feature API
   @Override
   public GM_Envelope getEnvelope( )
   {
     try
     {
-      final GM_Envelope property = getProperty( QNAME_PROP_BOUNDED_BY, GM_Envelope.class );
+      final GM_Envelope property = getProperty( QN_BOUNDED_BY, GM_Envelope.class );
       final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
       return geoTransformer.transform( property );
     }
