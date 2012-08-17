@@ -9,10 +9,10 @@ import java.io.InterruptedIOException;
 import java.io.LineNumberReader;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.StringTokenizer;
-import java.util.Vector;
+import java.util.List;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang3.StringUtils;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.gml.processes.i18n.Messages;
 
@@ -34,17 +34,17 @@ import com.vividsolutions.jts.io.ParseException;
  * <p>
  * Format der HMO Datei
  * </p>
- * 
+ *
  * <pre>
- * 
+ *
  *   * mit '*' gekennzeichnete Zeilen oder Zeilen mit weniger als drei Zeichen sind Kommentarzeilen
  *   * zuerst kommen die Punkte mit Nummer, x,y,z-Koordinate (Leerzeichengetrennt)
  *   P: &lt;Nummer:int&gt;	&lt;x:double&gt;  &lt;y:double&gt;  &lt;z:double&gt;
  *   * nach de Punkten kommen die Dreiecke mit Nummer, Ecke1, Ecke2 und Ecke3 (Referenzen auf die Punktnummern)
  *   D: &lt;Nummer:int&gt; &lt;e1:int&gt;  &lt;e2:int&gt;  &lt;e3:int&gt;
- * 
+ *
  * </pre>
- * 
+ *
  * @author belger
  */
 public class HMOReader
@@ -66,8 +66,6 @@ public class HMOReader
   private static final Logger LOG = Logger.getLogger( HMOReader.class.getName() );
 
   private final GeometryFactory m_gf;
-
-  private Vector<Coordinate> m_points = null;
 
   public HMOReader( final GeometryFactory gf )
   {
@@ -119,15 +117,15 @@ public class HMOReader
    * The given reader will be wrapped into a {@link java.io.BufferedReader}, so it is not required to to so by the
    * caller.
    * </p>
-   * 
+   *
    * @throws IOException
    * @throws ParseException
    * @throws InterruptedIOException
    */
   public final LinearRing[] read( final Reader r ) throws IOException, ParseException, InterruptedIOException
   {
-    final ArrayList<LinearRing> triangles = new ArrayList<LinearRing>();
-    m_points = new Vector<Coordinate>();
+    final List<LinearRing> triangles = new ArrayList<LinearRing>();
+    final ArrayList<Coordinate> points = new ArrayList<Coordinate>();
 
     final LineNumberReader lnr = new LineNumberReader( r );
     while( lnr.ready() )
@@ -143,16 +141,20 @@ public class HMOReader
         throw new ParseException( MessageFormatUtility.formatMessage( ERROR_SEMIKOLON, lnr.getLineNumber() ) );
 
       final char c0 = line.charAt( 0 );
-      final StringTokenizer sT = new StringTokenizer( line.substring( 2 ).trim() );
+
+      final String data = line.substring( 2 ).trim();
+
+      final String[] split = StringUtils.split( data, ' ' );
 
       switch( c0 )
       {
         case 'P':
-          parsePoint( sT, lnr.getLineNumber() );
+          parsePoint( points, split, lnr.getLineNumber() );
           break;
 
         case 'D':
-          triangles.add( parseTriangle( sT, lnr.getLineNumber() ) );
+          final LinearRing triangle = parseTriangle( points, split, lnr.getLineNumber() );
+          triangles.add( triangle );
           break;
 
         default:
@@ -160,23 +162,21 @@ public class HMOReader
       }
     }
 
-    m_points = null;
-
     return triangles.toArray( new LinearRing[triangles.size()] );
   }
 
-  private final LinearRing parseTriangle( final StringTokenizer sT, final int lineNumber ) throws ParseException
+  private LinearRing parseTriangle( final List<Coordinate> points, final String[] data, final int lineNumber ) throws ParseException
   {
     try
     {
-      /* final int n = */Integer.parseInt( sT.nextToken() );
-      final int n1 = Integer.parseInt( sT.nextToken() );
-      final int n2 = Integer.parseInt( sT.nextToken() );
-      final int n3 = Integer.parseInt( sT.nextToken() );
+      /* final int n = */Integer.parseInt( data[0] );
+      final int n1 = Integer.parseInt( data[1] );
+      final int n2 = Integer.parseInt( data[2] );
+      final int n3 = Integer.parseInt( data[3] );
 
-      final Coordinate p1 = m_points.get( n1 );
-      final Coordinate p2 = m_points.get( n2 );
-      final Coordinate p3 = m_points.get( n3 );
+      final Coordinate p1 = points.get( n1 );
+      final Coordinate p2 = points.get( n2 );
+      final Coordinate p3 = points.get( n3 );
 
       if( p1 == null || p2 == null || p3 == null )
         throw new ParseException( MessageFormatUtility.formatMessage( ERROR_TRIANGLE_NOPOINT, lineNumber ) );
@@ -193,24 +193,24 @@ public class HMOReader
     }
   }
 
-  private final void parsePoint( final StringTokenizer sT, final int lineNumber ) throws ParseException
+  private void parsePoint( final ArrayList<Coordinate> points, final String[] data, final int lineNumber ) throws ParseException
   {
     try
     {
-      final int n = Integer.parseInt( sT.nextToken() );
+      final int n = Integer.parseInt( data[0] );
 
-      if( m_points.size() > n && m_points.get( n ) != null )
+      if( points.size() > n && points.get( n ) != null )
         throw new ParseException( MessageFormatUtility.formatMessage( ERROR_POINT_DOUBLE, lineNumber ) );
 
-      final double x = NumberUtils.parseDouble( sT.nextToken() );
-      final double y = NumberUtils.parseDouble( sT.nextToken() );
-      final double z = NumberUtils.parseDouble( sT.nextToken() );
+      final double x = NumberUtils.parseDouble( data[1] );
+      final double y = NumberUtils.parseDouble( data[2] );
+      final double z = NumberUtils.parseDouble( data[3] );
 
       final Coordinate p = new Coordinate( x, y, z );
 
-      if( m_points.size() <= n )
-        m_points.setSize( n + 1 );
-      m_points.set( n, p );
+      if( points.size() <= n )
+        points.ensureCapacity( n + 1 );
+      points.set( n, p );
     }
     catch( final NumberFormatException e )
     {
