@@ -96,58 +96,17 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
     return pir.isInside( new Coordinate( position.getX(), position.getY() ) );
   }
 
-// /**
-// * Overwritten for better performance. <BR>
-// * TODO: this method does not recognize, if the positions lies on an edge or a corner of the triangle.
-// *
-// * @see org.kalypsodeegree.model.geometry.GM_Triangle#contains(org.kalypsodeegree.model.geometry.GM_Position)
-// */
-// public boolean contains2( final GM_Position position )
-// {
-// // FIXME: use JTS for this kind of stuff!
-//
-// final GM_Position[] exteriorRing = getExteriorRing();
-//
-// final GM_Position pos1 = exteriorRing[0];
-// final GM_Position pos2 = exteriorRing[1];
-// final GM_Position pos3 = exteriorRing[2];
-//
-// final int orientation12 = orientation( pos1, pos2, position );
-// final int orientation23 = orientation( pos2, pos3, position );
-// final int orientation31 = orientation( pos3, pos1, position );
-//
-// // edge
-// if( orientation12 == orientation23 && orientation31 == 0 )
-// return true;
-//
-// if( orientation23 == orientation31 && orientation12 == 0 )
-// return true;
-//
-// if( orientation31 == orientation12 && orientation23 == 0 )
-// return true;
-//
-// // corner
-// if( orientation12 == 0 && orientation23 == 0 && orientation31 != 0 )
-// return true;
-// if( orientation23 == 0 && orientation31 == 0 && orientation12 != 0 )
-// return true;
-// if( orientation31 == 0 && orientation12 == 0 && orientation23 != 0 )
-// return true;
-//
-// return orientation12 == orientation23 && orientation23 == orientation31;
-// }
-
   // FIXME: JTS!
   private static int orientation( final GM_Position pos1, final GM_Position pos2, final GM_Position pos3 )
   {
     final double s_a = signedArea( pos1, pos2, pos3 );
-     return s_a > 0 ? 1 : (s_a < 0 ? -1 : 0);
+    return s_a > 0 ? 1 : (s_a < 0 ? -1 : 0);
   }
 
   // FIXME: JTS!
   private static double signedArea( final GM_Position pos1, final GM_Position pos2, final GM_Position pos3 )
   {
-     return (pos1.getX() * (pos2.getY() - pos3.getY()) + pos2.getX() * (pos3.getY() - pos1.getY()) + pos3.getX() * (pos1.getY() - pos2.getY()));
+    return (pos1.getX() * (pos2.getY() - pos3.getY()) + pos2.getX() * (pos3.getY() - pos1.getY()) + pos3.getX() * (pos1.getY() - pos2.getY()));
   }
 
   @Override
@@ -182,33 +141,6 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
 
     throw new IllegalStateException();
   }
-
-  // @Override
-// public int hashCode( )
-// {
-// final int prime = 31;
-// int result = 1;
-// result = prime * result + Arrays.hashCode( m_planarEquation );
-// return result;
-// }
-//
-// @Override
-// public boolean equals( final Object obj )
-// {
-// if( this == obj )
-// return true;
-// if( getClass() != obj.getClass() )
-// return false;
-// final GM_Triangle_Impl other = (GM_Triangle_Impl) obj;
-// for( final GM_Position lPos : other.getExteriorRing() )
-// {
-// if( !this.contains2( lPos ) )
-// {
-// return false;
-// }
-// }
-// return true;
-// }
 
   @Override
   public int getOrientation( )

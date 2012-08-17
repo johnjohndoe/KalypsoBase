@@ -41,30 +41,21 @@
 package org.kalypso.gml.ui.internal.coverage.imports;
 
 import java.io.File;
-import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
-import org.apache.commons.io.FileUtils;
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.io.FilePattern;
-import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
-import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
-import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
-import org.kalypsodeegree_impl.gml.binding.commons.MultiSurfaceCoverage;
+import org.kalypso.gml.processes.converters.HmoTriangulatedSurfaceConverter;
+import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 
 /**
  * Imports a BCE .hmo file as coverage.
- *
+ * 
  * @author Gernot Belger
  */
-public class HmoCoverageImporter implements ICoverageImporter
+public class HmoCoverageImporter extends AbstractTriangulatedSurfaceCoverageImporter
 {
   @Override
   public FilePattern getFilePattern( )
@@ -73,40 +64,15 @@ public class HmoCoverageImporter implements ICoverageImporter
   }
 
   @Override
-  public ICoverage importCoverage( final ICoverageCollection coverageContainer, final File dataFile, final String crs, final IContainer dataContainer, final IProgressMonitor monitor ) throws CoreException
+  protected GM_TriangulatedSurface readInputData( final File dataFile, final String crs, final IProgressMonitor monitor ) throws CoreException, MalformedURLException
   {
-    final File tempFile = FileUtilities.getNewTempFile( "hmoConverter", "gml" );//$NON-NLS-1$ //$NON-NLS-2$
+    final URL sourceUrl = dataFile.toURI().toURL();
+    final String query = String.format( "?srs=%s", crs ); //$NON-NLS-1$
+    final URL sourceLocation = new URL( sourceUrl, query );
 
-    try
-    {
-      // TODO: read hmo and convert to GM_Triangulated surface
+    final HmoTriangulatedSurfaceConverter converter = new HmoTriangulatedSurfaceConverter();
+    final GM_TriangulatedSurface gmSurface = converter.convert( sourceLocation, monitor );
 
-      // TODO: determine bbox/boundary and set as domainSet
-
-      /* add as MultiSurface-Coverage */
-      final IFeatureBindingCollection<ICoverage> coverages = coverageContainer.getCoverages();
-      final ICoverage newCoverage = coverages.addNew( MultiSurfaceCoverage.FEATURE_MULTI_SURFACE_COVERAGE );
-
-      // TODO: move gm_triangulated surface into workspace
-      final File targetDir = dataContainer.getLocation().toFile();
-      final File targetFile = AbstractGridCoverageImporter.createTargetFile( dataFile, targetDir, "gml" ); //$NON-NLS-1$
-
-      FileUtils.moveFile( tempFile, targetFile );
-
-      /* Fire model event */
-      final GMLWorkspace workspace = coverageContainer.getWorkspace();
-      workspace.fireModellEvent( new FeatureStructureChangeModellEvent( workspace, coverageContainer, newCoverage, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
-
-      return newCoverage;
-    }
-    catch( final IOException e )
-    {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoGmlUIPlugin.id(), "Failed to convert triangulated surface", e );
-      throw new CoreException( status );
-    }
-    finally
-    {
-      FileUtils.deleteQuietly( tempFile );
-    }
+    return gmSurface;
   }
 }

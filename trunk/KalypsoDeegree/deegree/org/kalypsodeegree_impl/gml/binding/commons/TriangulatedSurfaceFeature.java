@@ -50,7 +50,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * Base implementation of commons:TriangulatedSurfaceFeature
- *
+ * 
  * @author Holger Albert
  * @author Gernot Belger
  */
@@ -58,7 +58,7 @@ public class TriangulatedSurfaceFeature extends Feature_Impl
 {
   public static final QName FEATURE_TRIANGULATED_SURFACE = new QName( NS.COMMON, "TriangulatedSurfaceFeature" ); //$NON-NLS-1$
 
-  private static final QName MEMBER_TRIANGULATED_SURFACE = new QName( NS.GML3, "triangulatedSurfaceMember" ); //$NON-NLS-1$
+  public static final QName MEMBER_TRIANGULATED_SURFACE = new QName( NS.GML3, "triangulatedSurfaceMember" ); //$NON-NLS-1$
 
   public TriangulatedSurfaceFeature( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {

@@ -171,7 +171,7 @@ abstract class AbstractGridCoverageImporter implements ICoverageImporter
    */
   protected abstract String doImportData( final File sourceFile, final File targetDir, final String sourceSRS, final IProgressMonitor monitor ) throws CoreException;
 
-  private static String createRelativeGridPath( final URL context, final IFile gridFile ) throws MalformedURLException, URIException
+  static String createRelativeGridPath( final URL context, final IFile gridFile ) throws MalformedURLException, URIException
   {
     final IFile contextFile = ResourceUtilities.findFileFromURL( context );
 
@@ -180,9 +180,7 @@ abstract class AbstractGridCoverageImporter implements ICoverageImporter
     if( contextFile != null )
     {
       final IPath contextFolderPath = contextFile.getFullPath().removeLastSegments( 1 );
-
       final IPath relativePath = gridPath.makeRelativeTo( contextFolderPath );
-
       return relativePath.toPortableString();
     }
 
@@ -190,9 +188,7 @@ abstract class AbstractGridCoverageImporter implements ICoverageImporter
     if( contextFolder != null )
     {
       final IPath contextFolderPath = contextFolder.getFullPath();
-
       final IPath relativePath = gridPath.makeRelativeTo( contextFolderPath );
-
       return relativePath.toPortableString();
     }
 
