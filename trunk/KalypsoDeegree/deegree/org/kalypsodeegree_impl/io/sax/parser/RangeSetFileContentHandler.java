@@ -52,7 +52,7 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 
 /**
- * @author "Gernot Belger"
+ * @author Gernot Belger
  */
 public class RangeSetFileContentHandler extends AbstractGmlContentHandler
 {
@@ -132,7 +132,13 @@ public class RangeSetFileContentHandler extends AbstractGmlContentHandler
     else if( RangeSetFile.PROPERTY_COMPRESSION.equals( elementName ) )
       m_file.setCompression( flushBuffer() );
     else
-      throwSAXParseException( "Unknown element: %s", elementName );
+    {
+      endFile();
+      return;
+
+      // FIXME: happens for empty rangeSet's
+// throwSAXParseException( "Unknown element: %s", elementName );
+    }
   }
 
   private void endFile( ) throws SAXParseException

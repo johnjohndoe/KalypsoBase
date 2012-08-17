@@ -50,7 +50,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  *
  * @author Dejan Antanaskovic, Gernot Belger
  */
-public class RectifiedGridCoverage extends AbstractCoverage implements ICoverage
+public class RectifiedGridCoverage extends AbstractCoverage
 {
   public static final QName QNAME = new QName( NS.GML3, "RectifiedGridCoverage" ); //$NON-NLS-1$
 

@@ -65,7 +65,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 /**
  * @author barbarins
  */
-public abstract class SequentialBinaryGeoGridReader extends AbstractGeoGrid implements Closeable, IGeoGrid
+public abstract class SequentialBinaryGeoGridReader extends AbstractGeoGrid implements Closeable
 {
   private static final String ERROR_RANDOM_ACCESS = "Random access not supported by this grid implementation"; //$NON-NLS-1$;
 

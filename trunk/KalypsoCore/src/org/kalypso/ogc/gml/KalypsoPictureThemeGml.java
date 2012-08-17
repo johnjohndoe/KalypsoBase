@@ -48,9 +48,10 @@ import javax.media.jai.TiledImage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.i18n.I10nString;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -104,7 +105,7 @@ public class KalypsoPictureThemeGml extends KalypsoPictureTheme
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.gml.KalypsoPictureThemeGml.1" ), e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), Messages.getString( "org.kalypso.ogc.gml.KalypsoPictureThemeGml.1" ), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }
@@ -120,11 +121,9 @@ public class KalypsoPictureThemeGml extends KalypsoPictureTheme
       final IFeatureBindingCollection<ICoverage> coverages = m_coverages.getCoverages();
       for( final ICoverage coverage : coverages )
       {
-        final RectifiedGridCoverage coverage2 = (RectifiedGridCoverage) coverage;
-
         /* imgFile */
-        final Object rangeSet = coverage2.getRangeSet();
-        if( rangeSet instanceof RangeSetFile )
+        final Object rangeSet = coverage.getRangeSet();
+        if( coverage instanceof RectifiedGridCoverage && rangeSet instanceof RangeSetFile )
         {
           final RangeSetFile type = (RangeSetFile) rangeSet;
           final String filePath = type.getFileName();

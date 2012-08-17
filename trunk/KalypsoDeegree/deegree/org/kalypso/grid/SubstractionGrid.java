@@ -43,7 +43,7 @@ package org.kalypso.grid;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
-public class SubstractionGrid extends AbstractDelegatingGeoGrid implements IGeoGrid
+public class SubstractionGrid extends AbstractDelegatingGeoGrid
 {
   private final IGeoGrid m_inputGrid1;
 

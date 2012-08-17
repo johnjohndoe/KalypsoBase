@@ -137,7 +137,7 @@ abstract class AbstractGridCoverageImporter implements ICoverageImporter
 
     final GMLWorkspace workspace = coverageContainer.getWorkspace();
 
-    final ICoverage newCoverage = CoverageCollection.addCoverage( coverageContainer, domain, filePath, mimeType );
+    final ICoverage newCoverage = CoverageCollection.addRectifiedGridCoverage( coverageContainer, domain, filePath, mimeType );
     newCoverage.setName( name );
 
     ProgressUtilities.worked( progress, 1 );

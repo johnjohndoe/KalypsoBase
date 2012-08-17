@@ -66,15 +66,13 @@ public class AbstractCoverage extends Feature_Impl implements ICoverage
   /**
    * @return Returns the rangeSet. Can be one of {@link RangeSetFile}; TODO: support others
    */
+  @Override
   public Object getRangeSet( )
   {
     return getProperty( QNAME_PROP_RANGE_SET );
   }
 
-  /**
-   * @param rangeSet
-   *          Choice can be a {@link RangeSetFile}
-   */
+  @Override
   public void setRangeSet( final Object rangeSet )
   {
     if( !(rangeSet instanceof RangeSetFile) )

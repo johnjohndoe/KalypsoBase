@@ -58,10 +58,10 @@ import com.vividsolutions.jts.geom.Point;
  * can be created. In addition a geometry can be set for which the values shall be created, in order to fasten up
  * generation of the grid. <BR>
  * the last category overwrites all others. HINT for nofdp: zuletzt ist oft
- * 
+ *
  * @author Thomas Jung
  */
-public class FlattenToCategoryGrid extends AbstractGeoGrid implements IGeoGrid
+public class FlattenToCategoryGrid extends AbstractGeoGrid
 {
 
   private static final GeometryFactory GF = new GeometryFactory();

@@ -52,13 +52,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypsodeegree.model.coverage.RangeSetFile;
-import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
-import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 
 /**
  * @author Thomas Jung
@@ -68,7 +66,7 @@ public class CoverageManagementHelper
   /**
    * Returns an existing grid file.<br>
    */
-  public static File getGridFile( final URL url )
+  private static File toJavaFile( final URL url )
   {
     /* Tries to find a file from the given url. */
     File fileFromUrl = ResourceUtilities.findJavaFileFromURL( url );
@@ -84,11 +82,9 @@ public class CoverageManagementHelper
    *
    * @return <code>null</code> of no underlying file is defined.
    */
-  public static URL getGridLocation( final ICoverage coverageToDelete )
+  public static URL getFileLocation( final ICoverage coverage ) throws CoreException
   {
-    final RectifiedGridCoverage coverage = (RectifiedGridCoverage) coverageToDelete;
-    final Feature feature = coverage;
-    final GMLWorkspace workspace = feature.getWorkspace();
+    final GMLWorkspace workspace = coverage.getWorkspace();
 
     final Object rangeSet = coverage.getRangeSet();
     if( !(rangeSet instanceof RangeSetFile) )
@@ -102,51 +98,38 @@ public class CoverageManagementHelper
     }
     catch( final MalformedURLException e )
     {
-      e.printStackTrace();
-      return null;
+      final IStatus status = new Status( IStatus.ERROR, KalypsoGmlUIPlugin.id(), Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementHelper0" ), e ); //$NON-NLS-1$
+      throw new CoreException( status );
     }
   }
 
   /**
    * Deletes the referenced file of a coverage, if it exists.
    */
-  public static IStatus deleteGridFile( final ICoverage coverageToDelete )
+  public static IStatus deleteRangeSetFile( final ICoverage coverage )
   {
-    final RectifiedGridCoverage coverage = (RectifiedGridCoverage) coverageToDelete;
-    final Feature feature = coverage;
-    final GMLWorkspace workspace = feature.getWorkspace();
-
-    final Object rangeSet = coverage.getRangeSet();
-    if( !(rangeSet instanceof RangeSetFile) )
-      return Status.OK_STATUS;
-
-    final String fileName = ((RangeSetFile) rangeSet).getFileName();
-
     try
     {
-      final URL url = new URL( workspace.getContext(), fileName );
-      deleteGridFile( url );
-    }
-    catch( final MalformedURLException e )
-    {
-      e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementHelper0" ) ); //$NON-NLS-1$
+      final URL fileLocation = getFileLocation( coverage );
+      if( fileLocation == null )
+        return Status.OK_STATUS;
+
+      deleteFile( fileLocation );
     }
     catch( final CoreException e )
     {
-      e.printStackTrace();
-      return StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementHelper0" ) ); //$NON-NLS-1$
+      return e.getStatus();
     }
 
     return Status.OK_STATUS;
   }
 
   /**
-   * Deletes a file given by a URL. Usefull for grid locations.
+   * Deletes a file given by a URL. Useful for grid locations.
    */
-  public static void deleteGridFile( final URL url ) throws CoreException
+  public static void deleteFile( final URL url ) throws CoreException
   {
-    final File gridFile = getGridFile( url );
+    final File gridFile = toJavaFile( url );
     if( gridFile != null )
       gridFile.delete();
 
