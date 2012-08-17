@@ -38,40 +38,41 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.gml.binding.commons;
+package org.kalypso.gml.ui.internal.coverage.imports;
 
-import javax.xml.namespace.QName;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 
-import org.kalypso.commons.xml.NS;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.contribs.java.io.FilePattern;
+import org.kalypso.gml.processes.converters.ShapeTriangulatedSurfaceConverter;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
- * Base implementation of commons:TriangulatedSurfaceFeature
+ * Imports a .shp file as coverage.
  * 
  * @author Holger Albert
- * @author Gernot Belger
  */
-public class TriangulatedSurfaceFeature extends Feature_Impl
+public class ShapeCoverageImporter extends AbstractTriangulatedSurfaceCoverageImporter
 {
-  public static final QName FEATURE_TRIANGULATED_SURFACE = new QName( NS.COMMON, "TriangulatedSurfaceFeature" ); //$NON-NLS-1$
-
-  public static final QName MEMBER_TRIANGULATED_SURFACE = new QName( NS.GML3, "triangulatedSurfaceMember" ); //$NON-NLS-1$
-
-  public TriangulatedSurfaceFeature( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  @Override
+  public FilePattern getFilePattern( )
   {
-    super( parent, parentRelation, ft, id, propValues );
+    return new FilePattern( "*.shp", "Shape-Files" ); //$NON-NLS-1$
   }
 
-  public GM_TriangulatedSurface getTriangulatedSurface( )
+  @Override
+  protected GM_TriangulatedSurface readInputData( final File dataFile, final String crs, final IProgressMonitor monitor ) throws CoreException, MalformedURLException
   {
-    return getProperty( MEMBER_TRIANGULATED_SURFACE, GM_TriangulatedSurface.class );
-  }
+    final URL sourceUrl = dataFile.toURI().toURL();
+    final String query = String.format( "?srs=%s", crs ); //$NON-NLS-1$
+    final URL sourceLocation = new URL( sourceUrl, query );
 
-  public void setTriangulatedSurface( final GM_TriangulatedSurface surface )
-  {
-    setProperty( MEMBER_TRIANGULATED_SURFACE, surface );
+    final ShapeTriangulatedSurfaceConverter converter = new ShapeTriangulatedSurfaceConverter();
+    final GM_TriangulatedSurface gmSurface = converter.convert( sourceLocation, monitor );
+
+    return gmSurface;
   }
 }
