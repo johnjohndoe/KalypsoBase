@@ -10,6 +10,7 @@ import java.io.LineNumberReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
@@ -125,7 +126,7 @@ public class HMOReader
   public final LinearRing[] read( final Reader r ) throws IOException, ParseException, InterruptedIOException
   {
     final List<LinearRing> triangles = new ArrayList<LinearRing>();
-    final ArrayList<Coordinate> points = new ArrayList<Coordinate>();
+    final Vector<Coordinate> points = new Vector<Coordinate>();
 
     final LineNumberReader lnr = new LineNumberReader( r );
     while( lnr.ready() )
@@ -193,7 +194,7 @@ public class HMOReader
     }
   }
 
-  private void parsePoint( final ArrayList<Coordinate> points, final String[] data, final int lineNumber ) throws ParseException
+  private void parsePoint( final Vector<Coordinate> points, final String[] data, final int lineNumber ) throws ParseException
   {
     try
     {
@@ -209,7 +210,7 @@ public class HMOReader
       final Coordinate p = new Coordinate( x, y, z );
 
       if( points.size() <= n )
-        points.ensureCapacity( n + 1 );
+        points.setSize( n + 1 );
       points.set( n, p );
     }
     catch( final NumberFormatException e )
