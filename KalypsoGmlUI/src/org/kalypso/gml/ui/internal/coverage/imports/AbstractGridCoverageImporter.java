@@ -74,6 +74,22 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
  */
 abstract class AbstractGridCoverageImporter implements ICoverageImporter
 {
+  static File createTargetFile( final File sourceFile, final File targetDir, final String suffix ) throws CoreException
+  {
+    final String basename = FilenameUtils.getBaseName( sourceFile.getName() );
+
+    final String destFileName = basename + "." + suffix; //$NON-NLS-1$
+
+    final File targetFile = new File( targetDir, destFileName );
+    if( targetFile.exists() )
+    {
+      final String message = Messages.getString( "org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.0", destFileName ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGmlUIPlugin.id(), message ) );
+    }
+
+    return targetFile;
+  }
+
   @Override
   public ICoverage importCoverage( final ICoverageCollection coverageContainer, final File dataFile, final String crs, final IContainer dataContainer, final IProgressMonitor monitor ) throws CoreException
   {

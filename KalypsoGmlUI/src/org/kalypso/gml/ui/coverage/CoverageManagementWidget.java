@@ -128,7 +128,6 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
-import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 
 /**
  * A widget with option pane, which allows the user to edit a coverage collection.<BR>
@@ -161,7 +160,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       final IRelationType targetPropertyType = featureList.getPropertyType();
       final IFeatureType targetFeatureType = targetPropertyType.getTargetFeatureType();
 
-      return GMLSchemaUtilities.substitutes( targetFeatureType, ICoverage.QNAME );
+      return GMLSchemaUtilities.substitutes( targetFeatureType, ICoverage.FEATURE__COVERAGE );
     }
   };
 
@@ -791,7 +790,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       @Override
       public String getText( final Object element )
       {
-        final RectifiedGridCoverage coverage = (RectifiedGridCoverage) element;
+        final ICoverage coverage = (ICoverage) element;
         return coverage.getName();
       }
     } );

@@ -66,7 +66,7 @@ public class BINCoverageImporter extends AbstractGridCoverageImporter
   @Override
   public FilePattern getFilePattern( )
   {
-    final String pattern = "*.bin";
+    final String pattern = "*.bin"; //$NON-NLS-1$
     final String filterName = "Kalypso Grid-Files";
 
     return new FilePattern( pattern, filterName );
@@ -82,39 +82,19 @@ public class BINCoverageImporter extends AbstractGridCoverageImporter
   @Override
   protected String doImportData( final File sourceFile, final File targetDir, final String sourceSRS, final IProgressMonitor monitor ) throws CoreException
   {
-    File targetFile = null;
-
     try
     {
-      final String gridFileName = sourceFile.getName();
+      final File targetFile = createTargetFile( sourceFile, targetDir, "bin" ); //$NON-NLS-1$
 
-      try
-      {
-        targetFile = new File( targetDir, gridFileName );
-        if( targetFile.exists() )
-        {
-          targetFile = null; // elese if will be deleted
-          final String message = Messages.getString( "org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.0", targetFile ); //$NON-NLS-1$
-          throw new CoreException( new Status( IStatus.ERROR, KalypsoGmlUIPlugin.id(), message, null ) );
-        }
-
-        FileUtils.copyFile( sourceFile, targetFile );
-        return targetFile.getName();
-      }
-      catch( final IOException e )
-      {
-        e.printStackTrace();
-        final String message = Messages.getString( "org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.3" ); //$NON-NLS-1$
-        final IStatus status = new Status( IStatus.ERROR, KalypsoGmlUIPlugin.id(), message, e );
-        throw new CoreException( status );
-      }
+      FileUtils.copyFile( sourceFile, targetFile );
+      return targetFile.getName();
     }
-    catch( final CoreException e )
+    catch( final IOException e )
     {
-      if( targetFile != null )
-        targetFile.delete();
-
-      throw e;
+      e.printStackTrace();
+      final String message = Messages.getString( "org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.3" ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoGmlUIPlugin.id(), message, e );
+      throw new CoreException( status );
     }
   }
 }

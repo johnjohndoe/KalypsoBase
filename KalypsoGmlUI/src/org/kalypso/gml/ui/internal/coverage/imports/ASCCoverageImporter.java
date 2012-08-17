@@ -44,7 +44,6 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -85,28 +84,15 @@ public class ASCCoverageImporter extends AbstractGridCoverageImporter
 
     try
     {
-      final String gridFileName = sourceFile.getName();
-      final String basename = FilenameUtils.getBaseName( gridFileName );
       try
       {
-
-        final String destFileName = basename + ".bin"; //$NON-NLS-1$
-
-        targetFile = new File( targetDir, destFileName );
-        if( targetFile.exists() )
-        {
-          /* Reset to null, else it will be deleted below */
-          targetFile = null;
-
-          final String message = Messages.getString( "org.kalypso.gml.ui.wizard.grid.ImportGridUtilities.0", destFileName ); //$NON-NLS-1$
-          throw new CoreException( new Status( IStatus.ERROR, KalypsoGmlUIPlugin.id(), message ) );
-        }
+        targetFile = createTargetFile( sourceFile, targetDir, "bin" ); //$NON-NLS-1$
 
         final URL sourceLocation = sourceFile.toURI().toURL();
         final ConvertAscii2Binary converter = new ConvertAscii2Binary( sourceLocation, targetFile, 2, sourceSRS );
         converter.doConvert( monitor );
 
-        return destFileName;
+        return targetFile.getName();
       }
       catch( final MalformedURLException e )
       {
