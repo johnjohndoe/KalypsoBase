@@ -53,7 +53,7 @@ import org.kalypso.contribs.java.io.FilePattern;
 
 /**
  * Helper that knows abotu all supported coverage formats.
- *
+ * 
  * @author Gernot Belger
  */
 final class CoverageFormats
@@ -74,9 +74,10 @@ final class CoverageFormats
 
     /* known patterns filter */
     final StringBuilder knownPatternsLabel = new StringBuilder();
-    knownPatternsLabel.append( "All supported formats (" );
-    knownPatternsLabel.append( StringUtils.join( knownPatterns, ", " ) );
-    knownPatternsLabel.append( ')' );
+    knownPatternsLabel.append( "All supported formats" );
+    // knownPatternsLabel.append( "All supported formats (" );
+    // knownPatternsLabel.append( StringUtils.join( knownPatterns, ", " ) );
+    // knownPatternsLabel.append( ')' );
 
     final String knownPatternsFilter = StringUtils.join( knownPatterns, ";" );
 
@@ -91,7 +92,7 @@ final class CoverageFormats
   private static ICoverageImporter[] getImporter( )
   {
     // FIXME: add formats depending on target coverage collection: i.e. if collection only supports grid formats, only
-// show grid formats
+    // show grid formats
 
     final Collection<ICoverageImporter> importers = new ArrayList<>();
 
@@ -100,6 +101,8 @@ final class CoverageFormats
     // TODO: importers.add( new TifCoverageImporter( "dat" ) );
 
     importers.add( new HmoCoverageImporter() );
+    importers.add( new GmlCoverageImporter() );
+    importers.add( new ShapeCoverageImporter() );
 
     return importers.toArray( new ICoverageImporter[importers.size()] );
   }
