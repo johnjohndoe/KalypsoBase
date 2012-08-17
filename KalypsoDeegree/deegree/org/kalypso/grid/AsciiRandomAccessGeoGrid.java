@@ -63,12 +63,12 @@ import com.vividsolutions.jts.geom.Coordinate;
  * </p>
  * TODO: still slow, how to improve performance? <br>
  * TODO: overide the walk method in order to make sure, that we iterate thorugh lines, not columns
- * 
+ *
  * @author Dejan Antanaskovic
  * @author Thomas Jung
  * @author Gernot Belger
  */
-public class AsciiRandomAccessGeoGrid extends AbstractGeoGrid implements IGeoGrid
+public class AsciiRandomAccessGeoGrid extends AbstractGeoGrid
 {
   /* Index of current row which is in memory */
   private int m_currentRow;

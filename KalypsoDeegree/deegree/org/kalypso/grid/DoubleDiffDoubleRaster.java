@@ -50,10 +50,10 @@ import com.vividsolutions.jts.geom.Coordinate;
  * <p>
  * Each value of this grid is computed by subtracting the corresponding value of the {@link IGeoValueProvider} by the
  * value of the delegated grid.
- * 
+ *
  * @author Gernot Belger
  */
-public class DoubleDiffDoubleRaster extends AbstractGeoGrid implements IGeoGrid
+public class DoubleDiffDoubleRaster extends AbstractGeoGrid
 {
   private final IGeoGrid m_raster;
 

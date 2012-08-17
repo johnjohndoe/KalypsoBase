@@ -40,7 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.grid;
 
+import java.math.BigDecimal;
+
+import org.kalypso.grid.GeoGridUtilities.Interpolation;
+import org.kalypsodeegree.model.elevation.ElevationException;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
@@ -96,63 +103,42 @@ public abstract class AbstractGeoGrid implements IGeoGrid
     m_sourceCRS = sourceCRS;
   }
 
-  /**
-   * @see org.kalypso.grid.IGeoGrid#getSurface(java.lang.String)
-   */
   @Override
   public GM_Surface< ? > getSurface( final String targetCRS ) throws GeoGridException
   {
     return GeoGridUtilities.createSurface( this, targetCRS );
   }
 
-  /**
-   * @see org.kalypso.grid.IGeoGrid#getCell(int, int, java.lang.String)
-   */
   @Override
   public GM_Surface< ? > getCell( final int x, final int y, final String targetCRS ) throws GeoGridException
   {
     return GeoGridUtilities.createCell( this, x, y, targetCRS );
   }
 
-  /**
-   * @see org.kalypso.grid.IGeoGrid#getEnvelope()
-   */
   @Override
   public Envelope getEnvelope( ) throws GeoGridException
   {
     return GeoGridUtilities.toEnvelope( this );
   }
 
-  /**
-   * @see org.kalypso.grid.IGeoGrid#getOrigin()
-   */
   @Override
   public Coordinate getOrigin( )
   {
     return m_origin;
   }
 
-  /**
-   * @see org.kalypso.grid.IGeoGrid#getOffsetX()
-   */
   @Override
   public Coordinate getOffsetX( )
   {
     return m_offsetX;
   }
 
-  /**
-   * @see org.kalypso.grid.IGeoGrid#getOffsetY()
-   */
   @Override
   public Coordinate getOffsetY( )
   {
     return m_offsetY;
   }
 
-  /**
-   * @see org.kalypso.grid.IGeoGrid#getSourceCRS()
-   */
   @Override
   public String getSourceCRS( )
   {
@@ -173,9 +159,6 @@ public abstract class AbstractGeoGrid implements IGeoGrid
     return getValue( x, y );
   }
 
-  /**
-   * @see org.kalypso.grid.IGeoValueProvider#getValue(com.vividsolutions.jts.geom.Coordinate, java.lang.String)
-   */
   @Override
   public double getValue( final Coordinate crd ) throws GeoGridException
   {
@@ -195,9 +178,6 @@ public abstract class AbstractGeoGrid implements IGeoGrid
     return getValue( cell.x, cell.y );
   }
 
-  /**
-   * @see org.kalypso.grid.IGeoGrid#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -216,9 +196,6 @@ public abstract class AbstractGeoGrid implements IGeoGrid
     super.finalize();
   }
 
-  /**
-   * @see org.kalypso.grid.IGeoGrid#getWalkingStrategy()
-   */
   @Override
   public IGeoWalkingStrategy getWalkingStrategy( )
   {
@@ -229,5 +206,41 @@ public abstract class AbstractGeoGrid implements IGeoGrid
   public void close( ) throws Exception
   {
     // nothing to do here
+  }
+
+  @Override
+  public GM_Envelope getBoundingBox( ) throws ElevationException
+  {
+    final GM_Surface< ? > surface = getSurface( m_sourceCRS );
+    return surface.getEnvelope();
+  }
+
+  @Override
+  public double getElevation( final GM_Point location ) throws ElevationException
+  {
+    final Coordinate locationCrd = JTSAdapter.export( location.getPosition() );
+    final Coordinate sourceCoordinate = GeoGridUtilities.transformCoordinate( this, locationCrd, location.getCoordinateSystem() );
+
+    return GeoGridUtilities.getValue( this, sourceCoordinate, Interpolation.none );
+  }
+
+  @Override
+  public double getMinElevation( ) throws ElevationException
+  {
+    final BigDecimal min = getMin();
+    if( min == null )
+      return Double.NaN;
+
+    return min.doubleValue();
+  }
+
+  @Override
+  public double getMaxElevation( ) throws ElevationException
+  {
+    final BigDecimal max = getMax();
+    if( max == null )
+      return Double.NaN;
+
+    return max.doubleValue();
   }
 }

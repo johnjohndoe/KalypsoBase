@@ -38,46 +38,17 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.gml.binding.commons;
-
-import javax.xml.namespace.QName;
-
-import org.kalypso.commons.xml.NS;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypsodeegree.model.coverage.RangeSetFile;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+package org.kalypsodeegree.model.elevation;
 
 /**
- * Base implementation of gml:_Coverage
+ * Exception for {@link IElevationProvider} stuff.
  *
- * @author Holger Albert
  * @author Gernot Belger
  */
-public class AbstractCoverage extends Feature_Impl implements ICoverage
+public class ElevationException extends Exception
 {
-  private static final QName QNAME_PROP_RANGE_SET = new QName( NS.GML3, "rangeSet" ); //$NON-NLS-1$
-
-  public AbstractCoverage( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  public ElevationException( final String message, final Throwable cause )
   {
-    super( parent, parentRelation, ft, id, propValues );
-  }
-
-  /**
-   * @return Returns the rangeSet. Can be one of {@link RangeSetFile}; TODO: support others
-   */
-  @Override
-  public Object getRangeSet( )
-  {
-    return getProperty( QNAME_PROP_RANGE_SET );
-  }
-
-  @Override
-  public void setRangeSet( final Object rangeSet )
-  {
-    if( !(rangeSet instanceof RangeSetFile) )
-      throw new IllegalArgumentException();
-
-    setProperty( QNAME_PROP_RANGE_SET, rangeSet );
+    super( message, cause );
   }
 }

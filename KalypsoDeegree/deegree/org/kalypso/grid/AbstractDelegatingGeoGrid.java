@@ -42,6 +42,9 @@ package org.kalypso.grid;
 
 import java.math.BigDecimal;
 
+import org.kalypsodeegree.model.elevation.ElevationException;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -239,5 +242,29 @@ public abstract class AbstractDelegatingGeoGrid implements IGeoGrid
   public void close( ) throws Exception
   {
     m_delegate.close();
+  }
+
+  @Override
+  public GM_Envelope getBoundingBox( ) throws ElevationException
+  {
+    return m_delegate.getBoundingBox();
+  }
+
+  @Override
+  public double getMinElevation( ) throws ElevationException
+  {
+    return m_delegate.getMinElevation();
+  }
+
+  @Override
+  public double getMaxElevation( ) throws ElevationException
+  {
+    return m_delegate.getMaxElevation();
+  }
+
+  @Override
+  public double getElevation( final GM_Point location ) throws ElevationException
+  {
+    return m_delegate.getElevation( location );
   }
 }

@@ -76,7 +76,7 @@ public class CoverageCollection extends Feature_Impl implements ICoverageCollect
   }
 
   // file name relative to the gml
-  public static ICoverage addCoverage( final ICoverageCollection coverages, final RectifiedGridDomain domain, final String externalResource, final String mimeType )
+  public static ICoverage addRectifiedGridCoverage( final ICoverageCollection coverages, final RectifiedGridDomain domain, final String externalResource, final String mimeType )
   {
     final RangeSetFile rangeSetFile = new RangeSetFile( externalResource );
 

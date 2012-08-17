@@ -46,4 +46,15 @@ import org.kalypsodeegree.model.feature.Feature;
 public interface ICoverage extends Feature
 {
   QName FEATURE__COVERAGE = new QName( NS.GML3, "_Coverage" ); //$NON-NLS-1$
+
+  /**
+   * @return Returns the rangeSet. Can be one of {@link RangeSetFile}; TODO: support others
+   */
+  Object getRangeSet( );
+
+  /**
+   * @param rangeSet
+   *          Choice can be a {@link RangeSetFile}
+   */
+  void setRangeSet( Object rangeSet );
 }

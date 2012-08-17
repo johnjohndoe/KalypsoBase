@@ -374,7 +374,7 @@ public final class GeoGridUtilities
   }
 
   /**
-   * Converts a gml-coverage to a {@link IGeoGrid}.<br>
+   * Wraps a gml-coverage as a {@link IGeoGrid}.<br>
    * After use, the grid has to be disposed.
    */
   public static IGeoGrid toGrid( final ICoverage coverage )
@@ -555,7 +555,7 @@ public final class GeoGridUtilities
         outputGrid.setStatistically( min, max );
 
       /* create new coverage and fill domain/range */
-      final ICoverage coverage = CoverageCollection.addCoverage( coverages, toGridDomain( grid ), filePath, mimeType );
+      final ICoverage coverage = CoverageCollection.addRectifiedGridCoverage( coverages, toGridDomain( grid ), filePath, mimeType );
       ProgressUtilities.worked( progress, 10 );
 
       return coverage;
@@ -585,7 +585,7 @@ public final class GeoGridUtilities
     try
     {
       /* create new coverage and fill domain/range */
-      final ICoverage coverage = CoverageCollection.addCoverage( coverages, toGridDomain( grid ), filePath, mimeType );
+      final ICoverage coverage = CoverageCollection.addRectifiedGridCoverage( coverages, toGridDomain( grid ), filePath, mimeType );
       ProgressUtilities.worked( progress, 10 );
       return coverage;
 

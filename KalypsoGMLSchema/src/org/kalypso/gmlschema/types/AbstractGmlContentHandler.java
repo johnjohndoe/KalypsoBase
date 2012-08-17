@@ -132,8 +132,8 @@ public abstract class AbstractGmlContentHandler implements IGmlContentHandler
 
   private SAXParseException createSAXParseException( final Exception cause, final String format, final Object... formatArguments )
   {
-    final String messgae = String.format( format, formatArguments );
-    return new SAXParseException( messgae, m_locator, cause );
+    final String message = String.format( format, formatArguments );
+    return new SAXParseException( message, m_locator, cause );
   }
 
   protected ContentHandler getTopLevel( )

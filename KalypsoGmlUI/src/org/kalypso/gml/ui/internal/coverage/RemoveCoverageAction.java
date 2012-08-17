@@ -130,7 +130,7 @@ public class RemoveCoverageAction extends Action implements IUpdateable
 
               for( final ICoverage coverage : selectedCoverages )
               {
-                final IStatus status = CoverageManagementHelper.deleteGridFile( coverage );
+                final IStatus status = CoverageManagementHelper.deleteRangeSetFile( coverage );
                 log.add( status );
               }
 

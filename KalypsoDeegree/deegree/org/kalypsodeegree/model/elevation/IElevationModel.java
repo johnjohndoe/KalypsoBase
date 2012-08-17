@@ -38,46 +38,48 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.gml.binding.commons;
+package org.kalypsodeegree.model.elevation;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.commons.xml.NS;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypsodeegree.model.coverage.RangeSetFile;
-import org.kalypsodeegree_impl.model.feature.Feature_Impl;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
- * Base implementation of gml:_Coverage
+ * Interface for classes that provide elevation information. The elevation can be get using
+ * {@link #getElevation(GM_Point)}.
  *
- * @author Holger Albert
- * @author Gernot Belger
+ * @author Patrice Congo
  */
-public class AbstractCoverage extends Feature_Impl implements ICoverage
+public interface IElevationModel
 {
-  private static final QName QNAME_PROP_RANGE_SET = new QName( NS.GML3, "rangeSet" ); //$NON-NLS-1$
-
-  public AbstractCoverage( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
-  {
-    super( parent, parentRelation, ft, id, propValues );
-  }
+  /**
+   * Get the elevation provides by this model for the specified location [(x,y) position].<br/>
+   * REMARK: the position is given as GM_Point in order to transport the target coordinate system as well. The
+   * implementation might need to convert the location to its own coordinate system.
+   *
+   * @param location
+   *          the location for which an elevation is to be computed
+   * @return the elevation if the model covered this position or NaN if not
+   */
+  double getElevation( GM_Point location ) throws ElevationException;
 
   /**
-   * @return Returns the rangeSet. Can be one of {@link RangeSetFile}; TODO: support others
+   * To get the bounding box of this elevation provider
+   *
+   * @return the bounding box as {@link GM_Envelope}
    */
-  @Override
-  public Object getRangeSet( )
-  {
-    return getProperty( QNAME_PROP_RANGE_SET );
-  }
+  GM_Envelope getBoundingBox( ) throws ElevationException;
 
-  @Override
-  public void setRangeSet( final Object rangeSet )
-  {
-    if( !(rangeSet instanceof RangeSetFile) )
-      throw new IllegalArgumentException();
+  /**
+   * To get the minimal elevation in this elevation provider
+   *
+   * @return the minimal elevation of this provider
+   */
+  double getMinElevation( ) throws ElevationException;
 
-    setProperty( QNAME_PROP_RANGE_SET, rangeSet );
-  }
+  /**
+   * To get the maximal elevation in this elevation provider
+   *
+   * @return the maximal elevation of this provider as double
+   */
+  double getMaxElevation( ) throws ElevationException;
 }

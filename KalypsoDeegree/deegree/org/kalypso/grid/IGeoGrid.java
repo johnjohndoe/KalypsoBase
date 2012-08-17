@@ -2,6 +2,7 @@ package org.kalypso.grid;
 
 import java.math.BigDecimal;
 
+import org.kalypsodeegree.model.elevation.IElevationModel;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -15,7 +16,7 @@ import com.vividsolutions.jts.geom.Envelope;
  *
  * @author Gernot Belger
  */
-public interface IGeoGrid extends IGeoValueProvider, AutoCloseable
+public interface IGeoGrid extends IGeoValueProvider, AutoCloseable, IElevationModel
 {
   /**
    * Call this after this grid is nor more used. Disposes of any use resources.
