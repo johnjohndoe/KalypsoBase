@@ -66,7 +66,7 @@ public class TriangulatedSurfaceTin implements ITin
 
   private IStatus m_loadStatus = INIT_STATUS;
 
-  private final URL m_triangulatedSurfaceLocation;
+  private final URL m_dataLocation;
 
   private TriangulatedSurfaceFeature m_surfaceFeature;
 
@@ -74,9 +74,12 @@ public class TriangulatedSurfaceTin implements ITin
 
   private Range<BigDecimal> m_minMax;
 
-  public TriangulatedSurfaceTin( final URL triangulatedSurfaceLocation )
+  private final String m_mimeType;
+
+  public TriangulatedSurfaceTin( final URL dataLocation, final String mimeType )
   {
-    m_triangulatedSurfaceLocation = triangulatedSurfaceLocation;
+    m_dataLocation = dataLocation;
+    m_mimeType = mimeType;
   }
 
   @Override
@@ -178,6 +181,11 @@ public class TriangulatedSurfaceTin implements ITin
 
   URL getDataLocation( )
   {
-    return m_triangulatedSurfaceLocation;
+    return m_dataLocation;
+  }
+
+  String getMimeType( )
+  {
+    return m_mimeType;
   }
 }

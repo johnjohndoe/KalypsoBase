@@ -44,6 +44,7 @@ import java.math.BigDecimal;
 import java.net.URL;
 
 import org.apache.commons.lang3.Range;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -83,9 +84,12 @@ public class TinLoadJob extends Job
   protected IStatus run( final IProgressMonitor monitor )
   {
     final URL dataLocation = m_triangulatedSurfaceTin.getDataLocation();
+    final String mimeType = m_triangulatedSurfaceTin.getMimeType();
 
     try
     {
+      Assert.isTrue( "tin/gml".equals( mimeType ) ); //$NON-NLS-1$
+
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( dataLocation, null, monitor );
 
       m_surface = (TriangulatedSurfaceFeature) workspace.getRootFeature();

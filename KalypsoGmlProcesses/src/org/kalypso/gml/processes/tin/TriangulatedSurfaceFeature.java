@@ -51,7 +51,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 /**
  * Base implementation of commons:TriangulatedSurfaceFeature<br/>
  * REMARK: should be defined in KalypsoDeegree, but was moved here for dependency reasons.
- * 
+ *
  * @author Holger Albert
  * @author Gernot Belger
  */

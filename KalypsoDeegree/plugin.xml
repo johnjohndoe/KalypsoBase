@@ -173,7 +173,6 @@
       </feature>
    </extension>
    <extension point="org.kalypso.deegree.featureBinding">
-      <feature class="org.kalypsodeegree_impl.gml.binding.commons.MultiSurfaceCoverage" qname="{http://www.opengis.net/gml}MultiSurfaceCoverage"/>
       <feature class="org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage" qname="{http://www.opengis.net/gml}RectifiedGridCoverage"/>
       <feature class="org.kalypsodeegree_impl.gml.binding.commons.CoverageCollection" qname="{org.kalypso.gml.common.coverage}CoverageCollection"/>
    </extension>
