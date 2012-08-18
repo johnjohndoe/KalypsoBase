@@ -52,6 +52,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.gml.processes.KalypsoGmlProcessesPlugin;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree.model.geometry.MinMaxSurfacePatchVisitor;
@@ -93,7 +94,8 @@ public class TinLoadJob extends Job
       final GM_TriangulatedSurface triangulatedSurface = m_surface.getTriangulatedSurface();
 
       final MinMaxSurfacePatchVisitor<GM_Triangle> minMaxVisitor = new MinMaxSurfacePatchVisitor<>();
-      triangulatedSurface.acceptSurfacePatches( null, minMaxVisitor, new NullProgressMonitor() );
+      final GM_Envelope surfaceEnvelope = m_surface.getEnvelope();
+      triangulatedSurface.acceptSurfacePatches( surfaceEnvelope, minMaxVisitor, new NullProgressMonitor() );
 
       final BigDecimal min = minMaxVisitor.getMin();
       final BigDecimal max = minMaxVisitor.getMax();

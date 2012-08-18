@@ -69,9 +69,6 @@ public class GM_TriangulatedSurface_Impl extends GM_PolyhedralSurface_Impl<GM_Tr
     return new GM_TriangulatedSurface_Impl( getCoordinateSystem() );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.geometry.GM_Primitive_Impl#getAdapter(java.lang.Class)
-   */
   @Override
   public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
@@ -82,9 +79,6 @@ public class GM_TriangulatedSurface_Impl extends GM_PolyhedralSurface_Impl<GM_Tr
     return super.getAdapter( adapter );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.geometry.GM_TriangulatedSurface#getValue(org.kalypsodeegree.model.geometry.GM_Position)
-   */
   @Override
   public double getValue( final GM_Point location )
   {
