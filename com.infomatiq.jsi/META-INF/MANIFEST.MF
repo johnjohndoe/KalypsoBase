@@ -10,7 +10,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: lib/log4j-1.2.6.jar,
  lib/sil-0.44.2b.jar,
  lib/jsi/jsi-1.0b8.jar,
- lib/trove/trove-2.0.2.jar,
+ lib/trove/trove-2.1.0.jar,
  .
 Export-Package: com.infomatiq.jsi,
  com.infomatiq.jsi.rtree,
