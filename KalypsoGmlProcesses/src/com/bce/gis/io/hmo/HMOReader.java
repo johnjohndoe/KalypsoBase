@@ -7,7 +7,6 @@ import java.io.Reader;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import org.apache.commons.lang3.StringUtils;
 import org.kalypso.contribs.java.lang.NumberUtils;
@@ -37,6 +36,14 @@ import com.vividsolutions.jts.io.ParseException;
  */
 public class HMOReader
 {
+  /**
+   * Receives the parsed triangles.
+   */
+  public interface ITriangleReceiver
+  {
+    void add( Coordinate c0, Coordinate c1, Coordinate c2 );
+  }
+
   private static final String ERROR_FORMAT = Messages.getString( "com.bce.gis.io.hmo.HMOReader.0" ); //$NON-NLS-1$
 
   static final String ERROR_POINT = ERROR_FORMAT + Messages.getString( "com.bce.gis.io.hmo.HMOReader.1" ); //$NON-NLS-1$
@@ -51,30 +58,52 @@ public class HMOReader
 
   static final String ERROR_TRIANGLE_NOPOINT = ERROR_FORMAT + Messages.getString( "com.bce.gis.io.hmo.HMOReader.6" ); //$NON-NLS-1$
 
-  private final GeometryFactory m_gf;
-
-  public HMOReader( final GeometryFactory gf )
-  {
-    m_gf = gf;
-  }
-
   /**
-   * Reads a .hmo Datei in form of linar rings. Each ring is garanteed to have exactly 3 vertices.
-   * <p>
+   * Reads hmo data in form of linear rings. Each ring is guaranteed to have exactly 3 vertices.<br/>
    * The given reader will be wrapped into a {@link java.io.BufferedReader}, so it is not required to to so by the
-   * caller.
-   * </p>
+   * caller.<br/>
+   * IMPORTANT: Very memory consuming and should hence not be used for large data files. Use
+   * {@link #read(Reader, ITriangleReceiver)} instead and directly process triangles when read.
    *
    * @throws IOException
    * @throws ParseException
    * @throws InterruptedIOException
    */
-  public final LinearRing[] read( final Reader r ) throws IOException, ParseException, InterruptedIOException
+  public final LinearRing[] read( final Reader r, final GeometryFactory gf ) throws IOException, ParseException, InterruptedIOException
   {
     final List<LinearRing> triangles = new ArrayList<LinearRing>();
-    final Vector<Coordinate> points = new Vector<Coordinate>();
 
-    final LineNumberReader lnr = new LineNumberReader( r );
+    final ITriangleReceiver receiver = new ITriangleReceiver()
+    {
+      @Override
+      public void add( final Coordinate c0, final Coordinate c1, final Coordinate c2 )
+      {
+        final LinearRing triangle = gf.createLinearRing( new Coordinate[] { c0, c1, c2, c0 } );
+        triangles.add( triangle );
+      }
+    };
+
+    read( r, receiver );
+
+    return triangles.toArray( new LinearRing[triangles.size()] );
+  }
+
+  /**
+   * Reads a .hmo Datei in form of linar rings. Each ring is guaranteed to have exactly 3 vertices.<br/>
+   * The given reader will be wrapped into a {@link java.io.BufferedReader}, so it is not required to to so by the
+   * caller.<br/>
+   *
+   * @param receiver
+   *          Each read triangle will be added to this receiver.
+   * @throws IOException
+   * @throws ParseException
+   * @throws InterruptedIOException
+   */
+  public final void read( final Reader r, final ITriangleReceiver receiver ) throws IOException, ParseException, InterruptedIOException
+  {
+    final List<Coordinate> points = new ArrayList<Coordinate>();
+
+    final LineNumberReader lnr = new LineNumberReader( r, 1024 * 1024 );
     while( lnr.ready() )
     {
       final String line = lnr.readLine();
@@ -84,8 +113,9 @@ public class HMOReader
       if( line.length() < 3 || line.charAt( 0 ) == '*' )
         continue;
 
+      final int lineNumber = lnr.getLineNumber();
       if( line.charAt( 1 ) != ':' )
-        throw new ParseException( MessageFormat.format( ERROR_SEMIKOLON, lnr.getLineNumber() ) );
+        throw new ParseException( MessageFormat.format( ERROR_SEMIKOLON, lineNumber ) );
 
       final char c0 = line.charAt( 0 );
 
@@ -96,23 +126,21 @@ public class HMOReader
       switch( c0 )
       {
         case 'P':
-          parsePoint( points, split, lnr.getLineNumber() );
+          parsePoint( points, split, lineNumber );
+
           break;
 
         case 'D':
-          final LinearRing triangle = parseTriangle( points, split, lnr.getLineNumber() );
-          triangles.add( triangle );
+          parseTriangle( points, receiver, split, lineNumber );
           break;
 
         default:
-          throw new ParseException( MessageFormat.format( ERROR_TYPE, lnr.getLineNumber() ) );
+          throw new ParseException( MessageFormat.format( ERROR_TYPE, lineNumber ) );
       }
     }
-
-    return triangles.toArray( new LinearRing[triangles.size()] );
   }
 
-  private LinearRing parseTriangle( final List<Coordinate> points, final String[] data, final int lineNumber ) throws ParseException
+  private void parseTriangle( final List<Coordinate> points, final ITriangleReceiver receiver, final String[] data, final int lineNumber ) throws ParseException
   {
     try
     {
@@ -128,9 +156,9 @@ public class HMOReader
       if( p1 == null || p2 == null || p3 == null )
         throw new ParseException( MessageFormat.format( ERROR_TRIANGLE_NOPOINT, lineNumber ) );
 
-      return m_gf.createLinearRing( new Coordinate[] { p1, p2, p3, p1 } );
+      receiver.add( p1, p2, p3 );
     }
-    catch( final ArrayIndexOutOfBoundsException aiobe )
+    catch( final IndexOutOfBoundsException aiobe )
     {
       throw new ParseException( MessageFormat.format( ERROR_TRIANGLE_NOPOINT, lineNumber ) );
     }
@@ -140,7 +168,7 @@ public class HMOReader
     }
   }
 
-  private void parsePoint( final Vector<Coordinate> points, final String[] data, final int lineNumber ) throws ParseException
+  private void parsePoint( final List<Coordinate> points, final String[] data, final int lineNumber ) throws ParseException
   {
     try
     {
@@ -155,8 +183,14 @@ public class HMOReader
 
       final Coordinate p = new Coordinate( x, y, z );
 
-      if( points.size() <= n )
-        points.setSize( n + 1 );
+      /* Make sure list is big enough */
+      final int size = points.size();
+      if( n >= size )
+      {
+        for( int i = size; i < n + 1; i++ )
+          points.add( null );
+      }
+
       points.set( n, p );
     }
     catch( final NumberFormatException e )
