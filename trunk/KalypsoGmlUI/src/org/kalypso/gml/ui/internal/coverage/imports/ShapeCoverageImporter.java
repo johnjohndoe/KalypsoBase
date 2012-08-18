@@ -47,7 +47,7 @@ import java.net.URL;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.java.io.FilePattern;
-import org.kalypso.gml.processes.converters.ShapeTriangulatedSurfaceConverter;
+import org.kalypso.gml.processes.tin.ShapeTriangulatedSurfaceConverter;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 
 /**

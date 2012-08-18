@@ -38,10 +38,13 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml.processes.converters;
+package org.kalypso.gml.processes.tin;
 
-import java.io.File;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.CoreException;
@@ -49,25 +52,30 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.util.PropertiesUtilities;
 import org.kalypso.gml.processes.KalypsoGmlProcessesPlugin;
-import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
-import org.kalypso.ogc.gml.serialize.ShapeSerializer;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-import org.kalypsodeegree.model.geometry.GM_MultiSurface;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
-import org.kalypsodeegree_impl.gml.binding.shape.AbstractShape;
-import org.kalypsodeegree_impl.gml.binding.shape.ShapeCollection;
+import org.kalypsodeegree_impl.model.geometry.GM_TriangulatedSurface_Impl;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.bce.gis.io.hmo.HMOReader;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LinearRing;
 
 /**
  * @author Holger Albert
  */
-public class ShapeTriangulatedSurfaceConverter extends AbstractTriangulatedSurfaceConverter
+public class HmoTriangulatedSurfaceConverter extends AbstractTriangulatedSurfaceConverter
 {
-  public ShapeTriangulatedSurfaceConverter( )
+  public HmoTriangulatedSurfaceConverter( )
   {
   }
 
@@ -84,42 +92,32 @@ public class ShapeTriangulatedSurfaceConverter extends AbstractTriangulatedSurfa
       monitor.beginTask( "Copying input data", 100 );
       monitor.subTask( "Copying input data..." );
 
-      /* Open shape. */
       final Properties properties = PropertiesUtilities.collectProperties( sourceLocation.getQuery(), "&", "=", null ); //$NON-NLS-1$ //$NON-NLS-2$
       final String crs = properties.getProperty( "srs" ); //$NON-NLS-1$
-      final URL shapeURL = new URL( sourceLocation.getProtocol() + ":" + sourceLocation.getPath() ); //$NON-NLS-1$
-      final String file2 = shapeURL.getFile();
-      final File file = new File( file2 );
-      final String absolutePath = file.getAbsolutePath();
-      final String shapeBase = FileUtilities.nameWithoutExtension( absolutePath );
+      final GM_TriangulatedSurface gmSurface = new GM_TriangulatedSurface_Impl( crs );
 
-      // TODO: Check shape type (at first only triangle polygons are supported).
-      final GM_TriangulatedSurface gmSurface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( crs );
+      final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+      final URL hmoLocation = new URL( sourceLocation.getProtocol() + ":" + sourceLocation.getPath() ); //$NON-NLS-1$
+      final HMOReader hmoReader = new HMOReader( new GeometryFactory() );
+      final Reader r = new InputStreamReader( hmoLocation.openStream() );
+      final LinearRing[] rings = hmoReader.read( r );
 
-      final ShapeCollection shapeCollection = ShapeSerializer.deserialize( shapeBase, crs );
-      final IFeatureBindingCollection<AbstractShape> shapes = shapeCollection.getShapes();
-      final GM_Object geom = shapes.get( 0 ).getGeometry();
-      if( geom instanceof GM_MultiSurface )
+      int count = 1;
+      for( final LinearRing ring : rings )
       {
-        /* Convert the gm_surfaces.exterior rings into gm.triangle. */
-        for( final AbstractShape shape : shapes )
-        {
-          final GM_Object geometry = shape.getGeometry();
-          if( geometry instanceof GM_MultiSurface )
-          {
-            final GM_MultiSurface polygonSurface = (GM_MultiSurface) geometry;
-            final GM_Triangle[] triangles = ConstraintDelaunayHelper.convertToTriangles( polygonSurface, crs );
+        /* Monitor. */
+        monitor.subTask( String.format( "Importing triangles: %d / %d", count++, rings.length ) );
 
-            /* Add the triangles into the gm_triangle_surfaces. */
-            for( final GM_Triangle element : triangles )
-            {
-              GM_Triangle triangle;
-              triangle = element;
-              gmSurface.add( triangle );
-              monitor.subTask( String.format( "Importing triangles: %d", gmSurface.size() ) );
-            }
-          }
+        final List<GM_Point> pointList = new LinkedList<GM_Point>();
+        for( int i = 0; i < ring.getNumPoints() - 1; i++ )
+        {
+          final GM_Object object = JTSAdapter.wrap( ring.getPointN( i ), crs );
+          final GM_Point point = (GM_Point) object;
+          point.setCoordinateSystem( crs );
+          pointList.add( (GM_Point) transformer.transform( point ) );
         }
+
+        addPoints( gmSurface, pointList );
       }
 
       /* Monitor. */
@@ -136,5 +134,23 @@ public class ShapeTriangulatedSurfaceConverter extends AbstractTriangulatedSurfa
       /* Monitor. */
       monitor.done();
     }
+  }
+
+  private void addPoints( final GM_TriangulatedSurface gmSurface, final List<GM_Point> pointList ) throws GM_Exception
+  {
+    final String crs = pointList.get( 0 ).getCoordinateSystem();
+    final GM_Position pos[] = new GM_Position[3];
+    for( int i = 0; i < pointList.size(); i++ )
+    {
+      final GM_Point point = pointList.get( i );
+      pos[i] = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Position( point.getX(), point.getY(), point.getZ() );
+    }
+
+    // For shape export we need a clockwise orientation.
+    // The algorithm that delivers the nodes is the nodes to the eater is thinking counter-clockwise.
+    // For that reason we switch the positions order to get that clockwise orientation.
+    final GM_Triangle gmTriangle = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Triangle( pos[2], pos[1], pos[0], crs );
+    if( gmTriangle != null )
+      gmSurface.add( gmTriangle );
   }
 }

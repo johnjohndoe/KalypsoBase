@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.gml.binding.commons;
+package org.kalypso.gml.processes.tin;
 
 import javax.xml.namespace.QName;
 
@@ -49,7 +49,8 @@ import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
- * Base implementation of commons:TriangulatedSurfaceFeature
+ * Base implementation of commons:TriangulatedSurfaceFeature<br/>
+ * REMARK: should be defined in KalypsoDeegree, but was moved here for dependency reasons.
  * 
  * @author Holger Albert
  * @author Gernot Belger
