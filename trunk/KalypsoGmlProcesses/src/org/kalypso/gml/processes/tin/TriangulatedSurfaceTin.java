@@ -40,11 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml.processes.tin;
 
+import java.math.BigDecimal;
 import java.net.URL;
 
-import org.kalypsodeegree.model.elevation.ElevationException;
+import org.apache.commons.lang3.Range;
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.kalypso.gml.processes.KalypsoGmlProcessesPlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree.model.tin.ITin;
 
 /**
@@ -54,56 +62,122 @@ import org.kalypsodeegree.model.tin.ITin;
  */
 public class TriangulatedSurfaceTin implements ITin
 {
+  private static IStatus INIT_STATUS = new Status( IStatus.INFO, KalypsoGmlProcessesPlugin.PLUGIN_ID, "Not initialized" );
+
+  private IStatus m_loadStatus = INIT_STATUS;
+
   private final URL m_triangulatedSurfaceLocation;
 
-  private TriangulatedSurfaceFeature m_surface;
+  private TriangulatedSurfaceFeature m_surfaceFeature;
+
+  private TinLoadJob m_loadJob;
+
+  private Range<BigDecimal> m_minMax;
 
   public TriangulatedSurfaceTin( final URL triangulatedSurfaceLocation )
   {
     m_triangulatedSurfaceLocation = triangulatedSurfaceLocation;
   }
 
-  private synchronized void checkData( )
+  @Override
+  public synchronized void dispose( )
   {
-    if( m_surface == null )
+    if( m_loadJob != null )
+      m_loadJob.cancel();
+    m_loadJob = null;
+    m_surfaceFeature = null;
+    m_minMax = null;
+    m_loadStatus = INIT_STATUS;
+  }
+
+  private synchronized GM_TriangulatedSurface getSurface( )
+  {
+    if( m_surfaceFeature == null && m_loadJob == null )
     {
-      m_surface = loadData();
+      m_loadJob = new TinLoadJob( this );
+
+      m_loadJob.addJobChangeListener( new JobChangeAdapter()
+      {
+        @Override
+        public void done( final IJobChangeEvent event )
+        {
+          handleSurfaceLoaded( event );
+        }
+      } );
+
+      m_loadStatus = new Status( IStatus.INFO, KalypsoGmlProcessesPlugin.PLUGIN_ID, "Loading..." );
+      m_loadJob.schedule();
     }
+
+    if( m_surfaceFeature == null )
+      return null;
+
+    return m_surfaceFeature.getTriangulatedSurface();
   }
 
-  private TriangulatedSurfaceFeature loadData( )
+  protected synchronized void handleSurfaceLoaded( final IJobChangeEvent event )
   {
+    Assert.isTrue( m_loadJob == event.getJob() );
 
-
-    // TODO Auto-generated method stub
-
+    m_surfaceFeature = m_loadJob.getSurface();
+    m_minMax = m_loadJob.getMinMax();
+    m_loadStatus = m_loadJob.getResult();
+    m_loadJob = null;
   }
 
-  @Override
-  public double getElevation( final GM_Point location ) throws ElevationException
+  private Range<BigDecimal> getMinMax( )
   {
-    // TODO Auto-generated method stub
-    return 0;
-  }
+    /* Trigger load */
+    getSurface();
 
-  @Override
-  public GM_Envelope getBoundingBox( ) throws ElevationException
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public double getMinElevation( ) throws ElevationException
-  {
-    // TODO Auto-generated method stub
-    return 0;
+    return m_minMax;
   }
 
   @Override
-  public double getMaxElevation( ) throws ElevationException
+  public GM_Envelope getBoundingBox( )
   {
-    // TODO Auto-generated method stub
-    return 0;
+    final GM_TriangulatedSurface surface = getSurface();
+    if( surface == null )
+      return null;
+
+    return surface.getEnvelope();
+  }
+
+  @Override
+  public double getElevation( final GM_Point location )
+  {
+    final GM_TriangulatedSurface surface = getSurface();
+    if( surface == null )
+      return Double.NaN;
+
+    return surface.getValue( location );
+  }
+
+
+  @Override
+  public double getMinElevation( )
+  {
+    final Range<BigDecimal> minMax = getMinMax();
+
+    if( minMax == null )
+      return Double.NaN;
+
+    return m_minMax.getMinimum().doubleValue();
+  }
+
+  @Override
+  public double getMaxElevation( )
+  {
+    final Range<BigDecimal> minMax = getMinMax();
+
+    if( minMax == null )
+      return Double.NaN;
+
+    return m_minMax.getMaximum().doubleValue();
+  }
+
+  URL getDataLocation( )
+  {
+    return m_triangulatedSurfaceLocation;
   }
 }
