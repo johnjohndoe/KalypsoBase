@@ -568,9 +568,6 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
     return ret;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.geometry.GM_Object#invalidate()
-   */
   @Override
   public void invalidate( )
   {
