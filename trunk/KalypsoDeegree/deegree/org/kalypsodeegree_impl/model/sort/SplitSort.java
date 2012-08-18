@@ -62,7 +62,6 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -75,7 +74,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeatureLinkUtils;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
-import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 import com.infomatiq.jsi.Rectangle;
 import com.infomatiq.jsi.SpatialIndex;
@@ -252,20 +251,7 @@ public class SplitSort implements FeatureList
     final Object data = item.getData();
     final GM_Envelope envelope = m_envelopeProvider.getEnvelope( data );
 
-    return toRectangle( envelope );
-  }
-
-  private static final Rectangle toRectangle( final GM_Envelope envelope )
-  {
-    if( envelope == null )
-      return null;
-
-    final float x1 = (float) envelope.getMinX();
-    final float y1 = (float) envelope.getMinY();
-    final float x2 = (float) envelope.getMaxX();
-    final float y2 = (float) envelope.getMaxY();
-
-    return new Rectangle( x1, y1, x2, y2 );
+    return GeometryUtilities.toRectangle( envelope );
   }
 
   private void unregisterFeature( final Object object )
@@ -535,7 +521,7 @@ public class SplitSort implements FeatureList
   {
     checkIndex();
 
-    final Rectangle envelope = toRectangle( queryEnv );
+    final Rectangle envelope = GeometryUtilities.toRectangle( queryEnv );
     return query( envelope, result );
   }
 
@@ -580,11 +566,8 @@ public class SplitSort implements FeatureList
     checkIndex();
 
     final Rectangle bounds = m_spatialIndex.getBounds();
-    if( bounds == null )
-      return null;
 
-    final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-    return new GM_Envelope_Impl( bounds.minX, bounds.minY, bounds.maxX, bounds.maxY, crs );
+    return GeometryUtilities.toEnvelope( bounds );
   }
 
   @Override

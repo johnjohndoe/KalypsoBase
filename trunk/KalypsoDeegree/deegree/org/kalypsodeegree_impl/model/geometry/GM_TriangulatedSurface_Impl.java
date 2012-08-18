@@ -35,6 +35,8 @@
  */
 package org.kalypsodeegree_impl.model.geometry;
 
+import gnu.trove.TIntProcedure;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +48,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 
-import com.vividsolutions.jts.geom.Envelope;
+import com.infomatiq.jsi.Rectangle;
 
 /**
  * @author Gernot Belger
@@ -89,33 +91,41 @@ public class GM_TriangulatedSurface_Impl extends GM_PolyhedralSurface_Impl<GM_Tr
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public double getValue( final GM_Position position )
   {
-    final Envelope searchEnv = new Envelope( position.getX(), position.getX(), position.getY(), position.getY() );
-    final List<GM_Triangle> query = getIndex().query( searchEnv );
-    for( final GM_Triangle triangle : query )
-    {
-      if( triangle.contains( position ) )
-        return triangle.getValue( position );
-    }
+    final GM_Triangle triangle = getTriangle( position );
+    if( triangle == null )
+      return Double.NaN;
 
-    return Double.NaN;
+    return triangle.getValue( position );
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public GM_Triangle getTriangle( final GM_Position position )
   {
-    final Envelope searchEnv = new Envelope( position.getX(), position.getX(), position.getY(), position.getY() );
-    final List<GM_Triangle> query = getIndex().query( searchEnv );
-    for( final GM_Triangle triangle : query )
-    {
-      if( triangle.contains( position ) )
-        return triangle;
-    }
+    final Rectangle searchEnv = new Rectangle( (float) position.getX(), (float) position.getY(), (float) position.getX(), (float) position.getY() );
 
-    return null;
+    final GM_Triangle[] result = new GM_Triangle[] { null };
+
+    final TIntProcedure ip = new TIntProcedure()
+    {
+      @Override
+      public boolean execute( final int value )
+      {
+        final GM_Triangle triangle = get( value );
+        if( triangle.contains( position ) )
+        {
+          result[0] = triangle;
+          return false;
+        }
+
+        return true;
+      }
+    };
+
+    getIndex().intersects( searchEnv, ip );
+
+    return result[0];
   }
 
   /**

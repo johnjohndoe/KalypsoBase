@@ -35,8 +35,11 @@
  */
 package org.kalypsodeegree_impl.model.geometry;
 
+import gnu.trove.TIntProcedure;
+
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -64,24 +67,20 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.index.ItemVisitor;
-import com.vividsolutions.jts.index.SpatialIndex;
-import com.vividsolutions.jts.index.quadtree.Quadtree;
+import com.infomatiq.jsi.Rectangle;
+import com.infomatiq.jsi.SpatialIndex;
+import com.infomatiq.jsi.rtree.RTree;
 
 /**
  * @author skurzbach
  */
 public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_OrientableSurface_Impl implements GM_PolyhedralSurface<T>
 {
-  // FIXME: use jsi instead
-  private SpatialIndex m_index = new Quadtree();
+  private final SpatialIndex m_index = new RTree();
 
   private final List<T> m_items;
-
-  // Optimization: we do not always want to recalculate the complete envelope, so we manage it ourselfs
-  private GM_Envelope m_envelope = null;
 
   public GM_PolyhedralSurface_Impl( final String crs ) throws GM_Exception
   {
@@ -92,10 +91,14 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   {
     super( crs );
 
+    m_index.init( null );
     m_items = items;
 
-    for( final T polygon : items )
-      insertToIndex( polygon );
+    for( int i = 0; i < items.size(); i++ )
+    {
+      final T polygon = items.get( i );
+      insertToIndex( i, polygon );
+    }
   }
 
   @Override
@@ -113,9 +116,11 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   @Override
   public boolean add( final T o )
   {
+    final int index = size();
+
     m_items.add( o );
 
-    insertToIndex( o );
+    insertToIndex( index, o );
 
     return true;
   }
@@ -123,15 +128,24 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   @Override
   public void add( final int index, final T element )
   {
-    m_items.add( index, element );
-    insertToIndex( element );
+    // FIXME: would break the index
+
+    throw new UnsupportedOperationException();
+
+// m_items.add( index, element );
+//
+// insertToIndex( index, element );
   }
 
   @Override
   public boolean addAll( final Collection< ? extends T> c )
   {
+    int index = size();
+
+    m_items.addAll( c );
+
     for( final T polygon : c )
-      add( polygon );
+      insertToIndex( index++, polygon );
 
     return !c.isEmpty();
   }
@@ -139,20 +153,25 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   @Override
   public boolean addAll( final int index, final Collection< ? extends T> c )
   {
-    m_items.addAll( index, c );
+    throw new UnsupportedOperationException();
 
-    for( final T polygon : c )
-      insertToIndex( polygon );
+    // FIXME: would break the index
 
-    return !c.isEmpty();
+// m_items.addAll( index, c );
+//
+// for( final T polygon : c )
+// insertToIndex( polygon );
+//
+// return !c.isEmpty();
   }
 
   @Override
   public void clear( )
   {
-    m_items.clear();
+    for( int i = 0; i < m_items.size(); i++ )
+      removeFromIndex( i, m_items.get( i ) );
 
-    m_index = new Quadtree();
+    m_items.clear();
 
     invalidate();
   }
@@ -160,12 +179,16 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   @Override
   public boolean contains( final Object o )
   {
+    // FIXME: implement with index
+
     return m_items.contains( o );
   }
 
   @Override
   public boolean containsAll( final Collection< ? > c )
   {
+    // FIXME: implement with index
+
     return m_items.containsAll( c );
   }
 
@@ -178,66 +201,65 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   @Override
   public int indexOf( final Object o )
   {
+    // FIXME: implement with index
+
     return m_items.indexOf( o );
   }
 
   /**
-   * TODO: if this surface is changed via this iterator, the index does not gets updated<br>
-   *
-   * @see java.util.List#iterator()
+   * IMPORTANT: it is forbidden to change this surface with this iterator.
    */
   @Override
   public Iterator<T> iterator( )
   {
-    // TODO + CHECK: see TODO above; beter do this
-// return Collections.unmodifiableList( m_items ).iterator();
-    return m_items.iterator();
+    return Collections.unmodifiableList( m_items ).iterator();
   }
 
   @Override
   public int lastIndexOf( final Object o )
   {
-    // TODO: see iterator()
+    // FIXME: implement with index
+
     return m_items.lastIndexOf( o );
   }
 
   /**
-   * TODO: if this surface is changed via this iterator, the index does not gets updated
-   *
-   * @see java.util.List#listIterator()
+   * IMPORTANT: it is forbidden to change this surface with this iterator.
    */
   @Override
   public ListIterator<T> listIterator( )
   {
-    // TODO: see iterator()
-    return m_items.listIterator();
+    return Collections.unmodifiableList( m_items ).listIterator();
   }
 
   /**
-   * TODO: if this surface is changed via this iterator, the index does not gets updated
-   *
-   * @see java.util.List#listIterator(int)
+   * IMPORTANT: it is forbidden to change this surface with this iterator.
    */
   @Override
   public ListIterator<T> listIterator( final int index )
   {
-    // TODO: see iterator()
-    return m_items.listIterator( index );
+    return Collections.unmodifiableList( m_items ).listIterator( index );
   }
 
   @Override
   public boolean remove( final Object o )
   {
-    removeFromIndex( o );
+    final int index = indexOf( o );
 
-    return m_items.remove( o );
+    final T removed = m_items.remove( index );
+
+    if( removed != null )
+      removeFromIndex( index, removed );
+
+    return removed != null;
   }
 
   @Override
   public T remove( final int index )
   {
     final T polygon = get( index );
-    removeFromIndex( polygon );
+
+    removeFromIndex( index, polygon );
 
     return m_items.remove( index );
   }
@@ -262,11 +284,11 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   public T set( final int index, final T element )
   {
     final T polygon = get( index );
-    removeFromIndex( polygon );
+    removeFromIndex( index, polygon );
 
     m_items.set( index, element );
 
-    insertToIndex( element );
+    insertToIndex( index, element );
     return polygon;
   }
 
@@ -297,7 +319,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   }
 
   @Override
-  public <otherT> otherT[] toArray( final otherT[] a )
+  public <T2> T2[] toArray( final T2[] a )
   {
     return m_items.toArray( a );
   }
@@ -329,10 +351,8 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   @Override
   public GM_Envelope getEnvelope( )
   {
-    if( m_envelope == null )
-      m_envelope = JTSAdapter.wrap( recalcEnvelope( m_items ), getCoordinateSystem() );
-
-    return m_envelope;
+    final Rectangle bounds = m_index.getBounds();
+    return GeometryUtilities.toEnvelope( bounds );
   }
 
   @Override
@@ -353,32 +373,8 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   protected GM_Point calculateCentroid( )
   {
     // TODO: implement, what is the centroid of this?
+    // -> should be the mean of all centroids of its children
     return GM_Constants.EMPTY_CENTROID;
-  }
-
-  private static <T extends GM_Polygon> Envelope recalcEnvelope( final List<T> items )
-  {
-    if( items.isEmpty() )
-      return new Envelope();
-
-    Envelope bbox = null;
-    for( final T gmPolygon : items )
-    {
-      final GM_Envelope env = gmPolygon.getEnvelope();
-      final Envelope envelope = JTSAdapter.export( env );
-      if( envelope.isNull() )
-        continue;
-
-      if( bbox == null )
-        bbox = envelope;
-      else
-        bbox.expandToInclude( envelope );
-    }
-
-    if( bbox == null )
-      return new Envelope();
-
-    return bbox;
   }
 
   @Override
@@ -451,35 +447,16 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
     return super.getAdapter( adapter );
   }
 
-  private void insertToIndex( final T polygon )
+  private void insertToIndex( final int index, final T polygon )
   {
-    final Envelope env = JTSAdapter.export( polygon.getEnvelope() );
-    m_index.insert( env, polygon );
-
-    if( isValid() )
-    {
-      final GM_Envelope polygonEnv = polygon.getEnvelope();
-
-      if( m_envelope == null )
-        m_envelope = polygonEnv;
-      else
-        m_envelope = m_envelope.getMerged( polygonEnv );
-    }
+    final Rectangle bounds = GeometryUtilities.toRectangle( polygon.getEnvelope() );
+    m_index.add( bounds, index );
   }
 
-  @SuppressWarnings("unchecked")
-  private void removeFromIndex( final Object o )
+  private void removeFromIndex( final int index, final T polygon )
   {
-    // TODO: consider envelope
-    // probably we should delegate the whole envelope stuff to the index
-    if( o instanceof GM_Polygon )
-    {
-      final T gmPoly = (T) o;
-      final Envelope env = JTSAdapter.export( gmPoly.getEnvelope() );
-      m_index.remove( env, o );
-    }
-
-    m_envelope = null;
+    final Rectangle bounds = GeometryUtilities.toRectangle( polygon.getEnvelope() );
+    m_index.delete( bounds, index );
   }
 
   @Override
@@ -505,22 +482,22 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   {
     monitor.beginTask( "", IProgressMonitor.UNKNOWN );
 
-    final ItemVisitor visitor = new ItemVisitor()
+    final TIntProcedure ip = new TIntProcedure()
     {
       @Override
-      @SuppressWarnings("unchecked")
-      public void visitItem( final Object item )
+      public boolean execute( final int value )
       {
-        final T t = (T) item;
+        final T t = get( value );
         surfacePatchVisitor.visit( t );
         ProgressUtilities.worked( monitor, 1 );
+        return true;
       }
     };
 
     try
     {
-      final Envelope searchEnv = JTSAdapter.export( envToVisit );
-      m_index.query( searchEnv, visitor );
+      final Rectangle searchRect = GeometryUtilities.toRectangle( envToVisit );
+      m_index.intersects( searchRect, ip );
     }
     catch( final OperationCanceledException e )
     {
@@ -529,9 +506,6 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
     }
   }
 
-  /**
-   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(java.lang.String)
-   */
   @Override
   @SuppressWarnings("unchecked")
   public GM_Object transform( final String targetCRS ) throws Exception

@@ -53,6 +53,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.transformation.transformer.IGeoTransformer;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -78,6 +79,7 @@ import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
+import com.infomatiq.jsi.Rectangle;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
 
@@ -1391,4 +1393,27 @@ public final class GeometryUtilities
 
     return result;
   }
+
+  public static final Rectangle toRectangle( final GM_Envelope envelope )
+  {
+    if( envelope == null )
+      return null;
+
+    final float x1 = (float) envelope.getMinX();
+    final float y1 = (float) envelope.getMinY();
+    final float x2 = (float) envelope.getMaxX();
+    final float y2 = (float) envelope.getMaxY();
+
+    return new Rectangle( x1, y1, x2, y2 );
+  }
+
+  public static GM_Envelope toEnvelope( final Rectangle bounds )
+  {
+    if( bounds == null )
+      return null;
+
+    final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+    return new GM_Envelope_Impl( bounds.minX, bounds.minY, bounds.maxX, bounds.maxY, crs );
+  }
+
 }
