@@ -584,19 +584,12 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see org.kalypsodeegree.model.geometry.GM_GenericSurface#getPerimeter()
-   */
   @Override
   public double getPerimeter( )
   {
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see org.kalypsodeegree.model.geometry.ISurfacePatchVisitable#acceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope,
-   *      org.kalypsodeegree.model.geometry.ISurfacePatchVisitor, org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<T> surfacePatchVisitor, final IProgressMonitor monitor ) throws CoreException
   {
@@ -609,7 +602,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
       public void visitItem( final Object item )
       {
         final T t = (T) item;
-        surfacePatchVisitor.visit( t, Double.NaN );
+        surfacePatchVisitor.visit( t );
         ProgressUtilities.worked( monitor, 1 );
       }
     };
