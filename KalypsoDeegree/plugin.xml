@@ -176,7 +176,6 @@
       <feature class="org.kalypsodeegree_impl.gml.binding.commons.MultiSurfaceCoverage" qname="{http://www.opengis.net/gml}MultiSurfaceCoverage"/>
       <feature class="org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage" qname="{http://www.opengis.net/gml}RectifiedGridCoverage"/>
       <feature class="org.kalypsodeegree_impl.gml.binding.commons.CoverageCollection" qname="{org.kalypso.gml.common.coverage}CoverageCollection"/>
-      <feature class="org.kalypsodeegree_impl.gml.binding.commons.TriangulatedSurfaceFeature" qname="{org.kalypso.gml.common}TriangulatedSurfaceFeature"/>
    </extension>
    <extension
          point="org.eclipse.wst.xml.core.catalogContributions">

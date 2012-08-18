@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml.processes.converters;
+package org.kalypso.gml.processes.tin;
 
 import java.net.URL;
 

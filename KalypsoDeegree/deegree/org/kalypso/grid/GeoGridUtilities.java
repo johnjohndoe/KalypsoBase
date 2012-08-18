@@ -107,8 +107,8 @@ public final class GeoGridUtilities
   }
 
   /**
-   * Calclates the geo-position of the given cell.
-   *
+   * Calculates the geo-position of the given cell.
+   * 
    * @param c
    *          If c is null, a new coordinate is returned, else its values are changed.
    */
@@ -116,7 +116,6 @@ public final class GeoGridUtilities
   {
     final Coordinate origin = grid.getOrigin();
 
-    // final double rasterSize = raster.getRasterSize();
     final Coordinate offsetX = grid.getOffsetX();
     final Coordinate offsetY = grid.getOffsetY();
 

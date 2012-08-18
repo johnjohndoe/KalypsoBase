@@ -38,41 +38,72 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml.ui.internal.coverage.imports;
+package org.kalypso.gml.processes.tin;
 
-import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.contribs.java.io.FilePattern;
-import org.kalypso.gml.processes.tin.ShapeTriangulatedSurfaceConverter;
-import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
+import org.kalypsodeegree.model.elevation.ElevationException;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.tin.ITin;
 
 /**
- * Imports a .shp file as coverage.
- * 
- * @author Holger Albert
+ * Wrapper around a {@link org.kalypsodeegree.model.geometry.GM_TriangulatedSurface} that implementents {@link ITin}
+ *
+ * @author Gernot Belger
  */
-public class ShapeCoverageImporter extends AbstractTriangulatedSurfaceCoverageImporter
+public class TriangulatedSurfaceTin implements ITin
 {
-  @Override
-  public FilePattern getFilePattern( )
+  private final URL m_triangulatedSurfaceLocation;
+
+  private TriangulatedSurfaceFeature m_surface;
+
+  public TriangulatedSurfaceTin( final URL triangulatedSurfaceLocation )
   {
-    return new FilePattern( "*.shp", "Shape-Files" ); //$NON-NLS-1$
+    m_triangulatedSurfaceLocation = triangulatedSurfaceLocation;
+  }
+
+  private synchronized void checkData( )
+  {
+    if( m_surface == null )
+    {
+      m_surface = loadData();
+    }
+  }
+
+  private TriangulatedSurfaceFeature loadData( )
+  {
+
+
+    // TODO Auto-generated method stub
+
   }
 
   @Override
-  protected GM_TriangulatedSurface readInputData( final File dataFile, final String crs, final IProgressMonitor monitor ) throws CoreException, MalformedURLException
+  public double getElevation( final GM_Point location ) throws ElevationException
   {
-    final URL sourceUrl = dataFile.toURI().toURL();
-    final String query = String.format( "?srs=%s", crs ); //$NON-NLS-1$
-    final URL sourceLocation = new URL( sourceUrl, query );
+    // TODO Auto-generated method stub
+    return 0;
+  }
 
-    final ShapeTriangulatedSurfaceConverter converter = new ShapeTriangulatedSurfaceConverter();
-    final GM_TriangulatedSurface gmSurface = converter.convert( sourceLocation, monitor );
+  @Override
+  public GM_Envelope getBoundingBox( ) throws ElevationException
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
-    return gmSurface;
+  @Override
+  public double getMinElevation( ) throws ElevationException
+  {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+
+  @Override
+  public double getMaxElevation( ) throws ElevationException
+  {
+    // TODO Auto-generated method stub
+    return 0;
   }
 }

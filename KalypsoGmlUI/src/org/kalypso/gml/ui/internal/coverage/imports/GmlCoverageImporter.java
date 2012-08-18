@@ -46,14 +46,14 @@ import java.net.MalformedURLException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.java.io.FilePattern;
-import org.kalypso.gml.processes.converters.GmlTriangulatedSurfaceConverter;
+import org.kalypso.gml.processes.tin.GmlTriangulatedSurfaceConverter;
+import org.kalypso.gml.processes.tin.TriangulatedSurfaceFeature;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
-import org.kalypsodeegree_impl.gml.binding.commons.TriangulatedSurfaceFeature;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * Imports a .gml file as coverage.
- * 
+ *
  * @author Holger Albert
  */
 public class GmlCoverageImporter extends AbstractTriangulatedSurfaceCoverageImporter
