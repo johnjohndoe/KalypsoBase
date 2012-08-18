@@ -98,27 +98,18 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
       insertToIndex( polygon );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.geometry.GM_Object#getDimension()
-   */
   @Override
   public int getDimension( )
   {
     return 2;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.geometry.GM_Object#isEmpty()
-   */
   @Override
   public boolean isEmpty( )
   {
     return m_items.isEmpty();
   }
 
-  /**
-   * @see java.util.List#add(java.lang.Object)
-   */
   @Override
   public boolean add( final T o )
   {
@@ -129,9 +120,6 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
     return true;
   }
 
-  /**
-   * @see java.util.List#add(int, java.lang.Object)
-   */
   @Override
   public void add( final int index, final T element )
   {
@@ -139,9 +127,6 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
     insertToIndex( element );
   }
 
-  /**
-   * @see java.util.List#addAll(java.util.Collection)
-   */
   @Override
   public boolean addAll( final Collection< ? extends T> c )
   {
@@ -151,9 +136,6 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
     return !c.isEmpty();
   }
 
-  /**
-   * @see java.util.List#addAll(int, java.util.Collection)
-   */
   @Override
   public boolean addAll( final int index, final Collection< ? extends T> c )
   {
@@ -165,9 +147,6 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
     return !c.isEmpty();
   }
 
-  /**
-   * @see java.util.List#clear()
-   */
   @Override
   public void clear( )
   {
@@ -178,36 +157,24 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
     invalidate();
   }
 
-  /**
-   * @see java.util.List#contains(java.lang.Object)
-   */
   @Override
   public boolean contains( final Object o )
   {
     return m_items.contains( o );
   }
 
-  /**
-   * @see java.util.List#containsAll(java.util.Collection)
-   */
   @Override
   public boolean containsAll( final Collection< ? > c )
   {
     return m_items.containsAll( c );
   }
 
-  /**
-   * @see java.util.List#get(int)
-   */
   @Override
   public T get( final int index )
   {
     return m_items.get( index );
   }
 
-  /**
-   * @see java.util.List#indexOf(java.lang.Object)
-   */
   @Override
   public int indexOf( final Object o )
   {
@@ -227,9 +194,6 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
     return m_items.iterator();
   }
 
-  /**
-   * @see java.util.List#lastIndexOf(java.lang.Object)
-   */
   @Override
   public int lastIndexOf( final Object o )
   {
@@ -261,9 +225,6 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
     return m_items.listIterator( index );
   }
 
-  /**
-   * @see java.util.List#remove(java.lang.Object)
-   */
   @Override
   public boolean remove( final Object o )
   {
@@ -272,9 +233,6 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
     return m_items.remove( o );
   }
 
-  /**
-   * @see java.util.List#remove(int)
-   */
   @Override
   public T remove( final int index )
   {
@@ -284,9 +242,6 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
     return m_items.remove( index );
   }
 
-  /**
-   * @see java.util.List#removeAll(java.util.Collection)
-   */
   @Override
   public boolean removeAll( final Collection< ? > c )
   {
@@ -297,18 +252,12 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
     return hasRemoved;
   }
 
-  /**
-   * @see java.util.List#retainAll(java.util.Collection)
-   */
   @Override
   public boolean retainAll( final Collection< ? > c )
   {
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see java.util.List#set(int, java.lang.Object)
-   */
   @Override
   public T set( final int index, final T element )
   {
@@ -321,18 +270,12 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
     return polygon;
   }
 
-  /**
-   * @see java.util.List#size()
-   */
   @Override
   public int size( )
   {
     return m_items.size();
   }
 
-  /**
-   * @see java.util.List#subList(int, int)
-   */
   @Override
   public List<T> subList( final int fromIndex, final int toIndex )
   {
@@ -347,27 +290,18 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
     }
   }
 
-  /**
-   * @see java.util.List#toArray()
-   */
   @Override
   public Object[] toArray( )
   {
     return m_items.toArray();
   }
 
-  /**
-   * @see java.util.List#toArray(T[])
-   */
   @Override
   public <otherT> otherT[] toArray( final otherT[] a )
   {
     return m_items.toArray( a );
   }
 
-  /**
-   * @see java.lang.Object#clone()
-   */
   @SuppressWarnings("unchecked")
   @Override
   public Object clone( ) throws CloneNotSupportedException
@@ -392,9 +326,6 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
     return new GM_PolyhedralSurface_Impl<T>( getCoordinateSystem() );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#getEnvelope()
-   */
   @Override
   public GM_Envelope getEnvelope( )
   {
@@ -404,9 +335,6 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
     return m_envelope;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#calculateEnvelope()
-   */
   @Override
   protected GM_Envelope calculateEnvelope( )
   {
@@ -414,9 +342,6 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#calculateBoundary()
-   */
   @Override
   protected GM_Boundary calculateBoundary( )
   {
@@ -424,9 +349,6 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
     return GM_Constants.EMPTY_BOUNDARY;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#calculateCentroid()
-   */
   @Override
   protected GM_Point calculateCentroid( )
   {
@@ -459,18 +381,12 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
     return bbox;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.geometry.GM_Object#getCoordinateDimension()
-   */
   @Override
   public int getCoordinateDimension( )
   {
     return CRSHelper.getDimension( getCoordinateSystem() );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.geometry.GM_Primitive_Impl#getAdapter(java.lang.Class)
-   */
   @Override
   public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
@@ -566,18 +482,12 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
     m_envelope = null;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.geometry.GM_OrientableSurface#getSurfaceBoundary()
-   */
   @Override
   public GM_SurfaceBoundary getSurfaceBoundary( )
   {
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see org.kalypsodeegree.model.geometry.GM_GenericSurface#getArea()
-   */
   @Override
   public double getArea( )
   {
