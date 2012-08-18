@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="lib/trove/trove-2.0.2.jar" sourcepath="lib/trove/trove-2.0.2_src.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/trove/trove-2.1.0.jar" sourcepath="lib/trove/trove-src-2.1.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jsi/jsi-1.0b8.jar" sourcepath="lib/jsi/jsi-1.0b8_src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/log4j-1.2.6.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/sil-0.44.2b.jar"/>
