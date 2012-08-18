@@ -1,40 +1,27 @@
 package com.bce.gis.io.hmo;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.InterruptedIOException;
 import java.io.LineNumberReader;
 import java.io.Reader;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.gml.processes.i18n.Messages;
 
-import com.bce.util.MessageFormatUtility;
-import com.bce.util.progressbar.Progressable;
-import com.bce.util.progressbar.ProgressableInputStream;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.io.ParseException;
 
 /**
- * <p>
- * Reader for HMO-Files
- * </p>
- * <p>
- * Creates a {@link com.vividsolutions.jts.geom.Geometry Geometrie} from a HMO file
- * </p>
- * <p>
- * Format der HMO Datei
- * </p>
+ * Reader for HMO-Files<br/>
+ * Creates a {@link com.vividsolutions.jts.geom.Geometry} from a HMO file<br/>
+ * Format der HMO Datei<br/>
  *
  * <pre>
  *
@@ -46,70 +33,29 @@ import com.vividsolutions.jts.io.ParseException;
  *
  * </pre>
  *
- * @author belger
+ * @author Gernot Belger
  */
 public class HMOReader
 {
-  public static final String ERROR_FORMAT = Messages.getString( "com.bce.gis.io.hmo.HMOReader.0" ); //$NON-NLS-1$
+  private static final String ERROR_FORMAT = Messages.getString( "com.bce.gis.io.hmo.HMOReader.0" ); //$NON-NLS-1$
 
-  public static final String ERROR_POINT = ERROR_FORMAT + Messages.getString( "com.bce.gis.io.hmo.HMOReader.1" ); //$NON-NLS-1$
+  static final String ERROR_POINT = ERROR_FORMAT + Messages.getString( "com.bce.gis.io.hmo.HMOReader.1" ); //$NON-NLS-1$
 
-  public static final String ERROR_POINT_DOUBLE = ERROR_FORMAT + Messages.getString( "com.bce.gis.io.hmo.HMOReader.2" ); //$NON-NLS-1$
+  static final String ERROR_POINT_DOUBLE = ERROR_FORMAT + Messages.getString( "com.bce.gis.io.hmo.HMOReader.2" ); //$NON-NLS-1$
 
-  public static final String ERROR_TYPE = ERROR_FORMAT + Messages.getString( "com.bce.gis.io.hmo.HMOReader.3" ); //$NON-NLS-1$
+  static final String ERROR_TYPE = ERROR_FORMAT + Messages.getString( "com.bce.gis.io.hmo.HMOReader.3" ); //$NON-NLS-1$
 
-  public static final String ERROR_SEMIKOLON = ERROR_FORMAT + Messages.getString( "com.bce.gis.io.hmo.HMOReader.4" ); //$NON-NLS-1$
+  static final String ERROR_SEMIKOLON = ERROR_FORMAT + Messages.getString( "com.bce.gis.io.hmo.HMOReader.4" ); //$NON-NLS-1$
 
-  public static final String ERROR_TRIANGLE = ERROR_FORMAT + Messages.getString( "com.bce.gis.io.hmo.HMOReader.5" ); //$NON-NLS-1$
+  static final String ERROR_TRIANGLE = ERROR_FORMAT + Messages.getString( "com.bce.gis.io.hmo.HMOReader.5" ); //$NON-NLS-1$
 
-  public static final String ERROR_TRIANGLE_NOPOINT = ERROR_FORMAT + Messages.getString( "com.bce.gis.io.hmo.HMOReader.6" ); //$NON-NLS-1$
-
-  private static final Logger LOG = Logger.getLogger( HMOReader.class.getName() );
+  static final String ERROR_TRIANGLE_NOPOINT = ERROR_FORMAT + Messages.getString( "com.bce.gis.io.hmo.HMOReader.6" ); //$NON-NLS-1$
 
   private final GeometryFactory m_gf;
 
   public HMOReader( final GeometryFactory gf )
   {
     m_gf = gf;
-  }
-
-  /**
-   * @throws HMOReaderException
-   */
-  public final LinearRing[] readFile( final File f, final Progressable p ) throws HMOReaderException
-  {
-    if( f == null )
-      throw new HMOReaderException( Messages.getString( "com.bce.gis.io.hmo.HMOReader.7" ), null ); //$NON-NLS-1$
-
-    try
-    {
-      LOG.info( Messages.getString( "com.bce.gis.io.hmo.HMOReader.8" ) + f.getAbsolutePath() ); //$NON-NLS-1$
-
-      if( p != null )
-        p.setNote( f.getAbsolutePath() + Messages.getString( "com.bce.gis.io.hmo.HMOReader.9" ) ); //$NON-NLS-1$
-
-      final FileInputStream fis = new FileInputStream( f );
-      final InputStream is = p != null ? (InputStream) new ProgressableInputStream( fis, p ) : fis;
-      final Reader r = new InputStreamReader( is, "US-ASCII" ); //$NON-NLS-1$
-      final LinearRing[] triangles = read( r );
-      r.close();
-
-      LOG.info( Messages.getString( "com.bce.gis.io.hmo.HMOReader.11" ) + f.getAbsolutePath() ); //$NON-NLS-1$
-
-      return triangles;
-    }
-    catch( final ParseException pe )
-    {
-      throw new HMOReaderException( Messages.getString( "com.bce.gis.io.hmo.HMOReader.12" ) + pe.getLocalizedMessage(), pe ); //$NON-NLS-1$
-    }
-    catch( final InterruptedIOException ioe )
-    {
-      throw new HMOReaderException( Messages.getString( "com.bce.gis.io.hmo.HMOReader.13" ), ioe ); //$NON-NLS-1$
-    }
-    catch( final Throwable t )
-    {
-      throw new HMOReaderException( Messages.getString( "com.bce.gis.io.hmo.HMOReader.14" ) + f.getAbsolutePath() + "\n" + t.getLocalizedMessage(), t ); //$NON-NLS-1$ //$NON-NLS-2$
-    }
   }
 
   /**
@@ -139,7 +85,7 @@ public class HMOReader
         continue;
 
       if( line.charAt( 1 ) != ':' )
-        throw new ParseException( MessageFormatUtility.formatMessage( ERROR_SEMIKOLON, lnr.getLineNumber() ) );
+        throw new ParseException( MessageFormat.format( ERROR_SEMIKOLON, lnr.getLineNumber() ) );
 
       final char c0 = line.charAt( 0 );
 
@@ -159,7 +105,7 @@ public class HMOReader
           break;
 
         default:
-          throw new ParseException( MessageFormatUtility.formatMessage( ERROR_TYPE, lnr.getLineNumber() ) );
+          throw new ParseException( MessageFormat.format( ERROR_TYPE, lnr.getLineNumber() ) );
       }
     }
 
@@ -180,17 +126,17 @@ public class HMOReader
       final Coordinate p3 = points.get( n3 );
 
       if( p1 == null || p2 == null || p3 == null )
-        throw new ParseException( MessageFormatUtility.formatMessage( ERROR_TRIANGLE_NOPOINT, lineNumber ) );
+        throw new ParseException( MessageFormat.format( ERROR_TRIANGLE_NOPOINT, lineNumber ) );
 
       return m_gf.createLinearRing( new Coordinate[] { p1, p2, p3, p1 } );
     }
     catch( final ArrayIndexOutOfBoundsException aiobe )
     {
-      throw new ParseException( MessageFormatUtility.formatMessage( ERROR_TRIANGLE_NOPOINT, lineNumber ) );
+      throw new ParseException( MessageFormat.format( ERROR_TRIANGLE_NOPOINT, lineNumber ) );
     }
     catch( final NumberFormatException nfe )
     {
-      throw new ParseException( MessageFormatUtility.formatMessage( ERROR_TRIANGLE, lineNumber ) + "\n" + nfe.getLocalizedMessage() ); //$NON-NLS-1$
+      throw new ParseException( MessageFormat.format( ERROR_TRIANGLE, lineNumber ) + "\n" + nfe.getLocalizedMessage() ); //$NON-NLS-1$
     }
   }
 
@@ -201,7 +147,7 @@ public class HMOReader
       final int n = Integer.parseInt( data[0] );
 
       if( points.size() > n && points.get( n ) != null )
-        throw new ParseException( MessageFormatUtility.formatMessage( ERROR_POINT_DOUBLE, lineNumber ) );
+        throw new ParseException( MessageFormat.format( ERROR_POINT_DOUBLE, lineNumber ) );
 
       final double x = NumberUtils.parseDouble( data[1] );
       final double y = NumberUtils.parseDouble( data[2] );
@@ -215,16 +161,7 @@ public class HMOReader
     }
     catch( final NumberFormatException e )
     {
-      throw new ParseException( MessageFormatUtility.formatMessage( ERROR_POINT, lineNumber ) + "\n" + e.getLocalizedMessage() ); //$NON-NLS-1$
+      throw new ParseException( MessageFormat.format( ERROR_POINT, lineNumber ) + "\n" + e.getLocalizedMessage() ); //$NON-NLS-1$
     }
-  }
-
-  /** Performance test */
-  public static void main( final String[] args ) throws HMOReaderException
-  {
-    LOG.info( Messages.getString( "com.bce.gis.io.hmo.HMOReader.18" ) ); //$NON-NLS-1$
-    final HMOReader hmoR = new HMOReader( new GeometryFactory() );
-    hmoR.readFile( new File( "C:/tmp/mueller/fliti/DT514582.hmo" ), null ); //$NON-NLS-1$
-    LOG.info( Messages.getString( "com.bce.gis.io.hmo.HMOReader.20" ) ); //$NON-NLS-1$
   }
 }

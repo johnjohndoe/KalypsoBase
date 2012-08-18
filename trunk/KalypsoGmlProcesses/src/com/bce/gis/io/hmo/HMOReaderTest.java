@@ -9,7 +9,6 @@ import java.text.MessageFormat;
 
 import junit.framework.TestCase;
 
-import com.bce.util.MessageFormatUtility;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LinearRing;
@@ -88,24 +87,24 @@ public class HMOReaderTest extends TestCase
 
   public void testWrongType( ) throws IOException
   {
-    checkError( s_errorHmo2, MessageFormatUtility.formatMessage( HMOReader.ERROR_TYPE, 2 ) );
+    checkError( s_errorHmo2, MessageFormat.format( HMOReader.ERROR_TYPE, 2 ) );
   }
 
   public void testWrongPoint( ) throws IOException
   {
-    checkError( "P: 0.5 1.0 1.0 1.0", MessageFormatUtility.formatMessage( HMOReader.ERROR_POINT, 1 ) ); //$NON-NLS-1$
-    checkError( "P: 1 xy 1.0 1.0", MessageFormatUtility.formatMessage( HMOReader.ERROR_POINT, 1 ) ); //$NON-NLS-1$
-    checkError( "P: 1 1.0 ab 1.0", MessageFormatUtility.formatMessage( HMOReader.ERROR_POINT, 1 ) ); //$NON-NLS-1$
-    checkError( "P: 1 1.0 1.0 de", MessageFormatUtility.formatMessage( HMOReader.ERROR_POINT, 1 ) ); //$NON-NLS-1$
-    checkError( "P: 1 0.0 0.0 0.0\nP: 1 1.0 1.0 1.0", MessageFormatUtility.formatMessage( HMOReader.ERROR_POINT_DOUBLE, 2 ) ); //$NON-NLS-1$
+    checkError( "P: 0.5 1.0 1.0 1.0", MessageFormat.format( HMOReader.ERROR_POINT, 1 ) ); //$NON-NLS-1$
+    checkError( "P: 1 xy 1.0 1.0", MessageFormat.format( HMOReader.ERROR_POINT, 1 ) ); //$NON-NLS-1$
+    checkError( "P: 1 1.0 ab 1.0", MessageFormat.format( HMOReader.ERROR_POINT, 1 ) ); //$NON-NLS-1$
+    checkError( "P: 1 1.0 1.0 de", MessageFormat.format( HMOReader.ERROR_POINT, 1 ) ); //$NON-NLS-1$
+    checkError( "P: 1 0.0 0.0 0.0\nP: 1 1.0 1.0 1.0", MessageFormat.format( HMOReader.ERROR_POINT_DOUBLE, 2 ) ); //$NON-NLS-1$
   }
 
   public void testWrongTriangle( ) throws IOException
   {
-    checkError( "D: 1 a 2 3", MessageFormatUtility.formatMessage( HMOReader.ERROR_TRIANGLE, 1 ) ); //$NON-NLS-1$
-    checkError( "D: 1 1 b 3", MessageFormatUtility.formatMessage( HMOReader.ERROR_TRIANGLE, 1 ) ); //$NON-NLS-1$
-    checkError( "D: 1 1 2 c", MessageFormatUtility.formatMessage( HMOReader.ERROR_TRIANGLE, 1 ) ); //$NON-NLS-1$
-    checkError( "D: 1 1 2 3", MessageFormatUtility.formatMessage( HMOReader.ERROR_TRIANGLE_NOPOINT, 1 ) ); //$NON-NLS-1$
+    checkError( "D: 1 a 2 3", MessageFormat.format( HMOReader.ERROR_TRIANGLE, 1 ) ); //$NON-NLS-1$
+    checkError( "D: 1 1 b 3", MessageFormat.format( HMOReader.ERROR_TRIANGLE, 1 ) ); //$NON-NLS-1$
+    checkError( "D: 1 1 2 c", MessageFormat.format( HMOReader.ERROR_TRIANGLE, 1 ) ); //$NON-NLS-1$
+    checkError( "D: 1 1 2 3", MessageFormat.format( HMOReader.ERROR_TRIANGLE_NOPOINT, 1 ) ); //$NON-NLS-1$
   }
 
   private void checkError( final String hmoString, final String exceptionString ) throws IOException
