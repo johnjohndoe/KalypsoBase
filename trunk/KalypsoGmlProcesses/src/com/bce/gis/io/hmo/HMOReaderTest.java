@@ -35,7 +35,7 @@ public class HMOReaderTest extends TestCase
 
   private static final String s_errorHmo2 = "P: 1 0.0 0.0 0.0\n" + "X: blubb"; //$NON-NLS-1$ //$NON-NLS-2$
 
-  private final HMOReader hmoReader = new HMOReader( gf );
+  private final HMOReader m_hmoReader = new HMOReader();
 
   public void testReadSimple( ) throws IOException, ParseException
   {
@@ -47,7 +47,7 @@ public class HMOReaderTest extends TestCase
   private LinearRing[] readString( final String s ) throws IOException, ParseException
   {
     final StringReader sr = new StringReader( s );
-    final LinearRing[] g = hmoReader.read( sr );
+    final LinearRing[] g = m_hmoReader.read( sr, gf );
     sr.close();
     return g;
   }
@@ -55,7 +55,7 @@ public class HMOReaderTest extends TestCase
   public void testReadComplex( ) throws IOException, ParseException
   {
     final Reader r = new InputStreamReader( HMOReaderTest.class.getResourceAsStream( "test/medium.hmo" ) ); //$NON-NLS-1$
-    final LinearRing[] g = hmoReader.read( r );
+    final LinearRing[] g = m_hmoReader.read( r, gf );
     r.close();
 
     assertEquals( 38, g.length );
@@ -64,7 +64,7 @@ public class HMOReaderTest extends TestCase
   public void testBig( ) throws IOException, ParseException
   {
     final Reader r = new InputStreamReader( HMOReaderTest.class.getResourceAsStream( "test/big.hmo" ) ); //$NON-NLS-1$
-    final LinearRing[] g = hmoReader.read( r );
+    final LinearRing[] g = m_hmoReader.read( r, gf );
     r.close();
 
     assertEquals( 63864, g.length );
@@ -79,7 +79,7 @@ public class HMOReaderTest extends TestCase
   {
     // Bug: nicht monoton ansteigende Punktnummern ergaben Lesefehler
     final Reader r = new InputStreamReader( HMOReaderTest.class.getResourceAsStream( "test/nonMonotone.hmo" ) ); //$NON-NLS-1$
-    final LinearRing[] g = hmoReader.read( r );
+    final LinearRing[] g = m_hmoReader.read( r, gf );
     r.close();
 
     assertEquals( 1, g.length );
