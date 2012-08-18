@@ -731,24 +731,14 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
     return r;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.geometry.ISurfacePatchVisitable#acceptSurfacePatches(org.kalypsodeegree.model.geometry.GM_Envelope,
-   *      org.kalypsodeegree.model.geometry.ISurfacePatchVisitor, org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<T> visitor, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( "", 1 );
 
-    visitor.visit( m_patch, Double.NaN );
+    visitor.visit( m_patch );
 
     ProgressUtilities.done( monitor );
-
-// for( final T patch : m_list )
-// {
-// visitor.visit( patch, Double.NaN );
-// ProgressUtilities.worked( monitor, 1 );
-// }
   }
 
   /**
