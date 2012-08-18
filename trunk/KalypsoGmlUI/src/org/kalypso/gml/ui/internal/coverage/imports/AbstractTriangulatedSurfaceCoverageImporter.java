@@ -57,6 +57,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.java.io.FilePattern;
+import org.kalypso.gml.processes.tin.MultiSurfaceCoverage;
 import org.kalypso.gml.processes.tin.TriangulatedSurfaceFeature;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
@@ -67,10 +68,8 @@ import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
-import org.kalypsodeegree_impl.gml.binding.commons.AbstractCoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
-import org.kalypsodeegree_impl.gml.binding.commons.MultiSurfaceCoverage;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
@@ -121,7 +120,7 @@ public abstract class AbstractTriangulatedSurfaceCoverageImporter implements ICo
 
       /* Add as MultiSurface-Coverage. */
       final IFeatureBindingCollection<ICoverage> coverages = coverageContainer.getCoverages();
-      final AbstractCoverage newCoverage = (AbstractCoverage) coverages.addNew( MultiSurfaceCoverage.FEATURE_MULTI_SURFACE_COVERAGE );
+      final ICoverage newCoverage = coverages.addNew( MultiSurfaceCoverage.FEATURE_MULTI_SURFACE_COVERAGE );
 
       /* Update the bounded by property. */
       final GM_Envelope boundedBy = gmSurface.getEnvelope();

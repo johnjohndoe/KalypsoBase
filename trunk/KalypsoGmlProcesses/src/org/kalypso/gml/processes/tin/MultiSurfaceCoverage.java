@@ -38,13 +38,19 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypsodeegree_impl.gml.binding.commons;
+package org.kalypso.gml.processes.tin;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypsodeegree.model.coverage.RangeSetFile;
+import org.kalypsodeegree.model.tin.ITin;
+import org.kalypsodeegree_impl.gml.binding.commons.AbstractCoverage;
 
 /**
  * Feature-Binding for gml:MultiSurfaceCoverage type.
@@ -55,8 +61,36 @@ public class MultiSurfaceCoverage extends AbstractCoverage
 {
   public static final QName FEATURE_MULTI_SURFACE_COVERAGE = new QName( NS.GML3, "MultiSurfaceCoverage" ); //$NON-NLS-1$
 
+  private TriangulatedSurfaceTin m_tin;
+
   public MultiSurfaceCoverage( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
+  }
+
+  public synchronized ITin getAsTin( )
+  {
+    if( m_tin == null )
+    {
+    final URL context = getWorkspace().getContext();
+
+    final RangeSetFile rangeSet = getRangeSet();
+
+    final String fileName = rangeSet.getFileName();
+    final String mimeType = rangeSet.getMimeType();
+
+      try
+      {
+        final URL dataLocation = new URL( context, fileName );
+
+        m_tin = new TriangulatedSurfaceTin( dataLocation, mimeType );
+      }
+      catch( final MalformedURLException e )
+      {
+        e.printStackTrace();
+      }
+    }
+
+    return m_tin;
   }
 }

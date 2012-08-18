@@ -24,6 +24,7 @@
    
    <extension point="org.kalypso.deegree.featureBinding">
       <feature class="org.kalypso.gml.processes.tin.TriangulatedSurfaceFeature" qname="{org.kalypso.gml.common}TriangulatedSurfaceFeature"/>
+      <feature class="org.kalypso.gml.processes.tin.MultiSurfaceCoverage" qname="{http://www.opengis.net/gml}MultiSurfaceCoverage"/>
    </extension>
    
 </plugin>

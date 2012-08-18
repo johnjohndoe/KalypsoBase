@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.commons.xml.NS;
 import org.kalypso.grid.GeoGridUtilities.Interpolation;
 import org.kalypsodeegree.model.coverage.RangeSetFile;
 import org.kalypsodeegree.model.elevation.ElevationException;
@@ -40,7 +37,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
 
   private final String m_sourceCRS;
 
-  private final Object m_rangeSet;
+  private final RangeSetFile m_rangeSet;
 
   private final URL m_context;
 
@@ -67,7 +64,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
       m_context = context;
 
     final RectifiedGridDomain domain = rgcFeature.getGridDomain();
-    m_rangeSet = rgcFeature.getProperty( new QName( NS.GML3, "rangeSet" ) );
+    m_rangeSet = rgcFeature.getRangeSet();
     GM_Point origin = null;
     try
     {
@@ -79,6 +76,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
       // domain
       e.printStackTrace();
     }
+
     m_origin = new Coordinate( origin.getX(), origin.getY() );
     m_offsetX = new Coordinate( domain.getOffsetX().getGeoX(), domain.getOffsetX().getGeoY() );
     m_offsetY = new Coordinate( domain.getOffsetY().getGeoX(), domain.getOffsetY().getGeoY() );
@@ -100,25 +98,17 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
 
   public URL getGridURL( ) throws GeoGridException
   {
-    if( m_rangeSet != null )
-    {
-      try
-      {
-        if( m_rangeSet instanceof RangeSetFile )
-        {
-          final RangeSetFile file = (RangeSetFile) m_rangeSet;
-          return new URL( m_context, file.getFileName() );
-        }
-        else
-          throw new UnsupportedOperationException( "Only FileSet rangeSets supported by now" );
-      }
-      catch( final IOException e )
-      {
-        throw new GeoGridException( "Could not access grid-file", e );
-      }
-    }
+    if( m_rangeSet == null )
+      return null;
 
-    return null;
+    try
+    {
+      return new URL( m_context, m_rangeSet.getFileName() );
+    }
+    catch( final IOException e )
+    {
+      throw new GeoGridException( "Failed to access grid-file", e );
+    }
   }
 
   protected synchronized IGeoGrid getGrid( ) throws GeoGridException
@@ -127,19 +117,15 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
     {
       try
       {
-        if( m_rangeSet instanceof RangeSetFile )
+        if( m_rangeSet != null )
         {
-          final RangeSetFile file = (RangeSetFile) m_rangeSet;
-          final URL url = new URL( m_context, file.getFileName() );
-
-          m_grid = GeoGridUtilities.openGrid( file.getMimeType(), url, m_origin, m_offsetX, m_offsetY, m_sourceCRS, m_writeable );
+          final URL url = new URL( m_context, m_rangeSet.getFileName() );
+          m_grid = GeoGridUtilities.openGrid( m_rangeSet.getMimeType(), url, m_origin, m_offsetX, m_offsetY, m_sourceCRS, m_writeable );
         }
-        else
-          throw new UnsupportedOperationException( "Only FileSet rangeSets supported by now" );
       }
       catch( final IOException e )
       {
-        throw new GeoGridException( "Could not access grid-file", e );
+        throw new GeoGridException( "Failed to access grid-file", e );
       }
     }
 
