@@ -51,6 +51,8 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public interface IElevationModel
 {
+  void dispose( );
+
   /**
    * Get the elevation provides by this model for the specified location [(x,y) position].<br/>
    * REMARK: the position is given as GM_Point in order to transport the target coordinate system as well. The
