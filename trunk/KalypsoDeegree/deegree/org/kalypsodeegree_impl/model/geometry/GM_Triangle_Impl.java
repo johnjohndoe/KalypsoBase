@@ -148,4 +148,33 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
     return orientation( getExteriorRing()[0], getExteriorRing()[1], getExteriorRing()[2] );
   }
 
+  @Override
+  public double getMinValue( )
+  {
+    final GM_Position[] ring = getExteriorRing();
+    double min = ring[0].getZ();
+
+    if( min > ring[1].getZ() )
+      min = ring[1].getZ();
+
+    if( min > ring[2].getZ() )
+      min = ring[2].getZ();
+
+    return min;
+  }
+
+  @Override
+  public double getMaxValue( )
+  {
+    final GM_Position[] ring = getExteriorRing();
+    double max = ring[0].getZ();
+
+    if( max < ring[1].getZ() )
+      max = ring[1].getZ();
+
+    if( max < ring[2].getZ() )
+      max = ring[2].getZ();
+
+    return max;
+  }
 }
