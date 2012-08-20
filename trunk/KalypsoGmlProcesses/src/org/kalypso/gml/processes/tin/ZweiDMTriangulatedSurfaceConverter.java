@@ -44,15 +44,25 @@ import java.net.URL;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
+import org.kalypso.gml.processes.KalypsoGmlProcessesPlugin;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
+import org.kalypsodeegree_impl.model.geometry.GM_TriangulatedSurface_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+
+import com.bce.gis.io.hmo.HMOReader.ITriangleReceiver;
+import com.bce.gis.io.zweidm.SmsParser;
+import com.vividsolutions.jts.geom.Coordinate;
 
 /**
  * @author Holger Albert
  */
 public class ZweiDMTriangulatedSurfaceConverter extends AbstractTriangulatedSurfaceConverter
 {
-  private final String m_sourceSrs;
+  public final String m_sourceSrs;
 
   public ZweiDMTriangulatedSurfaceConverter( final String sourceSrs )
   {
@@ -60,13 +70,55 @@ public class ZweiDMTriangulatedSurfaceConverter extends AbstractTriangulatedSurf
   }
 
   @Override
-  public GM_TriangulatedSurface convert( final URL sourceLocation, final IProgressMonitor monitor ) throws CoreException
+  public GM_TriangulatedSurface convert( final URL sourceLocation, IProgressMonitor monitor ) throws CoreException
   {
-    /* Coordinate system of the 2DM file. */
-    final int sourceSrid = JTSAdapter.toSrid( m_sourceSrs );
+    /* Monitor. */
+    if( monitor == null )
+      monitor = new NullProgressMonitor();
 
-    // TODO
+    try
+    {
+      /* Monitor. */
+      monitor.beginTask( "Copying input data", 100 );
+      monitor.subTask( "Copying input data..." );
 
-    return null;
+      /* Create the triangulated surface. */
+      final GM_TriangulatedSurface gmSurface = new GM_TriangulatedSurface_Impl( m_sourceSrs );
+
+      /* Coordinate system of the 2DM file. */
+      final int sourceSrid = JTSAdapter.toSrid( m_sourceSrs );
+
+      /* The receiver will get the points added by the sms model. */
+      final ITriangleReceiver receiver = new ITriangleReceiver()
+      {
+        @Override
+        public void add( final Coordinate c0, final Coordinate c1, final Coordinate c2 )
+        {
+          try
+          {
+            addTriangle( gmSurface, c0, c1, c2, m_sourceSrs );
+          }
+          catch( final Exception e )
+          {
+            e.printStackTrace();
+          }
+        }
+      };
+
+      /* Read the input data. */
+      final SmsParser parser = new SmsParser( new TriangulatedSurfaceSmsModel( sourceSrid, receiver ) );
+      parser.parse( sourceLocation, new SubProgressMonitor( monitor, 100 ) );
+
+      return gmSurface;
+    }
+    catch( final Exception ex )
+    {
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGmlProcessesPlugin.PLUGIN_ID, ex.getLocalizedMessage(), ex ) );
+    }
+    finally
+    {
+      /* Monitor. */
+      monitor.done();
+    }
   }
 }

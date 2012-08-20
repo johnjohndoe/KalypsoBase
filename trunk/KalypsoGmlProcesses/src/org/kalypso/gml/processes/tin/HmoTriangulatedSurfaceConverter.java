@@ -50,12 +50,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.gml.processes.KalypsoGmlProcessesPlugin;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.model.geometry.GM_TriangulatedSurface_Impl;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.bce.gis.io.hmo.HMOReader;
 import com.bce.gis.io.hmo.HMOReader.ITriangleReceiver;
@@ -107,14 +103,14 @@ public class HmoTriangulatedSurfaceConverter extends AbstractTriangulatedSurface
         }
       };
 
-      /* read hmo */
+      /* Read hmo. */
       // FIXME: stream never closed
       final Reader r = new InputStreamReader( hmoLocation.openStream() );
       final HMOReader hmoReader = new HMOReader();
       hmoReader.read( r, receiver );
 
       /* Monitor. */
-      monitor.done();
+      monitor.worked( 100 );
 
       return gmSurface;
     }
@@ -127,15 +123,5 @@ public class HmoTriangulatedSurfaceConverter extends AbstractTriangulatedSurface
       /* Monitor. */
       monitor.done();
     }
-  }
-
-  static void addTriangle( final GM_TriangulatedSurface surface, final Coordinate c0, final Coordinate c1, final Coordinate c2, final String sourceSrs ) throws Exception
-  {
-    final GM_Position p0 = JTSAdapter.wrap( c0 );
-    final GM_Position p1 = JTSAdapter.wrap( c1 );
-    final GM_Position p2 = JTSAdapter.wrap( c2 );
-
-    final GM_Triangle gmTriangle = GeometryFactory.createGM_Triangle( p0, p1, p2, sourceSrs );
-    surface.add( gmTriangle );
   }
 }
