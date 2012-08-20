@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,40 +36,46 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml.processes.tin;
-
-import java.net.URL;
-
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Triangle;
-import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+package com.bce.gis.io.zweidm;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LinearRing;
+import com.vividsolutions.jts.geom.Polygon;
 
-/**
- * @author Holger Albert
- */
-public abstract class AbstractTriangulatedSurfaceConverter
+public class SmsElement
 {
-  public AbstractTriangulatedSurfaceConverter( )
+  private final Integer[] m_nodeIds;
+
+  private final ISmsModel m_model;
+
+  private final int m_id;
+
+  public SmsElement( final ISmsModel model, final int id, final Integer[] nodeIds )
   {
+    m_model = model;
+    m_id = id;
+    m_nodeIds = nodeIds;
   }
 
-  public abstract GM_TriangulatedSurface convert( final URL sourceLocation, IProgressMonitor monitor ) throws CoreException;
-
-  protected void addTriangle( final GM_TriangulatedSurface surface, final Coordinate c0, final Coordinate c1, final Coordinate c2, final String sourceSrs ) throws Exception
+  public IPolygonWithName toSurface( )
   {
-    final GM_Position p0 = JTSAdapter.wrap( c0 );
-    final GM_Position p1 = JTSAdapter.wrap( c1 );
-    final GM_Position p2 = JTSAdapter.wrap( c2 );
+    final Coordinate[] coordinates = new Coordinate[m_nodeIds.length + 1];
+    for( int i = 0; i < m_nodeIds.length; i++ )
+    {
+      coordinates[i] = m_model.getNode( m_nodeIds[i] );
+    }
+    coordinates[m_nodeIds.length] = m_model.getNode( m_nodeIds[0] );
 
-    final GM_Triangle gmTriangle = GeometryFactory.createGM_Triangle( p0, p1, p2, sourceSrs );
-    surface.add( gmTriangle );
+    final int srid = m_model.getSrid();
+
+    final GeometryFactory gf = m_model.getGeometryFactory();
+    final LinearRing shell = gf.createLinearRing( coordinates );
+    final Polygon polygon = gf.createPolygon( shell, null );
+    polygon.setSRID( srid );
+
+    return new PolygonWithName( Integer.toString( m_id ), polygon );
   }
 }

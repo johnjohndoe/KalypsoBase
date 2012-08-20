@@ -129,7 +129,7 @@ public abstract class AbstractTriangulatedSurfaceCoverageImporter implements ICo
       /* Add as MultiSurface-Coverage. */
       final IFeatureBindingCollection<ICoverage> coverages = coverageContainer.getCoverages();
       final ICoverage newCoverage = coverages.addNew( MultiSurfaceCoverage.FEATURE_MULTI_SURFACE_COVERAGE );
-      newCoverage.setName( targetFile.getName() );
+      newCoverage.setName( dataFile.getName() );
 
       /* Update the bounded by property. */
       final GM_Envelope boundedBy = gmSurface.getEnvelope();

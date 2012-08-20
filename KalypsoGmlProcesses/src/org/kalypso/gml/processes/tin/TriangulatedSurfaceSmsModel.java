@@ -40,36 +40,36 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml.processes.tin;
 
-import java.net.URL;
-
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Triangle;
-import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-
+import com.bce.gis.io.hmo.HMOReader.ITriangleReceiver;
+import com.bce.gis.io.zweidm.IPolygonWithName;
+import com.bce.gis.io.zweidm.SmsElement;
+import com.bce.gis.io.zweidm.SmsModel;
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * @author Holger Albert
  */
-public abstract class AbstractTriangulatedSurfaceConverter
+public class TriangulatedSurfaceSmsModel extends SmsModel
 {
-  public AbstractTriangulatedSurfaceConverter( )
+  public TriangulatedSurfaceSmsModel( final int srid, final ITriangleReceiver receiver )
   {
+    super( srid );
   }
 
-  public abstract GM_TriangulatedSurface convert( final URL sourceLocation, IProgressMonitor monitor ) throws CoreException;
-
-  protected void addTriangle( final GM_TriangulatedSurface surface, final Coordinate c0, final Coordinate c1, final Coordinate c2, final String sourceSrs ) throws Exception
+  /**
+   * @see com.bce.gis.io.zweidm.SmsModel#addElement(java.lang.String, int, java.lang.Integer[], int)
+   */
+  @Override
+  public void addElement( final String lineString, final int id, final Integer[] nodeIds, final int roughnessClassID )
   {
-    final GM_Position p0 = JTSAdapter.wrap( c0 );
-    final GM_Position p1 = JTSAdapter.wrap( c1 );
-    final GM_Position p2 = JTSAdapter.wrap( c2 );
+    final SmsElement smsElement = new SmsElement( this, id, nodeIds );
+    final IPolygonWithName surface = smsElement.toSurface();
+    final Polygon polygon = surface.getPolygon();
+    final LineString exteriorRing = polygon.getExteriorRing();
+    final Coordinate[] coordinates = exteriorRing.getCoordinates();
 
-    final GM_Triangle gmTriangle = GeometryFactory.createGM_Triangle( p0, p1, p2, sourceSrs );
-    surface.add( gmTriangle );
+    // TODO
   }
 }

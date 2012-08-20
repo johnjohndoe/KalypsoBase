@@ -10,7 +10,7 @@
  *  http://www.tuhh.de/wb
  * 
  *  and
- *  
+ * 
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
@@ -36,40 +36,43 @@
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ * 
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml.processes.tin;
+package com.bce.gis.io.zweidm;
 
-import java.net.URL;
-
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Triangle;
-import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
-import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-
-import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Polygon;
 
 /**
- * @author Holger Albert
+ * @author Gernot Belger
  */
-public abstract class AbstractTriangulatedSurfaceConverter
+public class PolygonWithName implements IPolygonWithName
 {
-  public AbstractTriangulatedSurfaceConverter( )
+  private final String m_name;
+
+  private final Polygon m_polygon;
+
+  public PolygonWithName( final String name, final Polygon polygon )
   {
+    m_name = name;
+    m_polygon = polygon;
   }
 
-  public abstract GM_TriangulatedSurface convert( final URL sourceLocation, IProgressMonitor monitor ) throws CoreException;
-
-  protected void addTriangle( final GM_TriangulatedSurface surface, final Coordinate c0, final Coordinate c1, final Coordinate c2, final String sourceSrs ) throws Exception
+  @Override
+  public String getName( )
   {
-    final GM_Position p0 = JTSAdapter.wrap( c0 );
-    final GM_Position p1 = JTSAdapter.wrap( c1 );
-    final GM_Position p2 = JTSAdapter.wrap( c2 );
+    return m_name;
+  }
 
-    final GM_Triangle gmTriangle = GeometryFactory.createGM_Triangle( p0, p1, p2, sourceSrs );
-    surface.add( gmTriangle );
+  @Override
+  public Envelope getEnvelope( )
+  {
+    return m_polygon.getEnvelopeInternal();
+  }
+
+  @Override
+  public Polygon getPolygon( )
+  {
+    return m_polygon;
   }
 }
