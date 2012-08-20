@@ -38,29 +38,34 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml.processes.tin;
+package org.kalypso.gml.ui.internal.coverage.imports;
 
-import java.net.URL;
+import java.io.File;
+import java.net.MalformedURLException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.contribs.java.io.FilePattern;
+import org.kalypso.gml.processes.tin.ZweiDMTriangulatedSurfaceConverter;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 
 /**
  * @author Holger Albert
  */
-public class File2dmTriangulatedSurfaceConverter extends AbstractTriangulatedSurfaceConverter
+public class ZweiDMCoverageImporter extends AbstractTriangulatedSurfaceCoverageImporter
 {
-  private final String m_sourceSrs;
-
-  public File2dmTriangulatedSurfaceConverter( final String sourceSrs )
+  @Override
+  public FilePattern getFilePattern( )
   {
-    m_sourceSrs = sourceSrs;
+    return new FilePattern( ".2dm", "2DM-Files" );
   }
 
   @Override
-  public GM_TriangulatedSurface convert( final URL sourceLocation, final IProgressMonitor monitor ) throws CoreException
+  protected GM_TriangulatedSurface readInputData( final File dataFile, final String crs, final IProgressMonitor monitor ) throws CoreException, MalformedURLException
   {
-    return null;
+    final ZweiDMTriangulatedSurfaceConverter converter = new ZweiDMTriangulatedSurfaceConverter( crs );
+    final GM_TriangulatedSurface gmSurface = converter.convert( dataFile.toURI().toURL(), monitor );
+
+    return gmSurface;
   }
 }
