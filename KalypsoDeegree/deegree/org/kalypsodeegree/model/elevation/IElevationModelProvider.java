@@ -40,48 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.elevation;
 
-import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Point;
-
 /**
- * Interface for classes that provide elevation information. The elevation can be get using
- * {@link #getElevation(GM_Point)}.
- *
- * @author Patrice Congo
+ * Implementors of this interface provide an {@link IElevationModel}.
+ * 
+ * @author Gernot Belger
  */
-public interface IElevationModel
+public interface IElevationModelProvider
 {
-  void dispose( );
-
-  /**
-   * Get the elevation provides by this model for the specified location [(x,y) position].<br/>
-   * REMARK: the position is given as GM_Point in order to transport the target coordinate system as well. The
-   * implementation might need to convert the location to its own coordinate system.
-   *
-   * @param location
-   *          the location for which an elevation is to be computed
-   * @return the elevation if the model covered this position or NaN if not
-   */
-  double getElevation( GM_Point location ) throws ElevationException;
-
-  /**
-   * To get the bounding box of this elevation provider
-   *
-   * @return the bounding box as {@link GM_Envelope}
-   */
-  GM_Envelope getBoundingBox( ) throws ElevationException;
-
-  /**
-   * To get the minimal elevation in this elevation provider
-   *
-   * @return the minimal elevation of this provider
-   */
-  double getMinElevation( ) throws ElevationException;
-
-  /**
-   * To get the maximal elevation in this elevation provider
-   *
-   * @return the maximal elevation of this provider as double
-   */
-  double getMaxElevation( ) throws ElevationException;
+  IElevationModel getElevationModel( );
 }

@@ -49,6 +49,8 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.coverage.RangeSetFile;
+import org.kalypsodeegree.model.elevation.IElevationModel;
+import org.kalypsodeegree.model.elevation.IElevationModelProvider;
 import org.kalypsodeegree.model.tin.ITin;
 import org.kalypsodeegree_impl.gml.binding.commons.AbstractCoverage;
 
@@ -57,7 +59,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.AbstractCoverage;
  *
  * @author Gernot Belger
  */
-public class MultiSurfaceCoverage extends AbstractCoverage
+public class MultiSurfaceCoverage extends AbstractCoverage implements IElevationModelProvider
 {
   public static final QName FEATURE_MULTI_SURFACE_COVERAGE = new QName( NS.GML3, "MultiSurfaceCoverage" ); //$NON-NLS-1$
 
@@ -72,12 +74,12 @@ public class MultiSurfaceCoverage extends AbstractCoverage
   {
     if( m_tin == null )
     {
-    final URL context = getWorkspace().getContext();
+      final URL context = getWorkspace().getContext();
 
-    final RangeSetFile rangeSet = getRangeSet();
+      final RangeSetFile rangeSet = getRangeSet();
 
-    final String fileName = rangeSet.getFileName();
-    final String mimeType = rangeSet.getMimeType();
+      final String fileName = rangeSet.getFileName();
+      final String mimeType = rangeSet.getMimeType();
 
       try
       {
@@ -92,5 +94,11 @@ public class MultiSurfaceCoverage extends AbstractCoverage
     }
 
     return m_tin;
+  }
+
+  @Override
+  public IElevationModel getElevationModel( )
+  {
+    return getAsTin();
   }
 }

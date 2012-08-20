@@ -47,5 +47,4 @@ import org.kalypsodeegree.model.elevation.IElevationModel;
  */
 public interface ITin extends IElevationModel
 {
-  void dispose( );
 }
