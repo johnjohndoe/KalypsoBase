@@ -53,9 +53,13 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 public class TriangulatedSurfaceSmsModel extends SmsModel
 {
+  private final ITriangleReceiver m_receiver;
+
   public TriangulatedSurfaceSmsModel( final int srid, final ITriangleReceiver receiver )
   {
     super( srid );
+
+    m_receiver = receiver;
   }
 
   /**
@@ -70,6 +74,20 @@ public class TriangulatedSurfaceSmsModel extends SmsModel
     final LineString exteriorRing = polygon.getExteriorRing();
     final Coordinate[] coordinates = exteriorRing.getCoordinates();
 
-    // TODO
+    if( coordinates.length == 3 )
+    {
+      m_receiver.add( coordinates[0], coordinates[1], coordinates[2] );
+      return;
+    }
+
+    if( coordinates.length == 4 )
+    {
+      m_receiver.add( coordinates[0], coordinates[1], coordinates[2] );
+      m_receiver.add( coordinates[2], coordinates[3], coordinates[0] );
+
+      return;
+    }
+
+    throw new IllegalStateException( String.format( "Expected 3 or 4 coordinates, got %d...", coordinates.length ) );
   }
 }
