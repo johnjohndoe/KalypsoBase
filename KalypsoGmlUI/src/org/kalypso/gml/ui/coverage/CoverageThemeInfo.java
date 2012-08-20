@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- * 
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml.ui.coverage;
 
@@ -64,7 +64,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Show the height value of a coverage as info.
- * 
+ *
  * @author Gernot Belger
  */
 public class CoverageThemeInfo implements IKalypsoThemeInfo
@@ -82,9 +82,6 @@ public class CoverageThemeInfo implements IKalypsoThemeInfo
 
   private String m_formatString;
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoThemeInfo#init(org.kalypso.ogc.gml.IKalypsoTheme, java.util.Properties)
-   */
   @Override
   public void init( final IKalypsoTheme theme, final Properties props )
   {
@@ -101,10 +98,6 @@ public class CoverageThemeInfo implements IKalypsoThemeInfo
     return props.getProperty( PROP_FORMAT, DEFAULT_FORMAT_STRING );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoThemeInfo#appendInfo(java.util.Formatter,
-   *      org.kalypsodeegree.model.geometry.GM_Position)
-   */
   @Override
   public void appendInfo( final Formatter formatter, final GM_Position pos )
   {
@@ -113,10 +106,6 @@ public class CoverageThemeInfo implements IKalypsoThemeInfo
     appendQuickInfo( formatter, pos );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoThemeInfo#appendQuickInfo(java.util.Formatter,
-   *      org.kalypsodeegree.model.geometry.GM_Position)
-   */
   @Override
   public void appendQuickInfo( final Formatter formatter, final GM_Position pos )
   {
@@ -160,6 +149,9 @@ public class CoverageThemeInfo implements IKalypsoThemeInfo
 
       if( !Double.isNaN( value ) )
         return value;
+
+      // FIXME: dispose -> too heavy
+      // TODO: store elevatin models and dipose if theme is disposed (how to do that???)
     }
     return null;
   }

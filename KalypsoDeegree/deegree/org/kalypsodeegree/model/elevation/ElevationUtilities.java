@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree.model.elevation;
 
+import org.apache.commons.lang3.Range;
 import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
@@ -49,7 +50,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 
 /**
  * Helper class for {@link IElevationModel}s.
- * 
+ *
  * @author Gernot Belger
  */
 public final class ElevationUtilities
@@ -71,7 +72,7 @@ public final class ElevationUtilities
 
   /**
    * This function returns the envelope of the elevation model in the target coordinate system.
-   * 
+   *
    * @param elevationModel
    *          The elevation model.
    * @param targetSrs
@@ -87,5 +88,31 @@ public final class ElevationUtilities
     final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( targetSrs );
 
     return geoTransformer.transform( boundingBox );
+  }
+
+  public static Range<Double> calculateRange( final ICoverage[] coverages )
+  {
+    // get min / max
+    double min = Double.MAX_VALUE;
+    double max = -Double.MAX_VALUE;
+
+    for( final ICoverage coverage : coverages )
+    {
+      try
+      {
+        final IElevationModel model = toElevationModel( coverage );
+        min = Math.min( min, model.getMinElevation() );
+        max = Math.max( max, model.getMaxElevation() );
+
+        // dispose it
+        model.dispose();
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+      }
+    }
+
+    return Range.between( min, max );
   }
 }

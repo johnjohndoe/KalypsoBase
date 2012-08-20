@@ -85,6 +85,12 @@ public class TriangulatedSurfaceTin implements ITin
   @Override
   public synchronized void dispose( )
   {
+    // REAMRK: so dispose can be overwritten, but finalize will still dispose the data
+    disposeInternal();
+  }
+
+  public synchronized void disposeInternal( )
+  {
     if( m_loadJob != null )
       m_loadJob.cancel();
 
@@ -100,10 +106,11 @@ public class TriangulatedSurfaceTin implements ITin
   @Override
   protected void finalize( ) throws Throwable
   {
-    dispose();
+    disposeInternal();
   }
 
-  private synchronized GM_TriangulatedSurface getSurface( )
+  @Override
+  public synchronized GM_TriangulatedSurface getTriangulatedSurface( )
   {
     if( m_surfaceFeature == null && m_loadJob == null )
     {
@@ -141,7 +148,7 @@ public class TriangulatedSurfaceTin implements ITin
   private Range<BigDecimal> getMinMax( )
   {
     /* Trigger load */
-    getSurface();
+    getTriangulatedSurface();
 
     return m_minMax;
   }
@@ -149,7 +156,7 @@ public class TriangulatedSurfaceTin implements ITin
   @Override
   public GM_Envelope getBoundingBox( )
   {
-    final GM_TriangulatedSurface surface = getSurface();
+    final GM_TriangulatedSurface surface = getTriangulatedSurface();
     if( surface == null )
       return null;
 
@@ -159,7 +166,7 @@ public class TriangulatedSurfaceTin implements ITin
   @Override
   public double getElevation( final GM_Point location )
   {
-    final GM_TriangulatedSurface surface = getSurface();
+    final GM_TriangulatedSurface surface = getTriangulatedSurface();
     if( surface == null )
       return Double.NaN;
 
