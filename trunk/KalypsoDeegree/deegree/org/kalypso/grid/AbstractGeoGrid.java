@@ -42,7 +42,6 @@ package org.kalypso.grid;
 
 import java.math.BigDecimal;
 
-import org.kalypso.grid.GeoGridUtilities.Interpolation;
 import org.kalypsodeegree.model.elevation.ElevationException;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -219,9 +218,10 @@ public abstract class AbstractGeoGrid implements IGeoGrid
   public double getElevation( final GM_Point location ) throws ElevationException
   {
     final Coordinate locationCrd = JTSAdapter.export( location.getPosition() );
+
     final Coordinate sourceCoordinate = GeoGridUtilities.transformCoordinate( this, locationCrd, location.getCoordinateSystem() );
 
-    return GeoGridUtilities.getValue( this, sourceCoordinate, Interpolation.none );
+    return getValue( sourceCoordinate );
   }
 
   @Override

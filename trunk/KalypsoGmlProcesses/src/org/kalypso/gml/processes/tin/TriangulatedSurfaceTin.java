@@ -87,10 +87,20 @@ public class TriangulatedSurfaceTin implements ITin
   {
     if( m_loadJob != null )
       m_loadJob.cancel();
+
+    if( m_surfaceFeature != null )
+      m_surfaceFeature.getWorkspace().dispose();
+
     m_loadJob = null;
     m_surfaceFeature = null;
     m_minMax = null;
     m_loadStatus = INIT_STATUS;
+  }
+
+  @Override
+  protected void finalize( ) throws Throwable
+  {
+    dispose();
   }
 
   private synchronized GM_TriangulatedSurface getSurface( )
@@ -155,7 +165,6 @@ public class TriangulatedSurfaceTin implements ITin
 
     return surface.getValue( location );
   }
-
 
   @Override
   public double getMinElevation( )

@@ -19,11 +19,6 @@ import com.vividsolutions.jts.geom.Envelope;
 public interface IGeoGrid extends IGeoValueProvider, AutoCloseable, IElevationModel
 {
   /**
-   * Call this after this grid is nor more used. Disposes of any use resources.
-   */
-  void dispose( );
-
-  /**
    * Size of the raster. Amount of raster-cells in direction of x.
    */
   int getSizeX( ) throws GeoGridException;
