@@ -64,9 +64,8 @@ public class SmsElement
   {
     final Coordinate[] coordinates = new Coordinate[m_nodeIds.length + 1];
     for( int i = 0; i < m_nodeIds.length; i++ )
-    {
       coordinates[i] = m_model.getNode( m_nodeIds[i] );
-    }
+
     coordinates[m_nodeIds.length] = m_model.getNode( m_nodeIds[0] );
 
     final int srid = m_model.getSrid();
