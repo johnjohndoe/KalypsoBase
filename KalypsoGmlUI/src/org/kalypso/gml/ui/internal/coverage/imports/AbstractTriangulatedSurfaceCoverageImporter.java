@@ -125,7 +125,7 @@ public abstract class AbstractTriangulatedSurfaceCoverageImporter implements ICo
 
       /* Get the target file. */
       final File targetDir = dataContainer.getLocation().toFile();
-      final File targetFile = AbstractGridCoverageImporter.createTargetFile( dataFile, targetDir, "gml" ); //$NON-NLS-1$
+      final File targetFile = AbstractGridCoverageImporter.createTargetFile( dataFile, targetDir, "gmz" ); //$NON-NLS-1$
 
       /* Add as MultiSurface-Coverage. */
       final IFeatureBindingCollection<ICoverage> coverages = coverageContainer.getCoverages();
