@@ -48,6 +48,7 @@ import org.apache.commons.httpclient.URIException;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -164,6 +165,7 @@ public abstract class AbstractTriangulatedSurfaceCoverageImporter implements ICo
     finally
     {
       FileUtils.deleteQuietly( tempFile );
+      dataContainer.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
       monitor.done();
     }
   }

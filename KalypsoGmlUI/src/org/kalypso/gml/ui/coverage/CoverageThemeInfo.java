@@ -48,21 +48,19 @@ import org.eclipse.core.runtime.Assert;
 import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.grid.GeoGridUtilities;
-import org.kalypso.grid.IGeoGrid;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeInfo;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.model.elevation.ElevationUtilities;
+import org.kalypsodeegree.model.elevation.IElevationModel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-
-import com.vividsolutions.jts.geom.Coordinate;
+import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Show the height value of a coverage as info.
@@ -146,17 +144,20 @@ public class CoverageThemeInfo implements IKalypsoThemeInfo
     if( featureList == null )
       return null;
 
+    final String srs = m_theme.getMapModell().getCoordinatesSystem();
+    final GM_Point location = GeometryFactory.createGM_Point( pos, srs );
+
     final List< ? > coverages = featureList.query( pos, null );
     for( final Object object : coverages )
     {
       /* Search for the first grid which provides a value */
       final Feature feature = FeatureHelper.getFeature( workspace, object );
       final ICoverage coverage = (ICoverage) feature.getAdapter( ICoverage.class );
-      final IGeoGrid grid = GeoGridUtilities.toGrid( coverage );
-      final Coordinate crd = JTSAdapter.export( pos );
-      final Coordinate gridCrd = GeoGridUtilities.transformCoordinate( grid, crd, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
 
-      final double value = GeoGridUtilities.getValueChecked( grid, gridCrd );
+      final IElevationModel elevationModel = ElevationUtilities.toElevationModel( coverage );
+
+      final double value = elevationModel.getElevation( location );
+
       if( !Double.isNaN( value ) )
         return value;
     }
