@@ -50,6 +50,9 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 
 /**
+ * HINT: It is needed to store all data (nodes and elements), because the format does not specify an order for defining
+ * the nodes, elements (i.e. first the nodes, than the elements). The nodes may come last...
+ * 
  * @author Thomas Jung
  */
 public class SmsModel implements ISmsModel

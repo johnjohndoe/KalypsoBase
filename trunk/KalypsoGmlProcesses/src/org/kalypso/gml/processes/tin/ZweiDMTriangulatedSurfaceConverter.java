@@ -41,6 +41,7 @@
 package org.kalypso.gml.processes.tin;
 
 import java.net.URL;
+import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -53,9 +54,13 @@ import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.model.geometry.GM_TriangulatedSurface_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
-import com.bce.gis.io.hmo.HMOReader.ITriangleReceiver;
+import com.bce.gis.io.zweidm.IPolygonWithName;
+import com.bce.gis.io.zweidm.ISmsModel;
+import com.bce.gis.io.zweidm.SmsElement;
 import com.bce.gis.io.zweidm.SmsParser;
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * @author Holger Albert
@@ -82,32 +87,46 @@ public class ZweiDMTriangulatedSurfaceConverter extends AbstractTriangulatedSurf
       monitor.beginTask( "Copying input data", 100 );
       monitor.subTask( "Copying input data..." );
 
-      /* Create the triangulated surface. */
-      final GM_TriangulatedSurface gmSurface = new GM_TriangulatedSurface_Impl( m_sourceSrs );
-
       /* Coordinate system of the 2DM file. */
       final int sourceSrid = JTSAdapter.toSrid( m_sourceSrs );
 
-      /* The receiver will get the points added by the sms model. */
-      final ITriangleReceiver receiver = new ITriangleReceiver()
-      {
-        @Override
-        public void add( final Coordinate c0, final Coordinate c1, final Coordinate c2 )
-        {
-          try
-          {
-            addTriangle( gmSurface, c0, c1, c2, m_sourceSrs );
-          }
-          catch( final Exception e )
-          {
-            e.printStackTrace();
-          }
-        }
-      };
-
       /* Read the input data. */
-      final SmsParser parser = new SmsParser( new TriangulatedSurfaceSmsModel( sourceSrid, receiver ) );
-      parser.parse( sourceLocation, new SubProgressMonitor( monitor, 100 ) );
+      final SmsParser parser = new SmsParser( sourceSrid );
+      parser.parse( sourceLocation, new SubProgressMonitor( monitor, 50 ) );
+
+      /* Monitor. */
+      monitor.subTask( "Creating triangulated surface..." );
+
+      /* Create the triangulated surface. */
+      final GM_TriangulatedSurface gmSurface = new GM_TriangulatedSurface_Impl( m_sourceSrs );
+
+      /* Add the triangles. */
+      final ISmsModel model = parser.getModel();
+      final List<SmsElement> elementList = model.getElementList();
+      for( final SmsElement smsElement : elementList )
+      {
+        final IPolygonWithName surface = smsElement.toSurface();
+        final Polygon polygon = surface.getPolygon();
+        final LineString exteriorRing = polygon.getExteriorRing();
+        final Coordinate[] coordinates = exteriorRing.getCoordinates();
+        if( coordinates.length == 4 )
+        {
+          addTriangle( gmSurface, coordinates[0], coordinates[1], coordinates[2], m_sourceSrs );
+          continue;
+        }
+
+        if( coordinates.length == 5 )
+        {
+          addTriangle( gmSurface, coordinates[0], coordinates[1], coordinates[2], m_sourceSrs );
+          addTriangle( gmSurface, coordinates[2], coordinates[3], coordinates[0], m_sourceSrs );
+          continue;
+        }
+
+        throw new IllegalStateException( String.format( "Expected 4 or 5 coordinates, got %d...", coordinates.length ) );
+      }
+
+      /* Monitor. */
+      monitor.worked( 50 );
 
       return gmSurface;
     }
