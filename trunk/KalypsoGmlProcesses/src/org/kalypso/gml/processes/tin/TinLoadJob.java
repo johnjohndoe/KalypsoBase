@@ -60,7 +60,7 @@ import org.kalypsodeegree.model.geometry.MinMaxSurfacePatchVisitor;
 
 /**
  * Helper that loads the tin in a job.
- *
+ * 
  * @author Gernot Belger
  */
 public class TinLoadJob extends Job
@@ -88,7 +88,7 @@ public class TinLoadJob extends Job
 
     try
     {
-      Assert.isTrue( "tin/gml".equals( mimeType ) ); //$NON-NLS-1$
+      Assert.isTrue( "application/gml+xml".equals( mimeType ) ); //$NON-NLS-1$
 
       final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( dataLocation, null, monitor );
 

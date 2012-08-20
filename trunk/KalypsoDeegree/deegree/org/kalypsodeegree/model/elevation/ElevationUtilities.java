@@ -46,7 +46,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 
 /**
  * Helper class for {@link IElevationModel}s.
- *
+ * 
  * @author Gernot Belger
  */
 public final class ElevationUtilities
@@ -55,7 +55,7 @@ public final class ElevationUtilities
    * Wraps an coverage into an {@link IElevationModel}. The caller is responsible for disposing the returned
    * {@link IElevationModel}.
    */
-  public IElevationModel toElevationModel( final ICoverage coverage )
+  public static IElevationModel toElevationModel( final ICoverage coverage )
   {
     if( coverage instanceof IElevationModelProvider )
       return ((IElevationModelProvider) coverage).getElevationModel();
