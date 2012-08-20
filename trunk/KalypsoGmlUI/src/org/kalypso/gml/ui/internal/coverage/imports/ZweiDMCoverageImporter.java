@@ -57,7 +57,7 @@ public class ZweiDMCoverageImporter extends AbstractTriangulatedSurfaceCoverageI
   @Override
   public FilePattern getFilePattern( )
   {
-    return new FilePattern( ".2dm", "2DM-Files" );
+    return new FilePattern( "*.2dm", "2DM-Files" ); //$NON-NLS-1$
   }
 
   @Override

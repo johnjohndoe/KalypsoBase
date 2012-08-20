@@ -40,14 +40,12 @@ import javax.xml.namespace.QName;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.transformation.transformer.GeoTransformerFactory;
-import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * TODO: add setters/getters for the coverage-function
- *
+ * 
  * @author Dejan Antanaskovic, Gernot Belger
  */
 public class RectifiedGridCoverage extends AbstractCoverage
@@ -68,7 +66,7 @@ public class RectifiedGridCoverage extends AbstractCoverage
 
   /**
    * Sets the grid domain, also updates the boundedBy property.
-   *
+   * 
    * @param gridDomain
    *          The gridDomain to set.
    */
@@ -85,23 +83,6 @@ public class RectifiedGridCoverage extends AbstractCoverage
     catch( final Exception e )
     {
       e.printStackTrace();
-    }
-  }
-
-  // TODO: find a general solution within the feature API
-  @Override
-  public GM_Envelope getEnvelope( )
-  {
-    try
-    {
-      final GM_Envelope property = getProperty( QN_BOUNDED_BY, GM_Envelope.class );
-      final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
-      return geoTransformer.transform( property );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
-      return null;
     }
   }
 }

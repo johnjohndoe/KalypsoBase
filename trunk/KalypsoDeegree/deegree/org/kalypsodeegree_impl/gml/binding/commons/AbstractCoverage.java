@@ -45,12 +45,16 @@ import javax.xml.namespace.QName;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.coverage.RangeSetFile;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * Base implementation of gml:_Coverage
- *
+ * 
  * @author Holger Albert
  * @author Gernot Belger
  */
@@ -79,5 +83,22 @@ public class AbstractCoverage extends Feature_Impl implements ICoverage
       throw new IllegalArgumentException();
 
     setProperty( QNAME_PROP_RANGE_SET, rangeSet );
+  }
+
+  // TODO: find a general solution within the feature API
+  @Override
+  public GM_Envelope getBoundedBy( )
+  {
+    try
+    {
+      final GM_Envelope property = getProperty( QN_BOUNDED_BY, GM_Envelope.class );
+      final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+      return geoTransformer.transform( property );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      return null;
+    }
   }
 }

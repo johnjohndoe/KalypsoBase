@@ -41,16 +41,13 @@
 package org.kalypso.gml.ui.internal.coverage;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.deegree.model.spatialschema.GeometryException;
 import org.eclipse.jface.action.Action;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.gml.ui.KalypsoGmlUiImages;
 import org.kalypso.gml.ui.coverage.CoverageManagementWidget;
 import org.kalypso.gml.ui.i18n.Messages;
-import org.kalypso.grid.GeoGridException;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.model.elevation.ElevationUtilities;
-import org.kalypsodeegree.model.elevation.IElevationModel;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
@@ -84,8 +81,7 @@ public class JumpToCoverageAction extends Action implements IUpdateable
 
       for( final ICoverage coverage : selectedCoverages )
       {
-        final IElevationModel elevationModel = ElevationUtilities.toElevationModel( coverage );
-        final GM_Envelope boundingBox = ElevationUtilities.getEnvelope( elevationModel, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+        final GM_Envelope boundingBox = coverage.getBoundedBy();
         final GM_Envelope scaledBox = GeometryUtilities.scaleEnvelope( boundingBox, 1.05 );
 
         if( fullExtent == null )
@@ -96,11 +92,7 @@ public class JumpToCoverageAction extends Action implements IUpdateable
 
       m_widget.getMapPanel().setBoundingBox( fullExtent );
     }
-    catch( final GeoGridException e )
-    {
-      e.printStackTrace();
-    }
-    catch( final Exception e )
+    catch( final GeometryException e )
     {
       e.printStackTrace();
     }

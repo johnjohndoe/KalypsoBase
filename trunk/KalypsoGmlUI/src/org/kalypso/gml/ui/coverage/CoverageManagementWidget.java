@@ -95,7 +95,6 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.grid.GeoGridException;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
@@ -113,11 +112,8 @@ import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.ui.editor.gmleditor.command.MoveFeatureCommand;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypso.ui.editor.styleeditor.viewer.ColorMapViewer;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
-import org.kalypsodeegree.model.elevation.ElevationUtilities;
-import org.kalypsodeegree.model.elevation.IElevationModel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -825,8 +821,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       try
       {
         /* Paint bbox of selected coverage */
-        final IElevationModel elevationModel = ElevationUtilities.toElevationModel( m_selectedCoverage );
-        final GM_Envelope boundingBox = ElevationUtilities.getEnvelope( elevationModel, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+        final GM_Envelope boundingBox = m_selectedCoverage.getBoundedBy();
 
         final GM_Position minPoint = getMapPanel().getProjection().getDestPoint( boundingBox.getMin() );
         final GM_Position maxPoint = getMapPanel().getProjection().getDestPoint( boundingBox.getMax() );
@@ -839,10 +834,6 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
         g.setColor( Color.RED );
         g.drawRect( x, y, width, height );
-      }
-      catch( final GeoGridException e )
-      {
-        e.printStackTrace();
       }
       catch( final Exception e )
       {
