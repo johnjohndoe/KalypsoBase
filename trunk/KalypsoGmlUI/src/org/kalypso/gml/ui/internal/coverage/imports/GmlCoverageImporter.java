@@ -67,7 +67,8 @@ public class GmlCoverageImporter extends AbstractTriangulatedSurfaceCoverageImpo
   @Override
   protected GM_TriangulatedSurface readInputData( final File dataFile, final String crs, final IProgressMonitor monitor ) throws CoreException, MalformedURLException
   {
-    final GMLXPath sourcePath = new GMLXPath( TriangulatedSurfaceFeature.MEMBER_TRIANGULATED_SURFACE );
+    final GMLXPath gmlxPath = new GMLXPath( TriangulatedSurfaceFeature.FEATURE_TRIANGULATED_SURFACE );
+    final GMLXPath sourcePath = new GMLXPath( gmlxPath, TriangulatedSurfaceFeature.MEMBER_TRIANGULATED_SURFACE );
 
     final GmlTriangulatedSurfaceConverter converter = new GmlTriangulatedSurfaceConverter( sourcePath );
     final GM_TriangulatedSurface gmSurface = converter.convert( dataFile.toURI().toURL(), monitor );
