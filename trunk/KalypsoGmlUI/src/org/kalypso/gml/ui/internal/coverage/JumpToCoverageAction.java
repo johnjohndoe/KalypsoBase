@@ -48,10 +48,10 @@ import org.kalypso.gml.ui.KalypsoGmlUiImages;
 import org.kalypso.gml.ui.coverage.CoverageManagementWidget;
 import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.grid.GeoGridException;
-import org.kalypso.grid.GeoGridUtilities;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.model.elevation.ElevationUtilities;
+import org.kalypsodeegree.model.elevation.IElevationModel;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
@@ -84,8 +84,9 @@ public class JumpToCoverageAction extends Action implements IUpdateable
 
       for( final ICoverage coverage : selectedCoverages )
       {
-        final GM_Surface< ? > surface = GeoGridUtilities.createSurface( GeoGridUtilities.toGrid( coverage ), KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
-        final GM_Envelope scaledBox = GeometryUtilities.scaleEnvelope( surface.getEnvelope(), 1.05 );
+        final IElevationModel elevationModel = ElevationUtilities.toElevationModel( coverage );
+        final GM_Envelope boundingBox = ElevationUtilities.getEnvelope( elevationModel, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+        final GM_Envelope scaledBox = GeometryUtilities.scaleEnvelope( boundingBox, 1.05 );
 
         if( fullExtent == null )
           fullExtent = scaledBox;
@@ -104,7 +105,6 @@ public class JumpToCoverageAction extends Action implements IUpdateable
       e.printStackTrace();
     }
   }
-
 
   @Override
   public void update( )

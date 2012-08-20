@@ -96,7 +96,6 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.grid.GeoGridException;
-import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
@@ -117,6 +116,8 @@ import org.kalypso.ui.editor.styleeditor.viewer.ColorMapViewer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
+import org.kalypsodeegree.model.elevation.ElevationUtilities;
+import org.kalypsodeegree.model.elevation.IElevationModel;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -125,7 +126,6 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
@@ -133,7 +133,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
  * A widget with option pane, which allows the user to edit a coverage collection.<BR>
  * The user can add / remove coverage data to / from the collection and change the order of the elements of the
  * collection. In addition he can jump to the extent of an collection element in the map.
- *
+ * 
  * @author Thomas Jung
  * @author Gernot Belger
  */
@@ -825,11 +825,11 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       try
       {
         /* Paint bbox of selected coverage */
-        final GM_Surface< ? > surface = GeoGridUtilities.createSurface( GeoGridUtilities.toGrid( m_selectedCoverage ), KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
-        final GM_Envelope envelope = surface.getEnvelope();
+        final IElevationModel elevationModel = ElevationUtilities.toElevationModel( m_selectedCoverage );
+        final GM_Envelope boundingBox = ElevationUtilities.getEnvelope( elevationModel, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
 
-        final GM_Position minPoint = getMapPanel().getProjection().getDestPoint( envelope.getMin() );
-        final GM_Position maxPoint = getMapPanel().getProjection().getDestPoint( envelope.getMax() );
+        final GM_Position minPoint = getMapPanel().getProjection().getDestPoint( boundingBox.getMin() );
+        final GM_Position maxPoint = getMapPanel().getProjection().getDestPoint( boundingBox.getMax() );
 
         final int x = (int) Math.min( minPoint.getX(), maxPoint.getX() );
         final int y = (int) Math.min( minPoint.getY(), maxPoint.getY() );
@@ -886,7 +886,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   /**
    * This function returns the selected feature theme.
-   *
+   * 
    * @return The selected feature theme.
    */
   public IKalypsoFeatureTheme getSelectedTheme( )

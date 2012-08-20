@@ -41,6 +41,9 @@
 package org.kalypsodeegree.model.elevation;
 
 import org.kalypso.grid.GeoGridUtilities;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 
@@ -64,5 +67,25 @@ public final class ElevationUtilities
       return GeoGridUtilities.toGrid( coverage );
 
     throw new IllegalArgumentException();
+  }
+
+  /**
+   * This function returns the envelope of the elevation model in the target coordinate system.
+   * 
+   * @param elevationModel
+   *          The elevation model.
+   * @param targetSrs
+   *          The target coordinate system.
+   * @return The envelope of the elevation model in the target coordinate system.
+   */
+  public static GM_Envelope getEnvelope( final IElevationModel elevationModel, final String targetSrs ) throws Exception
+  {
+    final GM_Envelope boundingBox = elevationModel.getBoundingBox();
+    if( boundingBox == null )
+      return null;
+
+    final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( targetSrs );
+
+    return geoTransformer.transform( boundingBox );
   }
 }
