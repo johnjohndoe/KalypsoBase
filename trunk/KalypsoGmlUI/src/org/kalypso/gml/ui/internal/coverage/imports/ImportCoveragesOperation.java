@@ -45,9 +45,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
@@ -60,7 +62,6 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
 /**
  * @author belger
- *
  */
 final class ImportCoveragesOperation implements ICoreRunnableWithProgress
 {
@@ -86,32 +87,40 @@ final class ImportCoveragesOperation implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
-    final String taskName = Messages.getString( "org.kalypso.gml.ui.wizard.grid.AddRectifiedGridCoveragesWizard.5" );
-    final SubMonitor progress = SubMonitor.convert( monitor, taskName, m_selectedFiles.length ); //$NON-NLS-1$
-
     final IStatusCollector log = new StatusCollector( KalypsoGmlUIPlugin.id() );
+    final String taskName = Messages.getString( "org.kalypso.gml.ui.wizard.grid.AddRectifiedGridCoveragesWizard.5" );
 
-    final Collection<ICoverage> newCoverages = new ArrayList<ICoverage>( m_selectedFiles.length );
-    for( final File dataFile : m_selectedFiles )
+    try
     {
-      final String name = dataFile.getName();
-
-      try
+      final SubMonitor progress = SubMonitor.convert( monitor, taskName, m_selectedFiles.length ); //$NON-NLS-1$
+      final Collection<ICoverage> newCoverages = new ArrayList<ICoverage>( m_selectedFiles.length );
+      for( final File dataFile : m_selectedFiles )
       {
-        final ICoverage coverage = importCoverage( dataFile, progress.newChild( 1, SubMonitor.SUPPRESS_NONE ) );
-        newCoverages.add( coverage );
+        final String name = dataFile.getName();
 
-        log.add( IStatus.OK, name );
+        try
+        {
+          final ICoverage coverage = importCoverage( dataFile, progress.newChild( 1, SubMonitor.SUPPRESS_NONE ) );
+          newCoverages.add( coverage );
+
+          log.add( IStatus.OK, name );
+        }
+        catch( final CoreException e )
+        {
+          log.add( e.getStatus().getSeverity(), name, e );
+        }
       }
-      catch( final CoreException e )
-      {
-        log.add( e.getStatus().getSeverity(), name, e );
-      }
+
+      m_data.setNewCoverages( newCoverages.toArray( new ICoverage[newCoverages.size()] ) );
+      m_dataContainer.refreshLocal( IResource.DEPTH_INFINITE, new NullProgressMonitor() );
+
+      return log.asMultiStatus( taskName );
     }
-
-    m_data.setNewCoverages( newCoverages.toArray( new ICoverage[newCoverages.size()] ) );
-
-    return log.asMultiStatus( taskName );
+    catch( final CoreException ex )
+    {
+      log.add( ex.getStatus() );
+      return log.asMultiStatus( taskName );
+    }
   }
 
   private ICoverage importCoverage( final File dataFile, final IProgressMonitor monitor ) throws CoreException

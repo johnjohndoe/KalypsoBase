@@ -42,7 +42,6 @@ package org.kalypso.gml.ui.internal.coverage.imports;
 
 import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URL;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -66,12 +65,8 @@ public class HmoCoverageImporter extends AbstractTriangulatedSurfaceCoverageImpo
   @Override
   protected GM_TriangulatedSurface readInputData( final File dataFile, final String crs, final IProgressMonitor monitor ) throws CoreException, MalformedURLException
   {
-    final URL sourceUrl = dataFile.toURI().toURL();
-    final String query = String.format( "?srs=%s", crs ); //$NON-NLS-1$
-    final URL sourceLocation = new URL( sourceUrl, query );
-
-    final HmoTriangulatedSurfaceConverter converter = new HmoTriangulatedSurfaceConverter();
-    final GM_TriangulatedSurface gmSurface = converter.convert( sourceLocation, monitor );
+    final HmoTriangulatedSurfaceConverter converter = new HmoTriangulatedSurfaceConverter( crs );
+    final GM_TriangulatedSurface gmSurface = converter.convert( dataFile.toURI().toURL(), monitor );
 
     return gmSurface;
   }

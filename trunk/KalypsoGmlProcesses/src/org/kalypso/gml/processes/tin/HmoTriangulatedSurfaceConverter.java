@@ -43,16 +43,13 @@ package org.kalypso.gml.processes.tin;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
-import java.util.Properties;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.java.util.PropertiesUtilities;
 import org.kalypso.gml.processes.KalypsoGmlProcessesPlugin;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
@@ -69,6 +66,13 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public class HmoTriangulatedSurfaceConverter extends AbstractTriangulatedSurfaceConverter
 {
+  protected final String m_sourceSrs;
+
+  public HmoTriangulatedSurfaceConverter( final String sourceSrs )
+  {
+    m_sourceSrs = sourceSrs;
+  }
+
   @Override
   public GM_TriangulatedSurface convert( final URL sourceLocation, IProgressMonitor monitor ) throws CoreException
   {
@@ -82,14 +86,7 @@ public class HmoTriangulatedSurfaceConverter extends AbstractTriangulatedSurface
       monitor.beginTask( "Copying input data", 100 );
       monitor.subTask( "Copying input data..." );
 
-      // FIXME: check: is crs in source??! Probably we get srs from outside!
-      final Properties properties = PropertiesUtilities.collectProperties( sourceLocation.getQuery(), "&", "=", null ); //$NON-NLS-1$ //$NON-NLS-2$
-
-      final String sourceSRS = properties.getProperty( "srs" ); //$NON-NLS-1$
-
-      final String targetSRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-
-      final GM_TriangulatedSurface gmSurface = new GM_TriangulatedSurface_Impl( targetSRS );
+      final GM_TriangulatedSurface gmSurface = new GM_TriangulatedSurface_Impl( m_sourceSrs );
 
       // FIXME: why so complicated?
       final URL hmoLocation = new URL( sourceLocation.getProtocol() + ":" + sourceLocation.getPath() ); //$NON-NLS-1$
@@ -101,7 +98,7 @@ public class HmoTriangulatedSurfaceConverter extends AbstractTriangulatedSurface
         {
           try
           {
-            addTriangle( gmSurface, c0, c1, c2, sourceSRS );
+            addTriangle( gmSurface, c0, c1, c2, m_sourceSrs );
           }
           catch( final Exception e )
           {
@@ -132,23 +129,13 @@ public class HmoTriangulatedSurfaceConverter extends AbstractTriangulatedSurface
     }
   }
 
-  static void addTriangle( final GM_TriangulatedSurface surface, final Coordinate c0, final Coordinate c1, final Coordinate c2, final String sourceSRS ) throws Exception
+  static void addTriangle( final GM_TriangulatedSurface surface, final Coordinate c0, final Coordinate c1, final Coordinate c2, final String sourceSrs ) throws Exception
   {
     final GM_Position p0 = JTSAdapter.wrap( c0 );
     final GM_Position p1 = JTSAdapter.wrap( c1 );
     final GM_Position p2 = JTSAdapter.wrap( c2 );
 
-    /* Transform into srs of surface */
-    final String targetSRS = surface.getCoordinateSystem();
-
-    final GM_Position t0 = p0.transform( sourceSRS, targetSRS );
-    final GM_Position t1 = p1.transform( sourceSRS, targetSRS );
-    final GM_Position t2 = p2.transform( sourceSRS, targetSRS );
-
-    // For shape export we need a clockwise orientation.
-    // The algorithm that delivers the nodes is the nodes to the eater is thinking counter-clockwise.
-    // For that reason we switch the positions order to get that clockwise orientation.
-    final GM_Triangle gmTriangle = GeometryFactory.createGM_Triangle( t0, t1, t2, targetSRS );
+    final GM_Triangle gmTriangle = GeometryFactory.createGM_Triangle( p0, p1, p2, sourceSrs );
     surface.add( gmTriangle );
   }
 }

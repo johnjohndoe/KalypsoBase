@@ -42,7 +42,6 @@ package org.kalypso.gml.processes.tin;
 
 import java.io.File;
 import java.net.URL;
-import java.util.Properties;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -50,7 +49,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.contribs.java.util.PropertiesUtilities;
 import org.kalypso.gml.processes.KalypsoGmlProcessesPlugin;
 import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
@@ -67,8 +65,11 @@ import org.kalypsodeegree_impl.gml.binding.shape.ShapeCollection;
  */
 public class ShapeTriangulatedSurfaceConverter extends AbstractTriangulatedSurfaceConverter
 {
-  public ShapeTriangulatedSurfaceConverter( )
+  private final String m_sourceSrs;
+
+  public ShapeTriangulatedSurfaceConverter( final String sourceSrs )
   {
+    m_sourceSrs = sourceSrs;
   }
 
   @Override
@@ -85,8 +86,6 @@ public class ShapeTriangulatedSurfaceConverter extends AbstractTriangulatedSurfa
       monitor.subTask( "Copying input data..." );
 
       /* Open shape. */
-      final Properties properties = PropertiesUtilities.collectProperties( sourceLocation.getQuery(), "&", "=", null ); //$NON-NLS-1$ //$NON-NLS-2$
-      final String crs = properties.getProperty( "srs" ); //$NON-NLS-1$
       final URL shapeURL = new URL( sourceLocation.getProtocol() + ":" + sourceLocation.getPath() ); //$NON-NLS-1$
       final String file2 = shapeURL.getFile();
       final File file = new File( file2 );
@@ -94,9 +93,9 @@ public class ShapeTriangulatedSurfaceConverter extends AbstractTriangulatedSurfa
       final String shapeBase = FileUtilities.nameWithoutExtension( absolutePath );
 
       // TODO: Check shape type (at first only triangle polygons are supported).
-      final GM_TriangulatedSurface gmSurface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( crs );
+      final GM_TriangulatedSurface gmSurface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_TriangulatedSurface( m_sourceSrs );
 
-      final ShapeCollection shapeCollection = ShapeSerializer.deserialize( shapeBase, crs );
+      final ShapeCollection shapeCollection = ShapeSerializer.deserialize( shapeBase, m_sourceSrs );
       final IFeatureBindingCollection<AbstractShape> shapes = shapeCollection.getShapes();
       final GM_Object geom = shapes.get( 0 ).getGeometry();
       if( geom instanceof GM_MultiSurface )
@@ -108,7 +107,7 @@ public class ShapeTriangulatedSurfaceConverter extends AbstractTriangulatedSurfa
           if( geometry instanceof GM_MultiSurface )
           {
             final GM_MultiSurface polygonSurface = (GM_MultiSurface) geometry;
-            final GM_Triangle[] triangles = ConstraintDelaunayHelper.convertToTriangles( polygonSurface, crs );
+            final GM_Triangle[] triangles = ConstraintDelaunayHelper.convertToTriangles( polygonSurface, m_sourceSrs );
 
             /* Add the triangles into the gm_triangle_surfaces. */
             for( final GM_Triangle element : triangles )

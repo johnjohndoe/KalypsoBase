@@ -61,12 +61,16 @@ import org.kalypso.gml.processes.tin.MultiSurfaceCoverage;
 import org.kalypso.gml.processes.tin.TriangulatedSurfaceFeature;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.coverage.RangeSetFile;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
@@ -102,10 +106,14 @@ public abstract class AbstractTriangulatedSurfaceCoverageImporter implements ICo
       /* Monitor. */
       monitor.subTask( "Storing in temporary location..." );
 
+      /* Transform into the Kalypso coordinate system. */
+      final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+      final GM_Object transformedSurface = geoTransformer.transform( gmSurface );
+
       /* Create the workspace. */
-      final GMLWorkspace tmpWorkspace = FeatureFactory.createGMLWorkspace( TriangulatedSurfaceFeature.QNAME_FEATURE, null, null );
+      final GMLWorkspace tmpWorkspace = FeatureFactory.createGMLWorkspace( TriangulatedSurfaceFeature.FEATURE_TRIANGULATED_SURFACE, null, null );
       final TriangulatedSurfaceFeature rootFeature = (TriangulatedSurfaceFeature) tmpWorkspace.getRootFeature();
-      rootFeature.setTriangulatedSurface( gmSurface );
+      rootFeature.setTriangulatedSurface( (GM_TriangulatedSurface) transformedSurface );
 
       /* Save the workspace. */
       GmlSerializer.serializeWorkspace( tempFile, tmpWorkspace, "UTF-8" );
@@ -121,6 +129,7 @@ public abstract class AbstractTriangulatedSurfaceCoverageImporter implements ICo
       /* Add as MultiSurface-Coverage. */
       final IFeatureBindingCollection<ICoverage> coverages = coverageContainer.getCoverages();
       final ICoverage newCoverage = coverages.addNew( MultiSurfaceCoverage.FEATURE_MULTI_SURFACE_COVERAGE );
+      newCoverage.setName( targetFile.getName() );
 
       /* Update the bounded by property. */
       final GM_Envelope boundedBy = gmSurface.getEnvelope();
@@ -131,6 +140,9 @@ public abstract class AbstractTriangulatedSurfaceCoverageImporter implements ICo
       final RangeSetFile rangeSetFile = new RangeSetFile( externalResource );
       rangeSetFile.setMimeType( "application/gml+xml" );
       newCoverage.setRangeSet( rangeSetFile );
+
+      /* Update the envelopes. */
+      newCoverage.setEnvelopesUpdated();
 
       /* Move the file. */
       FileUtils.moveFile( tempFile, targetFile );
