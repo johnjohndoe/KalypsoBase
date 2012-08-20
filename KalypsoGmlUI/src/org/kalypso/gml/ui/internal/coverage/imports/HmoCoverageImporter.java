@@ -66,8 +66,6 @@ public class HmoCoverageImporter extends AbstractTriangulatedSurfaceCoverageImpo
   protected GM_TriangulatedSurface readInputData( final File dataFile, final String crs, final IProgressMonitor monitor ) throws CoreException, MalformedURLException
   {
     final HmoTriangulatedSurfaceConverter converter = new HmoTriangulatedSurfaceConverter( crs );
-    final GM_TriangulatedSurface gmSurface = converter.convert( dataFile.toURI().toURL(), monitor );
-
-    return gmSurface;
+    return converter.convert( dataFile.toURI().toURL(), monitor );
   }
 }

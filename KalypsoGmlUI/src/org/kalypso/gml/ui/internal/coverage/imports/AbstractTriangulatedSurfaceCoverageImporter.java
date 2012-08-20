@@ -134,7 +134,8 @@ public abstract class AbstractTriangulatedSurfaceCoverageImporter implements ICo
 
       /* Update the bounded by property. */
       final GM_Envelope boundedBy = gmSurface.getEnvelope();
-      newCoverage.setProperty( Feature.QN_BOUNDED_BY, boundedBy );
+      final GM_Envelope boundedByTransformed = geoTransformer.transform( boundedBy );
+      newCoverage.setProperty( Feature.QN_BOUNDED_BY, boundedByTransformed );
 
       /* Update the range set property. */
       final String externalResource = buildRelativePath( dataContainer, coverageContainer.getWorkspace().getContext(), targetFile );
