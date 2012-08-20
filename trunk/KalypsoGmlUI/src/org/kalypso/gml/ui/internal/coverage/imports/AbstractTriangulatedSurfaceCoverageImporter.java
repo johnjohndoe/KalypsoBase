@@ -170,7 +170,7 @@ public abstract class AbstractTriangulatedSurfaceCoverageImporter implements ICo
 
   private String buildRelativePath( final IContainer dataContainer, final URL context, final File targetFile ) throws URIException, MalformedURLException
   {
-    final IFile file = dataContainer.getFile( Path.fromOSString( targetFile.getAbsolutePath() ) );
+    final IFile file = dataContainer.getFile( Path.fromPortableString( targetFile.getName() ) );
     return AbstractGridCoverageImporter.createRelativeGridPath( context, file );
   }
 
