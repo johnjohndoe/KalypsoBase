@@ -53,7 +53,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * Imports a .gml file as coverage.
- *
+ * 
  * @author Holger Albert
  */
 public class GmlCoverageImporter extends AbstractTriangulatedSurfaceCoverageImporter
@@ -67,8 +67,8 @@ public class GmlCoverageImporter extends AbstractTriangulatedSurfaceCoverageImpo
   @Override
   protected GM_TriangulatedSurface readInputData( final File dataFile, final String crs, final IProgressMonitor monitor ) throws CoreException, MalformedURLException
   {
-    // TODO Is that wanted, are only the files (which are also created here), readable?
     final GMLXPath sourcePath = new GMLXPath( TriangulatedSurfaceFeature.MEMBER_TRIANGULATED_SURFACE );
+
     final GmlTriangulatedSurfaceConverter converter = new GmlTriangulatedSurfaceConverter( sourcePath );
     final GM_TriangulatedSurface gmSurface = converter.convert( dataFile.toURI().toURL(), monitor );
 
