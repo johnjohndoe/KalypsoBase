@@ -109,12 +109,15 @@ public class ZweiDMTriangulatedSurfaceConverter extends AbstractTriangulatedSurf
         final Polygon polygon = surface.getPolygon();
         final LineString exteriorRing = polygon.getExteriorRing();
         final Coordinate[] coordinates = exteriorRing.getCoordinates();
+
+        /* HINT: Triangle, Points 0,1,2,0. */
         if( coordinates.length == 4 )
         {
           addTriangle( gmSurface, coordinates[0], coordinates[1], coordinates[2], m_sourceSrs );
           continue;
         }
 
+        /* HINT: Rectangle, Points 0,1,2,3,0. */
         if( coordinates.length == 5 )
         {
           addTriangle( gmSurface, coordinates[0], coordinates[1], coordinates[2], m_sourceSrs );
