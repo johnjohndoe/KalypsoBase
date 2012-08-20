@@ -57,5 +57,4 @@ public interface PolygonColorMap extends Marshallable
   public PolygonColorMapEntry findEntry( String string, final Feature feature );
 
   public void replaceColorMap( List<PolygonColorMapEntry> colorMapList );
-
 }

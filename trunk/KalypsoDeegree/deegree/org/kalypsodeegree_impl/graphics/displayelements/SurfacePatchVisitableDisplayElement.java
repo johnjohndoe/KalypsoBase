@@ -92,18 +92,12 @@ public class SurfacePatchVisitableDisplayElement<P extends GM_SurfacePatch> impl
     m_surfacePatchVisitable = surfacePatchVisitable;
   }
 
-  /**
-   * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#getFeature()
-   */
   @Override
   public Feature getFeature( )
   {
     return m_feature;
   }
 
-  /**
-   * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#isHighlighted()
-   */
   @Override
   public boolean isHighlighted( )
   {
@@ -117,9 +111,6 @@ public class SurfacePatchVisitableDisplayElement<P extends GM_SurfacePatch> impl
     }
   }
 
-  /**
-   * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#isSelected()
-   */
   @Override
   public boolean isSelected( )
   {
@@ -133,9 +124,6 @@ public class SurfacePatchVisitableDisplayElement<P extends GM_SurfacePatch> impl
     }
   }
 
-  /**
-   * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#setHighlighted(boolean)
-   */
   @Override
   public void setHighlighted( final boolean highlighted )
   {
@@ -145,9 +133,6 @@ public class SurfacePatchVisitableDisplayElement<P extends GM_SurfacePatch> impl
     this.m_isHighlighted = highlighted;
   }
 
-  /**
-   * @see org.kalypsodeegree.graphics.displayelements.DisplayElement#setSelected(boolean)
-   */
   @Override
   public void setSelected( final boolean selected )
   {
@@ -215,18 +200,12 @@ public class SurfacePatchVisitableDisplayElement<P extends GM_SurfacePatch> impl
     return Math.sqrt( (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) );
   }
 
-  /**
-   * @see org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator#getDecorated()
-   */
   @Override
   public DisplayElement getDecorated( )
   {
     return m_decorated;
   }
 
-  /**
-   * @see org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator#setDecorated(org.kalypsodeegree.graphics.displayelements.DisplayElement)
-   */
   @Override
   public void setDecorated( final DisplayElement decorated )
   {

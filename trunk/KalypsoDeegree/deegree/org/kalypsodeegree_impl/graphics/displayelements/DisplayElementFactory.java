@@ -58,6 +58,8 @@ import org.kalypsodeegree.graphics.sld.SurfacePolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.TextSymbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.elevation.IElevationModel;
+import org.kalypsodeegree.model.elevation.IElevationModelProvider;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
@@ -70,6 +72,7 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
+import org.kalypsodeegree.model.tin.ITin;
 import org.kalypsodeegree_impl.filterencoding.PropertyName;
 import org.kalypsodeegree_impl.graphics.displayelements.SurfacePatchVisitableDisplayElement.IVisitorFactory;
 import org.kalypsodeegree_impl.graphics.sld.LineColorMap;
@@ -83,7 +86,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 /**
  * Factory class for the different kinds of <tt>DisplayElement</tt>s.
  * <p>
- * 
+ *
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
@@ -98,7 +101,7 @@ public final class DisplayElementFactory
   /**
    * Builds a <tt>DisplayElement</tt> using the given <tt>Feature</tt> or raster and <tt>Symbolizer</tt>.
    * <p>
-   * 
+   *
    * @param o
    *          contains the geometry or raster information (Feature or raster)
    * @param symbolizer
@@ -114,8 +117,9 @@ public final class DisplayElementFactory
     final Object geoObject = findGeometryObject( feature, symbolizer );
 
     // if the geometry property is null, do not build a DisplayElement
-    // Only for RasterSymbolizer a null geoObject is allowed, as it only depends on the feature
-    if( geoObject == null && !(symbolizer instanceof RasterSymbolizer) )
+    // Only for RasterSymbolizer and SurfacePolygonSymbolizer's a null geoObject is allowed, as it only depends on the
+    // feature
+    if( geoObject == null && !(symbolizer instanceof RasterSymbolizer) && !(symbolizer instanceof SurfacePolygonSymbolizer) )
       return null;
 
     final DisplayElement displayElement = buildDisplayElement( feature, symbolizer, geoObject, strategy );
@@ -168,7 +172,7 @@ public final class DisplayElementFactory
 
   /**
    * Finds the geometry object for the given symbolizer and feature.
-   * 
+   *
    * @return Either a {@link GM_Object} or a {@link List} of {@link GM_Object}'s.
    */
   private static Object findGeometryObject( final Feature feature, final Symbolizer symbolizer ) throws FilterEvaluationException, IncompatibleGeometryTypeException
@@ -209,14 +213,38 @@ public final class DisplayElementFactory
     return new SurfacePatchVisitableDisplayElement<GM_Triangle>( feature, tin, null, visitorFactory );
   }
 
+  @SuppressWarnings("unchecked")
   public static DisplayElement buildSurfacePolygonDisplayElement( final Feature feature, final Object geoProperty, final SurfacePolygonSymbolizer symbolizer ) throws IncompatibleGeometryTypeException
   {
-    if( !(geoProperty instanceof GM_Surface) )
-      throw new IncompatibleGeometryTypeException( "Tried to create a SurfaceDisplayElement from a geometry with an incompatible / unsupported type: '" + geoProperty.getClass().getName() + "'!" );
+    Feature tinFeature;
+    GM_Surface<GM_Polygon> tinGeometry;
+
+    // Hacky,, is there a better way to access the real geometry...?
+    if( feature instanceof IElevationModelProvider )
+    {
+      final IElevationModel elevationModel = ((IElevationModelProvider) feature).getElevationModel();
+      if( elevationModel instanceof ITin )
+      {
+        tinFeature = null;
+        final GM_Surface< ? extends GM_Polygon> surface = ((ITin) elevationModel).getTriangulatedSurface();
+        if( surface == null )
+          return null;
+
+        tinGeometry = (GM_Surface<GM_Polygon>) surface;
+      }
+      else
+        return null;
+    }
+    else
+    {
+      tinFeature = feature;
+
+      if( !(geoProperty instanceof GM_Surface) )
+        throw new IncompatibleGeometryTypeException( "Tried to create a SurfaceDisplayElement from a geometry with an incompatible / unsupported type: '" + geoProperty.getClass().getName() + "'!" );
+      tinGeometry = (GM_Surface<GM_Polygon>) geoProperty;
+    }
 
     final PolygonColorMap colorMap = symbolizer.getColorMap();
-    @SuppressWarnings("unchecked")
-    final GM_Surface<GM_Polygon> tin = (GM_Surface<GM_Polygon>) geoProperty;
     final IVisitorFactory<GM_Polygon> visitorFactory = new SurfacePatchVisitableDisplayElement.IVisitorFactory<GM_Polygon>()
     {
       @Override
@@ -227,13 +255,12 @@ public final class DisplayElementFactory
       }
     };
 
-    return new SurfacePatchVisitableDisplayElement<GM_Polygon>( feature, tin, null, visitorFactory );
+    return new SurfacePatchVisitableDisplayElement<GM_Polygon>( tinFeature, tinGeometry, null, visitorFactory );
   }
 
   /**
    * Builds a <tt>DisplayElement</tt> using the given <tt>Feature</tt> or Raster and a default <tt>Symbolizer</tt>.
-   * <p>
-   * 
+   *
    * @param o
    *          contains the geometry or raster information (Feature or raster)
    * @throws IncompatibleGeometryTypeException
@@ -281,7 +308,7 @@ public final class DisplayElementFactory
   /**
    * Creates a <tt>PointDisplayElement</tt> using the given geometry and style information.
    * <p>
-   * 
+   *
    * @param feature
    *          associated <tt>Feature<tt>
    * @param geom
@@ -301,7 +328,7 @@ public final class DisplayElementFactory
   /**
    * Creates a <tt>LineStringDisplayElement</tt> using the given geometry and style information.
    * <p>
-   * 
+   *
    * @param feature
    *          associated <tt>Feature<tt>
    * @param geom
@@ -321,7 +348,7 @@ public final class DisplayElementFactory
   /**
    * Creates a <tt>PolygonDisplayElement</tt> using the given geometry and style information.
    * <p>
-   * 
+   *
    * @param feature
    *          associated <tt>Feature<tt>
    * @param gmObject
@@ -341,7 +368,7 @@ public final class DisplayElementFactory
   /**
    * Creates a <tt>LabelDisplayElement</tt> using the given geometry and style information.
    * <p>
-   * 
+   *
    * @param feature
    *          <tt>Feature</tt> to be used (necessary for evaluation of the label expression)
    * @param gmObject
@@ -364,7 +391,7 @@ public final class DisplayElementFactory
   /**
    * Creates a <tt>RasterDisplayElement</tt> from the submitted image. The submitted <tt>GM_Envelope</tt> holds the
    * bounding box of the imgae/raster data.
-   * 
+   *
    * @param feature
    *          grid coverage as feature
    * @param sym

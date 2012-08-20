@@ -42,8 +42,12 @@ package org.kalypso.gml.ui.internal.coverage;
 
 import java.awt.Color;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -66,37 +70,73 @@ import org.kalypso.ogc.gml.IKalypsoStyle;
 import org.kalypso.ogc.gml.IKalypsoUserStyle;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
+import org.kalypsodeegree.graphics.sld.PolygonColorMapEntry;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.SldHelper;
+import org.kalypsodeegree.graphics.sld.SurfacePolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
+import org.kalypsodeegree_impl.graphics.sld.PolygonColorMap;
+import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
+import org.kalypsodeegree_impl.graphics.sld.SurfacePolygonSymbolizer_Impl;
 
 /**
- * Resposible for management of the color map in the coverage management widget.
+ * Responsible for management of the color map in the coverage management widget.
  *
  * @author Gernot Belger
  */
 public class CoverageColormapHandler
 {
-  private final RasterSymbolizer m_symbolizer;
+  private final RasterSymbolizer m_rasterSymbolizer;
 
   private final IKalypsoFeatureTheme[] m_allCoverageThemes;
+
+  private final Symbolizer[] m_symbolizers;
 
   public CoverageColormapHandler( final IKalypsoFeatureTheme coverageTheme, final IKalypsoFeatureTheme[] allCoverageThemes )
   {
     m_allCoverageThemes = allCoverageThemes;
 
-    m_symbolizer = findRasterSymbolizer( coverageTheme );
+    m_symbolizers = findSymbolizers( coverageTheme );
+    m_rasterSymbolizer = findRasterSymbolizer( coverageTheme );
   }
 
   public RasterSymbolizer getRasterSymbolizer( )
   {
-    return m_symbolizer;
+    return m_rasterSymbolizer;
   }
 
   /**
-   * returns the first {@link RasterSymbolizer} from the given user styles
+   * returns all {@link Symbolizer}s from the given theme.
+   *
+   * @return all defined {@link Symbolizer}s
+   */
+  private Symbolizer[] findSymbolizers( final IKalypsoFeatureTheme coverageTheme )
+  {
+    final Collection<Symbolizer> allSymbolizers = new ArrayList<Symbolizer>();
+
+    final IKalypsoStyle[] styles = coverageTheme.getStyles();
+
+    for( final IKalypsoStyle style : styles )
+    {
+      final FeatureTypeStyle[] featureTypeStyles = findFeatureTypeStyles( style );
+      for( final FeatureTypeStyle fts : featureTypeStyles )
+      {
+        final Rule[] rules = fts.getRules();
+        for( final Rule rule : rules )
+        {
+          final Symbolizer[] symbolizers = rule.getSymbolizers();
+          allSymbolizers.addAll( Arrays.asList( symbolizers ) );
+        }
+      }
+    }
+
+    return allSymbolizers.toArray( new Symbolizer[allSymbolizers.size()] );
+  }
+
+  /**
+   * returns the first {@link RasterSymbolizer} found in the given array of symbolizers.
    *
    * @param styles
    *          The styles in which the raster symbolizer is
@@ -118,13 +158,42 @@ public class CoverageColormapHandler
           for( final Symbolizer symbolizer : symbolizers )
           {
             if( symbolizer instanceof RasterSymbolizer )
+            {
+              ensurePolygonSymbolizer( rule );
+
               return (RasterSymbolizer) symbolizer;
+            }
           }
         }
       }
     }
 
     return null;
+  }
+
+  /**
+   * REMARK: quite hack for now: ensure, that we also have a polygon symbolizer (in the same rule as the raster
+   * symbolizer).
+   */
+  private void ensurePolygonSymbolizer( final Rule rule )
+  {
+    final Symbolizer[] symbolizers = rule.getSymbolizers();
+    for( final Symbolizer symbolizer : symbolizers )
+    {
+      if( symbolizer instanceof SurfacePolygonSymbolizer )
+        return;
+    }
+
+    /* No polygon symbolizer -> create one */
+    final SurfacePolygonSymbolizer newPolygonSymbolizer = new SurfacePolygonSymbolizer_Impl();
+
+    // TODO: should use domain geometry
+
+    // final PropertyName propertyName = new PropertyName( MultiSurfaceCoverage. );
+    // final Geometry geom = StyleFactory.createGeometry( propertyName );
+    // newPolygonSymbolizer.setGeometry( geom );
+
+    rule.addSymbolizer( newPolygonSymbolizer );
   }
 
   private FeatureTypeStyle[] findFeatureTypeStyles( final IKalypsoStyle style )
@@ -143,19 +212,58 @@ public class CoverageColormapHandler
    */
   public void updateRasterSymbolizer( final Shell shell, final ColorMapEntry[] entries )
   {
-    final TreeMap<Double, ColorMapEntry> new_colorMap = new TreeMap<Double, ColorMapEntry>();
+    final TreeMap<Double, ColorMapEntry> newRasterColorMap = new TreeMap<Double, ColorMapEntry>();
 
     // FIXME: move this code to the place, where the entries are created
     for( final ColorMapEntry colorMapEntry : entries )
     {
       // WHY? why do we not just ignore duplicate entries
-      if( !new_colorMap.containsKey( new Double( colorMapEntry.getQuantity() ) ) )
-        new_colorMap.put( new Double( colorMapEntry.getQuantity() ), colorMapEntry.clone() );
+      if( !newRasterColorMap.containsKey( new Double( colorMapEntry.getQuantity() ) ) )
+        newRasterColorMap.put( new Double( colorMapEntry.getQuantity() ), colorMapEntry.clone() );
     }
 
-    m_symbolizer.setColorMap( new_colorMap );
+    final List<PolygonColorMapEntry> newPolygonColorMap = translateColormap( newRasterColorMap );
+
+    /* Update the symbolizers */
+    for( final Symbolizer symbolizer : m_symbolizers )
+    {
+      if( symbolizer instanceof RasterSymbolizer )
+        ((RasterSymbolizer) symbolizer).setColorMap( newRasterColorMap );
+      else if( symbolizer instanceof SurfacePolygonSymbolizer )
+      {
+        final PolygonColorMap colorMap = ((SurfacePolygonSymbolizer) symbolizer).getColorMap();
+        colorMap.replaceColorMap( newPolygonColorMap );
+      }
+    }
 
     saveStyle( shell );
+  }
+
+  private static List<PolygonColorMapEntry> translateColormap( final TreeMap<Double, ColorMapEntry> newRasterColorMap )
+  {
+    /* Translate raster colormap to polygon colormap with same classification */
+    final List<PolygonColorMapEntry> newPolygonColorMap = new ArrayList<>( newRasterColorMap.size() );
+
+    Entry<Double, ColorMapEntry> lastEntry = null;
+
+    for( final Entry<Double, ColorMapEntry> entry : newRasterColorMap.entrySet() )
+    {
+      if( lastEntry != null )
+      {
+        final ColorMapEntry value = entry.getValue();
+        final Color color = value.getColorAndOpacity();
+
+        final BigDecimal fromValue = new BigDecimal( lastEntry.getValue().getQuantity() );
+        final BigDecimal toValue = new BigDecimal( entry.getValue().getQuantity() );
+
+        final PolygonColorMapEntry newEntry = StyleFactory.createPolygonColorMapEntry( color, color, fromValue, toValue );
+        newPolygonColorMap.add( newEntry );
+      }
+
+      lastEntry = entry;
+    }
+
+    return newPolygonColorMap;
   }
 
   private void saveStyle( final Shell shell )

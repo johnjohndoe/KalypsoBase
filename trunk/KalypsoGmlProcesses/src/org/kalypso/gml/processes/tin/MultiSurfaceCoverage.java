@@ -85,7 +85,14 @@ public class MultiSurfaceCoverage extends AbstractCoverage implements IElevation
       {
         final URL dataLocation = new URL( context, fileName );
 
-        m_tin = new TriangulatedSurfaceTin( dataLocation, mimeType );
+        m_tin = new TriangulatedSurfaceTin( dataLocation, mimeType )
+        {
+          @Override
+          public synchronized void dispose( )
+          {
+            // REMARK: suppress dispose from outside
+          }
+        };
       }
       catch( final MalformedURLException e )
       {

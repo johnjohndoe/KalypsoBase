@@ -54,10 +54,10 @@ import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.gml.ui.KalypsoGmlUiImages;
 import org.kalypso.gml.ui.coverage.CoverageManagementWidget;
 import org.kalypso.gml.ui.i18n.Messages;
-import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
+import org.kalypsodeegree.model.elevation.ElevationUtilities;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 
 /**
@@ -106,10 +106,10 @@ public class CoverageColorRangeAction extends Action implements IUpdateable
     final Collection<ColorMapEntry> values = input.values();
     final ColorMapEntry[] entries = values.toArray( new ColorMapEntry[values.size()] );
 
-    final Range<BigDecimal> minMax = GeoGridUtilities.calculateRange( coverages );
+    final Range<Double> minMax = ElevationUtilities.calculateRange( coverages );
 
-    final BigDecimal min = minMax.getMinimum();
-    final BigDecimal max = minMax.getMaximum();
+    final BigDecimal min = new BigDecimal( Double.toString( minMax.getMinimum() ) );
+    final BigDecimal max = new BigDecimal( Double.toString( minMax.getMaximum() ) );
 
     // open dialog
     final GridStyleDialog dialog = new GridStyleDialog( event.display.getActiveShell(), entries, min, max );

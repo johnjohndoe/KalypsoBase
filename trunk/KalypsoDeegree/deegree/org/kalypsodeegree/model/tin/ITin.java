@@ -41,10 +41,12 @@
 package org.kalypsodeegree.model.tin;
 
 import org.kalypsodeegree.model.elevation.IElevationModel;
+import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 
 /**
  * @author Gernot Belger
  */
 public interface ITin extends IElevationModel
 {
+  GM_TriangulatedSurface getTriangulatedSurface( );
 }
