@@ -103,6 +103,7 @@ final class CoverageFormats
     importers.add( new HmoCoverageImporter() );
     importers.add( new GmlCoverageImporter() );
     importers.add( new ShapeCoverageImporter() );
+    importers.add( new File2dmCoverageImporter() );
 
     return importers.toArray( new ICoverageImporter[importers.size()] );
   }

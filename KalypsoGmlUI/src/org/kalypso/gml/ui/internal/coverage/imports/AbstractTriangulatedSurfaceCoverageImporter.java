@@ -174,5 +174,5 @@ public abstract class AbstractTriangulatedSurfaceCoverageImporter implements ICo
     return AbstractGridCoverageImporter.createRelativeGridPath( context, file );
   }
 
-  protected abstract GM_TriangulatedSurface readInputData( final File dataFile, String crs, final IProgressMonitor monitor ) throws CoreException, MalformedURLException;
+  protected abstract GM_TriangulatedSurface readInputData( final File dataFile, final String crs, final IProgressMonitor monitor ) throws CoreException, MalformedURLException;
 }
