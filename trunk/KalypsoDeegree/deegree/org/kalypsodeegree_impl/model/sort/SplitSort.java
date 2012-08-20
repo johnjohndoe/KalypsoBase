@@ -62,6 +62,7 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -567,7 +568,10 @@ public class SplitSort implements FeatureList
 
     final Rectangle bounds = m_spatialIndex.getBounds();
 
-    return GeometryUtilities.toEnvelope( bounds );
+    // REMARK: we assume that all elements of the split sort are always in Kalypso CRS
+    final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+
+    return GeometryUtilities.toEnvelope( bounds, crs );
   }
 
   @Override

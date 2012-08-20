@@ -84,10 +84,17 @@ public class GM_TriangulatedSurface_Impl extends GM_PolyhedralSurface_Impl<GM_Tr
   @Override
   public double getValue( final GM_Point location )
   {
-    // TODO: transform to my own crs
-
-    final GM_Position position = location.getPosition();
-    return getValue( position );
+    try
+    {
+      final GM_Point transformedLocation = (GM_Point) location.transform( getCoordinateSystem() );
+      final GM_Position position = transformedLocation.getPosition();
+      return getValue( position );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      return Double.NaN;
+    }
   }
 
   @Override

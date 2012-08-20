@@ -352,7 +352,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   public GM_Envelope getEnvelope( )
   {
     final Rectangle bounds = m_index.getBounds();
-    return GeometryUtilities.toEnvelope( bounds );
+    return GeometryUtilities.toEnvelope( bounds, getCoordinateSystem() );
   }
 
   @Override

@@ -53,7 +53,6 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.transformation.transformer.IGeoTransformer;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -1407,12 +1406,11 @@ public final class GeometryUtilities
     return new Rectangle( x1, y1, x2, y2 );
   }
 
-  public static GM_Envelope toEnvelope( final Rectangle bounds )
+  public static GM_Envelope toEnvelope( final Rectangle bounds, final String crs )
   {
     if( bounds == null )
       return null;
 
-    final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     return new GM_Envelope_Impl( bounds.minX, bounds.minY, bounds.maxX, bounds.maxY, crs );
   }
 
