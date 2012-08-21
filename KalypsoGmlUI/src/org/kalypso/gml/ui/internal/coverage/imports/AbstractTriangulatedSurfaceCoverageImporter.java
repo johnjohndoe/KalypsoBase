@@ -93,7 +93,7 @@ public abstract class AbstractTriangulatedSurfaceCoverageImporter implements ICo
       monitor = new NullProgressMonitor();
 
     /* Get a temporary file. */
-    final File tempFile = FileUtilities.getNewTempFile( "hmoConverter", "gml" );//$NON-NLS-1$ //$NON-NLS-2$
+    final File tempFile = FileUtilities.getNewTempFile( "hmoConverter", "gmlz" );//$NON-NLS-1$ //$NON-NLS-2$
 
     try
     {

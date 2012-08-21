@@ -20,7 +20,7 @@ import com.vividsolutions.jts.geom.Envelope;
 /**
  * {@link IGeoGrid} implementation based on {@link org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage}s.<br>
  * This implementation analyzes the wrapped coverage and generates a suitable grid, to which all calls are delegated.
- *
+ * 
  * @author Gernot Belger
  */
 public class RectifiedGridCoverageGeoGrid implements IGeoGrid
@@ -289,7 +289,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
     final Coordinate locationCrd = JTSAdapter.export( location.getPosition() );
     final Coordinate sourceCoordinate = GeoGridUtilities.transformCoordinate( this, locationCrd, location.getCoordinateSystem() );
 
-    return GeoGridUtilities.getValue( this, sourceCoordinate, Interpolation.none );
+    return GeoGridUtilities.getValue( this, sourceCoordinate, Interpolation.bilinear );
   }
 
   @Override

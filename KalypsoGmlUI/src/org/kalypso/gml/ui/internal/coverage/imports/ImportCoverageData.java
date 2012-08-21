@@ -132,9 +132,13 @@ class ImportCoverageData extends AbstractModelObject
     m_sourceFile.init( settings );
     m_sourceSRS = DialogSettingsUtils.getString( settings, PROPERTY_SOURCE_SRS, m_sourceSRS );
 
-    final String dataFolderPath = DialogSettingsUtils.getString( settings, PROPERTY_DATA_FOLDER, getDataContainerPath() );
-    if( dataFolderPath != null )
-      setDataContainerPath( dataFolderPath );
+    if( m_dataContainer == null )
+    {
+      // REMARK: only load data container from settings, if it was not explicitely set from outside.
+      final String dataFolderPath = DialogSettingsUtils.getString( settings, PROPERTY_DATA_FOLDER, getDataContainerPath() );
+      if( dataFolderPath != null )
+        setDataContainerPath( dataFolderPath );
+    }
   }
 
   public void storeSettings( final IDialogSettings settings )
