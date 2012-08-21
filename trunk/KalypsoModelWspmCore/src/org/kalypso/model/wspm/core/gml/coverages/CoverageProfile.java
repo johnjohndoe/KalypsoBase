@@ -64,11 +64,15 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LineString;
 
 /**
- * TODO: split this one up into two helpers: 1) extract points from grids 2) create profile from a coordinate array.<br>
+ * TODO: Split this one up into two helpers:<br/>
+ * <br/>
+ * 1) Extract points from grids.<br/>
+ * 2) Create profile from a coordinate array.<br/>
+ * <br/>
  * This class should help handling coverages and profiles.
- *
+ * 
  * @author Holger Albert
- * @author kimwerner
+ * @author Kim Werner
  */
 public final class CoverageProfile
 {
@@ -78,39 +82,34 @@ public final class CoverageProfile
   }
 
   /**
-   * This function creates a new profile.<br>
-   * <br>
-   * The following steps are performed:<br>
+   * This function creates a new profile.<br/>
+   * <br/>
+   * The following steps are performed:
    * <ol>
-   * <li>the coverage is not set (=null) OR the line does not intersect with any data of the coverage (all line points
-   * have resulting NaN-values):
-   * <ol>
-   * <li>the line is converted into a profile with '0.0' as elevation
-   * </ol>
-   * <li>coverage is set:
-   * <ol>
-   * <li>Adds points to the geometry, depending on the size of the grid cell (1/8 grid cell size).</li>
    * <li>Computes the width and height for each point.</li>
    * <li>Create a profile with each point and its width and height (only points with elevation are being considered!)</li>
    * <li>The new profile is simplified by Douglas Peucker.</li>
    * </ol>
-   * <br>
-   * If you want to simplify the profile, use the result and the function {@link #thinProfile(IProfil)}.
-   *
+   * 
+   * @param profileType
+   *          The type of the profile.
+   * @param pointsZ
    * @param curve
    *          The curve, which represents the geometry on the map of the profile.
+   * @param crsOfCrds
+   * @param simplifyDistance
    * @return The new profile.
    */
   public static IProfil createProfile( final String profileType, final Coordinate[] pointsZ, final String crsOfCrds, final double simplifyDistance ) throws Exception
   {
-    /* STEP 2: Compute the width and height for each point of the new line. */
-    /* STEP 3: Create the new profile. */
+    /* STEP 1: Compute the width and height for each point of the new line. */
+    /* STEP 2: Create the new profile. */
     final IProfil profile = calculatePointsAndCreateProfile( profileType, pointsZ, crsOfCrds );
     final int length = profile.getPoints().length;
     if( length == 0 )
       return profile;
 
-    /* STEP 4: Simplify the profile. */
+    /* STEP 3: Simplify the profile. */
     ProfilUtil.simplifyProfile( profile, simplifyDistance );
 
     return profile;
@@ -118,7 +117,9 @@ public final class CoverageProfile
 
   /**
    * This function calculates the points for the profile and creates the new profile.
-   *
+   * 
+   * @param profileType
+   *          The type of the profile.
    * @param points
    *          All points of the new geo line.
    * @param csOfPoints
@@ -135,20 +136,19 @@ public final class CoverageProfile
     // FIXME: no! this at least depends on the coordinate system....!
     double breite = 0.0;
     Coordinate lastCrd = null;
-
     for( final Coordinate coordinate : points )
     {
+      /* Create a new point. */
       final IProfileRecord profilePoint = createPoint( profile, coordinate, breite );
 
       /* Add the new point to the profile. */
       profile.addPoint( profilePoint );
 
+      // FIXME: this at least depends on the coordinate system. In WGS84 we get deegrees, but we always need [m]!
       if( lastCrd != null )
-      {
-        // FIXME: this at least depends on the coordinate system. In WGS84 we get deegrees, but we always need [m]!
         breite += coordinate.distance( lastCrd );
-      }
 
+      /* Store the current coordinate. */
       lastCrd = coordinate;
     }
 
@@ -164,29 +164,23 @@ public final class CoverageProfile
     final IComponent cHoehe = profile.getPointPropertyFor( IWspmPointProperties.POINT_PROPERTY_HOEHE );
     final IComponent cRauheit = profile.getPointPropertyFor( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS );
 
-    /* add components if necessary */
+    /* Add components if necessary. */
     if( !profile.hasPointProperty( cRechtswert ) )
-    {
       profile.addPointProperty( cRechtswert );
-    }
-    if( !profile.hasPointProperty( cHochwert ) )
-    {
-      profile.addPointProperty( cHochwert );
-    }
-    if( !profile.hasPointProperty( cBreite ) )
-    {
-      profile.addPointProperty( cBreite );
-    }
-    if( !profile.hasPointProperty( cHoehe ) )
-    {
-      profile.addPointProperty( cHoehe );
-    }
-    if( !profile.hasPointProperty( cRauheit ) )
-    {
-      profile.addPointProperty( cRauheit );
-    }
 
-    /* get index for component */
+    if( !profile.hasPointProperty( cHochwert ) )
+      profile.addPointProperty( cHochwert );
+
+    if( !profile.hasPointProperty( cBreite ) )
+      profile.addPointProperty( cBreite );
+
+    if( !profile.hasPointProperty( cHoehe ) )
+      profile.addPointProperty( cHoehe );
+
+    if( !profile.hasPointProperty( cRauheit ) )
+      profile.addPointProperty( cRauheit );
+
+    /* Get index for component. */
     final int iRechtswert = profile.indexOfProperty( cRechtswert );
     final int iHochwert = profile.indexOfProperty( cHochwert );
     final int iBreite = profile.indexOfProperty( cBreite );
@@ -216,7 +210,7 @@ public final class CoverageProfile
 
   /**
    * Inserts new points into an existing profile.<br/>
-   *
+   * 
    * @param insertSign
    *          If -1, new points are inserted at the beginning of the profile, 'width' goes into negative direction.
    *          Else, points are inserted at the end of the profile with ascending width.
@@ -344,7 +338,7 @@ public final class CoverageProfile
     if( ArrayUtils.isEmpty( simplifiedCords ) )
       return;
 
-    CoverageProfile.insertPoints( profil, insertSign, simplifiedCords );
+    insertPoints( profil, insertSign, simplifiedCords );
 
     final int length = profil.getPoints().length;
     final int start = insertSign == -1 ? 0 : length - simplifiedCords.length;
