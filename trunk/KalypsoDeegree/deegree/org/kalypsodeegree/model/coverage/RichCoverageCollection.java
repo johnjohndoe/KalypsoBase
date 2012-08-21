@@ -118,20 +118,6 @@ public class RichCoverageCollection
     return extractZ( points, crs );
   }
 
-  public IElevationModel[] getElevationModels( )
-  {
-    final List<IElevationModel> emModels = new ArrayList<IElevationModel>();
-
-    final IFeatureBindingCollection<ICoverage> coverages = m_coverageCollection.getCoverages();
-    for( final ICoverage coverage : coverages )
-    {
-      final IElevationModel elevationModel = getElevationModel( coverage );
-      emModels.add( elevationModel );
-    }
-
-    return emModels.toArray( new IElevationModel[] {} );
-  }
-
   public void dispose( )
   {
     final Collection<IElevationModel> values = m_emCache.values();
