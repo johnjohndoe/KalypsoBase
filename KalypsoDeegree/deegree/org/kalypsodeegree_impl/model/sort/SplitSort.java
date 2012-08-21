@@ -162,9 +162,9 @@ public class SplitSort implements FeatureList
         /* Remove from index */
         if( oldEnvelope != null )
         {
-          final boolean success = m_spatialIndex.delete( newEnvelope, id );
+          final boolean success = m_spatialIndex.delete( oldEnvelope, id );
           if( !success )
-            System.out.println( "problem?" );
+            System.out.println( "SplitSort: problem!" );
         }
 
         /* reinsert into index */
