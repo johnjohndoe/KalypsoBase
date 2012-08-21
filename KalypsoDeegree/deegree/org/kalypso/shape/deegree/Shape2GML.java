@@ -151,7 +151,7 @@ public final class Shape2GML
       final String targetNamespace = ShapeCollection.SHP_NAMESPACE_URI + ".custom_" + key;
 
       /* geometry property: overwrites the one defined in '_Shape' */
-      final String geometryPropertyTypeString = createGeometryPropertyType( shapeType );
+      final String geomTypeName = getGeometryName( shapeType );
 
       /* The value properties */
       final String propertyElementsSchemaFragment = buildValueElementsDefinition( fields );
@@ -161,8 +161,8 @@ public final class Shape2GML
 
       String schemaString = IOUtils.toString( resource, Charsets.UTF_8.name() );
       schemaString = schemaString.replaceAll( Pattern.quote( "${CUSTOM_NAMESPACE_SUFFIX}" ), key );
-      schemaString = schemaString.replaceAll( Pattern.quote( "${CUSTOM_FEATURE_GEOMETRY_PROPERTY_TYPE}" ), geometryPropertyTypeString );
       schemaString = schemaString.replaceAll( Pattern.quote( "${CUSTOM_FEATURE_PROPERTY_ELEMENTS}" ), propertyElementsSchemaFragment );
+      schemaString = schemaString.replaceAll( Pattern.quote( "${GEOM_TYPE_NAME}" ), geomTypeName );
 
       final File tempFile = createTempFile( KalypsoDeegreePlugin.getDefault(), "temporaryCustomSchemas", "customSchema", ".xsd" );
       tempFile.deleteOnExit();
@@ -269,20 +269,47 @@ public final class Shape2GML
     }
   }
 
-  private static String createGeometryPropertyType( final ShapeType shapeType )
+  private static String getGeometryName( final ShapeType shapeType )
   {
-    final ITypeRegistry<IMarshallingTypeHandler> registry = MarshallingTypeRegistrySingleton.getTypeRegistry();
+    switch( shapeType )
+    {
+      case NULL:
+        return "Null"; //$NON-NLS-1$
 
-    final QName geometryType = GenericShapeDataFactory.findGeometryType( shapeType );
-    final IMarshallingTypeHandler geoTH = registry.getTypeHandlerForTypeName( geometryType );
+      case POINT:
+      case POINTM:
+      case POINTZ:
+        return "Point"; //$NON-NLS-1$
 
-    final String geomTag = geoTH.getTypeName().getLocalPart();
-    return "gml:" + geomTag;
+      case MULTIPOINT:
+      case MULTIPOINTM:
+      case MULTIPOINTZ:
+        return "MultiPoint"; //$NON-NLS-1$
+
+      case POLYLINE:
+      case POLYLINEM:
+      case POLYLINEZ:
+        return "Polyline";
+
+      case POLYGON:
+      case POLYGONM:
+      case POLYGONZ:
+        return "Polygon";
+    }
+
+    throw new UnsupportedOperationException();
   }
 
   private static GMLWorkspace createShapeWorkspace( final ShapeType shapeFileType ) throws GMLSchemaException
   {
-    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( ShapeCollection.FEATURE_SHAPE_COLLECTION, null, null );
+    final String geomName = getGeometryName( shapeFileType );
+
+    final QName collectionQName = ShapeCollection.FEATURE_SHAPE_COLLECTION;
+    final String concreteCollectionLocalName = geomName + collectionQName.getLocalPart();
+
+    final QName concreteCollectionQName = new QName( ShapeCollection.SHP_NAMESPACE_URI, concreteCollectionLocalName );
+
+    final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( concreteCollectionQName, null, null );
     final ShapeCollection collection = (ShapeCollection) workspace.getRootFeature();
 
     collection.setShapeType( shapeFileType );
