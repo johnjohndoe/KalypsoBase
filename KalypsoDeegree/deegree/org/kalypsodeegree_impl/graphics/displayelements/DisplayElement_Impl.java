@@ -35,13 +35,9 @@
  */
 package org.kalypsodeegree_impl.graphics.displayelements;
 
-import java.awt.Graphics;
 import java.io.Serializable;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
-import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -60,10 +56,6 @@ abstract class DisplayElement_Impl implements DisplayElement, Serializable
 
   private final Feature m_feature;
 
-  private boolean m_highlighted = false;
-
-  private boolean m_selected = false;
-
   /**
    * Creates a new DisplayElement_Impl object.
    * 
@@ -81,47 +73,5 @@ abstract class DisplayElement_Impl implements DisplayElement, Serializable
   public Feature getFeature( )
   {
     return m_feature;
-  }
-
-  /**
-   * renders the DisplayElement to the submitted graphic context
-   */
-  @Override
-  public abstract void paint( Graphics g, GeoTransform projection, final IProgressMonitor monitor ) throws CoreException;
-
-  /**
-   * marks a <tt>DisplayElement</tt> as selected or not
-   */
-  @Override
-  public void setSelected( final boolean selected )
-  {
-    m_selected = selected;
-  }
-
-  /**
-   * returns if the <tt>DisplayElement</tt> is selected or not
-   */
-  @Override
-  public boolean isSelected( )
-  {
-    return m_selected;
-  }
-
-  /**
-   * marks the <tt>DisplayElement</tt> as highlighted or not
-   */
-  @Override
-  public void setHighlighted( final boolean highlighted )
-  {
-    m_highlighted = highlighted;
-  }
-
-  /**
-   * returns if the <tt>DisplayElement</tt> is highlighted or not.
-   */
-  @Override
-  public boolean isHighlighted( )
-  {
-    return m_highlighted;
   }
 }

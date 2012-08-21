@@ -43,6 +43,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -734,16 +735,13 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
   @Override
   public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<T> visitor, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "", 1 );
+    monitor.beginTask( StringUtils.EMPTY, 1 );
 
     visitor.visit( m_patch );
 
     ProgressUtilities.done( monitor );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(java.lang.String)
-   */
   @Override
   public GM_Object transform( final String targetCRS ) throws Exception
   {
@@ -757,9 +755,6 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
     return new GM_Surface_Impl<GM_SurfacePatch>( getOrientation(), patch );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#setCoordinateSystem(java.lang.String)
-   */
   @Override
   public void setCoordinateSystem( final String crs )
   {
