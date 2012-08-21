@@ -15,11 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- * 
+ *
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -54,7 +54,7 @@ import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
 
 /**
  * Provide display mechanism for terrain elevation models
- * 
+ *
  * @author Madanagopal
  * @author Patrice Congo
  */
@@ -70,10 +70,6 @@ public class SurfacePatchVisitableDisplayElement<P extends GM_SurfacePatch> impl
   private final ISurfacePatchVisitable<P> m_surfacePatchVisitable;
 
   private final Feature m_feature;
-
-  private boolean m_isHighlighted = false;
-
-  private boolean m_isSelected = false;
 
   private DisplayElement m_decorated;
 
@@ -99,51 +95,6 @@ public class SurfacePatchVisitableDisplayElement<P extends GM_SurfacePatch> impl
   }
 
   @Override
-  public boolean isHighlighted( )
-  {
-    if( m_decorated != null )
-    {
-      return m_decorated.isHighlighted();
-    }
-    else
-    {
-      return m_isHighlighted;
-    }
-  }
-
-  @Override
-  public boolean isSelected( )
-  {
-    if( m_decorated != null )
-    {
-      return m_decorated.isSelected();
-    }
-    else
-    {
-      return m_isSelected;
-    }
-  }
-
-  @Override
-  public void setHighlighted( final boolean highlighted )
-  {
-    if( m_decorated != null )
-      m_decorated.setHighlighted( highlighted );
-
-    this.m_isHighlighted = highlighted;
-  }
-
-  @Override
-  public void setSelected( final boolean selected )
-  {
-    if( m_decorated != null )
-    {
-      m_decorated.setSelected( selected );
-    }
-    m_isSelected = selected;
-  }
-
-  @Override
   public void paint( final Graphics g, final GeoTransform projection, final IProgressMonitor monitor ) throws CoreException
   {
     if( m_decorated != null )
@@ -153,7 +104,6 @@ public class SurfacePatchVisitableDisplayElement<P extends GM_SurfacePatch> impl
 
     try
     {
-      // TODO: give monitor to accept method and check for cancel!
       final ISurfacePatchVisitor<P> visitor = m_visitorFactory.createVisitor( g, projection, m_colorModel );
       m_surfacePatchVisitable.acceptSurfacePatches( projection.getSourceRect(), visitor, monitor );
     }

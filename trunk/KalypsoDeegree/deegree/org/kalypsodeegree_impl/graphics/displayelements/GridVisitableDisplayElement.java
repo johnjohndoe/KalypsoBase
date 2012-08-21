@@ -64,10 +64,6 @@ public class GridVisitableDisplayElement<P extends GM_Curve> implements DisplayE
 
   private final Feature m_feature;
 
-  private boolean m_isHighlighted = false;
-
-  private boolean m_isSelected = false;
-
   private DisplayElement m_decorated;
 
   private final IGridVisitorFactory<P> m_visitorFactory;
@@ -87,51 +83,6 @@ public class GridVisitableDisplayElement<P extends GM_Curve> implements DisplayE
   public Feature getFeature( )
   {
     return m_feature;
-  }
-
-  @Override
-  public boolean isHighlighted( )
-  {
-    if( m_decorated != null )
-    {
-      return m_decorated.isHighlighted();
-    }
-    else
-    {
-      return m_isHighlighted;
-    }
-  }
-
-  @Override
-  public boolean isSelected( )
-  {
-    if( m_decorated != null )
-    {
-      return m_decorated.isSelected();
-    }
-    else
-    {
-      return m_isSelected;
-    }
-  }
-
-  @Override
-  public void setHighlighted( final boolean highlighted )
-  {
-    if( m_decorated != null )
-      m_decorated.setHighlighted( highlighted );
-
-    this.m_isHighlighted = highlighted;
-  }
-
-  @Override
-  public void setSelected( final boolean selected )
-  {
-    if( m_decorated != null )
-    {
-      m_decorated.setSelected( selected );
-    }
-    m_isSelected = selected;
   }
 
   @Override

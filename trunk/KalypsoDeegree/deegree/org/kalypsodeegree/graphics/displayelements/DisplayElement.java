@@ -62,24 +62,4 @@ public interface DisplayElement
    * renders the DisplayElement to the submitted graphic context
    */
   void paint( Graphics g, GeoTransform projection, IProgressMonitor monitor ) throws CoreException;
-
-  /**
-   * marks a <tt>DisplayElement</tt> as selected or not
-   */
-  void setSelected( boolean selected );
-
-  /**
-   * returns if the <tt>DisplayElement</tt> is selected or not
-   */
-  boolean isSelected( );
-
-  /**
-   * marks the <tt>DisplayElement</tt> as highlighted or not
-   */
-  void setHighlighted( boolean highlighted );
-
-  /**
-   * returns if the <tt>DisplayElement</tt> is highlighted or not.
-   */
-  boolean isHighlighted( );
 }

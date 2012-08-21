@@ -45,6 +45,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -480,7 +481,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   @Override
   public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<T> surfacePatchVisitor, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "", IProgressMonitor.UNKNOWN );
+    monitor.beginTask( StringUtils.EMPTY, IProgressMonitor.UNKNOWN );
 
     final TIntProcedure ip = new TIntProcedure()
     {
