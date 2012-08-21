@@ -20,6 +20,7 @@
 package org.kalypso.contribs.eclipse.jface.validators;
 
 import org.eclipse.jface.dialogs.IInputValidator;
+import org.kalypso.contribs.java.lang.NumberUtils;
 
 /**
  * This validater checks for doubles.
@@ -43,7 +44,7 @@ public class DoubleInputValidator implements IInputValidator
   {
     try
     {
-      Double.parseDouble( newText );
+      NumberUtils.parseDouble( newText );
     }
     catch( final NumberFormatException e )
     {
