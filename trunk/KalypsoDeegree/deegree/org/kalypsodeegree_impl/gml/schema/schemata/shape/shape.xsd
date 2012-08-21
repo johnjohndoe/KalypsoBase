@@ -5,22 +5,84 @@
   <import namespace="org.kalypso.gml.common" />
 
   <!-- ***************************DEFINITIONS***************************** -->
-  <element name="ShapeCollection" substitutionGroup="gml:_Feature">
+  <element name="ShapeCollection" substitutionGroup="gml:_Feature" abstract="true" type="shp:AbstractShapeCollectionType" />
+  <complexType name="AbstractShapeCollectionType" abstract="true">
+    <complexContent>
+      <extension base="gml:AbstractFeatureType">
+        <sequence>
+          <element name="type" type="shp:ShapeTypeNumber" />
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <element name="PointShapeCollection" substitutionGroup="shp:ShapeCollection" abstract="true">
     <complexType>
       <complexContent>
-        <extension base="gml:AbstractFeatureType">
+        <extension base="shp:AbstractShapeCollectionType">
           <sequence>
-            <element name="type" type="shp:ShapeTypeNumber" />
-            <element name="featureMember" type="shp:ShapeMemberPropertyType" minOccurs="0" maxOccurs="unbounded" />
+            <element name="featureMember" type="shp:PointShapeMemberPropertyType" minOccurs="0" maxOccurs="unbounded" />
           </sequence>
         </extension>
       </complexContent>
     </complexType>
   </element>
 
-  <complexType name="ShapeMemberPropertyType">
+  <element name="MultiPointShapeCollection" substitutionGroup="shp:ShapeCollection" abstract="true">
+    <complexType>
+      <complexContent>
+        <extension base="shp:AbstractShapeCollectionType">
+          <sequence>
+            <element name="featureMember" type="shp:MultiPointShapeMemberPropertyType" minOccurs="0" maxOccurs="unbounded" />
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <element name="PolylineShapeCollection" substitutionGroup="shp:ShapeCollection" abstract="true">
+    <complexType>
+      <complexContent>
+        <extension base="shp:AbstractShapeCollectionType">
+          <sequence>
+            <element name="featureMember" type="shp:PolylineShapeMemberPropertyType" minOccurs="0" maxOccurs="unbounded" />
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <element name="PolygonShapeCollection" substitutionGroup="shp:ShapeCollection" abstract="true">
+    <complexType>
+      <complexContent>
+        <extension base="shp:AbstractShapeCollectionType">
+          <sequence>
+            <element name="featureMember" type="shp:PolygonShapeMemberPropertyType" minOccurs="0" maxOccurs="unbounded" />
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <complexType name="PointShapeMemberPropertyType">
     <sequence minOccurs="1" maxOccurs="1">
-      <element ref="shp:_Shape" />
+      <element ref="shp:_PointShape" />
+    </sequence>
+  </complexType>
+  <complexType name="MultiPointShapeMemberPropertyType">
+    <sequence minOccurs="1" maxOccurs="1">
+      <element ref="shp:_MultiPointShape" />
+    </sequence>
+  </complexType>
+  <complexType name="PolylineShapeMemberPropertyType">
+    <sequence minOccurs="1" maxOccurs="1">
+      <element ref="shp:_PolylineShape" />
+    </sequence>
+  </complexType>
+
+  <complexType name="PolygonShapeMemberPropertyType">
+    <sequence minOccurs="1" maxOccurs="1">
+      <element ref="shp:_PolygonShape" />
     </sequence>
   </complexType>
 
@@ -28,21 +90,59 @@
   <complexType name="ShapeType">
     <complexContent>
       <extension base="common:EmptyFeatureBaseType">
-        <sequence>
-          <element ref="shp:GEOM"  minOccurs="0" maxOccurs="1"/>
-        </sequence>
       </extension>
     </complexContent>
   </complexType>
 
-  <element name="GEOM" type="gml:LocationPropertyType" />
-
-  <complexType name="ShapeGeometryPropertyType">
-    <choice minOccurs="1" maxOccurs="1">
-      <element ref="gml:multiPointProperty" />
-      <element ref="gml:multiCurveProperty" />
-      <element ref="gml:multiSurfaceProperty" />
-    </choice>
+  <element name="_NullShape" abstract="true" type="shp:NullShapeType" substitutionGroup="shp:_Shape" />
+  <complexType name="NullShapeType">
+    <complexContent>
+      <extension base="shp:ShapeType">
+        <sequence>
+          <element name="GEOM" type="gml:PointPropertyType" minOccurs="0" maxOccurs="1" />
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <element name="_PointShape" abstract="true" type="shp:PointShapeType" substitutionGroup="shp:_Shape" />
+  <complexType name="PointShapeType">
+    <complexContent>
+      <extension base="shp:ShapeType">
+        <sequence>
+          <element name="GEOM" type="gml:PointPropertyType" minOccurs="0" maxOccurs="1" />
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <element name="_MultiPointShape" abstract="true" type="shp:MultiPointShapeType" substitutionGroup="shp:_Shape" />
+  <complexType name="MultiPointShapeType">
+    <complexContent>
+      <extension base="shp:ShapeType">
+        <sequence>
+          <element name="GEOM" type="gml:MultiPointPropertyType" minOccurs="0" maxOccurs="1" />
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <element name="_PolylineShape" abstract="true" type="shp:PolylineShapeType" substitutionGroup="shp:_Shape" />
+  <complexType name="PolylineShapeType">
+    <complexContent>
+      <extension base="shp:ShapeType">
+        <sequence>
+          <element name="GEOM" type="gml:MultiCurvePropertyType" minOccurs="0" maxOccurs="1" />
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <element name="_PolygonShape" abstract="true" type="shp:PolygonShapeType" substitutionGroup="shp:_Shape" />
+  <complexType name="PolygonShapeType">
+    <complexContent>
+      <extension base="shp:ShapeType">
+        <sequence>
+          <element name="GEOM" type="gml:MultiSurfacePropertyType" minOccurs="0" maxOccurs="1" />
+        </sequence>
+      </extension>
+    </complexContent>
   </complexType>
 
   <simpleType name="ShapeTypeNumber">
