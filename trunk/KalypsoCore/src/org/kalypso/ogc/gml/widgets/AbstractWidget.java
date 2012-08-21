@@ -262,11 +262,6 @@ public abstract class AbstractWidget implements IWidget
     return m_toolTip;
   }
 
-  protected void mouseFunctionChanged( )
-  {
-    //
-  }
-
   @Override
   public void keyPressed( final KeyEvent event )
   {
