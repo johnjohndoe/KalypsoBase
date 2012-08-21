@@ -62,10 +62,8 @@ public class SurfacePatchVisitableDisplayElement<P extends GM_SurfacePatch> impl
 {
   public interface IVisitorFactory<P2 extends GM_SurfacePatch>
   {
-    ISurfacePatchVisitor<P2> createVisitor( final Graphics g, final GeoTransform projection, final IElevationColorModel model );
+    ISurfacePatchVisitor<P2> createVisitor( final Graphics g, final GeoTransform projection );
   }
-
-  private final IElevationColorModel m_colorModel;
 
   private final ISurfacePatchVisitable<P> m_surfacePatchVisitable;
 
@@ -75,16 +73,12 @@ public class SurfacePatchVisitableDisplayElement<P extends GM_SurfacePatch> impl
 
   private final IVisitorFactory<P> m_visitorFactory;
 
-  public SurfacePatchVisitableDisplayElement( final Feature feature, final ISurfacePatchVisitable<P> surfacePatchVisitable, final IElevationColorModel colorModel, final IVisitorFactory<P> visitorFactory )
+  public SurfacePatchVisitableDisplayElement( final Feature feature, final ISurfacePatchVisitable<P> surfacePatchVisitable, final IVisitorFactory<P> visitorFactory )
   {
+    Assert.isNotNull( surfacePatchVisitable );
+
     m_visitorFactory = visitorFactory;
-    Assert.isNotNull( surfacePatchVisitable, "surfacePatchVisitable" );
-
     m_feature = feature;
-
-    // TODO: remove this color-model stuff
-    m_colorModel = colorModel;
-
     m_surfacePatchVisitable = surfacePatchVisitable;
   }
 
@@ -104,7 +98,7 @@ public class SurfacePatchVisitableDisplayElement<P extends GM_SurfacePatch> impl
 
     try
     {
-      final ISurfacePatchVisitor<P> visitor = m_visitorFactory.createVisitor( g, projection, m_colorModel );
+      final ISurfacePatchVisitor<P> visitor = m_visitorFactory.createVisitor( g, projection );
       m_surfacePatchVisitable.acceptSurfacePatches( projection.getSourceRect(), visitor, monitor );
     }
     catch( final GM_Exception e )

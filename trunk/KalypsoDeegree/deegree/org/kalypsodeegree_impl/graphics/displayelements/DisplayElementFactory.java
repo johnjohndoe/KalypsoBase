@@ -39,6 +39,7 @@ import java.awt.Graphics;
 import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.displayelements.DisplayElementDecorator;
@@ -203,59 +204,60 @@ public final class DisplayElementFactory
     final IVisitorFactory<GM_Triangle> visitorFactory = new SurfacePatchVisitableDisplayElement.IVisitorFactory<GM_Triangle>()
     {
       @Override
-      public ISurfacePatchVisitor<GM_Triangle> createVisitor( final Graphics g, final GeoTransform projection, final IElevationColorModel model )
+      public ISurfacePatchVisitor<GM_Triangle> createVisitor( final Graphics g, final GeoTransform projection )
       {
         final UOM uom = symbolizer.getUom();
         return new SurfacePaintIsolinesVisitor( g, projection, new ColorMapConverter( colorMap, feature, uom, projection ) );
       }
     };
 
-    return new SurfacePatchVisitableDisplayElement<GM_Triangle>( feature, tin, null, visitorFactory );
+    return new SurfacePatchVisitableDisplayElement<GM_Triangle>( feature, tin, visitorFactory );
   }
 
-  @SuppressWarnings("unchecked")
   public static DisplayElement buildSurfacePolygonDisplayElement( final Feature feature, final Object geoProperty, final SurfacePolygonSymbolizer symbolizer ) throws IncompatibleGeometryTypeException
   {
-    Feature tinFeature;
-    GM_Surface<GM_Polygon> tinGeometry;
-
-    // Hacky,, is there a better way to access the real geometry...?
-    if( feature instanceof IElevationModelProvider )
-    {
-      final IElevationModel elevationModel = ((IElevationModelProvider) feature).getElevationModel();
-      if( elevationModel instanceof ITin )
-      {
-        tinFeature = null;
-        final GM_Surface< ? extends GM_Polygon> surface = ((ITin) elevationModel).getTriangulatedSurface();
-        if( surface == null )
-          return null;
-
-        tinGeometry = (GM_Surface<GM_Polygon>) surface;
-      }
-      else
-        return null;
-    }
-    else
-    {
-      tinFeature = feature;
-
-      if( !(geoProperty instanceof GM_Surface) )
-        throw new IncompatibleGeometryTypeException( "Tried to create a SurfaceDisplayElement from a geometry with an incompatible / unsupported type: '" + geoProperty.getClass().getName() + "'!" );
-      tinGeometry = (GM_Surface<GM_Polygon>) geoProperty;
-    }
+    final Pair<Feature, GM_Surface<GM_Triangle>> tin = findTin( feature, geoProperty );
+    if( tin == null )
+      return null;
 
     final PolygonColorMap colorMap = symbolizer.getColorMap();
-    final IVisitorFactory<GM_Polygon> visitorFactory = new SurfacePatchVisitableDisplayElement.IVisitorFactory<GM_Polygon>()
+    final IVisitorFactory<GM_Triangle> visitorFactory = new SurfacePatchVisitableDisplayElement.IVisitorFactory<GM_Triangle>()
     {
       @Override
-      public ISurfacePatchVisitor<GM_Polygon> createVisitor( final Graphics g, final GeoTransform projection, final IElevationColorModel model )
+      public ISurfacePatchVisitor<GM_Triangle> createVisitor( final Graphics g, final GeoTransform projection )
       {
         final UOM uom = symbolizer.getUom();
         return new SurfacePaintPolygonVisitor( g, new ColorMapConverter( colorMap, feature, uom, projection ) );
       }
     };
 
-    return new SurfacePatchVisitableDisplayElement<GM_Polygon>( tinFeature, tinGeometry, null, visitorFactory );
+    return new SurfacePatchVisitableDisplayElement<GM_Triangle>( tin.getLeft(), tin.getRight(), visitorFactory );
+  }
+
+  // Hacky,, is there a better way to access the real geometry...?
+  private static Pair<Feature, GM_Surface<GM_Triangle>> findTin( final Feature feature, final Object geoProperty ) throws IncompatibleGeometryTypeException
+  {
+    if( feature instanceof IElevationModelProvider )
+    {
+      final IElevationModel elevationModel = ((IElevationModelProvider) feature).getElevationModel();
+      if( elevationModel instanceof ITin )
+      {
+        final GM_Surface< ? extends GM_Polygon> surface = ((ITin) elevationModel).getTriangulatedSurface();
+        if( surface == null )
+          return null;
+
+        return Pair.of( null, (GM_Surface<GM_Triangle>) surface );
+      }
+      else
+        return null;
+    }
+    else
+    {
+      if( !(geoProperty instanceof GM_Surface) )
+        throw new IncompatibleGeometryTypeException( "Tried to create a SurfaceDisplayElement from a geometry with an incompatible / unsupported type: '" + geoProperty.getClass().getName() + "'!" );
+
+      return Pair.of( feature, (GM_Surface<GM_Triangle>) geoProperty );
+    }
   }
 
   /**
