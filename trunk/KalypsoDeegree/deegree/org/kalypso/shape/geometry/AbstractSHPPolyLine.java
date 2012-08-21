@@ -15,11 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- * 
+ *
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -79,7 +79,10 @@ abstract class AbstractSHPPolyLine implements ISHPParts
 
     m_multiPoint = readPoints( recBuf, envelope, numParts, numPoints );
 
-    SHPGeometryUtils.checkParts( m_multiPoint, m_parts );
+    // REMARK: this check is controproductive, because there are many invalid 8according to shape whitepaper) shapes otu
+// there...
+    // The nice thing: even ArcGIS produces invalid shape files ;-(
+    // SHPGeometryUtils.checkParts( m_multiPoint, m_parts );
   }
 
   protected abstract ISHPMultiPoint readPoints( byte[] recBuf, SHPEnvelope envelope, final int numParts, int numPoints );
