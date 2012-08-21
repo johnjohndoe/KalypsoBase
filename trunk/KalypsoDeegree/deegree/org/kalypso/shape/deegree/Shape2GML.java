@@ -112,15 +112,17 @@ public final class Shape2GML
       final String featureId = Integer.toString( i );
 
       /* get values */
-      final Object[] propertiesWithGeom = new Object[fieldCount + 1];
-      if( shape.readRow( i, propertiesWithGeom ) )
+      final Object[] properties = new Object[fieldCount];
+      if( shape.readRow( i, properties ) )
       {
         /* convert geometry */
         final ISHPGeometry geometry = shape.getShape( i );
         final GM_Object geom = SHP2GM_Object.transform( shapeSRS, geometry );
 
         /* Build properties including geometry, we know that geom is at pos 0 */
-        propertiesWithGeom[fieldCount] = geom;
+        final Object[] propertiesWithGeom = new Object[fieldCount + 1];
+        propertiesWithGeom[0] = geom;
+        System.arraycopy( properties, 0, propertiesWithGeom, 1, fieldCount );
 
         final AbstractShape newFeature = (AbstractShape) FeatureFactory.createFeature( collection, listRelation, featureId, featureType, propertiesWithGeom );
 

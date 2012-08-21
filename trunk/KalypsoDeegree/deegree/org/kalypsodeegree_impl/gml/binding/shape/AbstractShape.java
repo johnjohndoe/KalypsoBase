@@ -64,14 +64,13 @@ public class AbstractShape extends Feature_Impl
    * IMPORTANT: we use a non-qualified property here (without namespace), because the namespace is different for every
    * single shape instance.
    */
-  public static final String PROPERTY_GEOM = "GEOM";//$NON-NLS-1$
+  public static final QName PROPERTY_GEOM = new QName( SHP_NAMESPACE_URI, "GEOM" );//$NON-NLS-1$
 
   public AbstractShape( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  @SuppressWarnings("deprecation")
   public GM_Object getGeometry( )
   {
     return (GM_Object) getProperty( PROPERTY_GEOM );
@@ -79,7 +78,6 @@ public class AbstractShape extends Feature_Impl
 
   public void setGeometry( final GM_Object geometry )
   {
-    @SuppressWarnings("deprecation")
     final IPropertyType geomProperty = getFeatureType().getProperty( PROPERTY_GEOM );
     setProperty( geomProperty, geometry );
   }
