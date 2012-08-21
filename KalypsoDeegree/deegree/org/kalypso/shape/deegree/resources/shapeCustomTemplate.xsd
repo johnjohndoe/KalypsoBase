@@ -7,13 +7,17 @@
   <element name="Shape" type="custom:ShapeType" substitutionGroup="shp:_Shape" />
   <complexType name="ShapeType">
     <complexContent>
-      <restriction base="shp:ShapeType">
+      <extension base="shp:ShapeType">
         <sequence>
           ${CUSTOM_FEATURE_PROPERTY_ELEMENTS}
           <!-- At the end, so we can read the shape more performantly and avoid object constructions -->
-          <element name="GEOM" type="${CUSTOM_FEATURE_GEOMETRY_PROPERTY_TYPE}" minOccurs="0" maxOccurs="1" />
+          
+          <!-- <element ref="shp:GEOM" type="${CUSTOM_FEATURE_GEOMETRY_PROPERTY_TYPE}" minOccurs="0" maxOccurs="1" /> -->
+          <!-- 
+          <element name="GEOM" minOccurs="0" maxOccurs="1" type="gml:CurvePropertyType"/>
+           -->
         </sequence>
-      </restriction>
+      </extension>
     </complexContent>
   </complexType>
 </schema>
