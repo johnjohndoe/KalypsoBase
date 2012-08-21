@@ -85,7 +85,7 @@ class ThemeModelEventHandler
       if( themeWorkspace != null && changedWorkspace != themeWorkspace && changedWorkspace != themeWorkspace.getWorkspace() )
       {
         /* not my workspace */
-        return new FeatureThemeInvalidation( null, false );
+        return null;
       }
 
       if( m_event instanceof FeaturesChangedModellEvent )
@@ -101,7 +101,7 @@ class ThemeModelEventHandler
     }
 
     /* unknown event type, invalidate everything */
-    return new FeatureThemeInvalidation( m_theme.getFullExtent(), true );
+    return new FeatureThemeInvalidation( null, true );
   }
 
   private FeatureThemeInvalidation handleFeaturesChanged( final FeaturesChangedModellEvent featuresChangedModellEvent )
@@ -124,7 +124,7 @@ class ThemeModelEventHandler
     {
       // OPTIMIZATION: as List#contains is quite slow, we generally repaint if the number of changed features
       // is too large.
-      return new FeatureThemeInvalidation( m_theme.getFullExtent(), true );
+      return new FeatureThemeInvalidation( null, true );
     }
 
     /* Calculate bbox of changed features */
@@ -171,11 +171,13 @@ class ThemeModelEventHandler
         // also, only invalidate full extent if freshly added features are outside the old full extent
         // REMARK: this extremely improves performance adding 2d elements in Kalypso1D2D
         final Feature[] changedFeatures = fscme.getChangedFeatures();
+        if( changedFeatures.length == 0 )
+          return new FeatureThemeInvalidation( null, true );
 
         final GM_Envelope envelope = FeatureHelper.getEnvelope( changedFeatures );
 
         if( envelope == null )
-          return new FeatureThemeInvalidation( m_theme.getFullExtent(), false );
+          return new FeatureThemeInvalidation( null, false );
 
         final boolean shouldInvalidateExtents = !isInsideFullExtent( envelope );
 
