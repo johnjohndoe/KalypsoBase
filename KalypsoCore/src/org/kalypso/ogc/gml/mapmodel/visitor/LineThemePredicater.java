@@ -86,7 +86,6 @@ public class LineThemePredicater implements IKalypsoThemePredicate
     return hasLineElements( featureList );
   }
 
-
   private boolean hasLineElements( final FeatureList featureList )
   {
     final Feature owner = featureList.getOwner();

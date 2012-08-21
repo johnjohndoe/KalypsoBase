@@ -76,5 +76,4 @@ public final class KalypsoFeatureThemeHelper
 
     return resultThemes;
   }
-
 }
