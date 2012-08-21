@@ -54,7 +54,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 /**
  * Helper class that decides how to invalidate a {@link KalypsoFeatureTheme} if the underlying workspace model is
  * changed.
- *
+ * 
  * @author Gernot Belger
  */
 class ThemeModelEventHandler
@@ -115,7 +115,7 @@ class ThemeModelEventHandler
     if( isSingleFeature )
     {
       // TODO: we do not know which one of the changed features is the right one... (ses FIXME below)
-      // So we just invalidate all features in this list
+      // So we just invalidate all features in this (singleton) list
       for( final Feature feature : features )
         featureList.invalidate( feature );
     }

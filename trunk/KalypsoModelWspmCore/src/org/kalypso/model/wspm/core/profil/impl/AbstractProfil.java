@@ -509,6 +509,7 @@ public abstract class AbstractProfil implements IProfil
     boolean state = true;
     for( final IProfileRecord point : points )
     {
+      // TODO: use removeAll to avoid too many events!
       if( !getResult().remove( point.getRecord() ) )
         state = false;
     }
