@@ -56,7 +56,7 @@ import org.kalypso.ogc.gml.map.IMapPanel;
  */
 public interface IWidget extends MouseListener, MouseMotionListener, MouseWheelListener
 {
-  // FIXME: nonsene; makes everything more dificult: instead: keep different lists for different types of widgets
+  // FIXME: nonsene; makes everything more difficult: instead: keep different lists for different types of widgets
   public enum WIDGET_TYPE
   {
     eBackground,
@@ -68,6 +68,7 @@ public interface IWidget extends MouseListener, MouseMotionListener, MouseWheelL
 
   String getName( );
 
+  // FIXME: this is the tooltip of the widget button, NOT intended to be used for the tooltip rendered inside the map!
   String getToolTip( );
 
   // KeyEvents
@@ -101,7 +102,7 @@ public interface IWidget extends MouseListener, MouseMotionListener, MouseWheelL
 
   /**
    * This function sets the map of all parameter.
-   * 
+   *
    * @param parameter
    *          The map of all parameter. May be null.
    */
