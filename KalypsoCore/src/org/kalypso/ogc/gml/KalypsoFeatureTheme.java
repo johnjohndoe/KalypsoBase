@@ -291,7 +291,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     style.removeStyleListener( this );
     m_styles.remove( style );
 
-    requestInvalidation( new FeatureThemeInvalidation( getFullExtent(), true ) );
+    requestInvalidation( new FeatureThemeInvalidation( null, true ) );
 
     // HACKY: in order to refresh (not update) the outline, fire a visibility event
     fireVisibilityChanged( isVisible() );
@@ -309,7 +309,6 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       return;
 
     final FeatureThemeInvalidation invalidation = ThemeModelEventHandler.calculateInvalidation( this, event );
-
     requestInvalidation( invalidation );
   }
 
@@ -326,11 +325,8 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     }
 
     final GM_Envelope invalidBox = invalidation.getInvalidBox();
-    if( invalidBox != null )
-    {
-      /* Request the repaint event */
-      fireRepaintRequested( invalidBox );
-    }
+    /* Request the repaint event */
+    fireRepaintRequested( invalidBox );
   }
 
   @Override
@@ -344,6 +340,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       return null;
 
     m_fullExtent = visibleFeatures.getBoundingBox();
+
     return m_fullExtent;
   }
 
