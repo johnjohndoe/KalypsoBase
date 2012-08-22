@@ -15,11 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- * 
+ *
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -68,7 +68,11 @@ public class SHPPointz implements ISHPPoint
     m_x = ByteUtils.readLEDouble( recBuf, off );
     m_y = ByteUtils.readLEDouble( recBuf, off + 8 );
     m_z = ByteUtils.readLEDouble( recBuf, off + 16 );
-    m_m = ByteUtils.readLEDouble( recBuf, off + 24 );
+
+    if( off + 24 < recBuf.length )
+      m_m = ByteUtils.readLEDouble( recBuf, off + 24 );
+    else
+      m_m = Double.NaN;
 
     m_envelope = new SHPEnvelope( m_x, m_x, m_y, m_y );
   }
@@ -95,7 +99,9 @@ public class SHPPointz implements ISHPPoint
     DataUtils.writeLEDouble( output, m_x );
     DataUtils.writeLEDouble( output, m_y );
     DataUtils.writeLEDouble( output, m_z );
-    DataUtils.writeLEDouble( output, m_m );
+
+    if( !Double.isNaN( m_m ) )
+      DataUtils.writeLEDouble( output, m_m );
   }
 
   @Override
@@ -110,7 +116,10 @@ public class SHPPointz implements ISHPPoint
   @Override
   public int length( )
   {
-    return 32;
+    if( Double.isNaN( m_m ) )
+      return 24;
+    else
+      return 32;
   }
 
   @Override

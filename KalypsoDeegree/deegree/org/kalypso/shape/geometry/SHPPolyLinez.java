@@ -65,6 +65,8 @@ public class SHPPolyLinez extends AbstractSHPPolyLine
   @Override
   public int length( )
   {
+    // TODO: depends on m: m might be optional...
+
     return 32 + 4 + 4 + getNumParts() * 4 + getNumPoints() * 16 + 16 + getNumPoints() * 8 + 16 + getNumPoints() * 8;
   }
 }
