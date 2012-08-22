@@ -40,10 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.graphics.displayelements;
 
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Position;
+import org.kalypsodeegree_impl.graphics.sld.awt.FillPainter;
+import org.kalypsodeegree_impl.graphics.sld.awt.SldAwtUtilities;
+import org.kalypsodeegree_impl.graphics.sld.awt.StrokePainter;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -55,6 +60,8 @@ final class TrianglePainter
 {
   private static final double VAL_EPS = 0.0000001;
 
+  private final Graphics2D m_gc;
+
   private enum RELATION
   {
     INSIDE,
@@ -62,7 +69,38 @@ final class TrianglePainter
     BETWEEN;
   }
 
-  public static GM_Position[] calculateFigure( final GM_Position[] positions, final double startValue, final double endValue )
+  public TrianglePainter( final Graphics2D gc )
+  {
+    m_gc = gc;
+  }
+
+  public void paint( final GM_Position[] positions, final double startValue, final double endValue, final StrokePainter strokePainter, final FillPainter fillPainter, final GeoTransform world2Screen )
+  {
+    final GM_Position[] figure = calculateFigure( positions, startValue, endValue );
+    if( figure == null )
+      return;
+
+    // TODO: check if current surface is too small (i.e. < stroke.width) and if this is the case
+    // only draw a point with that color or something similar
+
+    // TODO: different strategy? -> paint pixel by pixel -> detect triangle value and paint with right class
+
+    paintSurface( figure, strokePainter, fillPainter, world2Screen );
+  }
+
+  private void paintSurface( final GM_Position[] figure, final StrokePainter strokePainter, final FillPainter fillPainter, final GeoTransform world2Screen )
+  {
+    try
+    {
+      SldAwtUtilities.paintRing( m_gc, figure, world2Screen, fillPainter, strokePainter );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+    }
+  }
+
+  private GM_Position[] calculateFigure( final GM_Position[] positions, final double startValue, final double endValue )
   {
     final RELATION r = relateTriangle( positions, startValue, endValue );
     switch( r )
@@ -80,7 +118,7 @@ final class TrianglePainter
     throw new UnsupportedOperationException();
   }
 
-  private static GM_Position[] calculateSplitFigure( final GM_Position[] positions, final double startValue, final double endValue )
+  private GM_Position[] calculateSplitFigure( final GM_Position[] positions, final double startValue, final double endValue )
   {
     /* get the intersection points */
     final List<GM_Position> posList = new ArrayList<GM_Position>( positions.length * 2 );
@@ -256,7 +294,7 @@ final class TrianglePainter
     return posList2.toArray( new GM_Position[posList2.size()] );
   }
 
-  private static RELATION relateTriangle( final GM_Position[] positions, final double startValue, final double endValue )
+  private RELATION relateTriangle( final GM_Position[] positions, final double startValue, final double endValue )
   {
     boolean inside = true;
     boolean outside = true;

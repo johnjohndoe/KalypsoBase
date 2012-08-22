@@ -43,25 +43,24 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
 import org.kalypsodeegree_impl.graphics.sld.awt.FillPainter;
-import org.kalypsodeegree_impl.graphics.sld.awt.SldAwtUtilities;
 import org.kalypsodeegree_impl.graphics.sld.awt.StrokePainter;
 
 /**
  * TODO: adapt this code for planar polygons (at least quadrilaterals) -> no: instead wrap the visitor, so it iterates
- * over triangles created by splitting up the quadrupels.
- *
+ * over triangles created by splitting up the quadrupels. Else, the quadrupels are not cirrectly painted.
+ * 
  * @author Gernot Belger
  * @author Thomas Jung
  */
 public class SurfacePaintPolygonVisitor implements ISurfacePatchVisitor<GM_Triangle>
 {
-  private final Graphics m_gc;
-
   private final ColorMapConverter m_colorModel;
+
+  private final TrianglePainter m_painter;
 
   public SurfacePaintPolygonVisitor( final Graphics gc, final ColorMapConverter colorModel )
   {
-    m_gc = gc;
+    m_painter = new TrianglePainter( (Graphics2D) gc );
     m_colorModel = colorModel;
   }
 
@@ -84,32 +83,11 @@ public class SurfacePaintPolygonVisitor implements ISurfacePatchVisitor<GM_Trian
       final double startValue = m_colorModel.getFrom( currentClass );
       final double endValue = m_colorModel.getTo( currentClass );
 
-      final GM_Position[] figure = TrianglePainter.calculateFigure( positions, startValue, endValue );
-      if( figure != null )
-      {
-        // TODO: check if current surface is too small (i.e. < stroke.width) and if this is the case
-        // only draw a point with that color or something similar
+      final StrokePainter strokePainter = m_colorModel.getLinePainter( currentClass );
+      final FillPainter fillPainter = m_colorModel.getFillPolygonPainter( currentClass );
+      final GeoTransform world2Screen = fillPainter.getWorld2Screen();
 
-        // TODO: different strategy? -> paint pixel by pixel -> detect triangle value and paint with right class
-
-        paintSurface( figure, currentClass );
-      }
-    }
-  }
-
-  private void paintSurface( final GM_Position[] posArray, final int currentClass )
-  {
-    final StrokePainter strokePainter = m_colorModel.getLinePainter( currentClass );
-    final FillPainter fillPainter = m_colorModel.getFillPolygonPainter( currentClass );
-    final GeoTransform world2Screen = fillPainter.getWorld2Screen();
-
-    try
-    {
-      SldAwtUtilities.paintRing( (Graphics2D) m_gc, posArray, world2Screen, fillPainter, strokePainter );
-    }
-    catch( final Exception e )
-    {
-      e.printStackTrace();
+      m_painter.paint( positions, startValue, endValue, strokePainter, fillPainter, world2Screen );
     }
   }
 }
