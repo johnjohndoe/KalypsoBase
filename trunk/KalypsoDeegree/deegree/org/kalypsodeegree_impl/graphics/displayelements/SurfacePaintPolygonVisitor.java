@@ -37,7 +37,9 @@ package org.kalypsodeegree_impl.graphics.displayelements;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.Arrays;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
@@ -48,7 +50,7 @@ import org.kalypsodeegree_impl.graphics.sld.awt.StrokePainter;
 /**
  * TODO: adapt this code for planar polygons (at least quadrilaterals) -> no: instead wrap the visitor, so it iterates
  * over triangles created by splitting up the quadrupels. Else, the quadrupels are not cirrectly painted.
- * 
+ *
  * @author Gernot Belger
  * @author Thomas Jung
  */
@@ -68,6 +70,7 @@ public class SurfacePaintPolygonVisitor implements ISurfacePatchVisitor<GM_Trian
   public boolean visit( final GM_Triangle polygon )
   {
     paintTriangle( polygon );
+
     return true;
   }
 
@@ -76,6 +79,8 @@ public class SurfacePaintPolygonVisitor implements ISurfacePatchVisitor<GM_Trian
     final int numOfClasses = m_colorModel.getNumOfClasses();
 
     final GM_Position[] positions = polygon.getExteriorRing();
+    final GM_Position[] copyOf = Arrays.copyOf( positions, positions.length );
+    ArrayUtils.reverse( copyOf );
 
     /* loop over all classes */
     for( int currentClass = 0; currentClass < numOfClasses; currentClass++ )
@@ -87,7 +92,13 @@ public class SurfacePaintPolygonVisitor implements ISurfacePatchVisitor<GM_Trian
       final FillPainter fillPainter = m_colorModel.getFillPolygonPainter( currentClass );
       final GeoTransform world2Screen = fillPainter.getWorld2Screen();
 
-      m_painter.paint( positions, startValue, endValue, strokePainter, fillPainter, world2Screen );
+      m_painter.paint( copyOf, startValue, endValue, strokePainter, fillPainter, world2Screen );
     }
+
+    // DEBUG:
+    // final StrokePainter strokePainter = m_colorModel.getLinePainter( 0 );
+    // final FillPainter fillPainter = m_colorModel.getFillPolygonPainter( 0 );
+    // final GeoTransform world2Screen = fillPainter.getWorld2Screen();
+    // m_painter.paintTriangle( positions, strokePainter, fillPainter, world2Screen );
   }
 }

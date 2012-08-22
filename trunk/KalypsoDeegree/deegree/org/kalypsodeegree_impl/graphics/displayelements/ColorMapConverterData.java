@@ -117,5 +117,4 @@ public class ColorMapConverterData
   {
     return m_polygonPainter;
   }
-
 }

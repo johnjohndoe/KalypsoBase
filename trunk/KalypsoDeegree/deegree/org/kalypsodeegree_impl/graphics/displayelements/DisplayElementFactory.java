@@ -68,7 +68,6 @@ import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
@@ -214,9 +213,9 @@ public final class DisplayElementFactory
     return new SurfacePatchVisitableDisplayElement<GM_Triangle>( feature, tin, visitorFactory );
   }
 
-  public static DisplayElement buildSurfacePolygonDisplayElement( final Feature feature, final Object geoProperty, final SurfacePolygonSymbolizer symbolizer ) throws IncompatibleGeometryTypeException
+  public static DisplayElement buildSurfacePolygonDisplayElement( final Feature feature, final Object geoProperty, final SurfacePolygonSymbolizer symbolizer )
   {
-    final Pair<Feature, GM_Surface<GM_Triangle>> tin = findTin( feature, geoProperty );
+    final Pair<Feature, GM_TriangulatedSurface> tin = findTin( feature, geoProperty );
     if( tin == null )
       return null;
 
@@ -235,28 +234,33 @@ public final class DisplayElementFactory
   }
 
   // Hacky,, is there a better way to access the real geometry...?
-  private static Pair<Feature, GM_Surface<GM_Triangle>> findTin( final Feature feature, final Object geoProperty ) throws IncompatibleGeometryTypeException
+  private static Pair<Feature, GM_TriangulatedSurface> findTin( final Feature feature, final Object geoProperty )
   {
     if( feature instanceof IElevationModelProvider )
     {
       final IElevationModel elevationModel = ((IElevationModelProvider) feature).getElevationModel();
       if( elevationModel instanceof ITin )
       {
-        final GM_Surface< ? extends GM_Polygon> surface = ((ITin) elevationModel).getTriangulatedSurface();
+        final GM_TriangulatedSurface surface = ((ITin) elevationModel).getTriangulatedSurface();
         if( surface == null )
           return null;
 
-        return Pair.of( null, (GM_Surface<GM_Triangle>) surface );
+        return Pair.of( null, surface );
       }
       else
         return null;
     }
     else
     {
-      if( !(geoProperty instanceof GM_Surface) )
-        throw new IncompatibleGeometryTypeException( "Tried to create a SurfaceDisplayElement from a geometry with an incompatible / unsupported type: '" + geoProperty.getClass().getName() + "'!" );
+      if( !(geoProperty instanceof GM_TriangulatedSurface) )
+        return null;
 
-      return Pair.of( feature, (GM_Surface<GM_Triangle>) geoProperty );
+      // Remark: This actually happens for coverage collection with grids and tins; just ignore for now
+      // throw new IncompatibleGeometryTypeException(
+      // "Tried to create a SurfaceDisplayElement from a geometry with an incompatible / unsupported type: '" +
+      // geoProperty.getClass().getName() + "'!" );
+
+      return Pair.of( feature, (GM_TriangulatedSurface) geoProperty );
     }
   }
 

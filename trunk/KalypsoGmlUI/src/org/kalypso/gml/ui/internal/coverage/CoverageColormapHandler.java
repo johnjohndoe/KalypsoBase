@@ -257,6 +257,13 @@ public class CoverageColormapHandler
         final BigDecimal toValue = new BigDecimal( entry.getValue().getQuantity() );
 
         final PolygonColorMapEntry newEntry = StyleFactory.createPolygonColorMapEntry( color, color, fromValue, toValue );
+
+        // REMARK: always use width '2': hides ugly artifacts in map (because fill and outline do not exactly match).
+        newEntry.getStroke().setWidth( 2 );
+
+        // TODO: use should decide if triangles are visible (no stroke, faster), or hidden (stroke with same color),
+        // slower.
+
         newPolygonColorMap.add( newEntry );
       }
 
