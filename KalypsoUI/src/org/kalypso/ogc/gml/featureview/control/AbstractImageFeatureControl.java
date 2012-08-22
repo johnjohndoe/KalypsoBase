@@ -42,12 +42,14 @@ package org.kalypso.ogc.gml.featureview.control;
 
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.URIUtil;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -86,13 +88,17 @@ public abstract class AbstractImageFeatureControl extends AbstractFeatureControl
     return uriString;
   }
 
-  protected URL resolveImagePath( final String imgPath ) throws MalformedURLException
+  protected URL resolveImagePath( final String imgPath ) throws MalformedURLException, URISyntaxException
   {
     final Feature feature = getFeature();
     final GMLWorkspace workspace = feature.getWorkspace();
     final URL context = workspace.getContext();
+
     final URL location = new URL( context, imgPath );
-    return translateLocation( location );
+    final URI uriEncoded = URIUtil.toURI( location );
+    final URL urlEncoded = URIUtil.toURL( uriEncoded );
+
+    return translateLocation( urlEncoded );
   }
 
   /** Translates platform url's to file url's */

@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.featureview.control;
 
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import javax.activation.MimeType;
@@ -192,7 +193,7 @@ public class ImageFeatureControl extends AbstractImageFeatureControl
       updateImageUrl( url );
       return null;
     }
-    catch( final MalformedURLException e )
+    catch( final MalformedURLException | URISyntaxException e )
     {
       e.printStackTrace();
 
