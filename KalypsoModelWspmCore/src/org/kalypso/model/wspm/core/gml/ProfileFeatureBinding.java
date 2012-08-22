@@ -470,8 +470,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
   }
 
   /**
-   * This function updates this profile with the data from the {@link IProfil} given. It locks the cache during the
-   * changes, but does unlock it, before fireing the events.
+   * This function updates this profile with the data from the {@link IProfil} given.
    * 
    * @param profile
    *          The {@link IProfil}.
