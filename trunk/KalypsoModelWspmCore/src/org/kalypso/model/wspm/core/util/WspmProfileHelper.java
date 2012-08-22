@@ -40,11 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.util;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.eclipse.core.runtime.Assert;
 import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.commons.math.geom.PolyLine;
 import org.kalypso.jts.JTSUtilities;
@@ -56,20 +61,28 @@ import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.LineSegment;
+import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 
 /**
- * @author Holger Albert, Thomas Jung , kimwerner TODO: merge / check this class with {@link ProfilUtil}
+ * TODO: merge / check this class with {@link ProfilUtil}
+ * 
+ * @author Holger Albert, Thomas Jung , Kim Werner
  */
 public final class WspmProfileHelper
 {
@@ -734,7 +747,277 @@ public final class WspmProfileHelper
     tmpProfil.addPoint( point2 );
 
     tmpProfil.setStation( orgIProfil.getStation() );
+
     return tmpProfil;
   }
 
+  /**
+   * This function creates a new profile.<br/>
+   * <br/>
+   * The following steps are performed:
+   * <ol>
+   * <li>Computes the width and height for each point.</li>
+   * <li>Create a profile with each point and its width and height (only points with elevation are being considered!)</li>
+   * <li>The new profile is simplified by Douglas Peucker.</li>
+   * </ol>
+   * 
+   * @param profileType
+   *          The type of the profile.
+   * @param pointsZ
+   * @param curve
+   *          The curve, which represents the geometry on the map of the profile.
+   * @param crsOfCrds
+   * @param simplifyDistance
+   * @return The new profile.
+   */
+  public static IProfil createProfile( final String profileType, final Coordinate[] pointsZ, final String crsOfCrds, final double simplifyDistance ) throws Exception
+  {
+    /* STEP 1: Compute the width and height for each point of the new line. */
+    /* STEP 2: Create the new profile. */
+    final IProfil profile = calculatePointsAndCreateProfile( profileType, pointsZ, crsOfCrds );
+    final int length = profile.getPoints().length;
+    if( length == 0 )
+      return profile;
+
+    /* STEP 3: Simplify the profile. */
+    ProfilUtil.simplifyProfile( profile, simplifyDistance );
+
+    return profile;
+  }
+
+  /**
+   * This function calculates the points for the profile and creates the new profile.
+   * 
+   * @param profileType
+   *          The type of the profile.
+   * @param points
+   *          All points of the new geo line.
+   * @param csOfPoints
+   *          The coordinate system of the points.
+   * @return The new profile.
+   */
+  private static IProfil calculatePointsAndCreateProfile( final String profileType, final Coordinate[] points, final String crsOfPoints ) throws Exception
+  {
+    /* Create the new profile. */
+    final IProfil profile = ProfilFactory.createProfil( profileType );
+    profile.setProperty( IWspmConstants.PROFIL_PROPERTY_CRS, crsOfPoints );
+
+    // TODO: check: we calculate the 'breite' by just adding up the distances between the points, is this always OK?
+    // FIXME: no! this at least depends on the coordinate system....!
+    double breite = 0.0;
+    Coordinate lastCrd = null;
+    for( final Coordinate coordinate : points )
+    {
+      /* Create a new point. */
+      final IProfileRecord profilePoint = createPoint( profile, coordinate, breite );
+
+      /* Add the new point to the profile. */
+      profile.addPoint( profilePoint );
+
+      // FIXME: this at least depends on the coordinate system. In WGS84 we get deegrees, but we always need [m]!
+      if( lastCrd != null )
+        breite += coordinate.distance( lastCrd );
+
+      /* Store the current coordinate. */
+      lastCrd = coordinate;
+    }
+
+    return profile;
+  }
+
+  private static IProfileRecord createPoint( final IProfil profile, final Coordinate coordinate, final double breite )
+  {
+    /* The needed components. */
+    final IComponent cRechtswert = profile.getPointPropertyFor( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT );
+    final IComponent cHochwert = profile.getPointPropertyFor( IWspmPointProperties.POINT_PROPERTY_HOCHWERT );
+    final IComponent cBreite = profile.getPointPropertyFor( IWspmPointProperties.POINT_PROPERTY_BREITE );
+    final IComponent cHoehe = profile.getPointPropertyFor( IWspmPointProperties.POINT_PROPERTY_HOEHE );
+    final IComponent cRauheit = profile.getPointPropertyFor( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS );
+
+    /* Add components if necessary. */
+    if( !profile.hasPointProperty( cRechtswert ) )
+      profile.addPointProperty( cRechtswert );
+
+    if( !profile.hasPointProperty( cHochwert ) )
+      profile.addPointProperty( cHochwert );
+
+    if( !profile.hasPointProperty( cBreite ) )
+      profile.addPointProperty( cBreite );
+
+    if( !profile.hasPointProperty( cHoehe ) )
+      profile.addPointProperty( cHoehe );
+
+    if( !profile.hasPointProperty( cRauheit ) )
+      profile.addPointProperty( cRauheit );
+
+    /* Get index for component. */
+    final int iRechtswert = profile.indexOfProperty( cRechtswert );
+    final int iHochwert = profile.indexOfProperty( cHochwert );
+    final int iBreite = profile.indexOfProperty( cBreite );
+    final int iHoehe = profile.indexOfProperty( cHoehe );
+    final int iRauheit = profile.indexOfProperty( cRauheit );
+
+    /* All necessary values. */
+    final Double rechtswert = coordinate.x;
+    final Double hochwert = coordinate.y;
+    final Double hoehe = Double.isNaN( coordinate.z ) ? 0.0 : coordinate.z;
+    final Object rauheit = cRauheit.getDefaultValue();
+
+    /* Create a new profile point. */
+    final IProfileRecord profilePoint = profile.createProfilPoint();
+
+    /* Add geo values. */
+    profilePoint.setValue( iRechtswert, rechtswert );
+    profilePoint.setValue( iHochwert, hochwert );
+
+    /* Add length section values. */
+    profilePoint.setValue( iBreite, breite );
+    profilePoint.setValue( iHoehe, hoehe );
+    profilePoint.setValue( iRauheit, rauheit );
+
+    return profilePoint;
+  }
+
+  /**
+   * Inserts new points into an existing profile.<br/>
+   * 
+   * @param insertSign
+   *          If -1, new points are inserted at the beginning of the profile, 'width' goes into negative direction.
+   *          Else, points are inserted at the end of the profile with ascending width.
+   * @param coordinatesCRS
+   *          The coordinate system of the new points.
+   */
+  public static void insertPoints( final IProfil profile, final int insertSign, final Coordinate[] newPoints, final String coordinatesCRS ) throws Exception
+  {
+    Assert.isTrue( insertSign == 1 || insertSign == -1 );
+
+    final int insertPositition = insertSign < 0 ? 0 : profile.getPoints().length - 1;
+    final IRecord point = profile.getPoint( insertPositition );
+    final int iBreite = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE );
+    double breite = (Double) point.getValue( iBreite );
+
+    final String srsName = profile.getSrsName();
+    final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( srsName );
+
+    final List<IRecord> newRecords = new ArrayList<IRecord>( newPoints.length );
+
+    Coordinate lastCrd = null;
+    for( final Coordinate coordinate : newPoints )
+    {
+      /* Transform the coordinate into the coordinate system of the profile. */
+      final GM_Position position = geoTransformer.transform( JTSAdapter.wrap( coordinate ), coordinatesCRS );
+      final Coordinate transformedCoordinate = JTSAdapter.export( position );
+
+      if( lastCrd != null )
+      {
+        final double distance = lastCrd.distance( transformedCoordinate );
+        if( insertSign < 0 )
+          breite -= distance;
+        else
+          breite += distance;
+
+        // REMARK: using record here because we later directly insert into the TupleResult
+        final IProfileRecord newPoint = createPoint( profile, transformedCoordinate, breite );
+        newRecords.add( newPoint.getRecord() );
+      }
+
+      lastCrd = transformedCoordinate;
+    }
+
+    final TupleResult result = profile.getResult();
+    if( insertSign < 0 )
+    {
+      Collections.reverse( newRecords );
+      result.addAll( 0, newRecords );
+    }
+    else
+    {
+      result.addAll( newRecords );
+    }
+  }
+
+  public static IProfil convertLinestringToEmptyProfile( final GM_Curve curve, final String profileType ) throws GM_Exception
+  {
+    final LineString jtsCurve = (LineString) JTSAdapter.export( curve );
+    return convertLinestringToEmptyProfile( jtsCurve, profileType );
+  }
+
+  /**
+   * creates a profile from {@link LineString} with '0.0' as z-values.
+   */
+  public static IProfil convertLinestringToEmptyProfile( final LineString jtsCurve, final String type )
+  {
+    if( jtsCurve == null )
+      return null;
+
+    /* Create the new profile. */
+    final IProfil profile = ProfilFactory.createProfil( type );
+
+    double breite = 0.0;
+
+    for( int i = 0; i < jtsCurve.getNumPoints(); i++ )
+    {
+      final Coordinate coordinate = jtsCurve.getCoordinateN( i );
+
+      final IProfileRecord newPoint = createPoint( profile, coordinate, breite );
+
+      /* calculate breite */
+      if( i > 0 )
+      {
+        final double distance = coordinate.distance( jtsCurve.getCoordinateN( i - 1 ) );
+        breite += distance;
+      }
+
+      profile.addPoint( newPoint );
+    }
+
+    return profile;
+  }
+
+  /**
+   * creates a profile from an array of Coordinate's with '0.0' as z-values.
+   */
+  public static IProfil convertLinestringToEmptyProfile( final Coordinate[] points, final String type )
+  {
+    /* Create the new profile. */
+    final IProfil profile = ProfilFactory.createProfil( type );
+
+    double breite = 0.0;
+
+    for( int i = 0; i < points.length; i++ )
+    {
+      final Coordinate coordinate = points[i];
+
+      final IProfileRecord newPoint = createPoint( profile, coordinate, breite );
+
+      /* calculate breite */
+      if( i > 0 )
+      {
+        final double distance = coordinate.distance( points[i - 1] );
+        breite += distance;
+      }
+
+      profile.addPoint( newPoint );
+    }
+
+    return profile;
+  }
+
+  /**
+   * @param insertSign
+   *          -1 points will be insert before, ...
+   */
+  public static void extendPoints( final IProfil profil, final int insertSign, final Coordinate[] simplifiedCords, final double simplifyDistance, final String coordinatesCRS ) throws Exception
+  {
+    if( ArrayUtils.isEmpty( simplifiedCords ) )
+      return;
+
+    insertPoints( profil, insertSign, simplifiedCords, coordinatesCRS );
+
+    final int length = profil.getPoints().length;
+    final int start = insertSign == -1 ? 0 : length - simplifiedCords.length;
+    final int end = insertSign == -1 ? simplifiedCords.length : length;
+
+    ProfilUtil.simplifyProfile( profil, simplifyDistance, start, end - 1 );
+  }
 }
