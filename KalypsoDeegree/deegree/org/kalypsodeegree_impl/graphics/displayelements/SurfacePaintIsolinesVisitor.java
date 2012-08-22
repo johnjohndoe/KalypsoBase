@@ -35,22 +35,15 @@
  */
 package org.kalypsodeegree_impl.graphics.displayelements;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.kalypsodeegree.graphics.displayelements.PolygonDisplayElement;
-import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
-import org.kalypsodeegree_impl.graphics.sld.PolygonSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.awt.StrokePainter;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
@@ -79,41 +72,13 @@ public class SurfacePaintIsolinesVisitor implements ISurfacePatchVisitor<GM_Tria
   @Override
   public boolean visit( final GM_Triangle triangle )
   {
-    /* DEBUG: Paint the triangle. */
-    // paintTriangle( triangle );
-
     /* Paint the iso lines. */
-    getTriangleIsoLines( triangle );
+    paintTriangleIsoLines( triangle );
 
     return true;
   }
 
-  /**
-   * This function paints the triangle.
-   */
-  protected void paintTriangle( final GM_Triangle triangle )
-  {
-    try
-    {
-      /* Define how the triangles will be drawn. */
-      final PolygonSymbolizer triangleSymbolizer = new PolygonSymbolizer_Impl();
-      triangleSymbolizer.getFill().setOpacity( 0 );
-      triangleSymbolizer.getStroke().setStroke( Color.BLACK );
-      triangleSymbolizer.getStroke().setWidth( 1 );
-
-      /* Draw the triangle. */
-      final GM_Surface< ? extends GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( triangle );
-
-      final PolygonDisplayElement triangleDisplayElement = DisplayElementFactory.buildPolygonDisplayElement( null, surface, triangleSymbolizer );
-      triangleDisplayElement.paint( m_gc, m_projection, new NullProgressMonitor() );
-    }
-    catch( final Exception ex )
-    {
-      ex.printStackTrace();
-    }
-  }
-
-  private void getTriangleIsoLines( final GM_Triangle triangle )
+  private void paintTriangleIsoLines( final GM_Triangle triangle )
   {
     // get value range of the triangle
     double minValue = Double.POSITIVE_INFINITY;

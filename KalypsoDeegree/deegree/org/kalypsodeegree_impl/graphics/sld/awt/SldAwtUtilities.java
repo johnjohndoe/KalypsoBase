@@ -58,11 +58,9 @@ public final class SldAwtUtilities
   }
 
   /**
-   * Creates an awt {@link Polygon} from the given ring, transforming it to screen coordinates.
-   * <p>
+   * Creates an awt {@link Polygon} from the given ring, transforming it to screen coordinates.<br/>
    * For perfomance reasons, points which cannot be distuingished on the screen are filtered out.
-   * </p>
-   *
+   * 
    * @param strokeWidth
    *          : Width in screen units: any adjacent points which are within this distance are filtered out.
    */

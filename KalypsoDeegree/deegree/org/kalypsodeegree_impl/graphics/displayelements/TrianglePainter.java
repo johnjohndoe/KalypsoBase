@@ -41,6 +41,7 @@
 package org.kalypsodeegree_impl.graphics.displayelements;
 
 import java.awt.Graphics2D;
+import java.awt.Polygon;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,6 +75,21 @@ final class TrianglePainter
     m_gc = gc;
   }
 
+  /**
+   * For debug pruposes: paint the whole triangle
+   */
+  public void paintTriangle( final GM_Position[] positions, final StrokePainter strokePainter, final FillPainter fillPainter, final GeoTransform world2Screen )
+  {
+    try
+    {
+      SldAwtUtilities.paintRing( m_gc, positions, world2Screen, fillPainter, strokePainter );
+    }
+    catch( final Exception ex )
+    {
+      ex.printStackTrace();
+    }
+  }
+
   public void paint( final GM_Position[] positions, final double startValue, final double endValue, final StrokePainter strokePainter, final FillPainter fillPainter, final GeoTransform world2Screen )
   {
     final GM_Position[] figure = calculateFigure( positions, startValue, endValue );
@@ -92,7 +108,9 @@ final class TrianglePainter
   {
     try
     {
-      SldAwtUtilities.paintRing( m_gc, figure, world2Screen, fillPainter, strokePainter );
+      final Polygon shape = SldAwtUtilities.polygonFromRing( figure, strokePainter.getWidth(), world2Screen );
+      if( shape != null )
+        SldAwtUtilities.paintShape( m_gc, shape, fillPainter, strokePainter );
     }
     catch( final Exception e )
     {
@@ -297,20 +315,24 @@ final class TrianglePainter
   private RELATION relateTriangle( final GM_Position[] positions, final double startValue, final double endValue )
   {
     boolean inside = true;
-    boolean outside = true;
+    boolean upper = true;
+    boolean lower = true;
 
-    for( final GM_Position position : positions )
+    for( int i = 0; i < positions.length - 1; i++ )
     {
+      final GM_Position position = positions[i];
+
       final double z = position.getZ();
 
       inside &= startValue < z && z <= endValue;
-      outside &= z <= startValue || z > endValue;
+      lower &= z <= startValue;
+      upper &= z > endValue;
     }
 
     if( inside )
       return RELATION.INSIDE;
 
-    if( outside )
+    if( upper || lower )
       return RELATION.OUTSIDE;
 
     return RELATION.BETWEEN;
