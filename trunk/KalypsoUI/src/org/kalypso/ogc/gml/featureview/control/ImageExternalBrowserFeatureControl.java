@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.featureview.control;
 
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.eclipse.swt.widgets.Composite;
@@ -52,7 +53,7 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * A hyperlink that opens the image location in the external browser.
- * 
+ *
  * @author Gernot Belger
  */
 public class ImageExternalBrowserFeatureControl extends AbstractImageFeatureControl
@@ -96,7 +97,7 @@ public class ImageExternalBrowserFeatureControl extends AbstractImageFeatureCont
       final String imagePath = getImagePath();
       return resolveImagePath( imagePath );
     }
-    catch( final MalformedURLException e )
+    catch( final MalformedURLException | URISyntaxException e )
     {
       e.printStackTrace();
       return null;
