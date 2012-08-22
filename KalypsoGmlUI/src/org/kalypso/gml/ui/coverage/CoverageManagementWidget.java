@@ -52,6 +52,7 @@ import java.util.Set;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
@@ -82,6 +83,7 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
+import org.kalypso.gml.ui.KalypsoGmlUiExtensions;
 import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.gml.ui.internal.coverage.AddCoverageAction;
 import org.kalypso.gml.ui.internal.coverage.CoverageColorRangeAction;
@@ -91,6 +93,7 @@ import org.kalypso.gml.ui.internal.coverage.JumpToCoverageAction;
 import org.kalypso.gml.ui.internal.coverage.MoveCoverageDownAction;
 import org.kalypso.gml.ui.internal.coverage.MoveCoverageUpAction;
 import org.kalypso.gml.ui.internal.coverage.RemoveCoverageAction;
+import org.kalypso.gml.ui.internal.coverage.actions.CoverageManagementAction;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -459,7 +462,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     initalizeCoverageViewer( m_coverageViewer );
 
     /* Initialize the coverage toolbar. */
-    initalizeCoverageActions( new ToolBarManager( coverageToolbar ), m_customActions );
+    initalizeCoverageActions( new ToolBarManager( coverageToolbar ) );
 
     /* Initialize the color map viewer. */
     updateStylePanel();
@@ -679,7 +682,22 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     manager.update( true );
   }
 
-  private void initalizeCoverageActions( final IToolBarManager manager, final IAction[] customActions )
+  private void initalizeCoverageActions( final IToolBarManager manager )
+  {
+    /* Add the default actions. */
+    addDefaultActions( manager );
+
+    /* Add actions registered by the extension point. */
+    addExtensionActions( manager );
+
+    /* Add the custom actions. */
+    addCustomActions( manager );
+
+    /* Update the toolbar manager. */
+    manager.update( true );
+  }
+
+  private void addDefaultActions( final IToolBarManager manager )
   {
     if( m_showAddRemoveButtons )
     {
@@ -691,22 +709,40 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     if( m_showAddRemoveButtons )
     {
-      // Changeing the order of grids only makes sense, if the user is allowed to add/remove them.
+      /* Changeing the order of grids only makes sense, if the user is allowed to add/remove them. */
       addAction( manager, new MoveCoverageUpAction( this ) );
       addAction( manager, new MoveCoverageDownAction( this ) );
     }
 
     addAction( manager, new JumpToCoverageAction( this ) );
+  }
 
-    /* Should some custom action be added. */
-    if( customActions != null )
+  private void addExtensionActions( final IToolBarManager manager )
+  {
+    try
     {
-      /* Add custom actions. */
-      for( final IAction customAction : customActions )
-        addAction( manager, customAction );
+      final CoverageManagementAction[] extensionActions = KalypsoGmlUiExtensions.createCoverageManagementActions();
+      for( final CoverageManagementAction extensionAction : extensionActions )
+      {
+        if( CoverageManagementAction.ROLE_WIDGET.equals( extensionAction.getActionRole() ) )
+          addAction( manager, extensionAction );
+      }
     }
+    catch( final CoreException ex )
+    {
+      ex.printStackTrace();
+    }
+  }
 
-    manager.update( true );
+  private void addCustomActions( final IToolBarManager manager )
+  {
+    /* Should some custom action be added? */
+    if( m_customActions == null )
+      return;
+
+    /* Add custom actions. */
+    for( final IAction customAction : m_customActions )
+      addAction( manager, customAction );
   }
 
   private void addAction( final IToolBarManager manager, final IAction action )

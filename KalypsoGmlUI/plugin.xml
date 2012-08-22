@@ -2,6 +2,7 @@
 <?eclipse version="3.0"?>
 <plugin>
    <extension-point id="toolWizards" name="toolWizards" schema="schema/toolWizards.exsd"/>
+   <extension-point id="coverageManagementAction" name="coverageManagementAction" schema="schema/coverageManagementAction.exsd"/>
    
    <extension point="org.kalypso.core.catalogContribution">
       <catalogContribution class="org.kalypso.gml.ui.catalog.GmlFeatureTypeStyleCatalogContribution" name="GML Style Catalog"/>

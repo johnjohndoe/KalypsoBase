@@ -54,6 +54,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -75,7 +76,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.deegree.i18n.Messages;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypso.transformation.crs.ICoordinateSystem;
@@ -235,7 +235,7 @@ public class CRSSelectionPanel extends Composite
     if( (getStyle() & NO_GROUP) != 0 )
     {
       final Composite composite = new Composite( this, SWT.NONE );
-      composite.setLayout( Layouts.createGridLayout( 2 ) );
+      composite.setLayout( GridLayoutFactory.fillDefaults().numColumns( 2 ).create() );
 
       return composite;
     }
@@ -320,12 +320,12 @@ public class CRSSelectionPanel extends Composite
    */
   public String getSelectedCRS( )
   {
-    // FIXME:this does not work! If the update job is still running, null is returned, even if the
-    // crs was set before.
+    // FIXME: This does not work!
+    // FIXME: If the update job is still running, null is returned, even if the crs was set before.
 
-    // TODO: keep the current crs in a separate variable (which is set on setCrs and returned on getCrs
-    // Update the variable if the combo is changed
-    // Probably makes m_lazySelection obsolete as well.
+    // TODO: Keep the current crs in a separate variable (which is set on setCrs and returned on getCrs).
+    // TODO: Update the variable if the combo is changed.
+    // TODO: Probably makes m_lazySelection obsolete as well.
 
     if( m_viewer == null || m_viewer.getControl().isDisposed() )
       return null;

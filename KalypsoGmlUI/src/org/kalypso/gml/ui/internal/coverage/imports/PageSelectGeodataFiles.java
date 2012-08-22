@@ -43,6 +43,7 @@ package org.kalypso.gml.ui.internal.coverage.imports;
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.window.Window;
@@ -64,7 +65,9 @@ import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.commons.databinding.swt.FileAndHistoryData;
 import org.kalypso.commons.databinding.swt.FileBinding;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateOpen;
+import org.kalypso.gml.ui.KalypsoGmlUiExtensions;
 import org.kalypso.gml.ui.i18n.Messages;
+import org.kalypso.gml.ui.internal.coverage.actions.CoverageManagementAction;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 
 /**
@@ -93,43 +96,78 @@ public class PageSelectGeodataFiles extends WizardPage
     GridLayoutFactory.swtDefaults().applyTo( container );
     setControl( container );
 
-    /* File group */
+    /* File group. */
     final Group fileGroup = new Group( container, SWT.NONE );
     fileGroup.setLayout( new GridLayout( 2, false ) );
     fileGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     fileGroup.setText( Messages.getString( "org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFiles.12" ) ); //$NON-NLS-1$
 
     final FileAndHistoryData sourceFile = m_data.getSourceFile();
-
     final IObservableValue modelFile = BeansObservables.observeValue( sourceFile, FileAndHistoryData.PROPERTY_FILE );
     final IObservableValue modelHistory = BeansObservables.observeValue( sourceFile, FileAndHistoryData.PROPERTY_HISTORY );
 
     final FileChooserDelegateOpen delegate = CoverageFormats.createFileOpenDelegate();
-
     final FileBinding fileBinding = new FileBinding( m_binding, modelFile, delegate );
 
     final Control historyControl = fileBinding.createFileFieldWithHistory( fileGroup, modelHistory );
     historyControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
 
-    final Button searchButton = fileBinding.createFileSearchButton( fileGroup, historyControl );
-    searchButton.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
+    final Button fileButton = fileBinding.createFileSearchButton( fileGroup, historyControl );
+    fileButton.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
 
-    /* Coordinate system combo */
-    final CRSSelectionPanel crsPanel = new CRSSelectionPanel( container, SWT.NONE );
+    /* Additional actions. */
+    createAdditionalActions( fileGroup );
+
+    /* Coordinate system combo. */
+    createCoordinateSystemCombo( container );
+
+    /* Data folder. */
+    createGridFolderControl( container );
+  }
+
+  private void createAdditionalActions( final Composite parent )
+  {
+    try
+    {
+      final CoverageManagementAction[] additionalActions = KalypsoGmlUiExtensions.createCoverageManagementActions();
+      for( final CoverageManagementAction additionalAction : additionalActions )
+      {
+        if( !CoverageManagementAction.ROLE_WIZARD.equals( additionalAction.getActionRole() ) )
+          continue;
+
+        final Button additionalButton = new Button( parent, SWT.CHECK );
+        additionalButton.setText( additionalAction.getText() );
+        additionalButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
+        additionalButton.addSelectionListener( new SelectionAdapter()
+        {
+          @Override
+          public void widgetSelected( final SelectionEvent e )
+          {
+            // TODO
+          }
+        } );
+      }
+    }
+    catch( final CoreException ex )
+    {
+      ex.printStackTrace();
+    }
+  }
+
+  private void createCoordinateSystemCombo( final Composite parent )
+  {
+    final CRSSelectionPanel crsPanel = new CRSSelectionPanel( parent, SWT.NONE );
     crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     crsPanel.setToolTipText( Messages.getString( "org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFiles.0" ) ); //$NON-NLS-1$
 
     final IObservableValue targetSrs = crsPanel.observe();
     final IObservableValue modelSrs = BeansObservables.observeValue( m_data, ImportCoverageData.PROPERTY_SOURCE_SRS );
     m_binding.bindValue( targetSrs, modelSrs );
-
-    /* data folder */
-    createGridFolderControl( container );
   }
 
-  private void createGridFolderControl( final Composite container )
+  private void createGridFolderControl( final Composite parent )
   {
-    final Group folderGroup = new Group( container, SWT.NONE );
+    final Group folderGroup = new Group( parent, SWT.NONE );
     folderGroup.setLayout( new GridLayout( 2, false ) );
     folderGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     folderGroup.setText( Messages.getString( "org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFiles.1" ) ); //$NON-NLS-1$
@@ -163,7 +201,6 @@ public class PageSelectGeodataFiles extends WizardPage
     } );
 
     final String dataFolderPath = m_data.getDataContainerPath();
-
     if( dataFolderPath != null )
       tFolder.setText( dataFolderPath );
   }
