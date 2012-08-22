@@ -46,7 +46,7 @@ import org.kalypsodeegree.model.geometry.ByteUtils;
 /**
  * @author Gernot Belger
  */
-abstract class AbstractSHPPolyLine implements ISHPParts
+abstract class AbstractSHPPolyLine implements ISHPPolyLine
 {
   private final int[] m_parts;
 

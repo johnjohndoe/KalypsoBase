@@ -43,12 +43,9 @@ import org.kalypso.shape.geometry.ISHPGeometry;
 import org.kalypso.shape.geometry.ISHPMultiPoint;
 import org.kalypso.shape.geometry.ISHPParts;
 import org.kalypso.shape.geometry.ISHPPoint;
+import org.kalypso.shape.geometry.ISHPPolyLine;
+import org.kalypso.shape.geometry.ISHPPolygon;
 import org.kalypso.shape.geometry.SHPNullShape;
-import org.kalypso.shape.geometry.SHPPoint;
-import org.kalypso.shape.geometry.SHPPolyLine;
-import org.kalypso.shape.geometry.SHPPolyLinez;
-import org.kalypso.shape.geometry.SHPPolygon;
-import org.kalypso.shape.geometry.SHPPolygonz;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveSegment;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -75,7 +72,7 @@ import com.vividsolutions.jts.geom.LinearRing;
  * 21.03.2000 ap: method: transformMultiPoint(..) declared and implemented <BR>
  * 21.03.2000 ap: method: transformPolyLine(..) declared and implemented <BR>
  * <!------------------------------------------------------------------------>
- * 
+ *
  * @version 21.03.2000
  * @author Andreas Poth
  */
@@ -267,7 +264,7 @@ public final class SHP2GM_Object
       return null;
 
     if( shpGeom instanceof ISHPPoint )
-      return SHP2GM_Object.transformPoint( crs, (SHPPoint) shpGeom );
+      return SHP2GM_Object.transformPoint( crs, (ISHPPoint) shpGeom );
 
     if( shpGeom instanceof ISHPMultiPoint )
     {
@@ -278,40 +275,22 @@ public final class SHP2GM_Object
       return GeometryFactory.createGM_MultiPoint( points, crs );
     }
 
-    if( shpGeom instanceof SHPPolyLine )
+    if( shpGeom instanceof ISHPPolyLine )
     {
-      final GM_Curve[] curves = SHP2GM_Object.transformPolyLine( crs, (SHPPolyLine) shpGeom );
+      final GM_Curve[] curves = SHP2GM_Object.transformPolyLine( crs, (ISHPPolyLine) shpGeom );
       if( curves == null )
         return null;
 
       return GeometryFactory.createGM_MultiCurve( curves, crs );
     }
 
-    if( shpGeom instanceof SHPPolygon )
+    if( shpGeom instanceof ISHPPolygon )
     {
-      final GM_Surface<GM_SurfacePatch>[] polygons = SHP2GM_Object.transformPolygon( crs, (SHPPolygon) shpGeom );
+      final GM_Surface<GM_SurfacePatch>[] polygons = SHP2GM_Object.transformPolygon( crs, (ISHPPolygon) shpGeom );
       if( polygons == null || polygons.length <= 0 )
         return null;
 
       return GeometryFactory.createGM_MultiSurface( polygons, crs );
-    }
-
-    if( shpGeom instanceof SHPPolyLinez )
-    {
-      final GM_Curve[] curves = SHP2GM_Object.transformPolyLine( crs, (SHPPolyLinez) shpGeom );
-      if( curves == null )
-        return null;
-
-      return GeometryFactory.createGM_MultiCurve( curves, crs );
-    }
-
-    if( shpGeom instanceof SHPPolygonz )
-    {
-      final GM_Surface<GM_SurfacePatch>[] polygonsz = SHP2GM_Object.transformPolygon( crs, (SHPPolygonz) shpGeom );
-      if( polygonsz != null )
-        return GeometryFactory.createGM_MultiSurface( polygonsz, crs );
-
-      return null;
     }
 
     throw new UnsupportedOperationException( "Unknown shpe class: " + shpGeom );
