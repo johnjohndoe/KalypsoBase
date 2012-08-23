@@ -40,15 +40,16 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml.ui.internal.coverage.actions;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.swt.widgets.Shell;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 
 /**
  * Base action for the coverage management widget.
  * 
  * @author Holger Albert
  */
-public abstract class CoverageManagementAction extends Action
+public abstract class CoverageManagementAction
 {
   /**
    * The action will be shown in the coverage management widget.
@@ -71,19 +72,39 @@ public abstract class CoverageManagementAction extends Action
   private String m_actionRole;
 
   /**
+   * The text of the coverage management action.
+   */
+  private final String m_actionText;
+
+  /**
    * The constructor.
    * 
-   * @param text
-   *          The action's text, or null if there is no text.
-   * @param image
-   *          The action's image, or null if there is no image.
+   * @param actionText
+   *          The text of the coverage management action.
    */
-  public CoverageManagementAction( final String text, final ImageDescriptor image )
+  public CoverageManagementAction( final String actionText )
   {
-    super( text, image );
-
     init( null, ROLE_WIDGET );
+
+    m_actionText = actionText;
   }
+
+  /**
+   * This function returns true, if the coverage management action is visible.
+   * 
+   * @return True, if the coverage management action is visible.
+   */
+  public abstract boolean isVisible( );
+
+  /**
+   * This function may be called to configure the coverage management action, before it is executed.
+   * 
+   * @param shell
+   *          The shell.
+   * @param data
+   *          The data object.
+   */
+  public abstract void preExecute( Shell shell, Object data );
 
   /**
    * This function initializes the coverage management action.
@@ -97,6 +118,28 @@ public abstract class CoverageManagementAction extends Action
   {
     m_actionId = actionId;
     m_actionRole = actionRole;
+  }
+
+  /**
+   * This function returns the action of the coverage management action. Must be implemented by coverage management
+   * actions with the role {@link #ROLE_WIDGET}.
+   * 
+   * @return The action of the coverage management action.
+   */
+  public IAction getAction( )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * This function returns the runnable of the coverage management action. Must be implemented by coverage management
+   * actions with the role {@link #ROLE_WIZARD}.
+   * 
+   * @return The runnable of the coverage management action.
+   */
+  public ICoreRunnableWithProgress getRunnable( )
+  {
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -117,5 +160,15 @@ public abstract class CoverageManagementAction extends Action
   public String getActionRole( )
   {
     return m_actionRole;
+  }
+
+  /**
+   * This function returns the text of the coverage management action.
+   * 
+   * @return The text of the coverage management action.
+   */
+  public String getActionText( )
+  {
+    return m_actionText;
   }
 }

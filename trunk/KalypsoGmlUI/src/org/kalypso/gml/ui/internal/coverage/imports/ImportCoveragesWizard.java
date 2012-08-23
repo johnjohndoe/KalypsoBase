@@ -47,29 +47,37 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.gml.ui.i18n.Messages;
+import org.kalypso.gml.ui.internal.coverage.actions.CoverageManagementAction;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
 /**
  * Dieser Wizard dient dazu, (mehrere) Rasterdateien in eine bestehende GML-Datei zu imporiteren.
- *
+ * 
  * @author Gernot Belger
  */
 public class ImportCoveragesWizard extends Wizard implements IWorkbenchWizard
 {
-  private final ImportCoverageData m_data = new ImportCoverageData();
+  private final ImportCoverageData m_data;
+
+  private PageSelectGeodataFiles m_pageSelect;
 
   public ImportCoveragesWizard( )
   {
+    m_data = new ImportCoverageData();
+    m_pageSelect = null;
+
     final IDialogSettings settings = DialogSettingsUtils.getDialogSettings( KalypsoGmlUIPlugin.getDefault(), "ImportRectifiedGridCoverageWizardSettings" ); //$NON-NLS-1$
     setDialogSettings( settings );
     setNeedsProgressMonitor( true );
-
     setWindowTitle( Messages.getString( "org.kalypso.gml.ui.wizard.grid.AddRectifiedGridCoveragesWizard.1" ) ); //$NON-NLS-1$
   }
 
@@ -90,18 +98,17 @@ public class ImportCoveragesWizard extends Wizard implements IWorkbenchWizard
   public void init( final ICoverageCollection coverages, final IContainer dataFolder, final boolean allowUserChangeDataFolder )
   {
     m_data.init( coverages, dataFolder, allowUserChangeDataFolder );
-
     m_data.loadSettings( getDialogSettings() );
   }
 
   @Override
   public void addPages( )
   {
-    final PageSelectGeodataFiles pageSelect = new PageSelectGeodataFiles( m_data );
-    pageSelect.setTitle( Messages.getString( "org.kalypso.gml.ui.wizard.grid.AddRectifiedGridCoveragesWizard.0" ) ); //$NON-NLS-1$
-    pageSelect.setDescription( Messages.getString( "org.kalypso.gml.ui.wizard.grid.AddRectifiedGridCoveragesWizard.4" ) ); //$NON-NLS-1$
+    m_pageSelect = new PageSelectGeodataFiles( m_data );
+    m_pageSelect.setTitle( Messages.getString( "org.kalypso.gml.ui.wizard.grid.AddRectifiedGridCoveragesWizard.0" ) ); //$NON-NLS-1$
+    m_pageSelect.setDescription( Messages.getString( "org.kalypso.gml.ui.wizard.grid.AddRectifiedGridCoveragesWizard.4" ) ); //$NON-NLS-1$
 
-    addPage( pageSelect );
+    addPage( m_pageSelect );
 
     super.addPages();
   }
@@ -109,15 +116,33 @@ public class ImportCoveragesWizard extends Wizard implements IWorkbenchWizard
   @Override
   public boolean performFinish( )
   {
+    /* Save the dialog settings. */
     m_data.storeSettings( getDialogSettings() );
 
+    /* The status collector. */
+    final IStatusCollector collector = new StatusCollector( KalypsoGmlUIPlugin.id() );
+
+    /* Execute the import coverages operation. */
     final ImportCoveragesOperation operation = new ImportCoveragesOperation( m_data );
+    final IStatus operationStatus = RunnableContextHelper.execute( getContainer(), true, true, operation );
+    collector.add( operationStatus );
 
-    final IStatus status = RunnableContextHelper.execute( getContainer(), true, true, operation );
+    /* Execute additional actions. */
+    final CoverageManagementAction[] checkedActions = m_pageSelect.getCheckedActions();
+    for( final CoverageManagementAction checkedAction : checkedActions )
+    {
+      /* Init the checked action. */
+      checkedAction.preExecute( getShell(), m_data );
 
-    StatusDialog.open( getShell(), status, getWindowTitle() );
+      /* Get the runnable. */
+      final ICoreRunnableWithProgress runnable = checkedAction.getRunnable();
 
-    //ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString( "org.kalypso.gml.ui.wizard.grid.AddRectifiedGridCoveragesWizard.6" ), status, IStatus.INFO | IStatus.WARNING | IStatus.ERROR ); //$NON-NLS-1$
+      /* Execute the runnable. */
+      final IStatus actionStatus = RunnableContextHelper.execute( getContainer(), true, false, runnable );
+      collector.add( actionStatus );
+    }
+
+    StatusDialog.open( getShell(), collector.asMultiStatus( "Import von Höhendaten" ), getWindowTitle() );
 
     // On error, we might have imported some coverages and some not, so we always leave the wizard.
     return true;

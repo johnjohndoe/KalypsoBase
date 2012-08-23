@@ -724,8 +724,20 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       final CoverageManagementAction[] extensionActions = KalypsoGmlUiExtensions.createCoverageManagementActions();
       for( final CoverageManagementAction extensionAction : extensionActions )
       {
-        if( CoverageManagementAction.ROLE_WIDGET.equals( extensionAction.getActionRole() ) )
-          addAction( manager, extensionAction );
+        if( !CoverageManagementAction.ROLE_WIDGET.equals( extensionAction.getActionRole() ) )
+          continue;
+
+        if( !extensionAction.isVisible() )
+          continue;
+
+        /* Init the extension action. */
+        extensionAction.preExecute( getShell(), null );
+
+        /* Get the action. */
+        final IAction action = extensionAction.getAction();
+
+        /* Add the action. */
+        addAction( manager, action );
       }
     }
     catch( final CoreException ex )
