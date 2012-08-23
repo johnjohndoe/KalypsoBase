@@ -61,7 +61,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 /**
  * @author Gernot Belger
  */
-class ImportCoverageData extends AbstractModelObject
+public class ImportCoverageData extends AbstractModelObject
 {
   static final String PROPERTY_SOURCE_FILES = "sourceFiles"; //$NON-NLS-1$
 

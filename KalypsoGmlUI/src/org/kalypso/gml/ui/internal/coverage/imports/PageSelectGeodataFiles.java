@@ -40,6 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml.ui.internal.coverage.imports;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
 import org.eclipse.core.databinding.beans.BeansObservables;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.resources.IContainer;
@@ -76,15 +83,22 @@ import org.kalypso.transformation.ui.CRSSelectionPanel;
  */
 public class PageSelectGeodataFiles extends WizardPage
 {
+  private final ImportCoverageData m_data;
+
   private DatabindingWizardPage m_binding;
 
-  private final ImportCoverageData m_data;
+  private final Map<String, CoverageManagementAction> m_additionalActions;
+
+  protected final Map<String, Boolean> m_checkedActions;
 
   public PageSelectGeodataFiles( final ImportCoverageData data )
   {
     super( "pageSelect" ); //$NON-NLS-1$
 
     m_data = data;
+    m_binding = null;
+    m_additionalActions = new HashMap<String, CoverageManagementAction>();
+    m_checkedActions = new HashMap<String, Boolean>();
   }
 
   @Override
@@ -135,17 +149,24 @@ public class PageSelectGeodataFiles extends WizardPage
         if( !CoverageManagementAction.ROLE_WIZARD.equals( additionalAction.getActionRole() ) )
           continue;
 
+        if( !additionalAction.isVisible() )
+          continue;
+
         final Button additionalButton = new Button( parent, SWT.CHECK );
-        additionalButton.setText( additionalAction.getText() );
+        additionalButton.setText( additionalAction.getActionText() );
         additionalButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
         additionalButton.addSelectionListener( new SelectionAdapter()
         {
           @Override
           public void widgetSelected( final SelectionEvent e )
           {
-            // TODO
+            final Button source = (Button) e.getSource();
+            m_checkedActions.put( additionalAction.getActionId(), new Boolean( source.getSelection() ) );
           }
         } );
+
+        m_additionalActions.put( additionalAction.getActionId(), additionalAction );
+        m_checkedActions.put( additionalAction.getActionId(), Boolean.FALSE );
       }
     }
     catch( final CoreException ex )
@@ -221,5 +242,20 @@ public class PageSelectGeodataFiles extends WizardPage
       final IPath newPath = (IPath) dialog.getResult()[0];
       tFolder.setText( newPath.toPortableString() );
     }
+  }
+
+  public CoverageManagementAction[] getCheckedActions( )
+  {
+    final List<CoverageManagementAction> checkedActions = new ArrayList<CoverageManagementAction>();
+
+    final Set<Entry<String, Boolean>> entries = m_checkedActions.entrySet();
+    for( final Entry<String, Boolean> entry : entries )
+    {
+      final Boolean checked = entry.getValue();
+      if( checked.booleanValue() )
+        checkedActions.add( m_additionalActions.get( entry.getKey() ) );
+    }
+
+    return checkedActions.toArray( new CoverageManagementAction[] {} );
   }
 }
