@@ -60,7 +60,7 @@ public final class SldAwtUtilities
   /**
    * Creates an awt {@link Polygon} from the given ring, transforming it to screen coordinates.<br/>
    * For perfomance reasons, points which cannot be distuingished on the screen are filtered out.
-   * 
+   *
    * @param strokeWidth
    *          : Width in screen units: any adjacent points which are within this distance are filtered out.
    */
@@ -136,14 +136,24 @@ public final class SldAwtUtilities
         return polygonFromRing( outerRing, strokeWidth, world2screen );
 
       // TODO: slow! Maybe at least test if inner rings are visible?
+      // TODO: we should do this ourselfs i.e. split up a polygon with holes into several polygons without holes
       final Area areaouter = areaFromRing( outerRing, strokeWidth, world2screen );
       if( innerRings != null )
       {
+        // REMARK: first adding all holes and substracting the union from the outer ring seems to be slightly fatser
+        // than substracting each single inner ring from the outer ring. Still slow for big geometries
+        final Area inner = new Area();
+
         for( final GM_Position[] innerRing : innerRings )
         {
           if( innerRing != null )
-            areaouter.subtract( areaFromRing( innerRing, strokeWidth, world2screen ) );
+          {
+            final Area innerArea = areaFromRing( innerRing, strokeWidth, world2screen );
+            inner.add( innerArea );
+          }
         }
+
+        areaouter.subtract( inner );
       }
 
       return areaouter;
