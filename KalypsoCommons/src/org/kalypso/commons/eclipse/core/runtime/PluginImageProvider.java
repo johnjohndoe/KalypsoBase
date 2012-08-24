@@ -54,7 +54,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
-import org.kalypso.contribs.eclipse.ui.internal.decorators.DecoratorOverlayIcon;
+import org.kalypso.contribs.eclipse.ui.decorators.DecoratorOverlayIcon;
 
 /**
  * This class is a helper class to provide images from a central place.

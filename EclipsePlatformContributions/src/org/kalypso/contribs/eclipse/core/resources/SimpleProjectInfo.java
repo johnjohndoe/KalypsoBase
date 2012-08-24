@@ -51,7 +51,7 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsPlugin;
+import org.kalypso.contribs.eclipse.EclipsePlatformContributionsPlugin;
 import org.kalypso.contribs.java.xml.XMLHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -100,7 +100,7 @@ public class SimpleProjectInfo
   public void read( ) throws CoreException
   {
     if( m_projectFile == null || !m_projectFile.exists() )
-      throw new CoreException( new Status( IStatus.ERROR, EclipseRCPContributionsPlugin.ID, "The file '.project' does not exist..." ) );
+      throw new CoreException( new Status( IStatus.ERROR, EclipsePlatformContributionsPlugin.getID(), "The file '.project' does not exist..." ) );
 
     /* The input stream. */
     InputStream is = null;
@@ -150,7 +150,7 @@ public class SimpleProjectInfo
     }
     catch( final Exception ex )
     {
-      throw new CoreException( new Status( IStatus.ERROR, EclipseRCPContributionsPlugin.ID, ex.getLocalizedMessage(), ex ) );
+      throw new CoreException( new Status( IStatus.ERROR, EclipsePlatformContributionsPlugin.getID(), ex.getLocalizedMessage(), ex ) );
     }
     finally
     {

@@ -38,11 +38,10 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml.ui.internal.coverage.actions;
+package org.kalypso.gml.ui.coverage;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 
 /**
  * Base action for the coverage management widget.
@@ -121,23 +120,11 @@ public abstract class CoverageManagementAction
   }
 
   /**
-   * This function returns the action of the coverage management action. Must be implemented by coverage management
-   * actions with the role {@link #ROLE_WIDGET}.
+   * This function returns the action of the coverage management action.
    * 
    * @return The action of the coverage management action.
    */
   public IAction getAction( )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  /**
-   * This function returns the runnable of the coverage management action. Must be implemented by coverage management
-   * actions with the role {@link #ROLE_WIZARD}.
-   * 
-   * @return The runnable of the coverage management action.
-   */
-  public ICoreRunnableWithProgress getRunnable( )
   {
     throw new UnsupportedOperationException();
   }

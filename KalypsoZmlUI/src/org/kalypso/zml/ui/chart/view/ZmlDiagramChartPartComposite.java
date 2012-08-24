@@ -48,7 +48,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.chart.ui.editor.mousehandler.ZoomPanMaximizeHandler;
 import org.kalypso.chart.ui.editor.mousehandler.ZoomPanMaximizeHandler.DIRECTION;
-import org.kalypso.chart.ui.internal.workbench.ChartPartComposite;
+import org.kalypso.chart.ui.workbench.ChartPartComposite;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.zml.core.base.IMultipleZmlSourceElement;
 import org.kalypso.zml.core.diagram.base.ChartTypeHandler;

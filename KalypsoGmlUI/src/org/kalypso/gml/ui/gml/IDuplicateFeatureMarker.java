@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml.ui.internal.feature.marker;
+package org.kalypso.gml.ui.gml;
 
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 

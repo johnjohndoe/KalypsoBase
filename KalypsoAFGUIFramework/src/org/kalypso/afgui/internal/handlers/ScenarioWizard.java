@@ -61,7 +61,7 @@ public class ScenarioWizard extends Wizard
 {
   private final ScenarioData m_data;
 
-  static void stopTaskAndOpenWizard( final Shell shell, final ScenarioData data )
+  public static void stopTaskAndOpenWizard( final Shell shell, final ScenarioData data )
   {
     /* Stop current task */
     final ITaskExecutionAuthority taskExecutionAuthority = KalypsoAFGUIFrameworkPlugin.getTaskExecutionAuthority();

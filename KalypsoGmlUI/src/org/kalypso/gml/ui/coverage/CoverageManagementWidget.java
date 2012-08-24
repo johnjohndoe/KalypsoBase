@@ -93,7 +93,6 @@ import org.kalypso.gml.ui.internal.coverage.JumpToCoverageAction;
 import org.kalypso.gml.ui.internal.coverage.MoveCoverageDownAction;
 import org.kalypso.gml.ui.internal.coverage.MoveCoverageUpAction;
 import org.kalypso.gml.ui.internal.coverage.RemoveCoverageAction;
-import org.kalypso.gml.ui.internal.coverage.actions.CoverageManagementAction;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;

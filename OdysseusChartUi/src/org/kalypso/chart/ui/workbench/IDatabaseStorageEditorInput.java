@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.chart.ui.internal.workbench;
+package org.kalypso.chart.ui.workbench;
 
 import org.eclipse.ui.IStorageEditorInput;
 

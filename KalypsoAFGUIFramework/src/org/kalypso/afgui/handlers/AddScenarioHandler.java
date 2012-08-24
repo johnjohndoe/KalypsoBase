@@ -1,7 +1,7 @@
 /**
  *
  */
-package org.kalypso.afgui.internal.handlers;
+package org.kalypso.afgui.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -13,6 +13,10 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.kalypso.afgui.internal.handlers.CreateScenarioOperation;
+import org.kalypso.afgui.internal.handlers.IScenarioOperation;
+import org.kalypso.afgui.internal.handlers.ScenarioData;
+import org.kalypso.afgui.internal.handlers.ScenarioWizard;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.views.WorkflowView;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;

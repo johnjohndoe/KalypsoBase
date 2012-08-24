@@ -11,7 +11,7 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.gml.ui.internal.coverage.actions.CoverageManagementAction;
+import org.kalypso.gml.ui.coverage.CoverageManagementAction;
 
 /**
  * Manages extension points of the gml ui plugin.

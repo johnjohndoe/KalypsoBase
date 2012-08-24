@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.kalypso.contribs.eclipse.ui.internal.decorators;
+package org.kalypso.contribs.eclipse.ui.decorators;
 
 import java.util.Arrays;
 

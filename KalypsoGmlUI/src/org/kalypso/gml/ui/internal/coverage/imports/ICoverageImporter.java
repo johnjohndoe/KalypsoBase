@@ -51,10 +51,10 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
 /**
  * Implementers represent formats that can be imported as coverages.
- *
+ * 
  * @author Gernot Belger
  */
-interface ICoverageImporter
+public interface ICoverageImporter
 {
   FilePattern getFilePattern( );
 
