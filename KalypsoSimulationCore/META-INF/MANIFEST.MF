@@ -4,7 +4,7 @@ Bundle-Name: KalypsoSimulationCore Plug-in
 Bundle-SymbolicName: org.kalypso.simulation.core; singleton:=true
 Bundle-Version: 12.7.0.qualifier
 Bundle-Activator: org.kalypso.simulation.core.KalypsoSimulationCorePlugin
-Bundle-Vendor: kalypsobase.sourceforge.net
+Bundle-Vendor: http://sourceforge.net/projects/kalypsobase/
 Require-Bundle: org.kalypso.core;visibility:=reexport,
  org.eclipse.wst.xml.core;resolution:=optional
 Bundle-ActivationPolicy: lazy

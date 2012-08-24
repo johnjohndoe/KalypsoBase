@@ -58,7 +58,7 @@ Bundle-ClassPath: .,
  lib/waterScene.jar,
  lib/xml-apis-ext.jar
 Bundle-Activator: org.kalypso.mt.KalypsoMTPlugin
-Bundle-Vendor: kalypsobase.sourceforge.net
+Bundle-Vendor: http://sourceforge.net/projects/kalypsobase/
 Bundle-Localization: plugin
 Export-Package: 
  org.kalypso.mt,

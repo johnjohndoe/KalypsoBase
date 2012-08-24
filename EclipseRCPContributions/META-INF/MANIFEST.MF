@@ -4,7 +4,7 @@ Bundle-Name: EclipseRCPContribution Plug-in
 Bundle-SymbolicName: org.kalypso.contribs.eclipsercp; singleton:=true
 Bundle-Version: 12.7.0.qualifier
 Bundle-Activator: org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsPlugin
-Bundle-Vendor: kalypsobase.sourceforge.net
+Bundle-Vendor: http://sourceforge.net/projects/kalypsobase/
 Bundle-Localization: plugin
 Export-Package: org.kalypso.contribs.eclipse.core.commands,
  org.kalypso.contribs.eclipse.core.commands.operations,

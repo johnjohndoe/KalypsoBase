@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.kalypso.metadoc; singleton:=true
 Bundle-Version: 12.7.0.qualifier
 Bundle-ClassPath: .
 Bundle-Activator: org.kalypso.metadoc.KalypsoMetaDocPlugin
-Bundle-Vendor: kalypsobase.sourceforge.net
+Bundle-Vendor: http://sourceforge.net/projects/kalypsobase/
 Bundle-Localization: plugin
 Export-Package: org.kalypso.metadoc,
  org.kalypso.metadoc.configuration,

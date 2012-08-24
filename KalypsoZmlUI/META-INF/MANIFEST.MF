@@ -13,7 +13,7 @@ Require-Bundle: org.kalypso.zml.core;visibility:=reexport,
  de.openali.odysseus.chart.ui;visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Bundle-Vendor: kalypsobase.sourceforge.net
+Bundle-Vendor: http://sourceforge.net/projects/kalypsobase/
 Export-Package: org.kalypso.zml.ui,
  org.kalypso.zml.ui.chart.grafik,
  org.kalypso.zml.ui.chart.layer.boundaries,

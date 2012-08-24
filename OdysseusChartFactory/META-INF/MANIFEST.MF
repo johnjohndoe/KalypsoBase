@@ -58,7 +58,7 @@ Export-Package: de.openali.odysseus.chart.factory,
    de.openali.odysseus.chartconfig.x020,
    org.apache.xmlbeans,
    de.openali.odysseus.chartconfig.x020.ParameterMapType"
-Bundle-Vendor: kalypsobase.sourceforge.net
+Bundle-Vendor: http://sourceforge.net/projects/kalypsobase/
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-Activator: de.openali.odysseus.chart.factory.OdysseusChartFactory
 Bundle-ActivationPolicy: lazy
