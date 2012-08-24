@@ -4,7 +4,7 @@ Bundle-Name: KalypsoAuth Plug-in
 Bundle-SymbolicName: org.kalypso.auth; singleton:=true
 Bundle-Version: 12.7.0.qualifier
 Bundle-Activator: org.kalypso.auth.KalypsoAuthPlugin
-Bundle-Vendor: kalypsobase.sourceforge.net
+Bundle-Vendor: http://sourceforge.net/projects/kalypsobase/
 Export-Package: org.kalypso.auth,
  org.kalypso.auth.user
 Require-Bundle: org.eclipse.ui;visibility:=reexport,

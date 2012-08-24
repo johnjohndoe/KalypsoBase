@@ -4,7 +4,7 @@ Bundle-Name: KalypsoCore Plug-in
 Bundle-SymbolicName: org.kalypso.core; singleton:=true
 Bundle-Version: 12.7.0.qualifier
 Bundle-Activator: org.kalypso.core.KalypsoCorePlugin
-Bundle-Vendor: kalypsobase.sourceforge.net
+Bundle-Vendor: http://sourceforge.net/projects/kalypsobase/
 Bundle-Localization: plugin
 Export-Package: org.kalypso.binding.ratingtable,
  org.kalypso.core,

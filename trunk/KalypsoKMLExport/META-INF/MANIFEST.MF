@@ -11,7 +11,7 @@ Bundle-Localization: plugin
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.kalypso.kml.export.KalypsoKMLPlugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Bundle-Vendor: kalypsobase.sourceforge.net
+Bundle-Vendor: http://sourceforge.net/projects/kalypsobase/
 Bundle-ClassPath: lib/jaxb/jaxb-api.jar,
  lib/jaxb/jaxb-impl.jar,
  lib/jaxb/jaxb-xjc.jar,

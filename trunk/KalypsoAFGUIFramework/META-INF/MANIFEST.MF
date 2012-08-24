@@ -4,7 +4,7 @@ Bundle-Name: KalypsoAFGUIFramework Plug-in
 Bundle-SymbolicName: org.kalypso.afgui; singleton:=true
 Bundle-Version: 12.7.0.qualifier
 Bundle-Activator: org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin
-Bundle-Vendor: kalypsobase.sourceforge.net
+Bundle-Vendor: http://sourceforge.net/projects/kalypsobase/
 Bundle-Localization: plugin
 Require-Bundle: de.openali.odysseus.chart.ui,
  de.renew.workflow.connector;visibility:=reexport,

@@ -4,7 +4,7 @@ Bundle-Name: KalypsoModelWspmCore Plug-in
 Bundle-SymbolicName: org.kalypso.model.wspm.core; singleton:=true
 Bundle-Version: 12.7.0.qualifier
 Bundle-Activator: org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin
-Bundle-Vendor: kalypsobase.sourceforge.net
+Bundle-Vendor: http://sourceforge.net/projects/kalypsobase/
 Export-Package: org.kalypso.model.wspm.core,
  org.kalypso.model.wspm.core.gml,
  org.kalypso.model.wspm.core.gml.assignment,

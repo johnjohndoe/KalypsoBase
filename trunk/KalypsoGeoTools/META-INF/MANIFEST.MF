@@ -4,7 +4,7 @@ Bundle-Name: KalypsoGeoTools Plug-in
 Bundle-SymbolicName: org.kalypso.geotools;singleton:=true
 Bundle-Version: 12.7.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Bundle-Vendor: kalypsobase.sourceforge.net
+Bundle-Vendor: http://sourceforge.net/projects/kalypsobase/
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib/geotools-2.7-M2/commons-pool-1.5.4.jar,
  lib/geotools-2.7-M2/geoapi-2.3-M1.jar,

@@ -14,4 +14,4 @@ Require-Bundle: org.kalypso.contribs.java,
  org.kalypso.simulation.ui,
  org.kalypso.service.wps,
  org.junit4;resolution:=optional
-Bundle-Vendor: kalypsobase.sourceforge.net
+Bundle-Vendor: http://sourceforge.net/projects/kalypsobase/

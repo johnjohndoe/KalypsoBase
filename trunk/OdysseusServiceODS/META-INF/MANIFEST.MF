@@ -16,5 +16,5 @@ Bundle-ActivationPolicy: lazy
 Bundle-Activator: de.openali.odysseus.service.ods.Activator
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: javax.servlet;version="2.4.0"
-Bundle-Vendor: kalypsobase.sourceforge.net
+Bundle-Vendor: http://sourceforge.net/projects/kalypsobase/
 Bundle-ClassPath: .

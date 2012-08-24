@@ -26,7 +26,7 @@ Bundle-ClassPath: lib/batik/lib/batik-anim.jar,
  lib/geotiff-jai/geotiff-jai.jar,
  lib/xtiff-jai/xtiff-jai.jar,
  .
-Bundle-Vendor: kalypsobase.sourceforge.net
+Bundle-Vendor: http://sourceforge.net/projects/kalypsobase/
 Require-Bundle: org.junit4;resolution:=optional,
  org.kalypso.contribs.ogc31,
  org.kalypso.deegree2;visibility:=reexport,

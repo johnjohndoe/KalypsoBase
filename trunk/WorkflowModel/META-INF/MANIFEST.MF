@@ -16,5 +16,5 @@ Export-Package: de.renew.workflow.base,
  de.renew.workflow.utils,
  org.kalypso.afgui.scenarios
 Bundle-Activator: de.renew.workflow.base.WorkflowModelPlugin
-Bundle-Vendor: kalypsobase.sourceforge.net
+Bundle-Vendor: http://sourceforge.net/projects/kalypsobase/
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

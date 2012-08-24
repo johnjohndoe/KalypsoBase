@@ -7,7 +7,7 @@ Bundle-ClassPath: lib/jcommon-0.9.6.jar,
  lib/jfreechart-0.9.21.jar,
  .
 Bundle-Activator: org.kalypso.ui.KalypsoGisPlugin
-Bundle-Vendor: kalypsobase.sourceforge.net
+Bundle-Vendor: http://sourceforge.net/projects/kalypsobase/
 Bundle-Localization: plugin
 Export-Package: com.keypoint,
  org.jfree,

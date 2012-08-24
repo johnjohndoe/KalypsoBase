@@ -4,7 +4,7 @@ Bundle-Name: KalypsoGmlUI Plug-in
 Bundle-SymbolicName: org.kalypso.gml.ui; singleton:=true
 Bundle-Version: 12.7.0.qualifier
 Bundle-Activator: org.kalypso.gml.ui.KalypsoGmlUIPlugin
-Bundle-Vendor: kalypsobase.sourceforge.net
+Bundle-Vendor: http://sourceforge.net/projects/kalypsobase/
 Bundle-Localization: plugin
 Require-Bundle: org.junit;resolution:=optional,
  org.kalypso.contribs.ogc31,

@@ -27,4 +27,4 @@ Export-Package: org.kalypso.project.database.client,
  org.kalypso.project.database.client.ui.project.wizard.create,
  org.kalypso.project.database.client.ui.view
 Bundle-ClassPath: .
-Bundle-Vendor: kalypsobase.sourceforge.net
+Bundle-Vendor: http://sourceforge.net/projects/kalypsobase/

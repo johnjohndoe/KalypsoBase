@@ -46,5 +46,5 @@ Export-Package: de.openali.odysseus.chart.framework,
  de.openali.odysseus.chart.framework.view.impl
 Bundle-Activator: de.openali.odysseus.chart.framework.OdysseusChartFramework
 Bundle-ActivationPolicy: lazy
-Bundle-Vendor: kalypsobase.sourceforge.net
+Bundle-Vendor: http://sourceforge.net/projects/kalypsobase/
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
