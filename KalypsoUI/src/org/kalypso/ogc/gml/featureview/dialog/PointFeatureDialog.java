@@ -94,7 +94,7 @@ public class PointFeatureDialog implements IFeatureDialog
     {
       final double[] values = dialog.getValues();
       final GM_Position newPos = GeometryFactory.createGM_Position( values );
-      final String newCrs = dialog.getCS_CoordinateSystem();
+      final String newCrs = dialog.getCS();
 
       final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( kalypsoCrs );
       try

@@ -155,8 +155,8 @@ public class PointDialog extends Dialog
     final CRSSelectionPanel crsPanel = new CRSSelectionPanel( combo_composite, SWT.NONE );
     crsPanel.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
-    if( getCS_CoordinateSystem() != null )
-      crsPanel.setSelectedCRS( getCS_CoordinateSystem() );
+    if( getCS() != null )
+      crsPanel.setSelectedCRS( getCS() );
 
     crsPanel.addSelectionChangedListener( new CRSSelectionListener()
     {
@@ -225,7 +225,7 @@ public class PointDialog extends Dialog
    * 
    * @return The cs.
    */
-  public String getCS_CoordinateSystem( )
+  public String getCS( )
   {
     return m_cs;
   }
