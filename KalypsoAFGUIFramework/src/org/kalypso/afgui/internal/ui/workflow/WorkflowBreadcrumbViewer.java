@@ -69,6 +69,8 @@ import org.eclipse.ui.menus.IMenuService;
 import org.eclipse.ui.services.IServiceLocator;
 import org.kalypso.afgui.internal.i18n.Messages;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
+import org.kalypso.afgui.ui.workflow.WorkflowBreadCrumbLabelProvider;
+import org.kalypso.afgui.ui.workflow.WorkflowBreadcrumbContentProvider;
 import org.kalypso.afgui.views.ScenarioViewerFilter;
 import org.kalypso.afgui.views.WorkflowView;
 

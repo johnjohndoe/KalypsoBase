@@ -49,6 +49,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.handlers.AddScenarioHandler;
 import org.kalypso.afgui.wizards.SetAsBaseScenarioWizard;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.module.IKalypsoModule;
