@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml.ui.internal.coverage.imports;
+package org.kalypso.gml.ui.coverage;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -55,13 +55,15 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.gml.ui.i18n.Messages;
+import org.kalypso.gml.ui.internal.coverage.imports.CoverageFormats;
+import org.kalypso.gml.ui.internal.coverage.imports.ICoverageImporter;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
 /**
  * @author belger
  */
-final class ImportCoveragesOperation implements ICoreRunnableWithProgress
+public final class ImportCoveragesOperation implements ICoreRunnableWithProgress
 {
   private final String m_crs;
 

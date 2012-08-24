@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.gml.ui.internal.coverage.imports;
+package org.kalypso.gml.ui.coverage;
 
 import java.io.File;
 import java.net.URL;
@@ -67,7 +67,7 @@ public class ImportCoverageData extends AbstractModelObject
 
   static final String PROPERTY_DATA_FOLDER = "dataFolder"; //$NON-NLS-1$
 
-  static final String PROPERTY_SOURCE_SRS = "sourceSRS"; //$NON-NLS-1$
+  public static final String PROPERTY_SOURCE_SRS = "sourceSRS"; //$NON-NLS-1$
 
   private final FileAndHistoryData m_sourceFile = new FileAndHistoryData( "sourceFiles" ); //$NON-NLS-1$
 
@@ -175,7 +175,7 @@ public class ImportCoverageData extends AbstractModelObject
     return m_dataContainer;
   }
 
-  String getDataContainerPath( )
+  public String getDataContainerPath( )
   {
     if( m_dataContainer == null )
       return null;

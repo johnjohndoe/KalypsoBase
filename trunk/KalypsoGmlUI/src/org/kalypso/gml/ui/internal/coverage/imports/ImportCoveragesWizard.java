@@ -42,20 +42,20 @@ package org.kalypso.gml.ui.internal.coverage.imports;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
-import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
-import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
-import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
+import org.kalypso.gml.ui.coverage.CoverageManagementAction;
+import org.kalypso.gml.ui.coverage.ImportCoverageData;
+import org.kalypso.gml.ui.coverage.ImportCoveragesOperation;
 import org.kalypso.gml.ui.i18n.Messages;
-import org.kalypso.gml.ui.internal.coverage.actions.CoverageManagementAction;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 
@@ -119,13 +119,14 @@ public class ImportCoveragesWizard extends Wizard implements IWorkbenchWizard
     /* Save the dialog settings. */
     m_data.storeSettings( getDialogSettings() );
 
-    /* The status collector. */
-    final IStatusCollector collector = new StatusCollector( KalypsoGmlUIPlugin.id() );
-
     /* Execute the import coverages operation. */
     final ImportCoveragesOperation operation = new ImportCoveragesOperation( m_data );
     final IStatus operationStatus = RunnableContextHelper.execute( getContainer(), true, true, operation );
-    collector.add( operationStatus );
+    if( !operationStatus.isOK() )
+    {
+      StatusDialog.open( getShell(), operationStatus, getWindowTitle() );
+      return true;
+    }
 
     /* Execute additional actions. */
     final CoverageManagementAction[] checkedActions = m_pageSelect.getCheckedActions();
@@ -134,15 +135,12 @@ public class ImportCoveragesWizard extends Wizard implements IWorkbenchWizard
       /* Init the checked action. */
       checkedAction.preExecute( getShell(), m_data );
 
-      /* Get the runnable. */
-      final ICoreRunnableWithProgress runnable = checkedAction.getRunnable();
+      /* Get the action. */
+      final IAction action = checkedAction.getAction();
 
-      /* Execute the runnable. */
-      final IStatus actionStatus = RunnableContextHelper.execute( getContainer(), true, false, runnable );
-      collector.add( actionStatus );
+      /* Execute the action. */
+      action.run();
     }
-
-    StatusDialog.open( getShell(), collector.asMultiStatus( "Import von Höhendaten" ), getWindowTitle() );
 
     // On error, we might have imported some coverages and some not, so we always leave the wizard.
     return true;

@@ -16,15 +16,15 @@ Require-Bundle: de.openali.odysseus.chart.ui,
  org.kalypso.module,
  org.kalypso.simulation.core,
  org.kalypso.ui,
- org.kalypso.ui.addlayer;bundle-version="11.6.5"
+ org.kalypso.ui.addlayer
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.afgui,
+ org.kalypso.afgui.handlers,
  org.kalypso.afgui.helper,
- org.kalypso.afgui.internal.handlers,
- org.kalypso.afgui.internal.ui.workflow,
  org.kalypso.afgui.model,
  org.kalypso.afgui.perspective,
  org.kalypso.afgui.scenarios,
+ org.kalypso.afgui.ui.workflow,
  org.kalypso.afgui.views,
  org.kalypso.afgui.wizards
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

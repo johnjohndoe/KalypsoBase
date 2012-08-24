@@ -73,8 +73,9 @@ import org.kalypso.commons.databinding.swt.FileAndHistoryData;
 import org.kalypso.commons.databinding.swt.FileBinding;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateOpen;
 import org.kalypso.gml.ui.KalypsoGmlUiExtensions;
+import org.kalypso.gml.ui.coverage.CoverageManagementAction;
+import org.kalypso.gml.ui.coverage.ImportCoverageData;
 import org.kalypso.gml.ui.i18n.Messages;
-import org.kalypso.gml.ui.internal.coverage.actions.CoverageManagementAction;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 
 /**

@@ -56,7 +56,7 @@ import org.kalypso.contribs.java.io.FilePattern;
  * 
  * @author Gernot Belger
  */
-final class CoverageFormats
+public final class CoverageFormats
 {
   public static FileChooserDelegateOpen createFileOpenDelegate( )
   {
