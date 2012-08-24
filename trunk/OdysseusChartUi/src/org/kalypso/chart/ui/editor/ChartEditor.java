@@ -20,7 +20,7 @@ import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 import org.kalypso.chart.ui.KalypsoChartUiPlugin;
 import org.kalypso.chart.ui.i18n.Messages;
-import org.kalypso.chart.ui.internal.workbench.ChartPartComposite;
+import org.kalypso.chart.ui.workbench.ChartPartComposite;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.IPropertyPart;
 
