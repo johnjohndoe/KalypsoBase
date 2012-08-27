@@ -68,6 +68,7 @@ final class RegisterVisitor implements FeatureVisitor
       // FIXME: should never happen!
       id = m_workspace.createFeatureId( f.getFeatureType() );
       System.out.println( "Feature has no id: " + f );
+      f.setId( id );
     }
 
     // TODO: better generate new ids and remember wich ones are generated (because
@@ -76,7 +77,7 @@ final class RegisterVisitor implements FeatureVisitor
     // When writing the gml, we then can quickly determine if the id is generated
 
     // TODO: do not put null-ids into this map ? What sideeffects do we expect
-    m_workspace.register( f, id );
+    m_workspace.register( f );
     return true;
   }
 }

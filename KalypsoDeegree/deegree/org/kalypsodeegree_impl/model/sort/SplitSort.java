@@ -219,7 +219,8 @@ public class SplitSort implements FeatureList
     }
 
     /* really remove item and unregister it from all hashes */
-    m_itemHash.remove( item );
+    final SplitSortItem removed = m_itemHash.remove( object );
+    Assert.isTrue( removed == item );
 
     m_invalidItems.remove( item );
 
@@ -266,7 +267,21 @@ public class SplitSort implements FeatureList
     final Feature f = (Feature) object;
     final GMLWorkspace workspace = f.getWorkspace();
     if( workspace instanceof GMLWorkspace_Impl )
-      ((GMLWorkspace_Impl) workspace).unregisterFeature( f );
+      ((GMLWorkspace_Impl) workspace).unregister( f );
+  }
+
+  private void registerFeature( final Object object )
+  {
+    /* Only inline features needs to be unregistered from the workspace */
+    if( object instanceof IXLinkedFeature )
+      return;
+    if( !(object instanceof Feature) )
+      return;
+
+    final Feature f = (Feature) object;
+    final GMLWorkspace workspace = f.getWorkspace();
+    if( workspace instanceof GMLWorkspace_Impl )
+      ((GMLWorkspace_Impl) workspace).register( f );
   }
 
   // IMPLEMENTATION OF LIST INTERFACE
@@ -280,6 +295,8 @@ public class SplitSort implements FeatureList
 
     m_items.add( object );
 
+    registerFeature( object );
+
     return true;
   }
 
@@ -291,6 +308,8 @@ public class SplitSort implements FeatureList
     createItem( object );
 
     m_items.add( index, object );
+
+    registerFeature( object );
   }
 
   @SuppressWarnings("unchecked")
@@ -300,7 +319,11 @@ public class SplitSort implements FeatureList
     checkCanAdd( c.size() );
 
     for( final Object object : c )
+    {
       createItem( object );
+
+      registerFeature( object );
+    }
 
     return m_items.addAll( c );
   }
@@ -312,7 +335,11 @@ public class SplitSort implements FeatureList
     checkCanAdd( c.size() );
 
     for( final Object object : c )
+    {
       createItem( object );
+
+      registerFeature( object );
+    }
 
     return m_items.addAll( index, c );
   }
@@ -325,6 +352,8 @@ public class SplitSort implements FeatureList
     removeDataObject( oldObject );
 
     createItem( newObject );
+
+    registerFeature( newObject );
 
     return oldObject;
   }
@@ -343,7 +372,6 @@ public class SplitSort implements FeatureList
       removeDataObject( object );
       return true;
     }
-
 
     /* unknown object */
     return false;
