@@ -126,14 +126,12 @@ public final class DisplayElementFactory
     if( displayElement == null )
       return null;
 
-    // TODO Patrice Check changes
     // decorate the display with another get through adapation
-    // TODO: next line is strange: if we adapt to DisplayElementDecorator, of course
-    // DisplayElementDecorator shall be returned, not only a DisplayElement....
     final DisplayElement displayElementDecorator = (DisplayElement) feature.getAdapter( DisplayElementDecorator.class );
-    if( displayElementDecorator instanceof DisplayElementDecorator )
+    if( displayElementDecorator != null )
     {
-      ((DisplayElementDecorator) displayElementDecorator).setDecorated( displayElement );
+      if( displayElementDecorator instanceof DisplayElementDecorator )
+        ((DisplayElementDecorator) displayElementDecorator).setDecorated( displayElement );
       return displayElementDecorator;
     }
 
@@ -219,18 +217,29 @@ public final class DisplayElementFactory
     if( tin == null )
       return null;
 
-    final PolygonColorMap colorMap = symbolizer.getColorMap();
-    final IVisitorFactory<GM_Triangle> visitorFactory = new SurfacePatchVisitableDisplayElement.IVisitorFactory<GM_Triangle>()
+    if( true )
     {
-      @Override
-      public ISurfacePatchVisitor<GM_Triangle> createVisitor( final Graphics g, final GeoTransform projection )
-      {
-        final UOM uom = symbolizer.getUom();
-        return new SurfacePaintPolygonVisitor( g, new ColorMapConverter( colorMap, feature, uom, projection ) );
-      }
-    };
+      final PolygonColorMap colorMap = symbolizer.getColorMap();
+      final ColorMapConverter colorModel = new ColorMapConverter( colorMap, feature, null, null );
+      return new TriangulatedSurfacePolygonDisplayElement( tin.getLeft(), tin.getRight(), colorModel );
+    }
+    else
+    {
+      final PolygonColorMap colorMap = symbolizer.getColorMap();
 
-    return new SurfacePatchVisitableDisplayElement<GM_Triangle>( tin.getLeft(), tin.getRight(), visitorFactory );
+      final IVisitorFactory<GM_Triangle> visitorFactory = new SurfacePatchVisitableDisplayElement.IVisitorFactory<GM_Triangle>()
+      {
+        @Override
+        public ISurfacePatchVisitor<GM_Triangle> createVisitor( final Graphics g, final GeoTransform projection )
+        {
+          final UOM uom = symbolizer.getUom();
+          final ColorMapConverter converter = new ColorMapConverter( colorMap, feature, uom, projection );
+          return new SurfacePaintPolygonVisitor( g, converter );
+        }
+      };
+
+      return new SurfacePatchVisitableDisplayElement<GM_Triangle>( tin.getLeft(), tin.getRight(), visitorFactory );
+    }
   }
 
   // Hacky,, is there a better way to access the real geometry...?
