@@ -35,8 +35,10 @@
  */
 package org.kalypsodeegree_impl.model.sort;
 
-import gnu.trove.TIntObjectHashMap;
+import gnu.trove.TIntFunction;
+import gnu.trove.TIntHashSet;
 import gnu.trove.TIntProcedure;
+import gnu.trove.TObjectIntHashMap;
 
 import java.awt.Graphics;
 import java.net.URI;
@@ -44,14 +46,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Map;
-import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -86,22 +83,17 @@ public class SplitSort implements FeatureList
   private SpatialIndex m_spatialIndex;
 
   /* Items of this list */
-  private final List<Object> m_items = new ArrayList<>();
+  private final List<SplitSortItem> m_items = new ArrayList<>();
 
-  /** Invalid objects, will be placed into the index when it is accessed next time. */
-  private final Set<SplitSortItem> m_invalidItems = new HashSet<>();
+  private final TObjectIntHashMap<Object> m_itemIndex = new TObjectIntHashMap<>();
 
-  private final TIntObjectHashMap<SplitSortItem> m_itemIdHash = new TIntObjectHashMap<>();
-
-  private final Map<Object, SplitSortItem> m_itemHash = new HashMap<>();
+  private final TIntHashSet m_invalidIndices = new TIntHashSet();
 
   private final Feature m_parentFeature;
 
   private final IRelationType m_parentFeatureTypeProperty;
 
   private final IEnvelopeProvider m_envelopeProvider;
-
-  private int m_currentId = Integer.MIN_VALUE;
 
   /**
    * @param parentFeature
@@ -147,93 +139,135 @@ public class SplitSort implements FeatureList
    */
   private synchronized void checkIndex( )
   {
-    for( final SplitSortItem invalidItem : m_invalidItems )
+    final TIntHashSet x = m_invalidIndices;
+
+    final TIntProcedure tp = new TIntProcedure()
     {
-      final Rectangle newEnvelope = getEnvelope( invalidItem );
-      final Rectangle oldEnvelope = invalidItem.getEnvelope();
-
-      final boolean envelopeChanged = invalidItem.setEnvelope( newEnvelope );
-
-      /* Only update spatial index if envelope really changed */
-      if( envelopeChanged )
+      @Override
+      public boolean execute( final int index )
       {
-        final int id = invalidItem.getId();
-
-        /* Remove from index */
-        if( oldEnvelope != null )
-        {
-          final boolean success = m_spatialIndex.delete( oldEnvelope, id );
-          if( !success )
-            System.out.println( "SplitSort: problem!" );
-        }
-
-        /* reinsert into index */
-        if( newEnvelope != null )
-          m_spatialIndex.add( newEnvelope, id );
+        revalidateItem( index );
+        return true;
       }
-    }
+    };
 
-    m_invalidItems.clear();
+    x.forEach( tp );
+
+    m_invalidIndices.clear();
   }
 
-  private synchronized SplitSortItem createItem( final Object data )
+  synchronized void revalidateItem( final int index )
+  {
+    final SplitSortItem invalidItem = m_items.get( index );
+
+    final Rectangle newEnvelope = getEnvelope( invalidItem );
+    final Rectangle oldEnvelope = invalidItem.getEnvelope();
+
+    final boolean envelopeChanged = invalidItem.setEnvelope( newEnvelope );
+
+    /* Only update spatial index if envelope really changed */
+    if( envelopeChanged )
+    {
+      /* Remove from index */
+      if( oldEnvelope != null )
+      {
+        final boolean success = m_spatialIndex.delete( oldEnvelope, index );
+        if( !success )
+          System.out.println( "SplitSort: problem!" );
+      }
+
+      /* reinsert into index */
+      if( newEnvelope != null )
+        m_spatialIndex.add( newEnvelope, index );
+    }
+  }
+
+  private synchronized SplitSortItem createItem( final Object data, final int index )
   {
     Assert.isNotNull( data );
 
-    final SplitSortItem existingItem = m_itemHash.get( data );
-    if( existingItem != null )
-    {
-      /* If item is already known, just increase the reference count and return it */
-      existingItem.increaseRef();
-      return existingItem;
-    }
-
     /* Create a new item */
-    final int id = m_currentId++;
 
-    if( m_currentId == Integer.MAX_VALUE )
-      System.out.println( "Problem! Max number of entries exceeded..." );
-
-    final SplitSortItem newItem = new SplitSortItem( data, id );
-
-    m_itemIdHash.put( id, newItem );
-    m_itemHash.put( data, newItem );
+    final SplitSortItem newItem = new SplitSortItem( data );
 
     /* mark as invalid, item gets inserted on next access */
-    m_invalidItems.add( newItem );
+    m_invalidIndices.add( index );
+
+    /* hash object against its id for fast lookup */
+    m_itemIndex.put( data, index );
+
+    registerFeature( data );
 
     return newItem;
   }
 
-  private void removeDataObject( final Object object )
+  /**
+   * Fixes indices after elements are inserted / removed from the middle of the list.
+   */
+  private void reindex( final int startIndex, final int offset )
   {
-    final SplitSortItem item = m_itemHash.get( object );
-
-    Assert.isNotNull( item );
-
-    final int counter = item.decreaseRef();
-    if( counter > 0 )
+    for( int oldIndex = startIndex; oldIndex < size(); oldIndex++ )
     {
-      /* if item has still references, just return */
-      return;
+      final SplitSortItem item = m_items.get( oldIndex );
+
+      final int newIndex = oldIndex + offset;
+
+      /* fix spatial index */
+      final Rectangle envelope = item.getEnvelope();
+      if( envelope != null )
+      {
+        final boolean removed = m_spatialIndex.delete( envelope, oldIndex );
+        Assert.isTrue( removed );
+
+        m_spatialIndex.add( envelope, newIndex );
+      }
     }
 
-    /* really remove item and unregister it from all hashes */
-    final SplitSortItem removed = m_itemHash.remove( object );
-    Assert.isTrue( removed == item );
+    /* Fix item hash */
+    final TIntFunction tf = new TIntFunction()
+    {
+      @Override
+      public int execute( final int value )
+      {
+        if( value < startIndex )
+          return value;
+        else
+          return value + offset;
+      }
+    };
+    m_itemIndex.transformValues( tf );
 
-    m_invalidItems.remove( item );
+    /* Fix invalid item indices */
+    final int[] invalidIndices = m_invalidIndices.toArray();
+    m_invalidIndices.clear();
+
+    for( final int invalidIndex : invalidIndices )
+    {
+      if( invalidIndex < startIndex )
+        m_invalidIndices.add( invalidIndex );
+      else
+        m_invalidIndices.add( invalidIndex + offset );
+    }
+  }
+
+  private void removeDataObject( final SplitSortItem item, final int index )
+  {
+    Assert.isNotNull( item );
+
+    final Object object = item.getData();
+
+    /* really remove item and unregister it from all hashes */
+    m_invalidIndices.remove( index );
+
+    // FIXME: check, what happens if object is contained in this list more than once?
+    m_itemIndex.remove( object );
 
     final Rectangle envelope = item.getEnvelope();
     if( envelope != null )
-    {
-      final int id = item.getId();
-      m_spatialIndex.delete( envelope, id );
-    }
+      m_spatialIndex.delete( envelope, index );
 
     // REMARK: it is a bit unclear what happens if we have a real Feature (not a link) multiple times in the same list.
     // We only unregister the it if the last occurrence is removed, assuming, that the feature is really no longer used.
-
     unregisterFeature( object );
   }
 
@@ -291,11 +325,9 @@ public class SplitSort implements FeatureList
   {
     checkCanAdd( 1 );
 
-    createItem( object );
+    final SplitSortItem item = createItem( object, size() );
 
-    m_items.add( object );
-
-    registerFeature( object );
+    m_items.add( item );
 
     return true;
   }
@@ -305,86 +337,93 @@ public class SplitSort implements FeatureList
   {
     checkCanAdd( 1 );
 
-    createItem( object );
+    reindex( index, 1 );
 
-    m_items.add( index, object );
+    final SplitSortItem newItem = createItem( object, index );
 
-    registerFeature( object );
+    m_items.add( index, newItem );
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public synchronized boolean addAll( @SuppressWarnings("rawtypes") final Collection c )
   {
     checkCanAdd( c.size() );
 
     for( final Object object : c )
-    {
-      createItem( object );
+      add( object );
 
-      registerFeature( object );
-    }
-
-    return m_items.addAll( c );
+    return !c.isEmpty();
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public synchronized boolean addAll( final int index, @SuppressWarnings("rawtypes") final Collection c )
   {
     checkCanAdd( c.size() );
 
+    reindex( index, c.size() );
+
+    final Collection<SplitSortItem> items = new ArrayList<>( c.size() );
+    final int count = 0;
     for( final Object object : c )
     {
-      createItem( object );
-
-      registerFeature( object );
+      final SplitSortItem newItem = createItem( object, index + count );
+      items.add( newItem );
     }
 
-    return m_items.addAll( index, c );
+    return m_items.addAll( index, items );
   }
 
   @Override
   public synchronized Object set( final int index, final Object newObject )
   {
-    final Object oldObject = m_items.set( index, newObject );
+    final SplitSortItem oldItem = m_items.get( index );
 
-    removeDataObject( oldObject );
+    removeDataObject( oldItem, index );
 
-    createItem( newObject );
+    final SplitSortItem newItem = createItem( newObject, index );
 
-    registerFeature( newObject );
+    m_items.set( index, newItem );
 
-    return oldObject;
+    return oldItem.getData();
   }
 
   @Override
   public synchronized Object get( final int index )
   {
-    return m_items.get( index );
+    return m_items.get( index ).getData();
   }
 
   @Override
   public synchronized boolean remove( final Object object )
   {
-    if( m_items.remove( object ) )
-    {
-      removeDataObject( object );
-      return true;
-    }
+    final int index = indexOf( object );
+    if( index == -1 )
+      return false;
 
-    /* unknown object */
-    return false;
+    final SplitSortItem item = m_items.get( index );
+
+    removeDataObject( item, index );
+
+    reindex( index + 1, -1 );
+
+    m_items.remove( index );
+
+    return true;
   }
+
 
   @Override
   public synchronized Object remove( final int index )
   {
-    final Object removedItem = m_items.remove( index );
+    final SplitSortItem item = m_items.get( index );
 
-    removeDataObject( removedItem );
+    removeDataObject( item, index );
 
-    return removedItem;
+    reindex( index + 1, -1 );
+
+    m_items.remove( index );
+
+    return item.getData();
   }
 
   @Override
@@ -393,15 +432,7 @@ public class SplitSort implements FeatureList
     boolean changed = false;
 
     for( final Object object : c )
-    {
-      // REMARK: slower than removeAll on m_items,
-      // but we have to make sure we really removed something, before remove the index item
-      if( m_items.remove( object ) )
-      {
-        removeDataObject( object );
-        changed = true;
-      }
-    }
+      changed |= remove( object );
 
     return changed;
   }
@@ -416,10 +447,7 @@ public class SplitSort implements FeatureList
     {
       final Object object = get( i );
       if( !c.contains( object ) )
-      {
-        remove( i-- );
-        modified = true;
-      }
+        modified |= remove( object );
     }
 
     return modified;
@@ -444,42 +472,67 @@ public class SplitSort implements FeatureList
       unregisterFeature( element );
 
     m_items.clear();
-    m_invalidItems.clear();
-    m_itemHash.clear();
-    m_itemIdHash.clear();
-
+    m_invalidIndices.clear();
+    m_itemIndex.clear();
     m_spatialIndex = createIndex();
-    m_currentId = Integer.MIN_VALUE;
   }
 
   @Override
   public synchronized Object[] toArray( )
   {
-    return m_items.toArray( new Object[m_items.size()] );
+    return toArray( new Object[size()] );
   }
 
   @Override
-  public synchronized Object[] toArray( final Object[] a )
+  public synchronized Object[] toArray( Object[] a )
   {
-    return m_items.toArray( a );
+    if( a == null || a.length != size() )
+      a = new Object[size()];
+
+    for( int i = 0; i < a.length; i++ )
+      a[i] = get( i );
+
+    return a;
   }
 
   @Override
-  public synchronized int indexOf( final Object item )
+  public synchronized int indexOf( final Object object )
   {
-    return m_items.indexOf( item );
+    final int index = m_itemIndex.get( object );
+    if( index != 0 )
+      return index;
+
+    // REMARK: linear search is needed, because we cannot assure the valid index, especially after an object has been
+    // removed that was contained inside the list twice.
+
+    /* linear search */
+    for( int i = 0; i < size(); i++ )
+    {
+      final SplitSortItem item = m_items.get( i );
+      if( item.getData().equals( object ) )
+        return i;
+    }
+
+    return -1;
   }
 
   @Override
-  public synchronized int lastIndexOf( final Object item )
+  public synchronized int lastIndexOf( final Object object )
   {
-    return m_items.lastIndexOf( item );
+    for( int i = size() - 1; i >= 0; i-- )
+    {
+      final SplitSortItem item = m_items.get( i );
+      if( item.getData().equals( object ) )
+        return i;
+    }
+
+    return -1;
   }
 
   @Override
   public synchronized boolean contains( final Object item )
   {
-    return m_itemHash.containsKey( item );
+    return indexOf( item ) != -1;
   }
 
   @Override
@@ -487,7 +540,7 @@ public class SplitSort implements FeatureList
   {
     for( final Object object : c )
     {
-      if( !m_itemHash.containsKey( object ) )
+      if( !contains( object ) )
         return false;
     }
 
@@ -502,7 +555,7 @@ public class SplitSort implements FeatureList
   @Override
   public synchronized Iterator< ? > iterator( )
   {
-    return Collections.unmodifiableList( m_items ).iterator();
+    return new SplitSortIterator( this, 0 );
   }
 
   /**
@@ -513,7 +566,7 @@ public class SplitSort implements FeatureList
   @Override
   public synchronized ListIterator< ? > listIterator( )
   {
-    return Collections.unmodifiableList( m_items ).listIterator();
+    return new SplitSortIterator( this, 0 );
   }
 
   /**
@@ -524,7 +577,7 @@ public class SplitSort implements FeatureList
   @Override
   public synchronized ListIterator< ? > listIterator( final int index )
   {
-    return Collections.unmodifiableList( m_items ).listIterator( index );
+    return new SplitSortIterator( this, index );
   }
 
   /**
@@ -559,12 +612,14 @@ public class SplitSort implements FeatureList
     @SuppressWarnings("unchecked")
     final List<Object> result = receiver == null ? new ArrayList<Object>() : receiver;
 
+    final List<SplitSortItem> items = m_items;
+
     final TIntProcedure ip = new TIntProcedure()
     {
       @Override
-      public boolean execute( final int id )
+      public boolean execute( final int index )
       {
-        final SplitSortItem item = getItemById( id );
+        final SplitSortItem item = items.get( index );
         final Object data = item.getData();
         result.add( data );
         return true;
@@ -575,11 +630,6 @@ public class SplitSort implements FeatureList
     m_spatialIndex.intersects( searchRect, ip );
 
     return result;
-  }
-
-  SplitSortItem getItemById( final int id )
-  {
-    return m_itemIdHash.get( id );
   }
 
   @Override
@@ -605,11 +655,11 @@ public class SplitSort implements FeatureList
   @Override
   public synchronized void invalidate( final Object object )
   {
-    final SplitSortItem item = m_itemHash.get( object );
+    final int index = indexOf( object );
+    if( index == -1 )
+      return;
 
-    // REMARK: item == null happens often during loading, because item is not yet in list
-    if( item != null )
-      m_invalidItems.add( item );
+    m_invalidIndices.add( index );
   }
 
   // FEATURE LIST IMPLEMENTATION
@@ -640,7 +690,7 @@ public class SplitSort implements FeatureList
     final Feature[] features = new Feature[m_items.size()];
     for( int i = 0; i < features.length; i++ )
     {
-      final Object object = m_items.get( i );
+      final Object object = get( i );
 
       features[i] = resolveFeature( object );
     }
@@ -657,7 +707,7 @@ public class SplitSort implements FeatureList
   @Override
   public synchronized void accept( final FeatureVisitor visitor, final int depth )
   {
-    for( final Object object : m_items )
+    for( final Object object : this )
     {
       if( object instanceof Feature && !(object instanceof IXLinkedFeature) )
         visitor.visit( (Feature) object );

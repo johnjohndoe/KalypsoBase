@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -40,10 +40,10 @@ import java.util.ListIterator;
 /**
  * Ein einfacher ListIterator auf einem Array. Alle Methoden, die die Liste verändern führen zu einer
  * {@link java.lang.UnsupportedOperationException}.
- * 
+ *
  * @author belger
  */
-public class ArrayIterator<T> implements ListIterator<T>
+class ArrayIterator<T> implements ListIterator<T>
 {
   private int m_index;
 
@@ -55,63 +55,42 @@ public class ArrayIterator<T> implements ListIterator<T>
     m_objects = objects;
   }
 
-  /**
-   * @see java.util.ListIterator#nextIndex()
-   */
   @Override
   public int nextIndex( )
   {
     return m_index;
   }
 
-  /**
-   * @see java.util.ListIterator#previousIndex()
-   */
   @Override
   public int previousIndex( )
   {
     return m_index - 1;
   }
 
-  /**
-   * @see java.util.Iterator#remove()
-   */
   @Override
   public void remove( )
   {
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see java.util.Iterator#hasNext()
-   */
   @Override
   public boolean hasNext( )
   {
     return m_index < m_objects.length;
   }
 
-  /**
-   * @see java.util.ListIterator#hasPrevious()
-   */
   @Override
   public boolean hasPrevious( )
   {
     return m_index > 0;
   }
 
-  /**
-   * @see java.util.Iterator#next()
-   */
   @Override
   public T next( )
   {
     return m_objects[m_index++];
   }
 
-  /**
-   * @see java.util.ListIterator#previous()
-   */
   @Override
   public T previous( )
   {
@@ -119,18 +98,12 @@ public class ArrayIterator<T> implements ListIterator<T>
     return m_objects[m_index];
   }
 
-  /**
-   * @see java.util.ListIterator#add(java.lang.Object)
-   */
   @Override
   public void add( final T o )
   {
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see java.util.ListIterator#set(java.lang.Object)
-   */
   @Override
   public void set( final T o )
   {

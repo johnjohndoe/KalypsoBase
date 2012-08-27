@@ -137,9 +137,6 @@ public class FilteredFeatureList implements FeatureList
     return toFeatures()[index];
   }
 
-  /**
-   * @see java.util.List#remove(int)
-   */
   @Override
   public Object remove( final int index )
   {
@@ -150,9 +147,6 @@ public class FilteredFeatureList implements FeatureList
     return null;
   }
 
-  /**
-   * @see java.util.List#add(int, java.lang.Object)
-   */
   @Override
   public void add( final int index, final Object element )
   {
@@ -160,9 +154,6 @@ public class FilteredFeatureList implements FeatureList
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see java.util.List#indexOf(java.lang.Object)
-   */
   @Override
   public int indexOf( final Object o )
   {
@@ -175,9 +166,6 @@ public class FilteredFeatureList implements FeatureList
     return -1;
   }
 
-  /**
-   * @see java.util.List#lastIndexOf(java.lang.Object)
-   */
   @Override
   public int lastIndexOf( final Object o )
   {
@@ -245,9 +233,6 @@ public class FilteredFeatureList implements FeatureList
     return true;
   }
 
-  /**
-   * @see java.util.Collection#removeAll(java.util.Collection)
-   */
   @Override
   public boolean removeAll( final Collection c )
   {
@@ -260,45 +245,30 @@ public class FilteredFeatureList implements FeatureList
     return !c.isEmpty();
   }
 
-  /**
-   * @see java.util.Collection#retainAll(java.util.Collection)
-   */
   @Override
   public boolean retainAll( final Collection c )
   {
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see java.util.Collection#iterator()
-   */
   @Override
   public Iterator iterator( )
   {
     return listIterator();
   }
 
-  /**
-   * @see java.util.List#subList(int, int)
-   */
   @Override
   public List subList( final int fromIndex, final int toIndex )
   {
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see java.util.List#listIterator()
-   */
   @Override
   public ListIterator listIterator( )
   {
     return listIterator( 0 );
   }
 
-  /**
-   * @see java.util.List#listIterator(int)
-   */
   @Override
   public ListIterator listIterator( final int index )
   {
@@ -308,18 +278,12 @@ public class FilteredFeatureList implements FeatureList
     return new ArrayIterator( index, toFeatures() );
   }
 
-  /**
-   * @see java.util.List#set(int, java.lang.Object)
-   */
   @Override
   public Object set( final int index, final Object element )
   {
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see java.util.Collection#toArray(java.lang.Object[])
-   */
   @Override
   public Object[] toArray( final Object[] a )
   {
@@ -381,19 +345,12 @@ public class FilteredFeatureList implements FeatureList
     return filterList( m_original.query( env, result ), result );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform)
-   */
   @Override
   public void paint( final Graphics g, final GeoTransform geoTransform )
   {
     m_original.paint( g, geoTransform );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#getBoundingBox()
-   */
   @Override
   public GM_Envelope getBoundingBox( )
   {
@@ -401,9 +358,6 @@ public class FilteredFeatureList implements FeatureList
     return m_original.getBoundingBox();
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.IFeatureProperty#getOwner()
-   */
   @Override
   public Feature getOwner( )
   {

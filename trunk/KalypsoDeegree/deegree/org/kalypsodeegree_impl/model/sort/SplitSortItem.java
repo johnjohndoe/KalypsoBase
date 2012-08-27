@@ -51,45 +51,16 @@ class SplitSortItem
 {
   private final Object m_data;
 
-  private final int m_id;
-
   private Rectangle m_envelope;
 
-  /**
-   * Number of instance of the data object in the main list.
-   */
-  private int m_refCount = 1;
-
-  public SplitSortItem( final Object data, final int id )
+  public SplitSortItem( final Object data )
   {
     m_data = data;
-    m_id = id;
-  }
-
-  public int getId( )
-  {
-    return m_id;
   }
 
   public Object getData( )
   {
     return m_data;
-  }
-
-  /**
-   * Increases the reference counter by one.
-   */
-  public void increaseRef( )
-  {
-    m_refCount++;
-  }
-
-  /**
-   * Decreases the reference counter by one and returns the new value.
-   */
-  public int decreaseRef( )
-  {
-    return --m_refCount;
   }
 
   /**
