@@ -35,6 +35,7 @@
  */
 package org.kalypsodeegree_impl.graphics.displayelements;
 
+import java.awt.Color;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -48,8 +49,9 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.graphics.sld.LineColorMap;
 import org.kalypsodeegree_impl.graphics.sld.PolygonColorMap;
 import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
-import org.kalypsodeegree_impl.graphics.sld.awt.FillPainter;
-import org.kalypsodeegree_impl.graphics.sld.awt.StrokePainter;
+
+import com.vividsolutions.jts.index.ItemVisitor;
+import com.vividsolutions.jts.index.intervalrtree.SortedPackedIntervalRTree;
 
 /**
  * Converts a LineColorMap or a PolygonColorMap into an ElevationColorModel TODO: zwei klassen draus machen, für
@@ -57,9 +59,11 @@ import org.kalypsodeegree_impl.graphics.sld.awt.StrokePainter;
  *
  * @author Thomas Jung
  */
-public class ColorMapConverter
+public class ColorMapConverter implements IElevationColorModel
 {
-  private final List<ColorMapConverterData> m_lister = new LinkedList<ColorMapConverterData>();
+  private final List<ElevationColorEntry> m_entries = new LinkedList<ElevationColorEntry>();
+
+  private final SortedPackedIntervalRTree m_entryIndex = new SortedPackedIntervalRTree();
 
   public ColorMapConverter( final LineColorMap colorMap, final Feature feature, final UOM uom, final GeoTransform projection )
   {
@@ -69,7 +73,6 @@ public class ColorMapConverter
     }
     catch( final FilterEvaluationException e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }
@@ -82,7 +85,6 @@ public class ColorMapConverter
     }
     catch( final FilterEvaluationException e )
     {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }
@@ -95,8 +97,8 @@ public class ColorMapConverter
       final Stroke stroke = element.getStroke();
       final String label = element.getLabel( feature );
       final double quantity = element.getQuantity( feature );
-      final ColorMapConverterData data = new ColorMapConverterData( stroke, feature, uom, projection, label, quantity );
-      m_lister.add( data );
+      final ElevationColorEntry data = new ElevationColorEntry( stroke, feature, uom, projection, label, quantity );
+      m_entries.add( data );
     }
   }
 
@@ -116,38 +118,59 @@ public class ColorMapConverter
       final String label = element.getLabel( feature );
       final double from = element.getFrom( feature );
       final double to = element.getTo( feature );
-      final ColorMapConverterData data = new ColorMapConverterData( fill, stroke, feature, uom, projection, label, from, to );
-      m_lister.add( data );
+      final ElevationColorEntry data = new ElevationColorEntry( fill, stroke, feature, uom, projection, label, from, to );
+      m_entries.add( data );
+      m_entryIndex.insert( from, to, data );
     }
   }
 
-  public int getNumOfClasses( )
+  @Override
+  public Color getColor( final double elevation )
   {
-    return m_lister.size();
+    final ElevationColorEntry colorEntry = getColorEntry( elevation );
+    if( colorEntry == null )
+    return null;
+
+    return colorEntry.getPolygonPainter().getFillColor();
   }
 
-  public double getFrom( final int currentClass )
+  @Override
+  public ElevationColorEntry getColorEntry( final double elevation )
   {
-    return m_lister.get( currentClass ).getFrom();
+    final ElevationColorEntry[] result = new ElevationColorEntry[1];
+
+    final ItemVisitor visitor = new ItemVisitor()
+    {
+      @Override
+      public void visitItem( final Object item )
+      {
+        result[0] = (ElevationColorEntry) item;
+      }
+    };
+    m_entryIndex.query( elevation, elevation, visitor );
+
+    return result[0];
   }
 
-  public double getTo( final int currentClass )
+  @Override
+  public void setElevationMinMax( final double min, final double max )
   {
-    return m_lister.get( currentClass ).getTo();
   }
 
-  public double getClassValue( final int currentClass )
+  @Override
+  public double[] getElevationMinMax( )
   {
-    return m_lister.get( currentClass ).getQuantity();
+    return null;
   }
 
-  public StrokePainter getLinePainter( final int currentClass )
+  @Override
+  public void setProjection( final GeoTransform projection )
   {
-    return m_lister.get( currentClass ).getLinePainter();
   }
 
-  public FillPainter getFillPolygonPainter( final int currentClass )
+  @Override
+  public ElevationColorEntry[] getColorEntries( )
   {
-    return m_lister.get( currentClass ).getPolygonPainter();
+    return m_entries.toArray( new ElevationColorEntry[m_entries.size()] );
   }
 }

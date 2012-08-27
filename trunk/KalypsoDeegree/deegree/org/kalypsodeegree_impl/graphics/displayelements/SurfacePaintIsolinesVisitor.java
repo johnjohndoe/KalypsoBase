@@ -94,13 +94,13 @@ public class SurfacePaintIsolinesVisitor implements ISurfacePatchVisitor<GM_Tria
         maxValue = position.getZ();
     }
 
-    final int numOfClasses = m_colorModel.getNumOfClasses();
-
     /* loop over all classes */
-    for( int currentClass = 0; currentClass < numOfClasses; currentClass++ )
+    final ElevationColorEntry[] colorEntries = m_colorModel.getColorEntries();
+    for( final ElevationColorEntry entry : colorEntries )
     {
       /* aktuelles von und bis setzen */
-      final double classValue = m_colorModel.getClassValue( currentClass );
+
+      final double classValue = entry.getQuantity();
 
       if( minValue <= classValue && classValue <= maxValue == true )
       {
@@ -128,8 +128,7 @@ public class SurfacePaintIsolinesVisitor implements ISurfacePatchVisitor<GM_Tria
 
         if( posList.size() == 2 )
         {
-
-          paintIsoLine( posList.get( 0 ), posList.get( 1 ), currentClass );
+          paintIsoLine( posList.get( 0 ), posList.get( 1 ), entry );
         }
       }
     }
@@ -144,7 +143,7 @@ public class SurfacePaintIsolinesVisitor implements ISurfacePatchVisitor<GM_Tria
     return GeometryFactory.createGM_Position( x, y, z - VAL_EPS );
   }
 
-  private void paintIsoLine( final GM_Position position1, final GM_Position position2, final int currentClass )
+  private void paintIsoLine( final GM_Position position1, final GM_Position position2, final ElevationColorEntry entry )
   {
     final GM_Position screenPos1 = m_projection.getDestPoint( position1 );
     final GM_Position screenPos2 = m_projection.getDestPoint( position2 );
@@ -160,7 +159,7 @@ public class SurfacePaintIsolinesVisitor implements ISurfacePatchVisitor<GM_Tria
     pos[1][1] = (int) screenPos2.getY();
     pos[2][0] = 2;
 
-    final StrokePainter painter = m_colorModel.getLinePainter( currentClass );
+    final StrokePainter painter = entry.getLinePainter();
     painter.paintPoses( (Graphics2D) m_gc, pos );
   }
 

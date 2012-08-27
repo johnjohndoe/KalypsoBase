@@ -38,12 +38,9 @@ package org.kalypsodeegree_impl.graphics.displayelements;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
-import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
-import org.kalypsodeegree_impl.graphics.sld.awt.FillPainter;
-import org.kalypsodeegree_impl.graphics.sld.awt.StrokePainter;
 
 /**
  * @author Patrice Kongo
@@ -69,21 +66,8 @@ public class SurfacePaintPlainTriangleVisitor<T extends GM_Polygon> implements I
 
   private void paintTriangle( final GM_Polygon polygon )
   {
-    final int numOfClasses = m_colorModel.getNumOfClasses();
-
     final GM_Position[] positions = polygon.getExteriorRing();
 
-    /* loop over all classes */
-    for( int currentClass = 0; currentClass < numOfClasses; currentClass++ )
-    {
-      final double startValue = m_colorModel.getFrom( currentClass );
-      final double endValue = m_colorModel.getTo( currentClass );
-
-      final StrokePainter strokePainter = m_colorModel.getLinePainter( currentClass );
-      final FillPainter fillPainter = m_colorModel.getFillPolygonPainter( currentClass );
-      final GeoTransform world2Screen = fillPainter.getWorld2Screen();
-
-      m_painter.paint( positions, startValue, endValue, strokePainter, fillPainter, world2Screen );
-    }
+    m_painter.paint( positions, m_colorModel );
   }
 }
