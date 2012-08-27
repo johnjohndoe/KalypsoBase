@@ -76,12 +76,9 @@ public class RemoveCoverageAction extends Action implements IUpdateable
 {
   private final CoverageManagementWidget m_widget;
 
-  private final Runnable m_refreshCoverageViewerRunnable;
-
-  public RemoveCoverageAction( final CoverageManagementWidget widget, final Runnable refreshCoverageViewerRunnable )
+  public RemoveCoverageAction( final CoverageManagementWidget widget )
   {
     m_widget = widget;
-    m_refreshCoverageViewerRunnable = refreshCoverageViewerRunnable;
 
     setText( Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.12" ) ); //$NON-NLS-1$
     setImageDescriptor( KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_REMOVE ) );
@@ -94,11 +91,10 @@ public class RemoveCoverageAction extends Action implements IUpdateable
 
     final ICoverage[] selectedCoverages = m_widget.getSelectedCoverages();
     final IKalypsoFeatureTheme selectedTheme = m_widget.getSelectedTheme();
+    final Runnable refreshRunnable = m_widget.getRefreshRunnable();
 
     if( ArrayUtils.isEmpty( selectedCoverages ) || selectedTheme == null )
       return;
-
-    final Runnable refreshRunnable = m_refreshCoverageViewerRunnable;
 
     final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
     {

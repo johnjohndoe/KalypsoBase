@@ -700,8 +700,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   {
     if( m_showAddRemoveButtons )
     {
-      addAction( manager, new AddCoverageAction( this, m_refreshCoverageViewerRunnable ) );
-      addAction( manager, new RemoveCoverageAction( this, m_refreshCoverageViewerRunnable ) );
+      addAction( manager, new AddCoverageAction( this ) );
+      addAction( manager, new RemoveCoverageAction( this ) );
     }
 
     addAction( manager, new ExportCoverageAction( this ) );
@@ -983,5 +983,10 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   public ICoverageCollection getCoverageCollection( )
   {
     return m_coverages;
+  }
+
+  public Runnable getRefreshRunnable( )
+  {
+    return m_refreshCoverageViewerRunnable;
   }
 }
