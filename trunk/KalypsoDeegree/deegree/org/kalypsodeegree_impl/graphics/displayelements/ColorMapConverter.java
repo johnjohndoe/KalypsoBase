@@ -56,7 +56,7 @@ import com.vividsolutions.jts.index.intervalrtree.SortedPackedIntervalRTree;
 /**
  * Converts a LineColorMap or a PolygonColorMap into an ElevationColorModel TODO: zwei klassen draus machen, für
  * isolines und isoflächen!
- *
+ * 
  * @author Thomas Jung
  */
 public class ColorMapConverter implements IElevationColorModel
@@ -129,7 +129,7 @@ public class ColorMapConverter implements IElevationColorModel
   {
     final ElevationColorEntry colorEntry = getColorEntry( elevation );
     if( colorEntry == null )
-    return null;
+      return null;
 
     return colorEntry.getPolygonPainter().getFillColor();
   }
@@ -137,6 +137,10 @@ public class ColorMapConverter implements IElevationColorModel
   @Override
   public ElevationColorEntry getColorEntry( final double elevation )
   {
+    // REMARK: necessary! query to empty index leads to endless loop.
+    if( m_entries.size() == 0 )
+      return null;
+
     final ElevationColorEntry[] result = new ElevationColorEntry[1];
 
     final ItemVisitor visitor = new ItemVisitor()
