@@ -37,21 +37,40 @@ package org.kalypsodeegree_impl.model.geometry;
 
 import javax.vecmath.Point3d;
 
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Triangle;
+
 /**
+ * Improved (direct) triangle implementation that does not keep any state except its three vertices. <br/>
+ * Everything else is calculated on the fly in order to minimize memory consumption.<br/>
+ * This is usually ok (regarding performance), because the involved operations are fast enough for three points.
+ *
  * @author Gernot Belger
  */
-public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
+class GM_Triangle_Impl implements GM_Triangle
 {
-  public GM_Triangle_Impl( final GM_Position pos1, final GM_Position pos2, final GM_Position pos3, final String crs ) throws GM_Exception
+  private final GM_Position m_p1;
+
+  private final GM_Position m_p2;
+
+  private final GM_Position m_p3;
+
+  private final String m_srsName;
+
+  public GM_Triangle_Impl( final GM_Position p1, final GM_Position p2, final GM_Position p3, final String srsName )
   {
-    super( new GM_Position[] { pos1, pos2, pos3, pos1 }, null, crs );
+    m_p1 = p1;
+    m_p2 = p2;
+    m_p3 = p3;
+    m_srsName = srsName;
   }
 
   @Override
@@ -68,16 +87,10 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
     final double x = position.getX();
     final double y = position.getY();
 
-    final GM_Position[] exteriorRing = getExteriorRing();
-    final GM_Position c0 = exteriorRing[0];
-    final GM_Position c1 = exteriorRing[1];
-    final GM_Position c2 = exteriorRing[2];
-
-    // FIXME: was cached before; check if this is needed; memory consumption!
     final Plane plane = new Plane();
-    final Point3d p0 = new Point3d( c0.getX(), c0.getY(), c0.getZ() );
-    final Point3d p1 = new Point3d( c1.getX(), c1.getY(), c1.getZ() );
-    final Point3d p2 = new Point3d( c2.getX(), c2.getY(), c2.getZ() );
+    final Point3d p0 = new Point3d( m_p1.getX(), m_p1.getY(), m_p1.getZ() );
+    final Point3d p1 = new Point3d( m_p2.getX(), m_p2.getY(), m_p2.getZ() );
+    final Point3d p2 = new Point3d( m_p3.getX(), m_p3.getY(), m_p3.getZ() );
     plane.setPlane( p0, p1, p2 );
 
     return plane.z( x, y );
@@ -86,29 +99,19 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
   @Override
   public boolean contains( final GM_Position position )
   {
-    // REMARK: directly computing 'isInside' for performance reasons. jts PointInRing is actually slower (because for
-    // arbitrary polygons) and more memory consuming.
-
-    final GM_Position[] exteriorRing = getExteriorRing();
-    final GM_Position c0 = exteriorRing[0];
-    final GM_Position c1 = exteriorRing[1];
-    final GM_Position c2 = exteriorRing[2];
-
-    final int a1 = orientation( c0, c1, position );
-    final int a2 = orientation( c1, c2, position );
-    final int a3 = orientation( c2, c0, position );
+    final int a1 = orientation( m_p1, m_p2, position );
+    final int a2 = orientation( m_p2, m_p3, position );
+    final int a3 = orientation( m_p3, m_p1, position );
 
     return (a1 == a2) && (a2 == a3);
   }
 
-  // FIXME: JTS!
   private static int orientation( final GM_Position pos1, final GM_Position pos2, final GM_Position pos3 )
   {
     final double s_a = signedArea( pos1, pos2, pos3 );
     return s_a > 0 ? 1 : (s_a < 0 ? -1 : 0);
   }
 
-  // FIXME: JTS!
   private static double signedArea( final GM_Position a, final GM_Position b, final GM_Position c )
   {
     return ((c.getX() - a.getX()) * (b.getY() - a.getY()) - (b.getX() - a.getX()) * (c.getY() - a.getY())) / 2;
@@ -122,10 +125,11 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
     if( sourceCRS == null || sourceCRS.equalsIgnoreCase( targetCRS ) )
       return this;
 
-    final GM_Ring exRing = GeometryFactory.createGM_Ring( getExteriorRing(), getCoordinateSystem() );
-    final GM_Ring transExRing = (GM_Ring) exRing.transform( targetCRS );
-    final GM_Position[] positions = transExRing.getPositions();
-    return GeometryFactory.createGM_Triangle( positions[0], positions[1], positions[2], targetCRS );
+    final GM_Position t1 = m_p1.transform( sourceCRS, targetCRS );
+    final GM_Position t2 = m_p1.transform( sourceCRS, targetCRS );
+    final GM_Position t3 = m_p1.transform( sourceCRS, targetCRS );
+
+    return GeometryFactory.createGM_Triangle( t1, t2, t3, targetCRS );
   }
 
   /**
@@ -134,36 +138,29 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
   @Override
   public Object clone( )
   {
-    try
-    {
-      final GM_Position[] clonedExteriorRing = GeometryFactory.cloneGM_Position( getExteriorRing() );
-      return new GM_Triangle_Impl( clonedExteriorRing[0], clonedExteriorRing[1], clonedExteriorRing[2], getCoordinateSystem() );
-    }
-    catch( final GM_Exception e )
-    {
-      e.printStackTrace();
-    }
+    final GM_Position c1 = (GM_Position) m_p1.clone();
+    final GM_Position c2 = (GM_Position) m_p2.clone();
+    final GM_Position c3 = (GM_Position) m_p3.clone();
 
-    throw new IllegalStateException();
+    return GeometryFactory.createGM_Triangle( c1, c2, c3, getCoordinateSystem() );
   }
 
   @Override
   public int getOrientation( )
   {
-    return orientation( getExteriorRing()[0], getExteriorRing()[1], getExteriorRing()[2] );
+    return orientation( m_p1, m_p2, m_p3 );
   }
 
   @Override
   public double getMinValue( )
   {
-    final GM_Position[] ring = getExteriorRing();
-    double min = ring[0].getZ();
+    double min = m_p1.getZ();
 
-    if( min > ring[1].getZ() )
-      min = ring[1].getZ();
+    if( min > m_p2.getZ() )
+      min = m_p2.getZ();
 
-    if( min > ring[2].getZ() )
-      min = ring[2].getZ();
+    if( min > m_p3.getZ() )
+      min = m_p3.getZ();
 
     return min;
   }
@@ -171,15 +168,117 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
   @Override
   public double getMaxValue( )
   {
-    final GM_Position[] ring = getExteriorRing();
-    double max = ring[0].getZ();
+    double max = m_p1.getZ();
 
-    if( max < ring[1].getZ() )
-      max = ring[1].getZ();
+    if( max < m_p2.getZ() )
+      max = m_p2.getZ();
 
-    if( max < ring[2].getZ() )
-      max = ring[2].getZ();
+    if( max < m_p3.getZ() )
+      max = m_p3.getZ();
 
     return max;
+  }
+
+  @Override
+  public GM_Position[] getExteriorRing( )
+  {
+    return new GM_Position[] { m_p1, m_p2, m_p3, m_p1 };
+  }
+
+  @Override
+  public GM_Position[][] getInteriorRings( )
+  {
+    return null;
+  }
+
+  @Override
+  public String getCoordinateSystem( )
+  {
+    return m_srsName;
+  }
+
+  @Override
+  public boolean intersects( final GM_Object gmo )
+  {
+    try
+    {
+      final GM_Polygon_Impl poly = new GM_Polygon_Impl( getExteriorRing(), getInteriorRings(), m_srsName );
+      return poly.intersects( gmo );
+    }
+    catch( final GM_Exception e )
+    {
+      e.printStackTrace();
+      return false;
+    }
+  }
+
+  @Override
+  public boolean contains( final GM_Object gmo )
+  {
+    try
+    {
+      if( gmo instanceof GM_Point )
+      {
+        final GM_Point point = (GM_Point) gmo;
+        final GM_Point transformedPoint = (GM_Point) point.transform( m_srsName );
+        return contains( transformedPoint.getPosition() );
+      }
+
+      final GM_Polygon_Impl poly = new GM_Polygon_Impl( getExteriorRing(), getInteriorRings(), m_srsName );
+      return poly.contains( gmo );
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
+      return false;
+    }
+  }
+
+  @Override
+  public GM_Point getCentroid( )
+  {
+    final Coordinate a = JTSAdapter.export( m_p1 );
+    final Coordinate b = JTSAdapter.export( m_p2 );
+    final Coordinate c = JTSAdapter.export( m_p3 );
+    final Coordinate centroid = Triangle.centroid( a, b, c );
+
+    final GM_Position pos2d = GeometryFactory.createGM_Position( centroid.x, centroid.y );
+    final double centroidZ = getValue( pos2d );
+
+    final GM_Position pos3d = GeometryFactory.createGM_Position( centroid.x, centroid.y, centroidZ );
+    return GeometryFactory.createGM_Point( pos3d, m_srsName );
+  }
+
+  @Override
+  public double getArea( )
+  {
+    final Coordinate a = JTSAdapter.export( m_p1 );
+    final Coordinate b = JTSAdapter.export( m_p2 );
+    final Coordinate c = JTSAdapter.export( m_p3 );
+
+    return Triangle.area( a, b, c );
+  }
+
+  @Override
+  public double getPerimeter( )
+  {
+    final double d1 = m_p1.getDistance( m_p2 );
+    final double d2 = m_p2.getDistance( m_p3 );
+    final double d3 = m_p3.getDistance( m_p1 );
+
+    return d1 + d2 + d3;
+  }
+
+  @Override
+  public GM_Envelope getEnvelope( )
+  {
+    final GM_Envelope env = GeometryFactory.createGM_Envelope( m_p1, m_p2, m_srsName );
+    return env.getMerged( m_p3 );
+  }
+
+  @Override
+  public void invalidate( )
+  {
+    // no ned for invalidatrion, we keep no state...
   }
 }

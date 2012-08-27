@@ -36,7 +36,6 @@
 package org.kalypsodeegree_impl.io.sax.parser;
 
 import org.kalypso.commons.xml.NS;
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
@@ -85,17 +84,8 @@ public class TriangleContentHandler extends GMLElementContentHandler implements 
     final String srs = m_ring.getCoordinateSystem();
     m_ring = null;
 
-    try
-    {
-      final GM_Triangle gmTriangle = GeometryFactory.createGM_Triangle( ring[0], ring[1], ring[2], srs );
-      m_triangleHandler.handle( gmTriangle );
-    }
-    catch( final GM_Exception e )
-    {
-      e.printStackTrace();
-
-      throwSAXParseException( e, "Failed to create triangle" );
-    }
+    final GM_Triangle gmTriangle = GeometryFactory.createGM_Triangle( ring[0], ring[1], ring[2], srs );
+    m_triangleHandler.handle( gmTriangle );
   }
 
   /**
