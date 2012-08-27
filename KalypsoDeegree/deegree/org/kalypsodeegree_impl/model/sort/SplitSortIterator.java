@@ -40,54 +40,89 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.sort;
 
-import com.infomatiq.jsi.Rectangle;
+import java.util.ListIterator;
+import java.util.NoSuchElementException;
 
 /**
- * Elements of the {@link SplitSort}.
- *
  * @author Gernot Belger
  */
-class SplitSortItem
+public class SplitSortIterator implements ListIterator<Object>
 {
-  private final Object m_data;
+  private final SplitSort m_splitSort;
 
-  private Rectangle m_envelope;
+  private int m_index;
 
-  public SplitSortItem( final Object data )
+  public SplitSortIterator( final SplitSort splitSort, final int index )
   {
-    m_data = data;
+    m_splitSort = splitSort;
+    m_index = index;
   }
 
-  public Object getData( )
+  @Override
+  public boolean hasNext( )
   {
-    return m_data;
+    return m_index < m_splitSort.size();
   }
 
-  /**
-   * @return <code>true</code> iff the previous envelope was different form the new one.
-   */
-  public boolean setEnvelope( final Rectangle envelope )
+  @Override
+  public Object next( )
   {
-    if( m_envelope == null )
+    try
     {
-      if( envelope == null )
-        return false;
-
-      m_envelope = envelope;
-      return true;
+      return m_splitSort.get( m_index++ );
     }
-    else
+    catch( final IndexOutOfBoundsException e )
     {
-      if( m_envelope.equals( envelope ) )
-        return false;
-
-      m_envelope = envelope;
-      return true;
+      throw new NoSuchElementException();
     }
   }
 
-  public Rectangle getEnvelope( )
+  @Override
+  public boolean hasPrevious( )
   {
-    return m_envelope;
+    return m_index > 0;
+  }
+
+  @Override
+  public Object previous( )
+  {
+    try
+    {
+      return m_splitSort.get( --m_index );
+    }
+    catch( final IndexOutOfBoundsException e )
+    {
+      throw new NoSuchElementException();
+    }
+  }
+
+  @Override
+  public int nextIndex( )
+  {
+    return m_index;
+  }
+
+  @Override
+  public int previousIndex( )
+  {
+    return m_index - 1;
+  }
+
+  @Override
+  public void remove( )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void set( final Object e )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void add( final Object e )
+  {
+    throw new UnsupportedOperationException();
   }
 }
