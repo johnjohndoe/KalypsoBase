@@ -69,7 +69,7 @@ public class ImportCoverageData extends AbstractModelObject
 
   public static final String PROPERTY_SOURCE_SRS = "sourceSRS"; //$NON-NLS-1$
 
-  private final FileAndHistoryData m_sourceFile = new FileAndHistoryData( "sourceFiles" ); //$NON-NLS-1$
+  private FileAndHistoryData m_sourceFile = new FileAndHistoryData( "sourceFiles" ); //$NON-NLS-1$
 
   private IContainer m_dataContainer;
 
@@ -118,9 +118,7 @@ public class ImportCoverageData extends AbstractModelObject
   public void init( final ICoverageCollection coverages, final IContainer dataContainer, final boolean allowUserChangeDataFolder )
   {
     m_coverageContainer = coverages;
-
     m_dataContainer = dataContainer;
-
     m_allowUserChangeDataFolder = dataContainer == null ? true : allowUserChangeDataFolder;
   }
 
@@ -149,6 +147,11 @@ public class ImportCoverageData extends AbstractModelObject
     m_sourceFile.storeSettings( settings );
     settings.put( PROPERTY_SOURCE_SRS, m_sourceSRS );
     settings.put( PROPERTY_DATA_FOLDER, getDataContainerPath() );
+  }
+
+  public void setSourceFile( final FileAndHistoryData sourceFile )
+  {
+    m_sourceFile = sourceFile;
   }
 
   public FileAndHistoryData getSourceFile( )
