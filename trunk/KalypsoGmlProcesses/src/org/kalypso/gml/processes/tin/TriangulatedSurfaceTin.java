@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.ui.progress.IProgressConstants;
 import org.kalypso.gml.processes.KalypsoGmlProcessesPlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -57,7 +58,7 @@ import org.kalypsodeegree.model.tin.ITin;
 
 /**
  * Wrapper around a {@link org.kalypsodeegree.model.geometry.GM_TriangulatedSurface} that implementents {@link ITin}
- *
+ * 
  * @author Gernot Belger
  */
 public class TriangulatedSurfaceTin implements ITin
@@ -115,6 +116,8 @@ public class TriangulatedSurfaceTin implements ITin
     if( m_surfaceFeature == null && m_loadJob == null )
     {
       m_loadJob = new TinLoadJob( this );
+      m_loadJob.setProperty( IProgressConstants.NO_IMMEDIATE_ERROR_PROMPT_PROPERTY, true );
+      m_loadJob.setProperty( IProgressConstants.KEEP_PROPERTY, false );
 
       m_loadJob.addJobChangeListener( new JobChangeAdapter()
       {

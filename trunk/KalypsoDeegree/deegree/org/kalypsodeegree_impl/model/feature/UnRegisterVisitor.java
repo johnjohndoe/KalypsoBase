@@ -55,7 +55,7 @@ final class UnRegisterVisitor implements FeatureVisitor
   @Override
   public boolean visit( final Feature f )
   {
-    m_workspace.unregisterFeature( f );
+    m_workspace.unregister( f );
     return true;
   }
 }

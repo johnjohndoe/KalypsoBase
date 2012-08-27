@@ -64,7 +64,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
 /**
  * In order to use this workspace with support of xlinks, a
  * {@link org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory} must be set.
- *
+ * 
  * @see #setFeatureProviderFactory(IFeatureProviderFactory)
  * @author doemming
  */
@@ -176,7 +176,7 @@ public class GMLWorkspace_Impl extends PlatformObject implements GMLWorkspace
 
   /**
    * Every listener is registered only once.
-   *
+   * 
    * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#addModellListener(org.kalypsodeegree.model.feature.event.ModellEventListener)
    */
   @Override
@@ -275,8 +275,8 @@ public class GMLWorkspace_Impl extends PlatformObject implements GMLWorkspace
     {
       if( next instanceof String && depth == FeatureVisitor.DEPTH_INFINITE_LINKS )
       {
-          final Feature f = getFeature( (String) next );
-          accept( fv, f, depth );
+        final Feature f = getFeature( (String) next );
+        accept( fv, f, depth );
       }
       else if( next instanceof IXLinkedFeature && depth == FeatureVisitor.DEPTH_INFINITE_LINKS )
       {
@@ -433,7 +433,7 @@ public class GMLWorkspace_Impl extends PlatformObject implements GMLWorkspace
     if( result )
     {
       accept( new UnRegisterVisitor( this ), childFeature, FeatureVisitor.DEPTH_INFINITE );
-      unregisterFeature( childFeature );
+      unregister( childFeature );
     }
     return result;
   }
@@ -442,15 +442,19 @@ public class GMLWorkspace_Impl extends PlatformObject implements GMLWorkspace
    * Unregisters a feature from this workspace.<br/>
    * Should be called only within this implementation. NOT intended to be called by client.
    */
-  public void unregisterFeature( final Feature feature )
+  public void unregister( final Feature feature )
   {
     final String id = feature.getId();
     m_indexMap.remove( id );
   }
 
-  void register( final Feature f, final String id )
+  /**
+   * Registers a feature in this workspace.<br/>
+   * Should be called only within this implementation. NOT intended to be called by client.
+   */
+  public void register( final Feature f )
   {
-    m_indexMap.put( id, f );
+    m_indexMap.put( f.getId(), f );
   }
 
   @Override
