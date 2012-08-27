@@ -244,9 +244,6 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
     return true;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.geometry.GM_SurfacePatch#transform(java.lang.String)
-   */
   @Override
   public GM_SurfacePatch transform( final String targetCRS ) throws Exception
   {

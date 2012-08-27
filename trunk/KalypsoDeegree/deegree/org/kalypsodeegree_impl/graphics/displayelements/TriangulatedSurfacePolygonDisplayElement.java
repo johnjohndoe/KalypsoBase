@@ -98,10 +98,10 @@ public class TriangulatedSurfacePolygonDisplayElement extends DisplayElement_Imp
       final Envelope intersection = screenRect.intersection( screenTinRect );
 
       /* walk over pixels of intersection */
-      final int fromX = (int) Math.floor( intersection.getMinX() );
-      final int toX = (int) Math.ceil( intersection.getMaxX() );
-      final int fromY = (int) Math.floor( intersection.getMinY() );
-      final int toY = (int) Math.ceil( intersection.getMaxY() );
+      final int fromX = (int) Math.ceil( intersection.getMinX() );
+      final int toX = (int) Math.floor( intersection.getMaxX() );
+      final int fromY = (int) Math.ceil( intersection.getMinY() );
+      final int toY = (int) Math.floor( intersection.getMaxY() );
 
       final String srs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
@@ -109,28 +109,12 @@ public class TriangulatedSurfacePolygonDisplayElement extends DisplayElement_Imp
 
       final int tileSize = 100;
 
+      final BufferedImage buffer = new BufferedImage( tileSize, tileSize, BufferedImage.TYPE_INT_ARGB );
+
       for( int x = fromX; x < toX; x += tileSize )
       {
-        final double sourceX = projection.getSourceX( x );
-
         for( int y = fromY; y < toY; y += tileSize )
-        {
-          drawTile( g2, projection, srs, x, y, toX, toY, tileSize );
-
-          final double sourceY = projection.getSourceY( y );
-
-          final double value = m_surface.getElevation( GeometryFactory.createGM_Point( sourceX, sourceY, srs ) );
-          if( !Double.isNaN( value ) )
-          {
-            final Color color = m_colorModel.getColor( value );
-            if( color != null )
-            {
-              g.setColor( color );
-              // g2.drawRect( x, y, 1, 1 );
-              // buffer.setRGB( x - fromX, y - fromY, color.getRGB() );
-            }
-          }
-        }
+          drawTile( g2, buffer, projection, srs, x, y, toX, toY, tileSize );
       }
     }
     catch( final ElevationException e )
@@ -139,35 +123,47 @@ public class TriangulatedSurfacePolygonDisplayElement extends DisplayElement_Imp
     }
   }
 
-  private void drawTile( final Graphics2D g2, final GeoTransform projection, final String srs, final int fromX, final int fromY, final int maxX, final int maxY, final int tileSize ) throws ElevationException
+  private void drawTile( final Graphics2D g2, final BufferedImage buffer, final GeoTransform projection, final String srs, final int fromX, final int fromY, final int maxX, final int maxY, final int tileSize ) throws ElevationException
   {
+    // REMARK: size of pixel; if > 1; a block of pxp pixels is rendered in the same color (big speedup!)
+    final int p = 2;
+
     final int width = Math.min( tileSize, maxX - fromX + 1 );
-    final int heigth = Math.min( tileSize, maxY - fromY + 1 );
+    final int height = Math.min( tileSize, maxY - fromY + 1 );
 
-    final BufferedImage buffer = new BufferedImage( width, heigth, BufferedImage.TYPE_INT_ARGB );
-
-    for( int x = fromX; x < fromX + width; x++ )
+    for( int x = fromX; x < fromX + width; x += p )
     {
       final double sourceX = projection.getSourceX( x );
 
-      for( int y = fromY; y < fromY + heigth; y++ )
+      for( int y = fromY; y < fromY + height; y += p )
       {
         final double sourceY = projection.getSourceY( y );
 
         final double value = m_surface.getElevation( GeometryFactory.createGM_Point( sourceX, sourceY, srs ) );
-        if( !Double.isNaN( value ) )
+        final Color color = m_colorModel.getColor( value );
+        final int rgb = color.getRGB();
+
+        /* Paint pixel in given color */
+        for( int i = 0; i < p; i++ )
         {
-          final Color color = m_colorModel.getColor( value );
-          if( color != null )
+          for( int j = 0; j < p; j++ )
           {
-            // g.setColor( color );
-            // g2.drawRect( x, y, 1, 1 );
-            buffer.setRGB( x - fromX, y - fromY, color.getRGB() );
+            final int xP = x - fromX + i;
+            final int yP = y - fromY + j;
+
+            if( xP < width && yP < height )
+            {
+              if( color != null )
+                buffer.setRGB( xP, yP, rgb );
+              else
+                buffer.setRGB( xP, yP, 0 );
+            }
           }
         }
       }
     }
 
-    g2.drawImage( buffer, fromX, fromY, null );
+    g2.drawImage( buffer, fromX, fromY, fromX + width, fromY + height, 0, 0, width, height, null );
+    // g2.drawImage( buffer, fromX, fromY, null );
   }
 }
