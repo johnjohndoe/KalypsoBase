@@ -47,7 +47,6 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitable;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
@@ -145,22 +144,8 @@ public class SurfacePatchVisitableDisplayElement<P extends GM_SurfacePatch> impl
   }
 
   @Override
-  public DisplayElement getDecorated( )
-  {
-    return m_decorated;
-  }
-
-  @Override
   public void setDecorated( final DisplayElement decorated )
   {
     m_decorated = decorated;
   }
-
-  public GM_Position[] getGM_PositionForThisSurface( final GM_Surface<GM_SurfacePatch> surface )
-  {
-    final GM_SurfacePatch patch = surface.get( 0 );
-    final GM_Position[] pos = patch.getExteriorRing();
-    return pos;
-  }
-
 }

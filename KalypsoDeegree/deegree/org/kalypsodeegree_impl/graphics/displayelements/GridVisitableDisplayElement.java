@@ -106,12 +106,6 @@ public class GridVisitableDisplayElement<P extends GM_Curve> implements DisplayE
   }
 
   @Override
-  public DisplayElement getDecorated( )
-  {
-    return m_decorated;
-  }
-
-  @Override
   public void setDecorated( final DisplayElement decorated )
   {
     m_decorated = decorated;
