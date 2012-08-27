@@ -730,7 +730,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
           continue;
 
         /* Init the extension action. */
-        extensionAction.preExecute( getShell(), null );
+        extensionAction.preExecute( getShell(), this );
 
         /* Get the action. */
         final IAction action = extensionAction.getAction();
