@@ -40,6 +40,7 @@ import gnu.trove.TIntProcedure;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -55,6 +56,8 @@ import com.infomatiq.jsi.Rectangle;
  */
 public class GM_TriangulatedSurface_Impl extends GM_PolyhedralSurface_Impl<GM_Triangle> implements GM_TriangulatedSurface
 {
+  private GM_Triangle m_lastHit = null;
+
   public GM_TriangulatedSurface_Impl( final String crs ) throws GM_Exception
   {
     this( new ArrayList<GM_Triangle>(), crs );
@@ -63,6 +66,12 @@ public class GM_TriangulatedSurface_Impl extends GM_PolyhedralSurface_Impl<GM_Tr
   public GM_TriangulatedSurface_Impl( final List<GM_Triangle> items, final String crs ) throws GM_Exception
   {
     super( items, crs );
+  }
+
+  @Override
+  public void dispose( )
+  {
+    // nothing to do...
   }
 
   @Override
@@ -110,6 +119,14 @@ public class GM_TriangulatedSurface_Impl extends GM_PolyhedralSurface_Impl<GM_Tr
   @Override
   public GM_Triangle getTriangle( final GM_Position position )
   {
+    // Protect against concurrent access
+    final GM_Triangle lastHit = m_lastHit;
+    if( lastHit != null )
+    {
+      if( lastHit.contains( position ) )
+        return lastHit;
+    }
+
     final Rectangle searchEnv = new Rectangle( (float) position.getX(), (float) position.getY(), (float) position.getX(), (float) position.getY() );
 
     final GM_Triangle[] result = new GM_Triangle[] { null };
@@ -132,13 +149,12 @@ public class GM_TriangulatedSurface_Impl extends GM_PolyhedralSurface_Impl<GM_Tr
 
     getIndex().intersects( searchEnv, ip );
 
+    m_lastHit = result[0];
     return result[0];
   }
 
   /**
    * Must override, else the wrong type is created.
-   *
-   * @see org.kalypsodeegree_impl.model.geometry.GM_PolyhedralSurface_Impl#transform(java.lang.String)
    */
   @Override
   public GM_Object transform( final String targetCRS ) throws Exception
@@ -154,5 +170,29 @@ public class GM_TriangulatedSurface_Impl extends GM_PolyhedralSurface_Impl<GM_Tr
       triangles[i] = (GM_Triangle) get( i ).transform( targetCRS );
 
     return GeometryFactory.createGM_TriangulatedSurface( triangles, targetCRS );
+  }
+
+  @Override
+  public double getElevation( final GM_Point location )
+  {
+    return getValue( location );
+  }
+
+  @Override
+  public GM_Envelope getBoundingBox( )
+  {
+    return getEnvelope();
+  }
+
+  @Override
+  public double getMinElevation( )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public double getMaxElevation( )
+  {
+    throw new UnsupportedOperationException();
   }
 }
