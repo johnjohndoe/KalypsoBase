@@ -38,8 +38,6 @@ package org.kalypsodeegree_impl.graphics.displayelements;
 import java.awt.Color;
 
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
-import org.kalypsodeegree_impl.graphics.sld.awt.FillPainter;
-import org.kalypsodeegree_impl.graphics.sld.awt.StrokePainter;
 
 /**
  * Interface for color model used in the elevation visualization
@@ -56,6 +54,10 @@ public interface IElevationColorModel
    */
   Color getColor( double elevation );
 
+  ElevationColorEntry getColorEntry( double elevation );
+
+  ElevationColorEntry[] getColorEntries( );
+
   /**
    * To set a new min and max elevation for the color model
    *
@@ -69,18 +71,6 @@ public interface IElevationColorModel
    * @return an {@link Color} for the given elevation
    */
   double[] getElevationMinMax( );
-
-  double getDiscretisationInterval( );
-
-  int getNumOfClasses( );
-
-  double getFrom( int currentClass );
-
-  double getTo( int currentClass );
-
-  StrokePainter getLinePainter( int currentClass );
-
-  FillPainter getFillPolygonPainter( int currentClass );
 
   void setProjection( GeoTransform projection );
 }

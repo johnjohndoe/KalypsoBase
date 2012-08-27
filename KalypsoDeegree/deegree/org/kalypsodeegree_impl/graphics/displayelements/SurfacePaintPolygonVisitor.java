@@ -37,15 +37,10 @@ package org.kalypsodeegree_impl.graphics.displayelements;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.util.Arrays;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
-import org.kalypsodeegree_impl.graphics.sld.awt.FillPainter;
-import org.kalypsodeegree_impl.graphics.sld.awt.StrokePainter;
 
 /**
  * TODO: adapt this code for planar polygons (at least quadrilaterals) -> no: instead wrap the visitor, so it iterates
@@ -76,29 +71,8 @@ public class SurfacePaintPolygonVisitor implements ISurfacePatchVisitor<GM_Trian
 
   private void paintTriangle( final GM_Triangle polygon )
   {
-    final int numOfClasses = m_colorModel.getNumOfClasses();
-
     final GM_Position[] positions = polygon.getExteriorRing();
-    final GM_Position[] copyOf = Arrays.copyOf( positions, positions.length );
-    ArrayUtils.reverse( copyOf );
 
-    /* loop over all classes */
-    for( int currentClass = 0; currentClass < numOfClasses; currentClass++ )
-    {
-      final double startValue = m_colorModel.getFrom( currentClass );
-      final double endValue = m_colorModel.getTo( currentClass );
-
-      final StrokePainter strokePainter = m_colorModel.getLinePainter( currentClass );
-      final FillPainter fillPainter = m_colorModel.getFillPolygonPainter( currentClass );
-      final GeoTransform world2Screen = fillPainter.getWorld2Screen();
-
-      m_painter.paint( copyOf, startValue, endValue, strokePainter, fillPainter, world2Screen );
-    }
-
-    // DEBUG:
-    // final StrokePainter strokePainter = m_colorModel.getLinePainter( 0 );
-    // final FillPainter fillPainter = m_colorModel.getFillPolygonPainter( 0 );
-    // final GeoTransform world2Screen = fillPainter.getWorld2Screen();
-    // m_painter.paintTriangle( positions, strokePainter, fillPainter, world2Screen );
+    m_painter.paint( positions, m_colorModel );
   }
 }

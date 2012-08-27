@@ -47,7 +47,7 @@ import org.kalypsodeegree_impl.graphics.sld.awt.StrokePainter;
 /**
  * @author Thomasd Jung
  */
-public class ColorMapConverterData
+public class ElevationColorEntry
 {
   private final String m_label;
 
@@ -63,7 +63,7 @@ public class ColorMapConverterData
 
   private final FillPainter m_polygonPainter;
 
-  public ColorMapConverterData( final Stroke stroke, final Feature feature, final UOM uom, final GeoTransform projection, final String label, final double quantity ) throws FilterEvaluationException
+  public ElevationColorEntry( final Stroke stroke, final Feature feature, final UOM uom, final GeoTransform projection, final String label, final double quantity ) throws FilterEvaluationException
   {
     m_label = label;
     m_quantity = quantity;
@@ -72,7 +72,7 @@ public class ColorMapConverterData
     m_linePainter = new StrokePainter( stroke, feature, uom, projection );
   }
 
-  public ColorMapConverterData( final Fill fill, final Stroke stroke, final Feature feature, final UOM uom, final GeoTransform projection, final String label, final double from, final double to ) throws FilterEvaluationException
+  public ElevationColorEntry( final Fill fill, final Stroke stroke, final Feature feature, final UOM uom, final GeoTransform projection, final String label, final double from, final double to ) throws FilterEvaluationException
   {
     m_label = label;
     m_from = from;

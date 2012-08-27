@@ -75,10 +75,36 @@ final class TrianglePainter
     m_gc = gc;
   }
 
+  public void paint( final GM_Position[] positions, final IElevationColorModel colorModel )
+  {
+    final ElevationColorEntry[] entries = colorModel.getColorEntries();
+
+    /* loop over all classes */
+    for( final ElevationColorEntry entry : entries )
+      paint( positions, entry );
+
+    // DEBUG:
+// try
+// {
+// final Stroke black = StyleFactory.createStroke( new Color( 0, 0, 0 ), 2 );
+// final StrokePainter strokePainter = new StrokePainter( black, null, null, null );
+//
+// final FillPainter fillPainter = m_colorModel.getFillPolygonPainter( 0 );
+// final GeoTransform world2Screen = fillPainter.getWorld2Screen();
+// m_painter.paintTriangle( positions, strokePainter, fillPainter, world2Screen );
+// }
+// catch( final FilterEvaluationException e )
+// {
+// // TODO Auto-generated catch block
+// e.printStackTrace();
+// }
+
+  }
+
   /**
    * For debug pruposes: paint the whole triangle
    */
-  public void paintTriangle( final GM_Position[] positions, final StrokePainter strokePainter, final FillPainter fillPainter, final GeoTransform world2Screen )
+  private void paintTriangle( final GM_Position[] positions, final StrokePainter strokePainter, final FillPainter fillPainter, final GeoTransform world2Screen )
   {
     try
     {
@@ -90,11 +116,22 @@ final class TrianglePainter
     }
   }
 
-  public void paint( final GM_Position[] positions, final double startValue, final double endValue, final StrokePainter strokePainter, final FillPainter fillPainter, final GeoTransform world2Screen )
+  private void paint( final GM_Position[] positions, final ElevationColorEntry entry )
   {
+    final double startValue = entry.getFrom();
+    final double endValue = entry.getTo();
+
+    final StrokePainter strokePainter = entry.getLinePainter();
+    final FillPainter fillPainter = entry.getPolygonPainter();
+
+    final GeoTransform world2Screen = fillPainter.getWorld2Screen();
+
     final GM_Position[] figure = calculateFigure( positions, startValue, endValue );
     if( figure == null )
       return;
+
+// final String join = StringUtils.join( figure, " - " );
+// System.out.println( join );
 
     // TODO: check if current surface is too small (i.e. < stroke.width) and if this is the case
     // only draw a point with that color or something similar
@@ -170,7 +207,7 @@ final class TrianglePainter
       /*
        * Knoten 1 liegt innnerhalb, Knoten 2 liegt oberhalb Knoten 1.z < Knoten 2.z des aktuell betrachteten Intervalls
        */
-      else if( startValue <= z1 && z1 < endValue && endValue <= z2 )
+      if( startValue <= z1 && z1 <= endValue && endValue <= z2 )
       {
         posList.add( GeometryFactory.createGM_Position( x1, y1, z1 ) );
 
@@ -183,7 +220,7 @@ final class TrianglePainter
       /*
        * Knoten 1 liegt unterhalb, Knoten 2 liegt oberhalb Knoten 1.z < Knoten 2.z des aktuell betrachteten Intervalls
        */
-      else if( z1 < startValue && startValue < z2 && z1 < endValue && endValue < z2 )
+      if( z1 <= startValue && startValue < z2 && z1 <= endValue && endValue <= z2 )
       {
         final double xA = x1 + (x2 - x1) * (startValue - z1) / (z2 - z1);
         final double yA = y1 + (y2 - y1) * (startValue - z1) / (z2 - z1);
@@ -199,7 +236,7 @@ final class TrianglePainter
       /*
        * Knoten 1 liegt unterhalb, Knoten 2 liegt innerhalb Knoten 1.z < Knoten 2.z des aktuell betrachteten Intervalls
        */
-      else if( z1 <= startValue && startValue < z2 && z2 <= endValue )
+      if( z1 <= startValue && startValue <= z2 && z2 <= endValue )
       {
         final double x = x1 + (x2 - x1) * (startValue - z1) / (z2 - z1);
         final double y = y1 + (y2 - y1) * (startValue - z1) / (z2 - z1);
@@ -212,7 +249,7 @@ final class TrianglePainter
       /*
        * Knoten 1 liegt innerhalb, Knoten 2 liegt innerhalb Knoten 1.z < Knoten 2.z des aktuell betrachteten Intervalls
        */
-      else if( startValue <= z1 && z2 <= endValue && z1 < z2 )
+      if( startValue <= z1 && z2 <= endValue && z1 < z2 )
       {
         posList.add( GeometryFactory.createGM_Position( x1, y1, z1 ) );
 
@@ -222,7 +259,7 @@ final class TrianglePainter
       /*
        * Knoten 1 liegt oberhalb, Knoten 2 liegt innerhalb Knoten 1.z < Knoten 2.z des aktuell betrachteten Intervalls
        */
-      else if( startValue <= z2 && z2 < endValue && endValue <= z1 )
+      if( startValue <= z2 && z2 <= endValue && endValue <= z1 )
       {
         final double x = x1 + (x2 - x1) * (endValue - z1) / (z2 - z1);
         final double y = y1 + (y2 - y1) * (endValue - z1) / (z2 - z1);
@@ -235,7 +272,7 @@ final class TrianglePainter
       /*
        * Knoten 1 liegt innerhalb, Knoten 2 liegt unterhalb Knoten 1.z > Knoten 2.z des aktuell betrachteten Intervalls
        */
-      else if( z2 < startValue && startValue < z1 && z2 < endValue && endValue < z1 )
+      if( z2 <= startValue && startValue <= z1 && z2 <= endValue && endValue <= z1 )
       {
         final double xA = x1 + (x2 - x1) * (endValue - z1) / (z2 - z1);
         final double yA = y1 + (y2 - y1) * (endValue - z1) / (z2 - z1);
@@ -251,7 +288,7 @@ final class TrianglePainter
       /*
        * Knoten 1 liegt innerhalb, Knoten 2 liegt unterhalb Knoten 1.z > Knoten 2.z des aktuell betrachteten Intervalls
        */
-      else if( z2 <= startValue && startValue < z1 && z1 <= endValue )
+      if( z2 <= startValue && startValue <= z1 && z1 <= endValue )
       {
         posList.add( GeometryFactory.createGM_Position( x1, y1, z1 ) );
 
@@ -264,7 +301,7 @@ final class TrianglePainter
       /*
        * Knoten 1 liegt innerhalb, Knoten 2 liegt innerhalb Knoten 2.z > Knoten 1.z des aktuell betrachteten Intervalls
        */
-      else if( startValue <= z2 && z1 <= endValue && z2 < z1 )
+      if( startValue <= z2 && z1 <= endValue && z2 < z1 )
       {
         posList.add( GeometryFactory.createGM_Position( x1, y1, z1 ) );
 
