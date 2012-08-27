@@ -44,10 +44,6 @@ import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 
-import com.vividsolutions.jts.algorithm.SimplePointInRing;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.LinearRing;
-
 /**
  * @author Gernot Belger
  */
@@ -90,10 +86,19 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
   @Override
   public boolean contains( final GM_Position position )
   {
-    final LinearRing exterior = JTSAdapter.exportAsRing( getExteriorRing() );
-    final SimplePointInRing pir = new SimplePointInRing( exterior );
+    // REMARK: directly computing 'isInside' for performance reasons. jts PointInRing is actually slower (because for
+    // arbitrary polygons) and more memory consuming.
 
-    return pir.isInside( new Coordinate( position.getX(), position.getY() ) );
+    final GM_Position[] exteriorRing = getExteriorRing();
+    final GM_Position c0 = exteriorRing[0];
+    final GM_Position c1 = exteriorRing[1];
+    final GM_Position c2 = exteriorRing[2];
+
+    final int a1 = orientation( c0, c1, position );
+    final int a2 = orientation( c1, c2, position );
+    final int a3 = orientation( c2, c0, position );
+
+    return (a1 == a2) && (a2 == a3);
   }
 
   // FIXME: JTS!
@@ -104,9 +109,9 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
   }
 
   // FIXME: JTS!
-  private static double signedArea( final GM_Position pos1, final GM_Position pos2, final GM_Position pos3 )
+  private static double signedArea( final GM_Position a, final GM_Position b, final GM_Position c )
   {
-    return (pos1.getX() * (pos2.getY() - pos3.getY()) + pos2.getX() * (pos3.getY() - pos1.getY()) + pos3.getX() * (pos1.getY() - pos2.getY()));
+    return ((c.getX() - a.getX()) * (b.getY() - a.getY()) - (b.getX() - a.getX()) * (c.getY() - a.getY())) / 2;
   }
 
   @Override
