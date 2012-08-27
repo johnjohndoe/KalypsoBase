@@ -141,7 +141,7 @@ public class TriangulatedSurfacePolygonDisplayElement extends DisplayElement_Imp
 
         final double value = m_surface.getElevation( GeometryFactory.createGM_Point( sourceX, sourceY, srs ) );
         final Color color = m_colorModel.getColor( value );
-        final int rgb = color.getRGB();
+        final int rgb = color == null ? 0 : color.getRGB();
 
         /* Paint pixel in given color */
         for( int i = 0; i < p; i++ )
@@ -153,10 +153,7 @@ public class TriangulatedSurfacePolygonDisplayElement extends DisplayElement_Imp
 
             if( xP < width && yP < height )
             {
-              if( color != null )
-                buffer.setRGB( xP, yP, rgb );
-              else
-                buffer.setRGB( xP, yP, 0 );
+              buffer.setRGB( xP, yP, rgb );
             }
           }
         }
