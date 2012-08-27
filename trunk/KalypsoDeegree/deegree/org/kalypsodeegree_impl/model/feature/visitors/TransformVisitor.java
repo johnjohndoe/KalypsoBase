@@ -142,7 +142,8 @@ public class TransformVisitor implements FeatureVisitor
   {
     final GM_Object object = (GM_Object) f.getProperty( ftp );
     final GM_Object transformedGeom = transformProperty( object );
-    f.setProperty( ftp, transformedGeom );
+    if( object != transformedGeom )
+      f.setProperty( ftp, transformedGeom );
 
     return object != transformedGeom;
   }
