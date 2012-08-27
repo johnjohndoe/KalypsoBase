@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -41,7 +41,7 @@ package org.kalypsodeegree.graphics.displayelements;
  * {@link org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory#buildDisplayElement(org.kalypsodeegree.model.feature.Feature, org.kalypsodeegree.graphics.sld.Symbolizer, org.kalypsodeegree.model.feature.GMLWorkspace)}
  * in association with the adapter framework to automaticaly decorate the configured display element with a feature
  * specific display element
- * 
+ *
  * @author Patrice Congo
  * @see DisplayElement
  * @see org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory
@@ -50,16 +50,9 @@ public interface DisplayElementDecorator extends DisplayElement
 {
   /**
    * Sets the display to decorate
-   * 
+   *
    * @param decorated
    *          the display to decorate
    */
-  public void setDecorated( DisplayElement decorated );
-
-  /**
-   * To get the {@link DisplayElement} which is being decorated
-   * 
-   * @return the decorated display element
-   */
-  public DisplayElement getDecorated( );
+  void setDecorated( DisplayElement decorated );
 }
