@@ -37,6 +37,7 @@ import de.openali.odysseus.chart.framework.model.style.IStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
+import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
 /**
  * @author alibu
@@ -345,7 +346,7 @@ public abstract class AbstractChartLayer implements IChartLayer
    * Default implementation does nothing.
    */
   @Override
-  public void paint( final GC gc, final IProgressMonitor monitor )
+  public void paint( final GC gc, ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
   }
 

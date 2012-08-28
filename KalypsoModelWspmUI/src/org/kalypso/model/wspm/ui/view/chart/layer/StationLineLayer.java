@@ -53,6 +53,7 @@ import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
 /**
  * @author kimwerner
@@ -91,7 +92,7 @@ public class StationLineLayer extends ComponentLayer
   }
 
   @Override
-  public void paint( final GC gc, final IProgressMonitor monitor )
+  public void paint( final GC gc,final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
     final IProfil profil = getProfil();
 

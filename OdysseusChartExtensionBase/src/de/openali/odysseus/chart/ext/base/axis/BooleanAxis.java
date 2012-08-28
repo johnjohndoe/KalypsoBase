@@ -65,7 +65,7 @@ public class BooleanAxis extends AbstractAxis
   private int normalizedToScreen( final double normValue )
   {
     final int range = getScreenHeight();
-    return (int) (range * (isInverted() ? 1 - normValue : normValue));
+    return getScreenOffset() + (int) (range * (isInverted() ? 1 - normValue : normValue));
   }
 
   private double numericToNormalized( final Number value )
@@ -85,7 +85,7 @@ public class BooleanAxis extends AbstractAxis
 
   /**
    * Uses the widgets' complete extension to allocates the normalized value in correspondence to a screen value
-   *
+   * 
    * @see de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent#screenToNormalized(int)
    */
   private double screenToNormalized( final int screenValue )
@@ -93,7 +93,7 @@ public class BooleanAxis extends AbstractAxis
     final int range = getScreenHeight();
     if( range == 0 )
       return 0;
-    final double normValue = (double) screenValue / range;
+    final double normValue = (double) (screenValue - getScreenOffset()) / range;
     return isInverted() ? 1 - normValue : normValue;
   }
 

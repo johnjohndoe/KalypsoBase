@@ -10,7 +10,7 @@ import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 
 /**
  * logical and numerical range are identical;
- *
+ * 
  * @author burtscher Concrete IAxis implementation - to be used for numeric data
  */
 public class GenericLinearAxis extends AbstractAxis
@@ -56,7 +56,8 @@ public class GenericLinearAxis extends AbstractAxis
     final double screen = (range * (isInverted() ? 1 - normValue : normValue));
 
     // REMARK: using floor here, so all values are rounded to the same direction
-    return (int) Math.floor( screen );
+
+    return getScreenOffset() + (int) Math.floor( screen );
   }
 
   private double numericToNormalized( final Number value )
@@ -76,7 +77,7 @@ public class GenericLinearAxis extends AbstractAxis
 
   /**
    * Uses the widgets' complete extension to allocates the normalized value in correspondence to a screen value
-   *
+   * 
    * @see de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent#screenToNormalized(int)
    */
   private double screenToNormalized( final int screenValue )
@@ -84,7 +85,7 @@ public class GenericLinearAxis extends AbstractAxis
     final int range = getScreenHeight();
     if( range == 0 )
       return 0;
-    final double normValue = (double) screenValue / range;
+    final double normValue = (double) (screenValue-getScreenOffset()) / range;
     return isInverted() ? 1 - normValue : normValue;
   }
 

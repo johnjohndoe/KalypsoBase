@@ -19,6 +19,7 @@ import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
+import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
 /**
  * @author alibu
@@ -102,7 +103,7 @@ public abstract class AbstractBarLayer extends AbstractChartLayer implements ITo
   }
 
   @Override
-  public void paint( final GC gc, final IProgressMonitor monitor )
+  public void paint( final GC gc, ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
     final String taskName = String.format( "Painting %s", getTitle() );
     monitor.beginTask( taskName, 100 );

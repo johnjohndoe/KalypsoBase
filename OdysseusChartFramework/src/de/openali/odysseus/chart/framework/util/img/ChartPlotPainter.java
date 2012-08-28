@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.util.img;
 
-import java.awt.Insets;
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubProgressMonitor;
@@ -81,7 +79,7 @@ public class ChartPlotPainter
     return m_size;
   }
 
-  public void paint( final GC gc, final Insets plotInsets, final IProgressMonitor monitor )
+  public void paint( final GC gc, final ChartImageInfo chartIamgeInfo, final IProgressMonitor monitor )
   {
     final IChartLayer[] layers = getLayersForPaint();
 
@@ -93,15 +91,12 @@ public class ChartPlotPainter
 
     try
     {
-      transform.translate( plotInsets.left, plotInsets.top );
-      gc.setTransform( transform );
-
       monitor.beginTask( "Painting layers", layers.length );
 
       for( final IChartLayer layer : layers )
       {
         if( layer.isVisible() )
-          layer.paint( gc, new SubProgressMonitor( monitor, 1 ) );
+          layer.paint( gc, chartIamgeInfo, new SubProgressMonitor( monitor, 1 ) );
 
         if( monitor.isCanceled() )
           throw new OperationCanceledException();

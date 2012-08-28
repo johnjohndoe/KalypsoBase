@@ -62,6 +62,7 @@ import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
+import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
 /**
  * @author Dirk Kuch
@@ -86,7 +87,7 @@ public class ZmlSelectionLayer extends AbstractChartLayer
   }
 
   @Override
-  public void paint( final GC gc, final IProgressMonitor monitor )
+  public void paint( final GC gc, ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
     if( Objects.allNull( m_selection, m_selectedDateRange ) )
       return;

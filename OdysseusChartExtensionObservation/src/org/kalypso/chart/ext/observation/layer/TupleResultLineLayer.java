@@ -21,6 +21,7 @@ import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
+import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 
 public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipChartLayer
@@ -188,7 +189,7 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
   }
 
   @Override
-  public void paint( final GC gc, IProgressMonitor monitor )
+  public void paint( final GC gc, ChartImageInfo chartImageInfo, IProgressMonitor monitor )
   {
     final TupleResultDomainValueData< ? , ? > data = getValueData();
     if( data == null )

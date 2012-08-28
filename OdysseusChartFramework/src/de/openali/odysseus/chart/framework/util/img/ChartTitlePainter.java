@@ -155,6 +155,7 @@ public class ChartTitlePainter
 
   private Rectangle paint( final GC gc, final Rectangle boundsRect, final ALIGNMENT horizontal, final ALIGNMENT vertical )
   {
+    //TODO: hier für horizontalen und vertikalen Textoffset feste Pixel nehmen, die einzelnen TitleTypes können dann mit relativen offsets arbeiten.
     final int anchorX = boundsRect.x + (int) Math.ceil( boundsRect.width * horizontal.doubleValue() );
     int anchorY = boundsRect.y;// + (int) Math.ceil( boundsRect.height * vertical.doubleValue() );
     Rectangle usedRect = new Rectangle( anchorX, anchorY, 0, 0 );

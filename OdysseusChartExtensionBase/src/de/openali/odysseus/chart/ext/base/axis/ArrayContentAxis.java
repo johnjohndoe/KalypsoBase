@@ -37,7 +37,7 @@ public class ArrayContentAxis extends AbstractAxis
   public int numericToScreen( final Number value )
   {
     final int start = getNumericRange().getMin().intValue();
-    return (value.intValue() - start) * m_fixedWidth;
+    return getScreenOffset()+(value.intValue() - start) * m_fixedWidth;
   }
 
   public Object numericToContent( final int index )
@@ -51,6 +51,6 @@ public class ArrayContentAxis extends AbstractAxis
   public Number screenToNumeric( final int value )
   {
     // Todo: zurzeit nur intervallRendered mit festem Intervall, und 1. Tick bei screen =0
-    return Math.round( value / m_fixedWidth ) + getNumericRange().getMin().intValue();
+    return Math.round( (value-getScreenOffset()) / m_fixedWidth ) + getNumericRange().getMin().intValue();
   }
 }
