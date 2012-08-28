@@ -62,9 +62,6 @@ public class Polynomial1D extends Feature_Impl implements IPolynomial1D
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.util.math.IPolynom1D#computeResult(double)
-   */
   @Override
   public double computeResult( final double input )
   {
@@ -85,9 +82,6 @@ public class Polynomial1D extends Feature_Impl implements IPolynomial1D
     return result;
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.util.math.IPolynom1D#getCoefficients()
-   */
   @Override
   @SuppressWarnings("unchecked")
   public double[] getCoefficients( )
@@ -114,38 +108,40 @@ public class Polynomial1D extends Feature_Impl implements IPolynomial1D
     setProperty( QNAME_PROP_COEFFICIENTS, list );
   }
 
-  @Override
-  public boolean equals( final Object obj )
-  {
-    if( this == obj )
-    {
-      return true;
-    }
-    else if( obj instanceof IPolynomial1D )
-    {
-      final double thisCoefs[] = getCoefficients();
-      final double compCoefs[] = ((IPolynomial1D) obj).getCoefficients();
-      int i = thisCoefs.length;
-      if( i != compCoefs.length )
-      {
-        return false;
-      }
-      i--;// goto last element
-      for( ; i >= 0; i-- )
-      {
-        if( thisCoefs[i] != compCoefs[i] )
-        {
-          return false;
-        }
-      }
-      return true;
-
-    }
-    else
-    {
-      return false;// super.equals(obj);
-    }
-  }
+  // FIXME 1) overwriting equals of Feature's is forbidden -> break integrity of feature lists etc.
+  // FIXME 2) !! hashCode not overwritten as well !!
+// @Override
+// public boolean equals( final Object obj )
+// {
+// if( this == obj )
+// {
+// return true;
+// }
+// else if( obj instanceof IPolynomial1D )
+// {
+// final double thisCoefs[] = getCoefficients();
+// final double compCoefs[] = ((IPolynomial1D) obj).getCoefficients();
+// int i = thisCoefs.length;
+// if( i != compCoefs.length )
+// {
+// return false;
+// }
+// i--;// goto last element
+// for( ; i >= 0; i-- )
+// {
+// if( thisCoefs[i] != compCoefs[i] )
+// {
+// return false;
+// }
+// }
+// return true;
+//
+// }
+// else
+// {
+// return false;// super.equals(obj);
+// }
+// }
 
   @Override
   public String toString( )
@@ -169,9 +165,6 @@ public class Polynomial1D extends Feature_Impl implements IPolynomial1D
     return buf.toString();
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.gml.binding.math.IPolynomial#checkConsistency()
-   */
   @Override
   public PolynomialConfigState checkConsistency( )
   {
@@ -179,9 +172,6 @@ public class Polynomial1D extends Feature_Impl implements IPolynomial1D
     return PolynomialConfigState.CONSISTENCY_OK;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D#getRangeMin()
-   */
   @Override
   public double getRangeMin( )
   {
@@ -192,9 +182,6 @@ public class Polynomial1D extends Feature_Impl implements IPolynomial1D
     return property;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D#getRangeMax()
-   */
   @Override
   public double getRangeMax( )
   {
@@ -205,9 +192,6 @@ public class Polynomial1D extends Feature_Impl implements IPolynomial1D
     return property;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D#setRange(double, double)
-   */
   @Override
   public void setRange( final double from, final double to )
   {
@@ -215,9 +199,6 @@ public class Polynomial1D extends Feature_Impl implements IPolynomial1D
     setProperty( QNAME_PROP_MAXRANGE, Double.isNaN( to ) ? null : to );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D#setDomainPhenomenon(java.lang.String)
-   */
   @Override
   public void setDomainPhenomenon( final String domainId )
   {
@@ -226,9 +207,6 @@ public class Polynomial1D extends Feature_Impl implements IPolynomial1D
     setProperty( QNAME_PROP_DOMAIN_PHENOMENON, ref );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D#setRangePhenomenon(java.lang.String)
-   */
   @Override
   public void setRangePhenomenon( final String rangeId )
   {
@@ -245,9 +223,6 @@ public class Polynomial1D extends Feature_Impl implements IPolynomial1D
     return FeatureFactory.createXLink( this, relation, featureType, domainId );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D#getDomainPhenomenon()
-   */
   @Override
   public String getDomainPhenomenon( )
   {
@@ -256,9 +231,6 @@ public class Polynomial1D extends Feature_Impl implements IPolynomial1D
     return propertyToId( property );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.gml.binding.math.IPolynomial1D#getRangePhenomenon()
-   */
   @Override
   public String getRangePhenomenon( )
   {
@@ -280,5 +252,4 @@ public class Polynomial1D extends Feature_Impl implements IPolynomial1D
 
     return property.toString();
   }
-
 }
