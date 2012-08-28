@@ -71,6 +71,8 @@ public interface IWidget extends MouseListener, MouseMotionListener, MouseWheelL
   // FIXME: this is the tooltip of the widget button, NOT intended to be used for the tooltip rendered inside the map!
   String getToolTip( );
 
+  IMapPanel getMapPanel( );
+
   // KeyEvents
   void keyPressed( KeyEvent e );
 
