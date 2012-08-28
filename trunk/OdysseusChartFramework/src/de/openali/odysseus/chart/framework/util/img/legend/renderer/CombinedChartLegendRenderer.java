@@ -60,6 +60,10 @@ public class CombinedChartLegendRenderer implements IChartLegendRenderer
   @Override
   public Image createImage( final IChartLegendCanvas canvas, final IChartLegendConfig config )
   {
+    if( m_lastRenderer == null )
+    {
+      return null;
+    }
     return m_lastRenderer.createImage( canvas, config );
   }
 

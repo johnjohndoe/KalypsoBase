@@ -65,6 +65,7 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
+import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
 /**
  * @author Dirk Kuch
@@ -102,7 +103,7 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
   }
 
   @Override
-  public void paint( final GC gc, final IProgressMonitor monitor )
+  public void paint( final GC gc, ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
     if( m_provider == null )
       return;

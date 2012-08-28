@@ -19,6 +19,7 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
+import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
 /**
  * @author alibu visualization of precipitation data as bar chart; The following configuration parameters are needed for
@@ -202,7 +203,7 @@ public class GridLayer extends AbstractChartLayer
    *      org.eclipse.swt.graphics.Device)
    */
   @Override
-  public void paint( final GC gc, IProgressMonitor monitor )
+  public void paint( final GC gc, ChartImageInfo chartImageInfo, IProgressMonitor monitor )
   {
 
     gc.setLineWidth( 5 );

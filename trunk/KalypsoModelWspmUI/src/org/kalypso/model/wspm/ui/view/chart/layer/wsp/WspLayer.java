@@ -71,6 +71,7 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
+import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
 /**
  * Displays constant wsp lines in the cross section.
@@ -213,7 +214,7 @@ public class WspLayer extends AbstractProfilTheme
   }
 
   @Override
-  public void paint( final GC gc, final IProgressMonitor monitor )
+  public void paint( final GC gc, ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
     final ILineStyle lineStyle = getLineStyle();
 

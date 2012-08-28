@@ -63,6 +63,7 @@ import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListene
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
+import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
 /**
  * ensures a specific domain date range for a chart diagram
@@ -110,7 +111,7 @@ public class ZmlDateRangeLayer extends AbstractChartLayer implements IZmlLayer
   }
 
   @Override
-  public void paint( final GC gc, final IProgressMonitor monitor )
+  public void paint( final GC gc, ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
     // nothing to do
   }

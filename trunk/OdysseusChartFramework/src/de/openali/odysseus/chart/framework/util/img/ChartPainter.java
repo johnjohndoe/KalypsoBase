@@ -41,8 +41,6 @@
 package de.openali.odysseus.chart.framework.util.img;
 
 import java.awt.Insets;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -63,7 +61,6 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
 import de.openali.odysseus.chart.framework.util.img.legend.ChartLegendCanvas;
 import de.openali.odysseus.chart.framework.util.img.legend.config.DefaultChartLegendConfig;
@@ -79,27 +76,6 @@ public class ChartPainter
 
   public static final String PLOT_INSETS = "PLOT_INSETS"; //$NON-NLS-1$
 
-  private final ChartLegendCanvas m_legendPainter;
-
-  private final Image m_image;
-
-  private final ChartTitlePainter m_titlePainter;
-
-  private final Rectangle m_paintRect;
-
-  public static ImageData createChartImageData( final IChartModel model, final Rectangle size, final IProgressMonitor monitor )
-  {
-    final Image image = createChartImage( model, size, monitor );
-    try
-    {
-      return image.getImageData();
-    }
-    finally
-    {
-      image.dispose();
-    }
-  }
-
   public static Image createChartImage( final IChartModel model, final Rectangle size, final IProgressMonitor monitor )
   {
     if( size.width == 0 || size.height == 0 )
@@ -114,6 +90,27 @@ public class ChartPainter
     return image;
   }
 
+  public static ImageData createChartImageData( final IChartModel model, final Rectangle size, final IProgressMonitor monitor )
+  {
+    final Image image = createChartImage( model, size, monitor );
+    try
+    {
+      return image.getImageData();
+    }
+    finally
+    {
+      image.dispose();
+    }
+  }
+
+  private final ChartLegendCanvas m_legendPainter;
+
+  private final Image m_image;
+
+  private final ChartTitlePainter m_titlePainter;
+
+  private final Rectangle m_paintRect;
+
   public ChartPainter( final IChartModel model, final Image image )
   {
     m_model = model;
@@ -127,123 +124,55 @@ public class ChartPainter
     m_legendPainter = new ChartLegendCanvas( m_model, new DefaultChartLegendConfig( m_paintRect ) );
   }
 
-  public final IStatus paintImage( final IProgressMonitor monitor )
+  private final Rectangle calculateAxisBottomRect( final Rectangle usableRect )
   {
-    final Insets plotFrameInsets = getPlotFrameInsets();
-
-    final Insets plotInsets = getPlotInsets();
-    setAxesHeight( plotInsets, m_paintRect );
-
-    if( monitor.isCanceled() )
-      return Status.CANCEL_STATUS;
-
-    Image legendImage = null;
-
-    final GC gc = new GC( m_image );
-    try
-    {
-      gc.setAntialias( SWT.ON );
-      gc.setTextAntialias( SWT.ON );
-      gc.setAdvanced( true );
-
-      final Point titleSize = m_titlePainter.getSize( m_paintRect.width );
-      m_titlePainter.paint( gc, new Rectangle( m_paintRect.x, m_paintRect.y, m_paintRect.width, titleSize.y ) );
-
-      if( monitor.isCanceled() )
-        return Status.CANCEL_STATUS;
-
-      // paint left Axes
-
-      // FIXME: axis position are highly dubious: plotFrameInsets are already a part of the plotInsets, why subtract
-      // now?
-
-      paintAxes( POSITION.LEFT, gc, plotInsets.left - plotFrameInsets.left, plotInsets.top - plotFrameInsets.top, plotInsets.top, m_paintRect.height - plotInsets.top - plotInsets.bottom, 90, false );
-      if( monitor.isCanceled() )
-        return Status.CANCEL_STATUS;
-
-      // paint right Axes
-      paintAxes( POSITION.RIGHT, gc, m_paintRect.width - plotInsets.right + plotFrameInsets.right, plotInsets.top, plotInsets.top, m_paintRect.height - plotInsets.top, 90, true );
-      if( monitor.isCanceled() )
-        return Status.CANCEL_STATUS;
-
-      // paint top Axes
-      paintAxes( POSITION.TOP, gc, plotInsets.left, plotInsets.top, plotInsets.left, m_paintRect.width, 0, true );
-      if( monitor.isCanceled() )
-        return Status.CANCEL_STATUS;
-
-      // paint bottom Axes
-      paintAxes( POSITION.BOTTOM, gc, plotInsets.left, m_paintRect.height - plotInsets.bottom + plotFrameInsets.bottom, plotInsets.left, m_paintRect.width - plotInsets.left, 0, false );
-      if( monitor.isCanceled() )
-        return Status.CANCEL_STATUS;
-
-      // paint plot
-      legendImage = m_legendPainter.createImage();
-      if( legendImage != null )
-        gc.drawImage( legendImage, m_paintRect.x, m_paintRect.y + m_paintRect.height - m_legendPainter.getSize().height );
-
-      if( monitor.isCanceled() )
-        return Status.CANCEL_STATUS;
-
-      final Rectangle plotRect = RectangleUtils.createInnerRectangle( m_paintRect.width, m_paintRect.height, plotInsets );
-      // Layer könnten sonst in die Achsen zeichnen
-      paintFrameRect( gc, RectangleUtils.bufferRect( plotRect, plotFrameInsets ) );
-      gc.setClipping( plotRect );
-
-      final ChartPlotPainter plotPainter = new ChartPlotPainter( m_model, new Point( m_paintRect.width, m_paintRect.height ) );
-      plotPainter.paint( gc, plotInsets, monitor );
-
-      return Status.OK_STATUS;
-    }
-    catch( final OperationCanceledException e )
-    {
-      return Status.CANCEL_STATUS;
-    }
-    finally
-    {
-      if( legendImage != null )
-        legendImage.dispose();
-
-      gc.dispose();
-    }
+    int totalWidth = getAxisWidth( POSITION.BOTTOM );
+    return new Rectangle( usableRect.x, usableRect.y + usableRect.height - totalWidth, usableRect.width, totalWidth );
   }
 
-  private ChartPlotFrame getPlotFrame( )
+  private final Rectangle calculateAxisLeftRect( final Rectangle usableRect )
   {
-    return m_model.getSettings().getPlotFrame();
+    int totalWidth = getAxisWidth( POSITION.LEFT );
+    return new Rectangle( usableRect.x, usableRect.y, totalWidth, usableRect.height );
   }
 
-  private void paintFrameRect( final GC gc, final Rectangle rect )
+  private final Rectangle calculateAxisRightRect( final Rectangle usableRect )
   {
-    getPlotFrame().paint( gc, rect );
-
+    int totalWidth = getAxisWidth( POSITION.RIGHT );
+    return new Rectangle( usableRect.x + usableRect.width - totalWidth, usableRect.y, totalWidth, usableRect.height );
   }
 
-  private int getAxesWidth( final IAxis[] axes )
+  private final Rectangle calculateAxisTopRect( final Rectangle usableRect )
   {
-    int width = 0; /* pixel */
-
-    for( final IAxis axis : axes )
-    {
-      if( axis.isVisible() )
-      {
-        final IAxisRenderer renderer = axis.getRenderer();
-        width += renderer.getAxisWidth( axis );
-      }
-    }
-    return width;
+    int totalWidth = getAxisWidth( POSITION.TOP );
+    return new Rectangle( usableRect.x, usableRect.y, usableRect.width, totalWidth );
   }
 
-  private ILineStyle getStyleFromAxes( final IAxis[] axes )
+  private final Rectangle calculateLegendRect( final Rectangle chartRect, final Image legendImage )
   {
+    final int legendHeight = legendImage == null ? 0 : legendImage.getBounds().height;
+    return new Rectangle( chartRect.x, chartRect.y + chartRect.height - legendHeight, chartRect.width, legendHeight );
+  }
+
+  private final Rectangle calculateTitleRect( final Rectangle chartRect )
+  {
+    final Point titleSize = m_titlePainter.getSize( m_paintRect.width );
+    return new Rectangle( chartRect.x, chartRect.y, titleSize.x, titleSize.y );
+  }
+
+  private final int getAxisWidth( final POSITION position )
+  {
+    final IAxis[] axes = m_model.getMapperRegistry().getAxesAt( position );
+    int totalWidth = 0;
     for( final IAxis axis : axes )
     {
       final IAxisRenderer renderer = axis.getRenderer();
-      if( renderer != null && axis.isVisible() )
+      if( renderer != null )
       {
-        return renderer.getLineStyle();
+        totalWidth = +renderer.getAxisWidth( axis );
       }
     }
-    return null;
+    return totalWidth;
   }
 
   private final Insets getChartInsets( )
@@ -251,7 +180,7 @@ public class ChartPainter
     final Insets insets = m_model.getSettings().getInsets( CHART_INSETS );
     if( insets == null )
     {
-      return new Insets( 3, 3, 3, 3 );
+      return new Insets( 0, 0, 0, 0 );
     }
     return insets;
   }
@@ -266,35 +195,13 @@ public class ChartPainter
     return insets;
   }
 
+  /**
+   * @deprecated will always return (0,0,0,0), use ChartImageInfo instead
+   */
+  @Deprecated
   public final Insets getPlotInsets( )
   {
-    final Insets plotFrameInsets = getPlotFrameInsets();
-
-    final Map<POSITION, Integer> insets = new HashMap<POSITION, Integer>();
-    insets.put( POSITION.TOP, plotFrameInsets.top + m_titlePainter.getSize( m_paintRect.width ).y + getAxesWidth( m_model.getMapperRegistry().getAxesAt( POSITION.TOP ) ) );
-    insets.put( POSITION.BOTTOM, plotFrameInsets.bottom + m_legendPainter.getSize().height + getAxesWidth( m_model.getMapperRegistry().getAxesAt( POSITION.BOTTOM ) ) );
-    insets.put( POSITION.LEFT, plotFrameInsets.left + getAxesWidth( m_model.getMapperRegistry().getAxesAt( POSITION.LEFT ) ) );
-    insets.put( POSITION.RIGHT, plotFrameInsets.right + getAxesWidth( m_model.getMapperRegistry().getAxesAt( POSITION.RIGHT ) ) );
-
-    final ChartPlotFrame plotFrame = getPlotFrame();
-    for( final POSITION position : POSITION.values() )
-    {
-      final ILineStyle style = getStyleFromAxes( m_model.getMapperRegistry().getAxesAt( position ) );
-      if( style == null )
-      {
-        if( plotFrame.getFrameEdge( position ).getLineStyle().isVisible() )
-        {
-          plotFrame.getFrameEdge( position ).getLineStyle().setWidth( 1 );
-          insets.put( position, insets.get( position ) + 1 );
-        }
-      }
-      else
-      {
-        plotFrame.getFrameEdge( position ).setLineStyle( style );
-      }
-    }
-
-    return new Insets( insets.get( POSITION.TOP ), insets.get( POSITION.LEFT ), insets.get( POSITION.BOTTOM ), insets.get( POSITION.RIGHT ) );
+    return new Insets( 0, 0, 0, 0 );
   }
 
   private void paintAxes( final POSITION position, final GC gc, final int anchorX, final int anchorY, final int startOffset, final int screenWidth, final int rotation, final boolean invertVertical )
@@ -350,12 +257,101 @@ public class ChartPainter
     }
   }
 
-  private void setAxesHeight( final Insets plotInsets, final Rectangle size )
+  private void paintFrameRect( final GC gc, final Rectangle rect )
+  {
+    final int old = gc.getLineWidth();
+    gc.setLineWidth( 1 );
+    gc.drawRectangle( rect );
+    gc.setLineWidth( old );
+
+  }
+
+  public final IStatus paintImage( final IProgressMonitor monitor )
+  {
+    if( monitor.isCanceled() )
+      return Status.CANCEL_STATUS;
+
+    final Image legendImage = m_legendPainter.createImage();
+    final ChartImageInfo infoObject = new ChartImageInfo();
+
+    final GC gc = new GC( m_image );
+    try
+    {
+      gc.setAntialias( SWT.ON );
+      gc.setTextAntialias( SWT.ON );
+      gc.setAdvanced( true );
+
+      infoObject.setClientRect( m_paintRect );
+
+      final Insets plotInsets = getPlotFrameInsets();
+
+      final Rectangle titleRect = calculateTitleRect( m_paintRect );
+      infoObject.setTitleRect( titleRect );
+      final Rectangle legendRect = calculateLegendRect( m_paintRect, legendImage );
+      infoObject.setLegendRect( legendRect );
+      final Rectangle usableAxisRect = new Rectangle( m_paintRect.x, m_paintRect.y + titleRect.height, m_paintRect.width, m_paintRect.height - titleRect.height - legendRect.height );
+      final Rectangle axisTopRect = calculateAxisTopRect( usableAxisRect );
+      final Rectangle axisBottomRect = calculateAxisBottomRect( usableAxisRect );
+      final Rectangle axisLeftRect = calculateAxisLeftRect( usableAxisRect );
+      final Rectangle axisRightRect = calculateAxisRightRect( usableAxisRect );
+      infoObject.setAxisBottomRect( axisBottomRect );
+      infoObject.setAxisLeftRect( axisLeftRect );
+      infoObject.setAxisRightRect( axisRightRect );
+      infoObject.setAxisTopRect( axisTopRect );
+      final Rectangle plotRect = new Rectangle( usableAxisRect.x + axisLeftRect.width, usableAxisRect.y + axisTopRect.height, usableAxisRect.width - axisLeftRect.width - axisRightRect.width, usableAxisRect.height
+          - axisTopRect.height - axisBottomRect.height );
+      infoObject.setPlotRect( plotRect );
+      final Rectangle plotClientRect = RectangleUtils.inflateRect( plotRect, plotInsets );
+      infoObject.setLayerRect( plotClientRect );
+
+      this.setAxesHeight( plotClientRect, plotRect );
+
+      m_titlePainter.paint( gc, titleRect );
+      if( monitor.isCanceled() )
+        return Status.CANCEL_STATUS;
+      paintFrameRect( gc, plotRect );
+      paintAxes( POSITION.TOP, gc, plotRect.x, axisTopRect.y + axisTopRect.height, plotInsets.left, axisTopRect.width, 0, true );
+      if( monitor.isCanceled() )
+        return Status.CANCEL_STATUS;
+      paintAxes( POSITION.LEFT, gc, plotRect.x, axisLeftRect.y, plotInsets.top, axisLeftRect.height - axisTopRect.height - axisBottomRect.height, 90, false );
+      if( monitor.isCanceled() )
+        return Status.CANCEL_STATUS;
+      paintAxes( POSITION.RIGHT, gc, axisRightRect.x, axisRightRect.y, plotInsets.top, axisRightRect.height - axisTopRect.height - axisBottomRect.height, 90, true );
+      if( monitor.isCanceled() )
+        return Status.CANCEL_STATUS;
+      paintAxes( POSITION.BOTTOM, gc, plotRect.x, axisBottomRect.y, plotInsets.left, axisBottomRect.width - axisLeftRect.width - axisRightRect.width, 0, false );
+      if( monitor.isCanceled() )
+        return Status.CANCEL_STATUS;
+      if( legendImage != null )
+        gc.drawImage( legendImage, legendRect.x, legendRect.y );
+
+      // Layer könnten sonst in die Achsen zeichnen
+      gc.setClipping( plotClientRect );
+
+      final ChartPlotPainter plotPainter = new ChartPlotPainter( m_model, new Point( plotClientRect.width, plotClientRect.height ) );
+      plotPainter.paint( gc, infoObject, monitor );
+
+      return Status.OK_STATUS;
+    }
+    catch( final OperationCanceledException e )
+    {
+      return Status.CANCEL_STATUS;
+    }
+    finally
+    {
+      if( legendImage != null )
+        legendImage.dispose();
+
+      gc.dispose();
+    }
+  }
+
+  private void setAxesHeight( final Rectangle plotRect, final Rectangle size )
   {
     // FIXME: setting the screen height during repaint is very bad practice, because it triggers another repaint
 
-    final int axisWidth = size.width - plotInsets.left - plotInsets.right;
-    final int axisHeight = size.height - plotInsets.top - plotInsets.bottom;
+    final int axisWidth = size.width;// - plotInsets.left - plotInsets.right;
+    final int axisHeight = size.height;// - plotInsets.top - plotInsets.bottom;
 
     for( final IAxis axis : m_model.getMapperRegistry().getAxes() )
     {
@@ -363,11 +359,13 @@ public class ChartPainter
       switch( orientation )
       {
         case HORIZONTAL:
-          axis.setScreenHeight( axisWidth );
+          axis.setScreenOffset( plotRect.x, axisWidth );
+         // axis.setScreenHeight( axisWidth );
           break;
 
         case VERTICAL:
-          axis.setScreenHeight( axisHeight );
+          axis.setScreenOffset( plotRect.y, axisHeight );
+        //  axis.setScreenHeight( axisHeight );
           break;
       }
     }

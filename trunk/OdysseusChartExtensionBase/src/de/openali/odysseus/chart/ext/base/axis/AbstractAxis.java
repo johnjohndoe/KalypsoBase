@@ -32,6 +32,8 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
 
   private int m_height = 1;
 
+  private int m_offset = 0;
+
   private IDataRange<Number> m_activeRange = null;
 
   private final List<TitleTypeBean> m_axisLabels = new ArrayList<TitleTypeBean>();
@@ -140,6 +142,12 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     return m_height;
   }
 
+  @Override
+  public int getScreenOffset( )
+  {
+    return m_offset;
+  }
+
   protected boolean isInverted( )
   {
     if( getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
@@ -221,12 +229,20 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
   @Override
   public void setScreenHeight( final int height )
   {
-    if( m_height == height )
+    if( m_height == height )// && m_offset == offset )
       return;
-
     m_height = height;
 
     fireMapperChanged( this );
+  }
+
+  @Override
+  public void setScreenOffset( final int offset, final int axisHeight )
+  {
+    if( m_offset != offset )// && m_offset == offset )
+      m_offset = offset;
+    if( m_height != axisHeight )// && m_offset == offset )
+      m_height = axisHeight;
   }
 
   @Override

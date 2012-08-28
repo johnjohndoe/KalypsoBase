@@ -445,9 +445,13 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
       // rotate TextRectangle
       newTransform.rotate( m_titleBean.getRotation() );
       // mirror Text
-      newTransform.translate( fitRect.x + fitRect.width / 2, fitRect.y + fitRect.height / 2 );
-      newTransform.scale( m_titleBean.isMirrorHorizontal() ? -1 : 1, m_titleBean.isMirrorVertical() ? -1 : 1 );
-      newTransform.translate( -(fitRect.x + fitRect.width / 2), -(fitRect.y + fitRect.height / 2) );
+      if( m_titleBean.isMirrorHorizontal() || m_titleBean.isMirrorVertical() )
+      {
+        newTransform.translate( fitRect.x + fitRect.width / 2, fitRect.y + fitRect.height / 2 );
+        newTransform.scale( m_titleBean.isMirrorHorizontal() ? -1 : 1, m_titleBean.isMirrorVertical() ? -1 : 1 );
+        newTransform.translate( -(fitRect.x -1 + fitRect.width / 2), -(fitRect.y +1 + fitRect.height / 2) );
+      }
+
       gc.setTransform( newTransform );
       if( isImageURL( m_titleBean.getText() ) )
       {

@@ -48,6 +48,7 @@ import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
+import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 import de.openali.odysseus.chart.framework.util.img.GenericChartLabelRenderer;
 import de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
@@ -77,7 +78,7 @@ public class DefaultTextLayer extends AbstractChartLayer
   }
 
   @Override
-  public void paint( final GC gc, final IProgressMonitor monitor )
+  public void paint( final GC gc, ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
     final ICoordinateMapper cm = getCoordinateMapper();
     if( m_titleTypeBeans == null || m_labelRenderer == null || cm == null )

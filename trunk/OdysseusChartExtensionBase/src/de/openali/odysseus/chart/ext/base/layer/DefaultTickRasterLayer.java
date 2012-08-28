@@ -49,6 +49,7 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
+import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
 /**
  * @author kimwerner
@@ -84,7 +85,7 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
    */
   @Override
-  public void paint( final GC gc, IProgressMonitor monitor )
+  public void paint( final GC gc, ChartImageInfo chartImageInfo, IProgressMonitor monitor )
   {
     final IAxis targetAxis = getTargetAxis();
     final IAxis domainAxis = getDomainAxis();

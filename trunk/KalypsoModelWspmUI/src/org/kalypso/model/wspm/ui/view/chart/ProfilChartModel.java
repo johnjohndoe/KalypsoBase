@@ -40,6 +40,8 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart;
 
+import java.awt.Insets;
+
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.ProfilListenerAdapter;
@@ -50,6 +52,7 @@ import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.model.impl.ChartModelState;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
+import de.openali.odysseus.chart.framework.util.img.ChartPainter;
 
 /**
  * @author kimwerner
@@ -109,9 +112,11 @@ public class ProfilChartModel extends ChartModel
     {
       m_profil.addProfilListener( m_profilListener );
       m_layerProvider.registerAxis( getMapperRegistry() );
-      // getSettings().addTitles( ChartTitleTester.getTitleTypes() );
       updateLayers();
     }
+
+    this.getSettings().addInsets( ChartPainter.CHART_INSETS, new Insets( 10,0,10,0 ) );
+    this.getSettings().addInsets( ChartPainter.PLOT_INSETS, new Insets( 0,0,0,0 ) );
   }
 
   @Override

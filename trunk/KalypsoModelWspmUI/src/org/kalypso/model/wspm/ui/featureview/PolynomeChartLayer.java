@@ -57,6 +57,7 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
+import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
 /**
  * A chart layer which displays Polynomial1D's. <br/>>
@@ -86,7 +87,7 @@ public class PolynomeChartLayer extends AbstractLineLayer
   }
 
   @Override
-  public void paint( final GC gc, IProgressMonitor monitor )
+  public void paint( final GC gc, ChartImageInfo chartImageInfo, IProgressMonitor monitor )
   {
     final IDataRange<Number> domainRange = m_data.getDomainRange();
     final double min = (Double) domainRange.getMin();

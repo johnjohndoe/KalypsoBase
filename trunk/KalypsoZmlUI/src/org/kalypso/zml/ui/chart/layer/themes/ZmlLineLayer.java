@@ -78,6 +78,7 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.model.style.IStyleSetRefernceFilter;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
+import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 import de.openali.odysseus.chart.framework.util.resource.IPair;
 
 /**
@@ -190,7 +191,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   }
 
   @Override
-  public void paint( final GC gc, final IProgressMonitor monitor )
+  public void paint( final GC gc, ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
     try
     {

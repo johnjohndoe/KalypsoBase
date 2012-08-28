@@ -8,6 +8,7 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.event.IEventProvider;
 import de.openali.odysseus.chart.framework.model.event.ILayerEventListener;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
+import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
 /**
  * @author burtscher an IChartLayer represents a (visual) layer of the chart; it can be assigned to up to 2 axes to
@@ -67,7 +68,7 @@ public interface IChartLayer extends ILayerContainer, IEventProvider<ILayerEvent
   /**
    * draws the layer using the given GC and Device
    */
-  void paint( final GC gc, IProgressMonitor monitor );
+  void paint( final GC gc, ChartImageInfo chartImageInfo, IProgressMonitor monitor );
 
   void setActive( boolean isActive );
 

@@ -16,6 +16,7 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
+import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
 /**
  * @author alibu
@@ -31,7 +32,7 @@ public class DefaultLineLayer extends AbstractLineLayer
   }
 
   @Override
-  public void paint( final GC gc, IProgressMonitor monitor )
+  public void paint( final GC gc, ChartImageInfo chartImageInfo, IProgressMonitor monitor )
   {
     final ITabularDataContainer< ? , ? > dataContainer = getDataContainer();
     if( dataContainer == null )
