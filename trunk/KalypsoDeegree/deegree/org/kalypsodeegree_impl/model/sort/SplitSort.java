@@ -135,7 +135,7 @@ public class SplitSort implements FeatureList
   }
 
   /**
-   * Recreate the index, if it is <code>null</code>.
+   * Recreate the index, if it is <code>null</code>.<br/>
    */
   private synchronized void checkIndex( )
   {
@@ -161,6 +161,7 @@ public class SplitSort implements FeatureList
     final SplitSortItem invalidItem = m_items.get( index );
 
     final Rectangle newEnvelope = getEnvelope( invalidItem );
+
     final Rectangle oldEnvelope = invalidItem.getEnvelope();
 
     final boolean envelopeChanged = invalidItem.setEnvelope( newEnvelope );
@@ -259,7 +260,7 @@ public class SplitSort implements FeatureList
     /* really remove item and unregister it from all hashes */
     m_invalidIndices.remove( index );
 
-    // FIXME: check, what happens if object is contained in this list more than once?
+    // FIXME: check, what happens if object is contained in this list more than once? Is there a way to avoid this?
     m_itemIndex.remove( object );
 
     final Rectangle envelope = item.getEnvelope();
@@ -410,7 +411,6 @@ public class SplitSort implements FeatureList
 
     return true;
   }
-
 
   @Override
   public synchronized Object remove( final int index )
