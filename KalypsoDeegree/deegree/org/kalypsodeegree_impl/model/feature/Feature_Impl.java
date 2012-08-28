@@ -942,4 +942,16 @@ public class Feature_Impl extends PlatformObject implements Feature
 
     return -1;
   }
+
+  @Override
+  public final boolean equals( final Object obj )
+  {
+    return super.equals( obj );
+  }
+
+  @Override
+  public int hashCode( )
+  {
+    return super.hashCode();
+  }
 }
