@@ -114,7 +114,8 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
   @Override
   protected Object recalculateProperty( final QName property, final Object oldValue )
   {
-    setEnvelopesUpdated();
+    // REMARK/BUGFIX: invalidating the index here leads to dead lock inside of the SplitSort.
+    // setEnvelopesUpdated();
 
     if( property == PROPERTY_PSEUDO_PROFILE )
       return createProfile( (IProfil) oldValue );
@@ -471,7 +472,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
 
   /**
    * This function updates this profile with the data from the {@link IProfil} given.
-   * 
+   *
    * @param profile
    *          The {@link IProfil}.
    */
