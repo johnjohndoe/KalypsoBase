@@ -84,16 +84,23 @@ class GM_Triangle_Impl implements GM_Triangle
   @Override
   public double getValue( final GM_Position position )
   {
-    final double x = position.getX();
-    final double y = position.getY();
+    try
+    {
+      final double x = position.getX();
+      final double y = position.getY();
 
-    final Plane plane = new Plane();
-    final Point3d p0 = new Point3d( m_p1.getX(), m_p1.getY(), m_p1.getZ() );
-    final Point3d p1 = new Point3d( m_p2.getX(), m_p2.getY(), m_p2.getZ() );
-    final Point3d p2 = new Point3d( m_p3.getX(), m_p3.getY(), m_p3.getZ() );
-    plane.setPlane( p0, p1, p2 );
+      final Plane plane = new Plane();
+      final Point3d p0 = new Point3d( m_p1.getX(), m_p1.getY(), m_p1.getZ() );
+      final Point3d p1 = new Point3d( m_p2.getX(), m_p2.getY(), m_p2.getZ() );
+      final Point3d p2 = new Point3d( m_p3.getX(), m_p3.getY(), m_p3.getZ() );
+      plane.setPlane( p0, p1, p2 );
 
-    return plane.z( x, y );
+      return plane.z( x, y );
+    }
+    catch( final ArithmeticException e )
+    {
+      return Double.NaN;
+    }
   }
 
   @Override
