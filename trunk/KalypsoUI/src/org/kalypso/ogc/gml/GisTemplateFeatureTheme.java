@@ -102,7 +102,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  * Implementiert unter anderem {@link org.kalypso.commons.command.ICommandTarget}, da sich die Daten des unterliegenden
  * Themas ändern können
  * </p>
- * 
+ *
  * @author Gernot Belger
  */
 public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPoolListener, ICommandTarget, IKalypsoFeatureTheme, IKalypsoSaveableTheme, IKalypsoStyleListener
@@ -517,9 +517,6 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     return null;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeatureType()
-   */
   @Override
   public IFeatureType getFeatureType( )
   {
@@ -529,16 +526,15 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     return null;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoFeatureTheme#getFeaturePath()
-   */
   @Override
   public String getFeaturePath( )
   {
     if( m_theme != null )
       return m_theme.getFeaturePath();
 
-    return null;
+    // IMPORTANT/BUGFIX: return the (immutable) feature path, else the path will be erased in the gmt file if
+    // saved before inner theme is created.
+    return m_featurePath;
   }
 
   @Override
@@ -621,7 +617,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
   /**
    * This function returns the unmodified href. This href will be saved again to the map.
-   * 
+   *
    * @return The unmodified href. This href will be saved again to the map.
    */
   public String getHref( )
@@ -634,9 +630,6 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     return m_layerKey;
   }
 
-  /**
-   * @see org.kalypso.util.pool.IPoolListener#isDisposed()
-   */
   @Override
   public boolean isDisposed( )
   {
@@ -922,7 +915,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   {
     fireVisibilityChanged( newVisibility );
   }
-  
+
   @Override
   public boolean isDirty( )
   {
