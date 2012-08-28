@@ -185,7 +185,7 @@ public abstract class AbstractWidget implements IWidget
 
   /**
    * This function returns the parameter value for the given paramater key.
-   *
+   * 
    * @param key
    *          The parameter key.
    * @return The parameter value, or null, if the parameter does not exist.
@@ -205,7 +205,7 @@ public abstract class AbstractWidget implements IWidget
 
   /**
    * TODO: give World2Screen Transformation into paint method
-   *
+   * 
    * @see org.kalypso.ogc.gml.widgets.IWidget#paint(java.awt.Graphics)
    */
   @Override
@@ -228,6 +228,7 @@ public abstract class AbstractWidget implements IWidget
     }
   }
 
+  @Override
   public final IMapPanel getMapPanel( )
   {
     return m_mapPanel;
