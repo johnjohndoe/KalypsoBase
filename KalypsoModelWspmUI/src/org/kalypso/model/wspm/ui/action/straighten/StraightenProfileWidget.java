@@ -232,7 +232,9 @@ public class StraightenProfileWidget extends AbstractProfileWidget
     switch( keyCode )
     {
       case KeyEvent.VK_ESCAPE:
-        finish();
+        m_firstPoint = null;
+        m_secondPoint = null;
+        repaintMap();
         break;
     }
   }
