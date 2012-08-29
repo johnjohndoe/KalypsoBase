@@ -51,19 +51,12 @@ public class ConstraintDelaunayCalcJob implements ISimulation
 
   private static final long PROCESS_TIMEOUT = 50000;
 
-  /**
-   * @see org.kalypso.simulation.core.ISimulation#getSpezifikation()
-   */
   @Override
   public URL getSpezifikation( )
   {
     return getClass().getResource( CALCJOB_SPEC );
   }
 
-  /**
-   * @see org.kalypso.simulation.core.ISimulation#run(java.io.File, org.kalypso.simulation.core.ISimulationDataProvider,
-   *      org.kalypso.simulation.core.ISimulationResultEater, org.kalypso.simulation.core.ISimulationMonitor)
-   */
   @Override
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
@@ -214,7 +207,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
 
   private GMLWorkspace readElements( final BufferedReader nodeReader, final BufferedReader eleReader, final String crs ) throws IOException, GM_Exception, GMLSchemaException
   {
-    final GM_Position[] points = ConstraintDelaunayHelper.parseTriangleNodeOutput( nodeReader );
+    final GM_Position[] points = TriangleExe.parseTriangleNodeOutput( nodeReader );
 
     final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( new QName( GmlProcessesUrlCatalog.NS_MESH, "TriangleCollection" ), null, null ); //$NON-NLS-1$
     final Feature rootFeature = workspace.getRootFeature();
@@ -222,7 +215,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
     final QName featureName = new QName( GmlProcessesUrlCatalog.NS_MESH, "Triangle" ); //$NON-NLS-1$
     final QName geomName = new QName( GmlProcessesUrlCatalog.NS_MESH, "triangle" ); //$NON-NLS-1$
 
-    final List<GM_Surface< ? extends GM_SurfacePatch>> surfaces = ConstraintDelaunayHelper.parseTriangleElementOutput( eleReader, crs, points );
+    final List<GM_Surface< ? extends GM_SurfacePatch>> surfaces = TriangleExe.parseTriangleElementOutput( eleReader, crs, points );
 
     for( final GM_Surface< ? > surface : surfaces )
     {
