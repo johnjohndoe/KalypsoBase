@@ -112,7 +112,7 @@
 					<LineStyle role="axisLine">
 						<Title></Title>
 						<LineColor>000000</LineColor>
-						<Width>1</Width>
+						<Width>2</Width>
 					</LineStyle>
 				</Styles>
 			</AxisRenderer>

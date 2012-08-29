@@ -44,6 +44,7 @@ import java.awt.Insets;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -72,6 +73,8 @@ public class ChartPlotFrame
 
   public final void paint( final GC gc, final Rectangle rect )
   {
+    final int oldAlias = gc.getAntialias();
+    gc.setAntialias( SWT.OFF );
     final Insets insets = getInsets();
     final Point leftTop = new Point( rect.x - insets.left, rect.y - insets.top );
     final Point rightBottom = new Point( rect.x + rect.width + insets.right, rect.y + rect.height + insets.bottom );
@@ -79,11 +82,12 @@ public class ChartPlotFrame
     getFrameEdge( POSITION.TOP ).paint( gc, leftTop.x, leftTop.y, rightBottom.x, leftTop.y );
     getFrameEdge( POSITION.BOTTOM ).paint( gc, rightBottom.x, leftTop.y, rightBottom.x, rightBottom.y );
     getFrameEdge( POSITION.RIGHT ).paint( gc, leftTop.x, rightBottom.y, rightBottom.x, rightBottom.y );
+    gc.setAntialias( oldAlias );
   }
 
   public final Insets getInsets( )
   {
-    return new Insets( getFrameEdge( POSITION.TOP ).getWidth(), getFrameEdge( POSITION.LEFT ).getWidth(), getFrameEdge( POSITION.BOTTOM ).getWidth(), getFrameEdge( POSITION.RIGHT ).getWidth() );
+    return new Insets( getFrameEdge( POSITION.TOP ).getWidth() / 2, getFrameEdge( POSITION.LEFT ).getWidth() / 2, getFrameEdge( POSITION.BOTTOM ).getWidth() / 2, getFrameEdge( POSITION.RIGHT ).getWidth() / 2 );
   }
 
   public final ChartPlotFrameEdge getFrameEdge( final POSITION position )

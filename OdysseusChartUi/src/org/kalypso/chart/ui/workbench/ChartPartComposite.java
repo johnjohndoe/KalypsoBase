@@ -209,7 +209,7 @@ public class ChartPartComposite implements IChartPart
       final Shell shell = m_part.getSite().getShell();
       ErrorDialog.openError( shell, Messages.getString( "org.kalypso.chart.ui.editor.ChartEditor.0" ), Messages.getString( "org.kalypso.chart.ui.editor.ChartEditor.1" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
     }
-
+    m_chartModel.getBehaviour().setAutoscale( true );
     updateControl();
 
     setDirty( false );
@@ -312,7 +312,7 @@ public class ChartPartComposite implements IChartPart
     if( m_part instanceof IPropertyPart )
     {
       /* force into ui threat */
-      final UIJob job = new UIJob("")
+      final UIJob job = new UIJob( "" )
       {
         @Override
         public IStatus runInUIThread( final IProgressMonitor monitor )

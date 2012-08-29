@@ -42,7 +42,7 @@ public class ChartModel implements IChartModel
 
   /**
    * automatically scales all given axes; scaling means here: show all available values
-   *
+   * 
    * @param axes
    *          axes == null -> update all chart model axes
    */
@@ -70,7 +70,7 @@ public class ChartModel implements IChartModel
     // TODO: dispose layer manager instead
     ILayerManager layerManager = getLayerManager();
     layerManager.accept( new DisposeLayersVisitor() );
-
+// TODO: dispose m_behavior
     m_dataMap.clear();
   }
 
