@@ -61,7 +61,9 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
+import de.openali.odysseus.chart.framework.util.StyleUtils;
 import de.openali.odysseus.chart.framework.util.img.legend.ChartLegendCanvas;
 import de.openali.odysseus.chart.framework.util.img.legend.config.DefaultChartLegendConfig;
 
@@ -169,7 +171,7 @@ public class ChartPainter
       final IAxisRenderer renderer = axis.getRenderer();
       if( renderer != null )
       {
-        totalWidth = +renderer.getAxisWidth( axis );
+        totalWidth += renderer.getAxisWidth( axis );
       }
     }
     return totalWidth;
@@ -259,10 +261,30 @@ public class ChartPainter
 
   private void paintFrameRect( final GC gc, final Rectangle rect )
   {
-    final int old = gc.getLineWidth();
-    gc.setLineWidth( 1 );
-    gc.drawRectangle( rect );
-    gc.setLineWidth( old );
+    final ChartPlotFrame plotFrame = m_model.getSettings().getPlotFrame();
+    for( final POSITION position : POSITION.values() )
+    {
+      final ChartPlotFrameEdge edge = plotFrame.getFrameEdge( position );
+      if( edge.getLineStyle() == null )
+      {
+        final ILineStyle lineStyle = StyleUtils.getDefaultLineStyle();
+        lineStyle.setWidth( 1 );
+        edge.setLineStyle( lineStyle );
+        for( final IAxis axis : m_model.getMapperRegistry().getAxesAt( position ) )
+        {
+          if( axis.isVisible() )
+          {
+            edge.setLineStyle( axis.getRenderer().getLineStyle() );
+            break;
+          }
+        }
+      }
+    }
+    plotFrame.paint( gc, rect );
+// final int old = gc.getLineWidth();
+// gc.setLineWidth( 1 );
+// gc.drawRectangle( rect );
+// gc.setLineWidth( old );
 
   }
 
@@ -360,12 +382,12 @@ public class ChartPainter
       {
         case HORIZONTAL:
           axis.setScreenOffset( plotRect.x, axisWidth );
-         // axis.setScreenHeight( axisWidth );
+          // axis.setScreenHeight( axisWidth );
           break;
 
         case VERTICAL:
           axis.setScreenOffset( plotRect.y, axisHeight );
-        //  axis.setScreenHeight( axisHeight );
+          // axis.setScreenHeight( axisHeight );
           break;
       }
     }

@@ -45,7 +45,6 @@ import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 /**
  * @author kimwerner
@@ -56,7 +55,7 @@ public class ChartPlotFrameEdge
 
   public ChartPlotFrameEdge( )
   {
-    this( StyleUtils.getDefaultLineStyle() );
+    this( null );
   }
 
   public ChartPlotFrameEdge( final ILineStyle lineStyle )
@@ -72,7 +71,7 @@ public class ChartPlotFrameEdge
 
   public int getWidth( )
   {
-    if( getLineStyle().isVisible() )
+    if( getLineStyle() != null && getLineStyle().isVisible() )
     {
       return getLineStyle().getWidth();
     }
@@ -82,7 +81,7 @@ public class ChartPlotFrameEdge
 
   public void paint( final GC gc, final int x1, final int y1, final int x2, final int y2 )
   {
-    if( getLineStyle().isVisible() )
+    if( getLineStyle() != null && getLineStyle().isVisible() )
     {
       final PolylineFigure lineFigure = new PolylineFigure();
       lineFigure.setStyle( getLineStyle() );

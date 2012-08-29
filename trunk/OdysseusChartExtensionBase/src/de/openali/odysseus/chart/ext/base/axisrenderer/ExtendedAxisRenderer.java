@@ -98,7 +98,7 @@ public class ExtendedAxisRenderer extends AbstractGenericAxisRenderer
 
       if( tickPos < screen.x || tickPos > screen.x + screen.width )
         continue;
-      final int tickStart = getLineStyle().getWidth();
+      final int tickStart = screen.y+getLineStyle().getWidth();
       final int tickEnd = tickStart + getTickLength();
       final int oldAlias = gc.getAntialias();
       gc.setAntialias( SWT.OFF );

@@ -194,12 +194,20 @@ public final class StyleHelper
 
   public static TitleTypeBean getTitleTypeBean( final POSITION position, final TitleType type, final ITextStyle style )
   {
-    final Insets inset = new Insets( type.getInsetTop(), type.getInsetLeft(), type.getInsetBottom(), type.getInsetBottom() );
+    final Insets inset = new Insets( 4, 2, 4, 2 );
+    if( type.isSetInsetTop() )
+      inset.top = type.getInsetTop();
+    if( type.isSetInsetBottom() )
+      inset.top = type.getInsetBottom();
+    if( type.isSetInsetLeft() )
+      inset.top = type.getInsetLeft();
+    if( type.isSetInsetRight() )
+      inset.top = type.getInsetRight();
     final TitleTypeBean title = ChartLabelRendererFactory.getAxisLabelType( position, type.getStringValue(), inset, style );
-    title.setPositionHorizontal( StyleHelper.getAlignment( type.getHorizontalPosition() ) );
-    title.setPositionVertical( StyleHelper.getAlignment( type.getVerticalPosition() ) );
-    title.setTextAnchorX( StyleHelper.getAlignment( type.getHorizontalTextAnchor() ) );
-    title.setTextAnchorY( StyleHelper.getAlignment( type.getVerticalTextAnchor() ) );
+    title.setPositionHorizontal( type.isSetHorizontalPosition() ? StyleHelper.getAlignment( type.getHorizontalPosition() ) : ALIGNMENT.CENTER );
+    title.setPositionVertical( type.isSetVerticalPosition() ? StyleHelper.getAlignment( type.getVerticalPosition() ) : ALIGNMENT.CENTER );
+    title.setTextAnchorX( type.isSetHorizontalTextAnchor() ? StyleHelper.getAlignment( type.getHorizontalTextAnchor() ) : ALIGNMENT.CENTER );
+    title.setTextAnchorY( type.isSetVerticalTextAnchor() ? StyleHelper.getAlignment( type.getVerticalTextAnchor() ) : ALIGNMENT.CENTER );
     return title;
   }
 
