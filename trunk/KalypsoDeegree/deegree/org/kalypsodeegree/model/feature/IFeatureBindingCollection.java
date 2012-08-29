@@ -41,9 +41,8 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 
 /**
  * Interface to be implemented by classes that wrapped a feature collection to provided a view as a {@link List} of
@@ -113,17 +112,17 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
   void accept( IFeatureBindingCollectionVisitor<FWCls> visitor );
 
   /**
-   * Answer all feature wrappers overlapping the selected zone
-   *
+   * Answer all feature wrappers overlapping the given geometry
+   * 
    * @param selectionSurface
-   *          the selection surface
-   * @param qname
+   *          The geometry to find elements of this list for
+   * @param geometryProperty
    *          qname of geometry property
    * @param containedOnly
    *          control the selection of feature according to whether a feature (limited to a geometry specified by
-   *          checkedGeometryPropertyName ) are contained in the selectionSurface or not:
+   *          checkedGeometryPropertyName ) are contained in the geometry or not:
    *          <ul>
-   *          <li/>true to select only features that are contains in the area
+   *          <li/>true to select only features that are contains in the given geometry
    *          <li/>false to allow selection of all overlapping feature
    *          </ul>
    * @param checkedGeometryPropertyName
@@ -131,7 +130,7 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
    * @return a list of feature overlapping the given surface
    * @throws {@link IllegalArgumentException} if selectionSurface is null
    */
-  List<FWCls> query( GM_Surface< ? extends GM_SurfacePatch> selectionSurface, QName qname, boolean containedOnly );
+  List<FWCls> query( GM_Object selectionSurface, QName geometryProperty, boolean containedOnly );
 
   /**
    * Answer all feature wrappers overlaping the given envelope

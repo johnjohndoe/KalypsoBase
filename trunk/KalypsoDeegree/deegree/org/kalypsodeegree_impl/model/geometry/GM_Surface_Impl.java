@@ -353,19 +353,15 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
   /**
    * The Boolean valued operation "contains" shall return TRUE if this GM_Object contains a single point given by a
    * coordinate.
-   * <p>
-   * </p>
    */
   @Override
   public boolean contains( final GM_Position position )
   {
-    return contains( new GM_Point_Impl( position, null ) );
+    return getBoundary().contains( position );
   }
 
   /**
    * The Boolean valued operation "contains" shall return TRUE if this GM_Object contains another GM_Object.
-   * <p>
-   * </p>
    */
   @Override
   public boolean contains( final GM_Object gmo )
