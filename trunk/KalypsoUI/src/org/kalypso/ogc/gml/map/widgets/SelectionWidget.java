@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- * 
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
 
@@ -45,6 +45,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.event.MouseEvent;
 import java.net.URL;
 
 import javax.swing.ImageIcon;
@@ -57,14 +58,14 @@ import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.RectangleSelector;
 import org.kalypso.ogc.gml.map.widgets.providers.tooltips.ITooltipProvider;
-import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ogc.gml.widgets.AbstractWidget;
 
 /**
  * This class is a selection widget over all themes.
- * 
+ *
  * @author Holger Albert
  */
-public class SelectionWidget extends DeprecatedMouseWidget
+public class SelectionWidget extends AbstractWidget
 {
   /**
    * This selector is responsible for drawing the rectangle for selecting a feature.
@@ -93,7 +94,7 @@ public class SelectionWidget extends DeprecatedMouseWidget
 
   /**
    * The constructor.
-   * 
+   *
    * @param name
    *          The name of the widget.
    * @param toolTip
@@ -108,7 +109,7 @@ public class SelectionWidget extends DeprecatedMouseWidget
 
   /**
    * The constructor.
-   * 
+   *
    * @param name
    *          The name of the widget.
    * @param toolTip
@@ -149,14 +150,12 @@ public class SelectionWidget extends DeprecatedMouseWidget
     getMapPanel().setCursor( cursor );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#dragged(java.awt.Point)
-   */
   @Override
-  public void dragged( final Point p )
+  public void mouseDragged( final MouseEvent event )
   {
     if( m_selector != null )
     {
+      final Point p = event.getPoint();
       m_selector.setEndPoint( new org.eclipse.swt.graphics.Point( p.x, p.y ) );
       getMapPanel().setMessage( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectionWidget.3" ) ); //$NON-NLS-1$
     }
@@ -168,28 +167,32 @@ public class SelectionWidget extends DeprecatedMouseWidget
 
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftPressed(java.awt.Point)
-   */
   @Override
-  public void leftPressed( final Point p )
+  public void mousePressed( final MouseEvent event )
   {
+    if( event.getButton() != MouseEvent.BUTTON1 )
+      return;
+    event.consume();
+
     /* Start painting the selection rectangle. */
+    final Point p = event.getPoint();
     m_selector = new RectangleSelector( new org.eclipse.swt.graphics.Point( p.x, p.y ) );
     getMapPanel().setMessage( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectionWidget.4" ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftReleased(java.awt.Point)
-   */
   @Override
-  public void leftReleased( final Point p )
+  public void mouseReleased( final MouseEvent event )
   {
+    if( event.getButton() != MouseEvent.BUTTON1 )
+      return;
+    event.consume();
+
     try
     {
       if( m_selector != null )
       {
         /* Set the end point. */
+        final Point p = event.getPoint();
         m_selector.setEndPoint( new org.eclipse.swt.graphics.Point( p.x, p.y ) );
 
         /* Select the feature in this rectangle. */
@@ -204,13 +207,10 @@ public class SelectionWidget extends DeprecatedMouseWidget
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#moved(java.awt.Point)
-   */
   @Override
-  public void moved( final Point p )
+  public void mouseMoved( final MouseEvent event )
   {
-    super.moved( p );
+    final Point p = event.getPoint();
 
     if( m_tooltipProvider != null && getMapPanel() != null )
       m_tooltip = m_tooltipProvider.getTooltip( getMapPanel(), new Rectangle( p.x, p.y, 0, 0 ) );
@@ -225,9 +225,6 @@ public class SelectionWidget extends DeprecatedMouseWidget
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#paint(java.awt.Graphics)
-   */
   @Override
   public void paint( final Graphics g )
   {
@@ -238,9 +235,6 @@ public class SelectionWidget extends DeprecatedMouseWidget
       m_tooltipProvider.paintTooltip( g, m_current_point, m_tooltip );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#finish()
-   */
   @Override
   public void finish( )
   {
@@ -250,13 +244,8 @@ public class SelectionWidget extends DeprecatedMouseWidget
     /* Reset the cursor to default. */
     final Cursor cursor = Cursor.getPredefinedCursor( Cursor.DEFAULT_CURSOR );
     getMapPanel().setCursor( cursor );
-
-    super.finish();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#setSelection(org.eclipse.jface.viewers.ISelection)
-   */
   @Override
   public void setSelection( final ISelection selection )
   {
