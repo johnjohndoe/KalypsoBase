@@ -42,41 +42,22 @@ package org.kalypso.ogc.gml.map.themes;
 
 import java.net.URL;
 
-import javax.xml.bind.JAXBElement;
-
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.IKalypsoThemeFactory;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.types.StyledLayerType;
-import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * Theme factory for {@link KalypsoImageTheme}s.
- * 
+ *
  * @author Holger Albert
  */
-public class ImageThemeFactory implements IKalypsoThemeFactory
+public class ImageThemeFactory extends AbstractThemeFactory
 {
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoThemeFactory#createTheme(org.kalypso.commons.i18n.I10nString,
-   *      org.kalypso.template.types.StyledLayerType, java.net.URL, org.kalypso.ogc.gml.mapmodel.IMapModell,
-   *      org.kalypso.ogc.gml.selection.IFeatureSelectionManager)
-   */
   @Override
   public IKalypsoTheme createTheme( final I10nString layerName, final StyledLayerType layerType, final URL context, final IMapModell mapModell, final IFeatureSelectionManager selectionManager )
   {
     return new KalypsoImageTheme( layerName, mapModell );
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoThemeFactory#configureLayer(org.kalypso.ogc.gml.IKalypsoTheme, java.lang.String,
-   *      org.kalypsodeegree.model.geometry.GM_Envelope, java.lang.String)
-   */
-  @Override
-  public JAXBElement< ? extends StyledLayerType> configureLayer( final IKalypsoTheme theme, final String id, final GM_Envelope bbox, final String srsName )
-  {
-    throw new UnsupportedOperationException();
   }
 }

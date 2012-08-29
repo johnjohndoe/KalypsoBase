@@ -46,17 +46,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import javax.xml.bind.JAXBElement;
-
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.commons.java.util.PropertiesHelper;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.IKalypsoThemeFactory;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
@@ -77,7 +75,7 @@ import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
  *
  * @author Gernot Belger
  */
-public class WmsThemeFactory implements IKalypsoThemeFactory
+public class WmsThemeFactory extends AbstractThemeFactory
 {
   @Override
   public IKalypsoTheme createTheme( final I10nString layerName, final StyledLayerType layerType, final URL context, final IMapModell mapModell, final IFeatureSelectionManager selectionManager ) throws CoreException
@@ -137,8 +135,34 @@ public class WmsThemeFactory implements IKalypsoThemeFactory
   }
 
   @Override
-  public JAXBElement< ? extends StyledLayerType> configureLayer( final IKalypsoTheme theme, final String id, final GM_Envelope bbox, final String srsName )
+  public void configureLayer( final IKalypsoTheme theme, final String id, final GM_Envelope bbox, final String srsName, final StyledLayerType layer, final IProgressMonitor monitor )
   {
-    throw new UnsupportedOperationException();
+    final KalypsoWMSTheme wmsTheme = (KalypsoWMSTheme) theme;
+
+    layer.setHref( wmsTheme.getSource() );
+
+    /* Configure the style. */
+    configureStyle( wmsTheme, layer );
+  }
+
+  private static void configureStyle( final KalypsoWMSTheme theme, final StyledLayerType layer )
+  {
+    final org.kalypso.template.types.ObjectFactory extentFac = new org.kalypso.template.types.ObjectFactory();
+    final Style[] oldStyles = theme.getStyles();
+    for( final Style oldStyle : oldStyles )
+    {
+      final Style newStyle = extentFac.createStyledLayerTypeStyle();
+      newStyle.setActuate( oldStyle.getActuate() );
+      newStyle.setArcrole( oldStyle.getArcrole() );
+      newStyle.setHref( oldStyle.getHref() );
+      newStyle.setLinktype( oldStyle.getLinktype() );
+      newStyle.setRole( oldStyle.getRole() );
+      newStyle.setShow( oldStyle.getShow() );
+      newStyle.setStyle( oldStyle.getStyle() );
+      newStyle.setTitle( oldStyle.getTitle() );
+      newStyle.setType( oldStyle.getType() );
+
+      layer.getStyle().add( newStyle );
+    }
   }
 }

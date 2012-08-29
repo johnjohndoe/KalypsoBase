@@ -388,9 +388,6 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell, IT
     m_modell.activateTheme( theme );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#internalActivate(org.kalypso.ogc.gml.IKalypsoTheme)
-   */
   @Override
   public void internalActivate( final IKalypsoTheme theme )
   {
@@ -427,9 +424,6 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell, IT
     return m_modell.getFullExtentBoundingBox();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getTheme(int)
-   */
   @Override
   public IKalypsoTheme getTheme( final int pos )
   {
@@ -460,10 +454,6 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell, IT
     m_modell.moveUp( theme );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IStatus paint( final Graphics g, final GeoTransform p, final IProgressMonitor monitor )
   {
@@ -477,10 +467,6 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell, IT
     theme.dispose();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#swapThemes(org.kalypso.ogc.gml.IKalypsoTheme,
-   *      org.kalypso.ogc.gml.IKalypsoTheme)
-   */
   @Override
   public void swapThemes( final IKalypsoTheme theme1, final IKalypsoTheme theme2 )
   {
@@ -502,86 +488,56 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell, IT
   public void accept( final IKalypsoThemeVisitor visitor, final int depth )
   {
     m_modell.accept( visitor, depth );
-
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#insertTheme(org.kalypso.ogc.gml.IKalypsoTheme, int)
-   */
   @Override
   public void insertTheme( final IKalypsoTheme theme, final int position )
   {
     m_modell.insertTheme( theme, position );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getName()
-   */
   @Override
   public I10nString getName( )
   {
     return m_modell.getName();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#accept(org.kalypso.ogc.gml.mapmodel.visitor.KalypsoThemeVisitor, int,
-   *      org.kalypso.ogc.gml.IKalypsoTheme)
-   */
   @Override
   public void accept( final IKalypsoThemeVisitor visitor, final int depth_infinite, final IKalypsoTheme theme )
   {
     m_modell.accept( visitor, depth_infinite, theme );
-
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getLabel()
-   */
   @Override
   public String getLabel( )
   {
     return m_modell.getLabel();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#addMapModelListener(org.kalypso.ogc.gml.mapmodel.IMapModellListener)
-   */
   @Override
   public void addMapModelListener( final IMapModellListener l )
   {
     m_modell.addMapModelListener( l );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#removeMapModelListener(org.kalypso.ogc.gml.mapmodel.IMapModellListener)
-   */
   @Override
   public void removeMapModelListener( final IMapModellListener l )
   {
     m_modell.removeMapModelListener( l );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getThemeParent(org.kalypso.ogc.gml.IKalypsoTheme)
-   */
   @Override
   public Object getThemeParent( final IKalypsoTheme theme )
   {
     return this;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#isLoaded()
-   */
   @Override
   public boolean isLoaded( )
   {
     return m_isLoaded;
   }
 
-  /**
-   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-   */
   @SuppressWarnings("rawtypes")
   @Override
   public Object getAdapter( final Class adapter )

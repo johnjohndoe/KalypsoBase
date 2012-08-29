@@ -175,7 +175,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     m_layerKey = new PoolableObjectType( type, source, context );
     m_featurePath = featurePath;
 
-    setType( type.toUpperCase() );
+    // setType( type );
 
     if( layerType instanceof StyledLayerType )
     {

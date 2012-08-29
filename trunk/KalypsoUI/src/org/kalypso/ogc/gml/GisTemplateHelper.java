@@ -112,7 +112,7 @@ public final class GisTemplateHelper
 {
   public static final ObjectFactory OF_GISMAPVIEW = new ObjectFactory();
 
-  public static final org.kalypso.template.types.ObjectFactory OF_TEMPLATE_TYPES = new org.kalypso.template.types.ObjectFactory();
+  public static final org.kalypso.template.types.ObjectFactory OF_TEMPLATE_TYPES = TemplateUtilities.OF_TEMPLATE_TYPES;
 
   public static final JAXBContext JC_FEATUREVIEW = JaxbUtilities.createQuiet( org.kalypso.template.featureview.ObjectFactory.class );
 
