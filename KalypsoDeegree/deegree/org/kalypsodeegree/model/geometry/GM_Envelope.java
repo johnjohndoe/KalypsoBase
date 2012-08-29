@@ -119,7 +119,7 @@ public interface GM_Envelope extends Cloneable
   GM_Envelope getMerged( GM_Envelope envelope );
 
   /**
-   * creates a new envelope
+   * Creates a new envelope 'buffered' by the given distance.
    */
   GM_Envelope getBuffer( double b );
 

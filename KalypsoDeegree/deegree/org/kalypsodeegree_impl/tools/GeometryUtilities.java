@@ -733,17 +733,15 @@ public final class GeometryUtilities
     return thinnedCurve;
   }
 
-  public static GM_Envelope grabEnvelopeFromDistance( final GM_Point position, final double grabDistance )
+  public static GM_Envelope grabEnvelopeFromDistance( final GM_Point point, final double grabDistance )
   {
-    final double posX = position.getX();
-    final double posY = position.getY();
+    final GM_Position position = point.getPosition();
+
+    final GM_Envelope posEnvelope = GeometryFactory.createGM_Envelope( position, position, point.getCoordinateSystem() );
+
     final double grabDistanceHalf = grabDistance / 2;
 
-    final GM_Position minPos = GeometryFactory.createGM_Position( posX - grabDistanceHalf, posY - grabDistanceHalf );
-    final GM_Position maxPos = GeometryFactory.createGM_Position( posX + grabDistanceHalf, posY + grabDistanceHalf );
-
-    final GM_Envelope reqEnvelope = GeometryFactory.createGM_Envelope( minPos, maxPos, position.getCoordinateSystem() );
-    return reqEnvelope;
+    return posEnvelope.getBuffer( grabDistanceHalf );
   }
 
   public static Feature findNearestFeature( final GM_Point point, final double grabDistance, final FeatureList modelList, final QName geoQName )

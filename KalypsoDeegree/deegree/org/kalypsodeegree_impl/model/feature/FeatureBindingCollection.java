@@ -58,7 +58,6 @@ import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
 
 /**
  * TODO: replaces FeatureWrapperCollection.... refaktor and use this stuff instead<br>
@@ -607,12 +606,8 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
     return getFeatureList().add( gmlID );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.IFeatureBindingCollection#query(org.kalypsodeegree.model.geometry.GM_Surface,
-   *      javax.xml.namespace.QName, boolean)
-   */
   @Override
-  public List<FWCls> query( final GM_Surface< ? > selectionSurface, final QName qname, final boolean containedOnly )
+  public List<FWCls> query( final GM_Object selectionSurface, final QName geometryProperty, final boolean containedOnly )
   {
     final List< ? > selectedFeature = getFeatureList().query( selectionSurface.getEnvelope(), null );
     final List<FWCls> selFW = new ArrayList<FWCls>( selectedFeature.size() );
@@ -623,12 +618,12 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
       final FWCls feature = FeatureHelper.getFeature( workspace, linkOrFeature, m_defaultWrapperClass );
       if( feature != null )
       {
-        final IPropertyType pt = feature.getFeatureType().getProperty( qname );
+        final IPropertyType pt = feature.getFeatureType().getProperty( geometryProperty );
         if( pt != null )
         {
           try
           {
-            final Object property = feature.getProperty( qname );
+            final Object property = feature.getProperty( geometryProperty );
             if( property instanceof GM_Object )
             {
               final GM_Object gmo = (GM_Object) property;
@@ -659,9 +654,6 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
     return selFW;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.IFeatureBindingCollection#query(org.kalypsodeegree.model.geometry.GM_Envelope)
-   */
   @Override
   public List<FWCls> query( final GM_Envelope envelope )
   {
@@ -677,9 +669,6 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
     return selFW;
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection#query(org.kalypsodeegree.model.geometry.GM_Position)
-   */
   @Override
   public List<FWCls> query( final GM_Position position )
   {

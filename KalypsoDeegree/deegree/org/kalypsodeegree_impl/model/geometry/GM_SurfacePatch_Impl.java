@@ -74,9 +74,6 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
 
   private GM_Point m_centroid = null;
 
-  // Not used anywhere; so for the moment we can just return a constant...
-// protected GM_SurfaceInterpolation m_interpolation = null;
-
   private GM_Position[] m_exteriorRing = null;
 
   private GM_Position[][] m_interiorRings = null;

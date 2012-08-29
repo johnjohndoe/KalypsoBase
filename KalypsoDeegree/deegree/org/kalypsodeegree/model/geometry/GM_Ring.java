@@ -47,7 +47,6 @@ package org.kalypsodeegree.model.geometry;
  * @version $Revision$ $Date$
  *          <p>
  */
-
 public interface GM_Ring extends GM_OrientableCurve
 {
   /**
@@ -69,10 +68,4 @@ public interface GM_Ring extends GM_OrientableCurve
    * returns the ring as an instance of <tt>GM_CurveSegment</tt>
    */
   public GM_CurveSegment getAsCurveSegment( ) throws GM_Exception;
-
-  /**
-   * @link aggregationByValue
-   * @clientCardinality 3..*
-   */
-  /* #GM_Position lnkGM_Position; */
 }

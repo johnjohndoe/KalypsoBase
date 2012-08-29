@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -51,7 +51,7 @@ import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
 /**
  * default implementation of the GM_SurfaceBoundary interface.
  * ------------------------------------------------------------
- * 
+ *
  * @version 11.6.2001
  * @author Andreas Poth href="mailto:poth@lat-lon.de"
  */
@@ -94,7 +94,7 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
 
   /**
    * checks if this curve is completly equal to the submitted geometry
-   * 
+   *
    * @param other
    *          object to compare to
    */
@@ -202,47 +202,35 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
   }
 
   /**
-   * The Boolean valued operation "contains" shall return TRUE if this GM_Object contains another GM_Object.
-   * <p>
-   * </p>
+   * The Boolean valued operation "contains" shall return TRUE if this GM_Object contains another GM_Object. <br/>
    * At the moment the operation just works with point geometries
    */
   @Override
   public boolean contains( final GM_Object gmo )
   {
-    boolean con = false;
+    if( !m_exterior.contains( gmo ) )
+      return false;
 
-    con = m_exterior.contains( gmo );
+    if( m_interior == null )
+      return true;
 
-    if( con )
+    for( final GM_Ring element : m_interior )
     {
-      if( m_interior != null )
-      {
-        for( final GM_Ring element : m_interior )
-        {
-          if( element.contains( gmo ) )
-          {
-            con = false;
-            break;
-          }
-        }
-      }
+      if( element.contains( gmo ) )
+        return false;
     }
 
-    return con;
+    return true;
   }
 
   /**
    * The Boolean valued operation "contains" shall return TRUE if this GM_Object contains a single point given by a
    * coordinate.
-   * <p>
-   * </p>
-   * dummy implementation
    */
   @Override
   public boolean contains( final GM_Position position )
   {
-    return contains( new GM_Point_Impl( position, null ) );
+    return contains( new GM_Point_Impl( position, getCoordinateSystem() ) );
   }
 
   /**
