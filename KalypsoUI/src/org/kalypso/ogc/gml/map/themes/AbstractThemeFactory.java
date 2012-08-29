@@ -40,25 +40,28 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.themes;
 
-import java.net.URL;
-
-import org.kalypso.commons.i18n.I10nString;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.IKalypsoTheme;
-import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
+import org.kalypso.ogc.gml.IKalypsoThemeFactory;
 import org.kalypso.template.types.StyledLayerType;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
- * Theme factory for {@link KalypsoScaleTheme}s.
- *
  * @author Gernot Belger
  */
-public class ScaleThemeFactory extends AbstractThemeFactory
+public abstract class AbstractThemeFactory implements IKalypsoThemeFactory
 {
   @Override
-  public IKalypsoTheme createTheme( final I10nString layerName, final StyledLayerType layerType, final URL context, final IMapModell mapModell, final IFeatureSelectionManager selectionManager )
+  public StyledLayerType createLayerType( final IKalypsoTheme theme )
   {
-    final String linktype = layerType.getLinktype();
-    return new KalypsoScaleTheme( layerName, layerType, linktype, mapModell );
+    return GisTemplateHelper.OF_TEMPLATE_TYPES.createStyledLayerType();
+  }
+
+  @SuppressWarnings("unused")
+  @Override
+  public void configureLayer( final IKalypsoTheme theme, final String id, final GM_Envelope bbox, final String srsName, final StyledLayerType layer, final IProgressMonitor monitor ) throws CoreException
+  {
   }
 }

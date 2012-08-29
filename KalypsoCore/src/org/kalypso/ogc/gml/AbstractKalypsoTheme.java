@@ -59,8 +59,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.core.runtime.SafeRunnable;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCoreExtensions;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -80,7 +80,7 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
 
   protected static final Object[] EMPTY_CHILDREN = new Object[] {};
 
-  protected static final IStatus PAINT_STATUS = StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.ogc.gml.AbstractKalypsoTheme.0" ), null ); //$NON-NLS-1$
+  protected static final IStatus PAINT_STATUS = new Status( IStatus.INFO, KalypsoCorePlugin.getID(), Messages.getString( "org.kalypso.ogc.gml.AbstractKalypsoTheme.0" ) ); //$NON-NLS-1$
 
   private final Collection<IKalypsoThemeListener> m_listeners = Collections.synchronizedSet( new HashSet<IKalypsoThemeListener>() );
 
@@ -357,17 +357,12 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     return m_properties.get( name );
   }
 
-  /**
-   * Return the names of all known properties.
-   */
+  @Override
   public String[] getPropertyNames( )
   {
     return m_properties.keySet().toArray( new String[m_properties.keySet().size()] );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#getStatus()
-   */
   @Override
   public IStatus getStatus( )
   {

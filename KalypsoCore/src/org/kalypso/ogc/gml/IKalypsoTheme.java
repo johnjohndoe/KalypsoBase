@@ -55,7 +55,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 /**
  * Implements {@link org.eclipse.ui.model.IWorkbenchAdapter} in order to provider nice labels/images, ..... Does NOT
  * implement {@link org.eclipse.ui.model.IWorkbenchAdapter2}. Fonts, and so on are decided outside of the theme scope.
- * 
+ *
  * @author Katharina <a href="mailto:k.lupp@web.de>Katharina Lupp </a>
  */
 public interface IKalypsoTheme extends IAdaptable
@@ -96,7 +96,7 @@ public interface IKalypsoTheme extends IAdaptable
 
   /**
    * Paints the theme to the given graphics context<br/>
-   * 
+   *
    * @throws CoreException
    *           REAMRK: Implementors should additionally set the status object internally, if an exception occurs in
    *           order to show the problem in the outline.
@@ -140,7 +140,7 @@ public interface IKalypsoTheme extends IAdaptable
    * This function should return true, if the theme has tried to load the image, data, etc. once. Regardless if it was
    * successful or not. I.e. in case of a WMS it would return true, if the theme connected to the WMS and the connection
    * was finished. It does not matter if it could successfully retrieve the image or not.
-   * 
+   *
    * @return <code>true</code>, if the first loading try has finished
    */
   boolean isLoaded( );
@@ -152,11 +152,14 @@ public interface IKalypsoTheme extends IAdaptable
   void setVisible( final boolean visible );
 
   /**
-   * Retrieves the indicated property from this theme.
-   * <p>
-   * The name of the property should be one of the <code>PROPERTY_</code> constants of this interface.
-   * </p>
-   * 
+   * Returns the names of all known properties.
+   */
+  String[] getPropertyNames( );
+
+  /**
+   * Retrieves the indicated property from this theme.<br/>
+   * The name of the property should be one of the <code>PROPERTY_</code> constants of this interface.<br/>
+   *
    * @param defaultValue
    *          If the property is not set, use this default value.
    * @throws IllegalArgumentException
@@ -172,14 +175,14 @@ public interface IKalypsoTheme extends IAdaptable
 
   /**
    * This function returns the ID of this theme.
-   * 
+   *
    * @return The ID of this theme.
    */
   String getId( );
 
   /**
    * This function sets the id of this theme.
-   * 
+   *
    * @param id
    *          The id of this theme.
    */
