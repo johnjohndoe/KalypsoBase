@@ -848,18 +848,12 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     setBoundingBox( wishBBox, true );
   }
 
-  /**
-   * @see IMapPanel#setBoundingBox(GM_Envelope, boolean, boolean)
-   */
   @Override
   public void setBoundingBox( final GM_Envelope wishBBox, final boolean useHistory )
   {
     setBoundingBox( wishBBox, useHistory, true );
   }
 
-  /**
-   * @see IMapPanel#setBoundingBox(GM_Envelope, boolean, boolean)
-   */
   @Override
   public void setBoundingBox( final GM_Envelope wishBBox, final boolean useHistory, final boolean invalidateMap )
   {
