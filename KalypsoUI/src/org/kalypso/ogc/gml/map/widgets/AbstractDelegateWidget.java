@@ -53,7 +53,9 @@ import org.kalypso.ogc.gml.widgets.IWidget;
 
 /**
  * @author Thomas Jung
+ * @deprecated Use {@link AbstractDelegateWidget2} instead.
  */
+@Deprecated
 public class AbstractDelegateWidget extends DeprecatedMouseWidget implements IWidgetWithStrategy
 {
   private IDeprecatedMouseWidget m_delegate = null;
