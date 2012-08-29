@@ -50,7 +50,7 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
  * {@link FWCls} <br>
  * TODO: move everything into FeatureList or let feature list implement this interface<br/>
  * TODOwhy 'binding'? rename to IFeatureCollection
- * 
+ *
  * @author Gernot Belger
  * @author Dirk Kuch
  */
@@ -59,7 +59,7 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
   /**
    * Creates and Adds a new element of the specified type into the feature collection at the end of the feature
    * collection
-   * 
+   *
    * @param newChildType
    *          the type of the element to add
    * @throws IllegalArgumentException
@@ -80,7 +80,7 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
 
   /**
    * Creates and Adds a new element of the specified type into the feature collection at the specified position
-   * 
+   *
    * @param index
    *          index at which the specified element is to be inserted.
    * @param newChildType
@@ -101,20 +101,20 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
 
   /**
    * Add this feature as reference to this list
-   * 
+   *
    * @param toAdd
    *          a wrapper wrapping the feature to be added as list
    * @return true if the feature has been added
    * @throws IllegalArgumentException
    *           if the argument toAdd is null
    */
-  boolean addRef( FWCls toAdd ) throws IllegalArgumentException;
+  <T extends FWCls> boolean addRef( T toAdd ) throws IllegalArgumentException;
 
   void accept( IFeatureBindingCollectionVisitor<FWCls> visitor );
 
   /**
    * Answer all feature wrappers overlapping the selected zone
-   * 
+   *
    * @param selectionSurface
    *          the selection surface
    * @param qname
@@ -135,7 +135,7 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
 
   /**
    * Answer all feature wrappers overlaping the given envelope
-   * 
+   *
    * @param envelope
    *          the envelope specifying the selection area
    * @return a list of feature overlaping the given surface
@@ -145,7 +145,7 @@ public interface IFeatureBindingCollection<FWCls extends Feature> extends List<F
 
   /**
    * Answer all feature wrappers containing the given position
-   * 
+   *
    * @param selectionSurface
    *          the selection surface
    * @return a list of feature overlaping the given surface
