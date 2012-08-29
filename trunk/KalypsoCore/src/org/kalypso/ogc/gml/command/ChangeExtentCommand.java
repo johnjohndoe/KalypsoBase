@@ -97,9 +97,6 @@ public class ChangeExtentCommand implements ICommand
     m_mapPanel.setBoundingBox( m_undoBoundingBox, m_useHistory );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
-   */
   @Override
   public String getDescription( )
   {
