@@ -590,11 +590,8 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
       return super.equals( obj );
   }
 
-  /**
-   * @see org.kalypso.kalypsosimulationmodel.core.IFeatureWrapperCollection#addRef(org.kalypsodeegree.model.feature.binding.IFeatureWrapper)
-   */
   @Override
-  public boolean addRef( final FWCls toAdd )
+  public <T extends FWCls> boolean addRef( final T toAdd ) throws IllegalArgumentException
   {
     final String gmlID = toAdd.getId();
 
