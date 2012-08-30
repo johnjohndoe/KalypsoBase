@@ -524,6 +524,26 @@ public final class ProfilUtil
     return GeometryFactory.createGM_Curve( pos, crs );
   }
 
+  /**
+   * Returns the profile line as jts coordinate in ascending order. Profile points that are not georeferenced, are left
+   * out.
+   */
+  public static Coordinate[] getLineCoordinates( final IProfil profile )
+  {
+    final IRecord[] georeferencedPoints = getGeoreferencedPoints( profile );
+    final Coordinate[] crds = new Coordinate[georeferencedPoints.length];
+
+    for( int i = 0; i < georeferencedPoints.length; i++ )
+    {
+      final Double x = getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT, georeferencedPoints[i] );
+      final Double y = getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOCHWERT, georeferencedPoints[i] );
+      final Double z = getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOEHE, georeferencedPoints[i] );
+      crds[i] = new Coordinate( x, y, z );
+    }
+
+    return crds;
+  }
+
   public static Double[] getDoubleValuesFor( final IProfil profil, final IComponent pointProperty, final boolean skipNullValues )
   {
     final List<Double> myValues = new ArrayList<Double>();
