@@ -195,5 +195,6 @@ public interface GM_Object extends IAdaptable
    *          The target coordinate system.
    * @return The transformed geometry.
    */
+  // FIXME: use a specific exception here -> really!
   public GM_Object transform( final String targetCRS ) throws Exception;
 }
