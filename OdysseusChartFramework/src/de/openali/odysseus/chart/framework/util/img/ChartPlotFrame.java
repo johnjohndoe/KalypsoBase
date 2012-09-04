@@ -80,8 +80,8 @@ public class ChartPlotFrame
     final Point rightBottom = new Point( rect.x + rect.width + insets.right, rect.y + rect.height + insets.bottom );
     getFrameEdge( POSITION.LEFT ).paint( gc, leftTop.x, leftTop.y, leftTop.x, rightBottom.y );
     getFrameEdge( POSITION.TOP ).paint( gc, leftTop.x, leftTop.y, rightBottom.x, leftTop.y );
-    getFrameEdge( POSITION.BOTTOM ).paint( gc, rightBottom.x, leftTop.y, rightBottom.x, rightBottom.y );
-    getFrameEdge( POSITION.RIGHT ).paint( gc, leftTop.x, rightBottom.y, rightBottom.x, rightBottom.y );
+    getFrameEdge( POSITION.RIGHT ).paint( gc, rightBottom.x, leftTop.y, rightBottom.x, rightBottom.y );
+    getFrameEdge( POSITION.BOTTOM ).paint( gc, leftTop.x, rightBottom.y, rightBottom.x, rightBottom.y );
     gc.setAntialias( oldAlias );
   }
 

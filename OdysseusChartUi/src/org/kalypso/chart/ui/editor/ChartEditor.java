@@ -64,7 +64,7 @@ public class ChartEditor extends EditorPart implements IPropertyPart
     super.setInput( input );
 
     m_chartPartComposite.loadInput( input );
-
+    m_chartPartComposite.getChartModel().autoscale( null );
     updatePartName();
   }
 
@@ -100,7 +100,7 @@ public class ChartEditor extends EditorPart implements IPropertyPart
   }
 
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( @SuppressWarnings( "rawtypes" ) final Class adapter )
   {
     final Object adapted = m_chartPartComposite.adapt( adapter );
     if( adapted != null )
@@ -131,7 +131,7 @@ public class ChartEditor extends EditorPart implements IPropertyPart
 
     try
     {
-      final IFileEditorInput input = (IFileEditorInput) editorInput;
+      final IFileEditorInput input = (IFileEditorInput)editorInput;
       final IFile file = input.getFile();
 
       final XmlOptions options = ChartConfigurationLoader.configureXmlOptions( file.getCharset() );

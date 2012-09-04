@@ -48,11 +48,11 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.ui.progress.UIJob;
-import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 
 import com.vividsolutions.jts.util.Assert;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 import de.openali.odysseus.chart.framework.util.img.ChartPainter;
 
 /**
@@ -60,13 +60,18 @@ import de.openali.odysseus.chart.framework.util.img.ChartPainter;
  */
 public class ChartPaintJob extends Job
 {
+  public ChartImageInfo getPlotInfo( )
+  {
+    return m_plotInfo;
+  }
+
   private final ChartImageComposite m_chart;
 
   private Image m_plotImage;
 
   private Rectangle m_clientArea = null;
 
-  private Rectangle m_plotRect;
+   private ChartImageInfo m_plotInfo;
 
   private final UIJob m_redrawJob;
 
@@ -152,13 +157,15 @@ public class ChartPaintJob extends Job
 
       final ChartPainter chartPainter = new ChartPainter( model, plotImage );
 
-      final Rectangle plotRect = RectangleUtils.inflateRect( bounds, chartPainter.getPlotInsets() );
-      setPlotRect( plotRect );
+      // final Rectangle plotRect = RectangleUtils.inflateRect( bounds, chartPainter.getPlotInsets() );
+      // setPlotRect( plotRect );
 
       if( monitor.isCanceled() )
         return Status.CANCEL_STATUS;
 
-      return chartPainter.paintImage( monitor );
+      final IStatus status = chartPainter.paintImage( monitor );
+      m_plotInfo = chartPainter.getInfoObject();
+      return status;
     }
     finally
     {
@@ -173,15 +180,15 @@ public class ChartPaintJob extends Job
     }
   }
 
-  private synchronized void setPlotRect( final Rectangle plotRect )
-  {
-    m_plotRect = plotRect;
-  }
-
-  public synchronized Rectangle getPlotRect( )
-  {
-    return m_plotRect;
-  }
+//  private synchronized void setPlotRect( final Rectangle plotRect )
+//  {
+//    m_plotRect = plotRect;
+//  }
+//
+//  public synchronized Rectangle getPlotRect( )
+//  {
+//    return m_plotRect;
+//  }
 
   private synchronized Image createPlotImage( final Rectangle bounds )
   {

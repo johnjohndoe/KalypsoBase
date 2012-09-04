@@ -89,7 +89,7 @@ public final class ChartFactory
         }
       }
 
-      final ILineStyle style = StyleFactory.createLineStyle( (LineStyleType) styleType );
+      final ILineStyle style = StyleFactory.createLineStyle( (LineStyleType)styleType );
       settings.addPlotFrameStyle( IAxisConstants.POSITION.valueOf( edge.getPosition().toString() ), style );
     }
   }
@@ -97,7 +97,7 @@ public final class ChartFactory
   public static void doConfiguration( final IChartModel model, final IReferenceResolver resolver, final ChartType chartType, final IExtensionLoader extLoader, final URL context )
   {
     model.setIdentifier( chartType.getId() );
-
+    model.getSettings().clearTitles();
     final ChartTypeResolver chartTypeResolver = ChartTypeResolver.getInstance();
 
     for( final TitleType type : chartType.getTitleArray() )
@@ -105,7 +105,7 @@ public final class ChartFactory
       try
       {
         final AbstractStyleType styleType = chartTypeResolver.findStyleType( type.getStyleref(), context );
-        final ITextStyle style = StyleFactory.createTextStyle( (TextStyleType) styleType );
+        final ITextStyle style = StyleFactory.createTextStyle( (TextStyleType)styleType );
         final TitleTypeBean title = StyleHelper.getTitleTypeBean( type, style );
         model.getSettings().addTitles( title );
       }

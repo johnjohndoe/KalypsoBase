@@ -82,5 +82,7 @@ public interface IBasicChartSettings
   void setLegendRenderer( String renderer );
 
   void setTitle( String title, ALIGNMENT position, ITextStyle textStyle, Insets insets );
+  
+  void clearTitles();
 
 }

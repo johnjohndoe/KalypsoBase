@@ -64,8 +64,6 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
  */
 public class ZoomPanMaximizeHandler extends AbstractChartHandler
 {
-  private static final int m_trashold = 5;
-
   public enum DIRECTION
   {
     eHorizontal,
@@ -86,6 +84,8 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
     }
   }
 
+  private static final int m_trashold = 5;
+
   private final Set<IChartSelectionChangedListener> m_listeners = Collections.synchronizedSet( new LinkedHashSet<IChartSelectionChangedListener>() );
 
   private final DIRECTION m_direction;
@@ -100,15 +100,10 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
     m_direction = direction;
   }
 
-  @Override
-  public void mouseDown( final MouseEvent e )
+  public void addListener( final IChartSelectionChangedListener listener )
   {
-    setCursor( cursorFromButton( e ) );
-
-    final Point currentPos = EventUtils.getPoint( e );
-    m_startPos = currentPos;
-
-    m_startPlot = ChartHandlerUtilities.screen2plotPoint( currentPos, getChart().getPlotRect() );
+    // FIXME: listener never removed
+    m_listeners.add( listener );
   }
 
   private int cursorFromButton( final MouseEvent e )
@@ -120,50 +115,6 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
       return SWT.CURSOR_SIZEALL;
 
     return -1;
-  }
-
-  @Override
-  public void mouseMove( final MouseEvent e )
-  {
-    super.mouseMove( e );
-
-    final Point currentPos = EventUtils.getPoint( e );
-    final Point currentPlot = ChartHandlerUtilities.screen2plotPoint( currentPos, getChart().getPlotRect() );
-    setToolInfo( null );
-
-    if( m_startPlot == null )
-    {
-      doSetTooltip( currentPlot );
-      return;
-    }
-
-    final boolean isMoved = isMoved( currentPos );
-    if( !isMoved )
-      return;
-
-    if( EventUtils.isStateButton1( e ) )
-    {
-      if( EventUtils.isControl( e ) || EventUtils.isShift( e ) )
-        doMouseMoveSelection( m_startPlot, currentPlot );
-      else
-        doMouseMoveZoom( m_startPlot, currentPlot );
-    }
-    else if( EventUtils.isStateButton2( e ) )
-      doMouseMovePan( m_startPlot, currentPlot );
-  }
-
-  private void doSetTooltip( final Point point )
-  {
-    final FindLayerTooltipVisitor visitor = new FindLayerTooltipVisitor( getChart(), point );
-    final IChartModel model = getChart().getChartModel();
-    model.getLayerManager().accept( visitor );
-
-    setToolInfo( visitor.getEditInfo() );
-  }
-
-  private boolean isMoved( final Point currentPos )
-  {
-    return Math.abs( currentPos.x - m_startPos.x ) > m_trashold || Math.abs( currentPos.y - m_startPos.y ) > 5;
   }
 
   protected void doMouseMovePan( final Point start, final Point end )
@@ -183,7 +134,7 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
 
   protected void doMouseMoveSelection( final Point start, final Point end )
   {
-    final Rectangle plotRect = getChart().getPlotRect();
+    final Rectangle plotRect = getChart().getPlotInfo().getPlotRect();
     final int minY = plotRect.y;
     final int height = plotRect.height;
 
@@ -195,57 +146,38 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
     getChart().setDragArea( new Rectangle( start.x, start.y, end.x - start.x, end.y - start.y ) );
   }
 
-  @Override
-  public void mouseUp( final MouseEvent e )
-  {
-    if( m_startPlot == null )
-      return;
-
-    try
-    {
-      doMouseUpAction( e );
-    }
-    finally
-    {
-      setCursor( SWT.CURSOR_ARROW );
-
-      m_startPlot = null;
-
-      final IChartComposite chart = getChart();
-      chart.setDragArea( null );
-    }
-  }
-
   private void doMouseUpAction( final MouseEvent e )
   {
     final Point currentPos = EventUtils.getPoint( e );
-    final Point currentPlot = ChartHandlerUtilities.screen2plotPoint( currentPos, getChart().getPlotRect() );
+    // final Point currentPlot = ChartHandlerUtilities.screen2plotPoint( currentPos, getChart().getPlotRect() );
 
     final boolean isMoved = isMoved( currentPos );
     if( !isMoved )
     {
       if( EventUtils.isStateButton1( e ) )
-        fireSelectionChanged( currentPlot );
+        fireSelectionChanged( currentPos );
       doMouseUpClick( m_startPlot );
       return;
     }
 
     if( EventUtils.isStateButton1( e ) )
     {
-      if( Objects.isNotNull( currentPlot ) )
+      if( Objects.isNotNull( currentPos ) )
       {
-        if( EventUtils.isControl( e ) || EventUtils.isShift( e ) )
-          fireSelectionChanged( m_startPlot, currentPlot );
+        if( EventUtils.isControl( e ) )
+          fireSelectionChanged( m_startPlot, currentPos );
+        else if( EventUtils.isShift( e ) )
+          doMouseUpAxisZoom( m_startPlot, currentPos );
         else
-          doMouseUpZoom( m_startPlot, currentPlot ); // zoom
+          doMouseUpZoom( m_startPlot, currentPos ); // zoom
       }
       else
         fireSelectionChanged( m_startPlot );
     }
     else if( EventUtils.isStateButton2( e ) )
     {
-      if( Objects.isNotNull( currentPlot ) )
-        doMouseUpPan( m_startPlot, currentPlot );
+      if( Objects.isNotNull( currentPos ) )
+        doMouseUpPan( m_startPlot, currentPos );
     }
   }
 
@@ -282,10 +214,31 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
     }
   }
 
-  public void addListener( final IChartSelectionChangedListener listener )
+  private void doMouseUpAxisZoom( final Point start, final Point end )
   {
-    // FIXME: listener never removed
-    m_listeners.add( listener );
+    if( Objects.isNull( start, end ) )
+      return;
+
+    if( end.x < start.x )
+      getChart().getChartModel().autoscale();
+    else
+    {
+      final Rectangle plotRect = getChart().getPlotInfo().getPlotRect();
+      final int y1 = plotRect.y;
+      final int y2 = y1 + plotRect.height;
+      final ZoomInVisitor visitor = new ZoomInVisitor( new Point( start.x, y1 ), new Point( end.x, y2 ) );
+      final IChartModel model = getChart().getChartModel();
+      model.getMapperRegistry().accept( visitor );
+    }
+  }
+
+  private void doSetTooltip( final Point point )
+  {
+    final FindLayerTooltipVisitor visitor = new FindLayerTooltipVisitor( getChart(), point );
+    final IChartModel model = getChart().getChartModel();
+    model.getLayerManager().accept( visitor );
+
+    setToolInfo( visitor.getEditInfo() );
   }
 
   private void fireSelectionChanged( final Point... points )
@@ -293,5 +246,73 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
     final IChartSelectionChangedListener[] listeners = m_listeners.toArray( new IChartSelectionChangedListener[] {} );
     for( final IChartSelectionChangedListener listener : listeners )
       listener.selctionChanged( points );
+  }
+
+  private boolean isMoved( final Point currentPos )
+  {
+    return Math.abs( currentPos.x - m_startPos.x ) > m_trashold || Math.abs( currentPos.y - m_startPos.y ) > 5;
+  }
+
+  @Override
+  public void mouseDown( final MouseEvent e )
+  {
+    setCursor( cursorFromButton( e ) );
+
+    final Point currentPos = EventUtils.getPoint( e );
+    m_startPos = currentPos;
+
+    m_startPlot = ChartHandlerUtilities.screen2plotPoint( currentPos, getChart().getPlotRect() );
+  }
+
+  @Override
+  public void mouseMove( final MouseEvent e )
+  {
+    super.mouseMove( e );
+
+    final Point currentPos = EventUtils.getPoint( e );
+    // final Point currentPlot = ChartHandlerUtilities.screen2plotPoint( currentPos, getChart().getPlotRect() );
+    setToolInfo( null );
+
+    if( m_startPlot == null )
+    {
+      doSetTooltip( currentPos );
+      return;
+    }
+
+    final boolean isMoved = isMoved( currentPos );
+    if( !isMoved )
+      return;
+
+    if( EventUtils.isStateButton1( e ) )
+    {
+      if( EventUtils.isControl( e ) || EventUtils.isShift( e ) )
+        doMouseMoveSelection( m_startPlot, currentPos );
+
+      else
+        doMouseMoveZoom( m_startPlot, currentPos );
+    }
+    else if( EventUtils.isStateButton2( e ) )
+      doMouseMovePan( m_startPlot, currentPos );
+  }
+
+  @Override
+  public void mouseUp( final MouseEvent e )
+  {
+    if( m_startPlot == null )
+      return;
+
+    try
+    {
+      doMouseUpAction( e );
+    }
+    finally
+    {
+      setCursor( SWT.CURSOR_ARROW );
+
+      m_startPlot = null;
+
+      final IChartComposite chart = getChart();
+      chart.setDragArea( null );
+    }
   }
 }
