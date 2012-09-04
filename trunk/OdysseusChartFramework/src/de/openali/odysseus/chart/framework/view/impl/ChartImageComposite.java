@@ -13,7 +13,6 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.graphics.Transform;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
@@ -26,6 +25,7 @@ import de.openali.odysseus.chart.framework.model.event.IMapperRegistryEventListe
 import de.openali.odysseus.chart.framework.model.event.impl.ChartModelEventHandler;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.IChartHandler;
 import de.openali.odysseus.chart.framework.view.IChartHandlerManager;
@@ -35,6 +35,12 @@ import de.openali.odysseus.chart.framework.view.IChartHandlerManager;
  */
 public class ChartImageComposite extends Canvas implements IChartComposite
 {
+  @Override
+  public ChartImageInfo getPlotInfo( )
+  {
+    return m_paintJob.getPlotInfo();
+  }
+
   private final ChartModelEventHandler m_chartModelEventHandler = new ChartModelEventHandler();
 
   private final ILayerManagerEventListener m_layerEventListener = new ChartImageLayerManagerEventListener( this );
@@ -116,7 +122,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   @Override
   public final Rectangle getPlotRect( )
   {
-    return m_paintJob.getPlotRect();
+    return new Rectangle( 0, 0, 0, 0 );// m_paintJob.getPlotRect();
   }
 
   @Override
@@ -130,18 +136,18 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   final void handlePaint( final PaintEvent paintEvent )
   {
     final ImageData plotData = m_paintJob.getPlotImageData();
-    final Rectangle plotRect = m_paintJob.getPlotRect();
+    // final Rectangle plotRect = m_paintJob.getPlotRect();
     final Point panOffset = m_panOffset;
     final Rectangle dragArea = m_dragArea;
     final EditInfo editInfo = m_editInfo;
 
-    if( plotData == null || plotRect == null )
+    if( plotData == null ) // || plotRect == null )
       return;
 
     final GC paintGC = paintEvent.gc;
 
-    Transform oldTransform = null;
-    Transform newTransform = null;
+    // Transform oldTransform = null;
+    // Transform newTransform = null;
     try
     {
       if( plotData != null )
@@ -151,16 +157,16 @@ public class ChartImageComposite extends Canvas implements IChartComposite
         plotImage.dispose();
       }
 
-      oldTransform = new Transform( paintGC.getDevice() );
-      newTransform = new Transform( paintGC.getDevice() );
+      // oldTransform = new Transform( paintGC.getDevice() );
+      // newTransform = new Transform( paintGC.getDevice() );
 
-      paintGC.getTransform( oldTransform );
-      paintGC.getTransform( newTransform );
+      // paintGC.getTransform( oldTransform );
+      // paintGC.getTransform( newTransform );
 
       // FIXME: makes no sense: why is there a transformation for the drag area and edit info?
       // Same for handlers: why should they paint with an active transformation?
-      newTransform.translate( plotRect.x, plotRect.y );
-      paintGC.setTransform( newTransform );
+      // newTransform.translate( plotRect.x, plotRect.y );
+      // paintGC.setTransform( newTransform );
 
       paintDragArea( paintGC, dragArea );
       paintEditInfo( paintGC, editInfo );
@@ -170,15 +176,15 @@ public class ChartImageComposite extends Canvas implements IChartComposite
       for( final IChartHandler handler : handlers )
         handler.paintControl( paintEvent );
 
-      paintGC.setTransform( oldTransform );
+      // paintGC.setTransform( oldTransform );
     }
     finally
     {
-      if( oldTransform != null )
-        newTransform.dispose();
-
-      if( newTransform != null )
-        newTransform.dispose();
+//      if( oldTransform != null )
+//        newTransform.dispose();
+//
+//      if( newTransform != null )
+//        newTransform.dispose();
     }
   }
 

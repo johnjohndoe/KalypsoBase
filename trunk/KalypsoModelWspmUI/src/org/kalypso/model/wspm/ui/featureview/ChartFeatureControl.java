@@ -52,7 +52,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.DialogSettings;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
@@ -216,9 +215,6 @@ public class ChartFeatureControl extends AbstractFeatureControl
 
     folder.addSelectionListener( new SelectionAdapter()
     {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
@@ -236,37 +232,18 @@ public class ChartFeatureControl extends AbstractFeatureControl
     ChartFeatureControl.SETTINGS.put( ChartFeatureControl.STR_SETTINGS_TAB, selectionIndex );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#isValid()
-   */
   @Override
   public boolean isValid( )
   {
     return true;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#addModifyListener(org.eclipse.swt.events.ModifyListener)
-   */
-  @Override
-  public void addModifyListener( final ModifyListener l )
-  {
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#removeModifyListener(org.eclipse.swt.events.ModifyListener)
-   */
-  @Override
-  public void removeModifyListener( final ModifyListener l )
-  {
-  }
-
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#updateControl()
-   */
   @Override
   public void updateControl( )
   {
+    // FIXME: will be called on every change to the underlying feature
+    // is this intended? XML configuration should only happen once.
+    
     /* HINT: m_chartTypes, m_chartTabs and m_charts will have the same length. */
     for( int i = 0; i < m_chartTabs.length; i++ )
     {
@@ -275,16 +252,13 @@ public class ChartFeatureControl extends AbstractFeatureControl
       {
         continue;
       }
-
+      
+      // TODO:if chart was previously loaded, why do configuration twice ?
       /* If the chart was previously loaded, it will contain layers - these have to be removed. */
       final IChartComposite chart = m_chartTabs[i].getChartComposite();
       final IChartModel chartModel = chart.getChartModel();
       final ILayerManager lm = chartModel.getLayerManager();
-      final IChartLayer[] layers = lm.getLayers();
-      for( final IChartLayer chartLayer : layers )
-      {
-        lm.removeLayer( chartLayer );
-      }
+      lm.clear();
 
       /* Configure. */
       ChartFactory.doConfiguration( chartModel, m_ccl, m_chartTypes[i], ChartExtensionLoader.getInstance(), m_context );
@@ -321,10 +295,10 @@ public class ChartFeatureControl extends AbstractFeatureControl
       final IDataRange< ? > targetRange = layer.getTargetRange( null );
       if( domainRange != null && targetRange != null )
       {
-        final Number domainMin = (Number) domainRange.getMin();
-        final Number domainMax = (Number) domainRange.getMax();
-        final Number targetMin = (Number) targetRange.getMin();
-        final Number targetMax = (Number) targetRange.getMax();
+        final Number domainMin = (Number)domainRange.getMin();
+        final Number domainMax = (Number)domainRange.getMax();
+        final Number targetMin = (Number)targetRange.getMin();
+        final Number targetMax = (Number)targetRange.getMax();
 
         if( domainMin.doubleValue() > Double.NEGATIVE_INFINITY )
           return true;
@@ -392,7 +366,7 @@ public class ChartFeatureControl extends AbstractFeatureControl
       /* Get the id. */
       final String id = element.getAttribute( "id" ); //$NON-NLS-1$
       if( id != null && id.length() > 0 && id.equals( chartProviderID ) )
-        return (IChartProvider) element.createExecutableExtension( "class" ); //$NON-NLS-1$
+        return (IChartProvider)element.createExecutableExtension( "class" ); //$NON-NLS-1$
     }
 
     return null;

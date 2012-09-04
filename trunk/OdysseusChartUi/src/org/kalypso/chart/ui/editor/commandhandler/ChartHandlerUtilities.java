@@ -89,7 +89,7 @@ public class ChartHandlerUtilities
   public static IChartComposite getChart( final IEvaluationContext context )
   {
     // Fixme: wenn mehrere Charts geöffnet sind wird die contextVariable nicht immer richtig gesetzt
-    return (IChartComposite) context.getVariable( ChartSourceProvider.ACTIVE_CHART_NAME );
+    return (IChartComposite)context.getVariable( ChartSourceProvider.ACTIVE_CHART_NAME );
   }
 
   /**
@@ -121,14 +121,14 @@ public class ChartHandlerUtilities
   {
     final Object chartVar = context.getVariable( ACTIVE_CHART_PART_NAME );
     if( chartVar instanceof IChartPart )
-      return (IChartPart) chartVar;
+      return (IChartPart)chartVar;
 
     final Object objPart = context.getVariable( ISources.ACTIVE_PART_NAME );
     if( objPart instanceof IWorkbenchPart )
     {
-      final IWorkbenchPart part = (IWorkbenchPart) objPart;
+      final IWorkbenchPart part = (IWorkbenchPart)objPart;
 
-      return (IChartPart) part.getAdapter( IChartPart.class );
+      return (IChartPart)part.getAdapter( IChartPart.class );
     }
 
     return null;
@@ -150,13 +150,13 @@ public class ChartHandlerUtilities
 
     if( part instanceof IWorkbenchPart )
     {
-      final IWorkbenchWindow window = ((IWorkbenchPart) part).getSite().getWorkbenchWindow();
+      final IWorkbenchWindow window = ((IWorkbenchPart)part).getSite().getWorkbenchWindow();
       filter.put( IServiceScopes.WINDOW_SCOPE, window );
 
-      commandService = (ICommandService) window.getService( ICommandService.class );
+      commandService = (ICommandService)window.getService( ICommandService.class );
     }
     else
-      commandService = (ICommandService) PlatformUI.getWorkbench().getService( ICommandService.class );
+      commandService = (ICommandService)PlatformUI.getWorkbench().getService( ICommandService.class );
 
     final Command[] commands = commandService.getDefinedCommands();
 
@@ -178,7 +178,7 @@ public class ChartHandlerUtilities
   public static IChartModel getModel( final UIElement element )
   {
     final IServiceLocator locator = element.getServiceLocator();
-    final IEvaluationService service = (IEvaluationService) locator.getService( IEvaluationService.class );
+    final IEvaluationService service = (IEvaluationService)locator.getService( IEvaluationService.class );
     final IEvaluationContext context = service.getCurrentState();
     final IChartComposite chart = ChartHandlerUtilities.getChart( context );
     if( chart == null )
@@ -187,18 +187,28 @@ public class ChartHandlerUtilities
     return chart.getChartModel();
   }
 
+  /**
+   * @deprecated will always return screen
+   */
+
+  @Deprecated
   public static Point screen2plotPoint( final Point screen, final Rectangle plotRect )
   {
-    if( plotRect == null )
-      return screen;
+    // if( plotRect == null )
+    return screen;
 
-    return new Point( screen.x - plotRect.x, screen.y - plotRect.y );
+    // return new Point( screen.x - plotRect.x, screen.y - plotRect.y );
   }
+  /**
+   * @deprecated will always return plotPoint
+   */
 
+  @Deprecated
+ 
   public static Point plotPoint2screen( final Point plotPoint, final Rectangle plotRect )
   {
-    if( plotRect == null )
-      return plotPoint;
-    return new Point( plotPoint.x + plotRect.x, plotPoint.y + plotRect.y );
+    // if( plotRect == null )
+    return plotPoint;
+    // return new Point( plotPoint.x + plotRect.x, plotPoint.y + plotRect.y );
   }
 }

@@ -61,7 +61,7 @@ import de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegend
 
 /**
  * Basic chart model parameters like title, styling, description, ...
- *
+ * 
  * @author Dirk Kuch
  */
 public class BasicChartSettings implements IBasicChartSettings
@@ -81,9 +81,30 @@ public class BasicChartSettings implements IBasicChartSettings
   private CHART_DATA_LOADER_STRATEGY m_strategy = CHART_DATA_LOADER_STRATEGY.eAsynchrone;
 
   @Override
+  public void addInsets( final String id, final Insets insets )
+  {
+    m_insets.put( id, insets );
+
+  }
+
+  @Override
+  public void addPlotFrameStyle( final POSITION position, final ILineStyle lineStyle )
+  {
+    m_plotFrame.setFrame( new ChartPlotFrameEdge( lineStyle ), position );
+
+  }
+
+  @Override
   public void addTitles( final TitleTypeBean... titles )
   {
     Collections.addAll( m_title, titles );
+  }
+
+  @Override
+  public void clearTitles( )
+  {
+    m_title.clear();
+
   }
 
   @Override
@@ -99,12 +120,24 @@ public class BasicChartSettings implements IBasicChartSettings
   }
 
   @Override
+  public Insets getInsets( final String id )
+  {
+    return m_insets.get( id );
+  }
+
+  @Override
   public IChartLegendRenderer getLegendRenderer( )
   {
     if( m_renderer == null )
       m_renderer = CompactChartLegendRenderer.ID;
 
     return OdysseusChartExtensions.getRenderers( m_renderer );
+  }
+
+  @Override
+  public ChartPlotFrame getPlotFrame( )
+  {
+    return m_plotFrame;
   }
 
   @Override
@@ -155,31 +188,5 @@ public class BasicChartSettings implements IBasicChartSettings
     titleType.setTextStyle( textStyle );
     m_title.clear();
     m_title.add( titleType );
-  }
-
-  @Override
-  public void addInsets( final String id, final Insets insets )
-  {
-    m_insets.put( id, insets );
-
-  }
-
-  @Override
-  public Insets getInsets( final String id )
-  {
-    return m_insets.get( id );
-  }
-
-  @Override
-  public void addPlotFrameStyle( final POSITION position, final ILineStyle lineStyle )
-  {
-    m_plotFrame.setFrame( new ChartPlotFrameEdge( lineStyle ), position );
-
-  }
-
-  @Override
-  public ChartPlotFrame getPlotFrame( )
-  {
-    return m_plotFrame;
   }
 }

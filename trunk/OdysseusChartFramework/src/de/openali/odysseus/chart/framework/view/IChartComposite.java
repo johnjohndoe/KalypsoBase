@@ -45,6 +45,7 @@ import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
 /**
  * @author kimwerner
@@ -54,6 +55,8 @@ public interface IChartComposite extends IChartView
   IChartHandlerManager getPlotHandler( );
 
   Rectangle getPlotRect( );
+  
+  ChartImageInfo getPlotInfo();
 
   void invalidate( );
 

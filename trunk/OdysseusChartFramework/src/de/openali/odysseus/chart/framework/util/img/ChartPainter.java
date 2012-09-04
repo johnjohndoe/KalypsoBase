@@ -74,6 +74,8 @@ public class ChartPainter
 {
   private final IChartModel m_model;
 
+  private ChartImageInfo m_infoObject;
+
   public static final String CHART_INSETS = "CHART_INSETS"; //$NON-NLS-1$
 
   public static final String PLOT_INSETS = "PLOT_INSETS"; //$NON-NLS-1$
@@ -185,6 +187,11 @@ public class ChartPainter
       return new Insets( 0, 0, 0, 0 );
     }
     return insets;
+  }
+
+  public ChartImageInfo getInfoObject( )
+  {
+    return m_infoObject;
   }
 
   private final Insets getPlotFrameInsets( )
@@ -325,7 +332,7 @@ public class ChartPainter
       infoObject.setPlotRect( plotRect );
       final Rectangle plotClientRect = RectangleUtils.inflateRect( plotRect, plotInsets );
       infoObject.setLayerRect( plotClientRect );
-
+      m_infoObject = infoObject;
       this.setAxesHeight( plotClientRect, plotRect );
 
       m_titlePainter.paint( gc, titleRect );
