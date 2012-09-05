@@ -542,7 +542,7 @@ public class SelectFeatureWidget extends DeprecatedMouseWidget
     if( Arrays.isEmpty( m_themes ) )
       return;
 
-    final Map<IKalypsoFeatureTheme, List<Feature>> selection = new HashMap<IKalypsoFeatureTheme, List<Feature>>();
+    final Map<IKalypsoFeatureTheme, List<Feature>> selection = new HashMap<>();
 
     for( final IKalypsoFeatureTheme theme : m_themes )
     {
@@ -640,8 +640,8 @@ public class SelectFeatureWidget extends DeprecatedMouseWidget
     if( selection.size() == 0 )
       selectionManager.clear();
 
-    final List<Feature> toRemove = new ArrayList<Feature>();
-    final List<EasyFeatureWrapper> toAdd = new ArrayList<EasyFeatureWrapper>();
+    final List<Feature> toRemove = new ArrayList<>();
+    final List<EasyFeatureWrapper> toAdd = new ArrayList<>();
 
     for( final IKalypsoFeatureTheme theme : selection.keySet() )
     {
@@ -683,13 +683,17 @@ public class SelectFeatureWidget extends DeprecatedMouseWidget
 
   private Collection<Feature> selectFeatures( final FeatureList featureList, final GM_Object selectGeometry, final QName[] qnamesToSelect, final GMLXPath[] geometryPathes, final boolean intersectMode )
   {
-    final Collection<Feature> selectedFeatures = new HashSet<Feature>();
+    final Collection<Feature> selectedFeatures = new HashSet<>();
+
+    if( featureList == null || featureList.getOwner() == null )
+      return selectedFeatures;
 
     // Only works for surface geometries:: select everything that intersects this geometry
     if( selectGeometry instanceof GM_Surface< ? > )
     {
       final GM_Envelope envelope = selectGeometry.getEnvelope();
       final GMLWorkspace workspace = featureList.getOwner().getWorkspace();
+
       final List< ? > result = featureList.query( envelope, null );
 
       for( final Object object : result )
