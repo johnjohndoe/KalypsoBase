@@ -230,6 +230,8 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     if( !isVisible() || getProfil() == null )
       return null;
 
+    // FIXME: wrong place -> this should be implemented in the layer that actually show a specific component
+
     final IProfileRecord[] profilPoints = getProfil().getPoints();
     final int len = profilPoints.length;
     for( int i = 0; i < len; i++ )
@@ -280,12 +282,17 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     return m_lineStyleActive;
   }
 
+  // FIXME: this abstract default style stuff is contraproductive. Each laxer should once and for all define its own
+  // styles.
   protected ILineStyle getLineStyleHover( )
   {
     if( m_lineStyleHover == null )
     {
-      m_lineStyleHover = getLineStyle().clone();
+      final ILineStyle lineStyle = getLineStyle();
+
+      m_lineStyleHover = lineStyle.clone();
       m_lineStyleHover.setDash( 0f, HOVER_DASH );
+
       m_lineStyleHover.setLineCap( LINECAP.FLAT );
     }
     return m_lineStyleHover;
@@ -336,6 +343,8 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     return m_pointStyleActive;
   }
 
+  // FIXME: this abstract default style stuff is contraproductive. Each laxer should once and for all define its own
+  // styles.
   protected IPointStyle getPointStyleHover( )
   {
     if( m_pointStyleHover == null )
@@ -344,7 +353,12 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
       m_pointStyleHover.setWidth( m_pointStyleHover.getWidth() * 2 );
       m_pointStyleHover.setHeight( m_pointStyleHover.getHeight() * 2 );
 
-      m_pointStyleHover.setStroke( getLineStyleHover().clone() );
+      final ILineStyle lineStyleHover = getLineStyleHover();
+      final ILineStyle stroke = lineStyleHover.clone();
+      stroke.setDash( 0.0f, null );
+
+      m_pointStyleHover.setStroke( stroke );
+
       m_pointStyleHover.setFillVisible( true );
     }
     return m_pointStyleHover;
