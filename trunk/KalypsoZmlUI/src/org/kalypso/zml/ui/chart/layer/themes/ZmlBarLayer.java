@@ -62,7 +62,9 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
+import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
+import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
 import org.kalypso.zml.core.diagram.base.IZmlLayer;
 import org.kalypso.zml.core.diagram.base.IZmlLayerProvider;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
@@ -333,12 +335,36 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer // , IToo
     // TODO: highlight rectangle
     final IPaintable hoverFigure = null;
     final IPaintable editFigure = null;
-    final Object editData = bar.getData();
+    final IObservationValueContainer editData = (IObservationValueContainer)bar.getData();
+    if( editData == null )
+      return null;
 
-    // TODO: get value via data index and format text
-    final String editText = "" + editData;
+    // TODO: configure formatting via layer parameters?
+    final StringBuilder label = new StringBuilder();
 
-    return new EditInfo( this, hoverFigure, editFigure, editData, editText, pos );
+    final IAxis[] axes = editData.getAxes();
+    for( final IAxis axis : axes )
+    {
+      if( AxisUtils.isDataSrcAxis( axis ) || AxisUtils.isStatusAxis( axis ) )
+        continue;
+
+      try
+      {
+        // FIXME: improve -> depends on data type; format double and dates correctly, etc...
+        // FIXME: use same mechanism as is used by table
+        label.append( axis.getName() );
+        label.append( "  " );
+        label.append( editData.get( axis ) );
+        label.append( String.format( "[%s]", axis.getUnit() ) );
+        label.append( '\n' );
+      }
+      catch( final SensorException e )
+      {
+        e.printStackTrace();
+      }
+    }
+
+    return new EditInfo( this, hoverFigure, editFigure, editData, label.toString(), pos );
   }
 
   IChartLayerFilter getStyleFilter( final String styleName, final IObservation observation )
