@@ -57,6 +57,9 @@ public final class Objects
   {
   }
 
+  /**
+   * Returns <code>true</code> if any of the given objects is <code>null</code>.
+   */
   public static boolean isNull( final Object... objects )
   {
     if( objects == null )
