@@ -41,7 +41,6 @@
 package org.kalypso.model.wspm.ui.featureview;
 
 import java.net.URL;
-import java.util.Map;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
@@ -59,6 +58,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.action.CommandWithStyle;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
@@ -99,7 +99,7 @@ public class ChartFeatureControl extends AbstractFeatureControl
 
   private final URL m_context;
 
-  private final Map<String, Integer> m_commands;
+  private final CommandWithStyle[] m_commands;
 
   /**
    * The ID of the chart provider. May be null.
@@ -120,7 +120,7 @@ public class ChartFeatureControl extends AbstractFeatureControl
 
   /**
    * The constructor.
-   * 
+   *
    * @param feature
    * @param ftp
    * @param ccl
@@ -129,7 +129,7 @@ public class ChartFeatureControl extends AbstractFeatureControl
    * @param commands
    * @param chartProviderID
    */
-  public ChartFeatureControl( final String featureKeyName, final Feature feature, final IPropertyType ftp, final ChartConfigurationLoader ccl, final ChartType[] chartTypes, final URL context, final Map<String, Integer> commands, final String chartProviderID )
+  public ChartFeatureControl( final String featureKeyName, final Feature feature, final IPropertyType ftp, final ChartConfigurationLoader ccl, final ChartType[] chartTypes, final URL context, final CommandWithStyle[] commands, final String chartProviderID )
   {
     super( feature, ftp );
 
@@ -321,7 +321,7 @@ public class ChartFeatureControl extends AbstractFeatureControl
 
   /**
    * This function configures the chart via a chart provider.
-   * 
+   *
    * @param chartModel
    *          The chart model.
    */
@@ -349,7 +349,7 @@ public class ChartFeatureControl extends AbstractFeatureControl
 
   /**
    * This function looks up a chart provider with the given ID.
-   * 
+   *
    * @param chartProviderID
    *          The ID of the chart provider.
    * @return The chart provider or null.

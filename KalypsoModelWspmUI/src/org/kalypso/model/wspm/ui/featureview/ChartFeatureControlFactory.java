@@ -41,18 +41,21 @@
 package org.kalypso.model.wspm.ui.featureview;
 
 import java.net.URL;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.jface.action.CommandWithStyle;
 import org.kalypso.contribs.eclipse.swt.SWTUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.ogc.gml.featureview.control.IExtensionsFeatureControlFactory2;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
@@ -89,12 +92,12 @@ public class ChartFeatureControlFactory implements IExtensionsFeatureControlFact
     final String[] commandIds = cmdIds.split( ";" ); //$NON-NLS-1$
     final String[] commandStyles = cmdStyles.split( ";" ); //$NON-NLS-1$
 
-    final Map<String, Integer> commands = new LinkedHashMap<String, Integer>();
+    final Collection<CommandWithStyle> commands = new ArrayList<>();
 
     if( commandIds.length != commandStyles.length )
     {
       final String msg = Messages.getString( "org.kalypso.model.wspm.ui.featureview.ChartFeatureControlFactory.0", commandIds, commandIds.length, cmdStyles, commandStyles.length ); //$NON-NLS-1$
-      final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, msg, null );
+      final IStatus status = new Status( IStatus.WARNING, KalypsoModelWspmUIPlugin.ID, msg );
       KalypsoCorePlugin.getDefault().getLog().log( status );
     }
     else
@@ -106,7 +109,7 @@ public class ChartFeatureControlFactory implements IExtensionsFeatureControlFact
 
         final int styleFromString = SWTUtilities.createStyleFromString( cmdStyle );
         final int style = styleFromString == 0 ? SWT.PUSH : styleFromString;
-        commands.put( cmdId, style );
+        commands.add( new CommandWithStyle( cmdId, style ) );
       }
     }
 
@@ -138,7 +141,10 @@ public class ChartFeatureControlFactory implements IExtensionsFeatureControlFact
       }
 
       final Feature chartFeature = ChartFeatureControl.getChartFeature( feature, pt );
-      return new ChartFeatureControl( featureKeyName, chartFeature, pt, ccl, chartTypes, configUrl, commands, chartProviderID );
+
+      final CommandWithStyle[] allCommands = commands.toArray( new CommandWithStyle[commands.size()] );
+
+      return new ChartFeatureControl( featureKeyName, chartFeature, pt, ccl, chartTypes, configUrl, allCommands, chartProviderID );
     }
     catch( final Throwable e )
     {

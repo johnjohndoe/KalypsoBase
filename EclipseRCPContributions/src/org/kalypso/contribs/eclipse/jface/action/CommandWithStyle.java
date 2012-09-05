@@ -40,49 +40,49 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.contribs.eclipse.jface.action;
 
-import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.action.ToolBarManager;
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.swt.SWT;
 import org.eclipse.ui.menus.CommandContributionItem;
-import org.eclipse.ui.menus.CommandContributionItemParameter;
-import org.eclipse.ui.services.IServiceLocator;
 
 /**
- * Utilities for the {@link org.eclipse.jface.action.ToolBarManager}.
+ * Encaspulates a command id and a swt style information.
  *
  * @author Gernot Belger
  */
-public final class ToolbarManagerUtils
+public class CommandWithStyle
 {
-  private ToolbarManagerUtils( )
+  private final String m_commandID;
+
+  private final int m_style;
+
+  public CommandWithStyle( final String commandID, final int style )
   {
-    throw new UnsupportedOperationException();
+    m_commandID = commandID;
+    m_style = style;
   }
 
-  /**
-   * Adds commands to a toolbar.<br/>
-   *
-   * @param commands
-   *          A map of commandId -> commandStyle. To add a separator, use an empty commandId.
-   */
-  public static void addCommands( final ToolBarManager manager, final CommandWithStyle[] commands, final IServiceLocator serviceLocator )
+  public String getCommandID( )
   {
-    for( final CommandWithStyle item : commands )
-    {
-      final String cmdId = item.getCommandID();
-      final Integer cmdStyle = item.getStyle();
+    return m_commandID;
+  }
 
-      if( cmdId == null || cmdId.trim().isEmpty() )
-      {
-        final Separator sep = new Separator();
-        sep.setVisible( true );
-        manager.add( sep );
-      }
-      else
-      {
-        final CommandContributionItemParameter cmdParams = new CommandContributionItemParameter( serviceLocator, cmdId + "_item_", cmdId, cmdStyle ); //$NON-NLS-1$
-        final CommandContributionItem contribItem = new CommandContributionItem( cmdParams );
-        manager.add( contribItem );
-      }
-    }
+  public int getStyle( )
+  {
+    return m_style;
+  }
+
+  public static CommandWithStyle radio( final String commandID )
+  {
+    return new CommandWithStyle( commandID, CommandContributionItem.STYLE_RADIO );
+  }
+
+  public static CommandWithStyle push( final String commandID )
+  {
+    return new CommandWithStyle( commandID, CommandContributionItem.STYLE_PUSH );
+  }
+
+  public static CommandWithStyle separator( )
+  {
+    return new CommandWithStyle( StringUtils.EMPTY, SWT.NONE );
   }
 }
