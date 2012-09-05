@@ -48,12 +48,10 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.commons.math.geom.PolyLine;
 import org.kalypso.jts.JTSUtilities;
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.ProfilFactory;
@@ -63,6 +61,7 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
+import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -81,7 +80,7 @@ import com.vividsolutions.jts.geom.Point;
 
 /**
  * TODO: merge / check this class with {@link ProfilUtil}
- * 
+ *
  * @author Holger Albert, Thomas Jung , Kim Werner
  */
 public final class WspmProfileHelper
@@ -103,7 +102,7 @@ public final class WspmProfileHelper
    * <li>The points of the segment with the lowest distance will be used for projection.</li>
    * </ol>
    * </p>
-   * 
+   *
    * @param point
    *          The geo point, must be in the same coordinate system as the profile is. It does not have to lie on the
    *          profile.
@@ -134,10 +133,13 @@ public final class WspmProfileHelper
 
   /**
    * Returns the coordinate system of the profile.
+   *
+   * @deprecated Every IProfile shoul have its own srs
    */
+  @Deprecated
   private static String getCoordinateSystem( final IProfil profile )
   {
-    final String crs = ObjectUtils.toString( profile.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS ) );
+    final String crs = profile.getSrsName();
     if( Strings.isEmpty( crs ) )
       return KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
@@ -167,7 +169,7 @@ public final class WspmProfileHelper
    * <li>The points of the segment with the lowest distance will be used for projection.</li>
    * </ol>
    * </p>
-   * 
+   *
    * @param geoPoint
    *          The geo point. It does not have to lie on the profile.
    * @param profile
@@ -290,16 +292,16 @@ public final class WspmProfileHelper
 
   /**
    * Returns the geographic coordinates (x, y, z) for a given width coordinate as GM_Point.
-   * 
+   *
    * @param width
    *          width coordinate
    * @param profile
    *          profile
-   * @return Geo position as GM_Point (transformed).
+   * @return Geo position as GM_Point (transformed to the Kalypso coordinate system).
    */
-  public static GM_Point getGeoPosition( final double width, final IProfil profile ) throws Exception
+  public static GM_Point getGeoPositionKalypso( final double width, final IProfil profile ) throws GeoTransformerException
   {
-    final GM_Point gmPoint = getGeoPositionInternal( width, profile );
+    final GM_Point gmPoint = getGeoPosition( width, profile );
     if( gmPoint == null )
       return null;
 
@@ -316,9 +318,9 @@ public final class WspmProfileHelper
    *          The width coordinate.
    * @param profile
    *          The profile.
-   * @return Geo position as GM_Point (untransformed).
+   * @return Geo position as GM_Point (untransformed in teh coordinate system of the profile).
    */
-  private static GM_Point getGeoPositionInternal( final double width, final IProfil profile )
+  public static GM_Point getGeoPosition( final double width, final IProfil profile )
   {
     /* If no or only one geo referenced points are found, return. */
     final IRecord[] geoReferencedPoints = ProfilUtil.getGeoreferencedPoints( profile );
@@ -328,7 +330,7 @@ public final class WspmProfileHelper
     // END OF FINDING GEOREFERENCED POINTS
 
     /* Now we have a list with fully geo referenced points of a profile. */
-    final String srsName = (String) profile.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS );
+    final String srsName = profile.getSrsName();
     final int iRechtswert = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT );
     final int iHochwert = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_HOCHWERT );
     final int iBreite = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE );
@@ -380,7 +382,7 @@ public final class WspmProfileHelper
    * Returns the corresponding height for an given width coordinate. if the width is outside of the profile points, the
    * first / last point height is returned. Else the height is obtained by linear interpolation between the adjacent
    * profile points.
-   * 
+   *
    * @param width
    *          width coordinate
    * @param profile
@@ -396,7 +398,7 @@ public final class WspmProfileHelper
    * Returns the corresponding value for an given width coordinate. if the width is outside the valid range of profile
    * points, the first / last value is returned. Else the value is obtained by linear interpolation between the adjacent
    * profile points.
-   * 
+   *
    * @param width
    *          width coordinate
    * @param profile
@@ -484,7 +486,7 @@ public final class WspmProfileHelper
 
   /**
    * gets the geo-points of the intersect between profile and water level
-   * 
+   *
    * @param profil
    *          input profile
    * @param wspHoehe
@@ -498,7 +500,7 @@ public final class WspmProfileHelper
     final IComponent cHochwert = profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_HOCHWERT );
     final IComponent cRechtswert = profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT );
 
-    final String crs = (String) profil.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS );
+    final String crs = profil.getSrsName();
 
     /* ignore profile without geo-coordinates */
     if( cHochwert == null || cRechtswert == null )
@@ -527,7 +529,7 @@ public final class WspmProfileHelper
 
   /**
    * calculates the water level segments as pairs of x-coordinates.
-   * 
+   *
    * @deprecated does not always return correct results. Use {@link WaterlevelIntersectionWorker} instead.
    */
   @Deprecated
@@ -615,7 +617,7 @@ public final class WspmProfileHelper
     return new PolyLine( xFiltered, yFiltered, 0.0001 );
   }
 
-  public static GM_Curve cutProfileAtWaterlevel( final double waterlevel, final IProfil profil, final String crs ) throws Exception
+  public static GM_Curve cutProfileAtWaterlevel( final double waterlevel, final IProfil profil ) throws Exception
   {
     final GM_Point[] points = WspmProfileHelper.calculateWspPoints( profil, waterlevel );
     IProfil cutProfile = null;
@@ -628,12 +630,12 @@ public final class WspmProfileHelper
       }
     }
 
-    return ProfilUtil.getLine( cutProfile, crs );
+    return ProfilUtil.getLine( cutProfile );
   }
 
   /**
    * cuts an IProfil at defined geo-points, that have to lie on the profile-line.
-   * 
+   *
    * @param profile
    *          the profile
    * @param firstPoint
@@ -676,8 +678,7 @@ public final class WspmProfileHelper
     final IProfil tmpProfil = ProfilFactory.createProfil( profile.getType() );
 
     /* set the coordinate system */
-    final String crs = (String) profile.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS );
-    tmpProfil.setProperty( IWspmConstants.PROFIL_PROPERTY_CRS, crs );
+    tmpProfil.setSrsName( profile.getSrsName() );
 
     final IComponent cBreite = tmpProfil.getPointPropertyFor( IWspmPointProperties.POINT_PROPERTY_BREITE );
     final IComponent cHoehe = tmpProfil.getPointPropertyFor( IWspmPointProperties.POINT_PROPERTY_HOEHE );
@@ -760,7 +761,7 @@ public final class WspmProfileHelper
    * <li>Create a profile with each point and its width and height (only points with elevation are being considered!)</li>
    * <li>The new profile is simplified by Douglas Peucker.</li>
    * </ol>
-   * 
+   *
    * @param profileType
    *          The type of the profile.
    * @param pointsZ
@@ -787,7 +788,7 @@ public final class WspmProfileHelper
 
   /**
    * This function calculates the points for the profile and creates the new profile.
-   * 
+   *
    * @param profileType
    *          The type of the profile.
    * @param points
@@ -800,7 +801,7 @@ public final class WspmProfileHelper
   {
     /* Create the new profile. */
     final IProfil profile = ProfilFactory.createProfil( profileType );
-    profile.setProperty( IWspmConstants.PROFIL_PROPERTY_CRS, crsOfPoints );
+    profile.setSrsName( crsOfPoints );
 
     // TODO: check: we calculate the 'breite' by just adding up the distances between the points, is this always OK?
     // FIXME: no! this at least depends on the coordinate system....!
@@ -880,7 +881,7 @@ public final class WspmProfileHelper
 
   /**
    * Inserts new points into an existing profile.<br/>
-   * 
+   *
    * @param insertSign
    *          If -1, new points are inserted at the beginning of the profile, 'width' goes into negative direction.
    *          Else, points are inserted at the end of the profile with ascending width.

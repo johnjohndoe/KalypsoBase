@@ -162,7 +162,7 @@ public final class Profiles
 
   public static GM_Point getPosition( final IProfil profile, final double breite ) throws Exception
   {
-    return WspmProfileHelper.getGeoPosition( breite, profile );
+    return WspmProfileHelper.getGeoPositionKalypso( breite, profile );
   }
 
   public static Coordinate getJtsPosition( final IProfil profile, final double breite ) throws Exception
