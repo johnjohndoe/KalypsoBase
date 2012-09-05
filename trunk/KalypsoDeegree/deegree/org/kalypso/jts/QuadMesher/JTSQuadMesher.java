@@ -2,57 +2,54 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.jts.QuadMesher;
-
-import org.kalypso.jts.LineStringUtilities;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LineString;
 
 /**
  * Generates a quad-mesh from four lines with end / start points which are coincident and build a quadrangle.
- * 
+ *
  * @author Thomas Jung
  */
 public class JTSQuadMesher
 {
-
   private final LineString m_bottomLine;
 
   private final LineString m_rightLine;
@@ -69,26 +66,22 @@ public class JTSQuadMesher
     m_rightLine = rightLine;
   }
 
-  public boolean validate( )
-  {
-
-    return false;
-  }
-
   /**
+   * FIXME: this comment is outdated, the orientation of hte lines is fixed within this method. Giving the lines like
+   * described does not work. Rather the lines should be oriented one foloowing the other.<br/>
    * check the orientation of the lines for the algorithm the line nodes must be oriented according the bootom line node
    * orientation. finaly, <code>
    *    - the bottom line won't be changed
    *    - the top line has to be oriented like the bottom line
-   *    - the left and the right line have to be oriented from 
-   *      bottom line to top line. 
-   *      
+   *    - the left and the right line have to be oriented from
+   *      bottom line to top line.
+   *
    *              top line
-   *            O--->---->O  
+   *            O--->---->O
    *            ^         ^
    *       left |         |  right
    *            |         |
-   *            O--->---->O 
+   *            O--->---->O
    *            bottom line
    * </code>
    */
@@ -108,16 +101,16 @@ public class JTSQuadMesher
 
     if( coordinatesTop[coordinatesTop.length - 1].equals2D( coordinatesRight[0] ) )
     {
-      newBottom = LineStringUtilities.changeOrientation( m_bottomLine );
+      newBottom = (LineString) m_bottomLine.reverse();
       newTop = m_topLine;
       newLeft = m_leftLine;
-      newRight = LineStringUtilities.changeOrientation( m_rightLine );
+      newRight = (LineString) m_rightLine.reverse();
     }
     else
     {
       newBottom = m_bottomLine;
-      newTop = LineStringUtilities.changeOrientation( m_topLine );
-      newLeft = LineStringUtilities.changeOrientation( m_leftLine );
+      newTop = (LineString) m_topLine.reverse();
+      newLeft = (LineString) m_leftLine.reverse();
       newRight = m_rightLine;
     }
 
@@ -198,7 +191,6 @@ public class JTSQuadMesher
     }
 
     return meshPoints;
-
   }
 
   /**
