@@ -44,6 +44,7 @@ import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartReference;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * The purpose of this part listener is to get a certain adapter of the active workbench part.
@@ -203,6 +204,9 @@ public class AdapterPartListener<C> implements IPartListener2
   public void setAdapter( final IWorkbenchPart part, final C adapter )
   {
     m_part = part;
+
+    if( PlatformUI.getWorkbench().isClosing() )
+      return;
 
     m_adapterEater.setAdapter( part, adapter );
   }
