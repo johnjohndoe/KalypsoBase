@@ -121,7 +121,7 @@ public final class DouglasPeuckerHelper
   /**
    * This function starts the creation of the operation, which removes points from the profile. It uses the
    * Douglas.Peucker algorithm, for finding the point to remove.
-   * 
+   *
    * @param allowedDistance
    *          The maximal Douglas-Peucker distance [m].
    * @return The point that should be removed from the profile.
@@ -151,8 +151,8 @@ public final class DouglasPeuckerHelper
       return new IProfileRecord[0];
 
     /* Reduce segment wise. */
-    final Set<IProfileRecord> pointsToKeepList = new HashSet<IProfileRecord>( Arrays.asList( pointsToKeep ) );
-    final List<IProfileRecord> pointsToRemove = new ArrayList<IProfileRecord>( points.length - 2 );
+    final Set<IProfileRecord> pointsToKeepList = new HashSet<>( Arrays.asList( pointsToKeep ) );
+    final List<IProfileRecord> pointsToRemove = new ArrayList<>( points.length - 2 );
 
     int segmentBegin = 0;
     for( int i = 0; i < points.length; i++ )
@@ -202,7 +202,7 @@ public final class DouglasPeuckerHelper
       final IProfileRecord[] beginReduced = reduceIt( points, begin, maxdistIndex, allowedDistance );
       final IProfileRecord[] endReduced = reduceIt( points, maxdistIndex, end, allowedDistance );
 
-      final List<IRecord> reduced = new ArrayList<IRecord>( beginReduced.length + endReduced.length );
+      final List<IRecord> reduced = new ArrayList<>( beginReduced.length + endReduced.length );
 
       reduced.addAll( Arrays.asList( beginReduced ) );
       reduced.addAll( Arrays.asList( endReduced ) );
@@ -221,34 +221,12 @@ public final class DouglasPeuckerHelper
 
   protected static double calcDistance( final IRecord beginPoint, final IRecord endPoint, final IRecord middlePoint )
   {
-
-// final IComponent breiteComp = ProfilObsHelper.getPropertyFromId( beginPoint, IWspmConstants.POINT_PROPERTY_BREITE );
-// final IComponent hoeheComp = ProfilObsHelper.getPropertyFromId( beginPoint, IWspmConstants.POINT_PROPERTY_HOEHE );
-//
-// final TupleResult ownerBegin = beginPoint.getOwner();
-// final int breiteIndexBegin = ownerBegin.indexOfComponent( breiteComp );
-// final int hoeheIndexBegin = ownerBegin.indexOfComponent( hoeheComp );
-//
-// final TupleResult ownerMiddle = middlePoint.getOwner();
-// final int breiteIndexMiddle = ownerMiddle.indexOfComponent( breiteComp );
-// final int hoeheIndexMiddle = ownerMiddle.indexOfComponent( hoeheComp );
-//
-// final TupleResult ownerEnd = endPoint.getOwner();
-// final int breiteIndexEnd = ownerEnd.indexOfComponent( breiteComp );
-// final int hoeheIndexEnd = ownerEnd.indexOfComponent( hoeheComp );
-
     final Double bx = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, beginPoint );// (Double)
-// beginPoint.getValue( breiteIndexBegin );
     final Double by = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOEHE, beginPoint );// (Double)
-// beginPoint.getValue( hoeheIndexBegin );
     final Double ex = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, endPoint );// (Double)
-// endPoint.getValue( breiteIndexMiddle );
     final Double ey = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOEHE, endPoint );// (Double)
-// endPoint.getValue( hoeheIndexMiddle );
     final Double mx = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, middlePoint );// (Double)
-// middlePoint.getValue( breiteIndexEnd );
     final Double my = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOEHE, middlePoint );// (Double)
-// middlePoint.getValue( hoeheIndexEnd );
 
     final double f = (ey - by) / (ex - bx);
 
@@ -266,14 +244,14 @@ public final class DouglasPeuckerHelper
    *          max number of points.
    * @return points to keep
    */
-  public static IRecord[] findIProfileVIPPoints( final IRecord[] points, final int allowedNumPoints )
+  public static IProfileRecord[] findIProfileVIPPoints( final IProfileRecord[] points, final int allowedNumPoints )
   {
-    final List<IRecord> pointsToKeep = new ArrayList<IRecord>( allowedNumPoints - 1 );
+    final List<IProfileRecord> pointsToKeep = new ArrayList<>( allowedNumPoints - 1 );
 
     // store the first point of the input profile in the profile point list.
     pointsToKeep.add( points[0] );
 
-    final LinkedList<ProfileSegmentData> profSegmentList = new LinkedList<ProfileSegmentData>();
+    final LinkedList<ProfileSegmentData> profSegmentList = new LinkedList<>();
 
     /* begin with the start and end point of the profile */
     final ProfileSegmentData startSegment = new ProfileSegmentData( points, 0, points.length - 1 );
@@ -296,6 +274,7 @@ public final class DouglasPeuckerHelper
           indexMax = j;
         }
       }
+
       // store the found maximum in the profile point list
       pointsToKeep.add( points[profSegmentList.get( indexMax ).m_distInd] );
 
@@ -307,8 +286,8 @@ public final class DouglasPeuckerHelper
       profSegmentList.set( indexMax, firstSplittedSegment );
       profSegmentList.add( indexMax + 1, secondSplittedSegment );
     }
-    pointsToKeep.add( points[points.length - 1] );
-    return pointsToKeep.toArray( new IRecord[pointsToKeep.size()] );
-  }
 
+    pointsToKeep.add( points[points.length - 1] );
+    return pointsToKeep.toArray( new IProfileRecord[pointsToKeep.size()] );
+  }
 }
