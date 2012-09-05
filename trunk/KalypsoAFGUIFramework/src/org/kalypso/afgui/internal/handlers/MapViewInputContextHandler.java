@@ -41,7 +41,7 @@ import de.renew.workflow.connector.cases.IScenario;
 /**
  * Loads a template file in the current map view. Requires that the current context contains the map view. Use a
  * {@link ViewContextHandler} for this purpose.
- * 
+ *
  * @author Stefan Kurzbach
  */
 public class MapViewInputContextHandler extends AbstractHandler
@@ -79,7 +79,8 @@ public class MapViewInputContextHandler extends AbstractHandler
     {
       // there is a map view and a file
       final MapView mapView = (MapView) view;
-      mapView.doSave( false, new NullProgressMonitor() );
+      // FIXME: if( mapView.isDirty() )
+        mapView.doSave( false, new NullProgressMonitor() );
       mapView.setInput( input );
 
       final IMapPanel mapPanel = (IMapPanel) mapView.getAdapter( IMapPanel.class );
