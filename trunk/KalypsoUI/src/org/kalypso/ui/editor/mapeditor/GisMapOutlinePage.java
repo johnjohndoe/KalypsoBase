@@ -62,7 +62,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.commands.ICommandService;
-import org.eclipse.ui.part.IPageBookViewPage;
 import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.part.Page;
 import org.eclipse.ui.services.IServiceScopes;
@@ -86,7 +85,7 @@ import org.kalypso.util.command.JobExclusiveCommandTarget;
  *
  * @author Gernot Belger
  */
-public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPageBookViewPage, ICommandTarget
+public class GisMapOutlinePage extends Page implements IContentOutlinePage, ICommandTarget
 {
   private final JobExclusiveCommandTarget m_commandTarget;
 
@@ -112,7 +111,7 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
    * </ul>
    * All other entries are ignored.
    */
-  private final Set<String> m_actionURIs = new HashSet<String>();
+  private final Set<String> m_actionURIs = new HashSet<>();
 
   private final MenuManager m_pagePopup = new MenuManager( "#MapOutlineContextMenu" ); //$NON-NLS-1$
 
@@ -247,9 +246,6 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
     super.dispose();
   }
 
-  /**
-   * @see org.eclipse.ui.part.IPage#getControl()
-   */
   @Override
   public Control getControl( )
   {
@@ -259,12 +255,13 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
     return m_outlineViewer.getControl();
   }
 
-  /**
-   * @see org.eclipse.ui.part.IPage#setFocus()
-   */
   @Override
   public void setFocus( )
   {
+    final Control control = getControl();
+    if( control != null && !control.isDisposed() )
+      control.setFocus();
+
     setStyleSelection( m_outlineViewer );
   }
 
@@ -277,22 +274,16 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
     if( activePage == null )
       return;
 
-    final StyleEditorViewPart part = (StyleEditorViewPart) activePage.findView( "org.kalypso.ui.editor.mapeditor.views.styleeditor" ); //$NON-NLS-1$
+    final StyleEditorViewPart part = (StyleEditorViewPart)activePage.findView( "org.kalypso.ui.editor.mapeditor.views.styleeditor" ); //$NON-NLS-1$
     if( part != null )
       part.setSelectionChangedProvider( selectionProvider );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#getMapModell()
-   */
   public IMapPanel getMapPanel( )
   {
     return m_panel;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModellView#setMapModell(org.kalypso.ogc.gml.mapmodel.IMapModell)
-   */
   public void setMapPanel( final IMapPanel panel )
   {
     if( m_panel != null )
@@ -307,12 +298,6 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
     }
   }
 
-  /**
-   * @param command
-   * @param runnable
-   * @see org.kalypso.util.command.JobExclusiveCommandTarget#postCommand(org.kalypso.commons.command.ICommand,
-   *      java.lang.Runnable)
-   */
   @Override
   public void postCommand( final ICommand command, final Runnable runnable )
   {
@@ -325,20 +310,12 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
       m_outlineViewer.setMapModel( newModel );
   }
 
-  /**
-   * @see org.eclipse.ui.part.IPageBookViewPage#init(org.eclipse.ui.part.IPageSite)
-   */
   @Override
   public void init( final IPageSite site )
   {
     super.init( site );
-
-    // site.setSelectionProvider( m_outlineViewer );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
-   */
   @Override
   public void addSelectionChangedListener( final ISelectionChangedListener listener )
   {
@@ -353,29 +330,18 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
     m_outlineViewer.addSelectionChangedListener( listener );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
-   */
   @Override
   public ISelection getSelection( )
   {
-    // return getSite().getSelectionProvider().getSelection();
     return m_outlineViewer.getSelection();
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
-   */
   @Override
   public void removeSelectionChangedListener( final ISelectionChangedListener listener )
   {
-    // getSite().getSelectionProvider().removeSelectionChangedListener( listener );
     m_outlineViewer.removeSelectionChangedListener( listener );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#setSelection(org.eclipse.jface.viewers.ISelection)
-   */
   @Override
   public void setSelection( final ISelection selection )
   {
@@ -400,8 +366,8 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, IPag
     if( site == null )
       return;
 
-    final ICommandService commandService = (ICommandService) site.getService( ICommandService.class );
-    final Map<String, Object> filter = new HashMap<String, Object>();
+    final ICommandService commandService = (ICommandService)site.getService( ICommandService.class );
+    final Map<String, Object> filter = new HashMap<>();
     filter.put( IServiceScopes.WINDOW_SCOPE, getSite().getPage().getWorkbenchWindow() );
     commandService.refreshElements( ToggleCompactOutlineHandler.CMD_ID, filter );
   }
