@@ -42,7 +42,6 @@ package org.kalypso.ui.editor.mapeditor;
 
 import java.awt.Component;
 import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.net.URL;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -96,9 +95,6 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  *
  * @author Stefan Kurzbach
  */
-// TODO: Why is it right here to inherit from AbstractEdtiorPart even when used within a View? Please comment on that.
-// (SK) This might have to be looked at. GisMapEditor used to implement AbstractEditorPart for basic gml editor
-// functionality (save when dirty, command target).
 public abstract class AbstractMapPart extends AbstractWorkbenchPart implements IMapPanelProvider
 {
   // TODO: we probably should move this elsewhere
@@ -146,9 +142,6 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
     super();
   }
 
-  /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
-   */
   @Override
   public void init( final IEditorSite site, final IEditorInput input )
   {
@@ -157,9 +150,6 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
     super.init( site, input );
   }
 
-  /**
-   * @see org.eclipse.ui.IViewPart#init(org.eclipse.ui.IViewSite)
-   */
   public void init( final IViewSite site )
   {
     setSite( site );
@@ -189,29 +179,30 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
     m_control = MapForm.createMapForm( parent );
     m_mapPanel = m_control.createMapPanel( this, m_selectionManager );
 
+    updatePanel( m_mapModell, m_initialEnv );
+    m_mapPanel.addMapPanelListener( m_mapPanelListener );
+
+    final MapPanelSourceProvider sourceProvider = new MapPanelSourceProvider( site, m_mapPanel );
+    setSourceProvider( sourceProvider );
+
     if( m_mapPanel instanceof Component )
     {
-      ((Component) m_mapPanel).addFocusListener( new FocusAdapter()
+      ((Component)m_mapPanel).addFocusListener( new FocusAdapter()
       {
         @Override
-        public void focusGained( final FocusEvent e )
+        public void focusGained( final java.awt.event.FocusEvent e )
         {
           handleFocuesGained();
         }
       } );
     }
 
-    updatePanel( m_mapModell, m_initialEnv );
-    m_mapPanel.addMapPanelListener( m_mapPanelListener );
-
-    setSourceProvider( new MapPanelSourceProvider( site, m_mapPanel ) );
-
     // HACK: at the moment views never have a menu... maybe we could get the information,
     // if a context menu is desired from the defining extension
     if( this instanceof IEditorPart )
     {
       final MenuManager contextMenu = MapPartHelper.createMapContextMenu( m_control.getBody(), m_mapPanel, site );
-      ((IEditorSite) site).registerContextMenu( contextMenu, m_mapPanel, false );
+      ((IEditorSite)site).registerContextMenu( contextMenu, m_mapPanel, false );
     }
 
     site.setSelectionProvider( m_mapPanel );
@@ -229,6 +220,7 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
       public void run( )
       {
         activePage.activate( AbstractMapPart.this );
+        // m_control.setFocus();
       }
     } );
   }
@@ -236,13 +228,13 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
   @Override
   public void setFocus( )
   {
-    if( m_control != null && !m_control.isDisposed() )
-      m_control.setFocus();
+    if( m_mapPanel instanceof Component )
+      ((Component)m_mapPanel).requestFocus();
   }
 
   public IViewSite getViewSite( )
   {
-    return (IViewSite) getSite();
+    return (IViewSite)getSite();
   }
 
   @Override
@@ -331,7 +323,7 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
     final IFile file;
     final IStorageEditorInput input = getEditorInput();
     if( input instanceof IFileEditorInput )
-      file = ((IFileEditorInput) input).getFile();
+      file = ((IFileEditorInput)input).getFile();
     else
       file = null;
 
@@ -433,7 +425,7 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
   }
 
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     if( IExportableObjectFactory.class.equals( adapter ) )
       return new MapExportableObjectFactory( getMapPanel() );
@@ -449,7 +441,7 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
     {
       final IEditorInput input = getEditorInput();
       if( input instanceof IFileEditorInput )
-        return ((IFileEditorInput) getEditorInput()).getFile();
+        return ((IFileEditorInput)getEditorInput()).getFile();
     }
 
     if( adapter == IMapPanel.class )
@@ -461,9 +453,6 @@ public abstract class AbstractMapPart extends AbstractWorkbenchPart implements I
     return super.getAdapter( adapter );
   }
 
-  /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#dispose()
-   */
   @Override
   public void dispose( )
   {
