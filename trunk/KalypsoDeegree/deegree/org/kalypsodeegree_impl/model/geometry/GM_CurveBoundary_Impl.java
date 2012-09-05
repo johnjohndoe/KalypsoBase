@@ -37,6 +37,7 @@ package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
 
+import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveBoundary;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -226,9 +227,6 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
     return inter;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#calculateCentroid()
-   */
   @Override
   protected GM_Point calculateCentroid( )
   {
@@ -251,11 +249,8 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
     return "point1: [" + m_sp + "] - point2: [" + m_ep + "]";
   }
 
-  /**
-   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(java.lang.String)
-   */
   @Override
-  public GM_Object transform( final String targetCRS ) throws Exception
+  public GM_Object transform( final String targetCRS ) throws GeoTransformerException
   {
     /* If the target is the same coordinate system, do not transform. */
     final String sourceCRS = getCoordinateSystem();

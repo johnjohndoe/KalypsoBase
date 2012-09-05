@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.geometry;
 
+import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_MultiGeometry;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -103,7 +104,7 @@ public class GM_MultiGeometry_Impl extends GM_Aggregate_Impl implements GM_Multi
   }
 
   @Override
-  public GM_Object transform( final String targetCRS ) throws Exception
+  public GM_Object transform( final String targetCRS ) throws GeoTransformerException
   {
     /* If the target is the same coordinate system, do not transform. */
     final String sourceCRS = getCoordinateSystem();

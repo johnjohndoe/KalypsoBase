@@ -37,6 +37,7 @@ package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
 
+import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveSegment;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -47,7 +48,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 /**
  * default implementation of the GM_MultiCurve interface from package jago.model.
  * ------------------------------------------------------------
- * 
+ *
  * @version 12.6.2001
  * @author Andreas Poth
  */
@@ -58,7 +59,7 @@ public final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements 
 
   /**
    * Creates a new GM_MultiCurve_Impl object.
-   * 
+   *
    * @param crs
    */
   public GM_MultiCurve_Impl( final String crs )
@@ -68,7 +69,7 @@ public final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements 
 
   /**
    * Creates a new GM_MultiCurve_Impl object.
-   * 
+   *
    * @param gmc
    */
   public GM_MultiCurve_Impl( final GM_Curve[] gmc )
@@ -78,7 +79,7 @@ public final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements 
 
   /**
    * Creates a new GM_MultiCurve_Impl object.
-   * 
+   *
    * @param gmc
    * @param crs
    */
@@ -99,7 +100,7 @@ public final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements 
   /**
    * inserts a GM_Curve in the aggregation. all elements with an index equal or larger index will be moved. if index is
    * larger then getSize() - 1 or smaller then 0 or gmc equals null an exception will be thrown.
-   * 
+   *
    * @param gmc
    *          GM_Curve to insert.
    * @param index
@@ -114,7 +115,7 @@ public final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements 
   /**
    * sets the submitted GM_Curve at the submitted index. the element at the position <code>index</code> will be removed.
    * if index is larger then getSize() - 1 or smaller then 0 or gmc equals null an exception will be thrown.
-   * 
+   *
    * @param gmc
    *          GM_Curve to set.
    * @param index
@@ -128,7 +129,7 @@ public final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements 
 
   /**
    * removes the submitted GM_Curve from the aggregation
-   * 
+   *
    * @return the removed GM_Curve
    */
   @Override
@@ -140,7 +141,7 @@ public final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements 
   /**
    * removes the GM_Curve at the submitted index from the aggregation. if index is larger then getSize() - 1 or smaller
    * then 0 an exception will be thrown.
-   * 
+   *
    * @return the removed GM_Curve
    */
   @Override
@@ -271,7 +272,7 @@ public final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements 
   }
 
   @Override
-  public GM_Object transform( final String targetCRS ) throws Exception
+  public GM_Object transform( final String targetCRS ) throws GeoTransformerException
   {
     /* If the target is the same coordinate system, do not transform. */
     final String sourceCRS = getCoordinateSystem();

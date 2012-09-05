@@ -54,6 +54,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.transformation.CRSHelper;
+import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Boundary;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -509,20 +510,27 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
 
   @Override
   @SuppressWarnings("unchecked")
-  public GM_Object transform( final String targetCRS ) throws Exception
+  public GM_Object transform( final String targetCRS ) throws GeoTransformerException
   {
-    /* If the target is the same coordinate system, do not transform. */
-    final String sourceCRS = getCoordinateSystem();
-    if( sourceCRS == null || sourceCRS.equalsIgnoreCase( targetCRS ) )
-      return this;
+    try
+    {
+      /* If the target is the same coordinate system, do not transform. */
+      final String sourceCRS = getCoordinateSystem();
+      if( sourceCRS == null || sourceCRS.equalsIgnoreCase( targetCRS ) )
+        return this;
 
-    final int cnt = size();
-    final T[] polygons = (T[]) new GM_Polygon[cnt];
+      final int cnt = size();
+      final T[] polygons = (T[]) new GM_Polygon[cnt];
 
-    for( int i = 0; i < cnt; i++ )
-      polygons[i] = (T) get( i ).transform( targetCRS );
+      for( int i = 0; i < cnt; i++ )
+        polygons[i] = (T) get( i ).transform( targetCRS );
 
-    return GeometryFactory.createGM_PolyhedralSurface( polygons, targetCRS );
+      return GeometryFactory.createGM_PolyhedralSurface( polygons, targetCRS );
+    }
+    catch( final GM_Exception e )
+    {
+      throw new GeoTransformerException( e );
+    }
   }
 
   protected SpatialIndex getIndex( )

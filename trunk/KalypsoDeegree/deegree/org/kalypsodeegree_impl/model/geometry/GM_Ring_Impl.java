@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -38,6 +38,7 @@ package org.kalypsodeegree_impl.model.geometry;
 import java.io.Serializable;
 import java.util.Arrays;
 
+import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypsodeegree.model.geometry.GM_Aggregate;
 import org.kalypsodeegree.model.geometry.GM_Boundary;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -59,7 +60,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * <p>
  * -----------------------------------------------------------------------
  * </p>
- * 
+ *
  * @version 05.04.2002
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  */
@@ -204,7 +205,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
 
   /**
    * checks if this curve segment is completly equal to the submitted geometry
-   * 
+   *
    * @param other
    *          object to compare to
    */
@@ -359,9 +360,6 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
     return GeometryUtilities.centroidFromRing( m_points, getCoordinateSystem() );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#calculateBoundary()
-   */
   @Override
   protected GM_Boundary calculateBoundary( )
   {
@@ -378,9 +376,6 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
     return ret;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#invalidate()
-   */
   @Override
   public void invalidate( )
   {
@@ -389,22 +384,26 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Se
     super.invalidate();
   }
 
-  /**
-   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(java.lang.String)
-   */
   @Override
-  public GM_Object transform( final String targetCRS ) throws Exception
+  public GM_Object transform( final String targetCRS ) throws GeoTransformerException
   {
-    /* If the target is the same coordinate system, do not transform. */
-    final String sourceCRS = getCoordinateSystem();
-    if( sourceCRS == null || sourceCRS.equalsIgnoreCase( targetCRS ) )
-      return this;
+    try
+    {
+      /* If the target is the same coordinate system, do not transform. */
+      final String sourceCRS = getCoordinateSystem();
+      if( sourceCRS == null || sourceCRS.equalsIgnoreCase( targetCRS ) )
+        return this;
 
-    final GM_Position[] pos = getPositions();
-    final GM_Position[] transPos = new GM_Position[pos.length];
-    for( int i = 0; i < pos.length; i++ )
-      transPos[i] = pos[i].transform( sourceCRS, targetCRS );
+      final GM_Position[] pos = getPositions();
+      final GM_Position[] transPos = new GM_Position[pos.length];
+      for( int i = 0; i < pos.length; i++ )
+        transPos[i] = pos[i].transform( sourceCRS, targetCRS );
 
-    return GeometryFactory.createGM_Ring( transPos, targetCRS );
+      return GeometryFactory.createGM_Ring( transPos, targetCRS );
+    }
+    catch( final GM_Exception e )
+    {
+      throw new GeoTransformerException( e );
+    }
   }
 }

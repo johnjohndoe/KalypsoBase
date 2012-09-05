@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
+import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Boundary;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -739,16 +740,23 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
   }
 
   @Override
-  public GM_Object transform( final String targetCRS ) throws Exception
+  public GM_Object transform( final String targetCRS ) throws GeoTransformerException
   {
-    /* If the target is the same coordinate system, do not transform. */
-    final String sourceCRS = getCoordinateSystem();
-    if( sourceCRS == null || sourceCRS.equalsIgnoreCase( targetCRS ) )
-      return this;
+    try
+    {
+      /* If the target is the same coordinate system, do not transform. */
+      final String sourceCRS = getCoordinateSystem();
+      if( sourceCRS == null || sourceCRS.equalsIgnoreCase( targetCRS ) )
+        return this;
 
-    final GM_SurfacePatch patch = (GM_SurfacePatch) m_patch.transform( targetCRS );
+      final GM_SurfacePatch patch = (GM_SurfacePatch) m_patch.transform( targetCRS );
 
-    return new GM_Surface_Impl<GM_SurfacePatch>( getOrientation(), patch );
+      return new GM_Surface_Impl<GM_SurfacePatch>( getOrientation(), patch );
+    }
+    catch( final GM_Exception e )
+    {
+      throw new GeoTransformerException( e );
+    }
   }
 
   @Override

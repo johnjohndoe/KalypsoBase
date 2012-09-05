@@ -39,6 +39,7 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.kalypso.commons.xml.NS;
+import org.kalypso.transformation.transformer.GeoTransformerException;
 
 /**
  * The basic interface for all geometries. it declares the methods that are common to all geometries. this doesn't means
@@ -184,9 +185,9 @@ public interface GM_Object extends IAdaptable
    * Call this method if you change the geometry.
    * </p>
    */
-  public void invalidate( );
+  void invalidate( );
 
-  public Object clone( ) throws CloneNotSupportedException;
+  Object clone( ) throws CloneNotSupportedException;
 
   /**
    * This function transforms the geometry.
@@ -196,5 +197,5 @@ public interface GM_Object extends IAdaptable
    * @return The transformed geometry.
    */
   // FIXME: use a specific exception here -> really!
-  public GM_Object transform( final String targetCRS ) throws Exception;
+  GM_Object transform( final String targetCRS ) throws GeoTransformerException;
 }

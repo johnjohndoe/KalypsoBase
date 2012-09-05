@@ -37,6 +37,7 @@ package org.kalypsodeegree_impl.model.geometry;
 
 import javax.vecmath.Point3d;
 
+import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -125,7 +126,7 @@ class GM_Triangle_Impl implements GM_Triangle
   }
 
   @Override
-  public GM_SurfacePatch transform( final String targetCRS ) throws Exception
+  public GM_SurfacePatch transform( final String targetCRS ) throws GeoTransformerException
   {
     /* If the target is the same coordinate system, do not transform. */
     final String sourceCRS = getCoordinateSystem();

@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypsodeegree.model.geometry.GM_Boundary;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveBoundary;
@@ -56,7 +57,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 /**
  * default implementation of the GM_Curve interface from package jago.model.
  * ------------------------------------------------------------
- * 
+ *
  * @version 14.10.2001
  * @author Andreas Poth
  */
@@ -70,7 +71,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
   /**
    * initialize the curve by submitting a spatial reference system and an array of curve segments. the orientation of
    * the curve is '+'
-   * 
+   *
    * @param segments
    *          array of GM_CurveSegment
    */
@@ -82,7 +83,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
   /**
    * initialize the curve by submitting a spatial reference system, an array of curve segments and the orientation of
    * the curve
-   * 
+   *
    * @param segments
    *          array of GM_CurveSegment
    * @param orientation
@@ -384,7 +385,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
 
   /**
    * returns the curve segment at the submitted index
-   * 
+   *
    * @param index
    *          index of the curve segment that should be returned
    * @exception GM_Exception
@@ -404,7 +405,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
 
   /**
    * writes a segment to the curve at submitted position. the old point will be deleted
-   * 
+   *
    * @param segment
    *          curve segment that should be set
    * @param index
@@ -476,7 +477,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
   /**
    * inserts a segment in the curve at the submitted position. all points with a position that equals index or is higher
    * will be shifted
-   * 
+   *
    * @param segment
    *          curve segment that should be inserted
    * @param index
@@ -547,7 +548,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
 
   /**
    * adds a segment at the end of the curve
-   * 
+   *
    * @param segment
    *          curve segment that should be set
    * @exception GM_Exception
@@ -574,7 +575,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
 
   /**
    * deletes the segment at the submitted index
-   * 
+   *
    * @param index
    *          index of the curve segement that should be removed from the curve.
    * @exception GM_Exception
@@ -641,7 +642,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
 
   /**
    * checks if this curve is completly equal to the submitted geometry
-   * 
+   *
    * @param other
    *          object to compare to
    */
@@ -721,33 +722,37 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
     return ret;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(java.lang.String)
-   */
   @Override
-  public GM_Object transform( final String targetCRS ) throws Exception
+  public GM_Object transform( final String targetCRS ) throws GeoTransformerException
   {
-    /* If the target is the same coordinate system, do not transform. */
-    final String sourceCRS = getCoordinateSystem();
-    if( sourceCRS == null || sourceCRS.equalsIgnoreCase( targetCRS ) )
-      return this;
-
-    final GM_CurveSegment[] newcus = new GM_CurveSegment[getNumberOfCurveSegments()];
-
-    for( int i = 0; i < getNumberOfCurveSegments(); i++ )
+    try
     {
-      final GM_CurveSegment cus = getCurveSegmentAt( i );
-      final GM_Position[] pos = cus.getPositions();
+      /* If the target is the same coordinate system, do not transform. */
+      final String sourceCRS = getCoordinateSystem();
+      if( sourceCRS == null || sourceCRS.equalsIgnoreCase( targetCRS ) )
+        return this;
 
-      // transformed positions-array
-      final GM_Position[] newpos = new GM_Position[pos.length];
+      final GM_CurveSegment[] newcus = new GM_CurveSegment[getNumberOfCurveSegments()];
 
-      for( int j = 0; j < pos.length; j++ )
-        newpos[j] = pos[j].transform( sourceCRS, targetCRS );
+      for( int i = 0; i < getNumberOfCurveSegments(); i++ )
+      {
+        final GM_CurveSegment cus = getCurveSegmentAt( i );
+        final GM_Position[] pos = cus.getPositions();
 
-      newcus[i] = GeometryFactory.createGM_CurveSegment( newpos, targetCRS );
+        // transformed positions-array
+        final GM_Position[] newpos = new GM_Position[pos.length];
+
+        for( int j = 0; j < pos.length; j++ )
+          newpos[j] = pos[j].transform( sourceCRS, targetCRS );
+
+        newcus[i] = GeometryFactory.createGM_CurveSegment( newpos, targetCRS );
+      }
+
+      return GeometryFactory.createGM_Curve( newcus );
     }
-
-    return GeometryFactory.createGM_Curve( newcus );
+    catch( final GM_Exception e )
+    {
+      throw new GeoTransformerException( e );
+    }
   }
 }

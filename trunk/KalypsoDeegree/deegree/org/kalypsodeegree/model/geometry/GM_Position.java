@@ -35,66 +35,68 @@
  */
 package org.kalypsodeegree.model.geometry;
 
+import org.kalypso.transformation.transformer.GeoTransformerException;
+
 /**
  * A sequence of decimals numbers which when written on a width are a sequence of coordinate positions. The width is
  * derived from the CRS or coordinate dimension of the container.
  * <p>
  * -----------------------------------------------------------------------
  * </p>
- * 
+ *
  * @version 5.6.2001
  * @author Andreas Poth
  *         <p>
  */
 public interface GM_Position
 {
-  public static final double MUTE = 0.000001;
+  double MUTE = 0.000001;
 
   /**
    * returns the x-value of the point
    */
-  public double getX( );
+  double getX( );
 
   /**
    * returns the y-value of the point
    */
-  public double getY( );
+  double getY( );
 
   /**
    * returns the z-value of the point
    */
-  public double getZ( );
+  double getZ( );
 
   /**
    * Returns the dimension (usually 2 or 3) of this position.
    */
-  public short getCoordinateDimension( );
+  short getCoordinateDimension( );
 
   /**
    * Discouraged!<br>
    * returns the x- and y-value of the point as a two dimensional array the first field contains the x- the second field
    * the y-value.
    */
-  public double[] getAsArray( );
+  double[] getAsArray( );
 
   /**
    * translates the coordinates of the position. the first coordinate of the position will be translated by the first
    * field of <tt>d</tt> the second coordinate by the second field of <tt>d</tt> and so on... <br>
    */
-  public void translate( double[] d );
+  void translate( double[] d );
 
-  public double getDistance( GM_Position position );
+  double getDistance( GM_Position position );
 
   /**
    * This function transforms the position.
-   * 
+   *
    * @param sourceCRS
    *          The source coordinate system.
    * @param targetCRS
    *          The target coordinate system.
    * @return The transformed position.
    */
-  public GM_Position transform( final String sourceCRS, final String targetCRS ) throws Exception;
+  GM_Position transform( String sourceCRS, String targetCRS ) throws GeoTransformerException;
 
-  public Object clone( );
+  Object clone( );
 }

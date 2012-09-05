@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -37,6 +37,7 @@ package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
 
+import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -47,7 +48,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * <p>
  * ------------------------------------------------------------
  * </p>
- * 
+ *
  * @version 12.6.2001
  * @author Andreas Poth href="mailto:poth@lat-lon.de"
  *         <p>
@@ -59,7 +60,7 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
 
   /**
    * Creates a new GM_MultiPoint_Impl object.
-   * 
+   *
    * @param crs
    */
   public GM_MultiPoint_Impl( final String crs )
@@ -69,7 +70,7 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
 
   /**
    * Creates a new GM_MultiPoint_Impl object.
-   * 
+   *
    * @param gmp
    */
   public GM_MultiPoint_Impl( final GM_Point[] gmp )
@@ -79,7 +80,7 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
 
   /**
    * Creates a new GM_MultiPoint_Impl object.
-   * 
+   *
    * @param gmp
    * @param crs
    */
@@ -100,7 +101,7 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   /**
    * inserts a GM_Point into the aggregation. all elements with an index equal or larger index will be moved. if index
    * is larger then getSize() - 1 or smaller then 0 or gmp equals null an exception will be thrown.
-   * 
+   *
    * @param gmp
    *          GM_Point to insert.
    * @param index
@@ -115,7 +116,7 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   /**
    * sets the submitted GM_Point at the submitted index. the element at the position <code>index</code> will be removed.
    * if index is larger then getSize() - 1 or smaller then 0 or gmp equals null an exception will be thrown.
-   * 
+   *
    * @param gmp
    *          GM_Point to set.
    * @param index
@@ -129,7 +130,7 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
 
   /**
    * removes the submitted GM_Point from the aggregation
-   * 
+   *
    * @return the removed GM_Point
    */
   @Override
@@ -141,7 +142,7 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
   /**
    * removes the GM_Point at the submitted index from the aggregation. if index is larger then getSize() - 1 or smaller
    * then 0 an exception will be thrown.
-   * 
+   *
    * @return the removed GM_Point
    */
   @Override
@@ -238,11 +239,8 @@ final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_Mult
     return new GM_MultiPoint_Impl( clonedPoints, getCoordinateSystem() );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(java.lang.String)
-   */
   @Override
-  public GM_Object transform( final String targetCRS ) throws Exception
+  public GM_Object transform( final String targetCRS ) throws GeoTransformerException
   {
     /* If the target is the same coordinate system, do not transform. */
     final String sourceCRS = getCoordinateSystem();

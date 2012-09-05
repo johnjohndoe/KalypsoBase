@@ -67,6 +67,7 @@ import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.GeoGridUtilities.Interpolation;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.grid.RectifiedGridCoverageGeoGrid;
+import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
@@ -329,10 +330,6 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
 
       g.drawImage( img, screenXfrom, screenYfrom, screenWidth, screenHeight, null );
     }
-    catch( final CoreException e )
-    {
-      throw e;
-    }
     catch( final Exception e )
     {
       throw new GeoGridException( "Could not transform the coordinate ...", e );
@@ -432,7 +429,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     return cang;
   }
 
-  private double[][] getValues( final IGeoGrid grid, final GeoTransform projection, final String targetCRS, final IGeoTransformer geoTransformer, final GeoGridUtilities.Interpolation interpolation, final int screenXfrom, final int screenYfrom, final int screenWidth, final int screenHeight ) throws GeoGridException, CoreException
+  private double[][] getValues( final IGeoGrid grid, final GeoTransform projection, final String targetCRS, final IGeoTransformer geoTransformer, final GeoGridUtilities.Interpolation interpolation, final int screenXfrom, final int screenYfrom, final int screenWidth, final int screenHeight ) throws GeoGridException
   {
     try
     {
@@ -457,11 +454,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
 
       return values;
     }
-    catch( final CoreException e )
-    {
-      throw e;
-    }
-    catch( final Exception e )
+    catch( final GeoTransformerException e )
     {
       throw new GeoGridException( "Could not transform the coordinate ...", e );
     }
