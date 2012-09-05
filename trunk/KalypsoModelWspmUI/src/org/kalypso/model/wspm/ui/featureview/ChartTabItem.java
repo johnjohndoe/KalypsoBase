@@ -40,8 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.featureview;
 
-import java.util.Map;
-
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
@@ -54,6 +52,7 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.commandhandler.ChartSourceProvider;
 import org.kalypso.commons.eclipse.ui.EmbeddedSourceToolbarManager;
+import org.kalypso.contribs.eclipse.jface.action.CommandWithStyle;
 import org.kalypsodeegree.model.feature.Feature;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
@@ -77,7 +76,7 @@ public class ChartTabItem extends Composite implements IChartPart
 
   // private final ZmlDiagramLayerListener m_layerManagerListener;
 
-  public ChartTabItem( final String featureKeyName, final Feature feature, final Composite parent, final int style, final Map<String, Integer> commands )
+  public ChartTabItem( final String featureKeyName, final Feature feature, final Composite parent, final int style, final CommandWithStyle[] commands )
   {
     super( parent, style );
 
@@ -106,7 +105,7 @@ public class ChartTabItem extends Composite implements IChartPart
 
     final GridData toolbarData = new GridData( SWT.FILL, SWT.CENTER, true, false );
     toolBar.setLayoutData( toolbarData );
-    final boolean hasCommands = commands.size() > 0;
+    final boolean hasCommands = commands.length > 0;
     toolbarData.exclude = !hasCommands;
     toolBar.setVisible( hasCommands );
     layout();
