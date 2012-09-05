@@ -37,6 +37,7 @@ package org.kalypsodeegree_impl.model.geometry;
 
 import java.io.Serializable;
 
+import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypsodeegree.model.geometry.GM_Aggregate;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -245,30 +246,37 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serial
   }
 
   @Override
-  public GM_SurfacePatch transform( final String targetCRS ) throws Exception
+  public GM_SurfacePatch transform( final String targetCRS ) throws GeoTransformerException
   {
-    /* If the target is the same coordinate system, do not transform. */
-    final String sourceCRS = getCoordinateSystem();
-    if( sourceCRS == null || sourceCRS.equalsIgnoreCase( targetCRS ) )
-      return this;
-
-    /* exterior ring */
-    final GM_Ring exRing = GeometryFactory.createGM_Ring( getExteriorRing(), getCoordinateSystem() );
-    final GM_Ring transExRing = (GM_Ring) exRing.transform( targetCRS );
-
-    /* interior rings */
-    final GM_Position[][] interiors = getInteriorRings();
-    if( interiors == null )
-      return new GM_Polygon_Impl( transExRing.getPositions(), null, targetCRS );
-
-    final GM_Position[][] transInRings = new GM_Position[interiors.length][];
-
-    for( int j = 0; j < interiors.length; j++ )
+    try
     {
-      final GM_Ring inRing = GeometryFactory.createGM_Ring( interiors[j], getCoordinateSystem() );
-      transInRings[j] = ((GM_Ring) inRing.transform( targetCRS )).getPositions();
-    }
+      /* If the target is the same coordinate system, do not transform. */
+      final String sourceCRS = getCoordinateSystem();
+      if( sourceCRS == null || sourceCRS.equalsIgnoreCase( targetCRS ) )
+        return this;
 
-    return new GM_Polygon_Impl( transExRing.getPositions(), transInRings, targetCRS );
+      /* exterior ring */
+      final GM_Ring exRing = GeometryFactory.createGM_Ring( getExteriorRing(), getCoordinateSystem() );
+      final GM_Ring transExRing = (GM_Ring) exRing.transform( targetCRS );
+
+      /* interior rings */
+      final GM_Position[][] interiors = getInteriorRings();
+      if( interiors == null )
+        return new GM_Polygon_Impl( transExRing.getPositions(), null, targetCRS );
+
+      final GM_Position[][] transInRings = new GM_Position[interiors.length][];
+
+      for( int j = 0; j < interiors.length; j++ )
+      {
+        final GM_Ring inRing = GeometryFactory.createGM_Ring( interiors[j], getCoordinateSystem() );
+        transInRings[j] = ((GM_Ring) inRing.transform( targetCRS )).getPositions();
+      }
+
+      return new GM_Polygon_Impl( transExRing.getPositions(), transInRings, targetCRS );
+    }
+    catch( final GM_Exception e )
+    {
+      throw new GeoTransformerException( e );
+    }
   }
 }

@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -36,12 +36,14 @@
 
 package org.kalypsodeegree.model.geometry;
 
+import org.kalypso.transformation.transformer.GeoTransformerException;
+
 /**
  * Defining the iso geometry <code>GM_SurfacePatch</code> which is used for building surfaces. A surface patch is made
  * of one exterior ring and 0..n interior rings. By definition there can't be a surface patch with no exterior ring. A
  * polygon is a specialized surface patch.<br>
  * -----------------------------------------------------
- * 
+ *
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  */
@@ -78,7 +80,7 @@ public interface GM_SurfacePatch extends GM_GenericSurface
    * The operation "centroid" shall return the mathematical centroid for this GM_Object. The result is not guaranteed to
    * be on the object.
    */
-  public GM_Point getCentroid( );
+  GM_Point getCentroid( );
 
   /**
    * The operation "area" shall return the area of this GM_GenericSurface. The area of a 2 dimensional geometric object
@@ -86,14 +88,14 @@ public interface GM_SurfacePatch extends GM_GenericSurface
    * distances, its return value shall be in a unit of measure appropriate for measuring distances squared.
    */
   @Override
-  public double getArea( );
+  double getArea( );
 
   /**
    * This function transforms the surface patch.
-   * 
+   *
    * @param targetCRS
    *          The target coordinate system.
    * @return The transformed surface patch.
    */
-  public GM_GenericSurface transform( final String targetCRS ) throws Exception;
+  GM_GenericSurface transform( final String targetCRS ) throws GeoTransformerException;
 }

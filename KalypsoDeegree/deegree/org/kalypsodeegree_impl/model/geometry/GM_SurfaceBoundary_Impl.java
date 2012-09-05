@@ -40,6 +40,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -287,9 +288,6 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
     return ret;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#invalidate()
-   */
   @Override
   public void invalidate( )
   {
@@ -300,11 +298,8 @@ class GM_SurfaceBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Su
     }
   }
 
-  /**
-   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(java.lang.String)
-   */
   @Override
-  public GM_Object transform( final String targetCRS ) throws Exception
+  public GM_Object transform( final String targetCRS ) throws GeoTransformerException
   {
     /* If the target is the same coordinate system, do not transform. */
     final String sourceCRS = getCoordinateSystem();

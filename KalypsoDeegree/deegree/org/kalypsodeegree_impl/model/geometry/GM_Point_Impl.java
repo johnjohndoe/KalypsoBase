@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -38,6 +38,7 @@ package org.kalypsodeegree_impl.model.geometry;
 import java.io.Serializable;
 
 import org.eclipse.core.runtime.Assert;
+import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Aggregate;
@@ -54,7 +55,7 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
  * <p>
  * ------------------------------------------------------------
  * </p>
- * 
+ *
  * @version 5.6.2001
  * @author Andreas Poth
  */
@@ -67,7 +68,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
 
   /**
    * constructor for initializing a point within a two-dimensional coordinate system
-   * 
+   *
    * @param x
    *          x-value of the point
    * @param y
@@ -82,7 +83,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
 
   /**
    * constructor for initializing a point within a three-dimensional coordinate system
-   * 
+   *
    * @param x
    *          x-value of the point
    * @param y
@@ -99,7 +100,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
 
   /**
    * constructor
-   * 
+   *
    * @param gmo
    *          existing GM_Point
    */
@@ -110,7 +111,7 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
 
   /**
    * constructor
-   * 
+   *
    * @param gmo
    *          existing GM_Point
    * @param crs
@@ -327,18 +328,12 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
     // );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#calculateEnvelope()
-   */
   @Override
   protected GM_Envelope calculateEnvelope( )
   {
     return GeometryFactory.createGM_Envelope( getPosition(), getPosition(), getCoordinateSystem() );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#calculateBoundary()
-   */
   @Override
   protected GM_Boundary calculateBoundary( )
   {
@@ -346,18 +341,12 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
     return GM_Constants.EMPTY_BOUNDARY;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#getCentroid()
-   */
   @Override
   public final GM_Point getCentroid( )
   {
     return this;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#calculateCentroid()
-   */
   @Override
   protected GM_Point calculateCentroid( )
   {
@@ -378,11 +367,8 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Seriali
     return ret;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.geometry.GM_Object#transform(java.lang.String)
-   */
   @Override
-  public GM_Object transform( final String targetCRS ) throws Exception
+  public GM_Object transform( final String targetCRS ) throws GeoTransformerException
   {
     /* If the target is the same coordinate system, do not transform. */
     final String sourceCRS = getCoordinateSystem();

@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -41,6 +41,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -56,7 +57,7 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
  * <p>
  * ------------------------------------------------------------
  * </p>
- * 
+ *
  * @version 12.6.2001
  * @author Andreas Poth
  *         <p>
@@ -70,7 +71,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
 
   /**
    * Creates a new GM_MultiSurface_Impl object.
-   * 
+   *
    * @param crs
    */
   public GM_MultiSurface_Impl( final String crs )
@@ -80,7 +81,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
 
   /**
    * Creates a new GM_MultiSurface_Impl object.
-   * 
+   *
    * @param surface
    */
   public GM_MultiSurface_Impl( final GM_Surface< ? >[] surfaces )
@@ -90,7 +91,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
 
   /**
    * Creates a new GM_MultiSurface_Impl object.
-   * 
+   *
    * @param surface
    * @param crs
    */
@@ -111,7 +112,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
   /**
    * inserts a GM_Surface in the aggregation. all elements with an index equal or larger index will be moved. if index
    * is larger then getSize() - 1 or smaller then 0 or gms equals null an exception will be thrown.
-   * 
+   *
    * @param gms
    *          GM_Surface to insert.
    * @param index
@@ -126,7 +127,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
   /**
    * sets the submitted GM_Surface at the submitted index. the element at the position <code>index</code> will be
    * removed. if index is larger then getSize() - 1 or smaller then 0 or gms equals null an exception will be thrown.
-   * 
+   *
    * @param gms
    *          GM_Surface to set.
    * @param index
@@ -140,7 +141,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
 
   /**
    * removes the submitted GM_Surface from the aggregation
-   * 
+   *
    * @return the removed GM_Surface
    */
   @Override
@@ -152,7 +153,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
   /**
    * removes the GM_Surface at the submitted index from the aggregation. if index is larger then getSize() - 1 or
    * smaller then 0 an exception will be thrown.
-   * 
+   *
    * @return the removed GM_Surface
    */
   @Override
@@ -320,11 +321,8 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
     return sp.getExteriorRing()[0].getCoordinateDimension();
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.geometry.GM_MultiPrimitive_Impl#transform(java.lang.String)
-   */
   @Override
-  public GM_Object transform( final String targetCRS ) throws Exception
+  public GM_Object transform( final String targetCRS ) throws GeoTransformerException
   {
     /* If the target is the same coordinate system, do not transform. */
     final String sourceCRS = getCoordinateSystem();

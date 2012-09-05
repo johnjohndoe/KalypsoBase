@@ -38,6 +38,7 @@ package org.kalypsodeegree_impl.model.geometry;
 import java.io.Serializable;
 
 import org.eclipse.core.runtime.Assert;
+import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -50,7 +51,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
  * <p>
  * -----------------------------------------------------------------------
  * </p>
- * 
+ *
  * @version
  * @author Andreas Poth
  *         <p>
@@ -80,7 +81,7 @@ class GM_Position3D_Impl implements GM_Position, Serializable
 
   /**
    * constructor
-   * 
+   *
    * @param x
    *          x-value of the point
    * @param y
@@ -216,9 +217,6 @@ class GM_Position3D_Impl implements GM_Position, Serializable
     return ret;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.geometry.GM_Position#getDistance(org.kalypsodeegree.model.geometry.GM_Position)
-   */
   @Override
   public double getDistance( final GM_Position other )
   {
@@ -229,11 +227,8 @@ class GM_Position3D_Impl implements GM_Position, Serializable
     return Math.sqrt( d );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.geometry.GM_Position#transform(java.lang.String, java.lang.String)
-   */
   @Override
-  public GM_Position transform( final String sourceCRS, final String targetCRS ) throws Exception
+  public GM_Position transform( final String sourceCRS, final String targetCRS ) throws GeoTransformerException
   {
     final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( targetCRS );
     return geoTransformer.transform( this, sourceCRS );
