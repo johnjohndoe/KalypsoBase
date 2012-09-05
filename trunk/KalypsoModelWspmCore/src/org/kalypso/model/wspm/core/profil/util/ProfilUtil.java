@@ -508,8 +508,10 @@ public final class ProfilUtil
     return geoReferencedPoints.toArray( new IProfileRecord[] {} );
   }
 
-  public static GM_Curve getLine( final IProfil profile, final String crs ) throws GM_Exception
+  public static GM_Curve getLine( final IProfil profile ) throws GM_Exception
   {
+    final String srsName = profile.getSrsName();
+
     final IRecord[] georeferencedPoints = getGeoreferencedPoints( profile );
     final GM_Position[] pos = new GM_Position[georeferencedPoints.length];
 
@@ -521,7 +523,7 @@ public final class ProfilUtil
       pos[i] = GeometryFactory.createGM_Position( x, y, z );
     }
 
-    return GeometryFactory.createGM_Curve( pos, crs );
+    return GeometryFactory.createGM_Curve( pos, srsName );
   }
 
   /**

@@ -117,7 +117,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * AWT canvas that displays a {@link org.kalypso.ogc.gml.mapmodel.MapModell}.
- * 
+ *
  * @author Andreas von Dömming
  * @author Gernot Belger
  */
@@ -128,7 +128,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   /**
    * Maximum delay by which repaints to the map are produced.
-   * 
+   *
    * @see java.awt.Component#repaint(long)
    */
   private static final long LAYER_REPAINT_MILLIS = 500;
@@ -149,7 +149,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   private final IFeatureSelectionManager m_selectionManager;
 
-  private final Collection<ISelectionChangedListener> m_selectionListeners = new HashSet<ISelectionChangedListener>( 5 );
+  private final Collection<ISelectionChangedListener> m_selectionListeners = new HashSet<>( 5 );
 
   private final IFeatureSelectionListener m_globalSelectionListener = new IFeatureSelectionListener()
   {
@@ -172,7 +172,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   private final Collection<IMapPanelPaintListener> m_paintListeners = Collections.synchronizedSet( new LinkedHashSet<IMapPanelPaintListener>() );
 
-  private final Collection<IMapPanelMTPaintListener> m_postPaintListeners = new HashSet<IMapPanelMTPaintListener>();
+  private final Collection<IMapPanelMTPaintListener> m_postPaintListeners = new HashSet<>();
 
   private final Map<IKalypsoTheme, IMapLayer> m_layers = Collections.synchronizedMap( new HashMap<IKalypsoTheme, IMapLayer>() );
 
@@ -498,7 +498,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
           {
             /**
              * Overwritten because opening the message dialog here results in a NPE
-             * 
+             *
              * @see org.eclipse.jface.util.SafeRunnable#handleException(java.lang.Throwable)
              */
             @Override
@@ -537,7 +537,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   /**
    * calculates the current map scale (denominator) as defined in the OGC SLD 1.0.0 specification
-   * 
+   *
    * @return scale of the map
    */
   @Override
@@ -684,7 +684,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
    * <li>all 'paint-listeners'</li>
    * <li>the current widget</li>
    * </ul>
-   * 
+   *
    * @see java.awt.Component#paint(java.awt.Graphics)
    */
   @Override
@@ -838,7 +838,7 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
 
   /**
    * This function sets the bounding box to this map panel and all its themes.
-   * 
+   *
    * @param wishBBox
    *          The new extent, will be adapted so it fits into the current size of the panel.
    */
@@ -1062,8 +1062,8 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
    */
   protected IMapLayer[] getLayersForRendering( )
   {
-    final List<IMapLayer> result = new ArrayList<IMapLayer>( 20 );
-    final List<IKalypsoFeatureTheme> visibleFestureThemes = new ArrayList<IKalypsoFeatureTheme>( 10 );
+    final List<IMapLayer> result = new ArrayList<>( 20 );
+    final List<IKalypsoFeatureTheme> visibleFestureThemes = new ArrayList<>( 10 );
 
     final IKalypsoThemeVisitor createLayerVisitor = new IKalypsoThemeVisitor()
     {

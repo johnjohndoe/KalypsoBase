@@ -96,8 +96,8 @@ public final class ChartConfigurationSaver
       final TitleType type = TitleType.Factory.newInstance();
       type.setStringValue( titleTypes[i].getText() );
       titleArray[i] = type;
-
     }
+
     chartType.setTitleArray( titleArray );
     final LayersType layers = chartType.addNewLayers();
     layers.setLayerArray( extractLayers( model.getLayerManager() ).values().toArray( new LayerType[] {} ) );

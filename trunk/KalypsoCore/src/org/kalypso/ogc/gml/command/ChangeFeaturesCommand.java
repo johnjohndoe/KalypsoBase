@@ -78,45 +78,30 @@ public class ChangeFeaturesCommand implements ICommand
     return m_newChanges;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
-   */
   @Override
   public boolean isUndoable( )
   {
     return true;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#process()
-   */
   @Override
   public void process( )
   {
     applyChanges( m_newChanges );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#redo()
-   */
   @Override
   public void redo( )
   {
     applyChanges( m_newChanges );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#undo()
-   */
   @Override
   public void undo( )
   {
     applyChanges( m_oldChanges );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
-   */
   @Override
   public String getDescription( )
   {

@@ -68,45 +68,30 @@ public class ChangeFeatureCommand implements ICommand
     m_oldValue = feature.getProperty( property );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#isUndoable()
-   */
   @Override
   public boolean isUndoable( )
   {
     return true;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#process()
-   */
   @Override
   public void process( ) throws Exception
   {
     applyChanges( m_newValue );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#redo()
-   */
   @Override
   public void redo( ) throws Exception
   {
     applyChanges( m_newValue );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#undo()
-   */
   @Override
   public void undo( ) throws Exception
   {
     applyChanges( m_oldValue );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
-   */
   @Override
   public String getDescription( )
   {

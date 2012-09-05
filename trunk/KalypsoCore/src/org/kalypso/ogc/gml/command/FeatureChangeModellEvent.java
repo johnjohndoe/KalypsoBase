@@ -63,7 +63,7 @@ public class FeatureChangeModellEvent extends FeaturesChangedModellEvent
 
   private static Feature[] featureFromChanges( final FeatureChange[] changes )
   {
-    final List<Feature> list = new ArrayList<Feature>( changes.length );
+    final List<Feature> list = new ArrayList<>( changes.length );
     for( final FeatureChange featureChange : changes )
       list.add( featureChange.getFeature() );
     return list.toArray( new Feature[list.size()] );
@@ -73,5 +73,4 @@ public class FeatureChangeModellEvent extends FeaturesChangedModellEvent
   {
     return m_changes;
   }
-
 }

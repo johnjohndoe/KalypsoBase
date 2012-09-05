@@ -98,20 +98,12 @@ public class MapPanelSourceProvider extends AbstractSourceProvider implements IS
   {
     // TODO: we should fire a source change on any change of the modell
 
-    /**
-     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeActivated(org.kalypso.ogc.gml.mapmodel.IMapModell,
-     *      org.kalypso.ogc.gml.IKalypsoTheme, org.kalypso.ogc.gml.IKalypsoTheme)
-     */
     @Override
     public void themeActivated( final IMapModell source, final IKalypsoTheme previouslyActive, final IKalypsoTheme nowActive )
     {
       refreshUIelements();
     }
 
-    /**
-     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeContextChanged(org.kalypso.ogc.gml.mapmodel.IMapModell,
-     *      org.kalypso.ogc.gml.IKalypsoTheme)
-     */
     @Override
     public void themeContextChanged( final IMapModell source, final IKalypsoTheme theme )
     {
@@ -148,7 +140,7 @@ public class MapPanelSourceProvider extends AbstractSourceProvider implements IS
    * This collection contains all services, with which this provider has been registered. Used in order to correctly
    * unregister.
    */
-  private final Collection<IServiceWithSources> m_registeredServices = new HashSet<IServiceWithSources>();
+  private final Collection<IServiceWithSources> m_registeredServices = new HashSet<>();
 
   /** Ensures, that the context are activated in the same order as the themes are activated. */
   private final ISchedulingRule m_muteRule = new MutexRule();
@@ -200,9 +192,6 @@ public class MapPanelSourceProvider extends AbstractSourceProvider implements IS
     return service;
   }
 
-  /**
-   * @see org.eclipse.ui.ISourceProvider#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -220,9 +209,6 @@ public class MapPanelSourceProvider extends AbstractSourceProvider implements IS
       m_mapPanelContext.getContextService().deactivateContext( m_mapPanelContext );
   }
 
-  /**
-   * @see org.eclipse.ui.ISourceProvider#getCurrentState()
-   */
   @Override
   public Map< ? , ? > getCurrentState( )
   {
@@ -231,9 +217,6 @@ public class MapPanelSourceProvider extends AbstractSourceProvider implements IS
     return currentState;
   }
 
-  /**
-   * @see org.eclipse.ui.ISourceProvider#getProvidedSourceNames()
-   */
   @Override
   public String[] getProvidedSourceNames( )
   {

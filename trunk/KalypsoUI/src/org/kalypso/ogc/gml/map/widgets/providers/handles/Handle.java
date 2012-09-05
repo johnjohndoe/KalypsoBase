@@ -103,9 +103,6 @@ public class Handle implements IHandle
     m_active = false;
   }
 
-  /**
-   * @see org.kalypso.informdss.manager.util.widgets.providers.handles.IHandle#isSelectable()
-   */
   @Override
   public boolean isSelectable( final Point p, final GeoTransform projection )
   {
