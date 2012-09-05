@@ -594,21 +594,21 @@ public class SplitSort implements FeatureList
   @Override
   public List< ? > query( final GM_Position pos, @SuppressWarnings("rawtypes") final List result )
   {
-    final Rectangle envelope = new Rectangle( (float) pos.getX(), (float) pos.getY(), (float) pos.getX(), (float) pos.getY() );
+    final Rectangle envelope = new Rectangle( (float) pos.getX() - 1.0f, (float) pos.getY() - 1.0f, (float) pos.getX() + 1.0f, (float) pos.getY() + 1.0f );
     return query( envelope, result );
   }
 
   @Override
   public List< ? > query( final GM_Envelope queryEnv, @SuppressWarnings("rawtypes") final List result )
   {
-    checkIndex();
-
     final Rectangle envelope = GeometryUtilities.toRectangle( queryEnv );
     return query( envelope, result );
   }
 
   private synchronized List< ? > query( final Rectangle envelope, @SuppressWarnings("rawtypes") final List receiver )
   {
+    checkIndex();
+
     @SuppressWarnings("unchecked")
     final List<Object> result = receiver == null ? new ArrayList<Object>() : receiver;
 
