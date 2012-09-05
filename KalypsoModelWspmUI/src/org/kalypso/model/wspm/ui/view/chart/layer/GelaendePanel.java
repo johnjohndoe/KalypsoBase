@@ -50,12 +50,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.changes.ProfilPropertyEdit;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
@@ -117,8 +113,10 @@ public class GelaendePanel extends AbstractProfilView
            * we need both methods to stay synchronized with featureView
            */
           getProfile().setComment( m_comment.getText() );
-          final ProfilOperation operation = new ProfilOperation( "", getProfile(), new ProfilPropertyEdit( getProfile(), IWspmConstants.PROFIL_PROPERTY_COMMENT, m_comment.getText() ), true ); //$NON-NLS-1$
-          new ProfilOperationJob( operation ).schedule();
+
+          // FIXME: check -> cannot work any more...
+          //final ProfilOperation operation = new ProfilOperation( "", getProfile(), new ProfilPropertyEdit( getProfile(), IWspmConstants.PROFIL_PROPERTY_COMMENT, m_comment.getText() ), true ); //$NON-NLS-1$
+          // new ProfilOperationJob( operation ).schedule();
         }
       }
     } );

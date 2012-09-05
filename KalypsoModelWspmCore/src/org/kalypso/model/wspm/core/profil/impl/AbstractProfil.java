@@ -106,6 +106,8 @@ public abstract class AbstractProfil implements IProfil
 
   private String m_description;
 
+  private String m_srsName;
+
   private final Set<IProfilListener> m_listeners = Collections.synchronizedSet( new LinkedHashSet<IProfilListener>( 10 ) );
 
   private final Map<Object, Object> m_additionalProfileSettings = new HashMap<Object, Object>();
@@ -406,7 +408,7 @@ public abstract class AbstractProfil implements IProfil
 
   /**
    * CREATES A NEW POINT PROPERTY.
-   * 
+   *
    * @return a pointProperty from PointPropertyProvider, see
    *         {@code IProfilPointPropertyProvider#getPointProperty(String)}
    *         <p>
@@ -556,17 +558,6 @@ public abstract class AbstractProfil implements IProfil
   public void removeProfilListener( final IProfilListener pl )
   {
     m_listeners.remove( pl );
-  }
-
-  @Override
-  public Object removeProperty( final Object key )
-  {
-    final Object old = m_additionalProfileSettings.get( key );
-    m_additionalProfileSettings.remove( key );
-
-    fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.PROFILE_PROPERTY_CHANGED ) );
-
-    return old;
   }
 
   @Override
@@ -852,20 +843,13 @@ public abstract class AbstractProfil implements IProfil
   @Override
   public String getSrsName( )
   {
-    final IProfileFeature source = getSource();
-    if( Objects.isNotNull( source ) )
-      return source.getSrsName();
-
-    return null;
+    return m_srsName;
   }
 
   @Override
   public void setSrsName( final String srsName )
   {
-    // FIXME: check: there is also a profile object SRSNAME
-    final IProfileFeature source = getSource();
-    if( Objects.isNotNull( source ) )
-      source.setSrsName( srsName );
+    m_srsName = srsName;
 
     fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.PROFILE_PROPERTY_CHANGED ) );
   }

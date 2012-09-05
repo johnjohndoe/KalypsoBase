@@ -61,7 +61,7 @@ public class InterpolateMissingCoordinatesVisitor implements IProfileRecordVisit
 
     try
     {
-      final GM_Point position = WspmProfileHelper.getGeoPosition( point.getBreite(), point.getProfile() );
+      final GM_Point position = WspmProfileHelper.getGeoPositionKalypso( point.getBreite(), point.getProfile() );
       if( Objects.isNotNull( position ) )
       {
         point.setRechtswert( position.getX() );

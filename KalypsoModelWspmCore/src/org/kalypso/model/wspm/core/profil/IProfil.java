@@ -87,7 +87,7 @@ public interface IProfil extends IObservation<TupleResult>
 
   /**
    * remove the current ProfileObject and adds the given ProfileObject
-   * 
+   *
    * @return the oldObject
    * @param building
    *          must not be null, in this case use removeProfileObject()
@@ -171,7 +171,7 @@ public interface IProfil extends IObservation<TupleResult>
    * FIXME: make usable again:<br>
    * - use String/String instead of object/object<br/>
    * - make sure everything gets serialized automatically (feature <-> profile)
-   * 
+   *
    * @param key
    * @return the value from internal HashMap<Object,Object>
    * @deprecated caution: additional properties will not be serialized to profile features
@@ -243,12 +243,6 @@ public interface IProfil extends IObservation<TupleResult>
 
   void removeProfilListener( IProfilListener pl );
 
-  /**
-   * @param key
-   *          removes the key and its value from the profiles internal HashMap<Object,Object>
-   */
-  Object removeProperty( Object key );
-
   void setComment( String comment );
 
   /**
@@ -262,6 +256,7 @@ public interface IProfil extends IObservation<TupleResult>
    * @param value
    *          saves any (key,value-Object) in the profiles internal HashMap
    */
+  @Deprecated
   void setProperty( Object key, Object value );
 
   void setStation( double station );
