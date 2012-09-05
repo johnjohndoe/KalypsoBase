@@ -62,7 +62,7 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 /**
  * @author kimwerner
  */
-public abstract class AbstractProfilTheme extends AbstractProfilLayer// implements IChartLayer
+public abstract class AbstractProfilTheme extends AbstractProfilLayer
 {
   private final String m_id;
 
@@ -242,29 +242,28 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
     return null;
   }
 
-  @Override
-  public EditInfo getHover( final Point pos )
-  {
-    final IChartLayer[] layers = getLayerManager().getLayers();
-    for( int i = layers.length - 1; i > -1; i-- ) // reverse layers, last paint will hover first
-    {
-      if( layers[i] instanceof IProfilChartLayer )
-      {
-        final IProfilChartLayer pLayer = (IProfilChartLayer) layers[i];
-        final EditInfo info = pLayer.getHover( pos );
-        if( info != null )
-        {
-          if( !pLayer.isActive() )
-          {
-            pLayer.setActive( true );
-          }
-          return info;
-        }
-      }
-    }
-    return null;
-
-  }
+// @Override
+// public EditInfo getHover( final Point pos )
+// {
+// final IChartLayer[] layers = getLayerManager().getLayers();
+// for( int i = layers.length - 1; i > -1; i-- ) // reverse layers, last paint will hover first
+// {
+// if( layers[i] instanceof IProfilChartLayer )
+// {
+// final IProfilChartLayer pLayer = (IProfilChartLayer) layers[i];
+// final EditInfo info = pLayer.getHover( pos );
+// if( info != null )
+// {
+// if( !pLayer.isActive() )
+// {
+// pLayer.setActive( true );
+// }
+// return info;
+// }
+// }
+// }
+// return null;
+// }
 
   @Override
   public String getIdentifier( )
@@ -296,11 +295,12 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer// implemen
     if( locked != isLocked() )
     {
       final EditableChartLayerVisitor visitor = new EditableChartLayerVisitor();
-      getLayerManager().accept( visitor );
+      accept( visitor );
 
       for( final IEditableChartLayer layer : visitor.getLayers() )
       {
-        layer.lockLayer( locked );
+        if( layer != this )
+          layer.lockLayer( locked );
       }
     }
 
