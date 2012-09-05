@@ -190,7 +190,6 @@ public class ChartHandlerUtilities
   /**
    * @deprecated will always return screen
    */
-
   @Deprecated
   public static Point screen2plotPoint( final Point screen, final Rectangle plotRect )
   {
@@ -202,9 +201,7 @@ public class ChartHandlerUtilities
   /**
    * @deprecated will always return plotPoint
    */
-
   @Deprecated
- 
   public static Point plotPoint2screen( final Point plotPoint, final Rectangle plotRect )
   {
     // if( plotRect == null )

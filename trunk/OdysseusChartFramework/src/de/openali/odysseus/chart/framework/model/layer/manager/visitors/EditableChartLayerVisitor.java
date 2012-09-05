@@ -45,20 +45,24 @@ import java.util.Set;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLayerVisitor;
+import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor2;
 
 /**
  * @author Dirk Kuch
  */
-public class EditableChartLayerVisitor extends AbstractChartLayerVisitor
+public class EditableChartLayerVisitor implements IChartLayerVisitor2
 {
   private final Set<IEditableChartLayer> m_layers = new LinkedHashSet<IEditableChartLayer>();
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
   @Override
-  public void visit( final IChartLayer layer )
+  public boolean getVisitDirection( )
+  {
+    // anticyclic to the paint direction, so top layers are edited first.
+    return true;
+  }
+
+  @Override
+  public boolean visit( final IChartLayer layer )
   {
     if( layer instanceof IEditableChartLayer )
     {
@@ -66,6 +70,8 @@ public class EditableChartLayerVisitor extends AbstractChartLayerVisitor
       if( !editable.isLocked() && editable.isVisible() )
         m_layers.add( editable );
     }
+
+    return true;
   }
 
   public IEditableChartLayer[] getLayers( )

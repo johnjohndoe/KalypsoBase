@@ -5,9 +5,9 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 
+import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.manager.visitors.EditableChartLayerVisitor;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 
@@ -31,10 +31,10 @@ public class DragEditHandler extends AbstractChartDragHandler
 
   private final boolean canSnap( final Point point )
   {
-    final ILayerManager layerManager = getChart().getChartModel().getLayerManager();
+    final IChartModel chartModel = getChart().getChartModel();
 
     final EditableChartLayerVisitor visitor = new EditableChartLayerVisitor();
-    layerManager.accept( visitor );
+    chartModel.accept( visitor );
 
     final IEditableChartLayer[] layers = visitor.getLayers();
 

@@ -50,6 +50,14 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 public interface IChartLayerVisitor2
 {
   /**
+   * Return the dirction in which this visitors wants to visit the layers.
+   *
+   * @return <code>true</code> if the layers should be visited in positive order (i.e. as they are in the layer
+   *         manager); <code>false</code> otherwise.
+   */
+  boolean getVisitDirection( );
+
+  /**
    * @return Return <code>true</code>, if sub layers should be visited.
    * @throws CancelVisitorException
    *           If thrown, the visitor is completely canceled, no other layers will be visited.

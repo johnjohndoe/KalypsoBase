@@ -68,6 +68,12 @@ public class AxisRangeVisitor implements IChartLayerVisitor2
   }
 
   @Override
+  public boolean getVisitDirection( )
+  {
+    return true;
+  }
+
+  @Override
   public boolean visit( final IChartLayer layer ) throws CancelVisitorException
   {
     if( !layer.isVisible() )

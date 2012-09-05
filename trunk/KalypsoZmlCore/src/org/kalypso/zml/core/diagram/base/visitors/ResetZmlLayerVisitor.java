@@ -56,6 +56,12 @@ import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisito
 public class ResetZmlLayerVisitor implements IChartLayerVisitor2
 {
   @Override
+  public boolean getVisitDirection( )
+  {
+    return true;
+  }
+
+  @Override
   public boolean visit( final IChartLayer layer )
   {
     if( !isCleanedOnRefresh( layer ) )
