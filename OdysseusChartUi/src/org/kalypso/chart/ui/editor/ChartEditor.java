@@ -90,7 +90,7 @@ public class ChartEditor extends EditorPart implements IPropertyPart
 
   /**
    * Made visible, because {@link ChartPartComposite} needs to call it.
-   * 
+   *
    * @see org.eclipse.ui.part.WorkbenchPart#firePropertyChange(int)
    */
   @Override
@@ -100,7 +100,7 @@ public class ChartEditor extends EditorPart implements IPropertyPart
   }
 
   @Override
-  public Object getAdapter( @SuppressWarnings( "rawtypes" ) final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     final Object adapted = m_chartPartComposite.adapt( adapter );
     if( adapted != null )

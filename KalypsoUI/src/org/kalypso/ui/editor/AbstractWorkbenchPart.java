@@ -538,7 +538,7 @@ public abstract class AbstractWorkbenchPart extends WorkbenchPart implements IRe
   }
 
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     if( adapter == ICommandTarget.class )
       return m_commandTarget;

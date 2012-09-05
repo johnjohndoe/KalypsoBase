@@ -68,13 +68,13 @@ import org.kalypso.ogc.gml.widgets.base.MouseWheelZoomWidget;
 
 /**
  * widget controller of map view
- * 
+ *
  * @author vdoemming
  * @author Dirk Kuch
  */
 public class WidgetManager implements MouseListener, MouseMotionListener, MouseWheelListener, KeyListener, IWidgetManager
 {
-  private final Set<IWidgetChangeListener> m_widgetChangeListener = new LinkedHashSet<IWidgetChangeListener>();
+  private final Set<IWidgetChangeListener> m_widgetChangeListener = new LinkedHashSet<>();
 
   private final IFeatureSelectionListener m_featureSelectionListener = new IFeatureSelectionListener()
   {
@@ -90,7 +90,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
   private final ICommandTarget m_commandTarget;
 
   // handle widgets as tree set because radio widgets should be processed first
-  private final Set<IWidget> m_widgets = Collections.synchronizedSet( new TreeSet<IWidget>( new Comparator<IWidget>()
+  private final Set<IWidget> m_widgets = Collections.synchronizedSet( new TreeSet<>( new Comparator<IWidget>()
   {
     @Override
     public int compare( final IWidget w1, final IWidget w2 )
@@ -98,8 +98,6 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
       // FIXME: does not work: same widget may be in toolbar twice (with different parameters)
       final String n1 = w1.getClass().getName();
       final String n2 = w2.getClass().getName();
-
-// ObjectUtils.identityToString( object );
 
       if( WIDGET_TYPE.eRadio.equals( w1 ) && WIDGET_TYPE.eRadio.equals( w2 ) )
       {
@@ -270,7 +268,7 @@ public class WidgetManager implements MouseListener, MouseMotionListener, MouseW
     final IWidget[] widgets = getWidgets();
     for( final IWidget widget : widgets )
     {
-      ((MouseWheelListener) widget).mouseWheelMoved( e );
+      widget.mouseWheelMoved( e );
 
       if( e.isConsumed() )
         return;

@@ -40,14 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.dialog.compare;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.commands.MousePositionChartHandler;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChart;
@@ -56,11 +53,7 @@ import org.kalypso.model.wspm.ui.view.chart.ProfilChartModel;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.IChartModelState;
-import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.impl.ChartModelState;
-import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 
@@ -98,25 +91,6 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
     super.dispose();
   }
 
-  // FIXME: what is the meaning of this? highly dubious
-// @Override
-// protected IStatus doInvalidateChart( final Rectangle panel, final IProgressMonitor monitor )
-// {
-// if( monitor.isCanceled() )
-// return Status.OK_STATUS;
-//
-//
-// final IChartLayer layer = getChartModel().getLayerManager().findLayer( IWspmLayers.LAYER_GELAENDE );
-//
-// final IProfileRecord point = getSelectedPoint( layer );
-// if( point != null )
-// {
-// getProfil().getSelection().setRange( point );
-// }
-//
-// return super.doInvalidateChart( panel, monitor );
-// }
-
   @Override
   public IChartComposite getChartComposite( )
   {
@@ -146,43 +120,6 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
     }
 
     return m_profilLayerProvider;
-  }
-
-  private final IProfileRecord getSelectedPoint( final IChartLayer layer )
-  {
-    if( Objects.isNull( layer, getProfil() ) )
-      return null;
-
-    final ICoordinateMapper mapper = layer.getCoordinateMapper();
-    final IAxis domAxis = mapper.getDomainAxis();
-    final IAxis valAxis = mapper.getTargetAxis();
-    if( Objects.isNull( domAxis, valAxis ) )
-      return null;
-
-    final IDataRange<Number> activeDom = domAxis.getSelection();
-    final IDataRange<Number> activeVal = valAxis.getSelection();
-    if( Objects.isNull( activeDom, activeVal ) )
-      return null;
-
-    for( final IProfileRecord point : getProfil().getPoints() )
-    {
-      final Double hoehe = point.getHoehe();
-      final Double breite = point.getBreite();
-      if( hoehe.isNaN() || breite.isNaN() )
-        continue;
-
-      final Double deltaX = Math.abs( activeDom.getMin().doubleValue() - activeDom.getMax().doubleValue() );
-      final IProfileRecord record = ProfilUtil.findPoint( getProfil(), activeDom.getMin().doubleValue() + deltaX / 2, deltaX );
-
-      final IProfileRecord[] selection = getProfil().getSelection().toPoints();
-      if( record != null && !ArrayUtils.contains( selection, record ) )
-      {
-        if( hoehe > activeVal.getMin().doubleValue() && hoehe < activeVal.getMax().doubleValue() && breite > activeDom.getMin().doubleValue() && breite < activeDom.getMax().doubleValue() )
-          return record;
-      }
-    }
-
-    return null;
   }
 
   public void invalidate( final IProfil profile, final Object result )
@@ -223,5 +160,4 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
       invalidate( profile, result );
     }
   }
-
 }
