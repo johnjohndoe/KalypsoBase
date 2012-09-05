@@ -1412,4 +1412,25 @@ public final class GeometryUtilities
     return new GM_Envelope_Impl( bounds.minX, bounds.minY, bounds.maxX, bounds.maxY, crs );
   }
 
+  /**
+   * Create the union of two or more envelopes. Handles <code>null</code> envelopes.
+   *
+   * @return The smallest envelope that covers all the given envelopes. <code>null</code>, if all given envelopes are
+   *         <code>null</code>.
+   * @see GM_Envelope#getMerged(GM_Envelope)
+   */
+  public static GM_Envelope mergeEnvelopes( final GM_Envelope... envelopes )
+  {
+    GM_Envelope union = null;
+
+    for( final GM_Envelope envelope : envelopes )
+    {
+      if( union == null )
+        union = envelope;
+      else
+        union = union.getMerged( envelope );
+    }
+
+    return union;
+  }
 }
