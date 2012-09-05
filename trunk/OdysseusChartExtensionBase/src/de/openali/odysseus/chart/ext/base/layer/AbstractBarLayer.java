@@ -37,7 +37,7 @@ public abstract class AbstractBarLayer extends AbstractChartLayer implements ITo
 
   private ILegendEntry[] createLegendEntries( )
   {
-    final List<ILegendEntry> entries = new ArrayList<ILegendEntry>();
+    final List<ILegendEntry> entries = new ArrayList<>();
     // TODO: use all styles that are available
     final FullRectangleFigure pf = getRectangleFigure();
     if( pf.getStyle().isVisible() )
@@ -103,7 +103,7 @@ public abstract class AbstractBarLayer extends AbstractChartLayer implements ITo
   }
 
   @Override
-  public void paint( final GC gc, ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
+  public void paint( final GC gc, final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
     final String taskName = String.format( "Painting %s", getTitle() );
     monitor.beginTask( taskName, 100 );
@@ -134,6 +134,9 @@ public abstract class AbstractBarLayer extends AbstractChartLayer implements ITo
   @Override
   public EditInfo getHover( final Point pos )
   {
+    if( m_index == null )
+      return null;
+
     final BarRectangle bar = m_index.findElement( pos );
     if( bar == null )
       return null;

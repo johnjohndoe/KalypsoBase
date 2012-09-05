@@ -65,19 +65,19 @@ public class RectangleIndex<DATA extends IRectangleProvider>
     m_index.init( null );
   }
 
-  public void addElement( final DATA paintRectangle )
+  public synchronized void addElement( final DATA rectangle )
   {
     final int id = m_elements.size();
 
-    m_elements.add( paintRectangle );
+    m_elements.add( rectangle );
 
-    final Rectangle rect = paintRectangle.getRectangle();
+    final Rectangle rect = rectangle.getRectangle();
 
     final com.infomatiq.jsi.Rectangle jsiRect = new com.infomatiq.jsi.Rectangle( rect.x, rect.y, rect.x + rect.width, rect.y + rect.height );
     m_index.add( jsiRect, id );
   }
 
-  public DATA findElement( final Point pos )
+  public synchronized DATA findElement( final Point pos )
   {
     final com.infomatiq.jsi.Point searchPoint = new com.infomatiq.jsi.Point( pos.x, pos.y );
 
@@ -85,6 +85,7 @@ public class RectangleIndex<DATA extends IRectangleProvider>
     final float snapDist = 5.0f;
 
     final List<DATA> result = new ArrayList<>( 1 );
+    result.add( null );
 
     final List<DATA> elements = m_elements;
 
@@ -93,7 +94,8 @@ public class RectangleIndex<DATA extends IRectangleProvider>
       @Override
       public boolean execute( final int index )
       {
-        result.set( 0, elements.get( index ) );
+        final DATA element = elements.get( index );
+        result.set( 0, element );
         return false;
       }
     };
