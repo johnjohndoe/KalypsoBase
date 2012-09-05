@@ -10,7 +10,6 @@ import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.impl.visitors.FindLayerTooltipVisitor;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.model.layer.manager.visitors.EditableChartLayerVisitor;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 
@@ -73,9 +72,8 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
 
     final Point plotPoint = ChartHandlerUtilities.screen2plotPoint( screen, getChart().getPlotRect() );
 
-    final ILayerManager layerManager = model.getLayerManager();
     final EditableChartLayerVisitor visitor = new EditableChartLayerVisitor();
-    layerManager.accept( visitor );
+    model.accept( visitor );
 
     final IEditableChartLayer[] layers = visitor.getLayers();
     ArrayUtils.reverse( layers );
@@ -132,7 +130,7 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
     final IChartModel model = chart.getChartModel();
 
     final FindLayerTooltipVisitor visitor = new FindLayerTooltipVisitor( chart, ChartHandlerUtilities.screen2plotPoint( point, chart.getPlotRect() ) );
-    model.getLayerManager().accept( visitor );
+    model.accept( visitor );
 
     setToolInfo( visitor.getEditInfo() );
   }

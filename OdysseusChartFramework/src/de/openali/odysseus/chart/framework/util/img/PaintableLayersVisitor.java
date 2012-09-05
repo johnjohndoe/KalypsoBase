@@ -43,7 +43,6 @@ package de.openali.odysseus.chart.framework.util.img;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.commons.exception.CancelVisitorException;
 
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -59,6 +58,12 @@ public class PaintableLayersVisitor implements IChartLayerVisitor2
   private final Collection<IChartLayer> m_layers = new ArrayList<>();
 
   @Override
+  public boolean getVisitDirection( )
+  {
+    return false;
+  }
+
+  @Override
   public boolean visit( final IChartLayer layer ) throws CancelVisitorException
   {
     if( layer.isVisible() )
@@ -70,10 +75,6 @@ public class PaintableLayersVisitor implements IChartLayerVisitor2
 
   public IChartLayer[] getLayers( )
   {
-    final IChartLayer[] layers = m_layers.toArray( new IChartLayer[m_layers.size()] );
-
-    ArrayUtils.reverse( layers );
-
-    return layers;
+    return m_layers.toArray( new IChartLayer[m_layers.size()] );
   }
 }

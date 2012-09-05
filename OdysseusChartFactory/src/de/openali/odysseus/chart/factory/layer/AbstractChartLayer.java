@@ -346,7 +346,7 @@ public abstract class AbstractChartLayer implements IChartLayer
    * Default implementation does nothing.
    */
   @Override
-  public void paint( final GC gc, ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
+  public void paint( final GC gc, final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
   }
 
@@ -493,7 +493,12 @@ public abstract class AbstractChartLayer implements IChartLayer
     if( !doRecurse )
       return;
 
+    final boolean direction = visitor.getVisitDirection();
+
     final IChartLayer[] children = getLayerManager().getLayers();
+    if( !direction )
+      ArrayUtils.reverse( children );
+
     for( final IChartLayer child : children )
       child.accept( visitor );
   }

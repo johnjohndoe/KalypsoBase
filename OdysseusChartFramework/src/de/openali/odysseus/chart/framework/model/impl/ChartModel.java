@@ -3,6 +3,7 @@ package de.openali.odysseus.chart.framework.model.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.commons.exception.CancelVisitorException;
 import org.kalypso.commons.java.lang.Arrays;
 
@@ -42,7 +43,7 @@ public class ChartModel implements IChartModel
 
   /**
    * automatically scales all given axes; scaling means here: show all available values
-   * 
+   *
    * @param axes
    *          axes == null -> update all chart model axes
    */
@@ -68,9 +69,9 @@ public class ChartModel implements IChartModel
   public void dispose( )
   {
     // TODO: dispose layer manager instead
-    ILayerManager layerManager = getLayerManager();
+    final ILayerManager layerManager = getLayerManager();
     layerManager.accept( new DisposeLayersVisitor() );
-// TODO: dispose m_behavior
+    // TODO: dispose m_behavior
     m_dataMap.clear();
   }
 
@@ -149,6 +150,10 @@ public class ChartModel implements IChartModel
     try
     {
       final IChartLayer[] layers = getLayerManager().getLayers();
+
+      if( !visitor.getVisitDirection() )
+        ArrayUtils.reverse( layers );
+
       for( final IChartLayer layer : layers )
         layer.accept( visitor );
     }

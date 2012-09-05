@@ -67,5 +67,4 @@ public interface IChartBehaviour
 
   // FIXME remove from interface
   void hideUnusedAxis( IAxis... axes );
-
 }

@@ -121,6 +121,12 @@ public class ZmlChartSelectionChangedHandler extends AbstractChartSelectionListe
     chart.getChartModel().accept( new IChartLayerVisitor2()
     {
       @Override
+      public boolean getVisitDirection( )
+      {
+        return true;
+      }
+
+      @Override
       public boolean visit( final IChartLayer layer )
       {
         if( layer instanceof ZmlSelectionLayer )
@@ -156,6 +162,12 @@ public class ZmlChartSelectionChangedHandler extends AbstractChartSelectionListe
 
     chart.getChartModel().accept( new IChartLayerVisitor2()
     {
+      @Override
+      public boolean getVisitDirection( )
+      {
+        return true;
+      }
+
       @Override
       public boolean visit( final IChartLayer layer )
       {

@@ -236,7 +236,7 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
   {
     final FindLayerTooltipVisitor visitor = new FindLayerTooltipVisitor( getChart(), point );
     final IChartModel model = getChart().getChartModel();
-    model.getLayerManager().accept( visitor );
+    model.accept( visitor );
 
     setToolInfo( visitor.getEditInfo() );
   }
