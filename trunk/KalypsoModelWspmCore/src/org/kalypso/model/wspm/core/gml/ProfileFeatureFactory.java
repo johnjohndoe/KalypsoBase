@@ -47,7 +47,6 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmConstants;
@@ -116,7 +115,7 @@ public final class ProfileFeatureFactory implements IWspmConstants
       /* name and description */
       final String name = profile.getName();
       final String description = profile.getComment();
-      final String srs = ObjectUtils.toString( profile.getProperty( IWspmConstants.PROFIL_PROPERTY_CRS ) );
+      final String srs = profile.getSrsName();
       changes.add( new FeatureChange( targetFeature, featureType.getProperty( IProfileFeature.PROPERTY_SRS ), srs ) );
 
       final List<String> namelist = new ArrayList<String>();

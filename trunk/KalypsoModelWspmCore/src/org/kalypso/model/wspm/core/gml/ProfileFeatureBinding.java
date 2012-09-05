@@ -243,9 +243,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
       profil.setStation( station );
     }
 
-    /* Some metadata */
-    final String crs = getSrsName();
-    profil.setProperty( IWspmConstants.PROFIL_PROPERTY_CRS, crs );
+    profil.setSrsName( getSrsName() );
 
     /* TODO - @hack - add flow direction to profile meta data */
     final Feature parent = getOwner();
