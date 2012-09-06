@@ -35,6 +35,10 @@
  */
 package org.kalypsodeegree_impl.model.geometry;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.vecmath.Point3d;
 
 import org.kalypso.transformation.transformer.GeoTransformerException;
@@ -90,11 +94,7 @@ class GM_Triangle_Impl implements GM_Triangle
       final double x = position.getX();
       final double y = position.getY();
 
-      final Plane plane = new Plane();
-      final Point3d p0 = new Point3d( m_p1.getX(), m_p1.getY(), m_p1.getZ() );
-      final Point3d p1 = new Point3d( m_p2.getX(), m_p2.getY(), m_p2.getZ() );
-      final Point3d p2 = new Point3d( m_p3.getX(), m_p3.getY(), m_p3.getZ() );
-      plane.setPlane( p0, p1, p2 );
+      final Plane plane = createPlane();
 
       return plane.z( x, y );
     }
@@ -102,6 +102,22 @@ class GM_Triangle_Impl implements GM_Triangle
     {
       return Double.NaN;
     }
+  }
+
+  private Plane createPlane( )
+  {
+    // REMARK: we do not cache the plane here, because
+    // - it actually does not save that much time
+    // - we have huge triagulated surfaces with millions of tirangles, so caching consumes too much memory.
+    // TODO: replace the heavywheight plane class with a direct calculation of the plane equation
+    final Plane plane = new Plane();
+
+    final Point3d p0 = new Point3d( m_p1.getX(), m_p1.getY(), m_p1.getZ() );
+    final Point3d p1 = new Point3d( m_p2.getX(), m_p2.getY(), m_p2.getZ() );
+    final Point3d p2 = new Point3d( m_p3.getX(), m_p3.getY(), m_p3.getZ() );
+    plane.setPlane( p0, p1, p2 );
+
+    return plane;
   }
 
   @Override
@@ -288,5 +304,41 @@ class GM_Triangle_Impl implements GM_Triangle
   public void invalidate( )
   {
     // no ned for invalidatrion, we keep no state...
+  }
+
+  @Override
+  public int hashCode( )
+  {
+    final Plane plane = createPlane();
+
+    return plane.hashCode();
+  }
+
+  @Override
+  public boolean equals( final Object obj )
+  {
+    if( this == obj )
+      return true;
+
+    if( getClass() != obj.getClass() )
+      return false;
+
+    final GM_Triangle_Impl other = (GM_Triangle_Impl) obj;
+
+    final Set<GM_Position> positions = new HashSet<GM_Position>();
+
+    // REMARK:
+
+    positions.addAll( Arrays.asList( this.getExteriorRing() ) );
+
+    for( final GM_Position lPos : other.getExteriorRing() )
+    {
+      if( !positions.contains( lPos ) )
+      {
+        return false;
+      }
+    }
+
+    return true;
   }
 }
