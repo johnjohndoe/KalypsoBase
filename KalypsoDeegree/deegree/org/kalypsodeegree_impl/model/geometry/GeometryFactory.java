@@ -1099,7 +1099,12 @@ final public class GeometryFactory
 
   public static GM_Triangle createGM_Triangle( final GM_Position pos1, final GM_Position pos2, final GM_Position pos3, final String crs )
   {
-    return new GM_Triangle_Impl( pos1, pos2, pos3, crs );
+    final GM_Triangle triangle = new GM_Triangle_Impl( pos1, pos2, pos3, crs );
+    
+    if( triangle.getOrientation() == -1 )
+      return new GM_Triangle_Impl( pos1, pos3, pos2, crs );
+
+    return triangle;
   }
 
   public static GM_TriangulatedSurface createGM_TriangulatedSurface( final String crs ) throws GM_Exception

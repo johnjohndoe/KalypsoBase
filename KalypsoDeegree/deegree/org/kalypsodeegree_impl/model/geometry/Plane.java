@@ -23,23 +23,21 @@ import javax.vecmath.Point3d;
 
 import org.opengis.util.Cloneable;
 
-// FIXME: copied from geotools; use Plane from apache math instead 
+// TODO: copied from geotools; use Plane from apache math instead
 /**
  * Equation of a plane in a three-dimensional space (<var>x</var>,<var>y</var>,<var>z</var>). The plane equation is
  * expressed by {@link #c}, {@link #cx} and {@link #cy} coefficients as below: <blockquote>
  * <var>z</var>(<var>x</var>,<var>y</var>) = <var>c</var> + <var>cx</var>*<var>x</var> + <var>cy</var>*<var>y</var>
  * </blockquote> Those coefficients can be set directly, or computed by a linear regression of this plane through a set
  * of three-dimensional points.
- * 
+ *
  * @since 2.0
  * @source $URL: http://svn.osgeo.org/geotools/trunk/modules/library/metadata/src/main/java/org/geotools/math/Plane.java
  *         $
  * @version $Id: Plane.java 31073 2008-07-25 08:14:47Z desruisseaux $
  * @author Martin Desruisseaux (PMO, IRD)
  * @author Howard Freeland, for algorithmic inspiration
- * @deprecated Use Plane from apache commnos match instead
  */
-@Deprecated
 public class Plane implements Cloneable, Serializable {
     /**
      * Serial number for compatibility with different versions.
