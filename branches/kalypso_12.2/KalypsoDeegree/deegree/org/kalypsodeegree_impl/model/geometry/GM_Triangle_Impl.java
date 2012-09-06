@@ -35,6 +35,10 @@
  */
 package org.kalypsodeegree_impl.model.geometry;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.vecmath.Point3d;
 
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -53,6 +57,8 @@ import com.vividsolutions.jts.geom.LinearRing;
  */
 public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
 {
+  private Plane m_plane = null;
+
   public GM_Triangle_Impl( final GM_Position pos1, final GM_Position pos2, final GM_Position pos3, final String crs ) throws GM_Exception
   {
     super( new GM_Position[] { pos1, pos2, pos3, pos1 }, null, crs );
@@ -72,6 +78,15 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
     final double x = position.getX();
     final double y = position.getY();
 
+    if( m_plane == null )
+    {
+      initPlanar();
+    }
+    return m_plane.z( x, y );
+  }
+
+  private void initPlanar( )
+  {
     final GM_Position[] exteriorRing = getExteriorRing();
     final Coordinate c0 = JTSAdapter.export( exteriorRing[0] );
     final Coordinate c1 = JTSAdapter.export( exteriorRing[1] );
@@ -84,8 +99,8 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
     final Point3d p1 = new Point3d( c1.x, c1.y, c1.z );
     final Point3d p2 = new Point3d( c2.x, c2.y, c2.z );
     plane.setPlane( p0, p1, p2 );
-    
-    return plane.z( x, y );
+
+    m_plane = plane;
   }
 
   @Override
@@ -93,7 +108,7 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
   {
     final LinearRing exterior = JTSAdapter.exportAsRing( getExteriorRing() );
     final SimplePointInRing pir = new SimplePointInRing( exterior );
-    
+
     return pir.isInside( new Coordinate( position.getX(), position.getY() ) );
   }
 
@@ -142,13 +157,13 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
   private static int orientation( final GM_Position pos1, final GM_Position pos2, final GM_Position pos3 )
   {
     final double s_a = signedArea( pos1, pos2, pos3 );
-     return s_a > 0 ? 1 : (s_a < 0 ? -1 : 0);
+    return s_a > 0 ? 1 : (s_a < 0 ? -1 : 0);
   }
 
   // FIXME: JTS!
   private static double signedArea( final GM_Position pos1, final GM_Position pos2, final GM_Position pos3 )
   {
-     return (pos1.getX() * (pos2.getY() - pos3.getY()) + pos2.getX() * (pos3.getY() - pos1.getY()) + pos3.getX() * (pos1.getY() - pos2.getY()));
+    return (pos1.getX() * (pos2.getY() - pos3.getY()) + pos2.getX() * (pos3.getY() - pos1.getY()) + pos3.getX() * (pos1.getY() - pos2.getY()));
   }
 
   @Override
@@ -184,32 +199,41 @@ public class GM_Triangle_Impl extends GM_Polygon_Impl implements GM_Triangle
     throw new IllegalStateException();
   }
 
-  // @Override
-// public int hashCode( )
-// {
-// final int prime = 31;
-// int result = 1;
-// result = prime * result + Arrays.hashCode( m_planarEquation );
-// return result;
-// }
-//
-// @Override
-// public boolean equals( final Object obj )
-// {
-// if( this == obj )
-// return true;
-// if( getClass() != obj.getClass() )
-// return false;
-// final GM_Triangle_Impl other = (GM_Triangle_Impl) obj;
-// for( final GM_Position lPos : other.getExteriorRing() )
-// {
-// if( !this.contains2( lPos ) )
-// {
-// return false;
-// }
-// }
-// return true;
-// }
+  @Override
+  public int hashCode( )
+  {
+    final int prime = 31;
+    int result = 1;
+
+    if( m_plane == null )
+    {
+      initPlanar();
+    }
+
+    final int hashCode = m_plane.hashCode();
+    result = prime * result + hashCode;
+    return result;
+  }
+
+  @Override
+  public boolean equals( final Object obj )
+  {
+    if( this == obj )
+      return true;
+    if( getClass() != obj.getClass() )
+      return false;
+    final GM_Triangle_Impl other = (GM_Triangle_Impl) obj;
+    final Set<GM_Position> positions = new HashSet<GM_Position>();
+    positions.addAll( Arrays.asList( this.getExteriorRing() ) );
+    for( final GM_Position lPos : other.getExteriorRing() )
+    {
+      if( !positions.contains( lPos ) )
+      {
+        return false;
+      }
+    }
+    return true;
+  }
 
   @Override
   public int getOrientation( )
