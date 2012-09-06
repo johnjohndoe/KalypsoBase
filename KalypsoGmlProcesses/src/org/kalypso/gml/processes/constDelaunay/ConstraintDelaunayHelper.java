@@ -408,8 +408,13 @@ public class ConstraintDelaunayHelper
 
   public static GM_Triangle[] convertToTriangles( final GM_Position[] positions, final String crs ) throws GM_Exception
   {
+    return convertToTriangles( positions, crs, true );
+  }
+
+  public static GM_Triangle[] convertToTriangles( final GM_Position[] positions, final String crs, final boolean useTriangleExe ) throws GM_Exception
+  {
     final List<GM_Triangle> triangleList = new LinkedList<GM_Triangle>();
-    triangleList.addAll( Arrays.asList( createGM_Triangles( positions, null, crs ) ) );
+    triangleList.addAll( Arrays.asList( createGM_Triangles( positions, null, crs, useTriangleExe ) ) );
 
     return triangleList.toArray( new GM_Triangle[triangleList.size()] );
   }
@@ -442,6 +447,11 @@ public class ConstraintDelaunayHelper
 
   public static GM_Triangle[] convertToTriangles( final GM_Surface< ? extends GM_SurfacePatch> pSurface, final String crs, final String... triangleArgs ) throws GM_Exception
   {
+    return convertToTriangles( pSurface, crs, true, triangleArgs );
+  }
+
+  public static GM_Triangle[] convertToTriangles( final GM_Surface< ? extends GM_SurfacePatch> pSurface, final String crs, final boolean useTriangleExe, final String... triangleArgs ) throws GM_Exception
+  {
     final List<GM_Triangle> triangleList = new LinkedList<GM_Triangle>();
     final boolean lBoolConvex = pSurface.getConvexHull().difference( pSurface ) == null;
     for( final GM_SurfacePatch surfacePatch : pSurface )
@@ -449,7 +459,7 @@ public class ConstraintDelaunayHelper
       final GM_Position[] exterior = surfacePatch.getExteriorRing();
       // final GM_Position[][] interior = surfacePatch.getInteriorRings();
       final GM_Triangle[] lArrTriangles;
-      lArrTriangles = createGM_Triangles( exterior, null, crs, triangleArgs );
+      lArrTriangles = createGM_Triangles( exterior, null, crs, useTriangleExe, triangleArgs );
 
       if( lArrTriangles != null )
       {
@@ -462,15 +472,7 @@ public class ConstraintDelaunayHelper
               continue;
             }
           }
-          if( lTriangle.getOrientation() == -1 )
-          {
-            triangleList.add( GeometryFactory.createGM_Triangle( lTriangle.getExteriorRing()[0], lTriangle.getExteriorRing()[2], lTriangle.getExteriorRing()[1], crs ) );
-
-          }
-          else
-          {
-            triangleList.add( lTriangle );
-          }
+          triangleList.add( lTriangle );
         }
       }
     }
@@ -478,11 +480,16 @@ public class ConstraintDelaunayHelper
     return triangleList.toArray( new GM_Triangle[triangleList.size()] );
   }
 
+  public static GM_Triangle[] createGM_Triangles( final GM_Position[] exterior, final GM_Curve[] breaklines, final String crs, final String... triangleArgs ) throws GM_Exception
+  {
+    return createGM_Triangles( exterior, breaklines, crs, true, triangleArgs );
+  }
+
   /**
    * converts an array of {@link GM_Position} into a list of {@link GM_Triangle}. If there are more than 3 positions in
    * the array the positions gets triangulated by Triangle.exe The positions must build a closed polygon.
    */
-  public static GM_Triangle[] createGM_Triangles( final GM_Position[] exterior, final GM_Curve[] breaklines, final String crs, final String... triangleArgs ) throws GM_Exception
+  public static GM_Triangle[] createGM_Triangles( final GM_Position[] exterior, final GM_Curve[] breaklines, final String crs, final boolean useTriangleExe, final String... triangleArgs ) throws GM_Exception
   {
     // check if pos arrays are closed polygons
 
@@ -495,7 +502,7 @@ public class ConstraintDelaunayHelper
     // if there are more than 3 corner positions triangulate the pos array.
     if( exterior.length > 4 )
     {
-      return triangulatePolygon( exterior, breaklines, crs, triangleArgs );
+      return triangulatePolygon( exterior, breaklines, crs, useTriangleExe, triangleArgs );
     }
     else
     {
@@ -554,10 +561,15 @@ public class ConstraintDelaunayHelper
 
   public static GM_Triangle[] triangulatePolygon( final GM_Position[] exterior, final GM_Curve[] breaklines, final String crs, final String... triangleArgs )
   {
+    return triangulatePolygon( exterior, breaklines, crs, true, triangleArgs );
+  }
+
+  public static GM_Triangle[] triangulatePolygon( final GM_Position[] exterior, final GM_Curve[] breaklines, final String crs, final boolean useTriangleExe, final String... triangleArgs )
+  {
     final File cmd = findTriangleExe();
 
     // triangulate without triangle.exe
-    if( !cmd.exists() )
+    if( !useTriangleExe || !cmd.exists() )
     {
       return getTrianglesWithTriangulationDT( exterior, crs );
     }
@@ -565,7 +577,6 @@ public class ConstraintDelaunayHelper
     BufferedReader nodeReader = null;
     BufferedReader eleReader = null;
     PrintStream pwSimuLog;
-
     final List<GM_Triangle> triangles = new LinkedList<GM_Triangle>();
 
     /* prepare */
