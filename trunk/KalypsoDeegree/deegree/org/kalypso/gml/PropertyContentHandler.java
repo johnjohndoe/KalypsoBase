@@ -236,13 +236,12 @@ public class PropertyContentHandler extends AbstractGmlContentHandler implements
   }
 
   @Override
-  public void handle( final StringBuffer simpleContent ) throws SAXParseException
+  public void handle( final String simpleContent ) throws SAXParseException
   {
     final IValuePropertyType valuePT = (IValuePropertyType) m_scopeProperty;
     final ISimpleMarshallingTypeHandler< ? > simpleHandler = (ISimpleMarshallingTypeHandler< ? >) valuePT.getTypeHandler();
-    final String simpleString = simpleContent.toString();
 
-    final Object value = simpleHandler.convertToJavaValue( simpleString );
+    final Object value = simpleHandler.convertToJavaValue( simpleContent );
     try
     {
       unmarshallSuccesful( value );
@@ -250,7 +249,7 @@ public class PropertyContentHandler extends AbstractGmlContentHandler implements
     catch( final Exception e )
     {
       e.printStackTrace();
-      throwSAXParseException( e, "Failed to parsed simple type. Content was '%s' for property '%s'", simpleString, m_scopeProperty.getQName() );
+      throwSAXParseException( e, "Failed to parsed simple type. Content was '%s' for property '%s'", simpleContent, m_scopeProperty.getQName() );
     }
   }
 
