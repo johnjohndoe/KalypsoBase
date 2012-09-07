@@ -80,28 +80,26 @@ public class FixedResultDefinitionFeaturePropertyFunction extends FeaturePropert
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#setValue(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
+   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#setValue(org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
   @Override
   public Object setValue( final Feature feature, final IPropertyType pt, final Object valueToSet )
   {
-    return getConstValue( feature, (IRelationType) pt );
+    return getConstValue( feature, (IRelationType)pt );
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
+   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
   @Override
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
-    return getConstValue( feature, (IRelationType) pt );
+    return getConstValue( feature, (IRelationType)pt );
   }
 
   /**
    * Produces the a feature of the following kind:
-   *
+   * 
    * <pre>
    *   &lt;swe:RecordDefinition gml:id=&quot;RecordDefinition1157976616979291&quot;&gt;
    *      &lt;swe:component xlink:href=&quot;urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation&quot;/&gt;
@@ -118,7 +116,7 @@ public class FixedResultDefinitionFeaturePropertyFunction extends FeaturePropert
     final IFeatureType recordSchemaType = schema.getFeatureType( QNAME_RECORD_RECORDSCHEMA );
 
     final Feature feature = FeatureFactory.createFeature( parent, parentRelation, id, featureType, true, 0 );
-    final FeatureList components = (FeatureList) feature.getProperty( QNAME_RECORD_COMPONENT );
+    final FeatureList components = (FeatureList)feature.getProperty( QNAME_RECORD_COMPONENT );
 
     for( final String href : m_compHrefs )
       components.addLink( href, recordSchemaType );
