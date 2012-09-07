@@ -131,7 +131,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
  * A widget with option pane, which allows the user to edit a coverage collection.<BR>
  * The user can add / remove coverage data to / from the collection and change the order of the elements of the
  * collection. In addition he can jump to the extent of an collection element in the map.
- * 
+ *
  * @author Thomas Jung
  * @author Gernot Belger
  */
@@ -234,7 +234,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     }
   };
 
-  private final Set<IUpdateable> m_actions = new HashSet<IUpdateable>();
+  private final Set<IUpdateable> m_actions = new HashSet<>();
 
   private final IAction[] m_customActions;
 
@@ -567,7 +567,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     final IMapModell mapModell = mapPanel == null ? null : mapPanel.getMapModell();
     final IKalypsoTheme activeTheme = mapModell == null ? null : mapModell.getActiveTheme();
 
-    final List<IKalypsoFeatureTheme> themesForCombo = new ArrayList<IKalypsoFeatureTheme>();
+    final List<IKalypsoFeatureTheme> themesForCombo = new ArrayList<>();
 
     if( COVERAGE_PREDICATE.decide( activeTheme ) )
       themesForCombo.add( (IKalypsoFeatureTheme) activeTheme );
@@ -924,7 +924,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   /**
    * This function returns the selected feature theme.
-   * 
+   *
    * @return The selected feature theme.
    */
   public IKalypsoFeatureTheme getSelectedTheme( )

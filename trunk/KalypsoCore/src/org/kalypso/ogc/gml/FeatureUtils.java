@@ -63,7 +63,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * some basic feature utils
- * 
+ *
  * @author Dirk Kuch
  */
 public final class FeatureUtils
@@ -122,7 +122,7 @@ public final class FeatureUtils
 
   public static FeatureChange[] getAsFeatureChange( final Feature feature, final Map<QName, Object> map )
   {
-    final List<FeatureChange> changes = new ArrayList<FeatureChange>();
+    final List<FeatureChange> changes = new ArrayList<>();
 
     final Set<Entry<QName, Object>> entrySet = map.entrySet();
     for( final Entry<QName, Object> entry : entrySet )
@@ -138,7 +138,7 @@ public final class FeatureUtils
 
   public static FeatureChange[] getAsFeatureChange( final Feature feature, final QName qname, final Object value )
   {
-    final Map<QName, Object> map = new HashMap<QName, Object>();
+    final Map<QName, Object> map = new HashMap<>();
     map.put( qname, value );
 
     return getAsFeatureChange( feature, map );
@@ -146,7 +146,7 @@ public final class FeatureUtils
 
   public static void updateProperty( final CommandableWorkspace workspace, final Feature feature, final QName qname, final Object value ) throws Exception
   {
-    final Map<QName, Object> map = new HashMap<QName, Object>();
+    final Map<QName, Object> map = new HashMap<>();
     map.put( qname, value );
 
     FeatureUtils.updateProperties( workspace, feature, map );

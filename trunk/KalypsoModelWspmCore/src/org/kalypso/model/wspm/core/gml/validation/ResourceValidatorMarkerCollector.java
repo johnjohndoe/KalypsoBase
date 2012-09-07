@@ -64,7 +64,7 @@ public final class ResourceValidatorMarkerCollector implements IValidatorMarkerC
 
   private final String m_editorID;
 
-  private final List<IMarker> m_markers = new ArrayList<IMarker>();
+  private final List<IMarker> m_markers = new ArrayList<>();
 
   private final String m_profileFeatureID;
 
@@ -94,7 +94,7 @@ public final class ResourceValidatorMarkerCollector implements IValidatorMarkerC
   public void reset( final String profilFeatureID ) throws CoreException
   {
     final IMarker[] markers = m_resource.findMarkers( KalypsoModelWspmCorePlugin.MARKER_ID, true, IResource.DEPTH_ZERO );
-    final ArrayList<IMarker> toDelete = new ArrayList<IMarker>();
+    final ArrayList<IMarker> toDelete = new ArrayList<>();
     for( final IMarker marker : markers )
     {
       if( marker == null )

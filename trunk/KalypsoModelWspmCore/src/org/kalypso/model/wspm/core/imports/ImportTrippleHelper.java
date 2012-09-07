@@ -99,7 +99,7 @@ public final class ImportTrippleHelper
       return new IProfil[0];
 
     /* read profiles, show warnings */
-    final List<IProfil> profiles = new ArrayList<IProfil>();
+    final List<IProfil> profiles = new ArrayList<>();
     IProfil currentProfile = null;
 
     /* file loading */

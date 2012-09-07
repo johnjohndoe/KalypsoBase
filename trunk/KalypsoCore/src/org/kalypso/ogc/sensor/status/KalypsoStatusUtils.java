@@ -59,7 +59,7 @@ import org.kalypso.ogc.sensor.impl.DefaultAxis;
 
 /**
  * Utility class for the handling of status information within Kalypso
- * 
+ *
  * @author schlienger
  */
 public final class KalypsoStatusUtils
@@ -94,7 +94,7 @@ public final class KalypsoStatusUtils
 
   /**
    * Returns the status axis name for the given value axis.
-   * 
+   *
    * @param axis
    *          the observation axis for which to return the status axis name
    * @return the name of the corresponding status axis
@@ -109,7 +109,7 @@ public final class KalypsoStatusUtils
 
   /**
    * Returns the axis label without the status marker
-   * 
+   *
    * @return just axis label
    */
   public static String getAxisNameFor( final IAxis statusAxis )
@@ -119,7 +119,7 @@ public final class KalypsoStatusUtils
 
   /**
    * Creates a status axis for the given 'normal' axis.
-   * 
+   *
    * @return new status axis
    * @throws IllegalArgumentException
    *           if given axis is already a status axis
@@ -135,7 +135,7 @@ public final class KalypsoStatusUtils
 
   /**
    * Returns true if the axis is a status-axis (speaking Kalypso intern)
-   * 
+   *
    * @return true if status-axis
    */
   // FIXME: also returns treu for Data-Source axes!
@@ -176,7 +176,7 @@ public final class KalypsoStatusUtils
 
   /**
    * Finds the first status axis among the given list.
-   * 
+   *
    * @return status axis
    * @throws NoSuchElementException
    *           if no status axis in the list
@@ -194,7 +194,7 @@ public final class KalypsoStatusUtils
 
   /**
    * Returns the status axis for the given axis if found in the axes-list.
-   * 
+   *
    * @throws NoSuchElementException
    *           if no corresponding status axis found
    */
@@ -226,12 +226,12 @@ public final class KalypsoStatusUtils
 
   /**
    * Finds the list of status axis among the given axes
-   * 
+   *
    * @return status axes
    */
   public static IAxis[] findStatusAxes( final IAxis[] axes )
   {
-    final ArrayList<IAxis> list = new ArrayList<IAxis>();
+    final ArrayList<IAxis> list = new ArrayList<>();
 
     for( final IAxis axe : axes )
     {
@@ -244,12 +244,12 @@ public final class KalypsoStatusUtils
 
   /**
    * Returns the list of non-status axes
-   * 
+   *
    * @return non-status axes
    */
   public static IAxis[] withoutStatusAxes( final IAxis[] axes )
   {
-    final ArrayList<IAxis> list = new ArrayList<IAxis>();
+    final ArrayList<IAxis> list = new ArrayList<>();
 
     for( int i = 0; i < axes.length; i++ )
     {
@@ -265,7 +265,7 @@ public final class KalypsoStatusUtils
    * axes from the result list or not.
    * <p>
    * Please note that currently the status axis is of a Number type.
-   * 
+   *
    * @param axes
    * @param desired
    * @param excludeStatusAxes
@@ -278,7 +278,7 @@ public final class KalypsoStatusUtils
     if( ArrayUtils.isEmpty( axes ) )
       return new IAxis[] {};
 
-    final ArrayList<IAxis> list = new ArrayList<IAxis>( axes == null ? 0 : axes.length );
+    final ArrayList<IAxis> list = new ArrayList<>( axes == null ? 0 : axes.length );
 
     for( int i = 0; i < axes.length; i++ )
     {
@@ -297,12 +297,12 @@ public final class KalypsoStatusUtils
 
   /**
    * Same as {@link KalypsoStatusUtils#findAxesByClass(IAxis[], Class, boolean)}for several classes.
-   * 
+   *
    * @see KalypsoStatusUtils#findAxesByClass(IAxis[], Class, boolean)
    */
   public static IAxis[] findAxesByClasses( final IAxis[] axes, final Class< ? >[] desired, final boolean excludeStatusAxes ) throws NoSuchElementException
   {
-    final List<IAxis> list = new ArrayList<IAxis>( axes == null ? 0 : axes.length );
+    final List<IAxis> list = new ArrayList<>( axes == null ? 0 : axes.length );
 
     for( final Class< ? > element : desired )
     {
@@ -324,7 +324,7 @@ public final class KalypsoStatusUtils
    * status axes from the result list or not.
    * <p>
    * Please note that currently the status axis is of a Number type.
-   * 
+   *
    * @param axes
    * @param desired
    * @param excludeStatusAxes
@@ -348,7 +348,7 @@ public final class KalypsoStatusUtils
 
   /**
    * Checks if bit is in the mask.
-   * 
+   *
    * @return true if bit is set in the given mask
    */
   public static boolean checkMask( final int mask, final int bit )
@@ -389,7 +389,7 @@ public final class KalypsoStatusUtils
    * <li>any URL: an URL that will be used for finding the image (see ImageIcon.ImageIcon( URL ) )
    * <li>null: returns null
    * </ol>
-   * 
+   *
    * @see KalypsoStatusUtils#ICON_QUESTION
    * @see KalypsoStatusUtils#ICON_WARNING
    * @see KalypsoStatusUtils#ICON_WRITE
@@ -511,7 +511,7 @@ public final class KalypsoStatusUtils
    * Get the combined status for the given axis.<br>
    * If the axis has no corresponding status axis, BIT_OK is returned.<br>
    * Else, the or'ed value of all stati is returned.
-   * 
+   *
    * @throws SensorException
    */
   public static int getStatus( final ITupleModel values, final IAxis axis ) throws SensorException
@@ -534,7 +534,7 @@ public final class KalypsoStatusUtils
 
   /**
    * Counts the occurrence of a given status bit.
-   * 
+   *
    * @throws SensorException
    */
   public static int countStatus( final ITupleModel values, final IAxis axis, final int mask ) throws SensorException

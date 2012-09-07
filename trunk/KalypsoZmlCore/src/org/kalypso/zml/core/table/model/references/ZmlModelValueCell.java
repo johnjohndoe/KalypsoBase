@@ -345,7 +345,7 @@ public class ZmlModelValueCell extends AbstractZmlCell implements IZmlModelValue
   {
     final DataColumn column = getColumn().getDataColumn();
 
-    final List<ZmlCellRule> rules = new ArrayList<ZmlCellRule>();
+    final List<ZmlCellRule> rules = new ArrayList<>();
     final ZmlCellRule[] columnRules = column.getCellRules();
     for( final ZmlCellRule rule : columnRules )
     {

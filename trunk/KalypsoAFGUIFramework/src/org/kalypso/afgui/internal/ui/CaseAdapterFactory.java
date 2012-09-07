@@ -49,7 +49,7 @@ public class CaseAdapterFactory implements IAdapterFactory
   private final CaseTreeContentAdapter m_caseTreeContentAdapter = new CaseTreeContentAdapter();
 
   @Override
-  public Object getAdapter( final Object adaptableObject, @SuppressWarnings("rawtypes") final Class adapterType )
+  public Object getAdapter( final Object adaptableObject, final Class adapterType )
   {
     if( adapterType == IWorkbenchAdapter.class || adapterType == IWorkbenchAdapter2.class )
     {

@@ -76,7 +76,7 @@ import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
  */
 public class StatusDialog extends AbstractStatusDialog
 {
-  private final Collection<IAction> m_actions = new ArrayList<IAction>();
+  private final Collection<IAction> m_actions = new ArrayList<>();
 
   private boolean m_showAsTree = true;
 

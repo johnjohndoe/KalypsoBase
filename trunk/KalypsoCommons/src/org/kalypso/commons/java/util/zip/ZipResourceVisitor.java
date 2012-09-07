@@ -60,7 +60,7 @@ import org.kalypso.commons.internal.i18n.Messages;
 
 /**
  * A {@link org.eclipse.core.resources.IResourceVisitor}which puts all visited resources in a single zip file.
- * 
+ *
  * @author belger
  */
 public class ZipResourceVisitor implements IResourceVisitor
@@ -73,7 +73,7 @@ public class ZipResourceVisitor implements IResourceVisitor
 
   private final ZipOutputStream m_zos;
 
-  private final Set<String> m_entries = new HashSet<String>();
+  private final Set<String> m_entries = new HashSet<>();
 
   private PATH_TYPE m_pathType = PATH_TYPE.PROJECT_RELATIVE;
 
@@ -99,7 +99,7 @@ public class ZipResourceVisitor implements IResourceVisitor
 
   /**
    * Must be called, to close Zip-File
-   * 
+   *
    * @throws IOException
    */
   public void close( ) throws IOException

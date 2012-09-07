@@ -73,7 +73,7 @@ public class ExportDocumentsObjectFactory implements IExportableObjectFactory
   public IExportableObject[] createExportableObjects( final ExtendedProperties configuration )
   {
     final Object[] checkedElements = m_page.getCheckedElements();
-    final List<IExportableObject> result = new ArrayList<IExportableObject>( checkedElements.length );
+    final List<IExportableObject> result = new ArrayList<>( checkedElements.length );
     for( final Object object : checkedElements )
     {
       final ExportableTreeItem treeItem = (ExportableTreeItem) object;
@@ -102,8 +102,8 @@ public class ExportDocumentsObjectFactory implements IExportableObjectFactory
     m_page.setViewerSorter( new ViewerSorter() );
     m_page.setInput( exportItems );
 
-    final List<ExportableTreeItem> checkedItems = new ArrayList<ExportableTreeItem>();
-    final List<ExportableTreeItem> grayedItems = new ArrayList<ExportableTreeItem>();
+    final List<ExportableTreeItem> checkedItems = new ArrayList<>();
+    final List<ExportableTreeItem> grayedItems = new ArrayList<>();
     ExportableTreeItem.filterChecked( exportItems, checkedItems, grayedItems );
     m_page.setChecked( checkedItems.toArray( new Object[checkedItems.size()] ) );
     m_page.setGrayed( grayedItems.toArray( new Object[grayedItems.size()] ) );

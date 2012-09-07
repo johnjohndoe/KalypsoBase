@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.wps.utils.ogc;
 
@@ -75,7 +75,7 @@ import org.kalypso.simulation.core.simspec.Modelspec;
 /**
  * FIXME: remove the case switch for the version. Rather implement two different medioators or better even
  * WPS-operations.
- * 
+ *
  * @author kurzbach
  */
 public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.wps._1_0.ProcessDescriptions, net.opengeospatial.wps.ProcessDescriptions>
@@ -97,7 +97,7 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
   {
     /* Build the process description for all simulations. */
     /* It is vital, that the two lists have the same order and length. */
-    final List<ProcessDescriptionType> processDescriptions = new ArrayList<ProcessDescriptionType>( identifiers.size() );
+    final List<ProcessDescriptionType> processDescriptions = new ArrayList<>( identifiers.size() );
     for( final String typeID : identifiers )
     {
       /* Build the process description. */
@@ -127,7 +127,7 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
 
   /**
    * Returns the complete process description for a process. It will look up the process in the registered simulations.
-   * 
+   *
    * @throws CoreException
    *           If the simulation could not be found or if there is a problem parsing the simulation specification.
    */
@@ -161,7 +161,7 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
         final List<DataType> input = modelSpec.getInput();
 
         /* Build the data inputs. */
-        final List<InputDescriptionType> inputDescriptions = new ArrayList<InputDescriptionType>( input.size() );
+        final List<InputDescriptionType> inputDescriptions = new ArrayList<>( input.size() );
 
         for( final DataType data : input )
         {
@@ -173,7 +173,7 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
         final List<DataType> output = modelSpec.getOutput();
 
         /* Build the output descriptions. */
-        final List<OutputDescriptionType> outputDescriptions = new ArrayList<OutputDescriptionType>( output.size() );
+        final List<OutputDescriptionType> outputDescriptions = new ArrayList<>( output.size() );
         for( final DataType data : output )
         {
           final OutputDescriptionType outputDescription = getOutputDescription( data );
@@ -240,7 +240,7 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
         {
           /* Reference. */
           final net.opengeospatial.wps.ComplexDataType complexData = WPS040ObjectFactoryUtilities.buildComplexDataType( "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-          final List<net.opengeospatial.wps.ComplexDataType> complexDatas = new LinkedList<net.opengeospatial.wps.ComplexDataType>();
+          final List<net.opengeospatial.wps.ComplexDataType> complexDatas = new LinkedList<>();
           complexDatas.add( complexData );
 
           outputFormChoice = WPS040ObjectFactoryUtilities.buildSupportedComplexDataType( complexDatas, null, null, null );
@@ -282,7 +282,7 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
         {
           /* Reference. */
           final net.opengeospatial.wps.ComplexDataType complexData = WPS040ObjectFactoryUtilities.buildComplexDataType( "", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-          final List<net.opengeospatial.wps.ComplexDataType> complexDatas = new LinkedList<net.opengeospatial.wps.ComplexDataType>();
+          final List<net.opengeospatial.wps.ComplexDataType> complexDatas = new LinkedList<>();
           complexDatas.add( complexData );
           inputFormChoice = WPS040ObjectFactoryUtilities.buildSupportedComplexDataType( complexDatas, null, null, null );
         }
@@ -297,7 +297,7 @@ public class ProcessDescriptionMediator extends AbstractWPSMediator<net.opengis.
   public Map<String, Object> getInputDescriptions( final String typeID ) throws CoreException
   {
     final Object processDescription = getProcessDescription( typeID );
-    final Map<String, Object> inputDescriptions = new HashMap<String, Object>();
+    final Map<String, Object> inputDescriptions = new HashMap<>();
     switch( getVersion() )
     {
       case V040:

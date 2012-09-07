@@ -15,7 +15,7 @@ import org.kalypso.gml.ui.coverage.CoverageManagementAction;
 
 /**
  * Manages extension points of the gml ui plugin.
- * 
+ *
  * @author Holger Albert
  */
 public class KalypsoGmlUiExtensions
@@ -39,7 +39,7 @@ public class KalypsoGmlUiExtensions
 
   /**
    * This function creates and returns the coverage management action with the given id, if one is registered.
-   * 
+   *
    * @param id
    *          The id of the coverage management action.
    * @return The coverage management action.
@@ -83,13 +83,13 @@ public class KalypsoGmlUiExtensions
 
   /**
    * This function creates and returns the coverage management actions.
-   * 
+   *
    * @return The coverage management actions.
    */
   public static CoverageManagementAction[] createCoverageManagementActions( ) throws CoreException
   {
     /* Memory for the results. */
-    final List<CoverageManagementAction> result = new ArrayList<CoverageManagementAction>();
+    final List<CoverageManagementAction> result = new ArrayList<>();
 
     /* Get the extension registry. */
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -122,13 +122,13 @@ public class KalypsoGmlUiExtensions
 
   /**
    * This function returns the ids of all coverage management actions.
-   * 
+   *
    * @return The ids of all coverage management actions.
    */
   public static String[] getCoverageManagementActionIds( )
   {
     /* Memory for the results. */
-    final List<String> result = new ArrayList<String>();
+    final List<String> result = new ArrayList<>();
 
     /* Get the extension registry. */
     final IExtensionRegistry registry = Platform.getExtensionRegistry();

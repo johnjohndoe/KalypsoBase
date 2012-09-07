@@ -55,7 +55,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
 
 /**
  * Holds properties for a timeseries-feature. This class is used as a struct.
- * 
+ *
  * @author schlienger
  */
 public final class TimeserieFeatureProperty
@@ -96,7 +96,7 @@ public final class TimeserieFeatureProperty
 
   public static final String PROP_ID = "id"; //$NON-NLS-1$
 
-  private final Set<String> m_visibleTypes = new HashSet<String>();
+  private final Set<String> m_visibleTypes = new HashSet<>();
 
   private final String m_nameColumn;
 

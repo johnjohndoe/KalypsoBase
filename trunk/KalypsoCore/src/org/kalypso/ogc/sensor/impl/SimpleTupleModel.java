@@ -57,22 +57,21 @@ import org.kalypso.ogc.sensor.event.IObservationChangeEvent;
 
 /**
  * Simple implementation of the {@link ITuppleModel} interface.
- * 
+ *
  * @author Marc Schlienger
  */
 public class SimpleTupleModel extends AbstractTupleModel
 {
-
   /**
    * An empty tuple model.
    */
   public static final ITupleModel EMPTY_TUPPLEMODEL = new SimpleTupleModel( new IAxis[0] );
 
-  private final List<Object[]> m_tuples = new ArrayList<Object[]>();
+  private final List<Object[]> m_tuples = new ArrayList<>();
 
   /**
    * The constructor. The model will contain no data.
-   * 
+   *
    * @param axes
    *          A list of axes.
    */
@@ -83,7 +82,7 @@ public class SimpleTupleModel extends AbstractTupleModel
 
   /**
    * The constructor. The model will contain no data.
-   * 
+   *
    * @param axes
    *          An array of axes.
    */
@@ -94,7 +93,7 @@ public class SimpleTupleModel extends AbstractTupleModel
 
   /**
    * The constructor. The model will contain a copy of the data from the given model.
-   * 
+   *
    * @param copyTupples
    *          A model. Its data will be copied.
    */
@@ -109,7 +108,7 @@ public class SimpleTupleModel extends AbstractTupleModel
 
   /**
    * The constructor. The model will contain a copy of the data from the given model.
-   * 
+   *
    * @param copyTupples
    *          A model. Its data will be copied.
    * @param dra
@@ -126,7 +125,7 @@ public class SimpleTupleModel extends AbstractTupleModel
 
   /**
    * The constructor. The model will contain the given data.
-   * 
+   *
    * @param axes
    *          An array of axes.
    * @param values
@@ -188,7 +187,7 @@ public class SimpleTupleModel extends AbstractTupleModel
 
   /**
    * This function adds a tupple at the end of the model.
-   * 
+   *
    * @param tupple
    *          The 'row' to be added.
    */
@@ -201,7 +200,7 @@ public class SimpleTupleModel extends AbstractTupleModel
 
   /**
    * This function adds a tuple at the end of the model
-   * 
+   *
    * @param tupple
    *          The 'row' to be added.
    */
@@ -214,7 +213,7 @@ public class SimpleTupleModel extends AbstractTupleModel
 
   /**
    * This function sets the data from the given model.
-   * 
+   *
    * @param copyTupples
    *          The model, which data will be copied.
    */
@@ -246,7 +245,7 @@ public class SimpleTupleModel extends AbstractTupleModel
 
   /**
    * This function sets the data from the given model.
-   * 
+   *
    * @param copyTupples
    *          The model, which data will be copied.
    * @param dra

@@ -87,7 +87,7 @@ public class ZmlSelectionLayer extends AbstractChartLayer
   }
 
   @Override
-  public void paint( final GC gc, ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
+  public void paint( final GC gc, final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
     if( Objects.allNull( m_selection, m_selectedDateRange ) )
       return;
@@ -126,7 +126,7 @@ public class ZmlSelectionLayer extends AbstractChartLayer
     final PolygonFigure figure = new PolygonFigure();
     figure.setStyle( m_areaStyle );
 
-    final List<Point> points = new ArrayList<Point>();
+    final List<Point> points = new ArrayList<>();
     points.add( new Point( x1, yMin ) );
     points.add( new Point( x1, yMax ) );
     points.add( new Point( x2, yMax ) );

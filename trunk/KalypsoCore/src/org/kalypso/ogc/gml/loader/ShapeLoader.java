@@ -95,7 +95,7 @@ public class ShapeLoader extends WorkspaceLoader
     final URL context = key.getContext();
 
     /* Files that get deleted at the end of this operation. */
-    final List<File> filesToDelete = new ArrayList<File>();
+    final List<File> filesToDelete = new ArrayList<>();
 
     try
     {

@@ -73,7 +73,7 @@ import org.kalypso.repository.IDataSourceItem;
 /**
  * The Linear-Progressiv-Transformation Filter is used for creating 'lower and upper envelopes' in the sense of a
  * timeserie. It is currently designed to work only with timeseries: meaning an observation with an axis of type date.
- * 
+ *
  * @author schlienger
  */
 public class TranProLinFilter extends AbstractObservationFilter
@@ -182,9 +182,9 @@ public class TranProLinFilter extends AbstractObservationFilter
       if( args != null && args.getDateRange() != null )
       {
         final DateRange dateRange = args.getDateRange();
-        if( targetBegin == null && dateRange.getFrom() != null )
+        if( dateRange.getFrom() != null )
           targetBegin = dateRange.getFrom();
-        if( targetEnd == null && dateRange.getTo() != null )
+        if( dateRange.getTo() != null )
           targetEnd = dateRange.getTo();
       }
       // try to assume from base tuple model if needed
@@ -251,7 +251,7 @@ public class TranProLinFilter extends AbstractObservationFilter
 
   private IAxis[] buildTargetAxes( final IAxis[] sourceAxes )
   {
-    final Collection<IAxis> targetAxes = new ArrayList<IAxis>();
+    final Collection<IAxis> targetAxes = new ArrayList<>();
 
     /* persistable axes */
     for( final IAxis axis : sourceAxes )

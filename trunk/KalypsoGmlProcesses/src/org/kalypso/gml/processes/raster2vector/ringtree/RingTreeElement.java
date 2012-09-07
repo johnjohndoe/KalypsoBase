@@ -34,7 +34,7 @@ public class RingTreeElement
 
   public final Coordinate innerCrd;
 
-  private final Collection<RingTreeElement> m_children = new ArrayList<RingTreeElement>();
+  private final Collection<RingTreeElement> m_children = new ArrayList<>();
 
   private final Collection<RingTreeElement> m_unmodChildren = Collections.unmodifiableCollection( m_children );
 
@@ -80,7 +80,7 @@ public class RingTreeElement
 
   public Integer initIntervals( final Interval[] intervals )
   {
-    final SortedSet<Integer> intervalSet = new TreeSet<Integer>();
+    final SortedSet<Integer> intervalSet = new TreeSet<>();
     for( final RingTreeElement child : m_children )
     {
       final Integer childInterval = child.initIntervals( intervals );

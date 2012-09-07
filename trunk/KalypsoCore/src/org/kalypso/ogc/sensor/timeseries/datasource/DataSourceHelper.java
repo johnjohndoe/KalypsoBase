@@ -54,7 +54,7 @@ import org.kalypso.repository.IDataSourceItem;
 
 /**
  * Helper code for multiple data source references - lke: filter://smeFilterClass?source_1=blub&source_2=blub2&...
- * 
+ *
  * @author Dirk Kuch
  */
 public final class DataSourceHelper
@@ -79,7 +79,7 @@ public final class DataSourceHelper
     if( referenceParts.length != 2 )
       return new String[] {};
 
-    final List<String> sources = new ArrayList<String>();
+    final List<String> sources = new ArrayList<>();
 
     final String[] parts = referenceParts[1].split( "\\&" ); //$NON-NLS-1$
     for( final String part : parts )

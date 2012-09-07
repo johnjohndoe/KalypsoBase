@@ -82,7 +82,7 @@ public class GridTest
 
     final IFeatureBindingCollection<ICoverage> coverages = inputCoverages.getCoverages();
 
-    final Collection<File> gridFiles = new ArrayList<File>();
+    final Collection<File> gridFiles = new ArrayList<>();
 
     for( final ICoverage inputCoverage : coverages )
     {

@@ -74,13 +74,11 @@ public class SelectionFeatureExtractor<T extends Feature>
     m_type = type;
   }
 
-  @SuppressWarnings("unchecked")
   public T[] getSelectedElements( )
   {
     return m_selectedElements.toArray( (T[]) Array.newInstance( m_type, m_selectedElements.size() ) );
   }
 
-  @SuppressWarnings("unchecked")
   public T[] getAvailableElements( )
   {
     return m_availableElements.toArray( (T[]) Array.newInstance( m_type, m_availableElements.size() ) );

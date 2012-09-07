@@ -158,7 +158,7 @@ public class WaterlevelRenderSegment
 
   public IPaintable getHoverFigure( final ILineStyle hoverLineStyle, final int screenLeft, final int screenRight, final ICoordinateMapper mapper )
   {
-    final Collection<IFigure< ? >> figures = new ArrayList<IFigure< ? >>();
+    final Collection<IFigure< ? >> figures = new ArrayList<>();
 
     /* Area */
     final PolygonFigure areaFigure = getAreaFigure( mapper );

@@ -148,7 +148,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
     final TupleResult tupleResult = ObservationFeatureFactory.buildTupleResult( f );
 
-    final IObservation<TupleResult> observation = new Observation<TupleResult>( name, desc, tupleResult );
+    final IObservation<TupleResult> observation = new Observation<>( name, desc, tupleResult );
     observation.setPhenomenon( phenomenon );
 
     return observation;
@@ -246,7 +246,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     if( recordDefinition == null || !GMLSchemaUtilities.substitutes( recordDefinition.getFeatureType(), ObservationFeatureFactory.QNAME_F_SORTED_RECORD_DEFINITION ) )
       return new IComponent[0];
 
-    final List<IComponent> components = new ArrayList<IComponent>();
+    final List<IComponent> components = new ArrayList<>();
 
     final FeatureList comps = (FeatureList) recordDefinition.getProperty( ObservationFeatureFactory.QNAME_P_SORTED_COMPONENT );
     for( final Object object : comps )
@@ -324,7 +324,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     if( recordDefinition == null )
       return new IComponent[0];
 
-    final List<IComponent> components = new ArrayList<IComponent>();
+    final List<IComponent> components = new ArrayList<>();
 
     final FeatureList comps = (FeatureList) recordDefinition.getProperty( ObservationFeatureFactory.SWE_COMPONENT );
     for( final Object object : comps )
@@ -357,7 +357,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     if( !GMLSchemaUtilities.substitutes( featureType, ObservationFeatureFactory.OM_OBSERVATION ) )
       throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.gml.om.ObservationFeatureFactory.23" ) + targetObsFeature ); //$NON-NLS-1$
 
-    final List<FeatureChange> changes = new ArrayList<FeatureChange>();
+    final List<FeatureChange> changes = new ArrayList<>();
 
     changes.add( new FeatureChange( targetObsFeature, featureType.getProperty( Feature.QN_NAME ), Collections.singletonList( source.getName() ) ) );
     changes.add( new FeatureChange( targetObsFeature, featureType.getProperty( Feature.QN_DESCRIPTION ), source.getDescription() ) );
@@ -414,7 +414,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
   /**
    * Helper: builds the record definition according to the components of the tuple result.
-   * 
+   *
    * @param map
    *          ATTENTION: the recordset is written in the same order as this map
    */
@@ -616,11 +616,11 @@ public class ObservationFeatureFactory implements IAdapterFactory
    * <p>
    * TODO do not create an observation twice for the same feature, pooling?
    * </p>
-   * 
+   *
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
    */
   @Override
-  public Object getAdapter( final Object adaptableObject, @SuppressWarnings("rawtypes") final Class adapterType )
+  public Object getAdapter( final Object adaptableObject, final Class adapterType )
   {
     if( adapterType == IObservation.class && adaptableObject instanceof Feature )
       return ObservationFeatureFactory.toObservation( (Feature) adaptableObject );

@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,26 +36,24 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.service.wps.utils.simulation;
 
-import java.io.Serializable;
 import java.util.List;
 
 import net.opengeospatial.wps.IOValueType;
 
 import org.kalypso.simulation.core.ISimulationConstants;
-import org.kalypso.simulation.core.ISimulationMonitor;
 import org.kalypso.simulation.core.SimulationException;
 import org.kalypso.simulation.core.SimulationInfo;
 
 /**
  * Contains the the actual data of a simulation.
- * 
+ *
  * @author Gernot Belger (original), Holger Albert (changes)
  */
-public class WPSSimulationInfo extends SimulationInfo implements Serializable, ISimulationMonitor
+public class WPSSimulationInfo extends SimulationInfo
 {
   /**
    * The result eater that knows about the current results

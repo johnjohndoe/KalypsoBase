@@ -64,7 +64,7 @@ import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
 /**
  * Decorator über einen Workspace, der diesen um die Fähigkeiten eines
  * {@link org.kalypso.commons.command.ICommandManager ICommandManagers}erweitert
- * 
+ *
  * @author Gernot Belger
  */
 public class CommandableWorkspace implements GMLWorkspace, ICommandManager
@@ -321,9 +321,6 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
     m_commandManager.clear();
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.GMLWorkspace#getNamespaceContext()
-   */
   @Override
   public NamespaceContext getNamespaceContext( )
   {
@@ -337,7 +334,7 @@ public class CommandableWorkspace implements GMLWorkspace, ICommandManager
   }
 
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     return m_workspace.getAdapter( adapter );
   }

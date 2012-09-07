@@ -14,12 +14,12 @@ import org.kalypso.ogc.sensor.timeseries.wq.WQException;
 
 /**
  * WQTableSet
- * 
+ *
  * @author schlienger
  */
 public class WQTableSet implements IWQConverter
 {
-  private final SortedMap<Date, WQTable> m_tables = new TreeMap<Date, WQTable>();
+  private final SortedMap<Date, WQTable> m_tables = new TreeMap<>();
 
   private final String m_fromType;
 
@@ -27,7 +27,7 @@ public class WQTableSet implements IWQConverter
 
   /**
    * Constructor
-   * 
+   *
    * @param tables
    *          the WQ-Tables depending with validity information
    * @param fromType

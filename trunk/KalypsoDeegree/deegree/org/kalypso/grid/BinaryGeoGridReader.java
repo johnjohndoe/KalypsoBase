@@ -128,6 +128,7 @@ public class BinaryGeoGridReader extends AbstractDelegatingGeoGrid
     return m_scale;
   }
 
+  @Override
   public void close( )
   {
     try

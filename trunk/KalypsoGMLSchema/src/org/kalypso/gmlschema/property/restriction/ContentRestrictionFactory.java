@@ -47,7 +47,7 @@ import org.kalypso.gmlschema.annotation.IAnnotation;
 
 /**
  * represents restriction on a simple content
- * 
+ *
  * @author doemming
  */
 public class ContentRestrictionFactory
@@ -58,13 +58,13 @@ public class ContentRestrictionFactory
    */
   public static IRestriction[] createRestrictions( final QName simpleQName, final Restriction restriction, final GMLSchema schema, final QName[] qnames )
   {
-    final List<IRestriction> result = new ArrayList<IRestriction>();
+    final List<IRestriction> result = new ArrayList<>();
 
     // enumeration
     final Facet[] enumerationArray = restriction.getEnumerationArray();
     if( enumerationArray.length > 0 )
     {
-      final Map<Object, IAnnotation> map = new LinkedHashMap<Object, IAnnotation>();
+      final Map<Object, IAnnotation> map = new LinkedHashMap<>();
 
       for( final Facet facet : enumerationArray )
       {
@@ -81,7 +81,7 @@ public class ContentRestrictionFactory
     final Pattern[] patternArray = restriction.getPatternArray();
     if( patternArray.length > 0 )
     {
-      final List<String> list = new ArrayList<String>();
+      final List<String> list = new ArrayList<>();
       for( final Pattern pattern : patternArray )
       {
         final String stringValue = pattern.getValue().getStringValue();
@@ -176,7 +176,7 @@ public class ContentRestrictionFactory
 
   /**
    * TODO: change to big decimal
-   * 
+   *
    * @param facet
    */
   private static double doubleValue( final Facet facet )

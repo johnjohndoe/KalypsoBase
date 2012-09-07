@@ -212,7 +212,7 @@ public final class ObservationUtilities
     if( ArrayUtils.isEmpty( axes ) )
       return new IAxis[] {};
 
-    final ArrayList<IAxis> list = new ArrayList<IAxis>( axes == null ? 0 : axes.length );
+    final ArrayList<IAxis> list = new ArrayList<>( axes == null ? 0 : axes.length );
 
     for( final IAxis axe : axes )
     {
@@ -236,7 +236,7 @@ public final class ObservationUtilities
     if( ArrayUtils.isEmpty( axes ) )
       return new IAxis[] {};
 
-    final List<IAxis> list = new ArrayList<IAxis>( axes == null ? 0 : axes.length );
+    final List<IAxis> list = new ArrayList<>( axes == null ? 0 : axes.length );
 
     for( final IAxis axe : axes )
     {
@@ -287,7 +287,7 @@ public final class ObservationUtilities
    */
   public static IAxis[] findAxesByKey( final IAxis[] axes )
   {
-    final ArrayList<IAxis> list = new ArrayList<IAxis>( axes.length );
+    final ArrayList<IAxis> list = new ArrayList<>( axes.length );
 
     for( final IAxis axe : axes )
     {
@@ -325,7 +325,7 @@ public final class ObservationUtilities
   public static void dump( final ITupleModel model, final String sep, final Writer writer ) throws SensorException
   {
     // do not use the same array because of the sort
-    final IAxis[] axes = new ArrayList<IAxis>( Arrays.asList( model.getAxes() ) ).toArray( new IAxis[0] );
+    final IAxis[] axes = new ArrayList<>( Arrays.asList( model.getAxes() ) ).toArray( new IAxis[0] );
 
     // sort axes in order to have a better output
     sortAxes( axes );
@@ -464,7 +464,7 @@ public final class ObservationUtilities
    */
   public static Map<Object, Integer> hashValues( final ITupleModel tuples, final IAxis axis ) throws SensorException
   {
-    final Map<Object, Integer> result = new HashMap<Object, Integer>();
+    final Map<Object, Integer> result = new HashMap<>();
 
     for( int i = 0; i < tuples.size(); i++ )
     {

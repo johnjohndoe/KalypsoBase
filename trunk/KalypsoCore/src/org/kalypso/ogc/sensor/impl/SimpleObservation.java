@@ -63,7 +63,7 @@ import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 
 /**
  * Default implementation of the <code>IObservation</code> interface.
- * 
+ *
  * @author schlienger
  */
 public class SimpleObservation implements IObservation
@@ -189,7 +189,7 @@ public class SimpleObservation implements IObservation
     }
 
     final IAxis[] otherAxes = values.getAxes();
-    final Map<IAxis, IAxis> map = new HashMap<IAxis, IAxis>( getAxes().length );
+    final Map<IAxis, IAxis> map = new HashMap<>( getAxes().length );
 
     for( final IAxis axis : getAxes() )
     {
@@ -262,7 +262,7 @@ public class SimpleObservation implements IObservation
   /**
    * Helper: since we are adding tupples to our model, we need a way to be sure that this is possible. For now, we
    * simply copy the existing values in a SimpleTuppleModel which finally allows to add tupples as desired.
-   * 
+   *
    * @return a SimpleTuppleModel
    * @throws SensorException
    */
@@ -304,7 +304,7 @@ public class SimpleObservation implements IObservation
 
   /**
    * Sets the href
-   * 
+   *
    * @param href
    *          localisation of the observation when it comes from a zml file for instance.
    */

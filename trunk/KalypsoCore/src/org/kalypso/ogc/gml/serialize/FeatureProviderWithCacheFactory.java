@@ -59,12 +59,12 @@ import org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory;
  * Workspaces that already have been loaded via the same factory will not be loaded twice but directly returned.<br/>
  * Once used, the factory should be released via the {@link #dispose()} method, which will release all cached
  * workspaces.
- * 
+ *
  * @author Gernot Belger
  */
 public class FeatureProviderWithCacheFactory implements IFeatureProviderFactory
 {
-  private final Map<String, IWorkspaceProvider> m_cache = new HashMap<String, IWorkspaceProvider>();
+  private final Map<String, IWorkspaceProvider> m_cache = new HashMap<>();
 
   private final IUrlResolver m_urlResolver = new UrlResolver();
 

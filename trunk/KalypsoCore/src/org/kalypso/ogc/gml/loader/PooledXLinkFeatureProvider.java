@@ -57,12 +57,11 @@ import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.ogc.gml.serialize.AbstractXLinkFeatureProvider;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IWorkspaceProvider;
 
 /**
  * @author Gernot Belger
  */
-public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider implements IWorkspaceProvider, IPoolListener
+public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider implements IPoolListener
 {
   private IPoolableObjectType m_key;
 

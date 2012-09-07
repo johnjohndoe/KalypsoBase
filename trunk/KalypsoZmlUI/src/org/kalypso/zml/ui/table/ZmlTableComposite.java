@@ -69,7 +69,7 @@ import org.kalypso.zml.ui.table.nat.ZmlTable;
  */
 public class ZmlTableComposite extends Composite implements IZmlTableComposite
 {
-  private final Set<IZmlTableCompositeListener> m_listeners = new LinkedHashSet<IZmlTableCompositeListener>();
+  private final Set<IZmlTableCompositeListener> m_listeners = new LinkedHashSet<>();
 
   private final Set<IZmlModelColumn> m_stackColumns = Collections.synchronizedSet( new LinkedHashSet<IZmlModelColumn>() );
 

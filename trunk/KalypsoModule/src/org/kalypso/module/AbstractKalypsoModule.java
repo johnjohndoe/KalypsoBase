@@ -112,7 +112,7 @@ public abstract class AbstractKalypsoModule implements IKalypsoModule, IExecutab
   @Override
   public IAction[] getProjectActions( )
   {
-    final Collection<IAction> actions = new ArrayList<IAction>();
+    final Collection<IAction> actions = new ArrayList<>();
 
     /* Create project actions */
     final INewProjectWizardProvider newProjectWizard = getNewProjectWizard();

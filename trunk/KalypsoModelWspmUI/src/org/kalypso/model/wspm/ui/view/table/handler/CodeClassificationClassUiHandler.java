@@ -65,7 +65,7 @@ import org.kalypso.ogc.gml.om.table.handlers.AbstractComponentUiHandler;
 
 /**
  * Handles profile point property "code" classifications
- * 
+ *
  * @author Dirk Kuch
  * @author Holger Albert
  */
@@ -193,7 +193,7 @@ public class CodeClassificationClassUiHandler extends AbstractComponentUiHandler
       return codeClasses;
 
     /* Add the most used classes. */
-    final List<Object> adjustedClasses = new ArrayList<Object>();
+    final List<Object> adjustedClasses = new ArrayList<>();
     for( final FavoriteItem usedItem : usedItems )
     {
       final ICodeClass usedClass = classification.findCodeClass( usedItem.getName() );

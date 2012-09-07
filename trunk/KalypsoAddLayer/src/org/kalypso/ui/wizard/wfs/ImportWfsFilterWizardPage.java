@@ -303,11 +303,11 @@ public class ImportWfsFilterWizardPage extends WizardPage
   {
     String message = ""; //$NON-NLS-1$
     if( m_activeSelectionButton.getSelection() )
-      message = message + Messages.getString( "org.kalypso.ui.wizard.wfs.ImportWfsFilterWizardPage.6", m_themeName ); //$NON-NLS-1$ 
+      message = message + Messages.getString( "org.kalypso.ui.wizard.wfs.ImportWfsFilterWizardPage.6", m_themeName ); //$NON-NLS-1$
     if( m_BBoxButton.getSelection() )
       message = message + Messages.getString( "org.kalypso.ui.wizard.wfs.ImportWfsFilterWizardPage.8" ); //$NON-NLS-1$
     if( m_bufferButton.getSelection() )
-      message = message + Messages.getString( "org.kalypso.ui.wizard.wfs.ImportWfsFilterWizardPage.7", m_bufferDistance.getText() ); //$NON-NLS-1$ 
+      message = message + Messages.getString( "org.kalypso.ui.wizard.wfs.ImportWfsFilterWizardPage.7", m_bufferDistance.getText() ); //$NON-NLS-1$
     setMessage( message );
 
   }
@@ -456,12 +456,12 @@ public class ImportWfsFilterWizardPage extends WizardPage
     {
       final Object firstElement = ((IKalypsoFeatureTheme) activeTheme).getSelectionManager().getFirstElement();
       m_themeName = activeTheme.getLabel();
-      if( firstElement instanceof Feature && firstElement != null )
+      if( firstElement instanceof Feature )
       {
         final Feature feature = (Feature) firstElement;
         final IFeatureType featureType = feature.getFeatureType();
         final IPropertyType[] properties = featureType.getProperties();
-        final List<Object> list = new ArrayList<Object>();
+        final List<Object> list = new ArrayList<>();
         for( final IPropertyType pt : properties )
         {
           if( pt instanceof IValuePropertyType )

@@ -86,7 +86,7 @@ public class PropertiesUtilities
 
   /**
    * Tries to load a (international) properties file from a given location.
-   * 
+   *
    * @deprecated Use ResourceBundleUtils#loadResourceBundle() instead
    */
   // TODO: Gernot, use ResourceBundle#getBundle(String baseName, Locale locale, ClassLoader loader) with a specific
@@ -138,7 +138,7 @@ public class PropertiesUtilities
     {
       // build list of suffixes for loading resource bundles
       String nl = Locale.getDefault().toString();
-      final List<String> result = new ArrayList<String>( 4 );
+      final List<String> result = new ArrayList<>( 4 );
       int lastSeparator;
       while( true )
       {
@@ -167,7 +167,7 @@ public class PropertiesUtilities
 
   /**
    * Loads the contents from the given {@link URL} into a {@link Properties} object.
-   * 
+   *
    * @see Properties#load(InputStream)
    */
   public static void load( final URL location, final Properties properties ) throws IOException

@@ -51,9 +51,9 @@ import org.kalypso.observation.result.TupleResult;
  */
 public abstract class AbstractPointPropertyProvider implements IProfilPointPropertyProvider
 {
-  protected final Set<String> m_properties = new LinkedHashSet<String>();
+  protected final Set<String> m_properties = new LinkedHashSet<>();
 
-  protected final Set<String> m_markers = new LinkedHashSet<String>();
+  protected final Set<String> m_markers = new LinkedHashSet<>();
 
   @Override
   public IProfil createProfil( )

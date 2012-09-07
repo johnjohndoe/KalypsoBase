@@ -51,15 +51,14 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChang
 
 /**
  * ProjectNature of remote Kalypso Projects
- * 
+ *
  * @author Dirk Kuch
  */
 public class RemoteProjectNature implements IProjectNature
 {
+  private static Map<IProject, ProjectScope> SCOPES = new HashMap<>();
 
-  private static Map<IProject, ProjectScope> SCOPES = new HashMap<IProject, ProjectScope>();
-
-  private static Map<IProject, IPreferenceChangeListener> LISTENER = new HashMap<IProject, IPreferenceChangeListener>();
+  private static Map<IProject, IPreferenceChangeListener> LISTENER = new HashMap<>();
 
   public static final String NATURE_ID = "org.kalypso.project.database.project.nature"; //$NON-NLS-1$
 
@@ -67,36 +66,24 @@ public class RemoteProjectNature implements IProjectNature
 
   private IProject m_project = null;
 
-  /**
-   * @see org.eclipse.core.resources.IProjectNature#configure()
-   */
   @Override
   public void configure( )
   {
     // TODO Auto-generated method stub
   }
 
-  /**
-   * @see org.eclipse.core.resources.IProjectNature#deconfigure()
-   */
   @Override
   public void deconfigure( )
   {
     // TODO Auto-generated method stub
   }
 
-  /**
-   * @see org.eclipse.core.resources.IProjectNature#getProject()
-   */
   @Override
   public IProject getProject( )
   {
     return m_project;
   }
 
-  /**
-   * @see org.eclipse.core.resources.IProjectNature#setProject(org.eclipse.core.resources.IProject)
-   */
   @Override
   public void setProject( final IProject project )
   {

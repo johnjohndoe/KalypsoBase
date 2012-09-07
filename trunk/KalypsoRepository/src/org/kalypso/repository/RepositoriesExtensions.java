@@ -14,7 +14,7 @@ import org.kalypso.repository.factory.IRepositoryFactory;
 
 /**
  * Helper class that delves into the extensions of the extension point org.kalypso.repositories.
- * 
+ *
  * @author schlienger
  */
 public final class RepositoriesExtensions
@@ -46,7 +46,7 @@ public final class RepositoriesExtensions
    * Uses the platform extension registry to retrieve all extensions for the repositories extension point.
    * <p>
    * For each extension, a RepositoryFactoryConfig is created which can be used in your application.
-   * 
+   *
    * @return array of config items
    * @throws CoreException
    */
@@ -61,7 +61,7 @@ public final class RepositoriesExtensions
 
     final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
 
-    final Vector<RepositoryFactoryConfig> items = new Vector<RepositoryFactoryConfig>();
+    final Vector<RepositoryFactoryConfig> items = new Vector<>();
 
     for( final IConfigurationElement element : configurationElements )
     {
@@ -80,7 +80,7 @@ public final class RepositoriesExtensions
 
   /**
    * Returns the corresponding factory config for the given repository factory classname
-   * 
+   *
    * @param factoryClassName
    * @param repositoryName
    * @param conf
@@ -115,7 +115,7 @@ public final class RepositoriesExtensions
     if( extensionPoint == null )
       return new IRepositoryResolver[] {};
 
-    final Set<IRepositoryResolver> resolvers = new HashSet<IRepositoryResolver>();
+    final Set<IRepositoryResolver> resolvers = new HashSet<>();
 
     final IConfigurationElement[] elements = extensionPoint.getConfigurationElements();
     for( final IConfigurationElement element : elements )
@@ -134,7 +134,7 @@ public final class RepositoriesExtensions
     if( extensionPoint == null )
       return new IRepositoryFilter[] {};
 
-    final Set<IRepositoryFilter> filters = new HashSet<IRepositoryFilter>();
+    final Set<IRepositoryFilter> filters = new HashSet<>();
 
     final IConfigurationElement[] elements = extensionPoint.getConfigurationElements();
     for( final IConfigurationElement element : elements )

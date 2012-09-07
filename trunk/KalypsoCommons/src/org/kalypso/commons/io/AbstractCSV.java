@@ -49,12 +49,12 @@ import java.util.Vector;
 
 /**
  * AbstractCSV
- * 
+ *
  * @author schlienger
  */
 public abstract class AbstractCSV implements ITabledValues
 {
-  protected final Vector<String[]> m_lines = new Vector<String[]>();
+  protected final Vector<String[]> m_lines = new Vector<>();
 
   protected final int m_startLine;
 
@@ -67,7 +67,7 @@ public abstract class AbstractCSV implements ITabledValues
 
   /**
    * Constructor
-   * 
+   *
    * @param ignoreEmptyLines
    *          when true, empty lines are not stored in this object
    * @param startLine
@@ -81,7 +81,7 @@ public abstract class AbstractCSV implements ITabledValues
 
   /**
    * Sets the string that delimits the commented lines
-   * 
+   *
    * @param str
    */
   public void setCommentedLineBeginString( final String str )
@@ -136,7 +136,7 @@ public abstract class AbstractCSV implements ITabledValues
 
   /**
    * Fetch the CSV-Values from the reader. Caller should take care of closing the reader.
-   * 
+   *
    * @param reader
    */
   public void fetch( final Reader reader ) throws IOException
@@ -174,7 +174,7 @@ public abstract class AbstractCSV implements ITabledValues
 
   /**
    * Saves the contents in the given Writer
-   * 
+   *
    * @param writer
    * @throws IOException
    */

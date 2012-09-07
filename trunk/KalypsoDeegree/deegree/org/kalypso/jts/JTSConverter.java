@@ -120,7 +120,7 @@ public class JTSConverter
     return curves.toArray( new GM_Curve[] {} );
   }
 
-  public static GM_Triangle toGMTriangle( final LinearRing ring, final String crs ) throws GM_Exception
+  public static GM_Triangle toGMTriangle( final LinearRing ring, final String crs )
   {
     final Coordinate[] coordinates = ring.getCoordinates();
     if( coordinates.length != 4 )
@@ -129,7 +129,7 @@ public class JTSConverter
     return toGMTriangle( new Coordinate[] { coordinates[0], coordinates[1], coordinates[2] }, crs );
   }
 
-  private static GM_Triangle toGMTriangle( final Coordinate[] coordinates, final String crs ) throws GM_Exception
+  private static GM_Triangle toGMTriangle( final Coordinate[] coordinates, final String crs )
   {
     return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Triangle( toPositions( coordinates ), crs );
   }

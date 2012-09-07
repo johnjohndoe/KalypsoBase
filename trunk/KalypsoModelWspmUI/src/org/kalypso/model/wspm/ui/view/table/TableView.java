@@ -107,7 +107,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelection;
 
 /**
  * TableView für ein Profil. Ist eine feste View auf genau einem Profil.
- * 
+ *
  * @author Gernot Belger
  * @author kimwerner
  */
@@ -469,7 +469,7 @@ public class TableView extends ViewPart implements ITupleResultViewerProvider, I
   }
 
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     if( adapter == ITupleResultViewerProvider.class )
       return this;

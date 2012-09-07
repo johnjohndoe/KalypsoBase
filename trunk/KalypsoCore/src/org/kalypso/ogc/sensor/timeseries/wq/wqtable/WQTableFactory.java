@@ -55,7 +55,6 @@ public final class WQTableFactory implements ISerializer<WQTableSet>
     try
     {
       final Unmarshaller unm = JC.createUnmarshaller();
-      @SuppressWarnings("unchecked")
       final JAXBElement<RatingTableList> element = (JAXBElement<RatingTableList>) unm.unmarshal( ins );
       final RatingTableList xmlTableList = element.getValue();
 

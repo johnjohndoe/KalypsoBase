@@ -22,7 +22,7 @@ public class JUnitTest_Connector_lzNA_kzNA_Test extends TestCase
 
   public final void testExecute( )
   {
-    final List<SimulationJobSpecification> jobSpecificationList = new ArrayList<SimulationJobSpecification>();
+    final List<SimulationJobSpecification> jobSpecificationList = new ArrayList<>();
 
     final IContainer calcCaseKZ = ResourcesPlugin.getWorkspace().getRoot().getProject( "DemoModell" ).getFolder( "Rechenvarianten/kurzzeit1" );
     final SimulationJobSpecification jobSpec = new SimulationJobSpecification( "KalypsoModelConnector_LZNA_KZNA", calcCaseKZ.getFullPath(), null );

@@ -11,7 +11,7 @@ import org.w3c.dom.NodeList;
  */
 public class NodeList_Impl implements NodeList
 {
-  private final List<Node> nodes = new ArrayList<Node>();
+  private final List<Node> nodes = new ArrayList<>();
 
   public NodeList_Impl( )
   {

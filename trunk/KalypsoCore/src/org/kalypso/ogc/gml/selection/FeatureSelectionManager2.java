@@ -63,9 +63,9 @@ import org.kalypsodeegree.model.feature.Feature;
 public class FeatureSelectionManager2 implements IFeatureSelectionManager
 {
   /** feature -> easyWrapper */
-  private final Map<Feature, EasyFeatureWrapper> m_map = new HashMap<Feature, EasyFeatureWrapper>();
+  private final Map<Feature, EasyFeatureWrapper> m_map = new HashMap<>();
 
-  private final Set<IFeatureSelectionListener> m_listener = new LinkedHashSet<IFeatureSelectionListener>( 5 );
+  private final Set<IFeatureSelectionListener> m_listener = new LinkedHashSet<>( 5 );
 
   @Override
   public void setSelection( final EasyFeatureWrapper[] selectedFeatures )
@@ -74,7 +74,7 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
     if( Arrays.equals( selectedFeatures, allFeatures ) )
       return;
 
-    final Set<EasyFeatureWrapper> newState = new HashSet<EasyFeatureWrapper>();
+    final Set<EasyFeatureWrapper> newState = new HashSet<>();
     Collections.addAll( newState, selectedFeatures );
     if( newState.equals( m_map.keySet() ) )
       return;
@@ -92,7 +92,7 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
   @Override
   public void changeSelection( final Feature[] featuresToRemove, final EasyFeatureWrapper[] featuresToAdd )
   {
-    final Set<Feature> oldState = new HashSet<Feature>( m_map.keySet() );
+    final Set<Feature> oldState = new HashSet<>( m_map.keySet() );
 
     for( final Feature f : featuresToRemove )
       m_map.remove( f );
@@ -197,7 +197,7 @@ public class FeatureSelectionManager2 implements IFeatureSelectionManager
   @Override
   public List<Feature> toList( )
   {
-    return new ArrayList<Feature>( m_map.keySet() );
+    return new ArrayList<>( m_map.keySet() );
   }
 
   @Override

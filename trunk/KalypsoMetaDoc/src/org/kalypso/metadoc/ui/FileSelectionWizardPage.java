@@ -361,7 +361,7 @@ public class FileSelectionWizardPage extends WizardPage implements IConfiguratio
     final IDialogSettings settings = getDialogSettings();
     if( settings != null )
     {
-      final List<String> history = new ArrayList<String>( Arrays.asList( m_destinationNameField.getItems() ) );
+      final List<String> history = new ArrayList<>( Arrays.asList( m_destinationNameField.getItems() ) );
       history.remove( getDestinationValue() );
       history.add( 0, getDestinationValue() );
 

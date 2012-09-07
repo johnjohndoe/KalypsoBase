@@ -59,7 +59,7 @@ import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLaye
  */
 public class ZmlChartLegendLayersVisitor extends AbstractChartLayerVisitor
 {
-  private final Set<IChartLayer> m_layers = new LinkedHashSet<IChartLayer>();
+  private final Set<IChartLayer> m_layers = new LinkedHashSet<>();
 
   @Override
   public void visit( final IChartLayer layer )

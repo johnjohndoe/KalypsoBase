@@ -384,11 +384,8 @@ public abstract class AbstractBrowserView extends ViewPart implements IBrowserVi
     return m_browserContext;
   }
 
-  /**
-   * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
-   */
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     if( adapter == IHtmlProvider.class )
       return new DefaultHtmlProvider( getHtml() );

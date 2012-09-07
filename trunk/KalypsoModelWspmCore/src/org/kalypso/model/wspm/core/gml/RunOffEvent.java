@@ -116,7 +116,7 @@ public class RunOffEvent extends Feature_Impl implements IRunOffEvent
       }
     };
 
-    final SortedMap<BigDecimal, BigDecimal> values = new TreeMap<BigDecimal, BigDecimal>( comp );
+    final SortedMap<BigDecimal, BigDecimal> values = new TreeMap<>( comp );
 
     for( final IRecord record : result )
     {

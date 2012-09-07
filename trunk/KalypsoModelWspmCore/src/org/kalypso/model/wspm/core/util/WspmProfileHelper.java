@@ -184,7 +184,7 @@ public final class WspmProfileHelper
   public static Double getWidthPosition( final GM_Point geoPoint, final IProfil profile, final String srsName ) throws Exception
   {
     /* List for storing points of the profile, which have a geo reference. */
-    final LinkedList<IRecord> geoReferencedPoints = new LinkedList<IRecord>();
+    final LinkedList<IRecord> geoReferencedPoints = new LinkedList<>();
 
     final IRecord[] points = profile.getPoints();
     final int iRechtswert = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT );
@@ -313,7 +313,7 @@ public final class WspmProfileHelper
 
   /**
    * This function returns the geographic coordinates (x, y, z) for a given width coordinate as GM_Point.
-   * 
+   *
    * @param width
    *          The width coordinate.
    * @param profile
@@ -559,7 +559,7 @@ public final class WspmProfileHelper
 
     final double[] intersectionXs = profilLine.intersect( wspLine );
 
-    final SortedSet<Double> intersections = new TreeSet<Double>();
+    final SortedSet<Double> intersections = new TreeSet<>();
 
     if( firstY < wspHoehe )
     {
@@ -900,7 +900,7 @@ public final class WspmProfileHelper
     final String srsName = profile.getSrsName();
     final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( srsName );
 
-    final List<IRecord> newRecords = new ArrayList<IRecord>( newPoints.length );
+    final List<IRecord> newRecords = new ArrayList<>( newPoints.length );
 
     Coordinate lastCrd = null;
     for( final Coordinate coordinate : newPoints )

@@ -50,12 +50,12 @@ import org.eclipse.core.runtime.Status;
 
 /**
  * Default implementation of {@link IStatusCollector}.
- * 
+ *
  * @author Gernot Belger
  */
 public class StatusCollector implements IStatusCollector
 {
-  private final Collection<IStatus> m_stati = new ArrayList<IStatus>();
+  private final Collection<IStatus> m_stati = new ArrayList<>();
 
   private final String m_pluginID;
 

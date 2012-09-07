@@ -99,7 +99,7 @@ public class SetZmlFilterCommandHandler extends AbstractHandler implements IElem
   }
 
   @Override
-  public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
+  public void updateElement( final UIElement element, final Map parameters )
   {
     final IChartModel model = ChartHandlerUtilities.getModel( element );
     if( Objects.isNull( model ) )

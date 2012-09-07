@@ -59,7 +59,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 
 /**
  * A set of validation rules and the means to use them.
- * 
+ *
  * @author belger
  */
 public class ValidatorRuleSet
@@ -77,7 +77,7 @@ public class ValidatorRuleSet
     if( Objects.isNull( validate, rules ) )
       return Status.OK_STATUS;
 
-    final List<IStatus> stati = new ArrayList<IStatus>();
+    final List<IStatus> stati = new ArrayList<>();
     final List<String> excludeRules = java.util.Arrays.asList( excludeIDs );
 
     monitor.beginTask( "Validating profile", ArrayUtils.getLength( rules ) ); //$NON-NLS-1$

@@ -50,7 +50,7 @@ import org.kalypso.contribs.java.util.DateUtilities;
 
 /**
  * A Set of WechmannParams ordered by WGR and valid for the given Date.
- * 
+ *
  * @author schlienger
  */
 public class WechmannSet
@@ -63,7 +63,7 @@ public class WechmannSet
 
   /**
    * Constructor with Params only. Takes the minimum Date as delivered by DateUtilities as validity.
-   * 
+   *
    * @param wps
    */
   public WechmannSet( final WechmannParams[] wps )
@@ -74,7 +74,7 @@ public class WechmannSet
   /**
    * Sets the WechmannParams, they will be sorted by WGR (ascending). The order is taken into account by the iterator
    * when you call <code>WechmannSet.iterator()</code>.
-   * 
+   *
    * @param validity
    * @param wps
    */
@@ -82,8 +82,8 @@ public class WechmannSet
   {
     m_validity = validity;
 
-    m_mapW = new TreeMap<Double, WechmannParams>();
-    m_mapQ = new TreeMap<Double, WechmannParams>();
+    m_mapW = new TreeMap<>();
+    m_mapQ = new TreeMap<>();
 
     for( final WechmannParams wp : wps )
     {

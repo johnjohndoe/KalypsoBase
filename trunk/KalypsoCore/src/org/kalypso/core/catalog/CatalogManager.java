@@ -79,7 +79,7 @@ import org.kalypso.core.i18n.Messages;
  * <p>
  * the default-catalog is dynamic, but changes will not be saved
  * </p>
- * 
+ *
  * @author doemming
  */
 @SuppressWarnings("restriction")
@@ -158,7 +158,6 @@ public class CatalogManager
 
       // REMARK: do not use 'unmarshaller.unmarshal( catalogURL )'
       // It does leave the stream open
-      @SuppressWarnings("unchecked")
       final JAXBElement<Catalog> object = (JAXBElement<Catalog>) unmarshaller.unmarshal( is );
       is.close();
 
@@ -180,7 +179,7 @@ public class CatalogManager
    */
   public synchronized void saveAll( )
   {
-    final List<URI> catalogsToClose = new ArrayList<URI>();
+    final List<URI> catalogsToClose = new ArrayList<>();
     for( final ICatalog catalog : m_openCatalogs.values() )
     {
       try

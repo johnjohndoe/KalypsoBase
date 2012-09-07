@@ -93,7 +93,7 @@ public class TupleResultLineLayerProvider extends AbstractLayerProvider
     final String domainComponentId = pc1.getParameterValue( "domainComponentId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
     final String valueComponentId = pc1.getParameterValue( "valueComponentId", "" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    return new TupleResultDomainValueData<Object, Object>( observation, domainComponentId, valueComponentId );
+    return new TupleResultDomainValueData<>( observation, domainComponentId, valueComponentId );
   }
 
   protected IObservation<TupleResult> getObservation( )

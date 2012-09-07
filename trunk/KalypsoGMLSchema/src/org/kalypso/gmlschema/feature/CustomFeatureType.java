@@ -69,11 +69,11 @@ import org.kalypso.gmlschema.xml.QualifiedElement;
  */
 public class CustomFeatureType extends QualifiedElement implements IFeatureType
 {
-  private final Map<QName, IPropertyType> m_qNameMap = new HashMap<QName, IPropertyType>();
+  private final Map<QName, IPropertyType> m_qNameMap = new HashMap<>();
 
-  private final Map<String, IPropertyType> m_locatPartMap = new HashMap<String, IPropertyType>();
+  private final Map<String, IPropertyType> m_locatPartMap = new HashMap<>();
 
-  private final Map<IPropertyType, Integer> m_positionMap = new HashMap<IPropertyType, Integer>();
+  private final Map<IPropertyType, Integer> m_positionMap = new HashMap<>();
 
   private final IPropertyType[] m_properties;
 
@@ -96,7 +96,7 @@ public class CustomFeatureType extends QualifiedElement implements IFeatureType
 
     m_annotation = new DefaultAnnotation( Platform.getNL(), qName.getLocalPart() );
     int geoPos = -1;
-    final List<IValuePropertyType> col = new ArrayList<IValuePropertyType>();
+    final List<IValuePropertyType> col = new ArrayList<>();
     for( int i = 0; i < pts.length; i++ )
     {
       final IPropertyType pt = pts[i];

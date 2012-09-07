@@ -73,7 +73,7 @@ public class ProfileProblemView
   private final FormToolkit m_toolkit;
 
   // TODO: put into dialog settings instead
-  private final Map<Integer, Boolean> m_expansionState = new HashMap<Integer, Boolean>();
+  private final Map<Integer, Boolean> m_expansionState = new HashMap<>();
 
 // protected final int m_maxHeight;
 

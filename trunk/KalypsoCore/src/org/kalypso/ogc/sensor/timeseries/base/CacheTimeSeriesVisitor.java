@@ -69,7 +69,7 @@ import com.google.common.collect.Iterables;
  */
 public class CacheTimeSeriesVisitor implements ITupleModelVisitor, ITimeseriesCache
 {
-  private final TreeMap<Date, TupleModelDataSet[]> m_values = new TreeMap<Date, TupleModelDataSet[]>();
+  private final TreeMap<Date, TupleModelDataSet[]> m_values = new TreeMap<>();
 
   private final String m_source;
 
@@ -102,7 +102,7 @@ public class CacheTimeSeriesVisitor implements ITupleModelVisitor, ITimeseriesCa
   @Override
   public DatedDataSets[] getValues( )
   {
-    final Set<DatedDataSets> sets = new LinkedHashSet<DatedDataSets>();
+    final Set<DatedDataSets> sets = new LinkedHashSet<>();
 
     final Set<Entry<Date, TupleModelDataSet[]>> entries = m_values.entrySet();
     for( final Entry<Date, TupleModelDataSet[]> entry : entries )
@@ -120,7 +120,7 @@ public class CacheTimeSeriesVisitor implements ITupleModelVisitor, ITimeseriesCa
     {
       final Date date = (Date) container.get( getDateAxis( container ) );
 
-      final Set<TupleModelDataSet> sets = new LinkedHashSet<TupleModelDataSet>();
+      final Set<TupleModelDataSet> sets = new LinkedHashSet<>();
 
       final IAxis[] axes = container.getAxes();
       final IAxis[] valueAxes = AxisUtils.findValueAxes( axes );
@@ -171,11 +171,6 @@ public class CacheTimeSeriesVisitor implements ITupleModelVisitor, ITimeseriesCa
     }
 
     return KalypsoStati.BIT_OK;
-  }
-
-  private IAxis getValueAxis( final ITupleModelValueContainer container )
-  {
-    return AxisUtils.findValueAxis( container.getAxes() );
   }
 
   private IAxis getDateAxis( final ITupleModelValueContainer container )

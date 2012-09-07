@@ -409,7 +409,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
   }
 
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     if( adapter == IFeatureSelection.class )
       return new KalypsoFeatureThemeSelection( m_selectionManager.toList(), this, m_selectionManager, null, null );

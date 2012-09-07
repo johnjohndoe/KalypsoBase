@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- * 
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.wps.client;
 
@@ -106,7 +106,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  * This class manages the connect between the client and the server.<br>
  * It polls regularly and checks the status of the calculation, that can be retrieved from it then.<br>
  * Furthermore it has the ability to be canceled.<br>
- * 
+ *
  * @author Holger Albert
  * @deprecated currently working on a refactoring of the wps service see
  *             {@link org.kalypso.service.wps.refactoring.IWPSProcess}
@@ -136,7 +136,7 @@ public class NonBlockingWPSRequest
 
   /**
    * The constructor.
-   * 
+   *
    * @param identifier
    *          The identifier of the service to be called.
    * @param serviceEndpoint
@@ -181,7 +181,7 @@ public class NonBlockingWPSRequest
   /**
    * This function initializes the request.<br>
    * TODO: let it throw an CoreException instead of returning the status; makes error handling much easier.
-   * 
+   *
    * @param monitor
    *          A progress monitor.
    * @return A status, indicating the success of the function.
@@ -272,7 +272,7 @@ public class NonBlockingWPSRequest
 
   /**
    * Starts the simulation.
-   * 
+   *
    * @param monitor
    *          The progress monitor.
    */
@@ -381,7 +381,7 @@ public class NonBlockingWPSRequest
   private DataInputsType createDataInputs( final ProcessDescriptionType description, final Map<String, Object> inputs ) throws CoreException
   {
     /* The storage for the input values. */
-    final List<IOValueType> inputValues = new LinkedList<IOValueType>();
+    final List<IOValueType> inputValues = new LinkedList<>();
 
     /* Get the input list. */
     final DataInputs dataInputs = description.getDataInputs();
@@ -518,7 +518,7 @@ public class NonBlockingWPSRequest
       }
 
       // REMARK: hack/convention: the input must now be the raw input for the anyType element
-      final List<Object> value = new ArrayList<Object>( 1 );
+      final List<Object> value = new ArrayList<>( 1 );
       value.add( valueString );
       valueType = WPS040ObjectFactoryUtilities.buildComplexValueType( format, encoding, schema, value );
     }
@@ -559,7 +559,7 @@ public class NonBlockingWPSRequest
 
   /**
    * This function creates the data outputs the clients expects for the wps.
-   * 
+   *
    * @param description
    *          The description of the process.
    * @param data
@@ -569,7 +569,7 @@ public class NonBlockingWPSRequest
   private OutputDefinitionsType createOutputDefinitions( final ProcessDescriptionType description, final List<String> outputs )
   {
     /* The storage for the output values. */
-    final List<OutputDefinitionType> outputValues = new LinkedList<OutputDefinitionType>();
+    final List<OutputDefinitionType> outputValues = new LinkedList<>();
 
     /* Get the output list. */
     final ProcessOutputs processOutputs = description.getProcessOutputs();

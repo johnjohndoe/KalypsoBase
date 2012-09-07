@@ -62,7 +62,7 @@ import au.com.bytecode.opencsv.CSVWriter;
 
 /**
  * Exports an IObservation<TupleResult> to an CSV-Spreadsheet
- * 
+ *
  * @author Dirk Kuch
  */
 public class ObservationSpreadsheetExporter implements ICoreRunnableWithProgress
@@ -94,7 +94,7 @@ public class ObservationSpreadsheetExporter implements ICoreRunnableWithProgress
 
       /* header */
       final IComponent[] components = result.getComponents();
-      final List<String> values = new ArrayList<String>();
+      final List<String> values = new ArrayList<>();
 
       for( final IComponent component : components )
       {

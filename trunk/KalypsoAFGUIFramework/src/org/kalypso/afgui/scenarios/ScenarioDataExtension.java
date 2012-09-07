@@ -55,7 +55,7 @@ import org.eclipse.core.runtime.dynamichelpers.IFilter;
 
 /**
  * Helper class to read and cache
- * 
+ *
  * @author Stefan Kurzbach
  */
 public class ScenarioDataExtension
@@ -64,7 +64,7 @@ public class ScenarioDataExtension
 
   private static final String ATTRIBUTE_ID = "id"; //$NON-NLS-1$
 
-  private static final Map<String, Map<String, IScenarioDatum>> m_dataSetCache = new HashMap<String, Map<String, IScenarioDatum>>();
+  private static final Map<String, Map<String, IScenarioDatum>> m_dataSetCache = new HashMap<>();
 
   private static ExtensionTracker extensionTracker;
 
@@ -88,7 +88,7 @@ public class ScenarioDataExtension
     if( scenarioDataMap == null )
     {
       // create new map
-      scenarioDataMap = new HashMap<String, IScenarioDatum>();
+      scenarioDataMap = new HashMap<>();
 
       // read from extension point registry
       final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();

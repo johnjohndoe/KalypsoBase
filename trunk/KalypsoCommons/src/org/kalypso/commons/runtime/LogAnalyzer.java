@@ -66,7 +66,7 @@ import org.kalypso.contribs.java.util.logging.LoggerUtilities;
  * <p>
  * The log files do now contain log-entries of the form 'LEVEL: message' which are read as IStatus object into a
  * multistatus.
- * 
+ *
  * @author Marc Schlienger
  */
 public class LogAnalyzer
@@ -83,7 +83,7 @@ public class LogAnalyzer
    * <li>The message text of each multi-status will be composed of all its statuses with code
    * {@link LoggerUtilities#CODE_SHOW_MSGBOX}</li>
    * </ul>
-   * 
+   *
    * @return The resulting stati. If problems are encountered while reading the file, instead an error status describing
    *         the io-problems is returned.
    */
@@ -128,12 +128,12 @@ public class LogAnalyzer
    * Reads a reader into an array of statuses.
    * <p>
    * The reader will not be closed.
-   * 
+   *
    * @throws IOException
    */
   public static IStatus[] readerToStatus( final BufferedReader br ) throws IOException
   {
-    final List<IStatus> stati = new ArrayList<IStatus>();
+    final List<IStatus> stati = new ArrayList<>();
 
     while( br.ready() )
     {
@@ -182,7 +182,7 @@ public class LogAnalyzer
    */
   private static final class GroupStatusStrategry
   {
-    private final List<IStatus> m_children = new ArrayList<IStatus>();
+    private final List<IStatus> m_children = new ArrayList<>();
 
     private final StringBuffer m_message = new StringBuffer();
 

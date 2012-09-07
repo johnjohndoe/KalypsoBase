@@ -72,7 +72,7 @@ public final class ConfigurationUtils
       return;
 
     final String[] array = conf.getStringArray( property );
-    if( array == null || array != null && !Arrays.asList( array ).contains( value ) )
+    if( array == null || !Arrays.asList( array ).contains( value ) )
       conf.addProperty( property, value );
   }
 }

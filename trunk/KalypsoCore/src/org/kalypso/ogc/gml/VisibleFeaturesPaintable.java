@@ -18,12 +18,12 @@ import org.kalypsodeegree_impl.graphics.displayelements.ILabelPlacementStrategy;
 
 /**
  * Paintable that collects all features that are within a given extent.
- * 
+ *
  * @author Gernot Belger
  */
 final class VisibleFeaturesPaintable implements IStylePaintable
 {
-  private final Set<Feature> m_features = new LinkedHashSet<Feature>();
+  private final Set<Feature> m_features = new LinkedHashSet<>();
 
   private final GM_Envelope m_env;
 

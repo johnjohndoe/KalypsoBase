@@ -12,7 +12,7 @@ import org.apache.commons.io.IOUtils;
 
 /**
  * Wraps some values of the servlet request.
- * 
+ *
  * @author Alex Burtscher, Holger Albert
  */
 public class RequestBean
@@ -45,13 +45,12 @@ public class RequestBean
 
   /**
    * The constructor.
-   * 
+   *
    * @param type
    *          The type of the request beeing used. Can be RequestBean.TYPE.GET or RequestBean.TYPE.POST.
    * @param request
    *          The servlet request.
    */
-  @SuppressWarnings("unchecked")
   public RequestBean( final TYPE type, final HttpServletRequest request )
   {
     m_type = type;
@@ -62,14 +61,14 @@ public class RequestBean
 
   /**
    * Preprocessing of parameter values; not implemented right now, but needed: parameter values can be case-insensitive
-   * 
+   *
    * @param parameters
    *          The parameters of the servlet request.
    * @return The preprocessed parameters.
    */
   private Map<String, String[]> preprocessParameters( final Map<String, String[]> parameters )
   {
-    final Map<String, String[]> newParameters = new HashMap<String, String[]>();
+    final Map<String, String[]> newParameters = new HashMap<>();
 
     final Set<String> set = parameters.keySet();
     for( final String key : set )
@@ -83,7 +82,7 @@ public class RequestBean
 
   /**
    * This function will read the body from the request and put it into a string.
-   * 
+   *
    * @param request
    *          The servlet request.
    */
@@ -130,7 +129,7 @@ public class RequestBean
 
   /**
    * This function returns true, if the request was send with the post method.
-   * 
+   *
    * @boolean True, if the post method was used.
    */
   public boolean isPost( )
@@ -143,7 +142,7 @@ public class RequestBean
 
   /**
    * This function will return the called URL.
-   * 
+   *
    * @return The called URL.
    */
   public String getUrl( )
@@ -153,7 +152,7 @@ public class RequestBean
 
   /**
    * This function returns a parameter value for a parameter name.
-   * 
+   *
    * @param key
    *          The parameter name.
    * @return The parameter value or null, if it does not exist.
@@ -169,7 +168,7 @@ public class RequestBean
 
   /**
    * This function returns the values of the parameter.
-   * 
+   *
    * @param key
    *          The parameter name.
    * @return The parameter values.
@@ -182,7 +181,7 @@ public class RequestBean
   /**
    * This function returns the body as string, if the post method was used and a body is available. Otherwise it returns
    * null.
-   * 
+   *
    * @return The body or null.
    */
   public String getBody( )

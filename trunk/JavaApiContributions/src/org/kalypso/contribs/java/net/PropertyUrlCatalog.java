@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.java.net;
 
@@ -49,16 +49,16 @@ import java.util.Properties;
 
 /**
  * A {@link PropertyUrlCatalog}based on a properties-hash.
- * 
+ *
  * @author belger
  */
 public class PropertyUrlCatalog implements IUrlCatalog
 {
-  private final Map<String, URL> m_catalog = new HashMap<String, URL>();
+  private final Map<String, URL> m_catalog = new HashMap<>();
 
   /**
    * The argument is copied into this catalog, so changes to catalog are not backed by this object.
-   * 
+   *
    * @param context
    *          All entries of catalog are resolved against this url. If null, the entries are tried to parse stand-alone.
    */

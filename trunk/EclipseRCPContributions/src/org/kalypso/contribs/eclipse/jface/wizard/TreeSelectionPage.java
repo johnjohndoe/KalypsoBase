@@ -51,7 +51,6 @@ import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -65,16 +64,16 @@ import org.eclipse.ui.internal.WorkbenchMessages;
 
 /**
  * A wizard page, that lets the user choose from a tree. <br>
- * 
+ *
  * @author Gernot Belger
  */
 @SuppressWarnings("restriction")
-public class TreeSelectionPage extends WizardPage implements IWizardPage
+public class TreeSelectionPage extends WizardPage
 {
   /**
    * Collection of buttons created by the <code>createButton</code> method.
    */
-  private final HashMap<Integer, Button> m_buttons = new HashMap<Integer, Button>();
+  private final HashMap<Integer, Button> m_buttons = new HashMap<>();
 
   static String SELECT_ALL_TITLE = WorkbenchMessages.SelectionDialog_selectLabel;
 
@@ -179,7 +178,7 @@ public class TreeSelectionPage extends WizardPage implements IWizardPage
 
   /**
    * Add the selection and deselection buttons to the dialog.
-   * 
+   *
    * @param composite
    *          org.eclipse.swt.widgets.Composite
    */
@@ -228,7 +227,7 @@ public class TreeSelectionPage extends WizardPage implements IWizardPage
    * button will be accesible from <code>getOKButton()</code>. Note that the parent's layout is assumed to be a
    * <code>GridLayout</code> and the number of columns in this layout is incremented. Subclasses may override.
    * </p>
-   * 
+   *
    * @param parent
    *          the parent composite
    * @param id

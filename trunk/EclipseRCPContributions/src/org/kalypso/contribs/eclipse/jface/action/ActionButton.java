@@ -70,7 +70,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
  */
 public class ActionButton
 {
-  private final Collection<Image> m_images = new ArrayList<Image>();
+  private final Collection<Image> m_images = new ArrayList<>();
 
   private final IAction m_action;
 

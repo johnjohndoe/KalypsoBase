@@ -55,7 +55,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  * <p>
  * It has NO own member variables, everything is backed by the given feature instance.
  * </p>
- * 
+ *
  * @author Gernot Belger
  */
 public abstract class WspmProject extends Feature_Impl implements IWspmProject
@@ -71,7 +71,7 @@ public abstract class WspmProject extends Feature_Impl implements IWspmProject
   public IFeatureBindingCollection<WspmWaterBody> getWaterBodies( )
   {
     if( m_waterBodies == null )
-      m_waterBodies = new FeatureBindingCollection<WspmWaterBody>( this, WspmWaterBody.class, QN_MEMBER_WATER_BODY );
+      m_waterBodies = new FeatureBindingCollection<>( this, WspmWaterBody.class, QN_MEMBER_WATER_BODY );
 
     return m_waterBodies;
   }

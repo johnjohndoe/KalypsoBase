@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- * 
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.wps.client;
 
@@ -76,7 +76,7 @@ import org.kalypso.service.wps.utils.WPSUtilities;
  * This class manages the connect between the client and the server.<br>
  * It polls regularly and checks the status of the calculation, that can be retrieved from it then.<br>
  * Furthermore it has the ability to be canceled.<br>
- * 
+ *
  * @author Holger Albert
  * @author Ilya
  * @deprecated currently working on a refactoring of the wps service see
@@ -109,7 +109,7 @@ public class WPSRequest
   /**
    * The result for the requested references.
    */
-  private final Map<String, ComplexValueReference> m_references = new LinkedHashMap<String, ComplexValueReference>();
+  private final Map<String, ComplexValueReference> m_references = new LinkedHashMap<>();
 
   /**
    * The result for the requested literals.
@@ -384,7 +384,7 @@ public class WPSRequest
 
   /**
    * This function refreshes the monitor.
-   * 
+   *
    * @param percentCompleted
    *          The amount of work done, reaching from 0 to 100.
    * @param description
@@ -421,7 +421,7 @@ public class WPSRequest
    * <li>All bounding boxes (BoundingBoxType) will be collected with their id.</li>
    * <li>All complex datas (ComplexDataType) will be collected with their id.</li>
    * </ol>
-   * 
+   *
    * @param processOutputs
    *          The process outputs contains the info of the results, which are to be collected.
    */
@@ -470,7 +470,7 @@ public class WPSRequest
         {
           if( m_literals == null )
           {
-            m_literals = new LinkedHashMap<String, Object>();
+            m_literals = new LinkedHashMap<>();
           }
 
           m_literals.put( ioValue.getIdentifier().getValue(), result );
@@ -484,7 +484,7 @@ public class WPSRequest
       if( boundingBox != null )
       {
         if( m_boundingBoxes == null )
-          m_boundingBoxes = new LinkedHashMap<String, BoundingBoxType>();
+          m_boundingBoxes = new LinkedHashMap<>();
 
         m_boundingBoxes.put( ioValue.getIdentifier().getValue(), boundingBox );
 
@@ -496,7 +496,7 @@ public class WPSRequest
       if( complexValue != null )
       {
         if( m_complexValues == null )
-          m_complexValues = new LinkedHashMap<String, ComplexValueType>();
+          m_complexValues = new LinkedHashMap<>();
 
         m_complexValues.put( ioValue.getIdentifier().getValue(), complexValue );
 
@@ -507,7 +507,7 @@ public class WPSRequest
 
   /**
    * This function returns the result of the references or null, if none.
-   * 
+   *
    * @return The result of the references or null, if none.
    */
   public Map<String, ComplexValueReference> getReferences( )
@@ -517,7 +517,7 @@ public class WPSRequest
 
   /**
    * This function returns the results for the literals or null, if none.
-   * 
+   *
    * @return The results for the literals with their identifier as key.
    */
   public Map<String, Object> getLiterals( )
@@ -527,7 +527,7 @@ public class WPSRequest
 
   /**
    * This function returns the results for the bounding boxes or null, if none.
-   * 
+   *
    * @return The results for the bounding boxes with their identifier as key.
    */
   public Map<String, BoundingBoxType> getBoundingBoxes( )
@@ -539,7 +539,7 @@ public class WPSRequest
    * TODO: (same for getLiterals and getReferences): dubious: why< not just a getResult( String key) method: the client
    * has to cast the result anyway. He may even not even know which one it is, so one single method (and inspection of
    * the result) should be better. This function returns the results for the complex values or null, if none.
-   * 
+   *
    * @return The results for the complex values with their identifier as key.
    */
   public Map<String, ComplexValueType> getComplexValues( )

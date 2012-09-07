@@ -79,7 +79,6 @@ public class ScenarioDatumProxy implements IScenarioDatum
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public Class< ? extends IModel> getModelClass( ) throws CoreException
   {
     final String name = m_element.getContributor().getName();

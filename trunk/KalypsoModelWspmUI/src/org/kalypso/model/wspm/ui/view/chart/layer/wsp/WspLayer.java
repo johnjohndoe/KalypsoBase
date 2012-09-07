@@ -200,7 +200,7 @@ public class WspLayer extends AbstractProfilTheme
     if( renderData.length == 0 )
       return null;
 
-    final SortedSet<Double> values = new TreeSet<Double>();
+    final SortedSet<Double> values = new TreeSet<>();
 
     for( final WaterlevelRenderData data : renderData )
     {
@@ -214,7 +214,7 @@ public class WspLayer extends AbstractProfilTheme
   }
 
   @Override
-  public void paint( final GC gc, ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
+  public void paint( final GC gc, final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
     final ILineStyle lineStyle = getLineStyle();
 

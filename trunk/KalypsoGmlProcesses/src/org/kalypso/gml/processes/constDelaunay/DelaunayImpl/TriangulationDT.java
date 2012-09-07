@@ -46,7 +46,6 @@ package org.kalypso.gml.processes.constDelaunay.DelaunayImpl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -82,7 +81,7 @@ final public class TriangulationDT
 
   private void init( final GM_Position[] pPositions, final String pCrs )
   {
-    final List<GM_Position> lListTmp = new ArrayList<GM_Position>();
+    final List<GM_Position> lListTmp = new ArrayList<>();
     int i = 0;
     while( i < pPositions.length )
     {
@@ -116,7 +115,7 @@ final public class TriangulationDT
       m_arrayEdges[i] = new Edge();
     }
     m_intNumberOfEdges = 0;
-    m_listGMTriangles = new ArrayList<GM_Triangle>();
+    m_listGMTriangles = new ArrayList<>();
   }
 
   /*
@@ -178,12 +177,12 @@ final public class TriangulationDT
 
   }
 
-  private GM_Triangle createTriangle( final int s, final int t, final int u ) throws GM_Exception
+  private GM_Triangle createTriangle( final int s, final int t, final int u )
   {
     return createTriangle( m_arrayPoints[s], m_arrayPoints[t], m_arrayPoints[u] );
   }
 
-  private GM_Triangle createTriangle( final RealPoint pPoint0, final RealPoint pPoint1, final RealPoint pPoint2 ) throws GM_Exception
+  private GM_Triangle createTriangle( final RealPoint pPoint0, final RealPoint pPoint1, final RealPoint pPoint2 )
   {
     GM_Triangle lTriangle = null;
     final GM_Position lPosition0 = GeometryFactory.createGM_Position( pPoint0.getX(), pPoint0.getY(), pPoint0.getZ() );

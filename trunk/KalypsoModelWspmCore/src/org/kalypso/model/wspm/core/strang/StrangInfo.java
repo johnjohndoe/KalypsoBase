@@ -14,7 +14,7 @@ public class StrangInfo
 
   private int m_index;
 
-  private final Collection<IStranginfoListener> m_listeners = new LinkedList<IStranginfoListener>();
+  private final Collection<IStranginfoListener> m_listeners = new LinkedList<>();
 
   private final IResultSet[] m_results;
 

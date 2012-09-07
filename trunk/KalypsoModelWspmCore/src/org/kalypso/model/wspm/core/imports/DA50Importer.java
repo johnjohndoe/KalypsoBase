@@ -70,7 +70,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
  * Helper class to import a DA50 file and apply its values to a list of profiles.
- * 
+ *
  * @author Gernot Belger
  * @author kimwerner
  */
@@ -97,7 +97,7 @@ public final class DA50Importer
       final DA50Entry[] entries = readDA50( da50reader, srsName );
 
       /* Index features by station */
-      final Map<Double, DA50Entry> entryMap = new TreeMap<Double, DA50Entry>( new DoubleComparator( Math.pow( 10, -IProfileFeature.STATION_SCALE ) ) );
+      final Map<Double, DA50Entry> entryMap = new TreeMap<>( new DoubleComparator( Math.pow( 10, -IProfileFeature.STATION_SCALE ) ) );
       for( final DA50Entry entry : entries )
       {
         entryMap.put( entry.station, entry );
@@ -196,7 +196,7 @@ public final class DA50Importer
    */
   private static DA50Entry[] readDA50( final LineNumberReader lnr, final String srsName ) throws IOException, CoreException
   {
-    final List<DA50Entry> result = new ArrayList<DA50Entry>();
+    final List<DA50Entry> result = new ArrayList<>();
 
     final MultiStatus logStatus = new MultiStatus( KalypsoModelWspmCorePlugin.getID(), 0, Messages.getString( "org.kalypso.model.wspm.core.imports.DA50Importer.2" ), null ); //$NON-NLS-1$
 

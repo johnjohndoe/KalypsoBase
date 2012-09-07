@@ -92,7 +92,7 @@ import org.kalypso.observation.result.TupleResult;
  */
 public abstract class AbstractProfil implements IProfil
 {
-  private final List<IProfileObject> m_profileObjects = new ArrayList<IProfileObject>();
+  private final List<IProfileObject> m_profileObjects = new ArrayList<>();
 
   private final String m_type;
 
@@ -110,7 +110,7 @@ public abstract class AbstractProfil implements IProfil
 
   private final Set<IProfilListener> m_listeners = Collections.synchronizedSet( new LinkedHashSet<IProfilListener>( 10 ) );
 
-  private final Map<Object, Object> m_additionalProfileSettings = new HashMap<Object, Object>();
+  private final Map<Object, Object> m_additionalProfileSettings = new HashMap<>();
 
   private final ITupleResultChangedListener m_tupleResultListener = new ProfilTupleResultChangeListener( this );
 
@@ -294,7 +294,7 @@ public abstract class AbstractProfil implements IProfil
   @Override
   public IProfileRecord[] getMarkedPoints( )
   {
-    final ArrayList<IProfileRecord> records = new ArrayList<IProfileRecord>();
+    final ArrayList<IProfileRecord> records = new ArrayList<>();
 
     final IProfileRecord[] points = getPoints();
     for( final IProfileRecord point : points )
@@ -336,7 +336,7 @@ public abstract class AbstractProfil implements IProfil
     if( index < 0 )
       return new IProfilPointMarker[] {};
 
-    final List<IProfilPointMarker> markers = new ArrayList<IProfilPointMarker>();
+    final List<IProfilPointMarker> markers = new ArrayList<>();
 
     final IProfileRecord[] points = getPoints();
     for( final IProfileRecord point : points )
@@ -353,7 +353,7 @@ public abstract class AbstractProfil implements IProfil
   @Override
   public IProfilPointMarker[] getPointMarkerFor( final IProfileRecord record )
   {
-    final ArrayList<IProfilPointMarker> pointMarkers = new ArrayList<IProfilPointMarker>();
+    final ArrayList<IProfilPointMarker> pointMarkers = new ArrayList<>();
     final IComponent[] markers = getPointMarkerTypes();
     for( final IComponent marker : markers )
     {
@@ -378,7 +378,7 @@ public abstract class AbstractProfil implements IProfil
   @Override
   public IComponent[] getPointMarkerTypes( )
   {
-    final List<IComponent> marker = new ArrayList<IComponent>();
+    final List<IComponent> marker = new ArrayList<>();
 
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( getType() );
     final IComponent[] properties = getPointProperties();
@@ -458,7 +458,7 @@ public abstract class AbstractProfil implements IProfil
   public <T extends IProfileObject> T[] getProfileObjects( final Class<T> clazz )
   {
     // TODO visitor
-    final List<T> objects = new ArrayList<T>();
+    final List<T> objects = new ArrayList<>();
     for( final IProfileObject object : m_profileObjects )
     {
       if( clazz.isInstance( object ) )

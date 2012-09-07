@@ -88,7 +88,7 @@ public class RelativeFeatureChangeTest extends TestCase
     for( int i = 0; i < COMMAND_COUNT; i++ )
     {
       m_result[i] = (Feature) featureList.get( i + 1 );
-      m_changes[i] = new ArrayList<FeatureChange>();
+      m_changes[i] = new ArrayList<>();
     }
 
     m_originalProperties = m_original.getFeatureType().getProperties();

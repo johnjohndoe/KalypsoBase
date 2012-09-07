@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.core.status.tree.provider;
 
@@ -48,7 +48,7 @@ import org.eclipse.jface.viewers.Viewer;
 
 /**
  * A content provider for status objects.
- * 
+ *
  * @author Holger Albert
  */
 public class StatusContentProvider implements ITreeContentProvider
@@ -171,7 +171,7 @@ public class StatusContentProvider implements ITreeContentProvider
 
   /**
    * This function builds up an index with the parents of each project.
-   * 
+   *
    * @return The index of the parents.
    */
   private WeakHashMap<IStatus, IStatus> retrieveParents( )
@@ -181,7 +181,7 @@ public class StatusContentProvider implements ITreeContentProvider
       return null;
 
     /* Create the parents hash map. */
-    final WeakHashMap<IStatus, IStatus> parents = new WeakHashMap<IStatus, IStatus>();
+    final WeakHashMap<IStatus, IStatus> parents = new WeakHashMap<>();
 
     /* If it is only a single status, no parents exist. */
     if( !m_input.isMultiStatus() )
@@ -194,7 +194,7 @@ public class StatusContentProvider implements ITreeContentProvider
 
   /**
    * This function hashes all status objects along with their parent in the hash map.
-   * 
+   *
    * @param parents
    *          The hash map.
    * @param parentNode

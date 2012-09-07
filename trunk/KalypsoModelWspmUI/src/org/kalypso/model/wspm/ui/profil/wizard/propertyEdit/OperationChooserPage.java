@@ -109,7 +109,7 @@ public class OperationChooserPage extends WizardPage
 
   private final String SETTINGS_CALCULATOR_VALUE = "operationChooserPage.calculatorvalue"; //$NON-NLS-1$
 
-  private final List<PropertyCalculator> m_calculators = new ArrayList<PropertyCalculator>();
+  private final List<PropertyCalculator> m_calculators = new ArrayList<>();
 
   private Double m_value = Double.NaN;
 
@@ -303,7 +303,7 @@ public class OperationChooserPage extends WizardPage
       }
     }
 
-    final Set<IRecord> selectedPoints = new HashSet<IRecord>();
+    final Set<IRecord> selectedPoints = new HashSet<>();
     for( final IProfileRecord point : profil.getPoints() )
     {
       if( m_filterChooser.accept( profil, point ) )

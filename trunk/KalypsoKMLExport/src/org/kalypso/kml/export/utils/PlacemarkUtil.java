@@ -19,7 +19,7 @@ public class PlacemarkUtil
   public static void addAdditional( final Folder base, final IKMLAdapter[] provider )
   {
     /* add additional place marks and clean up providers */
-    final List<IPlacemark> placemarks = new ArrayList<IPlacemark>();
+    final List<IPlacemark> placemarks = new ArrayList<>();
     for( final IKMLAdapter adapter : provider )
     {
       final IPlacemark[] placemarkers = adapter.getAdditionalPlacemarkers();

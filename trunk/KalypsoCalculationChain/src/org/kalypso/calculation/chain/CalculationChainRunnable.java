@@ -32,7 +32,7 @@ public class CalculationChainRunnable implements ICoreRunnableWithProgress
     FINISHED
   }
 
-  private final List<SimulationJobSpecification> m_jobSpecificationList = new ArrayList<SimulationJobSpecification>();
+  private final List<SimulationJobSpecification> m_jobSpecificationList = new ArrayList<>();
 
   private CHAIN_STATUS m_chainStatus;
 

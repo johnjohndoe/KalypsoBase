@@ -26,7 +26,7 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
  * Data model of remote projects in the {@link org.kalypso.project.database.server.ProjectDatabase}
- * 
+ *
  * @author Dirk Kuch
  */
 public class RemoteWorkspaceModel implements IRemoteWorkspaceModel
@@ -40,7 +40,7 @@ public class RemoteWorkspaceModel implements IRemoteWorkspaceModel
 
   protected IStatus m_connectionState = StatusUtilities.createInfoStatus( Messages.getString( "org.kalypso.project.database.client.core.model.remote.RemoteWorkspaceModel.0" ) ); //$NON-NLS-1$
 
-  protected Set<IRemoteProjectsListener> m_listener = new LinkedHashSet<IRemoteProjectsListener>();
+  protected Set<IRemoteProjectsListener> m_listener = new LinkedHashSet<>();
 
   protected final WorkspaceJob UPDATE_JOB;
 
@@ -240,13 +240,10 @@ public class RemoteWorkspaceModel implements IRemoteWorkspaceModel
     return m_connectionState;
   }
 
-  /**
-   * @see org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel#getProjects()
-   */
   @Override
   public IRemoteProject[] getProjects( )
   {
-    final Set<IRemoteProject> myHandlers = new HashSet<IRemoteProject>();
+    final Set<IRemoteProject> myHandlers = new HashSet<>();
 
     final KalypsoProjectBean[] beans = getBeans();
     for( final KalypsoProjectBean bean : beans )
@@ -257,13 +254,10 @@ public class RemoteWorkspaceModel implements IRemoteWorkspaceModel
     return myHandlers.toArray( new IRemoteProject[] {} );
   }
 
-  /**
-   * @see org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel#getProjects(java.lang.String)
-   */
   @Override
   public IRemoteProject[] getProjects( final String type )
   {
-    final Set<IRemoteProject> myHandlers = new HashSet<IRemoteProject>();
+    final Set<IRemoteProject> myHandlers = new HashSet<>();
 
     final IRemoteProject[] projects = getProjects();
     for( final IRemoteProject project : projects )

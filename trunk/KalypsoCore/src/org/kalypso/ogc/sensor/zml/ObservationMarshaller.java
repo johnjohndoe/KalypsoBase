@@ -278,7 +278,7 @@ class ObservationMarshaller
       // JUnit-Test)
       final List<AxisType> axisList = obsType.getAxis();
       final Comparator< ? super IAxis> axisComparator = new MarshallerAxisComparator();
-      final SortedSet<IAxis> sortedAxis = new TreeSet<IAxis>( axisComparator );
+      final SortedSet<IAxis> sortedAxis = new TreeSet<>( axisComparator );
       sortedAxis.addAll( Arrays.asList( m_input.getAxes() ) );
 
       for( final IAxis axis : sortedAxis )

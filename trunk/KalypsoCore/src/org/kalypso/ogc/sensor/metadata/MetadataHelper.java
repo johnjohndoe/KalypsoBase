@@ -65,7 +65,7 @@ import org.kalypso.ogc.sensor.util.TimestampHelper;
 /**
  * @author Dirk Kuch
  */
-public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMetaDataConstants
+public class MetadataHelper implements ICopyObservationMetaDataConstants
 {
   protected MetadataHelper( )
   {
@@ -278,7 +278,7 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
 
   /**
    * This function sets the timestamp into the metadata.
-   * 
+   *
    * @param metadata
    *          The metadata to update.
    * @param timestamp
@@ -293,7 +293,7 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
 
   /**
    * This function returns the timestamp.
-   * 
+   *
    * @param metadata
    *          The metadata.
    * @return The timestamp in UTC or null.
@@ -385,7 +385,7 @@ public class MetadataHelper implements ITimeseriesConstants, ICopyObservationMet
 
   /**
    * Read the time zone from the metadata of an {@link org.kalypso.observation.IObservation}.
-   * 
+   *
    * @return The timezone of <code>defaultTimezone</code>, if no timezone is defined.
    */
   public static TimeZone getTimeZone( final MetadataList metadata, final String defaultTimezoneName )

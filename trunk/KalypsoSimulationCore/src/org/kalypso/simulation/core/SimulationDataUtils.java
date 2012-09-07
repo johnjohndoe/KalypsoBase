@@ -60,7 +60,6 @@ public final class SimulationDataUtils
     return getInputOrDefault( dataProvider, id, null );
   }
 
-  @SuppressWarnings("unchecked")
   public static <T> T getInputOrDefault( final ISimulationDataProvider dataProvider, final String id, final T defaultValue ) throws SimulationException
   {
     if( dataProvider.hasID( id ) )

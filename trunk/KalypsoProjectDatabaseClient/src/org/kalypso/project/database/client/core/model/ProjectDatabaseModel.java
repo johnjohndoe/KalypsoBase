@@ -76,9 +76,9 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
 
   private RemoteWorkspaceModel m_remote = null;
 
-  private final Set<IProjectHandle> m_projects = new TreeSet<IProjectHandle>( IProjectHandle.COMPARATOR );
+  private final Set<IProjectHandle> m_projects = new TreeSet<>( IProjectHandle.COMPARATOR );
 
-  private final Set<IProjectDatabaseListener> m_listener = new LinkedHashSet<IProjectDatabaseListener>();
+  private final Set<IProjectDatabaseListener> m_listener = new LinkedHashSet<>();
 
   /**
    * @param localIds
@@ -121,7 +121,7 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
 
     if( m_remote != null )
     {
-      final Set<IRemoteProject> handler = new HashSet<IRemoteProject>();
+      final Set<IRemoteProject> handler = new HashSet<>();
 
       final KalypsoProjectBean[] beans = m_remote.getBeans();
       for( final KalypsoProjectBean bean : beans )
@@ -270,9 +270,6 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
     return StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.project.database.client.core.model.ProjectDatabaseModel.0" ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.project.database.client.core.model.remote.IRemoteProjectsListener#remoteConnectionChanged()
-   */
   @Override
   public void remoteConnectionChanged( final IStatus connectionState )
   {
@@ -284,9 +281,6 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
     }
   }
 
-  /**
-   * @see org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel#findProject(org.eclipse.core.resources.IProject)
-   */
   @Override
   public IProjectHandle findProject( final IProject project )
   {

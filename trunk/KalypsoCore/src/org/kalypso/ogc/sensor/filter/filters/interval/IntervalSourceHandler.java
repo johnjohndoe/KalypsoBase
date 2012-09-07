@@ -72,7 +72,7 @@ public final class IntervalSourceHandler
     final String[] baseSources = DataSourceHelper.getSources( base );
     final String[] otherSources = DataSourceHelper.getSources( other );
 
-    final Set<String> allReferences = new TreeSet<String>();
+    final Set<String> allReferences = new TreeSet<>();
     allReferences.addAll( Arrays.asList( baseSources ) );
     allReferences.addAll( Arrays.asList( otherSources ) );
     allReferences.remove( SOURCE_INITIAL_VALUE );

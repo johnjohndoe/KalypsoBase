@@ -57,13 +57,14 @@ import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 
 /**
  * AbstractObservationFilter
- * 
+ *
  * @author schlienger
  */
 public abstract class AbstractObservationFilter implements IObservationFilter
 {
   private IObservation m_obs = null;
 
+  @SuppressWarnings( "unused" )
   @Override
   // exception warning Ignored, else we got errors in implementors
   public void initFilter( final Object conf, final IObservation obs, final URL context ) throws SensorException

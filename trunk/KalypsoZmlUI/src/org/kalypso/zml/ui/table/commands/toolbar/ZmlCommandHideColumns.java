@@ -102,7 +102,7 @@ public class ZmlCommandHideColumns extends AbstractHandler implements IElementUp
   }
 
   @Override
-  public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
+  public void updateElement( final UIElement element, final Map parameters )
   {
     final IZmlTable table = ZmlHandlerUtil.getTable( element );
     if( table == null )

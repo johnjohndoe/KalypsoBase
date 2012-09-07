@@ -65,7 +65,7 @@ import org.kalypso.zml.core.base.IZmlSourceElement;
  */
 public class ZmlMemento implements IZmlMemento
 {
-  private final Map<IPoolableObjectType, List<IZmlSourceElement>> m_provider = new LinkedHashMap<IPoolableObjectType, List<IZmlSourceElement>>();
+  private final Map<IPoolableObjectType, List<IZmlSourceElement>> m_provider = new LinkedHashMap<>();
 
   protected final Set<IZmlMementoListener> m_listener = Collections.synchronizedSet( new LinkedHashSet<IZmlMementoListener>() );
 
@@ -97,7 +97,7 @@ public class ZmlMemento implements IZmlMemento
     List<IZmlSourceElement> sources = m_provider.get( poolKey );
     if( Objects.isNull( sources ) )
     {
-      sources = new ArrayList<IZmlSourceElement>();
+      sources = new ArrayList<>();
       m_provider.put( poolKey, sources );
     }
 
@@ -148,7 +148,7 @@ public class ZmlMemento implements IZmlMemento
   @Override
   public synchronized IZmlSourceElement[] findDirtyElements( )
   {
-    final Set<IZmlSourceElement> result = new LinkedHashSet<IZmlSourceElement>();
+    final Set<IZmlSourceElement> result = new LinkedHashSet<>();
 
     final Set<Entry<IPoolableObjectType, List<IZmlSourceElement>>> entries = m_provider.entrySet();
     for( final Entry<IPoolableObjectType, List<IZmlSourceElement>> entry : entries )

@@ -106,13 +106,13 @@ public class ChildWizardContext implements ILayoutPageContext
   }
 
   @Override
-  public Object getService( @SuppressWarnings("rawtypes") final Class api )
+  public Object getService( final Class api )
   {
     return m_context.getService( api );
   }
 
   @Override
-  public boolean hasService( @SuppressWarnings("rawtypes") final Class api )
+  public boolean hasService( final Class api )
   {
     return m_context.hasService( api );
   }

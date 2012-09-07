@@ -64,7 +64,7 @@ import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
  * <li>pixelsPerTick: Integer, default 5. Determines the resolution how the polynomes are rendered. 1 means: for every
  * pixel in x-diretion, a polynome value is calculated and rendered.</li>
  * </ul>
- * 
+ *
  * @author Gernot Belger
  * @author burtscher1
  */
@@ -91,7 +91,7 @@ public class PolynomeLayerProvider extends AbstractLayerProvider
     final FeatureList polygones = (FeatureList) feature.getProperty( propertyName );
 
     /* Filter polynomes by their domainId */
-    final List<IPolynomial1D> polys = new ArrayList<IPolynomial1D>();
+    final List<IPolynomial1D> polys = new ArrayList<>();
     for( final Object object : polygones )
     {
       final Feature polyFeature = (Feature) object;

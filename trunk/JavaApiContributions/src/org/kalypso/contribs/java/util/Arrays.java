@@ -47,7 +47,7 @@ import java.util.HashSet;
 
 /**
  * utility stuff for arrays
- * 
+ *
  * @author schlienger
  */
 public final class Arrays
@@ -63,7 +63,7 @@ public final class Arrays
   /**
    * Add all object from source of the class desiredClass to the dest collection. Either instances of the desired class
    * or subclasses will be accepted.
-   * 
+   *
    * @param source
    *          object from this source will be added to dest if they are instances of the desiredclass
    * @param dest
@@ -83,7 +83,7 @@ public final class Arrays
 
   /**
    * creates an array of raw ints with a given array of Integer Objects by copying the int values.
-   * 
+   *
    * @throws IllegalArgumentException
    *           if argument is null
    */
@@ -102,7 +102,7 @@ public final class Arrays
 
   /**
    * creates an array of raw doubles with a given array of Double Objects by copying the double values
-   * 
+   *
    * @throws IllegalArgumentException
    *           if argument is null
    */
@@ -121,7 +121,7 @@ public final class Arrays
 
   /**
    * creates an array of object doubles with a given array of doubles by copying the double values
-   * 
+   *
    * @throws IllegalArgumentException
    *           if argument is null
    */
@@ -140,7 +140,7 @@ public final class Arrays
 
   /**
    * Convenient method to cast array into type. The code here is based on the code of Vector.toArray(Object[] type)
-   * 
+   *
    * <pre>
    *  Call example:  Double[] ds = Arrays.castArray(someArray, new Double[0]);
    * </pre>
@@ -148,7 +148,6 @@ public final class Arrays
    * NOTE: the type of the elements in someArray must be the same as the type of the elements of the desired array.
    * </p>
    */
-  @SuppressWarnings("unchecked")
   public static <T> T[] castArray( final Object[] array, T[] type )
   {
     if( type.length < array.length )
@@ -273,7 +272,7 @@ public final class Arrays
   /**
    * Creates a new truncated array with values that are smaller than the given value. The value itself is inserted into
    * the array if it is not already contained.
-   * 
+   *
    * @param arr
    *          array to be truncated, must be sorted. Unpredictable results if not sorted
    * @param value
@@ -312,7 +311,7 @@ public final class Arrays
   /**
    * Creates a new truncated array with values that are bigger than the given value. The value itself is inserted into
    * the array if it is not already contained.
-   * 
+   *
    * @param arr
    *          array to be truncated, must be sorted. Unpredictable results if not sorted
    * @param value
@@ -427,7 +426,7 @@ public final class Arrays
 
   /**
    * Linear search for max in an array of doubles.
-   * 
+   *
    * @return The maximal value or <code>Double.NaN</code> if the array is empty.
    */
   public static double findMax( final double[] doubleArray )
@@ -446,7 +445,7 @@ public final class Arrays
 
   /**
    * merges bytearray a and part of bytearray b
-   * 
+   *
    * @param a
    * @param b
    * @param lengthB
@@ -464,7 +463,7 @@ public final class Arrays
 
   /**
    * checks if bytearray a and bytearray b are equal till position length
-   * 
+   *
    * @param a
    * @param b
    * @param length
@@ -513,7 +512,7 @@ public final class Arrays
 
   /**
    * Concatenate the two given arrays in a new one containing all of the elements.
-   * 
+   *
    * @param array1
    *          first array to append
    * @param array2
@@ -524,7 +523,7 @@ public final class Arrays
    */
   public static <T extends Object> T[] concat( final T[] array1, final T[] array2, final T[] type )
   {
-    final ArrayList<T> list = new ArrayList<T>( array1.length + array2.length );
+    final ArrayList<T> list = new ArrayList<>( array1.length + array2.length );
     list.addAll( java.util.Arrays.asList( array1 ) );
     list.addAll( java.util.Arrays.asList( array2 ) );
 
@@ -533,7 +532,7 @@ public final class Arrays
 
   /**
    * Return new array containing the given one with the given object appended at the end of it.
-   * 
+   *
    * @param object
    *          object to append to array
    * @param type
@@ -542,7 +541,7 @@ public final class Arrays
    */
   public static <T extends Object> T[] concat( final T[] array, final T object, final T[] type )
   {
-    final ArrayList<T> list = new ArrayList<T>( array.length + 1 );
+    final ArrayList<T> list = new ArrayList<>( array.length + 1 );
     list.addAll( java.util.Arrays.asList( array ) );
     list.add( object );
 
@@ -563,15 +562,14 @@ public final class Arrays
       return false;
 
     // wrap them into sets and compare the sets
-    final HashSet<Object> globalSet = new HashSet<Object>( java.util.Arrays.asList( array1 ) );
-    final HashSet<Object> set = new HashSet<Object>( java.util.Arrays.asList( array2 ) );
+    final HashSet<Object> globalSet = new HashSet<>( java.util.Arrays.asList( array1 ) );
+    final HashSet<Object> set = new HashSet<>( java.util.Arrays.asList( array2 ) );
 
     return globalSet.equals( set );
   }
 
   public static <T> T[] toArray( final Collection< ? extends T> c, final Class< ? extends T> type )
   {
-    @SuppressWarnings("unchecked")
     final T[] newArray = (T[]) Array.newInstance( type, c.size() );
     return c.toArray( newArray );
   }

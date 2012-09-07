@@ -103,7 +103,7 @@ public final class KalypsoFtpFactory
       final FtpServerFactory serverFactory = new FtpServerFactory();
 
       /* adding the default kalypso ftplet (not needed at the moment */
-      final Map<String, Ftplet> ftplets = new HashMap<String, Ftplet>();
+      final Map<String, Ftplet> ftplets = new HashMap<>();
       ftplets.put( KalypsoFtplet.class.getName(), new KalypsoFtplet() );
       serverFactory.setFtplets( ftplets );
 

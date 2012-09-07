@@ -98,8 +98,8 @@ public class PageSelectGeodataFiles extends WizardPage
 
     m_data = data;
     m_binding = null;
-    m_additionalActions = new HashMap<String, CoverageManagementAction>();
-    m_checkedActions = new HashMap<String, Boolean>();
+    m_additionalActions = new HashMap<>();
+    m_checkedActions = new HashMap<>();
   }
 
   @Override
@@ -247,7 +247,7 @@ public class PageSelectGeodataFiles extends WizardPage
 
   public CoverageManagementAction[] getCheckedActions( )
   {
-    final List<CoverageManagementAction> checkedActions = new ArrayList<CoverageManagementAction>();
+    final List<CoverageManagementAction> checkedActions = new ArrayList<>();
 
     final Set<Entry<String, Boolean>> entries = m_checkedActions.entrySet();
     for( final Entry<String, Boolean> entry : entries )

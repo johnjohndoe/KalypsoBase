@@ -60,7 +60,7 @@ import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQPair;
 
 /**
  * Objects of this class represent .at files from LHWZ
- * 
+ *
  * @author Gernot Belger
  */
 public class AtTable
@@ -143,7 +143,7 @@ public class AtTable
 
   /**
    * Reads a .at file from an URL into a WQTableSet.
-   * 
+   *
    * @throws IOException
    */
   public static AtTable readAt( final URL atLocation ) throws IOException
@@ -166,7 +166,7 @@ public class AtTable
 
   /**
    * Reads a .at file from an InpuStream into a WQTableSet.
-   * 
+   *
    * @throws IOException
    * @throws IOException
    */
@@ -183,7 +183,7 @@ public class AtTable
 
     final Matcher matcher = PATTERN_SECOND_LINE.matcher( secondLine );
     if( !matcher.matches() )
-      throw new IOException( Messages.getString( "org.kalypso.ogc.sensor.timeseries.wq.at.AtTable.3", secondLine ) ); //$NON-NLS-1$ 
+      throw new IOException( Messages.getString( "org.kalypso.ogc.sensor.timeseries.wq.at.AtTable.3", secondLine ) ); //$NON-NLS-1$
 
     final int size = Integer.parseInt( matcher.group( 1 ) );
     final String typeFrom = matcher.group( 2 );
@@ -198,7 +198,7 @@ public class AtTable
     // TODO: get validity from a) the stream b) the atDictionary
     // TODO: discuss with moni?
 
-    final List<WQPair> wqList = new ArrayList<WQPair>( size );
+    final List<WQPair> wqList = new ArrayList<>( size );
 
     // TODO: read table from stream
     while( reader.ready() )

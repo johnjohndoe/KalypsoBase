@@ -143,9 +143,9 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
 
   protected Command[] m_commands = new Command[] {};
 
-  private final Map<Command, IExecutionListener> m_executionListeners = new HashMap<Command, IExecutionListener>();
+  private final Map<Command, IExecutionListener> m_executionListeners = new HashMap<>();
 
-  private final Map<Command, ICommandListener> m_commandListeners = new HashMap<Command, ICommandListener>();
+  private final Map<Command, ICommandListener> m_commandListeners = new HashMap<>();
 
   protected CommandContributionItem m_currentCommand;
 
@@ -184,16 +184,16 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
   }
 
   @Override
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings( "unchecked" )
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
-    final Set<Command> commands = new LinkedHashSet<Command>();
+    final Set<Command> commands = new LinkedHashSet<>();
     if( data instanceof Map< ? , ? > )
     {
       /* REMARK: map ht is unsorted - sort commands by param id! */
       final Map<String, String> ht = (Map<String, String>) data;
 
-      final List<String> keys = new ArrayList<String>();
+      final List<String> keys = new ArrayList<>();
       keys.addAll( ht.keySet() );
       Collections.sort( keys );
 
@@ -336,13 +336,9 @@ public class DropDownToolbarItem extends CompoundContributionItem implements IEx
           final MenuItem item = (MenuItem) widget;
 
           final String text = label;
-          final String keyBindingText = null;
           if( text != null )
           {
-            if( keyBindingText == null )
-            {
               item.setText( text );
-            }
           }
 
           if( item.getSelection() != checkedState )

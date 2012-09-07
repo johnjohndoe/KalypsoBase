@@ -53,7 +53,7 @@ public final class ImportProfilesCommand implements ICommand
   @Override
   public void process( ) throws Exception
   {
-    final List<Feature> newFeatureList = new ArrayList<Feature>();
+    final List<Feature> newFeatureList = new ArrayList<>();
     try
     {
       for( final IProfil profile : m_profiles )

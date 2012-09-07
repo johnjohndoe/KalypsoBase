@@ -103,7 +103,7 @@ public class ProjectUpdateChangesAction extends Action
     try
     {
       // bad hack - to determine which project was newly created
-      final Map<ProjectTemplate, KalypsoProjectBean> mapping = new HashMap<ProjectTemplate, KalypsoProjectBean>();
+      final Map<ProjectTemplate, KalypsoProjectBean> mapping = new HashMap<>();
 
       final KalypsoProjectBean bean = m_handler.getBean();
       final ProjectTemplate template = new ProjectTemplate( null, String.format( "%s - Version %d", bean.getName(), bean.getProjectVersion() ), bean.getUnixName(), bean.getDescription(), null, bean.getUrl() ); //$NON-NLS-1$

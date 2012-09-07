@@ -54,7 +54,7 @@ import org.kalypso.core.KalypsoCorePlugin;
 
 /**
  * Helper class to read and cache
- * 
+ *
  * @author Stefan Kurzbach
  */
 public class ModelAdapterExtension
@@ -76,7 +76,7 @@ public class ModelAdapterExtension
     final IExtensionPoint extensionPoint = registry.getExtensionPoint( MODEL_ADAPTER_EXTENSION_POINT );
     final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
 
-    final List<IModelAdaptor> result = new ArrayList<IModelAdaptor>();
+    final List<IModelAdaptor> result = new ArrayList<>();
     for( final IConfigurationElement element : configurationElements )
     {
       final String elFeatureType = element.getAttribute( ATTRIBUTE_FEATURE_TYPE );

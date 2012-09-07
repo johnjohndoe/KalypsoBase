@@ -41,7 +41,6 @@
 package org.kalypso.zml.ui.table.nat.editing;
 
 import net.sourceforge.nattable.config.AbstractUiBindingConfiguration;
-import net.sourceforge.nattable.config.IConfiguration;
 import net.sourceforge.nattable.edit.action.CellEditDragMode;
 import net.sourceforge.nattable.edit.action.KeyEditAction;
 import net.sourceforge.nattable.edit.action.MouseEditAction;
@@ -63,7 +62,7 @@ import org.kalypso.zml.ui.table.nat.painter.ZmlModelCellPainter;
 /**
  * @author Dirk Kuch
  */
-public class ZmlEditBindings extends AbstractUiBindingConfiguration implements IConfiguration
+public class ZmlEditBindings extends AbstractUiBindingConfiguration
 {
   private final ZmlModelViewport m_viewport;
 

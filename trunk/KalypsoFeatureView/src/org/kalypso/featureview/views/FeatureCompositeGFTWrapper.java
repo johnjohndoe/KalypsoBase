@@ -229,7 +229,7 @@ public class FeatureCompositeGFTWrapper
   /**
    * GFT Files often points to an special Feature - with this function, you can replace an PLACEHOLDER with a feature
    * id.
-   * 
+   *
    * @param project
    *          your active eclipse project
    * @param templateFilePath
@@ -241,7 +241,7 @@ public class FeatureCompositeGFTWrapper
    */
   public static void createGftFile( final IFile iTemplate, final IFile iDestination, final String gmlId ) throws IOException, CoreException
   {
-    final HashMap<String, String> replacement = new HashMap<String, String>();
+    final HashMap<String, String> replacement = new HashMap<>();
     replacement.put( "%PLACEHOLDER%", gmlId ); //$NON-NLS-1$
 
     FeatureCompositeGFTWrapper.createGftFile( iTemplate, iDestination, replacement );
@@ -249,7 +249,7 @@ public class FeatureCompositeGFTWrapper
 
   /**
    * dto. - in this function you can replace different kind of keys and values (hashmap)
-   * 
+   *
    * @param project
    *          your active eclipse project
    * @param templateFilePath

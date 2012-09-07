@@ -52,7 +52,7 @@ import org.xml.sax.XMLReader;
 
 /**
  * Type handler for list-simple types.
- * 
+ *
  * @author Gernot Belger
  */
 public class ListSimpleTypeHandler implements ISimpleMarshallingTypeHandler<List< ? >>
@@ -68,16 +68,13 @@ public class ListSimpleTypeHandler implements ISimpleMarshallingTypeHandler<List
     m_baseTypeHandler = (ISimpleMarshallingTypeHandler<Object>) baseTypeHandler;
   }
 
-  /**
-   * @see org.kalypso.gmlschema.types.ISimpleMarshallingTypeHandler#convertToJavaValue(java.lang.String)
-   */
   @Override
   public List< ? > convertToJavaValue( final String xmlString )
   {
     if( xmlString == null )
       return null;
 
-    final List<Object> list = new ArrayList<Object>();
+    final List<Object> list = new ArrayList<>();
 
     final StringTokenizer st = new StringTokenizer( xmlString );
     while( st.hasMoreTokens() )
@@ -111,9 +108,6 @@ public class ListSimpleTypeHandler implements ISimpleMarshallingTypeHandler<List
     return result.toString();
   }
 
-  /**
-   * @see org.kalypso.gmlschema.types.IMarshallingTypeHandler#cloneObject(java.lang.Object, java.lang.String)
-   */
   @Override
   public Object cloneObject( final Object objectToClone, final String gmlVersion ) throws CloneNotSupportedException
   {
@@ -121,7 +115,7 @@ public class ListSimpleTypeHandler implements ISimpleMarshallingTypeHandler<List
       return null;
 
     final List< ? > list = (List< ? >) objectToClone;
-    final List<Object> clonedList = new ArrayList<Object>( list.size() );
+    final List<Object> clonedList = new ArrayList<>( list.size() );
 
     for( final Object object : list )
       clonedList.add( m_baseTypeHandler.cloneObject( object, gmlVersion ) );

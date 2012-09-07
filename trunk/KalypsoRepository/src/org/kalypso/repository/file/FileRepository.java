@@ -52,7 +52,7 @@ import org.kalypso.repository.IRepositoryItem;
 
 /**
  * Ein File Repository.
- * 
+ *
  * @author schlienger
  */
 public class FileRepository extends AbstractRepository
@@ -63,7 +63,7 @@ public class FileRepository extends AbstractRepository
 
   /**
    * Creates a FileRepository.
-   * 
+   *
    * @param factory
    * @param conf
    * @param location
@@ -124,7 +124,7 @@ public class FileRepository extends AbstractRepository
 
   /**
    * Factory method that can be overriden by subclasses to create adequate items.
-   * 
+   *
    * @param file
    * @return IRepositoryItem instance
    */
@@ -178,11 +178,8 @@ public class FileRepository extends AbstractRepository
     return createItem( f );
   }
 
-  /**
-   * @see org.kalypso.repository.AbstractRepository#getAdapter(java.lang.Class)
-   */
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class anotherClass )
+  public Object getAdapter( final Class anotherClass )
   {
     if( File.class.equals( anotherClass ) )
       return m_root;

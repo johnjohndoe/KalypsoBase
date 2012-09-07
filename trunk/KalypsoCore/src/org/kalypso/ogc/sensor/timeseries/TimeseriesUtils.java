@@ -90,7 +90,7 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
  * Utility for dealing Kalypso time series.
- * 
+ *
  * @author schlienger
  */
 public final class TimeseriesUtils implements ITimeseriesConstants
@@ -122,7 +122,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
 
   private static Properties CONFIG;
 
-  private static HashMap<String, NumberFormat> FORMAT_MAP = new HashMap<String, NumberFormat>();
+  private static HashMap<String, NumberFormat> FORMAT_MAP = new HashMap<>();
 
   private static NumberFormat DEFAULT_FORMAT = null;
 
@@ -135,7 +135,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
    * Finds out which metadata of the given observation begin with the given prefix.
    * <p>
    * This is for instance useful for the Alarmstufen
-   * 
+   *
    * @param obs
    * @param mdPrefix
    * @return list of metadata keys or empty array if nothing found
@@ -147,7 +147,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
 
     final MetadataList mdl = obs.getMetadataList();
 
-    final ArrayList<String> mds = new ArrayList<String>();
+    final ArrayList<String> mds = new ArrayList<>();
 
     final Set<Object> keySet = mdl.keySet();
     for( final Object object : keySet )
@@ -163,7 +163,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
 
   /**
    * Finds out the list of alarmstufen metadata keys
-   * 
+   *
    * @return list of metadata keys
    */
   public static String[] findOutMDAlarmLevel( final IObservation obs )
@@ -173,7 +173,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
 
   /**
    * Returns the color to use when displaying the value of the given Alarmstufe.
-   * 
+   *
    * @return color
    */
   public static Color getColorForAlarmLevel( final String mdAlarm )
@@ -187,7 +187,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
 
   /**
    * Lazy loading of the properties
-   * 
+   *
    * @return config of the timeseries package
    */
   private static synchronized Properties getProperties( )
@@ -252,7 +252,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
    * observation is a forecast.
    * <p>
    * An observation is a forecast when it has the MD_VORHERSAGE Metadata.
-   * 
+   *
    * @param obs
    * @return date range of the forecast or null if obs isn't a forecast.
    */
@@ -313,7 +313,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
 
   /**
    * Units are read from the config.properties file.
-   * 
+   *
    * @param type
    * @return corresponding unit
    */
@@ -326,7 +326,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
    * Returns a user-friendly name for the given type.
    * <p>
    * Note to Developer: keep the config.properties file up-to-date
-   * 
+   *
    * @return corresponding name (user friendly)
    */
   public static String getName( final String type )
@@ -338,7 +338,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
    * Returns a color for the given type.
    * <p>
    * Note to Developer: keep the config.properties file up-to-date
-   * 
+   *
    * @return a Color that is defined to be used with the given axis type, or a random color when no fits
    */
   public static Color[] getColorsFor( final String type )
@@ -401,7 +401,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
   /**
    * Returns a NumberFormat instance according to the given timeserie type. If there is no specific instance for the
    * given type, then a default number format is returned.
-   * 
+   *
    * @return instance of NumberFormat that can be used to display the values to the user
    */
   public static NumberFormat getNumberFormatFor( final String type )
@@ -466,7 +466,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
 
   /**
    * It is currently fix and is: "dd.MM.yy HH:mm"
-   * 
+   *
    * @return the date format to use when displaying dates for observations/timeseries
    */
   public static DateFormat getDateFormat( )
@@ -492,7 +492,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
 
   public static IAxis[] createDefaultAxes( final String[] axisTypes, final boolean firstWithKey )
   {
-    final List<IAxis> axisList = new ArrayList<IAxis>();
+    final List<IAxis> axisList = new ArrayList<>();
     if( axisTypes != null && axisTypes.length > 0 )
     {
       axisList.add( TimeseriesUtils.createDefaultAxis( axisTypes[0], firstWithKey ) );
@@ -540,7 +540,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
   /**
    * Return the value of the alarmLevel in regard to the given axisType. The alarm-levels are stored according to the
    * W-axis. If you want the value according to the Q-axis you should call this function with axisType = Q
-   * 
+   *
    * @param axisType
    *          the type of the axis for which to convert the alarm-level
    * @throws WQException
@@ -561,7 +561,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
   /**
    * Returns the class name for the given axis-type. The class must inherit from
    * <code>org.jfree.chart.axis.ValueAxis</code>.
-   * 
+   *
    * @return The class name for the given axis-type. The class must inherit from
    *         <code>org.jfree.chart.axis.ValueAxis</code>.
    */
@@ -580,7 +580,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
 
   /**
    * This function guesses the timestep of a given timeseries from several timsteps.
-   * 
+   *
    * @param timeseries
    *          The tuple model of a timeseries.
    * @return The timestep or null.
@@ -594,7 +594,7 @@ public final class TimeseriesUtils implements ITimeseriesConstants
   /**
    * This function guesses the timestamp of a given timeseries from several timsteps. Only timeseries with a timestep of
    * 1 day do have a timestamp.
-   * 
+   *
    * @param timeseries
    *          The tuple model of a timeseries.
    * @param timestep

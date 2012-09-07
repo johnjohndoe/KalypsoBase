@@ -93,7 +93,7 @@ public final class ProjectUtilities
   public static IProject[] findProjectsFromSelection( final ISelection selection )
   {
     // gleiche Projekte sollen nur einen Eintrag gebens
-    final Collection<IResource> projects = new HashSet<IResource>();
+    final Collection<IResource> projects = new HashSet<>();
     if( selection != null && !selection.isEmpty() && selection instanceof IStructuredSelection )
     {
       final IStructuredSelection ssel = (IStructuredSelection) selection;
@@ -157,7 +157,7 @@ public final class ProjectUtilities
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
     final IProject[] projects = root.getProjects();
 
-    final List<IProject> result = new ArrayList<IProject>( projects.length );
+    final List<IProject> result = new ArrayList<>( projects.length );
 
     for( final IProject project : projects )
     {

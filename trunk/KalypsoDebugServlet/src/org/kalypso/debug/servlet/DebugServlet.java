@@ -221,7 +221,7 @@ public class DebugServlet extends HttpServlet
     final Properties sysProps = System.getProperties();
 
     final Set<Entry<Object, Object>> entrySet = sysProps.entrySet();
-    final TreeSet<Entry<Object, Object>> sortedEntries = new TreeSet<Entry<Object, Object>>( new Comparator<Entry<Object, Object>>()
+    final TreeSet<Entry<Object, Object>> sortedEntries = new TreeSet<>( new Comparator<Entry<Object, Object>>()
     {
       @Override
       public int compare( final Entry<Object, Object> o1, final Entry<Object, Object> o2 )
@@ -260,7 +260,7 @@ public class DebugServlet extends HttpServlet
     final Properties fProps = FrameworkProperties.getProperties();
 
     final Set<Entry<Object, Object>> entrySet = fProps.entrySet();
-    final TreeSet<Entry<Object, Object>> sortedEntries = new TreeSet<Entry<Object, Object>>( new Comparator<Entry<Object, Object>>()
+    final TreeSet<Entry<Object, Object>> sortedEntries = new TreeSet<>( new Comparator<Entry<Object, Object>>()
     {
       @Override
       public int compare( final Entry<Object, Object> o1, final Entry<Object, Object> o2 )

@@ -126,7 +126,7 @@ public class KalypsoAFGUIFrameworkPlugin extends AbstractUIPlugin
     // So the views may open, and the default task will close/open the needed views anyways.
 
     // Close all views previously opened by any task in order to let them save themselves
-    final Collection<String> partsToKeep = new ArrayList<String>();
+    final Collection<String> partsToKeep = new ArrayList<>();
     partsToKeep.add( WorkflowView.ID );
     partsToKeep.add( PerspectiveWatcher.SCENARIO_VIEW_ID );
     PerspectiveWatcher.cleanPerspective( workbench2, partsToKeep );

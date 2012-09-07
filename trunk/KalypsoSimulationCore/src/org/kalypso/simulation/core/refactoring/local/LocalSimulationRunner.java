@@ -135,7 +135,7 @@ public class LocalSimulationRunner implements ISimulationRunner
 
   private SimulationDataPath[] resolveOutputs( final List<String> outputs )
   {
-    final List<SimulationDataPath> myPaths = new ArrayList<SimulationDataPath>();
+    final List<SimulationDataPath> myPaths = new ArrayList<>();
     final List<Output> modelOutputs = m_modeldata.getOutput();
     for( final Output output : modelOutputs )
     {
@@ -151,7 +151,7 @@ public class LocalSimulationRunner implements ISimulationRunner
 
   private SimulationDataPath[] resolveInputs( final Map<String, Object> inputs )
   {
-    final List<SimulationDataPath> myPaths = new ArrayList<SimulationDataPath>();
+    final List<SimulationDataPath> myPaths = new ArrayList<>();
 
     final Set<Entry<String, Object>> entries = inputs.entrySet();
     for( final Entry<String, Object> entry : entries )

@@ -44,7 +44,7 @@ public class LocalWorkspaceModel implements ILocalWorkspaceModel
    */
   private Set<ILocalProject> m_projects = null;
 
-  protected final Set<ILocalWorkspaceListener> m_listener = new LinkedHashSet<ILocalWorkspaceListener>();
+  protected final Set<ILocalWorkspaceListener> m_listener = new LinkedHashSet<>();
 
   public LocalWorkspaceModel( )
   {
@@ -75,7 +75,7 @@ public class LocalWorkspaceModel implements ILocalWorkspaceModel
 
   protected final void update( )
   {
-    m_projects = new TreeSet<ILocalProject>( IProjectHandle.COMPARATOR );
+    m_projects = new TreeSet<>( IProjectHandle.COMPARATOR );
 
     final IWorkspace workspace = ResourcesPlugin.getWorkspace();
     workspace.addResourceChangeListener( RESOURCE_LISTENER );

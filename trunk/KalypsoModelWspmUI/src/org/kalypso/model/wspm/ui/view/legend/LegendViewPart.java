@@ -61,7 +61,7 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
  * <p>
  * It is also a selection provider of its selected layers.
  * </p>
- * 
+ *
  * @author Gernot Belger
  * @author kimwerner
  */
@@ -88,7 +88,7 @@ public class LegendViewPart extends AbstractChartModelViewPart
   }
 
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     if( adapter == ChartEditorTreeOutlinePage.class )
       return m_chartlegend;

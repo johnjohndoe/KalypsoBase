@@ -58,12 +58,12 @@ import java.util.List;
  * 	 new DisposeHelper( m_someObjectArray ).dispose();
  * }
  * </pre></code>
- * 
+ *
  * @author schlienger
  */
 public final class DisposeHelper
 {
-  private final List<Object> m_candidates = new ArrayList<Object>( 20 );
+  private final List<Object> m_candidates = new ArrayList<>( 20 );
 
   public DisposeHelper( )
   {

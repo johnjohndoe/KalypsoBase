@@ -65,7 +65,7 @@ import org.kalypso.observation.result.IRecord;
 
 /**
  * Handles roughness class values.
- * 
+ *
  * @author Dirk Kuch
  * @author Holger Albert
  */
@@ -127,7 +127,7 @@ public class RoughnessClassUiHandler extends AbstractComponentClassUiHandler
     final IRoughnessClass clazz = classification.findRoughnessClass( value.toString() );
     if( Objects.isNotNull( clazz ) )
     {
-      final List<String> parameters = new ArrayList<String>();
+      final List<String> parameters = new ArrayList<>();
       append( parameters, "ks=%.2f", clazz.getKsValue() );
       append( parameters, "kst=%.2f", clazz.getKstValue() );
 
@@ -196,7 +196,7 @@ public class RoughnessClassUiHandler extends AbstractComponentClassUiHandler
       return roughnessClasses;
 
     /* Add the most used classes. */
-    final List<Object> adjustedClasses = new ArrayList<Object>();
+    final List<Object> adjustedClasses = new ArrayList<>();
     for( final FavoriteItem usedItem : usedItems )
     {
       final IRoughnessClass usedClass = classification.findRoughnessClass( usedItem.getName() );

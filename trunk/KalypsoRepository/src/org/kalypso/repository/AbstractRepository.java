@@ -54,7 +54,7 @@ import org.kalypso.repository.utils.RepositoryVisitors;
 
 /**
  * Abstract implementation of <code>IRepository</code> to provide basic functionality.
- * 
+ *
  * @author schlienger
  */
 public abstract class AbstractRepository implements IRepository
@@ -87,7 +87,7 @@ public abstract class AbstractRepository implements IRepository
     m_cached = cached;
     m_identifier = identifier;
 
-    m_listeners = new Vector<IRepositoryListener>();
+    m_listeners = new Vector<>();
     m_properties = new Properties();
   }
 
@@ -235,23 +235,17 @@ public abstract class AbstractRepository implements IRepository
    * This default implementation always returns null.
    */
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class anotherClass )
+  public Object getAdapter( final Class anotherClass )
   {
     return null;
   }
 
-  /**
-   * @see org.kalypso.repository.IRepositoryItem#hasAdapter(java.lang.Class)
-   */
   @Override
   public boolean hasAdapter( final Class< ? > adapter )
   {
     return false;
   }
 
-  /**
-   * @see org.kalypso.repository.IRepositoryItem#getRepository()
-   */
   @Override
   public IRepository getRepository( )
   {

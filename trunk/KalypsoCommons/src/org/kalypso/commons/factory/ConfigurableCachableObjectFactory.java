@@ -65,7 +65,7 @@ import org.kalypso.contribs.java.lang.reflect.ClassUtilityException;
  * </p>
  * <p>
  * Die Properties sind erweiterbar.
- * 
+ *
  * @author schlienger
  */
 public class ConfigurableCachableObjectFactory
@@ -73,7 +73,7 @@ public class ConfigurableCachableObjectFactory
   private final Properties m_props = new Properties();
 
   /** type -> objectinstance */
-  private final Map<String, Object> m_objects = new Hashtable<String, Object>();
+  private final Map<String, Object> m_objects = new Hashtable<>();
 
   private final boolean m_cache;
 
@@ -157,7 +157,7 @@ public class ConfigurableCachableObjectFactory
 
   /**
    * Inserts the given properties in the main properties of this factory.
-   * 
+   *
    * @param props
    */
   public void addProperties( final Properties props )

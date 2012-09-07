@@ -132,9 +132,6 @@ public class ProjectDatabase implements IProjectDatabase
       FACTORY.close();
   }
 
-  /**
-   * @see org.kalypso.projectfinal .database.sei.IProjectDatabase#getProjects()
-   */
   @Override
   public KalypsoProjectBean[] getProjectHeads( final String projectType )
   {
@@ -150,7 +147,7 @@ public class ProjectDatabase implements IProjectDatabase
       final List< ? > names = session.createQuery( String.format( "select m_unixName from KalypsoProjectBean where m_projectType = '%s' ORDER by m_name", projectType ) ).list(); //$NON-NLS-1$
       tx.commit();
 
-      final Set<String> projects = new HashSet<String>();
+      final Set<String> projects = new HashSet<>();
 
       for( final Object object : names )
       {
@@ -161,11 +158,11 @@ public class ProjectDatabase implements IProjectDatabase
         projects.add( name );
       }
 
-      final List<KalypsoProjectBean> projectBeans = new ArrayList<KalypsoProjectBean>();
+      final List<KalypsoProjectBean> projectBeans = new ArrayList<>();
 
       for( final String project : projects )
       {
-        final TreeMap<Integer, KalypsoProjectBean> myBeans = new TreeMap<Integer, KalypsoProjectBean>();
+        final TreeMap<Integer, KalypsoProjectBean> myBeans = new TreeMap<>();
 
         final Session mySession = FACTORY.getCurrentSession();
         final Transaction myTx = mySession.beginTransaction();
@@ -208,9 +205,6 @@ public class ProjectDatabase implements IProjectDatabase
 
   }
 
-  /**
-   * @see org.kalypso.project.database.sei.IProjectDatabase#getProject()
-   */
   @Override
   public KalypsoProjectBean getProject( final String projectUnixName )
   {
@@ -232,7 +226,7 @@ public class ProjectDatabase implements IProjectDatabase
       /* determine head */
       final KalypsoProjectBean head = (KalypsoProjectBean) projects.get( 0 );
 
-      final List<KalypsoProjectBean> beans = new ArrayList<KalypsoProjectBean>();
+      final List<KalypsoProjectBean> beans = new ArrayList<>();
       for( int i = 1; i < projects.size(); i++ )
         beans.add( (KalypsoProjectBean) projects.get( i ) );
 
@@ -369,10 +363,6 @@ public class ProjectDatabase implements IProjectDatabase
     }
   }
 
-  /**
-   * @see org.kalypso.project.database.sei.IProjectDatabase#getProjectTypes()
-   */
-  @SuppressWarnings("unchecked")
   @Override
   public String[] getProjectTypes( )
   {
@@ -392,13 +382,10 @@ public class ProjectDatabase implements IProjectDatabase
     return projects.toArray( new String[] {} );
   }
 
-  /**
-   * @see org.kalypso.project.database.sei.IProjectDatabase#getProjectHeads()
-   */
   @Override
   public KalypsoProjectBean[] getAllProjectHeads( )
   {
-    final Set<KalypsoProjectBean> myBeans = new TreeSet<KalypsoProjectBean>();
+    final Set<KalypsoProjectBean> myBeans = new TreeSet<>();
 
     final String[] types = getProjectTypes();
     for( final String type : types )
@@ -411,18 +398,12 @@ public class ProjectDatabase implements IProjectDatabase
     return myBeans.toArray( new KalypsoProjectBean[] {} );
   }
 
-  /**
-   * @see org.kalypso.project.database.sei.IProjectDatabase#ping()
-   */
   @Override
   public Boolean ping( )
   {
     return Boolean.TRUE;
   }
 
-  /**
-   * @see org.kalypso.project.database.sei.IProjectDatabase#deleteProject(org.kalypso.project.database.sei.beans.KalypsoProjectBean)
-   */
   @Override
   public Boolean deleteProject( final KalypsoProjectBean bean )
   {

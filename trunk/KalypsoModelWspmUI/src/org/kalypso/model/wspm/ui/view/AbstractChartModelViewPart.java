@@ -77,7 +77,7 @@ public abstract class AbstractChartModelViewPart extends ViewPart implements IAd
     }
   };
 
-  private final AdapterPartListener<IChartPart> m_chartProviderListener = new AdapterPartListener<IChartPart>( IChartPart.class, this, EditorFirstAdapterFinder.<IChartPart> instance(), EditorFirstAdapterFinder.<IChartPart> instance() );
+  private final AdapterPartListener<IChartPart> m_chartProviderListener = new AdapterPartListener<>( IChartPart.class, this, EditorFirstAdapterFinder.<IChartPart> instance(), EditorFirstAdapterFinder.<IChartPart> instance() );
 
   private IChartPart m_chartPart;
 
@@ -125,12 +125,8 @@ public abstract class AbstractChartModelViewPart extends ViewPart implements IAd
     super.dispose();
   }
 
-  /**
-   * @see org.eclipse.ui.part.WorkbenchPart#getAdapter(java.lang.Class)
-   */
-
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     if( adapter == IChartModel.class )
       return getChartModel();

@@ -92,7 +92,7 @@ public class DiffUtils
     if( ignorePath != null )
       ignores = Arrays.asList( ignorePath );
     else
-      ignores = new ArrayList<String>();
+      ignores = new ArrayList<>();
 
     for( final String path : pathesA )
     {

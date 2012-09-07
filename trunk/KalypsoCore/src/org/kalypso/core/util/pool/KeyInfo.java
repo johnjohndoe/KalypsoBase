@@ -79,7 +79,7 @@ public final class KeyInfo extends Job
   /** Flag, indicating if the associated object needs saving. */
   private boolean m_isDirty = false;
 
-  private final Map<IResource, Boolean> m_resources = new HashMap<IResource, Boolean>();
+  private final Map<IResource, Boolean> m_resources = new HashMap<>();
 
   /**
    * This flag becomes true, if the saving process is started and the resources are locked. It will be resetted after
@@ -437,7 +437,7 @@ public final class KeyInfo extends Job
 
   public void handleResourceChanged( final IResourceDelta delta )
   {
-    final List<IResourceDelta> deltas = new ArrayList<IResourceDelta>( m_resources.size() );
+    final List<IResourceDelta> deltas = new ArrayList<>( m_resources.size() );
 
     for( final IResource resource : m_resources.keySet() )
     {

@@ -78,7 +78,7 @@ public class GMLSchemaFactory
 {
   private static QName QNAME_FEATURE = new QName( NS.GML3, "_Feature" ); //$NON-NLS-1$
 
-  private static Map<String, GMLSchemaBuilder> m_gmlSchemaBuilderRegister = new HashMap<String, GMLSchemaBuilder>();
+  private static Map<String, GMLSchemaBuilder> m_gmlSchemaBuilderRegister = new HashMap<>();
 
   private static synchronized GMLSchemaBuilder getBuilderForVersion( final String version )
   {

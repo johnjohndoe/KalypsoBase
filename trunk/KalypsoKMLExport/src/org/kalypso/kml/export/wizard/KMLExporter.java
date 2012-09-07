@@ -66,7 +66,7 @@ public class KMLExporter implements ICoreRunnableWithProgress
     final IConfigurationElement[] elements = registry.getConfigurationElementsFor( IKMLAdapter.ID );
 
     // TODO handling of several providers, which provider wins / rules, returns a special geometry, aso
-    final List<IKMLAdapter> provider = new ArrayList<IKMLAdapter>( elements.length );
+    final List<IKMLAdapter> provider = new ArrayList<>( elements.length );
     for( final IConfigurationElement element : elements )
     {
       try

@@ -70,7 +70,7 @@ import org.kalypso.ogc.sensor.visitor.IObservationVisitor;
 /**
  * Data source proxy observation class. To add a data source axis to an model we have to create a new model. This is a
  * very slow operation, so we introduced this proxy class. the new model will be created by the first request.
- * 
+ *
  * @author Dirk Kuch
  */
 public class DataSourceProxyObservation implements IObservation
@@ -124,7 +124,7 @@ public class DataSourceProxyObservation implements IObservation
 
     final IAxis[] base = m_observation.getAxes();
 
-    final Set<IAxis> axes = new LinkedHashSet<IAxis>();
+    final Set<IAxis> axes = new LinkedHashSet<>();
     Collections.addAll( axes, base );
 
     final IAxis[] valueAxes = AxisUtils.findValueAxes( base, false );

@@ -114,7 +114,7 @@ public class CoverageColormapHandler
    */
   private Symbolizer[] findSymbolizers( final IKalypsoFeatureTheme coverageTheme )
   {
-    final Collection<Symbolizer> allSymbolizers = new ArrayList<Symbolizer>();
+    final Collection<Symbolizer> allSymbolizers = new ArrayList<>();
 
     final IKalypsoStyle[] styles = coverageTheme.getStyles();
 
@@ -212,7 +212,7 @@ public class CoverageColormapHandler
    */
   public void updateRasterSymbolizer( final Shell shell, final ColorMapEntry[] entries )
   {
-    final TreeMap<Double, ColorMapEntry> newRasterColorMap = new TreeMap<Double, ColorMapEntry>();
+    final TreeMap<Double, ColorMapEntry> newRasterColorMap = new TreeMap<>();
 
     // FIXME: move this code to the place, where the entries are created
     for( final ColorMapEntry colorMapEntry : entries )

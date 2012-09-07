@@ -108,7 +108,7 @@ public class TupleResultIndex
     if( m_index != null )
       return;
 
-    m_index = new TreeMap<Object, IRecord>( m_component );
+    m_index = new TreeMap<>( m_component );
 
     for( final IRecord record : m_result )
     {
@@ -132,7 +132,7 @@ public class TupleResultIndex
 
   /**
    * FIXME: move into helper class<br>
-   * 
+   *
    * @return an interpolated object based in the neighboring objects before and after the given domain
    */
   public synchronized Object getValue( final IComponent component, final Date date )

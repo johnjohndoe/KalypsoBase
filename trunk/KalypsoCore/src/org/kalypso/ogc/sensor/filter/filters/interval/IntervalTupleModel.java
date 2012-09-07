@@ -320,7 +320,7 @@ public class IntervalTupleModel extends AbstractTupleModel
   {
     final DataSourceHandler handler = new DataSourceHandler( m_metadata );
 
-    final Set<TupleModelDataSet> sourceValues = new LinkedHashSet<TupleModelDataSet>();
+    final Set<TupleModelDataSet> sourceValues = new LinkedHashSet<>();
 
     for( final IAxis valueAxis : m_axes.getValueAxes() )
     {

@@ -10,7 +10,7 @@ import org.kalypso.model.wspm.core.result.IStationResult;
 
 public class Result implements IResultSet
 {
-  private final Map<String, Map<String, Double>> m_map = new HashMap<String, Map<String, Double>>();
+  private final Map<String, Map<String, Double>> m_map = new HashMap<>();
 
   private final Map<String, Map<String, Double>> m_unmodMap = Collections.unmodifiableMap( m_map );
 
@@ -48,7 +48,7 @@ public class Result implements IResultSet
     if( map != null )
       return map;
 
-    final Map<String, Double> newMap = new HashMap<String, Double>();
+    final Map<String, Double> newMap = new HashMap<>();
     m_map.put( station, newMap );
 
     return newMap;

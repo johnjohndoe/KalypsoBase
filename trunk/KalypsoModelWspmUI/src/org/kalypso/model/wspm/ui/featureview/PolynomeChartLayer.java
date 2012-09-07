@@ -87,7 +87,7 @@ public class PolynomeChartLayer extends AbstractLineLayer
   }
 
   @Override
-  public void paint( final GC gc, ChartImageInfo chartImageInfo, IProgressMonitor monitor )
+  public void paint( final GC gc, final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
     final IDataRange<Number> domainRange = m_data.getDomainRange();
     final double min = (Double) domainRange.getMin();
@@ -100,7 +100,7 @@ public class PolynomeChartLayer extends AbstractLineLayer
     final IPointStyle ps = (IPointStyle) getStyleSet().getStyle( "point" ); //$NON-NLS-1$
     pf.setStyle( ps );
 
-    final ArrayList<Point> path = new ArrayList<Point>();
+    final ArrayList<Point> path = new ArrayList<>();
 
     final IAxis domainAxis = getDomainAxis();
     final IAxis targetAxis = getTargetAxis();

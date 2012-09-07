@@ -111,8 +111,8 @@ class FeatureThemePainter implements IStylePainter
   {
     final IKalypsoStyle[] styles = m_theme.getStyles();
 
-    final List<IKalypsoStyle> normalStyles = new ArrayList<IKalypsoStyle>( styles.length );
-    final List<IKalypsoStyle> selectionStyles = new ArrayList<IKalypsoStyle>( styles.length );
+    final List<IKalypsoStyle> normalStyles = new ArrayList<>( styles.length );
+    final List<IKalypsoStyle> selectionStyles = new ArrayList<>( styles.length );
     for( final IKalypsoStyle style : styles )
     {
       if( style.isUsedForSelection() )

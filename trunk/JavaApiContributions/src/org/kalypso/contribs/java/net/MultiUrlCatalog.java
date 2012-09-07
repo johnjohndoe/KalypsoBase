@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.java.net;
 
@@ -46,14 +46,14 @@ import java.util.Map;
 
 /**
  * A url-catalog made up from several url-catalogs.
- * 
+ *
  * @author gernot
  */
 public class MultiUrlCatalog implements IUrlCatalog
 {
   private final IUrlCatalog[] m_catalogs;
 
-  private final Map<String, URL> m_catalog = new HashMap<String, URL>();
+  private final Map<String, URL> m_catalog = new HashMap<>();
 
   public MultiUrlCatalog( final IUrlCatalog[] catalogs )
   {
@@ -65,7 +65,7 @@ public class MultiUrlCatalog implements IUrlCatalog
 
   /**
    * Iterates the child catalogs to find the url. The order is as given in the constructor.
-   * 
+   *
    * @see org.kalypso.contribs.java.net.IUrlCatalog#getURL(java.lang.String)
    */
   @Override

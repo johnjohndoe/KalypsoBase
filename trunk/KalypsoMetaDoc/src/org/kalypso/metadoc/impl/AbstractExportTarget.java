@@ -65,7 +65,7 @@ public abstract class AbstractExportTarget implements IExportTarget
   private ImageDescriptor m_imageDescriptor;
 
   /** contains the list of modes. If it is empty, all modes are supported */
-  private final Set<String> m_modes = new HashSet<String>();
+  private final Set<String> m_modes = new HashSet<>();
 
   /** holder for the properties */
   private final Properties m_properties = new Properties();

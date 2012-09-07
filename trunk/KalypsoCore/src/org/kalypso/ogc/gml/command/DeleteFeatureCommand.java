@@ -69,9 +69,9 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
  */
 public class DeleteFeatureCommand implements ICommand
 {
-  private final Map<Feature, Integer> m_listIndexMap = new HashMap<Feature, Integer>();
+  private final Map<Feature, Integer> m_listIndexMap = new HashMap<>();
 
-  final List<RemoveBrokenLinksCommand> m_removeBrokenLinksCommands = new ArrayList<RemoveBrokenLinksCommand>();
+  final List<RemoveBrokenLinksCommand> m_removeBrokenLinksCommands = new ArrayList<>();
 
   private final Feature[] m_featuresToDelete;
 
@@ -113,7 +113,7 @@ public class DeleteFeatureCommand implements ICommand
   @Override
   public void undo( ) throws Exception
   {
-    final Map<Feature, List<Feature>> parentMap = new HashMap<Feature, List<Feature>>();
+    final Map<Feature, List<Feature>> parentMap = new HashMap<>();
 
     for( final Feature featureToAdd : m_featuresToDelete )
     {
@@ -164,10 +164,10 @@ public class DeleteFeatureCommand implements ICommand
   {
     m_removeBrokenLinksCommands.clear();
 
-    final Set<GMLWorkspace> touchedWorkspaces = new HashSet<GMLWorkspace>();
+    final Set<GMLWorkspace> touchedWorkspaces = new HashSet<>();
 
     // collect event information
-    final Map<Feature, List<Feature>> parentMap = new HashMap<Feature, List<Feature>>();
+    final Map<Feature, List<Feature>> parentMap = new HashMap<>();
 
     for( final Feature featureToRemove : m_featuresToDelete )
     {
@@ -203,7 +203,7 @@ public class DeleteFeatureCommand implements ICommand
     final IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
     selectionManager.changeSelection( m_featuresToDelete, new EasyFeatureWrapper[] {} );
 
-    final List<ModellEvent> linkEvents = new ArrayList<ModellEvent>();
+    final List<ModellEvent> linkEvents = new ArrayList<>();
 
     for( final GMLWorkspace workspace : touchedWorkspaces )
     {
@@ -241,9 +241,9 @@ public class DeleteFeatureCommand implements ICommand
    */
   private final class FindLinksFeatureVisitor implements FeatureVisitor
   {
-    private final Set<Feature> m_changedFeatures = new HashSet<Feature>();
+    private final Set<Feature> m_changedFeatures = new HashSet<>();
 
-    private final Map<Feature, FeatureStructureChangeModellEvent> m_structureEvents = new HashMap<Feature, FeatureStructureChangeModellEvent>();
+    private final Map<Feature, FeatureStructureChangeModellEvent> m_structureEvents = new HashMap<>();
 
     private final GMLWorkspace m_workspace;
 

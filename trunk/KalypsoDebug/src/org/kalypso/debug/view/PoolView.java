@@ -74,7 +74,7 @@ import org.kalypso.core.util.pool.ResourcePool;
 
 /**
  * Zeigt den Inhalt des {@link PoolView}in Form einer Tabelle an. Die Tabelle wird alle 2 Sekunden aktualisiert.
- * 
+ *
  * @author belger
  */
 public class PoolView extends ViewPart implements ITableLabelProvider
@@ -96,7 +96,7 @@ public class PoolView extends ViewPart implements ITableLabelProvider
     public abstract String getValue( final KeyInfo info );
   }
 
-  private final List<PoolViewColumn> m_columns = new ArrayList<PoolViewColumn>( 3 );
+  private final List<PoolViewColumn> m_columns = new ArrayList<>( 3 );
 
   private final ResourcePool m_pool = KalypsoCorePlugin.getDefault().getPool();
 

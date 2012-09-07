@@ -53,7 +53,7 @@ import org.kalypso.repository.conf.Repconf.Repository;
 
 /**
  * Utility class for the repository config package.
- * 
+ *
  * @author schlienger
  */
 public final class RepositoryConfigUtils
@@ -67,7 +67,7 @@ public final class RepositoryConfigUtils
 
   /**
    * Loads the config from an <code>InputStream</code> and closes the stream once finished.
-   * 
+   *
    * @param ins
    * @throws RepositoryException
    */
@@ -81,7 +81,7 @@ public final class RepositoryConfigUtils
 
       final List<Repconf.Repository> list = repconf.getRepository();
 
-      final List<RepositoryFactoryConfig> fConfs = new Vector<RepositoryFactoryConfig>( list.size() );
+      final List<RepositoryFactoryConfig> fConfs = new Vector<>( list.size() );
 
       for( final Repository elt : list )
       {

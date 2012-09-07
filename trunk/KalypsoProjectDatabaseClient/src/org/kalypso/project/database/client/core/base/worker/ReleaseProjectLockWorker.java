@@ -41,7 +41,6 @@
 package org.kalypso.project.database.client.core.base.worker;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -55,7 +54,7 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 /**
  * Acquires a project lock (lock ticket) in the model base and update
  * {@link org.kalypso.project.database.common.nature.RemoteProjectNature} lock settings
- * 
+ *
  * @author Dirk Kuch
  */
 public class ReleaseProjectLockWorker implements ICoreRunnableWithProgress
@@ -79,11 +78,8 @@ public class ReleaseProjectLockWorker implements ICoreRunnableWithProgress
     m_force = force;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
-  public IStatus execute( final IProgressMonitor monitor ) throws CoreException
+  public IStatus execute( final IProgressMonitor monitor )
   {
     String ticket = null;
 

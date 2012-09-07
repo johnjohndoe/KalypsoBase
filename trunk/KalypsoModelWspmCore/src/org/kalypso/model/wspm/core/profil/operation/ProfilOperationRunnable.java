@@ -98,7 +98,7 @@ public class ProfilOperationRunnable implements ICoreRunnableWithProgress, IAdap
   }
 
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     if( adapter == Shell.class )
     {

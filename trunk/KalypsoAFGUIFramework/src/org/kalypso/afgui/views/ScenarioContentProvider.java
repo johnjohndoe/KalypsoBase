@@ -86,7 +86,7 @@ public class ScenarioContentProvider extends WorkbenchContentProvider implements
           if( nature != null )
           {
             // is of correct nature
-            final List<Object> resultList = new ArrayList<Object>( children.length + 3 );
+            final List<Object> resultList = new ArrayList<>( children.length + 3 );
             resultList.addAll( Arrays.asList( children ) );
             final IScenarioManager caseManager = nature.getCaseManager();
             if( caseManager != null )

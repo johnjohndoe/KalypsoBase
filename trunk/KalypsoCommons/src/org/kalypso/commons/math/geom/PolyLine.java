@@ -17,7 +17,7 @@ import org.kalypso.contribs.java.util.DoubleComparator;
  * NOTE: the class is currently under redesign, points are stored as Point2D and also as coordinates. This is maybe not
  * the best solution. But it allows us to perform some operations more rapidly.
  * </p>
- * 
+ *
  * @author schlienger
  */
 public class PolyLine
@@ -42,7 +42,7 @@ public class PolyLine
 
   /**
    * Constructor. Calls setPoints( Point2D[] ).
-   * 
+   *
    * @param points
    * @param delta
    *          used for double comparison
@@ -56,7 +56,7 @@ public class PolyLine
 
   /**
    * Constructor. Calls setPoints( double[], double[] ).
-   * 
+   *
    * @param x
    * @param y
    * @param delta
@@ -71,7 +71,7 @@ public class PolyLine
 
   /**
    * Constructor. Calls setPoints( Double[], Double[] ).
-   * 
+   *
    * @param x
    * @param y
    * @param delta
@@ -86,7 +86,7 @@ public class PolyLine
 
   /**
    * constructor. calls setPoints( int[], int[])
-   * 
+   *
    * @param x
    * @param y
    * @param delta
@@ -101,7 +101,7 @@ public class PolyLine
 
   /**
    * Sets the points. Points will be sorted on X before being set.
-   * 
+   *
    * @param pts
    *          order is not important. Method sorts them on X coordinate.
    */
@@ -121,7 +121,7 @@ public class PolyLine
 
   /**
    * Sets the points. Points will be sorted on X before being set.
-   * 
+   *
    * @param x
    *          X coordinates
    * @param y
@@ -139,7 +139,7 @@ public class PolyLine
 
   /**
    * Sets the points. Points will be sorted on X before being set.
-   * 
+   *
    * @param x
    *          X coordinates
    * @param y
@@ -157,7 +157,7 @@ public class PolyLine
 
   /**
    * Sets the points. Points will be sorted on X before being set.
-   * 
+   *
    * @param x
    *          X coordinates
    * @param y
@@ -176,7 +176,7 @@ public class PolyLine
   /**
    * Shortens this polyline and returns new one. It only takes the values in the given range of the X Axis. If from
    * and/or to is/are not present (Double.NaN), it computes the missing points and insert them into the new line.
-   * 
+   *
    * @param from
    * @param to
    * @return
@@ -246,7 +246,7 @@ public class PolyLine
    * return the Y for a given X. Interpolation is done when:<br>
    * - no point.X is found that equals this X and<br>
    * - X is not bigger than all point.X
-   * 
+   *
    * @param X
    *          - for which to find a Y
    * @return - either existing Y or linear interpolated Y
@@ -259,7 +259,7 @@ public class PolyLine
   /**
    * Gibt Y Wert an einer bestimmten Stelle der PolyLine zurück. Der Wert wir linear zwischen zwei Stützpunkten
    * interpoliert. Funktioniert nur, wenn x-Wert austeigend sortiert.
-   * 
+   *
    * @param X
    *          Für diesen x Wert wird der y-Wert gesucht
    * @param bExtrapol
@@ -316,7 +316,7 @@ public class PolyLine
   /**
    * UGLY: same method as getYFor(), but returns a Point2D instead. This code could be ameliorated by mergin both
    * methods.
-   * 
+   *
    * @param X
    * @param bExtrapol
    * @return
@@ -378,7 +378,7 @@ public class PolyLine
 
   /**
    * Computes the area between two polyline
-   * 
+   *
    * @param xe
    *          [null allowed] the refined X-coords of both p1 and p2, need to be sorted. When null is given, then xe is
    *          computed internally
@@ -445,7 +445,7 @@ public class PolyLine
 
   /**
    * Returns all x-Values where this PolyLine intersect another.
-   * 
+   *
    * @param other
    *          PolyLine to intersect
    * @return x-Values where this and other intersect
@@ -517,7 +517,7 @@ public class PolyLine
   /**
    * Returns the intersections (PolyLines) where pOther intersects pMaster. Only the intersections of pOther that
    * correspond to mode in regard to pMaster will be returned.
-   * 
+   *
    * @param pMaster
    * @param pOther
    * @param mode
@@ -554,7 +554,7 @@ public class PolyLine
       return new PolyLine[0];
     }
 
-    final Vector<PolyLine> vPols = new Vector<PolyLine>( ints.length );
+    final Vector<PolyLine> vPols = new Vector<>( ints.length );
 
     // for each intersection
     for( int i = 0; i < ints.length - 1; i++ )
@@ -572,7 +572,7 @@ public class PolyLine
 
   /**
    * Gibt die Vereinigung der X-Werte zweier Polylines sowie deren Schnittpunkte zurück.
-   * 
+   *
    * @return die (unsortierten) x-Werte: alle x-Werte von p1, p2 und vom Schnitt der beiden Polygone
    */
   public static double[] refinePolylines( final PolyLine p1, final PolyLine p2 )
@@ -608,7 +608,7 @@ public class PolyLine
   /**
    * builds the necessary polygones to represent the area between the two polylines. Depending on the mode, it might
    * either use all the points of the polylines or just the ones that correspond to the Y-coord positioning.
-   * 
+   *
    * @param p1
    *          the first polyline
    * @param p2
@@ -660,7 +660,7 @@ public class PolyLine
       ints[ints.length - 1] = r.getTo();
       System.arraycopy( xis, 0, ints, 1, xis.length );
 
-      final Vector<PolyGone> vPols = new Vector<PolyGone>( ints.length );
+      final Vector<PolyGone> vPols = new Vector<>( ints.length );
 
       // for each intersection
       for( int i = 0; i < ints.length - 1; i++ )
@@ -682,7 +682,7 @@ public class PolyLine
 
   /**
    * Builds a polygone with two polylines
-   * 
+   *
    * @param p1
    * @param p2
    * @return
@@ -701,7 +701,7 @@ public class PolyLine
   /**
    * Tells if the polyline placement mode is verified according to the given polylines. Pre-condition: the given
    * polylines should not intersect themselves.
-   * 
+   *
    * @param mode
    * @param p1
    * @param p2
@@ -734,7 +734,7 @@ public class PolyLine
 
   /**
    * Tells if the mode is verified according to the placement of the given polylines, in the range from-to.<br>
-   * 
+   *
    * @param mode
    * @param p1
    * @param p2
@@ -768,7 +768,7 @@ public class PolyLine
 
   /**
    * Returns the range on x
-   * 
+   *
    * @return
    */
   public Range xExtremum( )
@@ -780,7 +780,7 @@ public class PolyLine
    * Tells whether the X-range of this polyline lies within the given range:<br>
    * given.range.from &lt;= this.xrange.from &lt;= given.range.to given.range.from &lt;= this.xrange.to &lt;=
    * given.range.to
-   * 
+   *
    * @param xr
    * @return
    */
@@ -793,7 +793,7 @@ public class PolyLine
    * Computes the length of the polyline. The length is the sum of the length of each segment that build this polyline: <br>
    * L = S1 + ... + Si + ... + Sn<br>
    * Si = length of segment i
-   * 
+   *
    * @return
    */
   public double length( )
@@ -862,7 +862,7 @@ public class PolyLine
 
   /**
    * Returns the delta
-   * 
+   *
    * @return
    */
   public double getDelta( )

@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.wps.utils.simulation;
 
@@ -73,7 +73,7 @@ import org.kalypso.simulation.core.SimulationException;
 
 /**
  * Manages the started simulation in backgrounds.
- * 
+ *
  * @author Holger Albert
  */
 public class WPSSimulationHandler extends Thread
@@ -95,7 +95,7 @@ public class WPSSimulationHandler extends Thread
 
   /**
    * The constructor.
-   * 
+   *
    * @param service
    *          Manages ALL jobs.
    * @param jobID
@@ -207,13 +207,13 @@ public class WPSSimulationHandler extends Thread
 
   /**
    * This function creates the execute response for the case the process has failed.
-   * 
+   *
    * @param message
    *          The error message.
    */
   private void createProcessFailedExecuteResponse( final String message, final Throwable t ) throws Exception
   {
-    final List<String> list = new ArrayList<String>();
+    final List<String> list = new ArrayList<>();
     if( message != null )
       list.add( message );
 
@@ -238,7 +238,7 @@ public class WPSSimulationHandler extends Thread
       list.add( "No error message available." ); //$NON-NLS-1$
 
     final ExceptionType exception = WPS040ObjectFactoryUtilities.buildExceptionType( list, "NO_APPLICABLE_CODE", "" ); //$NON-NLS-1$ //$NON-NLS-2$
-    final List<ExceptionType> exceptions = new ArrayList<ExceptionType>();
+    final List<ExceptionType> exceptions = new ArrayList<>();
     exceptions.add( exception );
 
     final ExceptionReport exceptionReport = WPS040ObjectFactoryUtilities.buildExceptionReport( exceptions, WPSUtilities.WPS_VERSION.V040.toString(), null );
@@ -249,7 +249,7 @@ public class WPSSimulationHandler extends Thread
 
   /**
    * This function creates the execute response in the location for the given thread.
-   * 
+   *
    * @param status
    *          The status of the process.
    * @param ioValues

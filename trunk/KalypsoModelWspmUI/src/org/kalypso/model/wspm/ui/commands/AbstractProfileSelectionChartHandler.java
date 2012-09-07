@@ -345,7 +345,7 @@ public abstract class AbstractProfileSelectionChartHandler extends AbstractProfi
     final PolygonFigure figure = new PolygonFigure();
     figure.setStyle( areaStyle );
 
-    final List<Point> points = new ArrayList<Point>();
+    final List<Point> points = new ArrayList<>();
     points.add( new Point( x0, 0 ) );
     points.add( new Point( x0, yMax ) );
     points.add( new Point( x1, yMax ) );

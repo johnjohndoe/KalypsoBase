@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.unittests;
 
@@ -57,7 +57,7 @@ import org.kalypso.service.wps.utils.ogc.WPS040ObjectFactoryUtilities;
 /**
  * This unittest should test a http connection, accepting every certificate.<br>
  * This test will use the HttpClient bundled in KalypsoCommons.
- * 
+ *
  * @author Holger Albert
  */
 public class HttpsAcceptCertificate
@@ -87,7 +87,7 @@ public class HttpsAcceptCertificate
     System.setProperty( "javax.net.ssl.trustStorePassword", "key4ssl" );
 
     /* Build the describe process request. */
-    final List<CodeType> identifier = new LinkedList<CodeType>();
+    final List<CodeType> identifier = new LinkedList<>();
     identifier.add( WPS040ObjectFactoryUtilities.buildCodeType( "", "InformDSSHydraulicV1.0" ) );
     final DescribeProcess describeProcess = WPS040ObjectFactoryUtilities.buildDescribeProcess( identifier );
 
@@ -101,7 +101,7 @@ public class HttpsAcceptCertificate
 
   /**
    * This function creates the JUnit4TestAdapter.
-   * 
+   *
    * @return JUnit4TestAdapter
    */
   public static junit.framework.Test suite( )

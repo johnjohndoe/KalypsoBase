@@ -65,7 +65,7 @@ import org.kalypso.observation.result.IRecord;
 
 /**
  * Handles vegetation class values.
- * 
+ *
  * @author Dirk Kuch
  * @author Holger Albert
  */
@@ -127,7 +127,7 @@ public class VegetationClassUiHandler extends AbstractComponentClassUiHandler
     final IVegetationClass clazz = classification.findVegetationClass( value.toString() );
     if( Objects.isNotNull( clazz ) )
     {
-      final List<String> parameters = new ArrayList<String>();
+      final List<String> parameters = new ArrayList<>();
       append( parameters, "AX=%.2f", clazz.getAx() );
       append( parameters, "AY=%.2f", clazz.getAy() );
       append( parameters, "DP=%.2f", clazz.getDp() );
@@ -197,7 +197,7 @@ public class VegetationClassUiHandler extends AbstractComponentClassUiHandler
       return vegetationClasses;
 
     /* Add the most used classes. */
-    final List<Object> adjustedClasses = new ArrayList<Object>();
+    final List<Object> adjustedClasses = new ArrayList<>();
     for( final FavoriteItem usedItem : usedItems )
     {
       final IVegetationClass usedClass = classification.findVegetationClass( usedItem.getName() );

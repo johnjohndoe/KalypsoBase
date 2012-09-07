@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.command;
 
@@ -114,10 +114,10 @@ public class ModifyFeatureGeometryCommand implements ICommand
     // BUGIFX: it is NOT allowed to change positio nby position and invalidate while doing so
     // Counter example: polygon: first and last point get translated at different times
     // FIX: First, hash according to feature/property; then work by feature/property
-    final Map<List<Object>, Map<GM_Position, GM_Position>> handleHash = new HashMap<List<Object>, Map<GM_Position, GM_Position>>();
+    final Map<List<Object>, Map<GM_Position, GM_Position>> handleHash = new HashMap<>();
     for( final Handle handle : m_handles )
     {
-      final List<Object> key = new ArrayList<Object>();
+      final List<Object> key = new ArrayList<>();
       key.add( handle.getFeature() );
       key.add( handle.getPropertyType() );
 
@@ -132,7 +132,7 @@ public class ModifyFeatureGeometryCommand implements ICommand
       posSet.put( handle.getPosition(), handle.getPosition() );
     }
 
-    final Set<Feature> changedFeatures = new HashSet<Feature>();
+    final Set<Feature> changedFeatures = new HashSet<>();
 
     for( final Entry<List<Object>, Map<GM_Position, GM_Position>> hashEntry : handleHash.entrySet() )
     {
@@ -213,7 +213,7 @@ public class ModifyFeatureGeometryCommand implements ICommand
 
   /**
    * To get the list of feature which geometry have being translated This method never return null.
-   * 
+   *
    * @return the list of translated features
    */
   public Feature[] getTranslatedFeatures( )

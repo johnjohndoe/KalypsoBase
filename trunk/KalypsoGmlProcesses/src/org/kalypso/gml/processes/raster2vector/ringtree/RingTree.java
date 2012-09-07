@@ -86,7 +86,7 @@ public class RingTree
     }
 
     // wenns nirgends reinpasst schaun, welche children in das element gehören
-    final Collection<RingTreeElement> removeElements = new ArrayList<RingTreeElement>();
+    final Collection<RingTreeElement> removeElements = new ArrayList<>();
     for( final RingTreeElement child : target.children() )
     {
       if( element.pir.isInside( child.innerCrd ) && element.contains( child ) )

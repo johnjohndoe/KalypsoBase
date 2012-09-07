@@ -62,17 +62,17 @@ import org.kalypso.simulation.core.i18n.Messages;
 
 /**
  * Transfers results locally by moving the files to the target directory
- * 
+ *
  * @author belger, kurzbach
  */
 public class DefaultResultEater implements ISimulationResultEater
 {
-  private final Vector<File> m_files = new Vector<File>();
+  private final Vector<File> m_files = new Vector<>();
 
   private final ModelspecData m_modelspec;
 
   /** Should be synchronized */
-  private final Vector<SimulationResult> m_results = new Vector<SimulationResult>();
+  private final Vector<SimulationResult> m_results = new Vector<>();
 
   private final Map<String, SimulationDataPath> m_clientOutputMap;
 
@@ -80,7 +80,7 @@ public class DefaultResultEater implements ISimulationResultEater
   {
     m_modelspec = modelspec;
 
-    m_clientOutputMap = new HashMap<String, SimulationDataPath>( clientOutput.length );
+    m_clientOutputMap = new HashMap<>( clientOutput.length );
     for( final SimulationDataPath bean : clientOutput )
       m_clientOutputMap.put( bean.getId(), bean );
   }

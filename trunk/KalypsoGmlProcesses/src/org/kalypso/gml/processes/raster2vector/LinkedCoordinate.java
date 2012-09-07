@@ -12,7 +12,7 @@ import com.vividsolutions.jts.geom.LineString;
 
 /**
  * Element einer verketteten Liste von Cooridnaten
- * 
+ *
  * @author belger
  */
 public class LinkedCoordinate
@@ -137,7 +137,7 @@ public class LinkedCoordinate
     if( !isCircle() )
       throw new LinkedCoordinateException( Messages.getString( "org.kalypso.gml.processes.raster2vector.LinkedCoordinate.3" ) ); //$NON-NLS-1$
 
-    final Collection<Coordinate> currentString = new ArrayList<Coordinate>();
+    final Collection<Coordinate> currentString = new ArrayList<>();
 
     // Startplatz ändern
     LinkedCoordinate currentCrd = this;
@@ -186,9 +186,9 @@ public class LinkedCoordinate
 
   public Collection<LineString> getLineStrings( final GeometryFactory gf )
   {
-    final Collection<LineString> strings = new ArrayList<LineString>();
+    final Collection<LineString> strings = new ArrayList<>();
 
-    Collection<Coordinate> currentString = new ArrayList<Coordinate>();
+    Collection<Coordinate> currentString = new ArrayList<>();
 
     // Startplatz ändern
     LinkedCoordinate start = this;
@@ -203,7 +203,7 @@ public class LinkedCoordinate
         if( currentString.size() > 1 )
           strings.add( gf.createLineString( currentString.toArray( new Coordinate[currentString.size()] ) ) );
 
-        currentString = new ArrayList<Coordinate>();
+        currentString = new ArrayList<>();
       }
       else
         currentString.add( currentCrd.crd );

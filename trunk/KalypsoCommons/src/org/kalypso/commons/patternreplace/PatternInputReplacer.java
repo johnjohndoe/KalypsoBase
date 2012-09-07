@@ -64,7 +64,7 @@ public class PatternInputReplacer<T>
 {
   public static final String STR_INSERT_A_TOKEN_FROM_THE_LIST_OF_AVAILABLE_PATTERNS = "Insert a token from the list of available patterns";
 
-  private final Map<String, IPatternInput<T>> m_replacers = new LinkedHashMap<String, IPatternInput<T>>();
+  private final Map<String, IPatternInput<T>> m_replacers = new LinkedHashMap<>();
 
   private final String m_patternStart;
 
@@ -93,7 +93,6 @@ public class PatternInputReplacer<T>
     m_replacers.put( token, replacer );
   }
 
-  @SuppressWarnings("unchecked")
   public IPatternInput<T>[] getReplacer( )
   {
     return (IPatternInput<T>[]) m_replacers.values().toArray( new IPatternInput< ? >[m_replacers.size()] );
@@ -169,7 +168,7 @@ public class PatternInputReplacer<T>
 
   public IContributionItem[] asContributionItems( final Text text )
   {
-    final Collection<IContributionItem> items = new ArrayList<IContributionItem>();
+    final Collection<IContributionItem> items = new ArrayList<>();
 
     for( final IPatternInput<T> pattern : m_replacers.values() )
     {

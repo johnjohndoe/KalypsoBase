@@ -45,7 +45,7 @@ public class ZipDiffObject extends AbstractDiffObject
 
   private final ZipFile m_zipFile;
 
-  private final Hashtable<String, ZipEntry> m_pathes = new Hashtable<String, ZipEntry>();
+  private final Hashtable<String, ZipEntry> m_pathes = new Hashtable<>();
 
   /**
    * @throws IOException

@@ -83,7 +83,7 @@ public class ResourcePool
   private final ILoaderFactory m_factory;
 
   /** key -> KeyInfo */
-  private final Map<IPoolableObjectType, KeyInfo> m_keyInfos = new TreeMap<IPoolableObjectType, KeyInfo>( KeyComparator.getInstance() );
+  private final Map<IPoolableObjectType, KeyInfo> m_keyInfos = new TreeMap<>( KeyComparator.getInstance() );
 
   private final IResourceChangeListener m_resourceChangeListener = new IResourceChangeListener()
   {
@@ -156,7 +156,7 @@ public class ResourcePool
 
   public void removePoolListener( final IPoolListener l )
   {
-    final List<KeyInfo> infosToDispose = new ArrayList<KeyInfo>();
+    final List<KeyInfo> infosToDispose = new ArrayList<>();
 
     synchronized( m_keyInfos )
     {
@@ -207,7 +207,7 @@ public class ResourcePool
 
   public void saveObject( final Object object, final IProgressMonitor monitor ) throws LoaderException
   {
-    final List<KeyInfo> infosToSave = new ArrayList<KeyInfo>();
+    final List<KeyInfo> infosToSave = new ArrayList<>();
 
     synchronized( m_keyInfos )
     {

@@ -151,7 +151,7 @@ public class ZmlColumnHeaderCellPainter extends AbstractZmlCellPainter
   private Image[] getImages( final IZmlModelColumn column )
   {
 
-    final Set<Image> images = new LinkedHashSet<Image>();
+    final Set<Image> images = new LinkedHashSet<>();
 
     final AppliedRule[] rules = ZmlModelColumns.findRules( getViewport(), column );
     for( final AppliedRule rule : rules )

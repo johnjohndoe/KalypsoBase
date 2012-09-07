@@ -62,17 +62,17 @@ import org.eclipse.core.databinding.validation.IValidator;
  */
 public class DataBinder extends AbstractDataBinder
 {
-  private final Collection<IValidator> m_targetAfterGetValidator = new ArrayList<IValidator>( 1 );
+  private final Collection<IValidator> m_targetAfterGetValidator = new ArrayList<>( 1 );
 
-  private final Collection<IValidator> m_targetAfterConvertValidator = new ArrayList<IValidator>( 1 );
+  private final Collection<IValidator> m_targetAfterConvertValidator = new ArrayList<>( 1 );
 
-  private final Collection<IValidator> m_targetBeforeSetValidator = new ArrayList<IValidator>( 1 );
+  private final Collection<IValidator> m_targetBeforeSetValidator = new ArrayList<>( 1 );
 
-  private final Collection<IValidator> m_modelAfterGetValidator = new ArrayList<IValidator>( 1 );
+  private final Collection<IValidator> m_modelAfterGetValidator = new ArrayList<>( 1 );
 
-  private final Collection<IValidator> m_modelAfterConvertValidator = new ArrayList<IValidator>( 1 );
+  private final Collection<IValidator> m_modelAfterConvertValidator = new ArrayList<>( 1 );
 
-  private final Collection<IValidator> m_modelBeforeSetValidator = new ArrayList<IValidator>( 1 );
+  private final Collection<IValidator> m_modelBeforeSetValidator = new ArrayList<>( 1 );
 
   private final IObservableValue m_target;
 

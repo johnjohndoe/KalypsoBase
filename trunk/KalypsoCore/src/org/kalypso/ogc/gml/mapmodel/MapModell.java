@@ -73,7 +73,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  */
 public class MapModell implements IMapModell
 {
-  private final Vector<IKalypsoTheme> m_themes = new Vector<IKalypsoTheme>();
+  private final Vector<IKalypsoTheme> m_themes = new Vector<>();
 
   private final Collection<IMapModellListener> m_listeners = Collections.synchronizedCollection( new HashSet<IMapModellListener>() );
 

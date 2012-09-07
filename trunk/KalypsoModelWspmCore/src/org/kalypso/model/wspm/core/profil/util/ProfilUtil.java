@@ -137,7 +137,7 @@ public final class ProfilUtil
 
   public static Object[] getValuesFor( final IRecord[] points, final int componentIndex, final boolean skipNullValues )
   {
-    final Collection<Object> values = new ArrayList<Object>( points.length );
+    final Collection<Object> values = new ArrayList<>( points.length );
 
     for( final IRecord point : points )
     {
@@ -496,7 +496,7 @@ public final class ProfilUtil
   {
     /* List for storing points of the profile, which have a geo reference. */
     final IProfileRecord[] points = profile.getPoints();
-    final ArrayList<IProfileRecord> geoReferencedPoints = new ArrayList<IProfileRecord>( points.length );
+    final ArrayList<IProfileRecord> geoReferencedPoints = new ArrayList<>( points.length );
 
     for( final IProfileRecord point : points )
     {
@@ -548,7 +548,7 @@ public final class ProfilUtil
 
   public static Double[] getDoubleValuesFor( final IProfil profil, final IComponent pointProperty, final boolean skipNullValues )
   {
-    final List<Double> myValues = new ArrayList<Double>();
+    final List<Double> myValues = new ArrayList<>();
 
     final Object[] values = getValuesFor( profil, pointProperty );
     for( final Object object : values )
@@ -577,7 +577,7 @@ public final class ProfilUtil
     final int distanceCompIndex = profil.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE );
 
     IRecord lastGood = null;
-    final List<IRecord> toInterpolate = new ArrayList<IRecord>();
+    final List<IRecord> toInterpolate = new ArrayList<>();
 
     for( final IRecord point : profil.getPoints() )
     {
@@ -654,7 +654,6 @@ public final class ProfilUtil
   /**
    * Same as {@link #getValuesFor(IRecord[], String)}, but casts the result to the given type.
    */
-  @SuppressWarnings("unchecked")
   public static <T> T[] getValuesFor( final IRecord[] points, final String component, final Class<T> type, final boolean skipNullValues )
   {
     final Object[] values = getValuesFor( points, component, skipNullValues );

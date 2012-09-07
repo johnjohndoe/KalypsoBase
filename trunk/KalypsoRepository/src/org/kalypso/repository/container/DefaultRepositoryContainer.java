@@ -51,14 +51,14 @@ import org.kalypso.repository.RepositoryException;
 
 /**
  * Default implementation.
- * 
+ *
  * @author schlienger
  */
 public class DefaultRepositoryContainer implements IRepositoryContainer
 {
-  private final List<IRepository> m_reps = new Vector<IRepository>();
+  private final List<IRepository> m_reps = new Vector<>();
 
-  private final List<IRepositoryContainerListener> m_listeners = new Vector<IRepositoryContainerListener>();
+  private final List<IRepositoryContainerListener> m_listeners = new Vector<>();
 
   public DefaultRepositoryContainer( )
   {

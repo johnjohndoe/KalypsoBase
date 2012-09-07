@@ -102,7 +102,7 @@ public class TaskExecutor implements ITaskExecutor
     m_authority = authority;
     m_commandService = commandService;
     m_handlerService = handlerService;
-    m_taskChangeListeners = new ArrayList<ITaskExecutionListener>();
+    m_taskChangeListeners = new ArrayList<>();
   }
 
   @Override
@@ -250,14 +250,14 @@ public class TaskExecutor implements ITaskExecutor
   private Collection<String> collectOpenedViews( final ContextType context )
   {
     if( context == null )
-      return new ArrayList<String>();
+      return new ArrayList<>();
 
     final ContextType parentContext = context.getParent();
     final Collection<String> result;
     if( parentContext != null )
       result = collectOpenedViews( parentContext );
     else
-      result = new ArrayList<String>();
+      result = new ArrayList<>();
 
     if( context instanceof WorkbenchSiteContext )
     {

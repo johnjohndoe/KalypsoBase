@@ -59,14 +59,14 @@ import org.kalypso.metadoc.KalypsoMetaDocPlugin;
 
 /**
  * Helper class to insert all registered export-targets as actions into menubar and toolbar.
- * 
+ *
  * @author schlienger
  */
 public class ExportActionContributor
 {
   /**
    * Fills the export actions into the given target-editor
-   * 
+   *
    * @param mode
    *          the mode (in the sense of the org.kalypso.metadoc.exportTarget) which denotes which kind of perspective
    *          should be supported by the extension. Optional, can be null, which means take all targets.
@@ -118,7 +118,7 @@ public class ExportActionContributor
   private static ExportAction[] createActions( final IWorkbenchPart part, final String mode ) throws CoreException
   {
     final IExportTarget[] targets = KalypsoMetaDocPlugin.getDefault().getTargets();
-    final List<ExportAction> actions = new ArrayList<ExportAction>( targets.length );
+    final List<ExportAction> actions = new ArrayList<>( targets.length );
 
     for( final IExportTarget target : targets )
     {

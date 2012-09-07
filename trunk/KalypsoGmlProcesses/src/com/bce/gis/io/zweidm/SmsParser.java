@@ -66,7 +66,7 @@ import org.kalypso.gml.processes.KalypsoGmlProcessesPlugin;
 
 /**
  * Provides algorithm to convert from a SMS model to a 1d2d discretisation model
- * 
+ *
  * @author Thomas Jung
  */
 public class SmsParser
@@ -178,7 +178,7 @@ public class SmsParser
       return;
     }
 
-    final List<Integer> nodeIdList = new ArrayList<Integer>();
+    final List<Integer> nodeIdList = new ArrayList<>();
 
     final int id = Integer.parseInt( lineMatcher.group( 1 ) );
 
@@ -201,7 +201,7 @@ public class SmsParser
       return;
     }
 
-    final List<Integer> nodeIdList = new ArrayList<Integer>();
+    final List<Integer> nodeIdList = new ArrayList<>();
 
     final int id = Integer.parseInt( elementMatcher.group( 1 ) );
 

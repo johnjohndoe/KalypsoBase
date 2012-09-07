@@ -10,16 +10,16 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
 
 /**
  * Standardimplementation von {@link org.kalypsodeegree_impl.extension.ITypeRegistry}.
- * 
+ *
  * @author belger
  */
 public class TypeRegistry_impl<H extends ITypeHandler> implements ITypeRegistry<H>
 {
   /** typeName -> handler */
-  private final Map<QName, H> m_typeMap = new HashMap<QName, H>();
+  private final Map<QName, H> m_typeMap = new HashMap<>();
 
   /** className -> handler */
-  private final Map<Class< ? >, H> m_classMap = new HashMap<Class< ? >, H>();
+  private final Map<Class< ? >, H> m_classMap = new HashMap<>();
 
   /**
    * @throws TypeRegistryException

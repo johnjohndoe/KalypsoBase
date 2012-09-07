@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.java.net;
 
@@ -48,12 +48,12 @@ import java.util.Map;
 /**
  * A configurable <code>URLStreamHandlerFactory</code>. You can set various <code>URLStreamHandler</code> that match
  * specific protocols.
- * 
+ *
  * @author schlienger
  */
 public class ConfigurableURLStreamHandlerFactory implements URLStreamHandlerFactory
 {
-  final Map<String, URLStreamHandler> m_map = new HashMap<String, URLStreamHandler>();
+  final Map<String, URLStreamHandler> m_map = new HashMap<>();
 
   public void setHandler( final String protocol, final URLStreamHandler handler )
   {

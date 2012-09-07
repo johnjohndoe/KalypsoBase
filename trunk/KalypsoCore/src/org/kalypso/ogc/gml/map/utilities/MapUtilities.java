@@ -67,7 +67,7 @@ import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Utility class for map operations.
- * 
+ *
  * @author Holger Albert
  */
 public final class MapUtilities
@@ -78,7 +78,7 @@ public final class MapUtilities
 
   /**
    * Snaps the given AWT-Point to a given geometry, if it lies into a specified radius.
-   * 
+   *
    * @param mapPanel
    *          The MapPanel of the map.
    * @param p
@@ -102,7 +102,7 @@ public final class MapUtilities
 
   /**
    * Snaps the given GM_Point to a given geometry, if it lies into a specified radius.
-   * 
+   *
    * @param mapPanel
    *          The MapPanel of the map.
    * @param point
@@ -150,7 +150,7 @@ public final class MapUtilities
 
   /**
    * This method transforms the AWT-Point to a GM_Point.
-   * 
+   *
    * @param mapPanel
    *          The MapPanel of the map.
    * @param p
@@ -180,7 +180,7 @@ public final class MapUtilities
 
   /**
    * This method transforms the GM_Point to an AWT-Point.
-   * 
+   *
    * @param mapPanel
    *          The MapPanel of the map.
    * @param p
@@ -198,7 +198,7 @@ public final class MapUtilities
 
   /**
    * This method transforms the GM_Point to an AWT-Point.
-   * 
+   *
    * @param mapPanel
    *          The MapPanel of the map.
    * @param p
@@ -216,7 +216,7 @@ public final class MapUtilities
 
   /**
    * This function transforms a distance in pixel to the world distance.
-   * 
+   *
    * @param mapPanel
    *          The MapPanel of the map.
    * @param reference
@@ -236,7 +236,7 @@ public final class MapUtilities
 
   /**
    * This function transforms a distance in pixel to the world distance.
-   * 
+   *
    * @param mapPanel
    *          The MapPanel of the map.
    * @param distancePx
@@ -253,7 +253,7 @@ public final class MapUtilities
 
   /**
    * This function sets the map scale, if different from the given map panel.
-   * 
+   *
    * @param scale
    *          The new map scale.
    */
@@ -299,7 +299,7 @@ public final class MapUtilities
 
   /**
    * This functions returns all used ids.
-   * 
+   *
    * @param mapModell
    *          The map model.
    * @return All used ids.
@@ -307,7 +307,7 @@ public final class MapUtilities
   public static List<String> getUsedIds( final IMapModell mapModell )
   {
     /* Memory for the used ids. */
-    final List<String> usedIds = new ArrayList<String>();
+    final List<String> usedIds = new ArrayList<>();
 
     /* Loop all themes and collect their ids. */
     final IKalypsoTheme[] themes = mapModell.getAllThemes();
@@ -319,7 +319,7 @@ public final class MapUtilities
 
   /**
    * This function calculates an id in the form of 'ID_n' which is not in the list of used ids.
-   * 
+   *
    * @param usedIds
    *          The list of used ids.
    * @param usedIds

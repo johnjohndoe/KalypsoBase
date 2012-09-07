@@ -74,7 +74,7 @@ public class LanduseMappingUpdater implements IRunnableWithProgress
   {
     try
     {
-      final Set<Object> shapeValues = new LinkedHashSet<Object>();
+      final Set<Object> shapeValues = new LinkedHashSet<>();
       final int column = ArrayUtils.indexOf( m_file.getFields(), m_field );
 
       m_file.accept( new IShapeFileVisitor()

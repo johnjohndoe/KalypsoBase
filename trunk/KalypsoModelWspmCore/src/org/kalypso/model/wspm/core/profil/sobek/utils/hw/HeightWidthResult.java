@@ -70,7 +70,7 @@ import com.vividsolutions.jts.operation.valid.TopologyValidationError;
 /**
  * @author belger
  */
-public abstract class HeightWidthResult extends ProblemResult implements IHeightWidthResult
+public abstract class HeightWidthResult extends ProblemResult
 {
   private final String m_parentName;
 
@@ -102,7 +102,7 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
 
     final List<Coordinate> buildPolygon = buildPolygon();
 
-    final List<Coordinate> crds = new ArrayList<Coordinate>( buildPolygon );
+    final List<Coordinate> crds = new ArrayList<>( buildPolygon );
     if( crds.size() < 3 )
     {
       addStatus( IStatus.WARNING, "Invalid geometry (not enough points)", null ); //$NON-NLS-1$
@@ -152,7 +152,7 @@ public abstract class HeightWidthResult extends ProblemResult implements IHeight
 
   private double[] sampleHeights( final Coordinate[] coordinates )
   {
-    final Set<Double> sortedSet = new TreeSet<Double>();
+    final Set<Double> sortedSet = new TreeSet<>();
 
 // double lastY = Double.NaN;
     for( final Coordinate coordinate : coordinates )

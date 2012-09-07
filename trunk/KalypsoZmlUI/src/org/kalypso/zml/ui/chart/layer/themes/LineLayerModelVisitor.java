@@ -69,7 +69,7 @@ import de.openali.odysseus.chart.framework.util.resource.Pair;
  */
 public class LineLayerModelVisitor implements IObservationVisitor
 {
-  private final Collection<IPair<Number, Number>> m_path = new ArrayList<IPair<Number, Number>>();
+  private final Collection<IPair<Number, Number>> m_path = new ArrayList<>();
 
   private final ZmlLineLayer m_layer;
 
@@ -149,7 +149,7 @@ public class LineLayerModelVisitor implements IObservationVisitor
       final Number domainNumeric = m_layer.getRangeHandler().getDateDataOperator().logicalToNumeric( domain );
       final Number targetNumeric = m_layer.getRangeHandler().getNumberDataOperator().logicalToNumeric( (Double) valueObject );
 
-      final IPair<Number, Number> numeric = new Pair<Number, Number>( domainNumeric, targetNumeric );
+      final IPair<Number, Number> numeric = new Pair<>( domainNumeric, targetNumeric );
       m_path.add( numeric );
     }
     catch( final SensorException e )
@@ -172,7 +172,6 @@ public class LineLayerModelVisitor implements IObservationVisitor
     return false;
   }
 
-  @SuppressWarnings("unchecked")
   public IPair<Number, Number>[] getPoints( )
   {
     return m_path.toArray( new IPair[m_path.size()] );

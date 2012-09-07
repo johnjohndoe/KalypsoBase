@@ -44,7 +44,6 @@ import net.sourceforge.nattable.NatTable;
 import net.sourceforge.nattable.layer.LabelStack;
 import net.sourceforge.nattable.painter.cell.ICellPainter;
 import net.sourceforge.nattable.ui.matcher.CellPainterMouseEventMatcher;
-import net.sourceforge.nattable.ui.matcher.IMouseEventMatcher;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.events.MouseEvent;
@@ -55,7 +54,7 @@ import org.kalypso.zml.core.table.model.view.ZmlModelViewport;
 /**
  * @author Dirk Kuch
  */
-public class ZmlCellPainterMouseEventMatcher extends CellPainterMouseEventMatcher implements IMouseEventMatcher
+public class ZmlCellPainterMouseEventMatcher extends CellPainterMouseEventMatcher
 {
   private final ZmlModelViewport m_viewport;
 

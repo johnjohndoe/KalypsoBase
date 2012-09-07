@@ -72,13 +72,13 @@ public class ZmlLinkValues implements IZmlValues
 
   private final IParser m_parser;
 
-  private final Map<Object, Integer> m_helper = new Hashtable<Object, Integer>();
+  private final Map<Object, Integer> m_helper = new Hashtable<>();
 
   private final int m_column;
 
   /**
    * Constructor
-   * 
+   *
    * @param vl
    *          binding type
    * @param parser

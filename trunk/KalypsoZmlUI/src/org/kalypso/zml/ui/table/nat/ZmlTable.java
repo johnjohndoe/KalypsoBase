@@ -103,7 +103,7 @@ import org.kalypso.zml.ui.table.nat.tooltip.ZmlTableTooltip;
  */
 public class ZmlTable extends Composite implements IZmlTable
 {
-  private final Set<IZmlTableListener> m_listeners = new HashSet<IZmlTableListener>();
+  private final Set<IZmlTableListener> m_listeners = new HashSet<>();
 
   private UIJob m_updateJob;
 

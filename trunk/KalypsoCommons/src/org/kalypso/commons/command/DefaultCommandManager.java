@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.commons.command;
 
@@ -46,14 +46,14 @@ import javax.swing.event.EventListenerList;
 
 /**
  * Standardimplementierung von {@link ICommandManager}.
- * 
+ *
  * @author von Dömming
  */
 public class DefaultCommandManager implements ICommandManager
 {
   private final EventListenerList m_listenerList = new EventListenerList();
 
-  private final Vector<ICommand> stack = new Vector<ICommand>();
+  private final Vector<ICommand> stack = new Vector<>();
 
   private boolean doable = false;
 

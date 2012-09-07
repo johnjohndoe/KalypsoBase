@@ -23,8 +23,7 @@ public class JUnitTest_CalculationChain extends TestCase
 
   public final void testExecute( )
   {
-
-    final List<SimulationJobSpecification> jobSpecificationList = new ArrayList<SimulationJobSpecification>();
+    final List<SimulationJobSpecification> jobSpecificationList = new ArrayList<>();
 
     /*
      * NA calculation; uses model-defined (default) model data specification

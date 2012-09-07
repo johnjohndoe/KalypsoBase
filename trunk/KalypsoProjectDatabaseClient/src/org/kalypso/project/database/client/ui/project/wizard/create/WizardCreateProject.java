@@ -121,7 +121,7 @@ public class WizardCreateProject extends NewProjectWizard
         ArrayUtils.add( natures, RemoteProjectNature.NATURE_ID );
 
         // unique natures
-        final Set<String> myNatures = new HashSet<String>();
+        final Set<String> myNatures = new HashSet<>();
         for( final String nature : natures )
         {
           myNatures.add( nature );

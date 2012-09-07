@@ -153,7 +153,7 @@ public final class ZmlRuleResolver
       final ZmlTableConfigurationLoader loader = new ZmlTableConfigurationLoader( absoluteUri );
       final ZmlTableType tableType = loader.getTableType();
 
-      ruleSets = new ArrayList<ZmlRuleSet>();
+      ruleSets = new ArrayList<>();
 
       for( final RuleSetType ruleSet : tableType.getRuleSet() )
       {

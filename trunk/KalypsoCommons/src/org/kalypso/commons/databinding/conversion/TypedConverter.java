@@ -63,14 +63,12 @@ public abstract class TypedConverter<FROM, TO> extends Converter implements ITyp
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public Class<TO> getToType( )
   {
     return (Class<TO>) super.getToType();
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public Class<FROM> getFromType( )
   {
     return (Class<FROM>) super.getFromType();

@@ -61,7 +61,7 @@ import org.kalypso.metadoc.KalypsoMetaDocPlugin;
 
 /**
  * Handles the extension points of this plugin.
- * 
+ *
  * @author schlienger
  */
 public class MetadocExtensions
@@ -84,8 +84,8 @@ public class MetadocExtensions
   public static IExportTarget[] retrieveTargets( ) throws CoreException
   {
     final IConfigurationElement[] elements = retrieveConfigurationElementsFor( TARGETS_EXTENSION_POINT );
-    final Vector<IExportTarget> items = new Vector<IExportTarget>();
-    final List<IStatus> stati = new ArrayList<IStatus>();
+    final Vector<IExportTarget> items = new Vector<>();
+    final List<IStatus> stati = new ArrayList<>();
     for( final IConfigurationElement element : elements )
     {
       try
@@ -123,7 +123,7 @@ public class MetadocExtensions
    */
   private static Map<String, IConfigurationElement> retrieveExporterInHash( final String extensionPointId )
   {
-    final Map<String, IConfigurationElement> map = new HashMap<String, IConfigurationElement>();
+    final Map<String, IConfigurationElement> map = new HashMap<>();
 
     final IConfigurationElement[] elements = retrieveConfigurationElementsFor( extensionPointId );
     for( final IConfigurationElement element : elements )
@@ -148,7 +148,7 @@ public class MetadocExtensions
 
     final IExtension[] extensions = extensionPoint.getExtensions();
 
-    final Vector<IConfigurationElement> items = new Vector<IConfigurationElement>();
+    final Vector<IConfigurationElement> items = new Vector<>();
 
     for( final IExtension extension : extensions )
     {

@@ -67,7 +67,7 @@ import org.kalypso.model.wspm.core.util.vegetation.UpdateVegetationProperties;
 
 /**
  * updates a "simple" ks / kst value from roughness class
- * 
+ *
  * @author Dirk Kuch
  */
 public class UpdateSimpleRoughnessProperty implements ICoreRunnableWithProgress
@@ -97,7 +97,7 @@ public class UpdateSimpleRoughnessProperty implements ICoreRunnableWithProgress
     if( Objects.isNull( clazzes ) )
       throw new CoreException( new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( Messages.getString( "UpdateSimpleRoughnessProperty_0" ), m_profile.getStation() ) ) ); //$NON-NLS-1$
 
-    final List<IStatus> statis = new ArrayList<IStatus>();
+    final List<IStatus> statis = new ArrayList<>();
 
     final IProfileRecord[] points = m_profile.getPoints();
     for( final IProfileRecord point : points )

@@ -55,7 +55,7 @@ import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLaye
  */
 public class ParameterTypeLayerVisitor extends AbstractChartLayerVisitor
 {
-  private final Set<IZmlLayer> m_layers = new HashSet<IZmlLayer>();
+  private final Set<IZmlLayer> m_layers = new HashSet<>();
 
   private final String m_parameterType;
 

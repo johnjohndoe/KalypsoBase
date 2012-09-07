@@ -84,7 +84,7 @@ public class ApplyLanduseWorker implements IRunnableWithProgress
 {
   private final IApplyLanduseData m_delegate;
 
-  final Set<FeatureChange> m_changes = new LinkedHashSet<FeatureChange>();
+  final Set<FeatureChange> m_changes = new LinkedHashSet<>();
 
   public ApplyLanduseWorker( final IApplyLanduseData delegate )
   {
@@ -94,7 +94,7 @@ public class ApplyLanduseWorker implements IRunnableWithProgress
   @Override
   public void run( final IProgressMonitor monitor )
   {
-    final Set<IStatus> stati = new LinkedHashSet<IStatus>();
+    final Set<IStatus> stati = new LinkedHashSet<>();
 
     final IProfileFeature[] profiles = m_delegate.getProfiles();
     for( final IProfileFeature profileFeature : profiles )
@@ -169,7 +169,6 @@ public class ApplyLanduseWorker implements IRunnableWithProgress
     final TupleResult owner = point.getOwner();
 
     /* find polygon for location */
-    @SuppressWarnings("unchecked")
     final List<Object> foundPolygones = m_delegate.getPolyonFeatureList().query( geoPoint.getPosition(), null );
 
     for( final Object polyObject : foundPolygones )

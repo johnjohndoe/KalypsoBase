@@ -64,7 +64,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Intermediates between the {@link IProfil} interface and Features of QName {org.kalypso.model.wspm.profile}profile
- * 
+ *
  * @author Gernot Belger
  */
 public final class ProfileFeatureFactory implements IWspmConstants
@@ -109,7 +109,7 @@ public final class ProfileFeatureFactory implements IWspmConstants
   {
     final IFeatureType featureType = targetFeature.getFeatureType();
 
-    final List<FeatureChange> changes = new ArrayList<FeatureChange>();
+    final List<FeatureChange> changes = new ArrayList<>();
     try
     {
       /* name and description */
@@ -118,7 +118,7 @@ public final class ProfileFeatureFactory implements IWspmConstants
       final String srs = profile.getSrsName();
       changes.add( new FeatureChange( targetFeature, featureType.getProperty( IProfileFeature.PROPERTY_SRS ), srs ) );
 
-      final List<String> namelist = new ArrayList<String>();
+      final List<String> namelist = new ArrayList<>();
       namelist.add( name );
 
       changes.add( getFeatureChangeName( targetFeature, name ) );
@@ -147,8 +147,8 @@ public final class ProfileFeatureFactory implements IWspmConstants
       final IRelationType profileObjectsRelationType = (IRelationType) featureType.getProperty( memberQName );
       final FeatureList profileObjectList = FeatureFactory.createFeatureList( targetFeature, profileObjectsRelationType, new Feature[] {} );
 
-  
-      final IFeatureType profileObjectType = featureType.getGMLSchema().getFeatureType(IObservation.QNAME_OBSERVATION ); 
+
+      final IFeatureType profileObjectType = featureType.getGMLSchema().getFeatureType(IObservation.QNAME_OBSERVATION );
       final IRelationType profileObjectParentRelation = profileObjectList.getPropertyType();
 
       final IProfileObject[] profileObjects = profile.getProfileObjects();
@@ -175,7 +175,7 @@ public final class ProfileFeatureFactory implements IWspmConstants
 
   private static FeatureChange getFeatureChangeName( final Feature feature, final String profileName )
   {
-    final List<String> namelist = new ArrayList<String>();
+    final List<String> namelist = new ArrayList<>();
     namelist.add( profileName );
 
     return new FeatureChange( feature, Feature.QN_NAME, namelist );

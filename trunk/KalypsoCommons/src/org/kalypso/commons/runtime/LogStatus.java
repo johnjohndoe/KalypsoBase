@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.commons.runtime;
 
@@ -54,7 +54,7 @@ import org.eclipse.core.runtime.Status;
 /**
  * LogStatus, a status that gets its children from a log file. Can be used within an ErrorDialog, when the user clicks
  * on 'Details', the contents of the log file are displayed.
- * 
+ *
  * @author schlienger
  */
 public class LogStatus extends Status
@@ -82,15 +82,12 @@ public class LogStatus extends Status
     return true;
   }
 
-  /**
-   * @see org.eclipse.core.runtime.Status#getChildren()
-   */
   @Override
   public IStatus[] getChildren( )
   {
     if( m_children == null )
     {
-      final ArrayList<String> lines = new ArrayList<String>();
+      final ArrayList<String> lines = new ArrayList<>();
 
       BufferedReader reader = null;
       try

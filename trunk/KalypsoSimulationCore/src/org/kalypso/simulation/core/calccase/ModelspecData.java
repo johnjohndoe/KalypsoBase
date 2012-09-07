@@ -83,7 +83,7 @@ public class ModelspecData
 
   private Map<String, DataType> createHash( final List<DataType> list )
   {
-    final HashMap<String, DataType> map = new HashMap<String, DataType>( list.size() );
+    final HashMap<String, DataType> map = new HashMap<>( list.size() );
     for( final DataType data : list )
       map.put( data.getId(), data );
 
@@ -97,7 +97,7 @@ public class ModelspecData
 
   /**
    * Prüft, ob für alle benötigten ID eine eingabe da ist.
-   * 
+   *
    * @throws CalcJobServiceException
    */
   public void checkInput( final ISimulationDataProvider data ) throws SimulationException
@@ -107,7 +107,7 @@ public class ModelspecData
       final String id = input.getId();
       final String description = input.getDescription();
       if( !input.isOptional() && !data.hasID( id ) )
-        throw new SimulationException( Messages.getString( "org.kalypso.simulation.core.internal.queued.ModelspecData.1", id, description ), null ); //$NON-NLS-1$ 
+        throw new SimulationException( Messages.getString( "org.kalypso.simulation.core.internal.queued.ModelspecData.1", id, description ), null ); //$NON-NLS-1$
     }
   }
 

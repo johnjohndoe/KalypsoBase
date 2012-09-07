@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.kalypso.contribs.eclipse.jface.preference;
 
@@ -25,14 +25,14 @@ import org.eclipse.swt.widgets.Group;
 
 /**
  * A field editor in form of a checkable list.
- * 
+ *
  * @author belger
  */
 public class ChecklistFieldEditor extends FieldEditor implements ICheckStateListener
 {
-  private final Map<String, Object> m_idMap = new HashMap<String, Object>();
+  private final Map<String, Object> m_idMap = new HashMap<>();
 
-  private final Map<Object, String> m_contentMap = new HashMap<Object, String>();
+  private final Map<Object, String> m_contentMap = new HashMap<>();
 
   private CheckboxTableViewer m_checklist;
 
@@ -73,18 +73,12 @@ public class ChecklistFieldEditor extends FieldEditor implements ICheckStateList
     }
   }
 
-  /**
-   * @see org.eclipse.jface.preference.FieldEditor#adjustForNumColumns(int)
-   */
   @Override
   protected void adjustForNumColumns( final int numColumns )
   {
     ((GridData) m_group.getLayoutData()).horizontalSpan = numColumns;
   }
 
-  /**
-   * @see org.eclipse.jface.preference.FieldEditor#doFillIntoGrid(org.eclipse.swt.widgets.Composite, int)
-   */
   @Override
   protected void doFillIntoGrid( final Composite parent, final int numColumns )
   {
@@ -113,9 +107,6 @@ public class ChecklistFieldEditor extends FieldEditor implements ICheckStateList
       m_checklist.getControl().setFocus();
   }
 
-  /**
-   * @see org.eclipse.jface.preference.FieldEditor#doLoad()
-   */
   @Override
   protected void doLoad( )
   {
@@ -123,9 +114,6 @@ public class ChecklistFieldEditor extends FieldEditor implements ICheckStateList
     uncheckElements( value );
   }
 
-  /**
-   * @see org.eclipse.jface.preference.FieldEditor#doLoadDefault()
-   */
   @Override
   protected void doLoadDefault( )
   {
@@ -139,7 +127,7 @@ public class ChecklistFieldEditor extends FieldEditor implements ICheckStateList
     {
       final String[] strings = value.split( ";" );
 
-      final List<Object> elementsToCheck = new ArrayList<Object>( strings.length );
+      final List<Object> elementsToCheck = new ArrayList<>( strings.length );
       Collections.addAll( elementsToCheck, m_content );
 
       for( final String string : strings )
@@ -152,9 +140,6 @@ public class ChecklistFieldEditor extends FieldEditor implements ICheckStateList
     }
   }
 
-  /**
-   * @see org.eclipse.jface.preference.FieldEditor#doStore()
-   */
   @Override
   protected void doStore( )
   {
@@ -162,7 +147,7 @@ public class ChecklistFieldEditor extends FieldEditor implements ICheckStateList
     {
       final StringBuffer selection = new StringBuffer();
 
-      final List<Object> checked = m_checkedElements == null ? new ArrayList<Object>() : Arrays.asList( m_checkedElements );
+      final List<Object> checked = m_checkedElements == null ? new ArrayList<>() : Arrays.asList( m_checkedElements );
 
       for( final Object element : m_content )
       {
@@ -173,9 +158,6 @@ public class ChecklistFieldEditor extends FieldEditor implements ICheckStateList
     }
   }
 
-  /**
-   * @see org.eclipse.jface.preference.FieldEditor#getNumberOfControls()
-   */
   @Override
   public int getNumberOfControls( )
   {

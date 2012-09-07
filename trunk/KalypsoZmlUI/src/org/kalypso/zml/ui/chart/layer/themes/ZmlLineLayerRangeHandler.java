@@ -186,7 +186,7 @@ public class ZmlLineLayerRangeHandler
     {
       final ClipHelper helper = new ClipHelper( clip );
       final IPair<Number, Number>[][] clippedPoints = helper.clipAsLine( filteredPoints );
-      final Collection<IPair<Number, Number>> points = new ArrayList<IPair<Number, Number>>();
+      final Collection<IPair<Number, Number>> points = new ArrayList<>();
       for( final IPair<Number, Number>[] clipPoints : clippedPoints )
         points.addAll( Arrays.asList( clipPoints ) );
       return points.toArray( new IPair[points.size()] );

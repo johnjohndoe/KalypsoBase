@@ -17,9 +17,9 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 @SuppressWarnings("restriction")
 public class CalculationChainMember extends Feature_Impl implements ICalculationChainMember
 {
-  private final FeatureBindingCollection<ICalculationChainMemberEntry> m_inputs = new FeatureBindingCollection<ICalculationChainMemberEntry>( this, ICalculationChainMemberEntry.class, QNAME_PROP_INPUTS );
+  private final FeatureBindingCollection<ICalculationChainMemberEntry> m_inputs = new FeatureBindingCollection<>( this, ICalculationChainMemberEntry.class, QNAME_PROP_INPUTS );
 
-  private final FeatureBindingCollection<ICalculationChainMemberEntry> m_outputs = new FeatureBindingCollection<ICalculationChainMemberEntry>( this, ICalculationChainMemberEntry.class, QNAME_PROP_OUTPUTS );
+  private final FeatureBindingCollection<ICalculationChainMemberEntry> m_outputs = new FeatureBindingCollection<>( this, ICalculationChainMemberEntry.class, QNAME_PROP_OUTPUTS );
 
   public CalculationChainMember( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {

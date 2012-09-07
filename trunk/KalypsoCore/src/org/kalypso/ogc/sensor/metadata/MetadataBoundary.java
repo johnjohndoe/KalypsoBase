@@ -112,7 +112,7 @@ public final class MetadataBoundary implements IMetadataBoundary
 
   public static String[] findBoundaryKeys( final MetadataList metadata )
   {
-    final Set<String> keys = new HashSet<String>();
+    final Set<String> keys = new HashSet<>();
 
     final Set<Entry<Object, Object>> entries = metadata.entrySet();
     for( final Entry<Object, Object> entry : entries )
@@ -129,7 +129,7 @@ public final class MetadataBoundary implements IMetadataBoundary
   public static String[] findBoundaryKeys( final MetadataList metadata, final String type )
   {
     final Pattern pattern = new Pattern( BOUNDARY_PREFIX + type + ".*" ); //$NON-NLS-1$
-    final List<String> found = new ArrayList<String>();
+    final List<String> found = new ArrayList<>();
 
     final String[] keys = findBoundaryKeys( metadata );
     for( final String key : keys )
@@ -143,7 +143,7 @@ public final class MetadataBoundary implements IMetadataBoundary
 
   public static String[] findBoundaryKeys( final MetadataList metadata, final Pattern pattern )
   {
-    final Set<String> found = new LinkedHashSet<String>();
+    final Set<String> found = new LinkedHashSet<>();
     final Set<Object> keys = metadata.keySet();
     for( final Object key : keys )
     {
@@ -156,7 +156,7 @@ public final class MetadataBoundary implements IMetadataBoundary
 
   public static MetadataBoundary[] getBoundaries( final MetadataList metadata, final String[] keys )
   {
-    final List<MetadataBoundary> boundaries = new ArrayList<MetadataBoundary>();
+    final List<MetadataBoundary> boundaries = new ArrayList<>();
 
     for( final String key : keys )
     {
@@ -170,7 +170,7 @@ public final class MetadataBoundary implements IMetadataBoundary
 
   /**
    * Gets a {@link MetadataBoundary} from the metadata.
-   * 
+   *
    * @param defaultValue
    *          Used, if the property is defined but cannot be parsed.
    * @return <code>null</code>, if the either the key is <code>null</code> or the property is not defined.
