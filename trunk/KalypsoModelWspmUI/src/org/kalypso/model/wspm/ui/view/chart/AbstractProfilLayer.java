@@ -416,6 +416,9 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
       return null;
 
     final IComponent target = getTargetComponent();
+    if( target == null )
+      return null;
+
     final FindMinMaxVisitor visitor = new FindMinMaxVisitor( target.getId() );
     m_profil.accept( visitor, 1 );
 
