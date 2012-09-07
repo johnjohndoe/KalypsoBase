@@ -85,7 +85,7 @@ public class WPSQueuedSimulationService
   }
 
   /** Map of {@link WPSSimulationThread}s */
-  private final Map<String, WPSSimulationThread> m_threads = new HashMap<String, WPSSimulationThread>();
+  private final Map<String, WPSSimulationThread> m_threads = new HashMap<>();
 
   /**
    * Retrieves the simulation.
@@ -258,7 +258,7 @@ public class WPSQueuedSimulationService
 
     startScheduling();
 
-    return cjt == null ? null : cjt.getJobInfo();
+    return cjt.getJobInfo();
   }
 
   public void scheduleJobs( )

@@ -71,7 +71,7 @@ public class HMOReader
    */
   public final LinearRing[] read( final Reader r, final GeometryFactory gf ) throws IOException, ParseException, InterruptedIOException
   {
-    final List<LinearRing> triangles = new ArrayList<LinearRing>();
+    final List<LinearRing> triangles = new ArrayList<>();
 
     final ITriangleReceiver receiver = new ITriangleReceiver()
     {
@@ -101,7 +101,7 @@ public class HMOReader
    */
   public final void read( final Reader r, final ITriangleReceiver receiver ) throws IOException, ParseException, InterruptedIOException
   {
-    final List<Coordinate> points = new ArrayList<Coordinate>();
+    final List<Coordinate> points = new ArrayList<>();
 
     final LineNumberReader lnr = new LineNumberReader( r, 1024 * 1024 );
     while( lnr.ready() )

@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.java.lang;
 
@@ -48,7 +48,7 @@ import java.util.List;
  * loop processing, but that should not break the loop. Better, the exceptions that occur are caught and added to this
  * container. Once the loop processing is finished, the method isEmpty() can be called to check if it is necessary to
  * throw the MultiException or not.
- * 
+ *
  * @author schlienger
  */
 public class MultiException extends Exception
@@ -60,9 +60,6 @@ public class MultiException extends Exception
     super();
   }
 
-  /**
-   * @see java.lang.Object#finalize()
-   */
   @Override
   protected void finalize( ) throws Throwable
   {
@@ -75,14 +72,11 @@ public class MultiException extends Exception
   public void addException( final Exception e )
   {
     if( m_exceptions == null )
-      m_exceptions = new LinkedList<Exception>();
+      m_exceptions = new LinkedList<>();
 
     m_exceptions.add( e );
   }
 
-  /**
-   * @see java.lang.Throwable#getMessage()
-   */
   @Override
   public String getMessage( )
   {
@@ -120,11 +114,8 @@ public class MultiException extends Exception
     return m_exceptions == null || m_exceptions.size() == 0;
   }
 
-  /**
-   * @see java.lang.Throwable#getCause()
-   */
   @Override
-  public Throwable getCause( )
+  public synchronized Throwable getCause( )
   {
     if( m_exceptions.size() == 0 )
       return super.getCause();

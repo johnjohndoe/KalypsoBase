@@ -112,11 +112,11 @@ public class TriangleExe
     BufferedReader eleReader = null;
     PrintStream pwSimuLog;
 
-    final List<GM_Triangle> triangles = new LinkedList<GM_Triangle>();
+    final List<GM_Triangle> triangles = new LinkedList<>();
 
     /* prepare */
-    final List<TriangleVertex> nodeList = new LinkedList<TriangleVertex>();
-    final List<TriangleSegment> segmentList = new LinkedList<TriangleSegment>();
+    final List<TriangleVertex> nodeList = new LinkedList<>();
+    final List<TriangleSegment> segmentList = new LinkedList<>();
 
     int i = 0;
 
@@ -296,7 +296,7 @@ public class TriangleExe
 
   public static List<GM_Surface< ? extends GM_SurfacePatch>> parseTriangleElementOutput( final BufferedReader eleReader, final String crs, final GM_Position[] points ) throws IOException, GM_Exception
   {
-    final List<GM_Surface< ? extends GM_SurfacePatch>> surfaces = new ArrayList<GM_Surface< ? extends GM_SurfacePatch>>();
+    final List<GM_Surface< ? extends GM_SurfacePatch>> surfaces = new ArrayList<>();
 
     eleReader.readLine(); // ignore first line
     while( eleReader.ready() )

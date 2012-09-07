@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.observation.client.repository;
 
@@ -141,7 +141,7 @@ public class ServiceRepositoryItem implements IRepositoryItem
     {
       final IObservationService service = m_rep.getService();
 
-      final List<IRepositoryItem> items = new ArrayList<IRepositoryItem>();
+      final List<IRepositoryItem> items = new ArrayList<>();
       final ItemBean[] beans = service.getChildren( m_bean );
 
       for( final ItemBean bean : beans )
@@ -164,11 +164,8 @@ public class ServiceRepositoryItem implements IRepositoryItem
     }
   }
 
-  /**
-   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-   */
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class anotherClass )
+  public Object getAdapter( final Class anotherClass )
   {
     if( anotherClass == IObservation.class )
     {

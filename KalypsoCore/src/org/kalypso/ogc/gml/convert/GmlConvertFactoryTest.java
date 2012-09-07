@@ -73,6 +73,6 @@ public class GmlConvertFactoryTest extends Assert
   {
     final File file = new File( dir, filename );
     final URL url = file.toURI().toURL();
-    assertTrue( Messages.getString( "org.kalypso.ogc.gml.convert.GmlConvertFactoryTest.10" ), GmlConvertFactory.convertXml( url, m_urlUtilities, new HashMap<Object, Object>() ).isOK() ); //$NON-NLS-1$
+    assertTrue( Messages.getString( "org.kalypso.ogc.gml.convert.GmlConvertFactoryTest.10" ), GmlConvertFactory.convertXml( url, m_urlUtilities, new HashMap<>() ).isOK() ); //$NON-NLS-1$
   }
 }

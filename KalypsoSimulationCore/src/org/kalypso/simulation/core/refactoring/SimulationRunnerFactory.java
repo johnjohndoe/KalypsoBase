@@ -138,7 +138,7 @@ public class SimulationRunnerFactory
 
   public static List<String> resolveOutputs( final List<Output> output )
   {
-    final List<String> myOutputs = new ArrayList<String>();
+    final List<String> myOutputs = new ArrayList<>();
     for( final Output o : output )
     {
       myOutputs.add( o.getId() );
@@ -149,7 +149,7 @@ public class SimulationRunnerFactory
 
   public static Map<String, Object> resolveInputs( final List<Input> input )
   {
-    final Map<String, Object> myInputs = new HashMap<String, Object>();
+    final Map<String, Object> myInputs = new HashMap<>();
 
     for( final Input i : input )
     {

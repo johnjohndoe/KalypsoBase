@@ -75,7 +75,7 @@ public class ZmlRuleDataSource extends AbstractZmlCellRuleImplementation
 
   protected static final ColorRegistry COLOR_REGISTRY = new ColorRegistry();
 
-  private static List<Integer> COLORS = new ArrayList<Integer>();
+  private static List<Integer> COLORS = new ArrayList<>();
 
   @Override
   public String getIdentifier( )

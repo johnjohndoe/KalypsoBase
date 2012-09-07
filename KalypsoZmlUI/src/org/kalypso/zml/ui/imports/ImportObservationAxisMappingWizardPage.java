@@ -71,7 +71,7 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
 {
   private Composite m_topLevel;
 
-  private final List<WidgetLine> m_widgetLines = new ArrayList<WidgetLine>();
+  private final List<WidgetLine> m_widgetLines = new ArrayList<>();
 
   private INativeObservationAdapter m_nativeAdapter;
 
@@ -158,7 +158,7 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
 
   private IAxis[] createMappedAxis( final IAxis[] axisSrc, final IAxis[] axisTarget )
   {
-    final List<IAxis> result = new ArrayList<IAxis>();
+    final List<IAxis> result = new ArrayList<>();
     for( final IAxis src : axisSrc )
     {
       boolean mapped = false;
@@ -259,7 +259,7 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
 
   public IAxis[] getAxisMappingSrc( )
   {
-    final List<IAxis> result = new ArrayList<IAxis>();
+    final List<IAxis> result = new ArrayList<>();
     for( int i = 0; i < m_widgetLines.size(); i++ )
     {
       final WidgetLine wl = m_widgetLines.get( i );
@@ -275,7 +275,7 @@ public class ImportObservationAxisMappingWizardPage extends WizardPage implement
 
   public IAxis[] getAxisMappingTarget( )
   {
-    final List<IAxis> result = new ArrayList<IAxis>();
+    final List<IAxis> result = new ArrayList<>();
     for( int i = 0; i < m_widgetLines.size(); i++ )
     {
       final WidgetLine wl = m_widgetLines.get( i );

@@ -53,7 +53,7 @@ import org.kalypso.repository.utils.RepositoryVisitors;
 
 /**
  * An item of a <code>FileRepository</code> that represents a <code>File</code>.
- * 
+ *
  * @author schlienger
  */
 public class FileItem implements IRepositoryItem
@@ -128,11 +128,8 @@ public class FileItem implements IRepositoryItem
     return getName();
   }
 
-  /**
-   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-   */
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class anotherClass )
+  public Object getAdapter( final Class anotherClass )
   {
     if( anotherClass == File.class )
       return m_file;
@@ -140,9 +137,6 @@ public class FileItem implements IRepositoryItem
     return null;
   }
 
-  /**
-   * @see org.kalypso.repository.IRepositoryItem#getRepository()
-   */
   @Override
   public IRepository getRepository( )
   {
@@ -151,7 +145,7 @@ public class FileItem implements IRepositoryItem
 
   /**
    * Returns the identifier of the FileRepository and the relative path of the file in the repository
-   * 
+   *
    * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
    */
   @Override

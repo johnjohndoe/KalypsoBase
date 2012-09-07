@@ -149,7 +149,6 @@ public abstract class AbstractManagedTabViewer<DATA>
     return m_tabViewer.getTabFolder();
   }
 
-  @SuppressWarnings("unchecked")
   protected ITypedTabList<DATA> getListInput( )
   {
     return (ITypedTabList<DATA>) getViewer().getInput();

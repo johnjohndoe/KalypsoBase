@@ -469,7 +469,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     return new Color( cc[0], cc[1], cc[2], cc[3] );
   }
 
-  private void paintCellWise( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final String targetCRS, final int clusterSize, final GeoGridCell clippedMinCell, final GeoGridCell clippedMaxCell, final IProgressMonitor monitor ) throws GeoGridException, CoreException
+  private void paintCellWise( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final String targetCRS, final int clusterSize, final GeoGridCell clippedMinCell, final GeoGridCell clippedMaxCell, final IProgressMonitor monitor ) throws GeoGridException
   {
     monitor.beginTask( "Painting cells", clippedMaxCell.y + 2 - clippedMinCell.y );
 

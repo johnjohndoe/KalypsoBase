@@ -135,7 +135,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * ISelectionProvider</li>
  * <li></li>
  * </ul>
- * 
+ *
  * @see org.eclipse.jface.viewers.IPostSelectionProvider
  */
 public class FeatureView extends ViewPart implements ModellEventListener
@@ -589,7 +589,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
     if( feature == null )
       return null;
 
-    final Set<FeatureviewType> types = new HashSet<FeatureviewType>( 5 );
+    final Set<FeatureviewType> types = new HashSet<>( 5 );
     m_featureComposite.collectViewTypes( types );
 
     return types.toArray( new FeatureviewType[types.size()] );

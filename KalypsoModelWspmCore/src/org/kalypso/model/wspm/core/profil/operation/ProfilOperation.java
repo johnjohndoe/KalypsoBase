@@ -61,11 +61,11 @@ import org.kalypso.model.wspm.core.profil.changes.IllegalChange;
 
 public final class ProfilOperation extends AbstractOperation
 {
-  private final List<IProfilChange> m_undoChanges = new ArrayList<IProfilChange>();
+  private final List<IProfilChange> m_undoChanges = new ArrayList<>();
 
   private final IProfil m_profile;
 
-  private final List<IProfilChange> m_changes = new ArrayList<IProfilChange>();
+  private final List<IProfilChange> m_changes = new ArrayList<>();
 
   private final boolean m_rollbackAll;
 
@@ -129,7 +129,7 @@ public final class ProfilOperation extends AbstractOperation
     m_profile.startTransaction( this );
 
     monitor.beginTask( org.kalypso.model.wspm.core.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.operation.ProfilOperation.0" ), changes.size() ); //$NON-NLS-1$
-    final List<IProfilChange> doneChanges = new ArrayList<IProfilChange>();
+    final List<IProfilChange> doneChanges = new ArrayList<>();
     try
     {
       for( final IProfilChange change : changes )

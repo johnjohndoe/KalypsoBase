@@ -69,11 +69,11 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
 {
   private final static QName QNAME_LOCATION = new QName( NS.GML3, "location" ); //$NON-NLS-1$
 
-  private final HashMap<IPropertyType, Integer> m_positionMap = new HashMap<IPropertyType, Integer>();
+  private final HashMap<IPropertyType, Integer> m_positionMap = new HashMap<>();
 
-  private final HashMap<String, IPropertyType> m_localPartMap = new HashMap<String, IPropertyType>();
+  private final HashMap<String, IPropertyType> m_localPartMap = new HashMap<>();
 
-  private final HashMap<QName, IPropertyType> m_qNameMap = new HashMap<QName, IPropertyType>();
+  private final HashMap<QName, IPropertyType> m_qNameMap = new HashMap<>();
 
   // will be initialized in init()
   private IFeatureContentType m_featureContentType = null;
@@ -167,7 +167,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
   {
     final IPropertyType[] properties = m_featureContentType.getProperties();
 
-    final Map<QName, IPropertyType> propertyTypes = new LinkedHashMap<QName, IPropertyType>();
+    final Map<QName, IPropertyType> propertyTypes = new LinkedHashMap<>();
     for( final IPropertyType propertyType : properties )
     {
       // REMARK+HACK: somewhat of a hack, but necessary to have unique properties
@@ -203,7 +203,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
    */
   private void initGeometry( )
   {
-    final List<IValuePropertyType> list = new ArrayList<IValuePropertyType>();
+    final List<IValuePropertyType> list = new ArrayList<>();
 
     final IPropertyType[] properties = getProperties();
     // REMARK: used to get position for gml:location property. We cannot access the position via getProperty(), because
@@ -318,7 +318,6 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
   @Override
   public int getPropertyPosition( final IPropertyType propertyType )
   {
-
     final Integer pos = m_positionMap.get( propertyType );
     if( pos != null )
       return pos.intValue();
@@ -335,7 +334,7 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
       }
     }
 
-    return pos == null ? -1 : pos.intValue();
+    return -1;
   }
 
   /**

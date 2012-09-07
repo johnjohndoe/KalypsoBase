@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- * 
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.service.wps.utils.simulation;
 
@@ -91,7 +91,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * Manages the results for the client. Understands only Files at the moment.
- * 
+ *
  * @author Holger Albert
  */
 public class WPSSimulationResultEater implements ISimulationResultEater
@@ -141,7 +141,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
 
   /**
    * The constructor.
-   * 
+   *
    * @param processDescription
    *          The process description.
    * @param execute
@@ -164,8 +164,8 @@ public class WPSSimulationResultEater implements ISimulationResultEater
 
     m_execute = executeMediator.getV04();
     m_tmpDir = tmpDir;
-    m_results = new LinkedHashMap<String, IOValueType>();
-    m_references = new LinkedHashMap<File, FileObject>();
+    m_results = new LinkedHashMap<>();
+    m_references = new LinkedHashMap<>();
 
     m_outputList = index( m_processDescription );
     m_outputListClient = indexClient( m_execute );
@@ -289,7 +289,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
         if( result instanceof Boolean )
           valueFormChoice = addLiteralValueType( result );
         else
-          throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.7", id ), null ); //$NON-NLS-1$ 
+          throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.7", id ), null ); //$NON-NLS-1$
       }
       else
         throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.8" ) + value + ") with the identifier '" + id + "' is not supported (Literal) ...", null ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -299,10 +299,10 @@ public class WPSSimulationResultEater implements ISimulationResultEater
       if( result instanceof BoundingBoxType )
         valueFormChoice = result;
       else
-        throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.9", id ), null ); //$NON-NLS-1$ 
+        throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.9", id ), null ); //$NON-NLS-1$
     }
     else
-      throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.10", id ), null ); //$NON-NLS-1$ 
+      throw new SimulationException( Messages.getString( "org.kalypso.service.wps.utils.simulation.WPSSimulationResultEater.10", id ), null ); //$NON-NLS-1$
 
     /* Build io value. */
     final IOValueType ioValue = WPS040ObjectFactoryUtilities.buildIOValueType( outputDescription.getIdentifier(), outputDescription.getTitle(), outputDescription.getAbstract(), valueFormChoice );
@@ -329,7 +329,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
     }
 
     final Collection<IOValueType> values = m_results.values();
-    return new ArrayList<IOValueType>( values );
+    return new ArrayList<>( values );
   }
 
   private void copyResult( final File sourceFile, final FileObject destination ) throws IOException
@@ -352,7 +352,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
 
   /**
    * This function will create ComplexValueReference with the given file and copies it directly to the result directory.
-   * 
+   *
    * @param sourceFile
    *          The file to reference in the ComplexValueReference.
    * @return A ComplexValueReference with the given file.
@@ -400,7 +400,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
 
   /**
    * This function will create ComplexValueType with the given object.
-   * 
+   *
    * @param result
    *          An object, which should be added.
    * @return A ComplexValueType with the given file.
@@ -408,7 +408,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
   private ComplexValueType addComplexValueType( final Object result, final String format, final String schema )
   {
     // REMARK: hack/convention: the input must now be the raw input for the anyType element
-    final List<Object> value = new ArrayList<Object>( 1 );
+    final List<Object> value = new ArrayList<>( 1 );
     value.add( result );
 
     /* Build the complex value. */
@@ -417,7 +417,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
 
   /**
    * This function will create a LiteralValueType with the given object (String, Integer, Double, Boolean).
-   * 
+   *
    * @param result
    *          One of the types String, Integer, Double and Boolean.
    * @return A LiteralValueType with the given value.
@@ -458,14 +458,14 @@ public class WPSSimulationResultEater implements ISimulationResultEater
 
   /**
    * Indexes the output values with their id.
-   * 
+   *
    * @param processDescription
    *          The process description, containing the input data.
    * @return The indexed map.
    */
   private Map<String, OutputDescriptionType> index( final ProcessDescriptionType processDescription )
   {
-    final Map<String, OutputDescriptionType> outputList = new LinkedHashMap<String, OutputDescriptionType>();
+    final Map<String, OutputDescriptionType> outputList = new LinkedHashMap<>();
 
     final ProcessOutputs processOutputs = processDescription.getProcessOutputs();
     final List<OutputDescriptionType> outputs = processOutputs.getOutput();
@@ -478,14 +478,14 @@ public class WPSSimulationResultEater implements ISimulationResultEater
 
   /**
    * This function indexes the expected output from the client with their id.
-   * 
+   *
    * @param execute
    *          The execute request contains the ouput expected from the client.
    * @return The indexed map.
    */
   private Map<String, OutputDefinitionType> indexClient( final Execute execute )
   {
-    final Map<String, OutputDefinitionType> outputListClient = new LinkedHashMap<String, OutputDefinitionType>();
+    final Map<String, OutputDefinitionType> outputListClient = new LinkedHashMap<>();
 
     final OutputDefinitionsType outputDefinitions = execute.getOutputDefinitions();
     final List<OutputDefinitionType> outputs = outputDefinitions.getOutput();
@@ -534,7 +534,7 @@ public class WPSSimulationResultEater implements ISimulationResultEater
 
   /**
    * This function returns the result dir of this result eater.
-   * 
+   *
    * @return The result dir.
    */
   public FileObject getResultDir( )

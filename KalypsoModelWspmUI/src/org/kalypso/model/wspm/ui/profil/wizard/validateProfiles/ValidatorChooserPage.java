@@ -91,8 +91,8 @@ public class ValidatorChooserPage extends WizardPage
     buttonpaneldata.grabExcessHorizontalSpace = true;
     buttonpanel.setData( buttonpaneldata );
 
-    final Set<String> selectedRules = new HashSet<String>();
-    final Set<String> selectedFixes = new HashSet<String>();
+    final Set<String> selectedRules = new HashSet<>();
+    final Set<String> selectedFixes = new HashSet<>();
 
     final IDialogSettings dialogSettings = getDialogSettings();
     if( dialogSettings != null )
@@ -156,7 +156,7 @@ public class ValidatorChooserPage extends WizardPage
 
     if( m_rules == null )
     {
-      m_rules = new HashMap<String, IValidatorRule>();
+      m_rules = new HashMap<>();
       final ValidatorRuleSet ruleSet = KalypsoModelWspmCorePlugin.getValidatorSet( "" ); //$NON-NLS-1$
       final IValidatorRule[] rules = ruleSet.getRules();
 
@@ -184,7 +184,7 @@ public class ValidatorChooserPage extends WizardPage
       public void widgetSelected( final SelectionEvent e )
       {
         final IDialogSettings dialogSettings = getDialogSettings();
-        final Set<String> fs = new HashSet<String>();
+        final Set<String> fs = new HashSet<>();
         if( dialogSettings != null )
         {
           final String[] ruleIds = dialogSettings.getArray( SETTINGS_RULES_IDS );

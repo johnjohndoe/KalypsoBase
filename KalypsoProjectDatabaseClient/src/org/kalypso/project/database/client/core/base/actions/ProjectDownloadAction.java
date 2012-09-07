@@ -86,7 +86,7 @@ public class ProjectDownloadAction extends Action
       // categoryId-based (for 'normal' projects) and another that is based on remote projects
       final ProjectTemplate template = new ProjectTemplate( null, String.format( "%s - Version %d", bean.getName(), bean.getProjectVersion() ), bean.getUnixName(), bean.getDescription(), null, bean.getUrl() ); //$NON-NLS-1$
 
-      final Map<ProjectTemplate, KalypsoProjectBean> mapping = new HashMap<ProjectTemplate, KalypsoProjectBean>();
+      final Map<ProjectTemplate, KalypsoProjectBean> mapping = new HashMap<>();
       mapping.put( template, bean );
 
       final RemoteImportWorker worker = new RemoteImportWorker( new ProjectTemplate[] { template }, mapping, m_module );
@@ -98,5 +98,4 @@ public class ProjectDownloadAction extends Action
 
     }
   }
-
 }

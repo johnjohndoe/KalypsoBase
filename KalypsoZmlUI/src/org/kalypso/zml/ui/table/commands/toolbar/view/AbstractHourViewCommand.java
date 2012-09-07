@@ -143,7 +143,7 @@ public abstract class AbstractHourViewCommand extends AbstractHandler implements
   }
 
   @Override
-  public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
+  public void updateElement( final UIElement element, final Map parameters )
   {
     final IServiceLocator locator = element.getServiceLocator();
     final IZmlTable table = ZmlHandlerUtil.getTable( locator );

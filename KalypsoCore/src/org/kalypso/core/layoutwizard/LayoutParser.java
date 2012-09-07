@@ -163,7 +163,7 @@ public class LayoutParser
    * 'layout#layoutPartFactory' for a layout part factory, which can create the layout part. If none could be found, it
    * will create a view layout part, which will check the view registry as well. If there is also no view with this
    * primary id registered, it will display an error.
-   * 
+   *
    * @param primaryId
    *          The first part of the complete id (e.g. gisMap from gisMap.1).
    * @param id
@@ -296,7 +296,7 @@ public class LayoutParser
 
   private ILayoutController[] createControllers( final List<Controller> controllers )
   {
-    final Collection<ILayoutController> result = new ArrayList<ILayoutController>( controllers.size() );
+    final Collection<ILayoutController> result = new ArrayList<>( controllers.size() );
 
     for( final Controller controller : controllers )
     {

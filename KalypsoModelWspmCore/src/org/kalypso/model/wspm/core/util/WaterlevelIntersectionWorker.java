@@ -68,7 +68,7 @@ import com.vividsolutions.jts.util.Assert;
  */
 public class WaterlevelIntersectionWorker
 {
-  private final List<LineSegment> m_segments = new LinkedList<LineSegment>();
+  private final List<LineSegment> m_segments = new LinkedList<>();
 
   private final GeometryFactory m_factory = new GeometryFactory();
 
@@ -136,7 +136,7 @@ public class WaterlevelIntersectionWorker
 
     Assert.isTrue( widthValues.length == heightValues.length );
 
-    final List<Coordinate> crds = new ArrayList<Coordinate>();
+    final List<Coordinate> crds = new ArrayList<>();
 
     for( int i = 0; i < widthValues.length; i++ )
     {
@@ -159,7 +159,7 @@ public class WaterlevelIntersectionWorker
     if( profileCoordinates.size() < 3 )
       return null;
 
-    final List<Coordinate> negativeCoordinates = new ArrayList<Coordinate>();
+    final List<Coordinate> negativeCoordinates = new ArrayList<>();
 
     final Coordinate firstCrd = profileCoordinates.get( 0 );
     final Coordinate lastCrd = profileCoordinates.get( profileCoordinates.size() - 1 );

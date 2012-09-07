@@ -129,7 +129,7 @@ public class TupleModelDataSet
 
   public static TupleModelDataSet[] clone( final TupleModelDataSet[] dataSets )
   {
-    final Set<TupleModelDataSet> clones = new LinkedHashSet<TupleModelDataSet>();
+    final Set<TupleModelDataSet> clones = new LinkedHashSet<>();
     for( final TupleModelDataSet dataSet : dataSets )
     {
       clones.add( dataSet.clone() );

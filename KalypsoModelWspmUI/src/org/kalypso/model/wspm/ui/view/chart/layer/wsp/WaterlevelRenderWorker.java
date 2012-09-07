@@ -66,14 +66,14 @@ import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Calculates the {@link WaterlevelRenderData} for a given profile and water levels.
- * 
+ *
  * @author Gernot Belger
  */
 public class WaterlevelRenderWorker
 {
   private final GeometryFactory m_factory = new GeometryFactory();
 
-  private final Collection<WaterlevelRenderSegment> m_result = new ArrayList<WaterlevelRenderSegment>();
+  private final Collection<WaterlevelRenderSegment> m_result = new ArrayList<>();
 
   private final IProfil m_profile;
 
@@ -180,7 +180,7 @@ public class WaterlevelRenderWorker
     final Double[] widths = ProfilUtil.getValuesFor( m_profile, IWspmConstants.POINT_PROPERTY_BREITE, Double.class );
     final Double[] heights = ProfilUtil.getValuesFor( m_profile, IWspmConstants.POINT_PROPERTY_HOEHE, Double.class );
 
-    final List<Coordinate> area = new ArrayList<Coordinate>( index2 - index1 + 3 );
+    final List<Coordinate> area = new ArrayList<>( index2 - index1 + 3 );
 
     for( int i = index1; i <= index2; i++ )
     {

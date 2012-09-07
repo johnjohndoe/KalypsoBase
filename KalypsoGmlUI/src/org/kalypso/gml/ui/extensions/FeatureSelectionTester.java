@@ -73,7 +73,7 @@ public class FeatureSelectionTester extends PropertyTester
 
   public static IValuePropertyType[] findGeometryTypes( final IFeatureType featureType, final Class< ? > geomType )
   {
-    final Collection<IValuePropertyType> geometries = new ArrayList<IValuePropertyType>();
+    final Collection<IValuePropertyType> geometries = new ArrayList<>();
     final IPropertyType[] geometryProperties = featureType.getProperties();
     for( final IPropertyType propertyType : geometryProperties )
     {

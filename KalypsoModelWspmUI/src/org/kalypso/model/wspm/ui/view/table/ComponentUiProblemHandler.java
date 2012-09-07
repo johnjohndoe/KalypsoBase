@@ -70,7 +70,7 @@ import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
 /**
  * TODO: show marker text as tooltip<br>
  * TODO: open dialog that shows all markers if user clicks on marker (use cell-editor)
- * 
+ *
  * @author Gernot Belger
  * @author Kim Werner
  */
@@ -303,7 +303,7 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
     final IProfilPointMarker[] markers = m_profile.getPointMarkerFor( point instanceof IProfileRecord ? (IProfileRecord) point : new ProfileRecord( m_profile, point ) );
     if( markers == null || markers.length == 0 )
       return null;
-    final HashSet<String> types = new HashSet<String>();
+    final HashSet<String> types = new HashSet<>();
     for( final IProfilPointMarker marker : markers )
     {
       final IComponent type = marker.getComponent();

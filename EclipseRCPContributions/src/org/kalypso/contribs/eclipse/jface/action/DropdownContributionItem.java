@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Control;
  */
 public class DropdownContributionItem<T> extends ControlContribution
 {
-  private final Collection<SelectionListener> m_listeners = new LinkedList<SelectionListener>();
+  private final Collection<SelectionListener> m_listeners = new LinkedList<>();
 
   private T[] m_items;
 

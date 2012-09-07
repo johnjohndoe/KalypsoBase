@@ -222,7 +222,7 @@ public final class TemplateUtilities
       final ITranslatorContext translatorContext = new ITranslatorContext()
       {
         @Override
-        public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+        public Object getAdapter( final Class adapter )
         {
           return null;
         }

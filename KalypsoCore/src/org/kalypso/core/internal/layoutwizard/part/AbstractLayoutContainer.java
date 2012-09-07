@@ -58,7 +58,7 @@ import org.kalypso.core.layoutwizard.part.AbstractLayoutPart;
  */
 public abstract class AbstractLayoutContainer extends AbstractLayoutPart implements ILayoutContainer
 {
-  private final List<ILayoutPart> m_children = new ArrayList<ILayoutPart>();
+  private final List<ILayoutPart> m_children = new ArrayList<>();
 
   public AbstractLayoutContainer( final String id )
   {

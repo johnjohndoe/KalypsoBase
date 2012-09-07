@@ -45,7 +45,7 @@ final public class QuadraticAlgorithm extends TriangulationAlgorithm
     lIntNumberOfFaces = 0;
 
     // Find closest neighbours and add edge to triangulation.
-    final List<Integer> lListValues = new ArrayList<Integer>( 2 );
+    final List<Integer> lListValues = new ArrayList<>( 2 );
     findClosestNeighbours( pTriangulationDT.getPoints(), pTriangulationDT.getAmountOfPoints(), lListValues );// s, t );
 
     pTriangulationDT.addEdge( lListValues.get( 0 ), lListValues.get( 1 ), TriangulationDT.Undefined, TriangulationDT.Undefined );

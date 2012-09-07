@@ -103,7 +103,6 @@ public class ClassUrlCatalog implements IUrlCatalog
    * Die Classennamen werden aus den 'values' der Property-Datei gelesen. Die 'keys' werden ignoriert. Jede Klasse
    * selbst muss ein IUrlCatalog sein.
    */
-  @SuppressWarnings("unchecked")
   public ClassUrlCatalog( final Properties props )
   {
     try

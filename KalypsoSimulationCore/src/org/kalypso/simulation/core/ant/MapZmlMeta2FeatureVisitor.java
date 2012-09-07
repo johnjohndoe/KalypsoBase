@@ -90,7 +90,7 @@ public class MapZmlMeta2FeatureVisitor extends AbstractMonitoredFeatureVisitor i
 
     private String m_format;
 
-    private final List<Metadata> m_metadataEntries = new ArrayList<Metadata>( 2 );
+    private final List<Metadata> m_metadataEntries = new ArrayList<>( 2 );
 
     /** This FeatureProperty will be created */
     public void setTargetProperty( final String targetProperty )

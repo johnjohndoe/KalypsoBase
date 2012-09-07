@@ -8,7 +8,7 @@ import org.kalypso.contribs.java.util.Arrays;
 
 /**
  * holds a range (from-to) and an optional precision with optional factor.
- * 
+ *
  * @author schlienger
  */
 public class Range
@@ -33,7 +33,7 @@ public class Range
 
   /**
    * constructor with default values
-   * 
+   *
    * @param from
    * @param to
    */
@@ -45,7 +45,7 @@ public class Range
 
   /**
    * -
-   * 
+   *
    * @param from
    *          -
    * @param to
@@ -62,7 +62,7 @@ public class Range
 
   /**
    * Constructor
-   * 
+   *
    * @param from
    * @param to
    * @param precision
@@ -78,7 +78,7 @@ public class Range
 
   /**
    * Constructor with Range
-   * 
+   *
    * @param r
    */
   public Range( final Range r )
@@ -88,7 +88,7 @@ public class Range
 
   /**
    * Returns all the values from this range, begining with range.from, and incrementing by step up/down to range.to
-   * 
+   *
    * @return array of doubles
    * @throws IllegalStateException
    *           if step == 0
@@ -103,7 +103,7 @@ public class Range
     // estimate initial size
     final int count = (int) Math.round( Math.abs( m_to - m_from ) / step );
 
-    final ArrayList<Double> values = new ArrayList<Double>( count );
+    final ArrayList<Double> values = new ArrayList<>( count );
 // TDoubleArrayList values = new TDoubleArrayList( count );
 
     int sign = 1;
@@ -122,7 +122,7 @@ public class Range
 
   /**
    * Sets the conversion factor to bring the precision at the same unit as from, to.
-   * 
+   *
    * @param d
    * @throws IllegalArgumentException
    *           if factor == 0
@@ -174,7 +174,7 @@ public class Range
    * Returns a string that describes the contents of this Range<br>
    * Example: [1, 10] precision = 1, factor= 1 will give:<br>
    * [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-   * 
+   *
    * @return -
    */
   public String dump( )
@@ -196,7 +196,7 @@ public class Range
   /**
    * Merges both ranges so that the newly created one is as follows: <code>
    *     r.from = r1.from &lt; r2.from ? r2.from : r1.from
-   *     r.to   = r1.to   &gt; r2.to   ? r2.to   : r1.to 
+   *     r.to   = r1.to   &gt; r2.to   ? r2.to   : r1.to
    * </code>
    * <p>
    * Parameter Ranges can be null:<br>
@@ -204,7 +204,7 @@ public class Range
    * method returns null. <br>
    * If Ranges do not intersect, then merge is NOT possible and therefore it throws an IllegalArgumentException.
    * </p>
-   * 
+   *
    * @param r1
    *          [can be null]
    * @param r2
@@ -237,14 +237,14 @@ public class Range
   /**
    * Merges both ranges so that the newly created one is as follows: <code>
    *     r.from = r1.from &lt; r2.from ? r1.from : r2.from
-   *     r.to   = r1.to   &gt; r2.to   ? r1.to   : r2.to 
+   *     r.to   = r1.to   &gt; r2.to   ? r1.to   : r2.to
    * </code>
    * <p>
    * Parameter Ranges can be null:<br>
    * - one of them is null, then a new range copyied from the non null param is returned - if both Ranges are null, this
    * method returns null.
    * </p>
-   * 
+   *
    * @param r1
    *          [can be null]
    * @param r2
@@ -273,7 +273,7 @@ public class Range
   /**
    * Returns true if this range contains the given value, that is if:<br>
    * range.from &lt;= value &lt;= range.to
-   * 
+   *
    * @param value
    * @return
    */
@@ -287,7 +287,7 @@ public class Range
 
   /**
    * Returns the length of the Range, as Math.abs( to - from )
-   * 
+   *
    * @return
    */
   public double length( )
@@ -304,7 +304,7 @@ public class Range
    * <p>
    * The Double.compare() method is used to perform the comparison.
    * </p>
-   * 
+   *
    * @param other
    *          the other range to compare to
    * @return ?
@@ -343,7 +343,7 @@ public class Range
    * <p>
    * The Double.compare() method is perform the comparisons.
    * </p>
-   * 
+   *
    * @param other
    * @return
    */

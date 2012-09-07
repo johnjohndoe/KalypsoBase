@@ -10,7 +10,7 @@ public class LocalCalculationStack
 
   private Date m_date2 = null;
 
-  private final Set<LocalCalculationStackValue> m_values = new LinkedHashSet<LocalCalculationStackValue>();
+  private final Set<LocalCalculationStackValue> m_values = new LinkedHashSet<>();
 
   public void setDate2( final Date d2 )
   {

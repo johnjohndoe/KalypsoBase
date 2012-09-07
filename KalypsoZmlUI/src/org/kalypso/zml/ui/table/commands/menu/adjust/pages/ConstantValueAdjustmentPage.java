@@ -82,7 +82,7 @@ public class ConstantValueAdjustmentPage extends AbstractAdjustmentPage implemen
       toolkit.createLabel( body, "" );// spacer //$NON-NLS-1$
 
       toolkit.createLabel( body, Messages.ConstantValueAdjustmentPage_2 ).setFont( HEADING );
-      m_textBox = new EnhancedTextBox<Double>( body, toolkit, new DoubeValueWidgetRule() );
+      m_textBox = new EnhancedTextBox<>( body, toolkit, new DoubeValueWidgetRule() );
       m_textBox.setText( getConstantValue() );
       m_textBox.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
       m_textBox.addListener( this );

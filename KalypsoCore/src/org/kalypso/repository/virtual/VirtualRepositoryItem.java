@@ -56,7 +56,7 @@ import org.kalypso.zml.filters.AbstractFilterType;
 
 /**
  * VirtualRepositoryItem
- * 
+ *
  * @author schlienger
  */
 public class VirtualRepositoryItem implements IRepositoryItem
@@ -92,13 +92,13 @@ public class VirtualRepositoryItem implements IRepositoryItem
 
   /**
    * Returns
-   * 
+   *
    * <pre>
    * vrep://&lt;item_id&gt;
    * </pre>
-   * 
+   *
    * .
-   * 
+   *
    * @see org.kalypso.repository.IRepositoryItem#getIdentifier()
    */
   @Override
@@ -150,7 +150,7 @@ public class VirtualRepositoryItem implements IRepositoryItem
 
   /**
    * Sets the filter type. If valid, this allows this item to be adapted into an IObservation.
-   * 
+   *
    * @param filterType
    */
   public void setFilterType( final AbstractFilterType filterType )
@@ -159,7 +159,7 @@ public class VirtualRepositoryItem implements IRepositoryItem
   }
 
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class anotherClass )
+  public Object getAdapter( final Class anotherClass )
   {
     if( m_filterType != null && anotherClass == IObservation.class )
     {

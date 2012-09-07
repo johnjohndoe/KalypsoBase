@@ -157,7 +157,7 @@ public class Proxy
   public List<String> getNonProxyHosts( )
   {
     /* The list of all hosts, that should use no proxy. */
-    final ArrayList<String> noneProxies = new ArrayList<String>();
+    final ArrayList<String> noneProxies = new ArrayList<>();
 
     /* Get the system property. */
     final String noneProxyHosts = System.getProperty( "http.nonProxyHosts" );

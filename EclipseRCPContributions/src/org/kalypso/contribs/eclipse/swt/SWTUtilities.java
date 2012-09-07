@@ -62,7 +62,7 @@ public final class SWTUtilities
     throw new UnsupportedOperationException( "Helper class, do not instantiate" );
   }
 
-  private static final Map<String, Integer> SWT_MAP = new HashMap<String, Integer>();
+  private static final Map<String, Integer> SWT_MAP = new HashMap<>();
   static
   {
     SWT_MAP.put( "SWT.BEGINNING", SWT.BEGINNING ); //$NON-NLS-1$
@@ -111,7 +111,7 @@ public final class SWTUtilities
 
   }
 
-  private static final Map<String, Integer> GRID_DATA_MAP = new HashMap<String, Integer>();
+  private static final Map<String, Integer> GRID_DATA_MAP = new HashMap<>();
   static
   {
     GRID_DATA_MAP.put( "GridData.BEGINNING", new Integer( GridData.BEGINNING ) ); //$NON-NLS-1$

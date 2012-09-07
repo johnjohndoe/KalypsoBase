@@ -27,7 +27,7 @@ import org.kalypso.contribs.eclipse.ui.IEditorPartAction;
 
 /**
  * Helper class to register global actions and more.
- * 
+ *
  * @author Belger
  */
 public class RetargetActionManager
@@ -139,9 +139,9 @@ public class RetargetActionManager
     }
   }
 
-  private final Map<String, RetargetInfo> m_retargetMap = new HashMap<String, RetargetInfo>();
+  private final Map<String, RetargetInfo> m_retargetMap = new HashMap<>();
 
-  private final List<RetargetInfo> m_sortedRetargetinfo = new ArrayList<RetargetInfo>();
+  private final List<RetargetInfo> m_sortedRetargetinfo = new ArrayList<>();
 
   public RetargetInfo addRetargetInfo( final RetargetInfo info )
   {

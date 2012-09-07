@@ -8,7 +8,7 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
 
 /**
  * mapping between xml-typenames and java-classnames for GML-geometry types and XMLSCHEMA-simple types
- * 
+ *
  * @author doemming
  */
 public class Mapper
@@ -111,7 +111,7 @@ public class Mapper
   public static Object defaultValueforJavaType( final IValuePropertyType ftp )
   {
     if( ftp.isList() )
-      return new ArrayList<Object>();
+      return new ArrayList<>();
 
     return defaultValueforJavaType( ftp.getClass() );
   }

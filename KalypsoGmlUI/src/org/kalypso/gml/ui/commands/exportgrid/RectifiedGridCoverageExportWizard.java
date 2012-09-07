@@ -93,7 +93,7 @@ public class RectifiedGridCoverageExportWizard extends Wizard implements IImport
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
     final List< ? > list = selection.toList();
-    final List<ICoverage> coverages = new ArrayList<ICoverage>();
+    final List<ICoverage> coverages = new ArrayList<>();
     for( final Object object : list )
     {
       final ICoverage coverage = toCoverage( object );
@@ -118,7 +118,7 @@ public class RectifiedGridCoverageExportWizard extends Wizard implements IImport
   @Override
   public void addPages( )
   {
-    final Map<Object, String> formats = new HashMap<Object, String>();
+    final Map<Object, String> formats = new HashMap<>();
     formats.put( FMT_ASC, "asc" ); //$NON-NLS-1$
 
     m_saveFileWizardPage = new SaveFileWizardPage( "saveFilePage", Messages.getString( "org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageExportWizard.1" ), null, Messages.getString( "org.kalypso.gml.ui.wizard.grid.RectifiedGridCoverageExportWizard.2" ), formats ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$

@@ -77,7 +77,7 @@ public abstract class AbstractValueRunnable implements ICoreRunnableWithProgress
   @Override
   public final IStatus execute( final IProgressMonitor monitor )
   {
-    final List<IStatus> statis = new ArrayList<IStatus>();
+    final List<IStatus> statis = new ArrayList<>();
     try
     {
       final IObservation observation = m_column.getObservation();

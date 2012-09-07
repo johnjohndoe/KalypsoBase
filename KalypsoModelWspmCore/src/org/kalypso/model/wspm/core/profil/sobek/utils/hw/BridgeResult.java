@@ -75,15 +75,12 @@ public class BridgeResult extends HeightWidthResult
     m_lowerCrds = lowerCrds;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.profile.importer.hw.HeightWidthResult#buildPolygon()
-   */
   @Override
   protected List<Coordinate> buildPolygon( )
   {
     final Coordinate[] lowerCrdArray = m_lowerCrds.toArray( new Coordinate[m_lowerCrds.size()] );
     final CoordinateSequence lowerSeq = CoordinateArraySequenceFactory.instance().create( lowerCrdArray );
-    final List<Coordinate> bridgeCrdList = new LinkedList<Coordinate>( m_lowerCrds );
+    final List<Coordinate> bridgeCrdList = new LinkedList<>( m_lowerCrds );
     final Coordinate[] upperCrdArray = m_upperCrds.toArray( new Coordinate[m_upperCrds.size()] );
     final CoordinateSequence upperSeq = CoordinateArraySequenceFactory.instance().create( upperCrdArray );
 

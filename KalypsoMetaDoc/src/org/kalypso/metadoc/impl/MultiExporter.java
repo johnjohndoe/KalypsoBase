@@ -69,16 +69,13 @@ import org.kalypso.metadoc.ui.ExportableTreeItem;
  * <p>
  * There must be at least the 'id' argument which contains the id of the exporter to use (for a list of valid exporter
  * ids, see the <code>org.kalypso.metadoc.exporter</code> extension point)
- * 
+ *
  * @author belger
  */
 public class MultiExporter extends AbstractExporter
 {
   private IExporter[] m_exporters;
 
-  /**
-   * @see org.kalypso.metadoc.impl.AbstractExporter#init(org.kalypso.contribs.java.lang.ISupplier)
-   */
   @Override
   public void init( final ISupplier supplier ) throws CoreException
   {
@@ -87,7 +84,7 @@ public class MultiExporter extends AbstractExporter
     // read and create sub-exporters
     final Arguments arguments = (Arguments) getFromSupplier( "arguments" );
 
-    final Collection<IStatus> stati = new ArrayList<IStatus>();
+    final Collection<IStatus> stati = new ArrayList<>();
     final ISupplierCreator creator = new ISupplierCreator()
     {
       @Override
@@ -111,9 +108,6 @@ public class MultiExporter extends AbstractExporter
     }
   }
 
-  /**
-   * @see org.kalypso.metadoc.impl.AbstractExporter#createTreeItems(org.kalypso.metadoc.ui.ExportableTreeItem)
-   */
   @Override
   protected ExportableTreeItem[] createTreeItems( final ExportableTreeItem parent ) throws CoreException
   {
@@ -126,7 +120,7 @@ public class MultiExporter extends AbstractExporter
 
   /**
    * Returns the image of the first of its exporters.
-   * 
+   *
    * @see org.kalypso.metadoc.IExporter#getImageDescriptor()
    */
   @Override
@@ -140,7 +134,7 @@ public class MultiExporter extends AbstractExporter
    */
   public static Collection<IExporter> createExporterFromArguments( final Collection<IStatus> stati, final Arguments arguments, final String exporterKey, final ISupplierCreator supplierCreator )
   {
-    final Collection<IExporter> exporters = new ArrayList<IExporter>();
+    final Collection<IExporter> exporters = new ArrayList<>();
 
     final String[] allKeys = arguments.getAllKeys();
 

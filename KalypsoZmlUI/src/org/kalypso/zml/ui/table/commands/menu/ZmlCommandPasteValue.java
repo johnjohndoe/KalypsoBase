@@ -120,7 +120,7 @@ public class ZmlCommandPasteValue extends AbstractHandler
     final TextTransfer transfer = TextTransfer.getInstance();
     final String data = (String) clipboard.getContents( transfer );
 
-    final List<String> strings = new ArrayList<String>();
+    final List<String> strings = new ArrayList<>();
 
     final CSVReader reader = new CSVReader( new StringReader( data ), '\t' );
     final List<String[]> rows = reader.readAll();

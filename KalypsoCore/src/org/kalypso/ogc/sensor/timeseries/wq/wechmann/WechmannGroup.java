@@ -59,12 +59,12 @@ import org.kalypso.ogc.sensor.timeseries.wq.WQException;
 /**
  * A List of WechmannSets sorted according to the date of validity of the WechmannSet objects. You can call the iterator
  * to step through the list in the ascending order of date of validity.
- * 
+ *
  * @author schlienger
  */
 public class WechmannGroup implements IWQConverter
 {
-  private final SortedMap<Date, WechmannSet> m_map = new TreeMap<Date, WechmannSet>();
+  private final SortedMap<Date, WechmannSet> m_map = new TreeMap<>();
 
   /**
    * @param wsets
@@ -85,7 +85,7 @@ public class WechmannGroup implements IWQConverter
 
   /**
    * Returns the WechmannSet that is valid for the given date.
-   * 
+   *
    * @throws WQException
    */
   public WechmannSet getFor( final Date d ) throws WQException

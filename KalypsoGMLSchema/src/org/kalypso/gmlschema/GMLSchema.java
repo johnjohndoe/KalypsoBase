@@ -83,36 +83,36 @@ public class GMLSchema implements IGMLSchema
 {
   private final SchemaDocument m_schemaDocument;
 
-  private final Hashtable<QName, ElementReference> m_refElementHash = new Hashtable<QName, ElementReference>();
+  private final Hashtable<QName, ElementReference> m_refElementHash = new Hashtable<>();
 
-  private final Hashtable<QName, GroupReference> m_refGroupHash = new Hashtable<QName, GroupReference>();
+  private final Hashtable<QName, GroupReference> m_refGroupHash = new Hashtable<>();
 
-  private final Hashtable<QName, SimpleTypeReference> m_refSimpleTypeHash = new Hashtable<QName, SimpleTypeReference>();
+  private final Hashtable<QName, SimpleTypeReference> m_refSimpleTypeHash = new Hashtable<>();
 
-  private final Hashtable<QName, ComplexTypeReference> m_refComplexTypeHash = new Hashtable<QName, ComplexTypeReference>();
+  private final Hashtable<QName, ComplexTypeReference> m_refComplexTypeHash = new Hashtable<>();
 
   private final URL m_context;
 
   private final UrlResolver m_urlResolver;
 
-  private final Hashtable<String, GMLSchema> m_importedSchemasHash = new Hashtable<String, GMLSchema>();
+  private final Hashtable<String, GMLSchema> m_importedSchemasHash = new Hashtable<>();
 
   // TODO comment
-  private final Map<Object, Object> m_buildedObjectHash = new IdentityHashMap<Object, Object>();
+  private final Map<Object, Object> m_buildedObjectHash = new IdentityHashMap<>();
 
-  private final List<IPropertyType> m_propertyTypeList = new ArrayList<IPropertyType>();
+  private final List<IPropertyType> m_propertyTypeList = new ArrayList<>();
 
-  private final List<IRelationType> m_relationTypeList = new ArrayList<IRelationType>();
+  private final List<IRelationType> m_relationTypeList = new ArrayList<>();
 
-  private final Hashtable<ComplexType, FeatureContentType> m_featureContentTypes = new Hashtable<ComplexType, FeatureContentType>();
+  private final Hashtable<ComplexType, FeatureContentType> m_featureContentTypes = new Hashtable<>();
 
-  private final Hashtable<SimpleType, IPropertyContentType> m_propertyContentTypes = new Hashtable<SimpleType, IPropertyContentType>();
+  private final Hashtable<SimpleType, IPropertyContentType> m_propertyContentTypes = new Hashtable<>();
 
-  private final Hashtable<ComplexType, RelationContentType> m_relationContentTypes = new Hashtable<ComplexType, RelationContentType>();
+  private final Hashtable<ComplexType, RelationContentType> m_relationContentTypes = new Hashtable<>();
 
   private final String m_gmlVersion;
 
-  private final Map<QName, IFeatureType> m_featureTypeMap = new HashMap<QName, IFeatureType>();
+  private final Map<QName, IFeatureType> m_featureTypeMap = new HashMap<>();
 
   /**
    * we do not support circular imports at the moment, these are allowed from W3C, only circular element definitions are
@@ -120,7 +120,7 @@ public class GMLSchema implements IGMLSchema
    * TODO implement support of circular schema imports: suggesting of concept: move time of import processing to after
    * parsing but befoe initilazing ask doemming.
    */
-  private final List<SchemaDocument> m_includedSchemas = new ArrayList<SchemaDocument>();
+  private final List<SchemaDocument> m_includedSchemas = new ArrayList<>();
 
   /**
    * Additional schemas, which are not known as imported schemas. They are loaded implicitly while searching for certain
@@ -129,17 +129,17 @@ public class GMLSchema implements IGMLSchema
    * We need to remember these schemas, to resolve substituting feature types.
    * </p>
    */
-  private final Map<String, GMLSchema> m_additionalSchemas = new HashMap<String, GMLSchema>();
+  private final Map<String, GMLSchema> m_additionalSchemas = new HashMap<>();
 
   /** Ignored namespaces: these two schemas import each other, we don't know how to handle this. */
-  private final List<String> m_ignoreNameSpaces = new ArrayList<String>();
+  private final List<String> m_ignoreNameSpaces = new ArrayList<>();
   {
     m_ignoreNameSpaces.add( "http://www.w3.org/2001/SMIL20/" ); //$NON-NLS-1$
     m_ignoreNameSpaces.add( "http://www.w3.org/2001/SMIL20/Language" ); //$NON-NLS-1$
   }
 
   /* list of schemas that are referenced by include and have allready been processed */
-  private final List<URL> m_processedIncludeUrls = new ArrayList<URL>();
+  private final List<URL> m_processedIncludeUrls = new ArrayList<>();
 
   private final ResourceBundle m_resourceBundle;
 

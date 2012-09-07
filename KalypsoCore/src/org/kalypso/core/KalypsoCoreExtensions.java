@@ -108,7 +108,7 @@ public final class KalypsoCoreExtensions
       final IExtensionRegistry registry = Platform.getExtensionRegistry();
       final IExtensionPoint extensionPoint = registry.getExtensionPoint( VISITOR_EXTENSION_POINT );
       final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
-      THE_VISITOR_MAP = new HashMap<String, IConfigurationElement>( configurationElements.length );
+      THE_VISITOR_MAP = new HashMap<>( configurationElements.length );
       for( final IConfigurationElement element : configurationElements )
       {
         final String configid = element.getAttribute( "id" ); //$NON-NLS-1$
@@ -182,7 +182,7 @@ public final class KalypsoCoreExtensions
       final IExtensionRegistry registry = Platform.getExtensionRegistry();
       final IExtensionPoint extensionPoint = registry.getExtensionPoint( THEME_INFO_EXTENSION_POINT );
       final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
-      THE_THEME_INFO_MAP = new HashMap<String, IConfigurationElement>( configurationElements.length );
+      THE_THEME_INFO_MAP = new HashMap<>( configurationElements.length );
       for( final IConfigurationElement element : configurationElements )
       {
         final String configid = element.getAttribute( "id" ); //$NON-NLS-1$
@@ -230,7 +230,7 @@ public final class KalypsoCoreExtensions
    */
   public static IGmlSourceProvider[] createGmlSourceProvider( final String category )
   {
-    final List<IGmlSourceProvider> result = new ArrayList<IGmlSourceProvider>();
+    final List<IGmlSourceProvider> result = new ArrayList<>();
 
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
     final IExtensionPoint extensionPoint = registry.getExtensionPoint( GML_SOURCE_PROVIDER_EXTENSION_POINT );
@@ -363,7 +363,7 @@ public final class KalypsoCoreExtensions
   @Deprecated
   public static INativeObservationAdapter[] createNativeAdaptersOldStyle( )
   {
-    final List<INativeObservationAdapter> adapters = new ArrayList<INativeObservationAdapter>();
+    final List<INativeObservationAdapter> adapters = new ArrayList<>();
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
 
     final IExtensionPoint extensionPoint = registry.getExtensionPoint( "org.kalypso.core.nativeObsAdapter" ); //$NON-NLS-1$

@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.Servlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,7 +21,7 @@ import org.kalypso.service.ogc.interceptor.RequestInterceptorExtensions;
  * @author Gernot Belger
  */
 @SuppressWarnings("serial")
-public class OGCServlet extends HttpServlet implements Servlet
+public class OGCServlet extends HttpServlet
 {
   /**
    * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest,
@@ -54,7 +53,7 @@ public class OGCServlet extends HttpServlet implements Servlet
 
   /**
    * This function checks the given requests, and if a service could handle it.
-   * 
+   *
    * @param request
    *          The request.
    * @param response
@@ -116,7 +115,7 @@ public class OGCServlet extends HttpServlet implements Servlet
 
   /**
    * This function checks, if the parameter which are mandatory for the given service exists.
-   * 
+   *
    * @param request
    *          The request.
    * @param id

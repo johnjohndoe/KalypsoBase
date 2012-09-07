@@ -86,7 +86,7 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
  * This feature visitor copies one timeserie over another. It is used to commit the prognose time series to the IMS.
- * 
+ *
  * @author schlienger
  */
 public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisitor implements FeatureVisitor
@@ -226,7 +226,7 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
 
   private IAxis[] fetchTargetAxes( final IObservation templateObservation )
   {
-    final Collection<IAxis> result = new ArrayList<IAxis>();
+    final Collection<IAxis> result = new ArrayList<>();
 
     final IAxis[] axisList = templateObservation.getAxes();
 
@@ -283,7 +283,7 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
     if( values == null )
       return null;
 
-    final Map<IAxis, IAxis> map = new HashMap<IAxis, IAxis>();
+    final Map<IAxis, IAxis> map = new HashMap<>();
     for( int i = 0; i < targetAxes.length; i++ )
     {
       try

@@ -56,7 +56,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
  * Helper methods for Feature-selection.
- * 
+ *
  * @author belger
  */
 public final class FeatureSelectionHelper
@@ -78,14 +78,14 @@ public final class FeatureSelectionHelper
    * GMLEditorContentProvider2 is defined in the KalypsoUI plugin and this helper lives in KalypsoCore. adding the
    * linked Element Support would add a new dependency. do we still need the LinkedFeatureElement2 object or can we
    * model it differnetly since the GMLWorkspace api changed considerably?
-   * 
+   *
    * @param filterWorkspace
    *          if null, all features are returned
    */
   public static Feature[] getFeatures( final IFeatureSelection selection, final GMLWorkspace filterWorkspace )
   {
     final List< ? > list = selection.toList();
-    final ArrayList<Feature> features = new ArrayList<Feature>( list.size() );
+    final ArrayList<Feature> features = new ArrayList<>( list.size() );
     for( final Object element : list )
     {
       final Feature feature;
@@ -98,7 +98,7 @@ public final class FeatureSelectionHelper
 
       if( feature != null )
       {
-        if( filterWorkspace == null || filterWorkspace != null && selection.getWorkspace( feature ) == filterWorkspace )
+        if( filterWorkspace == null && selection.getWorkspace( feature ) == filterWorkspace )
           features.add( feature );
       }
     }
@@ -108,7 +108,7 @@ public final class FeatureSelectionHelper
 
   /**
    * This function returns all features contained in the selection which are part of the given theme.
-   * 
+   *
    * @param selection
    *          The selection.
    * @param filterTheme
@@ -125,7 +125,7 @@ public final class FeatureSelectionHelper
     final IFeatureSelectionManager selectionManager = selection.getSelectionManager();
 
     /* Memory for the results. */
-    final ArrayList<Feature> results = new ArrayList<Feature>();
+    final ArrayList<Feature> results = new ArrayList<>();
 
     /* Get all features of the filter theme. */
     final FeatureList features = filterTheme.getFeatureList();
@@ -171,7 +171,7 @@ public final class FeatureSelectionHelper
   public static Feature[] getAllFeaturesWithGeometry( final IFeatureSelection selection )
   {
     final Feature[] features = getFeatures( selection );
-    final ArrayList<Feature> result = new ArrayList<Feature>();
+    final ArrayList<Feature> result = new ArrayList<>();
     for( final Feature feature : features )
     {
       final GM_Object[] geometryProperties = feature.getGeometryPropertyValues();
@@ -185,7 +185,7 @@ public final class FeatureSelectionHelper
   {
     final EasyFeatureWrapper[] features = selection.getAllFeatures();
 
-    final List<Feature> resFeatures = new ArrayList<Feature>();
+    final List<Feature> resFeatures = new ArrayList<>();
 
     for( final EasyFeatureWrapper feature2 : features )
     {
@@ -210,8 +210,8 @@ public final class FeatureSelectionHelper
   public static EasyFeatureWrapper[] mergeWrapper( final EasyFeatureWrapper[] one, final EasyFeatureWrapper[] two )
   {
     // wird verwendt um zu prüfen ob das Feature schon im ersten EasyFeatureWrapper[] array vorkommt
-    final HashSet<Feature> features = new HashSet<Feature>();
-    final HashSet<EasyFeatureWrapper> res = new HashSet<EasyFeatureWrapper>();
+    final HashSet<Feature> features = new HashSet<>();
+    final HashSet<EasyFeatureWrapper> res = new HashSet<>();
     for( final EasyFeatureWrapper wrapper : one )
     {
       final boolean b = features.add( wrapper.getFeature() );

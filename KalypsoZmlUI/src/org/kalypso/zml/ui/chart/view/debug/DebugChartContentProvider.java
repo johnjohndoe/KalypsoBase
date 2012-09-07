@@ -92,7 +92,7 @@ public class DebugChartContentProvider implements ITreeContentProvider
       final ILayerContainer container = (ILayerContainer) element;
       final ILayerManager layerManager = container.getLayerManager();
 
-      final Set<Object> children = new LinkedHashSet<Object>();
+      final Set<Object> children = new LinkedHashSet<>();
       Collections.addAll( children, getDebugProperties( container ) );
       Collections.addAll( children, layerManager.getLayers() );
 
@@ -109,7 +109,7 @@ public class DebugChartContentProvider implements ITreeContentProvider
 
     final IChartLayer layer = (IChartLayer) container;
 
-    final Set<String> properties = new LinkedHashSet<String>();
+    final Set<String> properties = new LinkedHashSet<>();
 
     final ICoordinateMapper mapper = layer.getCoordinateMapper();
     if( Objects.isNotNull( mapper ) )

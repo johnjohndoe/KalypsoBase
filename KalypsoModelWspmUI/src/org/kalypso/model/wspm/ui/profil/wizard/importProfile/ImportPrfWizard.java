@@ -118,7 +118,7 @@ public class ImportPrfWizard extends Wizard implements IWorkbenchWizard
       return true;
 
     /* read profiles, show warnings */
-    final List<IProfil> profiles = new ArrayList<IProfil>( files.length );
+    final List<IProfil> profiles = new ArrayList<>( files.length );
     final MultiStatus prfReadStatus = readProfiles( shell, files, profiles );
 
     if( profiles.size() == 0 )

@@ -69,7 +69,7 @@ import org.kalypso.observation.result.IComponent;
 
 /**
  * Guess roughness class from existing ks / kst value
- * 
+ *
  * @author Dirk Kuch
  */
 public class GuessRoughessClassesRunnable implements ICoreRunnableWithProgress
@@ -105,7 +105,7 @@ public class GuessRoughessClassesRunnable implements ICoreRunnableWithProgress
     final IComponent component = m_profile.getPointPropertyFor( m_property );
     final String componentLabel = ComponentUtilities.getComponentLabel( component );
 
-    final List<IStatus> statis = new ArrayList<IStatus>();
+    final List<IStatus> statis = new ArrayList<>();
 
     final IProfileRecord[] points = m_profile.getPoints();
     for( final IProfileRecord point : points )

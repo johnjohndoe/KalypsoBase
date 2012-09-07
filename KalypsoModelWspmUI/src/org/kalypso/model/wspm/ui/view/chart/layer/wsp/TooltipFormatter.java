@@ -56,7 +56,7 @@ import org.kalypso.commons.pair.KeyValueFactory;
  */
 public class TooltipFormatter
 {
-  private final Collection<IKeyValue<String, String>> m_lines = new LinkedList<IKeyValue<String, String>>();
+  private final Collection<IKeyValue<String, String>> m_lines = new LinkedList<>();
 
   private final String m_header;
 

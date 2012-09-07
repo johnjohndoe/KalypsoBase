@@ -63,7 +63,7 @@ import com.vividsolutions.jts.geom.Envelope;
  * REMARK: could not be implemented as a {@link IGeoGridWalker} as the walker does not guarantee the order of walked
  * cells.
  * </p>
- * 
+ *
  * @author Gernot Belger
  */
 public class AscGridExporter
@@ -82,7 +82,7 @@ public class AscGridExporter
 
   /**
    * Writes a grid into a file in the ESRI Ascii Grid format.
-   * 
+   *
    * @throws IOException
    *           If write access to the output file fails.
    */
@@ -124,7 +124,7 @@ public class AscGridExporter
   /**
    * Writes a grid into a formatter in the ESRI Ascii Grid format.
    */
-  public void export( final IGeoGrid inputGrid, final Formatter destination, final IProgressMonitor monitor ) throws GeoGridException, CoreException
+  public void export( final IGeoGrid inputGrid, final Formatter destination, final IProgressMonitor monitor ) throws GeoGridException
   {
     final SubMonitor progress = SubMonitor.convert( monitor, "Writing ascii file", 100 );
 

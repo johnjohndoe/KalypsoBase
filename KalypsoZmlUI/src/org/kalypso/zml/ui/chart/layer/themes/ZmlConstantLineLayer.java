@@ -189,7 +189,7 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
   }
 
   @Override
-  public void paint( final GC gc, ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
+  public void paint( final GC gc, final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
     try
     {
@@ -238,7 +238,7 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
 
     final IMetadataLayerBoundary[] boundaryLayers = buildBoundaries( observation );
 
-    final Set<ZmlConstantLineBean> descriptors = new LinkedHashSet<ZmlConstantLineBean>();
+    final Set<ZmlConstantLineBean> descriptors = new LinkedHashSet<>();
     for( final IMetadataLayerBoundary boundaryLayer : boundaryLayers )
     {
       final IMetadataBoundary boundary = boundaryLayer.getBoundary();

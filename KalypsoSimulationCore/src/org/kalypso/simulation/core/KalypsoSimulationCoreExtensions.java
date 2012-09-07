@@ -104,7 +104,7 @@ public class KalypsoSimulationCoreExtensions
 
     final IExtension[] extensions = point.getExtensions();
 
-    final Map<String, IConfigurationElement> elements = new HashMap<String, IConfigurationElement>();
+    final Map<String, IConfigurationElement> elements = new HashMap<>();
     for( final IExtension extension : extensions )
     {
       final IConfigurationElement[] configurationElements = extension.getConfigurationElements();
@@ -176,7 +176,7 @@ public class KalypsoSimulationCoreExtensions
    */
   public static List<ISimulation> createSimulations( ) throws CoreException
   {
-    final List<ISimulation> simulations = new LinkedList<ISimulation>();
+    final List<ISimulation> simulations = new LinkedList<>();
 
     final Map<String, IConfigurationElement> elements = readSimulations();
     final Iterator<String> keys = elements.keySet().iterator();
@@ -233,7 +233,7 @@ public class KalypsoSimulationCoreExtensions
 
     final IExtension[] extensions = point.getExtensions();
 
-    final List<IConfigurationElement> services = new ArrayList<IConfigurationElement>();
+    final List<IConfigurationElement> services = new ArrayList<>();
     for( final IExtension extension : extensions )
     {
       final IConfigurationElement[] configurationElements = extension.getConfigurationElements();
@@ -247,7 +247,7 @@ public class KalypsoSimulationCoreExtensions
   public static ISimulationService[] createServices( )
   {
     final List<IConfigurationElement> serviceElements = readServices();
-    final List<ISimulationService> services = new ArrayList<ISimulationService>( serviceElements.size() );
+    final List<ISimulationService> services = new ArrayList<>( serviceElements.size() );
     for( final IConfigurationElement element : serviceElements )
     {
       try

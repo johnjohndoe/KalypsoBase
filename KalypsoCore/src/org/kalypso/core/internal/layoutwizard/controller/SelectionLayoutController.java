@@ -98,9 +98,7 @@ public class SelectionLayoutController implements ILayoutController
       final ISelection consumerSelection = consumerProvider.getSelection();
       if( selection instanceof IStructuredSelection && consumerSelection instanceof IStructuredSelection )
       {
-        @SuppressWarnings("unchecked")
         final Set< ? > selectionSet = new HashSet<>( ((IStructuredSelection) selection).toList() );
-        @SuppressWarnings("unchecked")
         final Set< ? > consumerSet = new HashSet<>( ((IStructuredSelection) consumerSelection).toList() );
         if( !selectionSet.equals( consumerSet ) )
           consumerProvider.setSelection( selection );

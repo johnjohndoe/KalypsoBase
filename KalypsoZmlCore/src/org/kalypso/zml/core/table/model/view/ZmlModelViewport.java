@@ -167,7 +167,7 @@ public class ZmlModelViewport
     if( ArrayUtils.isNotEmpty( m_columns ) )
       return m_columns;
 
-    final Set<IZmlModelColumn> collection = new LinkedHashSet<IZmlModelColumn>();
+    final Set<IZmlModelColumn> collection = new LinkedHashSet<>();
     final ZmlModelColumn[] modelColumns = m_model.getAvailableColumns();
     for( final ZmlModelColumn column : modelColumns )
     {
@@ -199,7 +199,7 @@ public class ZmlModelViewport
     if( ArrayUtils.isNotEmpty( m_rows ) )
       return m_rows;
 
-    final Set<IZmlModelRow> collection = new LinkedHashSet<IZmlModelRow>();
+    final Set<IZmlModelRow> collection = new LinkedHashSet<>();
 
     final IZmlModelRow[] modelRows = m_model.getRows();
     for( final IZmlModelRow row : modelRows )
@@ -326,7 +326,7 @@ public class ZmlModelViewport
   // TODO caching?!?
   public IZmlModelValueCell[] getCells( final IZmlModelColumn column )
   {
-    final Set<IZmlModelValueCell> cells = new LinkedHashSet<IZmlModelValueCell>();
+    final Set<IZmlModelValueCell> cells = new LinkedHashSet<>();
 
     final IZmlModelRow[] rows = getRows();
     for( final IZmlModelRow row : rows )

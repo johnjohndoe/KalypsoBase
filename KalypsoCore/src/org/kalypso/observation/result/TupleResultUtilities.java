@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.observation.result;
 
@@ -62,7 +62,7 @@ import org.kalypso.observation.phenomenon.IPhenomenon;
 
 /**
  * TODO: Merge most of the stuff with {@link ComponentUtilities}.
- * 
+ *
  * @author Gernot Belger
  */
 public class TupleResultUtilities
@@ -74,7 +74,7 @@ public class TupleResultUtilities
 
   /**
    * Get component by name.
-   * 
+   *
    * @return null, if no component with the given name was found.
    */
   public static IComponent findComponentByName( final TupleResult result, final String name )
@@ -93,7 +93,7 @@ public class TupleResultUtilities
 
   /**
    * Find component by id.
-   * 
+   *
    * @return The first component with the given id, null, none was found.
    */
   public static IComponent findComponentById( final IObservation<TupleResult> observation, final String id )
@@ -103,7 +103,7 @@ public class TupleResultUtilities
 
   /**
    * Find component by id.
-   * 
+   *
    * @return The first component with the given id, null, none was found.
    */
   public static IComponent findComponentById( final TupleResult result, final String id )
@@ -143,7 +143,7 @@ public class TupleResultUtilities
 
     if( XmlTypes.XS_BOOLEAN.equals( valueTypeName ) )
     {
-      final List<Boolean> values = new ArrayList<Boolean>();
+      final List<Boolean> values = new ArrayList<>();
       for( final IRecord record : result )
       {
         values.add( (Boolean) record.getValue( iComp ) );
@@ -159,7 +159,7 @@ public class TupleResultUtilities
       // TODO think about other numerical types:
       // XmlTypes.XS_BYTE, XmlTypes.XS_DECIMAL, XmlTypes.XS_FLOAT, XmlTypes.XS_INT, XmlTypes.XS_INTEGER,
       // XmlTypes.XS_LONG, XmlTypes.XS_SHORT
-      final List<java.lang.Double> values = new ArrayList<java.lang.Double>();
+      final List<java.lang.Double> values = new ArrayList<>();
       for( final IRecord record : result )
       {
         values.add( (java.lang.Double) record.getValue( iComp ) );
@@ -174,7 +174,7 @@ public class TupleResultUtilities
     {
       // TODO think about other date types
       // XmlTypes.XS_DATETIME, XmlTypes.XS_DURATION, XmlTypes.XS_TIME
-      final List<Date> values = new ArrayList<Date>();
+      final List<Date> values = new ArrayList<>();
       for( final IRecord record : result )
       {
         values.add( (Date) record.getValue( iComp ) );
@@ -187,7 +187,7 @@ public class TupleResultUtilities
     }
     else if( XmlTypes.XS_STRING.equals( valueTypeName ) )
     {
-      final List<String> values = new ArrayList<String>();
+      final List<String> values = new ArrayList<>();
       for( final IRecord record : result )
       {
         values.add( (String) record.getValue( iComp ) );
@@ -200,7 +200,7 @@ public class TupleResultUtilities
     }
     else
     {
-      final List<String> values = new ArrayList<String>();
+      final List<String> values = new ArrayList<>();
       for( final IRecord record : result )
       {
         values.add( record.getValue( iComp ).toString() );
@@ -231,7 +231,7 @@ public class TupleResultUtilities
 
     if( XmlTypes.XS_BOOLEAN.equals( valueTypeName ) )
     {
-      final List<Boolean> values = new ArrayList<Boolean>();
+      final List<Boolean> values = new ArrayList<>();
       for( final IRecord record : result )
       {
         values.add( (Boolean) record.getValue( iComp ) );
@@ -247,7 +247,7 @@ public class TupleResultUtilities
       // TODO think about other numerical types:
       // XmlTypes.XS_BYTE, XmlTypes.XS_DECIMAL, XmlTypes.XS_FLOAT, XmlTypes.XS_INT, XmlTypes.XS_INTEGER,
       // XmlTypes.XS_LONG, XmlTypes.XS_SHORT
-      final List<java.lang.Double> values = new ArrayList<java.lang.Double>();
+      final List<java.lang.Double> values = new ArrayList<>();
       for( final IRecord record : result )
       {
         values.add( (java.lang.Double) record.getValue( iComp ) );
@@ -262,7 +262,7 @@ public class TupleResultUtilities
     {
       // TODO think about other date types
       // XmlTypes.XS_DATETIME, XmlTypes.XS_DURATION, XmlTypes.XS_TIME
-      final List<Date> values = new ArrayList<Date>();
+      final List<Date> values = new ArrayList<>();
       for( final IRecord record : result )
       {
         values.add( (Date) record.getValue( iComp ) );
@@ -275,7 +275,7 @@ public class TupleResultUtilities
     }
     else if( XmlTypes.XS_STRING.equals( valueTypeName ) )
     {
-      final List<String> values = new ArrayList<String>();
+      final List<String> values = new ArrayList<>();
       for( final IRecord record : result )
       {
         values.add( (String) record.getValue( iComp ) );
@@ -288,7 +288,7 @@ public class TupleResultUtilities
     }
     else
     {
-      final List<String> values = new ArrayList<String>();
+      final List<String> values = new ArrayList<>();
       for( final IRecord record : result )
       {
         values.add( record.getValue( iComp ).toString() );
@@ -303,7 +303,7 @@ public class TupleResultUtilities
 
   /**
    * Copies records from one {@link TupleResult} to another.
-   * 
+   *
    * @param componentMap
    *          Map of component ids.
    * @throws IllegalArgumentException
@@ -351,7 +351,7 @@ public class TupleResultUtilities
 
   /**
    * Returns the index of the first component with a given id.
-   * 
+   *
    * @return -1, if no such component exists.
    */
   public static int indexOfComponent( final IObservation<TupleResult> observation, final String id )
@@ -361,7 +361,7 @@ public class TupleResultUtilities
 
   /**
    * Returns the index of the first component with a given id.
-   * 
+   *
    * @return -1, if no such component exists.
    */
   public static int indexOfComponent( final TupleResult result, final String id )
@@ -381,7 +381,7 @@ public class TupleResultUtilities
   public static Number[] getValuesAsNumbers( final IObservation<TupleResult> observation, final int componentIndex ) throws ClassCastException
   {
     final TupleResult result = observation.getResult();
-    final Collection<Number> values = new ArrayList<Number>( result.size() );
+    final Collection<Number> values = new ArrayList<>( result.size() );
 
     for( final IRecord record : result )
     {
@@ -449,7 +449,7 @@ public class TupleResultUtilities
 
   /**
    * Returns the first (index of a) component, that has the given component id.
-   * 
+   *
    * @reutrn -1, if no such component was found.
    */
   public static int indexOfComponentByPhenomenon( final TupleResult result, final String phenomenonID )

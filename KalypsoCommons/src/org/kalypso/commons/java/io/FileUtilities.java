@@ -563,7 +563,7 @@ public class FileUtilities
     before.add( Calendar.DAY_OF_MONTH, -days );
 
     /* Check the date of the files, each file older than 'days' will be deleted. */
-    final List<File> filesToDelete = new ArrayList<File>();
+    final List<File> filesToDelete = new ArrayList<>();
 
     for( int i = 0; i < files.size(); i++ )
     {

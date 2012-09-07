@@ -54,7 +54,7 @@ import org.kalypso.repository.IRepositoryItem;
 
 /**
  * Handles data sources of meta data lists
- * 
+ *
  * @author Dirk Kuch
  */
 public class DataSourceHandler
@@ -89,7 +89,7 @@ public class DataSourceHandler
 
   private Map<String, Integer> initSources( )
   {
-    final SortedMap<String, Integer> sources = new TreeMap<String, Integer>();
+    final SortedMap<String, Integer> sources = new TreeMap<>();
 
     for( final Object key : m_metadata.keySet() )
     {

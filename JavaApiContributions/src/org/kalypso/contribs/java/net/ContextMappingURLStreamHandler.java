@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.java.net;
 
@@ -53,22 +53,22 @@ import java.util.Map;
  * Removes the protocol of the <code>URL</code> and builds a new URL using the mapped context URL for this protocol.
  * <p>
  * Example:
- * 
+ *
  * <pre>
  *  URL input: project:foo/bar/test.txt#script#foobar
- *  
+ *
  *  protocol: project
  *  replacement: URL=file:C:/Temp/Project/
- *  
+ *
  *  the URL will be created using the following syntax:
  *  URL=file:C:/Temp/Project/foo/bar/test.txt#script#foobar
  * </pre>
- * 
+ *
  * @author schlienger
  */
 public class ContextMappingURLStreamHandler extends URLStreamHandler
 {
-  private final Map<String, URL> m_replacements = new Hashtable<String, URL>();
+  private final Map<String, URL> m_replacements = new Hashtable<>();
 
   /**
    * Sets the replacement for the given protocol string.

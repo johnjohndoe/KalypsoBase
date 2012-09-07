@@ -163,7 +163,7 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
           final List<FeatureviewType> viewList = template.getView();
           viewList.addAll( Arrays.asList( view.getCurrentViewTemplates() ) );
 
-          final Map<String, String> prefixes = new HashMap<String, String>( 1 );
+          final Map<String, String> prefixes = new HashMap<>( 1 );
           prefixes.put( "featureview.template.kalypso.org", "gft" ); //$NON-NLS-1$ //$NON-NLS-2$
 
           final Marshaller marshaller = JaxbUtilities.createMarshaller( templateJC, true, prefixes );

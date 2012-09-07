@@ -104,7 +104,7 @@ import org.kalypso.contribs.eclipse.core.net.Proxy;
  * don't need the manager anymore. <br>
  * When calling {@link FileObject#getContent()} you should also call {@link FileObject#close()} eventually. Otherwise
  * the resources might never be disposed.
- * 
+ *
  * @author Holger Albert, Stefan Kurzbach
  */
 public class VFSUtilities
@@ -204,7 +204,7 @@ public class VFSUtilities
 
     final IExtensionPoint extensionPoint = registry.getExtensionPoint( EXTENSION_POINT_ID );
     final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
-    final Map<String, IConfigurationElement> providerLocations = new HashMap<String, IConfigurationElement>( configurationElements.length );
+    final Map<String, IConfigurationElement> providerLocations = new HashMap<>( configurationElements.length );
 
     for( final IConfigurationElement element : configurationElements )
     {
@@ -216,7 +216,7 @@ public class VFSUtilities
 
   /**
    * Same as copy(source, destination, true)
-   * 
+   *
    * @see #copy(FileObject, FileObject, boolean)
    */
   public static void copy( final FileObject source, final FileObject destination ) throws IOException
@@ -227,7 +227,7 @@ public class VFSUtilities
   /**
    * This function copies a source to a given destination. If no filename is given in the destination file handle, the
    * filename of the source is used.<br>
-   * 
+   *
    * @param source
    *          The source file.
    * @param destination
@@ -248,7 +248,7 @@ public class VFSUtilities
 
   /**
    * Same as copyFileTo(source, destination, true)
-   * 
+   *
    * @see #copyFileTo(FileObject, FileObject, boolean)
    */
   public static void copyFileTo( final FileObject source, final FileObject destination ) throws IOException
@@ -262,7 +262,7 @@ public class VFSUtilities
    * <br>
    * It is tried to copy the file three times. If all three tries has failed, only then an IOException is thrown. <br>
    * All other exceptions are thrown normally.
-   * 
+   *
    * @param source
    *          The source file.
    * @param destination
@@ -341,7 +341,7 @@ public class VFSUtilities
   /**
    * This function will copy one directory to another one. If the destination base directory does not exist, it will be
    * created.
-   * 
+   *
    * @param source
    *          The source directory.
    * @param destination
@@ -394,7 +394,7 @@ public class VFSUtilities
 
   /**
    * Same as copyDirectoryToDirectory(source, destination, true)
-   * 
+   *
    * @see #copyDirectoryToDirectory(FileObject, FileObject, boolean)
    */
   public static void copyDirectoryToDirectory( final FileObject source, final FileObject destination ) throws IOException
@@ -404,7 +404,7 @@ public class VFSUtilities
 
   /**
    * This function copies a string to a vfs file object.
-   * 
+   *
    * @param value
    *          This string will be copied to the file.
    * @param destination
@@ -442,7 +442,7 @@ public class VFSUtilities
 
   /**
    * This function creates a temporary directory, which has a unique file name.
-   * 
+   *
    * @param prefix
    *          This prefix will be used for the temporary directory.
    * @param parentDir
@@ -470,7 +470,7 @@ public class VFSUtilities
 
   /**
    * This function will check the string for protocol, and if neccessary applys an proxy object to it.
-   * 
+   *
    * @param absoluteFile
    *          The absolute file path to the file. It should be absolute, because this function was not testet against
    *          relative files.
@@ -551,7 +551,7 @@ public class VFSUtilities
 
   /**
    * This function will check the string for protocol, and if neccessary applys an proxy object to it.
-   * 
+   *
    * @param absoluteFile
    *          The absolute file path to the file. It should be absolute, because this function was not testet against
    *          relative files.
@@ -566,7 +566,7 @@ public class VFSUtilities
   /**
    * This function deletes the given file. If the file object is a directory, all content and the directory itself will
    * be deleted.
-   * 
+   *
    * @param toDel
    *          The file or directory to be deleted.
    * @return The number of deleted files. 0, if none has been deleted.
@@ -610,7 +610,7 @@ public class VFSUtilities
   /**
    * This function closes the file object. It does not throw any exceptions. It calls {@link FileObject#close()} of the
    * given file objects.
-   * 
+   *
    * @param files
    *          The file objects which should be closed. May be null or already closed.
    */
@@ -645,7 +645,7 @@ public class VFSUtilities
 
   /**
    * Moves the complete content of one directory into another.
-   * 
+   *
    * @throws IOException
    *           If the move failed.
    */

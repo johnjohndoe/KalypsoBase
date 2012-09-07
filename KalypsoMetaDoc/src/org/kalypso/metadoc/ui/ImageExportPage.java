@@ -291,21 +291,21 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
 
   protected void updateControls( final String key )
   {
-    if( key.equals( CONF_IMAGE_WIDTH ) || key == null )
+    if( key.equals( CONF_IMAGE_WIDTH ) )
     {
       final String width = "" + m_conf.getInt( CONF_IMAGE_WIDTH, 300 );
       if( !m_widthtext.getText().equals( width ) )
         m_widthtext.setText( width );
     }
 
-    if( key.equals( CONF_IMAGE_HEIGHT ) || key == null )
+    if( key.equals( CONF_IMAGE_HEIGHT ) )
     {
       final String height = "" + m_conf.getInt( CONF_IMAGE_HEIGHT, 300 );
       if( !m_heighttext.getText().equals( height ) )
         m_heighttext.setText( height );
     }
 
-    if( key.equals( CONF_IMAGE_FORMAT ) || key == null )
+    if( key.equals( CONF_IMAGE_FORMAT ) )
     {
       final String format = m_conf.getString( CONF_IMAGE_FORMAT, FORMATS[0] );
 
@@ -313,7 +313,7 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
       if( !format.equals( oldFormat ) )
         m_combo.setSelection( new StructuredSelection( format ) );
     }
-    if( key.equals( CONF_IMAGE_RATIO ) || key == null )
+    if( key.equals( CONF_IMAGE_RATIO ) )
     {
       final boolean selection = m_conf.getBoolean( CONF_IMAGE_RATIO );
       if( selection && m_keepImageRatio != null )

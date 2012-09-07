@@ -421,10 +421,10 @@ public class DynamicCatalog implements ICatalog
   private List<String> internResolve( final String systemID, final String publicID, List<String> collector, final boolean doCollectURN, final boolean supportPattern, final boolean local, final boolean resolveContext )
   {
     if( collector == null )
-      collector = new ArrayList<String>();
+      collector = new ArrayList<>();
 
     final List<Object> publicOrSystemOrUri = m_catalog.getPublicOrSystemOrUri();
-    final List<Object> entries = new ArrayList<Object>();
+    final List<Object> entries = new ArrayList<>();
     entries.addAll( publicOrSystemOrUri );
     // TODO add entries from imported catalogs or extension-point catalogs
     for( int step = SYSTEM_RESOLVE_1; step <= DELEGATE_SEARCH_5; step++ )

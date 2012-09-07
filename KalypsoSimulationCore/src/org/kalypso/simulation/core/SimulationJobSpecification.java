@@ -19,9 +19,9 @@ public class SimulationJobSpecification
 
   private final String m_calculationTypeID;
 
-  private final List<Input> m_inputList = new ArrayList<Input>();
+  private final List<Input> m_inputList = new ArrayList<>();
 
-  private final List<Output> m_outputList = new ArrayList<Output>();
+  private final List<Output> m_outputList = new ArrayList<>();
 
   private final IPath m_container;
 
@@ -99,7 +99,7 @@ public class SimulationJobSpecification
 
   public Map<String, Object> getAntProperties( )
   {
-    final Map<String, Object> properties = new HashMap<String, Object>();
+    final Map<String, Object> properties = new HashMap<>();
     for( final Input input : m_inputList )
     {
       properties.put( input.getId(), input.getPath() );

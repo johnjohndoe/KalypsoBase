@@ -27,7 +27,7 @@ import org.kalypso.service.wps.utils.MarshallUtilities;
 
 /**
  * This class implements a WPS Service.
- * 
+ *
  * @author Holger Albert
  */
 public class WPSService implements IOGCService
@@ -235,7 +235,7 @@ public class WPSService implements IOGCService
    */
   private void init( )
   {
-    m_operations = new HashMap<String, IOperation>();
+    m_operations = new HashMap<>();
 
     /* Mandatory operations. */
     m_operations.put( "DescribeProcess", new DescribeProcessOperation() ); //$NON-NLS-1$

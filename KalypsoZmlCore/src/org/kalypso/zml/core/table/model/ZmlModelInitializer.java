@@ -137,7 +137,7 @@ public class ZmlModelInitializer implements ICoreRunnableWithProgress
 
   private Map<String, Set<DataSourcePropertyType>> getSources( )
   {
-    final Map<String, Set<DataSourcePropertyType>> map = new HashMap<String, Set<DataSourcePropertyType>>();
+    final Map<String, Set<DataSourcePropertyType>> map = new HashMap<>();
 
     final ZmlTableType tableType = m_model.getTableType();
     if( Objects.isNull( tableType ) )
@@ -157,7 +157,7 @@ public class ZmlModelInitializer implements ICoreRunnableWithProgress
       Set<DataSourcePropertyType> types = map.get( identifier );
       if( Objects.isNull( types ) )
       {
-        types = new LinkedHashSet<DataSourcePropertyType>();
+        types = new LinkedHashSet<>();
         map.put( identifier, types );
       }
 

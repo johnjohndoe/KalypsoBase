@@ -26,12 +26,12 @@ import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Sammelt LineStrings und kombiniert Sie als Polygone
- * 
+ *
  * @author belger
  */
 public class PolygonCollector implements SegmentCollector, RingTreeWalker
 {
-  private final List<CollectorDataProvider> m_dataList = new ArrayList<CollectorDataProvider>();
+  private final List<CollectorDataProvider> m_dataList = new ArrayList<>();
 
   private final GeometryFactory m_gf;
 

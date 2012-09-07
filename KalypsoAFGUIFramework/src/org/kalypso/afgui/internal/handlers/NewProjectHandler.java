@@ -42,7 +42,6 @@ package org.kalypso.afgui.internal.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -63,7 +62,7 @@ import org.eclipse.ui.internal.ide.IIDEHelpContextIds;
  * @author Gernot Belger
  */
 @SuppressWarnings("restriction")
-public class NewProjectHandler extends AbstractHandler implements IHandler
+public class NewProjectHandler extends AbstractHandler
 {
   @Override
   public Object execute( final ExecutionEvent event )

@@ -151,6 +151,7 @@ public class PoolGmlWorkspaceProvider extends AbstractGmlWorkspaceProvider imple
     return info;
   }
 
+  @Override
   public void save( final IProgressMonitor monitor ) throws CoreException
   {
     final KeyInfo info = getInfo();

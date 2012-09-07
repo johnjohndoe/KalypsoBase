@@ -61,7 +61,7 @@ public class ZmlArrayValues implements IZmlValues
     final String separator = va.getSeparator();
     final String[] tokens = StringUtilities.splitString( value, separator );
 
-    m_values = new Vector<Object>( tokens.length );
+    m_values = new Vector<>( tokens.length );
     for( final String token : tokens )
     {
       final Object obj = parser.parse( token );

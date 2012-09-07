@@ -45,8 +45,8 @@ public final class KalypsoModelWspmCoreExtensions
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
     final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.core.reparatorrule" ); //$NON-NLS-1$
 
-    final Collection<IProfilMarkerResolution> reparators = new ArrayList<IProfilMarkerResolution>( elements.length );
-    final Collection<IStatus> stati = new ArrayList<IStatus>( elements.length );
+    final Collection<IProfilMarkerResolution> reparators = new ArrayList<>( elements.length );
+    final Collection<IStatus> stati = new ArrayList<>( elements.length );
 
     for( final IConfigurationElement element : elements )
     {
@@ -145,7 +145,7 @@ public final class KalypsoModelWspmCoreExtensions
   {
     final IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
     final IConfigurationElement[] elements = extensionRegistry.getConfigurationElementsFor( "org.kalypso.model.wspm.core", "profilserializer" ); //$NON-NLS-1$ //$NON-NLS-2$
-    final Map<String, IConfigurationElement> map = new HashMap<String, IConfigurationElement>( elements.length );
+    final Map<String, IConfigurationElement> map = new HashMap<>( elements.length );
     for( final IConfigurationElement element : elements )
     {
       final String eltName = element.getName();
@@ -167,7 +167,7 @@ public final class KalypsoModelWspmCoreExtensions
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
     final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.core.profileFeatureProvider" ); //$NON-NLS-1$
 
-    final Collection<IProfileFeatureProvider> provider = new ArrayList<IProfileFeatureProvider>( elements.length );
+    final Collection<IProfileFeatureProvider> provider = new ArrayList<>( elements.length );
     for( final IConfigurationElement element : elements )
     {
       try
@@ -197,7 +197,7 @@ public final class KalypsoModelWspmCoreExtensions
 
   private static IProfilePointFilter[] restrictFilterByUsage( final IProfilePointFilter[] filters, final String usageHint )
   {
-    final Collection<IProfilePointFilter> restrictedFilters = new ArrayList<IProfilePointFilter>( filters.length );
+    final Collection<IProfilePointFilter> restrictedFilters = new ArrayList<>( filters.length );
 
     for( final IProfilePointFilter filter : filters )
     {
@@ -230,7 +230,7 @@ public final class KalypsoModelWspmCoreExtensions
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
     final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.core.profilePointFilter" ); //$NON-NLS-1$
 
-    final Collection<IProfilePointFilter> filter = new ArrayList<IProfilePointFilter>( elements.length );
+    final Collection<IProfilePointFilter> filter = new ArrayList<>( elements.length );
     for( final IConfigurationElement element : elements )
     {
       try
@@ -276,7 +276,7 @@ public final class KalypsoModelWspmCoreExtensions
     if( THE_MARKER_PROVIDER_MAP != null )
       return THE_MARKER_PROVIDER_MAP;
 
-    THE_MARKER_PROVIDER_MAP = new HashMap<String, List<IProfilPointMarkerProvider>>();
+    THE_MARKER_PROVIDER_MAP = new HashMap<>();
 
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
     final IConfigurationElement[] markerProvider = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.core.profilPointMarkerProvider" ); //$NON-NLS-1$
@@ -363,7 +363,7 @@ public final class KalypsoModelWspmCoreExtensions
     // TODO: hashing this map is not robust against registry changes; listen to extension registry and clear the map if
     // necessary
 
-    THE_PROFILE_TYPE_MAP = new HashMap<String, ProfileType>();
+    THE_PROFILE_TYPE_MAP = new HashMap<>();
 
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
     final IConfigurationElement[] propertyProvider = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.core.profiletype" ); //$NON-NLS-1$
@@ -407,7 +407,7 @@ public final class KalypsoModelWspmCoreExtensions
 
     // TODO: hashing this map is not robust against registry changes; listen to extension registry and clear the map if
     // necessary
-    PROFILE_OBJECT_PROVIDER = new HashMap<String, IProfileObjectProvider>();
+    PROFILE_OBJECT_PROVIDER = new HashMap<>();
 
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
     final IConfigurationElement[] propertyProvider = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.core.profileObjectProvider" ); //$NON-NLS-1$

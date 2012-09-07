@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.commons.java.lang;
 
@@ -57,7 +57,7 @@ import org.kalypso.contribs.java.io.StreamGobbler;
 
 /**
  * This class contains some additional helper function in addition to {@link ProcessHelper}.
- * 
+ *
  * @author Holger Albert
  */
 public class ProcessUtilities
@@ -76,7 +76,7 @@ public class ProcessUtilities
 
   /**
    * This function creates the environment for the process.
-   * 
+   *
    * @param chgEnv
    *          The evironment variables that should be set. May be ones to be replaced or new ones. May be null.
    * @return The environment for the process.
@@ -87,7 +87,7 @@ public class ProcessUtilities
     final Map<String, String> sysEnv = System.getenv();
 
     /* Rebuild the environment variables in a new map. */
-    final Map<String, String> newEnv = new HashMap<String, String>();
+    final Map<String, String> newEnv = new HashMap<>();
     for( final String key : sysEnv.keySet() )
       newEnv.put( key, sysEnv.get( key ) );
 
@@ -100,14 +100,14 @@ public class ProcessUtilities
     }
 
     /* Build an array. */
-    final List<String> listEnv = new ArrayList<String>();
+    final List<String> listEnv = new ArrayList<>();
     for( final String key : newEnv.keySet() )
       listEnv.add( String.format( "%s=%s", key, newEnv.get( key ) ) );
 
     return listEnv.toArray( new String[] {} );
   }
 
-  public static int executeProcess( String[] cmdLine, String[] env, File directory, long timeout, boolean doNotAskOnTimeout, boolean debug, IProgressMonitor monitor ) throws TimeoutException, IOException
+  public static int executeProcess( final String[] cmdLine, final String[] env, final File directory, final long timeout, final boolean doNotAskOnTimeout, final boolean debug, IProgressMonitor monitor ) throws TimeoutException, IOException
   {
     /* If no monitor was given, create a null progress monitor. */
     if( monitor == null )
@@ -200,7 +200,7 @@ public class ProcessUtilities
 
   /**
    * This function asks the user, if he want to wait a bit longer, because the timeout has been reached.
-   * 
+   *
    * @param display
    *          The display or null.
    * @param timeout

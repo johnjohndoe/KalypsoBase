@@ -73,7 +73,7 @@ public class GenericFeatureSelection implements IFeatureSelection
     return genericSelection;
   }
 
-  private final Map<Feature, EasyFeatureWrapper> m_data = new HashMap<Feature, EasyFeatureWrapper>();
+  private final Map<Feature, EasyFeatureWrapper> m_data = new HashMap<>();
 
   private Feature m_focusedFeature;
 

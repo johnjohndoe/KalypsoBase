@@ -170,7 +170,7 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
     final String classification = ""; //$NON-NLS-1$
 
     /* parsing of restrictions */
-    final Set<IRestriction> myRestrictions = new HashSet<IRestriction>();
+    final Set<IRestriction> myRestrictions = new HashSet<>();
 
     NodeList restriction = typeElt.getElementsByTagNameNS( NS.SWE, "restriction" ); //$NON-NLS-1$
     if( restriction.getLength() <= 0 )
@@ -180,8 +180,8 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
 
     if( restriction.getLength() > 0 )
     {
-      final Map<Object, IAnnotation> hEnumerations = new LinkedHashMap<Object, IAnnotation>();
-      final Set<String> sPatterns = new HashSet<String>(); // *< for pattern regex matching
+      final Map<Object, IAnnotation> hEnumerations = new LinkedHashMap<>();
+      final Set<String> sPatterns = new HashSet<>(); // *< for pattern regex matching
 
       for( int i = 0; i < restriction.getLength(); i++ )
       {
@@ -277,7 +277,7 @@ public class RepresentationTypeHandler extends SimpleDOMTypeHandler
         final Entry<Object, IAnnotation> falseEntry = entryIt.next();
         final Entry<Object, IAnnotation> trueEntry = entryIt.next();
 
-        final Map<Object, IAnnotation> booleanEnum = new LinkedHashMap<Object, IAnnotation>();
+        final Map<Object, IAnnotation> booleanEnum = new LinkedHashMap<>();
         booleanEnum.put( Boolean.FALSE, falseEntry.getValue() );
         booleanEnum.put( Boolean.TRUE, trueEntry.getValue() );
 

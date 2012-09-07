@@ -70,7 +70,6 @@ public final class KalypsoModelWspmUIExtensions
     return createExtensions( "org.kalypso.model.wspm.ui.profilPointsSource", new IPointsSource[0] ); //$NON-NLS-1$
   }
 
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
   public static <T> T[] createExtensions( final String extensionPoint, final T[] a )
   {
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -79,7 +78,7 @@ public final class KalypsoModelWspmUIExtensions
     // elements[0].getAttribute( "id" );
     // elements[0].createExecutableExtension( "class" );
 
-    final Collection<T> targets = new ArrayList<T>( elements.length );
+    final Collection<T> targets = new ArrayList<>( elements.length );
     for( final IConfigurationElement element : elements )
     {
       try

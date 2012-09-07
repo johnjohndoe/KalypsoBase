@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- * 
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.utils.shape;
 
@@ -76,7 +76,7 @@ public class ShapeUtilities
 
   /**
    * This function copies the files of a shape to the destination folder.
-   * 
+   *
    * @param shapeFile
    *          One of the shape files. The others will be determined by removing the file extension and listing the files
    *          of the parent with the same basename.
@@ -103,7 +103,7 @@ public class ShapeUtilities
     final String[] filenames = shapeDirectory.list( new BasenameFilenameFilter( FilenameUtils.getBaseName( shapeFile.getName() ) ) );
 
     /* Copy all found files. */
-    final List<String> files = new ArrayList<String>();
+    final List<String> files = new ArrayList<>();
     for( final String filename : filenames )
     {
       /* The filenames. */
@@ -133,7 +133,7 @@ public class ShapeUtilities
 
   /**
    * This function copies the files of a shape to the destination folder.
-   * 
+   *
    * @param shape
    *          One of the shape files. The others will be determined by removing the file extension and listing the files
    *          of the parent with the same basename.
@@ -164,7 +164,7 @@ public class ShapeUtilities
 
   /**
    * This function deletes the files of a shape.
-   * 
+   *
    * @param shapeFile
    *          One of the shape files. The others will be determined by removing the file extension and listing the files
    *          of the parent with the same basename.
@@ -194,7 +194,7 @@ public class ShapeUtilities
 
   /**
    * Fetches the names of all attributes from a shape file. Closes the shape afterwards.
-   * 
+   *
    * @param shapeBasePath
    *          The full path to the shape file (without .shp extension).
    */
@@ -212,7 +212,7 @@ public class ShapeUtilities
 
   /**
    * This function loads the shape and returns the feature type of its features.
-   * 
+   *
    * @param shapeFile
    *          The path of the shape file without extension.
    * @return The feature type.

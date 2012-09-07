@@ -90,7 +90,7 @@ public class ZmlCommandViewBoundaries extends AbstractHandler implements IElemen
   {
     final String linkedRules = (String) parameters.get( "rules" ); //$NON-NLS-1$
 
-    final List<AbstractZmlRule> myRules = new ArrayList<AbstractZmlRule>();
+    final List<AbstractZmlRule> myRules = new ArrayList<>();
     final ZmlRuleResolver resolver = ZmlRuleResolver.getInstance();
 
     final Iterable<String> rules = Splitter.on( ';' ).split( linkedRules ); //$NON-NLS-1$
@@ -115,7 +115,7 @@ public class ZmlCommandViewBoundaries extends AbstractHandler implements IElemen
   }
 
   @Override
-  public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
+  public void updateElement( final UIElement element, final Map parameters )
   {
     final AbstractZmlRule[] rules = findRules( parameters );
     for( final AbstractZmlRule rule : rules )

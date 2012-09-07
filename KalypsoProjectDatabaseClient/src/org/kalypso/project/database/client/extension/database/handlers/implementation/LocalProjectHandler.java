@@ -201,7 +201,7 @@ public class LocalProjectHandler extends LocalProjectHandle implements ILocalPro
           }
       }
 
-      final RemoteProjectNature myNature = (RemoteProjectNature) m_project.getNature( RemoteProjectNature.NATURE_ID );
+      final RemoteProjectNature myNature = (RemoteProjectNature)m_project.getNature( RemoteProjectNature.NATURE_ID );
       if( myNature == null )
         return null;
 
@@ -257,7 +257,7 @@ public class LocalProjectHandler extends LocalProjectHandle implements ILocalPro
       if( !(provider instanceof IRemoteProjectHandleProvider) )
         continue;
 
-      final IRemoteProjectHandleProvider remote = (IRemoteProjectHandleProvider) provider;
+      final IRemoteProjectHandleProvider remote = (IRemoteProjectHandleProvider)provider;
       final IRemoteWorkspaceModel model = remote.getRemoteWorkspaceModel();
 
       if( !model.isDatabaseOnline() )
@@ -318,14 +318,10 @@ public class LocalProjectHandler extends LocalProjectHandle implements ILocalPro
 
   private IAction createDatabaseAction( )
   {
-
     final IProjectHandleProvider provider = m_module.getProjectProvider();
     if( provider instanceof IRemoteProjectHandleProvider )
     {
-      final IRemoteProjectHandleProvider remote = (IRemoteProjectHandleProvider) provider;
-      if( remote != null )
-        return new ProjectUploadAction( this, m_module );
-
+      return new ProjectUploadAction( this, m_module );
     }
 
     return new EmptyProjectAction();

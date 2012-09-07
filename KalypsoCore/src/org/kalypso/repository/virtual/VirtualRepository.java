@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.repository.virtual;
 
@@ -63,7 +63,7 @@ import org.xml.sax.InputSource;
 
 /**
  * VirtualRepository
- * 
+ *
  * @author schlienger
  */
 public class VirtualRepository extends AbstractRepository
@@ -74,13 +74,13 @@ public class VirtualRepository extends AbstractRepository
   private IRepositoryItem[] m_children;
 
   /** stores the mapping between ids and items */
-  private final Map<String, IRepositoryItem> m_idMap = new Hashtable<String, IRepositoryItem>();
+  private final Map<String, IRepositoryItem> m_idMap = new Hashtable<>();
 
   private final String m_location;
 
   /**
    * Constructor
-   * 
+   *
    * @param factory
    * @param identifier
    *          uniquely identifies this repository among the list of repositories used in a given context. The identifier
@@ -114,11 +114,11 @@ public class VirtualRepository extends AbstractRepository
 
   private List<IRepositoryItem> buildStructure( final VirtualRepositoryItem parent, final List<LevelType> levels )
   {
-    final List<IRepositoryItem> rItems = new ArrayList<IRepositoryItem>( levels.size() );
+    final List<IRepositoryItem> rItems = new ArrayList<>( levels.size() );
     for( final LevelType level : levels )
     {
       final VirtualRepositoryItem rItem = new VirtualRepositoryItem( this, level.getName(), level.getId(), parent );
-      final List<IRepositoryItem> children = new ArrayList<IRepositoryItem>();
+      final List<IRepositoryItem> children = new ArrayList<>();
       children.addAll( buildStructure( rItem, level.getLevel() ) );
       children.addAll( buildItems( rItem, level.getItem() ) );
       rItem.setChildren( children );
@@ -130,7 +130,7 @@ public class VirtualRepository extends AbstractRepository
 
   private List<IRepositoryItem> buildItems( final VirtualRepositoryItem parent, final List<ItemType> items )
   {
-    final List<IRepositoryItem> rItems = new ArrayList<IRepositoryItem>( items.size() );
+    final List<IRepositoryItem> rItems = new ArrayList<>( items.size() );
     for( final ItemType item : items )
     {
       final VirtualRepositoryItem rItem = new VirtualRepositoryItem( this, item.getName(), item.getId(), parent );

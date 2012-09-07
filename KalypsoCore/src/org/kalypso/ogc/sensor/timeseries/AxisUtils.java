@@ -212,7 +212,7 @@ public final class AxisUtils implements ITimeseriesConstants
 
   public static IAxis[] findValueAxes( final IAxis[] axes, final boolean persistable )
   {
-    final List<IAxis> valueAxes = new ArrayList<IAxis>();
+    final List<IAxis> valueAxes = new ArrayList<>();
     for( final IAxis axis : axes )
     {
       if( isValueAxis( axis, persistable ) )
@@ -224,7 +224,7 @@ public final class AxisUtils implements ITimeseriesConstants
 
   public static IAxis[] findDataSourceAxes( final IAxis[] axes )
   {
-    final List<IAxis> dataSourceAxes = new ArrayList<IAxis>();
+    final List<IAxis> dataSourceAxes = new ArrayList<>();
     for( final IAxis axis : axes )
     {
       if( isDataSrcAxis( axis ) )

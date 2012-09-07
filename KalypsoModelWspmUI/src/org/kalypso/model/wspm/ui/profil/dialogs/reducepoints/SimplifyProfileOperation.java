@@ -143,7 +143,7 @@ public class SimplifyProfileOperation
 
   private IProfileRecord[] getPointsToKeep( )
   {
-    final Collection<IProfileRecord> pointsToKeep = new ArrayList<IProfileRecord>();
+    final Collection<IProfileRecord> pointsToKeep = new ArrayList<>();
 
     /* Marked points (TF, DB, BV) should never get simplified */
     final IProfileRecord[] markedPoints = m_profile.getMarkedPoints();
@@ -163,7 +163,7 @@ public class SimplifyProfileOperation
 
   private IProfileRecord[] getBuildingPoints( final IProfil profile )
   {
-    final Collection<IProfileRecord> buildingPoints = new ArrayList<IProfileRecord>();
+    final Collection<IProfileRecord> buildingPoints = new ArrayList<>();
 
     for( final String buildingComponent : m_buildingComponents )
     {
@@ -187,7 +187,7 @@ public class SimplifyProfileOperation
    */
   private IProfileRecord[] getAllValidPoints( final IProfil profile, final String buildingComponent )
   {
-    final Collection<IProfileRecord> allPoints = new ArrayList<IProfileRecord>();
+    final Collection<IProfileRecord> allPoints = new ArrayList<>();
 
     final int componentIndex = profile.indexOfProperty( buildingComponent );
     if( componentIndex == -1 )

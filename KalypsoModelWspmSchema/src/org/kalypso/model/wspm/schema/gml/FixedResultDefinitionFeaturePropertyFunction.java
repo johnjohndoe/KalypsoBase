@@ -67,11 +67,8 @@ public class FixedResultDefinitionFeaturePropertyFunction extends FeaturePropert
 
   private static final QName QNAME_RECORD_RECORDSCHEMA = new QName( NS.SWE, "SWE_RecordSchema" ); //$NON-NLS-1$
 
-  private final List<String> m_compHrefs = new ArrayList<String>();
+  private final List<String> m_compHrefs = new ArrayList<>();
 
-  /**
-   * @see org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction#init(java.util.Properties)
-   */
   @Override
   public void init( final Map<String, String> properties )
   {
@@ -128,5 +125,4 @@ public class FixedResultDefinitionFeaturePropertyFunction extends FeaturePropert
 
     return feature;
   }
-
 }

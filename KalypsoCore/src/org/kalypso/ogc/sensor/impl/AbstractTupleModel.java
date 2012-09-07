@@ -85,7 +85,7 @@ public abstract class AbstractTupleModel implements ITupleModel
   /**
    * maps an axis to its position in this tuple model.
    */
-  private final Map<IAxis, Integer> m_axes2pos = new LinkedHashMap<IAxis, Integer>();
+  private final Map<IAxis, Integer> m_axes2pos = new LinkedHashMap<>();
 
   private final IAxis[] m_axes;
 
@@ -333,7 +333,7 @@ public abstract class AbstractTupleModel implements ITupleModel
 
       start( transaction );
 
-      final Set<IStatus> stati = new LinkedHashSet<IStatus>();
+      final Set<IStatus> stati = new LinkedHashSet<>();
       for( final ITupleModelCommand command : transaction.getCommands() )
       {
         try

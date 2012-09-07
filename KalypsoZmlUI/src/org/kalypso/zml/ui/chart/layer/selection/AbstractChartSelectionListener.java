@@ -86,7 +86,7 @@ public abstract class AbstractChartSelectionListener implements IChartSelectionC
   {
     final IAxis axis = chart.getChartModel().getMapperRegistry().getAxis( ITimeseriesConstants.TYPE_DATE ); //$NON-NLS-1$
 
-    final Set<Date> dates = new TreeSet<Date>();
+    final Set<Date> dates = new TreeSet<>();
     for( final Point position : positions )
     {
       final Number screenToNumeric = axis.screenToNumeric( position.x );

@@ -17,7 +17,7 @@ import com.vividsolutions.jts.geom.LineString;
 
 /**
  * Sammelt LineStrings
- * 
+ *
  * @author belger
  */
 public class LineStringCollector implements SegmentCollector
@@ -28,7 +28,7 @@ public class LineStringCollector implements SegmentCollector
 
   private final boolean m_bSimple;
 
-  private final List<CollectorDataProvider> m_dataList = new ArrayList<CollectorDataProvider>();
+  private final List<CollectorDataProvider> m_dataList = new ArrayList<>();
 
   public LineStringCollector( final GeometryFactory gf, final double[] grenzen, final boolean bSimple )
   {

@@ -20,7 +20,7 @@ import com.vividsolutions.jts.geom.LinearRing;
  * <p>
  * Each linear ring must be a closed triangle, which will be oriented counter clock wise before writing.
  * </p>
- * 
+ *
  * @author Gernot Belger
  */
 public class ZweiDMWriter
@@ -44,7 +44,7 @@ public class ZweiDMWriter
 
     // write triangles
     // IMPORTANT: use linked hashmap, so the orering of insertion stays the same
-    final LinkedHashMap<Coordinate, Integer> crdSet = new LinkedHashMap<Coordinate, Integer>( m_rings.length * 3 );
+    final LinkedHashMap<Coordinate, Integer> crdSet = new LinkedHashMap<>( m_rings.length * 3 );
     for( int i = 0; i < m_rings.length; i++ )
     {
       final LinearRing ring = m_rings[i];

@@ -116,7 +116,7 @@ public class CalcCaseTreeContentProvider implements ITreeContentProvider
           return new Object[0];
 
         final IResource[] members = container.members( 0 );
-        final List<IFolder> children = new ArrayList<IFolder>( members.length );
+        final List<IFolder> children = new ArrayList<>( members.length );
         for( final IResource resource : members )
         {
           if( resource.getType() == IResource.FOLDER )

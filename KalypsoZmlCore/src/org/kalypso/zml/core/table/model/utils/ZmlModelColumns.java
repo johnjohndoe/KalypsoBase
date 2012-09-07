@@ -107,7 +107,7 @@ public final class ZmlModelColumns
 
   public static AppliedRule[] findRules( final ZmlModelViewport viewport, final IZmlModelColumn column )
   {
-    final Set<AppliedRule> rules = new LinkedHashSet<AppliedRule>();
+    final Set<AppliedRule> rules = new LinkedHashSet<>();
     Collections.addAll( rules, column.getColumnRules() );
 
     /** applied cell rules */
@@ -131,7 +131,7 @@ public final class ZmlModelColumns
 
   public static AppliedRule[] toApplied( final IZmlModelValueCell cell, final ZmlCellRule[] rules )
   {
-    final Set<AppliedRule> applied = new LinkedHashSet<AppliedRule>();
+    final Set<AppliedRule> applied = new LinkedHashSet<>();
 
     for( final ZmlCellRule rule : rules )
     {

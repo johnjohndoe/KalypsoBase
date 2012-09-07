@@ -56,11 +56,8 @@ public class FeatureThemeActionFilterAdapterFactory implements IAdapterFactory
     m_featureActionFilter = new ActionFilterRegistry( IKalypsoFeatureTheme.class.getName() );
   }
 
-  /**
-   * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
-   */
   @Override
-  public Object getAdapter( final Object adaptableObject, @SuppressWarnings("rawtypes") final Class adapterType )
+  public Object getAdapter( final Object adaptableObject, final Class adapterType )
   {
     if( adapterType == IActionFilter.class )
       return m_featureActionFilter;
@@ -68,9 +65,6 @@ public class FeatureThemeActionFilterAdapterFactory implements IAdapterFactory
     return null;
   }
 
-  /**
-   * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
-   */
   @Override
   public Class< ? >[] getAdapterList( )
   {

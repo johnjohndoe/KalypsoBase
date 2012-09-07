@@ -104,7 +104,7 @@ import org.kalypso.zml.request.Request;
  * manipulate the observation before it is delivered. ObservationManipulators are configured within the
  * IObservationService configuration file. All entries that begin with "MANIPULATOR_" are defining such manipulators.
  * The syntax of the configuration is as follows: MANIPULATOR_&lt;repository_id&gt;=&lt;manipulator_class_name&gt;.
- * 
+ *
  * @author Marc Schlienger
  * @author Gernot Belger
  * @author Holger Albert
@@ -139,13 +139,13 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
   /**
    * Constructs the service by reading the configuration.
    */
-  public ObservationServiceDelegate( ) throws RepositoryException
+  public ObservationServiceDelegate( )
   {
-    m_repositories = new Vector<IRepository>();
-    m_mapBeanId2Item = new Hashtable<String, IRepositoryItem>( 512 );
-    m_mapItem2Bean = new Hashtable<IRepositoryItem, ItemBean[]>( 512 );
-    m_mapRepId2Rep = new Hashtable<String, IRepository>();
-    m_mapDataId2File = new Hashtable<String, File>( 128 );
+    m_repositories = new Vector<>();
+    m_mapBeanId2Item = new Hashtable<>( 512 );
+    m_mapItem2Bean = new Hashtable<>( 512 );
+    m_mapRepId2Rep = new Hashtable<>();
+    m_mapDataId2File = new Hashtable<>( 128 );
 
     m_logger = Logger.getLogger( ObservationServiceDelegate.class.getName() );
     m_initialized = false;
@@ -212,10 +212,10 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
 
   /**
    * Initialise the Service according to configuration.
-   * 
+   *
    * @throws RemoteException
    */
-  protected final synchronized void init( ) throws RepositoryException
+  protected final synchronized void init( )
   {
     // TODO: at the moment, we silently ignore this implementation if no
     // service location was given: this is necessary, because if
@@ -307,14 +307,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
   @Override
   public final DataBean readData( final String href ) throws SensorException
   {
-    try
-    {
-      init();
-    }
-    catch( final RepositoryException e1 )
-    {
-      throw new SensorException( e1 );
-    }
+    init();
 
     final String hereHref = ObservationServiceUtils.removeServerSideId( href );
     final String obsId = org.kalypso.ogc.sensor.zml.ZmlURL.getIdentifierPart( hereHref );
@@ -590,11 +583,8 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
     return 0;
   }
 
-  /**
-   * @see org.kalypso.repository.service.IRepositoryService#reload()
-   */
   @Override
-  public final void reload( ) throws RepositoryException
+  public final void reload( )
   {
     m_initialized = false;
 
@@ -644,8 +634,6 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
 
   /**
    * FIXME at the moment we assume that an new item should be created in all sub repositories
-   * 
-   * @see org.kalypso.services.observation.sei.IRepositoryService#makeItem(java.lang.String)
    */
   @Override
   public final void makeItem( final String itemIdentifier ) throws RepositoryException
@@ -662,8 +650,6 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
 
   /**
    * FIXME at the moment we assume that an item should be deleted in all sub repositories
-   * 
-   * @see org.kalypso.services.observation.sei.IRepositoryService#deleteItem(java.lang.String)
    */
   @Override
   public final void deleteItem( final String identifier ) throws RepositoryException
@@ -743,7 +729,7 @@ public class ObservationServiceDelegate implements IObservationService, IDisposa
   @Override
   public StatusBean getStatus( final String type )
   {
-    final Set<IStatus> stati = new LinkedHashSet<IStatus>();
+    final Set<IStatus> stati = new LinkedHashSet<>();
     for( final IRepository repository : m_repositories )
     {
       stati.add( repository.getStatus( type ) );

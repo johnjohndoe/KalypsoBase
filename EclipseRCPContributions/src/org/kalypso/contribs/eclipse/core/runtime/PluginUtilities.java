@@ -152,7 +152,6 @@ public final class PluginUtilities
    * @throws ClassNotFoundException
    *           If either the class or the bundle cannot be found.
    */
-  @SuppressWarnings("unchecked")
   public static <T> Class<T> findClass( final String className, final String pluginId ) throws ClassNotFoundException
   {
     final Bundle bundle = Platform.getBundle( pluginId );

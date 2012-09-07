@@ -3,7 +3,6 @@
  */
 package org.kalypso.kml.export;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.kml.export.convert.ConvertFacade;
 import org.kalypso.kml.export.interfaces.IKMLAdapter;
@@ -36,12 +35,8 @@ public class KMLExportDelegate implements IStylePaintable
     m_bbox = bbox;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.painter.IStylePaintable#paint(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypsodeegree.graphics.sld.Symbolizer, org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
-  public void paint( final Feature feature, final Symbolizer symbolizer, final IProgressMonitor newChild ) throws CoreException
+  public void paint( final Feature feature, final Symbolizer symbolizer, final IProgressMonitor newChild )
   {
 
     try

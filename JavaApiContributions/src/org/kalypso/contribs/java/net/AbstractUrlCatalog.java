@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.contribs.java.net;
 
@@ -46,14 +46,14 @@ import java.util.Map;
 
 /**
  * Abstrakter UrlKatalog. Ableitende Klassen müssen nur den konkreten Katalog füllen.
- * 
+ *
  * @author belger
  */
 public abstract class AbstractUrlCatalog implements IUrlCatalog
 {
-  private final Map<String, URL> m_catalog = new HashMap<String, URL>();
+  private final Map<String, URL> m_catalog = new HashMap<>();
 
-  private final Map<String, String> m_prefixes = new HashMap<String, String>();
+  private final Map<String, String> m_prefixes = new HashMap<>();
 
   public AbstractUrlCatalog( )
   {
@@ -82,7 +82,7 @@ public abstract class AbstractUrlCatalog implements IUrlCatalog
 
   /**
    * Default implementation returns null.
-   * 
+   *
    * @see org.kalypso.contribs.java.net.IUrlCatalog#getPreferredNamespacePrefix(java.lang.String)
    */
   @Override

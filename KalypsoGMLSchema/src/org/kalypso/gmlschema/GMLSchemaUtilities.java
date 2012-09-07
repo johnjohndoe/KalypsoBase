@@ -137,11 +137,11 @@ public class GMLSchemaUtilities
 
   private static final IUrlResolver m_urlUtitilies = new UrlUtilities();
 
-  private static final Map<QName, Map<String, FindSubstitutesGMLSchemaVisitor>> m_substitutesResultMap = new HashMap<QName, Map<String, FindSubstitutesGMLSchemaVisitor>>();
+  private static final Map<QName, Map<String, FindSubstitutesGMLSchemaVisitor>> m_substitutesResultMap = new HashMap<>();
 
 // private static final Map<QName, Map<QName, Boolean>> m_substitutesCache = new HashMap<QName, Map<QName, Boolean>>();
 
-  private static final Map<QNameUnique, Map<QNameUnique, Boolean>> m_substitutesIDCache = new HashMap<QNameUnique, Map<QNameUnique, Boolean>>();
+  private static final Map<QNameUnique, Map<QNameUnique, Boolean>> m_substitutesIDCache = new HashMap<>();
 
   private final static QName XSD_SCHEMALOCATION = new QName( NS.XSD, "schemaLocation" ); //$NON-NLS-1$
 
@@ -205,7 +205,7 @@ public class GMLSchemaUtilities
     Map<QNameUnique, Boolean> substitutesMap = m_substitutesIDCache.get( qname );
     if( substitutesMap == null )
     {
-      substitutesMap = new HashMap<QNameUnique, Boolean>();
+      substitutesMap = new HashMap<>();
       m_substitutesIDCache.put( qname, substitutesMap );
     }
     return substitutesMap;
@@ -369,7 +369,7 @@ public class GMLSchemaUtilities
 
   private static QName findBaseType( final IGMLSchema schema, final Union union, final String gmlVersion ) throws GMLSchemaException
   {
-    final Set<QName> mixedSet = new HashSet<QName>();
+    final Set<QName> mixedSet = new HashSet<>();
     // embeddded simple types
     final LocalSimpleType[] simpleTypeArray = union.getSimpleTypeArray();
     if( simpleTypeArray.length > 0 )
@@ -405,7 +405,6 @@ public class GMLSchemaUtilities
       return new MixedQName( bases );
   }
 
-  @SuppressWarnings("unchecked")
   private static List<QName> memberTypesFromUnion( final Union union )
   {
     return union.getMemberTypes();
@@ -582,7 +581,7 @@ public class GMLSchemaUtilities
 
   public static String[] createFeaturePathes( final IGMLSchema gmlSchma, final String pathToHere, final IFeatureType featureType )
   {
-    final List<String> result = new ArrayList<String>();
+    final List<String> result = new ArrayList<>();
     if( featureType.getAllGeometryProperties().length > 0 )
       result.add( pathToHere );
     final IPropertyType[] props = featureType.getProperties();
@@ -651,7 +650,7 @@ public class GMLSchemaUtilities
       }
     };
 
-    final Map<URL, String> map = new Hashtable<URL, String>();
+    final Map<URL, String> map = new Hashtable<>();
     final String baseName = BASE_SCHEMA_IN_JAR;
     map.put( schemaURL, baseName );
     serializeToArchiveDir( schemaDocument, archiveDir, baseName, resolver2, map );
@@ -762,7 +761,7 @@ public class GMLSchemaUtilities
   public static List<ElementWithOccurs> collectElements( final IGMLSchema schema, final ExtensionType extension, List<ElementWithOccurs> collector, Occurs occurs ) throws GMLSchemaException
   {
     if( collector == null )
-      collector = new ArrayList<ElementWithOccurs>();
+      collector = new ArrayList<>();
     if( occurs == null )
       occurs = new Occurs( 1, 1 );
     if( extension == null )
@@ -790,7 +789,7 @@ public class GMLSchemaUtilities
   public static List<ElementWithOccurs> collectElements( final IGMLSchema schema, final ComplexType complexType, List<ElementWithOccurs> collector, Occurs occurs, final boolean followExtensions ) throws GMLSchemaException
   {
     if( collector == null )
-      collector = new ArrayList<ElementWithOccurs>();
+      collector = new ArrayList<>();
     if( occurs == null )
       occurs = new Occurs( 1, 1 );
     if( complexType == null )
@@ -823,7 +822,7 @@ public class GMLSchemaUtilities
   public static List<ElementWithOccurs> collectElements( final IGMLSchema schema, final ComplexRestrictionType restriction, List<ElementWithOccurs> collector, Occurs occurs ) throws GMLSchemaException
   {
     if( collector == null )
-      collector = new ArrayList<ElementWithOccurs>();
+      collector = new ArrayList<>();
     if( occurs == null )
       occurs = new Occurs( 1, 1 );
     if( restriction == null )
@@ -843,7 +842,7 @@ public class GMLSchemaUtilities
   public static List<ElementWithOccurs> collectElements( final IGMLSchema schema, final Group group, List<ElementWithOccurs> collector, Occurs occurs ) throws GMLSchemaException
   {
     if( collector == null )
-      collector = new ArrayList<ElementWithOccurs>();
+      collector = new ArrayList<>();
     if( occurs == null )
       occurs = new Occurs( 1, 1 );
     if( group == null )
@@ -941,7 +940,7 @@ public class GMLSchemaUtilities
   public static Map<String, URL> parseSchemaLocation( final String schemaLocation, final URL context )
   {
     final int schemaCount = schemaLocation == null ? 0 : schemaLocation.length() / 2 + 1;
-    final Map<String, URL> map = new HashMap<String, URL>( schemaCount );
+    final Map<String, URL> map = new HashMap<>( schemaCount );
 
     if( schemaLocation == null )
       return map;
@@ -1061,7 +1060,7 @@ public class GMLSchemaUtilities
     Map<String, FindSubstitutesGMLSchemaVisitor> map = m_substitutesResultMap.get( cacheFTKey );
     if( map == null )
     {
-      map = new HashMap<String, FindSubstitutesGMLSchemaVisitor>();
+      map = new HashMap<>();
       m_substitutesResultMap.put( cacheFTKey, map );
     }
 

@@ -9,7 +9,7 @@ import java.util.Set;
 
 /**
  * Arguments is a simple extension of Properties with a nesting-capability.
- * 
+ *
  * @author schlienger
  */
 public class Arguments extends LinkedHashMap<String, Object>
@@ -19,7 +19,7 @@ public class Arguments extends LinkedHashMap<String, Object>
 
   public Arguments( )
   {
-    m_parent = new HashMap<String, Object>();
+    m_parent = new HashMap<>();
   }
 
   public Arguments( final Arguments parent )
@@ -94,7 +94,7 @@ public class Arguments extends LinkedHashMap<String, Object>
 
   public String[] getAllKeys( )
   {
-    final Set<String> allKeys = new LinkedHashSet<String>();
+    final Set<String> allKeys = new LinkedHashSet<>();
 
     allKeys.addAll( keySet() );
     allKeys.addAll( Arrays.asList( getParentKeys() ) );
@@ -104,7 +104,7 @@ public class Arguments extends LinkedHashMap<String, Object>
 
   public String[] findAllKeys( final String prefix )
   {
-    final Set<String> myKeys = new LinkedHashSet<String>();
+    final Set<String> myKeys = new LinkedHashSet<>();
 
     final String[] keys = getAllKeys();
     for( final String key : keys )

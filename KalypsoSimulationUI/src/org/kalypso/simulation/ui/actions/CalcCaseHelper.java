@@ -124,7 +124,7 @@ public class CalcCaseHelper
 
   public static Map<String, Object> configureAntProperties( final IFolder mergeCaseFolder )
   {
-    final Map<String, Object> map = new HashMap<String, Object>();
+    final Map<String, Object> map = new HashMap<>();
 
     final String mergeRelPath;
     if( mergeCaseFolder == null )

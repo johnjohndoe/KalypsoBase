@@ -462,11 +462,8 @@ public abstract class AbstractKalypsoTheme extends PlatformObject implements IKa
     return getLabel();
   }
 
-  /**
-   * @see org.eclipse.core.runtime.PlatformObject#getAdapter(java.lang.Class)
-   */
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     if( adapter == IKalypsoThemeInfo.class )
     {

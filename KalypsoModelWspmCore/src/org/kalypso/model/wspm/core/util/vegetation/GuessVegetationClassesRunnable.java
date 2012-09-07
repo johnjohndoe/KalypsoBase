@@ -69,7 +69,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 
 /**
  * Guess vegatation classes from existing ax,ay,dp values
- * 
+ *
  * @author Dirk Kuch
  */
 public class GuessVegetationClassesRunnable implements ICoreRunnableWithProgress
@@ -98,7 +98,7 @@ public class GuessVegetationClassesRunnable implements ICoreRunnableWithProgress
     if( Objects.isNull( clazzes ) )
       throw new CoreException( new Status( IStatus.CANCEL, KalypsoModelWspmCorePlugin.getID(), String.format( Messages.getString( "GuessVegetationClassesRunnable_0" ), m_profile.getStation() ) ) ); //$NON-NLS-1$
 
-    final List<IStatus> statis = new ArrayList<IStatus>();
+    final List<IStatus> statis = new ArrayList<>();
 
     final IProfileRecord[] points = m_profile.getPoints();
     for( final IProfileRecord point : points )

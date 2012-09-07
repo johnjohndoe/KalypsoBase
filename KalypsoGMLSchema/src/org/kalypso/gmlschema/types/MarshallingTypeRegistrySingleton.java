@@ -9,7 +9,7 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * Dies sollte irgenwo zentral liegen oder in eine andere solche Klasse integriert werden
- * 
+ *
  * @author belger
  */
 public class MarshallingTypeRegistrySingleton
@@ -25,12 +25,11 @@ public class MarshallingTypeRegistrySingleton
     // wird nicht instantiiert
   }
 
-  @SuppressWarnings("unchecked")
   public synchronized static ITypeRegistry<IMarshallingTypeHandler> getTypeRegistry( )
   {
     if( m_typeRegistry == null )
     {
-      m_typeRegistry = new TypeRegistry_impl<IMarshallingTypeHandler>();
+      m_typeRegistry = new TypeRegistry_impl<>();
       final IExtensionRegistry registry = Platform.getExtensionRegistry();
       final IExtensionPoint extensionPoint = registry.getExtensionPoint( TYPE_HANDLERS_EXTENSION_POINT );
       final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();

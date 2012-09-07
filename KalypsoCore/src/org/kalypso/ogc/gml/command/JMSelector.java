@@ -59,7 +59,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Finds features in the map
- * 
+ *
  * @author von Dömming
  */
 public class JMSelector
@@ -73,9 +73,9 @@ public class JMSelector
   {
     try
     {
-      final List<Object> testFE = new ArrayList<Object>();
+      final List<Object> testFE = new ArrayList<>();
 
-      final List<Object> features = list == null ? new ArrayList<Object>() : list.query( env, new ArrayList<Object>() );
+      final List<Object> features = list == null ? new ArrayList<>() : list.query( env, new ArrayList<>() );
       for( final Object fe : features )
       {
         final Feature feature;
@@ -105,7 +105,7 @@ public class JMSelector
       e.printStackTrace();
     }
 
-    return new ArrayList<Object>();
+    return new ArrayList<>();
   }
 
   /**
@@ -113,10 +113,10 @@ public class JMSelector
    */
   public static List<Object> select( final GM_Position position, final JMSpatialIndex<Object> list )
   {
-    final List<Object> resultList = new ArrayList<Object>();
-    final List<Object> testFe = new ArrayList<Object>();
+    final List<Object> resultList = new ArrayList<>();
+    final List<Object> testFe = new ArrayList<>();
 
-    final List<Object> features = list.query( position, new ArrayList<Object>() );
+    final List<Object> features = list.query( position, new ArrayList<>() );
     for( final Object object : features )
     {
       final Feature feature;

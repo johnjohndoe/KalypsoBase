@@ -41,14 +41,13 @@
 package org.kalypso.model.wspm.ui.profil.wizard.landuse.utils;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.kalypso.shape.dbf.IDBFField;
 
 /**
  * @author Dirk Kuch
  */
-public class LanduseShapeLabelProvider extends LabelProvider implements IBaseLabelProvider
+public class LanduseShapeLabelProvider extends LabelProvider
 {
   @Override
   public final String getText( final Object element )

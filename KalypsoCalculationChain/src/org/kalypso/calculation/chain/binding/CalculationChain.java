@@ -9,7 +9,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 public class CalculationChain extends Feature_Impl implements ICalculationChain
 {
-  private final FeatureBindingCollection<ICalculationChainMember> m_calculations = new FeatureBindingCollection<ICalculationChainMember>( this, ICalculationChainMember.class, QNAME_PROP_CALCULATIONS );
+  private final FeatureBindingCollection<ICalculationChainMember> m_calculations = new FeatureBindingCollection<>( this, ICalculationChainMember.class, QNAME_PROP_CALCULATIONS );
 
   private boolean m_isSorted = true;
 

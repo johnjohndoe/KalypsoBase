@@ -55,7 +55,7 @@ public class CreateProfileMapAction extends AbstractHandler
     final Shell shell = HandlerUtil.getActiveShellChecked( event );
 
     /* retrieve selected profile-collections, abort if none */
-    final Map<Feature, IRelationType> selectedFeatures = new HashMap<Feature, IRelationType>();
+    final Map<Feature, IRelationType> selectedFeatures = new HashMap<>();
     for( final Object selectedObject : selection.toList() )
     {
       if( selectedObject instanceof IFeatureRelation )

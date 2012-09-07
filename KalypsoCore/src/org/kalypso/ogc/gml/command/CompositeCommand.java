@@ -48,7 +48,7 @@ import org.kalypso.commons.command.ICommand;
 
 /**
  * This class encapsulates a series of (similar) commands that can only be processed, undone and redone together
- * 
+ *
  * @author Stefan Kurzbach
  */
 public class CompositeCommand implements ICommand
@@ -64,7 +64,7 @@ public class CompositeCommand implements ICommand
    */
   public CompositeCommand( final String description )
   {
-    m_commands = new ArrayList<ICommand>();
+    m_commands = new ArrayList<>();
     m_description = description;
     m_canUndo = true;
   }
@@ -99,7 +99,7 @@ public class CompositeCommand implements ICommand
 
   /**
    * The composite command is only undoable if all commands that it exectutes can be undone
-   * 
+   *
    * @see org.kalypso.commons.command.ICommand#isUndoable()
    */
   @Override
@@ -110,7 +110,7 @@ public class CompositeCommand implements ICommand
 
   /**
    * Executes all the commands in order they were added
-   * 
+   *
    * @see org.kalypso.commons.command.ICommand#process()
    */
   @Override
@@ -122,7 +122,7 @@ public class CompositeCommand implements ICommand
 
   /**
    * Executes all the commands in order they were added
-   * 
+   *
    * @see org.kalypso.commons.command.ICommand#redo()
    */
   @Override
@@ -133,7 +133,7 @@ public class CompositeCommand implements ICommand
 
   /**
    * Undos the commands in reverse order they were added
-   * 
+   *
    * @see org.kalypso.commons.command.ICommand#undo()
    */
   @Override

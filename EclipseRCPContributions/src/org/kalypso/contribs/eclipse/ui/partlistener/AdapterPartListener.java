@@ -195,7 +195,6 @@ public class AdapterPartListener<C> implements IPartListener2
     return true;
   }
 
-  @SuppressWarnings("unchecked")
   protected C doAdaptPart( final IWorkbenchPart part )
   {
     return (C) part.getAdapter( m_adapter );

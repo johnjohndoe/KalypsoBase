@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.event;
 
@@ -47,12 +47,12 @@ import org.kalypso.ogc.sensor.IObservation;
 
 /**
  * ObservationEventAdapter
- * 
+ *
  * @author schlienger
  */
 public class ObservationEventAdapter implements IObservationEventProvider
 {
-  private final Set<IObservationListener> m_listeners = new LinkedHashSet<IObservationListener>();
+  private final Set<IObservationListener> m_listeners = new LinkedHashSet<>();
 
   private final IObservation m_obs;
 

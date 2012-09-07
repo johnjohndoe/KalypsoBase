@@ -53,7 +53,7 @@ import org.kalypso.module.project.IProjectHandle;
  */
 public class ProjectItemModel // extends AbstractProjectHandleProvider implements IProjectHandleProvder
 {
-  private final Set<IProjectHandlesChangedListener> m_listener = new LinkedHashSet<IProjectHandlesChangedListener>();
+  private final Set<IProjectHandlesChangedListener> m_listener = new LinkedHashSet<>();
 
   private final IProjectHandleProvider[] m_itemProviders;
 
@@ -125,7 +125,7 @@ public class ProjectItemModel // extends AbstractProjectHandleProvider implement
 
   public synchronized IProjectHandle[] getProjects( )
   {
-    final Collection<IProjectHandle> items = new ArrayList<IProjectHandle>();
+    final Collection<IProjectHandle> items = new ArrayList<>();
     for( final IProjectHandleProvider provider : m_itemProviders )
     {
       final IProjectHandle[] projects = provider.getProjects();

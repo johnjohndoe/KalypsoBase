@@ -137,7 +137,7 @@ class ObservationUnmarshaller implements ICoreRunnableWithProgress
 
       // axes and values
       final List<AxisType> bindingAxes = binding.getAxis();
-      final Map<IAxis, IZmlValues> valuesMap = new HashMap<IAxis, IZmlValues>( bindingAxes.size() );
+      final Map<IAxis, IZmlValues> valuesMap = new HashMap<>( bindingAxes.size() );
 
       final String data = binding.getData(); // data is optional and can be null
 
@@ -212,7 +212,7 @@ class ObservationUnmarshaller implements ICoreRunnableWithProgress
 
   /**
    * Parses the values and create the corresponding objects.
-   * 
+   *
    * @param context
    *          context into which the original file exists
    * @param axisType

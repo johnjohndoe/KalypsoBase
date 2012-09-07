@@ -48,7 +48,7 @@ import org.apache.commons.collections.ExtendedProperties;
 
 /**
  * Default implementation of the IPublishingConfiguration interface
- * 
+ *
  * @author schlienger
  */
 public class PublishingConfiguration extends ExtendedProperties
@@ -57,7 +57,7 @@ public class PublishingConfiguration extends ExtendedProperties
 
   public PublishingConfiguration( )
   {
-    m_listeners = new ArrayList<IConfigurationListener>( 10 );
+    m_listeners = new ArrayList<>( 10 );
   }
 
   private void fireConfigurationChanged( final String key )

@@ -90,7 +90,7 @@ public class WspmTableUiHandlerProvider implements IComponentUiHandlerProvider
   {
     Assert.isTrue( tupleResult == m_profile.getResult() );
 
-    final List<ComponentHandlerSortContainer> handlers = new ArrayList<ComponentHandlerSortContainer>();
+    final List<ComponentHandlerSortContainer> handlers = new ArrayList<>();
     handlers.add( new ComponentHandlerSortContainer( "unknown", -1, new ComponentUiProblemHandler( m_profile ) ) ); //$NON-NLS-1$
 
     final IComponent[] pointMarkerTypes = m_profile.getPointMarkerTypes();
@@ -109,7 +109,7 @@ public class WspmTableUiHandlerProvider implements IComponentUiHandlerProvider
 
     Collections.sort( handlers, new ComponentHandlerContainerSorter() );
 
-    final Map<Integer, IComponentUiHandler> map = new LinkedHashMap<Integer, IComponentUiHandler>();
+    final Map<Integer, IComponentUiHandler> map = new LinkedHashMap<>();
 
     final ComponentHandlerSortContainer[] sorted = handlers.toArray( new ComponentHandlerSortContainer[] {} );
     for( final ComponentHandlerSortContainer handler : sorted )

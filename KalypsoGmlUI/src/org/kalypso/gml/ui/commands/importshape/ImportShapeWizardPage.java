@@ -45,7 +45,7 @@ public class ImportShapeWizardPage extends WizardPage
 
   protected static final String DATA_PROPERTY = "property"; //$NON-NLS-1$
 
-  private final Map<String, ComboViewer> m_propertyViewers = new HashMap<String, ComboViewer>();
+  private final Map<String, ComboViewer> m_propertyViewers = new HashMap<>();
 
   private final String[] m_properties;
 

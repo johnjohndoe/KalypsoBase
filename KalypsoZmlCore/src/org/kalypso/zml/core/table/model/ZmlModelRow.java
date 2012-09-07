@@ -64,7 +64,7 @@ public class ZmlModelRow implements IZmlModelRow
   private final Date m_index;
 
   /** Map<Reference (id), Reference> */
-  Map<String, IZmlModelValueCell> m_valueCells = new HashMap<String, IZmlModelValueCell>();
+  Map<String, IZmlModelValueCell> m_valueCells = new HashMap<>();
 
   private final IZmlModel m_model;
 

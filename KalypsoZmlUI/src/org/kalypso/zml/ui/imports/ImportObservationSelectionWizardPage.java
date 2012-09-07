@@ -93,7 +93,7 @@ import org.kalypso.zml.ui.internal.i18n.Messages;
  */
 public class ImportObservationSelectionWizardPage extends WizardPage implements /* FocusListener, */ISelectionProvider, ISelectionChangedListener
 {
-  private final List<ISelectionChangedListener> m_selectionListener = new ArrayList<ISelectionChangedListener>();
+  private final List<ISelectionChangedListener> m_selectionListener = new ArrayList<>();
 
   private final INativeObservationAdapter[] m_adapter;
 

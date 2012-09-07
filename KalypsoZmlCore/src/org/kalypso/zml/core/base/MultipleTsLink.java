@@ -55,7 +55,7 @@ import org.eclipse.core.runtime.Assert;
  */
 public class MultipleTsLink implements IMultipleZmlSourceElement
 {
-  private final Set<IndexedTsLink> m_links = new LinkedHashSet<IndexedTsLink>();
+  private final Set<IndexedTsLink> m_links = new LinkedHashSet<>();
 
   private final String m_identifier;
 
@@ -103,7 +103,7 @@ public class MultipleTsLink implements IMultipleZmlSourceElement
 
   private String[] getSortedLinks( final TSLinkWithName[] links )
   {
-    final Set<String> identifiers = new TreeSet<String>();
+    final Set<String> identifiers = new TreeSet<>();
     for( final TSLinkWithName link : links )
     {
       identifiers.add( link.getIdentifier() );

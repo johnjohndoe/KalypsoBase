@@ -59,7 +59,7 @@ import org.kalypso.zml.core.table.model.visitor.IZmlModelColumnVisitor;
  */
 public class ShiftDateValuesVisitor implements IZmlModelColumnVisitor
 {
-  Map<Date, Number> m_shift = new HashMap<Date, Number>();
+  Map<Date, Number> m_shift = new HashMap<>();
 
   ZmlModelTransaction m_transaction = new ZmlModelTransaction();
 

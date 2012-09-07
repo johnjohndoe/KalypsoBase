@@ -118,7 +118,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
 
     setMessage( Messages.getString( "org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.4" ) ); //$NON-NLS-1$
 
-    final Set<QName> validGeomProperties = new HashSet<QName>();
+    final Set<QName> validGeomProperties = new HashSet<>();
     validGeomProperties.add( GMLConstants.QN_LINE_STRING );
     validGeomProperties.add( GMLConstants.QN_MULTI_LINE_STRING );
     validGeomProperties.add( GM_Curve.CURVE_ELEMENT );
@@ -225,9 +225,6 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
     viewer.setContentProvider( new ArrayContentProvider() );
     viewer.setLabelProvider( new LabelProvider()
     {
-      /**
-       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
-       */
       @Override
       public String getText( final Object element )
       {
@@ -240,7 +237,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
     final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( m_profileType );
 
     final String[] markerTypes = provider.getPointProperties();
-    final Collection<IComponent> markerComponents = new ArrayList<IComponent>( markerTypes.length );
+    final Collection<IComponent> markerComponents = new ArrayList<>( markerTypes.length );
     for( final String markerType : markerTypes )
     {
       if( provider.isMarker( markerType ) )

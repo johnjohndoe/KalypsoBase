@@ -91,7 +91,7 @@ public final class ImportCoveragesOperation implements ICoreRunnableWithProgress
     final String taskName = Messages.getString( "org.kalypso.gml.ui.wizard.grid.AddRectifiedGridCoveragesWizard.5" );
 
     final SubMonitor progress = SubMonitor.convert( monitor, taskName, m_selectedFiles.length ); //$NON-NLS-1$
-    final Collection<ICoverage> newCoverages = new ArrayList<ICoverage>( m_selectedFiles.length );
+    final Collection<ICoverage> newCoverages = new ArrayList<>( m_selectedFiles.length );
     for( final File dataFile : m_selectedFiles )
     {
       final String name = dataFile.getName();

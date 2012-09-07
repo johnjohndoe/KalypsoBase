@@ -111,7 +111,7 @@ public class ThemeAndPropertyChooserGroup
 
   private IKalypsoFeatureTheme m_choosenTheme = null;
 
-  private final Map<PropertyDescriptor, IPropertyType> m_properties = new LinkedHashMap<PropertyDescriptor, IPropertyType>();
+  private final Map<PropertyDescriptor, IPropertyType> m_properties = new LinkedHashMap<>();
 
   /**
    * @param filer
@@ -150,8 +150,8 @@ public class ThemeAndPropertyChooserGroup
     themeComboViewer.getControl().setEnabled( polygoneThemes.length > 0 );
 
     /* Property choosers */
-    final Map<PropertyDescriptor, Control[]> propertyControls = new HashMap<PropertyDescriptor, Control[]>();
-    final Map<PropertyDescriptor, ComboViewer> propertyCombos = new HashMap<PropertyDescriptor, ComboViewer>();
+    final Map<PropertyDescriptor, Control[]> propertyControls = new HashMap<>();
+    final Map<PropertyDescriptor, ComboViewer> propertyCombos = new HashMap<>();
 
     for( final PropertyDescriptor pd : m_properties.keySet() )
     {
@@ -208,7 +208,7 @@ public class ThemeAndPropertyChooserGroup
     themeComboViewer.setSelection( themeSelection );
 
     /* Apply dialog settings */
-    final Map<PropertyDescriptor, IStructuredSelection> propertySelection = new HashMap<PropertyDescriptor, IStructuredSelection>();
+    final Map<PropertyDescriptor, IStructuredSelection> propertySelection = new HashMap<>();
 
     if( m_dialogSettings != null )
     {

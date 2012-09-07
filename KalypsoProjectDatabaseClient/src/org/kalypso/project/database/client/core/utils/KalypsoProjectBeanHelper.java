@@ -59,7 +59,7 @@ public class KalypsoProjectBeanHelper
    */
   public static KalypsoProjectBean[] getSortedBeans( final KalypsoProjectBean headBean )
   {
-    final Set<KalypsoProjectBean> beans = new TreeSet<KalypsoProjectBean>( new Comparator<KalypsoProjectBean>()
+    final Set<KalypsoProjectBean> beans = new TreeSet<>( new Comparator<KalypsoProjectBean>()
     {
       @Override
       public int compare( final KalypsoProjectBean o1, final KalypsoProjectBean o2 )

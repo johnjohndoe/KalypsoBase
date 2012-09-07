@@ -54,7 +54,7 @@ import org.eclipse.core.resources.IResourceVisitor;
  */
 public class CalcCaseCollector implements IResourceVisitor
 {
-  private final Collection<IResource> m_calcCases = new ArrayList<IResource>();
+  private final Collection<IResource> m_calcCases = new ArrayList<>();
 
   private final String m_controlPath;
 

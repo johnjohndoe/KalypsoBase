@@ -87,7 +87,7 @@ import org.kalypso.zml.ui.table.dialogs.input.worker.FindNextValueVisitor;
 
 /**
  * composite for adding / overwriting single table values
- * 
+ *
  * @author Dirk Kuch
  */
 public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertModelListener, IAbstractEnhancedWidgetChangeListener
@@ -104,7 +104,7 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
 
   protected final FormToolkit m_toolkit;
 
-  private final Set<IZmlEinzelwertCompositeListener> m_listeners = new LinkedHashSet<IZmlEinzelwertCompositeListener>();
+  private final Set<IZmlEinzelwertCompositeListener> m_listeners = new LinkedHashSet<>();
 
   public ZmlEinzelwertComposite( final Composite parent, final FormToolkit toolkit, final ZmlEinzelwertModel model )
   {
@@ -170,14 +170,14 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
       final Date[] existing = m_model.getExistingDateValues();
       final Date[] dayAnchors = getDayAnchors( existing );
 
-      final EnhancedComboViewer<Date> viewerDay = new EnhancedComboViewer<Date>( base, toolkit, new DateWidgetRule() );
+      final EnhancedComboViewer<Date> viewerDay = new EnhancedComboViewer<>( base, toolkit, new DateWidgetRule() );
       viewerDay.addListener( this );
       row.addWidget( viewerDay );
       viewerDay.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
       viewerDay.setInput( dayAnchors );
       viewerDay.setSelection( findSelectedAnchor( row, dayAnchors ) );
 
-      final EnhancedComboViewer<Date> viewerTime = new EnhancedComboViewer<Date>( base, toolkit, new TimeWidgetRule() );
+      final EnhancedComboViewer<Date> viewerTime = new EnhancedComboViewer<>( base, toolkit, new TimeWidgetRule() );
       viewerTime.addListener( this );
       row.addWidget( viewerTime );
       viewerTime.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -240,7 +240,7 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
 
       toolkit.createLabel( base, "" ).setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) ); //$NON-NLS-1$
 
-      final EnhancedTextBox<Double> textBox = new EnhancedTextBox<Double>( base, toolkit, new DoubeValueWidgetRule() );
+      final EnhancedTextBox<Double> textBox = new EnhancedTextBox<>( base, toolkit, new DoubeValueWidgetRule() );
       textBox.addListener( this );
       row.addWidget( textBox );
       textBox.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -394,7 +394,7 @@ public class ZmlEinzelwertComposite extends Composite implements IZmlEinzelwertM
 
   private Date[] getDayAnchors( final Date[] existing )
   {
-    final Set<Date> anchors = new TreeSet<Date>();
+    final Set<Date> anchors = new TreeSet<>();
 
     for( final Date date : existing )
     {

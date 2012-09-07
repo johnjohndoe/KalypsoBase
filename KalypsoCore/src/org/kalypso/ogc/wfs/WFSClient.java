@@ -50,7 +50,7 @@ import org.xml.sax.SAXException;
 
 /**
  * An WebFeatureServiceClient. Implements the basic operations to access an OGC-WebFeatureService.
- * 
+ *
  * @author Gernot Belger
  */
 public class WFSClient
@@ -70,7 +70,7 @@ public class WFSClient
 
   public static final String URL_PARAM_SERVICE_DEFAULT = "WFS"; //$NON-NLS-1$
 
-  public static final String URL_PARAM_REQUEST = "REQUEST"; //$NON-NLS-1$ 
+  public static final String URL_PARAM_REQUEST = "REQUEST"; //$NON-NLS-1$
 
   private static final String PARAM_DESCRIBE_FEATURE_TYPE_NAMESPACE = "NAMESPACE"; //$NON-NLS-1$
 
@@ -100,9 +100,9 @@ public class WFSClient
   private final HttpClient m_httpClient;
 
   /** All Feature types supported by this WFS. */
-  private final Map<QName, WFSFeatureType> m_featureTypes = new HashMap<QName, WFSFeatureType>();
+  private final Map<QName, WFSFeatureType> m_featureTypes = new HashMap<>();
 
-  private final Map<WFSFeatureType, IFeatureType> m_schemaHash = new HashMap<WFSFeatureType, IFeatureType>();
+  private final Map<WFSFeatureType, IFeatureType> m_schemaHash = new HashMap<>();
 
   public WFSClient( final URL wfsURL )
   {
@@ -229,12 +229,12 @@ public class WFSClient
 
   /**
    * This function returns all filter capabilities operations for the wfs.
-   * 
+   *
    * @return All filter capabilities operations.
    */
   public String[] getAllFilterCapabilitesOperations( )
   {
-    final List<String> operators = new ArrayList<String>();
+    final List<String> operators = new ArrayList<>();
 
     final SpatialOperator[] spatialOperators = m_wfsCapabilities.getFilterCapabilities().getSpatialCapabilities().getSpatialOperators();
     for( final SpatialOperator spatialOperator : spatialOperators )
@@ -457,7 +457,7 @@ public class WFSClient
     final WFSFeatureType featureType = getFeatureType( name );
     final QualifiedName qname = featureType.getName();
 
-    final Map<String, String> params = new HashMap<String, String>(); // UrlUtilities.parseQuery( getUrl );
+    final Map<String, String> params = new HashMap<>(); // UrlUtilities.parseQuery( getUrl );
 
     params.put( URL_PARAM_SERVICE, "WFS" ); //$NON-NLS-1$
     params.put( URL_PARAM_VERSION, m_wfsCapabilities.getVersion() );

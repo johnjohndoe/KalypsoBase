@@ -62,10 +62,10 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * This implementation is based on a formatstring tha may contain the <code>${property:XXX}</code> notations.<br>
  * <br>
  * This class is intended to be overwritten by specialised implementations.
- * 
+ *
  * @author Gernot Belger
  */
-public class FeatureThemeInfo implements IKalypsoThemeInfo, IKalypsoFeatureThemeInfo
+public class FeatureThemeInfo implements IKalypsoFeatureThemeInfo
 {
   private IKalypsoFeatureTheme m_theme = null;
 
@@ -90,7 +90,7 @@ public class FeatureThemeInfo implements IKalypsoThemeInfo, IKalypsoFeatureTheme
 
   /**
    * Final, because called from a constructor.
-   * 
+   *
    * @see org.kalypso.ogc.gml.IKalypsoThemeInfo#init(org.kalypso.ogc.gml.IKalypsoTheme)
    */
   @Override

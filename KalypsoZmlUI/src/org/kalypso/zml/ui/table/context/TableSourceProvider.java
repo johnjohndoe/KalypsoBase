@@ -70,7 +70,7 @@ import org.kalypso.zml.ui.table.IZmlTableCompositeListener;
  * Manages context and sources corresponding to the chart.<br>
  * As soon as the manager is created on a chart, the chart-context is activated and registered with the given
  * serviceLocator. Also, the chart is provides as source via the evaluation context.<br>
- * 
+ *
  * @author Gernot Belger
  */
 public class TableSourceProvider extends AbstractSourceProvider
@@ -100,7 +100,7 @@ public class TableSourceProvider extends AbstractSourceProvider
    * This collection contains all services, with which this provider has been registered. Used in order to correctly
    * unregister.
    */
-  private final Collection<IServiceWithSources> m_registeredServices = new HashSet<IServiceWithSources>();
+  private final Collection<IServiceWithSources> m_registeredServices = new HashSet<>();
 
   /** Ensures, that the context are activated in the same order as the themes are activated. */
   private final ISchedulingRule m_mutexRule = new MutexRule();
@@ -165,7 +165,7 @@ public class TableSourceProvider extends AbstractSourceProvider
   @Override
   public Map< ? , ? > getCurrentState( )
   {
-    final Map<String, Object> currentState = new TreeMap<String, Object>();
+    final Map<String, Object> currentState = new TreeMap<>();
     currentState.put( ACTIVE_TABLE_NAME, m_source.getComposite() );
 
     return currentState;

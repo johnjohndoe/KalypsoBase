@@ -71,14 +71,14 @@ public class ZmlCommandSplineInterpolation extends AbstractHandler
 {
   /**
    * <pre>
-   * 
+   *
    *   - - s1 = = = x = = = x = = = s2 - -
-   * 
+   *
    * s1 -> start point
    * s2 -> end point
    * x  -> fix stuetzstellen
    * =  -> will be replaced by spline interpolation point
-   * 
+   *
    * </pre>
    */
   @Override
@@ -105,7 +105,7 @@ public class ZmlCommandSplineInterpolation extends AbstractHandler
 
       final IZmlModelValueCell[] stuetzstellen = visitor.getStuetzstellen();
 
-      final List<mxPoint> mxPoints = new ArrayList<mxPoint>();
+      final List<mxPoint> mxPoints = new ArrayList<>();
 
       final Splines splines = new Splines( new DateRange( s1.getIndexValue(), s2.getIndexValue() ) );
 
@@ -135,7 +135,7 @@ public class ZmlCommandSplineInterpolation extends AbstractHandler
 
   private mxPoint[] getPoints( final Splines splines, final IZmlModelValueCell... references ) throws SensorException
   {
-    final List<mxPoint> points = new ArrayList<mxPoint>();
+    final List<mxPoint> points = new ArrayList<>();
 
     for( final IZmlModelValueCell reference : references )
     {

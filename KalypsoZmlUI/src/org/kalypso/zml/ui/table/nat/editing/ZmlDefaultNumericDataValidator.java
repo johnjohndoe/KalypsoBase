@@ -42,14 +42,13 @@ package org.kalypso.zml.ui.table.nat.editing;
 
 import jregex.Pattern;
 import net.sourceforge.nattable.data.validate.DataValidator;
-import net.sourceforge.nattable.data.validate.IDataValidator;
 
 import org.kalypso.contribs.java.lang.NumberUtils;
 
 /**
  * @author Dirk Kuch
  */
-public class ZmlDefaultNumericDataValidator extends DataValidator implements IDataValidator
+public class ZmlDefaultNumericDataValidator extends DataValidator
 {
   private final Pattern m_pattern = new Pattern( "[+-]?[0-9.,]*" ); //$NON-NLS-1$
 

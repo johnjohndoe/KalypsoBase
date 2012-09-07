@@ -53,14 +53,14 @@ import org.eclipse.jface.viewers.StructuredSelection;
 /**
  * Default implementation of {@link org.eclipse.jface.viewers.IPostSelectionProvider}.<br>
  * Implements support for the listeners and the getter / setter. Subclasses may re-implement the getter/setter.<br>
- * 
+ *
  * @author Gernot Belger
  */
 public class SelectionProviderAdapter implements IPostSelectionProvider
 {
-  private final List<ISelectionChangedListener> m_listeners = new ArrayList<ISelectionChangedListener>();
+  private final List<ISelectionChangedListener> m_listeners = new ArrayList<>();
 
-  private final List<ISelectionChangedListener> m_postListeners = new ArrayList<ISelectionChangedListener>();
+  private final List<ISelectionChangedListener> m_postListeners = new ArrayList<>();
 
   private ISelection m_selection = StructuredSelection.EMPTY;
 

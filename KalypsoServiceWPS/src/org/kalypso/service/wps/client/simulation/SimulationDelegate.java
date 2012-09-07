@@ -91,7 +91,7 @@ import org.kalypso.simulation.core.simspec.Modeldata.Output;
 
 /**
  * This client can work with simulations.
- * 
+ *
  * @author Holger Albert
  */
 public class SimulationDelegate
@@ -136,7 +136,7 @@ public class SimulationDelegate
 
   /**
    * The constructor.
-   * 
+   *
    * @param identifier
    *          The id identifying the simulation.
    * @param calcCaseFolder
@@ -205,7 +205,7 @@ public class SimulationDelegate
 
   /**
    * This function copies all input files.
-   * 
+   *
    * @param files
    *          The files to copy.
    */
@@ -226,7 +226,7 @@ public class SimulationDelegate
 
   /**
    * This function copies one input file to the place, where the server can read it.
-   * 
+   *
    * @param ifile
    *          The file to copy.
    */
@@ -249,7 +249,7 @@ public class SimulationDelegate
     }
     catch( final Exception ex )
     {
-      throw new WPSException( Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationDelegate.2", ifile.getName() ), ex ); //$NON-NLS-1$ 
+      throw new WPSException( Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationDelegate.2", ifile.getName() ), ex ); //$NON-NLS-1$
     }
   }
 
@@ -455,7 +455,7 @@ public class SimulationDelegate
   /**
    * This function creates the inputs for the server. It will also copy the data to the right place, if needed and
    * ajdust the references according to it.
-   * 
+   *
    * @param description
    *          The process description type.
    * @param monitor
@@ -480,7 +480,7 @@ public class SimulationDelegate
       final FileSystemManager fsManager = m_fsManager;
 
       /* Get the list with the input. */
-      final Map<String, Object> wpsInputs = new HashMap<String, Object>();
+      final Map<String, Object> wpsInputs = new HashMap<>();
 
       /* Get the input list. */
       final DataInputs dataInputs = description.getDataInputs();
@@ -505,7 +505,7 @@ public class SimulationDelegate
           if( inputDescription.getMinimumOccurs().intValue() == 1 )
           {
             /* Ooops, it is a mandatory one, but it is missing in our model data. */
-            final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationDelegate.8", identifier.getValue() ), null ); //$NON-NLS-1$ 
+            final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationDelegate.8", identifier.getValue() ), null ); //$NON-NLS-1$
             throw new CoreException( status );
           }
 
@@ -566,7 +566,7 @@ public class SimulationDelegate
                 continue;
               }
 
-              throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationDelegate.10", inputPath ) ) ); //$NON-NLS-1$ 
+              throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.service.wps.client.simulation.SimulationDelegate.10", inputPath ) ) ); //$NON-NLS-1$
             }
 
             /* Collect all files. */
@@ -656,7 +656,7 @@ public class SimulationDelegate
 
   /**
    * This function creates the outputs from the model data.
-   * 
+   *
    * @return The output from the model data.
    */
   public List<String> createOutputs( )
@@ -665,7 +665,7 @@ public class SimulationDelegate
     final List<Output> outputList = m_data.getOutput();
 
     /* The storage for the output values. */
-    final List<String> outputs = new LinkedList<String>();
+    final List<String> outputs = new LinkedList<>();
 
     for( final Output output : outputList )
       outputs.add( output.getId() );

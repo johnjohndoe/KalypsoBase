@@ -101,7 +101,7 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 public class CreateDividerOperation implements ICoreRunnableWithProgress
 {
-  private final List<FeatureChange> m_changes = new ArrayList<FeatureChange>();
+  private final List<FeatureChange> m_changes = new ArrayList<>();
 
   private final Object[] m_profileFeatures;
 
@@ -235,7 +235,7 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
   private Integer[] findBestMarkers( final IProfil profil, final Integer[] nearestPointIndices )
   {
     /* Clear points that are contained multiple times */
-    final Set<Integer> nearestPointSet = new HashSet<Integer>( Arrays.asList( nearestPointIndices ) );
+    final Set<Integer> nearestPointSet = new HashSet<>( Arrays.asList( nearestPointIndices ) );
     nearestPointSet.remove( null );
     final Integer[] uniqueIntersectionPoints = nearestPointSet.toArray( new Integer[nearestPointSet.size()] );
 
@@ -285,7 +285,7 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
 
     final Integer[] result = new Integer[2];
 
-    final SortedSet<Integer> markerIndices = new TreeSet<Integer>( Arrays.asList( intersectionPoints ) );
+    final SortedSet<Integer> markerIndices = new TreeSet<>( Arrays.asList( intersectionPoints ) );
 
     result[0] = markerIndices.first();
     result[1] = markerIndices.last();
@@ -296,14 +296,14 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
   private Integer[] mixExistingWithIntersectionPoint( final IProfil profil, final Integer intersectionIndex )
   {
     final Integer[] markerPoints = existingMarkersAsIndices( profil );
-    final SortedSet<Integer> markerIndices = new TreeSet<Integer>( Arrays.asList( markerPoints ) );
+    final SortedSet<Integer> markerIndices = new TreeSet<>( Arrays.asList( markerPoints ) );
 
     // depends on the side of the profile!
     final IProfileRecord lowestPoint = ProfileVisitors.findLowestPoint( profil );
     if( Objects.isNull( lowestPoint ) )
       return new Integer[] { intersectionIndex };
 
-    final Collection<Integer> result = new ArrayList<Integer>( 2 );
+    final Collection<Integer> result = new ArrayList<>( 2 );
     result.add( intersectionIndex );
 
     if( intersectionIndex > lowestPoint.getIndex() )
@@ -353,7 +353,7 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
     final GM_Envelope curveEnvelope = curve.getEnvelope();
     @SuppressWarnings("unchecked")
     final List< ? > lineIntersectors = m_lineFeatures.query( curveEnvelope, null );
-    final List<Point> pointList = new ArrayList<Point>();
+    final List<Point> pointList = new ArrayList<>();
 
     for( final Object lineF : lineIntersectors )
     {
@@ -440,7 +440,7 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
 
   private double[] getIntersectionWidths( final IProfil profil, final Point[] intersectionPoints )
   {
-    final Collection<Double> widthList = new ArrayList<Double>( intersectionPoints.length );
+    final Collection<Double> widthList = new ArrayList<>( intersectionPoints.length );
     for( final Point point : intersectionPoints )
     {
       try

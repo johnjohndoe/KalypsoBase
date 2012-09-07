@@ -102,7 +102,7 @@ public class FileAndHistoryData extends AbstractModelObject
 
     // update source names history
     final String[] history = getHistory();
-    final Set<String> historySet = new LinkedHashSet<String>();
+    final Set<String> historySet = new LinkedHashSet<>();
     // New entry on, top; avoid duplicate entries
     if( path != null )
       historySet.add( path.toPortableString() );

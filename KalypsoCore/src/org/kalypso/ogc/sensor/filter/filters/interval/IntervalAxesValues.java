@@ -95,7 +95,7 @@ public class IntervalAxesValues
 
   public TupleModelDataSet[] getPlainValues( )
   {
-    final Set<TupleModelDataSet> dataSets = new LinkedHashSet<TupleModelDataSet>();
+    final Set<TupleModelDataSet> dataSets = new LinkedHashSet<>();
     for( final IAxis valueAxis : m_valueAxes )
     {
       dataSets.add( new TupleModelDataSet( valueAxis, 0d, KalypsoStati.BIT_OK, IntervalSourceHandler.SOURCE_INITIAL_VALUE ) );
@@ -126,7 +126,7 @@ public class IntervalAxesValues
 
   public TupleModelDataSet[] getDefaultValues( )
   {
-    final Set<TupleModelDataSet> dataSets = new LinkedHashSet<TupleModelDataSet>();
+    final Set<TupleModelDataSet> dataSets = new LinkedHashSet<>();
     for( final IAxis valueAxis : m_valueAxes )
     {
       dataSets.add( new TupleModelDataSet( valueAxis, m_defaultValue, m_defaultStatus, IntervalSourceHandler.SOURCE_INITIAL_VALUE ) );
@@ -150,7 +150,7 @@ public class IntervalAxesValues
 
   public IntervalData asIntervalData( final Interval interval, final ITupleModel model, final int index ) throws SensorException
   {
-    final Set<TupleModelDataSet> dataSets = new LinkedHashSet<TupleModelDataSet>();
+    final Set<TupleModelDataSet> dataSets = new LinkedHashSet<>();
 
     for( final IAxis valueAxis : m_valueAxes )
     {
@@ -167,7 +167,7 @@ public class IntervalAxesValues
 
   public IntervalData createDefaultData( final Interval interval )
   {
-    final Set<TupleModelDataSet> dataSets = new LinkedHashSet<TupleModelDataSet>();
+    final Set<TupleModelDataSet> dataSets = new LinkedHashSet<>();
     for( final IAxis axis : m_valueAxes )
     {
       dataSets.add( new TupleModelDataSet( axis, m_defaultValue, m_defaultStatus, IntervalSourceHandler.SOURCE_INTERVAL_FITLER ) );
@@ -179,7 +179,7 @@ public class IntervalAxesValues
   public IntervalData createPlainData( final Interval interval )
   {
 
-    final Set<TupleModelDataSet> dataSets = new LinkedHashSet<TupleModelDataSet>();
+    final Set<TupleModelDataSet> dataSets = new LinkedHashSet<>();
     for( final IAxis axis : m_valueAxes )
     {
       dataSets.add( new TupleModelDataSet( axis, 0d, KalypsoStati.BIT_OK, IntervalSourceHandler.SOURCE_INTERVAL_FITLER ) );

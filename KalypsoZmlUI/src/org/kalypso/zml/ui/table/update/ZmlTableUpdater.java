@@ -73,7 +73,7 @@ public class ZmlTableUpdater implements Runnable
   public void run( )
   {
     /** tricky: map is used for restoring the order of columns from the underlying calcWizard.xml */
-    final Set<IZmlSourceElement> indexList = new TreeSet<IZmlSourceElement>( new Comparator<IZmlSourceElement>()
+    final Set<IZmlSourceElement> indexList = new TreeSet<>( new Comparator<IZmlSourceElement>()
     {
       @Override
       public int compare( final IZmlSourceElement l1, final IZmlSourceElement l2 )

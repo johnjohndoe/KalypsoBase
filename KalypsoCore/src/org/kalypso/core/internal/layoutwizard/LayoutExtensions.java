@@ -52,7 +52,7 @@ import org.kalypso.core.layoutwizard.ILayoutPartFactory;
 
 /**
  * This class manages the layout extension point.
- * 
+ *
  * @author Holger Albert
  */
 public class LayoutExtensions
@@ -79,7 +79,7 @@ public class LayoutExtensions
 
   /**
    * This function returns the layout part factory for the given id.
-   * 
+   *
    * @param id
    *          The id of the layout part factory.
    * @return The layout part factory or null, if none was registered with this id.
@@ -94,7 +94,7 @@ public class LayoutExtensions
 
   /**
    * This function returns the layout part factory cache.
-   * 
+   *
    * @return The layout part factory cache.
    */
   private static synchronized Map<String, ILayoutPartFactory> getLpfCache( ) throws CoreException
@@ -107,13 +107,13 @@ public class LayoutExtensions
 
   /**
    * This function creates the layout part factory cache.
-   * 
+   *
    * @return The layout part factory cache.
    */
   private static synchronized Map<String, ILayoutPartFactory> createLpfCache( ) throws CoreException
   {
     /* Create the cache of the layout part factories. */
-    final HashMap<String, ILayoutPartFactory> lpfCache = new HashMap<String, ILayoutPartFactory>();
+    final HashMap<String, ILayoutPartFactory> lpfCache = new HashMap<>();
 
     /* Get the extension registry. */
     final IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();

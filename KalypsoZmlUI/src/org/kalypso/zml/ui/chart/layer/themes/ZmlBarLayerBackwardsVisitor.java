@@ -81,7 +81,7 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
  */
 class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPainter
 {
-  private final Map<String, IChartLayerFilter> m_filters = new HashMap<String, IChartLayerFilter>();
+  private final Map<String, IChartLayerFilter> m_filters = new HashMap<>();
 
   private final IAxis m_dateAxis;
 

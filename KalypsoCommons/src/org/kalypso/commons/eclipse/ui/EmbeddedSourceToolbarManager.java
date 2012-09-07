@@ -63,7 +63,7 @@ import org.kalypso.contribs.eclipse.jface.action.ToolbarManagerUtils;
  */
 public class EmbeddedSourceToolbarManager
 {
-  private final Collection<IExecutionListener> m_executionListeners = new ArrayList<IExecutionListener>();
+  private final Collection<IExecutionListener> m_executionListeners = new ArrayList<>();
 
   private final IServiceLocator m_serviceLocator;
 

@@ -73,7 +73,7 @@ import org.kalypso.gmlschema.xml.TypeReference;
  *      <attributeGroup ref="gml:AssociationAttributeGroup"/>
  *  </complexType>
  * <code>
- * 
+ *
  * @author Gernot Belger
  */
 public class GeometryPropertyBuilder extends AbstractBuilder
@@ -155,7 +155,7 @@ public class GeometryPropertyBuilder extends AbstractBuilder
 
     // find referenced element (target)
     final List<ElementWithOccurs> collector = GMLSchemaUtilities.collectElements( gmlSchema, complexType, null, null, followExtensions );
-    final List<QName> results = new ArrayList<QName>( collector.size() );
+    final List<QName> results = new ArrayList<>( collector.size() );
     for( final ElementWithOccurs elementWithOccurs : collector )
     {
       final Element targetElement = elementWithOccurs.getElement();

@@ -68,7 +68,7 @@ import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
  */
 public class SpatialIndexTest extends TestCase
 {
-  private final List<File> m_filesToDelete = new ArrayList<File>();
+  private final List<File> m_filesToDelete = new ArrayList<>();
 
   @Override
   protected void tearDown( ) throws Exception

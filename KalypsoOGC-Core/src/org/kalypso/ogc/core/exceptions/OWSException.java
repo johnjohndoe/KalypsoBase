@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.core.exceptions;
 
@@ -54,7 +54,7 @@ import org.kalypso.ogc.core.utils.OWSUtilities;
 
 /**
  * This exception can generate an OWS error xml.
- * 
+ *
  * @author Toni DiNardo
  */
 public class OWSException extends Exception
@@ -91,7 +91,7 @@ public class OWSException extends Exception
 
   /**
    * The constructor.
-   * 
+   *
    * @param version
    *          Specification version for OWS operation. The string value shall contain one x.y.z "version" value (e.g.,
    *          "2.1.3"). A version number shall contain three non-negative integers separated by decimal points, in the
@@ -120,7 +120,7 @@ public class OWSException extends Exception
 
   /**
    * The constructor.
-   * 
+   *
    * @param message
    *          The detail message. The detail message is saved for later retrieval by the getMessage() method.
    * @param version
@@ -153,7 +153,7 @@ public class OWSException extends Exception
 
   /**
    * The constructor.
-   * 
+   *
    * @param cause
    *          The cause (which is saved for later retrieval by the getCause() method). (A null value is permitted, and
    *          indicates that the cause is nonexistent or unknown.)
@@ -187,7 +187,7 @@ public class OWSException extends Exception
 
   /**
    * The constructor.
-   * 
+   *
    * @param message
    *          The detail message. The detail message is saved for later retrieval by the getMessage() method.
    * @param cause
@@ -223,7 +223,7 @@ public class OWSException extends Exception
 
   /**
    * This function serializes the OWS exception into XML form.
-   * 
+   *
    * @return The OWS exception in XML form.
    */
   public String toXML( )
@@ -266,7 +266,7 @@ public class OWSException extends Exception
 
   /**
    * This function returns the version.
-   * 
+   *
    * @return The version.
    */
   public String getVersion( )
@@ -276,7 +276,7 @@ public class OWSException extends Exception
 
   /**
    * This function returns the language.
-   * 
+   *
    * @return The language.
    */
   public String getLang( )
@@ -286,7 +286,7 @@ public class OWSException extends Exception
 
   /**
    * This function returns the exception code.
-   * 
+   *
    * @return The exception code.
    */
   public ExceptionCode getExceptionCode( )
@@ -296,7 +296,7 @@ public class OWSException extends Exception
 
   /**
    * This function returns the locator.
-   * 
+   *
    * @return The locator.
    */
   public String getLocator( )
@@ -306,7 +306,7 @@ public class OWSException extends Exception
 
   /**
    * This function initializes the OWS exception.
-   * 
+   *
    * @param version
    *          Specification version for OWS operation. The string value shall contain one x.y.z "version" value (e.g.,
    *          "2.1.3"). A version number shall contain three non-negative integers separated by decimal points, in the
@@ -337,13 +337,13 @@ public class OWSException extends Exception
 
   /**
    * This function returns the exception types.
-   * 
+   *
    * @return The exception types.
    */
   private ExceptionType[] getExceptionTypes( )
   {
     /* Memory for the exception types. */
-    final List<ExceptionType> exceptions = new ArrayList<ExceptionType>();
+    final List<ExceptionType> exceptions = new ArrayList<>();
 
     /* Collect the exception types recursively. */
     collectExceptionTypes( this, exceptions );
@@ -353,7 +353,7 @@ public class OWSException extends Exception
 
   /**
    * This function collects the exception types and adds them to the list of exception types.
-   * 
+   *
    * @param throwable
    *          The base throwable.
    * @param exceptions
@@ -378,7 +378,7 @@ public class OWSException extends Exception
 
   /**
    * This function builds the exception type for the given throwable.
-   * 
+   *
    * @param throwable
    *          The throwable, the exception type will be build for.
    * @return The exception type.

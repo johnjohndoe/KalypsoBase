@@ -94,7 +94,7 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
 
   ZmlModelColumnLoader m_loader;
 
-  private final Map<String, AbstractColumnType> m_columnTypeMap = new LinkedHashMap<String, AbstractColumnType>();
+  private final Map<String, AbstractColumnType> m_columnTypeMap = new LinkedHashMap<>();
 
   private String[] m_ignoreTypes;
 
@@ -241,7 +241,7 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
     m_rows.clear();
   }
 
-  final Set<IZmlModelColumn> m_stack = new LinkedHashSet<IZmlModelColumn>();
+  final Set<IZmlModelColumn> m_stack = new LinkedHashSet<>();
 
   int m_stackEvent = 0;
 
@@ -316,7 +316,7 @@ public class ZmlModel implements IZmlModel, IZmlModelColumnListener
   @Deprecated
   public ZmlModelColumn[] getAvailableColumns( )
   {
-    final Set<ZmlModelColumn> active = new LinkedHashSet<ZmlModelColumn>();
+    final Set<ZmlModelColumn> active = new LinkedHashSet<>();
 
     final ZmlModelColumn[] columns = getColumns();
     for( final ZmlModelColumn column : columns )

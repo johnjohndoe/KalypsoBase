@@ -73,7 +73,7 @@ import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 
 /**
  * merges multiple observation sources to one single result observation.
- * 
+ *
  * @author Dirk Kuch
  */
 public class MergeObservationWorker implements ICoreRunnableWithProgress
@@ -135,13 +135,10 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
     Arrays.sort( m_sources, COMPARATOR );
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
-    final List<IStatus> statis = new ArrayList<IStatus>();
+    final List<IStatus> statis = new ArrayList<>();
 
     final SimpleTupleModel baseModel = new SimpleTupleModel( m_axes );
 
@@ -198,7 +195,7 @@ public class MergeObservationWorker implements ICoreRunnableWithProgress
 
   private Object[][] getData( final IObservation srcObservation, final ITupleModel srcModel ) throws SensorException
   {
-    final List<Object[]> data = new ArrayList<Object[]>();
+    final List<Object[]> data = new ArrayList<>();
 
     final AxisMapping mapping = new AxisMapping( m_axes, srcModel.getAxes() );
     final IAxis[] srcAxes = mapping.getSourceAxes();

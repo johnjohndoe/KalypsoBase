@@ -276,7 +276,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     if( objects.size() == 0 )
       return new IObservation[] {};
 
-    final List<IObservation<TupleResult>> myResults = new ArrayList<IObservation<TupleResult>>();
+    final List<IObservation<TupleResult>> myResults = new ArrayList<>();
 
     // iterate over all profile objects and create its IProfileObject representation
     for( final Object obj : objects )
@@ -330,7 +330,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
   public synchronized IFeatureBindingCollection<Image> getImages( )
   {
     if( m_images == null )
-      m_images = new FeatureBindingCollection<Image>( this, Image.class, MEMBER_IMAGE, true );
+      m_images = new FeatureBindingCollection<>( this, Image.class, MEMBER_IMAGE, true );
 
     return m_images;
   }
@@ -494,7 +494,6 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     }
   }
 
-  @SuppressWarnings("unchecked")
   public void addProfileObject( final IProfileObject profileObject )
   {
     final IFeatureType featureType = getFeatureType();

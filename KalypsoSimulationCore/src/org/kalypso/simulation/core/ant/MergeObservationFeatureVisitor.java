@@ -114,7 +114,7 @@ public class MergeObservationFeatureVisitor implements FeatureVisitor
       final TimeseriesLinkType obsLink = (TimeseriesLinkType) f.getProperty( m_observationProperty );
       if( obsLink == null )
       {
-        m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, Messages.getString( "org.kalypso.ogc.util.MergeObservationFeatureVisitor.0", featureId, m_observationProperty ) ); //$NON-NLS-1$ 
+        m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, Messages.getString( "org.kalypso.ogc.util.MergeObservationFeatureVisitor.0", featureId, m_observationProperty ) ); //$NON-NLS-1$
         return true;
       }
 
@@ -173,7 +173,7 @@ public class MergeObservationFeatureVisitor implements FeatureVisitor
 
   /**
    * Merges the two observations as described in the class comment.
-   * 
+   *
    * @throws SensorException
    */
   private void mergeObservation( final IObservation sourceObs, final IObservation targetObs ) throws SensorException
@@ -261,12 +261,12 @@ public class MergeObservationFeatureVisitor implements FeatureVisitor
 
   /**
    * Filters the 'good' target axises and maps them to their corresponding source axes.
-   * 
+   *
    * @return Map <IAxis[], IAxis[]>; each array is of size 2; the axis and its status axis
    */
   private Map<IAxis[], IAxis[]> mapAxes( final IAxis[] sourceAxes, final IAxis[] targetAxes )
   {
-    final Map<IAxis[], IAxis[]> result = new HashMap<IAxis[], IAxis[]>();
+    final Map<IAxis[], IAxis[]> result = new HashMap<>();
 
     for( final IAxis targetAxis : targetAxes )
     {

@@ -1,12 +1,11 @@
 package org.kalypso.zml.core;
 
 import org.eclipse.core.runtime.Plugin;
-import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
-public class KalypsoZmlCore extends Plugin implements BundleActivator
+public class KalypsoZmlCore extends Plugin
 {
- 
+
   private static BundleContext CONTEXT;
 
   static BundleContext getContext( )

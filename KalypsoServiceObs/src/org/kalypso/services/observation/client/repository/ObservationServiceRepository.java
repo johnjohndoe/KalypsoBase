@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.services.observation.client.repository;
 
@@ -50,7 +50,6 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.repository.AbstractRepository;
 import org.kalypso.repository.IModifyableRepository;
 import org.kalypso.repository.IRepositoryItem;
-import org.kalypso.repository.IWriteableRepository;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.repository.utils.RepositoryItems;
 import org.kalypso.services.observation.KalypsoServiceObs;
@@ -60,13 +59,13 @@ import org.kalypso.services.observation.sei.StatusBean;
 
 /**
  * Repository of the Observation Service.
- * 
+ *
  * @author Schlienger
  */
-public class ObservationServiceRepository extends AbstractRepository implements IModifyableRepository, IWriteableRepository
+public class ObservationServiceRepository extends AbstractRepository implements IModifyableRepository
 {
   /** URL-Scheme that identifies the observation service */
-  public static final String ID = "kalypso-ocs"; //$NON-NLS-1$ 
+  public static final String ID = "kalypso-ocs"; //$NON-NLS-1$
 
   private static String ID_COLON = ID + ":"; //$NON-NLS-1$
 
@@ -151,7 +150,7 @@ public class ObservationServiceRepository extends AbstractRepository implements 
     try
     {
       final IObservationService service = getService();
-      final List<IRepositoryItem> items = new ArrayList<IRepositoryItem>();
+      final List<IRepositoryItem> items = new ArrayList<>();
 
       final ItemBean[] beans = service.getChildren( ROOT_ITEM );
       for( final ItemBean bean : beans )

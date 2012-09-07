@@ -38,7 +38,7 @@ public class KalypsoServiceObs extends Plugin
   // The shared instance.
   private static KalypsoServiceObs PLUGIN;
 
-  private final Map<String, IObservationService> m_services = new HashMap<String, IObservationService>();
+  private final Map<String, IObservationService> m_services = new HashMap<>();
 
   private final RepositoryRegistry m_repositoryRegistry = new RepositoryRegistry();
 
@@ -70,7 +70,7 @@ public class KalypsoServiceObs extends Plugin
     // register the observation webservice url stream handler
     final OcsURLStreamHandler handler = new OcsURLStreamHandler();
 
-    final Dictionary<String, Object> properties = new Hashtable<String, Object>( 1 );
+    final Dictionary<String, Object> properties = new Hashtable<>( 1 );
     properties.put( URLConstants.URL_HANDLER_PROTOCOL, new String[] { ObservationServiceRepository.ID } );
     context.registerService( URLStreamHandlerService.class.getName(), handler, properties );
   }
@@ -121,7 +121,7 @@ public class KalypsoServiceObs extends Plugin
 
   /**
    * Convenience method that returns the observation service proxy.
-   * 
+   *
    * @return WebService proxy for the IObservationService.
    */
   public synchronized IObservationService getObservationService( final String repository )

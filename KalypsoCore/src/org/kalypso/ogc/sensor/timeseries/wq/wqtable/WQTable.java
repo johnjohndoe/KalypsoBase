@@ -12,7 +12,7 @@ import org.kalypso.ogc.sensor.timeseries.wq.WQException;
 
 /**
  * WQTable
- * 
+ *
  * @author schlienger
  */
 public class WQTable
@@ -31,7 +31,7 @@ public class WQTable
 
   /**
    * Creates a WQTable with a default offset of 0
-   * 
+   *
    * @param validity
    *          date up from which this table is valid
    */
@@ -42,7 +42,7 @@ public class WQTable
 
   /**
    * Creates a WQTable
-   * 
+   *
    * @param validity
    *          date up from which this table is valid
    * @param offset
@@ -55,7 +55,7 @@ public class WQTable
 
   /**
    * Creates a WQTable with a default offset of 0
-   * 
+   *
    * @param validity
    *          date up from which this table is valid
    */
@@ -66,7 +66,7 @@ public class WQTable
 
   /**
    * Creates a WQTable
-   * 
+   *
    * @param validity
    *          date up from which this table is valid
    * @param offset
@@ -79,7 +79,7 @@ public class WQTable
 
   /**
    * Creates a WQTable with a default offset of 0
-   * 
+   *
    * @param validity
    *          date up from which this table is valid
    */
@@ -90,7 +90,7 @@ public class WQTable
 
   /**
    * Creates a WQTable
-   * 
+   *
    * @param validity
    *          date up from which this table is valid
    * @param offset
@@ -103,7 +103,7 @@ public class WQTable
 
   /**
    * Creates a WQTable
-   * 
+   *
    * @param validity
    *          date up from which this table is valid
    * @param offset
@@ -114,8 +114,8 @@ public class WQTable
     m_validity = validity;
     m_offset = offset;
 
-    m_qSortedPairs = new TreeSet<WQPair>( WQPairComparator.Q_COMPARATOR );
-    m_wSortedPairs = new TreeSet<WQPair>( WQPairComparator.W_COMPARATOR );
+    m_qSortedPairs = new TreeSet<>( WQPairComparator.Q_COMPARATOR );
+    m_wSortedPairs = new TreeSet<>( WQPairComparator.W_COMPARATOR );
 
     for( final WQPair wqpair : wqpairs )
     {

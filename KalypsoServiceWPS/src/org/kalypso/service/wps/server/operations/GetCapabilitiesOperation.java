@@ -34,7 +34,7 @@ import org.kalypso.simulation.core.simspec.Modelspec;
 
 /**
  * The implementation of the GetCapabilities function.
- * 
+ *
  * @author Holger Albert
  */
 @SuppressWarnings("restriction")
@@ -90,7 +90,7 @@ public class GetCapabilitiesOperation implements IOperation
       final List<ISimulation> simulations = WPSUtilities.getSimulations();
 
       /* Get all specifications. */
-      m_simModelspecs = new LinkedList<Modelspec>();
+      m_simModelspecs = new LinkedList<>();
       for( int i = 0; i < simulations.size(); i++ )
       {
         /* Get the simulation. */
@@ -145,7 +145,7 @@ public class GetCapabilitiesOperation implements IOperation
 
   /**
    * Checks for the parameter AcceptVersions and returns it. No POST/XML allowed!
-   * 
+   *
    * @param request
    *          The request.
    * @return The AcceptVersions parameter or null if not present.
@@ -166,12 +166,12 @@ public class GetCapabilitiesOperation implements IOperation
 
   /**
    * This function builds the service identification for this wps.
-   * 
+   *
    * @return The service identification.
    */
   private ServiceIdentification buildServiceIdentification( )
   {
-    final List<String> serviceTypeVersion = new LinkedList<String>();
+    final List<String> serviceTypeVersion = new LinkedList<>();
     // TODO: add version 1.0
     serviceTypeVersion.add( WPSUtilities.WPS_VERSION.V040.toString() );
 
@@ -180,7 +180,7 @@ public class GetCapabilitiesOperation implements IOperation
 
   /**
    * This function builds the service provider for this wps.
-   * 
+   *
    * @return The service provider.
    */
   private ServiceProvider buildServiceProvider( )
@@ -190,13 +190,13 @@ public class GetCapabilitiesOperation implements IOperation
 
   /**
    * This function builds the operations metadata for this wps.
-   * 
+   *
    * @return The operations metadata.
    */
   private OperationsMetadata buildOperationsMetadata( )
   {
     /* The operations. */
-    final List<Operation> operations = new LinkedList<Operation>();
+    final List<Operation> operations = new LinkedList<>();
 
     /* GetCapabilities. */
     operations.add( buildGetCapabilities() );
@@ -212,30 +212,30 @@ public class GetCapabilitiesOperation implements IOperation
 
   /**
    * This function builds the GetCapabilities oepration.
-   * 
+   *
    * @return GetCapabilities operation.
    */
   private Operation buildGetCapabilities( )
   {
-    final List<DCP> dcps = new LinkedList<DCP>();
+    final List<DCP> dcps = new LinkedList<>();
     final RequestMethodType requestMethod = WPS040ObjectFactoryUtilities.buildRequestMethodType( m_serverURL, null, null, null, null, null, null );
     final JAXBElement<RequestMethodType> get = WPS040ObjectFactoryUtilities.buildHTTPGet( requestMethod );
-    final List<JAXBElement<RequestMethodType>> requestMethods = new LinkedList<JAXBElement<RequestMethodType>>();
+    final List<JAXBElement<RequestMethodType>> requestMethods = new LinkedList<>();
     requestMethods.add( get );
     final HTTP http = WPS040ObjectFactoryUtilities.buildHTTP( requestMethods );
     dcps.add( WPS040ObjectFactoryUtilities.buildDCP( http ) );
 
-    final List<DomainType> parameter = new LinkedList<DomainType>();
+    final List<DomainType> parameter = new LinkedList<>();
 
-    final List<Object> values = new LinkedList<Object>();
+    final List<Object> values = new LinkedList<>();
     values.add( WPS040ObjectFactoryUtilities.buildValueType( "WPS" ) ); //$NON-NLS-1$
     parameter.add( WPS040ObjectFactoryUtilities.buildDomainType( WPS040ObjectFactoryUtilities.buildAllowedValues( values ), null, null, null, false, null, "Service" ) ); //$NON-NLS-1$
 
-    final List<Object> values1 = new LinkedList<Object>();
+    final List<Object> values1 = new LinkedList<>();
     values1.add( WPS040ObjectFactoryUtilities.buildValueType( "GetCapabilities" ) ); //$NON-NLS-1$
     parameter.add( WPS040ObjectFactoryUtilities.buildDomainType( WPS040ObjectFactoryUtilities.buildAllowedValues( values1 ), null, null, null, false, null, "Request" ) ); //$NON-NLS-1$
 
-    final List<Object> values2 = new LinkedList<Object>();
+    final List<Object> values2 = new LinkedList<>();
     values2.add( WPS040ObjectFactoryUtilities.buildValueType( WPSUtilities.WPS_VERSION.V040.toString() ) );
     parameter.add( WPS040ObjectFactoryUtilities.buildDomainType( WPS040ObjectFactoryUtilities.buildAllowedValues( values2 ), null, null, null, false, null, "AcceptVersions" ) ); //$NON-NLS-1$
 
@@ -244,36 +244,36 @@ public class GetCapabilitiesOperation implements IOperation
 
   /**
    * This function builds the DescribeProcess oepration.
-   * 
+   *
    * @return DescribeProcess operation.
    */
   private Operation buildDescribeProcess( )
   {
-    final List<DCP> dcps = new LinkedList<DCP>();
+    final List<DCP> dcps = new LinkedList<>();
     final RequestMethodType requestMethod = WPS040ObjectFactoryUtilities.buildRequestMethodType( m_serverURL, null, null, null, null, null, null );
     final JAXBElement<RequestMethodType> get = WPS040ObjectFactoryUtilities.buildHTTPGet( requestMethod );
     final JAXBElement<RequestMethodType> post = WPS040ObjectFactoryUtilities.buildHTTPPost( requestMethod );
-    final List<JAXBElement<RequestMethodType>> requestMethods = new LinkedList<JAXBElement<RequestMethodType>>();
+    final List<JAXBElement<RequestMethodType>> requestMethods = new LinkedList<>();
     requestMethods.add( get );
     requestMethods.add( post );
     final HTTP http = WPS040ObjectFactoryUtilities.buildHTTP( requestMethods );
     dcps.add( WPS040ObjectFactoryUtilities.buildDCP( http ) );
 
-    final List<DomainType> parameter = new LinkedList<DomainType>();
+    final List<DomainType> parameter = new LinkedList<>();
 
-    final List<Object> values = new LinkedList<Object>();
+    final List<Object> values = new LinkedList<>();
     values.add( WPS040ObjectFactoryUtilities.buildValueType( "WPS" ) ); //$NON-NLS-1$
     parameter.add( WPS040ObjectFactoryUtilities.buildDomainType( WPS040ObjectFactoryUtilities.buildAllowedValues( values ), null, null, null, false, null, "Service" ) ); //$NON-NLS-1$
 
-    final List<Object> values1 = new LinkedList<Object>();
+    final List<Object> values1 = new LinkedList<>();
     values1.add( WPS040ObjectFactoryUtilities.buildValueType( "DescribeProcess" ) ); //$NON-NLS-1$
     parameter.add( WPS040ObjectFactoryUtilities.buildDomainType( WPS040ObjectFactoryUtilities.buildAllowedValues( values1 ), null, null, null, false, null, "Request" ) ); //$NON-NLS-1$
 
-    final List<Object> values2 = new LinkedList<Object>();
+    final List<Object> values2 = new LinkedList<>();
     values2.add( WPS040ObjectFactoryUtilities.buildValueType( WPSUtilities.WPS_VERSION.V040.toString() ) );
     parameter.add( WPS040ObjectFactoryUtilities.buildDomainType( WPS040ObjectFactoryUtilities.buildAllowedValues( values2 ), null, null, null, false, null, "Version" ) ); //$NON-NLS-1$
 
-    final List<Object> allowedValues = new LinkedList<Object>();
+    final List<Object> allowedValues = new LinkedList<>();
     for( int i = 0; i < m_simModelspecs.size(); i++ )
     {
       /* Get the modelspec. */
@@ -288,33 +288,33 @@ public class GetCapabilitiesOperation implements IOperation
 
   /**
    * This function builds the Execute oepration.
-   * 
+   *
    * @return Execute operation.
    */
   private Operation buildExecute( )
   {
-    final List<DCP> dcps = new LinkedList<DCP>();
+    final List<DCP> dcps = new LinkedList<>();
     final RequestMethodType requestMethod = WPS040ObjectFactoryUtilities.buildRequestMethodType( m_serverURL, null, null, null, null, null, null );
     final JAXBElement<RequestMethodType> post = WPS040ObjectFactoryUtilities.buildHTTPPost( requestMethod );
-    final List<JAXBElement<RequestMethodType>> requestMethods = new LinkedList<JAXBElement<RequestMethodType>>();
+    final List<JAXBElement<RequestMethodType>> requestMethods = new LinkedList<>();
     requestMethods.add( post );
     final HTTP http = WPS040ObjectFactoryUtilities.buildHTTP( requestMethods );
     dcps.add( WPS040ObjectFactoryUtilities.buildDCP( http ) );
 
-    final List<DomainType> parameter = new LinkedList<DomainType>();
-    final List<Object> values = new LinkedList<Object>();
+    final List<DomainType> parameter = new LinkedList<>();
+    final List<Object> values = new LinkedList<>();
     values.add( WPS040ObjectFactoryUtilities.buildValueType( "WPS" ) ); //$NON-NLS-1$
     parameter.add( WPS040ObjectFactoryUtilities.buildDomainType( WPS040ObjectFactoryUtilities.buildAllowedValues( values ), null, null, null, false, null, "Service" ) ); //$NON-NLS-1$
 
-    final List<Object> values1 = new LinkedList<Object>();
+    final List<Object> values1 = new LinkedList<>();
     values1.add( WPS040ObjectFactoryUtilities.buildValueType( "Execute" ) ); //$NON-NLS-1$
     parameter.add( WPS040ObjectFactoryUtilities.buildDomainType( WPS040ObjectFactoryUtilities.buildAllowedValues( values1 ), null, null, null, false, null, "Request" ) ); //$NON-NLS-1$
 
-    final List<Object> values2 = new LinkedList<Object>();
+    final List<Object> values2 = new LinkedList<>();
     values2.add( WPS040ObjectFactoryUtilities.buildValueType( WPSUtilities.WPS_VERSION.V040.toString() ) );
     parameter.add( WPS040ObjectFactoryUtilities.buildDomainType( WPS040ObjectFactoryUtilities.buildAllowedValues( values2 ), null, null, null, false, null, "Version" ) ); //$NON-NLS-1$
 
-    final List<Object> allowedValues = new LinkedList<Object>();
+    final List<Object> allowedValues = new LinkedList<>();
     for( int i = 0; i < m_simModelspecs.size(); i++ )
     {
       /* Get the modelspec. */
@@ -329,12 +329,12 @@ public class GetCapabilitiesOperation implements IOperation
 
   /**
    * This function builds the process offerings.
-   * 
+   *
    * @return The process offerings.
    */
   private ProcessOfferings buildProcessOfferings( )
   {
-    final List<ProcessBriefType> processBriefs = new LinkedList<ProcessBriefType>();
+    final List<ProcessBriefType> processBriefs = new LinkedList<>();
     for( int i = 0; i < m_simModelspecs.size(); i++ )
     {
       /* Get the modelspec. */

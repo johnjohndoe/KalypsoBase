@@ -88,13 +88,13 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnObservati
 
   private String m_labelTokenizer;
 
-  private final Set<IZmlModelColumnListener> m_listeners = new LinkedHashSet<IZmlModelColumnListener>();
+  private final Set<IZmlModelColumnListener> m_listeners = new LinkedHashSet<>();
 
   private final IZmlModel m_model;
 
   private final DataColumn m_type;
 
-  final Set<IZmlModelValueCell> m_cells = new LinkedHashSet<IZmlModelValueCell>();
+  final Set<IZmlModelValueCell> m_cells = new LinkedHashSet<>();
 
   public ZmlModelColumn( final IZmlModel model, final DataColumn column )
   {
@@ -454,7 +454,7 @@ public class ZmlModelColumn implements IZmlModelColumn, IZmlModelColumnObservati
   @Override
   public AppliedRule[] getColumnRules( )
   {
-    final Set<AppliedRule> active = new LinkedHashSet<AppliedRule>();
+    final Set<AppliedRule> active = new LinkedHashSet<>();
 
     final ZmlColumnRule[] columnRules = getDataColumn().getColumnRules();
     for( final ZmlColumnRule rule : columnRules )

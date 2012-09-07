@@ -50,7 +50,6 @@ import org.eclipse.jface.viewers.ICheckable;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -65,7 +64,7 @@ import org.kalypso.core.i18n.Messages;
 /**
  * @author Gernot Belger
  */
-public class GmlSourceChooserPage extends WizardPage implements IWizardPage
+public class GmlSourceChooserPage extends WizardPage
 {
   private final IGmlSourceProvider[] m_provider;
 
@@ -186,7 +185,7 @@ public class GmlSourceChooserPage extends WizardPage implements IWizardPage
 
   public IGmlSource[] getChoosenSources( )
   {
-    final List<IGmlSource> result = new ArrayList<IGmlSource>();
+    final List<IGmlSource> result = new ArrayList<>();
 
     for( final Object element : m_checkedElements )
     {

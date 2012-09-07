@@ -233,7 +233,7 @@ public class PropertyEditWizard extends Wizard implements IWorkbenchWizard
     if( selectedPage == m_propertyChooserPage )
     {
 
-      final Collection<IComponent> properties = new LinkedHashSet<IComponent>();
+      final Collection<IComponent> properties = new LinkedHashSet<>();
       final Object[] profiles = m_profile == null ? m_profileChooserPage.getChoosen() : new Object[] { m_profile };
       for( final Object object : profiles )
       {

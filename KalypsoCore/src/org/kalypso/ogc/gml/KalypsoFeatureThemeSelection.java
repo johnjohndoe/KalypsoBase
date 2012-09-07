@@ -102,7 +102,7 @@ public final class KalypsoFeatureThemeSelection extends AbstractFeatureSelection
       return StructuredSelection.EMPTY;
 
     // TODO: major performance bug! Calls the slow contains method on split-sort
-    final List<Feature> list = new ArrayList<Feature>( selection );
+    final List<Feature> list = new ArrayList<>( selection );
     list.retainAll( featureList );
     return new StructuredSelection( list );
   }

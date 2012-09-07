@@ -37,7 +37,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 /**
  * Lädt und schreibt ein CSV als {@link org.kalypsodeegree.model.feature.GMLWorkspace}. Die Information, welche Spalte
  * wie gelesen wird, wird per {@link #addInfo(IPropertyType, CSVInfo)}übergeben.
- * 
+ *
  * @todo Einerseits ganz schön, genau zu spezifizieren, was die Spalten sind. Alternativ wäre aber auch super, wenn das
  *       auch automatisch anhand der 1.Zeile ginge
  * @todo Koordinatensystem berücksichtigen
@@ -65,7 +65,7 @@ public abstract class AbstractTabularFeatureReader
   }
 
   /** featureTypeProperty -> cvsinfo */
-  private final Map<IPropertyType, CSVInfo> m_infos = new LinkedHashMap<IPropertyType, CSVInfo>();
+  private final Map<IPropertyType, CSVInfo> m_infos = new LinkedHashMap<>();
 
   private final Filter m_filter;
 

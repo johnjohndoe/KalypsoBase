@@ -144,7 +144,7 @@ public class Raster2Lines implements IGeoGridWalker
 
   /**
    * Gibt ein Objekt vom Type LineString[] zurück
-   * 
+   *
    * @see org.kalypso.gis.doubleraster.DoubleRasterWalker#getResult()
    */
   @Override
@@ -246,13 +246,13 @@ public class Raster2Lines implements IGeoGridWalker
       }
     };
 
-    final Map<Coordinate, LinkedCoordinate> lcs = new IdentityHashMap<Coordinate, LinkedCoordinate>();
+    final Map<Coordinate, LinkedCoordinate> lcs = new IdentityHashMap<>();
 
     /*
      * Sort coordinate by distance to first coordinate; we do not use a SorteMap here, as in this case, coordinates on
      * the same place get lost
      */
-    final List<Coordinate> coordinates = new ArrayList<Coordinate>();
+    final List<Coordinate> coordinates = new ArrayList<>();
     coordinates.add( crdBegin );
     for( final LinkedCoordinate value : linkedCrs )
     {

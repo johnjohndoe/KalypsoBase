@@ -1,12 +1,12 @@
 /***********************************************
  * created on 		12.06.2006
  * last modified:
- * 
+ *
  * author:			sstein
- * 
+ *
  * description:
- * 
- * 
+ *
+ *
  ***********************************************/
 package org.openjump.core.graph.delauneySimplexInsert;
 
@@ -184,7 +184,7 @@ public class DTriangulationForJTS
 
   /**
    * Draw all the Delaunay edges.
-   * 
+   *
    * @return Arraylist with LineString geometries.
    */
   public List<LineString> drawAllDelaunay( )
@@ -212,7 +212,7 @@ public class DTriangulationForJTS
   }
 
   @SuppressWarnings("unchecked")
-  public List<GM_Triangle> getAllTriangles( final String crs ) throws GM_Exception
+  public List<GM_Triangle> getAllTriangles( final String crs )
   {
     final List<GM_Triangle> triangles = new ArrayList<GM_Triangle>();
 
@@ -247,7 +247,7 @@ public class DTriangulationForJTS
     return triangles;
   }
 
-  public List<GM_Triangle> getInnerTriangles( final String crs ) throws GM_Exception
+  public List<GM_Triangle> getInnerTriangles( final String crs )
   {
     final List<GM_Triangle> triangles = new ArrayList<GM_Triangle>();
 
@@ -304,7 +304,7 @@ public class DTriangulationForJTS
 
   /**
    * Draw all the Voronoi edges.
-   * 
+   *
    * @return Arraylist with LineString geometries.
    */
   public List<LineString> drawAllVoronoi( )
@@ -332,7 +332,7 @@ public class DTriangulationForJTS
 
   /**
    * Draw all the sites (i.e., the input points) of the DT.
-   * 
+   *
    * @return Arraylist with point geometries.
    */
   public List<Point> drawAllSites( )
@@ -357,7 +357,7 @@ public class DTriangulationForJTS
 
   /**
    * Draw all the empty circles (one for each triangle) of the DT.
-   * 
+   *
    * @return Arraylist with polygon geometries.
    */
   public List<Geometry> drawAllCircles( )
@@ -409,7 +409,7 @@ public class DTriangulationForJTS
 
   /**
    * the size of the box has been empirically defined to get "undistorted" outer thiessen polygons
-   * 
+   *
    * @return a bounding box necessary to create the final thiessen polygons
    */
   public Geometry getThiessenBoundingBox( )
@@ -423,7 +423,7 @@ public class DTriangulationForJTS
    * intersecting thiessen polygons (in the bounding box) are returned.
    * <p>
    * Note: "thiesen" and "voronoi" is exchangeable.
-   * 
+   *
    * @return
    */
   public List<Polygon> getThiessenPolys( )
@@ -465,7 +465,7 @@ public class DTriangulationForJTS
 
   /**
    * resolves triangles and updates / sets the z-values of those triangles
-   * 
+   *
    * @param positions
    *          positions containing x,y,z coordinates
    */

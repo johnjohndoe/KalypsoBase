@@ -59,7 +59,7 @@ public final class QueryUtilities
 
   public static Map<String, String> parse( final String query )
   {
-    final Map<String, String> result = new HashMap<String, String>();
+    final Map<String, String> result = new HashMap<>();
     if( query == null || query.isEmpty() )
       return result;
 
@@ -89,16 +89,16 @@ public final class QueryUtilities
     return result;
   }
 
-  public static String addParameter( String query, Map<String, String> parameter )
+  public static String addParameter( final String query, final Map<String, String> parameter )
   {
-    List<String> allParameter = new ArrayList<String>();
-    for( Entry<String, String> entry : parameter.entrySet() )
+    final List<String> allParameter = new ArrayList<>();
+    for( final Entry<String, String> entry : parameter.entrySet() )
     {
-      String oneParameter = String.format( "%s=%s", entry.getValue(), entry.getKey() );
+      final String oneParameter = String.format( "%s=%s", entry.getValue(), entry.getKey() );
       allParameter.add( oneParameter );
     }
 
-    String joinedParameter = StringUtils.join( allParameter.toArray( new String[] {} ), "&" );
+    final String joinedParameter = StringUtils.join( allParameter.toArray( new String[] {} ), "&" );
 
     if( query.contains( "?" ) )
       return String.format( "%s&%s", query, joinedParameter );

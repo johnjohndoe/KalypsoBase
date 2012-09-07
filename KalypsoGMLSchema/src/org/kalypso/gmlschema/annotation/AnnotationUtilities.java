@@ -126,7 +126,7 @@ public class AnnotationUtilities
    * <p>
    * All inner elements from the document element are regarded as annotations.
    * </p>
-   * 
+   *
    * @param createDefaultAnnotation
    *          If true, even if no annotation data is found, return a default annotation based on the defaultName; if
    *          false it returns null in this case.
@@ -270,7 +270,7 @@ public class AnnotationUtilities
    * Returns the text contained in the specified element. The returned value is trimmed by calling the trim() method of
    * java.lang.String
    * <p>
-   * 
+   *
    * @param node
    *          current element
    * @return the textual contents of the element or null, if it is missing
@@ -317,7 +317,7 @@ public class AnnotationUtilities
   private static String[] createKeys( final ResourceBundle resourceBundle, final QName[] qnames )
   {
     /* Produce the different types of keys */
-    final Set<String> keys = new HashSet<String>( 5 );
+    final Set<String> keys = new HashSet<>( 5 );
 
     for( final KeyTypes type : KeyTypes.values() )
       keys.add( buildKey( type, resourceBundle, qnames ) );

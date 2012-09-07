@@ -51,12 +51,12 @@ import org.kalypso.gmlschema.property.relation.RelationContentType;
  * a xmlbeans-parsed schema.
  * <p>
  * Both gml-version (2.1.x and 3.1.1) are supported via a general builder-factory.
- * 
+ *
  * @author Andreas von Dömming
  */
 public class GMLSchemaBuilder
 {
-  private final List<IBuilder> m_registeredBuilders = new ArrayList<IBuilder>();
+  private final List<IBuilder> m_registeredBuilders = new ArrayList<>();
 
   private final String m_gmlVersion;
 
@@ -162,7 +162,7 @@ public class GMLSchemaBuilder
 
   /**
    * initilize builded objects
-   * 
+   *
    * @param gmlSchema
    */
   private void rInit( final GMLSchema gmlSchema ) throws GMLSchemaException

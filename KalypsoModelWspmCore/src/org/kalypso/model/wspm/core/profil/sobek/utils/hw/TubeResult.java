@@ -66,13 +66,10 @@ public class TubeResult extends HeightWidthResult
     m_crdHash = collection;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.tuhh.core.profile.importer.hw.HeightWidthResult#buildPolygon()
-   */
   @Override
   protected List<Coordinate> buildPolygon( )
   {
-    final List<Coordinate> arrayList = new ArrayList<Coordinate>( m_crdHash );
+    final List<Coordinate> arrayList = new ArrayList<>( m_crdHash );
 // final UniqueCoordinateEPSArrayFilter uniqueCoordinateArrayFilter = new UniqueCoordinateEPSArrayFilter();
 // for( final Coordinate coordinate : arrayList )
 // uniqueCoordinateArrayFilter.filter( coordinate );
@@ -91,18 +88,18 @@ public class TubeResult extends HeightWidthResult
   /**
    * A {@link CoordinateFilter} that builds a set of <code>Coordinate</code>s. The set of coordinates contains no
    * duplicate points.
-   * 
+   *
    * @version 1.7
    */
   public static class UniqueCoordinateEPSArrayFilter implements CoordinateFilter
   {
-    private final Set<Coordinate> m_treeSet = new TreeSet<Coordinate>( new CoordinateEPSComparator( 0.001 ) );
+    private final Set<Coordinate> m_treeSet = new TreeSet<>( new CoordinateEPSComparator( 0.001 ) );
 
-    private final List<Coordinate> m_list = new ArrayList<Coordinate>();
+    private final List<Coordinate> m_list = new ArrayList<>();
 
     /**
      * Returns the gathered <code>Coordinate</code>s.
-     * 
+     *
      * @return the <code>Coordinate</code>s collected by this <code>CoordinateArrayFilter</code>
      */
     public Coordinate[] getCoordinates( )

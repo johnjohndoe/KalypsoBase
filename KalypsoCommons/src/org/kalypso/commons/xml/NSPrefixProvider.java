@@ -53,7 +53,7 @@ import org.kalypso.contribs.java.net.IUrlCatalog;
  * Suggestion: Retrieve preferred namespaces via catalogue mechanism, so new plugins can contribute new namesapce
  * prefixes.
  * </p>
- * 
+ *
  * @author doemming
  */
 public class NSPrefixProvider
@@ -62,7 +62,7 @@ public class NSPrefixProvider
 
   private IUrlCatalog m_catalog = null;
 
-  private final HashMap<String, String> m_prefixMap = new HashMap<String, String>();
+  private final HashMap<String, String> m_prefixMap = new HashMap<>();
 
   public static NSPrefixProvider getInstance( )
   {

@@ -51,10 +51,10 @@ import org.kalypso.gmlschema.xml.ElementWithOccurs;
 
 /**
  * TODO: insert type comment here
- * 
+ *
  * @author doemming
  */
-public abstract class RelationContentType implements IRelationContentType, IInitialize
+public abstract class RelationContentType implements IRelationContentType
 {
   /** TODO move this one to a constants class. */
   protected final static String XPATH_APPINFO_NAMESPACE_DECL = "declare namespace xs='" + NS.XSD_SCHEMA + "' " + "declare namespace kapp" + "='" + NS.KALYPSO_APPINFO + "' "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
@@ -94,7 +94,7 @@ public abstract class RelationContentType implements IRelationContentType, IInit
     {
       case IInitialize.INITIALIZE_RUN_FIRST:
       {
-        final List<FeatureType> result = new ArrayList<FeatureType>();
+        final List<FeatureType> result = new ArrayList<>();
         final List<ElementWithOccurs> localElements = getSequence();
         final ElementWithOccurs[] elementArray = localElements.toArray( new ElementWithOccurs[localElements.size()] );
         GMLSchema schema = null;
@@ -168,7 +168,7 @@ public abstract class RelationContentType implements IRelationContentType, IInit
           m_documentReferences = new IDocumentReference[] { IDocumentReference.SELF_REFERENCE };
         else
         {
-          final Set<IDocumentReference> docRefSet = new HashSet<IDocumentReference>( docRefs.length );
+          final Set<IDocumentReference> docRefSet = new HashSet<>( docRefs.length );
           for( final String ref : docRefs )
           {
             if( IDocumentReference.SELF_REFERENCE_NAME.equals( ref ) )

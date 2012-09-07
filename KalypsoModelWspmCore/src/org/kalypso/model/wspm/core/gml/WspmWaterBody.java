@@ -88,10 +88,10 @@ public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProf
   {
     super( parent, parentRelation, ft, id, propValues );
 
-    m_profileMembers = new FeatureBindingCollection<IProfileFeature>( this, IProfileFeature.class, MEMBER_PROFILE );
-    m_fixations = new FeatureBindingCollection<WspmFixation>( this, WspmFixation.class, MEMBER_WSP_FIX );
-    m_runoffEvents = new FeatureBindingCollection<IRunOffEvent>( this, IRunOffEvent.class, MEMBER_RUNOFF );
-    m_reaches = new FeatureBindingCollection<WspmReach>( this, WspmReach.class, MEMBER_REACH );
+    m_profileMembers = new FeatureBindingCollection<>( this, IProfileFeature.class, MEMBER_PROFILE );
+    m_fixations = new FeatureBindingCollection<>( this, WspmFixation.class, MEMBER_WSP_FIX );
+    m_runoffEvents = new FeatureBindingCollection<>( this, IRunOffEvent.class, MEMBER_RUNOFF );
+    m_reaches = new FeatureBindingCollection<>( this, WspmReach.class, MEMBER_REACH );
   }
 
   public IFeatureBindingCollection<IProfileFeature> getProfiles( )

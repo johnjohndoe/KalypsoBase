@@ -60,7 +60,7 @@ public class LocalWorkspaceItemProvider extends AbstractProjectHandleProvider
     final IWorkspaceRoot root = workspace.getRoot();
 
     final IProject[] projects = root.getProjects();
-    final Collection<IProjectHandle> items = new ArrayList<IProjectHandle>( projects.length );
+    final Collection<IProjectHandle> items = new ArrayList<>( projects.length );
     for( final IProject project : projects )
     {
       if( project.isAccessible() && project.isOpen() )

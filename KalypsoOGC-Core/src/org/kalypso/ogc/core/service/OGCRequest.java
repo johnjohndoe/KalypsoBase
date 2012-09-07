@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.core.service;
 
@@ -55,7 +55,7 @@ import org.apache.commons.io.IOUtils;
  * This class represents a request of a OGC service. Its main purpose is, to copy needed data of the servlet request, so
  * that it can be destroyed (thus freeing resources), after it was beeing handled. This is necessary, because OGC
  * services may execute long running, parallel operations.
- * 
+ *
  * @author Toni DiNardo
  */
 public class OGCRequest
@@ -77,7 +77,7 @@ public class OGCRequest
 
   /**
    * The constructor.
-   * 
+   *
    * @param post
    *          The type of the servlet request. True for a POST request. False for a GET request.
    * @param request
@@ -94,7 +94,7 @@ public class OGCRequest
 
   /**
    * This function returns true, if the request was send with the POST method.
-   * 
+   *
    * @boolean True, if the request was send with the POST method.
    */
   public boolean isPost( )
@@ -104,7 +104,7 @@ public class OGCRequest
 
   /**
    * This function returns a parameter value for a parameter name.
-   * 
+   *
    * @param key
    *          The parameter name.
    * @return The parameter value or null, if it does not exist.
@@ -121,7 +121,7 @@ public class OGCRequest
   /**
    * This function returns the body, if the request was send with the POST method and a body is available. Otherwise it
    * returns null.
-   * 
+   *
    * @return The body or null.
    */
   public String getBody( )
@@ -134,7 +134,7 @@ public class OGCRequest
 
   /**
    * This function initializes the OGC request.
-   * 
+   *
    * @param request
    *          The servlet request.
    */
@@ -146,15 +146,14 @@ public class OGCRequest
 
   /**
    * This function initializes the parameter.
-   * 
+   *
    * @param request
    *          The servlet request.
    * @return The parameter.
    */
-  @SuppressWarnings("unchecked")
   private Map<String, String[]> initParameter( final HttpServletRequest request )
   {
-    final Map<String, String[]> parameter = new HashMap<String, String[]>();
+    final Map<String, String[]> parameter = new HashMap<>();
 
     final Set<Entry<String, String[]>> entries = ((Map<String, String[]>) request.getParameterMap()).entrySet();
     for( final Entry<String, String[]> entry : entries )
@@ -165,7 +164,7 @@ public class OGCRequest
 
   /**
    * This function initializes the body.
-   * 
+   *
    * @param request
    *          The servlet request.
    * @return The body.

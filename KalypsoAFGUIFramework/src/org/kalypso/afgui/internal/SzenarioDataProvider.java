@@ -65,7 +65,7 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
    * <p>
    * At the moment this works, because each gml-file corresponds to exactly one (different) wrapper class.
    */
-  final Map<String, ScenarioDataPoolListener> m_keyMap = new HashMap<String, ScenarioDataPoolListener>();
+  final Map<String, ScenarioDataPoolListener> m_keyMap = new HashMap<>();
 
   private final Set<IScenarioDataListener> m_controller = Collections.synchronizedSet( new LinkedHashSet<IScenarioDataListener>() );
 
@@ -271,6 +271,7 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
    * Resets the dirty state of all data models. Only used internally, when the model should be released during platform
    * shutdown.
    */
+  @Override
   public void resetDirty( )
   {
     final KeyInfo[] infos = findKeyInfos();

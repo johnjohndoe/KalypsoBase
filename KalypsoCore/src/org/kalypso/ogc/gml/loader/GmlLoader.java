@@ -82,7 +82,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.TransformVisitor;
 
 /**
  * Lädt einen GMLWorkspace aus einem GML
- * 
+ *
  * @author Belger
  */
 public class GmlLoader extends WorkspaceLoader
@@ -102,7 +102,7 @@ public class GmlLoader extends WorkspaceLoader
       final SubMonitor moni = SubMonitor.convert( monitor, taskMsg, 1000 );
 
       /* Initialise */
-      final List<IStatus> resultList = new ArrayList<IStatus>();
+      final List<IStatus> resultList = new ArrayList<>();
       final TimeLogger perfLogger = KalypsoCoreDebug.PERF_SERIALIZE_GML.isEnabled() ? new TimeLogger( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.2" ) ) : null; //$NON-NLS-1$
       final PooledXLinkFeatureProviderFactory factory = new PooledXLinkFeatureProviderFactory();
       ProgressUtilities.worked( moni, 10 );
@@ -255,7 +255,7 @@ public class GmlLoader extends WorkspaceLoader
       final IFile file = ResourceUtilities.findFileFromURL( gmlURL );
       if( file != null )
         saveWorkspaceToFile( workspace, file );
-      else if( file == null && gmlURL.getProtocol().equals( "file" ) ) //$NON-NLS-1$
+      else if( gmlURL.getProtocol().equals( "file" ) ) //$NON-NLS-1$
       {
         // TODO: is this really ever used?
         final OutputStreamWriter w = new FileWriter( new File( gmlURL.getFile() ) );

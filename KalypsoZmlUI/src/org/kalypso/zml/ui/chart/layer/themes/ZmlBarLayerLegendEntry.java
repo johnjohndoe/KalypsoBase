@@ -65,7 +65,7 @@ public class ZmlBarLayerLegendEntry
 
   public ILegendEntry[] createLegendEntries( final FullRectangleFigure polygonFigure )
   {
-    final List<ILegendEntry> entries = new ArrayList<ILegendEntry>();
+    final List<ILegendEntry> entries = new ArrayList<>();
     if( polygonFigure.getStyle().isVisible() )
     {
       final LegendEntry entry = new LegendEntry( m_layer, m_layer.getTitle() )

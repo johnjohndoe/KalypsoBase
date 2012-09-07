@@ -651,25 +651,18 @@ public final class JTSAdapter
 
     for( int index = 0; index < triangles.getNumGeometries(); index++ )
     {
-      try
-      {
-        final Geometry geometry = triangles.getGeometryN( index );
-        if( !(geometry instanceof Polygon) )
-          continue;
+      final Geometry geometry = triangles.getGeometryN( index );
+      if( !(geometry instanceof Polygon) )
+        continue;
 
-        final GM_Triangle triangle = toTriangle( (Polygon) geometry );
-        surface.add( triangle );
-      }
-      catch( final GM_Exception e )
-      {
-        e.printStackTrace();
-      }
+      final GM_Triangle triangle = toTriangle( (Polygon) geometry );
+      surface.add( triangle );
     }
 
     return surface;
   }
 
-  private static GM_Triangle toTriangle( final Polygon polygon ) throws GM_Exception
+  private static GM_Triangle toTriangle( final Polygon polygon )
   {
     final Coordinate[] coordinates = polygon.getCoordinates();
     if( coordinates.length != 4 )

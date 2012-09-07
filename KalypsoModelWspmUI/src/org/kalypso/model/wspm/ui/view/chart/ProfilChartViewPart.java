@@ -162,7 +162,7 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
   }
 
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     if( IChartPart.class.equals( adapter ) )
       return this;
