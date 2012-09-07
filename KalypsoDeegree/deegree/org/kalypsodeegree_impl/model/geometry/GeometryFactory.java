@@ -1101,7 +1101,7 @@ final public class GeometryFactory
   {
     final GM_Triangle triangle = new GM_Triangle_Impl( pos1, pos2, pos3, crs );
     
-    if( triangle.getOrientation() == -1 )
+    if( triangle.getOrientation() == 1 )
       return new GM_Triangle_Impl( pos1, pos3, pos2, crs );
 
     return triangle;
