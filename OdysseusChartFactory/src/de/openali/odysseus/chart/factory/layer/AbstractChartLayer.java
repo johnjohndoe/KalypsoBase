@@ -318,18 +318,12 @@ public abstract class AbstractChartLayer implements IChartLayer
     return m_isActive;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#isAutoScale()
-   */
   @Override
   public boolean isAutoScale( )
   {
     return m_isAutoScale;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#isLegend()
-   */
   @Override
   public boolean isLegend( )
   {
