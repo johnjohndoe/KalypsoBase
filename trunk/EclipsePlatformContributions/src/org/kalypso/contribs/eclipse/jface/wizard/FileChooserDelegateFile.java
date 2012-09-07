@@ -31,27 +31,30 @@ import org.kalypso.contribs.java.io.FilePattern;
 
 public abstract class FileChooserDelegateFile implements IFileChooserDelegate
 {
-  private final Collection<String> m_filterNames = new ArrayList<String>();
+  private final Collection<String> m_filterNames = new ArrayList<>();
 
-  private final Collection<String> m_filterExtensions = new ArrayList<String>();
+  private final Collection<String> m_filterExtensions = new ArrayList<>();
 
   private final int m_fileDialogType;
 
   private String m_filename;
 
+  private final boolean m_optional;
+
   protected FileChooserDelegateFile( final int fileDialogType )
   {
-    this( fileDialogType, new String[0], new String[0] );
+    this( fileDialogType, new String[0], new String[0], false );
   }
 
-  protected FileChooserDelegateFile( final int fileDialogType, final String[] filterNames, final String[] filterExtensions )
+  protected FileChooserDelegateFile( final int fileDialogType, final String[] filterNames, final String[] filterExtensions, final boolean optional )
   {
     m_fileDialogType = fileDialogType;
 
     Assert.isTrue( filterNames.length == filterExtensions.length );
-
     for( int i = 0; i < filterExtensions.length; i++ )
       addFilter( filterNames[i], filterExtensions[i] );
+
+    m_optional = optional;
   }
 
   /**
@@ -93,8 +96,7 @@ public abstract class FileChooserDelegateFile implements IFileChooserDelegate
   }
 
   /**
-   * @see org.kalypso.contribs.eclipse.jface.wizard.IFileChooserDelegate#chooseFile(org.eclipse.swt.widgets.Shell,
-   *      java.io.File)
+   * @see org.kalypso.contribs.eclipse.jface.wizard.IFileChooserDelegate#chooseFile(org.eclipse.swt.widgets.Shell, java.io.File)
    */
   @Override
   public File chooseFile( final Shell shell, final File currentFile )
@@ -190,7 +192,7 @@ public abstract class FileChooserDelegateFile implements IFileChooserDelegate
   public IMessageProvider validate( final File file )
   {
     final String path = file == null ? "" : file.getPath().trim();//$NON-NLS-1$
-    if( path.length() == 0 )
+    if( path.length() == 0 && !m_optional )
       return new MessageProvider( "Es muss eine Datei angegeben werden.", IMessageProvider.ERROR );
 
     return null;
