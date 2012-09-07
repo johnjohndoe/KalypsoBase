@@ -43,9 +43,7 @@ package org.kalypso.model.wspm.ui.view.chart;
 import java.awt.geom.Point2D;
 
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
@@ -62,7 +60,6 @@ import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
 import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
-import de.openali.odysseus.chart.framework.model.figure.impl.MarkerFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
@@ -222,46 +219,6 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
       return null;
 
     return DataRange.create( (Number) min.getValue( domain ), (Number) max.getValue( domain ) );
-  }
-
-  @Override
-  public EditInfo getHover( final Point pos )
-  {
-    if( !isVisible() || getProfil() == null )
-      return null;
-
-    // FIXME: wrong place -> this should be implemented in the layer that actually show a specific component
-
-    final IProfileRecord[] profilPoints = getProfil().getPoints();
-    final int len = profilPoints.length;
-    for( int i = 0; i < len; i++ )
-    {
-      final Rectangle hover = getHoverRect( profilPoints[i] );
-      if( hover == null )
-      {
-        continue;
-      }
-
-      if( hover.contains( pos ) )
-      {
-        final Point target = toScreen( profilPoints[i] );
-        if( target == null )
-          return new EditInfo( this, null, null, i, getTooltipInfo( profilPoints[i] ), RectangleUtils.getCenterPoint( hover ) );
-
-        final IPointStyle pointStyleHover = getPointStyleHover();
-        final MarkerFigure hoverFigure = new MarkerFigure( pointStyleHover );
-        hoverFigure.setCenterPoint( target.x, target.y );
-
-        return new EditInfo( this, hoverFigure, null, i, getTooltipInfo( profilPoints[i] ), target );
-      }
-    }
-    return null;
-  }
-
-  @SuppressWarnings("unused")
-  public Rectangle getHoverRect( final IProfileRecord profilPoint )
-  {
-    return null;
   }
 
   protected ILineStyle getLineStyle( )
@@ -446,7 +403,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     return targetComponent.getName();
   }
 
-  public String getTooltipInfo( final IProfileRecord point )
+  protected String getTooltipInfo( final IProfileRecord point )
   {
     if( Objects.isNull( point, getTargetComponent(), getDomainComponent() ) )
       return ""; //$NON-NLS-1$
@@ -461,7 +418,6 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     {
       return e.getLocalizedMessage();
     }
-
   }
 
   @Override
@@ -531,17 +487,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     m_profil = profil;
   }
 
-  public Point2D toNumeric( final Point point )
-  {
-    if( point == null )
-      return null;
-    final ICoordinateMapper cm = getCoordinateMapper();
-    final Double x = cm.getDomainAxis().screenToNumeric( point.x ).doubleValue();
-    final Double y = cm.getTargetAxis().screenToNumeric( point.y ).doubleValue();
-    return new Point2D.Double( x, y );
-  }
-
-  public Point toScreen( final IProfileRecord point )
+  protected Point toScreen( final IProfileRecord point )
   {
     final ICoordinateMapper cm = getCoordinateMapper();
     if( Objects.isNull( cm ) )
@@ -555,6 +501,5 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
       return null;
 
     return cm.numericToScreen( x, y );
-
   }
 }
