@@ -52,7 +52,7 @@ import org.kalypso.commons.java.util.AbstractModelObject;
 
 /**
  * A data object that holds a file (or dir) and a file history.
- *
+ * 
  * @author Gernot Belger
  */
 public class FileAndHistoryData extends AbstractModelObject

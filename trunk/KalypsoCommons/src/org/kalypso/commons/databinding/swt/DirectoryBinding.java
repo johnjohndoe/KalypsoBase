@@ -58,6 +58,7 @@ import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.conversion.FileToStringConverter;
 import org.kalypso.commons.databinding.conversion.StringToFileConverter;
 import org.kalypso.commons.databinding.validation.FileAlreadyExistsValidator;
+import org.kalypso.commons.databinding.validation.FileExistsValidator;
 import org.kalypso.commons.databinding.validation.FileIsDirectoryValidator;
 
 /**
@@ -108,6 +109,9 @@ public class DirectoryBinding
 
     // FIXME: better validation and depending on save or load
     m_historyBinder.addTargetAfterConvertValidator( new FileIsDirectoryValidator( IStatus.ERROR ) );
+
+    if( m_style == SWT.OPEN )
+      m_historyBinder.addTargetAfterConvertValidator( new FileExistsValidator( IStatus.ERROR, "Directory does not exist" ) );
 
     if( m_style == SWT.SAVE )
       m_historyBinder.addTargetAfterConvertValidator( new FileAlreadyExistsValidator( IStatus.WARNING, "Directory already exists" ) );
