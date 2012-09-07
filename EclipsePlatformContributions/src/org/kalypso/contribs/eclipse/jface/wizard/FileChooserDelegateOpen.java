@@ -32,9 +32,9 @@ public class FileChooserDelegateOpen extends FileChooserDelegateFile
     super( SWT.OPEN );
   }
 
-  public FileChooserDelegateOpen( final String[] filterNames, final String[] filterExtensions )
+  public FileChooserDelegateOpen( final String[] filterNames, final String[] filterExtensions, final boolean optional )
   {
-    super( SWT.OPEN, filterNames, filterExtensions );
+    super( SWT.OPEN, filterNames, filterExtensions, optional );
   }
 
   @Override
@@ -62,10 +62,10 @@ public class FileChooserDelegateOpen extends FileChooserDelegateFile
     if( validate != null )
       return validate;
 
-    if( !file.exists() )
+    if( file != null && !file.exists() )
       return new MessageProvider( "Die angegebene Datei existiert nicht.", IMessageProvider.ERROR );
 
-    if( file.isDirectory() )
+    if( file != null && file.isDirectory() )
       return new MessageProvider( "Die angegebene Datei ist ein Verzeichnis.", IMessageProvider.ERROR );
 
     return null;

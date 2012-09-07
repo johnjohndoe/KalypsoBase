@@ -32,9 +32,9 @@ public class FileChooserDelegateSave extends FileChooserDelegateFile
     super( SWT.SAVE );
   }
 
-  public FileChooserDelegateSave( final String[] filterNames, final String[] filterExtensions )
+  public FileChooserDelegateSave( final String[] filterNames, final String[] filterExtensions, final boolean optional )
   {
-    super( SWT.SAVE, filterNames, filterExtensions );
+    super( SWT.SAVE, filterNames, filterExtensions, optional );
   }
 
   @Override
