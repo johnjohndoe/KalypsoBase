@@ -56,7 +56,7 @@ public class XsdBaseTypeHandlerRGB extends XsdBaseTypeHandler<RGB>
   @Override
   public RGB convertToJavaValue( final String xmlString )
   {
-    if( xmlString.length() == 7 )
+    if( xmlString != null && xmlString.length() == 7 )
     {
       final RGB rgb = new RGB( 0, 0, 0 );
 
@@ -82,27 +82,19 @@ public class XsdBaseTypeHandlerRGB extends XsdBaseTypeHandler<RGB>
   public String convertToXMLString( final RGB value )
   {
     if( value == null )
-    {
       return new String( "" );
-    }
 
     String red = Integer.toHexString( value.red );
     if( red.length() < 2 )
-    {
       red = "0" + red;
-    }
 
     String green = Integer.toHexString( value.green );
     if( green.length() < 2 )
-    {
       green = "0" + green;
-    }
 
     String blue = Integer.toHexString( value.blue );
     if( blue.length() < 2 )
-    {
       blue = "0" + blue;
-    }
 
     return new String( "#" + red + green + blue );
   }
