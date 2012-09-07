@@ -97,10 +97,11 @@ public final class RectangleUtils
     return new Point( x + w / 2, y + h / 2 );
   }
 
-  public static Rectangle buffer( final Point p )
+  public static Rectangle buffer( final Point p, final int size )
   {
     if( p == null )
       return null;
-    return new Rectangle( p.x - 5, p.y - 5, 10, 10 );
+
+    return new Rectangle( p.x - size, p.y - size, size * 2, size * 2 );
   }
 }
