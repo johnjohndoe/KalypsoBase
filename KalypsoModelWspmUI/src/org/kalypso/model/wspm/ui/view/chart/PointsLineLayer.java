@@ -49,7 +49,6 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
@@ -110,7 +109,8 @@ public class PointsLineLayer extends AbstractProfilLayer
       }
     };
 
-    final Point2D point = toNumeric( newPoint );
+    final Point2D point = ProfilLayerUtils.toNumeric( getCoordinateMapper(), newPoint );
+
     return new EditInfo( this, null, dragFigure, dragStartData.getData(), String.format( TOOLTIP_FORMAT, new Object[] { getDomainComponent().getName(), point.getX(), getTargetComponent().getName(),
         point.getY(), ComponentUtilities.getComponentUnitLabel( getTargetComponent() ) } ), dragStartData.getPosition() );
   }
@@ -147,10 +147,13 @@ public class PointsLineLayer extends AbstractProfilLayer
   }
 
   @Override
-  public Rectangle getHoverRect( final IProfileRecord profilPoint )
+  public EditInfo getHover( final Point pos )
   {
-    final ICoordinateMapper cm = getCoordinateMapper();
-    return cm == null ? null : RectangleUtils.buffer( toScreen( profilPoint ) );
+    if( !isVisible() )
+      return null;
+
+    final ProfilePointHover helper = new ProfilePointHover( this );
+    return helper.getHover( pos );
   }
 
   @Override
@@ -191,7 +194,7 @@ public class PointsLineLayer extends AbstractProfilLayer
   }
 
   @Override
-  public void paint( final GC gc, ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
+  public void paint( final GC gc, final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
     final IProfil profil = getProfil();
     if( profil == null )

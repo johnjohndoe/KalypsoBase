@@ -47,9 +47,10 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.view.chart.ComponentLayer;
+import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
 
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
@@ -58,11 +59,11 @@ import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 /**
  * @author kimwerner
  */
-public class StationLineLayer extends ComponentLayer
+public class StationLineLayer extends AbstractProfilLayer
 {
   public StationLineLayer( final IProfil profil, final String targetRangeProperty )
   {
-    super( profil, targetRangeProperty );
+    super( targetRangeProperty, profil, targetRangeProperty, null );
   }
 
   @Override
@@ -122,5 +123,11 @@ public class StationLineLayer extends ComponentLayer
     final int lineX = clipping.x + clipping.width / 2;
     pf.setPoints( new Point[] { new Point( lineX, clipping.height ), new Point( lineX, clipping.y ) } );
     pf.paint( gc );
+  }
+
+  @Override
+  public EditInfo getHover( final Point pos )
+  {
+    return null;
   }
 }

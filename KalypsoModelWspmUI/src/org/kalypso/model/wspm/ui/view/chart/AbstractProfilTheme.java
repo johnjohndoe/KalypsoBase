@@ -242,28 +242,14 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer
     return null;
   }
 
-// @Override
-// public EditInfo getHover( final Point pos )
-// {
-// final IChartLayer[] layers = getLayerManager().getLayers();
-// for( int i = layers.length - 1; i > -1; i-- ) // reverse layers, last paint will hover first
-// {
-// if( layers[i] instanceof IProfilChartLayer )
-// {
-// final IProfilChartLayer pLayer = (IProfilChartLayer) layers[i];
-// final EditInfo info = pLayer.getHover( pos );
-// if( info != null )
-// {
-// if( !pLayer.isActive() )
-// {
-// pLayer.setActive( true );
-// }
-// return info;
-// }
-// }
-// }
-// return null;
-// }
+  /**
+   * Empty implementation of getHover, because most themes do not have any hover elements but their children instead.
+   */
+  @Override
+  public EditInfo getHover( final Point pos )
+  {
+    return null;
+  }
 
   @Override
   public String getIdentifier( )
@@ -336,6 +322,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer
   public void setProfil( final IProfil profil )
   {
     super.setProfil( profil );
+
     for( final IChartLayer layer : getLayerManager().getLayers() )
     {
       if( layer instanceof IProfilChartLayer )

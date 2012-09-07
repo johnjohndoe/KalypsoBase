@@ -82,7 +82,7 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
       if( targetValue == null )
         continue;
       final Point pValue = getCoordinateMapper().logicalToScreen( domainValue, targetValue );
-      final Rectangle hover = getHoverRect( pValue, i );
+      final Rectangle hover = RectangleUtils.buffer( pValue, 5 );
       if( hover == null )
         continue;
 
@@ -96,11 +96,6 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
     }
 
     return null;
-  }
-
-  private Rectangle getHoverRect( final Point screen, final int index )
-  {
-    return RectangleUtils.buffer( screen );
   }
 
   public IObservation<TupleResult> getObservation( )
@@ -189,7 +184,7 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
   }
 
   @Override
-  public void paint( final GC gc, ChartImageInfo chartImageInfo, IProgressMonitor monitor )
+  public void paint( final GC gc, final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
     final TupleResultDomainValueData< ? , ? > data = getValueData();
     if( data == null )
