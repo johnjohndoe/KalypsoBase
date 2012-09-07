@@ -61,6 +61,8 @@ public class WspmFixation extends Feature_Impl implements IObservationFeature
 
   public static final String COMPONENT_WSP = IWspmConstants.LENGTH_SECTION_PROPERTY_WATERLEVEL;
 
+  public static final String COMPONENT_COMMENT = IWspmConstants.LENGTH_SECTION_PROPERTY_TEXT;
+
   public WspmFixation( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
@@ -81,6 +83,6 @@ public class WspmFixation extends Feature_Impl implements IObservationFeature
   @Override
   public WspmWaterBody getOwner( )
   {
-    return (WspmWaterBody) super.getOwner();
+    return (WspmWaterBody)super.getOwner();
   }
 }
