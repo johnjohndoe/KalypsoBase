@@ -103,6 +103,10 @@ public class ChartTabItem extends Composite implements IChartPart
     m_sourceManager = new EmbeddedSourceToolbarManager( sourceLocator, ChartSourceProvider.ACTIVE_CHART_NAME, ChartTabItem.this.getChartComposite() );
     m_sourceManager.fillToolbar( manager, commands );
 
+    // TODO: this is still an ugly place, the information which command to treigger (if any) should come from outside
+    if( commands.length > 0 )
+      EmbeddedSourceToolbarManager.executeCommand( sourceLocator, manager, commands[0].getCommandID() );
+
     final GridData toolbarData = new GridData( SWT.FILL, SWT.CENTER, true, false );
     toolBar.setLayoutData( toolbarData );
     final boolean hasCommands = commands.length > 0;

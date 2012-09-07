@@ -43,6 +43,7 @@ package org.kalypso.commons.eclipse.ui;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.IExecutionListener;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.swt.widgets.Event;
@@ -88,27 +89,13 @@ public class EmbeddedSourceToolbarManager
     ToolbarManagerUtils.addCommands( manager, commands, serviceLocator );
     manager.update( true );
 
-    final ICommandService cmdService = (ICommandService) serviceLocator.getService( ICommandService.class );
-    final IHandlerService handlerService = (IHandlerService) serviceLocator.getService( IHandlerService.class );
+    final ICommandService cmdService = (ICommandService)serviceLocator.getService( ICommandService.class );
+    final IHandlerService handlerService = (IHandlerService)serviceLocator.getService( IHandlerService.class );
 
     final String[] commandIDs = getCommandIDs( commands );
     final EmbeddedSourceExecutionListener executionListener = new EmbeddedSourceExecutionListener( commandIDs, handlerService, toolBar, m_sourceName, m_sourceValue );
     cmdService.addExecutionListener( executionListener );
     m_executionListeners.add( executionListener );
-
-    final Event event = new Event();
-    event.widget = toolBar;
-
-    // FIXME: ugly, should be triggered from outside
-    try
-    {
-      if( commandIDs.length > 0 )
-        handlerService.executeCommand( commandIDs[0], event );
-    }
-    catch( final Throwable e )
-    {
-      e.printStackTrace();
-    }
   }
 
   private String[] getCommandIDs( final CommandWithStyle[] commands )
@@ -122,8 +109,26 @@ public class EmbeddedSourceToolbarManager
   public void dispose( )
   {
     /* Unhook all previously created listeners */
-    final ICommandService cmdService = (ICommandService) m_serviceLocator.getService( ICommandService.class );
+    final ICommandService cmdService = (ICommandService)m_serviceLocator.getService( ICommandService.class );
     for( final IExecutionListener listener : m_executionListeners )
       cmdService.removeExecutionListener( listener );
+  }
+
+  public static void executeCommand( final IServiceLocator serviceLocator, final ToolBarManager manager, final String commandID )
+  {
+    try
+    {
+      final IHandlerService handlerService = (IHandlerService)serviceLocator.getService( IHandlerService.class );
+      final Event event = new Event();
+      if( manager != null )
+        event.widget = manager.getControl();
+
+      if( !StringUtils.isBlank( commandID ) )
+        handlerService.executeCommand( commandID, event );
+    }
+    catch( final Throwable e )
+    {
+      e.printStackTrace();
+    }
   }
 }
