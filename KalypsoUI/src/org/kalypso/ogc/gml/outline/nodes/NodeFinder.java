@@ -59,7 +59,7 @@ public class NodeFinder
 
   public IThemeNode[] find( final Object[] elements )
   {
-    final List<IThemeNode> nodes = new ArrayList<IThemeNode>();
+    final List<IThemeNode> nodes = new ArrayList<>();
 
     for( final Object element : elements )
     {

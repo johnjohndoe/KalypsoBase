@@ -93,7 +93,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 /**
  * Eclipse-Editor zum editieren der Gis-Tabellen-Templates.<br/>
  * Zeigt das ganze als Tabelendarstellung, die einzelnen Datenquellen können potentiell editiert werden.<br/>
- * 
+ *
  * @author Gernot Belger
  */
 public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart, IExportableObjectFactory
@@ -234,7 +234,7 @@ public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart
   }
 
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     if( adapter == IExportableObjectFactory.class )
       return this;

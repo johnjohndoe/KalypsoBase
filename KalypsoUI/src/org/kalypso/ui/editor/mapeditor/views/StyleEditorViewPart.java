@@ -212,7 +212,7 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
     {
       final IKalypsoFeatureTheme nodeTheme = (IKalypsoFeatureTheme) theme;
       // Reset style-editor, but the styles are not unique, so do not set anything
-      final IFeatureType otherType = nodeTheme == null ? null : nodeTheme.getFeatureType();
+      final IFeatureType otherType = nodeTheme.getFeatureType();
       final IKalypsoStyle[] styles = nodeTheme.getStyles();
       if( ArrayUtils.isEmpty( styles ) )
         return null;

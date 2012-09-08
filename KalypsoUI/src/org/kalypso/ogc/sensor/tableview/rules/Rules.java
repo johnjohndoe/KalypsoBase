@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.tableview.rules;
 
@@ -49,14 +49,14 @@ import java.util.NoSuchElementException;
 
 /**
  * Holds a list of rules.
- * 
+ *
  * @author schlienger
  */
 public class Rules implements ITableViewRules
 {
-  private final List<RenderingRule> m_rules = new ArrayList<RenderingRule>();
+  private final List<RenderingRule> m_rules = new ArrayList<>();
 
-  private final Map<Number, RenderingRule[]> m_map = new HashMap<Number, RenderingRule[]>();
+  private final Map<Number, RenderingRule[]> m_map = new HashMap<>();
 
   public Rules( )
   {
@@ -65,7 +65,7 @@ public class Rules implements ITableViewRules
 
   /**
    * Constructor with given rules
-   * 
+   *
    * @param rules
    */
   public Rules( final RenderingRule[] rules )
@@ -107,7 +107,7 @@ public class Rules implements ITableViewRules
 
     final int intMask = mask.intValue();
 
-    final List<RenderingRule> lrules = new ArrayList<RenderingRule>();
+    final List<RenderingRule> lrules = new ArrayList<>();
     for( final RenderingRule rule : m_rules )
     {
       if( rule.contains( intMask ) )

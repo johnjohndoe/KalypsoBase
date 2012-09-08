@@ -1,5 +1,3 @@
-package org.kalypso.zml.core.table.binding;
-
 /*----------------    FILE HEADER KALYPSO ------------------------------------------
  *
  *  This file is part of kalypso.
@@ -40,6 +38,7 @@ package org.kalypso.zml.core.table.binding;
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
+package org.kalypso.zml.core.table.binding;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -54,9 +53,11 @@ import jregex.RETokenizer;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.ICatalog;
+import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.i18n.Messages;
 import org.kalypso.zml.core.table.ZmlTableConfigurationLoader;
 import org.kalypso.zml.core.table.binding.rule.AbstractZmlRule;
@@ -131,7 +132,7 @@ public final class ZmlRuleResolver
     }
     catch( final Throwable t )
     {
-      throw new CoreException( StatusUtilities.createExceptionalErrorStatus( Messages.ZmlRuleResolver_1, t ) );
+      throw new CoreException( new Status(IStatus.ERROR, KalypsoZmlCore.PLUGIN_ID, Messages.ZmlRuleResolver_1, t ) );
     }
     throw new IllegalStateException();
   }

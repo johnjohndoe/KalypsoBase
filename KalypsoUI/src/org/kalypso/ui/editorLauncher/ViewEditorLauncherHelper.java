@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editorLauncher;
 
@@ -73,7 +73,7 @@ import org.kalypso.i18n.Messages;
 
 /**
  * Helper-Klasse für die Template-Auswahl
- * 
+ *
  * @author belger
  */
 public class ViewEditorLauncherHelper
@@ -106,10 +106,10 @@ public class ViewEditorLauncherHelper
       e.printStackTrace();
     }
 
-    final ArrayList<IFile> allTemplates = new ArrayList<IFile>();
+    final ArrayList<IFile> allTemplates = new ArrayList<>();
 
     // virtuelle Vorlagen hinzufügen
-    final Map<IFile, IDefaultTemplateLauncher> defaultTemplateMap = new HashMap<IFile, IDefaultTemplateLauncher>();
+    final Map<IFile, IDefaultTemplateLauncher> defaultTemplateMap = new HashMap<>();
     for( final IDefaultTemplateLauncher def : defaultTemplates )
     {
       final IFile defaultPseudoFile = folder.getFile( new Path( def.getFilename() ) );

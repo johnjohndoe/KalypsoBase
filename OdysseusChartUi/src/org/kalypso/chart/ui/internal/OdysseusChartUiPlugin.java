@@ -1,4 +1,4 @@
-package org.kalypso.chart.ui;
+package org.kalypso.chart.ui.internal;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -7,14 +7,14 @@ import org.osgi.framework.BundleContext;
 /**
  * The main plugin class to be used in the desktop.
  */
-public class KalypsoChartUiPlugin extends AbstractUIPlugin
+public class OdysseusChartUiPlugin extends AbstractUIPlugin
 {
   public static final String ID = "org.kalypso.chart.ui"; //$NON-NLS-1$
 
   // The shared instance.
-  private static KalypsoChartUiPlugin plugin;
+  private static OdysseusChartUiPlugin plugin;
 
-  public KalypsoChartUiPlugin( )
+  public OdysseusChartUiPlugin( )
   {
     plugin = this;
   }
@@ -41,7 +41,7 @@ public class KalypsoChartUiPlugin extends AbstractUIPlugin
   /**
    * Returns the shared instance.
    */
-  public static KalypsoChartUiPlugin getDefault( )
+  public static OdysseusChartUiPlugin getDefault( )
   {
     return plugin;
   }

@@ -117,7 +117,7 @@ public class ChartView extends ViewPart implements IContentOutlineProvider
   }
 
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     final Object adapted = m_chartPartComposite.adapt( adapter );
     if( adapted != null )

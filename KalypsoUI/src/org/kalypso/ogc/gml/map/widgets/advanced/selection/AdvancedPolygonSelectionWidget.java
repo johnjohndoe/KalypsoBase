@@ -62,7 +62,7 @@ import org.kalypso.ogc.gml.widgets.AbstractKeyListenerWidget;
  */
 public class AdvancedPolygonSelectionWidget extends AbstractKeyListenerWidget implements IAdvancedSelectionWidget
 {
-  List<IAdvancedSelectionWidgetDelegate> m_delegates = new ArrayList<IAdvancedSelectionWidgetDelegate>();
+  List<IAdvancedSelectionWidgetDelegate> m_delegates = new ArrayList<>();
 
   IAdvancedSelectionWidgetDelegate m_current = null;
 
@@ -105,36 +105,24 @@ public class AdvancedPolygonSelectionWidget extends AbstractKeyListenerWidget im
     getCurrentDelegate().paint( g );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#leftPressed(java.awt.Point)
-   */
   @Override
   public void leftPressed( final java.awt.Point p )
   {
     getCurrentDelegate().leftPressed( p );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#leftReleased(java.awt.Point)
-   */
   @Override
   public void leftReleased( final java.awt.Point p )
   {
     getCurrentDelegate().leftReleased( p );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#doubleClickedLeft(java.awt.Point)
-   */
   @Override
   public void doubleClickedLeft( final Point p )
   {
     getCurrentDelegate().doubleClickedLeft( p );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#getToolTip()
-   */
   @Override
   public String getToolTip( )
   {
@@ -154,7 +142,7 @@ public class AdvancedPolygonSelectionWidget extends AbstractKeyListenerWidget im
 
   /**
    * Escape Key pressed? -> reset / deactivate widget
-   * 
+   *
    * @see org.kalypso.ogc.gml.widgets.AbstractWidget#keyReleased(java.awt.event.KeyEvent)
    */
   @Override

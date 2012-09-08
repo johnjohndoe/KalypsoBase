@@ -264,7 +264,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
 
   /**
    * This function creates the remote service and returns it.
-   * 
+   *
    * @param capabilities
    *          The capabilites for the remote service.
    * @return The remote service.
@@ -273,7 +273,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
 
   /**
    * This function parses a String into an URL to the WMS service.
-   * 
+   *
    * @param service
    *          The String representation of the URL to the WMS service.
    * @return The URL to the WMS service.
@@ -295,7 +295,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
    * This method tries to find a common spatial reference system (srs) for a given set of layers. If all layers
    * coorespond to the local crs the local crs is returned, otherwise the srs of the top layer is returned and the
    * client must choose one to transform it to the local coordinate system
-   * 
+   *
    * @param localCRS
    *          The local spatial reference system.
    * @param capabilities
@@ -469,7 +469,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
 
   /**
    * This function returns the last request or null.
-   * 
+   *
    * @return The last request or null.
    */
   public synchronized String getLastRequest( )
@@ -569,7 +569,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
       return null;
 
     /* Collect the layers. */
-    final List<String> layers = new ArrayList<String>();
+    final List<String> layers = new ArrayList<>();
     final org.deegree.ogcwebservices.wms.operation.GetMap.Layer[] allLayers = lastGetMap.getLayers();
     for( final org.deegree.ogcwebservices.wms.operation.GetMap.Layer layer : allLayers )
     {

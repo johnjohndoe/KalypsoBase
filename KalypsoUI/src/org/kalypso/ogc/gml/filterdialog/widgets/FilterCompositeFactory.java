@@ -108,7 +108,7 @@ public class FilterCompositeFactory
 
   private static String[] getSupportedSpatialOps( final String[] supportedOperations )
   {
-    final ArrayList<String> result = new ArrayList<String>();
+    final ArrayList<String> result = new ArrayList<>();
     for( final String ops : supportedOperations )
     {
       if( OperationDefines.getTypeByName( ops ) == OperationDefines.TYPE_SPATIAL )
@@ -130,7 +130,7 @@ public class FilterCompositeFactory
 
   private static String[] getSupportedCOMPOps( final String[] supportedOperations )
   {
-    final ArrayList<String> result = new ArrayList<String>();
+    final ArrayList<String> result = new ArrayList<>();
     for( final String ops : supportedOperations )
     {
       if( OperationDefines.getTypeByName( ops ) == OperationDefines.TYPE_COMPARISON )

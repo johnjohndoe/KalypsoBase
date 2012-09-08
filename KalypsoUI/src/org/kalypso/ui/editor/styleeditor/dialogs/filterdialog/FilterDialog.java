@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.dialogs.filterdialog;
 
@@ -88,11 +88,11 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.panels.ComparisonFilterComboPanel;
 import org.kalypso.ui.editor.styleeditor.panels.LogicalFilterComboPanel;
 import org.kalypso.ui.editor.styleeditor.panels.SpatialOperationPanel;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.filterencoding.ElseFilter;
 import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.filterencoding.Filter;
@@ -431,7 +431,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     if( filter instanceof FeatureFilter )
     {
       final FeatureFilter featureFilter = (FeatureFilter) filter;
-      final ArrayList featureIds = featureFilter.getFeatureIds();
+      final ArrayList<FeatureId> featureIds = featureFilter.getFeatureIds();
       FilterDialogTreeNode tmpNode = null;
       FeatureIDData tmpData = null;
       for( int i = 0; i < featureIds.size(); i++ )
@@ -686,7 +686,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
       final FilterDialogTreeNode child = (FilterDialogTreeNode) children[0];
       if( child.getSubType() == FilterDialogTreeNode.LOCICAL_NOT )
       {
-        final ArrayList<Operation> arguments = new ArrayList<Operation>();
+        final ArrayList<Operation> arguments = new ArrayList<>();
         final Object[] innerElement = { (FilterDialogTreeNode) child.getChildren()[0] };
         final Filter filter = generateFilter( innerElement );
         if( filter instanceof ComplexFilter )
@@ -698,7 +698,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
       }
       else if( child.getSubType() == FilterDialogTreeNode.LOCICAL_AND )
       {
-        final ArrayList<Operation> arguments = new ArrayList<Operation>();
+        final ArrayList<Operation> arguments = new ArrayList<>();
         for( int i = 0; i < child.getChildren().length; i++ )
         {
           final Object[] innerElement = { (FilterDialogTreeNode) child.getChildren()[i] };
@@ -713,7 +713,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
       }
       else if( child.getSubType() == FilterDialogTreeNode.LOCICAL_OR )
       {
-        final ArrayList<Operation> arguments = new ArrayList<Operation>();
+        final ArrayList<Operation> arguments = new ArrayList<>();
         for( int i = 0; i < child.getChildren().length; i++ )
         {
           final Object[] innerElement = { (FilterDialogTreeNode) child.getChildren()[i] };
@@ -967,7 +967,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
   }
 
   /**
-   *  
+   *
    */
   private void enableSpatialOperations( )
   {
@@ -976,7 +976,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
   }
 
   /**
-   *  
+   *
    */
   private void disableSpatialOperations( )
   {
@@ -1083,7 +1083,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     final GridData propertyNameComboData = new GridData( 75, 30 );
     propertyNameCombo.setLayoutData( propertyNameComboData );
     // get all PropertyNames to use for filter
-    final ArrayList<String> labelStringItems = new ArrayList<String>();
+    final ArrayList<String> labelStringItems = new ArrayList<>();
     final IPropertyType[] ftp = featureType.getProperties();
     for( final IPropertyType geomProperty : ftp )
     {
@@ -1185,7 +1185,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
           addata = new BinarySpatialData();
           if( index >= 0 && index < items.length )
             ((BinarySpatialData) addata).setGeometryPropertyName( items[index] );
-          ((BinarySpatialData) addata).setGeomType( GeometryFactory.createGM_Point( 120, 200, KalypsoGisPlugin.getDefault().getCoordinatesSystem() ) );
+          ((BinarySpatialData)addata).setGeomType( GeometryFactory.createGM_Point( 120, 200, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() ) );
         }
         else
         {
@@ -1322,7 +1322,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     final GridData propertyNameComboData = new GridData( 75, 30 );
     propertyNameCombo.setLayoutData( propertyNameComboData );
     // get all PropertyNames to use for filter
-    final ArrayList<String> labelStringItems = new ArrayList<String>();
+    final ArrayList<String> labelStringItems = new ArrayList<>();
     final IPropertyType[] ftp = featureType.getProperties();
     for( int i = 0; i < ftp.length; i++ )
       if( !GeometryUtilities.isGeometry( ftp[i] ) )
@@ -1417,7 +1417,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     final GridData propertyNameComboData = new GridData( 75, 30 );
     propertyNameCombo.setLayoutData( propertyNameComboData );
     // get all PropertyNames to use for filter
-    final ArrayList<String> labelStringItems = new ArrayList<String>();
+    final ArrayList<String> labelStringItems = new ArrayList<>();
     final IPropertyType[] ftp = featureType.getProperties();
     for( int i = 0; i < ftp.length; i++ )
     {
@@ -1428,7 +1428,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         if( ftp[i] instanceof IValuePropertyType )
         {
           final IValuePropertyType vpt = (IValuePropertyType) ftp[i];
-          final Class valueClass = vpt.getValueClass();
+          final Class< ? > valueClass = vpt.getValueClass();
           if( valueClass == Double.class )
             labelStringItems.add( name );
           else if( valueClass == BigInteger.class )
@@ -1559,7 +1559,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     final GridData propertyNameComboData = new GridData( 75, 30 );
     propertyNameCombo.setLayoutData( propertyNameComboData );
     // get all PropertyNames to use for filter
-    final ArrayList<String> labelStringItems = new ArrayList<String>();
+    final ArrayList<String> labelStringItems = new ArrayList<>();
     final IPropertyType[] ftp = featureType.getProperties();
     for( int i = 0; i < ftp.length; i++ )
       if( !GeometryUtilities.isGeometry( ftp[i] ) )
@@ -1662,14 +1662,14 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     final GridData propertyNameComboData = new GridData( 75, 30 );
     propertyNameCombo.setLayoutData( propertyNameComboData );
     // get all PropertyNames to use for filter
-    final ArrayList<String> labelStringItems = new ArrayList<String>();
+    final ArrayList<String> labelStringItems = new ArrayList<>();
     final IPropertyType[] ftp = featureType.getProperties();
     for( final IPropertyType element : ftp )
     {
       if( element instanceof IValuePropertyType )
       {
         final IValuePropertyType vpt = (IValuePropertyType) element;
-        final Class valueClass = vpt.getValueClass();
+        final Class< ? > valueClass = vpt.getValueClass();
         final String name = element.getName();
         if( valueClass == Double.class )
           labelStringItems.add( name );
@@ -1798,8 +1798,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         final FilterDialogTreeNode childNode = new FilterDialogTreeNode( getLogicalCombo().getSelectionName( getLogicalCombo().getSelection() ), FilterDialogTreeNode.LOGICAL_NODE_TYPE );
         getCurrentNode().addNode( childNode );
         getM_viewer().expandAll();
-        if( childNode != null )
-          getM_viewer().setSelection( new StructuredSelection( childNode ) );
+        getM_viewer().setSelection( new StructuredSelection( childNode ) );
         getM_viewer().refresh( true );
         setFilterInvalid();
       }

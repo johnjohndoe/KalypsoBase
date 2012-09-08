@@ -55,8 +55,7 @@ import de.openali.odysseus.chart.framework.model.layer.impl.ChartLayerState;
  */
 public class ChartModelState implements IChartModelState
 {
-
-  private final List<IChartLayerState> m_layerStates = new ArrayList<IChartLayerState>();
+  private final List<IChartLayerState> m_layerStates = new ArrayList<>();
 
   @Override
   public void restoreState( final IChartModel model )
@@ -72,9 +71,6 @@ public class ChartModelState implements IChartModelState
     }
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.IChartModelState#storeState(de.openali.odysseus.chart.framework.model.IChartModel)
-   */
   @Override
   public void storeState( final IChartModel model )
   {

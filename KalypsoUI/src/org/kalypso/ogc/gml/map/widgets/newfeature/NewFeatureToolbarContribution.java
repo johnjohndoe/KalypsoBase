@@ -113,7 +113,7 @@ public class NewFeatureToolbarContribution extends DropDownToolbarItem
       return new CommandContributionItem[0];
     }
 
-    if( theme == null || !(theme instanceof IKalypsoFeatureTheme) )
+    if( !(theme instanceof IKalypsoFeatureTheme) )
       return new CommandContributionItem[0];
 
     final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) theme;
@@ -172,7 +172,7 @@ public class NewFeatureToolbarContribution extends DropDownToolbarItem
         tooltip = annotation.getValue( IAnnotation.ANNO_TOOLTIP );
       }
 
-      final Map<String, Object> map = new HashMap<String, Object>();
+      final Map<String, Object> map = new HashMap<>();
       final String parameterValue = ft.getQName().toString();
       map.put( parameter.getId(), parameterValue );
 

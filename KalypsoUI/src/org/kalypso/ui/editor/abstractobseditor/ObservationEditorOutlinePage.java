@@ -108,7 +108,7 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
   public ObsViewItem[] getSelectedItems( )
   {
     final ISelection sel = getSelection();
-    final List<ObsViewItem> items = new ArrayList<ObsViewItem>();
+    final List<ObsViewItem> items = new ArrayList<>();
 
     if( sel instanceof IStructuredSelection )
     {

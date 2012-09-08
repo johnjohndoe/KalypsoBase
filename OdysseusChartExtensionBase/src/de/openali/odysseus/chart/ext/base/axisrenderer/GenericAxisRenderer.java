@@ -141,16 +141,6 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     return StyleUtils.getDefaultTextStyle();
   }
 
-  /**
-   * @see de.openali.odysseus.chart.ext.base.axisrenderer.AbstractGenericAxisRenderer#getTickLabelStyle()
-   */
-  @Override
-  public ITextStyle getTickLabelStyle( )
-  {
-    // TODO Auto-generated method stub
-    return super.getTickLabelStyle();
-  }
-
   public Point calcTickLabelSize( final GC gc, final IAxis axis )
   {
     final IDataRange<Number> range = axis.getNumericRange();
@@ -168,7 +158,6 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     final int y = tickLabelSize.y + ihelper.top + ihelper.bottom;
 
     return new Point( x, y );
-
   }
 
   /**
@@ -322,7 +311,8 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
 
     final ITextStyle tickLabelStyle = getTickLabelStyle();
     final ILineStyle tickLineStyle = getTickLineStyle();
-    final int tickScreenDistance = (screenMax - screenMin) / ticks.length == 1 ? 1 : ticks.length - 1;
+
+    // final int tickScreenDistance = (screenMax - screenMin) / ticks.length == 1 ? 1 : ticks.length - 1;
 
     for( int i = 0; i < ticks.length; i++ )
     {

@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview;
 
@@ -72,7 +72,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * Waits for the observation to be loaded and creates a diagram-curve using the xml-template information.
- * 
+ *
  * @see org.kalypso.util.pool.PoolableObjectWaiter
  * @author schlienger
  */
@@ -83,10 +83,6 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
     super( new PoolableObjectType( xmlObs.getLinktype(), xmlObs.getHref(), context ), new Object[] { view, xmlObs }, synchron );
   }
 
-  /**
-   * @see org.kalypso.util.pool.PoolableObjectWaiter#objectLoaded(org.kalypso.util.pool.IPoolableObjectType,
-   *      java.lang.Object)
-   */
   @Override
   protected void objectLoaded( final IPoolableObjectType key, final Object newValue )
   {
@@ -100,7 +96,7 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
     for( final TypeCurve tcurve : xmlObs.getCurve() )
     {
       final List<Mapping> tmaps = tcurve.getMapping();
-      final List<AxisMapping> mappings = new ArrayList<AxisMapping>( tmaps.size() );
+      final List<AxisMapping> mappings = new ArrayList<>( tmaps.size() );
 
       boolean useThisCurve = true;
 

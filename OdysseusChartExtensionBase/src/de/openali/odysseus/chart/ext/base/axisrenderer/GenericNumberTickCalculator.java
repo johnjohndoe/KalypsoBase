@@ -16,10 +16,9 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATI
 
 public class GenericNumberTickCalculator implements ITickCalculator
 {
-
   /**
    * Calculates the ticks shown for the given Axis *
-   * 
+   *
    * @param minDisplayInterval
    *          interval division should stop when intervals become smaller than this value
    */
@@ -44,9 +43,7 @@ public class GenericNumberTickCalculator implements ITickCalculator
 // tickLabelWidth = ticklabelSize.y;
 // }
 
-    // Collection für Ticks
-    // final TreeMap<Integer, SortedSet<Double>> ticks = new TreeMap<Integer, SortedSet<Double>>();
-    final SortedSet<Number> ticks = new TreeSet<Number>();
+    final SortedSet<Number> ticks = new TreeSet<>();
 
     // Mini- und maximalen Grenz-Wert ermitteln anhand der Größe der Labels
     int screenMin, screenMax;
@@ -106,8 +103,8 @@ public class GenericNumberTickCalculator implements ITickCalculator
     }
 
     // hier werden alle Zahlen gespeichert, die als gute Divisoren eines Intervalls gelten
-    // 3 wï¿½rde z.B. schnell krumme werte erzeugen
-    final LinkedList<Integer> goodDivisors = new LinkedList<Integer>();
+    // 3 würde z.B. schnell krumme werte erzeugen
+    final LinkedList<Integer> goodDivisors = new LinkedList<>();
 
     goodDivisors.add( 5 );
     goodDivisors.add( 2 );
@@ -135,7 +132,7 @@ public class GenericNumberTickCalculator implements ITickCalculator
   /**
    * recursive function which divides in interval into a Double of "divisions" and adds the values to a linked list the
    * divisions have to have a larger range than the param interval *
-   * 
+   *
    * @param minDisplayInterval
    *          if value is greater than 0, the interval division should stop when intervals become smaller than this
    *          value
@@ -184,7 +181,7 @@ public class GenericNumberTickCalculator implements ITickCalculator
             }
 
             // Divisoren rotieren, damit in der nÃ¤chsten Ebene Ã¼ber den nÃ¤chsten iteriert wird
-            final ArrayList<Integer> newDivisors = new ArrayList<Integer>();
+            final ArrayList<Integer> newDivisors = new ArrayList<>();
             final int divIndex = divisors.indexOf( divisor );
             final List<Integer> tail = divisors.subList( divIndex + 1, divisors.size() );
             final List<Integer> head = divisors.subList( 0, divIndex + 1 );

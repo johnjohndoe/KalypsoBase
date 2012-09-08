@@ -46,12 +46,12 @@ public abstract class AbstractChartLayer implements IChartLayer
 {
   private ICoordinateMapper m_coordinateMapper;
 
-  private final Set<IChartLayerFilter> m_filters = new LinkedHashSet<IChartLayerFilter>();
+  private final Set<IChartLayerFilter> m_filters = new LinkedHashSet<>();
 
   /**
    * hash map to store arbitrary key value pairs
    */
-  private final Map<String, Object> m_data = new HashMap<String, Object>();
+  private final Map<String, Object> m_data = new HashMap<>();
 
   private String m_description = "";
 
@@ -69,7 +69,7 @@ public abstract class AbstractChartLayer implements IChartLayer
 
   private boolean m_legendIsVisible = true;
 
-  private final Map<String, IRetinalMapper> m_mapperMap = new HashMap<String, IRetinalMapper>();
+  private final Map<String, IRetinalMapper> m_mapperMap = new HashMap<>();
 
   private final ILayerProvider m_provider;
 

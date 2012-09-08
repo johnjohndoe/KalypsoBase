@@ -251,7 +251,7 @@ public class FeatureViewLayoutPart extends AbstractWizardLayoutPart implements I
 
     if( selection instanceof IStructuredSelection )
     {
-      final Collection<EasyFeatureWrapper> result = new ArrayList<EasyFeatureWrapper>();
+      final Collection<EasyFeatureWrapper> result = new ArrayList<>();
       final IStructuredSelection structSel = (IStructuredSelection) selection;
       for( final Iterator< ? > iterator = structSel.iterator(); iterator.hasNext(); )
       {

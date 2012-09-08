@@ -83,9 +83,6 @@ public class UndoRedoAction extends FullAction implements ICommandManagerListene
     refresh( source );
   }
 
-  /**
-   * @see org.eclipse.jface.action.IAction#run()
-   */
   @Override
   public void run( )
   {

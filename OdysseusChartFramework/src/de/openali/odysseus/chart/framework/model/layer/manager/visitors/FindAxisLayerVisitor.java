@@ -53,7 +53,7 @@ import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
  */
 public class FindAxisLayerVisitor extends AbstractChartLayerVisitor
 {
-  Set<IChartLayer> m_layers = new HashSet<IChartLayer>();
+  Set<IChartLayer> m_layers = new HashSet<>();
 
   private final IAxis m_axis;
 
@@ -65,9 +65,6 @@ public class FindAxisLayerVisitor extends AbstractChartLayerVisitor
     m_recursive = recursive;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisitor#visit(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
   @Override
   public void visit( final IChartLayer layer )
   {

@@ -53,7 +53,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.core.status.StatusComposite;
@@ -70,7 +69,7 @@ import org.kalypso.ogc.gml.command.RenameThemeCommand;
  * @author Gernot Belger
  * @author Holger Albert
  */
-public class ThemePropertyPage extends PropertyPage implements IWorkbenchPropertyPage
+public class ThemePropertyPage extends PropertyPage
 {
   private String m_themeName = null;
 

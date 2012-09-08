@@ -262,7 +262,7 @@ public abstract class AbstractSelectWidget extends DeprecatedMouseWidget
 
         final Feature fe = (Feature) JMSelector.selectNearest( pointSelect, gisRadius, ((IKalypsoFeatureTheme) activeTheme).getFeatureListVisible( null ), false );
 
-        final List<Feature> listFe = new ArrayList<Feature>();
+        final List<Feature> listFe = new ArrayList<>();
         if( fe != null )
           listFe.add( fe );
 

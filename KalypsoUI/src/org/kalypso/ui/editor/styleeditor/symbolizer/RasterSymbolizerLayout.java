@@ -87,7 +87,7 @@ public class RasterSymbolizerLayout extends AbstractSymbolizerComposite<RasterSy
 
     // ***** Table
     final Composite tableComposite = new Composite( panel, SWT.NULL );
-    final StyleInput<RasterSymbolizer> input = new StyleInput<RasterSymbolizer>( rasterSymbolizer, getInput() );
+    final StyleInput<RasterSymbolizer> input = new StyleInput<>( rasterSymbolizer, getInput() );
     new ColorMapEntryTable( tableComposite, input );
 
     return panel;

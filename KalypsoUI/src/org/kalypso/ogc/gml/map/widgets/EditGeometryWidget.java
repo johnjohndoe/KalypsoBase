@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
 
@@ -66,7 +66,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * <br>
  * display handles near mouse<br>
  * simply move handles with left drag<br>
- * 
+ *
  * @author doemming
  */
 public class EditGeometryWidget extends DeprecatedMouseWidget
@@ -80,7 +80,7 @@ public class EditGeometryWidget extends DeprecatedMouseWidget
   boolean m_careTopology = false;
 
   // list of handles
-  private List<Handle> m_handles = new ArrayList<Handle>();
+  private List<Handle> m_handles = new ArrayList<>();
 
   // handles while editing
   private List<Handle> m_editHandles = null;
@@ -124,7 +124,6 @@ public class EditGeometryWidget extends DeprecatedMouseWidget
     final double maxY = transform.getSourceY( p.getY() + m_boxRadiusVisibleHandles );
     // valid envelope with handles
     final GM_Envelope envelope = GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY, getMapPanel().getMapModell().getCoordinatesSystem() );
-    final JMSelector selector = new JMSelector();
 
     // final FeatureList featureListVisible = ((IKalypsoFeatureTheme) activeTheme).getFeatureListVisible( null );
     final FeatureList featureListVisible = ((IKalypsoFeatureTheme) activeTheme).getFeatureList();
@@ -208,7 +207,7 @@ public class EditGeometryWidget extends DeprecatedMouseWidget
 
   /**
    * Perform the translation of the selected features.
-   * 
+   *
    * @return true to signal that features
    */
   protected Feature[] perform( )
@@ -253,13 +252,13 @@ public class EditGeometryWidget extends DeprecatedMouseWidget
   /**
    * topology-mode=on : all handles relevant<br>
    * topology-mode=off : nearest handles <br>
-   * 
+   *
    * @return filteres handles
    */
   protected List<Handle> filter( final List<Handle> handles, final Point pointOfInterest, List<Handle> collector )
   {
     if( collector == null )
-      collector = new ArrayList<Handle>();
+      collector = new ArrayList<>();
 
     final GeoTransform transform = getMapPanel().getProjection();
     final IKalypsoTheme activeTheme = getActiveTheme();
@@ -271,7 +270,7 @@ public class EditGeometryWidget extends DeprecatedMouseWidget
     final GM_Position positionOfInterest = GeometryFactory.createGM_Position( gisX, gisY );
 
     // todo checkForTopology is not used, check it
-    final List<Handle> checkForTopology = new ArrayList<Handle>();
+    final List<Handle> checkForTopology = new ArrayList<>();
     // 1. select nearest handle
     Handle nearest = null;
     double minDistance = -1;

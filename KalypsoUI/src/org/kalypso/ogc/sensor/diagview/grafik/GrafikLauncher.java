@@ -432,8 +432,8 @@ public class GrafikLauncher
     Date xUpper = null;
     Number yLower = new Double( Double.MAX_VALUE );
     Number yUpper = new Double( -Double.MAX_VALUE );
-    final Set<XLine> xLines = new TreeSet<XLine>();
-    final Map<Double, ValueAndColor> yLines = new HashMap<Double, ValueAndColor>();
+    final Set<XLine> xLines = new TreeSet<>();
+    final Map<Double, ValueAndColor> yLines = new HashMap<>();
 
     // set the timezone of the dateformat
     if( odt.getTimezone() != null && odt.getTimezone().length() > 0 )
@@ -489,7 +489,7 @@ public class GrafikLauncher
       if( numberAxes.length == 0 )
         continue;
 
-      final List<IAxis> displayedAxes = new ArrayList<IAxis>( numberAxes.length );
+      final List<IAxis> displayedAxes = new ArrayList<>( numberAxes.length );
 
       final List<TypeCurve> curves = element.getCurve();
       for( final TypeCurve tc : curves )

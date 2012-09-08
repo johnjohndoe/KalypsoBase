@@ -138,7 +138,7 @@ public class FeatureTemplateviewer
     }
   };
 
-  private final Set<IFeaturesProviderListener> m_listener = new HashSet<IFeaturesProviderListener>();
+  private final Set<IFeaturesProviderListener> m_listener = new HashSet<>();
 
   private Composite m_contentPanel;
 

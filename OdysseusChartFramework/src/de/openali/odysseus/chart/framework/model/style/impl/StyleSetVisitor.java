@@ -128,7 +128,7 @@ public class StyleSetVisitor
 
   public String[] findReferences( final IStyleSet set, final Class< ? extends IStyle> clazz )
   {
-    final Set<String> styles = new LinkedHashSet<String>();
+    final Set<String> styles = new LinkedHashSet<>();
     final Map<String, IStyle> map = set.getStyles();
 
     final Set<Entry<String, IStyle>> entries = map.entrySet();

@@ -160,7 +160,7 @@ public class LegendComposite extends Composite
     super( parent, style );
 
     /* Initialize. */
-    m_listener = new ArrayList<ILegendChangedListener>();
+    m_listener = new ArrayList<>();
     m_main = null;
     m_content = null;
     m_mapModel = mapModel;
@@ -170,18 +170,12 @@ public class LegendComposite extends Composite
     createControls();
   }
 
-  /**
-   * @see org.eclipse.swt.widgets.Composite#setLayout(org.eclipse.swt.widgets.Layout)
-   */
   @Override
   public void setLayout( final Layout layout )
   {
     /* Ignore user set layouts, only layout datas are permitted. */
   }
 
-  /**
-   * @see org.eclipse.swt.widgets.Widget#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -216,7 +210,7 @@ public class LegendComposite extends Composite
     m_vertical = PositionUtilities.BOTTOM;
     m_backgroundColor = new RGB( 255, 255, 255 );
     m_insets = 10;
-    m_themeIds = new ArrayList<String>();
+    m_themeIds = new ArrayList<>();
     m_fontSize = 10;
 
     /* Do not change the default values, if no new properties are set. */
@@ -654,7 +648,7 @@ public class LegendComposite extends Composite
     final String verticalProperty = String.format( Locale.PRC, "%d", m_vertical ); //$NON-NLS-1$
     final String backgroundColorProperty = String.format( Locale.PRC, "%d;%d;%d", m_backgroundColor.red, m_backgroundColor.green, m_backgroundColor.blue ); //$NON-NLS-1$
     final String insetsProperty = String.format( Locale.PRC, "%d", m_insets ); //$NON-NLS-1$
-    final List<String> themeIds = new ArrayList<String>();
+    final List<String> themeIds = new ArrayList<>();
     for( int i = 0; i < m_themeIds.size(); i++ )
     {
       final String id = m_themeIds.get( i );

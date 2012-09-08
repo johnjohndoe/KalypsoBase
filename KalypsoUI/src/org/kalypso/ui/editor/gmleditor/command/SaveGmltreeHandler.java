@@ -55,7 +55,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.core.status.StatusDialog2;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.gmleditor.part.GmlTreeView;
 
@@ -92,7 +92,7 @@ public class SaveGmltreeHandler extends AbstractHandler
     final String errorMessage = Messages.getString( "org.kalypso.ui.editor.gmleditor.actions.SaveGmlDelegate.3" ); //$NON-NLS-1$;
     final IStatus result = ProgressUtilities.busyCursorWhile( progressService, op, errorMessage );
     if( !result.isOK() )
-      new StatusDialog2( shell, result, commandName );
+      StatusDialog.open( shell, result, commandName );
 
     return null;
   }

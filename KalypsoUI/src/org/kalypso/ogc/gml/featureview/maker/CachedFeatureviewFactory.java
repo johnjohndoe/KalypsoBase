@@ -75,9 +75,9 @@ public class CachedFeatureviewFactory implements IFeatureviewFactory
   private static String FEATUREVIEW_NAMESPACE = "featureview.template.kalypso.org"; //$NON-NLS-1$
 
   /** Map of especially added view-templates. */
-  private final Map<QName, FeatureviewTypeWithContext> m_viewMap = new HashMap<QName, FeatureviewTypeWithContext>();
+  private final Map<QName, FeatureviewTypeWithContext> m_viewMap = new HashMap<>();
 
-  private final Map<QName, FeatureviewTypeWithContext> m_cache = new HashMap<QName, FeatureviewTypeWithContext>();
+  private final Map<QName, FeatureviewTypeWithContext> m_cache = new HashMap<>();
 
   private final IFeatureviewFactory m_delegateFactory;
 

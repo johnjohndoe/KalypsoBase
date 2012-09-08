@@ -1,30 +1,30 @@
 /*
  * --------------- Kalypso-Header --------------------------------------------------------------------
- * 
+ *
  * This file is part of kalypso. Copyright (C) 2004, 2005 by:
- * 
+ *
  * Technical University Hamburg-Harburg (TUHH) Institute of River and coastal engineering Denickestr. 22 21073 Hamburg,
  * Germany http://www.tuhh.de/wb
- * 
+ *
  * and
- * 
+ *
  * Bjoernsen Consulting Engineers (BCE) Maria Trost 3 56070 Koblenz, Germany http://www.bjoernsen.de
- * 
+ *
  * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
  * Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- * 
+ *
  * Contact:
- * 
+ *
  * E-Mail: belger@bjoernsen.de schlienger@bjoernsen.de v.doemming@tuhh.de
- * 
+ *
  * ---------------------------------------------------------------------------------------------------
  */
 package org.kalypso.ogc.gml.map.widgets;
@@ -57,7 +57,7 @@ import com.vividsolutions.jts.geom.Geometry;
 /**
  * A widget which edits a arbitrary geometry. Overwrite it to define the behaviour what really happens (e.g. create new
  * feature or edit existing and so on).
- * 
+ *
  * @author Holger Albert
  */
 public abstract class AbstractCreateGeometeryWidget extends DeprecatedMouseWidget
@@ -66,7 +66,7 @@ public abstract class AbstractCreateGeometeryWidget extends DeprecatedMouseWidge
   private static double MIN_DRAG_DISTANCE_PIXEL = 0.02;
 
   // points in pixel coordinates
-  private final List<GM_Point> m_points = new ArrayList<GM_Point>();
+  private final List<GM_Point> m_points = new ArrayList<>();
 
   // this is the point currently under the mouse
   private GM_Point m_currentPoint = null;
@@ -94,7 +94,7 @@ public abstract class AbstractCreateGeometeryWidget extends DeprecatedMouseWidge
    */
   private GM_Object createGeometry( final List<GM_Point> pixelArray ) throws GM_Exception, NotEnoughPointsExeption
   {
-    final Class geoClass = getGeometryClass();
+    final Class< ? extends GM_Object> geoClass = getGeometryClass();
     if( geoClass == GeometryUtilities.getPolygonClass() && pixelArray.size() < 3 )
       throw new NotEnoughPointsExeption();
     if( geoClass == GeometryUtilities.getLineStringClass() && pixelArray.size() < 2 )
@@ -115,7 +115,7 @@ public abstract class AbstractCreateGeometeryWidget extends DeprecatedMouseWidge
 
   private List<GM_Position> getAsGM_Positions( final List<GM_Point> pixelArray )
   {
-    final List<GM_Position> lListResult = new ArrayList<GM_Position>();
+    final List<GM_Position> lListResult = new ArrayList<>();
     for( final GM_Point lGMPoint : pixelArray )
     {
       lListResult.add( lGMPoint.getPosition() );
@@ -136,7 +136,7 @@ public abstract class AbstractCreateGeometeryWidget extends DeprecatedMouseWidge
     if( !m_points.isEmpty() && m_points.get( m_points.size() - 1 ).equals( lGMPoint ) )
       return;
     // first test if vaild...
-    final List<GM_Point> testList = new ArrayList<GM_Point>();
+    final List<GM_Point> testList = new ArrayList<>();
     for( final GM_Point point : m_points )
       testList.add( point );
     testList.add( lGMPoint );
@@ -216,7 +216,7 @@ public abstract class AbstractCreateGeometeryWidget extends DeprecatedMouseWidge
       final int[][] lArrPositionToDrow = getXYArrayPixel();
       final int[] arrayX = lArrPositionToDrow[0];
       final int[] arrayY = lArrPositionToDrow[1];
-      final Class geoClass = getGeometryClass();
+      final Class< ? extends GM_Object> geoClass = getGeometryClass();
       if( geoClass == GeometryUtilities.getPolygonClass() )
       {
         // paint polygon
@@ -248,8 +248,8 @@ public abstract class AbstractCreateGeometeryWidget extends DeprecatedMouseWidge
    */
   private int[][] getXYArrayPixel( )
   {
-    final List<Integer> xArray = new ArrayList<Integer>();
-    final List<Integer> yArray = new ArrayList<Integer>();
+    final List<Integer> xArray = new ArrayList<>();
+    final List<Integer> yArray = new ArrayList<>();
     for( int i = 0; i < m_points.size(); i++ )
     {
       xArray.add( new Integer( (int) getMapPanel().getProjection().getDestX( m_points.get( i ).getX() ) ) );
@@ -291,7 +291,7 @@ public abstract class AbstractCreateGeometeryWidget extends DeprecatedMouseWidge
 
   /**
    * This method transforms the AWT-Point to a GM_Point.
-   * 
+   *
    * @param mapPanel
    *          The MapPanel of the map.
    * @param p
@@ -321,7 +321,7 @@ public abstract class AbstractCreateGeometeryWidget extends DeprecatedMouseWidge
 
   protected abstract void performIntern( final GM_Object validGeometryValue ) throws Exception;
 
-  private GM_Surface getPolygon( final List<GM_Position> posArray ) throws GM_Exception
+  private GM_Surface< ? > getPolygon( final List<GM_Position> posArray ) throws GM_Exception
   {
     // close the ring
     posArray.add( posArray.get( 0 ) );
@@ -337,15 +337,12 @@ public abstract class AbstractCreateGeometeryWidget extends DeprecatedMouseWidge
   /**
    * @return a point
    */
-  private GM_Point getPoint( final List posArray )
+  private GM_Point getPoint( final List<GM_Position> posArray )
   {
-    final GM_Position pos = (GM_Position) posArray.get( 0 );
+    final GM_Position pos = posArray.get( 0 );
     return GeometryFactory.createGM_Point( pos.getX(), pos.getY(), getCoordinatesSystem() );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#doubleClickedLeft(java.awt.Point)
-   */
   @Override
   public void doubleClickedLeft( final Point p )
   {
@@ -354,7 +351,7 @@ public abstract class AbstractCreateGeometeryWidget extends DeprecatedMouseWidge
 
     if( !m_points.isEmpty() )
     {
-      final Class geoClass = getGeometryClass();
+      final Class< ? extends GM_Object> geoClass = getGeometryClass();
       if( geoClass == GeometryUtilities.getPolygonClass() && m_points.size() >= 3 )
         perform();
       if( geoClass == GeometryUtilities.getLineStringClass() && m_points.size() >= 2 )
@@ -363,9 +360,6 @@ public abstract class AbstractCreateGeometeryWidget extends DeprecatedMouseWidge
 
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.widgets.IWidget#doubleClickedRight(java.awt.Point)
-   */
   @Override
   public void doubleClickedRight( final Point p )
   {
@@ -412,6 +406,5 @@ public abstract class AbstractCreateGeometeryWidget extends DeprecatedMouseWidge
 
   protected abstract GeoTransform getProjection( );
 
-  protected abstract Class getGeometryClass( );
-
+  protected abstract Class< ? extends GM_Object> getGeometryClass( );
 }

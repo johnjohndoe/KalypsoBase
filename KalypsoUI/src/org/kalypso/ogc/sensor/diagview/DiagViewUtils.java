@@ -90,7 +90,7 @@ import org.xml.sax.InputSource;
 
 /**
  * Observation Diagramm Template Handling made easy.
- * 
+ *
  * @author schlienger
  */
 public class DiagViewUtils
@@ -127,7 +127,7 @@ public class DiagViewUtils
 
   protected static Marshaller createMarshaller( ) throws JAXBException
   {
-    final Map<String, String> prefixMapping = new HashMap<String, String>();
+    final Map<String, String> prefixMapping = new HashMap<>();
     prefixMapping.put( NS.KALYPSO_OBSVIEW, "" ); //$NON-NLS-1$
     return JaxbUtilities.createMarshaller( ODT_JC, true, prefixMapping );
   }
@@ -158,7 +158,7 @@ public class DiagViewUtils
 
   /**
    * Loads a binding template. Closes the stream.
-   * 
+   *
    * @return diagram template object parsed from the file
    */
   public static Obsdiagview loadDiagramTemplateXML( final InputStream ins ) throws JAXBException
@@ -175,7 +175,7 @@ public class DiagViewUtils
 
   /**
    * Loads a binding template. Closes the stream.
-   * 
+   *
    * @return diagram template object parsed from the file
    */
   public static Obsdiagview loadDiagramTemplateXML( final Reader reader ) throws JAXBException
@@ -192,7 +192,7 @@ public class DiagViewUtils
 
   /**
    * Loads a binding template. Closes the stream.
-   * 
+   *
    * @return diagram template object parsed from the file
    */
   private static Obsdiagview loadDiagramTemplateXML( final InputSource ins ) throws JAXBException
@@ -202,7 +202,7 @@ public class DiagViewUtils
 
   /**
    * Builds the xml binding object using the given diagram view template
-   * 
+   *
    * @return xml binding object (ready for marshalling for instance)
    */
   public static Obsdiagview buildDiagramTemplateXML( final DiagView view, final IContainer context )
@@ -310,7 +310,7 @@ public class DiagViewUtils
 
   /**
    * Creates a diagram axis according to the given IObservation axis
-   * 
+   *
    * @return diagram axis
    */
   public static DiagramAxis createAxisFor( final IAxis axis )
@@ -320,7 +320,7 @@ public class DiagViewUtils
 
   /**
    * Creates a diagram axis according to the given IObservation axis
-   * 
+   *
    * @return diagram axis
    */
   public static DiagramAxis createAxisFor( final String axisType, final String label, final String unit, final boolean isKey )
@@ -377,7 +377,7 @@ public class DiagViewUtils
 
   /**
    * Apply the given xml-template representation to the diagview.
-   * 
+   *
    * @param ignoreHref
    *          [optional] tricky, used in the context of the wizard where token replace takes place. If a href could not
    *          be replaced, it is set to a specific tag-value and the ignoreHref parameter if specified denotes is
@@ -420,7 +420,7 @@ public class DiagViewUtils
       }
     }
 
-    final List<IStatus> stati = new ArrayList<IStatus>();
+    final List<IStatus> stati = new ArrayList<>();
 
     final List<TypeObservation> list = xml.getObservation();
     for( final TypeObservation tobs : list )
@@ -451,7 +451,7 @@ public class DiagViewUtils
 
   /**
    * Return the first axis of the mappings list which is not a key axis.
-   * 
+   *
    * @param mappings
    *          array of obs-diag axes mappings
    * @return obs axis (not a key axis) or null if not found

@@ -42,16 +42,17 @@ package org.kalypso.ogc.gml.map.widgets.advanced.utils;
 
 import java.awt.Graphics;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.eclipse.core.runtime.Status;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.i18n.Messages;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
@@ -67,13 +68,15 @@ import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 
 /**
+ * FIXME: merge with {@link SLDPainter2}.
+ *
  * @author Dirk Kuch
  */
 public class SLDPainter
 {
   private static final String PAINTING_SLD_FAILED = Messages.getString("SLDPainter_0"); //$NON-NLS-1$
 
-  private final Map<URL, Symbolizer> m_symbolizerMap = new HashMap<URL, Symbolizer>();
+  private final Map<URL, Symbolizer> m_symbolizerMap = new HashMap<>();
 
   private final GeoTransform m_projection;
 
@@ -87,7 +90,7 @@ public class SLDPainter
 
   public void paint( final Graphics g, final URL sld, final Coordinate[] coordinates ) throws CoreException
   {
-    final List<IStatus> statis = new ArrayList<IStatus>();
+    final IStatusCollector log = new StatusCollector( KalypsoGisPlugin.PLUGIN_ID );
 
     for( final Coordinate coordinate : coordinates )
     {
@@ -98,12 +101,12 @@ public class SLDPainter
       catch( final Exception e )
       {
         final String msg = String.format( Messages.getString("SLDPainter_1"), coordinate.x, coordinate.y ); //$NON-NLS-1$
-        StatusUtilities.createExceptionalErrorStatus( msg, e );
+        log.add( IStatus.ERROR, msg, e );
       }
     }
 
-    if( !statis.isEmpty() )
-      throw new CoreException( StatusUtilities.createStatus( statis, Messages.getString("SLDPainter_2") ) ); //$NON-NLS-1$
+    if( !log.isEmpty() )
+      throw new CoreException( log.asMultiStatus( Messages.getString("SLDPainter_2") ) ); //$NON-NLS-1$
   }
 
   public void paint( final Graphics g, final URL sld, final Coordinate coordinate ) throws CoreException
@@ -132,7 +135,7 @@ public class SLDPainter
     }
     catch( final GM_Exception e )
     {
-      throw new CoreException( StatusUtilities.createExceptionalErrorStatus( PAINTING_SLD_FAILED, e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, PAINTING_SLD_FAILED, e ) );
     }
   }
 
@@ -144,6 +147,7 @@ public class SLDPainter
     }
   }
 
+  // TODO: ugly, give url from outside
   public void paint( final Graphics g, final URL sld, final GM_Object gmo ) throws CoreException
   {
     Symbolizer symbolizer = m_symbolizerMap.get( sld );
@@ -156,7 +160,7 @@ public class SLDPainter
       }
       catch( final CoreException e )
       {
-        throw new CoreException( StatusUtilities.createExceptionalErrorStatus( PAINTING_SLD_FAILED, e ) );
+        throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, PAINTING_SLD_FAILED, e ) );
       }
     }
 
@@ -172,7 +176,7 @@ public class SLDPainter
     }
     catch( final Exception e )
     {
-      throw new CoreException( StatusUtilities.createExceptionalErrorStatus( PAINTING_SLD_FAILED, e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, PAINTING_SLD_FAILED, e ) );
     }
   }
 
@@ -186,8 +190,7 @@ public class SLDPainter
     }
     catch( final IncompatibleGeometryTypeException e )
     {
-      throw new CoreException( StatusUtilities.createExceptionalErrorStatus( PAINTING_SLD_FAILED, e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, PAINTING_SLD_FAILED, e ) );
     }
   }
-
 }

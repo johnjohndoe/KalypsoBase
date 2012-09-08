@@ -35,7 +35,6 @@ public class CSVLineLayerProvider extends AbstractLayerProvider
   {
     final AbstractDomainValueFileData data = new AbstractDomainValueFileData()
     {
-
       @SuppressWarnings("unchecked")
       @Override
       public boolean openData( )
@@ -49,8 +48,8 @@ public class CSVLineLayerProvider extends AbstractLayerProvider
           final BufferedReader br = new BufferedReader( isr );
           String s = "";
           int count = 0;
-          final List<Object> domainValues = new ArrayList<Object>();
-          final List<Object> targetValues = new ArrayList<Object>();
+          final List<Object> domainValues = new ArrayList<>();
+          final List<Object> targetValues = new ArrayList<>();
 
           while( (s = br.readLine()) != null )
           {
@@ -58,18 +57,10 @@ public class CSVLineLayerProvider extends AbstractLayerProvider
             // YearString
             if( cols.length >= 2 )
             {
-              Object domainVal = null;
-              Object targetVal = null;
               try
               {
-                domainVal = new Double( cols[0].trim() );
-                targetVal = new Double( cols[1].trim() );
-                if( domainVal != null && targetVal != null )
-                {
-
-                  domainValues.add( domainVal );
-                  targetValues.add( targetVal );
-                }
+                domainValues.add( new Double( cols[0].trim() ) );
+                targetValues.add( new Double( cols[1].trim() ) );
               }
               catch( final NumberFormatException e )
               {

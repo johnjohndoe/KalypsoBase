@@ -61,21 +61,13 @@ import de.openali.odysseus.chart.framework.util.ChartUtilities;
  */
 public class ChartTreeLabelProvider extends LabelProvider implements ITableLabelProvider
 {
-  private final Map<IChartLayer, Image> m_layerImages = new HashMap<IChartLayer, Image>();
+  private final Map<IChartLayer, Image> m_layerImages = new HashMap<>();
 
-  private final Map<ILegendEntry, Image> m_legendEntryImages = new HashMap<ILegendEntry, Image>();
+  private final Map<ILegendEntry, Image> m_legendEntryImages = new HashMap<>();
 
   /** Default size for legend icons: use 16, this is default for all eclipse icons */
   private final Point m_defaultIconSize = new Point( 16, 16 );
 
-  // TODO: give display, not chart part
-  public ChartTreeLabelProvider( )
-  {
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.LabelProvider#dispose()
-   */
   @Override
   public void dispose( )
   {

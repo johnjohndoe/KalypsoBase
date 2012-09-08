@@ -107,7 +107,7 @@ public class GmltreeSourceProvider extends AbstractSourceProvider implements ISo
    * This collection contains all services, with which this provider has been registered. Used in order to correctly
    * unregister.
    */
-  private final Collection<IServiceWithSources> m_registeredServices = new HashSet<IServiceWithSources>();
+  private final Collection<IServiceWithSources> m_registeredServices = new HashSet<>();
 
   private GmlTreeView m_treeViewer;
 
@@ -196,7 +196,7 @@ public class GmltreeSourceProvider extends AbstractSourceProvider implements ISo
   @Override
   public Map< ? , ? > getCurrentState( )
   {
-    final Map<String, Object> currentState = new TreeMap<String, Object>();
+    final Map<String, Object> currentState = new TreeMap<>();
     currentState.put( ACTIVE_GMLTREE_NAME, m_treeViewer );
     return currentState;
   }

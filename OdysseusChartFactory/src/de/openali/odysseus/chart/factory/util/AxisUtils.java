@@ -86,7 +86,7 @@ public final class AxisUtils
    */
   public static IAxis[] findAutoscaleAxes( final AxisType[] axes, final IMapperRegistry mapperRegistry )
   {
-    final List<IAxis> autoscaledAxes = new ArrayList<IAxis>();
+    final List<IAxis> autoscaledAxes = new ArrayList<>();
 
     for( final AxisType axisType : axes )
     {

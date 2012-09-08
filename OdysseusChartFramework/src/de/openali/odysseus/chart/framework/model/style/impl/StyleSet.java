@@ -10,7 +10,7 @@ import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 public class StyleSet implements IStyleSet
 {
-  private final Map<String, IStyle> m_styleMap = new LinkedHashMap<String, IStyle>();
+  private final Map<String, IStyle> m_styleMap = new LinkedHashMap<>();
 
   @Override
   public void addStyle( final String id, final IStyle style )

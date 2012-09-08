@@ -66,7 +66,7 @@ import de.renew.workflow.utils.ScenarioConfiguration;
 
 /**
  * Wrapper interface for handling {@link Case} Objects
- * 
+ *
  * @author Dirk Kuch
  */
 public class ScenarioHandler implements IScenario
@@ -283,7 +283,7 @@ public class ScenarioHandler implements IScenario
       if( ignoreFolders.length == 0 )
         return new IFolder[] {};
 
-      final List<IFolder> results = new ArrayList<IFolder>();
+      final List<IFolder> results = new ArrayList<>();
 
       for( final IgnoreFolder ignoreFolder : ignoreFolders )
       {

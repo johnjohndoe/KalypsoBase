@@ -78,14 +78,11 @@ public class GeometryFeaturesProvider implements IFeaturesProvider
     m_qname = qname;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.providers.IFeaturesProvider#getFeatures(org.kalypso.ogc.gml.map.IMapPanel)
-   */
   @Override
   public EasyFeatureWrapper[] getFeatures( final IMapPanel mapPanel )
   {
     final IKalypsoTheme[] allThemes = mapPanel.getMapModell().getAllThemes();
-    final List<EasyFeatureWrapper> foundfeatures = new ArrayList<EasyFeatureWrapper>();
+    final List<EasyFeatureWrapper> foundfeatures = new ArrayList<>();
 
     for( final IKalypsoTheme theme : allThemes )
     {

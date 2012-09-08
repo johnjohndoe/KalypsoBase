@@ -54,7 +54,7 @@ import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 
 /**
  * A label provider for the color map entry table.
- * 
+ *
  * @author Andreas Doemming
  * @author Holger Albert
  */
@@ -63,19 +63,8 @@ public class ColorMapEntryLabelProvider extends LabelProvider implements ITableL
   /**
    * The registry of the images.
    */
-  private final Map<java.awt.Color, Image> m_images;
+  private final Map<java.awt.Color, Image> m_images = new HashMap<>();
 
-  /**
-   * The constructor.
-   */
-  public ColorMapEntryLabelProvider( )
-  {
-    m_images = new HashMap<java.awt.Color, Image>();
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
-   */
   @Override
   public String getColumnText( final Object element, final int columnIndex )
   {

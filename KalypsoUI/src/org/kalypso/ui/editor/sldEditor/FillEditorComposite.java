@@ -83,7 +83,7 @@ import org.kalypsodeegree_impl.graphics.sld.awt.FillPainter;
  */
 public class FillEditorComposite extends Composite
 {
-  private final Set<IFillModifyListener> m_listeners = new HashSet<IFillModifyListener>();
+  private final Set<IFillModifyListener> m_listeners = new HashSet<>();
 
   private final Fill m_fill;
 
@@ -391,11 +391,7 @@ public class FillEditorComposite extends Composite
     final ImageConverter converter = new ImageConverter();
     final ImageData convertToSWT = converter.convertToSWT( bufferedImage );
 
-    final Image preview = new Image( getDisplay(), convertToSWT );
-    if( preview != null )
-    {
-      m_preview = preview;
-    }
+    m_preview = new Image( getDisplay(), convertToSWT );
     m_previewComp.setBackgroundImage( m_preview );
   }
 

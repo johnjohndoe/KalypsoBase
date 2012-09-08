@@ -62,10 +62,9 @@ import de.openali.odysseus.chart.framework.model.data.impl.NumberDataOperator;
  */
 public class DataOperatorHelper
 {
-  @SuppressWarnings("rawtypes")
-  private final Map<Class< ? >, IDataOperator> m_dataOperators = new HashMap<Class< ? >, IDataOperator>();
+  private final Map<Class< ? >, IDataOperator< ? >> m_dataOperators = new HashMap<>();
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings( "unchecked" )
   public DataOperatorHelper( )
   {
     m_dataOperators.put( Number.class, new NumberDataOperator( new NumberComparator() ) );
@@ -74,15 +73,14 @@ public class DataOperatorHelper
     m_dataOperators.put( Date.class, new DateDataOperator( new ComparableComparator(), "dd.MM.yyyy HH:mm" ) );
   }
 
-  @SuppressWarnings("unchecked")
   public <T> IDataOperator<T> getDataOperator( final Class<T> clazz )
   {
     for( final Class< ? > c : m_dataOperators.keySet() )
     {
       if( c.isAssignableFrom( clazz ) )
-        return m_dataOperators.get( c );
+        return (IDataOperator<T>)m_dataOperators.get( c );
     }
 
-    return new DummyDataOperator<T>();
+    return new DummyDataOperator<>();
   }
 }

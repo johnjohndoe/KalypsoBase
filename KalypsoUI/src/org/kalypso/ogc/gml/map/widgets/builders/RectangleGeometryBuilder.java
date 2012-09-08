@@ -58,7 +58,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * This class is a geometry builder for a rectangle.
- * 
+ *
  * @author Thomas Jung
  */
 public class RectangleGeometryBuilder implements IGeometryBuilder
@@ -81,7 +81,7 @@ public class RectangleGeometryBuilder implements IGeometryBuilder
 
   /**
    * The constructor.
-   * 
+   *
    * @param targetCrs
    *          The target coordinate system.
    */
@@ -184,8 +184,8 @@ public class RectangleGeometryBuilder implements IGeometryBuilder
 
   private int[][] getPointArrays( final GeoTransform projection, final Point currentPoint )
   {
-    final List<Integer> xArray = new ArrayList<Integer>();
-    final List<Integer> yArray = new ArrayList<Integer>();
+    final List<Integer> xArray = new ArrayList<>();
+    final List<Integer> yArray = new ArrayList<>();
 
     final int xStart = (int) projection.getDestX( m_startPoint.getX() );
     final int yStart = (int) projection.getDestY( m_startPoint.getY() );

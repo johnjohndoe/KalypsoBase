@@ -121,7 +121,6 @@ public class MoveFeatureCommand implements ICommand
     return Messages.getString( "org.kalypso.ui.editor.gmleditor.command.MoveFeatureCommand.0" ); //$NON-NLS-1$
   }
 
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
   private void move( final int step )
   {
     final List<Object> list = (List<Object>) m_parentFeature.getProperty( m_pt );

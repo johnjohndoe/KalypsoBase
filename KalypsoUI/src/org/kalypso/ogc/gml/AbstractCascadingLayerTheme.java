@@ -62,7 +62,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 /**
  * @author Stefan Kurzbach extended by Dirk Kuch
  */
-abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme implements IKalypsoCascadingTheme, IKalypsoSaveableTheme, IKalypsoLayerModell
+abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme implements IKalypsoCascadingTheme, IKalypsoSaveableTheme
 {
   private GisTemplateMapModell m_innerMapModel;
 

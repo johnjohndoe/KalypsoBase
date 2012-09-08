@@ -61,7 +61,7 @@ public class GMLLabelProvider extends LabelProvider
   /**
    * Hash for descriptors and its images.
    */
-  private final Map<ImageDescriptor, Image> m_images = new HashMap<ImageDescriptor, Image>( 20 );
+  private final Map<ImageDescriptor, Image> m_images = new HashMap<>( 20 );
 
   @Override
   public void dispose( )

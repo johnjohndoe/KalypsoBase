@@ -86,7 +86,7 @@ public class GMLContentProvider implements ITreeContentProvider
     }
   };
 
-  private final Map<QName, Boolean> m_showChildrenOverrides = new HashMap<QName, Boolean>();
+  private final Map<QName, Boolean> m_showChildrenOverrides = new HashMap<>();
 
   private TreeViewer m_viewer;
 
@@ -167,7 +167,7 @@ public class GMLContentProvider implements ITreeContentProvider
     if( parentElement instanceof GMLWorkspace )
       return new Object[] { ((GMLWorkspace) parentElement).getRootFeature() };
 
-    final List<Object> result = new ArrayList<Object>();
+    final List<Object> result = new ArrayList<>();
     if( parentElement instanceof Feature )
       collectFeatureChildren( parentElement, result );
     else if( parentElement instanceof FeatureAssociationTypeElement )

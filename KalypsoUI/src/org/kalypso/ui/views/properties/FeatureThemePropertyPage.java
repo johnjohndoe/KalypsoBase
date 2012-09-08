@@ -50,7 +50,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -63,7 +62,7 @@ import org.kalypso.ogc.gml.command.CompositeCommand;
  *
  * @author Gernot Belger
  */
-public class FeatureThemePropertyPage extends PropertyPage implements IWorkbenchPropertyPage
+public class FeatureThemePropertyPage extends PropertyPage
 {
   private String m_themeLocation = null;
 

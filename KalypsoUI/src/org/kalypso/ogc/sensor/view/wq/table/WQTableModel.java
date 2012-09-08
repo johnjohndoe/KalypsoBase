@@ -42,14 +42,13 @@
 package org.kalypso.ogc.sensor.view.wq.table;
 
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
 
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 
 /**
  * @author schlienger
  */
-public class WQTableModel extends AbstractTableModel implements TableModel
+public class WQTableModel extends AbstractTableModel
 {
   private final Double m_startW;
 

@@ -26,9 +26,7 @@ public class ScreenCoordinateAxis extends AbstractAxis implements IScreenAxis
   @Override
   public IDataRange<Number> getNumericRange( )
   {
-    final int screenHeight = getScreenHeight();
-
-    return new DataRange<Number>( 0, 1);//screenHeight );
+    return new DataRange<Number>( 0, 1 );
   }
 
   @Override

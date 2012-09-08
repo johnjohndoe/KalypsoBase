@@ -68,7 +68,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Selects the next feature from the current active theme of the map.
- * 
+ *
  * @author Gernot Belger
  */
 public class SelectNextFeatureHandler extends AbstractHandler implements IElementUpdater, IExecutableExtension
@@ -205,7 +205,7 @@ public class SelectNextFeatureHandler extends AbstractHandler implements IElemen
   {
     final int index = featureList.indexOf( previousElement );
     int newIndex = index;
-    final Set<Integer> indexChecked = new HashSet<Integer>();
+    final Set<Integer> indexChecked = new HashSet<>();
     while( !indexChecked.contains( newIndex ) )
     {
       // Remember all checked indices, to prevent endless-loop
@@ -286,16 +286,12 @@ public class SelectNextFeatureHandler extends AbstractHandler implements IElemen
     }
   }
 
-  /**
-   * @see org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.menus.UIElement, java.util.Map)
-   */
   @Override
-  public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
+  public void updateElement( final UIElement element, final Map parameters )
   {
     // Sttange: normally the framework should automatically call setEnabled, as
     final IHandlerService handlerService = (IHandlerService) element.getServiceLocator().getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
     setEnabled( context );
   }
-
 }

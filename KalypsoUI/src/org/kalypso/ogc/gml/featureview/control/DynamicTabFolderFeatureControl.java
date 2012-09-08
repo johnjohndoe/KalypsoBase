@@ -344,7 +344,7 @@ public class DynamicTabFolderFeatureControl extends AbstractFeatureControl
   {
     final CTabItem[] items = m_tabFolder.getItems();
 
-    final Collection<Object> objects = new ArrayList<Object>();
+    final Collection<Object> objects = new ArrayList<>();
 
     for( final CTabItem tabItem : items )
     {
@@ -356,7 +356,7 @@ public class DynamicTabFolderFeatureControl extends AbstractFeatureControl
       }
     }
 
-    final Collection<Object> allFeatureItems = new ArrayList<Object>( featureList );
+    final Collection<Object> allFeatureItems = new ArrayList<>( featureList );
 
     return !allFeatureItems.equals( objects );
   }

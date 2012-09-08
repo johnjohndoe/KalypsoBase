@@ -77,7 +77,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
   private final Collection<FeatureControlBuilder> m_controls = new ArrayList<>();
 
-  private final Collection<ModifyListener> m_modifyListeners = new ArrayList<ModifyListener>( 5 );
+  private final Collection<ModifyListener> m_modifyListeners = new ArrayList<>( 5 );
 
   private Control m_control = null;
 

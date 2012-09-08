@@ -103,7 +103,7 @@ public class NodeFactory
       return new TextThemeNode( parent, (KalypsoTextTheme) element );
 
     if( element instanceof IKalypsoTheme )
-      return new KalypsoThemeNode<IKalypsoTheme>( parent, (IKalypsoTheme) element );
+      return new KalypsoThemeNode<>( parent, (IKalypsoTheme)element );
 
     if( element instanceof IKalypsoUserStyle )
       return new UserStyleNode( parent, (IKalypsoUserStyle) element );

@@ -59,9 +59,9 @@ import org.kalypso.ui.KalypsoGisPlugin;
 public class GrafikAchsen
 {
   /** maps diag-axis-id to grafik-axis (only for vertical axes) */
-  private final Map<String, GrafikAchse> m_name2grafikAxis = new HashMap<String, GrafikAchse>();
+  private final Map<String, GrafikAchse> m_name2grafikAxis = new HashMap<>();
 
-  private final Map<String, Integer> m_id2axisnr = new HashMap<String, Integer>();
+  private final Map<String, Integer> m_id2axisnr = new HashMap<>();
 
   private int m_axisIdCounter = 0;
 
@@ -194,7 +194,7 @@ public class GrafikAchsen
 
   /**
    * Holds simple axis information for the grafik tool
-   * 
+   *
    * @author schlienger
    */
   public final static class GrafikAchse

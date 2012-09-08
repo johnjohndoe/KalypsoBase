@@ -102,7 +102,7 @@ public class CalendarParser implements IStringParser<Calendar>
              * hier werden die ausgelesenen Werte für einzelnen Zeiteinheiten gespeichert; enhält Paare wie zB
              * (Calendar.YEAR, "5Y") erst an späterer Stelle werden die Werte in Integers umgewandelt
              */
-            final Map<Integer, String> durationMap = new HashMap<Integer, String>();
+            final Map<Integer, String> durationMap = new HashMap<>();
 
             // Matcher initiualisieren
             matcher.matches();

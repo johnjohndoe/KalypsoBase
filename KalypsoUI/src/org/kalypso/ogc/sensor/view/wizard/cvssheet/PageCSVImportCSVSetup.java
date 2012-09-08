@@ -339,7 +339,7 @@ public class PageCSVImportCSVSetup extends WizardPage
     final Label lDateFormat = new Label( grSeperators, SWT.NONE );
     lDateFormat.setText( Messages.getString( "org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVImportCSVSetup.24" ) ); //$NON-NLS-1$
 
-    final List<SimpleDateFormat> dates = new ArrayList<SimpleDateFormat>();
+    final List<SimpleDateFormat> dates = new ArrayList<>();
     dates.add( new SimpleDateFormat( Messages.getString( "org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVImportCSVSetup.25" ) ) ); //$NON-NLS-1$
     dates.add( new SimpleDateFormat( Messages.getString( "org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVImportCSVSetup.26" ) ) ); //$NON-NLS-1$
 
@@ -365,7 +365,7 @@ public class PageCSVImportCSVSetup extends WizardPage
     final Label lTimeZones = new Label( grSeperators, SWT.NONE );
     lTimeZones.setText( Messages.getString( "org.kalypso.ogc.sensor.view.wizard.cvssheet.PageCSVImportCSVSetup.29" ) ); //$NON-NLS-1$
 
-    final Set<String> timeZones = new TreeSet<String>();
+    final Set<String> timeZones = new TreeSet<>();
     final String[] tz = TimeZone.getAvailableIDs();
     for( final String z : tz )
       if( z.contains( "Europe/" ) ) //$NON-NLS-1$

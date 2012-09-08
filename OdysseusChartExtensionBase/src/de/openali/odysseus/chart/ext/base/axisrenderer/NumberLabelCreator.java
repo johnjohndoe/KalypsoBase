@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraße 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.ext.base.axisrenderer;
 
@@ -84,10 +84,6 @@ public class NumberLabelCreator implements ILabelCreator
     }
   }
 
-  /**
-   * @see de.openali.odysseus.chart.ext.base.axisrenderer.ILabelCreator#getLabel(java.lang.Number,
-   *      de.openali.odysseus.chart.framework.model.data.IDataRange)
-   */
   @Override
   public String getLabel( final Number value, final IDataRange<Number> range )
   {
@@ -105,7 +101,7 @@ public class NumberLabelCreator implements ILabelCreator
       return null;
 
     // Differenz bilden und sicherstellen, dass sie positiv ist
-    Double diff = max == null || min == null ? 0.0 : Math.abs( max.doubleValue() - min.doubleValue() );
+    Double diff = Math.abs( max.doubleValue() - min.doubleValue() );
 
     final NumberFormat nf = new DecimalFormat();
     // Anzahl gültiger stellen
@@ -116,13 +112,13 @@ public class NumberLabelCreator implements ILabelCreator
     int id = 1;
 
     // Minuszeichen einplanen
-    if( min != null && max != null && (max.doubleValue() < 0 || min.doubleValue() < 0) )
+    if( max.doubleValue() < 0 || min.doubleValue() < 0 )
     {
       id++;
     }
 
     // Vorkommastellen ausrechnen
-    double tmpmax = max == null || min == null ? 0.0 : Math.max( Math.abs( max.doubleValue() ), Math.abs( min.doubleValue() ) );
+    double tmpmax = Math.max( Math.abs( max.doubleValue() ), Math.abs( min.doubleValue() ) );
     if( tmpmax >= 1 )
     {
       while( tmpmax >= 1 )

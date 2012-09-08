@@ -109,7 +109,7 @@ public class ScenarioManager implements IScenarioManager
 
   /**
    * Initializes the {@link ICaseManager} on the given project
-   * 
+   *
    * @param project
    *          the project, must not be <code>null</code>
    * @exception CoreException
@@ -210,7 +210,7 @@ public class ScenarioManager implements IScenarioManager
 
   /**
    * Saves the changes in the scenario structure to the database.
-   * 
+   *
    * @param monitor
    *          the progess monitor to report progress to or <code>null</code> if no progress reporting is desired
    * @exception CoreException
@@ -369,7 +369,7 @@ public class ScenarioManager implements IScenarioManager
   @Override
   public List<IScenario> getCases( )
   {
-    final List<IScenario> resultList = new ArrayList<IScenario>();
+    final List<IScenario> resultList = new ArrayList<>();
     final List<IScenario> internalCases = internalGetCases();
     for( final IScenario caze : internalCases )
     {
@@ -478,7 +478,7 @@ public class ScenarioManager implements IScenarioManager
 
     /* This are the folders, to be ignored. */
     /* The target folder should always be ignored. */
-    final List<IFolder> scenarioFolders = new ArrayList<IFolder>();
+    final List<IFolder> scenarioFolders = new ArrayList<>();
     scenarioFolders.add( targetFolder );
 
     /* If no sub scenarios should be copied, ignore these as well. */

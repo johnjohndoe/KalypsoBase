@@ -22,7 +22,7 @@ import de.openali.odysseus.service.odsimpl.x020.ServiceParametersType;
 /**
  * Class which handles the configurations for the service and the individual scenes; if a scene does not define its own
  * ServiceProvider- and ServiceIdentification-Elements, they are inherited from the global configuration.
- * 
+ *
  * @author Alexander Burtscher
  */
 public class ODSConfigurationLoader
@@ -80,13 +80,13 @@ public class ODSConfigurationLoader
 
   /**
    * initializes (resets) the scenes map and fills it with ODSScene-objects generated from ScenesType references
-   * 
+   *
    * @param scenes
    * @throws ConfigurationException
    */
   private void createODSScenes( final ScenesType scenes )
   {
-    m_scenes = new HashMap<String, ODSChartConfig>();
+    m_scenes = new HashMap<>();
     final SceneType defaultScene = scenes.getDefaultScene();
     m_defaultSceneId = defaultScene.getId();
     createODSScene( defaultScene );
@@ -98,7 +98,7 @@ public class ODSConfigurationLoader
   /**
    * adds one ODSScene to the Scenes-Map; if a scene does not have its own ServiceProvider and ServiceIdentifier, the
    * ones from the global configuration are used
-   * 
+   *
    * @param sceneRef
    * @throws ConfigurationException
    */
@@ -120,7 +120,7 @@ public class ODSConfigurationLoader
 
   /**
    * rereads the configuration files
-   * 
+   *
    * @throws ConfigurationException
    * @throws IOException
    * @throws XmlException
@@ -155,7 +155,7 @@ public class ODSConfigurationLoader
 
   private void createServiceParameterMap( final ServiceParametersType serviceParameters )
   {
-    m_serviceParameters = new HashMap<String, String>();
+    m_serviceParameters = new HashMap<>();
     final ParameterType[] parameterArray = serviceParameters.getParameterArray();
     for( final ParameterType param : parameterArray )
       m_serviceParameters.put( param.getName(), param.getValue() );

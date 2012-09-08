@@ -54,7 +54,7 @@ import de.openali.odysseus.chart.framework.view.IChartHandlerManager;
  */
 public class ChartImagePlotHandler implements IChartHandlerManager
 {
-  private final Set<IChartHandler> m_dragHandlers = new LinkedHashSet<IChartHandler>();
+  private final Set<IChartHandler> m_dragHandlers = new LinkedHashSet<>();
 
   private final ChartImageComposite m_chart;
 

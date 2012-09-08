@@ -116,7 +116,7 @@ public final class ChartExtensionLoader implements IExtensionLoader
       return LP_MAP;
     }
 
-    LP_MAP = new HashMap<String, IConfigurationElement>();
+    LP_MAP = new HashMap<>();
     final IExtensionRegistry er = Platform.getExtensionRegistry();
     if( er != null )
     {
@@ -142,7 +142,7 @@ public final class ChartExtensionLoader implements IExtensionLoader
       return AP_MAP;
     }
 
-    AP_MAP = new HashMap<String, IConfigurationElement>();
+    AP_MAP = new HashMap<>();
     final IExtensionRegistry er = Platform.getExtensionRegistry();
     if( er != null )
     {
@@ -168,7 +168,7 @@ public final class ChartExtensionLoader implements IExtensionLoader
       return MP_MAP;
     }
 
-    MP_MAP = new HashMap<String, IConfigurationElement>();
+    MP_MAP = new HashMap<>();
     final IExtensionRegistry er = Platform.getExtensionRegistry();
     if( er != null )
     {
@@ -194,7 +194,7 @@ public final class ChartExtensionLoader implements IExtensionLoader
       return ARP_MAP;
     }
 
-    ARP_MAP = new HashMap<String, IConfigurationElement>();
+    ARP_MAP = new HashMap<>();
     final IExtensionRegistry er = Platform.getExtensionRegistry();
     if( er != null )
     {

@@ -71,6 +71,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.jaxb.TemplateUtilities;
@@ -89,6 +90,7 @@ import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
@@ -221,11 +223,11 @@ public final class GisTemplateHelper
     }
     catch( final JAXBException e )
     {
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.gml.GisTemplateHelper.1" ), e ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ogc.gml.GisTemplateHelper.1" ), e ) ); //$NON-NLS-1$
     }
     catch( final IOException e )
     {
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.gml.GisTemplateHelper.1" ), e ) ); //$NON-NLS-1$
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ogc.gml.GisTemplateHelper.1" ), e ) ); //$NON-NLS-1$
     }
     finally
     {
@@ -409,10 +411,11 @@ public final class GisTemplateHelper
     final GM_Envelope env = GeometryFactory.createGM_Envelope( extent.getLeft(), extent.getBottom(), extent.getRight(), extent.getTop(), extent.getSrs() );
     final String orgSRSName = extent.getSrs();
     if( orgSRSName != null )
+    {
       try
       {
         final String targetSRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-        if( (orgSRSName != null) && !orgSRSName.equals( targetSRS ) )
+        if( !orgSRSName.equals( targetSRS ) )
         {
           // if srs attribute exists and it is not the target srs we have to convert it
           final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( targetSRS );
@@ -424,6 +427,8 @@ public final class GisTemplateHelper
         // we just print the error, but asume that we can return an envelope that is not converted
         e.printStackTrace();
       }
+    }
+
     return env;
   }
 

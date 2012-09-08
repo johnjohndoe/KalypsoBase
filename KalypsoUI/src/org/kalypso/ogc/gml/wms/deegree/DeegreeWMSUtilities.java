@@ -162,7 +162,7 @@ public final class DeegreeWMSUtilities
 
       /* HACK: Recreate the request, using vendor specific parameters. */
       /* HACK: SLD_BODY is not handled correctly in deegree2. */
-      final Map<String, String> vendorSpecificParameter = new HashMap<String, String>();
+      final Map<String, String> vendorSpecificParameter = new HashMap<>();
       vendorSpecificParameter.put( "SLD_BODY", sldBody ); //$NON-NLS-1$
 
       return GetMap.create( request.getVersion(), request.getId(), request.getLayers(), request.getElevation(), request.getSampleDimension(), request.getFormat(), request.getWidth(), request.getHeight(), request.getSrs(), request.getBoundingBox(), request.getTransparency(), request.getBGColor(), request.getExceptions(), request.getTime(), request.getSLD_URL(), request.getStyledLayerDescriptor(), vendorSpecificParameter );
@@ -187,7 +187,7 @@ public final class DeegreeWMSUtilities
    */
   private static HashMap<String, String> prepareRequestParameters( final WMSCapabilities capabilities, final String operationName ) throws CoreException
   {
-    final HashMap<String, String> wmsParameter = new HashMap<String, String>();
+    final HashMap<String, String> wmsParameter = new HashMap<>();
 
     /* HACK: in order to keep any existing query parts, add existing query parts from base url. */
     final Operation operation = checkOperation( capabilities, operationName );
@@ -297,7 +297,7 @@ public final class DeegreeWMSUtilities
    */
   private static String matchCrs( final Layer topLayer, final String[] layerSelection, final String localCRS )
   {
-    final Set<Layer> collector = new HashSet<Layer>();
+    final Set<Layer> collector = new HashSet<>();
 
     collect( collector, topLayer, layerSelection );
 
@@ -354,7 +354,7 @@ public final class DeegreeWMSUtilities
     final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( srs );
 
     final Layer topLayer = capabilites.getLayer();
-    final HashSet<Layer> layerCollector = new HashSet<Layer>();
+    final HashSet<Layer> layerCollector = new HashSet<>();
 
     collect( layerCollector, topLayer, layers );
 

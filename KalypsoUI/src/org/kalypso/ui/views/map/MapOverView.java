@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.views.map;
 
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewSite;
@@ -65,17 +64,14 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  */
 public class MapOverView extends AbstractMapPart implements IAdapterEater<IMapPanel>, IMapPanelListener, IViewPart
 {
-  private final IAdapterFinder<IMapPanel> m_closeFinder = new EditorFirstAdapterFinder<IMapPanel>();
+  private final IAdapterFinder<IMapPanel> m_closeFinder = new EditorFirstAdapterFinder<>();
 
   private final IAdapterFinder<IMapPanel> m_initFinder = m_closeFinder;
 
-  private final AdapterPartListener<IMapPanel> m_adapterListener = new AdapterPartListener<IMapPanel>( IMapPanel.class, this, m_initFinder, m_closeFinder );
+  private final AdapterPartListener<IMapPanel> m_adapterListener = new AdapterPartListener<>( IMapPanel.class, this, m_initFinder, m_closeFinder );
 
   private IMapPanel m_panel;
 
-  /**
-   * @see org.kalypso.ui.editor.mapeditor.AbstractMapPart#init(org.eclipse.ui.IViewSite)
-   */
   @Override
   public void init( final IViewSite site )
   {
@@ -84,35 +80,17 @@ public class MapOverView extends AbstractMapPart implements IAdapterEater<IMapPa
     site.getPage().addPartListener( m_adapterListener );
   }
 
-  /**
-   * @see org.eclipse.ui.IViewPart#init(org.eclipse.ui.IViewSite, org.eclipse.ui.IMemento)
-   */
   @Override
   public void init( final IViewSite site, final IMemento memento )
   {
     init( site );
   }
 
-  /**
-   * @see org.eclipse.ui.IViewPart#saveState(org.eclipse.ui.IMemento)
-   */
   @Override
   public void saveState( final IMemento memento )
   {
   }
 
-  /**
-   * @see org.kalypso.ui.editor.mapeditor.AbstractMapPart#createPartControl(org.eclipse.swt.widgets.Composite)
-   */
-  @Override
-  public void createPartControl( final Composite parent )
-  {
-    super.createPartControl( parent );
-  }
-
-  /**
-   * @see org.kalypso.ui.editor.mapeditor.AbstractMapPart#dispose()
-   */
   @Override
   public void dispose( )
   {

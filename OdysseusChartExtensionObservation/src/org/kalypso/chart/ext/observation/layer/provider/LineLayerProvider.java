@@ -28,9 +28,8 @@ public class LineLayerProvider extends AbstractLayerProvider
     TupleResultDomainValueData<Calendar, Double> data = null;
     if( href != null && observationId != null && domainComponentName != null && targetComponentName != null )
     {
-      data = new TupleResultDomainValueData<Calendar, Double>( getContext(), href, observationId, domainComponentName, targetComponentName );
+      data = new TupleResultDomainValueData<>( getContext(), href, observationId, domainComponentName, targetComponentName );
     }
     return data;
   }
-
 }

@@ -67,7 +67,7 @@ public class ChangeVisibilityCommandHandler extends AbstractHandler implements I
     if( Strings.isNullOrEmpty( parameter ) )
       return new IChartLayerFilter[] {};
 
-    final Set<IChartLayerFilter> filters = new LinkedHashSet<IChartLayerFilter>();
+    final Set<IChartLayerFilter> filters = new LinkedHashSet<>();
 
     final String[] parameters = parameter.split( ";" ); //$NON-NLS-1$
     for( final String filterIdentifier : parameters )
@@ -81,7 +81,7 @@ public class ChangeVisibilityCommandHandler extends AbstractHandler implements I
   }
 
   @Override
-  public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
+  public void updateElement( final UIElement element, final Map parameters )
   {
     final IChartModel model = ChartHandlerUtilities.getModel( element );
     if( Objects.isNull( model ) )

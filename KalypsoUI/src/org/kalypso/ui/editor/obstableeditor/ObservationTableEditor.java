@@ -126,11 +126,8 @@ public class ObservationTableEditor extends AbstractObservationEditor implements
     super.dispose();
   }
 
-  /**
-   * @see org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor#getAdapter(java.lang.Class)
-   */
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     if( adapter == IExportableObjectFactory.class )
       return this;
@@ -138,10 +135,6 @@ public class ObservationTableEditor extends AbstractObservationEditor implements
     return super.getAdapter( adapter );
   }
 
-  /**
-   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor,
-   *      org.eclipse.core.resources.IFile)
-   */
   @Override
   protected void doSaveInternal( final IProgressMonitor monitor, final IFile file ) throws CoreException
   {

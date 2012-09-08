@@ -86,14 +86,14 @@ import org.kalypsodeegree_impl.graphics.sld.awt.StrokePainter;
 
 /**
  * Composite, which gives the most important editing tools for a given stroke.
- * 
+ *
  * @author Thomas Jung
  * @deprecated Use {@link StrokeComposite} instead.
  */
 @Deprecated
 public class StrokeEditorComposite extends Composite
 {
-  private final Set<IStrokeModifyListener> m_listeners = new HashSet<IStrokeModifyListener>();
+  private final Set<IStrokeModifyListener> m_listeners = new HashSet<>();
 
   private final Stroke m_stroke;
 
@@ -426,11 +426,7 @@ public class StrokeEditorComposite extends Composite
     final ImageConverter converter = new ImageConverter();
     final ImageData convertToSWT = converter.convertToSWT( bufferedImage );
 
-    final Image preview = new Image( getDisplay(), convertToSWT );
-    if( preview != null )
-    {
-      m_preview = preview;
-    }
+    m_preview = new Image( getDisplay(), convertToSWT );
     m_previewComp.setBackgroundImage( m_preview );
   }
 

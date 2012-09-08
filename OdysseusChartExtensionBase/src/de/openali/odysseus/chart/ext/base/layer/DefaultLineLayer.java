@@ -32,7 +32,7 @@ public class DefaultLineLayer extends AbstractLineLayer
   }
 
   @Override
-  public void paint( final GC gc, ChartImageInfo chartImageInfo, IProgressMonitor monitor )
+  public void paint( final GC gc, final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
     final ITabularDataContainer< ? , ? > dataContainer = getDataContainer();
     if( dataContainer == null )
@@ -53,7 +53,7 @@ public class DefaultLineLayer extends AbstractLineLayer
       final ICoordinateMapper coordinateMapper = getCoordinateMapper();
       final int screenMin = coordinateMapper.numericToScreen( min, 0 ).x;
       final int screenMax = coordinateMapper.numericToScreen( max, 0 ).x;
-      final List<Point> path = new ArrayList<Point>();
+      final List<Point> path = new ArrayList<>();
       for( int i = 0; i < domainData.length; i++ )
       {
         final Object domVal = domainData[i];

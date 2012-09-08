@@ -91,9 +91,9 @@ public class ComboFeatureControl extends AbstractFeatureControl
 
   private ComboViewer m_comboViewer = null;
 
-  private final Map<Object, String> m_fixedEntries = new LinkedHashMap<Object, String>();
+  private final Map<Object, String> m_fixedEntries = new LinkedHashMap<>();
 
-  private final LinkedHashMap<Object, String> m_entries = new LinkedHashMap<Object, String>();
+  private final LinkedHashMap<Object, String> m_entries = new LinkedHashMap<>();
 
   private boolean m_ignoreNextUpdate = false;
 

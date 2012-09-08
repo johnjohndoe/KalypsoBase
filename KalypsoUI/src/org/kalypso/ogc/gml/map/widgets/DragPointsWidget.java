@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- * 
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.widgets;
 
@@ -67,7 +67,7 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * This class is a widget for selecting and dragging a handle (point) from a geometry.
- * 
+ *
  * @author Holger Albert
  */
 public class DragPointsWidget extends DeprecatedMouseWidget
@@ -109,7 +109,7 @@ public class DragPointsWidget extends DeprecatedMouseWidget
 
   /**
    * The constructor.
-   * 
+   *
    * @param name
    *          The name of this widget.
    * @param toolTip
@@ -150,9 +150,6 @@ public class DragPointsWidget extends DeprecatedMouseWidget
     getMapPanel().setCursor( cursor );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftReleased(java.awt.Point)
-   */
   @Override
   public void leftReleased( final Point p )
   {
@@ -160,7 +157,7 @@ public class DragPointsWidget extends DeprecatedMouseWidget
       return;
 
     /* Memory to collect all active handles. */
-    final ArrayList<Handle> list = new ArrayList<Handle>();
+    final ArrayList<Handle> list = new ArrayList<>();
 
     /* Set all handles inactive. */
     for( final IHandle handle : m_handles )
@@ -210,9 +207,6 @@ public class DragPointsWidget extends DeprecatedMouseWidget
     getMapPanel().setMessage( Messages.getString( "org.kalypso.ogc.gml.map.widgets.DragPointsWidget.1" ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#dragged(java.awt.Point)
-   */
   @Override
   public void dragged( final Point p )
   {
@@ -279,9 +273,6 @@ public class DragPointsWidget extends DeprecatedMouseWidget
     super.finish();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#setSelection(org.kalypso.ogc.gml.selection.IFeatureSelection)
-   */
   @Override
   public void setSelection( final ISelection selection )
   {
@@ -298,7 +289,7 @@ public class DragPointsWidget extends DeprecatedMouseWidget
     m_workspace = wrapper.getWorkspace();
 
     /* Create a new list for the handles. */
-    m_handles = new ArrayList<IHandle>();
+    m_handles = new ArrayList<>();
 
     /* Collect all handles from the handle provider. */
     m_handles.addAll( m_handlesProvider.collectHandles( feature, m_radius ) );
@@ -307,12 +298,8 @@ public class DragPointsWidget extends DeprecatedMouseWidget
     return;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#canBeActivated(org.eclipse.jface.viewers.ISelection,
-   *      org.kalypso.ogc.gml.map.MapPanel)
-   */
   @Override
-  public boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
+  public synchronized boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
   {
     if( mapPanel == null )
       return false;

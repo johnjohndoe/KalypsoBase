@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.diagview.jfreechart;
 
@@ -93,29 +93,29 @@ import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 
 /**
  * A plot for IObservation.
- * 
+ *
  * @author schlienger
  */
 public class ObservationPlot extends XYPlot
 {
   /** maps the diagram axis (from the template) to the chart axis */
-  private final transient Map<DiagramAxis, ValueAxis> m_diag2chartAxis = new HashMap<DiagramAxis, ValueAxis>();
+  private final transient Map<DiagramAxis, ValueAxis> m_diag2chartAxis = new HashMap<>();
 
   /** maps the chart axis to its position in the plot */
-  private final transient Map<ValueAxis, Integer> m_chartAxes2Pos = new HashMap<ValueAxis, Integer>();
+  private final transient Map<ValueAxis, Integer> m_chartAxes2Pos = new HashMap<>();
 
   /** maps the diagram axes (from the template) to a dataset */
-  private final transient Map<DiagramAxis, CurveDataset> m_diagAxis2ds = new HashMap<DiagramAxis, CurveDataset>();
+  private final transient Map<DiagramAxis, CurveDataset> m_diagAxis2ds = new HashMap<>();
 
   /** maps the diagram curve to the data serie */
-  private final transient Map<DiagViewCurve, XYCurveSerie> m_curve2serie = new HashMap<DiagViewCurve, XYCurveSerie>();
+  private final transient Map<DiagViewCurve, XYCurveSerie> m_curve2serie = new HashMap<>();
 
   /** maps the series to their datasets */
-  private final transient Map<XYCurveSerie, CurveDataset> m_serie2dataset = new HashMap<XYCurveSerie, CurveDataset>();
+  private final transient Map<XYCurveSerie, CurveDataset> m_serie2dataset = new HashMap<>();
 
-  private final transient Map<Double, AlarmLevelPlotElement> m_yConsts = new HashMap<Double, AlarmLevelPlotElement>();
+  private final transient Map<Double, AlarmLevelPlotElement> m_yConsts = new HashMap<>();
 
-  private final transient Map<Long, Marker> m_markers = new HashMap<Long, Marker>();
+  private final transient Map<Long, Marker> m_markers = new HashMap<>();
 
   private TimeZone m_timezone;
 
@@ -148,7 +148,7 @@ public class ObservationPlot extends XYPlot
 
   /**
    * Adds a diagram axis and configures it for the use in this plot.
-   * 
+   *
    * @param axis
    *          can be null, if present it is used to define a best suited formatter for the chart axis
    */
@@ -515,7 +515,7 @@ public class ObservationPlot extends XYPlot
 
   /**
    * overwritten to return a default axis when no real axes defined yet
-   * 
+   *
    * @see org.jfree.chart.plot.XYPlot#getDomainAxis()
    */
   @Override
@@ -529,7 +529,7 @@ public class ObservationPlot extends XYPlot
 
   /**
    * Overriden to return a default axis when no real axes defined yet
-   * 
+   *
    * @see org.jfree.chart.plot.XYPlot#getRangeAxis()
    */
   @Override
@@ -550,7 +550,7 @@ public class ObservationPlot extends XYPlot
 
   /**
    * overriden to also draw our alarmlevels
-   * 
+   *
    * @see org.jfree.chart.plot.XYPlot#drawAnnotations(java.awt.Graphics2D, java.awt.geom.Rectangle2D,
    *      org.jfree.chart.plot.PlotRenderingInfo)
    */
@@ -752,7 +752,7 @@ public class ObservationPlot extends XYPlot
 
   /**
    * mini helper class for storing a value and a color
-   * 
+   *
    * @author schlienger
    */
   private static final class AlarmLevelPlotElement

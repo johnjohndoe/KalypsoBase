@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.controls.files;
 
@@ -44,6 +44,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -59,7 +60,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ui.controls.files.listener.IFileChooserListener;
 
@@ -67,7 +67,7 @@ import org.kalypso.ui.controls.files.listener.IFileChooserListener;
  * Composite for selecting a file. It is able to create its controls on a composite or group. It will not use dialog
  * settings or other means to store the entered information. It is possible to be informed of the changes by a listener.
  * The selected path can also be set/returned explicitly by functions.
- * 
+ *
  * @author Holger Albert
  */
 public class FileChooserComposite extends Composite
@@ -109,7 +109,7 @@ public class FileChooserComposite extends Composite
 
   /**
    * The constructor.
-   * 
+   *
    * @param parent
    *          A widget which will be the parent of the new instance (cannot be null).
    * @param style
@@ -128,7 +128,7 @@ public class FileChooserComposite extends Composite
     super( parent, style );
 
     /* Initialize. */
-    m_listener = new ArrayList<IFileChooserListener>();
+    m_listener = new ArrayList<>();
     m_extensions = extensions;
     m_names = names;
     m_title = title;
@@ -237,7 +237,7 @@ public class FileChooserComposite extends Composite
 
   /**
    * This function creates the main composite. It takes the decision for a border into account.
-   * 
+   *
    * @return The main composite.
    */
   private Composite createMainComposite( )
@@ -245,8 +245,7 @@ public class FileChooserComposite extends Composite
     if( (getStyle() & NO_GROUP) != 0 )
     {
       final Composite main = new Composite( this, SWT.NONE );
-      main.setLayout( Layouts.createGridLayout( 3 ) );
-
+      GridLayoutFactory.fillDefaults().numColumns( 3 ).applyTo( main );
       return main;
     }
 
@@ -282,7 +281,7 @@ public class FileChooserComposite extends Composite
 
   /**
    * This function fires the path changed event.
-   * 
+   *
    * @param path
    *          The new path.
    */
@@ -294,7 +293,7 @@ public class FileChooserComposite extends Composite
 
   /**
    * This function adds a file chooser listener.
-   * 
+   *
    * @param listener
    *          The file chooser listener.
    */
@@ -306,7 +305,7 @@ public class FileChooserComposite extends Composite
 
   /**
    * This function removes a file chooser listener.
-   * 
+   *
    * @param listener
    *          The file chooser listener.
    */
@@ -318,7 +317,7 @@ public class FileChooserComposite extends Composite
 
   /**
    * This function sets the selected path.
-   * 
+   *
    * @param path
    *          The selected path.
    */
@@ -332,7 +331,7 @@ public class FileChooserComposite extends Composite
 
   /**
    * This function returns the selected path.
-   * 
+   *
    * @return The selected path.
    */
   public String getSelectedPath( )

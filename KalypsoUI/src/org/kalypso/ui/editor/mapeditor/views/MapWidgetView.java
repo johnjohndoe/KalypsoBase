@@ -109,7 +109,7 @@ public class MapWidgetView extends ViewPart
   /**
    * A map to remember the active widgets per map-part. For each part, there is at most one widget for this widget-view.
    */
-  private final Map<IMapPanel, WidgetInfo> m_widgetInfos = new HashMap<IMapPanel, WidgetInfo>();
+  private final Map<IMapPanel, WidgetInfo> m_widgetInfos = new HashMap<>();
 
   private final IAdapterEater<IMapPanel> m_adapterEater = new IAdapterEater<IMapPanel>()
   {
@@ -120,7 +120,7 @@ public class MapWidgetView extends ViewPart
     }
   };
 
-  private final IAdapterFinder<IMapPanel> m_adapterFinder = new EditorFirstAdapterFinder<IMapPanel>();
+  private final IAdapterFinder<IMapPanel> m_adapterFinder = new EditorFirstAdapterFinder<>();
 
   private final AdapterPartListener<IMapPanel> m_partListener = new AdapterPartListener<IMapPanel>( IMapPanel.class, m_adapterEater, m_adapterFinder, m_adapterFinder )
   {

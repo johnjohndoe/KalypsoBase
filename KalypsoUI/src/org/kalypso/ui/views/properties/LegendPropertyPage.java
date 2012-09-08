@@ -61,7 +61,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.kalypso.contribs.eclipse.swt.widgets.ImageCanvas;
 import org.kalypso.core.status.StatusComposite;
@@ -83,7 +82,7 @@ import org.kalypso.util.themes.position.PositionUtilities;
  *
  * @author Holger Albert
  */
-public class LegendPropertyPage extends PropertyPage implements IWorkbenchPropertyPage
+public class LegendPropertyPage extends PropertyPage
 {
   /**
    * The node.

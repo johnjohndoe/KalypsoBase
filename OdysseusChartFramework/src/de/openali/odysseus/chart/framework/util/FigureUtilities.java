@@ -24,7 +24,7 @@ public final class FigureUtilities
    */
   public static int[] pointArrayToIntArray( final Point[] points )
   {
-    final List<Integer> intList = new ArrayList<Integer>();
+    final List<Integer> intList = new ArrayList<>();
     for( final Point point : points )
     {
       if( point == null )

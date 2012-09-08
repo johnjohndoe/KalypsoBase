@@ -36,11 +36,8 @@ public class PanHandler extends AbstractHandler implements IElementUpdater
     return Status.OK_STATUS;
   }
 
-  /**
-   * @see org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.menus.UIElement, java.util.Map)
-   */
   @Override
-  public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
+  public void updateElement( final UIElement element, final Map parameters )
   {
     ElementUpdateHelper.updateElement( element, DragPanHandler.class );
   }

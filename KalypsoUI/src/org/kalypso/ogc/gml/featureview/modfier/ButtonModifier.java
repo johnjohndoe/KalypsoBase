@@ -103,14 +103,11 @@ public class ButtonModifier extends AbstractFeatureModifier
         return m_featureDialog.open( parentControl.getShell() ) == Window.OK;
       }
 
-      /**
-       * @see org.kalypso.ogc.gml.table.celleditors.DialogCellEditor#doGetValue()
-       */
       @Override
       protected Object doGetValue( )
       {
         // collect changes from dialog
-        final List<FeatureChange> col = new ArrayList<FeatureChange>();
+        final List<FeatureChange> col = new ArrayList<>();
         m_featureDialog.collectChanges( col );
         if( col.size() > 1 ) // TODO support more
           throw new UnsupportedOperationException( "Dialog must provide exactly one change" ); //$NON-NLS-1$

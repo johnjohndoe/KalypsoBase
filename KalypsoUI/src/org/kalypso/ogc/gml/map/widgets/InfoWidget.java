@@ -70,10 +70,6 @@ public class InfoWidget extends AbstractThemeInfoWidget
     super( name, toolTip );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.map.MapPanel)
-   */
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
   {
@@ -92,7 +88,7 @@ public class InfoWidget extends AbstractThemeInfoWidget
     if( mapModell == null )
       return EMPTY_THEMES;
 
-    final Collection<IKalypsoTheme> themes = new ArrayList<IKalypsoTheme>();
+    final Collection<IKalypsoTheme> themes = new ArrayList<>();
 
     final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
     for( final IKalypsoTheme theme : allThemes )

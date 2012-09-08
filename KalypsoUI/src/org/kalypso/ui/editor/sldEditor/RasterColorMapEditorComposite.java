@@ -69,7 +69,7 @@ import org.kalypsodeegree_impl.graphics.sld.ColorMapEntry_Impl;
 /**
  * In this composite the user can specify the colors, values and opacities for two ColorMapEntries. The classes
  * inbetween get interpolated by defining the step width, min and max value.
- * 
+ *
  * @author Thomas Jung
  */
 public abstract class RasterColorMapEditorComposite extends Composite
@@ -104,7 +104,7 @@ public abstract class RasterColorMapEditorComposite extends Composite
 
     /* Exclude transparent members from the beginning of the list. */
     double modifiedMinValue = entries.length > 0 ? entries[0].getQuantity() : globalMin.doubleValue();
-    final List<ColorMapEntry> nonTransparentEntriesList = new ArrayList<ColorMapEntry>();
+    final List<ColorMapEntry> nonTransparentEntriesList = new ArrayList<>();
     for( final ColorMapEntry entry : entries )
     {
       if( entry.getOpacity() > 0.0 )

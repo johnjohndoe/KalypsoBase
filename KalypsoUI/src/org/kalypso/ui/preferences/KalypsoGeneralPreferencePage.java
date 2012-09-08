@@ -40,13 +40,6 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.preferences;
 
-import java.util.Arrays;
-import java.util.Set;
-import java.util.TimeZone;
-import java.util.TreeSet;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -100,17 +93,11 @@ public class KalypsoGeneralPreferencePage extends FieldEditorPreferencePage impl
     m_timeZoneFieldEditor.load();
   }
 
-  /**
-   * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
-   */
   @Override
   public void init( final IWorkbench workbench )
   {
   }
 
-  /**
-   * @see org.eclipse.jface.preference.IPreferencePage#performOk()
-   */
   @Override
   public boolean performOk( )
   {

@@ -110,10 +110,10 @@ final class CSVBarLayerData extends AbstractDomainIntervalValueData
       final InputStream is = url.openStream();
       final InputStreamReader isr = new InputStreamReader( is );
 
-      final List<Object> domainValues = new ArrayList<Object>();
-      final List<Object> domainIntervalStartValues = new ArrayList<Object>();
-      final List<Object> domainIntervalEndValues = new ArrayList<Object>();
-      final List<Object> targetValues = new ArrayList<Object>();
+      final List<Object> domainValues = new ArrayList<>();
+      final List<Object> domainIntervalStartValues = new ArrayList<>();
+      final List<Object> domainIntervalEndValues = new ArrayList<>();
+      final List<Object> targetValues = new ArrayList<>();
 
       final BufferedReader br = new BufferedReader( isr );
       String s = "";

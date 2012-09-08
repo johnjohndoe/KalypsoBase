@@ -183,7 +183,7 @@ public class CapabilitiesLoader
   private void createOfferings( ) throws OWSException
   {
     final String[] sceneIds = m_odsEnvironment.getConfigLoader().getSceneIds();
-    m_sceneOfferings = new HashMap<String, ChartOfferingType[]>();
+    m_sceneOfferings = new HashMap<>();
     for( final String sceneId : sceneIds )
       m_sceneOfferings.put( sceneId, createSceneOfferings( sceneId ) );
 
@@ -200,7 +200,7 @@ public class CapabilitiesLoader
     final ODSChartConfig chartConfig = m_odsEnvironment.getConfigLoader().getChartConfig( sceneId );
 
     /* The chart list. */
-    final List<ChartOfferingType> chartList = new ArrayList<ChartOfferingType>();
+    final List<ChartOfferingType> chartList = new ArrayList<>();
 
     /* Loop all charts. */
     for( final IODSChart chart : charts )

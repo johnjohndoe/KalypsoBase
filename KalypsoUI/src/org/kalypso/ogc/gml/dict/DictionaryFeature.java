@@ -81,7 +81,7 @@ public class DictionaryFeature implements Feature
   }
 
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     return m_feature.getAdapter( adapter );
   }

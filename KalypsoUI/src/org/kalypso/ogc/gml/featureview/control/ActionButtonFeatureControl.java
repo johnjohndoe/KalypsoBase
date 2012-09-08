@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.featureview.control;
 
@@ -46,6 +46,7 @@ import java.util.Collection;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -54,7 +55,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
@@ -65,14 +65,14 @@ import org.osgi.framework.Bundle;
 
 /**
  * This feature control displays a button which runs an arbitrary action.
- * 
+ *
  * @author Gernot Belger
  */
 public class ActionButtonFeatureControl extends AbstractFeatureControl implements ModellEventListener
 {
   private Button m_button;
 
-  private final Collection<ModifyListener> m_modifyListener = new ArrayList<ModifyListener>();
+  private final Collection<ModifyListener> m_modifyListener = new ArrayList<>();
 
   private final IAction m_action;
 
@@ -96,7 +96,7 @@ public class ActionButtonFeatureControl extends AbstractFeatureControl implement
     final Bundle bundle = Platform.getBundle( pluginId );
     if( bundle == null )
     {
-      log.log( StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.ogc.gml.featureview.control.ActionButtonFeatureControl.idnotfound" ) + pluginId ) ); //$NON-NLS-1$
+      log.log( new Status( IStatus.WARNING, KalypsoGisPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ogc.gml.featureview.control.ActionButtonFeatureControl.idnotfound" ) + pluginId ) ); //$NON-NLS-1$
       return null;
     }
 
@@ -107,22 +107,22 @@ public class ActionButtonFeatureControl extends AbstractFeatureControl implement
     }
     catch( final ClassNotFoundException e )
     {
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.gml.featureview.control.ActionButtonFeatureControl.classnotfound" ) + actionClassName, e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ogc.gml.featureview.control.ActionButtonFeatureControl.classnotfound" ) + actionClassName, e ); //$NON-NLS-1$
       log.log( status );
     }
     catch( final InstantiationException e )
     {
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.gml.featureview.control.ActionButtonFeatureControl.instantiate" ) + actionClassName, e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ogc.gml.featureview.control.ActionButtonFeatureControl.instantiate" ) + actionClassName, e ); //$NON-NLS-1$
       log.log( status );
     }
     catch( final IllegalAccessException e )
     {
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.gml.featureview.control.ActionButtonFeatureControl.access" ) + actionClassName, e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ogc.gml.featureview.control.ActionButtonFeatureControl.access" ) + actionClassName, e ); //$NON-NLS-1$
       log.log( status );
     }
     catch( final ClassCastException e )
     {
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.gml.featureview.control.ActionButtonFeatureControl.implement" ) + actionClassName, e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ogc.gml.featureview.control.ActionButtonFeatureControl.implement" ) + actionClassName, e ); //$NON-NLS-1$
       log.log( status );
     }
 
@@ -161,7 +161,7 @@ public class ActionButtonFeatureControl extends AbstractFeatureControl implement
     if( m_action == null )
     {
       m_button.setText( "-" //$NON-NLS-1$
-          + Messages.getString( "org.kalypso.ogc.gml.featureview.control.ActionButtonFeatureControl.invalid" ) //$NON-NLS-1$ 
+          + Messages.getString( "org.kalypso.ogc.gml.featureview.control.ActionButtonFeatureControl.invalid" ) //$NON-NLS-1$
           + "-" ); //$NON-NLS-1$
       m_button.setImage( null );
       m_button.setToolTipText( null );
@@ -205,7 +205,7 @@ public class ActionButtonFeatureControl extends AbstractFeatureControl implement
 
   /**
    * Die ButtonControl ist immer valid
-   * 
+   *
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#isValid()
    */
   @Override

@@ -47,7 +47,7 @@ import org.kalypsodeegree_impl.tools.GMLConstants;
  */
 public abstract class AbstractCreateGeometryWidget extends DeprecatedMouseWidget
 {
-  private final List<IGeometryBuilder> m_buildersToDraw = new ArrayList<IGeometryBuilder>();
+  private final List<IGeometryBuilder> m_buildersToDraw = new ArrayList<>();
 
   private Point m_currentPoint = null;
 
@@ -114,7 +114,7 @@ public abstract class AbstractCreateGeometryWidget extends DeprecatedMouseWidget
     if( activeTheme instanceof IKalypsoFeatureTheme )
     {
       final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) activeTheme;
-      final IFeatureType featureType = theme == null ? null : theme.getFeatureType();
+      final IFeatureType featureType = theme.getFeatureType();
       final IGMLSchema schema = featureType == null ? null : featureType.getGMLSchema();
       m_featureType = schema == null ? null : schema.getFeatureType( m_qname );
       if( m_geomProperties.length > 0 )
@@ -192,9 +192,6 @@ public abstract class AbstractCreateGeometryWidget extends DeprecatedMouseWidget
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#doubleClickedLeft(java.awt.Point)
-   */
   @Override
   public void doubleClickedLeft( final Point p )
   {

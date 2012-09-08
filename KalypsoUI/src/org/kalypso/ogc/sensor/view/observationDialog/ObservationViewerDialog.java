@@ -48,7 +48,7 @@ import org.kalypso.i18n.Messages;
 /**
  * ObservationViewerDialog
  * <p>
- * 
+ *
  * @author schlienger (24.05.2005)
  */
 public class ObservationViewerDialog extends Dialog
@@ -57,7 +57,7 @@ public class ObservationViewerDialog extends Dialog
 
   private static final String SETTINGS_VIEWER = "observationViewer"; //$NON-NLS-1$
 
-  private final List<IObservationAction> m_actions = new ArrayList<IObservationAction>();
+  private final List<IObservationAction> m_actions = new ArrayList<>();
 
   private final boolean m_withHeader;
 

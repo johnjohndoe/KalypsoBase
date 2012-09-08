@@ -13,7 +13,7 @@ public class ServiceMetadata
   public ServiceMetadata( final String id )
   {
     m_id = id;
-    m_operations = new ArrayList<OperationMetadata>();
+    m_operations = new ArrayList<>();
   }
 
   public String getId( )

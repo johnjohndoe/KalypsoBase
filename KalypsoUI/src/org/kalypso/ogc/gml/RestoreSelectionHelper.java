@@ -69,7 +69,7 @@ import org.kalypsodeegree.model.feature.Feature;
  * <p>
  * To restore the previously stored selection, call {@link #restoreSelection()}.
  * </p>
- * 
+ *
  * @author belger
  */
 public class RestoreSelectionHelper
@@ -105,7 +105,7 @@ public class RestoreSelectionHelper
     if( workspace == null ) // REMARK: kommisch dass der Workspace hier null ist nach der Rechnung...
       return;
 
-    final List<EasyFeatureWrapper> easyFeatures = new ArrayList<EasyFeatureWrapper>( m_oldSelectionState.length );
+    final List<EasyFeatureWrapper> easyFeatures = new ArrayList<>( m_oldSelectionState.length );
     for( final String fid : m_oldSelectionState )
     {
       if( fid != null )

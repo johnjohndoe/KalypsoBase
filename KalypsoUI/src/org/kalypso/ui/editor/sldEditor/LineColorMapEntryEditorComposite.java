@@ -56,7 +56,7 @@ import org.kalypsodeegree.graphics.sld.Stroke;
  */
 public class LineColorMapEntryEditorComposite extends Composite
 {
-  private final Set<ILineColorMapEntryModifyListener> m_listeners = new HashSet<ILineColorMapEntryModifyListener>();
+  private final Set<ILineColorMapEntryModifyListener> m_listeners = new HashSet<>();
 
   private final LineColorMapEntry m_entry;
 

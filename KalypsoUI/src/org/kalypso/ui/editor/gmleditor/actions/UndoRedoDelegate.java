@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.gmleditor.actions;
 
@@ -50,12 +50,11 @@ import org.kalypso.ui.editor.gmleditor.part.GmlTreeView;
 import org.kalypso.ui.editor.mapeditor.WidgetActionPart;
 import org.kalypso.util.command.CommandJob;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
  * @author belger
  */
-public class UndoRedoDelegate extends AbstractGisEditorActionDelegate implements ModellEventListener
+public class UndoRedoDelegate extends AbstractGisEditorActionDelegate
 {
   private final boolean m_undo;
 

@@ -110,7 +110,7 @@ public class WmsThemeFactory extends AbstractThemeFactory
           }
         };
 
-        final List<NamedLayer> namedLayers = new ArrayList<NamedLayer>();
+        final List<NamedLayer> namedLayers = new ArrayList<>();
         for( final Style style : styleList )
         {
           final URL styleUrl = new URL( style.getHref() );

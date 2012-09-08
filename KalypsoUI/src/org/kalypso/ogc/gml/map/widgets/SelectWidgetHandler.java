@@ -6,7 +6,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
@@ -28,7 +27,6 @@ import org.eclipse.ui.menus.UIElement;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
@@ -42,7 +40,7 @@ import org.osgi.framework.Bundle;
 /**
  * @author Stefan Kurzbach
  */
-public class SelectWidgetHandler extends AbstractHandler implements IHandler, IElementUpdater, IExecutableExtension
+public class SelectWidgetHandler extends AbstractHandler implements IElementUpdater, IExecutableExtension
 {
   public static final String COMMAND_ID = "org.kalypso.ogc.gml.map.widgets.SelectWidgetCommand"; //$NON-NLS-1$
 
@@ -103,7 +101,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
 
     final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( applicationContext );
     if( mapPanel == null )
-      return StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler.7" ), new IllegalStateException() ); //$NON-NLS-1$
+      return new Status( IStatus.WARNING, KalypsoGisPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectWidgetHandler.7" ), new IllegalStateException() ); //$NON-NLS-1$
 
     if( HandlerUtils.isDeselected( event ) )
     {
@@ -143,7 +141,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
   }
 
   @Override
-  public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
+  public void updateElement( final UIElement element, final Map parameters )
   {
     // TODO: icon and tooltip should only be set once, but updateElement is called often
     // Is this icon/tooltip stuff still in use?
@@ -239,7 +237,6 @@ public class SelectWidgetHandler extends AbstractHandler implements IHandler, IE
     return AbstractUIPlugin.imageDescriptorFromPlugin( pluginId, imageFilePath );
   }
 
-  @SuppressWarnings("unchecked")
   private IWidget getWidgetFromBundle( final String pluginId, final String widgetName )
   {
     try

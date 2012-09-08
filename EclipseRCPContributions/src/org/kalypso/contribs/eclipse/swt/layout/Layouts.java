@@ -50,8 +50,6 @@ import org.eclipse.swt.layout.GridLayout;
 @Deprecated
 public final class Layouts
 {
-  private static final GridLayoutFactory FACTORY = GridLayoutFactory.fillDefaults();
-
   private Layouts( )
   {
   }
@@ -61,11 +59,7 @@ public final class Layouts
    */
   public static GridLayout createGridLayout( final int numColumns, final boolean makeColumnsEqualWidth )
   {
-    final GridLayout layout = FACTORY.create();
-    layout.numColumns = numColumns;
-    layout.makeColumnsEqualWidth = makeColumnsEqualWidth;
-
-    return layout;
+    return GridLayoutFactory.fillDefaults().numColumns( numColumns ).equalWidth( makeColumnsEqualWidth ).create();
   }
 
   /**
@@ -73,12 +67,11 @@ public final class Layouts
    */
   public static GridLayout createGridLayout( final int numColumns )
   {
-    return createGridLayout( numColumns, false );
+    return GridLayoutFactory.fillDefaults().numColumns( numColumns ).create();
   }
 
   public static GridLayout createGridLayout( )
   {
-    return createGridLayout( 1 );
+    return GridLayoutFactory.fillDefaults().create();
   }
-
 }

@@ -23,7 +23,7 @@ public class XMLOutput
       XmlOptions options = new XmlOptions();
       options = options.setSavePrettyPrint();
 
-      final Map<String, String> prefixes = new HashMap<String, String>();
+      final Map<String, String> prefixes = new HashMap<>();
       prefixes.put( "http://www.w3.org/1999/xlink", "xlink" );
       prefixes.put( "http://www.opengis.net/ows", "ows" );
       prefixes.put( "http://www.openali.de/odysseus/service/ods/0.2.0", "" );

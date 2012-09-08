@@ -48,7 +48,7 @@ import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 
 /**
  * Content provider for modifying the outline tree. It filters the styles and the rules.
- * 
+ *
  * @author Holger Albert
  */
 public class ThemeNodeContentProvider implements ITreeContentProvider
@@ -119,7 +119,7 @@ public class ThemeNodeContentProvider implements ITreeContentProvider
   {
     final TreeViewer viewer = getViewer();
     final Control control = viewer.getControl();
-    if( viewer == null || control.isDisposed() )
+    if( control == null || control.isDisposed() )
       return;
 
     final Object elementToRefresh = element == null ? m_viewer.getInput() : element;

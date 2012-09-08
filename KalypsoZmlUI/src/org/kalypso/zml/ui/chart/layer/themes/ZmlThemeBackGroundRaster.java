@@ -43,8 +43,6 @@ package org.kalypso.zml.ui.chart.layer.themes;
 import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
-import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
 
 /**
@@ -98,29 +96,29 @@ public class ZmlThemeBackGroundRaster extends AbstractChartLayer
 // layers[0].paint( gc, xxx );
 // }
 
-  private boolean equals( final IAxis a1, final IAxis a2 )
-  {
-    if( a1 == null )
-      return false;
-    if( a2 == null )
-      return false;
+//  private boolean equals( final IAxis a1, final IAxis a2 )
+//  {
+//    if( a1 == null )
+//      return false;
+//    if( a2 == null )
+//      return false;
+//
+//    return a1.getIdentifier().equals( a2.getIdentifier() );
+//  }
 
-    return a1.getIdentifier().equals( a2.getIdentifier() );
-  }
-
-  private IAxis findTargetAxis( final IAxis[] axes )
-  {
-    IAxis lastTargetAxis = null;
-
-    for( final IAxis axis : axes )
-    {
-      if( axis.isVisible() )
-      {
-        if( ORIENTATION.VERTICAL.equals( axis.getPosition().getOrientation() ) )
-          lastTargetAxis = axis;
-      }
-    }
-
-    return lastTargetAxis;
-  }
+//  private IAxis findTargetAxis( final IAxis[] axes )
+//  {
+//    IAxis lastTargetAxis = null;
+//
+//    for( final IAxis axis : axes )
+//    {
+//      if( axis.isVisible() )
+//      {
+//        if( ORIENTATION.VERTICAL.equals( axis.getPosition().getOrientation() ) )
+//          lastTargetAxis = axis;
+//      }
+//    }
+//
+//    return lastTargetAxis;
+//  }
 }

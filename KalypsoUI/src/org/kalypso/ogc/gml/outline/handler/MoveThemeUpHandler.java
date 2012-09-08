@@ -96,7 +96,7 @@ public class MoveThemeUpHandler extends AbstractHandler
     }
 
     /* (Re-)select moved themes */
-    final List<IThemeNode> selectedNodesInOrder = new ArrayList<IThemeNode>();
+    final List<IThemeNode> selectedNodesInOrder = new ArrayList<>();
     for( final IKalypsoTheme theme : selectedThemesInOrder )
     {
       final IThemeNode node = mapOutline.findNode( theme );

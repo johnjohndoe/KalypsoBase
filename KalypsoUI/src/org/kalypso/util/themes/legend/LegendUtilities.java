@@ -108,7 +108,7 @@ public class LegendUtilities
   {
     if( themeIdsProperty != null )
     {
-      final List<String> themes = new ArrayList<String>();
+      final List<String> themes = new ArrayList<>();
       final String[] themeIds = StringUtils.split( themeIdsProperty, ";" ); //$NON-NLS-1$
       for( final String themeId : themeIds )
       {

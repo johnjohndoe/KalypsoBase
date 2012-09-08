@@ -95,7 +95,7 @@ class SpatialComposite extends AbstractFilterComposite
 
   SpatialOperation m_operation;
 
-  TreeSet<String> m_allsupportedSpatialOps = new TreeSet<String>();
+  TreeSet<String> m_allsupportedSpatialOps = new TreeSet<>();
 
   private String[] m_supportedOps;
 
@@ -109,7 +109,7 @@ class SpatialComposite extends AbstractFilterComposite
 
   static private GM_Object m_oldGeometryOp = null;
 
-  HashMap<String, GM_Object> m_hash = new HashMap<String, GM_Object>();
+  HashMap<String, GM_Object> m_hash = new HashMap<>();
 
   private ComboViewer m_propViewer;
 
@@ -273,11 +273,10 @@ class SpatialComposite extends AbstractFilterComposite
     if( m_hash.containsValue( geometryLiteral ) )
     {
       final Set<Entry<String, GM_Object>> mapEntries = m_hash.entrySet();
-      for( final Object element2 : mapEntries )
+      for( final Entry<String, GM_Object> element : mapEntries )
       {
-        final Entry element = (Entry) element2;
         if( element.getValue().equals( geometryLiteral ) )
-          key = (String) element.getKey();
+          key = element.getKey();
       }
     }
     final String[] items = m_geomOpsCombo.getItems();

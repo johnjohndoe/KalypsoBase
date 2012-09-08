@@ -51,6 +51,7 @@ import java.util.Properties;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -72,7 +73,6 @@ import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.Form;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.ThemeUtilities;
@@ -139,7 +139,7 @@ public class ImageComposite extends Composite
     super( parent, style );
 
     /* Initialize. */
-    m_listener = new ArrayList<IImageChangedListener>();
+    m_listener = new ArrayList<>();
     m_main = null;
     m_content = null;
     checkProperties( properties );
@@ -179,11 +179,11 @@ public class ImageComposite extends Composite
   private void createControls( )
   {
     /* Create the layout. */
-    super.setLayout( Layouts.createGridLayout() );
+    super.setLayout( GridLayoutFactory.fillDefaults().create() );
 
     /* The content. */
     final Composite content = new Composite( this, SWT.NONE );
-    content.setLayout( Layouts.createGridLayout() );
+    GridLayoutFactory.fillDefaults().applyTo( content );
     content.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Create the main form. */
@@ -194,7 +194,7 @@ public class ImageComposite extends Composite
     final Composite body = m_main.getBody();
 
     /* Set the properties for the body of the form. */
-    body.setLayout( Layouts.createGridLayout() );
+    GridLayoutFactory.fillDefaults().applyTo( body );
 
     /* Create the content. */
     m_content = createContentComposite( body );
@@ -275,7 +275,7 @@ public class ImageComposite extends Composite
   {
     /* Create a composite. */
     final Composite contentComposite = new Composite( parent, SWT.NONE );
-    contentComposite.setLayout( Layouts.createGridLayout() );
+    GridLayoutFactory.fillDefaults().applyTo( contentComposite );
 
     /* Create the content internal composite. */
     final Composite contentInternalComposite = createContentInternalComposite( contentComposite );

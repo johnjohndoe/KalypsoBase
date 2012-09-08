@@ -58,7 +58,7 @@ import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 
 /**
  * Utility methods for working with ObsView objects
- * 
+ *
  * @author belger
  * @author schlienger
  */
@@ -75,7 +75,7 @@ public final class ObsViewUtils
    */
   public static Set<String> retrieveAxisTypes( final ObsViewItem[] items, final boolean onlyValueAxes )
   {
-    final Set<String> set = new TreeSet<String>();
+    final Set<String> set = new TreeSet<>();
 
     if( items == null )
       return set;

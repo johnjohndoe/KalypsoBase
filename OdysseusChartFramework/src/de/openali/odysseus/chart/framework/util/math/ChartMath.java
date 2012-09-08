@@ -17,7 +17,7 @@ public final class ChartMath
   /**
    * Calculates angle alpha from an acute-angled triangle defined by the points pointA, pointB, pointC using the law of
    * cosines
-   * 
+   *
    * @return angle alpha
    */
   public static double alphaFromTriangle( final Point pointA, final Point pointB, final Point pointC )
@@ -51,7 +51,7 @@ public final class ChartMath
     final int pathSize = path.size();
     if( pathSize > 2 && epsilon > 0 )
     {
-      final List<Point> newPath = new ArrayList<Point>();
+      final List<Point> newPath = new ArrayList<>();
       // Start und Endpunkt bestimmen
       final Point start = path.get( 0 );
       final Point end = path.get( pathSize - 1 );

@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.filterdialog.widgets;
 
@@ -98,7 +98,7 @@ class PropertyIsCOMPOperationComposite extends AbstractFilterComposite
 
   PropertyIsCOMPOperation m_operation;
 
-  final private TreeSet<String> m_allSupportedOps = new TreeSet<String>();
+  final private TreeSet<String> m_allSupportedOps = new TreeSet<>();
 
   private String[] m_supportedOps;
 
@@ -195,10 +195,10 @@ class PropertyIsCOMPOperationComposite extends AbstractFilterComposite
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        final Object firstElement = ((IStructuredSelection) event.getSelection()).getFirstElement();
+        final Object firstElement = ((IStructuredSelection)event.getSelection()).getFirstElement();
         if( firstElement instanceof IValuePropertyType )
         {
-          final IValuePropertyType vtp = (IValuePropertyType) firstElement;
+          final IValuePropertyType vtp = (IValuePropertyType)firstElement;
           final String content = m_secondRowText.getText();
           validate( vtp, content );
           updateOperation();
@@ -256,12 +256,9 @@ class PropertyIsCOMPOperationComposite extends AbstractFilterComposite
 
     if( firstExpression instanceof PropertyName && secondExpression instanceof Literal )
     {
-      if( firstExpression != null && secondExpression != null )
-      {
-        final String value = ((Literal) secondExpression).getValue();
-        m_secondRowText.setText( value );
-        m_propViewer.setSelection( new StructuredSelection( setPropertySelection( m_operation.getFirstExpression() ) ) );
-      }
+      final String value = ((Literal)secondExpression).getValue();
+      m_secondRowText.setText( value );
+      m_propViewer.setSelection( new StructuredSelection( setPropertySelection( m_operation.getFirstExpression() ) ) );
     }
     else if( firstExpression instanceof PropertyName && secondExpression instanceof ArithmeticExpression )
     {
@@ -271,14 +268,14 @@ class PropertyIsCOMPOperationComposite extends AbstractFilterComposite
 
   void updateOperation( )
   {
-    final IStructuredSelection selection = (IStructuredSelection) m_propViewer.getSelection();
+    final IStructuredSelection selection = (IStructuredSelection)m_propViewer.getSelection();
     final Object firstElement = selection.getFirstElement();
     if( firstElement instanceof IValuePropertyType )
     {
-      final IValuePropertyType vpt = (IValuePropertyType) firstElement;
+      final IValuePropertyType vpt = (IValuePropertyType)firstElement;
       final IPropertyType ftp = m_ft.getProperty( vpt.getQName() );
       final String literalName = m_secondRowText.getText().trim();
-      validate( (IValuePropertyType) ftp, literalName );
+      validate( (IValuePropertyType)ftp, literalName );
       m_operation.setFirstExperssion( new PropertyName( vpt.getQName() ) );
       m_operation.setSecondExperssion( new Literal( literalName ) );
     }

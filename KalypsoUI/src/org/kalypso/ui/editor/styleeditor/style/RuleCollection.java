@@ -40,7 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 12.09.2004
- *  
+ *
  */
 package org.kalypso.ui.editor.styleeditor.style;
 
@@ -54,7 +54,7 @@ import org.kalypsodeegree.graphics.sld.Rule;
  */
 public class RuleCollection
 {
-  private final List<Rule> m_rules = new ArrayList<Rule>();
+  private final List<Rule> m_rules = new ArrayList<>();
 
   private final String m_id;
 

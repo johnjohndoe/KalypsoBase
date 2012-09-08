@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.view;
 
-import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 
 import de.openali.odysseus.chart.framework.view.IChartHandler;
@@ -48,7 +47,7 @@ import de.openali.odysseus.chart.framework.view.IChartHandler;
 /**
  * @author Dirk Kuch
  */
-public class DebugChartLabelProvider extends LabelProvider implements IBaseLabelProvider
+public class DebugChartLabelProvider extends LabelProvider
 {
   @Override
   public String getText( final Object element )

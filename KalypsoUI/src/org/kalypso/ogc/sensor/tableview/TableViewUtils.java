@@ -82,7 +82,7 @@ import org.xml.sax.InputSource;
 
 /**
  * Observation Table Template Handling made easy
- * 
+ *
  * @author schlienger
  */
 public final class TableViewUtils
@@ -103,7 +103,7 @@ public final class TableViewUtils
 
   /**
    * Loads the xml template from the given reader. Closes the reader.
-   * 
+   *
    * @return table view template
    * @throws JAXBException
    */
@@ -121,7 +121,7 @@ public final class TableViewUtils
 
   /**
    * Loads the xml template from the given stream. Closes the stream.
-   * 
+   *
    * @return table view template
    */
   public static Obstableview loadTableTemplateXML( final InputStream ins ) throws JAXBException
@@ -138,7 +138,7 @@ public final class TableViewUtils
 
   /**
    * Loads the xml template from the given inputsource
-   * 
+   *
    * @return table view template
    */
   public static Obstableview loadTableTemplateXML( final InputSource ins ) throws JAXBException
@@ -183,7 +183,7 @@ public final class TableViewUtils
 
   /**
    * Builds the xml binding object using the given the table view template
-   * 
+   *
    * @param context
    *          If non-<code>null</code>, all data-pathes (href to observations) will be resolved as relative pathes
    *          against this context. Only the relative pathes will be written into the xml.<br>
@@ -307,7 +307,7 @@ public final class TableViewUtils
         view.getRules().addRule( RulesFactory.createRenderingRule( (TypeRenderingRule) element ) );
     }
 
-    final List<IStatus> stati = new ArrayList<IStatus>();
+    final List<IStatus> stati = new ArrayList<>();
 
     final List<TypeObservation> list = xml.getObservation();
     final TypeObservation[] tobs = list.toArray( new TypeObservation[list.size()] );
@@ -332,7 +332,7 @@ public final class TableViewUtils
 
   public static IObservation[] getObservations( final TableViewColumn[] tableViewColumns )
   {
-    final Set<IObservation> map = new HashSet<IObservation>();
+    final Set<IObservation> map = new HashSet<>();
     for( final TableViewColumn col : tableViewColumns )
       map.add( col.getObservation() );
 

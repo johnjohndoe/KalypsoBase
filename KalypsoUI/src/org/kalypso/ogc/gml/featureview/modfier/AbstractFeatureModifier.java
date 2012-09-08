@@ -56,7 +56,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
  */
 public abstract class AbstractFeatureModifier implements IFeatureModifierExtension
 {
-  private final Map<String, String> m_params = new HashMap<String, String>();
+  private final Map<String, String> m_params = new HashMap<>();
 
   private IPropertyType m_propertyType;
 

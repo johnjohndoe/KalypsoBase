@@ -116,9 +116,6 @@ public abstract class AbstractObservationEditor extends AbstractWorkbenchPart im
     return m_view;
   }
 
-  /**
-   * @see org.kalypso.ui.editor.AbstractEditorPart#tweakInput(org.eclipse.ui.IStorageEditorInput)
-   */
   @Override
   protected IStorageEditorInput tweakInput( final IStorageEditorInput input )
   {
@@ -137,11 +134,8 @@ public abstract class AbstractObservationEditor extends AbstractWorkbenchPart im
     return input;
   }
 
-  /**
-   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-   */
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     if( adapter == IContentOutlinePage.class )
     {

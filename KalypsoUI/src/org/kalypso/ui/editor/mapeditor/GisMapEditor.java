@@ -91,7 +91,7 @@ public class GisMapEditor extends AbstractMapPart implements IEditorPart
   }
 
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     if( IContentOutlinePage.class.equals( adapter ) )
     {

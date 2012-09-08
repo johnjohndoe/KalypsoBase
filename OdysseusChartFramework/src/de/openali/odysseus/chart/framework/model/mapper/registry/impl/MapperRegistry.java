@@ -29,7 +29,7 @@ public class MapperRegistry implements IMapperRegistry
   protected final MapperRegistryEventHandler m_handler = new MapperRegistryEventHandler();
 
   /** axis-identifier --> axis */
-  private final Map<String, IMapper> m_mappers = new HashMap<String, IMapper>();
+  private final Map<String, IMapper> m_mappers = new HashMap<>();
 
   private final DataOperatorHelper m_dataOperatorHelper = new DataOperatorHelper();
 
@@ -133,16 +133,10 @@ public class MapperRegistry implements IMapperRegistry
     m_handler.removeListener( l );
   }
 
-  /*
-   * (non-Javadoc)
-   * @see
-   * org.kalypso.chart.framework.model.axis.registry.IMapperRegistry#getAxesAt(org.kalypso.chart.framework.model.axis
-   * .IAxisConstants.POSITION)
-   */
   @Override
   public IAxis[] getAxesAt( final POSITION pos )
   {
-    final List<IAxis> axes = new ArrayList<IAxis>();
+    final List<IAxis> axes = new ArrayList<>();
     for( final IAxis axis : getAxes() )
     {
       if( axis.getPosition() == pos )
@@ -152,15 +146,11 @@ public class MapperRegistry implements IMapperRegistry
     return axes.toArray( new IAxis[0] );
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.kalypso.chart.framework.model.axis.registry.IMapperRegistry#getMappers()
-   */
   @Override
   public IMapper[] getMappers( )
   {
     final Collection<IMapper> allMappers = m_mappers.values();
-    final ArrayList<IMapper> mappers = new ArrayList<IMapper>();
+    final ArrayList<IMapper> mappers = new ArrayList<>();
     for( final IMapper mapper : allMappers )
     {
       // nur hinzufügen, wenn keine Axis
@@ -171,15 +161,11 @@ public class MapperRegistry implements IMapperRegistry
     return mappers.toArray( new IMapper[mappers.size()] );
   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.kalypso.chart.framework.model.axis.registry.IMapperRegistry#getAxes()
-   */
   @Override
   public IAxis[] getAxes( )
   {
     final Collection<IMapper> mappers = m_mappers.values();
-    final ArrayList<IAxis> axes = new ArrayList<IAxis>();
+    final ArrayList<IAxis> axes = new ArrayList<>();
     for( final IMapper mapper : mappers )
     {
       if( mapper instanceof de.openali.odysseus.chart.framework.model.mapper.IAxis )
@@ -221,14 +207,11 @@ public class MapperRegistry implements IMapperRegistry
     return null;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry#getNumericRangeAxisSnapshot()
-   */
   @Override
   public Map<IAxis, IDataRange<Number>> getNumericRangeAxisSnapshot( )
   {
     final IAxis[] axes = getAxes();
-    final Map<IAxis, IDataRange<Number>> axisMap = new HashMap<IAxis, IDataRange<Number>>();
+    final Map<IAxis, IDataRange<Number>> axisMap = new HashMap<>();
     for( final IAxis axis : axes )
     {
       final IDataRange<Number> nr = axis.getNumericRange();
@@ -242,5 +225,4 @@ public class MapperRegistry implements IMapperRegistry
   {
     return m_dataOperatorHelper.getDataOperator( clazz );
   }
-
 }

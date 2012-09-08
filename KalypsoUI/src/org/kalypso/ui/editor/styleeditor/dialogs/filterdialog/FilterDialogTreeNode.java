@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,11 +36,11 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 /*
  * Created on 04.08.2004
- *  
+ *
  */
 package org.kalypso.ui.editor.styleeditor.dialogs.filterdialog;
 
@@ -262,16 +262,15 @@ public class FilterDialogTreeNode
     parent = new FilterDialogTreeNode();
     parent.name = m_name;
     parent.type = ROOT_TYPE;
-    children = new ArrayList<FilterDialogTreeNode>();
+    children = new ArrayList<>();
     children.add( parent );
   }
 
   public void addNode( final FilterDialogTreeNode node )
   {
     if( children == null )
-    {
-      children = new ArrayList<FilterDialogTreeNode>();
-    }
+      children = new ArrayList<>();
+
     node.parent = this;
     children.add( node );
   }
@@ -287,9 +286,8 @@ public class FilterDialogTreeNode
   public Object[] getChildren( )
   {
     if( children == null )
-    {
-      children = new ArrayList<FilterDialogTreeNode>();
-    }
+      children = new ArrayList<>();
+
     return children.toArray();
   }
 

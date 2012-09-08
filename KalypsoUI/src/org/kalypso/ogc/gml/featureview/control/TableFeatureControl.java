@@ -14,6 +14,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -35,7 +36,6 @@ import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.swt.SWTUtilities;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.KeyInfo;
 import org.kalypso.core.util.pool.ResourcePool;
@@ -78,7 +78,7 @@ public class TableFeatureControl extends AbstractToolbarFeatureControl implement
 
   private final ICommandTarget m_templateTarget = new JobExclusiveCommandTarget( new DefaultCommandManager(), null );
 
-  protected final Collection<ModifyListener> m_listeners = new ArrayList<ModifyListener>();
+  protected final Collection<ModifyListener> m_listeners = new ArrayList<>();
 
   protected final IFeatureSelectionManager m_selectionManager;
 
@@ -129,7 +129,7 @@ public class TableFeatureControl extends AbstractToolbarFeatureControl implement
   {
     /* Create a new Composite for the toolbar. */
     final Composite client = new Composite( parent, SWT.NONE );
-    final GridLayout gridLayout = Layouts.createGridLayout();
+    final GridLayout gridLayout = GridLayoutFactory.fillDefaults().create();
     if( ToolbarHelper.hasActions( m_toolbar ) || m_showToolbar )
       gridLayout.numColumns++;
     client.setLayout( gridLayout );
@@ -176,7 +176,7 @@ public class TableFeatureControl extends AbstractToolbarFeatureControl implement
 
     final List<Toolbar.Command> commands;
     if( m_toolbar == null )
-      commands = new ArrayList<Toolbar.Command>();
+      commands = new ArrayList<>();
     else
       commands = m_toolbar.getCommand();
 

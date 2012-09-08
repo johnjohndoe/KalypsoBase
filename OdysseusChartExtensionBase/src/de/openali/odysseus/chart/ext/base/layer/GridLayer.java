@@ -54,7 +54,7 @@ public class GridLayer extends AbstractChartLayer
   private ILegendEntry[] createLegendEntries( )
   {
 
-    final ArrayList<ILegendEntry> entries = new ArrayList<ILegendEntry>();
+    final ArrayList<ILegendEntry> entries = new ArrayList<>();
     final PolylineFigure pf = getPolylineFigure();
     final ILineStyle ls = pf.getStyle();
     final String title = getTitle();
@@ -63,14 +63,13 @@ public class GridLayer extends AbstractChartLayer
 
       final LegendEntry le = new LegendEntry( this, title )
       {
-
         @Override
         public void paintSymbol( final GC gc, final Point size )
         {
           final int height = size.x;
           final int width = size.y;
 
-          final ArrayList<Point> points = new ArrayList<Point>();
+          final ArrayList<Point> points = new ArrayList<>();
           // Linie von links nach rechts
           points.add( new Point( 0, (int) (height * 0.3) ) );
           points.add( new Point( width, (int) (height * 0.3) ) );
@@ -119,7 +118,7 @@ public class GridLayer extends AbstractChartLayer
 
     final PolylineFigure figure = getPolylineFigure();
 
-    final ArrayList<Point> points = new ArrayList<Point>();
+    final ArrayList<Point> points = new ArrayList<>();
     // Linie von links nach rechts
     if( m_orientation == GridOrientation.BOTH || m_orientation == GridOrientation.HORIZONTAL )
     {
@@ -134,6 +133,7 @@ public class GridLayer extends AbstractChartLayer
       figure.paint( gc );
       points.clear();
     }
+
     // Linie von oben nach unten
     if( m_orientation == GridOrientation.BOTH || m_orientation == GridOrientation.VERTICAL )
     {
@@ -198,17 +198,12 @@ public class GridLayer extends AbstractChartLayer
     return null;
   }
 
-  /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC,
-   *      org.eclipse.swt.graphics.Device)
-   */
   @Override
-  public void paint( final GC gc, ChartImageInfo chartImageInfo, IProgressMonitor monitor )
+  public void paint( final GC gc, final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
-
     gc.setLineWidth( 5 );
 
-    final ArrayList<Point> path = new ArrayList<Point>();
+    final ArrayList<Point> path = new ArrayList<>();
 
     IAxis hAxis = null;
     IAxis vAxis = null;

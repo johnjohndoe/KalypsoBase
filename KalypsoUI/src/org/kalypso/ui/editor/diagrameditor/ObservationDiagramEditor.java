@@ -53,7 +53,6 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -78,7 +77,7 @@ import org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor;
  *
  * @author schlienger
  */
-public class ObservationDiagramEditor extends AbstractObservationEditor implements IExportableObjectFactory, IEditorPart
+public class ObservationDiagramEditor extends AbstractObservationEditor implements IExportableObjectFactory
 {
   public static final String EXTENSIN_ODT = ".odt"; //$NON-NLS-1$
 
@@ -132,11 +131,8 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
     helpSystem.setHelp( m_swingContainer, "org.kalypso.manual.gui-zml_diagramm_ansicht" ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor#getAdapter(java.lang.Class)
-   */
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     if( adapter == IExportableObjectFactory.class )
       return this;
@@ -144,10 +140,6 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
     return super.getAdapter( adapter );
   }
 
-  /**
-   * @see org.kalypso.ui.editor.AbstractWorkbenchPart#doSaveInternal(org.eclipse.core.runtime.IProgressMonitor,
-   *      org.eclipse.core.resources.IFile)
-   */
   @Override
   protected void doSaveInternal( final IProgressMonitor monitor, final IFile file ) throws CoreException
   {

@@ -45,6 +45,7 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -60,7 +61,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.menus.WorkbenchWindowControlContribution;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
@@ -74,7 +74,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * This class dipslays a small bar which enables the user to change the scale.
- * 
+ *
  * @author Holger Albert
  */
 public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution implements IAdapterEater<IMapPanel>
@@ -88,11 +88,11 @@ public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution i
     }
   };
 
-  private final IAdapterFinder<IMapPanel> m_closeFinder = new EditorFirstAdapterFinder<IMapPanel>();
+  private final IAdapterFinder<IMapPanel> m_closeFinder = new EditorFirstAdapterFinder<>();
 
   private final IAdapterFinder<IMapPanel> m_initFinder = m_closeFinder;
 
-  private final AdapterPartListener<IMapPanel> m_adapterListener = new AdapterPartListener<IMapPanel>( IMapPanel.class, this, m_initFinder, m_closeFinder );
+  private final AdapterPartListener<IMapPanel> m_adapterListener = new AdapterPartListener<>( IMapPanel.class, this, m_initFinder, m_closeFinder );
 
   private final UpdateItemJob m_updateScaleJob = new UpdateItemJob( "Updating scale box ...", this ); //$NON-NLS-1$
 
@@ -155,7 +155,7 @@ public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution i
   {
     /* The main composite */
     m_composite = new Composite( parent, SWT.NONE );
-    m_composite.setLayout( Layouts.createGridLayout( 2 ) );
+    m_composite.setLayout( GridLayoutFactory.fillDefaults().numColumns( 2 ).create() );
 
     /* Create the components. */
 

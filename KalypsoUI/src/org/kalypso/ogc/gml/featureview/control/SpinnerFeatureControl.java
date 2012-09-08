@@ -67,7 +67,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class SpinnerFeatureControl extends AbstractFeatureControl
 {
-  private final Collection<ModifyListener> m_modlistener = new HashSet<ModifyListener>();
+  private final Collection<ModifyListener> m_modlistener = new HashSet<>();
 
   private Spinner m_spinner;
 
@@ -80,9 +80,6 @@ public class SpinnerFeatureControl extends AbstractFeatureControl
     super( feature, ftp );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl#dispose()
-   */
   @Override
   public void dispose( )
   {

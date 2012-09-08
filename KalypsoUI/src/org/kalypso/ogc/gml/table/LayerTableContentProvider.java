@@ -73,7 +73,7 @@ public class LayerTableContentProvider implements IStructuredContentProvider
     @Override
     public void selectionChanged( final SelectionChangedEvent event )
     {
-      viewerSelectionChanged( (IStructuredSelection) event.getSelection() );
+      viewerSelectionChanged( (IStructuredSelection)event.getSelection() );
     }
   };
 
@@ -97,7 +97,7 @@ public class LayerTableContentProvider implements IStructuredContentProvider
 
   /**
    * Input muss ein IKalypsoFeatureTheme sein Output sind die Features
-   * 
+   *
    * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
    */
   @Override
@@ -105,59 +105,49 @@ public class LayerTableContentProvider implements IStructuredContentProvider
   {
     if( inputElement instanceof IFeaturesProvider )
     {
-      final IFeaturesProvider featuresProvider = (IFeaturesProvider) inputElement;
+      final IFeaturesProvider featuresProvider = (IFeaturesProvider)inputElement;
       final FeatureList featureList = featuresProvider.getFeatureList();
       // FIXME: unterscheide lade und fehler
       if( featureList == null )
         return new Object[] {};
 
-      if( featureList != null )
-      {
-        final IFeaturesProvider featureProvider = featuresProvider;
-        // TODO; hm, quite heavy, as the complete list is copied here...
-        final List<Feature> features = featureProvider.getFeatures();
-        if( features != null )
-          return features.toArray();
-      }
+      final IFeaturesProvider featureProvider = featuresProvider;
+      // TODO; hm, quite heavy, as the complete list is copied here...
+      final List<Feature> features = featureProvider.getFeatures();
+      if( features != null )
+        return features.toArray();
     }
 
     return new Object[] {};
 
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-   */
   @Override
   public void dispose( )
   {
     // all listeners are unhooked when inputChanged( ..., null) is called
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
-   */
   @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
     if( oldInput instanceof IFeaturesProvider )
     {
-      final IFeaturesProvider oldProvider = (IFeaturesProvider) oldInput;
+      final IFeaturesProvider oldProvider = (IFeaturesProvider)oldInput;
       oldProvider.removeFeaturesProviderListener( m_providerListener );
     }
 
     if( m_viewer != null )
       m_viewer.removePostSelectionChangedListener( m_tableSelectionListener );
 
-    m_viewer = (LayerTableViewer) viewer;
+    m_viewer = (LayerTableViewer)viewer;
 
     if( m_viewer != null )
       m_viewer.addPostSelectionChangedListener( m_tableSelectionListener );
 
     if( newInput instanceof IFeaturesProvider )
     {
-      final IFeaturesProvider newProvider = (IFeaturesProvider) newInput;
+      final IFeaturesProvider newProvider = (IFeaturesProvider)newInput;
       newProvider.addFeaturesProviderListener( m_providerListener );
     }
   }
@@ -186,13 +176,13 @@ public class LayerTableContentProvider implements IStructuredContentProvider
       return;
 
     // add current selection
-    final List<EasyFeatureWrapper> wrappers = new ArrayList<EasyFeatureWrapper>( selection.size() );
+    final List<EasyFeatureWrapper> wrappers = new ArrayList<>( selection.size() );
     for( final Iterator< ? > sIt = selection.iterator(); sIt.hasNext(); )
     {
       final Object object = sIt.next();
       if( object instanceof Feature )
       {
-        final Feature feature = (Feature) object;
+        final Feature feature = (Feature)object;
         final EasyFeatureWrapper wrapper = new EasyFeatureWrapper( featureProvider.getWorkspace(), feature );
         wrappers.add( wrapper );
       }
@@ -226,7 +216,7 @@ public class LayerTableContentProvider implements IStructuredContentProvider
     }
     else if( event instanceof FeaturesChangedModellEvent )
     {
-      final Feature[] features = ((FeaturesChangedModellEvent) event).getFeatures();
+      final Feature[] features = ((FeaturesChangedModellEvent)event).getFeatures();
       ViewerUtilities.update( m_viewer, features, null, false );
     }
     else if( event instanceof FeatureStructureChangeModellEvent )
@@ -235,7 +225,7 @@ public class LayerTableContentProvider implements IStructuredContentProvider
       final FeatureList featureList = featuresProvider == null ? null : featuresProvider.getFeatureList();
       final Feature parentFeature = featureList == null ? null : featureList.getOwner();
 
-      final Feature[] features = ((FeatureStructureChangeModellEvent) event).getParentFeatures();
+      final Feature[] features = ((FeatureStructureChangeModellEvent)event).getParentFeatures();
       for( final Feature feature : features )
       {
         if( feature == parentFeature )

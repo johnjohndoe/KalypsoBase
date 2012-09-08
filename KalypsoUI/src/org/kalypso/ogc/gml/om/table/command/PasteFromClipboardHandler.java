@@ -78,7 +78,7 @@ import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
 
 /**
  * Pastes the contents of the clipboard to the TupleResult
- * 
+ *
  * @author Dejan Antanaskovic
  */
 public class PasteFromClipboardHandler extends AbstractHandler
@@ -149,7 +149,7 @@ public class PasteFromClipboardHandler extends AbstractHandler
 
   private IRecord[] parseRecords( final Shell shell, final String trstring, final TupleResult tupleResult, final IComponent[] components, final XsdBaseTypeHandler< ? >[] typeHandlers, final TupleResultContentProvider contentProvider )
   {
-    final Collection<IRecord> records = new ArrayList<IRecord>();
+    final Collection<IRecord> records = new ArrayList<>();
     final IStatusCollector stati = new StatusCollector( KalypsoGisPlugin.getId() );
 
     final StringTokenizer st1 = new StringTokenizer( trstring, "\n" ); //$NON-NLS-1$

@@ -34,7 +34,7 @@ public class ChartModel implements IChartModel
 
   protected final BasicChartSettings m_settings = new BasicChartSettings();
 
-  private final Map<String, Object> m_dataMap = new HashMap<String, Object>();
+  private final Map<String, Object> m_dataMap = new HashMap<>();
 
   public ChartModel( )
   {

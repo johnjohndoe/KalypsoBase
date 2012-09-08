@@ -46,7 +46,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * Lets the user replace an existing geometry of a given feature with a new edited one.
- * 
+ *
  * @author Holger Albert
  */
 public class EditFeatureGeometryWidget extends AbstractFeatureGeometeryWidget
@@ -130,11 +130,8 @@ public class EditFeatureGeometryWidget extends AbstractFeatureGeometeryWidget
     workspace.postCommand( command );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractCreateGeometeryWidget#getGeometryClass()
-   */
   @Override
-  protected Class< ? > getGeometryClass( )
+  protected Class< ? extends GM_Object> getGeometryClass( )
   {
     final FeatureToEdit featureToEdit = (FeatureToEdit) getFeatureToEdit();
 
@@ -143,12 +140,9 @@ public class EditFeatureGeometryWidget extends AbstractFeatureGeometeryWidget
     if( geometryProperty == null )
       return null;
 
-    return geometryProperty.getValueClass();
+    return (Class< ? extends GM_Object>)geometryProperty.getValueClass();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractFeatureGeometeryWidget#update(org.kalypso.ogc.gml.map.MapPanel)
-   */
   @Override
   protected void update( final IMapPanel mapPanel )
   {

@@ -70,7 +70,7 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
 
   private final IFeatureModifier m_modifier;
 
-  private final Collection<ModifyListener> m_modlistener = new ArrayList<ModifyListener>();
+  private final Collection<ModifyListener> m_modlistener = new ArrayList<>();
 
   private final String m_text;
 
@@ -126,7 +126,7 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
 
   /**
    * Checkbox is always valid
-   * 
+   *
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#isValid()
    */
   @Override

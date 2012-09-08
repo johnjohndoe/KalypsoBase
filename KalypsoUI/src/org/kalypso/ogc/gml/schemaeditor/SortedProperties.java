@@ -50,30 +50,30 @@ import java.util.TreeMap;
  * The {@link #loadFromXML(InputStream)} and {@link #storeToXML(OutputStream, String, String)} methods load and store
  * properties in a simple XML format. By default the UTF-8 character encoding is used, however a specific encoding may
  * be specified if required. An XML properties document has the following DOCTYPE declaration:
- * 
+ *
  * <pre>
  * &lt;!DOCTYPE properties SYSTEM &quot;http://java.sun.com/dtd/properties.dtd&quot;&gt;
  * </pre>
- * 
+ *
  * Note that the system URI (http://java.sun.com/dtd/properties.dtd) is <i>not</i> accessed when exporting or importing
  * properties; it merely serves as a string to uniquely identify the DTD, which is:
- * 
+ *
  * <pre>
  *    &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
- * 
+ *
  *    &lt;!-- DTD for properties --&gt;
- * 
+ *
  *    &lt;!ELEMENT properties ( comment?, entry* ) &gt;
- * 
+ *
  *    &lt;!ATTLIST properties version CDATA #FIXED &quot;1.0&quot;&gt;
- * 
+ *
  *    &lt;!ELEMENT comment (#PCDATA) &gt;
- * 
+ *
  *    &lt;!ELEMENT entry (#PCDATA) &gt;
- * 
+ *
  *    &lt;!ATTLIST entry key CDATA #REQUIRED&gt;
  * </pre>
- * 
+ *
  * @see <a href="../../../technotes/tools/solaris/native2ascii.html">native2ascii tool for Solaris</a>
  * @see <a href="../../../technotes/tools/windows/native2ascii.html">native2ascii tool for Windows</a> <p>
  *      This class is thread-safe: multiple threads can share a single <tt>Properties</tt> object without the need for
@@ -93,7 +93,7 @@ public class SortedProperties extends TreeMap<String, String>
 
   /**
    * A property list that contains default values for any keys not found in this property list.
-   * 
+   *
    * @serial
    */
   protected SortedProperties defaults;
@@ -108,7 +108,7 @@ public class SortedProperties extends TreeMap<String, String>
 
   /**
    * Creates an empty property list with the specified defaults.
-   * 
+   *
    * @param defaults
    *          the defaults.
    */
@@ -121,7 +121,7 @@ public class SortedProperties extends TreeMap<String, String>
    * Calls the <tt>Hashtable</tt> method <code>put</code>. Provided for parallelism with the <tt>getProperty</tt>
    * method. Enforces use of strings for property keys and values. The value returned is the result of the
    * <tt>Hashtable</tt> call to <code>put</code>.
-   * 
+   *
    * @param key
    *          the key to be placed into this property list.
    * @param value
@@ -181,40 +181,40 @@ public class SortedProperties extends TreeMap<String, String>
    * As an example, each of the following three lines specifies the key <code>"Truth"</code> and the associated element
    * value <code>"Beauty"</code>:
    * <p>
-   * 
+   *
    * <pre>
    * Truth = Beauty
    *  Truth:Beauty
    * Truth            :Beauty
    * </pre>
-   * 
+   *
    * As another example, the following three lines specify a single property:
    * <p>
-   * 
+   *
    * <pre>
    * fruits                           apple, banana, pear, \
    *                                  cantaloupe, watermelon, \
    *                                  kiwi, mango
    * </pre>
-   * 
+   *
    * The key is <code>"fruits"</code> and the associated element is:
    * <p>
-   * 
+   *
    * <pre>
    * &quot;apple, banana, pear, cantaloupe, watermelon, kiwi, mango&quot;
    * </pre>
-   * 
+   *
    * Note that a space appears before each <code>\</code> so that a space will appear after each comma in the final
    * result; the <code>\</code>, line terminator, and leading white space on the continuation line are merely discarded
    * and are <i>not</i> replaced by one or more other characters.
    * <p>
    * As a third example, the line:
    * <p>
-   * 
+   *
    * <pre>
    * cheeses
    * </pre>
-   * 
+   *
    * specifies that the key is <code>"cheeses"</code> and the associated element is the empty string <code>""</code>.
    * <p>
    * <p>
@@ -237,7 +237,7 @@ public class SortedProperties extends TreeMap<String, String>
    * </ul>
    * <p>
    * The specified stream remains open after this method returns.
-   * 
+   *
    * @param reader
    *          the input character stream.
    * @throws IOException
@@ -259,7 +259,7 @@ public class SortedProperties extends TreeMap<String, String>
    * href="http://java.sun.com/docs/books/jls/third_edition/html/lexical.html#3.3">Unicode escapes</a>.
    * <p>
    * The specified stream remains open after this method returns.
-   * 
+   *
    * @param inStream
    *          the input stream.
    * @exception IOException
@@ -718,9 +718,9 @@ public class SortedProperties extends TreeMap<String, String>
   /**
    * Calls the <code>store(OutputStream out, String comments)</code> method and suppresses IOExceptions that were
    * thrown.
-   * 
+   *
    * @deprecated This method does not throw an IOException if an I/O error occurs while saving the property list. The
-   *             preferred way to save a properties list is via the <code>store(OutputStream out, 
+   *             preferred way to save a properties list is via the <code>store(OutputStream out,
    * String comments)</code> method or the <code>storeToXML(OutputStream os, String comment)</code> method.
    * @param out
    *          an output stream.
@@ -769,7 +769,7 @@ public class SortedProperties extends TreeMap<String, String>
    * After the entries have been written, the output stream is flushed. The output stream remains open after this method
    * returns.
    * <p>
-   * 
+   *
    * @param writer
    *          an output character stream writer.
    * @param comments
@@ -808,7 +808,7 @@ public class SortedProperties extends TreeMap<String, String>
    * After the entries have been written, the output stream is flushed. The output stream remains open after this method
    * returns.
    * <p>
-   * 
+   *
    * @param out
    *          an output stream.
    * @param comments
@@ -856,7 +856,7 @@ public class SortedProperties extends TreeMap<String, String>
    * Searches for the property with the specified key in this property list. If the key is not found in this property
    * list, the default property list, and its defaults, recursively, are then checked. The method returns
    * <code>null</code> if the property is not found.
-   * 
+   *
    * @param key
    *          the property key.
    * @return the value in this property list with the specified key value.
@@ -874,7 +874,7 @@ public class SortedProperties extends TreeMap<String, String>
    * Searches for the property with the specified key in this property list. If the key is not found in this property
    * list, the default property list, and its defaults, recursively, are then checked. The method returns the default
    * value argument if the property is not found.
-   * 
+   *
    * @param key
    *          the hashtable key.
    * @param defaultValue
@@ -892,7 +892,7 @@ public class SortedProperties extends TreeMap<String, String>
   /**
    * Returns an enumeration of all the keys in this property list, including distinct keys in the default property list
    * if a key of the same name has not already been found from the main properties list.
-   * 
+   *
    * @return an enumeration of all the keys in this property list, including the keys in the default property list.
    * @throws ClassCastException
    *           if any key in this property list is not a string.
@@ -914,7 +914,7 @@ public class SortedProperties extends TreeMap<String, String>
    * <p>
    * The returned set is not backed by the <tt>Properties</tt> object. Changes to this <tt>Properties</tt> are not
    * reflected in the set, or vice versa.
-   * 
+   *
    * @return a set of keys in this property list where the key and its corresponding value are strings, including the
    *         keys in the default property list.
    * @see java.util.Properties#defaults
@@ -922,14 +922,14 @@ public class SortedProperties extends TreeMap<String, String>
    */
   public Set<String> stringPropertyNames( )
   {
-    final Hashtable<String, String> h = new Hashtable<String, String>();
+    final Hashtable<String, String> h = new Hashtable<>();
     enumerateStringProperties( h );
     return h.keySet();
   }
 
   /**
    * Prints this property list out to the specified output stream. This method is useful for debugging.
-   * 
+   *
    * @param out
    *          an output stream.
    * @throws ClassCastException
@@ -954,7 +954,7 @@ public class SortedProperties extends TreeMap<String, String>
 
   /**
    * Prints this property list out to the specified output stream. This method is useful for debugging.
-   * 
+   *
    * @param out
    *          an output stream.
    * @throws ClassCastException
@@ -984,7 +984,7 @@ public class SortedProperties extends TreeMap<String, String>
 
   /**
    * Enumerates all key/value pairs in the specified hashtable.
-   * 
+   *
    * @param h
    *          the hashtable
    * @throws ClassCastException
@@ -1005,7 +1005,7 @@ public class SortedProperties extends TreeMap<String, String>
   /**
    * Enumerates all key/value pairs in the specified hashtable and omits the property if the key or value is not a
    * string.
-   * 
+   *
    * @param h
    *          the hashtable
    */
@@ -1028,7 +1028,7 @@ public class SortedProperties extends TreeMap<String, String>
 
   /**
    * Convert a nibble to a hex character
-   * 
+   *
    * @param nibble
    *          the nibble to convert.
    */

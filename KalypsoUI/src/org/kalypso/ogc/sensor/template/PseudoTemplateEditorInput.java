@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.template;
 
@@ -54,7 +54,7 @@ import org.eclipse.ui.IPersistableElement;
 
 /**
  * PseudoTemplateEditorInput
- * 
+ *
  * @author schlienger
  */
 public class PseudoTemplateEditorInput implements IFileEditorInput
@@ -65,7 +65,7 @@ public class PseudoTemplateEditorInput implements IFileEditorInput
 
   /**
    * Constructor
-   * 
+   *
    * @param storage
    *          template storage on which this pseudo template is based
    * @param fileExtension
@@ -77,84 +77,48 @@ public class PseudoTemplateEditorInput implements IFileEditorInput
     m_fileExtension = fileExtension;
   }
 
-  /**
-   * @see org.eclipse.ui.IStorageEditorInput#getStorage()
-   */
   @Override
   public IStorage getStorage( )
   {
     return m_storage;
   }
 
-  /**
-   * @see org.eclipse.ui.IEditorInput#exists()
-   */
   @Override
   public boolean exists( )
   {
     return false;
   }
 
-  /**
-   * @see org.eclipse.ui.IEditorInput#getImageDescriptor()
-   */
   @Override
   public ImageDescriptor getImageDescriptor( )
   {
     return null;
   }
 
-  /**
-   * @see org.eclipse.ui.IEditorInput#getName()
-   */
   @Override
   public String getName( )
   {
     return FilenameUtils.getBaseName( m_storage.getName() ) + m_fileExtension;
   }
 
-  /**
-   * @see org.eclipse.ui.IEditorInput#getPersistable()
-   */
   @Override
   public IPersistableElement getPersistable( )
   {
     return null;
   }
 
-  /**
-   * @see org.eclipse.ui.IEditorInput#getToolTipText()
-   */
   @Override
   public String getToolTipText( )
   {
     return m_storage.getHref();
   }
 
-  /**
-   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-   */
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     return null;
   }
 
-  /**
-   * Call is delegated to Object class since we always want new pseudo templates even if the underlying file is the same
-   * one.
-   * 
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
-  @Override
-  public boolean equals( final Object obj )
-  {
-    return super.equals( obj );
-  }
-
-  /**
-   * @see org.eclipse.ui.IFileEditorInput#getFile()
-   */
   @Override
   public IFile getFile( )
   {

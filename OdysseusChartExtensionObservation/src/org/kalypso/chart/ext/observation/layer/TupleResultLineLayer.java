@@ -190,7 +190,7 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
     if( data == null )
       return;
 
-    final List<Point> path = new ArrayList<Point>();
+    final List<Point> path = new ArrayList<>();
     data.open();
 
     final Object[] domainValues = data.getDomainValues();
