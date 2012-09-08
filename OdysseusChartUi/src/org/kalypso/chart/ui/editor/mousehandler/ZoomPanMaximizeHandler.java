@@ -48,7 +48,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.commons.java.lang.Objects;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
@@ -259,9 +258,9 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
     setCursor( cursorFromButton( e ) );
 
     final Point currentPos = EventUtils.getPoint( e );
-    m_startPos = currentPos;
 
-    m_startPlot = ChartHandlerUtilities.screen2plotPoint( currentPos, getChart().getPlotRect() );
+    m_startPos = currentPos;
+    m_startPlot = currentPos;
   }
 
   @Override
@@ -270,7 +269,6 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
     super.mouseMove( e );
 
     final Point currentPos = EventUtils.getPoint( e );
-    // final Point currentPlot = ChartHandlerUtilities.screen2plotPoint( currentPos, getChart().getPlotRect() );
     setToolInfo( null );
 
     if( m_startPlot == null )

@@ -68,9 +68,6 @@ public class DragPanHandler extends AbstractChartDragHandler
     this( chartComposite, 5, SWT.BUTTON_MASK );
   }
 
-  /**
-   * @see org.kalypso.chart.ui.editor.mousehandler.AbstractChartDragHandler#keyReleased(org.eclipse.swt.events.KeyEvent)
-   */
   @Override
   public void keyReleased( final KeyEvent e )
   {
@@ -107,12 +104,15 @@ public class DragPanHandler extends AbstractChartDragHandler
   public void doMouseUpAction( final Point start, final EditInfo editInfo )
   {
     getChart().setPanOffset( null, null, null );
+
     if( start != null )
     {
       final IChartModel model = getChart().getChartModel();
       final IMapperRegistry registry = model.getMapperRegistry();
 
-      registry.accept( new PanToVisitor( start, editInfo.getPosition() ) );
+      final Point position = editInfo.getPosition();
+
+      registry.accept( new PanToVisitor( start, position ) );
     }
 
     /** update active point */

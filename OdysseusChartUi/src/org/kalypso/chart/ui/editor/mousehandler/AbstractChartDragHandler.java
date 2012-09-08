@@ -27,10 +27,6 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
 
   private EditInfo m_clickInfo = null;
 
-  private int m_deltaSnapX = 0;
-
-  private int m_deltaSnapY = 0;
-
   private int m_startX = 0;
 
   private int m_startY = 0;
@@ -91,13 +87,10 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
   protected void mouseDown( final Point down )
   {
     m_clickInfo = getHover( down );
-    if( m_clickInfo == null )
-      m_clickInfo = new EditInfo( null, null, null, null, null, ChartHandlerUtilities.screen2plotPoint( down, getChart().getPlotRect() ) );
 
-    // offset from cursor relative to the given InfoObject Center
-    final Point pos = ChartHandlerUtilities.plotPoint2screen( m_clickInfo.getPosition(), getChart().getPlotRect() );
-    m_deltaSnapX = down.x - pos.x;
-    m_deltaSnapY = down.y - pos.y;
+    if( m_clickInfo == null )
+      m_clickInfo = new EditInfo( null, null, null, null, null, down );
+
     m_startX = down.x;
     m_startY = down.y;
   }
@@ -140,7 +133,7 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
     if( m_editInfo == null && (Math.abs( move.x - m_startX ) > m_trashold || Math.abs( move.y - m_startY ) > m_trashold) )
       m_editInfo = m_clickInfo.clone();
 
-    final Point plotPoint = ChartHandlerUtilities.screen2plotPoint( new Point( move.x - m_deltaSnapX, move.y - m_deltaSnapY ), getChart().getPlotRect() );
+    final Point plotPoint = ChartHandlerUtilities.screen2plotPoint( new Point( move.x, move.y ), getChart().getPlotRect() );
     doMouseMoveAction( plotPoint, m_editInfo == null ? m_clickInfo : m_editInfo );
   }
 
@@ -157,8 +150,9 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
     {
       if( m_editInfo != null )
       {
-        final Point position = new Point( up.x - m_deltaSnapX, up.y - m_deltaSnapY );
+        final Point position = new Point( up.x, up.y );
         final Point plotPoint = ChartHandlerUtilities.screen2plotPoint( position, getChart().getPlotRect() );
+
         doMouseUpAction( plotPoint, m_editInfo );
       }
       else if( m_clickInfo != null )
