@@ -72,6 +72,7 @@ import com.vividsolutions.jts.geom.MultiLineString;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.linearref.LengthIndexedLine;
 import com.vividsolutions.jts.operation.valid.IsValidOp;
 import com.vividsolutions.jts.operation.valid.TopologyValidationError;
 
@@ -85,13 +86,12 @@ public final class JTSUtilities
   /**
    * The allowed tolerance.
    */
+  // FIXME: bad, rather use precisions model of JTS
   public static final double TOLERANCE = 10E-04;
 
-  /**
-   * The constructor.
-   */
   private JTSUtilities( )
   {
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -324,9 +324,42 @@ public final class JTSUtilities
   /**
    * This function creates a line segment (JTS) of a line from a given start point to an end point, including all points
    * on the given line.<br>
+   * The returned line always starts at <code>start</code> and ends at <code>end</code>, regardless of the orientation
+   * of the input line.<br/>
+   * The start and end point are projected to the given linear geometry, so do not necessarily need to lie on the given
+   * line.<br/>
+   * This implementation is based on {@link LengthIndexedLine} of JTS and has the same restraints.
+   *
+   * @param line
+   *          The original line.
+   * @param start
+   *          The start point of the new line
+   * @param end
+   *          The end point of the new line
+   * @return A linear geometry (i.e. either a {@link LineString} or a {@link MultiLineString} on the original line
+   *         starting at with the start point and ending with the end point. If the input is a {@link LineString}, the
+   *         result can be safelay cast to {@link LineString} as well.
+   */
+  public static Geometry extractLineString( final Geometry linearGeomety, final Point startPoint, final Point endPoint )
+  {
+    final LengthIndexedLine index = new LengthIndexedLine( linearGeomety );
+
+    final double startIndex = index.project( startPoint.getCoordinate() );
+    final double endIndex = index.project( endPoint.getCoordinate() );
+
+    /* make sure orientiation is from start to end */
+    final double start = Math.min( startIndex, endIndex );
+    final double end = Math.max( startIndex, endIndex );
+
+    return index.extractLine( start, end );
+  }
+
+  /**
+   * This function creates a line segment (JTS) of a line from a given start point to an end point, including all points
+   * on the given line.<br>
    * TODO: The used distance is calculated only by the x- and y-coordinates!! For an 3-dimensaional distance
    * calculation, the start and end point should have z-coordinates.
-   *
+   * 
    * @param line
    *          The original line.
    * @param start
@@ -334,7 +367,9 @@ public final class JTSUtilities
    * @param end
    *          The end point of the new line (it has to be one point that lies on the original line).
    * @return A LineString on the original line starting at with the start point and ending with the end point.
+   * @deprecated Use {@link #extractLineString(Geometry, Point, Point)} instead
    */
+  @Deprecated
   public static LineString createLineString( final Geometry line, final Point start, final Point end )
   {
     /* Check if both points are lying on the line (2d!). */
