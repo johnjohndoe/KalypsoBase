@@ -50,7 +50,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoStyle;
@@ -59,7 +58,7 @@ import org.kalypsodeegree.xml.Marshallable;
 /**
  * @author Gernot Belger
  */
-public class FeatureThemeNode extends KalypsoThemeNode<IKalypsoFeatureTheme> implements IFontProvider
+public class FeatureThemeNode extends KalypsoThemeNode<IKalypsoFeatureTheme>
 {
   FeatureThemeNode( final IThemeNode parent, final IKalypsoFeatureTheme theme )
   {
@@ -145,7 +144,7 @@ public class FeatureThemeNode extends KalypsoThemeNode<IKalypsoFeatureTheme> imp
       }
     };
 
-    final List<IKalypsoStyle> filteredList = new ArrayList<IKalypsoStyle>( Arrays.asList( styles ) );
+    final List<IKalypsoStyle> filteredList = new ArrayList<>( Arrays.asList( styles ) );
     CollectionUtils.filter( filteredList, noSelectionStyles );
     return filteredList.toArray( new IKalypsoStyle[filteredList.size()] );
   }
@@ -188,7 +187,7 @@ public class FeatureThemeNode extends KalypsoThemeNode<IKalypsoFeatureTheme> imp
   }
 
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     if( adapter == Marshallable.class )
     {

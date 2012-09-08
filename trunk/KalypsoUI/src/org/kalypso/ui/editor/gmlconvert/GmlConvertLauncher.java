@@ -61,7 +61,7 @@ public class GmlConvertLauncher implements IEditorLauncher
           final IUrlResolver resolver = new UrlResolver();
           final URL context = ResourceUtilities.createURL( convertFile );
 
-          return GmlConvertFactory.convertXml( inputSource, resolver, context, new HashMap<Object, Object>() );
+          return GmlConvertFactory.convertXml( inputSource, resolver, context, new HashMap<>() );
         }
         catch( final GmlConvertException e )
         {

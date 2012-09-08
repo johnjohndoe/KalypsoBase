@@ -87,7 +87,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  */
 public class TupleResultFeatureControl extends AbstractToolbarFeatureControl implements ITupleResultChangedListener
 {
-  private final List<ModifyListener> m_listener = new ArrayList<ModifyListener>( 10 );
+  private final List<ModifyListener> m_listener = new ArrayList<>( 10 );
 
   private final IComponentUiHandlerProvider m_handlerProvider;
 

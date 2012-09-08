@@ -82,7 +82,7 @@ import org.kalypsodeegree.xml.Marshallable;
  */
 public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallable, IPoolListener
 {
-  private final Collection<IKalypsoStyleListener> m_listeners = new HashSet<IKalypsoStyleListener>();
+  private final Collection<IKalypsoStyleListener> m_listeners = new HashSet<>();
 
   private boolean m_disposed = false;
 

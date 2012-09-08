@@ -3,24 +3,10 @@ package de.openali.odysseus.chart.ext.base.axisrenderer;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 
-import de.openali.odysseus.chart.ext.base.data.IAxisContentProvider;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 
 public class OrdinalAxisTickCalculator implements ITickCalculator
 {
-  private final IAxisContentProvider m_axisContentProvider;
-
-  private final int m_fixedMinWidth;
-
-  private final int m_fixedMaxWidth;
-
-  public OrdinalAxisTickCalculator( final IAxisContentProvider contentProvider, final int minLabelWidth, final int maxLabelWidth )
-  {
-    m_axisContentProvider = contentProvider;
-    m_fixedMaxWidth = maxLabelWidth;
-    m_fixedMinWidth = minLabelWidth;
-  }
-
   /**
    * Calculates the ticks shown for the given Axis *
    * 
@@ -41,7 +27,5 @@ public class OrdinalAxisTickCalculator implements ITickCalculator
       tickPos[i] = start + i;
     }
     return tickPos;
-
   }
-
 }

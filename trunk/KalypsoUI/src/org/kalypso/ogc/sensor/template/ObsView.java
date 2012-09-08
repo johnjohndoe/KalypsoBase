@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.template;
 
@@ -68,7 +68,7 @@ import org.kalypso.ogc.sensor.provider.PooledObsProvider;
  * <p>
  * The view supports enabled features, which might dictate some of the aspects of the appearance. By default, features
  * are enabled.
- * 
+ *
  * @author schlienger
  */
 public abstract class ObsView implements IObsViewEventProvider
@@ -95,11 +95,11 @@ public abstract class ObsView implements IObsViewEventProvider
     }
   }
 
-  private final List<ObsViewItem> m_items = new ArrayList<ObsViewItem>();
+  private final List<ObsViewItem> m_items = new ArrayList<>();
 
-  private final List<IObsViewEventListener> m_listeners = new ArrayList<IObsViewEventListener>();
+  private final List<IObsViewEventListener> m_listeners = new ArrayList<>();
 
-  private final Set<String> m_enabledFeatures = new HashSet<String>();
+  private final Set<String> m_enabledFeatures = new HashSet<>();
 
   /**
    * If set, each add of an observation of one of these types is ignored (no items are added for this observation in
@@ -108,7 +108,7 @@ public abstract class ObsView implements IObsViewEventProvider
   private String[] m_ignoreTypes = new String[] { ITimeseriesConstants.TYPE_WECHMANN_SCHALTER_V, ITimeseriesConstants.TYPE_WECHMANN_E };
 
   /** If set, the concerned items are not displayed. Note: this is not to be confused with ignoreTypes */
-  private Set<String> m_hiddenTypes = new HashSet<String>();
+  private Set<String> m_hiddenTypes = new HashSet<>();
 
   /**
    * By default the timezone is <code>null</code>. In this case, the Kalypso zimezone is used. It can be overriden by
@@ -133,7 +133,7 @@ public abstract class ObsView implements IObsViewEventProvider
   /**
    * This method must be called before items are added. If items were already present in this view, it has no impact on
    * them.
-   * 
+   *
    * @param ignoreTypes
    *          if null a default empty array is used
    */
@@ -152,7 +152,7 @@ public abstract class ObsView implements IObsViewEventProvider
 
   /**
    * Return a correct string representation
-   * 
+   *
    * @see java.lang.Object#toString()
    */
   @Override
@@ -320,7 +320,7 @@ public abstract class ObsView implements IObsViewEventProvider
   public static Map<IObservation, ArrayList<ObsViewItem>> mapItems( final ObsViewItem[] items )
   {
     // obs -> columns
-    final Map<IObservation, ArrayList<ObsViewItem>> obsmap = new HashMap<IObservation, ArrayList<ObsViewItem>>();
+    final Map<IObservation, ArrayList<ObsViewItem>> obsmap = new HashMap<>();
     for( final ObsViewItem element : items )
     {
       final IObservation observation = element.getObservation();
@@ -380,14 +380,14 @@ public abstract class ObsView implements IObsViewEventProvider
   /**
    * Hide items which are displaying an observation which axis is of the given type. This method is the pendant to
    * setIgnoreType, but in contrario to the former, it only hides the items in the ui (it does not remove it).
-   * 
+   *
    * @param types
    *          list of types that should be hidden
    */
   public void hideTypes( final Set<String> types )
   {
     if( types == null )
-      m_hiddenTypes = new HashSet<String>();
+      m_hiddenTypes = new HashSet<>();
     else
       m_hiddenTypes = types;
 

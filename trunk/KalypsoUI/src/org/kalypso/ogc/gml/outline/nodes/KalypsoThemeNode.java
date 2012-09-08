@@ -337,7 +337,7 @@ public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode
   }
 
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     if( IKalypsoTheme.class.equals( adapter ) )
       return getTheme();

@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.util.themes.position.controls;
 
@@ -45,6 +45,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -55,7 +56,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ui.forms.widgets.Form;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
 import org.kalypso.i18n.Messages;
 import org.kalypso.util.themes.position.PositionUtilities;
@@ -63,7 +63,7 @@ import org.kalypso.util.themes.position.listener.IPositionChangedListener;
 
 /**
  * This composite edits the position.
- * 
+ *
  * @author Holger Albert
  */
 public class PositionComposite extends Composite
@@ -95,7 +95,7 @@ public class PositionComposite extends Composite
 
   /**
    * The constructor.
-   * 
+   *
    * @param parent
    *          A widget which will be the parent of the new instance (cannot be null).
    * @param style
@@ -112,7 +112,7 @@ public class PositionComposite extends Composite
     /* Initialize. */
     m_horizontal = PositionUtilities.checkHorizontalPosition( horizontal );
     m_vertical = PositionUtilities.checkVerticalPosition( vertical );
-    m_listener = new ArrayList<IPositionChangedListener>();
+    m_listener = new ArrayList<>();
     m_main = null;
     m_content = null;
 
@@ -153,11 +153,11 @@ public class PositionComposite extends Composite
   private void createControls( )
   {
     /* Create the layout. */
-    super.setLayout( Layouts.createGridLayout() );
+    super.setLayout( GridLayoutFactory.fillDefaults().create() );
 
     /* The content. */
     final Composite content = new Composite( this, SWT.NONE );
-    content.setLayout( Layouts.createGridLayout() );
+    content.setLayout( GridLayoutFactory.fillDefaults().create() );
     content.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Create the main form. */
@@ -168,7 +168,7 @@ public class PositionComposite extends Composite
     final Composite body = m_main.getBody();
 
     /* Set the properties for the body of the form. */
-    body.setLayout( Layouts.createGridLayout() );
+    body.setLayout( GridLayoutFactory.fillDefaults().create() );
 
     /* Create the content. */
     m_content = createContentComposite( body );
@@ -180,7 +180,7 @@ public class PositionComposite extends Composite
 
   /**
    * This function creates the content composite.
-   * 
+   *
    * @param parent
    *          The parent composite.
    * @return The content composite.
@@ -189,7 +189,7 @@ public class PositionComposite extends Composite
   {
     /* Create a composite. */
     final Composite contentComposite = new Composite( parent, SWT.NONE );
-    contentComposite.setLayout( Layouts.createGridLayout() );
+    contentComposite.setLayout( GridLayoutFactory.fillDefaults().create() );
 
     /* Create the content internal composite. */
     final Composite contentInternalComposite = createContentInternalComposite( contentComposite );
@@ -200,7 +200,7 @@ public class PositionComposite extends Composite
 
   /**
    * This function creates the content internal composite.
-   * 
+   *
    * @param parent
    *          The parent composite.
    * @return The content internal composite.
@@ -209,7 +209,7 @@ public class PositionComposite extends Composite
   {
     /* Create a composite. */
     final Composite contentInternalComposite = new Composite( parent, SWT.NONE );
-    contentInternalComposite.setLayout( Layouts.createGridLayout( 2 ) );
+    contentInternalComposite.setLayout( GridLayoutFactory.fillDefaults().numColumns( 2 ).create() );
 
     /* Create the horizontal group. */
     final Group horizontalGroup = createHorizontalGroup( contentInternalComposite );
@@ -224,7 +224,7 @@ public class PositionComposite extends Composite
 
   /**
    * This function creates the horizontal group.
-   * 
+   *
    * @param parent
    *          The parent composite.
    * @return The horizontal group.
@@ -298,7 +298,7 @@ public class PositionComposite extends Composite
 
   /**
    * This function creates the vertical group.
-   * 
+   *
    * @param parent
    *          The parent composite.
    * @return The vertical group.
@@ -372,7 +372,7 @@ public class PositionComposite extends Composite
 
   /**
    * This function updates the composite.
-   * 
+   *
    * @param status
    *          A status, containing a message, which should be displayed in the upper area of the view. May be null.
    */
@@ -403,7 +403,7 @@ public class PositionComposite extends Composite
 
   /**
    * This function fires a position changed event.
-   * 
+   *
    * @param horizontal
    *          The horzizontal position.
    * @param vertical
@@ -417,7 +417,7 @@ public class PositionComposite extends Composite
 
   /**
    * This function adds a position changed listener.
-   * 
+   *
    * @param listener
    *          The position changed listener to add.
    */
@@ -429,7 +429,7 @@ public class PositionComposite extends Composite
 
   /**
    * This function removes a position changed listener.
-   * 
+   *
    * @param listener
    *          The position changed listener to remove.
    */
@@ -441,7 +441,7 @@ public class PositionComposite extends Composite
 
   /**
    * This function returns the horizontal position.
-   * 
+   *
    * @return The horizontal position.
    */
   public int getHorizontal( )
@@ -451,7 +451,7 @@ public class PositionComposite extends Composite
 
   /**
    * This function returns the vertical position.
-   * 
+   *
    * @return The vertical position.
    */
   public int getVertical( )

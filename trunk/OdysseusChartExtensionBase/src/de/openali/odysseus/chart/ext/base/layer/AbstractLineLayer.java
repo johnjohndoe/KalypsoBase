@@ -94,7 +94,7 @@ public abstract class AbstractLineLayer extends AbstractChartLayer
 
         if( ps != null && ps.isVisible() && legendMode.contains( LEGEND_MODE_POINT ) )
         {
-          final List<Point> path = new ArrayList<Point>();
+          final List<Point> path = new ArrayList<>();
           path.add( new Point( size.x / 2, size.y / 2 ) );
 
           drawPoints( gc, path );

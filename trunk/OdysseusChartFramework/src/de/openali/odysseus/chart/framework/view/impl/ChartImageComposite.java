@@ -136,56 +136,26 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   final void handlePaint( final PaintEvent paintEvent )
   {
     final ImageData plotData = m_paintJob.getPlotImageData();
-    // final Rectangle plotRect = m_paintJob.getPlotRect();
     final Point panOffset = m_panOffset;
     final Rectangle dragArea = m_dragArea;
     final EditInfo editInfo = m_editInfo;
 
-    if( plotData == null ) // || plotRect == null )
+    if( plotData == null )
       return;
 
     final GC paintGC = paintEvent.gc;
 
-    // Transform oldTransform = null;
-    // Transform newTransform = null;
-    try
-    {
-      if( plotData != null )
-      {
-        final Image plotImage = new Image( paintEvent.display, plotData );
-        paintGC.drawImage( plotImage, -panOffset.x, -panOffset.y );
-        plotImage.dispose();
-      }
+    final Image plotImage = new Image( paintEvent.display, plotData );
+    paintGC.drawImage( plotImage, -panOffset.x, -panOffset.y );
+    plotImage.dispose();
 
-      // oldTransform = new Transform( paintGC.getDevice() );
-      // newTransform = new Transform( paintGC.getDevice() );
+    paintDragArea( paintGC, dragArea );
+    paintEditInfo( paintGC, editInfo );
 
-      // paintGC.getTransform( oldTransform );
-      // paintGC.getTransform( newTransform );
-
-      // FIXME: makes no sense: why is there a transformation for the drag area and edit info?
-      // Same for handlers: why should they paint with an active transformation?
-      // newTransform.translate( plotRect.x, plotRect.y );
-      // paintGC.setTransform( newTransform );
-
-      paintDragArea( paintGC, dragArea );
-      paintEditInfo( paintGC, editInfo );
-
-      final IChartHandlerManager manager = getPlotHandler();
-      final IChartHandler[] handlers = manager.getActiveHandlers();
-      for( final IChartHandler handler : handlers )
-        handler.paintControl( paintEvent );
-
-      // paintGC.setTransform( oldTransform );
-    }
-    finally
-    {
-//      if( oldTransform != null )
-//        newTransform.dispose();
-//
-//      if( newTransform != null )
-//        newTransform.dispose();
-    }
+    final IChartHandlerManager manager = getPlotHandler();
+    final IChartHandler[] handlers = manager.getActiveHandlers();
+    for( final IChartHandler handler : handlers )
+      handler.paintControl( paintEvent );
   }
 
   private static void paintDragArea( final GC gcw, final Rectangle dragArea )

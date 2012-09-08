@@ -30,7 +30,7 @@ public class ActiveWorkContext
 
   private ScenarioHandlingProjectNature m_currentProjectNature;
 
-  private final List<IActiveScenarioChangeListener> m_activeScenarioChangeListeners = new ArrayList<IActiveScenarioChangeListener>();
+  private final List<IActiveScenarioChangeListener> m_activeScenarioChangeListeners = new ArrayList<>();
 
   private final String m_natureID;
 

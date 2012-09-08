@@ -39,7 +39,7 @@ public final class OdysseusChartExtensions
     // fill binding map
     if( CHART_LEGEND_RENDERERS == null )
     {
-      CHART_LEGEND_RENDERERS = new ArrayList<IChartLegendRenderer>();
+      CHART_LEGEND_RENDERERS = new ArrayList<>();
 
       /* get extension points */
       final IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -84,7 +84,7 @@ public final class OdysseusChartExtensions
     // fill binding map
     if( Objects.isNull( FILTERS ) )
     {
-      FILTERS = new HashMap<String, IConfigurationElement>();
+      FILTERS = new HashMap<>();
 
       /* get extension points */
       final IExtensionRegistry registry = Platform.getExtensionRegistry();

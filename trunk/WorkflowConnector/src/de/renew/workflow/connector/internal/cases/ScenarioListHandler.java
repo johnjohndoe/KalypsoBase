@@ -67,7 +67,7 @@ public class ScenarioListHandler implements IScenarioList
     final Scenario scenario = m_scenarioHandler.getScenario();
     final ScenarioList derived = scenario.getDerivedScenarios();
     if( derived == null )
-      return new ArrayList<IScenario>();
+      return new ArrayList<>();
 
     final List<IScenario> myScenarios = new ArrayList<IScenario>()
     {

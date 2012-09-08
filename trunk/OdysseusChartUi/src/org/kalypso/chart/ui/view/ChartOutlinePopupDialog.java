@@ -48,8 +48,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.chart.ui.KalypsoChartUiPlugin;
 import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
+import org.kalypso.chart.ui.internal.OdysseusChartUiPlugin;
 import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 
@@ -109,7 +109,7 @@ public class ChartOutlinePopupDialog extends PopupDialog
   @Override
   protected IDialogSettings getDialogSettings( )
   {
-    return DialogSettingsUtils.getDialogSettings( KalypsoChartUiPlugin.getDefault(), ChartOutlinePopupDialog.class.getName() );
+    return DialogSettingsUtils.getDialogSettings( OdysseusChartUiPlugin.getDefault(), ChartOutlinePopupDialog.class.getName() );
   }
 
   protected IChartComposite getChartComposite( )

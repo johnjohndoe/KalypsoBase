@@ -13,7 +13,7 @@ import de.openali.odysseus.service.ods.Activator;
 
 /**
  * loads operation extensions and prepares the operations metadata section for the ServiceMetadataDocument
- * 
+ *
  * @author alibu
  */
 public class OWSOperationExtensionLoader
@@ -31,7 +31,7 @@ public class OWSOperationExtensionLoader
 
   public synchronized static Map<String, IConfigurationElement> getOperations( )
   {
-    THE_MAP = new HashMap<String, IConfigurationElement>();
+    THE_MAP = new HashMap<>();
     final IExtensionRegistry er = Platform.getExtensionRegistry();
     if( er != null )
     {
@@ -78,9 +78,9 @@ public class OWSOperationExtensionLoader
     else
     {
 
-      SM_MAP = new HashMap<String, ServiceMetadata>();
+      SM_MAP = new HashMap<>();
 
-      final List<OperationMetadata> operationsList = new ArrayList<OperationMetadata>();
+      final List<OperationMetadata> operationsList = new ArrayList<>();
 
       final IExtensionRegistry er = Platform.getExtensionRegistry();
       if( er != null )
@@ -98,7 +98,7 @@ public class OWSOperationExtensionLoader
           if( "true".equals( isPublicString ) )
             isPublic = true;
 
-          final List<OperationParameter> parameterList = new ArrayList<OperationParameter>();
+          final List<OperationParameter> parameterList = new ArrayList<>();
           final IConfigurationElement[] parameters = element.getChildren( "parameter" );
           for( final IConfigurationElement parameter : parameters )
           {
@@ -111,7 +111,7 @@ public class OWSOperationExtensionLoader
             if( "true".equals( isMandatoryString ) )
               isMandatory = true;
 
-            final ArrayList<String> valueList = new ArrayList<String>();
+            final ArrayList<String> valueList = new ArrayList<>();
             final IConfigurationElement[] parameterValues = parameter.getChildren( "parameterValue" );
             for( final IConfigurationElement parameterValue : parameterValues )
             {

@@ -8,6 +8,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Composite;
@@ -18,15 +19,15 @@ import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
-import org.kalypso.chart.ui.KalypsoChartUiPlugin;
 import org.kalypso.chart.ui.i18n.Messages;
+import org.kalypso.chart.ui.internal.OdysseusChartUiPlugin;
 import org.kalypso.chart.ui.workbench.ChartPartComposite;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.IPropertyPart;
 
 import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
 import de.openali.odysseus.chart.factory.config.ChartConfigurationSaver;
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chartconfig.x020.ChartConfigurationDocument;
 
 /**
@@ -64,7 +65,7 @@ public class ChartEditor extends EditorPart implements IPropertyPart
     super.setInput( input );
 
     m_chartPartComposite.loadInput( input );
-    m_chartPartComposite.getChartModel().autoscale( null );
+    m_chartPartComposite.getChartModel().autoscale( (IAxis)null );
     updatePartName();
   }
 
@@ -149,13 +150,13 @@ public class ChartEditor extends EditorPart implements IPropertyPart
     catch( final CoreException e )
     {
       final IStatus status = e.getStatus();
-      KalypsoChartUiPlugin.getDefault().getLog().log( status );
+      OdysseusChartUiPlugin.getDefault().getLog().log( status );
       ErrorDialog.openError( getEditorSite().getShell(), Messages.getString( "org.kalypso.chart.ui.editor.ChartEditor.4" ), Messages.getString( "org.kalypso.chart.ui.editor.ChartEditor.5" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     catch( final IOException e )
     {
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, e.toString(), e );
-      KalypsoChartUiPlugin.getDefault().getLog().log( status );
+      final IStatus status = new Status( IStatus.ERROR, OdysseusChartUiPlugin.ID, e.toString(), e );
+      OdysseusChartUiPlugin.getDefault().getLog().log( status );
       ErrorDialog.openError( getEditorSite().getShell(), Messages.getString( "org.kalypso.chart.ui.editor.ChartEditor.4" ), Messages.getString( "org.kalypso.chart.ui.editor.ChartEditor.5" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }

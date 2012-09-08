@@ -80,11 +80,11 @@ import com.vividsolutions.jts.geom.Polygon;
  */
 public abstract class AbstractSldGeometryBuilder implements ISldGeometryBuilder
 {
-  private final Set<IGeometryBuilderValidationRule> m_rules = new LinkedHashSet<IGeometryBuilderValidationRule>();
+  private final Set<IGeometryBuilderValidationRule> m_rules = new LinkedHashSet<>();
 
-  private final Set<Symbolizer> m_symbolizers = new HashSet<Symbolizer>();
+  private final Set<Symbolizer> m_symbolizers = new HashSet<>();
 
-  private final Set<Coordinate> m_coordinates = new LinkedHashSet<Coordinate>();
+  private final Set<Coordinate> m_coordinates = new LinkedHashSet<>();
 
   private final IMapPanel m_panel;
 

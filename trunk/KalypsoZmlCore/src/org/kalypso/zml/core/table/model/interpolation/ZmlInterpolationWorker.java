@@ -40,14 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.zml.core.table.model.interpolation;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -55,6 +53,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.transaction.ITupleModelTransaction;
 import org.kalypso.ogc.sensor.transaction.TupleModelTransaction;
+import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.i18n.Messages;
 import org.kalypso.zml.core.table.model.IZmlModelColumn;
 
@@ -86,7 +85,7 @@ public class ZmlInterpolationWorker implements ICoreRunnableWithProgress
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
-    final Set<IStatus> stati = new LinkedHashSet<>();
+    final IStatusCollector log = new StatusCollector( KalypsoZmlCore.PLUGIN_ID );
 
     try
     {
@@ -143,9 +142,9 @@ public class ZmlInterpolationWorker implements ICoreRunnableWithProgress
     catch( final SensorException e )
     {
       e.printStackTrace();
-      stati.add( StatusUtilities.createExceptionalErrorStatus( Messages.ZmlInterpolationWorker_0, e ) );
+      log.add( IStatus.ERROR, Messages.ZmlInterpolationWorker_0, e );
     }
 
-    return StatusUtilities.createStatus( stati, Messages.ZmlInterpolationWorker_1 );
+    return log.asMultiStatusOrOK( Messages.ZmlInterpolationWorker_1 );
   }
 }

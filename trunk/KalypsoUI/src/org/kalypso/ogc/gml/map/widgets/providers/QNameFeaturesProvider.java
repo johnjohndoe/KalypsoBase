@@ -58,7 +58,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
 
 /**
  * Feature provider, which uses a qname, which all returned features must substitute.
- * 
+ *
  * @author Holger Albert
  */
 public class QNameFeaturesProvider implements IFeaturesProvider
@@ -70,7 +70,7 @@ public class QNameFeaturesProvider implements IFeaturesProvider
 
   /**
    * The constructor.
-   * 
+   *
    * @param qname
    *          The qname, which must be substituted.
    */
@@ -79,9 +79,6 @@ public class QNameFeaturesProvider implements IFeaturesProvider
     m_qname = qname;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.providers.IFeaturesProvider#getFeatures(org.kalypso.ogc.gml.map.IMapPanel)
-   */
   @Override
   public EasyFeatureWrapper[] getFeatures( final IMapPanel mapPanel )
   {
@@ -89,7 +86,7 @@ public class QNameFeaturesProvider implements IFeaturesProvider
     final IKalypsoTheme[] allThemes = mapPanel.getMapModell().getAllThemes();
 
     /* The list of found features. */
-    final List<EasyFeatureWrapper> foundfeatures = new ArrayList<EasyFeatureWrapper>();
+    final List<EasyFeatureWrapper> foundfeatures = new ArrayList<>();
 
     /* Check each theme. */
     for( final IKalypsoTheme theme : allThemes )
@@ -100,7 +97,7 @@ public class QNameFeaturesProvider implements IFeaturesProvider
 
   /**
    * This function inspects one theme.
-   * 
+   *
    * @param found
    *          To this list, the found features will be added.
    * @param theme
@@ -131,7 +128,7 @@ public class QNameFeaturesProvider implements IFeaturesProvider
 
   /**
    * This function handles one theme.
-   * 
+   *
    * @param found
    *          To this list, the found features will be added.
    * @param theme

@@ -59,7 +59,7 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class DefaultControlMakerStrategy implements IControlMaker
 {
-  private final List<IControlMaker> m_makers = new ArrayList<IControlMaker>();
+  private final List<IControlMaker> m_makers = new ArrayList<>();
 
   public DefaultControlMakerStrategy( final boolean addValidator, final boolean showTables, final boolean showButton )
   {

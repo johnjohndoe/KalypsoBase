@@ -64,7 +64,6 @@ public class StyleTest implements PaintListener
   public static void main( final String... args )
   {
     new StyleTest();
-
   }
 
   @Override

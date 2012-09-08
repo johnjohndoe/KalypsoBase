@@ -50,7 +50,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 
 /**
  * Common code for parts showing a .gmv file.
- * 
+ *
  * @author Gernot Belger
  */
 public class AbstractGmvPart extends AbstractWorkbenchPart implements IGmvPart
@@ -290,7 +290,7 @@ public class AbstractGmvPart extends AbstractWorkbenchPart implements IGmvPart
   }
 
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     if( adapter == IPostSelectionProvider.class )
       return m_viewer;

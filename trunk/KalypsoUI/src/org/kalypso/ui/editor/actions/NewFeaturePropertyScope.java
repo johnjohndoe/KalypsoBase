@@ -124,7 +124,7 @@ class NewFeaturePropertyScope implements INewScope
   @Override
   public IAction[] createActions( )
   {
-    final Collection<IAction> actions = new ArrayList<IAction>();
+    final Collection<IAction> actions = new ArrayList<>();
 
     if( !checkFullList( actions ) )
       return new IAction[0];

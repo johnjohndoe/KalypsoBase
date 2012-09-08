@@ -61,13 +61,13 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public abstract class AbstractFeatureControl implements IFeatureControl
 {
-  private final List<ModifyListener> m_listeners = new ArrayList<ModifyListener>( 5 );
+  private final List<ModifyListener> m_listeners = new ArrayList<>( 5 );
 
   private Feature m_feature;
 
   private final IPropertyType m_ftp;
 
-  private final Collection<IFeatureChangeListener> m_changelisteners = new ArrayList<IFeatureChangeListener>();
+  private final Collection<IFeatureChangeListener> m_changelisteners = new ArrayList<>();
 
   public AbstractFeatureControl( final IPropertyType ftp )
   {

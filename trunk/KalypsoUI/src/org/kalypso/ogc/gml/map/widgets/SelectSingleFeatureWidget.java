@@ -44,7 +44,6 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.Collections;
 import java.util.Formatter;
 import java.util.List;
@@ -81,10 +80,10 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * De-selection is not possible.<br>
  * <br>
  * <code>Ctrl</code> toggles toggle-modus.
- * 
+ *
  * @author Gernot Belger
  */
-public class SelectSingleFeatureWidget extends DeprecatedMouseWidget implements MouseListener
+public class SelectSingleFeatureWidget extends DeprecatedMouseWidget
 {
   private static final String THEME_PROPERTY_SHOW_INFO = "singleSelectShowInfo"; //$NON-NLS-1$
 

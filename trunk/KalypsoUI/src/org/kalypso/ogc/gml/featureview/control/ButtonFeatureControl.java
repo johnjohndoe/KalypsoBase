@@ -82,7 +82,7 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
 
   private IFeatureDialog m_dialog = null;
 
-  private final Collection<ModifyListener> m_modifyListener = new ArrayList<ModifyListener>();
+  private final Collection<ModifyListener> m_modifyListener = new ArrayList<>();
 
   private final IFeatureChangeListener m_listener;
 
@@ -162,7 +162,7 @@ public class ButtonFeatureControl extends AbstractFeatureControl implements Mode
   {
     if( m_dialog.open( m_button.getShell() ) == Window.OK )
     {
-      final Collection<FeatureChange> c = new LinkedList<FeatureChange>();
+      final Collection<FeatureChange> c = new LinkedList<>();
       m_dialog.collectChanges( c );
       final FeatureChange[] changes = c.toArray( new FeatureChange[c.size()] );
       fireFeatureChange( new ChangeFeaturesCommand( getFeature().getWorkspace(), changes ) );

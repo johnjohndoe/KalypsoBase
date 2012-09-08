@@ -96,10 +96,6 @@
    <extension
          point="de.openali.odysseus.chart.factory.LayerProvider">
       <provider
-            class="org.kalypso.chart.ext.test.layer.provider.EditableLineLayerProvider"
-            id="org.kalypso.chart.ext.test.layer.provider.EditableLineLayerProvider">
-      </provider>
-      <provider
             class="de.openali.odysseus.chart.ext.base.layer.provider.GridLayerProvider"
             id="de.openali.odysseus.chart.ext.base.layer.provider.GridLayerProvider">
       </provider>

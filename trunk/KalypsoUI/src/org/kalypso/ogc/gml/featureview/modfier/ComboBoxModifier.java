@@ -109,7 +109,7 @@ public class ComboBoxModifier extends AbstractFeatureModifier
   protected Object refreshInput( )
   {
     /* update input */
-    final Collection<Object> input = new ArrayList<Object>();
+    final Collection<Object> input = new ArrayList<>();
 
     final IRelationType rt = (IRelationType) getPropertyType();
     if( !rt.isInlineAble() && rt.isLinkAble() )

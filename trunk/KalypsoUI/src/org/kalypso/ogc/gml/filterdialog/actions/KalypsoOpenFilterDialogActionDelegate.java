@@ -73,7 +73,7 @@ public class KalypsoOpenFilterDialogActionDelegate extends AbstractGisEditorActi
       MultiStatus multiStatus = null;
       final Filter filter = dialog.getFilter();
       final Feature[] features = (Feature[]) visableFeatures.toArray( new Feature[visableFeatures.size()] );
-      final ArrayList<Feature> newSelectedFeatures = new ArrayList<Feature>();
+      final ArrayList<Feature> newSelectedFeatures = new ArrayList<>();
       for( final Feature f : features )
       {
         try

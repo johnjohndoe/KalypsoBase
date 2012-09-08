@@ -124,21 +124,21 @@ public class DataRange<T> implements IDataRange<T>
         {
           final T minExpanded = (T) new Double( doubleValue - doubleValue * 0.1 );
           final T maxExpanded = (T) new Double( doubleValue + doubleValue * 0.1 );
-          return new DataRange<T>( minExpanded, maxExpanded );
+          return new DataRange<>( minExpanded, maxExpanded );
         }
         // falls == 0 wird 1 addiert oder subtrahiert
         else
         {
           final T min_1 = (T) new Double( doubleValue - 1 );
           final T max_1 = (T) new Double( doubleValue + 1 );
-          return new DataRange<T>( min_1, max_1 );
+          return new DataRange<>( min_1, max_1 );
         }
       }
 
       if( minNum.compareTo( maxNum ) > 0 )
-        return new DataRange<T>( max, min );
+        return new DataRange<>( max, min );
       else
-        return new DataRange<T>( min, max );
+        return new DataRange<>( min, max );
 
     }
     else if( min instanceof Comparable && max instanceof Comparable && (min.getClass().isInstance( max ) || max.getClass().isInstance( min )) )
@@ -153,9 +153,9 @@ public class DataRange<T> implements IDataRange<T>
       }
 
       if( minComp.compareTo( maxComp ) > 0 )
-        return new DataRange<T>( max, min );
+        return new DataRange<>( max, min );
       else
-        return new DataRange<T>( min, max );
+        return new DataRange<>( min, max );
 
     }
     /*
@@ -164,7 +164,7 @@ public class DataRange<T> implements IDataRange<T>
      */
     else
     {
-      return new DataRange<T>( min, max );
+      return new DataRange<>( min, max );
     }
   }
 
@@ -210,6 +210,6 @@ public class DataRange<T> implements IDataRange<T>
       }
     }
 
-    return new DataRange<T>( min, max );
+    return new DataRange<>( min, max );
   }
 }

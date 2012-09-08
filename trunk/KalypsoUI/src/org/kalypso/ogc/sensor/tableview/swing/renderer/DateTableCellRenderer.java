@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.sensor.tableview.swing.renderer;
 
@@ -56,13 +56,13 @@ import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 
 /**
  * Helper: formatiert das Datum auf eine richtige Art und Weise
- * 
+ *
  * @author schlienger
  */
 public class DateTableCellRenderer extends DefaultTableCellRenderer
 {
   /** maps dates to markers */
-  private final Set<ILabelMarker> m_markers = new TreeSet<ILabelMarker>();
+  private final Set<ILabelMarker> m_markers = new TreeSet<>();
 
   private final DateFormat m_df;
 
@@ -71,10 +71,6 @@ public class DateTableCellRenderer extends DefaultTableCellRenderer
     m_df = TimeseriesUtils.getDateFormat();
   }
 
-  /**
-   * @see javax.swing.table.DefaultTableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object,
-   *      boolean, boolean, int, int)
-   */
   @Override
   public Component getTableCellRendererComponent( final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row, final int column )
   {
@@ -109,7 +105,7 @@ public class DateTableCellRenderer extends DefaultTableCellRenderer
 
   /**
    * Adds a marker that modifies this renderer.
-   * 
+   *
    * @param marker
    */
   public void addMarker( final ILabelMarker marker )

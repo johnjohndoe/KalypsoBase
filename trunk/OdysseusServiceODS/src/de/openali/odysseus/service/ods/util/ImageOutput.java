@@ -22,7 +22,7 @@ public class ImageOutput
 {
   /**
    * This function creates the image response.
-   * 
+   *
    * @param request
    *          The OGC request.
    * @param response
@@ -72,8 +72,8 @@ public class ImageOutput
 
           final PaletteData pd = id.palette;
 
-          final TreeSet<Integer> pixels = new TreeSet<Integer>();
-          final HashSet<RGB> rgbs = new HashSet<RGB>();
+          final TreeSet<Integer> pixels = new TreeSet<>();
+          final HashSet<RGB> rgbs = new HashSet<>();
 
           for( int y = 0; y < id.height; y++ )
             for( int x = 0; x < id.width; x++ )

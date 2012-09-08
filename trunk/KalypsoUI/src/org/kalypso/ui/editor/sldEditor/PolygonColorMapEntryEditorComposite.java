@@ -58,7 +58,7 @@ import org.kalypsodeegree.graphics.sld.Stroke;
  */
 public class PolygonColorMapEntryEditorComposite extends Composite
 {
-  private final Set<IPolygonColorMapEntryModifyListener> m_listeners = new HashSet<IPolygonColorMapEntryModifyListener>();
+  private final Set<IPolygonColorMapEntryModifyListener> m_listeners = new HashSet<>();
 
   private final PolygonColorMapEntry m_entry;
 

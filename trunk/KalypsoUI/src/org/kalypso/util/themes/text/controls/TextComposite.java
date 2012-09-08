@@ -144,7 +144,7 @@ public class TextComposite extends Composite
     super( parent, style );
 
     /* Initialize. */
-    m_listener = new ArrayList<ITextChangedListener>();
+    m_listener = new ArrayList<>();
     m_main = null;
     m_content = null;
     checkProperties( properties );

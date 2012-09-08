@@ -315,13 +315,13 @@ public class ChartMapperFactory extends AbstractChartFactory
       final Number rangeMax = rangeType.getMaxRange();
       final boolean fixMinValue = rangeType.getFixMinValue();
       final boolean fixMaxValue = rangeType.getFixMaxValue();
-      return new DataRangeRestriction<Number>( min == null ? -Double.MAX_VALUE : min, max == null ? Double.MAX_VALUE : max, rangeMin == null ? 0.0 : rangeMin, rangeMax == null ? Double.MAX_VALUE
+      return new DataRangeRestriction<>( min == null ? -Double.MAX_VALUE : min, max == null ? Double.MAX_VALUE : max, rangeMin == null ? 0.0 : rangeMin, rangeMax == null ? Double.MAX_VALUE
           : rangeMax, fixMinValue, fixMaxValue );
     }
     else if( at.isSetAxisDateRangeRestriction() )
     {
       // TODO:return new DataRangeRestriction<Number>( ?,?,?,?);
-      return new DataRangeRestriction<Number>( null, null, null, null, false, false );
+      return new DataRangeRestriction<>( null, null, null, null, false, false );
     }
     else
       return null;
@@ -332,8 +332,6 @@ public class ChartMapperFactory extends AbstractChartFactory
    */
   private IDataRange<Number> getAxisRange( final IAxis axis, final AxisType at )
   {
-    Number min = null;
-    Number max = null;
     final DataOperatorHelper dataOperatorHelper = new DataOperatorHelper();
 
     if( at.isSetDateRange() )
@@ -341,15 +339,19 @@ public class ChartMapperFactory extends AbstractChartFactory
       final AxisDateRangeType range = at.getDateRange();
       final IDataOperator<Calendar> dataOperator = axis.getDataOperator( Calendar.class );
       final Calendar minValue = range.getMinValue();
-      min = dataOperator.logicalToNumeric( minValue );
       final Calendar maxValue = range.getMaxValue();
-      max = dataOperator.logicalToNumeric( maxValue );
+
+      final Number min = dataOperator.logicalToNumeric( minValue );
+      final Number max = dataOperator.logicalToNumeric( maxValue );
+      return DataRange.createFromComparable( min, max );
     }
     else if( at.isSetNumberRange() )
     {
       final AxisNumberRangeType range = at.getNumberRange();
-      min = range.getMinValue();
-      max = range.getMaxValue();
+
+      final Number min = range.getMinValue();
+      final Number max = range.getMaxValue();
+      return DataRange.createFromComparable( min, max );
     }
     else if( at.isSetStringRange() )
     {
@@ -358,13 +360,17 @@ public class ChartMapperFactory extends AbstractChartFactory
         final AxisStringRangeType range = at.getStringRange();
         final IDataOperator<Calendar> dataOperator = axis.getDataOperator( Calendar.class );
         final String minValue = range.getMinValue();
-        min = dataOperator.logicalToNumeric( dataOperator.stringToLogical( minValue ) );
         final String maxValue = range.getMaxValue();
-        max = dataOperator.logicalToNumeric( dataOperator.stringToLogical( maxValue ) );
+
+        final Number min = dataOperator.logicalToNumeric( dataOperator.stringToLogical( minValue ) );
+        final Number max = dataOperator.logicalToNumeric( dataOperator.stringToLogical( maxValue ) );
+
+        return DataRange.createFromComparable( min, max );
       }
       catch( final MalformedValueException ex )
       {
         ex.printStackTrace();
+        return DataRange.createFromComparable( null, null );
       }
     }
     else if( at.isSetDurationRange() )
@@ -374,18 +380,17 @@ public class ChartMapperFactory extends AbstractChartFactory
       final GDuration minDur = range.getMinValue();
       final Calendar now = Calendar.getInstance();
       final Calendar minValue = addDurationToCal( now, minDur );
-      min = dataOperator.logicalToNumeric( minValue );
       final GDuration maxDur = range.getMaxValue();
       final Calendar maxValue = addDurationToCal( now, maxDur );
-      max = dataOperator.logicalToNumeric( maxValue );
+
+      final Number min = dataOperator.logicalToNumeric( minValue );
+      final Number max = dataOperator.logicalToNumeric( maxValue );
+      return DataRange.createFromComparable( min, max );
     }
     else
     {
-      min = null;
-      max = null;
+      return DataRange.createFromComparable( null, null );
     }
-
-    return DataRange.createFromComparable( min, max );
   }
 
   private Calendar addDurationToCal( final Calendar cal, final GDuration dur )

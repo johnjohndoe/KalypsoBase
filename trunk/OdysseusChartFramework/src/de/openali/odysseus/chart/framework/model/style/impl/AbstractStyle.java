@@ -17,7 +17,7 @@ public abstract class AbstractStyle implements IStyle
   @Deprecated
   private String m_title;
 
-  private final Map<String, Object> m_data = new HashMap<String, Object>();
+  private final Map<String, Object> m_data = new HashMap<>();
 
   /**
    * @param alpha

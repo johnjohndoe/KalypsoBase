@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.abstractobseditor.actions;
 
@@ -56,7 +56,7 @@ import org.kalypso.ui.editor.abstractobseditor.ObservationEditorOutlinePage;
 
 /**
  * Allows the user to set the axis-types that should be ignored when displaying observation items
- * 
+ *
  * @author schlienger
  */
 public class SetIgnoreTypesAction extends FullAction
@@ -91,7 +91,7 @@ public class SetIgnoreTypesAction extends FullAction
         obsView.hideTypes( null );
       else
       {
-        final Set<String> hideSet = new LinkedHashSet<String>();
+        final Set<String> hideSet = new LinkedHashSet<>();
         for( final Object string : res )
           hideSet.add( string.toString() );
         obsView.hideTypes( hideSet );

@@ -10,13 +10,13 @@ public abstract class AbstractDomainIntervalValueData<T_domain, T_target> implem
 {
   private boolean m_isOpen = false;
 
-  private List<T_domain> m_domainIntervalStartValues = new ArrayList<T_domain>();
+  private List<T_domain> m_domainIntervalStartValues = new ArrayList<>();
 
-  private List<T_domain> m_domainIntervalEndValues = new ArrayList<T_domain>();
+  private List<T_domain> m_domainIntervalEndValues = new ArrayList<>();
 
-  private List<T_domain> m_domainValues = new ArrayList<T_domain>();
+  private List<T_domain> m_domainValues = new ArrayList<>();
 
-  private List<T_target> m_targetValues = new ArrayList<T_target>();
+  private List<T_target> m_targetValues = new ArrayList<>();
 
   @Override
   public boolean isOpen( )
@@ -37,25 +37,21 @@ public abstract class AbstractDomainIntervalValueData<T_domain, T_target> implem
 
   public abstract boolean openData( );
 
-  @SuppressWarnings("unchecked")
   public T_domain[] getDomainDataIntervalStart( )
   {
     return (T_domain[]) m_domainIntervalStartValues.toArray();
   }
 
-  @SuppressWarnings("unchecked")
   public T_domain[] getDomainDataIntervalEnd( )
   {
     return (T_domain[]) m_domainIntervalEndValues.toArray();
   }
 
-  @SuppressWarnings("unchecked")
   public T_domain[] getDomainValues( )
   {
     return (T_domain[]) m_domainValues.toArray();
   }
 
-  @SuppressWarnings("unchecked")
   public T_target[] getTargetValues( )
   {
     return (T_target[]) m_targetValues.toArray();

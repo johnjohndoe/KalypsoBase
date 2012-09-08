@@ -90,7 +90,7 @@ public class RuleNode extends AbstractThemeNode<Rule>
     // as we do not want to show the symbolisers (they got painted
     // as a combined symbol for this tree object)
     // Instead we return the collection of all their children
-    final List<Object> result = new ArrayList<Object>();
+    final List<Object> result = new ArrayList<>();
     final Symbolizer[] symbolizers = element.getSymbolizers();
     for( final Symbolizer symbolizer : symbolizers )
     {

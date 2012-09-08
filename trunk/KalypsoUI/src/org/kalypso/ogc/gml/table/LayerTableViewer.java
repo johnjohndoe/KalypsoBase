@@ -148,7 +148,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     public void selectionChanged( final Object source, final IFeatureSelection selection )
     {
       final Feature[] features = FeatureSelectionHelper.getFeatures( selection );
-      final List<Feature> globalFeatureList = new ArrayList<Feature>( Arrays.asList( features ) );
+      final List<Feature> globalFeatureList = new ArrayList<>( Arrays.asList( features ) );
 
       // filter ths which are in my list
       final IFeaturesProvider featureProvider = getInput();
@@ -156,7 +156,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
         return;
 
       final FeatureList featureList = featureProvider.getFeatureList();
-      final List< ? > themeFeatures = featureList == null ? new ArrayList<Object>() : (List< ? >) featureList;
+      final List< ? > themeFeatures = featureList == null ? new ArrayList<>() : (List< ? >)featureList;
       globalFeatureList.retainAll( themeFeatures );
       final Feature[] globalFeatures = globalFeatureList.toArray( new Feature[globalFeatureList.size()] );
 
@@ -946,7 +946,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
       features = featuresProvider.getFeatureList().toFeatures();
     }
 
-    final Collection<String[]> lines = new ArrayList<String[]>();
+    final Collection<String[]> lines = new ArrayList<>();
 
     final ITableLabelProvider labelProvider = (ITableLabelProvider) getLabelProvider();
 
@@ -1086,7 +1086,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     final int column = m_tableCursor.getColumn();
     if( row != null && row.getData() instanceof Feature )
     {
-      final Feature focusedFeature = row == null ? null : (Feature) row.getData();
+      final Feature focusedFeature = (Feature)row.getData();
 
       final IFeatureModifier modifier = getModifier( column );
 

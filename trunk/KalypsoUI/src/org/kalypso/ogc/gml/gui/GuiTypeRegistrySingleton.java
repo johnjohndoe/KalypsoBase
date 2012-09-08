@@ -9,7 +9,7 @@ import org.kalypso.ui.KalypsoUIExtensions;
 
 /**
  * Dies sollte irgenwo zentral liegen oder in eine andere solche Klasse integriert werden
- * 
+ *
  * @author belger
  */
 public class GuiTypeRegistrySingleton
@@ -25,7 +25,7 @@ public class GuiTypeRegistrySingleton
   {
     if( m_typeRegistry == null )
     {
-      m_typeRegistry = new TypeRegistry_impl<IGuiTypeHandler>();
+      m_typeRegistry = new TypeRegistry_impl<>();
 
       final ITypeHandlerFactory<IGuiTypeHandler>[] factories = KalypsoUIExtensions.createGuiTypeHandlerFactories();
       for( final ITypeHandlerFactory<IGuiTypeHandler> factory : factories )

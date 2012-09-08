@@ -69,7 +69,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * This class is a widget for selecting and dragging a complete feature.
- * 
+ *
  * @author Holger Albert
  */
 public class DragFeatureWidget extends DeprecatedMouseWidget
@@ -111,7 +111,7 @@ public class DragFeatureWidget extends DeprecatedMouseWidget
 
   /**
    * The constructor.
-   * 
+   *
    * @param name
    *          The name of this widget.
    * @param toolTip
@@ -152,9 +152,6 @@ public class DragFeatureWidget extends DeprecatedMouseWidget
     getMapPanel().setCursor( cursor );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#leftReleased(java.awt.Point)
-   */
   @Override
   public void leftReleased( final Point p )
   {
@@ -162,7 +159,7 @@ public class DragFeatureWidget extends DeprecatedMouseWidget
       return;
 
     /* Memory to collect all active handles. */
-    final ArrayList<Handle> list = new ArrayList<Handle>();
+    final ArrayList<Handle> list = new ArrayList<>();
 
     /* Set all handles inactive. */
     for( final IHandle handle : m_handles )
@@ -212,9 +209,6 @@ public class DragFeatureWidget extends DeprecatedMouseWidget
     getMapPanel().setMessage( Messages.getString( "org.kalypso.ogc.gml.map.widgets.DragFeatureWidget.1" ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#dragged(java.awt.Point)
-   */
   @Override
   public void dragged( final Point p )
   {
@@ -336,9 +330,6 @@ public class DragFeatureWidget extends DeprecatedMouseWidget
     getMapPanel().setCursor( cursor );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#setSelection(org.kalypso.ogc.gml.selection.IFeatureSelection)
-   */
   @Override
   public void setSelection( final ISelection selection )
   {
@@ -356,7 +347,7 @@ public class DragFeatureWidget extends DeprecatedMouseWidget
     m_workspace = wrapper.getWorkspace();
 
     /* Create a new list for the handles. */
-    m_handles = new ArrayList<IHandle>();
+    m_handles = new ArrayList<>();
 
     /* Collect all handles from the handle provider. */
     m_handles.addAll( m_handlesProvider.collectHandles( feature, m_radius ) );
@@ -406,12 +397,8 @@ public class DragFeatureWidget extends DeprecatedMouseWidget
     return null;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#canBeActivated(org.eclipse.jface.viewers.ISelection,
-   *      org.kalypso.ogc.gml.map.MapPanel)
-   */
   @Override
-  public boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
+  public synchronized boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
   {
     if( mapPanel == null )
       return false;

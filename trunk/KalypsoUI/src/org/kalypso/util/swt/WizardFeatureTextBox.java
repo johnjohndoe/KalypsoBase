@@ -66,7 +66,7 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * simple textbox wrapper rendering a qname of a feature
- * 
+ *
  * @author Dirk Kuch
  */
 public class WizardFeatureTextBox
@@ -77,7 +77,7 @@ public class WizardFeatureTextBox
 
   protected String m_text = ""; //$NON-NLS-1$
 
-  private final Set<Runnable> m_listener = new HashSet<Runnable>();
+  private final Set<Runnable> m_listener = new HashSet<>();
 
   protected Text m_textBox;
 

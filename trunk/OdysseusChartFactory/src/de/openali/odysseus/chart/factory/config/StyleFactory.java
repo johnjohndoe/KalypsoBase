@@ -99,7 +99,7 @@ public final class StyleFactory
 
   public static Map<String, IStyle> createStyleMap( final Styles styles, final URL context )
   {
-    final Map<String, IStyle> styleMap = new HashMap<String, IStyle>();
+    final Map<String, IStyle> styleMap = new HashMap<>();
 
     // Styles erzeugen
     if( styles != null )

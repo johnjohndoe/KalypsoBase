@@ -115,7 +115,7 @@ public final class RememberForSync
 
       // IMPORTANT: copy complete list into ArrayList; the list returned by Array.asList cannot be
       // modified (add/remove not implemented)
-      final List<IAxis> axisList = new ArrayList<IAxis>( java.util.Arrays.asList( axes ) );
+      final List<IAxis> axisList = new ArrayList<>( java.util.Arrays.asList( axes ) );
       axisList.remove( dateAxis );
       axisList.remove( m_numberAxis );
 

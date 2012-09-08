@@ -127,7 +127,7 @@ public class ThemeInfoWidget extends AbstractThemeInfoWidget
 
   protected void handleSelectionChanged( final ISelection selection )
   {
-    final List<IKalypsoTheme> themes = new ArrayList<IKalypsoTheme>();
+    final List<IKalypsoTheme> themes = new ArrayList<>();
 
     final IStructuredSelection sel = (IStructuredSelection) selection;
     final Object[] selectedElements = sel.toArray();

@@ -47,7 +47,6 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
@@ -64,10 +63,10 @@ import org.kalypso.ui.repository.view.RepositoryTreeContentProvider;
 
 /**
  * A view that allows the user to choose an observation within a tree of repositories
- * 
+ *
  * @author schlienger (19.05.2005)
  */
-public class ObservationChooser extends AbstractViewer implements ISelectionProvider
+public class ObservationChooser extends AbstractViewer
 {
   private final IRepositoryContainer m_repContainer;
 

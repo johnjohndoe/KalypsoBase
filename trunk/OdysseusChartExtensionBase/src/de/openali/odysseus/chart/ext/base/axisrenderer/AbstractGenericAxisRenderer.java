@@ -36,7 +36,7 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
    * @deprecated
    */
   @Deprecated
-  private final Map<String, Object> m_data = new HashMap<String, Object>();
+  private final Map<String, Object> m_data = new HashMap<>();
 
   public AbstractGenericAxisRenderer( final String id, final AxisRendererConfig axisConfig )
   {
@@ -100,9 +100,6 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
     return m_axisLabelRender;
   }
 
-  /**
-   * @see org.kalypso.chart.framework.model.layer.IChartLayer#getData()
-   */
   @Override
   public Object getData( final String id )
   {
@@ -185,9 +182,6 @@ public abstract class AbstractGenericAxisRenderer implements IAxisRenderer
     getAxisLabelRenderer().getTitleTypeBean().setInsets( insets );
   }
 
-  /**
-   * @see org.kalypso.chart.framework.model.layer.IChartLayer#setData()
-   */
   @Override
   public void setData( final String id, final Object data )
   {

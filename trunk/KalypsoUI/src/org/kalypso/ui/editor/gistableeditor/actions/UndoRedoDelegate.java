@@ -48,12 +48,11 @@ import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
 import org.kalypso.ui.editor.gistableeditor.GisTableEditor;
 import org.kalypso.ui.editor.mapeditor.WidgetActionPart;
 import org.kalypso.util.command.CommandJob;
-import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
  * @author belger
  */
-public class UndoRedoDelegate extends AbstractGisEditorActionDelegate implements ModellEventListener
+public class UndoRedoDelegate extends AbstractGisEditorActionDelegate
 {
   private final boolean m_undo;
 
@@ -62,9 +61,6 @@ public class UndoRedoDelegate extends AbstractGisEditorActionDelegate implements
     m_undo = undo;
   }
 
-  /**
-   * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
-   */
   @Override
   public void run( final IAction action )
   {

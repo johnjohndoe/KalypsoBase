@@ -49,7 +49,7 @@ import java.util.List;
 
 /**
  * TODO: throw away and merge with {@link org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer}.
- * 
+ *
  * @author Dirk Kuch
  */
 public class ToolTipRenderer
@@ -116,7 +116,7 @@ public class ToolTipRenderer
 
   private String[] adjustTooltip( final String[] tooltips )
   {
-    final List<String> myTooltips = new ArrayList<String>();
+    final List<String> myTooltips = new ArrayList<>();
 
     for( final String tooltip : tooltips )
     {

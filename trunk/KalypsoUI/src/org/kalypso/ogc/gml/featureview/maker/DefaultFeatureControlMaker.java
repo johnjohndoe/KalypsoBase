@@ -61,7 +61,7 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Control maker for the default feature properties. Replaces the old DefaultControlMaker.
- * 
+ *
  * @author Gernot Belger
  */
 public class DefaultFeatureControlMaker extends AbstractValueControlMaker
@@ -72,7 +72,7 @@ public class DefaultFeatureControlMaker extends AbstractValueControlMaker
 
   public final static QName QNAME_GML_BOUNDEDBY = new QName( NS.GML3, "boundedBy" ); //$NON-NLS-1$
 
-  private final List<JAXBElement< ? extends ControlType>> m_descControls = new ArrayList<JAXBElement< ? extends ControlType>>();
+  private final List<JAXBElement< ? extends ControlType>> m_descControls = new ArrayList<>();
 
   public DefaultFeatureControlMaker( final boolean addValidator )
   {

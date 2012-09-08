@@ -64,7 +64,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class DictionaryCatalog
 {
-  private final Map<DictionaryFeature, DictionaryEntry> m_featureMap = new HashMap<DictionaryFeature, DictionaryEntry>();
+  private final Map<DictionaryFeature, DictionaryEntry> m_featureMap = new HashMap<>();
 
   /**
    * Retrieves one feature from a dictionary.

@@ -119,7 +119,7 @@ public class CoordinateMapper implements ICoordinateMapper
 
     final Number domainNum = getDomainAxis().screenToNumeric( domainScreen );
     final Number targetNum = getTargetAxis().screenToNumeric( targetScreen );
-    return new Pair<Number, Number>( domainNum, targetNum );
+    return new Pair<>( domainNum, targetNum );
   }
 
   @Override

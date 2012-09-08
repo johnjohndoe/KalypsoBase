@@ -61,7 +61,7 @@ public class SLDPainter2
 {
   private final URL[] m_symbolizerLocations;
 
-  private final Map<URL, Symbolizer> m_cache = new WeakHashMap<URL, Symbolizer>();
+  private final Map<URL, Symbolizer> m_cache = new WeakHashMap<>();
 
   public SLDPainter2( final URL... symbolizerLocations )
   {

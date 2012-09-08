@@ -43,15 +43,14 @@ package org.kalypso.ui.views.properties;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.ThemeUtilities;
 import org.kalypso.ogc.gml.map.themes.KalypsoImageTheme;
@@ -64,7 +63,7 @@ import org.kalypso.util.themes.position.PositionUtilities;
 /**
  * @author Holger Albert
  */
-public class ImagePropertyPage extends PropertyPage implements IWorkbenchPropertyPage
+public class ImagePropertyPage extends PropertyPage
 {
   /**
    * The theme.
@@ -97,15 +96,12 @@ public class ImagePropertyPage extends PropertyPage implements IWorkbenchPropert
     m_main = null;
   }
 
-  /**
-   * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   protected Control createContents( final Composite parent )
   {
     /* The content. */
     final Composite content = new Composite( parent, SWT.NONE );
-    content.setLayout( Layouts.createGridLayout() );
+    content.setLayout( GridLayoutFactory.fillDefaults().create() );
     content.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Initialize. */

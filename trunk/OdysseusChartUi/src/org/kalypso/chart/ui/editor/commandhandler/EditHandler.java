@@ -37,7 +37,7 @@ public class EditHandler extends AbstractHandler implements IElementUpdater
   }
 
   @Override
-  public void updateElement( final UIElement element, @SuppressWarnings("rawtypes") final Map parameters )
+  public void updateElement( final UIElement element, final Map parameters )
   {
     ElementUpdateHelper.updateElement( element, DragEditHandler.class );
   }

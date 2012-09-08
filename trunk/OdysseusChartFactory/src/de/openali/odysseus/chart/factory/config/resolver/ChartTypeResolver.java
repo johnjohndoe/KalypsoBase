@@ -58,7 +58,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 
 import com.google.common.base.Strings;
@@ -145,7 +144,7 @@ public final class ChartTypeResolver implements IReferenceResolver
     catch( final Throwable t )
     {
       final String msg = String.format( "Resolving style type \"%s\" failed  ", reference );
-      throw new CoreException( StatusUtilities.createExceptionalErrorStatus( msg, t ) );
+      throw new CoreException( new Status( IStatus.ERROR, OdysseusChartFactory.PLUGIN_ID, msg, t ) );
     }
   }
 
@@ -166,7 +165,7 @@ public final class ChartTypeResolver implements IReferenceResolver
     }
     catch( final Throwable t )
     {
-      throw new CoreException( StatusUtilities.createExceptionalErrorStatus( "Resolving mapper type failed", t ) );
+      throw new CoreException( new Status( IStatus.ERROR, OdysseusChartFactory.PLUGIN_ID, "Resolving mapper type failed", t ) );
     }
   }
 
@@ -191,7 +190,7 @@ public final class ChartTypeResolver implements IReferenceResolver
     }
     catch( final Throwable t )
     {
-      throw new CoreException( StatusUtilities.createExceptionalErrorStatus( "Resolving layer failed", t ) );
+      throw new CoreException( new Status( IStatus.ERROR, OdysseusChartFactory.PLUGIN_ID, "Resolving layer failed", t ) );
     }
 
     throw new IllegalStateException();
@@ -209,7 +208,7 @@ public final class ChartTypeResolver implements IReferenceResolver
     final ChartConfigurationLoader loader = getLoader( context, uri );
     final ChartType[] charts = loader.getCharts();
 
-    final List<ChartType> chartTypes = new ArrayList<ChartType>();
+    final List<ChartType> chartTypes = new ArrayList<>();
     Collections.addAll( chartTypes, charts );
 
     for( final ChartType chart : chartTypes )
@@ -321,7 +320,7 @@ public final class ChartTypeResolver implements IReferenceResolver
     final ChartConfigurationLoader loader = getLoader( context, uri );
     final ChartType[] charts = loader.getCharts();
 
-    final List<ChartType> chartTypes = new ArrayList<ChartType>();
+    final List<ChartType> chartTypes = new ArrayList<>();
     Collections.addAll( chartTypes, charts );
 
     for( final ChartType chart : chartTypes )
@@ -357,7 +356,7 @@ public final class ChartTypeResolver implements IReferenceResolver
     final ChartConfigurationLoader loader = getLoader( context, uri );
     final ChartType[] charts = loader.getCharts();
 
-    final List<ChartType> chartTypes = new ArrayList<ChartType>();
+    final List<ChartType> chartTypes = new ArrayList<>();
     Collections.addAll( chartTypes, charts );
 
     for( final ChartType chart : chartTypes )

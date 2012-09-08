@@ -94,7 +94,7 @@ public class DebugChartOutlinePopupDialog extends ChartOutlinePopupDialog
 
   private Object[] toDebugInput( final IChartComposite composite )
   {
-    final Set<Object> input = new LinkedHashSet<Object>();
+    final Set<Object> input = new LinkedHashSet<>();
 
     input.add( "Chart Handlers" );
     final IChartHandlerManager handler = composite.getPlotHandler();

@@ -69,7 +69,7 @@ import de.renew.workflow.utils.ScenarioConfiguration;
 
 /**
  * Helper class to read and cache workflow systems from extension point.
- * 
+ *
  * @author Stefan Kurzbach
  */
 public class WorkflowSystemExtension
@@ -106,7 +106,7 @@ public class WorkflowSystemExtension
       final IExtensionRegistry registry = Platform.getExtensionRegistry();
       final IExtensionPoint extensionPoint = registry.getExtensionPoint( WORKFLOW_SYSTEM_EXTENSION_POINT );
       final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
-      THE_WORKFLOW_MAP = new HashMap<String, IWorkflow>( configurationElements.length );
+      THE_WORKFLOW_MAP = new HashMap<>( configurationElements.length );
 
       for( final IConfigurationElement element : configurationElements )
       {
@@ -141,10 +141,10 @@ public class WorkflowSystemExtension
   /**
    * This function returns the scenario configuration. May be null, if the configuration element contains no children or
    * only children of the wrong type.
-   * 
+   *
    * @param element
    *          The configuration element.
-   * 
+   *
    * @return The scenario configuration or null.
    */
   private static ScenarioConfiguration getScenarioConfiguration( final IConfigurationElement element )
@@ -161,7 +161,7 @@ public class WorkflowSystemExtension
       final String derivedFolder = configurationElement.getAttribute( WORKFLOW_SYSTEM_SCENARIO_CONFIGURATION_DERIVED_FOLDER );
 
       /* The ignore folders. */
-      final List<IgnoreFolder> ignoreFolders = new ArrayList<IgnoreFolder>();
+      final List<IgnoreFolder> ignoreFolders = new ArrayList<>();
 
       /* Get the configuration element for the ignore folders. */
       final IConfigurationElement[] children = configurationElement.getChildren( WORKFLOW_SYSTEM_SCENARIO_CONFIGURATION_IGNORE_FOLDER_ELEMENT );

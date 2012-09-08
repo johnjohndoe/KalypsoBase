@@ -58,7 +58,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * This class is a geometry builder for a line.
- * 
+ *
  * @author Holger Albert
  */
 public class LineGeometryBuilder implements IGeometryBuilder
@@ -68,7 +68,7 @@ public class LineGeometryBuilder implements IGeometryBuilder
    */
   private int m_cnt_points;
 
-  private final List<GM_Point> m_points = new ArrayList<GM_Point>();
+  private final List<GM_Point> m_points = new ArrayList<>();
 
   private final String m_crs;
 
@@ -84,7 +84,7 @@ public class LineGeometryBuilder implements IGeometryBuilder
 
   /**
    * The constructor.
-   * 
+   *
    * @param cnt_points
    *          If > 1 the the geometry will be finished, if the count of points is reached. If <= 1 no rule regarding the
    *          count of the points will apply, except that a line must consist of at least 2 points.
@@ -109,7 +109,7 @@ public class LineGeometryBuilder implements IGeometryBuilder
 
   /**
    * The constructor.
-   * 
+   *
    * @param cnt_points
    *          If > 1 the the geometry will be finished, if the count of points is reached. If <= 1 no rule regarding the
    *          count of the points will apply, except that a line must consist of at least 2 points.
@@ -181,8 +181,8 @@ public class LineGeometryBuilder implements IGeometryBuilder
 
   private int[][] getPointArrays( final GeoTransform projection, final Point currentPoint )
   {
-    final List<Integer> xArray = new ArrayList<Integer>();
-    final List<Integer> yArray = new ArrayList<Integer>();
+    final List<Integer> xArray = new ArrayList<>();
+    final List<Integer> yArray = new ArrayList<>();
 
     for( int i = 0; i < m_points.size(); i++ )
     {

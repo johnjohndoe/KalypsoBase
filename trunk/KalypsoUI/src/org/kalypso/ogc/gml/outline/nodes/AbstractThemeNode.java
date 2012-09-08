@@ -338,7 +338,7 @@ abstract class AbstractThemeNode<T> extends PlatformObject implements IThemeNode
   }
 
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     checkDisposed();
 

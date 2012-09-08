@@ -16,7 +16,7 @@ import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperat
  */
 public abstract class AbstractMapper implements IMapper
 {
-  private final Set<IMapperEventListener> m_listeners = new LinkedHashSet<IMapperEventListener>();
+  private final Set<IMapperEventListener> m_listeners = new LinkedHashSet<>();
 
   @Override
   public void addListener( final IMapperEventListener listener )
@@ -54,27 +54,18 @@ public abstract class AbstractMapper implements IMapper
     }
   }
 
-  /**
-   * @see org.kalypso.chart.framework.axis.IAxis#getIdentifier()
-   */
   @Override
   public String getIdentifier( )
   {
     return m_identifier;
   }
 
-  /**
-   * @see org.kalypso.chart.framework.model.layer.IChartLayer#setData()
-   */
   @Override
   public void setData( final String id, final Object data )
   {
     m_data.put( id, data );
   }
 
-  /**
-   * @see org.kalypso.chart.framework.model.layer.IChartLayer#getData()
-   */
   @Override
   public Object getData( final String id )
   {
@@ -85,7 +76,6 @@ public abstract class AbstractMapper implements IMapper
    * returns a data converter which may be used to convert data to numbers which can directly be used by the mapper (and
    * vice versa)
    */
-  @SuppressWarnings("unchecked")
   @Override
   public <T> IDataOperator<T> getDataOperator( final Class<T> clazz )
   {

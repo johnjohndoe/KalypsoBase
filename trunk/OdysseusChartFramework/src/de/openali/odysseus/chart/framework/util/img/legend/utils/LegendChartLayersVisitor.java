@@ -51,7 +51,7 @@ import de.openali.odysseus.chart.framework.model.layer.manager.AbstractChartLaye
  */
 public class LegendChartLayersVisitor extends AbstractChartLayerVisitor
 {
-  private final Set<IChartLayer> m_layers = new LinkedHashSet<IChartLayer>();
+  private final Set<IChartLayer> m_layers = new LinkedHashSet<>();
 
   @Override
   public void visit( final IChartLayer layer )
@@ -72,5 +72,4 @@ public class LegendChartLayersVisitor extends AbstractChartLayerVisitor
   {
     return m_layers.toArray( new IChartLayer[] {} );
   }
-
 }

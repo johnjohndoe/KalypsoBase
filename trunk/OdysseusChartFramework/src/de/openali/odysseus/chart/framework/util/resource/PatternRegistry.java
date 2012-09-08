@@ -47,60 +47,23 @@ import org.eclipse.swt.graphics.Pattern;
 
 /**
  * Registry to store SWT Patterns created from images. The caller does not need to dispose the patterns.
- * 
+ *
  * @author burtscher1
  */
 public class PatternRegistry extends AbstractResourceRegistryFactory<ImageDescriptor, Pair<Image, Pattern>>
 {
-// private final Map<ImageDescriptor, IPair<Image, Pattern>> m_patternMap = new HashMap<ImageDescriptor, IPair<Image,
-  // Pattern>>();
-//
-// public Pattern getPattern( Device dev, ImageDescriptor id )
-// {
-// IPair<Image, Pattern> pair = m_patternMap.get( id );
-// if( pair == null )
-// {
-// Image img = id.createImage( dev );
-// Pattern p = new Pattern( dev, img );
-// pair = new Pair<Image, Pattern>( img, p );
-// m_patternMap.put( id, pair );
-// }
-// return pair.getTarget();
-// }
-//
-// @Override
-// public void dispose( )
-// {
-// for( IPair<Image, Pattern> pair : m_patternMap.values() )
-// {
-// pair.getDomain().dispose();
-// pair.getTarget().dispose();
-// }
-// m_patternMap.clear();
-//
-// }
-
-  /**
-   * @see de.openali.odysseus.chart.framework.util.resource.AbstractResourceRegistryFactory#createResource(org.eclipse.swt.graphics.Device,
-   *      java.lang.Object)
-   */
   @Override
   protected Pair<Image, Pattern> createResource( final Device dev, final ImageDescriptor descriptor )
   {
     final Image img = descriptor.createImage( dev );
     final Pattern p = new Pattern( dev, img );
-    final Pair<Image, Pattern> pair = new Pair<Image, Pattern>( img, p );
-    return pair;
+    return new Pair<>( img, p );
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.util.resource.AbstractResourceRegistryFactory#disposeResource(java.lang.Object)
-   */
   @Override
   protected void disposeResource( final Pair<Image, Pattern> resource )
   {
     resource.getDomain().dispose();
     resource.getTarget().dispose();
   }
-
 }

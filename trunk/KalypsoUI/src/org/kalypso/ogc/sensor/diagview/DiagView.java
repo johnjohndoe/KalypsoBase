@@ -72,7 +72,7 @@ public class DiagView extends ObsView
   private boolean m_showLegend;
 
   /** axisID -> axis */
-  private final Map<String, DiagramAxis> m_axesMap = new Hashtable<String, DiagramAxis>();
+  private final Map<String, DiagramAxis> m_axesMap = new Hashtable<>();
 
   private TitleFormat m_titleFormat;
 
@@ -186,7 +186,7 @@ public class DiagView extends ObsView
 
   /**
    * Update the diagView with the new observation, perform best guess to know which curves will be added to it.
-   * 
+   *
    * @see org.kalypso.ogc.sensor.template.ObsView#addObservation(org.kalypso.ogc.sensor.template.IObsProvider,
    *      java.lang.String, org.kalypso.ogc.sensor.template.ObsView.ItemData)
    */

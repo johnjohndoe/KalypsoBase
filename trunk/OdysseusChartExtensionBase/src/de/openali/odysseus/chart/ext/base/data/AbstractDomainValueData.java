@@ -12,9 +12,9 @@ public abstract class AbstractDomainValueData<T_domain, T_target> implements ITa
 
   private boolean m_isLoading = false;
 
-  private List<T_domain> m_domainValues = new ArrayList<T_domain>();
+  private List<T_domain> m_domainValues = new ArrayList<>();
 
-  private List<T_target> m_targetValues = new ArrayList<T_target>();
+  private List<T_target> m_targetValues = new ArrayList<>();
 
   @Override
   public boolean isOpen( )

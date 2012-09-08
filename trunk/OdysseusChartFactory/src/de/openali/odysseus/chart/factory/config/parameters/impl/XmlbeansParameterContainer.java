@@ -21,16 +21,16 @@ import de.openali.odysseus.chartconfig.x020.ParametersType;
 
 /**
  * The class provides some help for extracting values from a set of configuration parameters
- * 
+ *
  * @author alibu
  */
 public class XmlbeansParameterContainer implements IParameterContainer
 {
-  private final Map<String, String> m_parameters = new HashMap<String, String>();
+  private final Map<String, String> m_parameters = new HashMap<>();
 
-  private final Map<String, List<String>> m_parameterLists = new HashMap<String, List<String>>();
+  private final Map<String, List<String>> m_parameterLists = new HashMap<>();
 
-  private final Map<String, Map<String, String>> m_parameterMaps = new HashMap<String, Map<String, String>>();
+  private final Map<String, Map<String, String>> m_parameterMaps = new HashMap<>();
 
   private final String m_ownerId;
 
@@ -52,7 +52,7 @@ public class XmlbeansParameterContainer implements IParameterContainer
       {
         final String name = param.getName().trim();
         final String[] valueArray = param.getValueArray();
-        final List<String> list = new ArrayList<String>();
+        final List<String> list = new ArrayList<>();
         for( final String string : valueArray )
         {
           list.add( string );
@@ -64,7 +64,7 @@ public class XmlbeansParameterContainer implements IParameterContainer
       {
         final String name = param.getName().trim();
         final Element[] elementArray = param.getElementArray();
-        final Map<String, String> map = new TreeMap<String, String>();
+        final Map<String, String> map = new TreeMap<>();
         for( final Element element : elementArray )
         {
           map.put( element.getKey(), element.getValue() );
@@ -151,23 +151,16 @@ public class XmlbeansParameterContainer implements IParameterContainer
     return m_parameterLists.get( paramName );
   }
 
-  /**
-   * @see org.kalypso.chart.factory.configuration.parameters.IParameterContainer#getParameterMap(java.lang.String)
-   */
   @Override
   public Map<String, String> getParameterMap( final String paramName )
   {
     return m_parameterMaps.get( paramName );
   }
 
-  /**
-   * @see org.kalypso.chart.factory.configuration.parameters.IParameterContainer#getParsedParameterList(java.lang.String,
-   *      java.util.List, org.kalypso.chart.framework.model.data.IStringParser)
-   */
   @Override
   public <T> List<T> getParsedParameterList( final String paramName, final List<String> defaultValues, final IStringParser<T> parser )
   {
-    final List<T> valueList = new ArrayList<T>();
+    final List<T> valueList = new ArrayList<>();
     List<String> stringList = m_parameterLists.get( paramName );
     // Wert nicht vorhanden, versuche auf Default-Wert auszuweichen => Warnung
     if( stringList == null )
@@ -202,14 +195,10 @@ public class XmlbeansParameterContainer implements IParameterContainer
     return valueList;
   }
 
-  /**
-   * @see org.kalypso.chart.factory.configuration.parameters.IParameterContainer#getParsedParameterList(java.lang.String,
-   *      java.util.Map, org.kalypso.chart.framework.model.data.IStringParser)
-   */
   @Override
   public <T> Map<String, T> getParsedParameterMap( final String paramName, final Map<String, String> defaultValues, final IStringParser<T> parser )
   {
-    final Map<String, T> valueMap = new TreeMap<String, T>();
+    final Map<String, T> valueMap = new TreeMap<>();
     Map<String, String> stringMap = m_parameterMaps.get( paramName );
     // Wert nicht vorhanden, versuche auf Default-Wert auszuweichen => Warnung
     if( stringMap == null )
@@ -246,13 +235,10 @@ public class XmlbeansParameterContainer implements IParameterContainer
     return valueMap;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IParameterContainer#findAllKeys(java.lang.String)
-   */
   @Override
   public String[] findAllKeys( final String prefix )
   {
-    final Set<String> keys = new LinkedHashSet<String>();
+    final Set<String> keys = new LinkedHashSet<>();
 
     final Set<Entry<String, String>> entries = m_parameters.entrySet();
     for( final Entry<String, String> entry : entries )

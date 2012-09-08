@@ -381,7 +381,7 @@ public class RulePatternTabItem implements ITabItem
           // first create new rules
           BoundaryExpression upperBoundary = null;
           BoundaryExpression lowerBoundary = null;
-          final ArrayList<Rule> ruleList = new ArrayList<Rule>();
+          final ArrayList<Rule> ruleList = new ArrayList<>();
           final PropertyName propertyName = new PropertyName( addFilterPropertyPanel.getSelection() );
           PropertyIsBetweenOperation operation = null;
 
@@ -587,7 +587,7 @@ public class RulePatternTabItem implements ITabItem
     {
       for( int j = 0; j < rule.getSymbolizers().length; j++ )
       {
-        final IStyleInput<Symbolizer> input = new StyleInput<Symbolizer>( rule.getSymbolizers()[j], m_input );
+        final IStyleInput<Symbolizer> input = new StyleInput<>( rule.getSymbolizers()[j], m_input );
         new FilterPatternSymbolizerTabItemBuilder( toolkit, symbolizerTabFolder, input, ruleCollection, j );
       }
       symbolizerTabFolder.pack();

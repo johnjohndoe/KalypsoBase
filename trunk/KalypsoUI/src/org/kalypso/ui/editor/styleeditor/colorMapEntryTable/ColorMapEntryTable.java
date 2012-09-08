@@ -76,7 +76,7 @@ import org.kalypsodeegree_impl.graphics.sld.ColorMapEntry_Impl;
 
 /**
  * A table for editing color maps.
- * 
+ *
  * @author Andreas Doemming
  * @author Holger Albert
  */
@@ -150,7 +150,7 @@ public class ColorMapEntryTable
 
   /**
    * This function creates the controls.
-   * 
+   *
    * @param parent
    *          The parent composite.
    */
@@ -173,7 +173,7 @@ public class ColorMapEntryTable
 
   /**
    * This function creates the table viewer.
-   * 
+   *
    * @param parent
    *          The parent composite.
    * @param input
@@ -208,7 +208,7 @@ public class ColorMapEntryTable
 
   /**
    * This function creates the columns for the table viewer.
-   * 
+   *
    * @param parent
    *          The parent table viewer.
    */
@@ -251,7 +251,7 @@ public class ColorMapEntryTable
 
   /**
    * This function creates the cell editors for the table viewer.
-   * 
+   *
    * @param parent
    *          The parent table viewer.
    */
@@ -318,7 +318,7 @@ public class ColorMapEntryTable
 
   /**
    * This functions creates the "Generate Range", "Add", "Delete" and "Refresh" buttons.
-   * 
+   *
    * @param parent
    *          The parent composite.
    */
@@ -437,7 +437,7 @@ public class ColorMapEntryTable
 
     try
     {
-      final TreeMap<Double, ColorMapEntry> colorMap = new TreeMap<Double, ColorMapEntry>();
+      final TreeMap<Double, ColorMapEntry> colorMap = new TreeMap<>();
 
       final List<ColorMapEntry> entries = m_entryList.getColorMapEntries();
       for( int i = 0; i < entries.size(); i++ )
@@ -457,13 +457,13 @@ public class ColorMapEntryTable
     catch( final Exception ex )
     {
       /* Open a error dialog. */
-      ErrorDialog.openError( m_tableViewer.getTable().getShell(), "Error", Messages.getString("ColorMapEntryTable.8"), new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), ex.getLocalizedMessage(), ex ) ); //$NON-NLS-1$ //$NON-NLS-2$ 
+      ErrorDialog.openError( m_tableViewer.getTable().getShell(), "Error", Messages.getString("ColorMapEntryTable.8"), new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), ex.getLocalizedMessage(), ex ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
   /**
    * This function returns the color map entry list.
-   * 
+   *
    * @return The color map entry list.
    */
   public ColorMapEntryList getColorMapEntryList( )

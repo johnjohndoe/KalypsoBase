@@ -56,7 +56,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.variables.VariableUtils;
@@ -105,7 +104,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  *
  * @author Gernot Belger
  */
-public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPoolListener, ICommandTarget, IKalypsoFeatureTheme, IKalypsoSaveableTheme, IKalypsoStyleListener
+public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPoolListener, IKalypsoFeatureTheme, IKalypsoSaveableTheme, IKalypsoStyleListener
 {
   protected static final Logger LOGGER = Logger.getLogger( GisTemplateFeatureTheme.class.getName() );
 
@@ -150,11 +149,11 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
   private final IFeatureSelectionManager m_selectionManager;
 
-  private final List<IKalypsoStyle> m_styles = new ArrayList<IKalypsoStyle>();
+  private final List<IKalypsoStyle> m_styles = new ArrayList<>();
 
   private boolean m_hasStyles;
 
-  private final List<IKalypsoStyle> m_defaultStyles = new ArrayList<IKalypsoStyle>();
+  private final List<IKalypsoStyle> m_defaultStyles = new ArrayList<>();
 
   /**
    * The unmodified href. This href will be saved again to the map.
@@ -235,7 +234,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.gml.GisTemplateFeatureTheme.4" ), e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ogc.gml.GisTemplateFeatureTheme.4" ), e ); //$NON-NLS-1$
       setStatus( status );
     }
   }
@@ -336,7 +335,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       }
       catch( final Throwable e )
       {
-        final IStatus errorStatus = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ogc.gml.GisTemplateFeatureTheme.1" ) + e.toString(), e ); //$NON-NLS-1$
+        final IStatus errorStatus = new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.ogc.gml.GisTemplateFeatureTheme.1" ) + e.toString(), e ); //$NON-NLS-1$
         KalypsoGisPlugin.getDefault().getLog().log( errorStatus );
         return;
       }
@@ -377,7 +376,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     final String legendIcon = getLegendIcon();
     final boolean shouldShowLegendChildren = shouldShowLegendChildren();
     final String[] propertyNames = getPropertyNames();
-    final Map<String, String> properties = new HashMap<String, String>();
+    final Map<String, String> properties = new HashMap<>();
     for( final String propName : propertyNames )
     {
       final String value = getProperty( propName, null );
@@ -642,18 +641,12 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     return m_selectionManager;
   }
 
-  /**
-   * @see org.kalypso.util.pool.IPoolListener#dirtyChanged(org.kalypso.util.pool.IPoolableObjectType, boolean)
-   */
   @Override
   public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
   {
     // TODO Change label, showing if dirty or not
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getContext()
-   */
   @Override
   public String getTypeContext( )
   {
@@ -757,11 +750,8 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       super.setStatus( status );
   }
 
-  /**
-   * @see org.eclipse.core.runtime.PlatformObject#getAdapter(java.lang.Class)
-   */
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     if( m_theme != null )
     {
@@ -773,9 +763,6 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     return super.getAdapter( adapter );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getProperty(java.lang.String, java.lang.String)
-   */
   @Override
   public String getProperty( final String name, final String defaultValue )
   {
@@ -785,9 +772,6 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     return m_theme.getProperty( name, defaultValue );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#setProperty(java.lang.String, java.lang.String)
-   */
   @Override
   public void setProperty( final String name, final String value )
   {
@@ -797,9 +781,6 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
       m_theme.setProperty( name, value );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#getLegendIcon()
-   */
   @Override
   public String getLegendIcon( )
   {
@@ -809,9 +790,6 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     return super.getLegendIcon();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#shouldShowLegendChildren()
-   */
   @Override
   public boolean shouldShowLegendChildren( )
   {
@@ -821,9 +799,6 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     return super.shouldShowLegendChildren();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#setShowLegendChildren(boolean)
-   */
   @Override
   public void setShowLegendChildren( final boolean showChildren )
   {
@@ -833,9 +808,6 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     super.setShowLegendChildren( showChildren );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.AbstractKalypsoTheme#setLegendIcon(java.lang.String, java.net.URL)
-   */
   @Override
   public void setLegendIcon( final String legendIcon, final URL context )
   {

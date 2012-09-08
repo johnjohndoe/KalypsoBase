@@ -116,7 +116,7 @@ public final class ChartConfigurationSaver
    */
   private static Map<String, AxisType> extractAxes( final IMapperRegistry registry )
   {
-    final Map<String, AxisType> axisTypes = new HashMap<String, AxisType>();
+    final Map<String, AxisType> axisTypes = new HashMap<>();
     final IAxis[] axes = registry.getAxes();
     for( final IAxis axis : axes )
     {
@@ -169,7 +169,7 @@ public final class ChartConfigurationSaver
    */
   private static Map<String, AxisRendererType> extractAxisRenderers( final IMapperRegistry registry )
   {
-    final Map<String, AxisRendererType> axisRendererTypes = new HashMap<String, AxisRendererType>();
+    final Map<String, AxisRendererType> axisRendererTypes = new HashMap<>();
     final IAxis[] axes = registry.getAxes();
     for( final IAxis axis : axes )
     {
@@ -192,7 +192,7 @@ public final class ChartConfigurationSaver
    */
   private static Map<String, MapperType> extractMappers( final IMapperRegistry registry )
   {
-    final Map<String, MapperType> mapperTypes = new HashMap<String, MapperType>();
+    final Map<String, MapperType> mapperTypes = new HashMap<>();
     final IMapper[] mappers = registry.getMappers();
     for( final IMapper mapper : mappers )
     {
@@ -211,7 +211,7 @@ public final class ChartConfigurationSaver
    */
   private static Map<String, LayerType> extractLayers( final ILayerManager manager )
   {
-    final Map<String, LayerType> layerTypes = new HashMap<String, LayerType>();
+    final Map<String, LayerType> layerTypes = new HashMap<>();
     for( final IChartLayer layer : manager.getLayers() )
     {
       final LayerType lt = (LayerType) layer.getData( AbstractChartFactory.CONFIGURATION_TYPE_KEY );

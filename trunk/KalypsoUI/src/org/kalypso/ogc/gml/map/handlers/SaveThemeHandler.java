@@ -88,8 +88,7 @@ public class SaveThemeHandler extends AbstractHandler
         final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
         if( activeTheme instanceof IKalypsoSaveableTheme )
         {
-
-          if( activeTheme != null && activeTheme instanceof IKalypsoFeatureTheme )
+          if( activeTheme instanceof IKalypsoFeatureTheme )
           {
             final IKalypsoFeatureTheme fTheme = (IKalypsoFeatureTheme) activeTheme;
             final CommandableWorkspace workspace = fTheme.getWorkspace();

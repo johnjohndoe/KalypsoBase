@@ -68,20 +68,17 @@ import org.kalypso.ui.editor.obstableeditor.ObservationTableEditor;
 
 /**
  * Save data
- * 
+ *
  * @author schlienger
  */
 public class SaveDataAction extends AbstractEditorActionDelegate
 {
-  /**
-   * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
-   */
   @Override
   public void run( final IAction action )
   {
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
 
-    final Collection<IStatus> problems = new ArrayList<IStatus>();
+    final Collection<IStatus> problems = new ArrayList<>();
     final TableView tableView = (TableView) ((ObservationTableEditor) getEditor()).getView();
 
     final ObsViewItem[] itemsAsObsView = tableView.getItems();
@@ -129,6 +126,6 @@ public class SaveDataAction extends AbstractEditorActionDelegate
     final String multiMessage = Messages.getString( "org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.0" ); //$NON-NLS-1$
     final MultiStatus multiStatus = new MultiStatus( KalypsoGisPlugin.getId(), 0, problems.toArray( new IStatus[problems.size()] ), multiMessage, null );
     if( !multiStatus.isOK() )
-      new StatusDialog( getShell(), multiStatus, Messages.getString( "org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.9" ) ).open(); //$NON-NLS-1$ 
+      new StatusDialog( getShell(), multiStatus, Messages.getString( "org.kalypso.ui.editor.obstableeditor.actions.SaveDataAction.9" ) ).open(); //$NON-NLS-1$
   }
 }

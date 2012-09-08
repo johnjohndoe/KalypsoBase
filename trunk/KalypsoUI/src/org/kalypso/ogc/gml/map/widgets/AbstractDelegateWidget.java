@@ -98,7 +98,7 @@ public class AbstractDelegateWidget extends DeprecatedMouseWidget implements IWi
   }
 
   @Override
-  public boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
+  public synchronized boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
   {
     if( m_delegate != null )
       return m_delegate.canBeActivated( selection, mapPanel );

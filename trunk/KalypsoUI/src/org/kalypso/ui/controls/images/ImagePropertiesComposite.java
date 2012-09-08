@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.controls.images;
 
@@ -44,6 +44,7 @@ import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelection;
@@ -66,14 +67,13 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.i18n.Messages;
 import org.kalypso.ui.controls.images.listener.IImagePropertyChangedListener;
 
 /**
  * This composite provides controls for editing image properties like width, height and format.
- * 
+ *
  * @author Holger Albert
  */
 public class ImagePropertiesComposite extends Composite
@@ -150,7 +150,7 @@ public class ImagePropertiesComposite extends Composite
 
   /**
    * The constructor.
-   * 
+   *
    * @param parent
    *          A widget which will be the parent of the new instance (cannot be null).
    * @param style
@@ -173,7 +173,7 @@ public class ImagePropertiesComposite extends Composite
     super( parent, style );
 
     /* Initialize the members. */
-    m_listener = new ArrayList<IImagePropertyChangedListener>();
+    m_listener = new ArrayList<>();
     m_imageWidthText = null;
     m_imageWidth = defaultWidth;
     m_imageHeightText = null;
@@ -192,18 +192,12 @@ public class ImagePropertiesComposite extends Composite
     createControls();
   }
 
-  /**
-   * @see org.eclipse.swt.widgets.Composite#setLayout(org.eclipse.swt.widgets.Layout)
-   */
   @Override
   public void setLayout( final Layout layout )
   {
     /* Ignore user set layouts, only layout datas are permitted. */
   }
 
-  /**
-   * @see org.eclipse.swt.widgets.Widget#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -234,23 +228,23 @@ public class ImagePropertiesComposite extends Composite
   private void createControls( )
   {
     /* Create the layout. */
-    super.setLayout( Layouts.createGridLayout() );
+    super.setLayout( GridLayoutFactory.fillDefaults().create() );
 
     /* The main composite. */
     final Composite main = new Composite( this, SWT.NONE );
-    main.setLayout( Layouts.createGridLayout() );
+    GridLayoutFactory.fillDefaults().applyTo( main );
     main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Create a group. */
     final Group imageGroup = new Group( main, SWT.NONE );
     imageGroup.setLayout( new GridLayout( 2, false ) );
     imageGroup.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    imageGroup.setText( Messages.getString("ImagePropertiesComposite_0") ); //$NON-NLS-1$
+    imageGroup.setText( Messages.getString( "ImagePropertiesComposite_0" ) ); //$NON-NLS-1$
 
     /* Create a label. */
     final Label imageWidthLabel = new Label( imageGroup, SWT.NONE );
     imageWidthLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    imageWidthLabel.setText( Messages.getString("ImagePropertiesComposite_1") ); //$NON-NLS-1$
+    imageWidthLabel.setText( Messages.getString( "ImagePropertiesComposite_1" ) ); //$NON-NLS-1$
 
     /* Create a text field. */
     m_imageWidthText = new Text( imageGroup, SWT.BORDER | SWT.RIGHT );
@@ -266,7 +260,7 @@ public class ImagePropertiesComposite extends Composite
       public void modifyText( final ModifyEvent e )
       {
         /* Get the source. */
-        final Text source = (Text) e.getSource();
+        final Text source = (Text)e.getSource();
 
         /* Store the text. */
         final Integer imageWidth = NumberUtils.parseQuietInteger( source.getText() );
@@ -280,7 +274,7 @@ public class ImagePropertiesComposite extends Composite
             m_aspectRatio = false;
 
             /* Calculate and set the adjusted height. */
-            final int adjustedHeight = (int) Math.floor( m_imageWidth / m_aspectFactor );
+            final int adjustedHeight = (int)Math.floor( m_imageWidth / m_aspectFactor );
             m_imageHeightText.setText( String.format( "%d", adjustedHeight ) ); //$NON-NLS-1$
 
             /* Reset the aspect ratio. */
@@ -296,7 +290,7 @@ public class ImagePropertiesComposite extends Composite
     /* Create a label. */
     final Label imageHeightLabel = new Label( imageGroup, SWT.NONE );
     imageHeightLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    imageHeightLabel.setText( Messages.getString("ImagePropertiesComposite_4") ); //$NON-NLS-1$
+    imageHeightLabel.setText( Messages.getString( "ImagePropertiesComposite_4" ) ); //$NON-NLS-1$
 
     /* Create a text field. */
     m_imageHeightText = new Text( imageGroup, SWT.BORDER | SWT.RIGHT );
@@ -312,7 +306,7 @@ public class ImagePropertiesComposite extends Composite
       public void modifyText( final ModifyEvent e )
       {
         /* Get the source. */
-        final Text source = (Text) e.getSource();
+        final Text source = (Text)e.getSource();
 
         /* Store the text. */
         final Integer imageHeight = NumberUtils.parseQuietInteger( source.getText() );
@@ -326,7 +320,7 @@ public class ImagePropertiesComposite extends Composite
             m_aspectRatio = false;
 
             /* Calculate and set the adjusted height. */
-            final int adjustedWidth = (int) Math.floor( m_imageHeight * m_aspectFactor );
+            final int adjustedWidth = (int)Math.floor( m_imageHeight * m_aspectFactor );
             m_imageWidthText.setText( String.format( "%d", adjustedWidth ) ); //$NON-NLS-1$
 
             /* Reset the aspect ratio. */
@@ -342,7 +336,7 @@ public class ImagePropertiesComposite extends Composite
     /* Create a button. */
     m_aspectRatioButton = new Button( imageGroup, SWT.CHECK );
     m_aspectRatioButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false, 2, 1 ) );
-    m_aspectRatioButton.setText( Messages.getString("ImagePropertiesComposite_7") ); //$NON-NLS-1$
+    m_aspectRatioButton.setText( Messages.getString( "ImagePropertiesComposite_7" ) ); //$NON-NLS-1$
     m_aspectRatioButton.addSelectionListener( new SelectionAdapter()
     {
       /**
@@ -351,11 +345,11 @@ public class ImagePropertiesComposite extends Composite
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        final Button source = (Button) e.getSource();
+        final Button source = (Button)e.getSource();
 
         final boolean aspectRatio = source.getSelection();
         if( aspectRatio && m_imageHeight > 0 )
-          m_aspectFactor = (double) m_imageWidth / (double) m_imageHeight;
+          m_aspectFactor = (double)m_imageWidth / (double)m_imageHeight;
 
         m_aspectRatio = aspectRatio;
       }
@@ -372,7 +366,7 @@ public class ImagePropertiesComposite extends Composite
     /* Create a label. */
     final Label insetsLabel = new Label( imageGroup, SWT.NONE );
     insetsLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    insetsLabel.setText( Messages.getString("ImagePropertiesComposite_9") ); //$NON-NLS-1$
+    insetsLabel.setText( Messages.getString( "ImagePropertiesComposite_9" ) ); //$NON-NLS-1$
     insetsLabel.setAlignment( SWT.LEFT );
 
     /* Create a spinner. */
@@ -391,7 +385,7 @@ public class ImagePropertiesComposite extends Composite
       public void widgetSelected( final SelectionEvent e )
       {
         /* Get the source. */
-        final Spinner source = (Spinner) e.getSource();
+        final Spinner source = (Spinner)e.getSource();
 
         /* Get the selection. */
         final int selection = source.getSelection();
@@ -410,16 +404,13 @@ public class ImagePropertiesComposite extends Composite
     /* Create a button. */
     m_borderButton = new Button( imageGroup, SWT.CHECK );
     m_borderButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false, 2, 1 ) );
-    m_borderButton.setText( Messages.getString("ImagePropertiesComposite_10") ); //$NON-NLS-1$
+    m_borderButton.setText( Messages.getString( "ImagePropertiesComposite_10" ) ); //$NON-NLS-1$
     m_borderButton.addSelectionListener( new SelectionAdapter()
     {
-      /**
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        final Button source = (Button) e.getSource();
+        final Button source = (Button)e.getSource();
         final boolean border = source.getSelection();
         m_border = border;
 
@@ -439,7 +430,7 @@ public class ImagePropertiesComposite extends Composite
     /* Create a label. */
     final Label imageFormatLabel = new Label( imageGroup, SWT.NONE );
     imageFormatLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    imageFormatLabel.setText( Messages.getString("ImagePropertiesComposite_12") ); //$NON-NLS-1$
+    imageFormatLabel.setText( Messages.getString( "ImagePropertiesComposite_12" ) ); //$NON-NLS-1$
 
     /* Create a combo viewer. */
     m_imageFormatViewer = new ComboViewer( imageGroup, SWT.READ_ONLY );
@@ -456,7 +447,7 @@ public class ImagePropertiesComposite extends Composite
       public void selectionChanged( final SelectionChangedEvent event )
       {
         /* Get the source. */
-        final ComboViewer source = (ComboViewer) event.getSource();
+        final ComboViewer source = (ComboViewer)event.getSource();
 
         /* Get the selection index. */
         final int imageFormatIndex = source.getCombo().getSelectionIndex();
@@ -469,7 +460,7 @@ public class ImagePropertiesComposite extends Composite
           return;
 
         /* Cast. */
-        final StructuredSelection structuredSelection = (StructuredSelection) selection;
+        final StructuredSelection structuredSelection = (StructuredSelection)selection;
 
         /* Get the first element. */
         final Object firstElement = structuredSelection.getFirstElement();
@@ -477,7 +468,7 @@ public class ImagePropertiesComposite extends Composite
           return;
 
         /* Cast. */
-        final String imageFormat = (String) firstElement;
+        final String imageFormat = (String)firstElement;
 
         /* Store the values. */
         m_imageFormat = imageFormat;
@@ -496,7 +487,7 @@ public class ImagePropertiesComposite extends Composite
 
   /**
    * This function fires the image property changed event.
-   * 
+   *
    * @param width
    *          The width.
    * @param height
@@ -518,7 +509,7 @@ public class ImagePropertiesComposite extends Composite
 
   /**
    * This function adds a image property changed listener.
-   * 
+   *
    * @param listener
    *          The image property changed listener to add.
    */
@@ -530,7 +521,7 @@ public class ImagePropertiesComposite extends Composite
 
   /**
    * This function removes a image property changed listener.
-   * 
+   *
    * @param listener
    *          The image property changed listener to remove.
    */
@@ -542,7 +533,7 @@ public class ImagePropertiesComposite extends Composite
 
   /**
    * This function sets the width of the image. The aspect ratio flag is ignored.
-   * 
+   *
    * @param imageWidth
    *          The width of the image or -1.
    */
@@ -567,7 +558,7 @@ public class ImagePropertiesComposite extends Composite
 
   /**
    * This function sets the height of the image. The aspect ratio flag is ignored.
-   * 
+   *
    * @param imageHeight
    *          The height of the image or -1.
    */
@@ -592,7 +583,7 @@ public class ImagePropertiesComposite extends Composite
 
   /**
    * This function sets the aspect ratio.
-   * 
+   *
    * @param aspectRatio
    *          True, if the aspect ratio should be maintained on change of the width or height.
    */
@@ -616,7 +607,7 @@ public class ImagePropertiesComposite extends Composite
 
   /**
    * This function sets the insets of the image.
-   * 
+   *
    * @param insets
    *          The insets of the image or null.
    */
@@ -643,7 +634,7 @@ public class ImagePropertiesComposite extends Composite
 
   /**
    * This function sets border status.
-   * 
+   *
    * @param aspectRatio
    *          True, if the drawn border is enabled.
    */
@@ -667,7 +658,7 @@ public class ImagePropertiesComposite extends Composite
 
   /**
    * This function sets the format of the image.
-   * 
+   *
    * @param imageFormat
    *          The format of the image or null.
    */
@@ -682,7 +673,7 @@ public class ImagePropertiesComposite extends Composite
 
   /**
    * This function returns the width of the image.
-   * 
+   *
    * @return The width of the image or -1.
    */
   public int getImageWidth( )
@@ -692,7 +683,7 @@ public class ImagePropertiesComposite extends Composite
 
   /**
    * This function returns the height of the image.
-   * 
+   *
    * @return The height of the image or -1.
    */
 
@@ -703,7 +694,7 @@ public class ImagePropertiesComposite extends Composite
 
   /**
    * This function returns true, if the aspect ratio should be maintained on change of the width or height.
-   * 
+   *
    * @return True, if the aspect ratio should be maintained on change of the width or height.
    */
   public boolean keepAspectRatio( )
@@ -713,7 +704,7 @@ public class ImagePropertiesComposite extends Composite
 
   /**
    * This function returns the insets of the image.
-   * 
+   *
    * @return The insets of the image or null.
    */
   public Insets getInsets( )
@@ -723,7 +714,7 @@ public class ImagePropertiesComposite extends Composite
 
   /**
    * This function returns true, if the drawn border is enabled.
-   * 
+   *
    * @return True, if the drawn border is enabled.
    */
   public boolean hasBorder( )
@@ -733,7 +724,7 @@ public class ImagePropertiesComposite extends Composite
 
   /**
    * This function returns the format of the image.
-   * 
+   *
    * @return The format of the image or null.
    */
   public String getImageFormat( )

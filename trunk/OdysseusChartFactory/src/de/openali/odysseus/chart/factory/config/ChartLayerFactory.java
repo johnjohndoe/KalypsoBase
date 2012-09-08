@@ -121,7 +121,7 @@ public class ChartLayerFactory extends AbstractChartFactory
 
   private IChartLayer[] build( final LayersType layersType, final ParametersType cascading, final ReferencableType... baseTypes )
   {
-    final Set<IChartLayer> layers = new LinkedHashSet<IChartLayer>();
+    final Set<IChartLayer> layers = new LinkedHashSet<>();
 
     final Node node = layersType.getDomNode();
     final NodeList childNodes = node.getChildNodes();
@@ -225,7 +225,7 @@ public class ChartLayerFactory extends AbstractChartFactory
 
     final ReferencableType parentBasePlayerType = LayerTypeHelper.getParentNode( derived );
 
-    final Set<ReferencableType> types = new LinkedHashSet<ReferencableType>();
+    final Set<ReferencableType> types = new LinkedHashSet<>();
     types.add( derived );
     types.add( baseLayerType );
     types.add( parentBasePlayerType );
@@ -469,7 +469,7 @@ public class ChartLayerFactory extends AbstractChartFactory
 
   public static Map<String, String> createMapperMap( final LayerType layerType )
   {
-    final Map<String, String> mapperMap = new HashMap<String, String>();
+    final Map<String, String> mapperMap = new HashMap<>();
     final MapperRefs mapperReferences = layerType.getMapperRefs();
     if( mapperReferences == null )
       return mapperMap;

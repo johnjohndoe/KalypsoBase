@@ -63,12 +63,12 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
  * Wizard-Page zur Eingabe der Steuerparameter
- * 
+ *
  * @author belger
  */
 public class FeaturePage extends WizardPage
 {
-  private final Collection<ICommand> m_changes = new ArrayList<ICommand>();
+  private final Collection<ICommand> m_changes = new ArrayList<>();
 
   private final ModellEventListener m_modellListener = new ModellEventListener()
   {
@@ -161,18 +161,12 @@ public class FeaturePage extends WizardPage
     m_feature.getWorkspace().removeModellListener( m_modellListener );
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
-   */
   @Override
   public boolean isPageComplete( )
   {
     return m_featureComposite != null && m_featureComposite.isValid();
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.WizardPage#canFlipToNextPage()
-   */
   @Override
   public boolean canFlipToNextPage( )
   {
@@ -184,6 +178,6 @@ public class FeaturePage extends WizardPage
 
   public Collection<ICommand> getChanges( )
   {
-    return new ArrayList<ICommand>( m_changes );
+    return new ArrayList<>( m_changes );
   }
 }

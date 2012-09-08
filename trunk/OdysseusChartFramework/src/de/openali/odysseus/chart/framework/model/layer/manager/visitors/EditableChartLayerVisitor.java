@@ -52,7 +52,7 @@ import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisito
  */
 public class EditableChartLayerVisitor implements IChartLayerVisitor2
 {
-  private final Set<IEditableChartLayer> m_layers = new LinkedHashSet<IEditableChartLayer>();
+  private final Set<IEditableChartLayer> m_layers = new LinkedHashSet<>();
 
   @Override
   public boolean getVisitDirection( )

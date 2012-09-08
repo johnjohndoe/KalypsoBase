@@ -79,7 +79,7 @@ public class AddFeatureCommand implements ICommand, IFeatureProvider
   private final GMLWorkspace m_workspace;
 
   /** A map with key=IPropertyType and value=Object to pass properties when the feature is newly created */
-  private final Map<IPropertyType, Object> m_properties = new HashMap<IPropertyType, Object>();
+  private final Map<IPropertyType, Object> m_properties = new HashMap<>();
 
   private final IFeatureSelectionManager m_selectionManager;
 
@@ -106,7 +106,7 @@ public class AddFeatureCommand implements ICommand, IFeatureProvider
 
   private static Map<IPropertyType, Object> convertProperties( final IFeatureType featureType, final Map<QName, Object> properties )
   {
-    final Map<IPropertyType, Object> typedProperties = new HashMap<IPropertyType, Object>();
+    final Map<IPropertyType, Object> typedProperties = new HashMap<>();
 
     for( final Entry<QName, Object> entry : properties.entrySet() )
     {

@@ -65,7 +65,7 @@ public class TaskGroup_Impl extends Task_Impl implements ITaskGroup
     super( taskGroup, workflow );
 
     final List<Task> tasks = taskGroup.getTasks();
-    m_tasks = new ArrayList<ITask>( tasks.size() );
+    m_tasks = new ArrayList<>( tasks.size() );
     for( final Task task : tasks )
     {
       if( task instanceof TaskGroup )

@@ -54,7 +54,7 @@ public class ODSEnvironment implements IODSEnvironment
 
   private static ODSEnvironment m_instance = null;
 
-  private static Map<String, List<IODSChart>> m_scenes = new TreeMap<String, List<IODSChart>>();
+  private static Map<String, List<IODSChart>> m_scenes = new TreeMap<>();
 
   private ODSEnvironment( )
   {
@@ -107,7 +107,7 @@ public class ODSEnvironment implements IODSEnvironment
   public void checkTmpDir( ) throws IOException
   {
     final File tmpDir = new File( System.getProperties().getProperty( "java.io.tmpdir" ) );
-    if( tmpDir == null || !tmpDir.exists() )
+    if( !tmpDir.exists() )
       throw new FileNotFoundException( "Path to config file doesn't exist: " + tmpDir.getAbsolutePath() );
 
     if( !tmpDir.canWrite() )
@@ -198,7 +198,7 @@ public class ODSEnvironment implements IODSEnvironment
         final ChartConfigurationDocument ccd = ChartConfigurationDocument.Factory.parse( chartFile );
         final ChartConfigurationType cc = ccd.getChartConfiguration();
         final ChartType[] chartArray = cc.getChartArray();
-        final List<IODSChart> sceneCharts = new ArrayList<IODSChart>();
+        final List<IODSChart> sceneCharts = new ArrayList<>();
         for( final ChartType chartType : chartArray )
         {
           final ChartConfigurationLoader ccl = new ChartConfigurationLoader( chartType );

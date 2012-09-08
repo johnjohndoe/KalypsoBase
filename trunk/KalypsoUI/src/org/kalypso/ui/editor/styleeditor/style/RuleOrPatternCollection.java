@@ -70,12 +70,12 @@ import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
  * This class is fed with rules. It identifies whether it is a normal rule or the rule belongs to a pattern. It collects
  * the rules and returns the number of rule items (-> number of tabitems to be displayed) as a list of Rule and
  * RuleCollection Objects.
- * 
+ *
  * @author F.Lindemann
  */
 public class RuleOrPatternCollection extends AbstractTabList<FeatureTypeStyle>
 {
-  private final Map<String, RuleCollection> m_patterns = new HashMap<String, RuleCollection>();
+  private final Map<String, RuleCollection> m_patterns = new HashMap<>();
 
   public RuleOrPatternCollection( final IFeatureTypeStyleInput input )
   {
@@ -87,8 +87,8 @@ public class RuleOrPatternCollection extends AbstractTabList<FeatureTypeStyle>
   @Override
   public void refresh( )
   {
-    final Map<Rule, RuleTabItem> ruleItems = new IdentityHashMap<Rule, RuleTabItem>();
-    final Map<RuleCollection, RulePatternTabItem> rulePatternItems = new IdentityHashMap<RuleCollection, RulePatternTabItem>();
+    final Map<Rule, RuleTabItem> ruleItems = new IdentityHashMap<>();
+    final Map<RuleCollection, RulePatternTabItem> rulePatternItems = new IdentityHashMap<>();
 
     final ITabItem[] items = getItems();
     for( final ITabItem item : items )
@@ -136,7 +136,7 @@ public class RuleOrPatternCollection extends AbstractTabList<FeatureTypeStyle>
     final String key = rule.getName();
     // it it is a pattern, add to ruleCollection
     if( key == null || !key.startsWith( "-name-" ) ) //$NON-NLS-1$
-      return new RuleTabItem( new StyleInput<Rule>( rule, getInput() ) );
+      return new RuleTabItem( new StyleInput<>( rule, getInput() ) );
 
     // 1. check whether there is already a rule collection with this rule
     if( m_patterns.containsKey( key ) )
@@ -149,7 +149,7 @@ public class RuleOrPatternCollection extends AbstractTabList<FeatureTypeStyle>
     {
       final RuleCollection ruleCollection = new RuleCollection( rule );
       m_patterns.put( key, ruleCollection );
-      return new RulePatternTabItem( new StyleInput<RuleCollection>( ruleCollection, getInput() ) );
+      return new RulePatternTabItem( new StyleInput<>( ruleCollection, getInput() ) );
     }
   }
 
@@ -282,7 +282,7 @@ public class RuleOrPatternCollection extends AbstractTabList<FeatureTypeStyle>
       final BoundaryExpression upperBoundary = new BoundaryExpression( "1" ); //$NON-NLS-1$
       final BoundaryExpression lowerBoundary = new BoundaryExpression( "0" ); //$NON-NLS-1$
       final PropertyIsBetweenOperation operation = new PropertyIsBetweenOperation( propertyName, lowerBoundary, upperBoundary );
-      final ArrayList<Rule> ruleList = new ArrayList<Rule>();
+      final ArrayList<Rule> ruleList = new ArrayList<>();
       ruleList.add( StyleFactory.createRule( null, patternName, "", "abstract", null, new ComplexFilter( operation ), false, 0, Double.MAX_VALUE ) ); //$NON-NLS-1$ //$NON-NLS-2$
       style.addRule( StyleFactory.createRule( null, patternName, "", "abstract", null, new ComplexFilter( operation ), false, 0, Double.MAX_VALUE ) ); //$NON-NLS-1$ //$NON-NLS-2$
 

@@ -10,7 +10,7 @@
  http://www.tuhh.de/wb
 
  and
- 
+
  Bjoernsen Consulting Engineers (BCE)
  Maria Trost 3
  56070 Koblenz, Germany
@@ -36,7 +36,7 @@
  belger@bjoernsen.de
  schlienger@bjoernsen.de
  v.doemming@tuhh.de
- 
+
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.table.wizard;
 
@@ -75,7 +75,7 @@ public class ExportTableWizard extends Wizard
 
   public ExportTableWizard( final LayerTableViewer layerTable )
   {
-    final Map<Object, String> formats = new HashMap<Object, String>();
+    final Map<Object, String> formats = new HashMap<>();
     formats.put( Messages.getString( "org.kalypso.ogc.gml.table.wizard.ExportTableWizard.2" ), "csv" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     m_filePage = new SaveFileWizardPage( "tableExport", Messages.getString( "org.kalypso.ogc.gml.table.wizard.ExportTableWizard.5" ), ImageProvider.IMAGE_ICON_GTT, //$NON-NLS-1$ //$NON-NLS-2$

@@ -130,7 +130,7 @@ public class KalypsoUIExtensions
       final IExtensionRegistry registry = Platform.getExtensionRegistry();
       final IExtensionPoint extensionPoint = registry.getExtensionPoint( FEATUREVIEW_CONTROL_EXTENSION_POINT );
       final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
-      THE_FEATUREVIEW_CONTROL_MAP = new HashMap<String, IConfigurationElement>( configurationElements.length );
+      THE_FEATUREVIEW_CONTROL_MAP = new HashMap<>( configurationElements.length );
 
       for( final IConfigurationElement element : configurationElements )
       {
@@ -166,7 +166,7 @@ public class KalypsoUIExtensions
       final IExtensionRegistry registry = Platform.getExtensionRegistry();
       final IExtensionPoint extensionPoint = registry.getExtensionPoint( OBSERVATION_TABLE_HEADER_POPUP_MENU_EXTENSION_POINT );
       final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
-      OBSERVATION_TABLE_HEADER_POPUP_MENUS = new HashMap<String, IConfigurationElement>( configurationElements.length );
+      OBSERVATION_TABLE_HEADER_POPUP_MENUS = new HashMap<>( configurationElements.length );
 
       for( final IConfigurationElement element : configurationElements )
       {
@@ -212,14 +212,13 @@ public class KalypsoUIExtensions
     return null;
   }
 
-  @SuppressWarnings("unchecked")
   public static ITypeHandlerFactory<IGuiTypeHandler>[] createGuiTypeHandlerFactories( )
   {
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
     final IExtensionPoint extensionPoint = registry.getExtensionPoint( TYPE_HANDLERS_EXTENSION_POINT );
     final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
 
-    final List<ITypeHandlerFactory<IGuiTypeHandler>> factories = new ArrayList<ITypeHandlerFactory<IGuiTypeHandler>>( configurationElements.length );
+    final List<ITypeHandlerFactory<IGuiTypeHandler>> factories = new ArrayList<>( configurationElements.length );
 
     for( final IConfigurationElement element : configurationElements )
     {
@@ -257,7 +256,7 @@ public class KalypsoUIExtensions
   {
     if( THE_FEATURE_MODIFIERS_MAP == null )
     {
-      THE_FEATURE_MODIFIERS_MAP = new HashMap<String, IConfigurationElement>();
+      THE_FEATURE_MODIFIERS_MAP = new HashMap<>();
 
       final IExtensionRegistry registry = Platform.getExtensionRegistry();
       final IExtensionPoint extensionPoint = registry.getExtensionPoint( TYPE_HANDLERS_EXTENSION_POINT );
@@ -283,7 +282,7 @@ public class KalypsoUIExtensions
   public static IMovieImageProvider[] createMovieImageProviders( ) throws CoreException
   {
     /* Memory for the results. */
-    final List<IMovieImageProvider> result = new ArrayList<IMovieImageProvider>();
+    final List<IMovieImageProvider> result = new ArrayList<>();
 
     /* Get the extension registry. */
     final IExtensionRegistry registry = Platform.getExtensionRegistry();

@@ -87,7 +87,7 @@ import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
 
 /**
  * Helper class for implementors of {@link org.eclipse.core.commands.IHandler} for map commands.
- * 
+ *
  * @author Gernot Belger
  */
 public class MapHandlerUtils
@@ -139,7 +139,7 @@ public class MapHandlerUtils
   /**
    * Gets the currently active mapPanel from the handler event.<br>
    * To be more precise, gets the <code>activeMapPanel</code> source from the events context.
-   * 
+   *
    * @return <code>null</code>, if no {@link IMapPanel} was found in the context.
    */
   public static IMapPanel getMapPanel( final IEvaluationContext context )
@@ -150,7 +150,7 @@ public class MapHandlerUtils
   /**
    * Gets the currently active mapPanel from the handler event.<br>
    * To be more precise, gets the <code>activeMapPanel</code> source from the events context.
-   * 
+   *
    * @throws ExecutionException
    *           If the current context contains no mapPanel.
    */
@@ -167,7 +167,7 @@ public class MapHandlerUtils
    * Gets the currently active mapModell from the handler event.<br>
    * To be more precise, gets the <code>activeMapPanel</code> source from the events context, and from it, its map
    * modell.
-   * 
+   *
    * @return <code>null</code>, if no {@link IMapModell} was found in the context.
    */
   public static IMapModell getMapModell( final IEvaluationContext context )
@@ -183,7 +183,7 @@ public class MapHandlerUtils
    * Gets the currently active mapModell from the handler event.<br>
    * To be more precise, gets the <code>activeMapPanel</code> source from the events context, and from it, its map
    * modell.
-   * 
+   *
    * @throws ExecutionException
    *           If the current context contains no mapPanel.
    */
@@ -200,7 +200,7 @@ public class MapHandlerUtils
    * Gets the currently active theme from the handler event.<br>
    * To be more precise, gets the <code>activeMapPanel</code> source from the events context, and from it, its active
    * theme.
-   * 
+   *
    * @throws ExecutionException
    *           If the current context contains no mapPanel.
    */
@@ -219,7 +219,7 @@ public class MapHandlerUtils
    */
   public static IKalypsoTheme[] getSelectedThemes( final ISelection selection )
   {
-    final List<IKalypsoTheme> themes = new ArrayList<IKalypsoTheme>();
+    final List<IKalypsoTheme> themes = new ArrayList<>();
 
     if( selection instanceof IStructuredSelection )
     {
@@ -241,7 +241,7 @@ public class MapHandlerUtils
    */
   public static IThemeNode[] getSelectedNodes( final ISelection selection )
   {
-    final List<IThemeNode> nodes = new ArrayList<IThemeNode>();
+    final List<IThemeNode> nodes = new ArrayList<>();
 
     if( selection instanceof IStructuredSelection )
     {
@@ -303,7 +303,7 @@ public class MapHandlerUtils
 
     final IMapModell mapModell = selectedModels[0];
     final IKalypsoTheme[] allThemes = mapModell.getAllThemes();
-    final List<IKalypsoTheme> allThemesList = new ArrayList<IKalypsoTheme>( Arrays.asList( allThemes ) );
+    final List<IKalypsoTheme> allThemesList = new ArrayList<>( Arrays.asList( allThemes ) );
 
     final List<IKalypsoTheme> selectedThemesList = Arrays.asList( selectedThemes );
     allThemesList.retainAll( selectedThemesList );
@@ -338,7 +338,7 @@ public class MapHandlerUtils
   /** Returns the models (=parents) of the given themes. Filters all duplicates. */
   public static IMapModell[] getSelectedModels( final IKalypsoTheme[] themes )
   {
-    final Set<IMapModell> models = new HashSet<IMapModell>( themes.length );
+    final Set<IMapModell> models = new HashSet<>( themes.length );
 
     for( final IKalypsoTheme kalypsoTheme : themes )
       models.add( kalypsoTheme.getMapModell() );

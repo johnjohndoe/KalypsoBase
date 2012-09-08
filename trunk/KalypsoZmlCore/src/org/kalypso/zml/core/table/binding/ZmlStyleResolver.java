@@ -51,8 +51,10 @@ import jregex.RETokenizer;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.zml.core.KalypsoZmlCore;
 import org.kalypso.zml.core.i18n.Messages;
 import org.kalypso.zml.core.table.ZmlTableConfigurationLoader;
 import org.kalypso.zml.core.table.schema.CellStyleType;
@@ -76,9 +78,8 @@ public final class ZmlStyleResolver
 
   private ZmlStyleResolver( )
   {
-    final CacheBuilder builder = CacheBuilder.newBuilder().expireAfterAccess( 30, TimeUnit.MINUTES );
-    m_styleSetCache = builder.build();
-    m_styleCache = builder.build();
+    m_styleSetCache = CacheBuilder.newBuilder().expireAfterAccess( 30, TimeUnit.MINUTES ).build();
+    m_styleCache = CacheBuilder.newBuilder().expireAfterAccess( 30, TimeUnit.MINUTES ).build();
   }
 
   public static ZmlStyleResolver getInstance( )
@@ -129,7 +130,7 @@ public final class ZmlStyleResolver
     }
     catch( final Throwable t )
     {
-      throw new CoreException( StatusUtilities.createExceptionalErrorStatus( Messages.ZmlStyleResolver_1, t ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoZmlCore.PLUGIN_ID, Messages.ZmlStyleResolver_1, t ) );
     }
   }
 

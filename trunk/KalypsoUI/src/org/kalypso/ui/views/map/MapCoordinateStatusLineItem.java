@@ -45,6 +45,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -60,7 +61,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.menus.WorkbenchWindowControlContribution;
 import org.eclipse.ui.progress.UIJob;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
@@ -77,14 +77,14 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * This item displays map coordinates in the status line.
- * 
+ *
  * @author Dirk Kuch
  */
 public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribution implements IAdapterEater<IMapPanel>
 {
   static String MAP_POSITION_TEXT = "%.2f / %.2f"; //$NON-NLS-1$
 
-  private static final IAdapterFinder<IMapPanel> m_initFinder = new EditorFirstAdapterFinder<IMapPanel>();
+  private static final IAdapterFinder<IMapPanel> m_initFinder = new EditorFirstAdapterFinder<>();
 
   private final IMapPanelListener m_panelListener = new MapPanelAdapter()
   {
@@ -95,7 +95,7 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
     }
   };
 
-  private final AdapterPartListener<IMapPanel> m_adapterListener = new AdapterPartListener<IMapPanel>( IMapPanel.class, this, m_initFinder, m_initFinder );
+  private final AdapterPartListener<IMapPanel> m_adapterListener = new AdapterPartListener<>( IMapPanel.class, this, m_initFinder, m_initFinder );
 
   private Label m_label;
 
@@ -126,7 +126,7 @@ public class MapCoordinateStatusLineItem extends WorkbenchWindowControlContribut
   protected Control createControl( final Composite parent )
   {
     m_composite = new Composite( parent, SWT.NONE );
-    m_composite.setLayout( Layouts.createGridLayout( 3 ) );
+    m_composite.setLayout( GridLayoutFactory.fillDefaults().numColumns( 3 ).create() );
 
     final ImageHyperlink lnk = new ImageHyperlink( m_composite, SWT.NONE );
     final Image image = KalypsoGisPlugin.getImageProvider().getImage( ImageProvider.DESCRIPTORS.STATUS_LINE_SHOW_MAP_COORDS );

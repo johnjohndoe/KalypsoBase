@@ -64,7 +64,7 @@ import org.kalypsodeegree.model.feature.Feature;
  * <p>
  * Today only properties with String type are supported.
  * </p>
- * 
+ *
  * @author belger
  */
 public class RadioFeatureControl extends AbstractFeatureControl
@@ -84,7 +84,7 @@ public class RadioFeatureControl extends AbstractFeatureControl
     }
   };
 
-  private final List<ModifyListener> m_listeners = new ArrayList<ModifyListener>( 5 );
+  private final List<ModifyListener> m_listeners = new ArrayList<>( 5 );
 
   private final Object m_valueToSet;
 

@@ -357,7 +357,7 @@ public class LineColorMapEditorComposite extends Composite
       final BigDecimal stepWidth = m_stepWidth.setScale( 2, BigDecimal.ROUND_HALF_UP );
       final int numOfClasses = maxDecimal.subtract( minDecimal ).divide( stepWidth ).intValue() + 1;
 
-      final List<LineColorMapEntry> colorMapList = new LinkedList<LineColorMapEntry>();
+      final List<LineColorMapEntry> colorMapList = new LinkedList<>();
 
       for( int currentClass = 0; currentClass < numOfClasses; currentClass++ )
       {

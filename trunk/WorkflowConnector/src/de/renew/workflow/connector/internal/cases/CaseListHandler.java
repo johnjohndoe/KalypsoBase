@@ -70,7 +70,7 @@ public class CaseListHandler implements ICaseList
   @Override
   public List<IScenario> getCases( )
   {
-    final List<IScenario> myCases = new ArrayList<IScenario>();
+    final List<IScenario> myCases = new ArrayList<>();
 
     final List<Case> cases = m_cases.getCases();
     for( final Case caze : cases )

@@ -214,7 +214,7 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
 
   protected void handleSelectionChanged( final ISelection selection )
   {
-    final List<IKalypsoTheme> themes = new ArrayList<IKalypsoTheme>();
+    final List<IKalypsoTheme> themes = new ArrayList<>();
     final IStructuredSelection sel = (IStructuredSelection) selection;
     final Object[] selectedElements = sel.toArray();
     for( final Object object : selectedElements )
@@ -438,7 +438,7 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
   }
 
   @Override
-  public boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
+  public synchronized boolean canBeActivated( final ISelection selection, final IMapPanel mapPanel )
   {
     try
     {

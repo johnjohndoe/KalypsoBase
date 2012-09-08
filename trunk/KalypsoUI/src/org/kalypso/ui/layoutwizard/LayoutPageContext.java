@@ -139,7 +139,7 @@ public class LayoutPageContext implements ILayoutPageContext
   }
 
   @Override
-  public Object getService( @SuppressWarnings("rawtypes") final Class api )
+  public Object getService( final Class api )
   {
     if( m_locator == null )
       return null;
@@ -148,7 +148,7 @@ public class LayoutPageContext implements ILayoutPageContext
   }
 
   @Override
-  public boolean hasService( @SuppressWarnings("rawtypes") final Class api )
+  public boolean hasService( final Class api )
   {
     if( m_locator == null )
       return false;

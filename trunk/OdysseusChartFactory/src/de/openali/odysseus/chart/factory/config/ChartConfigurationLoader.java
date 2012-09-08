@@ -77,7 +77,7 @@ public class ChartConfigurationLoader implements IReferenceResolver
 
   /**
    * creates a ConfigurationLoader based on the given ChartConfigurationDocument
-   * 
+   *
    * @param doc
    *          ChartConfigurationDocument
    */
@@ -88,7 +88,7 @@ public class ChartConfigurationLoader implements IReferenceResolver
 
   /**
    * creates a ConfigurationLoader from an InputStream provided by IStorage
-   * 
+   *
    * @param configFile
    * @throws CoreException
    * @throws IOException
@@ -148,7 +148,7 @@ public class ChartConfigurationLoader implements IReferenceResolver
     final DerivedLayerType[] derivedLayerArray = layers.getDerivedLayerArray();
     final LayerRefernceType[] layerReferenceArray = layers.getLayerReferenceArray();
 
-    final List<LayerType> results = new ArrayList<LayerType>();
+    final List<LayerType> results = new ArrayList<>();
 
     for( final LayerType layer : layerArray )
       results.add( layer );
@@ -189,7 +189,7 @@ public class ChartConfigurationLoader implements IReferenceResolver
     final LineStyleType[] lsa = styles.getLineStyleArray();
     final TextStyleType[] tsa = styles.getTextStyleArray();
 
-    final Map<String, AbstractStyleType> styleMap = new TreeMap<String, AbstractStyleType>();
+    final Map<String, AbstractStyleType> styleMap = new TreeMap<>();
     for( final AreaStyleType element : asa )
     {
       styleMap.put( element.getRole(), element );
@@ -213,7 +213,7 @@ public class ChartConfigurationLoader implements IReferenceResolver
 
   public Map<String, MapperType> getMappers( final LayerType layer )
   {
-    final TreeMap<String, MapperType> map = new TreeMap<String, MapperType>();
+    final TreeMap<String, MapperType> map = new TreeMap<>();
     final RoleReferencingType[] mra = layer.getMapperRefs().getMapperRefArray();
     for( final RoleReferencingType refType : mra )
     {
@@ -255,7 +255,7 @@ public class ChartConfigurationLoader implements IReferenceResolver
   /**
    * as xmlbeans does not support idrefs in xml schema, we have to find them by ourselves; this function searches the
    * DOM tree for an id that equals the given idref and checks if the found element is of the desired type
-   * 
+   *
    * @param idref
    * @param myClass
    * @return
@@ -270,7 +270,7 @@ public class ChartConfigurationLoader implements IReferenceResolver
 
   private synchronized Map<String, XmlObject> getIdMap( )
   {
-    m_idMap = new HashMap<String, XmlObject>();
+    m_idMap = new HashMap<>();
     fillIdMap( m_document.getDomNode() );
     return m_idMap;
   }
@@ -307,7 +307,7 @@ public class ChartConfigurationLoader implements IReferenceResolver
 
   /**
    * creates an XmlObject from a DOM node
-   * 
+   *
    * @param node
    * @return
    * @throws XmlException
@@ -389,7 +389,7 @@ public class ChartConfigurationLoader implements IReferenceResolver
   public static XmlOptions configureXmlOptions( final String charset )
   {
     final XmlOptions options = new XmlOptions();
-    final Map<String, String> prefixes = new HashMap<String, String>();
+    final Map<String, String> prefixes = new HashMap<>();
     prefixes.put( "http://www.openali.de/odysseus/chartconfig/0.2.0/", "" ); //$NON-NLS-1$ //$NON-NLS-2$
     options.setSaveSuggestedPrefixes( prefixes );
     options.setSavePrettyPrint();

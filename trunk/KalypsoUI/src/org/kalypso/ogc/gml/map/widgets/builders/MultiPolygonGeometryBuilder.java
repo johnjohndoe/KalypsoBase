@@ -47,14 +47,14 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 /**
  * This class is a geometry builder for a MultiSurface. Currently it only supports building MultiSurfaces with a single
  * Surface geometry.
- * 
+ *
  * @author kurzbach
  */
-public class MultiPolygonGeometryBuilder extends PolygonGeometryBuilder implements IGeometryBuilder
+public class MultiPolygonGeometryBuilder extends PolygonGeometryBuilder
 {
   /**
    * The constructor.
-   * 
+   *
    * @param cnt_points
    *          If > 2 the the geometry will be finished, if the count of points is reached. If <= 2 no rule regarding the
    *          count of the points will apply, except, that a polygon needs at least 3 points for being created.
@@ -68,7 +68,7 @@ public class MultiPolygonGeometryBuilder extends PolygonGeometryBuilder implemen
 
   /**
    * The constructor.
-   * 
+   *
    * @param cnt_points
    *          If > 2 the the geometry will be finished, if the count of points is reached. If <= 2 no rule regarding the
    *          count of the points will apply, except, that a polygon needs at least 3 points for beeing created.

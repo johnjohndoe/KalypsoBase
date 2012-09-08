@@ -8,7 +8,6 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
@@ -23,7 +22,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 
-public class NewFeatureHandler extends AbstractHandler implements IHandler
+public class NewFeatureHandler extends AbstractHandler
 {
   public static final String PARAMETER_FEATURE_TYPE = "org.kalypso.gis.newFeature.type"; //$NON-NLS-1$
 
@@ -86,7 +85,7 @@ public class NewFeatureHandler extends AbstractHandler implements IHandler
       if( ft.getQName().toString().equals( parameterFeatureType ) )
       {
         final IValuePropertyType[] allGeomteryProperties = ft.getAllGeometryProperties();
-        final List<QName> geomPropertiesQName = new ArrayList<QName>();
+        final List<QName> geomPropertiesQName = new ArrayList<>();
 
         for( final IValuePropertyType prop : allGeomteryProperties )
         {

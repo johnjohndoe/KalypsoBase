@@ -54,21 +54,12 @@ import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
  */
 public class DefaultTupleResultLayerProvider extends AbstractLayerProvider
 {
-
-  /**
-   * @see org.kalypso.swtchart.chart.layer.ILayerProvider#getLayers()
-   */
   @Override
   public IChartLayer getLayer( final URL context )
   {
-    return new TupleResultLineLayer( this, getDataContainer(), getStyleSet() );// .getStyle( "line", ILineStyle.class ),
-// getStyleSet().getStyle( "point", IPointStyle.class ) ); //$NON-NLS-1$
-// //$NON-NLS-2$
+    return new TupleResultLineLayer( this, getDataContainer(), getStyleSet() );
   }
 
-  /**
-   * @see org.kalypso.chart.factory.provider.ILayerProvider#getDataContainer()
-   */
   public TupleResultDomainValueData< ? , ? > getDataContainer( )
   {
     final IParameterContainer pc = getParameterContainer();
@@ -81,7 +72,7 @@ public class DefaultTupleResultLayerProvider extends AbstractLayerProvider
 
     if( href != null && observationId != null && domainComponentName != null && targetComponentName != null )
     {
-      return new TupleResultDomainValueData<Object, Object>( getContext(), href, observationId, domainComponentName, targetComponentName );
+      return new TupleResultDomainValueData<>( getContext(), href, observationId, domainComponentName, targetComponentName );
     }
 
     return null;

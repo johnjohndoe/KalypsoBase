@@ -157,7 +157,7 @@ public abstract class AbstractSymbolizerComposite<S extends Symbolizer> extends 
     final ComboViewer geometryChooser = new ComboViewer( section, SWT.DROP_DOWN | SWT.READ_ONLY );
     section.setClient( geometryChooser.getControl() );
 
-    final GeometryValue<S> geometryHandler = new GeometryValue<S>( m_input );
+    final GeometryValue<S> geometryHandler = new GeometryValue<>( m_input );
     geometryHandler.configureViewer( geometryChooser );
 
     final IViewerObservableValue target = ViewerProperties.singleSelection().observe( geometryChooser );

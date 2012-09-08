@@ -212,7 +212,7 @@ public class MapPanelSourceProvider extends AbstractSourceProvider implements IS
   @Override
   public Map< ? , ? > getCurrentState( )
   {
-    final Map<String, Object> currentState = new TreeMap<String, Object>();
+    final Map<String, Object> currentState = new TreeMap<>();
     currentState.put( ACTIVE_MAPPANEL_NAME, m_mapPanel );
     return currentState;
   }

@@ -144,7 +144,7 @@ public class MapView extends AbstractMapPart implements IViewPart, IContentOutli
   }
 
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     if( IContentOutlinePage.class.equals( adapter ) )
     {

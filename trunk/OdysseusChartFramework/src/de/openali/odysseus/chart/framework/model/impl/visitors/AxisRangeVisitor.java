@@ -58,7 +58,7 @@ import de.openali.odysseus.chart.framework.util.ChartUtilities;
  */
 public class AxisRangeVisitor implements IChartLayerVisitor2
 {
-  private final List<IDataRange< ? >> m_ranges = new ArrayList<IDataRange< ? >>();
+  private final List<IDataRange< ? >> m_ranges = new ArrayList<>();
 
   private final IAxis m_axis;
 

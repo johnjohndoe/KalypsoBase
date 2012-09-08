@@ -81,7 +81,7 @@ public class WQRelationFactory
     Arrays.sort( sortedW );
 
     // compute Q
-    final List<Double> resQ = new ArrayList<Double>();
+    final List<Double> resQ = new ArrayList<>();
 
     for( double w = sortedW[0]; w <= sortedW[sortedW.length - 1]; w++ )
     {

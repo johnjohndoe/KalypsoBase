@@ -213,7 +213,7 @@ public class CsvSheetImportDataModel
 
   }
 
-  Map<TSM_KEY, Object> data = new HashMap<TSM_KEY, Object>();
+  Map<TSM_KEY, Object> data = new HashMap<>();
 
   public Object getValue( final TSM_KEY key )
   {

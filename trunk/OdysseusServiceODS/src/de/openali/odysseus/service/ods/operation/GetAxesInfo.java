@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.kalypso.ogc.core.exceptions.ExceptionCode;
 import org.kalypso.ogc.core.exceptions.OWSException;
-import org.kalypso.ogc.core.operations.IOGCOperation;
 import org.kalypso.ogc.core.service.OGCRequest;
 import org.kalypso.ogc.core.utils.OWSUtilities;
 
@@ -43,7 +42,7 @@ import de.openali.odysseus.service.ods.x020.StringRangeDocument.StringRange;
  *
  * @author Holger Albert
  */
-public class GetAxesInfo extends AbstractODSOperation implements IOGCOperation
+public class GetAxesInfo extends AbstractODSOperation
 {
   private ChartConfigurationLoader m_cl;
 
@@ -51,9 +50,6 @@ public class GetAxesInfo extends AbstractODSOperation implements IOGCOperation
 
   private MapperRegistry m_mapperRegistry;
 
-  /**
-   * @see de.openali.odysseus.service.ods.operation.AbstractODSOperation#execute()
-   */
   @Override
   public void execute( ) throws OWSException
   {
@@ -86,7 +82,7 @@ public class GetAxesInfo extends AbstractODSOperation implements IOGCOperation
     final AxesInfoDocument aid = AxesInfoDocument.Factory.newInstance();
     final AxesInfoType ait = aid.addNewAxesInfo();
 
-    m_axes4Chart = new HashMap<String, AxisType>();
+    m_axes4Chart = new HashMap<>();
 
     /* die Achsen können von mehreren Layern referenziert werden; */
     /* daher HashMap aufbauen und immer überprüfen, ob die Achse schon da ist */
@@ -123,7 +119,7 @@ public class GetAxesInfo extends AbstractODSOperation implements IOGCOperation
     atInfo.setTitle( atConf.getLabel() );
 
     // Type
-    Class type = null;
+    Class< ? > type = null;
     IAxis axis = null;
 
     try
@@ -180,7 +176,7 @@ public class GetAxesInfo extends AbstractODSOperation implements IOGCOperation
     setDataRange( atConf, atInfo, type, axis );
   }
 
-  private void setDataRange( final AxisType atConf, final AxisOfferingType atInfo, final Class type, final IAxis axis )
+  private void setDataRange( final AxisType atConf, final AxisOfferingType atInfo, final Class< ? > type, final IAxis axis )
   {
     final IDataOperator< ? > dataOperator = axis.getDataOperator( type );
 

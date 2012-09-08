@@ -54,7 +54,7 @@ import org.kalypso.ogc.gml.om.table.celleditor.ComboBoxViewerCellEditor;
 
 /**
  * Handles enumerated values, i.e. values which have enumeration-restrictions.
- * 
+ *
  * @author Dirk Kuch
  * @author Gernot Belger
  */
@@ -65,21 +65,15 @@ public class ComponentUiBooleanHandler extends AbstractComponentUiHandler
     super( component, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#createCellEditor(org.eclipse.swt.widgets.Table)
-   */
   @Override
   public CellEditor createCellEditor( final Table table )
   {
-    final Set<Boolean> set = new LinkedHashSet<Boolean>();
+    final Set<Boolean> set = new LinkedHashSet<>();
     set.add( true );
     set.add( false );
 
     final LabelProvider labelProvider = new LabelProvider()
     {
-      /**
-       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
-       */
       @Override
       public String getText( final Object element )
       {

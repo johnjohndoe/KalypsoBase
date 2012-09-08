@@ -82,7 +82,7 @@ import org.w3c.dom.Element;
 /**
  * @author Gernot Belger
  */
-public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell, ITranslatorContext
+public class GisTemplateMapModell implements IKalypsoLayerModell, ITranslatorContext
 {
   private final IFeatureSelectionManager m_selectionManager;
 
@@ -286,7 +286,7 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell, IT
       monitor.worked( 500 );
 
       /* Collect already used ids. */
-      final List<String> usedIds = new ArrayList<String>();
+      final List<String> usedIds = new ArrayList<>();
       for( final IKalypsoTheme theme : themes )
       {
         /* Get the id of the theme. */
@@ -538,7 +538,6 @@ public class GisTemplateMapModell implements IMapModell, IKalypsoLayerModell, IT
     return m_isLoaded;
   }
 
-  @SuppressWarnings("rawtypes")
   @Override
   public Object getAdapter( final Class adapter )
   {

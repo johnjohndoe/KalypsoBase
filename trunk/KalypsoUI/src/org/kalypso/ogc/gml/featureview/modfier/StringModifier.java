@@ -145,7 +145,7 @@ public class StringModifier extends AbstractFeatureModifier
       // For other list-properties, where this behaviour is not intended, this string-modifier should not be used.
       if( getPropertyType().isList() )
       {
-        final List<Object> list = new ArrayList<Object>( 1 );
+        final List<Object> list = new ArrayList<>( 1 );
         list.add( value );
         return list;
       }

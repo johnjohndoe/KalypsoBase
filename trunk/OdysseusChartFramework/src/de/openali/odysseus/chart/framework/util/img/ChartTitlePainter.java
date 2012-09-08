@@ -100,7 +100,7 @@ public class ChartTitlePainter
 
   private TitleTypeBean[] getTitlesAtPosition( final ALIGNMENT horizontal, final ALIGNMENT vertical )
   {
-    final List<TitleTypeBean> titles = new ArrayList<TitleTypeBean>();
+    final List<TitleTypeBean> titles = new ArrayList<>();
     for( final TitleTypeBean titleType : m_titleTypes )
     {
       if( titleType == null )

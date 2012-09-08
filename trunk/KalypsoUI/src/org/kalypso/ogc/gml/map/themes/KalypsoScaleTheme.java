@@ -72,7 +72,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * This theme is able to create a small image, displaying the scale of the map.
- * 
+ *
  * @author Holger Albert
  */
 public class KalypsoScaleTheme extends AbstractKalypsoTheme
@@ -162,7 +162,7 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
     final int width = (int) p.getDestX( offsetX + subDistance ) - offset_x;
 
     /* Calculate the values for each sub rectangle. */
-    final LinkedList<Double> values = new LinkedList<Double>();
+    final LinkedList<Double> values = new LinkedList<>();
 
     for( int i = 0; i <= NUMBER_SUBS; i++ )
       values.add( subDistance * i );
@@ -175,7 +175,7 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
 
   /**
    * This function will round the given distance to a specific value.
-   * 
+   *
    * @param distance
    *          The original distance.
    * @return The modified distance.
@@ -200,7 +200,7 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
 
   /**
    * This function will determine the unit, which would be the best to be used in the scale bar.
-   * 
+   *
    * @param values
    *          The current values.
    * @return The unit, that should be used.
@@ -225,7 +225,7 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
 
   /**
    * This function paints the scale.
-   * 
+   *
    * @param g
    *          The graphic context.
    * @param offset_x
@@ -299,7 +299,7 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
       return;
 
     /* The position and bounds of the texts. */
-    final LinkedList<Rectangle2D> bounds = new LinkedList<Rectangle2D>();
+    final LinkedList<Rectangle2D> bounds = new LinkedList<>();
     for( int i = 0; i < values.size(); i++ )
     {
       final Rectangle2D stringBounds = g.getFontMetrics().getStringBounds( Messages.getString( "org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme.5", values.get( i ) / scaleUnit.getFactor() ), g ); //$NON-NLS-1$

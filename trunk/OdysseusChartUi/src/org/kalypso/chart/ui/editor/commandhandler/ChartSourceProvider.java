@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- * 
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- * 
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.chart.ui.editor.commandhandler;
 
@@ -70,7 +70,7 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
  * Manages context and sources corresponding to the chart.<br>
  * As soon as the manager is created on a chart, the chart-context is activated and registered with the given
  * serviceLocator. Also, the chart is provides as source via the evaluation context.<br>
- * 
+ *
  * @author Gernot Belger
  */
 public class ChartSourceProvider extends AbstractSourceProvider
@@ -90,7 +90,7 @@ public class ChartSourceProvider extends AbstractSourceProvider
    * This collection contains all services, with which this provider has been registered. Used in order to correctly
    * unregister.
    */
-  private final Collection<IServiceWithSources> m_registeredServices = new HashSet<IServiceWithSources>();
+  private final Collection<IServiceWithSources> m_registeredServices = new HashSet<>();
 
   /** Ensures, that the context are activated in the same order as the themes are activated. */
   private final ISchedulingRule m_mutexRule = new MutexRule();
@@ -153,20 +153,14 @@ public class ChartSourceProvider extends AbstractSourceProvider
 
   }
 
-  /**
-   * @see org.eclipse.ui.ISourceProvider#getCurrentState()
-   */
   @Override
   public Map< ? , ? > getCurrentState( )
   {
-    final Map<String, Object> currentState = new TreeMap<String, Object>();
+    final Map<String, Object> currentState = new TreeMap<>();
     currentState.put( ACTIVE_CHART_NAME, m_chart );
     return currentState;
   }
 
-  /**
-   * @see org.eclipse.ui.ISourceProvider#getProvidedSourceNames()
-   */
   @Override
   public String[] getProvidedSourceNames( )
   {

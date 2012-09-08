@@ -1,5 +1,5 @@
 /* Copied from package org.jfree.chart.axis.DateAxis because its not visible there...
- * 
+ *
  */
 package org.kalypso.ogc.sensor.diagview.jfreechart;
 
@@ -13,10 +13,9 @@ import org.jfree.chart.axis.Timeline;
  */
 public class DefaultTimeline implements Timeline, Serializable
 {
-
   /**
    * Converts a millisecond into a timeline value.
-   * 
+   *
    * @param millisecond
    *          the millisecond.
    * @return The timeline value.
@@ -29,7 +28,7 @@ public class DefaultTimeline implements Timeline, Serializable
 
   /**
    * Converts a date into a timeline value.
-   * 
+   *
    * @param date
    *          the domain value.
    * @return The timeline value.
@@ -42,7 +41,7 @@ public class DefaultTimeline implements Timeline, Serializable
 
   /**
    * Converts a timeline value into a millisecond (as encoded by java.util.Date).
-   * 
+   *
    * @param value
    *          the value.
    * @return The millisecond.
@@ -55,7 +54,7 @@ public class DefaultTimeline implements Timeline, Serializable
 
   /**
    * Returns <code>true</code> if the timeline includes the specified domain value.
-   * 
+   *
    * @param millisecond
    *          the millisecond.
    * @return <code>true</code>.
@@ -68,7 +67,7 @@ public class DefaultTimeline implements Timeline, Serializable
 
   /**
    * Returns <code>true</code> if the timeline includes the specified domain value.
-   * 
+   *
    * @param date
    *          the date.
    * @return <code>true</code>.
@@ -81,7 +80,7 @@ public class DefaultTimeline implements Timeline, Serializable
 
   /**
    * Returns <code>true</code> if the timeline includes the specified domain value range.
-   * 
+   *
    * @param from
    *          the start value.
    * @param to
@@ -96,7 +95,7 @@ public class DefaultTimeline implements Timeline, Serializable
 
   /**
    * Returns <code>true</code> if the timeline includes the specified domain value range.
-   * 
+   *
    * @param from
    *          the start date.
    * @param to
@@ -109,9 +108,17 @@ public class DefaultTimeline implements Timeline, Serializable
     return true;
   }
 
+  @Override
+  public int hashCode( )
+  {
+    // REMARK: implemented so that if fits to the euqals implementation;
+    // however it is not clear, if equals makes sense at all.
+    return DefaultTimeline.class.hashCode();
+  }
+
   /**
    * Tests an object for equality with this instance.
-   * 
+   *
    * @param object
    *          the object.
    * @return A boolean.
@@ -119,7 +126,6 @@ public class DefaultTimeline implements Timeline, Serializable
   @Override
   public boolean equals( final Object object )
   {
-
     if( object == null )
     {
       return false;
@@ -136,6 +142,5 @@ public class DefaultTimeline implements Timeline, Serializable
     }
 
     return false;
-
   }
 }

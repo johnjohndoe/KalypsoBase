@@ -78,14 +78,14 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 /**
  * This is a gui type handler for the color-type in commons.xsd
  * {@link org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogOGC}.
- * 
+ *
  * @author Dirk Kuch, Holger Albert
  */
 public class ColorGuiTypeHandler extends LabelProvider implements IGuiTypeHandler
 {
   private final XsdBaseTypeHandler< ? > m_handler;
 
-  private final Map<RGB, Image> m_imageCache = new HashMap<RGB, Image>();
+  private final Map<RGB, Image> m_imageCache = new HashMap<>();
 
   public ColorGuiTypeHandler( final XsdBaseTypeHandler< ? > handler )
   {

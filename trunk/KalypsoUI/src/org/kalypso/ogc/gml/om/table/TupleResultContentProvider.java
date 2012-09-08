@@ -93,7 +93,7 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
 
   private final IComponentUiHandlerProvider m_factory;
 
-  private final Map<String, IComponentUiHandler> m_componentHandlers = new HashMap<String, IComponentUiHandler>();
+  private final Map<String, IComponentUiHandler> m_componentHandlers = new HashMap<>();
 
   public TupleResultContentProvider( final IComponentUiHandlerProvider factory )
   {
@@ -146,7 +146,7 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
     final Map<Integer, IComponentUiHandler> componentHandlers = m_factory.createComponentHandler( m_result );
     m_componentHandlers.clear();
 
-    final List<CellEditor> cellEditors = new ArrayList<CellEditor>( m_componentHandlers.size() + 1 );
+    final List<CellEditor> cellEditors = new ArrayList<>( m_componentHandlers.size() + 1 );
 
     // HACK: add a 'dummy' column (size 0) ,in order to avoid the MS-Windows feature, that the first column is always
     // left-aligned
@@ -213,7 +213,7 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
       return;
 
     final IRecord[] records = new IRecord[changes.length];
-    final Set<String> properties = new HashSet<String>();
+    final Set<String> properties = new HashSet<>();
     for( int i = 0; i < changes.length; i++ )
     {
       final ValueChange change = changes[i];

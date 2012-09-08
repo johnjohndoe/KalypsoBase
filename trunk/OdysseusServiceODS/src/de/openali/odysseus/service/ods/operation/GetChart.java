@@ -26,11 +26,8 @@ import de.openali.odysseus.service.ods.util.ODSChartManipulation;
 /**
  * @author burtscher IODS operation to display an image containing a chart
  */
-public class GetChart extends AbstractODSDisplayOperation implements Runnable
+public class GetChart extends AbstractODSDisplayOperation
 {
-  /**
-   * @see java.lang.Runnable#run()
-   */
   @Override
   public void run( )
   {

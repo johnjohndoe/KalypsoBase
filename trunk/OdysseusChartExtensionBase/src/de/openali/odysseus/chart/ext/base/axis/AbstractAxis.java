@@ -36,7 +36,7 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
 
   private IDataRange<Number> m_activeRange = null;
 
-  private final List<TitleTypeBean> m_axisLabels = new ArrayList<TitleTypeBean>();
+  private final List<TitleTypeBean> m_axisLabels = new ArrayList<>();
 
   private IDataRange<Number> m_numericRange = DataRange.create( null, null );
 

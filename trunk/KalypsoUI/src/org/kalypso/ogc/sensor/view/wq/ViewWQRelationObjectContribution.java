@@ -63,7 +63,7 @@ import org.xml.sax.InputSource;
 
 /**
  * This action is contributed to IFile Objects. If they are Zml-Files, then the WQ-Relation is shown, if availabe.
- * 
+ *
  * @author schlienger
  */
 public class ViewWQRelationObjectContribution implements IObjectActionDelegate
@@ -73,8 +73,7 @@ public class ViewWQRelationObjectContribution implements IObjectActionDelegate
   private ISelection m_selection;
 
   /**
-   * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction,
-   *      org.eclipse.ui.IWorkbenchPart)
+   * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction, org.eclipse.ui.IWorkbenchPart)
    */
   @Override
   public void setActivePart( final IAction action, final IWorkbenchPart targetPart )
@@ -88,11 +87,11 @@ public class ViewWQRelationObjectContribution implements IObjectActionDelegate
   @Override
   public void run( final IAction action )
   {
-    final Object object = ((IStructuredSelection) m_selection).getFirstElement();
+    final Object object = ((IStructuredSelection)m_selection).getFirstElement();
     IFile file = null;
     if( object instanceof IFile )
     {
-      file = (IFile) object;
+      file = (IFile)object;
     }
     String wqTabelle = null;
     String wqWechmann = null;
@@ -127,25 +126,21 @@ public class ViewWQRelationObjectContribution implements IObjectActionDelegate
       return;
     }
 
-    if( wqTabelle != null )
+    try
     {
-      try
-      {
-        final WQTableSet set = WQTableFactory.parse( new InputSource( new StringReader( wqTabelle ) ) );
+      final WQTableSet set = WQTableFactory.parse( new InputSource( new StringReader( wqTabelle ) ) );
 
-        final WQRelationDialog dlg = new WQRelationDialog( shell, obsName, set );
-        dlg.open();
-      }
-      catch( final Exception e )
-      {
-        e.printStackTrace();
-      }
+      final WQRelationDialog dlg = new WQRelationDialog( shell, obsName, set );
+      dlg.open();
+    }
+    catch( final Exception e )
+    {
+      e.printStackTrace();
     }
   }
 
   /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-   *      org.eclipse.jface.viewers.ISelection)
+   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
    */
   @Override
   public void selectionChanged( final IAction action, final ISelection selection )
@@ -154,11 +149,11 @@ public class ViewWQRelationObjectContribution implements IObjectActionDelegate
 
     if( selection instanceof IStructuredSelection )
     {
-      final Object object = ((IStructuredSelection) selection).getFirstElement();
+      final Object object = ((IStructuredSelection)selection).getFirstElement();
 
       if( object instanceof IFile )
       {
-        final IFile file = (IFile) object;
+        final IFile file = (IFile)object;
         action.setEnabled( file.getFileExtension().equalsIgnoreCase( "zml" ) ); //$NON-NLS-1$
       }
     }

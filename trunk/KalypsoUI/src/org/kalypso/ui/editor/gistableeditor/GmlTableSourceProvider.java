@@ -86,6 +86,7 @@ public class GmlTableSourceProvider extends AbstractSourceProvider implements IS
 
   private static final String[] PROVIDED_SOURCE_NAMES = new String[] { ACTIVE_GMLTABLE_NAME };
 
+  // FIXME
   private final ModellEventListener m_modelListener = new ModellEventListener()
   {
     @Override
@@ -108,7 +109,7 @@ public class GmlTableSourceProvider extends AbstractSourceProvider implements IS
    * This collection contains all services, with which this provider has been registered. Used in order to correctly
    * unregister.
    */
-  private final Collection<IServiceWithSources> m_registeredServices = new HashSet<IServiceWithSources>();
+  private final Collection<IServiceWithSources> m_registeredServices = new HashSet<>();
 
   private LayerTableViewer m_tableViewer;
 
@@ -200,7 +201,7 @@ public class GmlTableSourceProvider extends AbstractSourceProvider implements IS
   @Override
   public Map< ? , ? > getCurrentState( )
   {
-    final Map<String, Object> currentState = new TreeMap<String, Object>();
+    final Map<String, Object> currentState = new TreeMap<>();
     currentState.put( ACTIVE_GMLTABLE_NAME, m_tableViewer );
     return currentState;
   }

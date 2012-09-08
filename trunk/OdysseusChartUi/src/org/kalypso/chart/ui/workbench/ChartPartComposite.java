@@ -64,10 +64,10 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.chart.ui.IChartPart;
-import org.kalypso.chart.ui.KalypsoChartUiPlugin;
 import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
 import org.kalypso.chart.ui.editor.ChartPartListener;
 import org.kalypso.chart.ui.i18n.Messages;
+import org.kalypso.chart.ui.internal.OdysseusChartUiPlugin;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
@@ -205,7 +205,7 @@ public class ChartPartComposite implements IChartPart
     catch( final Exception e )
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
-      KalypsoChartUiPlugin.getDefault().getLog().log( status );
+      OdysseusChartUiPlugin.getDefault().getLog().log( status );
       final Shell shell = m_part.getSite().getShell();
       ErrorDialog.openError( shell, Messages.getString( "org.kalypso.chart.ui.editor.ChartEditor.0" ), Messages.getString( "org.kalypso.chart.ui.editor.ChartEditor.1" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
     }

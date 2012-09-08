@@ -49,7 +49,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.IWorkbenchPropertyPage;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.ThemeUtilities;
@@ -63,7 +62,7 @@ import org.kalypso.util.themes.text.listener.ITextChangedListener;
 /**
  * @author Holger Albert
  */
-public class TextPropertyPage extends PropertyPage implements IWorkbenchPropertyPage
+public class TextPropertyPage extends PropertyPage
 {
   /**
    * The theme.

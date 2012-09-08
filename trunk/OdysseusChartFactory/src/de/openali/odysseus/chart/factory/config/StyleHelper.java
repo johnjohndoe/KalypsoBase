@@ -126,7 +126,7 @@ public final class StyleHelper
 
   public static AbstractStyleType findStyle( final ReferencableType[] baseReferences, final String identifier )
   {
-    final Set<Styles> styles = new LinkedHashSet<Styles>();
+    final Set<Styles> styles = new LinkedHashSet<>();
 
     for( final ReferencableType reference : baseReferences )
     {
@@ -152,7 +152,7 @@ public final class StyleHelper
 
   private static Styles[] findStyles( final LayerType layerType )
   {
-    final Set<Styles> collected = new LinkedHashSet<Styles>();
+    final Set<Styles> collected = new LinkedHashSet<>();
 
     final Styles styles = layerType.getStyles();
     if( styles != null )
@@ -169,7 +169,7 @@ public final class StyleHelper
 
   private static Styles[] findStyles( final ChartType chartType )
   {
-    final Set<Styles> collected = new LinkedHashSet<Styles>();
+    final Set<Styles> collected = new LinkedHashSet<>();
 
     final Styles styles = chartType.getStyles();
     if( styles != null )

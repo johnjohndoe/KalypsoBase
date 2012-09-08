@@ -46,7 +46,6 @@ import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.repository.IRepositoryFilter;
 import org.kalypso.repository.RepositoriesExtensions;
@@ -56,7 +55,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
 /**
  * @author Dirk Kuch
  */
-public class RepositoryArrayContentProvider extends ArrayContentProvider implements IStructuredContentProvider
+public class RepositoryArrayContentProvider extends ArrayContentProvider
 {
   private IRepositoryFilter[] m_filters;
 
@@ -73,15 +72,12 @@ public class RepositoryArrayContentProvider extends ArrayContentProvider impleme
     }
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ArrayContentProvider#getElements(java.lang.Object)
-   */
   @Override
   public Object[] getElements( final Object inputElement )
   {
     if( inputElement instanceof RepositoryFactoryConfig[] )
     {
-      final List<RepositoryFactoryConfig> filtered = new ArrayList<RepositoryFactoryConfig>();
+      final List<RepositoryFactoryConfig> filtered = new ArrayList<>();
 
       final RepositoryFactoryConfig[] factories = (RepositoryFactoryConfig[]) inputElement;
       for( final RepositoryFactoryConfig factory : factories )

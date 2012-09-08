@@ -125,7 +125,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     }
   };
 
-  private final List<ISelectionChangedListener> m_selectionListeners = new ArrayList<ISelectionChangedListener>( 5 );
+  private final List<ISelectionChangedListener> m_selectionListeners = new ArrayList<>( 5 );
 
   private final ResourcePool m_pool = KalypsoCorePlugin.getDefault().getPool();
 
@@ -280,7 +280,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
   protected Feature[] filterSelectedFeatures( final ISelection selection )
   {
     final Object[] selectedTreeItems = ((IStructuredSelection) selection).toArray();
-    final List<Feature> selectedFeatures = new ArrayList<Feature>();
+    final List<Feature> selectedFeatures = new ArrayList<>();
     for( final Object treeElement : selectedTreeItems )
     {
       Feature feature = null;

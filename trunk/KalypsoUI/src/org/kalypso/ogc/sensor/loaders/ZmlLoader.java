@@ -146,9 +146,6 @@ public class ZmlLoader extends AbstractLoader
     return "ZML"; //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.loader.AbstractLoader#getResourcesInternal(org.kalypso.core.util.pool.IPoolableObjectType)
-   */
   @Override
   public IResource[] getResourcesInternal( final IPoolableObjectType key ) throws MalformedURLException
   {
@@ -159,9 +156,6 @@ public class ZmlLoader extends AbstractLoader
     return new IResource[] { file };
   }
 
-  /**
-   * @see org.kalypso.loader.ILoader#release(java.lang.Object)
-   */
   @Override
   public void release( final Object object )
   {

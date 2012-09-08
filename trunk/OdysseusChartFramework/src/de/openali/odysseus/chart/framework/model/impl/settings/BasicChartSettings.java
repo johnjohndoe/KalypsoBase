@@ -61,7 +61,7 @@ import de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegend
 
 /**
  * Basic chart model parameters like title, styling, description, ...
- * 
+ *
  * @author Dirk Kuch
  */
 public class BasicChartSettings implements IBasicChartSettings
@@ -74,9 +74,9 @@ public class BasicChartSettings implements IBasicChartSettings
 
   private final ChartPlotFrame m_plotFrame = new ChartPlotFrame();
 
-  private final Map<String, Insets> m_insets = new HashMap<String, Insets>();
+  private final Map<String, Insets> m_insets = new HashMap<>();
 
-  private final List<TitleTypeBean> m_title = new ArrayList<TitleTypeBean>();
+  private final List<TitleTypeBean> m_title = new ArrayList<>();
 
   private CHART_DATA_LOADER_STRATEGY m_strategy = CHART_DATA_LOADER_STRATEGY.eAsynchrone;
 
@@ -84,14 +84,12 @@ public class BasicChartSettings implements IBasicChartSettings
   public void addInsets( final String id, final Insets insets )
   {
     m_insets.put( id, insets );
-
   }
 
   @Override
   public void addPlotFrameStyle( final POSITION position, final ILineStyle lineStyle )
   {
     m_plotFrame.setFrame( new ChartPlotFrameEdge( lineStyle ), position );
-
   }
 
   @Override

@@ -43,12 +43,18 @@ public class ODSChartManipulation
       reqLayers = reqLayerString.trim().split( "," );
 
     /* Herausfinden, welche von den angeforderten Layers wirklich existieren. */
-    final List<String> realReqLayers = new ArrayList<String>();
+    final List<String> realReqLayers = new ArrayList<>();
+
     if( reqLayers != null )
+    {
       for( final String layerId : reqLayers )
+      {
         if( manager.findLayer( layerId ) != null )
           realReqLayers.add( layerId );
-    if( realReqLayers != null && realReqLayers.size() > 0 )
+      }
+    }
+
+    if( realReqLayers.size() > 0 )
     {
       for( int i = 0; i < realReqLayers.size(); i++ )
       {

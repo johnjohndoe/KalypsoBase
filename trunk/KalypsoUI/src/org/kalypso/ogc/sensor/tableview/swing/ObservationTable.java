@@ -99,7 +99,7 @@ import org.kalypso.ui.KalypsoUIExtensions;
 
 /**
  * A JTable that can display observations.
- * 
+ *
  * @author schlienger
  */
 public class ObservationTable extends Panel implements IObsViewEventListener
@@ -220,7 +220,7 @@ public class ObservationTable extends Panel implements IObsViewEventListener
    */
   public Date[] getSelectedEntries( )
   {
-    final Set<Date> dates = new LinkedHashSet<Date>();
+    final Set<Date> dates = new LinkedHashSet<>();
 
     final int[] selectedRows = m_table.getSelectedRows();
     for( final int row : selectedRows )
@@ -447,7 +447,7 @@ public class ObservationTable extends Panel implements IObsViewEventListener
    * the associated column is removed from the model
    * <li>adds a label if the observation has a scenario property
    * </ul>
-   * 
+   *
    * @param adding
    *          is true when the observation (actually its associated table-view-column) is added to the model
    */

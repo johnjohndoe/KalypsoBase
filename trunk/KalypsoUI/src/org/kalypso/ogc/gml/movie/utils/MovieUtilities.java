@@ -209,7 +209,7 @@ public final class MovieUtilities
   public static MovieResolution[] getResolutions( )
   {
     /* All available resolutions. */
-    final List<MovieResolution> resolutions = new ArrayList<MovieResolution>();
+    final List<MovieResolution> resolutions = new ArrayList<>();
     resolutions.add( new MovieResolution( null, 640, 480 ) );
     resolutions.add( new MovieResolution( null, 800, 600 ) );
     resolutions.add( new MovieResolution( null, 1024, 768 ) );
@@ -222,7 +222,7 @@ public final class MovieUtilities
     final MovieResolution screenResolution = new MovieResolution( Messages.getString("MovieUtilities_7"), screenSize.width, screenSize.height ); //$NON-NLS-1$
 
     /* Memory for the results. */
-    final List<MovieResolution> results = new ArrayList<MovieResolution>();
+    final List<MovieResolution> results = new ArrayList<>();
 
     /* Collect all resolutions until the screen resolution. */
     for( final MovieResolution resolution : resolutions )

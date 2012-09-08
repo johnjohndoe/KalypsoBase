@@ -78,7 +78,7 @@ import au.com.bytecode.opencsv.CSVReader;
 
 /**
  * Perform finish worker for cvs import wizard.
- * 
+ *
  * @author Dirk Kuch
  */
 public class CsvSheetImportWorker implements ICoreRunnableWithProgress
@@ -167,8 +167,8 @@ public class CsvSheetImportWorker implements ICoreRunnableWithProgress
   {
     final DECIMAL_NUMBER_SEPERATORS dSep = (DECIMAL_NUMBER_SEPERATORS) m_model.getValue( TSM_KEY.eCsvDecimalNumberSeperator );
 
-    final List<Double> colOne = new ArrayList<Double>();
-    final List<Double> colTwo = new ArrayList<Double>();
+    final List<Double> colOne = new ArrayList<>();
+    final List<Double> colTwo = new ArrayList<>();
 
     String[] nextLine;
     while( (nextLine = readerWQ.readNext()) != null )
