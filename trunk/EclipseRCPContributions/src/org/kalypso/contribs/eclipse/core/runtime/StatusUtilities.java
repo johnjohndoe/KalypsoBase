@@ -237,6 +237,7 @@ public final class StatusUtilities
    * @param message
    *          only used when creating the MultiStatus
    */
+  @Deprecated
   public static IStatus createStatus( final Collection<IStatus> stati, final String message, final Object... args )
   {
     if( stati.isEmpty() )
@@ -304,6 +305,7 @@ public final class StatusUtilities
     return createStatus( IStatus.ERROR, String.format( errorMessage, args ), null );
   }
 
+  @Deprecated
   public static IStatus createExceptionalInfoStatus( final String infoMessage, final Throwable t )
   {
     return createStatus( IStatus.INFO, String.format( infoMessage ), t );
@@ -312,11 +314,13 @@ public final class StatusUtilities
   /**
    * Creates an info-status with given message and null throwable.
    */
+  @Deprecated
   public static IStatus createInfoStatus( final String infoMessage, final Object... args )
   {
     return createStatus( IStatus.INFO, String.format( infoMessage, args ), null );
   }
 
+  @Deprecated
   public static IStatus createExceptionalWarningStatus( final String warningMessage, final Throwable t )
   {
     return createStatus( IStatus.WARNING, String.format( warningMessage ), t );
