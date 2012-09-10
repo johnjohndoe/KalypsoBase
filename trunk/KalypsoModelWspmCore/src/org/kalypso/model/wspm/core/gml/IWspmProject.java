@@ -71,10 +71,14 @@ public interface IWspmProject extends Feature
    */
   WspmWaterBody createOrGetWaterBody( String name, boolean isDirectionUpstreams ) throws GMLSchemaException;
 
+  WspmWaterBody createOrGetWaterBodyByRefNr( String refNr, boolean isDirectionUpstreams ) throws GMLSchemaException;
+
   /**
    * Creates a new {@link WspmWaterBody} with a given name. This method always creates a new element.
    */
   WspmWaterBody createWaterBody( String name, boolean isDirectionUpstreams ) throws GMLSchemaException;
+
+  WspmWaterBody createWaterBodyByRefNr( String refNr, boolean isDirectionUpstreams ) throws GMLSchemaException;
 
   IWspmClassification getClassificationMember( );
 

@@ -75,7 +75,7 @@ import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
 /**
  * Displays constant wsp lines in the cross section.
- *
+ * 
  * @author Gernot Belger
  * @author Holger Albert
  */
@@ -111,13 +111,9 @@ public class WspLayer extends AbstractProfilTheme
     m_data = data;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.factory.layer.AbstractChartLayer#getLegendEntries()
-   */
   @Override
   public synchronized ILegendEntry[] getLegendEntries( )
   {
-
     if( ArrayUtils.isEmpty( m_legendEntries ) )
     {
       m_legendEntries = createLegendEntries();
@@ -149,7 +145,7 @@ public class WspLayer extends AbstractProfilTheme
 
   /**
    * This function returns the wsp layer data.
-   *
+   * 
    * @return The wsp layer data.
    */
   public IWspLayerData getData( )
@@ -210,7 +206,7 @@ public class WspLayer extends AbstractProfilTheme
 
     final Double min = values.first();
     final Double max = values.last();
-    return DataRange.create( min, max );
+    return new DataRange<>( min, max );
   }
 
   @Override
