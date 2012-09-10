@@ -55,7 +55,7 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  * <p>
  * It has NO own member variables, everything is backed by the given feature instance.
  * </p>
- *
+ * 
  * @author Gernot Belger
  */
 public abstract class WspmProject extends Feature_Impl implements IWspmProject
@@ -122,11 +122,19 @@ public abstract class WspmProject extends Feature_Impl implements IWspmProject
   }
 
   @Override
+  public WspmWaterBody createOrGetWaterBodyByRefNr( final String refNr, final boolean isDirectionUpstreams ) throws GMLSchemaException
+  {
+    final WspmWaterBody water = findWaterByRefNr( refNr );
+    if( water != null )
+      return water;
+
+    return createWaterBodyByRefNr( refNr, isDirectionUpstreams );
+  }
+
+  @Override
   public WspmWaterBody createWaterBody( final String name, final boolean isDirectionUpstreams ) throws GMLSchemaException
   {
-    final WspmWaterBody wspmWaterBody = (WspmWaterBody) FeatureHelper.addFeature( this, QN_MEMBER_WATER_BODY, null );
-
-    // set default values
+    final WspmWaterBody wspmWaterBody = (WspmWaterBody)FeatureHelper.addFeature( this, QN_MEMBER_WATER_BODY, null );
     wspmWaterBody.setName( name );
     wspmWaterBody.setDescription( StringUtils.EMPTY );
     wspmWaterBody.setRefNr( StringUtils.EMPTY );
@@ -136,11 +144,23 @@ public abstract class WspmProject extends Feature_Impl implements IWspmProject
   }
 
   @Override
+  public WspmWaterBody createWaterBodyByRefNr( final String refNr, final boolean isDirectionUpstreams ) throws GMLSchemaException
+  {
+    final WspmWaterBody wspmWaterBody = (WspmWaterBody)FeatureHelper.addFeature( this, QN_MEMBER_WATER_BODY, null );
+    wspmWaterBody.setName( StringUtils.EMPTY );
+    wspmWaterBody.setDescription( StringUtils.EMPTY );
+    wspmWaterBody.setRefNr( refNr );
+    wspmWaterBody.setDirectionUpstreams( isDirectionUpstreams );
+
+    return wspmWaterBody;
+  }
+
+  @Override
   public IWspmClassification createClassificationMember( )
   {
-    final IRelationType relation = (IRelationType) getFeatureType().getProperty( QN_CLASSIFICATION_MEMBER );
+    final IRelationType relation = (IRelationType)getFeatureType().getProperty( QN_CLASSIFICATION_MEMBER );
     final IFeatureType type = relation.getTargetFeatureType();
-    final IWspmClassification classification = (IWspmClassification) getWorkspace().createFeature( this, relation, type );
+    final IWspmClassification classification = (IWspmClassification)getWorkspace().createFeature( this, relation, type );
     setProperty( QN_CLASSIFICATION_MEMBER, classification );
 
     return classification;
