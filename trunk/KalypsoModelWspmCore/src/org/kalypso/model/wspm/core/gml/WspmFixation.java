@@ -46,7 +46,9 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ogc.gml.om.IObservationFeature;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
@@ -71,7 +73,21 @@ public class WspmFixation extends Feature_Impl implements IObservationFeature
   @Override
   public IObservation<TupleResult> toObservation( )
   {
-    return ObservationFeatureFactory.toObservation( this );
+    final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservationInternal( this );
+    final TupleResult result = obs.getResult();
+
+    final String[] components = new String[] { COMPONENT_STATION, COMPONENT_WSP, COMPONENT_COMMENT };
+    for( final String component : components )
+    {
+      final int index = result.indexOfComponent( component );
+      if( index == -1 )
+      {
+        result.addComponent( ComponentUtilities.getFeatureComponent( component ) );
+        saveObservation( obs );
+      }
+    }
+
+    return obs;
   }
 
   @Override

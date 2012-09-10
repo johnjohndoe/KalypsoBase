@@ -46,6 +46,7 @@ import java.util.SortedMap;
 import javax.xml.namespace.QName;
 
 import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.ogc.gml.om.IObservationFeature;
 
 /**
  * @author Dirk Kuch
@@ -59,6 +60,8 @@ public interface IRunOffEvent extends IObservationFeature
   String COMPONENT_STATION = IWspmConstants.LENGTH_SECTION_PROPERTY_STATION;
 
   String COMPONENT_RUNOFF = IWspmConstants.LENGTH_SECTION_PROPERTY_RUNOFF;
+
+  String COMPONENT_COMMENT = IWspmConstants.LENGTH_SECTION_PROPERTY_TEXT;
 
   Integer getAnnuality( );
 

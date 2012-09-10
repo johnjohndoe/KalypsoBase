@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.core.gml;
+package org.kalypso.ogc.gml.om;
 
 import javax.xml.namespace.QName;
 
@@ -47,8 +47,6 @@ import org.kalypso.observation.result.TupleResult;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * TODO: move to a more common place, it can bes used by all feature derived from om:Observation.
- * 
  * @author Gernot Belger
  */
 public interface IObservationFeature extends Feature
