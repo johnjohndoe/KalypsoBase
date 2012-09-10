@@ -556,9 +556,6 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
     return result;
   }
 
-  /**
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode( )
   {
@@ -687,9 +684,6 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
     return selFW;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.binding.IFeatureWrapperCollection#cloneInto(org.kalypsodeegree.model.feature.binding.IFeatureWrapper2)
-   */
   @Override
   public void cloneInto( final FWCls toClone ) throws Exception
   {

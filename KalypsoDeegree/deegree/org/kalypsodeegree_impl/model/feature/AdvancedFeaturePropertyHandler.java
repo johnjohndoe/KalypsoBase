@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -42,7 +42,7 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.virtual.IFunctionPropertyType;
@@ -58,7 +58,7 @@ import org.kalypsodeegree.model.feature.IFeaturePropertyHandler;
  * <li>delegate to a application-info-handler if present</li>
  * <li>else, use {@link org.kalypsodeegree_impl.model.feature.DefaultFeaturePropertyHandler}</li>
  * </ul>
- * 
+ *
  * @author Gernot Belger
  */
 public class AdvancedFeaturePropertyHandler implements IFeaturePropertyHandler
@@ -91,7 +91,7 @@ public class AdvancedFeaturePropertyHandler implements IFeaturePropertyHandler
         catch( final CoreException e )
         {
           final String msg = String.format( "Failed to create property function with id '%s' for property '%s'", functionId, qname );
-          final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, msg, e );
+          final IStatus status = new Status( IStatus.ERROR, KalypsoDeegreePlugin.getID(), msg, e );
 
           // Simply log errors to the error log, but continue
           KalypsoDeegreePlugin.getDefault().getLog().log( status );
@@ -100,10 +100,6 @@ public class AdvancedFeaturePropertyHandler implements IFeaturePropertyHandler
     }
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#setValue(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
-   */
   @Override
   public Object setValue( final Feature feature, final IPropertyType pt, final Object valueToSet )
   {
@@ -116,10 +112,6 @@ public class AdvancedFeaturePropertyHandler implements IFeaturePropertyHandler
     return DEFAULT_HANDLER.setValue( feature, pt, checkedValue );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
-   */
   @Override
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )
   {
@@ -132,9 +124,6 @@ public class AdvancedFeaturePropertyHandler implements IFeaturePropertyHandler
     return DEFAULT_HANDLER.getValue( feature, pt, checkedValue );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#invalidateEnvelope(org.kalypso.gmlschema.property.IPropertyType)
-   */
   @Override
   public boolean invalidateEnvelope( final IPropertyType pt )
   {
@@ -145,9 +134,6 @@ public class AdvancedFeaturePropertyHandler implements IFeaturePropertyHandler
     return DEFAULT_HANDLER.invalidateEnvelope( pt );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#isFunctionProperty(org.kalypso.gmlschema.property.IPropertyType)
-   */
   @Override
   public boolean isFunctionProperty( final IPropertyType pt )
   {
@@ -157,5 +143,4 @@ public class AdvancedFeaturePropertyHandler implements IFeaturePropertyHandler
 
     return DEFAULT_HANDLER.isFunctionProperty( pt );
   }
-
 }
