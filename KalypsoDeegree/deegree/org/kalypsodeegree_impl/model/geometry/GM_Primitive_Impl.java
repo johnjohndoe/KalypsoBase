@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -44,7 +44,7 @@ import org.kalypsodeegree.model.geometry.GM_Primitive;
 /**
  * default implementation of the GM_Primitive interface from package jago.model.
  * ------------------------------------------------------------
- * 
+ *
  * @version 8.6.2001
  * @author Andreas Poth
  */
@@ -55,7 +55,7 @@ abstract class GM_Primitive_Impl extends GM_Object_Impl implements GM_Primitive,
 
   /**
    * Creates a new GM_Primitive_Impl object.
-   * 
+   *
    * @param crs
    */
   protected GM_Primitive_Impl( final String crs )
@@ -63,9 +63,6 @@ abstract class GM_Primitive_Impl extends GM_Object_Impl implements GM_Primitive,
     super( crs );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#getAdapter(java.lang.Class)
-   */
   @Override
   public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
   {
@@ -77,8 +74,8 @@ abstract class GM_Primitive_Impl extends GM_Object_Impl implements GM_Primitive,
       if( adaptedObject == null )
         return null;
 
-      final Object adaptedArray = Array.newInstance( componentType, 1 );
-      Array.set( adaptedArray, 0, adaptedObject );
+      final Object[] adaptedArray = (Object[]) Array.newInstance( componentType, 1 );
+      adaptedArray[0] = adaptedObject;
 
       return adaptedArray;
     }
