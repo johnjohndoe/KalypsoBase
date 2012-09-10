@@ -123,7 +123,7 @@ public final class WspmProfileHelper
    * Same as {@link #getWidthPosition(Point, IProfil)}, but uses a {@link GM_Point} instead.<br>
    * The point is automatically transformed to the right coordinate system.
    */
-  public static Double getWidthPosition( final GM_Point point, final IProfil profile ) throws Exception
+  public static Double getWidthPosition( final GM_Point point, final IProfil profile ) throws GeoTransformerException, GM_Exception
   {
     final String srs = WspmProfileHelper.getCoordinateSystem( profile );
 
@@ -181,7 +181,7 @@ public final class WspmProfileHelper
    * @deprecated Use {@link #getWidthPosition(Point, IProfil)} instead.
    */
   @Deprecated
-  public static Double getWidthPosition( final GM_Point geoPoint, final IProfil profile, final String srsName ) throws Exception
+  public static Double getWidthPosition( final GM_Point geoPoint, final IProfil profile, final String srsName ) throws GeoTransformerException, GM_Exception
   {
     /* List for storing points of the profile, which have a geo reference. */
     final LinkedList<IRecord> geoReferencedPoints = new LinkedList<>();

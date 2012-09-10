@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.core.profil.impl;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -425,11 +426,19 @@ public abstract class AbstractProfil implements IProfil
   @Override
   public IProfileRecord[] getPoints( )
   {
-    final Set<IProfileRecord> collection = new LinkedHashSet<>();
-    final IRecord[] records = getResult().toArray( new IRecord[] {} );
+    final TupleResult result = getResult();
+    final IRecord[] records = result.toArray( new IRecord[result.size()] );
+
+    // FIXME: check: we should make sure tha our result only contains profile-record, so wrapping would not be needed (its a heavy operation
+    // and prohibits comparison of records with == )
+
+    final Collection<IProfileRecord> collection = new ArrayList<>();
     for( final IRecord record : records )
     {
-      collection.add( new ProfileRecord( this, record ) );
+      if( record instanceof IProfileRecord )
+        collection.add( (IProfileRecord)record );
+      else
+        collection.add( new ProfileRecord( this, record ) );
     }
 
     return collection.toArray( new IProfileRecord[] {} );
