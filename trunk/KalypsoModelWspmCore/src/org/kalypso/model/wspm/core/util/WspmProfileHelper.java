@@ -110,7 +110,7 @@ public final class WspmProfileHelper
    *          The profile
    * @return The width (X-Direction) of the geo point projected on the profile.
    */
-  public static Double getWidthPosition( final Point point, final IProfil profile ) throws Exception
+  public static Double getWidthPosition( final Point point, final IProfil profile ) throws GM_Exception, GeoTransformerException
   {
     final String srs = WspmProfileHelper.getCoordinateSystem( profile );
 
