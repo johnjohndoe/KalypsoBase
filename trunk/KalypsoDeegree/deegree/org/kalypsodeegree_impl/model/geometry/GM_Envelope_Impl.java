@@ -39,6 +39,7 @@ import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -288,6 +289,12 @@ public class GM_Envelope_Impl implements GM_Envelope, Serializable
   public boolean equals( final Object other )
   {
     return equals( other, false );
+  }
+
+  @Override
+  public int hashCode( )
+  {
+    return new HashCodeBuilder().append( m_minX ).append( m_minY ).append( m_maxX ).append( m_maxY ).append( m_coordinateSystem ).toHashCode();
   }
 
   /**
