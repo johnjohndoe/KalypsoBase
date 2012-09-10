@@ -202,9 +202,6 @@ public class TupleResult implements List<IRecord>
     renumber();
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString( )
   {
@@ -226,9 +223,6 @@ public class TupleResult implements List<IRecord>
     return m_interpolationHandler == null ? false : m_interpolationHandler.doInterpolation( result, record, index, distance );
   }
 
-  /**
-   * @see java.util.List#add(int, E)
-   */
   @Override
   public void add( final int index, final IRecord element )
   {
@@ -238,9 +232,6 @@ public class TupleResult implements List<IRecord>
     fireRecordsChanged( new IRecord[] { element }, TYPE.ADDED );
   }
 
-  /**
-   * @see java.util.List#add(E)
-   */
   @Override
   public boolean add( final IRecord o )
   {
@@ -253,9 +244,6 @@ public class TupleResult implements List<IRecord>
     return result;
   }
 
-  /**
-   * @see java.util.List#addAll(java.util.Collection)
-   */
   @Override
   public boolean addAll( final Collection< ? extends IRecord> c )
   {
@@ -267,9 +255,6 @@ public class TupleResult implements List<IRecord>
     return result;
   }
 
-  /**
-   * @see java.util.List#addAll(int, java.util.Collection)
-   */
   @Override
   public boolean addAll( final int index, final Collection< ? extends IRecord> c )
   {
@@ -281,9 +266,6 @@ public class TupleResult implements List<IRecord>
     return result;
   }
 
-  /**
-   * @see java.util.List#clear()
-   */
   @Override
   public void clear( )
   {
@@ -295,9 +277,6 @@ public class TupleResult implements List<IRecord>
     fireRecordsChanged( oldRecords, TYPE.REMOVED );
   }
 
-  /**
-   * @see java.util.List#contains(java.lang.Object)
-   */
   @Override
   public boolean contains( final Object o )
   {
@@ -313,9 +292,6 @@ public class TupleResult implements List<IRecord>
     return m_records.containsAll( c );
   }
 
-  /**
-   * @see java.util.List#get(int)
-   */
   @Override
   public IRecord get( final int index )
   {
@@ -324,9 +300,6 @@ public class TupleResult implements List<IRecord>
     return m_records.get( index );
   }
 
-  /**
-   * @see java.util.List#isEmpty()
-   */
   @Override
   public boolean isEmpty( )
   {
@@ -335,8 +308,6 @@ public class TupleResult implements List<IRecord>
 
   /**
    * IMPORTANT: removing via this iterator does not inform the listeners.
-   *
-   * @see java.util.List#iterator()
    */
   @Override
   public Iterator<IRecord> iterator( )
@@ -346,9 +317,6 @@ public class TupleResult implements List<IRecord>
     return m_records.iterator();
   }
 
-  /**
-   * @see java.util.List#lastIndexOf(java.lang.Object)
-   */
   @Override
   public int lastIndexOf( final Object o )
   {
@@ -359,8 +327,6 @@ public class TupleResult implements List<IRecord>
 
   /**
    * IMPORTANT: removing via this iterator does not inform the listeners.
-   *
-   * @see java.util.List#listIterator()
    */
   @Override
   public ListIterator<IRecord> listIterator( )
@@ -372,8 +338,6 @@ public class TupleResult implements List<IRecord>
 
   /**
    * IMPORTANT: removing via this iterator does not inform the listeners.
-   *
-   * @see java.util.List#listIterator(int)
    */
   @Override
   public ListIterator<IRecord> listIterator( final int index )
@@ -383,9 +347,6 @@ public class TupleResult implements List<IRecord>
     return m_records.listIterator( index );
   }
 
-  /**
-   * @see java.util.List#remove(int)
-   */
   @Override
   public IRecord remove( final int index )
   {
@@ -397,9 +358,6 @@ public class TupleResult implements List<IRecord>
     return result;
   }
 
-  /**
-   * @see java.util.List#remove(java.lang.Object)
-   */
   @Override
   public boolean remove( final Object o )
   {
@@ -444,9 +402,6 @@ public class TupleResult implements List<IRecord>
     return m_records.retainAll( c );
   }
 
-  /**
-   * @see java.util.List#set(int, E)
-   */
   @Override
   public IRecord set( final int index, final IRecord element )
   {
@@ -459,18 +414,12 @@ public class TupleResult implements List<IRecord>
     return result;
   }
 
-  /**
-   * @see java.util.List#size()
-   */
   @Override
   public int size( )
   {
     return m_records.size();
   }
 
-  /**
-   * @see java.util.List#subList(int, int)
-   */
   @Override
   public List<IRecord> subList( final int fromIndex, final int toIndex )
   {
@@ -484,9 +433,6 @@ public class TupleResult implements List<IRecord>
     return m_records.subList( fromIndex, toIndex );
   }
 
-  /**
-   * @see java.util.List#toArray()
-   */
   @Override
   public Object[] toArray( )
   {
@@ -495,9 +441,6 @@ public class TupleResult implements List<IRecord>
     return m_records.toArray();
   }
 
-  /**
-   * @see java.util.List#toArray(T[])
-   */
   @Override
   public <T> T[] toArray( final T[] a )
   {
@@ -736,9 +679,6 @@ public class TupleResult implements List<IRecord>
     return m_components.get( index );
   }
 
-  /**
-   * @see java.util.List#indexOf(java.lang.Object)
-   */
   @Override
   public int indexOf( final Object o )
   {
@@ -757,7 +697,6 @@ public class TupleResult implements List<IRecord>
   /**
    * @return -1, if no such component exists. Returns the index of the first component with a given id.
    */
-
   public int indexOfComponent( final String componentId )
   {
     for( int i = 0; i < m_components.size(); i++ )
