@@ -48,6 +48,7 @@ import java.util.TreeMap;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
@@ -68,7 +69,7 @@ public class RunOffEvent extends Feature_Impl implements IRunOffEvent
   {
     final Object property = getProperty( PROPERTY_ANNUALITY );
     if( property instanceof Number )
-      return ((Number) property).intValue();
+      return ((Number)property).intValue();
 
     return null;
   }
@@ -76,7 +77,21 @@ public class RunOffEvent extends Feature_Impl implements IRunOffEvent
   @Override
   public IObservation<TupleResult> toObservation( )
   {
-    return ObservationFeatureFactory.toObservation( this );
+    final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservationInternal( this );
+    final TupleResult result = obs.getResult();
+
+    final String[] components = new String[] { COMPONENT_STATION, COMPONENT_RUNOFF, COMPONENT_COMMENT };
+    for( final String component : components )
+    {
+      final int index = result.indexOfComponent( component );
+      if( index == -1 )
+      {
+        result.addComponent( ComponentUtilities.getFeatureComponent( component ) );
+        saveObservation( obs );
+      }
+    }
+
+    return obs;
   }
 
   @Override
@@ -120,8 +135,8 @@ public class RunOffEvent extends Feature_Impl implements IRunOffEvent
 
     for( final IRecord record : result )
     {
-      final BigDecimal station = (BigDecimal) record.getValue( stationComp );
-      final BigDecimal runOff = (BigDecimal) record.getValue( abflussComp );
+      final BigDecimal station = (BigDecimal)record.getValue( stationComp );
+      final BigDecimal runOff = (BigDecimal)record.getValue( abflussComp );
 
       // REMARK: just skip lines with 'holes', avoids confusion if an empty (but hardly visible) line is present.
       if( station != null && runOff != null )
@@ -134,7 +149,7 @@ public class RunOffEvent extends Feature_Impl implements IRunOffEvent
   @Override
   public WspmWaterBody getOwner( )
   {
-    return (WspmWaterBody) super.getOwner();
+    return (WspmWaterBody)super.getOwner();
   }
 
   @Override

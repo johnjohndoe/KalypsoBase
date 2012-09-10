@@ -122,6 +122,17 @@ public class ObservationFeatureFactory implements IAdapterFactory
    */
   public static IObservation<TupleResult> toObservation( final Feature f )
   {
+    if( f instanceof IObservationFeature )
+      return ((IObservationFeature)f).toObservation();
+
+    return toObservationInternal( f );
+  }
+
+  /**
+   * Only for implementros of IObservationFeature.
+   */
+  public static IObservation<TupleResult> toObservationInternal( final Feature f )
+  {
     if( f == null )
       return null;
     final IFeatureType featureType = f.getFeatureType();
@@ -129,8 +140,8 @@ public class ObservationFeatureFactory implements IAdapterFactory
     if( !GMLSchemaUtilities.substitutes( featureType, ObservationFeatureFactory.OM_OBSERVATION ) )
       throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.gml.om.ObservationFeatureFactory.16" ) + f ); //$NON-NLS-1$
 
-    final String name = (String) FeatureHelper.getFirstProperty( f, Feature.QN_NAME );
-    final String desc = (String) FeatureHelper.getFirstProperty( f, Feature.QN_DESCRIPTION );
+    final String name = (String)FeatureHelper.getFirstProperty( f, Feature.QN_NAME );
+    final String desc = (String)FeatureHelper.getFirstProperty( f, Feature.QN_DESCRIPTION );
 
     final Object phenProp = f.getProperty( ObservationFeatureFactory.OM_OBSERVED_PROP );
 
@@ -138,7 +149,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final IPhenomenon phenomenon;
     if( phenFeature != null )
     {
-      final String phenId = phenFeature instanceof IXLinkedFeature ? ((IXLinkedFeature) phenFeature).getHref() : phenFeature.getId();
+      final String phenId = phenFeature instanceof IXLinkedFeature ? ((IXLinkedFeature)phenFeature).getHref() : phenFeature.getId();
       final String phenName = NamedFeatureHelper.getName( phenFeature );
       final String phenDesc = NamedFeatureHelper.getDescription( phenFeature );
       phenomenon = new Phenomenon( phenId, phenName, phenDesc );
@@ -164,7 +175,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
   {
     final Feature recordDefinition = FeatureHelper.resolveLink( f, ObservationFeatureFactory.OM_RESULTDEFINITION );
 
-    final String result = (String) f.getProperty( ObservationFeatureFactory.OM_RESULT );
+    final String result = (String)f.getProperty( ObservationFeatureFactory.OM_RESULT );
 
     final IComponent[] components = ObservationFeatureFactory.buildComponents( recordDefinition );
     final IComponent[] sortComponents = ObservationFeatureFactory.buildSortComponents( recordDefinition );
@@ -212,13 +223,13 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
       if( handler instanceof XsdBaseTypeHandlerString )
       {
-        final XsdBaseTypeHandlerString myHandler = (XsdBaseTypeHandlerString) handler;
+        final XsdBaseTypeHandlerString myHandler = (XsdBaseTypeHandlerString)handler;
         return myHandler.convertToJavaValue( URLDecoder.decode( token, "UTF-8" ) ); //$NON-NLS-1$
       }
 
       if( handler instanceof XsdBaseTypeHandlerXMLGregorianCalendar )
       {
-        final XsdBaseTypeHandlerXMLGregorianCalendar myHandler = (XsdBaseTypeHandlerXMLGregorianCalendar) handler;
+        final XsdBaseTypeHandlerXMLGregorianCalendar myHandler = (XsdBaseTypeHandlerXMLGregorianCalendar)handler;
         return myHandler.convertToJavaValue( URLDecoder.decode( token, "UTF-8" ) ); //$NON-NLS-1$
       }
 
@@ -248,7 +259,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
     final List<IComponent> components = new ArrayList<>();
 
-    final FeatureList comps = (FeatureList) recordDefinition.getProperty( ObservationFeatureFactory.QNAME_P_SORTED_COMPONENT );
+    final FeatureList comps = (FeatureList)recordDefinition.getProperty( ObservationFeatureFactory.QNAME_P_SORTED_COMPONENT );
     for( final Object object : comps )
     {
       final Feature itemDef = FeatureHelper.getFeature( recordDefinition.getWorkspace(), object );
@@ -263,7 +274,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
   {
     if( recordDefinition == null || !GMLSchemaUtilities.substitutes( recordDefinition.getFeatureType(), ObservationFeatureFactory.QNAME_F_SORTED_RECORD_DEFINITION ) )
       return null;
-    final Feature component = (Feature) recordDefinition.getProperty( ObservationFeatureFactory.QNAME_P_ORDINALNUMBER_COMPONENT );
+    final Feature component = (Feature)recordDefinition.getProperty( ObservationFeatureFactory.QNAME_P_ORDINALNUMBER_COMPONENT );
     if( component != null )
       return new FeatureComponent( FeatureHelper.getFeature( recordDefinition.getWorkspace(), component ) );
     return null;
@@ -298,7 +309,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
     final IMarshallingTypeHandler handler = typeRegistry.getTypeHandlerForTypeName( valueTypeName );
     if( handler instanceof XsdBaseTypeHandler< ? > )
-      return (XsdBaseTypeHandler< ? >) handler;
+      return (XsdBaseTypeHandler< ? >)handler;
 
     return null;
   }
@@ -326,7 +337,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
     final List<IComponent> components = new ArrayList<>();
 
-    final FeatureList comps = (FeatureList) recordDefinition.getProperty( ObservationFeatureFactory.SWE_COMPONENT );
+    final FeatureList comps = (FeatureList)recordDefinition.getProperty( ObservationFeatureFactory.SWE_COMPONENT );
     for( final Object object : comps )
     {
       final Feature itemDef = FeatureHelper.getFeature( recordDefinition.getWorkspace(), object );
@@ -362,7 +373,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     changes.add( new FeatureChange( targetObsFeature, featureType.getProperty( Feature.QN_NAME ), Collections.singletonList( source.getName() ) ) );
     changes.add( new FeatureChange( targetObsFeature, featureType.getProperty( Feature.QN_DESCRIPTION ), source.getDescription() ) );
 
-    final IRelationType phenPt = (IRelationType) featureType.getProperty( ObservationFeatureFactory.OM_OBSERVED_PROP );
+    final IRelationType phenPt = (IRelationType)featureType.getProperty( ObservationFeatureFactory.OM_OBSERVED_PROP );
     final IPhenomenon phenomenon = source.getPhenomenon();
     final Object phenonemonFeature = toFeaturePhenonemon( phenomenon, targetObsFeature, phenPt );
     changes.add( new FeatureChange( targetObsFeature, phenPt, phenonemonFeature ) );
@@ -373,7 +384,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final IComponent[] sortComponents = result.getSortComponents();
     final IComponent ordinalNumberComponent = result.getOrdinalNumberComponent();
 
-    final IRelationType targetObsFeatureRelation = (IRelationType) featureType.getProperty( ObservationFeatureFactory.OM_RESULTDEFINITION );
+    final IRelationType targetObsFeatureRelation = (IRelationType)featureType.getProperty( ObservationFeatureFactory.OM_RESULTDEFINITION );
     final Feature rd = ObservationFeatureFactory.buildRecordDefinition( targetObsFeature, targetObsFeatureRelation, components, sortComponents, ordinalNumberComponent );
     changes.add( new FeatureChange( targetObsFeature, targetObsFeatureRelation, rd ) );
 
@@ -397,12 +408,12 @@ public class ObservationFeatureFactory implements IAdapterFactory
     if( phenomenonRef instanceof IXLinkedFeature )
     {
       // check if link exists, if not, we create an inline phenonemon
-      if( ((IXLinkedFeature) phenomenonRef).getFeatureId() != null )
+      if( ((IXLinkedFeature)phenomenonRef).getFeatureId() != null )
       {
         return phenomenonRef;
       }
 
-      final org.kalypso.deegree.binding.swe.Phenomenon phenonemonFeature = (org.kalypso.deegree.binding.swe.Phenomenon) FeatureFactory.createFeature( targetObsFeature, phenPt, id, phenPt.getTargetFeatureType(), true );
+      final org.kalypso.deegree.binding.swe.Phenomenon phenonemonFeature = (org.kalypso.deegree.binding.swe.Phenomenon)FeatureFactory.createFeature( targetObsFeature, phenPt, id, phenPt.getTargetFeatureType(), true );
       phenonemonFeature.setName( phenomenon.getName() );
       phenonemonFeature.setDescription( phenomenon.getDescription() );
 
@@ -414,7 +425,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
   /**
    * Helper: builds the record definition according to the components of the tuple result.
-   *
+   * 
    * @param map
    *          ATTENTION: the recordset is written in the same order as this map
    */
@@ -431,7 +442,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     // set resultDefinition property, create RecordDefinition feature
     final Feature featureRD = createSafeFeature( targetObsFeature, targetObsFeatureRelation.getQName(), recordDefinitionFT.getQName() );
 
-    final IRelationType itemDefRelation = (IRelationType) featureRD.getFeatureType().getProperty( ObservationFeatureFactory.SWE_COMPONENT );
+    final IRelationType itemDefRelation = (IRelationType)featureRD.getFeatureType().getProperty( ObservationFeatureFactory.SWE_COMPONENT );
 
     // for each component, set a component property, create a feature: ItemDefinition
     for( final IComponent comp : components )
@@ -446,7 +457,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
     if( sortComponents != null && sortComponents.length > 0 )
     {
-      final IRelationType sortedItemDefRelation = (IRelationType) featureRD.getFeatureType().getProperty( ObservationFeatureFactory.QNAME_P_SORTED_COMPONENT );
+      final IRelationType sortedItemDefRelation = (IRelationType)featureRD.getFeatureType().getProperty( ObservationFeatureFactory.QNAME_P_SORTED_COMPONENT );
       for( final IComponent comp : sortComponents )
       {
         final Feature featureItemDef = ObservationFeatureFactory.itemDefinitionFromComponent( featureRD, sortedItemDefRelation, comp );
@@ -456,7 +467,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
     if( ordinalNumberComponent != null )
     {
-      final IRelationType ordinalNumberItemDefRelation = (IRelationType) featureRD.getFeatureType().getProperty( ObservationFeatureFactory.QNAME_P_ORDINALNUMBER_COMPONENT );
+      final IRelationType ordinalNumberItemDefRelation = (IRelationType)featureRD.getFeatureType().getProperty( ObservationFeatureFactory.QNAME_P_ORDINALNUMBER_COMPONENT );
       final Feature featureItemDef = ObservationFeatureFactory.itemDefinitionFromComponent( featureRD, ordinalNumberItemDefRelation, ordinalNumberComponent );
       FeatureHelper.addProperty( featureRD, ObservationFeatureFactory.QNAME_P_ORDINALNUMBER_COMPONENT, featureItemDef );
     }
@@ -477,7 +488,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     {
       // TODO: dangerous, we should always create a new feature here, don't we?
 
-      final FeatureComponent fc = (FeatureComponent) comp;
+      final FeatureComponent fc = (FeatureComponent)comp;
       return fc.getItemDefinition();
     }
 
@@ -486,7 +497,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     itemDefinition.setDescription( comp.getDescription() );
 
     /* Phenomenon */
-    final IRelationType phenomenonRelation = (IRelationType) itemDefinition.getFeatureType().getProperty( ObservationFeatureFactory.SWE_PROPERTY );
+    final IRelationType phenomenonRelation = (IRelationType)itemDefinition.getFeatureType().getProperty( ObservationFeatureFactory.SWE_PROPERTY );
     final IPhenomenon phenomenon = comp.getPhenomenon();
 
     final Feature featurePhenomenon = PhenomenonUtilities.createPhenomenonFeature( phenomenon, itemDefinition, phenomenonRelation );
@@ -577,7 +588,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
     return buffer.toString();
   }
 
-  private static String recordValueToString( final Object value, @SuppressWarnings("rawtypes") final XsdBaseTypeHandler handler )
+  private static String recordValueToString( final Object value, @SuppressWarnings( "rawtypes" ) final XsdBaseTypeHandler handler )
   {
     if( value == null )
       return "null"; //$NON-NLS-1$
@@ -589,19 +600,18 @@ public class ObservationFeatureFactory implements IAdapterFactory
       // FIXME implement other type handlers over an fabrication method
       if( handler instanceof XsdBaseTypeHandlerString )
       {
-        final XsdBaseTypeHandlerString myHandler = (XsdBaseTypeHandlerString) handler;
-        return myHandler.convertToXMLString( URLEncoder.encode( (String) value, "UTF-8" ) ); //$NON-NLS-1$
+        final XsdBaseTypeHandlerString myHandler = (XsdBaseTypeHandlerString)handler;
+        return myHandler.convertToXMLString( URLEncoder.encode( (String)value, "UTF-8" ) ); //$NON-NLS-1$
       }
 
       if( handler instanceof XsdBaseTypeHandlerXMLGregorianCalendar )
       {
-        final XsdBaseTypeHandlerXMLGregorianCalendar myHandler = (XsdBaseTypeHandlerXMLGregorianCalendar) handler;
-        final XMLGregorianCalendar cal = (XMLGregorianCalendar) value;
+        final XsdBaseTypeHandlerXMLGregorianCalendar myHandler = (XsdBaseTypeHandlerXMLGregorianCalendar)handler;
+        final XMLGregorianCalendar cal = (XMLGregorianCalendar)value;
         return URLEncoder.encode( myHandler.convertToXMLString( cal ), "UTF-8" ); //$NON-NLS-1$
       }
 
-      @SuppressWarnings("unchecked")
-      final String xmlString = handler.convertToXMLString( value );
+      @SuppressWarnings( "unchecked" ) final String xmlString = handler.convertToXMLString( value );
       return xmlString;
     }
     catch( final UnsupportedEncodingException e )
@@ -616,14 +626,14 @@ public class ObservationFeatureFactory implements IAdapterFactory
    * <p>
    * TODO do not create an observation twice for the same feature, pooling?
    * </p>
-   *
+   * 
    * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
    */
   @Override
   public Object getAdapter( final Object adaptableObject, final Class adapterType )
   {
     if( adapterType == IObservation.class && adaptableObject instanceof Feature )
-      return ObservationFeatureFactory.toObservation( (Feature) adaptableObject );
+      return ObservationFeatureFactory.toObservation( (Feature)adaptableObject );
 
     return null;
   }
@@ -643,7 +653,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
     final IFeatureType featureType = GMLSchemaUtilities.getFeatureTypeQuiet( ObservationFeatureFactory.SWE_ITEMDEFINITION );
 
-    final FeatureList componentList = (FeatureList) recordDefinition.getProperty( ObservationFeatureFactory.SWE_COMPONENT );
+    final FeatureList componentList = (FeatureList)recordDefinition.getProperty( ObservationFeatureFactory.SWE_COMPONENT );
 
     final IXLinkedFeature itemDef = componentList.addLink( dictUrn, featureType );
 
@@ -652,7 +662,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
   private static Feature getOrCreateRecordDefinition( final Feature obsFeature )
   {
-    final IRelationType resultRelation = (IRelationType) obsFeature.getFeatureType().getProperty( ObservationFeatureFactory.OM_RESULTDEFINITION );
+    final IRelationType resultRelation = (IRelationType)obsFeature.getFeatureType().getProperty( ObservationFeatureFactory.OM_RESULTDEFINITION );
     final Feature recordDefinition = FeatureHelper.resolveLink( obsFeature, ObservationFeatureFactory.OM_RESULTDEFINITION );
     /* Make sure there is always a record definition */
     if( recordDefinition == null )
@@ -667,7 +677,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
   public static Feature createSafeFeature( final Feature feature, final QName parentRelation, final QName featureName )
   {
     final GMLWorkspace workspace = feature.getWorkspace();
-    final IRelationType rdParentRelation = (IRelationType) feature.getFeatureType().getProperty( parentRelation );
+    final IRelationType rdParentRelation = (IRelationType)feature.getFeatureType().getProperty( parentRelation );
     final IFeatureType featureType = GMLSchemaUtilities.getFeatureTypeQuiet( featureName );
 
     if( workspace == null )
