@@ -35,10 +35,7 @@
  */
 package org.kalypsodeegree_impl.model.sort;
 
-import gnu.trove.TIntFunction;
-import gnu.trove.TIntHashSet;
 import gnu.trove.TIntProcedure;
-import gnu.trove.TObjectIntHashMap;
 
 import java.awt.Graphics;
 import java.net.URI;
@@ -75,19 +72,17 @@ import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 import com.infomatiq.jsi.Rectangle;
-import com.infomatiq.jsi.SpatialIndex;
-import com.infomatiq.jsi.rtree.RTree;
 
 public class SplitSort implements FeatureList
 {
-  private SpatialIndex m_spatialIndex;
-
   /* Items of this list */
   private final List<SplitSortItem> m_items = new ArrayList<>();
 
-  private final TObjectIntHashMap<Object> m_itemIndex = new TObjectIntHashMap<>();
-
-  private final TIntHashSet m_invalidIndices = new TIntHashSet();
+  /**
+   * (Geo-)index for this FeatureList. Lazy instantiated for memory reasons, small list (and those that never query
+   * shall not have the memory consuming index.
+   */
+  private SplitSortindex m_index = null;
 
   private final Feature m_parentFeature;
 
@@ -123,153 +118,11 @@ public class SplitSort implements FeatureList
     m_parentFeature = parentFeature;
     m_parentFeatureTypeProperty = parentFTP;
     m_envelopeProvider = envelopeProvider == null ? new DefaultEnvelopeProvider( parentFeature ) : envelopeProvider;
-    m_spatialIndex = createIndex();
   }
 
-  private SpatialIndex createIndex( )
+  List<SplitSortItem> getItems( )
   {
-    final SpatialIndex spatialIndex = new RTree();
-    spatialIndex.init( null );
-
-    return spatialIndex;
-  }
-
-  /**
-   * Recreate the index, if it is <code>null</code>.<br/>
-   */
-  private synchronized void checkIndex( )
-  {
-    final TIntHashSet x = m_invalidIndices;
-
-    final TIntProcedure tp = new TIntProcedure()
-    {
-      @Override
-      public boolean execute( final int index )
-      {
-        revalidateItem( index );
-        return true;
-      }
-    };
-
-    x.forEach( tp );
-
-    m_invalidIndices.clear();
-  }
-
-  synchronized void revalidateItem( final int index )
-  {
-    final SplitSortItem invalidItem = m_items.get( index );
-
-    final Rectangle newEnvelope = getEnvelope( invalidItem );
-
-    final Rectangle oldEnvelope = invalidItem.getEnvelope();
-
-    final boolean envelopeChanged = invalidItem.setEnvelope( newEnvelope );
-
-    /* Only update spatial index if envelope really changed */
-    if( envelopeChanged )
-    {
-      /* Remove from index */
-      if( oldEnvelope != null )
-      {
-        final boolean success = m_spatialIndex.delete( oldEnvelope, index );
-        if( !success )
-          System.out.println( "SplitSort: problem!" );
-      }
-
-      /* reinsert into index */
-      if( newEnvelope != null )
-        m_spatialIndex.add( newEnvelope, index );
-    }
-  }
-
-  private synchronized SplitSortItem createItem( final Object data, final int index )
-  {
-    Assert.isNotNull( data );
-
-    /* Create a new item */
-
-    final SplitSortItem newItem = new SplitSortItem( data );
-
-    /* mark as invalid, item gets inserted on next access */
-    m_invalidIndices.add( index );
-
-    /* hash object against its id for fast lookup */
-    m_itemIndex.put( data, index );
-
-    registerFeature( data );
-
-    return newItem;
-  }
-
-  /**
-   * Fixes indices after elements are inserted / removed from the middle of the list.
-   */
-  private void reindex( final int startIndex, final int offset )
-  {
-    for( int oldIndex = startIndex; oldIndex < size(); oldIndex++ )
-    {
-      final SplitSortItem item = m_items.get( oldIndex );
-
-      final int newIndex = oldIndex + offset;
-
-      /* fix spatial index */
-      final Rectangle envelope = item.getEnvelope();
-      if( envelope != null )
-      {
-        final boolean removed = m_spatialIndex.delete( envelope, oldIndex );
-        Assert.isTrue( removed );
-
-        m_spatialIndex.add( envelope, newIndex );
-      }
-    }
-
-    /* Fix item hash */
-    final TIntFunction tf = new TIntFunction()
-    {
-      @Override
-      public int execute( final int value )
-      {
-        if( value < startIndex )
-          return value;
-        else
-          return value + offset;
-      }
-    };
-    m_itemIndex.transformValues( tf );
-
-    /* Fix invalid item indices */
-    final int[] invalidIndices = m_invalidIndices.toArray();
-    m_invalidIndices.clear();
-
-    for( final int invalidIndex : invalidIndices )
-    {
-      if( invalidIndex < startIndex )
-        m_invalidIndices.add( invalidIndex );
-      else
-        m_invalidIndices.add( invalidIndex + offset );
-    }
-  }
-
-  private void removeDataObject( final SplitSortItem item, final int index )
-  {
-    Assert.isNotNull( item );
-
-    final Object object = item.getData();
-
-    /* really remove item and unregister it from all hashes */
-    m_invalidIndices.remove( index );
-
-    // FIXME: check, what happens if object is contained in this list more than once? Is there a way to avoid this?
-    m_itemIndex.remove( object );
-
-    final Rectangle envelope = item.getEnvelope();
-    if( envelope != null )
-      m_spatialIndex.delete( envelope, index );
-
-    // REMARK: it is a bit unclear what happens if we have a real Feature (not a link) multiple times in the same list.
-    // We only unregister the it if the last occurrence is removed, assuming, that the feature is really no longer used.
-    unregisterFeature( object );
+    return m_items;
   }
 
   private void checkCanAdd( final int count )
@@ -283,12 +136,18 @@ public class SplitSort implements FeatureList
       throw new IllegalArgumentException( "Adding a new element violates maxOccurs" ); //$NON-NLS-1$
   }
 
-  private Rectangle getEnvelope( final SplitSortItem item )
+  private void registerFeature( final Object object )
   {
-    final Object data = item.getData();
-    final GM_Envelope envelope = m_envelopeProvider.getEnvelope( data );
+    /* Only inline features needs to be unregistered from the workspace */
+    if( object instanceof IXLinkedFeature )
+      return;
+    if( !(object instanceof Feature) )
+      return;
 
-    return GeometryUtilities.toRectangle( envelope );
+    final Feature f = (Feature) object;
+    final GMLWorkspace workspace = f.getWorkspace();
+    if( workspace instanceof GMLWorkspace_Impl )
+      ((GMLWorkspace_Impl) workspace).register( f );
   }
 
   private void unregisterFeature( final Object object )
@@ -305,18 +164,44 @@ public class SplitSort implements FeatureList
       ((GMLWorkspace_Impl) workspace).unregister( f );
   }
 
-  private void registerFeature( final Object object )
+  private synchronized SplitSortItem createItem( final Object data, final int index )
   {
-    /* Only inline features needs to be unregistered from the workspace */
-    if( object instanceof IXLinkedFeature )
-      return;
-    if( !(object instanceof Feature) )
-      return;
+    Assert.isNotNull( data );
 
-    final Feature f = (Feature) object;
-    final GMLWorkspace workspace = f.getWorkspace();
-    if( workspace instanceof GMLWorkspace_Impl )
-      ((GMLWorkspace_Impl) workspace).register( f );
+    /* Create a new item */
+
+    final SplitSortItem newItem = new SplitSortItem( data );
+
+    if( m_index != null )
+      m_index.insert( newItem, index );
+
+    registerFeature( data );
+
+    return newItem;
+  }
+
+  Rectangle getEnvelope( final SplitSortItem item )
+  {
+    final Object data = item.getData();
+    final GM_Envelope envelope = m_envelopeProvider.getEnvelope( data );
+
+    return GeometryUtilities.toRectangle( envelope );
+  }
+
+  private void removeDataObject( final SplitSortItem item, final int index )
+  {
+    if( m_index != null )
+      m_index.remove( item, index );
+
+    // REMARK: it is a bit unclear what happens if we have a real Feature (not a link) multiple times in the same list.
+    // We only unregister the it if the last occurrence is removed, assuming, that the feature is really no longer used.
+    unregisterFeature( item.getData() );
+  }
+
+  private synchronized void createIndex( )
+  {
+    if( m_index == null )
+      m_index = new SplitSortindex( this );
   }
 
   // IMPLEMENTATION OF LIST INTERFACE
@@ -338,7 +223,8 @@ public class SplitSort implements FeatureList
   {
     checkCanAdd( 1 );
 
-    reindex( index, 1 );
+    if( m_index != null )
+      m_index.reindex( index, 1 );
 
     final SplitSortItem newItem = createItem( object, index );
 
@@ -361,7 +247,8 @@ public class SplitSort implements FeatureList
   {
     checkCanAdd( c.size() );
 
-    reindex( index, c.size() );
+    if( m_index != null )
+      m_index.reindex( index, c.size() );
 
     final Collection<SplitSortItem> items = new ArrayList<>( c.size() );
     final int count = 0;
@@ -379,7 +266,8 @@ public class SplitSort implements FeatureList
   {
     final SplitSortItem oldItem = m_items.get( index );
 
-    removeDataObject( oldItem, index );
+    if( m_index != null )
+      removeDataObject( oldItem, index );
 
     final SplitSortItem newItem = createItem( newObject, index );
 
@@ -405,7 +293,8 @@ public class SplitSort implements FeatureList
 
     removeDataObject( item, index );
 
-    reindex( index + 1, -1 );
+    if( m_index != null )
+      m_index.reindex( index + 1, -1 );
 
     m_items.remove( index );
 
@@ -419,7 +308,8 @@ public class SplitSort implements FeatureList
 
     removeDataObject( item, index );
 
-    reindex( index + 1, -1 );
+    if( m_index != null )
+      m_index.reindex( index + 1, -1 );
 
     m_items.remove( index );
 
@@ -471,10 +361,9 @@ public class SplitSort implements FeatureList
     for( final Object element : m_items )
       unregisterFeature( element );
 
+    m_index = null;
+
     m_items.clear();
-    m_invalidIndices.clear();
-    m_itemIndex.clear();
-    m_spatialIndex = createIndex();
   }
 
   @Override
@@ -498,9 +387,14 @@ public class SplitSort implements FeatureList
   @Override
   public synchronized int indexOf( final Object object )
   {
-    final int index = m_itemIndex.get( object );
-    if( index != 0 )
-      return index;
+    if( m_index != null )
+    {
+      // TODO: if w ehave many object, should we create the index now?
+
+      final int index = m_index.indexOf( object );
+      if( index != 0 )
+        return index;
+    }
 
     // REMARK: linear search is needed, because we cannot assure the valid index, especially after an object has been
     // removed that was contained inside the list twice.
@@ -607,7 +501,7 @@ public class SplitSort implements FeatureList
 
   private synchronized List< ? > query( final Rectangle envelope, @SuppressWarnings("rawtypes") final List receiver )
   {
-    checkIndex();
+    createIndex();
 
     @SuppressWarnings("unchecked")
     final List<Object> result = receiver == null ? new ArrayList<Object>() : receiver;
@@ -626,8 +520,8 @@ public class SplitSort implements FeatureList
       }
     };
 
-    final Rectangle searchRect = envelope == null ? m_spatialIndex.getBounds() : envelope;
-    m_spatialIndex.intersects( searchRect, ip );
+    final Rectangle searchRect = envelope == null ? m_index.getBounds() : envelope;
+    m_index.intersects( searchRect, ip );
 
     return result;
   }
@@ -642,9 +536,9 @@ public class SplitSort implements FeatureList
   @Override
   public synchronized GM_Envelope getBoundingBox( )
   {
-    checkIndex();
+    createIndex();
 
-    final Rectangle bounds = m_spatialIndex.getBounds();
+    final Rectangle bounds = m_index.getBounds();
 
     // REMARK: we assume that all elements of the split sort are always in Kalypso CRS
     final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
@@ -655,11 +549,8 @@ public class SplitSort implements FeatureList
   @Override
   public synchronized void invalidate( final Object object )
   {
-    final int index = indexOf( object );
-    if( index == -1 )
-      return;
-
-    m_invalidIndices.add( index );
+    if( m_index != null )
+      m_index.invalidate( object );
   }
 
   // FEATURE LIST IMPLEMENTATION
