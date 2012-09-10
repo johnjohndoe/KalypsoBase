@@ -1332,10 +1332,10 @@ public final class GeometryUtilities
     }
   }
 
-  @SuppressWarnings("unchecked")
   /**
    * Adapts a given object to one or more GM_Objects of a given type.
    */
+  @SuppressWarnings("unchecked")
   public static <T extends GM_Object> T[] findGeometries( final Object geomOrList, final Class<T> type )
   {
     final T[] emptyArray = (T[]) Array.newInstance( type, 0 );
@@ -1350,6 +1350,7 @@ public final class GeometryUtilities
       final T[] adapter = (T[]) ((GM_Object) geomOrList).getAdapter( arrayType );
       if( adapter == null )
         return emptyArray;
+      
       return adapter;
     }
 
