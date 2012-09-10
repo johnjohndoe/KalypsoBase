@@ -69,11 +69,11 @@ public class FeatureType extends QualifiedElement implements IDetailedFeatureTyp
 {
   private final static QName QNAME_LOCATION = new QName( NS.GML3, "location" ); //$NON-NLS-1$
 
-  private final HashMap<IPropertyType, Integer> m_positionMap = new HashMap<>();
+  private final Map<IPropertyType, Integer> m_positionMap = new HashMap<>();
 
-  private final HashMap<String, IPropertyType> m_localPartMap = new HashMap<>();
+  private final Map<String, IPropertyType> m_localPartMap = new HashMap<>();
 
-  private final HashMap<QName, IPropertyType> m_qNameMap = new HashMap<>();
+  private final Map<QName, IPropertyType> m_qNameMap = new HashMap<>();
 
   // will be initialized in init()
   private IFeatureContentType m_featureContentType = null;
