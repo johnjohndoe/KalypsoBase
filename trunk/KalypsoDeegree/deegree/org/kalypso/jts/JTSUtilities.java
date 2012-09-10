@@ -52,10 +52,12 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.math.LinearEquation;
 import org.kalypso.commons.math.LinearEquation.SameXValuesException;
+import org.kalypso.commons.math.geom.PolyLine;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
@@ -359,7 +361,7 @@ public final class JTSUtilities
    * on the given line.<br>
    * TODO: The used distance is calculated only by the x- and y-coordinates!! For an 3-dimensaional distance
    * calculation, the start and end point should have z-coordinates.
-   * 
+   *
    * @param line
    *          The original line.
    * @param start
@@ -1443,5 +1445,60 @@ public final class JTSUtilities
     final double dz = c1.z - c2.z;
 
     return Math.sqrt( dx * dx + dy * dy + dz * dz );
+  }
+
+  /**
+   * Interpolate missing z values for all vertices from vertices that already have a z value.<br/>
+   * For each vertex, the z value is interpolated from the two nearest adjacent vertices with z values. If only one
+   * neighbour has a z value, it is directly copied.
+   */
+  public static LineString interpolateMissingZ( final LineString input )
+  {
+    final LengthIndexedLine lengthIndex = new LengthIndexedLine( input );
+
+    final Coordinate[] coordinates = input.getCoordinates();
+
+    /* a create mapping distance - z for later interpolation */
+    final Collection<Double> distancesWithZsList = new ArrayList<>( coordinates.length );
+
+    final Collection<Double> zsList = new ArrayList<>( coordinates.length );
+
+    for( final Coordinate vertex : coordinates )
+    {
+      if( !Double.isNaN( vertex.z ) )
+      {
+        final double distance = lengthIndex.indexOf( vertex );
+        distancesWithZsList.add( distance );
+        zsList.add( vertex.z );
+      }
+    }
+
+    final Double[] distances = distancesWithZsList.toArray( new Double[distancesWithZsList.size()] );
+    final Double[] zs = zsList.toArray( new Double[zsList.size()] );
+
+    /* create a polyline for interpolation of missing z's */
+    final PolyLine interpolator = new PolyLine( distances, zs, TOLERANCE );
+
+    /* last step: interpolate missing z's via interpolator */
+    final Coordinate[] coordinatesWithZ = new Coordinate[coordinates.length];
+
+    for( int i = 0; i < coordinatesWithZ.length; i++ )
+    {
+      final Coordinate vertex = coordinates[i];
+
+      if( Double.isNaN( vertex.z ) )
+      {
+        final double distance = lengthIndex.indexOf( vertex );
+        final double interpolatedZ = interpolator.getYFor( distance, false );
+        coordinatesWithZ[i] = new Coordinate( vertex.x, vertex.y, interpolatedZ );
+      }
+      else
+        coordinatesWithZ[i] = new Coordinate( vertex );
+    }
+
+    /* create and return new line string */
+    final LineString output = input.getFactory().createLineString( coordinatesWithZ );
+    output.setSRID( input.getSRID() );
+    return output;
   }
 }
