@@ -69,8 +69,10 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.LineString;
 
 /**
  * @author kimwerner
@@ -524,6 +526,28 @@ public final class ProfilUtil
     }
 
     return GeometryFactory.createGM_Curve( pos, srsName );
+  }
+
+  public static LineString getLineString( final IProfil profile )
+  {
+    final String srsName = profile.getSrsName();
+
+    final IProfileRecord[] georeferencedPoints = getGeoreferencedPoints( profile );
+    final Coordinate[] pos = new Coordinate[georeferencedPoints.length];
+
+    for( int i = 0; i < georeferencedPoints.length; i++ )
+    {
+      final IProfileRecord record = georeferencedPoints[i];
+      final Double x = record.getRechtswert();
+      final Double y = record.getHochwert();
+      final Double z = record.getHoehe();
+      pos[i] = new Coordinate( x, y, z );
+    }
+
+    final LineString line = JTSAdapter.jtsFactory.createLineString( pos );
+    line.setSRID( JTSAdapter.toSrid( srsName ) );
+
+    return line;
   }
 
   /**
