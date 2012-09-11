@@ -60,7 +60,7 @@ public class NamedFeatureHelper
 
   /**
    * Gets the 'gml:name' property which all (normal) feature have. Handles the undbounded and restricted case.
-   *
+   * 
    * @return null, if the given feature has no 'gml:name' property. The empty string if the property is not set.
    */
   public static String getName( final Feature namedFeature )
@@ -73,15 +73,15 @@ public class NamedFeatureHelper
     final Object value = namedFeature.getProperty( nameProperty );
 
     if( value instanceof String )
-      return (String) value;
+      return (String)value;
     else if( value instanceof List )
     {
-      final List< ? > nameList = (List< ? >) value;
-      if( nameList == null || nameList.isEmpty() )
+      final List< ? > nameList = (List< ? >)value;
+      if( nameList.isEmpty() )
         return "";
 
-      final String name = (String) nameList.get( 0 );
-      return name == null ? "" : (String) name;
+      final String name = (String)nameList.get( 0 );
+      return name == null ? "" : (String)name;
     }
 
     return "";
@@ -90,10 +90,10 @@ public class NamedFeatureHelper
   /** Sets the 'gml:name' property which all (normal) feature have. Handles the undbounded and restricted case. */
   public static void setName( final Feature namedFeature, final String name )
   {
-    final IValuePropertyType vpt = (IValuePropertyType) namedFeature.getFeatureType().getProperty( Feature.QN_NAME );
+    final IValuePropertyType vpt = (IValuePropertyType)namedFeature.getFeatureType().getProperty( Feature.QN_NAME );
     if( vpt.isList() )
     {
-      final ArrayList<String> nameList = new ArrayList<String>( 1 );
+      final ArrayList<String> nameList = new ArrayList<>( 1 );
       nameList.add( name );
       namedFeature.setProperty( Feature.QN_NAME, nameList );
     }
@@ -112,7 +112,7 @@ public class NamedFeatureHelper
       return null;
 
     final Object desc = namedFeature.getProperty( descProperty );
-    return desc == null ? "" : (String) desc;
+    return desc == null ? "" : (String)desc;
   }
 
   public static void setDescription( final Feature namedFeature, final String desc )

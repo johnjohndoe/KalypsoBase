@@ -5,6 +5,7 @@ import org.eclipse.ui.wizards.IWizardRegistry;
 import org.kalypso.contribs.eclipse.ui.dialogs.GenericWizardsHandler;
 import org.kalypso.contribs.eclipse.ui.dialogs.GenericWizardsWizard;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.imports.ImportWizardsWizard;
 
 public class ImportWizardsHandler extends GenericWizardsHandler
 {
