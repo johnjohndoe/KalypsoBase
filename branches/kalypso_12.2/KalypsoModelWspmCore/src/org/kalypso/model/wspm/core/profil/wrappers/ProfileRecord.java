@@ -425,12 +425,13 @@ public class ProfileRecord extends AbstractRecordWrapper implements IProfileReco
   @Override
   public Double getRoughnessFactor( )
   {
-    final IComponent componentFactor = m_profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_FACTOR );
-    if( Objects.isNull( componentFactor ) )
+    final int indexOfComponent = indexOfComponent( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_FACTOR );
+
+    if( indexOfComponent == -1 )
       return 1.0;
 
-    final Double factor = (Double) getValue( componentFactor );
-    if( Objects.isNull( factor ) )
+    final Double factor = (Double) getValue( indexOfComponent );
+    if( factor == null )
       return 1.0;
 
     return factor;
