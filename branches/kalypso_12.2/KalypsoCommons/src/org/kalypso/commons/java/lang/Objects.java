@@ -57,6 +57,9 @@ public final class Objects
   {
   }
 
+  /**
+   * @return <code>true</code>, of any of the given objects is <code>null</code>.
+   */
   public static boolean isNull( final Object... objects )
   {
     for( final Object object : objects )
