@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.ui.internal.imports;
+package org.kalypso.ui.imports;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.internal.IWorkbenchGraphicConstants;

@@ -69,7 +69,7 @@ import org.kalypsodeegree_impl.model.sort.SplitSort;
  * <p>
  * -----------------------------------------------------------------------
  * </p>
- *
+ * 
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  */
@@ -84,7 +84,7 @@ public final class FeatureFactory
    * creates an instance of a Feature from its IFeatureType and an array of Objects that represents it properties. It is
    * assumed that the order of the properties is identical to the order of the FeatureTypeProperties of the the
    * IFeatureType.
-   *
+   * 
    * @param id
    *          unique id of the <CODE>Feature</CODE>
    * @param featureType
@@ -109,7 +109,7 @@ public final class FeatureFactory
 
   /**
    * Erzeugt ein Feature mit gesetzter ID und füllt das Feature mit Standardwerten.
-   *
+   * 
    * @param initializeWithDefaults
    *          set <code>true</code> to generate default properties (e.g. when generating from UserInterface) <br>
    *          set <code>false</code> to not generate default properties (e.g. when reading from GML or so.)
@@ -126,9 +126,9 @@ public final class FeatureFactory
       if( pt.isList() )
       {
         if( pt instanceof IRelationType )
-          feature.setProperty( pt, FeatureFactory.createFeatureList( feature, (IRelationType) pt ) );
+          feature.setProperty( pt, FeatureFactory.createFeatureList( feature, (IRelationType)pt ) );
         else
-          feature.setProperty( pt, new ArrayList<Object>() );
+          feature.setProperty( pt, new ArrayList<>() );
       }
       else
       {
@@ -150,7 +150,7 @@ public final class FeatureFactory
   {
     final IPropertyType[] propTypes = feature.getFeatureType().getProperties();
 
-    final Map<IPropertyType, Object> results = new LinkedHashMap<IPropertyType, Object>( propTypes.length );
+    final Map<IPropertyType, Object> results = new LinkedHashMap<>( propTypes.length );
     for( final IPropertyType ftp : propTypes )
     {
       final Object value = createDefaultFeatureProperty( feature, ftp, depth );
@@ -163,10 +163,10 @@ public final class FeatureFactory
   private static Object createDefaultFeatureProperty( final Feature feature, final IPropertyType ftp, final int depth )
   {
     if( ftp instanceof IValuePropertyType )
-      return createDefaultValueProperty( (IValuePropertyType) ftp );
+      return createDefaultValueProperty( (IValuePropertyType)ftp );
 
     if( ftp instanceof IRelationType )
-      return createDefaultRelationProperty( feature, (IRelationType) ftp, depth );
+      return createDefaultRelationProperty( feature, (IRelationType)ftp, depth );
 
     return null;
   }
@@ -189,7 +189,7 @@ public final class FeatureFactory
       return null;
 
     final IMarshallingTypeHandler typeHandler = vpt.getTypeHandler();
-    if( typeHandler != null && defaultValue != null )
+    if( typeHandler != null )
     {
       try
       {

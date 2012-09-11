@@ -56,13 +56,12 @@ import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
 /**
  * A Feature implementation which delegates all calls to another feature, proved by a feature provider.
  * <p>
- * Everything is delegated to the provided feature, except #getParent (because this freature stil lives in its own
- * structure).
+ * Everything is delegated to the provided feature, except #getParent (because this freature stil lives in its own structure).
  * </p>
  * <p>
  * Cannot be used as workspace root.
  * </p>
- *
+ * 
  * @author Gernot Belger
  */
 class XLinkedFeature_Impl extends PlatformObject implements IXLinkedFeature
@@ -113,7 +112,7 @@ class XLinkedFeature_Impl extends PlatformObject implements IXLinkedFeature
   public final Feature getFeature( )
   {
     final GMLWorkspace workspace = m_parentFeature.getWorkspace();
-    final GMLWorkspace_Impl workspaceImpl = (GMLWorkspace_Impl) workspace.getAdapter( GMLWorkspace_Impl.class );
+    final GMLWorkspace_Impl workspaceImpl = (GMLWorkspace_Impl)workspace.getAdapter( GMLWorkspace_Impl.class );
     if( workspaceImpl == null || m_featureId == null )
     {
       // REMARK: This may happen while loading the gml, so we ignore it and all access to
@@ -125,7 +124,7 @@ class XLinkedFeature_Impl extends PlatformObject implements IXLinkedFeature
     if( linkedWorkspace == null )
       throw new IllegalStateException( String.format( "Could not resolve xlinked workspace: %s", m_uri ) );
 
-    final Feature feature = linkedWorkspace == null ? null : linkedWorkspace.getFeature( m_featureId );
+    final Feature feature = linkedWorkspace.getFeature( m_featureId );
     if( feature == null )
       throw new IllegalStateException( "No feature found at: " + m_uri + "#" + m_featureId );
 
@@ -173,7 +172,7 @@ class XLinkedFeature_Impl extends PlatformObject implements IXLinkedFeature
 
   /**
    * format of name if "namespace:name" or just "name" - both will work
-   *
+   * 
    * @return array of properties, properties with maxoccurency>0 (as defined in applicationschema) will be embedded in
    *         java.util.List-objects
    * @see org.kalypsodeegree.model.feature.Feature#getProperty(java.lang.String)
@@ -236,7 +235,7 @@ class XLinkedFeature_Impl extends PlatformObject implements IXLinkedFeature
 
   /**
    * Returns the workspace of the linked feature.
-   *
+   * 
    * @see org.kalypsodeegree.model.feature.Feature#getWorkspace()
    */
   @Override
@@ -275,7 +274,7 @@ class XLinkedFeature_Impl extends PlatformObject implements IXLinkedFeature
     if( !(obj instanceof IXLinkedFeature) )
       return false;
 
-    final XLinkedFeature_Impl other = (XLinkedFeature_Impl) obj;
+    final XLinkedFeature_Impl other = (XLinkedFeature_Impl)obj;
     return new EqualsBuilder().append( m_uri, other.m_uri ).append( m_featureId, other.m_featureId ).isEquals();
   }
 
@@ -386,7 +385,7 @@ class XLinkedFeature_Impl extends PlatformObject implements IXLinkedFeature
   {
     final Object property = getFeature().getProperty( NamedFeatureHelper.GML_LOCATION );
     if( property instanceof GM_Object )
-      return (GM_Object) property;
+      return (GM_Object)property;
 
     return null;
   }

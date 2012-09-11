@@ -52,7 +52,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
-import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme;
@@ -65,17 +64,15 @@ import org.kalypso.template.types.StyledLayerType.Property;
 /**
  * @author Dirk Kuch
  */
-public class AddCascadingThemeCommand implements ICommand, IThemeCommand
+public class AddCascadingThemeCommand implements IThemeCommand
 {
   private final IKalypsoLayerModell m_mapModell;
 
   private final String m_name;
 
-  private final List<ICommand> m_layerCommands = new ArrayList<ICommand>();
+  private final List<ICommand> m_layerCommands = new ArrayList<>();
 
   private CascadingLayer m_layer;
-
-  private IKalypsoCascadingTheme m_theme;
 
   private final ADD_THEME_POSITION m_position;
 
@@ -85,7 +82,7 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
 
   /**
    * Add Cascading theme constructor
-   *
+   * 
    * @param mapModell
    *          the gmt file
    * @param name
@@ -143,9 +140,6 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
     return m_layerCommands.toArray( new ICommand[] {} );
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#getDescription()
-   */
   @Override
   public String getDescription( )
   {
@@ -161,7 +155,7 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
     {
       if( command instanceof AddThemeCommand )
       {
-        final AddThemeCommand myCmd = (AddThemeCommand) command;
+        final AddThemeCommand myCmd = (AddThemeCommand)command;
         final StyledLayerType myLayer = myCmd.updateMapModel( mapModell );
 
         final JAXBElement<StyledLayerType> layerElement = factory.createLayer( myLayer );
@@ -169,7 +163,7 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
       }
       else if( command instanceof AddCascadingThemeCommand )
       {
-        final AddCascadingThemeCommand cmd = (AddCascadingThemeCommand) command;
+        final AddCascadingThemeCommand cmd = (AddCascadingThemeCommand)command;
         final CascadingLayer layer = cmd.init( factory );
         final List<JAXBElement< ? extends StyledLayerType>> myLayer = layer.getLayer();
 
@@ -180,7 +174,7 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
       }
       else if( command instanceof ISpecialAddThemeCommand )
       {
-        final ISpecialAddThemeCommand cmd = (ISpecialAddThemeCommand) command;
+        final ISpecialAddThemeCommand cmd = (ISpecialAddThemeCommand)command;
         final StyledLayerType myLayer = cmd.getLayer();
 
         final JAXBElement<StyledLayerType> layerElement = factory.createLayer( myLayer );
@@ -219,9 +213,6 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
     return false;
   }
 
-  /**
-   * @see org.kalypso.commons.command.ICommand#process()
-   */
   @Override
   public void process( ) throws Exception
   {
@@ -244,14 +235,10 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
     if( ADD_THEME_POSITION.eFront.equals( m_position ) )
     {
       final IKalypsoTheme[] themes = m_mapModell.getAllThemes();
-      m_theme = (IKalypsoCascadingTheme) m_mapModell.insertLayer( m_layer, getPosition( themes ) );
+      m_mapModell.insertLayer( m_layer, getPosition( themes ) );
     }
     else if( ADD_THEME_POSITION.eBack.equals( m_position ) )
-    {
-      m_theme = (IKalypsoCascadingTheme) m_mapModell.addLayer( m_layer );
-    }
-
-    m_mapModell.activateTheme( m_theme );
+      m_mapModell.addLayer( m_layer );
   }
 
   /**
@@ -304,7 +291,7 @@ public class AddCascadingThemeCommand implements ICommand, IThemeCommand
     {
       if( command instanceof IThemeCommand )
       {
-        final IThemeCommand theme = (IThemeCommand) command;
+        final IThemeCommand theme = (IThemeCommand)command;
         final StyledLayerType childLayer = theme.toStyledLayerType();
 
         childLayers.add( factory.createLayer( childLayer ) );
