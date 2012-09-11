@@ -51,7 +51,6 @@ import org.kalypso.model.wspm.core.gml.classifications.IVegetationClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-import org.kalypso.observation.result.IComponent;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -64,14 +63,84 @@ public final class WspmClassifications
   {
   }
 
-  public static IRoughnessClass findRoughnessClass( final IProfileRecord point )
+  /**
+   * Get the complete roughness value from the record. Resolves the class if necessary, and also applies a roughness
+   * factor if present.
+   *
+   * @param preferClasses
+   *          If <code>true</code>, class values have higher priority if direct values and class values are both
+   *          present. If <code>false</code>, direct values have the higher priority.
+   */
+  public static BigDecimal getRoughnessValue( final IProfileRecord point, final String roughnessComponent, final boolean preferClasses )
+  {
+    final Double factor = point.getRoughnessFactor();
+
+    if( preferClasses )
+    {
+      final BigDecimal classValue = findRoughnessClassValue( point, roughnessComponent );
+      if( classValue != null )
+        return classValue.multiply( new BigDecimal( factor ) );
+
+      final BigDecimal value = findRoughnessValue( point, roughnessComponent );
+      if( value != null )
+        return value.multiply( new BigDecimal( factor ) );
+
+      return null;
+    }
+    else
+    {
+      final BigDecimal value = findRoughnessValue( point, roughnessComponent );
+      if( value != null )
+        return value.multiply( new BigDecimal( factor ) );
+
+      final BigDecimal classValue = findRoughnessClassValue( point, roughnessComponent );
+      if( classValue != null )
+        return classValue.multiply( new BigDecimal( factor ) );
+
+      return null;
+    }
+  }
+
+  private static BigDecimal findRoughnessValue( final IProfileRecord point, final String roughnessComponent )
+  {
+    final int componentIndex = point.indexOfComponent( roughnessComponent );
+    if( componentIndex == -1 )
+      return null;
+
+    final Object value = point.getValue( componentIndex );
+    if( value instanceof BigDecimal )
+      return (BigDecimal) value;
+
+    if( value instanceof Number )
+    {
+      final double dbl = ((Number) value).doubleValue();
+      if( Double.isNaN( dbl ) )
+        return null;
+
+      return new BigDecimal( dbl );
+    }
+
+    // should never happen
+    return null;
+  }
+
+  private static BigDecimal findRoughnessClassValue( final IProfileRecord point, final String roughnessComponent )
+  {
+    final IRoughnessClass clazz = findRoughnessClass( point );
+    if( Objects.isNull( clazz ) )
+      return null;
+
+    return clazz.getValue( roughnessComponent );
+  }
+
+  private static IRoughnessClass findRoughnessClass( final IProfileRecord point )
   {
     final IProfil profile = point.getProfile();
     final int componentRoughnessClass = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
     if( componentRoughnessClass == -1 )
       return null;
 
-    final IWspmClassification classification = WspmClassifications.getClassification( profile );
+    final IWspmClassification classification = getClassification( profile );
     if( Objects.isNull( classification ) )
       return null;
 
@@ -82,27 +151,76 @@ public final class WspmClassifications
     return classification.findRoughnessClass( clazzName );
   }
 
-  public static Double findRoughnessValue( final IProfileRecord point, final IComponent component, final Double plainValue )
+  /**
+   * Gets the resolved vegetation value for the given component.<br/>
+   * Vegetation classes are resolved if necessary, depending on <code>preferClasses</code>.
+   *
+   * @param preferClasses
+   *          If <code>true</code>, class values have higher priority if direct values and class values are both
+   *          present. If <code>false</code>, direct values have the higher priority.
+   */
+  public static BigDecimal getVegetationValue( final IProfileRecord point, final String vegetationComponent, final boolean preferClasses )
   {
-    final IRoughnessClass clazz = findRoughnessClass( point );
-    if( Objects.isNull( clazz ) )
-      return plainValue;
+    if( preferClasses )
+    {
+      final BigDecimal classValue = findVegetationClassValue( point, vegetationComponent );
+      if( classValue != null )
+        return classValue;
 
-    final BigDecimal value = clazz.getValue( component.getId() );
-    if( Objects.isNotNull( value ) )
-      return value.doubleValue();
+      return findVegetationValue( point, vegetationComponent );
+    }
+    else
+    {
+      final BigDecimal value = findVegetationValue( point, vegetationComponent );
+      if( value != null )
+        return value;
 
-    return plainValue;
+      return findVegetationClassValue( point, vegetationComponent );
+    }
   }
 
-  public static IVegetationClass findVegetationClass( final IProfileRecord point )
+  private static BigDecimal findVegetationValue( final IProfileRecord point, final String vegetationComponent )
+  {
+    final IProfil profile = point.getProfile();
+
+    final int componentIndex = profile.indexOfProperty( vegetationComponent );
+    if( componentIndex == -1 )
+      return null;
+
+    final Object value = point.getValue( componentIndex );
+    if( value instanceof BigDecimal )
+      return (BigDecimal) value;
+
+    if( value instanceof Number )
+    {
+      final double dbl = ((Number) value).doubleValue();
+      if( Double.isNaN( dbl ) )
+        return null;
+
+      return new BigDecimal( dbl );
+    }
+
+    // should never happen
+    return null;
+  }
+
+  private static BigDecimal findVegetationClassValue( final IProfileRecord point, final String vegetationComponent )
+  {
+    final IVegetationClass clazz = findVegetationClass( point );
+    if( Objects.isNull( clazz ) )
+      return null;
+
+    return clazz.getValue( vegetationComponent );
+  }
+
+  private static IVegetationClass findVegetationClass( final IProfileRecord point )
   {
     final IProfil profile = point.getProfile();
     final int componentVegetationClass = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS );
     if( componentVegetationClass == -1 )
       return null;
 
-    final IWspmClassification classification = WspmClassifications.getClassification( profile );
+    final IWspmClassification classification = getClassification( profile );
     if( Objects.isNull( classification ) )
       return null;
 
@@ -113,40 +231,13 @@ public final class WspmClassifications
     return classification.findVegetationClass( clazzName );
   }
 
-  public static Double findVegetationValue( final IProfileRecord point, final IComponent component, final Double plainValue )
-  {
-    final IProfil profile = point.getProfile();
-
-    final int componentVegetationClass = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS );
-    if( componentVegetationClass == -1 )
-      return plainValue;
-
-    final IWspmClassification classification = WspmClassifications.getClassification( profile );
-    if( Objects.isNull( classification ) )
-      return plainValue;
-
-    final String clazzName = (String) point.getValue( componentVegetationClass );
-    if( Strings.isEmpty( clazzName ) )
-      return plainValue;
-
-    final IVegetationClass clazz = classification.findVegetationClass( clazzName );
-    if( Objects.isNull( clazz ) )
-      return plainValue;
-
-    final BigDecimal value = clazz.getValue( component.getId() );
-    if( Objects.isNotNull( value ) )
-      return value.doubleValue();
-
-    return plainValue;
-  }
-
   public static double getAx( final IProfileRecord point )
   {
     final Double bewuchs = point.getBewuchsDp();
     if( Objects.isNotNull( bewuchs ) )
       return bewuchs.doubleValue();
 
-    final IVegetationClass clazz = WspmClassifications.findVegetationClass( point );
+    final IVegetationClass clazz = findVegetationClass( point );
     if( Objects.isNotNull( clazz ) )
     {
       final BigDecimal decimal = clazz.getAx();
@@ -163,7 +254,7 @@ public final class WspmClassifications
     if( Objects.isNotNull( bewuchs ) )
       return bewuchs.doubleValue();
 
-    final IVegetationClass clazz = WspmClassifications.findVegetationClass( point );
+    final IVegetationClass clazz = findVegetationClass( point );
     if( Objects.isNotNull( clazz ) )
     {
       final BigDecimal decimal = clazz.getAy();
@@ -197,7 +288,7 @@ public final class WspmClassifications
     if( Objects.isNotNull( bewuchs ) )
       return bewuchs.doubleValue();
 
-    final IVegetationClass clazz = WspmClassifications.findVegetationClass( point );
+    final IVegetationClass clazz = findVegetationClass( point );
     if( Objects.isNotNull( clazz ) )
     {
       final BigDecimal decimal = clazz.getDp();
@@ -238,42 +329,5 @@ public final class WspmClassifications
       return false;
 
     return true;
-  }
-
-  public static Double getRoughnessValue( final IProfileRecord point, final String property )
-  {
-    final Double factor = point.getRoughnessFactor();
-
-    final IComponent component = point.hasPointProperty( property );
-    if( Objects.isNotNull( component ) )
-    {
-      final Object value = point.getValue( component );
-      if( value instanceof Number )
-      {
-        final Number number = (Number) value;
-        return number.doubleValue() * factor;
-      }
-    }
-
-    final IRoughnessClass clazz = WspmClassifications.findRoughnessClass( point );
-    if( Objects.isNull( clazz ) )
-      return null;
-
-    switch( property )
-    {
-      case IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS:
-        final BigDecimal clazzKsValue = clazz.getKsValue();
-        if( Objects.isNotNull( clazzKsValue ) )
-          return clazzKsValue.doubleValue() * factor;
-
-      case IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST:
-        final BigDecimal clazzKstValue = clazz.getKstValue();
-        if( Objects.isNotNull( clazzKstValue ) )
-          return clazzKstValue.doubleValue() * factor;
-
-      default:
-        return null;
-    }
-
   }
 }
