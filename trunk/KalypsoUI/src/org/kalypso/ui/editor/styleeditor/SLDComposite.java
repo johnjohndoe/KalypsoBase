@@ -163,6 +163,8 @@ public class SLDComposite extends Composite
     if( m_form.isDisposed() )
       return;
 
+    m_form.getMessageManager().setAutoUpdate( false );
+
     final Composite body = m_form.getBody();
     ControlUtils.disposeChildren( body );
 
@@ -170,6 +172,8 @@ public class SLDComposite extends Composite
       m_styleComposite = new FeatureTypeStyleComposite( m_toolkit, body, m_input );
 
     updateControl();
+
+    m_form.getMessageManager().setAutoUpdate( true );
   }
 
   protected void updateControl( )
