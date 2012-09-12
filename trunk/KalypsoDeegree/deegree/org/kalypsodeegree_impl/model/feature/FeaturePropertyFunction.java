@@ -50,10 +50,6 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public abstract class FeaturePropertyFunction implements IFeaturePropertyHandler, IExecutableExtension
 {
-  /**
-   * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
-   *      java.lang.String, java.lang.Object)
-   */
   @Override
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
@@ -78,18 +74,12 @@ public abstract class FeaturePropertyFunction implements IFeaturePropertyHandler
    */
   public abstract void init( final Map<String, String> properties );
 
-  /**
-   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#invalidateEnvelope(org.kalypso.gmlschema.property.IPropertyType)
-   */
   @Override
   public boolean invalidateEnvelope( final IPropertyType pt )
   {
     return GeometryUtilities.isGeometry( pt );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#isFunctionProperty(org.kalypso.gmlschema.property.IPropertyType)
-   */
   @Override
   public boolean isFunctionProperty( final IPropertyType pt )
   {

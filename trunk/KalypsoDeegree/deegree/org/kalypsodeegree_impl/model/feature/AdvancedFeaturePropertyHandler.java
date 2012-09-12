@@ -67,7 +67,7 @@ public class AdvancedFeaturePropertyHandler implements IFeaturePropertyHandler
 
   private final static IFeaturePropertyHandler CHECK_HANDLER = new CheckFeaturePropertyHandler();
 
-  private final Map<QName, IFeaturePropertyHandler> m_handlers = new HashMap<QName, IFeaturePropertyHandler>();
+  private final Map<QName, IFeaturePropertyHandler> m_handlers = new HashMap<>();
 
   public AdvancedFeaturePropertyHandler( final IFeatureType featureType )
   {
