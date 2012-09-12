@@ -135,21 +135,14 @@ public class JTSQuadMesher
     final Coordinate[][] meshPoints = new Coordinate[coordinatesNewBottom.length][coordinatesNewLeft.length];
 
     // calculate dictance between the first and the last intersection points for the new_top and new_bottom.
-    // final double distBottom = coordinatesNewBottom[0].distance( coordinatesNewBottom[coordinatesNewBottom.length - 1]
-    // );
-    // final double distTop = coordinatesNewTop[0].distance( coordinatesNewTop[coordinatesNewTop.length - 1] );
-
-    // better: do it by route than by distance to first point
+    // do it by route along the elements
     final double distBottom = calcRoute( coordinatesNewBottom, 0, coordinatesNewBottom.length - 1 );
     final double distTop = calcRoute( coordinatesNewTop, 0, coordinatesNewTop.length - 1 );
 
     for( int j = 0; j < coordinatesNewBottom.length; j++ )
     {
-
       // calculate distance between each bottom line point and the starting point of the bottom line
       // calculate distance between each top line point and the starting point of the top line
-      // final double distSegmentBottom = coordinatesNewBottom[j].distance( coordinatesNewBottom[0] );
-      // final double distSegmentTop = coordinatesNewTop[j].distance( coordinatesNewTop[0] );
 
       // better: do it by route than by distance to first point
       final double distSegmentBottom = calcRoute( coordinatesNewBottom, 0, j );
@@ -162,6 +155,7 @@ public class JTSQuadMesher
       {
         final double dxLeftToRight = coordinatesNewRight[i].x - coordinatesNewLeft[i].x;
         final double dyLeftToRight = coordinatesNewRight[i].y - coordinatesNewLeft[i].y;
+        final double dzLeftToRight = coordinatesNewRight[i].z - coordinatesNewLeft[i].z;
 
         final double ratio = (double) i / (double) (coordinatesNewLeft.length - 1);
 
@@ -170,10 +164,11 @@ public class JTSQuadMesher
 
         double x = coordinatesNewLeft[i].x + dxLeftToRight * relativeSegmentDistance / relativeDistance;
         double y = coordinatesNewLeft[i].y + dyLeftToRight * relativeSegmentDistance / relativeDistance;
-        double z = Double.NaN;
+        // double z = Double.NaN;
+        double z = coordinatesNewLeft[i].z + dzLeftToRight * relativeSegmentDistance / relativeDistance;
 
         if( i == 0 )
-        {
+        {// TODO: was already copied before, why again?
           x = coordinatesNewBottom[j].x;
           y = coordinatesNewBottom[j].y;
           z = coordinatesNewBottom[j].z;
