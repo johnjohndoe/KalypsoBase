@@ -60,7 +60,7 @@ public final class FeaturePropertyHandlerFactory
 
   /* Non-static starts here */
 
-  private final Map<IFeatureType, IFeaturePropertyHandler> m_handlers = new ConcurrentHashMap<IFeatureType, IFeaturePropertyHandler>();
+  private final Map<IFeatureType, IFeaturePropertyHandler> m_handlers = new ConcurrentHashMap<>();
 
   /**
    * Return a handler for the given feature type.<br/>

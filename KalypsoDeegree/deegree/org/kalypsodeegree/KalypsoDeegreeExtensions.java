@@ -114,23 +114,23 @@ public class KalypsoDeegreeExtensions
     if( FUNCTION_MAP == null )
     {
       final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
-      FUNCTION_MAP = new HashMap<String, IConfigurationElement>( configurationElements.length );
+      FUNCTION_MAP = new HashMap<>( configurationElements.length );
       for( final IConfigurationElement element : configurationElements )
       {
-        final String configid = element.getAttribute( "id" );
+        final String configid = element.getAttribute( "id" ); //$NON-NLS-1$
         FUNCTION_MAP.put( configid, element );
       }
     }
 
     if( !FUNCTION_MAP.containsKey( id ) )
     {
-      final String message = String.format( "No function property with id: %s", id );
+      final String message = String.format( "No function property with id: %s", id ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoDeegreePlugin.getID(), message );
       throw new CoreException( status );
     }
 
     final IConfigurationElement element = FUNCTION_MAP.get( id );
-    final FeaturePropertyFunction function = (FeaturePropertyFunction) element.createExecutableExtension( "class" );
+    final FeaturePropertyFunction function = (FeaturePropertyFunction)element.createExecutableExtension( "class" ); //$NON-NLS-1$
     function.init( properties );
 
     return function;
@@ -144,7 +144,7 @@ public class KalypsoDeegreeExtensions
 
       final IExtensionPoint extensionPoint = registry.getExtensionPoint( LISTENER_EXTENSION_POINT );
       final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
-      final Map<QName, List<IConfigurationElement>> listeners = new HashMap<QName, List<IConfigurationElement>>( configurationElements.length );
+      final Map<QName, List<IConfigurationElement>> listeners = new HashMap<>( configurationElements.length );
       for( final IConfigurationElement element : configurationElements )
       {
         final QName[] qnames = parseQNames( element );
@@ -158,7 +158,7 @@ public class KalypsoDeegreeExtensions
       }
 
       /* Make arrays from list */
-      QNAME_LISTENERS = new HashMap<QName, IConfigurationElement[]>( listeners.size() );
+      QNAME_LISTENERS = new HashMap<>( listeners.size() );
       for( final Map.Entry<QName, List<IConfigurationElement>> entry : listeners.entrySet() )
       {
         final List<IConfigurationElement> value = entry.getValue();
@@ -175,7 +175,7 @@ public class KalypsoDeegreeExtensions
   {
     final IConfigurationElement[] children = element.getChildren( "qname" );
 
-    final List<QName> qnames = new ArrayList<QName>( children.length );
+    final List<QName> qnames = new ArrayList<>( children.length );
     for( final IConfigurationElement child : children )
     {
       final String namespace = child.getAttribute( "namespace" );
@@ -238,7 +238,7 @@ public class KalypsoDeegreeExtensions
     final IFeatureType featureType = feature.getFeatureType();
     final IFeatureType[] substituteFeatureTypes = GMLSchemaUtilities.getSubstituts( featureType, featureType.getGMLSchema(), true, true );
 
-    final Set<IFeatureRule> result = new HashSet<IFeatureRule>();
+    final Set<IFeatureRule> result = new HashSet<>();
     for( final IFeatureType type : substituteFeatureTypes )
     {
       final List<IFeatureRule> list = rules.get( type );
@@ -261,7 +261,7 @@ public class KalypsoDeegreeExtensions
     // fill binding map
     if( FEATURE_BINDINGS == null )
     {
-      FEATURE_BINDINGS = new HashMap<QName, IConfigurationElement>();
+      FEATURE_BINDINGS = new HashMap<>();
 
       /* get extension points */
       final IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -284,7 +284,7 @@ public class KalypsoDeegreeExtensions
     if( THE_RULES != null )
       return THE_RULES;
 
-    THE_RULES = new HashMap<QName, List<IFeatureRule>>();
+    THE_RULES = new HashMap<>();
 
     final IExtensionRegistry registry = Platform.getExtensionRegistry();
 
