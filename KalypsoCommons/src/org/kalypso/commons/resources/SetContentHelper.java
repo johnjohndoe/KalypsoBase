@@ -66,14 +66,14 @@ import org.kalypso.contribs.java.lang.CatchRunnable;
 /**
  * Helper-Klasse für {@link org.eclipse.core.resources.IFile}. This is an abstract class, you must implement the
  * <code>write</code> method.
- * 
+ *
  * @author belger
  */
 public abstract class SetContentHelper
 {
   private static final String BCKUP_SUFFIX = "_bckup_"; //$NON-NLS-1$
 
-  final boolean doNotBackUp = Boolean.getBoolean( "kalypso.model.product.doNotMakeBckupsOnSave" ); //$NON-NLS-1$
+  final boolean m_doNotBackUp = Boolean.getBoolean( "kalypso.model.product.doNotMakeBckupsOnSave" ); //$NON-NLS-1$
 
   private String m_newCharset;
 
@@ -149,7 +149,7 @@ public abstract class SetContentHelper
       if( file.exists() )
       {
         String bckupFileName = ""; //$NON-NLS-1$
-        if( !doNotBackUp )
+        if( !m_doNotBackUp )
         {
           bckupFileName = createBckup( new File( file.getLocationURI() ) );
           file.refreshLocal( 0, monitor );
@@ -160,24 +160,25 @@ public abstract class SetContentHelper
         {
           file.setContents( m_pis, force, keepHistory, new SubProgressMonitor( monitor, 1000 ) );
         }
+
         /*
          * if the operation finished successfully remove the backup copy
          */
-        if( !doNotBackUp )
+        if( !m_doNotBackUp )
         {
           try
           {
-            File bckupFile = new File( bckupFileName );
+            final File bckupFile = new File( bckupFileName );
             try
             {
               bckupFile.delete();
             }
-            catch( Exception e )
+            catch( final Exception e )
             {
               bckupFile.deleteOnExit();
             }
           }
-          catch( Exception e )
+          catch( final Exception e )
           {
             // TODO: handle exception
           }
@@ -261,21 +262,21 @@ public abstract class SetContentHelper
   /**
    * rename the existing original file, save return the name of this renamed file, create empty file to replace original
    * one
-   * 
+   *
    * @param gmlFile
    *          original file to create a backup from
    * @return file name of created backup file
    */
   private String createBckup( final File gmlFile )
   {
-    String fileName = gmlFile.getAbsolutePath();
-    String bckupFileName = fileName + BCKUP_SUFFIX + (new Date()).getTime();
+    final String fileName = gmlFile.getAbsolutePath();
+    final String bckupFileName = fileName + BCKUP_SUFFIX + new Date().getTime();
     gmlFile.renameTo( new File( bckupFileName ) );
     try
     {
       gmlFile.createNewFile();
     }
-    catch( IOException e )
+    catch( final IOException e )
     {
       e.printStackTrace();
     }
