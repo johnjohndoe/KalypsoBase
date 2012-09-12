@@ -376,18 +376,25 @@ public final class FeatureHelper
       newParentFeature.setProperty( relation, newFeature );
     }
 
+    copyProperties( featureToClone, newFeature, nullValuedProperties );
+
+    return newFeature;
+  }
+
+  public static void copyProperties( final Feature source, final Feature target, final QName[] nullValuedProperties ) throws Exception
+  {
+    final IFeatureType featureType = source.getFeatureType();
+
     final IPropertyType[] properties = featureType.getProperties();
     for( final IPropertyType pt : properties )
     {
-      if( ArrayUtils.contains( nullValuedProperties, pt.getQName() ) )
-      {
+      if(  nullValuedProperties != null && ArrayUtils.contains( nullValuedProperties, pt.getQName() ) )
         continue;
-      }
 
       try
       {
-        final Object newValue = FeatureHelper.cloneProperty( featureToClone, newFeature, pt );
-        newFeature.setProperty( pt, newValue );
+        final Object newValue = FeatureHelper.cloneProperty( source, target, pt );
+        target.setProperty( pt, newValue );
       }
       catch( final CloneNotSupportedException e )
       {
@@ -395,8 +402,6 @@ public final class FeatureHelper
         KalypsoDeegreePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
       }
     }
-
-    return newFeature;
   }
 
   /**
