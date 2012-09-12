@@ -62,9 +62,6 @@ public class ComponentUiDoubleHandler extends AbstractComponentUiHandler
     super( component, editable, resizeable, moveable, columnLabel, columnStyle, columnWidth, columnWidthPercent, displayFormat, nullFormat, parseFormat );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#createCellEditor(org.eclipse.swt.widgets.Table)
-   */
   @Override
   public CellEditor createCellEditor( final Table table )
   {
@@ -73,9 +70,6 @@ public class ComponentUiDoubleHandler extends AbstractComponentUiHandler
     return textCellEditor;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#formatValue(java.lang.Object)
-   */
   @Override
   public Object doGetValue( final IRecord record )
   {
@@ -86,10 +80,6 @@ public class ComponentUiDoubleHandler extends AbstractComponentUiHandler
     return getStringRepresentation( record );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#setValue(org.kalypso.observation.result.IRecord,
-   *      java.lang.Object)
-   */
   @Override
   public void doSetValue( final IRecord record, final Object value )
   {
@@ -99,19 +89,12 @@ public class ComponentUiDoubleHandler extends AbstractComponentUiHandler
       setValue( record, parseValue( value.toString() ) );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#parseValue(java.lang.String)
-   */
   @Override
   public Object parseValue( final String text )
   {
     return NumberUtils.parseDouble( text );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#setValue(org.kalypso.observation.result.IRecord,
-   *      java.lang.Object)
-   */
   @Override
   public void setValue( final IRecord record, final Object value )
   {
