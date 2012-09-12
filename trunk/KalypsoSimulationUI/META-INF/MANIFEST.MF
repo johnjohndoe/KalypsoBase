@@ -12,7 +12,7 @@ Export-Package: org.kalypso.simulation.ui,
  org.kalypso.simulation.ui.calccase,
  org.kalypso.simulation.ui.calccase.jface,
  org.kalypso.simulation.ui.wizards.createCalcCase
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: .
 Require-Bundle: org.eclipse.core.commands,
  org.eclipse.core.externaltools,
