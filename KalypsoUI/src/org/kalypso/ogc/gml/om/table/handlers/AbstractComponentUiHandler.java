@@ -89,9 +89,6 @@ public abstract class AbstractComponentUiHandler implements IComponentUiHandler
     m_parseFormat = parseFormat;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getIdentity()
-   */
   @Override
   public String getIdentity( )
   {
@@ -106,7 +103,6 @@ public abstract class AbstractComponentUiHandler implements IComponentUiHandler
   @Override
   public String getStringRepresentation( final IRecord record )
   {
-
     try
     {
       final Object value = record.getValue( m_component );
@@ -116,41 +112,28 @@ public abstract class AbstractComponentUiHandler implements IComponentUiHandler
     }
     catch( final IndexOutOfBoundsException e )
     {
-
       return String.format( m_nullFormat );
     }
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getImage(org.kalypso.observation.result.IRecord)
-   */
   @Override
   public Image getImage( final IRecord record )
   {
     return null;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#isEditable()
-   */
   @Override
   public boolean isEditable( )
   {
     return m_editable;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#isResizeable()
-   */
   @Override
   public boolean isResizeable( )
   {
     return m_resizeable;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#isMoveable()
-   */
   @Override
   public boolean isMoveable( )
   {
@@ -169,9 +152,6 @@ public abstract class AbstractComponentUiHandler implements IComponentUiHandler
     return m_columnWidth;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getColumnWidthPercent()
-   */
   @Override
   public int getColumnWidthPercent( )
   {
@@ -193,13 +173,9 @@ public abstract class AbstractComponentUiHandler implements IComponentUiHandler
     return m_parseFormat;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getColumnLabel()
-   */
   @Override
   public String getColumnLabel( )
   {
     return m_columnLabel;
   }
-
 }
