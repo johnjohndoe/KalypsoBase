@@ -293,6 +293,7 @@ public class SplitSort implements FeatureList
 
     removeDataObject( item, index );
 
+    // FIXME: reindexing is very slow, we need another idea how to speed this up
     if( m_index != null )
       m_index.reindex( index + 1, -1 );
 
@@ -389,7 +390,7 @@ public class SplitSort implements FeatureList
   {
     if( m_index != null )
     {
-      // TODO: if w ehave many object, should we create the index now?
+      // TODO: if we have many object, should we create the index now?
 
       final int index = m_index.indexOf( object );
       if( index != 0 )
