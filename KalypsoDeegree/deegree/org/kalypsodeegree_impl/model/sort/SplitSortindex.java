@@ -153,6 +153,8 @@ class SplitSortindex
    */
   void reindex( final int startIndex, final int offset )
   {
+    // FIXME: slow!
+
     final List<SplitSortItem> items = m_parent.getItems();
 
     for( int oldIndex = startIndex; oldIndex < items.size(); oldIndex++ )
