@@ -5,6 +5,7 @@ package org.kalypso.commons.databinding.forms;
 
 import java.util.Iterator;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.ValidationStatusProvider;
 import org.eclipse.core.databinding.observable.ChangeEvent;
@@ -217,25 +218,31 @@ public class FormSupport
 
     final String message = m_messageProvider.getMessage( m_currentStatusProvider );
     final int type = m_messageProvider.getMessageType( m_currentStatusProvider );
+
     if( type == IMessageProvider.ERROR )
     {
       if( m_uiChanged )
-        m_form.setMessage( message, IMessageProvider.ERROR );
+        setMessage( message, IMessageProvider.ERROR );
       else
-        m_form.setMessage( null );
+        setMessage( null, IMessageProvider.NONE );
 
       if( m_currentStatus != null && currentStatusHasException() )
-      {
         handleStatusException();
-      }
     }
     else
-    {
-      m_form.setMessage( message, type );
-    }
+      setMessage( message, type );
 
     if( m_scrolledForm != null )
       m_scrolledForm.reflow( false );
+  }
+
+  private void setMessage( final String message, final int type )
+  {
+    final String oldMessgae = m_form.getMessage();
+    final int oldType = m_form.getMessageType();
+
+    if( type != oldType || !ObjectUtils.equals( message, oldMessgae ) )
+      m_form.setMessage( message, type );
   }
 
   private boolean currentStatusHasException( )
