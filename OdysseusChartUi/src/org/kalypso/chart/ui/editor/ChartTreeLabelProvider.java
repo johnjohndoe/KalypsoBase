@@ -61,21 +61,11 @@ import de.openali.odysseus.chart.framework.util.ChartUtilities;
  */
 public class ChartTreeLabelProvider extends LabelProvider implements ITableLabelProvider
 {
-  private final Map<IChartLayer, Image> m_layerImages = new HashMap<IChartLayer, Image>();
-
-  private final Map<ILegendEntry, Image> m_legendEntryImages = new HashMap<ILegendEntry, Image>();
+  private final Map<Object, Image> m_images = new HashMap<Object, Image>();
 
   /** Default size for legend icons: use 16, this is default for all eclipse icons */
   private final Point m_defaultIconSize = new Point( 16, 16 );
 
-  // TODO: give display, not chart part
-  public ChartTreeLabelProvider( )
-  {
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.LabelProvider#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -84,22 +74,14 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
     clearImages();
   }
 
-  private void clearImages( )
+  public void clearImages( )
   {
-    final Image[] layerImages = m_layerImages.values().toArray( new Image[m_layerImages.size()] );
-    m_layerImages.clear();
+    final Image[] layerImages = m_images.values().toArray( new Image[m_images.size()] );
+    m_images.clear();
     for( final Image img : layerImages )
-      img.dispose();
-
-    final Image[] legendEntryImages = m_legendEntryImages.values().toArray( new Image[m_legendEntryImages.size()] );
-    m_legendEntryImages.clear();
-    for( final Image img : legendEntryImages )
       img.dispose();
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
-   */
   @Override
   public String getText( final Object element )
   {
@@ -117,9 +99,6 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
     return super.getText( element );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
-   */
   @Override
   public Image getImage( final Object element )
   {
@@ -142,7 +121,7 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
           return null;
 
         final Image img = new Image( display, data );
-        addLayerImage( layer, img );
+        addImage( layer, img );
         return img;
       }
       else
@@ -191,7 +170,7 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
         gc.drawLine( width - 5, 1, width - 5, 9 );
 
         gc.dispose();
-        addLayerImage( layer, img );
+        addImage( layer, img );
         return img;
       }
 
@@ -200,57 +179,33 @@ public class ChartTreeLabelProvider extends LabelProvider implements ITableLabel
     {
       final ILegendEntry le = (ILegendEntry) element;
 
-      if( m_legendEntryImages.containsKey( le ) )
-        return m_legendEntryImages.get( le );
+      if( m_images.containsKey( le ) )
+        return m_images.get( le );
 
       final Image img = new Image( display, le.getSymbol( m_defaultIconSize ) );
-      addLegendImage( le, img );
+      addImage( le, img );
       return img;
     }
 
     return super.getImage( element );
   }
 
-  private void addLegendImage( final ILegendEntry le, final Image img )
+  private void addImage( final Object key, final Image img )
   {
-    final Image oldImage = m_legendEntryImages.put( le, img );
+    final Image oldImage = m_images.put( key, img );
     if( oldImage != null )
       oldImage.dispose();
   }
 
-  private void addLayerImage( final IChartLayer layer, final Image img )
-  {
-    final Image oldImage = m_layerImages.put( layer, img );
-    if( oldImage != null )
-      oldImage.dispose();
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
-   */
   @Override
   public Image getColumnImage( final Object element, final int columnIndex )
   {
     return getImage( element );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
-   */
   @Override
   public String getColumnText( final Object element, final int columnIndex )
   {
     return getText( element );
-  }
-
-  public void clearLayer( final IChartLayer layer )
-  {
-    final Image layerImage = m_layerImages.remove( layer );
-    if( layerImage != null )
-      layerImage.dispose();
-
-    final Image legendImage = m_legendEntryImages.remove( layer );
-    if( legendImage != null )
-      legendImage.dispose();
   }
 }
