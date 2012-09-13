@@ -31,4 +31,13 @@
 		<gft:gridData grabExcessHorizontalSpace="true" horizontalSpan="1" horizontalAlignment="GridData.FILL" />
 		<gft:text> </gft:text>
 	</gft:checkbox>
+  
+  <gft:group property="wspm:imageMember" style="SWT.NONE">
+    <gft:gridData verticalAlignment="SWT.FILL" horizontalSpan="2" horizontalAlignment="SWT.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+    <gft:gridLayout numColumns="1" />
+    
+    <gft:dynamicTabFolder property="wspm:imageMember" style="SWT.CLOSE">
+      <gft:gridData verticalAlignment="SWT.FILL" horizontalSpan="1" horizontalAlignment="SWT.FILL" grabExcessVerticalSpace="true" grabExcessHorizontalSpace="true" />
+    </gft:dynamicTabFolder>
+  </gft:group>
 </gft:featureview>

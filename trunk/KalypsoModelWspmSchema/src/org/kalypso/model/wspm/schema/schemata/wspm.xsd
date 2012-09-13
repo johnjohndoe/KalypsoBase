@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<!-- This file is part of Kalypso Copyright (c) 2008 by Björnsen Beratende Ingenieure GmbH, Koblenz, Germany (Bjoernsen Consulting Engineers), http://www.bjoernsen.de Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/ Kalypso is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License (LGPL) as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. You should have received a copy of the GNU Lesser General Public License along with Kalypso. If not, see <http://www.gnu.org/licenses/>. -->
+<!-- This file is part of Kalypso Copyright (c) 2008 by Björnsen Beratende Ingenieure GmbH, Koblenz, Germany (Bjoernsen Consulting Engineers), http://www.bjoernsen.de Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/ Kalypso is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License (LGPL) as published 
+  by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. You should have received a copy of the GNU Lesser General Public License along with Kalypso. If not, see <http://www.gnu.org/licenses/>. -->
 <schema xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wspm="org.kalypso.model.wspm" xmlns:runoff="org.kalypso.model.wspmrunoff" xmlns:wspmcommon="org.kalypso.model.wspmcommon" xmlns:wspmprofile="org.kalypso.model.wspmprofile" targetNamespace="org.kalypso.model.wspm" elementFormDefault="qualified" version="0.1">
   <!-- schema for WSPM = 'water surface profile model' -->
 
@@ -9,7 +10,7 @@
   <import namespace="http://www.opengis.net/om" schemaLocation="http://dev.bjoernsen.de/ogc/schema/om/1.0.30/om.xsd" />
   <import namespace="http://www.opengis.net/swe" schemaLocation="http://dev.bjoernsen.de/ogc/schema/sweCommon/1.0.30/swe.xsd" />
   <import namespace="org.kalypso.model.wspmprofile" schemaLocation="profile.xsd" />
-  
+
   <!-- _________________________________________________________________________________________ ELEMENTS _________________________________________________________________________________________ -->
   <element name="calculationMember" type="wspm:CalculationPropertyType" substitutionGroup="gml:featureMember">
     <annotation>
@@ -88,8 +89,8 @@
       <documentation>Calculation creation</documentation>
     </annotation>
   </element>
-  
-  
+
+
   <!-- _________________________________________________________________________________________ TYPES _________________________________________________________________________________________ -->
   <complexType name="CalculationPropertyType">
     <complexContent>
@@ -122,7 +123,7 @@
   </complexType>
   <complexType name="AbstractReachType" abstract="true">
     <complexContent>
-      <extension base="gml:AbstractFeatureType" />
+      <extension base="gml:AbstractFeatureType"/>
     </complexContent>
   </complexType>
   <complexType name="WaterBodyPropertyType">
@@ -177,6 +178,7 @@
               <documentation>Water surface fixings</documentation>
             </annotation>
           </element>
+          <element name="imageMember" type="wspmprofile:imageFeaturePropertyType" minOccurs="0" maxOccurs="unbounded" />
         </sequence>
       </extension>
     </complexContent>
@@ -195,10 +197,12 @@
   <!-- Overwritten to have a nice annotation. HM, geht nicht, wie muss mans machen? -->
   <!-- <complexType name="RunOffEventPropertyType"> <sequence minOccurs="0"> <element ref="om:AbstractObservation"> <annotation> <documentation xml:lang="de"> <label>${listProperty:http://www.opengis.net/gml#name;0}</label> <tooltip>Abflussereignis</tooltip> <description>Abflussereignis</description> </documentation> </annotation> </element> </sequence> <attributeGroup ref="gml:AssociationAttributeGroup"/> </complexType> -->
   <!-- -->
-  <!-- <complexType name="ResultPropertyType"> <complexContent> <restriction base="gml:FeaturePropertyType"> <sequence> <element ref="wspm:Result"/> </sequence> </restriction> </complexContent> </complexType> <complexType name="ResultType"> <complexContent> <extension base="wspmcommon:EmptyFeatureBaseType"> <sequence> <element ref="wspm:calculationMember"/> <element name="calculationTime" type="dateTime"> <annotation> <documentation xml:lang="de"> <label>???Zeitpunkt der Berechnung</label> <tooltip>???tooltip</tooltip> <description>???description</description> </documentation> </annotation> </element> <element ref="wspm:documentMember" minOccurs="0" maxOccurs="unbounded"/> <element name="observationMember" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded"> <annotation> <documentation xml:lang="de"> <label>???resultObservationMember</label> <tooltip>???tooltip</tooltip> <description>???description</description> </documentation> </annotation> </element> </sequence> 
-    </extension> </complexContent> </complexType> -->
+  <!-- <complexType name="ResultPropertyType"> <complexContent> <restriction base="gml:FeaturePropertyType"> <sequence> <element ref="wspm:Result"/> </sequence> </restriction> </complexContent> </complexType> <complexType name="ResultType"> <complexContent> <extension base="wspmcommon:EmptyFeatureBaseType"> <sequence> <element ref="wspm:calculationMember"/> <element name="calculationTime" type="dateTime"> <annotation> <documentation xml:lang="de"> <label>???Zeitpunkt der Berechnung</label> <tooltip>???tooltip</tooltip> 
+    <description>???description</description> </documentation> </annotation> </element> <element ref="wspm:documentMember" minOccurs="0" maxOccurs="unbounded"/> <element name="observationMember" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded"> <annotation> <documentation xml:lang="de"> <label>???resultObservationMember</label> <tooltip>???tooltip</tooltip> <description>???description</description> </documentation> </annotation> </element> </sequence> </extension> </complexContent> 
+    </complexType> -->
   <!-- -->
-  <!-- <complexType name="DocumentPropertyType"> <complexContent> <restriction base="gml:FeaturePropertyType"> <sequence> <element ref="wspm:Document"/> </sequence> </restriction> </complexContent> </complexType> <complexType name="DocumentType"> <complexContent> <extension base="wspmcommon:EmptyFeatureBaseType"> <sequence> <element name="label" type="string"> <annotation> <documentation xml:lang="de"> <label>???label</label> <tooltip>???tooltip</tooltip> <description>???description</description> </documentation> </annotation> </element> <element name="filePath" type="string"> <annotation> <documentation xml:lang="de"><![CDATA[ TODO: eigenen Typ definieren + type handler (z.B. datei öffnen beim klick)]]> <label>???filePath</label> <tooltip>???tooltip</tooltip> <description>???description</description> </documentation> </annotation> </element> </sequence> </extension> </complexContent> </complexType> -->
+  <!-- <complexType name="DocumentPropertyType"> <complexContent> <restriction base="gml:FeaturePropertyType"> <sequence> <element ref="wspm:Document"/> </sequence> </restriction> </complexContent> </complexType> <complexType name="DocumentType"> <complexContent> <extension base="wspmcommon:EmptyFeatureBaseType"> <sequence> <element name="label" type="string"> <annotation> <documentation xml:lang="de"> <label>???label</label> <tooltip>???tooltip</tooltip> <description>???description</description> 
+    </documentation> </annotation> </element> <element name="filePath" type="string"> <annotation> <documentation xml:lang="de"><![CDATA[ TODO: eigenen Typ definieren + type handler (z.B. datei öffnen beim klick)]]> <label>???filePath</label> <tooltip>???tooltip</tooltip> <description>???description</description> </documentation> </annotation> </element> </sequence> </extension> </complexContent> </complexType> -->
   <!-- -->
   <complexType name="RoughnessDefinitionCollectionPropertyType">
     <complexContent>
