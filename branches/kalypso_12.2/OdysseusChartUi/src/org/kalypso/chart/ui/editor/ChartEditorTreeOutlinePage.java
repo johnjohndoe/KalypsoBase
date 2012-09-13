@@ -52,6 +52,7 @@ import org.eclipse.jface.viewers.ICheckStateProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -129,10 +130,12 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
     this( new ChartEditorTreeContentProvider(), new ChartTreeLabelProvider() );
   }
 
-  public ChartEditorTreeOutlinePage( final ITreeContentProvider contentProvider, final ChartTreeLabelProvider labelProvider )
+  public ChartEditorTreeOutlinePage( final ITreeContentProvider contentProvider, final ITableLabelProvider labelProvider )
   {
     m_contentProvider = contentProvider;
-    m_labelProvider = labelProvider;
+    // FIXME: only as hot fix; we know that we have a ChartTreeLabelProvider; but feature patch does not work like this
+// -> change constructor later
+    m_labelProvider = (ChartTreeLabelProvider) labelProvider;
     m_eventListener = new AbstractLayerManagerEventListener()
     {
       @Override
