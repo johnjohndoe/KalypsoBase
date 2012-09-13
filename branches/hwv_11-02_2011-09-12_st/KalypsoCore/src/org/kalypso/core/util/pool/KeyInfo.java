@@ -201,7 +201,9 @@ public final class KeyInfo extends Job
   {
     // TRICKY: objectLoaded may add a new PoolListener for this key,
     // so we cannot iterate over m_listeners
-    final IPoolListener[] ls = m_listeners.toArray( new IPoolListener[m_listeners.size()] );
+    
+    // REMARK: give 0 array to force allocation of array within toArray; else we get threading problems.
+    final IPoolListener[] ls = m_listeners.toArray( new IPoolListener[0] );
     for( final IPoolListener element : ls )
       element.objectLoaded( m_key, o, status );
   }
@@ -210,7 +212,9 @@ public final class KeyInfo extends Job
   {
     // TRICKY: objectInvalid may add/remove PoolListener for this key,
     // so we cannot iterate over m_listeners
-    final IPoolListener[] ls = m_listeners.toArray( new IPoolListener[m_listeners.size()] );
+    
+    // REMARK: give 0 array to force allocation of array within toArray; else we get threading problems.
+    final IPoolListener[] ls = m_listeners.toArray( new IPoolListener[0] );
     for( final IPoolListener element : ls )
       element.objectInvalid( m_key, oldObject );
   }
@@ -219,14 +223,13 @@ public final class KeyInfo extends Job
   {
     // TRICKY: objectInvalid may add/remove PoolListener for this key,
     // so we cannot iterate over m_listeners
-    final IPoolListener[] ls = m_listeners.toArray( new IPoolListener[m_listeners.size()] );
+    
+    // REMARK: give 0 array to force allocation of array within toArray; else we get threading problems.
+    final IPoolListener[] ls = m_listeners.toArray( new IPoolListener[0] );
     for( final IPoolListener element : ls )
       element.dirtyChanged( m_key, isDirty );
   }
 
-  /**
-   * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   protected IStatus run( final IProgressMonitor monitor )
   {
