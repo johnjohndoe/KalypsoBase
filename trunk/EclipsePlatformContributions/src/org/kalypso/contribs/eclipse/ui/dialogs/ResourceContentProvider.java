@@ -26,16 +26,14 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.viewers.ITreeContentProvider;
 
 /**
  * @author N. Peiler
  * @author Dejan Antanaskovic, <a href="mailto:dejan.antanaskovic@tuhh.de">dejan.antanaskovic@tuhh.de</a>
- * @deprecated Use {@link org.eclipse.ui.model.WorkbenchContentProvider} and
- *             {@link org.eclipse.jface.viewers.ViewerFilter} instead.
+ * @deprecated Use {@link org.eclipse.ui.model.WorkbenchContentProvider} and {@link org.eclipse.jface.viewers.ViewerFilter} instead.
  */
 @Deprecated
-public class ResourceContentProvider extends BaseResourceContentProvider implements ITreeContentProvider
+public class ResourceContentProvider extends BaseResourceContentProvider
 {
   private final String[] m_allowedResourceExtensions;
 
@@ -59,22 +57,22 @@ public class ResourceContentProvider extends BaseResourceContentProvider impleme
   {
     if( element instanceof IWorkspace )
     {
-      return ((IWorkspace) element).getRoot().getProjects();
+      return ((IWorkspace)element).getRoot().getProjects();
     }
     else if( element instanceof IContainer )
     {
-      final IContainer container = (IContainer) element;
+      final IContainer container = (IContainer)element;
       if( container.isAccessible() )
       {
         try
         {
-          final List<IResource> children = new ArrayList<IResource>();
+          final List<IResource> children = new ArrayList<>();
           final IResource[] members = container.members();
           for( final IResource member : members )
           {
             if( member.getType() == IResource.FILE )
             {
-              if( checkExtension( ((IFile) member).getFileExtension() ) )
+              if( checkExtension( ((IFile)member).getFileExtension() ) )
                 children.add( member );
             }
             else

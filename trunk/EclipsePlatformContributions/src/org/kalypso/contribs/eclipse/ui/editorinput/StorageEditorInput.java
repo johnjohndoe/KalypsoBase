@@ -116,7 +116,7 @@ public class StorageEditorInput implements IFileEditorInput
   public IPersistableElement getPersistable( )
   {
     if( m_storage instanceof IPersistableElement )
-      return (IPersistableElement) m_storage;
+      return (IPersistableElement)m_storage;
 
     return null;
   }
@@ -138,7 +138,7 @@ public class StorageEditorInput implements IFileEditorInput
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     final IAdapterManager adapterManager = Platform.getAdapterManager();
     return adapterManager.loadAdapter( this, adapter.getName() );
@@ -156,7 +156,7 @@ public class StorageEditorInput implements IFileEditorInput
     if( !(obj instanceof StorageEditorInput) )
       return false;
 
-    return m_storage.equals( ((StorageEditorInput) obj).m_storage );
+    return m_storage.equals( ((StorageEditorInput)obj).m_storage );
   }
 
   /**
