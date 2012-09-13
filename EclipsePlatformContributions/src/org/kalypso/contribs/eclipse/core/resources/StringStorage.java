@@ -35,8 +35,7 @@ import org.kalypso.contribs.eclipse.EclipsePlatformContributionsPlugin;
 import org.kalypso.contribs.eclipse.ui.editorinput.StringStorageInputFactory;
 
 /**
- * REMARK: implementing {@link org.eclipse.ui.IPersistableElement} is only used in combinisation with
- * {@link org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput}.
+ * REMARK: implementing {@link org.eclipse.ui.IPersistableElement} is only used in combinisation with {@link org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput}.
  * 
  * @author Gernot Belger
  */
@@ -118,7 +117,7 @@ public class StringStorage implements IEncodedStorage, IPersistableElement
    * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
    */
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     final IAdapterManager adapterManager = Platform.getAdapterManager();
     return adapterManager.loadAdapter( this, adapter.getName() );
@@ -146,7 +145,7 @@ public class StringStorage implements IEncodedStorage, IPersistableElement
     if( !(obj instanceof StringStorage) )
       return false;
 
-    final StringStorage other = (StringStorage) obj;
+    final StringStorage other = (StringStorage)obj;
 
     if( m_path == null )
       return m_content.equals( other.m_content ) && other.m_path == null;

@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.Composite;
  * 
  * @author belger
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings( "restriction" )
 public class ResourceCompareInputCopy extends CompareEditorInput
 {
   private static final boolean NORMALIZE_CASE = true;
@@ -190,13 +190,13 @@ public class ResourceCompareInputCopy extends CompareEditorInput
         final ISelection selection = getSelection();
         if( selection instanceof IStructuredSelection )
         {
-          final IStructuredSelection ss = (IStructuredSelection) selection;
+          final IStructuredSelection ss = (IStructuredSelection)selection;
           if( ss.size() == 1 )
           {
             final Object element = ss.getFirstElement();
             if( element instanceof MyDiffNode )
             {
-              final ITypedElement te = ((MyDiffNode) element).getId();
+              final ITypedElement te = ((MyDiffNode)element).getId();
               if( te != null )
                 enable = !ITypedElement.FOLDER_TYPE.equals( te.getType() );
             }
@@ -301,7 +301,7 @@ public class ResourceCompareInputCopy extends CompareEditorInput
       return true;
     if( input instanceof IFile )
     {
-      final IFile file = (IFile) input;
+      final IFile file = (IFile)input;
       String type = file.getFileExtension();
       if( type != null )
       {
@@ -313,8 +313,7 @@ public class ResourceCompareInputCopy extends CompareEditorInput
   }
 
   /**
-   * Creates a <code>IStructureComparator</code> for the given input. Returns <code>null</code> if no
-   * <code>IStructureComparator</code> can be found for the <code>IResource</code>.
+   * Creates a <code>IStructureComparator</code> for the given input. Returns <code>null</code> if no <code>IStructureComparator</code> can be found for the <code>IResource</code>.
    */
   private IStructureComparator getStructure( final IResource input )
   {
@@ -323,7 +322,7 @@ public class ResourceCompareInputCopy extends CompareEditorInput
     if( input instanceof IFile )
     {
       final IStructureComparator rn = new FilteredBufferedResourceNode( input );
-      final IFile file = (IFile) input;
+      final IFile file = (IFile)input;
       final String type = normalizeCase( file.getFileExtension() );
       if( "JAR".equals( type ) || "ZIP".equals( type ) ) //$NON-NLS-2$ //$NON-NLS-1$
         return new ZipFileStructureCreator().getStructure( rn );
@@ -368,7 +367,7 @@ public class ResourceCompareInputCopy extends CompareEditorInput
         @Override
         protected Object visit( final Object parent, final int description, final Object ancestor, final Object left, final Object right )
         {
-          return new MyDiffNode( (IDiffContainer) parent, description, (ITypedElement) ancestor, (ITypedElement) left, (ITypedElement) right );
+          return new MyDiffNode( (IDiffContainer)parent, description, (ITypedElement)ancestor, (ITypedElement)left, (ITypedElement)right );
         }
       };
       fRoot = d.findDifferences( fThreeWay, pm, null, fAncestor, fLeft, fRight );
@@ -420,7 +419,7 @@ public class ResourceCompareInputCopy extends CompareEditorInput
     {
       try
       {
-        commit( pm, (DiffNode) fRoot );
+        commit( pm, (DiffNode)fRoot );
       }
       finally
       {
@@ -437,20 +436,20 @@ public class ResourceCompareInputCopy extends CompareEditorInput
   private static void commit( final IProgressMonitor pm, final DiffNode node ) throws CoreException
   {
     if( node instanceof MyDiffNode )
-      ((MyDiffNode) node).clearDirty();
+      ((MyDiffNode)node).clearDirty();
     final ITypedElement left = node.getLeft();
     if( left instanceof BufferedResourceNode )
-      ((BufferedResourceNode) left).commit( pm );
+      ((BufferedResourceNode)left).commit( pm );
     final ITypedElement right = node.getRight();
     if( right instanceof BufferedResourceNode )
-      ((BufferedResourceNode) right).commit( pm );
+      ((BufferedResourceNode)right).commit( pm );
     final IDiffElement[] children = node.getChildren();
     if( children != null )
     {
       for( final IDiffElement element : children )
       {
         if( element instanceof DiffNode )
-          commit( pm, (DiffNode) element );
+          commit( pm, (DiffNode)element );
       }
     }
   }
@@ -459,11 +458,11 @@ public class ResourceCompareInputCopy extends CompareEditorInput
    * @see IAdaptable.getAdapter
    */
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     if( IFile[].class.equals( adapter ) )
     {
-      final HashSet<IFile> collector = new HashSet<IFile>();
+      final HashSet<IFile> collector = new HashSet<>();
       collectDirtyResources( fRoot, collector );
       return collector.toArray( new IFile[collector.size()] );
     }
@@ -474,27 +473,27 @@ public class ResourceCompareInputCopy extends CompareEditorInput
   {
     if( o instanceof DiffNode )
     {
-      final DiffNode node = (DiffNode) o;
+      final DiffNode node = (DiffNode)o;
       final ITypedElement left = node.getLeft();
       if( left instanceof BufferedResourceNode )
       {
-        final BufferedResourceNode bn = (BufferedResourceNode) left;
+        final BufferedResourceNode bn = (BufferedResourceNode)left;
         if( bn.isDirty() )
         {
           final IResource resource = bn.getResource();
           if( resource instanceof IFile )
-            collector.add( (IFile) resource );
+            collector.add( (IFile)resource );
         }
       }
       final ITypedElement right = node.getRight();
       if( right instanceof BufferedResourceNode )
       {
-        final BufferedResourceNode bn = (BufferedResourceNode) right;
+        final BufferedResourceNode bn = (BufferedResourceNode)right;
         if( bn.isDirty() )
         {
           final IResource resource = bn.getResource();
           if( resource instanceof IFile )
-            collector.add( (IFile) resource );
+            collector.add( (IFile)resource );
         }
       }
       final IDiffElement[] children = node.getChildren();

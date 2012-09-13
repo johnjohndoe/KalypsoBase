@@ -185,7 +185,7 @@ public class ImportWfsWizardPage extends WizardPage
     {
       if( element instanceof WFSFeatureType )
       {
-        final WFSFeatureType featureType = (WFSFeatureType) element;
+        final WFSFeatureType featureType = (WFSFeatureType)element;
         final String title = featureType.getTitle();
         if( title == null || title.isEmpty() )
           return featureType.getName().getLocalName();
@@ -260,7 +260,7 @@ public class ImportWfsWizardPage extends WizardPage
     m_labelUrl.setLayoutData( new GridData( SWT.BEGINNING, SWT.CENTER, false, false ) );
 
     // initialize availabel Servers
-    List<String> catalog = ((ImportWfsSourceWizard) getWizard()).getCatalog();
+    List<String> catalog = ((ImportWfsSourceWizard)getWizard()).getCatalog();
     if( catalog == null )
       catalog = new ArrayList<String>();
 
@@ -421,20 +421,20 @@ public class ImportWfsWizardPage extends WizardPage
 
     final boolean visible = status != null && !status.isOK();
 
-    ((GridData) m_statusComposite.getLayoutData()).exclude = !visible;
+    ((GridData)m_statusComposite.getLayoutData()).exclude = !visible;
     m_statusComposite.setVisible( visible );
     m_statusComposite.getParent().layout();
   }
 
   protected void addButtonPressed( )
   {
-    final IStructuredSelection selection = (IStructuredSelection) m_listLeftSide.getSelection();
+    final IStructuredSelection selection = (IStructuredSelection)m_listLeftSide.getSelection();
     if( selection != null )
     {
       final Object[] original = selection.toArray();
       for( final Object element : original )
       {
-        final WFSFeatureType wfsFT = (WFSFeatureType) element;
+        final WFSFeatureType wfsFT = (WFSFeatureType)element;
         final List<WFSFeatureType> input = getLayerList();
         if( !input.contains( wfsFT ) )
         {
@@ -449,16 +449,15 @@ public class ImportWfsWizardPage extends WizardPage
     }
   }
 
-  /** Just for casting the list and suppress the warning */
-  @SuppressWarnings("unchecked")
+  /** Just for casting the list */
   List<WFSFeatureType> getLayerList( )
   {
-    return (List<WFSFeatureType>) m_listRightSide.getInput();
+    return (List<WFSFeatureType>)m_listRightSide.getInput();
   }
 
   protected void removeButtonPressed( )
   {
-    final IStructuredSelection selection = (IStructuredSelection) m_listRightSide.getSelection();
+    final IStructuredSelection selection = (IStructuredSelection)m_listRightSide.getSelection();
     if( selection != null )
     {
       final Object[] list = selection.toArray();
@@ -475,8 +474,8 @@ public class ImportWfsWizardPage extends WizardPage
   protected void filterPressed( )
   {
     // the add filter button is only enabled if the selection size == 1, hence there is only one selected element
-    final IStructuredSelection selection = (IStructuredSelection) m_listRightSide.getSelection();
-    final WFSFeatureType wfsFT = (WFSFeatureType) selection.getFirstElement();
+    final IStructuredSelection selection = (IStructuredSelection)m_listRightSide.getSelection();
+    final WFSFeatureType wfsFT = (WFSFeatureType)selection.getFirstElement();
     final Filter oldFilter = m_filter.get( wfsFT );
 
     // final QualifiedName name = wfsFT.getName();
@@ -501,10 +500,10 @@ public class ImportWfsWizardPage extends WizardPage
 
   void updateButtons( )
   {
-    final IStructuredSelection selection = (IStructuredSelection) m_listRightSide.getSelection();
+    final IStructuredSelection selection = (IStructuredSelection)m_listRightSide.getSelection();
     m_addFilterButton.setEnabled( selection.size() == 1 );
     m_removeLayer.setEnabled( selection.size() > 0 );
-    m_addLayer.setEnabled( ((IStructuredSelection) m_listLeftSide.getSelection()).size() > 0 );
+    m_addLayer.setEnabled( ((IStructuredSelection)m_listLeftSide.getSelection()).size() > 0 );
     revalidatePage();
   }
 
@@ -556,7 +555,7 @@ public class ImportWfsWizardPage extends WizardPage
 
   public void updateServers( final List<String> myServers )
   {
-    final ImportWfsSourceWizard wizard = (ImportWfsSourceWizard) getWizard();
+    final ImportWfsSourceWizard wizard = (ImportWfsSourceWizard)getWizard();
     wizard.setCatalog( myServers );
 
     m_viewerServers.setInput( myServers );
