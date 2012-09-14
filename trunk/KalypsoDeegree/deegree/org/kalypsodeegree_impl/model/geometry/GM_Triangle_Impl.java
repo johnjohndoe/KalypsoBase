@@ -35,12 +35,9 @@
  */
 package org.kalypsodeegree_impl.model.geometry;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.vecmath.Point3d;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -150,8 +147,8 @@ class GM_Triangle_Impl implements GM_Triangle
       return this;
 
     final GM_Position t1 = m_p1.transform( sourceCRS, targetCRS );
-    final GM_Position t2 = m_p1.transform( sourceCRS, targetCRS );
-    final GM_Position t3 = m_p1.transform( sourceCRS, targetCRS );
+    final GM_Position t2 = m_p2.transform( sourceCRS, targetCRS );
+    final GM_Position t3 = m_p3.transform( sourceCRS, targetCRS );
 
     return GeometryFactory.createGM_Triangle( t1, t2, t3, targetCRS );
   }
@@ -325,15 +322,12 @@ class GM_Triangle_Impl implements GM_Triangle
 
     final GM_Triangle_Impl other = (GM_Triangle_Impl) obj;
 
-    final Set<GM_Position> positions = new HashSet<GM_Position>();
+    final GM_Position[] exteriorRing = this.getExteriorRing();
 
-    // REMARK:
-
-    positions.addAll( Arrays.asList( this.getExteriorRing() ) );
-
-    for( final GM_Position lPos : other.getExteriorRing() )
+    for( final GM_Position pos : other.getExteriorRing() )
     {
-      if( !positions.contains( lPos ) )
+      // REMARK: linear search in the array of 3 elements is faster than hashing!
+      if( !ArrayUtils.contains( exteriorRing, pos ) )
       {
         return false;
       }
