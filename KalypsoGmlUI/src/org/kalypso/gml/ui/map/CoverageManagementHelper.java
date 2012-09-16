@@ -101,7 +101,9 @@ public class CoverageManagementHelper
       final File gridFile = getGridFile( url );
       if( gridFile != null )
       {
-        gridFile.deleteOnExit();
+        // BUGFIX: do not delete on exit -> if we reimport a grid with the same name later,
+        // it would be deleted on exit.
+        // gridFile.deleteOnExit();
         gridFile.delete();
       }
       final IFile eclipseFile = ResourceUtilities.findFileFromURL( url );
