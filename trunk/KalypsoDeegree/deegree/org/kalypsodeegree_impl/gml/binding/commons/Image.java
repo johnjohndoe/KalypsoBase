@@ -111,6 +111,6 @@ public class Image extends Feature_Impl
     if( StringUtils.isBlank( property ) )
       return null;
 
-    return MimeTypeUtils.createQuit( property );
+    return MimeTypeUtils.createQuietly( property );
   }
 }

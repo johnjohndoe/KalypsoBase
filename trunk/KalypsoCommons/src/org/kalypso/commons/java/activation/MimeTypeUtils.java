@@ -57,10 +57,10 @@ public class MimeTypeUtils
 
   /**
    * Tries to parse a mime type via {@link MimeType#MimeType(String)}, but silently ignores any error.
-   *
+   * 
    * @return <code>null</code>, if a {@link MimeTypeParseException} is thrown.
    */
-  public static MimeType createQuit( final String mimetype )
+  public static MimeType createQuietly( final String mimetype )
   {
     try
     {
@@ -76,5 +76,4 @@ public class MimeTypeUtils
 
     return null;
   }
-
 }
