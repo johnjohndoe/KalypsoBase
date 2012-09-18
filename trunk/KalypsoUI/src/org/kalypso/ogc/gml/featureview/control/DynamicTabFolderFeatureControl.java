@@ -98,7 +98,7 @@ public class DynamicTabFolderFeatureControl extends AbstractFeatureControl
     @Override
     public void close( final CTabFolderEvent event )
     {
-      final boolean doClose = handleTabClosed( (CTabItem) event.item );
+      final boolean doClose = handleTabClosed( (CTabItem)event.item );
       event.doit = doClose;
     }
   };
@@ -108,7 +108,7 @@ public class DynamicTabFolderFeatureControl extends AbstractFeatureControl
     @Override
     public void widgetSelected( final SelectionEvent e )
     {
-      e.doit = handleTabSelected( (CTabItem) e.item );
+      e.doit = handleTabSelected( (CTabItem)e.item );
     }
   };
 
@@ -189,7 +189,7 @@ public class DynamicTabFolderFeatureControl extends AbstractFeatureControl
       return;
     }
 
-    final FeatureList featureList = (FeatureList) property;
+    final FeatureList featureList = (FeatureList)property;
 
     if( hasObsoleteItems( featureList ) )
     {
@@ -276,7 +276,7 @@ public class DynamicTabFolderFeatureControl extends AbstractFeatureControl
 
     /* Content */
     final Group tabContent = new Group( m_tabFolder, SWT.NONE );
-    tabContent.setText( Messages.getString("DynamicTabFolderFeatureControl_0") ); //$NON-NLS-1$
+    tabContent.setText( Messages.getString( "DynamicTabFolderFeatureControl_0" ) ); //$NON-NLS-1$
     GridLayoutFactory.swtDefaults().applyTo( tabContent );
     addItem.setControl( tabContent );
 
@@ -386,8 +386,8 @@ public class DynamicTabFolderFeatureControl extends AbstractFeatureControl
     final FeatureTabItem featureItem = FeatureTabItem.get( item );
 
     // ask user for deletion
-    final String message = String.format( Messages.getString("DynamicTabFolderFeatureControl_1"), item.getText() ); //$NON-NLS-1$
-    final boolean doDelete = MessageDialog.openConfirm( m_tabFolder.getShell(), Messages.getString("DynamicTabFolderFeatureControl_2"), message ); //$NON-NLS-1$
+    final String message = String.format( Messages.getString( "DynamicTabFolderFeatureControl_1" ), item.getText() ); //$NON-NLS-1$
+    final boolean doDelete = MessageDialog.openConfirm( m_tabFolder.getShell(), Messages.getString( "DynamicTabFolderFeatureControl_2" ), message ); //$NON-NLS-1$
     if( !doDelete )
       return false;
 
