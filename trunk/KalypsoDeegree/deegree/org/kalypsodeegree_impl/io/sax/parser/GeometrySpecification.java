@@ -44,11 +44,11 @@ import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
+import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.io.sax.parser.geometrySpec.IGeometrySpecification;
-import org.kalypsodeegree_impl.tools.GMLConstants;
 import org.xml.sax.XMLReader;
 
 /**
@@ -78,7 +78,7 @@ public class GeometrySpecification implements IGeometrySpecification
     if( GM_Point.POINT_ELEMENT.equals( property ) )
       return new PointContentHandler( reader, resultEater, m_geometryContentHandler, defaultSrs );
 
-    if( GMLConstants.QN_LINE_STRING.equals( property ) )
+    if( GM_LineString.LINE_STRING_ELEMENT.equals( property ) )
       return new LineStringContentHandler( reader, resultEater, m_geometryContentHandler, defaultSrs );
 
     if( GM_Polygon.POLYGON_ELEMENT.equals( property ) )

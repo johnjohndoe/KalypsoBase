@@ -42,7 +42,7 @@ package org.kalypsodeegree_impl.io.sax.marshaller;
 
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree_impl.tools.GMLConstants;
+import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
@@ -52,11 +52,9 @@ import org.xml.sax.XMLReader;
  */
 public class LineStringMarshaller extends GeometryMarshaller<GM_Curve>
 {
-  public static final String TAG_LINE_STRING = GMLConstants.QN_LINE_STRING.getLocalPart();
-
   public LineStringMarshaller( final XMLReader reader )
   {
-    super( reader, TAG_LINE_STRING );
+    super( reader, GM_LineString.LINE_STRING_ELEMENT.getLocalPart() );
   }
 
   @Override
