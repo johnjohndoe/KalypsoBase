@@ -79,6 +79,7 @@ public class FeatureTabItem
   public FeatureTabItem( final CTabItem item, final GMLWorkspace workspace, final Object featureObject )
   {
     m_item = item;
+
     m_workspace = workspace;
     m_featureObject = featureObject;
     m_item.setData( DATA_ME, this );
