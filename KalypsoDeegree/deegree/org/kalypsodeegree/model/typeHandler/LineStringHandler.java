@@ -49,9 +49,9 @@ import org.kalypso.gmlschema.types.IMarshallingTypeHandler2;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree_impl.io.sax.marshaller.LineStringMarshaller;
 import org.kalypsodeegree_impl.io.sax.parser.LineStringContentHandler;
-import org.kalypsodeegree_impl.tools.GMLConstants;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
@@ -60,8 +60,6 @@ import org.xml.sax.XMLReader;
  */
 public class LineStringHandler implements IMarshallingTypeHandler2
 {
-  private static final QName QNAME_TYPE = GMLConstants.QN_LINE_STRING;
-
   @Override
   public IGmlContentHandler createContentHandler( final XMLReader reader, final IGmlContentHandler parentContentHandler, final UnmarshallResultEater resultEater )
   {
@@ -95,7 +93,7 @@ public class LineStringHandler implements IMarshallingTypeHandler2
   @Override
   public QName getTypeName( )
   {
-    return QNAME_TYPE;
+    return GM_LineString.LINE_STRING_ELEMENT;
   }
 
   @Override

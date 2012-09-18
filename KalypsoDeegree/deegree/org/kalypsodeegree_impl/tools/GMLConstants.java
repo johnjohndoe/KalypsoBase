@@ -53,8 +53,6 @@ import org.kalypso.commons.xml.NS;
 @Deprecated
 public final class GMLConstants
 {
-  public static final QName QN_LINE_STRING = new QName( NS.GML3, "LineString" );
-
   public static final QName QN_POINT_MEMBER = new QName( NS.GML3, "pointMember" );
 
   public static final QName QN_POINT_MEMBERS = new QName( NS.GML3, "pointMembers" );
