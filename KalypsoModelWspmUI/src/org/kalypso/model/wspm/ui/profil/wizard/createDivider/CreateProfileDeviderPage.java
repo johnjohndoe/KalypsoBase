@@ -84,6 +84,7 @@ import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeFilter;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.tools.GMLConstants;
@@ -119,7 +120,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
     setMessage( Messages.getString( "org.kalypso.model.wspm.ui.wizard.CreateProfileDeviderPage.4" ) ); //$NON-NLS-1$
 
     final Set<QName> validGeomProperties = new HashSet<>();
-    validGeomProperties.add( GMLConstants.QN_LINE_STRING );
+    validGeomProperties.add( GM_LineString.LINE_STRING_ELEMENT );
     validGeomProperties.add( GMLConstants.QN_MULTI_LINE_STRING );
     validGeomProperties.add( GM_Curve.CURVE_ELEMENT );
     validGeomProperties.add( GM_MultiCurve.MULTI_CURVE_ELEMENT );
