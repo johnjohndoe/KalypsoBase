@@ -108,19 +108,6 @@ public final class PluginUtilities
   }
 
   /**
-   * Returns a sub-section of a given {@link IDialogSettings}.<br>
-   * If the section does not yet exist, it is created.
-   * 
-   * @return <code>null</code>, if the given <code>settings</code> are <code>null</code>.
-   * @deprecated Use {@link DialogSettingsUtils#getSection(IDialogSettings, String)} instead.
-   */
-  @Deprecated
-  public static IDialogSettings getSection( final IDialogSettings settings, final String sectionName )
-  {
-    return DialogSettingsUtils.getSection( settings, sectionName );
-  }
-
-  /**
    * Search for a resource in the plugin (any file) and its fragments.
    * 
    * @return null, if something goes wrong
