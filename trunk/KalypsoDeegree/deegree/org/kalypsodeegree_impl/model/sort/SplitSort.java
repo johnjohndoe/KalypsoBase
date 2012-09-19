@@ -141,13 +141,14 @@ public class SplitSort implements FeatureList
     /* Only inline features needs to be unregistered from the workspace */
     if( object instanceof IXLinkedFeature )
       return;
+
     if( !(object instanceof Feature) )
       return;
 
-    final Feature f = (Feature) object;
+    final Feature f = (Feature)object;
     final GMLWorkspace workspace = f.getWorkspace();
     if( workspace instanceof GMLWorkspace_Impl )
-      ((GMLWorkspace_Impl) workspace).register( f );
+      ((GMLWorkspace_Impl)workspace).registerFeature( f );
   }
 
   private void unregisterFeature( final Object object )
@@ -155,13 +156,14 @@ public class SplitSort implements FeatureList
     /* Only inline features needs to be unregistered from the workspace */
     if( object instanceof IXLinkedFeature )
       return;
+
     if( !(object instanceof Feature) )
       return;
 
-    final Feature f = (Feature) object;
+    final Feature f = (Feature)object;
     final GMLWorkspace workspace = f.getWorkspace();
     if( workspace instanceof GMLWorkspace_Impl )
-      ((GMLWorkspace_Impl) workspace).unregister( f );
+      ((GMLWorkspace_Impl)workspace).unregisterFeature( f );
   }
 
   private synchronized SplitSortItem createItem( final Object data, final int index )
@@ -232,7 +234,7 @@ public class SplitSort implements FeatureList
   }
 
   @Override
-  public synchronized boolean addAll( @SuppressWarnings("rawtypes") final Collection c )
+  public synchronized boolean addAll( final Collection c )
   {
     checkCanAdd( c.size() );
 
@@ -243,7 +245,7 @@ public class SplitSort implements FeatureList
   }
 
   @Override
-  public synchronized boolean addAll( final int index, @SuppressWarnings("rawtypes") final Collection c )
+  public synchronized boolean addAll( final int index, final Collection c )
   {
     checkCanAdd( c.size() );
 
@@ -318,7 +320,7 @@ public class SplitSort implements FeatureList
   }
 
   @Override
-  public synchronized boolean removeAll( @SuppressWarnings("rawtypes") final Collection c )
+  public synchronized boolean removeAll( final Collection c )
   {
     boolean changed = false;
 
@@ -329,7 +331,7 @@ public class SplitSort implements FeatureList
   }
 
   @Override
-  public synchronized boolean retainAll( @SuppressWarnings("rawtypes") final Collection c )
+  public synchronized boolean retainAll( final Collection c )
   {
     boolean modified = false;
 
@@ -390,7 +392,7 @@ public class SplitSort implements FeatureList
   {
     if( m_index != null )
     {
-      // TODO: if we have many object, should we create the index now?
+      // TODO: if we have many objects, should we create the index now?
 
       final int index = m_index.indexOf( object );
       if( index != 0 )
@@ -431,7 +433,7 @@ public class SplitSort implements FeatureList
   }
 
   @Override
-  public synchronized boolean containsAll( @SuppressWarnings("rawtypes") final Collection c )
+  public synchronized boolean containsAll( final Collection c )
   {
     for( final Object object : c )
     {
@@ -487,25 +489,25 @@ public class SplitSort implements FeatureList
   // JMSpatialIndex implementation
 
   @Override
-  public List< ? > query( final GM_Position pos, @SuppressWarnings("rawtypes") final List result )
+  public List< ? > query( final GM_Position pos, final List result )
   {
-    final Rectangle envelope = new Rectangle( (float) pos.getX() - 1.0f, (float) pos.getY() - 1.0f, (float) pos.getX() + 1.0f, (float) pos.getY() + 1.0f );
+    final Rectangle envelope = new Rectangle( (float)pos.getX() - 1.0f, (float)pos.getY() - 1.0f, (float)pos.getX() + 1.0f, (float)pos.getY() + 1.0f );
     return query( envelope, result );
   }
 
   @Override
-  public List< ? > query( final GM_Envelope queryEnv, @SuppressWarnings("rawtypes") final List result )
+  public List< ? > query( final GM_Envelope queryEnv, final List result )
   {
     final Rectangle envelope = GeometryUtilities.toRectangle( queryEnv );
     return query( envelope, result );
   }
 
-  private synchronized List< ? > query( final Rectangle envelope, @SuppressWarnings("rawtypes") final List receiver )
+  private synchronized List< ? > query( final Rectangle envelope, @SuppressWarnings( "rawtypes" ) final List receiver )
   {
+    // FIXME: better handling of lists with very view elements: in this case, linear search would be better and would avoid the momory consuming spatial index
     createIndex();
 
-    @SuppressWarnings("unchecked")
-    final List<Object> result = receiver == null ? new ArrayList<Object>() : receiver;
+    @SuppressWarnings( "unchecked" ) final List<Object> result = receiver == null ? new ArrayList<>() : receiver;
 
     final List<SplitSortItem> items = m_items;
 
@@ -559,7 +561,7 @@ public class SplitSort implements FeatureList
   private Feature resolveFeature( final Object object )
   {
     if( object instanceof Feature && !(object instanceof IXLinkedFeature) )
-      return (Feature) object;
+      return (Feature)object;
 
     final Feature owner = getOwner();
     if( owner == null )
@@ -602,7 +604,7 @@ public class SplitSort implements FeatureList
     for( final Object object : this )
     {
       if( object instanceof Feature && !(object instanceof IXLinkedFeature) )
-        visitor.visit( (Feature) object );
+        visitor.visit( (Feature)object );
       else if( depth == FeatureVisitor.DEPTH_INFINITE_LINKS )
       {
         final Feature linkedFeature = resolveFeature( object );

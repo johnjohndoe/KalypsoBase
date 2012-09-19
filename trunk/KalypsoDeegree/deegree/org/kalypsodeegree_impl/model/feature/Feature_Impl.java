@@ -52,7 +52,6 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.feature.IFeaturePropertyHandler;
@@ -757,7 +756,7 @@ public class Feature_Impl extends PlatformObject implements Feature
     setProperty( relation, newFeature );
 
     /* Register new feature into workspace */
-    workspace.accept( new RegisterVisitor( workspace ), newFeature, FeatureVisitor.DEPTH_INFINITE );
+    workspace.registerFeature( newFeature );
 
     return newFeature;
   }
@@ -777,8 +776,9 @@ public class Feature_Impl extends PlatformObject implements Feature
     final Feature oldFeature = (Feature) oldValue;
 
     final GMLWorkspace_Impl workspace = (GMLWorkspace_Impl) getWorkspace();
+
     /* Unregister everything below the old feature that is no linked */
-    workspace.accept( new UnRegisterVisitor( workspace ), oldFeature, FeatureVisitor.DEPTH_INFINITE );
+    workspace.unregisterFeature( oldFeature );
   }
 
   @Override
