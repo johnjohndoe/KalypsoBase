@@ -62,16 +62,15 @@ import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
- * In order to use this workspace with support of xlinks, a
- * {@link org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory} must be set.
- * 
+ * In order to use this workspace with support of xlinks, a {@link org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory} must be set.
+ *
  * @see #setFeatureProviderFactory(IFeatureProviderFactory)
  * @author doemming
  */
 public class GMLWorkspace_Impl extends PlatformObject implements GMLWorkspace
 {
   /** id -> feature */
-  final Map<String, Feature> m_indexMap = new HashMap<String, Feature>();
+  final Map<String, Feature> m_indexMap = new HashMap<>();
 
   private final Feature m_rootFeature;
 
@@ -98,11 +97,11 @@ public class GMLWorkspace_Impl extends PlatformObject implements GMLWorkspace
     m_factory = new FeatureProviderFactoryCache( factory );
 
     if( m_rootFeature instanceof Feature_Impl )
-      ((Feature_Impl) m_rootFeature).setWorkspace( this );
+      ((Feature_Impl)m_rootFeature).setWorkspace( this );
 
     try
     {
-      accept( new RegisterVisitor( this ), m_rootFeature, FeatureVisitor.DEPTH_INFINITE );
+      registerFeature( m_rootFeature );
     }
     catch( final Throwable e )
     {
@@ -146,20 +145,20 @@ public class GMLWorkspace_Impl extends PlatformObject implements GMLWorkspace
       return new Feature[] { feature };
     }
 
-    final List<Feature> result = new ArrayList<Feature>();
-    final List< ? > linkList = (List< ? >) srcFeature.getProperty( linkProperty );
+    final List<Feature> result = new ArrayList<>();
+    final List< ? > linkList = (List< ? >)srcFeature.getProperty( linkProperty );
 
     for( final Object linkValue : linkList )
     {
       // TODO: same code as in resolveLink -> move to common place
       if( linkValue instanceof Feature )
       {
-        result.add( (Feature) linkValue );
+        result.add( (Feature)linkValue );
         continue;
       }
 
       // must be a reference
-      final String linkID = (String) linkValue;
+      final String linkID = (String)linkValue;
       result.add( getFeature( linkID ) );
     }
 
@@ -172,11 +171,11 @@ public class GMLWorkspace_Impl extends PlatformObject implements GMLWorkspace
     return m_rootFeature;
   }
 
-  private final Collection<ModellEventListener> m_listener = new HashSet<ModellEventListener>();
+  private final Collection<ModellEventListener> m_listener = new HashSet<>();
 
   /**
    * Every listener is registered only once.
-   * 
+   *
    * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#addModellListener(org.kalypsodeegree.model.feature.event.ModellEventListener)
    */
   @Override
@@ -247,20 +246,20 @@ public class GMLWorkspace_Impl extends PlatformObject implements GMLWorkspace
           {
             if( depth == FeatureVisitor.DEPTH_INFINITE_LINKS )
             {
-              final Feature f = getFeature( (String) value );
+              final Feature f = getFeature( (String)value );
               accept( fv, f, depth );
             }
           }
           else if( value instanceof Feature )
           {
-            final Feature f = (Feature) value;
+            final Feature f = (Feature)value;
             accept( fv, f, depth );
           }
           else if( value instanceof List )
-            accept( fv, (List< ? >) value, depth );
+            accept( fv, (List< ? >)value, depth );
           else if( value instanceof String && depth == FeatureVisitor.DEPTH_INFINITE_LINKS )
           {
-            final Feature f = getFeature( (String) value );
+            final Feature f = getFeature( (String)value );
             accept( fv, f, depth );
           }
         }
@@ -275,16 +274,16 @@ public class GMLWorkspace_Impl extends PlatformObject implements GMLWorkspace
     {
       if( next instanceof String && depth == FeatureVisitor.DEPTH_INFINITE_LINKS )
       {
-        final Feature f = getFeature( (String) next );
+        final Feature f = getFeature( (String)next );
         accept( fv, f, depth );
       }
       else if( next instanceof IXLinkedFeature && depth == FeatureVisitor.DEPTH_INFINITE_LINKS )
       {
-        final Feature f = ((IXLinkedFeature) next).getFeature();
+        final Feature f = ((IXLinkedFeature)next).getFeature();
         accept( fv, f, depth );
       }
       else if( !(next instanceof IXLinkedFeature) && next instanceof Feature )
-        accept( fv, (Feature) next, depth );
+        accept( fv, (Feature)next, depth );
     }
   }
 
@@ -340,7 +339,7 @@ public class GMLWorkspace_Impl extends PlatformObject implements GMLWorkspace
 
     // TODO: because we nowadys do recurse, another feature might be created meanwhile
     // so there is a chance, that an id is used twice
-    accept( new RegisterVisitor( this ), newFeature, FeatureVisitor.DEPTH_INFINITE );
+    registerFeature( newFeature );
 
     return newFeature;
   }
@@ -377,7 +376,7 @@ public class GMLWorkspace_Impl extends PlatformObject implements GMLWorkspace
 
     if( prop instanceof List )
     {
-      final List list = (List< ? >) prop;
+      final List list = (List< ? >)prop;
       // when pos = -1 -> append to end of the list
       if( pos == -1 )
         list.add( newFeature );
@@ -390,7 +389,7 @@ public class GMLWorkspace_Impl extends PlatformObject implements GMLWorkspace
     m_indexMap.put( newFeature.getId(), newFeature );
 
     // register also features in subtree of new feature
-    accept( new RegisterVisitor( this ), newFeature, FeatureVisitor.DEPTH_INFINITE );
+    registerFeature( newFeature );
     return;
   }
 
@@ -400,7 +399,7 @@ public class GMLWorkspace_Impl extends PlatformObject implements GMLWorkspace
     final Object prop = parentFeature.getProperty( linkProp );
 
     if( linkProp.isList() )
-      return ((List< ? >) prop).remove( childFeatureId );
+      return ((List< ? >)prop).remove( childFeatureId );
 
     if( childFeatureId.equals( parentFeature.getProperty( linkProp ) ) )
     {
@@ -418,7 +417,7 @@ public class GMLWorkspace_Impl extends PlatformObject implements GMLWorkspace
     final Object prop = parentFeature.getProperty( linkProp );
     if( linkProp.isList() )
     {
-      final List< ? > list = (List< ? >) prop;
+      final List< ? > list = (List< ? >)prop;
       result = list.remove( childFeature );
     }
     else
@@ -432,17 +431,16 @@ public class GMLWorkspace_Impl extends PlatformObject implements GMLWorkspace
 
     if( result )
     {
-      accept( new UnRegisterVisitor( this ), childFeature, FeatureVisitor.DEPTH_INFINITE );
-      unregister( childFeature );
+      unregisterFeature( childFeature );
     }
     return result;
   }
 
   /**
    * Unregisters a feature from this workspace.<br/>
-   * Should be called only within this implementation. NOT intended to be called by client.
+   * Does not recurse into sub features.
    */
-  public void unregister( final Feature feature )
+  void unregister( final Feature feature )
   {
     final String id = feature.getId();
     m_indexMap.remove( id );
@@ -450,9 +448,9 @@ public class GMLWorkspace_Impl extends PlatformObject implements GMLWorkspace
 
   /**
    * Registers a feature in this workspace.<br/>
-   * Should be called only within this implementation. NOT intended to be called by client.
+   * Does not recurse into sub features.
    */
-  public void register( final Feature f )
+  void register( final Feature f )
   {
     m_indexMap.put( f.getId(), f );
   }
@@ -462,9 +460,9 @@ public class GMLWorkspace_Impl extends PlatformObject implements GMLWorkspace
   {
     final Object featureFromPath = getFeatureFromPath( featurePath );
     if( featureFromPath instanceof Feature )
-      accept( fv, (Feature) featureFromPath, depth );
+      accept( fv, (Feature)featureFromPath, depth );
     else if( featureFromPath instanceof FeatureList )
-      accept( fv, (FeatureList) featureFromPath, depth );
+      accept( fv, (FeatureList)featureFromPath, depth );
     else
       throw new IllegalArgumentException( "FeaturePath is neither Feature nor FeatureList: " + featurePath );
   }
@@ -485,7 +483,7 @@ public class GMLWorkspace_Impl extends PlatformObject implements GMLWorkspace
       return false;
     if( property instanceof List )
     {
-      final Object object = ((List< ? >) property).get( pos );
+      final Object object = ((List< ? >)property).get( pos );
       if( object instanceof Feature )
         return false;
       return !m_indexMap.containsKey( object );
@@ -529,11 +527,29 @@ public class GMLWorkspace_Impl extends PlatformObject implements GMLWorkspace
   }
 
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     if( adapter == getClass() )
       return this;
 
     return super.getAdapter( adapter );
+  }
+
+  /**
+   * Registers a feature and its sub features into this workspace.<br/>
+   * ONLY intended to be used within this implementatino, NOT by clients.
+   */
+  public void registerFeature( final Feature feature )
+  {
+    accept( new RegisterVisitor( this ), feature, FeatureVisitor.DEPTH_INFINITE );
+  }
+
+  /**
+   * Unregisters a feature and its sub features from this workspace.<br/>
+   * ONLY intended to be used within this implementatino, NOT by clients.
+   */
+  public void unregisterFeature( final Feature feature )
+  {
+    accept( new UnRegisterVisitor( this ), feature, FeatureVisitor.DEPTH_INFINITE );
   }
 }
