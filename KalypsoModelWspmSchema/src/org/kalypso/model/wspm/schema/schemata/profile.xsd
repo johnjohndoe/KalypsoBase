@@ -1,11 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-  <!--
-    This file is part of Kalypso Copyright (c) 2008 by Björnsen Beratende Ingenieure GmbH, Koblenz, Germany (Bjoernsen Consulting Engineers), http://www.bjoernsen.de Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/ Kalypso is free software: you can
-    redistribute it and/or modify it under the terms of the GNU Lesser General Public License (LGPL) as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
-    the GNU Lesser General Public License for more details. You should have received a copy of the GNU Lesser General Public License along with Kalypso. If not, see <http://www.gnu.org/licenses/>.
-  -->
-<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns:swe="http://www.opengis.net/swe" xmlns:wspm="org.kalypso.model.wspm" xmlns:prof="org.kalypso.model.wspmprofile" xmlns:wspmcommon="org.kalypso.model.wspmcommon" xmlns:common="org.kalypso.gml.common" targetNamespace="org.kalypso.model.wspmprofile"
-  elementFormDefault="qualified" version="0.1">
+<!-- This file is part of Kalypso Copyright (c) 2008 by Björnsen Beratende Ingenieure GmbH, Koblenz, Germany (Bjoernsen Consulting Engineers), http://www.bjoernsen.de Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/ Kalypso is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License (LGPL) as published 
+  by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details. You should have received a copy of the GNU Lesser General Public License along with Kalypso. If not, see <http://www.gnu.org/licenses/>. -->
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:om="http://www.opengis.net/om" xmlns:swe="http://www.opengis.net/swe" xmlns:wspm="org.kalypso.model.wspm" xmlns:prof="org.kalypso.model.wspmprofile" xmlns:wspmcommon="org.kalypso.model.wspmcommon" xmlns:common="org.kalypso.gml.common" targetNamespace="org.kalypso.model.wspmprofile" elementFormDefault="qualified" version="0.1">
   <annotation>
     <appinfo xmlns:kapp="org.kalypso.appinfo">
       <kapp:gmlVersion>3.1.1</kapp:gmlVersion>
@@ -13,15 +9,11 @@
   </annotation>
   <import namespace="org.kalypso.model.wspmcommon" schemaLocation="wspmCommons.xsd" />
   <import namespace="org.kalypso.gml.common" />
-  <import namespace="http://www.opengis.net/gml"/>
-  <import namespace="http://www.opengis.net/om"/>
-  <import namespace="http://www.opengis.net/swe"/>
-  <!-- schema for WSPM Profiles  -->
-  <!-- 
-		_________________________________________________________________________________________
-		ELEMENTS
-		_________________________________________________________________________________________
-	-->
+  <import namespace="http://www.opengis.net/gml" />
+  <import namespace="http://www.opengis.net/om" />
+  <import namespace="http://www.opengis.net/swe" />
+  <!-- schema for WSPM Profiles -->
+  <!-- _________________________________________________________________________________________ ELEMENTS _________________________________________________________________________________________ -->
   <element name="Profile" type="prof:ProfileType" substitutionGroup="om:Observation">
     <annotation>
       <documentation xml:lang="de">
@@ -44,12 +36,12 @@
     <annotation>
       <documentation>Wir definieren einen eigenen Observation Typ für Querprofile. Damit wird die Stationierung direkt im Schema berücksichtigt: die Stationierung wird konsequent benutzt um Querprofil zu bearbeiten. Wir packen deswegen diese Information als Element und nicht als Metadata. Ein Querprofil leitet von CommonObservation ab und beinhaltet also die Tupeln. Sie werden anhand von
         resultDefinition angegeben. Für die zusätzliche Durchlässe, Maulprofile, Kreise und
-        Trapezen wird das Element member definiert. </documentation>
+        Trapezen wird das Element
+        member definiert.
+      </documentation>
       <appinfo xmlns:kapp="org.kalypso.appinfo">
         <kapp:functionProperty kapp:functionId="org.kalypso.model.wspm.functionProperty.profileGeometry" kapp:property="prof:profileLocation" />
-        <!-- 
-        <kapp:functionProperty kapp:functionId="org.kalypso.model.wspm.functionProperty.ProfileThroughputLocationCreator" kapp:property="prof:profileThroughputLocation" />
-         -->
+        <!-- <kapp:functionProperty kapp:functionId="org.kalypso.model.wspm.functionProperty.ProfileThroughputLocationCreator" kapp:property="prof:profileThroughputLocation" /> -->
       </appinfo>
     </annotation>
     <complexContent>
@@ -113,23 +105,8 @@
               </documentation>
             </annotation>
           </element>
-          <!-- 
-          <element name="profileThroughputLocation" type="gml:LineStringPropertyType" minOccurs="0" maxOccurs="1">
-            <annotation>
-              <appinfo>This property is backed by the profile-observation.</appinfo>
-              <documentation xml:lang="de">
-                <label>Durchfluss</label>
-                <tooltip>Durchfluss</tooltip>
-                <description>Durchfluss</description>
-              </documentation>
-              <documentation xml:lang="en">
-                <label>Profile throughput location</label>
-                <tooltip>Profile throughput location</tooltip>
-                <description>Profile throughput location</description>
-              </documentation>
-            </annotation>
-          </element>
-           -->
+          <!-- <element name="profileThroughputLocation" type="gml:LineStringPropertyType" minOccurs="0" maxOccurs="1"> <annotation> <appinfo>This property is backed by the profile-observation.</appinfo> <documentation xml:lang="de"> <label>Durchfluss</label> <tooltip>Durchfluss</tooltip> <description>Durchfluss</description> </documentation> <documentation xml:lang="en"> <label>Profile throughput location</label> <tooltip>Profile throughput location</tooltip> <description>Profile throughput location</description> 
+            </documentation> </annotation> </element> -->
           <element name="member" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded">
             <annotation>
               <documentation xml:lang="de"> Die Liste der zusätzliche Observationen: z.B. Durchlässe, Maulprofile, Kreise und Trapezen können hiermit abgebildet werden. </documentation>
@@ -137,12 +114,13 @@
             </annotation>
           </element>
           <element ref="prof:localEnergyLossMember" minOccurs="0" maxOccurs="unbounded" />
-          <element name="imageMember" type="prof:imageFeaturePropertyType" minOccurs="0" maxOccurs="unbounded"/>
+          <element name="imageMember" type="prof:imageFeaturePropertyType" minOccurs="0" maxOccurs="unbounded" />
           <element name="derivedGeometryMember" type="gml:FeaturePropertyType" minOccurs="0" maxOccurs="unbounded">
             <annotation>
               <documentation xml:lang="en">Additional geometries that are derived from the underlying observation. Are typically cached and will be generated if the underlying geometry changes.</documentation>
             </annotation>
           </element>
+          <element name="metadataMember" type="prof:MetadataPropertyType" minOccurs="0" maxOccurs="unbounded" />
         </sequence>
       </extension>
     </complexContent>
@@ -182,11 +160,7 @@
       </documentation>
     </annotation>
   </element>
-  <!-- 
-		_________________________________________________________________________________________
-		TYPES
-		_________________________________________________________________________________________	
-	-->
+  <!-- _________________________________________________________________________________________ TYPES _________________________________________________________________________________________ -->
   <complexType name="localEnergyLossPropertyType">
     <sequence>
       <element ref="prof:LocalEnergyLoss" />
@@ -299,6 +273,24 @@
               </documentation>
             </annotation>
           </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <complexType name="MetadataPropertyType">
+    <sequence>
+      <element ref="prof:Metadata"></element>
+    </sequence>
+  </complexType>
+
+  <element name="Metadata" type="prof:MetadataType" substitutionGroup="gml:_Feature" />
+  <complexType name="MetadataType">
+    <complexContent>
+      <extension base="gml:AbstractFeatureType">
+        <sequence>
+          <element name="key" type="string" nillable="false" />
+          <element name="value" type="string" />
         </sequence>
       </extension>
     </complexContent>

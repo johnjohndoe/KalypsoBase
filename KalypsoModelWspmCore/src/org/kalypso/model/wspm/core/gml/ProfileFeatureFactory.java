@@ -52,19 +52,24 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.IWspmNamespaces;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfileMetadata;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.ProfilFactory;
+import org.kalypso.model.wspm.core.profil.ProfileObjectFactory;
 import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
 import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
- * Intermediates between the {@link IProfil} interface and Features of QName {org.kalypso.model.wspm.profile}profile
- *
+ * Intermediates between the {@link IProfil} interface and Features of QName {org.kalypso.model.wspm.profile}profile.
+ * 
  * @author Gernot Belger
  */
 public final class ProfileFeatureFactory implements IWspmConstants
@@ -89,13 +94,11 @@ public final class ProfileFeatureFactory implements IWspmConstants
    * Assumes, that the given feature is empty.
    * </p>
    */
-  protected static void toFeature( final IProfil profile, final IProfileFeature targetFeature )
+  static void toFeature( final IProfil profile, final IProfileFeature targetFeature )
   {
-    final FeatureChange[] changes = ProfileFeatureFactory.toFeatureAsChanges( profile, targetFeature );
+    final FeatureChange[] changes = toFeatureAsChanges( profile, targetFeature );
     for( final FeatureChange change : changes )
-    {
       change.getFeature().setProperty( change.getProperty(), change.getNewValue() );
-    }
 
     targetFeature.setEnvelopesUpdated();
   }
@@ -104,15 +107,16 @@ public final class ProfileFeatureFactory implements IWspmConstants
    * Converts a profile to a feature. The feature is not yet changed but the needed changes are returned as feature
    * changes.
    */
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
-  protected static FeatureChange[] toFeatureAsChanges( final IProfil profile, final IProfileFeature targetFeature )
+  @SuppressWarnings( "unchecked" )//$NON-NLS-1$
+  static FeatureChange[] toFeatureAsChanges( final IProfil profile, final IProfileFeature targetFeature )
   {
     final IFeatureType featureType = targetFeature.getFeatureType();
 
     final List<FeatureChange> changes = new ArrayList<>();
+
     try
     {
-      /* name and description */
+      /* Name, description and srs. */
       final String name = profile.getName();
       final String description = profile.getComment();
       final String srs = profile.getSrsName();
@@ -124,31 +128,26 @@ public final class ProfileFeatureFactory implements IWspmConstants
       changes.add( getFeatureChangeName( targetFeature, name ) );
       changes.add( new FeatureChange( targetFeature, featureType.getProperty( Feature.QN_DESCRIPTION ), description ) );
 
-      /* station */
+      /* Station. */
       final double station = profile.getStation();
       changes.add( getFeatureChangeStation( targetFeature, station ) );
 
-      /* type */
+      /* Type. */
       final String profiletype = profile.getType();
       changes.add( new FeatureChange( targetFeature, featureType.getProperty( ProfileFeatureFactory.QNAME_TYPE ), profiletype ) );
 
-      /* Ensure that record-definition is there */
+      /* Ensure that record-definition is there. */
       final FeatureChange changeRecordDefinition = checkRecordDefinition( targetFeature );
       if( changeRecordDefinition != null )
-      {
         changes.add( changeRecordDefinition );
-      }
 
       final FeatureChange[] obsChanges = ObservationFeatureFactory.toFeatureAsChanges( profile, targetFeature );
       Collections.addAll( changes, obsChanges );
 
-      /* Profile Objects */
-      final QName memberQName = new QName( IWspmNamespaces.NS_WSPMPROF, "member" ); //$NON-NLS-1$
-      final IRelationType profileObjectsRelationType = (IRelationType) featureType.getProperty( memberQName );
+      /* Profile Objects. */
+      final IRelationType profileObjectsRelationType = (IRelationType)featureType.getProperty( new QName( IWspmNamespaces.NS_WSPMPROF, "member" ) );
       final FeatureList profileObjectList = FeatureFactory.createFeatureList( targetFeature, profileObjectsRelationType, new Feature[] {} );
-
-
-      final IFeatureType profileObjectType = featureType.getGMLSchema().getFeatureType(IObservation.QNAME_OBSERVATION );
+      final IFeatureType profileObjectType = featureType.getGMLSchema().getFeatureType( IObservation.QNAME_OBSERVATION );
       final IRelationType profileObjectParentRelation = profileObjectList.getPropertyType();
 
       final IProfileObject[] profileObjects = profile.getProfileObjects();
@@ -161,8 +160,29 @@ public final class ProfileFeatureFactory implements IWspmConstants
         Collections.addAll( changes, featureAsChanges );
       }
 
-      /* Always to set the building, even if null */
+      /* Always to set the building, even if null. */
       changes.add( new FeatureChange( targetFeature, profileObjectsRelationType, profileObjectList ) );
+
+      /* Metadata. */
+      final IRelationType metadataRelationType = (IRelationType)featureType.getProperty( IProfileFeature.MEMBER_METADATA );
+      final FeatureList metadataList = FeatureFactory.createFeatureList( targetFeature, metadataRelationType, new Feature[] {} );
+      final IFeatureType medatataType = featureType.getGMLSchema().getFeatureType( Metadata.FEATURE_METADATA );
+      final IRelationType metadataParentRelation = metadataList.getPropertyType();
+
+      final IProfileMetadata metadata = profile.getMetadata();
+      final String[] keys = metadata.getKeys();
+      for( final String key : keys )
+      {
+        final String value = metadata.getMetadata( key );
+
+        final Feature metadataFeature = targetFeature.getWorkspace().createFeature( targetFeature, metadataParentRelation, medatataType );
+        metadataList.add( metadataFeature );
+
+        changes.add( new FeatureChange( metadataFeature, featureType.getProperty( Metadata.PROPERTY_KEY ), key ) );
+        changes.add( new FeatureChange( metadataFeature, featureType.getProperty( Metadata.PROPERTY_VALUE ), value ) );
+      }
+
+      changes.add( new FeatureChange( targetFeature, metadataRelationType, metadataList ) );
     }
     catch( final Exception e )
     {
@@ -202,5 +222,62 @@ public final class ProfileFeatureFactory implements IWspmConstants
     }
 
     return null;
+  }
+
+  static IProfil toProfile( final ProfileFeatureBinding profileFeature )
+  {
+    /* Profile type. */
+    final String type = profileFeature.getProfileType();
+    if( type == null )
+      return null;
+
+    /* Observation of profile. */
+    final IObservation<TupleResult> observation = ObservationFeatureFactory.toObservation( profileFeature );
+    final IProfil profil = ProfilFactory.createProfil( type, observation, profileFeature );
+
+    /* Station of profile. */
+    final BigDecimal bigStation = (BigDecimal)profileFeature.getProperty( ProfileFeatureFactory.QNAME_STATION );
+    if( bigStation != null )
+    {
+      final double station = bigStation.doubleValue();
+      profil.setStation( station );
+    }
+
+    /* Srs of profile. */
+    profil.setSrsName( profileFeature.getSrsName() );
+
+    /* TODO - @hack - add flow direction to profile metadata. */
+    final Feature parent = profileFeature.getOwner();
+    if( parent instanceof WspmWaterBody )
+    {
+      final WspmWaterBody waterBody = (WspmWaterBody)parent;
+      profil.getMetadata().setMetadata( IWspmConstants.PROFIL_PROPERTY_FLOW_DIRECTION, Boolean.toString( waterBody.isDirectionUpstreams() ) );
+    }
+
+    /* Profile objects of profile. */
+    // REMARK: handle buildings before table, because the setBuilding method resets the corresponding table properties.
+    final IObservation<TupleResult>[] profileObjects = profileFeature.getProfileObjects();
+    for( final IObservation<TupleResult> obs : profileObjects )
+    {
+      final IProfileObject profileObject = ProfileObjectFactory.createProfileObject( profil, obs );
+      if( profileObject == null )
+        System.out.println( "failed to create Object: " + obs.getName() ); //$NON-NLS-1$
+      else
+        profil.addProfileObjects( profileObject );
+    }
+
+    /* Metadata. */
+    final IProfileMetadata profileMetadata = profil.getMetadata();
+
+    final IFeatureBindingCollection<Metadata> metadataList = profileFeature.getMetadata();
+    for( final Metadata metadata : metadataList )
+    {
+      final String key = metadata.getKey();
+      final String value = metadata.getValue();
+
+      profileMetadata.setMetadata( key, value );
+    }
+
+    return profil;
   }
 }

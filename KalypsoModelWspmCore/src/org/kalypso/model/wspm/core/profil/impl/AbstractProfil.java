@@ -44,11 +44,9 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -70,6 +68,7 @@ import org.kalypso.model.wspm.core.profil.IProfil;
 import org.kalypso.model.wspm.core.profil.IProfilListener;
 import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
 import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.IProfileMetadata;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfileTransaction;
 import org.kalypso.model.wspm.core.profil.IRangeSelection;
@@ -111,8 +110,6 @@ public abstract class AbstractProfil implements IProfil
 
   private final Set<IProfilListener> m_listeners = Collections.synchronizedSet( new LinkedHashSet<IProfilListener>( 10 ) );
 
-  private final Map<Object, Object> m_additionalProfileSettings = new HashMap<>();
-
   private final ITupleResultChangedListener m_tupleResultListener = new ProfilTupleResultChangeListener( this );
 
   private final ITupleResultChangedListener m_objectTupleListener = new ProfilObjectListener( this );
@@ -127,6 +124,8 @@ public abstract class AbstractProfil implements IProfil
 
   private int m_transactionHint;
 
+  private final IProfileMetadata m_metadata;
+
   public AbstractProfil( final String type, final TupleResult result, final IProfileFeature source )
   {
     m_type = type;
@@ -134,6 +133,7 @@ public abstract class AbstractProfil implements IProfil
     setResult( result );
 
     m_selection = new RangeSelection( this );
+    m_metadata = new ProfileMetadata( this );
   }
 
   @Override
@@ -409,12 +409,10 @@ public abstract class AbstractProfil implements IProfil
 
   /**
    * CREATES A NEW POINT PROPERTY.
-   *
-   * @return a pointProperty from PointPropertyProvider, see
-   *         {@code IProfilPointPropertyProvider#getPointProperty(String)}
+   * 
+   * @return a pointProperty from PointPropertyProvider, see {@code IProfilPointPropertyProvider#getPointProperty(String)}
    *         <p>
-   *         you must check {@link #hasPointProperty(IComponent)}, if false you must call
-   *         {@link #addPointProperty(IComponent)}
+   *         you must check {@link #hasPointProperty(IComponent)}, if false you must call {@link #addPointProperty(IComponent)}
    */
   @Override
   public IComponent getPointPropertyFor( final String propertyID )
@@ -462,7 +460,7 @@ public abstract class AbstractProfil implements IProfil
     return m_profileObjects.toArray( new IProfileObject[] {} );
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings( "unchecked" )
   @Override
   public <T extends IProfileObject> T[] getProfileObjects( final Class<T> clazz )
   {
@@ -472,22 +470,11 @@ public abstract class AbstractProfil implements IProfil
     {
       if( clazz.isInstance( object ) )
       {
-        objects.add( (T) object );
+        objects.add( (T)object );
       }
     }
 
-    return objects.toArray( (T[]) Array.newInstance( clazz, objects.size() ) );
-  }
-
-  /**
-   * @deprecated caution: additional properties will not be serialized to profile features
-   * @see org.kalypso.model.wspm.core.profil.IProfil#getProperty(java.lang.Object)
-   */
-  @Deprecated
-  @Override
-  public Object getProperty( final Object key )
-  {
-    return m_additionalProfileSettings.get( key );
+    return objects.toArray( (T[])Array.newInstance( clazz, objects.size() ) );
   }
 
   @Override
@@ -607,21 +594,6 @@ public abstract class AbstractProfil implements IProfil
     m_markerIndex = new MarkerIndex( this, markers );
 
     fireProblemMarkerChanged();
-  }
-
-  /**
-   * @deprecated caution: additional properties will not be serialized to profile features
-   */
-  @Deprecated
-  @Override
-  public void setProperty( final Object key, final Object value )
-  {
-    m_additionalProfileSettings.put( key, value );
-
-    final ProfilChangeHint hint = new ProfilChangeHint();
-    hint.setObjectChanged();
-
-    fireProfilChanged( hint );
   }
 
   @Override
@@ -846,7 +818,6 @@ public abstract class AbstractProfil implements IProfil
     {
       stopTransaction( transaction );
     }
-
   }
 
   @Override
@@ -861,5 +832,11 @@ public abstract class AbstractProfil implements IProfil
     m_srsName = srsName;
 
     fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.PROFILE_PROPERTY_CHANGED ) );
+  }
+
+  @Override
+  public IProfileMetadata getMetadata( )
+  {
+    return m_metadata;
   }
 }

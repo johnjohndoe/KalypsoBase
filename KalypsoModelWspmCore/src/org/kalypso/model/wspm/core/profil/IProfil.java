@@ -71,8 +71,7 @@ public interface IProfil extends IObservation<TupleResult>
   /**
    * @return true
    *         <p>
-   *         adds a new Record at the end of this Observation and copies the values of the Components existing in both
-   *         records
+   *         adds a new Record at the end of this Observation and copies the values of the Components existing in both records
    */
   boolean addPoint( IProfileRecord point );
 
@@ -87,7 +86,7 @@ public interface IProfil extends IObservation<TupleResult>
 
   /**
    * remove the current ProfileObject and adds the given ProfileObject
-   *
+   * 
    * @return the oldObject
    * @param building
    *          must not be null, in this case use removeProfileObject()
@@ -129,8 +128,7 @@ public interface IProfil extends IObservation<TupleResult>
   IProfilPointMarker[] getPointMarkerFor( String pointMarkerID );
 
   /**
-   * @return all Marker-Types stored in This profile, NOT all available Marker-Types registered for this
-   *         {@link #getType()}
+   * @return all Marker-Types stored in This profile, NOT all available Marker-Types registered for this {@link #getType()}
    * @see org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider
    */
   IComponent[] getPointMarkerTypes( );
@@ -166,18 +164,6 @@ public interface IProfil extends IObservation<TupleResult>
    * @return the current building(Tuhh) or other kind of ProfileObject, maybe null
    */
   <T extends IProfileObject> T[] getProfileObjects( Class<T> clazz );
-
-  /**
-   * FIXME: make usable again:<br>
-   * - use String/String instead of object/object<br/>
-   * - make sure everything gets serialized automatically (feature <-> profile)
-   *
-   * @param key
-   * @return the value from internal HashMap<Object,Object>
-   * @deprecated caution: additional properties will not be serialized to profile features
-   */
-  @Deprecated
-  Object getProperty( Object key );
 
   IRangeSelection getSelection( );
 
@@ -251,14 +237,6 @@ public interface IProfil extends IObservation<TupleResult>
    */
   void setProblemMarker( IMarker[] markers );
 
-  /**
-   * @param key
-   * @param value
-   *          saves any (key,value-Object) in the profiles internal HashMap
-   */
-  @Deprecated
-  void setProperty( Object key, Object value );
-
   void setStation( double station );
 
   IProfileRecord findNextPoint( double breite );
@@ -286,4 +264,6 @@ public interface IProfil extends IObservation<TupleResult>
   void setSrsName( String srsName );
 
   IStatus doTransaction( IProfileTransaction transaction );
+
+  IProfileMetadata getMetadata( );
 }
