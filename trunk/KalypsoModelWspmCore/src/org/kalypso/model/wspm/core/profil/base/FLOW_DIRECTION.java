@@ -40,7 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.base;
 
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfileMetadata;
 
 /**
  * direction eEstuary2Src = waterBody.isDirectionUpstreams
@@ -123,5 +125,20 @@ public enum FLOW_DIRECTION
       return eEstuary2Src;
 
     return eSrc2Estuary;
+  }
+
+  public static FLOW_DIRECTION findDirection( final IProfil... profiles )
+  {
+    for( final IProfil profile : profiles )
+    {
+      final IProfileMetadata metadata = profile.getMetadata();
+      final String flowDirection = metadata.getMetadata( IWspmConstants.PROFIL_PROPERTY_FLOW_DIRECTION );
+      if( flowDirection == null )
+        continue;
+
+      return FLOW_DIRECTION.toFlowDirection( Boolean.parseBoolean( flowDirection ) );
+    }
+
+    return null;
   }
 }

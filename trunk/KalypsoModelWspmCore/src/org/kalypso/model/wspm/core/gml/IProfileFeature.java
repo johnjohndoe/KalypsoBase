@@ -74,6 +74,8 @@ public interface IProfileFeature extends Feature, IProfileProvider
 
   QName MEMBER_IMAGE = new QName( IWspmConstants.NS_WSPMPROF, "imageMember" ); //$NON-NLS-1$
 
+  QName MEMBER_METADATA = new QName( IWspmConstants.NS_WSPMPROF, "metadataMember" ); //$NON-NLS-1$
+
   /**
    * The scale (i.e. fraction digits) for station values.
    * 
@@ -124,4 +126,6 @@ public interface IProfileFeature extends Feature, IProfileProvider
   Image addImage( URI photoURL );
 
   IFeatureBindingCollection<Image> getImages( );
+
+  String getMetadata( String key );
 }

@@ -43,6 +43,10 @@
             class="org.kalypso.model.wspm.core.gml.classifications.CodeClass"
             qname="{org.kalypso.model.wspm.classifications}CodeClass">
       </feature>
+      <feature
+            class="org.kalypso.model.wspm.core.gml.Metadata"
+            qname="{org.kalypso.model.wspmprofile}Metadata">
+      </feature>
    </extension>
    <extension
            point="org.eclipse.core.runtime.preferences">
