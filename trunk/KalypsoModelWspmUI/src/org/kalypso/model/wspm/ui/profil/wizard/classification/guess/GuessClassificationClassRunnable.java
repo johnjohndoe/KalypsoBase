@@ -53,12 +53,12 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileChange;
+import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.base.IProfileManipulator;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyAdd;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
 import org.kalypso.model.wspm.core.util.roughnesses.GuessRoughessClassesRunnable;
 import org.kalypso.model.wspm.core.util.vegetation.GuessVegetationClassesRunnable;
 import org.kalypso.observation.result.IComponent;
@@ -76,15 +76,15 @@ public class GuessClassificationClassRunnable implements IProfileManipulator
   }
 
   @Override
-  public final Pair<IProfilChange[], IStatus> performProfileManipulation( final IProfil profile, final IProgressMonitor monitor )
+  public final Pair<IProfileChange[], IStatus> performProfileManipulation( final IProfile profile, final IProgressMonitor monitor )
   {
     monitor.beginTask( "", 1 ); //$NON-NLS-1$
 
-    final IProfilChange[] changes = findChanges( profile, monitor );
+    final IProfileChange[] changes = findChanges( profile, monitor );
     return Pair.of( changes, Status.OK_STATUS );
   }
 
-  private IProfilChange[] findChanges( final IProfil profile, final IProgressMonitor monitor )
+  private IProfileChange[] findChanges( final IProfile profile, final IProgressMonitor monitor )
   {
     final String type = m_page.getType();
 
@@ -99,18 +99,18 @@ public class GuessClassificationClassRunnable implements IProfileManipulator
 
     monitor.done();
 
-    return new IProfilChange[] {};
+    return new IProfileChange[] {};
   }
 
-  private IProfilChange[] doGuessRoughnessClasses( final IProfil profile, final IProgressMonitor monitor )
+  private IProfileChange[] doGuessRoughnessClasses( final IProfile profile, final IProgressMonitor monitor )
   {
     if( !WspmClassifications.hasRoughnessProperties( profile ) )
-      return new IProfilChange[] {};
+      return new IProfileChange[] {};
 
     if( !WspmClassifications.hasRoughnessClass( profile ) )
       addRoughnessClass( profile, monitor );
 
-    final Set<IProfilChange> changes = new LinkedHashSet<>();
+    final Set<IProfileChange> changes = new LinkedHashSet<>();
 
     try
     {
@@ -134,13 +134,13 @@ public class GuessClassificationClassRunnable implements IProfileManipulator
       e.printStackTrace();
     }
 
-    return changes.toArray( new IProfilChange[] {} );
+    return changes.toArray( new IProfileChange[] {} );
   }
 
-  private IProfilChange[] doGuessVegetationClasses( final IProfil profile, final IProgressMonitor monitor )
+  private IProfileChange[] doGuessVegetationClasses( final IProfile profile, final IProgressMonitor monitor )
   {
     if( !WspmClassifications.hasVegetationProperties( profile ) )
-      return new IProfilChange[] {};
+      return new IProfileChange[] {};
 
     if( !WspmClassifications.hasVegetationClass( profile ) )
       addVegetationClass( profile, monitor );
@@ -157,26 +157,26 @@ public class GuessClassificationClassRunnable implements IProfileManipulator
       e.printStackTrace();
     }
 
-    return new IProfilChange[] {};
+    return new IProfileChange[] {};
   }
 
-  protected void addVegetationClass( final IProfil profile, final IProgressMonitor monitor )
+  protected void addVegetationClass( final IProfile profile, final IProgressMonitor monitor )
   {
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
+    final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
     final IComponent component = provider.getPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS );
 
-    final ProfilOperation operation = new ProfilOperation( "Adding profile point propertey - vegetation class", profile, true ); //$NON-NLS-1$
+    final ProfileOperation operation = new ProfileOperation( "Adding profile point propertey - vegetation class", profile, true ); //$NON-NLS-1$
     operation.addChange( new PointPropertyAdd( profile, component ) );
 
     operation.execute( monitor, null );
   }
 
-  protected void addRoughnessClass( final IProfil profile, final IProgressMonitor monitor )
+  protected void addRoughnessClass( final IProfile profile, final IProgressMonitor monitor )
   {
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
+    final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
     final IComponent component = provider.getPointProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
 
-    final ProfilOperation operation = new ProfilOperation( "Adding profile point propertey - roughness class", profile, true ); //$NON-NLS-1$
+    final ProfileOperation operation = new ProfileOperation( "Adding profile point propertey - roughness class", profile, true ); //$NON-NLS-1$
     operation.addChange( new PointPropertyAdd( profile, component ) );
 
     operation.execute( monitor, null );

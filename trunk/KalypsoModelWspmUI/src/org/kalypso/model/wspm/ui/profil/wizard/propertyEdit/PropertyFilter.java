@@ -42,7 +42,7 @@ package org.kalypso.model.wspm.ui.profil.wizard.propertyEdit;
 
 import org.eclipse.jface.viewers.IFilter;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.observation.result.IComponent;
 
 /**
@@ -51,9 +51,9 @@ import org.kalypso.observation.result.IComponent;
 public class PropertyFilter implements IFilter
 {
 
-  private final IProfil m_profile;
+  private final IProfile m_profile;
 
-  public PropertyFilter( final IProfil profile )
+  public PropertyFilter( final IProfile profile )
   {
     m_profile = profile;
   }

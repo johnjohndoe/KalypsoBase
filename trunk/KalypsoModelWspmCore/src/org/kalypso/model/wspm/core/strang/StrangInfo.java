@@ -10,7 +10,7 @@ import org.kalypso.model.wspm.core.result.IResultSet;
  */
 public class StrangInfo
 {
-  private final ProfilInfo[] m_profiles;
+  private final ProfileInfo[] m_profiles;
 
   private int m_index;
 
@@ -18,7 +18,7 @@ public class StrangInfo
 
   private final IResultSet[] m_results;
 
-  public StrangInfo( final ProfilInfo[] profile, final int index, final IResultSet[] results )
+  public StrangInfo( final ProfileInfo[] profile, final int index, final IResultSet[] results )
   {
     m_profiles = profile;
     m_index = index;
@@ -61,7 +61,7 @@ public class StrangInfo
     return true;
   }
 
-  public ProfilInfo getInfo( )
+  public ProfileInfo getInfo( )
   {
     return m_profiles[m_index];
   }
@@ -94,12 +94,12 @@ public class StrangInfo
     }
   }
 
-  public ProfilInfo[] getInfos( )
+  public ProfileInfo[] getInfos( )
   {
     return m_profiles;
   }
 
-  public void setInfo( final ProfilInfo selectedItem )
+  public void setInfo( final ProfileInfo selectedItem )
   {
     for( int i = 0; i < m_profiles.length; i++ )
     {

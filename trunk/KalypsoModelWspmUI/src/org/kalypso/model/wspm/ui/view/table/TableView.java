@@ -83,9 +83,9 @@ import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor;
 import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor.ADVANCE_MODE;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileProvider;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilListener;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileListener;
+import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfileRecord;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
@@ -125,7 +125,7 @@ public class TableView extends ViewPart implements ITupleResultViewerProvider, I
 
   private FormToolkit m_toolkit;
 
-  protected IProfil m_profile;
+  protected IProfile m_profile;
 
   protected DefaultTableViewer m_view;
 
@@ -145,10 +145,10 @@ public class TableView extends ViewPart implements ITupleResultViewerProvider, I
 
   // TODO: consider moving this in the content provider: to do this, extends the TupleResultContentProvider to a
   // ProfileContentProvider
-  private final IProfilListener m_profileListener = new IProfilListener()
+  private final IProfileListener m_profileListener = new IProfileListener()
   {
     @Override
-    public void onProfilChanged( final ProfilChangeHint hint )
+    public void onProfilChanged( final ProfileChangeHint hint )
     {
       if( hint.isSelectionChanged() )
       {
@@ -158,7 +158,7 @@ public class TableView extends ViewPart implements ITupleResultViewerProvider, I
     }
 
     @Override
-    public void onProblemMarkerChanged( final IProfil source )
+    public void onProblemMarkerChanged( final IProfile source )
     {
       m_markerRefreshJob.cancel();
       m_markerRefreshJob.schedule( 100 );
@@ -433,7 +433,7 @@ public class TableView extends ViewPart implements ITupleResultViewerProvider, I
     }
   }
 
-  public IProfil getProfil( )
+  public IProfile getProfil( )
   {
     return m_profile;
   }

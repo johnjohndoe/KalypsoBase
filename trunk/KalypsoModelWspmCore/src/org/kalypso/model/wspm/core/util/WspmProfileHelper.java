@@ -53,9 +53,9 @@ import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.commons.math.geom.PolyLine;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.ProfilFactory;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.ProfileFactory;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -110,7 +110,7 @@ public final class WspmProfileHelper
    *          The profile
    * @return The width (X-Direction) of the geo point projected on the profile.
    */
-  public static Double getWidthPosition( final Point point, final IProfil profile ) throws GM_Exception, GeoTransformerException
+  public static Double getWidthPosition( final Point point, final IProfile profile ) throws GM_Exception, GeoTransformerException
   {
     final String srs = WspmProfileHelper.getCoordinateSystem( profile );
 
@@ -123,7 +123,7 @@ public final class WspmProfileHelper
    * Same as {@link #getWidthPosition(Point, IProfil)}, but uses a {@link GM_Point} instead.<br>
    * The point is automatically transformed to the right coordinate system.
    */
-  public static Double getWidthPosition( final GM_Point point, final IProfil profile ) throws GeoTransformerException, GM_Exception
+  public static Double getWidthPosition( final GM_Point point, final IProfile profile ) throws GeoTransformerException, GM_Exception
   {
     final String srs = WspmProfileHelper.getCoordinateSystem( profile );
 
@@ -137,7 +137,7 @@ public final class WspmProfileHelper
    * @deprecated Every IProfile shoul have its own srs
    */
   @Deprecated
-  private static String getCoordinateSystem( final IProfil profile )
+  private static String getCoordinateSystem( final IProfile profile )
   {
     final String crs = profile.getSrsName();
     if( Strings.isEmpty( crs ) )
@@ -150,7 +150,7 @@ public final class WspmProfileHelper
    * @deprecated Use {@link #getWidthPosition(Point, IProfil)} instead.
    */
   @Deprecated
-  public static Double getWidthPosition( final Point point, final IProfil profile, final String srsName ) throws Exception
+  public static Double getWidthPosition( final Point point, final IProfile profile, final String srsName ) throws Exception
   {
     final GM_Point p = (GM_Point) JTSAdapter.wrap( point, srsName );
 
@@ -181,7 +181,7 @@ public final class WspmProfileHelper
    * @deprecated Use {@link #getWidthPosition(Point, IProfil)} instead.
    */
   @Deprecated
-  public static Double getWidthPosition( final GM_Point geoPoint, final IProfil profile, final String srsName ) throws GeoTransformerException, GM_Exception
+  public static Double getWidthPosition( final GM_Point geoPoint, final IProfile profile, final String srsName ) throws GeoTransformerException, GM_Exception
   {
     /* List for storing points of the profile, which have a geo reference. */
     final LinkedList<IRecord> geoReferencedPoints = new LinkedList<>();
@@ -299,7 +299,7 @@ public final class WspmProfileHelper
    *          profile
    * @return Geo position as GM_Point (transformed to the Kalypso coordinate system).
    */
-  public static GM_Point getGeoPositionKalypso( final double width, final IProfil profile ) throws GeoTransformerException
+  public static GM_Point getGeoPositionKalypso( final double width, final IProfile profile ) throws GeoTransformerException
   {
     final GM_Point gmPoint = getGeoPosition( width, profile );
     if( gmPoint == null )
@@ -320,10 +320,10 @@ public final class WspmProfileHelper
    *          The profile.
    * @return Geo position as GM_Point (untransformed in teh coordinate system of the profile).
    */
-  public static GM_Point getGeoPosition( final double width, final IProfil profile )
+  public static GM_Point getGeoPosition( final double width, final IProfile profile )
   {
     /* If no or only one geo referenced points are found, return. */
-    final IRecord[] geoReferencedPoints = ProfilUtil.getGeoreferencedPoints( profile );
+    final IRecord[] geoReferencedPoints = ProfileUtil.getGeoreferencedPoints( profile );
     if( geoReferencedPoints.length <= 1 )
       return null;
 
@@ -389,7 +389,7 @@ public final class WspmProfileHelper
    *          profile
    * @return The height
    */
-  public static Double getHeightByWidth( final double width, final IProfil profile )
+  public static Double getHeightByWidth( final double width, final IProfile profile )
   {
     return interpolateValue( profile, width, IWspmPointProperties.POINT_PROPERTY_HOEHE );
   }
@@ -405,7 +405,7 @@ public final class WspmProfileHelper
    *          profile
    * @return The height
    */
-  public static Double interpolateValue( final IProfil profile, final double width, final String valueComponent )
+  public static Double interpolateValue( final IProfile profile, final double width, final String valueComponent )
   {
     final int indexValueComponent = profile.indexOfProperty( valueComponent );
     return interpolateValue( profile, width, indexValueComponent );
@@ -414,7 +414,7 @@ public final class WspmProfileHelper
   /**
    * Same as {@link #interpolateValue(IProfil, double, String)} but for several values at once.
    */
-  public static Double[] interpolateValues( final IProfil profile, final Double[] widths, final String valueComponent )
+  public static Double[] interpolateValues( final IProfile profile, final Double[] widths, final String valueComponent )
   {
     final int indexValueComponent = profile.indexOfProperty( valueComponent );
     return interpolateValues( profile, widths, indexValueComponent );
@@ -423,7 +423,7 @@ public final class WspmProfileHelper
   /**
    * Same as {@link #interpolateValue(IProfil, double, int)} but for several values at once.
    */
-  public static Double[] interpolateValues( final IProfil profile, final Double[] widths, final int indexValueComponent )
+  public static Double[] interpolateValues( final IProfile profile, final Double[] widths, final int indexValueComponent )
   {
     final Double[] values = new Double[widths.length];
     for( int i = 0; i < values.length; i++ )
@@ -437,7 +437,7 @@ public final class WspmProfileHelper
   /**
    * Same as {@link #interpolateValue(IProfil, double, String)} but used the component index.
    */
-  public static Double interpolateValue( final IProfil profile, final double width, final int indexValueComponent )
+  public static Double interpolateValue( final IProfile profile, final double width, final int indexValueComponent )
   {
     final IRecord[] points = profile.getPoints();
     if( points.length < 1 )
@@ -492,7 +492,7 @@ public final class WspmProfileHelper
    * @param wspHoehe
    *          water level
    */
-  public static GM_Point[] calculateWspPoints( final IProfil profil, final double wspHoehe )
+  public static GM_Point[] calculateWspPoints( final IProfile profil, final double wspHoehe )
   {
     final Double[] intersections = calculateWspIntersections( profil, wspHoehe );
 
@@ -533,7 +533,7 @@ public final class WspmProfileHelper
    * @deprecated does not always return correct results. Use {@link WaterlevelIntersectionWorker} instead.
    */
   @Deprecated
-  public static Double[] calculateWspIntersections( final IProfil profil, final double wspHoehe )
+  public static Double[] calculateWspIntersections( final IProfile profil, final double wspHoehe )
   {
     final IComponent cHoehe = profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_HOEHE );
     final int iHoehe = profil.indexOfProperty( cHoehe );
@@ -549,8 +549,8 @@ public final class WspmProfileHelper
     final double lastX = (Double) lastPoint.getValue( iBreite );
     final double lastY = (Double) lastPoint.getValue( iHoehe );
 
-    final Double[] breiteValues = ProfilUtil.getDoubleValuesFor( profil, cBreite, false );
-    final Double[] heightValues = ProfilUtil.getDoubleValuesFor( profil, cHoehe, false );
+    final Double[] breiteValues = ProfileUtil.getDoubleValuesFor( profil, cBreite, false );
+    final Double[] heightValues = ProfileUtil.getDoubleValuesFor( profil, cHoehe, false );
 
     // FIXME: cannot work: width/height may contain null, which leads to problems here
 
@@ -577,7 +577,7 @@ public final class WspmProfileHelper
     return intersections.toArray( new Double[intersections.size()] );
   }
 
-  private static PolyLine createPolyline( final IProfil profil, final IComponent xProperty, final IComponent yProperty )
+  private static PolyLine createPolyline( final IProfile profil, final IComponent xProperty, final IComponent yProperty )
   {
     final IRecord[] points = profil.getPoints();
 
@@ -617,10 +617,10 @@ public final class WspmProfileHelper
     return new PolyLine( xFiltered, yFiltered, 0.0001 );
   }
 
-  public static GM_Curve cutProfileAtWaterlevel( final double waterlevel, final IProfil profil ) throws Exception
+  public static GM_Curve cutProfileAtWaterlevel( final double waterlevel, final IProfile profil ) throws Exception
   {
     final GM_Point[] points = WspmProfileHelper.calculateWspPoints( profil, waterlevel );
-    IProfil cutProfile = null;
+    IProfile cutProfile = null;
 
     if( points != null )
     {
@@ -630,7 +630,7 @@ public final class WspmProfileHelper
       }
     }
 
-    return ProfilUtil.getLine( cutProfile );
+    return ProfileUtil.getLine( cutProfile );
   }
 
   /**
@@ -643,12 +643,12 @@ public final class WspmProfileHelper
    * @param lastPoint
    *          last geo point
    */
-  public static IProfil cutProfile( final IProfil profile, final GM_Point firstPoint, final GM_Point lastPoint ) throws Exception
+  public static IProfile cutProfile( final IProfile profile, final GM_Point firstPoint, final GM_Point lastPoint ) throws Exception
   {
     final double width1 = WspmProfileHelper.getWidthPosition( firstPoint, profile );
     final double width2 = WspmProfileHelper.getWidthPosition( lastPoint, profile );
 
-    final IProfil orgIProfil = profile;
+    final IProfile orgIProfil = profile;
 
     final double startWidth;
     final double endWidth;
@@ -675,7 +675,7 @@ public final class WspmProfileHelper
     final double heigth2 = WspmProfileHelper.getHeightByWidth( endWidth, orgIProfil );
 
     final IProfileRecord[] profilPointList = profile.getPoints();
-    final IProfil tmpProfil = ProfilFactory.createProfil( profile.getType() );
+    final IProfile tmpProfil = ProfileFactory.createProfil( profile.getType() );
 
     /* set the coordinate system */
     tmpProfil.setSrsName( profile.getSrsName() );
@@ -771,17 +771,17 @@ public final class WspmProfileHelper
    * @param simplifyDistance
    * @return The new profile.
    */
-  public static IProfil createProfile( final String profileType, final Coordinate[] pointsZ, final String crsOfCrds, final double simplifyDistance ) throws Exception
+  public static IProfile createProfile( final String profileType, final Coordinate[] pointsZ, final String crsOfCrds, final double simplifyDistance ) throws Exception
   {
     /* STEP 1: Compute the width and height for each point of the new line. */
     /* STEP 2: Create the new profile. */
-    final IProfil profile = calculatePointsAndCreateProfile( profileType, pointsZ, crsOfCrds );
+    final IProfile profile = calculatePointsAndCreateProfile( profileType, pointsZ, crsOfCrds );
     final int length = profile.getPoints().length;
     if( length == 0 )
       return profile;
 
     /* STEP 3: Simplify the profile. */
-    ProfilUtil.simplifyProfile( profile, simplifyDistance );
+    ProfileUtil.simplifyProfile( profile, simplifyDistance );
 
     return profile;
   }
@@ -797,10 +797,10 @@ public final class WspmProfileHelper
    *          The coordinate system of the points.
    * @return The new profile.
    */
-  private static IProfil calculatePointsAndCreateProfile( final String profileType, final Coordinate[] points, final String crsOfPoints ) throws Exception
+  private static IProfile calculatePointsAndCreateProfile( final String profileType, final Coordinate[] points, final String crsOfPoints ) throws Exception
   {
     /* Create the new profile. */
-    final IProfil profile = ProfilFactory.createProfil( profileType );
+    final IProfile profile = ProfileFactory.createProfil( profileType );
     profile.setSrsName( crsOfPoints );
 
     // TODO: check: we calculate the 'breite' by just adding up the distances between the points, is this always OK?
@@ -826,7 +826,7 @@ public final class WspmProfileHelper
     return profile;
   }
 
-  private static IProfileRecord createPoint( final IProfil profile, final Coordinate coordinate, final double breite )
+  private static IProfileRecord createPoint( final IProfile profile, final Coordinate coordinate, final double breite )
   {
     /* The needed components. */
     final IComponent cRechtswert = profile.getPointPropertyFor( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT );
@@ -888,7 +888,7 @@ public final class WspmProfileHelper
    * @param coordinatesCRS
    *          The coordinate system of the new points.
    */
-  public static void insertPoints( final IProfil profile, final int insertSign, final Coordinate[] newPoints, final String coordinatesCRS ) throws Exception
+  public static void insertPoints( final IProfile profile, final int insertSign, final Coordinate[] newPoints, final String coordinatesCRS ) throws Exception
   {
     Assert.isTrue( insertSign == 1 || insertSign == -1 );
 
@@ -937,7 +937,7 @@ public final class WspmProfileHelper
     }
   }
 
-  public static IProfil convertLinestringToEmptyProfile( final GM_Curve curve, final String profileType ) throws GM_Exception
+  public static IProfile convertLinestringToEmptyProfile( final GM_Curve curve, final String profileType ) throws GM_Exception
   {
     final LineString jtsCurve = (LineString) JTSAdapter.export( curve );
     return convertLinestringToEmptyProfile( jtsCurve, profileType );
@@ -946,13 +946,13 @@ public final class WspmProfileHelper
   /**
    * creates a profile from {@link LineString} with '0.0' as z-values.
    */
-  public static IProfil convertLinestringToEmptyProfile( final LineString jtsCurve, final String type )
+  public static IProfile convertLinestringToEmptyProfile( final LineString jtsCurve, final String type )
   {
     if( jtsCurve == null )
       return null;
 
     /* Create the new profile. */
-    final IProfil profile = ProfilFactory.createProfil( type );
+    final IProfile profile = ProfileFactory.createProfil( type );
 
     double breite = 0.0;
 
@@ -978,10 +978,10 @@ public final class WspmProfileHelper
   /**
    * creates a profile from an array of Coordinate's with '0.0' as z-values.
    */
-  public static IProfil convertLinestringToEmptyProfile( final Coordinate[] points, final String type )
+  public static IProfile convertLinestringToEmptyProfile( final Coordinate[] points, final String type )
   {
     /* Create the new profile. */
-    final IProfil profile = ProfilFactory.createProfil( type );
+    final IProfile profile = ProfileFactory.createProfil( type );
 
     double breite = 0.0;
 
@@ -1008,7 +1008,7 @@ public final class WspmProfileHelper
    * @param insertSign
    *          -1 points will be insert before, ...
    */
-  public static void extendPoints( final IProfil profil, final int insertSign, final Coordinate[] simplifiedCords, final double simplifyDistance, final String coordinatesCRS ) throws Exception
+  public static void extendPoints( final IProfile profil, final int insertSign, final Coordinate[] simplifiedCords, final double simplifyDistance, final String coordinatesCRS ) throws Exception
   {
     if( ArrayUtils.isEmpty( simplifiedCords ) )
       return;
@@ -1019,6 +1019,6 @@ public final class WspmProfileHelper
     final int start = insertSign == -1 ? 0 : length - simplifiedCords.length;
     final int end = insertSign == -1 ? simplifiedCords.length : length;
 
-    ProfilUtil.simplifyProfile( profil, simplifyDistance, start, end - 1 );
+    ProfileUtil.simplifyProfile( profil, simplifyDistance, start, end - 1 );
   }
 }

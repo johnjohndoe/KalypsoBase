@@ -51,8 +51,8 @@ import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.ui.plugin.AbstractUIPluginExt;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 
 /**
@@ -64,11 +64,11 @@ public class WaterlevelsRenderWorker
 {
   private final Collection<WaterlevelRenderData> m_data = new ArrayList<>();
 
-  private final IProfil m_profile;
+  private final IProfile m_profile;
 
   private final IWspLayerData m_wspData;
 
-  public WaterlevelsRenderWorker( final IProfil profile, final IWspLayerData data )
+  public WaterlevelsRenderWorker( final IProfile profile, final IWspLayerData data )
   {
     m_profile = profile;
     m_wspData = data;
@@ -105,7 +105,7 @@ public class WaterlevelsRenderWorker
       return Status.OK_STATUS;
 
     /* Get the station. */
-    final BigDecimal station = ProfilUtil.stationToBigDecimal( m_profile.getStation() );
+    final BigDecimal station = ProfileUtil.stationToBigDecimal( m_profile.getStation() );
 
     /* Get all active water levels */
     final Object[] activeElements = m_wspData.getActiveElements();

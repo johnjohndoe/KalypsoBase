@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.ui.view.chart;
 
 import org.eclipse.swt.graphics.Point;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 
@@ -52,12 +52,12 @@ public final class ComponentLayer extends AbstractProfilLayer
 {
   private final boolean m_isAutoScale;
 
-  public ComponentLayer( final IProfil profil, final String targetRangeProperty )
+  public ComponentLayer( final IProfile profil, final String targetRangeProperty )
   {
     this( profil, targetRangeProperty, true );
   }
 
-  public ComponentLayer( final IProfil profil, final String targetRangeProperty, final boolean isAutoScale )
+  public ComponentLayer( final IProfile profil, final String targetRangeProperty, final boolean isAutoScale )
   {
     super( targetRangeProperty, profil, targetRangeProperty, null );
 

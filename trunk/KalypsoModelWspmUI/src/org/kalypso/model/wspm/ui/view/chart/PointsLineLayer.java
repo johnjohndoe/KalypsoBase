@@ -49,8 +49,8 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.observation.result.ComponentUtilities;
@@ -70,7 +70,7 @@ import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
  */
 public class PointsLineLayer extends AbstractProfilLayer
 {
-  public PointsLineLayer( final String id, final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
+  public PointsLineLayer( final String id, final IProfile profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
   {
     super( id, profil, targetRangeProperty, styleProvider );
     setData( IProfilChartLayer.VIEW_DATA_KEY, IProfilChartLayer.ALLOW_VERTICAL_EDITING );
@@ -125,7 +125,7 @@ public class PointsLineLayer extends AbstractProfilLayer
     final Integer pos = dragStartData.getData() instanceof Integer ? (Integer) dragStartData.getData() : -1;
     if( pos > -1 )
     {
-      final IProfil profil = getProfil();
+      final IProfile profil = getProfil();
       final IProfileRecord profilPoint = profil.getPoint( pos );
       final Integer hoehe = profil.indexOfProperty( getTargetComponent() );
       // final Integer breite = profil.indexOfProperty( getDomainComponent() );
@@ -185,7 +185,7 @@ public class PointsLineLayer extends AbstractProfilLayer
   }
 
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
+  public void onProfilChanged( final ProfileChangeHint hint )
   {
     if( hint.isPointsChanged() || hint.isPointValuesChanged() )
     {
@@ -196,7 +196,7 @@ public class PointsLineLayer extends AbstractProfilLayer
   @Override
   public void paint( final GC gc, final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
-    final IProfil profil = getProfil();
+    final IProfile profil = getProfil();
     if( profil == null )
       return;
 

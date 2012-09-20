@@ -46,7 +46,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResultUtilities;
@@ -94,7 +94,7 @@ public class ProfileCacherFeaturePropertyFunction extends FeaturePropertyFunctio
    * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
    *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
-  public static GM_Point convertPoint( final IProfil profile, final IRecord profilPoint, final String crs ) throws Exception
+  public static GM_Point convertPoint( final IProfile profile, final IRecord profilPoint, final String crs ) throws Exception
   {
     final int compRechtswert = TupleResultUtilities.indexOfComponent( profile, IWspmPointProperties.POINT_PROPERTY_RECHTSWERT );
     final int compHochwert = TupleResultUtilities.indexOfComponent( profile, IWspmPointProperties.POINT_PROPERTY_HOCHWERT );

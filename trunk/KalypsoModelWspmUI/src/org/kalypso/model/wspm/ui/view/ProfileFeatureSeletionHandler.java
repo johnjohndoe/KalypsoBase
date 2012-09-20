@@ -56,7 +56,7 @@ import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.IProfileProvider;
 import org.kalypso.model.wspm.core.gml.IProfileProviderListener;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureSelections;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 
 /**
@@ -173,7 +173,7 @@ public class ProfileFeatureSeletionHandler
     m_adapterPartListener.init( page );
   }
 
-  public IProfil getProfile( )
+  public IProfile getProfile( )
   {
     if( m_profileFeature != null )
       return m_profileFeature.getProfil();

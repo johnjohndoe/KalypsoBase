@@ -48,8 +48,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.i18n.Messages;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 
 /**
@@ -59,9 +59,9 @@ import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 @Deprecated
 public class ProfileWrapper
 {
-  private final IProfil m_profile;
+  private final IProfile m_profile;
 
-  public ProfileWrapper( final IProfil profile )
+  public ProfileWrapper( final IProfile profile )
   {
     m_profile = profile;
   }
@@ -80,17 +80,17 @@ public class ProfileWrapper
     return false;
   }
 
-  public IProfilPointMarker[] getProfilePointMarkerWrapper( final String marker )
+  public IProfilePointMarker[] getProfilePointMarkerWrapper( final String marker )
   {
-    final List<IProfilPointMarker> wrappers = new ArrayList<>();
+    final List<IProfilePointMarker> wrappers = new ArrayList<>();
 
-    final IProfilPointMarker[] markers = m_profile.getPointMarkerFor( marker );
-    for( final IProfilPointMarker m : markers )
+    final IProfilePointMarker[] markers = m_profile.getPointMarkerFor( marker );
+    for( final IProfilePointMarker m : markers )
     {
       wrappers.add( m );
     }
 
-    return wrappers.toArray( new IProfilPointMarker[] {} );
+    return wrappers.toArray( new IProfilePointMarker[] {} );
   }
 
   @Override
@@ -99,7 +99,7 @@ public class ProfileWrapper
     return String.format( Messages.getString( "ProfileWrapper_0" ), m_profile.getStation() ); //$NON-NLS-1$
   }
 
-  public IProfil getProfile( )
+  public IProfile getProfile( )
   {
     return m_profile;
   }
@@ -149,20 +149,20 @@ public class ProfileWrapper
 
   }
 
-  public IProfilPointMarker[] getPointMarkers( final IProfileRecord point )
+  public IProfilePointMarker[] getPointMarkers( final IProfileRecord point )
   {
-    final IProfilPointMarker[] markers = m_profile.getPointMarkerFor( point );
+    final IProfilePointMarker[] markers = m_profile.getPointMarkerFor( point );
     if( ArrayUtils.isEmpty( markers ) )
-      return new IProfilPointMarker[] {};
+      return new IProfilePointMarker[] {};
 
-    final List<IProfilPointMarker> myMarkers = new ArrayList<>();
+    final List<IProfilePointMarker> myMarkers = new ArrayList<>();
 
-    for( final IProfilPointMarker marker : markers )
+    for( final IProfilePointMarker marker : markers )
     {
       myMarkers.add( marker );
     }
 
-    return myMarkers.toArray( new IProfilPointMarker[] {} );
+    return myMarkers.toArray( new IProfilePointMarker[] {} );
   }
 
 }

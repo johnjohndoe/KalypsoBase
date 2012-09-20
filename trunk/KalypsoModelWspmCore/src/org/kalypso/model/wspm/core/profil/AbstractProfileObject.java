@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil;
 
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -95,7 +95,7 @@ public abstract class AbstractProfileObject implements IProfileObject
 
   protected static IComponent getObjectComponent( final String id )
   {
-    return ProfilUtil.getFeatureComponent( id );
+    return ProfileUtil.getFeatureComponent( id );
   }
 
   /**

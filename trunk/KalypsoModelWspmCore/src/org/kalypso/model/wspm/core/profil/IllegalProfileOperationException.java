@@ -45,21 +45,21 @@ package org.kalypso.model.wspm.core.profil;
  */
 public class IllegalProfileOperationException extends Exception
 {
-  private final IProfilChange m_operation;
+  private final IProfileChange m_operation;
 
-  public IllegalProfileOperationException( final String msg, final IProfilChange profilChange )
+  public IllegalProfileOperationException( final String msg, final IProfileChange profilChange )
   {
     super( msg );
     m_operation = profilChange;
   }
 
-  public IllegalProfileOperationException( final String msg, final Throwable t, final IProfilChange profilChange )
+  public IllegalProfileOperationException( final String msg, final Throwable t, final IProfileChange profilChange )
   {
     super( msg, t );
     m_operation = profilChange;
   }
 
-  public final IProfilChange getProfilChange( )
+  public final IProfileChange getProfilChange( )
   {
     return m_operation;
   }

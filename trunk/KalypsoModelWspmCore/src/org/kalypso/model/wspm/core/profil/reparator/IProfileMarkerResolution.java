@@ -38,41 +38,26 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.core.profil.operation;
+package org.kalypso.model.wspm.core.profil.reparator;
 
-import org.eclipse.core.commands.operations.IUndoContext;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IMarkerResolution2;
+import org.kalypso.model.wspm.core.profil.IProfile;
 
 /**
- * UndoContext für Profil-Operationen. Ein ProfilUndoContext passt (matches) einen anderen, wenn beide das gleiche
- * Profil repräsentieren.
- * 
- * @author Belger
+ * @author kimwerner
  */
-public class ProfilUndoContext implements IUndoContext
+public interface IProfileMarkerResolution extends IMarkerResolution2
 {
-  private final IProfil m_profil;
+  boolean resolve( final IProfile profile );
 
-  public ProfilUndoContext( final IProfil profil )
-  {
-    m_profil = profil;
-  }
+  String getSerializedParameter( );
 
-  /**
-   * @see org.eclipse.core.commands.operations.IUndoContext#getLabel()
-   */
-  @Override
-  public String getLabel( )
-  {
-    return "ProfilUndoContext"; //$NON-NLS-1$
-  }
+  void setData( final String parameterStream );
 
-  /**
-   * @see org.eclipse.core.commands.operations.IUndoContext#matches(org.eclipse.core.commands.operations.IUndoContext)
-   */
-  @Override
-  public boolean matches( final IUndoContext context )
-  {
-    return context instanceof ProfilUndoContext && m_profil == ((ProfilUndoContext) context).m_profil;
-  }
+  boolean hasUI( );
+
+  String getUIresult( final Shell shell, final IProfile profil );
+
+  void setUIresult( final String result );
 }

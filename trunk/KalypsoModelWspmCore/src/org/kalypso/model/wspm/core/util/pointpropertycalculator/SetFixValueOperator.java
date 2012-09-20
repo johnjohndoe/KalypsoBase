@@ -47,7 +47,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.i18n.Messages;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileTransaction;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -59,12 +59,12 @@ import org.kalypso.observation.result.TupleResult;
 public class SetFixValueOperator implements IPointPropertyCalculator
 {
   @Override
-  public final void calculate( final IProfil profile, final Double operand, final IComponent[] properties, final Collection<IRecord> points )
+  public final void calculate( final IProfile profile, final Double operand, final IComponent[] properties, final Collection<IRecord> points )
   {
     profile.doTransaction( new IProfileTransaction()
     {
       @Override
-      public IStatus execute( final IProfil p )
+      public IStatus execute( final IProfile p )
       {
         for( final IRecord point : points )
         {

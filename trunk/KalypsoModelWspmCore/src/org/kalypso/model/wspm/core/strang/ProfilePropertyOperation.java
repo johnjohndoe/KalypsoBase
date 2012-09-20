@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.strang;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.observation.result.IComponent;
@@ -48,16 +48,16 @@ import org.kalypso.observation.result.IComponent;
 /**
  * @author kimwerner
  */
-public final class ProfilPropertyOperation
+public final class ProfilePropertyOperation
 {
-  private ProfilPropertyOperation( )
+  private ProfilePropertyOperation( )
   {
     // helper class
   }
 
-  public static void operationFixValue( final IProfil[] profiles, final IProfilePointFilter filter, final IComponent property, final Double value )
+  public static void operationFixValue( final IProfile[] profiles, final IProfilePointFilter filter, final IComponent property, final Double value )
   {
-    for( final IProfil profil : profiles )
+    for( final IProfile profil : profiles )
     {
       final int index = profil.indexOfProperty( property );
       for( final IProfileRecord point : profil.getPoints() )
@@ -70,9 +70,9 @@ public final class ProfilPropertyOperation
     }
   }
 
-  public static void operationPercent( final IProfil[] profiles, final IProfilePointFilter filter, final IComponent property, final Double value )
+  public static void operationPercent( final IProfile[] profiles, final IProfilePointFilter filter, final IComponent property, final Double value )
   {
-    for( final IProfil profil : profiles )
+    for( final IProfile profil : profiles )
     {
       final int index = profil.indexOfProperty( property );
       for( final IProfileRecord point : profil.getPoints() )
@@ -87,9 +87,9 @@ public final class ProfilPropertyOperation
     }
   }
 
-  public static void operationAdd( final IProfil[] profiles, final IProfilePointFilter filter, final IComponent property, final Double value )
+  public static void operationAdd( final IProfile[] profiles, final IProfilePointFilter filter, final IComponent property, final Double value )
   {
-    for( final IProfil profil : profiles )
+    for( final IProfile profil : profiles )
     {
       final int index = profil.indexOfProperty( property );
       for( final IProfileRecord point : profil.getPoints() )

@@ -49,9 +49,9 @@ import org.kalypso.jts.JTSConverter;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarkerProvider;
 import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -100,8 +100,8 @@ public final class ProfilePainter
     if( Objects.isNull( profile ) )
       return;
 
-    final IProfil iProfile = profile.getProfil();
-    final IProfilPointMarkerProvider provider = KalypsoModelWspmCoreExtensions.getMarkerProviders( iProfile.getType() );
+    final IProfile iProfile = profile.getProfil();
+    final IProfilePointMarkerProvider provider = KalypsoModelWspmCoreExtensions.getMarkerProviders( iProfile.getType() );
 
     final String kalypsoSRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     final String profileSRS = profile.getSrsName();
@@ -113,8 +113,8 @@ public final class ProfilePainter
     {
       final JTSTransformer transformer = new JTSTransformer( profileSRID, kalypsoSRID );
 
-      final IProfilPointMarker[] markers = iProfile.getPointMarkers();
-      for( final IProfilPointMarker marker : markers )
+      final IProfilePointMarker[] markers = iProfile.getPointMarkers();
+      for( final IProfilePointMarker marker : markers )
       {
         try
         {
@@ -147,7 +147,7 @@ public final class ProfilePainter
       if( Objects.isNull( profileFeature ) )
         return;
 
-      final IProfil profile = profileFeature.getProfil();
+      final IProfile profile = profileFeature.getProfil();
       final IRangeSelection selection = profile.getSelection();
       final Double cursor = selection.getCursor();
       if( Objects.isNull( cursor ) )
@@ -175,7 +175,7 @@ public final class ProfilePainter
       if( Objects.isNull( profile ) )
         return;
 
-      final IProfil iProfil = profile.getProfil();
+      final IProfile iProfil = profile.getProfil();
       final IRangeSelection selection = iProfil.getSelection();
       if( selection.isEmpty() )
         return;

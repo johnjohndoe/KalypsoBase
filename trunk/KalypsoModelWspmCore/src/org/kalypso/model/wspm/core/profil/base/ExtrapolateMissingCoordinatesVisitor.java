@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.core.profil.base;
 import org.kalypso.commons.java.lang.Doubles;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.jts.JtsVectorUtilities;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecordVisitor;
 
@@ -76,7 +76,7 @@ public class ExtrapolateMissingCoordinatesVisitor implements IProfileRecordVisit
     if( !Doubles.isNaN( point.getRechtswert(), point.getHochwert() ) )
       return;
 
-    final IProfil profile = point.getProfile();
+    final IProfile profile = point.getProfile();
     final double p0 = profile.getFirstPoint().getBreite();
     final double pn = profile.getLastPoint().getBreite();
 

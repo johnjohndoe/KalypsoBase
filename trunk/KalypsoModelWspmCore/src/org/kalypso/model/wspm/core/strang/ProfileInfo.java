@@ -3,7 +3,7 @@ package org.kalypso.model.wspm.core.strang;
 /**
  * @author Belger
  */
-public class ProfilInfo
+public class ProfileInfo
 {
   private final String m_name;
 
@@ -11,7 +11,7 @@ public class ProfilInfo
 
   private final String m_station;
 
-  public ProfilInfo( final String station, final String filename )
+  public ProfileInfo( final String station, final String filename )
   {
     m_station = station;
     m_name = station;

@@ -41,14 +41,14 @@
 package org.kalypso.model.wspm.ui.view.chart;
 
 import org.kalypso.chart.ui.IChartPart;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 
 /**
  * @author Dirk Kuch
  */
 public interface IProfilChart extends IChartPart
 {
-  IProfil getProfil( );
+  IProfile getProfil( );
 
-  void setProfil( IProfil profile, Object result );
+  void setProfil( IProfile profile, Object result );
 }

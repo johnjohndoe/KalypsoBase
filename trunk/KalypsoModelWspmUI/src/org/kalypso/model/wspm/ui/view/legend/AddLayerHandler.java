@@ -52,7 +52,7 @@ import org.eclipse.ui.dialogs.ListDialog;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
@@ -78,7 +78,7 @@ public class AddLayerHandler extends AbstractHandler
     if( Objects.isNull( model ) )
       return null;
 
-    final IProfil profil = model.getProfil();
+    final IProfile profil = model.getProfil();
     if( profil == null )
       return null;
 

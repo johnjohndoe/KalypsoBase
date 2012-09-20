@@ -41,24 +41,24 @@
 package org.kalypso.model.wspm.core.profil.changes;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileChange;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 
-public class ProfileObjectAdd implements IProfilChange
+public class ProfileObjectAdd implements IProfileChange
 {
-  private final IProfil m_profil;
+  private final IProfile m_profil;
 
   private final IProfileObject[] m_objectsToAdd;
 
-  public ProfileObjectAdd( final IProfil profil, final IProfileObject... objectsToAdd )
+  public ProfileObjectAdd( final IProfile profil, final IProfileObject... objectsToAdd )
   {
     m_profil = profil;
     m_objectsToAdd = objectsToAdd;
   }
 
   @Override
-  public IProfilChange doChange( )
+  public IProfileChange doChange( )
   {
     m_profil.addProfileObjects( m_objectsToAdd );
 

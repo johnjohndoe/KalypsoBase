@@ -44,7 +44,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileTransaction;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.observation.result.IComponent;
@@ -61,7 +61,7 @@ public class FlipProfileTransaction implements IProfileTransaction
       IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS, IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST };
 
   @Override
-  public IStatus execute( final IProfil profile )
+  public IStatus execute( final IProfile profile )
   {
     final IComponent[] components = profile.getPointProperties();
     final IProfileRecord[] records = profile.getPoints();

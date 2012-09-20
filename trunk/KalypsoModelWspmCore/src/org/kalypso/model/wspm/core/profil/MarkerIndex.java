@@ -66,7 +66,7 @@ public class MarkerIndex
 
   private final IMarker[] m_markers;
 
-  public MarkerIndex( final IProfil profil, final IMarker[] markers )
+  public MarkerIndex( final IProfile profil, final IMarker[] markers )
   {
     m_markers = markers;
 

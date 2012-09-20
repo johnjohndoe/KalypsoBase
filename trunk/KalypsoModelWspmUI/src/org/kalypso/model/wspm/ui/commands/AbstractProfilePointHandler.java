@@ -52,9 +52,9 @@ import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.chart.ui.editor.mousehandler.AbstractChartHandler;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmLayers;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilListener;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileListener;
+import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 
@@ -72,18 +72,18 @@ public abstract class AbstractProfilePointHandler extends AbstractChartHandler
 {
   private Double m_breite;
 
-  private IProfil m_profile;
+  private IProfile m_profile;
 
-  private final IProfilListener m_listener = new IProfilListener()
+  private final IProfileListener m_listener = new IProfileListener()
   {
     @Override
-    public void onProfilChanged( final ProfilChangeHint hint )
+    public void onProfilChanged( final ProfileChangeHint hint )
     {
       profileChanged( hint );
     }
 
     @Override
-    public void onProblemMarkerChanged( final IProfil source )
+    public void onProblemMarkerChanged( final IProfile source )
     {
       profileProblemMarkerChanged( source );
     }
@@ -127,14 +127,14 @@ public abstract class AbstractProfilePointHandler extends AbstractChartHandler
     } );
   }
 
-  protected void profileChanged( final ProfilChangeHint hint )
+  protected void profileChanged( final ProfileChangeHint hint )
   {
     if( hint.isSelectionChanged() || hint.isSelectionCursorChanged() )
       forceRedrawEvent();
 
   }
 
-  protected void profileProblemMarkerChanged( @SuppressWarnings("unused") final IProfil source )
+  protected void profileProblemMarkerChanged( @SuppressWarnings("unused") final IProfile source )
   {
   }
 
@@ -148,12 +148,12 @@ public abstract class AbstractProfilePointHandler extends AbstractChartHandler
     m_breite = breite;
   }
 
-  protected final IProfil getProfile( )
+  protected final IProfile getProfile( )
   {
     return m_profile;
   }
 
-  protected final void setProfile( final IProfil profile )
+  protected final void setProfile( final IProfile profile )
   {
     if( Objects.equal( m_profile, profile ) )
       return;

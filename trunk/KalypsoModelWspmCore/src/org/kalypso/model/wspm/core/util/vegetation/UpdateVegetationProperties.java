@@ -58,8 +58,8 @@ import org.kalypso.model.wspm.core.gml.classifications.IVegetationClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.i18n.Messages;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileChange;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 import org.kalypso.observation.result.IRecord;
 
@@ -70,13 +70,13 @@ import org.kalypso.observation.result.IRecord;
  */
 public class UpdateVegetationProperties implements ICoreRunnableWithProgress
 {
-  private final IProfil m_profile;
+  private final IProfile m_profile;
 
   private final boolean m_overwrite;
 
-  final Set<IProfilChange> m_changes = new LinkedHashSet<>();
+  final Set<IProfileChange> m_changes = new LinkedHashSet<>();
 
-  public UpdateVegetationProperties( final IProfil profile, final boolean overwrite )
+  public UpdateVegetationProperties( final IProfile profile, final boolean overwrite )
   {
     m_profile = profile;
     m_overwrite = overwrite;
@@ -123,7 +123,7 @@ public class UpdateVegetationProperties implements ICoreRunnableWithProgress
   }
 
   // FIXME move into helper
-  public static int getPropety( final IProfil profile, final String property ) throws CoreException
+  public static int getPropety( final IProfile profile, final String property ) throws CoreException
   {
     final int index = profile.indexOfProperty( property );
     if( index == -1 )
@@ -144,8 +144,8 @@ public class UpdateVegetationProperties implements ICoreRunnableWithProgress
     return Objects.isNull( point.getValue( property ) );
   }
 
-  public IProfilChange[] getChanges( )
+  public IProfileChange[] getChanges( )
   {
-    return m_changes.toArray( new IProfilChange[] {} );
+    return m_changes.toArray( new IProfileChange[] {} );
   }
 }

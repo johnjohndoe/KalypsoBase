@@ -45,7 +45,7 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 
 /**
@@ -55,13 +55,13 @@ import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
  */
 public class SelectionPointsProvider implements IPointsProvider
 {
-  private final IProfil m_profil;
+  private final IProfile m_profil;
 
   private String m_errorMessage;
 
   private IProfileRecord[] m_points = new IProfileRecord[] {};
 
-  public SelectionPointsProvider( final IProfil profil, final ISelection selection )
+  public SelectionPointsProvider( final IProfile profil, final ISelection selection )
   {
     m_profil = profil;
 

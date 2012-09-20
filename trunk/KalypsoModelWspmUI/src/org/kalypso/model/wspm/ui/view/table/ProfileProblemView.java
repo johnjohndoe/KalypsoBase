@@ -60,7 +60,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.MarkerIndex;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 
@@ -90,7 +90,7 @@ public class ProfileProblemView
     GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( m_form.getBody() );
   }
 
-  private void createSection( final MarkerIndex markerIndex, final IProfil profil, final Composite parent, final int color, final int severity, final String messageKey )
+  private void createSection( final MarkerIndex markerIndex, final IProfile profil, final Composite parent, final int color, final int severity, final String messageKey )
   {
     final IMarker[] markers = markerIndex.get( severity );
 
@@ -106,7 +106,7 @@ public class ProfileProblemView
     createMarkerSection( profil, parent, color, messageKey, markers, severity );
   }
 
-  private void createMarkerSection( final IProfil profil, final Composite parent, final int color, final String messageKey, final IMarker[] markers, final int severity )
+  private void createMarkerSection( final IProfile profil, final Composite parent, final int color, final String messageKey, final IMarker[] markers, final int severity )
   {
     final Section section = m_toolkit.createSection( parent, ExpandableComposite.TWISTIE );
     section.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false, 2, 1 ) );
@@ -143,7 +143,7 @@ public class ProfileProblemView
     m_expansionState.put( severity, state );
   }
 
-  private void createMarkerControl( final IProfil profil, final Composite parent, final int color, final IMarker marker )
+  private void createMarkerControl( final IProfile profil, final Composite parent, final int color, final IMarker marker )
   {
     final QuickFixAction quickFixAction = new QuickFixAction( marker, profil );
     ActionHyperlink.createHyperlink( m_toolkit, parent, SWT.WRAP, quickFixAction );
@@ -154,7 +154,7 @@ public class ProfileProblemView
     link.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
   }
 
-  public final int updateSections( final IProfil profil )
+  public final int updateSections( final IProfile profil )
   {
     if( m_form.isDisposed() )
       return -1;
@@ -174,7 +174,7 @@ public class ProfileProblemView
     return size.y;
   }
 
-  private boolean createSections( final Composite parent, final IProfil profil )
+  private boolean createSections( final Composite parent, final IProfile profil )
   {
     final MarkerIndex markerIndex = profil.getProblemMarker();
     if( !(markerIndex != null && markerIndex.hasMarkers()) )

@@ -46,8 +46,8 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.reparator.IProfileMarkerResolution;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 
@@ -57,11 +57,11 @@ import org.kalypso.model.wspm.ui.i18n.Messages;
 @SuppressWarnings("restriction")
 public class QuickFixAction extends Action
 {
-  private final IProfilMarkerResolution[] m_markerRes;
+  private final IProfileMarkerResolution[] m_markerRes;
 
-  private final IProfil m_profil;
+  private final IProfile m_profil;
 
-  public QuickFixAction( final IMarker marker, final IProfil profil )
+  public QuickFixAction( final IMarker marker, final IProfile profil )
   {
     m_profil = profil;
 
@@ -82,7 +82,7 @@ public class QuickFixAction extends Action
   @Override
   public void runWithEvent( final Event event )
   {
-    for( final IProfilMarkerResolution profilMarkerResolution : m_markerRes )
+    for( final IProfileMarkerResolution profilMarkerResolution : m_markerRes )
     {
       if( profilMarkerResolution != null )
         profilMarkerResolution.resolve( m_profil );
@@ -90,15 +90,15 @@ public class QuickFixAction extends Action
   }
 
   // TODO: move into helper
-  private static IProfilMarkerResolution[] getResolutions( final IMarker marker )
+  private static IProfileMarkerResolution[] getResolutions( final IMarker marker )
   {
     final String resArray = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS, (String) null );
 
     final String[] resolutions = StringUtils.split( resArray, '\u0000' );
-    final IProfilMarkerResolution[] markerRes = new IProfilMarkerResolution[resolutions == null ? 0 : resolutions.length];
+    final IProfileMarkerResolution[] markerRes = new IProfileMarkerResolution[resolutions == null ? 0 : resolutions.length];
     for( int i = 0; i < markerRes.length; i++ )
     {
-      final IProfilMarkerResolution markerResolution = KalypsoModelWspmCoreExtensions.getReparatorRule( resolutions[i] );
+      final IProfileMarkerResolution markerResolution = KalypsoModelWspmCoreExtensions.getReparatorRule( resolutions[i] );
       if( markerResolution != null )
       {
         markerRes[i] = markerResolution;

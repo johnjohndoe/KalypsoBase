@@ -50,7 +50,7 @@ import org.kalypso.jts.JtsVectorUtilities;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.i18n.Messages;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.observation.result.IRecord;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -62,7 +62,7 @@ import com.vividsolutions.jts.geom.Point;
 public class MoveProfileRunnable implements ICoreRunnableWithProgress
 {
 
-  private final IProfil m_profile;
+  private final IProfile m_profile;
 
   private final Coordinate m_vector;
 
@@ -78,7 +78,7 @@ public class MoveProfileRunnable implements ICoreRunnableWithProgress
    * @param distance
    *          move points x meters
    */
-  public MoveProfileRunnable( final IProfil profile, final Coordinate vector, final Double distance, final int direction )
+  public MoveProfileRunnable( final IProfile profile, final Coordinate vector, final Double distance, final int direction )
   {
     m_profile = profile;
     m_vector = vector;

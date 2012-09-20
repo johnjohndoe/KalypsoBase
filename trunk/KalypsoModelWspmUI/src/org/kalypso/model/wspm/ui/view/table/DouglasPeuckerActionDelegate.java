@@ -47,7 +47,7 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog;
 import org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.IPointsProvider;
 import org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider;
@@ -88,7 +88,7 @@ public class DouglasPeuckerActionDelegate implements IViewActionDelegate
     // get profilpoints from selection and view
     // TODO: this does not work any more
     // final IProfilEventManager pem = (IProfilEventManager) m_view.getAdapter( IProfilEventManager.class );
-    final IProfil profile = m_view instanceof TableView ? ((TableView) m_view).getProfil() : null;
+    final IProfile profile = m_view instanceof TableView ? ((TableView) m_view).getProfil() : null;
 
     if( profile == null )
     {

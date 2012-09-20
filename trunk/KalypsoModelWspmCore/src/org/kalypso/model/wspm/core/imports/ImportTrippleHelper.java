@@ -60,10 +60,10 @@ import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.i18n.Messages;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
-import org.kalypso.model.wspm.core.profil.ProfilFactory;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.ProfileFactory;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -88,19 +88,19 @@ public final class ImportTrippleHelper
    * @param trippleFile
    *          file with profile tripples
    */
-  public static IProfil[] importTrippelData( final File trippleFile, final String separator, final String profileType, final String crs ) throws CoreException
+  public static IProfile[] importTrippelData( final File trippleFile, final String separator, final String profileType, final String crs ) throws CoreException
   {
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profileType );
+    final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profileType );
 
     final IComponent rechtswert = provider.getPointProperty( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT );
     final IComponent hochwert = provider.getPointProperty( IWspmPointProperties.POINT_PROPERTY_HOCHWERT );
 
     if( trippleFile == null )
-      return new IProfil[0];
+      return new IProfile[0];
 
     /* read profiles, show warnings */
-    final List<IProfil> profiles = new ArrayList<>();
-    IProfil currentProfile = null;
+    final List<IProfile> profiles = new ArrayList<>();
+    IProfile currentProfile = null;
 
     /* file loading */
     LineNumberReader fileReader = null;
@@ -143,15 +143,15 @@ public final class ImportTrippleHelper
         {
           /* first value = profile station */
           final double station = NumberUtils.parseDouble( tokens[0] );
-          final BigDecimal currentStation = ProfilUtil.stationToBigDecimal( station );
+          final BigDecimal currentStation = ProfileUtil.stationToBigDecimal( station );
 
-          final BigDecimal currentProfileStation = currentProfile == null ? null : ProfilUtil.stationToBigDecimal( currentProfile.getStation() );
+          final BigDecimal currentProfileStation = currentProfile == null ? null : ProfileUtil.stationToBigDecimal( currentProfile.getStation() );
 
           if( !ObjectUtils.equals( currentStation, currentProfileStation ) )
           {
             lastPoint = null;
 
-            currentProfile = ProfilFactory.createProfil( profileType );
+            currentProfile = ProfileFactory.createProfil( profileType );
 
             currentProfile.setStation( station );
             currentProfile.setName( Messages.getString( "org.kalypso.model.wspm.core.imports.ImportTrippleHelper.1" ) ); //$NON-NLS-1$
@@ -195,7 +195,7 @@ public final class ImportTrippleHelper
       IOUtils.closeQuietly( fileReader );
     }
 
-    return profiles.toArray( new IProfil[profiles.size()] );
+    return profiles.toArray( new IProfile[profiles.size()] );
   }
 
   /**
@@ -206,7 +206,7 @@ public final class ImportTrippleHelper
    * @param tokenizer
    *          holds the point data (x, y, z)
    */
-  private static IProfileRecord createProfilePoint( final IProfil profile, final String[] tokens, final IProfileRecord lastPoint )
+  private static IProfileRecord createProfilePoint( final IProfile profile, final String[] tokens, final IProfileRecord lastPoint )
   {
     final IProfileRecord point = profile.createProfilPoint();
 
@@ -244,11 +244,11 @@ public final class ImportTrippleHelper
       return 0.0;
 
     /* get the segment length of the already imported profile points */
-    final double previousWidth = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, previousPoint );
+    final double previousWidth = ProfileUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, previousPoint );
 
     /* add the segment length of the segment defined by the last imported profile point and the new to add profile point */
-    final double xPrevious = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT, previousPoint );
-    final double yPrevious = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOCHWERT, previousPoint );
+    final double xPrevious = ProfileUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT, previousPoint );
+    final double yPrevious = ProfileUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOCHWERT, previousPoint );
 
     final Coordinate posPrevious = new Coordinate( xPrevious, yPrevious );
     final Coordinate posPoint = new Coordinate( xPoint, yPoint );

@@ -48,7 +48,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.kalypso.model.wspm.core.IWspmPointProperties;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.observation.result.IRecord;
 
@@ -126,7 +126,7 @@ public final class DouglasPeuckerHelper
    *          The maximal Douglas-Peucker distance [m].
    * @return The point that should be removed from the profile.
    */
-  public static IProfileRecord[] reduce( final double allowedDistance, final IProfileRecord[] points, final IProfil profile )
+  public static IProfileRecord[] reduce( final double allowedDistance, final IProfileRecord[] points, final IProfile profile )
   {
     /* Reduce points. */
     final IProfileRecord[] pointsToKeep = profile.getMarkedPoints();
@@ -221,12 +221,12 @@ public final class DouglasPeuckerHelper
 
   protected static double calcDistance( final IRecord beginPoint, final IRecord endPoint, final IRecord middlePoint )
   {
-    final Double bx = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, beginPoint );// (Double)
-    final Double by = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOEHE, beginPoint );// (Double)
-    final Double ex = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, endPoint );// (Double)
-    final Double ey = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOEHE, endPoint );// (Double)
-    final Double mx = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, middlePoint );// (Double)
-    final Double my = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOEHE, middlePoint );// (Double)
+    final Double bx = ProfileUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, beginPoint );// (Double)
+    final Double by = ProfileUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOEHE, beginPoint );// (Double)
+    final Double ex = ProfileUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, endPoint );// (Double)
+    final Double ey = ProfileUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOEHE, endPoint );// (Double)
+    final Double mx = ProfileUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, middlePoint );// (Double)
+    final Double my = ProfileUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOEHE, middlePoint );// (Double)
 
     final double f = (ey - by) / (ex - bx);
 

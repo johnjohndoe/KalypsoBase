@@ -47,7 +47,7 @@ import java.util.Set;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.i18n.Messages;
@@ -84,7 +84,7 @@ public class TableSelectionProfilePointFilter implements IProfilePointFilter
   }
 
   @Override
-  public boolean accept( final IProfil profil, final IProfileRecord point )
+  public boolean accept( final IProfile profil, final IProfileRecord point )
   {
     return m_points.contains( point );
   }

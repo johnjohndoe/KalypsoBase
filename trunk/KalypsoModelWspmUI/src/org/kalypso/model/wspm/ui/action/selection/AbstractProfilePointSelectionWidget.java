@@ -50,7 +50,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
@@ -130,7 +130,7 @@ public abstract class AbstractProfilePointSelectionWidget extends AbstractProfil
 
     try
     {
-      final IProfil profile = getProfile().getProfil();
+      final IProfile profile = getProfile().getProfil();
       final IRangeSelection selection = profile.getSelection();
 
       final Double cursor = selection.getCursor();
@@ -197,7 +197,7 @@ public abstract class AbstractProfilePointSelectionWidget extends AbstractProfil
       return null;
 
     final IProfileFeature profileFeature = getProfile();
-    final IProfil profile = profileFeature.getProfil();
+    final IProfile profile = profileFeature.getProfil();
     final IRangeSelection selection = profile.getSelection();
     final Double cursor = selection.getCursor();
     if( Objects.isNull( cursor ) )

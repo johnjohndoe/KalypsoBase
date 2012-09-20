@@ -42,23 +42,23 @@ package org.kalypso.model.wspm.core.profil.changes;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.model.wspm.core.i18n.Messages;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileChange;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.observation.result.IRecord;
 
 /**
  * @author kimwerner
  */
-public class PointAdd implements IProfilChange
+public class PointAdd implements IProfileChange
 {
-  private final IProfil m_profil;
+  private final IProfile m_profil;
 
   private final IProfileRecord m_pointBefore;
 
   private final IProfileRecord m_point;
 
-  public PointAdd( final IProfil profil, final IProfileRecord pointBefore, final IProfileRecord point )
+  public PointAdd( final IProfile profil, final IProfileRecord pointBefore, final IProfileRecord point )
   {
     m_profil = profil;
     m_pointBefore = pointBefore;
@@ -66,7 +66,7 @@ public class PointAdd implements IProfilChange
   }
 
   @Override
-  public IProfilChange doChange( )
+  public IProfileChange doChange( )
   {
     IProfileRecord pointToAdd = null;
     if( m_point != null )

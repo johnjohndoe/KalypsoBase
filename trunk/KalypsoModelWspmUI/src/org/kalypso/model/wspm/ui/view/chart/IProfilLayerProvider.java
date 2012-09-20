@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
@@ -57,7 +57,7 @@ public interface IProfilLayerProvider
    * if the layer depends on other layers or properties, create all required things here. </p> if there is nothing to do
    * see getLayer( final String layerId, final ProfilChartView view ) </p> return all affected layer
    */
-  void addLayerToProfile( final IProfil profil, final String layerId );
+  void addLayerToProfile( final IProfile profil, final String layerId );
 
   /**
    * return the layers not shown yet, but addable.
@@ -66,11 +66,11 @@ public interface IProfilLayerProvider
    */
   LayerDescriptor[] getAddableLayers( final ProfilChartModel chartModel );
 
-  IProfilChartLayer createLayer( final IProfil profile, final String layerId );
+  IProfilChartLayer createLayer( final IProfile profile, final String layerId );
 
-  IProfilChartLayer[] createLayers( final IProfil profile, Object result );
+  IProfilChartLayer[] createLayers( final IProfile profile, Object result );
 
-  IComponentUiHandlerProvider getComponentUiHandlerProvider( final IProfil profile );
+  IComponentUiHandlerProvider getComponentUiHandlerProvider( final IProfile profile );
 
   IAxis[] registerAxis( IMapperRegistry mapperRegistry );
 }

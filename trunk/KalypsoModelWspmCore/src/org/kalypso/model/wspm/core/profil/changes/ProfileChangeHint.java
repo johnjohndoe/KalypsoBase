@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.core.profil.changes;
 /**
  * @author belger
  */
-public class ProfilChangeHint
+public class ProfileChangeHint
 {
   public static final int OBJECT_CHANGED = 1;
 
@@ -73,11 +73,11 @@ public class ProfilChangeHint
 
   private int m_event = 0;
 
-  public ProfilChangeHint( )
+  public ProfileChangeHint( )
   {
   }
 
-  public ProfilChangeHint( final int mask )
+  public ProfileChangeHint( final int mask )
   {
     m_event = mask;
   }

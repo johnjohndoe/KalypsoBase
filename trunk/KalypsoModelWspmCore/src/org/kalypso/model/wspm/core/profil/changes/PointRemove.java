@@ -41,8 +41,8 @@
 package org.kalypso.model.wspm.core.profil.changes;
 
 import org.kalypso.model.wspm.core.i18n.Messages;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileChange;
 import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.observation.result.IRecord;
@@ -51,15 +51,15 @@ import org.kalypso.observation.result.IRecord;
  * @author kimwerner
  */
 
-public class PointRemove implements IProfilChange
+public class PointRemove implements IProfileChange
 {
-  private final IProfil m_profil;
+  private final IProfile m_profil;
 
   private final IProfileRecord[] m_points;
 
   private final int[] m_pointPositions;
 
-  public PointRemove( final IProfil profil, final IProfileRecord... points )
+  public PointRemove( final IProfile profil, final IProfileRecord... points )
   {
     m_profil = profil;
     m_points = points;
@@ -67,7 +67,7 @@ public class PointRemove implements IProfilChange
   }
 
   @Override
-  public IProfilChange doChange( ) throws IllegalProfileOperationException
+  public IProfileChange doChange( ) throws IllegalProfileOperationException
   {
     for( int i = 0; i < m_points.length; i++ )
     {

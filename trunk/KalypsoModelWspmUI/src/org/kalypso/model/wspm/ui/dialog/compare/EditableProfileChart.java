@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.ui.dialog.compare;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.chart.ui.editor.mousehandler.DragEditHandler;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 
 import de.openali.odysseus.chart.framework.view.IChartComposite;
@@ -54,7 +54,7 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
 public class EditableProfileChart extends ProfileChartComposite
 {
 
-  public EditableProfileChart( final Composite parent, final int style, final IProfilLayerProvider provider, final IProfil profile )
+  public EditableProfileChart( final Composite parent, final int style, final IProfilLayerProvider provider, final IProfile profile )
   {
     super( parent, style, provider, profile );
 

@@ -40,12 +40,40 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil;
 
-public interface IProfilChange
+import org.eclipse.core.runtime.Assert;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.i18n.Messages;
+import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.TupleResult;
+
+/**
+ * @author kimwerner
+ */
+public final class ProfileFactory
 {
-  /**
-   * @param the
-   *          Themes , affected by this ProfilChange should be set true
-   * @return the undo operation for this ProfilChange or {@code null} if not undoable
-   */
-  IProfilChange doChange( ) throws IllegalProfileOperationException;
+  private ProfileFactory( )
+  {
+  }
+
+  public static IProfile createProfil( final String type )
+  {
+    final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( type );
+    Assert.isNotNull( provider, Messages.getString( "org.kalypso.model.wspm.core.profil.ProfilFactory.0", type ) ); //$NON-NLS-1$
+
+    return provider.createProfil();
+  }
+
+  public static IProfile createProfil( final String type, final IObservation<TupleResult> observation, final IProfileFeature source )
+  {
+    final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( type );
+    Assert.isNotNull( provider, Messages.getString( "org.kalypso.model.wspm.core.profil.ProfilFactory.0", type ) ); //$NON-NLS-1$
+
+    final IProfile profile = provider.createProfil( observation.getResult(), source );
+    profile.setName( observation.getName() );
+    profile.setDescription( observation.getDescription() );
+    profile.setPhenomenon( observation.getPhenomenon() );
+
+    return profile;
+  }
 }

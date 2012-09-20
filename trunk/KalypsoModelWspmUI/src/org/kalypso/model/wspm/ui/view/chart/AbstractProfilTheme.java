@@ -43,8 +43,8 @@ package org.kalypso.model.wspm.ui.view.chart;
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.observation.result.IComponent;
@@ -70,12 +70,12 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer
 
   private ILegendEntry[] m_combinedEntry;
 
-  public AbstractProfilTheme( final IProfil profil, final String id, final String title, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
+  public AbstractProfilTheme( final IProfile profil, final String id, final String title, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
     this( profil, id, title, chartLayers, cm, null );
   }
 
-  public AbstractProfilTheme( final IProfil profil, final String id, final String title, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm, final ILayerStyleProvider styleProvider )
+  public AbstractProfilTheme( final IProfile profil, final String id, final String title, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm, final ILayerStyleProvider styleProvider )
   {
     super( id, profil, "", styleProvider ); //$NON-NLS-1$
 
@@ -294,7 +294,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer
   }
 
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
+  public void onProfilChanged( final ProfileChangeHint hint )
   {
     if( hint.isSelectionChanged() )
     {
@@ -319,7 +319,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer
   }
 
   @Override
-  public void setProfil( final IProfil profil )
+  public void setProfil( final IProfile profil )
   {
     super.setProfil( profil );
 

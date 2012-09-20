@@ -55,7 +55,7 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.debug.KalypsoModelWspmCoreDebug;
 import org.kalypso.model.wspm.core.i18n.Messages;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 
 /**
  * A set of validation rules and the means to use them.
@@ -71,7 +71,7 @@ public class ValidatorRuleSet
     m_rules = rules;
   }
 
-  public IStatus validateProfile( final IProfil profil, final IValidatorMarkerCollector collector, final boolean validate, final String[] excludeIDs, final IProgressMonitor monitor )
+  public IStatus validateProfile( final IProfile profil, final IValidatorMarkerCollector collector, final boolean validate, final String[] excludeIDs, final IProgressMonitor monitor )
   {
     final IValidatorRule[] rules = m_rules;
     if( Objects.isNull( validate, rules ) )

@@ -53,7 +53,7 @@ public final class ProfileObjectFactory
   {
   }
 
-  public static IProfileObject createProfileObject( final IProfil profile, final IObservation<TupleResult> observation )
+  public static IProfileObject createProfileObject( final IProfile profile, final IObservation<TupleResult> observation )
   {
     final String profileProviderId = observation.getName();
 

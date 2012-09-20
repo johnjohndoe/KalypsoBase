@@ -45,7 +45,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.kalypso.contribs.eclipse.jface.action.DropdownContributionItem;
 import org.kalypso.model.wspm.core.strang.IStranginfoListener;
-import org.kalypso.model.wspm.core.strang.ProfilInfo;
+import org.kalypso.model.wspm.core.strang.ProfileInfo;
 import org.kalypso.model.wspm.core.strang.StrangInfo;
 
 /**
@@ -53,7 +53,7 @@ import org.kalypso.model.wspm.core.strang.StrangInfo;
  */
 public class StranginfoCombo implements IStranginfoListener, SelectionListener
 {
-  private final DropdownContributionItem<ProfilInfo> m_comboitem = new DropdownContributionItem<>( null );
+  private final DropdownContributionItem<ProfileInfo> m_comboitem = new DropdownContributionItem<>( null );
 
   private StrangInfo m_info = null;
 
@@ -92,7 +92,7 @@ public class StranginfoCombo implements IStranginfoListener, SelectionListener
   {
     if( source != null )
     {
-      final ProfilInfo oldItem = m_comboitem.getSelectedItem();
+      final ProfileInfo oldItem = m_comboitem.getSelectedItem();
       if( oldItem != m_info.getInfo() )
       {
         m_comboitem.setSelectedItem( m_info.getInfo() );
@@ -114,7 +114,7 @@ public class StranginfoCombo implements IStranginfoListener, SelectionListener
     if( m_info == null )
       return;
 
-    final ProfilInfo selectedItem = m_comboitem.getSelectedItem();
+    final ProfileInfo selectedItem = m_comboitem.getSelectedItem();
 
     m_info.setInfo( selectedItem );
 

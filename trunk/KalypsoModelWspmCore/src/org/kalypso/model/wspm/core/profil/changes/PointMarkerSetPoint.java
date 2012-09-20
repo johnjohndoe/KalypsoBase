@@ -40,19 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.changes;
 
-import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfileChange;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 
-public class PointMarkerSetPoint implements IProfilChange
+public class PointMarkerSetPoint implements IProfileChange
 {
-  private final IProfilPointMarker m_pointMarker;
+  private final IProfilePointMarker m_pointMarker;
 
   private final IProfileRecord m_newPosition;
 
   private IProfileRecord m_oldPosition;
 
-  public PointMarkerSetPoint( final IProfilPointMarker pointMarker, final IProfileRecord newPosition )
+  public PointMarkerSetPoint( final IProfilePointMarker pointMarker, final IProfileRecord newPosition )
   {
     m_pointMarker = pointMarker;
     m_newPosition = newPosition;
@@ -60,7 +60,7 @@ public class PointMarkerSetPoint implements IProfilChange
   }
 
   @Override
-  public IProfilChange doChange( )
+  public IProfileChange doChange( )
   {
     m_oldPosition = m_pointMarker.setPoint( m_newPosition );
 

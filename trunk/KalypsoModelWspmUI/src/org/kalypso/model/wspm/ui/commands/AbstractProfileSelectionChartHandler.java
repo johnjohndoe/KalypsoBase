@@ -52,9 +52,9 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IRangeSelection;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
 import org.kalypso.model.wspm.core.profil.visitors.FindClosestPointVisitor;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
@@ -114,7 +114,7 @@ public abstract class AbstractProfileSelectionChartHandler extends AbstractProfi
   }
 
   @Override
-  protected void profileChanged( final ProfilChangeHint hint )
+  protected void profileChanged( final ProfileChangeHint hint )
   {
     if( !hint.isSelectionChanged() || !hint.isSelectionCursorChanged() )
       return;
@@ -141,7 +141,7 @@ public abstract class AbstractProfileSelectionChartHandler extends AbstractProfi
       return;
     }
 
-    final IProfil profile = getProfile();
+    final IProfile profile = getProfile();
 
     final double breite = getSelection( profile, position.x );
     if( Double.isNaN( breite ) )
@@ -166,7 +166,7 @@ public abstract class AbstractProfileSelectionChartHandler extends AbstractProfi
     selection.setCursor( getBreite() );
   }
 
-  private double getSelection( final IProfil profile, final int x )
+  private double getSelection( final IProfile profile, final int x )
   {
     final double snap = snapToPoint( profile, x );
     if( Double.isNaN( snap ) )
@@ -178,7 +178,7 @@ public abstract class AbstractProfileSelectionChartHandler extends AbstractProfi
     return profile.findPreviousPoint( snap ).getBreite();
   }
 
-  private double snapToPoint( final IProfil profile, final int screenX )
+  private double snapToPoint( final IProfile profile, final int screenX )
   {
     if( profile == null )
       return Double.NaN;
@@ -229,7 +229,7 @@ public abstract class AbstractProfileSelectionChartHandler extends AbstractProfi
 
     m_p1 = mapper.getDomainAxis().screenToNumeric( position.x ).doubleValue();
 
-    final IProfil profile = getProfile();
+    final IProfile profile = getProfile();
 
     final IRangeSelection selection = profile.getSelection();
     selection.setRange( Range.between( m_p0, m_p1 ) );
@@ -249,7 +249,7 @@ public abstract class AbstractProfileSelectionChartHandler extends AbstractProfi
   {
     super.paintControl( e );
 
-    final IProfil profile = getProfile();
+    final IProfile profile = getProfile();
     if( Objects.isNull( profile ) )
       return;
 
@@ -258,7 +258,7 @@ public abstract class AbstractProfileSelectionChartHandler extends AbstractProfi
 
   }
 
-  private void doPaintCursor( final PaintEvent e, final IProfil profile )
+  private void doPaintCursor( final PaintEvent e, final IProfile profile )
   {
     final IRangeSelection selection = profile.getSelection();
     final Double cursor = selection.getCursor();
@@ -283,7 +283,7 @@ public abstract class AbstractProfileSelectionChartHandler extends AbstractProfi
     figure.paint( e.gc );
   }
 
-  private void doPaintSelection( final PaintEvent e, final IProfil profile )
+  private void doPaintSelection( final PaintEvent e, final IProfile profile )
   {
     final IRangeSelection selection = profile.getSelection();
 

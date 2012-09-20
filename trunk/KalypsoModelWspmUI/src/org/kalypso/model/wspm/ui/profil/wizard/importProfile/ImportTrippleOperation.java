@@ -10,7 +10,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.model.wspm.core.imports.ImportTrippleHelper;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.ui.action.ImportProfilesCommand;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -51,7 +51,7 @@ final class ImportTrippleOperation implements ICoreRunnableWithProgress
 
       /* get file name from wizard */
 
-      final IProfil[] profiles = ImportTrippleHelper.importTrippelData( m_trippelFile, m_separator, ImportProfileWizard.PROFIL_TYPE_PASCHE, m_crs );
+      final IProfile[] profiles = ImportTrippleHelper.importTrippelData( m_trippelFile, m_separator, ImportProfileWizard.PROFIL_TYPE_PASCHE, m_crs );
 
       monitor.worked( 1 );
 

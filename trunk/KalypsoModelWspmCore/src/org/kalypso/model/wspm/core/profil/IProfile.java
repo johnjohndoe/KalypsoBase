@@ -54,7 +54,7 @@ import org.kalypso.observation.result.TupleResult;
  * @author kimwerner
  * @author Dirk Kuch
  */
-public interface IProfil extends IObservation<TupleResult>
+public interface IProfile extends IObservation<TupleResult>
 {
   void accept( final IProfileRecordVisitor visitor, final int direction );
 
@@ -93,9 +93,9 @@ public interface IProfil extends IObservation<TupleResult>
    */
   IProfileObject[] addProfileObjects( IProfileObject... profileObjects );
 
-  void addProfilListener( IProfilListener listener );
+  void addProfilListener( IProfileListener listener );
 
-  IProfilPointMarker createPointMarker( String markerID, IProfileRecord point );
+  IProfilePointMarker createPointMarker( String markerID, IProfileRecord point );
 
   /**
    * @return a valid profilPoint, addable to this profile
@@ -115,17 +115,17 @@ public interface IProfil extends IObservation<TupleResult>
   /**
    * Gets all PointMarker of the given type in this profile.
    */
-  IProfilPointMarker[] getPointMarkerFor( IComponent pointMarker );
+  IProfilePointMarker[] getPointMarkerFor( IComponent pointMarker );
 
   /**
    * Gets all markers for this record.
    */
-  IProfilPointMarker[] getPointMarkerFor( IProfileRecord record );
+  IProfilePointMarker[] getPointMarkerFor( IProfileRecord record );
 
   /**
    * Gets all PointMarker of the given type in this profile.
    */
-  IProfilPointMarker[] getPointMarkerFor( String pointMarkerID );
+  IProfilePointMarker[] getPointMarkerFor( String pointMarkerID );
 
   /**
    * @return all Marker-Types stored in This profile, NOT all available Marker-Types registered for this {@link #getType()}
@@ -214,7 +214,7 @@ public interface IProfil extends IObservation<TupleResult>
    * obsolete - point markers will be automatically set by their own setValue() implementation (value will be directly
    * added to observation, and so the point marker is registered)
    */
-  Object removePointMarker( IProfilPointMarker devider );
+  Object removePointMarker( IProfilePointMarker devider );
 
   /**
    * @param pointProperty
@@ -227,7 +227,7 @@ public interface IProfil extends IObservation<TupleResult>
 
   boolean removeProfileObject( IProfileObject profileObject );
 
-  void removeProfilListener( IProfilListener pl );
+  void removeProfilListener( IProfileListener pl );
 
   void setComment( String comment );
 
@@ -243,7 +243,7 @@ public interface IProfil extends IObservation<TupleResult>
 
   IProfileRecord findPreviousPoint( double breite );
 
-  IProfilPointMarker[] getPointMarkers( );
+  IProfilePointMarker[] getPointMarkers( );
 
   @Deprecated
   /**

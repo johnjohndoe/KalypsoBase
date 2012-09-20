@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.core.profil.wrappers;
 
 import org.apache.commons.lang3.Range;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
@@ -142,7 +142,7 @@ public interface IProfileRecord extends IRecord
   @Override
   IProfileRecord cloneRecord( );
 
-  IProfil getProfile( );
+  IProfile getProfile( );
 
   IProfileRecord getNextPoint( );
 

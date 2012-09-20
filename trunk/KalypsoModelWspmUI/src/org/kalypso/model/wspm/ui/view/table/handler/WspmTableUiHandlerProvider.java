@@ -56,7 +56,7 @@ import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.property.restriction.RestrictionUtilities;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.ui.view.table.ComponentUiProblemHandler;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
@@ -78,9 +78,9 @@ public class WspmTableUiHandlerProvider implements IComponentUiHandlerProvider
 {
   private static final int DEFAULT_SPACING = 100;
 
-  private final IProfil m_profile;
+  private final IProfile m_profile;
 
-  public WspmTableUiHandlerProvider( final IProfil profile )
+  public WspmTableUiHandlerProvider( final IProfile profile )
   {
     m_profile = profile;
   }

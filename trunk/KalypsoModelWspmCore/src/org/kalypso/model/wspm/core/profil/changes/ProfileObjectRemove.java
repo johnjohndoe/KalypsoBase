@@ -41,13 +41,13 @@
 package org.kalypso.model.wspm.core.profil.changes;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileChange;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 
-public class ProfileObjectRemove implements IProfilChange
+public class ProfileObjectRemove implements IProfileChange
 {
-  private final IProfil m_profil;
+  private final IProfile m_profil;
 
   private final IProfileObject[] m_objectsToRemove;
 
@@ -56,14 +56,14 @@ public class ProfileObjectRemove implements IProfilChange
    * @param building
    *          maybe null to remove building
    */
-  public ProfileObjectRemove( final IProfil profil, final IProfileObject... objectsToRemove )
+  public ProfileObjectRemove( final IProfile profil, final IProfileObject... objectsToRemove )
   {
     m_profil = profil;
     m_objectsToRemove = objectsToRemove;
   }
 
   @Override
-  public IProfilChange doChange( )
+  public IProfileChange doChange( )
   {
     for( final IProfileObject element : m_objectsToRemove )
     {

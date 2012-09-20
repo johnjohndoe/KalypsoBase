@@ -40,10 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.impl;
 
-import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfileChange;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyAdd;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyRemove;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.ITupleResultChangedListener;
@@ -54,13 +54,13 @@ import org.kalypso.observation.result.ITupleResultChangedListener;
  * @author Gernot Belger
  * @author kimwerner
  */
-public class ProfilTupleResultChangeListener implements ITupleResultChangedListener
+public class ProfileTupleResultChangeListener implements ITupleResultChangedListener
 {
-  private final AbstractProfil m_profil;
+  private final AbstractProfile m_profil;
 
  // private final IProfilChange m_onMarkerMovedDelete = null;
 
-  public ProfilTupleResultChangeListener( final AbstractProfil profil )
+  public ProfileTupleResultChangeListener( final AbstractProfile profil )
   {
     m_profil = profil;
   }
@@ -68,10 +68,10 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
   @Override
   public void componentsChanged( final IComponent[] components, final TYPE type )
   {
-    final ProfilChangeHint hint = new ProfilChangeHint();
+    final ProfileChangeHint hint = new ProfileChangeHint();
     hint.setPointPropertiesChanged();
     final int l = components.length;
-    final IProfilChange[] changes = new IProfilChange[l];
+    final IProfileChange[] changes = new IProfileChange[l];
     for( int i = 0; i < l; i++ )
     {
       if( type == TYPE.ADDED )
@@ -90,13 +90,13 @@ public class ProfilTupleResultChangeListener implements ITupleResultChangedListe
   @Override
   public void recordsChanged( final IRecord[] records, final TYPE type )
   {
-    m_profil.fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.PROFILE_PROPERTY_CHANGED ) );
+    m_profil.fireProfilChanged( new ProfileChangeHint( ProfileChangeHint.PROFILE_PROPERTY_CHANGED ) );
   }
 
   @Override
   public void valuesChanged( final ValueChange[] changes )
   {
-    final ProfilChangeHint hint = new ProfilChangeHint();
+    final ProfileChangeHint hint = new ProfileChangeHint();
 
     // final List<IProfilChange> profChanges = new ArrayList<IProfilChange>();
 

@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.core.profil.base;
 
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileMetadata;
 
 /**
@@ -54,7 +54,7 @@ public enum FLOW_DIRECTION
   eSrc2Estuary,
   eEstuary2Src;
 
-  public IProfil getUpperProfile( final IProfil p1, final IProfil p2 )
+  public IProfile getUpperProfile( final IProfile p1, final IProfile p2 )
   {
     // FIXME: use StationComparator! Do not reimplement everything!
 
@@ -81,7 +81,7 @@ public enum FLOW_DIRECTION
     throw new UnsupportedOperationException();
   }
 
-  public IProfil getLowerProfile( final IProfil p1, final IProfil p2 )
+  public IProfile getLowerProfile( final IProfile p1, final IProfile p2 )
   {
     final FLOW_DIRECTION direction = valueOf( name() );
 
@@ -127,9 +127,9 @@ public enum FLOW_DIRECTION
     return eSrc2Estuary;
   }
 
-  public static FLOW_DIRECTION findDirection( final IProfil... profiles )
+  public static FLOW_DIRECTION findDirection( final IProfile... profiles )
   {
-    for( final IProfil profile : profiles )
+    for( final IProfile profile : profiles )
     {
       final IProfileMetadata metadata = profile.getMetadata();
       final String flowDirection = metadata.getMetadata( IWspmConstants.PROFIL_PROPERTY_FLOW_DIRECTION );

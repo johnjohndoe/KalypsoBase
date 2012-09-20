@@ -38,34 +38,41 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.core.profil.util;
+package org.kalypso.model.wspm.core.profil.operation;
 
-import java.util.Comparator;
-
-import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
+import org.eclipse.core.commands.operations.IUndoContext;
+import org.kalypso.model.wspm.core.profil.IProfile;
 
 /**
- * Compares profile points concerning a given property.
+ * UndoContext für Profil-Operationen. Ein ProfilUndoContext passt (matches) einen anderen, wenn beide das gleiche
+ * Profil repräsentieren.
  * 
- * @author Thomas Jung
+ * @author Belger
  */
-public class ProfilComparator implements Comparator<IRecord>
+public class ProfileUndoContext implements IUndoContext
 {
-  private final IComponent m_pointProperty;
+  private final IProfile m_profil;
 
-  public ProfilComparator( final IComponent pointProperty )
+  public ProfileUndoContext( final IProfile profil )
   {
-    m_pointProperty = pointProperty;
+    m_profil = profil;
   }
 
+  /**
+   * @see org.eclipse.core.commands.operations.IUndoContext#getLabel()
+   */
   @Override
-  public int compare( final IRecord p1, final IRecord p2 )
+  public String getLabel( )
   {
-    final Double v1 = ProfilUtil.getDoubleValueFor( m_pointProperty.getId(), p1 );
-    final Double v2 = ProfilUtil.getDoubleValueFor( m_pointProperty.getId(), p2 );
-
-    return Double.compare( v1, v2 );
+    return "ProfilUndoContext"; //$NON-NLS-1$
   }
 
+  /**
+   * @see org.eclipse.core.commands.operations.IUndoContext#matches(org.eclipse.core.commands.operations.IUndoContext)
+   */
+  @Override
+  public boolean matches( final IUndoContext context )
+  {
+    return context instanceof ProfileUndoContext && m_profil == ((ProfileUndoContext) context).m_profil;
+  }
 }

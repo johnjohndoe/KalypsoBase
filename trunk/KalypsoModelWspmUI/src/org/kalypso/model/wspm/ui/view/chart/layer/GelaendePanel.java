@@ -50,8 +50,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.AbstractProfilView;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
@@ -68,7 +68,7 @@ public class GelaendePanel extends AbstractProfilView
 
   private final IChartLayer m_layer;
 
-  public GelaendePanel( final IProfil profile, final IChartLayer layer )
+  public GelaendePanel( final IProfile profile, final IChartLayer layer )
   {
     super( profile );
     m_layer = layer;
@@ -152,7 +152,7 @@ public class GelaendePanel extends AbstractProfilView
   }
 
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
+  public void onProfilChanged( final ProfileChangeHint hint )
   {
     if( hint.isProfilPropertyChanged() )
     {

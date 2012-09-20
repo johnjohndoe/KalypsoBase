@@ -48,6 +48,6 @@ import org.eclipse.core.runtime.IStatus;
 public interface IProfileTransaction
 {
 
-  IStatus execute( IProfil profile );
+  IStatus execute( IProfile profile );
 
 }

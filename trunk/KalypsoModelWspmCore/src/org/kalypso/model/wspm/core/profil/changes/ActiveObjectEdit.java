@@ -41,19 +41,19 @@
 package org.kalypso.model.wspm.core.profil.changes;
 
 import org.apache.commons.lang3.Range;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileChange;
 import org.kalypso.observation.result.IComponent;
 
-public class ActiveObjectEdit implements IProfilChange
+public class ActiveObjectEdit implements IProfileChange
 {
   private final IComponent m_property;
 
-  private final IProfil m_profil;
+  private final IProfile m_profil;
 
   private final Range<Double> m_selection;
 
-  public ActiveObjectEdit( final IProfil profil, final Range<Double> selection, final IComponent property )
+  public ActiveObjectEdit( final IProfile profil, final Range<Double> selection, final IComponent property )
   {
     m_profil = profil;
     m_selection = selection;
@@ -61,7 +61,7 @@ public class ActiveObjectEdit implements IProfilChange
   }
 
   @Override
-  public IProfilChange doChange( )
+  public IProfileChange doChange( )
   {
     final Range<Double> oldRange = m_profil.getSelection().getRange();
     final IComponent oldProperty = m_profil.getSelection().getActiveProperty();

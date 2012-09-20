@@ -51,12 +51,12 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.IWspmNamespaces;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileMetadata;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.core.profil.ProfilFactory;
+import org.kalypso.model.wspm.core.profil.ProfileFactory;
 import org.kalypso.model.wspm.core.profil.ProfileObjectFactory;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.command.FeatureChange;
@@ -94,7 +94,7 @@ public final class ProfileFeatureFactory implements IWspmConstants
    * Assumes, that the given feature is empty.
    * </p>
    */
-  static void toFeature( final IProfil profile, final IProfileFeature targetFeature )
+  static void toFeature( final IProfile profile, final IProfileFeature targetFeature )
   {
     final FeatureChange[] changes = toFeatureAsChanges( profile, targetFeature );
     for( final FeatureChange change : changes )
@@ -108,7 +108,7 @@ public final class ProfileFeatureFactory implements IWspmConstants
    * changes.
    */
   @SuppressWarnings( "unchecked" )//$NON-NLS-1$
-  static FeatureChange[] toFeatureAsChanges( final IProfil profile, final IProfileFeature targetFeature )
+  static FeatureChange[] toFeatureAsChanges( final IProfile profile, final IProfileFeature targetFeature )
   {
     final IFeatureType featureType = targetFeature.getFeatureType();
 
@@ -207,7 +207,7 @@ public final class ProfileFeatureFactory implements IWspmConstants
       return new FeatureChange( feature, ProfileFeatureFactory.QNAME_STATION, null );
     else
     {
-      final BigDecimal bigStation = ProfilUtil.stationToBigDecimal( profileStation );
+      final BigDecimal bigStation = ProfileUtil.stationToBigDecimal( profileStation );
       return new FeatureChange( feature, ProfileFeatureFactory.QNAME_STATION, bigStation );
     }
   }
@@ -224,7 +224,7 @@ public final class ProfileFeatureFactory implements IWspmConstants
     return null;
   }
 
-  static IProfil toProfile( final ProfileFeatureBinding profileFeature )
+  static IProfile toProfile( final ProfileFeatureBinding profileFeature )
   {
     /* Profile type. */
     final String type = profileFeature.getProfileType();
@@ -233,7 +233,7 @@ public final class ProfileFeatureFactory implements IWspmConstants
 
     /* Observation of profile. */
     final IObservation<TupleResult> observation = ObservationFeatureFactory.toObservation( profileFeature );
-    final IProfil profil = ProfilFactory.createProfil( type, observation, profileFeature );
+    final IProfile profil = ProfileFactory.createProfil( type, observation, profileFeature );
 
     /* Station of profile. */
     final BigDecimal bigStation = (BigDecimal)profileFeature.getProperty( ProfileFeatureFactory.QNAME_STATION );

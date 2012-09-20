@@ -23,11 +23,11 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.validation.ProfileFetureValidationListener;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilListener;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileListener;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
-import org.kalypso.model.wspm.core.profil.ProfilListenerAdapter;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.ProfileListenerAdapter;
+import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
 import org.kalypso.model.wspm.core.result.ProfileAndResults;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.observation.IObservation;
@@ -75,10 +75,10 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     CACHE_DEFINITION.addCachedProperty( PROPERTY_PSEUDO_PROFILE, MEMBER_OBSERVATION );
   }
 
-  private final IProfilListener m_profilListener = new ProfilListenerAdapter()
+  private final IProfileListener m_profilListener = new ProfileListenerAdapter()
   {
     @Override
-    public void onProfilChanged( final ProfilChangeHint hint )
+    public void onProfilChanged( final ProfileChangeHint hint )
     {
       handleCachedProfileChanged( hint );
     }
@@ -117,7 +117,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     // setEnvelopesUpdated();
 
     if( property == PROPERTY_PSEUDO_PROFILE )
-      return createProfile( (IProfil)oldValue );
+      return createProfile( (IProfile)oldValue );
 
     if( property.equals( PROPERTY_LINE ) )
       return createProfileSegment( this, null );
@@ -125,14 +125,14 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     return super.recalculateProperty( property, oldValue );
   }
 
-  private Object createProfile( final IProfil oldProfile )
+  private Object createProfile( final IProfile oldProfile )
   {
     try
     {
       if( Objects.isNotNull( oldProfile ) )
         oldProfile.removeProfilListener( m_profilListener );
 
-      final IProfil profile = toProfile();
+      final IProfile profile = toProfile();
 
       if( Objects.isNotNull( profile ) )
       {
@@ -169,9 +169,9 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
   }
 
   @Override
-  public IProfil getProfil( )
+  public IProfile getProfil( )
   {
-    return getProperty( PROPERTY_PSEUDO_PROFILE, IProfil.class );
+    return getProperty( PROPERTY_PSEUDO_PROFILE, IProfile.class );
   }
 
   @Override
@@ -223,7 +223,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     setProperty( ProfileFeatureFactory.QNAME_TYPE, type );
   }
 
-  private IProfil toProfile( )
+  private IProfile toProfile( )
   {
     return ProfileFeatureFactory.toProfile( this );
   }
@@ -277,7 +277,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
 
   public static GM_Curve createProfileSegment( final IProfileFeature profile, final String pointMarkerName )
   {
-    final IProfil profil = profile.getProfil();
+    final IProfile profil = profile.getProfil();
     if( profil == null )
       return null;
 
@@ -297,7 +297,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
   @Override
   public LineString getJtsLine( ) throws GM_Exception
   {
-    final IProfil profil = getProfil();
+    final IProfile profil = getProfil();
     if( profil == null )
       return null;
 
@@ -325,11 +325,11 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     return ProfileAndResults.findResultNode( this );
   }
 
-  protected void handleCachedProfileChanged( final ProfilChangeHint hint )
+  protected void handleCachedProfileChanged( final ProfileChangeHint hint )
   {
-    if( (hint.getEvent() & ProfilChangeHint.DATA_CHANGED) != 0 )
+    if( (hint.getEvent() & ProfileChangeHint.DATA_CHANGED) != 0 )
     {
-      final IProfil profile = getProfil();
+      final IProfile profile = getProfil();
       if( profile == null )
         return;
 
@@ -420,7 +420,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
    * use with caution - should only be used for IProfiles which has been generated without of an existing
    * IProfileFeature
    */
-  public void setProfile( final IProfil profile )
+  public void setProfile( final IProfile profile )
   {
     ProfileFeatureFactory.toFeature( profile, this );
   }
@@ -431,7 +431,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
    * @param profile
    *          The {@link IProfil}.
    */
-  public void updateWithProfile( final IProfil profile )
+  public void updateWithProfile( final IProfile profile )
   {
     try
     {

@@ -51,7 +51,7 @@ import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
 import org.kalypso.model.wspm.core.gml.WspmProject;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
@@ -226,7 +226,7 @@ public class StraightenProfileOperation implements ICoreRunnableWithProgress
     final GM_Point gmTransformedPoint = (GM_Point) geoTransformer.transform( gmAnchorPoint );
 
     /* Create the new profile point. */
-    final IProfil profil = profile.getProfil();
+    final IProfile profil = profile.getProfil();
     final IProfileRecord point = profil.createProfilPoint();
 
     /* Calculate the values. */
@@ -264,7 +264,7 @@ public class StraightenProfileOperation implements ICoreRunnableWithProgress
       throw new IllegalStateException( "The first and second point are the same or too near to each other..." );
 
     /* Get the start width and end width. */
-    final IProfil profil = profile.getProfil();
+    final IProfile profil = profile.getProfil();
     final double firstWidth = Profiles.getWidth( profil, firstPoint );
     final double secondWidth = Profiles.getWidth( profil, secondPoint );
 
@@ -341,12 +341,12 @@ public class StraightenProfileOperation implements ICoreRunnableWithProgress
     else
     {
       /* Correct all points of the profile. */
-      final IProfil profil = profile.getProfil();
+      final IProfile profil = profile.getProfil();
       pointsToCorrect = profil.getPoints();
     }
 
     /* Get the profile. */
-    final IProfil profil = profile.getProfil();
+    final IProfile profil = profile.getProfil();
 
     /* Get the geo transformer. */
     final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( profile.getSrsName() );

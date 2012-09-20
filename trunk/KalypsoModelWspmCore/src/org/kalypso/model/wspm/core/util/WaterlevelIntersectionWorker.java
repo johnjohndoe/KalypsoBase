@@ -45,8 +45,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.observation.result.IComponent;
@@ -72,11 +72,11 @@ public class WaterlevelIntersectionWorker
 
   private final GeometryFactory m_factory = new GeometryFactory();
 
-  private final IProfil m_profile;
+  private final IProfile m_profile;
 
   private final double m_height;
 
-  public WaterlevelIntersectionWorker( final IProfil profile, final double height )
+  public WaterlevelIntersectionWorker( final IProfile profile, final double height )
   {
     m_profile = profile;
     m_height = height;
@@ -131,8 +131,8 @@ public class WaterlevelIntersectionWorker
     final IComponent cHeight = m_profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
     final IComponent cWidth = m_profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
 
-    final Double[] widthValues = ProfilUtil.getDoubleValuesFor( m_profile, cWidth, false );
-    final Double[] heightValues = ProfilUtil.getDoubleValuesFor( m_profile, cHeight, false );
+    final Double[] widthValues = ProfileUtil.getDoubleValuesFor( m_profile, cWidth, false );
+    final Double[] heightValues = ProfileUtil.getDoubleValuesFor( m_profile, cHeight, false );
 
     Assert.isTrue( widthValues.length == heightValues.length );
 

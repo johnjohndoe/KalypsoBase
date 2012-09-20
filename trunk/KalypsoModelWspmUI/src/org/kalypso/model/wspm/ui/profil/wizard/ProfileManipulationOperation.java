@@ -20,11 +20,11 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.ui.plugin.AbstractUIPluginExt;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileChange;
 import org.kalypso.model.wspm.core.profil.base.IProfileManipulator;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 
 /**
@@ -40,7 +40,7 @@ public final class ProfileManipulationOperation implements ICoreRunnableWithProg
 
   private final IWizardContainer m_wizardContainer;
 
-  Set<ProfilOperation> m_profileOperations = new LinkedHashSet<>();
+  Set<ProfileOperation> m_profileOperations = new LinkedHashSet<>();
 
   public ProfileManipulationOperation( final IWizardContainer wizardContainer, final String windowTitle, final IProfileFeature[] profileFeatures, final IProfileManipulator manipulator )
   {
@@ -61,15 +61,15 @@ public final class ProfileManipulationOperation implements ICoreRunnableWithProg
     {
       try
       {
-        final IProfil profile = profileFeature.getProfil();
+        final IProfile profile = profileFeature.getProfil();
 
         final String subTask = String.format( Messages.getString( "ProfileManipulationOperation_1" ), profileFeature.getName(), profileFeature.getBigStation() ); //$NON-NLS-1$
         monitor.subTask( subTask );
 
-        final ProfilOperation operation = new ProfilOperation( "Performing profile operation", profile, true ); //$NON-NLS-1$
+        final ProfileOperation operation = new ProfileOperation( "Performing profile operation", profile, true ); //$NON-NLS-1$
 
-        final Pair<IProfilChange[], IStatus> result = m_manipulator.performProfileManipulation( profile, new SubProgressMonitor( monitor, 1 ) );
-        final IProfilChange[] changes = result.getKey();
+        final Pair<IProfileChange[], IStatus> result = m_manipulator.performProfileManipulation( profile, new SubProgressMonitor( monitor, 1 ) );
+        final IProfileChange[] changes = result.getKey();
         operation.addChange( changes );
 
         m_profileOperations.add( operation );
@@ -119,7 +119,7 @@ public final class ProfileManipulationOperation implements ICoreRunnableWithProg
 
   private boolean applyChanges( )
   {
-    final ProfilOperationJob job = new ProfilOperationJob( m_profileOperations.toArray( new ProfilOperation[] {} ) );
+    final ProfileOperationJob job = new ProfileOperationJob( m_profileOperations.toArray( new ProfileOperation[] {} ) );
     job.schedule();
 
     return true;

@@ -40,14 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.changes;
 
-import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfileChange;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
-public class ProfileObjectEdit implements IProfilChange
+public class ProfileObjectEdit implements IProfileChange
 {
   private final IProfileObject m_object;
 
@@ -71,7 +71,7 @@ public class ProfileObjectEdit implements IProfilChange
   }
 
   @Override
-  public IProfilChange doChange( )
+  public IProfileChange doChange( )
   {
     // FIXME rowIndex may change until rollback or undo
     final IObservation<TupleResult> observation = m_object.getObservation();

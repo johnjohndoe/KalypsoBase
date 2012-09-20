@@ -48,5 +48,5 @@ import org.kalypso.observation.result.TupleResult;
  */
 public interface IProfileObjectProvider
 {
-  IProfileObject buildProfileObject( IProfil profile, IObservation<TupleResult> observation );
+  IProfileObject buildProfileObject( IProfile profile, IObservation<TupleResult> observation );
 }

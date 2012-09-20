@@ -62,8 +62,8 @@ import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureBinding;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileChange;
 import org.kalypso.model.wspm.core.profil.base.IProfileManipulator;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
@@ -92,7 +92,7 @@ public class PropertyEditWizard extends Wizard implements IWorkbenchWizard
 
   private ArrayChooserPage m_propertyChooserPage;
 
-  private IProfil m_profile;
+  private IProfile m_profile;
 
   private OperationChooserPage m_operationChooserPage;
 
@@ -101,7 +101,7 @@ public class PropertyEditWizard extends Wizard implements IWorkbenchWizard
     // empty, needed for tools wizard
   }
 
-  public PropertyEditWizard( final IProfil profile )
+  public PropertyEditWizard( final IProfile profile )
   {
     m_profile = profile;
     m_profileChooserPage = null;
@@ -214,13 +214,13 @@ public class PropertyEditWizard extends Wizard implements IWorkbenchWizard
     final IProfileManipulator manipulator = new IProfileManipulator()
     {
       @Override
-      public Pair<IProfilChange[], IStatus> performProfileManipulation( final IProfil profile, final IProgressMonitor monitor )
+      public Pair<IProfileChange[], IStatus> performProfileManipulation( final IProfile profile, final IProgressMonitor monitor )
       {
         monitor.beginTask( "", 1 ); //$NON-NLS-1$
         operationChooserPage.changeProfile( profile, choosen );
         monitor.done();
 
-        return Pair.of( new IProfilChange[] {}, Status.OK_STATUS );
+        return Pair.of( new IProfileChange[] {}, Status.OK_STATUS );
       }
     };
 
@@ -237,7 +237,7 @@ public class PropertyEditWizard extends Wizard implements IWorkbenchWizard
       final Object[] profiles = m_profile == null ? m_profileChooserPage.getChoosen() : new Object[] { m_profile };
       for( final Object object : profiles )
       {
-        final IProfil profile = getProfile( object );
+        final IProfile profile = getProfile( object );
         if( Objects.isNull( profile ) )
           continue;
 
@@ -254,10 +254,10 @@ public class PropertyEditWizard extends Wizard implements IWorkbenchWizard
     }
   }
 
-  private IProfil getProfile( final Object object )
+  private IProfile getProfile( final Object object )
   {
-    if( object instanceof IProfil )
-      return (IProfil) object;
+    if( object instanceof IProfile )
+      return (IProfile) object;
     else if( object instanceof ProfileFeatureBinding )
       return ((ProfileFeatureBinding) object).getProfil();
 

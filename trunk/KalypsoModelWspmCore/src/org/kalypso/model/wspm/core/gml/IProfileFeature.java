@@ -46,7 +46,7 @@ import java.net.URI;
 import javax.xml.namespace.QName;
 
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -93,7 +93,7 @@ public interface IProfileFeature extends Feature, IProfileProvider
   void setBigStation( BigDecimal bigStation );
 
   @Override
-  IProfil getProfil( );
+  IProfile getProfil( );
 
   /**
    * Returns the profile geometry.<br/>

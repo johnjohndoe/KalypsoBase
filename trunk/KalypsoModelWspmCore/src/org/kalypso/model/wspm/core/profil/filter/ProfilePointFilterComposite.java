@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.Control;
 import org.kalypso.contribs.eclipse.jface.dialog.ListSelectionComposite;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.i18n.Messages;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 
 /**
@@ -162,7 +162,7 @@ public class ProfilePointFilterComposite extends ListSelectionComposite implemen
    * This implementation accepts a point, if any of the selected filters accepts the point.
    */
   @Override
-  public boolean accept( final IProfil profil, final IProfileRecord point )
+  public boolean accept( final IProfile profil, final IProfileRecord point )
   {
     final Object[] checkedElements = getCheckedElements();
     for( final Object filter : checkedElements )
@@ -215,7 +215,7 @@ public class ProfilePointFilterComposite extends ListSelectionComposite implemen
     throw new UnsupportedOperationException();
   }
 
-  public IProfileRecord[] getSelectedPoints( final IProfil profile )
+  public IProfileRecord[] getSelectedPoints( final IProfile profile )
   {
     final IProfileRecord[] points = profile.getPoints();
     final Object[] checkedElements = getCheckedElements();

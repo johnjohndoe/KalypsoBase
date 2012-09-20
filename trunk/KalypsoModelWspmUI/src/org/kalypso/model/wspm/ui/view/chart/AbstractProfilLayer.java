@@ -45,9 +45,9 @@ import java.awt.geom.Point2D;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.core.profil.visitors.FindMinMaxVisitor;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.i18n.Messages;
@@ -89,13 +89,13 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   private IPointStyle m_pointStyleHover = null;
 
-  private IProfil m_profil;
+  private IProfile m_profil;
 
   private int m_targetPropIndex = -1;
 
   private final String m_targetRangeProperty;
 
-  public AbstractProfilLayer( final String id, final IProfil profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
+  public AbstractProfilLayer( final String id, final IProfile profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
   {
     super( null, new StyleSet() );
 
@@ -180,7 +180,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     final IComponent cmp = getTargetComponent();
     if( !Objects.isNull( cmp, pos ) )
     {
-      final IProfil profil = getProfil();
+      final IProfile profil = getProfil();
       profil.getSelection().setRange( profil.getPoint( pos ) );
       profil.getSelection().setActivePointProperty( cmp );
     }
@@ -271,8 +271,8 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   public Point2D getPoint2D( final IProfileRecord point )
   {
-    final Double x = ProfilUtil.getDoubleValueFor( m_domainComponent, point );
-    final Double y = ProfilUtil.getDoubleValueFor( getTargetPropertyIndex(), point );
+    final Double x = ProfileUtil.getDoubleValueFor( m_domainComponent, point );
+    final Double y = ProfileUtil.getDoubleValueFor( getTargetPropertyIndex(), point );
     return new Point2D.Double( x, y );
   }
 
@@ -335,7 +335,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   }
 
   @Override
-  public IProfil getProfil( )
+  public IProfile getProfil( )
   {
     return m_profil;
   }
@@ -433,9 +433,9 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   }
 
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
+  public void onProfilChanged( final ProfileChangeHint hint )
   {
-    final IProfil profil = getProfil();
+    final IProfile profil = getProfil();
     if( profil == null )
       return;
 
@@ -482,7 +482,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   }
 
   @Override
-  public void setProfil( final IProfil profil )
+  public void setProfil( final IProfile profil )
   {
     m_profil = profil;
   }
@@ -493,8 +493,8 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     if( Objects.isNull( cm ) )
       return null;
 
-    final Double x = ProfilUtil.getDoubleValueFor( m_domainComponent, point );
-    final Double y = ProfilUtil.getDoubleValueFor( getTargetPropertyIndex(), point );
+    final Double x = ProfileUtil.getDoubleValueFor( m_domainComponent, point );
+    final Double y = ProfileUtil.getDoubleValueFor( getTargetPropertyIndex(), point );
     if( Objects.isNull( x, y ) )
       return null;
     else if( x.isNaN() || y.isNaN() )
