@@ -53,9 +53,9 @@ public class ProfileType
 
   public final String m_description;
 
-  public final IProfilPointPropertyProvider m_pointProvider;
+  public final IProfilePointPropertyProvider m_pointProvider;
 
-  public ProfileType( final String id, final String label, final String description, final IProfilPointPropertyProvider pointProvider )
+  public ProfileType( final String id, final String label, final String description, final IProfilePointPropertyProvider pointProvider )
   {
     m_id = id;
     m_label = label;

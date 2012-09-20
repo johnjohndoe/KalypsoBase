@@ -44,7 +44,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
@@ -61,7 +61,7 @@ import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
  */
 public class StationLineLayer extends AbstractProfilLayer
 {
-  public StationLineLayer( final IProfil profil, final String targetRangeProperty )
+  public StationLineLayer( final IProfile profil, final String targetRangeProperty )
   {
     super( targetRangeProperty, profil, targetRangeProperty, null );
   }
@@ -95,7 +95,7 @@ public class StationLineLayer extends AbstractProfilLayer
   @Override
   public void paint( final GC gc,final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
-    final IProfil profil = getProfil();
+    final IProfile profil = getProfil();
 
     if( profil == null )
       return;

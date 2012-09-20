@@ -62,7 +62,7 @@ import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.action.base.AbstractProfileWidget;
@@ -213,7 +213,7 @@ public class StraightenProfileWidget extends AbstractProfileWidget
     if( Objects.isNull( profileFeature ) )
       return null;
 
-    final IProfil profile = profileFeature.getProfil();
+    final IProfile profile = profileFeature.getProfil();
     if( Objects.isNull( profile ) )
       return null;
 

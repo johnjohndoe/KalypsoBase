@@ -52,7 +52,7 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureFactory;
-import org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution;
+import org.kalypso.model.wspm.core.profil.reparator.IProfileMarkerResolution;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.ValidatorRuleSet;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
@@ -71,7 +71,7 @@ public class ValidateProfilesWizard extends Wizard implements IWorkbenchWizard
 
   private ValidatorRuleSet m_validatorRuleSet;
 
-  private IProfilMarkerResolution[] m_reparatorRules;
+  private IProfileMarkerResolution[] m_reparatorRules;
 
   private ProfilesChooserPage m_profileChooserPage;
 
@@ -115,13 +115,13 @@ public class ValidateProfilesWizard extends Wizard implements IWorkbenchWizard
     m_validatorChooserPage = new ArrayChooserPage( rules, new IValidatorRule[0], new IValidatorRule[0], 1, "validatorChooserPage", Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard.3" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
     m_validatorChooserPage.setLabelProvider( new LabelProvider() );
     m_validatorChooserPage.setMessage( Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard.4" ) ); //$NON-NLS-1$
-    m_quickFixChoosePage = new ArrayChooserPage( m_reparatorRules, new IProfilMarkerResolution[0], new IProfilMarkerResolution[0], 0, "quickFixChoosePage", Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard.5" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_quickFixChoosePage = new ArrayChooserPage( m_reparatorRules, new IProfileMarkerResolution[0], new IProfileMarkerResolution[0], 0, "quickFixChoosePage", Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard.5" ), null ); //$NON-NLS-1$ //$NON-NLS-2$
     m_quickFixChoosePage.setLabelProvider( new LabelProvider()
     {
       @Override
       public String getText( final Object element )
       {
-        return ((IProfilMarkerResolution) element).getLabel();
+        return ((IProfileMarkerResolution) element).getLabel();
       }
     } );
     m_quickFixChoosePage.setMessage( Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.validateProfiles.ValidateProfilesWizard.6" ) ); //$NON-NLS-1$

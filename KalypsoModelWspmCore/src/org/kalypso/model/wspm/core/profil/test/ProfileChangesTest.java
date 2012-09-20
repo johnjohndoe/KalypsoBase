@@ -45,7 +45,7 @@ import junit.framework.TestCase;
 /**
  * @author kimwerner
  */
-public class ProfilChangesTest extends TestCase
+public class ProfileChangesTest extends TestCase
 {
   public void testRunTest( ) throws Exception
   {

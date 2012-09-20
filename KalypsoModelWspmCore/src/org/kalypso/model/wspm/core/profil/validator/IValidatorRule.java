@@ -42,7 +42,7 @@ package org.kalypso.model.wspm.core.profil.validator;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IExecutableExtension;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 
 public interface IValidatorRule extends IExecutableExtension
 {
@@ -51,7 +51,7 @@ public interface IValidatorRule extends IExecutableExtension
    * 
    * @throws CoreException
    */
-  void validate( final IProfil profil, final IValidatorMarkerCollector helper ) throws CoreException;
+  void validate( final IProfile profil, final IValidatorMarkerCollector helper ) throws CoreException;
 
   String getID( );
 

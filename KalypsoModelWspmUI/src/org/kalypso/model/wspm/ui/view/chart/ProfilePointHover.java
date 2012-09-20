@@ -21,7 +21,7 @@ package org.kalypso.model.wspm.ui.view.chart;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 
 import de.openali.odysseus.chart.framework.model.figure.impl.MarkerFigure;
@@ -44,7 +44,7 @@ public class ProfilePointHover
 
   public EditInfo getHover( final Point pos )
   {
-    final IProfil profil = m_layer.getProfil();
+    final IProfile profil = m_layer.getProfil();
 
     if( profil == null )
       return null;

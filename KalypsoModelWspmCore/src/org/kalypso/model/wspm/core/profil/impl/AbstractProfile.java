@@ -64,16 +64,16 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.i18n.Messages;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilListener;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileListener;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
+import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileMetadata;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfileTransaction;
 import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.core.profil.MarkerIndex;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
 import org.kalypso.model.wspm.core.profil.impl.marker.PointMarker;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
@@ -90,7 +90,7 @@ import org.kalypso.observation.result.TupleResult;
  * @author Kim Werner
  * @author Dirk Kuch
  */
-public abstract class AbstractProfil implements IProfil
+public abstract class AbstractProfile implements IProfile
 {
   private final List<IProfileObject> m_profileObjects = new ArrayList<>();
 
@@ -108,11 +108,11 @@ public abstract class AbstractProfil implements IProfil
 
   private String m_srsName;
 
-  private final Set<IProfilListener> m_listeners = Collections.synchronizedSet( new LinkedHashSet<IProfilListener>( 10 ) );
+  private final Set<IProfileListener> m_listeners = Collections.synchronizedSet( new LinkedHashSet<IProfileListener>( 10 ) );
 
-  private final ITupleResultChangedListener m_tupleResultListener = new ProfilTupleResultChangeListener( this );
+  private final ITupleResultChangedListener m_tupleResultListener = new ProfileTupleResultChangeListener( this );
 
-  private final ITupleResultChangedListener m_objectTupleListener = new ProfilObjectListener( this );
+  private final ITupleResultChangedListener m_objectTupleListener = new ProfileObjectListener( this );
 
   private MarkerIndex m_markerIndex;
 
@@ -126,7 +126,7 @@ public abstract class AbstractProfil implements IProfil
 
   private final IProfileMetadata m_metadata;
 
-  public AbstractProfil( final String type, final TupleResult result, final IProfileFeature source )
+  public AbstractProfile( final String type, final TupleResult result, final IProfileFeature source )
   {
     m_type = type;
     m_source = source;
@@ -209,13 +209,13 @@ public abstract class AbstractProfil implements IProfil
       m_profileObjects.add( object );
     }
 
-    fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.OBJECT_CHANGED ) );
+    fireProfilChanged( new ProfileChangeHint( ProfileChangeHint.OBJECT_CHANGED ) );
 
     return m_profileObjects.toArray( new IProfileObject[] {} );
   }
 
   @Override
-  public void addProfilListener( final IProfilListener pl )
+  public void addProfilListener( final IProfileListener pl )
   {
     if( Objects.isNull( pl ) )
       return;
@@ -237,8 +237,8 @@ public abstract class AbstractProfil implements IProfil
       return;
     // FIXME: check: fireProblemMarkerChanged after transaction?
 
-    final IProfilListener[] listeners = m_listeners.toArray( new IProfilListener[m_listeners.size()] );
-    for( final IProfilListener listener : listeners )
+    final IProfileListener[] listeners = m_listeners.toArray( new IProfileListener[m_listeners.size()] );
+    for( final IProfileListener listener : listeners )
     {
       try
       {
@@ -252,7 +252,7 @@ public abstract class AbstractProfil implements IProfil
     }
   }
 
-  void fireProfilChanged( final ProfilChangeHint hint )
+  void fireProfilChanged( final ProfileChangeHint hint )
   {
     // TODO: instead of ProfileOperation, we could combine the hints ourselfs during transaction mode
     if( !m_transactionLock.isEmpty() )
@@ -261,8 +261,8 @@ public abstract class AbstractProfil implements IProfil
       return;
     }
 
-    final IProfilListener[] listeners = m_listeners.toArray( new IProfilListener[m_listeners.size()] );
-    for( final IProfilListener listener : listeners )
+    final IProfileListener[] listeners = m_listeners.toArray( new IProfileListener[m_listeners.size()] );
+    for( final IProfileListener listener : listeners )
     {
       try
       {
@@ -328,16 +328,16 @@ public abstract class AbstractProfil implements IProfil
   }
 
   @Override
-  public IProfilPointMarker[] getPointMarkerFor( final IComponent markerColumn )
+  public IProfilePointMarker[] getPointMarkerFor( final IComponent markerColumn )
   {
     if( Objects.isNull( markerColumn ) )
-      return new IProfilPointMarker[] {};
+      return new IProfilePointMarker[] {};
 
     final int index = getResult().indexOfComponent( markerColumn );
     if( index < 0 )
-      return new IProfilPointMarker[] {};
+      return new IProfilePointMarker[] {};
 
-    final List<IProfilPointMarker> markers = new ArrayList<>();
+    final List<IProfilePointMarker> markers = new ArrayList<>();
 
     final IProfileRecord[] points = getPoints();
     for( final IProfileRecord point : points )
@@ -348,13 +348,13 @@ public abstract class AbstractProfil implements IProfil
         markers.add( new PointMarker( markerColumn, point ) );
       }
     }
-    return markers.toArray( new IProfilPointMarker[] {} );
+    return markers.toArray( new IProfilePointMarker[] {} );
   }
 
   @Override
-  public IProfilPointMarker[] getPointMarkerFor( final IProfileRecord record )
+  public IProfilePointMarker[] getPointMarkerFor( final IProfileRecord record )
   {
-    final ArrayList<IProfilPointMarker> pointMarkers = new ArrayList<>();
+    final ArrayList<IProfilePointMarker> pointMarkers = new ArrayList<>();
     final IComponent[] markers = getPointMarkerTypes();
     for( final IComponent marker : markers )
     {
@@ -368,7 +368,7 @@ public abstract class AbstractProfil implements IProfil
   }
 
   @Override
-  public IProfilPointMarker[] getPointMarkerFor( final String pointMarkerID )
+  public IProfilePointMarker[] getPointMarkerFor( final String pointMarkerID )
   {
     final IComponent cmp = hasPointProperty( pointMarkerID );
     if( cmp == null )
@@ -381,7 +381,7 @@ public abstract class AbstractProfil implements IProfil
   {
     final List<IComponent> marker = new ArrayList<>();
 
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( getType() );
+    final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( getType() );
     final IComponent[] properties = getPointProperties();
 
     for( final IComponent component : properties )
@@ -396,7 +396,7 @@ public abstract class AbstractProfil implements IProfil
   @Override
   public boolean isPointMarker( final String propertyID )
   {
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( getType() );
+    final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( getType() );
     return provider == null ? false : provider.isMarker( propertyID );
   }
 
@@ -417,7 +417,7 @@ public abstract class AbstractProfil implements IProfil
   @Override
   public IComponent getPointPropertyFor( final String propertyID )
   {
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( getType() );
+    final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( getType() );
     return provider == null ? null : provider.getPointProperty( propertyID );
   }
 
@@ -516,7 +516,7 @@ public abstract class AbstractProfil implements IProfil
   }
 
   @Override
-  public Object removePointMarker( final IProfilPointMarker marker )
+  public Object removePointMarker( final IProfilePointMarker marker )
   {
     final Object oldValue = marker.getValue();
 
@@ -524,7 +524,7 @@ public abstract class AbstractProfil implements IProfil
     final Object defaultValue = id.getDefaultValue();
     marker.setValue( defaultValue );
 
-    fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.MARKER_MOVED ) );
+    fireProfilChanged( new ProfileChangeHint( ProfileChangeHint.MARKER_MOVED ) );
 
     return oldValue;
   }
@@ -545,13 +545,13 @@ public abstract class AbstractProfil implements IProfil
 
     final boolean removed = m_profileObjects.remove( profileObject );
 
-    fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.OBJECT_CHANGED ) );
+    fireProfilChanged( new ProfileChangeHint( ProfileChangeHint.OBJECT_CHANGED ) );
 
     return removed;
   }
 
   @Override
-  public void removeProfilListener( final IProfilListener pl )
+  public void removeProfilListener( final IProfileListener pl )
   {
     m_listeners.remove( pl );
   }
@@ -561,7 +561,7 @@ public abstract class AbstractProfil implements IProfil
   {
     setDescription( comment );
 
-    fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.PROFILE_PROPERTY_CHANGED ) );
+    fireProfilChanged( new ProfileChangeHint( ProfileChangeHint.PROFILE_PROPERTY_CHANGED ) );
   }
 
   @Override
@@ -569,7 +569,7 @@ public abstract class AbstractProfil implements IProfil
   {
     m_description = desc;
 
-    fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.PROFILE_PROPERTY_CHANGED ) );
+    fireProfilChanged( new ProfileChangeHint( ProfileChangeHint.PROFILE_PROPERTY_CHANGED ) );
   }
 
   @Override
@@ -577,7 +577,7 @@ public abstract class AbstractProfil implements IProfil
   {
     m_name = name;
 
-    fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.PROFILE_PROPERTY_CHANGED ) );
+    fireProfilChanged( new ProfileChangeHint( ProfileChangeHint.PROFILE_PROPERTY_CHANGED ) );
   }
 
   @Override
@@ -585,7 +585,7 @@ public abstract class AbstractProfil implements IProfil
   {
     m_phenomenon = phenomenon;
 
-    fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.PROFILE_PROPERTY_CHANGED ) );
+    fireProfilChanged( new ProfileChangeHint( ProfileChangeHint.PROFILE_PROPERTY_CHANGED ) );
   }
 
   @Override
@@ -608,7 +608,7 @@ public abstract class AbstractProfil implements IProfil
 
     m_result = result;
 
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( m_type );
+    final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( m_type );
     provider.checkComponents( result );
 
     m_result.addChangeListener( m_tupleResultListener );
@@ -619,7 +619,7 @@ public abstract class AbstractProfil implements IProfil
   {
     m_station = station;
 
-    fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.PROFILE_PROPERTY_CHANGED ) );
+    fireProfilChanged( new ProfileChangeHint( ProfileChangeHint.PROFILE_PROPERTY_CHANGED ) );
   }
 
   @Override
@@ -770,9 +770,9 @@ public abstract class AbstractProfil implements IProfil
   }
 
   @Override
-  public IProfilPointMarker[] getPointMarkers( )
+  public IProfilePointMarker[] getPointMarkers( )
   {
-    final Set<IProfilPointMarker> markers = new LinkedHashSet<>();
+    final Set<IProfilePointMarker> markers = new LinkedHashSet<>();
 
     final IComponent[] types = getPointMarkerTypes();
     for( final IComponent type : types )
@@ -780,7 +780,7 @@ public abstract class AbstractProfil implements IProfil
       Collections.addAll( markers, getPointMarkerFor( type ) );
     }
 
-    return markers.toArray( new IProfilPointMarker[] {} );
+    return markers.toArray( new IProfilePointMarker[] {} );
   }
 
   @Override
@@ -797,7 +797,7 @@ public abstract class AbstractProfil implements IProfil
     m_transactionLock.remove( lock );
     m_transactionHint = 0;
 
-    fireProfilChanged( new ProfilChangeHint( hint ) );
+    fireProfilChanged( new ProfileChangeHint( hint ) );
   }
 
   @Override
@@ -831,7 +831,7 @@ public abstract class AbstractProfil implements IProfil
   {
     m_srsName = srsName;
 
-    fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.PROFILE_PROPERTY_CHANGED ) );
+    fireProfilChanged( new ProfileChangeHint( ProfileChangeHint.PROFILE_PROPERTY_CHANGED ) );
   }
 
   @Override

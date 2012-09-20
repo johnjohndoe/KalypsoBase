@@ -56,7 +56,7 @@ import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.swt.awt.SWT_AWT_Utilities;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
@@ -139,7 +139,7 @@ public class InsertProfilePointWidget extends AbstractProfileWidget
       if( ProfileWidgetHelper.isVertexPoint( profileFeature.getJtsLine(), snapped.getCoordinate() ) )
         return;
 
-      final IProfil profile = profileFeature.getProfil();
+      final IProfile profile = profileFeature.getProfil();
       final Double cursor = profile.getSelection().getCursor();
       if( Objects.isNull( cursor ) )
         return;
@@ -228,7 +228,7 @@ public class InsertProfilePointWidget extends AbstractProfileWidget
     if( Objects.isNull( profileFeature ) )
       return null;
 
-    final IProfil profile = profileFeature.getProfil();
+    final IProfile profile = profileFeature.getProfil();
     if( Objects.isNull( profile ) )
       return null;
 

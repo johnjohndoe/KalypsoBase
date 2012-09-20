@@ -48,7 +48,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.observation.result.IRecord;
 
@@ -72,7 +72,7 @@ public class RefreshProfileMarkerJob extends UIJob
   @Override
   public IStatus runInUIThread( final IProgressMonitor monitor )
   {
-    final IProfil profile = m_tableView.getProfil();
+    final IProfile profile = m_tableView.getProfil();
     if( Objects.isNull( profile ) )
       return Status.CANCEL_STATUS;
 // TODO: nur die geänderten Marker neu zeichnen

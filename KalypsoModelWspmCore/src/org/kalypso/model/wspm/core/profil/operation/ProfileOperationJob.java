@@ -54,17 +54,17 @@ import org.kalypso.model.wspm.core.i18n.Messages;
  *
  * @author belger
  */
-public class ProfilOperationJob extends Job
+public class ProfileOperationJob extends Job
 {
   private static final MutexRule MUTEX = new MutexRule();
 
-  private final ProfilOperationRunnable m_runnable;
+  private final ProfileOperationRunnable m_runnable;
 
-  public ProfilOperationJob( final IUndoableOperation... operations )
+  public ProfileOperationJob( final IUndoableOperation... operations )
   {
     super( getLabel( operations ) );
 
-    m_runnable = new ProfilOperationRunnable( operations );
+    m_runnable = new ProfileOperationRunnable( operations );
 
     setUser( true );
     setSystem( false );

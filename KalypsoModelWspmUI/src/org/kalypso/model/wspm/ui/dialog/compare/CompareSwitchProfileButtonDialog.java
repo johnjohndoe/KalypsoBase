@@ -42,7 +42,7 @@ package org.kalypso.model.wspm.ui.dialog.compare;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChart;
 
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
@@ -65,7 +65,7 @@ public class CompareSwitchProfileButtonDialog extends SwitchProfileButtonDialog
   }
 
   @Override
-  protected void setProfile( final IProfil baseProfile )
+  protected void setProfile( final IProfile baseProfile )
   {
     super.setProfile( baseProfile );
 

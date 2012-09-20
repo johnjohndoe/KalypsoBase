@@ -57,8 +57,8 @@ import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
@@ -100,7 +100,7 @@ public class ApplyLanduseWorker implements IRunnableWithProgress
     for( final IProfileFeature profileFeature : profiles )
     {
       final String crs = profileFeature.getSrsName();
-      final IProfil profile = profileFeature.getProfil();
+      final IProfile profile = profileFeature.getProfil();
 
       // TODO: check if the profile has all components already.
       // but how to do, we don't know here what components are necessary for the current profile...
@@ -164,7 +164,7 @@ public class ApplyLanduseWorker implements IRunnableWithProgress
     return m_changes.toArray( new FeatureChange[] {} );
   }
 
-  private void assignValueToPoint( final IProfil profil, final IRecord point, final GM_Point geoPoint, final Geometry jtsPoint ) throws GM_Exception
+  private void assignValueToPoint( final IProfile profil, final IRecord point, final GM_Point geoPoint, final Geometry jtsPoint ) throws GM_Exception
   {
     final TupleResult owner = point.getOwner();
 
@@ -198,7 +198,7 @@ public class ApplyLanduseWorker implements IRunnableWithProgress
           if( Objects.isNull( componentId, newValue ) )
             continue;
 
-          final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profil.getType() );
+          final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profil.getType() );
           final IComponent component = provider.getPointProperty( componentId );
 
           final Object defaultValue = getDefaultValue( component );

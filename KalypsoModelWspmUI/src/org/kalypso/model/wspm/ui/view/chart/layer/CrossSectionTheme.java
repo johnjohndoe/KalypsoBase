@@ -41,8 +41,8 @@
 package org.kalypso.model.wspm.ui.view.chart.layer;
 
 import org.kalypso.model.wspm.core.IWspmLayers;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
@@ -58,7 +58,7 @@ public class CrossSectionTheme extends AbstractProfilTheme
 {
   public static final String TITLE = Messages.getString( "org.kalypso.model.wspm.ui.view.chart.CrossSectionTheme.0" ); //$NON-NLS-1$
 
-  public CrossSectionTheme( final IProfil profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
+  public CrossSectionTheme( final IProfile profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
     super( profil, IWspmLayers.LAYER_GELAENDE, TITLE, chartLayers, cm );
   }
@@ -70,7 +70,7 @@ public class CrossSectionTheme extends AbstractProfilTheme
   }
 
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
+  public void onProfilChanged( final ProfileChangeHint hint )
   {
     if( hint.isSelectionChanged() || hint.isPointValuesChanged() || hint.isPointsChanged() )
     {

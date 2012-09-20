@@ -64,10 +64,10 @@ import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
+import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
@@ -159,7 +159,7 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
 
         monitor.subTask( String.format( "%s (km %s)", profile.getName(), profile.getBigStation() ) ); //$NON-NLS-1$
 
-        final IProfil profil = profile.getProfil();
+        final IProfile profil = profile.getProfil();
 
         // create marker for each point
         final Integer[] newMarkerPoints = findNewMarkerPoints( profile );
@@ -179,10 +179,10 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
   {
     final Point[] intersectionPoints = findNewMarkerLocations( profile );
 
-    final IProfil profil = profile.getProfil();
+    final IProfile profil = profile.getProfil();
     final double[] intersectionWidths = getIntersectionWidths( profil, intersectionPoints );
 
-    final Integer[] nearestPointIndices = ProfilUtil.findNearestPointIndices( profil, intersectionWidths );
+    final Integer[] nearestPointIndices = ProfileUtil.findNearestPointIndices( profil, intersectionWidths );
 
     final Integer[] bestMarkers = findBestMarkers( profil, nearestPointIndices );
 
@@ -196,7 +196,7 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
    * If we have too many, we take the outermost markers.<br>
    * If we have too less, we add markers at profile end or beginning.
    */
-  private Integer[] cleanupMarkers( final IProfil profil, final Integer[] bestMarkers )
+  private Integer[] cleanupMarkers( final IProfile profil, final Integer[] bestMarkers )
   {
     final IRecord[] points = profil.getPoints();
     if( points.length < 2 )
@@ -232,7 +232,7 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
     }
   }
 
-  private Integer[] findBestMarkers( final IProfil profil, final Integer[] nearestPointIndices )
+  private Integer[] findBestMarkers( final IProfile profil, final Integer[] nearestPointIndices )
   {
     /* Clear points that are contained multiple times */
     final Set<Integer> nearestPointSet = new HashSet<>( Arrays.asList( nearestPointIndices ) );
@@ -261,7 +261,7 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
     }
   }
 
-  private Integer[] findBestMarkersAndKeepExisting( final IProfil profil, final Integer[] intersectionPoints )
+  private Integer[] findBestMarkersAndKeepExisting( final IProfile profil, final Integer[] intersectionPoints )
   {
     switch( intersectionPoints.length )
     {
@@ -293,7 +293,7 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
     return result;
   }
 
-  private Integer[] mixExistingWithIntersectionPoint( final IProfil profil, final Integer intersectionIndex )
+  private Integer[] mixExistingWithIntersectionPoint( final IProfile profil, final Integer intersectionIndex )
   {
     final Integer[] markerPoints = existingMarkersAsIndices( profil );
     final SortedSet<Integer> markerIndices = new TreeSet<>( Arrays.asList( markerPoints ) );
@@ -328,9 +328,9 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
     return result.toArray( new Integer[result.size()] );
   }
 
-  private Integer[] existingMarkersAsIndices( final IProfil profil )
+  private Integer[] existingMarkersAsIndices( final IProfile profil )
   {
-    final IProfilPointMarker[] existingMarkers = profil.getPointMarkerFor( m_deviderType );
+    final IProfilePointMarker[] existingMarkers = profil.getPointMarkerFor( m_deviderType );
     final Integer[] asPoints = new Integer[existingMarkers.length];
     for( int i = 0; i < asPoints.length; i++ )
     {
@@ -409,17 +409,17 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
   /**
    * At the moment, only existing points are taken
    */
-  private boolean createNewDevider( final IProfil profil, final Integer[] newMarkerPoints )
+  private boolean createNewDevider( final IProfile profil, final Integer[] newMarkerPoints )
   {
     /** Clear existing points */
-    final IProfilPointMarker[] existingMarkers = profil.getPointMarkerFor( m_deviderType );
-    for( final IProfilPointMarker marker : existingMarkers )
+    final IProfilePointMarker[] existingMarkers = profil.getPointMarkerFor( m_deviderType );
+    for( final IProfilePointMarker marker : existingMarkers )
     {
       profil.removePointMarker( marker );
     }
 
     /** Add new Points */
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profil.getType() );
+    final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profil.getType() );
     final String id = m_deviderType.getId();
 
     boolean markerHasBeenAdded = false;
@@ -428,7 +428,7 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
       if( markerIndex != null )
       {
         final IProfileRecord markerPoint = profil.getPoint( markerIndex );
-        final IProfilPointMarker marker = profil.createPointMarker( id, markerPoint );
+        final IProfilePointMarker marker = profil.createPointMarker( id, markerPoint );
         final Object defaultValue = provider.getDefaultValue( id );
         marker.setValue( defaultValue );
         markerHasBeenAdded = true;
@@ -438,7 +438,7 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
     return markerHasBeenAdded;
   }
 
-  private double[] getIntersectionWidths( final IProfil profil, final Point[] intersectionPoints )
+  private double[] getIntersectionWidths( final IProfile profil, final Point[] intersectionPoints )
   {
     final Collection<Double> widthList = new ArrayList<>( intersectionPoints.length );
     for( final Point point : intersectionPoints )

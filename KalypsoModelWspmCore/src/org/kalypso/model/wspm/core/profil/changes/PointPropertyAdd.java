@@ -40,34 +40,34 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.changes;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileChange;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
-public final class PointPropertyAdd implements IProfilChange
+public final class PointPropertyAdd implements IProfileChange
 {
-  private final IProfil m_profil;
+  private final IProfile m_profil;
 
   private final IComponent m_property;
 
   private final Object[] m_values;
 
-  public PointPropertyAdd( final IProfil profil, final IComponent property, final Object[] values )
+  public PointPropertyAdd( final IProfile profil, final IComponent property, final Object[] values )
   {
     m_profil = profil;
     m_property = property;
     m_values = values;
   }
 
-  public PointPropertyAdd( final IProfil profil, final IComponent property )
+  public PointPropertyAdd( final IProfile profil, final IComponent property )
   {
     m_profil = profil;
     m_property = property;
     m_values = null;
   }
 
-  public PointPropertyAdd( final IProfil profil, final IComponent property, final Object defaultValue )
+  public PointPropertyAdd( final IProfile profil, final IComponent property, final Object defaultValue )
   {
     m_profil = profil;
     m_property = property;
@@ -75,7 +75,7 @@ public final class PointPropertyAdd implements IProfilChange
   }
 
   @Override
-  public IProfilChange doChange( )
+  public IProfileChange doChange( )
   {
     if( m_values == null )
     {

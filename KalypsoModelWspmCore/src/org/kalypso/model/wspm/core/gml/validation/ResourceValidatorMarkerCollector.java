@@ -50,8 +50,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.ide.IDE;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.debug.KalypsoModelWspmCoreDebug;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.reparator.IProfileMarkerResolution;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 
 public final class ResourceValidatorMarkerCollector implements IValidatorMarkerCollector
@@ -81,7 +81,7 @@ public final class ResourceValidatorMarkerCollector implements IValidatorMarkerC
   @Override
   public void createProfilMarker( final int severity, final String message, final String location, final int pointPos, final String pointProperty ) throws CoreException
   {
-    createProfilMarker( severity, message, location, pointPos, pointProperty, new IProfilMarkerResolution[] {} );
+    createProfilMarker( severity, message, location, pointPos, pointProperty, new IProfileMarkerResolution[] {} );
   }
 
   @Override
@@ -129,7 +129,7 @@ public final class ResourceValidatorMarkerCollector implements IValidatorMarkerC
   }
 
   @Override
-  public void createProfilMarker( final int severityError, final String msg, final IProfil profile, final IProfilMarkerResolution... markerResolutions ) throws CoreException
+  public void createProfilMarker( final int severityError, final String msg, final IProfile profile, final IProfileMarkerResolution... markerResolutions ) throws CoreException
   {
     final String location = String.format( "km %.4f", profile.getStation() ); //$NON-NLS-1$
 
@@ -137,7 +137,7 @@ public final class ResourceValidatorMarkerCollector implements IValidatorMarkerC
   }
 
   @Override
-  public void createProfilMarker( final int severity, final String message, final String location, final int pointPos, final String pointProperty, final IProfilMarkerResolution... markerResolutions ) throws CoreException
+  public void createProfilMarker( final int severity, final String message, final String location, final int pointPos, final String pointProperty, final IProfileMarkerResolution... markerResolutions ) throws CoreException
   {
     KalypsoModelWspmCoreDebug.DEBUG_VALIDATION_MARKER.printf( "%s - %s - %s - %s", severity, message, location, pointPos ); //$NON-NLS-1$
 

@@ -60,8 +60,8 @@ import org.kalypso.model.wspm.core.gml.classifications.IVegetationClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.i18n.Messages;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileChange;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 
@@ -74,15 +74,15 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public class GuessVegetationClassesRunnable implements ICoreRunnableWithProgress
 {
-  private final IProfil m_profile;
+  private final IProfile m_profile;
 
   private final boolean m_overwriteValues;
 
   private final Double m_maxDelta;
 
-  private final Set<IProfilChange> m_changes = new LinkedHashSet<>();
+  private final Set<IProfileChange> m_changes = new LinkedHashSet<>();
 
-  public GuessVegetationClassesRunnable( final IProfil profile, final boolean overwriteValues, final Double delta )
+  public GuessVegetationClassesRunnable( final IProfile profile, final boolean overwriteValues, final Double delta )
   {
     m_profile = profile;
     m_overwriteValues = overwriteValues;
@@ -177,8 +177,8 @@ public class GuessVegetationClassesRunnable implements ICoreRunnableWithProgress
     return new Coordinate( ax.doubleValue(), ax.doubleValue(), dp.doubleValue() );
   }
 
-  public IProfilChange[] getChanges( )
+  public IProfileChange[] getChanges( )
   {
-    return m_changes.toArray( new IProfilChange[] {} );
+    return m_changes.toArray( new IProfileChange[] {} );
   }
 }

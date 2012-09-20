@@ -38,26 +38,55 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.core.profil.reparator;
+package org.kalypso.model.wspm.core.profil;
 
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IMarkerResolution2;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.TupleResult;
 
 /**
  * @author kimwerner
  */
-public interface IProfilMarkerResolution extends IMarkerResolution2
+public interface IProfilePointPropertyProvider
 {
-  boolean resolve( final IProfil profile );
+  /**
+   * creates a new empty IProfil object - builders are registered over extension points
+   */
+  IProfile createProfil( );
 
-  String getSerializedParameter( );
+  /**
+   * create a new IProfil object, takes given Observation as profile data
+   */
+  IProfile createProfil( TupleResult observation, IProfileFeature source );
 
-  void setData( final String parameterStream );
+  /**
+   * FIXME: not used any more: either remove or use
+   * 
+   * @return all PointPropertyIds handled by this provider NOTE: the natural order in this Array is the initial
+   *         columnsort used in the tableview
+   */
+  String[] getPointProperties( );
 
-  boolean hasUI( );
+  // FIXME: does not belong in this interface
+  IComponent getPointProperty( String propertyId );
 
-  String getUIresult( final Shell shell, final IProfil profil );
+  /**
+   * @return true if the provider supports the propertyId
+   */
+  boolean providesPointProperty( final String property );
 
-  void setUIresult( final String result );
+  /**
+   * Check, if a given {@link TupleResult} is valid according to this profile type.
+   */
+  void checkComponents( TupleResult result );
+
+  /**
+   * markers maybe handled different in special cases (p.e. UI)
+   */
+  boolean isMarker( final String markerID );
+
+  /**
+   * Returns the default value for the given propertyID
+   */
+  Object getDefaultValue( final String propertyID );
 }

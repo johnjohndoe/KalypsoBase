@@ -44,7 +44,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.commands.MousePositionChartHandler;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChart;
@@ -70,7 +70,7 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
 
   private ProfilChartModel m_profilChartModel = null;
 
-  public ProfileChartComposite( final Composite parent, final int style, final IProfilLayerProvider layerProvider, final IProfil profile )
+  public ProfileChartComposite( final Composite parent, final int style, final IProfilLayerProvider layerProvider, final IProfile profile )
   {
     super( parent, style, null, BACKGROUND_RGB );
 
@@ -98,7 +98,7 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
   }
 
   @Override
-  public IProfil getProfil( )
+  public IProfile getProfil( )
   {
     if( Objects.isNull( m_profilChartModel ) )
       return null;
@@ -106,7 +106,7 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
     return m_profilChartModel.getProfil();
   }
 
-  protected IProfilLayerProvider getProfilLayerProvider( final IProfil profile )
+  protected IProfilLayerProvider getProfilLayerProvider( final IProfile profile )
   {
     if( Objects.isNotNull( m_profilLayerProvider ) )
       return m_profilLayerProvider;
@@ -122,14 +122,14 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
     return m_profilLayerProvider;
   }
 
-  public void invalidate( final IProfil profile, final Object result )
+  public void invalidate( final IProfile profile, final Object result )
   {
     if( isDisposed() )
       return;
 
     // FIXME: bad and ugly! we should keep only one model, m_chartModel; not two references to the same thing
     final IChartModel oldModel = m_profilChartModel;
-    final IProfil oldProfile = m_profilChartModel == null ? null : m_profilChartModel.getProfil();
+    final IProfile oldProfile = m_profilChartModel == null ? null : m_profilChartModel.getProfil();
     if( profile != null && profile == oldProfile )
       return;
 
@@ -153,7 +153,7 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
   }
 
   @Override
-  public void setProfil( final IProfil profile, final Object result )
+  public void setProfil( final IProfile profile, final Object result )
   {
     synchronized( this )
     {

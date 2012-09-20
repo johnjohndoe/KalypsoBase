@@ -51,7 +51,7 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.IProfileProvider;
 import org.kalypso.model.wspm.core.gml.IProfileProviderListener;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -59,7 +59,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
  */
 public class ProfileFetureValidationListener implements IProfileProviderListener
 {
-  private IProfil m_profile;
+  private IProfile m_profile;
 
   private ValidationProfilListener m_listener;
 
@@ -89,7 +89,7 @@ public class ProfileFetureValidationListener implements IProfileProviderListener
     if( Objects.isNotNull( m_profile, m_listener ) )
       m_profile.removeProfilListener( m_listener );
 
-    final IProfil profile = provider.getProfil();
+    final IProfile profile = provider.getProfil();
     m_profile = profile;
 
     if( Objects.isNotNull( m_profile ) )

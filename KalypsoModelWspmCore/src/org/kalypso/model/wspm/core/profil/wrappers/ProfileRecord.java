@@ -47,9 +47,9 @@ import org.kalypso.commons.java.lang.Doubles;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.jts.JTSConverter;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IRangeSelection;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
@@ -62,9 +62,9 @@ import com.vividsolutions.jts.geom.Point;
  */
 public class ProfileRecord extends AbstractRecordWrapper implements IProfileRecord
 {
-  private IProfil m_profile;
+  private IProfile m_profile;
 
-  public ProfileRecord( final IProfil parent, final IRecord record )
+  public ProfileRecord( final IProfile parent, final IRecord record )
   {
     super( record );
 
@@ -100,7 +100,7 @@ public class ProfileRecord extends AbstractRecordWrapper implements IProfileReco
   @Override
   public Double getHoehe( )
   {
-    final double value = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOEHE, this );
+    final double value = ProfileUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOEHE, this );
     if( Double.isNaN( value ) )
       return null;
 
@@ -110,7 +110,7 @@ public class ProfileRecord extends AbstractRecordWrapper implements IProfileReco
   @Override
   public Double getBreite( )
   {
-    final double value = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, this );
+    final double value = ProfileUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, this );
     if( Double.isNaN( value ) )
       return null;
 
@@ -120,7 +120,7 @@ public class ProfileRecord extends AbstractRecordWrapper implements IProfileReco
   @Override
   public Double getHochwert( )
   {
-    final double value = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOCHWERT, this );
+    final double value = ProfileUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_HOCHWERT, this );
     if( Double.isNaN( value ) )
       return null;
 
@@ -130,7 +130,7 @@ public class ProfileRecord extends AbstractRecordWrapper implements IProfileReco
   @Override
   public Double getRechtswert( )
   {
-    final double value = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT, this );
+    final double value = ProfileUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT, this );
     if( Double.isNaN( value ) )
       return null;
 
@@ -200,13 +200,13 @@ public class ProfileRecord extends AbstractRecordWrapper implements IProfileReco
   @Override
   public Double getKsValue( )
   {
-    return ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS, this );
+    return ProfileUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS, this );
   }
 
   @Override
   public Double getKstValue( )
   {
-    return ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST, this );
+    return ProfileUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST, this );
   }
 
   /**
@@ -325,7 +325,7 @@ public class ProfileRecord extends AbstractRecordWrapper implements IProfileReco
   }
 
   @Override
-  public IProfil getProfile( )
+  public IProfile getProfile( )
   {
     return m_profile;
   }
@@ -336,7 +336,7 @@ public class ProfileRecord extends AbstractRecordWrapper implements IProfileReco
     return new ProfileRecord( getProfile(), getRecord().cloneRecord() );
   }
 
-  public void setProfile( final IProfil profile )
+  public void setProfile( final IProfile profile )
   {
     m_profile = profile;
   }
@@ -410,7 +410,7 @@ public class ProfileRecord extends AbstractRecordWrapper implements IProfileReco
   @Override
   public boolean isSelected( )
   {
-    final IProfil profile = getProfile();
+    final IProfile profile = getProfile();
     if( Objects.isNull( profile ) )
       return false;
 

@@ -45,7 +45,7 @@ import org.apache.commons.lang3.Range;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IRangeSelection;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
 import org.kalypso.model.wspm.core.profil.visitors.FindMinMaxVisitor;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
@@ -60,11 +60,11 @@ public class RangeSelection implements IRangeSelection
 
   private Range<Double> m_selection;
 
-  private final AbstractProfil m_profile;
+  private final AbstractProfile m_profile;
 
   private Double m_cursor;
 
-  public RangeSelection( final AbstractProfil profile )
+  public RangeSelection( final AbstractProfile profile )
   {
     m_profile = profile;
   }
@@ -79,7 +79,7 @@ public class RangeSelection implements IRangeSelection
   public void setActivePointProperty( final IComponent pointProperty )
   {
     m_activePointProperty = pointProperty;
-    m_profile.fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.ACTIVE_PROPERTY_CHANGED ) );
+    m_profile.fireProfilChanged( new ProfileChangeHint( ProfileChangeHint.ACTIVE_PROPERTY_CHANGED ) );
   }
 
   @Override
@@ -95,7 +95,7 @@ public class RangeSelection implements IRangeSelection
       return;
 
     m_selection = selection;
-    final ProfilChangeHint hint = new ProfilChangeHint( ProfilChangeHint.SELECTION_CHANGED );
+    final ProfileChangeHint hint = new ProfileChangeHint( ProfileChangeHint.SELECTION_CHANGED );
     m_profile.fireProfilChanged( hint );
   }
 
@@ -114,7 +114,7 @@ public class RangeSelection implements IRangeSelection
     if( ArrayUtils.isEmpty( points ) )
     {
       m_selection = null;
-      m_profile.fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.SELECTION_CHANGED ) );
+      m_profile.fireProfilChanged( new ProfileChangeHint( ProfileChangeHint.SELECTION_CHANGED ) );
     }
     else if( ArrayUtils.getLength( points ) == 1 )
     {
@@ -151,7 +151,7 @@ public class RangeSelection implements IRangeSelection
   public void setCursor( final Double breite )
   {
     m_cursor = breite;
-    m_profile.fireProfilChanged( new ProfilChangeHint( ProfilChangeHint.SELECTION_CURSOR_CHANGED ) );
+    m_profile.fireProfilChanged( new ProfileChangeHint( ProfileChangeHint.SELECTION_CURSOR_CHANGED ) );
   }
 
   @Override

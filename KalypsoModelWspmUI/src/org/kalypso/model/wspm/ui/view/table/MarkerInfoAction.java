@@ -45,7 +45,7 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 
@@ -55,11 +55,11 @@ import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 @SuppressWarnings("restriction")
 public class MarkerInfoAction extends Action
 {
-  private final IProfil m_profil;
+  private final IProfile m_profil;
 
   private final IMarker m_marker;
 
-  public MarkerInfoAction( final IMarker marker, final IProfil profil )
+  public MarkerInfoAction( final IMarker marker, final IProfile profil )
   {
     m_marker = marker;
     m_profil = profil;

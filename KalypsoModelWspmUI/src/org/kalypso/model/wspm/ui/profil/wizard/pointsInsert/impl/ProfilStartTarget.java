@@ -43,11 +43,11 @@ package org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl;
 import java.util.List;
 
 import org.kalypso.model.wspm.core.IWspmPointProperties;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileChange;
 import org.kalypso.model.wspm.core.profil.changes.PointAdd;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationJob;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperationJob;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.AbstractPointsTarget;
 import org.kalypso.observation.result.IComponent;
@@ -65,7 +65,7 @@ public class ProfilStartTarget extends AbstractPointsTarget
    *      IProfilPoints)
    */
   @Override
-  public void insertPoints( final IProfil profile, final List<IRecord> points )
+  public void insertPoints( final IProfile profile, final List<IRecord> points )
   {
     if( points != null )
     {
@@ -77,7 +77,7 @@ public class ProfilStartTarget extends AbstractPointsTarget
     }
   }
 
-  private final void addPointInternal( final IProfil profile )
+  private final void addPointInternal( final IProfile profile )
   {
     final TupleResult result = profile.getResult();
     IRecord record = null;
@@ -112,7 +112,7 @@ public class ProfilStartTarget extends AbstractPointsTarget
     result.add( 0, myPoint );
   }
 
-  public void insertPointsInternal( final IProfil profile, final List<IRecord> points )
+  public void insertPointsInternal( final IProfile profile, final List<IRecord> points )
   {
     if( points == null )
     {
@@ -129,7 +129,7 @@ public class ProfilStartTarget extends AbstractPointsTarget
       final int iPointsBreite = owner.indexOfComponent( IWspmPointProperties.POINT_PROPERTY_BREITE );
       final int iPointsHoehe = owner.indexOfComponent( IWspmPointProperties.POINT_PROPERTY_HOEHE );
 
-      final IProfilChange[] changes = new IProfilChange[pointsToAdd];
+      final IProfileChange[] changes = new IProfileChange[pointsToAdd];
       try
       {
         final IProfileRecord[] existingPoints = profile.getPoints();
@@ -164,8 +164,8 @@ public class ProfilStartTarget extends AbstractPointsTarget
         // should never happen, stops operation and raise NullPointerException in ProfilOperation.doChange
         changes[0] = null;
       }
-      final ProfilOperation operation = new ProfilOperation( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl.ProfilStartTarget.0" ), profile, changes, false ); //$NON-NLS-1$
-      new ProfilOperationJob( operation ).schedule();
+      final ProfileOperation operation = new ProfileOperation( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl.ProfilStartTarget.0" ), profile, changes, false ); //$NON-NLS-1$
+      new ProfileOperationJob( operation ).schedule();
     }
 
   }

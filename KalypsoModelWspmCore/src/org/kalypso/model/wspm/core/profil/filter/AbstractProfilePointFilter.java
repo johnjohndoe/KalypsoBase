@@ -43,8 +43,8 @@ package org.kalypso.model.wspm.core.profil.filter;
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.observation.result.IRecord;
 
 /**
@@ -93,7 +93,7 @@ public abstract class AbstractProfilePointFilter implements IProfilePointFilter,
     m_usageHint = config.getAttribute( "usageHint" ); //$NON-NLS-1$
   }
 
-  protected boolean isBetweenMarkers( final IProfil profil, final IRecord point, final IProfilPointMarker leftMarker, final IProfilPointMarker rightMarker )
+  protected boolean isBetweenMarkers( final IProfile profil, final IRecord point, final IProfilePointMarker leftMarker, final IProfilePointMarker rightMarker )
   {
     final IRecord[] points = profil.getPoints();
     if( points.length < 1 )

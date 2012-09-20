@@ -49,7 +49,7 @@ import org.kalypso.model.wspm.core.gml.WspmProject;
 import org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass;
 import org.kalypso.model.wspm.core.gml.classifications.IVegetationClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.observation.result.IComponent;
 import org.kalypsodeegree.model.feature.Feature;
@@ -66,7 +66,7 @@ public final class WspmClassifications
 
   public static IRoughnessClass findRoughnessClass( final IProfileRecord point )
   {
-    final IProfil profile = point.getProfile();
+    final IProfile profile = point.getProfile();
     final int componentRoughnessClass = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS );
     if( componentRoughnessClass == -1 )
       return null;
@@ -97,7 +97,7 @@ public final class WspmClassifications
 
   public static IVegetationClass findVegetationClass( final IProfileRecord point )
   {
-    final IProfil profile = point.getProfile();
+    final IProfile profile = point.getProfile();
     final int componentVegetationClass = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS );
     if( componentVegetationClass == -1 )
       return null;
@@ -115,7 +115,7 @@ public final class WspmClassifications
 
   public static Double findVegetationValue( final IProfileRecord point, final IComponent component, final Double plainValue )
   {
-    final IProfil profile = point.getProfile();
+    final IProfile profile = point.getProfile();
 
     final int componentVegetationClass = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS );
     if( componentVegetationClass == -1 )
@@ -174,7 +174,7 @@ public final class WspmClassifications
     return Double.NaN;
   }
 
-  public static IWspmClassification getClassification( final IProfil profile )
+  public static IWspmClassification getClassification( final IProfile profile )
   {
     final Object source = profile.getSource();
     if( !(source instanceof Feature) )
@@ -208,12 +208,12 @@ public final class WspmClassifications
     return Double.NaN;
   }
 
-  public static boolean hasRoughnessClass( final IProfil profile )
+  public static boolean hasRoughnessClass( final IProfile profile )
   {
     return Objects.isNotNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS ) );
   }
 
-  public static boolean hasRoughnessProperties( final IProfil profile )
+  public static boolean hasRoughnessProperties( final IProfile profile )
   {
     if( Objects.isNotNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS ) ) )
       return true;
@@ -223,12 +223,12 @@ public final class WspmClassifications
     return false;
   }
 
-  public static boolean hasVegetationClass( final IProfil profile )
+  public static boolean hasVegetationClass( final IProfile profile )
   {
     return Objects.isNotNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS ) );
   }
 
-  public static boolean hasVegetationProperties( final IProfil profile )
+  public static boolean hasVegetationProperties( final IProfile profile )
   {
     if( Objects.isNull( profile.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX ) ) )
       return false;

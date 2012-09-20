@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.dialog.compare;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 
 /**
  * @author Dirk Kuch
@@ -49,7 +49,7 @@ public interface ICompareProfileProvider
 {
   CompareProfileWrapper getBaseProfile( );
 
-  IProfil[] getBaseProfiles( );
+  IProfile[] getBaseProfiles( );
 
-  CompareProfileWrapper[] getAdditionalProfiles( IProfil baseProfile );
+  CompareProfileWrapper[] getAdditionalProfiles( IProfile baseProfile );
 }

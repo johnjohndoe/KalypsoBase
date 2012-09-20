@@ -73,7 +73,7 @@ import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.MessageProvider;
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.core.profil.filter.ProfilePointFilterComposite;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
@@ -278,7 +278,7 @@ public class OperationChooserPage extends WizardPage
     updateMessage();
   }
 
-  public void changeProfile( final IProfil profil, final Object[] properties )
+  public void changeProfile( final IProfile profil, final Object[] properties )
   {
     final IComponent[] propertyIds = new IComponent[properties.length];
     for( int i = 0; i < properties.length; i++ )

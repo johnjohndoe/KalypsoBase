@@ -55,7 +55,7 @@ import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartModel;
 
@@ -165,7 +165,7 @@ public abstract class AbstractChartModelViewPart extends ViewPart implements IAd
 
   private String getStationName( final IChartModel model )
   {
-    final IProfil profil = model instanceof ProfilChartModel ? ((ProfilChartModel) model).getProfil() : null;
+    final IProfile profil = model instanceof ProfilChartModel ? ((ProfilChartModel) model).getProfil() : null;
     return profil == null ? null : String.format( Messages.getString( "AbstractChartModelViewPart.0" ), profil.getStation() ); //$NON-NLS-1$
   }
 

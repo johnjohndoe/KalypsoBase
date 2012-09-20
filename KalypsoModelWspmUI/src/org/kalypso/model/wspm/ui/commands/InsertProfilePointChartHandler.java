@@ -54,7 +54,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.core.profil.visitors.FindClosestPointVisitor;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
@@ -199,14 +199,14 @@ public class InsertProfilePointChartHandler extends AbstractProfilePointHandler
   {
     super.paintControl( e );
 
-    final IProfil profile = getProfile();
+    final IProfile profile = getProfile();
     if( Objects.isNull( profile ) )
       return;
 
     doPaintCursor( e, profile );
   }
 
-  private void doPaintCursor( final PaintEvent e, final IProfil profile )
+  private void doPaintCursor( final PaintEvent e, final IProfile profile )
   {
     final IRangeSelection selection = profile.getSelection();
     final Double cursor = selection.getCursor();

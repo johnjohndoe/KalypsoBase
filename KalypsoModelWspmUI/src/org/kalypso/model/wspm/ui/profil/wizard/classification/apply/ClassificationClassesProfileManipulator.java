@@ -53,12 +53,12 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilPointPropertyProvider;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileChange;
+import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.base.IProfileManipulator;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyAdd;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
 import org.kalypso.model.wspm.core.util.roughnesses.UpdateSimpleRoughnessProperty;
 import org.kalypso.model.wspm.core.util.vegetation.UpdateVegetationProperties;
 import org.kalypso.observation.result.IComponent;
@@ -76,15 +76,15 @@ public class ClassificationClassesProfileManipulator implements IProfileManipula
   }
 
   @Override
-  public Pair<IProfilChange[], IStatus> performProfileManipulation( final IProfil profile, final IProgressMonitor monitor )
+  public Pair<IProfileChange[], IStatus> performProfileManipulation( final IProfile profile, final IProgressMonitor monitor )
   {
     monitor.beginTask( "", 1 ); //$NON-NLS-1$
 
-    final IProfilChange[] changes = findChanges( profile, monitor );
+    final IProfileChange[] changes = findChanges( profile, monitor );
     return Pair.of( changes, Status.OK_STATUS );
   }
 
-  private IProfilChange[] findChanges( final IProfil profile, final IProgressMonitor monitor )
+  private IProfileChange[] findChanges( final IProfile profile, final IProgressMonitor monitor )
   {
     final String type = m_page.getType();
 
@@ -99,18 +99,18 @@ public class ClassificationClassesProfileManipulator implements IProfileManipula
 
     monitor.done();
 
-    return new IProfilChange[] {};
+    return new IProfileChange[] {};
   }
 
-  private IProfilChange[] doRoughnessClassification( final IProfil profile, final IProgressMonitor monitor )
+  private IProfileChange[] doRoughnessClassification( final IProfile profile, final IProgressMonitor monitor )
   {
     if( !WspmClassifications.hasRoughnessClass( profile ) )
-      return new IProfilChange[] {};
+      return new IProfileChange[] {};
 
     if( !WspmClassifications.hasRoughnessProperties( profile ) )
       addRoughnessProperties( profile, monitor );
 
-    final Set<IProfilChange> changes = new LinkedHashSet<>();
+    final Set<IProfileChange> changes = new LinkedHashSet<>();
 
     try
     {
@@ -135,13 +135,13 @@ public class ClassificationClassesProfileManipulator implements IProfileManipula
       e.printStackTrace();
     }
 
-    return changes.toArray( new IProfilChange[] {} );
+    return changes.toArray( new IProfileChange[] {} );
   }
 
-  private IProfilChange[] doBewuchsClassification( final IProfil profile, final IProgressMonitor monitor )
+  private IProfileChange[] doBewuchsClassification( final IProfile profile, final IProgressMonitor monitor )
   {
     if( !WspmClassifications.hasVegetationClass( profile ) )
-      return new IProfilChange[] {};
+      return new IProfileChange[] {};
 
     if( !WspmClassifications.hasVegetationProperties( profile ) )
       addVegetationProperties( profile, monitor );
@@ -158,30 +158,30 @@ public class ClassificationClassesProfileManipulator implements IProfileManipula
       e.printStackTrace();
     }
 
-    return new IProfilChange[] {};
+    return new IProfileChange[] {};
   }
 
-  private void addRoughnessProperties( final IProfil profile, final IProgressMonitor monitor )
+  private void addRoughnessProperties( final IProfile profile, final IProgressMonitor monitor )
   {
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
+    final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
     final IComponent propertyKs = provider.getPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS );
     final IComponent propertyKst = provider.getPointProperty( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST );
 
-    final ProfilOperation operation = new ProfilOperation( "Adding profile point propertey - vegetation class", profile, true ); //$NON-NLS-1$
+    final ProfileOperation operation = new ProfileOperation( "Adding profile point propertey - vegetation class", profile, true ); //$NON-NLS-1$
     operation.addChange( new PointPropertyAdd( profile, propertyKs ) );
     operation.addChange( new PointPropertyAdd( profile, propertyKst ) );
 
     operation.execute( monitor, null );
   }
 
-  private void addVegetationProperties( final IProfil profile, final IProgressMonitor monitor )
+  private void addVegetationProperties( final IProfile profile, final IProgressMonitor monitor )
   {
-    final IProfilPointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
+    final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( profile.getType() );
     final IComponent propertyAx = provider.getPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX );
     final IComponent propertyAy = provider.getPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY );
     final IComponent propertyDp = provider.getPointProperty( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP );
 
-    final ProfilOperation operation = new ProfilOperation( "Adding profile point propertey - vegetation class", profile, true ); //$NON-NLS-1$
+    final ProfileOperation operation = new ProfileOperation( "Adding profile point propertey - vegetation class", profile, true ); //$NON-NLS-1$
     operation.addChange( new PointPropertyAdd( profile, propertyAx ) );
     operation.addChange( new PointPropertyAdd( profile, propertyAy ) );
     operation.addChange( new PointPropertyAdd( profile, propertyDp ) );

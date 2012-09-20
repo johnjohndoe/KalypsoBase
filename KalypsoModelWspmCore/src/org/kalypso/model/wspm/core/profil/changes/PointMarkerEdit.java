@@ -40,23 +40,23 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.changes;
 
-import org.kalypso.model.wspm.core.profil.IProfilChange;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfileChange;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 
-public class PointMarkerEdit implements IProfilChange
+public class PointMarkerEdit implements IProfileChange
 {
-  private final IProfilPointMarker m_pointMarker;
+  private final IProfilePointMarker m_pointMarker;
 
   private final Object m_newValue;
 
-  public PointMarkerEdit( final IProfilPointMarker pointMarker, final Object newValue )
+  public PointMarkerEdit( final IProfilePointMarker pointMarker, final Object newValue )
   {
     m_pointMarker = pointMarker;
     m_newValue = newValue;
   }
 
   @Override
-  public IProfilChange doChange( )
+  public IProfileChange doChange( )
   {
     final Object oldValue = m_pointMarker.getIntepretedValue();
     m_pointMarker.setInterpretedValue( m_newValue );

@@ -51,11 +51,11 @@ import org.kalypso.jts.JTSConverter;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.IProfileProvider;
 import org.kalypso.model.wspm.core.gml.IProfileProviderListener;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilListener;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileListener;
 import org.kalypso.model.wspm.core.profil.IRangeSelection;
-import org.kalypso.model.wspm.core.profil.ProfilListenerAdapter;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.ProfileListenerAdapter;
+import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
@@ -76,10 +76,10 @@ public class AbstractProfileWidget extends AbstractWidget
 {
   private final ToolTipRenderer m_toolTipRenderer = new ToolTipRenderer();
 
-  private final IProfilListener m_listener = new ProfilListenerAdapter()
+  private final IProfileListener m_listener = new ProfileListenerAdapter()
   {
     @Override
-    public void onProfilChanged( final ProfilChangeHint hint )
+    public void onProfilChanged( final ProfileChangeHint hint )
     {
       repaintMap();
     }
@@ -100,7 +100,7 @@ public class AbstractProfileWidget extends AbstractWidget
 
   private com.vividsolutions.jts.geom.Point m_snapPoint;
 
-  private IProfil m_profile;
+  private IProfile m_profile;
 
   public AbstractProfileWidget( final String name, final String toolTip )
   {
@@ -130,7 +130,7 @@ public class AbstractProfileWidget extends AbstractWidget
       if( Objects.isNull( point ) )
         return;
 
-      final IProfil profile = profileFeature.getProfil();
+      final IProfile profile = profileFeature.getProfil();
       final IRangeSelection selection = profile.getSelection();
 
       m_snapPoint = getSnapPoint( profileFeature.getJtsLine(), point );

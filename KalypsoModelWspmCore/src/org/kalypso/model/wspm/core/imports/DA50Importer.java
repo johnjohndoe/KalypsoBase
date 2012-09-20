@@ -60,7 +60,7 @@ import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.i18n.Messages;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.observation.result.IComponent;
@@ -111,7 +111,7 @@ public final class DA50Importer
         final DA50Entry d50Entry = entryMap.get( station );
         if( d50Entry != null )
         {
-          final IProfil profil = profile.getProfil();
+          final IProfile profil = profile.getProfil();
           applyD50Entry( profil, d50Entry, bRefFirst );
         }
       }
@@ -133,7 +133,7 @@ public final class DA50Importer
    *          Where to apply the reference: if true, the start-point is applied to the first point of the profile, else
    *          to the point with the breite-coordinate zero.
    */
-  private static void applyD50Entry( final IProfil profil, final DA50Entry entry, final boolean bRefFirst ) throws CoreException
+  private static void applyD50Entry( final IProfile profil, final DA50Entry entry, final boolean bRefFirst ) throws CoreException
   {
     final GM_Position startPos = entry.start.getPosition();
     final GM_Position endPos = entry.end.getPosition();

@@ -45,8 +45,8 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
@@ -84,7 +84,7 @@ public final class WspmGeometryUtilities
     }
   }
 
-  public static GM_Curve createProfileSegment( final IProfil profil )
+  public static GM_Curve createProfileSegment( final IProfile profil )
   {
     return createProfileSegment( profil, profil.getSrsName() );
   }
@@ -93,12 +93,12 @@ public final class WspmGeometryUtilities
    * @deprecated use {@link #createProfileSegment(IProfil)}
    */
   @Deprecated
-  public static GM_Curve createProfileSegment( final IProfil profil, final String srsName )
+  public static GM_Curve createProfileSegment( final IProfile profil, final String srsName )
   {
     return createProfileSegment( profil, srsName, null );
   }
 
-  public static GM_Curve createProfileSegment( final IProfil profil, String srsName, final String pointMarkerName )
+  public static GM_Curve createProfileSegment( final IProfile profil, String srsName, final String pointMarkerName )
   {
     try
     {
@@ -115,7 +115,7 @@ public final class WspmGeometryUtilities
 
       if( pointMarkerName != null )
       {
-        final IProfilPointMarker[] durchstroemte = profil.getPointMarkerFor( pointMarkerName );
+        final IProfilePointMarker[] durchstroemte = profil.getPointMarkerFor( pointMarkerName );
 
         if( durchstroemte.length < 2 )
           return null;
@@ -195,12 +195,12 @@ public final class WspmGeometryUtilities
     return GeometryFactory.createGM_Position( rw, hw, h );
   }
 
-  public static GM_Point createLocation( final IProfil profil, final IRecord point, final String srsName )
+  public static GM_Point createLocation( final IProfile profil, final IRecord point, final String srsName )
   {
     return createLocation( profil, point, srsName, IWspmPointProperties.POINT_PROPERTY_HOEHE );
   }
 
-  public static GM_Point createLocation( final IProfil profil, final IRecord point, String srsName, final String heightComponentID )
+  public static GM_Point createLocation( final IProfile profil, final IRecord point, String srsName, final String heightComponentID )
   {
     try
     {

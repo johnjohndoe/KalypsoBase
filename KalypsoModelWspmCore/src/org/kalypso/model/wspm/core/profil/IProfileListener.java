@@ -40,36 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil;
 
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-import org.kalypso.observation.result.IComponent;
+import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
 
 /**
- * @author Dirk Kuch
+ * @author Belger
  */
-public interface IProfilPointMarker
+public interface IProfileListener
 {
-  IComponent getComponent( );
+  void onProfilChanged( final ProfileChangeHint hint );
 
-  /**
-   * @return returns mapped profile point (type of IRecord)
-   */
-  IProfileRecord getPoint( );
-
-  /**
-   * @param newPosition
-   *          new profile point
-   * @return returns old mapped profile point
-   */
-  IProfileRecord setPoint( IProfileRecord newPosition );
-
-  void setValue( Object newValue );
-
-  Object getValue( );
-
-  // FIXME: what is the meaning of 'interpreted'?
-  /* Interpreted ui values to obtain backward compability */
-  Object getIntepretedValue( );
-
-  void setInterpretedValue( Object value );
-
+  void onProblemMarkerChanged( final IProfile source );
 }

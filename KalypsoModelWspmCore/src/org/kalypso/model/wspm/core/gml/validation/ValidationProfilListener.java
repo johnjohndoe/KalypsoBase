@@ -60,9 +60,9 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.debug.KalypsoModelWspmCoreDebug;
 import org.kalypso.model.wspm.core.i18n.Messages;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilListener;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileListener;
+import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.core.profil.validator.ValidatorRuleSet;
 
@@ -72,13 +72,13 @@ import org.kalypso.model.wspm.core.profil.validator.ValidatorRuleSet;
  * @author Gernot Belger
  */
 @SuppressWarnings("restriction")
-public class ValidationProfilListener implements IProfilListener
+public class ValidationProfilListener implements IProfileListener
 {
   private final IPropertyChangeListener m_propertyListener;
 
   private final WorkspaceJob m_validateJob;
 
-  public ValidationProfilListener( final IProfil profile, final IFile file, final String editorID, final String featureID )
+  public ValidationProfilListener( final IProfile profile, final IFile file, final String editorID, final String featureID )
   {
     if( file == null ) // start calculation
     {
@@ -166,14 +166,14 @@ public class ValidationProfilListener implements IProfilListener
   }
 
   @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
+  public void onProfilChanged( final ProfileChangeHint hint )
   {
-    if( (hint.getEvent() & ProfilChangeHint.DATA_CHANGED) != 0 )
+    if( (hint.getEvent() & ProfileChangeHint.DATA_CHANGED) != 0 )
       revalidate();
   }
 
   @Override
-  public void onProblemMarkerChanged( final IProfil source )
+  public void onProblemMarkerChanged( final IProfile source )
   {
     // Ignored
   }

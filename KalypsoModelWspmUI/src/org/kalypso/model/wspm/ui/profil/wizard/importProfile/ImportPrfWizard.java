@@ -63,9 +63,9 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.gml.WspmWaterBody;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
-import org.kalypso.model.wspm.core.profil.serializer.ProfilSerializerUtilitites;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.serializer.IProfileSource;
+import org.kalypso.model.wspm.core.profil.serializer.ProfileSerializerUtilitites;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.action.ImportProfilesCommand;
 import org.kalypso.model.wspm.ui.i18n.Messages;
@@ -118,7 +118,7 @@ public class ImportPrfWizard extends Wizard implements IWorkbenchWizard
       return true;
 
     /* read profiles, show warnings */
-    final List<IProfil> profiles = new ArrayList<>( files.length );
+    final List<IProfile> profiles = new ArrayList<>( files.length );
     final MultiStatus prfReadStatus = readProfiles( shell, files, profiles );
 
     if( profiles.size() == 0 )
@@ -136,7 +136,7 @@ public class ImportPrfWizard extends Wizard implements IWorkbenchWizard
     /* convert them into the profile-list */
     try
     {
-      final IProfil[] profs = profiles.toArray( new IProfil[profiles.size()] );
+      final IProfile[] profs = profiles.toArray( new IProfile[profiles.size()] );
       final ImportProfilesCommand command = new ImportProfilesCommand( m_water, profs );
       m_workspace.postCommand( command );
     }
@@ -177,7 +177,7 @@ public class ImportPrfWizard extends Wizard implements IWorkbenchWizard
     return results;
   }
 
-  private MultiStatus readProfiles( final Shell shell, final File[] files, final List<IProfil> profiles )
+  private MultiStatus readProfiles( final Shell shell, final File[] files, final List<IProfile> profiles )
   {
     final MultiStatus prfReadStatus = new MultiStatus( PluginUtilities.id( KalypsoModelWspmUIPlugin.getDefault() ), -1, org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.action.ImportProfilePrfAction.3" ), null ); //$NON-NLS-1$
     // final Date today = new Date();
@@ -186,13 +186,13 @@ public class ImportPrfWizard extends Wizard implements IWorkbenchWizard
     {
       try
       {
-        final IProfilSource prfSource = KalypsoModelWspmCoreExtensions.createProfilSource( "prf" ); //$NON-NLS-1$
-        final IProfil[] profs = ProfilSerializerUtilitites.readProfile( prfSource, file, "org.kalypso.model.wspm.tuhh.profiletype" ); //$NON-NLS-1$
+        final IProfileSource prfSource = KalypsoModelWspmCoreExtensions.createProfilSource( "prf" ); //$NON-NLS-1$
+        final IProfile[] profs = ProfileSerializerUtilitites.readProfile( prfSource, file, "org.kalypso.model.wspm.tuhh.profiletype" ); //$NON-NLS-1$
         if( profs == null || profs.length < 0 )
         {
           continue;
         }
-        final IProfil profile = profs[0];
+        final IProfile profile = profs[0];
         profile.setName( org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.action.ImportProfilePrfAction.4" ) ); //$NON-NLS-1$
 
         // FIXME: ask user for crs!

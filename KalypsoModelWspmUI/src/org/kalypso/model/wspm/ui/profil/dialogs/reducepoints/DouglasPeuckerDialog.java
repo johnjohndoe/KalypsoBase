@@ -69,7 +69,7 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 
@@ -94,7 +94,7 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
 
   private final IPointsProvider[] m_pointsProviders;
 
-  private final IProfil m_profile;
+  private final IProfile m_profile;
 
   private IPointsProvider m_provider = null;
 
@@ -104,7 +104,7 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
 
   private SimplifyProfileOperation m_operation;
 
-  public DouglasPeuckerDialog( final Shell parentShell, final IProfil profile, final IPointsProvider[] pointsProviders )
+  public DouglasPeuckerDialog( final Shell parentShell, final IProfile profile, final IPointsProvider[] pointsProviders )
   {
     super( parentShell );
 

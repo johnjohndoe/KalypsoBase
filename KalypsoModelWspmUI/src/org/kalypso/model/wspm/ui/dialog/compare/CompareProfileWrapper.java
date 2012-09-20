@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.dialog.compare;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 
 /**
@@ -50,18 +50,18 @@ public class CompareProfileWrapper
 {
   private final String m_label;
 
-  private final IProfil m_profile;
+  private final IProfile m_profile;
 
   private final IProfilLayerProvider m_layerProvider;
 
-  public CompareProfileWrapper( final IProfil profile, final IProfilLayerProvider layerProvider, final String label )
+  public CompareProfileWrapper( final IProfile profile, final IProfilLayerProvider layerProvider, final String label )
   {
     m_profile = profile;
     m_layerProvider = layerProvider;
     m_label = label;
   }
 
-  public IProfil getProfil( )
+  public IProfile getProfil( )
   {
     return m_profile;
   }

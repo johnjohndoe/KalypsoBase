@@ -59,8 +59,8 @@ import org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
 import org.kalypso.model.wspm.core.i18n.Messages;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileChange;
 import org.kalypso.model.wspm.core.profil.changes.PointPropertyEdit;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.vegetation.UpdateVegetationProperties;
@@ -72,15 +72,15 @@ import org.kalypso.model.wspm.core.util.vegetation.UpdateVegetationProperties;
  */
 public class UpdateSimpleRoughnessProperty implements ICoreRunnableWithProgress
 {
-  private final IProfil m_profile;
+  private final IProfile m_profile;
 
   private final String m_property;
 
   private final boolean m_overwrite;
 
-  private final Set<IProfilChange> m_changes = new LinkedHashSet<>();
+  private final Set<IProfileChange> m_changes = new LinkedHashSet<>();
 
-  public UpdateSimpleRoughnessProperty( final IProfil profile, final String property, final boolean overwrite )
+  public UpdateSimpleRoughnessProperty( final IProfile profile, final String property, final boolean overwrite )
   {
     m_profile = profile;
     m_property = property;
@@ -124,8 +124,8 @@ public class UpdateSimpleRoughnessProperty implements ICoreRunnableWithProgress
     return StatusUtilities.createStatus( statis, String.format( Messages.getString( "UpdateSimpleRoughnessProperty_2" ), m_profile.getStation() ) ); //$NON-NLS-1$
   }
 
-  public IProfilChange[] getChanges( )
+  public IProfileChange[] getChanges( )
   {
-    return m_changes.toArray( new IProfilChange[] {} );
+    return m_changes.toArray( new IProfileChange[] {} );
   }
 }

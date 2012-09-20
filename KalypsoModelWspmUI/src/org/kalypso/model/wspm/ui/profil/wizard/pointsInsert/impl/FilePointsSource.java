@@ -56,9 +56,9 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.serializer.IProfilSource;
-import org.kalypso.model.wspm.core.profil.serializer.ProfilSerializerUtilitites;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.serializer.IProfileSource;
+import org.kalypso.model.wspm.core.profil.serializer.ProfileSerializerUtilitites;
 import org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.AbstractPointsSource;
 import org.kalypso.observation.result.IRecord;
 
@@ -79,11 +79,11 @@ public class FilePointsSource extends AbstractPointsSource
 
     try
     {
-      final IProfilSource prfS = KalypsoModelWspmCoreExtensions.createProfilSource( "prf" ); //$NON-NLS-1$
+      final IProfileSource prfS = KalypsoModelWspmCoreExtensions.createProfilSource( "prf" ); //$NON-NLS-1$
       // TODO: here the profile type is directly given (always read as pasche)
       // change this later to let the user choose how to read
 
-      final IProfil[] profiles = ProfilSerializerUtilitites.readProfile( prfS, f, "org.kalypso.model.wspm.tuhh.profiletype" ); //$NON-NLS-1$
+      final IProfile[] profiles = ProfileSerializerUtilitites.readProfile( prfS, f, "org.kalypso.model.wspm.tuhh.profiletype" ); //$NON-NLS-1$
       return profiles == null || profiles.length < 0 ? null : profiles[0].getResult();
     }
     catch( final Exception e )

@@ -47,7 +47,7 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 
 /**
@@ -55,13 +55,13 @@ import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
  */
 public class InsertPointsWizard extends Wizard
 {
-  protected final IProfil m_profile;
+  protected final IProfile m_profile;
 
   protected PointsSourceChooserPage m_pointsSourceChooserPage;
 
   protected PointsTargetChooserPage m_pointsTargetChooserPage;
 
-  public InsertPointsWizard( final IProfil profile )
+  public InsertPointsWizard( final IProfile profile )
   {
 
     m_profile = profile;

@@ -66,8 +66,8 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.validation.ResourceValidatorMarkerCollector;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.reparator.IProfilMarkerResolution;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.reparator.IProfileMarkerResolution;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorRule;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
@@ -115,7 +115,7 @@ public class ValidateProfilesJob extends UIJob
       if( Objects.isNull( profileFeature ) )
         continue;
 
-      final IProfil profile = profileFeature.getProfil();
+      final IProfile profile = profileFeature.getProfil();
       if( Objects.isNull( profile ) )
         continue;
 
@@ -156,9 +156,9 @@ public class ValidateProfilesJob extends UIJob
         final String quickFixRes = marker.getAttribute( IValidatorMarkerCollector.MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTIONS, null );
         if( StringUtils.isNotEmpty( quickFixRes ) && ArrayUtils.isNotEmpty( m_quickFixes ) )
         {
-          final IProfilMarkerResolution[] resultions = toProfileMarkerResultions( quickFixRes );
+          final IProfileMarkerResolution[] resultions = toProfileMarkerResultions( quickFixRes );
 
-          for( final IProfilMarkerResolution resultion : resultions )
+          for( final IProfileMarkerResolution resultion : resultions )
           {
 
             final Object quickFix = findQuickFix( resultion );
@@ -207,7 +207,7 @@ public class ValidateProfilesJob extends UIJob
     return StatusUtilities.createStatus( stati, "Profile Validating Job" );
   }
 
-  private Object findQuickFix( final IProfilMarkerResolution resultion )
+  private Object findQuickFix( final IProfileMarkerResolution resultion )
   {
     if( Objects.isNull( resultion ) )
       return null;
@@ -221,12 +221,12 @@ public class ValidateProfilesJob extends UIJob
     return null;
   }
 
-  private IProfilMarkerResolution[] toProfileMarkerResultions( final String quickFixRes )
+  private IProfileMarkerResolution[] toProfileMarkerResultions( final String quickFixRes )
   {
     if( StringUtils.isEmpty( quickFixRes ) )
-      return new IProfilMarkerResolution[] {};
+      return new IProfileMarkerResolution[] {};
 
-    final Set<IProfilMarkerResolution> result = new LinkedHashSet<>();
+    final Set<IProfileMarkerResolution> result = new LinkedHashSet<>();
 
     final String[] resolutions = StringUtils.split( quickFixRes, '\u0000' );
     for( final String resultion : resolutions )
@@ -234,7 +234,7 @@ public class ValidateProfilesJob extends UIJob
       result.add( KalypsoModelWspmCoreExtensions.getReparatorRule( resultion ) );
     }
 
-    return result.toArray( new IProfilMarkerResolution[] {} );
+    return result.toArray( new IProfileMarkerResolution[] {} );
   }
 
   private void doInit( )

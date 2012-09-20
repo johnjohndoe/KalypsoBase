@@ -48,7 +48,7 @@ import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard;
@@ -79,7 +79,7 @@ public class PropertyEditDelegate implements IViewActionDelegate
   {
     final Shell viewShell = m_view.getViewSite().getShell();
 
-    final IProfil profile = m_view instanceof TableView ? ((TableView) m_view).getProfil() : null;
+    final IProfile profile = m_view instanceof TableView ? ((TableView) m_view).getProfil() : null;
 
     if( profile == null )
     {

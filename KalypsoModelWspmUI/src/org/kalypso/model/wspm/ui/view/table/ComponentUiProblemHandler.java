@@ -57,9 +57,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarkerProvider;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarkerProvider;
 import org.kalypso.model.wspm.core.profil.MarkerIndex;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.ProfileRecord;
@@ -99,9 +99,9 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
     IMG_REGISTRY.put( IMAGE_NO_ERROR, ImageDescriptor.createFromImageData( new ImageData( 16, 16, 1, new PaletteData( new RGB[] { new RGB( 255, 255, 255 ) } ) ) ) );
   }
 
-  private final IProfil m_profile;
+  private final IProfile m_profile;
 
-  public ComponentUiProblemHandler( final IProfil profile )
+  public ComponentUiProblemHandler( final IProfile profile )
   {
     m_profile = profile;
   }
@@ -214,7 +214,7 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
     buffer.append( Arrays.toString( deviderTypes ) );
     final String key = buffer.toString();
 
-    final IProfilPointMarkerProvider mp = KalypsoModelWspmCoreExtensions.getMarkerProviders( m_profile.getType() );
+    final IProfilePointMarkerProvider mp = KalypsoModelWspmCoreExtensions.getMarkerProviders( m_profile.getType() );
     final Image image = IMG_REGISTRY.get( key );
     if( image == null )
     {
@@ -287,7 +287,7 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
   @Deprecated
   public final IComponent getDeviderTyp( final IProfileRecord point )
   {
-    final IProfilPointMarker[] markers = m_profile.getPointMarkerFor( point );
+    final IProfilePointMarker[] markers = m_profile.getPointMarkerFor( point );
     if( markers == null )
       return null;
 
@@ -300,11 +300,11 @@ public class ComponentUiProblemHandler implements IComponentUiHandler
 
   public final String[] getMarkerTypes( final IRecord point )
   {
-    final IProfilPointMarker[] markers = m_profile.getPointMarkerFor( point instanceof IProfileRecord ? (IProfileRecord) point : new ProfileRecord( m_profile, point ) );
+    final IProfilePointMarker[] markers = m_profile.getPointMarkerFor( point instanceof IProfileRecord ? (IProfileRecord) point : new ProfileRecord( m_profile, point ) );
     if( markers == null || markers.length == 0 )
       return null;
     final HashSet<String> types = new HashSet<>();
-    for( final IProfilPointMarker marker : markers )
+    for( final IProfilePointMarker marker : markers )
     {
       final IComponent type = marker.getComponent();
       if( !types.contains( type.getId() ) )

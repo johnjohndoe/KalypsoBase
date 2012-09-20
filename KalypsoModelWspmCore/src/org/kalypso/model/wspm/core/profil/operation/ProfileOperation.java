@@ -54,45 +54,45 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileChange;
 import org.kalypso.model.wspm.core.profil.IllegalProfileOperationException;
 import org.kalypso.model.wspm.core.profil.changes.IllegalChange;
 
-public final class ProfilOperation extends AbstractOperation
+public final class ProfileOperation extends AbstractOperation
 {
-  private final List<IProfilChange> m_undoChanges = new ArrayList<>();
+  private final List<IProfileChange> m_undoChanges = new ArrayList<>();
 
-  private final IProfil m_profile;
+  private final IProfile m_profile;
 
-  private final List<IProfilChange> m_changes = new ArrayList<>();
+  private final List<IProfileChange> m_changes = new ArrayList<>();
 
   private final boolean m_rollbackAll;
 
   private boolean m_canUndo = true;
 
-  public ProfilOperation( final String label, final IProfil profile, final boolean rollbackAll )
+  public ProfileOperation( final String label, final IProfile profile, final boolean rollbackAll )
   {
-    this( label, profile, new IProfilChange[] {}, rollbackAll );
+    this( label, profile, new IProfileChange[] {}, rollbackAll );
   }
 
-  public ProfilOperation( final String label, final IProfil profile, final IProfilChange change, final boolean rollbackAll )
+  public ProfileOperation( final String label, final IProfile profile, final IProfileChange change, final boolean rollbackAll )
   {
-    this( label, profile, new IProfilChange[] { change }, rollbackAll );
+    this( label, profile, new IProfileChange[] { change }, rollbackAll );
   }
 
-  public ProfilOperation( final String label, final IProfil profile, final IProfilChange[] changes, final boolean rollbackAll )
+  public ProfileOperation( final String label, final IProfile profile, final IProfileChange[] changes, final boolean rollbackAll )
   {
     super( label );
 
-    addContext( new ProfilUndoContext( profile ) );
+    addContext( new ProfileUndoContext( profile ) );
 
     m_changes.addAll( Arrays.asList( changes ) );
     m_profile = profile;
     m_rollbackAll = rollbackAll;
   }
 
-  public void addChange( final IProfilChange... changes )
+  public void addChange( final IProfileChange... changes )
   {
     if( ArrayUtils.isEmpty( changes ) )
       return;
@@ -100,7 +100,7 @@ public final class ProfilOperation extends AbstractOperation
     Collections.addAll( m_changes, changes );
   }
 
-  protected IProfil getProfil( )
+  protected IProfile getProfil( )
   {
     return m_profile;
   }
@@ -108,13 +108,13 @@ public final class ProfilOperation extends AbstractOperation
   @Override
   public IStatus redo( final IProgressMonitor monitor, final IAdaptable info )
   {
-    return doit( monitor, info, new ArrayList<IProfilChange>(), m_changes );
+    return doit( monitor, info, new ArrayList<IProfileChange>(), m_changes );
   }
 
   @Override
   public IStatus undo( final IProgressMonitor monitor, final IAdaptable info )
   {
-    return doit( monitor, info, new ArrayList<IProfilChange>(), m_undoChanges );
+    return doit( monitor, info, new ArrayList<IProfileChange>(), m_undoChanges );
   }
 
   @Override
@@ -124,18 +124,18 @@ public final class ProfilOperation extends AbstractOperation
   }
 
   private IStatus doit( final IProgressMonitor monitor, @SuppressWarnings("unused")//$NON-NLS-1$
-  final IAdaptable info, final List<IProfilChange> undoChanges, final List<IProfilChange> changes )
+  final IAdaptable info, final List<IProfileChange> undoChanges, final List<IProfileChange> changes )
   {
     m_profile.startTransaction( this );
 
     monitor.beginTask( org.kalypso.model.wspm.core.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.operation.ProfilOperation.0" ), changes.size() ); //$NON-NLS-1$
-    final List<IProfilChange> doneChanges = new ArrayList<>();
+    final List<IProfileChange> doneChanges = new ArrayList<>();
     try
     {
-      for( final IProfilChange change : changes )
+      for( final IProfileChange change : changes )
       {
         // FIXME: suspect, why can any change be null here=?
-        final IProfilChange undoChange;
+        final IProfileChange undoChange;
         if( change == null )
           undoChange = null;
         else
@@ -166,7 +166,7 @@ public final class ProfilOperation extends AbstractOperation
         {
           if( !d.isDisposed() )
           {
-            final IProfilChange change = e.getProfilChange();
+            final IProfileChange change = e.getProfilChange();
             if( change == null )
             {
               MessageDialog.openWarning( d.getActiveShell(), org.kalypso.model.wspm.core.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.operation.ProfilOperation.1" ), e.getMessage() ); //$NON-NLS-1$
@@ -194,9 +194,9 @@ public final class ProfilOperation extends AbstractOperation
     return Status.OK_STATUS;
   }
 
-  private void rollback( final List<IProfilChange> changes )
+  private void rollback( final List<IProfileChange> changes )
   {
-    for( final IProfilChange undo : changes )
+    for( final IProfileChange undo : changes )
     {
       try
       {

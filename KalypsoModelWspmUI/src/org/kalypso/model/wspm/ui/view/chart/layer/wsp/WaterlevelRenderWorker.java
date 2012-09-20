@@ -49,9 +49,9 @@ import org.apache.commons.lang3.Range;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.WaterlevelIntersectionWorker;
@@ -75,13 +75,13 @@ public class WaterlevelRenderWorker
 
   private final Collection<WaterlevelRenderSegment> m_result = new ArrayList<>();
 
-  private final IProfil m_profile;
+  private final IProfile m_profile;
 
   private final double m_value;
 
   private final int m_widthComponent;
 
-  public WaterlevelRenderWorker( final IProfil profile, final double value )
+  public WaterlevelRenderWorker( final IProfile profile, final double value )
   {
     m_profile = profile;
     m_value = value;
@@ -136,7 +136,7 @@ public class WaterlevelRenderWorker
   private Range<Double> getRestriction( )
   {
     final String markerType = Preferences.getWaterlevelRestrictionMarker();
-    final IProfilPointMarker[] markers = m_profile.getPointMarkerFor( markerType );
+    final IProfilePointMarker[] markers = m_profile.getPointMarkerFor( markerType );
 
     if( ArrayUtils.isEmpty( markers ) )
       return null;
@@ -150,9 +150,9 @@ public class WaterlevelRenderWorker
     return Range.between( leftLimit, rightLimit );
   }
 
-  private double findLimit( final IProfilPointMarker[] markers, final int index )
+  private double findLimit( final IProfilePointMarker[] markers, final int index )
   {
-    final IProfilPointMarker leftMarker = markers[index];
+    final IProfilePointMarker leftMarker = markers[index];
     final Object value = leftMarker.getPoint().getValue( m_widthComponent );
     if( value instanceof Number )
       return ((Number) value).doubleValue();
@@ -177,8 +177,8 @@ public class WaterlevelRenderWorker
     final int index1 = point1.getIndex();
     final int index2 = point2.getIndex();
 
-    final Double[] widths = ProfilUtil.getValuesFor( m_profile, IWspmConstants.POINT_PROPERTY_BREITE, Double.class );
-    final Double[] heights = ProfilUtil.getValuesFor( m_profile, IWspmConstants.POINT_PROPERTY_HOEHE, Double.class );
+    final Double[] widths = ProfileUtil.getValuesFor( m_profile, IWspmConstants.POINT_PROPERTY_BREITE, Double.class );
+    final Double[] heights = ProfileUtil.getValuesFor( m_profile, IWspmConstants.POINT_PROPERTY_HOEHE, Double.class );
 
     final List<Coordinate> area = new ArrayList<>( index2 - index1 + 3 );
 

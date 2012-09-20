@@ -42,10 +42,10 @@ package org.kalypso.model.wspm.ui.view.chart;
 
 import java.awt.Insets;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilListener;
-import org.kalypso.model.wspm.core.profil.ProfilListenerAdapter;
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileListener;
+import org.kalypso.model.wspm.core.profil.ProfileListenerAdapter;
+import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
@@ -59,11 +59,11 @@ import de.openali.odysseus.chart.framework.util.img.ChartPainter;
  */
 public class ProfilChartModel extends ChartModel
 {
-  private final IProfilListener m_profilListener = new ProfilListenerAdapter()
+  private final IProfileListener m_profilListener = new ProfileListenerAdapter()
   {
 
     @Override
-    public void onProfilChanged( final ProfilChangeHint hint )
+    public void onProfilChanged( final ProfileChangeHint hint )
     {
       if( hint.isObjectChanged() )
       {
@@ -83,7 +83,7 @@ public class ProfilChartModel extends ChartModel
     }
   };
 
-  private final IProfil m_profil;
+  private final IProfile m_profil;
 
   private IProfilLayerProvider m_layerProvider;
 
@@ -102,7 +102,7 @@ public class ProfilChartModel extends ChartModel
     return m_layerProvider;
   }
 
-  public ProfilChartModel( final IProfilLayerProvider layerProvider, final IProfil profil, final Object result )
+  public ProfilChartModel( final IProfilLayerProvider layerProvider, final IProfile profil, final Object result )
   {
     m_layerProvider = layerProvider;
     m_profil = profil;
@@ -137,7 +137,7 @@ public class ProfilChartModel extends ChartModel
     return null;
   }
 
-  public IProfil getProfil( )
+  public IProfile getProfil( )
   {
     return m_profil;
   }

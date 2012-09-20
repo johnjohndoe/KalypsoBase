@@ -40,32 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil;
 
-import org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint;
-
-/**
- * Empty implementation of {@link IProfilListener}.
- * 
- * @author belger
- */
-public class ProfilListenerAdapter implements IProfilListener
+public interface IProfileChange
 {
   /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProblemMarkerChanged(org.kalypso.model.wspm.core.profil.IProfil)
+   * @param the
+   *          Themes , affected by this ProfilChange should be set true
+   * @return the undo operation for this ProfilChange or {@code null} if not undoable
    */
-  @Override
-  public void onProblemMarkerChanged( final IProfil source )
-  {
-    // nothing to do, overwrite to implement
-  }
-
-  /**
-   * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProfilChanged(org.kalypso.model.wspm.core.profil.changes.ProfilChangeHint,
-   *      org.kalypso.model.wspm.core.profil.IProfilChange[])
-   */
-  @Override
-  public void onProfilChanged( final ProfilChangeHint hint )
-  {
-    // nothing to do, overwrite to implement
-  }
-
+  IProfileChange doChange( ) throws IllegalProfileOperationException;
 }

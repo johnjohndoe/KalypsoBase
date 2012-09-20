@@ -53,10 +53,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.changes.PointRemove;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperation;
-import org.kalypso.model.wspm.core.profil.operation.ProfilOperationRunnable;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperation;
+import org.kalypso.model.wspm.core.profil.operation.ProfileOperationRunnable;
 import org.kalypso.model.wspm.core.profil.util.DouglasPeuckerHelper;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
@@ -67,7 +67,7 @@ import org.kalypso.model.wspm.ui.i18n.Messages;
  */
 public class SimplifyProfileOperation
 {
-  private final IProfil m_profile;
+  private final IProfile m_profile;
 
   private final IPointsProvider m_provider;
 
@@ -75,9 +75,9 @@ public class SimplifyProfileOperation
 
   private final String[] m_buildingComponents;
 
-  private ProfilOperation m_operation;
+  private ProfileOperation m_operation;
 
-  public SimplifyProfileOperation( final IProfil profile, final IPointsProvider provider, final double distance, final String[] buildingComponents )
+  public SimplifyProfileOperation( final IProfile profile, final IPointsProvider provider, final double distance, final String[] buildingComponents )
   {
     m_profile = profile;
     m_provider = provider;
@@ -128,10 +128,10 @@ public class SimplifyProfileOperation
 
     /* Create the profile operation. */
     final PointRemove pointRemove = new PointRemove( m_profile, pointsToRemove );
-    m_operation = new ProfilOperation( Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.13" ), m_profile, pointRemove, false ); //$NON-NLS-1$
+    m_operation = new ProfileOperation( Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.DouglasPeuckerDialog.13" ), m_profile, pointRemove, false ); //$NON-NLS-1$
 
     /* Create the runnable. */
-    final ProfilOperationRunnable operationRunnable = new ProfilOperationRunnable( m_operation );
+    final ProfileOperationRunnable operationRunnable = new ProfileOperationRunnable( m_operation );
 
     /* Execute the value. */
     final IStatus operationStatus = operationRunnable.execute( new NullProgressMonitor() );
@@ -161,7 +161,7 @@ public class SimplifyProfileOperation
     return pointsToKeep.toArray( new IProfileRecord[pointsToKeep.size()] );
   }
 
-  private IProfileRecord[] getBuildingPoints( final IProfil profile )
+  private IProfileRecord[] getBuildingPoints( final IProfile profile )
   {
     final Collection<IProfileRecord> buildingPoints = new ArrayList<>();
 
@@ -174,7 +174,7 @@ public class SimplifyProfileOperation
     return buildingPoints.toArray( new IProfileRecord[buildingPoints.size()] );
   }
 
-  private IProfileRecord[] getBuildingPoints( final IProfil profile, final String buildingComponent )
+  private IProfileRecord[] getBuildingPoints( final IProfile profile, final String buildingComponent )
   {
     if( !ArrayUtils.isEmpty( m_buildingComponents ) )
       return getAllValidPoints( profile, buildingComponent );
@@ -185,7 +185,7 @@ public class SimplifyProfileOperation
   /**
    * Get all profile points of a component, which values are of type number (i.e non-<code>null</code>).
    */
-  private IProfileRecord[] getAllValidPoints( final IProfil profile, final String buildingComponent )
+  private IProfileRecord[] getAllValidPoints( final IProfile profile, final String buildingComponent )
   {
     final Collection<IProfileRecord> allPoints = new ArrayList<>();
 
@@ -208,7 +208,7 @@ public class SimplifyProfileOperation
 
   // FIXME: does not work properly we need to consider if the point lies on the soil or not, see BridgeRule
   @SuppressWarnings("unused")
-  private IProfileRecord[] getStartingEndBuildingPoints( final IProfil profile, final String buildingComponent )
+  private IProfileRecord[] getStartingEndBuildingPoints( final IProfile profile, final String buildingComponent )
   {
     final Collection<IProfileRecord> startOrEndPoints = new HashSet<IProfileRecord>();
 

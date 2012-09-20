@@ -40,12 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.changes;
 
-import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfileChange;
 
 /**
  * @author kimwerner
  */
-public class IllegalChange implements IProfilChange
+public class IllegalChange implements IProfileChange
 {
   private final String m_message;
 
@@ -55,7 +55,7 @@ public class IllegalChange implements IProfilChange
   }
 
   @Override
-  public IProfilChange doChange( )
+  public IProfileChange doChange( )
   {
     return null;
   }

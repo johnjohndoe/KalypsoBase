@@ -58,7 +58,7 @@ import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
 import org.kalypso.model.wspm.core.gml.classifications.ICodeClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
 import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassifications;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.gml.om.table.handlers.AbstractComponentUiHandler;
@@ -71,11 +71,11 @@ import org.kalypso.ogc.gml.om.table.handlers.AbstractComponentUiHandler;
  */
 public class CodeClassificationClassUiHandler extends AbstractComponentUiHandler
 {
-  private final IProfil m_profile;
+  private final IProfile m_profile;
 
   private final IDialogSettings m_dialogSettings;
 
-  public CodeClassificationClassUiHandler( final int component, final boolean editable, final boolean resizeable, final boolean moveable, final String columnLabel, final int columnWidth, final int columnWidthPercent, final IProfil profile )
+  public CodeClassificationClassUiHandler( final int component, final boolean editable, final boolean resizeable, final boolean moveable, final String columnLabel, final int columnWidth, final int columnWidthPercent, final IProfile profile )
   {
     super( component, editable, resizeable, moveable, columnLabel, SWT.NONE, columnWidth, columnWidthPercent, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 

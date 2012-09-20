@@ -54,28 +54,28 @@ import java.io.Reader;
 import java.io.Writer;
 
 import org.apache.commons.io.IOUtils;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 
 /**
  * Helper class with utility methods to handle {@link IProfilSource}s.
  * 
  * @author Gernot Belger
  */
-public final class ProfilSerializerUtilitites
+public final class ProfileSerializerUtilitites
 {
-  private ProfilSerializerUtilitites( )
+  private ProfileSerializerUtilitites( )
   {
     // Helper class, do not instantiate
   }
 
   /** Read a file via the given profile source and creates a profile from it. */
-  public static IProfil[] readProfile( final IProfilSource source, final File file, final String profilType ) throws IOException
+  public static IProfile[] readProfile( final IProfileSource source, final File file, final String profilType ) throws IOException
   {
     Reader fileReader = null;
     try
     {
       fileReader = new InputStreamReader( new FileInputStream( file ) );
-      final IProfil[] profiles = source.read( profilType, fileReader );
+      final IProfile[] profiles = source.read( profilType, fileReader );
       fileReader.close();
 
       return profiles;
@@ -94,13 +94,13 @@ public final class ProfilSerializerUtilitites
    * @param profile
    *          This profiles gets written
    */
-  public static void writeProfile( final IProfilSink sink, final IProfil profile, final File file ) throws IOException
+  public static void writeProfile( final IProfileSink sink, final IProfile profile, final File file ) throws IOException
   {
     Writer writer = null;
     try
     {
       writer = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( file ) ) );
-      sink.write( new IProfil[] { profile }, writer );
+      sink.write( new IProfile[] { profile }, writer );
       writer.close();
     }
     finally
@@ -117,13 +117,13 @@ public final class ProfilSerializerUtilitites
    * @param profile
    *          This profiles gets written
    */
-  public static void writeProfile( final IProfilSink sink, final IProfil profile, final OutputStream stream ) throws IOException
+  public static void writeProfile( final IProfileSink sink, final IProfile profile, final OutputStream stream ) throws IOException
   {
     Writer writer = null;
     try
     {
       writer = new BufferedWriter( new OutputStreamWriter( stream ) );
-      sink.write( new IProfil[] { profile }, writer );
+      sink.write( new IProfile[] { profile }, writer );
       writer.close();
     }
     finally
@@ -133,13 +133,13 @@ public final class ProfilSerializerUtilitites
   }
 
   /** Read a file via the given profile source and creates a profile from it. */
-  public static IProfil readProfile( final IProfilSource source, final InputStream stream, final String profilType ) throws IOException
+  public static IProfile readProfile( final IProfileSource source, final InputStream stream, final String profilType ) throws IOException
   {
     Reader fileReader = null;
     try
     {
       fileReader = new BufferedReader( new InputStreamReader( stream ) );
-      final IProfil[] profiles = source.read( profilType, fileReader );
+      final IProfile[] profiles = source.read( profilType, fileReader );
       fileReader.close();
 
       return profiles[0];

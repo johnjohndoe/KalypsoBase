@@ -53,7 +53,7 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.model.wspm.core.gml.IProfileProvider;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.i18n.Messages;
@@ -87,7 +87,7 @@ public class UpdateSelectionJob extends UIJob
       return Status.CANCEL_STATUS;
 
     EditorFirstAdapterFinder.<IProfileProvider> instance();
-    final IProfil profile = m_tableView.getProfil();
+    final IProfile profile = m_tableView.getProfil();
     final IRangeSelection selection = profile.getSelection();
 
     final IRecord[] records = toSelection( profile, selection );
@@ -101,7 +101,7 @@ public class UpdateSelectionJob extends UIJob
 
   }
 
-  private IRecord[] toSelection( final IProfil profile, final IRangeSelection selection )
+  private IRecord[] toSelection( final IProfile profile, final IRangeSelection selection )
   {
     if( selection.isEmpty() )
       return new IRecord[] {};

@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.filter;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 
 /**
@@ -54,7 +54,7 @@ public interface IProfilePointFilter
 
   String getDescription( );
 
-  boolean accept( final IProfil profil, final IProfileRecord point );
+  boolean accept( final IProfile profil, final IProfileRecord point );
 
   String getUsageHint( );
 }

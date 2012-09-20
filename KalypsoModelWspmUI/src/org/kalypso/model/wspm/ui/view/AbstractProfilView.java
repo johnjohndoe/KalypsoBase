@@ -47,8 +47,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilListener;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileListener;
 import org.kalypso.model.wspm.core.result.IStationResult;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 
@@ -56,20 +56,20 @@ import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
  * @author belger
  * @author kimwerner
  */
-public abstract class AbstractProfilView implements IProfilListener, IProfilView
+public abstract class AbstractProfilView implements IProfileListener, IProfilView
 {
-  private final IProfil m_profile;
+  private final IProfile m_profile;
 
   private Control m_control;
 
   private final IStationResult[] m_results;
 
-  public AbstractProfilView( final IProfil profile )
+  public AbstractProfilView( final IProfile profile )
   {
     this( profile, null );
   }
 
-  public AbstractProfilView( final IProfil profile, final IStationResult[] results )
+  public AbstractProfilView( final IProfile profile, final IStationResult[] results )
   {
     m_profile = profile;
     m_results = results == null ? new IStationResult[0] : results;
@@ -134,7 +134,7 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
   /**
    * @see org.kalypso.model.wspm.ui.profil.view.IProfilView#getProfil()
    */
-  public final IProfil getProfile( )
+  public final IProfile getProfile( )
   {
     return m_profile;
   }
@@ -148,7 +148,7 @@ public abstract class AbstractProfilView implements IProfilListener, IProfilView
    * @see org.kalypso.model.wspm.core.profil.IProfilListener#onProblemMarkerChanged(org.kalypso.model.wspm.core.profil.IProfil)
    */
   @Override
-  public void onProblemMarkerChanged( final IProfil source )
+  public void onProblemMarkerChanged( final IProfile source )
   {
     // instances must overwrite this method
   }

@@ -62,7 +62,7 @@ import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.ChartPartListener;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.model.wspm.core.gml.IProfileProvider;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.dialog.compare.ProfileChartComposite;
 import org.kalypso.model.wspm.ui.i18n.Messages;
@@ -111,7 +111,7 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
       m_form.getBody().setLayout( new FillLayout() );
       m_toolkit.decorateFormHeading( m_form );
 
-      final IProfil profile = m_handler.getProfile();
+      final IProfile profile = m_handler.getProfile();
 
       m_profilChartComposite = new ProfileChartComposite( m_form.getBody(), parent.getStyle(), getProfilLayerProvider(), profile );
       m_partListener.setChart( m_profilChartComposite );
@@ -208,7 +208,7 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
   {
     setPartNames( Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_1" ), Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    final IProfil newProfile = provider == null ? null : provider.getProfil();
+    final IProfile newProfile = provider == null ? null : provider.getProfil();
 
     if( newProfile == null )
     {
@@ -224,7 +224,7 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
     setChartModel( newProfile, provider == null ? null : provider.getResult() );
   }
 
-  private void setChartModel( final IProfil newProfile, final Object result )
+  private void setChartModel( final IProfile newProfile, final Object result )
   {
     final ProfileChartComposite chartComposite = m_profilChartComposite;
     if( chartComposite == null )

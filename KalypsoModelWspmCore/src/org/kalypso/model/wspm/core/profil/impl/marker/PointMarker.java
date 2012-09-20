@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.impl.marker;
 
-import org.kalypso.model.wspm.core.profil.IProfilPointMarker;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
@@ -48,7 +48,7 @@ import org.kalypso.observation.result.TupleResult;
 /**
  * @author kimwerner
  */
-public class PointMarker implements IProfilPointMarker
+public class PointMarker implements IProfilePointMarker
 {
   private final IComponent m_type;
 

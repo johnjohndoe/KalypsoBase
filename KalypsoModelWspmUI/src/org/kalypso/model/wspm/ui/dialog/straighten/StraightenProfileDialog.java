@@ -58,7 +58,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
@@ -198,7 +198,7 @@ public class StraightenProfileDialog extends TitleAreaDialog
     try
     {
       /* Get the profile. */
-      final IProfil profil = profile.getProfil();
+      final IProfile profil = profile.getProfil();
 
       /* Get the width of both points. */
       final double firstWidth = Profiles.getWidth( profil, firstPoint );

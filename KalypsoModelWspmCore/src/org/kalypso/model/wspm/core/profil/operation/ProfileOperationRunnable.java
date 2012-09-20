@@ -62,11 +62,11 @@ import org.kalypso.model.wspm.core.i18n.Messages;
 /**
  * @author Gernot
  */
-public class ProfilOperationRunnable implements ICoreRunnableWithProgress, IAdaptable
+public class ProfileOperationRunnable implements ICoreRunnableWithProgress, IAdaptable
 {
   private final IUndoableOperation[] m_operations;
 
-  public ProfilOperationRunnable( final IUndoableOperation... operation )
+  public ProfileOperationRunnable( final IUndoableOperation... operation )
   {
     m_operations = operation;
   }

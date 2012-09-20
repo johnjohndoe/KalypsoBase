@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.actions.ActionDelegate;
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.InsertPointsWizard;
 
 /**
@@ -71,7 +71,7 @@ public class InsertPointsActionDelegate extends ActionDelegate implements IViewA
   {
     final Shell viewShell = m_view.getViewSite().getShell();
 
-    final IProfil profile = m_view.getProfil();
+    final IProfile profile = m_view.getProfil();
 
     if( profile == null )
     {

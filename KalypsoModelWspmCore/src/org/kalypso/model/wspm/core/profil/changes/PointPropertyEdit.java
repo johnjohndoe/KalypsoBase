@@ -44,13 +44,13 @@ import java.util.Arrays;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileChange;
 import org.kalypso.model.wspm.core.profil.IProfileTransaction;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 
-public final class PointPropertyEdit implements IProfilChange
+public final class PointPropertyEdit implements IProfileChange
 {
   protected final IRecord[] m_points;
 
@@ -58,29 +58,29 @@ public final class PointPropertyEdit implements IProfilChange
 
   protected final Object[] m_newValues;
 
-  protected final IProfil m_profile;
+  protected final IProfile m_profile;
 
-  public PointPropertyEdit( final IProfil profile, final IRecord p, final IComponent property, final Object newValue )
+  public PointPropertyEdit( final IProfile profile, final IRecord p, final IComponent property, final Object newValue )
   {
     this( profile, new IRecord[] { p }, property, new Object[] { newValue } );
   }
 
-  public PointPropertyEdit( final IProfil profile, final IRecord[] p, final IComponent property, final Object newValue )
+  public PointPropertyEdit( final IProfile profile, final IRecord[] p, final IComponent property, final Object newValue )
   {
     this( profile, p, property, fillValues( p, newValue ) );
   }
 
-  public PointPropertyEdit( final IProfil profile, final IRecord[] points, final IComponent property, final Object[] newValues )
+  public PointPropertyEdit( final IProfile profile, final IRecord[] points, final IComponent property, final Object[] newValues )
   {
     this( profile, points, points[0].getOwner().indexOfComponent( property ), newValues );
   }
 
-  public PointPropertyEdit( final IProfil profile, final IRecord point, final int component, final Object newValues )
+  public PointPropertyEdit( final IProfile profile, final IRecord point, final int component, final Object newValues )
   {
     this( profile, new IRecord[] { point }, component, new Object[] { newValues } );
   }
 
-  public PointPropertyEdit( final IProfil profile, final IRecord[] points, final int component, final Object[] newValues )
+  public PointPropertyEdit( final IProfile profile, final IRecord[] points, final int component, final Object[] newValues )
   {
     m_profile = profile;
     m_points = points;
@@ -98,7 +98,7 @@ public final class PointPropertyEdit implements IProfilChange
   protected Object[] m_oldValues;
 
   @Override
-  public IProfilChange doChange( )
+  public IProfileChange doChange( )
   {
     if( m_points.length < 1 || m_index < 0 )
       return new PointPropertyEdit( m_profile, m_points, m_index, m_newValues );
@@ -107,7 +107,7 @@ public final class PointPropertyEdit implements IProfilChange
     {
 
       @Override
-      public IStatus execute( final IProfil profile )
+      public IStatus execute( final IProfile profile )
       {
         m_oldValues = new Object[m_points.length];
 

@@ -44,8 +44,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.IProfilChange;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileChange;
 import org.kalypso.model.wspm.core.profil.base.ExtrapolateMissingCoordinatesVisitor;
 import org.kalypso.model.wspm.core.profil.base.IProfileManipulator;
 import org.kalypso.model.wspm.core.profil.base.InterpolateMissingCoordinatesVisitor;
@@ -63,13 +63,13 @@ public class FillMissingProfileGeometriesManipulator implements IProfileManipula
   }
 
   @Override
-  public Pair<IProfilChange[], IStatus> performProfileManipulation( final IProfil profile, final IProgressMonitor monitor )
+  public Pair<IProfileChange[], IStatus> performProfileManipulation( final IProfile profile, final IProgressMonitor monitor )
   {
     // FIXME: profile is directly manipulated, what the HELL!
     profile.accept( new InterpolateMissingCoordinatesVisitor(), 1 );
     if( m_extrapolate )
       profile.accept( new ExtrapolateMissingCoordinatesVisitor(), 1 );
 
-    return Pair.of( new IProfilChange[] {}, Status.OK_STATUS );
+    return Pair.of( new IProfileChange[] {}, Status.OK_STATUS );
   }
 }

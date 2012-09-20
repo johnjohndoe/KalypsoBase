@@ -44,8 +44,8 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.jts.JTSConverter;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
-import org.kalypso.model.wspm.core.profil.IProfil;
-import org.kalypso.model.wspm.core.profil.util.ProfilUtil;
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
@@ -71,7 +71,7 @@ public final class Profiles
   {
   }
 
-  public static IProfileRecord addPoint( final IProfil profile, final Double width )
+  public static IProfileRecord addPoint( final IProfile profile, final Double width )
   {
     final IProfileRecord point = ProfileVisitors.findPoint( profile, width );
     if( Objects.isNotNull( point ) )
@@ -84,9 +84,9 @@ public final class Profiles
     return addRecordByWidth( profile, add, false );
   }
 
-  private static IProfileRecord addRecordByWidth( final IProfil profile, final IProfileRecord point, final boolean overwritePointMarkers )
+  private static IProfileRecord addRecordByWidth( final IProfile profile, final IProfileRecord point, final boolean overwritePointMarkers )
   {
-    final Double width = ProfilUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, point );
+    final Double width = ProfileUtil.getDoubleValueFor( IWspmPointProperties.POINT_PROPERTY_BREITE, point );
 
     final IProfileRecord[] records = profile.getPoints();
     final int iBreite = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE );
@@ -126,12 +126,12 @@ public final class Profiles
     return point;
   }
 
-  public static double getHoehe( final IProfil profile, final Double width )
+  public static double getHoehe( final IProfile profile, final Double width )
   {
     return WspmProfileHelper.getHeightByWidth( width, profile );
   }
 
-  public static double getWidth( final IProfil profile, final Point point ) throws GM_Exception
+  public static double getWidth( final IProfile profile, final Point point ) throws GM_Exception
   {
     try
     {
@@ -150,7 +150,7 @@ public final class Profiles
     }
   }
 
-  public static LineString getGeometry( final IProfil profile ) throws GM_Exception
+  public static LineString getGeometry( final IProfile profile ) throws GM_Exception
   {
     final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
@@ -160,12 +160,12 @@ public final class Profiles
     return profileLineString;
   }
 
-  public static GM_Point getPosition( final IProfil profile, final double breite ) throws Exception
+  public static GM_Point getPosition( final IProfile profile, final double breite ) throws Exception
   {
     return WspmProfileHelper.getGeoPositionKalypso( breite, profile );
   }
 
-  public static Coordinate getJtsPosition( final IProfil profile, final double breite ) throws Exception
+  public static Coordinate getJtsPosition( final IProfile profile, final double breite ) throws Exception
   {
     final GM_Point point = getPosition( profile, breite );
     final Point p = (Point) JTSAdapter.export( point );

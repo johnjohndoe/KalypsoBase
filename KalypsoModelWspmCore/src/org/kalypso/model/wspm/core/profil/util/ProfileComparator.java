@@ -38,17 +38,34 @@
  *  v.doemming@tuhh.de
  *   
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.core.profil.serializer;
+package org.kalypso.model.wspm.core.profil.util;
 
-import java.io.IOException;
-import java.io.Reader;
+import java.util.Comparator;
 
-import org.kalypso.model.wspm.core.profil.IProfil;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 
 /**
- * @author kimwerner
+ * Compares profile points concerning a given property.
+ * 
+ * @author Thomas Jung
  */
-public interface IProfilSource
+public class ProfileComparator implements Comparator<IRecord>
 {
-  IProfil[] read( final String profileTyp, final Reader reader ) throws IOException;
+  private final IComponent m_pointProperty;
+
+  public ProfileComparator( final IComponent pointProperty )
+  {
+    m_pointProperty = pointProperty;
+  }
+
+  @Override
+  public int compare( final IRecord p1, final IRecord p2 )
+  {
+    final Double v1 = ProfileUtil.getDoubleValueFor( m_pointProperty.getId(), p1 );
+    final Double v2 = ProfileUtil.getDoubleValueFor( m_pointProperty.getId(), p2 );
+
+    return Double.compare( v1, v2 );
+  }
+
 }
