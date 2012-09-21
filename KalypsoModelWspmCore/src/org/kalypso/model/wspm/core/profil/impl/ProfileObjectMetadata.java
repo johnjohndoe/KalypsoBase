@@ -21,19 +21,19 @@ package org.kalypso.model.wspm.core.profil.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.kalypso.model.wspm.core.profil.AbstractProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfileMetadata;
-import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
 
 /**
  * @author Holger Albert
  */
-public class ProfileMetadata implements IProfileMetadata
+public class ProfileObjectMetadata implements IProfileMetadata
 {
-  private final AbstractProfile m_parent;
+  private final AbstractProfileObject m_parent;
 
   private final Map<String, String> m_metadata;
 
-  public ProfileMetadata( final AbstractProfile parent )
+  public ProfileObjectMetadata( final AbstractProfileObject parent )
   {
     m_parent = parent;
     m_metadata = new HashMap<>();
@@ -55,27 +55,22 @@ public class ProfileMetadata implements IProfileMetadata
   public void setMetadata( final String key, final String value )
   {
     m_metadata.put( key, value );
-    fireProfileChanged();
+    fireProfileObjectChanged();
   }
 
   @Override
   public String removeMetadata( final String key )
   {
     final String removed = m_metadata.remove( key );
-    fireProfileChanged();
+    fireProfileObjectChanged();
     return removed;
   }
 
-  private void fireProfileChanged( )
+  private void fireProfileObjectChanged( )
   {
     if( m_parent == null )
       return;
 
-    /* Create the profile change hint. */
-    final ProfileChangeHint hint = new ProfileChangeHint();
-    hint.setObjectChanged();
-
-    /* Fire the profile changed event. */
-    m_parent.fireProfilChanged( hint );
+    // TODO
   }
 }

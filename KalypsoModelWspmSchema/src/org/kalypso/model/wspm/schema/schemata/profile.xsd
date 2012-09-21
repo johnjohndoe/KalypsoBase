@@ -109,8 +109,8 @@
             </documentation> </annotation> </element> -->
           <element name="member" type="om:AbstractObservationPropertyType" minOccurs="0" maxOccurs="unbounded">
             <annotation>
-              <documentation xml:lang="de"> Die Liste der zusätzliche Observationen: z.B. Durchlässe, Maulprofile, Kreise und Trapezen können hiermit abgebildet werden. </documentation>
-              <documentation xml:lang="en"> List of additional observations: e.g. outlets, arch, circular and trapezoidal profiles can be modelled. </documentation>
+              <documentation xml:lang="de">Die Liste der zusätzliche Observationen: z.B. Durchlässe, Maulprofile, Kreise und Trapezen können hiermit abgebildet werden. </documentation>
+              <documentation xml:lang="en">List of additional observations: e.g. outlets, arch, circular and trapezoidal profiles can be modelled. </documentation>
             </annotation>
           </element>
           <element ref="prof:localEnergyLossMember" minOccurs="0" maxOccurs="unbounded" />
