@@ -68,6 +68,9 @@ public class ProfileMetadata implements IProfileMetadata
 
   private void fireProfileChanged( )
   {
+    if( m_parent == null )
+      return;
+
     /* Create the profile change hint. */
     final ProfileChangeHint hint = new ProfileChangeHint();
     hint.setObjectChanged();

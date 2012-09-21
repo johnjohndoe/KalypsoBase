@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil;
 
+import org.kalypso.model.wspm.core.profil.impl.ProfileObjectMetadata;
 import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.IComponent;
@@ -54,9 +55,12 @@ public abstract class AbstractProfileObject implements IProfileObject
 {
   private final IObservation<TupleResult> m_observation;
 
+  private final IProfileMetadata m_metadata;
+
   protected AbstractProfileObject( final IObservation<TupleResult> observation )
   {
     m_observation = observation;
+    m_metadata = new ProfileObjectMetadata( this );
   }
 
   @Override
@@ -107,7 +111,7 @@ public abstract class AbstractProfileObject implements IProfileObject
   {
     final Object value = getValueFor( componentId );
     if( value instanceof Number )
-      return ((Number) value).doubleValue();
+      return ((Number)value).doubleValue();
 
     return Double.NaN;
   }
@@ -146,8 +150,7 @@ public abstract class AbstractProfileObject implements IProfileObject
   }
 
   /**
-   * @see org.kalypso.model.wspm.core.profil.IProfileObject#setValue(org.kalypso.observation.result.IComponent,
-   *      java.lang.Object)
+   * @see org.kalypso.model.wspm.core.profil.IProfileObject#setValue(org.kalypso.observation.result.IComponent, java.lang.Object)
    */
   @Override
   public void setValue( final IComponent component, final Object value )
@@ -197,4 +200,9 @@ public abstract class AbstractProfileObject implements IProfileObject
     }
   }
 
+  @Override
+  public IProfileMetadata getMetadata( )
+  {
+    return m_metadata;
+  }
 }

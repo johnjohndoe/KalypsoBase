@@ -70,4 +70,6 @@ public interface IProfileObject
   void setValue( IComponent component, Object value );
 
   void setValueFor( String componentID, Object value );
+
+  IProfileMetadata getMetadata( );
 }

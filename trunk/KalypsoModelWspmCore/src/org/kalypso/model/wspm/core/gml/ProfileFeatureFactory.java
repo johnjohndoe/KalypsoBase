@@ -156,6 +156,7 @@ public final class ProfileFeatureFactory implements IWspmConstants
         final Feature profileObjectFeature = targetFeature.getWorkspace().createFeature( targetFeature, profileObjectParentRelation, profileObjectType );
         profileObjectList.add( profileObjectFeature );
 
+        // TODO How to handle the metadata of the profile objects...
         final FeatureChange[] featureAsChanges = ObservationFeatureFactory.toFeatureAsChanges( profileObject.getObservation(), profileObjectFeature );
         Collections.addAll( changes, featureAsChanges );
       }
@@ -259,6 +260,7 @@ public final class ProfileFeatureFactory implements IWspmConstants
     final IObservation<TupleResult>[] profileObjects = profileFeature.getProfileObjects();
     for( final IObservation<TupleResult> obs : profileObjects )
     {
+      // TODO How to handle the metadata of the profile objects...
       final IProfileObject profileObject = ProfileObjectFactory.createProfileObject( profil, obs );
       if( profileObject == null )
         System.out.println( "failed to create Object: " + obs.getName() ); //$NON-NLS-1$
