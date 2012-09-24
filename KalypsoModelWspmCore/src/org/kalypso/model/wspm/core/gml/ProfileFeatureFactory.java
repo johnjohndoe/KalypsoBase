@@ -69,7 +69,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Intermediates between the {@link IProfil} interface and Features of QName {org.kalypso.model.wspm.profile}profile.
- * 
+ *
  * @author Gernot Belger
  */
 public final class ProfileFeatureFactory implements IWspmConstants
@@ -179,8 +179,8 @@ public final class ProfileFeatureFactory implements IWspmConstants
         final Feature metadataFeature = targetFeature.getWorkspace().createFeature( targetFeature, metadataParentRelation, medatataType );
         metadataList.add( metadataFeature );
 
-        changes.add( new FeatureChange( metadataFeature, featureType.getProperty( Metadata.PROPERTY_KEY ), key ) );
-        changes.add( new FeatureChange( metadataFeature, featureType.getProperty( Metadata.PROPERTY_VALUE ), value ) );
+        changes.add( new FeatureChange( metadataFeature, medatataType.getProperty( Metadata.PROPERTY_KEY ), key ) );
+        changes.add( new FeatureChange( metadataFeature, medatataType.getProperty( Metadata.PROPERTY_VALUE ), value ) );
       }
 
       changes.add( new FeatureChange( targetFeature, metadataRelationType, metadataList ) );
