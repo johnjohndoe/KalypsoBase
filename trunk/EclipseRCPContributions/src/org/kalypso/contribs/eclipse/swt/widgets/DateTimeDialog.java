@@ -46,6 +46,7 @@ import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -54,7 +55,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 
 /**
  * @author Dirk Kuch
@@ -111,7 +111,7 @@ public class DateTimeDialog extends Dialog
   protected Control createDialogArea( final Composite parent )
   {
     final Composite composite = (Composite) super.createDialogArea( parent );
-    composite.setLayout( Layouts.createGridLayout() );
+    GridLayoutFactory.fillDefaults().applyTo( composite );
 
     final Calendar preSettedTime = fetchPreSettedTime();
 
