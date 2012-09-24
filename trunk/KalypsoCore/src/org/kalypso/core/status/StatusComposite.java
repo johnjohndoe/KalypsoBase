@@ -41,6 +41,7 @@
 package org.kalypso.core.status;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -73,7 +74,7 @@ import org.kalypso.core.i18n.Messages;
  * <dt><b>Events:</b></dt>
  * <dd>(none)</dd>
  * </dl>
- * 
+ *
  * @author Gernot Belger
  */
 @SuppressWarnings("restriction")
@@ -114,7 +115,7 @@ public class StatusComposite extends Composite
 
   /**
    * The constructor.
-   * 
+   *
    * @param parent
    *          The parent composite.
    * @param style
@@ -127,7 +128,7 @@ public class StatusComposite extends Composite
 
   /**
    * The constructor.
-   * 
+   *
    * @param toolkit
    *          The form toolkit. May be null.
    * @param parent
@@ -181,7 +182,7 @@ public class StatusComposite extends Composite
     setStatus( m_status );
 
     /* Create the layout. */
-    super.setLayout( Layouts.createGridLayout( colCount ) );
+    super.setLayout( GridLayoutFactory.fillDefaults().numColumns( colCount ).create() );
   }
 
   private void createImageLabel( )
@@ -280,7 +281,7 @@ public class StatusComposite extends Composite
 
   /**
    * Sets the status of this composites and updates it to show it in the composite.
-   * 
+   *
    * @exception SWTException
    *              <ul>
    *              <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
@@ -398,6 +399,10 @@ public class StatusComposite extends Composite
     return getStatusImage( status.getSeverity() );
   }
 
+  /**
+   * Get the appropriate image for the given status severity.<br>
+   * The returned images does not need to be disposed.
+   */
   public static Image getStatusImage( final int severity )
   {
     switch( severity )

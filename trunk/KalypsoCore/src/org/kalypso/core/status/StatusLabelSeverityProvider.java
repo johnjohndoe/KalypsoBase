@@ -50,9 +50,6 @@ import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
 @SuppressWarnings("restriction")
 public class StatusLabelSeverityProvider extends StatusLabelProvider
 {
-  /**
-   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getImage(java.lang.Object)
-   */
   @Override
   public Image getImage( final Object element )
   {
@@ -66,5 +63,4 @@ public class StatusLabelSeverityProvider extends StatusLabelProvider
 
     return StatusComposite.getStatusImage( status );
   }
-
 }
