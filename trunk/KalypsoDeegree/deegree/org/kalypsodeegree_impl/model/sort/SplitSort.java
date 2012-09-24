@@ -452,7 +452,7 @@ public class SplitSort implements FeatureList
   @Override
   public synchronized Iterator< ? > iterator( )
   {
-    return new SplitSortIterator( this, 0 );
+    return listIterator();
   }
 
   /**
@@ -463,7 +463,7 @@ public class SplitSort implements FeatureList
   @Override
   public synchronized ListIterator< ? > listIterator( )
   {
-    return new SplitSortIterator( this, 0 );
+    return listIterator( 0 );
   }
 
   /**

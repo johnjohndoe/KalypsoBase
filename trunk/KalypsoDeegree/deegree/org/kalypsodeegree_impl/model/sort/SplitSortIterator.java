@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.sort;
 
+import java.util.ConcurrentModificationException;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
@@ -50,48 +51,85 @@ public class SplitSortIterator implements ListIterator<Object>
 {
   private final SplitSort m_splitSort;
 
-  private int m_index;
+  /**
+   * Index of element to be returned by subsequent call to next.
+   */
+  private int m_cursor;
+
+  /**
+   * Index of element returned by most recent call to next or
+   * previous. Reset to -1 if this element is deleted by a call
+   * to remove.
+   */
+  private int m_lastRet = -1;
+
+  /**
+   * The modCount value that the iterator believes that the backing
+   * List should have. If this expectation is violated, the iterator
+   * has detected concurrent modification.
+   */
+  // int m_expectedModCount = m_modCount;
 
   public SplitSortIterator( final SplitSort splitSort, final int index )
   {
     m_splitSort = splitSort;
-    m_index = index;
+    m_cursor = index;
+  }
+
+  private Object get( final int index )
+  {
+    return m_splitSort.get( index );
   }
 
   @Override
   public boolean hasNext( )
   {
-    return m_index < m_splitSort.size();
+    return m_cursor < m_splitSort.size();
   }
 
   @Override
   public Object next( )
   {
+    checkForComodification();
+
     try
     {
-      return m_splitSort.get( m_index++ );
+      final int i = m_cursor;
+      final Object next = get( i );
+      m_lastRet = i;
+      m_cursor = i + 1;
+      return next;
     }
     catch( final IndexOutOfBoundsException e )
     {
+      checkForComodification();
+
       throw new NoSuchElementException();
     }
+
   }
 
   @Override
   public boolean hasPrevious( )
   {
-    return m_index > 0;
+    return m_cursor != 0;
   }
 
   @Override
   public Object previous( )
   {
+    checkForComodification();
+
     try
     {
-      return m_splitSort.get( --m_index );
+      final int i = m_cursor - 1;
+      final Object previous = get( i );
+      m_lastRet = m_cursor = i;
+      return previous;
     }
     catch( final IndexOutOfBoundsException e )
     {
+      checkForComodification();
       throw new NoSuchElementException();
     }
   }
@@ -99,30 +137,78 @@ public class SplitSortIterator implements ListIterator<Object>
   @Override
   public int nextIndex( )
   {
-    return m_index;
+    return m_cursor;
   }
 
   @Override
   public int previousIndex( )
   {
-    return m_index - 1;
+    return m_cursor - 1;
   }
 
   @Override
   public void remove( )
   {
-    throw new UnsupportedOperationException();
+    if( m_lastRet < 0 )
+      throw new IllegalStateException();
+
+    checkForComodification();
+
+    try
+    {
+      m_splitSort.remove( m_lastRet );
+      if( m_lastRet < m_cursor )
+        m_cursor--;
+      m_lastRet = -1;
+      // m_expectedModCount = modCount;
+    }
+    catch( final IndexOutOfBoundsException e )
+    {
+      throw new ConcurrentModificationException();
+    }
   }
 
   @Override
   public void set( final Object e )
   {
-    throw new UnsupportedOperationException();
+    if( m_lastRet < 0 )
+      throw new IllegalStateException();
+
+    checkForComodification();
+
+    try
+    {
+      m_splitSort.set( m_lastRet, e );
+      // m_expectedModCount = modCount;
+    }
+    catch( final IndexOutOfBoundsException ex )
+    {
+      throw new ConcurrentModificationException();
+    }
   }
 
   @Override
   public void add( final Object e )
   {
-    throw new UnsupportedOperationException();
+    checkForComodification();
+
+    try
+    {
+      final int i = m_cursor;
+      m_splitSort.add( i, e );
+      m_lastRet = -1;
+      m_cursor = i + 1;
+      // m_expectedModCount = modCount;
+    }
+    catch( final IndexOutOfBoundsException ex )
+    {
+      throw new ConcurrentModificationException();
+    }
+  }
+
+  private final void checkForComodification( )
+  {
+//    if( m_modCount != m_m_expectedModCount )
+//      throw new ConcurrentModificationException();
   }
 }
