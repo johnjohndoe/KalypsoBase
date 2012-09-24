@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
@@ -34,7 +35,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.SelectionDialog;
 import org.eclipse.ui.internal.WorkbenchMessages;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 
 /**
  * A standard dialog which solicits a list of selections from the user. This class is configured with an arbitrary data
@@ -69,7 +69,7 @@ public class TreeSelectionDialog extends SelectionDialog
 
   /**
    * Creates a tree selection dialog.
-   * 
+   *
    * @param parentShell
    *          the parent shell
    * @param input
@@ -102,16 +102,18 @@ public class TreeSelectionDialog extends SelectionDialog
 
   /**
    * Add the selection and deselection buttons to the dialog.
-   * 
+   *
    * @param composite
    *          org.eclipse.swt.widgets.Composite
    */
   private void addSelectionButtons( final Composite composite )
   {
     final Composite buttonComposite = new Composite( composite, SWT.NONE );
-    final GridLayout layout = Layouts.createGridLayout();
+
+    final GridLayout layout = GridLayoutFactory.fillDefaults().create();
     layout.horizontalSpacing = convertHorizontalDLUsToPixels( IDialogConstants.HORIZONTAL_SPACING );
     buttonComposite.setLayout( layout );
+
     buttonComposite.setLayoutData( new GridData( SWT.END, SWT.TOP, true, false ) );
 
     final Button selectButton = createButton( buttonComposite, IDialogConstants.SELECT_ALL_ID, SELECT_ALL_TITLE, false );
@@ -208,7 +210,7 @@ public class TreeSelectionDialog extends SelectionDialog
 
   /**
    * Returns the viewer used to show the list.
-   * 
+   *
    * @return the viewer, or <code>null</code> if not yet created
    */
   protected CheckboxTreeViewer getViewer( )

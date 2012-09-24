@@ -194,7 +194,7 @@ public class BufferPaintJob extends Job
     }
     catch( final Throwable t )
     {
-      return StatusUtilities.createStatus( IStatus.ERROR, "Failed to paint buffer image", t );
+      return new Status( IStatus.ERROR, EclipseRCPContributionsPlugin.ID, "Failed to paint buffer image", t ); //$NON-NLS-1$
     }
     finally
     {

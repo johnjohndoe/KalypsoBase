@@ -44,6 +44,7 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -55,7 +56,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 
 /**
  * @author Dirk Kuch
@@ -106,14 +106,11 @@ public class ElementsComposite extends Composite implements IElementsComposite
     m_selectedPage = selectedPage;
     m_style = style;
 
-    setLayout( Layouts.createGridLayout() );
+    setLayout( GridLayoutFactory.fillDefaults().create() );
 
     update();
   }
 
-  /**
-   * @see org.eclipse.swt.widgets.Widget#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -125,9 +122,6 @@ public class ElementsComposite extends Composite implements IElementsComposite
     super.dispose();
   }
 
-  /**
-   * @see org.eclipse.swt.widgets.Control#update()
-   */
   @Override
   public final void update( )
   {
@@ -145,8 +139,8 @@ public class ElementsComposite extends Composite implements IElementsComposite
     }
 
     m_body = m_toolkit.createComposite( this );
+    GridLayoutFactory.fillDefaults().applyTo( m_body );
 
-    m_body.setLayout( Layouts.createGridLayout() );
     m_body.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     if( isComboEnabledHead() )
@@ -189,9 +183,6 @@ public class ElementsComposite extends Composite implements IElementsComposite
     viewer.setContentProvider( new ArrayContentProvider() );
     viewer.setLabelProvider( new LabelProvider()
     {
-      /**
-       * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
-       */
       @Override
       public String getText( final Object element )
       {

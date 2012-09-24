@@ -44,6 +44,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -67,7 +68,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.internal.WorkbenchMessages;
 import org.kalypso.contribs.eclipse.jface.viewers.ColumnViewerTooltipListener;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 
 /**
  * @author Gernot Belger
@@ -180,8 +180,8 @@ public class ListSelectionComposite
   private void addSelectionButtons( final CheckboxTableViewer checkboxViewer, final Composite composite )
   {
     final Composite buttonComposite = new Composite( composite, SWT.NONE );
-    final GridLayout layout = Layouts.createGridLayout();
-// layout.horizontalSpacing = convertHorizontalDLUsToPixels( IDialogConstants.HORIZONTAL_SPACING );
+    final GridLayout layout = GridLayoutFactory.fillDefaults().create();
+    // layout.horizontalSpacing = convertHorizontalDLUsToPixels( IDialogConstants.HORIZONTAL_SPACING );
     layout.horizontalSpacing = IDialogConstants.HORIZONTAL_SPACING;
     buttonComposite.setLayout( layout );
     buttonComposite.setLayoutData( new GridData( SWT.END, SWT.TOP, true, false ) );
