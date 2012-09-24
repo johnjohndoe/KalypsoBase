@@ -128,5 +128,4 @@ public abstract class StatusLabelProvider extends ColumnLabelProvider
   {
     return null;
   }
-
 }
