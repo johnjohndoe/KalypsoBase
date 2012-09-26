@@ -1,6 +1,5 @@
 package org.kalypso.chart.ui.editor.mousehandler;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
@@ -72,7 +71,6 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
     model.accept( visitor );
 
     final IEditableChartLayer[] layers = visitor.getLayers();
-    ArrayUtils.reverse( layers );
 
     for( final IEditableChartLayer layer : layers )
     {
@@ -108,6 +106,7 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
   public void mouseMove( final MouseEvent e )
   {
     super.mouseMove( e );
+
     setToolInfo( null );
 
     final Point p = new Point( e.x, e.y );

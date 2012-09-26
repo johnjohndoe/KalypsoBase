@@ -121,7 +121,6 @@ public abstract class AbstractChartHandler implements IChartHandler
       if( plot.getCursor() != plot.getDisplay().getSystemCursor( m_cursor ) )
         plot.setCursor( swtCursor );
     }
-
   }
 
   @Override
