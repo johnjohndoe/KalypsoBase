@@ -86,7 +86,7 @@ public interface IProfile extends IObservation<TupleResult>
 
   /**
    * remove the current ProfileObject and adds the given ProfileObject
-   * 
+   *
    * @return the oldObject
    * @param building
    *          must not be null, in this case use removeProfileObject()
@@ -245,18 +245,20 @@ public interface IProfile extends IObservation<TupleResult>
 
   IProfilePointMarker[] getPointMarkers( );
 
-  @Deprecated
   /**
-   * @deprecated use {@link IProfil#doTransaction(IProfileTransaction)}
    * Locks all change events until {@link #stopTransaction(Object, ProfilChangeHint)} is called.
+   *
+   * @deprecated use {@link IProfil#doTransaction(IProfileTransaction)}
    */
+  @Deprecated
   void startTransaction( Object lock );
 
-  @Deprecated
   /**
-   * @deprecated use {@link IProfil#doTransaction(IProfileTransaction)}
    * Unlocks change events and fire one big event with the given hint.
+   *
+   * @deprecated use {@link IProfil#doTransaction(IProfileTransaction)}
    */
+  @Deprecated
   void stopTransaction( Object lock );
 
   String getSrsName( );
