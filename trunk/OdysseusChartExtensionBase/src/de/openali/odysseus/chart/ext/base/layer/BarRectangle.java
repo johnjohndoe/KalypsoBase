@@ -46,6 +46,8 @@ import java.util.Set;
 
 import org.eclipse.swt.graphics.Rectangle;
 
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
+
 /**
  * @author Gernot Belger
  */
@@ -53,14 +55,14 @@ public class BarRectangle implements IRectangleProvider
 {
   private final Rectangle m_rectangle;
 
-  private Object m_data;
-
   private final Set<String> m_styleNames = new LinkedHashSet<>();
 
-  public BarRectangle( final Object data, final Rectangle rectangle, final String[] styleNames )
+  private EditInfo m_info;
+
+  public BarRectangle( final Rectangle rectangle, final String[] styleNames, final EditInfo info )
   {
-    m_data = data;
     m_rectangle = rectangle;
+    m_info = info;
     m_styleNames.addAll( Arrays.asList( styleNames ) );
   }
 
@@ -80,13 +82,13 @@ public class BarRectangle implements IRectangleProvider
     return m_styleNames.toArray( new String[m_styleNames.size()] );
   }
 
-  public Object getData( )
+  public EditInfo getEditInfo( )
   {
-    return m_data;
+    return m_info;
   }
 
-  public void setData( final Object data )
+  public void setEditInfo( final EditInfo info )
   {
-    m_data = data;
+    m_info = info;
   }
 }

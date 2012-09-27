@@ -28,7 +28,7 @@ public abstract class AbstractBarLayer extends AbstractChartLayer implements ITo
 {
   private ILegendEntry[] m_legendEntries;
 
-  private RectangleIndex<BarRectangle> m_index;
+  private HoverIndex m_hoverIndex;
 
   public AbstractBarLayer( final ILayerProvider provider, final IStyleSet styleSet )
   {
@@ -121,7 +121,7 @@ public abstract class AbstractBarLayer extends AbstractChartLayer implements ITo
       if( monitor.isCanceled() )
         return;
 
-      m_index = paintManager.getIndex();
+      m_hoverIndex = paintManager.getIndex();
     }
     catch( final OperationCanceledException e )
     {
@@ -134,21 +134,14 @@ public abstract class AbstractBarLayer extends AbstractChartLayer implements ITo
   @Override
   public EditInfo getHover( final Point pos )
   {
-    if( m_index == null )
+    if( m_hoverIndex == null )
       return null;
 
-    final BarRectangle bar = m_index.findElement( pos );
-    if( bar == null )
-      return null;
-
-    return getEditInfo( bar, pos );
+    return m_hoverIndex.findElement( pos );
   }
 
-  /**
-   * Overwrite to implement tooltip and edit behavior
-   */
-  protected EditInfo getEditInfo( @SuppressWarnings("unused") final BarRectangle bar, @SuppressWarnings("unused") final Point pos )
+  protected void invalidateHoverIndex( )
   {
-    return null;
+    m_hoverIndex = null;
   }
 }

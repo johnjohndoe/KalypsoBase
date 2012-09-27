@@ -6,6 +6,7 @@ import de.openali.odysseus.chart.ext.base.data.AbstractDomainIntervalValueData;
 import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
@@ -68,5 +69,11 @@ public class DomainIntervalBarLayer extends AbstractBarLayer
       return null;
     final IDataOperator dop = new DataOperatorHelper().getDataOperator( getDomainAxis().getDataClass() );
     return DataRange.create( dop.logicalToNumeric( domainRange.getMin() ), dop.logicalToNumeric( domainRange.getMax() ) );
+  }
+
+  protected EditInfo getEditInfo( @SuppressWarnings( "unused" ) final int index )
+  {
+    // TODO: for now, no info yet
+    return null;
   }
 }
