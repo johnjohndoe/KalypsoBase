@@ -51,57 +51,60 @@ import org.eclipse.swt.graphics.Rectangle;
 import com.infomatiq.jsi.SpatialIndex;
 import com.infomatiq.jsi.rtree.RTree;
 
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
+
 /**
  * @author Gernot Belger
  */
-public class RectangleIndex<DATA extends IRectangleProvider>
+public class HoverIndex
 {
   private final SpatialIndex m_index = new RTree();
 
-  private final List<DATA> m_elements = new ArrayList<>();
+  private final List<EditInfo> m_elements = new ArrayList<>();
 
-  public RectangleIndex( )
+  public HoverIndex( )
   {
     m_index.init( null );
   }
 
-  public synchronized void addElement( final DATA rectangle )
+  public synchronized void addElement( final Rectangle rect, final EditInfo info )
   {
     final int id = m_elements.size();
 
-    m_elements.add( rectangle );
-
-    final Rectangle rect = rectangle.getRectangle();
+    m_elements.add( info );
 
     final com.infomatiq.jsi.Rectangle jsiRect = new com.infomatiq.jsi.Rectangle( rect.x, rect.y, rect.x + rect.width, rect.y + rect.height );
     m_index.add( jsiRect, id );
   }
 
-  public synchronized DATA findElement( final Point pos )
+  public synchronized EditInfo findElement( final Point pos )
   {
     final com.infomatiq.jsi.Point searchPoint = new com.infomatiq.jsi.Point( pos.x, pos.y );
 
-    // Everything is in pixels here, so we directly use 5px
-    final float snapDist = 5.0f;
-
-    final List<DATA> result = new ArrayList<>( 1 );
+    final List<EditInfo> result = new ArrayList<>( 1 );
     result.add( null );
 
-    final List<DATA> elements = m_elements;
+    final List<EditInfo> elements = m_elements;
 
     final TIntProcedure receiver = new TIntProcedure()
     {
       @Override
       public boolean execute( final int index )
       {
-        final DATA element = elements.get( index );
+        final EditInfo element = elements.get( index );
         result.set( 0, element );
         return false;
       }
     };
 
-    m_index.nearest( searchPoint, receiver, snapDist );
+    // REMARK: use snap distance 0, we assume that the given rectangle was already including a 'snap'
+    m_index.nearest( searchPoint, receiver, 0f );
 
-    return result.get( 0 );
+    final EditInfo info = result.get( 0 );
+    if( info == null )
+      return null;
+
+    /* Position was not set during paint... */
+    return new EditInfo( info.getLayer(), info.getHoverFigure(), info.getEditFigure(), info.getData(), info.getText(), pos );
   }
 }

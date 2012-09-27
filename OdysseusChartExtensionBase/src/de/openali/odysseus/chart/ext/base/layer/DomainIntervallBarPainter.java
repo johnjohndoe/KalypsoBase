@@ -46,6 +46,7 @@ import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.ext.base.data.AbstractDomainIntervalValueData;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
 
 /**
@@ -98,7 +99,9 @@ public class DomainIntervallBarPainter implements IBarLayerPainter
       final Point p2 = m_layer.getCoordinateMapper().logicalToScreen( endValue, targetValue );
       final Rectangle rect = new Rectangle( p1.x, p1.y, p2.x - p1.x, m_screenHeight - p2.y );
 
-      final BarRectangle barRect = new BarRectangle( i, rect, m_styleNames );
+      final EditInfo info = m_layer.getEditInfo( i );
+      final BarRectangle barRect = new BarRectangle( rect, m_styleNames, info );
+
       m_paintManager.addRectangle( barRect );
     }
   }

@@ -47,6 +47,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.framework.model.figure.impl.FullRectangleFigure;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
@@ -58,7 +59,7 @@ import de.openali.odysseus.chart.framework.model.style.IStyleSet;
  */
 public class BarPaintManager
 {
-  private final RectangleIndex<BarRectangle> m_index = new RectangleIndex<>();
+  private final HoverIndex m_index = new HoverIndex();
 
   private final Map<String, FullRectangleFigure> m_figures = new HashMap<>();
 
@@ -89,7 +90,8 @@ public class BarPaintManager
     if( isInScreen( rectangle ) )
     {
       /* index this element */
-      m_index.addElement( paintRectangle );
+      final EditInfo info = paintRectangle.getEditInfo();
+      m_index.addElement( rectangle, info );
 
       /* paint element */
       final String[] styleNames = paintRectangle.getStyles();
@@ -118,7 +120,7 @@ public class BarPaintManager
     return m_figures.get( styleName );
   }
 
-  public RectangleIndex<BarRectangle> getIndex( )
+  public HoverIndex getIndex( )
   {
     return m_index;
   }

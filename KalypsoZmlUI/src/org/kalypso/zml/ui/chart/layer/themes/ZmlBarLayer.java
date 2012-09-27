@@ -49,7 +49,6 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.swt.graphics.Point;
 import org.joda.time.Period;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
@@ -62,9 +61,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.metadata.MetadataHelper;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ogc.sensor.request.IRequest;
-import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
-import org.kalypso.ogc.sensor.visitor.IObservationValueContainer;
 import org.kalypso.zml.core.diagram.base.IZmlLayer;
 import org.kalypso.zml.core.diagram.base.IZmlLayerProvider;
 import org.kalypso.zml.core.diagram.data.IZmlLayerDataHandler;
@@ -74,13 +71,10 @@ import org.kalypso.zml.ui.chart.layer.filters.IZmlChartLayerFilter;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractBarLayer;
 import de.openali.odysseus.chart.ext.base.layer.BarPaintManager;
-import de.openali.odysseus.chart.ext.base.layer.BarRectangle;
 import de.openali.odysseus.chart.ext.base.layer.IBarLayerPainter;
 import de.openali.odysseus.chart.framework.OdysseusChartExtensions;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
-import de.openali.odysseus.chart.framework.model.figure.IPaintable;
-import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyle;
@@ -91,7 +85,7 @@ import de.openali.odysseus.chart.framework.model.style.impl.StyleSetVisitor;
  * @author Dirk Kuch
  * @author kimwerner
  */
-public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer // , ITooltipChartLayer
+public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
 {
   private static final String PARAMETER_FIXED_HEIGHT = "fixedHeight"; //$NON-NLS-1$
 
@@ -180,6 +174,8 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer // , IToo
   public void onObservationChanged( final ContentChangeType type )
   {
     m_range.invalidateRange();
+
+    invalidateHoverIndex();
 
     getEventHandler().fireLayerContentChanged( this, type );
   }
@@ -327,44 +323,6 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer // , IToo
     }
 
     setDataHandler( handler );
-  }
-
-  @Override
-  protected EditInfo getEditInfo( final BarRectangle bar, final Point pos )
-  {
-    // TODO: highlight rectangle
-    final IPaintable hoverFigure = null;
-    final IPaintable editFigure = null;
-    final IObservationValueContainer editData = (IObservationValueContainer)bar.getData();
-    if( editData == null )
-      return null;
-
-    // TODO: configure formatting via layer parameters?
-    final StringBuilder label = new StringBuilder();
-
-    final IAxis[] axes = editData.getAxes();
-    for( final IAxis axis : axes )
-    {
-      if( AxisUtils.isDataSrcAxis( axis ) || AxisUtils.isStatusAxis( axis ) )
-        continue;
-
-      try
-      {
-        // FIXME: improve -> depends on data type; format double and dates correctly, etc...
-        // FIXME: use same mechanism as is used by table
-        label.append( axis.getName() );
-        label.append( "  " );
-        label.append( editData.get( axis ) );
-        label.append( String.format( "[%s]", axis.getUnit() ) );
-        label.append( '\n' );
-      }
-      catch( final SensorException e )
-      {
-        e.printStackTrace();
-      }
-    }
-
-    return new EditInfo( this, hoverFigure, editFigure, editData, label.toString(), pos );
   }
 
   IChartLayerFilter getStyleFilter( final String styleName, final IObservation observation )

@@ -67,6 +67,8 @@ import de.openali.odysseus.chart.ext.base.layer.BarPaintManager;
 import de.openali.odysseus.chart.ext.base.layer.BarRectangle;
 import de.openali.odysseus.chart.ext.base.layer.IBarLayerPainter;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
+import de.openali.odysseus.chart.framework.model.figure.IPaintable;
+import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
@@ -177,7 +179,8 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPaint
       initRectangleFirstTime( domainValue, currentX );
 
       /* set data to current bar: the absolute max wins */
-      final IObservationValueContainer oldContainer = (IObservationValueContainer) m_currentBar.getData();
+      final EditInfo oldInfo = m_currentBar.getEditInfo();
+      final IObservationValueContainer oldContainer = oldInfo == null ? null : (IObservationValueContainer)(oldInfo.getData());
 
       /* update current bar */
       final Rectangle currentRectangle = m_currentBar.getRectangle();
@@ -196,7 +199,8 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPaint
         m_currentBar.addStyle( currentStyles );
 
         final IObservationValueContainer currentMaxData = calculateCurrentMaxData( oldContainer, container, targetValue );
-        m_currentBar.setData( currentMaxData );
+        final EditInfo info = createInfo( currentMaxData );
+        m_currentBar.setEditInfo( info );
       }
 
       // TODO: we continue even offscreen, in order to correctly handle the first rectangle
@@ -218,7 +222,7 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPaint
         currentRectangle.width = 0;
         currentRectangle.height = 0;
 
-        m_currentBar = new BarRectangle( null, m_currentBar.getRectangle(), new String[] {} );
+        m_currentBar = new BarRectangle( m_currentBar.getRectangle(), new String[] {}, null );
       }
       else
       {
@@ -305,7 +309,8 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPaint
       final int lastX = calculateFirstX( currentTime, screenCurrentX );
 
       final Rectangle currentRectangle = new Rectangle( lastX, m_baseLine, 0, 0 );
-      m_currentBar = new BarRectangle( null, currentRectangle, new String[] {} );
+
+      m_currentBar = new BarRectangle( currentRectangle, new String[] {}, null );
     }
   }
 
@@ -328,5 +333,41 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPaint
 
       return m_mapper.numericToScreen( numericPrev, 0 ).x;
     }
+  }
+
+  private EditInfo createInfo( final IObservationValueContainer editData )
+  {
+    // TODO: highlight rectangle
+    final IPaintable hoverFigure = null;
+    final IPaintable editFigure = null;
+    if( editData == null )
+      return null;
+
+    // TODO: configure formatting via layer parameters?
+    final StringBuilder label = new StringBuilder();
+
+    final IAxis[] axes = editData.getAxes();
+    for( final IAxis axis : axes )
+    {
+      if( AxisUtils.isDataSrcAxis( axis ) || AxisUtils.isStatusAxis( axis ) )
+        continue;
+
+      try
+      {
+        // FIXME: improve -> depends on data type; format double and dates correctly, etc...
+        // FIXME: use same mechanism as is used by table
+        label.append( axis.getName() );
+        label.append( "  " );
+        label.append( editData.get( axis ) );
+        label.append( String.format( "[%s]", axis.getUnit() ) );
+        label.append( '\n' );
+      }
+      catch( final SensorException e )
+      {
+        e.printStackTrace();
+      }
+    }
+
+    return new EditInfo( m_layer, hoverFigure, editFigure, editData, label.toString(), null );
   }
 }
