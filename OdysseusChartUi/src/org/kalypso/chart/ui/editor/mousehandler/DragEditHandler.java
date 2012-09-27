@@ -8,6 +8,7 @@ import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.manager.visitors.EditableChartLayerVisitor;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 
@@ -55,13 +56,9 @@ public class DragEditHandler extends AbstractChartDragHandler
     if( m_editInfo == null )
       m_editInfo = editInfo;
 
-    if( m_editInfo.getLayer() != null )
-    {
-      if( ((IEditableChartLayer) editInfo.getLayer()).isLocked() )
-        m_editInfo = null;
-      else
-        getChart().setEditInfo( ((IEditableChartLayer) editInfo.getLayer()).drag( start, m_editInfo ) );
-    }
+    final ITooltipChartLayer layer = m_editInfo.getLayer();
+    if( layer instanceof IEditableChartLayer )
+      getChart().setEditInfo( ((IEditableChartLayer)layer).drag( start, m_editInfo ) );
   }
 
   @Override
@@ -70,7 +67,7 @@ public class DragEditHandler extends AbstractChartDragHandler
     try
     {
       if( editInfo != null && editInfo.getLayer() != null )
-        ((IEditableChartLayer) editInfo.getLayer()).commitDrag( start, editInfo );
+        ((IEditableChartLayer)editInfo.getLayer()).commitDrag( start, editInfo );
     }
     finally
     {

@@ -67,7 +67,7 @@ public class EditableChartLayerVisitor implements IChartLayerVisitor2
     if( layer instanceof IEditableChartLayer )
     {
       final IEditableChartLayer editable = (IEditableChartLayer) layer;
-      if( !editable.isLocked() && editable.isVisible() )
+      if( editable.isVisible() )
         m_layers.add( editable );
     }
 

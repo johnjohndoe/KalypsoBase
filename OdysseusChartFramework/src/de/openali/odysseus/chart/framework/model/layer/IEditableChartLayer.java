@@ -50,11 +50,4 @@ public interface IEditableChartLayer extends ITooltipChartLayer
   EditInfo drag( Point newPos, EditInfo dragStartData );
 
   EditInfo commitDrag( Point point, EditInfo dragStartData );
-
-  /**
-   * deny editing for this layer
-   */
-  void lockLayer( boolean isLocked );
-
-  boolean isLocked( );
 }

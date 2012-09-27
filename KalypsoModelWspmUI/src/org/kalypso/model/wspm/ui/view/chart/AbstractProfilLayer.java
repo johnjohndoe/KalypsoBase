@@ -75,8 +75,6 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 {
   private final String m_domainComponent;
 
-  private boolean m_isLocked = false;
-
   private ILineStyle m_lineStyle = null;
 
   private ILineStyle m_lineStyleActive = null;
@@ -418,18 +416,6 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     {
       return e.getLocalizedMessage();
     }
-  }
-
-  @Override
-  public boolean isLocked( )
-  {
-    return m_isLocked;
-  }
-
-  @Override
-  public void lockLayer( final boolean isLocked )
-  {
-    m_isLocked = isLocked;
   }
 
   @Override
