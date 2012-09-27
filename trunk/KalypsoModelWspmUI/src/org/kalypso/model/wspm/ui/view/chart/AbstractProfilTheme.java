@@ -53,10 +53,8 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
-import de.openali.odysseus.chart.framework.model.layer.IEditableChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
-import de.openali.odysseus.chart.framework.model.layer.manager.visitors.EditableChartLayerVisitor;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 
 /**
@@ -184,8 +182,9 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer
   public EditInfo drag( final Point newPos, final EditInfo dragStartData )
   {
     final IProfilChartLayer layer = getActiveLayer();
-    if( layer == null || layer.isLocked() )
+    if( layer == null )
       return null;
+
     return layer.drag( newPos, dragStartData );
   }
 
@@ -273,24 +272,6 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer
   public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
   {
     return null;
-  }
-
-  @Override
-  public void lockLayer( final boolean locked )
-  {
-    if( locked != isLocked() )
-    {
-      final EditableChartLayerVisitor visitor = new EditableChartLayerVisitor();
-      accept( visitor );
-
-      for( final IEditableChartLayer layer : visitor.getLayers() )
-      {
-        if( layer != this )
-          layer.lockLayer( locked );
-      }
-    }
-
-    super.lockLayer( locked );
   }
 
   @Override
