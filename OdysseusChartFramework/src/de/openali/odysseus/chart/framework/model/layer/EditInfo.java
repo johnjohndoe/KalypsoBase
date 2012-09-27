@@ -1,6 +1,7 @@
 package de.openali.odysseus.chart.framework.model.layer;
 
-import org.eclipse.swt.SWT;
+import java.awt.event.MouseEvent;
+
 import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
@@ -19,11 +20,11 @@ public class EditInfo implements Cloneable
 
   private final Object m_data;
 
-  private Point m_position;
+  private final Point m_position;
 
-  private String m_text;
+  private final String m_text;
 
-  private int m_mouseButton;
+  private final int m_mouseButton;
 
   public EditInfo( final ITooltipChartLayer editLayer, final IPaintable hoverFigure, final IPaintable editFigure, final Object editData, final String editText, final Point mousePosition )
   {
@@ -31,15 +32,22 @@ public class EditInfo implements Cloneable
     m_hoverFigure = hoverFigure;
     m_editFigure = editFigure;
     m_data = editData;
-
-    setText( editText );
-    setPosition( mousePosition );
-    setMouseButton( SWT.NONE );
+    m_text = editText;
+    m_position = mousePosition;
+    m_mouseButton = MouseEvent.NOBUTTON;
   }
 
-  /**
-   * @see java.lang.Object#clone()
-   */
+  public EditInfo( final EditInfo info )
+  {
+    m_layer = info.getLayer();
+    m_hoverFigure = info.getHoverFigure();
+    m_editFigure = info.getEditFigure();
+    m_data = info.getData();
+    m_text = info.getText();
+    m_position = info.getPosition();
+    m_mouseButton = info.getMouseButton();
+  }
+
   @Override
   public EditInfo clone( )
   {
@@ -66,29 +74,14 @@ public class EditInfo implements Cloneable
     return m_data;
   }
 
-  public void setPosition( final Point position )
-  {
-    m_position = position;
-  }
-
   public Point getPosition( )
   {
     return m_position;
   }
 
-  public void setText( final String text )
-  {
-    m_text = text;
-  }
-
   public String getText( )
   {
     return m_text;
-  }
-
-  public void setMouseButton( final int mouseButton )
-  {
-    m_mouseButton = mouseButton;
   }
 
   public int getMouseButton( )
