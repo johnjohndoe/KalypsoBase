@@ -81,6 +81,9 @@ public class FindLayerTooltipVisitor implements IChartLayerVisitor2
     if( !(chartLayer instanceof ITooltipChartLayer) )
       return true;
 
+    if( !chartLayer.isVisible() )
+      return true;
+
     final ITooltipChartLayer layer = (ITooltipChartLayer) chartLayer;
     final EditInfo info = layer.getHover( m_point );
     if( Objects.isNotNull( info ) )

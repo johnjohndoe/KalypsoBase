@@ -57,7 +57,7 @@ public class TooltipChartLayerVisitor extends AbstractChartLayerVisitor
   @Override
   public void visit( final IChartLayer layer )
   {
-    if( layer instanceof ITooltipChartLayer )
+    if( layer instanceof ITooltipChartLayer && layer.isVisible() )
       m_layers.add( (ITooltipChartLayer) layer );
   }
 
