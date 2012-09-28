@@ -47,7 +47,7 @@ import junit.framework.TestCase;
 
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.java.util.zip.ZipUtilities;
-import org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogOGC;
+import org.kalypso.contribs.ogc31.UrlCatalogOGC;
 
 /**
  * test succeedes when <br>
