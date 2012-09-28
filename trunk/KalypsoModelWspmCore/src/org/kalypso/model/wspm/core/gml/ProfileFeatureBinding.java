@@ -25,13 +25,10 @@ import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.gml.validation.ProfileFetureValidationListener;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileListener;
-import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.ProfileListenerAdapter;
 import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
 import org.kalypso.model.wspm.core.result.ProfileAndResults;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
-import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -72,7 +69,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     CACHE_DEFINITION.addCachedProperty( PROPERTY_PSEUDO_PROFILE, FEATURE_PROFILE );
     CACHE_DEFINITION.addCachedProperty( PROPERTY_PSEUDO_PROFILE, ObservationFeatureFactory.OM_RESULT );
     CACHE_DEFINITION.addCachedProperty( PROPERTY_PSEUDO_PROFILE, ObservationFeatureFactory.OM_RESULTDEFINITION );
-    CACHE_DEFINITION.addCachedProperty( PROPERTY_PSEUDO_PROFILE, MEMBER_OBSERVATION );
+    CACHE_DEFINITION.addCachedProperty( PROPERTY_PSEUDO_PROFILE, MEMBER_PROFILE_OBJECTS );
   }
 
   private final IProfileListener m_profilListener = new ProfileListenerAdapter()
@@ -169,7 +166,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
   }
 
   @Override
-  public IProfile getProfil( )
+  public IProfile getProfile( )
   {
     return getProperty( PROPERTY_PSEUDO_PROFILE, IProfile.class );
   }
@@ -229,22 +226,10 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
   }
 
   @SuppressWarnings( "unchecked" )
-  IObservation<TupleResult>[] getProfileObjects( )
+  Feature[] getProfileObjects( )
   {
-    final List< ? > objects = (List< ? >)getProperty( MEMBER_OBSERVATION );
-    if( objects.size() == 0 )
-      return new IObservation[] {};
-
-    final List<IObservation<TupleResult>> myResults = new ArrayList<>();
-
-    // iterate over all profile objects and create its IProfileObject representation
-    for( final Object obj : objects )
-    {
-      final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservation( (Feature)obj );
-      myResults.add( obs );
-    }
-
-    return myResults.toArray( new IObservation[] {} );
+    final FeatureList profileObjects = (FeatureList)getProperty( MEMBER_PROFILE_OBJECTS );
+    return profileObjects.toFeatures();
   }
 
   @Override
@@ -277,7 +262,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
 
   public static GM_Curve createProfileSegment( final IProfileFeature profile, final String pointMarkerName )
   {
-    final IProfile profil = profile.getProfil();
+    final IProfile profil = profile.getProfile();
     if( profil == null )
       return null;
 
@@ -297,7 +282,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
   @Override
   public LineString getJtsLine( ) throws GM_Exception
   {
-    final IProfile profil = getProfil();
+    final IProfile profil = getProfile();
     if( profil == null )
       return null;
 
@@ -329,7 +314,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
   {
     if( (hint.getEvent() & ProfileChangeHint.DATA_CHANGED) != 0 )
     {
-      final IProfile profile = getProfil();
+      final IProfile profile = getProfile();
       if( profile == null )
         return;
 
@@ -451,21 +436,16 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     }
   }
 
-  public void addProfileObject( final IProfileObject profileObject )
+  @Override
+  public String[] getMetadataKeys( )
   {
-    final IFeatureType featureType = getFeatureType();
-    final IFeatureType profileObjectType = featureType.getGMLSchema().getFeatureType( IObservation.QNAME_OBSERVATION );
-    final List<Feature> objects = (List<Feature>)getProperty( MEMBER_OBSERVATION );
-    if( objects == null )
-      throw new UnsupportedOperationException();
+    final List<String> metadataKeys = new ArrayList<>();
 
-    final IRelationType profileObjectParentRelation = ((FeatureList)objects).getPropertyType();
-    final Feature profileObjectFeature = getWorkspace().createFeature( this, profileObjectParentRelation, profileObjectType );
-    objects.add( profileObjectFeature );
+    final IFeatureBindingCollection<Metadata> metadata = getMetadata();
+    for( final Metadata existingData : metadata )
+      metadataKeys.add( existingData.getKey() );
 
-    ObservationFeatureFactory.toFeature( profileObject.getObservation(), profileObjectFeature );
-
-    // TODO event handling
+    return metadataKeys.toArray( new String[] {} );
   }
 
   @Override

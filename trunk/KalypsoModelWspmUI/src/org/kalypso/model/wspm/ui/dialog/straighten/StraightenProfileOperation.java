@@ -168,7 +168,7 @@ public class StraightenProfileOperation implements ICoreRunnableWithProgress
 
       /* Copy data of the temporary profile feature to the profile feature. */
       final ProfileFeatureBinding profileBinding = (ProfileFeatureBinding) profile;
-      profileBinding.updateWithProfile( tmpProfile.getProfil() );
+      profileBinding.updateWithProfile( tmpProfile.getProfile() );
       final ProfileSelection profileSelection = m_data.getProfileSelection();
       final Feature item = profileSelection.getItem( profile );
       if( item != null )
@@ -226,7 +226,7 @@ public class StraightenProfileOperation implements ICoreRunnableWithProgress
     final GM_Point gmTransformedPoint = (GM_Point) geoTransformer.transform( gmAnchorPoint );
 
     /* Create the new profile point. */
-    final IProfile profil = profile.getProfil();
+    final IProfile profil = profile.getProfile();
     final IProfileRecord point = profil.createProfilPoint();
 
     /* Calculate the values. */
@@ -264,7 +264,7 @@ public class StraightenProfileOperation implements ICoreRunnableWithProgress
       throw new IllegalStateException( "The first and second point are the same or too near to each other..." );
 
     /* Get the start width and end width. */
-    final IProfile profil = profile.getProfil();
+    final IProfile profil = profile.getProfile();
     final double firstWidth = Profiles.getWidth( profil, firstPoint );
     final double secondWidth = Profiles.getWidth( profil, secondPoint );
 
@@ -341,12 +341,12 @@ public class StraightenProfileOperation implements ICoreRunnableWithProgress
     else
     {
       /* Correct all points of the profile. */
-      final IProfile profil = profile.getProfil();
+      final IProfile profil = profile.getProfile();
       pointsToCorrect = profil.getPoints();
     }
 
     /* Get the profile. */
-    final IProfile profil = profile.getProfil();
+    final IProfile profil = profile.getProfile();
 
     /* Get the geo transformer. */
     final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( profile.getSrsName() );

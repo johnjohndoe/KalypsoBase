@@ -174,7 +174,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   public void executeClick( final EditInfo clickInfo )
   {
     final Object data = clickInfo.getData();
-    final Integer pos = data instanceof Integer ? (Integer) data : null;
+    final Integer pos = data instanceof Integer ? (Integer)data : null;
     final IComponent cmp = getTargetComponent();
     if( !Objects.isNull( cmp, pos ) )
     {
@@ -216,7 +216,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     if( Objects.isNull( min, max ) )
       return null;
 
-    return DataRange.create( (Number) min.getValue( domain ), (Number) max.getValue( domain ) );
+    return DataRange.create( (Number)min.getValue( domain ), (Number)max.getValue( domain ) );
   }
 
   protected ILineStyle getLineStyle( )
@@ -357,6 +357,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     {
       if( m_profil == null )
         return -1;
+
       m_targetPropIndex = m_profil.getResult().indexOfComponent( m_targetRangeProperty );
     }
 
@@ -382,8 +383,8 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     if( Objects.isNull( min, max ) )
       return null;
 
-    final Number minValue = (Number) min.getValue( target );
-    final Number maxValue = (Number) max.getValue( target );
+    final Number minValue = (Number)min.getValue( target );
+    final Number maxValue = (Number)max.getValue( target );
 
     if( Math.abs( minValue.doubleValue() - maxValue.doubleValue() ) < 0.001 )
       return DataRange.create( minValue.doubleValue() - 1, minValue.doubleValue() + 1 );
@@ -426,9 +427,10 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
       return;
 
     if( hint.isSelectionChanged() )
-    {
       getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
-    }
+
+    if( hint.isPointPropertiesChanged() )
+      m_targetPropIndex = -1;
   }
 
   @Override
@@ -471,6 +473,8 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   public void setProfil( final IProfile profil )
   {
     m_profil = profil;
+
+    m_targetPropIndex = -1;
   }
 
   protected Point toScreen( final IProfileRecord point )

@@ -398,7 +398,7 @@ public class TableView extends ViewPart implements ITupleResultViewerProvider, I
       m_profile.removeProfilListener( m_profileListener );
 
     // TODO: get the profile in the async method call
-    m_profile = provider == null ? null : provider.getProfil();
+    m_profile = provider == null ? null : provider.getProfile();
 
     if( m_profile != null )
     {

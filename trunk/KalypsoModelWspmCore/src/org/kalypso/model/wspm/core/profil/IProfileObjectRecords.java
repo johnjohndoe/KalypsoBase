@@ -16,11 +16,22 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.kalypso.model.wspm.core.profil.objects;
+package org.kalypso.model.wspm.core.profil;
 
 /**
  * @author Holger Albert
  */
-public interface IProfileObjectData
+public interface IProfileObjectRecords
 {
+  int getSize( );
+
+  IProfileObjectRecord addNewRecord( );
+
+  void addRecord( IProfileObjectRecord record );
+
+  IProfileObjectRecord getRecord( int index );
+
+  IProfileObjectRecord removeRecord( int index );
+
+  void clearRecords( );
 }

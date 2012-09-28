@@ -115,7 +115,7 @@ public class ValidateProfilesJob extends UIJob
       if( Objects.isNull( profileFeature ) )
         continue;
 
-      final IProfile profile = profileFeature.getProfil();
+      final IProfile profile = profileFeature.getProfile();
       if( Objects.isNull( profile ) )
         continue;
 

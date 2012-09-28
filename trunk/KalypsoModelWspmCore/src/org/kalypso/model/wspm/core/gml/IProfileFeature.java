@@ -70,7 +70,7 @@ public interface IProfileFeature extends Feature, IProfileProvider
 
   QName PROPERTY_SRS = new QName( IWspmConstants.NS_WSPMPROF, "srsName" ); //$NON-NLS-1$
 
-  QName MEMBER_OBSERVATION = new QName( IWspmConstants.NS_WSPMPROF, "member" ); //$NON-NLS-1$
+  QName MEMBER_PROFILE_OBJECTS = new QName( IWspmConstants.NS_WSPMPROF, "member" ); //$NON-NLS-1$
 
   QName MEMBER_IMAGE = new QName( IWspmConstants.NS_WSPMPROF, "imageMember" ); //$NON-NLS-1$
 
@@ -93,7 +93,7 @@ public interface IProfileFeature extends Feature, IProfileProvider
   void setBigStation( BigDecimal bigStation );
 
   @Override
-  IProfile getProfil( );
+  IProfile getProfile( );
 
   /**
    * Returns the profile geometry.<br/>
@@ -126,6 +126,8 @@ public interface IProfileFeature extends Feature, IProfileProvider
   Image addImage( URI photoURL );
 
   IFeatureBindingCollection<Image> getImages( );
+
+  String[] getMetadataKeys( );
 
   String getMetadata( String key );
 }

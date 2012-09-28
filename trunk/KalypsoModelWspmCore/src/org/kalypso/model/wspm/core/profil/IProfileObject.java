@@ -40,36 +40,30 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil;
 
-import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.TupleResult;
-
 /**
- * @author kimwerner
+ * @author Kim Werner
  */
 public interface IProfileObject
 {
   String getId( );
 
-  void cloneValuesFrom( IProfileObject other );
+  String getTypeLabel( );
 
-  /**
-   * @return the keys this Object held as a key,value
-   * @see getValueFor(key)
-   */
-  IComponent[] getObjectProperties( );
+  String[] getProperties( );
 
-  IObservation<TupleResult> getObservation( );
+  String getPropertyLabel( String property );
 
-  IComponent getObjectProperty( final String componentId );
-
-  Object getValue( IComponent component );
-
-  Object getValueFor( String componentID );
-
-  void setValue( IComponent component, Object value );
-
-  void setValueFor( String componentID, Object value );
+  IProfileObjectRecords getRecords( );
 
   IProfileMetadata getMetadata( );
+
+  String getValue( String key, String defaultValue );
+
+  void setValue( String key, String value );
+
+  String removeValue( String key );
+
+  void addProfileObjectListener( IProfileObjectListener listener );
+
+  void removeProfileObjectListener( IProfileObjectListener listener );
 }

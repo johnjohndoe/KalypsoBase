@@ -130,7 +130,7 @@ public class AbstractProfileWidget extends AbstractWidget
       if( Objects.isNull( point ) )
         return;
 
-      final IProfile profile = profileFeature.getProfil();
+      final IProfile profile = profileFeature.getProfile();
       final IRangeSelection selection = profile.getSelection();
 
       m_snapPoint = getSnapPoint( profileFeature.getJtsLine(), point );
@@ -139,7 +139,7 @@ public class AbstractProfileWidget extends AbstractWidget
         selection.setCursor( null );
       else
       {
-        final double cursor = Profiles.getWidth( getProfile().getProfil(), m_snapPoint );
+        final double cursor = Profiles.getWidth( getProfile().getProfile(), m_snapPoint );
         selection.setCursor( cursor );
       }
     }
@@ -243,7 +243,7 @@ public class AbstractProfileWidget extends AbstractWidget
     m_profile = null;
 
     if( provider != null )
-      m_profile = provider.getProfil();
+      m_profile = provider.getProfile();
 
     if( m_profile != null )
       m_profile.addProfilListener( m_listener );

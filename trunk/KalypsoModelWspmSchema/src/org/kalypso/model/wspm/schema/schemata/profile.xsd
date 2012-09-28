@@ -12,8 +12,8 @@
   <import namespace="http://www.opengis.net/gml" />
   <import namespace="http://www.opengis.net/om" />
   <import namespace="http://www.opengis.net/swe" />
-  <!-- schema for WSPM Profiles -->
-  <!-- _________________________________________________________________________________________ ELEMENTS _________________________________________________________________________________________ -->
+
+  <!-- Schema for WSPM profiles. -->
   <element name="Profile" type="prof:ProfileType" substitutionGroup="om:Observation">
     <annotation>
       <documentation xml:lang="de">
@@ -120,7 +120,7 @@
               <documentation xml:lang="en">Additional geometries that are derived from the underlying observation. Are typically cached and will be generated if the underlying geometry changes.</documentation>
             </annotation>
           </element>
-          <element name="metadataMember" type="prof:MetadataPropertyType" minOccurs="0" maxOccurs="unbounded" />
+          <element name="metadataMember" type="prof:metadataPropertyType" minOccurs="0" maxOccurs="unbounded" />
         </sequence>
       </extension>
     </complexContent>
@@ -146,6 +146,12 @@
       </documentation>
     </annotation>
   </element>
+  <complexType name="localEnergyLossPropertyType">
+    <sequence>
+      <element ref="prof:LocalEnergyLoss" />
+    </sequence>
+  </complexType>
+
   <element name="LocalEnergyLoss" type="prof:LocalEnergyLossType">
     <annotation>
       <documentation xml:lang="de">
@@ -160,12 +166,6 @@
       </documentation>
     </annotation>
   </element>
-  <!-- _________________________________________________________________________________________ TYPES _________________________________________________________________________________________ -->
-  <complexType name="localEnergyLossPropertyType">
-    <sequence>
-      <element ref="prof:LocalEnergyLoss" />
-    </sequence>
-  </complexType>
   <complexType name="LocalEnergyLossType">
     <complexContent>
       <!-- Can't use wspm namespace here because we get cyclic import. -->
@@ -278,7 +278,18 @@
     </complexContent>
   </complexType>
 
-  <complexType name="MetadataPropertyType">
+  <element name="ProfileObject" type="prof:ProfileObjectType" substitutionGroup="om:Observation" />
+  <complexType name="ProfileObjectType">
+    <complexContent>
+      <extension base="om:ObservationType">
+        <sequence>
+          <element name="metadataMember" type="prof:metadataPropertyType" minOccurs="0" maxOccurs="unbounded" />
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <complexType name="metadataPropertyType">
     <sequence>
       <element ref="prof:Metadata"></element>
     </sequence>

@@ -111,7 +111,7 @@ public final class DA50Importer
         final DA50Entry d50Entry = entryMap.get( station );
         if( d50Entry != null )
         {
-          final IProfile profil = profile.getProfil();
+          final IProfile profil = profile.getProfile();
           applyD50Entry( profil, d50Entry, bRefFirst );
         }
       }

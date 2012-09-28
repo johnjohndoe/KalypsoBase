@@ -16,14 +16,30 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with Kalypso.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.kalypso.model.wspm.core.profil.objects;
+package org.kalypso.model.wspm.core.profil;
 
 /**
  * @author Holger Albert
  */
-public class AbstractProfileObjectData implements IProfileObjectData
+public interface IProfileObjectRecord
 {
-  public AbstractProfileObjectData( )
-  {
-  }
+  String getId( );
+
+  void setId( String id );
+
+  Double getBreite( );
+
+  void setBreite( Double breite );
+
+  Double getHoehe( );
+
+  void setHoehe( Double hoehe );
+
+  Double getRechtswert( );
+
+  void setRechtswert( Double rechtswert );
+
+  Double getHochwert( );
+
+  void setHochwert( Double hochwert );
 }

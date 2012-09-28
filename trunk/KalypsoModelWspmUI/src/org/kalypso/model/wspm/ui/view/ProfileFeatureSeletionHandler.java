@@ -176,7 +176,7 @@ public class ProfileFeatureSeletionHandler
   public IProfile getProfile( )
   {
     if( m_profileFeature != null )
-      return m_profileFeature.getProfil();
+      return m_profileFeature.getProfile();
 
     return null;
   }

@@ -61,7 +61,7 @@ public final class ProfileManipulationOperation implements ICoreRunnableWithProg
     {
       try
       {
-        final IProfile profile = profileFeature.getProfil();
+        final IProfile profile = profileFeature.getProfile();
 
         final String subTask = String.format( Messages.getString( "ProfileManipulationOperation_1" ), profileFeature.getName(), profileFeature.getBigStation() ); //$NON-NLS-1$
         monitor.subTask( subTask );

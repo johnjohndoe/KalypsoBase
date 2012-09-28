@@ -100,7 +100,7 @@ public final class ProfilePainter
     if( Objects.isNull( profile ) )
       return;
 
-    final IProfile iProfile = profile.getProfil();
+    final IProfile iProfile = profile.getProfile();
     final IProfilePointMarkerProvider provider = KalypsoModelWspmCoreExtensions.getMarkerProviders( iProfile.getType() );
 
     final String kalypsoSRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
@@ -147,7 +147,7 @@ public final class ProfilePainter
       if( Objects.isNull( profileFeature ) )
         return;
 
-      final IProfile profile = profileFeature.getProfil();
+      final IProfile profile = profileFeature.getProfile();
       final IRangeSelection selection = profile.getSelection();
       final Double cursor = selection.getCursor();
       if( Objects.isNull( cursor ) )
@@ -175,7 +175,7 @@ public final class ProfilePainter
       if( Objects.isNull( profile ) )
         return;
 
-      final IProfile iProfil = profile.getProfil();
+      final IProfile iProfil = profile.getProfile();
       final IRangeSelection selection = iProfil.getSelection();
       if( selection.isEmpty() )
         return;
@@ -208,13 +208,13 @@ public final class ProfilePainter
 
     if( Objects.equal( minimum, maximum ) )
     {
-      final Coordinate coorinate = Profiles.getJtsPosition( profile.getProfil(), minimum );
+      final Coordinate coorinate = Profiles.getJtsPosition( profile.getProfile(), minimum );
       return JTSConverter.toPoint( coorinate );
     }
     else
     {
-      final Coordinate c1 = Profiles.getJtsPosition( profile.getProfil(), minimum );
-      final Coordinate c2 = Profiles.getJtsPosition( profile.getProfil(), maximum );
+      final Coordinate c1 = Profiles.getJtsPosition( profile.getProfile(), minimum );
+      final Coordinate c2 = Profiles.getJtsPosition( profile.getProfile(), maximum );
 
       return JTSUtilities.createLineString( profile.getJtsLine(), JTSConverter.toPoint( c1 ), JTSConverter.toPoint( c2 ) );
     }

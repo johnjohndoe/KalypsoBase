@@ -54,10 +54,15 @@ import org.kalypso.model.wspm.core.IWspmNamespaces;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileMetadata;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.IProfileObjectRecord;
+import org.kalypso.model.wspm.core.profil.IProfileObjectRecords;
 import org.kalypso.model.wspm.core.profil.ProfileFactory;
 import org.kalypso.model.wspm.core.profil.ProfileObjectFactory;
 import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.observation.IObservation;
+import org.kalypso.observation.Observation;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
@@ -69,7 +74,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Intermediates between the {@link IProfil} interface and Features of QName {org.kalypso.model.wspm.profile}profile.
- *
+ * 
  * @author Gernot Belger
  */
 public final class ProfileFeatureFactory implements IWspmConstants
@@ -147,7 +152,7 @@ public final class ProfileFeatureFactory implements IWspmConstants
       /* Profile Objects. */
       final IRelationType profileObjectsRelationType = (IRelationType)featureType.getProperty( new QName( IWspmNamespaces.NS_WSPMPROF, "member" ) );
       final FeatureList profileObjectList = FeatureFactory.createFeatureList( targetFeature, profileObjectsRelationType, new Feature[] {} );
-      final IFeatureType profileObjectType = featureType.getGMLSchema().getFeatureType( IObservation.QNAME_OBSERVATION );
+      final IFeatureType profileObjectType = featureType.getGMLSchema().getFeatureType( ProfileObjectBinding.FEATURE_PROFILE_OBJECT );
       final IRelationType profileObjectParentRelation = profileObjectList.getPropertyType();
 
       final IProfileObject[] profileObjects = profile.getProfileObjects();
@@ -156,34 +161,21 @@ public final class ProfileFeatureFactory implements IWspmConstants
         final Feature profileObjectFeature = targetFeature.getWorkspace().createFeature( targetFeature, profileObjectParentRelation, profileObjectType );
         profileObjectList.add( profileObjectFeature );
 
-        // TODO How to handle the metadata of the profile objects...
-        final FeatureChange[] featureAsChanges = ObservationFeatureFactory.toFeatureAsChanges( profileObject.getObservation(), profileObjectFeature );
-        Collections.addAll( changes, featureAsChanges );
+        /* Observation. */
+        final FeatureChange[] observationChanges = handleProfileObjectObservation( profileObject, profileObjectFeature );
+        Collections.addAll( changes, observationChanges );
+
+        /* Metadata. */
+        final FeatureChange[] metadataChanges = handleMetadata( profileObject.getMetadata(), profileObjectFeature, ProfileObjectBinding.MEMBER_METADATA );
+        Collections.addAll( changes, metadataChanges );
       }
 
       /* Always to set the building, even if null. */
       changes.add( new FeatureChange( targetFeature, profileObjectsRelationType, profileObjectList ) );
 
       /* Metadata. */
-      final IRelationType metadataRelationType = (IRelationType)featureType.getProperty( IProfileFeature.MEMBER_METADATA );
-      final FeatureList metadataList = FeatureFactory.createFeatureList( targetFeature, metadataRelationType, new Feature[] {} );
-      final IFeatureType medatataType = featureType.getGMLSchema().getFeatureType( Metadata.FEATURE_METADATA );
-      final IRelationType metadataParentRelation = metadataList.getPropertyType();
-
-      final IProfileMetadata metadata = profile.getMetadata();
-      final String[] keys = metadata.getKeys();
-      for( final String key : keys )
-      {
-        final String value = metadata.getMetadata( key );
-
-        final Feature metadataFeature = targetFeature.getWorkspace().createFeature( targetFeature, metadataParentRelation, medatataType );
-        metadataList.add( metadataFeature );
-
-        changes.add( new FeatureChange( metadataFeature, medatataType.getProperty( Metadata.PROPERTY_KEY ), key ) );
-        changes.add( new FeatureChange( metadataFeature, medatataType.getProperty( Metadata.PROPERTY_VALUE ), value ) );
-      }
-
-      changes.add( new FeatureChange( targetFeature, metadataRelationType, metadataList ) );
+      final FeatureChange[] metadataChanges = handleMetadata( profile.getMetadata(), targetFeature, IProfileFeature.MEMBER_METADATA );
+      Collections.addAll( changes, metadataChanges );
     }
     catch( final Exception e )
     {
@@ -225,53 +217,123 @@ public final class ProfileFeatureFactory implements IWspmConstants
     return null;
   }
 
-  static IProfile toProfile( final ProfileFeatureBinding profileFeature )
+  private static FeatureChange[] handleProfileObjectObservation( final IProfileObject profileObject, final Feature profileObjectFeature )
+  {
+    final IComponent idComponent = ProfileUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_ID );
+    final IComponent breiteComponent = ProfileUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_BREITE );
+    final IComponent hoeheComponent = ProfileUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_HOEHE );
+    final IComponent rechtswertComponent = ProfileUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    final IComponent hochwertComponent = ProfileUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+
+    final TupleResult result = new TupleResult();
+    result.addComponent( idComponent );
+    result.addComponent( breiteComponent );
+    result.addComponent( hoeheComponent );
+    result.addComponent( rechtswertComponent );
+    result.addComponent( hochwertComponent );
+
+    final int idIndex = result.indexOfComponent( idComponent );
+    final int breiteIndex = result.indexOfComponent( breiteComponent );
+    final int hoeheIndex = result.indexOfComponent( hoeheComponent );
+    final int rechtswertIndex = result.indexOfComponent( rechtswertComponent );
+    final int hochwertIndex = result.indexOfComponent( hochwertComponent );
+
+    final String buildingId = profileObject.getId();
+    final Observation<TupleResult> observation = new Observation<>( buildingId, null, result );
+
+    final IProfileObjectRecords profileObjectRecords = profileObject.getRecords();
+    for( int i = 0; i < profileObjectRecords.getSize(); i++ )
+    {
+      final IProfileObjectRecord profileObjectRecord = profileObjectRecords.getRecord( i );
+
+      final IRecord record = result.createRecord();
+      record.setValue( idIndex, profileObjectRecord.getId() );
+      record.setValue( breiteIndex, profileObjectRecord.getBreite() );
+      record.setValue( hoeheIndex, profileObjectRecord.getHoehe() );
+      record.setValue( rechtswertIndex, profileObjectRecord.getRechtswert() );
+      record.setValue( hochwertIndex, profileObjectRecord.getHochwert() );
+
+      result.add( record );
+    }
+
+    return ObservationFeatureFactory.toFeatureAsChanges( observation, profileObjectFeature );
+  }
+
+  @SuppressWarnings( "unchecked" )
+  private static FeatureChange[] handleMetadata( final IProfileMetadata metadata, final Feature targetFeature, final QName memberMetadata )
+  {
+    /* Memory for the results. */
+    final List<FeatureChange> changes = new ArrayList<>();
+
+    /* Metadata. */
+    final IFeatureType featureType = targetFeature.getFeatureType();
+    final IRelationType metadataRelationType = (IRelationType)featureType.getProperty( memberMetadata );
+    final FeatureList metadataList = FeatureFactory.createFeatureList( targetFeature, metadataRelationType, new Feature[] {} );
+    final IFeatureType medatataType = featureType.getGMLSchema().getFeatureType( Metadata.FEATURE_METADATA );
+    final IRelationType metadataParentRelation = metadataList.getPropertyType();
+
+    final String[] keys = metadata.getKeys();
+    for( final String key : keys )
+    {
+      final String value = metadata.getMetadata( key );
+
+      final Feature metadataFeature = targetFeature.getWorkspace().createFeature( targetFeature, metadataParentRelation, medatataType );
+      metadataList.add( metadataFeature );
+
+      changes.add( new FeatureChange( metadataFeature, medatataType.getProperty( Metadata.PROPERTY_KEY ), key ) );
+      changes.add( new FeatureChange( metadataFeature, medatataType.getProperty( Metadata.PROPERTY_VALUE ), value ) );
+    }
+
+    changes.add( new FeatureChange( targetFeature, metadataRelationType, metadataList ) );
+
+    return changes.toArray( new FeatureChange[] {} );
+  }
+
+  static IProfile toProfile( final ProfileFeatureBinding sourceFeature )
   {
     /* Profile type. */
-    final String type = profileFeature.getProfileType();
+    final String type = sourceFeature.getProfileType();
     if( type == null )
       return null;
 
     /* Observation of profile. */
-    final IObservation<TupleResult> observation = ObservationFeatureFactory.toObservation( profileFeature );
-    final IProfile profil = ProfileFactory.createProfil( type, observation, profileFeature );
+    final IObservation<TupleResult> observation = ObservationFeatureFactory.toObservation( sourceFeature );
+    final IProfile profile = ProfileFactory.createProfil( type, observation, sourceFeature );
 
     /* Station of profile. */
-    final BigDecimal bigStation = (BigDecimal)profileFeature.getProperty( ProfileFeatureFactory.QNAME_STATION );
+    final BigDecimal bigStation = (BigDecimal)sourceFeature.getProperty( ProfileFeatureFactory.QNAME_STATION );
     if( bigStation != null )
     {
       final double station = bigStation.doubleValue();
-      profil.setStation( station );
+      profile.setStation( station );
     }
 
     /* Srs of profile. */
-    profil.setSrsName( profileFeature.getSrsName() );
+    profile.setSrsName( sourceFeature.getSrsName() );
 
     /* TODO - @hack - add flow direction to profile metadata. */
-    final Feature parent = profileFeature.getOwner();
+    final Feature parent = sourceFeature.getOwner();
     if( parent instanceof WspmWaterBody )
     {
       final WspmWaterBody waterBody = (WspmWaterBody)parent;
-      profil.getMetadata().setMetadata( IWspmConstants.PROFIL_PROPERTY_FLOW_DIRECTION, Boolean.toString( waterBody.isDirectionUpstreams() ) );
+      profile.getMetadata().setMetadata( IWspmConstants.PROFIL_PROPERTY_FLOW_DIRECTION, Boolean.toString( waterBody.isDirectionUpstreams() ) );
     }
 
     /* Profile objects of profile. */
-    // REMARK: handle buildings before table, because the setBuilding method resets the corresponding table properties.
-    final IObservation<TupleResult>[] profileObjects = profileFeature.getProfileObjects();
-    for( final IObservation<TupleResult> obs : profileObjects )
+    final Feature[] profileObjectFeatures = sourceFeature.getProfileObjects();
+    for( final Feature profileObjectFeature : profileObjectFeatures )
     {
-      // TODO How to handle the metadata of the profile objects...
-      final IProfileObject profileObject = ProfileObjectFactory.createProfileObject( profil, obs );
+      final IProfileObject profileObject = ProfileObjectFactory.createProfileObject( profile, profileObjectFeature );
       if( profileObject == null )
-        System.out.println( "failed to create Object: " + obs.getName() ); //$NON-NLS-1$
+        System.out.println( "failed to create Object: " + profileObjectFeature.getName() ); //$NON-NLS-1$
       else
-        profil.addProfileObjects( profileObject );
+        profile.addProfileObjects( profileObject );
     }
 
     /* Metadata. */
-    final IProfileMetadata profileMetadata = profil.getMetadata();
+    final IProfileMetadata profileMetadata = profile.getMetadata();
 
-    final IFeatureBindingCollection<Metadata> metadataList = profileFeature.getMetadata();
+    final IFeatureBindingCollection<Metadata> metadataList = sourceFeature.getMetadata();
     for( final Metadata metadata : metadataList )
     {
       final String key = metadata.getKey();
@@ -280,6 +342,6 @@ public final class ProfileFeatureFactory implements IWspmConstants
       profileMetadata.setMetadata( key, value );
     }
 
-    return profil;
+    return profile;
   }
 }

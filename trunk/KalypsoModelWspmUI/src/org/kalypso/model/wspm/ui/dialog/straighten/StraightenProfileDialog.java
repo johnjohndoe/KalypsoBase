@@ -198,7 +198,7 @@ public class StraightenProfileDialog extends TitleAreaDialog
     try
     {
       /* Get the profile. */
-      final IProfile profil = profile.getProfil();
+      final IProfile profil = profile.getProfile();
 
       /* Get the width of both points. */
       final double firstWidth = Profiles.getWidth( profil, firstPoint );
