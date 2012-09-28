@@ -47,6 +47,10 @@
             class="org.kalypso.model.wspm.core.gml.Metadata"
             qname="{org.kalypso.model.wspmprofile}Metadata">
       </feature>
+      <feature
+            class="org.kalypso.model.wspm.core.gml.ProfileObjectBinding"
+            qname="{org.kalypso.model.wspmprofile}ProfileObject">
+      </feature>
    </extension>
    <extension
            point="org.eclipse.core.runtime.preferences">

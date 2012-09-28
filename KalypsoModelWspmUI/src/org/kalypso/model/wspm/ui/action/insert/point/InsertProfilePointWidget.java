@@ -139,7 +139,7 @@ public class InsertProfilePointWidget extends AbstractProfileWidget
       if( ProfileWidgetHelper.isVertexPoint( profileFeature.getJtsLine(), snapped.getCoordinate() ) )
         return;
 
-      final IProfile profile = profileFeature.getProfil();
+      final IProfile profile = profileFeature.getProfile();
       final Double cursor = profile.getSelection().getCursor();
       if( Objects.isNull( cursor ) )
         return;
@@ -228,7 +228,7 @@ public class InsertProfilePointWidget extends AbstractProfileWidget
     if( Objects.isNull( profileFeature ) )
       return null;
 
-    final IProfile profile = profileFeature.getProfil();
+    final IProfile profile = profileFeature.getProfile();
     if( Objects.isNull( profile ) )
       return null;
 

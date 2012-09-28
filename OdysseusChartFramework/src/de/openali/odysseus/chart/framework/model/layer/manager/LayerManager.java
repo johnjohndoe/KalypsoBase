@@ -33,7 +33,7 @@ public class LayerManager implements ILayerManager
 
       final LayerManagerEventHandler parentHandler = findParentHandler();
       if( parentHandler != null )
-        parentHandler.fireActiveLayerChanged( (IChartLayer) getContainer() );
+        parentHandler.fireActiveLayerChanged( (IChartLayer)getContainer() );
     }
 
     private LayerManagerEventHandler findParentHandler( )
@@ -59,7 +59,7 @@ public class LayerManager implements ILayerManager
 
       final LayerManagerEventHandler parentHandler = findParentHandler();
       if( parentHandler != null )
-        parentHandler.fireLayerContentChanged( (IChartLayer) getContainer(), type );
+        parentHandler.fireLayerContentChanged( (IChartLayer)getContainer(), type );
     }
 
     @Override
@@ -69,7 +69,7 @@ public class LayerManager implements ILayerManager
 
       final LayerManagerEventHandler parentHandler = findParentHandler();
       if( parentHandler != null )
-        parentHandler.fireLayerVisibilityChanged( (IChartLayer) getContainer() );
+        parentHandler.fireLayerVisibilityChanged( (IChartLayer)getContainer() );
     }
   };
 
@@ -156,6 +156,8 @@ public class LayerManager implements ILayerManager
   @Override
   public void clear( )
   {
+    // FIXME: reimplement: directly dispose all layers; else we get paint events during clean
+
     for( final IChartLayer next : getLayers() )
     {
       removeLayer( next );

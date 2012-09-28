@@ -89,7 +89,7 @@ public class ProfileFetureValidationListener implements IProfileProviderListener
     if( Objects.isNotNull( m_profile, m_listener ) )
       m_profile.removeProfilListener( m_listener );
 
-    final IProfile profile = provider.getProfil();
+    final IProfile profile = provider.getProfile();
     m_profile = profile;
 
     if( Objects.isNotNull( m_profile ) )

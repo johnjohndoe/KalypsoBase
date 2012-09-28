@@ -208,7 +208,7 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
   {
     setPartNames( Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_1" ), Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    final IProfile newProfile = provider == null ? null : provider.getProfil();
+    final IProfile newProfile = provider == null ? null : provider.getProfile();
 
     if( newProfile == null )
     {

@@ -21,13 +21,14 @@ package org.kalypso.model.wspm.core.profil.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.kalypso.model.wspm.core.profil.IProfileMetadata;
 import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
 
 /**
  * @author Holger Albert
  */
-public class ProfileMetadata implements IProfileMetadata
+class ProfileMetadata implements IProfileMetadata
 {
   private final AbstractProfile m_parent;
 
@@ -54,6 +55,10 @@ public class ProfileMetadata implements IProfileMetadata
   @Override
   public void setMetadata( final String key, final String value )
   {
+    final String oldValue = getMetadata( key );
+    if( ObjectUtils.equals( oldValue, value ) )
+      return;
+
     m_metadata.put( key, value );
     fireProfileChanged();
   }

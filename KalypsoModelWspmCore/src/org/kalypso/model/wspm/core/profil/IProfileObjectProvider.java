@@ -40,13 +40,12 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil;
 
-import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.TupleResult;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Dirk Kuch
  */
 public interface IProfileObjectProvider
 {
-  IProfileObject buildProfileObject( IProfile profile, IObservation<TupleResult> observation );
+  IProfileObject buildProfileObject( IProfile profile, Feature profileObjectFeature );
 }

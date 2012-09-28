@@ -100,7 +100,7 @@ public class ApplyLanduseWorker implements IRunnableWithProgress
     for( final IProfileFeature profileFeature : profiles )
     {
       final String crs = profileFeature.getSrsName();
-      final IProfile profile = profileFeature.getProfil();
+      final IProfile profile = profileFeature.getProfile();
 
       // TODO: check if the profile has all components already.
       // but how to do, we don't know here what components are necessary for the current profile...

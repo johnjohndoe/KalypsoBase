@@ -159,7 +159,7 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
 
         monitor.subTask( String.format( "%s (km %s)", profile.getName(), profile.getBigStation() ) ); //$NON-NLS-1$
 
-        final IProfile profil = profile.getProfil();
+        final IProfile profil = profile.getProfile();
 
         // create marker for each point
         final Integer[] newMarkerPoints = findNewMarkerPoints( profile );
@@ -179,7 +179,7 @@ public class CreateDividerOperation implements ICoreRunnableWithProgress
   {
     final Point[] intersectionPoints = findNewMarkerLocations( profile );
 
-    final IProfile profil = profile.getProfil();
+    final IProfile profil = profile.getProfile();
     final double[] intersectionWidths = getIntersectionWidths( profil, intersectionPoints );
 
     final Integer[] nearestPointIndices = ProfileUtil.findNearestPointIndices( profil, intersectionWidths );

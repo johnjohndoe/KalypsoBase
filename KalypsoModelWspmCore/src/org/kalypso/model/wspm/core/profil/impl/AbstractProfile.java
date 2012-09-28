@@ -66,10 +66,11 @@ import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.i18n.Messages;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileListener;
-import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
-import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileMetadata;
 import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.IProfileObjectListener;
+import org.kalypso.model.wspm.core.profil.IProfilePointMarker;
+import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.IProfileTransaction;
 import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.core.profil.MarkerIndex;
@@ -112,7 +113,7 @@ public abstract class AbstractProfile implements IProfile
 
   private final ITupleResultChangedListener m_tupleResultListener = new ProfileTupleResultChangeListener( this );
 
-  private final ITupleResultChangedListener m_objectTupleListener = new ProfileObjectListener( this );
+  private final IProfileObjectListener m_profileObjectListener = new ProfileObjectListener( this );
 
   private MarkerIndex m_markerIndex;
 
@@ -204,8 +205,7 @@ public abstract class AbstractProfile implements IProfile
   {
     for( final IProfileObject object : profileObjects )
     {
-      // TODO: what if objects have additional state ?
-      object.getObservation().getResult().addChangeListener( m_objectTupleListener );
+      object.addProfileObjectListener( m_profileObjectListener );
       m_profileObjects.add( object );
     }
 
@@ -541,7 +541,7 @@ public abstract class AbstractProfile implements IProfile
   @Override
   public boolean removeProfileObject( final IProfileObject profileObject )
   {
-    profileObject.getObservation().getResult().removeChangeListener( m_objectTupleListener );
+    profileObject.removeProfileObjectListener( m_profileObjectListener );
 
     final boolean removed = m_profileObjects.remove( profileObject );
 

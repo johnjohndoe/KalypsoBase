@@ -259,7 +259,7 @@ public class PropertyEditWizard extends Wizard implements IWorkbenchWizard
     if( object instanceof IProfile )
       return (IProfile) object;
     else if( object instanceof ProfileFeatureBinding )
-      return ((ProfileFeatureBinding) object).getProfil();
+      return ((ProfileFeatureBinding) object).getProfile();
 
     return null;
   }

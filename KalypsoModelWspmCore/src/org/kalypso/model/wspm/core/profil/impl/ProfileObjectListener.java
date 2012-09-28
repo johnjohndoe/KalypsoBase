@@ -40,15 +40,14 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.profil.impl;
 
+import org.kalypso.model.wspm.core.profil.IProfileObject;
+import org.kalypso.model.wspm.core.profil.IProfileObjectListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
-import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
-import org.kalypso.observation.result.ITupleResultChangedListener;
 
 /**
  * @author Gernot Belger
  */
-public class ProfileObjectListener implements ITupleResultChangedListener
+class ProfileObjectListener implements IProfileObjectListener
 {
   ProfileChangeHint m_hint = new ProfileChangeHint( ProfileChangeHint.OBJECT_DATA_CHANGED );
 
@@ -60,19 +59,7 @@ public class ProfileObjectListener implements ITupleResultChangedListener
   }
 
   @Override
-  public void valuesChanged( final ValueChange[] changes )
-  {
-    m_profil.fireProfilChanged( m_hint );
-  }
-
-  @Override
-  public void recordsChanged( final IRecord[] records, final TYPE type )
-  {
-    m_profil.fireProfilChanged( m_hint );
-  }
-
-  @Override
-  public void componentsChanged( final IComponent[] components, final TYPE type )
+  public void profileObjectChanged( final IProfileObject object )
   {
     m_profil.fireProfilChanged( m_hint );
   }

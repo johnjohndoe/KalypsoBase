@@ -213,7 +213,7 @@ public class StraightenProfileWidget extends AbstractProfileWidget
     if( Objects.isNull( profileFeature ) )
       return null;
 
-    final IProfile profile = profileFeature.getProfil();
+    final IProfile profile = profileFeature.getProfile();
     if( Objects.isNull( profile ) )
       return null;
 

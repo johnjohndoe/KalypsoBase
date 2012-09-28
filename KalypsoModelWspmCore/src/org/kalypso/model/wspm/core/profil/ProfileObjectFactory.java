@@ -41,8 +41,7 @@
 package org.kalypso.model.wspm.core.profil;
 
 import org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions;
-import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.TupleResult;
+import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * @author Dirk Kuch
@@ -53,14 +52,14 @@ public final class ProfileObjectFactory
   {
   }
 
-  public static IProfileObject createProfileObject( final IProfile profile, final IObservation<TupleResult> observation )
+  public static IProfileObject createProfileObject( final IProfile profile, final Feature profileObjectFeature )
   {
-    final String profileProviderId = observation.getName();
+    final String profileProviderId = profileObjectFeature.getName();
 
     final IProfileObjectProvider provider = KalypsoModelWspmCoreExtensions.getProfileObjectProvider( profileProviderId );
     if( provider == null )
       return null;
 
-    return provider.buildProfileObject( profile, observation );
+    return provider.buildProfileObject( profile, profileObjectFeature );
   }
 }

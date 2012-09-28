@@ -47,7 +47,7 @@ import org.kalypso.model.wspm.core.profil.IProfile;
  */
 public interface IProfileProvider
 {
-  IProfile getProfil( );
+  IProfile getProfile( );
 
   void addProfilProviderListener( final IProfileProviderListener l );
 

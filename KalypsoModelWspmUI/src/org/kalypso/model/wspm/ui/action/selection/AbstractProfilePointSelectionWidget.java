@@ -130,7 +130,7 @@ public abstract class AbstractProfilePointSelectionWidget extends AbstractProfil
 
     try
     {
-      final IProfile profile = getProfile().getProfil();
+      final IProfile profile = getProfile().getProfile();
       final IRangeSelection selection = profile.getSelection();
 
       final Double cursor = selection.getCursor();
@@ -197,7 +197,7 @@ public abstract class AbstractProfilePointSelectionWidget extends AbstractProfil
       return null;
 
     final IProfileFeature profileFeature = getProfile();
-    final IProfile profile = profileFeature.getProfil();
+    final IProfile profile = profileFeature.getProfile();
     final IRangeSelection selection = profile.getSelection();
     final Double cursor = selection.getCursor();
     if( Objects.isNull( cursor ) )
