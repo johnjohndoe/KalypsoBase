@@ -67,7 +67,7 @@ public class ImportShapeFileData extends AbstractModelObject
 
   static final String EXTENSIONS_SLD = "sld"; //$NON-NLS-1$
 
-  static final String[] EMPTY_STYLES = new String[] { Messages.getString("ImportShapeFileData.5") }; //$NON-NLS-1$
+  public static final String[] EMPTY_STYLES = new String[] { Messages.getString( "ImportShapeFileData.5" ) }; //$NON-NLS-1$
 
   static final String[] FEATURETYPE_STYLES = new String[] { Messages.getString("ImportShapeFileData.6") }; //$NON-NLS-1$
 

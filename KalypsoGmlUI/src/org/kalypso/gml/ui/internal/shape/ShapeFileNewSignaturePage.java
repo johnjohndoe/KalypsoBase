@@ -41,17 +41,13 @@
 package org.kalypso.gml.ui.internal.shape;
 
 import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.BeanProperties;
 import org.eclipse.core.databinding.observable.list.IObservableList;
 import org.eclipse.core.databinding.observable.list.WritableList;
 import org.eclipse.core.databinding.observable.value.IObservableValue;
 import org.eclipse.core.databinding.property.value.IValueProperty;
 import org.eclipse.core.databinding.validation.IValidator;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.databinding.swt.ISWTObservableValue;
-import org.eclipse.jface.databinding.swt.SWTObservables;
 import org.eclipse.jface.databinding.viewers.IViewerObservableValue;
 import org.eclipse.jface.databinding.viewers.ViewerProperties;
 import org.eclipse.jface.databinding.viewers.ViewerSupport;
@@ -66,14 +62,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.Form;
-import org.kalypso.commons.databinding.conversion.StringToPathConverter;
-import org.kalypso.commons.databinding.validation.MultiValidator;
 import org.kalypso.commons.databinding.viewers.ComboViewerEditingSupport;
 import org.kalypso.commons.databinding.viewers.TextEditingSupport;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
@@ -82,15 +74,19 @@ import org.kalypso.shape.ShapeType;
 import org.kalypso.shape.dbf.FieldType;
 
 /**
+ * Allows user to define the signature of a shape file: geometry type and fields.<br/>
+ * TODO: allow to save shape signature under a given name for later reuse
+ * TODO: allow to add predefined signatures for shapes used in the workspace (like lengthsection 2d, water body, etc.)
+ *
  * @author Gernot Belger
  */
-public class ShapeFileNewPage extends WizardPage
+public class ShapeFileNewSignaturePage extends WizardPage
 {
   private final DataBindingContext m_context = new DataBindingContext();
 
   private final ShapeFileNewData m_input;
 
-  protected ShapeFileNewPage( final String pageName, final ShapeFileNewData input )
+  ShapeFileNewSignaturePage( final String pageName, final ShapeFileNewData input )
   {
     super( pageName );
 
@@ -100,9 +96,6 @@ public class ShapeFileNewPage extends WizardPage
     setDescription( Messages.getString( "ShapeFileNewPage_1" ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public void createControl( final Composite parent )
   {
@@ -121,24 +114,8 @@ public class ShapeFileNewPage extends WizardPage
 
   private void createContents( final Composite parent )
   {
-    createFileChooser( parent );
     createTypeChooser( parent );
     createFieldEditor( parent );
-  }
-
-  private void createFileChooser( final Composite parent )
-  {
-    final Label label = new Label( parent, SWT.NONE );
-    label.setText( Messages.getString( "ShapeFileNewPage_2" ) ); //$NON-NLS-1$
-
-    final Text fileField = new Text( parent, SWT.BORDER );
-    fileField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    fileField.setMessage( Messages.getString( "ShapeFileNewPage_3" ) ); //$NON-NLS-1$
-
-    final Button fileButton = new Button( parent, SWT.PUSH );
-    fileButton.setText( Messages.getString( "ShapeFileNewPage_4" ) ); //$NON-NLS-1$
-
-    createFileBinding( fileField, fileButton );
   }
 
   private void createTypeChooser( final Composite parent )
@@ -191,29 +168,6 @@ public class ShapeFileNewPage extends WizardPage
     ActionHyperlink.createHyperlink( null, actionPanel, SWT.PUSH, removeAction );
   }
 
-  private void createFileBinding( final Text fileField, final Button fileButton )
-  {
-    final ISWTObservableValue fileText = SWTObservables.observeText( fileField, SWT.Modify );
-    final IObservableValue pathValue = new ShapePathValue( m_input );
-
-    fileButton.addSelectionListener( new FileSaveAsSelectionListener( pathValue, Messages.getString( "ShapeFileNewPage_7" ) ) ); //$NON-NLS-1$
-
-    final UpdateValueStrategy targetToModel = new UpdateValueStrategy();
-    targetToModel.setConverter( new StringToPathConverter() );
-
-    final MultiValidator multiValidator = new MultiValidator();
-    multiValidator.add( new PathIsProjectValidator( IStatus.ERROR ) );
-    multiValidator.add( new PathIsDirectoryValidator( IStatus.ERROR ) );
-    multiValidator.add( new PathShapeExistsValidator( IStatus.WARNING ) );
-    targetToModel.setBeforeSetValidator( multiValidator );
-
-    final UpdateValueStrategy modelToTarget = new UpdateValueStrategy();
-    // AfterGet also works when new dialog sets the new path into the model
-    modelToTarget.setAfterGetValidator( multiValidator );
-
-    m_context.bindValue( fileText, pathValue, targetToModel, modelToTarget );
-  }
-
   private void createTypeBinding( final ComboViewer viewer )
   {
     final IViewerObservableValue comboValue = ViewerProperties.singleSelection().observe( viewer );
@@ -244,16 +198,13 @@ public class ShapeFileNewPage extends WizardPage
     return tableInput;
   }
 
-  public void createNameColumn( final TableViewer viewer, final IValueProperty nameProperty )
+  private void createNameColumn( final TableViewer viewer, final IValueProperty nameProperty )
   {
     final TableViewerColumn nameColumn = new TableViewerColumn( viewer, SWT.LEFT );
     nameColumn.getColumn().setText( Messages.getString( "ShapeFileNewPage_8" ) ); //$NON-NLS-1$
     nameColumn.getColumn().setWidth( 100 );
     final TextEditingSupport editingSupport = new TextEditingSupport( viewer, m_context, nameProperty )
     {
-      /**
-       * @see org.kalypso.commons.databinding.viewers.TextEditingSupport#createValidator(java.lang.Object)
-       */
       @Override
       protected IValidator createValidator( final Object element )
       {
@@ -263,7 +214,7 @@ public class ShapeFileNewPage extends WizardPage
     nameColumn.setEditingSupport( editingSupport );
   }
 
-  public void createTypeColumn( final TableViewer viewer, final IValueProperty typeProperty )
+  private void createTypeColumn( final TableViewer viewer, final IValueProperty typeProperty )
   {
     final TableViewerColumn typeColumn = new TableViewerColumn( viewer, SWT.LEFT );
     typeColumn.getColumn().setWidth( 100 );
@@ -283,7 +234,7 @@ public class ShapeFileNewPage extends WizardPage
     typeColumn.setEditingSupport( typeEditingSupport );
   }
 
-  public void createLengthColumn( final TableViewer viewer, final IValueProperty lengthProperty )
+  private void createLengthColumn( final TableViewer viewer, final IValueProperty lengthProperty )
   {
     final TableViewerColumn lengthColumn = new TableViewerColumn( viewer, SWT.LEFT );
     lengthColumn.getColumn().setWidth( 100 );
@@ -300,16 +251,13 @@ public class ShapeFileNewPage extends WizardPage
     lengthColumn.setEditingSupport( editingSupport );
   }
 
-  public void createDecimalColumn( final TableViewer viewer, final IValueProperty decimalsProperty )
+  private void createDecimalColumn( final TableViewer viewer, final IValueProperty decimalsProperty )
   {
     final TableViewerColumn decimalColumn = new TableViewerColumn( viewer, SWT.LEFT );
     decimalColumn.getColumn().setWidth( 100 );
     decimalColumn.getColumn().setText( Messages.getString( "ShapeFileNewPage_11" ) ); //$NON-NLS-1$
     final TextEditingSupport editingSupport = new TextEditingSupport( viewer, m_context, decimalsProperty )
     {
-      /**
-       * @see org.kalypso.commons.databinding.viewers.TextEditingSupport#createValidator(java.lang.Object)
-       */
       @Override
       protected IValidator createValidator( final Object element )
       {

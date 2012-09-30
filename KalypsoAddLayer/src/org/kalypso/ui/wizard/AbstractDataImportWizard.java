@@ -74,7 +74,7 @@ public abstract class AbstractDataImportWizard extends Wizard implements IKalyps
     return m_insertionIndex;
   }
 
-  protected final IKalypsoLayerModell getMapModel( )
+  public final IKalypsoLayerModell getMapModel( )
   {
     return m_modell;
   }
@@ -98,7 +98,7 @@ public abstract class AbstractDataImportWizard extends Wizard implements IKalyps
     throw new UnsupportedOperationException();
   }
 
-  protected final void postCommand( final ICommand command, final Runnable runnable )
+  public final void postCommand( final ICommand command, final Runnable runnable )
   {
     m_commandTarget.postCommand( command, runnable );
   }

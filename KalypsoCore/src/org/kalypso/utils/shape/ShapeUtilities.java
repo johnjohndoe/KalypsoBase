@@ -41,6 +41,7 @@
 package org.kalypso.utils.shape;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -48,10 +49,16 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOCase;
+import org.apache.commons.io.filefilter.NameFileFilter;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.contribs.eclipse.core.resources.FileFilterVisitor;
 import org.kalypso.contribs.java.io.filter.BasenameFilenameFilter;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.feature.IFeatureType;
@@ -65,13 +72,11 @@ import org.kalypso.shape.deegree.Shape2GML;
 /**
  * @author Holger Albert
  */
-public class ShapeUtilities
+public final class ShapeUtilities
 {
-  /**
-   * The constructor.
-   */
-  public ShapeUtilities( )
+  private ShapeUtilities( )
   {
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -229,5 +234,23 @@ public class ShapeUtilities
 
       return Shape2GML.createFeatureType( key, shapeType, fields );
     }
+  }
+
+  /**
+   * Find all files of a shape file (i.e. .shp, .dbf and ..shx), but only if they really exist.
+   * 
+   * @param shapeFile
+   *          Path to the file with extension '.shp'.
+   */
+  public static IFile[] getExistingShapeFiles( final IFile shapeFile ) throws CoreException
+  {
+    final IContainer parent = shapeFile.getParent();
+    final IPath basePath = shapeFile.getFullPath().removeFileExtension();
+
+    final String name = basePath.lastSegment();
+    final FileFilter filter = new NameFileFilter( new String[] { name + ShapeFile.EXTENSION_SHP, name + ShapeFile.EXTENSION_DBF, name + ShapeFile.EXTENSION_SHX }, IOCase.SYSTEM );
+    final FileFilterVisitor visitor = new FileFilterVisitor( filter );
+    parent.accept( visitor );
+    return visitor.getFiles();
   }
 }

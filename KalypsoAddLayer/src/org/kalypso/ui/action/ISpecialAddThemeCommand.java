@@ -48,7 +48,5 @@ import org.kalypso.template.types.StyledLayerType;
  */
 public interface ISpecialAddThemeCommand extends ICommand
 {
-
   StyledLayerType getLayer( );
-
 }

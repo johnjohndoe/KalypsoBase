@@ -44,8 +44,8 @@ import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.CatalogSLD;
 import org.kalypso.core.catalog.CatalogSLDUtils;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.ogc.gml.IKalypsoLayerModell;
-import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.shape.FileMode;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.ShapeFileUtils;
@@ -56,9 +56,11 @@ import org.kalypso.ui.KalypsoAddLayerPlugin;
 import org.kalypso.ui.action.AddThemeCommand;
 import org.kalypso.ui.addlayer.internal.util.AddLayerUtils;
 import org.kalypso.ui.i18n.Messages;
+import org.kalypso.ui.wizard.AbstractDataImportWizard;
 import org.kalypso.ui.wizard.shape.ImportShapeFileData.StyleImport;
 import org.kalypsodeegree.xml.Marshallable;
 import org.kalypsodeegree.xml.XMLParsingException;
+import org.kalypsodeegree_impl.gml.binding.shape.ShapeCollection;
 import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
 
 import com.google.common.base.Charsets;
@@ -112,7 +114,8 @@ public class ImportShapeOperation
 
     final int insertionIndex = m_data.getInsertionIndex();
 
-    final AddThemeCommand command = new AddThemeCommand( mapModell, themeName, "shape", ShapeSerializer.PROPERTY_FEATURE_MEMBER.getLocalPart(), fileName, insertionIndex ); //$NON-NLS-1$
+    final String featurePath = ShapeCollection.MEMBER_FEATURE_LOCAL;
+    final AddThemeCommand command = new AddThemeCommand( mapModell, themeName, "shape", featurePath, fileName, insertionIndex ); //$NON-NLS-1$
 
     try
     {
@@ -216,5 +219,34 @@ public class ImportShapeOperation
   private I18NBundle readTranslationBundle( final URL ftsURL )
   {
     return new I18NBundle( ResourceBundleUtils.loadResourceBundle( ftsURL ) );
+  }
+
+  public boolean executeOnWizard( final AbstractDataImportWizard wizard )
+  {
+    final Shell shell = wizard.getShell();
+    final String title = wizard.getWindowTitle();
+
+    final IKalypsoLayerModell mapModell = wizard.getMapModel();
+
+    if( !checkPrecondition( shell, title ) )
+      return false;
+
+    try
+    {
+      final ICommand command = createCommand( mapModell );
+      if( command == null )
+        return false;
+
+      wizard.postCommand( command, null );
+
+      return true;
+    }
+    catch( final CoreException e )
+    {
+      final IStatus status = e.getStatus();
+      KalypsoAddLayerPlugin.getDefault().getLog().log( status );
+      StatusDialog.open( shell, status, title );
+      return false;
+    }
   }
 }

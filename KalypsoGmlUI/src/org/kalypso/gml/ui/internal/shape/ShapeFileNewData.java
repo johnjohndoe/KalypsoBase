@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypso.shape.ShapeType;
@@ -77,6 +78,23 @@ public class ShapeFileNewData
     {
       e.printStackTrace();
     }
+  }
+
+  public void init( final IDialogSettings settings )
+  {
+    if( settings == null )
+      return;
+
+    // TODO Auto-generated method stub
+
+  }
+
+  public void storeSettings( final IDialogSettings settings )
+  {
+    if( settings == null )
+      return;
+    // TODO Auto-generated method stub
+
   }
 
   public void setType( final ShapeType type )

@@ -71,6 +71,7 @@ public class CapabilitiesComposite extends Composite
     // FIXME: trigger from outside
     if( false )
       createAddressControls();
+
     createOpenCapabilitiesControls();
     createImageProviderControls();
     createTitleControls();
