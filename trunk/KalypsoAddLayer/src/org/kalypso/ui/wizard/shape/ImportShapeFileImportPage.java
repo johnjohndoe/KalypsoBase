@@ -74,7 +74,6 @@ import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.commons.databinding.swt.FileAndHistoryData;
 import org.kalypso.commons.databinding.swt.WorkspaceFileBinding;
 import org.kalypso.commons.databinding.validation.NotNullValidator;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypso.transformation.ui.validators.CRSInputValidator;
 import org.kalypso.ui.i18n.Messages;
@@ -187,7 +186,7 @@ public class ImportShapeFileImportPage extends WizardPage
     final IObservableValue target = m_crsPanel.observe();
     final IObservableValue model = BeansObservables.observeValue( m_data, ImportShapeFileData.PROPERTY_SRS );
 
-    final NotNullValidator<String> notNullValidator = new NotNullValidator<String>( String.class, IStatus.ERROR, Messages.getString("ImportShapeFileImportPage.1") ); //$NON-NLS-1$
+    final NotNullValidator<String> notNullValidator = new NotNullValidator<>( String.class, IStatus.ERROR, Messages.getString( "ImportShapeFileImportPage.1" ) ); //$NON-NLS-1$
 
     m_binding.bindValue( target, model, notNullValidator, new CRSInputValidator() );
   }
@@ -206,7 +205,7 @@ public class ImportShapeFileImportPage extends WizardPage
   private void createStyleTypeRadio( final Composite parent )
   {
     final Composite radioPanel = new Composite( parent, SWT.NONE );
-    radioPanel.setLayout( Layouts.createGridLayout() );
+    GridLayoutFactory.fillDefaults().applyTo( radioPanel );
     radioPanel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 3, 1 ) );
 
     final StyleImport[] styleImportTypes = StyleImport.values();

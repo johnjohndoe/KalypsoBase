@@ -62,16 +62,6 @@ import org.kalypso.ui.wizard.shape.ImportShapeSourceWizard;
  */
 public class OpenShapeWizardHandler extends AbstractHandler
 {
-  /**
-   * The constructor.
-   */
-  public OpenShapeWizardHandler( )
-  {
-  }
-
-  /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event )
   {

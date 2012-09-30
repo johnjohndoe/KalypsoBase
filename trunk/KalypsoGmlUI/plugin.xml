@@ -509,4 +509,29 @@
         </menuContribution>
      </extension>
     
+    <extension point="org.kalypso.ui.addLayerWizard">
+      <wizard
+            class="org.kalypso.gml.ui.internal.shape.CreateShapeSourceWizard"
+            icon="icons/obj16/file_shp.gif"
+            id="org.kalypso.gml.ui.createShapeThemeWizard"
+            name="ESRI (tm) Shape (create new)">
+         <description>Creates a new shape file and adds it a theme to the map.</description>
+      </wizard>
+    
+      <wizardSelection description="Default selection used for the map editor." id="org.kalypso.ui.addlayer.wizardselection.default">
+         <wizardRef wizardId="org.kalypso.ui.wizard.shape"/>
+         <wizardRef wizardId="org.kalypso.gml.ui.createShapeThemeWizard"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.wms"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.wfs"/>
+         <wizardRef wizardId="gml"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.raster"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.image"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.others.LegendThemeWizard"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.others.CascadingThemeWizard"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.others.ScaleThemeWizard"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.others.ImageThemeWizard"/>
+         <wizardRef wizardId="org.kalypso.ui.wizard.others.TextThemeWizard"/>
+      </wizardSelection>
+    </extension>
+    
 </plugin>

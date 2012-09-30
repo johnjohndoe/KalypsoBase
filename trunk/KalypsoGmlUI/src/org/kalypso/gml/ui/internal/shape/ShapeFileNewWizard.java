@@ -40,33 +40,34 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.gml.ui.internal.shape;
 
-import java.io.FileFilter;
 import java.util.Iterator;
 
-import org.apache.commons.io.IOCase;
-import org.apache.commons.io.filefilter.NameFileFilter;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
-import org.kalypso.contribs.eclipse.core.resources.FileFilterVisitor;
+import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog;
+import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.gml.ui.i18n.Messages;
-import org.kalypso.shape.ShapeFile;
+import org.kalypso.utils.shape.ShapeUtilities;
 
 /**
+ * TODO: make useable as 'add theme' wizard in wspm and workflow projects
+ * TODO: - page that just entes a name; shape is then saved in shape import folder
+ * TODO: add as new theme to map
+ *
  * @author Gernot Belger
  */
 public class ShapeFileNewWizard extends Wizard implements INewWizard
@@ -80,34 +81,29 @@ public class ShapeFileNewWizard extends Wizard implements INewWizard
     setNeedsProgressMonitor( true );
     setHelpAvailable( false );
 
+    setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoGmlUIPlugin.getDefault(), WIZARD_ID ) );
+
     setWindowTitle( Messages.getString( "ShapeFileNewWizard_0" ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
-   *      org.eclipse.jface.viewers.IStructuredSelection)
-   */
   @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
+    m_shapeFileNewData.init( getDialogSettings() );
+
     final IContainer container = findSelection( selection );
     if( container != null )
     {
       final IFile shapeFile = container.getFile( new Path( Messages.getString( "ShapeFileNewWizard_1" ) ) ); //$NON-NLS-1$
       m_shapeFileNewData.setShapeFile( shapeFile );
     }
-
-    // TODO: read dialog settingsinto data
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#addPages()
-   */
   @Override
   public void addPages( )
   {
-    final IWizardPage page = new ShapeFileNewPage( "newShapePage", m_shapeFileNewData ); //$NON-NLS-1$
-    addPage( page );
+    addPage( new ShapeFileNewFilePage( "filepath", m_shapeFileNewData ) ); //$NON-NLS-1$
+    addPage( new ShapeFileNewSignaturePage( "signature", m_shapeFileNewData ) ); //$NON-NLS-1$
   }
 
   private IContainer findSelection( final IStructuredSelection selection )
@@ -116,22 +112,19 @@ public class ShapeFileNewWizard extends Wizard implements INewWizard
     {
       final Object element = iterator.next();
       if( element instanceof IContainer )
-        return (IContainer) element;
+        return (IContainer)element;
 
       if( element instanceof IResource )
-        return ((IResource) element).getParent();
+        return ((IResource)element).getParent();
     }
 
     return null;
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#performFinish()
-   */
   @Override
   public boolean performFinish( )
   {
-    // TODO: write dialog settingsinto data
+    m_shapeFileNewData.storeSettings( getDialogSettings() );
 
     final IStatus result = doFinish();
     if( result.matches( IStatus.CANCEL ) )
@@ -146,16 +139,13 @@ public class ShapeFileNewWizard extends Wizard implements INewWizard
   {
     try
     {
-      final IFile[] shapeFileExists = getExistingShapeFiles();
-      if( shapeFileExists.length > 0 )
-      {
-        final MessageDialog dialog = new MessageDialog( getShell(), getWindowTitle(), null, Messages.getString( "ShapeFileNewWizard_3" ), MessageDialog.WARNING, new String[] { //$NON-NLS-1$
-        IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0 );
-        if( dialog.open() != IDialogConstants.OK_ID )
-          return Status.CANCEL_STATUS;
-      }
+      final IFile baseFile = m_shapeFileNewData.getShpFile();
 
-      deleteExitingShapeFiles( shapeFileExists );
+      final Shell shell = getShell();
+      final String title = getWindowTitle();
+
+      if( !askForAndDeleteExistingFiles( shell, title, baseFile ) )
+        return Status.CANCEL_STATUS;
 
       final ShapeFileNewOperation operation = new ShapeFileNewOperation( m_shapeFileNewData );
       return RunnableContextHelper.execute( getContainer(), true, false, operation );
@@ -166,24 +156,26 @@ public class ShapeFileNewWizard extends Wizard implements INewWizard
     }
   }
 
-  private IFile[] getExistingShapeFiles( ) throws CoreException
+  static boolean askForAndDeleteExistingFiles( final Shell shell, final String title, final IFile baseFile ) throws CoreException
   {
-    final IFile baseFile = m_shapeFileNewData.getShpFile();
-    final IContainer parent = baseFile.getParent();
-    final IPath basePath = baseFile.getFullPath().removeFileExtension();
+    final IFile[] shapeFileExists = ShapeUtilities.getExistingShapeFiles( baseFile );
+    if( shapeFileExists.length > 0 )
+    {
+      final MessageDialog dialog = new MessageDialog( shell, title, null, Messages.getString( "ShapeFileNewWizard_3" ), MessageDialog.WARNING, new String[] { //$NON-NLS-1$
+      IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0 );
+      if( dialog.open() != IDialogConstants.OK_ID )
+        return false;
+    }
 
-    final String name = basePath.lastSegment();
-    final FileFilter filter = new NameFileFilter( new String[] { name + ShapeFile.EXTENSION_SHP, name + ShapeFile.EXTENSION_DBF, name + ShapeFile.EXTENSION_SHX }, IOCase.SYSTEM );
-    final FileFilterVisitor visitor = new FileFilterVisitor( filter );
-    parent.accept( visitor );
-    return visitor.getFiles();
+    deleteExitingShapeFiles( shapeFileExists );
+
+    return true;
   }
 
-  private void deleteExitingShapeFiles( final IFile[] shapeFileExists ) throws CoreException
+  static void deleteExitingShapeFiles( final IFile[] shapeFileExists ) throws CoreException
   {
     // Delete via resource-api in order to keep history
     for( final IFile existingFile : shapeFileExists )
       existingFile.delete( false, true, null );
   }
-
 }

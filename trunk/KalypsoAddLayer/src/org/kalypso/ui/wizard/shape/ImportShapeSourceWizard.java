@@ -42,16 +42,10 @@ package org.kalypso.ui.wizard.shape;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.databinding.swt.FileAndHistoryData;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.core.status.StatusDialog;
-import org.kalypso.ogc.gml.IKalypsoLayerModell;
 import org.kalypso.ui.ImageProvider;
-import org.kalypso.ui.KalypsoAddLayerPlugin;
 import org.kalypso.ui.addlayer.dnd.MapDropData;
 import org.kalypso.ui.i18n.Messages;
 import org.kalypso.ui.wizard.AbstractDataImportWizard;
@@ -63,44 +57,9 @@ public class ImportShapeSourceWizard extends AbstractDataImportWizard
 {
   private final ImportShapeFileData m_data = new ImportShapeFileData();
 
-  private final String m_title;
-
   public ImportShapeSourceWizard( )
   {
-    m_title = Messages.getString( "org.kalypso.ui.wizard.shape.ImportShapeSourceWizard.0" ); //$NON-NLS-1$
-  }
-
-  @Override
-  public boolean performFinish( )
-  {
-    final int insertionIndex = getInsertionIndex();
-    m_data.setInsertionIndex( insertionIndex );
-
-    m_data.storeSettings( getDialogSettings() );
-
-    final IKalypsoLayerModell mapModell = getMapModel();
-
-    final ImportShapeOperation operation = new ImportShapeOperation( m_data );
-    if( !operation.checkPrecondition( getShell(), m_title ) )
-      return false;
-
-    try
-    {
-      final ICommand command = operation.createCommand( mapModell );
-      if( command == null )
-        return false;
-
-      postCommand( command, null );
-
-      return true;
-    }
-    catch( final CoreException e )
-    {
-      final IStatus status = e.getStatus();
-      KalypsoAddLayerPlugin.getDefault().getLog().log( status );
-      StatusDialog.open( getShell(), status, m_title );
-      return false;
-    }
+    setWindowTitle( Messages.getString( "org.kalypso.ui.wizard.shape.ImportShapeSourceWizard.0" ) ); //$NON-NLS-1$
   }
 
   @Override
@@ -110,7 +69,8 @@ public class ImportShapeSourceWizard extends AbstractDataImportWizard
 
     final IProject project = ResourceUtilities.findProjectFromURL( getMapModel().getContext() );
 
-    final ImportShapeFileImportPage page = new ImportShapeFileImportPage( "shapefileimport", m_title, ImageProvider.IMAGE_KALYPSO_ICON_BIG, m_data ); //$NON-NLS-1$
+    final String title = getWindowTitle();
+    final ImportShapeFileImportPage page = new ImportShapeFileImportPage( "shapefileimport", title, ImageProvider.IMAGE_KALYPSO_ICON_BIG, m_data ); //$NON-NLS-1$
 
     page.setProjectSelection( project );
 
@@ -127,5 +87,18 @@ public class ImportShapeSourceWizard extends AbstractDataImportWizard
       shapeFile.setPath( null );
     else
       shapeFile.setPath( new Path( path ) );
+  }
+
+  @Override
+  public boolean performFinish( )
+  {
+    m_data.storeSettings( getDialogSettings() );
+
+    final int insertionIndex = getInsertionIndex();
+    m_data.setInsertionIndex( insertionIndex );
+
+    final ImportShapeOperation operation = new ImportShapeOperation( m_data );
+
+    return operation.executeOnWizard( this );
   }
 }

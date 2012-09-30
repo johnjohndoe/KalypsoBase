@@ -98,7 +98,7 @@ public class LoadStyleJob extends Job
         final StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createStyledLayerDescriptor( context, documentElement );
 
         final Layer[] layers = styledLayerDescriptor.getLayers();
-        final Collection<Style> allStyles = new ArrayList<Style>();
+        final Collection<Style> allStyles = new ArrayList<>();
         for( final Layer layer : layers )
         {
           final Style[] styles = layer.getStyles();

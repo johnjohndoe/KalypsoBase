@@ -4,10 +4,7 @@
 
    <extension-point id="WMSImageProvider" name="WMSImageProvider" schema="schema/WMSImageProvider.exsd"/>
 
-   <extension
-         id="addLayerWizard"
-         name="dataimport"
-         point="org.kalypso.ui.addLayerWizard">
+   <extension point="org.kalypso.ui.addLayerWizard">
       <wizard
             class="org.kalypso.ui.wizard.shape.ImportShapeSourceWizard"
             icon="icon/file_shp.GIF"
@@ -85,19 +82,6 @@
             name="%org.kalypso.ui.wizard.text.theme.name">
          <description>%org.kalypso.ui.wizard.text.theme.description</description>
       </wizard>
-      <wizardSelection description="Default selection used for the map editor." id="org.kalypso.ui.addlayer.wizardselection.default">
-         <wizardRef wizardId="org.kalypso.ui.wizard.shape"/>
-         <wizardRef wizardId="org.kalypso.ui.wizard.wms"/>
-         <wizardRef wizardId="org.kalypso.ui.wizard.wfs"/>
-         <wizardRef wizardId="gml"/>
-         <wizardRef wizardId="org.kalypso.ui.wizard.raster"/>
-         <wizardRef wizardId="org.kalypso.ui.wizard.image"/>
-         <wizardRef wizardId="org.kalypso.ui.wizard.others.LegendThemeWizard"/>
-         <wizardRef wizardId="org.kalypso.ui.wizard.others.CascadingThemeWizard"/>
-         <wizardRef wizardId="org.kalypso.ui.wizard.others.ScaleThemeWizard"/>
-         <wizardRef wizardId="org.kalypso.ui.wizard.others.ImageThemeWizard"/>
-         <wizardRef wizardId="org.kalypso.ui.wizard.others.TextThemeWizard"/>
-      </wizardSelection>
    </extension>
    <extension
          point="org.eclipse.ui.newWizards">
