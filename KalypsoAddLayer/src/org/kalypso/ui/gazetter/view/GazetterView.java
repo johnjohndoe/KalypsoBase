@@ -45,46 +45,46 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * <em>
- * 
+ *
  *  Bezirk                                  Strasse
  *  _________    ___________ _              ___________ _
  * |*abc_____|  |___________|V|GOTO        |___________|V|GOTO
- * 
- * 
- * 
+ *
+ *
+ *
  *  Label                 Strasse
  *  ___________ _          ___________ _
  * |___________|V|        |___________|V|
- * 
+ *
  * label
  * description
- * 
+ *
  * The title of the combobox is the <code>label</code>. The <code>description</code> acts as tooltip.
- * 
+ *
  * each combobox decorates a list of feature of the featuretype <code>featuretypeName</code>.
- * The spatial identifier (acts as ID) of the extend is the value of the property <code>spacialIdentifier</code>.  
+ * The spatial identifier (acts as ID) of the extend is the value of the property <code>spacialIdentifier</code>.
  * The labeled items in the combobox are the values of the property <code>labelPropertyName</code>.
  * The geometry associated with is the value of the property <code>geographicExtendPropertyName</code>.
- * 
+ *
  * featuretype
  *  labelProperty
  *  spacialIdentifierProperty
  *  geographicExtendProperty
- * 
+ *
  * childs are the elements that can be queried for more detailed extents.
- * After selecting a parent, the direct childs may update their comboboxes. 
- * 
+ * After selecting a parent, the direct childs may update their comboboxes.
+ *
  * </em>
- * 
+ *
  * @author doemming
  */
 
 public class GazetterView extends ViewPart
 {
 
-  private final HashMap<GazetterLocationType, GazetteerControl> m_GazetteerLocation2Control = new HashMap<GazetterLocationType, GazetteerControl>();
+  private final HashMap<GazetterLocationType, GazetteerControl> m_gazetteerLocation2Control = new HashMap<>();
 
-  private final HashMap<GazetteerControl, GazetterLocationType> m_GazetteerControl2Location = new HashMap<GazetteerControl, GazetterLocationType>();
+  private final HashMap<GazetteerControl, GazetterLocationType> m_gazetteerControl2Location = new HashMap<>();
 
   public GazetterView( )
   {
@@ -122,7 +122,7 @@ public class GazetterView extends ViewPart
     while( iterator.hasNext() )
     {
       final GazetterLocationType gz = iterator.next();
-      final GazetteerControl control = m_GazetteerLocation2Control.get( gz );
+      final GazetteerControl control = m_gazetteerLocation2Control.get( gz );
       try
       {
         control.init( null, null, null );
@@ -273,8 +273,8 @@ public class GazetterView extends ViewPart
 
   private void register( final GazetterLocationType location, final GazetteerControl control )
   {
-    m_GazetteerLocation2Control.put( location, control );
-    m_GazetteerControl2Location.put( control, location );
+    m_gazetteerLocation2Control.put( location, control );
+    m_gazetteerControl2Location.put( control, location );
   }
 
   private org.kalypso.view.gazetter.GazetterView getGazetterView( )
@@ -306,7 +306,7 @@ public class GazetterView extends ViewPart
 
   public GazetteerControl getGControlForGLocation( final GazetterLocationType location )
   {
-    return m_GazetteerLocation2Control.get( location );
+    return m_gazetteerLocation2Control.get( location );
   }
 
 }

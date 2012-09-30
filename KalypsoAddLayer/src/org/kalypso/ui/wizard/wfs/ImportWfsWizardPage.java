@@ -51,6 +51,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.deegree.ogcwebservices.wfs.capabilities.WFSFeatureType;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -81,7 +82,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusComposite;
@@ -89,6 +89,7 @@ import org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog;
 import org.kalypso.ogc.wfs.IWFSLayer;
 import org.kalypso.ogc.wfs.WFSClient;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.KalypsoAddLayerPlugin;
 import org.kalypso.ui.i18n.Messages;
 import org.kalypsodeegree.filterencoding.Filter;
 
@@ -97,7 +98,7 @@ import org.kalypsodeegree.filterencoding.Filter;
  */
 public class ImportWfsWizardPage extends WizardPage
 {
-  private static final IStatus LOADING_STATUS = StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.ui.wizard.wfs.ImportWfsWizardPage.0" ), null ); //$NON-NLS-1$
+  private static final IStatus LOADING_STATUS = new Status( IStatus.INFO, KalypsoAddLayerPlugin.getId(), Messages.getString( "org.kalypso.ui.wizard.wfs.ImportWfsWizardPage.0" ), null ); //$NON-NLS-1$
 
   protected Button getDefault;
 
@@ -127,7 +128,7 @@ public class ImportWfsWizardPage extends WizardPage
 
   private Button m_addFilterButton;
 
-  private final HashMap<WFSFeatureType, Filter> m_filter = new HashMap<WFSFeatureType, Filter>();
+  private final HashMap<WFSFeatureType, Filter> m_filter = new HashMap<>();
 
   private String m_uri = null;
 
@@ -199,7 +200,7 @@ public class ImportWfsWizardPage extends WizardPage
 
   private Composite m_leftsideButtonC;
 
-  private final Map<URL, WFSClient> m_capabilites = new HashMap<URL, WFSClient>();
+  private final Map<URL, WFSClient> m_capabilites = new HashMap<>();
 
   final IDoubleClickListener m_doubleClickListener = new IDoubleClickListener()
   {
@@ -262,7 +263,7 @@ public class ImportWfsWizardPage extends WizardPage
     // initialize availabel Servers
     List<String> catalog = ((ImportWfsSourceWizard)getWizard()).getCatalog();
     if( catalog == null )
-      catalog = new ArrayList<String>();
+      catalog = new ArrayList<>();
 
     m_viewerServers = new ComboViewer( fieldGroup, SWT.BORDER );
     m_viewerServers.setContentProvider( new ArrayContentProvider() );
@@ -404,7 +405,7 @@ public class ImportWfsWizardPage extends WizardPage
     catch( final MalformedURLException e )
     {
       e.printStackTrace();
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.ui.wizard.wfs.ImportWfsWizardPage.9" ) + m_uri, e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoAddLayerPlugin.getId(), Messages.getString( "org.kalypso.ui.wizard.wfs.ImportWfsWizardPage.9" ) + m_uri, e ); //$NON-NLS-1$
       setErrorMessage( status.getMessage() );
       setStatus( status );
     }

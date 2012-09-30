@@ -42,7 +42,7 @@ public final class ImageProviderExtensions
     /* Get the extension registry. */
     final IExtensionRegistry er = Platform.getExtensionRegistry();
 
-    final Map<String, String> mapping = new HashMap<String, String>();
+    final Map<String, String> mapping = new HashMap<>();
 
     final IConfigurationElement[] configurationElementsFor = er.getConfigurationElementsFor( EXTENSION_POINT_ID );
     for( final IConfigurationElement element : configurationElementsFor )

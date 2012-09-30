@@ -89,7 +89,7 @@ public class LegendThemeWizardPage extends WizardPage
     super( pageName );
 
     m_mapModell = mapModell;
-    m_properties = new HashMap<String, String>();
+    m_properties = new HashMap<>();
 
     setTitle( Messages.getString("LegendThemeWizardPage_0") ); //$NON-NLS-1$
     setDescription( Messages.getString("LegendThemeWizardPage_1") ); //$NON-NLS-1$
@@ -112,7 +112,7 @@ public class LegendThemeWizardPage extends WizardPage
     super( pageName, title, titleImage );
 
     m_mapModell = mapModell;
-    m_properties = new HashMap<String, String>();
+    m_properties = new HashMap<>();
 
     setDescription( Messages.getString("LegendThemeWizardPage_2") ); //$NON-NLS-1$
   }

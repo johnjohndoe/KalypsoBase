@@ -157,8 +157,8 @@ public class KalypsoGmlImportWizard extends AbstractDataImportWizard
 
     final Object selectedElement = m_data.getSelectedElement();
 
-    final List<String> pathList = new ArrayList<String>();
-    final List<String> titleList = new ArrayList<String>();
+    final List<String> pathList = new ArrayList<>();
+    final List<String> titleList = new ArrayList<>();
     if( selectedElement instanceof Feature )
     {
       // create featurepath for element
