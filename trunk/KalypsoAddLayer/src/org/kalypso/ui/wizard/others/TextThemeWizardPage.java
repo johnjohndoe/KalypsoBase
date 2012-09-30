@@ -80,7 +80,7 @@ public class TextThemeWizardPage extends WizardPage
   {
     super( pageName );
 
-    m_properties = new HashMap<String, String>();
+    m_properties = new HashMap<>();
 
     setTitle( Messages.getString("TextThemeWizardPage_0") ); //$NON-NLS-1$
     setDescription( Messages.getString("TextThemeWizardPage_1") ); //$NON-NLS-1$
@@ -100,7 +100,7 @@ public class TextThemeWizardPage extends WizardPage
   {
     super( pageName, title, titleImage );
 
-    m_properties = new HashMap<String, String>();
+    m_properties = new HashMap<>();
 
     setDescription( Messages.getString("TextThemeWizardPage_2") ); //$NON-NLS-1$
   }

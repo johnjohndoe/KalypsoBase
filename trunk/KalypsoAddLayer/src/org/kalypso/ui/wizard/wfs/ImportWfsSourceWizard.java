@@ -164,7 +164,7 @@ public class ImportWfsSourceWizard extends AbstractDataImportWizard
     catch( final IOException e )
     {
       e.printStackTrace();
-      m_catalog = new ArrayList<String>();
+      m_catalog = new ArrayList<>();
     }
     finally
     {
@@ -195,7 +195,7 @@ public class ImportWfsSourceWizard extends AbstractDataImportWizard
 
   public void readCatalog( final InputStream is ) throws IOException
   {
-    final ArrayList<String> catalog = new ArrayList<String>();
+    final ArrayList<String> catalog = new ArrayList<>();
     final BufferedReader br = new BufferedReader( new InputStreamReader( is ) );
     String line = br.readLine();
     do

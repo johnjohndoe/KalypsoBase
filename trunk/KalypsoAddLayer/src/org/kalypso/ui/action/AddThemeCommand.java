@@ -63,9 +63,9 @@ public class AddThemeCommand implements IThemeCommand
   /** Default location where the new theme is inserted into the model: at top */
   private static final int DEFAULT_INSERTION_INDEX = 0;
 
-  private final Collection<Style> m_styles = new ArrayList<Style>();
+  private final Collection<Style> m_styles = new ArrayList<>();
 
-  private final Map<String, String> m_properties = new HashMap<String, String>();
+  private final Map<String, String> m_properties = new HashMap<>();
 
   private IKalypsoLayerModell m_mapModell;
 

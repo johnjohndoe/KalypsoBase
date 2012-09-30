@@ -283,7 +283,7 @@ public class ImportRasterSourceWizardPage extends WizardPage
       final StyledLayerDescriptor styledLayerDescriptor = SLDFactory.createSLD( styleURL );
       // TODO: move into helper
       final Layer[] layers = styledLayerDescriptor.getLayers();
-      final Vector<String> styleNameVector = new Vector<String>();
+      final Vector<String> styleNameVector = new Vector<>();
       for( final Layer layer : layers )
       {
         final Style[] styles = layer.getStyles();
