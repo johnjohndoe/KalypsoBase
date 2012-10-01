@@ -30,11 +30,11 @@ import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
  */
 class ProfileMetadata implements IProfileMetadata
 {
-  private final AbstractProfile m_parent;
+  private final ProfileMetadataObserver m_parent;
 
   private final Map<String, String> m_metadata;
 
-  public ProfileMetadata( final AbstractProfile parent )
+  public ProfileMetadata( final ProfileMetadataObserver parent )
   {
     m_parent = parent;
     m_metadata = new HashMap<>();
