@@ -43,13 +43,16 @@ package org.kalypso.model.wspm.ui.view.legend;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ListDialog;
-import org.kalypso.chart.ui.IChartPart;
+import org.eclipse.ui.handlers.HandlerUtil;
+import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.profil.IProfile;
@@ -74,8 +77,13 @@ public class AddLayerHandler extends AbstractHandler
     if( Objects.isNull( view ) )
       return null;
 
-    final ProfilChartModel model = getProfileChartModel( view );
-    if( Objects.isNull( model ) )
+    final Shell shell = HandlerUtil.getActiveShell( event );
+    final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
+
+    final IChartComposite chartComposite = ChartHandlerUtilities.getChartChecked( context );
+
+    final ProfilChartModel model = getProfileChartModel( chartComposite );
+    if( model == null )
       return null;
 
     final IProfile profil = model.getProfil();
@@ -88,7 +96,7 @@ public class AddLayerHandler extends AbstractHandler
 
     final LayerDescriptor[] layerDescriptors = layerProvider.getAddableLayers( model );
 
-    final ListDialog dialog = new ListDialog( null );
+    final ListDialog dialog = new ListDialog( shell );
     dialog.setAddCancelButton( true );
     dialog.setBlockOnOpen( true );
     dialog.setContentProvider( new ArrayContentProvider() );
@@ -97,7 +105,7 @@ public class AddLayerHandler extends AbstractHandler
       @Override
       public final String getText( final Object element )
       {
-        return ((LayerDescriptor) element).getLabel();
+        return ((LayerDescriptor)element).getLabel();
       }
     } );
     dialog.setInput( layerDescriptors );
@@ -110,10 +118,10 @@ public class AddLayerHandler extends AbstractHandler
     if( Arrays.isEmpty( result ) )
       return null;
 
-    final LayerDescriptor layerToAdd = (LayerDescriptor) result[0];
+    final LayerDescriptor layerToAdd = (LayerDescriptor)result[0];
     try
     {
-      layerProvider.addLayerToProfile( profil, layerToAdd.getId() );
+      layerProvider.addLayerToProfile( shell, profil, layerToAdd.getId() );
     }
     catch( final Exception e )
     {
@@ -123,19 +131,14 @@ public class AddLayerHandler extends AbstractHandler
     return null;
   }
 
-  private ProfilChartModel getProfileChartModel( final IViewPart view )
+  private ProfilChartModel getProfileChartModel( final IChartComposite chartComposite )
   {
-    final IChartPart part = (IChartPart) view.getAdapter( IChartPart.class );
-    if( Objects.isNull( part ) )
+    if( chartComposite == null )
       return null;
 
-    final IChartComposite composite = part.getChartComposite();
-    if( Objects.isNull( composite ) )
-      return null;
-
-    final IChartModel model = composite.getChartModel();
+    final IChartModel model = chartComposite.getChartModel();
     if( model instanceof ProfilChartModel )
-      return (ProfilChartModel) model;
+      return (ProfilChartModel)model;
 
     return null;
   }

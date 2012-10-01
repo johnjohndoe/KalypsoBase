@@ -56,17 +56,18 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 
 /**
- * This view shows the profile legend. It always shows the legend of the last active part which adapts to
- * {@link org.kalypso.model.wspm.ui.profil.view.chart}.
+ * This view shows the profile legend. It always shows the legend of the last active part which adapts to {@link org.kalypso.model.wspm.ui.profil.view.chart}.
  * <p>
  * It is also a selection provider of its selected layers.
  * </p>
- *
+ * 
  * @author Gernot Belger
  * @author kimwerner
  */
 public class LegendViewPart extends AbstractChartModelViewPart
 {
+  public static final String ID = "org.kalypso.model.wspm.ui.view.legend.LegendViewPart"; //$NON-NLS-1$;
+
   private final ChartEditorTreeOutlinePage m_chartlegend = new ChartEditorTreeOutlinePage( new ProfilChartEditorTreeContentProvider(), new ChartTreeLabelProvider() );
 
   private Form m_form;
@@ -120,7 +121,7 @@ public class LegendViewPart extends AbstractChartModelViewPart
     IChartModel model = getChartModel();
     m_chartlegend.setModel( model );
     setSelectedLayer( model );
-    if( model != null && model instanceof ProfilChartModel && ((ProfilChartModel) model).getProfil() == null )
+    if( model != null && model instanceof ProfilChartModel && ((ProfilChartModel)model).getProfil() == null )
     {
       model = null;
     }
