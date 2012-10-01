@@ -49,7 +49,7 @@ import org.eclipse.core.runtime.Assert;
 
 /**
  * Utility class for Number parsing etc.
- *
+ * 
  * @author belger
  */
 public final class NumberUtils
@@ -57,6 +57,15 @@ public final class NumberUtils
   private NumberUtils( )
   {
     // do not instantiate
+  }
+
+  public static final boolean isInteger( final String string )
+  {
+    final Integer integer = parseQuietInteger( string );
+    if( integer == null )
+      return false;
+
+    return true;
   }
 
   public static final boolean isDouble( final String string )
@@ -73,6 +82,11 @@ public final class NumberUtils
     return Double.parseDouble( string.replace( ',', '.' ) );
   }
 
+  public static final float parseFloat( final String string )
+  {
+    return Float.parseFloat( string.replace( ',', '.' ) );
+  }
+
   /**
    * Parses a string as {@link BigDecimal}.<br>
    * The decimal separator may be one of '.' or ','.
@@ -80,6 +94,34 @@ public final class NumberUtils
   public static final BigDecimal parseBigDecimal( final String string ) throws NumberFormatException
   {
     return new BigDecimal( string.replace( ',', '.' ) );
+  }
+
+  /**
+   * Similar to {@link #parseQuietInteger(String)} but returns an int.<br/>
+   * If the value cannot be parse, the default value is returned.
+   */
+  public static final int parseQuietInt( final String value, final int errorValue )
+  {
+    final Integer integer = parseQuietInteger( value );
+    if( integer == null )
+      return errorValue;
+
+    return integer.intValue();
+  }
+
+  /**
+   * Tries to parse an integer, if fails returns null
+   */
+  public static final Integer parseQuietInteger( final String string )
+  {
+    try
+    {
+      return new Integer( Integer.parseInt( string ) );
+    }
+    catch( final NumberFormatException e )
+    {
+      return null;
+    }
   }
 
   /**
@@ -98,23 +140,57 @@ public final class NumberUtils
     }
   }
 
-  public static final boolean isInteger( final String string )
-  {
-    final Integer integer = parseQuietInteger( string );
-    if( integer == null )
-      return false;
-
-    return true;
-  }
-
   /**
-   * Tries to parse an integer, if fails returns null
+   * Tries to parse a {@link BigDecimal}.<br>
+   * The decimal separator may be one of '.' or ','.
+   * 
+   * @return A new BigDecimal parsed from the indicated string. <code>null</code>, if the string is not parseable.
+   * @see BigDecimal
    */
-  public static final Integer parseQuietInteger( final String string )
+  public static final BigDecimal parseQuietDecimal( final String string )
   {
     try
     {
-      return new Integer( Integer.parseInt( string ) );
+      return new BigDecimal( string.replace( ',', '.' ) );
+    }
+    catch( final NumberFormatException e )
+    {
+      return null;
+    }
+  }
+
+  /**
+   * Tries to parse a {@link BigDecimal} from a part of a string and additionally sets the indicated scale.<br>
+   * The decimal separator may be one of '.' or ','.
+   * 
+   * @param line
+   *          The string from which to parse the decimal.
+   * @param beginIndex
+   *          the beginning index, inclusive.
+   * @param endIndex
+   *          the ending index, exclusive.
+   * @param scale
+   *          The scale to set on the parsed decimal. If rounding is necessary the {@link BigDecimal#ROUND_HALF_UP} method is used.
+   * @return A new BigDecimal parsed from the indicated substring scaled to the givern scale. <code>null</code>, if the
+   *         substring is not parseable as BigDecimal or if the given string is too short.
+   * @throws IllegalArgumentException
+   *           If <code>beginIndex</code> is not less than <code>endIndex</code>.
+   * @see BigDecimal
+   * @see BigDecimal#setScale(int, int)
+   * @see String#substring(int, int)
+   */
+  public static final BigDecimal parseQuietDecimal( final String line, final int beginIndex, final int endIndex, final int scale )
+  {
+    Assert.isLegal( beginIndex < endIndex );
+
+    if( line.length() < endIndex )
+      return null;
+
+    final String substring = line.substring( beginIndex, endIndex ).trim();
+
+    try
+    {
+      return new BigDecimal( substring.replace( ',', '.' ) ).setScale( scale, BigDecimal.ROUND_HALF_UP );
     }
     catch( final NumberFormatException e )
     {
@@ -135,67 +211,8 @@ public final class NumberUtils
   }
 
   /**
-   * Tries to parse a {@link BigDecimal}.<br>
-   * The decimal separator may be one of '.' or ','.
-   *
-   * @return A new BigDecimal parsed from the indicated string. <code>null</code>, if the string is not parseable.
-   * @see BigDecimal
-   */
-  public static BigDecimal parseQuietDecimal( final String string )
-  {
-    try
-    {
-      return new BigDecimal( string.replace( ',', '.' ) );
-    }
-    catch( final NumberFormatException e )
-    {
-      return null;
-    }
-  }
-
-  /**
-   * Tries to parse a {@link BigDecimal} from a part of a string and additionally sets the indicated scale.<br>
-   * The decimal separator may be one of '.' or ','.
-   *
-   * @param line
-   *          The string from which to parse the decimal.
-   * @param beginIndex
-   *          the beginning index, inclusive.
-   * @param endIndex
-   *          the ending index, exclusive.
-   * @param scale
-   *          The scale to set on the parsed decimal. If rounding is necessary the {@link BigDecimal#ROUND_HALF_UP}
-   *          method is used.
-   * @return A new BigDecimal parsed from the indicated substring scaled to the givern scale. <code>null</code>, if the
-   *         substring is not parseable as BigDecimal or if the given string is too short.
-   * @throws IllegalArgumentException
-   *           If <code>beginIndex</code> is not less than <code>endIndex</code>.
-   * @see BigDecimal
-   * @see BigDecimal#setScale(int, int)
-   * @see String#substring(int, int)
-   */
-  public static BigDecimal parseQuietDecimal( final String line, final int beginIndex, final int endIndex, final int scale )
-  {
-    Assert.isLegal( beginIndex < endIndex );
-
-    if( line.length() < endIndex )
-      return null;
-
-    final String substring = line.substring( beginIndex, endIndex ).trim();
-
-    try
-    {
-      return new BigDecimal( substring.replace( ',', '.' ) ).setScale( scale, BigDecimal.ROUND_HALF_UP );
-    }
-    catch( final NumberFormatException e )
-    {
-      return null;
-    }
-  }
-
-  /**
    * Returns the next bigger {@link BigDecimal} with the same scale.
-   *
+   * 
    * @see BigDecimal
    */
   public static BigDecimal increment( final BigDecimal decimal )
@@ -205,7 +222,7 @@ public final class NumberUtils
 
   /**
    * Returns the next smaller {@link BigDecimal} with the same scale.
-   *
+   * 
    * @see BigDecimal
    */
   public static BigDecimal decrement( final BigDecimal decimal )
@@ -225,23 +242,5 @@ public final class NumberUtils
     final BigDecimal bigDecimalFloat = bigDecimal.subtract( bigDecimalLong );
     bigDecimal = bigDecimalFloat.setScale( sigFigs, RoundingMode.HALF_UP ).add( bigDecimalLong );
     return bigDecimal.doubleValue();
-  }
-
-  /**
-   * Similar to {@link #parseQuietInteger(String)} but returns an int.<br/>
-   * If the value cannot be parse, the default value is returned.
-   */
-  public static int parseQuietInt( final String value, final int errorValue )
-  {
-    final Integer integer = parseQuietInteger( value );
-    if( integer == null )
-      return errorValue;
-
-    return integer.intValue();
-  }
-
-  public static float parseFloat( final String string )
-  {
-    return Float.parseFloat( string.replace( ',', '.' ) );
   }
 }

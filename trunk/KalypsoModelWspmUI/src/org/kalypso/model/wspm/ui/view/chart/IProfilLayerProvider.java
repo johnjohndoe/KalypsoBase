@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart;
 
+import org.eclipse.swt.widgets.Shell;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 
@@ -57,7 +58,7 @@ public interface IProfilLayerProvider
    * if the layer depends on other layers or properties, create all required things here. </p> if there is nothing to do
    * see getLayer( final String layerId, final ProfilChartView view ) </p> return all affected layer
    */
-  void addLayerToProfile( final IProfile profil, final String layerId );
+  void addLayerToProfile( Shell shell, final IProfile profil, final String layerId );
 
   /**
    * return the layers not shown yet, but addable.

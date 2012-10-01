@@ -45,25 +45,27 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
-import org.kalypso.model.wspm.ui.i18n.Messages;
+import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
 public class RemoveLayerHandler extends AbstractHandler
 {
-  /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event )
   {
-    final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-    final IViewPart view = activePage == null ? null : activePage.findView( "org.kalypso.model.wspm.ui.view.legend.LegendViewPart" ); //$NON-NLS-1$
+    final String commandName = HandlerUtils.getCommandName( event );
+    final Shell shell = HandlerUtil.getActiveShell( event );
 
-    final ChartEditorTreeOutlinePage legendView = view == null ? null : (ChartEditorTreeOutlinePage) view.getAdapter( ChartEditorTreeOutlinePage.class );
+    final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+    final IViewPart view = activePage == null ? null : activePage.findView( LegendViewPart.ID );
+
+    final ChartEditorTreeOutlinePage legendView = view == null ? null : (ChartEditorTreeOutlinePage)view.getAdapter( ChartEditorTreeOutlinePage.class );
 
     if( legendView == null )
       return null;
@@ -71,16 +73,22 @@ public class RemoveLayerHandler extends AbstractHandler
     final ISelection selection = legendView.getSelection();
     if( selection == null || selection.isEmpty() )
       return null;
+
     if( selection instanceof IStructuredSelection )
     {
-      final IProfilChartLayer layer = (IProfilChartLayer) ((IStructuredSelection) selection).getFirstElement();
       try
       {
+        final IProfilChartLayer layer = (IProfilChartLayer)((IStructuredSelection)selection).getFirstElement();
+
+        final String message = String.format( "Remove dataset '%s'", layer.getTitle() );
+        if( !MessageDialog.openConfirm( shell, commandName, message ) )
+          return null;
+
         layer.removeYourself();
       }
       catch( final UnsupportedOperationException e )
       {
-        MessageDialog.openError( view.getViewSite().getShell(), Messages.getString( "org.kalypso.model.wspm.ui.view.legend.RemoveLayerHandler.1" ), e.getLocalizedMessage() ); //$NON-NLS-1$
+        MessageDialog.openError( shell, commandName, e.getLocalizedMessage() ); //$NON-NLS-1$
       }
     }
     return null;
