@@ -91,7 +91,7 @@ import org.kalypso.observation.result.TupleResult;
  * @author Kim Werner
  * @author Dirk Kuch
  */
-public abstract class AbstractProfile implements IProfile
+public abstract class AbstractProfile extends ProfileMetadataObserver implements IProfile
 {
   private final List<IProfileObject> m_profileObjects = new ArrayList<>();
 
@@ -252,6 +252,7 @@ public abstract class AbstractProfile implements IProfile
     }
   }
 
+  @Override
   void fireProfilChanged( final ProfileChangeHint hint )
   {
     // TODO: instead of ProfileOperation, we could combine the hints ourselfs during transaction mode
