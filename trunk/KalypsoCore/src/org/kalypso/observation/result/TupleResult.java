@@ -218,9 +218,9 @@ public class TupleResult implements List<IRecord>
     return m_interpolationHandler;
   }
 
-  public boolean doInterpolation( final TupleResult result, final IRecord record, final int index, final Double distance )
+  public boolean doInterpolation( final IRecord record, final int index, final double distance )
   {
-    return m_interpolationHandler == null ? false : m_interpolationHandler.doInterpolation( result, record, index, distance );
+    return m_interpolationHandler == null ? false : m_interpolationHandler.doInterpolation( this, record, index, distance );
   }
 
   @Override

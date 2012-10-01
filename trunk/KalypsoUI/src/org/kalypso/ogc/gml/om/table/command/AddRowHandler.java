@@ -96,7 +96,7 @@ public class AddRowHandler extends AbstractHandler
       if( Double.isNaN( faktor ) )
         return null; // cancel
 
-      final boolean success = tupleResult.doInterpolation( tupleResult, row, index, faktor );
+      final boolean success = tupleResult.doInterpolation( row, index, faktor );
       if( success )
         tupleResult.add( index + 1, row );
 
