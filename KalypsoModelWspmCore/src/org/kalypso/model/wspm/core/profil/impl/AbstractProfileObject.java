@@ -51,13 +51,14 @@ import org.kalypso.model.wspm.core.profil.IProfileObject;
 import org.kalypso.model.wspm.core.profil.IProfileObjectListener;
 import org.kalypso.model.wspm.core.profil.IProfileObjectRecord;
 import org.kalypso.model.wspm.core.profil.IProfileObjectRecords;
+import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
 import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.observation.result.IComponent;
 
 /**
  * @author Holger Albert
  */
-public abstract class AbstractProfileObject implements IProfileObject
+public abstract class AbstractProfileObject extends ProfileMetadataObserver implements IProfileObject
 {
   private final List<IProfileObjectListener> m_listener;
 
@@ -72,7 +73,7 @@ public abstract class AbstractProfileObject implements IProfileObject
     m_listener = new ArrayList<>();
     m_typeLabel = createTypeLabel();
     m_records = new ProfileObjectRecords( this );
-    m_metadata = new ProfileObjectMetadata( this );
+    m_metadata = new ProfileMetadata( this );
   }
 
   @Override
@@ -127,6 +128,12 @@ public abstract class AbstractProfileObject implements IProfileObject
   {
     if( m_listener.contains( listener ) )
       m_listener.remove( listener );
+  }
+
+  @Override
+  void fireProfilChanged( final ProfileChangeHint hint )
+  {
+    fireProfileObjectMetadataChanged();
   }
 
   private String createTypeLabel( )
@@ -226,7 +233,7 @@ public abstract class AbstractProfileObject implements IProfileObject
       listener.profileObjectChanged( this );
   }
 
-  protected void fireProfileObjectMetadataChanged( )
+  private void fireProfileObjectMetadataChanged( )
   {
     for( final IProfileObjectListener listener : m_listener )
       listener.profileObjectChanged( this );
