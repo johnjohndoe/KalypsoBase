@@ -59,9 +59,6 @@ import org.kalypso.observation.result.TupleResult;
  */
 public class InsertRowHandler extends AbstractHandler
 {
-  /**
-   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
@@ -87,7 +84,7 @@ public class InsertRowHandler extends AbstractHandler
     }
 
     final IRecord row = tupleResult.createRecord();
-    tupleResult.doInterpolation( tupleResult, row, index, 0.5 );
+    tupleResult.doInterpolation( row, index, 0.5 );
 
     tupleResult.add( index + 1, row );
 
