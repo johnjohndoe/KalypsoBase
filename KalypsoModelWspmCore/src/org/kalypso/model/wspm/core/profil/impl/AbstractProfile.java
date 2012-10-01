@@ -409,7 +409,7 @@ public abstract class AbstractProfile implements IProfile
 
   /**
    * CREATES A NEW POINT PROPERTY.
-   * 
+   *
    * @return a pointProperty from PointPropertyProvider, see {@code IProfilPointPropertyProvider#getPointProperty(String)}
    *         <p>
    *         you must check {@link #hasPointProperty(IComponent)}, if false you must call {@link #addPointProperty(IComponent)}
@@ -464,8 +464,8 @@ public abstract class AbstractProfile implements IProfile
   @Override
   public <T extends IProfileObject> T[] getProfileObjects( final Class<T> clazz )
   {
-    // TODO visitor
     final List<T> objects = new ArrayList<>();
+
     for( final IProfileObject object : m_profileObjects )
     {
       if( clazz.isInstance( object ) )
