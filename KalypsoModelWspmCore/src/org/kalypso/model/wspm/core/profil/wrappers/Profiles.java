@@ -50,6 +50,7 @@ import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.TupleResult;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -65,13 +66,18 @@ import com.vividsolutions.jts.geom.Point;
  */
 public final class Profiles
 {
+  // FIXME: bad -> this is lower than the general precision of 'breite' -> leads to bugs!
   public static final double FUZZINESS = 0.005; // Inaccuracies profile of points
 
   private Profiles( )
   {
   }
 
-  public static IProfileRecord addPoint( final IProfile profile, final Double width )
+  /**
+   * Returns the point at the given width.<br/>
+   * If no point with the given width exists, create a new point. The height value of the new point (but no other properties) is interpolated from adjacent points.
+   */
+  public static IProfileRecord addOrFindPoint( final IProfile profile, final Double width )
   {
     final IProfileRecord point = ProfileVisitors.findPoint( profile, width );
     if( Objects.isNotNull( point ) )
@@ -79,9 +85,57 @@ public final class Profiles
 
     final IProfileRecord add = profile.createProfilPoint();
     add.setBreite( width );
+
+    // FIXME: only height is interpolated here, why?!
     add.setHoehe( getHoehe( profile, width ) );
 
     return addRecordByWidth( profile, add, false );
+  }
+
+  /**
+   * Inserts a new point at the given width.<br/>
+   * Always inserts a new point, the properties of the new point are interpolated from adjacent points.
+   */
+  public static IProfileRecord insertPoint( final IProfile profile, final double width )
+  {
+    final TupleResult result = profile.getResult();
+
+    final IProfileRecord previousPoint = ProfileVisitors.findPreviousPoint( profile, width );
+
+    if( previousPoint == null && profile.getPoints().length > 0 )
+    {
+      final IProfileRecord lastRecord = profile.getLastPoint();
+
+      final IProfileRecord newRecord = lastRecord.cloneRecord();
+      newRecord.setBreite( width );
+
+      profile.addPoint( newRecord );
+
+      return newRecord;
+    }
+
+    /* create new record and set values by interpolating them form the neighbouring record */
+    final IProfileRecord newRecord = profile.createProfilPoint();
+
+    /* interpolate values onto new record */
+    if( previousPoint != null )
+    {
+      final int previousIndex = profile.indexOf( previousPoint );
+      final double distance = width - previousPoint.getBreite();
+      result.doInterpolation( newRecord, previousIndex, distance );
+
+      newRecord.setBreite( width );
+
+      profile.addPoint( previousIndex + 1, newRecord );
+    }
+    else
+    {
+      newRecord.setBreite( width );
+
+      profile.addPoint( newRecord );
+    }
+
+    return newRecord;
   }
 
   private static IProfileRecord addRecordByWidth( final IProfile profile, final IProfileRecord point, final boolean overwritePointMarkers )
@@ -94,7 +148,7 @@ public final class Profiles
     for( int i = 0; i < records.length; i++ )
     {
       final IProfileRecord r = records[i];
-      final Double rw = (Double) r.getValue( iBreite );
+      final Double rw = (Double)r.getValue( iBreite );
 
       if( Math.abs( width - rw ) < FUZZINESS )
       {
@@ -114,7 +168,7 @@ public final class Profiles
       else if( width < rw )
       {
         // add new record
-        profile.getResult().add( i, point.getRecord() );
+        profile.addPoint( i, point );
         return point;
       }
       else if( width.equals( rw ) )
@@ -155,7 +209,7 @@ public final class Profiles
     final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
     final GM_Curve profileCurve = WspmGeometryUtilities.createProfileSegment( profile, crs );
-    final LineString profileLineString = (LineString) JTSAdapter.export( profileCurve );
+    final LineString profileLineString = (LineString)JTSAdapter.export( profileCurve );
 
     return profileLineString;
   }
@@ -168,7 +222,7 @@ public final class Profiles
   public static Coordinate getJtsPosition( final IProfile profile, final double breite ) throws Exception
   {
     final GM_Point point = getPosition( profile, breite );
-    final Point p = (Point) JTSAdapter.export( point );
+    final Point p = (Point)JTSAdapter.export( point );
     if( p == null )
       return null;
 
