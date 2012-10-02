@@ -27,6 +27,10 @@ public interface IProfileObjectRecord
 
   void setId( String id );
 
+  String getComment( );
+
+  void setComment( String comment );
+
   Double getBreite( );
 
   void setBreite( Double breite );
@@ -42,4 +46,8 @@ public interface IProfileObjectRecord
   Double getHochwert( );
 
   void setHochwert( Double hochwert );
+
+  String getCode( );
+
+  void setCode( String code );
 }

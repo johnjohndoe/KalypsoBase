@@ -29,6 +29,8 @@ class ProfileObjectRecord implements IProfileObjectRecord
 
   private String m_id;
 
+  private String m_comment;
+
   private Double m_breite;
 
   private Double m_hoehe;
@@ -37,19 +39,23 @@ class ProfileObjectRecord implements IProfileObjectRecord
 
   private Double m_hochwert;
 
+  private String m_code;
+
   public ProfileObjectRecord( final ProfileObjectRecords parent )
   {
-    this( parent, null, 0.0, 0.0, 0.0, 0.0 );
+    this( parent, null, null, 0.0, 0.0, 0.0, 0.0, null );
   }
 
-  public ProfileObjectRecord( final ProfileObjectRecords parent, final String id, final Double breite, final Double hoehe, final Double rechtswert, final Double hochwert )
+  public ProfileObjectRecord( final ProfileObjectRecords parent, final String id, final String comment, final Double breite, final Double hoehe, final Double rechtswert, final Double hochwert, final String code )
   {
     m_parent = parent;
     m_id = id;
+    m_comment = comment;
     m_breite = breite;
     m_hoehe = hoehe;
     m_rechtswert = rechtswert;
     m_hochwert = hochwert;
+    m_code = code;
   }
 
   @Override
@@ -62,6 +68,19 @@ class ProfileObjectRecord implements IProfileObjectRecord
   public void setId( final String id )
   {
     m_id = id;
+    fireProfileObjectRecordChanged();
+  }
+
+  @Override
+  public String getComment( )
+  {
+    return m_comment;
+  }
+
+  @Override
+  public void setComment( final String comment )
+  {
+    m_comment = comment;
     fireProfileObjectRecordChanged();
   }
 
@@ -114,6 +133,19 @@ class ProfileObjectRecord implements IProfileObjectRecord
   public void setHochwert( final Double hochwert )
   {
     m_hochwert = hochwert;
+    fireProfileObjectRecordChanged();
+  }
+
+  @Override
+  public String getCode( )
+  {
+    return m_code;
+  }
+
+  @Override
+  public void setCode( final String code )
+  {
+    m_code = code;
     fireProfileObjectRecordChanged();
   }
 

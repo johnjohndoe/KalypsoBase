@@ -42,16 +42,20 @@ public class ProfileObjectHelper
     final TupleResult result = profileObjectObservation.getResult();
 
     final IComponent idComponent = ProfileUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_ID );
+    final IComponent commentComponent = ProfileUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_COMMENT );
     final IComponent breiteComponent = ProfileUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_BREITE );
     final IComponent hoeheComponent = ProfileUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_HOEHE );
     final IComponent rechtswertComponent = ProfileUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
     final IComponent hochwertComponent = ProfileUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+    final IComponent codeComponent = ProfileUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_CODE );
 
     final int idIndex = result.indexOfComponent( idComponent );
+    final int commentIndex = result.indexOfComponent( commentComponent );
     final int breiteIndex = result.indexOfComponent( breiteComponent );
     final int hoeheIndex = result.indexOfComponent( hoeheComponent );
     final int rechtswertIndex = result.indexOfComponent( rechtswertComponent );
     final int hochwertIndex = result.indexOfComponent( hochwertComponent );
+    final int codeIndex = result.indexOfComponent( codeComponent );
 
     final IProfileObjectRecords records = profileObject.getRecords();
 
@@ -60,17 +64,21 @@ public class ProfileObjectHelper
       final IRecord record = result.get( i );
 
       final String id = (String)record.getValue( idIndex );
+      final String comment = (String)record.getValue( commentIndex );
       final Double breite = (Double)record.getValue( breiteIndex );
       final Double hoehe = (Double)record.getValue( hoeheIndex );
       final Double rechtswert = (Double)record.getValue( rechtswertIndex );
       final Double hochwert = (Double)record.getValue( hochwertIndex );
+      final String code = (String)record.getValue( codeIndex );
 
       final IProfileObjectRecord profileObjectRecord = records.addNewRecord();
       profileObjectRecord.setId( id );
+      profileObjectRecord.setComment( comment );
       profileObjectRecord.setBreite( breite );
       profileObjectRecord.setHoehe( hoehe );
       profileObjectRecord.setRechtswert( rechtswert );
       profileObjectRecord.setHochwert( hochwert );
+      profileObjectRecord.setCode( code );
     }
   }
 

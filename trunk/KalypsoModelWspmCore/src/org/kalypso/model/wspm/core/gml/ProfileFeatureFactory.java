@@ -220,23 +220,29 @@ public final class ProfileFeatureFactory implements IWspmConstants
   private static FeatureChange[] handleProfileObjectObservation( final IProfileObject profileObject, final Feature profileObjectFeature )
   {
     final IComponent idComponent = ProfileUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_ID );
+    final IComponent commentComponent = ProfileUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_COMMENT );
     final IComponent breiteComponent = ProfileUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_BREITE );
     final IComponent hoeheComponent = ProfileUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_HOEHE );
     final IComponent rechtswertComponent = ProfileUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
     final IComponent hochwertComponent = ProfileUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+    final IComponent codeComponent = ProfileUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_CODE );
 
     final TupleResult result = new TupleResult();
     result.addComponent( idComponent );
+    result.addComponent( commentComponent );
     result.addComponent( breiteComponent );
     result.addComponent( hoeheComponent );
     result.addComponent( rechtswertComponent );
     result.addComponent( hochwertComponent );
+    result.addComponent( codeComponent );
 
     final int idIndex = result.indexOfComponent( idComponent );
+    final int commentIndex = result.indexOfComponent( commentComponent );
     final int breiteIndex = result.indexOfComponent( breiteComponent );
     final int hoeheIndex = result.indexOfComponent( hoeheComponent );
     final int rechtswertIndex = result.indexOfComponent( rechtswertComponent );
     final int hochwertIndex = result.indexOfComponent( hochwertComponent );
+    final int codeIndex = result.indexOfComponent( codeComponent );
 
     final String buildingId = profileObject.getId();
     final Observation<TupleResult> observation = new Observation<>( buildingId, null, result );
@@ -248,10 +254,12 @@ public final class ProfileFeatureFactory implements IWspmConstants
 
       final IRecord record = result.createRecord();
       record.setValue( idIndex, profileObjectRecord.getId() );
+      record.setValue( commentIndex, profileObjectRecord.getComment() );
       record.setValue( breiteIndex, profileObjectRecord.getBreite() );
       record.setValue( hoeheIndex, profileObjectRecord.getHoehe() );
       record.setValue( rechtswertIndex, profileObjectRecord.getRechtswert() );
       record.setValue( hochwertIndex, profileObjectRecord.getHochwert() );
+      record.setValue( codeIndex, profileObjectRecord.getCode() );
 
       result.add( record );
     }

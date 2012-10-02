@@ -83,6 +83,18 @@ public abstract class AbstractProfileObject extends ProfileMetadataObserver impl
   }
 
   @Override
+  public String[] getProperties( )
+  {
+    return new String[] {};
+  }
+
+  @Override
+  public String getPropertyLabel( final String property )
+  {
+    return null;
+  }
+
+  @Override
   public IProfileObjectRecords getRecords( )
   {
     return m_records;
