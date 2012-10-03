@@ -189,7 +189,6 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     // draw edit shape
     if( editInfo.getEditFigure() != null )
       editInfo.getEditFigure().paint( gc );
-
   }
 
   private void registerListener( )
