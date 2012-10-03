@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="Cp1252" standalone="yes"?>
 <ChartConfiguration xmlns="http://www.openali.de/odysseus/chartconfig/0.2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Chart legend="false" id="runoffChart">
-    <Title></Title>
     <Description>Discharge</Description>
+    <ChartInsets bottom="0" left="10" top="10" right="0"/>
     <Layers>
       <Layer visible="true" id="dischargeLayer">
-        <Provider epid="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+        <Provider epid="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider">
           <Parameters>
             <Parameter name="featureKey" value="runOffEventFeatureKey" />
             <Parameter name="domainComponentId" value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionStation" />
-            <Parameter name="valueComponentId" value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionRunOff" />
+            <Parameter name="targetComponentId" value="urn:ogc:gml:dict:kalypso:model:wspm:components#LengthSectionRunOff" />
           </Parameters>
         </Provider>
         <Title>Abfluss</Title>
@@ -102,7 +102,6 @@
         </Provider>
         <Styles>
           <LineStyle role="axisLine">
-            <Title></Title>
             <Width>2</Width>
             <LineColor>000000</LineColor>
           </LineStyle>
@@ -118,20 +117,16 @@
         </Provider>
         <Styles>
           <LineStyle role="axisLine">
-            <Title></Title>
             <Width>1</Width>
             <LineColor>000000</LineColor>
           </LineStyle>
           <TextStyle role="axisLabel">
-            <Title></Title>
             <TextColor>00aa00</TextColor>
           </TextStyle>
           <LineStyle role="tickLine">
-            <Title></Title>
             <LineColor>00aa00</LineColor>
           </LineStyle>
           <TextStyle role="tickLabel">
-            <Title></Title>
             <TextColor>00aa00</TextColor>
           </TextStyle>
         </Styles>
