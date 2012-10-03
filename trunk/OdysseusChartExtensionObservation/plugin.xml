@@ -10,17 +10,13 @@
         
       <provider
             class="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider"
-            id="org.kalypso.chart.ext.layer.provider.observation.LineLayerProvider"/>
+            id="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider"/>
             
-      <!-- Deprecated: use org.kalypso.chart.ext.layer.provider.observation.LineLayerProvider -->
+      <!-- Deprecated: use org.kalypso.chart.ext.observation.TupleResultLineLayerProvider -->
+      <!-- REMARK: kept for now, because this provider was used in workspace saved kod files -->
       <provider
             class="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider"
             id="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider"/>
-      <!-- Deprecated: use org.kalypso.chart.ext.layer.provider.observation.LineLayerProvider -->
-      <provider
-            class="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider"
-            id="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
-      </provider>
    </extension>
    <extension
          point="de.openali.odysseus.chart.factory.MapperProvider">
