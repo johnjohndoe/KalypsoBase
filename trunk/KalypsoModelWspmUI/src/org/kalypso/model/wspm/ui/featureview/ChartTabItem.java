@@ -43,9 +43,12 @@ package org.kalypso.model.wspm.ui.featureview;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
@@ -53,7 +56,6 @@ import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.commandhandler.ChartSourceProvider;
 import org.kalypso.commons.eclipse.ui.EmbeddedSourceToolbarManager;
 import org.kalypso.contribs.eclipse.jface.action.CommandWithStyle;
-import org.kalypsodeegree.model.feature.Feature;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
@@ -66,53 +68,64 @@ import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
  *
  * @author burtscher1
  */
-public class ChartTabItem extends Composite implements IChartPart
+public class ChartTabItem implements IChartPart
 {
-  private final ChartImageComposite m_chartComposite;
+  private final IChartModel m_chartModel = new ChartModel();
 
-  private final EmbeddedSourceToolbarManager m_sourceManager;
+  private final CommandWithStyle[] m_commands;
 
-  private final IChartModel m_chartModel;
+  private ChartImageComposite m_chartComposite = null;
 
-  // private final ZmlDiagramLayerListener m_layerManagerListener;
+  private EmbeddedSourceToolbarManager m_sourceManager = null;
 
-  public ChartTabItem( final String featureKeyName, final Feature feature, final Composite parent, final int style, final CommandWithStyle[] commands )
+  public ChartTabItem( final CommandWithStyle[] commands )
   {
-    super( parent, style );
+    m_commands = commands;
+  }
 
-    GridLayoutFactory.fillDefaults().spacing( 0, 0 ).applyTo( this );
+  public Control createControl( final Composite parent, final int style )
+  {
+    final Composite panel = new Composite( parent, style );
+
+    GridLayoutFactory.fillDefaults().spacing( 0, 0 ).applyTo( panel );
 
     final ToolBarManager manager = new ToolBarManager( SWT.HORIZONTAL | SWT.FLAT );
-    final ToolBar toolBar = manager.createControl( this );
+    final ToolBar toolBar = manager.createControl( panel );
 
-    m_chartModel = new ChartModel();
-
-    // FIXME: only works for zml layers... -> we need a beeter concept
-    // m_layerManagerListener = new ZmlDiagramLayerListener( m_chartModel );
-    // m_chartModel.getLayerManager().getEventHandler().addListener( m_layerManagerListener );
-
-    m_chartModel.dispose();
-
-    // remember the feature from the feature control
-    m_chartModel.setData( featureKeyName, feature );
-
-    m_chartComposite = new ChartImageComposite( this, SWT.BORDER, m_chartModel, new RGB( 255, 255, 255 ) );
+    m_chartComposite = new ChartImageComposite( panel, SWT.BORDER, m_chartModel, new RGB( 255, 255, 255 ) );
     m_chartComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     final IWorkbench sourceLocator = PlatformUI.getWorkbench();
     m_sourceManager = new EmbeddedSourceToolbarManager( sourceLocator, ChartSourceProvider.ACTIVE_CHART_NAME, ChartTabItem.this.getChartComposite() );
-    m_sourceManager.fillToolbar( manager, commands );
+    m_sourceManager.fillToolbar( manager, m_commands );
 
-    // TODO: this is still an ugly place, the information which command to treigger (if any) should come from outside
-    if( commands.length > 0 )
-      EmbeddedSourceToolbarManager.executeCommand( sourceLocator, manager, commands[0].getCommandID() );
+    // TODO: this is still an ugly place, the information which command to trigger (if any) should come from outside
+    if( m_commands.length > 0 )
+      EmbeddedSourceToolbarManager.executeCommand( sourceLocator, manager, m_commands[0].getCommandID() );
 
     final GridData toolbarData = new GridData( SWT.FILL, SWT.CENTER, true, false );
     toolBar.setLayoutData( toolbarData );
-    final boolean hasCommands = commands.length > 0;
+    final boolean hasCommands = m_commands.length > 0;
     toolbarData.exclude = !hasCommands;
     toolBar.setVisible( hasCommands );
-    layout();
+
+    parent.layout();
+
+    panel.addDisposeListener( new DisposeListener()
+    {
+      @Override
+      public void widgetDisposed( final DisposeEvent e )
+      {
+        dispose();
+      }
+    } );
+
+    return panel;
+  }
+
+  public IChartModel getChartModel( )
+  {
+    return m_chartModel;
   }
 
   @Override
@@ -121,15 +134,11 @@ public class ChartTabItem extends Composite implements IChartPart
     return m_chartComposite;
   }
 
-  @Override
-  public void dispose( )
+  void dispose( )
   {
-    m_sourceManager.dispose();
+    if( m_sourceManager != null )
+      m_sourceManager.dispose();
 
-    if( m_chartComposite != null && !m_chartComposite.isDisposed() )
-      m_chartComposite.dispose();
-
-    // m_chartModel.getLayerManager().getEventHandler().removeListener( m_layerManagerListener );
     m_chartModel.dispose();
   }
 }

@@ -1,4 +1,4 @@
-package org.kalypso.chart.ext.observation.layer;
+package org.kalypso.chart.ext.observation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +7,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.chart.ext.observation.data.TupleResultDomainValueData;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.ComponentUtilities;

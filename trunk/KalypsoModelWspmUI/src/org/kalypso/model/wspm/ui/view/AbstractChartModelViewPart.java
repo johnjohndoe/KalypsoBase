@@ -107,9 +107,6 @@ public abstract class AbstractChartModelViewPart extends ViewPart implements IAd
     return m_toolkit;
   }
 
-  /**
-   * @see org.eclipse.ui.part.WorkbenchPart#dispose()
-   */
   @Override
   public void dispose( )
   {

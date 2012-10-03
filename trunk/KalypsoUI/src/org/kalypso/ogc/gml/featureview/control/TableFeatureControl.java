@@ -223,9 +223,6 @@ public class TableFeatureControl extends AbstractToolbarFeatureControl implement
     return client;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureControl#dispose()
-   */
   @Override
   public void dispose( )
   {
