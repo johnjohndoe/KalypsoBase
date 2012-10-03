@@ -100,9 +100,7 @@ public class ChartFeatureControlFactory implements IExtensionsFeatureControlFact
 
     final String configurationUrl = KalypsoCorePlugin.getDefault().getCatalogManager().resolve( configurationUrn, configurationUrn );
 
-    final Feature chartFeature = ChartFeatureControlComposite.getChartFeature( feature, pt );
-
-    return new ChartFeatureControl( featureKeyName, chartFeature, pt, configurationUrl, chartName, commands, chartProviderID );
+    return new ChartFeatureControl( featureKeyName, feature, pt, configurationUrl, chartName, commands, chartProviderID );
   }
 
   private CommandWithStyle[] parseCommands( final String cmdIds, final String cmdStyles )
