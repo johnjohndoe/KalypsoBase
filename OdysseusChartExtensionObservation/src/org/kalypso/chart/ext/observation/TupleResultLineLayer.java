@@ -16,6 +16,7 @@ import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
 import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
@@ -34,6 +35,16 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
     super( provider, styleSet );
 
     m_valueData = data;
+
+    m_valueData.setLayer( this );
+  }
+
+  @Override
+  public void dispose( )
+  {
+    m_valueData.close();
+
+    super.dispose();
   }
 
   @Override
@@ -212,5 +223,10 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
       }
     }
     paint( gc, path.toArray( new Point[] {} ) );
+  }
+
+  void onObservationChanged( )
+  {
+    getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
   }
 }

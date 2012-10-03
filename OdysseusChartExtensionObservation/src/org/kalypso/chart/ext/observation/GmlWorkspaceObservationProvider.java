@@ -38,6 +38,8 @@ public class GmlWorkspaceObservationProvider implements IObservationProvider
 
   final private URL m_context;
 
+  private GMLWorkspace m_workspace;
+
   /**
    * @param href
    *          Location of a gml resource (.gml file)
@@ -52,12 +54,22 @@ public class GmlWorkspaceObservationProvider implements IObservationProvider
   }
 
   @Override
+  public void dispose( )
+  {
+    if( m_workspace != null )
+    {
+      m_workspace.dispose();
+      m_workspace = null;
+    }
+  }
+
+  @Override
   public IObservation<TupleResult> getObservation( )
   {
     try
     {
-      final GMLWorkspace workspace = GmlSerializer.createGMLWorkspace( new URL( m_context, m_href ), null );
-      final Feature feature = workspace.getFeature( m_observationId );
+      m_workspace = GmlSerializer.createGMLWorkspace( new URL( m_context, m_href ), null );
+      final Feature feature = m_workspace.getFeature( m_observationId );
       if( feature != null )
       {
         // FIXME: makes no sense.... however we should give some information if the

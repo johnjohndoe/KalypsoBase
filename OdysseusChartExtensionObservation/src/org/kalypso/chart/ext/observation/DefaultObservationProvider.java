@@ -36,6 +36,11 @@ public class DefaultObservationProvider implements IObservationProvider
   }
 
   @Override
+  public void dispose( )
+  {
+  }
+
+  @Override
   public IObservation<TupleResult> getObservation( )
   {
     return m_observation;

@@ -23,10 +23,12 @@ import org.kalypso.observation.result.TupleResult;
 
 /**
  * Provides a {@link IObservation}
- * 
+ *
  * @author Gernot Belger
  */
 public interface IObservationProvider
 {
   IObservation<TupleResult> getObservation( );
+
+  void dispose( );
 }
