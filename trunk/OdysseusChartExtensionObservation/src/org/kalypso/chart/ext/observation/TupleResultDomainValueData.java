@@ -45,7 +45,9 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 
 import org.kalypso.observation.IObservation;
+import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.ITupleResultChangedListener;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree.model.feature.Feature;
@@ -82,15 +84,15 @@ import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
  */
 public class TupleResultDomainValueData<T_domain, T_target> implements IDataContainer<T_domain, T_target>
 {
-  private static final String PARAMETER_DOMAIN_COMPONENT_ID = "domainComponentId";
+  private static final String PARAMETER_DOMAIN_COMPONENT_ID = "domainComponentId"; //$NON-NLS-1$
 
-  private static final String PARAMETER_TARGET_COMPONENT_ID = "targetComponentId";
+  private static final String PARAMETER_TARGET_COMPONENT_ID = "targetComponentId"; //$NON-NLS-1$
 
   /**
-   * @deprecated use targetComponentId instead.
+   * @deprecated use targetComponentId instead. Still present for backwards compatibility.
    */
   @Deprecated
-  private static final String PARAMETER_VALUE_COMPONENT_ID = "valueComponentId";
+  private static final String PARAMETER_VALUE_COMPONENT_ID = "valueComponentId"; //$NON-NLS-1$
 
   private static final String PARAMETER_FEATURE_KEY = "featureKey"; //$NON-NLS-1$
 
@@ -99,6 +101,27 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
   private static final String PARAMETER_HREF = "href"; //$NON-NLS-1$
 
   private static final String PARAMETER_OBSERVATION_ID = "observationId"; //$NON-NLS-1$
+
+  private final ITupleResultChangedListener m_changeListener = new ITupleResultChangedListener()
+  {
+    @Override
+    public void valuesChanged( final ValueChange[] changes )
+    {
+      handleObservationChanged();
+    }
+
+    @Override
+    public void recordsChanged( final IRecord[] records, final TYPE type )
+    {
+      handleObservationChanged();
+    }
+
+    @Override
+    public void componentsChanged( final IComponent[] components, final TYPE type )
+    {
+      handleObservationChanged();
+    }
+  };
 
   final private String m_domainComponentName;
 
@@ -110,11 +133,18 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
 
   private final IObservationProvider m_provider;
 
+  private TupleResultLineLayer m_layer;
+
   public TupleResultDomainValueData( final IObservationProvider provider, final String domainComponentName, final String targetComponentName )
   {
     m_provider = provider;
     m_domainComponentName = domainComponentName;
     m_targetComponentName = targetComponentName;
+  }
+
+  void setLayer( final TupleResultLineLayer layer )
+  {
+    m_layer = layer;
   }
 
   public IObservation<TupleResult> getObservation( )
@@ -129,6 +159,9 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
       return;
 
     m_observation = m_provider.getObservation();
+
+    if( m_observation != null )
+      m_observation.getResult().addChangeListener( m_changeListener );
 
     // FIXME: add listener and update layer if observation changes
 
@@ -154,7 +187,8 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
     return (T_domain[])getValues( m_domainComponentName );
   }
 
-  protected Object[] getValues( final String compName )
+  // TODO: bad, against the philosophy fof the chart layers: instead, iterate through values!
+  private Object[] getValues( final String compName )
   {
     open();
 
@@ -183,11 +217,14 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
     return (T_target[])getValues( m_targetComponentName );
   }
 
+  // FIXME: never called, but must be called!
   @Override
   public void close( )
   {
+    m_provider.dispose();
     m_observation = null;
     m_isOpen = false;
+    m_layer = null;
   }
 
   @Override
@@ -259,5 +296,11 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
       return null;
 
     return ObservationFeatureFactory.toObservation( feature );
+  }
+
+  protected void handleObservationChanged( )
+  {
+    if( m_layer != null )
+      m_layer.onObservationChanged();
   }
 }
