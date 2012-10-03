@@ -42,7 +42,11 @@ package org.kalypso.ogc.gml.featureview.control.composite;
 
 import java.util.List;
 
+import org.eclipse.jface.dialogs.DialogSettings;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.TabItem;
@@ -59,9 +63,13 @@ import org.kalypso.template.featureview.TabFolder;
 public class TabFolderCompositionControl extends AbstractFeatureCompositionControl
 {
   /**
-   * If this data property is set to a tab control as Boolean.FALSE, the tab is hidden (disposed after creation).
+   * These settings are used locally to remember the last selected tab-folder.<br/>
+   * Static because we want to keep the currently selected tab over selection of features.
    */
-  public static String DATA_HIDE_TAB = "hideTab"; //$NON-NLS-1$
+  // TODO: should be more individual i.e. remeber selection for each different folder (but how to distinguish??)
+  private final static IDialogSettings SETTINGS = new DialogSettings( "bla" ); //$NON-NLS-1$
+
+  private static final String STR_SETTINGS_TAB = "tabIndex"; //$NON-NLS-1$
 
   private final TabFolder m_folderType;
 
@@ -77,54 +85,57 @@ public class TabFolderCompositionControl extends AbstractFeatureCompositionContr
   {
     final org.eclipse.swt.widgets.TabFolder tabFolder = new org.eclipse.swt.widgets.TabFolder( parent, style );
 
+    /* create the tab items */
     final List<org.kalypso.template.featureview.TabFolder.TabItem> tabItem = m_folderType.getTabItem();
     for( final org.kalypso.template.featureview.TabFolder.TabItem tabItemType : tabItem )
+      createItem( tabFolder, tabItemType );
+
+    /* restore previous selected tab */
+    final String selectedTabStr = SETTINGS.get( STR_SETTINGS_TAB );
+    final int selectedTab = selectedTabStr == null ? 0 : Integer.parseInt( selectedTabStr );
+    if( selectedTab < tabFolder.getTabList().length )
     {
-      final String label = tabItemType.getTabLabel();
-      final String itemLabel = getAnnotation( IAnnotation.ANNO_LABEL, label );
-
-      final ControlType control = tabItemType.getControl().getValue();
-
-      final TabItem item = new TabItem( tabFolder, SWT.NONE );
-      item.setText( translate( itemLabel ) );
-
-      final Control tabControl = createControl( tabFolder, SWT.NONE, control );
-
-      final boolean isHidden = isHidden( tabControl );
-      if( isHidden )
-      {
-        tabControl.dispose();
-        item.dispose();
-      }
-      else
-      {
-        // ?? This seems to be breaking FeatureView's with observations. in this case control of parent will be used
-        // FIXME: The parent if a TabItem MUST be the TabFolder! Everything else is just nonsense
-        try
-        {
-          item.setControl( tabControl );
-        }
-        catch( final Exception e )
-        {
-          item.setControl( tabControl.getParent() );
-        }
-      }
-
+      tabFolder.setSelection( selectedTab );
     }
+
+    tabFolder.addSelectionListener( new SelectionAdapter()
+    {
+      @Override
+      public void widgetSelected( final SelectionEvent e )
+      {
+        handleFolderSelectionChanged( tabFolder.getSelectionIndex() );
+      }
+    } );
 
     return tabFolder;
   }
 
-  private boolean isHidden( final Control tabControl )
+  protected void handleFolderSelectionChanged( final int selectionIndex )
   {
-    final Object data = tabControl.getData( DATA_HIDE_TAB );
+    SETTINGS.put( STR_SETTINGS_TAB, selectionIndex );
+  }
 
-    if( data instanceof Boolean )
-      return (Boolean)data;
+  private void createItem( final org.eclipse.swt.widgets.TabFolder tabFolder, final org.kalypso.template.featureview.TabFolder.TabItem tabItemType )
+  {
+    final String label = tabItemType.getTabLabel();
+    final String itemLabel = getAnnotation( IAnnotation.ANNO_LABEL, label );
 
-    if( data instanceof String )
-      return Boolean.valueOf( (String)data );
+    final ControlType control = tabItemType.getControl().getValue();
 
-    return false;
+    final TabItem item = new TabItem( tabFolder, SWT.NONE );
+    item.setText( translate( itemLabel ) );
+
+    final Control tabControl = createControl( tabFolder, SWT.NONE, control );
+
+    // ?? This seems to be breaking FeatureView's with observations. in this case control of parent will be used
+    // FIXME: The parent if a TabItem MUST be the TabFolder! Everything else is just nonsense
+    try
+    {
+      item.setControl( tabControl );
+    }
+    catch( final Exception e )
+    {
+      item.setControl( tabControl.getParent() );
+    }
   }
 }
