@@ -382,10 +382,6 @@
                class="org.kalypso.model.wspm.ui.featureview.PolynomeLayerProvider"
                id="org.kalypso.model.wspm.ui.featureview.PolynomeLayerProvider">
          </provider>
-         <provider
-               class="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider"
-               id="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
-         </provider>
       </extension>
       <extension
             point="org.eclipse.ui.commands">
