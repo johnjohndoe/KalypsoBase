@@ -222,7 +222,13 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
   public void close( )
   {
     m_provider.dispose();
-    m_observation = null;
+
+    if( m_observation != null )
+    {
+      m_observation.getResult().removeChangeListener( m_changeListener );
+      m_observation = null;
+    }
+
     m_isOpen = false;
     m_layer = null;
   }
