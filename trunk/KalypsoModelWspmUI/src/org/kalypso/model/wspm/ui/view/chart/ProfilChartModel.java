@@ -50,9 +50,9 @@ import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.model.impl.ChartModelState;
+import de.openali.odysseus.chart.framework.model.impl.settings.IBasicChartSettings;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
-import de.openali.odysseus.chart.framework.util.img.ChartPainter;
 
 /**
  * @author kimwerner
@@ -115,8 +115,10 @@ public class ProfilChartModel extends ChartModel
       updateLayers();
     }
 
-    this.getSettings().addInsets( ChartPainter.CHART_INSETS, new Insets( 10,0,10,0 ) );
-    this.getSettings().addInsets( ChartPainter.PLOT_INSETS, new Insets( 0,0,0,0 ) );
+    final IBasicChartSettings settings = getSettings();
+
+    settings.setChartInsets( new Insets( 10, 0, 10, 0 ) );
+    settings.setPlotInsets( new Insets( 0, 0, 0, 0 ) );
   }
 
   @Override

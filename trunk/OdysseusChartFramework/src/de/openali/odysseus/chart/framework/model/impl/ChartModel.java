@@ -24,7 +24,7 @@ import de.openali.odysseus.chart.framework.model.mapper.registry.impl.MapperRegi
 
 public class ChartModel implements IChartModel
 {
-  protected final ChartBehaviour m_behaviour = new ChartBehaviour( this );
+  private final ChartBehaviour m_behaviour = new ChartBehaviour( this );
 
   private String m_identifier = ""; //$NON-NLS-1$
 
@@ -32,7 +32,7 @@ public class ChartModel implements IChartModel
 
   private final IMapperRegistry m_mapperRegistry = new MapperRegistry();
 
-  protected final BasicChartSettings m_settings = new BasicChartSettings();
+  private IBasicChartSettings m_settings = new BasicChartSettings();
 
   private final Map<String, Object> m_dataMap = new HashMap<>();
 
@@ -61,6 +61,9 @@ public class ChartModel implements IChartModel
   @Override
   public void clear( )
   {
+    m_settings = new BasicChartSettings();
+    // FIXME: also the behaviour should be cleard, is this safe here?
+
     getLayerManager().clear();
     getMapperRegistry().clear();
   }

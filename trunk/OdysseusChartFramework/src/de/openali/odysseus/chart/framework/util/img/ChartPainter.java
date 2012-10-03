@@ -57,6 +57,7 @@ import org.eclipse.swt.graphics.Transform;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.impl.settings.IBasicChartSettings;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
@@ -75,10 +76,6 @@ public class ChartPainter
   private final IChartModel m_model;
 
   private ChartImageInfo m_infoObject;
-
-  public static final String CHART_INSETS = "CHART_INSETS"; //$NON-NLS-1$
-
-  public static final String PLOT_INSETS = "PLOT_INSETS"; //$NON-NLS-1$
 
   public static Image createChartImage( final IChartModel model, final Rectangle size, final IProgressMonitor monitor )
   {
@@ -122,33 +119,35 @@ public class ChartPainter
 
     final Rectangle imageSize = image.getBounds();
 
-    m_paintRect = RectangleUtils.inflateRect( imageSize, getChartInsets() );
+    final IBasicChartSettings settings = m_model.getSettings();
 
-    m_titlePainter = new ChartTitlePainter( m_model.getSettings().getTitles() );
+    m_paintRect = RectangleUtils.inflateRect( imageSize, settings.getChartInsets() );
+
+    m_titlePainter = new ChartTitlePainter( settings.getTitles() );
     m_legendPainter = new ChartLegendCanvas( m_model, new DefaultChartLegendConfig( m_paintRect ) );
   }
 
   private final Rectangle calculateAxisBottomRect( final Rectangle usableRect )
   {
-    int totalWidth = getAxisWidth( POSITION.BOTTOM );
+    final int totalWidth = getAxisWidth( POSITION.BOTTOM );
     return new Rectangle( usableRect.x, usableRect.y + usableRect.height - totalWidth, usableRect.width, totalWidth );
   }
 
   private final Rectangle calculateAxisLeftRect( final Rectangle usableRect )
   {
-    int totalWidth = getAxisWidth( POSITION.LEFT );
+    final int totalWidth = getAxisWidth( POSITION.LEFT );
     return new Rectangle( usableRect.x, usableRect.y, totalWidth, usableRect.height );
   }
 
   private final Rectangle calculateAxisRightRect( final Rectangle usableRect )
   {
-    int totalWidth = getAxisWidth( POSITION.RIGHT );
+    final int totalWidth = getAxisWidth( POSITION.RIGHT );
     return new Rectangle( usableRect.x + usableRect.width - totalWidth, usableRect.y, totalWidth, usableRect.height );
   }
 
   private final Rectangle calculateAxisTopRect( final Rectangle usableRect )
   {
-    int totalWidth = getAxisWidth( POSITION.TOP );
+    final int totalWidth = getAxisWidth( POSITION.TOP );
     return new Rectangle( usableRect.x, usableRect.y, usableRect.width, totalWidth );
   }
 
@@ -179,29 +178,9 @@ public class ChartPainter
     return totalWidth;
   }
 
-  private final Insets getChartInsets( )
-  {
-    final Insets insets = m_model.getSettings().getInsets( CHART_INSETS );
-    if( insets == null )
-    {
-      return new Insets( 0, 0, 0, 0 );
-    }
-    return insets;
-  }
-
   public ChartImageInfo getInfoObject( )
   {
     return m_infoObject;
-  }
-
-  private final Insets getPlotFrameInsets( )
-  {
-    final Insets insets = m_model.getSettings().getInsets( PLOT_INSETS );
-    if( insets == null )
-    {
-      return new Insets( 0, 0, 0, 0 );
-    }
-    return insets;
   }
 
   /**
@@ -312,7 +291,7 @@ public class ChartPainter
 
       infoObject.setClientRect( m_paintRect );
 
-      final Insets plotInsets = getPlotFrameInsets();
+      final Insets plotInsets = m_model.getSettings().getPlotInsets();
 
       final Rectangle titleRect = calculateTitleRect( m_paintRect );
       infoObject.setTitleRect( titleRect );
