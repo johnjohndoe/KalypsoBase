@@ -48,6 +48,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.DialogSettings;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.swt.SWT;
@@ -62,8 +63,10 @@ import org.kalypso.contribs.eclipse.jface.action.CommandWithStyle;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.chart.provider.IChartProvider;
 import org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl;
+import org.kalypso.ogc.gml.featureview.control.composite.TabFolderCompositionControl;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
@@ -72,12 +75,9 @@ import de.openali.odysseus.chart.factory.config.ChartExtensionLoader;
 import de.openali.odysseus.chart.factory.config.ChartFactory;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.util.ChartUtilities;
-import de.openali.odysseus.chart.framework.view.IChartComposite;
-import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 import de.openali.odysseus.chartconfig.x020.ChartType;
 import de.openali.odysseus.chartconfig.x020.TitleType;
 
@@ -87,9 +87,10 @@ import de.openali.odysseus.chartconfig.x020.TitleType;
 public class ChartFeatureControl extends AbstractFeatureControl
 {
   /**
-   * These settings are used locally to remember the last selected tab-folder.
+   * These settings are used locally to remember the last selected tab-folder.<br/>
+   * Static because we want to keep the currently selected tab over selection of features.
    */
-  private static final IDialogSettings SETTINGS = new DialogSettings( "bla" ); //$NON-NLS-1$
+  private final static IDialogSettings SETTINGS = new DialogSettings( "bla" ); //$NON-NLS-1$
 
   private static final String STR_SETTINGS_TAB = "tabIndex"; //$NON-NLS-1$
 
@@ -109,26 +110,10 @@ public class ChartFeatureControl extends AbstractFeatureControl
   /**
    * The chart tabs.
    */
-  private ChartTabItem[] m_chartTabs;
-
-  /**
-   * The chart composites. Each corresponds to one tab.
-   */
-  private IChartComposite[] m_charts;
+  private final ChartTabItem[] m_chartTabs;
 
   private final String m_featureKeyName;
 
-  /**
-   * The constructor.
-   *
-   * @param feature
-   * @param ftp
-   * @param ccl
-   * @param chartTypes
-   * @param context
-   * @param commands
-   * @param chartProviderID
-   */
   public ChartFeatureControl( final String featureKeyName, final Feature feature, final IPropertyType ftp, final ChartConfigurationLoader ccl, final ChartType[] chartTypes, final URL context, final CommandWithStyle[] commands, final String chartProviderID )
   {
     super( feature, ftp );
@@ -139,36 +124,36 @@ public class ChartFeatureControl extends AbstractFeatureControl
     m_context = context;
     m_commands = commands;
     m_chartProviderID = chartProviderID;
-    m_chartTabs = null;
-    m_charts = null;
+    m_chartTabs = new ChartTabItem[m_chartTypes.length];
   }
 
   @Override
   public Control createControl( final Composite parent, final int style )
   {
-    /* Prepare the chart tabs and the charts. */
-    m_chartTabs = new ChartTabItem[m_chartTypes.length];
-    m_charts = new ChartImageComposite[m_chartTypes.length];
-
     /* If there are no tabs show a warning. */
     if( m_chartTabs.length == 0 )
     {
-      final IStatus warningStatus = StatusUtilities.createStatus( IStatus.WARNING, org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.featureview.ChartFeatureControl.0" ), null ); //$NON-NLS-1$
+      final IStatus warningStatus = new Status( IStatus.WARNING, KalypsoModelWspmUIPlugin.ID, Messages.getString( "org.kalypso.model.wspm.ui.featureview.ChartFeatureControl.0" ) ); //$NON-NLS-1$
       final StatusComposite statusComposite = new StatusComposite( parent, SWT.NONE );
       statusComposite.setStatus( warningStatus );
       return statusComposite;
     }
 
+    /* initialize charts */
+    initCharts();
+
     /* Only one chart? */
     if( m_chartTabs.length == 1 )
     {
-      /* REMARK: We do not tab, if we have only one chart. */
-      m_chartTabs[0] = new ChartTabItem( m_featureKeyName, getFeature(), parent, style, m_commands );
+      final Control tabControl = m_chartTabs[0].createControl( parent, style );
+
+      if( !hasData( m_chartTabs[0] ) )
+        tabControl.setData( TabFolderCompositionControl.DATA_HIDE_TAB, Boolean.TRUE );
 
       /* Update the controls. */
       updateControl();
 
-      return m_chartTabs[0];
+      return tabControl;
     }
 
     /* Only show tabs, which are not empty. */
@@ -179,10 +164,12 @@ public class ChartFeatureControl extends AbstractFeatureControl
     {
       /* Check for each type, if it is empty... */
       final ChartType chartType = m_chartTypes[i];
-      if( !hasData( chartType, m_featureKeyName, getFeature() ) )
+      final ChartTabItem chartTabItem = m_chartTabs[i];
+
+      if( !hasData( chartTabItem ) )
       {
+        chartTabItem.dispose();
         m_chartTabs[i] = null;
-        m_charts[i] = null;
         continue;
       }
 
@@ -200,10 +187,10 @@ public class ChartFeatureControl extends AbstractFeatureControl
       item.setToolTipText( chartType.getDescription() );
 
       /* Create the chart tab. */
-      m_chartTabs[i] = new ChartTabItem( m_featureKeyName, getFeature(), folder, style, m_commands );
+      final Control tabControl = chartTabItem.createControl( folder, style );
 
       /* Set the chart tab to the tab. */
-      item.setControl( m_chartTabs[i] );
+      item.setControl( tabControl );
     }
 
     final String selectedTabStr = SETTINGS.get( STR_SETTINGS_TAB );
@@ -227,6 +214,34 @@ public class ChartFeatureControl extends AbstractFeatureControl
     return folder;
   }
 
+  private void initCharts( )
+  {
+    final Feature feature = getFeature();
+
+    /* Create a tab for each type. */
+    for( int i = 0; i < m_chartTypes.length; i++ )
+    {
+      /* Check for each type, if it is empty... */
+      final ChartType chartType = m_chartTypes[i];
+
+      m_chartTabs[i] = new ChartTabItem( m_commands );
+
+      final IChartModel chartModel = m_chartTabs[i].getChartModel();
+
+      // remember the feature from the feature control
+      chartModel.setData( m_featureKeyName, feature );
+
+      /* Configure. */
+      ChartFactory.doConfiguration( chartModel, m_ccl, chartType, ChartExtensionLoader.getInstance(), m_context );
+
+      /* Configure via a chart provider. */
+      doConfiguration( chartModel );
+
+      /* Maximise. */
+      ChartUtilities.maximize( chartModel );
+    }
+  }
+
   protected void handleFolderSelectionChanged( final int selectionIndex )
   {
     ChartFeatureControl.SETTINGS.put( ChartFeatureControl.STR_SETTINGS_TAB, selectionIndex );
@@ -241,50 +256,17 @@ public class ChartFeatureControl extends AbstractFeatureControl
   @Override
   public void updateControl( )
   {
-    // FIXME: will be called on every change to the underlying feature
-    // is this intended? XML configuration should only happen once.
-    
-    /* HINT: m_chartTypes, m_chartTabs and m_charts will have the same length. */
-    for( int i = 0; i < m_chartTabs.length; i++ )
+    for( int i = 0; i < m_chartTypes.length; i++ )
     {
-      /* Configured tabs, for whose there is no data, will have no chart tabs. */
-      if( m_chartTabs[i] == null )
-      {
-        continue;
-      }
-      
-      // TODO:if chart was previously loaded, why do configuration twice ?
-      /* If the chart was previously loaded, it will contain layers - these have to be removed. */
-      final IChartComposite chart = m_chartTabs[i].getChartComposite();
-      final IChartModel chartModel = chart.getChartModel();
-      final ILayerManager lm = chartModel.getLayerManager();
-      lm.clear();
-
-      /* Configure. */
-      ChartFactory.doConfiguration( chartModel, m_ccl, m_chartTypes[i], ChartExtensionLoader.getInstance(), m_context );
-
-      /* Configure via a chart provider. */
-      doConfiguration( chartModel );
-
+      final IChartModel chartModel = m_chartTabs[i].getChartModel();
       /* Maximise. */
       ChartUtilities.maximize( chartModel );
     }
   }
 
-  // FIXME: all data is loaded twice; we should reuse this already loaded chart model and give it to the ChartTabItem
-  private boolean hasData( final ChartType chartType, final String featureKeyName, final Feature feature )
+  private boolean hasData( final ChartTabItem chartItem )
   {
-    /* Make a dummy chart model. */
-    final IChartModel chartModel = new ChartModel();
-
-    /* set data object */
-    chartModel.setData( featureKeyName, feature );
-
-    /* Configure. */
-    ChartFactory.doConfiguration( chartModel, m_ccl, chartType, ChartExtensionLoader.getInstance(), m_context );
-
-    /* Configure via a chart provider. */
-    doConfiguration( chartModel );
+    final IChartModel chartModel = chartItem.getChartModel();
 
     /* Check, if all layers are emtpy. */
     final ILayerManager layerManager = chartModel.getLayerManager();
@@ -372,9 +354,6 @@ public class ChartFeatureControl extends AbstractFeatureControl
     return null;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl#dispose()
-   */
   @Override
   public void dispose( )
   {

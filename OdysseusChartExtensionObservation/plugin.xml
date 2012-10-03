@@ -3,12 +3,24 @@
 <plugin>
    <extension
          point="de.openali.odysseus.chart.factory.LayerProvider">
+         
+       <!-- REMARK: due to (ugly!) historic reasons, different layer providers with the same funcitonality have been
+            implemented and registered for different id. We now use only one implementation, but still register the different id's.
+        -->
+        
       <provider
-            class="org.kalypso.chart.ext.observation.layer.provider.LineLayerProvider"
+            class="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider"
             id="org.kalypso.chart.ext.layer.provider.observation.LineLayerProvider"/>
+            
+      <!-- Deprecated: use org.kalypso.chart.ext.layer.provider.observation.LineLayerProvider -->
       <provider
-            class="org.kalypso.chart.ext.observation.layer.provider.DefaultTupleResultLayerProvider"
+            class="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider"
             id="org.kalypso.layerprovider.observation.LaengsschnittLayerProvider"/>
+      <!-- Deprecated: use org.kalypso.chart.ext.layer.provider.observation.LineLayerProvider -->
+      <provider
+            class="org.kalypso.chart.ext.observation.TupleResultLineLayerProvider"
+            id="org.kalypso.model.wspm.ui.featureview.TupleResultLineLayerProvider">
+      </provider>
    </extension>
    <extension
          point="de.openali.odysseus.chart.factory.MapperProvider">
