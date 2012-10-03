@@ -177,9 +177,6 @@ public class TupleResultFeatureControl extends AbstractToolbarFeatureControl imp
     return composite;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.AbstractFeatureControl#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -201,9 +198,6 @@ public class TupleResultFeatureControl extends AbstractToolbarFeatureControl imp
     super.dispose();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#updateControl()
-   */
   @Override
   public void updateControl( )
   {
@@ -252,36 +246,24 @@ public class TupleResultFeatureControl extends AbstractToolbarFeatureControl imp
     return feature;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#isValid()
-   */
   @Override
   public boolean isValid( )
   {
     return true;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#addModifyListener(org.eclipse.swt.events.ModifyListener)
-   */
   @Override
   public void addModifyListener( final ModifyListener l )
   {
     m_listener.add( l );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControl#removeModifyListener(org.eclipse.swt.events.ModifyListener)
-   */
   @Override
   public void removeModifyListener( final ModifyListener l )
   {
     m_listener.remove( l );
   }
 
-  /**
-   * @see org.kalypso.observation.result.ITupleResultChangedListener#valuesChanged(org.kalypso.observation.result.ITupleResultChangedListener.ValueChange[])
-   */
   @Override
   public void valuesChanged( final ValueChange[] changes )
   {
@@ -289,10 +271,6 @@ public class TupleResultFeatureControl extends AbstractToolbarFeatureControl imp
     // fireModified();
   }
 
-  /**
-   * @see org.kalypso.observation.result.ITupleResultChangedListener#recordsChanged(org.kalypso.observation.result.IRecord[],
-   *      org.kalypso.observation.result.ITupleResultChangedListener.TYPE)
-   */
   @Override
   public void recordsChanged( final IRecord[] records, final TYPE type )
   {
@@ -383,5 +361,4 @@ public class TupleResultFeatureControl extends AbstractToolbarFeatureControl imp
      */
     return true;
   }
-
 }
