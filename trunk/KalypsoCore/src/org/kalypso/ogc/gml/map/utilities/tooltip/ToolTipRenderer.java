@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.map.utilities.tooltip;
 
@@ -54,6 +54,7 @@ import java.util.regex.Pattern;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
+import org.kalypso.contribs.eclipse.swt.ColorUtilities;
 
 /**
  * @author Dirk Kuch
@@ -261,9 +262,13 @@ public class ToolTipRenderer
         basePoint.y = screenRect.y;
     }
 
-    final org.eclipse.swt.graphics.Color textColor = gc.getDevice().getSystemColor( SWT.COLOR_INFO_FOREGROUND );
-    final org.eclipse.swt.graphics.Color bgColor = gc.getDevice().getSystemColor( SWT.COLOR_INFO_BACKGROUND );
-    final org.eclipse.swt.graphics.Color borderColor = gc.getDevice().getSystemColor( SWT.COLOR_BLACK );
+    // TODO: hotfix, we cannot access system colors here, will cause a invalid thread access. It would still be nice to access the real systems info colors.
+    final org.eclipse.swt.graphics.Color borderColor = new org.eclipse.swt.graphics.Color( gc.getDevice(), 0, 0, 0 );
+    // final org.eclipse.swt.graphics.Color borderColor = gc.getDevice().getSystemColor( SWT.COLOR_BLACK );
+    final org.eclipse.swt.graphics.Color textColor = new org.eclipse.swt.graphics.Color( gc.getDevice(), 0, 0, 0 );
+    // final org.eclipse.swt.graphics.Color textColor = gc.getDevice().getSystemColor( SWT.COLOR_INFO_FOREGROUND );
+    final org.eclipse.swt.graphics.Color bgColor = new org.eclipse.swt.graphics.Color( gc.getDevice(), ColorUtilities.toRGB( DEFAULT_BACKGROUND_COLOR ) );
+    // final org.eclipse.swt.graphics.Color bgColor = gc.getDevice().getSystemColor( SWT.COLOR_INFO_BACKGROUND );
 
     gc.setAlpha( 255 );
 
@@ -278,6 +283,10 @@ public class ToolTipRenderer
     /* draw tooltip labels */
     gc.setForeground( textColor );
     gc.drawText( tooltip, basePoint.x + m_insets.left, basePoint.y + m_insets.top, drawFlags );
+
+    borderColor.dispose();
+    textColor.dispose();
+    bgColor.dispose();
 
 // // debug: draw textbox and basepoint
 // gc.drawRectangle( basePoint.x + m_insets.left, basePoint.y + m_insets.top, textBoxSize.x, textBoxSize.y );

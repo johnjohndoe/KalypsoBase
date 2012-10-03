@@ -208,5 +208,4 @@ public final class SWTUtilities
     if( !(control instanceof Composite) )
       control.setEnabled( enabled );
   }
-
 }
