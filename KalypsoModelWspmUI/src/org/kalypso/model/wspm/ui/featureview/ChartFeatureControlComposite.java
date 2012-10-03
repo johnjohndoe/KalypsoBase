@@ -40,11 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.featureview;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -56,47 +55,49 @@ import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.commandhandler.ChartSourceProvider;
 import org.kalypso.commons.eclipse.ui.EmbeddedSourceToolbarManager;
 import org.kalypso.contribs.eclipse.jface.action.CommandWithStyle;
+import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
+import org.kalypso.core.status.StatusComposite;
+import org.kalypso.gmlschema.property.IPropertyType;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.impl.ChartModel;
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 
 /**
- * Class for charts inserted as tabs into the chart feature control; this has to be isolated in a seperate class as each
- * IChartPart can only return one ChartComposite and one ChartDragHandler
- *
- * @author burtscher1
+ * @author Gernot Belger
  */
-public class ChartTabItem implements IChartPart
+class ChartFeatureControlComposite extends Composite implements IChartPart
 {
-  private final IChartModel m_chartModel = new ChartModel();
-
   private final CommandWithStyle[] m_commands;
 
   private ChartImageComposite m_chartComposite = null;
 
   private EmbeddedSourceToolbarManager m_sourceManager = null;
 
-  public ChartTabItem( final CommandWithStyle[] commands )
+  private final IChartModel m_model;
+
+  public ChartFeatureControlComposite( final IChartModel model, final CommandWithStyle[] commands, final Composite parent, final int style )
   {
+    super( parent, style );
+
+    m_model = model;
     m_commands = commands;
-  }
 
-  public Control createControl( final Composite parent, final int style )
-  {
-    final Composite panel = new Composite( parent, style );
-
-    GridLayoutFactory.fillDefaults().spacing( 0, 0 ).applyTo( panel );
+    GridLayoutFactory.fillDefaults().spacing( 0, 0 ).applyTo( this );
 
     final ToolBarManager manager = new ToolBarManager( SWT.HORIZONTAL | SWT.FLAT );
-    final ToolBar toolBar = manager.createControl( panel );
+    final ToolBar toolBar = manager.createControl( this );
 
-    m_chartComposite = new ChartImageComposite( panel, SWT.BORDER, m_chartModel, new RGB( 255, 255, 255 ) );
+    m_chartComposite = new ChartImageComposite( this, SWT.BORDER, m_model, new RGB( 255, 255, 255 ) );
     m_chartComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     final IWorkbench sourceLocator = PlatformUI.getWorkbench();
-    m_sourceManager = new EmbeddedSourceToolbarManager( sourceLocator, ChartSourceProvider.ACTIVE_CHART_NAME, ChartTabItem.this.getChartComposite() );
+    m_sourceManager = new EmbeddedSourceToolbarManager( sourceLocator, ChartSourceProvider.ACTIVE_CHART_NAME, ChartFeatureControlComposite.this.getChartComposite() );
     m_sourceManager.fillToolbar( manager, m_commands );
 
     // TODO: this is still an ugly place, the information which command to trigger (if any) should come from outside
@@ -111,21 +112,7 @@ public class ChartTabItem implements IChartPart
 
     parent.layout();
 
-    panel.addDisposeListener( new DisposeListener()
-    {
-      @Override
-      public void widgetDisposed( final DisposeEvent e )
-      {
-        dispose();
-      }
-    } );
-
-    return panel;
-  }
-
-  public IChartModel getChartModel( )
-  {
-    return m_chartModel;
+    ControlUtils.addDisposeListener( this );
   }
 
   @Override
@@ -134,11 +121,71 @@ public class ChartTabItem implements IChartPart
     return m_chartComposite;
   }
 
-  void dispose( )
+  @Override
+  public void dispose( )
   {
     if( m_sourceManager != null )
       m_sourceManager.dispose();
+  }
 
-    m_chartModel.dispose();
+  boolean hasData( )
+  {
+    /* Check, if all layers are emtpy. */
+    final ILayerManager layerManager = m_model.getLayerManager();
+    final IChartLayer[] layers = layerManager.getLayers();
+    for( final IChartLayer layer : layers )
+    {
+      final IDataRange< ? > domainRange = layer.getDomainRange();
+      final IDataRange< ? > targetRange = layer.getTargetRange( null );
+      if( domainRange != null && targetRange != null )
+      {
+        final Number domainMin = (Number)domainRange.getMin();
+        final Number domainMax = (Number)domainRange.getMax();
+        final Number targetMin = (Number)targetRange.getMin();
+        final Number targetMax = (Number)targetRange.getMax();
+
+        if( domainMin.doubleValue() > Double.NEGATIVE_INFINITY )
+          return true;
+
+        if( domainMax.doubleValue() < Double.POSITIVE_INFINITY )
+          return true;
+
+        if( targetMin.doubleValue() > Double.NEGATIVE_INFINITY )
+          return true;
+
+        if( targetMax.doubleValue() < Double.POSITIVE_INFINITY )
+          return true;
+
+        return false;
+      }
+    }
+
+    return false;
+  }
+
+  static Feature getChartFeature( final Feature feature, final IPropertyType pt )
+  {
+    final Object property = pt == null ? null : feature.getProperty( pt );
+    final Feature childFeature = FeatureHelper.getFeature( feature.getWorkspace(), property );
+    return childFeature == null ? feature : childFeature;
+  }
+
+  public void addStatus( final IStatus result )
+  {
+    /* hide toolbar and chart */
+    final Control[] children = m_chartComposite.getParent().getChildren();
+    for( final Control child : children )
+    {
+      final GridData layoutData = (GridData)child.getLayoutData();
+      layoutData.exclude = !result.isOK();
+      child.setVisible( false );
+    }
+
+    /* show status */
+    final StatusComposite statusComposite = new StatusComposite( this, SWT.NONE );
+    statusComposite.setStatus( result );
+    statusComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
+
+    layout();
   }
 }
