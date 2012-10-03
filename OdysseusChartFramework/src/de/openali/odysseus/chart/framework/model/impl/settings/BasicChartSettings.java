@@ -43,9 +43,9 @@ package de.openali.odysseus.chart.framework.model.impl.settings;
 import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import org.eclipse.core.runtime.Assert;
 
 import de.openali.odysseus.chart.framework.OdysseusChartExtensions;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
@@ -74,17 +74,13 @@ public class BasicChartSettings implements IBasicChartSettings
 
   private final ChartPlotFrame m_plotFrame = new ChartPlotFrame();
 
-  private final Map<String, Insets> m_insets = new HashMap<>();
-
   private final List<TitleTypeBean> m_title = new ArrayList<>();
 
   private CHART_DATA_LOADER_STRATEGY m_strategy = CHART_DATA_LOADER_STRATEGY.eAsynchrone;
 
-  @Override
-  public void addInsets( final String id, final Insets insets )
-  {
-    m_insets.put( id, insets );
-  }
+  private Insets m_chartInsets = new Insets( 0, 0, 0, 0 );
+
+  private Insets m_plotInsets = new Insets( 0, 0, 0, 0 );
 
   @Override
   public void addPlotFrameStyle( final POSITION position, final ILineStyle lineStyle )
@@ -99,13 +95,6 @@ public class BasicChartSettings implements IBasicChartSettings
   }
 
   @Override
-  public void clearTitles( )
-  {
-    m_title.clear();
-
-  }
-
-  @Override
   public CHART_DATA_LOADER_STRATEGY getDataLoaderStrategy( )
   {
     return m_strategy;
@@ -115,12 +104,6 @@ public class BasicChartSettings implements IBasicChartSettings
   public String getDescription( )
   {
     return m_description;
-  }
-
-  @Override
-  public Insets getInsets( final String id )
-  {
-    return m_insets.get( id );
   }
 
   @Override
@@ -186,5 +169,33 @@ public class BasicChartSettings implements IBasicChartSettings
     titleType.setTextStyle( textStyle );
     m_title.clear();
     m_title.add( titleType );
+  }
+
+  @Override
+  public Insets getChartInsets( )
+  {
+    return m_chartInsets;
+  }
+
+  @Override
+  public void setChartInsets( final Insets chartInsets )
+  {
+    Assert.isNotNull( chartInsets );
+
+    m_chartInsets = chartInsets;
+  }
+
+  @Override
+  public Insets getPlotInsets( )
+  {
+    return m_plotInsets;
+  }
+
+  @Override
+  public void setPlotInsets( final Insets plotInsets )
+  {
+    Assert.isNotNull( plotInsets );
+
+    m_plotInsets = plotInsets;
   }
 }

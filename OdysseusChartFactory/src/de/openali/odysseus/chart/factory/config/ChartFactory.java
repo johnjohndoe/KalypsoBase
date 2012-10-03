@@ -28,7 +28,7 @@ import de.openali.odysseus.chartconfig.x020.TitleType;
 
 /**
  * Creates a chart object from a configuration
- * 
+ *
  * @author alibu
  */
 public final class ChartFactory
@@ -66,9 +66,9 @@ public final class ChartFactory
     doConfiguration( model, configurationLoader, dt, extLoader, context );
   }
 
-  private static void addInsets( final IBasicChartSettings settings, final InsetType insetType )
+  private static Insets toInsets( final InsetType insetType )
   {
-    settings.addInsets( insetType.getId(), new Insets( insetType.getTop(), insetType.getLeft(), insetType.getBottom(), insetType.getRight() ) );
+    return new Insets( insetType.getTop(), insetType.getLeft(), insetType.getBottom(), insetType.getRight() );
   }
 
   private static void setPlotFrame( final IBasicChartSettings settings, final URL context, final Edge[] plotFrameEdges )
@@ -96,8 +96,12 @@ public final class ChartFactory
 
   public static void doConfiguration( final IChartModel model, final IReferenceResolver resolver, final ChartType chartType, final IExtensionLoader extLoader, final URL context )
   {
+    model.clear();
+
     model.setIdentifier( chartType.getId() );
-    model.getSettings().clearTitles();
+
+    final IBasicChartSettings settings = model.getSettings();
+
     final ChartTypeResolver chartTypeResolver = ChartTypeResolver.getInstance();
 
     for( final TitleType type : chartType.getTitleArray() )
@@ -107,36 +111,35 @@ public final class ChartFactory
         final AbstractStyleType styleType = chartTypeResolver.findStyleType( type.getStyleref(), context );
         final ITextStyle style = StyleFactory.createTextStyle( (TextStyleType)styleType );
         final TitleTypeBean title = StyleHelper.getTitleTypeBean( type, style );
-        model.getSettings().addTitles( title );
+        settings.addTitles( title );
       }
       catch( final Throwable t )
       {
         t.printStackTrace();
       }
     }
+
     if( chartType.isSetChartInsets() )
-    {
-      addInsets( model.getSettings(), chartType.getChartInsets() );
-    }
+      settings.setChartInsets( toInsets( chartType.getChartInsets() ) );
+
     if( chartType.isSetPlotInsets() )
-    {
-      addInsets( model.getSettings(), chartType.getPlotInsets() );
-    }
+      settings.setPlotInsets( toInsets( chartType.getPlotInsets() ) );
+
     if( chartType.isSetPlotFrame() )
     {
       final PlotFrameStyle plotFrameStyle = chartType.getPlotFrame();
       final Edge[] plotFrameEdges = plotFrameStyle.getEdgeArray();
       if( plotFrameEdges.length > 0 )
       {
-        setPlotFrame( model.getSettings(), context, plotFrameEdges );
+        setPlotFrame( settings, context, plotFrameEdges );
       }
     }
-    model.getSettings().setDescription( chartType.getDescription() );
+    settings.setDescription( chartType.getDescription() );
 
     model.getBehaviour().setHideLegend( !chartType.getLegend() );
-    model.getSettings().setLegendRenderer( chartType.getLegendRenderer() );
+    settings.setLegendRenderer( chartType.getLegendRenderer() );
 
-    model.getSettings().setDataLoaderStrategy( CHART_DATA_LOADER_STRATEGY.convert( chartType.getLoader().toString() ) );
+    settings.setDataLoaderStrategy( CHART_DATA_LOADER_STRATEGY.convert( chartType.getLoader().toString() ) );
 
     final ExtendedReferenceResolver extendedResolver = new ExtendedReferenceResolver( resolver );
     final ChartMapperFactory mapperFactory = new ChartMapperFactory( model, extendedResolver, extLoader, context );

@@ -21,7 +21,7 @@
   <element name="ScreenAxis" type="ods:ScreenAxisType" />
   <element name="Mapper" type="ods:MapperType" />
   <element name="AxisRenderer" type="ods:AxisRendererType" />
-  
+
 
   <complexType name="AbstractConfigurationType" abstract="true">
     <complexContent>
@@ -144,7 +144,7 @@
     <attribute name="title" type="string" use="optional" />
   </complexType>
 
- <complexType name="DerivedLayerType">
+  <complexType name="DerivedLayerType">
     <complexContent>
       <extension base="ods:ReferencableType">
         <sequence>
@@ -162,7 +162,7 @@
   </complexType>
 
 
- 
+
 
   <complexType name="ChildLayerType">
     <sequence>
@@ -212,7 +212,7 @@
             </annotation>
           </element>
           <element name="Labels" type="ods:TitleTypes" minOccurs="0" />
-          <element name="Direction" type="ods:DirectionType" minOccurs="1"/>
+          <element name="Direction" type="ods:DirectionType" minOccurs="1" />
           <element name="Position" type="ods:PositionType" minOccurs="1" />
           <choice minOccurs="0">
             <element ref="ods:DateRange" />
@@ -468,14 +468,10 @@
     </simpleContent>
   </complexType>
   <complexType name="InsetType">
-    <complexContent>
-      <extension base="ods:ReferencableType">
-        <attribute name="top" type="int" use="optional" default="0" />
-        <attribute name="left" type="int" use="optional" default="0" />
-        <attribute name="bottom" type="int" use="optional" default="0" />
-        <attribute name="right" type="int" use="optional" default="0" />
-      </extension>
-    </complexContent>
+    <attribute name="top" type="int" use="optional" default="0" />
+    <attribute name="left" type="int" use="optional" default="0" />
+    <attribute name="bottom" type="int" use="optional" default="0" />
+    <attribute name="right" type="int" use="optional" default="0" />
   </complexType>
 
   <complexType name="PlotFrameStyle">

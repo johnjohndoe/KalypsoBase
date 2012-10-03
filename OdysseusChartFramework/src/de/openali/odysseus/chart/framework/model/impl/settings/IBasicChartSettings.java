@@ -55,8 +55,6 @@ import de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegend
  */
 public interface IBasicChartSettings
 {
-  void addInsets( final String id, final Insets insets );
-
   void addPlotFrameStyle( final POSITION position, final ILineStyle lineStyle );
 
   ChartPlotFrame getPlotFrame( );
@@ -66,8 +64,6 @@ public interface IBasicChartSettings
   CHART_DATA_LOADER_STRATEGY getDataLoaderStrategy( );
 
   String getDescription( );
-
-  Insets getInsets( final String id );
 
   IChartLegendRenderer getLegendRenderer( );
 
@@ -82,7 +78,12 @@ public interface IBasicChartSettings
   void setLegendRenderer( String renderer );
 
   void setTitle( String title, ALIGNMENT position, ITextStyle textStyle, Insets insets );
-  
-  void clearTitles();
 
+  Insets getChartInsets( );
+
+  void setChartInsets( Insets insets );
+
+  Insets getPlotInsets( );
+
+  void setPlotInsets( Insets insets );
 }

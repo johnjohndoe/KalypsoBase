@@ -157,9 +157,6 @@ public class ChartPaintJob extends Job
 
       final ChartPainter chartPainter = new ChartPainter( model, plotImage );
 
-      // final Rectangle plotRect = RectangleUtils.inflateRect( bounds, chartPainter.getPlotInsets() );
-      // setPlotRect( plotRect );
-
       if( monitor.isCanceled() )
         return Status.CANCEL_STATUS;
 
