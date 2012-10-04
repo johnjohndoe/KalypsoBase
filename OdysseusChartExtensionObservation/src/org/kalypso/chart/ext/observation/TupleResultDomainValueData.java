@@ -55,7 +55,6 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.data.DataRange;
-import de.openali.odysseus.chart.framework.model.data.IDataContainer;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
 
@@ -82,7 +81,7 @@ import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
  *
  * @author Gernot
  */
-public class TupleResultDomainValueData<T_domain, T_target> implements IDataContainer<T_domain, T_target>
+public class TupleResultDomainValueData<T_domain, T_target>
 {
   private static final String PARAMETER_DOMAIN_COMPONENT_ID = "domainComponentId"; //$NON-NLS-1$
 
@@ -149,11 +148,12 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
 
   public IObservation<TupleResult> getObservation( )
   {
+    open();
+
     return m_observation;
   }
 
-  @Override
-  public void open( )
+  private void open( )
   {
     if( m_isOpen )
       return;
@@ -168,7 +168,6 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
     m_isOpen = true;
   }
 
-  @Override
   public IDataRange<T_domain> getDomainRange( )
   {
     final T_domain[] domainValues = getDomainValues();
@@ -176,7 +175,6 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
     return DataRange.createFromComparable( domainValues );
   }
 
-  @Override
   public IDataRange<T_target> getTargetRange( )
   {
     return DataRange.createFromComparable( getTargetValues() );
@@ -201,15 +199,31 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
 
     final Object[] objArr = new Object[m_observation.getResult().size()];
     int index = 0;
+
     for( final IRecord record : m_observation.getResult() )
-    {
-      final Object objVal = record.getValue( iComp );
-      if( objVal instanceof XMLGregorianCalendar )
-        objArr[index++] = ((XMLGregorianCalendar)objVal).toGregorianCalendar();
-      else
-        objArr[index++] = objVal;
-    }
+      objArr[index++] = getValue( record, iComp );
+
     return objArr;
+  }
+
+  // FIXME: only until kim refactors the data operator stuff...
+  private Object getValue( final IRecord record, final int componentIndex )
+  {
+    final Object objVal = record.getValue( componentIndex );
+    if( objVal instanceof XMLGregorianCalendar )
+      return ((XMLGregorianCalendar)objVal).toGregorianCalendar();
+
+    return objVal;
+  }
+
+  public Object getDomainValue( final IRecord record )
+  {
+    return getValue( record, getDomainComponentIndex() );
+  }
+
+  public Object getTargetValue( final IRecord record )
+  {
+    return getValue( record, getTargetComponentIndex() );
   }
 
   public T_target[] getTargetValues( )
@@ -217,8 +231,6 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
     return (T_target[])getValues( m_targetComponentName );
   }
 
-  // FIXME: never called, but must be called!
-  @Override
   public void close( )
   {
     m_provider.dispose();
@@ -233,7 +245,6 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
     m_layer = null;
   }
 
-  @Override
   public boolean isOpen( )
   {
     return m_isOpen;
@@ -247,6 +258,60 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
   public String getTargetComponentName( )
   {
     return m_targetComponentName;
+  }
+
+  protected void handleObservationChanged( )
+  {
+    if( m_layer != null )
+      m_layer.onObservationChanged();
+  }
+
+  private int getComponentIndex( final String componentID )
+  {
+    final IObservation<TupleResult> observation = getObservation();
+    if( observation == null )
+      return -1;
+
+    final TupleResult result = observation.getResult();
+    return result.indexOfComponent( componentID );
+  }
+
+  // TODO: cache
+  int getDomainComponentIndex( )
+  {
+    return getComponentIndex( m_domainComponentName );
+  }
+
+  // TODO: cache
+  int getTargetComponentIndex( )
+  {
+    return getComponentIndex( m_targetComponentName );
+  }
+
+  private IComponent getComponent( final String componentID )
+  {
+    final IObservation<TupleResult> observation = getObservation();
+    if( observation == null )
+      return null;
+
+    final int componentIndex = getComponentIndex( componentID );
+    if( componentIndex == -1 )
+      return null;
+
+    final TupleResult result = observation.getResult();
+    return result.getComponent( componentIndex );
+  }
+
+  // TODO: cache
+  public IComponent getDomainComponent( )
+  {
+    return getComponent( m_domainComponentName );
+  }
+
+  // TODO: cache
+  public IComponent getTargetComponent( )
+  {
+    return getComponent( m_targetComponentName );
   }
 
   public static TupleResultDomainValueData< ? , ? > fromContainer( final IParameterContainer pc, final URL context, final IChartModel model )
@@ -302,11 +367,5 @@ public class TupleResultDomainValueData<T_domain, T_target> implements IDataCont
       return null;
 
     return ObservationFeatureFactory.toObservation( feature );
-  }
-
-  protected void handleObservationChanged( )
-  {
-    if( m_layer != null )
-      m_layer.onObservationChanged();
   }
 }
