@@ -137,7 +137,7 @@ public class ApplyLanduseShapePage extends WizardPage
     group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
     group.setText( ProfilePointFilterComposite.STR_GROUP_TEXT );
 
-    m_model.getFilter().createControl( group, SWT.NULL );
+    m_model.getFilter().createControl( group, SWT.BORDER );
 
     setControl( body );
   }
