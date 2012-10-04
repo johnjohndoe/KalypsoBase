@@ -208,8 +208,10 @@ public class DefaultWPSProcess implements IWPSProcess
   @Override
   public synchronized String getTitle( )
   {
-    // TODO
-    return null;
+    if( m_processDescription == null )
+      return "<unknown>";
+
+    return m_processDescription.getTitle();
   }
 
   @Override
