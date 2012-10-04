@@ -50,4 +50,6 @@ public interface ILanduseShapeDataProvider
   IProject getProject( );
 
   String getLnkShapeFile( );
+
+  String getShapeSRS( );
 }

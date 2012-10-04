@@ -40,8 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard.landuse.model;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.charset.Charset;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IFile;
@@ -56,6 +59,7 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.shape.FileMode;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.dbf.IDBFField;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -78,6 +82,8 @@ public class LanduseModel extends AbstractModelObject implements ILanduseModel
   private String m_type;
 
   private String m_shapeFileBase;
+
+  private String m_shapeSRS;
 
   public LanduseModel( final IProject project, final String type )
   {
@@ -171,12 +177,29 @@ public class LanduseModel extends AbstractModelObject implements ILanduseModel
       if( Objects.isNotNull( m_shapeFile ) )
         m_shapeFile.close();
 
+      m_shapeSRS = readShapeSRS( base );
+
       m_shapeFile = shapeFile;
       m_shapeFileBase = base;
     }
     catch( final Exception ex )
     {
       ex.printStackTrace();
+    }
+  }
+
+  private String readShapeSRS( final String base )
+  {
+    try
+    {
+      final File prjFile = new File( base + ".prj" ); //$NON-NLS-1$
+
+      return FileUtils.readFileToString( prjFile );
+    }
+    catch( final IOException e )
+    {
+      e.printStackTrace();
+      return KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     }
   }
 
@@ -208,5 +231,11 @@ public class LanduseModel extends AbstractModelObject implements ILanduseModel
     m_type = type;
 
     firePropertyChange( PROPERTY_TYPE, oldValue, type );
+  }
+
+  @Override
+  public String getShapeSRS( )
+  {
+    return m_shapeSRS;
   }
 }

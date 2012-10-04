@@ -45,9 +45,7 @@ package org.kalypso.ui.wizard.shape;
  */
 public interface IShapeFileSelection
 {
-
   String getShapeFile( );
 
   String getSoureCRS( );
-
 }

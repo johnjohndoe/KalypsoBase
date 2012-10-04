@@ -40,59 +40,72 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard.landuse.runnables;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.model.wspm.ui.i18n.Messages;
+import org.kalypso.contribs.eclipse.core.resources.FolderUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ILanduseModel;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.LanduseProperties;
-import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.ILanduseShapeDataProvider;
 
 /**
  * @author Dirk Kuch
  */
-public class ImportLanduseShapeRunnable implements IRunnableWithProgress
+public class ImportLanduseShapeRunnable implements ICoreRunnableWithProgress
 {
-  private final ILanduseShapeDataProvider m_handler;
-
   private final ILanduseModel m_roughnessMapping;
 
   private final ILanduseModel m_vegetationMapping;
 
-  public ImportLanduseShapeRunnable( final ILanduseShapeDataProvider handler, final ILanduseModel roughnessMapping, final ILanduseModel vegetationMapping )
+  private final IFolder m_landuseFolder;
+
+  private final String m_lnkShapeFile;
+
+  private final String m_shapeSRS;
+
+  public ImportLanduseShapeRunnable( final IFolder landuseFolder, final String lnkShapeFile, final String shapeSRS, final ILanduseModel roughnessMapping, final ILanduseModel vegetationMapping )
   {
-    m_handler = handler;
+    m_landuseFolder = landuseFolder;
+    m_lnkShapeFile = lnkShapeFile;
+    m_shapeSRS = shapeSRS;
     m_roughnessMapping = roughnessMapping;
     m_vegetationMapping = vegetationMapping;
   }
 
   @Override
-  public void run( final IProgressMonitor monitor ) throws InvocationTargetException
+  public IStatus execute( final IProgressMonitor monitor ) throws InvocationTargetException
   {
     try
     {
+      FolderUtilities.mkdirs( m_landuseFolder );
+
       // copy shape file into landuse folder
-      final IFolder landuse = getLanduseFolder( monitor );
-      final String lnkShapeFile = FilenameUtils.removeExtension( m_handler.getLnkShapeFile() );
+      final String baseName = importShapeFile( monitor );
 
-      final String baseName = importShapeFile( landuse, lnkShapeFile, monitor );
-      writePropertyMappings( m_roughnessMapping, landuse, String.format( "%s.roughness.properties", baseName ), monitor ); //$NON-NLS-1$ //$NON-NLS-1$
-      writePropertyMappings( m_vegetationMapping, landuse, String.format( "%s.vegetation.properties", baseName ), monitor ); //$NON-NLS-1$ //$NON-NLS-1$
+      writePropertyMappings( m_roughnessMapping, String.format( "%s.roughness.properties", baseName ), monitor ); //$NON-NLS-1$ //$NON-NLS-1$
+      writePropertyMappings( m_vegetationMapping, String.format( "%s.vegetation.properties", baseName ), monitor ); //$NON-NLS-1$ //$NON-NLS-1$
 
-      buildStyledLayerDescriptor( m_roughnessMapping, landuse, String.format( "%s.roughness.sld", baseName ), monitor ); //$NON-NLS-1$
-      buildStyledLayerDescriptor( m_vegetationMapping, landuse, String.format( "%s.vegetation.sld", baseName ), monitor ); //$NON-NLS-1$
+      buildStyledLayerDescriptor( m_roughnessMapping, String.format( "%s.roughness.sld", baseName ), monitor ); //$NON-NLS-1$
+      buildStyledLayerDescriptor( m_vegetationMapping, String.format( "%s.vegetation.sld", baseName ), monitor ); //$NON-NLS-1$
+
+      return Status.OK_STATUS;
+    }
+    catch( final OperationCanceledException e )
+    {
+      return Status.CANCEL_STATUS;
     }
     catch( final Exception e )
     {
@@ -102,15 +115,15 @@ public class ImportLanduseShapeRunnable implements IRunnableWithProgress
 
   }
 
-  private void buildStyledLayerDescriptor( final ILanduseModel mapping, final IFolder landuse, final String fileName, final IProgressMonitor monitor ) throws CoreException
+  private void buildStyledLayerDescriptor( final ILanduseModel mapping, final String fileName, final IProgressMonitor monitor ) throws CoreException
   {
-    final LanduseStyledLayerDescriptorBuilder builder = new LanduseStyledLayerDescriptorBuilder( mapping, landuse.getFile( fileName ) );
+    final LanduseStyledLayerDescriptorBuilder builder = new LanduseStyledLayerDescriptorBuilder( mapping, m_landuseFolder.getFile( fileName ) );
     builder.execute( monitor );
   }
 
-  private void writePropertyMappings( final ILanduseModel mapping, final IFolder folder, final String fileName, final IProgressMonitor monitor ) throws IOException, CoreException
+  private void writePropertyMappings( final ILanduseModel mapping, final String fileName, final IProgressMonitor monitor ) throws IOException, CoreException
   {
-    final IFile iProperties = folder.getFile( fileName );
+    final IFile iProperties = m_landuseFolder.getFile( fileName );
     final FileOutputStream outputStream = new FileOutputStream( iProperties.getLocation().toFile() );
     try
     {
@@ -124,46 +137,19 @@ public class ImportLanduseShapeRunnable implements IRunnableWithProgress
     }
   }
 
-  private String importShapeFile( final IFolder landuse, final String lnkShapeFile, final IProgressMonitor monitor ) throws CoreException
+  private String importShapeFile( final IProgressMonitor monitor ) throws CoreException, IOException
   {
-    if( fileExists( landuse, lnkShapeFile ) )
-    {
-      final boolean overwrite = MessageDialog.openQuestion( PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.getString( "ImportLanduseShapeRunnable.4" ), Messages.getString( "ImportLanduseShapeRunnable.5" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      if( overwrite )
-      {
-        FileUtilities.copyShapeFileToDirectory( lnkShapeFile, landuse.getLocation().toFile() );
-      }
-      else
-        throw new UnsupportedOperationException(); // TODO
-    }
-    else
-      FileUtilities.copyShapeFileToDirectory( lnkShapeFile, landuse.getLocation().toFile() );
+    final File landuseDir = m_landuseFolder.getLocation().toFile();
+    FileUtilities.copyShapeFileToDirectory( m_lnkShapeFile, landuseDir );
 
-    landuse.refreshLocal( IResource.DEPTH_INFINITE, monitor );
+    // FIXME: write prj file as well!
+    final String baseName = FilenameUtils.getBaseName( m_lnkShapeFile );
+    final File prjFile = new File( landuseDir, baseName + ".prj" ); //$NON-NLS-1$
 
-    return FilenameUtils.getBaseName( lnkShapeFile );
+    FileUtils.writeStringToFile( prjFile, m_shapeSRS );
+
+    m_landuseFolder.refreshLocal( IResource.DEPTH_INFINITE, monitor );
+
+    return baseName;
   }
-
-  private boolean fileExists( final IFolder landuse, final String lnkShapeFile ) throws CoreException
-  {
-    final ContainsFileNameVisitor visitor = new ContainsFileNameVisitor( landuse, lnkShapeFile, false );
-    landuse.accept( visitor );
-
-    return visitor.containsEqualFileName();
-  }
-
-  private IFolder getLanduseFolder( final IProgressMonitor monitor ) throws CoreException
-  {
-    final IProject project = m_handler.getProject();
-    final IFolder dataFolder = project.getFolder( "data" ); //$NON-NLS-1$ //$NON-NLS-1$
-    if( !dataFolder.exists() )
-      dataFolder.create( true, true, monitor );
-
-    final IFolder landuseFolder = dataFolder.getFolder( "landuse" ); //$NON-NLS-1$ //$NON-NLS-1$
-    if( !landuseFolder.exists() )
-      landuseFolder.create( true, true, monitor );
-
-    return landuseFolder;
-  }
-
 }

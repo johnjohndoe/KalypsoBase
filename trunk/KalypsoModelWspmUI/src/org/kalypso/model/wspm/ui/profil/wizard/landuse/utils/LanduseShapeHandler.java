@@ -70,4 +70,8 @@ public class LanduseShapeHandler implements ILanduseShapeDataProvider
     return m_selection.getShapeFile();
   }
 
+  public String getShapeSRS( )
+  {
+    return m_selection.getSoureCRS();
+  }
 }
