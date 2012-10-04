@@ -202,6 +202,8 @@ public class PropertyEditWizard extends Wizard implements IWorkbenchWizard
   {
     final OperationChooserPage operationChooserPage = m_operationChooserPage;
 
+    final Object[] properties = m_propertyChooserPage.getChoosen();
+
     final Set<IProfileFeature> profiles = new LinkedHashSet<>();
 
     final Object[] choosen = m_profileChooserPage.getChoosen();
@@ -217,7 +219,7 @@ public class PropertyEditWizard extends Wizard implements IWorkbenchWizard
       public Pair<IProfileChange[], IStatus> performProfileManipulation( final IProfile profile, final IProgressMonitor monitor )
       {
         monitor.beginTask( "", 1 ); //$NON-NLS-1$
-        operationChooserPage.changeProfile( profile, choosen );
+        operationChooserPage.changeProfile( profile, properties );
         monitor.done();
 
         return Pair.of( new IProfileChange[] {}, Status.OK_STATUS );
