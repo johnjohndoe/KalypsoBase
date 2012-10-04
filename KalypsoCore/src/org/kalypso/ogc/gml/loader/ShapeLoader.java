@@ -266,9 +266,6 @@ public class ShapeLoader extends WorkspaceLoader
     }
   }
 
-  /**
-   * @see org.kalypso.loader.AbstractLoader#getResourcesInternal(org.kalypso.core.util.pool.IPoolableObjectType)
-   */
   @Override
   public IResource[] getResourcesInternal( final IPoolableObjectType key ) throws MalformedURLException
   {
