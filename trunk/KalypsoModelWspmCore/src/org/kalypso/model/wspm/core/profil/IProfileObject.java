@@ -47,6 +47,10 @@ public interface IProfileObject
 {
   String getId( );
 
+  String getDescription( );
+
+  void setDescription( String description );
+
   String getTypeLabel( );
 
   String[] getProperties( );
@@ -66,4 +70,5 @@ public interface IProfileObject
   void addProfileObjectListener( IProfileObjectListener listener );
 
   void removeProfileObjectListener( IProfileObjectListener listener );
+
 }

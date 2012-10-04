@@ -246,6 +246,7 @@ public final class ProfileFeatureFactory implements IWspmConstants
 
     final String buildingId = profileObject.getId();
     final Observation<TupleResult> observation = new Observation<>( buildingId, null, result );
+    observation.setDescription( profileObject.getDescription() );
 
     final IProfileObjectRecords profileObjectRecords = profileObject.getRecords();
     for( int i = 0; i < profileObjectRecords.getSize(); i++ )
