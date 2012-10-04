@@ -70,4 +70,6 @@ public interface ILanduseModel extends IModelObject
   IFile getLanduseShape( );
 
   ShapeFile getShapeFile( );
+
+  String getShapeSRS( );
 }

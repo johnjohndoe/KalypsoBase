@@ -65,7 +65,6 @@ import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ILanduseModel;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.LanduseProperties;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree_impl.gml.binding.shape.ShapeCollection;
@@ -92,7 +91,10 @@ public class ApplyLanduseDelegate implements IApplyLanduseData
 
     final File shapeFile = file.getLocation().toFile();
     final String shapeBase = FilenameUtils.removeExtension( shapeFile.getAbsolutePath() );
-    m_shapeCollection = ShapeSerializer.deserialize( shapeBase, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+
+    final String shapeSRS = model.getShapeSRS();
+
+    m_shapeCollection = ShapeSerializer.deserialize( shapeBase, shapeSRS );
   }
 
   @Override

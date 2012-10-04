@@ -47,6 +47,7 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfileHandlerUtils;
@@ -106,7 +107,7 @@ public class ApplyLanduseShapeWizard extends Wizard implements IWorkbenchWizard
       try
       {
         final ApplyLanduseWorker worker = new ApplyLanduseWorker( delegate );
-        getContainer().run( false, true, worker );
+        RunnableContextHelper.execute( getContainer(), true, true, worker );
 
         final FeatureChange[] changes = worker.getChanges();
         if( !ArrayUtils.isEmpty( changes ) )

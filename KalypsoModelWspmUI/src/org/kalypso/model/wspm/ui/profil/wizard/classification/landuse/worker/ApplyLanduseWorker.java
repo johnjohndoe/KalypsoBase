@@ -48,9 +48,11 @@ import java.util.Set;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.xml.XmlTypes;
+import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
+import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
+import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.plugin.AbstractUIPluginExt;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
@@ -62,13 +64,16 @@ import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
+import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -80,11 +85,13 @@ import com.vividsolutions.jts.geom.Geometry;
 /**
  * @author Dirk Kuch
  */
-public class ApplyLanduseWorker implements IRunnableWithProgress
+public class ApplyLanduseWorker implements ICoreRunnableWithProgress
 {
   private final IApplyLanduseData m_delegate;
 
   final Set<FeatureChange> m_changes = new LinkedHashSet<>();
+
+  private String m_shapeSRS;
 
   public ApplyLanduseWorker( final IApplyLanduseData delegate )
   {
@@ -92,11 +99,15 @@ public class ApplyLanduseWorker implements IRunnableWithProgress
   }
 
   @Override
-  public void run( final IProgressMonitor monitor )
+  public IStatus execute( final IProgressMonitor monitor )
   {
-    final Set<IStatus> stati = new LinkedHashSet<>();
+    final IStatusCollector log = new StatusCollector( KalypsoModelWspmUIPlugin.ID );
+
+    initShapeSRS();
 
     final IProfileFeature[] profiles = m_delegate.getProfiles();
+    monitor.beginTask( "Assign landuse classes", profiles.length );
+
     for( final IProfileFeature profileFeature : profiles )
     {
       final String crs = profileFeature.getSrsName();
@@ -140,8 +151,8 @@ public class ApplyLanduseWorker implements IRunnableWithProgress
             final GM_Point geoPoint = WspmGeometryUtilities.pointFromRwHw( rechtswert, hochwert, Double.NaN, crs, WspmGeometryUtilities.GEO_TRANSFORMER );
             if( geoPoint != null )
             {
-              final Geometry jtsPoint = JTSAdapter.export( geoPoint );
-              assignValueToPoint( profile, point, geoPoint, jtsPoint );
+              final GM_Point transformedPoint = (GM_Point)geoPoint.transform( m_shapeSRS );
+              assignValueToPoint( profile, point, transformedPoint );
             }
           }
         }
@@ -149,13 +160,36 @@ public class ApplyLanduseWorker implements IRunnableWithProgress
         {
           t.printStackTrace();
 
-          stati.add( new Status( IStatus.ERROR, AbstractUIPluginExt.ID, Messages.getString( "ApplyLanduseWorker_0" ), t ) ); //$NON-NLS-1$
+          log.add( new Status( IStatus.ERROR, AbstractUIPluginExt.ID, Messages.getString( "ApplyLanduseWorker_0" ), t ) ); //$NON-NLS-1$
         }
 
         count++;
       }
 
       ProgressUtilities.worked( monitor, 1 );
+    }
+
+    return log.asMultiStatusOrOK( "Problems when assigning landuse classes" );
+  }
+
+  private void initShapeSRS( )
+  {
+    // FALLBACK to kalypso srs if we find no shape srs, does not really matter
+    m_shapeSRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+
+    // Use first found srs of polygons
+    final FeatureList polygonList = m_delegate.getPolyonFeatureList();
+    if( polygonList.isEmpty() )
+      return;
+
+    for( final Object poly : polygonList )
+    {
+      final GM_Object gmObject = getPolygonGeometry( poly );
+      if( gmObject != null )
+      {
+        m_shapeSRS = gmObject.getCoordinateSystem();
+        return;
+      }
     }
   }
 
@@ -164,23 +198,25 @@ public class ApplyLanduseWorker implements IRunnableWithProgress
     return m_changes.toArray( new FeatureChange[] {} );
   }
 
-  private void assignValueToPoint( final IProfile profil, final IRecord point, final GM_Point geoPoint, final Geometry jtsPoint ) throws GM_Exception
+  private void assignValueToPoint( final IProfile profil, final IRecord point, final GM_Point geoPoint ) throws GM_Exception
   {
     final TupleResult owner = point.getOwner();
 
     /* find polygon for location */
-    final List<Object> foundPolygones = m_delegate.getPolyonFeatureList().query( geoPoint.getPosition(), null );
+    final FeatureList polygonList = m_delegate.getPolyonFeatureList();
+    final List<Object> foundPolygones = polygonList.query( geoPoint.getPosition(), null );
+
+    final Geometry jtsPoint = JTSAdapter.export( geoPoint );
 
     for( final Object polyObject : foundPolygones )
     {
-      final Feature polygoneFeature = (Feature) polyObject;
-
-      // BUGFIX: use any gm_object here, because we do not know what it is (surface, multi surface, ...)
-      final GM_Object gmObject = (GM_Object) polygoneFeature.getProperty( m_delegate.getGeometryPropertyType() );
-      if( Objects.isNull( gmObject ) )
+      final Feature polygoneFeature = (Feature)polyObject;
+      final GM_Object gmObject = getPolygonGeometry( polygoneFeature );
+      if( gmObject == null )
         continue;
 
       final Geometry jtsGeom = JTSAdapter.export( gmObject );
+
       if( jtsGeom.contains( jtsPoint ) )
       {
         final Object polygoneValue = polygoneFeature.getProperty( m_delegate.getValuePropertyType() );
@@ -213,6 +249,14 @@ public class ApplyLanduseWorker implements IRunnableWithProgress
     }
   }
 
+  private GM_Object getPolygonGeometry( final Object polyObject )
+  {
+    final Feature polygoneFeature = (Feature)polyObject;
+
+    // BUGFIX: use any gm_object here, because we do not know what it is (surface, multi surface, ...)
+    return (GM_Object)polygoneFeature.getProperty( m_delegate.getGeometryPropertyType() );
+  }
+
   private Object getDefaultValue( final IComponent component )
   {
     final Object defaultValue = component.getDefaultValue();
@@ -221,5 +265,4 @@ public class ApplyLanduseWorker implements IRunnableWithProgress
 
     return defaultValue;
   }
-
 }

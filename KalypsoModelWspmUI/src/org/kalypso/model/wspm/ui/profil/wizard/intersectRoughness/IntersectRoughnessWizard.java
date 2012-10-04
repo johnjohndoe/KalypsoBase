@@ -120,9 +120,6 @@ public class IntersectRoughnessWizard extends Wizard implements IWorkbenchWizard
     super.addPages();
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -156,7 +153,7 @@ public class IntersectRoughnessWizard extends Wizard implements IWorkbenchWizard
           final IntersectRoughnessesLanduseDelegate delegate = new IntersectRoughnessesLanduseDelegate( m_roughnessIntersectPage, (IProfileFeature[]) choosen );
 
           final ApplyLanduseWorker worker = new ApplyLanduseWorker( delegate );
-          getContainer().run( false, false, worker );
+          RunnableContextHelper.execute( getContainer(), true, false, worker );
 
           final FeatureChange[] changes = worker.getChanges();
           if( !ArrayUtils.isEmpty( changes ) )
