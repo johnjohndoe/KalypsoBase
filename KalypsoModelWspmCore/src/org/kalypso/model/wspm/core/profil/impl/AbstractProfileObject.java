@@ -62,6 +62,8 @@ public abstract class AbstractProfileObject extends ProfileMetadataObserver impl
 {
   private final List<IProfileObjectListener> m_listener;
 
+  private String m_description;
+
   private final String m_typeLabel;
 
   private final IProfileObjectRecords m_records;
@@ -71,9 +73,22 @@ public abstract class AbstractProfileObject extends ProfileMetadataObserver impl
   protected AbstractProfileObject( )
   {
     m_listener = new ArrayList<>();
+    m_description = null;
     m_typeLabel = createTypeLabel();
     m_records = new ProfileObjectRecords( this );
     m_metadata = new ProfileMetadata( this );
+  }
+
+  @Override
+  public String getDescription( )
+  {
+    return m_description;
+  }
+
+  @Override
+  public void setDescription( final String description )
+  {
+    m_description = description;
   }
 
   @Override

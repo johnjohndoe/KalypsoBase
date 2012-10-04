@@ -80,6 +80,8 @@ public class ProfileObjectHelper
       profileObjectRecord.setHochwert( hochwert );
       profileObjectRecord.setCode( code );
     }
+
+    profileObject.setDescription( profileObjectObservation.getDescription() );
   }
 
   public static void fillMetadata( final ProfileObjectBinding profileObjectBinding, final IProfileObject profileObject )
