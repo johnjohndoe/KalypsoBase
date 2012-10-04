@@ -166,6 +166,7 @@ public abstract class AbstractLineLayer extends AbstractChartLayer
     final PolylineFigure lf = getPolyLineFigure();
     lf.setPoints( points );
     lf.paint( gc );
+
     final PointFigure pf = getPointFigure();
     pf.setPoints( points );
     pf.paint( gc );

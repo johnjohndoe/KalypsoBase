@@ -10,13 +10,17 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.ComponentUtilities;
+import org.kalypso.observation.result.IComponent;
+import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
+import de.openali.odysseus.chart.ext.base.layer.HoverIndex;
 import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
+import de.openali.odysseus.chart.framework.model.figure.IPaintable;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.layer.ITooltipChartLayer;
@@ -29,6 +33,8 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
   private static String TOOLTIP_FORMAT = "%-12s %s %n%-12s %s"; //$NON-NLS-1$
 
   private final TupleResultDomainValueData< ? , ? > m_valueData;
+
+  private HoverIndex m_infoIndex = null;
 
   public TupleResultLineLayer( final ILayerProvider provider, final TupleResultDomainValueData< ? , ? > data, final IStyleSet styleSet )
   {
@@ -68,44 +74,17 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
   // FIXME: awful -> should not be necessary!
   private Number toNumeric( final Object value )
   {
-    final IDataOperator<Object> dop = (IDataOperator<Object>) getCoordinateMapper().getDataOperator( value.getClass() );
+    final IDataOperator<Object> dop = (IDataOperator<Object>)getCoordinateMapper().getDataOperator( value.getClass() );
     return dop.logicalToNumeric( value );
   }
 
   @Override
-  public EditInfo getHover( final Point pos )
+  public final EditInfo getHover( final Point pos )
   {
-    if( !isVisible() )
+    if( m_infoIndex == null )
       return null;
 
-    if( getValueData() == null )
-      return null;
-
-    final Object[] domainValues = getValueData().getDomainValues();
-    final Object[] targetValues = getValueData().getTargetValues();
-    for( int i = 0; i < domainValues.length; i++ )
-    {
-      if( domainValues.length != targetValues.length )
-        return null;
-      final Object domainValue = domainValues[i];
-      final Object targetValue = targetValues[i];
-      if( targetValue == null )
-        continue;
-      final Point pValue = getCoordinateMapper().logicalToScreen( domainValue, targetValue );
-      final Rectangle hover = RectangleUtils.buffer( pValue, 5 );
-      if( hover == null )
-        continue;
-
-      if( hover.contains( pos ) )
-      {
-        if( pValue == null )
-          return new EditInfo( this, null, null, i, getTooltip( i ), RectangleUtils.getCenterPoint( hover ) );
-
-        return new EditInfo( this, null, null, i, getTooltip( i ), pValue );
-      }
-    }
-
-    return null;
+    return m_infoIndex.findElement( pos );
   }
 
   public IObservation<TupleResult> getObservation( )
@@ -120,6 +99,7 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
   {
     if( getValueData() == null || getTargetAxis() == null )
       return null;
+
     final IDataRange< ? > dataRange = getValueData().getTargetRange();
     final Object min = dataRange.getMin();
     final Object max = dataRange.getMax();
@@ -131,41 +111,53 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
   @Override
   public String getTitle( )
   {
-    if( super.getTitle() == null && getValueData() != null )
+    if( super.getTitle() == null && m_valueData != null )
     {
-      getValueData().open();
-      final IObservation<TupleResult> obs = getValueData().getObservation();
+      final IObservation<TupleResult> obs = m_valueData.getObservation();
       final TupleResult tr = obs == null ? null : obs.getResult();
       if( tr != null )
       {
-        final int targetComponentIndex = tr.indexOfComponent( getValueData().getTargetComponentName() );
+        final int targetComponentIndex = tr.indexOfComponent( m_valueData.getTargetComponentName() );
         if( targetComponentIndex > -1 )
           return tr.getComponent( targetComponentIndex ).getName();
       }
     }
+
     return super.getTitle();
   }
 
-  protected String getTooltip( final int index )
+  protected String getTooltip( final IRecord record )
   {
-    if( getValueData() == null )
-      return "";
-    final TupleResult tr = getValueData().getObservation().getResult();
-    final int targetComponentIndex = tr.indexOfComponent( getValueData().getTargetComponentName() );
-    final int domainComponentIndex = tr.indexOfComponent( getValueData().getDomainComponentName() );
-    final String targetComponentLabel = ComponentUtilities.getComponentLabel( tr.getComponent( targetComponentIndex ) );
-    final String domainComponentLabel = ComponentUtilities.getComponentLabel( tr.getComponent( domainComponentIndex ) );
-    final Object y = tr.get( index ).getValue( targetComponentIndex );
-    final Object x = tr.get( index ).getValue( domainComponentIndex );
+    final IComponent domainComponent = m_valueData.getDomainComponent();
+    final IComponent targetComponent = m_valueData.getTargetComponent();
 
-    return String.format( TOOLTIP_FORMAT, new Object[] { domainComponentLabel, x, targetComponentLabel, y } );
+    if( domainComponent == null || targetComponent == null )
+      return null;
+
+    final Object domainValue = m_valueData.getDomainValue( record );
+    final Object targetValue = m_valueData.getTargetValue( record );
+
+    if( domainValue == null || targetValue == null )
+      return null;
+
+    final String domainComponentLabel = ComponentUtilities.getComponentLabel( m_valueData.getDomainComponent() );
+    final String targetComponentLabel = ComponentUtilities.getComponentLabel( m_valueData.getTargetComponent() );
+
+    // FIXME: better tooltip formatting
+//    final TooltipFormatter tooltip = new TooltipFormatter( comment );
+//    tooltip.addLine( stationLabel, station.toString() );
+//    tooltip.addLine( okLabel, ok.toString() );
+//    tooltip.addLine( ukLabel, uk.toString() );
+//    tooltip.addLine( widthLabel, bw.toString() );
+
+    return String.format( TOOLTIP_FORMAT, new Object[] { domainComponentLabel, domainValue, targetComponentLabel, targetValue } );
   }
 
   private String getUnitFromComponent( final String id )
   {
     if( getValueData() == null )
       return null;
-    getValueData().open();
+
     final IObservation<TupleResult> obs = getValueData().getObservation();
     final TupleResult tr = obs == null ? null : obs.getResult();
     if( tr != null )
@@ -177,7 +169,7 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
     return null;
   }
 
-  public TupleResultDomainValueData< ? , ? > getValueData( )
+  protected TupleResultDomainValueData< ? , ? > getValueData( )
   {
     return m_valueData;
   }
@@ -187,8 +179,10 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
   {
     if( getValueData() == null )
       return;
+
     if( getTargetAxis().getLabels().length == 0 )
       getTargetAxis().addLabel( new TitleTypeBean( getUnitFromComponent( getValueData().getTargetComponentName() ) ) );
+
     if( getDomainAxis().getLabels().length == 0 )
       getDomainAxis().addLabel( new TitleTypeBean( getUnitFromComponent( getValueData().getDomainComponentName() ) ) );
   }
@@ -201,32 +195,71 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
       return;
 
     final List<Point> path = new ArrayList<>();
-    data.open();
 
-    final Object[] domainValues = data.getDomainValues();
-    final Object[] targetValues = data.getTargetValues();
+    final IObservation<TupleResult> observation = data.getObservation();
+    if( observation == null )
+      return;
 
-    if( domainValues.length > 0 && targetValues.length > 0 )
+    /* recreate hover info on every paint */
+    clearInfoIndex();
+
+    final TupleResult result = observation.getResult();
+
+    int recordIndex = 0;
+    for( final IRecord record : result )
     {
-      for( int i = 0; i < domainValues.length; i++ )
-      {
-        final Object domainValue = domainValues[i];
-        final Object targetValue = targetValues[i];
-
-        // we have to check if all values are correct - an incorrect value means a null value - the axis would return 0
-        // in that case
-        if( domainValue != null && targetValue != null )
-        {
-          final Point screen = getCoordinateMapper().logicalToScreen( domainValue, targetValue );
-          path.add( screen );
-        }
-      }
+      final Point screen = paintRecord( record, recordIndex++ );
+      if( screen != null )
+        path.add( screen );
     }
+
+    // TODO: ugly...
     paint( gc, path.toArray( new Point[] {} ) );
+  }
+
+  protected void clearInfoIndex( )
+  {
+    m_infoIndex = new HoverIndex();
+  }
+
+  private Point paintRecord( final IRecord record, final int recordIndex )
+  {
+    final Object domainValue = m_valueData.getDomainValue( record );
+    final Object targetValue = m_valueData.getTargetValue( record );
+
+    if( domainValue == null || targetValue == null )
+      return null;
+
+    // we have to check if all values are correct - an incorrect value means a null value - the axis would return 0
+    // in that case
+    final Point screen = getCoordinateMapper().logicalToScreen( domainValue, targetValue );
+
+    addInfo( screen, record, recordIndex );
+
+    return screen;
+  }
+
+  private void addInfo( final Point screen, final IRecord record, final int recordIndex )
+  {
+    // FIXME: lets have a nice figure!
+    final IPaintable hoverFigure = null;
+
+    final String tooltip = getTooltip( record );
+    final Rectangle hover = RectangleUtils.buffer( screen, 5 );
+
+    final EditInfo info = new EditInfo( this, hoverFigure, null, recordIndex, tooltip, null );
+    addInfoElement( hover, info );
+  }
+
+  protected void addInfoElement( final Rectangle bounds, final EditInfo info )
+  {
+    m_infoIndex.addElement( bounds, info );
   }
 
   void onObservationChanged( )
   {
+    m_infoIndex = null;
+
     getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
   }
 }
