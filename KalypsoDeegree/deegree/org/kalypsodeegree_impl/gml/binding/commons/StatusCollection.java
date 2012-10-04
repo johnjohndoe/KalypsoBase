@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -52,31 +52,24 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * A collection of geo status objects.
- * 
+ *
  * @author Gernot Belger
  */
 public class StatusCollection extends Feature_Impl implements IStatusCollection
 {
-  private final IFeatureBindingCollection<IGeoStatus> m_statusCollection = new FeatureBindingCollection<IGeoStatus>( this, IGeoStatus.class, QNAME_PROP_STATUS_MEMBER );
+  private final IFeatureBindingCollection<IGeoStatus> m_statusCollection = new FeatureBindingCollection<>( this, IGeoStatus.class, QNAME_PROP_STATUS_MEMBER );
 
   public StatusCollection( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection#createGeoStatus(org.eclipse.core.runtime.IStatus)
-   */
   @Override
   public IGeoStatus createGeoStatus( final IStatus status )
   {
     return createGeoStatus( status, null, null );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection#createGeoStatus(org.eclipse.core.runtime.IStatus,
-   *      org.kalypsodeegree.model.geometry.GM_Object, java.util.Date)
-   */
   @Override
   public IGeoStatus createGeoStatus( final IStatus status, final GM_Object location, final Date time )
   {
@@ -89,9 +82,6 @@ public class StatusCollection extends Feature_Impl implements IStatusCollection
     return createMultiGeoStatus( status, location, time );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection#createGeoStatus(org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus)
-   */
   @Override
   public IGeoStatus createGeoStatus( final IGeoStatus geoStatus )
   {
@@ -104,10 +94,6 @@ public class StatusCollection extends Feature_Impl implements IStatusCollection
     return createMultiGeoStatus( geoStatus );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection#createGeoStatus(int, java.lang.String, int,
-   *      java.lang.String, java.lang.Throwable, org.kalypsodeegree.model.geometry.GM_Object, java.util.Date)
-   */
   @Override
   public IGeoStatus createGeoStatus( final int severity, final String pluginId, final int code, final String message, final Throwable exception, final GM_Object location, final Date time )
   {
@@ -120,22 +106,22 @@ public class StatusCollection extends Feature_Impl implements IStatusCollection
     return geoStatus;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection#contains(org.eclipse.core.runtime.IStatus)
-   */
   @Override
   public boolean contains( final IStatus simulationStatus )
   {
     return m_statusCollection.contains( simulationStatus );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.gml.binding.commons.IStatusCollection#isEmpty()
-   */
   @Override
   public boolean isEmpty( )
   {
     return m_statusCollection.isEmpty();
+  }
+
+  @Override
+  public IFeatureBindingCollection<IGeoStatus> getStatusList( )
+  {
+    return m_statusCollection;
   }
 
   private IGeoStatus createMultiGeoStatus( final IStatus status, final GM_Object location, final Date time )
@@ -228,7 +214,7 @@ public class StatusCollection extends Feature_Impl implements IStatusCollection
   @Override
   public final IStatus toStatus( )
   {
-    final List<IStatus> children = new ArrayList<IStatus>();
+    final List<IStatus> children = new ArrayList<>();
 
     final FeatureList list = m_statusCollection.getFeatureList();
     for( final Object object : list )

@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -42,31 +42,32 @@ import javax.xml.namespace.QName;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.xml.NS;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
  * Binds the common:StatusCollection type.
- * 
+ *
  * @author Gernot Belger
  */
 public interface IStatusCollection extends Feature
 {
-  public static final QName QNAME = new QName( NS.COMMON, "StatusCollection" );
+  public static final QName QNAME = new QName( NS.COMMON, "StatusCollection" ); //$NON-NLS-1$
 
-  public static final QName QNAME_PROP_STATUS_MEMBER = new QName( NS.COMMON, "statusMember" );
+  public static final QName QNAME_PROP_STATUS_MEMBER = new QName( NS.COMMON, "statusMember" ); //$NON-NLS-1$
 
   /**
    * This function creates a new geo status and adds it to the collection.
-   * 
+   *
    * @param status
    *          The values will be copied from this status.
    * @return The new geo status.
    */
-  public IGeoStatus createGeoStatus( IStatus status );
+  IGeoStatus createGeoStatus( IStatus status );
 
   /**
    * This function creates a new geo status and adds it to the collection.
-   * 
+   *
    * @param status
    *          The values will be copied from this status.
    * @param location
@@ -75,20 +76,20 @@ public interface IStatusCollection extends Feature
    *          The time, or <code>null</code> if not applicable.
    * @return The new geo status.
    */
-  public IGeoStatus createGeoStatus( IStatus status, GM_Object location, Date time );
+  IGeoStatus createGeoStatus( IStatus status, GM_Object location, Date time );
 
   /**
    * This function creates a new geo status and adds it to the collection.
-   * 
+   *
    * @param geoStatus
    *          The values will be copied from this geo status.
    * @return The new geo status.
    */
-  public IGeoStatus createGeoStatus( IGeoStatus geoStatus );
+  IGeoStatus createGeoStatus( IGeoStatus geoStatus );
 
   /**
    * This function creates a new geo status and adds it to the collection.
-   * 
+   *
    * @param severity
    *          The severity; one of <code>OK</code>, <code>ERROR</code>, <code>INFO</code>, <code>WARNING</code>, or
    *          <code>CANCEL</code>.
@@ -106,11 +107,13 @@ public interface IStatusCollection extends Feature
    *          The time, or <code>null</code> if not applicable.
    * @return The new geo status.
    */
-  public IGeoStatus createGeoStatus( int severity, String pluginId, int code, String message, Throwable exception, GM_Object location, Date time );
+  IGeoStatus createGeoStatus( int severity, String pluginId, int code, String message, Throwable exception, GM_Object location, Date time );
 
-  public boolean contains( IStatus simulationStatus );
+  boolean contains( IStatus simulationStatus );
 
-  public boolean isEmpty( );
+  boolean isEmpty( );
 
   IStatus toStatus( );
+
+  IFeatureBindingCollection<IGeoStatus> getStatusList( );
 }
