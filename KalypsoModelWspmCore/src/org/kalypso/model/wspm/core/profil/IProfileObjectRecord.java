@@ -18,6 +18,8 @@
  */
 package org.kalypso.model.wspm.core.profil;
 
+import com.vividsolutions.jts.geom.Point;
+
 /**
  * @author Holger Albert
  */
@@ -50,4 +52,8 @@ public interface IProfileObjectRecord
   String getCode( );
 
   void setCode( String code );
+
+  Point getPoint( );
+
+  Point getGeoPoint( );
 }

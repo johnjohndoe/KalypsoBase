@@ -41,44 +41,14 @@ public class ProfileObjectHelper
     final IObservation<TupleResult> profileObjectObservation = ObservationFeatureFactory.toObservation( profileObjectBinding );
     final TupleResult result = profileObjectObservation.getResult();
 
-    final IComponent idComponent = ProfileUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_ID );
-    final IComponent commentComponent = ProfileUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_COMMENT );
-    final IComponent breiteComponent = ProfileUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_BREITE );
-    final IComponent hoeheComponent = ProfileUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_HOEHE );
-    final IComponent rechtswertComponent = ProfileUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
-    final IComponent hochwertComponent = ProfileUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_HOCHWERT );
-    final IComponent codeComponent = ProfileUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_CODE );
-
-    final int idIndex = result.indexOfComponent( idComponent );
-    final int commentIndex = result.indexOfComponent( commentComponent );
-    final int breiteIndex = result.indexOfComponent( breiteComponent );
-    final int hoeheIndex = result.indexOfComponent( hoeheComponent );
-    final int rechtswertIndex = result.indexOfComponent( rechtswertComponent );
-    final int hochwertIndex = result.indexOfComponent( hochwertComponent );
-    final int codeIndex = result.indexOfComponent( codeComponent );
-
     final IProfileObjectRecords records = profileObject.getRecords();
 
     for( int i = 0; i < result.size(); i++ )
     {
       final IRecord record = result.get( i );
-
-      final String id = (String)record.getValue( idIndex );
-      final String comment = (String)record.getValue( commentIndex );
-      final Double breite = (Double)record.getValue( breiteIndex );
-      final Double hoehe = (Double)record.getValue( hoeheIndex );
-      final Double rechtswert = (Double)record.getValue( rechtswertIndex );
-      final Double hochwert = (Double)record.getValue( hochwertIndex );
-      final String code = (String)record.getValue( codeIndex );
-
       final IProfileObjectRecord profileObjectRecord = records.addNewRecord();
-      profileObjectRecord.setId( id );
-      profileObjectRecord.setComment( comment );
-      profileObjectRecord.setBreite( breite );
-      profileObjectRecord.setHoehe( hoehe );
-      profileObjectRecord.setRechtswert( rechtswert );
-      profileObjectRecord.setHochwert( hochwert );
-      profileObjectRecord.setCode( code );
+
+      updateStandardProperties( record, profileObjectRecord );
     }
 
     profileObject.setDescription( profileObjectObservation.getDescription() );
@@ -95,5 +65,42 @@ public class ProfileObjectHelper
       if( metadataValue != null && metadataValue.length() > 0 )
         profileObjectMetadata.setMetadata( metadataKey, metadataValue );
     }
+  }
+
+  public static void updateStandardProperties( final IRecord source, final IProfileObjectRecord target )
+  {
+    final TupleResult owner = source.getOwner();
+
+    final IComponent idComponent = ProfileUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_ID );
+    final IComponent commentComponent = ProfileUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_COMMENT );
+    final IComponent breiteComponent = ProfileUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_BREITE );
+    final IComponent hoeheComponent = ProfileUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_HOEHE );
+    final IComponent rechtswertComponent = ProfileUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_RECHTSWERT );
+    final IComponent hochwertComponent = ProfileUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_HOCHWERT );
+    final IComponent codeComponent = ProfileUtil.getFeatureComponent( IWspmConstants.POINT_PROPERTY_CODE );
+
+    final int idIndex = owner.indexOfComponent( idComponent );
+    final int commentIndex = owner.indexOfComponent( commentComponent );
+    final int breiteIndex = owner.indexOfComponent( breiteComponent );
+    final int hoeheIndex = owner.indexOfComponent( hoeheComponent );
+    final int rechtswertIndex = owner.indexOfComponent( rechtswertComponent );
+    final int hochwertIndex = owner.indexOfComponent( hochwertComponent );
+    final int codeIndex = owner.indexOfComponent( codeComponent );
+
+    final String id = (String)source.getValue( idIndex );
+    final String comment = (String)source.getValue( commentIndex );
+    final Double breite = (Double)source.getValue( breiteIndex );
+    final Double hoehe = (Double)source.getValue( hoeheIndex );
+    final Double rechtswert = (Double)source.getValue( rechtswertIndex );
+    final Double hochwert = (Double)source.getValue( hochwertIndex );
+    final String code = (String)source.getValue( codeIndex );
+
+    target.setId( id );
+    target.setComment( comment );
+    target.setBreite( breite );
+    target.setHoehe( hoehe );
+    target.setRechtswert( rechtswert );
+    target.setHochwert( hochwert );
+    target.setCode( code );
   }
 }
