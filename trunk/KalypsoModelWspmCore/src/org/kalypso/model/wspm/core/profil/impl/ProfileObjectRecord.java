@@ -20,6 +20,10 @@ package org.kalypso.model.wspm.core.profil.impl;
 
 import org.kalypso.model.wspm.core.profil.IProfileObjectRecord;
 
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Point;
+
 /**
  * @author Holger Albert
  */
@@ -147,6 +151,34 @@ class ProfileObjectRecord implements IProfileObjectRecord
   {
     m_code = code;
     fireProfileObjectRecordChanged();
+  }
+
+  @Override
+  public Point getPoint( )
+  {
+    final Double breite = getBreite();
+    final Double hoehe = getHoehe();
+    if( breite != null && hoehe != null )
+    {
+      final GeometryFactory factory = new GeometryFactory();
+      return factory.createPoint( new Coordinate( breite.doubleValue(), hoehe.doubleValue() ) );
+    }
+
+    return null;
+  }
+
+  @Override
+  public Point getGeoPoint( )
+  {
+    final Double rechtswert = getRechtswert();
+    final Double hochwert = getHochwert();
+    if( rechtswert != null && hochwert != null )
+    {
+      final GeometryFactory factory = new GeometryFactory();
+      return factory.createPoint( new Coordinate( rechtswert.doubleValue(), hochwert.doubleValue() ) );
+    }
+
+    return null;
   }
 
   private void fireProfileObjectRecordChanged( )
