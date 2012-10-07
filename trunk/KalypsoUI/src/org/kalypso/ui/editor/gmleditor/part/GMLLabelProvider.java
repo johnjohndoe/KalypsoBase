@@ -29,15 +29,20 @@
  */
 package org.kalypso.ui.editor.gmleditor.part;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.xml.namespace.QName;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.resource.LocalResourceManager;
+import org.eclipse.jface.viewers.DecorationContext;
+import org.eclipse.jface.viewers.IDecoration;
+import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.LabelProviderChangedEvent;
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.contribs.java.lang.DisposeHelper;
+import org.eclipse.ui.IDecoratorManager;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
@@ -58,24 +63,49 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class GMLLabelProvider extends LabelProvider
 {
-  /**
-   * Hash for descriptors and its images.
-   */
-  private final Map<ImageDescriptor, Image> m_images = new HashMap<>( 20 );
+  // IMPORTANT: we are using a static resource manager here that will never be disposed here, because
+  // the hasing of the decorated images depends on the base image instances. If create new images for
+  // every label provider, the decorated images will add up leading to a resource leak.
+  private static LocalResourceManager m_resourceManager;
+
+  private final ILabelProviderListener m_decoratorListener = new ILabelProviderListener()
+  {
+    @Override
+    public void labelProviderChanged( final LabelProviderChangedEvent event )
+    {
+      handleDecorationChanged( event );
+    }
+  };
+
+  private final IDecoratorManager m_decoratorManager;
+
+  public GMLLabelProvider( )
+  {
+    final IWorkbench workbench = PlatformUI.getWorkbench();
+
+    m_decoratorManager = workbench.getDecoratorManager();
+
+    synchronized( workbench )
+    {
+      if( m_resourceManager == null )
+        m_resourceManager = new LocalResourceManager( JFaceResources.getResources( workbench.getDisplay() ) );
+    }
+
+    // TODO: check if this is ok? We change the global decoration context here...
+    ((DecorationContext)DecorationContext.DEFAULT_CONTEXT).putProperty( IDecoration.ENABLE_REPLACE, Boolean.TRUE );
+
+    m_decoratorManager.addListener( m_decoratorListener );
+  }
 
   @Override
   public void dispose( )
   {
+    m_decoratorManager.removeListener( m_decoratorListener );
+
     super.dispose();
 
-    /* Helper for disposing objects. */
-    final DisposeHelper disposeHelper = new DisposeHelper( m_images.values() );
-
-    /* Dispose the images. */
-    disposeHelper.dispose();
-
-    /* Clear the map. */
-    m_images.clear();
+    // IMPORTANT: not disposes, see above
+    // m_resourceManager.dispose();
   }
 
   @Override
@@ -87,16 +117,9 @@ public class GMLLabelProvider extends LabelProvider
       return null;
 
     /* If its image is already there, take it. */
-    if( m_images.containsKey( descriptor ) )
-      return m_images.get( descriptor );
+    final Image rawImage = m_resourceManager.createImage( descriptor );
 
-    /* Otherwise create it. */
-    final Image createImage = descriptor.createImage();
-
-    /* Store the image. */
-    m_images.put( descriptor, createImage );
-
-    return createImage;
+    return m_decoratorManager.decorateImage( rawImage, element );
   }
 
   /**
@@ -140,7 +163,7 @@ public class GMLLabelProvider extends LabelProvider
 
     if( element instanceof IValuePropertyType )
     {
-      final IValuePropertyType vpt = (IValuePropertyType) element;
+      final IValuePropertyType vpt = (IValuePropertyType)element;
       if( GeometryUtilities.isPointGeometry( vpt ) )
         return ImageProvider.IMAGE_GEOM_PROP_POINT;
       if( GeometryUtilities.isMultiPointGeometry( vpt ) )
@@ -164,15 +187,24 @@ public class GMLLabelProvider extends LabelProvider
   @Override
   public String getText( final Object element )
   {
+    final String rawText = getRawText( element );
+
+    // m_decoratorManager.addListener( null );
+
+    return m_decoratorManager.decorateText( rawText, element );
+  }
+
+  private String getRawText( final Object element )
+  {
     if( element instanceof GMLWorkspace )
       return "GML"; //$NON-NLS-1$
 
     if( element instanceof Feature )
-      return FeatureHelper.getAnnotationValue( (Feature) element, IAnnotation.ANNO_LABEL );
+      return FeatureHelper.getAnnotationValue( (Feature)element, IAnnotation.ANNO_LABEL );
 
     if( element instanceof FeatureAssociationTypeElement )
     {
-      final IAnnotation annotation = ((FeatureAssociationTypeElement) element).getPropertyType().getAnnotation();
+      final IAnnotation annotation = ((FeatureAssociationTypeElement)element).getPropertyType().getAnnotation();
       if( annotation != null )
         return annotation.getLabel();
       return "<-> "; //$NON-NLS-1$
@@ -180,13 +212,13 @@ public class GMLLabelProvider extends LabelProvider
 
     if( element instanceof LinkedFeatureElement )
     {
-      final Feature decoratedFeature = ((LinkedFeatureElement) element).getDecoratedFeature();
+      final Feature decoratedFeature = ((LinkedFeatureElement)element).getDecoratedFeature();
       return "-> " + getText( decoratedFeature ); //$NON-NLS-1$
     }
 
     if( element instanceof IValuePropertyType )
     {
-      final IValuePropertyType vpt = (IValuePropertyType) element;
+      final IValuePropertyType vpt = (IValuePropertyType)element;
       return vpt.getValueClass().getName().replaceAll( ".+\\.", "" ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
@@ -210,17 +242,17 @@ public class GMLLabelProvider extends LabelProvider
   {
     if( element instanceof Feature )
     {
-      final IFeatureType featureType = ((Feature) element).getFeatureType();
+      final IFeatureType featureType = ((Feature)element).getFeatureType();
       return featureType.getQName();
     }
     else if( element instanceof FeatureAssociationTypeElement )
     {
-      final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) element;
+      final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement)element;
       return fate.getPropertyType().getQName();
     }
     else if( element instanceof LinkedFeatureElement )
     {
-      final LinkedFeatureElement linkedFeature = (LinkedFeatureElement) element;
+      final LinkedFeatureElement linkedFeature = (LinkedFeatureElement)element;
       final Feature decoratedFeature = linkedFeature.getDecoratedFeature();
       if( decoratedFeature == null )
         return null;
@@ -233,5 +265,12 @@ public class GMLLabelProvider extends LabelProvider
     }
 
     return null;
+  }
+
+  protected void handleDecorationChanged( final LabelProviderChangedEvent event )
+  {
+    // FIXME: we are reactnig to ANY event in the workbench..., OK?
+
+    fireLabelProviderChanged( event );
   }
 }
