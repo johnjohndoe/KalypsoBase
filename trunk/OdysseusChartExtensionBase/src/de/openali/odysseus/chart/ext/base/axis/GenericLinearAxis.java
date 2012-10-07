@@ -10,7 +10,7 @@ import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 
 /**
  * logical and numerical range are identical;
- * 
+ *
  * @author burtscher Concrete IAxis implementation - to be used for numeric data
  */
 public class GenericLinearAxis extends AbstractAxis
@@ -62,9 +62,13 @@ public class GenericLinearAxis extends AbstractAxis
 
   private double numericToNormalized( final Number value )
   {
+    if( value == null )
+      return Double.NaN;
+
     final IDataRange<Number> dataRange = getNumericRange();
     if( dataRange.getMax() == null || dataRange.getMin() == null )
       return Double.NaN;
+
     final double r = dataRange.getMax().doubleValue() - dataRange.getMin().doubleValue();
     return (value.doubleValue() - dataRange.getMin().doubleValue()) / r;
   }
@@ -77,7 +81,7 @@ public class GenericLinearAxis extends AbstractAxis
 
   /**
    * Uses the widgets' complete extension to allocates the normalized value in correspondence to a screen value
-   * 
+   *
    * @see de.openali.odysseus.chart.framework.model.mapper.component.IAxisComponent#screenToNormalized(int)
    */
   private double screenToNormalized( final int screenValue )
