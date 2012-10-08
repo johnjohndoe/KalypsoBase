@@ -165,10 +165,18 @@ public abstract class AbstractProfileObject extends ProfileMetadataObserver impl
 
   private String createTypeLabel( )
   {
-    // FIXME Children should provide the type description...
-    final String buildingId = getId();
-    final IComponent buildingComponent = ProfileUtil.getFeatureComponent( buildingId );
-    return buildingComponent == null ? buildingId : buildingComponent.getName();
+    try
+    {
+      // FIXME Children should provide the type description...
+      final String buildingId = getId();
+      final IComponent buildingComponent = ProfileUtil.getFeatureComponent( buildingId );
+      return buildingComponent == null ? buildingId : buildingComponent.getName();
+    }
+    catch( final Exception ex )
+    {
+      ex.printStackTrace();
+      return "Generisch";
+    }
   }
 
   protected Integer getIntegerValue( final String key, final Integer defaultValue )
