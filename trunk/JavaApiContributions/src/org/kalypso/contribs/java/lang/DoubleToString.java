@@ -3,8 +3,6 @@
  */
 package org.kalypso.contribs.java.lang;
 
-import java.text.DecimalFormat;
-import java.text.FieldPosition;
 
 public class DoubleToString
 {
@@ -65,12 +63,12 @@ public class DoubleToString
     1e277D, 1e278D, 1e279D, 1e280D, 1e281D, 1e282D, 1e283D, 1e284D, 1e285D, 1e286D, 1e287D, 1e288D, 1e289D, 1e290D, 1e291D, 1e292D, 1e293D, 1e294D, 1e295D, 1e296D, 1e297D, 1e298D, 1e299D, 1e300D,
     1e301D, 1e302D, 1e303D, 1e304D, 1e305D, 1e306D, 1e307D, 1e308D };
 
-  public static void appendFormattedNoThousands( final StringBuffer s, final double d, final int numFractDigits, final char decimalPoint )
+  public static void appendFormattedNoThousands( final StringBuilder s, final double d, final int numFractDigits, final char decimalPoint )
   {
     appendFormatted( s, d, numFractDigits, decimalPoint, 'X', Integer.MAX_VALUE, '\uFFFF', '\uFFFF' );
   }
 
-  public static void appendFormatted( final StringBuffer s, final double d, final int numFractDigits, final char decimalPoint, final char thousandsSeparator, final int numDigitsSeparated )
+  public static void appendFormatted( final StringBuilder s, final double d, final int numFractDigits, final char decimalPoint, final char thousandsSeparator, final int numDigitsSeparated )
   {
     appendFormatted( s, d, numFractDigits, decimalPoint, thousandsSeparator, numDigitsSeparated, '\uFFFF', '\uFFFF' );
   }
@@ -81,7 +79,7 @@ public class DoubleToString
    * @param negativeSuffix
    *          Precedes negative number. Use '\uFFFF' if no prefix should be used.
    */
-  public static void appendFormatted( final StringBuffer s, double d, final int numFractDigits, final char decimalPoint, final char thousandsSeparator, final int numDigitsSeparated, final char negativePrefix, final char negativeSuffix )
+  public static void appendFormatted( final StringBuilder s, double d, final int numFractDigits, final char decimalPoint, final char thousandsSeparator, final int numDigitsSeparated, final char negativePrefix, final char negativeSuffix )
   {
     // First check for the special cases, +/-infinity, Not-a-number and -0.0
     if( d == Double.NEGATIVE_INFINITY )
@@ -183,7 +181,7 @@ public class DoubleToString
     }
   }
 
-  private static void appendAsDouble( final StringBuffer s, long l, long l_mag, int d_magnitude, int numFractDigits, final char decimalPoint, final char thousandsSeparator, final int numDigitsSeparated )
+  private static void appendAsDouble( final StringBuilder s, long l, long l_mag, int d_magnitude, int numFractDigits, final char decimalPoint, final char thousandsSeparator, final int numDigitsSeparated )
   {
     // If the magnitude is negative, we have a 0.xxx number
     if( d_magnitude < 0 )
@@ -297,7 +295,7 @@ public class DoubleToString
     }
   }
 
-  private static void appendNearlyZeroNumber( final StringBuffer s, final double d, final int d_magnitude, final int numFractDigits, final char decimalPoint )
+  private static void appendNearlyZeroNumber( final StringBuilder s, final double d, final int d_magnitude, final int numFractDigits, final char decimalPoint )
   {
     if( d_magnitude + numFractDigits == -1 )
     {
@@ -426,12 +424,12 @@ public class DoubleToString
   private static void main_adj( final int repeat, final String name, final double[] arr, final String list )
   {
     long time1, time2;
-    StringBuffer s;
+    StringBuilder s;
 
     System.out.println( "The " + name );
     System.out.println( "    " + list );
     System.out.println( "are appended to a StringBuffer one by one " + repeat + " times." );
-    s = new StringBuffer();
+    s = new StringBuilder();
     Runtime.getRuntime().gc();
 
     System.out.println( "Starting test" );
@@ -441,7 +439,7 @@ public class DoubleToString
         append( s, arr[j] );
     time1 = System.currentTimeMillis() - time1;
     System.out.println( "  The append        took " + time1 + " milliseconds" );
-    s = new StringBuffer();
+    s = new StringBuilder();
     Runtime.getRuntime().gc();
 
     System.out.println( "Starting test" );
@@ -451,7 +449,7 @@ public class DoubleToString
         appendFormatted( s, arr[j], 4, '.', ',', 3, '-', '\uffff' );
     time1 = System.currentTimeMillis() - time1;
     System.out.println( "  The format append took " + time1 + " milliseconds" );
-    s = new StringBuffer();
+    s = new StringBuilder();
     Runtime.getRuntime().gc();
 
     System.out.println( "Starting test" );
@@ -461,22 +459,24 @@ public class DoubleToString
         s.append( arr[j] );
     time2 = System.currentTimeMillis() - time2;
     System.out.println( "  The StringBuffer  took " + time2 + " milliseconds" );
-    s = new StringBuffer();
+    s = new StringBuilder();
     Runtime.getRuntime().gc();
 
     System.out.println( "Starting test" );
     time2 = System.currentTimeMillis();
-    final DecimalFormat format = new DecimalFormat( "#,##0.0000" );
-    final FieldPosition f = new FieldPosition( 0 );
+//    final DecimalFormat format = new DecimalFormat( "#,##0.0000" );
+//    final FieldPosition f = new FieldPosition( 0 );
     for( int i = repeat; i > 0; i-- )
-      for( int j = arr.length - 1; j >= 0; j-- )
-        format.format( arr[j], s, f );
+    {
+//      for( int j = arr.length - 1; j >= 0; j-- )
+//        format.format( arr[j], s, f );
+    }
     time2 = System.currentTimeMillis() - time2;
     System.out.println( "  The DecimalFormat  took " + time2 + " milliseconds" );
-    s = new StringBuffer();
+    s = new StringBuilder();
     Runtime.getRuntime().gc();
 
-    s = new StringBuffer();
+    s = new StringBuilder();
     for( final double element : arr )
     {
       append( s, element );
@@ -484,7 +484,7 @@ public class DoubleToString
     }
     System.out.println( "    " + s );
 
-    s = new StringBuffer();
+    s = new StringBuilder();
     for( final double element : arr )
     {
       appendFormatted( s, element, 4, '.', ',', 3, '-', '\uffff' );
@@ -492,20 +492,20 @@ public class DoubleToString
     }
     System.out.println( "    " + s );
 
-    s = new StringBuffer();
+    s = new StringBuilder();
     for( final double element : arr )
       s.append( element ).append( ", " );
     System.out.println( "    " + s );
 
-    s = new StringBuffer();
-    for( final double element : arr )
-      format.format( element, s, f ).append( ", " );
+    s = new StringBuilder();
+//    for( final double element : arr )
+//      format.format( element, s, f ).append( ", " );
     System.out.println( "    " + s );
 
     System.out.println();
   }
 
-  public static void append( final StringBuffer s, double d )
+  public static void append( final StringBuilder s, double d )
   {
     if( d == Double.NEGATIVE_INFINITY )
       s.append( NEGATIVE_INFINITY );
@@ -606,7 +606,7 @@ public class DoubleToString
     }
   }
 
-  public static void append( final StringBuffer s, int i )
+  public static void append( final StringBuilder s, int i )
   {
     if( i < 0 )
     {
@@ -716,7 +716,7 @@ public class DoubleToString
     }
   }
 
-  private static void appendFractDigits( final StringBuffer s, long i, int decimalOffset )
+  private static void appendFractDigits( final StringBuilder s, long i, int decimalOffset )
   {
     long mag = tenthPower( i );
     long c;
