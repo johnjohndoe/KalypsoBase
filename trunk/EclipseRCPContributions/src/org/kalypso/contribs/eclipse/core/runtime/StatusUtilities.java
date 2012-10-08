@@ -237,8 +237,7 @@ public final class StatusUtilities
    * @param message
    *          only used when creating the MultiStatus
    */
-  @Deprecated
-  public static IStatus createStatus( final Collection<IStatus> stati, final String message, final Object... args )
+  public static IStatus createStatus( final Collection<IStatus> stati, final String multiMessage, final Object... args )
   {
     if( stati.isEmpty() )
       return Status.OK_STATUS;
@@ -246,7 +245,7 @@ public final class StatusUtilities
     if( stati.size() == 1 )
       return stati.iterator().next();
 
-    return new MultiStatus( EclipseRCPContributionsPlugin.ID, 0, stati.toArray( new IStatus[stati.size()] ), String.format( message, args ), null );
+    return new MultiStatus( EclipseRCPContributionsPlugin.ID, 0, stati.toArray( new IStatus[stati.size()] ), String.format( multiMessage, args ), null );
   }
 
   /**
@@ -257,10 +256,9 @@ public final class StatusUtilities
    * @param message
    *          only used when creating the MultiStatus
    */
-  @Deprecated
-  public static IStatus createStatus( final IStatus[] stati, final String message, final Object... args )
+  public static IStatus createStatus( final IStatus[] stati, final String multiMessage, final Object... args )
   {
-    return createStatus( Arrays.asList( stati ), String.format( message, args ) );
+    return createStatus( Arrays.asList( stati ), multiMessage, args );
   }
 
   /**
