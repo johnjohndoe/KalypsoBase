@@ -218,12 +218,20 @@ public class TupleResultDomainValueData<T_domain, T_target>
 
   public Object getDomainValue( final IRecord record )
   {
-    return getValue( record, getDomainComponentIndex() );
+    final int index = getDomainComponentIndex();
+    if( index == -1 )
+      return null;
+
+    return getValue( record, index );
   }
 
   public Object getTargetValue( final IRecord record )
   {
-    return getValue( record, getTargetComponentIndex() );
+    final int index = getTargetComponentIndex();
+    if( index == -1 )
+      return null;
+
+    return getValue( record, index );
   }
 
   public T_target[] getTargetValues( )
