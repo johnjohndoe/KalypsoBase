@@ -206,8 +206,7 @@ public class TupleResultDomainValueData<T_domain, T_target>
     return objArr;
   }
 
-  // FIXME: only until kim refactors the data operator stuff...
-  private Object getValue( final IRecord record, final int componentIndex )
+  public Object getValue( final IRecord record, final int componentIndex )
   {
     final Object objVal = record.getValue( componentIndex );
     if( objVal instanceof XMLGregorianCalendar )

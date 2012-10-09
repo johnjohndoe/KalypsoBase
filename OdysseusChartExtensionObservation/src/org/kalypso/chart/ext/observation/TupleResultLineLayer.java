@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.ComponentUtilities;
+import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
@@ -128,30 +130,32 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
 
   protected String getTooltip( final IRecord record )
   {
-//    final IComponent domainComponent = m_valueData.getDomainComponent();
-//    final IComponent targetComponent = m_valueData.getTargetComponent();
-//
-//    if( domainComponent == null || targetComponent == null )
-//      return null;
+    final String[] tooltipComponents = new String[] { m_valueData.getDomainComponentName(), m_valueData.getTargetComponentName() };
 
-    final Object domainValue = m_valueData.getDomainValue( record );
-    final Object targetValue = m_valueData.getTargetValue( record );
+    final String[] columnFormats = new String[] { "%s", "%s", "[%s]" }; //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
+    final int[] columnAlignments = new int[] { SWT.LEFT, SWT.RIGHT, SWT.LEFT };
+    final TooltipFormatter tooltip = new TooltipFormatter( null, columnFormats, columnAlignments );
 
-//    if( domainValue == null || targetValue == null )
-//      return null;
+    for( final String componentName : tooltipComponents )
+    {
+      final int indexOfComponent = record.indexOfComponent( componentName );
+      if( indexOfComponent != -1 )
+      {
+        final Object value = record.getValue( indexOfComponent );
 
-    final String domainComponentLabel = ComponentUtilities.getComponentLabel( m_valueData.getDomainComponent() );
-    final String targetComponentLabel = ComponentUtilities.getComponentLabel( m_valueData.getTargetComponent() );
+        // TODO: format value with locale according to precision of component
 
-    final TooltipFormatter tooltip = new TooltipFormatter( null );
-    if( domainValue != null )
-      tooltip.addLine( domainComponentLabel, domainValue.toString() );
-    if( targetValue != null )
-      tooltip.addLine( targetComponentLabel, targetValue.toString() );
+        final IComponent component = record.getOwner().getComponent( indexOfComponent );
+
+        final String componentLabel = ComponentUtilities.getComponentName( component );
+        final String componentUnit = ComponentUtilities.getComponentUnitLabel( component );
+
+        if( value != null )
+          tooltip.addLine( componentLabel, value, componentUnit );
+      }
+    }
 
     return tooltip.format();
-
-    // return String.format( TOOLTIP_FORMAT, new Object[] { domainComponentLabel, domainValue, targetComponentLabel, targetValue } );
   }
 
   private String getUnitFromComponent( final String id )
