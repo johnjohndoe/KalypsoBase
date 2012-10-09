@@ -23,7 +23,7 @@ package org.kalypso.model.wspm.core.profil;
  */
 public interface IProfileObjectRecords
 {
-  int getSize( );
+  int size( );
 
   IProfileObjectRecord addNewRecord( );
 

@@ -40,7 +40,7 @@ class ProfileObjectRecords implements IProfileObjectRecords
   }
 
   @Override
-  public int getSize( )
+  public int size( )
   {
     return m_records.size();
   }
