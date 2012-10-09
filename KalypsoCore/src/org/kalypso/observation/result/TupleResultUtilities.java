@@ -509,4 +509,19 @@ public class TupleResultUtilities
 
     return clone;
   }
+
+  /**
+   * Either gets and existing component, or creates it if it doesn't exist yet.
+   * 
+   * @return The index of the component
+   */
+  public static int getOrCreateComponent( final TupleResult result, final String componentID )
+  {
+    final int index = result.indexOfComponent( componentID );
+    if( index != -1 )
+      return index;
+
+    result.addComponent( ComponentUtilities.getFeatureComponent( componentID ) );
+    return result.indexOfComponent( componentID );
+  }
 }
