@@ -10,12 +10,12 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 import org.kalypso.observation.IObservation;
 import org.kalypso.observation.result.ComponentUtilities;
-import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
 import de.openali.odysseus.chart.ext.base.layer.HoverIndex;
+import de.openali.odysseus.chart.ext.base.layer.TooltipFormatter;
 import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -30,7 +30,7 @@ import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 
 public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipChartLayer
 {
-  private static String TOOLTIP_FORMAT = "%-12s %s %n%-12s %s"; //$NON-NLS-1$
+//  private static String TOOLTIP_FORMAT = "%-12s %s %n%-12s %s"; //$NON-NLS-1$
 
   private final TupleResultDomainValueData< ? , ? > m_valueData;
 
@@ -128,29 +128,30 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
 
   protected String getTooltip( final IRecord record )
   {
-    final IComponent domainComponent = m_valueData.getDomainComponent();
-    final IComponent targetComponent = m_valueData.getTargetComponent();
-
-    if( domainComponent == null || targetComponent == null )
-      return null;
+//    final IComponent domainComponent = m_valueData.getDomainComponent();
+//    final IComponent targetComponent = m_valueData.getTargetComponent();
+//
+//    if( domainComponent == null || targetComponent == null )
+//      return null;
 
     final Object domainValue = m_valueData.getDomainValue( record );
     final Object targetValue = m_valueData.getTargetValue( record );
 
-    if( domainValue == null || targetValue == null )
-      return null;
+//    if( domainValue == null || targetValue == null )
+//      return null;
 
     final String domainComponentLabel = ComponentUtilities.getComponentLabel( m_valueData.getDomainComponent() );
     final String targetComponentLabel = ComponentUtilities.getComponentLabel( m_valueData.getTargetComponent() );
 
-    // FIXME: better tooltip formatting
-//    final TooltipFormatter tooltip = new TooltipFormatter( comment );
-//    tooltip.addLine( stationLabel, station.toString() );
-//    tooltip.addLine( okLabel, ok.toString() );
-//    tooltip.addLine( ukLabel, uk.toString() );
-//    tooltip.addLine( widthLabel, bw.toString() );
+    final TooltipFormatter tooltip = new TooltipFormatter( null );
+    if( domainValue != null )
+      tooltip.addLine( domainComponentLabel, domainValue.toString() );
+    if( targetValue != null )
+      tooltip.addLine( targetComponentLabel, targetValue.toString() );
 
-    return String.format( TOOLTIP_FORMAT, new Object[] { domainComponentLabel, domainValue, targetComponentLabel, targetValue } );
+    return tooltip.format();
+
+    // return String.format( TOOLTIP_FORMAT, new Object[] { domainComponentLabel, domainValue, targetComponentLabel, targetValue } );
   }
 
   private String getUnitFromComponent( final String id )
