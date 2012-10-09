@@ -51,11 +51,6 @@ public class ProfileObjectRemove implements IProfileChange
 
   private final IProfileObject[] m_objectsToRemove;
 
-  /**
-   * @param profil
-   * @param building
-   *          maybe null to remove building
-   */
   public ProfileObjectRemove( final IProfile profil, final IProfileObject... objectsToRemove )
   {
     m_profil = profil;
@@ -66,9 +61,7 @@ public class ProfileObjectRemove implements IProfileChange
   public IProfileChange doChange( )
   {
     for( final IProfileObject element : m_objectsToRemove )
-    {
       m_profil.removeProfileObject( element );
-    }
 
     final IProfileObject[] objectsToAdd = m_objectsToRemove;
     ArrayUtils.reverse( objectsToAdd );
