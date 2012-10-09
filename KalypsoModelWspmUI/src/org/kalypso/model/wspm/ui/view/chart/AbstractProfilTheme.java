@@ -298,18 +298,4 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer
   {
     throw new UnsupportedOperationException( Messages.getString( "org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme.0" ) ); //$NON-NLS-1$
   }
-
-  @Override
-  public void setProfil( final IProfile profil )
-  {
-    super.setProfil( profil );
-
-    for( final IChartLayer layer : getLayerManager().getLayers() )
-    {
-      if( layer instanceof IProfilChartLayer )
-      {
-        ((IProfilChartLayer) layer).setProfil( profil );
-      }
-    }
-  }
 }
