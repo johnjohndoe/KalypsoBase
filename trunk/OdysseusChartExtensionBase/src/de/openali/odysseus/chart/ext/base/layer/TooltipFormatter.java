@@ -42,11 +42,11 @@ package de.openali.odysseus.chart.ext.base.layer;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
+import org.eclipse.swt.SWT;
 
 /**
  * Helper class for formatting chart tooltips.<br/>
@@ -56,19 +56,71 @@ import org.apache.commons.lang3.tuple.Pair;
  */
 public class TooltipFormatter
 {
-  private final Collection<Pair<String, String>> m_lines = new LinkedList<>();
+  private int[] m_columnWidths = null;
+
+  private final List<String[]> m_lines = new LinkedList<>();
 
   private final String m_header;
 
+  private String[] m_formats;
+
+  private int[] m_alignments;
+
   public TooltipFormatter( final String header )
   {
-    m_header = header;
+    this( header, null, null );
   }
 
-  public void addLine( final String key, final String value )
+  public TooltipFormatter( final String header, final String[] formats, final int[] alignments )
   {
-    final Pair<String, String> pair = Pair.of( key, value );
-    m_lines.add( pair );
+    m_header = header;
+    m_formats = formats;
+    m_alignments = alignments;
+  }
+
+  public void addLine( final Object... values )
+  {
+    /* check length of columns and create default formats if necessary */
+    if( m_formats != null )
+    {
+      if( m_formats.length != values.length )
+        throw new IllegalArgumentException( "all lines of the tooltip must have the same number of columns" ); //$NON-NLS-1$
+    }
+    else
+    {
+      m_formats = new String[values.length];
+      for( int i = 0; i < m_formats.length; i++ )
+      {
+        m_formats[i] = "%s"; //$NON-NLS-1$
+      }
+    }
+
+    /* create default alignments */
+    if( m_alignments == null || m_alignments.length != m_formats.length )
+    {
+      m_alignments = new int[m_formats.length];
+      if( m_alignments.length > 0 )
+        m_alignments[0] = SWT.LEFT;
+      for( int i = 1; i < m_alignments.length; i++ )
+        m_alignments[i] = SWT.RIGHT;
+    }
+
+    if( m_columnWidths == null )
+      m_columnWidths = new int[m_formats.length];
+
+    /* directly format as string and update widths */
+    final String[] texts = new String[values.length];
+    for( int i = 0; i < texts.length; i++ )
+    {
+      final String formattedValue = String.format( m_formats[i], values[i] );
+      texts[i] = formattedValue;
+    }
+
+    m_lines.add( texts );
+
+    /* update max widths */
+    for( int i = 0; i < texts.length; i++ )
+      m_columnWidths[i] = Math.max( m_columnWidths[i], texts[i].length() );
   }
 
   public String format( )
@@ -82,16 +134,17 @@ public class TooltipFormatter
       pw.println();
     }
 
-    final int maxKeyLength = findMaxKeyLength();
-    final int maxValueLength = findMaxValueLength();
-
-    for( final Pair<String, String> pair : m_lines )
+    for( final String[] texts : m_lines )
     {
-      final String key = pair.getKey();
-      final String value = pair.getValue();
+      for( int i = 0; i < texts.length; i++ )
+      {
+        final String alignedText = alignText( texts, i );
+        pw.append( alignedText );
 
-      pw.append( StringUtils.rightPad( key, maxKeyLength + 1 ) );
-      pw.append( StringUtils.leftPad( value, maxValueLength + 1 ) );
+        /* one space between columns */
+        if( i != texts.length - 1 )
+          pw.append( ' ' );
+      }
 
       pw.println();
     }
@@ -100,29 +153,14 @@ public class TooltipFormatter
     return StringUtils.chomp( out.toString() );
   }
 
-  private int findMaxKeyLength( )
+  private String alignText( final String[] texts, final int i )
   {
-    int maxLength = 0;
+    final String value = texts[i];
+    final int alignment = m_alignments[i];
 
-    for( final Pair<String, String> pair : m_lines )
-    {
-      final int length = pair.getKey().length();
-      maxLength = Math.max( maxLength, length );
-    }
-
-    return maxLength;
-  }
-
-  private int findMaxValueLength( )
-  {
-    int maxLength = 0;
-
-    for( final Pair<String, String> pair : m_lines )
-    {
-      final int length = pair.getValue().length();
-      maxLength = Math.max( maxLength, length );
-    }
-
-    return maxLength;
+    if( alignment == SWT.LEFT )
+      return StringUtils.rightPad( value, m_columnWidths[i] );
+    else
+      return StringUtils.leftPad( value, m_columnWidths[i] );
   }
 }
