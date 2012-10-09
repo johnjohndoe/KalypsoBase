@@ -44,13 +44,15 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
 
     m_valueData = data;
 
-    m_valueData.setLayer( this );
+    if( m_valueData != null )
+      m_valueData.setLayer( this );
   }
 
   @Override
   public void dispose( )
   {
-    m_valueData.close();
+    if( m_valueData != null )
+      m_valueData.close();
 
     super.dispose();
   }
