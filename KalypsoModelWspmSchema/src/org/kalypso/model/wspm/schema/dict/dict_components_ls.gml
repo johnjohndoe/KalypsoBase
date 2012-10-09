@@ -749,5 +749,43 @@
                </swe:representation>
           </swe:ItemDefinition>
      </gml:dictionaryEntry>
+     
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="LengthSection_easting">
+               <gml:name>%LengthSection_easting.name</gml:name>
+               <swe:property>
+                    <swe:Phenomenon gml:id="phen-easting">
+                         <gml:name>%phen-easting.name</gml:name>
+                    </swe:Phenomenon>
+               </swe:property>
+               <swe:representation>
+                    <swe:SimpleType>
+                         <st:restriction base="decimal">
+                              <!-- REMARK: no fractions digits, as easting may contain degree coodinates, that need more digits -->
+                              <!-- st:fractionDigits value="3"/-->
+                         </st:restriction>
+                    </swe:SimpleType>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
+
+     <gml:dictionaryEntry>
+          <swe:ItemDefinition gml:id="LengthSection_northing">
+               <gml:name>%LengthSection_northing.name</gml:name>
+               <swe:property>
+                    <swe:Phenomenon gml:id="phen-northing">
+                         <gml:name>%phen-northing.name</gml:name>
+                    </swe:Phenomenon>
+               </swe:property>
+               <swe:representation>
+                    <swe:SimpleType>
+                         <st:restriction base="decimal">
+                              <!-- REMARK: no fractions digits, as northing may contain degree coodinates, that need more digits -->
+                              <!-- st:fractionDigits value="3"/-->
+                         </st:restriction>
+                    </swe:SimpleType>
+               </swe:representation>
+          </swe:ItemDefinition>
+     </gml:dictionaryEntry>
 
 </gml:Dictionary>
