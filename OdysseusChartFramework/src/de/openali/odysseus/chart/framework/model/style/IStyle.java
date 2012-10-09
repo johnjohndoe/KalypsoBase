@@ -37,5 +37,4 @@ public interface IStyle extends Cloneable
   void setTitle( String title );
 
   void setVisible( boolean isVisible );
-
 }
