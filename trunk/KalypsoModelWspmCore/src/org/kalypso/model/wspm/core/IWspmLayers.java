@@ -61,4 +61,7 @@ public interface IWspmLayers
   String LAYER_CODE = PROFILE_LAYER + "CODE"; //$NON-NLS-1$
 
   String LAYER_COMMENT = PROFILE_LAYER + "COMMENT"; //$NON-NLS-1$
+
+  /** overlay layer for additional profiles shown in the chart */
+  String LAYER_SECOND_PROFILE = PROFILE_LAYER + "SECOND_PROFILE"; //$NON-NLS-1$
 }
