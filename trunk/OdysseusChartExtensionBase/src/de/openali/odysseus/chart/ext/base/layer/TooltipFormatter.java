@@ -38,7 +38,7 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.ui.view.chart.layer.wsp;
+package de.openali.odysseus.chart.ext.base.layer;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -46,17 +46,17 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import org.apache.commons.lang3.StringUtils;
-import org.kalypso.commons.pair.IKeyValue;
-import org.kalypso.commons.pair.KeyValueFactory;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
- * FIXME: use for all profile tooltip, move to common place.
+ * Helper class for formatting chart tooltips.<br/>
+ * Shows an (optional) header line and two columns, one for the label, one for the value.
  *
  * @author Gernot Belger
  */
 public class TooltipFormatter
 {
-  private final Collection<IKeyValue<String, String>> m_lines = new LinkedList<>();
+  private final Collection<Pair<String, String>> m_lines = new LinkedList<>();
 
   private final String m_header;
 
@@ -67,7 +67,7 @@ public class TooltipFormatter
 
   public void addLine( final String key, final String value )
   {
-    final IKeyValue<String, String> pair = KeyValueFactory.createPairEqualsBoth( key, value );
+    final Pair<String, String> pair = Pair.of( key, value );
     m_lines.add( pair );
   }
 
@@ -85,13 +85,13 @@ public class TooltipFormatter
     final int maxKeyLength = findMaxKeyLength();
     final int maxValueLength = findMaxValueLength();
 
-    for( final IKeyValue<String, String> pair : m_lines )
+    for( final Pair<String, String> pair : m_lines )
     {
       final String key = pair.getKey();
       final String value = pair.getValue();
 
       pw.append( StringUtils.rightPad( key, maxKeyLength + 1 ) );
-      pw.append( StringUtils.leftPad( value, maxValueLength ) );
+      pw.append( StringUtils.leftPad( value, maxValueLength + 1 ) );
 
       pw.println();
     }
@@ -104,7 +104,7 @@ public class TooltipFormatter
   {
     int maxLength = 0;
 
-    for( final IKeyValue<String, String> pair : m_lines )
+    for( final Pair<String, String> pair : m_lines )
     {
       final int length = pair.getKey().length();
       maxLength = Math.max( maxLength, length );
@@ -117,7 +117,7 @@ public class TooltipFormatter
   {
     int maxLength = 0;
 
-    for( final IKeyValue<String, String> pair : m_lines )
+    for( final Pair<String, String> pair : m_lines )
     {
       final int length = pair.getValue().length();
       maxLength = Math.max( maxLength, length );

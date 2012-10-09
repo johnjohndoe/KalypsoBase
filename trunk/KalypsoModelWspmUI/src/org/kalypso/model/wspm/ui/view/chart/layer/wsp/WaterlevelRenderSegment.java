@@ -51,6 +51,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.LineSegment;
 import com.vividsolutions.jts.geom.Polygon;
 
+import de.openali.odysseus.chart.ext.base.layer.TooltipFormatter;
 import de.openali.odysseus.chart.framework.model.figure.IFigure;
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
 import de.openali.odysseus.chart.framework.model.figure.impl.MultiFigure;
