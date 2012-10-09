@@ -99,10 +99,12 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
   {
     if( m_titleBean == null )
       return new Rectangle( 0, 0, 0, 0 );
+
     final Point textSize = calcTextSize( gc, m_titleBean.getText() );
     final int border = isDrawBorder() ? m_borderStyle.getStroke().getWidth() : 0;
     final Point overAllSize = new Point( textSize.x + border * 2 + m_titleBean.getInsets().left + m_titleBean.getInsets().right, textSize.y + border * 2 + m_titleBean.getInsets().top
         + m_titleBean.getInsets().bottom );
+
     final Rectangle textRect = getTextRect( m_titleBean.getTextAnchorX(), m_titleBean.getTextAnchorY(), overAllSize );
     final double radian = Math.toRadians( degree );
     final double cosi = Math.cos( radian );
@@ -119,13 +121,13 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
   {
     if( StringUtils.isEmpty( text ) )
       return new Point( 0, 0 );
+
     if( isImageURL( text ) )
       return getImageSize( text );
 
     m_titleBean.getTextStyle().apply( gc );
-    final Point textSize = gc.textExtent( text, m_drawTransparent | SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
-    return textSize;
 
+    return gc.textExtent( text, m_drawTransparent | SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
   }
 
   final private Rectangle checkSize( final Rectangle boundsRect, final Rectangle textRect, final ALIGNMENT alignment )
@@ -152,13 +154,13 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
       default:
         return textRect;
     }
-
   }
 
   private String fitToFixedWidth( final GC gc, final String line, final int width )
   {
     if( width < 1 )
       return line;
+
     final int lineWidth = calcTextSize( gc, line ).x;
     final int charWidth = lineWidth / line.length();
     if( lineWidth <= width )
@@ -173,12 +175,8 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
       s = StringUtils.abbreviateMiddle( line, "..", maxChar );
     }
     return s;
-
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#getBorderLine()
-   */
   @Override
   public IAreaStyle getBorderStyle( )
   {
@@ -284,9 +282,8 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
     try
     {
       m_titleBean.getTextStyle().apply( gc );
-      final Rectangle textRectangle = calcSize( gc, m_titleBean.getRotation() );
 
-      return textRectangle;
+      return calcSize( gc, m_titleBean.getRotation() );
     }
     finally
     {
@@ -345,22 +342,15 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
 
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#getTitleTypeBean()
-   */
   @Override
   public TitleTypeBean getTitleTypeBean( )
   {
     return m_titleBean;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.util.img.IChartLabelRenderer#isDrawBorder()
-   */
   @Override
   public boolean isDrawBorder( )
   {
-
     return getBorderStyle() != null && getBorderStyle().getStroke().isVisible();
   }
 
@@ -451,56 +441,13 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
         newTransform.scale( m_titleBean.isMirrorHorizontal() ? -1 : 1, m_titleBean.isMirrorVertical() ? -1 : 1 );
         newTransform.translate( -(fitRect.x -1 + fitRect.width / 2), -(fitRect.y +1 + fitRect.height / 2) );
       }
-
       gc.setTransform( newTransform );
+
+      // TODO: discuss with Gernot: usnig same element for image and text is cool, but ugly. Why not define a 'titleBean' and a 'imageBean' separately?
       if( isImageURL( m_titleBean.getText() ) )
-      {
-        // draw image
-        final ImageData imageData = loadImage( device, m_titleBean.getText().substring( 4 ) );
-        if( imageData != null )
-        {
-          final Image image = new Image( device, imageData );
-          try
-          {
-            gc.drawImage( image, fitRect.x, fitRect.y );
-          }
-          finally
-          {
-            image.dispose();
-          }
-        }
-      }
+        paintAsImage( gc, device, fitRect );
       else
-      // draw Text
-      {
-
-        final int borderWidth = getBorderStyle() == null ? 0 : getBorderStyle().getStroke().getWidth();
-        if( isDrawBorder() )
-        {
-          final Rectangle borderLineCentered = RectangleUtils.inflateRect( fitRect, (borderWidth + 1) / 2 );
-          getBorderStyle().apply( gc );
-          if( getBorderStyle().isFillVisible() )
-            gc.fillRectangle( borderLineCentered );
-          gc.drawRectangle( borderLineCentered );
-        }
-        final Rectangle innerBorder = RectangleUtils.inflateRect( fitRect, borderWidth );
-        final Rectangle textRect = RectangleUtils.inflateRect( innerBorder, getTitleTypeBean().getInsets() );
-        final String[] lines = StringUtils.split( m_titleBean.getText(), "\n" );// TODO: maybe other split strategy
-        final int lineHeight = textRect.height / lines.length;
-        int top = textRect.y;
-        final int flags = m_drawTransparent | SWT.DRAW_DELIMITER | SWT.DRAW_TAB;
-
-        m_titleBean.getTextStyle().apply( gc );
-        for( final String line : lines )
-        {
-          final String fitLine = fitToFixedWidth( gc, line, textRect.width );
-
-          final Point lineSize = gc.textExtent( fitLine, flags );
-          final int lineInset = getLineInset( m_titleBean.getPositionHorizontal(), lineSize.x, textRect.width );
-          gc.drawText( fitLine, textRect.x + lineInset, top, flags );
-          top += lineHeight;
-        }
-      }
+        paintAsText( gc, boundsRect );
     }
     finally
     {
@@ -515,6 +462,64 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
       gc.setTransform( oldTransform );
       oldTransform.dispose();
       newTransform.dispose();
+    }
+  }
+
+  private void paintAsImage( final GC gc, final Device device, final Rectangle fitRect )
+  {
+    final ImageData imageData = loadImage( device, m_titleBean.getText().substring( 4 ) );
+    if( imageData != null )
+    {
+      final Image image = new Image( device, imageData );
+      try
+      {
+        gc.drawImage( image, fitRect.x, fitRect.y );
+      }
+      finally
+      {
+        image.dispose();
+      }
+    }
+  }
+
+  private void paintAsText( final GC gc, final Rectangle boundsRect )
+  {
+    // HOTFIX: recalculate sizes here, because transformation changes the calculated text size
+    // -> leads to abbreviated texts in all tooltips. Seems to work with mirror/rotation etc.
+    final Rectangle titleRect2 = calcSize( gc, 0 );
+    final Rectangle fitRect2 = checkSize( boundsRect, titleRect2, m_titleBean.getPositionHorizontal() );
+
+    final int borderWidth = getBorderStyle() == null ? 0 : getBorderStyle().getStroke().getWidth();
+
+    if( isDrawBorder() )
+    {
+      final Rectangle borderLineCentered = RectangleUtils.inflateRect( fitRect2, (borderWidth + 1) / 2 );
+      getBorderStyle().apply( gc );
+      if( getBorderStyle().isFillVisible() )
+        gc.fillRectangle( borderLineCentered );
+      gc.drawRectangle( borderLineCentered );
+    }
+
+    final Rectangle innerBorder = RectangleUtils.inflateRect( fitRect2, borderWidth );
+    final Rectangle textRect = RectangleUtils.inflateRect( innerBorder, getTitleTypeBean().getInsets() );
+    final String[] lines = StringUtils.split( m_titleBean.getText(), "\n" );// TODO: maybe other split strategy
+
+    final int lineHeight = textRect.height / lines.length;
+
+    int top = textRect.y;
+
+    final int flags = m_drawTransparent | SWT.DRAW_DELIMITER | SWT.DRAW_TAB;
+
+    m_titleBean.getTextStyle().apply( gc );
+    for( final String line : lines )
+    {
+      // FIXME: NO, WHY?!
+      final String fitLine = fitToFixedWidth( gc, line, textRect.width );
+
+      final Point lineSize = gc.textExtent( fitLine, flags );
+      final int lineInset = getLineInset( m_titleBean.getPositionHorizontal(), lineSize.x, textRect.width );
+      gc.drawText( fitLine, textRect.x + lineInset, top, flags );
+      top += lineHeight;
     }
   }
 

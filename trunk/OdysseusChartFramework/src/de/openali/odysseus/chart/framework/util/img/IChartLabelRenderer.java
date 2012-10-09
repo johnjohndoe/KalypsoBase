@@ -51,7 +51,6 @@ import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
  */
 public interface IChartLabelRenderer
 {
-
   IAreaStyle getBorderStyle( );
 
   TitleTypeBean getTitleTypeBean( );
@@ -67,5 +66,4 @@ public interface IChartLabelRenderer
   void setTitleTypeBean( final TitleTypeBean titleTypeBean );
 
   Rectangle getSize( );
-
 }
