@@ -46,8 +46,8 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.observation.IObservation;
-import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.ogc.gml.om.IObservationFeature;
 import org.kalypso.ogc.gml.om.ObservationFeatureFactory;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
@@ -59,11 +59,23 @@ public class WspmFixation extends Feature_Impl implements IObservationFeature
 {
   public static final QName QNAME_FEATURE_WSPM_FIXATION = new QName( IWspmConstants.NS_WSPMRUNOFF, "WaterlevelFixation" ); //$NON-NLS-1$
 
+  /* The station the waterlevel is assigned to. Required */
   public static final String COMPONENT_STATION = IWspmConstants.LENGTH_SECTION_PROPERTY_STATION;
 
+  /* The waterlevel height. Required */
   public static final String COMPONENT_WSP = IWspmConstants.LENGTH_SECTION_PROPERTY_WATERLEVEL;
 
+  /* Comment for this waterlevel. Optional */
   public static final String COMPONENT_COMMENT = IWspmConstants.LENGTH_SECTION_PROPERTY_TEXT;
+
+  /* Location component of the waterlevel. Optional */
+  public static final String COMPONENT_EASTING = IWspmConstants.LENGTH_SECTION_PROPERTY_EASTING;
+
+  /* Location component of the waterlevel. Optional */
+  public static final String COMPONENT_NORTHING = IWspmConstants.LENGTH_SECTION_PROPERTY_NORTHING;
+
+  /* Runoff for this waterlevel. Optional. */
+  public static final String COMPONENT_RUNOFF = IWspmConstants.LENGTH_SECTION_PROPERTY_RUNOFF;
 
   public WspmFixation( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -76,16 +88,17 @@ public class WspmFixation extends Feature_Impl implements IObservationFeature
     final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservationInternal( this );
     final TupleResult result = obs.getResult();
 
+    /* ensure that all required components are present */
     final String[] components = new String[] { COMPONENT_STATION, COMPONENT_WSP, COMPONENT_COMMENT };
+
+    final int oldCount = result.getComponents().length;
+
     for( final String component : components )
-    {
-      final int index = result.indexOfComponent( component );
-      if( index == -1 )
-      {
-        result.addComponent( ComponentUtilities.getFeatureComponent( component ) );
-        saveObservation( obs );
-      }
-    }
+      TupleResultUtilities.getOrCreateComponent( result, component );
+
+    /* save if observation was changed */
+    if( result.getComponents().length != oldCount )
+      saveObservation( obs );
 
     return obs;
   }
