@@ -19,9 +19,9 @@
           <TargetAxisRef ref="nnAxis" />
         </MapperRefs>
         <Styles>
-          <LineStyle role="line" isVisible="false">
-            <Width>2</Width>
-            <LineColor>0077B2</LineColor>
+          <LineStyle role="line" isVisible="true">
+            <Width>1</Width>
+            <LineColor>cccccc</LineColor>
           </LineStyle>
 
           <PointStyle role="point" isVisible="true">
