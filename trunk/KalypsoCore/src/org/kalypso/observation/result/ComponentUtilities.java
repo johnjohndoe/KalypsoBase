@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.observation.result;
 
@@ -52,7 +52,7 @@ import org.kalypso.ogc.gml.om.FeatureComponent;
 
 /**
  * Utility methods for components
- * 
+ *
  * @author schlienger
  */
 public final class ComponentUtilities
@@ -106,7 +106,7 @@ public final class ComponentUtilities
 
   /**
    * TODO: move into helper class of restrictions!
-   * 
+   *
    * @author Dirk Kuch
    */
   public static boolean restrictionContainsEnumeration( final IRestriction[] restrictions )
@@ -122,7 +122,7 @@ public final class ComponentUtilities
 
   /**
    * Searches for a component by id.
-   * 
+   *
    * @return <code>null</code>, if no compoentn with the given id is found, else the first found component.
    */
   public static IComponent findComponentByID( final IComponent[] components, final String componentID )
@@ -196,7 +196,7 @@ public final class ComponentUtilities
   /**
    * Returns the scale (number of decimal digits) of this component.<br>
    * This works only for components that contain a {@link FractionDigitRestriction}.<br>
-   * 
+   *
    * @return -1 If no scale can be determined.
    * @see org.kalypso.observation.result.IComponent#getPrecision()
    */
@@ -214,6 +214,9 @@ public final class ComponentUtilities
   public static IComponent getFeatureComponent( final String propertyId )
   {
     final String[] split = propertyId.split( "#" ); //$NON-NLS-1$
+    if( split.length != 2 )
+      return null;
+
     final String dictionaryUrn = split[0];
     final String itemId = split[1];
 
@@ -233,7 +236,7 @@ public final class ComponentUtilities
 
   /**
    * Either gets and existing component, or creates it if it doesn't exist yet.
-   * 
+   *
    * @return The index of the component
    */
   public static int getOrCreateComponent( final TupleResult result, final String componentID )
