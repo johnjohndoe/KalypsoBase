@@ -89,8 +89,6 @@ public interface IProfilChartLayer extends IEditableChartLayer
 
   IProfile getProfil( );
 
-  void setProfil( final IProfile profil );
-
   IComponent getTargetComponent( );
 
   IComponent getDomainComponent( );

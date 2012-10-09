@@ -87,7 +87,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   private IPointStyle m_pointStyleHover = null;
 
-  private IProfile m_profil;
+  private final IProfile m_profil;
 
   private int m_targetPropIndex = -1;
 
@@ -209,7 +209,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
       return null;
 
     final FindMinMaxVisitor visitor = new FindMinMaxVisitor( domain.getId() );
-    m_profil.accept( visitor, 1 );
+    getProfil().accept( visitor, 1 );
 
     final IProfileRecord min = visitor.getMinimum();
     final IProfileRecord max = visitor.getMaximum();
@@ -341,24 +341,27 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   @Override
   public IComponent getTargetComponent( )
   {
-    if( m_profil == null || getTargetPropertyIndex() == -1 )
+    final IProfile profil = getProfil();
+    if( profil == null || getTargetPropertyIndex() == -1 )
       return null;
 
-    final int indexOfProperty = m_profil.indexOfProperty( m_targetRangeProperty );
+    final int indexOfProperty = profil.indexOfProperty( m_targetRangeProperty );
     if( indexOfProperty < 0 )
       return null;
 
-    return m_profil.getResult().getComponent( indexOfProperty );
+    return profil.getResult().getComponent( indexOfProperty );
   }
 
   protected final int getTargetPropertyIndex( )
   {
+    final IProfile profil = getProfil();
+
     if( m_targetPropIndex < 0 )
     {
-      if( m_profil == null )
+      if( profil == null )
         return -1;
 
-      m_targetPropIndex = m_profil.getResult().indexOfComponent( m_targetRangeProperty );
+      m_targetPropIndex = profil.getResult().indexOfComponent( m_targetRangeProperty );
     }
 
     return m_targetPropIndex;
@@ -376,7 +379,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
       return null;
 
     final FindMinMaxVisitor visitor = new FindMinMaxVisitor( target.getId() );
-    m_profil.accept( visitor, 1 );
+    getProfil().accept( visitor, 1 );
 
     final IProfileRecord min = visitor.getMinimum();
     final IProfileRecord max = visitor.getMaximum();
@@ -467,14 +470,6 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   public void setPointStyleHover( final IPointStyle pointStyleHover )
   {
     m_pointStyleHover = pointStyleHover;
-  }
-
-  @Override
-  public void setProfil( final IProfile profil )
-  {
-    m_profil = profil;
-
-    m_targetPropIndex = -1;
   }
 
   protected Point toScreen( final IProfileRecord point )
