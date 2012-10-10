@@ -154,10 +154,10 @@ public class GMLContentProvider implements ITreeContentProvider
   public static QName getQName( final Object element )
   {
     if( element instanceof Feature )
-      return ((Feature) element).getQualifiedName();
+      return ((Feature)element).getQualifiedName();
 
     if( element instanceof FeatureAssociationTypeElement )
-      return ((FeatureAssociationTypeElement) element).getPropertyType().getQName();
+      return ((FeatureAssociationTypeElement)element).getPropertyType().getQName();
 
     return null;
   }
@@ -165,29 +165,29 @@ public class GMLContentProvider implements ITreeContentProvider
   private Object[] getChildrenInternal( final Object parentElement )
   {
     if( parentElement instanceof GMLWorkspace )
-      return new Object[] { ((GMLWorkspace) parentElement).getRootFeature() };
+      return new Object[] { ((GMLWorkspace)parentElement).getRootFeature() };
 
     final List<Object> result = new ArrayList<>();
     if( parentElement instanceof Feature )
       collectFeatureChildren( parentElement, result );
     else if( parentElement instanceof FeatureAssociationTypeElement )
-      collectAssociationChildren( (FeatureAssociationTypeElement) parentElement, result );
+      collectAssociationChildren( (FeatureAssociationTypeElement)parentElement, result );
     else if( parentElement instanceof FeatureList )
-      return ((FeatureList) parentElement).toArray(); // can happen in !showAssociation's mode
+      return ((FeatureList)parentElement).toArray(); // can happen in !showAssociation's mode
 
     return result.toArray();
   }
 
   private void collectFeatureChildren( final Object parentElement, final List<Object> result )
   {
-    final Feature parentFE = (Feature) parentElement;
+    final Feature parentFE = (Feature)parentElement;
     final IPropertyType[] properties = parentFE.getFeatureType().getProperties();
 
     for( final IPropertyType property : properties )
     {
       if( property instanceof IRelationType )
       {
-        final FeatureAssociationTypeElement fate = new FeatureAssociationTypeElement( (Feature) parentElement, (IRelationType) property );
+        final FeatureAssociationTypeElement fate = new FeatureAssociationTypeElement( (Feature)parentElement, (IRelationType)property );
         if( m_showAssociations )
           result.add( fate );
         else
@@ -236,7 +236,7 @@ public class GMLContentProvider implements ITreeContentProvider
 
     if( linkProp.isList() )
     {
-      final List< ? > list = (List< ? >) value;
+      final List< ? > list = (List< ? >)value;
       if( pos < 0 || pos >= list.size() )
         return false;
 
@@ -266,7 +266,7 @@ public class GMLContentProvider implements ITreeContentProvider
     /* If its an association we know the parent */
     if( element instanceof FeatureAssociationTypeElement )
     {
-      final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) element;
+      final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement)element;
       return fate.getOwner();
     }
 
@@ -280,7 +280,7 @@ public class GMLContentProvider implements ITreeContentProvider
 
     if( element instanceof Feature )
     {
-      final Feature feature = (Feature) element;
+      final Feature feature = (Feature)element;
       final Feature parent = feature.getOwner();
 
       if( !m_showAssociations )
@@ -292,14 +292,14 @@ public class GMLContentProvider implements ITreeContentProvider
         for( final Object object : parentChildren )
           if( object instanceof FeatureAssociationTypeElement )
           {
-            final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) object;
+            final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement)object;
             final IRelationType associationTypeProperty = fate.getPropertyType();
             final Object property = parent.getProperty( associationTypeProperty );
             if( property == feature )
               return fate;
             else if( property instanceof List< ? > )
             {
-              if( ((List< ? >) property).contains( feature ) )
+              if( ((List< ? >)property).contains( feature ) )
                 return fate;
             }
           }
@@ -368,9 +368,9 @@ public class GMLContentProvider implements ITreeContentProvider
       for( final Object object : children )
         if( object instanceof FeatureAssociationTypeElement )
         {
-          final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) object;
+          final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement)object;
 
-          final Object property = ((Feature) parent).getProperty( fate.getPropertyType() );
+          final Object property = ((Feature)parent).getProperty( fate.getPropertyType() );
           if( property == valueFromSegment )
             return object;
         }
@@ -393,13 +393,12 @@ public class GMLContentProvider implements ITreeContentProvider
   }
 
   /**
-   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
+   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
    */
   @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
-    m_viewer = (TreeViewer) viewer;
+    m_viewer = (TreeViewer)viewer;
 
     if( oldInput != newInput )
     {
@@ -411,7 +410,7 @@ public class GMLContentProvider implements ITreeContentProvider
 
       if( newInput instanceof GMLWorkspace )
       {
-        m_workspace = (GMLWorkspace) newInput;
+        m_workspace = (GMLWorkspace)newInput;
         m_workspace.addModellListener( m_workspaceListener );
       }
       else
@@ -442,12 +441,12 @@ public class GMLContentProvider implements ITreeContentProvider
     {
       if( object instanceof Feature )
       {
-        final Feature feature = (Feature) object;
+        final Feature feature = (Feature)object;
         m_rootPath = new GMLXPath( feature );
       }
       else if( object instanceof FeatureAssociationTypeElement )
       {
-        final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) object;
+        final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement)object;
         final Feature parentFeature = fate.getOwner();
         final GMLXPath path = new GMLXPath( parentFeature );
         m_rootPath = new GMLXPath( path, fate.getPropertyType().getQName() );
@@ -547,7 +546,7 @@ public class GMLContentProvider implements ITreeContentProvider
       if( m_featureStructureChangedJob != null )
         m_featureStructureChangedJob.cancel();
 
-      m_featureStructureChangedJob = new UIJob( Messages.getString("GMLContentProvider_0") ) //$NON-NLS-1$
+      m_featureStructureChangedJob = new UIJob( Messages.getString( "GMLContentProvider_0" ) ) //$NON-NLS-1$
       {
         @Override
         public IStatus runInUIThread( final IProgressMonitor monitor )
@@ -558,6 +557,7 @@ public class GMLContentProvider implements ITreeContentProvider
             return Status.CANCEL_STATUS;
 
           final Object[] expandedElements = treeViewer.getExpandedElements();
+
           treeViewer.refresh();
 
           treeViewer.setExpandedElements( expandedElements );
@@ -574,13 +574,14 @@ public class GMLContentProvider implements ITreeContentProvider
     }
     else if( modellEvent instanceof FeaturesChangedModellEvent )
     {
-      final FeaturesChangedModellEvent fcme = (FeaturesChangedModellEvent) modellEvent;
+      final FeaturesChangedModellEvent fcme = (FeaturesChangedModellEvent)modellEvent;
+      // FIXME: highly dubious... why this globa stack???
       Collections.addAll( m_featureChangeStack, fcme.getFeatures() );
 
       if( m_featureChangeJob != null )
         m_featureChangeJob.cancel();
 
-      m_featureChangeJob = new UIJob( Messages.getString("GMLContentProvider_1") ) //$NON-NLS-1$
+      m_featureChangeJob = new UIJob( Messages.getString( "GMLContentProvider_1" ) ) //$NON-NLS-1$
       {
         @Override
         public IStatus runInUIThread( final IProgressMonitor monitor )
@@ -593,8 +594,13 @@ public class GMLContentProvider implements ITreeContentProvider
 
           final Feature[] features = m_featureChangeStack.toArray( new Feature[] {} );
           m_featureChangeStack.clear();
+
           for( final Feature feature : features )
+          {
+            // FIXME: handle special case: also refresh elements of tree that reference this feature...
+
             treeViewer.refresh( feature, true );
+          }
 
           return Status.OK_STATUS;
         }
