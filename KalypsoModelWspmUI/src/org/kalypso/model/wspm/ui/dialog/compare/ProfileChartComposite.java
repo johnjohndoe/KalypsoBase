@@ -142,10 +142,8 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
     }
 
     m_profilChartModel = new ProfilChartModel( getProfilLayerProvider( profile ), profile, result );
-    if( state != null )
-    {
-      state.restoreState( m_profilChartModel );
-    }
+
+    state.restoreState( m_profilChartModel );
 
     // TODO: don't autoscale, restore zoom instead
     m_profilChartModel.autoscale();

@@ -75,15 +75,11 @@ public class ProfileProblemView
   // TODO: put into dialog settings instead
   private final Map<Integer, Boolean> m_expansionState = new HashMap<>();
 
-// protected final int m_maxHeight;
-
   private final ScrolledForm m_form;
 
-  public ProfileProblemView( final FormToolkit toolkit, final Composite parent, final int maxHeight )
+  public ProfileProblemView( final FormToolkit toolkit, final Composite parent )
   {
     m_toolkit = toolkit;
-// m_maxHeight = maxHeight;
-
     m_form = m_toolkit.createScrolledForm( parent );
     m_form.setExpandVertical( true );
 

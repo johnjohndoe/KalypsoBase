@@ -45,6 +45,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
@@ -58,7 +59,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.plugin.AbstractUIPluginExt;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
@@ -70,13 +70,13 @@ import org.kalypso.model.wspm.ui.view.chart.layer.wsp.WspLayer;
  */
 public class WaterLevelResultTree extends Composite
 {
-  protected CheckboxTreeViewer m_treeViewer;
+  private CheckboxTreeViewer m_treeViewer;
 
   public WaterLevelResultTree( final Composite parent, final WspLayer layer, final FormToolkit toolkit )
   {
     super( parent, SWT.NULL );
 
-    setLayout( Layouts.createGridLayout() );
+    setLayout( GridLayoutFactory.fillDefaults().create() );
     render( layer, toolkit );
   }
 
@@ -118,6 +118,7 @@ public class WaterLevelResultTree extends Composite
         m_treeViewer.setCheckedElements( activeNames );
       }
 
+      final CheckboxTreeViewer treeViewer = m_treeViewer;
       m_treeViewer.addCheckStateListener( new ICheckStateListener()
       {
         @Override
@@ -126,7 +127,7 @@ public class WaterLevelResultTree extends Composite
           try
           {
             /* Get the source. */
-            final CheckboxTreeViewer source = m_treeViewer;
+            final CheckboxTreeViewer source = treeViewer;
             final Object[] checked = source.getCheckedElements();
             data.activateElements( checked );
 

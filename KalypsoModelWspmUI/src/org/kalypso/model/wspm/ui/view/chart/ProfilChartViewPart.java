@@ -44,6 +44,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -60,7 +61,6 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.ChartPartListener;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.model.wspm.core.gml.IProfileProvider;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
@@ -124,7 +124,7 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
   public final void createPartControl( final Composite parent )
   {
     m_control = new Composite( parent, SWT.NONE );
-    m_control.setLayout( Layouts.createGridLayout() );
+    m_control.setLayout( GridLayoutFactory.fillDefaults().create() );
     createContent( m_control );
 
     final IProfileProvider profileFeature = m_handler.getProfileFeature();

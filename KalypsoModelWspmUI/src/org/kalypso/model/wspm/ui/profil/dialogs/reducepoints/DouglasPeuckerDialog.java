@@ -47,6 +47,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -66,7 +67,6 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.model.wspm.core.profil.IProfile;
@@ -229,9 +229,6 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
     return new Point( Math.max( defaultSize.x, lastWidth ), Math.max( defaultSize.y - 130, lastHeight ) );
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   protected Control createDialogArea( final Composite parent )
   {
@@ -240,10 +237,7 @@ public class DouglasPeuckerDialog extends TitleAreaDialog
     // create the top level composite for the dialog area
     final Composite composite = toolkit.createComposite( parent );
     composite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
-    final GridLayout layout = Layouts.createGridLayout();
-    layout.verticalSpacing = 0;
-    layout.horizontalSpacing = 0;
-    composite.setLayout( layout );
+    GridLayoutFactory.fillDefaults().spacing( 0, 0 ).applyTo( composite );
 
     // Build the separator line
     final Label titleBarSeparator = toolkit.createSeparator( composite, SWT.HORIZONTAL | SWT.SEPARATOR );
