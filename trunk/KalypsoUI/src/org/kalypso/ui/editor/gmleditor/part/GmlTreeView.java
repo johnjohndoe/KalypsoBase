@@ -70,8 +70,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.xml.sax.InputSource;
 
 /**
- * Is among others a {@link org.eclipse.jface.viewers.IPostSelectionProvider}. The returned selection consists of
- * {@link org.kalypsodeegree.model.feature.Feature}and
+ * Is among others a {@link org.eclipse.jface.viewers.IPostSelectionProvider}. The returned selection consists of {@link org.kalypsodeegree.model.feature.Feature}and
  * {@link org.kalypsodeegree.model.feature.FeatureAssociationTypeProperty}objects.
  */
 public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEventProvider, ModellEventListener
@@ -104,12 +103,12 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
       {
         final TreeViewer treeViewer = getTreeViewer();
 
-        final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+        final IStructuredSelection selection = (IStructuredSelection)event.getSelection();
         final Object obj = selection.getFirstElement();
         if( obj instanceof LinkedFeatureElement )
         {
           // Jump to linked element
-          final Feature feature = ((LinkedFeatureElement) obj).getDecoratedFeature();
+          final Feature feature = ((LinkedFeatureElement)obj).getDecoratedFeature();
           final StructuredSelection ss = new StructuredSelection( feature );
           treeViewer.setSelection( ss, true );
           treeViewer.expandToLevel( feature, 1 );
@@ -198,7 +197,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     if( m_updateControl != null )
       m_updateControl.cancel();
 
-    m_updateControl = new UIJob( Messages.getString("GmlTreeView.0") ) //$NON-NLS-1$
+    m_updateControl = new UIJob( Messages.getString( "GmlTreeView.0" ) ) //$NON-NLS-1$
     {
 
       @Override
@@ -241,7 +240,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     final Object input = m_treeViewer.getInput();
     if( input instanceof CommandableWorkspace )
     {
-      final CommandableWorkspace workspace = (CommandableWorkspace) input;
+      final CommandableWorkspace workspace = (CommandableWorkspace)input;
 
       Feature[] toRemove;
       if( m_lastSelection != null )
@@ -279,15 +278,15 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
 
   protected Feature[] filterSelectedFeatures( final ISelection selection )
   {
-    final Object[] selectedTreeItems = ((IStructuredSelection) selection).toArray();
+    final Object[] selectedTreeItems = ((IStructuredSelection)selection).toArray();
     final List<Feature> selectedFeatures = new ArrayList<>();
     for( final Object treeElement : selectedTreeItems )
     {
       Feature feature = null;
       if( treeElement instanceof LinkedFeatureElement )
-        feature = ((LinkedFeatureElement) treeElement).getDecoratedFeature();
+        feature = ((LinkedFeatureElement)treeElement).getDecoratedFeature();
       else if( treeElement instanceof Feature )
-        feature = (Feature) treeElement;
+        feature = (Feature)treeElement;
       if( feature != null && !selectedFeatures.contains( feature ) )
         selectedFeatures.add( feature );
     }
@@ -319,9 +318,6 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     m_workspace = null;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.event.ModellEventListener#onModellChange(org.kalypsodeegree.model.feature.event.ModellEvent)
-   */
   @Override
   public void onModellChange( final ModellEvent modellEvent )
   {
@@ -349,18 +345,12 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     return m_workspace;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#addModellListener(org.kalypsodeegree.model.feature.event.ModellEventListener)
-   */
   @Override
   public void addModellListener( final ModellEventListener listener )
   {
     m_eventProvider.addModellListener( listener );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#removeModellListener(org.kalypsodeegree.model.feature.event.ModellEventListener)
-   */
   @Override
   public void removeModellListener( final ModellEventListener listener )
   {
@@ -384,13 +374,9 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
   @Override
   public IStructuredSelection getSelection( )
   {
-    return new TreeFeatureSelection( (IStructuredSelection) m_treeViewer.getSelection() );
+    return new TreeFeatureSelection( (IStructuredSelection)m_treeViewer.getSelection() );
   }
 
-  /**
-   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object,
-   *      org.eclipse.core.runtime.IStatus)
-   */
   @Override
   public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
   {
@@ -402,7 +388,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
         m_workspace = null;
       }
 
-      m_workspace = (CommandableWorkspace) newValue;
+      m_workspace = (CommandableWorkspace)newValue;
       if( m_workspace != null )
         m_workspace.addModellListener( this );
 
@@ -467,9 +453,6 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     }
   }
 
-  /**
-   * @see org.kalypso.util.pool.IPoolListener#objectInvalid(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object)
-   */
   @Override
   public void objectInvalid( final IPoolableObjectType key, final Object oldValue )
   {
@@ -506,7 +489,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
       final Unmarshaller unmarshaller = TemplateUtilities.createGistreeviewUnmarshaller();
       final InputSource is = new InputSource( r );
 
-      final Gistreeview treeview = (Gistreeview) unmarshaller.unmarshal( is );
+      final Gistreeview treeview = (Gistreeview)unmarshaller.unmarshal( is );
       setInput( treeview, context );
     }
     catch( final JAXBException e )
@@ -680,16 +663,13 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     return false;
   }
 
-  /**
-   * @see org.kalypso.util.pool.IPoolListener#dirtyChanged(org.kalypso.util.pool.IPoolableObjectType, boolean)
-   */
   @Override
   public void dirtyChanged( final IPoolableObjectType key, final boolean isDirty )
   {
     // TODO propagate dirty change to GmlEditor if present
   }
 
-  public void setInput( final Gistreeview treeview, final URL context )
+  protected void setInput( final Gistreeview treeview, final URL context )
   {
     setInput( treeview, context, true );
   }
@@ -718,7 +698,12 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     if( !m_treeViewer.getControl().isDisposed() )
     {
       if( showContextWhileLoading )
-        m_treeViewer.setLabelProvider( new ConstantLabelProvider( Messages.getString( "org.kalypso.ui.editor.gmleditor.part.GmlTreeView.11" ) + context + Messages.getString( "org.kalypso.ui.editor.gmleditor.part.GmlTreeView.12" ), waitImg ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      {
+        final String file = context.getFile();
+
+        final String text = Messages.getString( "org.kalypso.ui.editor.gmleditor.part.GmlTreeView.11", file ); //$NON-NLS-1$
+        m_treeViewer.setLabelProvider( new ConstantLabelProvider( text, waitImg ) );
+      }
       else
         m_treeViewer.setLabelProvider( new ConstantLabelProvider( " ", waitImg ) ); //$NON-NLS-1$
 
