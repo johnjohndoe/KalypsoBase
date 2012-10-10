@@ -50,7 +50,6 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
  */
 public class AbstractClassificationClass extends Feature_Impl implements IClassificationClass
 {
-
   public AbstractClassificationClass( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );

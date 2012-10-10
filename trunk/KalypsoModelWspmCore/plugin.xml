@@ -51,6 +51,22 @@
             class="org.kalypso.model.wspm.core.gml.ProfileObjectBinding"
             qname="{org.kalypso.model.wspmprofile}ProfileObject">
       </feature>
+      <feature
+            class="org.kalypso.model.wspm.core.gml.classifications.PartType"
+            qname="{org.kalypso.model.wspm.classifications}PartType">
+      </feature>
+      <feature
+            class="org.kalypso.model.wspm.core.gml.classifications.StyleDefinition"
+            qname="{org.kalypso.model.wspm.classifications}StyleDefinition">
+      </feature>
+      <feature
+            class="org.kalypso.model.wspm.core.gml.classifications.Style"
+            qname="{org.kalypso.model.wspm.classifications}Style">
+      </feature>
+      <feature
+            class="org.kalypso.model.wspm.core.gml.classifications.StyleParameter"
+            qname="{org.kalypso.model.wspm.classifications}StyleParameter">
+      </feature>
    </extension>
    <extension
            point="org.eclipse.core.runtime.preferences">
