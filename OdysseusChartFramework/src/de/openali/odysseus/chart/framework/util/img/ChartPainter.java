@@ -183,15 +183,6 @@ public class ChartPainter
     return m_infoObject;
   }
 
-  /**
-   * @deprecated will always return (0,0,0,0), use ChartImageInfo instead
-   */
-  @Deprecated
-  public final Insets getPlotInsets( )
-  {
-    return new Insets( 0, 0, 0, 0 );
-  }
-
   private void paintAxes( final POSITION position, final GC gc, final int anchorX, final int anchorY, final int startOffset, final int screenWidth, final int rotation, final boolean invertVertical )
   {
     final IAxis[] axes = m_model.getMapperRegistry().getAxesAt( position );
@@ -309,10 +300,14 @@ public class ChartPainter
       final Rectangle plotRect = new Rectangle( usableAxisRect.x + axisLeftRect.width, usableAxisRect.y + axisTopRect.height, usableAxisRect.width - axisLeftRect.width - axisRightRect.width, usableAxisRect.height
           - axisTopRect.height - axisBottomRect.height );
       infoObject.setPlotRect( plotRect );
+
       final Rectangle plotClientRect = RectangleUtils.inflateRect( plotRect, plotInsets );
+
       infoObject.setLayerRect( plotClientRect );
       m_infoObject = infoObject;
-      this.setAxesHeight( plotClientRect, plotRect );
+
+      // FIXME: plot insets do not really act like expected; check this...
+      setAxesHeight( plotRect, plotRect );
 
       m_titlePainter.paint( gc, titleRect );
       if( monitor.isCanceled() )
@@ -334,7 +329,8 @@ public class ChartPainter
         gc.drawImage( legendImage, legendRect.x, legendRect.y );
 
       // Layer könnten sonst in die Achsen zeichnen
-      gc.setClipping( plotClientRect );
+      // REMARK: not the plotClientRect, the layer may still paint into the insets
+      gc.setClipping( plotRect );
 
       final ChartPlotPainter plotPainter = new ChartPlotPainter( m_model, new Point( plotClientRect.width, plotClientRect.height ) );
       plotPainter.paint( gc, infoObject, monitor );
@@ -356,8 +352,6 @@ public class ChartPainter
 
   private void setAxesHeight( final Rectangle plotRect, final Rectangle size )
   {
-    // FIXME: setting the screen height during repaint is very bad practice, because it triggers another repaint
-
     final int axisWidth = size.width;// - plotInsets.left - plotInsets.right;
     final int axisHeight = size.height;// - plotInsets.top - plotInsets.bottom;
 
@@ -368,12 +362,10 @@ public class ChartPainter
       {
         case HORIZONTAL:
           axis.setScreenOffset( plotRect.x, axisWidth );
-          // axis.setScreenHeight( axisWidth );
           break;
 
         case VERTICAL:
           axis.setScreenOffset( plotRect.y, axisHeight );
-          // axis.setScreenHeight( axisHeight );
           break;
       }
     }
