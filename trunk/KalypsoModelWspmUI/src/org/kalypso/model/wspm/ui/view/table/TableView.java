@@ -239,7 +239,7 @@ public class TableView extends ViewPart implements ITupleResultViewerProvider, I
     m_sashForm = new SashForm( body, SWT.VERTICAL );
     m_sashForm.setSashWidth( 4 );
 
-    m_problemView = new ProfileProblemView( m_toolkit, m_sashForm, INITIAL_PROBLEM_SASH_WEIGHT );
+    m_problemView = new ProfileProblemView( m_toolkit, m_sashForm );
 
     m_view = new TupleResultTableViewer( m_sashForm, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION );
 

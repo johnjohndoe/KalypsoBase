@@ -41,6 +41,7 @@
 package org.kalypso.model.wspm.ui.dialog.compare;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -50,7 +51,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChart;
@@ -79,7 +79,7 @@ public class SwitchProfileButtonDialog extends Composite
     m_chartView = chartView;
     m_profiles = profiles;
 
-    setLayout( Layouts.createGridLayout( 4 ) );
+    setLayout( GridLayoutFactory.fillDefaults().numColumns( 4 ).create() );
 
     final FormToolkit toolkit = new FormToolkit( parent.getDisplay() );
     render( toolkit );

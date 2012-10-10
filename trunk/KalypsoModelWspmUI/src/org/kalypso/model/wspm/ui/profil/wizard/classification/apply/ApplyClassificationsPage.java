@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard.classification.apply;
 
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -49,7 +50,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 
@@ -74,7 +74,7 @@ public class ApplyClassificationsPage extends WizardPage
   public void createControl( final Composite parent )
   {
     final Composite body = new Composite( parent, SWT.NULL );
-    body.setLayout( Layouts.createGridLayout() );
+    GridLayoutFactory.fillDefaults().applyTo( body );
 
     createTypeControl( body );
     createPropertiesControl( body );
