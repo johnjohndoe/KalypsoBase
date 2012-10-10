@@ -244,10 +244,10 @@ public final class WspmClassifications
   {
     final Double factor = point.getRoughnessFactor();
 
-    final IComponent component = point.hasPointProperty( property );
-    if( Objects.isNotNull( component ) )
+    final int componentIndex = point.indexOfComponent( property );
+    if( componentIndex != -1 )
     {
-      final Object value = point.getValue( component );
+      final Object value = point.getValue( componentIndex );
       if( value instanceof Number )
       {
         final Number number = (Number) value;
@@ -274,6 +274,5 @@ public final class WspmClassifications
       default:
         return null;
     }
-
   }
 }
