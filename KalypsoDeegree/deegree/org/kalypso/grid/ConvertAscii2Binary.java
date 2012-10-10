@@ -51,12 +51,13 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.deegree.i18n.Messages;
 import org.kalypsodeegree.KalypsoDeegreeDebug;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -66,7 +67,7 @@ import com.vividsolutions.jts.util.Assert;
 
 /**
  * Converter which converts an ESRI Ascii Grid into a {@link BinaryGrid}.
- * 
+ *
  * @author Gernot Belger
  */
 public class ConvertAscii2Binary
@@ -168,8 +169,7 @@ public class ConvertAscii2Binary
       KalypsoDeegreeDebug.GRID_OPS.printf( "%s", "converting ascii-grid to binary...   failed.\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
       final String message = String.format( "Failed to convert grid %s to %s:\n%s", m_asciiFileURL, m_ascbinFile, e.toString() );
-      throw new CoreException( StatusUtilities.createStatus( IStatus.ERROR, message, e ) );
-
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoDeegreePlugin.getID(), message, e ) );
     }
     finally
     {
@@ -183,5 +183,4 @@ public class ConvertAscii2Binary
   {
     return m_gridDomain;
   }
-
 }

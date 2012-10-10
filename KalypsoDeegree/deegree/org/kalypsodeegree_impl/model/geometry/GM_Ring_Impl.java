@@ -35,7 +35,6 @@
  */
 package org.kalypsodeegree_impl.model.geometry;
 
-import java.io.Serializable;
 import java.util.Arrays;
 
 import org.kalypso.transformation.transformer.GeoTransformerException;
@@ -64,7 +63,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * @version 05.04.2002
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  */
-public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring, Serializable
+public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 9157144642050604928L;

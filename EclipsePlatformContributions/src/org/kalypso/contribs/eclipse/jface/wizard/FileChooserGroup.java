@@ -6,11 +6,11 @@
  *  Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany
  *  (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/
  *
- *  Kalypso is free software: you can redistribute it and/or modify it under the terms  
- *  of the GNU Lesser General Public License (LGPL) as published by the Free Software 
+ *  Kalypso is free software: you can redistribute it and/or modify it under the terms
+ *  of the GNU Lesser General Public License (LGPL) as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
- *  Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
+ *  Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  *  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public
@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * A group to choose a file from the file system.
- * 
+ *
  * @author Gernot Belger
  */
 public class FileChooserGroup
@@ -59,7 +59,7 @@ public class FileChooserGroup
 
   /**
    * used as Filter like "*.txt" if this dialog can choose directories instead of files
-   * 
+   *
    * @see FileChooserDelegate#getFilterExtensions()
    */
   public static final String DIRECTORY_FILTER_SUFFIX = "DIRECTORY_FILTER_SUFFIX"; //$NON-NLS-1$
@@ -70,7 +70,7 @@ public class FileChooserGroup
 
   private Text m_text;
 
-  private final Set<FileChangedListener> m_listeners = new HashSet<FileChangedListener>();
+  private final Set<FileChangedListener> m_listeners = new HashSet<>();
 
   private final IFileChooserDelegate m_delegate;
 
@@ -226,7 +226,7 @@ public class FileChooserGroup
 
   /**
    * Sets the dialog settings used to remember the last entered filename.
-   * 
+   *
    * @param settings
    *          If <code>null</code>, the filename will not be stored.
    */

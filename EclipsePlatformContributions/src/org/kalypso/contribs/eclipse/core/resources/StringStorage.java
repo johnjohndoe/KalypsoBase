@@ -6,11 +6,11 @@
  *  Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany
  *  (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/
  *
- *  Kalypso is free software: you can redistribute it and/or modify it under the terms  
- *  of the GNU Lesser General Public License (LGPL) as published by the Free Software 
+ *  Kalypso is free software: you can redistribute it and/or modify it under the terms
+ *  of the GNU Lesser General Public License (LGPL) as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
- *  Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
+ *  Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  *  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public
@@ -22,6 +22,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.eclipse.core.resources.IEncodedStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdapterManager;
@@ -36,7 +37,7 @@ import org.kalypso.contribs.eclipse.ui.editorinput.StringStorageInputFactory;
 
 /**
  * REMARK: implementing {@link org.eclipse.ui.IPersistableElement} is only used in combinisation with {@link org.kalypso.contribs.eclipse.ui.editorinput.StorageEditorInput}.
- * 
+ *
  * @author Gernot Belger
  */
 public class StringStorage implements IEncodedStorage, IPersistableElement
@@ -62,10 +63,6 @@ public class StringStorage implements IEncodedStorage, IPersistableElement
     m_name = name;
   }
 
-  /**
-   * @throws CoreException
-   * @see org.eclipse.core.resources.IStorage#getContents()
-   */
   @Override
   public InputStream getContents( ) throws CoreException
   {
@@ -80,18 +77,12 @@ public class StringStorage implements IEncodedStorage, IPersistableElement
     }
   }
 
-  /**
-   * @see org.eclipse.core.resources.IStorage#getFullPath()
-   */
   @Override
   public IPath getFullPath( )
   {
     return m_path;
   }
 
-  /**
-   * @see org.eclipse.core.resources.IStorage#getName()
-   */
   @Override
   public String getName( )
   {
@@ -104,18 +95,12 @@ public class StringStorage implements IEncodedStorage, IPersistableElement
     return m_path.lastSegment();
   }
 
-  /**
-   * @see org.eclipse.core.resources.IStorage#isReadOnly()
-   */
   @Override
   public boolean isReadOnly( )
   {
     return true;
   }
 
-  /**
-   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-   */
   @Override
   public Object getAdapter( final Class adapter )
   {
@@ -123,9 +108,6 @@ public class StringStorage implements IEncodedStorage, IPersistableElement
     return adapterManager.loadAdapter( this, adapter.getName() );
   }
 
-  /**
-   * @see org.eclipse.core.resources.IEncodedStorage#getCharset()
-   */
   @Override
   public String getCharset( )
   {
@@ -133,9 +115,12 @@ public class StringStorage implements IEncodedStorage, IPersistableElement
     return "UTF-8"; //$NON-NLS-1$
   }
 
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
+  @Override
+  public int hashCode( )
+  {
+    return new HashCodeBuilder().append( m_content ).append( m_path ).toHashCode();
+  }
+
   @Override
   public boolean equals( final Object obj )
   {
@@ -153,18 +138,12 @@ public class StringStorage implements IEncodedStorage, IPersistableElement
     return m_content.equals( other.m_content ) && m_path.equals( other.m_path );
   }
 
-  /**
-   * @see org.eclipse.ui.IPersistableElement#getFactoryId()
-   */
   @Override
   public String getFactoryId( )
   {
     return StringStorageInputFactory.ID;
   }
 
-  /**
-   * @see org.eclipse.ui.IPersistable#saveState(org.eclipse.ui.IMemento)
-   */
   @Override
   public void saveState( final IMemento memento )
   {

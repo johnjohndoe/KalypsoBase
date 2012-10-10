@@ -225,7 +225,6 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     return ProfileFeatureFactory.toProfile( this );
   }
 
-  @SuppressWarnings( "unchecked" )
   Feature[] getProfileObjects( )
   {
     final FeatureList profileObjects = (FeatureList)getProperty( MEMBER_PROFILE_OBJECTS );

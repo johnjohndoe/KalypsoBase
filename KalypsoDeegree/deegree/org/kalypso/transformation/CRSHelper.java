@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.transformation;
 
@@ -52,7 +52,7 @@ import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
  * This class is a helper for dealing with coordinate systems.
- * 
+ *
  * @author Holger Albert
  */
 public final class CRSHelper
@@ -67,7 +67,7 @@ public final class CRSHelper
 
   /**
    * This function returns true, if the given code is one of the known coordinate systems.
-   * 
+   *
    * @param code
    *          The code of the coordinate system to check.
    * @return True, if the coordinate system exists.
@@ -96,7 +96,7 @@ public final class CRSHelper
 
   /**
    * This function returns all known codes of coordinate systems.
-   * 
+   *
    * @return An array of all known codes of coordinate systems.
    */
   public static String[] getAllNames( )
@@ -111,7 +111,7 @@ public final class CRSHelper
 
   /**
    * This function returns the dimension of the coordinate system with the given code.
-   * 
+   *
    * @return The dimension of the coordinate system.
    */
   public static int getDimension( final String code )
@@ -127,7 +127,7 @@ public final class CRSHelper
    * This function returns an array of coordinate systems with the given codes.<br>
    * <br>
    * ATTENTION: Outside of this plugin, only the codes should be used.
-   * 
+   *
    * @param codes
    *          The array of codes.
    * @return The array of coordinate systems.
@@ -135,7 +135,7 @@ public final class CRSHelper
   public static ICoordinateSystem[] getCRSListByNames( final String[] codes )
   {
     /* Memory for the coordinate systems. */
-    final ArrayList<ICoordinateSystem> coordinateSystems = new ArrayList<ICoordinateSystem>();
+    final ArrayList<ICoordinateSystem> coordinateSystems = new ArrayList<>();
 
     for( final String code : codes )
     {
@@ -149,7 +149,7 @@ public final class CRSHelper
   /**
    * This function returns a string, which is usable for a tooltip of a CRS. It contains the code the given coordinate
    * system.
-   * 
+   *
    * @param code
    *          The code of the coordinate system.
    * @return The tooltip string.
@@ -185,7 +185,7 @@ public final class CRSHelper
 
   /**
    * This function hashes the given coordinate systems with its EPSG code as key.
-   * 
+   *
    * @return The hash of the given coordinate systems.
    */
   public static HashMap<String, ICoordinateSystem> getCoordHash( final String[] codes )
@@ -194,7 +194,7 @@ public final class CRSHelper
     final ICoordinateSystem[] coordinateSystems = CRSHelper.getCRSListByNames( codes );
 
     /* Cache the coordinate systems. */
-    final HashMap<String, ICoordinateSystem> coordHash = new HashMap<String, ICoordinateSystem>();
+    final HashMap<String, ICoordinateSystem> coordHash = new HashMap<>();
     for( final ICoordinateSystem coordinateSystem : coordinateSystems )
     {
       coordHash.put( coordinateSystem.getCode(), coordinateSystem );
@@ -205,7 +205,7 @@ public final class CRSHelper
 
   /**
    * This function returns the EPSG code of the given coordinate system.
-   * 
+   *
    * @param code
    *          The code of the coordinate system.
    * @return The EPSG code of the given coordinate system.

@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.transformation.ui;
 
@@ -54,6 +54,7 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelection;
@@ -78,7 +79,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.deegree.i18n.Messages;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypso.transformation.crs.CoordinateSystemFactory;
@@ -89,7 +89,7 @@ import org.kalypso.transformation.ui.validators.CRSInputValidator;
 
 /**
  * This class represents a panel with elements for managing the coordinate systems.
- * 
+ *
  * @author Holger Albert
  */
 public class AvailableCRSPanel extends Composite implements IJobChangeListener
@@ -116,9 +116,9 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
   {
     super( parent, style );
 
-    m_listener = new ArrayList<IAvailableCRSPanelListener>();
+    m_listener = new ArrayList<>();
     m_viewer = null;
-    m_coordHash = new HashMap<String, ICoordinateSystem>();
+    m_coordHash = new HashMap<>();
 
     /* Create the controls. */
     createControls();
@@ -130,10 +130,7 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
   private void createControls( )
   {
     /* Set the layout data. */
-    final GridLayout gridLayout = Layouts.createGridLayout();
-    gridLayout.horizontalSpacing = 0;
-    gridLayout.verticalSpacing = 0;
-    super.setLayout( gridLayout );
+    super.setLayout( GridLayoutFactory.fillDefaults().spacing( 0, 0 ).create() );
 
     /* Create the main group for the panel. */
     final Group main = new Group( this, SWT.NONE );
@@ -251,7 +248,7 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
 
   /**
    * This function sets the available coordinate systems.
-   * 
+   *
    * @param preferenceCodes
    *          An array of codes from coordinate systems. Make sure, they are ; seperated.
    */
@@ -286,7 +283,7 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
 
   /**
    * This function returns the codes of all coordinate systems in the list and returns them as a ; seperated string.
-   * 
+   *
    * @return The codes of the coordinate systems in the list as a ; seperated string.
    */
   public String getAvailableCoordinateSystems( )
@@ -316,7 +313,7 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
 
   /**
    * This function sets the selection of the panel.
-   * 
+   *
    * @param selection
    *          The selection.
    */
@@ -332,7 +329,7 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
 
   /**
    * This function returns the code of the selected coordinate system.
-   * 
+   *
    * @return The code of the selected coordinate system or null, if none is selected.
    */
   public String getSelectedCRS( )
@@ -365,7 +362,7 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
 
   /**
    * This function adds a available crs panel listener.
-   * 
+   *
    * @param listener
    *          The available crs panel listener.
    */
@@ -377,7 +374,7 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
 
   /**
    * This function removes a available crs panel listener.
-   * 
+   *
    * @param listener
    *          The available crs panel listener.
    */
@@ -389,7 +386,7 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
 
   /**
    * This function adds a selection changed listener.
-   * 
+   *
    * @param listener
    *          The selection changed listener.
    */
@@ -401,7 +398,7 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
 
   /**
    * This function removes a selection changed listener.
-   * 
+   *
    * @param listener
    *          The selection changed listener.
    */
@@ -413,7 +410,7 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
 
   /**
    * This function informs listeners about the coordinate systems, being initialized.
-   * 
+   *
    * @param codes
    *          The list of codes of the coordinate systems.
    */
@@ -459,7 +456,7 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
 
   /**
    * This function informs listeners about the coordinate system, which was removed.
-   * 
+   *
    * @param code
    *          The code of the coordinate system.
    */
@@ -477,7 +474,7 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
 
   /**
    * This function adds a new coordinate system.
-   * 
+   *
    * @param display
    *          The display.
    */
@@ -517,7 +514,7 @@ public class AvailableCRSPanel extends Composite implements IJobChangeListener
 
   /**
    * This function informs listeners about the coordinate system, which was added.
-   * 
+   *
    * @param code
    *          The code of the coordinate system.
    */

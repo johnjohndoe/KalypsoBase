@@ -6,11 +6,11 @@
  *  Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany
  *  (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/
  *
- *  Kalypso is free software: you can redistribute it and/or modify it under the terms  
- *  of the GNU Lesser General Public License (LGPL) as published by the Free Software 
+ *  Kalypso is free software: you can redistribute it and/or modify it under the terms
+ *  of the GNU Lesser General Public License (LGPL) as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
- *  Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
+ *  Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  *  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public
@@ -39,7 +39,7 @@ import org.w3c.dom.NodeList;
 /**
  * This class reads the .project file and stores basic information of a project. This is usefull, if you have a project
  * outside the current eclipse workspace, but need information like name and natures of it. <strong>Not tested!</strong>
- * 
+ *
  * @author Holger Albert
  */
 public class SimpleProjectInfo
@@ -61,7 +61,7 @@ public class SimpleProjectInfo
 
   /**
    * The constructor.
-   * 
+   *
    * @param projectFile
    *          The project file.
    */
@@ -110,7 +110,7 @@ public class SimpleProjectInfo
 
         if( childNode.getNodeName().equals( "natures" ) )
         {
-          final List<String> natures = new ArrayList<String>();
+          final List<String> natures = new ArrayList<>();
           final NodeList natureNodes = childNode.getChildNodes();
           for( int j = 0; j < natureNodes.getLength(); j++ )
           {
@@ -150,7 +150,7 @@ public class SimpleProjectInfo
 
   /**
    * This function returns the directory of the project.
-   * 
+   *
    * @return The directory of the project.
    */
   public File getDirectory( )
@@ -160,7 +160,7 @@ public class SimpleProjectInfo
 
   /**
    * This function returns the name of the project.
-   * 
+   *
    * @return The name of the project.
    */
   public String getName( )
@@ -170,7 +170,7 @@ public class SimpleProjectInfo
 
   /**
    * This function returns the natures of the project.
-   * 
+   *
    * @return The natures of the project.
    */
   public String[] getNatures( )

@@ -44,7 +44,7 @@ import java.net.URL;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -85,9 +85,8 @@ public class GridMetaReaderAscii extends AbstractGridMetaReader
     {
       e.printStackTrace();
       final String msg = String.format( "Fehler beim Lesen des Headers von %s", urlImage );
-      m_valid = StatusUtilities.createStatus( IStatus.ERROR, msg, e );
+      m_valid = new Status( IStatus.ERROR, KalypsoDeegreePlugin.getID(), msg, e );
     }
-
   }
 
   @Override

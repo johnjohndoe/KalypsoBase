@@ -6,11 +6,11 @@
  *  Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany
  *  (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/
  *
- *  Kalypso is free software: you can redistribute it and/or modify it under the terms  
- *  of the GNU Lesser General Public License (LGPL) as published by the Free Software 
+ *  Kalypso is free software: you can redistribute it and/or modify it under the terms
+ *  of the GNU Lesser General Public License (LGPL) as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
- *  Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
+ *  Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  *  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public
@@ -73,7 +73,7 @@ public class SaveFileWizardPage extends WizardPage
 
   private final String m_groupname;
 
-  private final Map<Object, String> m_formats = new HashMap<Object, String>();
+  private final Map<Object, String> m_formats = new HashMap<>();
 
   private StructuredViewer m_formatViewer;
 
@@ -144,7 +144,7 @@ public class SaveFileWizardPage extends WizardPage
 
   /**
    * Add the passed value to self's destination widget's history
-   * 
+   *
    * @param value
    *          java.lang.String
    */
@@ -156,7 +156,7 @@ public class SaveFileWizardPage extends WizardPage
   /**
    * Returns the name of a container with a location that encompasses targetDirectory. Returns null if there is no
    * conflict.
-   * 
+   *
    * @param targetDirectory
    *          the path of the directory to check.
    * @return the conflicting container name or <code>null</code>
@@ -370,7 +370,7 @@ public class SaveFileWizardPage extends WizardPage
     final IDialogSettings settings = getDialogSettings();
     if( settings != null )
     {
-      final List<String> history = new ArrayList<String>( Arrays.asList( m_destinationNameField.getItems() ) );
+      final List<String> history = new ArrayList<>( Arrays.asList( m_destinationNameField.getItems() ) );
       history.remove( getDestinationValue() );
       history.add( 0, getDestinationValue() );
 

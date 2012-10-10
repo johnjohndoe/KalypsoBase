@@ -81,7 +81,7 @@ import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * Writes an GMLWorkspace into a {@link XMLReader}.
- * 
+ *
  * @author Andreas von Dömming
  */
 public class GMLSAXFactory
@@ -89,7 +89,7 @@ public class GMLSAXFactory
   private final NSPrefixProvider m_nsMapper = NSUtilities.getNSProvider();
 
   /** Namespace -> prefix: Contains the namespaces, whose prefix was already registered in the content handler. */
-  private final Map<String, String> m_usedPrefixes = new HashMap<String, String>();
+  private final Map<String, String> m_usedPrefixes = new HashMap<>();
 
   private final XMLReader m_reader;
 
@@ -136,7 +136,7 @@ public class GMLSAXFactory
 
   private void forcePrefixes( final GMLWorkspace workspace, final String rootNamespace ) throws SAXException
   {
-    final Set<String> forcedTypes = new TreeSet<String>();
+    final Set<String> forcedTypes = new TreeSet<>();
 
     final String[] knownNamespaces = forceFeatureTypePrefixes( workspace );
     final String[] additionalNamespaces = forceAdditionalSchemaPrefixes( workspace );
@@ -182,7 +182,7 @@ public class GMLSAXFactory
 
   private String[] forceAdditionalSchemaPrefixes( final GMLWorkspace workspace )
   {
-    final Collection<String> namespaces = new ArrayList<String>();
+    final Collection<String> namespaces = new ArrayList<>();
 
     // TODO: bug... this may cause too much namespaces to bee written into the gml-file
     // Either, we must only write what we really have, or
@@ -205,7 +205,7 @@ public class GMLSAXFactory
    */
   private String[] forceFeatureTypePrefixes( final GMLWorkspace workspace )
   {
-    final Collection<String> namespaces = new HashSet<String>();
+    final Collection<String> namespaces = new HashSet<>();
     final IGMLSchema gmlSchema = workspace.getGMLSchema();
 
     final IFeatureType[] featureTypes = gmlSchema.getAllFeatureTypes();

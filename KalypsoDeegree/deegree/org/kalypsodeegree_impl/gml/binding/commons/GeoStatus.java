@@ -59,12 +59,11 @@ import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
  * The feature based implementation of {@link IGeoStatus}.
- * 
+ *
  * @author Thomas Jung
  */
 public class GeoStatus extends Feature_Impl implements IGeoStatus
 {
-
   private enum SEVERITYTYPE
   {
     ok,
@@ -74,43 +73,31 @@ public class GeoStatus extends Feature_Impl implements IGeoStatus
     cancel
   }
 
-  private final IFeatureBindingCollection<IGeoStatus> m_children = new FeatureBindingCollection<IGeoStatus>( this, IGeoStatus.class, QNAME_PROP_STATUS_CHILD_MEMBER );
+  private final IFeatureBindingCollection<IGeoStatus> m_children = new FeatureBindingCollection<>( this, IGeoStatus.class, QNAME_PROP_STATUS_CHILD_MEMBER );
 
   public GeoStatus( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.gml.binding.commons.IStatus#getChildrenCollection()
-   */
   @Override
   public IFeatureBindingCollection<IGeoStatus> getChildrenCollection( )
   {
     return m_children;
   }
 
-  /**
-   * @see org.eclipse.core.runtime.IStatus#getChildren()
-   */
   @Override
   public org.eclipse.core.runtime.IStatus[] getChildren( )
   {
     return m_children.toArray( new IGeoStatus[m_children.size()] );
   }
 
-  /**
-   * @see org.eclipse.core.runtime.IStatus#getCode()
-   */
   @Override
   public int getCode( )
   {
     return getProperty( QNAME_PROP_STATUS_CODE, Integer.class );
   }
 
-  /**
-   * @see org.eclipse.core.runtime.IStatus#getException()
-   */
   @Override
   public Throwable getException( )
   {
@@ -142,27 +129,18 @@ public class GeoStatus extends Feature_Impl implements IGeoStatus
     }
   }
 
-  /**
-   * @see org.eclipse.core.runtime.IStatus#getMessage()
-   */
   @Override
   public String getMessage( )
   {
     return getDescription();
   }
 
-  /**
-   * @see org.eclipse.core.runtime.IStatus#getPlugin()
-   */
   @Override
   public String getPlugin( )
   {
     return getProperty( QNAME_PROP_STATUS_PLUGIN, String.class );
   }
 
-  /**
-   * @see org.eclipse.core.runtime.IStatus#getSeverity()
-   */
   @Override
   public int getSeverity( )
   {
@@ -185,27 +163,18 @@ public class GeoStatus extends Feature_Impl implements IGeoStatus
     }
   }
 
-  /**
-   * @see org.eclipse.core.runtime.IStatus#isMultiStatus()
-   */
   @Override
   public boolean isMultiStatus( )
   {
     return m_children.size() > 0;
   }
 
-  /**
-   * @see org.eclipse.core.runtime.IStatus#isOK()
-   */
   @Override
   public boolean isOK( )
   {
     return getSeverityType() == SEVERITYTYPE.ok;
   }
 
-  /**
-   * @see org.eclipse.core.runtime.IStatus#matches(int)
-   */
   @Override
   public boolean matches( final int severityMask )
   {
@@ -219,18 +188,12 @@ public class GeoStatus extends Feature_Impl implements IGeoStatus
     return SEVERITYTYPE.valueOf( value );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus#setCode(int)
-   */
   @Override
   public void setCode( final int code )
   {
     setProperty( QNAME_PROP_STATUS_CODE, code );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus#setException(java.lang.Throwable)
-   */
   @Override
   public void setException( final Throwable t )
   {
@@ -262,27 +225,18 @@ public class GeoStatus extends Feature_Impl implements IGeoStatus
     }
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus#setMessage(java.lang.String)
-   */
   @Override
   public void setMessage( final String message )
   {
     setDescription( message );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus#setPlugin(java.lang.String)
-   */
   @Override
   public void setPlugin( final String pluginId )
   {
     setProperty( QNAME_PROP_STATUS_PLUGIN, pluginId );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus#setSeverity(int)
-   */
   @Override
   public void setSeverity( final int severity )
   {
@@ -319,9 +273,6 @@ public class GeoStatus extends Feature_Impl implements IGeoStatus
     setProperty( QNAME_PROP_STATUS_SEVERITY, severityType.name() );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus#getTime()
-   */
   @Override
   public Date getTime( )
   {
@@ -332,9 +283,6 @@ public class GeoStatus extends Feature_Impl implements IGeoStatus
     return null;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.gml.binding.commons.IGeoStatus#setTime(java.util.Date)
-   */
   @Override
   public void setTime( final Date time )
   {

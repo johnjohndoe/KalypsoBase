@@ -35,7 +35,6 @@
  */
 package org.kalypsodeegree_impl.model.geometry;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -55,7 +54,6 @@ import org.kalypsodeegree.model.geometry.GM_Boundary;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_GenericSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -82,7 +80,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * @version 05.04.2002
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  */
-class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Impl implements GM_Surface<T>, GM_GenericSurface, Serializable
+class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Impl implements GM_Surface<T>
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = -2148069106391096842L;
@@ -298,7 +296,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
     {
       final GM_SurfacePatch myPatch = (GM_SurfacePatch) m_patch.clone();
 
-      return new GM_Surface_Impl<GM_SurfacePatch>( getOrientation(), myPatch );
+      return new GM_Surface_Impl<>( getOrientation(), myPatch );
     }
     catch( final GM_Exception e )
     {
@@ -395,7 +393,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
   }
 
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     if( adapter == GM_SurfacePatch.class )
       return m_patch;
@@ -751,7 +749,7 @@ class GM_Surface_Impl<T extends GM_SurfacePatch> extends GM_OrientableSurface_Im
 
       final GM_SurfacePatch patch = (GM_SurfacePatch) m_patch.transform( targetCRS );
 
-      return new GM_Surface_Impl<GM_SurfacePatch>( getOrientation(), patch );
+      return new GM_Surface_Impl<>( getOrientation(), patch );
     }
     catch( final GM_Exception e )
     {

@@ -6,11 +6,11 @@
  *  Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany
  *  (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/
  *
- *  Kalypso is free software: you can redistribute it and/or modify it under the terms  
- *  of the GNU Lesser General Public License (LGPL) as published by the Free Software 
+ *  Kalypso is free software: you can redistribute it and/or modify it under the terms
+ *  of the GNU Lesser General Public License (LGPL) as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
- *  Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
+ *  Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  *  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public
@@ -48,6 +48,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.PageChangedEvent;
 import org.eclipse.jface.dialogs.PageChangingEvent;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -93,7 +94,6 @@ import org.kalypso.contribs.eclipse.i18n.Messages;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.IResetableWizard;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2;
 import org.kalypso.contribs.java.lang.CatchRunnable;
 import org.kalypso.contribs.java.lang.DisposeHelper;
@@ -106,7 +106,7 @@ import org.kalypso.contribs.java.lang.DisposeHelper;
  * <p>
  * Lots of the code was taken from {@link org.eclipse.jface.wizard.WizardDialog}.
  * </p>
- * 
+ *
  * @author belger
  */
 public class WizardView extends ViewPart implements IWizardContainer2, IWizardChangeProvider, IPageChangeProvider
@@ -145,7 +145,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
   private final String m_backgroundRgbId = "" + this + ".title.background"; //$NON-NLS-1$ //$NON-NLS-2$
 
-  private final List<IWizardContainerListener> m_listeners = new ArrayList<IWizardContainerListener>( 5 );
+  private final List<IWizardContainerListener> m_listeners = new ArrayList<>( 5 );
 
   private IWizard m_wizard;
 
@@ -161,7 +161,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   /** Right side of sash form, will be recreated on every {@link #setWizard(IWizard, int)} */
   private Composite m_pageAndButtonArea;
 
-  private final Map<Integer, Button> m_buttons = new HashMap<Integer, Button>( 10 );
+  private final Map<Integer, Button> m_buttons = new HashMap<>( 10 );
 
   private FontMetrics m_fontMetrics;
 
@@ -173,7 +173,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
   private boolean m_backJumpsToLastVisited = true;
 
-  private final Map<Integer, String> m_buttonLabels = new HashMap<Integer, String>();
+  private final Map<Integer, String> m_buttonLabels = new HashMap<>();
 
   private final Set<IPageChangedListener> m_pageChangedListeners = Collections.synchronizedSet( new LinkedHashSet<IPageChangedListener>() );
 
@@ -342,9 +342,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
     // Now create a work area for the rest of the dialog
     m_workArea = new Composite( parent, SWT.NULL );
-    final GridLayout workLayout = Layouts.createGridLayout();
-    workLayout.verticalSpacing = 0;
-    m_workArea.setLayout( workLayout );
+    GridLayoutFactory.fillDefaults().spacing( 5, 0 ).applyTo( m_workArea );
 
     m_workArea.setBackground( parent.getDisplay().getSystemColor( SWT.COLOR_RED ) );
 
@@ -369,10 +367,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     getSite().registerContextMenu( menuManager, getSite().getSelectionProvider() );
 
     m_pageAndButtonArea = new Composite( m_mainSash, SWT.NONE );
-    final GridLayout pageAndButtonLayout = Layouts.createGridLayout();
-    pageAndButtonLayout.horizontalSpacing = 0;
-    pageAndButtonLayout.verticalSpacing = 0;
-    m_pageAndButtonArea.setLayout( pageAndButtonLayout );
+    GridLayoutFactory.fillDefaults().spacing( 0, 0 ).applyTo( m_pageAndButtonArea );
     m_pageAndButtonArea.setFont( m_mainSash.getFont() );
 
     setWizard( m_wizard );
@@ -405,7 +400,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    * <p>
    * The returned control's layout data must be an instance of <code>GridData</code>.
    * </p>
-   * 
+   *
    * @param parent
    *          the parent composite to contain the button bar
    * @return the button bar control
@@ -459,7 +454,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    * Creates the Previous and Next buttons for this wizard dialog. Creates standard (<code>SWT.PUSH</code>) buttons and
    * registers for their selection events. Note that the number of columns in the button bar composite is incremented.
    * These buttons are created specially to prevent any space between them.
-   * 
+   *
    * @param parent
    *          the parent button bar
    * @return a composite containing the new buttons
@@ -470,13 +465,10 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
     ((GridLayout) parent.getLayout()).numColumns++;
     final Composite composite = new Composite( parent, SWT.NONE );
     // create a layout with spacing and margins appropriate for the font size.
-    final GridLayout layout = Layouts.createGridLayout();
-    layout.numColumns = 0; // will be incremented by createButton
-    layout.horizontalSpacing = 0;
-    layout.verticalSpacing = 0;
-    composite.setLayout( layout );
-    final GridData data = new GridData( GridData.HORIZONTAL_ALIGN_CENTER | GridData.VERTICAL_ALIGN_CENTER );
-    composite.setLayoutData( data );
+    GridLayoutFactory.fillDefaults().numColumns( 0 ).spacing( 0, 0 ).applyTo( composite );
+
+    composite.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_CENTER | GridData.VERTICAL_ALIGN_CENTER ) );
+
     composite.setFont( parent.getFont() );
     createButton( composite, IDialogConstants.BACK_ID, IDialogConstants.BACK_LABEL, "doPrev", false ); //$NON-NLS-1$
     createButton( composite, IDialogConstants.NEXT_ID, IDialogConstants.NEXT_LABEL, "doNext", true ); //$NON-NLS-1$
@@ -493,7 +485,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    * button will be accesible from <code>getOKButton()</code>. Note that the parent's layout is assumed to be a
    * <code>GridLayout</code> and the number of columns in this layout is incremented. Subclasses may override.
    * </p>
-   * 
+   *
    * @param parent
    *          the parent composite
    * @param id
@@ -552,7 +544,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
   /**
    * Set the layout data of the button to a GridData with appropriate heights and widths.
-   * 
+   *
    * @param button
    */
   protected void setButtonLayoutData( final Button button )
@@ -569,7 +561,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    * <p>
    * This method must be called before any of the dialog unit based conversion methods are called.
    * </p>
-   * 
+   *
    * @param control
    *          a control from which to obtain the current font
    */
@@ -590,7 +582,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    * <p>
    * Clients may call this framework method, but should not override it.
    * </p>
-   * 
+   *
    * @param dlus
    *          the number of vertical dialog units
    * @return the number of pixels
@@ -611,7 +603,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    * <p>
    * Clients may call this framework method, but should not override it.
    * </p>
-   * 
+   *
    * @param dlus
    *          the number of horizontal dialog units
    * @return the number of pixels
@@ -638,7 +630,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
   /**
    * Not imlemented, as we are inside a ViewPart, which should'nt change its own size.
-   * 
+   *
    * @see org.eclipse.jface.wizard.IWizardContainer2#updateSize()
    */
   @Override
@@ -762,7 +754,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    * Returns the button created by the method <code>createButton</code> for the specified ID as defined on
    * <code>IDialogConstants</code>. If <code>createButton</code> was never called with this ID, or if
    * <code>createButton</code> is overridden, this method will return <code>null</code>.
-   * 
+   *
    * @param id
    *          the id of the button to look for
    * @return the button for the ID or <code>null</code>
@@ -818,7 +810,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
   /**
    * Update the receiver for the new page.
-   * 
+   *
    * @param page
    */
   protected void updateForPage( final IWizardPage page )
@@ -1084,7 +1076,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
   /**
    * Creates the dialog's title area.
-   * 
+   *
    * @param parent
    *          the SWT parent for the title area widgets
    * @return Control with the highest x axis value.
@@ -1156,7 +1148,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   /**
    * Set the layout values for the messageLabel, messageImageLabel and fillerLabel for the case where there is a normal
    * message.
-   * 
+   *
    * @param verticalSpacing
    *          int The spacing between widgets on the vertical axis.
    * @param horizontalSpacing
@@ -1205,7 +1197,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   /**
    * Retained for backward compatibility. Returns the title area composite. There is no composite in this implementation
    * so the shell is returned.
-   * 
+   *
    * @return Composite
    * @deprecated
    */
@@ -1217,7 +1209,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
   /**
    * Returns the title image label.
-   * 
+   *
    * @return the title image label
    */
   protected Label getTitleImageLabel( )
@@ -1228,7 +1220,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   /**
    * Display the given error message. The currently displayed message is saved and will be redisplayed when the error
    * message is set to <code>null</code>.
-   * 
+   *
    * @param newErrorMessage
    *          the newErrorMessage to display or <code>null</code>
    */
@@ -1352,7 +1344,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    * Shortcut for <code>setMessage(newMessage, IMessageProvider.NONE)</code>
    * </p>
    * This method should be called after the dialog has been opened as it updates the message label immediately.
-   * 
+   *
    * @param newMessage
    *          the message, or <code>null</code> to clear the message
    */
@@ -1372,7 +1364,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
    * using <code>setErrorMessage</code>). An error message overrides the current message until the error message is
    * cleared. This method replaces the current message and does not affect the error message.
    * </p>
-   * 
+   *
    * @param newMessage
    *          the message, or <code>null</code> to clear the message
    * @param newType
@@ -1404,7 +1396,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
   /**
    * Show the new message and image.
-   * 
+   *
    * @param newMessage
    * @param newImage
    */
@@ -1433,7 +1425,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
   /**
    * Update the contents of the messageLabel.
-   * 
+   *
    * @param newMessage
    *          the message to use
    */
@@ -1452,7 +1444,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
   /**
    * Sets the title to be shown in the title area of this dialog.
-   * 
+   *
    * @param newTitle
    *          the title show
    */
@@ -1469,7 +1461,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
   /**
    * Sets the title image to be shown in the title area of this dialog.
-   * 
+   *
    * @param newTitleImage
    *          the title image show
    */
@@ -1494,7 +1486,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
   /**
    * Make the label used for displaying error images visible depending on boolean.
-   * 
+   *
    * @param visible
    *          . If <code>true</code> make the image visible, if not then make it not visible.
    */
@@ -1507,7 +1499,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
   /**
    * Set the message backgrounds to be the error or normal color depending on whether or not showingError is true.
-   * 
+   *
    * @param showingErr
    *          If <code>true</code> use a different Color to indicate the error.
    */
@@ -1526,7 +1518,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
   /**
    * Reset the attachment of the workArea to now attach to top as the top control.
-   * 
+   *
    * @param top
    */
   private void resetWorkAreaAttachments( final Control top )
@@ -1697,7 +1689,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   /**
    * Notifies any selection changed listeners that the selected page has changed. Only listeners registered at the time
    * this method is called are notified.
-   * 
+   *
    * @param event
    *          a selection changed event
    * @see IPageChangedListener#pageChanged
@@ -1723,7 +1715,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   /**
    * Adds a listener for page changes to the list of page changing listeners registered for this dialog. Has no effect
    * if an identical listener is already registered.
-   * 
+   *
    * @param listener
    *          a page changing listener
    * @since 3.3
@@ -1735,7 +1727,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
   /**
    * Removes the provided page changing listener from the list of page changing listeners registered for the dialog.
-   * 
+   *
    * @param listener
    *          a page changing listener
    * @since 3.3
@@ -1747,7 +1739,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
 
   /**
    * Notifies page changing listeners and returns result of page changing processing to the sender.
-   * 
+   *
    * @param eventType
    * @return <code>true</code> if page changing listener completes successfully, <code>false</code> otherwise
    */
@@ -1762,7 +1754,7 @@ public class WizardView extends ViewPart implements IWizardContainer2, IWizardCh
   /**
    * Notifies any page changing listeners that the currently selected dialog page is changing. Only listeners registered
    * at the time this method is called are notified.
-   * 
+   *
    * @param event
    *          a selection changing event
    * @see IPageChangingListener#handlePageChanging(PageChangingEvent)

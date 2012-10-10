@@ -2,41 +2,41 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.transformation.ui;
 
@@ -90,7 +90,7 @@ import org.kalypso.transformation.ui.provider.CRSLabelProvider;
  * <dt><b>Events:</b></dt>
  * <dd>(none)</dd>
  * </dl>
- * 
+ *
  * @author Holger Albert
  */
 public class CRSSelectionPanel extends Composite
@@ -143,7 +143,7 @@ public class CRSSelectionPanel extends Composite
 
   /**
    * The constructor.
-   * 
+   *
    * @param parent
    * @param style
    */
@@ -154,7 +154,7 @@ public class CRSSelectionPanel extends Composite
 
   /**
    * The constructor.
-   * 
+   *
    * @param parent
    * @param style
    * @param extText
@@ -166,10 +166,10 @@ public class CRSSelectionPanel extends Composite
 
     m_extText = extText;
 
-    m_listener = new ArrayList<ISelectionChangedListener>();
+    m_listener = new ArrayList<>();
     m_viewer = null;
-    m_coordHash = new HashMap<String, ICoordinateSystem>();
-    m_imageList = new ArrayList<Image>();
+    m_coordHash = new HashMap<>();
+    m_imageList = new ArrayList<>();
     m_lazySelection = null;
 
     createControls();
@@ -291,7 +291,7 @@ public class CRSSelectionPanel extends Composite
 
   /**
    * This function sets the selection of the panel.
-   * 
+   *
    * @param selection
    *          The selection.
    */
@@ -315,7 +315,7 @@ public class CRSSelectionPanel extends Composite
 
   /**
    * This function returns the code of the selected coordinate system.
-   * 
+   *
    * @return The code of the selected coordinate system or null, if none is selected.
    */
   public String getSelectedCRS( )
@@ -358,7 +358,7 @@ public class CRSSelectionPanel extends Composite
 
   /**
    * This function adds a selection changed listener.
-   * 
+   *
    * @param listener
    *          The selection changed listener.
    */
@@ -373,7 +373,7 @@ public class CRSSelectionPanel extends Composite
 
   /**
    * This function removes a selection changed listener.
-   * 
+   *
    * @param listener
    *          The selection changed listener.
    */
@@ -388,7 +388,7 @@ public class CRSSelectionPanel extends Composite
 
   /**
    * This function updates the combobox, displaying the coordinate systems.
-   * 
+   *
    * @param codes
    *          The codes of the coordinate systems, to initialize.
    */

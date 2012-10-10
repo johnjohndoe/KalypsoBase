@@ -6,11 +6,11 @@
  *  Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany
  *  (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/
  *
- *  Kalypso is free software: you can redistribute it and/or modify it under the terms  
- *  of the GNU Lesser General Public License (LGPL) as published by the Free Software 
+ *  Kalypso is free software: you can redistribute it and/or modify it under the terms
+ *  of the GNU Lesser General Public License (LGPL) as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
- *  Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
+ *  Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  *  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public
@@ -28,7 +28,7 @@ import org.eclipse.core.resources.IResourceVisitor;
 
 /**
  * A {@link org.eclipse.core.resources.IResourceVisitor} which collects all resources which name matches a given regex.
- * 
+ *
  * @author belger
  */
 public class RegexResourceVisitor implements IResourceVisitor
@@ -39,7 +39,7 @@ public class RegexResourceVisitor implements IResourceVisitor
 
   private final boolean m_recurseIntoMatched;
 
-  private final List<IResource> m_result = new ArrayList<IResource>();
+  private final List<IResource> m_result = new ArrayList<>();
 
   /**
    * @param regex

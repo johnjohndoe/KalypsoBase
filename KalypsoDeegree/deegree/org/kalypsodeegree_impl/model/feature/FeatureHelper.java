@@ -329,7 +329,7 @@ public final class FeatureHelper
       final IValuePropertyType sourceVPT = (IValuePropertyType) sourcePT;
       final IMarshallingTypeHandler sourceTypeHandler = sourceVPT.getTypeHandler();
       if( sourceTypeHandler instanceof ISimpleMarshallingTypeHandler )
-        return ((ISimpleMarshallingTypeHandler) sourceTypeHandler).convertToXMLString( sourceValue );
+        return ((ISimpleMarshallingTypeHandler)sourceTypeHandler).convertToXMLString( sourceValue );
     }
     else if( sourcePT instanceof IRelationType )
     {
@@ -417,8 +417,8 @@ public final class FeatureHelper
     final Object property = sourceFeature.getProperty( pt );
     if( pt.isList() )
     {
-      final List list = (List) property;
-      final List targetList = (List) targetFeature.getProperty( pt );
+      final List<?> list = (List<?>) property;
+      final List targetList = (List)targetFeature.getProperty( pt );
 
       for( final Object listElement : list )
       {
@@ -527,7 +527,7 @@ public final class FeatureHelper
     if( linkProp.isList() )
     {
       // list:
-      final List list = (List) property;
+      final List< ? > list = (List< ? >)property;
       return list.contains( destFE );
     }
     // no list:
@@ -554,7 +554,7 @@ public final class FeatureHelper
 
   public static int[] getPositionOfAllAssociations( final Feature feature )
   {
-    final ArrayList<Integer> res = new ArrayList<Integer>();
+    final ArrayList<Integer> res = new ArrayList<>();
     final IFeatureType featureType = feature.getFeatureType();
     final IPropertyType[] properties = featureType.getProperties();
     for( int i = 0; i < properties.length; i++ )
@@ -571,7 +571,7 @@ public final class FeatureHelper
 
   public static IRelationType[] getAllAssociations( final Feature feature )
   {
-    final ArrayList<IRelationType> res = new ArrayList<IRelationType>();
+    final ArrayList<IRelationType> res = new ArrayList<>();
     final IFeatureType featureType = feature.getFeatureType();
     final IPropertyType[] properties = featureType.getProperties();
     for( final IPropertyType property : properties )
@@ -669,7 +669,7 @@ public final class FeatureHelper
 
     if( prop instanceof List )
     {
-      final List list = (List) prop;
+      final List< ? > list = (List< ? >)prop;
 
       if( list.size() > 0 )
         return list.get( 0 );
@@ -1149,7 +1149,7 @@ public final class FeatureHelper
     final FeatureList list = (FeatureList) parent.getProperty( propertyQName );
 
     /* Create a map QName->Features. */
-    final HashMap<QName, ArrayList<Feature>> featureMap = new HashMap<QName, ArrayList<Feature>>();
+    final HashMap<QName, ArrayList<Feature>> featureMap = new HashMap<>();
 
     for( final Object o : list )
     {
@@ -1169,7 +1169,7 @@ public final class FeatureHelper
       else
       {
         /* Add the qname as a new key, with a new List. */
-        final ArrayList<Feature> sub_list = new ArrayList<Feature>();
+        final ArrayList<Feature> sub_list = new ArrayList<>();
         sub_list.add( feature );
         featureMap.put( qname, sub_list );
       }
@@ -1452,7 +1452,7 @@ public final class FeatureHelper
   {
     final GMLWorkspace workspace = featureList.getOwner().getWorkspace();
 
-    final List<Feature> features = new ArrayList<Feature>( featureList.size() );
+    final List<Feature> features = new ArrayList<>( featureList.size() );
     for( final Object object : featureList )
     {
       final Feature feature = FeatureHelper.getFeature( workspace, object );
@@ -1468,7 +1468,6 @@ public final class FeatureHelper
   /**
    * Reads a property for every feature of an array of features and puts them into a new array.
    */
-  @SuppressWarnings("unchecked")
   public static <T> T[] getProperties( final Feature[] features, final GMLXPath xPath, final T[] a ) throws GMLXPathException
   {
     final T[] properties = a == null ? a : (T[]) Array.newInstance( a.getClass().getComponentType(), features.length );

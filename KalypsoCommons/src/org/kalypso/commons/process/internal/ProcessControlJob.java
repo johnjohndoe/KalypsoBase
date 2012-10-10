@@ -4,13 +4,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.commons.KalypsoCommonsPlugin;
 import org.kalypso.contribs.java.lang.ICancelable;
 
 /**
  * This job controls the execution of a process.<br>
  * The process will be killed if either a timeout is reached or the given {@link ICancelable} is canceled.
- * 
+ *
  * @author Monika Thül
  * @author Gernot Belger
  */
@@ -54,7 +54,7 @@ public class ProcessControlJob extends Job
             if( processDuration > m_lTimeout )
             {
               m_proc.destroy();
-              return StatusUtilities.createStatus( IStatus.ERROR, "Timeout reached", null ); //$NON-NLS-1$
+              return new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), "Timeout reached" ); //$NON-NLS-1$
             }
           }
 
