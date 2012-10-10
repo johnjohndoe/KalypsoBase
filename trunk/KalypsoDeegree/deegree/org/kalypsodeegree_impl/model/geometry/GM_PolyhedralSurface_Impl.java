@@ -305,7 +305,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   {
     try
     {
-      return new GM_PolyhedralSurface_Impl<T>( m_items.subList( fromIndex, toIndex ), getCoordinateSystem() );
+      return new GM_PolyhedralSurface_Impl<>( m_items.subList( fromIndex, toIndex ), getCoordinateSystem() );
     }
     catch( final GM_Exception e )
     {
@@ -326,7 +326,6 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
     return m_items.toArray( a );
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public Object clone( ) throws CloneNotSupportedException
   {
@@ -347,7 +346,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
 
   protected <S extends T> GM_PolyhedralSurface<T> createCloneInstance( ) throws GM_Exception
   {
-    return new GM_PolyhedralSurface_Impl<T>( getCoordinateSystem() );
+    return new GM_PolyhedralSurface_Impl<>( getCoordinateSystem() );
   }
 
   @Override
@@ -386,7 +385,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   }
 
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     if( adapter == GM_SurfacePatch[].class || adapter == GM_Polygon[].class )
     {
@@ -396,9 +395,8 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
     // for points: get centroids of the polygons
     if( adapter == GM_Point[].class )
     {
-      final List<GM_Point> pointList = new LinkedList<GM_Point>();
+      final List<GM_Point> pointList = new LinkedList<>();
 
-      @SuppressWarnings("unchecked")
       final T[] polygons = (T[]) m_items.toArray( new GM_Polygon[m_items.size()] );
       for( final T polygon : polygons )
       {

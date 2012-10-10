@@ -520,7 +520,7 @@ public final class JTSAdapter
     }
     final GM_Polygon patch = new GM_Polygon_Impl( exteriorRing, interiorRings, crs );
 
-    return new GM_Surface_Impl<GM_Polygon>( patch );
+    return new GM_Surface_Impl<>( patch );
   }
 
   /**
@@ -684,7 +684,6 @@ public final class JTSAdapter
    */
   public static <J extends Geometry> J[] export( final GM_Object[] input, final Class<J> resultType ) throws GM_Exception
   {
-    @SuppressWarnings("unchecked")
     final J[] result = (J[]) Array.newInstance( resultType, input.length );
 
     for( int i = 0; i < input.length; i++ )

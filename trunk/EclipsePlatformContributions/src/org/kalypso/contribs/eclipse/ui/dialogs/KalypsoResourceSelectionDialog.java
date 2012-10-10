@@ -6,11 +6,11 @@
  *  Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany
  *  (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/
  *
- *  Kalypso is free software: you can redistribute it and/or modify it under the terms  
- *  of the GNU Lesser General Public License (LGPL) as published by the Free Software 
+ *  Kalypso is free software: you can redistribute it and/or modify it under the terms
+ *  of the GNU Lesser General Public License (LGPL) as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
- *  Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
+ *  Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  *  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public
@@ -24,11 +24,11 @@ import java.util.List;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.JFaceColors;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -38,7 +38,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ISelectionValidator;
 import org.eclipse.ui.dialogs.SelectionDialog;
 import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 
 @SuppressWarnings("restriction")
 public class KalypsoResourceSelectionDialog extends SelectionDialog
@@ -144,9 +143,8 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
   {
     // create the top level composite for the dialog
     final Composite composite = new Composite( parent, 0 );
-    final GridLayout layout = Layouts.createGridLayout();
-    layout.verticalSpacing = 0;
-    composite.setLayout( layout );
+    GridLayoutFactory.fillDefaults().spacing( 5, 0 ).applyTo( composite );
+
     composite.setLayoutData( new GridData( GridData.FILL_BOTH ) );
     applyDialogFont( composite );
     // initialize the dialog units
@@ -169,7 +167,7 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
   @Override
   protected void okPressed( )
   {
-    final List<IPath> chosenResourcePathList = new ArrayList<IPath>();
+    final List<IPath> chosenResourcePathList = new ArrayList<>();
     final IPath returnValue = m_group.getResourceFullPath();
     if( returnValue != null )
       chosenResourcePathList.add( returnValue );
@@ -179,7 +177,7 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
 
   /**
    * Sets the validator to use.
-   * 
+   *
    * @param val
    *          A selection validator
    */
@@ -190,7 +188,7 @@ public class KalypsoResourceSelectionDialog extends SelectionDialog
 
   /**
    * Set whether or not closed projects should be shown in the selection dialog.
-   * 
+   *
    * @param show
    *          Whether or not to show closed projects.
    */

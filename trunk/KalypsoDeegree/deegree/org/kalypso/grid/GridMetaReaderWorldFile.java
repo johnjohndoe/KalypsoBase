@@ -51,7 +51,7 @@ import javax.media.jai.TiledImage;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -87,7 +87,7 @@ public class GridMetaReaderWorldFile extends AbstractGridMetaReader
     if( m_worldFile == null )
     {
       final String msg = String.format( "No world file found for %s", m_image );
-      return StatusUtilities.createStatus( IStatus.ERROR, msg, null );
+      return new Status( IStatus.ERROR, KalypsoDeegreePlugin.getID(), msg );
     }
 
     InputStream is = null;
@@ -101,7 +101,7 @@ public class GridMetaReaderWorldFile extends AbstractGridMetaReader
     {
       e.printStackTrace();
       final String msg = String.format( "Failed to access world file %s: %s", m_worldFile, e.toString() );
-      return StatusUtilities.createStatus( IStatus.ERROR, msg, e );
+      return new Status( IStatus.ERROR, KalypsoDeegreePlugin.getID(), msg, e );
     }
     finally
     {

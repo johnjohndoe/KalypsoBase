@@ -6,11 +6,11 @@
  *  Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany
  *  (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/
  *
- *  Kalypso is free software: you can redistribute it and/or modify it under the terms  
- *  of the GNU Lesser General Public License (LGPL) as published by the Free Software 
+ *  Kalypso is free software: you can redistribute it and/or modify it under the terms
+ *  of the GNU Lesser General Public License (LGPL) as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
- *  Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
+ *  Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  *  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public
@@ -41,9 +41,6 @@ public class BaseResourceContentProvider implements ITreeContentProvider
   {
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
-   */
   @Override
   public Object[] getChildren( final Object element )
   {
@@ -54,7 +51,7 @@ public class BaseResourceContentProvider implements ITreeContentProvider
       if( m_showClosedProjects )
         return allProjects;
 
-      final ArrayList<IProject> accessibleProjects = new ArrayList<IProject>();
+      final ArrayList<IProject> accessibleProjects = new ArrayList<>();
       for( final IProject allProject : allProjects )
       {
         if( allProject.isOpen() )
@@ -69,7 +66,7 @@ public class BaseResourceContentProvider implements ITreeContentProvider
       {
         try
         {
-          final List<IResource> children = new ArrayList<IResource>();
+          final List<IResource> children = new ArrayList<>();
           final IResource[] members = container.members();
           for( final IResource member : members )
           {

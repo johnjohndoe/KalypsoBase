@@ -397,7 +397,7 @@ final public class GeometryFactory
   public static GM_Surface<GM_Polygon> createGM_Surface( final GM_Position[] exteriorRing, final GM_Position[][] interiorRings, final String crs ) throws GM_Exception
   {
     final GM_Polygon sp = new GM_Polygon_Impl( exteriorRing, interiorRings, crs );
-    return new GM_Surface_Impl<GM_Polygon>( sp );
+    return new GM_Surface_Impl<>( sp );
   }
 
   /**
@@ -408,7 +408,7 @@ final public class GeometryFactory
    */
   public static GM_Surface<GM_SurfacePatch> createGM_Surface( final GM_SurfacePatch patch ) throws GM_Exception
   {
-    return new GM_Surface_Impl<GM_SurfacePatch>( patch );
+    return new GM_Surface_Impl<>( patch );
   }
 
   /**
@@ -937,7 +937,7 @@ final public class GeometryFactory
 
     offset += 4;
 
-    final List<GM_Surface< ? extends GM_SurfacePatch>> list = new ArrayList<GM_Surface< ? extends GM_SurfacePatch>>( numPoly );
+    final List<GM_Surface< ? extends GM_SurfacePatch>> list = new ArrayList<>( numPoly );
 
     for( int ip = 0; ip < numPoly; ip++ )
     {
@@ -1081,7 +1081,7 @@ final public class GeometryFactory
 
   public static GM_Position[] cloneGM_Position( final GM_Position[] positions )
   {
-    final List<GM_Position> myList = new LinkedList<GM_Position>();
+    final List<GM_Position> myList = new LinkedList<>();
 
     for( final GM_Position position : positions )
       myList.add( (GM_Position) position.clone() );
@@ -1100,7 +1100,7 @@ final public class GeometryFactory
   public static GM_Triangle createGM_Triangle( final GM_Position pos1, final GM_Position pos2, final GM_Position pos3, final String crs )
   {
     final GM_Triangle triangle = new GM_Triangle_Impl( pos1, pos2, pos3, crs );
-    
+
     if( triangle.getOrientation() == 1 )
       return new GM_Triangle_Impl( pos1, pos3, pos2, crs );
 
@@ -1114,7 +1114,7 @@ final public class GeometryFactory
 
   public static GM_PolyhedralSurface<GM_Polygon> createGM_PolyhedralSurface( final String crs ) throws GM_Exception
   {
-    return new GM_PolyhedralSurface_Impl<GM_Polygon>( crs );
+    return new GM_PolyhedralSurface_Impl<>( crs );
   }
 
   /**
@@ -1127,7 +1127,7 @@ final public class GeometryFactory
    */
   public static GM_Curve[] createGM_Curve( final GM_Position[][] rings, final String crs ) throws GM_Exception
   {
-    final List<GM_Curve> curveList = new LinkedList<GM_Curve>();
+    final List<GM_Curve> curveList = new LinkedList<>();
 
     for( final GM_Position[] positions : rings )
     {
@@ -1141,7 +1141,7 @@ final public class GeometryFactory
 
   public static GM_Ring[] createGM_Rings( final GM_Position[][] rings, final String crs ) throws GM_Exception
   {
-    final List<GM_Ring> ringList = new LinkedList<GM_Ring>();
+    final List<GM_Ring> ringList = new LinkedList<>();
 
     for( final GM_Position[] positions : rings )
       ringList.add( createGM_Ring( positions, crs ) );

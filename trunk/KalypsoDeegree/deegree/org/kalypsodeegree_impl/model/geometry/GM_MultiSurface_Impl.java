@@ -35,7 +35,6 @@
  */
 package org.kalypsodeegree_impl.model.geometry;
 
-import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -62,7 +61,7 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
  * @author Andreas Poth
  *         <p>
  */
-final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_MultiSurface, Serializable
+final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_MultiSurface
 {
   /** Use serialVersionUID for interoperability. */
   private static final long serialVersionUID = -6471121873087659850L;
@@ -180,15 +179,12 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
     return m_aggregate.toArray( new GM_Surface[getSize()] );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.geometry.GM_Primitive_Impl#getAdapter(java.lang.Class)
-   */
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     if( adapter == GM_SurfacePatch[].class )
     {
-      final List<GM_SurfacePatch> patchList = new LinkedList<GM_SurfacePatch>();
+      final List<GM_SurfacePatch> patchList = new LinkedList<>();
 
       final GM_Surface< ? >[] surfaces = getAllSurfaces();
 
@@ -205,7 +201,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
 
     if( adapter == GM_Curve.class )
     {
-      final List<GM_Curve> curveList = new LinkedList<GM_Curve>();
+      final List<GM_Curve> curveList = new LinkedList<>();
 
       final GM_Surface< ? >[] surfaces = getAllSurfaces();
 

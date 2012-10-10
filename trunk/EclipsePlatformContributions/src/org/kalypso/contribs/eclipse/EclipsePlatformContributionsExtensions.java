@@ -6,11 +6,11 @@
  *  Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany
  *  (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/
  *
- *  Kalypso is free software: you can redistribute it and/or modify it under the terms  
- *  of the GNU Lesser General Public License (LGPL) as published by the Free Software 
+ *  Kalypso is free software: you can redistribute it and/or modify it under the terms
+ *  of the GNU Lesser General Public License (LGPL) as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
- *  Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
+ *  Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  *  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public
@@ -29,8 +29,8 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.osgi.framework.Bundle;
 
 /**
@@ -55,7 +55,7 @@ public class EclipsePlatformContributionsExtensions
     final IExtensionPoint extensionPoint = registry.getExtensionPoint( EXT_PROJECT_TEMPLATE );
     final IConfigurationElement[] configurationElements = extensionPoint.getConfigurationElements();
 
-    final Collection<ProjectTemplate> demoProjects = new ArrayList<ProjectTemplate>( configurationElements.length );
+    final Collection<ProjectTemplate> demoProjects = new ArrayList<>( configurationElements.length );
     for( final IConfigurationElement configurationElement : configurationElements )
     {
       final String id = configurationElement.getAttribute( "id" ); //$NON-NLS-1$
@@ -73,7 +73,7 @@ public class EclipsePlatformContributionsExtensions
         if( dataLocation == null )
         {
           final String msg = String.format( "Resource not found for project template '%s': %s", label, data ); //$NON-NLS-1$
-          final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, msg, null );
+          final IStatus status = new Status( IStatus.WARNING, EclipsePlatformContributionsPlugin.getID(), msg );
           EclipsePlatformContributionsPlugin.getDefault().getLog().log( status );
         }
         else

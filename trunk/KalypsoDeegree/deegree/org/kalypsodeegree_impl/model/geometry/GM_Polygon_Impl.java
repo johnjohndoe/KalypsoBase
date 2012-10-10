@@ -35,8 +35,6 @@
  */
 package org.kalypsodeegree_impl.model.geometry;
 
-import java.io.Serializable;
-
 import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypsodeegree.model.geometry.GM_Aggregate;
 import org.kalypsodeegree.model.geometry.GM_Curve;
@@ -56,7 +54,7 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
  * @version 11.6.2001
  * @author Andreas Poth
  */
-class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon, Serializable
+class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = -1293845886457211088L;

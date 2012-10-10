@@ -26,6 +26,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -46,7 +47,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.part.DrillDownComposite;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 
 @SuppressWarnings("restriction")
 public class ResourceSelectionGroup extends Composite
@@ -147,7 +147,7 @@ public class ResourceSelectionGroup extends Composite
    */
   public void createContents( final String message, final int heightHint )
   {
-    setLayout( Layouts.createGridLayout() );
+    setLayout( GridLayoutFactory.fillDefaults().create() );
     setLayoutData( new GridData( GridData.FILL_BOTH ) );
 
     final Label label = new Label( this, SWT.WRAP );

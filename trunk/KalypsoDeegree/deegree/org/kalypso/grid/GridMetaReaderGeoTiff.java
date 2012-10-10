@@ -50,8 +50,8 @@ import javax.media.jai.TiledImage;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.geotiff.image.jai.GeoTIFFDirectory;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.grid.GridFileVerifier.IMAGE_TYPE;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
@@ -172,7 +172,7 @@ public class GridMetaReaderGeoTiff extends AbstractGridMetaReader
       e.printStackTrace();
 
       final String message = String.format( "Failed to access %s", m_urlImage );
-      return StatusUtilities.createStatus( IStatus.ERROR, message, e );
+      return new Status( IStatus.ERROR, KalypsoDeegreePlugin.getID(), message, e );
     }
     finally
     {

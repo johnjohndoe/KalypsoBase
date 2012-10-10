@@ -56,8 +56,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypso.grid.CachingGeoGrid;
@@ -70,6 +70,7 @@ import org.kalypso.grid.RectifiedGridCoverageGeoGrid;
 import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
@@ -118,7 +119,6 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
 
   private double m_max;
 
-  @SuppressWarnings("unchecked")
   RasterDisplayElement_Impl( final Feature feature, final GM_Object[] geometry, final RasterSymbolizer symbolizer )
   {
     super( feature, geometry, symbolizer );
@@ -181,7 +181,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     }
     catch( final Exception e )
     {
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Failed to paint grid", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoDeegreePlugin.getID(), "Failed to paint grid", e );
       throw new CoreException( status );
     }
     finally
@@ -516,7 +516,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     }
     catch( final IncompatibleGeometryTypeException e )
     {
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "Failed to create display element for image-outline", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoDeegreePlugin.getID(), "Failed to create display element for image-outline", e );
       throw new CoreException( status );
     }
   }
