@@ -42,44 +42,18 @@ package org.kalypso.model.wspm.core.gml.classifications;
 
 import javax.xml.namespace.QName;
 
-import org.kalypso.model.wspm.core.IWspmConstants;
+import org.kalypso.model.wspm.core.IWspmNamespaces;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
 /**
- * @author Dirk Kuch
+ * @author Gernot Belger
  */
-public interface IWspmClassification extends Feature
+public interface IStyleDefinition extends Feature
 {
-  QName MEMBER_ROUGHNESS_CLASSES = new QName( IWspmConstants.NS_WSPM_CLASSIFICATIONS, "roughnessClasses" ); //$NON-NLS-1$
+  QName FEATURE_STYLE_DEFINITION = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "StyleDefinition" ); //$NON-NLS-1$
 
-  QName MEMBER_VEGETATION_CLASSES = new QName( IWspmConstants.NS_WSPM_CLASSIFICATIONS, "vegetationClasses" ); //$NON-NLS-1$
+  QName MEMBER_STYLE = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "styleMember" ); //$NON-NLS-1$
 
-  QName MEMBER_CODE_CLASSES = new QName( IWspmConstants.NS_WSPM_CLASSIFICATIONS, "codeClasses" ); //$NON-NLS-1$
-
-  QName MEMBER_PART_TYPE = new QName( IWspmConstants.NS_WSPM_CLASSIFICATIONS, "partType" ); //$NON-NLS-1$
-
-  QName MEMBER_STYLE_DEFINITION = new QName( IWspmConstants.NS_WSPM_CLASSIFICATIONS, "styleDefinition" ); //$NON-NLS-1$
-
-  IFeatureBindingCollection<IRoughnessClass> getRoughnessClassCollection( );
-
-  IRoughnessClass[] getRoughnessClasses( );
-
-  IFeatureBindingCollection<IVegetationClass> getVegetationClassCollection( );
-
-  IVegetationClass[] getVegetationClasses( );
-
-  IRoughnessClass findRoughnessClass( String name );
-
-  IVegetationClass findVegetationClass( String name );
-
-  IFeatureBindingCollection<ICodeClass> getCodeClassCollection( );
-
-  ICodeClass[] getCodeClasses( );
-
-  ICodeClass findCodeClass( String name );
-
-  IFeatureBindingCollection<IPartType> getPartTypeCollection( );
-
-  IFeatureBindingCollection<IStyleDefinition> getStyleDefinitionCollection( );
+  IFeatureBindingCollection<IStyle> getStyleCollection( );
 }

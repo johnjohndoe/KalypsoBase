@@ -40,46 +40,30 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml.classifications;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
- * @author Dirk Kuch
+ * @author Gernot Belger
  */
-public interface IWspmClassification extends Feature
+public class Style extends Feature_Impl implements IStyle
 {
-  QName MEMBER_ROUGHNESS_CLASSES = new QName( IWspmConstants.NS_WSPM_CLASSIFICATIONS, "roughnessClasses" ); //$NON-NLS-1$
+  private IFeatureBindingCollection<IStyleParameter> m_parameters = null;
 
-  QName MEMBER_VEGETATION_CLASSES = new QName( IWspmConstants.NS_WSPM_CLASSIFICATIONS, "vegetationClasses" ); //$NON-NLS-1$
+  public Style( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  {
+    super( parent, parentRelation, ft, id, propValues );
+  }
 
-  QName MEMBER_CODE_CLASSES = new QName( IWspmConstants.NS_WSPM_CLASSIFICATIONS, "codeClasses" ); //$NON-NLS-1$
+  @Override
+  public synchronized IFeatureBindingCollection<IStyleParameter> getParameterCollection( )
+  {
+    if( m_parameters == null )
+      m_parameters = new FeatureBindingCollection<>( this, IStyleParameter.class, MEMBER_PARAMETER );
 
-  QName MEMBER_PART_TYPE = new QName( IWspmConstants.NS_WSPM_CLASSIFICATIONS, "partType" ); //$NON-NLS-1$
-
-  QName MEMBER_STYLE_DEFINITION = new QName( IWspmConstants.NS_WSPM_CLASSIFICATIONS, "styleDefinition" ); //$NON-NLS-1$
-
-  IFeatureBindingCollection<IRoughnessClass> getRoughnessClassCollection( );
-
-  IRoughnessClass[] getRoughnessClasses( );
-
-  IFeatureBindingCollection<IVegetationClass> getVegetationClassCollection( );
-
-  IVegetationClass[] getVegetationClasses( );
-
-  IRoughnessClass findRoughnessClass( String name );
-
-  IVegetationClass findVegetationClass( String name );
-
-  IFeatureBindingCollection<ICodeClass> getCodeClassCollection( );
-
-  ICodeClass[] getCodeClasses( );
-
-  ICodeClass findCodeClass( String name );
-
-  IFeatureBindingCollection<IPartType> getPartTypeCollection( );
-
-  IFeatureBindingCollection<IStyleDefinition> getStyleDefinitionCollection( );
+    return m_parameters;
+  }
 }

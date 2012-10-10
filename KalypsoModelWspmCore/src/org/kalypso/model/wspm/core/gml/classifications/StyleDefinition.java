@@ -40,46 +40,30 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml.classifications;
 
-import javax.xml.namespace.QName;
-
-import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypsodeegree.model.feature.Feature;
+import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
+import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
 /**
- * @author Dirk Kuch
+ * @author Gernot Belger
  */
-public interface IWspmClassification extends Feature
+public class StyleDefinition extends Feature_Impl implements IStyleDefinition
 {
-  QName MEMBER_ROUGHNESS_CLASSES = new QName( IWspmConstants.NS_WSPM_CLASSIFICATIONS, "roughnessClasses" ); //$NON-NLS-1$
+  private IFeatureBindingCollection<IStyle> m_styles = null;
 
-  QName MEMBER_VEGETATION_CLASSES = new QName( IWspmConstants.NS_WSPM_CLASSIFICATIONS, "vegetationClasses" ); //$NON-NLS-1$
+  public StyleDefinition( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
+  {
+    super( parent, parentRelation, ft, id, propValues );
+  }
 
-  QName MEMBER_CODE_CLASSES = new QName( IWspmConstants.NS_WSPM_CLASSIFICATIONS, "codeClasses" ); //$NON-NLS-1$
+  @Override
+  public synchronized IFeatureBindingCollection<IStyle> getStyleCollection( )
+  {
+    if( m_styles == null )
+      m_styles = new FeatureBindingCollection<>( this, IStyle.class, MEMBER_STYLE );
 
-  QName MEMBER_PART_TYPE = new QName( IWspmConstants.NS_WSPM_CLASSIFICATIONS, "partType" ); //$NON-NLS-1$
-
-  QName MEMBER_STYLE_DEFINITION = new QName( IWspmConstants.NS_WSPM_CLASSIFICATIONS, "styleDefinition" ); //$NON-NLS-1$
-
-  IFeatureBindingCollection<IRoughnessClass> getRoughnessClassCollection( );
-
-  IRoughnessClass[] getRoughnessClasses( );
-
-  IFeatureBindingCollection<IVegetationClass> getVegetationClassCollection( );
-
-  IVegetationClass[] getVegetationClasses( );
-
-  IRoughnessClass findRoughnessClass( String name );
-
-  IVegetationClass findVegetationClass( String name );
-
-  IFeatureBindingCollection<ICodeClass> getCodeClassCollection( );
-
-  ICodeClass[] getCodeClasses( );
-
-  ICodeClass findCodeClass( String name );
-
-  IFeatureBindingCollection<IPartType> getPartTypeCollection( );
-
-  IFeatureBindingCollection<IStyleDefinition> getStyleDefinitionCollection( );
+    return m_styles;
+  }
 }

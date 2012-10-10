@@ -57,16 +57,20 @@ public class WspmClassification extends Feature_Impl implements IWspmClassificat
 
   private IFeatureBindingCollection<ICodeClass> m_codeClasses = null;
 
+  private IFeatureBindingCollection<IPartType> m_partTypes = null;
+
+  private IFeatureBindingCollection<IStyleDefinition> m_styleDefinitions = null;
+
   public WspmClassification( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
   }
 
   @Override
-  public IFeatureBindingCollection<IRoughnessClass> getRoughnessClassCollection( )
+  public synchronized IFeatureBindingCollection<IRoughnessClass> getRoughnessClassCollection( )
   {
     if( m_roughnessClasses == null )
-      m_roughnessClasses = new FeatureBindingCollection<>( this, IRoughnessClass.class, QN_MEMBER_ROUGHNESS_CLASSES );
+      m_roughnessClasses = new FeatureBindingCollection<>( this, IRoughnessClass.class, MEMBER_ROUGHNESS_CLASSES );
 
     return m_roughnessClasses;
   }
@@ -80,10 +84,10 @@ public class WspmClassification extends Feature_Impl implements IWspmClassificat
   }
 
   @Override
-  public IFeatureBindingCollection<IVegetationClass> getVegetationClassCollection( )
+  public synchronized IFeatureBindingCollection<IVegetationClass> getVegetationClassCollection( )
   {
     if( m_vegetationClasses == null )
-      m_vegetationClasses = new FeatureBindingCollection<>( this, IVegetationClass.class, QN_MEMBER_VEGETATION_CLASSES );
+      m_vegetationClasses = new FeatureBindingCollection<>( this, IVegetationClass.class, MEMBER_VEGETATION_CLASSES );
 
     return m_vegetationClasses;
   }
@@ -126,7 +130,7 @@ public class WspmClassification extends Feature_Impl implements IWspmClassificat
   public IFeatureBindingCollection<ICodeClass> getCodeClassCollection( )
   {
     if( m_codeClasses == null )
-      m_codeClasses = new FeatureBindingCollection<>( this, ICodeClass.class, QN_MEMBER_CODE_CLASSES );
+      m_codeClasses = new FeatureBindingCollection<>( this, ICodeClass.class, MEMBER_CODE_CLASSES );
 
     return m_codeClasses;
   }
@@ -150,5 +154,23 @@ public class WspmClassification extends Feature_Impl implements IWspmClassificat
     }
 
     return null;
+  }
+
+  @Override
+  public synchronized IFeatureBindingCollection<IPartType> getPartTypeCollection( )
+  {
+    if( m_partTypes == null )
+      m_partTypes = new FeatureBindingCollection<>( this, IPartType.class, MEMBER_PART_TYPE );
+
+    return m_partTypes;
+  }
+
+  @Override
+  public synchronized IFeatureBindingCollection<IStyleDefinition> getStyleDefinitionCollection( )
+  {
+    if( m_styleDefinitions == null )
+      m_styleDefinitions = new FeatureBindingCollection<>( this, IStyleDefinition.class, MEMBER_STYLE_DEFINITION );
+
+    return m_styleDefinitions;
   }
 }
