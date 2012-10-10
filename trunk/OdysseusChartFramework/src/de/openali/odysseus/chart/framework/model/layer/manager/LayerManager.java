@@ -156,12 +156,15 @@ public class LayerManager implements ILayerManager
   @Override
   public void clear( )
   {
-    // FIXME: reimplement: directly dispose all layers; else we get paint events during clean
+    // REMARK: Bugfix, if the events were send directly after a remove, the remaining layers (that will removed next)
+    // might try to repaint on a stale data model (happens for profile charts)
+    final IChartLayer[] layersToRemove = m_layers.toArray( new IChartLayer[] {} );
+    for( final IChartLayer layerToRemove : layersToRemove )
+      removeLayerInternal( layerToRemove );
 
-    for( final IChartLayer next : getLayers() )
-    {
-      removeLayer( next );
-    }
+    // TODO Eventually send a composite event...
+    for( final IChartLayer removedLayer : layersToRemove )
+      m_handler.fireLayerRemoved( removedLayer );
   }
 
   @Override
@@ -201,13 +204,18 @@ public class LayerManager implements ILayerManager
   @Override
   public void removeLayer( final IChartLayer layer )
   {
+    removeLayerInternal( layer );
+
+    m_handler.fireLayerRemoved( layer );
+  }
+
+  private void removeLayerInternal( final IChartLayer layer )
+  {
     layer.setActive( false );
 
     m_layers.remove( layer );
     layer.removeListener( m_layerListener );
     layer.dispose();
-
-    m_handler.fireLayerRemoved( layer );
   }
 
   @Override
