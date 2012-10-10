@@ -365,10 +365,12 @@ public class TupleResultDomainValueData<T_domain, T_target>
     {
       feature = baseFeature;
     }
-    else
+    else if( baseFeature != null )
     {
       feature = FeatureHelper.getFeature( baseFeature.getWorkspace(), baseFeature.getProperty( propertyName ) );
     }
+    else
+      feature = null;
 
     if( feature == null )
       return null;
