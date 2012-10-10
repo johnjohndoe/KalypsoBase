@@ -7,10 +7,6 @@
 	<annotation>
 		<documentation>observation.xsd An implementation of the OandM model for SWE Copyright (c)
 			2005 Open Geospatial Consortium - see http://www.opengeospatial.org/about/?page=ipr</documentation>
-
-		<appinfo xmlns:kapp="org.kalypso.appinfo">
-			<kapp:gmlVersion>3.1.1</kapp:gmlVersion>
-		</appinfo>
 	</annotation>
 	<!-- ====================================================================== -->
 	<!-- bring in other schemas -->
