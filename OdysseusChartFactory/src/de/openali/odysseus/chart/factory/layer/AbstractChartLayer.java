@@ -437,9 +437,6 @@ public abstract class AbstractChartLayer implements IChartLayer
     m_identifier = identifier;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#setLegend(boolean)
-   */
   @Override
   public void setLegend( final boolean isVisible )
   {

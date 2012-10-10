@@ -61,8 +61,7 @@ import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
  * <li>featureKey: String. Key, where to get the feature from the ChartDataProvider.</li>
  * <li>propertyName: QName. QName of the list-property of polynomes inside the given feature.</li>
  * <li>domainId: String. If set, the polynomes are filtered by this domain-phenomenon-id</li>
- * <li>pixelsPerTick: Integer, default 5. Determines the resolution how the polynomes are rendered. 1 means: for every
- * pixel in x-diretion, a polynome value is calculated and rendered.</li>
+ * <li>pixelsPerTick: Integer, default 5. Determines the resolution how the polynomes are rendered. 1 means: for every pixel in x-diretion, a polynome value is calculated and rendered.</li>
  * </ul>
  *
  * @author Gernot Belger
@@ -86,16 +85,19 @@ public class PolynomeLayerProvider extends AbstractLayerProvider
     final String featureKey = pc.getParameterValue( "featureKey", null ); //$NON-NLS-1$
     final String propertyNameStr = pc.getParameterValue( "propertyName", null ); //$NON-NLS-1$
     final QName propertyName = propertyNameStr == null ? null : QName.valueOf( propertyNameStr );
-    final Feature feature = (Feature) getModel().getData( featureKey );
+    final Feature feature = (Feature)getModel().getData( featureKey );
 
-    final FeatureList polygones = (FeatureList) feature.getProperty( propertyName );
+    if( feature == null )
+      return new PolynomDataContainer( new IPolynomial1D[0] );
+
+    final FeatureList polygones = (FeatureList)feature.getProperty( propertyName );
 
     /* Filter polynomes by their domainId */
     final List<IPolynomial1D> polys = new ArrayList<>();
     for( final Object object : polygones )
     {
-      final Feature polyFeature = (Feature) object;
-      final IPolynomial1D poly1d = (IPolynomial1D) polyFeature.getAdapter( IPolynomial1D.class );
+      final Feature polyFeature = (Feature)object;
+      final IPolynomial1D poly1d = (IPolynomial1D)polyFeature.getAdapter( IPolynomial1D.class );
       if( domainId == null || domainId.equals( poly1d.getDomainPhenomenon() ) )
       {
         polys.add( poly1d );

@@ -41,7 +41,6 @@
 package org.kalypso.zml.ui.chart.layer.themes;
 
 import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
-import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
 
@@ -52,13 +51,10 @@ public class ZmlThemeBackGroundRaster extends AbstractChartLayer
 {
   public static final String ID = "org.kalypso.hwv.core.chart.ZmlThemeBackGroundRaster"; //$NON-NLS-1$
 
-  private final IChartModel m_model;
-
-  public ZmlThemeBackGroundRaster( final ILayerProvider provider, final IChartModel model )
+  public ZmlThemeBackGroundRaster( final ILayerProvider provider )
   {
     super( provider, new StyleSet() );
 
-    m_model = model;
     setIdentifier( ID );
   }
 
