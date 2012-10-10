@@ -70,5 +70,4 @@ public interface IProfileObject
   void addProfileObjectListener( IProfileObjectListener listener );
 
   void removeProfileObjectListener( IProfileObjectListener listener );
-
 }
