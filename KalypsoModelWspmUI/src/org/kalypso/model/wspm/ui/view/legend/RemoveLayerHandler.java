@@ -91,7 +91,7 @@ public class RemoveLayerHandler extends AbstractHandler
         MessageDialog.openError( shell, commandName, e.getLocalizedMessage() ); //$NON-NLS-1$
       }
     }
-    return null;
 
+    return null;
   }
 }
