@@ -344,6 +344,9 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
       finally
       {
         unlockCache();
+
+        // TODO: shouldn't we still inform listenrs about changes?
+        fireProfileChanged();
       }
     }
   }
@@ -411,7 +414,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
 
   /**
    * This function updates this profile with the data from the {@link IProfil} given.
-   * 
+   *
    * @param profile
    *          The {@link IProfil}.
    */
