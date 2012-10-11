@@ -43,7 +43,6 @@ package org.kalypso.grid;
 import java.io.IOException;
 import java.net.URL;
 
-import org.kalypso.grid.parallel.ParallelBinaryGridProcessorBean;
 import org.kalypso.grid.parallel.SequentialBinaryGeoGridReader;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -61,7 +60,7 @@ public class SequentialBinaryGeoGrid extends SequentialBinaryGeoGridReader
   }
 
   @Override
-  protected double getValue( final int x, final int y, final Coordinate crd, final ParallelBinaryGridProcessorBean bean )
+  protected double getValue( final int x, final int y, final Coordinate crd )
   {
     return crd.z;
   }

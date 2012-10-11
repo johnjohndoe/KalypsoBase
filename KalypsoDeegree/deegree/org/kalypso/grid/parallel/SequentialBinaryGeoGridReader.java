@@ -178,16 +178,11 @@ public abstract class SequentialBinaryGeoGridReader extends AbstractGeoGrid impl
     if( data == null )
       return null;
 
-    final ParallelBinaryGridProcessorBean bean = createNewBean( data, m_currentPosition );
+    final ParallelBinaryGridProcessorBean bean = new ParallelBinaryGridProcessorBean( data, m_currentPosition );
 
     m_currentPosition += data.length;
 
     return bean;
-  }
-
-  protected ParallelBinaryGridProcessorBean createNewBean( final Double[] data, final long startPosition )
-  {
-    return new ParallelBinaryGridProcessorBean( data, startPosition );
   }
 
   double getValue( final int k, final ParallelBinaryGridProcessorBean bean ) throws GeoGridException
@@ -209,11 +204,10 @@ public abstract class SequentialBinaryGeoGridReader extends AbstractGeoGrid impl
 
     final Coordinate crd = new Coordinate( cx, cy, z );
 
-    return getValue( x, y, crd, bean );
+    return getValue( x, y, crd );
   }
 
-  // FIXME: ugly, we should not give the bean to outsiders
-  protected abstract double getValue( int x, int y, Coordinate crd, ParallelBinaryGridProcessorBean bean ) throws GeoGridException;
+  protected abstract double getValue( int x, int y, Coordinate crd ) throws GeoGridException;
 
   @Override
   public double getValue( final int x, final int y )
