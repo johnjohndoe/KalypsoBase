@@ -166,11 +166,37 @@ public class WspmClassification extends Feature_Impl implements IWspmClassificat
   }
 
   @Override
+  public IPartType findPartType( final String category )
+  {
+    final IFeatureBindingCollection<IPartType> partTypes = getPartTypeCollection();
+    for( final IPartType type : partTypes )
+    {
+      if( type.getName().equals( category ) )
+        return type;
+    }
+
+    return null;
+  }
+
+  @Override
   public synchronized IFeatureBindingCollection<IStyleDefinition> getStyleDefinitionCollection( )
   {
     if( m_styleDefinitions == null )
       m_styleDefinitions = new FeatureBindingCollection<>( this, IStyleDefinition.class, MEMBER_STYLE_DEFINITION );
 
     return m_styleDefinitions;
+  }
+
+  @Override
+  public IStyleDefinition findStyleDefinition( final String name )
+  {
+    final IFeatureBindingCollection<IStyleDefinition> styleDefinitions = getStyleDefinitionCollection();
+    for( final IStyleDefinition definition : styleDefinitions )
+    {
+      if( definition.getName().equals( name ) )
+        return definition;
+    }
+
+    return null;
   }
 }

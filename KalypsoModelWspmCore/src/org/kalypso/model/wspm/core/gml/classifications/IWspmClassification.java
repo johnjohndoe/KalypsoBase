@@ -81,5 +81,9 @@ public interface IWspmClassification extends Feature
 
   IFeatureBindingCollection<IPartType> getPartTypeCollection( );
 
+  IPartType findPartType( String category );
+
   IFeatureBindingCollection<IStyleDefinition> getStyleDefinitionCollection( );
+
+  IStyleDefinition findStyleDefinition( String name );
 }

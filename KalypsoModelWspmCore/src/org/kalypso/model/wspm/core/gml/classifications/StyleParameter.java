@@ -61,8 +61,20 @@ public class StyleParameter extends Feature_Impl implements IStyleParameter
   }
 
   @Override
+  public void setKey( final String key )
+  {
+    setProperty( PROPERTY_KEY, key );
+  }
+
+  @Override
   public String getValue( )
   {
     return getProperty( PROPERTY_VALUE, String.class );
+  }
+
+  @Override
+  public void setValue( final String value )
+  {
+    setProperty( PROPERTY_VALUE, value );
   }
 }

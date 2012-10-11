@@ -53,9 +53,17 @@ public interface IPartType extends Feature
 {
   QName FEATURE_PART_TYPE = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "PartType" ); //$NON-NLS-1$
 
+  QName PROPERTY_COMMENT = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "comment" ); //$NON-NLS-1$
+
   QName MEMBER_STYLE = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "styleMember" ); //$NON-NLS-1$
+
+  String getComment( );
+
+  void setComment( String comment );
 
   IXLinkedFeature getStyleDefinitionReference( );
 
   IStyleDefinition getStyleDefinition( );
+
+  void setStyleReference( String styleDefinitionName );
 }
