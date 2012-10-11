@@ -1,42 +1,23 @@
 package org.kalypso.simulation.core;
 
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.eclipse.core.runtime.Status;
 
+/**
+ * Abstract class used by classes extending Job, for easier status manipulation.
+ */
 public abstract class AbstractInternalStatusJob
 {
-  /**
-   * Abstract class used by classes extending Job, for easier status manipulation.
-   */
+  private IStatus m_status = new Status( IStatus.INFO, KalypsoSimulationCorePlugin.getID(), "Init" ); //$NON-NLS-1$
 
-  private IStatus m_status = StatusUtilities.createInfoStatus( "Init", new Object[0] ); //$NON-NLS-1$
-
-  protected static enum STATUS
+  // FIXME: ugly! always set in run method before return, so it is really a return value -> implement run and override with a internalRun method that returns a status
+  protected void setStatus( final int severity, final String message )
   {
-    OK,
-    INFO,
-    ERROR
-  }
-
-  protected void setStatus( final STATUS status, final String message )
-  {
-    switch( status )
-    {
-      case OK:
-        m_status = StatusUtilities.createOkStatus( message );
-        break;
-      case INFO:
-        m_status = StatusUtilities.createInfoStatus( message );
-        break;
-      default:
-        m_status = StatusUtilities.createErrorStatus( message );
-        break;
-    }
+    m_status = new Status(severity, KalypsoSimulationCorePlugin.getID(), message );
   }
 
   protected boolean isOkStatus( )
   {
     return m_status.isOK();
   }
-
 }
