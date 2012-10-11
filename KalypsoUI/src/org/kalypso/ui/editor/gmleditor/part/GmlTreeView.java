@@ -10,6 +10,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -699,7 +700,7 @@ public class GmlTreeView implements ISelectionProvider, IPoolListener, ModellEve
     {
       if( showContextWhileLoading )
       {
-        final String file = context.getFile();
+        final String file = context == null ? StringUtils.EMPTY : context.getFile();
 
         final String text = Messages.getString( "org.kalypso.ui.editor.gmleditor.part.GmlTreeView.11", file ); //$NON-NLS-1$
         m_treeViewer.setLabelProvider( new ConstantLabelProvider( text, waitImg ) );
