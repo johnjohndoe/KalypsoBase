@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.core.gml.classifications;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
 
@@ -53,6 +54,18 @@ public class PartType extends Feature_Impl implements IPartType
   public PartType( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
     super( parent, parentRelation, ft, id, propValues );
+  }
+
+  @Override
+  public String getComment( )
+  {
+    return getProperty( PROPERTY_COMMENT, String.class );
+  }
+
+  @Override
+  public void setComment( final String comment )
+  {
+    setProperty( PROPERTY_COMMENT, comment );
   }
 
   @Override
@@ -69,5 +82,24 @@ public class PartType extends Feature_Impl implements IPartType
       return null;
 
     return (IStyleDefinition)reference.getFeature();
+  }
+
+  @Override
+  public void setStyleReference( final String styleDefinitionName )
+  {
+    final Feature owner = getOwner();
+    if( !(owner instanceof IWspmClassification) )
+      return;
+
+    final IWspmClassification classification = (IWspmClassification)owner;
+    final IStyleDefinition definition = classification.findStyleDefinition( styleDefinitionName );
+
+    if( definition == null )
+      setLink( MEMBER_STYLE, null );
+    else
+    {
+      final String href = String.format( "#%s", definition.getId() );
+      setLink( MEMBER_STYLE, href );
+    }
   }
 }

@@ -133,6 +133,7 @@
       <complexContent>
         <extension base="gml:AbstractFeatureType">
           <sequence>
+            <element name="comment" type="string" minOccurs="0"/>
             <element name="styleMember">
               <complexType>
                 <sequence>
