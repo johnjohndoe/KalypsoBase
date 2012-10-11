@@ -102,7 +102,7 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
   /**
    * Creates a new folder creation wizard page. If the initial resource selection contains exactly one container
    * resource then it will be used as the default container resource.
-   * 
+   *
    * @param pageName
    *          the name of the page
    * @param selection
@@ -118,7 +118,7 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
 
   /**
    * (non-Javadoc) Method declared on IDialogPage.
-   * 
+   *
    * @param parent
    */
   @Override
@@ -149,7 +149,7 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
   /**
    * The <code>WizardNewFolderCreationPage</code> implementation of this <code>Listener</code> method handles all events
    * and enablements for controls on this page. Subclasses may extend.
-   * 
+   *
    * @param ev
    */
   @Override
@@ -163,7 +163,7 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
    */
   protected void initializePage( )
   {
-    final Iterator currSel = m_currentSelection.iterator();
+    final Iterator< ? > currSel = m_currentSelection.iterator();
     if( currSel.hasNext() )
     {
       final Object next = currSel.next();
@@ -201,7 +201,7 @@ public class NewCalculationCaseCreateFolderPage extends WizardPage implements Li
 
   /**
    * Returns whether this page's controls currently all contain valid values.
-   * 
+   *
    * @return <code>true</code> if all controls are valid, and <code>false</code> if at least one is invalid
    */
   protected boolean validatePage( )
