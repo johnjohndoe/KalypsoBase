@@ -2,44 +2,45 @@
  *
  *  This file is part of kalypso.
  *  Copyright (C) 2004 by:
- * 
+ *
  *  Technical University Hamburg-Harburg (TUHH)
  *  Institute of River and coastal engineering
  *  Denickestraﬂe 22
  *  21073 Hamburg, Germany
  *  http://www.tuhh.de/wb
- * 
+ *
  *  and
- *  
+ *
  *  Bjoernsen Consulting Engineers (BCE)
  *  Maria Trost 3
  *  56070 Koblenz, Germany
  *  http://www.bjoernsen.de
- * 
+ *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
  *  License as published by the Free Software Foundation; either
  *  version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  *  This library is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *  Lesser General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *
  *  Contact:
- * 
+ *
  *  E-Mail:
  *  belger@bjoernsen.de
  *  schlienger@bjoernsen.de
  *  v.doemming@tuhh.de
- *   
+ *
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -58,6 +59,10 @@ import org.kalypso.model.wspm.core.gml.IProfileProviderListener;
 import org.kalypso.model.wspm.core.gml.ProfileFeatureSelections;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
+import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
+import org.kalypsodeegree.model.feature.event.ModellEvent;
 
 /**
  * @author Dirk Kuch
@@ -80,13 +85,13 @@ public class ProfileFeatureSeletionHandler
     @Override
     public void onProfilProviderChanged( final IProfileProvider provider )
     {
-      m_part.handleProfilProviderChanged( provider );
+      handleProfileChanged( provider );
     }
   };
 
-  protected final IProfileFeatureSelectionListener m_part;
+  private final IProfileFeatureSelectionListener m_part;
 
-  private IProfileFeature m_profileFeature;
+  private Pair<IProfileFeature, Object> m_profileFeatureAnSelection;
 
   private IWorkbenchPart m_profileSourcePart;
 
@@ -112,26 +117,55 @@ public class ProfileFeatureSeletionHandler
     };
   }
 
-  protected void handleSelectionChanged( final IStructuredSelection selection )
+  protected void handleProfileChanged( final IProfileProvider provider )
   {
-    final IProfileFeature profileFeature = ProfileFeatureSelections.findFeature( selection );
-    setProfileFeature( profileFeature );
-  }
+    m_part.handleProfilProviderChanged( provider );
 
-  private void setProfileFeature( final IProfileFeature profileFeature )
-  {
-    if( Objects.equal( profileFeature, m_profileFeature ) )
+    // HACK/REMARK: sometimes, the selected object is not directly the profile but a referencing feasture (e.g. TuhhReachSegment)
+    // In order to let this element to refresh it's state (e.g. the decorator on the state tree), we fire an extra event on this element
+
+    final Pair<IProfileFeature, Object> profileFeatureAnSelection = m_profileFeatureAnSelection;
+    if( profileFeatureAnSelection == null )
       return;
 
-    if( m_profileFeature != null )
-      m_profileFeature.removeProfilProviderListener( m_providerListener );
+    final Object selection = profileFeatureAnSelection.getValue();
+    if( selection == profileFeatureAnSelection.getKey() )
+      return;
 
-    m_profileFeature = profileFeature;
+    if( !(selection instanceof Feature) )
+      return;
 
-    if( m_profileFeature != null )
-      m_profileFeature.addProfilProviderListener( m_providerListener );
+    final Feature selectedFeature = (Feature)selection;
+    final GMLWorkspace workspace = selectedFeature.getWorkspace();
+    if( workspace == null )
+      return;
 
-    m_part.handleProfilProviderChanged( m_profileFeature );
+    final ModellEvent changeEvent = new FeaturesChangedModellEvent( workspace, new Feature[] { selectedFeature } );
+    workspace.fireModellEvent( changeEvent );
+  }
+
+  protected void handleSelectionChanged( final IStructuredSelection selection )
+  {
+    final Pair<IProfileFeature, Object> profileAndSelection = ProfileFeatureSelections.findProfile( selection );
+    setProfileFeature( profileAndSelection );
+  }
+
+  private void setProfileFeature( final Pair<IProfileFeature, Object> profileAndSelection )
+  {
+    if( Objects.equal( profileAndSelection, m_profileFeatureAnSelection ) )
+      return;
+
+    final IProfileProvider oldProfileFeature = getProfileFeature();
+    if( oldProfileFeature != null )
+      oldProfileFeature.removeProfilProviderListener( m_providerListener );
+
+    m_profileFeatureAnSelection = profileAndSelection;
+
+    final IProfileProvider profileFeature = getProfileFeature();
+    if( profileFeature != null )
+      profileFeature.addProfilProviderListener( m_providerListener );
+
+    m_part.handleProfilProviderChanged( profileFeature );
   }
 
   public void dispose( )
@@ -143,8 +177,9 @@ public class ProfileFeatureSeletionHandler
         provider.removeSelectionChangedListener( m_selectionListener );
     }
 
-    if( m_profileFeature != null )
-      m_profileFeature.removeProfilProviderListener( m_providerListener );
+    final IProfileProvider profileFeature = getProfileFeature();
+    if( profileFeature != null )
+      profileFeature.removeProfilProviderListener( m_providerListener );
 
     if( m_adapterPartListener != null )
       m_adapterPartListener.dispose();
@@ -175,14 +210,18 @@ public class ProfileFeatureSeletionHandler
 
   public IProfile getProfile( )
   {
-    if( m_profileFeature != null )
-      return m_profileFeature.getProfile();
+    final IProfileProvider profileFeature = getProfileFeature();
+    if( profileFeature != null )
+      return profileFeature.getProfile();
 
     return null;
   }
 
   public IProfileProvider getProfileFeature( )
   {
-    return m_profileFeature;
+    if( m_profileFeatureAnSelection == null )
+      return null;
+
+    return m_profileFeatureAnSelection.getKey();
   }
 }
