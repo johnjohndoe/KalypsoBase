@@ -43,13 +43,16 @@ package org.kalypso.transformation.transformer;
 import org.geotools.geometry.GeneralDirectPosition;
 import org.geotools.referencing.CRS;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
-import org.opengis.geometry.MismatchedDimensionException;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.LinearRing;
+import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Helper that transforms JTS coordinates, based on SRID's.
@@ -91,7 +94,7 @@ public class JTSTransformer
   }
 
   // TODO: better exceptions
-  public Coordinate transform( final Coordinate sourceCrd ) throws MismatchedDimensionException, TransformException
+  public Coordinate transform( final Coordinate sourceCrd ) throws TransformException
   {
     if( sourceCrd == null )
       return null;
@@ -110,8 +113,54 @@ public class JTSTransformer
     return new Coordinate( m_targetPt.getOrdinate( 0 ), m_targetPt.getOrdinate( 1 ), targetZ );
   }
 
+  public Coordinate[] transform( final Coordinate[] coordinates ) throws TransformException
+  {
+    if( coordinates == null )
+      return null;
+
+    final Coordinate[] transformedCoordinates = new Coordinate[coordinates.length];
+
+    for( int i = 0; i < transformedCoordinates.length; i++ )
+      transformedCoordinates[i] = transform( coordinates[i] );
+
+    return transformedCoordinates;
+  }
+
   public int getTargetSRID( )
   {
     return m_targetSRID;
+  }
+
+  public Polygon transformPolygon( final Polygon polygon ) throws TransformException
+  {
+    if( polygon == null )
+      return null;
+
+
+    /* transform shell */
+    final LinearRing transformedShell = transformLinearRing( polygon.getExteriorRing() );
+
+    /* transform interior rings */
+    final int numInteriorRing = polygon.getNumInteriorRing();
+    final LinearRing[] transformedHoles = new LinearRing[numInteriorRing];
+    for( int i = 0; i < transformedHoles.length; i++ )
+      transformedHoles[i] = transformLinearRing( polygon.getInteriorRingN( i ) );
+
+    /* create new geometry */
+    final GeometryFactory factory = polygon.getFactory();
+    return factory.createPolygon( transformedShell, transformedHoles );
+  }
+
+  private LinearRing transformLinearRing( final LineString ring ) throws TransformException
+  {
+    if( ring == null )
+      return null;
+
+    final Coordinate[] coordinates = ring.getCoordinates();
+    final Coordinate[] transformedCoordinates = transform( coordinates );
+
+    /* create new geometry */
+    final GeometryFactory factory = ring.getFactory();
+    return factory.createLinearRing( transformedCoordinates );
   }
 }
