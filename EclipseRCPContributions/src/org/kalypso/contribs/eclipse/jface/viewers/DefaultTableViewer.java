@@ -213,7 +213,6 @@ public class DefaultTableViewer extends TableViewer
       element.dispose();
 
     setColumnProperties( new String[] {} );
-
   }
 
   public String getProperty( final int columnIndex )

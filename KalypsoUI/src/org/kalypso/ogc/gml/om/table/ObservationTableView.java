@@ -66,9 +66,6 @@ public class ObservationTableView extends ViewPart implements IFeatureSelectionL
 
   private TupleResultLabelProvider m_tupleResultLabelProvider;
 
-  /**
-   * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   public void createPartControl( final Composite parent )
   {
@@ -88,9 +85,6 @@ public class ObservationTableView extends ViewPart implements IFeatureSelectionL
     selectionChanged( this, KalypsoCorePlugin.getDefault().getSelectionManager() );
   }
 
-  /**
-   * @see org.eclipse.ui.part.WorkbenchPart#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -102,19 +96,12 @@ public class ObservationTableView extends ViewPart implements IFeatureSelectionL
     super.dispose();
   }
 
-  /**
-   * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
-   */
   @Override
   public void setFocus( )
   {
     m_viewer.getControl().setFocus();
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.selection.IFeatureSelectionListener#selectionChanged(java.lang.Object,
-   *      org.kalypso.ogc.gml.selection.IFeatureSelection)
-   */
   @Override
   public void selectionChanged( final Object source, final IFeatureSelection selection )
   {

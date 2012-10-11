@@ -70,8 +70,10 @@ import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 
 /**
  * @author Marc Schlienger
+ * @deprecated Use {@link TupleResultContentProvider2} instead.
  */
-public class TupleResultContentProvider implements IStructuredContentProvider, ITupleResultChangedListener
+@Deprecated
+public final class TupleResultContentProvider implements IStructuredContentProvider, ITupleResultChangedListener
 {
   private static final String DUMMY = "dummy"; //$NON-NLS-1$
 
@@ -101,20 +103,6 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
     m_updateColumnsJob.setSystem( true );
   }
 
-  /* default */
-  static IComponentUiHandler[] addFakeHandler( final IComponentUiHandler[] componentHandlers )
-  {
-    final IComponentUiHandler[] handlerWithFake = new IComponentUiHandler[componentHandlers.length + 1];
-
-    handlerWithFake[0] = new ComponentUiFirstColumnHandler();
-    System.arraycopy( componentHandlers, 0, handlerWithFake, 1, componentHandlers.length );
-
-    return handlerWithFake;
-  }
-
-  /**
-   * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -139,7 +127,7 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
     }
   }
 
-  protected void refreshColumns( )
+  void refreshColumns( )
   {
     m_tableViewer.removeAllColumns();
 
@@ -199,11 +187,6 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
     }
 
     return null;
-  }
-
-  public TupleResult getResult( )
-  {
-    return m_result;
   }
 
   @Override
@@ -308,7 +291,7 @@ public class TupleResultContentProvider implements IStructuredContentProvider, I
     return m_factory;
   }
 
-  protected DefaultTableViewer getTableViewer( )
+  DefaultTableViewer getTableViewer( )
   {
     return m_tableViewer;
   }

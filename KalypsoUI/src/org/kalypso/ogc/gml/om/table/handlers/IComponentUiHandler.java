@@ -47,7 +47,7 @@ import org.kalypso.observation.result.IRecord;
 
 /**
  * Implementors of this class are responsible for UI-representation of values of tuple-result components.
- * 
+ *
  * @author Dirk Kuch
  * @author Gernot Belger
  * @see org.kalypso.observation.result.TupleResult
@@ -67,7 +67,7 @@ public interface IComponentUiHandler
 
   /**
    * Format value for the cell editor
-   * 
+   *
    * @return Must not return <code>null</code>.
    */
   Object doGetValue( IRecord record );
@@ -79,7 +79,7 @@ public interface IComponentUiHandler
 
   /**
    * Sets a value to the record's component represented by this handler.
-   * 
+   *
    * @param value
    *          An object which's type must fit to the handled component
    */
@@ -102,6 +102,7 @@ public interface IComponentUiHandler
    * No other validity checks are performed, so column wider than the table may be configured.<br/>
    * If >0, the columnWidth property is interpreted as the minimum width.
    */
+  @Deprecated
   int getColumnWidthPercent( );
 
   int getColumnStyle( );
@@ -109,5 +110,5 @@ public interface IComponentUiHandler
   String getColumnLabel( );
 
   /** Converts a (user entered) text into an object handled by this handler. */
-  public Object parseValue( final String text );
+  Object parseValue( final String text );
 }
