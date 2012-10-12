@@ -65,7 +65,7 @@ import com.vividsolutions.jts.geom.impl.CoordinateArraySequence;
 
 /**
  * Transforms {@link ISHPGeometry}s to JTS {@link com.vividsolutions.jts.geom.Geometry}s.
- * 
+ *
  * @author Gernot Belger
  */
 public final class SHP2JTS
@@ -111,7 +111,7 @@ public final class SHP2JTS
       for( int p = start; p < end; p++ )
       {
         final ISHPPoint point = points[p];
-        crds[i] = new Coordinate( point.getX(), point.getY(), point.getZ() );
+        crds[p] = new Coordinate( point.getX(), point.getY(), point.getZ() );
       }
 
       sequences[i] = new CoordinateArraySequence( crds );
@@ -142,8 +142,8 @@ public final class SHP2JTS
     final CoordinateSequence[] sequences = transformParts( shppolygon );
 
     /* sort into inner and outer rings */
-    final List<LinearRing> outerRings = new ArrayList<LinearRing>( sequences.length );
-    final List<LinearRing> innerRings = new ArrayList<LinearRing>( sequences.length );
+    final List<LinearRing> outerRings = new ArrayList<>( sequences.length );
+    final List<LinearRing> innerRings = new ArrayList<>( sequences.length );
 
     for( final CoordinateSequence part : sequences )
     {
