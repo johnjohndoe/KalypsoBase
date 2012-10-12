@@ -77,7 +77,7 @@ public class ParallelBinaryGridProcessor
     m_reader = inputGridReader;
     m_writer = outputGridWriter;
     m_writerWorker = new WriterThread( this, m_lock );
-    m_beans = new ArrayList<ParallelBinaryGridProcessorBean>( m_reader.getBlocksAmount() + 1 );
+    m_beans = new ArrayList<>( m_reader.getBlocksAmount() + 1 );
   }
 
   // FIXME: implement progress monitor for this operation
@@ -189,7 +189,6 @@ public class ParallelBinaryGridProcessor
       m_lock.notify();
     }
   }
-
 
   double getValue( final int k, final ParallelBinaryGridProcessorBean bean ) throws GeoGridException
   {

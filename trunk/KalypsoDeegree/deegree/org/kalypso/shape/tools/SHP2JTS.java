@@ -161,11 +161,11 @@ public final class SHP2JTS
     }
 
     /* build polygons and determine which ring is inside which polyogn */
-    final List<Polygon> polygons = new ArrayList<Polygon>();
+    final List<Polygon> polygons = new ArrayList<>();
 
     for( final LinearRing out_ring : outerRings )
     {
-      final List<LinearRing> innerOfOuter = new ArrayList<LinearRing>( innerRings.size() );
+      final List<LinearRing> innerOfOuter = new ArrayList<>( innerRings.size() );
       PointInRing pir = null; // lazy create (performance!)
 
       for( final Iterator<LinearRing> innerIt = innerRings.iterator(); innerIt.hasNext(); )
