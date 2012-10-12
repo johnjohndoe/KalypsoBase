@@ -15,11 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- * 
+ *
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -38,7 +38,6 @@ package org.kalypsodeegree_impl.graphics.displayelements;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.io.Serializable;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
@@ -59,12 +58,12 @@ import org.kalypsodeegree_impl.graphics.sld.awt.StrokePainter;
  * <p>
  * It can be rendered using a solid stroke or a graphics stroke.
  * <p>
- * 
+ *
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
  */
-class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implements LineStringDisplayElement, Serializable
+class LineStringDisplayElement_Impl extends GeometryDisplayElement_Impl implements LineStringDisplayElement
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = -4657962592230618248L;

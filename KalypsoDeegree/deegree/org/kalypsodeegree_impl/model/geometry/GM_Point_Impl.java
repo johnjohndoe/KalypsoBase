@@ -35,8 +35,6 @@
  */
 package org.kalypsodeegree_impl.model.geometry;
 
-import java.io.Serializable;
-
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
@@ -59,7 +57,7 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
  * @version 5.6.2001
  * @author Andreas Poth
  */
-final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point, Serializable
+final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 6106017748940535740L;

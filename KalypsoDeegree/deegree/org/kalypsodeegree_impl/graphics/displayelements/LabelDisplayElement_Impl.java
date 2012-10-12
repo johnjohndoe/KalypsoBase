@@ -15,11 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- * 
+ *
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -37,7 +37,6 @@ package org.kalypsodeegree_impl.graphics.displayelements;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.io.Serializable;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -60,12 +59,12 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  * generated either when the <tt>paint</tt> -method is called or assigned externally using the <tt>setLabels</tt>- or
  * <tt>addLabels</tt> -methods.
  * <p>
- * 
+ *
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
  */
-public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implements LabelDisplayElement, Serializable
+public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implements LabelDisplayElement
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = -7870967255670858503L;
@@ -77,7 +76,7 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
   /**
    * Creates a new LabelDisplayElement_Impl object.
    * <p>
-   * 
+   *
    * @param feature
    *          associated <tt>Feature</tt>
    * @param geometry
@@ -117,7 +116,7 @@ public class LabelDisplayElement_Impl extends GeometryDisplayElement_Impl implem
    * been assigned externally, these labels are used, else <tt>Label</tt> -instances are created automatically using the
    * <tt>LabelFactory</tt>.
    * <p>
-   * 
+   *
    * @param g
    *          <tt>Graphics</tt> context to be used
    * @param projection

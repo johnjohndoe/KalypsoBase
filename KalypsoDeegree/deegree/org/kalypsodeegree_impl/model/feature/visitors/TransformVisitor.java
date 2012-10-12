@@ -60,7 +60,7 @@ public class TransformVisitor implements FeatureVisitor
   private IGeoTransformer m_transformer;
 
   /** feature -> exception */
-  private final Map<Feature, Throwable> m_exceptions = new HashMap<Feature, Throwable>();
+  private final Map<Feature, Throwable> m_exceptions = new HashMap<>();
 
   public TransformVisitor( final String targetCRS )
   {

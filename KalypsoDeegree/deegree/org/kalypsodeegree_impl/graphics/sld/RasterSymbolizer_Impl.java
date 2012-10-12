@@ -59,11 +59,11 @@ import org.kalypsodeegree.xml.Marshallable;
  * <p>
  * ----------------------------------------------------------------------
  * </p>
- * 
+ *
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @version $Revision$ $Date$
  */
-public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymbolizer, Marshallable
+public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymbolizer
 {
   private ParameterValueType m_opacity;
 

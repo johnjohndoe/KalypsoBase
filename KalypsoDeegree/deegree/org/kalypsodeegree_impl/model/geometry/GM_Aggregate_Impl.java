@@ -35,7 +35,6 @@
  */
 package org.kalypsodeegree_impl.model.geometry;
 
-import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,7 +54,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  * @version 8.6.2001
  * @author Andreas Poth href="mailto:poth@lat-lon.de"
  */
-abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate, Serializable
+abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 1161164609227432958L;
@@ -81,7 +80,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   {
     super( crs );
 
-    m_aggregate = new ArrayList<GM_Object>( Arrays.asList( children ) );
+    m_aggregate = new ArrayList<>( Arrays.asList( children ) );
   }
 
   /**
@@ -424,7 +423,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate,
   }
 
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     /* An array of GM_xxx adapts to the array of its adapters. */
     final Class< ? > componentType = adapter.getComponentType();

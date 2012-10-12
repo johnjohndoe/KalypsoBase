@@ -15,11 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- * 
+ *
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -76,7 +76,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * Different geometry-types (of the LabelDisplayElement) imply different strategies concerning the way the
  * <tt>Labels</tt> are generated.
  * <p>
- * 
+ *
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
  */
@@ -151,7 +151,7 @@ public class LabelFactory
       final LineMetrics metrics = font.getLineMetrics( caption, frc );
 
       final GM_Object[] geometries = m_element.getGeometry();
-      final List<Label> allLabels = new ArrayList<Label>();
+      final List<Label> allLabels = new ArrayList<>();
       for( final GM_Object geometry : geometries )
       {
         final Label[] labels = createLabels( feature, caption, geometry, font, color, metrics, size );
@@ -302,7 +302,7 @@ public class LabelFactory
    * Determines positions on the given <tt>GM_MultiCurve</tt> where a caption could be drawn. For each of this positons,
    * three candidates are produced; one on the line, one above of it and one below.
    * <p>
-   * 
+   *
    * @param multiCurve
    * @param element
    * @param g
@@ -312,7 +312,7 @@ public class LabelFactory
    */
   private Label[] createMultiCurveLabels( final Feature feature, final String caption, final GM_MultiCurve multiCurve, final Font font, final Color color, final LineMetrics metrics, final Dimension bounds ) throws FilterEvaluationException, GM_Exception
   {
-    final List<Label> placements = new ArrayList<Label>();
+    final List<Label> placements = new ArrayList<>();
     for( int i = 0; i < multiCurve.getSize(); i++ )
     {
       final GM_Curve curve = multiCurve.getCurveAt( i );
@@ -326,7 +326,7 @@ public class LabelFactory
   /**
    * Determines positions on the given <tt>GM_Curve</tt> where a caption could be drawn. For each of this positons,
    * three candidates are produced; one on the line, one above of it and one below.
-   * 
+   *
    * @param curve
    * @param element
    * @param g
@@ -377,8 +377,8 @@ public class LabelFactory
     int boxStartX = lastX;
     int boxStartY = lastY;
 
-    final List<Label> labels = new ArrayList<Label>( MAX_CURVE_LABELS_COUNT );
-    final List<int[]> eCandidates = new ArrayList<int[]>( MAX_CURVE_LABELS_COUNT );
+    final List<Label> labels = new ArrayList<>( MAX_CURVE_LABELS_COUNT );
+    final List<int[]> eCandidates = new ArrayList<>( MAX_CURVE_LABELS_COUNT );
 
     int i = 0;
     for( int kk = 0; kk < MAX_CURVE_LABELS_COUNT && kk < pos[2][0]; kk++ )
@@ -440,7 +440,7 @@ public class LabelFactory
     // pick lists of boxes on the linestring
     // FIXME: strange: is the gap really the number of labels? shouldn't it be the minimum gap in pixels betwen to
     // labels?
-    final List<Label> pick = new ArrayList<Label>( 100 );
+    final List<Label> pick = new ArrayList<>( 100 );
 
     final int n = labels.size();
     for( int j = n / 2; j < n; j += gap + 1 )
@@ -494,7 +494,7 @@ public class LabelFactory
    * The ideal line is thought to be running from left to right, the left deviation value generally is above the line,
    * the right value is below.
    * <p>
-   * 
+   *
    * @param start
    *          starting point of the linestring
    * @param end
@@ -555,7 +555,7 @@ public class LabelFactory
    * Finds a point on the line between p1 and p2 that has a certain distance from point p0 (provided that there is such
    * a point).
    * <p>
-   * 
+   *
    * @param p0
    *          point that is used as reference point for the distance
    * @param p1

@@ -58,7 +58,7 @@ public class LinearRingContentHandler extends GMLElementContentHandler implement
 {
   public static final String ELEMENT_LINEAR_RING = "LinearRing";
 
-  private final List<GM_Position> m_poses;
+  private final List<GM_Position> m_poses = new ArrayList<>();
 
   private final IRingHandler m_lineaRingHandler;
 
@@ -69,7 +69,6 @@ public class LinearRingContentHandler extends GMLElementContentHandler implement
     super( reader, NS.GML3, ELEMENT_LINEAR_RING, defaultSrs, lineaRingHandler );
 
     m_lineaRingHandler = lineaRingHandler;
-    m_poses = new ArrayList<GM_Position>();
   }
 
   @Override

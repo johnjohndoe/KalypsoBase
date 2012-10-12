@@ -622,7 +622,7 @@ public final class SLDFactory
   {
     // optional: <CssParameter>s
     final ElementList nl = XMLTools.getChildElementsByName( "CssParameter", CommonNamespaces.SLDNS.toString(), element );//$NON-NLS-1$
-    final Map<String, CssParameter> cssParams = new HashMap<String, CssParameter>( nl.getLength() );
+    final Map<String, CssParameter> cssParams = new HashMap<>( nl.getLength() );
 
     for( int i = 0; i < nl.getLength(); i++ )
     {
@@ -650,7 +650,7 @@ public final class SLDFactory
       return null;
 
     // mix of text nodes and <wfs:Expression>-elements
-    final List<Object> componentList = new ArrayList<Object>();
+    final List<Object> componentList = new ArrayList<>();
     final NodeList nl = element.getChildNodes();
 
     for( int i = 0; i < nl.getLength(); i++ )
@@ -731,7 +731,7 @@ public final class SLDFactory
 
     // optional: <NamedLayer>(s) / <UserLayer>(s)
     final NodeList nodelist = element.getChildNodes();
-    final List<Layer> layerList = new ArrayList<Layer>( 100 );
+    final List<Layer> layerList = new ArrayList<>( 100 );
 
     for( int i = 0; i < nodelist.getLength(); i++ )
     {
@@ -852,7 +852,7 @@ public final class SLDFactory
 
     // optional: <NamedStyle>(s) / <UserStyle>(s)
     final NodeList nodelist = element.getChildNodes();
-    final List<Style> styleList = new ArrayList<Style>();
+    final List<Style> styleList = new ArrayList<>();
 
     for( int i = 0; i < nodelist.getLength(); i++ )
       if( nodelist.item( i ) instanceof Element )
@@ -1126,13 +1126,13 @@ public final class SLDFactory
     // optional: several <Rule> / <SemanticTypeIdentifier>
     final NodeList nodelist = element.getChildNodes();
 
-    final List<Rule> ruleList = new ArrayList<Rule>();
-    final List<String> typeIdentifierList = new ArrayList<String>();
+    final List<Rule> ruleList = new ArrayList<>();
+    final List<String> typeIdentifierList = new ArrayList<>();
 
     // collect Filters of all Rules
-    final List<Filter> filters = new ArrayList<Filter>();
+    final List<Filter> filters = new ArrayList<>();
     // collect all Rules that have an ElseFilter
-    final List<Rule> elseRules = new ArrayList<Rule>();
+    final List<Rule> elseRules = new ArrayList<>();
 
     for( int i = 0; i < nodelist.getLength(); i++ )
     {
@@ -1273,7 +1273,7 @@ public final class SLDFactory
 
     // optional: different Symbolizer-elements
     final NodeList symbolizerNL = element.getChildNodes();
-    final List<Symbolizer> symbolizerList = new ArrayList<Symbolizer>();
+    final List<Symbolizer> symbolizerList = new ArrayList<>();
 
     for( int i = 0; i < symbolizerNL.getLength(); i++ )
     {
@@ -1722,7 +1722,7 @@ public final class SLDFactory
 
     // optional: <CssParameter>s
     final ElementList nl = XMLTools.getChildElementsByName( "CssParameter", CommonNamespaces.SLDNS.toString(), element );
-    final HashMap<String, CssParameter> cssParams = new HashMap<String, CssParameter>( nl.getLength() );
+    final HashMap<String, CssParameter> cssParams = new HashMap<>( nl.getLength() );
 
     for( int i = 0; i < nl.getLength(); i++ )
     {
@@ -1849,7 +1849,7 @@ public final class SLDFactory
 
     // optional: <CssParameter>s
     final ElementList nl = XMLTools.getChildElementsByName( "CssParameter", CommonNamespaces.SLDNS.toString(), element );
-    final HashMap<String, CssParameter> cssParams = new HashMap<String, CssParameter>( nl.getLength() );
+    final HashMap<String, CssParameter> cssParams = new HashMap<>( nl.getLength() );
 
     for( int i = 0; i < nl.getLength(); i++ )
     {
@@ -1922,7 +1922,7 @@ public final class SLDFactory
 
     // optional: <ExternalGraphic>s / <Mark>s
     final NodeList nodelist = element.getChildNodes();
-    final List<Object> marksAndExtGraphicsList = new ArrayList<Object>();
+    final List<Object> marksAndExtGraphicsList = new ArrayList<>();
 
     for( int i = 0; i < nodelist.getLength(); i++ )
     {
@@ -2000,7 +2000,7 @@ public final class SLDFactory
 
   private static SortedMap<Double, ColorMapEntry> createColorMap( final Element colorMapElement )
   {
-    final SortedMap<Double, ColorMapEntry> colorMap = new TreeMap<Double, ColorMapEntry>();
+    final SortedMap<Double, ColorMapEntry> colorMap = new TreeMap<>();
     if( colorMapElement == null )
       return null;
 

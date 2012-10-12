@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -66,14 +66,14 @@ import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
  * (default) meaning no rotation. In the case that a Graphic is derived from a font-glyph Mark, the Size specified here
  * will be used for the final rendering. Allowed CssParameters are "opacity", "size", and "rotation".
  * <p>
- * 
+ *
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
  */
 public class Graphic_Impl implements Graphic, Marshallable
 {
-  private final List<Object> m_marksAndExtGraphics = new ArrayList<Object>();
+  private final List<Object> m_marksAndExtGraphics = new ArrayList<>();
 
   private ParameterValueType m_opacity = null;
 
@@ -84,7 +84,7 @@ public class Graphic_Impl implements Graphic, Marshallable
   /**
    * Creates a new <tt>Graphic_Impl</tt> instance.
    * <p>
-   * 
+   *
    * @param marksAndExtGraphics
    *          the image will be based upon these
    * @param opacity
@@ -105,7 +105,7 @@ public class Graphic_Impl implements Graphic, Marshallable
   /**
    * Creates a new <tt>Graphic_Impl</tt> instance based on the default <tt>Mark</tt>: a square.
    * <p>
-   * 
+   *
    * @param opacity
    *          opacity that the resulting image will have
    * @param size
@@ -122,7 +122,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    * Returns an object-array that enables the access to the stored <tt>ExternalGraphic</tt> and <tt>Mark</tt>
    * -instances.
    * <p>
-   * 
+   *
    * @return contains <tt>ExternalGraphic</tt> and <tt>Mark</tt> -objects
    */
   @Override
@@ -136,7 +136,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    * Sets the <tt>ExternalGraphic</tt>/<tt>Mark<tt>-instances that the image
    * will be based on.
    * <p>
-   * 
+   *
    * @param object
    *          to be used as basis for the resulting image
    */
@@ -158,7 +158,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    * Adds an Object to an object-array that enables the access to the stored <tt>ExternalGraphic</tt> and <tt>Mark</tt>
    * -instances.
    * <p>
-   * 
+   *
    * @param object
    *          to be used as basis for the resulting image
    */
@@ -172,7 +172,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    * Removes an Object from an object-array that enables the access to the stored <tt>ExternalGraphic</tt> and
    * <tt>Mark</tt> -instances.
    * <p>
-   * 
+   *
    * @param object
    *          to be used as basis for the resulting image
    */
@@ -185,7 +185,7 @@ public class Graphic_Impl implements Graphic, Marshallable
   /**
    * The Opacity element gives the opacity to use for rendering the graphic.
    * <p>
-   * 
+   *
    * @param feature
    *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
@@ -220,7 +220,7 @@ public class Graphic_Impl implements Graphic, Marshallable
   /**
    * The Opacity element gives the opacity of to use for rendering the graphic.
    * <p>
-   * 
+   *
    * @param opacity
    *          Opacity to be set for the graphic
    */
@@ -235,7 +235,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    * is also used in other contexts than graphic size and pixel units are still used even for font size. The default
    * size for an object is context-dependent. Negative values are not allowed.
    * <p>
-   * 
+   *
    * @param feature
    *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
@@ -345,7 +345,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    * encoded as a floating- point number. Negative values mean counter-clockwise rotation. The default value is 0.0 (no
    * rotation).
    * <p>
-   * 
+   *
    * @param feature
    *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
@@ -388,7 +388,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    * parameters. If the 'Size'-parameter is omitted, the height of the first <tt>ExternalGraphic</tt> is used. If there
    * is none, the default value of 6 pixels is used.
    * <p>
-   * 
+   *
    * @return the <tt>BufferedImage</tt> ready to be painted
    * @throws FilterEvaluationException
    *           if the evaluation fails
@@ -417,7 +417,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    * This is much faster than creating a BufferedImage as in {@link #getAsImage(Feature, UOM, GeoTransform)} and should
    * be therefore used in preference.
    * </p>
-   * 
+   *
    * @see org.kalypsodeegree.graphics.sld.Graphic#paintAwt(java.awt.Graphics2D,
    *      org.kalypsodeegree.model.feature.Feature, org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform)
@@ -461,7 +461,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    * parameters. If the 'Size'-parameter is omitted, the height of the first <tt>ExternalGraphic</tt> is used. If there
    * is none, the default value of 6 pixels is used.
    * <p>
-   * 
+   *
    * @return the <tt>BufferedImage</tt> ready to be painted
    * @throws FilterEvaluationException
    *           if the evaluation fails
@@ -492,7 +492,7 @@ public class Graphic_Impl implements Graphic, Marshallable
 
   /**
    * exports the content of the Graphic as XML formated String
-   * 
+   *
    * @return xml representation of the Graphic
    */
   @Override

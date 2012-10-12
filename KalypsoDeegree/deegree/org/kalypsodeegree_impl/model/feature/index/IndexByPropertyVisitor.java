@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -49,7 +49,7 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
  * This visitor hashes all features by one property. The property should be indexable (must have unique values),
  * otherwise some values could be missing, because they uses the same key then.<br>
  * Should the property be null, the visitor will not visit any features and the map will be empty than.
- * 
+ *
  * @author Holger Albert
  */
 public class IndexByPropertyVisitor implements FeatureVisitor
@@ -66,7 +66,7 @@ public class IndexByPropertyVisitor implements FeatureVisitor
 
   /**
    * The constructor.
-   * 
+   *
    * @param property
    *          Should the property be null, the visitor will not visit any features and the map will be empty than.
    * @param asTreeMap
@@ -81,12 +81,12 @@ public class IndexByPropertyVisitor implements FeatureVisitor
     if( asTreeMap )
     {
       if( comparator == null )
-        m_index = new TreeMap<Object, Feature>();
+        m_index = new TreeMap<>();
       else
-        m_index = new TreeMap<Object, Feature>( comparator );
+        m_index = new TreeMap<>( comparator );
     }
     else
-      m_index = new HashMap<Object, Feature>();
+      m_index = new HashMap<>();
   }
 
   /**
@@ -106,7 +106,7 @@ public class IndexByPropertyVisitor implements FeatureVisitor
 
   /**
    * This function returns the index map for this visitor.
-   * 
+   *
    * @return The indexed map.
    */
   public Map<Object, Feature> getIndex( )

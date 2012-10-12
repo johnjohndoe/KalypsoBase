@@ -35,7 +35,6 @@
  */
 package org.kalypsodeegree_impl.model.geometry;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,7 +46,6 @@ import org.kalypsodeegree.model.geometry.GM_CurveBoundary;
 import org.kalypsodeegree.model.geometry.GM_CurveSegment;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_GenericCurve;
 import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -61,7 +59,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * @version 14.10.2001
  * @author Andreas Poth
  */
-class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_GenericCurve, Serializable
+class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 4060425075179654976L;
@@ -93,20 +91,17 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
   {
     super( segments[0].getCoordinateSystem(), orientation );
 
-    m_segments = new ArrayList<GM_CurveSegment>( segments.length );
+    m_segments = new ArrayList<>( segments.length );
 
-    if( segments != null )
+    for( int i = 0; i < segments.length; i++ )
     {
-      for( int i = 0; i < segments.length; i++ )
-      {
-        m_segments.add( segments[i] );
+      m_segments.add( segments[i] );
 
-        if( i > 0 )
+      if( i > 0 )
+      {
+        if( !segments[i - 1].getEndPoint().equals( segments[i].getStartPoint() ) )
         {
-          if( !segments[i - 1].getEndPoint().equals( segments[i].getStartPoint() ) )
-          {
-            throw new GM_Exception( "end-point of segment[i-1] doesn't match start-point of segment[i]!" );
-          }
+          throw new GM_Exception( "end-point of segment[i-1] doesn't match start-point of segment[i]!" );
         }
       }
     }
@@ -694,8 +689,7 @@ class GM_Curve_Impl extends GM_OrientableCurve_Impl implements GM_Curve, GM_Gene
   @Override
   public GM_Curve clone( ) throws CloneNotSupportedException
   {
-    // kuch
-    final List<GM_CurveSegment> mySegments = new LinkedList<GM_CurveSegment>();
+    final List<GM_CurveSegment> mySegments = new LinkedList<>();
     for( final GM_CurveSegment segment : m_segments )
     {
       mySegments.add( (GM_CurveSegment) segment.clone() );

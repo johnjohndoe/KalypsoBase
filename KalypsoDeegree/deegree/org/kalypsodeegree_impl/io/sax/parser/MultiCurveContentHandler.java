@@ -62,7 +62,7 @@ public class MultiCurveContentHandler extends GMLElementContentHandler implement
 {
   private static final String ELEMENT_MULTI_CURVE = "MultiCurve"; //$NON-NLS-1$
 
-  private final List<GM_Curve> m_curves = new ArrayList<GM_Curve>();
+  private final List<GM_Curve> m_curves = new ArrayList<>();
 
   private final UnmarshallResultEater m_resultEater;
 

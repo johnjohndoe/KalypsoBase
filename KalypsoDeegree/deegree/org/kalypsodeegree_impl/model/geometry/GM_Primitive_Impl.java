@@ -35,7 +35,6 @@
  */
 package org.kalypsodeegree_impl.model.geometry;
 
-import java.io.Serializable;
 import java.lang.reflect.Array;
 
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -48,7 +47,7 @@ import org.kalypsodeegree.model.geometry.GM_Primitive;
  * @version 8.6.2001
  * @author Andreas Poth
  */
-abstract class GM_Primitive_Impl extends GM_Object_Impl implements GM_Primitive, Serializable
+abstract class GM_Primitive_Impl extends GM_Object_Impl implements GM_Primitive
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = -2121656681131551613L;
@@ -64,7 +63,7 @@ abstract class GM_Primitive_Impl extends GM_Object_Impl implements GM_Primitive,
   }
 
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     /* A primitive adapts to the array of itself adapted to the desired class. */
     final Class< ? > componentType = adapter.getComponentType();

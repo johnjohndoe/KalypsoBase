@@ -184,7 +184,7 @@ public class RectifiedGridDomainTypeHandlerGml3 extends AbstractOldFormatMarshal
       final GM_Point origin = (GM_Point) adapter.wrapFromNode( n_point );
 
       final NodeList nl_offSetVector = ((Element) node).getElementsByTagNameNS( NS.GML3, "offsetVector" );
-      final List<RectifiedGridDomain.OffsetVector> offSetVectors = new ArrayList<OffsetVector>();
+      final List<RectifiedGridDomain.OffsetVector> offSetVectors = new ArrayList<>();
       for( int i = 0; i < nl_offSetVector.getLength(); i++ )
       {
         final Node n_offsetVector = nl_offSetVector.item( i );

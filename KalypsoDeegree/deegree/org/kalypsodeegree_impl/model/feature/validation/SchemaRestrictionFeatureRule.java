@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -42,21 +42,16 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.validation.IFeatureMarkerCollector;
-import org.kalypsodeegree.model.feature.validation.IFeatureRule;
 import org.kalypsodeegree_impl.model.feature.validation.rules.IRule;
 import org.kalypsodeegree_impl.model.feature.validation.rules.RuleFactory;
 
 /**
  * A very generel rule which validates the restrictions defined in the gml application schema.
- * 
+ *
  * @author Gernot Belger
  */
-public class SchemaRestrictionFeatureRule extends AbstractFeatureRule implements IFeatureRule
+public class SchemaRestrictionFeatureRule extends AbstractFeatureRule
 {
-  /**
-   * @see org.kalypsodeegree.model.feature.validation.IFeatureRule#validate(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypsodeegree.model.feature.validation.IFeatureMarkerCollector)
-   */
   @Override
   public void validate( final Feature feature, final IFeatureMarkerCollector collector )
   {
@@ -96,5 +91,4 @@ public class SchemaRestrictionFeatureRule extends AbstractFeatureRule implements
 
     feature.getWorkspace().accept( visitor, feature, FeatureVisitor.DEPTH_INFINITE );
   }
-
 }

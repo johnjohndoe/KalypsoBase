@@ -35,8 +35,6 @@
  */
 package org.kalypsodeegree_impl.model.geometry;
 
-import java.io.Serializable;
-
 import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveSegment;
@@ -52,7 +50,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * @version 12.6.2001
  * @author Andreas Poth
  */
-public final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_MultiCurve, Serializable
+public final class GM_MultiCurve_Impl extends GM_MultiPrimitive_Impl implements GM_MultiCurve
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 2730942874409216686L;

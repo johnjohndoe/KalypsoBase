@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -61,7 +61,7 @@ public class FilterUtilites
   /**
    * Merges filter1 with filter2 to a new filter. ComplexFilters are merged with and AND operation. FeatureFilters are
    * merged by returning the two featureId list in one list. ElseFilters can not be merged.
-   * 
+   *
    * @param filter1
    *          filter to be merged with filter2
    * @param filter2
@@ -107,7 +107,7 @@ public class FilterUtilites
       return filter1;
     else if( op1 == null && op2 != null )
       return filter2;
-    final ArrayList<Operation> andOps = new ArrayList<Operation>();
+    final ArrayList<Operation> andOps = new ArrayList<>();
     andOps.add( op1 );
     andOps.add( op2 );
     return new ComplexFilter( new LogicalOperation( OperationDefines.AND, andOps ) );
@@ -117,7 +117,7 @@ public class FilterUtilites
   /**
    * Remove the one filter from an existing filter. If the filter to be removed is not contained in the original filter,
    * the original filter is returned.
-   * 
+   *
    * @param originalFilter
    *          the actual filter.
    * @param filterToRemove

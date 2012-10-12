@@ -83,7 +83,6 @@ public class Polynomial1D extends Feature_Impl implements IPolynomial1D
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public double[] getCoefficients( )
   {
     final List<Double> coefs = (List<Double>) getProperty( QNAME_PROP_COEFFICIENTS );
@@ -97,7 +96,7 @@ public class Polynomial1D extends Feature_Impl implements IPolynomial1D
   @Override
   public void setCoefficients( final double[] coefficients ) throws IllegalArgumentException
   {
-    final List<Double> list = new ArrayList<Double>();
+    final List<Double> list = new ArrayList<>();
 
     if( coefficients != null )
     {

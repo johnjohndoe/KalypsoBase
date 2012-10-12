@@ -46,7 +46,7 @@ public class Refinement
   @SuppressWarnings({ "unchecked", "rawtypes" })
   private GM_Object[] doRefineCurve( final GM_MultiSurface[] inputSurfaces, final GM_Curve inputCurve ) throws GM_Exception
   {
-    final List<GM_Object> list = new ArrayList<GM_Object>();
+    final List<GM_Object> list = new ArrayList<>();
 
     if( inputCurve.getStartPoint().equals( inputCurve.getEndPoint() ) )
     {
@@ -101,7 +101,7 @@ public class Refinement
 
             if( intersection instanceof GM_MultiPoint )
             {
-              final List<GM_Point> pointList = new ArrayList<GM_Point>();
+              final List<GM_Point> pointList = new ArrayList<>();
 
               final GM_MultiPoint multiPoint = (GM_MultiPoint) intersection;
               final GM_Point[] points = multiPoint.getAllPoints();
@@ -137,7 +137,7 @@ public class Refinement
 
             else if( intersection instanceof GM_Point )
             {
-              final List<GM_Point> pointList = new ArrayList<GM_Point>();
+              final List<GM_Point> pointList = new ArrayList<>();
               final GM_Point point = (GM_Point) intersection;
 
               if( Double.isNaN( point.getZ() ) )

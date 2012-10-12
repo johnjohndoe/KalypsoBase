@@ -70,7 +70,7 @@ public class StrokePainter
   private final java.awt.Stroke m_stroke;
 
   // additional painters - paint an arrow, aso
-  private final List<IAdditionalStrokePainter> m_painters = new ArrayList<IAdditionalStrokePainter>();
+  private final List<IAdditionalStrokePainter> m_painters = new ArrayList<>();
 
   public StrokePainter( final Stroke stroke, final Feature feature, final UOM uom, final GeoTransform projection ) throws FilterEvaluationException
   {

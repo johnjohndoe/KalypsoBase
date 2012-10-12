@@ -1035,7 +1035,7 @@ public final class GeometryUtilities
   protected static GM_Position[] getPolygonPositions( final GM_Curve[] curves, final boolean selfIntersected ) throws GM_Exception
   {
     /* test for self-intersection */
-    final List<GM_Position> posList = new ArrayList<GM_Position>();
+    final List<GM_Position> posList = new ArrayList<>();
 
     /* - add first curve's positions to positions list */
     final GM_Position[] positions1 = curves[1].getAsLineString().getPositions();
@@ -1316,7 +1316,7 @@ public final class GeometryUtilities
     }
     try
     {
-      final List<GM_Position> lListPositionWithValues = new ArrayList<GM_Position>();
+      final List<GM_Position> lListPositionWithValues = new ArrayList<>();
       final Set<GM_Point> lSetKeys = mapPositionsValues.keySet();
       GM_Point gmPoint = null;
       for( final Iterator<GM_Point> iterator = lSetKeys.iterator(); iterator.hasNext(); )
@@ -1335,7 +1335,6 @@ public final class GeometryUtilities
   /**
    * Adapts a given object to one or more GM_Objects of a given type.
    */
-  @SuppressWarnings("unchecked")
   public static <T extends GM_Object> T[] findGeometries( final Object geomOrList, final Class<T> type )
   {
     final T[] emptyArray = (T[]) Array.newInstance( type, 0 );
@@ -1350,7 +1349,7 @@ public final class GeometryUtilities
       final T[] adapter = (T[]) ((GM_Object) geomOrList).getAdapter( arrayType );
       if( adapter == null )
         return emptyArray;
-      
+
       return adapter;
     }
 
@@ -1360,10 +1359,9 @@ public final class GeometryUtilities
     return emptyArray;
   }
 
-  @SuppressWarnings("unchecked")
   private static <T extends GM_Object> T[] findGeometries( final List< ? > geomList, final Class< ? extends GM_Object[]> arrayType )
   {
-    final List<T> result = new ArrayList<T>();
+    final List<T> result = new ArrayList<>();
     for( final Object geom : geomList )
     {
       if( geom instanceof GM_Object )
@@ -1378,7 +1376,6 @@ public final class GeometryUtilities
     return result.toArray( store );
   }
 
-  @SuppressWarnings("unchecked")
   public static <G extends GM_Object> G[] transform( final G[] input, final IGeoTransformer transformer ) throws Exception
   {
     final G[] result = (G[]) Array.newInstance( input.getClass().getComponentType(), input.length );

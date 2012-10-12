@@ -59,9 +59,9 @@ import org.xml.sax.XMLReader;
  */
 public abstract class AbstractXMLReader implements XMLReader
 {
-  private final List<String> m_enabledFeatures = new ArrayList<String>();
+  private final List<String> m_enabledFeatures = new ArrayList<>();
 
-  private final Map<String, Object> m_propMap = new HashMap<String, Object>();
+  private final Map<String, Object> m_propMap = new HashMap<>();
 
   private EntityResolver m_entityResolver;
 

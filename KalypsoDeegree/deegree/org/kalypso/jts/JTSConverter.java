@@ -68,7 +68,7 @@ public class JTSConverter
 {
   public static Coordinate[] toCoordinates( final GM_Position[] positions )
   {
-    final List<Coordinate> coordinates = new ArrayList<Coordinate>();
+    final List<Coordinate> coordinates = new ArrayList<>();
     for( final GM_Position position : positions )
     {
       coordinates.add( JTSAdapter.export( position ) );
@@ -81,7 +81,7 @@ public class JTSConverter
   {
     final GeometryFactory factory = new GeometryFactory();
 
-    final List<Point> points = new ArrayList<Point>();
+    final List<Point> points = new ArrayList<>();
     for( final Coordinate coordinate : coordinates )
     {
       points.add( factory.createPoint( coordinate ) );
@@ -99,7 +99,7 @@ public class JTSConverter
 
   public static GM_Position[] toPositions( final Coordinate[] coordinates )
   {
-    final List<GM_Position> positions = new ArrayList<GM_Position>();
+    final List<GM_Position> positions = new ArrayList<>();
     for( final Coordinate coordinate : coordinates )
     {
       positions.add( JTSAdapter.wrap( coordinate ) );
@@ -110,7 +110,7 @@ public class JTSConverter
 
   public static GM_Curve[] toCurves( final LineString[] profiles, final String crs ) throws GM_Exception
   {
-    final Set<GM_Curve> curves = new HashSet<GM_Curve>();
+    final Set<GM_Curve> curves = new HashSet<>();
 
     for( final LineString profile : profiles )
     {
@@ -141,7 +141,7 @@ public class JTSConverter
 
   public static GM_Point[] toGMPoints( final Point[] points, final String crs ) throws GM_Exception
   {
-    final List<GM_Point> gmpoints = new ArrayList<GM_Point>();
+    final List<GM_Point> gmpoints = new ArrayList<>();
 
     for( final Point point : points )
     {
@@ -158,7 +158,7 @@ public class JTSConverter
 
   public static LineString[] toLineString( final MultiLineString multi )
   {
-    final Set<LineString> lineStrings = new LinkedHashSet<LineString>();
+    final Set<LineString> lineStrings = new LinkedHashSet<>();
     for( int i = 0; i < multi.getNumGeometries(); i++ )
     {
       final LineString lineString = (LineString) multi.getGeometryN( i );

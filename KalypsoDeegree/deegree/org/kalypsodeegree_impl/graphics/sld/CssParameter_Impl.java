@@ -84,7 +84,7 @@ import org.kalypsodeegree.xml.Marshallable;
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
  */
-class CssParameter_Impl implements CssParameter, Marshallable
+class CssParameter_Impl implements CssParameter
 {
   private ParameterValueType m_pvt = null;
 

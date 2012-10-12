@@ -92,21 +92,13 @@ public class CoordContentHandler extends GMLElementContentHandler
     m_coordinatesHandler.handle( coords );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#doStartElement(java.lang.String,
-   *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
-   */
   @Override
   protected void doStartElement( final String uri, final String localName, final String name, final Attributes atts )
   {
     m_xyz = 0;
-    m_coords = new ArrayList<Double>();
+    m_coords = new ArrayList<>();
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.io.sax.parser.GMLElementContentHandler#handleUnexpectedEndElement(java.lang.String,
-   *      java.lang.String, java.lang.String)
-   */
   @Override
   public void handleUnexpectedEndElement( final String uri, final String localName, final String name ) throws SAXException
   {
@@ -125,7 +117,7 @@ public class CoordContentHandler extends GMLElementContentHandler
 
   private List<Double[]> endCoords( )
   {
-    final List<Double[]> coords = new ArrayList<Double[]>( 1 );
+    final List<Double[]> coords = new ArrayList<>( 1 );
     coords.add( m_coords.toArray( new Double[m_coords.size()] ) );
 
     return coords;

@@ -51,7 +51,7 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
  */
 public class CollectorVisitor implements FeatureVisitor
 {
-  private final Collection<Feature> m_results = new ArrayList<Feature>();
+  private final Collection<Feature> m_results = new ArrayList<>();
 
   private final Filter m_predicate;
 

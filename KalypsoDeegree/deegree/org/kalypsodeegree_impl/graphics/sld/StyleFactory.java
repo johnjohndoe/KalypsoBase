@@ -298,7 +298,7 @@ public final class StyleFactory
    */
   public static Stroke createStroke( final Color color, final double width, final double opacity, final float[] dashArray, final String lineJoin, final String lineCap )
   {
-    final HashMap<String, CssParameter> cssParams = new HashMap<String, CssParameter>();
+    final HashMap<String, CssParameter> cssParams = new HashMap<>();
 
     final CssParameter stroke = createCssParameter( "stroke", getColorAsHex( color ) );
     cssParams.put( "stroke", stroke );
@@ -339,7 +339,7 @@ public final class StyleFactory
    */
   public static Stroke createStroke( final Color color, final double width, final float[] dashArray )
   {
-    final HashMap<String, CssParameter> cssParams = new HashMap<String, CssParameter>();
+    final HashMap<String, CssParameter> cssParams = new HashMap<>();
 
     final CssParameter stroke = createCssParameter( "stroke", getColorAsHex( color ) );
     cssParams.put( "stroke", stroke );
@@ -432,7 +432,7 @@ public final class StyleFactory
    */
   public static Fill createFill( final Color color, final double opacity, final GraphicFill fill )
   {
-    final HashMap<String, CssParameter> cssParams = new HashMap<String, CssParameter>();
+    final HashMap<String, CssParameter> cssParams = new HashMap<>();
     final CssParameter fillCo = createCssParameter( "fill", getColorAsHex( color ) );
     cssParams.put( "fill", fillCo );
     final CssParameter fillOp = createCssParameter( "fill-opacity", opacity );
@@ -803,7 +803,7 @@ public final class StyleFactory
    */
   public static Font createFont( final String fontFamily, final boolean italic, final boolean bold, final double fontSize )
   {
-    final Map<String, CssParameter> cssParams = new HashMap<String, CssParameter>();
+    final Map<String, CssParameter> cssParams = new HashMap<>();
 
     cssParams.put( "font-family", createCssParameter( "font-family", fontFamily ) );
     cssParams.put( "font-size", createCssParameter( "font-size", "" + fontSize ) );
@@ -1073,7 +1073,7 @@ public final class StyleFactory
    */
   public static RasterSymbolizer createRasterSymbolizer( )
   {
-    final TreeMap<Double, ColorMapEntry> colorMap = new TreeMap<Double, ColorMapEntry>();
+    final TreeMap<Double, ColorMapEntry> colorMap = new TreeMap<>();
     final ColorMapEntry noData = new ColorMapEntry_Impl( Color.WHITE, 0, -9999, "Keine Daten" );
     colorMap.put( new Double( -9999 ), noData );
     return new RasterSymbolizer_Impl( null, colorMap, null, null );

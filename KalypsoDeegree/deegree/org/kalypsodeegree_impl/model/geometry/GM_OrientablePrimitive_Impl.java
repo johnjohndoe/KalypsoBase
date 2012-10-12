@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -35,8 +35,6 @@
  */
 package org.kalypsodeegree_impl.model.geometry;
 
-import java.io.Serializable;
-
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_OrientablePrimitive;
 
@@ -46,12 +44,12 @@ import org.kalypsodeegree.model.geometry.GM_OrientablePrimitive;
  * <p>
  * ------------------------------------------------------------
  * </p>
- * 
+ *
  * @version 8.6.2001
  * @author Andreas Poth
  *         <p>
  */
-abstract class GM_OrientablePrimitive_Impl extends GM_Primitive_Impl implements GM_OrientablePrimitive, Serializable
+abstract class GM_OrientablePrimitive_Impl extends GM_Primitive_Impl implements GM_OrientablePrimitive
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 5655221930434396483L;
@@ -60,7 +58,7 @@ abstract class GM_OrientablePrimitive_Impl extends GM_Primitive_Impl implements 
 
   /**
    * the constructor sets the curves orientation
-   * 
+   *
    * @param crs
    *          spatial reference system of the geometry
    * @param orientation
@@ -76,7 +74,7 @@ abstract class GM_OrientablePrimitive_Impl extends GM_Primitive_Impl implements 
 
   /**
    * returns the orientation of a curve
-   * 
+   *
    * @return curve orientation ('+'|'-')
    */
   @Override
@@ -87,7 +85,7 @@ abstract class GM_OrientablePrimitive_Impl extends GM_Primitive_Impl implements 
 
   /**
    * sets the curves orientation
-   * 
+   *
    * @param orientation
    *          orientation of the curve ('+'|'-')
    * @exception GM_Exception

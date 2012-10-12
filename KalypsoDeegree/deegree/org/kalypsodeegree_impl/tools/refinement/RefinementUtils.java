@@ -111,9 +111,9 @@ public final class RefinementUtils
   @SuppressWarnings("unchecked")
   public static GM_Surface< ? extends GM_SurfacePatch>[] splitPolygonbyLine( final GM_Position[] patchPoses, final GM_Position[] linePoses, final String crs ) throws GM_Exception
   {
-    final List<GM_Surface< ? extends GM_SurfacePatch>> surfaceList = new ArrayList<GM_Surface< ? extends GM_SurfacePatch>>();
-    final Set<GM_Position> originalPosList = new HashSet<GM_Position>();
-    final List<Coordinate> coordList = new ArrayList<Coordinate>();
+    final List<GM_Surface< ? extends GM_SurfacePatch>> surfaceList = new ArrayList<>();
+    final Set<GM_Position> originalPosList = new HashSet<>();
+    final List<Coordinate> coordList = new ArrayList<>();
 
     /* EQUALITY CHECK */
     /* if the split-line is identical with one of the patch's border segments, do nothing */
@@ -166,7 +166,7 @@ public final class RefinementUtils
 
   private static GM_Surface< ? extends GM_SurfacePatch> reassignOriginalPositions( final Set<GM_Position> originalPosList, final GM_Position[] ring, final String crs ) throws GM_Exception
   {
-    final List<GM_Position> posList = new ArrayList<GM_Position>();
+    final List<GM_Position> posList = new ArrayList<>();
 
     for( GM_Position position : ring )
     {
@@ -248,7 +248,7 @@ public final class RefinementUtils
 
   private static GM_Curve flipCurve( final GM_Curve curve ) throws GM_Exception
   {
-    final List<GM_Position> posList = new ArrayList<GM_Position>();
+    final List<GM_Position> posList = new ArrayList<>();
     for( int i = curve.getAsLineString().getNumberOfPoints() - 1; i == 0; i-- )
     {
       posList.add( curve.getAsLineString().getPositionAt( i ) );
@@ -304,10 +304,9 @@ public final class RefinementUtils
    *          the positions of the intersection points
    * @return the resulting surfaces
    */
-  @SuppressWarnings("unchecked")
   public static GM_Surface< ? extends GM_SurfacePatch>[] splitSurfacePatch( final GM_SurfacePatch surfacePatch, final GM_Position[] linePoses ) throws GM_Exception
   {
-    final List<GM_Surface< ? extends GM_SurfacePatch>> surfaceList = new ArrayList<GM_Surface< ? extends GM_SurfacePatch>>();
+    final List<GM_Surface< ? extends GM_SurfacePatch>> surfaceList = new ArrayList<>();
 
     final GM_Position[] patchPoses = surfacePatch.getExteriorRing();
 
@@ -320,10 +319,9 @@ public final class RefinementUtils
     return surfaceList.toArray( new GM_Surface[surfaceList.size()] );
   }
 
-  @SuppressWarnings("unchecked")
   public static GM_Surface<GM_SurfacePatch>[] triangulatePolygon( final String crs, final GM_Position[] ring ) throws GM_Exception
   {
-    final List<GM_Surface< ? extends GM_SurfacePatch>> surfaceList = new ArrayList<GM_Surface< ? extends GM_SurfacePatch>>();
+    final List<GM_Surface< ? extends GM_SurfacePatch>> surfaceList = new ArrayList<>();
     final GM_Position[] orientedRing = GeometryUtilities.orientateRing( ring );
     final GM_Position[][] triangles = GeometryUtilities.triangulateRing( orientedRing );
     for( final GM_Position[] poses : triangles )
@@ -333,5 +331,4 @@ public final class RefinementUtils
     }
     return surfaceList.toArray( new GM_Surface[surfaceList.size()] );
   }
-
 }

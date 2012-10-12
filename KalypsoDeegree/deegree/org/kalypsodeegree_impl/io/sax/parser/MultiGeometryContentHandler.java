@@ -63,7 +63,7 @@ import org.xml.sax.XMLReader;
 // FIXME: almost the same code as the other Multi...ContentHandler's;
 public class MultiGeometryContentHandler extends GMLElementContentHandler implements IGMLElementHandler<GM_Object>
 {
-  private final List<GM_Object> m_geometries = new ArrayList<GM_Object>();
+  private final List<GM_Object> m_geometries = new ArrayList<>();
 
   private final UnmarshallResultEater m_resultEater;
 

@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -52,11 +52,11 @@ import org.kalypsodeegree.xml.Marshallable;
  * <p>
  * ----------------------------------------------------------------------
  * </p>
- * 
+ *
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @version $Revision$ $Date$
  */
-public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marshallable
+public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor
 {
   private final String m_version = "1.0.0";
 
@@ -77,7 +77,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    */
   public StyledLayerDescriptor_Impl( final String name, final String title, final String abstract_, final Layer[] layers )
   {
-    m_layers = new ArrayList<Layer>( layers.length );
+    m_layers = new ArrayList<>( layers.length );
     setLayers( layers );
     setAbstract( abstract_ );
     setName( name );
@@ -89,7 +89,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    */
   public StyledLayerDescriptor_Impl( final Layer[] layers )
   {
-    m_layers = new ArrayList<Layer>( layers.length );
+    m_layers = new ArrayList<>( layers.length );
     setLayers( layers );
   }
 
@@ -104,7 +104,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
 
   /**
    * Sets Layers
-   * 
+   *
    * @param layers
    *          the Layers as Array
    */
@@ -124,7 +124,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
 
   /**
    * adds the <Layer>
-   * 
+   *
    * @param layer
    *          a Layer to add
    */
@@ -136,7 +136,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
 
   /**
    * removes the <Layer>
-   * 
+   *
    * @param layer
    *          a Layer to remove
    */
@@ -154,13 +154,13 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    * data. Multiple feature types can be included in a UserLayer, since this is semantically equivalent to a Layer. All
    * feature types of a UserLayer come from the same WFS. The WFS can be named explicitly with the "wfs" attribute or it
    * can be implied by context.
-   * 
+   *
    * @return the UserLayers as Array
    */
   @Override
   public UserLayer[] getUserLayers( )
   {
-    final List<UserLayer> list = new ArrayList<UserLayer>( m_layers.size() );
+    final List<UserLayer> list = new ArrayList<>( m_layers.size() );
     for( int i = 0; i < m_layers.size(); i++ )
     {
       if( m_layers.get( i ) instanceof UserLayer )
@@ -174,13 +174,13 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
   /**
    * A NamedLayer uses the "name" attribute to identify a layer known to the WMS and can contain zero or more styles,
    * either NamedStyles or UserStyles. In the absence of any styles the default style for the layer is used.
-   * 
+   *
    * @return the NamedLayers as Array
    */
   @Override
   public NamedLayer[] getNamedLayers( )
   {
-    final List<NamedLayer> list = new ArrayList<NamedLayer>();
+    final List<NamedLayer> list = new ArrayList<>();
     for( int i = 0; i < m_layers.size(); i++ )
     {
       if( m_layers.get( i ) instanceof NamedLayer )
@@ -192,7 +192,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
   /**
    * A NamedLayer uses the "name" attribute to identify a layer known to the WMS and can contain zero or more styles,
    * either NamedStyles or UserStyles. In the absence of any styles the default style for the layer is used.
-   * 
+   *
    * @return the NamedLayers as Array
    */
   @Override
@@ -211,7 +211,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
    * documents stored in various different versions of the SLD spec. The string has the format x.y.z, the same as in
    * other OpenGIS Web Server specs. For example, an SLD document stored according to this spec would have the version
    * string 0.7.2.
-   * 
+   *
    * @return the version of the SLD as String
    */
   @Override
@@ -222,7 +222,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
 
   /**
    * sets the <Version>
-   * 
+   *
    * @param version
    *          the version of the SLD
    */
@@ -285,7 +285,7 @@ public class StyledLayerDescriptor_Impl implements StyledLayerDescriptor, Marsha
 
   /**
    * exports the content of the Font as XML formated String
-   * 
+   *
    * @return xml representation of the Font
    */
   @Override

@@ -15,11 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- * 
+ *
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -50,7 +50,7 @@ import org.xml.sax.XMLReader;
 
 /**
  * Base type-handler for simple types.
- * 
+ *
  * @author Andreas von Dömming
  */
 public abstract class XsdBaseTypeHandler<T> implements ISimpleMarshallingTypeHandler<T>, Comparator<T>
@@ -100,7 +100,7 @@ public abstract class XsdBaseTypeHandler<T> implements ISimpleMarshallingTypeHan
       if( objectToClone instanceof List )
       {
         final List< ? > list = (List< ? >) objectToClone;
-        final List<T> clonedList = new ArrayList<T>( list.size() );
+        final List<T> clonedList = new ArrayList<>( list.size() );
         for( final Object listItem : list )
         {
           final T clonedObject = cloneValueObject( (T) listItem );

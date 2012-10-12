@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -50,7 +50,7 @@ import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 
 /**
  * Andreas: This code doesn't seems to be used, doesn't do anything and causes yellow thingis. Delete it?
- * 
+ *
  * @version $Revision$
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  */
@@ -256,7 +256,7 @@ class LinearContains
    */
   private static GM_Position[] getPositions( final GM_Curve curve ) throws GM_Exception
   {
-    final List<GM_Position> positions = new ArrayList<GM_Position>( 1000 );
+    final List<GM_Position> positions = new ArrayList<>( 1000 );
 
     for( int i = 0; i < curve.getNumberOfCurveSegments(); i++ )
     {

@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -49,7 +49,7 @@ import org.kalypsodeegree.model.feature.Feature;
  * <li>comparison_ops</li>
  * <li>logical_ops</li>
  * </ul>
- * 
+ *
  * @author Markus Schneider
  * @version 06.08.2002
  */
@@ -68,7 +68,7 @@ public class ComplexFilter extends AbstractFilter
    * Constructs a new <tt>ComplexFilter<tt> that consists of an
    * empty <tt>LogicalOperation</tt> of the given type.
    * <p>
-   * 
+   *
    * @param operatorId
    *          OperationDefines.AND, OperationDefines.OR or OperationDefines.NOT
    */
@@ -81,7 +81,7 @@ public class ComplexFilter extends AbstractFilter
    * Constructs a new <tt>ComplexFilter<tt> that consists of a
    * <tt>LogicalOperation</tt> with the given <tt>Filter</tt>.
    * <p>
-   * 
+   *
    * @param filter1
    *          first Filter to be used
    * @param filter2
@@ -91,9 +91,8 @@ public class ComplexFilter extends AbstractFilter
    */
   public ComplexFilter( final ComplexFilter filter1, final ComplexFilter filter2, final int operatorId )
   {
-
     // extract the Operations from the Filters
-    final ArrayList<Operation> arguments = new ArrayList<Operation>();
+    final ArrayList<Operation> arguments = new ArrayList<>();
     arguments.add( filter1.getOperation() );
     if( filter2 != null )
       arguments.add( filter2.getOperation() );
@@ -115,7 +114,7 @@ public class ComplexFilter extends AbstractFilter
 
   /**
    * Calculates the <tt>Filter</tt>'s logical value based on the certain property values of the given feature.
-   * 
+   *
    * @param feature
    *          that determines the values of <tt>PropertyNames</tt> in the expression
    * @return true, if the <tt>Filter</tt> evaluates to true, else false

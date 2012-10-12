@@ -98,7 +98,7 @@ public class MultiPointContentHandler extends GMLElementContentHandler implement
     m_resultEater = resultEater;
     m_multiPointHandler = multiPointHandler;
 
-    m_points = new ArrayList<GM_Point>();
+    m_points = new ArrayList<>();
     m_multiPoint = null;
   }
 

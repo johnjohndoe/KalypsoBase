@@ -61,7 +61,7 @@ import com.vividsolutions.jts.index.intervalrtree.SortedPackedIntervalRTree;
  */
 public class ColorMapConverter implements IElevationColorModel
 {
-  private final List<ElevationColorEntry> m_entries = new LinkedList<ElevationColorEntry>();
+  private final List<ElevationColorEntry> m_entries = new LinkedList<>();
 
   private final SortedPackedIntervalRTree m_entryIndex = new SortedPackedIntervalRTree();
 

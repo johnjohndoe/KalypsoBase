@@ -35,8 +35,6 @@
  */
 package org.kalypsodeegree_impl.model.geometry;
 
-import java.io.Serializable;
-
 import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypsodeegree.model.geometry.GM_Aggregate;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -54,7 +52,7 @@ import org.kalypsodeegree.model.geometry.GM_Primitive;
  * @version 5.6.2001
  * @author Andreas Poth
  */
-class GM_MultiPrimitive_Impl extends GM_Aggregate_Impl implements GM_MultiPrimitive, Serializable
+class GM_MultiPrimitive_Impl extends GM_Aggregate_Impl implements GM_MultiPrimitive
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 7228377539686274411L;

@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -55,11 +55,11 @@ import org.kalypsodeegree.xml.Marshallable;
  * <p>
  * ----------------------------------------------------------------------
  * </p>
- * 
+ *
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @version $Revision$ $Date$
  */
-public class PointSymbolizer_Impl extends Symbolizer_Impl implements PointSymbolizer, Marshallable
+public class PointSymbolizer_Impl extends Symbolizer_Impl implements PointSymbolizer
 {
   private Graphic m_graphic = null;
 
@@ -112,7 +112,7 @@ public class PointSymbolizer_Impl extends Symbolizer_Impl implements PointSymbol
    * clockwise, with 0 (default) meaning no rotation. In the case that a Graphic is derived from a font-glyph Mark, the
    * Size specified here will be used for the final rendering. Allowed CssParameters are "opacity", "size", and
    * "rotation".
-   * 
+   *
    * @return the graphic of the point
    */
   @Override
@@ -123,7 +123,7 @@ public class PointSymbolizer_Impl extends Symbolizer_Impl implements PointSymbol
 
   /**
    * sets the <Graphic>
-   * 
+   *
    * @param graphic
    *          the graphic of the point
    */
@@ -135,7 +135,7 @@ public class PointSymbolizer_Impl extends Symbolizer_Impl implements PointSymbol
 
   /**
    * exports the content of the PointSymbolizer as XML formated String
-   * 
+   *
    * @return xml representation of the PointSymbolizer
    */
   @Override

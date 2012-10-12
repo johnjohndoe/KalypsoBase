@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -44,7 +44,7 @@ import java.util.List;
  * Walks along the given <tt>GM_Curve</tt> and generates positions on the line string in regular intervals (i.e. with
  * the same distance).
  * <p>
- * 
+ *
  * @author <a href="mailto:mschneider@lat-lon.de>Markus Schneider </a>
  * @version $Revision$ $Date$
  */
@@ -72,7 +72,7 @@ public class CurveWalker
    * Determines positions on the given <tt>GM_Curve</tt> where a caption could be drawn. For each of this positons,
    * three candidates are produced; one on the line, one above of it and one below.
    * <p>
-   * 
+   *
    * @param pos
    * @return ArrayList containing Arrays of Label-objects
    */
@@ -86,8 +86,8 @@ public class CurveWalker
     int boxStartX = lastX;
     int boxStartY = lastY;
 
-    final ArrayList<double[]> labels = new ArrayList<double[]>( 100 );
-    final List<int[]> eCandidates = new ArrayList<int[]>( 100 );
+    final ArrayList<double[]> labels = new ArrayList<>( 100 );
+    final List<int[]> eCandidates = new ArrayList<>( 100 );
 
     int i = 0;
     while( i < count )
@@ -140,7 +140,7 @@ public class CurveWalker
    * The ideal line is thought to be running from left to right, the left deviation value generally is above the line,
    * the right value is below.
    * <p>
-   * 
+   *
    * @param start
    *          starting point of the linestring
    * @param end
@@ -245,7 +245,7 @@ public class CurveWalker
    * Finds a point on the line between p1 and p2 that has a certain distance from point p0 (provided that there is such
    * a point).
    * <p>
-   * 
+   *
    * @param p0
    *          point that is used as reference point for the distance
    * @param p1

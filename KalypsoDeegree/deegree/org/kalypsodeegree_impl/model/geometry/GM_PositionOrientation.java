@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -43,7 +43,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
  * Helper class to set the orientation of a closed ring defined by its positions
- * 
+ *
  * @author Thomas Jung
  */
 public class GM_PositionOrientation
@@ -82,7 +82,7 @@ public class GM_PositionOrientation
 
   private static GM_Position[] reverse( final GM_Position[] pos )
   {
-    final List<GM_Position> posList = new LinkedList<GM_Position>();
+    final List<GM_Position> posList = new LinkedList<>();
 
     for( int i = 0; i < pos.length; i++ )
     {
@@ -97,7 +97,7 @@ public class GM_PositionOrientation
    * Original comment: orientation2D_Polygon(): tests the orientation of a simple polygon Input: int n = the number of
    * vertices in the polygon Point* V = an array of n+1 vertices with V[n]=V[0] Return: >0 for counterclockwise =0 for
    * none (degenerate) <0 for clockwise Note: this algorithm is faster than computing the signed area.
-   * 
+   *
    * @throws CoordOrientationException
    */
   public static TYPE getPolygonOrientation( final GM_Position[] pos ) throws GM_PositionOrientationException

@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -50,11 +50,11 @@ import org.kalypsodeegree.xml.Marshallable;
  * <p>
  * ----------------------------------------------------------------------
  * </p>
- * 
+ *
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @version $Revision$ $Date$
  */
-public class GraphicFill_Impl implements GraphicFill, Marshallable
+public class GraphicFill_Impl implements GraphicFill
 {
   private final Graphic m_graphic;
 
@@ -70,7 +70,7 @@ public class GraphicFill_Impl implements GraphicFill, Marshallable
    * A Graphic is a graphic symbol with an inherent shape, color(s), and possibly size. A graphic can be very informally
    * defined as a little picture and can be of either a raster or vector-graphic source type. The term graphic is used
    * since the term symbol is similar to symbolizer which is used in a different context in SLD.
-   * 
+   *
    * @return graphic
    */
   @Override
@@ -81,7 +81,7 @@ public class GraphicFill_Impl implements GraphicFill, Marshallable
 
   /**
    * exports the content of the GraphicFill as XML formated String
-   * 
+   *
    * @return xml representation of the GraphicFill
    */
   @Override

@@ -35,8 +35,6 @@
  */
 package org.kalypsodeegree_impl.model.geometry;
 
-import java.io.Serializable;
-
 import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveBoundary;
@@ -56,7 +54,7 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
  * @version 10.6.2001
  * @author Andreas Poth
  */
-class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_CurveBoundary, Serializable
+class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_CurveBoundary
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 4226497939552424434L;

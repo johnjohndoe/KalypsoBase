@@ -54,7 +54,7 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 
 /**
  * Feature with cache for properties.
- * 
+ *
  * @author Gernot Belger
  */
 public class AbstractCachedFeature2 extends Feature_Impl
@@ -62,9 +62,9 @@ public class AbstractCachedFeature2 extends Feature_Impl
   // TODO: we should move this somehow to the feature type
   private final FeatureCacheDefinition m_cacheDefinition;
 
-  private final Set<QName> m_dirty = new HashSet<QName>();
+  private final Set<QName> m_dirty = new HashSet<>();
 
-  private final Map<QName, Object> m_cache = new HashMap<QName, Object>();
+  private final Map<QName, Object> m_cache = new HashMap<>();
 
   private boolean m_lock;
 
@@ -114,7 +114,7 @@ public class AbstractCachedFeature2 extends Feature_Impl
 
   /**
    * Allows implementors to react to dirty changes to cached properties.<br/>
-   * 
+   *
    * @param cachedProperties
    *          The properties that got dirty and need to be recalculated next time getProperty is called.
    */

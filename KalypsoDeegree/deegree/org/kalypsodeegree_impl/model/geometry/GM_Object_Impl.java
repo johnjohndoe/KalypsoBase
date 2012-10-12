@@ -52,7 +52,7 @@ import com.vividsolutions.jts.geom.TopologyException;
  * Default implementation of the GM_Object interface from package deegree.model. The implementation is abstract because
  * only the management of the spatial reference system is unique for all geometries.
  * <p>
- * 
+ *
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
@@ -74,7 +74,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
 
   /**
    * constructor that sets the spatial reference system
-   * 
+   *
    * @param crs
    *          new spatial reference system
    */
@@ -94,7 +94,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
 
   /**
    * sets the spatial reference system
-   * 
+   *
    * @param crs
    *          new spatial reference system
    */
@@ -273,7 +273,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    * <p>
    * </p>
    * dummy implementation
-   * 
+   *
    * @throws GM_Exception
    */
   @Override
@@ -313,7 +313,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
   /**
    * The Boolean valued operation "contains" shall return TRUE if this GM_Object contains another GM_Object.
    * <p>
-   * 
+   *
    * @param that
    *          the GM_Object to test (whether is is contained)
    * @return true if the given object is contained, else false
@@ -339,7 +339,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    * The Boolean valued operation "contains" shall return TRUE if this GM_Object contains a single point given by a
    * coordinate.
    * <p>
-   * 
+   *
    * @param position
    *          GM_Position to test (whether is is contained)
    * @return true if the given object is contained, else false
@@ -354,7 +354,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    * The Boolean valued operation "intersects" shall return TRUE if this GM_Object intersects another GM_Object. Within
    * a GM_Complex, the GM_Primitives do not intersect one another. In general, topologically structured data uses shared
    * geometric objects to capture intersection information.
-   * 
+   *
    * @param that
    *          the GM_Object to intersect with
    * @return true if the objects intersects, else false
@@ -379,7 +379,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
   /**
    * The "union" operation shall return the set theoretic union of this GM_Object and the passed GM_Object.
    * <p>
-   * 
+   *
    * @param that
    *          the GM_Object to unify
    * @return intersection or null, if computation failed
@@ -412,7 +412,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    * The "intersection" operation shall return the set theoretic intersection of this <tt>GM_Object</tt> and the passed
    * <tt>GM_Object</tt>.
    * <p>
-   * 
+   *
    * @param that
    *          the GM_Object to intersect with
    * @return intersection or null, if it is empty (or computation failed)
@@ -450,7 +450,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
   /**
    * The "difference" operation shall return the set theoretic difference of this GM_Object and the passed GM_Object.
    * <p>
-   * 
+   *
    * @param that
    *          the GM_Object to calculate the difference with
    * @return difference or null, if it is empty (or computation failed)
@@ -494,7 +494,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
   /**
    * Compares the GM_Object to be equal to another GM_Object.
    * <p>
-   * 
+   *
    * @param that
    *          the GM_Object to test for equality
    * @return true if the objects are equal, else false
@@ -583,11 +583,8 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
     m_valid = false;
   }
 
-  /**
-   * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-   */
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     if( adapter == this.getClass() )
       return this;

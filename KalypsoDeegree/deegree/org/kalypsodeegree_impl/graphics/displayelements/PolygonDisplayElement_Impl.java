@@ -39,7 +39,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
-import java.io.Serializable;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
@@ -61,7 +60,7 @@ import org.kalypsodeegree_impl.graphics.sld.awt.StrokePainter;
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  */
-public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl implements PolygonDisplayElement, Serializable
+public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl implements PolygonDisplayElement
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = -2980154437699081214L;

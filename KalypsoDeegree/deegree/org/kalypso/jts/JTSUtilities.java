@@ -52,7 +52,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.commons.math.LinearEquation;
@@ -162,7 +161,7 @@ public final class JTSUtilities
         continue;
 
       /* Point was intersecting the last segment, now take all coordinates but the last one ... */
-      final LinkedList<Coordinate> lineCoords = new LinkedList<Coordinate>();
+      final LinkedList<Coordinate> lineCoords = new LinkedList<>();
       for( int j = 0; j < coords.length - 1; j++ )
         lineCoords.add( coords[j] );
 
@@ -452,7 +451,7 @@ public final class JTSUtilities
    */
   private static LineString createLineStringFromLine( final LineString line, final Point start, final Point end )
   {
-    final List<Point> points = new LinkedList<Point>();
+    final List<Point> points = new LinkedList<>();
 
     boolean add = false;
 
@@ -519,7 +518,7 @@ public final class JTSUtilities
    */
   private static LineString createLineStringFromMultiLine( final MultiLineString line, final Point start, final Point end )
   {
-    final List<Point> points = new LinkedList<Point>();
+    final List<Point> points = new LinkedList<>();
 
     boolean add = false;
     boolean endPointFound = false;
@@ -722,7 +721,7 @@ public final class JTSUtilities
     /* Always add the first coordinate. */
     newCoordinates.add( lineCoordinates[0], false );
 
-    final Collection<Coordinate> toIgnore = new HashSet<Coordinate>();
+    final Collection<Coordinate> toIgnore = new HashSet<>();
 
     /* Only loop until the one before the last one. */
     for( int i = 0; i < lineCoordinates.length - 1; i++ )
@@ -735,7 +734,7 @@ public final class JTSUtilities
       final LineSegment ls = new LineSegment( startCoord, endCoord );
 
       /* If no one is intersecting, the current end coordinate has to be added. */
-      final List<Coordinate> toAdd = new ArrayList<Coordinate>();
+      final List<Coordinate> toAdd = new ArrayList<>();
 
       for( final Coordinate location : locations )
       {
@@ -780,7 +779,7 @@ public final class JTSUtilities
       final LineString lineString = (LineString) geometry;
       final Coordinate[] coordinates = lineString.getCoordinates();
 
-      final Set<Coordinate> myCoordinates = new LinkedHashSet<Coordinate>();
+      final Set<Coordinate> myCoordinates = new LinkedHashSet<>();
       for( int i = coordinates.length - 1; i >= 0; i-- )
         myCoordinates.add( coordinates[i] );
 
@@ -808,7 +807,7 @@ public final class JTSUtilities
     /* Interpolate the times for each points, if time is given. */
 
     /* List with the coordinates of the new line string. */
-    final List<Coordinate> coordinates = new ArrayList<Coordinate>();
+    final List<Coordinate> coordinates = new ArrayList<>();
 
     /* The x-axis represents the distance on the line string. */
     final double x1 = 0.0;
@@ -872,7 +871,7 @@ public final class JTSUtilities
   public static List<Polygon> collectPolygons( final Geometry geometry )
   {
     /* Memory for the results. */
-    final List<Polygon> polygons = new ArrayList<Polygon>();
+    final List<Polygon> polygons = new ArrayList<>();
 
     if( !(geometry instanceof Polygon) && !(geometry instanceof MultiPolygon) )
       return polygons;
@@ -908,7 +907,7 @@ public final class JTSUtilities
   public static Coordinate[] removeZCoordinates( final Coordinate[] coordinates )
   {
     /* Memory for the results. */
-    final List<Coordinate> results = new ArrayList<Coordinate>();
+    final List<Coordinate> results = new ArrayList<>();
 
     for( final Coordinate coordinate : coordinates )
       results.add( new Coordinate( coordinate.x, coordinate.y ) );
@@ -1003,7 +1002,7 @@ public final class JTSUtilities
   {
     final GeometryFactory factory = new GeometryFactory();
 
-    final List<LinearRing> myInnerRings = new ArrayList<LinearRing>();
+    final List<LinearRing> myInnerRings = new ArrayList<>();
     final int rings = poly.getNumInteriorRing();
 
     for( int i = 0; i < rings; i++ )
@@ -1032,7 +1031,7 @@ public final class JTSUtilities
 
   public static Geometry[] findGeometriesInRange( final Geometry[] geometries, final Geometry base, final double radius )
   {
-    final Set<Geometry> myGeometries = new HashSet<Geometry>();
+    final Set<Geometry> myGeometries = new HashSet<>();
 
     for( final Geometry geometry : geometries )
     {
@@ -1062,7 +1061,7 @@ public final class JTSUtilities
       }
     };
 
-    final Set<Coordinate> myCoordinates = new TreeSet<Coordinate>( comparator );
+    final Set<Coordinate> myCoordinates = new TreeSet<>( comparator );
 
     for( final Coordinate c : coordinates )
     {
@@ -1241,7 +1240,7 @@ public final class JTSUtilities
     double sumDistances = 0.0;
 
     /* Calculate the distances. */
-    final List<Double> distances = new ArrayList<Double>();
+    final List<Double> distances = new ArrayList<>();
     for( int i = 0; i < coordinatePairs.size(); i++ )
     {
       if( numberOfPoints > 0 && i >= numberOfPoints )
@@ -1270,7 +1269,7 @@ public final class JTSUtilities
     }
 
     /* Calculate the factors. */
-    final List<Double> factors = new ArrayList<Double>();
+    final List<Double> factors = new ArrayList<>();
     for( int i = 0; i < distances.size(); i++ )
     {
       /* Get the distance. */
@@ -1320,7 +1319,7 @@ public final class JTSUtilities
   public static List<CoordinatePair> getCoordinatePairs( final Coordinate coordinate, final List<Coordinate> points )
   {
     /* Memory for the results. */
-    final List<CoordinatePair> results = new ArrayList<CoordinatePair>();
+    final List<CoordinatePair> results = new ArrayList<>();
 
     for( int i = 0; i < points.size(); i++ )
     {
@@ -1423,7 +1422,7 @@ public final class JTSUtilities
 
   public static Coordinate[] replace( final Coordinate[] coordinates, final Coordinate old, final Coordinate set )
   {
-    final List<Coordinate> replaced = new ArrayList<Coordinate>();
+    final List<Coordinate> replaced = new ArrayList<>();
     for( final Coordinate coordinate : coordinates )
     {
       if( coordinate.equals( old ) )

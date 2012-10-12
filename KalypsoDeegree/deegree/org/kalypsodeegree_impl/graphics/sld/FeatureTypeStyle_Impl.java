@@ -56,15 +56,15 @@ import org.kalypsodeegree.xml.Marshallable;
  * <p>
  * ----------------------------------------------------------------------
  * </p>
- * 
+ *
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @version $Revision$ $Date$
  */
-public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
+public class FeatureTypeStyle_Impl implements FeatureTypeStyle
 {
-  private final List<Rule> m_rules = new ArrayList<Rule>();
+  private final List<Rule> m_rules = new ArrayList<>();
 
-  private final List<String> m_semanticTypeIdentifier = new ArrayList<String>();
+  private final List<String> m_semanticTypeIdentifier = new ArrayList<>();
 
   private String m_abstract = null;
 
@@ -90,7 +90,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
   /**
    * The Name element does not have an explicit use at present, though it conceivably might be used to reference a
    * feature style in some feature-style library.
-   * 
+   *
    * @return name
    */
   @Override
@@ -102,7 +102,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
   /**
    * The Name element does not have an explicit use at present, though it conceivably might be used to reference a
    * feature style in some feature-style library. Sets the <Name>o
-   * 
+   *
    * @param name
    *          the name
    */
@@ -114,7 +114,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
 
   /**
    * human-readable information about the style
-   * 
+   *
    * @return the title of the FeatureTypeStyle
    */
   @Override
@@ -125,7 +125,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
 
   /**
    * sets the <Title>
-   * 
+   *
    * @param title
    *          the title of the FeatureTypeStyle
    */
@@ -137,7 +137,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
 
   /**
    * human-readable information about the style
-   * 
+   *
    * @return an abstract of the FeatureTypeStyle
    */
   @Override
@@ -148,7 +148,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
 
   /**
    * sets <Abstract>
-   * 
+   *
    * @param abstract_
    *          an abstract of the FeatureTypeStyle
    */
@@ -160,7 +160,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
 
   /**
    * returns the name of the affected feature type
-   * 
+   *
    * @return the name of the FeatureTypeStyle as String
    */
   @Override
@@ -171,7 +171,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
 
   /**
    * sets the name of the affected feature type
-   * 
+   *
    * @param featureTypeName
    *          the name of the FeatureTypeStyle
    */
@@ -188,7 +188,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
    * generic:line, generic:polygon, generic:point, generic:text, generic:raster, and generic:any are reserved to
    * indicate that a FeatureTypeStyle may be used with any feature type with the corresponding default geometry type
    * (i.e., no feature properties are referenced in the feature-type style).
-   * 
+   *
    * @return the SemanticTypeIdentifiers from the FeatureTypeStyle as String-Array
    */
   @Override
@@ -199,7 +199,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
 
   /**
    * Sets the SemanticTypeIdentifiers.
-   * 
+   *
    * @param semanticTypeIdentifiers
    *          SemanticTypeIdentifiers for the FeatureTypeStyle
    */
@@ -219,7 +219,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
 
   /**
    * adds the <SemanticTypeIdentifier>
-   * 
+   *
    * @param semanticTypeIdentifier
    *          SemanticTypeIdentifier to add
    */
@@ -231,7 +231,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
 
   /**
    * Removes an <SemanticTypeIdentifier>.
-   * 
+   *
    * @param semanticTypeIdentifier
    *          SemanticTypeIdentifier to remove
    */
@@ -244,7 +244,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
   /**
    * Rules are used to group rendering instructions by feature-property conditions and map scales. Rule definitions are
    * placed immediately inside of feature-style definitions.
-   * 
+   *
    * @return the rules of the FeatureTypeStyle as Array
    */
   @Override
@@ -269,7 +269,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
 
   /**
    * sets the <Rules>
-   * 
+   *
    * @param rules
    *          the rules of the FeatureTypeStyle as Array
    */
@@ -289,7 +289,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
 
   /**
    * adds the <Rules>
-   * 
+   *
    * @param rule
    *          a rule
    */
@@ -301,7 +301,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
 
   /**
    * removes a rule
-   * 
+   *
    * @param rule
    *          a rule
    */
@@ -313,7 +313,7 @@ public class FeatureTypeStyle_Impl implements FeatureTypeStyle, Marshallable
 
   /**
    * exports the content of the FeatureTypeStyle as XML formated String
-   * 
+   *
    * @return xml representation of the FeatureTypeStyle
    */
   @Override

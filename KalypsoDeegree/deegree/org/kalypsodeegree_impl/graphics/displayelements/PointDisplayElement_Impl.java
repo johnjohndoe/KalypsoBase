@@ -40,7 +40,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.Serializable;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
@@ -62,7 +61,7 @@ import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
  */
-class PointDisplayElement_Impl extends GeometryDisplayElement_Impl implements PointDisplayElement, Serializable
+class PointDisplayElement_Impl extends GeometryDisplayElement_Impl implements PointDisplayElement
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = -2979559276151855757L;

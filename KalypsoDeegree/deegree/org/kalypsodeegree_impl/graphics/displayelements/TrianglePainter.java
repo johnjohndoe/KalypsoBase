@@ -176,7 +176,7 @@ final class TrianglePainter
   private GM_Position[] calculateSplitFigure( final GM_Position[] positions, final double startValue, final double endValue )
   {
     /* get the intersection points */
-    final List<GM_Position> posList = new ArrayList<GM_Position>( positions.length * 2 );
+    final List<GM_Position> posList = new ArrayList<>( positions.length * 2 );
 
     /* loop over all arcs */
     for( int j = 0; j < positions.length - 1; j++ )
@@ -319,7 +319,7 @@ final class TrianglePainter
      * orientiert.
      */
 
-    final List<GM_Position> posList2 = new ArrayList<GM_Position>( size );
+    final List<GM_Position> posList2 = new ArrayList<>( size );
     posList2.add( posList.get( 0 ) );
 
     int numDoublePoints = 0; // Anzahl nicht doppelter Punkte in Farbklasse (bäh, unschön gelöst!)
