@@ -86,6 +86,7 @@ import org.kalypso.contribs.eclipse.jobs.ImageCache;
 import org.kalypso.contribs.eclipse.jobs.JobObserverJob;
 import org.kalypso.contribs.eclipse.jobs.TextPaintable;
 import org.kalypso.core.KalypsoCoreDebug;
+import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
@@ -351,9 +352,6 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     //
   }
 
-  /**
-   * @see java.awt.event.ComponentListener#componentResized(java.awt.event.ComponentEvent)
-   */
   @Override
   public void componentResized( final ComponentEvent e )
   {
@@ -375,14 +373,14 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
     if( ObjectUtils.equals( m_size, size ) )
       return;
 
+//    if( size != null && size.width == 0 && size.height == 0 )
+//      return;
+
     m_size = size;
 
     setBoundingBox( m_wishBBox, false );
   }
 
-  /**
-   * @see java.awt.event.ComponentListener#componentShown(java.awt.event.ComponentEvent)
-   */
   @Override
   public void componentShown( final ComponentEvent e )
   {
@@ -941,12 +939,12 @@ public class MapPanel extends Canvas implements ComponentListener, IMapPanel
   protected void updateStatus( )
   {
     if( m_model == null )
-      setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.ogc.gml.map.MapPanel.20" ), null ) ); //$NON-NLS-1$
+      setStatus( new Status( IStatus.INFO, KalypsoCorePlugin.getID(), Messages.getString( "org.kalypso.ogc.gml.map.MapPanel.20" ), null ) ); //$NON-NLS-1$
     else
     {
       // We should instead get a status from the model itself
       if( m_model.getThemeSize() == 0 )
-        setStatus( StatusUtilities.createStatus( IStatus.INFO, Messages.getString( "org.kalypso.ogc.gml.map.MapPanel.21" ), null ) ); //$NON-NLS-1$
+        setStatus( new Status( IStatus.INFO, KalypsoCorePlugin.getID(), Messages.getString( "org.kalypso.ogc.gml.map.MapPanel.21" ), null ) ); //$NON-NLS-1$
       else
         setStatus( Status.OK_STATUS );
     }
