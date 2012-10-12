@@ -125,9 +125,10 @@ public class ProfileSelection
   private void addItem( final Object item )
   {
     if( m_workspace == null )
-    {
       m_workspace = AdapterUtils.getAdapter( item, CommandableWorkspace.class );
-    }
+
+    if( m_workspace == null && m_selection instanceof IFeatureSelection && item instanceof Feature )
+      m_workspace = ((IFeatureSelection)m_selection).getWorkspace( (Feature)item );
 
     final FeatureList featureList = AdapterUtils.getAdapter( item, FeatureList.class );
     if( featureList != null )
@@ -196,10 +197,7 @@ public class ProfileSelection
       m_profiles2Items.put( profile, (Feature) item );
 
     /* Set the first commandable workspace we find */
-    if( m_workspace != null )
-      return;
-
-    if( m_selection instanceof IFeatureSelection )
+    if( m_workspace == null && m_selection instanceof IFeatureSelection )
     {
       m_workspace = ((IFeatureSelection) m_selection).getWorkspace( profile );
     }

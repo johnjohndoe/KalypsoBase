@@ -109,6 +109,8 @@ public class ApplyClassificationsPage extends WizardPage
     group.setLayout( new GridLayout() );
     group.setText( Messages.getString( "ApplyClassificationsPage.4" ) ); //$NON-NLS-1$
 
+    // TODO: ugly: instead use a combo box and data binding!
+
     final Button buttonVegetation = new Button( group, SWT.RADIO );
     buttonVegetation.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
     buttonVegetation.setText( Messages.getString( "ApplyClassificationsPage.5" ) ); //$NON-NLS-1$
@@ -148,5 +150,4 @@ public class ApplyClassificationsPage extends WizardPage
   {
     return m_overwrite;
   }
-
 }

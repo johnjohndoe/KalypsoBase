@@ -57,12 +57,6 @@ public class GuessClassificationsWizard extends ManipulateProfileWizard
   }
 
   @Override
-  protected String getProfilePageMessage( )
-  {
-    return Messages.getString( "GuessClassificationsWizard.1" ); //$NON-NLS-1$
-  }
-
-  @Override
   public void addPages( )
   {
     m_page = new GuessClassificationPage();
@@ -74,5 +68,4 @@ public class GuessClassificationsWizard extends ManipulateProfileWizard
   {
     return new GuessClassificationClassRunnable( m_page );
   }
-
 }

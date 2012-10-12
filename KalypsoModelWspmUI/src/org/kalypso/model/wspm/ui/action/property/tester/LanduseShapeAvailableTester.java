@@ -50,6 +50,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.model.wspm.ui.profil.wizard.landuse.ImportLanduseShapeWizard;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
 /**
@@ -84,14 +85,14 @@ public class LanduseShapeAvailableTester extends PropertyTester
 
   private boolean testHasReachSelection( final IProject project )
   {
-    final IFolder folder = project.getFolder( "data/landuse" ); //$NON-NLS-1$
-    if( !folder.exists() )
+    final IFolder landuseFolder = ImportLanduseShapeWizard.getLanduseFolder( project );
+    if( !landuseFolder.exists() )
       return false;
 
     try
     {
       final ContainsFileExtensionVisitor visitor = new ContainsFileExtensionVisitor( "shp" ); //$NON-NLS-1$
-      folder.accept( visitor );
+      landuseFolder.accept( visitor );
 
       return visitor.hasFileExtension();
     }
