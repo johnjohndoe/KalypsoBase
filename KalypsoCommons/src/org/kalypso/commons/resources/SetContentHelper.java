@@ -51,7 +51,6 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.zip.GZIPOutputStream;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -130,10 +129,6 @@ public abstract class SetContentHelper
     catch( final Throwable e )
     {
       throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.commons.resources.SetContentHelper.2" ) ) ); //$NON-NLS-1$
-    }
-    finally
-    {
-      FileUtils.deleteQuietly( backupFile );
     }
 
     // enclose in finally?
