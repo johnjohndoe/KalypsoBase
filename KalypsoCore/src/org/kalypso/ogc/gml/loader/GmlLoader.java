@@ -57,6 +57,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.commons.resources.SetContentHelper;
@@ -216,7 +217,7 @@ public class GmlLoader extends WorkspaceLoader
     {
       try
       {
-        resultList.add( StatusUtilities.createInfoStatus( Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.13", gmlFile.getName(), currentTry.toOSString() ) ) ); //$NON-NLS-1$
+        resultList.add( new Status( IStatus.INFO, KalypsoCorePlugin.getID(), Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.13", gmlFile.getName(), currentTry.toOSString() ) ) ); //$NON-NLS-1$
         gmlFile.copy( currentTry, false, monitor );
       }
       catch( final CoreException e )
@@ -226,19 +227,12 @@ public class GmlLoader extends WorkspaceLoader
     }
   }
 
-  /**
-   * @see org.kalypso.loader.ILoader#getDescription()
-   */
   @Override
   public String getDescription( )
   {
     return Messages.getString( "org.kalypso.ogc.gml.loader.GmlLoader.14" ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.loader.ILoader#save(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor,
-   *      java.lang.Object)
-   */
   @Override
   public void save( final IPoolableObjectType key, final IProgressMonitor monitor, final Object data ) throws LoaderException
   {
@@ -279,11 +273,7 @@ public class GmlLoader extends WorkspaceLoader
 
   private void saveWorkspaceToFile( final GMLWorkspace workspace, final IFile file ) throws CoreException
   {
-    // FIXME: this is not robust enough against problems when saving (data loss possible).
-    // Possible solution: always write to temporary file (next to real file); after that rename to real file and refresh
-    // local.
-    // However we have to check if that works in a robust way.
-    final SetContentHelper thread = new SetContentHelper()
+    final SetContentHelper helper = new SetContentHelper()
     {
       @Override
       protected void write( final OutputStreamWriter writer ) throws Throwable
@@ -292,15 +282,11 @@ public class GmlLoader extends WorkspaceLoader
       }
     };
 
-    if( GmlSerializer.isGZ( file.getName() ) )
-      thread.setCompressed( true );
+    helper.setCompressed( GmlSerializer.isGZ( file.getName() ) );
 
-    thread.setFileContents( file, false, true, new NullProgressMonitor() );
+    helper.setFileContents( file, false, true, new NullProgressMonitor() );
   }
 
-  /**
-   * @see org.kalypso.loader.AbstractLoader#getResourcesInternal(org.kalypso.core.util.pool.IPoolableObjectType)
-   */
   @Override
   protected IResource[] getResourcesInternal( final IPoolableObjectType key ) throws MalformedURLException
   {
@@ -310,5 +296,4 @@ public class GmlLoader extends WorkspaceLoader
     final IResource gmlFile = ResourceUtilities.findFileFromURL( gmlURL );
     return new IResource[] { gmlFile };
   }
-
 }
