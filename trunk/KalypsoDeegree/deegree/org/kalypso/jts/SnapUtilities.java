@@ -57,14 +57,14 @@ import com.vividsolutions.jts.geom.TopologyException;
 
 /**
  * Utility class for snapping a point to geometries.
- * 
+ *
  * @author Holger Albert, Dirk Kuch
  */
 public class SnapUtilities
 {
   /**
    * The snap type.
-   * 
+   *
    * @author Holger Albert
    */
   public static enum SNAP_TYPE
@@ -94,7 +94,7 @@ public class SnapUtilities
 
   /**
    * This function returns a point representing the point.
-   * 
+   *
    * @param pointJTS
    *          The point.
    * @return A new point, representing the point.
@@ -107,7 +107,7 @@ public class SnapUtilities
 
   /**
    * This function returns a point snapped to the line.
-   * 
+   *
    * @param geometryJTS
    *          The line.
    * @param pointBuffer
@@ -120,12 +120,12 @@ public class SnapUtilities
   {
     /**
      * FIXME: use JTS implementation, like:
-     * 
+     *
      * <pre>
      * final LocationIndexedLine lineIndex = new LocationIndexedLine( lineString );
      * final LinearLocation location = lineIndex.project( position.getCoordinate() );
      * location.snapToVertex( lineString, MapUtilities.calculateWorldDistance( getMapPanel(), 10 ) );
-     * 
+     *
      * return JTSConverter.toPoint( lineIndex.extractPoint( location ) );
      * </pre>
      */
@@ -152,7 +152,7 @@ public class SnapUtilities
       {
 
         final LineString[] lineStrings = toLineString( pointBuffer.intersection( geometryJTS ) );
-        final Map<Double, Point> map = new TreeMap<Double, Point>();
+        final Map<Double, Point> map = new TreeMap<>();
 
         for( final LineString lineString : lineStrings )
         {
@@ -194,7 +194,7 @@ public class SnapUtilities
 
   /**
    * This function returns a point snapped to the polygon at the outside.
-   * 
+   *
    * @param geometryJTS
    *          The polygon.
    * @param pointBuffer
@@ -241,7 +241,7 @@ public class SnapUtilities
 
   /**
    * This function returns a point snapped to the multi line.
-   * 
+   *
    * @param geometryJTS
    *          The multi line.
    * @param pointBuffer
@@ -274,7 +274,7 @@ public class SnapUtilities
 
   /**
    * This function returns a point snapped to the multi polygon at the outside.
-   * 
+   *
    * @param geometryJTS
    *          The multi polygon.
    * @param pointBuffer

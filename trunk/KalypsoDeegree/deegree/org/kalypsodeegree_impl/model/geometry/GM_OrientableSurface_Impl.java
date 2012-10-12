@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -35,8 +35,6 @@
  */
 package org.kalypsodeegree_impl.model.geometry;
 
-import java.io.Serializable;
-
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_OrientableSurface;
 
@@ -46,18 +44,18 @@ import org.kalypsodeegree.model.geometry.GM_OrientableSurface;
  * <p>
  * -----------------------------------------------------------------------
  * </p>
- * 
+ *
  * @version 05.04.2002
  * @author Andreas Poth
  */
-abstract class GM_OrientableSurface_Impl extends GM_OrientablePrimitive_Impl implements GM_OrientableSurface, Serializable
+abstract class GM_OrientableSurface_Impl extends GM_OrientablePrimitive_Impl implements GM_OrientableSurface
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 4169996004405925850L;
 
   /**
    * Creates a new GM_OrientableSurface_Impl object.
-   * 
+   *
    * @param crs
    * @throws GM_Exception
    */
@@ -68,7 +66,7 @@ abstract class GM_OrientableSurface_Impl extends GM_OrientablePrimitive_Impl imp
 
   /**
    * Creates a new GM_OrientableSurface_Impl object.
-   * 
+   *
    * @param crs
    * @param orientation
    * @throws GM_Exception

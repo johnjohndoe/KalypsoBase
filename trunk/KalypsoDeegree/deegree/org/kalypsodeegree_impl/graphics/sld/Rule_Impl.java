@@ -90,7 +90,7 @@ public class Rule_Impl implements Rule, Marshallable
    */
   public Rule_Impl( final Symbolizer[] symbolizers, final String name, final String title, final String abstract_, final LegendGraphic legendGraphic, final Filter filter, final boolean elseFilter, final double minScaleDenominator, final double maxScaleDenominator )
   {
-    m_symbolizers = new ArrayList<Symbolizer>();
+    m_symbolizers = new ArrayList<>();
     setSymbolizers( symbolizers );
     setName( name );
     setTitle( title );

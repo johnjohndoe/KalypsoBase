@@ -64,7 +64,7 @@ public class SldHelper
 {
   /**
    * returns the interpolated color of a colormap defined by start and end color.
-   * 
+   *
    * @param currentClass
    *          current class
    * @param numOfClasses
@@ -105,7 +105,7 @@ public class SldHelper
 
   /**
    * checks the user typed string for the double value
-   * 
+   *
    * @param comp
    *          composite of the text field
    * @param text
@@ -136,7 +136,7 @@ public class SldHelper
 
   /**
    * checks the user typed a string for a positive double value, if it is negative the value is set to 0.
-   * 
+   *
    * @param comp
    *          composite of the text field
    * @param text
@@ -181,7 +181,7 @@ public class SldHelper
    */
   public static ColorMapEntry[] createColorMap( final Color fromColor, final Color toColor, final BigDecimal stepWidth, final BigDecimal minValue, final BigDecimal maxValue, final Integer maxEntries ) throws CoreException
   {
-    final List<ColorMapEntry> colorMapList = new LinkedList<ColorMapEntry>();
+    final List<ColorMapEntry> colorMapList = new LinkedList<>();
 
     final double opacityFrom = fromColor.getAlpha() / 255.0;
     final double opacityTo = toColor.getAlpha() / 255.0;

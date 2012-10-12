@@ -58,7 +58,7 @@ public class FindLinkedFeatureVisitor implements FeatureVisitor
 {
   private final String[] m_hrefs;
 
-  private final Map<Feature, Set<IRelationType>> m_linkedFeatures = new HashMap<Feature, Set<IRelationType>>();
+  private final Map<Feature, Set<IRelationType>> m_linkedFeatures = new HashMap<>();
 
   public FindLinkedFeatureVisitor( final String[] hrefs )
   {
@@ -79,7 +79,7 @@ public class FindLinkedFeatureVisitor implements FeatureVisitor
         final IRelationType rt = (IRelationType) pt;
         if( rt.isList() )
         {
-          final List linkList = (List) f.getProperty( rt );
+          final List< ? > linkList = (List< ? >)f.getProperty( rt );
           for( final Object link : linkList )
             checkFeature( f, rt, link );
         }

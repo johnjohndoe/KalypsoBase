@@ -15,11 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- * 
+ *
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -55,7 +55,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * This Factory is intended to supply default styles as SLD (Styled Layer Descriptor). When the factory is created it is
  * Initialised with the physical location to save the generated SLDs to. The Factory creates default styles for a
  * specific feature type.The styles are registered as key value pair. The key is namespace plus feature type name.
- * 
+ *
  * @author Christoph Küpferle, Technische Universität Hamburg-Harburg
  */
 public class DefaultStyleFactory
@@ -63,7 +63,7 @@ public class DefaultStyleFactory
   /** Create a default user style for a given type name. */
   public static UserStyle createUserStyle( final IFeatureType featureType, final String styleName ) throws StyleNotDefinedException
   {
-    final ArrayList<Symbolizer> symbolizer = new ArrayList<Symbolizer>();
+    final ArrayList<Symbolizer> symbolizer = new ArrayList<>();
 
     if( featureType.getQName().equals( RectifiedGridCoverage.QNAME ) )
       symbolizer.add( StyleFactory.createRasterSymbolizer() );

@@ -70,7 +70,7 @@ public class CoverageCollection extends Feature_Impl implements ICoverageCollect
   public synchronized IFeatureBindingCollection<ICoverage> getCoverages( )
   {
     if( m_coverages == null )
-      m_coverages = new FeatureBindingCollection<ICoverage>( this, ICoverage.class, QNAME_PROP_COVERAGE_MEMBER );
+      m_coverages = new FeatureBindingCollection<>( this, ICoverage.class, QNAME_PROP_COVERAGE_MEMBER );
 
     return m_coverages;
   }

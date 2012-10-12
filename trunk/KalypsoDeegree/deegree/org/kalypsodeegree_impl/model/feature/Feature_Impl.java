@@ -150,6 +150,7 @@ public class Feature_Impl extends PlatformObject implements Feature
     return fsh.getValue( this, pt, currentValue );
   }
 
+  @Deprecated
   @Override
   public GM_Envelope getEnvelope( )
   {
@@ -333,7 +334,7 @@ public class Feature_Impl extends PlatformObject implements Feature
   @Override
   public GM_Object[] getGeometryPropertyValues( )
   {
-    final List<GM_Object> result = new ArrayList<GM_Object>();
+    final List<GM_Object> result = new ArrayList<>();
     final IPropertyType[] ftp = m_featureType.getProperties();
     for( final IPropertyType element : ftp )
     {
@@ -528,7 +529,7 @@ public class Feature_Impl extends PlatformObject implements Feature
   }
 
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     /*
      * Small performance tweak and also works for new directly instantiated features when not registered with adapter

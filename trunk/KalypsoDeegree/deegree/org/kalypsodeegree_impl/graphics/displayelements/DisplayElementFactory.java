@@ -208,7 +208,7 @@ public final class DisplayElementFactory
       }
     };
 
-    return new SurfacePatchVisitableDisplayElement<GM_Triangle>( feature, tin, visitorFactory );
+    return new SurfacePatchVisitableDisplayElement<>( feature, tin, visitorFactory );
   }
 
   public static DisplayElement buildSurfacePolygonDisplayElement( final Feature feature, final Object geoProperty, final SurfacePolygonSymbolizer symbolizer )
@@ -238,7 +238,7 @@ public final class DisplayElementFactory
         }
       };
 
-      return new SurfacePatchVisitableDisplayElement<GM_Triangle>( tin.getLeft(), tin.getRight(), visitorFactory );
+      return new SurfacePatchVisitableDisplayElement<>( tin.getLeft(), tin.getRight(), visitorFactory );
     }
   }
 

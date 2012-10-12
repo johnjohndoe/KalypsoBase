@@ -50,7 +50,7 @@ import org.xml.sax.XMLReader;
  *
  * @author Felipe Maximino
  */
-public class MultiLineStringContentHandler extends MultiCurveContentHandler implements ICurveHandler
+public class MultiLineStringContentHandler extends MultiCurveContentHandler
 {
   private static final String ELEMENT_MULTI_LINE_STRING = "MultiLineString";
 
@@ -64,7 +64,7 @@ public class MultiLineStringContentHandler extends MultiCurveContentHandler impl
   {
     return new LineStringMemberContentHandler( getXMLReader(), this, activeSrs );
   }
-  
+
   @Override
   protected String memberName( )
   {

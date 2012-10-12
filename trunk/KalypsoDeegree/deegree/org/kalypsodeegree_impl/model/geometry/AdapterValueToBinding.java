@@ -61,7 +61,7 @@ public class AdapterValueToBinding implements AdapterValueToGMLBinding
     final TransformerFactory tf = TransformerFactory.newInstance();
     final Transformer transformer = tf.newTransformer();
 
-    final InputSource is = new MarshallerInputSource<GM_Object>( geometry );
+    final InputSource is = new MarshallerInputSource<>( geometry );
 
     final XMLReader reader = new GmlElementXmlReader();
 

@@ -104,7 +104,7 @@ public class SurfacePaintIsolinesVisitor implements ISurfacePatchVisitor<GM_Tria
 
       if( minValue <= classValue && classValue <= maxValue == true )
       {
-        final List<GM_Position> posList = new LinkedList<GM_Position>();
+        final List<GM_Position> posList = new LinkedList<>();
 
         for( int j = 0; j < positions.length - 1; j++ )
         {

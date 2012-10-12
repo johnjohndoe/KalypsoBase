@@ -35,8 +35,6 @@
  */
 package org.kalypsodeegree_impl.model.geometry;
 
-import java.io.Serializable;
-
 import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiPoint;
@@ -53,7 +51,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
  * @author Andreas Poth href="mailto:poth@lat-lon.de"
  *         <p>
  */
-final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_MultiPoint, Serializable
+final class GM_MultiPoint_Impl extends GM_MultiPrimitive_Impl implements GM_MultiPoint
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = -1105623021535230655L;

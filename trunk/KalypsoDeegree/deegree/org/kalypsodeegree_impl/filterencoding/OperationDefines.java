@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -40,7 +40,7 @@ import java.util.Map;
 
 /**
  * Defines codes and constants for easy coping with the different kinds of Operations (both XML-Entities & JavaObjects).
- * 
+ *
  * @author Markus Schneider
  * @version 06.08.2002
  */
@@ -126,7 +126,7 @@ public class OperationDefines
 
   /**
    * Returns the type of an operation for a given name.
-   * 
+   *
    * @return TYPE_SPATIAL / TYPE_COMPARISON / TYPE_LOGICAL / TYPE_UNKNOWN
    */
   public static int getTypeByName( final String name )
@@ -139,7 +139,7 @@ public class OperationDefines
 
   /**
    * Returns the id of an operation for a given name.
-   * 
+   *
    * @return BBOX / PROPERTYISEQUAL / AND / ...
    */
   public static int getIdByName( final String name )
@@ -152,7 +152,7 @@ public class OperationDefines
 
   /**
    * Returns the type of an operation for a given id.
-   * 
+   *
    * @return TYPE_SPATIAL / TYPE_COMPARISON / TYPE_LOGICAL / TYPE_UNKNOWN
    */
   public static int getTypeById( final int id )
@@ -165,7 +165,7 @@ public class OperationDefines
 
   /**
    * Returns the name of an operation for a given id.
-   * 
+   *
    * @return null / Name of operation
    */
   public static String getNameById( final int id )
@@ -188,8 +188,8 @@ public class OperationDefines
 
   private static void buildHashMaps( )
   {
-    names = new HashMap<String, OperationInfo>( 25 );
-    ids = new HashMap<Integer, OperationInfo>( 25 );
+    names = new HashMap<>( 25 );
+    ids = new HashMap<>( 25 );
 
     addOperationInfo( BBOX, "BBOX", TYPE_SPATIAL );
     addOperationInfo( EQUALS, "Equals", TYPE_SPATIAL );

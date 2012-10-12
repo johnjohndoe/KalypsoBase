@@ -172,7 +172,7 @@ public class PosListContentHandler extends GMLElementContentHandler
 
   private GM_Position[] createPositions( final double[] doubles, final int coordsSize )
   {
-    final List<GM_Position> positions = new ArrayList<GM_Position>( coordsSize );
+    final List<GM_Position> positions = new ArrayList<>( coordsSize );
     if( m_checkedCrsDimension == 2 )
     {
       for( int i = 0; i < coordsSize; )

@@ -106,7 +106,7 @@ public final class GenericShapeDataFactory
 
   public static IDBFValue[] findFields( final IFeatureType type )
   {
-    final Collection<IDBFValue> fields = new ArrayList<IDBFValue>();
+    final Collection<IDBFValue> fields = new ArrayList<>();
 
     final IPropertyType[] ftp = type.getProperties();
     for( final IPropertyType element : ftp )

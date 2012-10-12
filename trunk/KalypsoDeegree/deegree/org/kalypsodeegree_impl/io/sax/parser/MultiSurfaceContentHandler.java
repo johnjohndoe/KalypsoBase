@@ -66,7 +66,7 @@ public class MultiSurfaceContentHandler extends GMLElementContentHandler impleme
 {
   public static final String ELEMENT_MULTI_SURFACE = GM_MultiSurface.MULTI_SURFACE_ELEMENT.getLocalPart();
 
-  private final List<GM_Surface< ? extends GM_SurfacePatch>> m_surfaces = new ArrayList<GM_Surface< ? extends GM_SurfacePatch>>();
+  private final List<GM_Surface< ? extends GM_SurfacePatch>> m_surfaces = new ArrayList<>();
 
   private final UnmarshallResultEater m_resultEater;
 
@@ -126,7 +126,6 @@ public class MultiSurfaceContentHandler extends GMLElementContentHandler impleme
 
   private GM_MultiSurface endMultiSurface( )
   {
-    @SuppressWarnings("unchecked")
     final GM_Surface< ? extends GM_SurfacePatch>[] patches = m_surfaces.toArray( new GM_Surface[m_surfaces.size()] );
 
     return GeometryFactory.createGM_MultiSurface( patches, m_activeSrs );

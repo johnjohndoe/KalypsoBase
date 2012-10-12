@@ -172,8 +172,8 @@ public final class SHP2GM_Object
   {
     final GM_Position[][] parts = transformParts( shppolygon );
 
-    final List<GM_Position[]> outerRings = new ArrayList<GM_Position[]>( parts.length );
-    final List<GM_Position[]> innerRings = new ArrayList<GM_Position[]>( parts.length );
+    final List<GM_Position[]> outerRings = new ArrayList<>( parts.length );
+    final List<GM_Position[]> innerRings = new ArrayList<>( parts.length );
 
     for( final GM_Position[] part : parts )
     {
@@ -187,11 +187,11 @@ public final class SHP2GM_Object
         innerRings.add( ring );
     }
 
-    final List<GM_Surface< ? extends GM_SurfacePatch>> wkslp = new ArrayList<GM_Surface< ? extends GM_SurfacePatch>>();
+    final List<GM_Surface< ? extends GM_SurfacePatch>> wkslp = new ArrayList<>();
 
     for( final GM_Position[] out_ring : outerRings )
     {
-      final List<GM_Position[]> innerOfOuter = new ArrayList<GM_Position[]>( innerRings.size() );
+      final List<GM_Position[]> innerOfOuter = new ArrayList<>( innerRings.size() );
       PointInRing pir = null; // lazy create (performance!)
 
       for( final Iterator<GM_Position[]> innerIt = innerRings.iterator(); innerIt.hasNext(); )
@@ -234,7 +234,6 @@ public final class SHP2GM_Object
     return toArray( wkslp );
   }
 
-  @SuppressWarnings("unchecked")
   private static GM_Surface<GM_SurfacePatch>[] toArray( final List<GM_Surface< ? extends GM_SurfacePatch>> wkslp )
   {
     return wkslp.toArray( new GM_Surface[wkslp.size()] );

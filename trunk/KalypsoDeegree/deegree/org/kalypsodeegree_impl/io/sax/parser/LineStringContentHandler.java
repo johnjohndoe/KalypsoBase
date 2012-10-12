@@ -71,7 +71,7 @@ public class LineStringContentHandler extends GMLElementContentHandler implement
 
   private final ICurveHandler m_lineStringHandler;
 
-  private final List<GM_Position> m_positions;
+  private final List<GM_Position> m_positions = new ArrayList<>();
 
   private String m_activeSrs;
 
@@ -98,7 +98,6 @@ public class LineStringContentHandler extends GMLElementContentHandler implement
 
     m_resultEater = resultEater;
     m_lineStringHandler = lineStringHandler;
-    m_positions = new ArrayList<GM_Position>();
     m_lineString = null;
   }
 

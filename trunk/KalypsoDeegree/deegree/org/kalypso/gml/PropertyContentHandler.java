@@ -58,7 +58,6 @@ import org.kalypso.gmlschema.types.IMarshallingTypeHandler2;
 import org.kalypso.gmlschema.types.ISimpleMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree_impl.io.sax.parser.IGmlElementContentHandler;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -71,7 +70,7 @@ import org.xml.sax.XMLReader;
  * @author Andreas von Doemming
  * @author Felipe Maximino - Refaktoring
  */
-public class PropertyContentHandler extends AbstractGmlContentHandler implements IGmlElementContentHandler, UnmarshallResultEater, IFeatureHandler, ISimpleContentHandler, IPropertyHandler
+public class PropertyContentHandler extends AbstractGmlContentHandler implements UnmarshallResultEater, IFeatureHandler, ISimpleContentHandler, IPropertyHandler
 {
   /* the feature that this property */
   private final Feature m_scopeFeature;

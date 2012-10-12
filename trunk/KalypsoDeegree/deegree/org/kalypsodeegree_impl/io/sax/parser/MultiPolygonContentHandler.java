@@ -67,7 +67,7 @@ public class MultiPolygonContentHandler extends GMLElementContentHandler impleme
 {
   public static final String ELEMENT_MULTI_POLYGON = GMLConstants.QN_MULTI_POLYGON.getLocalPart();
 
-  private final List<GM_Surface< ? extends GM_SurfacePatch>> m_polygons = new ArrayList<GM_Surface< ? extends GM_SurfacePatch>>();
+  private final List<GM_Surface< ? extends GM_SurfacePatch>> m_polygons = new ArrayList<>();
 
   private final UnmarshallResultEater m_resultEater;
 
@@ -132,7 +132,6 @@ public class MultiPolygonContentHandler extends GMLElementContentHandler impleme
 
   private GM_MultiSurface endMultiSurface( )
   {
-    @SuppressWarnings("unchecked")
     final GM_Surface< ? extends GM_SurfacePatch>[] patches = m_polygons.toArray( new GM_Surface[m_polygons.size()] );
 
     return GeometryFactory.createGM_MultiSurface( patches, m_activeSrs );

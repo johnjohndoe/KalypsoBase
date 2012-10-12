@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -42,14 +42,14 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * Encapsulates the information of a <Filter>element that consists of a number of FeatureId constraints (only) (as
  * defined in the FeatureId DTD).
- * 
+ *
  * @author Markus Schneider
  * @version 06.08.2002
  */
 public class FeatureFilter extends AbstractFilter
 {
   /** FeatureIds the FeatureFilter is based on */
-  private final ArrayList<FeatureId> m_featureIds = new ArrayList<FeatureId>();
+  private final ArrayList<FeatureId> m_featureIds = new ArrayList<>();
 
   /** Adds a FeatureId constraint. */
   public void addFeatureId( final FeatureId featureId )
@@ -66,7 +66,7 @@ public class FeatureFilter extends AbstractFilter
   /**
    * Calculates the <tt>FeatureFilter</tt>'s logical value based on the ID of the given <tt>Feature</tt>. FIXME!!! Use a
    * TreeSet (or something) to speed up comparison.
-   * 
+   *
    * @param feature
    *          that determines the Id
    * @return true, if the <tt>FeatureFilter</tt> evaluates to true, else false

@@ -142,13 +142,12 @@ public class GridFileVerifier
       if( worldFile != null )
         return RASTER_TYPE.eImageWorldFile;
 
-      if( worldFile == null )
-        /* is it an geodata image, like geotif? ATM only geotif is supported */
-        if( IMAGE_TYPE.eTIFF.equals( image_type ) && isGeoTiff( urlImage ) )
-          return RASTER_TYPE.eImageGeo;
-        else
-          /* only a simple image */
-          return RASTER_TYPE.eImage;
+      /* is it an geodata image, like geotif? ATM only geotif is supported */
+      if( IMAGE_TYPE.eTIFF.equals( image_type ) && isGeoTiff( urlImage ) )
+        return RASTER_TYPE.eImageGeo;
+      else
+        /* only a simple image */
+        return RASTER_TYPE.eImage;
     }
 
     if( isAsciGrid( urlImage ) )

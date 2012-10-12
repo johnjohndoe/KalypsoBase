@@ -92,7 +92,7 @@ public class SplitSortContainer
 
   private Envelope m_envelope;
 
-  private Map<Object, Envelope> m_objects = new LinkedHashMap<Object, Envelope>();
+  private Map<Object, Envelope> m_objects = new LinkedHashMap<>();
 
   private SplitSortContainer m_parent;
 
@@ -123,7 +123,7 @@ public class SplitSortContainer
   private void resort( )
   {
     final Map<Object, Envelope> oldObjects = m_objects;
-    m_objects = new LinkedHashMap<Object, Envelope>( oldObjects.size() );
+    m_objects = new LinkedHashMap<>( oldObjects.size() );
 
     for( final Entry<Object, Envelope> entry : oldObjects.entrySet() )
     {
@@ -327,7 +327,7 @@ public class SplitSortContainer
   public List<Object> query( final Envelope env, List<Object> result )
   {
     if( result == null )
-      result = new ArrayList<Object>();
+      result = new ArrayList<>();
 
     if( env == null )
       return result;
@@ -360,7 +360,7 @@ public class SplitSortContainer
 
   /**
    * Removes the item from this container.
-   * 
+   *
    * @param env
    *          If <code>null</code>, no optimization is made via the position of the item.
    */
@@ -438,7 +438,7 @@ public class SplitSortContainer
 
   /**
    * Checks, if this container contains the item.
-   * 
+   *
    * @param env
    *          If non-<code>null</code>, this envelope is used to improve the search.
    */

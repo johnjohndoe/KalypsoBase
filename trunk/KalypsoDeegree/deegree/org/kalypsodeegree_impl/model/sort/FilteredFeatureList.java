@@ -39,7 +39,6 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -212,7 +211,7 @@ public class FilteredFeatureList implements FeatureList
   @Override
   public boolean addAll( final Collection c )
   {
-    for( final Iterator cIt = c.iterator(); cIt.hasNext(); )
+    for( final Iterator< ? > cIt = c.iterator(); cIt.hasNext(); )
     {
       add( cIt.next() );
     }
@@ -223,7 +222,7 @@ public class FilteredFeatureList implements FeatureList
   @Override
   public boolean containsAll( final Collection c )
   {
-    for( final Iterator cIt = c.iterator(); cIt.hasNext(); )
+    for( final Iterator< ? > cIt = c.iterator(); cIt.hasNext(); )
     {
       final Object f = cIt.next();
       if( !contains( f ) )
@@ -236,7 +235,7 @@ public class FilteredFeatureList implements FeatureList
   @Override
   public boolean removeAll( final Collection c )
   {
-    for( final Iterator cIt = c.iterator(); cIt.hasNext(); )
+    for( final Iterator< ? > cIt = c.iterator(); cIt.hasNext(); )
     {
       final Object f = cIt.next();
       remove( f );
@@ -308,7 +307,7 @@ public class FilteredFeatureList implements FeatureList
 
     // only remove new elements, which do not match type
     final List< ? > sublist = originalList.subList( oldlength, originalList.size() );
-    final List<Object> lListActualResult = new ArrayList<Object>();
+    final List<Object> lListActualResult = new ArrayList<>();
     lListActualResult.addAll( originalList.subList( 0, oldlength ) );
     for( final Object lObjNext : sublist )
     {
@@ -324,19 +323,6 @@ public class FilteredFeatureList implements FeatureList
     }
 
     return lListActualResult;
-  }
-
-  private List<Feature> filterList( final List< ? > originalList )
-  {
-    final List<Feature> filteredList = new LinkedList<Feature>();
-    for( final Object object : originalList )
-    {
-      final Feature f = FeatureHelper.resolveLinkedFeature( m_original.getOwner().getWorkspace(), object );
-      if( m_predicate.matchesType( f ) )
-        filteredList.add( f );
-    }
-
-    return filteredList;
   }
 
   @Override

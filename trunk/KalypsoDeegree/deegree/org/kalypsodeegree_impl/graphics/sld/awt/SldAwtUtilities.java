@@ -138,23 +138,20 @@ public final class SldAwtUtilities
       // TODO: slow! Maybe at least test if inner rings are visible?
       // TODO: we should do this ourselfs i.e. split up a polygon with holes into several polygons without holes
       final Area areaouter = areaFromRing( outerRing, strokeWidth, world2screen );
-      if( innerRings != null )
+      // REMARK: first adding all holes and substracting the union from the outer ring seems to be slightly fatser
+      // than substracting each single inner ring from the outer ring. Still slow for big geometries
+      final Area inner = new Area();
+
+      for( final GM_Position[] innerRing : innerRings )
       {
-        // REMARK: first adding all holes and substracting the union from the outer ring seems to be slightly fatser
-        // than substracting each single inner ring from the outer ring. Still slow for big geometries
-        final Area inner = new Area();
-
-        for( final GM_Position[] innerRing : innerRings )
+        if( innerRing != null )
         {
-          if( innerRing != null )
-          {
-            final Area innerArea = areaFromRing( innerRing, strokeWidth, world2screen );
-            inner.add( innerArea );
-          }
+          final Area innerArea = areaFromRing( innerRing, strokeWidth, world2screen );
+          inner.add( innerArea );
         }
-
-        areaouter.subtract( inner );
       }
+
+      areaouter.subtract( inner );
 
       return areaouter;
     }

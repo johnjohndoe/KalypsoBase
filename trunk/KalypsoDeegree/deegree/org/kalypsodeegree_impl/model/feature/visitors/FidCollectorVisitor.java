@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -45,16 +45,13 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
  * <p>
  * Simply collects all Ids of visited features
  * </p>
- * 
+ *
  * @author belger
  */
 public class FidCollectorVisitor implements FeatureVisitor
 {
-  private final Collection<String> m_results = new ArrayList<String>();
+  private final Collection<String> m_results = new ArrayList<>();
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureVisitor#visit(org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
   public synchronized boolean visit( final Feature f )
   {
@@ -64,7 +61,7 @@ public class FidCollectorVisitor implements FeatureVisitor
 
   /**
    * Returns alle visited features ids.
-   * 
+   *
    * @param reset
    *          if true, resets the inner result set, so next call to getResults results in empty array.
    */

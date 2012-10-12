@@ -55,7 +55,7 @@ import org.kalypsodeegree.model.feature.event.IGmlWorkspaceDelta;
  */
 public class GmlWorkspaceDeltaFactory
 {
-  private final Map<Feature, Map<IPropertyType, GmlWorkspaceDelta>> m_deltaMap = new HashMap<Feature, Map<IPropertyType, GmlWorkspaceDelta>>();
+  private final Map<Feature, Map<IPropertyType, GmlWorkspaceDelta>> m_deltaMap = new HashMap<>();
 
   private final GMLWorkspace m_workspace;
 

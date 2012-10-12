@@ -15,11 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- * 
+ *
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -54,7 +54,7 @@ import org.xml.sax.XMLReader;
  * <p>
  * Parsing must hence start with the gml:PolyhedralSurface element.
  * </p>
- * 
+ *
  * @author Felipe Maximino
  */
 public class PolyhedralSurfaceContentHandler extends GMLElementContentHandler implements IPolygonHandler
@@ -157,7 +157,7 @@ public class PolyhedralSurfaceContentHandler extends GMLElementContentHandler im
 
     if( m_polygons == null )
     {
-      m_polygons = new ArrayList<GM_Polygon>();
+      m_polygons = new ArrayList<>();
     }
     m_polygons.add( polygon );
   }

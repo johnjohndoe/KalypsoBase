@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -52,7 +52,7 @@ import org.w3c.dom.Element;
 
 /**
  * Encapsulates the information of a <Function>element as defined in the Expression DTD.
- * 
+ *
  * @author Markus Schneider
  * @version 07.08.2002
  */
@@ -62,7 +62,7 @@ public class Function extends Expression_Impl
   private String m_name;
 
   /** The Function's arguments. */
-  private final List<Expression> m_args = new ArrayList<Expression>();
+  private final List<Expression> m_args = new ArrayList<>();
 
   private IFunctionExpression m_function;
 
@@ -77,7 +77,7 @@ public class Function extends Expression_Impl
   /**
    * Given a DOM-fragment, a corresponding Expression-object is built. This method recursively calls other buildFromDOM
    * () - methods to validate the structure of the DOM-fragment.
-   * 
+   *
    * @throws FilterConstructionException
    *           if the structure of the DOM-fragment is invalid
    */
@@ -96,7 +96,7 @@ public class Function extends Expression_Impl
     // determine the arguments of the Function
     final ElementList children = XMLTools.getChildElements( element );
 
-    final List<Expression> args = new ArrayList<Expression>( children.getLength() );
+    final List<Expression> args = new ArrayList<>( children.getLength() );
     for( int i = 0; i < children.getLength(); i++ )
       args.add( Expression_Impl.buildFromDOM( children.item( i ) ) );
 
@@ -143,7 +143,7 @@ public class Function extends Expression_Impl
 
   /**
    * Returns the <tt>Function</tt>'s value (to be used in the evaluation of a complexer <tt>Expression</tt>).
-   * 
+   *
    * @param feature
    *          that determines the concrete values of <tt>PropertyNames</tt> found in the expression
    * @return the resulting value

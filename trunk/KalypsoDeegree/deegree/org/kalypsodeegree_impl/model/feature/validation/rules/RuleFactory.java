@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -54,7 +54,7 @@ import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 /**
  * This class serves as factory class. It shall provide created rules from a property. An other aspect is the check if
  * the content of the property is valid.
- * 
+ *
  * @author albert
  */
 public abstract class RuleFactory
@@ -66,13 +66,13 @@ public abstract class RuleFactory
 
   /**
    * This function creates a list of rules for a property, if it have any restrictions.
-   * 
+   *
    * @param ftp
    *          The GML schema that represents a feature property.
    */
   public static IRule[] getRules( final IPropertyType ftp )
   {
-    final Vector<IRule> rules = new Vector<IRule>();
+    final Vector<IRule> rules = new Vector<>();
 
     if( ftp instanceof IValuePropertyType )
     {

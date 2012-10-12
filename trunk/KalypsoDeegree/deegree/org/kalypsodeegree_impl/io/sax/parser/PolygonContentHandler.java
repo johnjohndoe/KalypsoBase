@@ -73,7 +73,7 @@ public class PolygonContentHandler extends GMLElementContentHandler implements I
 
   private GM_Position[] m_exteriorRing = null;
 
-  private final List<GM_Position[]> m_interiorRings = new ArrayList<GM_Position[]>();
+  private final List<GM_Position[]> m_interiorRings = new ArrayList<>();
 
   private final ISurfaceHandler<GM_Polygon> m_surfaceHandler;
 

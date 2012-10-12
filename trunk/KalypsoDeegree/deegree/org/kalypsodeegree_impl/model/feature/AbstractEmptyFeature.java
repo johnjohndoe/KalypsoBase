@@ -168,7 +168,7 @@ public abstract class AbstractEmptyFeature implements Feature
   }
 
   @Override
-  public Object getAdapter( @SuppressWarnings("rawtypes") final Class adapter )
+  public Object getAdapter( final Class adapter )
   {
     return null;
   }

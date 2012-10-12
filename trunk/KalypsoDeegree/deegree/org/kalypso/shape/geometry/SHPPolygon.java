@@ -40,7 +40,7 @@ import org.kalypso.shape.ShapeType;
 /**
  * @author Andreas Poth
  */
-public class SHPPolygon extends AbstractSHPPolygon implements ISHPPolygon
+public class SHPPolygon extends AbstractSHPPolygon
 {
   public SHPPolygon( final byte[] recBuf )
   {

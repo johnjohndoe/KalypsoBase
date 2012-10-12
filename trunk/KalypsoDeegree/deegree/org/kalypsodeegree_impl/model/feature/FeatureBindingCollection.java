@@ -607,7 +607,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
   public List<FWCls> query( final GM_Object selectionSurface, final QName geometryProperty, final boolean containedOnly )
   {
     final List< ? > selectedFeature = getFeatureList().query( selectionSurface.getEnvelope(), null );
-    final List<FWCls> selFW = new ArrayList<FWCls>( selectedFeature.size() );
+    final List<FWCls> selFW = new ArrayList<>( selectedFeature.size() );
     final GMLWorkspace workspace = m_parentFeature.getWorkspace();
 
     for( final Object linkOrFeature : selectedFeature )
@@ -655,7 +655,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
   public List<FWCls> query( final GM_Envelope envelope )
   {
     final List< ? > selectedFeature = getFeatureList().query( envelope, null );
-    final List<FWCls> selFW = new ArrayList<FWCls>( selectedFeature.size() );
+    final List<FWCls> selFW = new ArrayList<>( selectedFeature.size() );
     for( final Object linkOrFeature : selectedFeature )
     {
       final Feature feature = FeatureHelper.getFeature( m_parentFeature.getWorkspace(), linkOrFeature );
@@ -670,7 +670,7 @@ public class FeatureBindingCollection<FWCls extends Feature> implements IFeature
   public List<FWCls> query( final GM_Position position )
   {
     final List< ? > selectedFeature = getFeatureList().query( position, null );
-    final List<FWCls> selFW = new ArrayList<FWCls>( selectedFeature.size() );
+    final List<FWCls> selFW = new ArrayList<>( selectedFeature.size() );
     final GMLWorkspace workspace = m_parentFeature.getWorkspace();
 
     for( final Object linkOrFeature : selectedFeature )

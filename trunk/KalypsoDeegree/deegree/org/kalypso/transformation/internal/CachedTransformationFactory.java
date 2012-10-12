@@ -51,7 +51,7 @@ import org.deegree.model.crs.UnknownCRSException;
 
 /**
  * This is a factory for transformations, which uses the original one from Deegree 2, but caches the results.
- * 
+ *
  * @author Holger Albert
  */
 class CachedTransformationFactory
@@ -77,12 +77,12 @@ class CachedTransformationFactory
   private CachedTransformationFactory( )
   {
     m_delegate = TransformationFactory.getInstance();
-    m_cachedTransformations = new HashMap<String, CRSTransformation>();
+    m_cachedTransformations = new HashMap<>();
   }
 
   /**
    * This function returns the instance of this factory.
-   * 
+   *
    * @return The instance of this factory.
    */
   public static CachedTransformationFactory getInstance( )
@@ -97,7 +97,7 @@ class CachedTransformationFactory
    * Creates a transformation between two coordinate systems. This method will examine the coordinate systems in order
    * to construct a transformation between them. This method may fail if no path between the coordinate systems is
    * found.
-   * 
+   *
    * @param source
    *          Input coordinate system name.
    * @param target
@@ -112,7 +112,7 @@ class CachedTransformationFactory
   /**
    * This function retrieves a transformation by a source name and target name of a coordinate system from the cache. If
    * it does not exist in the cache, it is created and put into the cache.
-   * 
+   *
    * @param source
    *          Input coordinate system name.
    * @param target

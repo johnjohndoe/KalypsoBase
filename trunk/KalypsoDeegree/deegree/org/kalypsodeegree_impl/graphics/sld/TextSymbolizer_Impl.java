@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -53,12 +53,12 @@ import org.kalypsodeegree.xml.Marshallable;
  * does not support the first preference. A missing Halo or Fill element means that no halo or fill will be plotted,
  * respectively. The Fill is rendered over top of the Halo, and the Halo includes the interiors of the font glyphs.
  * <p>
- * 
+ *
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
  */
-public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymbolizer, Marshallable
+public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymbolizer
 {
   private Fill m_fill = null;
 
@@ -85,7 +85,7 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
 
   /**
    * returns the Label as a <tt>ParameterValueType</tt> to be renderd
-   * 
+   *
    * @return the label
    */
   @Override
@@ -96,7 +96,7 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
 
   /**
    * sets the <Label>
-   * 
+   *
    * @param label
    *          the label
    */
@@ -108,7 +108,7 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
 
   /**
    * Identifies a Font of a certain family, style, and size.
-   * 
+   *
    * @return the font
    */
   @Override
@@ -119,7 +119,7 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
 
   /**
    * Sets a Font of a certain family, style, and size.
-   * 
+   *
    * @param font
    *          the font
    */
@@ -136,7 +136,7 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
    * <p>
    * </p>
    * MORE PARAMETERS ARE PROBABLY NEEDED HERE.
-   * 
+   *
    * @return the labelPlacement
    */
   @Override
@@ -147,7 +147,7 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
 
   /**
    * sets the <LabelPlacement>
-   * 
+   *
    * @param labelPlacement
    *          the labelPlacement
    */
@@ -162,7 +162,7 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
    * Block halo type can be used. The radius is computed from the outside edge of the font glyph (or inside of "holes").
    * The default is a Radius of 1.0 (pixels) but if no Halo is selected in a containing structure, no halo will be
    * rendered. The default is a solid white (Color "#FFFFFF") opaque halo.
-   * 
+   *
    * @return the halo
    */
   @Override
@@ -173,7 +173,7 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
 
   /**
    * sets <Halo>
-   * 
+   *
    * @param halo
    *          the halo
    */
@@ -187,7 +187,7 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
    * A Fill allows area geometries to be filled. There are two types of fills: solid-color and repeated GraphicFill. In
    * general, if a Fill element is omitted in its containing element, no fill will be rendered. The default is a solid
    * 50%-gray (color "#808080") opaque fill.
-   * 
+   *
    * @return the fill
    */
   @Override
@@ -198,7 +198,7 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
 
   /**
    * sets the <Fill>
-   * 
+   *
    * @param fill
    *          the fill
    */
@@ -210,7 +210,7 @@ public class TextSymbolizer_Impl extends Symbolizer_Impl implements TextSymboliz
 
   /**
    * exports the content of the TextSymbolizer as XML formated String
-   * 
+   *
    * @return xml representation of the TextSymbolizer
    */
   @Override

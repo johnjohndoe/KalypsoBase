@@ -45,14 +45,14 @@ import java.util.List;
 
 /**
  * Wrapper class to wrap IGeoGrids to a category defined as Integer.
- * 
+ *
  * @author Thomas Jung
  */
 public class GridCategoryWrapper implements Comparable<GridCategoryWrapper>
 {
   private final Integer m_value;
 
-  private final List<IGeoGrid> gridList = new ArrayList<IGeoGrid>();
+  private final List<IGeoGrid> gridList = new ArrayList<>();
 
   public GridCategoryWrapper( final Integer value )
   {

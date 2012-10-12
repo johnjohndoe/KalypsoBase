@@ -15,11 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- * 
+ *
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -55,11 +55,11 @@ import org.kalypsodeegree.xml.Marshallable;
  * <p>
  * ----------------------------------------------------------------------
  * </p>
- * 
+ *
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @version $Revision$ $Date$
  */
-public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSymbolizer, Marshallable
+public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSymbolizer
 {
   private Fill m_fill = null;
 
@@ -91,7 +91,7 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
    * A Fill allows area geometries to be filled. There are two types of fills: solid-color and repeated GraphicFill. In
    * general, if a Fill element is omitted in its containing element, no fill will be rendered. The default is a solid
    * 50%-gray (color "#808080") opaque fill.
-   * 
+   *
    * @return the fill of the polygon
    */
   @Override
@@ -102,7 +102,7 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
 
   /**
    * sets the <Fill>
-   * 
+   *
    * @param fill
    *          the fill of the polygon
    */
@@ -117,7 +117,7 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
    * strokes: solid Color, GraphicFill (stipple), and repeated GraphicStroke. A repeated graphic is plotted linearly and
    * has its graphic symbol bended around the curves of the line string. The default is a solid black line (Color
    * "#000000").
-   * 
+   *
    * @return the stroke of the polygon
    */
   @Override
@@ -128,7 +128,7 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
 
   /**
    * sets the <Stroke>
-   * 
+   *
    * @param stroke
    *          the stroke of the polygon
    */
@@ -140,7 +140,7 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
 
   /**
    * Produces a textual representation of this object.
-   * 
+   *
    * @return the textual representation
    */
   @Override
@@ -171,7 +171,7 @@ public class PolygonSymbolizer_Impl extends Symbolizer_Impl implements PolygonSy
 
   /**
    * exports the content of the PolygonSymbolizer as XML formated String
-   * 
+   *
    * @return xml representation of the PolygonSymbolizer
    */
   @Override

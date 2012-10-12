@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -40,7 +40,6 @@ import java.util.Arrays;
 
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_GenericSurface;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
@@ -51,11 +50,11 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * default implementation of the GM_SurfacePatch interface from package jago.model. the class is abstract because it
  * should be specialized by derived classes <code>GM_Polygon</code> for example
  * ------------------------------------------------------------
- * 
+ *
  * @version 11.6.2001
  * @author Andreas Poth
  */
-abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurface, Serializable
+abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, Serializable
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 7641735268892225180L;
@@ -82,7 +81,7 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
 
   /**
    * Creates a new GM_SurfacePatch_Impl object.
-   * 
+   *
    * @param interpolation
    * @param exteriorRing
    * @param interiorRings
@@ -197,7 +196,7 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, GM_GenericSurfac
 
   /**
    * This function sets the coordinate system.
-   * 
+   *
    * @param crs
    *          The coordinate system.
    */

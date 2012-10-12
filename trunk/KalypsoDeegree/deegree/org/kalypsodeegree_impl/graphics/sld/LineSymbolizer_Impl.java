@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -54,11 +54,11 @@ import org.kalypsodeegree.xml.Marshallable;
  * <p>
  * ----------------------------------------------------------------------
  * </p>
- * 
+ *
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @version $Revision$ $Date$
  */
-public class LineSymbolizer_Impl extends Symbolizer_Impl implements LineSymbolizer, Marshallable
+public class LineSymbolizer_Impl extends Symbolizer_Impl implements LineSymbolizer
 {
   private Stroke m_stroke = null;
 
@@ -87,7 +87,7 @@ public class LineSymbolizer_Impl extends Symbolizer_Impl implements LineSymboliz
    * strokes: solid Color, GraphicFill (stipple), and repeated GraphicStroke. A repeated graphic is plotted linearly and
    * has its graphic symbol bended around the curves of the line string. The default is a solid black line (Color
    * "#000000").
-   * 
+   *
    * @return the Stroke
    */
   @Override
@@ -98,7 +98,7 @@ public class LineSymbolizer_Impl extends Symbolizer_Impl implements LineSymboliz
 
   /**
    * sets the <Stroke>
-   * 
+   *
    * @param stroke
    *          the Stroke
    */
@@ -110,7 +110,7 @@ public class LineSymbolizer_Impl extends Symbolizer_Impl implements LineSymboliz
 
   /**
    * exports the content of the LineSymbolizer as XML formated String
-   * 
+   *
    * @return xml representation of the LineSymbolizer
    */
   @Override

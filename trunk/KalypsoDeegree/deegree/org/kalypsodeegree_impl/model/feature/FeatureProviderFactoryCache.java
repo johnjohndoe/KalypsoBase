@@ -43,12 +43,12 @@ import org.kalypsodeegree.model.feature.IWorkspaceProvider;
 
 /**
  * Abstract feature provider factory which parses the href and caches the providers.
- * 
+ *
  * @author Gernot Belger
  */
 public class FeatureProviderFactoryCache
 {
-  private final Map<String, IWorkspaceProvider> m_providers = new HashMap<String, IWorkspaceProvider>();
+  private final Map<String, IWorkspaceProvider> m_providers = new HashMap<>();
 
   private final IFeatureProviderFactory m_factory;
 

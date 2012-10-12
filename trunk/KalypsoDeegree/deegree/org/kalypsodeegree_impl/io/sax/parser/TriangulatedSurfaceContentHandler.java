@@ -15,11 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- * 
+ *
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -52,7 +52,7 @@ import org.xml.sax.XMLReader;
 /**
  * A content handler which parses a gml:TriangulatedSurface element.<br>
  * Parsing must hence starts with the gml:TriangulatedSurface element.<br>
- * 
+ *
  * @author Gernot Belger
  */
 public class TriangulatedSurfaceContentHandler extends GMLElementContentHandler implements ITriangleHandler
@@ -78,7 +78,7 @@ public class TriangulatedSurfaceContentHandler extends GMLElementContentHandler 
 
     m_resultEater = resultEater;
 
-    m_triangles = new ArrayList<GM_Triangle>();
+    m_triangles = new ArrayList<>();
     m_triangulatedSurface = null;
   }
 
@@ -142,7 +142,7 @@ public class TriangulatedSurfaceContentHandler extends GMLElementContentHandler 
       m_crs = triangle.getCoordinateSystem();
 
     if( m_triangles == null )
-      m_triangles = new ArrayList<GM_Triangle>();
+      m_triangles = new ArrayList<>();
 
     m_triangles.add( triangle );
     // TODO: project triangles to my srs?

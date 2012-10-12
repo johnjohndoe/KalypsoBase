@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -49,18 +49,18 @@ import org.w3c.dom.Element;
 
 /**
  * Encapsulates the information of a logical_ops entity (as defined in the Filter DTD).
- * 
+ *
  * @author Markus Schneider
  * @version 10.08.2002
  */
 public class LogicalOperation extends AbstractOperation
 {
   /** Arguments of the Operation. */
-  private List<Operation> m_arguments = new ArrayList<Operation>();
+  private List<Operation> m_arguments = new ArrayList<>();
 
   /**
    * Constructs a new LogicalOperation.
-   * 
+   *
    * @see OperationDefines
    */
   public LogicalOperation( final int operatorId, final ArrayList<Operation> arguments )
@@ -85,7 +85,7 @@ public class LogicalOperation extends AbstractOperation
   /**
    * Given a DOM-fragment, a corresponding Operation-object is built. This method recursively calls other buildFromDOM
    * () - methods to validate the structure of the DOM-fragment.
-   * 
+   *
    * @throws FilterConstructionException
    *           if the structure of the DOM-fragment is invalid
    */
@@ -95,7 +95,7 @@ public class LogicalOperation extends AbstractOperation
     // check if root element's name is a known operator
     final String name = element.getLocalName();
     final int operatorId = OperationDefines.getIdByName( name );
-    final ArrayList<Operation> arguments = new ArrayList<Operation>();
+    final ArrayList<Operation> arguments = new ArrayList<>();
 
     switch( operatorId )
     {
@@ -151,7 +151,7 @@ public class LogicalOperation extends AbstractOperation
   /**
    * Calculates the <tt>LogicalOperation</tt>'s logical value based on the certain property values of the given
    * <tt>Feature</tt>.
-   * 
+   *
    * @param feature
    *          that determines the property values
    * @return true, if the <tt>LogicalOperation</tt> evaluates to true, else false

@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -41,7 +41,7 @@ import java.util.HashMap;
  * Defines codes and constants for easy coping with the different kinds of Expressions (both XML-Entities &
  * JavaObjects). Change: the static, lazily initialized members where NOT thread safe. Better: use the class in a non
  * static way
- * 
+ *
  * @author Markus Schneider
  * @version 06.08.2002
  */
@@ -67,10 +67,10 @@ public class ExpressionDefines
   public static final int UNKNOWN = -1;
 
   /** used to associate names with the expressions */
-  private static HashMap<String, ExpressionInfo> names = new HashMap<String, ExpressionInfo>();
+  private static HashMap<String, ExpressionInfo> names = new HashMap<>();
 
   /** used to associate ids (Integers) with the expressions */
-  private static HashMap<Integer, ExpressionInfo> ids = new HashMap<Integer, ExpressionInfo>();
+  private static HashMap<Integer, ExpressionInfo> ids = new HashMap<>();
 
   public ExpressionDefines( )
   {
@@ -93,7 +93,7 @@ public class ExpressionDefines
 
   /**
    * Returns the id of an expression for a given name.
-   * 
+   *
    * @return EXPRESSION / PROPERTYNAME / LITERAL / ...
    */
   public int getIdByName( final String name )
@@ -106,7 +106,7 @@ public class ExpressionDefines
 
   /**
    * Returns the name of an expression for a given id.
-   * 
+   *
    * @return null / Name of expression
    */
   public String getNameById( final int id )

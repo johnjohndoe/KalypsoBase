@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -43,38 +43,26 @@ import java.util.Collection;
  */
 public class ModellEventProviderAdapter implements ModellEventProvider
 {
-  private final Collection<ModellEventListener> m_listeners = new ArrayList<ModellEventListener>();
+  private final Collection<ModellEventListener> m_listeners = new ArrayList<>();
 
-  /**
-   * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#dispose()
-   */
   @Override
   public void dispose( )
   {
     m_listeners.clear();
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#addModellListener(org.kalypsodeegree.model.feature.event.ModellEventListener)
-   */
   @Override
   public void addModellListener( final ModellEventListener listener )
   {
     m_listeners.add( listener );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#removeModellListener(org.kalypsodeegree.model.feature.event.ModellEventListener)
-   */
   @Override
   public void removeModellListener( final ModellEventListener listener )
   {
     m_listeners.remove( listener );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#fireModellEvent(org.kalypsodeegree.model.feature.event.ModellEvent)
-   */
   @Override
   public void fireModellEvent( final ModellEvent event )
   {
