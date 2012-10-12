@@ -51,21 +51,21 @@ public class ParallelBinaryGridProcessorBean
 
   public double m_min = Double.MAX_VALUE;
 
-  private final Double[] m_data;
+  private final double[] m_data;
 
   private final long m_startPosition;
 
-  public ParallelBinaryGridProcessorBean( final Double[] data, final long position )
+  public ParallelBinaryGridProcessorBean( final double[] data, final long position )
   {
     m_data = data;
     m_startPosition = position;
   }
 
-  void setValue( final int k, final Double value )
+  void setValue( final int k, final double value )
   {
     m_data[k] = value;
 
-    if( value != null && !value.isNaN() )
+    if( !Double.isNaN( value ) )
     {
       m_max = Math.max( m_max, value );
       m_min = Math.min( m_min, value );
@@ -74,14 +74,10 @@ public class ParallelBinaryGridProcessorBean
 
   double getValue( final int k )
   {
-
-    if( m_data[k] == null )
-      return Double.NaN;
-
-    return m_data[k].doubleValue();
+    return m_data[k];
   }
 
-  public Double[] getData( )
+  public double[] getData( )
   {
     return m_data;
   }

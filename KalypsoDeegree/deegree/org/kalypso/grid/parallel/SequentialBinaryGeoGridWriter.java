@@ -60,7 +60,7 @@ public class SequentialBinaryGeoGridWriter implements Closeable
 
   private BigDecimal m_min = BigDecimal.valueOf( Double.MAX_VALUE );
 
-  private final int m_scale;
+  private final double m_scalePotence;
 
   public SequentialBinaryGeoGridWriter( final String outputCoverageFileName, final int sizeX, final int sizeY, final int scale ) throws IOException
   {
@@ -68,7 +68,7 @@ public class SequentialBinaryGeoGridWriter implements Closeable
     m_min = BigDecimal.valueOf( Double.MAX_VALUE );
     m_max = BigDecimal.valueOf( -Double.MAX_VALUE );
 
-    m_scale = scale;
+    m_scalePotence = Math.pow( 10, scale );
 
     // .. init file
     m_gridStream = new BufferedOutputStream( new FileOutputStream( outputCoverageFileName ) );
@@ -82,21 +82,21 @@ public class SequentialBinaryGeoGridWriter implements Closeable
 
   public void write( final ParallelBinaryGridProcessorBean bean ) throws IOException
   {
-    final Double[] data = bean.getData();
-    for( final Double value : data )
+    final double[] data = bean.getData();
+    for( final double value : data )
     {
       final int rawValue = rescaleValue( value );
       writeInt( rawValue );
     }
   }
 
-  private int rescaleValue( final Double value )
+  private int rescaleValue( final double value )
   {
-    if( value == null || value.isNaN() )
+    if( Double.isNaN( value ) )
       return BinaryGeoGrid.NO_DATA;
 
-    final BigDecimal rescaledValue = new BigDecimal( value ).setScale( m_scale, BigDecimal.ROUND_HALF_UP );
-    return rescaledValue.unscaledValue().intValue();
+    final double scaledValue = value * m_scalePotence;
+    return (int)Math.round( scaledValue );
   }
 
   private final void writeInt( final int v ) throws IOException
@@ -110,13 +110,9 @@ public class SequentialBinaryGeoGridWriter implements Closeable
   @Override
   public void close( ) throws IOException
   {
-    writeInt( m_min.setScale( m_scale, BigDecimal.ROUND_HALF_UP ).unscaledValue().intValue() );
-    writeInt( m_max.setScale( m_scale, BigDecimal.ROUND_HALF_UP ).unscaledValue().intValue() );
-    m_gridStream.close();
-  }
+    writeInt( rescaleValue( m_min.doubleValue() ) );
+    writeInt( rescaleValue( m_max.doubleValue() ) );
 
-  int getScale( )
-  {
-    return m_scale;
+    m_gridStream.close();
   }
 }

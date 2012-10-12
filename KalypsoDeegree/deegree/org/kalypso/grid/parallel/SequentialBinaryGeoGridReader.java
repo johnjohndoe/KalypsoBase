@@ -48,7 +48,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
@@ -80,6 +79,8 @@ public abstract class SequentialBinaryGeoGridReader extends AbstractGeoGrid impl
 
   private final BinaryGeoGridHeader m_header;
 
+  private final double m_scalePotence;
+
   // TODO: replace templateGrid with something that only provides origin etc; just like RectifiedGridDomain...
   public SequentialBinaryGeoGridReader( final IGeoGrid templateGrid, final URL pUrl ) throws IOException, GeoGridException
   {
@@ -90,12 +91,15 @@ public abstract class SequentialBinaryGeoGridReader extends AbstractGeoGrid impl
     if( gridFile == null )
       gridFile = FileUtils.toFile( pUrl );
 
-    m_gridStream = new DataInputStream( new BufferedInputStream( new FileInputStream( gridFile ) ) );
+    // REMARK using same buffer size as block size, so stream can be read ni one go
+    m_gridStream = new DataInputStream( new BufferedInputStream( new FileInputStream( gridFile ), m_blockSize ) );
 
     m_header = BinaryGeoGridHeader.read( m_gridStream );
 
     final long length = getSizeX() * getSizeY();
     m_blockAmount = (length / m_blockSize) + 1;
+
+    m_scalePotence = (int)Math.pow( 10, m_header.getScale() );
   }
 
   @Override
@@ -115,9 +119,9 @@ public abstract class SequentialBinaryGeoGridReader extends AbstractGeoGrid impl
     return (int) m_blockAmount;
   }
 
-  private Double[] read( final int items ) throws IOException
+  private double[] read( final int items ) throws IOException
   {
-    final Double[] data = new Double[items];
+    final double[] data = new double[items];
     for( int i = 0; i < data.length; i++ )
     {
       try
@@ -131,7 +135,7 @@ public abstract class SequentialBinaryGeoGridReader extends AbstractGeoGrid impl
         if( i == 0 )
           return null;
 
-        final Double[] lastBlock = new Double[i];
+        final double[] lastBlock = new double[i];
         System.arraycopy( data, 0, lastBlock, 0, i );
         return lastBlock;
       }
@@ -139,18 +143,13 @@ public abstract class SequentialBinaryGeoGridReader extends AbstractGeoGrid impl
     return data;
   }
 
-  private Double unscaleValue( final int rawValue )
+  private double unscaleValue( final int rawValue )
   {
     /* NO_DATA */
     if( rawValue == BinaryGeoGrid.NO_DATA )
-      return null;
+      return Double.NaN;
 
-    return new BigDecimal( BigInteger.valueOf( rawValue ), getScale() ).doubleValue();
-  }
-
-  public int getScale( )
-  {
-    return m_header.getScale();
+    return rawValue / m_scalePotence;
   }
 
   @Override
@@ -174,7 +173,7 @@ public abstract class SequentialBinaryGeoGridReader extends AbstractGeoGrid impl
 
   ParallelBinaryGridProcessorBean getNextBlock( ) throws IOException
   {
-    final Double[] data = read( m_blockSize );
+    final double[] data = read( m_blockSize );
     if( data == null )
       return null;
 
