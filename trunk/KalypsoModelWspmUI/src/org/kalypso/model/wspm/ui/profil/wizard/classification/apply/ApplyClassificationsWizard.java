@@ -57,12 +57,6 @@ public class ApplyClassificationsWizard extends ManipulateProfileWizard
   }
 
   @Override
-  protected String getProfilePageMessage( )
-  {
-    return Messages.getString( "ApplyClassificationsWizard.1" ); //$NON-NLS-1$
-  }
-
-  @Override
   public void addPages( )
   {
     m_page = new ApplyClassificationsPage();

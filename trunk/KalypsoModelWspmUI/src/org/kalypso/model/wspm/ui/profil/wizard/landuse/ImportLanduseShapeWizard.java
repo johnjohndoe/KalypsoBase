@@ -221,9 +221,13 @@ public class ImportLanduseShapeWizard extends Wizard implements IWorkbenchWizard
   private IFolder getLanduseFolder( )
   {
     final IProject project = m_handler.getProject();
+    return getLanduseFolder( project );
+  }
+
+  public static IFolder getLanduseFolder( final IProject project )
+  {
     final IFolder dataFolder = project.getFolder( "data" ); //$NON-NLS-1$ //$NON-NLS-1$
 
     return dataFolder.getFolder( "landuse" ); //$NON-NLS-1$
   }
-
 }

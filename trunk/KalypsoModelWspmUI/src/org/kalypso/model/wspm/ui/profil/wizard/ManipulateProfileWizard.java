@@ -52,6 +52,7 @@ import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.base.IProfileManipulator;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -72,7 +73,13 @@ public abstract class ManipulateProfileWizard extends Wizard implements IWorkben
     addPage( m_profileChooserPage );
   }
 
-  protected abstract String getProfilePageMessage( );
+  /**
+   * Returns a default message that can be overwritten by clients.
+   */
+  protected String getProfilePageMessage( )
+  {
+    return Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage.1" ); //$NON-NLS-1$
+  }
 
   @Override
   public boolean performFinish( )
