@@ -40,48 +40,41 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.commons.resources;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
-import java.util.Date;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.zip.GZIPOutputStream;
 
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.kalypso.commons.KalypsoCommonsPlugin;
 import org.kalypso.commons.internal.i18n.Messages;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.contribs.java.lang.CatchRunnable;
 
 /**
- * Helper-Klasse für {@link org.eclipse.core.resources.IFile}. This is an abstract class, you must implement the
- * <code>write</code> method.
+ * // FIXME: the whole class is now rotten! Instead write direclty into java file; than refresh the workspace; also handle backup stuff! <br>
+ * TODO: we need another helper class instead of this stuff...<br/>
+ * Helper-Klasse für {@link org.eclipse.core.resources.IFile}. This is an abstract class, you must implement the <code>write</code> method.
  *
- * @author belger
+ * @author Gernot Belger
  */
 public abstract class SetContentHelper
 {
   private static final String BCKUP_SUFFIX = "_bckup_"; //$NON-NLS-1$
 
-  final boolean m_doNotBackUp = Boolean.getBoolean( "kalypso.model.product.doNotMakeBckupsOnSave" ); //$NON-NLS-1$
-
-  private String m_newCharset;
-
   private final String m_title;
 
-  private String m_oldCharset;
-
-  private boolean m_doCompress;
+  private boolean m_doCompress = false;
 
   public SetContentHelper( )
   {
@@ -102,150 +95,70 @@ public abstract class SetContentHelper
     setFileContents( file, force, keepHistory, monitor, null );
   }
 
+  public void setCompressed( final boolean doCompress )
+  {
+    m_doCompress = doCompress;
+  }
+
+  // FIXME: still ugly: history not kept and force not respected; use only for big files; else write into StringWrite and directly call IFile#setContents
   public void setFileContents( final IFile file, final boolean force, final boolean keepHistory, final IProgressMonitor monitor, final String charset ) throws CoreException
   {
-    m_oldCharset = findCurrentCharset( file );
-    m_newCharset = findNewCharset( file, charset, m_oldCharset );
+    final String oldCharset = findCurrentCharset( file );
+    final String newCharset = findNewCharset( file, charset, oldCharset );
 
-    PipedInputStream m_pis = null;
-    boolean wasCreated = false;
+    final File javaFile = file.getLocation().toFile();
+
+    // save file to backup
+    final Path filePath = javaFile.toPath();
+
+    final String fileName = javaFile.getAbsolutePath();
+    final String backupFileName = fileName + BCKUP_SUFFIX + System.currentTimeMillis();
+    final File backupFile = new File( backupFileName );
+
     try
     {
-      monitor.beginTask( m_title, 2000 );
+      writeContents( backupFile, newCharset, monitor );
 
-      final PipedOutputStream pos = new PipedOutputStream();
-      m_pis = new PipedInputStream( pos );
+      /* rename backup to new file */
+      Files.move( backupFile.toPath(), filePath, StandardCopyOption.REPLACE_EXISTING );
 
-      final boolean doCompress = m_doCompress;
+      file.refreshLocal( IFile.DEPTH_ZERO, new NullProgressMonitor() );
 
-      final CatchRunnable innerRunnable = new CatchRunnable()
-      {
-        @Override
-        protected void runIntern( ) throws Throwable
-        {
-          OutputStreamWriter outputStreamWriter = null;
-          try
-          {
-            final OutputStream os;
-            if( doCompress )
-              os = new GZIPOutputStream( pos );
-            else
-              os = pos;
-
-            outputStreamWriter = new OutputStreamWriter( os, getCharset() );
-            write( outputStreamWriter );
-            outputStreamWriter.close();
-          }
-          finally
-          {
-            IOUtils.closeQuietly( outputStreamWriter );
-          }
-        }
-      };
-      final Thread innerThread = new Thread( innerRunnable, "SetContentHelper" ); //$NON-NLS-1$
-      innerThread.start();
-
-      // set file contents
-      if( file.exists() )
-      {
-        String bckupFileName = ""; //$NON-NLS-1$
-        if( !m_doNotBackUp )
-        {
-          bckupFileName = createBckup( new File( file.getLocationURI() ) );
-          file.refreshLocal( 0, monitor );
-          file.setContents( m_pis, force, keepHistory, new SubProgressMonitor( monitor, 1000 ) );
-          file.refreshLocal( 0, monitor );
-        }
-        else
-        {
-          file.setContents( m_pis, force, keepHistory, new SubProgressMonitor( monitor, 1000 ) );
-        }
-
-        /*
-         * if the operation finished successfully remove the backup copy
-         */
-        if( !m_doNotBackUp )
-        {
-          try
-          {
-            final File bckupFile = new File( bckupFileName );
-            try
-            {
-              bckupFile.delete();
-            }
-            catch( final Exception e )
-            {
-              bckupFile.deleteOnExit();
-            }
-          }
-          catch( final Exception e )
-          {
-            // TODO: handle exception
-          }
-        }
-
-      }
-      else
-      {
-        file.create( m_pis, force, new SubProgressMonitor( monitor, 1000 ) );
-        wasCreated = true;
-      }
-
-      // wait for innerThread to stop
-      while( innerThread.isAlive() )
-      {
-        try
-        {
-          Thread.sleep( 100 );
-        }
-        catch( final InterruptedException e )
-        {
-          e.printStackTrace();
-        }
-      }
-
-      m_pis.close();
-
-      final Throwable thrown = innerRunnable.getThrown();
-      if( thrown != null )
-        throw new CoreException( StatusUtilities.statusFromThrowable( thrown, Messages.getString( "org.kalypso.commons.resources.SetContentHelper.2" ) ) ); //$NON-NLS-1$
+      if( newCharset != null && !ObjectUtils.equals( oldCharset, newCharset ) )
+        file.setCharset( newCharset, new SubProgressMonitor( monitor, 1000 ) );
     }
-    catch( final CoreException e )
+    catch( final Throwable e )
     {
-      // if we should create the file, silently delete it now
-      if( wasCreated )
-      {
-        try
-        {
-          file.delete( true, new NullProgressMonitor() );
-        }
-        catch( final CoreException ce )
-        {
-          // Log?
-
-          // ignore
-          ce.printStackTrace();
-        }
-      }
-
-      // rethrow
-      throw e;
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), 0, Messages.getString( "org.kalypso.commons.resources.SetContentHelper.3" ), e ) ); //$NON-NLS-1$
+      throw new CoreException( StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.commons.resources.SetContentHelper.2" ) ) ); //$NON-NLS-1$
     }
     finally
     {
-      IOUtils.closeQuietly( m_pis );
+      FileUtils.deleteQuietly( backupFile );
     }
-
-    if( m_newCharset != null && !ObjectUtils.equals( m_oldCharset, m_newCharset ) )
-      file.setCharset( m_newCharset, new SubProgressMonitor( monitor, 1000 ) );
 
     // enclose in finally?
     monitor.done();
+  }
+
+  private void writeContents( final File file, final String charset, final IProgressMonitor monitor ) throws Throwable
+  {
+    monitor.beginTask( m_title, 2000 );
+
+    try( OutputStreamWriter writer = new OutputStreamWriter( openStream( file ), charset ) )
+    {
+      write( writer );
+      writer.close();
+    }
+  }
+
+  private OutputStream openStream( final File file ) throws IOException
+  {
+    final BufferedOutputStream bos = new BufferedOutputStream( new FileOutputStream( file ) );
+
+    if( m_doCompress )
+      return new GZIPOutputStream( bos );
+    else
+      return bos;
   }
 
   private String findNewCharset( final IFile file, final String charset, final String currentCharset ) throws CoreException
@@ -256,31 +169,8 @@ public abstract class SetContentHelper
     if( currentCharset != null )
       return currentCharset;
 
+    // FIXME: why parent, shouldnt we directly use file?
     return file.getParent().getDefaultCharset();
-  }
-
-  /**
-   * rename the existing original file, save return the name of this renamed file, create empty file to replace original
-   * one
-   *
-   * @param gmlFile
-   *          original file to create a backup from
-   * @return file name of created backup file
-   */
-  private String createBckup( final File gmlFile )
-  {
-    final String fileName = gmlFile.getAbsolutePath();
-    final String bckupFileName = fileName + BCKUP_SUFFIX + new Date().getTime();
-    gmlFile.renameTo( new File( bckupFileName ) );
-    try
-    {
-      gmlFile.createNewFile();
-    }
-    catch( final IOException e )
-    {
-      e.printStackTrace();
-    }
-    return bckupFileName;
   }
 
   private String findCurrentCharset( final IFile file ) throws CoreException
@@ -295,17 +185,4 @@ public abstract class SetContentHelper
    * Override this method to provide your business. The writer is closed once write returns.
    */
   protected abstract void write( final OutputStreamWriter writer ) throws Throwable;
-
-  /**
-   * @return the charset used for encoding the file
-   */
-  protected String getCharset( )
-  {
-    return m_newCharset;
-  }
-
-  public void setCompressed( final boolean doCompress )
-  {
-    m_doCompress = doCompress;
-  }
 }
