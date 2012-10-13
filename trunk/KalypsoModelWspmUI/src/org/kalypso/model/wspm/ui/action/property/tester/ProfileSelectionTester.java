@@ -42,7 +42,7 @@ package org.kalypso.model.wspm.ui.action.property.tester;
 
 import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.jface.viewers.ISelection;
-import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.model.wspm.ui.action.ProfilesSelection;
 
 /**
  * @author Gernot Belger
@@ -71,7 +71,7 @@ public class ProfileSelectionTester extends PropertyTester
   private boolean testHasProfileSelection( final Object receiver )
   {
     if( receiver instanceof ISelection )
-      return new ProfileSelection( (ISelection) receiver ).hasProfiles();
+      return new ProfilesSelection( (ISelection) receiver ).hasProfiles();
 
     return false;
   }

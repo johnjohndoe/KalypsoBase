@@ -70,7 +70,7 @@ public abstract class AbstractProfilesHandler extends AbstractHandler
     final Shell shell = HandlerUtil.getActiveShellChecked( event );
     final ISelection selection = HandlerUtil.getCurrentSelectionChecked( event );
 
-    final ProfileSelection profileSelection = new ProfileSelection( selection );
+    final ProfilesSelection profileSelection = new ProfilesSelection( selection );
     if( !profileSelection.hasProfiles() )
     {
       final String title = getTitle();
@@ -97,5 +97,5 @@ public abstract class AbstractProfilesHandler extends AbstractHandler
 
   protected abstract String getTitle( );
 
-  protected abstract IWizard createWizard( final ProfileSelection profileSelection );
+  protected abstract IWizard createWizard( final ProfilesSelection profileSelection );
 }

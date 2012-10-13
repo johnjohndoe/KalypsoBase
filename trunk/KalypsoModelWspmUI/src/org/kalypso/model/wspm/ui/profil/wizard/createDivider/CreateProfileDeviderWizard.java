@@ -52,7 +52,7 @@ import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.model.wspm.ui.action.ProfilesSelection;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfileHandlerUtils;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
@@ -86,7 +86,7 @@ public class CreateProfileDeviderWizard extends Wizard implements IWorkbenchWiza
   {
     /* retrieve selected profiles, abort if none */
     final IKalypsoFeatureTheme theme = FeatureThemeWizardUtilitites.findTheme( selection );
-    final ProfileSelection profileSelection = ProfileHandlerUtils.getSelectionChecked( selection );
+    final ProfilesSelection profileSelection = ProfileHandlerUtils.getSelectionChecked( selection );
 
     m_theme = theme;
 

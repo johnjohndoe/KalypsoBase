@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.ui.action.base;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.model.wspm.ui.action.ProfilesSelection;
 
 /**
  * @author Dirk Kuch
@@ -61,6 +61,6 @@ public class ProfileWidgetMapPanelListener implements ISelectionChangedListener
   public void selectionChanged( final SelectionChangedEvent event )
   {
     final ISelection selection = event.getSelection();
-    m_widget.setSelection( new ProfileSelection( selection ) );
+    m_widget.setSelection( new ProfilesSelection( selection ) );
   }
 }

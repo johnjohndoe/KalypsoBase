@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.ui.dialog.straighten;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
-import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.model.wspm.ui.action.ProfilesSelection;
 import org.kalypso.model.wspm.ui.dialog.straighten.data.CORRECT_POINTS_AMOUNT;
 import org.kalypso.model.wspm.ui.dialog.straighten.data.CORRECT_POINTS_ENABLEMENT;
 
@@ -65,7 +65,7 @@ public class StraightenProfileData extends AbstractModelObject
   /**
    * The selection, which contains the profile.
    */
-  private final ProfileSelection m_profileSelection;
+  private final ProfilesSelection m_profileSelection;
 
   /**
    * The profile.
@@ -118,7 +118,7 @@ public class StraightenProfileData extends AbstractModelObject
    * @param secondWidth
    *          The width in the profile of the second point.
    */
-  public StraightenProfileData( final ProfileSelection profileSelection, final IProfileFeature profile, final Point firstPoint, final Point secondPoint, final double firstWidth, final double secondWidth )
+  public StraightenProfileData( final ProfilesSelection profileSelection, final IProfileFeature profile, final Point firstPoint, final Point secondPoint, final double firstWidth, final double secondWidth )
   {
     m_profileSelection = profileSelection;
     m_profile = profile;
@@ -135,7 +135,7 @@ public class StraightenProfileData extends AbstractModelObject
    * 
    * @return The selection, which contains the profile.
    */
-  public ProfileSelection getProfileSelection( )
+  public ProfilesSelection getProfileSelection( )
   {
     return m_profileSelection;
   }

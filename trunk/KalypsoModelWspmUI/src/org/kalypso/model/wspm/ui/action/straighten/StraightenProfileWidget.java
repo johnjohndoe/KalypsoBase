@@ -64,7 +64,7 @@ import org.kalypso.core.status.StatusDialog;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
-import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.model.wspm.ui.action.ProfilesSelection;
 import org.kalypso.model.wspm.ui.action.base.AbstractProfileWidget;
 import org.kalypso.model.wspm.ui.action.base.ProfilePainter;
 import org.kalypso.model.wspm.ui.action.base.ProfileWidgetMapPanelListener;
@@ -119,7 +119,7 @@ public class StraightenProfileWidget extends AbstractProfileWidget
 
     /* Initialize widget with the selection. */
     final ISelection selection = mapPanel.getSelection();
-    setSelection( new ProfileSelection( selection ) );
+    setSelection( new ProfilesSelection( selection ) );
 
     /* Init the cursor. */
     final Cursor cursor = Cursor.getPredefinedCursor( Cursor.CROSSHAIR_CURSOR );
@@ -133,7 +133,7 @@ public class StraightenProfileWidget extends AbstractProfileWidget
     getMapPanel().removeSelectionChangedListener( m_mapPanelListener );
 
     /* Reset the selection within this widget. */
-    setSelection( (ProfileSelection) null );
+    setSelection( (ProfilesSelection) null );
 
     /* Reset & repaint. */
     reset();

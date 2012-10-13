@@ -55,7 +55,7 @@ import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.model.wspm.ui.action.ProfilesSelection;
 import org.kalypso.model.wspm.ui.action.base.ProfileWidgetHelper;
 import org.kalypso.model.wspm.ui.dialog.straighten.data.CORRECT_POINTS_AMOUNT;
 import org.kalypso.model.wspm.ui.dialog.straighten.data.CORRECT_POINTS_ENABLEMENT;
@@ -169,7 +169,7 @@ public class StraightenProfileOperation implements ICoreRunnableWithProgress
       /* Copy data of the temporary profile feature to the profile feature. */
       final ProfileFeatureBinding profileBinding = (ProfileFeatureBinding) profile;
       profileBinding.updateWithProfile( tmpProfile.getProfile() );
-      final ProfileSelection profileSelection = m_data.getProfileSelection();
+      final ProfilesSelection profileSelection = m_data.getProfileSelection();
       final Feature item = profileSelection.getItem( profile );
       if( item != null )
       {

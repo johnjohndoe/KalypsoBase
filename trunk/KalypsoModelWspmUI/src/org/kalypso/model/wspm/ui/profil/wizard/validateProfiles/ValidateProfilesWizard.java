@@ -56,7 +56,7 @@ import org.kalypso.model.wspm.core.profil.reparator.IProfileMarkerResolution;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorRule;
 import org.kalypso.model.wspm.core.profil.validator.ValidatorRuleSet;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.model.wspm.ui.action.ProfilesSelection;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfileHandlerUtils;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
@@ -93,7 +93,7 @@ public class ValidateProfilesWizard extends Wizard implements IWorkbenchWizard
   @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
-    final ProfileSelection profileSelection = ProfileHandlerUtils.getSelectionChecked( selection );
+    final ProfilesSelection profileSelection = ProfileHandlerUtils.getSelectionChecked( selection );
     m_workspace = profileSelection.getWorkspace();
     m_profiles = profileSelection.getProfiles();
     m_profiletype = (String) m_profiles[0].getProperty( ProfileFeatureFactory.QNAME_TYPE );

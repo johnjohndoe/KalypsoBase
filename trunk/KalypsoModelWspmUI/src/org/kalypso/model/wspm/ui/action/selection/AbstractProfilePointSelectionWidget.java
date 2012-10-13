@@ -53,7 +53,7 @@ import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
-import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.model.wspm.ui.action.ProfilesSelection;
 import org.kalypso.model.wspm.ui.action.base.AbstractProfileWidget;
 import org.kalypso.model.wspm.ui.action.base.ProfilePainter;
 import org.kalypso.model.wspm.ui.action.base.ProfileWidgetMapPanelListener;
@@ -94,7 +94,7 @@ public abstract class AbstractProfilePointSelectionWidget extends AbstractProfil
 
     /* Initialize widget with the selection. */
     final ISelection selection = mapPanel.getSelection();
-    setSelection( new ProfileSelection( selection ) );
+    setSelection( new ProfilesSelection( selection ) );
 
     /* Reset. */
     reset();
@@ -111,7 +111,7 @@ public abstract class AbstractProfilePointSelectionWidget extends AbstractProfil
     getMapPanel().removeSelectionChangedListener( m_mapPanelListener );
 
     /* Reset the selection within this widget. */
-    setSelection( (ProfileSelection) null ); // purge profile change listener
+    setSelection( (ProfilesSelection) null ); // purge profile change listener
 
     /* Reset & repaint. */
     reset();

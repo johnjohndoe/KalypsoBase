@@ -65,7 +65,7 @@ import org.kalypsodeegree.model.feature.IFeatureRelation;
  *
  * @author Gernot Belger
  */
-public class ProfileSelection
+public class ProfilesSelection
 {
   private final Collection<IProfileFeature> m_foundProfiles = new LinkedHashSet<>();
 
@@ -85,7 +85,7 @@ public class ProfileSelection
    */
   private final Map<IProfileFeature, Feature> m_profiles2Items = new HashMap<>();
 
-  public ProfileSelection( final ISelection selection )
+  public ProfilesSelection( final ISelection selection )
   {
     m_selection = selection;
     findProfiles();

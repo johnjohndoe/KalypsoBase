@@ -67,7 +67,7 @@ import org.kalypso.model.wspm.core.profil.IProfileChange;
 import org.kalypso.model.wspm.core.profil.base.IProfileManipulator;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.model.wspm.ui.action.ProfilesSelection;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfileHandlerUtils;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfileManipulationOperation;
@@ -114,7 +114,7 @@ public class PropertyEditWizard extends Wizard implements IWorkbenchWizard
   {
     m_profile = null;
 
-    final ProfileSelection profileSelection = ProfileHandlerUtils.getSelectionChecked( selection );
+    final ProfilesSelection profileSelection = ProfileHandlerUtils.getSelectionChecked( selection );
 
     final String message = Messages.getString( "org.kalypso.model.wspm.ui.profil.wizard.propertyEdit.PropertyEditWizard.2" ); //$NON-NLS-1$
     m_profileChooserPage = new ProfilesChooserPage( message, profileSelection, false );

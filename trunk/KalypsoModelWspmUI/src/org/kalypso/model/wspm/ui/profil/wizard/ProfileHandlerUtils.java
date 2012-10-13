@@ -41,7 +41,7 @@
 package org.kalypso.model.wspm.ui.profil.wizard;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.model.wspm.ui.action.ProfilesSelection;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 
 /**
@@ -56,9 +56,9 @@ public final class ProfileHandlerUtils
     throw new UnsupportedOperationException( "Helper class, do not instantiate" ); //$NON-NLS-1$
   }
 
-  public static ProfileSelection getSelectionChecked( final IStructuredSelection selection )
+  public static ProfilesSelection getSelectionChecked( final IStructuredSelection selection )
   {
-    final ProfileSelection profileSelection = new ProfileSelection( selection );
+    final ProfilesSelection profileSelection = new ProfilesSelection( selection );
     if( profileSelection.hasProfiles() )
       return profileSelection;
 

@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.contribs.eclipse.jface.wizard.ArrayChooserPage;
-import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.model.wspm.ui.action.ProfilesSelection;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.results.IResultInterpolationSettings;
 import org.kalypso.model.wspm.ui.profil.wizard.results.ResultInterpolationSettingsComposite;
@@ -62,12 +62,12 @@ public class ProfilesChooserPage extends ArrayChooserPage
 
   private ResultInterpolationSettingsComposite m_resultInterpolationSettingsComposite;
 
-  public ProfilesChooserPage( final String message, final ProfileSelection selection, final boolean useDialogSettings )
+  public ProfilesChooserPage( final String message, final ProfilesSelection selection, final boolean useDialogSettings )
   {
     this( message, selection, useDialogSettings, 1 );
   }
 
-  public ProfilesChooserPage( final String message, final ProfileSelection selection, final boolean useDialogSettings, final int numToSelect )
+  public ProfilesChooserPage( final String message, final ProfilesSelection selection, final boolean useDialogSettings, final int numToSelect )
   {
     this( message, selection.getProfiles(), new Object[0], selection.getSelectedProfiles(), numToSelect, useDialogSettings );//$NON-NLS-1$//$NON-NLS-2$
   }

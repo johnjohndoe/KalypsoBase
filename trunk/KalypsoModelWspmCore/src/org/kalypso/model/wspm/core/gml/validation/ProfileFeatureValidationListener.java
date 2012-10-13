@@ -57,13 +57,13 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 /**
  * @author Dirk Kuch
  */
-public class ProfileFetureValidationListener implements IProfileProviderListener
+public class ProfileFeatureValidationListener implements IProfileProviderListener
 {
   private IProfile m_profile;
 
   private ValidationProfilListener m_listener;
 
-  public ProfileFetureValidationListener( final IProfileFeature feature )
+  public ProfileFeatureValidationListener( final IProfileFeature feature )
   {
     final Job job = new Job( "Registering initial profile validation listener" ) //$NON-NLS-1$
     {

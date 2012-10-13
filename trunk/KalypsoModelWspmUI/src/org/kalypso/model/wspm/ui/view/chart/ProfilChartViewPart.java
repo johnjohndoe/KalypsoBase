@@ -61,12 +61,13 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.ChartPartListener;
-import org.kalypso.model.wspm.core.gml.IProfileProvider;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.gml.IProfileSelection;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.dialog.compare.ProfileChartComposite;
 import org.kalypso.model.wspm.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.view.IProfileFeatureSelectionListener;
+import org.kalypso.model.wspm.ui.view.IProfileSelectionListener;
 import org.kalypso.model.wspm.ui.view.ProfileFeatureSeletionHandler;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 
@@ -76,7 +77,7 @@ import de.openali.odysseus.chart.framework.view.IChartView;
 /**
  * @author kimwerner
  */
-public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfileFeatureSelectionListener
+public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfileSelectionListener
 {
   public static final String ID = "org.kalypso.model.wspm.ui.view.chart.ChartView"; //$NON-NLS-1$
 
@@ -111,7 +112,11 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
       m_form.getBody().setLayout( new FillLayout() );
       m_toolkit.decorateFormHeading( m_form );
 
-      final IProfile profile = m_handler.getProfile();
+      final IProfileSelection selection = m_handler.getProfileSelection();
+      final IProfileFeature profileFeature = selection == null ? null : selection.getProfileFeature();
+      final IProfile profile = profileFeature == null ? null : profileFeature.getProfile();
+
+      // TODO: we have now access to the profile source and hence to the reach -> we could show prev/next buttons or do other things with the profile container
 
       m_profilChartComposite = new ProfileChartComposite( m_form.getBody(), parent.getStyle(), getProfilLayerProvider(), profile );
       m_partListener.setChart( m_profilChartComposite );
@@ -127,9 +132,9 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
     m_control.setLayout( GridLayoutFactory.fillDefaults().create() );
     createContent( m_control );
 
-    final IProfileProvider profileFeature = m_handler.getProfileFeature();
+    final IProfileSelection selection = m_handler.getProfileSelection();
 
-    handleProfilProviderChanged( profileFeature );
+    handleProfilSourceChanged( selection );
   }
 
   @Override
@@ -204,13 +209,13 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
   }
 
   @Override
-  public void handleProfilProviderChanged( final IProfileProvider provider )
+  public void handleProfilSourceChanged( final IProfileSelection selection )
   {
     setPartNames( Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_1" ), Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    final IProfile newProfile = provider == null ? null : provider.getProfile();
+    final IProfileFeature newProfileFeature = selection == null ? null : selection.getProfileFeature();
 
-    if( newProfile == null )
+    if( selection == null )
     {
       setPartNames( Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_1" ), Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       setFormMessage( Messages.getString( "org.kalypso.model.wspm.ui.view.chart.ChartView.0" ), IMessageProvider.INFORMATION ); //$NON-NLS-1$
@@ -218,10 +223,13 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
     else
     {
       setFormMessage( null, IMessageProvider.NONE );
-      setPartNames( String.format( Messages.getString( "ProfilChartViewPart.1" ), newProfile.getStation() ), Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      setPartNames( String.format( Messages.getString( "ProfilChartViewPart.1" ), newProfileFeature.getBigStation() ), Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
-    setChartModel( newProfile, provider == null ? null : provider.getResult() );
+    final IProfile newProfile = newProfileFeature == null ? null :newProfileFeature.getProfile();
+    final Object result = selection == null ? null : selection.getResult();
+
+    setChartModel( newProfile, result );
   }
 
   private void setChartModel( final IProfile newProfile, final Object result )
