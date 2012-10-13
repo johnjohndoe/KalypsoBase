@@ -78,7 +78,7 @@ public class TriangulatedSurfaceContentHandlerTest extends Assert
   {
     // load a surface from a file
 
-    final URL tinLocation = getClass().getResource( "resources/triangulatedSurface.xml.gz" );
+    final URL tinLocation = getClass().getResource( "/etc/test/resources/triangulatedSurface.xml.gz" );
 
     assertNotNull( tinLocation );
 

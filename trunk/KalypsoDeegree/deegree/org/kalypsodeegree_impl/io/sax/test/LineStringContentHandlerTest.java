@@ -81,7 +81,7 @@ public class LineStringContentHandlerTest extends AssertGeometry
   @Test
   public void testLineString1( ) throws Exception
   {
-    final GM_Curve lineString = parseLineString( "resources/lineString1.gml" );
+    final GM_Curve lineString = parseLineString( "/etc/test/resources/lineString1.gml" );
     assertCurve( LINE_STRING, lineString );
   }
 
@@ -91,7 +91,7 @@ public class LineStringContentHandlerTest extends AssertGeometry
   @Test
   public void testLineString2( ) throws Exception
   {
-    final GM_Curve lineString = parseLineString( "resources/lineString2.gml" );
+    final GM_Curve lineString = parseLineString( "/etc/test/resources/lineString2.gml" );
     assertCurve( LINE_STRING, lineString );
   }
 
@@ -101,7 +101,7 @@ public class LineStringContentHandlerTest extends AssertGeometry
   @Test
   public void testLineString3( ) throws Exception
   {
-    final GM_Curve lineString = parseLineString( "resources/lineString3.gml" );
+    final GM_Curve lineString = parseLineString( "/etc/test/resources/lineString3.gml" );
     assertCurve( LINE_STRING, lineString );
   }
 
@@ -111,7 +111,7 @@ public class LineStringContentHandlerTest extends AssertGeometry
   @Test
   public void testLineString4( ) throws Exception
   {
-    final GM_Curve lineString = parseLineString( "resources/lineString4.gml" );
+    final GM_Curve lineString = parseLineString( "/etc/test/resources/lineString4.gml" );
     assertCurve( LINE_STRING, lineString );
   }
 
@@ -123,7 +123,7 @@ public class LineStringContentHandlerTest extends AssertGeometry
   {
     try
     {
-      parseLineString( "resources/lineString5.gml" );
+      parseLineString( "/etc/test/resources/lineString5.gml" );
     }
     catch( final SAXParseException e )
     {

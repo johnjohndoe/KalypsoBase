@@ -84,7 +84,7 @@ public class MultiCurveContentHandlerTest extends AssertGeometry
     final GM_Curve curve2 = GeometryFactory.createGM_Curve( new GM_Position[] { POSITION1_2, POSITION2_2, POSITION3_2, POSITION4_2 }, "EPSG:31467" ); //$NON-NLS-1$
     final GM_MultiCurve expectedCurves = GeometryFactory.createGM_MultiCurve( new GM_Curve[] { curve1, curve2 } );
 
-    final GM_MultiCurve multiLineString = parseMultiLineString( "resources/multiCurve.gml" );
+    final GM_MultiCurve multiLineString = parseMultiLineString( "/etc/test/resources/multiCurve.gml" );
     assertMultiCurve( expectedCurves, multiLineString );
   }
 

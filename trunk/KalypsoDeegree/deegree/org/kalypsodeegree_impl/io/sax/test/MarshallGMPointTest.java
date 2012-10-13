@@ -80,7 +80,7 @@ public class MarshallGMPointTest extends TestCase
     SaxParserTestUtils.marshallDocument( reader, marshaller, point2D );
     os.close();
 
-    final URL filePoint2D = getClass().getResource( "resources/pointb.gml" );
+    final URL filePoint2D = getClass().getResource( "/etc/test/resources/pointb.gml" );
     assertNotNull( filePoint2D );
 
     SaxParserTestUtils.assertContentEquals( filePoint2D, f );
@@ -102,7 +102,7 @@ public class MarshallGMPointTest extends TestCase
     SaxParserTestUtils.marshallDocument( reader, marshaller, point3D );
     os.close();
 
-    final URL filePoint3D = getClass().getResource( "resources/pointa.gml" );
+    final URL filePoint3D = getClass().getResource( "/etc/test/resources/pointa.gml" );
     assertNotNull( filePoint3D );
 
     SaxParserTestUtils.assertContentEquals( filePoint3D, f );

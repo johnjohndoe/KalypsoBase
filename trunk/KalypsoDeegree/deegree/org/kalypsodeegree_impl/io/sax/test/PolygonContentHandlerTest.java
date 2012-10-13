@@ -111,21 +111,21 @@ public class PolygonContentHandlerTest extends Assert
   @Test
   public void testPolygonNoHole( ) throws Exception
   {
-    final GM_Surface<GM_Polygon> polygon = parsePolygon( "resources/polygonNoHole.gml" );
+    final GM_Surface<GM_Polygon> polygon = parsePolygon( "/etc/test/resources/polygonNoHole.gml" );
     assertPolygon( m_surfaceNoHole, polygon );
   }
 
   @Test
   public void testPolygonOneHole( ) throws Exception
   {
-    final GM_Surface<GM_Polygon> polygon = parsePolygon( "resources/polygonOneHole.gml" );
+    final GM_Surface<GM_Polygon> polygon = parsePolygon( "/etc/test/resources/polygonOneHole.gml" );
     assertPolygon( m_surfaceOneHole, polygon );
   }
 
   @Test
   public void testPolygonTwoHoles( ) throws Exception
   {
-    final GM_Surface<GM_Polygon> polygon = parsePolygon( "resources/polygonTwoHoles.gml" );
+    final GM_Surface<GM_Polygon> polygon = parsePolygon( "/etc/test/resources/polygonTwoHoles.gml" );
     assertPolygon( m_surfaceTwoHoles, polygon );
   }
 
@@ -134,7 +134,7 @@ public class PolygonContentHandlerTest extends Assert
   @Ignore(value = "Too slow for normal testing")
   public void testReadOften( ) throws Exception
   {
-    final URL resource = getClass().getResource( "resources/polygonBig.gml" );
+    final URL resource = getClass().getResource( "/etc/test/resources/polygonBig.gml" );
     final String content = UrlUtilities.toString( resource, SaxParserTestUtils.ENCODING );
 
     for( int i = 0; i < 10000; i++ )
@@ -147,7 +147,7 @@ public class PolygonContentHandlerTest extends Assert
   @Ignore(value = "Too slow for normal testing")
   public void testReadOften2( ) throws Exception
   {
-    final URL resource = getClass().getResource( "resources/polygonBig2.gml" );
+    final URL resource = getClass().getResource( "/etc/test/resources/polygonBig2.gml" );
     final String content = UrlUtilities.toString( resource, SaxParserTestUtils.ENCODING );
 
     for( int i = 0; i < 10000; i++ )

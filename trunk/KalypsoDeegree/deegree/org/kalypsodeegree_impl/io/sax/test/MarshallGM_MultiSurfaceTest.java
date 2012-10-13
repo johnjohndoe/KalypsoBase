@@ -105,7 +105,7 @@ public class MarshallGM_MultiSurfaceTest extends TestCase
     SaxParserTestUtils.marshallDocument( reader, marshaller, m_multiPolygon );
     os.close();
 
-    final URL url = getClass().getResource( "resources/multiPolygon_marshall.gml" );
+    final URL url = getClass().getResource( "/etc/test/resources/multiPolygon_marshall.gml" );
 
     final String actualContent = os.toString( SaxParserTestUtils.ENCODING );
     SaxParserTestUtils.assertContentEquals( url, actualContent );

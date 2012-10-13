@@ -63,7 +63,7 @@ public class EnvelopeContentHandlerTest extends AssertGeometry
   @Test
   public void testNull( ) throws Exception
   {
-    final GM_Envelope actual = parseNull( "resources/null.gml" );
+    final GM_Envelope actual = parseNull( "/etc/test/resources/null.gml" );
 
     /* Test data */
     final GM_Envelope expected = null;
@@ -73,7 +73,7 @@ public class EnvelopeContentHandlerTest extends AssertGeometry
 
   private void testEnvelope( final String testResource ) throws Exception
   {
-    final GM_Envelope actual = parseEnvelope( "resources/" + testResource );
+    final GM_Envelope actual = parseEnvelope( "/etc/test/resources/" + testResource );
 
     /* Test data */
     final GM_Position lower = GeometryFactory.createGM_Position( 1.0, 2.0 );

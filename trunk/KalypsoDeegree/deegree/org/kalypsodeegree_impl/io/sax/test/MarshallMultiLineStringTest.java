@@ -84,7 +84,7 @@ public class MarshallMultiLineStringTest
 
     final String content = marshallMultiLineString( multiLineString );
 
-    final URL url = getClass().getResource( "resources/multiLineString_marshall1.gml" );
+    final URL url = getClass().getResource( "/etc/test/resources/multiLineString_marshall1.gml" );
 
     SaxParserTestUtils.assertContentEquals( url, content );
   }
@@ -96,7 +96,7 @@ public class MarshallMultiLineStringTest
 
     final String content = marshallMultiLineString( multiLineString );
 
-    final URL url = getClass().getResource( "resources/multiLineString_marshall2.gml" );
+    final URL url = getClass().getResource( "/etc/test/resources/multiLineString_marshall2.gml" );
 
     SaxParserTestUtils.assertContentEquals( url, content );
   }

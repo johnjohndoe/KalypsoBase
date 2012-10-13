@@ -77,7 +77,7 @@ public class MarshallEnvelopeTest
     SaxParserTestUtils.marshallDocument( reader, marshaller, expected );
     os.close();
 
-    final URL url = getClass().getResource( "resources/envelope_marshall.gml" );
+    final URL url = getClass().getResource( "/etc/test/resources/envelope_marshall.gml" );
     final String actualContent = os.toString();
 
     SaxParserTestUtils.assertContentEquals( url, actualContent );

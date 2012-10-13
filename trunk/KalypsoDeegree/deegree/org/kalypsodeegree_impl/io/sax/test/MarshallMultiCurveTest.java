@@ -84,7 +84,7 @@ public class MarshallMultiCurveTest
 
     final String content = marshallMultiCurve( multiCurve );
 
-    final URL url = getClass().getResource( "resources/multiCurve_marshall1.gml" );
+    final URL url = getClass().getResource( "/etc/test/resources/multiCurve_marshall1.gml" );
 
     SaxParserTestUtils.assertContentEquals( url, content );
   }
@@ -96,7 +96,7 @@ public class MarshallMultiCurveTest
 
     final String content = marshallMultiCurve( multiLineString );
 
-    final URL url = getClass().getResource( "resources/multiCurve_marshall2.gml" );
+    final URL url = getClass().getResource( "/etc/test/resources/multiCurve_marshall2.gml" );
 
     SaxParserTestUtils.assertContentEquals( url, content );
   }

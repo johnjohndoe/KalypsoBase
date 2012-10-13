@@ -75,7 +75,7 @@ public class MarshallLineStringTest extends TestCase
     SaxParserTestUtils.marshallDocument( reader, marshaller, lineString );
     os.close();
 
-    final URL url = getClass().getResource( "resources/lineString_marshall.gml" );
+    final URL url = getClass().getResource( "/etc/test/resources/lineString_marshall.gml" );
 
     SaxParserTestUtils.assertContentEquals( url, temp );
   }
