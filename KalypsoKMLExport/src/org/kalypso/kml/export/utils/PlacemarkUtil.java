@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.kml.export.KalypsoKMLPlugin;
-import org.kalypso.kml.export.Messages;
+import org.kalypso.kml.export.i18n.Messages;
 import org.kalypso.kml.export.interfaces.IKMLAdapter;
 import org.kalypso.kml.export.interfaces.IPlacemark;
 
@@ -15,7 +15,6 @@ import de.micromata.opengis.kml.v_2_2_0.Point;
 
 public class PlacemarkUtil
 {
-
   public static void addAdditional( final Folder base, final IKMLAdapter[] provider )
   {
     /* add additional place marks and clean up providers */

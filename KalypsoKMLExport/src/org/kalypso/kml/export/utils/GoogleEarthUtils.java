@@ -20,13 +20,6 @@ public class GoogleEarthUtils
    */
   public static final String GOOGLE_EARTH_CS = "EPSG:4326"; //$NON-NLS-1$
 
-  /**
-   * @param boundingBox
-   * @param coordinatesSystem
-   * @param factory
-   * @param documentType
-   * @throws Exception
-   */
   public static void setLookAt( final GM_Envelope boundingBox, final String coordinatesSystem, final Kml kml ) throws Exception
   {
     // set look at to the middle of bounding box
@@ -82,6 +75,5 @@ public class GoogleEarthUtils
 // final RegionType region = factory.createRegionType();
 // region.setLatLonAltBox( latLonBox );
 // documentType.setRegion( region );
-
   }
 }

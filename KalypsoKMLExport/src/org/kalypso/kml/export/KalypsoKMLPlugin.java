@@ -39,5 +39,4 @@ public class KalypsoKMLPlugin extends Plugin
     super.stop( context );
     KalypsoKMLPlugin.plugin = null;
   }
-
 }

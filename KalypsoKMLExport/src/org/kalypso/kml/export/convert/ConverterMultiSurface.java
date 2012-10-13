@@ -14,13 +14,6 @@ import de.micromata.opengis.kml.v_2_2_0.Polygon;
  */
 public class ConverterMultiSurface
 {
-
-  /**
-   * @param factory
-   * @param gmo
-   * @return
-   * @throws Exception
-   */
   public static MultiGeometry convert( final GM_MultiSurface gmo ) throws Exception
   {
     final MultiGeometry multGeometry = new MultiGeometry();
@@ -34,5 +27,4 @@ public class ConverterMultiSurface
 
     return multGeometry;
   }
-
 }

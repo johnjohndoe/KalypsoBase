@@ -4,7 +4,7 @@
 package org.kalypso.kml.export;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.kalypso.kml.export.convert.ConvertFacade;
+import org.kalypso.kml.export.convert.StyleConverter;
 import org.kalypso.kml.export.interfaces.IKMLAdapter;
 import org.kalypso.ogc.gml.painter.IStylePaintable;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
@@ -27,18 +27,20 @@ public class KMLExportDelegate implements IStylePaintable
 
   private final Folder m_folder;
 
-  public KMLExportDelegate( final IKMLAdapter[] provider, final Folder folder, final double scale, final GM_Envelope bbox )
+  private final StyleConverter m_converter;
+
+  public KMLExportDelegate( final IKMLAdapter[] provider, final Folder folder, final double scale, final GM_Envelope bbox, final StyleConverter converter )
   {
     m_provider = provider;
     m_folder = folder;
     m_scale = scale;
     m_bbox = bbox;
+    m_converter = converter;
   }
 
   @Override
   public void paint( final Feature feature, final Symbolizer symbolizer, final IProgressMonitor newChild )
   {
-
     try
     {
       for( final IKMLAdapter adapter : m_provider )
@@ -46,8 +48,7 @@ public class KMLExportDelegate implements IStylePaintable
         adapter.registerExportedFeature( feature );
       }
 
-      // TODO perhaps, get rendered GM_Point geometry from symbolizer
-      ConvertFacade.convert( m_provider, m_folder, symbolizer, feature );
+      m_converter.convert( m_provider, m_folder, symbolizer, feature );
     }
     catch( final Exception e )
     {

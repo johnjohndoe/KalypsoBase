@@ -12,8 +12,5 @@ Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.kalypso.kml.export.KalypsoKMLPlugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-Vendor: http://sourceforge.net/projects/kalypsobase/
-Bundle-ClassPath: lib/jaxb/jaxb-api.jar,
- lib/jaxb/jaxb-impl.jar,
- lib/jaxb/jaxb-xjc.jar,
- lib/JavaApiForKML/2010_01/JavaAPIforKml.jar,
+Bundle-ClassPath: lib/JavaApiForKML/2010_01/JavaAPIforKml.jar,
  .

@@ -41,41 +41,187 @@
 package org.kalypso.kml.export.convert;
 
 import java.awt.Color;
+import java.io.File;
+import java.io.IOException;
 
+import org.kalypso.kml.export.geometry.GeoUtils;
+import org.kalypso.kml.export.geometry.GeoUtils.GEOMETRY_TYPE;
+import org.kalypso.kml.export.interfaces.IKMLAdapter;
+import org.kalypso.kml.export.utils.KMLAdapterUtils;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.Fill;
 import org.kalypsodeegree.graphics.sld.Font;
+import org.kalypsodeegree.graphics.sld.PointSymbolizer;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 import org.kalypsodeegree.graphics.sld.TextSymbolizer;
+import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_MultiCurve;
+import org.kalypsodeegree.model.geometry.GM_MultiSurface;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 
+import de.micromata.opengis.kml.v_2_2_0.Folder;
+import de.micromata.opengis.kml.v_2_2_0.Icon;
+import de.micromata.opengis.kml.v_2_2_0.IconStyle;
 import de.micromata.opengis.kml.v_2_2_0.LabelStyle;
+import de.micromata.opengis.kml.v_2_2_0.LineString;
 import de.micromata.opengis.kml.v_2_2_0.LineStyle;
+import de.micromata.opengis.kml.v_2_2_0.MultiGeometry;
+import de.micromata.opengis.kml.v_2_2_0.Placemark;
+import de.micromata.opengis.kml.v_2_2_0.Point;
 import de.micromata.opengis.kml.v_2_2_0.PolyStyle;
+import de.micromata.opengis.kml.v_2_2_0.Polygon;
 import de.micromata.opengis.kml.v_2_2_0.Style;
 
 /**
  * @author Dirk Kuch
  */
-public final class StyleConverter
+public class StyleConverter
 {
-  private StyleConverter( )
+  private final GraphicImageExporter m_iconExporter;
+
+  public StyleConverter( final File imageDir, final String baseName, final GeoTransform transform )
   {
+    m_iconExporter = new GraphicImageExporter( imageDir, baseName, transform );
   }
 
-  public static void convert( final Style style, final Symbolizer symbolizer, final Feature feature ) throws FilterEvaluationException
+  public void convert( final IKMLAdapter[] providers, final Folder folder, final Symbolizer symbolizer, final Feature feature ) throws Exception
+  {
+    final GM_Object[] geometries = DisplayElementFactory.findGeometries( feature, symbolizer );
+
+    for( final GM_Object gmo : geometries )
+    {
+      final GEOMETRY_TYPE gt = GeoUtils.getGeoType( gmo );
+      if( GEOMETRY_TYPE.eMultiCurve.equals( gt ) )
+      {
+        final Placemark placemark = folder.createAndAddPlacemark();
+        placemark.setName( KMLAdapterUtils.getFeatureName( feature, providers ) );
+
+        final MultiGeometry multiGeometry = ConverterMultiCurve.convert( (GM_MultiCurve)gmo );
+        placemark.setGeometry( multiGeometry );
+
+// if( style != null )
+//          placemark.setStyleUrl( "#" + style.getId() ); //$NON-NLS-1$
+      }
+      else if( GEOMETRY_TYPE.eCurve.equals( gt ) )
+      {
+        final Placemark placemark = folder.createAndAddPlacemark();
+        placemark.setName( KMLAdapterUtils.getFeatureName( feature, providers ) );
+
+        final LineString lineString = ConverterCurve.convert( (GM_Curve)gmo );
+        placemark.setGeometry( lineString );
+
+// if( style != null )
+//          placemark.setStyleUrl( "#" + style.getId() ); //$NON-NLS-1$
+      }
+      else if( GEOMETRY_TYPE.eMultiSurface.equals( gt ) )
+      {
+        final Placemark placemark = folder.createAndAddPlacemark();
+        placemark.setName( KMLAdapterUtils.getFeatureName( feature, providers ) );
+
+        final MultiGeometry multiGeometry = ConverterMultiSurface.convert( (GM_MultiSurface)gmo );
+        placemark.setGeometry( multiGeometry );
+
+// if( style != null )
+//          placemark.setStyleUrl( "#" + style.getId() ); //$NON-NLS-1$
+      }
+      else if( GEOMETRY_TYPE.eSurface.equals( gt ) )
+      {
+        final Placemark placemark = folder.createAndAddPlacemark();
+        placemark.setName( KMLAdapterUtils.getFeatureName( feature, providers ) );
+
+        final Polygon geometry = ConverterSurface.convert( (GM_Surface< ? >)gmo );
+        placemark.setGeometry( geometry );
+
+        final Style style = placemark.createAndAddStyle();
+        convert( style, symbolizer, feature );
+
+// if( style != null )
+//          placemark.setStyleUrl( "#" + style.getId() ); //$NON-NLS-1$
+      }
+      else if( GEOMETRY_TYPE.ePoint.equals( gt ) )
+      {
+        // FIXME implement
+// IPlacemarkIcon myPlacemark = null;
+//
+// for( final IGoogleEarthAdapter adapter : providers )
+// {
+// myPlacemark = adapter.getPlacemarkIcon( feature );
+// if( myPlacemark != null )
+// break;
+// }
+//
+// if( myPlacemark != null )
+// {
+// final PlacemarkType placemark = factory.createPlacemarkType();
+// placemark.setName( feature.getId() );
+//
+// final StyleTypeFactory styleTypeFactory = StyleTypeFactory.getStyleFactory( factory );
+//
+// final StyleType iconStyle = styleTypeFactory.createIconStyle( "http://www.heise.de/icons/ho/heise.gif" );
+// placemark.setStyleUrl( "#" + iconStyle.getId() );
+//
+// featureTypes.add( placemark );
+// }
+// else
+// {
+        final Placemark placemark = folder.createAndAddPlacemark();
+        placemark.setName( feature.getId() );
+
+        final Point point = ConverterPoint.convert( (GM_Point)gmo );
+        placemark.setGeometry( point );
+
+        final Style style = placemark.createAndAddStyle();
+        convert( style, symbolizer, feature );
+
+// if( style != null )
+// placemark.setStyleUrl( "#" + style.getId() ); //$NON-NLS-1$
+
+// featureTypes.add( placemark );
+// }
+      }
+      else
+        throw new UnsupportedOperationException();
+
+    }
+  }
+
+  private void convert( final Style style, final Symbolizer symbolizer, final Feature feature ) throws FilterEvaluationException, IOException
   {
     if( symbolizer instanceof PolygonSymbolizer )
       convert( (PolygonSymbolizer) symbolizer, feature, style );
+    else if( symbolizer instanceof PointSymbolizer )
+      convert( (PointSymbolizer)symbolizer, feature, style );
     else if( symbolizer instanceof TextSymbolizer )
       convert( (TextSymbolizer) symbolizer, feature, style );
     else
       throw new UnsupportedOperationException();
   }
 
-  private static void convert( final TextSymbolizer symbolizer, final Feature feature, final Style style ) throws FilterEvaluationException
+  private void convert( final PointSymbolizer symbolizer, final Feature feature, final Style style ) throws FilterEvaluationException, IOException
+  {
+    // FIXME: we could save the image relative to the kml?
+    final String iconPath = m_iconExporter.getImagePath( symbolizer, feature );
+
+    final Icon icon = new Icon();
+    icon.setHref( iconPath );
+
+    final IconStyle iconStyle = new IconStyle();
+    iconStyle.setIcon( icon );
+
+    // final double size = graphic.getSize( feature );
+    // iconStyle.setScale( size );
+
+    style.setIconStyle( iconStyle );
+  }
+
+  private void convert( final TextSymbolizer symbolizer, final Feature feature, final Style style ) throws FilterEvaluationException
   {
     final LabelStyle labelStyle = new LabelStyle();
 
@@ -85,7 +231,7 @@ public final class StyleConverter
     style.setLabelStyle( labelStyle );
   }
 
-  private static void convert( final PolygonSymbolizer symbolizer, final Feature feature, final Style style ) throws FilterEvaluationException
+  private void convert( final PolygonSymbolizer symbolizer, final Feature feature, final Style style ) throws FilterEvaluationException
   {
     final Stroke stroke = symbolizer.getStroke();
     final LineStyle targetStroke = new LineStyle();
