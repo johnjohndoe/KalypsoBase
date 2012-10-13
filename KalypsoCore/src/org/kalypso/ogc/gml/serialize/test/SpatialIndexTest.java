@@ -81,13 +81,13 @@ public class SpatialIndexTest extends TestCase
 
   public void testBigShape( ) throws Exception
   {
-    doTheTest( "resources/bigShape.zip", "mod", ShapeCollection.MEMBER_FEATURE ); //$NON-NLS-1$ //$NON-NLS-2$
+    doTheTest( "/etc/test/resources/gmlserializer/bigShape.zip", "mod", ShapeCollection.MEMBER_FEATURE ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   // invalid test, depends on KalypsoModel1d2d
 // public void testBigGml( ) throws Exception
 // {
-//    doTheTest( "resources/bigGml.zip", "nodeResult.gml", new QName( "http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults", "nodeResultMember" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+//    doTheTest( "/etc/test/resources/gmlserializer/bigGml.zip", "nodeResult.gml", new QName( "http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults", "nodeResultMember" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 // }
 
   private void doTheTest( final String zipResourcePath, final String filename, final QName propQName ) throws Exception

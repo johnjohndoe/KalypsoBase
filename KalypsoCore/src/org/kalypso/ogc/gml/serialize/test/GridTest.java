@@ -68,7 +68,7 @@ public class GridTest
   @Ignore(value = "Takes too much time....")
   public void testGridProcessing( ) throws Exception
   {
-    final URL zipResource = getClass().getResource( "resources/dgm2m.zip" ); //$NON-NLS-1$
+    final URL zipResource = getClass().getResource( "/etc/test/resources/gmlserializer/dgm2m.zip" ); //$NON-NLS-1$
     final URL gmlResource = new URL( "jar:" + zipResource.toExternalForm() + "!/" + "dgm2m.gml" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     /* Read input workspace and coverages */
