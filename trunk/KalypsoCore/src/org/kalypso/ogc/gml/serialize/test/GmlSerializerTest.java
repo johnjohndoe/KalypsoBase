@@ -83,7 +83,7 @@ public class GmlSerializerTest
 // @Test
   public void testLoadPerformance( ) throws Exception
   {
-    final URL zipResource = getClass().getResource( "resources/grandeGml.zip" ); //$NON-NLS-1$
+    final URL zipResource = getClass().getResource( "/etc/test/resources/gmlserializer/grandeGml.zip" ); //$NON-NLS-1$
     final String externalForm = zipResource.toExternalForm();
     final URL gmlUrl = new URL( "jar:" + externalForm + "!/discretisation.gml" ); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -111,7 +111,7 @@ public class GmlSerializerTest
 // final URL zipResource = getClass().getResource( "resources/dgm2m.zip" );
 // final String externalForm = zipResource.toExternalForm();
 // final URL gmlUrl = new URL( "jar:" + externalForm + "!/dgm2m.gml" );
-    final URL zipResource = getClass().getResource( "resources/grandeGml.zip" ); //$NON-NLS-1$
+    final URL zipResource = getClass().getResource( "/etc/test/resources/gmlserializer/grandeGml.zip" ); //$NON-NLS-1$
     final String externalForm = zipResource.toExternalForm();
     final URL gmlUrl = new URL( "jar:" + externalForm + "!/discretisation.gml" ); //$NON-NLS-1$ //$NON-NLS-2$
 // final File outFile = File.createTempFile( "gmlSaveTest", ".gml" );
