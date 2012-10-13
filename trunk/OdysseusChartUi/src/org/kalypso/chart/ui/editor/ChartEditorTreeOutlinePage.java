@@ -97,7 +97,7 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
 
   protected ICheckStateProvider m_checkStateProvider = null;
 
-  protected final ITableLabelProvider m_labelProvider;
+  protected final ChartTreeLabelProvider m_labelProvider;
 
   private final ILayerManagerEventListener m_eventListener;
 
@@ -133,7 +133,9 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
   public ChartEditorTreeOutlinePage( final ITreeContentProvider contentProvider, final ITableLabelProvider labelProvider )
   {
     m_contentProvider = contentProvider;
-    m_labelProvider = labelProvider;
+    // FIXME: only as hot fix; we know that we have a ChartTreeLabelProvider; but feature patch does not work like this
+// -> change constructor later
+    m_labelProvider = (ChartTreeLabelProvider) labelProvider;
     m_eventListener = new AbstractLayerManagerEventListener()
     {
       @Override
@@ -252,6 +254,11 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
       /* Remember type of selected layer */
       final IChartModel oldModel = (IChartModel) m_treeViewer.getInput();
       final String currentSelection = findSelectedLayerId( oldModel );
+
+      // BUGFIX: clear images on every model change; else the legend images will accumulate forever, because
+      // - every model gets new images
+      // - the legend is normally never closed, so the label provider never disposed.
+      m_labelProvider.clearImages();
 
       m_treeViewer.setInput( model );
 
