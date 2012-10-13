@@ -130,8 +130,8 @@ public class TestInundationFrequenciesGrid2Shp
     final IProject project = workspace.getRoot().getProject( "InundationFrequenciesTest" ); //$NON-NLS-1$
     project.create( new NullProgressMonitor() );
 
-    final URL zipLocation = getClass().getResource( "resources/inundationDepthRaster.zip" ); //$NON-NLS-1$
-// final URL zipLocation = getClass().getResource( "resources/flattentestgrids.zip" );
+    final URL zipLocation = getClass().getResource( "/etc/test/resources/raster2vector/inundationDepthRaster.zip" ); //$NON-NLS-1$
+// final URL zipLocation = getClass().getResource( "/etc/test/resources/raster2vector/flattentestgrids.zip" );
     ZipUtilities.unzip( zipLocation, project, new NullProgressMonitor() );
 
     // run test model
