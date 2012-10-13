@@ -42,7 +42,6 @@ package org.kalypso.gml.ui.test;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
@@ -52,6 +51,7 @@ import javax.imageio.ImageIO;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.commons.performance.TimeLogger;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
@@ -85,7 +85,7 @@ public class GisMapPerfTest extends TestCase
   {
     for( final String[] resource : RESOURCES )
     {
-      final URL zipResource = getClass().getResource( "resources/" + resource[0] ); //$NON-NLS-1$
+      final URL zipResource = getClass().getResource( "/etc/test/resources/" + resource[0] ); //$NON-NLS-1$
       final URL gmtResource = new URL( "jar:" + zipResource.toExternalForm() + "!/" + resource[1] ); //$NON-NLS-1$ //$NON-NLS-2$
 
       mapLoadingAndVisualization( gmtResource );
@@ -139,7 +139,7 @@ public class GisMapPerfTest extends TestCase
       logger.printCurrentInterim( "Rendered map #" + i + ": " ); //$NON-NLS-1$ //$NON-NLS-2$
 
       if( i == 0 )
-        ImageIO.write( image, "png", new File( "C:/tmp/image.png" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        ImageIO.write( image, "png", FileUtilities.getNewTempFile( "image", "png" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     logger.printCurrentTotal( "Total: " ); //$NON-NLS-1$
