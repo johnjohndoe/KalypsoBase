@@ -6,7 +6,7 @@ Bundle-Version: 12.7.0.qualifier
 Require-Bundle: org.eclipse.core.runtime
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: .,
- lib/io/commons-io-2.3.jar,
+ lib/io/commons-io-2.4.jar,
  lib/lang/commons-lang3-3.1.jar,
  lib/sanselan/sanselan-0.97-incubator.jar,
  lib/collections/commons-collections-3.2.1.jar,
