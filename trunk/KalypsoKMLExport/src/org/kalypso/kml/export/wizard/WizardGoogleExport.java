@@ -44,36 +44,29 @@ import java.io.File;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.kml.export.Messages;
 import org.kalypso.kml.export.constants.IKMLExportSettings;
-import org.kalypso.ui.views.map.MapView;
+import org.kalypso.kml.export.i18n.Messages;
+import org.kalypso.ogc.gml.map.IMapPanel;
 
 /**
  * @author Dirk Kuch
  */
-public class WizardGoogleExport extends Wizard implements IWorkbenchWizard
+public class WizardGoogleExport extends Wizard
 {
-
   private PageGoogleExport m_page;
-
-  private final MapView m_mapView;
 
   private final File m_targetFile;
 
-  public WizardGoogleExport( final MapView mapView, final File targetFile )
+  private final IMapPanel m_mapPanel;
+
+  public WizardGoogleExport( final IMapPanel mapPanel, final File targetFile )
   {
-    m_mapView = mapView;
+    m_mapPanel = mapPanel;
     m_targetFile = targetFile;
   }
 
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#addPages()
-   */
   @Override
   public void addPages( )
   {
@@ -88,23 +81,10 @@ public class WizardGoogleExport extends Wizard implements IWorkbenchWizard
     return m_page;
   }
 
-  /**
-   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
-   *      org.eclipse.jface.viewers.IStructuredSelection)
-   */
-  @Override
-  public void init( final IWorkbench workbench, final IStructuredSelection selection )
-  {
-
-  }
-
-  /**
-   * @see org.eclipse.jface.wizard.Wizard#performFinish()
-   */
   @Override
   public boolean performFinish( )
   {
-    final KMLExporter googleEarthExporter = new KMLExporter( m_mapView, m_page );
+    final KMLExporter googleEarthExporter = new KMLExporter( m_mapPanel, m_page );
 
     final IStatus status = RunnableContextHelper.execute( getContainer(), true, false, googleEarthExporter );
     ErrorDialog.openError( getShell(), getWindowTitle(), Messages.WizardGoogleExport_1, status );

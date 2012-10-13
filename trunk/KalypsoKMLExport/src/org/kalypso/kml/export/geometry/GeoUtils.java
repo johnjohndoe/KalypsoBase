@@ -24,10 +24,6 @@ public class GeoUtils
     eMultiSurface
   }
 
-  /**
-   * @param gmo
-   * @return
-   */
   public static GEOMETRY_TYPE getGeoType( final GM_Object gmo )
   {
     if( gmo instanceof GM_MultiCurve )
@@ -43,5 +39,4 @@ public class GeoUtils
 
     throw new UnsupportedOperationException();
   }
-
 }

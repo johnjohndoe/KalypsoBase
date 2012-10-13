@@ -14,14 +14,6 @@ import de.micromata.opengis.kml.v_2_2_0.MultiGeometry;
  */
 public class ConverterMultiCurve
 {
-
-  /**
-   * @param factory
-   * @param string
-   * @param multiCurve
-   * @return
-   * @throws Exception
-   */
   public static MultiGeometry convert( final GM_MultiCurve multiCurve ) throws Exception
   {
     final MultiGeometry multiGeometry = new MultiGeometry();

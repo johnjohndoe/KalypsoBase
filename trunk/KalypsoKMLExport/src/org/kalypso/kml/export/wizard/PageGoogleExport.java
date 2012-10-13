@@ -17,8 +17,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateSave;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserGroup;
-import org.kalypso.kml.export.Messages;
 import org.kalypso.kml.export.constants.IKMLExportSettings;
+import org.kalypso.kml.export.i18n.Messages;
 
 /**
  * @author Dirk Kuch
@@ -31,11 +31,7 @@ public class PageGoogleExport extends WizardPage implements IKMLExportSettings
 
   protected String m_description;
 
-  /**
-   * @param file
-   * @param pageName
-   */
-  protected PageGoogleExport( final File targetFile )
+  PageGoogleExport( final File targetFile )
   {
     super( "googleEarthExportPage" ); //$NON-NLS-1$
 
