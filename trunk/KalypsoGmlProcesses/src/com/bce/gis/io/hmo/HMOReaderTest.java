@@ -54,7 +54,7 @@ public class HMOReaderTest extends TestCase
 
   public void testReadComplex( ) throws IOException, ParseException
   {
-    final Reader r = new InputStreamReader( HMOReaderTest.class.getResourceAsStream( "test/medium.hmo" ) ); //$NON-NLS-1$
+    final Reader r = new InputStreamReader( HMOReaderTest.class.getResourceAsStream( "/etc/test/resources/hmo/medium.hmo" ) ); //$NON-NLS-1$
     final LinearRing[] g = m_hmoReader.read( r, gf );
     r.close();
 
@@ -63,7 +63,7 @@ public class HMOReaderTest extends TestCase
 
   public void testBig( ) throws IOException, ParseException
   {
-    final Reader r = new InputStreamReader( HMOReaderTest.class.getResourceAsStream( "test/big.hmo" ) ); //$NON-NLS-1$
+    final Reader r = new InputStreamReader( HMOReaderTest.class.getResourceAsStream( "/etc/test/resources/hmo/big.hmo" ) ); //$NON-NLS-1$
     final LinearRing[] g = m_hmoReader.read( r, gf );
     r.close();
 
@@ -78,7 +78,7 @@ public class HMOReaderTest extends TestCase
   public void testNonMonotonPointNumbers( ) throws InterruptedIOException, IOException, ParseException
   {
     // Bug: nicht monoton ansteigende Punktnummern ergaben Lesefehler
-    final Reader r = new InputStreamReader( HMOReaderTest.class.getResourceAsStream( "test/nonMonotone.hmo" ) ); //$NON-NLS-1$
+    final Reader r = new InputStreamReader( HMOReaderTest.class.getResourceAsStream( "/etc/test/resources/hmo/nonMonotone.hmo" ) ); //$NON-NLS-1$
     final LinearRing[] g = m_hmoReader.read( r, gf );
     r.close();
 

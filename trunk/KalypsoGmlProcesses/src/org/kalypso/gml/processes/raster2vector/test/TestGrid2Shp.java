@@ -116,7 +116,7 @@ public class TestGrid2Shp
     final IProject project = workspace.getRoot().getProject( "GridConvertingTest" ); //$NON-NLS-1$
     project.create( new NullProgressMonitor() );
 
-    final URL zipLocation = getClass().getResource( "resources/grids.zip" ); //$NON-NLS-1$
+    final URL zipLocation = getClass().getResource( "/etc/test/resources/raster2vector/grids.zip" ); //$NON-NLS-1$
     ZipUtilities.unzip( zipLocation, project, new NullProgressMonitor() );
 
     // run test model
