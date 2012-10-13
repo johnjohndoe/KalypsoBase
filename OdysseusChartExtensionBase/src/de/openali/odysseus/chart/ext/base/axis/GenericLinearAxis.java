@@ -70,6 +70,7 @@ public class GenericLinearAxis extends AbstractAxis
       return Double.NaN;
 
     final double r = dataRange.getMax().doubleValue() - dataRange.getMin().doubleValue();
+
     return (value.doubleValue() - dataRange.getMin().doubleValue()) / r;
   }
 

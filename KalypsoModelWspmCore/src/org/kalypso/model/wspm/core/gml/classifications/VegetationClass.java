@@ -92,9 +92,6 @@ public class VegetationClass extends AbstractClassificationClass implements IVeg
     setProperty( PROPERTY_DP, value );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.gml.classifications.IVegetationClass#getValue(java.lang.String)
-   */
   @Override
   public BigDecimal getValue( final String identifier )
   {
