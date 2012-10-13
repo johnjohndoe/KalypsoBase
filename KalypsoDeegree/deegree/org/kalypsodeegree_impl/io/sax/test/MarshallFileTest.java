@@ -72,7 +72,7 @@ public class MarshallFileTest
     SaxParserTestUtils.marshallDocument( reader, marshaller, file );
     os.close();
 
-    final URL url = getClass().getResource( "resources/file_marshall.gml" );
+    final URL url = getClass().getResource( "/etc/test/resources/file_marshall.gml" );
     final String actualContent = os.toString();
 
     SaxParserTestUtils.assertContentEquals( url, actualContent );

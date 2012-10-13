@@ -59,7 +59,7 @@ public class FileContentHandlerTest extends AssertGeometry
   @Test
   public void testFile( ) throws Exception
   {
-    final RangeSetFile actual = parseFile( "resources/file_marshall.gml" );
+    final RangeSetFile actual = parseFile( "/etc/test/resources/file_marshall.gml" );
 
     /* Test data */
     final RangeSetFile expected = new RangeSetFile( "testname.tif" ); //$NON-NLS-1$

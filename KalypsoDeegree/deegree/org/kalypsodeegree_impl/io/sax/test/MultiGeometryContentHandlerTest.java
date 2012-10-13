@@ -78,7 +78,7 @@ public class MultiGeometryContentHandlerTest extends AssertGeometry
   {
     final GM_Aggregate expectedGeometry = GeometryFactory.createGM_MultiGeometry( "EPSG:31467" ); //$NON-NLS-1$
 
-    final GM_MultiGeometry actualGeometry = parseMultiGeometry( "resources/multiGeometry_empty.gml" );
+    final GM_MultiGeometry actualGeometry = parseMultiGeometry( "/etc/test/resources/multiGeometry_empty.gml" );
     assertMultiGeometry( expectedGeometry, actualGeometry );
   }
 
@@ -93,7 +93,7 @@ public class MultiGeometryContentHandlerTest extends AssertGeometry
 
     final GM_MultiGeometry expected = GeometryFactory.createGM_MultiGeometry( new GM_Object[] { point1, curve1 }, "EPSG:31467" ); //$NON-NLS-1$
 
-    final GM_MultiGeometry actual = parseMultiGeometry( "resources/multiGeometry.gml" );
+    final GM_MultiGeometry actual = parseMultiGeometry( "/etc/test/resources/multiGeometry.gml" );
 
     assertMultiGeometry( expected, actual );
   }

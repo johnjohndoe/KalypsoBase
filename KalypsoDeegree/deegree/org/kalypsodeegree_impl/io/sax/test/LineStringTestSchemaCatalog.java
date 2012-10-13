@@ -58,7 +58,7 @@ public class LineStringTestSchemaCatalog extends AbstractUrlCatalog
   @Override
   protected void fillCatalog( final Class< ? > myClass, final Map<String, URL> catalog, final Map<String, String> prefixes )
   {
-    catalog.put( NS_TEST, myClass.getResource( "resources/lineStringTest.xsd" ) ); //$NON-NLS-1$
+    catalog.put( NS_TEST, myClass.getResource( "/etc/test/resources/lineStringTest.xsd" ) ); //$NON-NLS-1$
     prefixes.put( NS_TEST, "tst" ); //$NON-NLS-1$    
   }
 

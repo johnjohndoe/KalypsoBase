@@ -74,7 +74,7 @@ public class MultiPointContentHandlerTest extends GmlParsingTester
   @Test
   public void testMultiPoint1( ) throws Exception
   {
-    final GM_MultiPoint multiPoint = parseMultiPoint( "resources/multiPoint1.gml" );
+    final GM_MultiPoint multiPoint = parseMultiPoint( "/etc/test/resources/multiPoint1.gml" );
     assertMultiPoint( multiPoint );
   }
 
@@ -84,7 +84,7 @@ public class MultiPointContentHandlerTest extends GmlParsingTester
   @Test
   public void testMultiPoint2( ) throws Exception
   {
-    final GM_MultiPoint multiPoint = parseMultiPoint( "resources/multiPoint2.gml" );
+    final GM_MultiPoint multiPoint = parseMultiPoint( "/etc/test/resources/multiPoint2.gml" );
     assertMultiPoint( multiPoint );
   }
 
@@ -97,7 +97,7 @@ public class MultiPointContentHandlerTest extends GmlParsingTester
   {
     try
     {
-      parseMultiPoint( "resources/multiPoint2.gml" );
+      parseMultiPoint( "/etc/test/resources/multiPoint2.gml" );
     }
     catch( final SAXParseException e )
     {

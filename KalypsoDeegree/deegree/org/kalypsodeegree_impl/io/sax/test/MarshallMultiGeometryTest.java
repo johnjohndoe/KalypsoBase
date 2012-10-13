@@ -82,7 +82,7 @@ public class MarshallMultiGeometryTest
 
     final String content = marshallMultiGeometry( toWrite );
 
-    final URL url = getClass().getResource( "resources/multiGeometry_marshall.gml" );
+    final URL url = getClass().getResource( "/etc/test/resources/multiGeometry_marshall.gml" );
 
     SaxParserTestUtils.assertContentEquals( url, content );
   }

@@ -74,7 +74,7 @@ public class MarshallGMMultiPointTest extends TestCase
     SaxParserTestUtils.marshallDocument( reader, marshaller, multiPoint );
     os.close();
 
-    final URL url = getClass().getResource( "resources/multiPointa.gml" );
+    final URL url = getClass().getResource( "/etc/test/resources/multiPointa.gml" );
 
     SaxParserTestUtils.assertContentEquals( url, temp );
   }

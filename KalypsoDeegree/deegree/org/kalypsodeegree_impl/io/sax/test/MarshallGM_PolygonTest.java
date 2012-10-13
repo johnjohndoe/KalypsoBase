@@ -122,7 +122,7 @@ public class MarshallGM_PolygonTest extends TestCase
     SaxParserTestUtils.marshallDocument( reader, marshaller, polygonToSave );
     os.close();
 
-    final URL url = getClass().getResource( "resources/" + expectedResource );
+    final URL url = getClass().getResource( "/etc/test/resources/" + expectedResource );
 
     final String actualContent = os.toString( SaxParserTestUtils.ENCODING );
     SaxParserTestUtils.assertContentEquals( url, actualContent );

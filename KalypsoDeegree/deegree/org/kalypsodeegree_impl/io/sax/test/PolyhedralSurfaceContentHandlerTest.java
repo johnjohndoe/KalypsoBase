@@ -73,7 +73,7 @@ public class PolyhedralSurfaceContentHandlerTest extends Assert
   {
     for( int i = 0; i < 100; i++ )
     {
-      final GM_PolyhedralSurface< ? > surface = readPolygons( new InputSource( PolyhedralSurfaceContentHandlerTest.class.getResourceAsStream( "resources/minPolyhedralSurface.gml" ) ) );
+      final GM_PolyhedralSurface< ? > surface = readPolygons( new InputSource( PolyhedralSurfaceContentHandlerTest.class.getResourceAsStream( "/etc/test/resources/minPolyhedralSurface.gml" ) ) );
 
       assertSurface( surface );
     }

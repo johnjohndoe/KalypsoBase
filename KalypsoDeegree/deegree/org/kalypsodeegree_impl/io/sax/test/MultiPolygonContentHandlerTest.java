@@ -110,14 +110,14 @@ public class MultiPolygonContentHandlerTest extends Assert
   @Test
   public void testMultiSurface( ) throws Exception
   {
-    final GM_MultiSurface polygon = parseMultiPolygon( "resources/multiPolygon_marshall.gml" );
+    final GM_MultiSurface polygon = parseMultiPolygon( "/etc/test/resources/multiPolygon_marshall.gml" );
     assertMultiPolygon( m_multiPolygon, polygon );
   }
 
   @Test
   public void testMultiSurfaceOuterBoundary( ) throws Exception
   {
-    final GM_MultiSurface multi = parseMultiPolygon( "resources/multiPolygon_outerBoundary.gml" );
+    final GM_MultiSurface multi = parseMultiPolygon( "/etc/test/resources/multiPolygon_outerBoundary.gml" );
     assertNotNull( multi );
     assertEquals( 1, multi.getSize() );
 

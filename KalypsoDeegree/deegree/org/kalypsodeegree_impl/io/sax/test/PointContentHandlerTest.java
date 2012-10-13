@@ -72,7 +72,7 @@ public class PointContentHandlerTest extends AssertGeometry
   @Test
   public void testPoint1( ) throws Exception
   {
-    final GM_Point point = parsePoint( "resources/point1.gml" );
+    final GM_Point point = parsePoint( "/etc/test/resources/point1.gml" );
     assertPoint( POINT3D, point );
   }
 
@@ -84,7 +84,7 @@ public class PointContentHandlerTest extends AssertGeometry
   {
     try
     {
-      parsePoint( "resources/point2.gml" );
+      parsePoint( "/etc/test/resources/point2.gml" );
     }
     catch( final SAXParseException e )
     {
@@ -98,7 +98,7 @@ public class PointContentHandlerTest extends AssertGeometry
   @Test
   public void testPoint3( ) throws Exception
   {
-    final GM_Point point = parsePoint( "resources/point3.gml" );
+    final GM_Point point = parsePoint( "/etc/test/resources/point3.gml" );
     assertPoint( POINT2D, point );
   }
 
@@ -108,7 +108,7 @@ public class PointContentHandlerTest extends AssertGeometry
   @Test
   public void testPoint4( ) throws Exception
   {
-    final GM_Point point = parsePoint( "resources/point4.gml" );
+    final GM_Point point = parsePoint( "/etc/test/resources/point4.gml" );
     assertPoint( POINT3D, point );
   }
 
@@ -120,7 +120,7 @@ public class PointContentHandlerTest extends AssertGeometry
   {
     try
     {
-      parsePoint( "resources/point5.gml" );
+      parsePoint( "/etc/test/resources/point5.gml" );
       fail( "This should throw an exception" );
     }
     catch( final SAXParseException e )
@@ -136,7 +136,7 @@ public class PointContentHandlerTest extends AssertGeometry
   @Test
   public void testPoint6( ) throws Exception
   {
-    final GM_Point point = parsePoint( "resources/point6.gml" );
+    final GM_Point point = parsePoint( "/etc/test/resources/point6.gml" );
     assertPoint( POINT3D, point );
   }
 
@@ -146,7 +146,7 @@ public class PointContentHandlerTest extends AssertGeometry
   @Test
   public void testPoint7( ) throws Exception
   {
-    final GM_Point point = parsePoint( "resources/point7.gml" );
+    final GM_Point point = parsePoint( "/etc/test/resources/point7.gml" );
     assertPoint( POINT2D, point );
   }
 
@@ -158,7 +158,7 @@ public class PointContentHandlerTest extends AssertGeometry
   {
     try
     {
-      parsePoint( "resources/point8.gml" );
+      parsePoint( "/etc/test/resources/point8.gml" );
       fail( "This should throw an exception" );
     }
     catch( final SAXParseException e )
@@ -176,7 +176,7 @@ public class PointContentHandlerTest extends AssertGeometry
   {
     try
     {
-      parsePoint( "resources/point9.gml" );
+      parsePoint( "/etc/test/resources/point9.gml" );
       fail( "This should throw an exception" );
     }
     catch( final SAXParseException e )
@@ -191,7 +191,7 @@ public class PointContentHandlerTest extends AssertGeometry
   @Test
   public void testPoint10( ) throws Exception
   {
-    final GM_Point point = parsePoint( "resources/point10.gml" );
+    final GM_Point point = parsePoint( "/etc/test/resources/point10.gml" );
     assertPoint( POINT3D, point );
   }
 

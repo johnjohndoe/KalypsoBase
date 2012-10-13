@@ -91,7 +91,7 @@ public class MultiLineStringContentHandlerTest extends TestCase
   @Test
   public void testMultiLineString1( ) throws Exception
   {
-    final GM_MultiCurve multiLineString = parseMultiLineString( "resources/multiLineString1.gml" );
+    final GM_MultiCurve multiLineString = parseMultiLineString( "/etc/test/resources/multiLineString1.gml" );
     assertMultiLineString( multiLineString, 0 );
   }
 
@@ -101,7 +101,7 @@ public class MultiLineStringContentHandlerTest extends TestCase
   @Test
   public void testMultiLineString2( ) throws Exception
   {
-    final GM_MultiCurve multiLineString = parseMultiLineString( "resources/multiLineString2.gml" );
+    final GM_MultiCurve multiLineString = parseMultiLineString( "/etc/test/resources/multiLineString2.gml" );
     assertMultiLineString( multiLineString, 1 );
   }
 
@@ -111,7 +111,7 @@ public class MultiLineStringContentHandlerTest extends TestCase
   @Test
   public void testMultiLineString3( ) throws Exception
   {
-    final GM_MultiCurve multiLineString = parseMultiLineString( "resources/multiLineString3.gml" );
+    final GM_MultiCurve multiLineString = parseMultiLineString( "/etc/test/resources/multiLineString3.gml" );
     assertMultiLineString( multiLineString, 2 );
   }
 
