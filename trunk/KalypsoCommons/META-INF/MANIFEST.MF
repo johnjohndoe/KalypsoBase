@@ -39,27 +39,13 @@ Bundle-ClassPath: lib/jaxb_2_2_4/activation.jar,
  lib/slf4j-1.6.4/slf4j-jdk14-1.6.4.jar,
  lib/jgraph/jgraphx_1_5_1_11.jar,
  lib/opencsv/opencsv-2.3.jar,
- lib/guava/guava-12.0.jar,
  lib/joda-time/joda-time-2.1.jar,
- .,
- lib/breadcrumb/nu.bibi.breadcrumb.jar
+ lib/breadcrumb/nu.bibi.breadcrumb.jar,
+ .
 Bundle-Activator: org.kalypso.commons.KalypsoCommonsPlugin
 Bundle-Vendor: http://sourceforge.net/projects/kalypsobase/
 Bundle-Localization: plugin
 Export-Package: au.com.bytecode.opencsv,
- com.google.common.annotations,
- com.google.common.base,
- com.google.common.base.internal,
- com.google.common.cache,
- com.google.common.collect,
- com.google.common.eventbus,
- com.google.common.hash,
- com.google.common.io,
- com.google.common.math,
- com.google.common.net,
- com.google.common.primitives,
- com.google.common.reflect,
- com.google.common.util.concurrent,
  com.itextpdf.text,
  com.itextpdf.text.error_messages,
  com.itextpdf.text.exceptions,
@@ -447,6 +433,7 @@ Require-Bundle: org.junit4;resolution:=optional,
  org.eclipse.jface.databinding;visibility:=reexport,
  org.kalypso.contribs.eclipseplatform;visibility:=reexport,
  org.kalypso.contribs.java;visibility:=reexport,
- org.kalypso.deegree2;visibility:=reexport
+ org.kalypso.deegree2;visibility:=reexport,
+ com.google.guava;visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
