@@ -82,7 +82,8 @@ import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor;
 import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor.ADVANCE_MODE;
 import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.gml.IProfileProvider;
+import org.kalypso.model.wspm.core.gml.IProfileFeature;
+import org.kalypso.model.wspm.core.gml.IProfileSelection;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
@@ -91,7 +92,7 @@ import org.kalypso.model.wspm.core.profil.wrappers.ProfileRecord;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.view.IProfileFeatureSelectionListener;
+import org.kalypso.model.wspm.ui.view.IProfileSelectionListener;
 import org.kalypso.model.wspm.ui.view.ProfileFeatureSeletionHandler;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 import org.kalypso.observation.result.IComponent;
@@ -111,7 +112,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelection;
  * @author Gernot Belger
  * @author kimwerner
  */
-public class TableView extends ViewPart implements ITupleResultViewerProvider, IProfileFeatureSelectionListener
+public class TableView extends ViewPart implements ITupleResultViewerProvider, IProfileSelectionListener
 {
   public static final String ID = "org.kalypso.model.wspm.ui.view.table.TableView"; //$NON-NLS-1$
 
@@ -392,13 +393,15 @@ public class TableView extends ViewPart implements ITupleResultViewerProvider, I
   }
 
   @Override
-  public void handleProfilProviderChanged( final IProfileProvider provider )
+  public void handleProfilSourceChanged( final IProfileSelection selection )
   {
     if( m_profile != null )
       m_profile.removeProfilListener( m_profileListener );
 
     // TODO: get the profile in the async method call
-    m_profile = provider == null ? null : provider.getProfile();
+    final IProfileFeature profileFeature = selection == null ? null : selection.getProfileFeature();
+
+    m_profile = profileFeature == null ? null : profileFeature.getProfile();
 
     if( m_profile != null )
     {

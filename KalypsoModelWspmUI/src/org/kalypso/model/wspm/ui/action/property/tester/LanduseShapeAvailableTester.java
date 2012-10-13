@@ -49,7 +49,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.model.wspm.ui.action.ProfilesSelection;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.ImportLanduseShapeWizard;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 
@@ -109,7 +109,7 @@ public class LanduseShapeAvailableTester extends PropertyTester
     if( !(receiver instanceof ISelection) )
       return null;
 
-    final ProfileSelection selection = new ProfileSelection( (ISelection) receiver );
+    final ProfilesSelection selection = new ProfilesSelection( (ISelection) receiver );
     final CommandableWorkspace workspace = selection.getWorkspace();
     if( Objects.isNull( workspace ) )
       return null;

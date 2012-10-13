@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -56,7 +55,8 @@ import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.IProfileProvider;
 import org.kalypso.model.wspm.core.gml.IProfileProviderListener;
-import org.kalypso.model.wspm.core.gml.ProfileFeatureSelections;
+import org.kalypso.model.wspm.core.gml.IProfileSelection;
+import org.kalypso.model.wspm.core.gml.ProfileSelection;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypsodeegree.model.feature.Feature;
@@ -89,13 +89,13 @@ public class ProfileFeatureSeletionHandler
     }
   };
 
-  private final IProfileFeatureSelectionListener m_part;
+  private final IProfileSelectionListener m_part;
 
-  private Pair<IProfileFeature, Object> m_profileFeatureAnSelection;
+  private IProfileSelection m_selectedElement;
 
   private IWorkbenchPart m_profileSourcePart;
 
-  public ProfileFeatureSeletionHandler( final IProfileFeatureSelectionListener part )
+  public ProfileFeatureSeletionHandler( final IProfileSelectionListener part )
   {
     m_part = part;
 
@@ -119,17 +119,21 @@ public class ProfileFeatureSeletionHandler
 
   protected void handleProfileChanged( final IProfileProvider provider )
   {
-    m_part.handleProfilProviderChanged( provider );
+    final IProfileFeature selectedProvider = m_selectedElement == null ? null : m_selectedElement.getProfileFeature();
+    if( provider != selectedProvider )
+      return;
+
+    m_part.handleProfilSourceChanged( m_selectedElement );
 
     // HACK/REMARK: sometimes, the selected object is not directly the profile but a referencing feasture (e.g. TuhhReachSegment)
     // In order to let this element to refresh it's state (e.g. the decorator on the state tree), we fire an extra event on this element
 
-    final Pair<IProfileFeature, Object> profileFeatureAnSelection = m_profileFeatureAnSelection;
-    if( profileFeatureAnSelection == null )
+    final IProfileSelection selectedElement = m_selectedElement;
+    if( selectedElement == null )
       return;
 
-    final Object selection = profileFeatureAnSelection.getValue();
-    if( selection == profileFeatureAnSelection.getKey() )
+    final Object selection = selectedElement.getSource();
+    if( selection == selectedElement.getProfileFeature() )
       return;
 
     if( !(selection instanceof Feature) )
@@ -146,26 +150,26 @@ public class ProfileFeatureSeletionHandler
 
   protected void handleSelectionChanged( final IStructuredSelection selection )
   {
-    final Pair<IProfileFeature, Object> profileAndSelection = ProfileFeatureSelections.findProfile( selection );
-    setProfileFeature( profileAndSelection );
+    final IProfileSelection profileAndSource = ProfileSelection.fromSelection( selection );
+    setSelectedElement( profileAndSource );
   }
 
-  private void setProfileFeature( final Pair<IProfileFeature, Object> profileAndSelection )
+  private void setSelectedElement( final IProfileSelection selection )
   {
-    if( Objects.equal( profileAndSelection, m_profileFeatureAnSelection ) )
+    if( Objects.equal( selection, m_selectedElement ) )
       return;
 
     final IProfileProvider oldProfileFeature = getProfileFeature();
     if( oldProfileFeature != null )
       oldProfileFeature.removeProfilProviderListener( m_providerListener );
 
-    m_profileFeatureAnSelection = profileAndSelection;
+    m_selectedElement = selection;
 
     final IProfileProvider profileFeature = getProfileFeature();
     if( profileFeature != null )
       profileFeature.addProfilProviderListener( m_providerListener );
 
-    m_part.handleProfilProviderChanged( profileFeature );
+    m_part.handleProfilSourceChanged( selection );
   }
 
   public void dispose( )
@@ -210,18 +214,23 @@ public class ProfileFeatureSeletionHandler
 
   public IProfile getProfile( )
   {
-    final IProfileProvider profileFeature = getProfileFeature();
-    if( profileFeature != null )
-      return profileFeature.getProfile();
-
-    return null;
-  }
-
-  public IProfileProvider getProfileFeature( )
-  {
-    if( m_profileFeatureAnSelection == null )
+    final IProfileFeature profileFeature = getProfileFeature();
+    if( profileFeature == null )
       return null;
 
-    return m_profileFeatureAnSelection.getKey();
+    return profileFeature.getProfile();
+  }
+
+  private IProfileFeature getProfileFeature( )
+  {
+    if( m_selectedElement == null )
+      return null;
+
+    return m_selectedElement.getProfileFeature();
+  }
+
+  public IProfileSelection getProfileSelection( )
+  {
+    return m_selectedElement;
   }
 }

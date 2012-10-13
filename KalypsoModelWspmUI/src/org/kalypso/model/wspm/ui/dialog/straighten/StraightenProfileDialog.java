@@ -61,7 +61,7 @@ import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.model.wspm.ui.action.ProfilesSelection;
 import org.kalypso.model.wspm.ui.dialog.straighten.data.CORRECT_POINTS_ENABLEMENT;
 import org.kalypso.model.wspm.ui.dialog.straighten.provider.CorrectPointsEnablementLabelProvider;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -105,7 +105,7 @@ public class StraightenProfileDialog extends TitleAreaDialog
    * @param secondPoint
    *          The second point.
    */
-  public StraightenProfileDialog( final Shell parentShell, final ProfileSelection profileSelection, final IProfileFeature profile, final Point firstPoint, final Point secondPoint )
+  public StraightenProfileDialog( final Shell parentShell, final ProfilesSelection profileSelection, final IProfileFeature profile, final Point firstPoint, final Point secondPoint )
   {
     super( parentShell );
 
@@ -193,7 +193,7 @@ public class StraightenProfileDialog extends TitleAreaDialog
    * @param secondPoint
    *          The second point.
    */
-  private void initializeData( final ProfileSelection profileSelection, final IProfileFeature profile, final Point firstPoint, final Point secondPoint )
+  private void initializeData( final ProfilesSelection profileSelection, final IProfileFeature profile, final Point firstPoint, final Point secondPoint )
   {
     try
     {

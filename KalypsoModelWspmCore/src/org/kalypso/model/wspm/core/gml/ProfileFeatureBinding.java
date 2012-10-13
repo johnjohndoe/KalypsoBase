@@ -22,12 +22,11 @@ import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
-import org.kalypso.model.wspm.core.gml.validation.ProfileFetureValidationListener;
+import org.kalypso.model.wspm.core.gml.validation.ProfileFeatureValidationListener;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileListener;
 import org.kalypso.model.wspm.core.profil.ProfileListenerAdapter;
 import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
-import org.kalypso.model.wspm.core.result.ProfileAndResults;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
@@ -97,7 +96,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
 
   private IFeatureBindingCollection<Metadata> m_metadata = null;
 
-  protected ProfileFetureValidationListener m_validator;
+  protected ProfileFeatureValidationListener m_validator;
 
   public ProfileFeatureBinding( final Object parent, final IRelationType parentRelation, final IFeatureType ft, final String id, final Object[] propValues )
   {
@@ -135,7 +134,7 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
       {
         if( Objects.isNull( m_validator ) ) // "late binding"
         {
-          m_validator = new ProfileFetureValidationListener( this );
+          m_validator = new ProfileFeatureValidationListener( this );
           addProfilProviderListener( m_validator );
         }
 
@@ -295,18 +294,6 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
   {
     m_profilListenerJob.cancel();
     m_listeners.clear();
-  }
-
-  @Override
-  public Object getResult( )
-  {
-    // HACK: If type not set, force it to be the tuhh-profile. We need this, as tuhh-profile are created via
-    // the gml-tree which knows nothing about profiles... Everyone else should create profile programatically
-    // and directly set the preferred type.
-    if( getProfileType() == null )
-      setProfileType( "org.kalypso.model.wspm.tuhh.profiletype" ); //$NON-NLS-1$
-
-    return ProfileAndResults.findResultNode( this );
   }
 
   protected void handleCachedProfileChanged( final ProfileChangeHint hint )

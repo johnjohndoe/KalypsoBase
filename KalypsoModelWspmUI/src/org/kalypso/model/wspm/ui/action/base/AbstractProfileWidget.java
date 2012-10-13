@@ -57,7 +57,7 @@ import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.core.profil.ProfileListenerAdapter;
 import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
-import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.model.wspm.ui.action.ProfilesSelection;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
@@ -94,7 +94,7 @@ public class AbstractProfileWidget extends AbstractWidget
     }
   };
 
-  private ProfileSelection m_selection;
+  private ProfilesSelection m_selection;
 
   private IProfileFeature m_profileFeature;
 
@@ -185,7 +185,7 @@ public class AbstractProfileWidget extends AbstractWidget
     return null;
   }
 
-  public void setSelection( final ProfileSelection selection )
+  public void setSelection( final ProfilesSelection selection )
   {
     final IProfileFeature profile = selection == null || selection.getSelectedProfiles().length < 1 ? null : selection.getSelectedProfiles()[0];
 
@@ -205,7 +205,7 @@ public class AbstractProfileWidget extends AbstractWidget
     handleOnProfilProviderChanged( m_profileFeature );
   }
 
-  protected ProfileSelection getSelection( )
+  protected ProfilesSelection getSelection( )
   {
     return m_selection;
   }

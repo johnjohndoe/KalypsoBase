@@ -38,46 +38,17 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.core.gml;
+package org.kalypso.model.wspm.ui.view;
 
-import java.util.Iterator;
-
-import org.apache.commons.lang3.tuple.Pair;
-import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IViewPart;
+import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
+import org.kalypso.model.wspm.core.gml.IProfileSelection;
+import org.kalypso.ogc.gml.selection.IFeatureSelection;
 
 /**
  * @author Dirk Kuch
  */
-public final class ProfileFeatureSelections
+public interface IProfileSelectionListener extends IViewPart, IAdapterEater<IFeatureSelection>
 {
-  private ProfileFeatureSelections( )
-  {
-  }
-
-  public static Pair<IProfileFeature, Object> findProfile( final IStructuredSelection selection )
-  {
-    for( final Iterator< ? > itr = selection.iterator(); itr.hasNext(); )
-    {
-      final Pair<IProfileFeature, Object> profileAndSelection = toProfileFeature( itr.next() );
-      if( profileAndSelection != null )
-        return profileAndSelection;
-    }
-
-    return null;
-  }
-
-  private static Pair<IProfileFeature, Object> toProfileFeature( final Object element )
-  {
-    if( element instanceof IProfileFeature )
-      return Pair.of( (IProfileFeature)element, element );
-
-    if( element instanceof IAdaptable )
-    {
-      final IProfileFeature profile = (IProfileFeature)((IAdaptable)element).getAdapter( IProfileFeature.class );
-      return Pair.of( profile, element );
-    }
-
-    return null;
-  }
+  void handleProfilSourceChanged( final IProfileSelection selection );
 }

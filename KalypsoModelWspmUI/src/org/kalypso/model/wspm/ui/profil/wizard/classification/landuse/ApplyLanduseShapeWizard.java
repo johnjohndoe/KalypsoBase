@@ -48,7 +48,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
-import org.kalypso.model.wspm.ui.action.ProfileSelection;
+import org.kalypso.model.wspm.ui.action.ProfilesSelection;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfileHandlerUtils;
 import org.kalypso.model.wspm.ui.profil.wizard.ProfilesChooserPage;
@@ -71,7 +71,7 @@ public class ApplyLanduseShapeWizard extends Wizard implements IWorkbenchWizard
 
   private ProfilesChooserPage m_profileChooserPage;
 
-  private ProfileSelection m_profileSelection;
+  private ProfilesSelection m_profileSelection;
 
   private CommandableWorkspace m_workspace;
 
@@ -134,7 +134,7 @@ public class ApplyLanduseShapeWizard extends Wizard implements IWorkbenchWizard
   @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )
   {
-    final ProfileSelection profileSelection = ProfileHandlerUtils.getSelectionChecked( selection );
+    final ProfilesSelection profileSelection = ProfileHandlerUtils.getSelectionChecked( selection );
     m_profileSelection = profileSelection;
 
     m_workspace = m_profileSelection.getWorkspace();
