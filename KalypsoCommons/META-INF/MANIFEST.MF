@@ -434,6 +434,6 @@ Require-Bundle: org.junit4;resolution:=optional,
  org.kalypso.contribs.eclipseplatform;visibility:=reexport,
  org.kalypso.contribs.java;visibility:=reexport,
  org.kalypso.deegree2;visibility:=reexport,
- com.google.guava;visibility:=reexport
+ com.google.guava;bundle-version="13.0.1";visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
