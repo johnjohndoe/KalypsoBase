@@ -233,7 +233,7 @@ public final class WspmClassifications
 
   public static double getAx( final IProfileRecord point )
   {
-    final Double bewuchs = point.getBewuchsDp();
+    final Double bewuchs = point.getBewuchsAx();
     if( Objects.isNotNull( bewuchs ) )
       return bewuchs.doubleValue();
 
@@ -250,7 +250,7 @@ public final class WspmClassifications
 
   public static double getAy( final IProfileRecord point )
   {
-    final Double bewuchs = point.getBewuchsDp();
+    final Double bewuchs = point.getBewuchsAy();
     if( Objects.isNotNull( bewuchs ) )
       return bewuchs.doubleValue();
 
