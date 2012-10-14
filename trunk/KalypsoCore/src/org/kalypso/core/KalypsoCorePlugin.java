@@ -109,9 +109,6 @@ public class KalypsoCorePlugin extends AbstractUIPlugin
     INSTANCE = this;
   }
 
-  /**
-   * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
-   */
   @Override
   public void start( final BundleContext context ) throws Exception
   {
@@ -121,9 +118,6 @@ public class KalypsoCorePlugin extends AbstractUIPlugin
     m_imgProvider.resetTmpFiles();
   }
 
-  /**
-   * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
-   */
   @Override
   public void stop( final BundleContext context ) throws Exception
   {

@@ -80,16 +80,26 @@ public class ProfileFeatureValidationListener implements IProfileProviderListene
     job.setUser( false );
     job.setProperty( IProgressConstants2.KEEP_PROPERTY, Boolean.FALSE );
 
-    job.schedule();
+    job.schedule( 100 );
+  }
+
+  public void dispose( )
+  {
+    if( m_listener != null )
+      m_listener.dispose();
   }
 
   @Override
   public void onProfilProviderChanged( final IProfileProvider provider )
   {
+    final IProfile profile = provider.getProfile();
+
+    if( m_profile == profile )
+      return;
+
     if( Objects.isNotNull( m_profile, m_listener ) )
       m_profile.removeProfilListener( m_listener );
 
-    final IProfile profile = provider.getProfile();
     m_profile = profile;
 
     if( Objects.isNotNull( m_profile ) )
@@ -99,6 +109,9 @@ public class ProfileFeatureValidationListener implements IProfileProviderListene
       final IFile file = getFile( source );
       if( file != null )
       {
+        if( m_listener != null )
+          m_listener.dispose();
+
         m_listener = new ValidationProfilListener( m_profile, file, null, source.getId() );
         m_profile.addProfilListener( m_listener );
       }

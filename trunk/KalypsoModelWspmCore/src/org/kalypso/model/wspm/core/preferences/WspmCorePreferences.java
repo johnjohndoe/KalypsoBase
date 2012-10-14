@@ -38,23 +38,55 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.model.wspm.core.gml.validation;
+package org.kalypso.model.wspm.core.preferences;
 
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.kalypso.core.KalypsoCorePlugin;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 
 /**
- * Class used to initialize default preference values.
+ * Access to wspm ui preferences.
+ *
+ * @author Gernot Belger
  */
-public class ValidationPreferenceInitializer extends AbstractPreferenceInitializer
+public final class WspmCorePreferences
 {
-  @Override
-  public void initializeDefaultPreferences( )
+  public static final String P_VALIDATE_PROFILE = "validateProfile"; //$NON-NLS-1$
+
+  public static final String P_VALIDATE_RULES_TO_EXCLUDE = "validateRulesToApply"; //$NON-NLS-1$
+
+  private WspmCorePreferences( )
   {
-    final IPreferenceStore store = KalypsoCorePlugin.getDefault().getPreferenceStore();
-    store.setDefault( ValidationPreferenceConstants.P_VALIDATE_PROFILE, true );
-    store.setDefault( ValidationPreferenceConstants.P_VALIDATE_RULES_TO_EXCLUDE, StringUtils.EMPTY );
+    throw new UnsupportedOperationException();
+  }
+
+  private static IPreferenceStore getStore( )
+  {
+    return KalypsoModelWspmCorePlugin.getDefault().getPreferenceStore();
+  }
+
+  public static void initDefaults( final IPreferenceStore store )
+  {
+    store.setDefault( P_VALIDATE_PROFILE, true );
+    store.setDefault( P_VALIDATE_RULES_TO_EXCLUDE, StringUtils.EMPTY );
+  }
+
+  public static boolean getValidateProfiles( )
+  {
+    final IPreferenceStore store = getStore();
+    return store.getBoolean( WspmCorePreferences.P_VALIDATE_PROFILE );
+  }
+
+
+  public static String[] getExcludedRules( )
+  {
+    final String excludes = getStore().getString( P_VALIDATE_RULES_TO_EXCLUDE );
+    return excludes.split( ";" ); //$NON-NLS-1$
+  }
+
+  public static void addPreferenceListener( final IPropertyChangeListener listener )
+  {
+    getStore().addPropertyChangeListener( listener );
   }
 }

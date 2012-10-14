@@ -5,12 +5,15 @@ package org.kalypso.contribs.eclipse.jface.preference;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -26,7 +29,7 @@ import org.eclipse.swt.widgets.Group;
 /**
  * A field editor in form of a checkable list.
  *
- * @author belger
+ * @author Gernot Belger
  */
 public class ChecklistFieldEditor extends FieldEditor implements ICheckStateListener
 {
@@ -91,7 +94,7 @@ public class ChecklistFieldEditor extends FieldEditor implements ICheckStateList
       m_group.setLayoutData( gridData );
       m_group.setText( getLabelText() );
 
-      m_checklist = CheckboxTableViewer.newCheckList( m_group, SWT.NONE );
+      m_checklist = CheckboxTableViewer.newCheckList( m_group, SWT.BORDER );
       m_checklist.setContentProvider( new ArrayContentProvider() );
       m_checklist.addCheckStateListener( this );
       m_checklist.getControl().setLayoutData( new GridData( GridData.FILL_BOTH ) );
@@ -143,18 +146,20 @@ public class ChecklistFieldEditor extends FieldEditor implements ICheckStateList
   @Override
   protected void doStore( )
   {
-    if( m_checklist != null )
+    if( m_checklist != null && m_checkedElements != null )
     {
-      final StringBuffer selection = new StringBuffer();
-
-      final List<Object> checked = m_checkedElements == null ? new ArrayList<>() : Arrays.asList( m_checkedElements );
+      // FIXME: this is very special and was made for the validation rules of WspmCore...
+      final Set<String> excluded = new HashSet<>();
 
       for( final Object element : m_content )
       {
-        if( !checked.contains( element ) )
-          selection.append( m_contentMap.get( element ) );
+        if( !ArrayUtils.contains( m_checkedElements, element ) )
+          excluded.add( m_contentMap.get( element ) );
       }
-      getPreferenceStore().setValue( getPreferenceName(), selection.toString() );
+
+      final String preference = StringUtils.join( excluded, ';' );
+
+      getPreferenceStore().setValue( getPreferenceName(), preference );
     }
   }
 

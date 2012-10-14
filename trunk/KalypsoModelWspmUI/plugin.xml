@@ -8,10 +8,6 @@
    <extension-point id="profilPointPropertyUiHandlerProvider" name="profilPointPropertyUiHandlerProvider" schema="schema/profilPointPropertyUiHandlerProvider.exsd"/>
    <extension-point id="chartProvider" name="chartProvider" schema="schema/chartProvider.exsd"/>
 
-        <extension
-           point="org.eclipse.core.runtime.preferences">
-        <initializer class="org.kalypso.model.wspm.ui.preferences.PreferenceInitializer"/>
-     </extension>
      <extension
            point="org.eclipse.ui.viewActions">
         <viewContribution
@@ -99,8 +95,7 @@
       <super type="org.eclipse.core.resources.problemmarker"/>
       <persistent value="false"/>
    </extension>
-   <extension
-           point="org.eclipse.ui.preferencePages">
+   <extension point="org.eclipse.ui.preferencePages">
         <page
               category="org.kalypso.ui.preferences.KalypsoPreferencePage"
               class="org.kalypso.model.wspm.ui.preferences.KalypsoWspmPreferencePage"
@@ -111,14 +106,18 @@
               class="org.kalypso.model.wspm.ui.preferences.ValidatorPreferencePage"
               id="org.kalypso.model.wspm.ui.preferences.ValidatorPreferencePage"
               name="%org.kalypso.model.wspm.ui.preferences.ValidatorPreferencePage"/>
+        <!--
+        FIXME: not use any more ,but we expect to have some preferences for the table in the future, so kept for the moment.
+         
         <page
               category="org.kalypso.model.wspm.ui.preferences.KalypsoWspmPreferencePage"
               class="org.kalypso.model.wspm.ui.preferences.TablePreferencePage"
               id="org.kalypso.model.wspm.ui.preferences.TablePreferencePage"
               name="%page.name.0">
         </page>
-     </extension>
-     <extension
+        -->
+   </extension>
+   <extension
            point="org.kalypso.model.wspm.ui.profilPointsSource">
         <profilPointsSource
               class="org.kalypso.model.wspm.ui.profil.wizard.pointsInsert.impl.FilePointsSource"
@@ -286,11 +285,11 @@
                   style="push">
             </command>
             <command
-                  commandId="org.kalypso.ui.tupleResult.moveDownSelectedRowsCommand"
+                  commandId="org.kalypso.ui.tupleResult.moveUpSelectedRowsCommand"
                   style="push">
             </command>
             <command
-                  commandId="org.kalypso.ui.tupleResult.moveUpSelectedRowsCommand"
+                  commandId="org.kalypso.ui.tupleResult.moveDownSelectedRowsCommand"
                   style="push">
             </command>
             <command

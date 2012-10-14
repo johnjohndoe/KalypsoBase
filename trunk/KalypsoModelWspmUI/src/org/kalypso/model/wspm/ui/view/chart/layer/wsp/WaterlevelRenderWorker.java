@@ -56,7 +56,7 @@ import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.util.WaterlevelIntersectionWorker;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
-import org.kalypso.model.wspm.ui.preferences.Preferences;
+import org.kalypso.model.wspm.ui.preferences.WspmUiPreferences;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -135,7 +135,7 @@ public class WaterlevelRenderWorker
 
   private Range<Double> getRestriction( )
   {
-    final String markerType = Preferences.getWaterlevelRestrictionMarker();
+    final String markerType = WspmUiPreferences.getWaterlevelRestrictionMarker();
     final IProfilePointMarker[] markers = m_profile.getPointMarkerFor( markerType );
 
     if( ArrayUtils.isEmpty( markers ) )

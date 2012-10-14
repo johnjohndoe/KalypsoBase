@@ -43,27 +43,18 @@ package org.kalypso.model.wspm.core.gml.validation;
 import java.text.DateFormat;
 import java.util.Calendar;
 
-import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.progress.IProgressConstants;
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.debug.KalypsoModelWspmCoreDebug;
-import org.kalypso.model.wspm.core.i18n.Messages;
+import org.kalypso.model.wspm.core.preferences.WspmCorePreferences;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
-import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.core.profil.validator.ValidatorRuleSet;
 
 /**
@@ -71,10 +62,9 @@ import org.kalypso.model.wspm.core.profil.validator.ValidatorRuleSet;
  *
  * @author Gernot Belger
  */
-@SuppressWarnings("restriction")
 public class ValidationProfilListener implements IProfileListener
 {
-  private final IPropertyChangeListener m_propertyListener;
+  private final IPropertyChangeListener m_preferencesListener;
 
   private final WorkspaceJob m_validateJob;
 
@@ -83,7 +73,7 @@ public class ValidationProfilListener implements IProfileListener
     if( file == null ) // start calculation
     {
       m_validateJob = null;
-      m_propertyListener = null;
+      m_preferencesListener = null;
 
       return;
     }
@@ -91,76 +81,40 @@ public class ValidationProfilListener implements IProfileListener
     final String profiletype = profile.getType();
     final ValidatorRuleSet rules = KalypsoModelWspmCorePlugin.getValidatorSet( profiletype );
 
-    m_validateJob = new WorkspaceJob( Messages.getString( "ValidationProfilListener_0" ) ) //$NON-NLS-1$
-    {
-      @Override
-      public IStatus runInWorkspace( final IProgressMonitor monitor )
-      {
-        if( monitor.isCanceled() )
-          return Status.CANCEL_STATUS;
-
-        final IPreferenceStore preferenceStore = KalypsoCorePlugin.getDefault().getPreferenceStore();
-        final boolean validate = preferenceStore.getBoolean( ValidationPreferenceConstants.P_VALIDATE_PROFILE );
-        final String excludes = preferenceStore.getString( ValidationPreferenceConstants.P_VALIDATE_RULES_TO_EXCLUDE );
-
-        final IValidatorMarkerCollector collector = new ResourceValidatorMarkerCollector( file, editorID, "" + profile.getStation(), featureID ); //$NON-NLS-1$
-
-        try
-        {
-          collector.reset( featureID );
-        }
-        catch( final ResourceException e1 )
-        {
-          // ignore: this kind of exception is thrown, if the marker id to be deleted is already out of scope.
-        }
-        catch( final CoreException e )
-        {
-          return e.getStatus();
-        }
-
-        KalypsoModelWspmCoreDebug.DEBUG_VALIDATION_MARKER.printf( " (validation_performance_check)    startValidation : %s\n", DateFormat.getTimeInstance().format( Calendar.getInstance().getTime() ) ); //$NON-NLS-1$
-
-        // TODO: use monitor and check for cancel
-        final IStatus status = rules.validateProfile( profile, collector, validate, excludes.split( ";" ), monitor ); //$NON-NLS-1$
-
-        final IMarker[] markers = collector.getMarkers();
-        profile.setProblemMarker( markers );
-        return status;
-      }
-    };
-
+    m_validateJob = new ValidateProfileJob( editorID, file, featureID, profile, rules );
     m_validateJob.setSystem( true );
     m_validateJob.setRule( file.getWorkspace().getRuleFactory().markerRule( file ) );
     m_validateJob.setProperty( IProgressConstants.NO_IMMEDIATE_ERROR_PROMPT_PROPERTY, Boolean.TRUE );
 
-    m_propertyListener = new IPropertyChangeListener()
+    m_preferencesListener = new IPropertyChangeListener()
     {
       @Override
       public void propertyChange( final PropertyChangeEvent event )
       {
-        if( ValidationPreferenceConstants.P_VALIDATE_PROFILE.equals( event.getProperty() ) || ValidationPreferenceConstants.P_VALIDATE_RULES_TO_EXCLUDE.equals( event.getProperty() ) )
-        {
-          revalidate(); // TODO: validate all profiles... in that case!
-        }
+        if( WspmCorePreferences.P_VALIDATE_PROFILE.equals( event.getProperty() ) || WspmCorePreferences.P_VALIDATE_RULES_TO_EXCLUDE.equals( event.getProperty() ) )
+          revalidate();
       }
     };
 
-    KalypsoCorePlugin.getDefault().getPreferenceStore().addPropertyChangeListener( m_propertyListener );
+    // FIXME: listener never removed....
+    WspmCorePreferences.addPreferenceListener( m_preferencesListener );
 
     revalidate();
   }
 
   public void dispose( )
   {
-    KalypsoCorePlugin.getDefault().getPreferenceStore().removePropertyChangeListener( m_propertyListener );
+    KalypsoCorePlugin.getDefault().getPreferenceStore().removePropertyChangeListener( m_preferencesListener );
   }
 
   protected void revalidate( )
   {
+    if( m_validateJob == null )
+      return;
+
     KalypsoModelWspmCoreDebug.DEBUG_VALIDATION_MARKER.printf( "(validation_performance_check)Revalidate : %s\n", DateFormat.getTimeInstance().format( Calendar.getInstance().getTime() ) ); //$NON-NLS-1$
 
-    if( Objects.isNotNull( m_validateJob ) )
-      m_validateJob.cancel(); // Just in case, to avoid too much validations
+    m_validateJob.cancel(); // Just in case, to avoid too much validations
 
     m_validateJob.schedule( 100 );
   }
@@ -175,6 +129,6 @@ public class ValidationProfilListener implements IProfileListener
   @Override
   public void onProblemMarkerChanged( final IProfile source )
   {
-    // Ignored
+    // Ignored, we are the cause for that...
   }
 }
