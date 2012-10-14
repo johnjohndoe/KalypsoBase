@@ -62,9 +62,6 @@ public class PropertyEditDelegate implements IViewActionDelegate
 {
   private IViewPart m_view;
 
-  /**
-   * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
-   */
   @Override
   public void init( final IViewPart view )
   {
@@ -100,16 +97,10 @@ public class PropertyEditDelegate implements IViewActionDelegate
     final WizardDialog2 dialog = new WizardDialog2( viewShell, propertyEditWizard );
     dialog.setRememberSize( true );
     dialog.open();
-
   }
 
-  /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-   *      org.eclipse.jface.viewers.ISelection)
-   */
   @Override
   public void selectionChanged( final IAction action, final ISelection selection )
   {
   }
-
 }
