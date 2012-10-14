@@ -53,6 +53,8 @@ import org.kalypso.contribs.eclipse.core.runtime.AdapterUtils;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.IProfileSelectionProvider;
+import org.kalypso.model.wspm.core.gml.WspmProject;
+import org.kalypso.model.wspm.core.gml.WspmWaterBody;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ui.editor.gmleditor.part.FeatureAssociationTypeElement;
@@ -98,12 +100,9 @@ public class ProfilesSelection
 
     final List< ? > items = ((IStructuredSelection) m_selection).toList();
     for( final Object item : items )
-    {
       addItem( item );
-    }
 
     addSisters();
-
   }
 
   /**
@@ -141,6 +140,12 @@ public class ProfilesSelection
     if( fate != null )
     {
       addFeatureProperty( (FeatureAssociationTypeElement) item );
+      return;
+    }
+
+    if( item instanceof WspmWaterBody )
+    {
+      addFeatureProperty( (IFeatureRelation)((WspmWaterBody)item).getProperty( WspmWaterBody.MEMBER_PROFILE ) );
       return;
     }
 
@@ -218,6 +223,13 @@ public class ProfilesSelection
     final IRelationType rt = featureList.getPropertyType();
     final Feature parentFeature = featureList.getOwner();
     addParentFeature( parentFeature, rt );
+
+    if( rt.getQName().equals( WspmProject.QN_MEMBER_WATER_BODY ) )
+    {
+      final List< ? > value = (List< ? >)featureList.getValue();
+      for( final Object element : value )
+        addItem( element );
+    }
   }
 
   private void addParentFeature( final Feature parentFeature, final IRelationType property )
