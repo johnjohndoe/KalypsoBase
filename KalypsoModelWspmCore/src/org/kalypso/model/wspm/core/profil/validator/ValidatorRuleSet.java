@@ -51,7 +51,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.KalypsoModelWspmCorePlugin;
 import org.kalypso.model.wspm.core.debug.KalypsoModelWspmCoreDebug;
 import org.kalypso.model.wspm.core.i18n.Messages;
@@ -71,11 +70,9 @@ public class ValidatorRuleSet
     m_rules = rules;
   }
 
-  public IStatus validateProfile( final IProfile profil, final IValidatorMarkerCollector collector, final boolean validate, final String[] excludeIDs, final IProgressMonitor monitor )
+  public IStatus validateProfile( final IProfile profil, final IValidatorMarkerCollector collector, final String[] excludeIDs, final IProgressMonitor monitor )
   {
     final IValidatorRule[] rules = m_rules;
-    if( Objects.isNull( validate, rules ) )
-      return Status.OK_STATUS;
 
     final List<IStatus> stati = new ArrayList<>();
     final List<String> excludeRules = java.util.Arrays.asList( excludeIDs );
