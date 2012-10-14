@@ -79,7 +79,6 @@ public class FindVectorVisitor implements IProfileRecordVisitor
 
       throw new CancelVisitorException();
     }
-
   }
 
   public double getP0( )

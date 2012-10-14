@@ -65,11 +65,11 @@ public class FillMissingProfileGeometriesManipulator implements IProfileManipula
   @Override
   public Pair<IProfileChange[], IStatus> performProfileManipulation( final IProfile profile, final IProgressMonitor monitor )
   {
-    // FIXME: profile is directly manipulated, what the HELL!
     profile.accept( new InterpolateMissingCoordinatesVisitor(), 1 );
     if( m_extrapolate )
       profile.accept( new ExtrapolateMissingCoordinatesVisitor(), 1 );
 
+    // FIXME: needs to return change!
     return Pair.of( new IProfileChange[] {}, Status.OK_STATUS );
   }
 }

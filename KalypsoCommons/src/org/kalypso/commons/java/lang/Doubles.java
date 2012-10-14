@@ -103,6 +103,7 @@ public final class Doubles
     return null;
   }
 
+  // FIXME bad name!
   public static boolean isNaN( final Double... numbers )
   {
     if( ArrayUtils.isEmpty( numbers ) )
