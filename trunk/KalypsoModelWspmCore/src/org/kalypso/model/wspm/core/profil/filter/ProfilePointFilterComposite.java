@@ -97,9 +97,6 @@ public class ProfilePointFilterComposite extends ListSelectionComposite implemen
     this( new ArrayContentProvider(), LABEL_PROVIDER, useageHint );
   }
 
-  /**
-   *
-   */
   private ProfilePointFilterComposite( final IStructuredContentProvider contentProvider, final ILabelProvider labelProvider, final String usageHint )
   {
     super( contentProvider, labelProvider );

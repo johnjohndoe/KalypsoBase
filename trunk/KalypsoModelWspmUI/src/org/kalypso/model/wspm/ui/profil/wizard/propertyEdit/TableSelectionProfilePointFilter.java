@@ -86,7 +86,10 @@ public class TableSelectionProfilePointFilter implements IProfilePointFilter
   @Override
   public boolean accept( final IProfile profil, final IProfileRecord point )
   {
-    return m_points.contains( point );
+    if( m_points.contains( point ) )
+      return true;
+
+    return m_points.contains( point.getRecord() );
   }
 
   @Override
