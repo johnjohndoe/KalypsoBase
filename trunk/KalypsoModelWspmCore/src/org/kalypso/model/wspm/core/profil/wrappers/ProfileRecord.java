@@ -395,8 +395,9 @@ public class ProfileRecord extends AbstractRecordWrapper implements IProfileReco
     final int index = getIndex();
     if( index == 0 )
       return null;
+
     if( result.size() >= index )
-      return new ProfileRecord( getProfile(), result.get( index - 1 ) );
+      return getProfile().getPoint( index - 1 );
 
     return getProfile().findPreviousPoint( getBreite() );
   }

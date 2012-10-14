@@ -55,7 +55,6 @@ import org.kalypso.model.wspm.core.profil.base.InterpolateMissingCoordinatesVisi
  */
 public class FillMissingProfileGeocoordinatesRunnable implements ICoreRunnableWithProgress
 {
-
   private final IProfile m_profile;
 
   public FillMissingProfileGeocoordinatesRunnable( final IProfile profile )
@@ -66,11 +65,9 @@ public class FillMissingProfileGeocoordinatesRunnable implements ICoreRunnableWi
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
-
     m_profile.accept( new InterpolateMissingCoordinatesVisitor(), 1 );
     m_profile.accept( new ExtrapolateMissingCoordinatesVisitor(), 1 );
 
     return new Status( IStatus.OK, KalypsoModelWspmCorePlugin.getID(), Messages.getString("FillMissingProfileGeocoordinatesRunnable_0") ); //$NON-NLS-1$
   }
-
 }

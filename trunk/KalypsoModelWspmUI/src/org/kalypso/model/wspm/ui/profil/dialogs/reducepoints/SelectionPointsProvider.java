@@ -47,6 +47,9 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.model.wspm.core.profil.wrappers.ProfileRecord;
+import org.kalypso.model.wspm.ui.i18n.Messages;
+import org.kalypso.observation.result.IRecord;
 
 /**
  * Delivers points from a selection.
@@ -55,71 +58,68 @@ import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
  */
 public class SelectionPointsProvider implements IPointsProvider
 {
-  private final IProfile m_profil;
-
   private String m_errorMessage;
 
   private IProfileRecord[] m_points = new IProfileRecord[] {};
 
-  public SelectionPointsProvider( final IProfile profil, final ISelection selection )
+  public SelectionPointsProvider( final IProfile profile, final ISelection selection, final boolean selectionMustBeContinious )
   {
-    m_profil = profil;
-
     if( selection.isEmpty() )
     {
-      m_errorMessage = org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider.0" ); //$NON-NLS-1$
+      m_errorMessage = Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider.0" ); //$NON-NLS-1$
       return;
     }
 
-    if( selection instanceof IStructuredSelection )
-    {
-// try
-// {
-      final IStructuredSelection structSel = (IStructuredSelection) selection;
+    if( !(selection instanceof IStructuredSelection) )
+      m_errorMessage = Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider.4" ); //$NON-NLS-1$
 
-      if( structSel.size() < 3 )
+    final IStructuredSelection structSel = (IStructuredSelection)selection;
+
+    // FIXME: only usefull for douglas peucker, bad for other tools!
+//    if( structSel.size() < 3 )
+//    {
+//      m_errorMessage = Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider.1" ); //$NON-NLS-1$
+//      return;
+//    }
+
+    final Object[] objects = structSel.toArray();
+
+    IProfileRecord lastPoint = null;
+    final List<IProfileRecord> points = new ArrayList<>( objects.length );
+    for( final Object object : objects )
+    {
+      final IProfileRecord record = toRecord( profile, object );
+      if( record == null )
       {
-        m_errorMessage = org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider.1" ); //$NON-NLS-1$
+        m_errorMessage = Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider.3" ); //$NON-NLS-1$
         return;
       }
 
-      final Object[] objects = structSel.toArray();
-
-      IProfileRecord lastPoint = null;
-      final List<IProfileRecord> points = new ArrayList<>( objects.length );
-      for( final Object object : objects )
+      // IMPORTANT: compare, IRecord's, as the elements may have created on the ways
+      if( selectionMustBeContinious && lastPoint != null && lastPoint.getRecord() != record.getPreviousPoint().getRecord() )
       {
-        if( object instanceof IProfileRecord )
-        {
-          final IProfileRecord point = (IProfileRecord) object;
-          if( lastPoint != null && lastPoint != point.getPreviousPoint() )
-          {
-            m_errorMessage = org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider.2" ); //$NON-NLS-1$
-            return;
-          }
-
-          points.add( point );
-          lastPoint = point;
-        }
-        else
-        {
-          m_errorMessage = org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider.3" ); //$NON-NLS-1$
-          return;
-        }
+        m_errorMessage = Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider.2" ); //$NON-NLS-1$
+        return;
       }
 
-      m_errorMessage = null;
-      m_points = points.toArray( new IProfileRecord[points.size()] );
-      return;
-// }
-// catch( final IllegalProfileOperationException e )
-// {
-// m_errorMessage = "Fehler beim Prüfen der Selektion: " + e.getLocalizedMessage();
-// return;
-// }
+      points.add( record );
+      lastPoint = record;
     }
 
-    m_errorMessage = org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider.4" ); //$NON-NLS-1$
+    m_errorMessage = null;
+    m_points = points.toArray( new IProfileRecord[points.size()] );
+  }
+
+  private IProfileRecord toRecord( final IProfile profile, final Object object )
+  {
+    if( object instanceof IProfileRecord )
+      return (IProfileRecord)object;
+
+    // IMPORTANT: elements of profile table are not IProfileRecords
+    if( object instanceof IRecord )
+      return new ProfileRecord( profile, (IRecord)object );
+
+    return null;
   }
 
   @Override
@@ -137,6 +137,6 @@ public class SelectionPointsProvider implements IPointsProvider
   @Override
   public String getName( )
   {
-    return org.kalypso.model.wspm.ui.i18n.Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider.5" ); //$NON-NLS-1$
+    return Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider.5" ); //$NON-NLS-1$
   }
 }
