@@ -20,10 +20,10 @@ package org.kalypso.model.wspm.core.gml;
 
 import java.util.Iterator;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileListener;
 import org.kalypso.model.wspm.core.result.ProfileAndResults;
 
 /**
@@ -37,15 +37,15 @@ public class ProfileSelection implements IProfileSelection
   {
     for( final Iterator< ? > itr = selection.iterator(); itr.hasNext(); )
     {
-      final IProfileSelection profileAndSource = ProfileSelection.fromObject( itr.next() );
-      if( profileAndSource != null )
-        return profileAndSource;
+      final IProfileSelection profileSelection = ProfileSelection.fromObjectOrNull( itr.next() );
+      if( profileSelection != null )
+        return profileSelection;
     }
 
-    return null;
+    return new ProfileSelection( null, null );
   }
 
-  public static IProfileSelection fromObject( final Object element )
+  private static IProfileSelection fromObjectOrNull( final Object element )
   {
     if( element instanceof IProfileFeature )
       return new ProfileSelection( (IProfileFeature)element, element );
@@ -53,7 +53,8 @@ public class ProfileSelection implements IProfileSelection
     if( element instanceof IAdaptable )
     {
       final IProfileFeature profile = (IProfileFeature)((IAdaptable)element).getAdapter( IProfileFeature.class );
-      return new ProfileSelection( profile, element );
+      if( profile != null )
+        return new ProfileSelection( profile, element );
     }
 
     return null;
@@ -63,34 +64,59 @@ public class ProfileSelection implements IProfileSelection
 
   private final IProfileFeature m_profileFeature;
 
-  private ProfileSelection( final IProfileFeature profile, final Object source )
+  /* Fixed reference to the profile, we need to create another sleection object if that changes */
+  private final IProfile m_profile;
+
+  /* Fixed reference to the result, we need to create another sleection object if that changes */
+  private final Object m_result;
+
+  public ProfileSelection( final IProfileFeature profileFeature, final Object source )
   {
-    m_profileFeature = profile;
+    m_profileFeature = profileFeature;
     m_source = source;
+    m_profile = profileFeature == null ? null : profileFeature.getProfile();
+    m_result = getResult( profileFeature );
   }
 
-  @Override
-  public int hashCode( )
+  private static Object getResult( final IProfileFeature profileFeature )
   {
-    return m_source.hashCode();
+    if( profileFeature == null )
+      return null;
+
+    // HACK: If type not set, force it to be the tuhh-profile. We need this, as tuhh-profile are created via
+    // the gml-tree which knows nothing about profiles... Everyone else should create profile programatically
+    // and directly set the preferred type.
+    if( profileFeature.getProfileType() == null )
+      profileFeature.setProfileType( "org.kalypso.model.wspm.tuhh.profiletype" ); //$NON-NLS-1$
+
+    return ProfileAndResults.findResultNode( profileFeature );
   }
 
-  @Override
-  public boolean equals( final Object obj )
-  {
-    if( obj == null )
-      return false;
-
-    if( obj == this )
-      return true;
-
-    if( obj.getClass() != getClass() )
-      return false;
-
-    final ProfileSelection other = (ProfileSelection)obj;
-
-    return new EqualsBuilder().append( m_source, other.m_source ).isEquals();
-  }
+//  @Override
+//  public int hashCode( )
+//  {
+//    if( m_source == null )
+//      return 0;
+//
+//    return m_source.hashCode();
+//  }
+//
+//  @Override
+//  public boolean equals( final Object obj )
+//  {
+//    if( obj == null )
+//      return false;
+//
+//    if( obj == this )
+//      return true;
+//
+//    if( obj.getClass() != getClass() )
+//      return false;
+//
+//    final ProfileSelection other = (ProfileSelection)obj;
+//
+//    return new EqualsBuilder().append( m_source, other.m_source ).isEquals();
+//  }
 
   @Override
   public IProfileFeature getProfileFeature( )
@@ -98,9 +124,10 @@ public class ProfileSelection implements IProfileSelection
     return m_profileFeature;
   }
 
+  @Override
   public IProfile getProfile( )
   {
-    return m_profileFeature.getProfile();
+    return m_profile;
   }
 
   @Override
@@ -112,12 +139,30 @@ public class ProfileSelection implements IProfileSelection
   @Override
   public Object getResult( )
   {
-    // HACK: If type not set, force it to be the tuhh-profile. We need this, as tuhh-profile are created via
-    // the gml-tree which knows nothing about profiles... Everyone else should create profile programatically
-    // and directly set the preferred type.
-    if( m_profileFeature.getProfileType() == null )
-      m_profileFeature.setProfileType( "org.kalypso.model.wspm.tuhh.profiletype" ); //$NON-NLS-1$
+    return m_result;
+  }
 
-    return ProfileAndResults.findResultNode( m_profileFeature );
+  @Override
+  public boolean isEmpty( )
+  {
+    return m_profileFeature == null;
+  }
+
+  @Override
+  public void addProfilListener( final IProfileListener profileListener )
+  {
+    if( m_profile == null )
+      return;
+
+    m_profile.addProfilListener( profileListener );
+  }
+
+  @Override
+  public void removeProfileListener( final IProfileListener profileListener )
+  {
+    if( m_profile == null )
+      return;
+
+    m_profile.addProfilListener( profileListener );
   }
 }

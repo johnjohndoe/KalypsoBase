@@ -67,9 +67,6 @@ import org.kalypso.observation.result.TupleResult;
  */
 public class AddRowHandler extends AbstractHandler
 {
-  /**
-   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
@@ -177,5 +174,4 @@ public class AddRowHandler extends AbstractHandler
     final String value = inputDialog.getValue();
     return NumberUtils.parseQuietDouble( value );
   }
-
 }

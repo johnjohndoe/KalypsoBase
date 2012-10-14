@@ -132,9 +132,11 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
 
       if( Objects.isNotNull( profile ) )
       {
-        if( Objects.isNull( m_validator ) ) // "late binding"
+        /* create the validator the first time the profile is created */
+        if( Objects.isNull( m_validator ) )
         {
           m_validator = new ProfileFeatureValidationListener( this );
+          // FIXME: m_validator never gets disposed ;-(
           addProfilProviderListener( m_validator );
         }
 
