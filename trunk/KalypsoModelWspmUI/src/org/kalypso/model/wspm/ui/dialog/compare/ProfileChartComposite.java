@@ -106,6 +106,14 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
     return m_profilChartModel.getProfil();
   }
 
+  public Object getResult( )
+  {
+    if( Objects.isNull( m_profilChartModel ) )
+      return null;
+
+    return m_profilChartModel.getResult();
+  }
+
   protected IProfilLayerProvider getProfilLayerProvider( final IProfile profile )
   {
     if( Objects.isNotNull( m_profilLayerProvider ) )
@@ -122,7 +130,7 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
     return m_profilLayerProvider;
   }
 
-  public void invalidate( final IProfile profile, final Object result )
+  private void invalidate( final IProfile profile, final Object result )
   {
     if( isDisposed() )
       return;
@@ -151,11 +159,8 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
   }
 
   @Override
-  public void setProfil( final IProfile profile, final Object result )
+  public synchronized void setProfil( final IProfile profile, final Object result )
   {
-    synchronized( this )
-    {
-      invalidate( profile, result );
-    }
+    invalidate( profile, result );
   }
 }

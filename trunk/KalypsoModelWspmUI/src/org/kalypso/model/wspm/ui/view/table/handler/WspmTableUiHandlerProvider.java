@@ -137,25 +137,38 @@ public class WspmTableUiHandlerProvider implements IComponentUiHandlerProvider
       return new ComponentUiEnumerationHandler( index, true, true, true, label, SWT.LEFT, DEFAULT_SPACING, spacing, "%s", "<not set>", items ); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
-    if( component.getId().equals( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS ) )
+    /* Some special cases */
+    final String id = component.getId();
+
+    if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( id ) )
       return new RoughnessClassUiHandler( index, true, true, true, label, DEFAULT_SPACING, spacing, m_profile );
-    else if( component.getId().equals( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS ) )
+
+    if( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS.equals( id ) )
       return new VegetationClassUiHandler( index, true, true, true, label, DEFAULT_SPACING, spacing, m_profile );
-    else if( component.getId().equals( IWspmPointProperties.POINT_PROPERTY_CODE ) )
+
+    if( IWspmPointProperties.POINT_PROPERTY_CODE.equals( id ) )
       return new CodeClassificationClassUiHandler( index, true, true, true, label, DEFAULT_SPACING, spacing, m_profile );
-    else if( XmlTypes.XS_DATETIME.equals( valueTypeName ) )
+
+    /* The rest by it's data type */
+    if( XmlTypes.XS_DATETIME.equals( valueTypeName ) )
       return new ComponentUiDateHandler( index, true, true, true, label, SWT.NONE, DEFAULT_SPACING, spacing, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    else if( XmlTypes.XS_STRING.equals( valueTypeName ) )
+
+    if( XmlTypes.XS_STRING.equals( valueTypeName ) )
       return new ComponentUiStringHandler( index, true, true, true, label, SWT.NONE, DEFAULT_SPACING, spacing, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    else if( XmlTypes.XS_INTEGER.equals( valueTypeName ) )
+
+    if( XmlTypes.XS_INTEGER.equals( valueTypeName ) )
       return new ComponentUiIntegerHandler( index, true, true, true, label, SWT.NONE, DEFAULT_SPACING, spacing, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    else if( XmlTypes.XS_DECIMAL.equals( valueTypeName ) )
+
+    if( XmlTypes.XS_DECIMAL.equals( valueTypeName ) )
       return new ComponentUiDecimalHandler( index, true, true, true, label, SWT.RIGHT, DEFAULT_SPACING, spacing, "%.04f", "", "%.04f" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    else if( XmlTypes.XS_DOUBLE.equals( valueTypeName ) )
+
+    if( XmlTypes.XS_DOUBLE.equals( valueTypeName ) )
       return new ComponentUiDoubleHandler( index, true, true, true, label, SWT.RIGHT, DEFAULT_SPACING, spacing, "%.04f", "", "%.04f" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    else if( XmlTypes.XS_BOOLEAN.equals( valueTypeName ) )
+
+    if( XmlTypes.XS_BOOLEAN.equals( valueTypeName ) )
       return new ComponentUiBooleanHandler( index, true, true, true, label, SWT.CENTER, DEFAULT_SPACING, spacing, "%b", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    else if( XmlTypes.XS_STRING.equals( valueTypeName ) )
+
+    if( XmlTypes.XS_STRING.equals( valueTypeName ) )
       return new ComponentUiStringHandler( index, true, true, true, label, SWT.CENTER, DEFAULT_SPACING, spacing, "%b", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     throw new UnsupportedOperationException();

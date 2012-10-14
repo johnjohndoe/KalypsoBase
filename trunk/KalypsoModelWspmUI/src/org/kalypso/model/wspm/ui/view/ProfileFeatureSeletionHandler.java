@@ -57,7 +57,6 @@ import org.kalypso.model.wspm.core.gml.IProfileProvider;
 import org.kalypso.model.wspm.core.gml.IProfileProviderListener;
 import org.kalypso.model.wspm.core.gml.IProfileSelection;
 import org.kalypso.model.wspm.core.gml.ProfileSelection;
-import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -91,7 +90,7 @@ public class ProfileFeatureSeletionHandler
 
   private final IProfileSelectionListener m_part;
 
-  private IProfileSelection m_selectedElement;
+  private IProfileSelection m_selectedElement = ProfileSelection.fromSelection( StructuredSelection.EMPTY );
 
   private IWorkbenchPart m_profileSourcePart;
 
@@ -115,61 +114,6 @@ public class ProfileFeatureSeletionHandler
         return null;
       }
     };
-  }
-
-  protected void handleProfileChanged( final IProfileProvider provider )
-  {
-    final IProfileFeature selectedProvider = m_selectedElement == null ? null : m_selectedElement.getProfileFeature();
-    if( provider != selectedProvider )
-      return;
-
-    m_part.handleProfilSourceChanged( m_selectedElement );
-
-    // HACK/REMARK: sometimes, the selected object is not directly the profile but a referencing feasture (e.g. TuhhReachSegment)
-    // In order to let this element to refresh it's state (e.g. the decorator on the state tree), we fire an extra event on this element
-
-    final IProfileSelection selectedElement = m_selectedElement;
-    if( selectedElement == null )
-      return;
-
-    final Object selection = selectedElement.getSource();
-    if( selection == selectedElement.getProfileFeature() )
-      return;
-
-    if( !(selection instanceof Feature) )
-      return;
-
-    final Feature selectedFeature = (Feature)selection;
-    final GMLWorkspace workspace = selectedFeature.getWorkspace();
-    if( workspace == null )
-      return;
-
-    final ModellEvent changeEvent = new FeaturesChangedModellEvent( workspace, new Feature[] { selectedFeature } );
-    workspace.fireModellEvent( changeEvent );
-  }
-
-  protected void handleSelectionChanged( final IStructuredSelection selection )
-  {
-    final IProfileSelection profileAndSource = ProfileSelection.fromSelection( selection );
-    setSelectedElement( profileAndSource );
-  }
-
-  private void setSelectedElement( final IProfileSelection selection )
-  {
-    if( Objects.equal( selection, m_selectedElement ) )
-      return;
-
-    final IProfileProvider oldProfileFeature = getProfileFeature();
-    if( oldProfileFeature != null )
-      oldProfileFeature.removeProfilProviderListener( m_providerListener );
-
-    m_selectedElement = selection;
-
-    final IProfileProvider profileFeature = getProfileFeature();
-    if( profileFeature != null )
-      profileFeature.addProfilProviderListener( m_providerListener );
-
-    m_part.handleProfilSourceChanged( selection );
   }
 
   public void dispose( )
@@ -203,7 +147,7 @@ public class ProfileFeatureSeletionHandler
       m_profileSourcePart.getSite().getSelectionProvider().addSelectionChangedListener( m_selectionListener );
 
     final ISelection initialSelection = Objects.firstNonNull( selection, StructuredSelection.EMPTY );
-    handleSelectionChanged( (IStructuredSelection) initialSelection );
+    handleSelectionChanged( (IStructuredSelection)initialSelection );
   }
 
   public void doInit( final IViewSite site )
@@ -212,13 +156,62 @@ public class ProfileFeatureSeletionHandler
     m_adapterPartListener.init( page );
   }
 
-  public IProfile getProfile( )
+  protected void handleSelectionChanged( final IStructuredSelection selection )
   {
-    final IProfileFeature profileFeature = getProfileFeature();
-    if( profileFeature == null )
-      return null;
+    final IProfileSelection selectedElement = ProfileSelection.fromSelection( selection );
 
-    return profileFeature.getProfile();
+    /* If during sleection the source does not change, we do nothing */
+    if( Objects.equal( selectedElement.getSource(), m_selectedElement.getSource() ) )
+      return;
+
+    final IProfileProvider oldProfileFeature = getProfileFeature();
+    if( oldProfileFeature != null )
+      oldProfileFeature.removeProfilProviderListener( m_providerListener );
+
+    m_selectedElement = selectedElement;
+
+    final IProfileProvider profileFeature = getProfileFeature();
+    if( profileFeature != null )
+      profileFeature.addProfilProviderListener( m_providerListener );
+
+    m_part.handleProfilSourceChanged( selectedElement );
+  }
+
+  // TODO: consider moving this into the table/chart
+  protected void handleProfileChanged( final IProfileProvider provider )
+  {
+    /* check if the event comes from the current selected element */
+    final IProfileFeature selectedProvider = m_selectedElement == null ? null : m_selectedElement.getProfileFeature();
+    if( provider != selectedProvider )
+      return;
+
+    /* reinit selection */
+    final ProfileSelection newSelectedElement = new ProfileSelection( m_selectedElement.getProfileFeature(), m_selectedElement.getSource() );
+
+    // REMARK: no need to unregister/register the profile provider listeners, we know that we still have the same profile feature as before
+    m_selectedElement = newSelectedElement;
+
+    m_part.handleProfilSourceChanged( newSelectedElement );
+
+    // HACK/REMARK: sometimes, the selected object is not directly the profile but a referencing feasture (e.g. TuhhReachSegment)
+    // In order to let this element to refresh it's state (e.g. the decorator on the state tree), we fire an extra event on this element
+
+    // FIXME: does not belong here, the decorator itself should be listener to the object and react accordingly
+
+    final Object selection = newSelectedElement.getSource();
+    if( selection == newSelectedElement.getProfileFeature() )
+      return;
+
+    if( !(selection instanceof Feature) )
+      return;
+
+    final Feature selectedFeature = (Feature)selection;
+    final GMLWorkspace workspace = selectedFeature.getWorkspace();
+    if( workspace == null )
+      return;
+
+    final ModellEvent changeEvent = new FeaturesChangedModellEvent( workspace, new Feature[] { selectedFeature } );
+    workspace.fireModellEvent( changeEvent );
   }
 
   private IProfileFeature getProfileFeature( )

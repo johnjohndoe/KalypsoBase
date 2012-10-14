@@ -144,6 +144,11 @@ public class ProfilChartModel extends ChartModel
     return m_profil;
   }
 
+  public Object getResult( )
+  {
+    return m_result;
+  }
+
   protected void handlePropertyOrBuildingChanged( )
   {
     updateLayers();
@@ -170,6 +175,5 @@ public class ProfilChartModel extends ChartModel
 
       modelState.restoreState( this );
     }
-
   }
 }

@@ -104,6 +104,8 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
 
     m_partListener.setChart( null );
 
+    // FIXME: refaktor out a ProfileChartForm
+
     if( m_form == null )
     {
       m_form = m_toolkit.createForm( parent );
@@ -130,6 +132,7 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
   {
     m_control = new Composite( parent, SWT.NONE );
     m_control.setLayout( GridLayoutFactory.fillDefaults().create() );
+
     createContent( m_control );
 
     final IProfileSelection selection = m_handler.getProfileSelection();
@@ -152,6 +155,7 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
     if( m_profilChartComposite != null )
     {
       m_profilChartComposite.dispose();
+      m_profilChartComposite = null;
     }
 
     if( m_form != null )
@@ -161,7 +165,12 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
 
     m_form = null;
     m_profilChartComposite = null;
-    m_toolkit = null;
+
+    if( m_toolkit != null )
+    {
+      m_toolkit.dispose();
+      m_toolkit = null;
+    }
 
     super.dispose();
   }
@@ -209,33 +218,28 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
   }
 
   @Override
-  public void handleProfilSourceChanged( final IProfileSelection selection )
+  public final void handleProfilSourceChanged( final IProfileSelection selection )
   {
-    setPartNames( Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_1" ), Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-
     final IProfileFeature newProfileFeature = selection == null ? null : selection.getProfileFeature();
 
-    if( selection == null )
-    {
-      setPartNames( Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_1" ), Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-      setFormMessage( Messages.getString( "org.kalypso.model.wspm.ui.view.chart.ChartView.0" ), IMessageProvider.INFORMATION ); //$NON-NLS-1$
-    }
-    else
-    {
-      setFormMessage( null, IMessageProvider.NONE );
-      setPartNames( String.format( Messages.getString( "ProfilChartViewPart.1" ), newProfileFeature.getBigStation() ), Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
-    }
-
-    final IProfile newProfile = newProfileFeature == null ? null :newProfileFeature.getProfile();
+    final IProfile newProfile = newProfileFeature == null ? null : newProfileFeature.getProfile();
     final Object result = selection == null ? null : selection.getResult();
 
     setChartModel( newProfile, result );
   }
 
-  private void setChartModel( final IProfile newProfile, final Object result )
+  private void setChartModel( final IProfile newProfile, final Object newResult )
   {
+    updateMessages( newProfile );
+
     final ProfileChartComposite chartComposite = m_profilChartComposite;
     if( chartComposite == null )
+      return;
+
+    /* If no reference changed, do nothing. The chart itself reacts to inner profile changes */
+    final IProfile profile = chartComposite.getProfil();
+    final Object result = chartComposite.getResult();
+    if( newProfile == profile && newResult == result )
       return;
 
     final UIJob job = new UIJob( "Updating profile chart" ) //$NON-NLS-1$
@@ -244,7 +248,7 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
         if( !chartComposite.isDisposed() )
-          chartComposite.setProfil( newProfile, result );
+          chartComposite.setProfil( newProfile, newResult );
 
         return Status.OK_STATUS;
       }
@@ -254,7 +258,20 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
     job.setUser( false );
 
     job.schedule();
+  }
 
+  private void updateMessages( final IProfile newProfile )
+  {
+    if( newProfile == null )
+    {
+      setFormMessage( Messages.getString( "org.kalypso.model.wspm.ui.view.chart.ChartView.0" ), IMessageProvider.INFORMATION ); //$NON-NLS-1$
+      setPartNames( Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_1" ), Messages.getString( "org.kalypso.model.wspm.ui.view.AbstractProfilViewPart_2" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+    else
+    {
+      setFormMessage( null, IMessageProvider.NONE );
+      setPartNames( Messages.getString( "ProfilChartViewPart.1", newProfile.getStation() ), newProfile.getDescription() ); //$NON-NLS-1$
+    }
   }
 
   @Override
@@ -319,5 +336,4 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
     setTitleToolTip( tooltip );
     setPartName( partName );
   }
-
 }

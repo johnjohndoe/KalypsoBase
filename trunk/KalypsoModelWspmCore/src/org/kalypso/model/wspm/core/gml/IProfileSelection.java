@@ -18,6 +18,8 @@
  */
 package org.kalypso.model.wspm.core.gml;
 
+import org.kalypso.model.wspm.core.profil.IProfile;
+import org.kalypso.model.wspm.core.profil.IProfileListener;
 
 /**
  * A selected profile, consists of {@link IProfileFeature} and its really selected source object (e.e. TuhhReachSegment)
@@ -26,9 +28,28 @@ package org.kalypso.model.wspm.core.gml;
  */
 public interface IProfileSelection
 {
+  /**
+   * If <code>false</code> is returned, {@link #getProfileFeature()} and {@link #getProfile()} are garantueed to return non-<code>null</code> values.
+   */
+  boolean isEmpty( );
+
   Object getSource( );
 
   IProfileFeature getProfileFeature( );
 
+  IProfile getProfile( );
+
   Object getResult( );
+
+  /**
+   * Adds a {@link IProfileListener} to the IProfile represented by this selection.<br/>
+   * Does nothing, if this selection is empty.
+   */
+  void addProfilListener( IProfileListener profileListener );
+
+  /**
+   * Removes a {@link IProfileListener} to the IProfile represented by this selection.<br/>
+   * Does nothing, if this selection is empty.
+   */
+  void removeProfileListener( IProfileListener profileListener );
 }

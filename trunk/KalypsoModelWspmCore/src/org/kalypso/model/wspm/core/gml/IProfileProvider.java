@@ -43,15 +43,18 @@ package org.kalypso.model.wspm.core.gml;
 import org.kalypso.model.wspm.core.profil.IProfile;
 
 /**
+ * Implementors provide {@link IProfile}s and inform listeners if the referenced IProfile object may have changed.<br/>
+ * The listeners are then intended to fetch the profile again with {@link #getProfile()}.
+ *
  * @author Gernot Belger
  */
 public interface IProfileProvider
 {
-  IProfile getProfile( );
-
   void addProfilProviderListener( final IProfileProviderListener l );
 
   void removeProfilProviderListener( final IProfileProviderListener l );
 
   void dispose( );
+
+  IProfile getProfile( );
 }
