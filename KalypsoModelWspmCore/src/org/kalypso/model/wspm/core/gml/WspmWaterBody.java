@@ -159,14 +159,10 @@ public class WspmWaterBody extends Feature_Impl implements IWspmConstants, IProf
     return m_reaches;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.gml.IProfileSelectionProvider#getSelectedProfiles(org.kalypso.gmlschema.property.relation.IRelationType)
-   */
   @Override
   public IProfileFeature[] getSelectedProfiles( final IRelationType selectionHint )
   {
     final List<IProfileFeature> profile = new ArrayList<>();
-    if( selectionHint != null && selectionHint.isList() )
     {
       final FeatureList property = (FeatureList)getProperty( selectionHint );
       for( final Object object : property )
