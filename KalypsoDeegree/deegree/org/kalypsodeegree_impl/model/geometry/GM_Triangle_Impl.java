@@ -47,6 +47,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 
+import com.vividsolutions.jts.algorithm.CGAlgorithms;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Triangle;
 
@@ -120,17 +121,29 @@ class GM_Triangle_Impl implements GM_Triangle
   @Override
   public boolean contains( final GM_Position position )
   {
-    final int a1 = orientation( m_p1, m_p2, position );
-    final int a2 = orientation( m_p2, m_p3, position );
-    final int a3 = orientation( m_p3, m_p1, position );
+    // REMARK: see below; but still problematic, because we create many objects here....
+    final Coordinate[] ring = JTSAdapter.export( getExteriorRing() );
 
-    return (a1 == a2) && (a2 == a3);
+    final Coordinate pt = new Coordinate( position.getX(), position.getY() );
+    return CGAlgorithms.isPointInRing( pt, ring );
+
+//    REMARK: this does not work for points on the edge or vetice of th etriangle
+//    final int a1 = orientation( m_p1, m_p2, position );
+//    final int a2 = orientation( m_p2, m_p3, position );
+//    final int a3 = orientation( m_p3, m_p1, position );
+//    return (a1 == a2) && (a2 == a3);
   }
 
   private static int orientation( final GM_Position pos1, final GM_Position pos2, final GM_Position pos3 )
   {
     final double s_a = signedArea( pos1, pos2, pos3 );
-    return s_a > 0 ? 1 : (s_a < 0 ? -1 : 0);
+    if( s_a > 0 )
+      return 1;
+
+    if( s_a < 0 )
+      return -1;
+
+    return 0;
   }
 
   private static double signedArea( final GM_Position a, final GM_Position b, final GM_Position c )
