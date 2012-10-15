@@ -240,7 +240,6 @@ public final class GmlSerializer
 
   /**
    * Same as {@link #createGMLWorkspace(URL, IFeatureProviderFactory, null )
-
    */
   public static GMLWorkspace createGMLWorkspace( final URL gmlURL, final IFeatureProviderFactory factory ) throws Exception
   {
