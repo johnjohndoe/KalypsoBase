@@ -224,7 +224,7 @@ public class ProfilesSelection
     final Feature parentFeature = featureList.getOwner();
     addParentFeature( parentFeature, rt );
 
-    if( rt.getQName().equals( WspmProject.QN_MEMBER_WATER_BODY ) )
+    if( rt != null && WspmProject.QN_MEMBER_WATER_BODY.equals( rt.getQName() ) )
     {
       final List< ? > value = (List< ? >)featureList.getValue();
       for( final Object element : value )
