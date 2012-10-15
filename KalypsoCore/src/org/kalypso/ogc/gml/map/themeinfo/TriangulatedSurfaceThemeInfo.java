@@ -63,7 +63,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * {@link IKalypsoThemeInfo}-implementation for features which contain
  * {@link org.kalypsodeegree.model.geometry.GM_TriangulatedSurface}s.<br>
  * Show the interpolated value at the given position.
- * 
+ *
  * @author Gernot Belger
  */
 public class TriangulatedSurfaceThemeInfo implements IKalypsoThemeInfo
@@ -76,7 +76,7 @@ public class TriangulatedSurfaceThemeInfo implements IKalypsoThemeInfo
    * .<br>
    * Defaults to <code>Wert: %.2f</code>.
    */
-  public static final String PROP_FORMAT = "m_format"; //$NON-NLS-1$
+  public static final String PROP_FORMAT = "format"; //$NON-NLS-1$
 
   /**
    * Value of the property which indicates the name of the featue-property containing the triangulated surface geometry.<br>
@@ -91,9 +91,6 @@ public class TriangulatedSurfaceThemeInfo implements IKalypsoThemeInfo
 
   private QName m_geomName;
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoThemeInfo#init(org.kalypso.ogc.gml.IKalypsoTheme, java.util.Properties)
-   */
   @Override
   public void init( final IKalypsoTheme theme, final Properties props )
   {
@@ -107,10 +104,6 @@ public class TriangulatedSurfaceThemeInfo implements IKalypsoThemeInfo
     m_geomName = qnameStr == null ? null : QName.valueOf( qnameStr );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoThemeInfo#appendInfo(java.util.Formatter,
-   *      org.kalypsodeegree.model.geometry.GM_Position)
-   */
   @Override
   public void appendInfo( final Formatter formatter, final GM_Position pos )
   {
@@ -118,10 +111,6 @@ public class TriangulatedSurfaceThemeInfo implements IKalypsoThemeInfo
     appendQuickInfo( formatter, pos );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.IKalypsoThemeInfo#appendQuickInfo(java.util.Formatter,
-   *      org.kalypsodeegree.model.geometry.GM_Position)
-   */
   @Override
   @SuppressWarnings("unchecked")
   public void appendQuickInfo( final Formatter formatter, final GM_Position pos )
