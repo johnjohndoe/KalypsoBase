@@ -87,14 +87,13 @@ public class ProfileObjectHelper
     final int hochwertIndex = owner.indexOfComponent( hochwertComponent );
     final int codeIndex = owner.indexOfComponent( codeComponent );
 
-    /* id == -1 can only happen for update components; will be overwritten in this case */
+    final Double breite = (Double)source.getValue( breiteIndex );
+    /* missing components can only happen when updating components from the whole profile and creating new objects. Else, all components should be there */
     final String id = idIndex == -1 ? null : (String)source.getValue( idIndex );
     final String comment = commentIndex == -1 ? null : (String)source.getValue( commentIndex );
-    final Double breite = (Double)source.getValue( breiteIndex );
-    final Double hoehe = (Double)source.getValue( hoeheIndex );
-    final Double rechtswert = (Double)source.getValue( rechtswertIndex );
-    final Double hochwert = (Double)source.getValue( hochwertIndex );
-    /* id == -1 can only happen for update components; will be overwritten in this case */
+    final Double hoehe = hoeheIndex == -1 ? null : (Double)source.getValue( hoeheIndex );
+    final Double rechtswert = rechtswertIndex == -1 ? null : (Double)source.getValue( rechtswertIndex );
+    final Double hochwert = hochwertIndex == -1 ? null : (Double)source.getValue( hochwertIndex );
     final String code = codeIndex == -1 ? null : (String)source.getValue( codeIndex );
 
     target.setId( id );
