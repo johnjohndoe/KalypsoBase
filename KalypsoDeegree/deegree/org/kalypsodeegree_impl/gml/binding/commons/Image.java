@@ -88,6 +88,9 @@ public class Image extends Feature_Impl
     try
     {
       final String uriString = getProperty( PROPERTY_URI, String.class );
+      if( StringUtils.isBlank( uriString ) )
+        return null;
+
       return URIUtil.fromString( uriString );
     }
     catch( final URISyntaxException e )
