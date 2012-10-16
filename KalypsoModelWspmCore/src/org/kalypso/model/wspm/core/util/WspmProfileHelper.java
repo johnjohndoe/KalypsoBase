@@ -41,11 +41,10 @@
 package org.kalypso.model.wspm.core.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.Assert;
@@ -529,49 +528,20 @@ public final class WspmProfileHelper
 
   /**
    * calculates the water level segments as pairs of x-coordinates.
-   *
-   * @deprecated does not always return correct results. Use {@link WaterlevelIntersectionWorker} instead.
    */
-  @Deprecated
   public static Double[] calculateWspIntersections( final IProfile profil, final double wspHoehe )
   {
-    final IComponent cHoehe = profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_HOEHE );
-    final int iHoehe = profil.indexOfProperty( cHoehe );
-    final IComponent cBreite = profil.hasPointProperty( IWspmPointProperties.POINT_PROPERTY_BREITE );
-    final int iBreite = profil.indexOfProperty( cBreite );
+    /* use worker to calculate intersections */
+    final WaterlevelIntersectionWorker worker = new WaterlevelIntersectionWorker( profil, wspHoehe );
+    worker.execute();
+    final LineSegment[] segments = worker.getSegments();
 
-    final IRecord[] points = profil.getPoints();
-    final IRecord firstPoint = points[0];
-    final IRecord lastPoint = points[points.length - 1];
+    final Collection<Double> intersections = new ArrayList<>( segments.length * 2 );
 
-    final double firstX = (Double) firstPoint.getValue( iBreite );
-    final double firstY = (Double) firstPoint.getValue( iHoehe );
-    final double lastX = (Double) lastPoint.getValue( iBreite );
-    final double lastY = (Double) lastPoint.getValue( iHoehe );
-
-    final Double[] breiteValues = ProfileUtil.getDoubleValuesFor( profil, cBreite, false );
-    final Double[] heightValues = ProfileUtil.getDoubleValuesFor( profil, cHoehe, false );
-
-    // FIXME: cannot work: width/height may contain null, which leads to problems here
-
-    final PolyLine wspLine = new PolyLine( new double[] { firstX, lastX }, new double[] { wspHoehe, wspHoehe }, 0.0001 );
-    final PolyLine profilLine = new PolyLine( breiteValues, heightValues, 0.0001 );
-
-    final double[] intersectionXs = profilLine.intersect( wspLine );
-
-    final SortedSet<Double> intersections = new TreeSet<>();
-
-    if( firstY < wspHoehe )
+    for( final LineSegment lineSegment : segments )
     {
-      intersections.add( new Double( firstX ) );
-    }
-    for( final double d : intersectionXs )
-    {
-      intersections.add( new Double( d ) );
-    }
-    if( lastY < wspHoehe )
-    {
-      intersections.add( new Double( lastX ) );
+      intersections.add( lineSegment.p0.x );
+      intersections.add( lineSegment.p1.x );
     }
 
     return intersections.toArray( new Double[intersections.size()] );
