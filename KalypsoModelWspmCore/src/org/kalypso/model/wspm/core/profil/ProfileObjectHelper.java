@@ -6,11 +6,11 @@
  *  Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany
  *  (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/
  *
- *  Kalypso is free software: you can redistribute it and/or modify it under the terms  
- *  of the GNU Lesser General Public License (LGPL) as published by the Free Software 
+ *  Kalypso is free software: you can redistribute it and/or modify it under the terms
+ *  of the GNU Lesser General Public License (LGPL) as published by the Free Software
  *  Foundation, either version 3 of the License, or (at your option) any later version.
  *
- *  Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
+ *  Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  *  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public
@@ -87,13 +87,15 @@ public class ProfileObjectHelper
     final int hochwertIndex = owner.indexOfComponent( hochwertComponent );
     final int codeIndex = owner.indexOfComponent( codeComponent );
 
-    final String id = (String)source.getValue( idIndex );
-    final String comment = (String)source.getValue( commentIndex );
+    /* id == -1 can only happen for update components; will be overwritten in this case */
+    final String id = idIndex == -1 ? null : (String)source.getValue( idIndex );
+    final String comment = commentIndex == -1 ? null : (String)source.getValue( commentIndex );
     final Double breite = (Double)source.getValue( breiteIndex );
     final Double hoehe = (Double)source.getValue( hoeheIndex );
     final Double rechtswert = (Double)source.getValue( rechtswertIndex );
     final Double hochwert = (Double)source.getValue( hochwertIndex );
-    final String code = (String)source.getValue( codeIndex );
+    /* id == -1 can only happen for update components; will be overwritten in this case */
+    final String code = codeIndex == -1 ? null : (String)source.getValue( codeIndex );
 
     target.setId( id );
     target.setComment( comment );
