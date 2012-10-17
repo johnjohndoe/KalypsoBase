@@ -48,6 +48,8 @@ import gnu.trove.TObjectIntHashMap;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 import com.infomatiq.jsi.Rectangle;
 import com.infomatiq.jsi.SpatialIndex;
@@ -56,7 +58,7 @@ import com.infomatiq.jsi.rtree.RTree;
 /**
  * Index elements for {@link SplitSort}.<br/>
  * Put into a spearate class, so it can get separately instantiated. This is necessary for memory saving reasons.
- *
+ * 
  * @author Gernot Belger
  */
 class SplitSortindex
@@ -116,7 +118,8 @@ class SplitSortindex
 
     final SplitSortItem invalidItem = items.get( index );
 
-    final Rectangle newEnvelope = m_parent.getEnvelope( invalidItem );
+    final GM_Envelope envelope = m_parent.getEnvelope( invalidItem.getData() );
+    final Rectangle newEnvelope = GeometryUtilities.toRectangle( envelope );
 
     final Rectangle oldEnvelope = invalidItem.getEnvelope();
 

@@ -77,6 +77,7 @@ import org.kalypso.ogc.gml.painter.StylePainterFactory;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
+import org.kalypsodeegree.model.feature.ArrayFeatureList;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -142,14 +143,15 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
 
     if( featureFromPath instanceof FeatureList )
     {
-      m_featureList = (FeatureList) featureFromPath;
+      m_featureList = (FeatureList)featureFromPath;
       m_featureType = new FeaturePath( m_featurePath ).getFeatureType( m_workspace );
     }
     else if( featureFromPath instanceof Feature )
     {
-      final Feature singleFeature = (Feature) featureFromPath;
+      final Feature singleFeature = (Feature)featureFromPath;
       final Feature parent = singleFeature.getOwner();
-      m_featureList = FeatureFactory.createFeatureList( parent, singleFeature.getParentRelation() );
+      // m_featureList = FeatureFactory.createFeatureList( parent, singleFeature.getParentRelation() );
+      m_featureList = new ArrayFeatureList( parent, singleFeature.getParentRelation(), null );
       m_featureList.add( singleFeature );
       m_featureType = singleFeature.getFeatureType();
       m_isSingleFeature = true;
@@ -213,7 +215,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
     {
       final ILabelPlacementStrategy strategy = createStrategy( g, selected );
 
-      final IStylePaintable paintDelegate = new FeatureThemePaintable( p, (Graphics2D) graphics, m_selectionManager, selected, strategy );
+      final IStylePaintable paintDelegate = new FeatureThemePaintable( p, (Graphics2D)graphics, m_selectionManager, selected, strategy );
       final IStylePainter painter = StylePainterFactory.create( this, selected );
       painter.paint( paintDelegate, monitor );
 
@@ -253,7 +255,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       return g;
 
     /* Use normal style with highlight graphics to paint */
-    return new HighlightGraphics( (Graphics2D) g );
+    return new HighlightGraphics( (Graphics2D)g );
   }
 
   private boolean hasSelectionStyle( )

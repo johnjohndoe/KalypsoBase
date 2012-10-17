@@ -56,6 +56,7 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.xml.Mapper;
+import org.kalypsodeegree.model.feature.ArrayFeatureList;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -226,9 +227,10 @@ public final class FeatureFactory
     return workspace.createFeature( feature, rt, targetFeatureType, subDepth );
   }
 
+  @SuppressWarnings( "unchecked" )
   public static FeatureList createFeatureList( final Feature parentFeature, final IRelationType parentFTP, final List< ? > list )
   {
-    final SplitSort result = new SplitSort( parentFeature, parentFTP );
+    final FeatureList result = new SplitSort( parentFeature, parentFTP );
     result.addAll( list );
     return result;
   }
@@ -240,12 +242,15 @@ public final class FeatureFactory
 
   public static FeatureList createFeatureList( final Feature parentFeature, final IRelationType parentFTP )
   {
-    return new SplitSort( parentFeature, parentFTP );
+    return createFeatureList( parentFeature, parentFTP, (IEnvelopeProvider)null );
   }
 
   public static FeatureList createFeatureList( final Feature parentFeature, final IRelationType parentFTP, final IEnvelopeProvider envelopeProvider )
   {
-    return new SplitSort( parentFeature, parentFTP, envelopeProvider );
+    if( parentFTP != null && parentFTP.getMaxOccurs() > IPropertyType.UNBOUND_OCCURENCY && parentFTP.getMaxOccurs() <= ArrayFeatureList.INITIAL_CAPACITY )
+      return new ArrayFeatureList( parentFeature, parentFTP, envelopeProvider );
+    else
+      return new SplitSort( parentFeature, parentFTP, envelopeProvider );
   }
 
   public static GMLWorkspace createGMLWorkspace( final IGMLSchema schema, final Feature rootFeature, final URL context, final String schemaLocation, final IFeatureProviderFactory factory, final NamespaceContext namespaceContext )

@@ -60,10 +60,10 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
- * TODO: replaces FeatureWrapperCollection.... refaktor and use this stuff instead<br>
  *
  * @author Gernot Belger
  * @author Dirk Kuch
+ * @author Stefan Kurzbach
  */
 @SuppressWarnings({ "unchecked" })
 public class FeatureBindingCollection<FWCls extends Feature> implements IFeatureBindingCollection<FWCls>
