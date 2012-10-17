@@ -52,11 +52,11 @@ import org.kalypso.observation.result.ITupleResultChangedListener.TYPE;
 import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
 
 /**
- * Default visibility: do NOT use outside of TupleResult.
+ * Do NOT use outside of TupleResult. Use IRecord and TupleResult.createRecord.
  *
- * @author schlienger Default visibility, use IRecord and TupleResult.createRecord.
+ * @author schlienger
  */
-/* default */class Record implements IRecord
+public class Record implements IRecord
 {
   private final List<Object> m_values = new ArrayList<>();
 
@@ -64,7 +64,7 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
 
   private TupleResult m_owner;
 
-  Record( final TupleResult result, final IComponent[] components )
+  public Record( final TupleResult result, final IComponent[] components )
   {
     m_owner = result;
     m_components = Arrays.asList( components );
@@ -116,7 +116,7 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
     setValue( index, value, false );
   }
 
-  private void setValue( final int index, final Object value, final boolean purgeChangeEvent )
+  private void setValue( final int index, final Object value, final boolean doNotFireEvent )
   {
     final Object oldValue = m_values.get( index );
     if( ObjectUtils.equals( value, oldValue ) )
@@ -124,7 +124,7 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
 
     m_values.set( index, value );
 
-    if( !purgeChangeEvent && Objects.isNotNull( m_owner ) )
+    if( !doNotFireEvent && Objects.isNotNull( m_owner ) )
       fireRecordChanged( index, oldValue, value );
   }
 
@@ -154,13 +154,15 @@ import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
   public IRecord cloneRecord( )
   {
     final TupleResult result = getOwner();
-    final IComponent[] components = m_components.toArray( new IComponent[m_components.size()] );
 
-    final Record record = new Record( result, components );
+    final Record clonedRecord = (Record)result.createRecord();
+
+    final IComponent[] components = result.getComponents();
+
     for( int i = 0; i < components.length; i++ )
-      record.setValue( i, getValue( i ), true ); // owner is null
+      clonedRecord.setValue( i, getValue( i ), true );
 
-    return record;
+    return clonedRecord;
   }
 
   /**

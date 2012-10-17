@@ -59,7 +59,6 @@ import org.kalypso.model.wspm.core.profil.IProfileObjectRecords;
 import org.kalypso.model.wspm.core.profil.ProfileFactory;
 import org.kalypso.model.wspm.core.profil.ProfileObjectFactory;
 import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
-import org.kalypso.observation.IObservation;
 import org.kalypso.observation.Observation;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
@@ -74,7 +73,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Intermediates between the {@link IProfil} interface and Features of QName {org.kalypso.model.wspm.profile}profile.
- * 
+ *
  * @author Gernot Belger
  */
 public final class ProfileFeatureFactory implements IWspmConstants
@@ -306,8 +305,8 @@ public final class ProfileFeatureFactory implements IWspmConstants
       return null;
 
     /* Observation of profile. */
-    final IObservation<TupleResult> observation = ObservationFeatureFactory.toObservation( sourceFeature );
-    final IProfile profile = ProfileFactory.createProfil( type, observation, sourceFeature );
+    final IProfile profile = ProfileFactory.createProfil( type, sourceFeature );
+    ObservationFeatureFactory.fillObservation( profile, sourceFeature );
 
     /* Station of profile. */
     final BigDecimal bigStation = (BigDecimal)sourceFeature.getProperty( ProfileFeatureFactory.QNAME_STATION );

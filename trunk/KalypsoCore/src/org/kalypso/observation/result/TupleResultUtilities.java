@@ -146,7 +146,7 @@ public class TupleResultUtilities
       final List<Boolean> values = new ArrayList<>();
       for( final IRecord record : result )
       {
-        values.add( (Boolean) record.getValue( iComp ) );
+        values.add( (Boolean)record.getValue( iComp ) );
       }
       if( values.size() < 1 )
       {
@@ -162,7 +162,7 @@ public class TupleResultUtilities
       final List<java.lang.Double> values = new ArrayList<>();
       for( final IRecord record : result )
       {
-        values.add( (java.lang.Double) record.getValue( iComp ) );
+        values.add( (java.lang.Double)record.getValue( iComp ) );
       }
       if( values.size() < 1 )
       {
@@ -177,7 +177,7 @@ public class TupleResultUtilities
       final List<Date> values = new ArrayList<>();
       for( final IRecord record : result )
       {
-        values.add( (Date) record.getValue( iComp ) );
+        values.add( (Date)record.getValue( iComp ) );
       }
       if( values.size() < 1 )
       {
@@ -190,7 +190,7 @@ public class TupleResultUtilities
       final List<String> values = new ArrayList<>();
       for( final IRecord record : result )
       {
-        values.add( (String) record.getValue( iComp ) );
+        values.add( (String)record.getValue( iComp ) );
       }
       if( values.size() < 1 )
       {
@@ -234,7 +234,7 @@ public class TupleResultUtilities
       final List<Boolean> values = new ArrayList<>();
       for( final IRecord record : result )
       {
-        values.add( (Boolean) record.getValue( iComp ) );
+        values.add( (Boolean)record.getValue( iComp ) );
       }
       if( values.size() < 1 )
       {
@@ -250,7 +250,7 @@ public class TupleResultUtilities
       final List<java.lang.Double> values = new ArrayList<>();
       for( final IRecord record : result )
       {
-        values.add( (java.lang.Double) record.getValue( iComp ) );
+        values.add( (java.lang.Double)record.getValue( iComp ) );
       }
       if( values.size() < 1 )
       {
@@ -265,7 +265,7 @@ public class TupleResultUtilities
       final List<Date> values = new ArrayList<>();
       for( final IRecord record : result )
       {
-        values.add( (Date) record.getValue( iComp ) );
+        values.add( (Date)record.getValue( iComp ) );
       }
       if( values.size() < 1 )
       {
@@ -278,7 +278,7 @@ public class TupleResultUtilities
       final List<String> values = new ArrayList<>();
       for( final IRecord record : result )
       {
-        values.add( (String) record.getValue( iComp ) );
+        values.add( (String)record.getValue( iComp ) );
       }
       if( values.size() < 1 )
       {
@@ -385,7 +385,7 @@ public class TupleResultUtilities
 
     for( final IRecord record : result )
     {
-      final Number value = (Number) record.getValue( componentIndex );
+      final Number value = (Number)record.getValue( componentIndex );
       values.add( value );
     }
 
@@ -489,30 +489,27 @@ public class TupleResultUtilities
 
   }
 
-  public static TupleResult clone( final TupleResult base )
+  public static void copyValues( final TupleResult sourceResult, final TupleResult targetResult )
   {
-    final IComponent[] components = base.getComponents();
-    final TupleResult clone = new TupleResult( components );
+    final IComponent[] components = sourceResult.getComponents();
+    for( final IComponent component : components )
+      targetResult.addComponent( component );
 
-    for( int index = 0; index < base.size(); index++ )
+    for( int index = 0; index < sourceResult.size(); index++ )
     {
-      final IRecord target = clone.createRecord();
-      final IRecord record = base.get( index );
+      final IRecord target = targetResult.createRecord();
+      final IRecord record = sourceResult.get( index );
 
       for( int component = 0; component < ArrayUtils.getLength( components ); component++ )
-      {
         target.setValue( component, record.getValue( component ) );
-      }
 
-      clone.add( target );
+      targetResult.add( target );
     }
-
-    return clone;
   }
 
   /**
    * Either gets and existing component, or creates it if it doesn't exist yet.
-   * 
+   *
    * @return The index of the component
    */
   public static int getOrCreateComponent( final TupleResult result, final String componentID )

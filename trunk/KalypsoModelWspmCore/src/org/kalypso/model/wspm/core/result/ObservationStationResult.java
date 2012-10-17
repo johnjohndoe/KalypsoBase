@@ -71,9 +71,6 @@ public class ObservationStationResult implements IStationResult
     m_station = station;
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.result.IStationResult#getName()
-   */
   @Override
   public String getName( )
   {
@@ -82,9 +79,6 @@ public class ObservationStationResult implements IStationResult
     return NamedFeatureHelper.getName( m_feature );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.core.result.IStationResult#getComponents()
-   */
   @Override
   public String[] getComponentIds( )
   {

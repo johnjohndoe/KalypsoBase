@@ -645,7 +645,7 @@ public final class WspmProfileHelper
     final double heigth2 = WspmProfileHelper.getHeightByWidth( endWidth, orgIProfil );
 
     final IProfileRecord[] profilPointList = profile.getPoints();
-    final IProfile tmpProfil = ProfileFactory.createProfil( profile.getType() );
+    final IProfile tmpProfil = ProfileFactory.createProfil( profile.getType(), null );
 
     /* set the coordinate system */
     tmpProfil.setSrsName( profile.getSrsName() );
@@ -770,7 +770,7 @@ public final class WspmProfileHelper
   private static IProfile calculatePointsAndCreateProfile( final String profileType, final Coordinate[] points, final String crsOfPoints ) throws Exception
   {
     /* Create the new profile. */
-    final IProfile profile = ProfileFactory.createProfil( profileType );
+    final IProfile profile = ProfileFactory.createProfil( profileType, null );
     profile.setSrsName( crsOfPoints );
 
     // TODO: check: we calculate the 'breite' by just adding up the distances between the points, is this always OK?
@@ -870,7 +870,7 @@ public final class WspmProfileHelper
     final String srsName = profile.getSrsName();
     final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( srsName );
 
-    final List<IRecord> newRecords = new ArrayList<>( newPoints.length );
+    final List<IProfileRecord> newRecords = new ArrayList<>( newPoints.length );
 
     Coordinate lastCrd = null;
     for( final Coordinate coordinate : newPoints )
@@ -889,7 +889,7 @@ public final class WspmProfileHelper
 
         // REMARK: using record here because we later directly insert into the TupleResult
         final IProfileRecord newPoint = createPoint( profile, transformedCoordinate, breite );
-        newRecords.add( newPoint.getRecord() );
+        newRecords.add( newPoint );
       }
 
       lastCrd = transformedCoordinate;
@@ -922,7 +922,7 @@ public final class WspmProfileHelper
       return null;
 
     /* Create the new profile. */
-    final IProfile profile = ProfileFactory.createProfil( type );
+    final IProfile profile = ProfileFactory.createProfil( type, null );
 
     double breite = 0.0;
 
@@ -951,7 +951,7 @@ public final class WspmProfileHelper
   public static IProfile convertLinestringToEmptyProfile( final Coordinate[] points, final String type )
   {
     /* Create the new profile. */
-    final IProfile profile = ProfileFactory.createProfil( type );
+    final IProfile profile = ProfileFactory.createProfil( type, null );
 
     double breite = 0.0;
 

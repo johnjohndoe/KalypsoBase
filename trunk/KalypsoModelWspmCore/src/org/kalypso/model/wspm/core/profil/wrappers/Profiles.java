@@ -50,7 +50,6 @@ import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.util.WspmGeometryUtilities;
 import org.kalypso.model.wspm.core.util.WspmProfileHelper;
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.TupleResult;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
@@ -90,52 +89,6 @@ public final class Profiles
     add.setHoehe( getHoehe( profile, width ) );
 
     return addRecordByWidth( profile, add, false );
-  }
-
-  /**
-   * Inserts a new point at the given width.<br/>
-   * Always inserts a new point, the properties of the new point are interpolated from adjacent points.
-   */
-  public static IProfileRecord insertPoint( final IProfile profile, final double width )
-  {
-    final TupleResult result = profile.getResult();
-
-    final IProfileRecord previousPoint = ProfileVisitors.findPreviousPoint( profile, width );
-
-    if( previousPoint == null && profile.getPoints().length > 0 )
-    {
-      final IProfileRecord lastRecord = profile.getLastPoint();
-
-      final IProfileRecord newRecord = lastRecord.cloneRecord();
-      newRecord.setBreite( width );
-
-      profile.addPoint( newRecord );
-
-      return newRecord;
-    }
-
-    /* create new record and set values by interpolating them form the neighbouring record */
-    final IProfileRecord newRecord = profile.createProfilPoint();
-
-    /* interpolate values onto new record */
-    if( previousPoint != null )
-    {
-      final int previousIndex = profile.indexOf( previousPoint );
-      final double distance = width - previousPoint.getBreite();
-      result.doInterpolation( newRecord, previousIndex, distance );
-
-      newRecord.setBreite( width );
-
-      profile.addPoint( previousIndex + 1, newRecord );
-    }
-    else
-    {
-      newRecord.setBreite( width );
-
-      profile.addPoint( newRecord );
-    }
-
-    return newRecord;
   }
 
   private static IProfileRecord addRecordByWidth( final IProfile profile, final IProfileRecord point, final boolean overwritePointMarkers )
@@ -198,9 +151,7 @@ public final class Profiles
 
       final LineString lineString = getGeometry( profile );
       final double jtsDistance = JTSUtilities.pointDistanceOnLine( lineString, point );
-      final double width = profile.getFirstPoint().getBreite() + jtsDistance;
-
-      return width;
+      return profile.getFirstPoint().getBreite() + jtsDistance;
     }
   }
 
@@ -209,9 +160,7 @@ public final class Profiles
     final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
     final GM_Curve profileCurve = WspmGeometryUtilities.createProfileSegment( profile, crs );
-    final LineString profileLineString = (LineString)JTSAdapter.export( profileCurve );
-
-    return profileLineString;
+    return (LineString)JTSAdapter.export( profileCurve );
   }
 
   public static GM_Point getPosition( final IProfile profile, final double breite ) throws Exception

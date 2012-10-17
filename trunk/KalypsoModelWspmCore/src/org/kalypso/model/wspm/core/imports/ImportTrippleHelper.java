@@ -151,7 +151,7 @@ public final class ImportTrippleHelper
           {
             lastPoint = null;
 
-            currentProfile = ProfileFactory.createProfil( profileType );
+            currentProfile = ProfileFactory.createProfil( profileType, null );
 
             currentProfile.setStation( station );
             currentProfile.setName( Messages.getString( "org.kalypso.model.wspm.core.imports.ImportTrippleHelper.1" ) ); //$NON-NLS-1$

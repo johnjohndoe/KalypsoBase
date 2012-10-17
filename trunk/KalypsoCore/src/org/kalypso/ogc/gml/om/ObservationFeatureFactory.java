@@ -71,6 +71,7 @@ import org.kalypso.observation.phenomenon.Phenomenon;
 import org.kalypso.observation.phenomenon.PhenomenonUtilities;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.IRecordFactory;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypsodeegree.model.feature.Feature;
@@ -122,19 +123,41 @@ public class ObservationFeatureFactory implements IAdapterFactory
    */
   public static IObservation<TupleResult> toObservation( final Feature f )
   {
+    return toObservation( f, null );
+  }
+
+  /**
+   * Makes a tuple based observation from a feature. The feature must substitute http://www.opengis.net/om:Observation .
+   */
+  public static IObservation<TupleResult> toObservation( final Feature f, final IRecordFactory recordFactory )
+  {
     if( f instanceof IObservationFeature )
       return ((IObservationFeature)f).toObservation();
 
-    return toObservationInternal( f );
+    return toObservationInternal( f, recordFactory );
   }
 
   /**
    * Only for implementros of IObservationFeature.
    */
-  public static IObservation<TupleResult> toObservationInternal( final Feature f )
+  public static IObservation<TupleResult> toObservationInternal( final Feature f, final IRecordFactory recordFactory )
+  {
+    final TupleResult tupleResult = new TupleResult( recordFactory );
+    final IObservation<TupleResult> observation = new Observation<>( null, null, tupleResult );
+
+    fillObservation( observation, f );
+
+    return observation;
+  }
+
+  public static void fillObservation( final IObservation<TupleResult> observation, final Feature f )
   {
     if( f == null )
-      return null;
+      return;
+
+    final TupleResult result = observation.getResult();
+    fillResult( result, f );
+
     final IFeatureType featureType = f.getFeatureType();
 
     if( !GMLSchemaUtilities.substitutes( featureType, ObservationFeatureFactory.OM_OBSERVATION ) )
@@ -157,12 +180,9 @@ public class ObservationFeatureFactory implements IAdapterFactory
     else
       phenomenon = null;
 
-    final TupleResult tupleResult = ObservationFeatureFactory.buildTupleResult( f );
-
-    final IObservation<TupleResult> observation = new Observation<>( name, desc, tupleResult );
+    observation.setName( name );
+    observation.setDescription( desc );
     observation.setPhenomenon( phenomenon );
-
-    return observation;
   }
 
   /**
@@ -171,8 +191,13 @@ public class ObservationFeatureFactory implements IAdapterFactory
    * <p>
    * This method is declared protected, but if the need emanes, it could be made public.
    */
-  protected static TupleResult buildTupleResult( final Feature f )
+  private static void fillResult( final TupleResult tupleResult, final Feature f )
   {
+    /* Clear result */
+    final IComponent[] existingComponents = tupleResult.getComponents();
+    for( final IComponent existingComponent : existingComponents )
+      tupleResult.removeComponent( existingComponent );
+
     final Feature recordDefinition = FeatureHelper.resolveLink( f, ObservationFeatureFactory.OM_RESULTDEFINITION );
 
     final String result = (String)f.getProperty( ObservationFeatureFactory.OM_RESULT );
@@ -182,7 +207,10 @@ public class ObservationFeatureFactory implements IAdapterFactory
     final IComponent ordinalNumberComponent = ObservationFeatureFactory.getOrdinalNumberComponent( recordDefinition );
     final XsdBaseTypeHandler< ? >[] typeHandlers = ObservationFeatureFactory.typeHandlersForComponents( components );
 
-    final TupleResult tupleResult = new TupleResult( components );
+
+    for( final IComponent component : components )
+      tupleResult.addComponent( component );
+
     tupleResult.setSortComponents( sortComponents );
     tupleResult.setOrdinalNumberComponent( ordinalNumberComponent );
 
@@ -210,8 +238,6 @@ public class ObservationFeatureFactory implements IAdapterFactory
       nb++;
       nb = nb % components.length;
     }
-
-    return tupleResult;
   }
 
   private static Object convertToJavaValue( final String token, final XsdBaseTypeHandler< ? > handler )
@@ -425,7 +451,7 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
   /**
    * Helper: builds the record definition according to the components of the tuple result.
-   * 
+   *
    * @param map
    *          ATTENTION: the recordset is written in the same order as this map
    */
@@ -625,9 +651,6 @@ public class ObservationFeatureFactory implements IAdapterFactory
    * TODO do not directly return an observation, but rather an observation provider
    * <p>
    * TODO do not create an observation twice for the same feature, pooling?
-   * </p>
-   * 
-   * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
    */
   @Override
   public Object getAdapter( final Object adaptableObject, final Class adapterType )
@@ -638,9 +661,6 @@ public class ObservationFeatureFactory implements IAdapterFactory
     return null;
   }
 
-  /**
-   * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
-   */
   @Override
   public Class< ? >[] getAdapterList( )
   {
@@ -688,5 +708,4 @@ public class ObservationFeatureFactory implements IAdapterFactory
 
     return workspace.createFeature( feature, rdParentRelation, featureType );
   }
-
 }

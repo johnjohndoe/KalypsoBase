@@ -754,7 +754,7 @@ public final class ProfileUtil
   {
     /* Get the profile changes. */
     final IProfileRecord[] pointsToSimplify = profile.getPoints();
-
+// FIXME: very slow!
     final IProfileRecord[] pointsToRemoved = DouglasPeuckerHelper.reduce( allowedDistance, pointsToSimplify, profile );
     profile.removePoints( pointsToRemoved );
   }

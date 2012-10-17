@@ -56,7 +56,6 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.core.i18n.Messages;
 import org.kalypso.observation.result.ITupleResultChangedListener.TYPE;
 import org.kalypso.observation.result.ITupleResultChangedListener.ValueChange;
 
@@ -111,13 +110,31 @@ public class TupleResult implements List<IRecord>
     }
   };
 
+  /** Factory that must be used to create all records */
+  private final IRecordFactory m_factory;
+
   public TupleResult( )
   {
-    // default constructor
+    this( new IComponent[] {} );
+  }
+
+  public TupleResult( final IRecordFactory factory )
+  {
+    this( factory, new IComponent[] {} );
   }
 
   public TupleResult( final IComponent[] comps )
   {
+    this( null, comps );
+  }
+
+  public TupleResult( final IRecordFactory factory, final IComponent[] comps )
+  {
+    if( factory == null )
+      m_factory = new RecordFactory();
+    else
+      m_factory = factory;
+
     for( final IComponent element : comps )
       addComponent( element );
   }
@@ -205,7 +222,7 @@ public class TupleResult implements List<IRecord>
   @Override
   public String toString( )
   {
-    return Messages.getString( "org.kalypso.observation.result.TupleResult.0" ) + getComponents(); //$NON-NLS-1$
+    return "TupleResult: " + getComponents(); //$NON-NLS-1$
   }
 
   public void setInterpolationHandler( final IInterpolationHandler handler )
@@ -371,9 +388,6 @@ public class TupleResult implements List<IRecord>
     return result;
   }
 
-  /**
-   * @see java.util.List#removeAll(java.util.Collection)
-   */
   @Override
   public boolean removeAll( final Collection< ? > c )
   {
@@ -389,9 +403,6 @@ public class TupleResult implements List<IRecord>
     return removeAll;
   }
 
-  /**
-   * @see java.util.List#retainAll(java.util.Collection)
-   */
   @Override
   public boolean retainAll( final Collection< ? > c )
   {
@@ -451,16 +462,12 @@ public class TupleResult implements List<IRecord>
 
   private void checkRecord( final IRecord record )
   {
-    final Record r = (Record) record;
+    final TupleResult owner = record.getOwner();
 
-    final TupleResult owner = r.getOwner();
-    // If owner is still null, just set it to me
-    if( owner == null )
-      r.setOwner( this, m_components );
-    else
-      Assert.isTrue( r.getOwner() == this, Messages.getString( "org.kalypso.observation.result.TupleResult.1" ) + record ); //$NON-NLS-1$
-
-    // Assert.isTrue( r.getCount() == m_components.size(), "Number of records values not equal to number of components"
+    Assert.isNotNull( owner );
+    Assert.isTrue( owner == this );
+    // FIXME: check still makes sense!
+    // Assert.isTrue( r.getCount() == m_components.size() );
   }
 
   private void checkRecords( final Collection< ? extends IRecord> c )
@@ -583,11 +590,6 @@ public class TupleResult implements List<IRecord>
     return true;
   }
 
-  // TODO: add other component methods:
-  // - addComponent( index, comp )
-  // - removeComponent( index )
-  // - setComponent( index, comp )
-
   /**
    * This method creates, but DOES NOT adds a record.<br/>
    * This allows to modify record before they are added to the result. This is necessary in order to avoid many change
@@ -595,7 +597,7 @@ public class TupleResult implements List<IRecord>
    */
   public IRecord createRecord( )
   {
-    return new Record( null, getComponents() );
+    return m_factory.createRecord( this, getComponents() );
   }
 
   public boolean hasComponent( final IComponent comp )
@@ -628,7 +630,7 @@ public class TupleResult implements List<IRecord>
       }
       catch( final Throwable e )
       {
-        final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.observation.result.TupleResult.2" ) ); //$NON-NLS-1$
+        final IStatus status = StatusUtilities.statusFromThrowable( e );
         KalypsoCorePlugin.getDefault().getLog().log( status );
       }
     }
@@ -646,7 +648,7 @@ public class TupleResult implements List<IRecord>
       }
       catch( final Throwable e )
       {
-        final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.observation.result.TupleResult.3" ) ); //$NON-NLS-1$
+        final IStatus status = StatusUtilities.statusFromThrowable( e );
         KalypsoCorePlugin.getDefault().getLog().log( status );
       }
     }
@@ -663,7 +665,7 @@ public class TupleResult implements List<IRecord>
       }
       catch( final Throwable e )
       {
-        final IStatus status = StatusUtilities.statusFromThrowable( e, Messages.getString( "org.kalypso.observation.result.TupleResult.4" ) ); //$NON-NLS-1$
+        final IStatus status = StatusUtilities.statusFromThrowable( e );
         KalypsoCorePlugin.getDefault().getLog().log( status );
       }
     }
@@ -707,5 +709,10 @@ public class TupleResult implements List<IRecord>
     }
 
     return -1;
+  }
+
+  IRecordFactory getFactory( )
+  {
+    return m_factory;
   }
 }

@@ -51,19 +51,15 @@ import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
 import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor;
 import org.kalypso.contribs.eclipse.swt.custom.ExcelTableCursor.ADVANCE_MODE;
-import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.gml.IProfileSelection;
 import org.kalypso.model.wspm.core.gml.ProfileSelection;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileListener;
 import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfileRecord;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
-import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.featureview.control.TupleResultTableViewer;
 import org.kalypso.ogc.gml.om.table.TupleResultCellModifier;
@@ -397,22 +393,8 @@ public class ProfileTableForm implements ITupleResultViewerProvider
 
     for( final Iterator< ? > itr = structured.iterator(); itr.hasNext(); )
     {
-      final Object object = itr.next();
-      if( object instanceof IProfileRecord )
-      {
-        records.add( (IProfileRecord)object );
-      }
-      else if( object instanceof IRecord )
-      {
-        // FIXME: should never happen any more
-        final IRecord record = (IRecord)object;
-
-        // FIXME: why this check here??
-        final IProfile profile = m_selection.getProfile();
-        final IComponent component = profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
-        if( component != null )
-          records.add( new ProfileRecord( profile, record ) );
-      }
+      final IProfileRecord record = (IProfileRecord)itr.next();
+      records.add( record );
     }
 
     return records.toArray( new IProfileRecord[] {} );

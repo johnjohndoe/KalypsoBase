@@ -42,7 +42,7 @@ package org.kalypso.model.wspm.core.profil.impl;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -53,7 +53,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.Range;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.exception.CancelVisitorException;
@@ -79,11 +78,10 @@ import org.kalypso.model.wspm.core.profil.impl.marker.PointMarker;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecordVisitor;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfileRecord;
+import org.kalypso.model.wspm.core.profil.wrappers.ProfileRecordFactory;
 import org.kalypso.observation.IObservationVisitor;
 import org.kalypso.observation.phenomenon.IPhenomenon;
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.ITupleResultChangedListener;
 import org.kalypso.observation.result.TupleResult;
 
@@ -101,7 +99,7 @@ public abstract class AbstractProfile extends ProfileMetadataObserver implements
 
   private IPhenomenon m_phenomenon;
 
-  private TupleResult m_result;
+  private final TupleResult m_result;
 
   private String m_name;
 
@@ -127,14 +125,20 @@ public abstract class AbstractProfile extends ProfileMetadataObserver implements
 
   private final IProfileMetadata m_metadata;
 
-  public AbstractProfile( final String type, final TupleResult result, final IProfileFeature source )
+  public AbstractProfile( final String type, final IProfileFeature source )
   {
     m_type = type;
     m_source = source;
-    setResult( result );
 
     m_selection = new RangeSelection( this );
     m_metadata = new ProfileMetadata( this );
+
+    m_result = new TupleResult( new ProfileRecordFactory( this ) );
+
+    final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( m_type );
+    provider.checkComponents( m_result );
+
+    m_result.addChangeListener( m_tupleResultListener );
   }
 
   @Override
@@ -152,13 +156,13 @@ public abstract class AbstractProfile extends ProfileMetadataObserver implements
   @Override
   public void addPoint( final int index, final IProfileRecord point )
   {
-    getResult().add( index, point.getRecord() );
+    getResult().add( index, point );
   }
 
   @Override
   public boolean addPoint( final IProfileRecord point )
   {
-    return getResult().add( point.getRecord() );
+    return getResult().add( point );
   }
 
   @Override
@@ -226,9 +230,7 @@ public abstract class AbstractProfile extends ProfileMetadataObserver implements
   @Override
   public IProfileRecord createProfilPoint( )
   {
-    final IRecord record = m_result.createRecord();
-
-    return new ProfileRecord( this, record );
+    return (IProfileRecord)m_result.createRecord();
   }
 
   private void fireProblemMarkerChanged( )
@@ -426,21 +428,8 @@ public abstract class AbstractProfile extends ProfileMetadataObserver implements
   public IProfileRecord[] getPoints( )
   {
     final TupleResult result = getResult();
-    final IRecord[] records = result.toArray( new IRecord[result.size()] );
 
-    // FIXME: check: we should make sure tha our result only contains profile-record, so wrapping would not be needed (its a heavy operation
-    // and prohibits comparison of records with == )
-
-    final Collection<IProfileRecord> collection = new ArrayList<>();
-    for( final IRecord record : records )
-    {
-      if( record instanceof IProfileRecord )
-        collection.add( (IProfileRecord)record );
-      else
-        collection.add( new ProfileRecord( this, record ) );
-    }
-
-    return collection.toArray( new IProfileRecord[] {} );
+    return result.toArray( new IProfileRecord[result.size()] );
   }
 
   @Override
@@ -499,21 +488,13 @@ public abstract class AbstractProfile extends ProfileMetadataObserver implements
   @Override
   public boolean removePoint( final IProfileRecord point )
   {
-    return getResult().remove( point.getRecord() );
+    return getResult().remove( point );
   }
 
   @Override
   public boolean removePoints( final IProfileRecord[] points )
   {
-    boolean state = true;
-    for( final IProfileRecord point : points )
-    {
-      // TODO: use removeAll to avoid too many events!
-      if( !getResult().remove( point.getRecord() ) )
-        state = false;
-    }
-
-    return state;
+    return getResult().removeAll( Arrays.asList( points ) );
   }
 
   @Override
@@ -597,23 +578,23 @@ public abstract class AbstractProfile extends ProfileMetadataObserver implements
     fireProblemMarkerChanged();
   }
 
-  @Override
-  public void setResult( final TupleResult result )
-  {
-    Assert.isNotNull( result );
-
-    if( m_result != null )
-    {
-      m_result.removeChangeListener( m_tupleResultListener );
-    }
-
-    m_result = result;
-
-    final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( m_type );
-    provider.checkComponents( result );
-
-    m_result.addChangeListener( m_tupleResultListener );
-  }
+//  @Override
+//  public void setResult( final TupleResult result )
+//  {
+//    Assert.isNotNull( result );
+//
+//    if( m_result != null )
+//    {
+//      m_result.removeChangeListener( m_tupleResultListener );
+//    }
+//
+//    m_result = result;
+//
+//    final IProfilePointPropertyProvider provider = KalypsoModelWspmCoreExtensions.getPointPropertyProviders( m_type );
+//    provider.checkComponents( result );
+//
+//    m_result.addChangeListener( m_tupleResultListener );
+//  }
 
   @Override
   public void setStation( final double station )
@@ -660,7 +641,7 @@ public abstract class AbstractProfile extends ProfileMetadataObserver implements
   {
     final int index = record.getIndex();
     if( index == -1 ) // fall back - this should never happen
-      return getResult().indexOf( record.getRecord() );
+      return getResult().indexOf( record );
 
     return index;
   }
@@ -693,7 +674,7 @@ public abstract class AbstractProfile extends ProfileMetadataObserver implements
     if( getResult().isEmpty() )
       return null;
 
-    return new ProfileRecord( this, getResult().get( 0 ) );
+    return (IProfileRecord)getResult().get( 0 );
   }
 
   @Override
@@ -703,7 +684,7 @@ public abstract class AbstractProfile extends ProfileMetadataObserver implements
     if( result.isEmpty() )
       return null;
 
-    return new ProfileRecord( this, result.get( result.size() - 1 ) );
+    return (IProfileRecord)result.get( result.size() - 1 );
   }
 
   @Override

@@ -72,11 +72,5 @@ public interface IObservation<T>
 
   T getResult( );
 
-  /**
-   * @deprecated Do not use, only for internal useage!
-   */
-  @Deprecated
-  void setResult( T values );
-
   void accept( IObservationVisitor visitor );
 }
