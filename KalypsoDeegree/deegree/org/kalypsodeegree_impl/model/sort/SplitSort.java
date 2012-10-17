@@ -37,43 +37,21 @@ package org.kalypsodeegree_impl.model.sort;
 
 import gnu.trove.TIntProcedure;
 
-import java.awt.Graphics;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import javax.xml.namespace.QName;
-
-import org.apache.commons.lang3.StringUtils;
-import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.URIUtil;
-import org.kalypso.gmlschema.GMLSchemaUtilities;
-import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
-import org.kalypsodeegree.model.feature.FeatureVisitor;
-import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
-import org.kalypsodeegree_impl.model.feature.FeatureHelper;
-import org.kalypsodeegree_impl.model.feature.FeatureLinkUtils;
-import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 import com.infomatiq.jsi.Rectangle;
 
-public class SplitSort implements FeatureList
+public class SplitSort extends AbstractFeatureList
 {
   /* Items of this list */
   private final List<SplitSortItem> m_items = new ArrayList<>();
@@ -84,40 +62,14 @@ public class SplitSort implements FeatureList
    */
   private SplitSortindex m_index = null;
 
-  private final Feature m_parentFeature;
-
-  private final IRelationType m_parentFeatureTypeProperty;
-
-  private final IEnvelopeProvider m_envelopeProvider;
-
-  /**
-   * @param parentFeature
-   *          The parent feature. May be <code>null</code>, if this list has no underlying workspace. Make sure
-   *          parentFTP is also null then.
-   * @param parentFTP
-   *          The feature type of the parent. May be <code>null</code>, if this list has no underlying workspace. Make
-   *          sure parentFeature is also null then.
-   */
   public SplitSort( final Feature parentFeature, final IRelationType parentFTP )
   {
-    this( parentFeature, parentFTP, null );
+    super( parentFeature, parentFTP, null );
   }
 
-  /**
-   * @param parentFeature
-   *          The parent feature. May be null, if this list has no underlying workspace. Make sure parentFTP is also
-   *          null then.
-   * @param parentFTP
-   *          The feature type of the parent. May be null, if this list has no underlying workspace. Make sure
-   *          parentFeature is also null then.
-   * @param envelopeProvider
-   *          The provider returns envelops. If <code>null</code>, the default one is used.
-   */
   public SplitSort( final Feature parentFeature, final IRelationType parentFTP, final IEnvelopeProvider envelopeProvider )
   {
-    m_parentFeature = parentFeature;
-    m_parentFeatureTypeProperty = parentFTP;
-    m_envelopeProvider = envelopeProvider == null ? new DefaultEnvelopeProvider( parentFeature ) : envelopeProvider;
+    super( parentFeature, parentFTP, envelopeProvider );
   }
 
   List<SplitSortItem> getItems( )
@@ -125,69 +77,17 @@ public class SplitSort implements FeatureList
     return m_items;
   }
 
-  private void checkCanAdd( final int count )
-  {
-    if( m_parentFeatureTypeProperty == null )
-      return;
-
-    final int maxOccurs = m_parentFeatureTypeProperty.getMaxOccurs();
-
-    if( maxOccurs != IPropertyType.UNBOUND_OCCURENCY && size() + count > maxOccurs )
-      throw new IllegalArgumentException( "Adding a new element violates maxOccurs" ); //$NON-NLS-1$
-  }
-
-  private void registerFeature( final Object object )
-  {
-    /* Only inline features needs to be unregistered from the workspace */
-    if( object instanceof IXLinkedFeature )
-      return;
-
-    if( !(object instanceof Feature) )
-      return;
-
-    final Feature f = (Feature)object;
-    final GMLWorkspace workspace = f.getWorkspace();
-    if( workspace instanceof GMLWorkspace_Impl )
-      ((GMLWorkspace_Impl)workspace).registerFeature( f );
-  }
-
-  private void unregisterFeature( final Object object )
-  {
-    /* Only inline features needs to be unregistered from the workspace */
-    if( object instanceof IXLinkedFeature )
-      return;
-
-    if( !(object instanceof Feature) )
-      return;
-
-    final Feature f = (Feature)object;
-    final GMLWorkspace workspace = f.getWorkspace();
-    if( workspace instanceof GMLWorkspace_Impl )
-      ((GMLWorkspace_Impl)workspace).unregisterFeature( f );
-  }
-
   private synchronized SplitSortItem createItem( final Object data, final int index )
   {
-    Assert.isNotNull( data );
-
     /* Create a new item */
+    registerFeature( data );
 
     final SplitSortItem newItem = new SplitSortItem( data );
 
     if( m_index != null )
       m_index.insert( newItem, index );
 
-    registerFeature( data );
-
     return newItem;
-  }
-
-  Rectangle getEnvelope( final SplitSortItem item )
-  {
-    final Object data = item.getData();
-    final GM_Envelope envelope = m_envelopeProvider.getEnvelope( data );
-
-    return GeometryUtilities.toRectangle( envelope );
   }
 
   private void removeDataObject( final SplitSortItem item, final int index )
@@ -208,6 +108,9 @@ public class SplitSort implements FeatureList
 
   // IMPLEMENTATION OF LIST INTERFACE
 
+  /**
+   * @see java.util.List#add(java.lang.Object)
+   */
   @Override
   public synchronized boolean add( final Object object )
   {
@@ -220,6 +123,9 @@ public class SplitSort implements FeatureList
     return true;
   }
 
+  /**
+   * @see java.util.List#add(int, java.lang.Object)
+   */
   @Override
   public synchronized void add( final int index, final Object object )
   {
@@ -233,17 +139,9 @@ public class SplitSort implements FeatureList
     m_items.add( index, newItem );
   }
 
-  @Override
-  public synchronized boolean addAll( final Collection c )
-  {
-    checkCanAdd( c.size() );
-
-    for( final Object object : c )
-      add( object );
-
-    return !c.isEmpty();
-  }
-
+  /**
+   * @see org.kalypsodeegree_impl.model.sort.AbstractFeatureList#addAll(int, java.util.Collection)
+   */
   @Override
   public synchronized boolean addAll( final int index, final Collection c )
   {
@@ -263,6 +161,9 @@ public class SplitSort implements FeatureList
     return m_items.addAll( index, items );
   }
 
+  /**
+   * @see org.kalypsodeegree_impl.model.sort.AbstractFeatureList#set(int, java.lang.Object)
+   */
   @Override
   public synchronized Object set( final int index, final Object newObject )
   {
@@ -278,12 +179,18 @@ public class SplitSort implements FeatureList
     return oldItem.getData();
   }
 
+  /**
+   * @see java.util.List#get(int)
+   */
   @Override
   public synchronized Object get( final int index )
   {
     return m_items.get( index ).getData();
   }
 
+  /**
+   * @see java.util.List#remove(java.lang.Object)
+   */
   @Override
   public synchronized boolean remove( final Object object )
   {
@@ -304,6 +211,9 @@ public class SplitSort implements FeatureList
     return true;
   }
 
+  /**
+   * @see java.util.List#remove(int)
+   */
   @Override
   public synchronized Object remove( final int index )
   {
@@ -319,45 +229,18 @@ public class SplitSort implements FeatureList
     return item.getData();
   }
 
-  @Override
-  public synchronized boolean removeAll( final Collection c )
-  {
-    boolean changed = false;
-
-    for( final Object object : c )
-      changed |= remove( object );
-
-    return changed;
-  }
-
-  @Override
-  public synchronized boolean retainAll( final Collection c )
-  {
-    boolean modified = false;
-
-    final int size = size();
-    for( int i = 0; i < size; i++ )
-    {
-      final Object object = get( i );
-      if( !c.contains( object ) )
-        modified |= remove( object );
-    }
-
-    return modified;
-  }
-
+  /**
+   * @see java.util.List#size()
+   */
   @Override
   public synchronized int size( )
   {
     return m_items.size();
   }
 
-  @Override
-  public synchronized boolean isEmpty( )
-  {
-    return size() == 0;
-  }
-
+  /**
+   * @see java.util.List#clear()
+   */
   @Override
   public synchronized void clear( )
   {
@@ -369,24 +252,9 @@ public class SplitSort implements FeatureList
     m_items.clear();
   }
 
-  @Override
-  public synchronized Object[] toArray( )
-  {
-    return toArray( new Object[size()] );
-  }
-
-  @Override
-  public synchronized Object[] toArray( Object[] a )
-  {
-    if( a == null || a.length != size() )
-      a = new Object[size()];
-
-    for( int i = 0; i < a.length; i++ )
-      a[i] = get( i );
-
-    return a;
-  }
-
+  /**
+   * @see java.util.List#indexOf(java.lang.Object)
+   */
   @Override
   public synchronized int indexOf( final Object object )
   {
@@ -413,6 +281,9 @@ public class SplitSort implements FeatureList
     return -1;
   }
 
+  /**
+   * @see java.util.List#lastIndexOf(java.lang.Object)
+   */
   @Override
   public synchronized int lastIndexOf( final Object object )
   {
@@ -426,50 +297,12 @@ public class SplitSort implements FeatureList
     return -1;
   }
 
-  @Override
-  public synchronized boolean contains( final Object item )
-  {
-    return indexOf( item ) != -1;
-  }
-
-  @Override
-  public synchronized boolean containsAll( final Collection c )
-  {
-    for( final Object object : c )
-    {
-      if( !contains( object ) )
-        return false;
-    }
-
-    return true;
-  }
-
   /**
    * ATTENTION: Returns an unmodifiable iterator i.e. changing the list via the returned iterator results in an
    * exception.<br/>
    * The iterator is not synchronized, however.
-   */
-  @Override
-  public synchronized Iterator< ? > iterator( )
-  {
-    return listIterator();
-  }
-
-  /**
-   * ATTENTION: Returns an unmodifiable iterator i.e. changing the list via the returned iterator results in an
-   * exception.<br/>
-   * The iterator is not synchronized, however.
-   */
-  @Override
-  public synchronized ListIterator< ? > listIterator( )
-  {
-    return listIterator( 0 );
-  }
-
-  /**
-   * ATTENTION: Returns an unmodifiable iterator i.e. changing the list via the returned iterator results in an
-   * exception.<br/>
-   * The iterator is not synchronized, however.
+   * 
+   * @see java.util.List#listIterator(int)
    */
   @Override
   public synchronized ListIterator< ? > listIterator( final int index )
@@ -477,17 +310,11 @@ public class SplitSort implements FeatureList
     return new SplitSortIterator( this, index );
   }
 
-  /**
-   * NOT IMPLEMENTED
-   */
-  @Override
-  public synchronized List< ? > subList( final int fromIndex, final int toIndex )
-  {
-    throw new UnsupportedOperationException();
-  }
-
   // JMSpatialIndex implementation
 
+  /**
+   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#query(org.kalypsodeegree.model.geometry.GM_Position, java.util.List)
+   */
   @Override
   public List< ? > query( final GM_Position pos, final List result )
   {
@@ -495,6 +322,9 @@ public class SplitSort implements FeatureList
     return query( envelope, result );
   }
 
+  /**
+   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#query(org.kalypsodeegree.model.geometry.GM_Envelope, java.util.List)
+   */
   @Override
   public List< ? > query( final GM_Envelope queryEnv, final List result )
   {
@@ -502,12 +332,15 @@ public class SplitSort implements FeatureList
     return query( envelope, result );
   }
 
-  private synchronized List< ? > query( final Rectangle envelope, @SuppressWarnings( "rawtypes" ) final List receiver )
+  /**
+   *
+   */
+  @SuppressWarnings( { "unchecked", "rawtypes" } )
+  protected synchronized List< ? > query( final Rectangle envelope, final List receiver )
   {
-    // FIXME: better handling of lists with very view elements: in this case, linear search would be better and would avoid the momory consuming spatial index
     createIndex();
 
-    @SuppressWarnings( "unchecked" ) final List<Object> result = receiver == null ? new ArrayList<>() : receiver;
+    final List<Object> result = receiver == null ? new ArrayList<>() : receiver;
 
     final List<SplitSortItem> items = m_items;
 
@@ -529,13 +362,9 @@ public class SplitSort implements FeatureList
     return result;
   }
 
-  @Override
-  public synchronized void paint( final Graphics g, final GeoTransform geoTransform )
-  {
-    // how to paint the RTree?
-    // m_spatialIndex.paint( g, geoTransform );
-  }
-
+  /**
+   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#getBoundingBox()
+   */
   @Override
   public synchronized GM_Envelope getBoundingBox( )
   {
@@ -549,6 +378,9 @@ public class SplitSort implements FeatureList
     return GeometryUtilities.toEnvelope( bounds, crs );
   }
 
+  /**
+   * @see org.kalypsodeegree_impl.model.sort.AbstractFeatureList#invalidate(java.lang.Object)
+   */
   @Override
   public synchronized void invalidate( final Object object )
   {
@@ -556,209 +388,4 @@ public class SplitSort implements FeatureList
       m_index.invalidate( object );
   }
 
-  // FEATURE LIST IMPLEMENTATION
-
-  private Feature resolveFeature( final Object object )
-  {
-    if( object instanceof Feature && !(object instanceof IXLinkedFeature) )
-      return (Feature)object;
-
-    final Feature owner = getOwner();
-    if( owner == null )
-      return null;
-
-    final GMLWorkspace workspace = owner.getWorkspace();
-    if( workspace == null )
-      return null;
-
-    return FeatureHelper.getFeature( workspace, object );
-  }
-
-  /**
-   * If this list does not has an owner within a valid workspace, links are not resolved and the returned arraxy will
-   * contain <code>null</code> elements instead.
-   */
-  @Override
-  public synchronized Feature[] toFeatures( )
-  {
-    final Feature[] features = new Feature[m_items.size()];
-    for( int i = 0; i < features.length; i++ )
-    {
-      final Object object = get( i );
-
-      features[i] = resolveFeature( object );
-    }
-
-    return features;
-  }
-
-  @Override
-  public void accept( final FeatureVisitor visitor )
-  {
-    accept( visitor, FeatureVisitor.DEPTH_INFINITE );
-  }
-
-  @Override
-  public synchronized void accept( final FeatureVisitor visitor, final int depth )
-  {
-    for( final Object object : this )
-    {
-      if( object instanceof Feature && !(object instanceof IXLinkedFeature) )
-        visitor.visit( (Feature)object );
-      else if( depth == FeatureVisitor.DEPTH_INFINITE_LINKS )
-      {
-        final Feature linkedFeature = resolveFeature( object );
-        if( linkedFeature != null )
-          visitor.visit( linkedFeature );
-      }
-    }
-  }
-
-  @Override
-  public Feature getOwner( )
-  {
-    return m_parentFeature;
-  }
-
-  @Override
-  public IRelationType getPropertyType( )
-  {
-    return m_parentFeatureTypeProperty;
-  }
-
-  @Override
-  public QName getName( )
-  {
-    return getPropertyType().getQName();
-  }
-
-  @Override
-  public Object getValue( )
-  {
-    return this;
-  }
-
-  @Override
-  public void setValue( final Object value )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public <T extends Feature> IXLinkedFeature addLink( final T toAdd ) throws IllegalArgumentException, IllegalStateException
-  {
-    return insertLink( size(), toAdd );
-  }
-
-  @Override
-  public IXLinkedFeature addLink( final String href ) throws IllegalArgumentException, IllegalStateException
-  {
-    return insertLink( size(), href );
-  }
-
-  @Override
-  public IXLinkedFeature addLink( final String href, final QName featureTypeName ) throws IllegalArgumentException, IllegalStateException
-  {
-    return insertLink( size(), href, featureTypeName );
-  }
-
-  @Override
-  public IXLinkedFeature addLink( final String href, final IFeatureType featureType ) throws IllegalArgumentException, IllegalStateException
-  {
-    return insertLink( size(), href, featureType );
-  }
-
-  @Override
-  public <T extends Feature> IXLinkedFeature insertLink( final int index, final T toLink ) throws IllegalArgumentException, IllegalStateException
-  {
-    final String path = findLinkPath( toLink );
-    final String id = toLink.getId();
-
-    final String href = String.format( "%s#%s", path, id );
-
-    return insertLink( index, href, toLink.getFeatureType() );
-  }
-
-  private String findLinkPath( final Feature toLink )
-  {
-    final GMLWorkspace linkedWorkspace = toLink.getWorkspace();
-    final GMLWorkspace sourceWorkspace = m_parentFeature.getWorkspace();
-
-    /* Internal link, no uri */
-    if( linkedWorkspace == sourceWorkspace )
-      return StringUtils.EMPTY;
-
-    final URL targetContext = linkedWorkspace.getContext();
-    final URL sourceContext = sourceWorkspace.getContext();
-
-    try
-    {
-      final URI targetURI = targetContext.toURI();
-      final URI sourceURI = sourceContext.toURI();
-      final URI relativeURI = URIUtil.makeRelative( targetURI, sourceURI );
-      return relativeURI.toString();
-    }
-    catch( final URISyntaxException e )
-    {
-      e.printStackTrace();
-      return targetContext.toString();
-    }
-  }
-
-  @Override
-  public IXLinkedFeature insertLink( final int index, final String href ) throws IllegalArgumentException, IllegalStateException
-  {
-    return insertLink( index, href, getPropertyType().getTargetFeatureType() );
-  }
-
-  @Override
-  public IXLinkedFeature insertLink( final int index, final String href, final QName featureTypeName ) throws IllegalArgumentException, IllegalStateException
-  {
-    final IFeatureType featureType = GMLSchemaUtilities.getFeatureTypeQuiet( featureTypeName );
-    if( featureType == null )
-    {
-      final String message = String.format( "Unknown feature type: %s", featureTypeName ); //$NON-NLS-1$
-      throw new IllegalArgumentException( message );
-    }
-
-    return insertLink( index, href, featureType );
-  }
-
-  @Override
-  public synchronized IXLinkedFeature insertLink( final int index, final String href, final IFeatureType featureType ) throws IllegalArgumentException, IllegalStateException
-  {
-    final IXLinkedFeature link = FeatureFactory.createXLink( m_parentFeature, m_parentFeatureTypeProperty, featureType, href );
-
-    // REMARK: this should be checked on every add. Probably this will cause problems due to old buggy code.
-    // So we at least check in this new method. Should be moved into the add methods.
-    checkCanAdd( 1 );
-
-    if( index < 0 )
-      add( link );
-    else
-      add( index, link );
-
-    return link;
-  }
-
-  @Override
-  public synchronized boolean removeLink( final Feature targetFeature )
-  {
-    if( targetFeature instanceof IXLinkedFeature )
-      throw new IllegalArgumentException( "targetFeature may only be an inline feature" ); //$NON-NLS-1$
-
-    for( int i = 0; i < size(); i++ )
-    {
-      final Object element = get( i );
-
-      if( FeatureLinkUtils.isSameOrLinkTo( targetFeature, element ) )
-      {
-        remove( i );
-        return true;
-      }
-    }
-
-    /* not found */
-    return false;
-  }
 }
