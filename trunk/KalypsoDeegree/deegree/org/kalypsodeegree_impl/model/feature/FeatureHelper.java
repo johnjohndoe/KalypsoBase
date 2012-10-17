@@ -895,6 +895,7 @@ public final class FeatureHelper
     if( value instanceof Feature )
       return (Feature) value;
 
+    // FIXME: code never reached?!
     if( feature instanceof IXLinkedFeature )
     {
       /* Its a local link inside a xlinked-feature */
