@@ -89,7 +89,7 @@ public class TableSelectionProfilePointFilter implements IProfilePointFilter
     if( m_points.contains( point ) )
       return true;
 
-    return m_points.contains( point.getRecord() );
+    return m_points.contains( point );
   }
 
   @Override
@@ -115,5 +115,4 @@ public class TableSelectionProfilePointFilter implements IProfilePointFilter
   {
     return "tableSelection"; //$NON-NLS-1$
   }
-
 }

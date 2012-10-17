@@ -89,8 +89,8 @@ public class DouglasPeuckerActionDelegate implements IViewActionDelegate
       return;
     }
 
-    final IPointsProvider allPointsPointsProvider = new SimplePointsProvider( profile.getPoints() ); //$NON-NLS-1$
-    final IPointsProvider selectionPointProvider = new SelectionPointsProvider( profile, m_selection, true );
+    final IPointsProvider allPointsPointsProvider = new SimplePointsProvider( profile.getPoints() );
+    final IPointsProvider selectionPointProvider = new SelectionPointsProvider( m_selection, true );
 
     final DouglasPeuckerDialog dialog = new DouglasPeuckerDialog( viewShell, profile, new IPointsProvider[] { allPointsPointsProvider, selectionPointProvider } );
     dialog.open();

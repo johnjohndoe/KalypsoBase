@@ -161,7 +161,7 @@ public class InsertProfilePointWidget extends AbstractProfileWidget
 
       final int index = before.getIndex();
       if( interpolation.doInterpolation( result, record, index, distance ) )
-        result.add( index + 1, record.getRecord() );
+        result.add( index + 1, record );
 
       final Job job = new Job( "Active point changed" ) //$NON-NLS-1$
       {

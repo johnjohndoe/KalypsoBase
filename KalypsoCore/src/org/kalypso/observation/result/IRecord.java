@@ -42,7 +42,7 @@ package org.kalypso.observation.result;
 
 /**
  * A record holds the values for the components of a tuple result.
- * 
+ *
  * @author schlienger
  */
 public interface IRecord
@@ -73,7 +73,7 @@ public interface IRecord
    * ATTENTION: only ment to be called by {@link TupleResult} itself! Else sorting may fail...<br>
    * TODO: check if this could be made default visible, or if the record may inform its owner to sort itself... (make
    * sure its not called twice)
-   * 
+   *
    * @throws IllegalArgumentException
    *           if the component is unknown to this record
    * @deprecated Use {@link #setValue(int, Object)} instead. This is because there could be more values for one column
@@ -87,7 +87,13 @@ public interface IRecord
    */
   void setValue( int index, Object value ) throws IndexOutOfBoundsException;
 
-  IRecord cloneRecord( );
+//  IRecord cloneRecord( );
 
   int indexOfComponent( String componentID );
+
+  /**
+   * Create a new record with the same values as the given one.<br/>
+   * The record still needs to be added to the result afterwards.
+   */
+  IRecord cloneRecord( );
 }

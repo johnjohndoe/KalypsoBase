@@ -45,11 +45,8 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
-import org.kalypso.model.wspm.core.profil.wrappers.ProfileRecord;
 import org.kalypso.model.wspm.ui.i18n.Messages;
-import org.kalypso.observation.result.IRecord;
 
 /**
  * Delivers points from a selection.
@@ -62,7 +59,7 @@ public class SelectionPointsProvider implements IPointsProvider
 
   private IProfileRecord[] m_points = new IProfileRecord[] {};
 
-  public SelectionPointsProvider( final IProfile profile, final ISelection selection, final boolean selectionMustBeContinious )
+  public SelectionPointsProvider( final ISelection selection, final boolean selectionMustBeContinious )
   {
     if( selection.isEmpty() )
     {
@@ -88,15 +85,10 @@ public class SelectionPointsProvider implements IPointsProvider
     final List<IProfileRecord> points = new ArrayList<>( objects.length );
     for( final Object object : objects )
     {
-      final IProfileRecord record = toRecord( profile, object );
-      if( record == null )
-      {
-        m_errorMessage = Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider.3" ); //$NON-NLS-1$
-        return;
-      }
+      final IProfileRecord record = (IProfileRecord)object;
 
       // IMPORTANT: compare, IRecord's, as the elements may have created on the ways
-      if( selectionMustBeContinious && lastPoint != null && lastPoint.getRecord() != record.getPreviousPoint().getRecord() )
+      if( selectionMustBeContinious && lastPoint != null && lastPoint != record.getPreviousPoint() )
       {
         m_errorMessage = Messages.getString( "org.kalypso.model.wspm.ui.profil.dialogs.reducepoints.SelectionPointsProvider.2" ); //$NON-NLS-1$
         return;
@@ -108,18 +100,6 @@ public class SelectionPointsProvider implements IPointsProvider
 
     m_errorMessage = null;
     m_points = points.toArray( new IProfileRecord[points.size()] );
-  }
-
-  private IProfileRecord toRecord( final IProfile profile, final Object object )
-  {
-    if( object instanceof IProfileRecord )
-      return (IProfileRecord)object;
-
-    // IMPORTANT: elements of profile table are not IProfileRecords
-    if( object instanceof IRecord )
-      return new ProfileRecord( profile, (IRecord)object );
-
-    return null;
   }
 
   @Override

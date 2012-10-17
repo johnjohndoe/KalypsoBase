@@ -41,8 +41,6 @@
 package org.kalypso.model.wspm.core.profil.wrappers;
 
 import org.apache.commons.lang3.Range;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.kalypso.commons.java.lang.Doubles;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.jts.JTSConverter;
@@ -51,7 +49,7 @@ import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.observation.result.IComponent;
-import org.kalypso.observation.result.IRecord;
+import org.kalypso.observation.result.Record;
 import org.kalypso.observation.result.TupleResult;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -60,41 +58,15 @@ import com.vividsolutions.jts.geom.Point;
 /**
  * @author Dirk Kuch
  */
-public class ProfileRecord extends AbstractRecordWrapper implements IProfileRecord
+public class ProfileRecord extends Record implements IProfileRecord
 {
-  private IProfile m_profile;
+  private final IProfile m_profile;
 
-  public ProfileRecord( final IProfile parent, final IRecord record )
+  public ProfileRecord( final IProfile owner, final IComponent[] components )
   {
-    super( record );
+    super( owner.getResult(), components );
 
-    setProfile( parent );
-  }
-
-  @Override
-  public boolean equals( final Object object )
-  {
-    if( object instanceof IProfileRecord )
-    {
-      final IProfileRecord other = (IProfileRecord) object;
-
-      final EqualsBuilder builder = new EqualsBuilder();
-      builder.append( hashCode(), other.hashCode() );
-
-      return builder.isEquals();
-    }
-
-    return super.equals( object );
-  }
-
-  @Override
-  public int hashCode( )
-  {
-    final HashCodeBuilder builder = new HashCodeBuilder();
-    builder.append( getClass().getName() );
-    builder.append( getRecord() );
-
-    return builder.toHashCode();
+    m_profile = owner;
   }
 
   @Override
@@ -140,41 +112,35 @@ public class ProfileRecord extends AbstractRecordWrapper implements IProfileReco
   @Override
   public void setBreite( final Double width )
   {
-    final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_BREITE );
-    getRecord().setValue( index, width );
+    final int index = indexOfComponent( IWspmPointProperties.POINT_PROPERTY_BREITE );
+    setValue( index, width );
   }
 
   @Override
   public void setHoehe( final Double hoehe )
   {
-    final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_HOEHE );
-    getRecord().setValue( index, hoehe );
-  }
-
-  @Override
-  public String toString( )
-  {
-    return String.format( "[%.2f, %.2f]", getBreite(), getHoehe() ); //$NON-NLS-1$
+    final int index = indexOfComponent( IWspmPointProperties.POINT_PROPERTY_HOEHE );
+    setValue( index, hoehe );
   }
 
   @Override
   public void setKsValue( final Double ksValue )
   {
-    final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS );
+    final int index = indexOfComponent( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS );
     if( index < 0 )
       return;
 
-    getRecord().setValue( index, ksValue );
+    setValue( index, ksValue );
   }
 
   @Override
   public void setKstValue( final Double kstValue )
   {
-    final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST );
+    final int index = indexOfComponent( IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST );
     if( index < 0 )
       return;
 
-    getRecord().setValue( index, kstValue );
+    setValue( index, kstValue );
   }
 
   /**
@@ -215,11 +181,11 @@ public class ProfileRecord extends AbstractRecordWrapper implements IProfileReco
   @Override
   public void setBewuchsAx( final Double bewuchsAx )
   {
-    final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX );
+    final int index = indexOfComponent( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX );
     if( index < 0 )
       return;
 
-    getRecord().setValue( index, bewuchsAx );
+    setValue( index, bewuchsAx );
   }
 
   /**
@@ -228,11 +194,11 @@ public class ProfileRecord extends AbstractRecordWrapper implements IProfileReco
   @Override
   public void setBewuchsAy( final Double bewuchsAy )
   {
-    final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY );
+    final int index = indexOfComponent( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY );
     if( index < 0 )
       return;
 
-    getRecord().setValue( index, bewuchsAy );
+    setValue( index, bewuchsAy );
   }
 
   /**
@@ -241,30 +207,30 @@ public class ProfileRecord extends AbstractRecordWrapper implements IProfileReco
   @Override
   public void setBewuchsDp( final Double bewuchsDp )
   {
-    final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP );
+    final int index = indexOfComponent( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP );
     if( index < 0 )
       return;
 
-    getRecord().setValue( index, bewuchsDp );
+    setValue( index, bewuchsDp );
   }
 
   @Override
   public void setRechtswert( final double x )
   {
-    final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT );
+    final int index = indexOfComponent( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT );
     if( index < 0 )
       return;
-    getRecord().setValue( index, x );
+    setValue( index, x );
   }
 
   @Override
   public void setHochwert( final double y )
   {
-    final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_HOCHWERT );
+    final int index = indexOfComponent( IWspmPointProperties.POINT_PROPERTY_HOCHWERT );
     if( index < 0 )
       return;
 
-    getRecord().setValue( index, y );
+    setValue( index, y );
   }
 
   /**
@@ -273,11 +239,11 @@ public class ProfileRecord extends AbstractRecordWrapper implements IProfileReco
   @Override
   public Double getBewuchsAx( )
   {
-    final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX );
+    final int index = indexOfComponent( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX );
     if( index < 0 )
       return null;
 
-    final Object value = getRecord().getValue( index );
+    final Object value = getValue( index );
     if( value instanceof Number )
       return ((Number) value).doubleValue();
 
@@ -290,11 +256,11 @@ public class ProfileRecord extends AbstractRecordWrapper implements IProfileReco
   @Override
   public Double getBewuchsAy( )
   {
-    final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY );
+    final int index = indexOfComponent( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY );
     if( index < 0 )
       return null;
 
-    final Object value = getRecord().getValue( index );
+    final Object value = getValue( index );
     if( value instanceof Number )
       return ((Number) value).doubleValue();
 
@@ -307,11 +273,11 @@ public class ProfileRecord extends AbstractRecordWrapper implements IProfileReco
   @Override
   public Double getBewuchsDp( )
   {
-    final int index = findComponent( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP );
+    final int index = indexOfComponent( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP );
     if( index < 0 )
       return null;
 
-    final Object value = getRecord().getValue( index );
+    final Object value = getValue( index );
     if( value instanceof Number )
       return ((Number) value).doubleValue();
 
@@ -328,23 +294,6 @@ public class ProfileRecord extends AbstractRecordWrapper implements IProfileReco
   public IProfile getProfile( )
   {
     return m_profile;
-  }
-
-  @Override
-  public IProfileRecord cloneRecord( )
-  {
-    return new ProfileRecord( getProfile(), getRecord().cloneRecord() );
-  }
-
-  public void setProfile( final IProfile profile )
-  {
-    m_profile = profile;
-  }
-
-  @Override
-  public int getIndex( )
-  {
-    return getRecord().getIndex();
   }
 
   @Override
@@ -380,7 +329,7 @@ public class ProfileRecord extends AbstractRecordWrapper implements IProfileReco
 
     final int index = getIndex();
     if( result.size() - 1 > index )
-      return new ProfileRecord( getProfile(), result.get( index + 1 ) );
+      return (IProfileRecord)result.get( index + 1 );
 
     return getProfile().findNextPoint( getBreite() );
   }

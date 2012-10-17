@@ -77,7 +77,7 @@ public class RunOffEvent extends Feature_Impl implements IRunOffEvent
   @Override
   public IObservation<TupleResult> toObservation( )
   {
-    final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservationInternal( this );
+    final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservationInternal( this, null );
     final TupleResult result = obs.getResult();
 
     final String[] components = new String[] { COMPONENT_STATION, COMPONENT_RUNOFF, COMPONENT_COMMENT };

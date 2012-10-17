@@ -56,12 +56,6 @@ public abstract class AbstractPointPropertyProvider implements IProfilePointProp
   protected final Set<String> m_markers = new LinkedHashSet<>();
 
   @Override
-  public IProfile createProfil( )
-  {
-    return createProfil( new TupleResult(), null );
-  }
-
-  @Override
   public Object getDefaultValue( final String propertyID )
   {
     final IComponent component = getPointProperty( propertyID );

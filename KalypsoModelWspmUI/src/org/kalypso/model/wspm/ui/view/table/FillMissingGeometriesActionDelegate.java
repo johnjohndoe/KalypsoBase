@@ -88,7 +88,7 @@ public class FillMissingGeometriesActionDelegate implements IViewActionDelegate
     }
 
     final IPointsProvider allPointsPointsProvider = new SimplePointsProvider( profile.getPoints() );
-    final IPointsProvider selectionPointProvider = new SelectionPointsProvider( profile, m_selection, false );
+    final IPointsProvider selectionPointProvider = new SelectionPointsProvider( m_selection, false );
 
     final FillMissingProfileGeometriesWizard wizard = new FillMissingProfileGeometriesWizard( new IPointsProvider[] { allPointsPointsProvider, selectionPointProvider } );
     final WizardDialog2 dialog = new WizardDialog2( viewShell, wizard );

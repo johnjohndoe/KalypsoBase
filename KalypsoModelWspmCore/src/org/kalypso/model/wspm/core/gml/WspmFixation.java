@@ -85,7 +85,7 @@ public class WspmFixation extends Feature_Impl implements IObservationFeature
   @Override
   public IObservation<TupleResult> toObservation( )
   {
-    final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservationInternal( this );
+    final IObservation<TupleResult> obs = ObservationFeatureFactory.toObservationInternal( this, null );
     final TupleResult result = obs.getResult();
 
     /* ensure that all required components are present */

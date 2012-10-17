@@ -140,7 +140,7 @@ public class ProfilStartTarget extends AbstractPointsTarget
         for( final IRecord point : points )
         {
 
-          final IProfileRecord newPoint = targetPkt.cloneRecord();
+          final IProfileRecord newPoint = targetPkt;
           newPoint.setValue( iBreite, (Double) point.getValue( iPointsBreite ) - deltaX );
           newPoint.setValue( iHoehe, (Double) point.getValue( iPointsHoehe ) - deltaY );
           for( final IComponent prop : owner.getComponents() )
