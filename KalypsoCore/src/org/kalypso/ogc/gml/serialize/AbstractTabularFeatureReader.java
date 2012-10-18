@@ -27,9 +27,10 @@ import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.filterencoding.AbstractFilter;
+import org.kalypsodeegree_impl.gml.binding.shape.AbstractShape;
 import org.kalypsodeegree_impl.gml.binding.shape.ShapeCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
@@ -37,7 +38,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 /**
  * Lädt und schreibt ein CSV als {@link org.kalypsodeegree.model.feature.GMLWorkspace}. Die Information, welche Spalte
  * wie gelesen wird, wird per {@link #addInfo(IPropertyType, CSVInfo)}übergeben.
- *
+ * 
  * @todo Einerseits ganz schön, genau zu spezifizieren, was die Spalten sind. Alternativ wäre aber auch super, wenn das
  *       auch automatisch anhand der 1.Zeile ginge
  * @todo Koordinatensystem berücksichtigen
@@ -102,7 +103,7 @@ public abstract class AbstractTabularFeatureReader
       final IMarshallingTypeHandler typeHandler = typeRegistry.getTypeHandlerForTypeName( element.getType() );
 
       if( typeHandler == null )
-        throw new GmlConvertException( String.format( Messages.getString("AbstractTabularFeatureReader.0"), element.getName(), element.getType() ) ); //$NON-NLS-1$
+        throw new GmlConvertException( String.format( Messages.getString( "AbstractTabularFeatureReader.0" ), element.getName(), element.getType() ) ); //$NON-NLS-1$
 
       final IPropertyType ftp = GMLSchemaFactory.createValuePropertyType( qname, typeHandler, 0, 1, false );
       final boolean ignoreFormatExceptions = element.isIgnoreFormatExceptions();
@@ -135,11 +136,10 @@ public abstract class AbstractTabularFeatureReader
     return m_type.getLineskip();
   }
 
-  protected FeatureList getFeatureList( )
+  protected IFeatureBindingCollection<AbstractShape> getFeatureList( )
   {
-    final Feature rootFeature = m_workspace.getRootFeature();
-    final IRelationType memberRelation = (IRelationType) rootFeature.getFeatureType().getProperty( ShapeSerializer.PROPERTY_FEATURE_MEMBER );
-    return (FeatureList) rootFeature.getProperty( memberRelation );
+    final ShapeCollection rootFeature = (ShapeCollection)m_workspace.getRootFeature();
+    return rootFeature.getShapes();
   }
 
   private void addInfo( final IPropertyType ftp, final CSVInfo info )
@@ -160,7 +160,7 @@ public abstract class AbstractTabularFeatureReader
     catch( final FilterConstructionException e )
     {
       e.printStackTrace();
-      throw new GmlConvertException( Messages.getString("AbstractTabularFeatureReader.1"), e ); //$NON-NLS-1$
+      throw new GmlConvertException( Messages.getString( "AbstractTabularFeatureReader.1" ), e ); //$NON-NLS-1$
     }
   }
 
@@ -175,7 +175,7 @@ public abstract class AbstractTabularFeatureReader
       final IPropertyType ftp = properties[i];
       if( !(ftp instanceof IValuePropertyType) )
         continue;
-      final IValuePropertyType vpt = (IValuePropertyType) ftp;
+      final IValuePropertyType vpt = (IValuePropertyType)ftp;
       final CSVInfo info = m_infos.get( ftp );
 
       // check column numbers
