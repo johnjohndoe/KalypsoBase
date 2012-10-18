@@ -75,10 +75,10 @@ public class GMLSchemaCache
   /**
    * Schreibt ein schema in diesen Cache.
    */
-  public synchronized void addSchema( final String namespace, final GMLSchema schema, final Date validity, final long lastModifiedCheck )
+  public synchronized void addSchema( final String namespace, final GMLSchema schema, final Date validity, final long lastModifiedCheck, final String gmlVersion )
   {
-    final String version = schema.getGMLVersion();
-    final String publicId = namespace + "#" + version; //$NON-NLS-1$
+//    final String version = schema.getGMLVersion();
+    final String publicId = namespace + "#" + gmlVersion; //$NON-NLS-1$
 
     Debug.CATALOG.printf( "Adding schema to cache: %s", publicId ); //$NON-NLS-1$
 
@@ -93,9 +93,6 @@ public class GMLSchemaCache
    */
   public synchronized GMLSchema getSchema( final String namespace, final String gmlVersion, final URL schemaURL ) throws GMLSchemaException
   {
-    if( schemaURL == null )
-      throw new GMLSchemaException( Messages.getString( "org.kalypso.gmlschema.GMLSchemaCache.0", namespace ) ); //$NON-NLS-1$
-
     Debug.CATALOG.printf( "GML-Schema cache lookup: %s, %s, %s%n", namespace, gmlVersion, schemaURL ); //$NON-NLS-1$
 
     Assert.isNotNull( namespace );
@@ -115,9 +112,12 @@ public class GMLSchemaCache
     // TODO: maybe create a validity from all imported schematas as well?
 
     // if object already in memCache and is valid, just return it
-    final GMLSchemaWrapper sw = (GMLSchemaWrapper) m_memCache.getObject( publicId );
+    final GMLSchemaWrapper sw = (GMLSchemaWrapper)m_memCache.getObject( publicId );
 
     final long currentMillis = System.currentTimeMillis();
+
+    if( sw == null && schemaURL == null )
+      throw new GMLSchemaException( Messages.getString( "org.kalypso.gmlschema.GMLSchemaCache.0", namespace ) ); //$NON-NLS-1$
 
     if( sw != null )
     {

@@ -45,8 +45,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
 import junit.framework.TestCase;
 
 import org.apache.commons.io.FileUtils;
@@ -58,7 +56,9 @@ import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree_impl.gml.binding.shape.AbstractShape;
 import org.kalypsodeegree_impl.gml.binding.shape.ShapeCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
@@ -81,7 +81,7 @@ public class SpatialIndexTest extends TestCase
 
   public void testBigShape( ) throws Exception
   {
-    doTheTest( "/etc/test/resources/gmlserializer/bigShape.zip", "mod", ShapeCollection.MEMBER_FEATURE ); //$NON-NLS-1$ //$NON-NLS-2$
+    doTheTest( "/etc/test/resources/gmlserializer/bigShape.zip", "mod", ShapeCollection.MEMBER_FEATURE_LOCAL ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   // invalid test, depends on KalypsoModel1d2d
@@ -90,7 +90,7 @@ public class SpatialIndexTest extends TestCase
 //    doTheTest( "/etc/test/resources/gmlserializer/bigGml.zip", "nodeResult.gml", new QName( "http://www.tu-harburg.de/wb/kalypso/schemata/1d2dResults", "nodeResultMember" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 // }
 
-  private void doTheTest( final String zipResourcePath, final String filename, final QName propQName ) throws Exception
+  private void doTheTest( final String zipResourcePath, final String filename, final String memberFeatureLocal ) throws Exception
   {
     final TimeLogger logger = new TimeLogger( "Start spatial index test" ); //$NON-NLS-1$
     final GMLWorkspace workspace = loadWorkspace( zipResourcePath, filename );
@@ -99,14 +99,15 @@ public class SpatialIndexTest extends TestCase
 
     final FeatureList sort = FeatureFactory.createFeatureList( null, null );
 
-    final FeatureList featureList = (FeatureList) workspace.getRootFeature().getProperty( propQName );
-    for( final Object object : featureList )
+    final ShapeCollection shapeCollection = (ShapeCollection)workspace.getRootFeature();
+    final IFeatureBindingCollection<AbstractShape> shapes = shapeCollection.getShapes();
+    for( final Object object : shapes )
       sort.add( object );
 
     logger.takeInterimTime();
     logger.printCurrentInterim( "Index built in: " ); //$NON-NLS-1$
 
-    final GM_Envelope boundingBox = featureList.getBoundingBox();
+    final GM_Envelope boundingBox = shapes.getBoundingBox();
 
     sort.query( boundingBox, null );
     logger.takeInterimTime();
@@ -116,7 +117,7 @@ public class SpatialIndexTest extends TestCase
     logger.takeInterimTime();
     logger.printCurrentInterim( "Index queried again in: " ); //$NON-NLS-1$
 
-    sort.invalidate( featureList.get( 0 ) );
+    sort.invalidate( shapes.get( 0 ) );
     logger.takeInterimTime();
     logger.printCurrentInterim( "Index invalidated in: " ); //$NON-NLS-1$
 
