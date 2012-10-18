@@ -78,9 +78,6 @@ public class ComboBoxViewerCellEditor extends CellEditor
       m_input = input;
     }
 
-    /**
-     * @see org.eclipse.jface.viewers.IInputProvider#getInput()
-     */
     @Override
     public Object getInput( )
     {
@@ -116,9 +113,6 @@ public class ComboBoxViewerCellEditor extends CellEditor
     deactivate();
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.CellEditor#createControl(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   protected Control createControl( final Composite parent )
   {
@@ -215,9 +209,6 @@ public class ComboBoxViewerCellEditor extends CellEditor
     combo.setFocus();
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.CellEditor#doSetValue(java.lang.Object)
-   */
   @Override
   protected void doSetValue( final Object value )
   {
