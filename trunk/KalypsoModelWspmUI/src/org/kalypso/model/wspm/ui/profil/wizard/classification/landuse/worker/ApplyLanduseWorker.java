@@ -71,6 +71,8 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.observation.result.TupleResultUtilities;
 import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.transformation.transformer.GeoTransformerFactory;
+import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -91,8 +93,6 @@ public class ApplyLanduseWorker implements ICoreRunnableWithProgress
 
   final Set<FeatureChange> m_changes = new LinkedHashSet<>();
 
-  private String m_shapeSRS;
-
   public ApplyLanduseWorker( final IApplyLanduseData delegate )
   {
     m_delegate = delegate;
@@ -103,14 +103,16 @@ public class ApplyLanduseWorker implements ICoreRunnableWithProgress
   {
     final IStatusCollector log = new StatusCollector( KalypsoModelWspmUIPlugin.ID );
 
-    initShapeSRS();
+    /* we need to transform the coordinates of the profile points to the crs of the shape */
+    final String shapeSRS = initShapeSRS();
+    final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( shapeSRS );
 
     final IProfileFeature[] profiles = m_delegate.getProfiles();
     monitor.beginTask( "Assign landuse classes", profiles.length );
 
     for( final IProfileFeature profileFeature : profiles )
     {
-      final String crs = profileFeature.getSrsName();
+      final String profilSRS = profileFeature.getSrsName();
       final IProfile profile = profileFeature.getProfile();
 
       // TODO: check if the profile has all components already.
@@ -148,12 +150,8 @@ public class ApplyLanduseWorker implements ICoreRunnableWithProgress
           final double hochwert = arrayHochwert[index];
           if( !Double.isNaN( rechtswert ) && !Double.isNaN( hochwert ) )
           {
-            final GM_Point geoPoint = WspmGeometryUtilities.pointFromRwHw( rechtswert, hochwert, Double.NaN, crs, WspmGeometryUtilities.GEO_TRANSFORMER );
-            if( geoPoint != null )
-            {
-              final GM_Point transformedPoint = (GM_Point)geoPoint.transform( m_shapeSRS );
-              assignValueToPoint( profile, point, transformedPoint );
-            }
+            final GM_Point geoPoint = WspmGeometryUtilities.pointFromRwHw( rechtswert, hochwert, Double.NaN, profilSRS, transformer );
+            assignValueToPoint( profile, point, geoPoint );
           }
         }
         catch( final Throwable t )
@@ -172,25 +170,24 @@ public class ApplyLanduseWorker implements ICoreRunnableWithProgress
     return log.asMultiStatusOrOK( "Problems when assigning landuse classes" );
   }
 
-  private void initShapeSRS( )
+  private String initShapeSRS( )
   {
     // FALLBACK to kalypso srs if we find no shape srs, does not really matter
-    m_shapeSRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
+    final String kalypsoSRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
 
     // Use first found srs of polygons
     final FeatureList polygonList = m_delegate.getPolyonFeatureList();
     if( polygonList.isEmpty() )
-      return;
+      return kalypsoSRS;
 
     for( final Object poly : polygonList )
     {
       final GM_Object gmObject = getPolygonGeometry( poly );
       if( gmObject != null )
-      {
-        m_shapeSRS = gmObject.getCoordinateSystem();
-        return;
-      }
+        return gmObject.getCoordinateSystem();
     }
+
+    return kalypsoSRS;
   }
 
   public FeatureChange[] getChanges( )
