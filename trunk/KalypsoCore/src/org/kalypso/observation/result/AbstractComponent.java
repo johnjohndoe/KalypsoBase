@@ -51,9 +51,6 @@ import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
  */
 public abstract class AbstractComponent implements IComponent
 {
-  /**
-   * @see org.kalypso.observation.result.IComponent#getPrecision()
-   */
   @Override
   public Double getPrecision( )
   {
@@ -88,9 +85,6 @@ public abstract class AbstractComponent implements IComponent
     return handler.compare( objFirst, objSecond );
   }
 
-  /**
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals( final Object obj )
   {
@@ -125,9 +119,6 @@ public abstract class AbstractComponent implements IComponent
     }
   }
 
-  /**
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode( )
   {

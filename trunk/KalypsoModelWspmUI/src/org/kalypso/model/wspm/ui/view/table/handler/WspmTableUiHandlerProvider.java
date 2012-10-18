@@ -63,7 +63,6 @@ import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.table.handlers.ComponentUiBooleanHandler;
 import org.kalypso.ogc.gml.om.table.handlers.ComponentUiDateHandler;
-import org.kalypso.ogc.gml.om.table.handlers.ComponentUiDecimalHandler;
 import org.kalypso.ogc.gml.om.table.handlers.ComponentUiDoubleHandler;
 import org.kalypso.ogc.gml.om.table.handlers.ComponentUiEnumerationHandler;
 import org.kalypso.ogc.gml.om.table.handlers.ComponentUiIntegerHandler;
@@ -159,11 +158,14 @@ public class WspmTableUiHandlerProvider implements IComponentUiHandlerProvider
     if( XmlTypes.XS_INTEGER.equals( valueTypeName ) )
       return new ComponentUiIntegerHandler( index, true, true, true, label, SWT.NONE, DEFAULT_SPACING, spacing, "%s", "%s", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-    if( XmlTypes.XS_DECIMAL.equals( valueTypeName ) )
-      return new ComponentUiDecimalHandler( index, true, true, true, label, SWT.RIGHT, DEFAULT_SPACING, spacing, "%.04f", "", "%.04f" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    if( XmlTypes.XS_DOUBLE.equals( valueTypeName ) || XmlTypes.XS_DECIMAL.equals( valueTypeName ) )
+    {
+      // TODO for now
+      final int precision = precisionForComponent( component );
+      final String format = String.format( "%%.%df", precision );
 
-    if( XmlTypes.XS_DOUBLE.equals( valueTypeName ) )
-      return new ComponentUiDoubleHandler( index, true, true, true, label, SWT.RIGHT, DEFAULT_SPACING, spacing, "%.04f", "", "%.04f" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      return new ComponentUiDoubleHandler( index, true, true, true, label, SWT.RIGHT, DEFAULT_SPACING, spacing, format, "", format ); //$NON-NLS-1$
+    }
 
     if( XmlTypes.XS_BOOLEAN.equals( valueTypeName ) )
       return new ComponentUiBooleanHandler( index, true, true, true, label, SWT.CENTER, DEFAULT_SPACING, spacing, "%b", "", "" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -174,4 +176,36 @@ public class WspmTableUiHandlerProvider implements IComponentUiHandlerProvider
     throw new UnsupportedOperationException();
   }
 
+  private int precisionForComponent( final IComponent component )
+  {
+    final String id = component.getId();
+
+    switch( id )
+    {
+    // REMARK: we show breite/hohe with 2 digits, but internally still use 4 digits (per dictionary), else we get problems with duplicate points etc.
+      case IWspmPointProperties.POINT_PROPERTY_HOEHE:
+      case IWspmPointProperties.POINT_PROPERTY_BREITE:
+        return 2;
+
+      case IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AX:
+      case IWspmPointProperties.POINT_PROPERTY_BEWUCHS_AY:
+      case IWspmPointProperties.POINT_PROPERTY_BEWUCHS_DP:
+        return 2;
+
+      case IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KS:
+        return 3;
+
+      case IWspmPointProperties.POINT_PROPERTY_RAUHEIT_KST:
+        return 0;
+
+      case IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_FACTOR:
+        return 2;
+    }
+
+    final int scale = ComponentUtilities.getScale( component );
+    if( scale != -1 )
+      return scale;
+
+    return 4;
+  }
 }
