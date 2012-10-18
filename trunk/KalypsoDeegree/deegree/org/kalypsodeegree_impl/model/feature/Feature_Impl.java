@@ -63,7 +63,7 @@ import org.kalypsodeegree_impl.model.geometry.GM_Envelope_Impl;
 
 /**
  * Implementation of ogc feature
- *
+ * 
  * @author doemming
  */
 public class Feature_Impl extends PlatformObject implements Feature
@@ -126,7 +126,7 @@ public class Feature_Impl extends PlatformObject implements Feature
 
   /**
    * Accesses a property value of this feature.
-   *
+   * 
    * @return Value of the given properties. Properties with maxoccurency > 0 (as defined in applicationschema) will be
    *         embedded in java.util.List-objects
    * @see org.kalypsodeegree.model.feature.Feature#getProperty(java.lang.String)
@@ -239,9 +239,9 @@ public class Feature_Impl extends PlatformObject implements Feature
   public GMLWorkspace getWorkspace( )
   {
     if( m_parent instanceof GMLWorkspace )
-      return (GMLWorkspace) m_parent;
+      return (GMLWorkspace)m_parent;
     if( m_parent instanceof Feature )
-      return ((Feature) m_parent).getWorkspace();
+      return ((Feature)m_parent).getWorkspace();
     return null;
   }
 
@@ -321,12 +321,12 @@ public class Feature_Impl extends PlatformObject implements Feature
     final Object prop = getProperty( defaultGeomProp );
     if( defaultGeomProp.isList() )
     {
-      final List< ? > props = (List< ? >) prop;
-      return (GM_Object) (props.size() > 0 ? props.get( 0 ) : null);
+      final List< ? > props = (List< ? >)prop;
+      return (GM_Object)(props.size() > 0 ? props.get( 0 ) : null);
     }
 
     if( prop == null || prop instanceof GM_Object )
-      return (GM_Object) prop;
+      return (GM_Object)prop;
 
     throw new IllegalStateException( "Wrong geometry type: " + prop.getClass().getName() );
   }
@@ -338,7 +338,7 @@ public class Feature_Impl extends PlatformObject implements Feature
     final IPropertyType[] ftp = m_featureType.getProperties();
     for( final IPropertyType element : ftp )
     {
-      if( element instanceof IValuePropertyType && ((IValuePropertyType) element).isGeometry() )
+      if( element instanceof IValuePropertyType && ((IValuePropertyType)element).isGeometry() )
       {
         final Object o = getProperty( element );
         if( o == null )
@@ -348,11 +348,11 @@ public class Feature_Impl extends PlatformObject implements Feature
 
         if( element.isList() )
         {
-          result.addAll( (List) o );
+          result.addAll( (List)o );
         }
         else
         {
-          result.add( (GM_Object) o );
+          result.add( (GM_Object)o );
         }
       }
     }
@@ -364,7 +364,7 @@ public class Feature_Impl extends PlatformObject implements Feature
   public Feature getOwner( )
   {
     if( m_parent instanceof Feature )
-      return (Feature) m_parent;
+      return (Feature)m_parent;
 
     return null;
   }
@@ -393,8 +393,8 @@ public class Feature_Impl extends PlatformObject implements Feature
     if( rt != null && rt.isList() )
     {
       // rt relation type and this relation type can differ (different feature workspaces!)
-      final IRelationType relation = (IRelationType) parent.getFeatureType().getProperty( rt.getQName() );
-      final FeatureList list = (FeatureList) parent.getProperty( relation );
+      final IRelationType relation = (IRelationType)parent.getFeatureType().getProperty( rt.getQName() );
+      final FeatureList list = (FeatureList)parent.getProperty( relation );
       list.invalidate( this );
     }
   }
@@ -440,7 +440,7 @@ public class Feature_Impl extends PlatformObject implements Feature
   {
     final Object property = getProperty( NamedFeatureHelper.GML_LOCATION );
     if( property instanceof GM_Object )
-      return (GM_Object) property;
+      return (GM_Object)property;
 
     return null;
   }
@@ -453,11 +453,11 @@ public class Feature_Impl extends PlatformObject implements Feature
 
   /**
    * feature given the property {@link QName}
-   *
+   * 
    * @param propertyQName
    *          the {@link QName} of the property to get.
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings( "unchecked" )
   protected <T> T getProperty( final QName propertyQName, final Class<T> propClass )
   {
     final Object prop = getProperty( propertyQName );
@@ -467,10 +467,10 @@ public class Feature_Impl extends PlatformObject implements Feature
         return null;
 
       if( propClass.isAssignableFrom( prop.getClass() ) )
-        return (T) prop;
+        return (T)prop;
 
       if( prop instanceof IAdaptable )
-        return (T) ((IAdaptable) prop).getAdapter( propClass );
+        return (T)((IAdaptable)prop).getAdapter( propClass );
 
       throw new RuntimeException( "Property of type[" + propClass + "] expected " + "\n\tbut found this type :" + prop.getClass() );
     }
@@ -500,8 +500,7 @@ public class Feature_Impl extends PlatformObject implements Feature
 
   protected <T> T getProperty( final QName property, final T defaultValue )
   {
-    @SuppressWarnings("unchecked")
-    final T value = (T) getProperty( property, defaultValue.getClass() );
+    @SuppressWarnings( "unchecked" ) final T value = (T)getProperty( property, defaultValue.getClass() );
     if( value == null )
       return defaultValue;
 
@@ -565,9 +564,9 @@ public class Feature_Impl extends PlatformObject implements Feature
       return null;
 
     if( linkValue instanceof Feature )
-      return (Feature) linkValue;
+      return (Feature)linkValue;
 
-    final String linkID = (String) linkValue;
+    final String linkID = (String)linkValue;
     final GMLWorkspace workspace = getWorkspace();
     if( workspace == null )
       return null;
@@ -619,7 +618,7 @@ public class Feature_Impl extends PlatformObject implements Feature
     }
 
     if( relation instanceof IRelationType )
-      return (IRelationType) relation;
+      return (IRelationType)relation;
 
     final String message = String.format( "Property is not a relation: '%s'", relationName ); //$NON-NLS-1$
     throw new IllegalArgumentException( message );
@@ -750,7 +749,7 @@ public class Feature_Impl extends PlatformObject implements Feature
     unregisterSubFeature( oldFeature );
 
     /* Create and set new feature */
-    final GMLWorkspace_Impl workspace = (GMLWorkspace_Impl) getWorkspace();
+    final GMLWorkspace_Impl workspace = (GMLWorkspace_Impl)getWorkspace();
     final String id = workspace.createFeatureId( featureType );
 
     final Feature newFeature = FeatureFactory.createFeature( this, relation, id, featureType, true, -1 );
@@ -774,9 +773,9 @@ public class Feature_Impl extends PlatformObject implements Feature
     if( !(oldValue instanceof Feature) )
       return;
 
-    final Feature oldFeature = (Feature) oldValue;
+    final Feature oldFeature = (Feature)oldValue;
 
-    final GMLWorkspace_Impl workspace = (GMLWorkspace_Impl) getWorkspace();
+    final GMLWorkspace_Impl workspace = (GMLWorkspace_Impl)getWorkspace();
 
     /* Unregister everything below the old feature that is no linked */
     workspace.unregisterFeature( oldFeature );
@@ -797,12 +796,12 @@ public class Feature_Impl extends PlatformObject implements Feature
       return null;
 
     if( linkValue instanceof IXLinkedFeature )
-      return ((IXLinkedFeature) linkValue).getFeature();
+      return ((IXLinkedFeature)linkValue).getFeature();
 
     if( linkValue instanceof Feature )
-      return (Feature) linkValue;
+      return (Feature)linkValue;
 
-    final String linkID = (String) linkValue;
+    final String linkID = (String)linkValue;
     final GMLWorkspace workspace = getWorkspace();
     if( workspace == null )
       return null;
@@ -832,7 +831,7 @@ public class Feature_Impl extends PlatformObject implements Feature
         // TODO: this should not be necessary, but it is still not really clear what happens in the
         // IFeatureBindingCollection; so just in case...
         if( feature instanceof IXLinkedFeature )
-          feature = ((IXLinkedFeature) feature).getFeature();
+          feature = ((IXLinkedFeature)feature).getFeature();
 
         resolvedMembers[i] = feature;
       }
@@ -900,7 +899,7 @@ public class Feature_Impl extends PlatformObject implements Feature
 
   private int removeListMember( final IRelationType relation, final Object toRemove )
   {
-    final FeatureList members = (FeatureList) getProperty( relation );
+    final FeatureList members = (FeatureList)getProperty( relation );
 
     final int posToRemove = findMemberToRemove( members, toRemove );
     if( posToRemove == -1 )
@@ -944,14 +943,20 @@ public class Feature_Impl extends PlatformObject implements Feature
     return -1;
   }
 
+  /**
+   * Implemented to make final: reimplementation of equals is forbidden for {@link Feature}s.
+   */
   @Override
   public final boolean equals( final Object obj )
   {
     return super.equals( obj );
   }
 
+  /**
+   * Implemented to make final: reimplementation of hashCode is forbidden for {@link Feature}s.
+   */
   @Override
-  public int hashCode( )
+  public final int hashCode( )
   {
     return super.hashCode();
   }

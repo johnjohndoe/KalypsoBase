@@ -66,7 +66,7 @@ import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
  * (default) meaning no rotation. In the case that a Graphic is derived from a font-glyph Mark, the Size specified here
  * will be used for the final rendering. Allowed CssParameters are "opacity", "size", and "rotation".
  * <p>
- *
+ * 
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
@@ -84,7 +84,7 @@ public class Graphic_Impl implements Graphic, Marshallable
   /**
    * Creates a new <tt>Graphic_Impl</tt> instance.
    * <p>
-   *
+   * 
    * @param marksAndExtGraphics
    *          the image will be based upon these
    * @param opacity
@@ -105,7 +105,7 @@ public class Graphic_Impl implements Graphic, Marshallable
   /**
    * Creates a new <tt>Graphic_Impl</tt> instance based on the default <tt>Mark</tt>: a square.
    * <p>
-   *
+   * 
    * @param opacity
    *          opacity that the resulting image will have
    * @param size
@@ -119,10 +119,9 @@ public class Graphic_Impl implements Graphic, Marshallable
   }
 
   /**
-   * Returns an object-array that enables the access to the stored <tt>ExternalGraphic</tt> and <tt>Mark</tt>
-   * -instances.
+   * Returns an object-array that enables the access to the stored <tt>ExternalGraphic</tt> and <tt>Mark</tt> -instances.
    * <p>
-   *
+   * 
    * @return contains <tt>ExternalGraphic</tt> and <tt>Mark</tt> -objects
    */
   @Override
@@ -136,7 +135,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    * Sets the <tt>ExternalGraphic</tt>/<tt>Mark<tt>-instances that the image
    * will be based on.
    * <p>
-   *
+   * 
    * @param object
    *          to be used as basis for the resulting image
    */
@@ -155,10 +154,9 @@ public class Graphic_Impl implements Graphic, Marshallable
   }
 
   /**
-   * Adds an Object to an object-array that enables the access to the stored <tt>ExternalGraphic</tt> and <tt>Mark</tt>
-   * -instances.
+   * Adds an Object to an object-array that enables the access to the stored <tt>ExternalGraphic</tt> and <tt>Mark</tt> -instances.
    * <p>
-   *
+   * 
    * @param object
    *          to be used as basis for the resulting image
    */
@@ -169,10 +167,9 @@ public class Graphic_Impl implements Graphic, Marshallable
   }
 
   /**
-   * Removes an Object from an object-array that enables the access to the stored <tt>ExternalGraphic</tt> and
-   * <tt>Mark</tt> -instances.
+   * Removes an Object from an object-array that enables the access to the stored <tt>ExternalGraphic</tt> and <tt>Mark</tt> -instances.
    * <p>
-   *
+   * 
    * @param object
    *          to be used as basis for the resulting image
    */
@@ -185,7 +182,7 @@ public class Graphic_Impl implements Graphic, Marshallable
   /**
    * The Opacity element gives the opacity to use for rendering the graphic.
    * <p>
-   *
+   * 
    * @param feature
    *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
@@ -220,7 +217,7 @@ public class Graphic_Impl implements Graphic, Marshallable
   /**
    * The Opacity element gives the opacity of to use for rendering the graphic.
    * <p>
-   *
+   * 
    * @param opacity
    *          Opacity to be set for the graphic
    */
@@ -235,7 +232,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    * is also used in other contexts than graphic size and pixel units are still used even for font size. The default
    * size for an object is context-dependent. Negative values are not allowed.
    * <p>
-   *
+   * 
    * @param feature
    *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
@@ -295,7 +292,7 @@ public class Graphic_Impl implements Graphic, Marshallable
         if( o instanceof ExternalGraphic )
         {
           final int iSize = Double.valueOf( size ).intValue();
-          final BufferedImage extImage = ((ExternalGraphic) o).getAsImage( iSize, iSize );
+          final BufferedImage extImage = ((ExternalGraphic)o).getAsImage( iSize, iSize );
           size = extImage.getHeight();
           break;
         }
@@ -317,14 +314,14 @@ public class Graphic_Impl implements Graphic, Marshallable
         final double sizeFromNull = transform.getDestX( sourceRect.getMin().getX() );
         final double sizeFromMeters = transform.getDestX( sourceRect.getMin().getX() + size );
         final double lengthInMeters = Math.abs( sizeFromMeters - sizeFromNull );
-        return (int) lengthInMeters;
+        return (int)lengthInMeters;
 
       case foot:
         throw new UnsupportedOperationException( "Foot unit not implemented yet..." );
 
       case pixel:
       default:
-        return (int) size;
+        return (int)size;
     }
   }
 
@@ -345,7 +342,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    * encoded as a floating- point number. Negative values mean counter-clockwise rotation. The default value is 0.0 (no
    * rotation).
    * <p>
-   *
+   * 
    * @param feature
    *          specifies the <tt>Feature</tt> to be used for evaluation of the underlying 'sld:ParameterValueType'
    * @return the (evaluated) value of the parameter
@@ -355,21 +352,19 @@ public class Graphic_Impl implements Graphic, Marshallable
   @Override
   public double getRotation( final Feature feature ) throws FilterEvaluationException
   {
-    if( m_rotation != null )
+    if( m_rotation == null )
+      return ROTATION_DEFAULT;
+
+    final String value = m_rotation.evaluate( feature );
+
+    try
     {
-      final String value = m_rotation.evaluate( feature );
-
-      try
-      {
-        return Double.parseDouble( value );
-      }
-      catch( final NumberFormatException e )
-      {
-        throw new FilterEvaluationException( " Given value for parameter 'rotation' ('" + value + "') has invalid format!" );
-      }
+      return Double.parseDouble( value );
     }
-
-    return ROTATION_DEFAULT;
+    catch( final NumberFormatException e )
+    {
+      throw new FilterEvaluationException( " Given value for parameter 'rotation' ('" + value + "') has invalid format!" );
+    }
   }
 
   /**
@@ -388,7 +383,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    * parameters. If the 'Size'-parameter is omitted, the height of the first <tt>ExternalGraphic</tt> is used. If there
    * is none, the default value of 6 pixels is used.
    * <p>
-   *
+   * 
    * @return the <tt>BufferedImage</tt> ready to be painted
    * @throws FilterEvaluationException
    *           if the evaluation fails
@@ -414,12 +409,10 @@ public class Graphic_Impl implements Graphic, Marshallable
   /**
    * Paints this Graphics object directly into the awt-graphics.
    * <p>
-   * This is much faster than creating a BufferedImage as in {@link #getAsImage(Feature, UOM, GeoTransform)} and should
-   * be therefore used in preference.
+   * This is much faster than creating a BufferedImage as in {@link #getAsImage(Feature, UOM, GeoTransform)} and should be therefore used in preference.
    * </p>
-   *
-   * @see org.kalypsodeegree.graphics.sld.Graphic#paintAwt(java.awt.Graphics2D,
-   *      org.kalypsodeegree.model.feature.Feature, org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM,
+   * 
+   * @see org.kalypsodeegree.graphics.sld.Graphic#paintAwt(java.awt.Graphics2D, org.kalypsodeegree.model.feature.Feature, org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM,
    *      org.kalypsodeegree.graphics.transformation.GeoTransform)
    */
   @Override
@@ -448,11 +441,11 @@ public class Graphic_Impl implements Graphic, Marshallable
   {
     if( o instanceof ExternalGraphic )
     {
-      ((ExternalGraphic) o).paintAwt( g, size, size );
+      ((ExternalGraphic)o).paintAwt( g, size, size );
     }
     else
     {
-      ((Mark) o).paintAwt( g, feature, size );
+      ((Mark)o).paintAwt( g, feature, size );
     }
   }
 
@@ -461,7 +454,7 @@ public class Graphic_Impl implements Graphic, Marshallable
    * parameters. If the 'Size'-parameter is omitted, the height of the first <tt>ExternalGraphic</tt> is used. If there
    * is none, the default value of 6 pixels is used.
    * <p>
-   *
+   * 
    * @return the <tt>BufferedImage</tt> ready to be painted
    * @throws FilterEvaluationException
    *           if the evaluation fails
@@ -473,11 +466,11 @@ public class Graphic_Impl implements Graphic, Marshallable
     {
       if( o instanceof ExternalGraphic )
       {
-        ((ExternalGraphic) o).paint( gc );
+        ((ExternalGraphic)o).paint( gc );
       }
       else
       {
-        ((Mark) o).paint( gc, feature );
+        ((Mark)o).paint( gc, feature );
       }
     }
 
@@ -492,7 +485,7 @@ public class Graphic_Impl implements Graphic, Marshallable
 
   /**
    * exports the content of the Graphic as XML formated String
-   *
+   * 
    * @return xml representation of the Graphic
    */
   @Override
@@ -502,24 +495,24 @@ public class Graphic_Impl implements Graphic, Marshallable
     sb.append( "<Graphic>" );
     for( int i = 0; i < m_marksAndExtGraphics.size(); i++ )
     {
-      sb.append( ((Marshallable) m_marksAndExtGraphics.get( i )).exportAsXML() );
+      sb.append( ((Marshallable)m_marksAndExtGraphics.get( i )).exportAsXML() );
     }
     if( m_opacity != null )
     {
       sb.append( "<Opacity>" );
-      sb.append( ((Marshallable) m_opacity).exportAsXML() );
+      sb.append( ((Marshallable)m_opacity).exportAsXML() );
       sb.append( "</Opacity>" );
     }
     if( m_size != null )
     {
       sb.append( "<Size>" );
-      sb.append( ((Marshallable) m_size).exportAsXML() );
+      sb.append( ((Marshallable)m_size).exportAsXML() );
       sb.append( "</Size>" );
     }
     if( m_rotation != null )
     {
       sb.append( "<Rotation>" );
-      sb.append( ((Marshallable) m_rotation).exportAsXML() );
+      sb.append( ((Marshallable)m_rotation).exportAsXML() );
       sb.append( "</Rotation>" );
     }
     sb.append( "</Graphic>" );

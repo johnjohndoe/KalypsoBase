@@ -97,10 +97,10 @@ public final class Shape2GML
 
     final IFeatureType featureType = createFeatureType( featureTypeKey, shape );
 
-    final GMLWorkspace workspace = createShapeWorkspace( shape.getShapeType() );
-    final ShapeCollection collection = (ShapeCollection) workspace.getRootFeature();
+    final GMLWorkspace workspace = createShapeWorkspace( shape.getShapeType(), featureType );
+    final ShapeCollection collection = (ShapeCollection)workspace.getRootFeature();
 
-    final IRelationType listRelation = (IRelationType) collection.getFeatureType().getProperty( ShapeCollection.MEMBER_FEATURE );
+    final IRelationType listRelation = (IRelationType)collection.getFeatureType().getProperty( ShapeCollection.MEMBER_FEATURE_LOCAL );
 
     final int fieldCount = shape.getFields().length;
 
@@ -124,7 +124,7 @@ public final class Shape2GML
         propertiesWithGeom[0] = geom;
         System.arraycopy( properties, 0, propertiesWithGeom, 1, fieldCount );
 
-        final AbstractShape newFeature = (AbstractShape) FeatureFactory.createFeature( collection, listRelation, featureId, featureType, propertiesWithGeom );
+        final AbstractShape newFeature = (AbstractShape)FeatureFactory.createFeature( collection, listRelation, featureId, featureType, propertiesWithGeom );
 
         /* add to workspace */
         workspace.addFeatureAsComposition( collection, listRelation, -1, newFeature );
@@ -172,7 +172,7 @@ public final class Shape2GML
 
       /* read schema via catalog and retrieve the feature type from the freshly loaded schema */
       final GMLSchemaCatalog catalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-      final IGMLSchema schema = catalog.getSchema( "3.1.1", tempFile.toURI().toURL() ); //$NON-NLS-1$
+      final IGMLSchema schema = catalog.getSchema( null, tempFile.toURI().toURL() ); //$NON-NLS-1$
 
       final QName memberFeatureType = new QName( targetNamespace, "Shape" ); //$NON-NLS-1$
       return schema.getFeatureType( memberFeatureType );
@@ -300,17 +300,18 @@ public final class Shape2GML
     throw new UnsupportedOperationException();
   }
 
-  private static GMLWorkspace createShapeWorkspace( final ShapeType shapeFileType ) throws GMLSchemaException
+  private static GMLWorkspace createShapeWorkspace( final ShapeType shapeFileType, final IFeatureType elementType ) throws GMLSchemaException
   {
-    final String geomName = getGeometryName( shapeFileType );
+//    final String geomName = getGeometryName( shapeFileType );
 
-    final QName collectionQName = ShapeCollection.FEATURE_SHAPE_COLLECTION;
-    final String concreteCollectionLocalName = geomName + collectionQName.getLocalPart();
+//    final QName collectionQName = ShapeCollection.FEATURE_SHAPE_COLLECTION;
+//    final String concreteCollectionLocalName = geomName + collectionQName.getLocalPart();
 
-    final QName concreteCollectionQName = new QName( ShapeCollection.SHP_NAMESPACE_URI, concreteCollectionLocalName );
+    final String customNamespace = elementType.getQName().getNamespaceURI();
+    final QName concreteCollectionQName = new QName( customNamespace, "ShapeCollection" ); //$NON-NLS-1$
 
     final GMLWorkspace workspace = FeatureFactory.createGMLWorkspace( concreteCollectionQName, null, null );
-    final ShapeCollection collection = (ShapeCollection) workspace.getRootFeature();
+    final ShapeCollection collection = (ShapeCollection)workspace.getRootFeature();
 
     collection.setShapeType( shapeFileType );
 

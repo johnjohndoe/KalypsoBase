@@ -75,7 +75,6 @@ import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
  */
 public abstract class AbstractFeatureList implements FeatureList
 {
-
   private final Feature m_parentFeature;
 
   private final IRelationType m_parentFeatureTypeProperty;
@@ -211,18 +210,12 @@ public abstract class AbstractFeatureList implements FeatureList
 
   /* FeatureList interface */
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#accept(org.kalypsodeegree.model.feature.FeatureVisitor)
-   */
   @Override
   public void accept( final FeatureVisitor visitor )
   {
     accept( visitor, FeatureVisitor.DEPTH_INFINITE );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#accept(org.kalypsodeegree.model.feature.FeatureVisitor, int)
-   */
   @Override
   public synchronized void accept( final FeatureVisitor visitor, final int depth )
   {
@@ -239,63 +232,42 @@ public abstract class AbstractFeatureList implements FeatureList
     }
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#addLink(java.lang.String)
-   */
   @Override
   public IXLinkedFeature addLink( final String href ) throws IllegalArgumentException, IllegalStateException
   {
     return insertLink( size(), href );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#addLink(java.lang.String, org.kalypso.gmlschema.feature.IFeatureType)
-   */
   @Override
   public IXLinkedFeature addLink( final String href, final IFeatureType featureType ) throws IllegalArgumentException, IllegalStateException
   {
     return insertLink( size(), href, featureType );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#addLink(java.lang.String, javax.xml.namespace.QName)
-   */
   @Override
   public IXLinkedFeature addLink( final String href, final QName featureTypeName ) throws IllegalArgumentException, IllegalStateException
   {
     return insertLink( size(), href, featureTypeName );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#addLink(org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
   public <T extends Feature> IXLinkedFeature addLink( final T toAdd ) throws IllegalArgumentException, IllegalStateException
   {
     return insertLink( size(), toAdd );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#getOwner()
-   */
   @Override
   public Feature getOwner( )
   {
     return m_parentFeature;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#insertLink(int, java.lang.String)
-   */
   @Override
   public IXLinkedFeature insertLink( final int index, final String href ) throws IllegalArgumentException, IllegalStateException
   {
     return insertLink( index, href, getPropertyType().getTargetFeatureType() );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#insertLink(int, java.lang.String, org.kalypso.gmlschema.feature.IFeatureType)
-   */
   @Override
   @SuppressWarnings( "unchecked" )
   public synchronized IXLinkedFeature insertLink( final int index, final String href, final IFeatureType featureType ) throws IllegalArgumentException, IllegalStateException
@@ -314,9 +286,6 @@ public abstract class AbstractFeatureList implements FeatureList
     return link;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#insertLink(int, java.lang.String, javax.xml.namespace.QName)
-   */
   @Override
   public IXLinkedFeature insertLink( final int index, final String href, final QName featureTypeName ) throws IllegalArgumentException, IllegalStateException
   {
@@ -330,9 +299,6 @@ public abstract class AbstractFeatureList implements FeatureList
     return insertLink( index, href, featureType );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#insertLink(int, org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
   public <T extends Feature> IXLinkedFeature insertLink( final int index, final T toLink ) throws IllegalArgumentException, IllegalStateException
   {
@@ -344,9 +310,6 @@ public abstract class AbstractFeatureList implements FeatureList
     return insertLink( index, href, toLink.getFeatureType() );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#removeLink(org.kalypsodeegree.model.feature.Feature)
-   */
   @Override
   public synchronized boolean removeLink( final Feature targetFeature )
   {
@@ -368,9 +331,6 @@ public abstract class AbstractFeatureList implements FeatureList
     return false;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.FeatureList#toFeatures()
-   */
   @Override
   public synchronized Feature[] toFeatures( )
   {
@@ -387,9 +347,6 @@ public abstract class AbstractFeatureList implements FeatureList
 
   /* List interface */
 
-  /**
-   * @see java.util.List#addAll(java.util.Collection)
-   */
   @Override
   @SuppressWarnings( "unchecked" )
   public synchronized boolean addAll( final Collection c )
@@ -402,9 +359,6 @@ public abstract class AbstractFeatureList implements FeatureList
     return !c.isEmpty();
   }
 
-  /**
-   * @see java.util.List#addAll(int, java.util.Collection)
-   */
   @Override
   @SuppressWarnings( "unchecked" )
   public synchronized boolean addAll( final int index, final Collection c )
@@ -417,18 +371,12 @@ public abstract class AbstractFeatureList implements FeatureList
     return !c.isEmpty();
   }
 
-  /**
-   * @see java.util.List#contains(java.lang.Object)
-   */
   @Override
   public synchronized boolean contains( final Object item )
   {
     return indexOf( item ) != -1;
   }
 
-  /**
-   * @see java.util.List#containsAll(java.util.Collection)
-   */
   @Override
   public synchronized boolean containsAll( final Collection c )
   {
@@ -441,36 +389,24 @@ public abstract class AbstractFeatureList implements FeatureList
     return true;
   }
 
-  /**
-   * @see java.util.List#isEmpty()
-   */
   @Override
   public synchronized boolean isEmpty( )
   {
     return size() == 0;
   }
 
-  /**
-   * @see java.util.List#iterator()
-   */
   @Override
   public synchronized Iterator< ? > iterator( )
   {
     return listIterator();
   }
 
-  /**
-   * @see java.util.List#listIterator()
-   */
   @Override
   public synchronized ListIterator< ? > listIterator( )
   {
     return listIterator( 0 );
   }
 
-  /**
-   * @see java.util.List#removeAll(java.util.Collection)
-   */
   @Override
   public synchronized boolean removeAll( final Collection c )
   {
@@ -482,9 +418,6 @@ public abstract class AbstractFeatureList implements FeatureList
     return changed;
   }
 
-  /**
-   * @see java.util.List#retainAll(java.util.Collection)
-   */
   @Override
   public synchronized boolean retainAll( final Collection c )
   {
@@ -501,12 +434,9 @@ public abstract class AbstractFeatureList implements FeatureList
     return modified;
   }
 
-  /**
-   * @see java.util.List#set(int, java.lang.Object)
-   */
   @Override
   @SuppressWarnings( "unchecked" )
-  public Object set( int index, Object object )
+  public Object set( final int index, final Object object )
   {
     final Object oldItem = remove( index );
     add( index, object );
@@ -514,8 +444,7 @@ public abstract class AbstractFeatureList implements FeatureList
   }
 
   /**
-   * @see java.util.List#subList(int, int)
-   *      NOT IMPLEMENTED
+   * NOT IMPLEMENTED
    */
   @Override
   public synchronized List< ? > subList( final int fromIndex, final int toIndex )
@@ -523,18 +452,12 @@ public abstract class AbstractFeatureList implements FeatureList
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see java.util.List#toArray()
-   */
   @Override
   public synchronized Object[] toArray( )
   {
     return toArray( new Object[size()] );
   }
 
-  /**
-   * @see java.util.List#toArray(T[])
-   */
   @Override
   public synchronized Object[] toArray( Object[] a )
   {
@@ -549,18 +472,12 @@ public abstract class AbstractFeatureList implements FeatureList
 
   /* JMSpatialIndex interface */
 
-  /**
-   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#invalidate(java.lang.Object)
-   */
   @Override
-  public void invalidate( Object o )
+  public void invalidate( final Object o )
   {
     // do nothing
   }
 
-  /**
-   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#paint(java.awt.Graphics, org.kalypsodeegree.graphics.transformation.GeoTransform)
-   */
   @Override
   public synchronized void paint( final Graphics g, final GeoTransform geoTransform )
   {
@@ -569,27 +486,18 @@ public abstract class AbstractFeatureList implements FeatureList
 
   /* IFeatureProperty interface */
 
-  /**
-   * @see org.kalypsodeegree.model.feature.IFeatureProperty#getName()
-   */
   @Override
   public QName getName( )
   {
     return getPropertyType().getQName();
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.IFeatureProperty#getValue()
-   */
   @Override
   public Object getValue( )
   {
     return this;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.feature.IFeatureProperty#setValue(java.lang.Object)
-   */
   @Override
   public void setValue( final Object value )
   {
@@ -598,13 +506,9 @@ public abstract class AbstractFeatureList implements FeatureList
 
   /* IFeatureRelation interface */
 
-  /**
-   * @see org.kalypsodeegree.model.feature.IFeatureRelation#getPropertyType()
-   */
   @Override
   public IRelationType getPropertyType( )
   {
     return m_parentFeatureTypeProperty;
   }
-
 }

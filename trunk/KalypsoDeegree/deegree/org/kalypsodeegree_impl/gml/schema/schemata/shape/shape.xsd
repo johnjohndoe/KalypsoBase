@@ -16,80 +16,11 @@
     </complexContent>
   </complexType>
 
-  <element name="PointShapeCollection" substitutionGroup="shp:ShapeCollection" abstract="true">
-    <complexType>
-      <complexContent>
-        <extension base="shp:AbstractShapeCollectionType">
-          <sequence>
-            <element name="featureMember" type="shp:PointShapeMemberPropertyType" minOccurs="0" maxOccurs="unbounded" />
-          </sequence>
-        </extension>
-      </complexContent>
-    </complexType>
-  </element>
-
-  <element name="MultiPointShapeCollection" substitutionGroup="shp:ShapeCollection" abstract="true">
-    <complexType>
-      <complexContent>
-        <extension base="shp:AbstractShapeCollectionType">
-          <sequence>
-            <element name="featureMember" type="shp:MultiPointShapeMemberPropertyType" minOccurs="0" maxOccurs="unbounded" />
-          </sequence>
-        </extension>
-      </complexContent>
-    </complexType>
-  </element>
-
-  <element name="PolylineShapeCollection" substitutionGroup="shp:ShapeCollection" abstract="true">
-    <complexType>
-      <complexContent>
-        <extension base="shp:AbstractShapeCollectionType">
-          <sequence>
-            <element name="featureMember" type="shp:PolylineShapeMemberPropertyType" minOccurs="0" maxOccurs="unbounded" />
-          </sequence>
-        </extension>
-      </complexContent>
-    </complexType>
-  </element>
-
-  <element name="PolygonShapeCollection" substitutionGroup="shp:ShapeCollection" abstract="true">
-    <complexType>
-      <complexContent>
-        <extension base="shp:AbstractShapeCollectionType">
-          <sequence>
-            <element name="featureMember" type="shp:PolygonShapeMemberPropertyType" minOccurs="0" maxOccurs="unbounded" />
-          </sequence>
-        </extension>
-      </complexContent>
-    </complexType>
-  </element>
-
-  <complexType name="PointShapeMemberPropertyType">
-    <sequence minOccurs="1" maxOccurs="1">
-      <element ref="shp:_PointShape" />
-    </sequence>
-  </complexType>
-  <complexType name="MultiPointShapeMemberPropertyType">
-    <sequence minOccurs="1" maxOccurs="1">
-      <element ref="shp:_MultiPointShape" />
-    </sequence>
-  </complexType>
-  <complexType name="PolylineShapeMemberPropertyType">
-    <sequence minOccurs="1" maxOccurs="1">
-      <element ref="shp:_PolylineShape" />
-    </sequence>
-  </complexType>
-
-  <complexType name="PolygonShapeMemberPropertyType">
-    <sequence minOccurs="1" maxOccurs="1">
-      <element ref="shp:_PolygonShape" />
-    </sequence>
-  </complexType>
-
   <element name="_Shape" abstract="true" type="shp:ShapeType" substitutionGroup="gml:_Feature" />
   <complexType name="ShapeType">
     <complexContent>
       <extension base="common:EmptyFeatureBaseType">
+          <element name="GEOM" type="gml:GeometryPropertyType" minOccurs="0" maxOccurs="1" />
       </extension>
     </complexContent>
   </complexType>

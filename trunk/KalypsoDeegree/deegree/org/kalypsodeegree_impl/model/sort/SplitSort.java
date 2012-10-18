@@ -108,9 +108,6 @@ public class SplitSort extends AbstractFeatureList
 
   // IMPLEMENTATION OF LIST INTERFACE
 
-  /**
-   * @see java.util.List#add(java.lang.Object)
-   */
   @Override
   public synchronized boolean add( final Object object )
   {
@@ -123,9 +120,6 @@ public class SplitSort extends AbstractFeatureList
     return true;
   }
 
-  /**
-   * @see java.util.List#add(int, java.lang.Object)
-   */
   @Override
   public synchronized void add( final int index, final Object object )
   {
@@ -139,9 +133,6 @@ public class SplitSort extends AbstractFeatureList
     m_items.add( index, newItem );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.sort.AbstractFeatureList#addAll(int, java.util.Collection)
-   */
   @Override
   public synchronized boolean addAll( final int index, final Collection c )
   {
@@ -161,9 +152,6 @@ public class SplitSort extends AbstractFeatureList
     return m_items.addAll( index, items );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.sort.AbstractFeatureList#set(int, java.lang.Object)
-   */
   @Override
   public synchronized Object set( final int index, final Object newObject )
   {
@@ -179,18 +167,12 @@ public class SplitSort extends AbstractFeatureList
     return oldItem.getData();
   }
 
-  /**
-   * @see java.util.List#get(int)
-   */
   @Override
   public synchronized Object get( final int index )
   {
     return m_items.get( index ).getData();
   }
 
-  /**
-   * @see java.util.List#remove(java.lang.Object)
-   */
   @Override
   public synchronized boolean remove( final Object object )
   {
@@ -211,9 +193,6 @@ public class SplitSort extends AbstractFeatureList
     return true;
   }
 
-  /**
-   * @see java.util.List#remove(int)
-   */
   @Override
   public synchronized Object remove( final int index )
   {
@@ -229,18 +208,12 @@ public class SplitSort extends AbstractFeatureList
     return item.getData();
   }
 
-  /**
-   * @see java.util.List#size()
-   */
   @Override
   public synchronized int size( )
   {
     return m_items.size();
   }
 
-  /**
-   * @see java.util.List#clear()
-   */
   @Override
   public synchronized void clear( )
   {
@@ -252,18 +225,14 @@ public class SplitSort extends AbstractFeatureList
     m_items.clear();
   }
 
-  /**
-   * @see java.util.List#indexOf(java.lang.Object)
-   */
   @Override
   public synchronized int indexOf( final Object object )
   {
     if( m_index != null )
     {
       // TODO: if we have many objects, should we create the index now?
-
       final int index = m_index.indexOf( object );
-      if( index != 0 )
+      if( index != -1 )
         return index;
     }
 
@@ -281,9 +250,6 @@ public class SplitSort extends AbstractFeatureList
     return -1;
   }
 
-  /**
-   * @see java.util.List#lastIndexOf(java.lang.Object)
-   */
   @Override
   public synchronized int lastIndexOf( final Object object )
   {
@@ -301,8 +267,6 @@ public class SplitSort extends AbstractFeatureList
    * ATTENTION: Returns an unmodifiable iterator i.e. changing the list via the returned iterator results in an
    * exception.<br/>
    * The iterator is not synchronized, however.
-   * 
-   * @see java.util.List#listIterator(int)
    */
   @Override
   public synchronized ListIterator< ? > listIterator( final int index )
@@ -312,9 +276,6 @@ public class SplitSort extends AbstractFeatureList
 
   // JMSpatialIndex implementation
 
-  /**
-   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#query(org.kalypsodeegree.model.geometry.GM_Position, java.util.List)
-   */
   @Override
   public List< ? > query( final GM_Position pos, final List result )
   {
@@ -322,9 +283,6 @@ public class SplitSort extends AbstractFeatureList
     return query( envelope, result );
   }
 
-  /**
-   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#query(org.kalypsodeegree.model.geometry.GM_Envelope, java.util.List)
-   */
   @Override
   public List< ? > query( final GM_Envelope queryEnv, final List result )
   {
@@ -332,9 +290,6 @@ public class SplitSort extends AbstractFeatureList
     return query( envelope, result );
   }
 
-  /**
-   *
-   */
   @SuppressWarnings( { "unchecked", "rawtypes" } )
   protected synchronized List< ? > query( final Rectangle envelope, final List receiver )
   {
@@ -362,9 +317,6 @@ public class SplitSort extends AbstractFeatureList
     return result;
   }
 
-  /**
-   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#getBoundingBox()
-   */
   @Override
   public synchronized GM_Envelope getBoundingBox( )
   {
@@ -378,14 +330,10 @@ public class SplitSort extends AbstractFeatureList
     return GeometryUtilities.toEnvelope( bounds, crs );
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.sort.AbstractFeatureList#invalidate(java.lang.Object)
-   */
   @Override
   public synchronized void invalidate( final Object object )
   {
     if( m_index != null )
       m_index.invalidate( object );
   }
-
 }

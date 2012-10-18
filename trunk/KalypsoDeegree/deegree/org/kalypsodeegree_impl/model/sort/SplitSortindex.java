@@ -223,7 +223,12 @@ class SplitSortindex
 
   public int indexOf( final Object object )
   {
-    return m_itemIndex.get( object );
+    final int index = m_itemIndex.get( object );
+    // REMARK: strange, trove returns '0' for unknown element, but '0' may be a valid value of our mapping...
+    if( index == 0 && !m_itemIndex.containsKey( object ) )
+      return -1;
+
+    return index;
   }
 
   public Rectangle getBounds( )

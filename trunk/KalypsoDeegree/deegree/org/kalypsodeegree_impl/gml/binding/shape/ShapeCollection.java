@@ -63,11 +63,6 @@ public class ShapeCollection extends Feature_Impl
 
   public static final String MEMBER_FEATURE_LOCAL = "featureMember"; //$NON-NLS-1$
 
-  /**
-   * The list property of the shape root feature containing the features.
-   */
-  public static final QName MEMBER_FEATURE = new QName( SHP_NAMESPACE_URI, MEMBER_FEATURE_LOCAL ); //$NON-NLS-1$
-
   private static final QName PROPERTY_TYPE = new QName( SHP_NAMESPACE_URI, "type" ); //$NON-NLS-1$
 
   private IFeatureBindingCollection<AbstractShape> m_shapes;
@@ -92,9 +87,18 @@ public class ShapeCollection extends Feature_Impl
   {
     if( m_shapes == null )
     {
-      m_shapes = new FeatureBindingCollection<>( this, AbstractShape.class, MEMBER_FEATURE );
+      final QName memberProperty = findMemberProperty();
+      m_shapes = new FeatureBindingCollection<>( this, AbstractShape.class, memberProperty );
     }
 
     return m_shapes;
+  }
+
+  @SuppressWarnings( "deprecation" )
+  private QName findMemberProperty( )
+  {
+    final IFeatureType featureType = getFeatureType();
+    // REMARK: the collection schema varies with the custom type, so the namespace of the member is not fix
+    return featureType.getProperty( MEMBER_FEATURE_LOCAL ).getQName();
   }
 }

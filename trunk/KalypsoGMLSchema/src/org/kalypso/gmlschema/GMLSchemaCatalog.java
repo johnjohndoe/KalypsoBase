@@ -18,7 +18,7 @@ import org.kalypso.gmlschema.i18n.Messages;
  * 
  * @author schlienger
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings( "restriction" )
 public final class GMLSchemaCatalog
 {
   private final IUrlCatalog m_urlCatalog;
@@ -58,7 +58,7 @@ public final class GMLSchemaCatalog
       final GMLSchema schema = GMLSchemaFactory.createGMLSchema( gmlVersion, schemaLocation );
       final Date validity = new Date( schemaLocation.openConnection().getLastModified() );
 
-      m_cache.addSchema( schema.getTargetNamespace(), schema, validity, System.currentTimeMillis() );
+      m_cache.addSchema( schema.getTargetNamespace(), schema, validity, System.currentTimeMillis(), gmlVersion );
 
       Debug.CATALOG.printf( "Schema successfully loaded and put into the cache. Validity = %s%n", validity ); //$NON-NLS-1$
 
