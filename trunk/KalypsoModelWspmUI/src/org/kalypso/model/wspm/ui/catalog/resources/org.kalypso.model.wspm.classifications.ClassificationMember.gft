@@ -38,8 +38,8 @@
         <gistable:column alignment="SWT.LEFT" editable="true" format="" name="description" width="180" />
         <gistable:column alignment="SWT.LEFT" editable="true" format="" name="comment" width="180" />
         <gistable:column alignment="SWT.RIGHT" editable="true" format="" name="color" width="100" />
-        <gistable:column alignment="SWT.RIGHT" editable="true" format="" name="ksValue" width="75" />
-        <gistable:column alignment="SWT.RIGHT" editable="true" format="" name="kstValue" width="75" />
+        <gistable:column alignment="SWT.RIGHT" editable="true" format="%.3f" name="ksValue" width="75" />
+        <gistable:column alignment="SWT.RIGHT" editable="true" format="%.0f" name="kstValue" width="75" />
 
         <gistable:sort propertyName="name" />
       </gistable:layer>
