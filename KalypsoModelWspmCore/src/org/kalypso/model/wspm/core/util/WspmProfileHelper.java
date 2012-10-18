@@ -46,7 +46,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.commons.java.lang.Strings;
 import org.kalypso.commons.math.geom.PolyLine;
@@ -61,13 +60,10 @@ import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.transformation.transformer.GeoTransformerException;
-import org.kalypso.transformation.transformer.GeoTransformerFactory;
-import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
@@ -723,80 +719,9 @@ public final class WspmProfileHelper
   }
 
   /**
-   * This function creates a new profile.<br/>
-   * <br/>
-   * The following steps are performed:
-   * <ol>
-   * <li>Computes the width and height for each point.</li>
-   * <li>Create a profile with each point and its width and height (only points with elevation are being considered!)</li>
-   * <li>The new profile is simplified by Douglas Peucker.</li>
-   * </ol>
-   *
-   * @param profileType
-   *          The type of the profile.
-   * @param pointsZ
-   * @param curve
-   *          The curve, which represents the geometry on the map of the profile.
-   * @param crsOfCrds
-   * @param simplifyDistance
-   * @return The new profile.
+   * Creates a new profile point from a location at a given width.
    */
-  public static IProfile createProfile( final String profileType, final Coordinate[] pointsZ, final String crsOfCrds, final double simplifyDistance ) throws Exception
-  {
-    /* STEP 1: Compute the width and height for each point of the new line. */
-    /* STEP 2: Create the new profile. */
-    final IProfile profile = calculatePointsAndCreateProfile( profileType, pointsZ, crsOfCrds );
-    final int length = profile.getPoints().length;
-    if( length == 0 )
-      return profile;
-
-    /* STEP 3: Simplify the profile. */
-    ProfileUtil.simplifyProfile( profile, simplifyDistance );
-
-    return profile;
-  }
-
-  /**
-   * This function calculates the points for the profile and creates the new profile.
-   *
-   * @param profileType
-   *          The type of the profile.
-   * @param points
-   *          All points of the new geo line.
-   * @param csOfPoints
-   *          The coordinate system of the points.
-   * @return The new profile.
-   */
-  private static IProfile calculatePointsAndCreateProfile( final String profileType, final Coordinate[] points, final String crsOfPoints ) throws Exception
-  {
-    /* Create the new profile. */
-    final IProfile profile = ProfileFactory.createProfil( profileType, null );
-    profile.setSrsName( crsOfPoints );
-
-    // TODO: check: we calculate the 'breite' by just adding up the distances between the points, is this always OK?
-    // FIXME: no! this at least depends on the coordinate system....!
-    double breite = 0.0;
-    Coordinate lastCrd = null;
-    for( final Coordinate coordinate : points )
-    {
-      /* Create a new point. */
-      final IProfileRecord profilePoint = createPoint( profile, coordinate, breite );
-
-      /* Add the new point to the profile. */
-      profile.addPoint( profilePoint );
-
-      // FIXME: this at least depends on the coordinate system. In WGS84 we get deegrees, but we always need [m]!
-      if( lastCrd != null )
-        breite += coordinate.distance( lastCrd );
-
-      /* Store the current coordinate. */
-      lastCrd = coordinate;
-    }
-
-    return profile;
-  }
-
-  private static IProfileRecord createPoint( final IProfile profile, final Coordinate coordinate, final double breite )
+  public static IProfileRecord createRecord( final IProfile profile, final Coordinate coordinate, final double breite )
   {
     /* The needed components. */
     final IComponent cRechtswert = profile.getPointPropertyFor( IWspmPointProperties.POINT_PROPERTY_RECHTSWERT );
@@ -855,10 +780,12 @@ public final class WspmProfileHelper
    * @param insertSign
    *          If -1, new points are inserted at the beginning of the profile, 'width' goes into negative direction.
    *          Else, points are inserted at the end of the profile with ascending width.
+   * @param newPoints
+   *          The location to be inserted as new points into the profile. Must be in the same coordinate system as the profile.
    * @param coordinatesCRS
    *          The coordinate system of the new points.
    */
-  public static void insertPoints( final IProfile profile, final int insertSign, final Coordinate[] newPoints, final String coordinatesCRS ) throws Exception
+  public static void insertPoints( final IProfile profile, final int insertSign, final Coordinate[] newPoints )
   {
     Assert.isTrue( insertSign == 1 || insertSign == -1 );
 
@@ -867,32 +794,26 @@ public final class WspmProfileHelper
     final int iBreite = profile.indexOfProperty( IWspmPointProperties.POINT_PROPERTY_BREITE );
     double breite = (Double) point.getValue( iBreite );
 
-    final String srsName = profile.getSrsName();
-    final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( srsName );
-
     final List<IProfileRecord> newRecords = new ArrayList<>( newPoints.length );
 
     Coordinate lastCrd = null;
     for( final Coordinate coordinate : newPoints )
     {
       /* Transform the coordinate into the coordinate system of the profile. */
-      final GM_Position position = geoTransformer.transform( JTSAdapter.wrap( coordinate ), coordinatesCRS );
-      final Coordinate transformedCoordinate = JTSAdapter.export( position );
-
       if( lastCrd != null )
       {
-        final double distance = lastCrd.distance( transformedCoordinate );
+        final double distance = lastCrd.distance( coordinate );
         if( insertSign < 0 )
           breite -= distance;
         else
           breite += distance;
 
         // REMARK: using record here because we later directly insert into the TupleResult
-        final IProfileRecord newPoint = createPoint( profile, transformedCoordinate, breite );
+        final IProfileRecord newPoint = createRecord( profile, coordinate, breite );
         newRecords.add( newPoint );
       }
 
-      lastCrd = transformedCoordinate;
+      lastCrd = coordinate;
     }
 
     final TupleResult result = profile.getResult();
@@ -930,7 +851,7 @@ public final class WspmProfileHelper
     {
       final Coordinate coordinate = jtsCurve.getCoordinateN( i );
 
-      final IProfileRecord newPoint = createPoint( profile, coordinate, breite );
+      final IProfileRecord newPoint = createRecord( profile, coordinate, breite );
 
       /* calculate breite */
       if( i > 0 )
@@ -959,7 +880,7 @@ public final class WspmProfileHelper
     {
       final Coordinate coordinate = points[i];
 
-      final IProfileRecord newPoint = createPoint( profile, coordinate, breite );
+      final IProfileRecord newPoint = createRecord( profile, coordinate, breite );
 
       /* calculate breite */
       if( i > 0 )
@@ -972,23 +893,5 @@ public final class WspmProfileHelper
     }
 
     return profile;
-  }
-
-  /**
-   * @param insertSign
-   *          -1 points will be insert before, ...
-   */
-  public static void extendPoints( final IProfile profil, final int insertSign, final Coordinate[] simplifiedCords, final double simplifyDistance, final String coordinatesCRS ) throws Exception
-  {
-    if( ArrayUtils.isEmpty( simplifiedCords ) )
-      return;
-
-    insertPoints( profil, insertSign, simplifiedCords, coordinatesCRS );
-
-    final int length = profil.getPoints().length;
-    final int start = insertSign == -1 ? 0 : length - simplifiedCords.length;
-    final int end = insertSign == -1 ? simplifiedCords.length : length;
-
-    ProfileUtil.simplifyProfile( profil, simplifyDistance, start, end - 1 );
   }
 }
