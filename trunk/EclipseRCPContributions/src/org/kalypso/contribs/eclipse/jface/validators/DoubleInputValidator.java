@@ -29,16 +29,6 @@ import org.kalypso.contribs.java.lang.NumberUtils;
  */
 public class DoubleInputValidator implements IInputValidator
 {
-  /**
-   * The constructor.
-   */
-  public DoubleInputValidator( )
-  {
-  }
-
-  /**
-   * @see org.eclipse.jface.dialogs.IInputValidator#isValid(java.lang.String)
-   */
   @Override
   public String isValid( final String newText )
   {
