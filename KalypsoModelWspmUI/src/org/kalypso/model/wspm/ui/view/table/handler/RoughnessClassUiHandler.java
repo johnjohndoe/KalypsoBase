@@ -62,6 +62,7 @@ import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassification
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.observation.result.IRecord;
+import org.kalypso.ogc.gml.om.table.handlers.AbstractComponentUiHandler;
 
 /**
  * Handles roughness class values.
@@ -69,7 +70,7 @@ import org.kalypso.observation.result.IRecord;
  * @author Dirk Kuch
  * @author Holger Albert
  */
-public class RoughnessClassUiHandler extends AbstractComponentClassUiHandler
+public class RoughnessClassUiHandler extends AbstractComponentUiHandler
 {
   private final IProfile m_profile;
 
@@ -126,13 +127,7 @@ public class RoughnessClassUiHandler extends AbstractComponentClassUiHandler
     final IWspmClassification classification = WspmClassifications.getClassification( m_profile );
     final IRoughnessClass clazz = classification.findRoughnessClass( value.toString() );
     if( Objects.isNotNull( clazz ) )
-    {
-      final List<String> parameters = new ArrayList<>();
-      append( parameters, "ks=%.2f", clazz.getKsValue() );
-      append( parameters, "kst=%.2f", clazz.getKstValue() );
-
-      return getStringRepresentation( clazz.getDescription(), parameters );
-    }
+      return clazz.getLabelWithValues();
 
     return super.getStringRepresentation( record );
   }

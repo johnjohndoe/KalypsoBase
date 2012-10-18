@@ -43,6 +43,7 @@ package org.kalypso.model.wspm.ui.profil.wizard.landuse.model;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -54,7 +55,11 @@ import org.kalypso.commons.java.util.AbstractModelObject;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.gml.IWspmProject;
 import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
+import org.kalypso.model.wspm.core.gml.classifications.IRoughnessClass;
+import org.kalypso.model.wspm.core.gml.classifications.IVegetationClass;
 import org.kalypso.model.wspm.core.gml.classifications.IWspmClassification;
+import org.kalypso.model.wspm.ui.view.table.handler.RoughnessClassComparator;
+import org.kalypso.model.wspm.ui.view.table.handler.VegetationClassComparator;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.shape.FileMode;
 import org.kalypso.shape.ShapeFile;
@@ -122,9 +127,23 @@ public class LanduseModel extends AbstractModelObject implements ILanduseModel
       final IWspmClassification classification = project.getClassificationMember();
 
       if( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS.equals( getType() ) )
-        return classification.getVegetationClasses();
+      {
+        final IVegetationClass[] vegetationClasses = classification.getVegetationClasses();
+
+        /* Sort the vegetation classes. */
+        Arrays.sort( vegetationClasses, new VegetationClassComparator() );
+
+        return vegetationClasses;
+      }
       else if( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS.equals( getType() ) )
-        return classification.getRoughnessClasses();
+      {
+        final IRoughnessClass[] roughnessClasses = classification.getRoughnessClasses();
+
+        /* Sort the vegetation classes. */
+        Arrays.sort( roughnessClasses, new RoughnessClassComparator() );
+
+        return roughnessClasses;
+      }
     }
     catch( final Exception e )
     {
@@ -198,7 +217,6 @@ public class LanduseModel extends AbstractModelObject implements ILanduseModel
     }
     catch( final IOException e )
     {
-      e.printStackTrace();
       return KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     }
   }

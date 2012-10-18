@@ -62,6 +62,7 @@ import org.kalypso.model.wspm.core.gml.classifications.helper.WspmClassification
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.observation.result.IRecord;
+import org.kalypso.ogc.gml.om.table.handlers.AbstractComponentUiHandler;
 
 /**
  * Handles vegetation class values.
@@ -69,7 +70,7 @@ import org.kalypso.observation.result.IRecord;
  * @author Dirk Kuch
  * @author Holger Albert
  */
-public class VegetationClassUiHandler extends AbstractComponentClassUiHandler
+public class VegetationClassUiHandler extends AbstractComponentUiHandler
 {
   private final IProfile m_profile;
 
@@ -126,14 +127,7 @@ public class VegetationClassUiHandler extends AbstractComponentClassUiHandler
     final IWspmClassification classification = WspmClassifications.getClassification( m_profile );
     final IVegetationClass clazz = classification.findVegetationClass( value.toString() );
     if( Objects.isNotNull( clazz ) )
-    {
-      final List<String> parameters = new ArrayList<>();
-      append( parameters, "AX=%.2f", clazz.getAx() );
-      append( parameters, "AY=%.2f", clazz.getAy() );
-      append( parameters, "DP=%.2f", clazz.getDp() );
-
-      return getStringRepresentation( clazz.getDescription(), parameters );
-    }
+      return clazz.getLabelWithValues();
 
     return super.getStringRepresentation( record );
   }

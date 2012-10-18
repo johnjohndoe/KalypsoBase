@@ -67,9 +67,6 @@ public class LanduseMappingLabelProvider extends ColumnLabelProvider
     m_column = column;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
-   */
   @Override
   public String getText( final Object element )
   {
@@ -94,7 +91,7 @@ public class LanduseMappingLabelProvider extends ColumnLabelProvider
       if( Objects.isNull( clazz ) )
         return Messages.getString( "LanduseMappingLabelProvider.1" ); //$NON-NLS-1$
 
-      return clazz.getDescription();
+      return clazz.getLabelWithValues();
     }
     else
       throw new IllegalStateException();
@@ -112,7 +109,6 @@ public class LanduseMappingLabelProvider extends ColumnLabelProvider
     return null;
   }
 
-  @SuppressWarnings("rawtypes")
   public static Map.Entry toEntry( final Object element )
   {
     if( element instanceof Map.Entry )
@@ -120,5 +116,4 @@ public class LanduseMappingLabelProvider extends ColumnLabelProvider
 
     return null;
   }
-
 }

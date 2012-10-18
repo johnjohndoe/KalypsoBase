@@ -89,7 +89,6 @@ public class LanduseMappingTable extends Composite
       @Override
       public Object[] getElements( final Object inputElement )
       {
-
         if( inputElement instanceof Properties )
         {
           final Properties properties = (Properties) inputElement;

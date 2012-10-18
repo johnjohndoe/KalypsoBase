@@ -46,6 +46,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.ComboBoxViewerCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -53,7 +54,6 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.gml.classifications.IClassificationClass;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ILanduseModel;
 import org.kalypso.model.wspm.ui.view.table.handler.ClassificationLabelProvider;
-import org.kalypso.ogc.gml.om.table.celleditor.ComboBoxViewerCellEditor;
 
 /**
  * @author Dirk Kuch
@@ -65,37 +65,37 @@ public class LandMappingEditingSupport extends EditingSupport
   public LandMappingEditingSupport( final ColumnViewer viewer, final ILanduseModel model )
   {
     super( viewer );
+
     m_model = model;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.EditingSupport#getCellEditor(java.lang.Object)
-   */
   @Override
   protected CellEditor getCellEditor( final Object element )
   {
-
     final Composite parent = (Composite) getViewer().getControl();
+
     /** on-the-fly generation - because classification classes can change (roughness or vegetation classes!) */
-    return new ComboBoxViewerCellEditor( new ArrayContentProvider(), new ClassificationLabelProvider(), m_model.getClasses(), parent, SWT.READ_ONLY | SWT.DROP_DOWN );
+    final ComboBoxViewerCellEditor editor = new ComboBoxViewerCellEditor( parent, SWT.READ_ONLY | SWT.DROP_DOWN );
+    editor.setContentProvider( new ArrayContentProvider() );
+    editor.setLabelProvider( new ClassificationLabelProvider() );
+
+    editor.setInput( m_model.getClasses() );
+
+    editor.getViewer().setComparator( null );
+    editor.getViewer().getCCombo().setVisibleItemCount( 15 );
+
+    return editor;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.EditingSupport#canEdit(java.lang.Object)
-   */
   @Override
   protected boolean canEdit( final Object element )
   {
     return true;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.EditingSupport#getValue(java.lang.Object)
-   */
   @Override
   protected Object getValue( final Object element )
   {
-    @SuppressWarnings("rawtypes")
     final Entry entry = LanduseMappingLabelProvider.toEntry( element );
 
     final Object objValue = entry.getValue();
@@ -115,11 +115,9 @@ public class LandMappingEditingSupport extends EditingSupport
     return null;
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   protected void setValue( final Object element, final Object value )
   {
-    @SuppressWarnings("rawtypes")
     final Entry entry = LanduseMappingLabelProvider.toEntry( element );
     if( Objects.isNull( entry ) )
       return;
@@ -132,5 +130,4 @@ public class LandMappingEditingSupport extends EditingSupport
 
     getViewer().refresh( entry );
   }
-
 }

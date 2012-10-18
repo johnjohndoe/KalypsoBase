@@ -50,16 +50,6 @@ import org.kalypso.model.wspm.core.gml.classifications.IVegetationClass;
  */
 public class VegetationClassComparator implements Comparator<IVegetationClass>
 {
-  /**
-   * The constructor.
-   */
-  public VegetationClassComparator( )
-  {
-  }
-
-  /**
-   * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-   */
   @Override
   public int compare( final IVegetationClass o1, final IVegetationClass o2 )
   {
