@@ -61,11 +61,9 @@ import org.kalypso.commons.databinding.jface.wizard.DatabindingWizardPage;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.filter.ProfilePointFilterComposite;
 import org.kalypso.model.wspm.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.model.ALSShapeFilePropertyFiller;
 import org.kalypso.model.wspm.ui.profil.wizard.classification.landuse.model.ApplyLanduseShapeModel;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.model.ILanduseModel;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.LanduseMappingTable;
-import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.LandusePropertyFilter;
 import org.kalypso.model.wspm.ui.profil.wizard.landuse.utils.LanduseShapeLabelProvider;
 
 /**
@@ -104,13 +102,13 @@ public class ApplyLanduseShapePage extends WizardPage
       @Override
       public String getText( final Object element )
       {
-        if( StringUtils.equals( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS, (String) element ) )
+        if( StringUtils.equals( IWspmPointProperties.POINT_PROPERTY_BEWUCHS_CLASS, (String)element ) )
         {
-          return Messages.getString("ApplyLanduseShapePage.0"); //$NON-NLS-1$
+          return Messages.getString( "ApplyLanduseShapePage.0" ); //$NON-NLS-1$
         }
-        else if( StringUtils.equals( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS, (String) element ) )
+        else if( StringUtils.equals( IWspmPointProperties.POINT_PROPERTY_ROUGHNESS_CLASS, (String)element ) )
         {
-          return Messages.getString("ApplyLanduseShapePage.1"); //$NON-NLS-1$
+          return Messages.getString( "ApplyLanduseShapePage.1" ); //$NON-NLS-1$
         }
         return super.getText( element );
       }
@@ -122,11 +120,12 @@ public class ApplyLanduseShapePage extends WizardPage
     landuseShapeFile.setInput( m_model.getLanduseShapeFiles() );
 
     /** select shape file property */
-    new Label( body, SWT.NULL ).setText( Messages.getString( "ApplyLanduseShapePage_4" ) ); //$NON-NLS-1$
-    final ComboViewer properties = getViewer( body, ILanduseModel.PROPERTY_SHAPE_COLUMN );
-    properties.addFilter( new LandusePropertyFilter() );
+    // TODO: makes no sense here, changing the property does not work
+    //new Label( body, SWT.NULL ).setText( Messages.getString( "ApplyLanduseShapePage_4" ) ); //$NON-NLS-1$
+    // final ComboViewer properties = getViewer( body, ILanduseModel.PROPERTY_SHAPE_COLUMN );
+    // properties.addFilter( new LandusePropertyFilter() );
 
-    m_model.addPropertyChangeListener( ILanduseModel.PROPERTY_LANDUSE_SHAPE, new ALSShapeFilePropertyFiller( properties ) );
+    // m_model.addPropertyChangeListener( ILanduseModel.PROPERTY_LANDUSE_SHAPE, new ALSShapeFilePropertyFiller( properties ) );
 
     final LanduseMappingTable table = new LanduseMappingTable( body, m_model );
     table.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
@@ -161,5 +160,4 @@ public class ApplyLanduseShapePage extends WizardPage
   {
     return m_model;
   }
-
 }
