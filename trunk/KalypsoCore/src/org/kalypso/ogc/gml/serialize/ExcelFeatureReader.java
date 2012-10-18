@@ -22,7 +22,8 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.convert.GmlConvertException;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree_impl.gml.binding.shape.AbstractShape;
 
 /**
  * Lädt und schreibt ein Excel als {@link org.kalypsodeegree.model.feature.GMLWorkspace}. Die Information, welche Spalte
@@ -54,7 +55,7 @@ public final class ExcelFeatureReader extends AbstractTabularFeatureReader
 
       if( excelFile == null )
       {
-        final String message = String.format( Messages.getString("ExcelFeatureReader.0"), m_href ); //$NON-NLS-1$
+        final String message = String.format( Messages.getString( "ExcelFeatureReader.0" ), m_href ); //$NON-NLS-1$
         throw new GmlConvertException( message );
       }
 
@@ -66,7 +67,7 @@ public final class ExcelFeatureReader extends AbstractTabularFeatureReader
 
       final int numberOfSheets = wb.getNumberOfSheets();
       if( numberOfSheets == 0 )
-        throw new GmlConvertException( Messages.getString("ExcelFeatureReader.1") ); //$NON-NLS-1$
+        throw new GmlConvertException( Messages.getString( "ExcelFeatureReader.1" ) ); //$NON-NLS-1$
 
       final HSSFSheet sheet = wb.getSheetAt( 0 );
 
@@ -81,9 +82,9 @@ public final class ExcelFeatureReader extends AbstractTabularFeatureReader
 
   private void loadSheet( final HSSFSheet sheet ) throws CsvException, FilterEvaluationException
   {
-    final FeatureList featureList = getFeatureList();
-    final Feature parentFeature = featureList.getOwner();
-    final IRelationType parentRelation = featureList.getPropertyType();
+    final IFeatureBindingCollection<AbstractShape> shapeCollection = getFeatureList();
+    final Feature parentFeature = shapeCollection.getParentFeature();
+    final IRelationType parentRelation = shapeCollection.getFeatureList().getPropertyType();
     final IFeatureType featureType = parentRelation.getTargetFeatureType();
 
     final int firstRowNum = sheet.getFirstRowNum();
@@ -102,7 +103,7 @@ public final class ExcelFeatureReader extends AbstractTabularFeatureReader
 
       final Feature newFeature = createFeatureFromTokens( parentFeature, parentRelation, "" + i, tokens, featureType ); //$NON-NLS-1$
       if( acceptFeature( newFeature ) )
-        featureList.add( newFeature );
+        shapeCollection.getFeatureList().add( newFeature );
     }
   }
 

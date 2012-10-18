@@ -44,8 +44,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
 
-import javax.xml.namespace.QName;
-
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -78,39 +76,18 @@ public final class ShapeSerializer
   /** The default charset of a shape (really the .dbf) is IBM850. */
   private static final String SHAPE_DEFAULT_CHARSET_IBM850 = "IBM850"; //$NON-NLS-1$
 
-  /**
-   * @deprecated Use {@link ShapeCollection} instead
-   */
-  @Deprecated
-  public static final String SHP_NAMESPACE_URI = ShapeCollection.SHP_NAMESPACE_URI;
-
-  /**
-   * The list property of the shape root feature containing the features.
-   * 
-   * @deprecated Use {@link ShapeCollection} instead
-   */
-  @Deprecated
-  public static final QName PROPERTY_FEATURE_MEMBER = new QName( SHP_NAMESPACE_URI, "featureMember" ); //$NON-NLS-1$
-
-  /**
-   * Pseudo QNAME, placeholder for the gml-id to be written.
-   */
-  public static final QName QNAME_GMLID = new QName( ShapeSerializer.class.getName() + "gmlid" ); //$NON-NLS-1$
-
-
   private ShapeSerializer( )
   {
     // wird nicht instantiiert
   }
 
   /**
-   * @deprecated Use {@link org.kalypso.shape.ShapeWriter} and {@link org.kalypso.shape.deegree.GenericShapeDataFactory}
-   *             instead.
+   * @deprecated Use {@link org.kalypso.shape.ShapeWriter} and {@link org.kalypso.shape.deegree.GenericShapeDataFactory} instead.
    */
   @Deprecated
   public static void serialize( final GMLWorkspace workspace, final String filenameBase, final String targetSrs ) throws GmlSerializeException
   {
-    final ShapeCollection collection = (ShapeCollection) workspace.getRootFeature();
+    final ShapeCollection collection = (ShapeCollection)workspace.getRootFeature();
     serialize( collection, filenameBase, targetSrs );
   }
 
@@ -179,7 +156,7 @@ public final class ShapeSerializer
     final String taskName = Messages.getString( "org.kalypso.ogc.gml.serialize.ShapeSerializer.2", fileBase ); //$NON-NLS-1$
     final SubMonitor moni = SubMonitor.convert( monitor, taskName, 100 );
 
-    try (ShapeFile sf = new ShapeFile( fileBase, charset, FileMode.READ ))
+    try( ShapeFile sf = new ShapeFile( fileBase, charset, FileMode.READ ) )
     {
       // TODO: as before, but still ugly
       final String key = Integer.toString( fileBase.hashCode() );

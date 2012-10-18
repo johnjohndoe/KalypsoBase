@@ -18,7 +18,8 @@ import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypso.ogc.gml.convert.GmlConvertException;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree_impl.gml.binding.shape.AbstractShape;
 
 /**
  * Lädt und schreibt ein CSV als {@link org.kalypsodeegree.model.feature.GMLWorkspace}. Die Information, welche Spalte
@@ -75,9 +76,9 @@ public final class CsvFeatureReader extends AbstractTabularFeatureReader
 
   private void loadCSV( final InputStreamReader isr, final String comment, final String delemiter, final int lineskip ) throws CsvException, IOException, FilterEvaluationException
   {
-    final FeatureList featureList = getFeatureList();
-    final Feature parentFeature = featureList.getOwner();
-    final IRelationType parentRelation = featureList.getPropertyType();
+    final IFeatureBindingCollection<AbstractShape> featureList = getFeatureList();
+    final Feature parentFeature = featureList.getParentFeature();
+    final IRelationType parentRelation = featureList.getFeatureList().getPropertyType();
     final IFeatureType featureType = parentRelation.getTargetFeatureType();
 
     final LineNumberReader lnr = new LineNumberReader( isr );
@@ -97,9 +98,10 @@ public final class CsvFeatureReader extends AbstractTabularFeatureReader
         continue;
 
       final String[] tokens = line.split( m_delemiter, -1 );
+
       final Feature newFeature = createFeatureFromTokens( parentFeature, parentRelation, "" + lnr.getLineNumber(), tokens, featureType ); //$NON-NLS-1$
       if( acceptFeature( newFeature ) )
-        featureList.add( newFeature );
+        featureList.getFeatureList().add( newFeature );
     }
   }
 }
