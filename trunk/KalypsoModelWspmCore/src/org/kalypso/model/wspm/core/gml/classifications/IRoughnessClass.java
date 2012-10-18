@@ -66,5 +66,4 @@ public interface IRoughnessClass extends IClassificationClass
   void setKsValue( BigDecimal value );
 
   BigDecimal getValue( String component );
-
 }

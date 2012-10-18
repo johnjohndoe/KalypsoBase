@@ -53,10 +53,6 @@ public class LandusePropertyFilter extends ViewerFilter
 {
   private static final FieldType[] FILTER = new FieldType[] { FieldType.D, FieldType.F, FieldType.L, FieldType.M, FieldType.N };
 
-  /**
-   * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
-   */
   @Override
   public boolean select( final Viewer viewer, final Object parentElement, final Object element )
   {
@@ -70,5 +66,4 @@ public class LandusePropertyFilter extends ViewerFilter
 
     return true;
   }
-
 }
