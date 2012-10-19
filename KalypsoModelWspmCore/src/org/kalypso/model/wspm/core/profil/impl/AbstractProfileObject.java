@@ -60,15 +60,15 @@ import org.kalypso.observation.result.IComponent;
  */
 public abstract class AbstractProfileObject extends ProfileMetadataObserver implements IProfileObject
 {
-  private final List<IProfileObjectListener>   m_listener = new ArrayList<>();
+  private final List<IProfileObjectListener> m_listener = new ArrayList<>();
 
-  private String   m_description = null;
+  private String m_description = null;
 
   private final String m_typeLabel = createTypeLabel();
 
   private final IProfileObjectRecords m_records = new ProfileObjectRecords( this );
 
-  private final IProfileMetadata   m_metadata = new ProfileMetadata( this );
+  private final IProfileMetadata m_metadata = new ProfileMetadata( this );
 
   protected AbstractProfileObject( )
   {
@@ -158,7 +158,7 @@ public abstract class AbstractProfileObject extends ProfileMetadataObserver impl
     fireProfileObjectMetadataChanged();
   }
 
-  private String createTypeLabel( )
+  protected String createTypeLabel( )
   {
     try
     {
