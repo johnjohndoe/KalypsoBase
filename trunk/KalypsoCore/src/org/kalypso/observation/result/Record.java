@@ -41,11 +41,11 @@
 package org.kalypso.observation.result;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.eclipse.core.runtime.Assert;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.core.i18n.Messages;
 import org.kalypso.observation.result.ITupleResultChangedListener.TYPE;
@@ -60,14 +60,14 @@ public class Record implements IRecord
 {
   private final List<Object> m_values = new ArrayList<>();
 
-  private List<IComponent> m_components = new ArrayList<>();
-
-  private TupleResult m_owner;
+  private final TupleResult m_owner;
 
   public Record( final TupleResult result, final IComponent[] components )
   {
+    Assert.isNotNull( result );
+    Assert.isNotNull( components );
+
     m_owner = result;
-    m_components = Arrays.asList( components );
 
     for( final IComponent component : components )
       m_values.add( component.getDefaultValue() );
@@ -95,7 +95,9 @@ public class Record implements IRecord
 
   private int checkComponent( final IComponent comp )
   {
-    final int index = m_components.indexOf( comp );
+    final TupleResult owner = getOwner();
+
+    final int index = owner.indexOfComponent( comp );
     if( index == -1 )
       throw new IllegalArgumentException( Messages.getString( "org.kalypso.observation.result.Record.0" ) + comp ); //$NON-NLS-1$
 
@@ -181,23 +183,10 @@ public class Record implements IRecord
     }
   }
 
-  void setOwner( final TupleResult owner, final List<IComponent> components )
-  {
-    m_owner = owner;
-    m_components = components;
-  }
-
   @Override
   public int indexOfComponent( final String componentID )
   {
-    for( int i = 0; i < m_components.size(); i++ )
-    {
-      final IComponent comp = m_components.get( i );
-      if( comp.getId().equals( componentID ) )
-        return i;
-    }
-
-    return -1;
+    return getOwner().indexOfComponent( componentID );
   }
 
   @Override
