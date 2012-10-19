@@ -84,10 +84,10 @@ import de.renew.workflow.base.IWorkflow;
 
 /**
  * This class is responsible for loading / storing the perspective configuration for a task.
- * 
+ *
  * @author Gernot Belger
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings( "restriction" )
 class TaskPerspectiveStore
 {
   private static final String USER_AREA_DIR = "taskPerspectives"; //$NON-NLS-1$
@@ -175,7 +175,7 @@ class TaskPerspectiveStore
     {
       final URL systemLocation = getSystemLocation( task );
 
-      try (Reader reader = new InputStreamReader( systemLocation.openStream(), Charsets.UTF_8 ))
+      try( Reader reader = new InputStreamReader( systemLocation.openStream(), Charsets.UTF_8 ) )
       {
         return XMLMemento.createReadRoot( reader );
       }
@@ -219,7 +219,7 @@ class TaskPerspectiveStore
     if( !userFile.exists() )
       return null;
 
-    try (Reader reader = new InputStreamReader( new FileInputStream( userFile ), Charsets.UTF_8 ))
+    try( Reader reader = new InputStreamReader( new FileInputStream( userFile ), Charsets.UTF_8 ) )
     {
       return XMLMemento.createReadRoot( reader );
     }
@@ -264,7 +264,7 @@ class TaskPerspectiveStore
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
     final IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-    final WorkbenchPage page = (WorkbenchPage) window.getActivePage();
+    final WorkbenchPage page = (WorkbenchPage)window.getActivePage();
     if( page == null )
       return null;
 
@@ -309,7 +309,7 @@ class TaskPerspectiveStore
     final Version kalypsoVersion = product.getDefiningBundle().getVersion();
     memento.putString( KEY_KALYPSO_VERISON, kalypsoVersion.toString() );
 
-    try (final Writer writer = new OutputStreamWriter( new FileOutputStream( targetFile ), Charsets.UTF_8 ))
+    try( final Writer writer = new OutputStreamWriter( new FileOutputStream( targetFile ), Charsets.UTF_8 ) )
     {
       memento.save( writer );
     }
@@ -385,7 +385,7 @@ class TaskPerspectiveStore
   private void applyPerspectiveConfiguration( final Perspective perspective, final XMLMemento memento ) throws IOException
   {
     final PerspectiveRegistry registry = getPerspectiveRegistry();
-    final PerspectiveDescriptor desc = (PerspectiveDescriptor) perspective.getDesc();
+    final PerspectiveDescriptor desc = (PerspectiveDescriptor)perspective.getDesc();
 
     if( !desc.getId().equals( org.kalypso.afgui.perspective.Perspective.ID ) )
       return;
@@ -393,8 +393,8 @@ class TaskPerspectiveStore
     registry.saveCustomPersp( desc, memento );
 
     final IWorkbench workbench = PlatformUI.getWorkbench();
-    final WorkbenchWindow window = (WorkbenchWindow) workbench.getActiveWorkbenchWindow();
-    final WorkbenchPage page = (WorkbenchPage) window.getActivePage();
+    final WorkbenchWindow window = (WorkbenchWindow)workbench.getActiveWorkbenchWindow();
+    final WorkbenchPage page = (WorkbenchPage)window.getActivePage();
 
     m_resetInProgress = true;
     try
@@ -409,7 +409,7 @@ class TaskPerspectiveStore
 
   private PerspectiveRegistry getPerspectiveRegistry( )
   {
-    return (PerspectiveRegistry) WorkbenchPlugin.getDefault().getPerspectiveRegistry();
+    return (PerspectiveRegistry)WorkbenchPlugin.getDefault().getPerspectiveRegistry();
   }
 
   protected void handleWindowOpened( final IWorkbenchWindow window )
@@ -427,6 +427,9 @@ class TaskPerspectiveStore
     if( m_resetInProgress )
       return;
 
+    if( !org.kalypso.afgui.perspective.Perspective.ID.equals( perspective.getId() ) )
+      return;
+
     m_ignoreNextActivation = true;
     m_ignoreNextDeactivation = true;
 
@@ -439,7 +442,7 @@ class TaskPerspectiveStore
     }
 
     /* Reset definition for the active task */
-    resetSystemSettings( (PerspectiveDescriptor) perspective );
+    resetSystemSettings( (PerspectiveDescriptor)perspective );
   }
 
   // TODO: not used, but this it how it is done; would be nice to have a menu to reset the whole definition
@@ -455,7 +458,7 @@ class TaskPerspectiveStore
     clearUserEntries();
 
     /* Reset definition for the active task */
-    resetSystemSettings( (PerspectiveDescriptor) perspective );
+    resetSystemSettings( (PerspectiveDescriptor)perspective );
   }
 
   private void clearUserEntries( )
