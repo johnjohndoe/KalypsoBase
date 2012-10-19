@@ -193,10 +193,9 @@ public class ObservationFeatureFactory implements IAdapterFactory
    */
   private static void fillResult( final TupleResult tupleResult, final Feature f )
   {
-    /* Clear result */
-    final IComponent[] existingComponents = tupleResult.getComponents();
-    for( final IComponent existingComponent : existingComponents )
-      tupleResult.removeComponent( existingComponent );
+    /* clear components from result: some TupleResults are created with components (e.g. when created via profile provider in wspm) */
+    while( tupleResult.getComponents().length > 0 )
+      tupleResult.removeComponent( 0 );
 
     final Feature recordDefinition = FeatureHelper.resolveLink( f, ObservationFeatureFactory.OM_RESULTDEFINITION );
 
