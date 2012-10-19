@@ -524,11 +524,11 @@ public class TupleResult implements List<IRecord>
         r.set( m_components.size() - 1, record.getValue( index ) );
       else
         r.set( m_components.size() - 1, comp.getDefaultValue() );
-
     }
 
     if( m_sortComponents.contains( comp ) )
       m_isSorted = false;
+
     fireComponentsChanged( new IComponent[] { comp }, TYPE.ADDED );
     return added;
   }
@@ -555,36 +555,11 @@ public class TupleResult implements List<IRecord>
     return added;
   }
 
-  /**
-   * removes all components of type IComponent
-   *
-   * @param comp
-   *          interpreted as type!!!
-   */
-  public boolean removeComponent( final IComponent comp )
-  {
-    while( m_components.contains( comp ) )
-    {
-      m_components.remove( comp );
-    }
-
-    if( m_sortComponents.contains( comp ) )
-      m_isSorted = false;
-    fireComponentsChanged( new IComponent[] { comp }, TYPE.REMOVED );
-
-    if( m_components.contains( comp ) )
-      return false;
-
-    return true;
-  }
-
   public boolean removeComponent( final int index )
   {
-
     for( final IRecord record : m_records )
-    {
       ((Record) record).remove( index );
-    }
+
     final IComponent comp = m_components.remove( index );
     fireComponentsChanged( new IComponent[] { comp }, TYPE.REMOVED );
     return true;
