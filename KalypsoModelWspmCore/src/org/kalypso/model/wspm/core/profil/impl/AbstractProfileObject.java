@@ -163,7 +163,7 @@ public abstract class AbstractProfileObject extends ProfileMetadataObserver impl
     try
     {
       // FIXME Children should provide the type description...
-      final String buildingId = getId();
+      final String buildingId = getType();
       final IComponent buildingComponent = ProfileUtil.getFeatureComponent( buildingId );
       return buildingComponent == null ? buildingId : buildingComponent.getName();
     }
