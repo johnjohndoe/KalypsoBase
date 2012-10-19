@@ -80,7 +80,6 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
  */
 public class ValidateProfilesJob extends UIJob
 {
-
   private final IProfileFeature[] m_profileFeatures;
 
   private final IValidatorRule[] m_rules;

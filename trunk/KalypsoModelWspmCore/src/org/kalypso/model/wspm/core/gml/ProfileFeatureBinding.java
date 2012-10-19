@@ -36,6 +36,7 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
+import org.kalypsodeegree.model.feature.event.FeaturesChangedModellEvent;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -77,6 +78,12 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     public void onProfilChanged( final ProfileChangeHint hint )
     {
       handleCachedProfileChanged( hint );
+    }
+
+    @Override
+    public void onProblemMarkerChanged( final IProfile source )
+    {
+      fireFeatureChanged();
     }
   };
 
@@ -490,5 +497,15 @@ public class ProfileFeatureBinding extends AbstractCachedFeature2 implements IPr
     }
 
     return null;
+  }
+
+  protected void fireFeatureChanged( )
+  {
+    final GMLWorkspace workspace = getWorkspace();
+    if( workspace == null )
+      return;
+
+    final FeaturesChangedModellEvent changeEvent = new FeaturesChangedModellEvent( workspace, new Feature[] { this } );
+    workspace.fireModellEvent( changeEvent );
   }
 }
