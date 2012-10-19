@@ -34,7 +34,7 @@ public class GenericProfileHorizon extends AbstractProfileObject
   }
 
   @Override
-  public String getId( )
+  public String getType( )
   {
     return m_id;
   }

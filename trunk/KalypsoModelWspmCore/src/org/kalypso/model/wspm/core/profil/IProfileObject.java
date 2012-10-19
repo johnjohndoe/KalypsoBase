@@ -45,7 +45,7 @@ package org.kalypso.model.wspm.core.profil;
  */
 public interface IProfileObject
 {
-  String getId( );
+  String getType( );
 
   String getDescription( );
 
