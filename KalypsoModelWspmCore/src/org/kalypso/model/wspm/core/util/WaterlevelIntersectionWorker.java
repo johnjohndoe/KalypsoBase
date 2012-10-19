@@ -40,25 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.util;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
-import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.observation.result.IComponent;
+import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryCollectionIterator;
+import com.vividsolutions.jts.geom.CoordinateList;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineSegment;
 import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.LinearRing;
-import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.PrecisionModel;
 import com.vividsolutions.jts.util.Assert;
 
 /**
@@ -68,65 +61,36 @@ import com.vividsolutions.jts.util.Assert;
  */
 public class WaterlevelIntersectionWorker
 {
-  private final List<LineSegment> m_segments = new LinkedList<>();
-
-  private final GeometryFactory m_factory = new GeometryFactory();
-
   private final IProfile m_profile;
 
-  private final double m_height;
+  private final double m_waterlevelHeight;
 
-  public WaterlevelIntersectionWorker( final IProfile profile, final double height )
+  private LineSegment[] m_segments;
+
+  private final GeometryFactory m_factory;
+
+  public WaterlevelIntersectionWorker( final IProfile profile, final double waterlevelHeight )
   {
     m_profile = profile;
-    m_height = height;
+    m_waterlevelHeight = waterlevelHeight;
+
+    final String profileSRS = m_profile.getSrsName();
+    final int profileSRID = JTSAdapter.toSrid( profileSRS );
+    m_factory = new GeometryFactory( new PrecisionModel(), profileSRID );
   }
 
   public void execute( )
   {
-    final IProfileRecord record = ProfileVisitors.findMaximum( m_profile, IWspmConstants.POINT_PROPERTY_HOEHE );
-    final Double maxHeight = record.getHoehe();
-
-    final double top = Math.max( maxHeight, m_height ) + 1.0;
-
-    final List<Coordinate> profileCoordinates = buildProfileCoordinates();
-
-    final Polygon profileNegative = buildProfileNegative( profileCoordinates, top );
-    if( profileNegative == null )
-      return;
+    final Coordinate[] profileCoordinates = buildProfileCoordinates();
 
     final LineString waterlevelLine = buildWaterlevelLine( profileCoordinates );
 
-    /* Decompose segments */
-    final Geometry waterlevelSegments = profileNegative.intersection( waterlevelLine );
-    addSegments( waterlevelSegments );
+    final JTSWaterlevelIntersector intersector = new JTSWaterlevelIntersector( profileCoordinates );
+    final LineString[] lines = intersector.createWaterlevels( waterlevelLine );
+    m_segments = extractSegments( lines );
   }
 
-  private void addSegments( final Geometry segments )
-  {
-    for( final GeometryCollectionIterator iterator = new GeometryCollectionIterator( segments ); iterator.hasNext(); )
-    {
-      final Object segment = iterator.next();
-      addSegment( segment );
-    }
-  }
-
-  private void addSegment( final Object segment )
-  {
-    if( segment instanceof LineString )
-    {
-      final LineString line = (LineString) segment;
-
-      Assert.isTrue( line.getNumPoints() == 2 );
-
-      final LineSegment waterLevel = new LineSegment( line.getCoordinateN( 0 ), line.getCoordinateN( 1 ) );
-
-      m_segments.add( waterLevel );
-      return;
-    }
-  }
-
-  private List<Coordinate> buildProfileCoordinates( )
+  private Coordinate[] buildProfileCoordinates( )
   {
     final IComponent cHeight = m_profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_HOEHE );
     final IComponent cWidth = m_profile.hasPointProperty( IWspmConstants.POINT_PROPERTY_BREITE );
@@ -136,7 +100,7 @@ public class WaterlevelIntersectionWorker
 
     Assert.isTrue( widthValues.length == heightValues.length );
 
-    final List<Coordinate> crds = new ArrayList<>();
+    final CoordinateList coordinates = new CoordinateList();
 
     for( int i = 0; i < widthValues.length; i++ )
     {
@@ -144,53 +108,47 @@ public class WaterlevelIntersectionWorker
       final Double height = heightValues[i];
       if( width != null && height != null )
       {
-        crds.add( new Coordinate( width, height ) );
+        final Coordinate crd = new Coordinate( width, height );
+        coordinates.add( crd, false );
       }
     }
 
-    return crds;
+    return coordinates.toCoordinateArray();
   }
 
-  /**
-   * Builds a 'negative' of the profile area.
-   */
-  private Polygon buildProfileNegative( final List<Coordinate> profileCoordinates, final double top )
+  private LineString buildWaterlevelLine( final Coordinate[] profileCoordinates )
   {
-    if( profileCoordinates.size() < 3 )
+    if( profileCoordinates.length < 3 )
       return null;
 
-    final List<Coordinate> negativeCoordinates = new ArrayList<>();
+    final Coordinate firstCrd = profileCoordinates[0];
+    final Coordinate lastCrd = profileCoordinates[profileCoordinates.length - 1];
 
-    final Coordinate firstCrd = profileCoordinates.get( 0 );
-    final Coordinate lastCrd = profileCoordinates.get( profileCoordinates.size() - 1 );
-
-    negativeCoordinates.addAll( profileCoordinates );
-    // REMARK: +1/-1 handles the rare case where we have negative vertical walls at the end of the cs
-    // TODO: there is still no guarantee, that we get a valid polygon here (backjumps at cs end, etc.)
-    negativeCoordinates.add( new Coordinate( lastCrd.x + 1.0, top ) );
-    negativeCoordinates.add( new Coordinate( firstCrd.x - 1.0, top ) );
-    negativeCoordinates.add( new Coordinate( firstCrd ) );
-
-    final LinearRing shell = m_factory.createLinearRing( negativeCoordinates.toArray( new Coordinate[negativeCoordinates.size()] ) );
-    if( !shell.isValid() )
-      return null;
-
-    return m_factory.createPolygon( shell, null );
-  }
-
-  private LineString buildWaterlevelLine( final List<Coordinate> profileCoordinates )
-  {
-    final Coordinate firstCrd = profileCoordinates.get( 0 );
-    final Coordinate lastCrd = profileCoordinates.get( profileCoordinates.size() - 1 );
-
-    final Coordinate waterlevelStart = new Coordinate( firstCrd.x, m_height );
-    final Coordinate waterlevelEnd = new Coordinate( lastCrd.x, m_height );
+    final Coordinate waterlevelStart = new Coordinate( firstCrd.x, m_waterlevelHeight );
+    final Coordinate waterlevelEnd = new Coordinate( lastCrd.x, m_waterlevelHeight );
 
     return m_factory.createLineString( new Coordinate[] { waterlevelStart, waterlevelEnd } );
   }
 
   public LineSegment[] getSegments( )
   {
-    return m_segments.toArray( new LineSegment[m_segments.size()] );
+    return m_segments;
+  }
+
+  private LineSegment[] extractSegments( final LineString[] lines )
+  {
+    final LineSegment[] segments = new LineSegment[lines.length];
+
+    for( int i = 0; i < segments.length; i++ )
+    {
+      final LineString line = lines[i];
+
+      // The algorithm should guarantuee, that a horizontal waterlevel only delivers segments
+      Assert.isTrue( line.getNumPoints() == 2 );
+
+      segments[i] = new LineSegment( line.getCoordinateN( 0 ), line.getCoordinateN( 1 ) );
+    }
+
+    return segments;
   }
 }
