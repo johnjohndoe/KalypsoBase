@@ -36,14 +36,12 @@
 package org.kalypsodeegree;
 
 import org.deegree.crs.transformations.TransformationFactory;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.kalypso.contribs.eclipse.osgi.FrameworkUtilities;
-import org.kalypso.preferences.IKalypsoDeegreePreferences;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.osgi.framework.BundleContext;
+import org.osgi.service.prefs.BackingStoreException;
 
 public class KalypsoDeegreePlugin extends Plugin
 {
@@ -51,6 +49,8 @@ public class KalypsoDeegreePlugin extends Plugin
    * The shared instance.
    */
   private static KalypsoDeegreePlugin PLUGIN;
+
+  private ScopedPreferenceStore m_preferenceStore;
 
   /**
    * The constructor.
@@ -62,9 +62,6 @@ public class KalypsoDeegreePlugin extends Plugin
     PLUGIN = this;
   }
 
-  /**
-   * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
-   */
   @Override
   public void start( final BundleContext context ) throws Exception
   {
@@ -79,9 +76,8 @@ public class KalypsoDeegreePlugin extends Plugin
   @Override
   public void stop( final BundleContext context ) throws Exception
   {
-    /* Save the plug-in preferences. */
-    final IEclipsePreferences instanceNode = InstanceScope.INSTANCE.getNode( getBundle().getSymbolicName() );
-    instanceNode.flush();
+    savePluginStore();
+    m_preferenceStore = null;
 
     PLUGIN = null;
 
@@ -98,22 +94,12 @@ public class KalypsoDeegreePlugin extends Plugin
 
   /**
    * This function returns the coordinate system set in the preferences.
-   * 
+   *
    * @return The coordinate system.
    */
   public String getCoordinateSystem( )
   {
-    final String defaultSrs = getDefaultCoordinateSystem();
-
-    final IPreferencesService preferencesService = Platform.getPreferencesService();
-    final String pluginID = getBundle().getSymbolicName();
-
-    return preferencesService.getString( pluginID, IKalypsoDeegreePreferences.DEFAULT_CRS_SETTING, defaultSrs, null );
-  }
-
-  private String getDefaultCoordinateSystem( )
-  {
-    return FrameworkUtilities.getProperty( "kalypso.defaultSRS", IKalypsoDeegreePreferences.DEFAULT_CRS_VALUE );
+    return KalypsoDeegreePreferences.getCoordinateSystem();
   }
 
   /**
@@ -122,5 +108,48 @@ public class KalypsoDeegreePlugin extends Plugin
   public static String getID( )
   {
     return getDefault().getBundle().getSymbolicName();
+  }
+
+  /**
+   * Returns the preference store for this plug-in.
+   * This preference store is used to hold persistent settings for this plug-in in
+   * the context of a workbench. Some of these settings will be user controlled,
+   * whereas others may be internal setting that are never exposed to the user.
+   * <p>
+   * If an error occurs reading the preference store, an empty preference store is quietly created, initialized with defaults, and returned.
+   * </p>
+   * <p>
+   * <strong>NOTE:</strong> As of Eclipse 3.1 this method is no longer referring to the core runtime compatibility layer and so plug-ins relying on Plugin#initializeDefaultPreferences will have to
+   * access the compatibility layer themselves.
+   * </p>
+   *
+   * @return the preference store
+   */
+  synchronized IPreferenceStore getPreferenceStore( )
+  {
+    // Create the preference store lazily.
+    if( m_preferenceStore == null )
+    {
+      m_preferenceStore = new ScopedPreferenceStore( InstanceScope.INSTANCE, getID() );
+
+      KalypsoDeegreePreferences.initDefaults( m_preferenceStore );
+    }
+
+    return m_preferenceStore;
+  }
+
+  public void savePluginStore( )
+  {
+    if( m_preferenceStore == null )
+      return;
+
+    try
+    {
+      InstanceScope.INSTANCE.getNode( getID() ).flush();
+    }
+    catch( final BackingStoreException e )
+    {
+      e.printStackTrace();
+    }
   }
 }

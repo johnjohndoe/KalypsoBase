@@ -87,6 +87,7 @@ public class WaterlevelIntersectionWorker
 
     final JTSWaterlevelIntersector intersector = new JTSWaterlevelIntersector( profileCoordinates );
     final LineString[] lines = intersector.createWaterlevels( waterlevelLine );
+
     m_segments = extractSegments( lines );
   }
 

@@ -43,9 +43,7 @@ package org.kalypso.transformation;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.eclipse.core.runtime.Platform;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.preferences.IKalypsoDeegreePreferences;
 import org.kalypso.transformation.crs.CoordinateSystemFactory;
 import org.kalypso.transformation.crs.ICoordinateSystem;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -92,21 +90,6 @@ public final class CRSHelper
     {
       return false;
     }
-  }
-
-  /**
-   * This function returns all known codes of coordinate systems.
-   *
-   * @return An array of all known codes of coordinate systems.
-   */
-  public static String[] getAllNames( )
-  {
-    final String preferenceCodes = Platform.getPreferencesService().getString( KalypsoDeegreePlugin.getID(), IKalypsoDeegreePreferences.AVAILABLE_CRS_SETTING, IKalypsoDeegreePreferences.AVAILABLE_CRS_VALUE, null );
-    if( preferenceCodes == null || preferenceCodes.length() == 0 )
-      return new String[] {};
-
-    final String[] availableNames = preferenceCodes.split( ";" );
-    return availableNames;
   }
 
   /**

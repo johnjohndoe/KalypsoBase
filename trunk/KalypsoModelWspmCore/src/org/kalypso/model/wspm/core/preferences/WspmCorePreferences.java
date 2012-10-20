@@ -78,7 +78,6 @@ public final class WspmCorePreferences
     return store.getBoolean( WspmCorePreferences.P_VALIDATE_PROFILE );
   }
 
-
   public static String[] getExcludedRules( )
   {
     final String excludes = getStore().getString( P_VALIDATE_RULES_TO_EXCLUDE );
