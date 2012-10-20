@@ -61,7 +61,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.contribs.java.awt.ColorUtilities;
-import org.kalypso.grid.CachingGeoGrid;
 import org.kalypso.grid.GeoGridCell;
 import org.kalypso.grid.GeoGridException;
 import org.kalypso.grid.GeoGridUtilities;
@@ -158,14 +157,13 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     }
   }
 
-  private IGeoGrid getGrid( ) throws Exception
+  private IGeoGrid getGrid( )
   {
     final Feature feature = getFeature();
     if( feature.getWorkspace() == null )
       return null;
 
-    // return new RectifiedGridCoverageGeoGrid( feature );
-    return new CachingGeoGrid( new RectifiedGridCoverageGeoGrid( (RectifiedGridCoverage) feature ) );
+    return new RectifiedGridCoverageGeoGrid( (RectifiedGridCoverage)feature );
   }
 
   /**
@@ -460,7 +458,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
           final GM_Position transformedPosition = geoTransformer.transform( position, targetCRS );
           final Coordinate transformedCrd = JTSAdapter.export( transformedPosition );
 
-          // TODO: still too slow, if cellsize bigger than the rastersize
+          // TODO: still too slow
 
           final double value = GeoGridUtilities.getValue( grid, transformedCrd, m_interpolation );
           // REMARK: for performance optimization: we may use the same value for more than one pixel at the same time...
