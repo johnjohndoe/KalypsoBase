@@ -56,6 +56,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
@@ -71,6 +72,7 @@ import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.KalypsoDeegreePreferences;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
@@ -119,9 +121,17 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
 
   private double m_max;
 
+  private final GeoGridUtilities.Interpolation m_interpolation;
+
+  private final int m_pixelResolution;
+
   RasterDisplayElement_Impl( final Feature feature, final GM_Object[] geometry, final RasterSymbolizer symbolizer )
   {
     super( feature, geometry, symbolizer );
+
+    // fetch preferences
+    m_interpolation = KalypsoDeegreePreferences.getRasterPaintingInterpolationMethod();
+    m_pixelResolution = KalypsoDeegreePreferences.getRasterPaintingPixelResolution();
 
     // PERFORMANCE: create doubles and colors as arrays for quick access
     final SortedMap<Double, ColorMapEntry> colorMap = symbolizer.getColorMap();
@@ -175,6 +185,10 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
       Assert.isNotNull( targetCrs );
       paintGrid( (Graphics2D) g, grid, projection, targetCrs, monitor );
     }
+    catch( final OperationCanceledException e )
+    {
+      throw new CoreException( Status.CANCEL_STATUS );
+    }
     catch( final CoreException ce )
     {
       throw ce;
@@ -199,17 +213,14 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     /* Get the envelope of the surface of the grid (it is transformed). */
     final GM_Surface< ? > gridSurface = grid.getSurface( targetCRS );
 
-    // Experimental: change interpolation method for better rendering; is quite slow however
-    // final GeoGridUtilities.Interpolation interpolation = Interpolation.bilinear;
-    final GeoGridUtilities.Interpolation interpolation = Interpolation.nearest;
-
     final Composite oldAlphaComposite = g.getComposite();
     try
     {
       final float opacity = getOpacity();
       if( !Double.isNaN( opacity ) )
         g.setComposite( AlphaComposite.getInstance( AlphaComposite.SRC_OVER, opacity ) );
-      paintRaster( g, grid, projection, gridSurface, targetCRS, interpolation, progress.newChild( 95, SubMonitor.SUPPRESS_NONE ) );
+
+      paintRaster( g, grid, projection, gridSurface, targetCRS, progress.newChild( 95, SubMonitor.SUPPRESS_NONE ) );
     }
     finally
     {
@@ -222,7 +233,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     paintImageOutline( g, gridSurface, projection, imageOutline, progress.newChild( 5, SubMonitor.SUPPRESS_NONE ) );
   }
 
-  private void paintRaster( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final GM_Surface< ? > gridSurface, final String targetCRS, final GeoGridUtilities.Interpolation interpolation, final IProgressMonitor progress ) throws GeoGridException, CoreException
+  private void paintRaster( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final GM_Surface< ? > gridSurface, final String targetCRS, final IProgressMonitor progress ) throws GeoGridException, CoreException
   {
     final GM_Envelope envelope = gridSurface.getEnvelope();
 
@@ -268,11 +279,8 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     final GeoGridCell clippedMinCell = normalizedMinCell.max( originCell );
     final GeoGridCell clippedMaxCell = normalizedMaxCell.min( maxGridCell );
 
-    if( cellPixelWidthX < 1 || interpolation != Interpolation.none )
-    {
-      final Interpolation interpolation2use = cellPixelWidthX < 1 ? Interpolation.nearest : interpolation;
-      paintPixelwise( g, grid, projection, targetCRS, env, cellPixelWidthX, cellPixelWidthY, interpolation2use, progress );
-    }
+    if( cellPixelWidthX <= m_pixelResolution || m_interpolation != Interpolation.nearest )
+      paintPixelwise( g, grid, projection, targetCRS, env, cellPixelWidthX, cellPixelWidthY, progress );
     else
       paintCellWise( g, grid, projection, targetCRS, clusterSize, clippedMinCell, clippedMaxCell, progress );
 
@@ -285,7 +293,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
    * Paints the grid pixel by pixel. This is used, if one cell is smaller than a screen-pixel.<br>
    * We iterate through all pixels and get their values.
    */
-  private void paintPixelwise( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final String targetCRS, final Envelope env, final double cellPixelWidthX, final double cellPixelWidthY, final GeoGridUtilities.Interpolation interpolation, final IProgressMonitor monitor ) throws GeoGridException, CoreException
+  private void paintPixelwise( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final String targetCRS, final Envelope env, final double cellPixelWidthX, final double cellPixelWidthY, final IProgressMonitor monitor ) throws GeoGridException, CoreException
   {
     final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( grid.getSourceCRS() );
 
@@ -312,19 +320,19 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
       {
         progress.subTask( String.format( "%d/%d", count++, progressCount ) );
 
-        paintTile( g, grid, projection, targetCRS, geoTransformer, interpolation, tileX, tileY, tileSizeX, tileSizeY, cellPixelWidthX, cellPixelWidthY, progress.newChild( 1 ) );
+        paintTile( g, grid, projection, targetCRS, geoTransformer, tileX, tileY, tileSizeX, tileSizeY, cellPixelWidthX, cellPixelWidthY, progress.newChild( 1 ) );
       }
     }
   }
 
-  private void paintTile( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final String targetCRS, final IGeoTransformer geoTransformer, final GeoGridUtilities.Interpolation interpolation, final int screenXfrom, final int screenYfrom, final int screenWidth, final int screenHeight, final double cellPixelWidthX, final double cellPixelWidthY, final IProgressMonitor monitor ) throws GeoGridException, CoreException
+  private void paintTile( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final String targetCRS, final IGeoTransformer geoTransformer, final int screenXfrom, final int screenYfrom, final int screenWidth, final int screenHeight, final double cellPixelWidthX, final double cellPixelWidthY, final IProgressMonitor monitor ) throws GeoGridException, CoreException
   {
     try
     {
       final double xres = cellPixelWidthX;
       final double yres = cellPixelWidthY;
 
-      final double[][] values = getValues( grid, projection, targetCRS, geoTransformer, interpolation, screenXfrom - 1, screenYfrom - 1, screenWidth + 2, screenHeight + 2 );
+      final double[][] values = getValues( grid, projection, targetCRS, geoTransformer, screenXfrom - 1, screenYfrom - 1, screenWidth + 2, screenHeight + 2 );
       final double[][] slopes = getSlopes( values, xres, yres );
       final BufferedImage img = getTiledImage( screenWidth, screenHeight, values, slopes );
 
@@ -429,15 +437,19 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     return cang;
   }
 
-  private double[][] getValues( final IGeoGrid grid, final GeoTransform projection, final String targetCRS, final IGeoTransformer geoTransformer, final GeoGridUtilities.Interpolation interpolation, final int screenXfrom, final int screenYfrom, final int screenWidth, final int screenHeight ) throws GeoGridException
+  private double[][] getValues( final IGeoGrid grid, final GeoTransform projection, final String targetCRS, final IGeoTransformer geoTransformer, final int screenXfrom, final int screenYfrom, final int screenWidth, final int screenHeight ) throws GeoGridException
   {
     try
     {
+      /* create empty grid */
       final double[][] values = new double[screenHeight][];
       for( int y = 0; y < screenHeight; y++ )
-      {
         values[y] = new double[screenWidth];
-        for( int x = 0; x < screenWidth; x++ )
+
+      /* fill with values */
+      for( int y = 0; y < screenHeight; y += m_pixelResolution )
+      {
+        for( int x = 0; x < screenWidth; x += m_pixelResolution )
         {
           /* These coordinates should be in the target coordinate system. */
           final double geoX = projection.getSourceX( x + screenXfrom );
@@ -447,8 +459,25 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
           /* Transform to grid's target crs */
           final GM_Position transformedPosition = geoTransformer.transform( position, targetCRS );
           final Coordinate transformedCrd = JTSAdapter.export( transformedPosition );
-          // TODO: still too slow, if cellsize bigger than the ratsersize
-          values[y][x] = GeoGridUtilities.getValue( grid, transformedCrd, interpolation );
+
+          // TODO: still too slow, if cellsize bigger than the rastersize
+
+          final double value = GeoGridUtilities.getValue( grid, transformedCrd, m_interpolation );
+          // REMARK: for performance optimization: we may use the same value for more than one pixel at the same time...
+
+          /* Write pixel block */
+          for( int i = 0; i < m_pixelResolution; i++ )
+          {
+            final int y2 = y + i;
+
+            for( int j = 0; j < m_pixelResolution; j++ )
+            {
+              final int x2 = x + j;
+
+              if( y2 < screenHeight && x2 < screenWidth )
+                values[y2][x2] = value;
+            }
+          }
         }
       }
 

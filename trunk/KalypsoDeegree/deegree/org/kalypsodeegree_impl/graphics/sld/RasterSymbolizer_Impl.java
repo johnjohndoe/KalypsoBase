@@ -109,18 +109,12 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
     m_colorMap = colorMap;
   }
 
-  /**
-   * @see org.kalypsodeegree.graphics.sld.RasterSymbolizer#getImageOutline()
-   */
   @Override
   public Symbolizer getImageOutline( )
   {
     return m_imageOutline;
   }
 
-  /**
-   * @see org.kalypsodeegree.graphics.sld.RasterSymbolizer#setImageOutline(org.kalypsodeegree.graphics.sld.Symbolizer)
-   */
   @Override
   public void setImageOutline( final Symbolizer imageOutline )
   {
@@ -228,5 +222,4 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
     colorStart.dispose();
     colorEnd.dispose();
   }
-
 }
