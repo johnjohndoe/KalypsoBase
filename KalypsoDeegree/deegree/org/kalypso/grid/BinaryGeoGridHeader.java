@@ -42,6 +42,8 @@ package org.kalypso.grid;
 
 import java.io.DataInput;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 
 import org.eclipse.core.runtime.Assert;
 
@@ -52,11 +54,15 @@ import org.eclipse.core.runtime.Assert;
  */
 public class BinaryGeoGridHeader
 {
+  static final int HEADER_SIZE = 4 * 4;
+
   private final int m_sizeX;
 
   private final int m_sizeY;
 
   private final int m_scale;
+
+  private final double m_scalePower;
 
   public static BinaryGeoGridHeader read( final DataInput input ) throws IOException
   {
@@ -71,11 +77,29 @@ public class BinaryGeoGridHeader
     return new BinaryGeoGridHeader( sizeX, sizeY, scale );
   }
 
+  public static BinaryGeoGridHeader read( final FileChannel input ) throws IOException
+  {
+    final ByteBuffer buffer = ByteBuffer.allocate( HEADER_SIZE );
+
+    input.read( buffer );
+
+    final int version = buffer.getInt( 0 );
+
+    Assert.isTrue( version == 0, "Unknown binary file format version: " + version ); //$NON-NLS-1$
+
+    final int sizeX = buffer.getInt( 4 );
+    final int sizeY = buffer.getInt( 8 );
+    final int scale = buffer.getInt( 12 );
+
+    return new BinaryGeoGridHeader( sizeX, sizeY, scale );
+  }
+
   public BinaryGeoGridHeader( final int sizeX, final int sizeY, final int scale )
   {
     m_sizeX = sizeX;
     m_sizeY = sizeY;
     m_scale = scale;
+    m_scalePower = Math.pow( 10, scale );
   }
 
   public int getSizeX( )
@@ -91,5 +115,23 @@ public class BinaryGeoGridHeader
   public int getScale( )
   {
     return m_scale;
+  }
+
+  public double getScaleFactor( )
+  {
+    return m_scalePower;
+  }
+
+  public void write( final FileChannel channel ) throws IOException
+  {
+    final ByteBuffer buffer = ByteBuffer.allocate( HEADER_SIZE );
+
+    buffer.putInt( 0 ); // Version number
+    buffer.putInt( m_sizeX );
+    buffer.putInt( m_sizeY );
+    buffer.putInt( m_scale );
+
+    buffer.rewind();
+    channel.write( buffer );
   }
 }

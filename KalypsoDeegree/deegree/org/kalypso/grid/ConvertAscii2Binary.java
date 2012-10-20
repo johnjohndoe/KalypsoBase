@@ -43,7 +43,6 @@ package org.kalypso.grid;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Scanner;
 
@@ -141,7 +140,7 @@ public class ConvertAscii2Binary
             binaryGrid.setValue( x, y, Double.NaN );
           else
           {
-            final BigDecimal currentValue = NumberUtils.parseQuietDecimal( next );
+            final double currentValue = NumberUtils.parseQuietDouble( next );
             binaryGrid.setValue( x, y, currentValue );
           }
         }

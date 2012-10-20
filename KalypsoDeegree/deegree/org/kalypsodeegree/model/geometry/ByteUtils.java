@@ -107,9 +107,7 @@ public class ByteUtils
    */
   public static int readBEInt( final byte[] b, final int off )
   {
-
     return (b[off + 0] & 0xff) << 24 | (b[off + 1] & 0xff) << 16 | (b[off + 2] & 0xff) << 8 | b[off + 3] & 0xff;
-
   }
 
   /**
