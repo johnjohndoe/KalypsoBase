@@ -40,56 +40,45 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.grid;
 
-import java.util.Map;
+import java.awt.Point;
+import java.util.concurrent.ExecutionException;
 
-import javax.vecmath.Tuple2i;
-
-import org.shiftone.cache.Cache;
-import org.shiftone.cache.adaptor.CacheMap;
-import org.shiftone.cache.decorator.miss.MissHandler;
-import org.shiftone.cache.decorator.miss.MissHandlingCache;
-import org.shiftone.cache.policy.lru.LruCacheFactory;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 
 /**
  * @author belger
  */
 public class CachingGeoGrid extends AbstractDelegatingGeoGrid
 {
-  private Map<Tuple2i, Double> m_cacheMap = null;
+  private LoadingCache<Point, Double> m_cache;
 
   public CachingGeoGrid( final IGeoGrid delegate )
   {
     super( delegate, true );
   }
 
-  @SuppressWarnings("unchecked")
-  private Map<Tuple2i, Double> getCache( ) throws GeoGridException
+  private LoadingCache<Point, Double> getCache( )
   {
     synchronized( this )
     {
-      if( m_cacheMap == null )
+      if( m_cache == null )
       {
-        final IGeoGrid delegate = getDelegate();
-        final int cacheSize = Math.max( delegate.getSizeX(), delegate.getSizeY() ) * 10;
-        // REMARK: we give a long period, as we cannod void the registration of the reaper-timer
-        final Cache cache = new LruCacheFactory().newInstance( "GridCache" + System.currentTimeMillis(), 1000 * 60 * 5, cacheSize );
-
-        final MissHandler missHandler = new MissHandler()
+        final CacheLoader<Point, Double> loader = new CacheLoader<Point, Double>()
         {
           @Override
-          public Object fetchObject( final Object key ) throws Exception
+          public Double load( final Point tuple ) throws Exception
           {
-            final Tuple2i tuple = (Tuple2i) key;
             return getDelegate().getValue( tuple.x, tuple.y );
           }
         };
 
-        final MissHandlingCache missHandlingCache = new MissHandlingCache( cache, missHandler );
-        m_cacheMap = new CacheMap( missHandlingCache );
+        m_cache = CacheBuilder.newBuilder().maximumSize( 10 * 1024 * 1024 ).build( loader );
       }
     }
 
-    return m_cacheMap;
+    return m_cache;
   }
 
   @Override
@@ -97,22 +86,24 @@ public class CachingGeoGrid extends AbstractDelegatingGeoGrid
   {
     super.dispose();
 
-    try
+    synchronized( this )
     {
-      getCache().clear();
-    }
-    catch( final GeoGridException e )
-    {
-      e.printStackTrace();
+      if( m_cache != null )
+        m_cache.cleanUp();
+      m_cache = null;
     }
   }
 
   @Override
   public double getValue( final int x, final int y ) throws GeoGridException
   {
-    return getCache().get( new Tuple2i( x, y )
+    try
     {
-    } );
+      return getCache().get( new Point( x, y ) );
+    }
+    catch( final ExecutionException e )
+    {
+      throw new GeoGridException( "Failed to access cached grid value", e ); //$NON-NLS-1$
+    }
   }
-
 }
