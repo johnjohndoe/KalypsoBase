@@ -80,6 +80,7 @@ import org.kalypso.deegree.i18n.Messages;
 import org.kalypso.transformation.CRSHelper;
 import org.kalypso.transformation.crs.ICoordinateSystem;
 import org.kalypso.transformation.ui.provider.CRSLabelProvider;
+import org.kalypsodeegree.KalypsoDeegreePreferences;
 
 /**
  * This class represents a panel with elements for choosing a coordinate system.<br>
@@ -227,7 +228,8 @@ public class CRSSelectionPanel extends Composite
     } );
 
     /* Set the input. */
-    updateCoordinateSystemsCombo( CRSHelper.getAllNames() );
+    final String[] availableSrsNames = KalypsoDeegreePreferences.getAvailableSrsNamesArray();
+    updateCoordinateSystemsCombo( availableSrsNames );
   }
 
   private Composite createMainComposite( )
