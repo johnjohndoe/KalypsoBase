@@ -64,6 +64,8 @@ import org.opengis.referencing.operation.TransformException;
  */
 public class GeoToolsGeoTransformer implements IGeoTransformer
 {
+  private static final CachedGeoToolsCRSFactory CRS_CACHE = new CachedGeoToolsCRSFactory();
+
   /**
    * The coordinate system, into which the transformations should be done.
    */
@@ -95,12 +97,14 @@ public class GeoToolsGeoTransformer implements IGeoTransformer
       if( sourceCRS == null || sourceCRS.equalsIgnoreCase( m_targetCRS ) )
         return position;
 
+      // TODO: performance bottle neck -> we should cache the math transforms!
+
       /* Get the coordinate systems. */
-      final CoordinateReferenceSystem sourceCoordinateSystem = CRS.decode( sourceCRS );
-      final CoordinateReferenceSystem targetCoordinateSystem = CRS.decode( m_targetCRS );
+      final CoordinateReferenceSystem sourceCoordinateSystem = CRS_CACHE.getCRS( sourceCRS );
+      final CoordinateReferenceSystem targetCoordinateSystem = CRS_CACHE.getCRS( m_targetCRS );
 
       /* Get the transformation. */
-      final MathTransform transformation = CRS.findMathTransform( sourceCoordinateSystem, targetCoordinateSystem );
+      final MathTransform transformation = CRS_CACHE.getTransform( sourceCRS, m_targetCRS );
 
       /* Debug. */
       Debug.TRANSFORM.printf( "POS: %s to %s\n", sourceCRS, m_targetCRS );
@@ -120,7 +124,7 @@ public class GeoToolsGeoTransformer implements IGeoTransformer
 
       return GeometryFactory.createGM_Position( targetPt.getOrdinate( 0 ), targetPt.getOrdinate( 1 ), targetPt.getDimension() == 3 ? targetPt.getOrdinate( 2 ) : position.getZ() );
     }
-    catch( MismatchedDimensionException | IndexOutOfBoundsException | FactoryException | TransformException e )
+    catch( MismatchedDimensionException | IndexOutOfBoundsException | TransformException e )
     {
       throw new GeoTransformerException( e );
     }
