@@ -17,13 +17,7 @@
 		<initializer class="org.kalypso.ui.preferences.KalypsoPreferenceInitializer"/>
 	</extension>
 	<extension id="preferencePages" name="preferencePages" point="org.eclipse.ui.preferencePages">
-		<page class="org.eclipse.ui.internal.dialogs.EmptyPreferencePage" id="org.kalypso.ui.preferences.KalypsoPreferencePage" name="%org.kalypso.ui.preferences.KalypsoPreferencePage"/>
-        <page
-            category="org.kalypso.ui.preferences.KalypsoPreferencePage"
-            class="org.kalypso.ui.preferences.KalypsoGeneralPreferencePage"
-            id="org.kalypso.ui.preferences.KalypsoGeneralPreferencePage"
-            name="%org.kalypso.ui.preferences.KalypsoGeneralPreferencePage">
-      </page>
+		<page class="org.kalypso.ui.preferences.KalypsoGeneralPreferencePage" id="org.kalypso.ui.preferences.KalypsoPreferencePage" name="%org.kalypso.ui.preferences.KalypsoPreferencePage"/>
 	</extension>
 	<extension id="editors" name="editors" point="org.eclipse.ui.editors">
 		<editor class="org.kalypso.ui.editor.mapeditor.GisMapEditor" icon="icons/kalypso_gmt.gif" default="true"  name="%org.kalypso.ui.editor.mapeditor.GisMapEditor" id="org.kalypso.ui.editor.mapeditor.GisMapEditor" extensions="gmt" contributorClass="org.kalypso.ui.editor.mapeditor.GisMapEditorActionBarContributor">

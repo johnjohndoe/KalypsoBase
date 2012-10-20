@@ -40,14 +40,28 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.preferences;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.IntegerFieldEditor;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.kalypso.contribs.eclipse.jface.preference.ComboStringFieldEditor;
 import org.kalypso.contribs.java.util.TimezoneUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.preferences.IKalypsoCorePreferences;
+import org.kalypso.grid.GeoGridUtilities;
+import org.kalypso.grid.GeoGridUtilities.Interpolation;
 import org.kalypso.i18n.Messages;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.KalypsoDeegreePreferences;
 
 /**
  * This class represents a preference page that is contributed to the Preferences dialog. By subclassing
@@ -59,13 +73,22 @@ import org.kalypso.i18n.Messages;
  */
 public class KalypsoGeneralPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage
 {
-  private ComboStringFieldEditor m_timeZoneFieldEditor;
+  private ComboStringFieldEditor m_timeZoneEditor;
+
+  private IntegerFieldEditor m_rasterPixelEditor;
+
+  private ComboFieldEditor m_rasterInterpolationEditor;
 
   public KalypsoGeneralPreferencePage( )
   {
     super( GRID );
     setPreferenceStore( KalypsoCorePlugin.getDefault().getPreferenceStore() );
     setDescription( Messages.getString( "org.kalypso.ui.preferences.KalypsoGeneralPreferencePage.0" ) ); //$NON-NLS-1$
+  }
+
+  @Override
+  public void init( final IWorkbench workbench )
+  {
   }
 
   /**
@@ -80,8 +103,47 @@ public class KalypsoGeneralPreferencePage extends FieldEditorPreferencePage impl
 
     final String label = Messages.getString( "org.kalypso.ui.preferences.KalypsoGeneralPreferencePage.3" ); //$NON-NLS-1$
     final String tooltipText = Messages.getString( "org.kalypso.ui.preferences.KalypsoGeneralPreferencePage.4" ); //$NON-NLS-1$
-    m_timeZoneFieldEditor = new ComboStringFieldEditor( IKalypsoCorePreferences.DISPLAY_TIMEZONE, label, tooltipText, getFieldEditorParent(), false, ids );
-    addField( m_timeZoneFieldEditor );
+    m_timeZoneEditor = new ComboStringFieldEditor( IKalypsoCorePreferences.DISPLAY_TIMEZONE, label, tooltipText, getFieldEditorParent(), false, ids );
+
+    /* raster painting */
+    final Group rasterPaintingGroup = new Group( getFieldEditorParent(), SWT.NONE );
+    rasterPaintingGroup.setText( "Raster Painting Options" );
+    rasterPaintingGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false, 2, 1 ) );
+
+    final Label rasterPaintingGroupLabel = new Label( rasterPaintingGroup, SWT.WRAP );
+    rasterPaintingGroupLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
+    rasterPaintingGroupLabel.setText( "Tweak these options to speed up raster painting or make it more beautiful." );
+
+    final String rasterPixelLabel = "Pixel Resolution";
+    m_rasterPixelEditor = new IntegerFieldEditor( KalypsoDeegreePreferences.SETTING_RASTER_PAINTING_PIXEL_RESOLUTION, rasterPixelLabel, rasterPaintingGroup );
+    m_rasterPixelEditor.setValidRange( 1, 10 );
+
+    final String rasterInterpolationLabel = "Interpolation Method";
+    final String[][] interpolationNamesAndValues = getInterpolationNamesAndValues();
+    m_rasterInterpolationEditor = new ComboFieldEditor( KalypsoDeegreePreferences.SETTING_RASTER_PAINTING_INTERPOLATION_METHOD, rasterInterpolationLabel, interpolationNamesAndValues, rasterPaintingGroup );
+
+    // Gruml... field editors change layout of parent...
+    GridLayoutFactory.swtDefaults().numColumns( 2 ).applyTo( rasterPaintingGroup );
+
+    /* register all fields */
+    addField( m_timeZoneEditor );
+    addField( m_rasterPixelEditor );
+    addField( m_rasterInterpolationEditor );
+  }
+
+  private String[][] getInterpolationNamesAndValues( )
+  {
+    final Collection<String[]> namesAndValues = new ArrayList<>();
+
+    final Interpolation[] interpolations = GeoGridUtilities.Interpolation.values();
+    for( final Interpolation interpolation : interpolations )
+    {
+      final String name = interpolation.toString();
+      final String value = interpolation.name();
+      namesAndValues.add( new String[] { name, value } );
+    }
+
+    return namesAndValues.toArray( new String[namesAndValues.size()][] );
   }
 
   @Override
@@ -89,14 +151,16 @@ public class KalypsoGeneralPreferencePage extends FieldEditorPreferencePage impl
   {
     super.initialize();
 
-    m_timeZoneFieldEditor.setPreferenceStore( KalypsoCorePlugin.getDefault().getPreferenceStore() );
-    m_timeZoneFieldEditor.load();
+    m_timeZoneEditor.setPreferenceStore( KalypsoCorePlugin.getDefault().getPreferenceStore() );
+    m_timeZoneEditor.load();
+
+    m_rasterPixelEditor.setPreferenceStore( KalypsoDeegreePreferences.getStore() );
+    m_rasterPixelEditor.load();
+
+    m_rasterInterpolationEditor.setPreferenceStore( KalypsoDeegreePreferences.getStore() );
+    m_rasterInterpolationEditor.load();
   }
 
-  @Override
-  public void init( final IWorkbench workbench )
-  {
-  }
 
   @Override
   public boolean performOk( )
@@ -105,6 +169,7 @@ public class KalypsoGeneralPreferencePage extends FieldEditorPreferencePage impl
 
     // even if on shutdown the preferences are saved, we save them in case of a platfrom crash
     KalypsoCorePlugin.getDefault().savePluginPreferences();
+    KalypsoDeegreePlugin.getDefault().savePluginStore();
 
     return result;
   }
