@@ -74,6 +74,7 @@
       <gistable:layer id="partType" linktype="gml">
         <gistable:column alignment="SWT.LEFT" editable="false" format="" name="name" label="ID" width="120" />
         <gistable:column alignment="SWT.LEFT" editable="false" format="" name="description" width="180" />
+        <gistable:column alignment="SWT.LEFT" editable="false" format="" name="styleMember" width="100" />
         <gistable:column alignment="SWT.LEFT" editable="false" format="" name="comment" width="180" />
       </gistable:layer>
     </gistable:gistableview>
