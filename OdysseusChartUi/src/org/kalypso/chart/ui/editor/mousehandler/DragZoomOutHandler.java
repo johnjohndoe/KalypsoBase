@@ -43,7 +43,6 @@ package org.kalypso.chart.ui.editor.mousehandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.impl.visitors.ZoomOutVisitor;
@@ -62,17 +61,12 @@ public class DragZoomOutHandler extends AbstractChartDragHandler
     super( chartComposite, 5, SWT.BUTTON_MASK );
   }
 
-  /**
-   * @see org.kalypso.chart.ui.editor.mousehandler.AbstractChartDragHandler#doMouseUpAction(org.eclipse.swt.graphics.Point,
-   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
-   */
   @Override
   public void doMouseUpAction( final Point end, final EditInfo editInfo )
   {
     try
     {
-      final Rectangle plotRect = getChart().getPlotRect();
-      final ZoomOutVisitor visitor = new ZoomOutVisitor( ChartHandlerUtilities.screen2plotPoint( editInfo.getPosition(),plotRect ), ChartHandlerUtilities.screen2plotPoint( end,plotRect ) );
+      final ZoomOutVisitor visitor = new ZoomOutVisitor( editInfo.getPosition(), end );
 
       final IChartModel model = getChart().getChartModel();
       model.getMapperRegistry().accept( visitor );
@@ -83,17 +77,13 @@ public class DragZoomOutHandler extends AbstractChartDragHandler
     }
   }
 
-  /**
-   * @see org.kalypso.chart.ui.editor.mousehandler.AbstractChartDragHandler#doMouseMoveAction(org.eclipse.swt.graphics.Point,
-   *      de.openali.odysseus.chart.framework.model.layer.EditInfo)
-   */
   @Override
   public void doMouseMoveAction( final Point end, final EditInfo editInfo )
   {
     setCursor( SWT.CURSOR_CROSS );
 
     final Point start = editInfo.getPosition();
-    final Point pos = ChartHandlerUtilities.plotPoint2screen( end ,getChart().getPlotRect());
+    final Point pos = end;
     getChart().setDragArea( new Rectangle( start.x, start.y, pos.x - start.x, pos.y - start.y ) );
   }
 

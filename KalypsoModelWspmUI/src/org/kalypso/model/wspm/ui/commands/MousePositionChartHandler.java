@@ -109,7 +109,7 @@ public class MousePositionChartHandler extends AbstractProfilePointHandler
     String msg = "";
     if( !Objects.isNull( theme ) )
     {
-      final Point position = ChartHandlerUtilities.screen2plotPoint( new Point( e.x, e.y ), chart.getPlotRect() );
+      final Point position = new Point( e.x, e.y );
       final ICoordinateMapper mapper = theme.getCoordinateMapper();
       final Number hoehe = mapper.getTargetAxis().screenToNumeric( position.y );
       final Number breite = mapper.getDomainAxis().screenToNumeric( position.x );
