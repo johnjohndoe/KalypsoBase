@@ -115,6 +115,32 @@ public class PointsLineLayer extends AbstractProfilLayer
         point.getY(), ComponentUtilities.getComponentUnitLabel( getTargetComponent() ) } ), dragStartData.getPosition() );
   }
 
+  private IProfileRecord getNextNonNull( final int index )
+  {
+    final IProfileRecord[] points = getProfil().getPoints();
+    final int prop = getProfil().indexOfProperty( getTargetProperty() );
+    for( int i = index + 1; i < points.length; i++ )
+    {
+
+      if( points[i] != null && points[i].getValue( prop ) != null )
+        return points[i];
+    }
+    return points[index];
+  }
+
+  private IProfileRecord getPreviousNonNull( final int index )
+  {
+    final IProfileRecord[] points = getProfil().getPoints();
+    final int prop = getProfil().indexOfProperty( getTargetProperty() );
+    for( int i = index - 1; i > -1; i-- )
+    {
+      if( points[i] != null && points[i].getValue( prop ) != null )
+        return points[i];
+    }
+
+    return points[index];
+  }
+
   @Override
   public void executeDrop( final Point point, final EditInfo dragStartData )
   {

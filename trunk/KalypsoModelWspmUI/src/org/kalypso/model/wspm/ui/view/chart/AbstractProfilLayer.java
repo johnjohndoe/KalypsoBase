@@ -91,6 +91,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   private int m_targetPropIndex = -1;
 
+  // FIXME: does not belong here! -> move into layers that 'think' in profile properties
   private final String m_targetRangeProperty;
 
   public AbstractProfilLayer( final String id, final IProfile profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
@@ -253,20 +254,6 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     return m_lineStyleHover;
   }
 
-  public IProfileRecord getNextNonNull( final int index )
-  {
-    final IProfileRecord[] points = getProfil().getPoints();
-    final int prop = getProfil().indexOfProperty( m_targetRangeProperty );
-    for( int i = index + 1; i < points.length; i++ )
-    {
-
-      if( points[i] != null && points[i].getValue( prop ) != null )
-        return points[i];
-    }
-    return points[index];
-
-  }
-
   public Point2D getPoint2D( final IProfileRecord point )
   {
     final Double x = ProfileUtil.getDoubleValueFor( m_domainComponent, point );
@@ -317,19 +304,6 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
       m_pointStyleHover.setFillVisible( true );
     }
     return m_pointStyleHover;
-  }
-
-  public IProfileRecord getPreviousNonNull( final int index )
-  {
-    final IProfileRecord[] points = getProfil().getPoints();
-    final int prop = getProfil().indexOfProperty( m_targetRangeProperty );
-    for( int i = index - 1; i > -1; i-- )
-    {
-      if( points[i] != null && points[i].getValue( prop ) != null )
-        return points[i];
-    }
-    return points[index];
-
   }
 
   @Override
@@ -400,7 +374,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   {
     final IComponent targetComponent = getTargetComponent();
     if( targetComponent == null )
-      return ""; //$NON-NLS-1$
+      return super.getTitle();
 
     return targetComponent.getName();
   }
@@ -447,30 +421,6 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     m_lineStyle = lineStyle;
   }
 
-  public void setLineStyleActive( final ILineStyle lineStyleActive )
-  {
-    m_lineStyleActive = lineStyleActive;
-  }
-
-  public void setLineStyleHover( final ILineStyle lineStyleHover )
-  {
-    m_lineStyleHover = lineStyleHover;
-  }
-
-  public void setPointStyle( final IPointStyle pointStyle )
-  {
-    m_pointStyle = pointStyle;
-  }
-
-  public void setPointStyleActive( final IPointStyle pointStyleActive )
-  {
-    m_pointStyleActive = pointStyleActive;
-  }
-
-  public void setPointStyleHover( final IPointStyle pointStyleHover )
-  {
-    m_pointStyleHover = pointStyleHover;
-  }
 
   protected Point toScreen( final IProfileRecord point )
   {

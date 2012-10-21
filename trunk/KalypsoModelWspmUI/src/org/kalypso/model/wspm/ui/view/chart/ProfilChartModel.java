@@ -61,7 +61,6 @@ public class ProfilChartModel extends ChartModel
 {
   private final IProfileListener m_profilListener = new ProfileListenerAdapter()
   {
-
     @Override
     public void onProfilChanged( final ProfileChangeHint hint )
     {
@@ -89,19 +88,6 @@ public class ProfilChartModel extends ChartModel
 
   private final Object m_result;
 
-  protected IProfilLayerProvider getProfilLayerProvider( )
-  {
-    if( m_layerProvider != null )
-      return m_layerProvider;
-
-    if( getProfil() != null )
-    {
-      m_layerProvider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( getProfil().getType() );
-    }
-
-    return m_layerProvider;
-  }
-
   public ProfilChartModel( final IProfilLayerProvider layerProvider, final IProfile profil, final Object result )
   {
     m_layerProvider = layerProvider;
@@ -125,9 +111,7 @@ public class ProfilChartModel extends ChartModel
   public void dispose( )
   {
     if( m_profil != null )
-    {
       m_profil.removeProfilListener( m_profilListener );
-    }
   }
 
   public final IProfilChartLayer getLayer( final String layerID )
@@ -175,5 +159,18 @@ public class ProfilChartModel extends ChartModel
 
       modelState.restoreState( this );
     }
+  }
+
+  protected IProfilLayerProvider getProfilLayerProvider( )
+  {
+    if( m_layerProvider != null )
+      return m_layerProvider;
+
+    if( getProfil() != null )
+    {
+      m_layerProvider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( getProfil().getType() );
+    }
+
+    return m_layerProvider;
   }
 }
