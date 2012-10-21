@@ -40,9 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
@@ -58,7 +55,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
-import org.eclipse.ui.progress.UIJob;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.ChartPartListener;
 import org.kalypso.model.wspm.core.gml.IProfileFeature;
@@ -242,22 +238,8 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
     if( newProfile == profile && newResult == result )
       return;
 
-    final UIJob job = new UIJob( "Updating profile chart" ) //$NON-NLS-1$
-    {
-      @Override
-      public IStatus runInUIThread( final IProgressMonitor monitor )
-      {
-        if( !chartComposite.isDisposed() )
-          chartComposite.setProfil( newProfile, newResult );
-
-        return Status.OK_STATUS;
-      }
-    };
-
-    job.setSystem( true );
-    job.setUser( false );
-
-    job.schedule();
+    if( !chartComposite.isDisposed() )
+      chartComposite.setProfil( newProfile, newResult );
   }
 
   private void updateMessages( final IProfile newProfile )
