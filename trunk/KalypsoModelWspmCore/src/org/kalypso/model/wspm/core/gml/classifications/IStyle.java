@@ -20,7 +20,9 @@ package org.kalypso.model.wspm.core.gml.classifications;
 
 import javax.xml.namespace.QName;
 
+import org.eclipse.swt.graphics.RGB;
 import org.kalypso.model.wspm.core.IWspmNamespaces;
+import org.kalypso.model.wspm.core.gml.classifications.IStyleParameterConstants.TYPE;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 
@@ -34,4 +36,18 @@ public interface IStyle extends Feature
   QName MEMBER_PARAMETER = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "parameterMember" ); //$NON-NLS-1$
 
   IFeatureBindingCollection<IStyleParameter> getParameterCollection( );
+
+  TYPE getType( );
+
+  int getWidth( );
+
+  RGB getColor( );
+
+  int getHeight( );
+
+  int getStrokeWidth( );
+
+  RGB getStrokeColor( );
+
+  RGB getFillColor( );
 }
