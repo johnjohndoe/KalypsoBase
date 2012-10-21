@@ -123,7 +123,6 @@ public class WaterlevelRenderWorker
 
   private WaterlevelRenderSegment buildSegment( final LineSegment segment, final Range<Double> restriction ) throws Exception
   {
-
     final Range<Double> segmentRange = Range.between( segment.p0.x, segment.p1.x );
     if( restriction != null && !segmentRange.isOverlappedBy( restriction ) )
       return null;
