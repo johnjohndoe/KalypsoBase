@@ -77,6 +77,7 @@ public class ChartModelState implements IChartModelState
     final ILayerManager layerManager = model == null ? null : model.getLayerManager();
     if( layerManager == null )
       return;
+
     for( final IChartLayer chartLayer : layerManager.getLayers() )
     {
       final IChartLayerState layerState = new ChartLayerState();

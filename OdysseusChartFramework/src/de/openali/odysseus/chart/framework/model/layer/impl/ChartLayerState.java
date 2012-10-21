@@ -83,9 +83,6 @@ public class ChartLayerState implements IChartLayerState
     return m_isVisible;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.layer.IChartLayerState#restoreState(de.openali.odysseus.chart.framework.model.layer.IChartLayer)
-   */
   @Override
   public void restoreState( final IChartLayer chartLayer )
   {

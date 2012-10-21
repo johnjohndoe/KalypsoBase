@@ -72,6 +72,7 @@ public interface IChartLayer extends ILayerContainer, IEventProvider<ILayerEvent
 
   void setActive( boolean isActive );
 
+  // FIXME: bad; layer should always get mapper in constructor! What layers changes the axis during it's live?
   void setCoordinateMapper( ICoordinateMapper coordinateMapper );
 
   /**
