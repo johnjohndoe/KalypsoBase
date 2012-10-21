@@ -67,8 +67,6 @@ public interface IProfilLayerProvider
    */
   LayerDescriptor[] getAddableLayers( final ProfilChartModel chartModel );
 
-  IProfilChartLayer createLayer( final IProfile profile, final String layerId );
-
   IProfilChartLayer[] createLayers( final IProfile profile, Object result );
 
   IComponentUiHandlerProvider getComponentUiHandlerProvider( final IProfile profile );

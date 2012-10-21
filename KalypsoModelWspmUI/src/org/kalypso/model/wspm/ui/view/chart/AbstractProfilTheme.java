@@ -83,10 +83,12 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer
 
     m_id = id;
 
+    // FIXME: bad! all layers should get their mapper in the constructor
     setCoordinateMapper( cm );
 
     if( chartLayers != null )
     {
+      // FIXME: bad! all layers should get their mapper in the constructor
       for( final IChartLayer layer : chartLayers )
         layer.setCoordinateMapper( cm );
 

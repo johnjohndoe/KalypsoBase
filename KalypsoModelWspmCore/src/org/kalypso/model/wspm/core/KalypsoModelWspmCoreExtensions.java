@@ -14,9 +14,9 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.model.wspm.core.gml.IProfileFeatureProvider;
+import org.kalypso.model.wspm.core.profil.IProfileObjectProvider;
 import org.kalypso.model.wspm.core.profil.IProfilePointMarkerProvider;
 import org.kalypso.model.wspm.core.profil.IProfilePointPropertyProvider;
-import org.kalypso.model.wspm.core.profil.IProfileObjectProvider;
 import org.kalypso.model.wspm.core.profil.ProfileType;
 import org.kalypso.model.wspm.core.profil.filter.IProfilePointFilter;
 import org.kalypso.model.wspm.core.profil.reparator.IProfileMarkerResolution;
@@ -392,12 +392,7 @@ public final class KalypsoModelWspmCoreExtensions
   public static IProfileObjectProvider getProfileObjectProvider( final String providerId )
   {
     final Map<String, IProfileObjectProvider> map = getProfileObjectProviders();
-    final IProfileObjectProvider provider = map.get( providerId );
-    if( provider == null )
-    {
-      System.out.println( "ProfileObjectProvider not registered: " + providerId ); //$NON-NLS-1$
-    }
-    return provider;
+    return map.get( providerId );
   }
 
   private static synchronized Map<String, IProfileObjectProvider> getProfileObjectProviders( )
