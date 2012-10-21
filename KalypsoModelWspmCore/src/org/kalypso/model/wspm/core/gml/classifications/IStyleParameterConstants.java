@@ -18,36 +18,28 @@
  */
 package org.kalypso.model.wspm.core.gml.classifications;
 
-import javax.xml.namespace.QName;
-
-import org.eclipse.swt.graphics.RGB;
-import org.kalypso.model.wspm.core.IWspmNamespaces;
-import org.kalypso.model.wspm.core.gml.classifications.IStyleParameterConstants.TYPE;
-import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
-
 /**
  * @author Gernot Belger
  */
-public interface IStyle extends Feature
+public interface IStyleParameterConstants
 {
-  QName FEATURE_STYLE = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "Style" ); //$NON-NLS-1$
+  public enum TYPE
+  {
+    point,
+    line
+  }
 
-  QName MEMBER_PARAMETER = new QName( IWspmNamespaces.NS_WSPM_CLASSIFICATIONS, "parameterMember" ); //$NON-NLS-1$
+  String PARAMETER_TYPE = "type"; //$NON-NLS-1$
 
-  IFeatureBindingCollection<IStyleParameter> getParameterCollection( );
+  String WIDTH = "width"; //$NON-NLS-1$
 
-  TYPE getType( );
+  String COLOR = "color"; //$NON-NLS-1$
 
-  int getWidth( );
+  String HEIGHT = "height"; //$NON-NLS-1$
 
-  RGB getColor( );
+  String STROKE_WIDTH = "strokeWidth"; //$NON-NLS-1$
 
-  int getHeight( );
+  String STROKE_COLOR = "strokeColor"; //$NON-NLS-1$
 
-  int getStrokeWidth( );
-
-  RGB getStrokeColor( );
-
-  RGB getFillColor( );
+  String FILL_COLOR = "fillColor"; //$NON-NLS-1$
 }

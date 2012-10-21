@@ -40,8 +40,13 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.core.gml.classifications;
 
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.swt.graphics.RGB;
+import org.kalypso.contribs.eclipse.swt.ColorUtilities;
+import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
+import org.kalypso.model.wspm.core.gml.classifications.IStyleParameterConstants.TYPE;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.FeatureBindingCollection;
 import org.kalypsodeegree_impl.model.feature.Feature_Impl;
@@ -65,5 +70,97 @@ public class Style extends Feature_Impl implements IStyle
       m_parameters = new FeatureBindingCollection<>( this, IStyleParameter.class, MEMBER_PARAMETER );
 
     return m_parameters;
+  }
+
+  private String getParameterValue( final String parameterKey )
+  {
+    final IFeatureBindingCollection<IStyleParameter> parameters = getParameterCollection();
+    for( final IStyleParameter parameter : parameters )
+    {
+      final String key = parameter.getKey();
+      if( key.equals( parameterKey ) )
+        return parameter.getValue();
+    }
+
+    return null;
+  }
+
+  @Override
+  public TYPE getType( )
+  {
+    final String typeName = getParameterValue( IStyleParameterConstants.PARAMETER_TYPE );
+    if( StringUtils.isBlank( typeName ) )
+      return null;
+
+    try
+    {
+      return IStyleParameterConstants.TYPE.valueOf( typeName );
+    }
+    catch( final IllegalArgumentException e )
+    {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  private int getIntParameter( final String key, final int defaultValue )
+  {
+    final String textValue = getParameterValue( key );
+    if( StringUtils.isBlank( textValue ) )
+      return defaultValue;
+
+    return NumberUtils.parseQuietInt( textValue, defaultValue );
+  }
+
+  private RGB getColorParameter( final String key )
+  {
+    final RGB black = new RGB( 0, 0, 0 );
+
+    final String textValue = getParameterValue( key );
+    if( StringUtils.isBlank( textValue ) )
+      return black;
+
+    final RGB htmlColor = ColorUtilities.toRGBFromHTML( textValue );
+    if( htmlColor == null )
+      return black;
+
+    return htmlColor;
+  }
+
+  @Override
+  public RGB getColor( )
+  {
+    return getColorParameter( IStyleParameterConstants.COLOR );
+  }
+
+  @Override
+  public int getWidth( )
+  {
+    return getIntParameter( IStyleParameterConstants.WIDTH, 1 );
+  }
+
+  @Override
+  public int getHeight( )
+  {
+    return getIntParameter( IStyleParameterConstants.HEIGHT, 1 );
+  }
+
+
+  @Override
+  public int getStrokeWidth( )
+  {
+    return getIntParameter( IStyleParameterConstants.STROKE_WIDTH, 1 );
+  }
+
+  @Override
+  public RGB getStrokeColor( )
+  {
+    return getColorParameter( IStyleParameterConstants.STROKE_COLOR );
+  }
+
+  @Override
+  public RGB getFillColor( )
+  {
+    return getColorParameter( IStyleParameterConstants.FILL_COLOR );
   }
 }

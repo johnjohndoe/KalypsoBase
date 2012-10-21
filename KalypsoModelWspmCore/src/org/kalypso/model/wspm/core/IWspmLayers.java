@@ -64,4 +64,6 @@ public interface IWspmLayers
 
   /** overlay layer for additional profiles shown in the chart */
   String LAYER_SECOND_PROFILE = PROFILE_LAYER + "SECOND_PROFILE"; //$NON-NLS-1$
+
+  String LAYER_PROFILE_OBJECTS = PROFILE_LAYER + "PROFILE_OBJECTS"; //$NON-NLS-1$
 }
