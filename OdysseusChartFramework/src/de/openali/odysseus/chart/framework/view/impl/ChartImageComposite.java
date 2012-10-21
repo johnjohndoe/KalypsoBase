@@ -59,6 +59,8 @@ public class ChartImageComposite extends Canvas implements IChartComposite
 
   private final ChartPaintJob m_paintJob = new ChartPaintJob( this );
 
+  private boolean m_invalidatePending;
+
   public ChartImageComposite( final Composite parent, final int style, final IChartModel model, final RGB backgroundRGB )
   {
     super( parent, style | SWT.DOUBLE_BUFFERED );
@@ -122,7 +124,8 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   @Override
   public final Rectangle getPlotRect( )
   {
-    return new Rectangle( 0, 0, 0, 0 );// m_paintJob.getPlotRect();
+    // FIXME: does this still make sense?
+    return new Rectangle( 0, 0, 0, 0 );
   }
 
   @Override
@@ -130,11 +133,25 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   {
     m_paintJob.cancel();
 
-    m_paintJob.schedule( 150 );
+    // REMARK: prevent schedule if this composite is not really visible;
+    // we just remember that an invalidation should take place on next redraw
+    // This is a performance optimization for the case when the chart is not visible
+    if( !isVisible() )
+    {
+      m_invalidatePending = true;
+      return;
+    }
+
+    m_invalidatePending = false;
+
+    m_paintJob.schedule( 50 );
   }
 
   final void handlePaint( final PaintEvent paintEvent )
   {
+    if( m_invalidatePending )
+      invalidate();
+
     final ImageData plotData = m_paintJob.getPlotImageData();
     final Point panOffset = m_panOffset;
     final Rectangle dragArea = m_dragArea;
