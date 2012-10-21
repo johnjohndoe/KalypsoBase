@@ -60,5 +60,4 @@ public interface ILegendEntry
   IChartLayer getParentLayer( );
 
   ImageData getSymbol( Point size );
-
 }

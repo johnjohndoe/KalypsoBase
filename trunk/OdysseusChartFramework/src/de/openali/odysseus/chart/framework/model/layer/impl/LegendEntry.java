@@ -11,7 +11,6 @@ import de.openali.odysseus.chart.framework.util.ChartUtilities;
 
 public abstract class LegendEntry implements ILegendEntry
 {
-
   private final String m_description;
 
   private final IChartLayer m_parent;
