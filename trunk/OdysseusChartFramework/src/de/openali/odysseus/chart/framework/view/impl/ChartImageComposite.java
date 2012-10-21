@@ -136,11 +136,11 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     // REMARK: prevent schedule if this composite is not really visible;
     // we just remember that an invalidation should take place on next redraw
     // This is a performance optimization for the case when the chart is not visible
-    if( !isVisible() )
-    {
-      m_invalidatePending = true;
-      return;
-    }
+//    if( !isVisible() )
+//    {
+//      m_invalidatePending = true;
+//      return;
+//    }
 
     m_invalidatePending = false;
 
