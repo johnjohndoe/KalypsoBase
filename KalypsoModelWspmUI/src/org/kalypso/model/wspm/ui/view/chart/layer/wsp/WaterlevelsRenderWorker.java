@@ -81,7 +81,6 @@ public class WaterlevelsRenderWorker
 
   public IStatus execute( )
   {
-
     try
     {
       return doExecute();
@@ -139,5 +138,4 @@ public class WaterlevelsRenderWorker
   {
     return m_wspData.searchValue( element, station );
   }
-
 }
