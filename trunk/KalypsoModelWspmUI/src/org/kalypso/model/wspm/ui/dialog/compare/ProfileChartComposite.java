@@ -42,7 +42,6 @@ package org.kalypso.model.wspm.ui.dialog.compare;
 
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.chart.ui.editor.mousehandler.PlotDragHandlerDelegate;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
@@ -55,6 +54,7 @@ import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.IChartModelState;
 import de.openali.odysseus.chart.framework.model.impl.ChartModelState;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
+import de.openali.odysseus.chart.framework.view.IChartHandlerManager;
 import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
 
 /**
@@ -75,11 +75,11 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
     super( parent, style, null, BACKGROUND_RGB );
 
     m_profilLayerProvider = layerProvider;
-    new PlotDragHandlerDelegate( this );
 
     invalidate( profile, null );
 
-    getPlotHandler().addPlotHandler( new MousePositionChartHandler( this ) );
+    final IChartHandlerManager plotHandler = getPlotHandler();
+    plotHandler.addPlotHandler( new MousePositionChartHandler( this ) );
   }
 
   @Override
