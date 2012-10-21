@@ -78,7 +78,7 @@ public class DragEditHandler extends AbstractChartDragHandler
   @Override
   public void mouseMove( final MouseEvent e )
   {
-    if( canSnap( ChartHandlerUtilities.screen2plotPoint( new Point( e.x, e.y ), getChart().getPlotRect() ) ) )
+    if( canSnap( new Point( e.x, e.y ) ) )
       setCursor( SWT.CURSOR_HAND );
     else
       setCursor( SWT.CURSOR_ARROW );

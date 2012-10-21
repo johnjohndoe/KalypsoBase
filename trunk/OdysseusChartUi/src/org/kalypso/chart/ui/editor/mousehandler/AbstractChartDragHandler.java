@@ -65,7 +65,7 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
     if( model == null )
       return null;
 
-    final Point plotPoint = ChartHandlerUtilities.screen2plotPoint( screen, getChart().getPlotRect() );
+    final Point plotPoint = screen;
 
     final EditableChartLayerVisitor visitor = new EditableChartLayerVisitor();
     model.accept( visitor );
@@ -121,7 +121,7 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
     final IChartComposite chart = getChart();
     final IChartModel model = chart.getChartModel();
 
-    final FindLayerTooltipVisitor visitor = new FindLayerTooltipVisitor( chart, ChartHandlerUtilities.screen2plotPoint( point, chart.getPlotRect() ) );
+    final FindLayerTooltipVisitor visitor = new FindLayerTooltipVisitor( chart, point );
     model.accept( visitor );
 
     setToolInfo( visitor.getEditInfo() );
@@ -132,7 +132,7 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
     if( m_editInfo == null && (Math.abs( move.x - m_startX ) > m_trashold || Math.abs( move.y - m_startY ) > m_trashold) )
       m_editInfo = m_clickInfo.clone();
 
-    final Point plotPoint = ChartHandlerUtilities.screen2plotPoint( new Point( move.x, move.y ), getChart().getPlotRect() );
+    final Point plotPoint = new Point( move.x, move.y );
     doMouseMoveAction( plotPoint, m_editInfo == null ? m_clickInfo : m_editInfo );
   }
 
@@ -150,7 +150,7 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
       if( m_editInfo != null )
       {
         final Point position = new Point( up.x, up.y );
-        final Point plotPoint = ChartHandlerUtilities.screen2plotPoint( position, getChart().getPlotRect() );
+        final Point plotPoint = position;
 
         doMouseUpAction( plotPoint, m_editInfo );
       }

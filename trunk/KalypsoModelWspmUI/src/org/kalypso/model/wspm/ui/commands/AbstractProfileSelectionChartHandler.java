@@ -135,7 +135,7 @@ public abstract class AbstractProfileSelectionChartHandler extends AbstractProfi
     final IChartComposite chart = getChart();
     final Rectangle bounds = chart.getPlotRect();
 
-    final Point position = ChartHandlerUtilities.screen2plotPoint( new Point( e.x, e.y ), bounds );
+    final Point position = new Point( e.x, e.y );
     if( !isValid( bounds, new Point( e.x, e.y ) ) )// position ) )
     {
       return;
@@ -218,7 +218,7 @@ public abstract class AbstractProfileSelectionChartHandler extends AbstractProfi
     final IChartComposite chart = getChart();
     final Rectangle bounds = chart.getPlotRect();
 
-    final Point position = ChartHandlerUtilities.screen2plotPoint( new Point( e.x, e.y ), bounds );
+    final Point position = new Point( e.x, e.y );
     if( !isValid( bounds, new Point( e.x, e.y ) ) )// position ) )
     {
       return;

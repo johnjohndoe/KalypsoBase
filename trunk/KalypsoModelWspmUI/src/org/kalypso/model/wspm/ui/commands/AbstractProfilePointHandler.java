@@ -179,7 +179,7 @@ public abstract class AbstractProfilePointHandler extends AbstractChartHandler
     final IChartComposite chart = getChart();
     final Rectangle bounds = chart.getPlotRect();
 
-    final Point position = ChartHandlerUtilities.screen2plotPoint( new Point( e.x, e.y ), bounds );
+    final Point position = new Point( e.x, e.y );
     if( !isValid( bounds, new Point( e.x, e.y ) ) )// position ) )
     {
       doReset();
