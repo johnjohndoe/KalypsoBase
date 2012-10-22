@@ -51,8 +51,7 @@ public abstract class LegendEntry implements ILegendEntry
   public Point computeSize( final Point size )
   {
     final Point neededSize = getMinimumSize();
-    final Point realSize = new Point( Math.max( neededSize.x, size.x ), Math.max( neededSize.y, size.y ) );
-    return realSize;
+    return new Point( Math.max( neededSize.x, size.x ), Math.max( neededSize.y, size.y ) );
   }
 
   /**

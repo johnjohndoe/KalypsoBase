@@ -300,18 +300,12 @@ public abstract class AbstractChartLayer implements IChartLayer
     return null;
   }
 
-  /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#getTitle()
-   */
   @Override
   public String getTitle( )
   {
     return m_title;
   }
 
-  /**
-   * @see org.kalypso.swtchart.chart.layer.IChartLayer#isActive()
-   */
   @Override
   public boolean isActive( )
   {
