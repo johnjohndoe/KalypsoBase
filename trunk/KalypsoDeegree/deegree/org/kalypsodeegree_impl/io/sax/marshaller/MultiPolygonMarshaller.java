@@ -44,8 +44,8 @@ import java.util.Iterator;
 
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.tools.GMLConstants;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -69,7 +69,7 @@ public class MultiPolygonMarshaller extends GeometryMarshaller<GM_MultiSurface>
   {
     for( final Iterator<GM_Object> it = marshalledObject.getIterator(); it.hasNext(); )
     {
-      final GM_Surface<GM_Polygon> object = (GM_Surface<GM_Polygon>) it.next();
+      final GM_Polygon<GM_PolygonPatch> object = (GM_Polygon<GM_PolygonPatch>) it.next();
       new PolygonMemberMarshaller( getXMLReader() ).marshall( object );
     }
   }

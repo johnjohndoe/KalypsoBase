@@ -92,7 +92,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
@@ -689,7 +689,7 @@ public class SelectFeatureWidget extends DeprecatedMouseWidget
       return selectedFeatures;
 
     // Only works for surface geometries:: select everything that intersects this geometry
-    if( selectGeometry instanceof GM_Surface< ? > )
+    if( selectGeometry instanceof GM_Polygon< ? > )
     {
       final GM_Envelope envelope = selectGeometry.getEnvelope();
       final GMLWorkspace workspace = featureList.getOwner().getWorkspace();

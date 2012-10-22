@@ -84,8 +84,8 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
@@ -477,7 +477,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
     return new Object[0];
   }
 
-  GM_Surface< ? extends GM_SurfacePatch> getBBoxFromActiveMap( )
+  GM_Polygon< ? extends GM_AbstractSurfacePatch> getBBoxFromActiveMap( )
   {
     final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
     // if this Wizard is activated we assume there is always a map (GisMapEditor) open.

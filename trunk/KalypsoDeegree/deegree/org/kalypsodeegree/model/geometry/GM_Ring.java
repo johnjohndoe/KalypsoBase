@@ -47,7 +47,7 @@ package org.kalypsodeegree.model.geometry;
  * @version $Revision$ $Date$
  *          <p>
  */
-public interface GM_Ring extends GM_OrientableCurve
+public interface GM_Ring extends GM_AbstractCurve
 {
   /**
    * returns true because a ring is always a cycle

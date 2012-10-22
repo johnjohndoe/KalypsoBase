@@ -41,13 +41,13 @@
 package org.kalypsodeegree_impl.io.sax.parser;
 
 import org.kalypso.gmlschema.types.IGMLElementHandler;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 
 /**
  * @Gernot Belger
  */
-public interface ISurfaceHandler<T extends GM_SurfacePatch> extends IGMLElementHandler<GM_Surface<T>>
+public interface ISurfaceHandler<T extends GM_AbstractSurfacePatch> extends IGMLElementHandler<GM_Polygon<T>>
 {
 
 }

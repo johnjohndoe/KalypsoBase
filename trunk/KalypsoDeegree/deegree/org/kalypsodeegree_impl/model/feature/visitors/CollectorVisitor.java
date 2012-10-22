@@ -46,7 +46,7 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
 
 /**
  * Simply collects all visited features that get evaluated by a predicate.
- *
+ * 
  * @author Gernot Belger
  */
 public class CollectorVisitor implements FeatureVisitor
@@ -82,16 +82,23 @@ public class CollectorVisitor implements FeatureVisitor
   /**
    * Returns alle visited features.
    * <p>
-   * IMPORTANT: this method has been synchronized since toggle between radio buttons cause a
-   * ArrayIndexOutOfBoundsException in the first line.
+   * IMPORTANT: this method has been synchronized since toggle between radio buttons cause a ArrayIndexOutOfBoundsException in the first line.
    * </p>
-   *
+   * 
    * @param reset
    *          if true, resets the inner result set, so next call to getResults results in empty array.
    */
   public synchronized Feature[] getResults( final boolean reset )
   {
-    final Feature[] features = m_results.toArray( new Feature[0] );
+    final Feature[] features = m_results.toArray( new Feature[m_results.size()] );
+    if( reset )
+      m_results.clear();
+    return features;
+  }
+
+  public synchronized <T extends Feature> T[] getResults( final boolean reset, T[] array )
+  {
+    final T[] features = m_results.toArray( array );
     if( reset )
       m_results.clear();
     return features;

@@ -42,8 +42,8 @@ package org.kalypsodeegree_impl.io.sax.parser;
 
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.types.IGmlContentHandler;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.tools.GMLConstants;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -54,13 +54,13 @@ import org.xml.sax.XMLReader;
  *
  * @author Felipe Maximino
  */
-public class SurfaceMemberContentHandler extends GMLElementContentHandler implements ISurfaceHandler<GM_Polygon>
+public class SurfaceMemberContentHandler extends GMLElementContentHandler implements ISurfaceHandler<GM_PolygonPatch>
 {
   public static final String ELEMENT_SURFACE_MEMBER = GMLConstants.QN_SURFACE_MEMBER.getLocalPart();
 
-  private final ISurfaceHandler<GM_Polygon> m_surfaceHandler;
+  private final ISurfaceHandler<GM_PolygonPatch> m_surfaceHandler;
 
-  public SurfaceMemberContentHandler( final XMLReader reader, final IGmlContentHandler parent, final ISurfaceHandler<GM_Polygon> surfaceHandler, final String defaultSrs )
+  public SurfaceMemberContentHandler( final XMLReader reader, final IGmlContentHandler parent, final ISurfaceHandler<GM_PolygonPatch> surfaceHandler, final String defaultSrs )
   {
     super( reader, NS.GML3, ELEMENT_SURFACE_MEMBER, defaultSrs, parent );
 
@@ -88,7 +88,7 @@ public class SurfaceMemberContentHandler extends GMLElementContentHandler implem
    * @see org.kalypso.gmlschema.types.IGMLElementHandler#handle(java.lang.Object)
    */
   @Override
-  public void handle( final GM_Surface<GM_Polygon> element ) throws SAXException
+  public void handle( final GM_Polygon<GM_PolygonPatch> element ) throws SAXException
   {
     m_surfaceHandler.handle( element );
   }

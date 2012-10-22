@@ -41,6 +41,7 @@
 package org.kalypsodeegree_impl.model.sort;
 
 import java.awt.Graphics;
+import java.lang.reflect.Array;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -65,16 +66,17 @@ import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeatureLinkUtils;
 import org.kalypsodeegree_impl.model.feature.GMLWorkspace_Impl;
+import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
 
 /**
  * @author kurzbach
  */
 public abstract class AbstractFeatureList implements FeatureList
 {
+
   private final Feature m_parentFeature;
 
   private final IRelationType m_parentFeatureTypeProperty;
@@ -119,7 +121,8 @@ public abstract class AbstractFeatureList implements FeatureList
     final int maxOccurs = m_parentFeatureTypeProperty.getMaxOccurs();
 
     if( maxOccurs != IPropertyType.UNBOUND_OCCURENCY && size() + count > maxOccurs )
-      throw new IllegalArgumentException( "Adding a new element violates maxOccurs" ); //$NON-NLS-1$
+      return;
+    //throw new IllegalArgumentException( "Adding a new element violates maxOccurs" ); //$NON-NLS-1$
   }
 
   protected GM_Envelope getEnvelope( final Object object )
@@ -132,7 +135,7 @@ public abstract class AbstractFeatureList implements FeatureList
   {
     Assert.isNotNull( object );
 
-    /* Only inline features needs to be unregistered from the workspace */
+    /* Only inline features needs to be registered with the workspace */
     if( object instanceof IXLinkedFeature )
       return;
 
@@ -192,9 +195,12 @@ public abstract class AbstractFeatureList implements FeatureList
    * If this list does not has an owner within a valid workspace, links are not resolved and the returned arraxy will
    * contain <code>null</code> elements instead.
    */
-  private Feature resolveFeature( final Object object )
+  protected Feature resolveFeature( final Object object )
   {
-    if( object instanceof Feature && !(object instanceof IXLinkedFeature) )
+    if( object instanceof IXLinkedFeature )
+      return ((IXLinkedFeature)object).getFeature();
+
+    if( object instanceof Feature )
       return (Feature)object;
 
     final Feature owner = getOwner();
@@ -263,20 +269,31 @@ public abstract class AbstractFeatureList implements FeatureList
   }
 
   @Override
+  public Feature getResolved( int index )
+  {
+    return resolveFeature( get( index ) );
+  }
+
+  @Override
+  @SuppressWarnings( "unchecked" )
   public IXLinkedFeature insertLink( final int index, final String href ) throws IllegalArgumentException, IllegalStateException
   {
-    return insertLink( index, href, getPropertyType().getTargetFeatureType() );
+    // return insertLink( index, href, getPropertyType().getTargetFeatureType() );
+    final IXLinkedFeature link = new XLinkedFeature_Impl( m_parentFeature, m_parentFeatureTypeProperty, getPropertyType().getTargetFeatureType(), href );
+
+    if( index < 0 )
+      add( href );
+    else
+      add( index, href );
+
+    return link;
   }
 
   @Override
   @SuppressWarnings( "unchecked" )
   public synchronized IXLinkedFeature insertLink( final int index, final String href, final IFeatureType featureType ) throws IllegalArgumentException, IllegalStateException
   {
-    final IXLinkedFeature link = FeatureFactory.createXLink( m_parentFeature, m_parentFeatureTypeProperty, featureType, href );
-
-    // REMARK: this should be checked on every add. Probably this will cause problems due to old buggy code.
-    // So we at least check in this new method. Should be moved into the add methods.
-    checkCanAdd( 1 );
+    final IXLinkedFeature link = new XLinkedFeature_Impl( m_parentFeature, m_parentFeatureTypeProperty, featureType, href );
 
     if( index < 0 )
       add( link );
@@ -332,14 +349,36 @@ public abstract class AbstractFeatureList implements FeatureList
   }
 
   @Override
+  public boolean containsOrLinksTo( final Feature targetFeature )
+  {
+    if( targetFeature instanceof IXLinkedFeature )
+      throw new IllegalArgumentException( "targetFeature may only be an inline feature" ); //$NON-NLS-1$
+
+    final Object member = FeatureLinkUtils.findMember( this, targetFeature );
+    return member != null;
+  }
+
+  @Override
   public synchronized Feature[] toFeatures( )
   {
-    final Feature[] features = new Feature[size()];
-    for( int i = 0; i < features.length; i++ )
+    return toFeatures( new Feature[size()] );
+  }
+
+  @Override
+  @SuppressWarnings( "unchecked" )
+  public synchronized <T extends Feature> T[] toFeatures( T[] features )
+  {
+    final int newLength = size();
+    final Class< ? extends Feature[]> newType = features.getClass();
+    if( features.length != newLength )
+    {
+      features = ((Object)newType == (Object)Object[].class) ? (T[])new Object[newLength] : (T[])Array.newInstance( newType.getComponentType(), newLength );
+    }
+
+    for( int i = 0; i < newLength; i++ )
     {
       final Object object = get( i );
-
-      features[i] = resolveFeature( object );
+      features[i] = (T)resolveFeature( object );
     }
 
     return features;
@@ -511,4 +550,5 @@ public abstract class AbstractFeatureList implements FeatureList
   {
     return m_parentFeatureTypeProperty;
   }
+
 }

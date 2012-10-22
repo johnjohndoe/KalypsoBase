@@ -55,10 +55,10 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree_impl.io.sax.parser.PolygonContentHandler;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.InputSource;
@@ -72,11 +72,11 @@ public class PolygonContentHandlerTest extends Assert
 {
   private final SAXParserFactory m_saxFactory = SAXParserFactory.newInstance();
 
-  private GM_Surface<GM_Polygon> m_surfaceOneHole;
+  private GM_Polygon<GM_PolygonPatch> m_surfaceOneHole;
 
-  private GM_Surface<GM_Polygon> m_surfaceTwoHoles;
+  private GM_Polygon<GM_PolygonPatch> m_surfaceTwoHoles;
 
-  private GM_Surface<GM_Polygon> m_surfaceNoHole;
+  private GM_Polygon<GM_PolygonPatch> m_surfaceNoHole;
 
   @Before
   public void setUp( ) throws Exception
@@ -111,21 +111,21 @@ public class PolygonContentHandlerTest extends Assert
   @Test
   public void testPolygonNoHole( ) throws Exception
   {
-    final GM_Surface<GM_Polygon> polygon = parsePolygon( "/etc/test/resources/polygonNoHole.gml" );
+    final GM_Polygon<GM_PolygonPatch> polygon = parsePolygon( "/etc/test/resources/polygonNoHole.gml" );
     assertPolygon( m_surfaceNoHole, polygon );
   }
 
   @Test
   public void testPolygonOneHole( ) throws Exception
   {
-    final GM_Surface<GM_Polygon> polygon = parsePolygon( "/etc/test/resources/polygonOneHole.gml" );
+    final GM_Polygon<GM_PolygonPatch> polygon = parsePolygon( "/etc/test/resources/polygonOneHole.gml" );
     assertPolygon( m_surfaceOneHole, polygon );
   }
 
   @Test
   public void testPolygonTwoHoles( ) throws Exception
   {
-    final GM_Surface<GM_Polygon> polygon = parsePolygon( "/etc/test/resources/polygonTwoHoles.gml" );
+    final GM_Polygon<GM_PolygonPatch> polygon = parsePolygon( "/etc/test/resources/polygonTwoHoles.gml" );
     assertPolygon( m_surfaceTwoHoles, polygon );
   }
 
@@ -154,7 +154,7 @@ public class PolygonContentHandlerTest extends Assert
       parsePolygonFromContent( content );
   }
 
-  public static void assertPolygon( final GM_Surface<GM_Polygon> expected, final GM_Surface<GM_Polygon> polygon )
+  public static void assertPolygon( final GM_Polygon<GM_PolygonPatch> expected, final GM_Polygon<GM_PolygonPatch> polygon )
   {
     assertEquals( expected.getCoordinateSystem(), polygon.getCoordinateSystem() );
 
@@ -163,7 +163,7 @@ public class PolygonContentHandlerTest extends Assert
     assertPatch( expected.get( 0 ), polygon.get( 0 ) );
   }
 
-  public static void assertPatch( final GM_SurfacePatch expectedPatch, final GM_SurfacePatch patch )
+  public static void assertPatch( final GM_AbstractSurfacePatch expectedPatch, final GM_AbstractSurfacePatch patch )
   {
     assertRing( expectedPatch.getExteriorRing(), patch.getExteriorRing() );
 
@@ -189,14 +189,14 @@ public class PolygonContentHandlerTest extends Assert
       assertEquals( expectedRing[i], ring[i] );
   }
 
-  private GM_Surface<GM_Polygon> parsePolygonFromContent( final String content ) throws Exception
+  private GM_Polygon<GM_PolygonPatch> parsePolygonFromContent( final String content ) throws Exception
   {
     final InputStream inputStream = IOUtils.toInputStream( content );
 
     return parsePolygon( inputStream );
   }
 
-  private GM_Surface<GM_Polygon> parsePolygon( final String resourceLocation ) throws Exception
+  private GM_Polygon<GM_PolygonPatch> parsePolygon( final String resourceLocation ) throws Exception
   {
     final URL resource = getClass().getResource( resourceLocation );
     final String content = UrlUtilities.toString( resource, SaxParserTestUtils.ENCODING );
@@ -206,21 +206,21 @@ public class PolygonContentHandlerTest extends Assert
   }
 
   @SuppressWarnings("unchecked")
-  private GM_Surface<GM_Polygon> parsePolygon( final InputStream inputStream ) throws ParserConfigurationException, SAXException, IOException
+  private GM_Polygon<GM_PolygonPatch> parsePolygon( final InputStream inputStream ) throws ParserConfigurationException, SAXException, IOException
   {
     final InputSource is = new InputSource( inputStream );
 
     final SAXParser saxParser = m_saxFactory.newSAXParser();
     final XMLReader reader = saxParser.getXMLReader();
 
-    final GM_Surface< ? >[] result = new GM_Surface< ? >[1];
+    final GM_Polygon< ? >[] result = new GM_Polygon< ? >[1];
     final UnmarshallResultEater resultEater = new UnmarshallResultEater()
     {
       @Override
       public void unmarshallSuccesful( final Object value )
       {
-        assertTrue( value instanceof GM_Surface );
-        result[0] = (GM_Surface< ? >) value;
+        assertTrue( value instanceof GM_Polygon );
+        result[0] = (GM_Polygon< ? >) value;
       }
     };
 
@@ -228,7 +228,7 @@ public class PolygonContentHandlerTest extends Assert
     reader.setContentHandler( contentHandler );
     reader.parse( is );
 
-    return (GM_Surface<GM_Polygon>) result[0];
+    return (GM_Polygon<GM_PolygonPatch>) result[0];
   }
 
   // REMARK: exchange method in order to use binding-stuff instead

@@ -71,7 +71,7 @@ import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.gml.binding.shape.AbstractShape;
 import org.kalypsodeegree_impl.gml.binding.shape.ShapeCollection;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
@@ -231,7 +231,7 @@ public final class GenericShapeDataFactory
     if( GM_Curve.class.isAssignableFrom( valueClass ) )
       return ShapeType.POLYLINE;
 
-    if( GM_Surface.class.isAssignableFrom( valueClass ) )
+    if( GM_Polygon.class.isAssignableFrom( valueClass ) )
       return ShapeType.POLYGON;
 
     if( GM_MultiPoint.class.isAssignableFrom( valueClass ) )

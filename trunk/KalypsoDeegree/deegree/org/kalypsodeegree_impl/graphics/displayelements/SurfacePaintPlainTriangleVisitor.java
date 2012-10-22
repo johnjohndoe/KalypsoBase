@@ -38,14 +38,14 @@ package org.kalypsodeegree_impl.graphics.displayelements;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
-import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
 
 /**
  * @author Patrice Kongo
  */
-public class SurfacePaintPlainTriangleVisitor<T extends GM_Polygon> implements ISurfacePatchVisitor<T>
+public class SurfacePaintPlainTriangleVisitor<T extends GM_PolygonPatch> implements ISurfacePatchVisitor<T>
 {
   private final IElevationColorModel m_colorModel;
 
@@ -64,7 +64,7 @@ public class SurfacePaintPlainTriangleVisitor<T extends GM_Polygon> implements I
     return true;
   }
 
-  private void paintTriangle( final GM_Polygon polygon )
+  private void paintTriangle( final GM_PolygonPatch polygon )
   {
     final GM_Position[] positions = polygon.getExteriorRing();
 

@@ -42,7 +42,7 @@ import java.math.BigDecimal;
  *
  * @author Gernot Belger
  */
-public class MinMaxSurfacePatchVisitor<P extends GM_SurfacePatch> implements ISurfacePatchVisitor<P>
+public class MinMaxSurfacePatchVisitor<P extends GM_AbstractSurfacePatch> implements ISurfacePatchVisitor<P>
 {
   private double m_min = Double.MAX_VALUE;
 

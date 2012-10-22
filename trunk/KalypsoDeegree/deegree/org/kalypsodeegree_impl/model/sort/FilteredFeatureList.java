@@ -63,7 +63,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.CollectorVisitor;
  * Eine gefilterte FeatureListe. Die Liste zeigt nach aussen nur die Features, die einem bestimmten IFeatureType
  * entsprechen. Andererseits ist die Liste aber durch die originale Liste gebackupd, d.h. alle Änderungen dieser Liste
  * ändern auch die Originalliste.
- *
+ * 
  * @author belger
  */
 public class FilteredFeatureList implements FeatureList
@@ -79,6 +79,15 @@ public class FilteredFeatureList implements FeatureList
     final QNameUnique uniqueFilterQName = QNameUnique.create( filterQName );
 
     m_predicate = new FeatureTypeFilter( uniqueFilterQName, uniqueFilterQName.asLocal(), acceptIfSubstituting );
+  }
+
+  /**
+   * not implemented
+   */
+  @Override
+  public <T extends Feature> T[] toFeatures( final T[] features )
+  {
+    throw new UnsupportedOperationException();
   }
 
   @Override
@@ -181,7 +190,7 @@ public class FilteredFeatureList implements FeatureList
   @Override
   public boolean add( final Object o )
   {
-    if( !m_predicate.matchesType( (Feature) o ) )
+    if( !m_predicate.matchesType( (Feature)o ) )
       throw new IllegalArgumentException();
 
     return m_original.add( o );
@@ -196,7 +205,7 @@ public class FilteredFeatureList implements FeatureList
   @Override
   public boolean remove( final Object o )
   {
-    if( m_predicate.matchesType( (Feature) o ) )
+    if( m_predicate.matchesType( (Feature)o ) )
       return m_original.remove( o );
 
     return false;
@@ -301,15 +310,21 @@ public class FilteredFeatureList implements FeatureList
     return filterList( m_original.query( env, result ), result );
   }
 
-  private List< ? > filterList( final List< ? > originalList, final List< ? > result )
+  @Override
+  public <T extends Feature> List<T> queryResolved( final GM_Envelope env, final List<T> result )
+  {
+    return filterList( m_original.queryResolved( env, result ), result );
+  }
+
+  private <T> List<T> filterList( final List<T> originalList, final List<T> result )
   {
     final int oldlength = result == null ? 0 : result.size();
 
     // only remove new elements, which do not match type
-    final List< ? > sublist = originalList.subList( oldlength, originalList.size() );
-    final List<Object> lListActualResult = new ArrayList<>();
+    final List<T> sublist = originalList.subList( oldlength, originalList.size() );
+    final List<T> lListActualResult = new ArrayList<>();
     lListActualResult.addAll( originalList.subList( 0, oldlength ) );
-    for( final Object lObjNext : sublist )
+    for( final T lObjNext : sublist )
     {
       final Feature f = FeatureHelper.resolveLinkedFeature( m_original.getOwner().getWorkspace(), lObjNext );
       if( m_predicate.matchesType( f ) )
@@ -329,6 +344,12 @@ public class FilteredFeatureList implements FeatureList
   public List query( final GM_Position env, final List result )
   {
     return filterList( m_original.query( env, result ), result );
+  }
+
+  @Override
+  public <T extends Feature> List<T> queryResolved( final GM_Position env, final List<T> result )
+  {
+    return filterList( m_original.queryResolved( env, result ), result );
   }
 
   @Override
@@ -433,5 +454,22 @@ public class FilteredFeatureList implements FeatureList
   public boolean removeLink( final Feature targetFeature )
   {
     return m_original.removeLink( targetFeature );
+  }
+
+  @Override
+  public boolean containsOrLinksTo( final Feature targetFeature )
+  {
+    for( final Feature property : toFeatures() )
+    {
+      if( property.equals( targetFeature ) )
+        return true;
+    }
+    return false;
+  }
+
+  @Override
+  public Feature getResolved( final int index )
+  {
+    return (Feature)get( index );
   }
 }

@@ -49,10 +49,10 @@ import org.kalypsodeegree.model.geometry.GM_MultiPrimitive;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 
@@ -148,8 +148,8 @@ public final class JTSAdapter
     if( gmObject instanceof GM_MultiCurve )
       return export( (GM_MultiCurve) gmObject );
 
-    if( gmObject instanceof GM_Surface )
-      return export( (GM_Surface< ? >) gmObject );
+    if( gmObject instanceof GM_Polygon )
+      return export( (GM_Polygon< ? >) gmObject );
 
     if( gmObject instanceof GM_MultiSurface )
       return export( (GM_MultiSurface) gmObject );
@@ -369,9 +369,9 @@ public final class JTSAdapter
    *          a <tt>GM_Surface</tt>
    * @return the corresponding <tt>Polygon</tt> object
    */
-  private static Polygon export( final GM_Surface< ? > surface )
+  private static Polygon export( final GM_Polygon< ? > surface )
   {
-    final GM_SurfacePatch patch = surface.get( 0 );
+    final GM_AbstractSurfacePatch patch = surface.getSurfacePatch();
     final GM_Position[] exteriorRing = patch.getExteriorRing();
     final GM_Position[][] interiorRings = patch.getInteriorRings();
 
@@ -397,7 +397,7 @@ public final class JTSAdapter
    */
   private static MultiPolygon export( final GM_MultiSurface msurface )
   {
-    final GM_Surface< ? >[] surfaces = msurface.getAllSurfaces();
+    final GM_Polygon< ? >[] surfaces = msurface.getAllSurfaces();
     final Polygon[] polygons = new Polygon[surfaces.length];
 
     for( int i = 0; i < surfaces.length; i++ )
@@ -509,7 +509,7 @@ public final class JTSAdapter
    * @return the corresponding <tt>GM_Surface</tt> object
    * @throws GM_Exception
    */
-  private static GM_Surface<GM_Polygon> wrap( final Polygon polygon, final String crs ) throws GM_Exception
+  private static GM_Polygon<GM_PolygonPatch> wrap( final Polygon polygon, final String crs ) throws GM_Exception
   {
     final GM_Position[] exteriorRing = createGMPositions( polygon.getExteriorRing() );
     final GM_Position[][] interiorRings = new GM_Position[polygon.getNumInteriorRing()][];
@@ -518,9 +518,9 @@ public final class JTSAdapter
     {
       interiorRings[i] = createGMPositions( polygon.getInteriorRingN( i ) );
     }
-    final GM_Polygon patch = new GM_Polygon_Impl( exteriorRing, interiorRings, crs );
+    final GM_PolygonPatch patch = new GM_PolygonPatch_Impl( exteriorRing, interiorRings, crs );
 
-    return new GM_Surface_Impl<>( patch );
+    return new GM_Polygon_Impl<>( patch );
   }
 
   /**
@@ -534,7 +534,7 @@ public final class JTSAdapter
    */
   private static GM_MultiSurface wrap( final MultiPolygon multiPolygon, final String crs ) throws GM_Exception
   {
-    final GM_Surface< ? >[] surfaces = new GM_Surface[multiPolygon.getNumGeometries()];
+    final GM_Polygon< ? >[] surfaces = new GM_Polygon[multiPolygon.getNumGeometries()];
     for( int i = 0; i < surfaces.length; i++ )
     {
       surfaces[i] = wrap( (Polygon) multiPolygon.getGeometryN( i ), crs );

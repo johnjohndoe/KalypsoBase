@@ -48,7 +48,7 @@ import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_PolyhedralSurface;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -87,7 +87,7 @@ public class GeometryMemberMarshaller extends AbstractMarshaller<GM_Object>
     if( marshalledObject instanceof GM_PolyhedralSurface )
       return new PolyhedralSurfaceMarshaller( xmlReader );
 
-    if( marshalledObject instanceof GM_Surface )
+    if( marshalledObject instanceof GM_Polygon )
       return new PolygonMarshaller( xmlReader );
 
     if( marshalledObject instanceof GM_MultiGeometry )

@@ -59,8 +59,8 @@ import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.xml.ElementList;
 import org.kalypsodeegree.xml.XMLTools;
 import org.w3c.dom.Element;
@@ -147,7 +147,7 @@ public class PropertyIsInstanceOfOperation extends ComparisonOperation
     }
     else if( "_Surface".equals( localName ) )
     {
-      equals = propertyValue instanceof GM_Surface || propertyValue instanceof GM_MultiSurface || propertyValue instanceof GM_SurfacePatch;
+      equals = propertyValue instanceof GM_Polygon || propertyValue instanceof GM_MultiSurface || propertyValue instanceof GM_AbstractSurfacePatch;
     }
     else
     {

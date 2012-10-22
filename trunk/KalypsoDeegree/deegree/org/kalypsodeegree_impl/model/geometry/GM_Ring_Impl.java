@@ -50,8 +50,8 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -63,14 +63,14 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * @version 05.04.2002
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  */
-public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring
+public class GM_Ring_Impl extends GM_AbstractCurve_Impl implements GM_Ring
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 9157144642050604928L;
 
   private GM_Position[] m_points = null;
 
-  private GM_SurfacePatch m_sp = null;
+  private GM_AbstractSurfacePatch m_sp = null;
 
   /**
    * Constructor, with Array and CS_CoordinateSystem
@@ -277,10 +277,10 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring
         final GM_Curve curve = new GM_Curve_Impl( new GM_CurveSegment[] { sp } );
         inter = LinearIntersects.intersects( (GM_Curve) gmo, curve );
       }
-      else if( gmo instanceof GM_Surface )
+      else if( gmo instanceof GM_Polygon )
       {
         final GM_Curve curve = new GM_Curve_Impl( new GM_CurveSegment[] { sp } );
-        inter = LinearIntersects.intersects( curve, (GM_Surface< ? >) gmo );
+        inter = LinearIntersects.intersects( curve, (GM_Polygon< ? >) gmo );
       }
       else if( gmo instanceof GM_MultiPrimitive )
       {
@@ -327,7 +327,7 @@ public class GM_Ring_Impl extends GM_OrientableCurve_Impl implements GM_Ring
     try
     {
       if( m_sp == null )
-        m_sp = new GM_Polygon_Impl( m_points, null, getCoordinateSystem() );
+        m_sp = new GM_PolygonPatch_Impl( m_points, null, getCoordinateSystem() );
       return m_sp.contains( gmo );
     }
     catch( final Exception e )

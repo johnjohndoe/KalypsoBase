@@ -18,13 +18,13 @@
  * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always.
+ * interface-compatibility to deegree is wanted but not retained always. 
  * 
- * If you intend to use this software in other ways than in kalypso
+ * If you intend to use this software in other ways than in kalypso 
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree,
+ * all modifications are licensed as deegree, 
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -36,26 +36,33 @@
 
 package org.kalypsodeegree.model.geometry;
 
-import java.util.List;
-
-import javax.xml.namespace.QName;
-
-import org.kalypso.commons.xml.NS;
-
 /**
- * Defining the surface geometry of the iso geometry model. a surface is made of 1..n surface patches. for convention it
- * is defined that GM_Surface is a closed geometry. that means each surface patch a surface is made of must touch at
- * least one other surface patch if a surface is made of more then one surface patch
+ * The basic interface for orientated two dimensional geometries.
  * <p>
  * -----------------------------------------------------
  * </p>
  * 
- * @author Andreas Poth
+ * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  *          <p>
  */
-
-public interface GM_Surface<T extends GM_SurfacePatch> extends GM_OrientableSurface, GM_GenericSurface, List<T>, ISurfacePatchVisitable<T>
+public interface GM_AbstractGeometricPrimitive extends GM_AbstractGeometry
 {
-  QName SURFACE_ELEMENT = new QName( NS.GML3, "_Surface" ); //$NON-NLS-1$
+  /**
+   * returns the orientation of a curve
+   * 
+   * @return curve orientation ('+'|'-')
+   */
+  char getOrientation( );
+
+  /**
+   * sets the curves orientation
+   * 
+   * @param orientation
+   *          orientation of the curve ('+'|'-')
+   * @exception GM_Exception
+   *              will be thrown if orientation is invalid
+   */
+  void setOrientation( char orientation ) throws GM_Exception;
+
 }

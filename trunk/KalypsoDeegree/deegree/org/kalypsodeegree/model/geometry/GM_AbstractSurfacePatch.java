@@ -47,7 +47,7 @@ import org.kalypso.transformation.transformer.GeoTransformerException;
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  */
-public interface GM_SurfacePatch extends GM_GenericSurface
+public interface GM_AbstractSurfacePatch extends GM_GenericSurface
 {
   /**
    * returns the exterior ring of the surface

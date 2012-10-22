@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -36,16 +36,19 @@
 
 package org.kalypsodeegree.model.geometry;
 
+
+
 /**
- * A GM_Primitive is the basic geometry for all none complex geometries.
+ * A GM_Polygon is a specialized GM_SurfacePatch and it's implementation should be implementable. It special
+ * characteristic is that's the interpolation between the points of the bounding rings is linear.
  * <p>
  * -----------------------------------------------------
  * </p>
- * 
+ *
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  *          <p>
  */
-public interface GM_Primitive extends GM_Object
+public interface GM_PolygonPatch extends GM_AbstractSurfacePatch
 {
 }

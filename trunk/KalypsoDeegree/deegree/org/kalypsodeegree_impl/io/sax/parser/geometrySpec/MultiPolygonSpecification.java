@@ -43,7 +43,7 @@ package org.kalypsodeegree_impl.io.sax.parser.geometrySpec;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.types.IGmlContentHandler;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree_impl.io.sax.parser.ISurfaceHandler;
 import org.kalypsodeegree_impl.io.sax.parser.PolygonMemberContentHandler;
 import org.kalypsodeegree_impl.tools.GMLConstants;
@@ -65,7 +65,7 @@ public class MultiPolygonSpecification implements IGeometrySpecification
   {
     /* gml:pointMember */
     if( GMLConstants.QN_POLYGON_MEMBER.equals( property ) )
-      return new PolygonMemberContentHandler( reader, parent, (ISurfaceHandler<GM_Polygon>) receiver, defaultSrs );
+      return new PolygonMemberContentHandler( reader, parent, (ISurfaceHandler<GM_PolygonPatch>) receiver, defaultSrs );
 
     return null;
   }

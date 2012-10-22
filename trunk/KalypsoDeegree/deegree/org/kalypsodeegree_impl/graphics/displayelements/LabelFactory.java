@@ -66,8 +66,8 @@ import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -175,7 +175,7 @@ public class LabelFactory
     if( geometry instanceof GM_Curve || geometry instanceof GM_MultiCurve )
       return createCurveLabels( feature, caption, geometry, font, color, metrics, bounds );
 
-    if( geometry instanceof GM_Surface || geometry instanceof GM_MultiSurface )
+    if( geometry instanceof GM_Polygon || geometry instanceof GM_MultiSurface )
       return createSurfaceLabels( feature, caption, geometry, font, color, metrics, bounds );
 
     throw new IllegalArgumentException( "LabelFactory does not implement generation of Labels from geometries of type: '" + geometry.getClass().getName() + "'!" );
@@ -200,7 +200,7 @@ public class LabelFactory
 
   private Label[] createCurveLabels( final Feature feature, final String caption, final GM_Object geometry, final Font font, final Color color, final LineMetrics metrics, final Dimension bounds ) throws GM_Exception, FilterEvaluationException
   {
-    final GM_Surface< ? extends GM_SurfacePatch> screenSurface = GeometryFactory.createGM_Surface( m_projection.getSourceRect(), null );
+    final GM_Polygon< ? extends GM_AbstractSurfacePatch> screenSurface = GeometryFactory.createGM_Surface( m_projection.getSourceRect(), null );
     final GM_Object intersection = screenSurface.intersection( geometry );
 
     if( intersection instanceof GM_Curve )
@@ -264,7 +264,7 @@ public class LabelFactory
       return geometry;
 
     // TODO: we need to do this only onlce
-    final GM_Surface< ? extends GM_SurfacePatch> screenSurface = GeometryFactory.createGM_Surface( m_projection.getSourceRect(), null );
+    final GM_Polygon< ? extends GM_AbstractSurfacePatch> screenSurface = GeometryFactory.createGM_Surface( m_projection.getSourceRect(), null );
 
     final GM_Object intersection = screenSurface.intersection( geometry );
     if( intersection == null )

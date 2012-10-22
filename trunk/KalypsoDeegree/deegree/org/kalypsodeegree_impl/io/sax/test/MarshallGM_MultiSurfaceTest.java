@@ -49,9 +49,9 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.junit.Test;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.io.sax.marshaller.MultiPolygonMarshaller;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.SAXException;
@@ -87,11 +87,11 @@ public class MarshallGM_MultiSurfaceTest extends TestCase
     final GM_Position[] interiorRing2 = new GM_Position[] { pos2, pos7, pos6, pos2 };
 
     final String crs = "EPSG:31467";
-    final GM_Surface<GM_Polygon> surfaceNoHole = GeometryFactory.createGM_Surface( exteriorRing, new GM_Position[][] {}, crs );
-    final GM_Surface<GM_Polygon> surfaceOneHole = GeometryFactory.createGM_Surface( exteriorRing, new GM_Position[][] { interiorRing1 }, crs );
-    final GM_Surface<GM_Polygon> surfaceTwoHoles = GeometryFactory.createGM_Surface( exteriorRing, new GM_Position[][] { interiorRing1, interiorRing2 }, crs );
+    final GM_Polygon<GM_PolygonPatch> surfaceNoHole = GeometryFactory.createGM_Surface( exteriorRing, new GM_Position[][] {}, crs );
+    final GM_Polygon<GM_PolygonPatch> surfaceOneHole = GeometryFactory.createGM_Surface( exteriorRing, new GM_Position[][] { interiorRing1 }, crs );
+    final GM_Polygon<GM_PolygonPatch> surfaceTwoHoles = GeometryFactory.createGM_Surface( exteriorRing, new GM_Position[][] { interiorRing1, interiorRing2 }, crs );
 
-    m_multiPolygon = GeometryFactory.createGM_MultiSurface( new GM_Surface[] { surfaceNoHole, surfaceOneHole, surfaceTwoHoles }, crs );
+    m_multiPolygon = GeometryFactory.createGM_MultiSurface( new GM_Polygon[] { surfaceNoHole, surfaceOneHole, surfaceTwoHoles }, crs );
   }
 
   @Test

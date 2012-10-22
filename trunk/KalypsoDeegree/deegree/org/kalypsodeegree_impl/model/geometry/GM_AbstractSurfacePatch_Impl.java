@@ -43,7 +43,7 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_SurfaceInterpolation;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -54,7 +54,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * @version 11.6.2001
  * @author Andreas Poth
  */
-abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, Serializable
+abstract class GM_AbstractSurfacePatch_Impl implements GM_AbstractSurfacePatch, Serializable
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 7641735268892225180L;
@@ -88,7 +88,7 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, Serializable
    * @param crs
    * @throws GM_Exception
    */
-  protected GM_SurfacePatch_Impl( final GM_Position[] exteriorRing, final GM_Position[][] interiorRings, final String crs ) throws GM_Exception
+  protected GM_AbstractSurfacePatch_Impl( final GM_Position[] exteriorRing, final GM_Position[][] interiorRings, final String crs ) throws GM_Exception
   {
     m_crs = crs;
 
@@ -211,19 +211,19 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, Serializable
   @Override
   public boolean equals( final Object other )
   {
-    if( other == null || !(other instanceof GM_SurfacePatch_Impl) )
+    if( other == null || !(other instanceof GM_AbstractSurfacePatch_Impl) )
     {
       return false;
     }
 
     // Assuming envelope cannot be null (always calculated)
-    if( !m_envelope.equals( ((GM_SurfacePatch) other).getEnvelope() ) )
+    if( !m_envelope.equals( ((GM_AbstractSurfacePatch) other).getEnvelope() ) )
     {
       return false;
     }
 
     // Assuming exteriorRing cannot be null (checked by Constructor)
-    if( !Arrays.equals( m_exteriorRing, ((GM_SurfacePatch) other).getExteriorRing() ) )
+    if( !Arrays.equals( m_exteriorRing, ((GM_AbstractSurfacePatch) other).getExteriorRing() ) )
     {
       return false;
     }
@@ -232,19 +232,19 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, Serializable
     // by Constructor)
     if( m_interiorRings != null )
     {
-      if( ((GM_SurfacePatch) other).getInteriorRings() == null )
+      if( ((GM_AbstractSurfacePatch) other).getInteriorRings() == null )
       {
         return false;
       }
 
-      if( m_interiorRings.length != ((GM_SurfacePatch) other).getInteriorRings().length )
+      if( m_interiorRings.length != ((GM_AbstractSurfacePatch) other).getInteriorRings().length )
       {
         return false;
       }
 
       for( int i = 0; i < m_interiorRings.length; i++ )
       {
-        if( !Arrays.equals( m_interiorRings[i], ((GM_SurfacePatch) other).getInteriorRings()[i] ) )
+        if( !Arrays.equals( m_interiorRings[i], ((GM_AbstractSurfacePatch) other).getInteriorRings()[i] ) )
         {
           return false;
         }
@@ -252,7 +252,7 @@ abstract class GM_SurfacePatch_Impl implements GM_SurfacePatch, Serializable
     }
     else
     {
-      if( ((GM_SurfacePatch) other).getInteriorRings() != null )
+      if( ((GM_AbstractSurfacePatch) other).getInteriorRings() != null )
       {
         return false;
       }

@@ -49,8 +49,8 @@ import org.kalypso.ogc.gml.map.widgets.providers.handles.IHandle;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
@@ -72,14 +72,14 @@ public class PolygonHandlesProvider implements IHandlesProvider
       final GM_Object gmObj = (GM_Object) feature.getProperty( geoVpt );
       if( GeometryUtilities.isPolygonGeometry( geoVpt ) )
       {
-        final GM_Surface<GM_SurfacePatch> surface = (GM_Surface<GM_SurfacePatch>) gmObj;
+        final GM_Polygon<GM_AbstractSurfacePatch> surface = (GM_Polygon<GM_AbstractSurfacePatch>) gmObj;
 
         final int numberOfSurfacePatches = surface.size();
 
         for( int i = 0; i < numberOfSurfacePatches; i++ )
         {
           /* One patch of a surface. It can contain several points. */
-          final GM_SurfacePatch surfacePatch = surface.get( i );
+          final GM_AbstractSurfacePatch surfacePatch = surface.get( i );
 
           final GM_Position[] exteriorRing = surfacePatch.getExteriorRing();
           for( final GM_Position position : exteriorRing )

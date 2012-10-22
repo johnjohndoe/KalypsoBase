@@ -43,8 +43,8 @@ import org.kalypsodeegree.model.geometry.GM_MultiPrimitive;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 
 /**
  * default implementation of the GM_LineString interface of package jago.model.
@@ -122,10 +122,10 @@ class GM_LineString_Impl extends GM_CurveSegment_Impl implements GM_LineString
         final GM_CurveSegment[] cs = new GM_CurveSegment[] { this };
         inter = LinearIntersects.intersects( (GM_Curve) gmo, new GM_Curve_Impl( cs ) );
       }
-      else if( gmo instanceof GM_Surface )
+      else if( gmo instanceof GM_Polygon )
       {
         final GM_CurveSegment[] cs = new GM_CurveSegment[] { this };
-        inter = LinearIntersects.intersects( new GM_Curve_Impl( cs ), (GM_Surface<GM_SurfacePatch>) gmo );
+        inter = LinearIntersects.intersects( new GM_Curve_Impl( cs ), (GM_Polygon<GM_AbstractSurfacePatch>) gmo );
       }
       else if( gmo instanceof GM_MultiPrimitive )
       {

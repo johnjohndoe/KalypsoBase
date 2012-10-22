@@ -48,8 +48,8 @@ import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 
 /**
  * default implementation of the GM_MultiSurface interface from package jago.model.
@@ -83,7 +83,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
    *
    * @param surface
    */
-  public GM_MultiSurface_Impl( final GM_Surface< ? >[] surfaces )
+  public GM_MultiSurface_Impl( final GM_Polygon< ? >[] surfaces )
   {
     this( surfaces, null );
   }
@@ -94,7 +94,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
    * @param surface
    * @param crs
    */
-  public GM_MultiSurface_Impl( final GM_Surface< ? >[] surfaces, final String crs )
+  public GM_MultiSurface_Impl( final GM_Polygon< ? >[] surfaces, final String crs )
   {
     super( surfaces, crs );
   }
@@ -103,7 +103,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
    * adds an GM_Surface to the aggregation
    */
   @Override
-  public void addSurface( final GM_Surface< ? > gms )
+  public void addSurface( final GM_Polygon< ? > gms )
   {
     super.add( gms );
   }
@@ -118,7 +118,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
    *          position where to insert the new GM_Surface
    */
   @Override
-  public void insertSurfaceAt( final GM_Surface< ? > gms, final int index ) throws GM_Exception
+  public void insertSurfaceAt( final GM_Polygon< ? > gms, final int index ) throws GM_Exception
   {
     super.insertObjectAt( gms, index );
   }
@@ -133,7 +133,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
    *          position where to set the new GM_Surface
    */
   @Override
-  public void setSurfaceAt( final GM_Surface< ? > gms, final int index ) throws GM_Exception
+  public void setSurfaceAt( final GM_Polygon< ? > gms, final int index ) throws GM_Exception
   {
     setObjectAt( gms, index );
   }
@@ -144,9 +144,9 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
    * @return the removed GM_Surface
    */
   @Override
-  public GM_Surface< ? > removeSurface( final GM_Surface< ? > gms )
+  public GM_Polygon< ? > removeSurface( final GM_Polygon< ? > gms )
   {
-    return (GM_Surface< ? >) super.removeObject( gms );
+    return (GM_Polygon< ? >) super.removeObject( gms );
   }
 
   /**
@@ -156,59 +156,59 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
    * @return the removed GM_Surface
    */
   @Override
-  public GM_Surface< ? > removeSurfaceAt( final int index ) throws GM_Exception
+  public GM_Polygon< ? > removeSurfaceAt( final int index ) throws GM_Exception
   {
-    return (GM_Surface< ? >) super.removeObjectAt( index );
+    return (GM_Polygon< ? >) super.removeObjectAt( index );
   }
 
   /**
    * returns the GM_Surface at the submitted index.
    */
   @Override
-  public GM_Surface< ? > getSurfaceAt( final int index )
+  public GM_Polygon< ? > getSurfaceAt( final int index )
   {
-    return (GM_Surface< ? >) super.getPrimitiveAt( index );
+    return (GM_Polygon< ? >) super.getPrimitiveAt( index );
   }
 
   /**
    * returns all GM_Surfaces as array
    */
   @Override
-  public GM_Surface< ? >[] getAllSurfaces( )
+  public GM_Polygon< ? >[] getAllSurfaces( )
   {
-    return m_aggregate.toArray( new GM_Surface[getSize()] );
+    return m_aggregate.toArray( new GM_Polygon[getSize()] );
   }
 
   @Override
   public Object getAdapter( final Class adapter )
   {
-    if( adapter == GM_SurfacePatch[].class )
+    if( adapter == GM_AbstractSurfacePatch[].class )
     {
-      final List<GM_SurfacePatch> patchList = new LinkedList<>();
+      final List<GM_AbstractSurfacePatch> patchList = new LinkedList<>();
 
-      final GM_Surface< ? >[] surfaces = getAllSurfaces();
+      final GM_Polygon< ? >[] surfaces = getAllSurfaces();
 
-      for( final GM_Surface< ? > surface : surfaces )
+      for( final GM_Polygon< ? > surface : surfaces )
       {
-        final GM_SurfacePatch[] surfacePatches = (GM_SurfacePatch[]) surface.getAdapter( GM_SurfacePatch[].class );
-        for( final GM_SurfacePatch surfacePatch : surfacePatches )
+        final GM_AbstractSurfacePatch[] surfacePatches = (GM_AbstractSurfacePatch[]) surface.getAdapter( GM_AbstractSurfacePatch[].class );
+        for( final GM_AbstractSurfacePatch surfacePatch : surfacePatches )
         {
           patchList.add( surfacePatch );
         }
       }
-      return patchList.toArray( new GM_SurfacePatch[patchList.size()] );
+      return patchList.toArray( new GM_AbstractSurfacePatch[patchList.size()] );
     }
 
     if( adapter == GM_Curve.class )
     {
       final List<GM_Curve> curveList = new LinkedList<>();
 
-      final GM_Surface< ? >[] surfaces = getAllSurfaces();
+      final GM_Polygon< ? >[] surfaces = getAllSurfaces();
 
-      for( final GM_Surface< ? > surface : surfaces )
+      for( final GM_Polygon< ? > surface : surfaces )
       {
-        final GM_SurfacePatch[] surfacePatches = (GM_SurfacePatch[]) surface.getAdapter( GM_SurfacePatch[].class );
-        for( final GM_SurfacePatch surfacePatch : surfacePatches )
+        final GM_AbstractSurfacePatch[] surfacePatches = (GM_AbstractSurfacePatch[]) surface.getAdapter( GM_AbstractSurfacePatch[].class );
+        for( final GM_AbstractSurfacePatch surfacePatch : surfacePatches )
         {
           final GM_Position[] exteriorRing = surfacePatch.getExteriorRing();
           try
@@ -286,10 +286,10 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
   @Override
   public Object clone( ) throws CloneNotSupportedException
   {
-    final GM_Surface< ? >[] surfaces = getAllSurfaces();
-    final GM_Surface< ? >[] clonedSurfaces = new GM_Surface[surfaces.length];
+    final GM_Polygon< ? >[] surfaces = getAllSurfaces();
+    final GM_Polygon< ? >[] clonedSurfaces = new GM_Polygon[surfaces.length];
     for( int i = 0; i < surfaces.length; i++ )
-      clonedSurfaces[i] = (GM_Surface< ? >) surfaces[i].clone();
+      clonedSurfaces[i] = (GM_Polygon< ? >) surfaces[i].clone();
 
     return new GM_MultiSurface_Impl( clonedSurfaces, getCoordinateSystem() );
   }
@@ -313,7 +313,7 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
   @Override
   public int getCoordinateDimension( )
   {
-    final GM_SurfacePatch sp = getSurfaceAt( 0 ).get( 0 );
+    final GM_AbstractSurfacePatch sp = getSurfaceAt( 0 ).getSurfacePatch();
     return sp.getExteriorRing()[0].getCoordinateDimension();
   }
 
@@ -325,10 +325,10 @@ final class GM_MultiSurface_Impl extends GM_MultiPrimitive_Impl implements GM_Mu
     if( sourceCRS == null || sourceCRS.equalsIgnoreCase( targetCRS ) )
       return this;
 
-    final GM_Surface< ? >[] surfaces = new GM_Surface[getSize()];
+    final GM_Polygon< ? >[] surfaces = new GM_Polygon[getSize()];
 
     for( int i = 0; i < getSize(); i++ )
-      surfaces[i] = (GM_Surface< ? >) getSurfaceAt( i ).transform( targetCRS );
+      surfaces[i] = (GM_Polygon< ? >) getSurfaceAt( i ).transform( targetCRS );
 
     return GeometryFactory.createGM_MultiSurface( surfaces, targetCRS );
   }

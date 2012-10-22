@@ -63,14 +63,14 @@ public class ArrayFeatureList extends AbstractFeatureList
 {
   public static final int INITIAL_CAPACITY = 4;
 
-  private final ArrayList<Object> m_items = new ArrayList<>( 4 );
+  private final ArrayList<Object> m_items = new ArrayList<>( INITIAL_CAPACITY );
 
-  public ArrayFeatureList( Feature parentFeature, IRelationType parentFTP )
+  public ArrayFeatureList( final Feature parentFeature, final IRelationType parentFTP )
   {
     super( parentFeature, parentFTP );
   }
 
-  public ArrayFeatureList( Feature parentFeature, IRelationType parentFTP, final IEnvelopeProvider envelopeProvider )
+  public ArrayFeatureList( final Feature parentFeature, final IRelationType parentFTP, final IEnvelopeProvider envelopeProvider )
   {
     super( parentFeature, parentFTP, envelopeProvider );
   }
@@ -81,9 +81,10 @@ public class ArrayFeatureList extends AbstractFeatureList
    * @see java.util.List#add(int, java.lang.Object)
    */
   @Override
-  public void add( int index, Object object )
+  public void add( final int index, final Object object )
   {
     checkCanAdd( 1 );
+//    final Object linkOrLocal = localFromLink( object );
     registerFeature( object );
     m_items.add( index, object );
   }
@@ -92,12 +93,35 @@ public class ArrayFeatureList extends AbstractFeatureList
    * @see java.util.List#add(java.lang.Object)
    */
   @Override
-  public boolean add( Object object )
+  public boolean add( final Object object )
   {
     checkCanAdd( 1 );
+//    final Object linkOrLocal = localFromLink( object );
     registerFeature( object );
     return m_items.add( object );
   }
+
+//  private Object localFromLink( final Object object )
+//  {
+//    if( object instanceof XLinkedFeature_Impl )
+//    {
+//      // check for local links
+//      final String href = ((XLinkedFeature_Impl)object).getHref();
+//      if( href.startsWith( "#" ) )
+//        return href;
+//    }
+//    return object;
+//  }
+
+//  private Object linkFromLocal( final Object object )
+//  {
+//    if( object instanceof String )
+//    {
+//      final IRelationType propertyType = getPropertyType();
+//      return new XLinkedFeature_Impl( getOwner(), propertyType, propertyType.getTargetFeatureType(), (String)object );
+//    }
+//    return object;
+//  }
 
   /**
    * @see java.util.List#clear()
@@ -114,7 +138,7 @@ public class ArrayFeatureList extends AbstractFeatureList
    * @see java.util.List#get(int)
    */
   @Override
-  public Object get( int index )
+  public Object get( final int index )
   {
     return m_items.get( index );
   }
@@ -123,7 +147,7 @@ public class ArrayFeatureList extends AbstractFeatureList
    * @see java.util.List#indexOf(java.lang.Object)
    */
   @Override
-  public int indexOf( Object object )
+  public int indexOf( final Object object )
   {
     return m_items.indexOf( object );
   }
@@ -132,7 +156,7 @@ public class ArrayFeatureList extends AbstractFeatureList
    * @see java.util.List#lastIndexOf(java.lang.Object)
    */
   @Override
-  public int lastIndexOf( Object object )
+  public int lastIndexOf( final Object object )
   {
     return m_items.lastIndexOf( object );
   }
@@ -141,7 +165,7 @@ public class ArrayFeatureList extends AbstractFeatureList
    * @see java.util.List#listIterator(int)
    */
   @Override
-  public ListIterator listIterator( int index )
+  public ListIterator listIterator( final int index )
   {
     return m_items.listIterator( index );
   }
@@ -150,7 +174,7 @@ public class ArrayFeatureList extends AbstractFeatureList
    * @see java.util.List#remove(int)
    */
   @Override
-  public Object remove( int index )
+  public Object remove( final int index )
   {
     final Object object = m_items.remove( index );
     unregisterFeature( object );
@@ -161,7 +185,7 @@ public class ArrayFeatureList extends AbstractFeatureList
    * @see java.util.List#remove(java.lang.Object)
    */
   @Override
-  public boolean remove( Object object )
+  public boolean remove( final Object object )
   {
     final int index = indexOf( object );
     if( index == -1 )
@@ -213,33 +237,52 @@ public class ArrayFeatureList extends AbstractFeatureList
    * @see org.kalypsodeegree.model.sort.JMSpatialIndex#query(org.kalypsodeegree.model.geometry.GM_Envelope, java.util.List)
    */
   @Override
-  public List query( GM_Envelope envelope, List receiver )
+  public List query( final GM_Envelope envelope, final List receiver )
   {
-    final List<Object> result = receiver == null ? new ArrayList<>() : receiver;
-    if( envelope == null )
-    {
-      result.addAll( m_items );
-      return result;
-    }
-
-    for( Object object : m_items )
-    {
-      final GM_Envelope itemEnv = getEnvelope( object );
-      if( envelope.intersects( itemEnv ) )
-        result.add( object );
-    }
-
-    return result;
+    return queryInternal( envelope, receiver, false );
   }
 
   /**
    * @see org.kalypsodeegree.model.sort.JMSpatialIndex#query(org.kalypsodeegree.model.geometry.GM_Position, java.util.List)
    */
   @Override
-  public List query( GM_Position pos, List receiver )
+  public List query( final GM_Position pos, final List receiver )
   {
     final GM_Envelope envelope = new GM_Envelope_Impl( pos.getX() - 1.0, pos.getY() - 1.0, pos.getX() + 1.0, pos.getY() + 1.0, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
-    return query( envelope, receiver );
+    return queryInternal( envelope, receiver, false );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#query(org.kalypsodeegree.model.geometry.GM_Envelope, java.util.List)
+   */
+  @SuppressWarnings( { "unchecked" } )
+  @Override
+  public <T extends Feature> List<T> queryResolved( final GM_Envelope envelope, final List<T> receiver )
+  {
+    return (List<T>)queryInternal( envelope, receiver, true );
+  }
+
+  /**
+   * @see org.kalypsodeegree.model.sort.JMSpatialIndex#query(org.kalypsodeegree.model.geometry.GM_Position, java.util.List)
+   */
+  @SuppressWarnings( { "unchecked" } )
+  @Override
+  public <T extends Feature> List<T> queryResolved( final GM_Position pos, final List<T> receiver )
+  {
+    final GM_Envelope envelope = new GM_Envelope_Impl( pos.getX() - 1.0, pos.getY() - 1.0, pos.getX() + 1.0, pos.getY() + 1.0, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() );
+    return (List<T>)queryInternal( envelope, receiver, true );
+  }
+
+  @SuppressWarnings( { "unchecked", "rawtypes" } )
+  private List< ? > queryInternal( final GM_Envelope envelope, final List receiver, final boolean resolve )
+  {
+    final List<Object> result = (receiver == null) ? new ArrayList<>() : receiver;
+    for( final Object object : m_items )
+    {
+      if( envelope == null || envelope.intersects( getEnvelope( object ) ) )
+        result.add( resolve ? resolveFeature( object ) : object );
+    }
+    return result;
   }
 
 }

@@ -41,7 +41,7 @@
 package org.kalypso.ogc.gml.map.widgets.builders;
 
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -86,10 +86,10 @@ public class MultiPolygonGeometryBuilder extends PolygonGeometryBuilder
   @Override
   public GM_Object finish( ) throws Exception
   {
-    final GM_Surface< ? > result = (GM_Surface< ? >) super.finish();
+    final GM_Polygon< ? > result = (GM_Polygon< ? >) super.finish();
     if( result != null )
     {
-      return GeometryFactory.createGM_MultiSurface( new GM_Surface[] { result }, result.getCoordinateSystem() );
+      return GeometryFactory.createGM_MultiSurface( new GM_Polygon[] { result }, result.getCoordinateSystem() );
     }
     return null;
   }

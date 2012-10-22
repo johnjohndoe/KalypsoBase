@@ -50,7 +50,7 @@ import org.kalypso.commons.xml.NS;
  * @version $Revision$ $Date$
  *          <p>
  */
-public interface GM_Point extends GM_Primitive
+public interface GM_Point extends GM_AbstractGeometry
 {
   QName POINT_ELEMENT = new QName( NS.GML3, "Point" );
 

@@ -43,15 +43,15 @@ package org.kalypso.ogc.gml.map.widgets.advanced.selection;
 import org.kalypso.ogc.gml.map.widgets.advanced.IAdvancedWidgetChangeListener;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidget.EDIT_MODE;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 
 /**
  * @author Dirk Kuch
  */
 public interface IAdvancedSelectionWidgetDataProvider
 {
-  Feature[] query( GM_Surface< ? extends GM_SurfacePatch> surface, EDIT_MODE editMode );
+  Feature[] query( GM_Polygon< ? extends GM_AbstractSurfacePatch> surface, EDIT_MODE editMode );
 
   Feature[] getLastQuery( );
 

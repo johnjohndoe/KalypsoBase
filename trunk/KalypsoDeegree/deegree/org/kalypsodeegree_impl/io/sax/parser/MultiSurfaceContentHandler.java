@@ -47,9 +47,9 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree_impl.io.sax.parser.geometrySpec.MultiSurfaceSpecification;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.Attributes;
@@ -62,11 +62,11 @@ import org.xml.sax.XMLReader;
  *
  * @author Gernot Belger
  */
-public class MultiSurfaceContentHandler extends GMLElementContentHandler implements ISurfaceHandler<GM_Polygon>
+public class MultiSurfaceContentHandler extends GMLElementContentHandler implements ISurfaceHandler<GM_PolygonPatch>
 {
   public static final String ELEMENT_MULTI_SURFACE = GM_MultiSurface.MULTI_SURFACE_ELEMENT.getLocalPart();
 
-  private final List<GM_Surface< ? extends GM_SurfacePatch>> m_surfaces = new ArrayList<>();
+  private final List<GM_Polygon< ? extends GM_AbstractSurfacePatch>> m_surfaces = new ArrayList<>();
 
   private final UnmarshallResultEater m_resultEater;
 
@@ -126,13 +126,13 @@ public class MultiSurfaceContentHandler extends GMLElementContentHandler impleme
 
   private GM_MultiSurface endMultiSurface( )
   {
-    final GM_Surface< ? extends GM_SurfacePatch>[] patches = m_surfaces.toArray( new GM_Surface[m_surfaces.size()] );
+    final GM_Polygon< ? extends GM_AbstractSurfacePatch>[] patches = m_surfaces.toArray( new GM_Polygon[m_surfaces.size()] );
 
     return GeometryFactory.createGM_MultiSurface( patches, m_activeSrs );
   }
 
   @Override
-  public void handle( final GM_Surface<GM_Polygon> element )
+  public void handle( final GM_Polygon<GM_PolygonPatch> element )
   {
     m_surfaces.add( element );
   }

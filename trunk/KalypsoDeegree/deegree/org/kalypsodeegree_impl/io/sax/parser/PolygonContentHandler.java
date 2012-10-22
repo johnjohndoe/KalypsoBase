@@ -47,11 +47,12 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.io.sax.parser.geometrySpec.PolygonSpecification;
+import org.kalypsodeegree_impl.model.geometry.GM_Polygon_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -67,7 +68,7 @@ public class PolygonContentHandler extends GMLElementContentHandler implements I
 {
   private final UnmarshallResultEater m_resultEater;
 
-  private GM_Surface<GM_Polygon> m_surface = null;
+  private GM_Polygon<GM_PolygonPatch> m_surface = null;
 
   private String m_activeSrs;
 
@@ -75,7 +76,7 @@ public class PolygonContentHandler extends GMLElementContentHandler implements I
 
   private final List<GM_Position[]> m_interiorRings = new ArrayList<>();
 
-  private final ISurfaceHandler<GM_Polygon> m_surfaceHandler;
+  private final ISurfaceHandler<GM_PolygonPatch> m_surfaceHandler;
 
   public PolygonContentHandler( final XMLReader xmlReader, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContentHandler, final String defaultSrs )
   {
@@ -87,14 +88,14 @@ public class PolygonContentHandler extends GMLElementContentHandler implements I
     this( xmlReader, null, resultEater, parentContentHandler, null );
   }
 
-  public PolygonContentHandler( final XMLReader xmlReader, final ISurfaceHandler<GM_Polygon> surfaceHandler, final String defaultSrs )
+  public PolygonContentHandler( final XMLReader xmlReader, final ISurfaceHandler<GM_PolygonPatch> surfaceHandler, final String defaultSrs )
   {
     this( xmlReader, surfaceHandler, null, surfaceHandler, defaultSrs );
   }
 
-  private PolygonContentHandler( final XMLReader xmlReader, final ISurfaceHandler<GM_Polygon> surfaceHandler, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContentHandler, final String defaultSrs )
+  private PolygonContentHandler( final XMLReader xmlReader, final ISurfaceHandler<GM_PolygonPatch> surfaceHandler, final UnmarshallResultEater resultEater, final IGmlContentHandler parentContentHandler, final String defaultSrs )
   {
-    super( xmlReader, NS.GML3, GM_Polygon.POLYGON_ELEMENT.getLocalPart(), defaultSrs, parentContentHandler );
+    super( xmlReader, NS.GML3, GM_Polygon_Impl.POLYGON_ELEMENT.getLocalPart(), defaultSrs, parentContentHandler );
 
     m_resultEater = resultEater;
     m_surfaceHandler = surfaceHandler;
@@ -135,7 +136,7 @@ public class PolygonContentHandler extends GMLElementContentHandler implements I
     setDelegate( choiceContentHandler );
   }
 
-  private GM_Surface<GM_Polygon> endSurface( ) throws SAXParseException
+  private GM_Polygon<GM_PolygonPatch> endSurface( ) throws SAXParseException
   {
     try
     {

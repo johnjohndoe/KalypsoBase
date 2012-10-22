@@ -9,7 +9,7 @@ import org.kalypsodeegree.model.coverage.RangeSetFile;
 import org.kalypsodeegree.model.elevation.ElevationException;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -251,7 +251,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   }
 
   @Override
-  public GM_Surface< ? > getCell( final int x, final int y, final String targetCRS ) throws GeoGridException
+  public GM_Polygon< ? > getCell( final int x, final int y, final String targetCRS ) throws GeoGridException
   {
     final IGeoGrid grid = getGrid();
     if( grid == null )
@@ -267,7 +267,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   }
 
   @Override
-  public GM_Surface< ? > getSurface( final String targetCRS ) throws GeoGridException
+  public GM_Polygon< ? > getSurface( final String targetCRS ) throws GeoGridException
   {
     final IGeoGrid grid = getGrid();
     if( grid == null )
@@ -279,7 +279,7 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   @Override
   public GM_Envelope getBoundingBox( ) throws ElevationException
   {
-    final GM_Surface< ? > surface = getSurface( m_sourceCRS );
+    final GM_Polygon< ? > surface = getSurface( m_sourceCRS );
     return surface.getEnvelope();
   }
 

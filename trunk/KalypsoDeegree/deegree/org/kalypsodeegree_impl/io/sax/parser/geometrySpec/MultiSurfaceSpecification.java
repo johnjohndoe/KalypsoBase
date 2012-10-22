@@ -43,7 +43,7 @@ package org.kalypsodeegree_impl.io.sax.parser.geometrySpec;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.types.IGmlContentHandler;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree_impl.io.sax.parser.ISurfaceHandler;
 import org.kalypsodeegree_impl.io.sax.parser.SurfaceMemberContentHandler;
 import org.kalypsodeegree_impl.tools.GMLConstants;
@@ -66,7 +66,7 @@ public class MultiSurfaceSpecification implements IGeometrySpecification
 
     /* gml:surfaceMember */
     if( GMLConstants.QN_SURFACE_MEMBER.equals( property ) )
-      return new SurfaceMemberContentHandler( reader, parent, (ISurfaceHandler<GM_Polygon>) receiver, defaultSrs );
+      return new SurfaceMemberContentHandler( reader, parent, (ISurfaceHandler<GM_PolygonPatch>) receiver, defaultSrs );
 
     // TODO: gml:surfaceMembers
 // if( GMLConstants.QN_SURFACE_MEMBER.equals( property ) )

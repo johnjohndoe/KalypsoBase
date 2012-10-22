@@ -47,6 +47,6 @@ package org.kalypsodeegree.model.geometry;
  *          <p>
  */
 
-public interface GM_Solid extends GM_Primitive
+public interface GM_Solid extends GM_AbstractGeometry
 {
 }

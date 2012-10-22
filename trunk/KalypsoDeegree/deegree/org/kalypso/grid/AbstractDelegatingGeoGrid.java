@@ -45,7 +45,7 @@ import java.math.BigDecimal;
 import org.kalypsodeegree.model.elevation.ElevationException;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
@@ -188,7 +188,7 @@ public abstract class AbstractDelegatingGeoGrid implements IGeoGrid
   }
 
   @Override
-  public GM_Surface< ? > getSurface( final String targetCRS ) throws GeoGridException
+  public GM_Polygon< ? > getSurface( final String targetCRS ) throws GeoGridException
   {
     if( m_delegate == null )
       throw new GeoGridException( "No grid-delegate available", null );
@@ -197,7 +197,7 @@ public abstract class AbstractDelegatingGeoGrid implements IGeoGrid
   }
 
   @Override
-  public GM_Surface< ? > getCell( final int x, final int y, final String targetCRS ) throws GeoGridException
+  public GM_Polygon< ? > getCell( final int x, final int y, final String targetCRS ) throws GeoGridException
   {
     if( m_delegate == null )
       throw new GeoGridException( "No grid-delegate available", null );

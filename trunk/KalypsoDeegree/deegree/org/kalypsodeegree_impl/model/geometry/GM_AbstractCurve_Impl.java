@@ -35,51 +35,45 @@
  */
 package org.kalypsodeegree_impl.model.geometry;
 
-import java.lang.reflect.Array;
-
-import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Primitive;
+import org.kalypsodeegree.model.geometry.GM_Exception;
+import org.kalypsodeegree.model.geometry.GM_AbstractCurve;
 
 /**
- * default implementation of the GM_Primitive interface from package jago.model.
+ * default implementierung of the GM_OrientableSurface interface from package jago.model. the implementation is abstract
+ * because only initialization of the spatial reference system is unique to all orientated curves
+ * <p>
  * ------------------------------------------------------------
+ * </p>
  *
- * @version 8.6.2001
+ * @version 11.6.2001
  * @author Andreas Poth
+ *         <p>
  */
-abstract class GM_Primitive_Impl extends GM_Object_Impl implements GM_Primitive
+abstract class GM_AbstractCurve_Impl extends GM_AbstractGeometricPrimitive_Impl implements GM_AbstractCurve
 {
   /** Use serialVersionUID for interoperability. */
-  private final static long serialVersionUID = -2121656681131551613L;
+  private final static long serialVersionUID = -133652834691775077L;
 
   /**
-   * Creates a new GM_Primitive_Impl object.
+   * Creates a new GM_OrientableCurve_Impl object.
    *
    * @param crs
+   * @throws GM_Exception
    */
-  protected GM_Primitive_Impl( final String crs )
+  protected GM_AbstractCurve_Impl( final String crs ) throws GM_Exception
   {
-    super( crs );
+    super( crs, '+' );
   }
 
-  @Override
-  public Object getAdapter( final Class adapter )
+  /**
+   * Creates a new GM_OrientableCurve_Impl object.
+   *
+   * @param crs
+   * @param orientation
+   * @throws GM_Exception
+   */
+  protected GM_AbstractCurve_Impl( final String crs, final char orientation ) throws GM_Exception
   {
-    /* A primitive adapts to the array of itself adapted to the desired class. */
-    final Class< ? > componentType = adapter.getComponentType();
-    if( componentType != null && GM_Object.class.isAssignableFrom( componentType ) )
-    {
-      final Object adaptedObject = getAdapter( componentType );
-      if( adaptedObject == null )
-        return null;
-
-      final Object[] adaptedArray = (Object[]) Array.newInstance( componentType, 1 );
-      adaptedArray[0] = adaptedObject;
-
-      return adaptedArray;
-    }
-
-    return super.getAdapter( adapter );
+    super( crs, orientation );
   }
-
 }

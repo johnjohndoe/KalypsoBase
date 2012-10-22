@@ -52,8 +52,8 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.sort.JMSpatialIndex;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
@@ -91,7 +91,7 @@ public class JMSelector
         {
           final String coordinateSystem = defaultGeometryProperty.getCoordinateSystem();
 
-          final GM_Surface< ? extends GM_SurfacePatch> bbox = GeometryFactory.createGM_Surface( env, coordinateSystem );
+          final GM_Polygon< ? extends GM_AbstractSurfacePatch> bbox = GeometryFactory.createGM_Surface( env, coordinateSystem );
 
           if( selectWithinBoxStatus && bbox.contains( defaultGeometryProperty ) || !selectWithinBoxStatus && bbox.intersects( defaultGeometryProperty ) )
             testFE.add( fe );
@@ -180,7 +180,7 @@ public class JMSelector
       double distance = defaultGeometryProperty.distance( pos );
       // some geometries must be prefered, otherwise it is not possible to
       // select a point inside a polygon as the polygone is always more near
-      if( defaultGeometryProperty instanceof GM_Surface )
+      if( defaultGeometryProperty instanceof GM_Polygon )
         distance += 2 * r / 5;
       if( defaultGeometryProperty instanceof GM_Curve )
         distance += r / 5;
@@ -198,9 +198,9 @@ public class JMSelector
     GM_Position[] positions = null;
     try
     {
-      if( geom instanceof GM_Surface )
+      if( geom instanceof GM_Polygon )
       {
-        final GM_Surface< ? extends GM_SurfacePatch> surface = (GM_Surface< ? >) geom;
+        final GM_Polygon< ? extends GM_AbstractSurfacePatch> surface = (GM_Polygon< ? >) geom;
         positions = surface.getSurfaceBoundary().getExteriorRing().getPositions();
       }
       else if( geom instanceof GM_Curve )

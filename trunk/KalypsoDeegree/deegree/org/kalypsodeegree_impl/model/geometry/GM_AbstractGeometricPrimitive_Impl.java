@@ -36,7 +36,7 @@
 package org.kalypsodeegree_impl.model.geometry;
 
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_OrientablePrimitive;
+import org.kalypsodeegree.model.geometry.GM_AbstractGeometricPrimitive;
 
 /**
  * default implementation of the GM_OrientablePrimitive interface from package jago.model. the implementation is
@@ -49,7 +49,7 @@ import org.kalypsodeegree.model.geometry.GM_OrientablePrimitive;
  * @author Andreas Poth
  *         <p>
  */
-abstract class GM_OrientablePrimitive_Impl extends GM_Primitive_Impl implements GM_OrientablePrimitive
+abstract class GM_AbstractGeometricPrimitive_Impl extends GM_AbstractGeometry_Impl implements GM_AbstractGeometricPrimitive
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 5655221930434396483L;
@@ -66,7 +66,7 @@ abstract class GM_OrientablePrimitive_Impl extends GM_Primitive_Impl implements 
    * @exception GM_Exception
    *              will be thrown if orientation is invalid
    */
-  protected GM_OrientablePrimitive_Impl( final String crs, final char orientation ) throws GM_Exception
+  protected GM_AbstractGeometricPrimitive_Impl( final String crs, final char orientation ) throws GM_Exception
   {
     super( crs );
     setOrientation( orientation );

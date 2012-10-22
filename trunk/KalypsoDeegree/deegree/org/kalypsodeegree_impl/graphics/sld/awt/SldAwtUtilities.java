@@ -42,8 +42,8 @@ import java.awt.geom.Area;
 
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 
 /**
  * Helper class for ocnversion beetween GM_Object and awt-Shapes.
@@ -123,9 +123,9 @@ public final class SldAwtUtilities
   /**
    * Creates an {@link Area} with holes from an exterior ring and interior rings.
    */
-  public static <T extends GM_SurfacePatch> Shape shapeFromSurface( final GM_Surface<T> surface, final double strokeWidth, final GeoTransform world2screen )
+  public static <T extends GM_AbstractSurfacePatch> Shape shapeFromSurface( final GM_Polygon<T> surface, final double strokeWidth, final GeoTransform world2screen )
   {
-    final GM_SurfacePatch patch = surface.get( 0 );
+    final GM_AbstractSurfacePatch patch = surface.get( 0 );
     final GM_Position[] outerRing = patch.getExteriorRing();
     final GM_Position[][] innerRings = patch.getInteriorRings();
 
@@ -189,7 +189,7 @@ public final class SldAwtUtilities
     }
   }
 
-  public static void paintSurface( final Graphics2D g2, final GM_Surface< ? > surface, final GeoTransform world2screen, final FillPainter fillPainter, final StrokePainter strokePainter ) throws Exception
+  public static void paintSurface( final Graphics2D g2, final GM_Polygon< ? > surface, final GeoTransform world2screen, final FillPainter fillPainter, final StrokePainter strokePainter ) throws Exception
   {
     final Shape shape = SldAwtUtilities.shapeFromSurface( surface, strokePainter.getWidth(), world2screen );
 

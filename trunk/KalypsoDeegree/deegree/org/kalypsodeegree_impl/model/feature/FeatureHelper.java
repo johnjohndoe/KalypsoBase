@@ -80,7 +80,6 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
@@ -89,6 +88,7 @@ import org.kalypsodeegree_impl.model.feature.tokenreplace.FeatureIdTokenReplacer
 import org.kalypsodeegree_impl.model.feature.tokenreplace.ListPropertyTokenReplacer;
 import org.kalypsodeegree_impl.model.feature.tokenreplace.PropertyTokenReplacer;
 import org.kalypsodeegree_impl.model.feature.visitors.CollectorVisitor;
+import org.kalypsodeegree_impl.model.geometry.GM_Polygon_Impl;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
@@ -309,7 +309,7 @@ public final class FeatureHelper
     if( sourceGeom instanceof GM_MultiSurface )
     {
       final GM_MultiSurface multiSurface = (GM_MultiSurface) sourceGeom;
-      if( GM_Polygon.POLYGON_ELEMENT.equals( targetQName ) || GM_Surface.SURFACE_ELEMENT.equals( targetQName ) )
+      if( GM_Polygon_Impl.POLYGON_ELEMENT.equals( targetQName ) || GM_Polygon.SURFACE_ELEMENT.equals( targetQName ) )
       {
         if( multiSurface.getSize() > 0 )
           return multiSurface.getObjectAt( 0 );

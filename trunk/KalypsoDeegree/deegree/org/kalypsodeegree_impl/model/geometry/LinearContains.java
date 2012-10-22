@@ -38,19 +38,19 @@ package org.kalypsodeegree_impl.model.geometry;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveSegment;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
-import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 
 /**
  * Andreas: This code doesn't seems to be used, doesn't do anything and causes yellow thingis. Delete it?
- *
+ * 
  * @version $Revision$
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  */
@@ -59,7 +59,7 @@ class LinearContains
   /**
    * the operation returns true if the submitted point contains the submitted surface patch
    */
-  public static boolean contains( final GM_SurfacePatch surface, final GM_Position point )
+  public static boolean contains( final GM_AbstractSurfacePatch surface, final GM_Position point )
   {
     boolean con = false;
     final GM_Position[] ex = surface.getExteriorRing();
@@ -88,7 +88,7 @@ class LinearContains
   /**
    * the operation returns true if the submitted curve segment contains the submitted surface patch
    */
-  public static boolean contains( final GM_SurfacePatch surface, final GM_CurveSegment curve )
+  public static boolean contains( final GM_AbstractSurfacePatch surface, final GM_CurveSegment curve )
   {
     boolean con = true;
     final GM_Position[] ex = surface.getExteriorRing();
@@ -134,7 +134,7 @@ class LinearContains
   /**
    * the operation returns true if the first surface patches contains the second one
    */
-  public static boolean contains( final GM_SurfacePatch surface1, final GM_SurfacePatch surface2 )
+  public static boolean contains( final GM_AbstractSurfacePatch surface1, final GM_AbstractSurfacePatch surface2 )
   {
     boolean con = true;
     final GM_Position[] ex = surface1.getExteriorRing();
@@ -234,21 +234,9 @@ class LinearContains
   /**
    * the operation returns true if the submitted point contains the submitted surface
    */
-  public static boolean contains( final GM_Surface< ? > surface, final GM_Point point ) throws Exception
+  public static boolean contains( final GM_Polygon< ? > surface, final GM_Point point ) throws Exception
   {
-    boolean contain = false;
-    final int cnt = surface.size();
-
-    for( int i = 0; i < cnt; i++ )
-    {
-      if( contains( surface.get( i ), point.getPosition() ) )
-      {
-        contain = true;
-        break;
-      }
-    }
-
-    return contain;
+    return contains( surface.getSurfacePatch(), point.getPosition() );
   }
 
   /**
@@ -267,17 +255,17 @@ class LinearContains
         positions.add( element );
     }
 
-    return (GM_Position[]) positions.toArray();
+    return (GM_Position[])positions.toArray();
   }
 
   /**
    * the operation returns true if the submitted curve contains the submitted surface
    */
-  public static boolean contains( final GM_Surface< ? > surface, final GM_Curve curve ) throws GM_Exception
+  public static boolean contains( final GM_Polygon< ? > surface, final GM_Curve curve ) throws GM_Exception
   {
     // gather the positions of the crings (exterior and interior) and
     // the curve as arrays of GM_Positions
-    final GM_SurfaceBoundary boundary = (GM_SurfaceBoundary) surface.getBoundary();
+    final GM_SurfaceBoundary boundary = (GM_SurfaceBoundary)surface.getBoundary();
     final GM_Ring extRing = boundary.getExteriorRing();
     final GM_Ring[] intRings = boundary.getInteriorRings();
 
@@ -313,9 +301,9 @@ class LinearContains
   /**
    * the operation returns true if the two submitted surfaces contains
    */
-  public static boolean contains( final GM_Surface< ? > surface2, final GM_Surface< ? > surface1 ) throws Exception
+  public static boolean contains( final GM_Polygon< ? > surface2, final GM_Polygon< ? > surface1 ) throws Exception
   {
-    return contains( surface2.get( 0 ), surface1.get( 0 ) );
+    return contains( surface2.getSurfacePatch(), surface1.getSurfacePatch() );
   }
 
   /**

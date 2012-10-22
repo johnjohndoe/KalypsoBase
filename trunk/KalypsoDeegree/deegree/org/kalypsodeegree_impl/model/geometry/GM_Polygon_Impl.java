@@ -35,99 +35,262 @@
  */
 package org.kalypsodeegree_impl.model.geometry;
 
+import java.util.Iterator;
+
+import javax.xml.namespace.QName;
+
+import org.apache.commons.collections.iterators.SingletonIterator;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.kalypso.commons.xml.NS;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.transformation.transformer.GeoTransformerException;
-import org.kalypsodeegree.model.geometry.GM_Aggregate;
+import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Boundary;
 import org.kalypsodeegree.model.geometry.GM_Curve;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
+import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
+import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
- * default implementierung of the GM_Polygon interface from package jago.model.
- * ------------------------------------------------------------
- *
- * @version 11.6.2001
- * @author Andreas Poth
+ * default implementation of the GM_Surface interface from package jago.model.
+ * <p>
+ * </p>
+ * for simplicity of the implementation it is assumed that a surface is build from just one surface patch. this isn't
+ * completly confrom to the ISO 19107 and the OGC GAIA specification but sufficient for most applications.
+ * <p>
+ * </p>
+ * It will be extended to fullfill the complete specs as soon as possible.
+ * <p>
+ * -----------------------------------------------------------------------
+ * </p>
+ * 
+ * @version 05.04.2002
+ * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  */
-class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon
+public class GM_Polygon_Impl<T extends GM_AbstractSurfacePatch> extends GM_AbstractSurface_Impl<T> implements GM_Polygon<T>
 {
   /** Use serialVersionUID for interoperability. */
-  private final static long serialVersionUID = -1293845886457211088L;
+  private final static long serialVersionUID = -2148069106391096842L;
+
+  private T m_patch;
+
+  public static final QName POLYGON_ELEMENT = new QName( NS.GML3, "Polygon" ); //$NON-NLS-1$
 
   /**
-   * Creates a new GM_Polygon_Impl object.
-   *
-   * @param interpolation
-   * @param exteriorRing
-   * @param interiorRings
-   * @param crs
-   * @throws GM_Exception
+   * initializes the surface with default orientation submitting one surface patch.
+   * 
+   * @param surfacePatch
+   *          patches of the surface.
    */
-  public GM_Polygon_Impl( final GM_Position[] exteriorRing, final GM_Position[][] interiorRings, final String crs ) throws GM_Exception
+  public GM_Polygon_Impl( final T surfacePatch ) throws GM_Exception
   {
-    super( exteriorRing, interiorRings, crs );
+    this( '+', surfacePatch );
   }
 
   /**
-   * checks if this curve is completly equal to the submitted geometry
-   *
+   * initializes the surface submitting the orientation and one surface patch.
+   * 
+   * @param surfacePatch
+   *          patches of the surface.
+   */
+  public GM_Polygon_Impl( final char orientation, final T surfacePatch ) throws GM_Exception
+  {
+    super( surfacePatch.getCoordinateSystem(), orientation );
+
+// m_list = Collections.singletonList( surfacePatch );
+    m_patch = surfacePatch;
+  }
+
+  /**
+   * initializes the surface with default orientation submitting the surfaces boundary
+   * 
+   * @param boundary
+   *          boundary of the surface
+   */
+  public GM_Polygon_Impl( final GM_SurfaceBoundary boundary ) throws GM_Exception
+  {
+    this( '+', boundary );
+  }
+
+  /**
+   * initializes the surface submitting the orientation and the surfaces boundary.
+   * 
+   * @param boundary
+   *          boundary of the surface
+   */
+  public GM_Polygon_Impl( final char orientation, final GM_SurfaceBoundary boundary ) throws GM_Exception
+  {
+    super( boundary.getCoordinateSystem(), orientation );
+
+    m_patch = (T)GeometryFactory.createGM_PolygonPatch( boundary.getExteriorRing(), boundary.getInteriorRings(), boundary.getCoordinateSystem() );
+  }
+
+  /**
+   * calculates the boundary and area of the surface
+   */
+  @Override
+  protected GM_Boundary calculateBoundary( ) throws GM_Exception
+  {
+    final GM_Ring ext = new GM_Ring_Impl( m_patch.getExteriorRing(), getCoordinateSystem() );
+    final GM_Position[][] inn_ = m_patch.getInteriorRings();
+    GM_Ring[] inn = null;
+
+    if( inn_ != null )
+    {
+      inn = new GM_Ring_Impl[inn_.length];
+
+      for( int i = 0; i < inn_.length; i++ )
+      {
+        inn[i] = new GM_Ring_Impl( inn_[i], getCoordinateSystem() );
+      }
+    }
+
+    return new GM_SurfaceBoundary_Impl( ext, inn );
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#calculateCentroid()
+   */
+  @Override
+  protected GM_Point calculateCentroid( )
+  {
+    return GeometryUtilities.guessPointOnSurface( this, m_patch.getCentroid(), 3 );
+  }
+
+  /**
+   * Optimization: we do not need to instantiate a new envelope, just get the one from the patch
+   * 
+   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#getEnvelope()
+   */
+  @Override
+  public GM_Envelope getEnvelope( )
+  {
+    return m_patch.getEnvelope();
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#calculateEnvelope()
+   */
+  @Override
+  protected GM_Envelope calculateEnvelope( )
+  {
+    // as we overwrite getEnvelope, this should never be called
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * returns the length of all boundaries of the surface in a reference system appropriate for measuring distances.
+   */
+  @Override
+  public double getPerimeter( )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * The operation "area" shall return the area of this GM_GenericSurface. The area of a 2 dimensional geometric object
+   * shall be a numeric measure of its surface area Since area is an accumulation (integral) of the product of two
+   * distances, its return value shall be in a unit of measure appropriate for measuring distances squared.
+   */
+  @Override
+  public double getArea( )
+  {
+    return m_patch.getArea();
+  }
+
+  /**
+   * returns the boundary of the surface as surface boundary
+   */
+  @Override
+  public GM_SurfaceBoundary getSurfaceBoundary( )
+  {
+    return (GM_SurfaceBoundary)getBoundary();
+  }
+
+  /**
+   * returns the number of patches building the surface
+   */
+  public int getNumberOfSurfacePatches( )
+  {
+    return 1;
+  }
+
+  /**
+   * returns the surface patch at the submitted index
+   */
+  @Override
+  public T getSurfacePatch( )
+  {
+    return m_patch;
+  }
+
+  /**
+   * checks if this surface is completly equal to the submitted geometry
+   * 
    * @param other
    *          object to compare to
    */
   @Override
   public boolean equals( final Object other )
   {
-    if( !super.equals( other ) || !(other instanceof GM_Polygon_Impl) )
-    {
+    if( !super.equals( other ) )
       return false;
-    }
 
-    return true;
-  }
+    if( !(other instanceof GM_Polygon_Impl) )
+      return false;
 
-  @Override
-  public String toString( )
-  {
-    String ret = "GM_SurfacePatch: ";
-    ret = "interpolation = " + INTERPOLATION_NONE + "\n";
-    ret += "exteriorRing = \n";
+    if( !ObjectUtils.equals( getEnvelope(), ((GM_Object)other).getEnvelope() ) )
+      return false;
 
-    final GM_Position[] exteriorRing = getExteriorRing();
-    for( final GM_Position element : exteriorRing )
-    {
-      ret += element + "\n";
-    }
-
-    ret += "interiorRings = " + getInteriorRings() + "\n";
-    ret += "envelope = " + getEnvelope() + "\n";
-    return ret;
+    return ObjectUtils.equals( m_patch, m_patch );
   }
 
   /**
-   * returns a deep copy of the geometry
+   * The operation "dimension" shall return the inherent dimension of this GM_Object, which shall be less than or equal
+   * to the coordinate dimension. The dimension of a collection of geometric objects shall be the largest dimension of
+   * any of its pieces. Points are 0-dimensional, curves are 1-dimensional, surfaces are 2-dimensional, and solids are
+   * 3-dimensional.
    */
   @Override
-  public Object clone( )
+  public int getDimension( )
   {
-    final GM_Position[] clonedExteriorRing = GeometryFactory.cloneGM_Position( getExteriorRing() );
+    return 2;
+  }
 
-    final GM_Position[][] interiorRings = getInteriorRings();
-    final GM_Position[][] clonedInterior = interiorRings == null ? null : new GM_Position[interiorRings.length][];
+  /**
+   * The operation "coordinateDimension" shall return the dimension of the coordinates that define this GM_Object, which
+   * must be the same as the coordinate dimension of the coordinate reference system for this GM_Object.
+   */
+  @Override
+  public int getCoordinateDimension( )
+  {
+    return m_patch.getExteriorRing()[0].getCoordinateDimension();
+  }
 
-    if( clonedInterior != null )
-    {
-      for( int i = 0; i < interiorRings.length; i++ )
-        clonedInterior[i] = GeometryFactory.cloneGM_Position( interiorRings[i] );
-    }
-
+  /**
+   * returns a shallow copy of the geometry
+   */
+  @Override
+  public Object clone( ) throws CloneNotSupportedException
+  {
     try
     {
-      return new GM_Polygon_Impl( clonedExteriorRing, clonedInterior, getCoordinateSystem() );
+      final GM_AbstractSurfacePatch myPatch = (GM_AbstractSurfacePatch)m_patch.clone();
+
+      return new GM_Polygon_Impl<>( getOrientation(), myPatch );
     }
     catch( final GM_Exception e )
     {
@@ -138,54 +301,56 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon
   }
 
   /**
-   * The Boolean valued operation "intersects" shall return TRUE if this GM_Object intersects another GM_Object. Within
-   * a GM_Complex, the GM_Primitives do not intersect one another. In general, topologically structured data uses shared
-   * geometric objects to capture intersection information.
+   * translate each point of the surface with the values of the submitted double array.
+   */
+  @Override
+  public void translate( final double[] d )
+  {
+    final GM_Position[] ext = m_patch.getExteriorRing();
+    final GM_Position[][] inn = m_patch.getInteriorRings();
+
+    for( final GM_Position element : ext )
+    {
+      element.translate( d );
+    }
+
+    if( inn != null )
+    {
+      for( final GM_Position[] element : inn )
+      {
+        for( final GM_Position element2 : element )
+        {
+          element2.translate( d );
+        }
+      }
+    }
+    invalidate();
+  }
+
+  /**
+   * The boolean valued operation "intersects" shall return TRUE if this <tt>GM_Surface_Impl</tt> intersects with the
+   * given <tt>GM_Object</t>.
+   * Within a <tt>GM_Complex</tt>, the <tt>GM_Primitives</tt> do not intersect one another. In general, topologically
+   * structured data uses shared geometric objects to capture intersection information.
+   * 
+   * @param gmo
+   *          the <tt>GM_Object</tt> to test for intersection
+   * @return true if the <tt>GM_Object</tt> intersects with this
    */
   @Override
   public boolean intersects( final GM_Object gmo )
   {
-    boolean inter = false;
-
-    try
-    {
-      if( gmo instanceof GM_Point )
-      {
-        inter = LinearIntersects.intersects( ((GM_Point) gmo).getPosition(), this );
-      }
-      else if( gmo instanceof GM_Curve )
-      {
-        inter = LinearIntersects.intersects( (GM_Curve) gmo, new GM_Surface_Impl<GM_Polygon>( this ) );
-      }
-      else if( gmo instanceof GM_Surface )
-      {
-        inter = LinearIntersects.intersects( (GM_Surface< ? >) gmo, new GM_Surface_Impl<GM_Polygon>( this ) );
-      }
-      else if( gmo instanceof GM_Aggregate )
-      {
-        inter = intersectsMultiObject( (GM_Aggregate) gmo );
-      }
-    }
-    catch( final Exception e )
-    {
-    }
-
-    return inter;
+    return m_patch.contains( gmo ) || getBoundary().intersects( gmo );
   }
 
   /**
-   * the operations returns true if the submitted multi primitive intersects with the curve segment
+   * The Boolean valued operation "contains" shall return TRUE if this GM_Object contains a single point given by a
+   * coordinate.
    */
-  private boolean intersectsMultiObject( final GM_Aggregate mprim ) throws Exception
+  @Override
+  public boolean contains( final GM_Position position )
   {
-    final int cnt = mprim.getSize();
-    for( int i = 0; i < cnt; i++ )
-    {
-      if( intersects( mprim.getObjectAt( i ) ) )
-        return true;
-    }
-
-    return false;
+    return getBoundary().contains( position );
   }
 
   /**
@@ -194,57 +359,98 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon
   @Override
   public boolean contains( final GM_Object gmo )
   {
-    boolean contain = false;
-
-    try
-    {
-      if( gmo instanceof GM_Point )
-      {
-        contain = LinearContains.contains( this, ((GM_Point) gmo).getPosition() );
-      }
-      else if( gmo instanceof GM_Curve )
-      {
-        // contain = contain_.contains ( new GM_Surface_Impl ( this ),
-        // (GM_Curve)gmo );
-        contain = LinearContains.contains( this, ((GM_Curve) gmo).getAsLineString() );
-      }
-      else if( gmo instanceof GM_Surface )
-      {
-        contain = LinearContains.contains( new GM_Surface_Impl<GM_Polygon>( this ), (GM_Surface< ? >) gmo );
-      }
-      else if( gmo instanceof GM_Aggregate )
-      {
-        contain = containsMultiObject( (GM_Aggregate) gmo );
-      }
-    }
-    catch( final Exception e )
-    {
-    }
-
-    return contain;
+    return getBoundary().contains( gmo );
   }
 
-  private boolean containsMultiObject( final GM_Aggregate gmo )
+  /**
+   *
+   */
+  @Override
+  public String toString( )
   {
-    try
-    {
-      for( int i = 0; i < gmo.getSize(); i++ )
-      {
-        if( !contains( gmo.getObjectAt( i ) ) )
-        {
-          return false;
-        }
-      }
-    }
-    catch( final Exception e )
-    {
-    }
+    String ret = getClass().getName() + ":\n";
 
-    return true;
+    ret += "envelope = " + getEnvelope() + "\n";
+    ret += " CRS: " + getCoordinateSystem() + "\n";
+    ret += "patch = " + m_patch + "\n";
+
+    return ret;
+  }
+
+  /**
+   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#invalidate()
+   */
+  @Override
+  public void invalidate( )
+  {
+    super.invalidate();
   }
 
   @Override
-  public GM_SurfacePatch transform( final String targetCRS ) throws GeoTransformerException
+  public Object getAdapter( final Class adapter )
+  {
+    if( adapter == GM_AbstractSurfacePatch.class )
+      return m_patch;
+
+    if( adapter == GM_AbstractSurfacePatch[].class )
+      return new GM_AbstractSurfacePatch[] { m_patch };
+
+    if( adapter == GM_Curve.class )
+    {
+      final GM_AbstractSurfacePatch surfacePatchAt = m_patch;
+      final GM_Position[] exteriorRing = surfacePatchAt.getExteriorRing();
+      try
+      {
+        return GeometryFactory.createGM_Curve( exteriorRing, getCoordinateSystem() );
+      }
+      catch( final GM_Exception e )
+      {
+        final IStatus status = StatusUtilities.statusFromThrowable( e );
+        KalypsoDeegreePlugin.getDefault().getLog().log( status );
+        return null;
+      }
+    }
+
+    return super.getAdapter( adapter );
+  }
+
+  @Override
+  @Deprecated
+  public T get( final int index )
+  {
+    return getSurfacePatch();
+  }
+  
+  @Override
+  @Deprecated
+  @SuppressWarnings( "unchecked" )
+  public Iterator<T> iterator( )
+  {
+    return new SingletonIterator( m_patch );
+  }
+
+  /**
+   * @return
+   * @see java.util.List#hashCode()
+   */
+  @Override
+  public int hashCode( )
+  {
+    return m_patch.hashCode();
+  }
+
+  @Override
+  public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<T> visitor, final IProgressMonitor monitor ) throws CoreException
+  {
+    monitor.beginTask( StringUtils.EMPTY, 1 );
+
+    visitor.visit( m_patch );
+
+    ProgressUtilities.done( monitor );
+  }
+
+  @Override
+  public GM_Object transform( final String targetCRS ) throws GeoTransformerException
   {
     try
     {
@@ -253,28 +459,23 @@ class GM_Polygon_Impl extends GM_SurfacePatch_Impl implements GM_Polygon
       if( sourceCRS == null || sourceCRS.equalsIgnoreCase( targetCRS ) )
         return this;
 
-      /* exterior ring */
-      final GM_Ring exRing = GeometryFactory.createGM_Ring( getExteriorRing(), getCoordinateSystem() );
-      final GM_Ring transExRing = (GM_Ring) exRing.transform( targetCRS );
+      final GM_AbstractSurfacePatch patch = (GM_AbstractSurfacePatch)m_patch.transform( targetCRS );
 
-      /* interior rings */
-      final GM_Position[][] interiors = getInteriorRings();
-      if( interiors == null )
-        return new GM_Polygon_Impl( transExRing.getPositions(), null, targetCRS );
-
-      final GM_Position[][] transInRings = new GM_Position[interiors.length][];
-
-      for( int j = 0; j < interiors.length; j++ )
-      {
-        final GM_Ring inRing = GeometryFactory.createGM_Ring( interiors[j], getCoordinateSystem() );
-        transInRings[j] = ((GM_Ring) inRing.transform( targetCRS )).getPositions();
-      }
-
-      return new GM_Polygon_Impl( transExRing.getPositions(), transInRings, targetCRS );
+      return new GM_Polygon_Impl<>( getOrientation(), patch );
     }
     catch( final GM_Exception e )
     {
       throw new GeoTransformerException( e );
     }
   }
+
+  @Override
+  public void setCoordinateSystem( final String crs )
+  {
+    super.setCoordinateSystem( crs );
+
+    if( m_patch instanceof GM_AbstractSurfacePatch_Impl )
+      ((GM_AbstractSurfacePatch_Impl)m_patch).setCoordinateSystem( crs );
+  }
+
 }

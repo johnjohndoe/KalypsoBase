@@ -48,7 +48,7 @@ import java.math.BigDecimal;
 import org.deegree.model.spatialschema.ByteUtils;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
@@ -307,7 +307,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   }
 
   @Override
-  public GM_Surface< ? > getCell( final int x, final int y, final String targetCRS )
+  public GM_Polygon< ? > getCell( final int x, final int y, final String targetCRS )
   {
     throw new UnsupportedOperationException();
   }
@@ -343,7 +343,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   }
 
   @Override
-  public GM_Surface< ? > getSurface( final String targetCRS )
+  public GM_Polygon< ? > getSurface( final String targetCRS )
   {
     throw new UnsupportedOperationException();
   }

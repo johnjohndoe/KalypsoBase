@@ -64,7 +64,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
  * 
  * @author Gernot Belger
  */
-class XLinkedFeature_Impl extends PlatformObject implements IXLinkedFeature
+public class XLinkedFeature_Impl extends PlatformObject implements IXLinkedFeature
 {
   private final Feature m_parentFeature;
 
@@ -78,7 +78,7 @@ class XLinkedFeature_Impl extends PlatformObject implements IXLinkedFeature
 
   private IFeatureType m_featureType;
 
-  XLinkedFeature_Impl( final Feature parentFeature, final IRelationType parentRelation, final IFeatureType featureType, final String href )
+  public XLinkedFeature_Impl( final Feature parentFeature, final IRelationType parentRelation, final IFeatureType featureType, final String href )
   {
     m_parentFeature = parentFeature;
     m_parentRelation = parentRelation;

@@ -45,6 +45,6 @@ package org.kalypsodeegree.model.geometry;
  * @version $Revision$ $Date$
  *          <p>
  */
-public interface GM_CompositeCurve extends GM_OrientableCurve, GM_Composite
+public interface GM_CompositeCurve extends GM_AbstractCurve, GM_Composite
 {
 }

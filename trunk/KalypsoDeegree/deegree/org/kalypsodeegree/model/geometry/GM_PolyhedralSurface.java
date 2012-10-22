@@ -45,7 +45,7 @@ package org.kalypsodeegree.model.geometry;
  * 
  * @author Gernot Belger
  */
-public interface GM_PolyhedralSurface<T extends GM_Polygon> extends GM_Surface<T>
+public interface GM_PolyhedralSurface<T extends GM_PolygonPatch> extends GM_AbstractSurface<T>, GM_GenericSurface, ISurfacePatchVisitable<T>
 {
 
 }

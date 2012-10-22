@@ -41,12 +41,12 @@
 package org.kalypsodeegree_impl.io.sax.parser;
 
 import org.kalypso.gmlschema.types.IGMLElementHandler;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 
 /**
  * @author Felipe Maximino
  */
-public interface IPolygonHandler extends IGMLElementHandler<GM_Polygon>
+public interface IPolygonHandler extends IGMLElementHandler<GM_PolygonPatch>
 {
 
 }

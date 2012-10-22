@@ -46,7 +46,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 
 /**
  * default implementation of the GM_Point interface.
@@ -57,7 +57,7 @@ import org.kalypsodeegree.model.geometry.GM_Surface;
  * @version 5.6.2001
  * @author Andreas Poth
  */
-final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point
+final class GM_Point_Impl extends GM_AbstractGeometry_Impl implements GM_Point
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 6106017748940535740L;
@@ -274,9 +274,9 @@ final class GM_Point_Impl extends GM_Primitive_Impl implements GM_Point
       {
         inter = LinearIntersects.intersects( this, (GM_Curve) gmo );
       }
-      else if( gmo instanceof GM_Surface )
+      else if( gmo instanceof GM_Polygon )
       {
-        inter = LinearIntersects.intersects( this, (GM_Surface< ? >) gmo );
+        inter = LinearIntersects.intersects( this, (GM_Polygon< ? >) gmo );
       }
       else if( gmo instanceof GM_Aggregate )
       {

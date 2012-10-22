@@ -15,11 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- *
+ * 
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- *
+ * 
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -41,17 +41,25 @@ import javax.xml.namespace.QName;
 import org.kalypso.commons.xml.NS;
 
 /**
- * A GM_Polygon is a specialized GM_SurfacePatch and it's implementation should be implementable. It special
- * characteristic is that's the interpolation between the points of the bounding rings is linear.
+ * A polygon is a surface defined by a single surface patch
  * <p>
  * -----------------------------------------------------
  * </p>
- *
- * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
+ * 
+ * @author Andreas Poth
  * @version $Revision$ $Date$
  *          <p>
  */
-public interface GM_Polygon extends GM_SurfacePatch
+
+public interface GM_Polygon<T extends GM_AbstractSurfacePatch> extends GM_AbstractSurface<T>, GM_GenericSurface, ISurfacePatchVisitable<T>
 {
-  QName POLYGON_ELEMENT = new QName( NS.GML3, "Polygon" ); //$NON-NLS-1$
+  QName SURFACE_ELEMENT = new QName( NS.GML3, "_Surface" ); //$NON-NLS-1$
+
+  public T getSurfacePatch( );
+
+  /**
+   * Use getSurfacePatch() instead
+   */
+  @Override
+  public T get( int index );
 }

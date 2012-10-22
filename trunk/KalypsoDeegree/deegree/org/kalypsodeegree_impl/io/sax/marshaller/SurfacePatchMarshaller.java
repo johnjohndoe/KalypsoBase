@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.marshaller;
 
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.xml.sax.Attributes;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.AttributesImpl;
@@ -50,7 +50,7 @@ import org.xml.sax.helpers.AttributesImpl;
  *
  * @author Felipe Maximino
  */
-public abstract class SurfacePatchMarshaller<T extends GM_SurfacePatch> extends AbstractMarshaller<T>
+public abstract class SurfacePatchMarshaller<T extends GM_AbstractSurfacePatch> extends AbstractMarshaller<T>
 {
   private final String m_defaultCrs;
 

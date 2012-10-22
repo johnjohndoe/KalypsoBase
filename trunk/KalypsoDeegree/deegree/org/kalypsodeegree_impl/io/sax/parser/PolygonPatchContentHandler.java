@@ -42,7 +42,7 @@ package org.kalypsodeegree_impl.io.sax.parser;
 
 import org.kalypso.commons.xml.NS;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree_impl.io.sax.parser.geometrySpec.PolygonSpecification;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -86,7 +86,7 @@ public class PolygonPatchContentHandler extends GMLElementContentHandler impleme
 
     try
     {
-      final GM_Polygon polygon = (GM_Polygon) GeometryFactory.createGM_SurfacePatch( m_ring, null, crs );
+      final GM_PolygonPatch polygon = (GM_PolygonPatch) GeometryFactory.createGM_PolygonPatch( m_ring, null, crs );
       m_polygonHandler.handle( polygon );
     }
     catch( final GM_Exception e )

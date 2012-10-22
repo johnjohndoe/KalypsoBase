@@ -50,7 +50,7 @@ import org.kalypso.commons.xml.NS;
  * @version $Revision$ $Date$
  *          <p>
  */
-public interface GM_Curve extends GM_OrientableCurve, GM_GenericCurve
+public interface GM_Curve extends GM_AbstractCurve, GM_GenericCurve
 {
   QName CURVE_ELEMENT = new QName( NS.GML3, "_Curve" ); //$NON-NLS-1$
 

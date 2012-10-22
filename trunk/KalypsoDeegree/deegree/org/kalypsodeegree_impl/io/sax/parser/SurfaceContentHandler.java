@@ -42,7 +42,7 @@ package org.kalypsodeegree_impl.io.sax.parser;
 
 import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.xml.sax.XMLReader;
 
 /**
@@ -58,7 +58,7 @@ public class SurfaceContentHandler extends PolygonContentHandler
     super( xmlReader, resultEater, parentContentHandler, defaultCrs );
   }
 
-  public SurfaceContentHandler( final XMLReader xmlReader, final ISurfaceHandler<GM_Polygon> surfaceHandler, final String defaultSrs )
+  public SurfaceContentHandler( final XMLReader xmlReader, final ISurfaceHandler<GM_PolygonPatch> surfaceHandler, final String defaultSrs )
   {
     super( xmlReader, surfaceHandler, defaultSrs );
   }

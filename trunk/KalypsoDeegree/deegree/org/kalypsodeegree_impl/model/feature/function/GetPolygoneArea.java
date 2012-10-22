@@ -44,7 +44,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.model.feature.FeaturePropertyFunction;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
@@ -105,10 +105,10 @@ public class GetPolygoneArea extends FeaturePropertyFunction
       return null;
 
     final Object objGeometry = feature.getProperty( polyProperty );
-    if( !(objGeometry instanceof GM_Surface< ? >) )
+    if( !(objGeometry instanceof GM_Polygon< ? >) )
       return null;
 
-    final GM_Surface< ? > polygon = (GM_Surface< ? >) objGeometry;
+    final GM_Polygon< ? > polygon = (GM_Polygon< ? >) objGeometry;
 
     final double polygonArea = polygon.getArea();
 

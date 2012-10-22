@@ -55,7 +55,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -130,7 +130,7 @@ public class DeegreeGeoTransformer implements IGeoTransformer
   }
 
   @Override
-  public GM_SurfacePatch transform( final GM_SurfacePatch surfacePatch ) throws GeoTransformerException
+  public GM_AbstractSurfacePatch transform( final GM_AbstractSurfacePatch surfacePatch ) throws GeoTransformerException
   {
     if( surfacePatch == null )
       return null;
@@ -139,7 +139,7 @@ public class DeegreeGeoTransformer implements IGeoTransformer
     if( sourceCRS == null || sourceCRS.equalsIgnoreCase( m_targetCRS ) )
       return surfacePatch;
 
-    return (GM_SurfacePatch) surfacePatch.transform( m_targetCRS );
+    return (GM_AbstractSurfacePatch) surfacePatch.transform( m_targetCRS );
   }
 
   /**

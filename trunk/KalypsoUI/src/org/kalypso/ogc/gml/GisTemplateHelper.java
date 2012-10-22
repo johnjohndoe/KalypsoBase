@@ -96,7 +96,7 @@ import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.filterencoding.AbstractFilter;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
@@ -446,7 +446,7 @@ public final class GisTemplateHelper
     return gismapview;
   }
 
-  public static GM_Surface< ? > getBoxAsSurface( final Gismapview mapview, final String targetCS ) throws Exception
+  public static GM_Polygon< ? > getBoxAsSurface( final Gismapview mapview, final String targetCS ) throws Exception
   {
     final ExtentType extent = mapview.getExtent();
     final String crsName = extent.getSrs();
@@ -454,11 +454,11 @@ public final class GisTemplateHelper
     if( CRSHelper.isKnownCRS( crsName ) )
     {
       final GM_Envelope envelope = GeometryFactory.createGM_Envelope( extent.getLeft(), extent.getBottom(), extent.getRight(), extent.getTop(), crsName );
-      final GM_Surface< ? > bboxAsSurface = GeometryFactory.createGM_Surface( envelope, crsName );
+      final GM_Polygon< ? > bboxAsSurface = GeometryFactory.createGM_Surface( envelope, crsName );
       if( targetCS != null )
       {
         final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( targetCS );
-        return (GM_Surface< ? >) transformer.transform( bboxAsSurface );
+        return (GM_Polygon< ? >) transformer.transform( bboxAsSurface );
       }
 
       return bboxAsSurface;

@@ -41,8 +41,7 @@
 package org.kalypsodeegree_impl.io.sax.marshaller;
 
 import org.kalypso.commons.xml.NS;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurface;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
@@ -50,17 +49,17 @@ import org.xml.sax.XMLReader;
 
 /**
  * A marshaller for GML surfaces. It delegates the marshalling to the corresponding PatchesMarshaller
- *
+ * 
  * @author Felipe Maximino
  */
-public abstract class AbstractSurfaceMarshaller<T extends GM_SurfacePatch> extends GeometryMarshaller<GM_Surface<T>>
+public abstract class AbstractSurfaceMarshaller<S extends GM_AbstractSurface< ? >> extends GeometryMarshaller<S>
 {
   public AbstractSurfaceMarshaller( final XMLReader reader, final String tag )
   {
     super( reader, tag );
   }
 
-  public void startMarshalling( @SuppressWarnings("unused") final GM_Surface< ? > surface, final Attributes atts ) throws SAXException
+  public void startMarshalling( @SuppressWarnings( "unused" ) final S surface, final Attributes atts ) throws SAXException
   {
     final ContentHandler contentHandler = getXMLReader().getContentHandler();
     contentHandler.startElement( NS.GML3, getTag(), getQName(), atts );

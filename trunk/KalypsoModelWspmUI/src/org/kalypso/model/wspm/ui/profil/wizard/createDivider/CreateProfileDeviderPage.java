@@ -86,7 +86,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree_impl.model.geometry.GM_Polygon_Impl;
 import org.kalypsodeegree_impl.tools.GMLConstants;
 
 /**
@@ -124,7 +124,7 @@ public class CreateProfileDeviderPage extends WizardPage implements IUpdateable,
     validGeomProperties.add( GMLConstants.QN_MULTI_LINE_STRING );
     validGeomProperties.add( GM_Curve.CURVE_ELEMENT );
     validGeomProperties.add( GM_MultiCurve.MULTI_CURVE_ELEMENT );
-    validGeomProperties.add( GM_Polygon.POLYGON_ELEMENT );
+    validGeomProperties.add( GM_Polygon_Impl.POLYGON_ELEMENT );
     validGeomProperties.add( GMLConstants.QN_MULTI_POLYGON );
 
     final IPropertyTypeFilter geoFilter = new IPropertyTypeFilter()

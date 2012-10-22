@@ -40,18 +40,18 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.marshaller;
 
-import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
+import org.kalypsodeegree.model.geometry.GM_PolyhedralSurface;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
  * A marshaller for gml:PolyhedralSurfaces
- *
+ * 
  * @author Gernot Belger
  * @author Felipe Maximino - Refaktoring
  */
-public class PolyhedralSurfaceMarshaller extends AbstractSurfaceMarshaller<GM_Polygon>
+public class PolyhedralSurfaceMarshaller extends AbstractSurfaceMarshaller<GM_PolyhedralSurface<GM_PolygonPatch>>
 {
   private static final String TAG_POLYHEDRAL_SURFACE = "PolyhedralSurface"; //$NON-NLS-1$
 
@@ -61,7 +61,7 @@ public class PolyhedralSurfaceMarshaller extends AbstractSurfaceMarshaller<GM_Po
   }
 
   @Override
-  protected void doMarshallContent( final GM_Surface<GM_Polygon> marshalledObject ) throws SAXException
+  protected void doMarshallContent( final GM_PolyhedralSurface<GM_PolygonPatch> marshalledObject ) throws SAXException
   {
     final PolygonPatchesMarshaller patchesMarshaller = new PolygonPatchesMarshaller( getXMLReader(), marshalledObject.getCoordinateSystem() );
     patchesMarshaller.marshall( marshalledObject );

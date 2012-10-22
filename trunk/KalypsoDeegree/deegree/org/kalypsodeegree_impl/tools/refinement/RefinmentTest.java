@@ -3,13 +3,13 @@ package org.kalypsodeegree_impl.tools.refinement;
 import junit.framework.TestCase;
 
 import org.kalypsodeegree.KalypsoDeegreePlugin;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -20,7 +20,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 public class RefinmentTest extends TestCase
 {
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings( "unchecked" )
   public void testLoadResults( ) throws Exception
   {
     final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
@@ -37,10 +37,10 @@ public class RefinmentTest extends TestCase
     final GM_Ring exterior = GeometryFactory.createGM_Ring( positions, crs );
     final GM_Ring[] interior = null;
 
-    final GM_SurfacePatch patch = GeometryFactory.createGM_SurfacePatch( exterior, interior, crs );
+    final GM_AbstractSurfacePatch patch = GeometryFactory.createGM_PolygonPatch( exterior, interior, crs );
 
-    final GM_Surface< ? extends GM_SurfacePatch> surface = GeometryFactory.createGM_Surface( patch );
-    final GM_Surface< ? >[] surfaces = new GM_Surface[] { surface };
+    final GM_Polygon< ? extends GM_AbstractSurfacePatch> surface = GeometryFactory.createGM_Surface( patch );
+    final GM_Polygon< ? >[] surfaces = new GM_Polygon[] { surface };
 
     final GM_MultiSurface multiSurface = GeometryFactory.createGM_MultiSurface( surfaces, crs );
 
@@ -59,7 +59,7 @@ public class RefinmentTest extends TestCase
 
     for( final GM_Object object : doRefine )
     {
-      if( object instanceof GM_Surface )
+      if( object instanceof GM_Polygon )
       {
 // final GM_Surface<GM_SurfacePatch> surface1 = (GM_Surface<GM_SurfacePatch>) object;
 // for( final GM_SurfacePatch surfacePatch : surface1 )
@@ -141,18 +141,16 @@ public class RefinmentTest extends TestCase
 
     for( final GM_Object object : doRefine4 )
     {
-      if( object instanceof GM_Surface )
+      if( object instanceof GM_Polygon )
       {
-        final GM_Surface<GM_SurfacePatch> surface4 = (GM_Surface<GM_SurfacePatch>) object;
-        for( final GM_SurfacePatch surfacePatch : surface4 )
-        {
-          final GM_Position[] ring = surfacePatch.getExteriorRing();
+        final GM_Polygon<GM_AbstractSurfacePatch> surface4 = (GM_Polygon<GM_AbstractSurfacePatch>)object;
+        final GM_Position[] ring = surface4.getSurfacePatch().getExteriorRing();
 
-          if( ring.length > 4 )
-          {
-            // split again
-            // right now: simple polygon triangulation
-            // make a polygon from the curves (polygon must be oriented ccw)
+        if( ring.length > 4 )
+        {
+          // split again
+          // right now: simple polygon triangulation
+          // make a polygon from the curves (polygon must be oriented ccw)
 // final GM_Surface<GM_SurfacePatch>[] triangulatedPolygon = RefinementUtils.triangulatePolygon( crs, ring );
 // for( final GM_Surface<GM_SurfacePatch> triangle : triangulatedPolygon )
 // {
@@ -167,15 +165,14 @@ public class RefinmentTest extends TestCase
 // }
 // }
 // }
-          }
-          else
-          {
+        }
+        else
+        {
 // for( final GM_Position element : ring )
 // {
 // System.out.format( "pos # %d:  ", i );
 // System.out.format( "%9.2f %9.2f %9.2f \n", ring[i].getX(), ring[i].getY(), ring[i].getZ() );
 // }
-          }
         }
       }
     }

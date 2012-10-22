@@ -38,7 +38,7 @@ package org.kalypsodeegree.model.geometry;
 /**
  * @author Gernot Belger
  */
-public interface GM_Triangle extends GM_Polygon
+public interface GM_Triangle extends GM_PolygonPatch
 {
   /**
    * Returns the (z-)value of linear-equation defined by this triangle at the given position.
