@@ -47,9 +47,9 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree_impl.io.sax.parser.geometrySpec.MultiPolygonSpecification;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GMLConstants;
@@ -63,11 +63,11 @@ import org.xml.sax.XMLReader;
  *
  * @author Gernot Belger
  */
-public class MultiPolygonContentHandler extends GMLElementContentHandler implements ISurfaceHandler<GM_Polygon>
+public class MultiPolygonContentHandler extends GMLElementContentHandler implements ISurfaceHandler<GM_PolygonPatch>
 {
   public static final String ELEMENT_MULTI_POLYGON = GMLConstants.QN_MULTI_POLYGON.getLocalPart();
 
-  private final List<GM_Surface< ? extends GM_SurfacePatch>> m_polygons = new ArrayList<>();
+  private final List<GM_Polygon< ? extends GM_AbstractSurfacePatch>> m_polygons = new ArrayList<>();
 
   private final UnmarshallResultEater m_resultEater;
 
@@ -132,7 +132,7 @@ public class MultiPolygonContentHandler extends GMLElementContentHandler impleme
 
   private GM_MultiSurface endMultiSurface( )
   {
-    final GM_Surface< ? extends GM_SurfacePatch>[] patches = m_polygons.toArray( new GM_Surface[m_polygons.size()] );
+    final GM_Polygon< ? extends GM_AbstractSurfacePatch>[] patches = m_polygons.toArray( new GM_Polygon[m_polygons.size()] );
 
     return GeometryFactory.createGM_MultiSurface( patches, m_activeSrs );
   }
@@ -141,7 +141,7 @@ public class MultiPolygonContentHandler extends GMLElementContentHandler impleme
    * @see org.kalypso.gmlschema.types.IGMLElementHandler#handle(java.lang.Object)
    */
   @Override
-  public void handle( final GM_Surface<GM_Polygon> element )
+  public void handle( final GM_Polygon<GM_PolygonPatch> element )
   {
     m_polygons.add( element );
   }

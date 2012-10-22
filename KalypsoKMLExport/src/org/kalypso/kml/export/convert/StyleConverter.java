@@ -63,7 +63,7 @@ import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 
 import de.micromata.opengis.kml.v_2_2_0.Folder;
@@ -136,7 +136,7 @@ public class StyleConverter
         final Placemark placemark = folder.createAndAddPlacemark();
         placemark.setName( KMLAdapterUtils.getFeatureName( feature, providers ) );
 
-        final Polygon geometry = ConverterSurface.convert( (GM_Surface< ? >)gmo );
+        final Polygon geometry = ConverterSurface.convert( (GM_Polygon< ? >)gmo );
         placemark.setGeometry( geometry );
 
         final Style style = placemark.createAndAddStyle();

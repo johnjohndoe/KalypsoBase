@@ -68,7 +68,7 @@ import org.kalypsodeegree.model.geometry.GM_MultiPoint;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
@@ -307,7 +307,7 @@ public final class DisplayElementFactory
       final LineSymbolizer symbolizer = new LineSymbolizer_Impl();
       displayElement = buildLineStringDisplayElement( feature, geoProperty, symbolizer );
     } // PolygonSymbolizer
-    else if( geoProperty instanceof GM_Surface || geoProperty instanceof GM_MultiSurface )
+    else if( geoProperty instanceof GM_Polygon || geoProperty instanceof GM_MultiSurface )
     {
       final PolygonSymbolizer symbolizer = new PolygonSymbolizer_Impl();
       displayElement = buildPolygonDisplayElement( feature, geoProperty, symbolizer );
@@ -374,7 +374,7 @@ public final class DisplayElementFactory
    */
   public static PolygonDisplayElement buildPolygonDisplayElement( final Feature feature, final Object geomOrList, final PolygonSymbolizer sym )
   {
-    final GM_Surface< ? >[] surfaces = GeometryUtilities.findGeometries( geomOrList, GM_Surface.class );
+    final GM_Polygon< ? >[] surfaces = GeometryUtilities.findGeometries( geomOrList, GM_Polygon.class );
     if( ArrayUtils.isEmpty( surfaces ) )
       return null;
     return new PolygonDisplayElement_Impl( feature, surfaces, sym );

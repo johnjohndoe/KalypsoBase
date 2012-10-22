@@ -35,7 +35,7 @@
  */
 package org.kalypsodeegree.model.geometry;
 
-public interface ISurfacePatchVisitor<P extends GM_SurfacePatch>
+public interface ISurfacePatchVisitor<P extends GM_AbstractSurfacePatch>
 {
   boolean visit( P surfacePatch );
 }

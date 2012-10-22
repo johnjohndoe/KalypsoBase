@@ -59,7 +59,7 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.algorithm.CGAlgorithms;
@@ -116,7 +116,7 @@ public class GM_Object2Shape
 
       case POLYGON:
       {
-        final GM_SurfacePatch[] surfacePatches = (GM_SurfacePatch[]) transformedGeom.getAdapter( GM_SurfacePatch[].class );
+        final GM_AbstractSurfacePatch[] surfacePatches = (GM_AbstractSurfacePatch[]) transformedGeom.getAdapter( GM_AbstractSurfacePatch[].class );
         if( ArrayUtils.isEmpty( surfacePatches ) )
           return new SHPNullShape();
 
@@ -149,7 +149,7 @@ public class GM_Object2Shape
 
       case POLYGONZ:
       {
-        final GM_SurfacePatch[] surfacePatches = (GM_SurfacePatch[]) transformedGeom.getAdapter( GM_SurfacePatch[].class );
+        final GM_AbstractSurfacePatch[] surfacePatches = (GM_AbstractSurfacePatch[]) transformedGeom.getAdapter( GM_AbstractSurfacePatch[].class );
         if( ArrayUtils.isEmpty( surfacePatches ) )
           return new SHPNullShape();
 
@@ -270,7 +270,7 @@ public class GM_Object2Shape
 
       case POLYGONM:
       {
-        final GM_SurfacePatch[] surfacePatches = (GM_SurfacePatch[]) transformedGeom.getAdapter( GM_SurfacePatch[].class );
+        final GM_AbstractSurfacePatch[] surfacePatches = (GM_AbstractSurfacePatch[]) transformedGeom.getAdapter( GM_AbstractSurfacePatch[].class );
         if( ArrayUtils.isEmpty( surfacePatches ) )
           return new SHPNullShape();
 
@@ -316,10 +316,10 @@ public class GM_Object2Shape
     }
   }
 
-  private static Coordinate[][] orientCurves( final GM_SurfacePatch[] surfacePatch )
+  private static Coordinate[][] orientCurves( final GM_AbstractSurfacePatch[] surfacePatch )
   {
     final List<Coordinate[]> curveList = new LinkedList<>();
-    for( final GM_SurfacePatch element : surfacePatch )
+    for( final GM_AbstractSurfacePatch element : surfacePatch )
     {
       /* Outer rings are clockwise */
       final LinearRing exteriorRing = JTSAdapter.exportAsRing( element.getExteriorRing() );
@@ -352,14 +352,14 @@ public class GM_Object2Shape
     return m_shapeType;
   }
 
-  public ISHPGeometry convert( final GM_SurfacePatch patch ) throws ShapeDataException
+  public ISHPGeometry convert( final GM_AbstractSurfacePatch patch ) throws ShapeDataException
   {
     if( patch == null )
       return new SHPNullShape();
 
-    final GM_SurfacePatch transformedPatch = getTransformedPatch( patch );
+    final GM_AbstractSurfacePatch transformedPatch = getTransformedPatch( patch );
 
-    final GM_SurfacePatch[] patches = new GM_SurfacePatch[] { transformedPatch };
+    final GM_AbstractSurfacePatch[] patches = new GM_AbstractSurfacePatch[] { transformedPatch };
     final Coordinate[][] curves = orientCurves( patches );
     if( curves == null )
       return new SHPNullShape();
@@ -389,7 +389,7 @@ public class GM_Object2Shape
     }
   }
 
-  private GM_SurfacePatch getTransformedPatch( final GM_SurfacePatch patch ) throws ShapeDataException
+  private GM_AbstractSurfacePatch getTransformedPatch( final GM_AbstractSurfacePatch patch ) throws ShapeDataException
   {
     try
     {

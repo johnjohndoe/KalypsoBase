@@ -47,7 +47,7 @@ import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitable;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
 
@@ -57,9 +57,9 @@ import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
  * @author Madanagopal
  * @author Patrice Congo
  */
-public class SurfacePatchVisitableDisplayElement<P extends GM_SurfacePatch> implements DisplayElementDecorator
+public class SurfacePatchVisitableDisplayElement<P extends GM_AbstractSurfacePatch> implements DisplayElementDecorator
 {
-  public interface IVisitorFactory<P2 extends GM_SurfacePatch>
+  public interface IVisitorFactory<P2 extends GM_AbstractSurfacePatch>
   {
     ISurfacePatchVisitor<P2> createVisitor( final Graphics g, final GeoTransform projection );
   }

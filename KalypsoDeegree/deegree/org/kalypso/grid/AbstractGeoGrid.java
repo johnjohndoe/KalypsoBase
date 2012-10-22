@@ -46,7 +46,7 @@ import org.kalypso.grid.GeoGridUtilities.Interpolation;
 import org.kalypsodeegree.model.elevation.ElevationException;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -104,13 +104,13 @@ public abstract class AbstractGeoGrid implements IGeoGrid
   }
 
   @Override
-  public GM_Surface< ? > getSurface( final String targetCRS ) throws GeoGridException
+  public GM_Polygon< ? > getSurface( final String targetCRS ) throws GeoGridException
   {
     return GeoGridUtilities.createSurface( this, targetCRS );
   }
 
   @Override
-  public GM_Surface< ? > getCell( final int x, final int y, final String targetCRS ) throws GeoGridException
+  public GM_Polygon< ? > getCell( final int x, final int y, final String targetCRS ) throws GeoGridException
   {
     return GeoGridUtilities.createCell( this, x, y, targetCRS );
   }
@@ -211,7 +211,7 @@ public abstract class AbstractGeoGrid implements IGeoGrid
   @Override
   public GM_Envelope getBoundingBox( ) throws ElevationException
   {
-    final GM_Surface< ? > surface = getSurface( m_sourceCRS );
+    final GM_Polygon< ? > surface = getSurface( m_sourceCRS );
     return surface.getEnvelope();
   }
 

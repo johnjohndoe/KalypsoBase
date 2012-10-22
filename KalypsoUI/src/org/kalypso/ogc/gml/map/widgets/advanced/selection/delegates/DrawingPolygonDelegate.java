@@ -63,7 +63,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 
 import com.vividsolutions.jts.geom.Geometry;
@@ -132,7 +132,7 @@ public class DrawingPolygonDelegate extends AbstractAdvancedSelectionWidgetDeleg
         final Geometry jtsBase = JTSAdapter.export( gmo );
         final List<Feature> myFeatures = new ArrayList<>();
 
-        final Feature[] features = getDataProvider().query( (GM_Surface< ? >) gmo, getEditMode() );
+        final Feature[] features = getDataProvider().query( (GM_Polygon< ? >) gmo, getEditMode() );
 
         for( final Feature feature : features )
         {
@@ -184,7 +184,7 @@ public class DrawingPolygonDelegate extends AbstractAdvancedSelectionWidgetDeleg
 
         final Geometry jtsBase = JTSAdapter.export( gmo );
 
-        final Feature[] features = getDataProvider().query( (GM_Surface< ? >) gmo, getEditMode() );
+        final Feature[] features = getDataProvider().query( (GM_Polygon< ? >) gmo, getEditMode() );
 
         final List<Feature> highlight = new ArrayList<>();
 

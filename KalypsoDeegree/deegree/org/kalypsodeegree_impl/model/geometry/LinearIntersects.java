@@ -35,12 +35,12 @@
  */
 package org.kalypsodeegree_impl.model.geometry;
 
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveSegment;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
 
 /**
  * @version $Revision$
@@ -95,7 +95,7 @@ class LinearIntersects
   /**
    * the operation returns true if the submitted point intersects the submitted surface patch
    */
-  public static boolean intersects( final GM_Position point, final GM_SurfacePatch surface )
+  public static boolean intersects( final GM_Position point, final GM_AbstractSurfacePatch surface )
   {
     return LinearContains.contains( surface, point );
   }
@@ -127,7 +127,7 @@ class LinearIntersects
   /**
    * the operation returns true if the submitted curve segment intersects the submitted surface patch
    */
-  public static boolean intersects( final GM_CurveSegment curve, final GM_SurfacePatch surface ) throws Exception
+  public static boolean intersects( final GM_CurveSegment curve, final GM_AbstractSurfacePatch surface ) throws Exception
   {
     boolean inter = false;
     // is the curve completly embedded within the surface patch
@@ -172,7 +172,7 @@ class LinearIntersects
   /**
    * the operation returns true if the two submitted surface patches intersects
    */
-  public static boolean intersects( final GM_SurfacePatch surface1, final GM_SurfacePatch surface2 ) throws Exception
+  public static boolean intersects( final GM_AbstractSurfacePatch surface1, final GM_AbstractSurfacePatch surface2 ) throws Exception
   {
     boolean inter = false;
     final String crs1 = surface1.getCoordinateSystem();
@@ -276,22 +276,9 @@ class LinearIntersects
   /**
    * the operation returns true if the submitted point intersects the submitted surface
    */
-  public static boolean intersects( final GM_Point point, final GM_Surface< ? > surface ) throws Exception
+  public static boolean intersects( final GM_Point point, final GM_Polygon< ? > surface ) throws Exception
   {
-    boolean inter = false;
-
-    final int cnt = surface.size();
-
-    for( int i = 0; i < cnt; i++ )
-    {
-      if( intersects( point.getPosition(), surface.get( i ) ) )
-      {
-        inter = true;
-        break;
-      }
-    }
-
-    return inter;
+    return intersects( point.getPosition(), surface.getSurfacePatch() );
   }
 
   /**
@@ -321,23 +308,17 @@ class LinearIntersects
   /**
    * the operation returns true if the submitted curve intersects the submitted surface
    */
-  public static boolean intersects( final GM_Curve curve, final GM_Surface< ? > surface ) throws Exception
+  public static boolean intersects( final GM_Curve curve, final GM_Polygon< ? > surface ) throws Exception
   {
     boolean inter = false;
     final int cnt1 = curve.getNumberOfCurveSegments();
-    final int cnt2 = surface.size();
-
     for( int i = 0; i < cnt1; i++ )
     {
-      for( int j = 0; j < cnt2; j++ )
+      if( intersects( curve.getCurveSegmentAt( i ), surface.getSurfacePatch() ) )
       {
-        if( intersects( curve.getCurveSegmentAt( i ), surface.get( j ) ) )
-        {
-          inter = true;
-          break;
-        }
+        inter = true;
+        break;
       }
-
       if( inter )
       {
         break;
@@ -350,31 +331,9 @@ class LinearIntersects
   /**
    * the operation returns true if the two submitted surfaces intersects
    */
-  public static boolean intersects( final GM_Surface< ? > surface1, final GM_Surface< ? > surface2 ) throws Exception
+  public static boolean intersects( final GM_Polygon< ? > surface1, final GM_Polygon< ? > surface2 ) throws Exception
   {
-    boolean inter = false;
-
-    final int cnt1 = surface1.size();
-    final int cnt2 = surface2.size();
-
-    for( int i = 0; i < cnt1; i++ )
-    {
-      for( int j = 0; j < cnt2; j++ )
-      {
-        if( intersects( surface1.get( i ), surface2.get( j ) ) )
-        {
-          inter = true;
-          break;
-        }
-      }
-
-      if( inter )
-      {
-        break;
-      }
-    }
-
-    return inter;
+    return intersects( surface1.getSurfacePatch(), surface2.getSurfacePatch() );
   }
 
   protected static int relativeCCW( final double X1, final double Y1, double X2, double Y2, double PX, double PY )

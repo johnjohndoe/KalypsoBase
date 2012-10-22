@@ -87,7 +87,7 @@ import org.kalypsodeegree.model.coverage.RangeSetFile;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Curve;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridDomain;
@@ -191,7 +191,7 @@ public class TestGrid2Shp
 
       for( final CollectorDataProvider element : data )
       {
-        final GM_Surface< ? > line = (GM_Surface< ? >) element.getGeometry();
+        final GM_Polygon< ? > line = (GM_Polygon< ? >) element.getGeometry();
         final ISHPGeometry geom = gm2shp.convert( line );
 
         final Double id = element.getId();

@@ -47,7 +47,7 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
@@ -321,7 +321,7 @@ public abstract class AbstractCreateGeometeryWidget extends DeprecatedMouseWidge
 
   protected abstract void performIntern( final GM_Object validGeometryValue ) throws Exception;
 
-  private GM_Surface< ? > getPolygon( final List<GM_Position> posArray ) throws GM_Exception
+  private GM_Polygon< ? > getPolygon( final List<GM_Position> posArray ) throws GM_Exception
   {
     // close the ring
     posArray.add( posArray.get( 0 ) );

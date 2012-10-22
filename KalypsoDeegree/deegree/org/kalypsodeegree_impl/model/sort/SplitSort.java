@@ -280,33 +280,45 @@ public class SplitSort extends AbstractFeatureList
   public List< ? > query( final GM_Position pos, final List result )
   {
     final Rectangle envelope = new Rectangle( (float)pos.getX() - 1.0f, (float)pos.getY() - 1.0f, (float)pos.getX() + 1.0f, (float)pos.getY() + 1.0f );
-    return query( envelope, result );
+    return query( envelope, result, false );
   }
 
   @Override
   public List< ? > query( final GM_Envelope queryEnv, final List result )
   {
     final Rectangle envelope = GeometryUtilities.toRectangle( queryEnv );
-    return query( envelope, result );
+    return query( envelope, result, false );
+  }
+
+  @Override
+  @SuppressWarnings( { "unchecked" } )
+  public <T extends Feature> List<T> queryResolved( final GM_Position pos, final List<T> result )
+  {
+    final Rectangle envelope = new Rectangle( (float)pos.getX() - 1.0f, (float)pos.getY() - 1.0f, (float)pos.getX() + 1.0f, (float)pos.getY() + 1.0f );
+    return (List<T>)query( envelope, result, true );
+  }
+
+  @Override
+  @SuppressWarnings( { "unchecked" } )
+  public <T extends Feature> List<T> queryResolved( final GM_Envelope queryEnv, final List<T> result )
+  {
+    final Rectangle envelope = GeometryUtilities.toRectangle( queryEnv );
+    return (List<T>)query( envelope, result, true );
   }
 
   @SuppressWarnings( { "unchecked", "rawtypes" } )
-  protected synchronized List< ? > query( final Rectangle envelope, final List receiver )
+  private synchronized List< ? > query( final Rectangle envelope, final List receiver, final boolean resolve )
   {
     createIndex();
 
     final List<Object> result = receiver == null ? new ArrayList<>() : receiver;
-
-    final List<SplitSortItem> items = m_items;
 
     final TIntProcedure ip = new TIntProcedure()
     {
       @Override
       public boolean execute( final int index )
       {
-        final SplitSortItem item = items.get( index );
-        final Object data = item.getData();
-        result.add( data );
+        result.add( resolve ? getResolved( index ) : get( index ) );
         return true;
       }
     };

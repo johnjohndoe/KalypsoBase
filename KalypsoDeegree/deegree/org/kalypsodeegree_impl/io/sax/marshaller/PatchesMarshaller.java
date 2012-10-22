@@ -40,17 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.marshaller;
 
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurface;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
  * A marshaller for gml:SurfacePatchArrayPropertyType. It delegates the marshalling to the corresponding Patch elements.
- *
+ * 
  * @author Felipe Maximino
  */
-public abstract class PatchesMarshaller<T extends GM_SurfacePatch> extends AbstractMarshaller<GM_Surface<T>>
+public abstract class PatchesMarshaller<T extends GM_AbstractSurfacePatch> extends AbstractMarshaller<GM_AbstractSurface<T>>
 {
   private final String m_defaultCRS;
 
@@ -67,7 +67,7 @@ public abstract class PatchesMarshaller<T extends GM_SurfacePatch> extends Abstr
   }
 
   @Override
-  protected void doMarshallContent( final GM_Surface<T> marshalledObject ) throws SAXException
+  protected void doMarshallContent( final GM_AbstractSurface<T> marshalledObject ) throws SAXException
   {
     final SurfacePatchMarshaller<T> surfacePatchMarshaller = createPatchMarshaller();
     for( final T patch : marshalledObject )

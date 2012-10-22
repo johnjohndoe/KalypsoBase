@@ -55,7 +55,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
 
 /**
@@ -89,8 +89,8 @@ public class HandlesFactory
       createPointHandles( feature, propType, (GM_Point) geometry, collector, envelope );
     else if( geometry instanceof GM_Curve )
       createCurveHandles( feature, propType, (GM_Curve) geometry, collector, envelope );
-    else if( geometry instanceof GM_Surface )
-      createSurfaceHandles( feature, propType, (GM_Surface< ? >) geometry, collector, envelope );
+    else if( geometry instanceof GM_Polygon )
+      createSurfaceHandles( feature, propType, (GM_Polygon< ? >) geometry, collector, envelope );
   }
 
   private static void createPointHandles( final Feature feature, final IValuePropertyType propType, final GM_Point point, final List<Handle> collector, final GM_Envelope envelope )
@@ -116,7 +116,7 @@ public class HandlesFactory
 
   }
 
-  private static void createSurfaceHandles( final Feature feature, final IValuePropertyType propType, final GM_Surface< ? > surface, final List<Handle> collector, final GM_Envelope envelope )
+  private static void createSurfaceHandles( final Feature feature, final IValuePropertyType propType, final GM_Polygon< ? > surface, final List<Handle> collector, final GM_Envelope envelope )
   {
     final GM_SurfaceBoundary surfaceBoundary = surface.getSurfaceBoundary();
     if( surfaceBoundary == null )

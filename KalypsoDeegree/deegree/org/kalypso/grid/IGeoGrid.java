@@ -3,7 +3,7 @@ package org.kalypso.grid;
 import java.math.BigDecimal;
 
 import org.kalypsodeegree.model.elevation.IElevationModel;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
@@ -54,7 +54,7 @@ public interface IGeoGrid extends IGeoValueProvider, AutoCloseable, IElevationMo
    *          returned.
    * @return The surface of the grid.
    */
-  GM_Surface< ? > getSurface( final String targetCRS ) throws GeoGridException;
+  GM_Polygon< ? > getSurface( final String targetCRS ) throws GeoGridException;
 
   /**
    * This function returns the cell at the given (cell-)coordinates. We interpret the grid cell as a surface with the
@@ -68,7 +68,7 @@ public interface IGeoGrid extends IGeoValueProvider, AutoCloseable, IElevationMo
    *          The coordinate system will be used to transform the cell, after it was created and before it is returned.
    * @return The cell.
    */
-  GM_Surface< ? > getCell( final int x, final int y, final String targetCRS ) throws GeoGridException;
+  GM_Polygon< ? > getCell( final int x, final int y, final String targetCRS ) throws GeoGridException;
 
   /**
    * The envelope of this grid.<br>

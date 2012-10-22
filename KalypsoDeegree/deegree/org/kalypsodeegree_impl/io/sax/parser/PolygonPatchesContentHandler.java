@@ -42,7 +42,7 @@ package org.kalypsodeegree_impl.io.sax.parser;
 
 import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.types.IGmlContentHandler;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -77,7 +77,7 @@ public class PolygonPatchesContentHandler extends GMLElementContentHandler imple
   }
 
   @Override
-  public void handle( final GM_Polygon polygon ) throws SAXException
+  public void handle( final GM_PolygonPatch polygon ) throws SAXException
   {
     m_polygonHandler.handle( polygon );
   }

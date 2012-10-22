@@ -98,7 +98,7 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
@@ -257,7 +257,7 @@ public class TestInundationFrequenciesGrid2Shp
       final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
       final GM_Object2Shape gm2shp = new GM_Object2Shape( shapeType, crs );
 
-      final GM_Surface< ? > surface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Surface( env, crs );
+      final GM_Polygon< ? > surface = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Surface( env, crs );
       final ISHPGeometry geom = gm2shp.convert( surface );
 
       final Double id = 1.0;
@@ -283,7 +283,7 @@ public class TestInundationFrequenciesGrid2Shp
 
       for( final CollectorDataProvider element : data )
       {
-        final GM_Surface< ? > line = (GM_Surface< ? >) element.getGeometry();
+        final GM_Polygon< ? > line = (GM_Polygon< ? >) element.getGeometry();
         final ISHPGeometry geom = gm2shp.convert( line );
 
         final Double id = element.getId();

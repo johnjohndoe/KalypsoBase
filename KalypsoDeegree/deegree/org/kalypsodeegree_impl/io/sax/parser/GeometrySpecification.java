@@ -47,8 +47,8 @@ import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.io.sax.parser.geometrySpec.IGeometrySpecification;
+import org.kalypsodeegree_impl.model.geometry.GM_Polygon_Impl;
 import org.xml.sax.XMLReader;
 
 /**
@@ -81,7 +81,7 @@ public class GeometrySpecification implements IGeometrySpecification
     if( GM_LineString.LINE_STRING_ELEMENT.equals( property ) )
       return new LineStringContentHandler( reader, resultEater, m_geometryContentHandler, defaultSrs );
 
-    if( GM_Polygon.POLYGON_ELEMENT.equals( property ) )
+    if( GM_Polygon_Impl.POLYGON_ELEMENT.equals( property ) )
       return new PolygonContentHandler( reader, resultEater, m_geometryContentHandler, defaultSrs );
 
     throw new UnsupportedOperationException();

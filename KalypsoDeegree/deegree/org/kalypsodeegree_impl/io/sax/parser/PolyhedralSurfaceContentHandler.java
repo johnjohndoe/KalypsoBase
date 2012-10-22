@@ -42,7 +42,7 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_PolyhedralSurface;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.Attributes;
@@ -61,11 +61,11 @@ public class PolyhedralSurfaceContentHandler extends GMLElementContentHandler im
 {
   private static final String ELEMENT_POLYHEDRAL_SURFACE = "PolyhedralSurface";
 
-  private List<GM_Polygon> m_polygons = null;
+  private List<GM_PolygonPatch> m_polygons = null;
 
   private String m_crs;
 
-  private GM_PolyhedralSurface<GM_Polygon> m_polyhedralSurface;
+  private GM_PolyhedralSurface<GM_PolygonPatch> m_polyhedralSurface;
 
   private final UnmarshallResultEater m_resultEater;
 
@@ -97,7 +97,7 @@ public class PolyhedralSurfaceContentHandler extends GMLElementContentHandler im
   {
     try
     {
-      final GM_Polygon[] polygons = m_polygons.toArray( new GM_Polygon[m_polygons.size()] );
+      final GM_PolygonPatch[] polygons = m_polygons.toArray( new GM_PolygonPatch[m_polygons.size()] );
       m_polyhedralSurface = GeometryFactory.createGM_PolyhedralSurface( polygons, m_crs );
     }
     catch( final GM_Exception e )
@@ -148,7 +148,7 @@ public class PolyhedralSurfaceContentHandler extends GMLElementContentHandler im
    * @see org.kalypsodeegree_impl.io.sax.IPolygonHandler#handlePolygon()
    */
   @Override
-  public void handle( final GM_Polygon polygon )
+  public void handle( final GM_PolygonPatch polygon )
   {
     if( m_crs == null )
     {

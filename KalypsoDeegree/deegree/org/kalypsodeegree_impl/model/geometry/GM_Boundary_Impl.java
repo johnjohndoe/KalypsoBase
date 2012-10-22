@@ -48,7 +48,7 @@ import org.kalypsodeegree.model.geometry.GM_Boundary;
  * @author Andreas Poth
  *         <p>
  */
-abstract class GM_Boundary_Impl extends GM_Object_Impl implements GM_Boundary
+abstract class GM_Boundary_Impl extends GM_AbstractGML_Impl implements GM_Boundary
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = -6057663115928108209L;

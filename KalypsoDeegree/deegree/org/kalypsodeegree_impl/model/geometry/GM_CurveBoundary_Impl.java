@@ -43,7 +43,7 @@ import org.kalypsodeegree.model.geometry.GM_MultiPrimitive;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 
 /**
  * default implementation of the GM_CurveBoundary interface from package jago.model.
@@ -183,13 +183,13 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
           inter = LinearIntersects.intersects( p2, (GM_Curve) gmo );
         }
       }
-      else if( gmo instanceof GM_Surface )
+      else if( gmo instanceof GM_Polygon )
       {
-        inter = LinearIntersects.intersects( p1, (GM_Surface< ? >) gmo );
+        inter = LinearIntersects.intersects( p1, (GM_Polygon< ? >) gmo );
 
         if( !inter )
         {
-          inter = LinearIntersects.intersects( p2, (GM_Surface< ? >) gmo );
+          inter = LinearIntersects.intersects( p2, (GM_Polygon< ? >) gmo );
         }
       }
       else if( gmo instanceof GM_MultiPrimitive )

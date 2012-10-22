@@ -54,7 +54,7 @@ import org.kalypsodeegree.model.geometry.GM_Object;
  * @version 8.6.2001
  * @author Andreas Poth href="mailto:poth@lat-lon.de"
  */
-abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate
+abstract class GM_Aggregate_Impl extends GM_AbstractGML_Impl implements GM_Aggregate
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 1161164609227432958L;
@@ -309,7 +309,7 @@ abstract class GM_Aggregate_Impl extends GM_Object_Impl implements GM_Aggregate
     {
       for( int i = 0; i < m_aggregate.size(); i++ )
       {
-        ((GM_Object_Impl) getObjectAt( i )).setCoordinateSystem( crs );
+        ((GM_AbstractGML_Impl) getObjectAt( i )).setCoordinateSystem( crs );
       }
       invalidate();
     }

@@ -57,8 +57,8 @@ import org.kalypso.ogc.gml.map.widgets.advanced.utils.WidgetCursors;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -86,7 +86,7 @@ public class RectanglePolygonDelegate extends AbstractAdvancedSelectionWidgetDel
       Assert.isTrue( base.getCoordinateSystem() == current.getCoordinateSystem() );
 
       final GM_Envelope envelop = GeometryFactory.createGM_Envelope( base.getPosition(), current.getPosition(), base.getCoordinateSystem() );
-      final GM_Surface< ? extends GM_SurfacePatch> box = GeometryFactory.createGM_Surface( envelop, envelop.getCoordinateSystem() );
+      final GM_Polygon< ? extends GM_AbstractSurfacePatch> box = GeometryFactory.createGM_Surface( envelop, envelop.getCoordinateSystem() );
 
       final Feature[] features = getDataProvider().query( box, getEditMode() );
       getDataProvider().post( features, getEditMode() );
@@ -121,7 +121,7 @@ public class RectanglePolygonDelegate extends AbstractAdvancedSelectionWidgetDel
       Assert.isTrue( gmBase.getCoordinateSystem() == gmCurrent.getCoordinateSystem() );
 
       final GM_Envelope envelope = GeometryFactory.createGM_Envelope( gmBase.getPosition(), gmCurrent.getPosition(), gmBase.getCoordinateSystem() );
-      final GM_Surface< ? extends GM_SurfacePatch> box = GeometryFactory.createGM_Surface( envelope, envelope.getCoordinateSystem() );
+      final GM_Polygon< ? extends GM_AbstractSurfacePatch> box = GeometryFactory.createGM_Surface( envelope, envelope.getCoordinateSystem() );
 
       final Feature[] features = getDataProvider().query( box, getEditMode() );
       highlightUnderlyingGeometries( features, g, getEditMode() );

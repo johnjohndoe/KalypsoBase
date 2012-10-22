@@ -46,7 +46,7 @@ import org.kalypsodeegree.graphics.displayelements.PolygonDisplayElement;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.graphics.sld.PolygonSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.Symbolizer_Impl.UOM;
 import org.kalypsodeegree_impl.graphics.sld.awt.FillPainter;
@@ -71,7 +71,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
    * @param feature
    * @param geometry
    */
-  protected PolygonDisplayElement_Impl( final Feature feature, final GM_Surface< ? >[] surfaces )
+  protected PolygonDisplayElement_Impl( final Feature feature, final GM_Polygon< ? >[] surfaces )
   {
     this( feature, surfaces, new PolygonSymbolizer_Impl() );
   }
@@ -83,7 +83,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
    * @param geometry
    * @param symbolizer
    */
-  protected PolygonDisplayElement_Impl( final Feature feature, final GM_Surface< ? >[] surfaces, final PolygonSymbolizer symbolizer )
+  protected PolygonDisplayElement_Impl( final Feature feature, final GM_Polygon< ? >[] surfaces, final PolygonSymbolizer symbolizer )
   {
     super( feature, surfaces, symbolizer );
   }
@@ -108,7 +108,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
     if( fill == null )
       return;
 
-    final GM_Surface< ? >[] surfaces = (GM_Surface< ? >[]) getGeometry();
+    final GM_Polygon< ? >[] surfaces = (GM_Polygon< ? >[]) getGeometry();
 
     try
     {
@@ -116,7 +116,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
       final StrokePainter strokePainter = new StrokePainter( stroke, feature, uom, projection );
       final FillPainter fillPainter = new FillPainter( fill, feature, uom, projection );
 
-      for( final GM_Surface< ? > element : surfaces )
+      for( final GM_Polygon< ? > element : surfaces )
       {
         SldAwtUtilities.paintSurface( g2, element, projection, fillPainter, strokePainter );
       }

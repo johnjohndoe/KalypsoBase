@@ -49,7 +49,7 @@ import javax.xml.parsers.SAXParserFactory;
 import org.junit.Assert;
 import org.junit.Test;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_PolyhedralSurface;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.io.sax.parser.PolyhedralSurfaceContentHandler;
@@ -84,7 +84,7 @@ public class PolyhedralSurfaceContentHandlerTest extends Assert
   {
     assertEquals( 3, surface.size() );
 
-    final GM_Polygon triangle = surface.get( 0 );
+    final GM_PolygonPatch triangle = surface.get( 0 );
     final String srs = triangle.getCoordinateSystem();
 
     assertEquals( "EPSG:31467", srs );

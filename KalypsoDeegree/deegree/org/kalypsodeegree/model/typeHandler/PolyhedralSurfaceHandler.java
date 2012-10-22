@@ -45,7 +45,8 @@ import org.kalypso.gmlschema.types.IMarshallingTypeHandler2;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
+import org.kalypsodeegree.model.geometry.GM_PolyhedralSurface;
 import org.kalypsodeegree_impl.io.sax.marshaller.PolyhedralSurfaceMarshaller;
 import org.kalypsodeegree_impl.io.sax.parser.PolyhedralSurfaceContentHandler;
 import org.xml.sax.SAXException;
@@ -65,10 +66,10 @@ public class PolyhedralSurfaceHandler implements IMarshallingTypeHandler2
   }
 
   @Override
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings( "unchecked" )
   public void marshal( final Object value, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
   {
-    final GM_Surface<GM_Polygon> surface = (GM_Surface<GM_Polygon>) value;
+    final GM_PolyhedralSurface<GM_PolygonPatch> surface = (GM_PolyhedralSurface<GM_PolygonPatch>)value;
 
     new PolyhedralSurfaceMarshaller( reader ).marshall( surface );
   }
@@ -94,7 +95,7 @@ public class PolyhedralSurfaceHandler implements IMarshallingTypeHandler2
   @Override
   public Class< ? > getValueClass( )
   {
-    return GM_Surface.class;
+    return GM_Polygon.class;
   }
 
   @Override

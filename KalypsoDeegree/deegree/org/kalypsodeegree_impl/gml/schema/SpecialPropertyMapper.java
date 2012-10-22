@@ -44,7 +44,7 @@ import java.util.Map;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_MultiCurve;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
@@ -68,22 +68,22 @@ public final class SpecialPropertyMapper
 
   private SpecialPropertyMapper( )
   {
-    register( new SpecialMapper( GM_Surface.class, GM_MultiSurface.class )
+    register( new SpecialMapper( GM_Polygon.class, GM_MultiSurface.class )
     {
       @Override
       public Object map( final Object srcObject )
       {
-        final GM_Surface< ? > surface = (GM_Surface< ? >) srcObject;
-        final GM_Surface< ? >[] surfaces = new GM_Surface[] { surface };
+        final GM_Polygon< ? > surface = (GM_Polygon< ? >) srcObject;
+        final GM_Polygon< ? >[] surfaces = new GM_Polygon[] { surface };
         return GeometryFactory.createGM_MultiSurface( surfaces, surface.getCoordinateSystem() );
       }
     } );
-    register( new SpecialMapper( GM_MultiSurface.class, GM_Surface.class )
+    register( new SpecialMapper( GM_MultiSurface.class, GM_Polygon.class )
     {
       @Override
       public Object map( final Object srcObject )
       {
-        final GM_Surface< ? >[] surfaces = new GM_Surface[] { ((GM_MultiSurface) srcObject).getSurfaceAt( 0 ) };
+        final GM_Polygon< ? >[] surfaces = new GM_Polygon[] { ((GM_MultiSurface) srcObject).getSurfaceAt( 0 ) };
         return surfaces[0];
       }
     } );

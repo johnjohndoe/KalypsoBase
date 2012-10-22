@@ -41,7 +41,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 /**
  * @author Patrice Congo
  */
-public interface ISurfacePatchVisitable<P extends GM_SurfacePatch>
+public interface ISurfacePatchVisitable<P extends GM_AbstractSurfacePatch>
 {
   void acceptSurfacePatches( GM_Envelope envToVisit, ISurfacePatchVisitor<P> surfacePatchVisitor, IProgressMonitor monitor ) throws GM_Exception, CoreException;
 }

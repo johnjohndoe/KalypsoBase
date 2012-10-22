@@ -10,9 +10,9 @@ import org.kalypso.kml.export.utils.GoogleEarthUtils;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 import de.micromata.opengis.kml.v_2_2_0.Boundary;
@@ -24,7 +24,7 @@ import de.micromata.opengis.kml.v_2_2_0.Polygon;
  */
 public class ConverterSurface
 {
-  public static Polygon convert( final GM_Surface< ? > gmo ) throws Exception
+  public static Polygon convert( final GM_Polygon< ? > gmo ) throws Exception
   {
     /* handling of multigeometries not implemented at the moment */
     if( gmo.size() > 1 )
@@ -37,10 +37,10 @@ public class ConverterSurface
       final Polygon polygoneType = new Polygon();
 
       final Object object = gmo.get( i );
-      if( !(object instanceof GM_Polygon) )
+      if( !(object instanceof GM_PolygonPatch) )
         continue;
 
-      final GM_Polygon polygon = (GM_Polygon) object;
+      final GM_PolygonPatch polygon = (GM_PolygonPatch) object;
 
       /* set outer boundary */
 

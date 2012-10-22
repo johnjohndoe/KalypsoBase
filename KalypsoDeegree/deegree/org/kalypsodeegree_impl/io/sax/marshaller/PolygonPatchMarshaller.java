@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.marshaller;
 
-import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -50,7 +50,7 @@ import org.xml.sax.XMLReader;
  *
  * @author Felipe Maximino
  */
-public class PolygonPatchMarshaller extends SurfacePatchMarshaller<GM_Polygon>
+public class PolygonPatchMarshaller extends SurfacePatchMarshaller<GM_PolygonPatch>
 {
   private static final String TAG_POLYGON_PATCH = "PolygonPatch";
 
@@ -60,7 +60,7 @@ public class PolygonPatchMarshaller extends SurfacePatchMarshaller<GM_Polygon>
   }
 
   @Override
-  protected void doMarshallContent( final GM_Polygon marshalledObject ) throws SAXException
+  protected void doMarshallContent( final GM_PolygonPatch marshalledObject ) throws SAXException
   {
     final GM_Position[] exteriorRing = marshalledObject.getExteriorRing();
     new ExteriorMarshaller( getXMLReader() ).marshall( exteriorRing );

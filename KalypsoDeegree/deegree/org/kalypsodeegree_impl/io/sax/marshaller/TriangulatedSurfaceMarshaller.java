@@ -40,19 +40,19 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.marshaller;
 
-import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
+import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
  * A marshaller for gml:TriangulatedSurfaces
- *
+ * 
  * @author Gernot Belger
  * @author Felipe Maximino - Refaktoring
  */
-public class TriangulatedSurfaceMarshaller extends AbstractSurfaceMarshaller<GM_Triangle>
+public class TriangulatedSurfaceMarshaller extends AbstractSurfaceMarshaller<GM_TriangulatedSurface>
 {
   private static final String TAG_TRIANGULATED_SURFACE = "TriangulatedSurface";
 
@@ -66,7 +66,7 @@ public class TriangulatedSurfaceMarshaller extends AbstractSurfaceMarshaller<GM_
   }
 
   @Override
-  protected void doMarshallContent( final GM_Surface<GM_Triangle> marshalledObject ) throws SAXException
+  protected void doMarshallContent( final GM_TriangulatedSurface marshalledObject ) throws SAXException
   {
     m_patchesMarshaller.marshall( marshalledObject );
   }
@@ -77,7 +77,7 @@ public class TriangulatedSurfaceMarshaller extends AbstractSurfaceMarshaller<GM_
     triangleMarshaller.marshall( triangle );
   }
 
-  public void startSurface( final GM_Surface<GM_Triangle> surface, final Attributes atts ) throws SAXException
+  public void startSurface( final GM_TriangulatedSurface surface, final Attributes atts ) throws SAXException
   {
     startMarshalling( surface, atts );
     m_patchesMarshaller.startMarshalling( surface );

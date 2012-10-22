@@ -46,6 +46,6 @@ package org.kalypsodeegree.model.geometry;
  *          <p>
  */
 
-public interface GM_Shell extends GM_OrientableSurface
+public interface GM_Shell extends GM_AbstractSurface
 {
 }

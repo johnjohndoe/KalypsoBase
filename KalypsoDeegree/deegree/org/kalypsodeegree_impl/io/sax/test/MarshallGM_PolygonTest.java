@@ -48,9 +48,9 @@ import junit.framework.TestCase;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.junit.Test;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.io.sax.marshaller.PolygonMarshaller;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.SAXException;
@@ -61,11 +61,11 @@ import org.xml.sax.XMLReader;
  */
 public class MarshallGM_PolygonTest extends TestCase
 {
-  private final GM_Surface<GM_Polygon> m_surfaceOneHole;
+  private final GM_Polygon<GM_PolygonPatch> m_surfaceOneHole;
 
-  private final GM_Surface<GM_Polygon> m_surfaceTwoHoles;
+  private final GM_Polygon<GM_PolygonPatch> m_surfaceTwoHoles;
 
-  private final GM_Surface<GM_Polygon> m_surfaceNoHole;
+  private final GM_Polygon<GM_PolygonPatch> m_surfaceNoHole;
 
   public MarshallGM_PolygonTest( ) throws GM_Exception
   {
@@ -112,7 +112,7 @@ public class MarshallGM_PolygonTest extends TestCase
     testPolygon( "polygon_marshall_twoHoles.gml", m_surfaceTwoHoles );
   }
 
-  private void testPolygon( final String expectedResource, final GM_Surface<GM_Polygon> polygonToSave ) throws IOException, SAXException
+  private void testPolygon( final String expectedResource, final GM_Polygon<GM_PolygonPatch> polygonToSave ) throws IOException, SAXException
   {
     final ByteArrayOutputStream os = new ByteArrayOutputStream();
 

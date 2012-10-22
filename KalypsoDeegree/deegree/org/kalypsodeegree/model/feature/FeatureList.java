@@ -40,6 +40,8 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.kalypso.gmlschema.feature.IFeatureType;
+import org.kalypsodeegree.model.geometry.GM_Envelope;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.sort.JMSpatialIndex;
 
 /**
@@ -50,11 +52,13 @@ public interface FeatureList extends List, JMSpatialIndex, IFeatureRelation
   /**
    * Gets ALL features in this list. Resolves any links.
    */
+  <T extends Feature> T[] toFeatures( T[] features );
+
   Feature[] toFeatures( );
 
   /**
    * Visit all Features in the list.
-   *
+   * 
    * @param depth
    *          One of {@link FeatureVisitor#DEPTH_INFINITE}...
    */
@@ -65,7 +69,7 @@ public interface FeatureList extends List, JMSpatialIndex, IFeatureRelation
 
   /**
    * The feature containing this list.
-   *
+   * 
    * @return The parent feature, <code>null</code> if the list has no parent feature.
    */
   @Override
@@ -99,7 +103,7 @@ public interface FeatureList extends List, JMSpatialIndex, IFeatureRelation
    * of this workspace.<br/>
    * Does not check, if the given feature is already contained in this list (the list may be allowed to contain multiple
    * links to the same feature or even a feature and a link to the same feature at the same time).
-   *
+   * 
    * @param toLink
    *          a wrapper wrapping the feature to be added as list
    * @return The freshly created link
@@ -114,7 +118,7 @@ public interface FeatureList extends List, JMSpatialIndex, IFeatureRelation
 
   /**
    * Same as {@link #insertLink(int, Feature)}, using a given href.
-   *
+   * 
    * @see Feature#setLink(org.kalypso.gmlschema.property.relation.IRelationType, String) for the interpreatation of the
    *      parameters.
    */
@@ -122,7 +126,7 @@ public interface FeatureList extends List, JMSpatialIndex, IFeatureRelation
 
   /**
    * Same as {@link #insertLink(int, Feature)}, using a given href.
-   *
+   * 
    * @see Feature#setLink(org.kalypso.gmlschema.property.relation.IRelationType, String) for the interpreatation of the
    *      parameters.
    */
@@ -130,7 +134,7 @@ public interface FeatureList extends List, JMSpatialIndex, IFeatureRelation
 
   /**
    * Same as {@link #insertLink(int, Feature)}, using a given href.
-   *
+   * 
    * @see Feature#setLink(org.kalypso.gmlschema.property.relation.IRelationType, String) for the interpreatation of the
    *      parameters.
    */
@@ -139,12 +143,20 @@ public interface FeatureList extends List, JMSpatialIndex, IFeatureRelation
   /**
    * Removes a link from this list that links to the given feature.<br/>
    * If more than one element links to the given feature, only the first will be removed.
-   *
+   * 
    * @return <code>true</code> If the list was changed by this operation.
    * @throws IllegalArgumentException
    *           If the given feature is an {@link IXLinkedFeature}.
    */
   boolean removeLink( Feature targetFeature );
+
+  boolean containsOrLinksTo( Feature targetFeature );
+
+  Feature getResolved( int index );
+
+  <T extends Feature> List<T> queryResolved( GM_Envelope env, List<T> result );
+
+  <T extends Feature> List<T> queryResolved( GM_Position env, List<T> result );
 
   // TODO: uncomment only if implemented
 

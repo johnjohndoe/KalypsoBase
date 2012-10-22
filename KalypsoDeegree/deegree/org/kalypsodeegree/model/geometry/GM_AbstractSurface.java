@@ -36,10 +36,9 @@
 
 package org.kalypsodeegree.model.geometry;
 
+import java.util.List;
+
 /**
- * The specialisation of the GM_OrientablePrimitive as a curve. Note that a orientated geometry can only have one
- * direction. if you for example have to model a road that can be driven in two directions you need two identical
- * geometries but ith different orientations.
  * <p>
  * -----------------------------------------------------
  * </p>
@@ -49,7 +48,10 @@ package org.kalypsodeegree.model.geometry;
  *          <p>
  */
 
-public interface GM_OrientableCurve extends GM_OrientablePrimitive
+public interface GM_AbstractSurface<T extends GM_AbstractSurfacePatch> extends GM_AbstractGeometricPrimitive, List<T>
 {
-  GM_CurveBoundary getCurveBoundary( );
+  /**
+   * returns the boundary of the surface
+   */
+  GM_SurfaceBoundary getSurfaceBoundary( );
 }

@@ -40,7 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.marshaller;
 
-import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.xml.sax.XMLReader;
 
 /**
@@ -48,7 +48,7 @@ import org.xml.sax.XMLReader;
  *
  * @author Felipe Maximino
  */
-public class PolygonPatchesMarshaller extends PatchesMarshaller<GM_Polygon>
+public class PolygonPatchesMarshaller extends PatchesMarshaller<GM_PolygonPatch>
 {
   public static final String TAG_POLYGON_PATCHES = "polygonPatches";
 

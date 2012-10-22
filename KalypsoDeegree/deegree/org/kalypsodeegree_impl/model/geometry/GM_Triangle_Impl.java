@@ -44,7 +44,7 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 
 import com.vividsolutions.jts.algorithm.CGAlgorithms;
@@ -152,7 +152,7 @@ class GM_Triangle_Impl implements GM_Triangle
   }
 
   @Override
-  public GM_SurfacePatch transform( final String targetCRS ) throws GeoTransformerException
+  public GM_AbstractSurfacePatch transform( final String targetCRS ) throws GeoTransformerException
   {
     /* If the target is the same coordinate system, do not transform. */
     final String sourceCRS = getCoordinateSystem();
@@ -236,7 +236,7 @@ class GM_Triangle_Impl implements GM_Triangle
   {
     try
     {
-      final GM_Polygon_Impl poly = new GM_Polygon_Impl( getExteriorRing(), getInteriorRings(), m_srsName );
+      final GM_PolygonPatch_Impl poly = new GM_PolygonPatch_Impl( getExteriorRing(), getInteriorRings(), m_srsName );
       return poly.intersects( gmo );
     }
     catch( final GM_Exception e )
@@ -258,7 +258,7 @@ class GM_Triangle_Impl implements GM_Triangle
         return contains( transformedPoint.getPosition() );
       }
 
-      final GM_Polygon_Impl poly = new GM_Polygon_Impl( getExteriorRing(), getInteriorRings(), m_srsName );
+      final GM_PolygonPatch_Impl poly = new GM_PolygonPatch_Impl( getExteriorRing(), getInteriorRings(), m_srsName );
       return poly.contains( gmo );
     }
     catch( final Exception e )

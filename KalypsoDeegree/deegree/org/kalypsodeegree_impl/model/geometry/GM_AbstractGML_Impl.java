@@ -57,7 +57,7 @@ import com.vividsolutions.jts.geom.TopologyException;
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
  */
-public abstract class GM_Object_Impl extends PlatformObject implements GM_Object, Serializable
+public abstract class GM_AbstractGML_Impl extends PlatformObject implements GM_Object, Serializable
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = 130728662284673112L;
@@ -78,7 +78,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
    * @param crs
    *          new spatial reference system
    */
-  protected GM_Object_Impl( final String crs )
+  protected GM_AbstractGML_Impl( final String crs )
   {
     setCoordinateSystem( crs );
   }
@@ -505,7 +505,7 @@ public abstract class GM_Object_Impl extends PlatformObject implements GM_Object
     if( that == this )
       return true;
 
-    if( that == null || !(that instanceof GM_Object_Impl) )
+    if( that == null || !(that instanceof GM_AbstractGML_Impl) )
       return false;
 
     if( m_crs != null )

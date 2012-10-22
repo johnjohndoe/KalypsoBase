@@ -52,10 +52,10 @@ public interface GM_MultiPrimitive extends GM_Aggregate
   /**
    * returns the GM_Primitive at the submitted index.
    */
-  GM_Primitive getPrimitiveAt( int index );
+  GM_AbstractGeometry getPrimitiveAt( int index );
 
   /**
    * returns all GM_Primitives as array
    */
-  GM_Primitive[] getAllPrimitives( );
+  GM_AbstractGeometry[] getAllPrimitives( );
 }

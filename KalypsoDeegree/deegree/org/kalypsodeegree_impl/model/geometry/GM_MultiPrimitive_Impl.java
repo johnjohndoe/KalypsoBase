@@ -41,7 +41,7 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiPrimitive;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Primitive;
+import org.kalypsodeegree.model.geometry.GM_AbstractGeometry;
 
 /**
  * default implementation of the GM_MultiPrimitive interface of package jago.model.
@@ -108,18 +108,18 @@ class GM_MultiPrimitive_Impl extends GM_Aggregate_Impl implements GM_MultiPrimit
    * returns the GM_Primitive at the submitted index.
    */
   @Override
-  public GM_Primitive getPrimitiveAt( final int index )
+  public GM_AbstractGeometry getPrimitiveAt( final int index )
   {
-    return (GM_Primitive) super.getObjectAt( index );
+    return (GM_AbstractGeometry) super.getObjectAt( index );
   }
 
   /**
    * returns all GM_Primitives as array
    */
   @Override
-  public GM_Primitive[] getAllPrimitives( )
+  public GM_AbstractGeometry[] getAllPrimitives( )
   {
-    final GM_Primitive[] gmos = new GM_Primitive[getSize()];
+    final GM_AbstractGeometry[] gmos = new GM_AbstractGeometry[getSize()];
 
     return m_aggregate.toArray( gmos );
   }

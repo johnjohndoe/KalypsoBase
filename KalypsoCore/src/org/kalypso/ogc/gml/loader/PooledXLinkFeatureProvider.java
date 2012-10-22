@@ -155,14 +155,14 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
         if( info != null )
         {
           int timer = 0;
-          while( timer < 1000 )
+          while( m_workspace == null && timer < 10)
           {
-            final int state = info.getState();
-            if( state != Job.WAITING )
-              break;
+//            final int state = info.getState();
+//            if( state != Job.WAITING )
+//              break;
 
-            Thread.sleep( 100 );
-            timer += 100;
+            Thread.sleep( 500 );
+            timer += 1;
           }
 // FIXME: bad... leads to dead locks...
           info.join();

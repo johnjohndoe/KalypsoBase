@@ -40,15 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.marshaller;
 
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
  * @author Gernot Belger
  */
-public class PolygonMemberMarshaller extends AbstractMarshaller<GM_Surface<GM_Polygon>>
+public class PolygonMemberMarshaller extends AbstractMarshaller<GM_Polygon<GM_PolygonPatch>>
 {
   public static final String TAG_POLYGON_MEMBER = "polygonMember"; //$NON-NLS-1$
 
@@ -58,7 +58,7 @@ public class PolygonMemberMarshaller extends AbstractMarshaller<GM_Surface<GM_Po
   }
 
   @Override
-  protected void doMarshallContent( final GM_Surface<GM_Polygon> marshalledObject ) throws SAXException
+  protected void doMarshallContent( final GM_Polygon<GM_PolygonPatch> marshalledObject ) throws SAXException
   {
     new PolygonMarshaller( getXMLReader() ).marshall( marshalledObject );
   }

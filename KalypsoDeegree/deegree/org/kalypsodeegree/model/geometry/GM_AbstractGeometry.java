@@ -37,6 +37,7 @@
 package org.kalypsodeegree.model.geometry;
 
 /**
+ * A GM_Primitive is the basic geometry for all none complex geometries.
  * <p>
  * -----------------------------------------------------
  * </p>
@@ -45,11 +46,6 @@ package org.kalypsodeegree.model.geometry;
  * @version $Revision$ $Date$
  *          <p>
  */
-
-public interface GM_OrientableSurface extends GM_OrientablePrimitive
+public interface GM_AbstractGeometry extends GM_Object
 {
-  /**
-   * returns the boundary of the surface
-   */
-  GM_SurfaceBoundary getSurfaceBoundary( );
 }

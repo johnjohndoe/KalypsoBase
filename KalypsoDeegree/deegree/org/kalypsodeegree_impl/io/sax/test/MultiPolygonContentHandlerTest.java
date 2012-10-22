@@ -56,9 +56,9 @@ import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.io.sax.parser.MultiPolygonContentHandler;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.InputSource;
@@ -100,11 +100,11 @@ public class MultiPolygonContentHandlerTest extends Assert
     final GM_Position[] interiorRing2 = new GM_Position[] { pos2, pos7, pos6, pos2 };
 
     final String crs = "EPSG:31467";
-    final GM_Surface<GM_Polygon> surfaceNoHole = GeometryFactory.createGM_Surface( exteriorRing, new GM_Position[][] {}, crs );
-    final GM_Surface<GM_Polygon> surfaceOneHole = GeometryFactory.createGM_Surface( exteriorRing, new GM_Position[][] { interiorRing1 }, crs );
-    final GM_Surface<GM_Polygon> surfaceTwoHoles = GeometryFactory.createGM_Surface( exteriorRing, new GM_Position[][] { interiorRing1, interiorRing2 }, crs );
+    final GM_Polygon<GM_PolygonPatch> surfaceNoHole = GeometryFactory.createGM_Surface( exteriorRing, new GM_Position[][] {}, crs );
+    final GM_Polygon<GM_PolygonPatch> surfaceOneHole = GeometryFactory.createGM_Surface( exteriorRing, new GM_Position[][] { interiorRing1 }, crs );
+    final GM_Polygon<GM_PolygonPatch> surfaceTwoHoles = GeometryFactory.createGM_Surface( exteriorRing, new GM_Position[][] { interiorRing1, interiorRing2 }, crs );
 
-    m_multiPolygon = GeometryFactory.createGM_MultiSurface( new GM_Surface[] { surfaceNoHole, surfaceOneHole, surfaceTwoHoles }, crs );
+    m_multiPolygon = GeometryFactory.createGM_MultiSurface( new GM_Polygon[] { surfaceNoHole, surfaceOneHole, surfaceTwoHoles }, crs );
   }
 
   @Test
@@ -121,8 +121,8 @@ public class MultiPolygonContentHandlerTest extends Assert
     assertNotNull( multi );
     assertEquals( 1, multi.getSize() );
 
-    final GM_Surface<GM_Polygon> surface = (GM_Surface<GM_Polygon>) multi.getObjectAt( 0 );
-    final GM_Polygon polygon = surface.get( 0 );
+    final GM_Polygon<GM_PolygonPatch> surface = (GM_Polygon<GM_PolygonPatch>) multi.getObjectAt( 0 );
+    final GM_PolygonPatch polygon = surface.get( 0 );
     final GM_Position[] exteriorRing = polygon.getExteriorRing();
 
     assertEquals( 165, exteriorRing.length );
@@ -140,8 +140,8 @@ public class MultiPolygonContentHandlerTest extends Assert
       final GM_Object expectedPolygon = expected.getObjectAt( i );
       final GM_Object actualPolygon = actual.getObjectAt( i );
 
-      assertTrue( expectedPolygon instanceof GM_Surface );
-      assertTrue( actualPolygon instanceof GM_Surface );
+      assertTrue( expectedPolygon instanceof GM_Polygon );
+      assertTrue( actualPolygon instanceof GM_Polygon );
 
     }
   }

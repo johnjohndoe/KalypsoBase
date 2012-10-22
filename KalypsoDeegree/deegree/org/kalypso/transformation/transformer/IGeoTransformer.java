@@ -43,7 +43,7 @@ package org.kalypso.transformation.transformer;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 
 /**
  * This interface provides functions for transforming geometries into different coordinate systems.
@@ -96,5 +96,5 @@ public interface IGeoTransformer
    *          The surface patch.
    * @return The transformed surface patch.
    */
-  GM_SurfacePatch transform( GM_SurfacePatch surfacePatch ) throws GeoTransformerException;
+  GM_AbstractSurfacePatch transform( GM_AbstractSurfacePatch surfacePatch ) throws GeoTransformerException;
 }

@@ -38,7 +38,7 @@ package org.kalypsodeegree_impl.model.feature;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree_impl.model.geometry.GM_Object_Impl;
+import org.kalypsodeegree_impl.model.geometry.GM_AbstractGML_Impl;
 
 /**
  * @author vdoemming
@@ -54,7 +54,7 @@ public class GMLUtilities
       if( prop != null && prop instanceof Feature )
         setCrs( (Feature) prop, srcCS );
       else if( prop != null && prop instanceof GM_Object )
-        ((GM_Object_Impl) prop).setCoordinateSystem( srcCS );
+        ((GM_AbstractGML_Impl) prop).setCoordinateSystem( srcCS );
     }
   }
 
@@ -72,7 +72,7 @@ public class GMLUtilities
         checkCrs( (Feature) prop, defaultCS );
       else if( prop != null && prop instanceof GM_Object )
       {
-        final GM_Object_Impl gmlProp = (GM_Object_Impl) prop;
+        final GM_AbstractGML_Impl gmlProp = (GM_AbstractGML_Impl) prop;
         if( gmlProp.getCoordinateSystem() == null )
           gmlProp.setCoordinateSystem( defaultCS );
       }

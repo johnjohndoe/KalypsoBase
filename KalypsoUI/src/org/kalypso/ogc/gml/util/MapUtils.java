@@ -66,9 +66,9 @@ import org.kalypsodeegree.model.geometry.GM_MultiPrimitive;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Primitive;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_AbstractGeometry;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
@@ -177,22 +177,22 @@ public class MapUtils
       paintGrabbedPoint( panel, g2, (GM_Point) geom );
     else if( geom instanceof GM_Curve )
       paintGrabbedCurve( panel, g2, (GM_Curve) geom );
-    else if( geom instanceof GM_Surface )
-      drawGrabbedSurface( panel, g2, (GM_Surface<GM_SurfacePatch>) geom );
+    else if( geom instanceof GM_Polygon )
+      drawGrabbedSurface( panel, g2, (GM_Polygon<GM_AbstractSurfacePatch>) geom );
     else if( geom instanceof GM_MultiPrimitive )
     {
       final GM_MultiPrimitive multi = (GM_MultiPrimitive) geom;
-      final GM_Primitive[] allPrimitives = multi.getAllPrimitives();
-      for( final GM_Primitive primitive : allPrimitives )
+      final GM_AbstractGeometry[] allPrimitives = multi.getAllPrimitives();
+      for( final GM_AbstractGeometry primitive : allPrimitives )
         paintGrabbedGeometry( panel, g2, primitive );
     }
     else
       paintGrabbedPoint( panel, g2, geom.getCentroid() );
   }
 
-  private static void drawGrabbedSurface( final IMapPanel panel, final Graphics2D g2, final GM_Surface<GM_SurfacePatch> surface )
+  private static void drawGrabbedSurface( final IMapPanel panel, final Graphics2D g2, final GM_Polygon<GM_AbstractSurfacePatch> surface )
   {
-    final GM_SurfacePatch patch = surface.get( 0 );
+    final GM_AbstractSurfacePatch patch = surface.get( 0 );
 
     final String crs = surface.getCoordinateSystem();
     final GM_Position[] positions = patch.getExteriorRing();

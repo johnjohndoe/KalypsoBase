@@ -60,8 +60,8 @@ import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
@@ -247,9 +247,9 @@ public class ConstraintDelaunayHelper
     final GM_Object[] objects = polygonSurface.getAll();
     for( final GM_Object object : objects )
     {
-      if( object instanceof GM_Surface )
+      if( object instanceof GM_Polygon )
       {
-        final GM_Surface<GM_SurfacePatch> surface = (GM_Surface<GM_SurfacePatch>)object;
+        final GM_Polygon<GM_AbstractSurfacePatch> surface = (GM_Polygon<GM_AbstractSurfacePatch>)object;
         final GM_Triangle[] triangles = convertToTriangles( surface, crs );
         for( final GM_Triangle triangle : triangles )
         {
@@ -260,21 +260,21 @@ public class ConstraintDelaunayHelper
     return triangleList.toArray( new GM_Triangle[triangleList.size()] );
   }
 
-  public static GM_Triangle[] convertToTriangles( final GM_Surface<GM_SurfacePatch> surface, final String crs ) throws GM_Exception
+  public static GM_Triangle[] convertToTriangles( final GM_Polygon<GM_AbstractSurfacePatch> surface, final String crs ) throws GM_Exception
   {
     return convertToTriangles( surface, crs, new String[0] );
   }
 
-  public static GM_Triangle[] convertToTriangles( final GM_Surface< ? extends GM_SurfacePatch> pSurface, final String crs, final String... triangleArgs ) throws GM_Exception
+  public static GM_Triangle[] convertToTriangles( final GM_Polygon< ? extends GM_AbstractSurfacePatch> pSurface, final String crs, final String... triangleArgs ) throws GM_Exception
   {
     return convertToTriangles( pSurface, crs, true, triangleArgs );
   }
 
-  public static GM_Triangle[] convertToTriangles( final GM_Surface< ? extends GM_SurfacePatch> pSurface, final String crs, final boolean useTriangleExe, final String... triangleArgs ) throws GM_Exception
+  public static GM_Triangle[] convertToTriangles( final GM_Polygon< ? extends GM_AbstractSurfacePatch> pSurface, final String crs, final boolean useTriangleExe, final String... triangleArgs ) throws GM_Exception
   {
     final List<GM_Triangle> triangleList = new LinkedList<>();
     final boolean lBoolConvex = pSurface.getConvexHull().difference( pSurface ) == null;
-    for( final GM_SurfacePatch surfacePatch : pSurface )
+    for( final GM_AbstractSurfacePatch surfacePatch : pSurface )
     {
       final GM_Position[] exterior = surfacePatch.getExteriorRing();
 

@@ -91,8 +91,8 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.graphics.sld.PointSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.PolygonSymbolizer_Impl;
@@ -181,7 +181,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
 
       final String targetCrs = projection.getSourceRect().getCoordinateSystem();
       Assert.isNotNull( targetCrs );
-      paintGrid( (Graphics2D) g, grid, projection, targetCrs, monitor );
+      paintGrid( (Graphics2D)g, grid, projection, targetCrs, monitor );
     }
     catch( final OperationCanceledException e )
     {
@@ -209,7 +209,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     final SubMonitor progress = SubMonitor.convert( monitor, "Painting grid", 100 );
 
     /* Get the envelope of the surface of the grid (it is transformed). */
-    final GM_Surface< ? > gridSurface = grid.getSurface( targetCRS );
+    final GM_Polygon< ? > gridSurface = grid.getSurface( targetCRS );
 
     final Composite oldAlphaComposite = g.getComposite();
     try
@@ -226,12 +226,12 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     }
 
     // TODO Tricky: apply opacityFactor to imageOutline as well?
-    final RasterSymbolizer symbolizer = (RasterSymbolizer) getSymbolizer();
+    final RasterSymbolizer symbolizer = (RasterSymbolizer)getSymbolizer();
     final Symbolizer imageOutline = symbolizer.getImageOutline();
     paintImageOutline( g, gridSurface, projection, imageOutline, progress.newChild( 5, SubMonitor.SUPPRESS_NONE ) );
   }
 
-  private void paintRaster( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final GM_Surface< ? > gridSurface, final String targetCRS, final IProgressMonitor progress ) throws GeoGridException, CoreException
+  private void paintRaster( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final GM_Polygon< ? > gridSurface, final String targetCRS, final IProgressMonitor progress ) throws GeoGridException, CoreException
   {
     final GM_Envelope envelope = gridSurface.getEnvelope();
 
@@ -249,7 +249,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     final double cellPixelWidthY = gridPixelWidthY / grid.getSizeY();
 
     /* The cluster size. */
-    final int clusterSize = (int) Math.ceil( CLUSTER_CELL_COUNT / cellPixelWidthX );
+    final int clusterSize = (int)Math.ceil( CLUSTER_CELL_COUNT / cellPixelWidthX );
 
     /* The enevlope of the map extent (in geo coordinates). */
     final Envelope paintEnvelope = JTSAdapter.export( projection.getSourceRect() );
@@ -297,10 +297,10 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
 
     // Always +/- 1 in order to avoid gaps due to rounding errors
     // cells outside the grid will not be painted, as we get Double.NaN here
-    final int screenXfrom = (int) projection.getDestX( env.getMinX() ) - 1;
-    final int screenXto = (int) projection.getDestX( env.getMaxX() ) + 1;
-    final int screenYfrom = (int) projection.getDestY( env.getMaxY() ) - 1;
-    final int screenYto = (int) projection.getDestY( env.getMinY() ) + 1;
+    final int screenXfrom = (int)projection.getDestX( env.getMinX() ) - 1;
+    final int screenXto = (int)projection.getDestX( env.getMaxX() ) + 1;
+    final int screenYfrom = (int)projection.getDestY( env.getMaxY() ) - 1;
+    final int screenYto = (int)projection.getDestY( env.getMinY() ) + 1;
 
     // Split up into tiles...
     // TODO: check, if this is ok in combination with the cached-grid
@@ -377,7 +377,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
 
   private double[][] getSlopes( final double[][] values, final double xres, final double yres )
   {
-    final RasterSymbolizer symbolizer = (RasterSymbolizer) getSymbolizer();
+    final RasterSymbolizer symbolizer = (RasterSymbolizer)getSymbolizer();
     final ShadedRelief shadedRelief = symbolizer.getShadedRelief();
     if( shadedRelief == null )
       return null;
@@ -523,13 +523,13 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
       return;
 
     /* Get the surface of the cell (in the target coordinate system). */
-    final GM_Surface< ? > cell = grid.getCell( i, j, targetCRS );
+    final GM_Polygon< ? > cell = grid.getCell( i, j, targetCRS );
     final GM_Envelope cellEnvelope = cell.getEnvelope();
     final Envelope jtsCellEnvelope = JTSAdapter.export( cellEnvelope );
     paintEnvelope( g, projection, jtsCellEnvelope, color );
   }
 
-  private void paintImageOutline( final Graphics2D g, final GM_Surface< ? > gridSurface, final GeoTransform projection, final Symbolizer imageOutline, final IProgressMonitor monitor ) throws CoreException
+  private void paintImageOutline( final Graphics2D g, final GM_Polygon< ? > gridSurface, final GeoTransform projection, final Symbolizer imageOutline, final IProgressMonitor monitor ) throws CoreException
   {
     try
     {
@@ -609,11 +609,11 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     final double paintMaxX = projection.getDestX( currentCellEnv.getMaxX() );
     final double paintMaxY = projection.getDestY( currentCellEnv.getMaxY() );
 
-    final int x1 = (int) Math.ceil( paintMinX );
-    final int y1 = (int) Math.ceil( paintMaxY );
+    final int x1 = (int)Math.ceil( paintMinX );
+    final int y1 = (int)Math.ceil( paintMaxY );
 
-    final int x2 = (int) Math.ceil( paintMaxX );
-    final int y2 = (int) Math.ceil( paintMinY );
+    final int x2 = (int)Math.ceil( paintMaxX );
+    final int y2 = (int)Math.ceil( paintMinY );
 
     final int width = x2 - x1;
     final int height = y2 - y1;
@@ -663,7 +663,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
 
   private float getOpacity( ) throws FilterEvaluationException
   {
-    final RasterSymbolizer symbolizer = (RasterSymbolizer) getSymbolizer();
+    final RasterSymbolizer symbolizer = (RasterSymbolizer)getSymbolizer();
     final ParameterValueType opacity = symbolizer.getOpacity();
     if( opacity == null )
       return Float.NaN;
@@ -686,10 +686,10 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
   {
     // REMARK: all fields appear to be unsused, but they are: via reflection in equals() and hashCode()
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings( "unused" )
     private final String m_featureId;
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings( "unused" )
     private final URL m_url;
 
     public GridCacheKey( final String featureId, final URL url )
@@ -720,7 +720,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
   /**
    * This function paints the cells and/or the cells center points.
    */
-  @SuppressWarnings("unused")
+  @SuppressWarnings( "unused" )
   // REMARK: not used, normally; but is used for debugging the raster stuff.
   // Maybe add tracing option to switch this on/off
   private void paintCells( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final String targetCRS, final GeoGridCell minCell, final GeoGridCell maxCell, final boolean cells, final boolean centerPoints, final IProgressMonitor monitor ) throws CoreException
@@ -751,7 +751,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
           if( cells )
           {
             /* Create the cells geometry. */
-            final GM_Surface< ? > surface = GeoGridUtilities.createCell( grid, x, y, targetCRS );
+            final GM_Polygon< ? > surface = GeoGridUtilities.createCell( grid, x, y, targetCRS );
 
             /* Paint the cell at this position. */
             final PolygonDisplayElement cellDisplayElement = DisplayElementFactory.buildPolygonDisplayElement( null, surface, cellSymbolizer );

@@ -62,12 +62,12 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_PolyhedralSurface;
 import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Surface;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
-import org.kalypsodeegree.model.geometry.GM_SurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.ISurfacePatchVisitor;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
@@ -78,7 +78,7 @@ import com.infomatiq.jsi.rtree.RTree;
 /**
  * @author skurzbach
  */
-public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_OrientableSurface_Impl implements GM_PolyhedralSurface<T>
+public class GM_PolyhedralSurface_Impl<T extends GM_PolygonPatch> extends GM_AbstractSurface_Impl<T> implements GM_PolyhedralSurface<T>
 {
   private final SpatialIndex m_index = new RTree();
 
@@ -128,18 +128,6 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   }
 
   @Override
-  public void add( final int index, final T element )
-  {
-    // FIXME: would break the index
-
-    throw new UnsupportedOperationException();
-
-// m_items.add( index, element );
-//
-// insertToIndex( index, element );
-  }
-
-  @Override
   public boolean addAll( final Collection< ? extends T> c )
   {
     int index = size();
@@ -150,21 +138,6 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
       insertToIndex( index++, polygon );
 
     return !c.isEmpty();
-  }
-
-  @Override
-  public boolean addAll( final int index, final Collection< ? extends T> c )
-  {
-    throw new UnsupportedOperationException();
-
-    // FIXME: would break the index
-
-// m_items.addAll( index, c );
-//
-// for( final T polygon : c )
-// insertToIndex( polygon );
-//
-// return !c.isEmpty();
   }
 
   @Override
@@ -277,12 +250,6 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   }
 
   @Override
-  public boolean retainAll( final Collection< ? > c )
-  {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
   public T set( final int index, final T element )
   {
     final T polygon = get( index );
@@ -387,9 +354,9 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
   @Override
   public Object getAdapter( final Class adapter )
   {
-    if( adapter == GM_SurfacePatch[].class || adapter == GM_Polygon[].class )
+    if( adapter == GM_AbstractSurfacePatch[].class || adapter == GM_PolygonPatch[].class )
     {
-      return m_items.toArray( new GM_Polygon[m_items.size()] );
+      return m_items.toArray( new GM_PolygonPatch[m_items.size()] );
     }
 
     // for points: get centroids of the polygons
@@ -397,7 +364,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
     {
       final List<GM_Point> pointList = new LinkedList<>();
 
-      final T[] polygons = (T[]) m_items.toArray( new GM_Polygon[m_items.size()] );
+      final T[] polygons = (T[]) m_items.toArray( new GM_PolygonPatch[m_items.size()] );
       for( final T polygon : polygons )
       {
         pointList.add( polygon.getCentroid() );
@@ -427,11 +394,11 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
     }
 
     // NO: behaviour assymmetric to GM_Surface
-    if( adapter == GM_Surface[].class )
+    if( adapter == GM_Polygon[].class )
     {
       try
       {
-        final GM_Surface< ? >[] surfaces = new GM_Surface[m_items.size()];
+        final GM_Polygon< ? >[] surfaces = new GM_Polygon[m_items.size()];
         for( int i = 0; i < surfaces.length; i++ )
           surfaces[i] = GeometryFactory.createGM_Surface( m_items.get( i ) );
 
@@ -518,7 +485,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_Polygon> extends GM_Orientab
         return this;
 
       final int cnt = size();
-      final T[] polygons = (T[]) new GM_Polygon[cnt];
+      final T[] polygons = (T[]) new GM_PolygonPatch[cnt];
 
       for( int i = 0; i < cnt; i++ )
         polygons[i] = (T) get( i ).transform( targetCRS );
