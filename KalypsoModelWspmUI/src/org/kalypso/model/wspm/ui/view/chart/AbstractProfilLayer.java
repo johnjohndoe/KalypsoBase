@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.ui.view.chart;
 
 import java.awt.geom.Point2D;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
@@ -56,6 +57,7 @@ import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 
+import de.openali.odysseus.chart.ext.base.layer.TooltipFormatter;
 import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
 import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
@@ -199,6 +201,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     return getProfil() == null ? null : getProfil().hasPointProperty( m_domainComponent );
   }
 
+  // FIXME: does not belong here
   @Override
   public IDataRange< ? > getDomainRange( )
   {
@@ -381,14 +384,24 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
 
   protected String getTooltipInfo( final IProfileRecord point )
   {
-    if( Objects.isNull( point, getTargetComponent(), getDomainComponent() ) )
+    final IComponent domainComponent = getDomainComponent();
+    final IComponent targetComponent = getTargetComponent();
+    if( Objects.isNull( point, targetComponent, domainComponent ) )
       return ""; //$NON-NLS-1$
 
     try
     {
       final Point2D p = getPoint2D( point );
-      return String.format( TOOLTIP_FORMAT, new Object[] { getDomainComponent().getName(), p.getX(), getTargetComponent().getName(), p.getY(),
-          ComponentUtilities.getComponentUnitLabel( getTargetComponent() ) } );
+
+      final TooltipFormatter formatter = new TooltipFormatter( null, new String[] { "%s", "%10.4f", "[%s]" }, new int[] { SWT.LEFT, SWT.RIGHT, SWT.LEFT } );
+
+      final String domainUnit = ComponentUtilities.getComponentUnitLabel( domainComponent );
+      formatter.addLine( domainComponent.getName(), p.getX(), domainUnit );
+
+      final String targetUnit = ComponentUtilities.getComponentUnitLabel( targetComponent );
+      formatter.addLine( targetComponent.getName(), p.getY(), targetUnit );
+
+      return formatter.format();
     }
     catch( final RuntimeException e )
     {

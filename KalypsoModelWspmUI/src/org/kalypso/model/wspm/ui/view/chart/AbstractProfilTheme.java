@@ -75,7 +75,12 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer
 
   public AbstractProfilTheme( final IProfile profil, final String id, final String title, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm, final ILayerStyleProvider styleProvider )
   {
-    super( id, profil, "", styleProvider ); //$NON-NLS-1$
+    this( profil, id, title, chartLayers, cm, styleProvider, "" );
+  }
+
+  public AbstractProfilTheme( final IProfile profil, final String id, final String title, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm, final ILayerStyleProvider styleProvider, final String targetProperty )
+  {
+    super( id, profil, targetProperty, styleProvider ); //$NON-NLS-1$
 
     /* *grml* AbstractProfileLayer overwrites getTitle() implementation */
     setTitle( title );
@@ -146,17 +151,17 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer
         for( final IChartLayer layer : getLayerManager().getLayers() )
         {
           final ILegendEntry[] les = layer.getLegendEntries();
-          if( les == null || les.length == 0 )
-          {
-            continue;
-          }
+
           for( final ILegendEntry l : les )
           {
-            ((LegendEntry) l).paintSymbol( gc, size );
+            // FIXME: i.e. no other implementations than LegendEntry are supported, this is ugly....
+            if( l instanceof LegendEntry )
+              ((LegendEntry)l).paintSymbol( gc, size );
           }
         }
       }
     };
+
     return new ILegendEntry[] { le };
   }
 

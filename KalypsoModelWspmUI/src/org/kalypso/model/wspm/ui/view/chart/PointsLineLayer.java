@@ -207,7 +207,6 @@ public class PointsLineLayer extends AbstractProfilLayer
     };
 
     return new ILegendEntry[] { le };
-
   }
 
   @Override
