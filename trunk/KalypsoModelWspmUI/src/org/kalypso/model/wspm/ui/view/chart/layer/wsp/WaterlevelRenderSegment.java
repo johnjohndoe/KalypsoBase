@@ -43,7 +43,7 @@ package org.kalypso.model.wspm.ui.view.chart.layer.wsp;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.apache.commons.lang3.StringUtils;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 
@@ -115,7 +115,7 @@ public class WaterlevelRenderSegment
 
   public String formatTooltip( final String label )
   {
-    final TooltipFormatter tooltipFormatter = new TooltipFormatter( label );
+    final TooltipFormatter tooltipFormatter = new TooltipFormatter( label, new String[] { "%s", "%.2f", "[%s]" }, new int[] { SWT.LEFT, SWT.RIGHT, SWT.LEFT } );
 
     final double value = getHeight();
     final double width = getWidth();
@@ -125,16 +125,11 @@ public class WaterlevelRenderSegment
     final String widthLabel = Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLayer.3" ); //$NON-NLS-1$
     final String areaLabel = Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLayer.4" ); //$NON-NLS-1$
 
-    final String heightText = String.format( "%.2f", value ); //$NON-NLS-1$
-    final String widthText = String.format( "%.2f", width ); //$NON-NLS-1$
-    final String areaText = String.format( "%.2f", area ); //$NON-NLS-1$
-
-    tooltipFormatter.addLine( StringUtils.EMPTY, StringUtils.EMPTY );
-    tooltipFormatter.addLine( heightLabel, heightText );
-    tooltipFormatter.addLine( widthLabel, widthText );
+    tooltipFormatter.addLine( heightLabel, value, "mNN" ); //$NON-NLS-1$
+    tooltipFormatter.addLine( widthLabel, width, "m" ); //$NON-NLS-1$
 
     if( !Double.isNaN( area ) )
-      tooltipFormatter.addLine( areaLabel, areaText );
+      tooltipFormatter.addLine( areaLabel, area, "m²" ); //$NON-NLS-1$
 
     return tooltipFormatter.format();
   }
