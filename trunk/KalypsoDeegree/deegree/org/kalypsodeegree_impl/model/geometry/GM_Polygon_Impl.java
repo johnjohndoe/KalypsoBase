@@ -428,6 +428,13 @@ public class GM_Polygon_Impl<T extends GM_AbstractSurfacePatch> extends GM_Abstr
   {
     return new SingletonIterator( m_patch );
   }
+  
+  @Override
+  @Deprecated
+  public int size( )
+  {
+    return 1;
+  }
 
   /**
    * @return
