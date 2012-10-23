@@ -429,7 +429,7 @@ public abstract class AbstractProfile extends ProfileMetadataObserver implements
   {
     final TupleResult result = getResult();
 
-    return result.toArray( new IProfileRecord[result.size()] );
+      return result.toArray( new IProfileRecord[result.size()] );
   }
 
   @Override

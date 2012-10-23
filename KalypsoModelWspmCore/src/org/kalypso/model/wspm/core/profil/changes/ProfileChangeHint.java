@@ -67,9 +67,11 @@ public class ProfileChangeHint
   public static final int SELECTION_CHANGED = 512;
 
   public static final int SELECTION_CURSOR_CHANGED = 1024;
+  
+  public static final int ACTIVE_POINTS_CHANGED = 2048;
 
   public static final int DATA_CHANGED = OBJECT_CHANGED | OBJECT_DATA_CHANGED | POINT_VALUES_CHANGED | POINT_PROPERTIES_CHANGED | POINTS_CHANGED | MARKER_DATA_CHANGED | MARKER_MOVED
-      | PROFILE_PROPERTY_CHANGED;
+      |  PROFILE_PROPERTY_CHANGED |ACTIVE_POINTS_CHANGED;
 
   private int m_event = 0;
 
@@ -218,5 +220,4 @@ public class ProfileChangeHint
   {
     return (m_event & SELECTION_CURSOR_CHANGED) != 0;
   }
-
 }

@@ -54,6 +54,7 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.commandhandler.ChartSourceProvider;
 import org.kalypso.commons.eclipse.ui.EmbeddedSourceToolbarManager;
+import org.kalypso.commons.java.lang.Doubles;
 import org.kalypso.contribs.eclipse.jface.action.CommandWithStyle;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.core.status.StatusComposite;
@@ -144,19 +145,9 @@ class ChartFeatureControlComposite extends Composite implements IChartPart
         final Number targetMin = (Number)targetRange.getMin();
         final Number targetMax = (Number)targetRange.getMax();
 
-        if( domainMin.doubleValue() > Double.NEGATIVE_INFINITY )
+        final boolean hasValues = !Doubles.isNullOrInfinite( domainMin, domainMax, targetMin, targetMax );
+        if( hasValues )
           return true;
-
-        if( domainMax.doubleValue() < Double.POSITIVE_INFINITY )
-          return true;
-
-        if( targetMin.doubleValue() > Double.NEGATIVE_INFINITY )
-          return true;
-
-        if( targetMax.doubleValue() < Double.POSITIVE_INFINITY )
-          return true;
-
-        return false;
       }
     }
 

@@ -40,9 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.ext.base.axis.provider;
 
-import java.util.Calendar;
-
-import de.openali.odysseus.chart.ext.base.axis.GenericLinearAxis;
+import de.openali.odysseus.chart.ext.base.axis.CalendarAxis;
 import de.openali.odysseus.chart.ext.base.axis.ScreenCoordinateAxis;
 import de.openali.odysseus.chart.factory.provider.AbstractAxisProvider;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
@@ -59,7 +57,7 @@ public class GenericCalendarAxisProvider extends AbstractAxisProvider
   @Override
   public IAxis getAxis( )
   {
-    return new GenericLinearAxis( getId(), POSITION.BOTTOM, Calendar.class );
+    return new CalendarAxis( getId(), POSITION.BOTTOM );
   }
 
   @Override

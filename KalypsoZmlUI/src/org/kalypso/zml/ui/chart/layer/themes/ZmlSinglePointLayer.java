@@ -93,7 +93,7 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
   @Override
   public IZmlLayerProvider getProvider( )
   {
-    return (IZmlLayerProvider) super.getProvider();
+    return (IZmlLayerProvider)super.getProvider();
   }
 
   private void setup( final URL context )
@@ -127,28 +127,30 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
     getEventHandler().fireLayerContentChanged( this, type );
   }
 
+  @SuppressWarnings( { "unchecked", "rawtypes" } )
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Double> getDomainRange( )
   {
     if( ArrayUtils.isEmpty( m_descriptors ) )
       return null;
 
-    Long min = Long.MAX_VALUE;
-    Long max = -Long.MAX_VALUE;
+    Number min = Long.MAX_VALUE;
+    Number max = -Long.MAX_VALUE;
 
     for( final ZmlSinglePointBean bean : m_descriptors )
     {
       final DateRange dateRange = bean.getDateRange();
 
-      min = Math.min( dateRange.getFrom().getTime(), min );
-      max = Math.max( dateRange.getTo().getTime(), max );
+      min = Math.min( dateRange.getFrom().getTime(), min.longValue() );
+      max = Math.max( dateRange.getTo().getTime(), max.longValue() );
     }
 
-    return DataRange.create( min, max );
+    return new DataRange( min, max );
   }
 
+  @SuppressWarnings( { "unchecked", "rawtypes" } )
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Double> getTargetRange( final IDataRange< ? > domainIntervall )
   {
     if( ArrayUtils.isEmpty( m_descriptors ) )
       return null;
@@ -162,7 +164,7 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
       min = Math.min( max.doubleValue(), descriptor.getValue().getTarget().doubleValue() );
     }
 
-    return DataRange.create( min, max );
+    return new DataRange( min, max );
   }
 
   @Override
@@ -173,7 +175,7 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
 
     for( final ZmlSinglePointBean descriptor : m_descriptors )
     {
-      final Point centerPoint = getCoordinateMapper().numericToScreen( descriptor.getValue().getDomain(), descriptor.getValue().getTarget() );
+      final Point centerPoint = getCoordinateMapper().logicalToScreen( descriptor.getValue().getDomain(), descriptor.getValue().getTarget() );
 
       final PointFigure pf = new PointFigure();
       pf.setStyle( descriptor.getPointStyle() );
@@ -207,7 +209,7 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
 
     try
     {
-      final IObservation observation = (IObservation) handler.getAdapter( IObservation.class );
+      final IObservation observation = (IObservation)handler.getAdapter( IObservation.class );
       if( observation == null )
         return;
 
@@ -245,7 +247,7 @@ public class ZmlSinglePointLayer extends AbstractLineLayer implements IZmlLayer
 
   private Double findValue( final IZmlLayerDataHandler provider, final Date position ) throws SensorException
   {
-    final IObservation observation = (IObservation) provider.getAdapter( IObservation.class );
+    final IObservation observation = (IObservation)provider.getAdapter( IObservation.class );
 
     final IChartLayerFilter[] filters = getFilters();
     ZmlChartLayerFilters.initializeFilters( observation, filters );

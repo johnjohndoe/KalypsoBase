@@ -6,7 +6,7 @@ import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.layer.IChartComponentProvider;
 import de.openali.odysseus.chart.framework.model.layer.IParameterContainer;
-import de.openali.odysseus.chart.framework.model.mapper.IRetinalMapper;
+import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 
 /**
  * @author alibu
@@ -16,7 +16,7 @@ public interface IMapperProvider extends IChartComponentProvider
   /**
    * @return axis created by the MapperProvider
    */
-  IRetinalMapper getMapper( ) throws ConfigurationException;
+  IMapper getMapper( ) throws ConfigurationException;
 
   void init( final IChartModel model, final String id, final IParameterContainer parameters, final URL context );
 

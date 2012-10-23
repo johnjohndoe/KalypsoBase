@@ -141,6 +141,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     return StyleUtils.getDefaultTextStyle();
   }
 
+  @SuppressWarnings( "rawtypes" )
   public Point calcTickLabelSize( final GC gc, final IAxis axis )
   {
     final IDataRange<Number> range = axis.getNumericRange();
@@ -164,6 +165,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
    * @return Array of 4 int-Values: startX, startY, endX, endY - where startX/Y are the start coordinates for the axis
    *         line and endX/Y its end coordinates within the given Rectangle
    */
+  @SuppressWarnings( "rawtypes" )
   private int[] createAxisSegment( final IAxis axis, final Rectangle screen )
   {
     int startX;
@@ -213,6 +215,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
     return new int[] { startX, startY, endX, endY };
   }
 
+  @SuppressWarnings( "rawtypes" )
   protected void drawAxisLabel( final GC gc, final IAxis axis, final int startX, final int startY, final int endX, final int endY, final int offset )
   {
     if( axis.getLabel() != null )
@@ -290,7 +293,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
   /**
    * draws the Axis ticks into the given GC
    */
-  private void drawTicks( final GC gc, final IAxis axis, final int startX, final int startY, final Number[] ticks, final int offset )
+  private void drawTicks( final GC gc, final IAxis axis, final int startX, final int startY, final Double[] ticks, final int offset )
   {
 
     if( gc == null || axis == null || ticks == null || ticks.length < 1 )
@@ -531,10 +534,10 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
   }
 
   @Override
-  public Number[] getTicks( final IAxis axis, final GC gc )
+  public Double[] getTicks( final IAxis axis, final GC gc )
   {
     final Point tickLabelSize = calcTickLabelSize( gc, axis );
-    final Number[] ticks = getTickCalculator().calcTicks( gc, axis, getMinTickInterval(), tickLabelSize );
+    final Double[] ticks = getTickCalculator().calcTicks( gc, axis, getMinTickInterval(), tickLabelSize );
     return ticks;
   }
 
@@ -570,7 +573,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
       else
         offset = coords[1];
 
-      final Number[] ticks = getTicks( axis, gc );
+      final Double[] ticks = getTicks( axis, gc );
 
       drawTicks( gc, axis, coords[0], coords[1], ticks, offset );
       drawAxisLabel( gc, axis, coords[0], coords[1], coords[2], coords[3], offset );

@@ -67,7 +67,6 @@ public class DragZoomOutHandler extends AbstractChartDragHandler
     try
     {
       final ZoomOutVisitor visitor = new ZoomOutVisitor( editInfo.getPosition(), end );
-
       final IChartModel model = getChart().getChartModel();
       model.getMapperRegistry().accept( visitor );
     }
@@ -77,14 +76,12 @@ public class DragZoomOutHandler extends AbstractChartDragHandler
     }
   }
 
-  @Override
+   @Override
   public void doMouseMoveAction( final Point end, final EditInfo editInfo )
   {
     setCursor( SWT.CURSOR_CROSS );
-
     final Point start = editInfo.getPosition();
-    final Point pos = end;
-    getChart().setDragArea( new Rectangle( start.x, start.y, pos.x - start.x, pos.y - start.y ) );
+    getChart().setDragArea( new Rectangle( start.x, start.y, end.x - start.x, end.y - start.y ) );
   }
 
 }

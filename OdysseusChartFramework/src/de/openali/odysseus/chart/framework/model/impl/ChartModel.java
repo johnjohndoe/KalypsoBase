@@ -47,6 +47,7 @@ public class ChartModel implements IChartModel
    * @param axes
    *          axes == null -> update all chart model axes
    */
+  @SuppressWarnings( "rawtypes" )
   @Override
   public void autoscale( final IAxis... axes )
   {

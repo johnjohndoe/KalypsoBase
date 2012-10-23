@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.factory.layer;
 
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
 
@@ -52,6 +53,20 @@ public class PlainLayer extends AbstractChartLayer
   public PlainLayer( final ILayerProvider provider )
   {
     super( provider,new StyleSet() );
+  }
+
+  @Override
+  public IDataRange<Double> getDomainRange( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public IDataRange<Double> getTargetRange( IDataRange< ? > domainIntervall )
+  {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }

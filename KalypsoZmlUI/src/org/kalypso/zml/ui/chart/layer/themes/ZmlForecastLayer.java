@@ -108,13 +108,13 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
     if( m_provider == null )
       return;
 
-    final ICoordinateMapper mapper = getCoordinateMapper();
+    final ICoordinateMapper<Number,Number> mapper = getCoordinateMapper();
 
-    final IAxis domainAxis = mapper.getDomainAxis();
-    final IAxis targetAxis = mapper.getTargetAxis();
+    final IAxis<Number> domainAxis = mapper.getDomainAxis();
+    final IAxis<Number> targetAxis = mapper.getTargetAxis();
 
-    final IDataRange<Number> domainRange = domainAxis.getNumericRange();
-    final IDataRange<Number> targetRange = targetAxis.getNumericRange();
+    final IDataRange<Double> domainRange = domainAxis.getNumericRange();
+    final IDataRange<Double> targetRange = targetAxis.getNumericRange();
 
     final Number min = domainRange.getMin();
     final Number max = domainRange.getMax();
@@ -133,7 +133,7 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
     if( !to.after( forecast ) )
       return;
 
-    final Integer x = Math.abs( domainAxis.numericToScreen( forecast.getTimeInMillis() ) );
+    final Integer x = Math.abs( domainAxis.logicalToScreen( forecast.getTimeInMillis() ) );
 
     final Integer y0 = targetAxis.numericToScreen( targetRange.getMin() );
     final Integer y1 = targetAxis.numericToScreen( targetRange.getMax() );
@@ -177,7 +177,7 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
   }
 
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Double> getDomainRange( )
   {
     // TODO: all three parameters should eventually be set from outside
     final boolean shouldAutomax = true;
@@ -191,8 +191,8 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
     if( forecast == null )
       return null;
 
-    final Calendar from = (Calendar) forecast.clone();
-    final Calendar end = (Calendar) forecast.clone();
+    final Calendar from = (Calendar)forecast.clone();
+    final Calendar end = (Calendar)forecast.clone();
 
     from.add( bufferField, -bufferAmount );
     end.add( bufferField, bufferAmount );
@@ -201,7 +201,7 @@ public class ZmlForecastLayer extends AbstractChartLayer implements IObsProvider
   }
 
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Double> getTargetRange( final IDataRange< ? > domainIntervall )
   {
     return null;
   }

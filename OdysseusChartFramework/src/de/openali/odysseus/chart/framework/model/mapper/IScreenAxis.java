@@ -45,7 +45,7 @@ package de.openali.odysseus.chart.framework.model.mapper;
  * 
  * @author Dirk Kuch
  */
-public interface IScreenAxis extends IAxis
+public interface IScreenAxis<T> extends IAxis<T>
 {
 
 }

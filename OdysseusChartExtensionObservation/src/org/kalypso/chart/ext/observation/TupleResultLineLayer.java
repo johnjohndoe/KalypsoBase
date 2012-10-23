@@ -18,8 +18,6 @@ import org.kalypso.observation.result.TupleResult;
 import de.openali.odysseus.chart.ext.base.layer.AbstractLineLayer;
 import de.openali.odysseus.chart.ext.base.layer.HoverIndex;
 import de.openali.odysseus.chart.ext.base.layer.TooltipFormatter;
-import de.openali.odysseus.chart.framework.model.data.DataRange;
-import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
@@ -57,29 +55,11 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
     super.dispose();
   }
 
+  @SuppressWarnings( { "unchecked", "rawtypes" } )
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Double> getDomainRange( )
   {
-    if( getValueData() == null || getDomainAxis() == null )
-      return null;
-
-    final IDataRange< ? > dataRange = getValueData().getDomainRange();
-    final Object min = dataRange.getMin();
-    final Object max = dataRange.getMax();
-    if( min == null || max == null )
-      return null;
-
-    // FIXME: bad and ugly hack: getDomainRange must return numeric values
-    final Number numericMin = toNumeric( min );
-    final Number numericMax = toNumeric( max );
-    return DataRange.create( numericMin, numericMax );
-  }
-
-  // FIXME: awful -> should not be necessary!
-  private Number toNumeric( final Object value )
-  {
-    final IDataOperator<Object> dop = (IDataOperator<Object>)getCoordinateMapper().getDataOperator( value.getClass() );
-    return dop.logicalToNumeric( value );
+    return getNumericRange( getDomainAxis(), getValueData().getDomainRange() );
   }
 
   @Override
@@ -98,18 +78,11 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
     return getValueData().getObservation();
   }
 
+  @SuppressWarnings( { "unchecked", "rawtypes" } )
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Double> getTargetRange( final IDataRange< ? > domainIntervall )
   {
-    if( getValueData() == null || getTargetAxis() == null )
-      return null;
-
-    final IDataRange< ? > dataRange = getValueData().getTargetRange();
-    final Object min = dataRange.getMin();
-    final Object max = dataRange.getMax();
-    if( min == null || max == null )
-      return null;
-    return dataRange;
+    return getNumericRange( getTargetAxis(), getValueData().getTargetRange() );
   }
 
   @Override
@@ -156,7 +129,6 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
           tooltip.addLine( componentLabel, value, componentUnit );
       }
     }
-
     return tooltip.format();
   }
 

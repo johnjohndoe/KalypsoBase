@@ -30,7 +30,7 @@ public interface IChartLayer extends ILayerContainer, IEventProvider<ILayerEvent
    */
   String getDescription( );
 
-  IDataRange< ? > getDomainRange( );
+  IDataRange<Double> getDomainRange( );
 
   ILegendEntry[] getLegendEntries( );
 
@@ -40,7 +40,7 @@ public interface IChartLayer extends ILayerContainer, IEventProvider<ILayerEvent
    * @param domainIntervall
    *          shrinks the TargetRange, pass null to retrieve full dataRange
    */
-  IDataRange< ? > getTargetRange( IDataRange< ? > domainIntervall );
+  IDataRange<Double> getTargetRange( IDataRange< ? > domainIntervall );
 
   /**
    * @return the layers title

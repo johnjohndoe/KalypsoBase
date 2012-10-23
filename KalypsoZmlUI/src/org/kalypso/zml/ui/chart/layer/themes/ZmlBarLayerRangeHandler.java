@@ -72,16 +72,16 @@ class ZmlBarLayerRangeHandler
 
   private final IDataOperator<Number> m_numberDataOperator = new DataOperatorHelper().getDataOperator( Number.class );
 
-  private IDataRange<Number> m_targetRange;
+  private IDataRange<Double> m_targetRange;
 
-  private IDataRange<Number> m_domainRange;
+  private IDataRange<Double> m_domainRange;
 
   public ZmlBarLayerRangeHandler( final ZmlBarLayer layer )
   {
     m_layer = layer;
   }
 
-  public synchronized IDataRange<Number> getDomainRange( )
+  public synchronized IDataRange<Double> getDomainRange( )
   {
     if( m_domainRange == null )
       m_domainRange = calculateDomainRange();
@@ -89,11 +89,12 @@ class ZmlBarLayerRangeHandler
     return m_domainRange;
   }
 
-  private IDataRange<Number> calculateDomainRange( )
+  @SuppressWarnings( { "unchecked", "rawtypes" } )
+  private IDataRange<Double> calculateDomainRange( )
   {
     try
     {
-      final IObservation observation = (IObservation) m_layer.getDataHandler().getAdapter( IObservation.class );
+      final IObservation observation = (IObservation)m_layer.getDataHandler().getAdapter( IObservation.class );
       if( Objects.isNull( observation ) )
         return null;
 
@@ -103,8 +104,8 @@ class ZmlBarLayerRangeHandler
       if( Objects.isNull( range ) )
         return null;
 
-      Date min = (Date) range.getLower();
-      Date max = (Date) range.getUpper();
+      Date min = (Date)range.getLower();
+      Date max = (Date)range.getUpper();
 
       final IAxis axis = m_layer.getDataHandler().getValueAxis();
       if( axis == null )
@@ -120,7 +121,7 @@ class ZmlBarLayerRangeHandler
       else
         min = doAdjustMin( observation, min );
 
-      return DataRange.create( getDateDataOperator().logicalToNumeric( min ), getDateDataOperator().logicalToNumeric( max ) );
+      return new DataRange( getDateDataOperator().logicalToNumeric( min ), getDateDataOperator().logicalToNumeric( max ) );
     }
     catch( final SensorException e )
     {
@@ -157,7 +158,7 @@ class ZmlBarLayerRangeHandler
     return m_dateDataOperator;
   }
 
-  public synchronized IDataRange<Number> getTargetRange( )
+  public synchronized IDataRange<Double> getTargetRange( )
   {
     if( m_targetRange == null )
       m_targetRange = calculateTargetRange();
@@ -165,12 +166,13 @@ class ZmlBarLayerRangeHandler
     return m_targetRange;
   }
 
-  private IDataRange<Number> calculateTargetRange( )
+  @SuppressWarnings( { "unchecked", "rawtypes" } )
+  private IDataRange<Double> calculateTargetRange( )
   {
     try
     {
       final IZmlLayerDataHandler handler = m_layer.getDataHandler();
-      final IObservation observation = (IObservation) handler.getAdapter( IObservation.class );
+      final IObservation observation = (IObservation)handler.getAdapter( IObservation.class );
       if( Objects.isNull( observation ) )
         return null;
 
@@ -184,16 +186,16 @@ class ZmlBarLayerRangeHandler
       // FIXME: the axis is responsible for that!
       final Class< ? > dataClass = valueAxis.getDataClass();
       if( Boolean.class.equals( dataClass ) )
-        return new DataRange<Number>( 0, 1 );
+        return new DataRange<Double>( 0.0, 1.0);
 
       final IAxisRange range = model.getRange( valueAxis );
       if( range == null )
         return null;
 
-      final Number min = getNumberDataOperator().logicalToNumeric( (Number) range.getLower() );
-      final Number max = getNumberDataOperator().logicalToNumeric( (Number) range.getUpper() );
+      final Number min = getNumberDataOperator().logicalToNumeric( (Number)range.getLower() );
+      final Number max = getNumberDataOperator().logicalToNumeric( (Number)range.getUpper() );
 
-      return DataRange.create( min, max );
+      return new DataRange( min, max );
     }
     catch( final SensorException e )
     {

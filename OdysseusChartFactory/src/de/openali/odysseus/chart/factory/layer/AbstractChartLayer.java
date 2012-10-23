@@ -17,6 +17,7 @@ import com.google.common.base.Strings;
 import de.openali.odysseus.chart.framework.OdysseusChartExtensions;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.ILayerContainer;
+import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.event.ILayerEventListener;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
@@ -32,7 +33,6 @@ import de.openali.odysseus.chart.framework.model.layer.manager.IChartLayerVisito
 import de.openali.odysseus.chart.framework.model.layer.manager.LayerManager;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
-import de.openali.odysseus.chart.framework.model.mapper.IRetinalMapper;
 import de.openali.odysseus.chart.framework.model.style.IStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
@@ -44,7 +44,7 @@ import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
  */
 public abstract class AbstractChartLayer implements IChartLayer
 {
-  private ICoordinateMapper m_coordinateMapper;
+  private ICoordinateMapper<?,?> m_coordinateMapper;
 
   private final Set<IChartLayerFilter> m_filters = new LinkedHashSet<>();
 
@@ -69,7 +69,7 @@ public abstract class AbstractChartLayer implements IChartLayer
 
   private boolean m_legendIsVisible = true;
 
-  private final Map<String, IRetinalMapper> m_mapperMap = new HashMap<>();
+ // private final Map<String, IRetinalMapper> m_mapperMap = new HashMap<>();
 
   private final ILayerProvider m_provider;
 
@@ -81,6 +81,13 @@ public abstract class AbstractChartLayer implements IChartLayer
 
   final ILayerManagerEventListener m_layerManagerListener = new ILayerManagerEventListener()
   {
+    @Override
+    public void redrawRequested( )
+    {
+      //Do nothing
+      //ChartImageComposite SWT.redraw
+    }
+
     @Override
     public void onActivLayerChanged( final IChartLayer layer )
     {
@@ -162,10 +169,10 @@ public abstract class AbstractChartLayer implements IChartLayer
     m_eventHandler.addListener( listener );
   }
 
-  public void addMapper( final String role, final IRetinalMapper mapper )
-  {
-    m_mapperMap.put( role, mapper );
-  }
+//  public void addMapper( final String role, final IRetinalMapper mapper )
+//  {
+//    m_mapperMap.put( role, mapper );
+//  }
 
   @Override
   public void dispose( )
@@ -194,7 +201,7 @@ public abstract class AbstractChartLayer implements IChartLayer
   /**
    * convenience method; same as getCoordinateMapper().getDomainAxis()
    */
-  protected IAxis getDomainAxis( )
+  protected IAxis< ? > getDomainAxis( )
   {
     return getCoordinateMapper() == null ? null : getCoordinateMapper().getDomainAxis();
   }
@@ -204,15 +211,36 @@ public abstract class AbstractChartLayer implements IChartLayer
    * is just wrong.<br/>
    * The caller of getDomainRange is responsible for recursion.
    */
-  @Override
-  public IDataRange< ? > getDomainRange( )
-  {
-    return null;
-  }
+//  @Override
+//  public IDataRange<Number> getDomainRange( )
+//  {
+//    return null;
+//  }
 
   public LayerEventHandler getEventHandler( )
   {
     return m_eventHandler;
+  }
+
+  @SuppressWarnings( { "unchecked", "rawtypes" } )
+  protected IDataRange<Double> getNumericRange( IAxis axis, IDataRange logicalRange )
+  {
+    if( logicalRange == null || axis == null || logicalRange.getMin() == null )
+      return new DataRange<>( null, null );
+    final Class< ? > clazz = axis.getDataClass();
+    final Class< ? > dataClass = logicalRange.getMin().getClass();
+    try
+    {
+      final Double min = axis.logicalToNumeric( logicalRange.getMin() );
+      final Double max = axis.logicalToNumeric( logicalRange.getMax() );
+      return new DataRange<>( min, max );
+    }
+    catch( ClassCastException e )
+    {
+      System.out.println( "axis " + axis.getIdentifier() + " expect " + clazz.getSimpleName() + ", " + dataClass.getSimpleName() + " given." );
+      return new DataRange<>( null, null );
+    }
+
   }
 
   @Override
@@ -240,10 +268,10 @@ public abstract class AbstractChartLayer implements IChartLayer
     return new ILegendEntry[] {};
   }
 
-  protected IRetinalMapper getMapper( final String role )
-  {
-    return m_mapperMap.get( role );
-  }
+//  protected IRetinalMapper getMapper( final String role )
+//  {
+//    return m_mapperMap.get( role );
+//  }
 
   @Override
   public IChartModel getModel( )
@@ -282,11 +310,15 @@ public abstract class AbstractChartLayer implements IChartLayer
   /**
    * convenience method; same as getCoordinateMapper().getTargetAxis()
    */
+  @SuppressWarnings( "rawtypes" )
   protected IAxis getTargetAxis( )
   {
     if( getCoordinateMapper() == null )
       return null;
-    return getCoordinateMapper().getTargetAxis();
+
+    ICoordinateMapper coordinateMapper = getCoordinateMapper();
+
+    return coordinateMapper.getTargetAxis();
   }
 
   /**
@@ -294,11 +326,11 @@ public abstract class AbstractChartLayer implements IChartLayer
    * is just wrong.<br/>
    * The caller of getDomainRange is responsible for recursion.
    */
-  @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > intervall )
-  {
-    return null;
-  }
+//  @Override
+//  public IDataRange<Number> getTargetRange( final IDataRange<?> intervall )
+//  {
+//    return null;
+//  }
 
   @Override
   public String getTitle( )

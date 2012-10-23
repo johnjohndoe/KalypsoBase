@@ -46,6 +46,8 @@ import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 /**
  * @author burtscher1
  */
+// TODO: bad name
+// TODO: integrate into ChartImageComposite
 public class ChartModelEventHandler extends AbstractEventProvider<IChartModelEventListener>
 {
   public void fireModelChanged( final IChartModel oldModel, final IChartModel newModel )

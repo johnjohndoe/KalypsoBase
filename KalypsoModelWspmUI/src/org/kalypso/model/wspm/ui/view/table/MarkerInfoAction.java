@@ -79,7 +79,7 @@ public class MarkerInfoAction extends Action
       return;
 
     final IProfileRecord record = m_profil.getPoint( pointPos );
-    m_profil.getSelection().setRange( record );
+    m_profil.getSelection().setActivePoints( record );
   }
 
   // TODO: move into helper

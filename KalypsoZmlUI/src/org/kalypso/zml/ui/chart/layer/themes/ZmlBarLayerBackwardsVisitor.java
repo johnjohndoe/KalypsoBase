@@ -165,11 +165,11 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPaint
       if( Objects.isNull( domainValue, targetValue ) )
         return;
 
-      final Number numericTarget = m_range.getNumberDataOperator().logicalToNumeric( targetValue );
+      final Double numericTarget = m_range.getNumberDataOperator().logicalToNumeric( targetValue );
 
       /* current x */
       final IDataOperator<Date> dateDataOperator = m_range.getDateDataOperator();
-      final Number numericDomain = dateDataOperator.logicalToNumeric( domainValue );
+      final Double numericDomain = dateDataOperator.logicalToNumeric( domainValue );
 
       final Point screenCurrent = m_mapper.numericToScreen( numericDomain, numericTarget );
 
@@ -329,9 +329,9 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPaint
       final Date prevTime = new Date( currentTime.getTime() - widthMillis );
 
       final IDataOperator<Date> dateDataOperator = m_range.getDateDataOperator();
-      final Number numericPrev = dateDataOperator.logicalToNumeric( prevTime );
+      final Double numericPrev = dateDataOperator.logicalToNumeric( prevTime );
 
-      return m_mapper.numericToScreen( numericPrev, 0 ).x;
+      return m_mapper.numericToScreen( numericPrev, 0.0 ).x;
     }
   }
 

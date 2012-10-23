@@ -48,4 +48,6 @@ public interface ILayerManagerEventListener
    * called when active layer changed
    */
   void onActivLayerChanged( IChartLayer layer );
+
+  void redrawRequested( );
 }

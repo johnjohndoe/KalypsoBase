@@ -45,7 +45,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
@@ -71,7 +70,7 @@ import de.openali.odysseus.chartconfig.x020.TitleType;
 
 /**
  * saves a chart to an XML document
- *
+ * 
  * @author burtscher1
  */
 public final class ChartConfigurationSaver
@@ -123,18 +122,17 @@ public final class ChartConfigurationSaver
 
       // FIXME: this is completely awful!
 
-      final AxisType at = (AxisType) axis.getData( AbstractChartFactory.CONFIGURATION_TYPE_KEY );
+      final AxisType at = (AxisType)axis.getData( AbstractChartFactory.CONFIGURATION_TYPE_KEY );
       if( at != null )
       {
         // only set new range
         // TODO: Die Achsen schreiben ihre range nur in die .kod wenn das Element vorher schon angelegt war
         if( at.isSetDateRange() )
         {
-          final IDataOperator<Calendar> dop = axis.getDataOperator( Calendar.class );
           final AxisDateRangeType configRange = at.getDateRange();
-          final IDataRange<Number> numericRange = axis.getNumericRange();
-          configRange.setMinValue( dop.numericToLogical( numericRange.getMin() ) );
-          configRange.setMaxValue( dop.numericToLogical( numericRange.getMax() ) );
+          final IDataRange<Double> numericRange = axis.getNumericRange();
+          configRange.setMinValue( (Calendar)axis.numericToLogical( numericRange.getMin() ) );
+          configRange.setMaxValue( (Calendar)axis.numericToLogical( numericRange.getMax() ) );
         }
         // else if( at.isSetDurationRange() )
         // {
@@ -149,13 +147,12 @@ public final class ChartConfigurationSaver
         }
         else if( at.isSetStringRange() )
         {
-          final IDataOperator<Calendar> dop = axis.getDataOperator( Calendar.class );
           final AxisStringRangeType configRange = at.getStringRange();
-          final IDataRange<Number> numericRange = axis.getNumericRange();
-          final Calendar minLogical = dop.numericToLogical( numericRange.getMin() );
-          final Calendar maxLogical = dop.numericToLogical( numericRange.getMax() );
-          configRange.setMinValue( dop.logicalToString( minLogical ) );
-          configRange.setMaxValue( dop.logicalToString( maxLogical ) );
+          final IDataRange<Double> numericRange = axis.getNumericRange();
+          final Calendar minLogical = (Calendar)axis.numericToLogical( numericRange.getMin() );
+          final Calendar maxLogical = (Calendar)axis.numericToLogical( numericRange.getMax() );
+          configRange.setMinValue( axis.logicalToXMLString(  minLogical ) );
+          configRange.setMaxValue( axis.logicalToXMLString( maxLogical ) );
         }
 
         axisTypes.put( axis.getIdentifier(), at );
@@ -176,7 +173,7 @@ public final class ChartConfigurationSaver
       final IAxisRenderer renderer = axis.getRenderer();
       if( renderer != null )
       {
-        final AxisRendererType art = (AxisRendererType) renderer.getData( AbstractChartFactory.CONFIGURATION_TYPE_KEY );
+        final AxisRendererType art = (AxisRendererType)renderer.getData( AbstractChartFactory.CONFIGURATION_TYPE_KEY );
         if( art != null )
         {
           // everything stays as it was
@@ -196,7 +193,7 @@ public final class ChartConfigurationSaver
     final IMapper[] mappers = registry.getMappers();
     for( final IMapper mapper : mappers )
     {
-      final MapperType mt = (MapperType) mapper.getData( AbstractChartFactory.CONFIGURATION_TYPE_KEY );
+      final MapperType mt = (MapperType)mapper.getData( AbstractChartFactory.CONFIGURATION_TYPE_KEY );
       if( mt != null )
       {
         // everything stays as it was
@@ -214,7 +211,7 @@ public final class ChartConfigurationSaver
     final Map<String, LayerType> layerTypes = new HashMap<>();
     for( final IChartLayer layer : manager.getLayers() )
     {
-      final LayerType lt = (LayerType) layer.getData( AbstractChartFactory.CONFIGURATION_TYPE_KEY );
+      final LayerType lt = (LayerType)layer.getData( AbstractChartFactory.CONFIGURATION_TYPE_KEY );
       if( lt != null )
       {
         // set layer visibility

@@ -37,6 +37,9 @@ public class ExtendedAxisRenderer extends AbstractGenericAxisRenderer
   {
     super( id, axisLabelRenderer, tickLabelRenderer, config );
     setTickCalculator( tickCalculator );
+    /**
+     * statt des labelcreators @link DataOperator#toString(Object) nutzen
+     */
     setLabelCreator( labelCreator );
     setMinTickInterval( config.minTickInterval );
     setHideCut( config.hideCut );
@@ -49,6 +52,7 @@ public class ExtendedAxisRenderer extends AbstractGenericAxisRenderer
     this( id, labelCreator, ChartLabelRendererFactory.getAxisLabelRenderer( position, config.labelInsets, config.labelStyle, config.textBorderStyle ), ChartLabelRendererFactory.getTickLabelRenderer( position, config.tickLabelInsets, config.tickLabelStyle, config.textBorderStyle ), tickCalculator, config );
   }
 
+  @SuppressWarnings( "rawtypes" )
   public Point calcTickLabelSize( final IAxis axis )
   {
     final IDataRange<Number> range = axis.getNumericRange();
@@ -70,7 +74,8 @@ public class ExtendedAxisRenderer extends AbstractGenericAxisRenderer
   /**
    * draws the Axis ticks into the given GC
    */
-  private void drawTicks( final GC gc, final Rectangle screen, final IAxis axis, final Number[] ticks )
+  @SuppressWarnings( "rawtypes" )
+  private void drawTicks( final GC gc, final Rectangle screen, final IAxis axis, final Double[] ticks )
   {
 
     // final Insets inset = new Insets( screen.y, screen.x, -1, screen.width - screen.x - axis.getScreenHeight() );
@@ -217,10 +222,10 @@ public class ExtendedAxisRenderer extends AbstractGenericAxisRenderer
   }
 
   @Override
-  public Number[] getTicks( final IAxis axis, final GC gc )
+  public Double[] getTicks( final IAxis axis, final GC gc )
   {
     final Point tickLabelSize = calcTickLabelSize( axis );
-    final Number[] ticks = getTickCalculator().calcTicks( gc, axis, getMinTickInterval(), tickLabelSize );
+    final Double[] ticks = getTickCalculator().calcTicks( gc, axis, getMinTickInterval(), tickLabelSize );
     return ticks;
   }
 

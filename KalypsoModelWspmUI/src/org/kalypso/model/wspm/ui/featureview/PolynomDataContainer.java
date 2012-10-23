@@ -58,7 +58,7 @@ class PolynomDataContainer
     m_polyArray = polyArray;
   }
 
-  public IDataRange<Number> getDomainRange( )
+  public IDataRange<Double> getDomainRange( )
   {
     double min = Double.POSITIVE_INFINITY;
     double max = Double.NEGATIVE_INFINITY;
@@ -83,17 +83,17 @@ class PolynomDataContainer
       }
     }
 
-    return DataRange.createFromComparable( (Number) min, (Number) max );
+    return DataRange.createFromComparable(  min, max );
   }
 
-  public IDataRange<Number> getTargetRange( )
+  public IDataRange<Double> getTargetRange( )
   {
     double min = Double.POSITIVE_INFINITY;
     double max = Double.NEGATIVE_INFINITY;
 
-    final IDataRange<Number> domainRange = getDomainRange();
-    final double domainMin = domainRange.getMin().doubleValue();
-    final double domainMax = domainRange.getMax().doubleValue();
+    final IDataRange<Double> domainRange = getDomainRange();
+    final double domainMin = domainRange.getMin();
+    final double domainMax = domainRange.getMax();
 
     // TODO: handle case where domainMin == domainMax
 
@@ -144,7 +144,7 @@ class PolynomDataContainer
       }
     }
 
-    return DataRange.createFromComparable( (Number) min, (Number) max );
+    return DataRange.createFromComparable(min,  max );
   }
 
   public IPolynomial1D[] getPolyArray( )

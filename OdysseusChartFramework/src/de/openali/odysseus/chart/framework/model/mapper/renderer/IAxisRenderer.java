@@ -17,7 +17,7 @@ public interface IAxisRenderer
    * 
    * @return Collection of tick-values
    */
-  Number[] getTicks( IAxis axis, GC gc );
+  Double[] getTicks( IAxis axis, GC gc );
 
   /**
    * draws the IAxis-Representation into the given GC;

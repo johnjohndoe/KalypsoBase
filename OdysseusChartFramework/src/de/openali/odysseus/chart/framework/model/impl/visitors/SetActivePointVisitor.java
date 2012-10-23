@@ -42,7 +42,6 @@ package de.openali.odysseus.chart.framework.model.impl.visitors;
 
 import org.eclipse.swt.graphics.Point;
 
-import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IAxisVisitor;
@@ -62,7 +61,7 @@ public class SetActivePointVisitor implements IAxisVisitor
       p = m_point.y;
     final Number min = axis.screenToNumeric( p - m_precision / 2 );
     final Number max = axis.screenToNumeric( p + m_precision / 2 );
-    axis.setSelection( DataRange.create( min, max ) );
+   // axis.setSelection( DataRange.create( min, max ) );
   }
 
   final Point m_point;

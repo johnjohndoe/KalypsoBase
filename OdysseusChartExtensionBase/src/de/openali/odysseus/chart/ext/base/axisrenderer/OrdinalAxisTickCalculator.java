@@ -14,17 +14,17 @@ public class OrdinalAxisTickCalculator implements ITickCalculator
    *          interval division should stop when intervals become smaller than this value
    */
   @Override
-  public Number[] calcTicks( final GC gc, final IAxis axis, final Number minDisplayInterval, final Point ticklabelSize )
+  public Double[] calcTicks( final GC gc, final IAxis<?> axis, final Number minDisplayInterval, final Point ticklabelSize )
   {
     if( axis.getNumericRange().getMin() == null || axis.getNumericRange().getMax() == null )
-      return new Number[] {};
+      return new Double[] {};
 
     final int start = axis.getNumericRange().getMin().intValue();
     final int end = axis.getNumericRange().getMax().intValue();
-    final Number[] tickPos = new Number[end - start + 1];
+    final Double[] tickPos = new Double[end - start + 1];
     for( int i = 0; i < tickPos.length; i++ )
     {
-      tickPos[i] = start + i;
+      tickPos[i] = (start + i)*1.0;
     }
     return tickPos;
   }

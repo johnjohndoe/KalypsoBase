@@ -1,5 +1,6 @@
 package de.openali.odysseus.chart.framework.view.impl;
 
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -15,6 +16,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypso.contribs.eclipse.core.runtime.SafeRunnable;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 
 import de.openali.odysseus.chart.framework.OdysseusChartFramework;
@@ -124,8 +126,7 @@ public class ChartImageComposite extends Canvas implements IChartComposite
   @Override
   public final Rectangle getPlotRect( )
   {
-    // FIXME: does this still make sense?
-    return new Rectangle( 0, 0, 0, 0 );
+    return getPlotInfo().getPlotRect();
   }
 
   @Override
@@ -169,10 +170,21 @@ public class ChartImageComposite extends Canvas implements IChartComposite
     paintDragArea( paintGC, dragArea );
     paintEditInfo( paintGC, editInfo );
 
+    // FIXME: resource leak, if exceptions are thrown -> call in SafeRunner or similar
+
     final IChartHandlerManager manager = getPlotHandler();
     final IChartHandler[] handlers = manager.getActiveHandlers();
     for( final IChartHandler handler : handlers )
-      handler.paintControl( paintEvent );
+    {
+      SafeRunner.run( new SafeRunnable()
+      {
+        @Override
+        public void run( ) throws Exception
+        {
+          handler.paintControl( paintEvent );
+        }
+      } );
+    }
   }
 
   private static void paintDragArea( final GC gcw, final Rectangle dragArea )

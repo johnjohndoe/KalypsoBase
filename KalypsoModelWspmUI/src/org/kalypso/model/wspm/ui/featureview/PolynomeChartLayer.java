@@ -89,9 +89,9 @@ public class PolynomeChartLayer extends AbstractLineLayer
   @Override
   public void paint( final GC gc, final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
-    final IDataRange<Number> domainRange = m_data.getDomainRange();
-    final double min = (Double) domainRange.getMin();
-    final double max = (Double) domainRange.getMax();
+    final IDataRange<Double> domainRange = m_data.getDomainRange();
+    final double min = domainRange.getMin();
+    final double max = domainRange.getMax();
 
     final PolylineFigure plf = new PolylineFigure();
     final ILineStyle pls = (ILineStyle) getStyleSet().getStyle( "line" ); //$NON-NLS-1$
@@ -138,13 +138,13 @@ public class PolynomeChartLayer extends AbstractLineLayer
   }
 
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Double> getDomainRange( )
   {
     return m_data.getDomainRange();
   }
 
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Double> getTargetRange( final IDataRange< ? > domainIntervall )
   {
     return m_data.getTargetRange();
   }

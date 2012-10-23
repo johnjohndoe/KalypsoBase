@@ -8,7 +8,6 @@ import java.util.Map;
 
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.data.DataRange;
-import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.event.IMapperEventListener;
 import de.openali.odysseus.chart.framework.model.event.IMapperRegistryEventListener;
@@ -220,9 +219,9 @@ public class MapperRegistry implements IMapperRegistry
     return axisMap;
   }
 
-  @Override
-  public <T> IDataOperator<T> getDataOperator( final Class<T> clazz )
-  {
-    return m_dataOperatorHelper.getDataOperator( clazz );
-  }
+//  @Override
+//  public <T> IDataOperator<T> getDataOperator( final Class<T> clazz )
+//  {
+//    return m_dataOperatorHelper.getDataOperator( clazz );
+//  }
 }

@@ -18,18 +18,18 @@ public class GenericNumberTickCalculator implements ITickCalculator
 {
   /**
    * Calculates the ticks shown for the given Axis *
-   *
+   * 
    * @param minDisplayInterval
    *          interval division should stop when intervals become smaller than this value
    */
   @Override
-  public Number[] calcTicks( final GC gc, final IAxis axis, final Number minDisplayInterval, final Point ticklabelSize )
+  public Double[] calcTicks( final GC gc, final IAxis axis, final Number minDisplayInterval, final Point ticklabelSize )
   {
-    final IDataRange<Number> range = axis.getNumericRange();
-    final Number max = range.getMax();
-    final Number min = range.getMin();
-    if( max == null || Double.isNaN( max.doubleValue() ) || min == null || Double.isNaN( min.doubleValue() ) )
-      return new Number[] {};
+    final IDataRange<Double> range = axis.getNumericRange();
+    final Double max = range.getMax();
+    final Double min = range.getMin();
+    if( max == null || max.isNaN() || min == null || min.isNaN() )
+      return new Double[] {};
 
     // TickLabelGröße + 2 wegen Rundungsfehlern beim positionieren
     /* minimaler Bildschirmabstand zwischen zwei labels */
@@ -58,7 +58,7 @@ public class GenericNumberTickCalculator implements ITickCalculator
 
     final double numericRange = Math.abs( numericMax - numericMin );
     if( Double.isNaN( numericRange ) )
-      return new Number[] {};
+      return new Double[] {};
 
     // der minimale logische Abstand anhand des Ticklabels;
     final double minLogInterval = Math.abs( axis.screenToNumeric( ticklabelSize.x ).doubleValue() - axis.screenToNumeric( 0 ).doubleValue() );
@@ -93,7 +93,7 @@ public class GenericNumberTickCalculator implements ITickCalculator
     normmax = normmax * Math.pow( 10, (rangepow - 1) * -1 );
 
     // Zum feststellen, Ã¼ber wieviele Grundintervalle iteriert werden soll
-    final int normmid = (int) ((normmax - normmin) * Math.pow( 10, rangepow - 1 ));
+    final int normmid = (int)((normmax - normmin) * Math.pow( 10, rangepow - 1 ));
 
     // Das Intervall verwendet zunï¿½chst nur 10er Schritte
     double interval = Math.pow( 10, rangepow * -1 - 1 );
@@ -124,7 +124,7 @@ public class GenericNumberTickCalculator implements ITickCalculator
       findBetweens( normmiddle, normmax, minLogInterval, goodDivisors, ticks, minDisplayInterval, axis );
     }
 
-    final Number[] numTicks = ticks.toArray( new Number[] {} );
+    final Double[] numTicks = ticks.toArray( new Double[] {} );
     return numTicks;
 
   }
@@ -132,7 +132,7 @@ public class GenericNumberTickCalculator implements ITickCalculator
   /**
    * recursive function which divides in interval into a Double of "divisions" and adds the values to a linked list the
    * divisions have to have a larger range than the param interval *
-   *
+   * 
    * @param minDisplayInterval
    *          if value is greater than 0, the interval division should stop when intervals become smaller than this
    *          value
@@ -205,7 +205,7 @@ public class GenericNumberTickCalculator implements ITickCalculator
     }
   }
 
-  private static Point getScreenMinMax( final IAxis axis, final IDataRange<Number> range, final Point ticklabelSize )
+  private static Point getScreenMinMax( final IAxis axis, final IDataRange<Double> range, final Point ticklabelSize )
   {
     int screenMin;
     int screenMax;
@@ -214,25 +214,25 @@ public class GenericNumberTickCalculator implements ITickCalculator
     {
       if( axis.getDirection() == DIRECTION.POSITIVE )
       {
-        screenMin = (int) (axis.numericToScreen( range.getMin() ) + Math.ceil( 0.5 * ticklabelSize.x ));
-        screenMax = (int) (axis.numericToScreen( range.getMax() ) - Math.ceil( 0.5 * ticklabelSize.x ));
+        screenMin = (int)(axis.numericToScreen( range.getMin() ) + Math.ceil( 0.5 * ticklabelSize.x ));
+        screenMax = (int)(axis.numericToScreen( range.getMax() ) - Math.ceil( 0.5 * ticklabelSize.x ));
       }
       else
       {
 
-        screenMin = (int) (axis.numericToScreen( range.getMin() ) - Math.ceil( 0.5 * ticklabelSize.x ));
-        screenMax = (int) (axis.numericToScreen( range.getMax() ) + Math.ceil( 0.5 * ticklabelSize.x ));
+        screenMin = (int)(axis.numericToScreen( range.getMin() ) - Math.ceil( 0.5 * ticklabelSize.x ));
+        screenMax = (int)(axis.numericToScreen( range.getMax() ) + Math.ceil( 0.5 * ticklabelSize.x ));
       }
     }
     else if( axis.getDirection() == DIRECTION.POSITIVE )
     {
-      screenMin = (int) (axis.numericToScreen( range.getMin() ) - Math.ceil( 0.5 * ticklabelSize.y ));
-      screenMax = (int) (axis.numericToScreen( range.getMax() ) + Math.ceil( 0.5 * ticklabelSize.y ));
+      screenMin = (int)(axis.numericToScreen( range.getMin() ) - Math.ceil( 0.5 * ticklabelSize.y ));
+      screenMax = (int)(axis.numericToScreen( range.getMax() ) + Math.ceil( 0.5 * ticklabelSize.y ));
     }
     else
     {
-      screenMin = (int) (axis.numericToScreen( range.getMin() ) + Math.ceil( 0.5 * ticklabelSize.y ));
-      screenMax = (int) (axis.numericToScreen( range.getMax() ) - Math.ceil( 0.5 * ticklabelSize.y ));
+      screenMin = (int)(axis.numericToScreen( range.getMin() ) + Math.ceil( 0.5 * ticklabelSize.y ));
+      screenMax = (int)(axis.numericToScreen( range.getMax() ) - Math.ceil( 0.5 * ticklabelSize.y ));
     }
     return new Point( screenMin, screenMax );
   }

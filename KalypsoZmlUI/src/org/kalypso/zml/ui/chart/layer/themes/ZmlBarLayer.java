@@ -136,7 +136,7 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
   }
 
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Double> getDomainRange( )
   {
     return m_range.getDomainRange();
   }
@@ -148,7 +148,7 @@ public class ZmlBarLayer extends AbstractBarLayer implements IZmlLayer
   }
 
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Double> getTargetRange( final IDataRange< ? > domainIntervall )
   {
     return m_range.getTargetRange();
   }

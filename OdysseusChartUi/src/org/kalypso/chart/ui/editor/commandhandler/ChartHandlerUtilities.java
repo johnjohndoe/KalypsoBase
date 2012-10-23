@@ -81,7 +81,7 @@ public class ChartHandlerUtilities
   /**
    * Gets the currently active chart from the handler event.<br>
    * To be more precise, gets the {@link ChartSourceProvider#ACTIVE_CHART_NAME} source from the events context.
-   *
+   * 
    * @return <code>null</code>, if no {@link IMapPanel} was found in the context.
    */
   public static IChartComposite getChart( final IEvaluationContext context )
@@ -93,7 +93,7 @@ public class ChartHandlerUtilities
   /**
    * Gets the currently active chart from the handler event.<br>
    * To be more precise, gets the {@link ChartSourceProvider#ACTIVE_CHART_NAME} source from the events context.
-   *
+   * 
    * @throws ExecutionException
    *           If the current context contains no chart.
    */
@@ -110,7 +110,7 @@ public class ChartHandlerUtilities
    * Helps finding the chart composite in the context.<br>
    * Normally (for editor and view) this is done via adapting the active workbench part.<br>
    * However for the feature view some hack was needed: here it is found via the activeChartComposite variable.
-   *
+   * 
    * @deprecated Use {@link #getChart(IEvaluationContext)} instead.
    */
   // FIXME: replace with ISourceProvider stuff
@@ -136,7 +136,7 @@ public class ChartHandlerUtilities
    * helper function - it calls all commands from the chart ui commands category to refresh their state; function is
    * public as it is called from the command handlers so multiple contributions of a command (e.g. toolbar and menu) are
    * synchronized
-   *
+   * 
    * @deprecated Should happen automatically, use ISourceProvider mechanism instead.
    */
   @Deprecated

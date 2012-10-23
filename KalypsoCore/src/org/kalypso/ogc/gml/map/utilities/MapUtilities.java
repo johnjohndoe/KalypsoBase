@@ -67,7 +67,7 @@ import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Utility class for map operations.
- *
+ * 
  * @author Holger Albert
  */
 public final class MapUtilities
@@ -78,7 +78,7 @@ public final class MapUtilities
 
   /**
    * Snaps the given AWT-Point to a given geometry, if it lies into a specified radius.
-   *
+   * 
    * @param mapPanel
    *          The MapPanel of the map.
    * @param p
@@ -102,7 +102,7 @@ public final class MapUtilities
 
   /**
    * Snaps the given GM_Point to a given geometry, if it lies into a specified radius.
-   *
+   * 
    * @param mapPanel
    *          The MapPanel of the map.
    * @param point
@@ -117,12 +117,12 @@ public final class MapUtilities
   {
     /* Get the JTS geometry. */
     final Geometry geometryJTS = JTSAdapter.export( geometry );
-    final com.vividsolutions.jts.geom.Point pointJTS = (com.vividsolutions.jts.geom.Point) JTSAdapter.export( point );
+    final com.vividsolutions.jts.geom.Point pointJTS = (com.vividsolutions.jts.geom.Point)JTSAdapter.export( point );
 
     final double buffer = MapUtilities.calculateWorldDistance( mapPanel, point, radiusPx );
     final com.vividsolutions.jts.geom.Point snapPoint = snap( geometryJTS, pointJTS, type, buffer );
     if( snapPoint != null )
-      return (GM_Point) JTSAdapter.wrap( snapPoint, point.getCoordinateSystem() );
+      return (GM_Point)JTSAdapter.wrap( snapPoint, point.getCoordinateSystem() );
 
     return null;
   }
@@ -137,20 +137,20 @@ public final class MapUtilities
     if( geometryJTS instanceof com.vividsolutions.jts.geom.Point )
       return SnapUtilities.snapPoint( pointJTS );
     else if( geometryJTS instanceof LineString )
-      return SnapUtilities.snapToLine( (LineString) geometryJTS, pointBuffer, type );
+      return SnapUtilities.snapToLine( (LineString)geometryJTS, pointBuffer, type );
     else if( geometryJTS instanceof MultiLineString )
-      return SnapUtilities.snapMultiLine( (MultiLineString) geometryJTS, pointBuffer, type );
+      return SnapUtilities.snapMultiLine( (MultiLineString)geometryJTS, pointBuffer, type );
     else if( geometryJTS instanceof Polygon )
-      return SnapUtilities.snapPolygon( (Polygon) geometryJTS, pointBuffer, type );
+      return SnapUtilities.snapPolygon( (Polygon)geometryJTS, pointBuffer, type );
     else if( geometryJTS instanceof MultiPolygon )
-      return SnapUtilities.snapMultiPolygon( (MultiPolygon) geometryJTS, pointBuffer, type );
+      return SnapUtilities.snapMultiPolygon( (MultiPolygon)geometryJTS, pointBuffer, type );
 
     return null;
   }
 
   /**
    * This method transforms the AWT-Point to a GM_Point.
-   *
+   * 
    * @param mapPanel
    *          The MapPanel of the map.
    * @param p
@@ -159,6 +159,9 @@ public final class MapUtilities
   public static GM_Point transform( final IMapPanel mapPanel, final Point p )
   {
     if( p == null )
+      return null;
+
+    if( mapPanel == null )
       return null;
 
     final GeoTransform projection = mapPanel.getProjection();
@@ -180,7 +183,7 @@ public final class MapUtilities
 
   /**
    * This method transforms the GM_Point to an AWT-Point.
-   *
+   * 
    * @param mapPanel
    *          The MapPanel of the map.
    * @param p
@@ -193,12 +196,12 @@ public final class MapUtilities
     final double x = p.getX();
     final double y = p.getY();
 
-    return new Point( (int) projection.getDestX( x ), (int) projection.getDestY( y ) );
+    return new Point( (int)projection.getDestX( x ), (int)projection.getDestY( y ) );
   }
 
   /**
    * This method transforms the GM_Point to an AWT-Point.
-   *
+   * 
    * @param mapPanel
    *          The MapPanel of the map.
    * @param p
@@ -211,12 +214,12 @@ public final class MapUtilities
     final double x = position.getX();
     final double y = position.getY();
 
-    return new Point( (int) projection.getDestX( x ), (int) projection.getDestY( y ) );
+    return new Point( (int)projection.getDestX( x ), (int)projection.getDestY( y ) );
   }
 
   /**
    * This function transforms a distance in pixel to the world distance.
-   *
+   * 
    * @param mapPanel
    *          The MapPanel of the map.
    * @param reference
@@ -236,7 +239,7 @@ public final class MapUtilities
 
   /**
    * This function transforms a distance in pixel to the world distance.
-   *
+   * 
    * @param mapPanel
    *          The MapPanel of the map.
    * @param distancePx
@@ -253,7 +256,7 @@ public final class MapUtilities
 
   /**
    * This function sets the map scale, if different from the given map panel.
-   *
+   * 
    * @param scale
    *          The new map scale.
    */
@@ -299,7 +302,7 @@ public final class MapUtilities
 
   /**
    * This functions returns all used ids.
-   *
+   * 
    * @param mapModell
    *          The map model.
    * @return All used ids.
@@ -319,7 +322,7 @@ public final class MapUtilities
 
   /**
    * This function calculates an id in the form of 'ID_n' which is not in the list of used ids.
-   *
+   * 
    * @param usedIds
    *          The list of used ids.
    * @param usedIds

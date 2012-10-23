@@ -43,7 +43,6 @@ package de.openali.odysseus.chart.ext.base.axis.provider;
 import de.openali.odysseus.chart.ext.base.axis.BooleanAxis;
 import de.openali.odysseus.chart.ext.base.axis.ScreenCoordinateAxis;
 import de.openali.odysseus.chart.factory.provider.AbstractAxisProvider;
-import de.openali.odysseus.chart.framework.model.data.impl.StringDataOperator;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 
@@ -52,18 +51,10 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
  */
 public class BooleanAxisProvider extends AbstractAxisProvider
 {
-
   @Override
   public IAxis getAxis( )
   {
-    final IAxis axis = new BooleanAxis( getId(), getPosition(), getDataClass() );
-    if( getValueArray() != null )
-    {
-      final StringDataOperator sdo = new StringDataOperator( getValueArray() );
-      axis.addDataOperator( String.class, sdo );
-    }
-
-    return axis;
+    return new BooleanAxis( getId(), getPosition() );
   }
 
   @Override

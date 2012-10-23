@@ -316,15 +316,19 @@ public class ChartPainter
       paintAxes( POSITION.TOP, gc, plotRect.x, axisTopRect.y + axisTopRect.height, plotInsets.left, axisTopRect.width, 0, true );
       if( monitor.isCanceled() )
         return Status.CANCEL_STATUS;
+      
       paintAxes( POSITION.LEFT, gc, plotRect.x, axisLeftRect.y, plotInsets.top, axisLeftRect.height - axisTopRect.height - axisBottomRect.height, 90, false );
       if( monitor.isCanceled() )
         return Status.CANCEL_STATUS;
+      
       paintAxes( POSITION.RIGHT, gc, axisRightRect.x, axisRightRect.y, plotInsets.top, axisRightRect.height - axisTopRect.height - axisBottomRect.height, 90, true );
       if( monitor.isCanceled() )
         return Status.CANCEL_STATUS;
+      
       paintAxes( POSITION.BOTTOM, gc, plotRect.x, axisBottomRect.y, plotInsets.left, axisBottomRect.width - axisLeftRect.width - axisRightRect.width, 0, false );
       if( monitor.isCanceled() )
         return Status.CANCEL_STATUS;
+      
       if( legendImage != null )
         gc.drawImage( legendImage, legendRect.x, legendRect.y );
 

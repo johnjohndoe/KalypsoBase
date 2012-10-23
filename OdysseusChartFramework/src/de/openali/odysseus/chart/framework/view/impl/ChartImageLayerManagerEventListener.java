@@ -40,6 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package de.openali.odysseus.chart.framework.view.impl;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.ui.progress.UIJob;
+
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 
@@ -90,5 +95,30 @@ public class ChartImageLayerManagerEventListener implements ILayerManagerEventLi
   public void onLayerVisibilityChanged( final IChartLayer layer )
   {
     m_chartImageComposite.invalidate();
+  }
+
+  @Override
+  public void redrawRequested( )
+  {
+    final ChartImageComposite imageComposite = m_chartImageComposite;
+    UIJob redrawJob = new UIJob( "Redrawing chart" ) //$NON-NLS-1$
+    {
+      @Override
+      public IStatus runInUIThread( final IProgressMonitor monitor )
+      {
+        if( monitor.isCanceled() )
+          return Status.CANCEL_STATUS;
+
+        if( !imageComposite.isDisposed() )
+          imageComposite.redraw();
+
+        return Status.OK_STATUS;
+      }
+    };
+
+    redrawJob.setUser( false );
+    redrawJob.setSystem( true );
+    redrawJob.schedule();
+
   }
 }

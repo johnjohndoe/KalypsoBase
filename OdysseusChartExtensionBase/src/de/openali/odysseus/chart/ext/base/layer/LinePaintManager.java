@@ -47,7 +47,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 
-import de.openali.odysseus.chart.ext.base.layer.CollisionIndex;
 import de.openali.odysseus.chart.framework.model.figure.impl.MarkerFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
@@ -67,8 +66,10 @@ public class LinePaintManager
 
   private final IStyle[] m_styles;
 
+  @SuppressWarnings( "rawtypes" )
   private final ICoordinateMapper m_mapper;
 
+  @SuppressWarnings( "rawtypes" )
   public LinePaintManager( final ICoordinateMapper mapper, final GC gc, final IStyle... styles )
   {
     m_mapper = mapper;
@@ -95,11 +96,12 @@ public class LinePaintManager
       throw new OperationCanceledException();
   }
 
+  @SuppressWarnings( "unchecked" )
   private Point[] toScreen( final IPair<Number, Number>[] points )
   {
     final Point[] screenPoints = new Point[points.length];
     for( int i = 0; i < screenPoints.length; i++ )
-      screenPoints[i] = m_mapper.numericToScreen( points[i].getDomain(), points[i].getTarget() );
+      screenPoints[i] = m_mapper.logicalToScreen( points[i].getDomain(), points[i].getTarget() );
     return screenPoints;
   }
 

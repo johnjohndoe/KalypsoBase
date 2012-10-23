@@ -55,7 +55,7 @@ import de.openali.odysseus.chart.framework.model.data.impl.DummyDataOperator;
 import de.openali.odysseus.chart.framework.model.data.impl.NumberDataOperator;
 
 /**
- * all dataoperators for data types which have a unambiguous relation to real numbers should be stored here, so all
+ * all data operators for data types which have a unambiguous relation to real numbers should be stored here, so all
  * mappers can access them.
  *
  * @author burtscher1

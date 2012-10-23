@@ -46,15 +46,18 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
+import org.kalypso.chart.ui.editor.mousehandler.AbstractChartHandler;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.model.wspm.core.IWspmLayers;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
+import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
+import de.openali.odysseus.chart.framework.model.layer.manager.visitors.FindLayerVisitor;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ALIGNMENT;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.FONTSTYLE;
@@ -68,7 +71,7 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
 /**
  * @author Dirk Kuch
  */
-public class MousePositionChartHandler extends AbstractProfilePointHandler
+public class MousePositionChartHandler extends AbstractChartHandler
 {
   private final IChartLabelRenderer m_labelRenderer;
 
@@ -82,7 +85,7 @@ public class MousePositionChartHandler extends AbstractProfilePointHandler
 
     title.setPositionHorizontal( ALIGNMENT.RIGHT );
     title.setTextAnchorX( ALIGNMENT.RIGHT );
-    title.setPositionVertical( ALIGNMENT.BOTTOM );
+    title.setPositionVertical( ALIGNMENT.TOP);
     title.setTextAnchorY( ALIGNMENT.BOTTOM );
 
     final IChartModel model = chart.getChartModel();
@@ -100,31 +103,34 @@ public class MousePositionChartHandler extends AbstractProfilePointHandler
     m_labelRenderer = new GenericChartLabelRenderer( title );
   }
 
+  public static final IProfilChartLayer findProfileTheme( final IChartComposite chart )
+  {
+    final IChartModel model = chart.getChartModel();
+
+    final FindLayerVisitor visitor = new FindLayerVisitor( IWspmLayers.LAYER_GELAENDE );
+    model.getLayerManager().accept( visitor );
+
+    final IChartLayer layer = visitor.getLayer();
+
+    return (AbstractProfilTheme)layer;
+  }
+
+  @SuppressWarnings( "rawtypes" )
   @Override
   public void mouseMove( final MouseEvent e )
   {
-    super.mouseMove( e );
     final IChartComposite chart = getChart();
-    final AbstractProfilTheme theme = findProfileTheme( chart );
+    final IProfilChartLayer theme = UpdateProfileCursorChartHandler.findProfileTheme( chart );
     String msg = "";
     if( !Objects.isNull( theme ) )
     {
-      final Point position = new Point( e.x, e.y );
       final ICoordinateMapper mapper = theme.getCoordinateMapper();
-      final Number hoehe = mapper.getTargetAxis().screenToNumeric( position.y );
-      final Number breite = mapper.getDomainAxis().screenToNumeric( position.x );
+      final Number hoehe = mapper.getTargetAxis().screenToNumeric( e.y );
+      final Number breite = mapper.getDomainAxis().screenToNumeric( e.x );
       msg = String.format( Messages.getString( "MousePositionChartHandler_0" ), breite, hoehe ); //$NON-NLS-1$
     }
     m_labelRenderer.getTitleTypeBean().setLabel( msg );
     forceRedrawEvent();
-  }
-
-  @Override
-  protected void doMouseMove( final AbstractProfilTheme theme, final Point position )
-  {
-    /**
-     * Do nothing @see mouseMove( final MouseEvent e )
-     */
   }
 
   @Override
@@ -137,7 +143,11 @@ public class MousePositionChartHandler extends AbstractProfilePointHandler
   public void paintControl( final PaintEvent e )
   {
     final IChartComposite chart = getChart();
-    final Rectangle rect = chart.getPlotRect();
-    m_labelRenderer.paint( e.gc, new Rectangle( -rect.x, -rect.y, e.width, e.height ) );
+    if( chart == null || chart.getPlotInfo() == null )
+    {
+      return;
+    }
+    final Rectangle rect = chart.getPlotInfo().getLegendRect();
+    m_labelRenderer.paint( e.gc, rect);//new Point( rect.x+rect.width, rect.y ) );
   }
 }

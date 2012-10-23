@@ -49,7 +49,6 @@ import de.openali.odysseus.chart.framework.model.data.IDataOperator;
  */
 public abstract class AbstractDataOperator<T> implements IDataOperator<T>
 {
-
   private final Comparator<T> m_comparator;
 
   public AbstractDataOperator( final Comparator<T> comparator )
@@ -57,12 +56,15 @@ public abstract class AbstractDataOperator<T> implements IDataOperator<T>
     m_comparator = comparator;
   }
 
-  /**
-   * @see de.openali.odysseus.chart.framework.model.data.IDataOperator#getComparator()
-   */
   @Override
   public Comparator<T> getComparator( )
   {
     return m_comparator;
+  }
+
+  @Override
+  public String logicalToString( final T logVal )
+  {
+    return logVal.toString();
   }
 }

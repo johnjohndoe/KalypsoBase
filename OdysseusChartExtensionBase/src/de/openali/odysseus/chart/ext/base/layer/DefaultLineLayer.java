@@ -8,13 +8,10 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
-import de.openali.odysseus.chart.framework.model.data.DataRange;
-import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.ITabularDataContainer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
-import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
@@ -31,6 +28,7 @@ public class DefaultLineLayer extends AbstractLineLayer
     m_dataContainer = data;
   }
 
+  @SuppressWarnings( "rawtypes" )
   @Override
   public void paint( final GC gc, final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
@@ -47,12 +45,12 @@ public class DefaultLineLayer extends AbstractLineLayer
 
     if( domainData.length > 0 )
     {
-      final IDataRange<Number> dr = getDomainAxis().getNumericRange();
-      final Number max = dr.getMax();
-      final Number min = dr.getMin();
+      final IDataRange<Double> dr = getDomainRange();
+      final Double max = dr.getMax();
+      final Double min = dr.getMin();
       final ICoordinateMapper coordinateMapper = getCoordinateMapper();
-      final int screenMin = coordinateMapper.numericToScreen( min, 0 ).x;
-      final int screenMax = coordinateMapper.numericToScreen( max, 0 ).x;
+      final int screenMin = coordinateMapper.numericToScreen( min, 0.0 ).x;
+      final int screenMax = coordinateMapper.numericToScreen( max, 0.0 ).x;
       final List<Point> path = new ArrayList<>();
       for( int i = 0; i < domainData.length; i++ )
       {
@@ -72,24 +70,15 @@ public class DefaultLineLayer extends AbstractLineLayer
   }
 
   @Override
-  @SuppressWarnings({ "rawtypes", "unchecked" })
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Double> getDomainRange( )
   {
-    final IDataRange< ? > domainRange = m_dataContainer.getDomainRange();
-    if( domainRange == null )
-      return null;
-    final IDataOperator dop = new DataOperatorHelper().getDataOperator( getDomainAxis().getDataClass() );
-    return DataRange.create( dop.logicalToNumeric( domainRange.getMin() ), dop.logicalToNumeric( domainRange.getMax() ) );
+    return getNumericRange( getDomainAxis(), m_dataContainer.getDomainRange() );
   }
 
+  @SuppressWarnings( "rawtypes" )
   @Override
-  @SuppressWarnings({ "rawtypes", "unchecked" })
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Double> getTargetRange( final IDataRange domainIntervall )
   {
-    final IDataRange< ? > targetRange = m_dataContainer.getTargetRange();
-    if( targetRange == null )
-      return null;
-    final IDataOperator top = new DataOperatorHelper().getDataOperator( getTargetAxis().getDataClass() );
-    return DataRange.create( top.logicalToNumeric( targetRange.getMin() ), top.logicalToNumeric( targetRange.getMax() ) );
+    return getNumericRange( getTargetAxis(), m_dataContainer.getTargetRange() );
   }
 }

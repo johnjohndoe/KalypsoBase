@@ -45,6 +45,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 
 import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
@@ -96,5 +97,19 @@ public class DefaultTextLayer extends AbstractChartLayer
 
       m_labelRenderer.paint( gc, new Point( (int) screenPosX, (int) screenPosY ) );
     }
+  }
+
+  @Override
+  public IDataRange<Double> getDomainRange( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public IDataRange<Double> getTargetRange( IDataRange< ? > domainIntervall )
+  {
+    // TODO Auto-generated method stub
+    return null;
   }
 }

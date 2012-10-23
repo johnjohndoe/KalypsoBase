@@ -166,7 +166,7 @@ public class PointsLineLayer extends AbstractProfilLayer
       final Double y = cm.getTargetAxis().screenToNumeric( newPoint.y ).doubleValue();
       profilPoint.setValue( hoehe, y );
 
-      profil.getSelection().setRange( profilPoint );
+      profil.getSelection().setActivePoints( profilPoint );
 
       getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
     }
@@ -212,7 +212,7 @@ public class PointsLineLayer extends AbstractProfilLayer
   @Override
   public void onProfilChanged( final ProfileChangeHint hint )
   {
-    if( hint.isPointsChanged() || hint.isPointValuesChanged() )
+    if( hint.isPointsChanged() || hint.isPointValuesChanged() || hint.isSelectionChanged() )
     {
       getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
     }

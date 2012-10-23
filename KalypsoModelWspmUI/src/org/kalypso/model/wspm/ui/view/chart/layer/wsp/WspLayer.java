@@ -101,6 +101,7 @@ public class WspLayer extends AbstractProfilTheme
    *          True, if the area below the wsp lines should be filled. If there are more than one wsp line, this option
    *          should be false, because you could see only the most above line and its area.
    */
+  @SuppressWarnings( "rawtypes" )
   public WspLayer( final IProfile profile, final String layerId, final ILayerStyleProvider styleProvider, final IWspLayerData data, final ICoordinateMapper mapper )
   {
     super( profile, layerId, Messages.getString( "WspLayer.0" ), null, mapper, styleProvider ); //$NON-NLS-1$
@@ -153,13 +154,14 @@ public class WspLayer extends AbstractProfilTheme
     return m_data;
   }
 
+  @SuppressWarnings( "rawtypes" )
   @Override
   public EditInfo getHover( final Point pos )
   {
     final WaterlevelRenderData[] renderData = getRenderData();
 
-    final IAxis domainAxis = getDomainAxis();
-    final IDataRange<Number> domainRange = domainAxis.getNumericRange();
+    final IAxis< ? > domainAxis = getDomainAxis();
+    final IDataRange<Double> domainRange = domainAxis.getNumericRange();
 
     /* The x positions. */
     final int xStart = domainAxis.numericToScreen( domainRange.getMin() );
@@ -190,7 +192,7 @@ public class WspLayer extends AbstractProfilTheme
   }
 
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Double> getTargetRange( final IDataRange domainIntervall )
   {
     final WaterlevelRenderData[] renderData = getRenderData();
     if( renderData.length == 0 )
@@ -209,6 +211,7 @@ public class WspLayer extends AbstractProfilTheme
     return new DataRange<>( min, max );
   }
 
+  @SuppressWarnings( "rawtypes" )
   @Override
   public void paint( final GC gc, final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {

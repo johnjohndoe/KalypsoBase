@@ -41,6 +41,7 @@
 package org.kalypso.zml.ui.chart.layer.themes;
 
 import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
 
@@ -49,6 +50,20 @@ import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
  */
 public class ZmlThemeBackGroundRaster extends AbstractChartLayer
 {
+  @Override
+  public IDataRange<Double> getDomainRange( )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public IDataRange<Double> getTargetRange( IDataRange< ? > domainIntervall )
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
   public static final String ID = "org.kalypso.hwv.core.chart.ZmlThemeBackGroundRaster"; //$NON-NLS-1$
 
   public ZmlThemeBackGroundRaster( final ILayerProvider provider )

@@ -161,31 +161,32 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
   }
 
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Double> getDomainRange( )
   {
     return null;
   }
 
+  @SuppressWarnings( { "unchecked", "rawtypes" } )
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Double> getTargetRange( final IDataRange< ? > domainIntervall )
   {
     if( !m_calculateRange || ArrayUtils.isEmpty( m_descriptors ) )
     {
       return null;
     }
 
-    Number max = -Double.MAX_VALUE;
-    Number min = Double.MAX_VALUE;
+    Double max = -Double.MAX_VALUE;
+    Double min = Double.MAX_VALUE;
     if( m_calculateRange )
     {
       for( final ZmlConstantLineBean descriptor : m_descriptors )
       {
-        max = Math.max( max.doubleValue(), descriptor.getValue().doubleValue() );
-        min = Math.min( max.doubleValue(), descriptor.getValue().doubleValue() );
+        max = Math.max( max, descriptor.getValue().doubleValue());
+        min = Math.min( min, descriptor.getValue().doubleValue());
       }
     }
 
-    return DataRange.create( min, max );
+    return new DataRange ( min, max );
   }
 
   @Override
@@ -198,7 +199,7 @@ public class ZmlConstantLineLayer extends AbstractLineLayer implements IZmlLayer
 
       for( final ZmlConstantLineBean descriptor : m_descriptors )
       {
-        final int screenValue = getTargetAxis().numericToScreen( descriptor.getValue() );
+        final int screenValue = getTargetAxis().logicalToScreen( descriptor.getValue() );
         final PolylineFigure polylineFigure = new PolylineFigure();
         polylineFigure.setStyle( descriptor.getLineStyle() );
         polylineFigure.setPoints( new Point[] { new Point( 0, screenValue ), new Point( getDomainAxis().getScreenHeight(), screenValue ) } );

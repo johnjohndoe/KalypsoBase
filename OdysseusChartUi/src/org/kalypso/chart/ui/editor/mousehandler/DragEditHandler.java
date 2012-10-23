@@ -3,7 +3,6 @@ package org.kalypso.chart.ui.editor.mousehandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
-import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
@@ -78,7 +77,7 @@ public class DragEditHandler extends AbstractChartDragHandler
   @Override
   public void mouseMove( final MouseEvent e )
   {
-    if( canSnap( new Point( e.x, e.y ) ) )
+    if( canSnap(  new Point( e.x, e.y )) )
       setCursor( SWT.CURSOR_HAND );
     else
       setCursor( SWT.CURSOR_ARROW );

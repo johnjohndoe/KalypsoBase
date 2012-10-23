@@ -2,7 +2,6 @@ package de.openali.odysseus.chart.framework.model.mapper.registry;
 
 import java.util.Map;
 
-import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.event.IEventProvider;
 import de.openali.odysseus.chart.framework.model.event.IMapperRegistryEventListener;
@@ -18,11 +17,13 @@ import de.openali.odysseus.chart.framework.model.mapper.IMapper;
 public interface IMapperRegistry extends IEventProvider<IMapperRegistryEventListener>
 {
 
+  @SuppressWarnings( "rawtypes" )
   /**
    * @return Array of all present axes
    */
   IAxis[] getAxes( );
 
+  @SuppressWarnings( "rawtypes" )
   IAxis getAxis( String id );
 
   IMapper getMapper( String id );
@@ -32,6 +33,7 @@ public interface IMapperRegistry extends IEventProvider<IMapperRegistryEventList
    */
   IMapper[] getMappers( );
 
+  @SuppressWarnings( "rawtypes" )
   /**
    * @return Array of all axes at the given position
    */
@@ -39,9 +41,10 @@ public interface IMapperRegistry extends IEventProvider<IMapperRegistryEventList
 
   void addMapper( IMapper mapper );
 
+  @SuppressWarnings( "rawtypes" )
   Map<IAxis, IDataRange<Number>> getNumericRangeAxisSnapshot( );
 
-  <T> IDataOperator<T> getDataOperator( Class<T> clazz );
+  //<T> IDataOperator<T> getDataOperator( Class<T> clazz );
 
   void accept( IAxisVisitor visitor );
 

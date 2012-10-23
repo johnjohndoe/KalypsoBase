@@ -49,7 +49,6 @@ import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.observation.result.IComponent;
 
-import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -242,11 +241,11 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer
    * is just wrong.<br/>
    * The caller of getDomainRange is responsible for recursion.
    */
-  @Override
-  public IDataRange< ? > getDomainRange( )
-  {
-    return null;
-  }
+//  @Override
+//  public IDataRange<Number> getDomainRange( )
+//  {
+//    return null;
+//  }
 
   /**
    * Empty implementation of getHover, because most themes do not have any hover elements but their children instead.
@@ -275,21 +274,21 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer
    * is just wrong.<br/>
    * The caller of getDomainRange is responsible for recursion.
    */
-  @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
-  {
-    return null;
-  }
+//  @Override
+//  public IDataRange<Number> getTargetRange( final IDataRange< ? > domainIntervall )
+//  {
+//    return null;
+//  }
 
   @Override
   public void onProfilChanged( final ProfileChangeHint hint )
   {
-    if( hint.isSelectionChanged() )
-    {
-      fireLayerContentChanged( ContentChangeType.value );
-    }
-    else
-    {
+//    if( hint.isSelectionChanged() )
+//    {
+//      fireLayerContentChanged( ContentChangeType.value );
+//    }
+//    else
+//    {
       for( final IChartLayer layer : getLayerManager().getLayers() )
       {
         if( layer instanceof IProfilChartLayer )
@@ -297,7 +296,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer
           ((IProfilChartLayer) layer).onProfilChanged( hint );
         }
       }
-    }
+//    }
   }
 
   @Override
