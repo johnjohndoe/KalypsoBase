@@ -116,7 +116,7 @@ public final class KeyInfo extends Job
 
   public void dispose( )
   {
-    KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( Messages.getString("KeyInfo.0"), m_key ); //$NON-NLS-1$
+    KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( Messages.getString( "KeyInfo.0" ), m_key ); //$NON-NLS-1$
 
     m_listeners.clear();
 
@@ -169,7 +169,7 @@ public final class KeyInfo extends Job
     synchronized( this )
     {
       final int state = getState();
-      KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( Messages.getString("KeyInfo.1"), state ); //$NON-NLS-1$
+      KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( Messages.getString( "KeyInfo.1" ), state ); //$NON-NLS-1$
 
       cancel();
       schedule();
@@ -281,7 +281,7 @@ public final class KeyInfo extends Job
       final Throwable cause = e.getCause();
       if( cause instanceof CoreException )
       {
-        final CoreException core = (CoreException) cause;
+        final CoreException core = (CoreException)cause;
         final IStatus status = core.getStatus();
         if( status.matches( IStatus.CANCEL ) )
           return status;
@@ -299,7 +299,7 @@ public final class KeyInfo extends Job
     if( m_object == null )
       return;
 
-    KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( Messages.getString("KeyInfo.2"), m_key ); //$NON-NLS-1$
+    KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( Messages.getString( "KeyInfo.2" ), m_key ); //$NON-NLS-1$
 
     m_loader.release( m_object );
     m_object = null;
@@ -412,7 +412,7 @@ public final class KeyInfo extends Job
 
   /**
    * Reloads the pool object.
-   *
+   * 
    * @param force
    *          If <code>false</code>, the object only is reloaded if it is dirty.
    */
@@ -484,8 +484,8 @@ public final class KeyInfo extends Job
         final Object oldObject = m_object;
         if( oldObject != null )
         {
-          KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( Messages.getString("KeyInfo.3"), m_key ); //$NON-NLS-1$
-          KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( Messages.getString("KeyInfo.4"), m_key ); //$NON-NLS-1$
+          KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( Messages.getString( "KeyInfo.3" ), m_key ); //$NON-NLS-1$
+          KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( Messages.getString( "KeyInfo.4" ), m_key ); //$NON-NLS-1$
           m_loader.release( m_object );
           m_object = null;
           fireObjectInvalid( oldObject );
@@ -495,7 +495,7 @@ public final class KeyInfo extends Job
       case IResourceDelta.ADDED:
       case IResourceDelta.CHANGED:
       {
-        KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( Messages.getString("KeyInfo.5"), m_key ); //$NON-NLS-1$
+        KalypsoCoreDebug.RESOURCE_POOL_KEYS.printf( Messages.getString( "KeyInfo.5" ), m_key ); //$NON-NLS-1$
         reloadInternal();
         return;
       }
@@ -535,5 +535,25 @@ public final class KeyInfo extends Job
     }
 
     return false;
+  }
+
+  public static void waitForJobDone( KeyInfo info )
+  {
+    if( info.getResult() != null )
+      return;
+
+    try
+    {
+      /* The job is running and there fore we have to wait. */
+      while( info.getResult() == null )
+      {
+        Thread.sleep( 100 );
+      }
+    }
+    catch( final InterruptedException e )
+    {
+      final IStatus status = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), e.getLocalizedMessage(), e );
+      KalypsoCorePlugin.getDefault().getLog().log( status );
+    }
   }
 }
