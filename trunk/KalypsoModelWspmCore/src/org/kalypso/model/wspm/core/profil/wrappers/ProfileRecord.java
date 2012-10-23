@@ -46,7 +46,6 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.jts.JTSConverter;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfile;
-import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.Record;
@@ -61,6 +60,8 @@ import com.vividsolutions.jts.geom.Point;
 public class ProfileRecord extends Record implements IProfileRecord
 {
   private final IProfile m_profile;
+
+  private boolean m_isSelected = false;
 
   public ProfileRecord( final IProfile owner, final IComponent[] components )
   {
@@ -245,7 +246,7 @@ public class ProfileRecord extends Record implements IProfileRecord
 
     final Object value = getValue( index );
     if( value instanceof Number )
-      return ((Number) value).doubleValue();
+      return ((Number)value).doubleValue();
 
     return null;
   }
@@ -262,7 +263,7 @@ public class ProfileRecord extends Record implements IProfileRecord
 
     final Object value = getValue( index );
     if( value instanceof Number )
-      return ((Number) value).doubleValue();
+      return ((Number)value).doubleValue();
 
     return null;
   }
@@ -279,7 +280,7 @@ public class ProfileRecord extends Record implements IProfileRecord
 
     final Object value = getValue( index );
     if( value instanceof Number )
-      return ((Number) value).doubleValue();
+      return ((Number)value).doubleValue();
 
     return null;
   }
@@ -357,19 +358,25 @@ public class ProfileRecord extends Record implements IProfileRecord
     return Range.is( getBreite() );
   }
 
+  public void setSelected( final boolean isSelected )
+  {
+    m_isSelected = isSelected;
+  }
+
   @Override
   public boolean isSelected( )
   {
-    final IProfile profile = getProfile();
-    if( Objects.isNull( profile ) )
-      return false;
-
-    final IRangeSelection selection = profile.getSelection();
-    final Range<Double> range = selection.getRange();
-    if( Objects.isNull( range ) )
-      return false;
-
-    return range.contains( getBreite() );
+    return m_isSelected;
+//    final IProfile profile = getProfile();
+//    if( Objects.isNull( profile ) )
+//      return false;
+//
+//    final IRangeSelection selection = profile.getSelection();
+//    final Range<Double> range = selection.getRange();
+//    if( Objects.isNull( range ) )
+//      return false;
+//
+//    return range.contains( getBreite() );
   }
 
   @Override
@@ -380,7 +387,7 @@ public class ProfileRecord extends Record implements IProfileRecord
     if( indexOfComponent == -1 )
       return 1.0;
 
-    final Double factor = (Double) getValue( indexOfComponent );
+    final Double factor = (Double)getValue( indexOfComponent );
     if( factor == null )
       return 1.0;
 

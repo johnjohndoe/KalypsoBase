@@ -62,7 +62,7 @@ public abstract class AbstractChartHandler implements IChartHandler
     if( m_job != null )
       m_job.cancel();
 
-    m_job = new UIJob( "Redrawing chart tooltip" )
+    m_job = new UIJob( "Redrawing chart" ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
@@ -84,7 +84,7 @@ public abstract class AbstractChartHandler implements IChartHandler
     m_job.schedule();
   }
 
-  public IChartComposite getChart( )
+  protected IChartComposite getChart( )
   {
     return m_chart;
   }
@@ -165,15 +165,19 @@ public abstract class AbstractChartHandler implements IChartHandler
   protected boolean isOutOfRange( final Integer x )
   {
     final IChartComposite chart = getChart();
-    final Rectangle rect = chart.getPlotRect();
+    final Rectangle rect = chart.getPlotInfo().getPlotRect();
     return rect.contains( x, rect.y +1 ) == false;
   }
 
   protected boolean isOutOfRange( final Point screen )
   {
     final IChartComposite chart = getChart();
-    final Rectangle rect = RectangleUtils.inflateRect( chart.getPlotRect(), 1 );
+    final Rectangle rect = RectangleUtils.inflateRect( chart.getPlotInfo().getPlotRect(), 1 );
     return rect.contains( screen ) == false;
+    
+    
+    
+    
   }
 
   @Override

@@ -11,7 +11,6 @@ import org.kalypso.ogc.core.utils.OWSUtilities;
 import de.openali.odysseus.chart.framework.exception.MalformedValueException;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.data.DataRange;
-import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
 import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
@@ -20,7 +19,7 @@ import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry
 
 /**
  * Helper class for chart stuff concerning request parameters.
- *
+ * 
  * @author Alexander Burtscher
  */
 public class ODSChartManipulation
@@ -112,7 +111,7 @@ public class ODSChartManipulation
   /**
    * sets range for an individual axis; set to public so an axis can be re-ranged widthout the need for a complete
    * chartmodel (e.g. by GetAxesInfo, GetAxis)
-   *
+   * 
    * @param iaxis
    *          the axis whose range to set
    * @param clazz
@@ -122,15 +121,15 @@ public class ODSChartManipulation
    * @param maxString
    *          axis max value as string
    */
-  public static <T> void setAxisRange2( final IAxis iaxis, final Class<T> clazz, final String maxString, final String minString ) throws OWSException
+  public static <T> void setAxisRange2( final IAxis<T> iaxis, final Class<T> clazz, final String maxString, final String minString ) throws OWSException
   {
-    final IDataOperator<T> da = iaxis.getDataOperator( clazz );
-    Number min = null;
-    Number max = null;
+    // final IDataOperator<T> da = iaxis.getDataOperator( clazz );
+    T min = null;
+    T max = null;
 
     try
     {
-      min = da.logicalToNumeric( da.stringToLogical( minString ) );
+      min = iaxis.XMLStringToLogical( minString );
     }
     catch( final MalformedValueException e )
     {
@@ -139,14 +138,14 @@ public class ODSChartManipulation
 
     try
     {
-      max = da.logicalToNumeric( da.stringToLogical( maxString ) );
+      max = iaxis.XMLStringToLogical( maxString );
     }
     catch( final MalformedValueException e )
     {
       throw new OWSException( "Value '" + maxString + "' is not appropriate for Axis '" + iaxis.getIdentifier() + "'", OWSUtilities.OWS_VERSION, "en", ExceptionCode.INVALID_PARAMETER_VALUE, null );
     }
 
-    final IDataRange<Number> dr = DataRange.create( min, max );
-    iaxis.setNumericRange( dr );
+    final IDataRange<T> dr = new DataRange<>( min, max );
+    iaxis.setLogicalRange( dr );
   }
 }

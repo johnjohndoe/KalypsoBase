@@ -72,11 +72,20 @@ public class ProfilChartModel extends ChartModel
       {
         handlePropertyOrBuildingChanged();
       }
+
+      // REMARK: we directly redraw trhe chart for any selection changes here; before this was managed by the selction handler,
+
+      // but listeners never got unregistered. This is a better place.
+
+      else if( /*hint.isSelectionChanged() || */hint.isSelectionCursorChanged() )
+      {
+        getLayerManager().getEventHandler().redrawRequested();
+      }
       else
       {
         for( final IChartLayer layer : getLayerManager().getLayers() )
         {
-          ((IProfilChartLayer) layer).onProfilChanged( hint );
+          ((IProfilChartLayer)layer).onProfilChanged( hint );
         }
       }
     }
@@ -118,7 +127,7 @@ public class ProfilChartModel extends ChartModel
   {
     final IChartLayer layer = getLayerManager().findLayer( layerID );
     if( layer instanceof IProfilChartLayer )
-      return (IProfilChartLayer) layer;
+      return (IProfilChartLayer)layer;
 
     return null;
   }

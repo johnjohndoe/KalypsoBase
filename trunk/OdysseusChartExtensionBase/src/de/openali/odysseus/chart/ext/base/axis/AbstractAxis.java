@@ -4,9 +4,9 @@ import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.ObjectUtils;
-
+import de.openali.odysseus.chart.framework.exception.MalformedValueException;
 import de.openali.odysseus.chart.framework.model.data.DataRange;
+import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRangeRestriction;
 import de.openali.odysseus.chart.framework.model.impl.AxisVisitorBehavior;
@@ -24,9 +24,9 @@ import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
  * @author burtscher Abstract implementation of IAxis - implements some methods which are equal for all concrete
  *         IAxis-classes
  */
-public abstract class AbstractAxis extends AbstractMapper implements IAxis
+public abstract class AbstractAxis<T> extends AbstractMapper implements IAxis<T>
 {
-  private final Class< ? > m_dataClass;
+  private final IDataOperator<T> m_dataOperator;
 
   private DIRECTION m_dir = DIRECTION.POSITIVE;
 
@@ -34,13 +34,13 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
 
   private int m_offset = 0;
 
-  private IDataRange<Number> m_activeRange = null;
-
   private final List<TitleTypeBean> m_axisLabels = new ArrayList<>();
 
-  private IDataRange<Number> m_numericRange = DataRange.create( null, null );
+  private IDataRange<Double> m_numericRange = new DataRange<>( null, null );
 
   private final POSITION m_pos;
+
+  // private final IDataRange<Double> m_activeRange = null;
 
   private IAxisAdjustment m_preferredAdjustment = null;
 
@@ -52,19 +52,17 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
 
   private boolean m_allowZoom = true;
 
-  public AbstractAxis( final String id, final POSITION pos, final Class< ? > dataClass )
+  public AbstractAxis( final String id, final POSITION pos )
   {
-    this( id, pos, dataClass, null );
+    this( id, pos, null, null );
   }
 
-  public AbstractAxis( final String id, final POSITION pos, final Class< ? > dataClass, final IAxisRenderer renderer )
+  public AbstractAxis( final String id, final POSITION pos, final IAxisRenderer renderer,final IDataOperator<T> dataOperator )
   {
     super( id );
-
     m_pos = pos;
-    m_dataClass = dataClass;
-
     setRenderer( renderer );
+    m_dataOperator = dataOperator;
   }
 
   @Override
@@ -80,9 +78,15 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
   }
 
   @Override
-  public Class< ? > getDataClass( )
+  public IAxisVisitorBehavior getAxisVisitorBehavior( )
   {
-    return m_dataClass;
+    return new AxisVisitorBehavior( m_allowZoom, true, true );
+  }
+
+  @Deprecated
+  protected IDataOperator<T> getDataOperator( )
+  {
+    return m_dataOperator;
   }
 
   @Override
@@ -107,7 +111,13 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
   }
 
   @Override
-  public IDataRange<Number> getNumericRange( )
+  public IDataRange<T> getLogicalRange( )
+  {
+    return new DataRange<>( numericToLogical( m_numericRange.getMin() ), numericToLogical( m_numericRange.getMax() ) );
+  }
+
+  @Override
+  public IDataRange<Double> getNumericRange( )
   {
     return m_numericRange;
   }
@@ -148,14 +158,7 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     return m_offset;
   }
 
-  protected boolean isInverted( )
-  {
-    if( getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
-      return getDirection() == DIRECTION.NEGATIVE;
-    return getDirection() == DIRECTION.POSITIVE;
-  }
-
-  private boolean hasNullValues( final IDataRange<Number> range, final DataRangeRestriction<Number> restriction )
+  private boolean hasNullValues( final IDataRange<Double> range, final DataRangeRestriction<Number> restriction )
   {
     if( restriction == null || range == null || range.getMin() == null || range.getMax() == null || restriction.getMin() == null || restriction.getMax() == null || restriction.getMinRange() == null
         || restriction.getMaxRange() == null )
@@ -164,10 +167,107 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     return false;
   }
 
+  public boolean isAllowZoom( )
+  {
+    return m_allowZoom;
+  }
+
+  protected boolean isInverted( )
+  {
+    if( getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
+      return getDirection() == DIRECTION.NEGATIVE;
+    return getDirection() == DIRECTION.POSITIVE;
+  }
+
+//
+//  @Override
+//  public IDataRange<Double> getSelection( )
+//  {
+//    return m_activeRange;
+//  }
+
   @Override
   public boolean isVisible( )
   {
     return m_visible;
+  }
+
+  @Override
+  public int logicalToScreen( T value )
+  {
+    return numericToScreen( logicalToNumeric( value ) );
+  }
+
+  @Override
+  public String logicalToXMLString( T value )
+  {
+    return getDataOperator().logicalToString( value );
+  }
+
+  @Override
+  public Double normalizedToNumeric( Double value )
+  {
+    final IDataRange<Double> dataRange = getNumericRange();
+
+    if( dataRange.getMax() == null || dataRange.getMin() == null )
+      return null;
+    final double r = dataRange.getMax().doubleValue() - dataRange.getMin().doubleValue();
+
+    return Double.valueOf( value * r + dataRange.getMin().doubleValue() );
+  }
+
+  @Override
+  public int normalizedToScreen( Double value )
+  {
+    final int range = getScreenHeight();
+    final double screen = (range * (isInverted() ? 1 - value : value));
+
+    // REMARK: using floor here, so all values are rounded to the same direction
+
+    return getScreenOffset() + (int)Math.floor( screen );
+  }
+
+  @Override
+  public Double numericToNormalized( Double value )
+  {
+    final IDataRange<Double> dataRange = getNumericRange();
+    if( dataRange.getMax() == null || dataRange.getMin() == null )
+      return Double.NaN;
+    final double r = dataRange.getMax().doubleValue() - dataRange.getMin().doubleValue();
+    return (value - dataRange.getMin().doubleValue()) / r;
+  }
+
+  @Override
+  public int numericToScreen( Double value )
+  {
+    return normalizedToScreen( numericToNormalized( value ) );
+  }
+
+  @Override
+  public T screenToLogical( int value )
+  {
+    return numericToLogical( screenToNumeric( value ) );
+  }
+
+  @Override
+  public Double screenToNormalized( int value )
+  {
+    final int range = getScreenHeight();
+    if( range == 0 )
+      return null;
+    final double normValue = (double)(value - getScreenOffset()) / range;
+    return isInverted() ? 1 - normValue : normValue;
+  }
+
+  @Override
+  public Double screenToNumeric( int value )
+  {
+    return normalizedToNumeric( screenToNormalized( value ) );
+  }
+
+  public void setAllowZoom( final boolean allowZoom )
+  {
+    m_allowZoom = allowZoom;
   }
 
   @Override
@@ -189,15 +289,21 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
   }
 
   @Override
-  public void setNumericRange( final IDataRange<Number> range )
+  public void setLogicalRange( IDataRange<T> range )
   {
-    final Number rangeMin = range.getMin();
-    final Number rangeMax = range.getMax();
+    setNumericRange( new DataRange<>( logicalToNumeric( range.getMin() ), logicalToNumeric( range.getMax() ) ) );
+  }
+
+  @Override
+  public void setNumericRange( IDataRange<Double> range )
+  {
+    final Double rangeMin = range.getMin();
+    final Double rangeMax = range.getMax();
 
     if( rangeMax == m_numericRange.getMax() && rangeMin == m_numericRange.getMin() )
       return;
     if( rangeMin == null || rangeMax == null )
-      m_numericRange = DataRange.create( rangeMin, rangeMax );
+      m_numericRange = new DataRange<>( rangeMin, rangeMax );
     else
       m_numericRange = validateDataRange( range, getRangeRestriction() );
 
@@ -256,13 +362,27 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
     fireMapperChanged( this );
   }
 
+//  @Override
+//  public void setSelection( final IDataRange<Double> range )
+//  {
+//    if( ObjectUtils.equals( m_activeRange, range ) )
+//      return;
+//
+//    m_activeRange = range;
+//
+//    // FIXME: generally repainting the chart is bad; only elements that really paint the range should be informed and
+//    // those should trigger a paint event (i.e. the selection layer)
+//
+//    fireMapperChanged( this );
+//  }
+
   @Override
   public String toString( )
   {
     return String.format( "%s {id=%s, pos=%s, dir=%s, visible=%s }", getLabel(), getIdentifier(), m_pos, m_dir, isVisible() ); //$NON-NLS-1$
   }
 
-  protected IDataRange<Number> validateDataRange( final IDataRange<Number> range, final DataRangeRestriction<Number> restriction )
+  protected IDataRange<Double> validateDataRange( final IDataRange<Double> range, final DataRangeRestriction<Number> restriction )
   {
     if( hasNullValues( range, restriction ) )
       return range;
@@ -309,52 +429,24 @@ public abstract class AbstractAxis extends AbstractMapper implements IAxis
       final double delta = newRangeSize - newRestrictionMaxRange;
       final double min = Math.max( newRangeMin + delta / 2.0, newRestrictionMin );
       final double max = Math.min( min + newRestrictionMaxRange, newRestrictionMax );
-      return DataRange.create( (Number) min, (Number) max );
+      return new DataRange<>( min, max );
     }
     if( newRangeSize < newRestrictionMinRange )
     {
       final double delta = newRestrictionMinRange - newRangeSize;
       final double min = Math.max( newRangeMin - delta / 2.0, newRestrictionMin );
       final double max = Math.min( min + newRestrictionMinRange, newRestrictionMax );
-      return DataRange.create( (Number) min, (Number) max );
+      return new DataRange<>( min, max );
     }
 
-    return DataRange.create( (Number) newRangeMin, (Number) newRangeMax );
+    return new DataRange<>( newRangeMin, newRangeMax );
   }
 
   @Override
-  public void setSelection( final IDataRange<Number> range )
+  public T XMLStringToLogical( String value ) throws MalformedValueException
   {
-    if( ObjectUtils.equals( m_activeRange, range ) )
-      return;
 
-    m_activeRange = range;
+    return getDataOperator().stringToLogical( value );
 
-    // FIXME: generally repainting the chart is bad; only elements that really paint the range should be informed and
-    // those should trigger a paint event (i.e. the selection layer)
-
-    fireMapperChanged( this );
-  }
-
-  @Override
-  public IDataRange<Number> getSelection( )
-  {
-    return m_activeRange;
-  }
-
-  @Override
-  public IAxisVisitorBehavior getAxisVisitorBehavior( )
-  {
-    return new AxisVisitorBehavior( m_allowZoom, true, true );
-  }
-
-  public boolean isAllowZoom( )
-  {
-    return m_allowZoom;
-  }
-
-  public void setAllowZoom( final boolean allowZoom )
-  {
-    m_allowZoom = allowZoom;
   }
 }

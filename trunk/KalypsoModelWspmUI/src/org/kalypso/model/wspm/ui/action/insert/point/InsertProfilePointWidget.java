@@ -168,7 +168,7 @@ public class InsertProfilePointWidget extends AbstractProfileWidget
         @Override
         protected IStatus run( final IProgressMonitor monitor )
         {
-          profile.getSelection().setRange( record );
+          profile.getSelection().setActivePoints( record );
 
           return Status.OK_STATUS;
         }

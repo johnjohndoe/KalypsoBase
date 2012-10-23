@@ -68,14 +68,14 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
   }
 
   @Override
-  public IDataRange<Number> getDomainRange( )
+  public IDataRange<Double> getDomainRange( )
   {
     // don't calculate
     return null;
   }
 
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Double> getTargetRange( final IDataRange< ? > domainIntervall )
   {
     // don't calculate
     return null;
@@ -84,6 +84,7 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
   /**
    * @see de.openali.odysseus.chart.framework.model.layer.IChartLayer#paint(org.eclipse.swt.graphics.GC)
    */
+  @SuppressWarnings( "rawtypes" )
   @Override
   public void paint( final GC gc, ChartImageInfo chartImageInfo, IProgressMonitor monitor )
   {
@@ -104,16 +105,16 @@ public class DefaultTickRasterLayer extends AbstractLineLayer
 // final int heigth = targetAxis.getScreenHeight();
     for( final Number domTick : domTicks )
     {
-      final Point p1 = new Point( domainAxis.numericToScreen( domTick ), 0 );
-      final Point p2 = new Point( domainAxis.numericToScreen( domTick ), heigth );
+      final Point p1 = new Point( domainAxis.numericToScreen( domTick.doubleValue() ), chartImageInfo.getPlotRect().y );
+      final Point p2 = new Point( domainAxis.numericToScreen( domTick.doubleValue() ), chartImageInfo.getPlotRect().y+chartImageInfo.getPlotRect().height );
 
       drawLine( gc, p1, p2 );
     }
 
     for( final Number valTick : valTicks )
     {
-      final Point p1 = new Point( 0, targetAxis.numericToScreen( valTick ) );
-      final Point p2 = new Point( width, targetAxis.numericToScreen( valTick ) );
+      final Point p1 = new Point( chartImageInfo.getPlotRect().x, targetAxis.numericToScreen( valTick.doubleValue() ) );
+      final Point p2 = new Point( chartImageInfo.getPlotRect().x+chartImageInfo.getPlotRect().width, targetAxis.numericToScreen( valTick.doubleValue() ) );
 
       drawLine( gc, p1, p2 );
     }

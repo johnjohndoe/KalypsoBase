@@ -34,11 +34,11 @@ public class DateDataOperator extends AbstractDataOperator<Date>
   }
 
   @Override
-  public Long logicalToNumeric( final Date logVal )
+  public Double logicalToNumeric( final Date logVal )
   {
     if( logVal == null )
       return null;
-    return logVal.getTime();
+    return Long.valueOf( logVal.getTime()).doubleValue();
 
   }
 

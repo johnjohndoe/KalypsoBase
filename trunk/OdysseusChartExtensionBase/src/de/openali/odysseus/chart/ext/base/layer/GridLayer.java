@@ -38,7 +38,9 @@ public class GridLayer extends AbstractChartLayer
     VERTICAL,
     BOTH
   }
+
   private ILegendEntry[] m_legendEntries;
+
   private final GridOrientation m_orientation;
 
   public GridLayer( final ILayerProvider provider, final GridOrientation orientation, final ILineStyle gridStyle )
@@ -71,23 +73,23 @@ public class GridLayer extends AbstractChartLayer
 
           final ArrayList<Point> points = new ArrayList<>();
           // Linie von links nach rechts
-          points.add( new Point( 0, (int) (height * 0.3) ) );
-          points.add( new Point( width, (int) (height * 0.3) ) );
+          points.add( new Point( 0, (int)(height * 0.3) ) );
+          points.add( new Point( width, (int)(height * 0.3) ) );
           pf.setPoints( points.toArray( new Point[] {} ) );
           pf.paint( gc );
           points.clear();
-          points.add( new Point( 0, (int) (height * 0.7) ) );
-          points.add( new Point( width, (int) (height * 0.7) ) );
+          points.add( new Point( 0, (int)(height * 0.7) ) );
+          points.add( new Point( width, (int)(height * 0.7) ) );
           pf.setPoints( points.toArray( new Point[] {} ) );
           pf.paint( gc );
           points.clear();
-          points.add( new Point( (int) (width * 0.3), 0 ) );
-          points.add( new Point( (int) (width * 0.3), height ) );
+          points.add( new Point( (int)(width * 0.3), 0 ) );
+          points.add( new Point( (int)(width * 0.3), height ) );
           pf.setPoints( points.toArray( new Point[] {} ) );
           pf.paint( gc );
           points.clear();
-          points.add( new Point( (int) (width * 0.7), 0 ) );
-          points.add( new Point( (int) (width * 0.7), height ) );
+          points.add( new Point( (int)(width * 0.7), 0 ) );
+          points.add( new Point( (int)(width * 0.7), height ) );
           pf.setPoints( points.toArray( new Point[] {} ) );
           pf.paint( gc );
         }
@@ -122,13 +124,13 @@ public class GridLayer extends AbstractChartLayer
     // Linie von links nach rechts
     if( m_orientation == GridOrientation.BOTH || m_orientation == GridOrientation.HORIZONTAL )
     {
-      points.add( new Point( 0, (int) (height * 0.3) ) );
-      points.add( new Point( width, (int) (height * 0.3) ) );
+      points.add( new Point( 0, (int)(height * 0.3) ) );
+      points.add( new Point( width, (int)(height * 0.3) ) );
       figure.setPoints( points.toArray( new Point[] {} ) );
       figure.paint( gc );
       points.clear();
-      points.add( new Point( 0, (int) (height * 0.7) ) );
-      points.add( new Point( width, (int) (height * 0.7) ) );
+      points.add( new Point( 0, (int)(height * 0.7) ) );
+      points.add( new Point( width, (int)(height * 0.7) ) );
       figure.setPoints( points.toArray( new Point[] {} ) );
       figure.paint( gc );
       points.clear();
@@ -137,13 +139,13 @@ public class GridLayer extends AbstractChartLayer
     // Linie von oben nach unten
     if( m_orientation == GridOrientation.BOTH || m_orientation == GridOrientation.VERTICAL )
     {
-      points.add( new Point( (int) (width * 0.3), 0 ) );
-      points.add( new Point( (int) (width * 0.3), height ) );
+      points.add( new Point( (int)(width * 0.3), 0 ) );
+      points.add( new Point( (int)(width * 0.3), height ) );
       figure.setPoints( points.toArray( new Point[] {} ) );
       figure.paint( gc );
       points.clear();
-      points.add( new Point( (int) (width * 0.7), 0 ) );
-      points.add( new Point( (int) (width * 0.7), height ) );
+      points.add( new Point( (int)(width * 0.7), 0 ) );
+      points.add( new Point( (int)(width * 0.7), height ) );
       figure.setPoints( points.toArray( new Point[] {} ) );
       figure.paint( gc );
       points.clear();
@@ -155,7 +157,7 @@ public class GridLayer extends AbstractChartLayer
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getDomainRange()
    */
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Double> getDomainRange( )
   {
     return null;
   }
@@ -168,8 +170,8 @@ public class GridLayer extends AbstractChartLayer
   {
     if( ArrayUtils.isEmpty( m_legendEntries ) )
     {
-     m_legendEntries = createLegendEntries();
-          }
+      m_legendEntries = createLegendEntries();
+    }
     return m_legendEntries;
   }
 
@@ -193,11 +195,12 @@ public class GridLayer extends AbstractChartLayer
    * @see org.kalypso.swtchart.chart.layer.IChartLayer#getTargetRange()
    */
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Double> getTargetRange( final IDataRange< ? > domainIntervall )
   {
     return null;
   }
 
+  @SuppressWarnings( { "rawtypes" } )
   @Override
   public void paint( final GC gc, final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
@@ -225,12 +228,12 @@ public class GridLayer extends AbstractChartLayer
     // von links nach rechts zeichnen
     if( m_orientation == GridOrientation.BOTH || m_orientation == GridOrientation.HORIZONTAL )
     {
-      final Number[] vTicks = vAxis.getRenderer().getTicks( vAxis, gc );
-      final IDataRange<Number> hRange = hAxis.getNumericRange();
+      final Double[] vTicks = vAxis.getRenderer().getTicks( vAxis, gc );
+      final IDataRange<Double> hRange = hAxis.getNumericRange();
       final int xfrom = hAxis.numericToScreen( hRange.getMin() );
       final int xto = hAxis.numericToScreen( hRange.getMax() );
       if( vTicks != null )
-        for( final Number vTick : vTicks )
+        for( final Double vTick : vTicks )
         {
           path.clear();
           path.add( new Point( xfrom, vAxis.numericToScreen( vTick ) ) );
@@ -242,12 +245,12 @@ public class GridLayer extends AbstractChartLayer
     // von unten nach oben zeichnen
     if( m_orientation == GridOrientation.BOTH || m_orientation == GridOrientation.VERTICAL )
     {
-      final Number[] hTicks = hAxis.getRenderer().getTicks( hAxis, gc );
-      final IDataRange<Number> vRange = vAxis.getNumericRange();
+      final Double[] hTicks = hAxis.getRenderer().getTicks( hAxis, gc );
+      final IDataRange<Double> vRange = vAxis.getNumericRange();
       final int yfrom = vAxis.numericToScreen( vRange.getMin() );
       final int yto = vAxis.numericToScreen( vRange.getMax() );
       if( hTicks != null )
-        for( final Number hTick : hTicks )
+        for( final Double hTick : hTicks )
         {
           path.clear();
           path.add( new Point( hAxis.numericToScreen( hTick ), yfrom ) );

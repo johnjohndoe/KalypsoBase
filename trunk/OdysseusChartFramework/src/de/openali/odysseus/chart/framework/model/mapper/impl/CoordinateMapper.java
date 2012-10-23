@@ -42,92 +42,92 @@ package de.openali.odysseus.chart.framework.model.mapper.impl;
 
 import org.eclipse.swt.graphics.Point;
 
-import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
-import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.ORIENTATION;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
-import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
 import de.openali.odysseus.chart.framework.util.resource.IPair;
 import de.openali.odysseus.chart.framework.util.resource.Pair;
 
 /**
  * @author alibu
  */
-public class CoordinateMapper implements ICoordinateMapper
+public class CoordinateMapper<T_Domain, T_Target> implements ICoordinateMapper<T_Domain, T_Target>
 {
-  private final IAxis m_domainAxis;
+  private final IAxis<T_Domain> m_domainAxis;
 
-  private final IAxis m_targetAxis;
+  private final IAxis<T_Target> m_targetAxis;
 
-  private final ORIENTATION m_ori;
+ // private final ORIENTATION m_ori;
 
-  private final DataOperatorHelper m_doh = new DataOperatorHelper();
+  //private final DataOperatorHelper m_doh = new DataOperatorHelper();
 
-  public CoordinateMapper( final IAxis domain, final IAxis target )
+  public CoordinateMapper( final IAxis<T_Domain> domain, final IAxis<T_Target> target )
   {
     m_domainAxis = domain;
     m_targetAxis = target;
-    m_ori = m_domainAxis.getPosition().getOrientation();
+ //   m_ori = m_domainAxis.getPosition().getOrientation();
   }
 
-  @Override
-  public IDataOperator< ? > getDataOperator( final Class< ? > clazz )
-  {
-    return m_doh.getDataOperator( clazz );
-  }
+//  @Override
+//  public IDataOperator< ? > getDataOperator( final Class< ? > clazz )
+//  {
+//    return m_doh.getDataOperator( clazz );
+//  }
 
   @Override
-  public Point numericToScreen( final Number domVal, final Number targetVal )
+  public Point numericToScreen( final Double domVal, final Double targetVal )
   {
     final int domScreen = m_domainAxis.numericToScreen( domVal );
     final int valScreen = m_targetAxis.numericToScreen( targetVal );
-    final Point unswitched = new Point( domScreen, valScreen );
+    return new Point( domScreen, valScreen );
+   // final Point unswitched = new Point( domScreen, valScreen );
     // Koordinaten switchen
-    return new Point( m_ori.getX( unswitched ), m_ori.getY( unswitched ) );
+   // return new Point( m_ori.getX( unswitched ), m_ori.getY( unswitched ) );
   }
 
   @Override
-  public IAxis getDomainAxis( )
+  public IAxis<T_Domain> getDomainAxis( )
   {
     return m_domainAxis;
   }
 
   @Override
-  public IAxis getTargetAxis( )
+  public IAxis<T_Target> getTargetAxis( )
   {
     return m_targetAxis;
   }
 
   @Override
-  @SuppressWarnings({ "unchecked", "rawtypes" })
-  public Point logicalToScreen( final Object domainValue, final Object targetValue )
+  public Point logicalToScreen( final T_Domain domainValue, final T_Target targetValue )
   {
-    final IDataOperator dop = m_doh.getDataOperator( domainValue.getClass() );
-    final IDataOperator top = m_doh.getDataOperator( targetValue.getClass() );
-
-    return numericToScreen( dop.logicalToNumeric( domainValue ), top.logicalToNumeric( targetValue ) );
+    return numericToScreen( m_domainAxis.logicalToNumeric( domainValue ), m_targetAxis.logicalToNumeric( targetValue ) );
   }
 
   @Override
-  public IPair<Number, Number> screenToNumeric( final Point screenValue )
+  public IPair<Double, Double> screenToNumeric( final Point screenValue )
   {
     if( screenValue == null )
       return null;
 
-    final int domainScreen = getDomainAxis().getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) ? screenValue.x : screenValue.y;
-    final int targetScreen = getTargetAxis().getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) ? screenValue.x : screenValue.y;
+  //  final int domainScreen = getDomainAxis().getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) ? screenValue.x : screenValue.y;
+  //  final int targetScreen = getTargetAxis().getPosition().getOrientation().equals( ORIENTATION.HORIZONTAL ) ? screenValue.x : screenValue.y;
 
-    final Number domainNum = getDomainAxis().screenToNumeric( domainScreen );
-    final Number targetNum = getTargetAxis().screenToNumeric( targetScreen );
+    final Double domainNum = getDomainAxis().screenToNumeric( screenValue.x );
+    final Double targetNum = getTargetAxis().screenToNumeric( screenValue.y );
     return new Pair<>( domainNum, targetNum );
   }
 
   @Override
   public Point getScreenSize( )
   {
-    final IAxis domainAxis = getDomainAxis();
-    final IAxis targetAxis = getTargetAxis();
+    final IAxis<T_Domain> domainAxis = getDomainAxis();
+    final IAxis<T_Target> targetAxis = getTargetAxis();
 
     return new Point( domainAxis.getScreenHeight(), targetAxis.getScreenHeight() );
+  }
+
+  @Override
+  public IPair<T_Domain, T_Target> screenToLogical( Point screenValue )
+  {
+    return new Pair<>( getDomainAxis().screenToLogical( screenValue.x ), getTargetAxis().screenToLogical( screenValue.y ) );
   }
 }

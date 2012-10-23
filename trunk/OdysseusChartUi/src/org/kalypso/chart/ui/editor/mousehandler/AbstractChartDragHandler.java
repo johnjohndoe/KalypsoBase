@@ -3,7 +3,6 @@ package org.kalypso.chart.ui.editor.mousehandler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Point;
-import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.impl.visitors.FindLayerTooltipVisitor;
@@ -15,7 +14,7 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
 /**
  * FIXME: using the edit info here in order to save the click-state is dubious. Separate editing and dragging (i.e.
  * separate this into different helper classes or remove the edit stuff from this class).
- *
+ * 
  * @author kimwerner
  */
 public abstract class AbstractChartDragHandler extends AbstractChartHandler
@@ -65,8 +64,6 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
     if( model == null )
       return null;
 
-    final Point plotPoint = screen;
-
     final EditableChartLayerVisitor visitor = new EditableChartLayerVisitor();
     model.accept( visitor );
 
@@ -74,7 +71,7 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
 
     for( final IEditableChartLayer layer : layers )
     {
-      final EditInfo info = layer.getHover( plotPoint );
+      final EditInfo info = layer.getHover( screen );
       if( info != null )
         return info;
     }
@@ -150,9 +147,7 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
       if( m_editInfo != null )
       {
         final Point position = new Point( up.x, up.y );
-        final Point plotPoint = position;
-
-        doMouseUpAction( plotPoint, m_editInfo );
+        doMouseUpAction( position, m_editInfo );
       }
       else if( m_clickInfo != null )
         doMouseUpAction( null, m_clickInfo );
@@ -174,7 +169,7 @@ public abstract class AbstractChartDragHandler extends AbstractChartHandler
   protected void updateSelection( final EditInfo editInfo )
   {
     if( editInfo != null && editInfo.getLayer() != null )
-      ((IEditableChartLayer) editInfo.getLayer()).commitDrag( editInfo.getPosition(), editInfo );
+      ((IEditableChartLayer)editInfo.getLayer()).commitDrag( editInfo.getPosition(), editInfo );
   }
 
 }

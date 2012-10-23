@@ -337,12 +337,12 @@ public class ChartMapperFactory extends AbstractChartFactory
     if( at.isSetDateRange() )
     {
       final AxisDateRangeType range = at.getDateRange();
-      final IDataOperator<Calendar> dataOperator = axis.getDataOperator( Calendar.class );
+    //  final IDataOperator<Calendar> dataOperator = axis.getDataOperator( Calendar.class );
       final Calendar minValue = range.getMinValue();
       final Calendar maxValue = range.getMaxValue();
 
-      final Number min = dataOperator.logicalToNumeric( minValue );
-      final Number max = dataOperator.logicalToNumeric( maxValue );
+      final Number min = axis.logicalToNumeric( minValue );
+      final Number max = axis.logicalToNumeric( maxValue );
       return DataRange.createFromComparable( min, max );
     }
     else if( at.isSetNumberRange() )
@@ -358,12 +358,12 @@ public class ChartMapperFactory extends AbstractChartFactory
       try
       {
         final AxisStringRangeType range = at.getStringRange();
-        final IDataOperator<Calendar> dataOperator = axis.getDataOperator( Calendar.class );
+      //  final IDataOperator<Calendar> dataOperator = axis.getDataOperator( Calendar.class );
         final String minValue = range.getMinValue();
         final String maxValue = range.getMaxValue();
 
-        final Number min = dataOperator.logicalToNumeric( dataOperator.stringToLogical( minValue ) );
-        final Number max = dataOperator.logicalToNumeric( dataOperator.stringToLogical( maxValue ) );
+        final Number min = axis.logicalToNumeric( axis.XMLStringToLogical(  minValue ) );
+        final Number max = axis.logicalToNumeric( axis.XMLStringToLogical( maxValue ) );
 
         return DataRange.createFromComparable( min, max );
       }

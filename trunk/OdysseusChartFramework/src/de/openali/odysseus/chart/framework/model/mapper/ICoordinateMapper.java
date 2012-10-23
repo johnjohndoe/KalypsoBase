@@ -42,25 +42,26 @@ package de.openali.odysseus.chart.framework.model.mapper;
 
 import org.eclipse.swt.graphics.Point;
 
-import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.util.resource.IPair;
 
 /**
  * @author alibu
  */
-public interface ICoordinateMapper
+public interface ICoordinateMapper<T_Domain, T_Target>
 {
-  IPair<Number, Number> screenToNumeric( Point screenValue );
+  //IDataOperator< ? > getDataOperator( final Class< ? > clazz );
 
-  Point numericToScreen( Number domainValue, Number targetValue );
-
-  IAxis getDomainAxis( );
-
-  IAxis getTargetAxis( );
-
-  Point logicalToScreen( Object domainValue, Object targetValue );
+  IAxis<T_Domain> getDomainAxis( );
 
   Point getScreenSize( );
 
-  IDataOperator< ? > getDataOperator( final Class< ? > clazz );
+  IAxis<T_Target> getTargetAxis( );
+
+  Point logicalToScreen( T_Domain domainValue, T_Target targetValue );
+  
+  Point numericToScreen( Double domainValue, Double targetValue );
+
+  IPair<T_Domain, T_Target> screenToLogical( Point screenValue );
+
+  IPair<Double, Double> screenToNumeric( Point screenValue );
 }

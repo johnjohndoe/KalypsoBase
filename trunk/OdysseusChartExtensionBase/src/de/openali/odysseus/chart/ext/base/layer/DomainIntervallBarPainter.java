@@ -45,9 +45,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 
 import de.openali.odysseus.chart.ext.base.data.AbstractDomainIntervalValueData;
-import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
-import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
 
 /**
  * @author Gernot Belger
@@ -84,10 +82,11 @@ public class DomainIntervallBarPainter implements IBarLayerPainter
     final Object[] domainStartComponent = m_dataContainer.getDomainDataIntervalStart();
     final Object[] domainEndComponent = m_dataContainer.getDomainDataIntervalEnd();
     final Object[] targetComponent = m_dataContainer.getTargetValues();
-    final IDataOperator< ? > dopDomain = new DataOperatorHelper().getDataOperator( domainStartComponent[0].getClass() );
-    final IDataOperator< ? > dopTarget = new DataOperatorHelper().getDataOperator( targetComponent[0].getClass() );
-    if( dopDomain == null || dopTarget == null )
-      return;
+//    
+//    final IDataOperator< ? > dopDomain = new DataOperatorHelper().getDataOperator( domainStartComponent[0].getClass() );
+//    final IDataOperator< ? > dopTarget = new DataOperatorHelper().getDataOperator( targetComponent[0].getClass() );
+//    if( dopDomain == null || dopTarget == null )
+//      return;
 
     for( int i = 0; i < domainStartComponent.length; i++ )
     {

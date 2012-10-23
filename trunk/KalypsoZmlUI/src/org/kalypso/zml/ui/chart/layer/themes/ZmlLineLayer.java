@@ -155,7 +155,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   }
 
   @Override
-  public IDataRange<Number> getDomainRange( )
+  public IDataRange<Double> getDomainRange( )
   {
     return m_range.getDomainRange();
   }
@@ -168,7 +168,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   }
 
   @Override
-  public IDataRange<Number> getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Double> getTargetRange( final IDataRange< ? > domainIntervall )
   {
     return m_range.getTargetRange();
   }
@@ -229,6 +229,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     return visitor.getPoints();
   }
 
+  @SuppressWarnings( "rawtypes" )
   private void paintSinglePoint( final GC gc, final IPair<Number, Number> point )
   {
     final IPointStyle pointStyle = getSinglePointStyle();
@@ -248,6 +249,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     paintManager.paintPoints( points, new NullProgressMonitor() );
   }
 
+  @SuppressWarnings( "rawtypes" )
   private void paintPoints( final GC gc, final IPair<Number, Number>[] points, final IProgressMonitor monitor )
   {
     final Rectangle2D clip = getClip();

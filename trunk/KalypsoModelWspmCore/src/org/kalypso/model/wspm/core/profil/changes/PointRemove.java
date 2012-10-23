@@ -80,7 +80,7 @@ public class PointRemove implements IProfileChange
     {
       if( m_points.length > 0 )
       {
-        m_profil.getSelection().setRange( m_points[0] );
+        m_profil.getSelection().setActivePoints( m_points[0] );
       }
       throw new IllegalProfileOperationException( Messages.getString( "org.kalypso.model.wspm.core.profil.changes.PointRemove.1" ), this ); //$NON-NLS-1$
     }

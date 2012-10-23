@@ -99,12 +99,13 @@ public class DateTimeTickCalculator implements ITickCalculator
   /**
    * Calculates the ticks shown for the given Axis
    */
+  @SuppressWarnings( "rawtypes" )
   @Override
-  public Number[] calcTicks( final GC gc, final IAxis axis, final Number minDisplayInterval, final Point ticklabelSize )
+  public Double[] calcTicks( final GC gc, final IAxis axis, final Number minDisplayInterval, final Point ticklabelSize )
   {
     final IDataRange<Number> numRange = axis.getNumericRange();
     if( numRange == null || numRange.getMin() == null || numRange.getMax() == null )
-      return new Number[] {};
+      return new Double[] {};
 
     final long start = numRange.getMin().longValue();
     final long end = numRange.getMax().longValue();
@@ -120,16 +121,16 @@ public class DateTimeTickCalculator implements ITickCalculator
 
     final int rollOver = calculateRollover( tickCount, maximumTickCount, rollOvers );
 
-    final List<Number> ticks = new ArrayList<>();
-    long tick = getFirstRollValue( axisField, start, end );
-    ticks.add( tick );
+    final List<Double> ticks = new ArrayList<>();
+    Long tick = getFirstRollValue( axisField, start, end );
+    ticks.add( tick.doubleValue() );
     while( tick < end )
     {
       tick = field.add( tick, rollOver );
-      ticks.add( tick );
+      ticks.add( tick.doubleValue() );
     }
 
-    return ticks.toArray( new Number[ticks.size()] );
+    return ticks.toArray( new Double[ticks.size()] );
   }
 
   private int calculateRollover( final int tickCount, final int maximumTickCount, final int[] rollOvers )

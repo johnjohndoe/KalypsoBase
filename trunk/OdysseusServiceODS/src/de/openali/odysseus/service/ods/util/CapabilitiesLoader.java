@@ -29,9 +29,7 @@ import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
 import de.openali.odysseus.chart.factory.config.ChartExtensionLoader;
 import de.openali.odysseus.chart.factory.config.ChartFactory;
 import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
-import de.openali.odysseus.chart.framework.model.data.IOrdinalDataOperator;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -40,7 +38,6 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION;
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
-import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
 import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
 import de.openali.odysseus.service.ods.environment.IODSChart;
 import de.openali.odysseus.service.ods.environment.IODSEnvironment;
@@ -61,7 +58,6 @@ import de.openali.odysseus.service.ods.x020.ODSCapabilitiesDocument;
 import de.openali.odysseus.service.ods.x020.ODSCapabilitiesType;
 import de.openali.odysseus.service.ods.x020.ODSMetaDataDocument;
 import de.openali.odysseus.service.ods.x020.StringRangeDocument.StringRange;
-import de.openali.odysseus.service.ods.x020.StringRangeDocument.StringRange.ValueSet;
 import de.openali.odysseus.service.ods.x020.SymbolOfferingType;
 import de.openali.odysseus.service.ods.x020.SymbolsOfferingType;
 
@@ -169,7 +165,7 @@ public class CapabilitiesLoader
    */
   public ODSCapabilitiesDocument getCapabilitiesDocument( final String sceneId )
   {
-    final ODSCapabilitiesDocument copy = (ODSCapabilitiesDocument) m_odsCapabilities.copy();
+    final ODSCapabilitiesDocument copy = (ODSCapabilitiesDocument)m_odsCapabilities.copy();
     final ODSCapabilitiesType capabilities = copy.getODSCapabilities();
     final ChartsOfferingType charts = capabilities.addNewCharts();
     charts.setChartArray( m_sceneOfferings.get( sceneId ) );
@@ -238,6 +234,7 @@ public class CapabilitiesLoader
     return chartList.toArray( new ChartOfferingType[] {} );
   }
 
+  @SuppressWarnings( "rawtypes" )
   public ChartOfferingType createChartOffering( final IChartModel model, final String scene ) throws OWSException
   {
     final ChartOfferingType xmlChart = ChartOfferingType.Factory.newInstance();
@@ -292,7 +289,7 @@ public class CapabilitiesLoader
     }
 
     final AxesOfferingType xmlAxes = xmlChart.addNewAxes();
-    for( final IAxis axis : model.getMapperRegistry().getAxes() )
+    for( final IAxis< ? > axis : model.getMapperRegistry().getAxes() )
     {
       final AxisOfferingType xmlAxis = xmlAxes.addNewAxis();
       xmlAxis.setId( axis.getIdentifier() );
@@ -319,7 +316,7 @@ public class CapabilitiesLoader
         xmlPos = AxisPositionType.RIGHT;
       xmlAxis.setPosition( xmlPos );
 
-      final IDataRange<Number> numericRange = axis.getNumericRange();
+      final IDataRange<Double> numericRange = axis.getNumericRange();
       final Class< ? > clazz = axis.getDataClass();
 
       if( numericRange == null || numericRange.getMin() == null || numericRange.getMax() == null )
@@ -329,28 +326,26 @@ public class CapabilitiesLoader
       else if( Number.class.isAssignableFrom( clazz ) )
       {
         final NumberRange range = xmlAxis.addNewNumberRange();
-        range.setMinValue( numericRange.getMin().doubleValue() );
-        range.setMaxValue( numericRange.getMax().doubleValue() );
+        range.setMinValue( ((Number)axis.numericToLogical( numericRange.getMin() )).doubleValue() );
+        range.setMaxValue( ((Number)axis.numericToLogical( numericRange.getMax() )).doubleValue() );
       }
+      // FIXME: check if we need the date case
       else if( Calendar.class.isAssignableFrom( clazz ) )
       {
-        final IDataOperator<Calendar> dop = new DataOperatorHelper().getDataOperator( Calendar.class );
         final DateRange range = xmlAxis.addNewDateRange();
-        range.setMinValue( dop.numericToLogical( numericRange.getMin() ) );
-        range.setMaxValue( dop.numericToLogical( numericRange.getMax() ) );
+        range.setMinValue( (Calendar)axis.numericToLogical( numericRange.getMin() ) );
+        range.setMaxValue( (Calendar)axis.numericToLogical( numericRange.getMax() ) );
       }
       else if( String.class.isAssignableFrom( clazz ) )
       {
-        final IDataOperator<String> dop = axis.getDataOperator( String.class );
-
         final StringRange range = xmlAxis.addNewStringRange();
-        range.setMinValue( dop.numericToLogical( numericRange.getMin() ) );
-        range.setMaxValue( dop.numericToLogical( numericRange.getMax() ) );
+        range.setMinValue( (String)axis.numericToLogical( numericRange.getMin() ) );
+        range.setMaxValue( (String)axis.numericToLogical( numericRange.getMax() ) );
 
         /* Alle einzelnen Werte angeben. */
-        final IOrdinalDataOperator<String> odop = (IOrdinalDataOperator<String>) dop;
-        final ValueSet valueSet = range.addNewValueSet();
-        valueSet.setValueArray( odop.getValues() );
+//        final IOrdinalDataOperator<String> odop = (IOrdinalDataOperator<String>)dop;
+//        final ValueSet valueSet = range.addNewValueSet();
+//        valueSet.setValueArray( odop.getValues() );
       }
     }
 

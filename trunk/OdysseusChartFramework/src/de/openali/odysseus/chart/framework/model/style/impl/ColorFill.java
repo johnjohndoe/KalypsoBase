@@ -8,12 +8,12 @@ import de.openali.odysseus.chart.framework.model.style.IFill;
 
 public class ColorFill implements IFill
 {
-
   private RGB m_rgb;
 
   public ColorFill( final RGB rgb )
   {
     m_rgb = rgb;
+
     setFillColor( rgb );
   }
 
@@ -26,13 +26,11 @@ public class ColorFill implements IFill
   public void apply( final GC gc )
   {
     gc.setBackground( OdysseusChartFramework.getDefault().getColorRegistry().getResource( gc.getDevice(), getFillColor() ) );
-
   }
 
   @Override
   public void dispose( )
   {
-
   }
 
   @Override
@@ -45,5 +43,4 @@ public class ColorFill implements IFill
   {
     return m_rgb;
   }
-
 }

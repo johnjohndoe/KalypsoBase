@@ -56,4 +56,12 @@ public class LayerManagerEventHandler extends AbstractEventProvider<ILayerManage
       l.onLayerContentChanged( layer, type );
     }
   }
+
+  public void redrawRequested( )
+  {
+    for( final ILayerManagerEventListener l : getListeners( ILayerManagerEventListener.class ) )
+    {
+      l.redrawRequested();
+    }
+  }
 }

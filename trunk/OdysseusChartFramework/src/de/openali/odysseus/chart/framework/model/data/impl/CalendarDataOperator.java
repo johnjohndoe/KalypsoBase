@@ -53,10 +53,10 @@ public class CalendarDataOperator extends AbstractDataOperator<Calendar>
   }
 
   @Override
-  public Long logicalToNumeric( final Calendar logVal )
+  public Double logicalToNumeric( final Calendar logVal )
   {
     if( logVal != null )
-      return logVal.getTimeInMillis();
+      return Long.valueOf( logVal.getTimeInMillis()).doubleValue();
     return null;
   }
 
@@ -128,6 +128,9 @@ public class CalendarDataOperator extends AbstractDataOperator<Calendar>
     if( value.trim().equals( "" ) )
       return null;
 
+ //   DatatypeConverter.parseDateTime( lexicalXSDDateTime );
+ //   DatatypeConverter.printDateTime( val );
+    
     // erst mal versuchen, ein korrektes Datum zu parsen
     final Calendar cal = Calendar.getInstance();
     // cal.set( Calendar.DST_OFFSET, 0);

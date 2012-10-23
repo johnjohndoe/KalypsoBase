@@ -9,8 +9,14 @@ import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 /**
  * @author kimwerner
  */
-public class ArrayContentAxis extends AbstractAxis
+public class ArrayContentAxis extends AbstractAxis<Integer>
 {
+  @Override
+  public Class<Integer> getDataClass( )
+  {
+    return Integer.class;
+  }
+
   private IAxisContentProvider m_contentProvider = null;
 
   private int m_fixedWidth = -1;
@@ -22,7 +28,7 @@ public class ArrayContentAxis extends AbstractAxis
 
   public ArrayContentAxis( final String id, final POSITION position, final IAxisRenderer axisRenderer, final IAxisContentProvider contentProvider, final int fixedWidth )
   {
-    super( id, position, Integer.class, axisRenderer );
+    super( id, position, axisRenderer, null );
 
     m_contentProvider = contentProvider;
     m_fixedWidth = fixedWidth;
@@ -34,10 +40,10 @@ public class ArrayContentAxis extends AbstractAxis
   }
 
   @Override
-  public int numericToScreen( final Number value )
+  public int numericToScreen( final Double value )
   {
     final int start = getNumericRange().getMin().intValue();
-    return getScreenOffset()+(value.intValue() - start) * m_fixedWidth;
+    return getScreenOffset() + (value.intValue() - start) * m_fixedWidth;
   }
 
   public Object numericToContent( final int index )
@@ -48,9 +54,21 @@ public class ArrayContentAxis extends AbstractAxis
   }
 
   @Override
-  public Number screenToNumeric( final int value )
+  public Double screenToNumeric( final int value )
   {
     // Todo: zurzeit nur intervallRendered mit festem Intervall, und 1. Tick bei screen =0
-    return Math.round( (value-getScreenOffset()) / m_fixedWidth ) + getNumericRange().getMin().intValue();
+    return Math.round( (value - getScreenOffset()) / m_fixedWidth ) + getNumericRange().getMin();
+  }
+
+  @Override
+  public Double logicalToNumeric( Integer value )
+  {
+    return value.doubleValue();
+  }
+
+  @Override
+  public Integer numericToLogical( Double value )
+  {
+    return value.intValue();
   }
 }

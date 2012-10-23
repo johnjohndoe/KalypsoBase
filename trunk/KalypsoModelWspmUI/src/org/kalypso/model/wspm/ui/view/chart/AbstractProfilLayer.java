@@ -182,7 +182,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     if( !Objects.isNull( cmp, pos ) )
     {
       final IProfile profil = getProfil();
-      profil.getSelection().setRange( profil.getPoint( pos ) );
+      profil.getSelection().setActivePoints( profil.getPoint( pos ) );
       profil.getSelection().setActivePointProperty( cmp );
     }
   }
@@ -201,9 +201,9 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     return getProfil() == null ? null : getProfil().hasPointProperty( m_domainComponent );
   }
 
-  // FIXME: does not belong here
+  @SuppressWarnings( { "unchecked", "rawtypes" } )
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Double> getDomainRange( )
   {
     if( getCoordinateMapper() == null )
       return null;
@@ -211,7 +211,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     final IComponent domain = getDomainComponent();
     if( Objects.isNull( domain ) )
       return null;
-
+    final int domainPropertyIndex = m_profil.getResult().indexOfComponent( m_domainComponent );
     final FindMinMaxVisitor visitor = new FindMinMaxVisitor( domain.getId() );
     getProfil().accept( visitor, 1 );
 
@@ -219,8 +219,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     final IProfileRecord max = visitor.getMaximum();
     if( Objects.isNull( min, max ) )
       return null;
-
-    return DataRange.create( (Number)min.getValue( domain ), (Number)max.getValue( domain ) );
+    return new DataRange( min.getValue( domainPropertyIndex ), max.getValue( domainPropertyIndex ) );
   }
 
   protected ILineStyle getLineStyle( )
@@ -337,15 +336,15 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     {
       if( profil == null )
         return -1;
-
       m_targetPropIndex = profil.getResult().indexOfComponent( m_targetRangeProperty );
     }
 
     return m_targetPropIndex;
   }
 
+  @SuppressWarnings( { "rawtypes", "unchecked" } )
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Double> getTargetRange( final IDataRange domainIntervall )
   {
     final int targetPropertyIndex = getTargetPropertyIndex();
     if( getCoordinateMapper() == null || targetPropertyIndex == -1 )
@@ -363,13 +362,10 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     if( Objects.isNull( min, max ) )
       return null;
 
-    final Number minValue = (Number)min.getValue( target );
-    final Number maxValue = (Number)max.getValue( target );
+    final Number minValue = (Number)min.getValue( targetPropertyIndex );
+    final Number maxValue = (Number)max.getValue( targetPropertyIndex );
 
-    if( Math.abs( minValue.doubleValue() - maxValue.doubleValue() ) < 0.001 )
-      return DataRange.create( minValue.doubleValue() - 1, minValue.doubleValue() + 1 );
-
-    return DataRange.create( minValue, maxValue );
+    return new DataRange( minValue, maxValue );
   }
 
   @Override
@@ -417,10 +413,12 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
       return;
 
     if( hint.isSelectionChanged() )
+    {
       getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
 
-    if( hint.isPointPropertiesChanged() )
-      m_targetPropIndex = -1;
+      if( hint.isPointPropertiesChanged() )
+        m_targetPropIndex = -1;
+    }
   }
 
   @Override

@@ -165,7 +165,7 @@ public class WaterlevelRenderSegment
     figures.add( areaFigure );
 
     /* Horizontal line over the whole section */
-    final int screenY = mapper.numericToScreen( 0, getHeight() ).y;
+    final int screenY = mapper.numericToScreen( 0.0, getHeight() ).y;
 
     final PolylineFigure hoverFigure = new PolylineFigure();
     hoverFigure.setStyle( hoverLineStyle );

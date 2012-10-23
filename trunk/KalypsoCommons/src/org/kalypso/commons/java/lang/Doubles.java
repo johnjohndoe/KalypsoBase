@@ -103,6 +103,42 @@ public final class Doubles
     return null;
   }
 
+  public static boolean isNullOrInfinite( final Number... numbers )
+  {
+    final Double[] doubles = new Double[numbers.length];
+    for( int i = 0; i < doubles.length; i++ )
+    {
+      if( numbers[i] == null )
+        doubles[i] = Double.NaN;
+      else if( numbers[i] instanceof Double )
+        doubles[i] = (Double)numbers[i];
+      else
+        doubles[i] = numbers[i].doubleValue();
+    }
+    
+    return isNaN( doubles );
+  }
+
+  /**
+   * Returns <code>true</code>, if one of the given doubles if <code>null</code>, NaN, or Infinite.
+   */
+  public static boolean isNullOrInfinite( final Double... numbers )
+  {
+    if( ArrayUtils.isEmpty( numbers ) )
+      return true;
+    
+    for( final Double number : numbers )
+    {
+      if( Objects.isNull( number ) )
+        return true;
+      
+      if( !com.google.common.primitives.Doubles.isFinite( number ) )
+        return true;
+    }
+    
+    return false;
+  }
+  
   // FIXME bad name!
   public static boolean isNaN( final Double... numbers )
   {

@@ -51,9 +51,6 @@ import org.kalypso.contribs.eclipse.internal.EclipseRCPContributionsPlugin;
  */
 public abstract class SafeRunnable implements ISafeRunnable
 {
-  /**
-   * @see org.eclipse.core.runtime.ISafeRunnable#handleException(java.lang.Throwable)
-   */
   @Override
   public void handleException( final Throwable exception )
   {

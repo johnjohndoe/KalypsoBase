@@ -102,7 +102,7 @@ public class StationLineLayer extends AbstractProfilLayer
 
     final IProfileRecord[] profilPoints = profil.getPoints();
 
-    final IAxis targetAxis = getCoordinateMapper().getTargetAxis();
+    final IAxis<?> targetAxis = getCoordinateMapper().getTargetAxis();
     final int baseLine = targetAxis.numericToScreen( targetAxis.getNumericRange().getMin() );
     for( final IProfileRecord profilPoint : profilPoints )
     {

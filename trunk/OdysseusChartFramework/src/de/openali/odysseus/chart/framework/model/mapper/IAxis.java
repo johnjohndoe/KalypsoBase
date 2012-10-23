@@ -1,5 +1,6 @@
 package de.openali.odysseus.chart.framework.model.mapper;
 
+import de.openali.odysseus.chart.framework.exception.MalformedValueException;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRangeRestriction;
 import de.openali.odysseus.chart.framework.model.impl.IAxisVisitorBehavior;
@@ -15,8 +16,14 @@ import de.openali.odysseus.chart.framework.util.img.TitleTypeBean;
  * 
  * @author burtscher
  */
-public interface IAxis extends IMapper
+public interface IAxis<T> extends IMapper
 {
+  void addLabel( final TitleTypeBean title );
+
+  void clearLabels( );
+
+  IAxisVisitorBehavior getAxisVisitorBehavior( );
+
   /**
    * This is used for configuration purposes: the numeric range has to be mapped to a concrete range in the Chartfile
    * (e.g. to data values). This field is set according to the configuration attribute type from the chartfile, so it
@@ -24,7 +31,7 @@ public interface IAxis extends IMapper
    * 
    * @return class of data type which is intended by this axis
    */
-  Class< ? > getDataClass( );
+  Class<T> getDataClass( );
 
   /**
    * @return axis direction - positive or negative
@@ -39,10 +46,14 @@ public interface IAxis extends IMapper
    */
   String getLabel( );
 
+  TitleTypeBean[] getLabels( );
+
+  IDataRange<T> getLogicalRange( );
+
   /**
    * returns the internally used number range
    */
-  IDataRange<Number> getNumericRange( );
+  IDataRange<Double> getNumericRange( );
 
   /**
    * @return axis position - left, right, top, bottom
@@ -71,20 +82,40 @@ public interface IAxis extends IMapper
 
   int getScreenOffset( );
 
+  // IDataRange<Double> getSelection( );
+
   /**
    * @return true if this axis is used by Layers
    */
   boolean isVisible( );
 
+  Double logicalToNumeric( T value );
+
+  int logicalToScreen( T value );
+
+  String logicalToXMLString( T value );
+
+  Double normalizedToNumeric( Double value );
+
+  int normalizedToScreen( Double value );
+
+  T numericToLogical( Double value );
+
+  Double numericToNormalized( Double value );
+
   /**
    * transforms a numeric value into a screen position
    */
-  int numericToScreen( Number value );
+  int numericToScreen( Double value );
+
+  T screenToLogical( int value );
+
+  Double screenToNormalized( int value );
 
   /**
    * transforms a screen position into a numeric value
    */
-  Number screenToNumeric( int value );
+  Double screenToNumeric( int value );
 
   void setDirection( DIRECTION dir );
 
@@ -94,18 +125,14 @@ public interface IAxis extends IMapper
    */
   void setLabel( String label );
 
+  void setLogicalRange( IDataRange<T> range );
+
   /**
    * sets the internally used number range
    */
-  void setNumericRange( IDataRange<Number> range );
+  void setNumericRange( IDataRange<Double> range );
 
   void setPreferredAdjustment( IAxisAdjustment adj );
-
-  TitleTypeBean[] getLabels( );
-
-  void addLabel( final TitleTypeBean title );
-
-  void clearLabels( );
 
   /**
    * sets the internally used absolute Min-Max-Value
@@ -120,9 +147,7 @@ public interface IAxis extends IMapper
 
   void setVisible( final boolean visible );
 
-  void setSelection( IDataRange<Number> range );
+  // void setSelection( IDataRange<Double> range );
 
-  IDataRange<Number> getSelection( );
-
-  IAxisVisitorBehavior getAxisVisitorBehavior( );
+  T XMLStringToLogical( String value ) throws MalformedValueException;
 }

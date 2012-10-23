@@ -356,6 +356,8 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
 
   private boolean isImageURL( final String text )
   {// FIXME: WHAT IS THIS?!
+    //Falls ein Image (Icon) als Titel gezeichnet werden soll, wird es zurzeit mit einer URL referenziert.
+    //TODO:ein ImageObject statt eines String übergeben
     return text.startsWith( "URL:" );
   }
 

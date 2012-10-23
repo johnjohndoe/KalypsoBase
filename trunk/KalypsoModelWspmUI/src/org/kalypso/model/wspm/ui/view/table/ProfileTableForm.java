@@ -196,7 +196,7 @@ public class ProfileTableForm implements ITupleResultViewerProvider
         final IProfileRecord[] selection = toPoints( viewer.getSelection() );
         if( ArrayUtils.isNotEmpty( selection ) )
         {
-          getProfil().getSelection().setRange( selection );
+          getProfil().getSelection().setActivePoints( selection );
         }
       }
     } );
@@ -378,7 +378,7 @@ public class ProfileTableForm implements ITupleResultViewerProvider
     if( ArrayUtils.isNotEmpty( records ) )
     {
       final IProfile profile = m_selection.getProfile();
-      profile.getSelection().setRange( records );
+      profile.getSelection().setActivePoints( records );
     }
   }
 

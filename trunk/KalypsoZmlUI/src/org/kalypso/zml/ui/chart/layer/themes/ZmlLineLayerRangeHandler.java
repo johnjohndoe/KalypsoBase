@@ -72,16 +72,16 @@ public class ZmlLineLayerRangeHandler
 
   private final ZmlLineLayer m_layer;
 
-  private IDataRange<Number> m_domainRange = null;
+  private IDataRange<Double> m_domainRange = null;
 
-  private IDataRange<Number> m_targetRange = null;
+  private IDataRange<Double> m_targetRange = null;
 
   public ZmlLineLayerRangeHandler( final ZmlLineLayer layer )
   {
     m_layer = layer;
   }
 
-  public synchronized IDataRange<Number> getDomainRange( )
+  public synchronized IDataRange<Double> getDomainRange( )
   {
     if( m_domainRange == null )
       recalculateRanges();
@@ -89,7 +89,7 @@ public class ZmlLineLayerRangeHandler
     return m_domainRange;
   }
 
-  public synchronized IDataRange<Number> getTargetRange( )
+  public synchronized IDataRange<Double> getTargetRange( )
   {
     if( m_targetRange == null )
       recalculateRanges();
@@ -97,6 +97,7 @@ public class ZmlLineLayerRangeHandler
     return m_targetRange;
   }
 
+  @SuppressWarnings( { "unchecked", "rawtypes" } )
   private void recalculateRanges( )
   {
     try
@@ -115,8 +116,8 @@ public class ZmlLineLayerRangeHandler
       final Number minTarget = min.getTarget();
       final Number maxTarget = max.getTarget();
 
-      m_domainRange = DataRange.create( minDomain, maxDomain );
-      m_targetRange = DataRange.create( minTarget, maxTarget );
+      m_domainRange = new DataRange (minDomain, maxDomain );
+      m_targetRange = new DataRange( minTarget, maxTarget );
     }
     catch( final SensorException e )
     {

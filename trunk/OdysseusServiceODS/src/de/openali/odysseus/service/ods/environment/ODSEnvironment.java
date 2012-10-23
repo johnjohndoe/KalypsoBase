@@ -131,11 +131,11 @@ public class ODSEnvironment implements IODSEnvironment
     }
 
     // relative search, fallback test
-    final String fileString = FrameworkUtilities.getProperty( IODSConstants.ODS_CONFIG_FILENAME_KEY, IODSConstants.ODS_CONFIG_FILENAME_DEFAULT );
-    final File relPath = new File( pathString, fileString );
-    final URL url = ConfigUtils.findCentralConfigLocation( relPath.toString() );
+//    final String fileString = FrameworkUtilities.getProperty( IODSConstants.ODS_CONFIG_FILENAME_KEY, IODSConstants.ODS_CONFIG_FILENAME_DEFAULT );
+//    final File relPath = new File( pathString, fileString );
+    final URL url = ConfigUtils.findCentralConfigLocation( pathString );
     final File file = new File( url.getPath() );
-    m_configDir = file.getParentFile();
+    m_configDir = file;
   }
 
   private void checkConfigFile( ) throws IOException

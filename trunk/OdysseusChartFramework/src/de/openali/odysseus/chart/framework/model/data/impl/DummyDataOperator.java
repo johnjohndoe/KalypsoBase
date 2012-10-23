@@ -98,7 +98,7 @@ public class DummyDataOperator<T> implements IDataOperator<T>
    * @see de.openali.odysseus.chart.framework.model.data.IDataOperator#logicalToNumeric(java.lang.Object)
    */
   @Override
-  public Number logicalToNumeric( final T logVal )
+  public Double logicalToNumeric( final T logVal )
   {
     return Double.NaN;
   }

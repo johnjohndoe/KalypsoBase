@@ -67,6 +67,7 @@ import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 /**
  * @author Dirk Kuch
  */
+// FIXME: bad name; has nothing to do with zml
 public class ZmlSelectionLayer extends AbstractChartLayer
 {
   private final ILineStyle m_lineStyle;
@@ -98,6 +99,7 @@ public class ZmlSelectionLayer extends AbstractChartLayer
       paintMultiSelect( gc );
   }
 
+  @SuppressWarnings( { "unchecked", "rawtypes" } )
   private void paintMultiSelect( final GC gc )
   {
     final ICoordinateMapper mapper = getCoordinateMapper();
@@ -105,11 +107,11 @@ public class ZmlSelectionLayer extends AbstractChartLayer
     final IAxis domainAxis = mapper.getDomainAxis();
     final IAxis targetAxis = mapper.getTargetAxis();
 
-    final IDataRange<Number> domainRange = domainAxis.getNumericRange();
-    final IDataRange<Number> targetRange = targetAxis.getNumericRange();
+    final IDataRange<Double> domainRange = domainAxis.getNumericRange();
+    final IDataRange<Double> targetRange = targetAxis.getNumericRange();
 
-    final Number min = domainRange.getMin();
-    final Number max = domainRange.getMax();
+    final Double min = domainRange.getMin();
+    final Double max = domainRange.getMax();
     if( Objects.isNull( min, max ) )
       return;
 
@@ -117,8 +119,8 @@ public class ZmlSelectionLayer extends AbstractChartLayer
     if( !dateRange.intersects( m_selectedDateRange ) )
       return;
 
-    final Integer x1 = Math.abs( domainAxis.numericToScreen( m_selectedDateRange.getFrom().getTime() ) );
-    final Integer x2 = Math.abs( domainAxis.numericToScreen( m_selectedDateRange.getTo().getTime() ) );
+    final Integer x1 = Math.abs( domainAxis.logicalToScreen( m_selectedDateRange.getFrom().getTime() ) );
+    final Integer x2 = Math.abs( domainAxis.logicalToScreen( m_selectedDateRange.getTo().getTime() ) );
 
     final Integer yMin = targetAxis.numericToScreen( targetRange.getMin() );
     final Integer yMax = targetAxis.numericToScreen( targetRange.getMax() );
@@ -136,6 +138,7 @@ public class ZmlSelectionLayer extends AbstractChartLayer
     figure.paint( gc );
   }
 
+  @SuppressWarnings( "rawtypes" )
   private void paintSingleSelect( final GC gc )
   {
     final ICoordinateMapper mapper = getCoordinateMapper();
@@ -143,11 +146,11 @@ public class ZmlSelectionLayer extends AbstractChartLayer
     final IAxis domainAxis = mapper.getDomainAxis();
     final IAxis targetAxis = mapper.getTargetAxis();
 
-    final IDataRange<Number> domainRange = domainAxis.getNumericRange();
-    final IDataRange<Number> targetRange = targetAxis.getNumericRange();
+    final IDataRange<Double> domainRange = domainAxis.getNumericRange();
+    final IDataRange<Double> targetRange = targetAxis.getNumericRange();
 
-    final Number min = domainRange.getMin();
-    final Number max = domainRange.getMax();
+    final Double min = domainRange.getMin();
+    final Double max = domainRange.getMax();
     if( Objects.isNull( min, max ) )
       return;
 
@@ -192,13 +195,13 @@ public class ZmlSelectionLayer extends AbstractChartLayer
   }
 
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Double> getDomainRange( )
   {
     return null;
   }
 
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Double> getTargetRange( final IDataRange< ? > domainIntervall )
   {
     return null;
   }

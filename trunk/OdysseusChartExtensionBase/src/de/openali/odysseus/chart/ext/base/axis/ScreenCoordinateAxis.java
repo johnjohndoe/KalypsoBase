@@ -8,12 +8,28 @@ import de.openali.odysseus.chart.framework.model.mapper.IScreenAxis;
 
 /**
  * @author kimwerner
+ * 
+ * ist eher eine normalisierte Achse: 0 gibt den Startwert in pixeln der Achse, 1 den Endpunkt.
+ * @deprecated use {@link AbstractAxis#logicalToScreen(Object)} instead
  */
-public class ScreenCoordinateAxis extends AbstractAxis implements IScreenAxis
+@Deprecated
+public class ScreenCoordinateAxis extends AbstractAxis<Integer> implements IScreenAxis<Integer>
 {
   public ScreenCoordinateAxis( final String id, final POSITION pos )
   {
-    super( id, pos, Double.class, null );
+    super( id, pos, null, null );
+  }
+
+  @Override
+  public Class<Integer> getDataClass( )
+  {
+    return Integer.class;
+  }
+
+  @Override
+  public IDataRange<Double> getNumericRange( )
+  {
+    return new DataRange<>( 0.0, 1.0 );
   }
 
   @Override
@@ -24,13 +40,19 @@ public class ScreenCoordinateAxis extends AbstractAxis implements IScreenAxis
   }
 
   @Override
-  public IDataRange<Number> getNumericRange( )
+  public Double logicalToNumeric( Integer value )
   {
-    return new DataRange<Number>( 0, 1 );
+    return value.doubleValue();
   }
 
   @Override
-  public int numericToScreen( final Number value )
+  public Integer numericToLogical( Double value )
+  {
+    return value.intValue();
+  }
+
+  @Override
+  public int numericToScreen( final Double value )
   {
     final DIRECTION direction = getDirection();
     switch( direction )
@@ -46,24 +68,25 @@ public class ScreenCoordinateAxis extends AbstractAxis implements IScreenAxis
     }
   }
 
+  
   @Override
-  public Number screenToNumeric( final int value )
+  public Double screenToNumeric( final int value )
   {
     final DIRECTION direction = getDirection();
     switch( direction )
     {
       case POSITIVE:
-        return value;
+        return new Integer(value).doubleValue();
 
       case NEGATIVE:
-        return getScreenHeight() - value;
+        return getScreenHeight() - new Integer(value).doubleValue();
 
       default:
         throw new IllegalArgumentException();
     }
   }
 
-  @SuppressWarnings("rawtypes")
+  @SuppressWarnings( "rawtypes" )
   @Override
   public void setNumericRange( final IDataRange range )
   {

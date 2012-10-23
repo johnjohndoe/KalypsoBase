@@ -69,8 +69,8 @@ public class InsertProfilePointCommandHandler extends AbstractHandler implements
     if( chart == null )
       return Status.CANCEL_STATUS;
 
-    final IChartHandlerManager handler = chart.getPlotHandler();
-    handler.activatePlotHandler( new InsertProfilePointChartHandler( chart ) );
+    final IChartHandlerManager manager = chart.getPlotHandler();
+    manager.activatePlotHandler( new InsertProfilePointChartHandler( chart ) );
 
     final IChartPart part = ChartHandlerUtilities.findChartComposite( context );
     if( part != null )

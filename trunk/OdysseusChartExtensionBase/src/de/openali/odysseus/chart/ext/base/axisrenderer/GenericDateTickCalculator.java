@@ -72,8 +72,9 @@ public class GenericDateTickCalculator implements ITickCalculator
   /**
    * Calculates the ticks shown for the given Axis
    */
+  @SuppressWarnings( "rawtypes" )
   @Override
-  public Number[] calcTicks( final GC gc, final IAxis axis, final Number minDisplayInterval, final Point ticklabelSize )
+  public Double[] calcTicks( final GC gc, final IAxis axis, final Number minDisplayInterval, final Point ticklabelSize )
   {
     // TickLabelGröße + 2 wegen Rundungsfehlern beim positionieren
     final int minScreenInterval;
@@ -91,7 +92,7 @@ public class GenericDateTickCalculator implements ITickCalculator
 // int screenMin, screenMax;
     final IDataRange<Number> range = axis.getNumericRange();
     if( range == null )
-      return new Number[] {};
+      return new Double[] {};
 //
 // if( axis.getPosition().getOrientation() == ORIENTATION.HORIZONTAL )
 // {
@@ -128,7 +129,7 @@ public class GenericDateTickCalculator implements ITickCalculator
     final Number min = range.getMin();
     final Number max = range.getMax();
     if( min == null || max == null )
-      return new Number[] {};
+      return new Double[] {};
 
     final long logicalMin = min.longValue();// axis.screenToNumeric( screenMin ).longValue();
     final long logicalMax = max.longValue();// axis.screenToNumeric( screenMax ).longValue();
@@ -169,17 +170,17 @@ public class GenericDateTickCalculator implements ITickCalculator
       oldi = i;
     }
 
-    final SortedSet<Number> realticks = new TreeSet<>();
+    final SortedSet<Double> realticks = new TreeSet<>();
     for( final Long tick : ticks )
     {
       final long ticklv = tick.longValue();
       if( ticklv >= logicalMin && ticklv <= logicalMax )
       {
-        realticks.add( tick );
+        realticks.add( tick.doubleValue() );
       }
     }
 
-    final Number[] numTicks = realticks.toArray( new Number[] {} );
+    final Double[] numTicks = realticks.toArray( new Double[] {} );
 
     return numTicks;
   }

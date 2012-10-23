@@ -3,12 +3,9 @@ package de.openali.odysseus.chart.ext.base.layer;
 import java.util.Map;
 
 import de.openali.odysseus.chart.ext.base.data.AbstractDomainIntervalValueData;
-import de.openali.odysseus.chart.framework.model.data.DataRange;
-import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILayerProvider;
-import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
 import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
@@ -50,25 +47,15 @@ public class DomainIntervalBarLayer extends AbstractBarLayer
   }
 
   @Override
-  public IDataRange< ? > getTargetRange( final IDataRange< ? > domainIntervall )
+  public IDataRange<Double> getTargetRange( final IDataRange< ? > domainIntervall )
   {
-    final IDataRange< ? > targetRange = getDataContainer().getTargetRange();
-
-    if( targetRange == null )
-      return null;
-
-    final IDataOperator dop = new DataOperatorHelper().getDataOperator( getTargetAxis().getDataClass() );
-    return DataRange.create( dop.logicalToNumeric( targetRange.getMin() ), dop.logicalToNumeric( targetRange.getMax() ) );
+    return getNumericRange( getTargetAxis(), getDataContainer().getTargetRange() );
   }
 
   @Override
-  public IDataRange< ? > getDomainRange( )
+  public IDataRange<Double> getDomainRange( )
   {
-    final IDataRange< ? > domainRange = getDataContainer().getDomainRange();
-    if( domainRange == null )
-      return null;
-    final IDataOperator dop = new DataOperatorHelper().getDataOperator( getDomainAxis().getDataClass() );
-    return DataRange.create( dop.logicalToNumeric( domainRange.getMin() ), dop.logicalToNumeric( domainRange.getMax() ) );
+    return getNumericRange( getDomainAxis(), getDataContainer().getDomainRange() );
   }
 
   protected EditInfo getEditInfo( @SuppressWarnings( "unused" ) final int index )

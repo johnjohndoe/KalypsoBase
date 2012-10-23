@@ -48,6 +48,11 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
  */
 public abstract class AbstractLayerManagerEventListener implements ILayerManagerEventListener
 {
+  @Override
+  public void redrawRequested( )
+  {
+  }
+
   /**
    * not implemented - override in subclass if needed
    */

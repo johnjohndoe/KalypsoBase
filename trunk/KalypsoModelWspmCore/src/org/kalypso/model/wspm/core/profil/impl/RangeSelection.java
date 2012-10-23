@@ -49,6 +49,7 @@ import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
 import org.kalypso.model.wspm.core.profil.visitors.FindMinMaxVisitor;
 import org.kalypso.model.wspm.core.profil.visitors.ProfileVisitors;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
+import org.kalypso.model.wspm.core.profil.wrappers.ProfileRecord;
 import org.kalypso.observation.result.IComponent;
 
 /**
@@ -95,7 +96,12 @@ public class RangeSelection implements IRangeSelection
       return;
 
     m_selection = selection;
-    final ProfileChangeHint hint = new ProfileChangeHint( ProfileChangeHint.SELECTION_CHANGED );
+    for( final IProfileRecord record : m_profile.getPoints() )
+    {
+      ((ProfileRecord)record).setSelected( selection.contains( record.getBreite() ) );
+    }
+    final ProfileChangeHint hint = new ProfileChangeHint( ProfileChangeHint.SELECTION_CHANGED | ProfileChangeHint.ACTIVE_POINTS_CHANGED );
+    hint.setObjectDataChanged();
     m_profile.fireProfilChanged( hint );
   }
 
@@ -108,15 +114,24 @@ public class RangeSelection implements IRangeSelection
     return ProfileVisitors.findPointsBetween( m_profile, m_selection, true );
   }
 
-  @Override
-  public void setRange( final IProfileRecord... points )
+  public final void setActivePointsInternal( final IProfileRecord... points )
   {
-    if( ArrayUtils.isEmpty( points ) )
+    for( final IProfileRecord record : m_profile.getPoints() )
     {
-      m_selection = null;
-      m_profile.fireProfilChanged( new ProfileChangeHint( ProfileChangeHint.SELECTION_CHANGED ) );
+      ((ProfileRecord)record).setSelected( false );
     }
-    else if( ArrayUtils.getLength( points ) == 1 )
+    for( final IProfileRecord record : points )
+    {
+      ((ProfileRecord)record).setSelected( true );
+    }
+    m_profile.fireProfilChanged( new ProfileChangeHint( ProfileChangeHint.ACTIVE_POINTS_CHANGED ) );
+  }
+
+  @Override
+  public void setActivePoints( final IProfileRecord... points )
+  {
+    setActivePointsInternal( points );
+    if( ArrayUtils.getLength( points ) == 1 )
     {
       final IProfileRecord point = points[0];
       final Double width = point.getBreite();
