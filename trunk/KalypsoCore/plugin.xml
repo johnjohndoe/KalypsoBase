@@ -198,5 +198,11 @@
           file-extensions="gml,gmt,gmv,gft,gtt,gmc,ott,odt,zml,sld">
     </file-association>
  </extension>
+ <extension
+       point="org.geotools.customCRSProvider">
+    <customCRSProvider
+          class="org.kalypso.core.util.KalypsoCRSProvider">
+    </customCRSProvider>
+ </extension>
 
 </plugin>

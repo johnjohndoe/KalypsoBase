@@ -20,12 +20,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/xmlbeans-2.5/xbean.jar" sourcepath="lib/xmlbeans-2.5/src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/xmlbeans-2.5/xmlbeans-qname.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xmlbeans-2.5/xmlpublic.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/poi-2.6/poi-bin-3.6-20091214/poi-3.6/poi-3.6-20091214.jar" sourcepath="lib/poi-2.6/poi-src-3.6-20091214.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/poi-2.6/poi-bin-3.6-20091214/poi-3.6/poi-contrib-3.6-20091214.jar" sourcepath="lib/poi-2.6/poi-src-3.6-20091214.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/poi-2.6/poi-bin-3.6-20091214/poi-3.6/poi-examples-3.6-20091214.jar" sourcepath="lib/poi-2.6/poi-src-3.6-20091214.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/poi-2.6/poi-bin-3.6-20091214/poi-3.6/poi-ooxml-3.6-20091214.jar" sourcepath="lib/poi-2.6/poi-src-3.6-20091214.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/poi-2.6/poi-bin-3.6-20091214/poi-3.6/poi-ooxml-schemas-3.6-20091214.jar" sourcepath="lib/poi-2.6/poi-src-3.6-20091214.zip"/>
-	<classpathentry exported="true" kind="lib" path="lib/poi-2.6/poi-bin-3.6-20091214/poi-3.6/poi-scratchpad-3.6-20091214.jar" sourcepath="lib/poi-2.6/poi-src-3.6-20091214.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/jregex/jregex1.2_01.jar" sourcepath="lib/jregex/jregex1.2_01-src.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jai-1_1_3/jai-1_1_3/lib/jai_codec.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jai-1_1_3/jai-1_1_3/lib/jai_core.jar" sourcepath="lib/jai-1_1_3/jai-1_1_3/lib/jai_core_src.zip"/>
