@@ -148,7 +148,7 @@ public final class XMLUtilities
   public static String getNameSpaceForPrefix( final Element context, final String prefix )
   {
     // TODO: why not just the next line?
-// return context.lookupNamespaceURI( prefix );
+    // return context.lookupNamespaceURI( prefix );
 
     final String prefixDeclarationNamespace = "http://www.w3.org/2000/xmlns/";
     if( prefix.equals( context.getPrefix() ) )
@@ -170,7 +170,7 @@ public final class XMLUtilities
 // }
     final Node parentNode = context.getParentNode();
     if( parentNode != null && parentNode instanceof Element )
-      return getNameSpaceForPrefix( (Element) parentNode, prefix );
+      return getNameSpaceForPrefix( (Element)parentNode, prefix );
     return null;
   }
 

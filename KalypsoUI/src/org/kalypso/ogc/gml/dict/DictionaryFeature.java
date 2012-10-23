@@ -60,13 +60,12 @@ import org.kalypsodeegree_impl.gml.binding.commons.NamedFeatureHelper;
  * There are two reasons for a new implementation:
  * </p>
  * <p>
- * 1) This distinguishes between separate calls to {@link org.kalypso.ogc.gml.dict.DictionaryCatalog#getEntry(String)},
- * so releasing works fine.
+ * 1) This distinguishes between separate calls to {@link org.kalypso.ogc.gml.dict.DictionaryCatalog#getEntry(String)}, so releasing works fine.
  * </p>
  * <p>
  * 2) This feature does not support change of any values, which is prohibited for dictionary entries.
  * </p>
- *
+ * 
  * @author Gernot Belger
  */
 public class DictionaryFeature implements Feature
@@ -229,7 +228,7 @@ public class DictionaryFeature implements Feature
   {
     final Object property = m_feature.getProperty( NamedFeatureHelper.GML_LOCATION );
     if( property instanceof GM_Object )
-      return (GM_Object) property;
+      return (GM_Object)property;
 
     return null;
   }
