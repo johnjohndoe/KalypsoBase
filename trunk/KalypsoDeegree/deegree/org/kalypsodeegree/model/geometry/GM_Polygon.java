@@ -15,11 +15,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
  * interface-compatibility to deegree is wanted but not retained always.
- * 
+ *
  * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
@@ -45,21 +45,20 @@ import org.kalypso.commons.xml.NS;
  * <p>
  * -----------------------------------------------------
  * </p>
- * 
+ *
  * @author Andreas Poth
  * @version $Revision$ $Date$
  *          <p>
  */
-
 public interface GM_Polygon<T extends GM_AbstractSurfacePatch> extends GM_AbstractSurface<T>, GM_GenericSurface, ISurfacePatchVisitable<T>
 {
-  QName SURFACE_ELEMENT = new QName( NS.GML3, "_Surface" ); //$NON-NLS-1$
+  QName POLYGON_ELEMENT = new QName( NS.GML3, "Polygon" ); //$NON-NLS-1$
 
-  public T getSurfacePatch( );
+  T getSurfacePatch( );
 
   /**
    * Use getSurfacePatch() instead
    */
   @Override
-  public T get( int index );
+  T get( int index );
 }

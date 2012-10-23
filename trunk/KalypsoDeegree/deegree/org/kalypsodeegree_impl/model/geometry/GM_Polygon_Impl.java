@@ -37,15 +37,12 @@ package org.kalypsodeegree_impl.model.geometry;
 
 import java.util.Iterator;
 
-import javax.xml.namespace.QName;
-
 import org.apache.commons.collections.iterators.SingletonIterator;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.transformation.transformer.GeoTransformerException;
@@ -86,8 +83,6 @@ public class GM_Polygon_Impl<T extends GM_AbstractSurfacePatch> extends GM_Abstr
   private final static long serialVersionUID = -2148069106391096842L;
 
   private T m_patch;
-
-  public static final QName POLYGON_ELEMENT = new QName( NS.GML3, "Polygon" ); //$NON-NLS-1$
 
   /**
    * initializes the surface with default orientation submitting one surface patch.

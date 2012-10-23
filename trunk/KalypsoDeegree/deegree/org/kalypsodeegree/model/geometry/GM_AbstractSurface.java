@@ -15,16 +15,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  * history:
- * 
+ *
  * Files in this package are originally taken from deegree and modified here
  * to fit in kalypso. As goals of kalypso differ from that one in deegree
- * interface-compatibility to deegree is wanted but not retained always. 
- * 
- * If you intend to use this software in other ways than in kalypso 
+ * interface-compatibility to deegree is wanted but not retained always.
+ *
+ * If you intend to use this software in other ways than in kalypso
  * (e.g. OGC-web services), you should consider the latest version of deegree,
  * see http://www.deegree.org .
  *
- * all modifications are licensed as deegree, 
+ * all modifications are licensed as deegree,
  * original copyright:
  *
  * Copyright (C) 2001 by:
@@ -38,18 +38,23 @@ package org.kalypsodeegree.model.geometry;
 
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
+import org.kalypso.commons.xml.NS;
+
 /**
  * <p>
  * -----------------------------------------------------
  * </p>
- * 
+ *
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @version $Revision$ $Date$
  *          <p>
  */
-
 public interface GM_AbstractSurface<T extends GM_AbstractSurfacePatch> extends GM_AbstractGeometricPrimitive, List<T>
 {
+  QName SURFACE_ELEMENT = new QName( NS.GML3, "_Surface" ); //$NON-NLS-1$
+
   /**
    * returns the boundary of the surface
    */
