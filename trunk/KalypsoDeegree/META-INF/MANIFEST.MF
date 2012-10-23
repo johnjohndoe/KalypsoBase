@@ -27,12 +27,13 @@ Bundle-ClassPath: lib/batik/lib/batik-anim.jar,
  lib/xtiff-jai/xtiff-jai.jar,
  .
 Bundle-Vendor: http://sourceforge.net/projects/kalypsobase/
-Require-Bundle: org.junit4;resolution:=optional,
+Require-Bundle: com.infomatiq.jsi;visibility:=reexport,
+ org.geotools;visibility:=reexport,
+ org.j3d,
+ org.junit4;resolution:=optional,
  org.kalypso.contribs.ogc31,
  org.kalypso.deegree2;visibility:=reexport,
- org.kalypso.geotools;visibility:=reexport,
- org.kalypso.gmlschema;visibility:=reexport,
- com.infomatiq.jsi;bundle-version="1.0.0";visibility:=reexport
+ org.kalypso.gmlschema;visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.kalypsodeegree.KalypsoDeegreePlugin
 Export-Package: org.kalypso.deegree.binding.gml,

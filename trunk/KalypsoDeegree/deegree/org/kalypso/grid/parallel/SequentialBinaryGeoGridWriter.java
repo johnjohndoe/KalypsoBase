@@ -46,8 +46,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-import org.deegree.model.spatialschema.ByteUtils;
 import org.kalypso.grid.BinaryGeoGrid;
+import org.kalypsodeegree.model.geometry.ByteUtils;
 
 /**
  * @author barbarins

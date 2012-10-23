@@ -46,15 +46,16 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 
+import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.kalypso.contribs.java.xml.XMLUtilities;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
@@ -149,7 +150,7 @@ public final class XMLTools
       {
         if( nl.item( i ) instanceof Element )
         {
-          element = (Element) nl.item( i );
+          element = (Element)nl.item( i );
           final String s = element.getNamespaceURI();
           if( s == null && namespace == null || namespace != null && namespace.equals( s ) )
           {
@@ -195,7 +196,7 @@ public final class XMLTools
       {
         if( nl.item( i ) instanceof Element )
         {
-          final Element element = (Element) nl.item( i );
+          final Element element = (Element)nl.item( i );
 
           final String s = element.getNamespaceURI();
           if( s == null && namespace == null || namespace != null && namespace.equals( s ) )
@@ -235,7 +236,7 @@ public final class XMLTools
       {
         if( nl.item( i ) instanceof Element )
         {
-          element = (Element) nl.item( i );
+          element = (Element)nl.item( i );
 
           final String s = element.getNamespaceURI();
 
@@ -312,39 +313,40 @@ public final class XMLTools
    * @param namespace
    * @param node
    */
-  public static QName getQNameValue( final String name, final String namespace, final Node node )
+  public static QName getQNameValue( final Element element )
   {
-    final Element element = getChildByName( name, namespace, node );
     if( element == null )
       return null;
+
     final String value = getValue( element );
+    if( StringUtils.isBlank( value ) )
+      return null;
+
     // hack to build a qName from string presentation (QName.toString())
     // this is needed as the XML-SchemaType is still xs:string and not xs:QName
     // according to Markus U. Müller (OGC SLD-Editor) this will change in the next version in SLD Standard
     final int pos = value.indexOf( '}' );
     if( value.startsWith( "{" ) && pos > 0 )
-    {
-      final String namespaceURI = value.substring( 1, pos );
-      final String localName = value.substring( pos + 1 );
-      return new QName( namespaceURI, localName );
-    }
+      return QName.valueOf( value );
 
-    if( "".equals( value ) )
-      return null;
+    QName prefixedName = parsePrefixedQName( value );
+    String prefix = prefixedName.getPrefix();
+    final String namespaceURI = element.lookupNamespaceURI( prefix );
+    return new QName( namespaceURI, prefixedName.getLocalPart(), prefix );
+  }
 
-    final int split = value.lastIndexOf( ":" );
-    if( split < 1 )
-    {
-      final String namespaceURI = element.getNamespaceURI();
-      final String localName = value;
-      return new QName( namespaceURI, localName );
-    }
-    final String prefix = value.substring( 0, split );
-    final String localPart = value.substring( split + 1 );
-    final String namespaceURI = XMLUtilities.getNameSpaceForPrefix( element, prefix );
-    if( namespaceURI != null && namespaceURI.length() > 0 )
-      return new QName( namespaceURI, localPart, prefix );
-    return null;
+  /**
+   * Parses the submitted {@link String} as a {@link QName}.<br/>
+   * The string must be of form <code>prefix:localPart</code>.
+   * The reuturned qname alsways has namespace {@link XMLConstants#NULL_NS_URI}.
+   */
+  public static QName parsePrefixedQName( String prefixed )
+  {
+    String[] tmp = StringUtils.split( prefixed, ":", 2 ); //$NON-NLS-1$
+    if( tmp.length == 2 )
+      return new QName( XMLConstants.NULL_NS_URI, tmp[1], tmp[0] );
+    else
+      return new QName( prefixed );
   }
 
   /**
@@ -448,7 +450,7 @@ public final class XMLTools
 
     if( atts != null )
     {
-      final Attr attribute = (Attr) atts.getNamedItem( name );
+      final Attr attribute = (Attr)atts.getNamedItem( name );
 
       if( attribute != null )
       {
@@ -477,7 +479,7 @@ public final class XMLTools
 
     if( atts != null )
     {
-      final Attr attribute = (Attr) atts.getNamedItem( name );
+      final Attr attribute = (Attr)atts.getNamedItem( name );
 
       if( attribute != null )
       {
@@ -514,7 +516,7 @@ public final class XMLTools
 
     if( atts != null )
     {
-      final Attr attribute = (Attr) atts.getNamedItemNS( namespace, name );
+      final Attr attribute = (Attr)atts.getNamedItemNS( namespace, name );
 
       if( attribute != null )
       {
@@ -572,7 +574,7 @@ public final class XMLTools
       return null;
     }
 
-    final Attr a = (Attr) atts.getNamedItem( attrName );
+    final Attr a = (Attr)atts.getNamedItem( attrName );
 
     if( a != null )
     {
@@ -595,7 +597,7 @@ public final class XMLTools
       return null;
     }
 
-    final Attr a = (Attr) atts.getNamedItemNS( namespace, attrName );
+    final Attr a = (Attr)atts.getNamedItemNS( namespace, attrName );
 
     if( a != null )
     {
@@ -687,8 +689,7 @@ public final class XMLTools
    * @throws IOException
    * @throws SAXException
    * @deprecated Probably code which uses this method is not safe for two reasons: the reader only gets closed if no
-   *             exception is thrown, second probably the charset is not correctly set. Use {@link #parse(InputStream)}
-   *             instead, charset encoding is set inside the xml-file.
+   *             exception is thrown, second probably the charset is not correctly set. Use {@link #parse(InputStream)} instead, charset encoding is set inside the xml-file.
    */
   @Deprecated
   public static Document parse( final Reader reader ) throws IOException, SAXException
@@ -755,7 +756,7 @@ public final class XMLTools
     {
       for( int i = 0; i < attr.getLength(); i++ )
       {
-        ((Element) dest).setAttribute( attr.item( i ).getNodeName(), attr.item( i ).getNodeValue() );
+        ((Element)dest).setAttribute( attr.item( i ).getNodeName(), attr.item( i ).getNodeValue() );
       }
     }
 
@@ -802,7 +803,7 @@ public final class XMLTools
 
     if( dest instanceof Document )
     {
-      dDoc = (Document) dest;
+      dDoc = (Document)dest;
     }
     else
     {
@@ -839,7 +840,7 @@ public final class XMLTools
       {
         if( nl.item( i ) instanceof Element )
         {
-          element = (Element) nl.item( i );
+          element = (Element)nl.item( i );
 
           break;
         }
@@ -887,7 +888,7 @@ public final class XMLTools
       {
         if( nl.item( i ) instanceof Element )
         {
-          element = (Element) nl.item( i );
+          element = (Element)nl.item( i );
 
           if( element.getNodeName().equals( name ) )
           {
@@ -919,7 +920,7 @@ public final class XMLTools
       {
         if( nl.item( i ) instanceof Element )
         {
-          element = (Element) nl.item( i );
+          element = (Element)nl.item( i );
 
           final String s = element.getNamespaceURI();
 
@@ -970,7 +971,7 @@ public final class XMLTools
     for( int i = 0; i < children.getLength(); i++ )
     {
       if( children.item( i ).getNodeType() == Node.ELEMENT_NODE )
-        list.addElement( (Element) children.item( i ) );
+        list.addElement( (Element)children.item( i ) );
     }
 
     return list;
@@ -987,7 +988,7 @@ public final class XMLTools
       {
         sb.append( "<?xml version=\"1.0\"?>\n" );
 
-        final Document doc = (Document) node;
+        final Document doc = (Document)node;
         appendNode( doc.getDocumentElement(), "", sb );
 
         break;
