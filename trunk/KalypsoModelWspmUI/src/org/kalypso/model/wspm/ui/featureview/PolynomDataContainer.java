@@ -125,8 +125,8 @@ class PolynomDataContainer
 
     if( range != 0 )
     {
-      min = min - 0.1 * range;
-      max = max + 0.1 * range;
+      min = min ;//- 0.1 * range;
+      max = max ;//+ 0.1 * range;
     }
     else
     {

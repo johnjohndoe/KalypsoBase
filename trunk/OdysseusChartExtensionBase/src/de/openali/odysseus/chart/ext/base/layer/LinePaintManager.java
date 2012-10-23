@@ -101,7 +101,7 @@ public class LinePaintManager
   {
     final Point[] screenPoints = new Point[points.length];
     for( int i = 0; i < screenPoints.length; i++ )
-      screenPoints[i] = m_mapper.logicalToScreen( points[i].getDomain(), points[i].getTarget() );
+      screenPoints[i] = m_mapper.numericToScreen( points[i].getDomain().doubleValue(), points[i].getTarget().doubleValue() );
     return screenPoints;
   }
 
