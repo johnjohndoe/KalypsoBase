@@ -36,6 +36,8 @@
 
 package org.kalypsodeegree.model.geometry;
 
+import java.util.Iterator;
+
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.xml.NS;
@@ -60,5 +62,20 @@ public interface GM_Polygon<T extends GM_AbstractSurfacePatch> extends GM_Abstra
    * Use getSurfacePatch() instead
    */
   @Override
+  @Deprecated
   T get( int index );
+
+  /**
+   * Size is always 1
+   */
+  @Override
+  @Deprecated
+  int size( );
+
+  /**
+   * The iterator will contain only one element. Use getSurfacePatch() instead.
+   */
+  @Override
+  @Deprecated
+  Iterator<T> iterator( );
 }
