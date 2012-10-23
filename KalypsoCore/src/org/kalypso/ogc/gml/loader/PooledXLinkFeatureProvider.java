@@ -44,9 +44,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.IPoolListener;
@@ -150,37 +148,15 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
         info = pool.addPoolListener( this, m_key );
       }
 
-      try
-      {
-        if( info != null )
-        {
-          int timer = 0;
-          while( m_workspace == null && timer < 10)
-          {
-//            final int state = info.getState();
-//            if( state != Job.WAITING )
-//              break;
-
-            Thread.sleep( 500 );
-            timer += 1;
-          }
-// FIXME: bad... leads to dead locks...
-          info.join();
-        }
-      }
-      catch( final InterruptedException e )
-      {
-        final IStatus status = StatusUtilities.statusFromThrowable( e );
-        KalypsoCorePlugin.getDefault().getLog().log( status );
-      }
+      if( info != null )
+        KeyInfo.waitForJobDone( info );
     }
 
     return m_workspace;
   }
 
   /**
-   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object,
-   *      org.eclipse.core.runtime.IStatus)
+   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object, org.eclipse.core.runtime.IStatus)
    */
   @Override
   public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
@@ -188,7 +164,7 @@ public class PooledXLinkFeatureProvider extends AbstractXLinkFeatureProvider imp
     if( KeyComparator.getInstance().compare( key, m_key ) == 0 )
     {
       if( status.isOK() )
-        m_workspace = (GMLWorkspace) newValue;
+        m_workspace = (GMLWorkspace)newValue;
       else
         m_workspace = null;
     }
