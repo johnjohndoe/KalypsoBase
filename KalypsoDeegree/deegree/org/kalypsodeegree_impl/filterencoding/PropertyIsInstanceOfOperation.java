@@ -44,10 +44,6 @@ package org.kalypsodeegree_impl.filterencoding;
 
 import javax.xml.namespace.QName;
 
-import org.deegree.datatypes.QualifiedName;
-import org.deegree.framework.xml.NamespaceContext;
-import org.deegree.framework.xml.XMLParsingException;
-import org.deegree.ogcbase.CommonNamespaces;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
@@ -68,8 +64,7 @@ import org.w3c.dom.Element;
 /**
  * deegree-specific <code>ComparisonOperation</code> that allows to check the type of a property.
  * <p>
- * This is useful if the property has an abstract type with several concrete implementations, for example
- * 'gml:_Geometry'.
+ * This is useful if the property has an abstract type with several concrete implementations, for example 'gml:_Geometry'.
  * <p>
  * NOTE: Currently supported types to test are:
  * <ul>
@@ -86,9 +81,7 @@ public class PropertyIsInstanceOfOperation extends ComparisonOperation
 {
   private final PropertyName m_propertyName;
 
-  private final QualifiedName m_typeName;
-
-  private static NamespaceContext nsContext = CommonNamespaces.getNamespaceContext();
+  private final QName m_typeName;
 
   /**
    * Creates a new instance of <code>PropertyIsInstanceOfOperation</code>.
@@ -96,7 +89,7 @@ public class PropertyIsInstanceOfOperation extends ComparisonOperation
    * @param propertyName
    * @param typeName
    */
-  public PropertyIsInstanceOfOperation( final PropertyName propertyName, final QualifiedName typeName )
+  public PropertyIsInstanceOfOperation( final PropertyName propertyName, final QName typeName )
   {
     super( OperationDefines.PROPERTYISINSTANCEOF );
     m_propertyName = propertyName;
@@ -109,10 +102,13 @@ public class PropertyIsInstanceOfOperation extends ComparisonOperation
   @Override
   public StringBuffer toXML( )
   {
+    String prefixedName = String.format( "%s:%s", m_typeName.getPrefix(), m_typeName.getLocalPart() );
+    // TODO: we also need to define the prefix mapping in the output xml
+
     final StringBuffer sb = new StringBuffer();
     sb.append( "<deegreeogc:" ).append( getOperatorName() ).append( " xmlns:deegreeogc=\"http://www.deegree.org/ogc\">" );
     sb.append( m_propertyName.toXML() );
-    sb.append( "<ogc:Literal>" ).append( m_typeName.getPrefixedName() ).append( "</ogc:Literal>" );
+    sb.append( "<ogc:Literal>" ).append( prefixedName ).append( "</ogc:Literal>" );
     sb.append( "</deegreeogc:" ).append( getOperatorName() ).append( ">" );
     return sb;
   }
@@ -134,9 +130,10 @@ public class PropertyIsInstanceOfOperation extends ComparisonOperation
     final Object propertyValue = m_propertyName.evaluate( feature );
 
     if( propertyValue instanceof Feature )
-      return GMLSchemaUtilities.substitutes( ((Feature) propertyValue).getFeatureType(), new QName( m_typeName.getNamespace().toString(), m_typeName.getLocalName() ) );
+      return GMLSchemaUtilities.substitutes( ((Feature)propertyValue).getFeatureType(), m_typeName );
 
-    final String localName = m_typeName.getLocalName();
+    // FIXME: we are now able to use the type information of the property instead
+    final String localName = m_typeName.getLocalPart();
     if( "Point".equals( localName ) )
     {
       equals = propertyValue instanceof GM_Point || propertyValue instanceof GM_MultiPoint;
@@ -178,19 +175,22 @@ public class PropertyIsInstanceOfOperation extends ComparisonOperation
     if( children.getLength() != 2 )
       throw new FilterConstructionException( "'PropertyIsInstanceOf' requires exactly 2 elements!" );
 
-    final PropertyName propertyName = (PropertyName) PropertyName.buildFromDOM( children.item( 0 ) );
-    QualifiedName typeName = null;
+    final PropertyName propertyName = (PropertyName)PropertyName.buildFromDOM( children.item( 0 ) );
 
-    try
-    {
-      typeName = org.deegree.framework.xml.XMLTools.getRequiredNodeAsQualifiedName( element, "ogc:Literal/text()", nsContext );
-    }
-    catch( final XMLParsingException e )
-    {
-      throw new FilterConstructionException( e.getMessage() );
-    }
+    Element literalElement = children.item( 1 );
+    Literal literal = (Literal)Literal.buildFromDOM( literalElement );
 
-    return new PropertyIsInstanceOfOperation( propertyName, typeName );
+    String value = literal.getValue();
+
+    QName prefixedQName = XMLTools.parsePrefixedQName( value );
+
+    String prefix = prefixedQName.getPrefix();
+
+    String namespaceURI = literalElement.lookupNamespaceURI( prefix );
+
+    QName fullQualifiedName = new QName( namespaceURI, prefixedQName.getLocalPart(), prefix );
+
+    return new PropertyIsInstanceOfOperation( propertyName, fullQualifiedName );
   }
 
   /**
@@ -202,8 +202,7 @@ public class PropertyIsInstanceOfOperation extends ComparisonOperation
   }
 
   /**
-   * @see org.kalypsodeegree.filterencoding.Operation#accept(org.kalypsodeegree.filterencoding.visitor.FilterVisitor,
-   *      org.kalypsodeegree.filterencoding.Operation, int)
+   * @see org.kalypsodeegree.filterencoding.Operation#accept(org.kalypsodeegree.filterencoding.visitor.FilterVisitor, org.kalypsodeegree.filterencoding.Operation, int)
    */
   @Override
   public void accept( final FilterVisitor fv, final Operation operation, final int depth )

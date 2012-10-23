@@ -56,7 +56,6 @@ import javax.xml.namespace.QName;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.deegree.ogcbase.CommonNamespaces;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -130,11 +129,10 @@ import org.xml.sax.SAXException;
 /**
  * Factory class for all mapped SLD-elements.
  * <p>
- * TODO: Default values for omitted elements (such as fill color) should better not be used in the construction of the
- * corresponding objects (Fill), but marked as left out (to make it possible to differentiate between explicitly given
- * values and default values).
+ * TODO: Default values for omitted elements (such as fill color) should better not be used in the construction of the corresponding objects (Fill), but marked as left out (to make it possible to
+ * differentiate between explicitly given values and default values).
  * <p>
- *
+ * 
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
@@ -154,7 +152,7 @@ public final class SLDFactory
 
   /**
    * Creates a <tt>StyledLayerDescriptor</tt> -instance from the given file.
-   *
+   * 
    * @param styleFile
    *          The file to read the style from
    * @throws XMLParsingException
@@ -178,7 +176,7 @@ public final class SLDFactory
   /**
    * Creates a <tt>StyledLayerDescriptor</tt> -instance from the given Reader.
    * <p>
-   *
+   * 
    * @param reader
    *          provides the XML document
    * @throws XMLParsingException
@@ -232,7 +230,7 @@ public final class SLDFactory
   {
     final Object element = readSLD( url );
     if( element instanceof StyledLayerDescriptor )
-      return (StyledLayerDescriptor) element;
+      return (StyledLayerDescriptor)element;
 
     throw new XMLParsingException( String.format( "Root element is not '%s'", StyledLayerDescriptor.ELEMENT_STYLEDLAYERDESCRIPTOR ) );
   }
@@ -240,7 +238,7 @@ public final class SLDFactory
   /**
    * Reads an sld file from an {@link URL}.<br>
    * The type of the returned element may be any of the top-level types defined in the sld-schema.
-   *
+   * 
    * @throws XMLParsingException
    *           if a syntactic or semantic error in the XML document is encountered
    * @return The read top-Level element
@@ -273,7 +271,7 @@ public final class SLDFactory
   /**
    * Reads an sld file from an {@link InputStream}.<br>
    * The type of the returned element may be any of the top-level types defined in the sld-schema.
-   *
+   * 
    * @throws XMLParsingException
    *           if a syntactic or semantic error in the XML document is encountered
    * @return The read top-Level element
@@ -333,7 +331,7 @@ public final class SLDFactory
    * Creates a <tt>TextSymbolizer</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'TextSymbolizer'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
    *          the 'TextSymbolizer'- <tt>Element</tt>
    * @param min
@@ -349,7 +347,7 @@ public final class SLDFactory
 
     // optional: <Geometry>
     Geometry geometry = null;
-    final Element geometryElement = XMLTools.getChildByName( "Geometry", CommonNamespaces.SLDNS.toString(), element );//$NON-NLS-1$
+    final Element geometryElement = XMLTools.getChildByName( "Geometry", NS.SLD, element );//$NON-NLS-1$
 
     if( geometryElement != null )
     {
@@ -358,7 +356,7 @@ public final class SLDFactory
 
     // optional: <Label>
     ParameterValueType label = null;
-    final Element labelElement = XMLTools.getChildByName( "Label", CommonNamespaces.SLDNS.toString(), element );//$NON-NLS-1$
+    final Element labelElement = XMLTools.getChildByName( "Label", NS.SLD, element );//$NON-NLS-1$
 
     if( labelElement != null )
     {
@@ -367,7 +365,7 @@ public final class SLDFactory
 
     // optional: <Font>
     Font font = null;
-    final Element fontElement = XMLTools.getChildByName( "Font", CommonNamespaces.SLDNS.toString(), element );//$NON-NLS-1$
+    final Element fontElement = XMLTools.getChildByName( "Font", NS.SLD, element );//$NON-NLS-1$
 
     if( fontElement != null )
     {
@@ -376,7 +374,7 @@ public final class SLDFactory
 
     // optional: <LabelPlacement>
     LabelPlacement labelPlacement = null;
-    final Element lpElement = XMLTools.getChildByName( "LabelPlacement", CommonNamespaces.SLDNS.toString(), element );//$NON-NLS-1$
+    final Element lpElement = XMLTools.getChildByName( "LabelPlacement", NS.SLD, element );//$NON-NLS-1$
 
     if( lpElement != null )
     {
@@ -385,7 +383,7 @@ public final class SLDFactory
 
     // optional: <Halo>
     Halo halo = null;
-    final Element haloElement = XMLTools.getChildByName( "Halo", CommonNamespaces.SLDNS.toString(), element );//$NON-NLS-1$
+    final Element haloElement = XMLTools.getChildByName( "Halo", NS.SLD, element );//$NON-NLS-1$
 
     if( haloElement != null )
     {
@@ -399,10 +397,9 @@ public final class SLDFactory
   }
 
   /**
-   * Creates a <tt>Halo</tt> -instance according to the contents of the DOM-subtree starting at the given 'Halo'-
-   * <tt>Element</tt>.
+   * Creates a <tt>Halo</tt> -instance according to the contents of the DOM-subtree starting at the given 'Halo'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
    *          the 'Halo'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -413,7 +410,7 @@ public final class SLDFactory
   {
     // optional: <Radius>
     ParameterValueType radius = null;
-    final Element radiusElement = XMLTools.getChildByName( "Radius", CommonNamespaces.SLDNS.toString(), element );//$NON-NLS-1$
+    final Element radiusElement = XMLTools.getChildByName( "Radius", NS.SLD, element );//$NON-NLS-1$
 
     if( radiusElement != null )
     {
@@ -422,7 +419,7 @@ public final class SLDFactory
 
     // optional: <Fill>
     Fill fill = null;
-    final Element fillElement = XMLTools.getChildByName( "Fill", CommonNamespaces.SLDNS.toString(), element );//$NON-NLS-1$
+    final Element fillElement = XMLTools.getChildByName( "Fill", NS.SLD, element );//$NON-NLS-1$
 
     if( fillElement != null )
     {
@@ -431,7 +428,7 @@ public final class SLDFactory
 
     // optional: <Stroke>
     Stroke stroke = null;
-    final Element strokeElement = XMLTools.getChildByName( "Stroke", CommonNamespaces.SLDNS.toString(), element );//$NON-NLS-1$
+    final Element strokeElement = XMLTools.getChildByName( "Stroke", NS.SLD, element );//$NON-NLS-1$
 
     if( strokeElement != null )
     {
@@ -445,7 +442,7 @@ public final class SLDFactory
    * Creates a <tt>LabelPlacement</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'LabelPlacement'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
    *          the 'LabelPlacement'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -464,10 +461,10 @@ public final class SLDFactory
     for( int i = 0; i < nodelist.getLength(); i++ )
       if( nodelist.item( i ) instanceof Element )
       {
-        final Element child = (Element) nodelist.item( i );
+        final Element child = (Element)nodelist.item( i );
         final String namespace = child.getNamespaceURI();
 
-        if( !CommonNamespaces.SLDNS.toString().equals( namespace ) )
+        if( !NS.SLD.equals( namespace ) )
         {
           continue;
         }
@@ -502,7 +499,7 @@ public final class SLDFactory
    * Creates a <tt>PointPlacement</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'PointPlacement'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
    *          the 'PointPlacement'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -518,14 +515,14 @@ public final class SLDFactory
 
     // optional: <AnchorPoint>
     ParameterValueType[] anchorPoint = null;
-    final Element apElement = XMLTools.getChildByName( "AnchorPoint", CommonNamespaces.SLDNS.toString(), element );//$NON-NLS-1$
+    final Element apElement = XMLTools.getChildByName( "AnchorPoint", NS.SLD, element );//$NON-NLS-1$
 
     if( apElement != null )
     {
       anchorPoint = new ParameterValueType[2];
 
-      final Element apXElement = XMLTools.getChildByName( "AnchorPointX", CommonNamespaces.SLDNS.toString(), apElement );//$NON-NLS-1$
-      final Element apYElement = XMLTools.getChildByName( "AnchorPointY", CommonNamespaces.SLDNS.toString(), apElement );//$NON-NLS-1$
+      final Element apXElement = XMLTools.getChildByName( "AnchorPointX", NS.SLD, apElement );//$NON-NLS-1$
+      final Element apYElement = XMLTools.getChildByName( "AnchorPointY", NS.SLD, apElement );//$NON-NLS-1$
 
       if( apXElement == null || apYElement == null )
         throw new XMLParsingException( "Element 'AnchorPoint' must contain exactly one " + "'AnchorPointX'- and one 'AnchorPointY'-element!" );
@@ -536,14 +533,14 @@ public final class SLDFactory
 
     // optional: <Displacement>
     ParameterValueType[] displacement = null;
-    final Element dElement = XMLTools.getChildByName( "Displacement", CommonNamespaces.SLDNS.toString(), element );//$NON-NLS-1$
+    final Element dElement = XMLTools.getChildByName( "Displacement", NS.SLD, element );//$NON-NLS-1$
 
     if( dElement != null )
     {
       displacement = new ParameterValueType[2];
 
-      final Element dXElement = XMLTools.getChildByName( "DisplacementX", CommonNamespaces.SLDNS.toString(), dElement );//$NON-NLS-1$
-      final Element dYElement = XMLTools.getChildByName( "DisplacementY", CommonNamespaces.SLDNS.toString(), dElement );//$NON-NLS-1$
+      final Element dXElement = XMLTools.getChildByName( "DisplacementX", NS.SLD, dElement );//$NON-NLS-1$
+      final Element dYElement = XMLTools.getChildByName( "DisplacementY", NS.SLD, dElement );//$NON-NLS-1$
 
       if( dXElement == null || dYElement == null )
         throw new XMLParsingException( "Element 'Displacement' must contain exactly one " + "'DisplacementX'- and one 'DisplacementY'-element!" );
@@ -554,7 +551,7 @@ public final class SLDFactory
 
     // optional: <Rotation>
     ParameterValueType rotation = null;
-    final Element rElement = XMLTools.getChildByName( "Rotation", CommonNamespaces.SLDNS.toString(), element );//$NON-NLS-1$
+    final Element rElement = XMLTools.getChildByName( "Rotation", NS.SLD, element );//$NON-NLS-1$
 
     if( rElement != null )
     {
@@ -568,7 +565,7 @@ public final class SLDFactory
    * Creates a <tt>LinePlacement</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'LinePlacement'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
    *          the 'LinePlacement'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -579,7 +576,7 @@ public final class SLDFactory
   {
     // optional: <PerpendicularOffset>
     ParameterValueType pOffset = null;
-    final Element pOffsetElement = XMLTools.getChildByName( "PerpendicularOffset", CommonNamespaces.SLDNS.toString(), element );//$NON-NLS-1$
+    final Element pOffsetElement = XMLTools.getChildByName( "PerpendicularOffset", NS.SLD, element );//$NON-NLS-1$
 
     if( pOffsetElement != null )
     {
@@ -588,7 +585,7 @@ public final class SLDFactory
 
     // optional: <Gap> (this is deegree-specific)
     ParameterValueType gap = null;
-    final Element gapElement = XMLTools.getChildByName( "Gap", CommonNamespaces.SLDNS.toString(), element );//$NON-NLS-1$
+    final Element gapElement = XMLTools.getChildByName( "Gap", NS.SLD, element );//$NON-NLS-1$
 
     if( gapElement != null )
     {
@@ -597,7 +594,7 @@ public final class SLDFactory
 
     // optional: <LineWidth> (this is deegree-specific)
     ParameterValueType lineWidth = null;
-    final Element lineWidthElement = XMLTools.getChildByName( "LineWidth", CommonNamespaces.SLDNS.toString(), element );//$NON-NLS-1$
+    final Element lineWidthElement = XMLTools.getChildByName( "LineWidth", NS.SLD, element );//$NON-NLS-1$
 
     if( lineWidthElement != null )
     {
@@ -608,10 +605,9 @@ public final class SLDFactory
   }
 
   /**
-   * Creates a <tt>Font</tt> -instance according to the contents of the DOM-subtree starting at the given 'Font'-
-   * <tt>Element</tt>.
+   * Creates a <tt>Font</tt> -instance according to the contents of the DOM-subtree starting at the given 'Font'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
    *          the 'Font'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -621,7 +617,7 @@ public final class SLDFactory
   private static Font createFont( final Element element ) throws XMLParsingException
   {
     // optional: <CssParameter>s
-    final ElementList nl = XMLTools.getChildElementsByName( "CssParameter", CommonNamespaces.SLDNS.toString(), element );//$NON-NLS-1$
+    final ElementList nl = XMLTools.getChildElementsByName( "CssParameter", NS.SLD, element );//$NON-NLS-1$
     final Map<String, CssParameter> cssParams = new HashMap<>( nl.getLength() );
 
     for( int i = 0; i < nl.getLength(); i++ )
@@ -634,10 +630,9 @@ public final class SLDFactory
   }
 
   /**
-   * Creates a <tt>ParameterValueType</tt> -instance according to the contents of the DOM-subtree starting at the given
-   * <tt>Element</tt>.
+   * Creates a <tt>ParameterValueType</tt> -instance according to the contents of the DOM-subtree starting at the given <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
    *          the <tt>Element</tt> (must be of the type sld:ParameterValueType)
    * @throws XMLParsingException
@@ -666,7 +661,7 @@ public final class SLDFactory
         }
         case Node.ELEMENT_NODE:
         {
-          final Expression expression = Expression_Impl.buildFromDOM( (Element) node );
+          final Expression expression = Expression_Impl.buildFromDOM( (Element)node );
           componentList.add( expression );
           break;
         }
@@ -682,7 +677,7 @@ public final class SLDFactory
   /**
    * Creates a <tt>StyledLayerDescriptor</tt> -instance according to the contents of the DOM-subtree starting at the
    * given 'StyledLayerDescriptor'- <tt>Element</tt>.
-   *
+   * 
    * @param context
    *          Used as context to resolve any links contained in the document.
    * @param element
@@ -709,7 +704,7 @@ public final class SLDFactory
    * Creates a <tt>StyledLayerDescriptor</tt> -instance according to the contents of the DOM-subtree starting at the
    * given 'StyledLayerDescriptor'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
    *          the 'StyledLayerDescriptor'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -719,12 +714,12 @@ public final class SLDFactory
   public static StyledLayerDescriptor createStyledLayerDescriptor( final IUrlResolver2 urlResolver, final Element element ) throws XMLParsingException
   {
     // optional: <Name>
-    final String name = XMLTools.getStringValue( "Name", CommonNamespaces.SLDNS.toString(), element, null );//$NON-NLS-1$
+    final String name = XMLTools.getStringValue( "Name", NS.SLD, element, null );//$NON-NLS-1$
 
     // optional: <Title>
-    final String title = XMLTools.getStringValue( "Title", CommonNamespaces.SLDNS.toString(), element, null );//$NON-NLS-1$
+    final String title = XMLTools.getStringValue( "Title", NS.SLD, element, null );//$NON-NLS-1$
     // optional: <Abstract>
-    final String description = XMLTools.getStringValue( "Abstract", CommonNamespaces.SLDNS.toString(), element, null );//$NON-NLS-1$
+    final String description = XMLTools.getStringValue( "Abstract", NS.SLD, element, null );//$NON-NLS-1$
     // required: version-Attribute
     // final String version = XMLTools.getRequiredAttrValue( "version", element );
     // TODO: check for correct version here...; must be "1.0.0", but i have seen many wrong .sld's
@@ -737,10 +732,10 @@ public final class SLDFactory
     {
       if( nodelist.item( i ) instanceof Element )
       {
-        final Element child = (Element) nodelist.item( i );
+        final Element child = (Element)nodelist.item( i );
         final String namespace = child.getNamespaceURI();
 
-        if( !CommonNamespaces.SLDNS.toString().equals( namespace ) )
+        if( !NS.SLD.equals( namespace ) )
         {
           continue;
         }
@@ -766,7 +761,7 @@ public final class SLDFactory
    * Creates a <tt>NamedStyle</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'NamedStyle'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
    *          the 'NamedStyle'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -776,7 +771,7 @@ public final class SLDFactory
   private static NamedStyle createNamedStyle( final Element element ) throws XMLParsingException
   {
     // required: <Name>
-    final String name = XMLTools.getRequiredStringValue( "Name", CommonNamespaces.SLDNS.toString(), element );
+    final String name = XMLTools.getRequiredStringValue( "Name", NS.SLD, element );
 
     return new NamedStyle_Impl( name );
   }
@@ -793,7 +788,7 @@ public final class SLDFactory
    * Creates a <tt>RemoteOWS</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'RemoteOWS'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
    *          the 'RemoteOWS'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -803,13 +798,13 @@ public final class SLDFactory
   private static RemoteOWS createRemoteOWS( final Element element ) throws XMLParsingException
   {
     // required: <Service>
-    final String service = XMLTools.getRequiredStringValue( "Service", CommonNamespaces.SLDNS.toString(), element );//$NON-NLS-1$
+    final String service = XMLTools.getRequiredStringValue( "Service", NS.SLD, element );//$NON-NLS-1$
 
     if( !("WFS".equals( service ) || "WCS".equals( service )) )//$NON-NLS-1$//$NON-NLS-2$
       throw new XMLParsingException( "Value ('" + service + "') of element 'service' is invalid. " + "Allowed values are: 'WFS' and 'WCS'." );
 
     // required: <OnlineResource>
-    final Element onlineResourceElement = XMLTools.getRequiredChildByName( "OnlineResource", CommonNamespaces.SLDNS.toString(), element );//$NON-NLS-1$
+    final Element onlineResourceElement = XMLTools.getRequiredChildByName( "OnlineResource", NS.SLD, element );//$NON-NLS-1$
     final String href = XMLTools.getRequiredAttrValue( "xlink:href", onlineResourceElement );
     URL url = null;
 
@@ -829,7 +824,7 @@ public final class SLDFactory
    * Creates a <tt>NamedLayer</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'UserLayer'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
    *          the 'NamedLayer'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -839,11 +834,11 @@ public final class SLDFactory
   private static NamedLayer createNamedLayer( final IUrlResolver2 urlResolver, final Element element ) throws XMLParsingException
   {
     // required: <Name>
-    final String name = XMLTools.getRequiredStringValue( "Name", CommonNamespaces.SLDNS.toString(), element );//$NON-NLS-1$
+    final String name = XMLTools.getRequiredStringValue( "Name", NS.SLD, element );//$NON-NLS-1$
 
     // optional: <LayerFeatureConstraints>
     LayerFeatureConstraints lfc = null;
-    final Element lfcElement = XMLTools.getChildByName( "LayerFeatureConstraints", CommonNamespaces.SLDNS.toString(), element );//$NON-NLS-1$
+    final Element lfcElement = XMLTools.getChildByName( "LayerFeatureConstraints", NS.SLD, element );//$NON-NLS-1$
 
     if( lfcElement != null )
     {
@@ -857,10 +852,10 @@ public final class SLDFactory
     for( int i = 0; i < nodelist.getLength(); i++ )
       if( nodelist.item( i ) instanceof Element )
       {
-        final Element child = (Element) nodelist.item( i );
+        final Element child = (Element)nodelist.item( i );
         final String namespace = child.getNamespaceURI();
 
-        if( !CommonNamespaces.SLDNS.toString().equals( namespace ) )
+        if( !NS.SLD.equals( namespace ) )
         {
           continue;
         }
@@ -894,7 +889,7 @@ public final class SLDFactory
    * Creates a <tt>UserLayer</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'UserLayer'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
    *          the 'UserLayer'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -904,11 +899,11 @@ public final class SLDFactory
   private static UserLayer createUserLayer( final IUrlResolver2 urlResolver, final Element element ) throws XMLParsingException
   {
     // optional: <Name>
-    final String name = XMLTools.getStringValue( "Name", CommonNamespaces.SLDNS.toString(), element, null );
+    final String name = XMLTools.getStringValue( "Name", NS.SLD, element, null );
 
     // optional: <RemoteOWS>
     RemoteOWS remoteOWS = null;
-    final Element remoteOWSElement = XMLTools.getChildByName( "RemoteOWS", CommonNamespaces.SLDNS.toString(), element );//$NON-NLS-1$
+    final Element remoteOWSElement = XMLTools.getChildByName( "RemoteOWS", NS.SLD, element );//$NON-NLS-1$
 
     if( remoteOWSElement != null )
     {
@@ -917,11 +912,11 @@ public final class SLDFactory
 
     // required: <LayerFeatureConstraints>
     LayerFeatureConstraints lfc = null;
-    final Element lfcElement = XMLTools.getRequiredChildByName( "LayerFeatureConstraints", CommonNamespaces.SLDNS.toString(), element );//$NON-NLS-1$
+    final Element lfcElement = XMLTools.getRequiredChildByName( "LayerFeatureConstraints", NS.SLD, element );//$NON-NLS-1$
     lfc = SLDFactory.createLayerFeatureConstraints( lfcElement );
 
     // optional: <UserStyle>(s)
-    final ElementList nodelist = XMLTools.getChildElementsByName( "UserStyle", CommonNamespaces.SLDNS.toString(), element );//$NON-NLS-1$
+    final ElementList nodelist = XMLTools.getChildElementsByName( "UserStyle", NS.SLD, element );//$NON-NLS-1$
     final UserStyle[] styles = new UserStyle[nodelist.getLength()];
 
     for( int i = 0; i < nodelist.getLength(); i++ )
@@ -936,7 +931,7 @@ public final class SLDFactory
    * Creates a <tt>FeatureTypeConstraint</tt> -instance according to the contents of the DOM-subtree starting at the
    * given 'FeatureTypeConstraint'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
    *          the 'FeatureTypeConstraint'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -946,7 +941,7 @@ public final class SLDFactory
   private static FeatureTypeConstraint createFeatureTypeConstraint( final Element element ) throws XMLParsingException
   {
     // optional: <Name>
-    final String name = XMLTools.getStringValue( "FeatureTypeName", CommonNamespaces.SLDNS.toString(), element, null );//$NON-NLS-1$
+    final String name = XMLTools.getStringValue( "FeatureTypeName", NS.SLD, element, null );//$NON-NLS-1$
 
     // optional: <Filter>
     Filter filter = null;
@@ -958,7 +953,7 @@ public final class SLDFactory
     }
 
     // optional: <Extent>(s)
-    final ElementList nodelist = XMLTools.getChildElementsByName( "Extent", CommonNamespaces.SLDNS.toString(), element );//$NON-NLS-1$
+    final ElementList nodelist = XMLTools.getChildElementsByName( "Extent", NS.SLD, element );//$NON-NLS-1$
     final Extent[] extents = new Extent[nodelist.getLength()];
 
     for( int i = 0; i < nodelist.getLength(); i++ )
@@ -970,10 +965,9 @@ public final class SLDFactory
   }
 
   /**
-   * Creates an <tt>Extent</tt> -instance according to the contents of the DOM-subtree starting at the given 'Extent'-
-   * <tt>Element</tt>.
+   * Creates an <tt>Extent</tt> -instance according to the contents of the DOM-subtree starting at the given 'Extent'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
    *          the 'Extent'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -983,9 +977,9 @@ public final class SLDFactory
   private static Extent createExtent( final Element element ) throws XMLParsingException
   {
     // required: <Name>
-    final String name = XMLTools.getRequiredStringValue( "Name", CommonNamespaces.SLDNS.toString(), element );//$NON-NLS-1$
+    final String name = XMLTools.getRequiredStringValue( "Name", NS.SLD, element );//$NON-NLS-1$
     // required: <Value>
-    final String value = XMLTools.getRequiredStringValue( "Value", CommonNamespaces.SLDNS.toString(), element );//$NON-NLS-1$
+    final String value = XMLTools.getRequiredStringValue( "Value", NS.SLD, element );//$NON-NLS-1$
 
     return new Extent_Impl( name, value );
   }
@@ -994,7 +988,7 @@ public final class SLDFactory
    * Creates a <tt>LayerFeatureConstraints</tt> -instance according to the contents of the DOM-subtree starting at the
    * given 'LayerFeatureConstraints'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
    *          the 'LayerFeatureConstraints'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -1004,7 +998,7 @@ public final class SLDFactory
   public static LayerFeatureConstraints createLayerFeatureConstraints( final Element element ) throws XMLParsingException
   {
     // required: <FeatureTypeConstraint>(s)
-    final ElementList nodelist = XMLTools.getChildElementsByName( "FeatureTypeConstraint", CommonNamespaces.SLDNS.toString(), element );//$NON-NLS-1$
+    final ElementList nodelist = XMLTools.getChildElementsByName( "FeatureTypeConstraint", NS.SLD, element );//$NON-NLS-1$
     final FeatureTypeConstraint[] ftcs = new FeatureTypeConstraint[nodelist.getLength()];
 
     for( int i = 0; i < nodelist.getLength(); i++ )
@@ -1019,7 +1013,7 @@ public final class SLDFactory
    * Creates a <tt>UserStyle</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'UserStyle'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
    *          the 'UserStyle'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -1029,14 +1023,14 @@ public final class SLDFactory
   private static UserStyle createUserStyle( final IUrlResolver2 urlResolver, final Element element ) throws XMLParsingException
   {
     // optional: <Name>
-    final String name = XMLTools.getStringValue( "Name", CommonNamespaces.SLDNS.toString(), element, null );//$NON-NLS-1$
+    final String name = XMLTools.getStringValue( "Name", NS.SLD, element, null );//$NON-NLS-1$
     // optional: <Title>
-    final String title = XMLTools.getStringValue( "Title", CommonNamespaces.SLDNS.toString(), element, null );//$NON-NLS-1$
+    final String title = XMLTools.getStringValue( "Title", NS.SLD, element, null );//$NON-NLS-1$
     // optional: <Abstract>
-    final String description = XMLTools.getStringValue( "Abstract", CommonNamespaces.SLDNS.toString(), element, null );//$NON-NLS-1$
+    final String description = XMLTools.getStringValue( "Abstract", NS.SLD, element, null );//$NON-NLS-1$
 
     // optional: <IsDefault>
-    final String defaultString = XMLTools.getStringValue( "IsDefault", CommonNamespaces.SLDNS.toString(), element, null );//$NON-NLS-1$
+    final String defaultString = XMLTools.getStringValue( "IsDefault", NS.SLD, element, null );//$NON-NLS-1$
     boolean isDefault = false;
 
     if( defaultString != null )
@@ -1046,7 +1040,7 @@ public final class SLDFactory
       }
 
     // required: <FeatureTypeStyle> (s)
-    final ElementList nl = XMLTools.getChildElementsByName( "FeatureTypeStyle", CommonNamespaces.SLDNS.toString(), element );
+    final ElementList nl = XMLTools.getChildElementsByName( "FeatureTypeStyle", NS.SLD, element );
     final FeatureTypeStyle[] styles = new FeatureTypeStyle[nl.getLength()];
 
     if( styles.length == 0 )
@@ -1105,7 +1099,7 @@ public final class SLDFactory
    * <p>
    * TODO: The ElseFilter currently does not work correctly with FeatureFilters.
    * <p>
-   *
+   * 
    * @param element
    *          the 'FeatureTypeStyle'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -1115,13 +1109,15 @@ public final class SLDFactory
   public static FeatureTypeStyle createFeatureTypeStyle( final IUrlResolver2 urlResolver, final Element element ) throws XMLParsingException
   {
     // optional: <Name>
-    final String name = XMLTools.getStringValue( "Name", CommonNamespaces.SLDNS.toString(), element, null );
+    final String name = XMLTools.getStringValue( "Name", NS.SLD, element, null );
     // optional: <Title>
-    final String title = XMLTools.getStringValue( "Title", CommonNamespaces.SLDNS.toString(), element, null );
+    final String title = XMLTools.getStringValue( "Title", NS.SLD, element, null );
     // optional: <Abstract>
-    final String description = XMLTools.getStringValue( "Abstract", CommonNamespaces.SLDNS.toString(), element, null );
+    final String description = XMLTools.getStringValue( "Abstract", NS.SLD, element, null );
+
     // optional: <FeatureTypeName>
-    final QName featureTypeQName = XMLTools.getQNameValue( "FeatureTypeName", CommonNamespaces.SLDNS.toString(), element );
+    final Element featureTypeNameElement = XMLTools.getChildByName( "FeatureTypeName", NS.SLD, element );
+    final QName featureTypeQName = XMLTools.getQNameValue( featureTypeNameElement );
 
     // optional: several <Rule> / <SemanticTypeIdentifier>
     final NodeList nodelist = element.getChildNodes();
@@ -1159,10 +1155,10 @@ public final class SLDFactory
   {
     if( item instanceof Element )
     {
-      final Element child = (Element) item;
+      final Element child = (Element)item;
       final String namespace = child.getNamespaceURI();
 
-      if( !CommonNamespaces.SLDNS.toString().equals( namespace ) )
+      if( !NS.SLD.equals( namespace ) )
       {
         return;
       }
@@ -1198,8 +1194,8 @@ public final class SLDFactory
     if( filters.size() == 1 )
     {
       final ComplexFilter elseFilter = new ComplexFilter( OperationDefines.NOT );
-      final List<Operation> arguments = ((LogicalOperation) elseFilter.getOperation()).getArguments();
-      final ComplexFilter complexFilter = (ComplexFilter) filters.get( 0 );
+      final List<Operation> arguments = ((LogicalOperation)elseFilter.getOperation()).getArguments();
+      final ComplexFilter complexFilter = (ComplexFilter)filters.get( 0 );
       arguments.add( complexFilter.getOperation() );
       return elseFilter;
     }
@@ -1210,10 +1206,10 @@ public final class SLDFactory
       final ComplexFilter innerFilter = new ComplexFilter( OperationDefines.OR );
       ComplexFilter elseFilter;
       elseFilter = new ComplexFilter( innerFilter, null, OperationDefines.NOT );
-      final List<Operation> arguments = ((LogicalOperation) innerFilter.getOperation()).getArguments();
+      final List<Operation> arguments = ((LogicalOperation)innerFilter.getOperation()).getArguments();
 
       for( final Filter complexFilter : filters )
-        arguments.add( ((ComplexFilter) complexFilter).getOperation() );
+        arguments.add( ((ComplexFilter)complexFilter).getOperation() );
 
       return elseFilter;
     }
@@ -1222,10 +1218,9 @@ public final class SLDFactory
   }
 
   /**
-   * Creates a <tt>Rule</tt> -instance according to the contents of the DOM-subtree starting at the given 'Rule'-
-   * <tt>Element</tt>.
+   * Creates a <tt>Rule</tt> -instance according to the contents of the DOM-subtree starting at the given 'Rule'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
    *          the 'Rule'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -1235,14 +1230,14 @@ public final class SLDFactory
   private static Rule createRule( final IUrlResolver2 urlResolver, final Element element ) throws XMLParsingException
   {
     // optional: <Name>
-    final String name = XMLTools.getStringValue( "Name", CommonNamespaces.SLDNS.toString(), element, null );//$NON-NLS-1$
+    final String name = XMLTools.getStringValue( "Name", NS.SLD, element, null );//$NON-NLS-1$
     // optional: <Title>
-    final String title = XMLTools.getStringValue( "Title", CommonNamespaces.SLDNS.toString(), element, null );//$NON-NLS-1$
+    final String title = XMLTools.getStringValue( "Title", NS.SLD, element, null );//$NON-NLS-1$
     // optional: <Abstract>
-    final String description = XMLTools.getStringValue( "Abstract", CommonNamespaces.SLDNS.toString(), element, null );//$NON-NLS-1$
+    final String description = XMLTools.getStringValue( "Abstract", NS.SLD, element, null );//$NON-NLS-1$
 
     // optional: <LegendGraphic>
-    final Element legendGraphicElement = XMLTools.getChildByName( "LegendGraphic", CommonNamespaces.SLDNS.toString(), element );//$NON-NLS-1$
+    final Element legendGraphicElement = XMLTools.getChildByName( "LegendGraphic", NS.SLD, element );//$NON-NLS-1$
 
     final LegendGraphic legendGraphic;
     if( legendGraphicElement == null )
@@ -1260,16 +1255,16 @@ public final class SLDFactory
       filter = AbstractFilter.buildFromDOM( filterElement );
 
     // optional: <ElseFilter>
-    final Element elseFilterElement = XMLTools.getChildByName( "ElseFilter", CommonNamespaces.SLDNS.toString(), element );//$NON-NLS-1$
+    final Element elseFilterElement = XMLTools.getChildByName( "ElseFilter", NS.SLD, element );//$NON-NLS-1$
     final boolean hasElseFilter = elseFilterElement != null;
 
     if( filterElement != null && hasElseFilter )
       throw new XMLParsingException( "Element 'Rule' may contain a 'Filter'- or " + "an 'ElseFilter'-element, but not both!" );
 
     // optional: <MinScaleDenominator>
-    final double min = XMLTools.getDoubleValue( "MinScaleDenominator", CommonNamespaces.SLDNS.toString(), element, 0.0 );//$NON-NLS-1$
+    final double min = XMLTools.getDoubleValue( "MinScaleDenominator", NS.SLD, element, 0.0 );//$NON-NLS-1$
     // optional: <MaxScaleDenominator>
-    final double max = XMLTools.getDoubleValue( "MaxScaleDenominator", CommonNamespaces.SLDNS.toString(), element, 9E99 );//$NON-NLS-1$
+    final double max = XMLTools.getDoubleValue( "MaxScaleDenominator", NS.SLD, element, 9E99 );//$NON-NLS-1$
 
     // optional: different Symbolizer-elements
     final NodeList symbolizerNL = element.getChildNodes();
@@ -1280,7 +1275,7 @@ public final class SLDFactory
       final Node item = symbolizerNL.item( i );
       if( item instanceof Element )
       {
-        final Symbolizer symbolizer = createSymbolizer( urlResolver, (Element) item );
+        final Symbolizer symbolizer = createSymbolizer( urlResolver, (Element)item );
         if( symbolizer != null )
           symbolizerList.add( symbolizer );
       }
@@ -1329,7 +1324,7 @@ public final class SLDFactory
   {
     final String namespace = symbolizerElement.getNamespaceURI();
 
-    if( !(CommonNamespaces.SLDNS.toString().equals( namespace ) || SLDNS_EXT.equals( namespace )) )
+    if( !(NS.SLD.equals( namespace ) || SLDNS_EXT.equals( namespace )) )
       return null;
 
     final UOM uom = readUOM( symbolizerElement );
@@ -1378,7 +1373,7 @@ public final class SLDFactory
    * Creates a <tt>PointSymbolizer</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'PointSymbolizer'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
    *          the 'PointSymbolizer'- <tt>Element</tt>
    * @param min
@@ -1393,7 +1388,7 @@ public final class SLDFactory
   {
     // optional: <Geometry>
     Geometry geometry = null;
-    final Element geometryElement = XMLTools.getChildByName( "Geometry", CommonNamespaces.SLDNS.toString(), element );
+    final Element geometryElement = XMLTools.getChildByName( "Geometry", NS.SLD, element );
 
     if( geometryElement != null )
     {
@@ -1402,7 +1397,7 @@ public final class SLDFactory
 
     // optional: <Graphic>
     Graphic graphic = null;
-    final Element graphicElement = XMLTools.getChildByName( "Graphic", CommonNamespaces.SLDNS.toString(), element );
+    final Element graphicElement = XMLTools.getChildByName( "Graphic", NS.SLD, element );
 
     if( graphicElement != null )
     {
@@ -1416,7 +1411,7 @@ public final class SLDFactory
    * Creates a <tt>LineSymbolizer</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'LineSymbolizer'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
    *          the 'LineSymbolizer'- <tt>Element</tt>
    * @param min
@@ -1431,7 +1426,7 @@ public final class SLDFactory
   {
     // optional: <Geometry>
     Geometry geometry = null;
-    final Element geometryElement = XMLTools.getChildByName( "Geometry", CommonNamespaces.SLDNS.toString(), element );
+    final Element geometryElement = XMLTools.getChildByName( "Geometry", NS.SLD, element );
 
     if( geometryElement != null )
     {
@@ -1440,7 +1435,7 @@ public final class SLDFactory
 
     // optional: <Stroke>
     Stroke stroke = null;
-    final Element strokeElement = XMLTools.getChildByName( "Stroke", CommonNamespaces.SLDNS.toString(), element );
+    final Element strokeElement = XMLTools.getChildByName( "Stroke", NS.SLD, element );
 
     if( strokeElement != null )
     {
@@ -1454,7 +1449,7 @@ public final class SLDFactory
    * Creates a <tt>PolygonSymbolizer</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'PolygonSymbolizer'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
    *          the 'PolygonSymbolizer'- <tt>Element</tt>
    * @param min
@@ -1469,7 +1464,7 @@ public final class SLDFactory
   {
     // optional: <Geometry>
     Geometry geometry = null;
-    final Element geometryElement = XMLTools.getChildByName( "Geometry", CommonNamespaces.SLDNS.toString(), element );
+    final Element geometryElement = XMLTools.getChildByName( "Geometry", NS.SLD, element );
 
     if( geometryElement != null )
     {
@@ -1478,7 +1473,7 @@ public final class SLDFactory
 
     // optional: <Fill>
     Fill fill = null;
-    final Element fillElement = XMLTools.getChildByName( "Fill", CommonNamespaces.SLDNS.toString(), element );
+    final Element fillElement = XMLTools.getChildByName( "Fill", NS.SLD, element );
 
     if( fillElement != null )
     {
@@ -1487,7 +1482,7 @@ public final class SLDFactory
 
     // optional: <Stroke>
     Stroke stroke = null;
-    final Element strokeElement = XMLTools.getChildByName( "Stroke", CommonNamespaces.SLDNS.toString(), element );
+    final Element strokeElement = XMLTools.getChildByName( "Stroke", NS.SLD, element );
 
     if( strokeElement != null )
     {
@@ -1501,7 +1496,7 @@ public final class SLDFactory
    * Creates a <tt>SurfaceLineSymbolizer</tt> -instance according to the contents of the DOM-subtree starting at the
    * given 'SurfaceLineSymbolizer'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
    *          the 'SurfaceLineSymbolizer'- <tt>Element</tt>
    * @param min
@@ -1516,7 +1511,7 @@ public final class SLDFactory
   {
     // optional: <Geometry>
     Geometry geometry = null;
-    final Element geometryElement = XMLTools.getChildByName( "Geometry", CommonNamespaces.SLDNS.toString(), element );
+    final Element geometryElement = XMLTools.getChildByName( "Geometry", NS.SLD, element );
     if( geometryElement != null )
     {
       geometry = SLDFactory.createGeometry( geometryElement );
@@ -1537,7 +1532,7 @@ public final class SLDFactory
    * Creates a <tt>SurfacePolygonSymbolizer</tt> -instance according to the contents of the DOM-subtree starting at the
    * given 'SurfaceLineSymbolizer'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
    *          the 'SurfacePolygonSymbolizer'- <tt>Element</tt>
    * @param min
@@ -1552,7 +1547,7 @@ public final class SLDFactory
   {
     // optional: <Geometry>
     Geometry geometry = null;
-    final Element geometryElement = XMLTools.getChildByName( "Geometry", CommonNamespaces.SLDNS.toString(), element );
+    final Element geometryElement = XMLTools.getChildByName( "Geometry", NS.SLD, element );
     if( geometryElement != null )
     {
       geometry = SLDFactory.createGeometry( geometryElement );
@@ -1621,7 +1616,7 @@ public final class SLDFactory
 
     // <Fill>
     Fill fill = null;
-    final Element fillElement = XMLTools.getChildByName( "Fill", CommonNamespaces.SLDNS.toString(), element );
+    final Element fillElement = XMLTools.getChildByName( "Fill", NS.SLD, element );
 
     if( fillElement != null )
     {
@@ -1630,7 +1625,7 @@ public final class SLDFactory
 
     // <Stroke>
     Stroke stroke = null;
-    final Element strokeElement = XMLTools.getChildByName( "Stroke", CommonNamespaces.SLDNS.toString(), element );
+    final Element strokeElement = XMLTools.getChildByName( "Stroke", NS.SLD, element );
 
     if( strokeElement != null )
     {
@@ -1658,7 +1653,7 @@ public final class SLDFactory
   {
     // <Stroke>
     Stroke stroke = null;
-    final Element strokeElement = XMLTools.getChildByName( "Stroke", CommonNamespaces.SLDNS.toString(), element );
+    final Element strokeElement = XMLTools.getChildByName( "Stroke", NS.SLD, element );
 
     if( strokeElement != null )
     {
@@ -1684,7 +1679,7 @@ public final class SLDFactory
    * <p>
    * FIXME: Add support for 'Function'-Elements.
    * <p>
-   *
+   * 
    * @param element
    *          the 'Geometry'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -1694,15 +1689,14 @@ public final class SLDFactory
   private static Geometry createGeometry( final Element element ) throws XMLParsingException
   {
     final Element propertyNameElement = XMLTools.getRequiredChildByName( "PropertyName", SLDFactory.NS_OGC, element );
-    final PropertyName propertyName = (PropertyName) PropertyName.buildFromDOM( propertyNameElement );
+    final PropertyName propertyName = (PropertyName)PropertyName.buildFromDOM( propertyNameElement );
     return new Geometry_Impl( propertyName );
   }
 
   /**
-   * Creates a <tt>Fill</tt> -instance according to the contents of the DOM-subtree starting at the given 'Fill'-
-   * <tt>Element</tt>.
+   * Creates a <tt>Fill</tt> -instance according to the contents of the DOM-subtree starting at the given 'Fill'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
    *          the 'Fill'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -1713,7 +1707,7 @@ public final class SLDFactory
   {
     // optional: <GraphicFill>
     GraphicFill graphicFill = null;
-    final Element graphicFillElement = XMLTools.getChildByName( "GraphicFill", CommonNamespaces.SLDNS.toString(), element );
+    final Element graphicFillElement = XMLTools.getChildByName( "GraphicFill", NS.SLD, element );
 
     if( graphicFillElement != null )
     {
@@ -1721,7 +1715,7 @@ public final class SLDFactory
     }
 
     // optional: <CssParameter>s
-    final ElementList nl = XMLTools.getChildElementsByName( "CssParameter", CommonNamespaces.SLDNS.toString(), element );
+    final ElementList nl = XMLTools.getChildElementsByName( "CssParameter", NS.SLD, element );
     final HashMap<String, CssParameter> cssParams = new HashMap<>( nl.getLength() );
 
     for( int i = 0; i < nl.getLength(); i++ )
@@ -1737,7 +1731,7 @@ public final class SLDFactory
    * Creates a <tt>LegendGraphic</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'LegendGraphic'-element.
    * <p>
-   *
+   * 
    * @param element
    *          the 'LegendGraphic'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -1747,7 +1741,7 @@ public final class SLDFactory
   public static LegendGraphic createLegendGraphic( final IUrlResolver2 urlResolver, final Element element ) throws XMLParsingException
   {
     // required: <Graphic>
-    final Element graphicElement = XMLTools.getRequiredChildByName( "Graphic", CommonNamespaces.SLDNS.toString(), element );
+    final Element graphicElement = XMLTools.getRequiredChildByName( "Graphic", NS.SLD, element );
     final Graphic graphic = SLDFactory.createGraphic( urlResolver, graphicElement );
 
     return new LegendGraphic_Impl( graphic );
@@ -1757,7 +1751,7 @@ public final class SLDFactory
    * Creates an <tt>ExternalGraphic</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'ExternalGraphic'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
    *          the 'ExternalGraphic'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -1767,21 +1761,20 @@ public final class SLDFactory
   private static ExternalGraphic createExternalGraphic( final IUrlResolver2 urlResolver, final Element element ) throws XMLParsingException
   {
     // required: <OnlineResource>
-    final Element onlineResourceElement = XMLTools.getRequiredChildByName( "OnlineResource", CommonNamespaces.SLDNS.toString(), element );
+    final Element onlineResourceElement = XMLTools.getRequiredChildByName( "OnlineResource", NS.SLD, element );
 
     final String href = XMLTools.getRequiredAttrValue( "href", NS.XLINK, onlineResourceElement ); //$NON-NLS-1$
 
     // required: <Format> (in <OnlineResource>)
-    final String format = XMLTools.getRequiredStringValue( "Format", CommonNamespaces.SLDNS.toString(), element );
+    final String format = XMLTools.getRequiredStringValue( "Format", NS.SLD, element );
 
     return new ExternalGraphic_Impl( urlResolver, format, href );
   }
 
   /**
-   * Creates a <tt>Mark</tt> -instance according to the contents of the DOM-subtree starting at the given 'Mark'-
-   * <tt>Element</tt>.
+   * Creates a <tt>Mark</tt> -instance according to the contents of the DOM-subtree starting at the given 'Mark'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
    *          the 'Mark'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -1794,10 +1787,10 @@ public final class SLDFactory
     Fill fill = null;
 
     // optional: <WellKnownName>
-    final String wkn = XMLTools.getStringValue( "WellKnownName", CommonNamespaces.SLDNS.toString(), element, null );
+    final String wkn = XMLTools.getStringValue( "WellKnownName", NS.SLD, element, null );
 
     // optional: <Stroke>
-    final Element strokeElement = XMLTools.getChildByName( "Stroke", CommonNamespaces.SLDNS.toString(), element );
+    final Element strokeElement = XMLTools.getChildByName( "Stroke", NS.SLD, element );
 
     if( strokeElement != null )
     {
@@ -1805,7 +1798,7 @@ public final class SLDFactory
     }
 
     // optional: <Fill>
-    final Element fillElement = XMLTools.getChildByName( "Fill", CommonNamespaces.SLDNS.toString(), element );
+    final Element fillElement = XMLTools.getChildByName( "Fill", NS.SLD, element );
 
     if( fillElement != null )
     {
@@ -1816,10 +1809,9 @@ public final class SLDFactory
   }
 
   /**
-   * Creates a <tt>Stroke</tt> -instance according to the contents of the DOM-subtree starting at the given 'Stroke'-
-   * <tt>Element</tt>.
+   * Creates a <tt>Stroke</tt> -instance according to the contents of the DOM-subtree starting at the given 'Stroke'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
    *          the 'Stroke'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -1832,7 +1824,7 @@ public final class SLDFactory
     GraphicStroke gs = null;
 
     // optional: <GraphicFill>
-    final Element gfElement = XMLTools.getChildByName( "GraphicFill", CommonNamespaces.SLDNS.toString(), element );
+    final Element gfElement = XMLTools.getChildByName( "GraphicFill", NS.SLD, element );
 
     if( gfElement != null )
     {
@@ -1840,7 +1832,7 @@ public final class SLDFactory
     }
 
     // optional: <GraphicStroke>
-    final Element gsElement = XMLTools.getChildByName( "GraphicStroke", CommonNamespaces.SLDNS.toString(), element );
+    final Element gsElement = XMLTools.getChildByName( "GraphicStroke", NS.SLD, element );
 
     if( gsElement != null )
     {
@@ -1848,7 +1840,7 @@ public final class SLDFactory
     }
 
     // optional: <CssParameter>s
-    final ElementList nl = XMLTools.getChildElementsByName( "CssParameter", CommonNamespaces.SLDNS.toString(), element );
+    final ElementList nl = XMLTools.getChildElementsByName( "CssParameter", NS.SLD, element );
     final HashMap<String, CssParameter> cssParams = new HashMap<>( nl.getLength() );
 
     for( int i = 0; i < nl.getLength(); i++ )
@@ -1864,7 +1856,7 @@ public final class SLDFactory
    * Creates a <tt>GraphicFill</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'GraphicFill'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
    *          the 'GraphicFill'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -1874,7 +1866,7 @@ public final class SLDFactory
   private static GraphicFill createGraphicFill( final IUrlResolver2 urlResolver, final Element element ) throws XMLParsingException
   {
     // required: <Graphic>
-    final Element graphicElement = XMLTools.getRequiredChildByName( "Graphic", CommonNamespaces.SLDNS.toString(), element );
+    final Element graphicElement = XMLTools.getRequiredChildByName( "Graphic", NS.SLD, element );
     final Graphic graphic = SLDFactory.createGraphic( urlResolver, graphicElement );
 
     return new GraphicFill_Impl( graphic );
@@ -1884,7 +1876,7 @@ public final class SLDFactory
    * Creates a <tt>GraphicStroke</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'GraphicStroke'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
    *          the 'GraphicStroke'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -1894,7 +1886,7 @@ public final class SLDFactory
   private static GraphicStroke createGraphicStroke( final IUrlResolver2 urlResolver, final Element element ) throws XMLParsingException
   {
     // required: <Graphic>
-    final Element graphicElement = XMLTools.getRequiredChildByName( "Graphic", CommonNamespaces.SLDNS.toString(), element );
+    final Element graphicElement = XMLTools.getRequiredChildByName( "Graphic", NS.SLD, element );
     final Graphic graphic = SLDFactory.createGraphic( urlResolver, graphicElement );
 
     return new GraphicStroke_Impl( graphic );
@@ -1904,7 +1896,7 @@ public final class SLDFactory
    * Creates a <tt>Graphic</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'Graphic'-element.
    * <p>
-   *
+   * 
    * @param element
    *          the 'Graphic'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -1928,10 +1920,10 @@ public final class SLDFactory
     {
       if( nodelist.item( i ) instanceof Element )
       {
-        final Element child = (Element) nodelist.item( i );
+        final Element child = (Element)nodelist.item( i );
         final String namespace = child.getNamespaceURI();
 
-        if( !CommonNamespaces.SLDNS.toString().equals( namespace ) )
+        if( !NS.SLD.equals( namespace ) )
           continue;
 
         final String childName = child.getLocalName();
@@ -1957,7 +1949,7 @@ public final class SLDFactory
    * Creates a <tt>CssParameter</tt> -instance according to the contents of the DOM-subtree starting at the given
    * 'CssParameter'- <tt>Element</tt>.
    * <p>
-   *
+   * 
    * @param element
    *          the 'CssParamter'- <tt>Element</tt>
    * @throws XMLParsingException
@@ -1977,16 +1969,16 @@ public final class SLDFactory
   {
     try
     {
-      final Element colorMapElement = XMLTools.getChildByName( "ColorMap", CommonNamespaces.SLDNS.toString(), element );
+      final Element colorMapElement = XMLTools.getChildByName( "ColorMap", NS.SLD, element );
       final SortedMap<Double, ColorMapEntry> colorMap = createColorMap( colorMapElement );
 
-      final Element imageOutlineElement = XMLTools.getChildByName( "ImageOutline", CommonNamespaces.SLDNS.toString(), element );
+      final Element imageOutlineElement = XMLTools.getChildByName( "ImageOutline", NS.SLD, element );
       final Symbolizer imageOutline = createImageOutline( urlResolver, imageOutlineElement, uom );
 
-      final Element shadedReliefElement = XMLTools.getChildByName( "ShadedRelief", CommonNamespaces.SLDNS.toString(), element );
+      final Element shadedReliefElement = XMLTools.getChildByName( "ShadedRelief", NS.SLD, element );
       final ShadedRelief shadedRelief = createShadedRelief( shadedReliefElement );
 
-      final Element opacityElement = XMLTools.getChildByName( "Opacity", CommonNamespaces.SLDNS.toString(), element );
+      final Element opacityElement = XMLTools.getChildByName( "Opacity", NS.SLD, element );
       final ParameterValueType opacity = createParameterValueType( opacityElement );
 
       return new RasterSymbolizer_Impl( opacity, colorMap, imageOutline, shadedRelief );
@@ -2013,7 +2005,7 @@ public final class SLDFactory
 
       if( entryNode instanceof Element && NS.SLD.equals( namespaceUri ) && "ColorMapEntry".equals( nodeName ) ) //$NON-NLS-1$
       {
-        final Element entryElement = (Element) entryNode;
+        final Element entryElement = (Element)entryNode;
         final String colorAttribute = entryElement.getAttribute( "color" ); //$NON-NLS-1$
         final String opacityAttribite = entryElement.getAttribute( "opacity" ); //$NON-NLS-1$
         final String quantityAttribute = entryElement.getAttribute( "quantity" ); //$NON-NLS-1$
@@ -2042,10 +2034,10 @@ public final class SLDFactory
     if( element == null )
       return null;
 
-    final String brightnessOnlyString = XMLTools.getStringValue( "BrightnessOnly", CommonNamespaces.SLDNS.toString(), element, null );
+    final String brightnessOnlyString = XMLTools.getStringValue( "BrightnessOnly", NS.SLD, element, null );
     final Boolean brightnessOnly = brightnessOnlyString == null ? null : DatatypeConverter.parseBoolean( brightnessOnlyString );
 
-    final String reliefFactorString = XMLTools.getStringValue( "ReliefFactor", CommonNamespaces.SLDNS.toString(), element, null );
+    final String reliefFactorString = XMLTools.getStringValue( "ReliefFactor", NS.SLD, element, null );
     final Double reliefFactor = reliefFactorString == null ? null : DatatypeConverter.parseDouble( reliefFactorString );
 
     return new ShadedRelief( brightnessOnly, reliefFactor );
@@ -2056,11 +2048,11 @@ public final class SLDFactory
     if( element == null )
       return null;
 
-    final Element lineSymbolizerElement = XMLTools.getChildByName( "LineSymbolizer", CommonNamespaces.SLDNS.toString(), element );
+    final Element lineSymbolizerElement = XMLTools.getChildByName( "LineSymbolizer", NS.SLD, element );
     if( lineSymbolizerElement != null )
       return createLineSymbolizer( urlResolver, lineSymbolizerElement, uom );
 
-    final Element polygonSymbolizerElement = XMLTools.getChildByName( "PolygonSymbolizer", CommonNamespaces.SLDNS.toString(), element );
+    final Element polygonSymbolizerElement = XMLTools.getChildByName( "PolygonSymbolizer", NS.SLD, element );
     if( polygonSymbolizerElement != null )
       return createPolygonSymbolizer( urlResolver, polygonSymbolizerElement, uom );
 

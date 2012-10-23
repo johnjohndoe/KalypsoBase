@@ -49,8 +49,8 @@ import java.math.BigInteger;
 import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
-import org.deegree.model.spatialschema.ByteUtils;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
+import org.kalypsodeegree.model.geometry.ByteUtils;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
