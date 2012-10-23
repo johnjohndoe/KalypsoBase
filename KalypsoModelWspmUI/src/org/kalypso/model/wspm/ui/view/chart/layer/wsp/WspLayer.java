@@ -75,7 +75,7 @@ import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
 /**
  * Displays constant wsp lines in the cross section.
- * 
+ *
  * @author Gernot Belger
  * @author Holger Albert
  */
@@ -96,13 +96,7 @@ public class WspLayer extends AbstractProfilTheme
 
   private ILegendEntry[] m_legendEntries;
 
-  /**
-   * @param fill
-   *          True, if the area below the wsp lines should be filled. If there are more than one wsp line, this option
-   *          should be false, because you could see only the most above line and its area.
-   */
-  @SuppressWarnings( "rawtypes" )
-  public WspLayer( final IProfile profile, final String layerId, final ILayerStyleProvider styleProvider, final IWspLayerData data, final ICoordinateMapper mapper )
+  public WspLayer( final IProfile profile, final String layerId, final ILayerStyleProvider styleProvider, final IWspLayerData data, final ICoordinateMapper< ? , ? > mapper )
   {
     super( profile, layerId, Messages.getString( "WspLayer.0" ), null, mapper, styleProvider ); //$NON-NLS-1$
 
@@ -146,7 +140,7 @@ public class WspLayer extends AbstractProfilTheme
 
   /**
    * This function returns the wsp layer data.
-   * 
+   *
    * @return The wsp layer data.
    */
   public IWspLayerData getData( )
@@ -158,6 +152,8 @@ public class WspLayer extends AbstractProfilTheme
   @Override
   public EditInfo getHover( final Point pos )
   {
+    // TODO: create hover infos this during paint
+
     final WaterlevelRenderData[] renderData = getRenderData();
 
     final IAxis< ? > domainAxis = getDomainAxis();

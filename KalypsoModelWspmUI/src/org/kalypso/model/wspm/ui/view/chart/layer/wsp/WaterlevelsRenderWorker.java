@@ -115,7 +115,9 @@ public class WaterlevelsRenderWorker
     final IStatusCollector stati = new StatusCollector( KalypsoModelWspmUIPlugin.ID );
     for( final Object element : activeElements )
     {
-      /* Resolve value her, so we do not need to give wsp data to worker */
+      // FIXME: ignore elements that have attached waterlevel objects
+
+      /* Resolve value here, so we do not need to give wsp data to worker */
       final double value = getValue( element, station );
       final String label = wspLabelProvider.getText( element );
 

@@ -49,8 +49,6 @@ import de.openali.odysseus.chart.framework.util.resource.IPair;
  */
 public interface ICoordinateMapper<T_Domain, T_Target>
 {
-  //IDataOperator< ? > getDataOperator( final Class< ? > clazz );
-
   IAxis<T_Domain> getDomainAxis( );
 
   Point getScreenSize( );

@@ -53,7 +53,6 @@ import org.kalypso.model.wspm.ui.view.chart.layer.wsp.utils.WaterLevelResultTree
  */
 public class WspPanel extends AbstractProfilView
 {
-
   private final WspLayer m_layer;
 
   private final ViewerFilter m_filter;
