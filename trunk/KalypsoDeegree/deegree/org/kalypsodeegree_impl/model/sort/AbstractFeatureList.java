@@ -278,7 +278,7 @@ public abstract class AbstractFeatureList implements FeatureList
   @SuppressWarnings( "unchecked" )
   public IXLinkedFeature insertLink( final int index, final String href ) throws IllegalArgumentException, IllegalStateException
   {
-    // return insertLink( index, href, getPropertyType().getTargetFeatureType() );
+    // add String (id) link (for memory reasons)!
     final IXLinkedFeature link = new XLinkedFeature_Impl( m_parentFeature, m_parentFeatureTypeProperty, getPropertyType().getTargetFeatureType(), href );
 
     if( index < 0 )

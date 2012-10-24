@@ -61,7 +61,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class ArrayFeatureList extends AbstractFeatureList
 {
-  public static final int INITIAL_CAPACITY = 4;
+  public static final int INITIAL_CAPACITY = 16;
 
   private final ArrayList<Object> m_items = new ArrayList<>( INITIAL_CAPACITY );
 
@@ -84,7 +84,6 @@ public class ArrayFeatureList extends AbstractFeatureList
   public void add( final int index, final Object object )
   {
     checkCanAdd( 1 );
-//    final Object linkOrLocal = localFromLink( object );
     registerFeature( object );
     m_items.add( index, object );
   }
@@ -96,32 +95,9 @@ public class ArrayFeatureList extends AbstractFeatureList
   public boolean add( final Object object )
   {
     checkCanAdd( 1 );
-//    final Object linkOrLocal = localFromLink( object );
     registerFeature( object );
     return m_items.add( object );
   }
-
-//  private Object localFromLink( final Object object )
-//  {
-//    if( object instanceof XLinkedFeature_Impl )
-//    {
-//      // check for local links
-//      final String href = ((XLinkedFeature_Impl)object).getHref();
-//      if( href.startsWith( "#" ) )
-//        return href;
-//    }
-//    return object;
-//  }
-
-//  private Object linkFromLocal( final Object object )
-//  {
-//    if( object instanceof String )
-//    {
-//      final IRelationType propertyType = getPropertyType();
-//      return new XLinkedFeature_Impl( getOwner(), propertyType, propertyType.getTargetFeatureType(), (String)object );
-//    }
-//    return object;
-//  }
 
   /**
    * @see java.util.List#clear()
