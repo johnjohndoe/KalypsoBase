@@ -367,16 +367,6 @@ public class ProfileRecord extends Record implements IProfileRecord
   public boolean isSelected( )
   {
     return m_isSelected;
-//    final IProfile profile = getProfile();
-//    if( Objects.isNull( profile ) )
-//      return false;
-//
-//    final IRangeSelection selection = profile.getSelection();
-//    final Range<Double> range = selection.getRange();
-//    if( Objects.isNull( range ) )
-//      return false;
-//
-//    return range.contains( getBreite() );
   }
 
   @Override
@@ -392,5 +382,19 @@ public class ProfileRecord extends Record implements IProfileRecord
       return 1.0;
 
     return factor;
+  }
+
+  @Override
+  public String getComment( )
+  {
+    final int indexOfComment = indexOfComponent( IWspmPointProperties.POINT_PROPERTY_COMMENT );
+    if( indexOfComment == -1 )
+      return null;
+
+    Object commentValue = getValue( indexOfComment );
+    if( commentValue == null )
+      return null;
+    
+    return commentValue.toString();
   }
 }
