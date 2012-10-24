@@ -147,4 +147,6 @@ public interface IProfileRecord extends IRecord
    * @return point is part of selected range
    */
   boolean isSelected( );
+
+  String getComment( );
 }
