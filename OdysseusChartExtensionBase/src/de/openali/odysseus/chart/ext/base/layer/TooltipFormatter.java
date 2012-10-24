@@ -42,6 +42,8 @@ package de.openali.odysseus.chart.ext.base.layer;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -66,6 +68,8 @@ public class TooltipFormatter
 
   private int[] m_alignments;
 
+  private Collection<String> m_footer = new ArrayList<>();
+  
   public TooltipFormatter( final String header )
   {
     this( header, null, null );
@@ -78,6 +82,11 @@ public class TooltipFormatter
     m_alignments = alignments;
   }
 
+  public void addFooter(String line)
+  {
+    m_footer.add( line );
+  }
+  
   public void addLine( final Object... values )
   {
     /* check length of columns and create default formats if necessary */
@@ -149,6 +158,9 @@ public class TooltipFormatter
       pw.println();
     }
 
+    for( String footer : m_footer )
+      pw.println(footer);
+    
     pw.flush();
     return StringUtils.chomp( out.toString() );
   }
