@@ -58,16 +58,6 @@ import org.eclipse.jetty.servlets.CGI;
  */
 public class CGIServlet extends CGI
 {
-  /**
-   * The constructor.
-   */
-  public CGIServlet( )
-  {
-  }
-
-  /**
-   * @see javax.servlet.GenericServlet#getInitParameter(java.lang.String)
-   */
   @Override
   public String getInitParameter( final String name )
   {
@@ -89,7 +79,6 @@ public class CGIServlet extends CGI
         return file.toString();
 
       return new File( file, "cgi-bin" ).toString();
-
     }
     catch( final Exception ex )
     {
