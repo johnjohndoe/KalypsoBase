@@ -49,7 +49,7 @@ import java.util.Set;
 import org.apache.commons.collections.iterators.IteratorEnumeration;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.Platform;
-import org.mortbay.servlet.CGI;
+import org.eclipse.jetty.servlets.CGI;
 
 /**
  * A CGI servlet, which can be configured.
@@ -97,17 +97,15 @@ public class CGIServlet extends CGI
       return null;
     }
   }
-
+  
   @Override
-  public Enumeration< ? > getInitParameterNames( )
+  public Enumeration<String> getInitParameterNames( )
   {
     final Set<String> results = new HashSet<>();
 
     final Enumeration< ? > initParameterNames = super.getInitParameterNames();
     while( initParameterNames.hasMoreElements() )
-    {
       results.add( (String) initParameterNames.nextElement() );
-    }
 
     if( !results.contains( "ENV_PROJ_LIB" ) )
       results.add( "ENV_PROJ_LIB" );
