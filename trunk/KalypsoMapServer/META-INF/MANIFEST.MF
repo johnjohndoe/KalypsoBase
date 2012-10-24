@@ -5,7 +5,6 @@ Bundle-SymbolicName: org.kalypso.mapserver;singleton:=true
 Bundle-Version: 12.7.0.qualifier
 Bundle-Activator: org.kalypso.mapserver.Activator
 Require-Bundle: org.eclipse.core.runtime,
- org.mortbay.jetty.util,
  org.kalypso.commons,
  org.kalypso.deegree
 Bundle-ActivationPolicy: lazy
@@ -17,3 +16,5 @@ Export-Package: org.kalypso.mapserver,
  org.kalypso.mapserver.utils.exceptions,
  org.mapserver.mapserver
 Import-Package: javax.servlet
+Bundle-ClassPath: lib/jetty-servlets-8.0.0.M3.jar,
+ .
