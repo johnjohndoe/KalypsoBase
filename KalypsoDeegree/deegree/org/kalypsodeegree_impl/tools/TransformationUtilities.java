@@ -133,13 +133,13 @@ public class TransformationUtilities
     final GM_Envelope sourceScreenRect = projection.getSourceRect();
 
     /* Create a surface and transform it in the coordinate system of the. */
-    final GM_Polygon< ? > sourceScreenSurface = GeometryFactory.createGM_Surface( sourceScreenRect, targetCS );
+    final GM_Polygon sourceScreenSurface = GeometryFactory.createGM_Surface( sourceScreenRect, targetCS );
 
-    GM_Polygon< ? > destScreenSurface;
+    GM_Polygon destScreenSurface;
     if( !targetCS.equals( gridDomain.getOrigin( null ).getCoordinateSystem() ) )
     {
       final IGeoTransformer geoTrans1 = GeoTransformerFactory.getGeoTransformer( gridDomain.getOrigin( null ).getCoordinateSystem() );
-      destScreenSurface = (GM_Polygon< ? >) geoTrans1.transform( sourceScreenSurface );
+      destScreenSurface = (GM_Polygon) geoTrans1.transform( sourceScreenSurface );
     }
     else
       destScreenSurface = sourceScreenSurface;
@@ -168,7 +168,7 @@ public class TransformationUtilities
     final RenderedImage paintImage = derivePaintImage( image );
 
     /* Get the destinationSurface in target coordinates. */
-    final GM_Polygon< ? > destSurface = gridDomain.getGM_Surface( lowX, lowY, highX, highY, targetCS );
+    final GM_Polygon destSurface = gridDomain.getGM_Surface( lowX, lowY, highX, highY, targetCS );
     final GM_Ring destExtRing = destSurface.getSurfaceBoundary().getExteriorRing();
     final GM_Position llCorner = destExtRing.getPositions()[0];
     final GM_Position lrCorner = destExtRing.getPositions()[1];

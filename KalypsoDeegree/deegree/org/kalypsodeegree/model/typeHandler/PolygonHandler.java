@@ -70,14 +70,14 @@ public class PolygonHandler implements IMarshallingTypeHandler2
   @Override
   public Object cloneObject( final Object objectToClone, final String gmlVersion ) throws CloneNotSupportedException
   {
-    final GM_Polygon< ? > polygon = (GM_Polygon< ? >) objectToClone;
+    final GM_Polygon polygon = (GM_Polygon) objectToClone;
     return polygon.clone();
   }
 
   @Override
   public void marshal( final Object value, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
   {
-    new PolygonMarshaller( reader ).marshall( (GM_Polygon<GM_PolygonPatch>) value );
+    new PolygonMarshaller( reader ).marshall( (GM_Polygon) value );
   }
 
   @Override

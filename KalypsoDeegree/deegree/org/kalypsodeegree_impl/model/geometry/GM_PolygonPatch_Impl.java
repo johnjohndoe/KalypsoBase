@@ -36,21 +36,21 @@
 package org.kalypsodeegree_impl.model.geometry;
 
 import org.kalypso.transformation.transformer.GeoTransformerException;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Aggregate;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 
 /**
  * default implementierung of the GM_Polygon interface from package jago.model.
  * ------------------------------------------------------------
- *
+ * 
  * @version 11.6.2001
  * @author Andreas Poth
  */
@@ -61,7 +61,7 @@ class GM_PolygonPatch_Impl extends GM_AbstractSurfacePatch_Impl implements GM_Po
 
   /**
    * Creates a new GM_Polygon_Impl object.
-   *
+   * 
    * @param interpolation
    * @param exteriorRing
    * @param interiorRings
@@ -75,7 +75,7 @@ class GM_PolygonPatch_Impl extends GM_AbstractSurfacePatch_Impl implements GM_Po
 
   /**
    * checks if this curve is completly equal to the submitted geometry
-   *
+   * 
    * @param other
    *          object to compare to
    */
@@ -151,19 +151,19 @@ class GM_PolygonPatch_Impl extends GM_AbstractSurfacePatch_Impl implements GM_Po
     {
       if( gmo instanceof GM_Point )
       {
-        inter = LinearIntersects.intersects( ((GM_Point) gmo).getPosition(), this );
+        inter = LinearIntersects.intersects( ((GM_Point)gmo).getPosition(), this );
       }
       else if( gmo instanceof GM_Curve )
       {
-        inter = LinearIntersects.intersects( (GM_Curve) gmo, new GM_Polygon_Impl<GM_PolygonPatch>( this ) );
+        inter = LinearIntersects.intersects( (GM_Curve)gmo, new GM_Polygon_Impl( this ) );
       }
       else if( gmo instanceof GM_Polygon )
       {
-        inter = LinearIntersects.intersects( (GM_Polygon< ? >) gmo, new GM_Polygon_Impl<GM_PolygonPatch>( this ) );
+        inter = LinearIntersects.intersects( (GM_Polygon)gmo, new GM_Polygon_Impl( this ) );
       }
       else if( gmo instanceof GM_Aggregate )
       {
-        inter = intersectsMultiObject( (GM_Aggregate) gmo );
+        inter = intersectsMultiObject( (GM_Aggregate)gmo );
       }
     }
     catch( final Exception e )
@@ -200,21 +200,21 @@ class GM_PolygonPatch_Impl extends GM_AbstractSurfacePatch_Impl implements GM_Po
     {
       if( gmo instanceof GM_Point )
       {
-        contain = LinearContains.contains( this, ((GM_Point) gmo).getPosition() );
+        contain = LinearContains.contains( this, ((GM_Point)gmo).getPosition() );
       }
       else if( gmo instanceof GM_Curve )
       {
         // contain = contain_.contains ( new GM_Surface_Impl ( this ),
         // (GM_Curve)gmo );
-        contain = LinearContains.contains( this, ((GM_Curve) gmo).getAsLineString() );
+        contain = LinearContains.contains( this, ((GM_Curve)gmo).getAsLineString() );
       }
       else if( gmo instanceof GM_Polygon )
       {
-        contain = LinearContains.contains( new GM_Polygon_Impl<GM_PolygonPatch>( this ), (GM_Polygon< ? >) gmo );
+        contain = LinearContains.contains( new GM_Polygon_Impl( this ), (GM_Polygon)gmo );
       }
       else if( gmo instanceof GM_Aggregate )
       {
-        contain = containsMultiObject( (GM_Aggregate) gmo );
+        contain = containsMultiObject( (GM_Aggregate)gmo );
       }
     }
     catch( final Exception e )
@@ -255,7 +255,7 @@ class GM_PolygonPatch_Impl extends GM_AbstractSurfacePatch_Impl implements GM_Po
 
       /* exterior ring */
       final GM_Ring exRing = GeometryFactory.createGM_Ring( getExteriorRing(), getCoordinateSystem() );
-      final GM_Ring transExRing = (GM_Ring) exRing.transform( targetCRS );
+      final GM_Ring transExRing = (GM_Ring)exRing.transform( targetCRS );
 
       /* interior rings */
       final GM_Position[][] interiors = getInteriorRings();
@@ -267,7 +267,7 @@ class GM_PolygonPatch_Impl extends GM_AbstractSurfacePatch_Impl implements GM_Po
       for( int j = 0; j < interiors.length; j++ )
       {
         final GM_Ring inRing = GeometryFactory.createGM_Ring( interiors[j], getCoordinateSystem() );
-        transInRings[j] = ((GM_Ring) inRing.transform( targetCRS )).getPositions();
+        transInRings[j] = ((GM_Ring)inRing.transform( targetCRS )).getPositions();
       }
 
       return new GM_PolygonPatch_Impl( transExRing.getPositions(), transInRings, targetCRS );

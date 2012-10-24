@@ -234,7 +234,7 @@ class LinearContains
   /**
    * the operation returns true if the submitted point contains the submitted surface
    */
-  public static boolean contains( final GM_Polygon< ? > surface, final GM_Point point ) throws Exception
+  public static boolean contains( final GM_Polygon surface, final GM_Point point ) throws Exception
   {
     return contains( surface.getSurfacePatch(), point.getPosition() );
   }
@@ -261,7 +261,7 @@ class LinearContains
   /**
    * the operation returns true if the submitted curve contains the submitted surface
    */
-  public static boolean contains( final GM_Polygon< ? > surface, final GM_Curve curve ) throws GM_Exception
+  public static boolean contains( final GM_Polygon surface, final GM_Curve curve ) throws GM_Exception
   {
     // gather the positions of the crings (exterior and interior) and
     // the curve as arrays of GM_Positions
@@ -301,7 +301,7 @@ class LinearContains
   /**
    * the operation returns true if the two submitted surfaces contains
    */
-  public static boolean contains( final GM_Polygon< ? > surface2, final GM_Polygon< ? > surface1 ) throws Exception
+  public static boolean contains( final GM_Polygon surface2, final GM_Polygon surface1 ) throws Exception
   {
     return contains( surface2.getSurfacePatch(), surface1.getSurfacePatch() );
   }

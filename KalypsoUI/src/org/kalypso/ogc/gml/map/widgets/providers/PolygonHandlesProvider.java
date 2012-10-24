@@ -72,7 +72,7 @@ public class PolygonHandlesProvider implements IHandlesProvider
       final GM_Object gmObj = (GM_Object) feature.getProperty( geoVpt );
       if( GeometryUtilities.isPolygonGeometry( geoVpt ) )
       {
-        final GM_Polygon<GM_AbstractSurfacePatch> surface = (GM_Polygon<GM_AbstractSurfacePatch>) gmObj;
+        final GM_Polygon surface = (GM_Polygon) gmObj;
 
         final int numberOfSurfacePatches = surface.size();
 

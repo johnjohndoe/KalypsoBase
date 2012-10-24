@@ -73,10 +73,10 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree_impl.gml.binding.commons.CoverageCollection;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverage;
 import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
@@ -265,7 +265,7 @@ public final class GeoGridUtilities
    *          returned.
    * @return The surface of the given grid.
    */
-  public static GM_Polygon< ? > createSurface( final IGeoGrid grid, final String targetCRS ) throws GeoGridException
+  public static GM_Polygon createSurface( final IGeoGrid grid, final String targetCRS ) throws GeoGridException
   {
     try
     {
@@ -289,17 +289,17 @@ public final class GeoGridUtilities
       final GM_Ring shell = GeometryFactory.createGM_Ring( new GM_Position[] { c1, c2, c3, c4, c1 }, grid.getSourceCRS() );
 
       /* Create the surface patch. */
-      final GM_AbstractSurfacePatch patch = GeometryFactory.createGM_PolygonPatch( shell, new GM_Ring[] {}, grid.getSourceCRS() );
+      final GM_PolygonPatch patch = GeometryFactory.createGM_PolygonPatch( shell, new GM_Ring[] {}, grid.getSourceCRS() );
 
       /* Create the surface. */
-      final GM_Polygon< ? extends GM_AbstractSurfacePatch> surface = GeometryFactory.createGM_Surface( patch );
+      final GM_Polygon surface = GeometryFactory.createGM_Surface( patch );
 
       /* Transform it. */
       Assert.isNotNull( "The target coordinate system is not allowed to be null ...", targetCRS );
       if( grid.getSourceCRS() != null && !grid.getSourceCRS().equals( targetCRS ) )
       {
         final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( targetCRS );
-        return (GM_Polygon< ? >) geoTransformer.transform( surface );
+        return (GM_Polygon) geoTransformer.transform( surface );
       }
 
       return surface;
@@ -324,7 +324,7 @@ public final class GeoGridUtilities
    *          The coordinate system will be used to transform the cell, after it was created and before it is returned.
    * @return The cell at the given (cell-)coordinates in the grid.
    */
-  public static GM_Polygon< ? > createCell( final IGeoGrid grid, final int x, final int y, final String targetCRS ) throws GeoGridException
+  public static GM_Polygon createCell( final IGeoGrid grid, final int x, final int y, final String targetCRS ) throws GeoGridException
   {
     // TODO What with offsetX.y and offsetY.x
     try
@@ -350,17 +350,17 @@ public final class GeoGridUtilities
       final GM_Ring shell = GeometryFactory.createGM_Ring( new GM_Position[] { c1, c2, c3, c4, c1 }, grid.getSourceCRS() );
 
       /* Create the surface patch. */
-      final GM_AbstractSurfacePatch patch = GeometryFactory.createGM_PolygonPatch( shell, new GM_Ring[] {}, grid.getSourceCRS() );
+      final GM_PolygonPatch patch = GeometryFactory.createGM_PolygonPatch( shell, new GM_Ring[] {}, grid.getSourceCRS() );
 
       /* Create the surface. */
-      final GM_Polygon< ? extends GM_AbstractSurfacePatch> surface = GeometryFactory.createGM_Surface( patch );
+      final GM_Polygon surface = GeometryFactory.createGM_Surface( patch );
 
       /* Transform it. */
       Assert.isNotNull( "The target coordinate system is not allowed to be null ...", targetCRS );
       if( grid.getSourceCRS() != null && !grid.getSourceCRS().equals( targetCRS ) )
       {
         final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( targetCRS );
-        return (GM_Polygon< ? >) geoTransformer.transform( surface );
+        return (GM_Polygon) geoTransformer.transform( surface );
       }
 
       return surface;
@@ -1037,10 +1037,10 @@ public final class GeoGridUtilities
         final GM_Ring shell = GeometryFactory.createGM_Ring( new GM_Position[] { c1, c2, c3, c4, c1 }, grid.getSourceCRS() );
 
         /* Create the surface patch. */
-        final GM_AbstractSurfacePatch patch = GeometryFactory.createGM_PolygonPatch( shell, new GM_Ring[] {}, grid.getSourceCRS() );
+        final GM_PolygonPatch patch = GeometryFactory.createGM_PolygonPatch( shell, new GM_Ring[] {}, grid.getSourceCRS() );
 
         /* Create the surface. */
-        final GM_Polygon< ? extends GM_AbstractSurfacePatch> surface = GeometryFactory.createGM_Surface( patch );
+        final GM_Polygon surface = GeometryFactory.createGM_Surface( patch );
 
         final Geometry geometry = JTSAdapter.export( surface );
 
@@ -1094,7 +1094,7 @@ public final class GeoGridUtilities
         minCellSizeY = Math.min( Math.abs( grid.getOffsetX().y + grid.getOffsetY().y ), minCellSizeY );
 
         final String targetCRS = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
-        final GM_Polygon< ? > surface = GeoGridUtilities.createSurface( grid, targetCRS );
+        final GM_Polygon surface = GeoGridUtilities.createSurface( grid, targetCRS );
 
         final Geometry geometry = JTSAdapter.export( surface );
 

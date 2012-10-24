@@ -91,7 +91,7 @@ public class JMSelector
         {
           final String coordinateSystem = defaultGeometryProperty.getCoordinateSystem();
 
-          final GM_Polygon< ? extends GM_AbstractSurfacePatch> bbox = GeometryFactory.createGM_Surface( env, coordinateSystem );
+          final GM_Polygon bbox = GeometryFactory.createGM_Surface( env, coordinateSystem );
 
           if( selectWithinBoxStatus && bbox.contains( defaultGeometryProperty ) || !selectWithinBoxStatus && bbox.intersects( defaultGeometryProperty ) )
             testFE.add( fe );
@@ -200,7 +200,7 @@ public class JMSelector
     {
       if( geom instanceof GM_Polygon )
       {
-        final GM_Polygon< ? extends GM_AbstractSurfacePatch> surface = (GM_Polygon< ? >) geom;
+        final GM_Polygon surface = (GM_Polygon) geom;
         positions = surface.getSurfaceBoundary().getExteriorRing().getPositions();
       }
       else if( geom instanceof GM_Curve )

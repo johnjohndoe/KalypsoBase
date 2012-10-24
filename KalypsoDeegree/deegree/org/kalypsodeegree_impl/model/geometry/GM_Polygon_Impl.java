@@ -55,6 +55,7 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_SurfaceBoundary;
@@ -65,7 +66,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * default implementation of the GM_Surface interface from package jago.model.
  * <p>
  * </p>
- * for simplicity of the implementation it is assumed that a surface is build from just one surface patch. this isn't
+ * for simplicity of the implementation it is assumed that a surface is build from just one surface patch. this isn'GM_PolygonPatch
  * completly confrom to the ISO 19107 and the OGC GAIA specification but sufficient for most applications.
  * <p>
  * </p>
@@ -77,12 +78,12 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * @version 05.04.2002
  * @author <a href="mailto:poth@lat-lon.de">Andreas Poth </a>
  */
-public class GM_Polygon_Impl<T extends GM_AbstractSurfacePatch> extends GM_AbstractSurface_Impl<T> implements GM_Polygon<T>
+public class GM_Polygon_Impl extends GM_AbstractSurface_Impl<GM_PolygonPatch> implements GM_Polygon
 {
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = -2148069106391096842L;
 
-  private T m_patch;
+  private GM_PolygonPatch m_patch;
 
   /**
    * initializes the surface with default orientation submitting one surface patch.
@@ -90,7 +91,7 @@ public class GM_Polygon_Impl<T extends GM_AbstractSurfacePatch> extends GM_Abstr
    * @param surfacePatch
    *          patches of the surface.
    */
-  public GM_Polygon_Impl( final T surfacePatch ) throws GM_Exception
+  public GM_Polygon_Impl( final GM_PolygonPatch surfacePatch ) throws GM_Exception
   {
     this( '+', surfacePatch );
   }
@@ -101,7 +102,7 @@ public class GM_Polygon_Impl<T extends GM_AbstractSurfacePatch> extends GM_Abstr
    * @param surfacePatch
    *          patches of the surface.
    */
-  public GM_Polygon_Impl( final char orientation, final T surfacePatch ) throws GM_Exception
+  public GM_Polygon_Impl( final char orientation, final GM_PolygonPatch surfacePatch ) throws GM_Exception
   {
     super( surfacePatch.getCoordinateSystem(), orientation );
 
@@ -130,7 +131,7 @@ public class GM_Polygon_Impl<T extends GM_AbstractSurfacePatch> extends GM_Abstr
   {
     super( boundary.getCoordinateSystem(), orientation );
 
-    m_patch = (T)GeometryFactory.createGM_PolygonPatch( boundary.getExteriorRing(), boundary.getInteriorRings(), boundary.getCoordinateSystem() );
+    m_patch = GeometryFactory.createGM_PolygonPatch( boundary.getExteriorRing(), boundary.getInteriorRings(), boundary.getCoordinateSystem() );
   }
 
   /**
@@ -227,7 +228,7 @@ public class GM_Polygon_Impl<T extends GM_AbstractSurfacePatch> extends GM_Abstr
    * returns the surface patch at the submitted index
    */
   @Override
-  public T getSurfacePatch( )
+  public GM_PolygonPatch getSurfacePatch( )
   {
     return m_patch;
   }
@@ -283,9 +284,9 @@ public class GM_Polygon_Impl<T extends GM_AbstractSurfacePatch> extends GM_Abstr
   {
     try
     {
-      final GM_AbstractSurfacePatch myPatch = (GM_AbstractSurfacePatch)m_patch.clone();
+      final GM_PolygonPatch myPatch = (GM_PolygonPatch)m_patch.clone();
 
-      return new GM_Polygon_Impl<>( getOrientation(), myPatch );
+      return new GM_Polygon_Impl( getOrientation(), myPatch );
     }
     catch( final GM_Exception e )
     {
@@ -324,7 +325,7 @@ public class GM_Polygon_Impl<T extends GM_AbstractSurfacePatch> extends GM_Abstr
 
   /**
    * The boolean valued operation "intersects" shall return TRUE if this <tt>GM_Surface_Impl</tt> intersects with the
-   * given <tt>GM_Object</t>.
+   * given <tt>GM_Object</GM_PolygonPatch>.
    * Within a <tt>GM_Complex</tt>, the <tt>GM_Primitives</tt> do not intersect one another. In general, topologically
    * structured data uses shared geometric objects to capture intersection information.
    * 
@@ -411,19 +412,19 @@ public class GM_Polygon_Impl<T extends GM_AbstractSurfacePatch> extends GM_Abstr
 
   @Override
   @Deprecated
-  public T get( final int index )
+  public GM_PolygonPatch get( final int index )
   {
     return getSurfacePatch();
   }
-  
+
   @Override
   @Deprecated
   @SuppressWarnings( "unchecked" )
-  public Iterator<T> iterator( )
+  public Iterator<GM_PolygonPatch> iterator( )
   {
     return new SingletonIterator( m_patch );
   }
-  
+
   @Override
   @Deprecated
   public int size( )
@@ -442,7 +443,7 @@ public class GM_Polygon_Impl<T extends GM_AbstractSurfacePatch> extends GM_Abstr
   }
 
   @Override
-  public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<T> visitor, final IProgressMonitor monitor ) throws CoreException
+  public void acceptSurfacePatches( final GM_Envelope envToVisit, final ISurfacePatchVisitor<GM_PolygonPatch> visitor, final IProgressMonitor monitor ) throws CoreException
   {
     monitor.beginTask( StringUtils.EMPTY, 1 );
 
@@ -461,9 +462,9 @@ public class GM_Polygon_Impl<T extends GM_AbstractSurfacePatch> extends GM_Abstr
       if( sourceCRS == null || sourceCRS.equalsIgnoreCase( targetCRS ) )
         return this;
 
-      final GM_AbstractSurfacePatch patch = (GM_AbstractSurfacePatch)m_patch.transform( targetCRS );
+      final GM_PolygonPatch patch = (GM_PolygonPatch)m_patch.transform( targetCRS );
 
-      return new GM_Polygon_Impl<>( getOrientation(), patch );
+      return new GM_Polygon_Impl( getOrientation(), patch );
     }
     catch( final GM_Exception e )
     {

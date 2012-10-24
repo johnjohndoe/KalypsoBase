@@ -87,9 +87,9 @@ public class MarshallGM_MultiSurfaceTest extends TestCase
     final GM_Position[] interiorRing2 = new GM_Position[] { pos2, pos7, pos6, pos2 };
 
     final String crs = "EPSG:31467";
-    final GM_Polygon<GM_PolygonPatch> surfaceNoHole = GeometryFactory.createGM_Surface( exteriorRing, new GM_Position[][] {}, crs );
-    final GM_Polygon<GM_PolygonPatch> surfaceOneHole = GeometryFactory.createGM_Surface( exteriorRing, new GM_Position[][] { interiorRing1 }, crs );
-    final GM_Polygon<GM_PolygonPatch> surfaceTwoHoles = GeometryFactory.createGM_Surface( exteriorRing, new GM_Position[][] { interiorRing1, interiorRing2 }, crs );
+    final GM_Polygon surfaceNoHole = GeometryFactory.createGM_Surface( exteriorRing, new GM_Position[][] {}, crs );
+    final GM_Polygon surfaceOneHole = GeometryFactory.createGM_Surface( exteriorRing, new GM_Position[][] { interiorRing1 }, crs );
+    final GM_Polygon surfaceTwoHoles = GeometryFactory.createGM_Surface( exteriorRing, new GM_Position[][] { interiorRing1, interiorRing2 }, crs );
 
     m_multiPolygon = GeometryFactory.createGM_MultiSurface( new GM_Polygon[] { surfaceNoHole, surfaceOneHole, surfaceTwoHoles }, crs );
   }

@@ -71,7 +71,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
    * @param feature
    * @param geometry
    */
-  protected PolygonDisplayElement_Impl( final Feature feature, final GM_Polygon< ? >[] surfaces )
+  protected PolygonDisplayElement_Impl( final Feature feature, final GM_Polygon[] surfaces )
   {
     this( feature, surfaces, new PolygonSymbolizer_Impl() );
   }
@@ -83,7 +83,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
    * @param geometry
    * @param symbolizer
    */
-  protected PolygonDisplayElement_Impl( final Feature feature, final GM_Polygon< ? >[] surfaces, final PolygonSymbolizer symbolizer )
+  protected PolygonDisplayElement_Impl( final Feature feature, final GM_Polygon[] surfaces, final PolygonSymbolizer symbolizer )
   {
     super( feature, surfaces, symbolizer );
   }
@@ -108,7 +108,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
     if( fill == null )
       return;
 
-    final GM_Polygon< ? >[] surfaces = (GM_Polygon< ? >[]) getGeometry();
+    final GM_Polygon[] surfaces = (GM_Polygon[]) getGeometry();
 
     try
     {
@@ -116,7 +116,7 @@ public class PolygonDisplayElement_Impl extends GeometryDisplayElement_Impl impl
       final StrokePainter strokePainter = new StrokePainter( stroke, feature, uom, projection );
       final FillPainter fillPainter = new FillPainter( fill, feature, uom, projection );
 
-      for( final GM_Polygon< ? > element : surfaces )
+      for( final GM_Polygon element : surfaces )
       {
         SldAwtUtilities.paintSurface( g2, element, projection, fillPainter, strokePainter );
       }

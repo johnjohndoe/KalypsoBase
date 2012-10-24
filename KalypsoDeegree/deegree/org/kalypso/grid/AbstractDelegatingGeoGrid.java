@@ -188,7 +188,7 @@ public abstract class AbstractDelegatingGeoGrid implements IGeoGrid
   }
 
   @Override
-  public GM_Polygon< ? > getSurface( final String targetCRS ) throws GeoGridException
+  public GM_Polygon getSurface( final String targetCRS ) throws GeoGridException
   {
     if( m_delegate == null )
       throw new GeoGridException( "No grid-delegate available", null );
@@ -197,7 +197,7 @@ public abstract class AbstractDelegatingGeoGrid implements IGeoGrid
   }
 
   @Override
-  public GM_Polygon< ? > getCell( final int x, final int y, final String targetCRS ) throws GeoGridException
+  public GM_Polygon getCell( final int x, final int y, final String targetCRS ) throws GeoGridException
   {
     if( m_delegate == null )
       throw new GeoGridException( "No grid-delegate available", null );

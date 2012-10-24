@@ -132,7 +132,7 @@ public class DrawingPolygonDelegate extends AbstractAdvancedSelectionWidgetDeleg
         final Geometry jtsBase = JTSAdapter.export( gmo );
         final List<Feature> myFeatures = new ArrayList<>();
 
-        final Feature[] features = getDataProvider().query( (GM_Polygon< ? >) gmo, getEditMode() );
+        final Feature[] features = getDataProvider().query( (GM_Polygon) gmo, getEditMode() );
 
         for( final Feature feature : features )
         {
@@ -184,7 +184,7 @@ public class DrawingPolygonDelegate extends AbstractAdvancedSelectionWidgetDeleg
 
         final Geometry jtsBase = JTSAdapter.export( gmo );
 
-        final Feature[] features = getDataProvider().query( (GM_Polygon< ? >) gmo, getEditMode() );
+        final Feature[] features = getDataProvider().query( (GM_Polygon) gmo, getEditMode() );
 
         final List<Feature> highlight = new ArrayList<>();
 

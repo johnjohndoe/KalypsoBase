@@ -70,18 +70,18 @@ public class SurfaceHandler implements IMarshallingTypeHandler2
   @Override
   public Object cloneObject( final Object objectToClone, final String gmlVersion ) throws CloneNotSupportedException
   {
-    final GM_Polygon< ? > surface = (GM_Polygon< ? >) objectToClone;
+    final GM_Polygon surface = (GM_Polygon) objectToClone;
     return surface.clone();
   }
 
   @Override
   public void marshal( final Object value, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
   {
-    final GM_Polygon< ? extends GM_AbstractSurfacePatch> surface = (GM_Polygon< ? extends GM_AbstractSurfacePatch>) value;
+    final GM_Polygon surface = (GM_Polygon) value;
 
     // TODO: we can only marshal Surface's as polygons at the moment
     // However we should at least check, if it is really a Polygon
-    new PolygonMarshaller( reader ).marshall( (GM_Polygon<GM_PolygonPatch>) surface );
+    new PolygonMarshaller( reader ).marshall( (GM_Polygon) surface );
   }
 
   @Override

@@ -477,7 +477,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
     return new Object[0];
   }
 
-  GM_Polygon< ? extends GM_AbstractSurfacePatch> getBBoxFromActiveMap( )
+  GM_Polygon getBBoxFromActiveMap( )
   {
     final IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
     // if this Wizard is activated we assume there is always a map (GisMapEditor) open.

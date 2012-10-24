@@ -209,7 +209,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     final SubMonitor progress = SubMonitor.convert( monitor, "Painting grid", 100 );
 
     /* Get the envelope of the surface of the grid (it is transformed). */
-    final GM_Polygon< ? > gridSurface = grid.getSurface( targetCRS );
+    final GM_Polygon gridSurface = grid.getSurface( targetCRS );
 
     final Composite oldAlphaComposite = g.getComposite();
     try
@@ -231,7 +231,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     paintImageOutline( g, gridSurface, projection, imageOutline, progress.newChild( 5, SubMonitor.SUPPRESS_NONE ) );
   }
 
-  private void paintRaster( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final GM_Polygon< ? > gridSurface, final String targetCRS, final IProgressMonitor progress ) throws GeoGridException, CoreException
+  private void paintRaster( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final GM_Polygon gridSurface, final String targetCRS, final IProgressMonitor progress ) throws GeoGridException, CoreException
   {
     final GM_Envelope envelope = gridSurface.getEnvelope();
 
@@ -523,13 +523,13 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
       return;
 
     /* Get the surface of the cell (in the target coordinate system). */
-    final GM_Polygon< ? > cell = grid.getCell( i, j, targetCRS );
+    final GM_Polygon cell = grid.getCell( i, j, targetCRS );
     final GM_Envelope cellEnvelope = cell.getEnvelope();
     final Envelope jtsCellEnvelope = JTSAdapter.export( cellEnvelope );
     paintEnvelope( g, projection, jtsCellEnvelope, color );
   }
 
-  private void paintImageOutline( final Graphics2D g, final GM_Polygon< ? > gridSurface, final GeoTransform projection, final Symbolizer imageOutline, final IProgressMonitor monitor ) throws CoreException
+  private void paintImageOutline( final Graphics2D g, final GM_Polygon gridSurface, final GeoTransform projection, final Symbolizer imageOutline, final IProgressMonitor monitor ) throws CoreException
   {
     try
     {
@@ -751,7 +751,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
           if( cells )
           {
             /* Create the cells geometry. */
-            final GM_Polygon< ? > surface = GeoGridUtilities.createCell( grid, x, y, targetCRS );
+            final GM_Polygon surface = GeoGridUtilities.createCell( grid, x, y, targetCRS );
 
             /* Paint the cell at this position. */
             final PolygonDisplayElement cellDisplayElement = DisplayElementFactory.buildPolygonDisplayElement( null, surface, cellSymbolizer );

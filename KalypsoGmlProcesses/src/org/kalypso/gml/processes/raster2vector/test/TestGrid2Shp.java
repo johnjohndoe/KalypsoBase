@@ -191,7 +191,7 @@ public class TestGrid2Shp
 
       for( final CollectorDataProvider element : data )
       {
-        final GM_Polygon< ? > line = (GM_Polygon< ? >) element.getGeometry();
+        final GM_Polygon line = (GM_Polygon) element.getGeometry();
         final ISHPGeometry geom = gm2shp.convert( line );
 
         final Double id = element.getId();

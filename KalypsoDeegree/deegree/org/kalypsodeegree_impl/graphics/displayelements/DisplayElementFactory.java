@@ -374,7 +374,7 @@ public final class DisplayElementFactory
    */
   public static PolygonDisplayElement buildPolygonDisplayElement( final Feature feature, final Object geomOrList, final PolygonSymbolizer sym )
   {
-    final GM_Polygon< ? >[] surfaces = GeometryUtilities.findGeometries( geomOrList, GM_Polygon.class );
+    final GM_Polygon[] surfaces = GeometryUtilities.findGeometries( geomOrList, GM_Polygon.class );
     if( ArrayUtils.isEmpty( surfaces ) )
       return null;
     return new PolygonDisplayElement_Impl( feature, surfaces, sym );

@@ -84,7 +84,7 @@ public class PolygonMemberContentHandler extends GMLElementContentHandler implem
   }
 
   @Override
-  public void handle( final GM_Polygon<GM_PolygonPatch> element ) throws SAXException
+  public void handle( final GM_Polygon element ) throws SAXException
   {
     m_surfaceHandler.handle( element );
   }

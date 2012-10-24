@@ -276,7 +276,7 @@ class LinearIntersects
   /**
    * the operation returns true if the submitted point intersects the submitted surface
    */
-  public static boolean intersects( final GM_Point point, final GM_Polygon< ? > surface ) throws Exception
+  public static boolean intersects( final GM_Point point, final GM_Polygon surface ) throws Exception
   {
     return intersects( point.getPosition(), surface.getSurfacePatch() );
   }
@@ -308,7 +308,7 @@ class LinearIntersects
   /**
    * the operation returns true if the submitted curve intersects the submitted surface
    */
-  public static boolean intersects( final GM_Curve curve, final GM_Polygon< ? > surface ) throws Exception
+  public static boolean intersects( final GM_Curve curve, final GM_Polygon surface ) throws Exception
   {
     boolean inter = false;
     final int cnt1 = curve.getNumberOfCurveSegments();
@@ -331,7 +331,7 @@ class LinearIntersects
   /**
    * the operation returns true if the two submitted surfaces intersects
    */
-  public static boolean intersects( final GM_Polygon< ? > surface1, final GM_Polygon< ? > surface2 ) throws Exception
+  public static boolean intersects( final GM_Polygon surface1, final GM_Polygon surface2 ) throws Exception
   {
     return intersects( surface1.getSurfacePatch(), surface2.getSurfacePatch() );
   }

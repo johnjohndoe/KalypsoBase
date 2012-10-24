@@ -185,11 +185,11 @@ class GM_CurveBoundary_Impl extends GM_PrimitiveBoundary_Impl implements GM_Curv
       }
       else if( gmo instanceof GM_Polygon )
       {
-        inter = LinearIntersects.intersects( p1, (GM_Polygon< ? >) gmo );
+        inter = LinearIntersects.intersects( p1, (GM_Polygon) gmo );
 
         if( !inter )
         {
-          inter = LinearIntersects.intersects( p2, (GM_Polygon< ? >) gmo );
+          inter = LinearIntersects.intersects( p2, (GM_Polygon) gmo );
         }
       }
       else if( gmo instanceof GM_MultiPrimitive )

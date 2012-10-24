@@ -69,7 +69,7 @@ public class MultiSurfaceMarshaller extends GeometryMarshaller<GM_MultiSurface>
     for( final Iterator<GM_Object> it = marshalledObject.getIterator(); it.hasNext(); )
     {
       // FIXME: we should allow all geometries that substitue '_Surface'
-      final GM_Polygon<GM_PolygonPatch> object = (GM_Polygon<GM_PolygonPatch>) it.next();
+      final GM_Polygon object = (GM_Polygon) it.next();
       new PolygonMemberMarshaller( getXMLReader() ).marshall( object );
     }
   }

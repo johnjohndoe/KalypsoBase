@@ -105,10 +105,10 @@ public class GetPolygoneArea extends FeaturePropertyFunction
       return null;
 
     final Object objGeometry = feature.getProperty( polyProperty );
-    if( !(objGeometry instanceof GM_Polygon< ? >) )
+    if( !(objGeometry instanceof GM_Polygon) )
       return null;
 
-    final GM_Polygon< ? > polygon = (GM_Polygon< ? >) objGeometry;
+    final GM_Polygon polygon = (GM_Polygon) objGeometry;
 
     final double polygonArea = polygon.getArea();
 

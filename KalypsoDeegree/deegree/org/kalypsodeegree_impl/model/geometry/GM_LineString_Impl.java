@@ -125,7 +125,7 @@ class GM_LineString_Impl extends GM_CurveSegment_Impl implements GM_LineString
       else if( gmo instanceof GM_Polygon )
       {
         final GM_CurveSegment[] cs = new GM_CurveSegment[] { this };
-        inter = LinearIntersects.intersects( new GM_Curve_Impl( cs ), (GM_Polygon<GM_AbstractSurfacePatch>) gmo );
+        inter = LinearIntersects.intersects( new GM_Curve_Impl( cs ), (GM_Polygon) gmo );
       }
       else if( gmo instanceof GM_MultiPrimitive )
       {

@@ -48,7 +48,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * default implementation of the GM_SurfacePatch interface from package jago.model. the class is abstract because it
- * should be specialized by derived classes <code>GM_Polygon</code> for example
+ * should be specialized by derived classes <code>GM_Polygon for example
  * ------------------------------------------------------------
  *
  * @version 11.6.2001

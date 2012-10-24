@@ -88,7 +88,7 @@ public class SurfaceMemberContentHandler extends GMLElementContentHandler implem
    * @see org.kalypso.gmlschema.types.IGMLElementHandler#handle(java.lang.Object)
    */
   @Override
-  public void handle( final GM_Polygon<GM_PolygonPatch> element ) throws SAXException
+  public void handle( final GM_Polygon element ) throws SAXException
   {
     m_surfaceHandler.handle( element );
   }

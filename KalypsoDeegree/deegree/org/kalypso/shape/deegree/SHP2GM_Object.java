@@ -168,7 +168,7 @@ public final class SHP2GM_Object
   /**
    * Transforms the SHPPolygon to a WKSGeometry
    */
-  public static GM_Polygon<GM_AbstractSurfacePatch>[] transformPolygon( final String crs, final ISHPParts shppolygon )
+  public static GM_Polygon[] transformPolygon( final String crs, final ISHPParts shppolygon )
   {
     final GM_Position[][] parts = transformParts( shppolygon );
 
@@ -187,7 +187,7 @@ public final class SHP2GM_Object
         innerRings.add( ring );
     }
 
-    final List<GM_Polygon< ? extends GM_AbstractSurfacePatch>> wkslp = new ArrayList<>();
+    final List<GM_Polygon> wkslp = new ArrayList<>();
 
     for( final GM_Position[] out_ring : outerRings )
     {
@@ -222,7 +222,7 @@ public final class SHP2GM_Object
       try
       {
         final GM_Position[][] inrings = innerOfOuter.toArray( new GM_Position[innerOfOuter.size()][] );
-        final GM_Polygon< ? extends GM_AbstractSurfacePatch> sur = GeometryFactory.createGM_Surface( out_ring, inrings, crs );
+        final GM_Polygon sur = GeometryFactory.createGM_Surface( out_ring, inrings, crs );
         wkslp.add( sur );
       }
       catch( final GM_Exception e )
@@ -234,7 +234,7 @@ public final class SHP2GM_Object
     return toArray( wkslp );
   }
 
-  private static GM_Polygon<GM_AbstractSurfacePatch>[] toArray( final List<GM_Polygon< ? extends GM_AbstractSurfacePatch>> wkslp )
+  private static GM_Polygon[] toArray( final List<GM_Polygon> wkslp )
   {
     return wkslp.toArray( new GM_Polygon[wkslp.size()] );
   }
@@ -285,7 +285,7 @@ public final class SHP2GM_Object
 
     if( shpGeom instanceof ISHPPolygon )
     {
-      final GM_Polygon<GM_AbstractSurfacePatch>[] polygons = SHP2GM_Object.transformPolygon( crs, (ISHPPolygon) shpGeom );
+      final GM_Polygon[] polygons = SHP2GM_Object.transformPolygon( crs, (ISHPPolygon) shpGeom );
       if( polygons == null || polygons.length <= 0 )
         return null;
 

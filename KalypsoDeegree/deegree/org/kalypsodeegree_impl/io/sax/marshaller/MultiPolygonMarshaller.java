@@ -69,7 +69,7 @@ public class MultiPolygonMarshaller extends GeometryMarshaller<GM_MultiSurface>
   {
     for( final Iterator<GM_Object> it = marshalledObject.getIterator(); it.hasNext(); )
     {
-      final GM_Polygon<GM_PolygonPatch> object = (GM_Polygon<GM_PolygonPatch>) it.next();
+      final GM_Polygon object = (GM_Polygon) it.next();
       new PolygonMemberMarshaller( getXMLReader() ).marshall( object );
     }
   }

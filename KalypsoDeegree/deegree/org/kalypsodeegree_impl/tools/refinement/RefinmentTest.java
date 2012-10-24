@@ -8,6 +8,7 @@ import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -37,10 +38,10 @@ public class RefinmentTest extends TestCase
     final GM_Ring exterior = GeometryFactory.createGM_Ring( positions, crs );
     final GM_Ring[] interior = null;
 
-    final GM_AbstractSurfacePatch patch = GeometryFactory.createGM_PolygonPatch( exterior, interior, crs );
+    final GM_PolygonPatch patch = GeometryFactory.createGM_PolygonPatch( exterior, interior, crs );
 
-    final GM_Polygon< ? extends GM_AbstractSurfacePatch> surface = GeometryFactory.createGM_Surface( patch );
-    final GM_Polygon< ? >[] surfaces = new GM_Polygon[] { surface };
+    final GM_Polygon surface = GeometryFactory.createGM_Surface( patch );
+    final GM_Polygon[] surfaces = new GM_Polygon[] { surface };
 
     final GM_MultiSurface multiSurface = GeometryFactory.createGM_MultiSurface( surfaces, crs );
 
@@ -143,7 +144,7 @@ public class RefinmentTest extends TestCase
     {
       if( object instanceof GM_Polygon )
       {
-        final GM_Polygon<GM_AbstractSurfacePatch> surface4 = (GM_Polygon<GM_AbstractSurfacePatch>)object;
+        final GM_Polygon surface4 = (GM_Polygon)object;
         final GM_Position[] ring = surface4.getSurfacePatch().getExteriorRing();
 
         if( ring.length > 4 )

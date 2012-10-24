@@ -66,7 +66,7 @@ public class MultiSurfaceContentHandler extends GMLElementContentHandler impleme
 {
   public static final String ELEMENT_MULTI_SURFACE = GM_MultiSurface.MULTI_SURFACE_ELEMENT.getLocalPart();
 
-  private final List<GM_Polygon< ? extends GM_AbstractSurfacePatch>> m_surfaces = new ArrayList<>();
+  private final List<GM_Polygon> m_surfaces = new ArrayList<>();
 
   private final UnmarshallResultEater m_resultEater;
 
@@ -126,13 +126,13 @@ public class MultiSurfaceContentHandler extends GMLElementContentHandler impleme
 
   private GM_MultiSurface endMultiSurface( )
   {
-    final GM_Polygon< ? extends GM_AbstractSurfacePatch>[] patches = m_surfaces.toArray( new GM_Polygon[m_surfaces.size()] );
+    final GM_Polygon[] patches = m_surfaces.toArray( new GM_Polygon[m_surfaces.size()] );
 
     return GeometryFactory.createGM_MultiSurface( patches, m_activeSrs );
   }
 
   @Override
-  public void handle( final GM_Polygon<GM_PolygonPatch> element )
+  public void handle( final GM_Polygon element )
   {
     m_surfaces.add( element );
   }

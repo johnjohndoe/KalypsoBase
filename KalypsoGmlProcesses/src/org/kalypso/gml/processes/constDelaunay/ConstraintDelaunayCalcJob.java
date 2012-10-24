@@ -215,9 +215,9 @@ public class ConstraintDelaunayCalcJob implements ISimulation
     final QName featureName = new QName( GmlProcessesUrlCatalog.NS_MESH, "Triangle" ); //$NON-NLS-1$
     final QName geomName = new QName( GmlProcessesUrlCatalog.NS_MESH, "triangle" ); //$NON-NLS-1$
 
-    final List<GM_Polygon< ? extends GM_AbstractSurfacePatch>> surfaces = TriangleExe.parseTriangleElementOutput( eleReader, crs, points );
+    final List<GM_Polygon> surfaces = TriangleExe.parseTriangleElementOutput( eleReader, crs, points );
 
-    for( final GM_Polygon< ? > surface : surfaces )
+    for( final GM_Polygon surface : surfaces )
     {
       final Feature newFeature = FeatureHelper.addFeature( rootFeature, memberName, featureName );
       newFeature.setProperty( geomName, surface );

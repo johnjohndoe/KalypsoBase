@@ -86,7 +86,7 @@ public class MultiPolygonGeometryBuilder extends PolygonGeometryBuilder
   @Override
   public GM_Object finish( ) throws Exception
   {
-    final GM_Polygon< ? > result = (GM_Polygon< ? >) super.finish();
+    final GM_Polygon result = (GM_Polygon) super.finish();
     if( result != null )
     {
       return GeometryFactory.createGM_MultiSurface( new GM_Polygon[] { result }, result.getCoordinateSystem() );

@@ -67,7 +67,7 @@ public class MultiPolygonContentHandler extends GMLElementContentHandler impleme
 {
   public static final String ELEMENT_MULTI_POLYGON = GMLConstants.QN_MULTI_POLYGON.getLocalPart();
 
-  private final List<GM_Polygon< ? extends GM_AbstractSurfacePatch>> m_polygons = new ArrayList<>();
+  private final List<GM_Polygon> m_polygons = new ArrayList<>();
 
   private final UnmarshallResultEater m_resultEater;
 
@@ -132,7 +132,7 @@ public class MultiPolygonContentHandler extends GMLElementContentHandler impleme
 
   private GM_MultiSurface endMultiSurface( )
   {
-    final GM_Polygon< ? extends GM_AbstractSurfacePatch>[] patches = m_polygons.toArray( new GM_Polygon[m_polygons.size()] );
+    final GM_Polygon[] patches = m_polygons.toArray( new GM_Polygon[m_polygons.size()] );
 
     return GeometryFactory.createGM_MultiSurface( patches, m_activeSrs );
   }
@@ -141,7 +141,7 @@ public class MultiPolygonContentHandler extends GMLElementContentHandler impleme
    * @see org.kalypso.gmlschema.types.IGMLElementHandler#handle(java.lang.Object)
    */
   @Override
-  public void handle( final GM_Polygon<GM_PolygonPatch> element )
+  public void handle( final GM_Polygon element )
   {
     m_polygons.add( element );
   }

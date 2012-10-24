@@ -227,9 +227,9 @@ public class TriangleExe
 
       final GM_Position[] points = parseTriangleNodeOutput( nodeReader );
 
-      final List<GM_Polygon< ? extends GM_AbstractSurfacePatch>> elements = parseTriangleElementOutput( eleReader, m_crs, points );
+      final List<GM_Polygon> elements = parseTriangleElementOutput( eleReader, m_crs, points );
 
-      for( final GM_Polygon< ? extends GM_AbstractSurfacePatch> element : elements )
+      for( final GM_Polygon element : elements )
       {
         for( final GM_AbstractSurfacePatch surfacePatch : element )
         {
@@ -294,9 +294,9 @@ public class TriangleExe
     return points;
   }
 
-  public static List<GM_Polygon< ? extends GM_AbstractSurfacePatch>> parseTriangleElementOutput( final BufferedReader eleReader, final String crs, final GM_Position[] points ) throws IOException, GM_Exception
+  public static List<GM_Polygon> parseTriangleElementOutput( final BufferedReader eleReader, final String crs, final GM_Position[] points ) throws IOException, GM_Exception
   {
-    final List<GM_Polygon< ? extends GM_AbstractSurfacePatch>> surfaces = new ArrayList<>();
+    final List<GM_Polygon> surfaces = new ArrayList<>();
 
     eleReader.readLine(); // ignore first line
     while( eleReader.ready() )
@@ -316,7 +316,7 @@ public class TriangleExe
 
       final GM_Position[] triangle = new GM_Position[] { points[p1], points[p2], points[p3], points[p1] };
 
-      final GM_Polygon< ? extends GM_AbstractSurfacePatch> surface = GeometryFactory.createGM_Surface( triangle, null, crs );
+      final GM_Polygon surface = GeometryFactory.createGM_Surface( triangle, null, crs );
 
       surfaces.add( surface );
 
