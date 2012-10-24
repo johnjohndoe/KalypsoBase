@@ -42,7 +42,6 @@ import java.util.List;
 
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.ByteUtils;
-import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_CurveSegment;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -395,10 +394,10 @@ final public class GeometryFactory
    * @param crs
    *          spatial reference system of the surface patch
    */
-  public static GM_Polygon<GM_PolygonPatch> createGM_Surface( final GM_Position[] exteriorRing, final GM_Position[][] interiorRings, final String crs ) throws GM_Exception
+  public static GM_Polygon createGM_Surface( final GM_Position[] exteriorRing, final GM_Position[][] interiorRings, final String crs ) throws GM_Exception
   {
     final GM_PolygonPatch sp = new GM_PolygonPatch_Impl( exteriorRing, interiorRings, crs );
-    return new GM_Polygon_Impl<>( sp );
+    return new GM_Polygon_Impl( sp );
   }
 
   /**
@@ -407,9 +406,9 @@ final public class GeometryFactory
    * @param patch
    *          patches that build the surface
    */
-  public static GM_Polygon<GM_AbstractSurfacePatch> createGM_Surface( final GM_AbstractSurfacePatch patch ) throws GM_Exception
+  public static GM_Polygon createGM_Surface( final GM_PolygonPatch patch ) throws GM_Exception
   {
-    return new GM_Polygon_Impl<>( patch );
+    return new GM_Polygon_Impl( patch );
   }
 
   /**
@@ -422,7 +421,7 @@ final public class GeometryFactory
    * @param si
    *          GM_SurfaceInterpolation
    */
-  public static GM_Polygon< ? extends GM_AbstractSurfacePatch> createGM_Surface( final byte[] wkb, final String crs ) throws GM_Exception
+  public static GM_Polygon createGM_Surface( final byte[] wkb, final String crs ) throws GM_Exception
   {
     int wkbtype = -1;
     int numRings = 0;
@@ -561,7 +560,7 @@ final public class GeometryFactory
       }
     }
 
-    final GM_AbstractSurfacePatch patch = GeometryFactory.createGM_PolygonPatch( externalBoundary, internalBoundaries, crs );
+    final GM_PolygonPatch patch = GeometryFactory.createGM_PolygonPatch( externalBoundary, internalBoundaries, crs );
 
     return GeometryFactory.createGM_Surface( patch );
   }
@@ -577,7 +576,7 @@ final public class GeometryFactory
    * @return corresponding surface
    * @throws GM_Exception
    */
-  public static GM_Polygon< ? extends GM_AbstractSurfacePatch> createGM_Surface( final GM_Envelope bbox, final String crs ) throws GM_Exception
+  public static GM_Polygon createGM_Surface( final GM_Envelope bbox, final String crs ) throws GM_Exception
   {
     final GM_Position min = bbox.getMin();
     final GM_Position max = bbox.getMax();
@@ -596,7 +595,7 @@ final public class GeometryFactory
    * @return corresponding surface
    * @throws GM_Exception
    */
-  public static GM_Polygon< ? extends GM_AbstractSurfacePatch> createGM_Surface( final double[] exterior, final double[][] interior, final int dim, final String crs ) throws GM_Exception
+  public static GM_Polygon createGM_Surface( final double[] exterior, final double[][] interior, final int dim, final String crs ) throws GM_Exception
   {
     // get exterior ring
     final GM_Position[] ext = positionsFromDoubles( exterior, dim );
@@ -887,7 +886,7 @@ final public class GeometryFactory
   /**
    * creates a GM_MultiSurface
    */
-  public static GM_MultiSurface createGM_MultiSurface( final GM_Polygon< ? >[] surfaces, final String crs )
+  public static GM_MultiSurface createGM_MultiSurface( final GM_Polygon[] surfaces, final String crs )
   {
     return new GM_MultiSurface_Impl( surfaces, crs );
   }
@@ -938,7 +937,7 @@ final public class GeometryFactory
 
     offset += 4;
 
-    final List<GM_Polygon< ? extends GM_AbstractSurfacePatch>> list = new ArrayList<>( numPoly );
+    final List<GM_Polygon> list = new ArrayList<>( numPoly );
 
     for( int ip = 0; ip < numPoly; ip++ )
     {
@@ -1065,7 +1064,7 @@ final public class GeometryFactory
         }
       }
 
-      final GM_AbstractSurfacePatch patch = GeometryFactory.createGM_PolygonPatch( externalBoundary, internalBoundaries, crs );
+      final GM_PolygonPatch patch = GeometryFactory.createGM_PolygonPatch( externalBoundary, internalBoundaries, crs );
 
       list.add( GeometryFactory.createGM_Surface( patch ) );
     }

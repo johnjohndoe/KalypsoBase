@@ -200,7 +200,7 @@ public class LabelFactory
 
   private Label[] createCurveLabels( final Feature feature, final String caption, final GM_Object geometry, final Font font, final Color color, final LineMetrics metrics, final Dimension bounds ) throws GM_Exception, FilterEvaluationException
   {
-    final GM_Polygon< ? extends GM_AbstractSurfacePatch> screenSurface = GeometryFactory.createGM_Surface( m_projection.getSourceRect(), null );
+    final GM_Polygon screenSurface = GeometryFactory.createGM_Surface( m_projection.getSourceRect(), null );
     final GM_Object intersection = screenSurface.intersection( geometry );
 
     if( intersection instanceof GM_Curve )
@@ -264,7 +264,7 @@ public class LabelFactory
       return geometry;
 
     // TODO: we need to do this only onlce
-    final GM_Polygon< ? extends GM_AbstractSurfacePatch> screenSurface = GeometryFactory.createGM_Surface( m_projection.getSourceRect(), null );
+    final GM_Polygon screenSurface = GeometryFactory.createGM_Surface( m_projection.getSourceRect(), null );
 
     final GM_Object intersection = screenSurface.intersection( geometry );
     if( intersection == null )

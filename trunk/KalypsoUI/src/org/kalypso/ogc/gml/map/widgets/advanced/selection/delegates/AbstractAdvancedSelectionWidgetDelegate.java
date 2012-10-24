@@ -133,7 +133,7 @@ public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvanc
     }
   }
 
-  protected GM_Polygon<GM_AbstractSurfacePatch> getSurface( final GM_Point point ) throws GM_Exception
+  protected GM_Polygon getSurface( final GM_Point point ) throws GM_Exception
   {
     if( point == null )
       return null;
@@ -141,7 +141,7 @@ public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvanc
     final Geometry geometry = JTSAdapter.export( point );
     final Geometry buffer = geometry.buffer( 0.1 );
 
-    return (GM_Polygon<GM_AbstractSurfacePatch>) JTSAdapter.wrap( buffer );
+    return (GM_Polygon) JTSAdapter.wrap( buffer );
   }
 
   protected void highlightUnderlyingGeometries( final Feature[] features, final Graphics g, final EDIT_MODE mode )

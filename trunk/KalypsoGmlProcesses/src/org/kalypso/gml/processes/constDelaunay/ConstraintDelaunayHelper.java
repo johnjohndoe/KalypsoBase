@@ -249,7 +249,7 @@ public class ConstraintDelaunayHelper
     {
       if( object instanceof GM_Polygon )
       {
-        final GM_Polygon<GM_AbstractSurfacePatch> surface = (GM_Polygon<GM_AbstractSurfacePatch>)object;
+        final GM_Polygon surface = (GM_Polygon)object;
         final GM_Triangle[] triangles = convertToTriangles( surface, crs );
         for( final GM_Triangle triangle : triangles )
         {
@@ -260,17 +260,17 @@ public class ConstraintDelaunayHelper
     return triangleList.toArray( new GM_Triangle[triangleList.size()] );
   }
 
-  public static GM_Triangle[] convertToTriangles( final GM_Polygon<GM_AbstractSurfacePatch> surface, final String crs ) throws GM_Exception
+  public static GM_Triangle[] convertToTriangles( final GM_Polygon surface, final String crs ) throws GM_Exception
   {
     return convertToTriangles( surface, crs, new String[0] );
   }
 
-  public static GM_Triangle[] convertToTriangles( final GM_Polygon< ? extends GM_AbstractSurfacePatch> pSurface, final String crs, final String... triangleArgs ) throws GM_Exception
+  public static GM_Triangle[] convertToTriangles( final GM_Polygon pSurface, final String crs, final String... triangleArgs ) throws GM_Exception
   {
     return convertToTriangles( pSurface, crs, true, triangleArgs );
   }
 
-  public static GM_Triangle[] convertToTriangles( final GM_Polygon< ? extends GM_AbstractSurfacePatch> pSurface, final String crs, final boolean useTriangleExe, final String... triangleArgs ) throws GM_Exception
+  public static GM_Triangle[] convertToTriangles( final GM_Polygon pSurface, final String crs, final boolean useTriangleExe, final String... triangleArgs ) throws GM_Exception
   {
     final List<GM_Triangle> triangleList = new LinkedList<>();
     final boolean lBoolConvex = pSurface.getConvexHull().difference( pSurface ) == null;

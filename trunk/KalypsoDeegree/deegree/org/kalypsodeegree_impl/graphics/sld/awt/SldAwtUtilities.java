@@ -123,7 +123,7 @@ public final class SldAwtUtilities
   /**
    * Creates an {@link Area} with holes from an exterior ring and interior rings.
    */
-  public static <T extends GM_AbstractSurfacePatch> Shape shapeFromSurface( final GM_Polygon<T> surface, final double strokeWidth, final GeoTransform world2screen )
+  public static <T extends GM_AbstractSurfacePatch> Shape shapeFromSurface( final GM_Polygon surface, final double strokeWidth, final GeoTransform world2screen )
   {
     final GM_AbstractSurfacePatch patch = surface.get( 0 );
     final GM_Position[] outerRing = patch.getExteriorRing();
@@ -189,7 +189,7 @@ public final class SldAwtUtilities
     }
   }
 
-  public static void paintSurface( final Graphics2D g2, final GM_Polygon< ? > surface, final GeoTransform world2screen, final FillPainter fillPainter, final StrokePainter strokePainter ) throws Exception
+  public static void paintSurface( final Graphics2D g2, final GM_Polygon surface, final GeoTransform world2screen, final FillPainter fillPainter, final StrokePainter strokePainter ) throws Exception
   {
     final Shape shape = SldAwtUtilities.shapeFromSurface( surface, strokePainter.getWidth(), world2screen );
 

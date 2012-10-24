@@ -52,7 +52,7 @@ import org.xml.sax.XMLReader;
  *
  * @author Felipe Maximino
  */
-public class PolygonMarshaller extends GeometryMarshaller<GM_Polygon<GM_PolygonPatch>>
+public class PolygonMarshaller extends GeometryMarshaller<GM_Polygon>
 {
   public PolygonMarshaller( final XMLReader reader )
   {
@@ -60,7 +60,7 @@ public class PolygonMarshaller extends GeometryMarshaller<GM_Polygon<GM_PolygonP
   }
 
   @Override
-  protected void doMarshallContent( final GM_Polygon<GM_PolygonPatch> marshalledObject ) throws SAXException
+  protected void doMarshallContent( final GM_Polygon marshalledObject ) throws SAXException
   {
     final GM_PolygonPatch polygon = marshalledObject.get( 0 );
 

@@ -47,23 +47,23 @@ import org.kalypso.commons.xml.NS;
  * <p>
  * -----------------------------------------------------
  * </p>
- *
+ * 
  * @author Andreas Poth
  * @version $Revision$ $Date$
  *          <p>
  */
-public interface GM_Polygon<T extends GM_AbstractSurfacePatch> extends GM_AbstractSurface<T>, GM_GenericSurface, ISurfacePatchVisitable<T>
+public interface GM_Polygon extends GM_AbstractSurface<GM_PolygonPatch>, GM_GenericSurface, ISurfacePatchVisitable<GM_PolygonPatch>
 {
   QName POLYGON_ELEMENT = new QName( NS.GML3, "Polygon" ); //$NON-NLS-1$
 
-  T getSurfacePatch( );
+  GM_PolygonPatch getSurfacePatch( );
 
   /**
    * Use getSurfacePatch() instead
    */
   @Override
   @Deprecated
-  T get( int index );
+  GM_PolygonPatch get( int index );
 
   /**
    * Size is always 1
@@ -77,5 +77,5 @@ public interface GM_Polygon<T extends GM_AbstractSurfacePatch> extends GM_Abstra
    */
   @Override
   @Deprecated
-  Iterator<T> iterator( );
+  Iterator<GM_PolygonPatch> iterator( );
 }

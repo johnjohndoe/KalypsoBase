@@ -48,7 +48,7 @@ import org.xml.sax.XMLReader;
 /**
  * @author Gernot Belger
  */
-public class PolygonMemberMarshaller extends AbstractMarshaller<GM_Polygon<GM_PolygonPatch>>
+public class PolygonMemberMarshaller extends AbstractMarshaller<GM_Polygon>
 {
   public static final String TAG_POLYGON_MEMBER = "polygonMember"; //$NON-NLS-1$
 
@@ -58,7 +58,7 @@ public class PolygonMemberMarshaller extends AbstractMarshaller<GM_Polygon<GM_Po
   }
 
   @Override
-  protected void doMarshallContent( final GM_Polygon<GM_PolygonPatch> marshalledObject ) throws SAXException
+  protected void doMarshallContent( final GM_Polygon marshalledObject ) throws SAXException
   {
     new PolygonMarshaller( getXMLReader() ).marshall( marshalledObject );
   }

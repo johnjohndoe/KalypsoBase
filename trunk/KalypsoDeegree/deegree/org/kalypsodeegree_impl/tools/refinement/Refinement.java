@@ -28,7 +28,7 @@ public class Refinement
     }
     else if( inputGeom instanceof GM_Polygon )
     {
-      return doRefineSurface( inputSurfaces, (GM_Polygon< ? >)inputGeom );
+      return doRefineSurface( inputSurfaces, (GM_Polygon)inputGeom );
     }
     else
     {
@@ -36,7 +36,7 @@ public class Refinement
     }
   }
 
-  private GM_Object[] doRefineSurface( final GM_MultiSurface[] inputSurfaces, final GM_Polygon< ? > inputSurface ) throws GM_Exception
+  private GM_Object[] doRefineSurface( final GM_MultiSurface[] inputSurfaces, final GM_Polygon inputSurface ) throws GM_Exception
   {
     final GM_Position[] exteriorRing = inputSurface.get( 0 ).getExteriorRing();
     final GM_Curve curve = GeometryFactory.createGM_Curve( exteriorRing, inputSurface.getCoordinateSystem() );
@@ -51,11 +51,11 @@ public class Refinement
     if( inputCurve.getStartPoint().equals( inputCurve.getEndPoint() ) )
     {
       final GM_LineString lineString = inputCurve.getAsLineString();
-      final GM_Polygon< ? extends GM_AbstractSurfacePatch> surface = GeometryFactory.createGM_Surface( lineString.getPositions(), null, inputCurve.getCoordinateSystem() );
+      final GM_Polygon surface = GeometryFactory.createGM_Surface( lineString.getPositions(), null, inputCurve.getCoordinateSystem() );
       GM_Object remainingSurface = surface;
       for( final GM_MultiSurface multiSurface : inputSurfaces )
       {
-        for( final GM_Polygon< ? > gm_SurfacePatch : multiSurface.getAllSurfaces() )
+        for( final GM_Polygon gm_SurfacePatch : multiSurface.getAllSurfaces() )
         {
           if( remainingSurface != null )
           {
@@ -65,8 +65,8 @@ public class Refinement
       }
       if( remainingSurface instanceof GM_MultiSurface )
       {
-        final GM_Polygon< ? >[] allSurfaces = ((GM_MultiSurface)remainingSurface).getAllSurfaces();
-        for( final GM_Polygon< ? > gm_Surface : allSurfaces )
+        final GM_Polygon[] allSurfaces = ((GM_MultiSurface)remainingSurface).getAllSurfaces();
+        for( final GM_Polygon gm_Surface : allSurfaces )
           list.add( gm_Surface );
       }
       else if( remainingSurface instanceof GM_Polygon )
@@ -83,7 +83,7 @@ public class Refinement
       {
         if( object instanceof GM_Polygon )
         {
-          final GM_Polygon<GM_AbstractSurfacePatch> surface = (GM_Polygon<GM_AbstractSurfacePatch>)object;
+          final GM_Polygon surface = (GM_Polygon)object;
           final GM_AbstractSurfacePatch surfacePatch = surface.getSurfacePatch();
 
           /* clip refinement curve with surface patch */

@@ -51,6 +51,7 @@ import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Ring;
 import org.kalypsodeegree.model.geometry.GM_Triangle;
@@ -109,9 +110,9 @@ public final class RefinementUtils
    * surface
    */
   @SuppressWarnings( "unchecked" )
-  public static GM_Polygon< ? extends GM_AbstractSurfacePatch>[] splitPolygonbyLine( final GM_Position[] patchPoses, final GM_Position[] linePoses, final String crs ) throws GM_Exception
+  public static GM_Polygon[] splitPolygonbyLine( final GM_Position[] patchPoses, final GM_Position[] linePoses, final String crs ) throws GM_Exception
   {
-    final List<GM_Polygon< ? extends GM_AbstractSurfacePatch>> surfaceList = new ArrayList<>();
+    final List<GM_Polygon> surfaceList = new ArrayList<>();
     final Set<GM_Position> originalPosList = new HashSet<>();
     final List<Coordinate> coordList = new ArrayList<>();
 
@@ -147,12 +148,12 @@ public final class RefinementUtils
       final GM_Object object = JTSAdapter.wrap( polygon, crs );
       if( object instanceof GM_Polygon )
       {
-        final GM_Polygon<GM_AbstractSurfacePatch> surface = (GM_Polygon<GM_AbstractSurfacePatch>)object;
+        final GM_Polygon surface = (GM_Polygon)object;
         final GM_Position[] ring = surface.getSurfacePatch().getExteriorRing();
 
         /* RE-ASSIGNMENT */
         // check for each position, if it lies within a given search radius of an original position
-        final GM_Polygon< ? extends GM_AbstractSurfacePatch> origPosSurface = reassignOriginalPositions( originalPosList, ring, crs );
+        final GM_Polygon origPosSurface = reassignOriginalPositions( originalPosList, ring, crs );
         surfaceList.add( origPosSurface );
       }
     }
@@ -160,7 +161,7 @@ public final class RefinementUtils
     return surfaceList.toArray( new GM_Polygon[surfaceList.size()] );
   }
 
-  private static GM_Polygon< ? extends GM_AbstractSurfacePatch> reassignOriginalPositions( final Set<GM_Position> originalPosList, final GM_Position[] ring, final String crs ) throws GM_Exception
+  private static GM_Polygon reassignOriginalPositions( final Set<GM_Position> originalPosList, final GM_Position[] ring, final String crs ) throws GM_Exception
   {
     final List<GM_Position> posList = new ArrayList<>();
 
@@ -187,18 +188,18 @@ public final class RefinementUtils
       posList.add( posList.get( 0 ) );
       final GM_Position[] poses = posList.toArray( new GM_Position[posList.size()] );
       final GM_Ring origRing = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Ring( poses, crs );
-      final GM_AbstractSurfacePatch patch = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_PolygonPatch( origRing, null, crs );
+      final GM_PolygonPatch patch = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_PolygonPatch( origRing, null, crs );
       return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Surface( patch );
     }
     else
       return null;
   }
 
-  public static GM_Polygon<GM_AbstractSurfacePatch> getSurface( final GM_Position[] poses, final String crs ) throws GM_Exception
+  public static GM_Polygon getSurface( final GM_Position[] poses, final String crs ) throws GM_Exception
   {
     final GM_Ring ring = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Ring( poses, crs );
 
-    final GM_AbstractSurfacePatch patch = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_PolygonPatch( ring, null, crs );
+    final GM_PolygonPatch patch = org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_PolygonPatch( ring, null, crs );
 
     return org.kalypsodeegree_impl.model.geometry.GeometryFactory.createGM_Surface( patch );
   }
@@ -300,24 +301,24 @@ public final class RefinementUtils
    *          the positions of the intersection points
    * @return the resulting surfaces
    */
-  public static GM_Polygon< ? extends GM_AbstractSurfacePatch>[] splitSurfacePatch( final GM_AbstractSurfacePatch surfacePatch, final GM_Position[] linePoses ) throws GM_Exception
+  public static GM_Polygon[] splitSurfacePatch( final GM_AbstractSurfacePatch surfacePatch, final GM_Position[] linePoses ) throws GM_Exception
   {
-    final List<GM_Polygon< ? extends GM_AbstractSurfacePatch>> surfaceList = new ArrayList<>();
+    final List<GM_Polygon> surfaceList = new ArrayList<>();
 
     final GM_Position[] patchPoses = surfacePatch.getExteriorRing();
 
     final String crs = surfacePatch.getCoordinateSystem();
-    final GM_Polygon< ? extends GM_AbstractSurfacePatch>[] surfaces = RefinementUtils.splitPolygonbyLine( patchPoses, linePoses, crs );
+    final GM_Polygon[] surfaces = RefinementUtils.splitPolygonbyLine( patchPoses, linePoses, crs );
 
-    for( final GM_Polygon< ? extends GM_AbstractSurfacePatch> surface : surfaces )
+    for( final GM_Polygon surface : surfaces )
       surfaceList.add( surface );
 
     return surfaceList.toArray( new GM_Polygon[surfaceList.size()] );
   }
 
-  public static GM_Polygon<GM_AbstractSurfacePatch>[] triangulatePolygon( final String crs, final GM_Position[] ring ) throws GM_Exception
+  public static GM_Polygon[] triangulatePolygon( final String crs, final GM_Position[] ring ) throws GM_Exception
   {
-    final List<GM_Polygon< ? extends GM_AbstractSurfacePatch>> surfaceList = new ArrayList<>();
+    final List<GM_Polygon> surfaceList = new ArrayList<>();
     final GM_Position[] orientedRing = GeometryUtilities.orientateRing( ring );
     final GM_Position[][] triangles = GeometryUtilities.triangulateRing( orientedRing );
     for( final GM_Position[] poses : triangles )

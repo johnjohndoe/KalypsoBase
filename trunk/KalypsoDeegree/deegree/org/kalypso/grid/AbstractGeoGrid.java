@@ -104,13 +104,13 @@ public abstract class AbstractGeoGrid implements IGeoGrid
   }
 
   @Override
-  public GM_Polygon< ? > getSurface( final String targetCRS ) throws GeoGridException
+  public GM_Polygon getSurface( final String targetCRS ) throws GeoGridException
   {
     return GeoGridUtilities.createSurface( this, targetCRS );
   }
 
   @Override
-  public GM_Polygon< ? > getCell( final int x, final int y, final String targetCRS ) throws GeoGridException
+  public GM_Polygon getCell( final int x, final int y, final String targetCRS ) throws GeoGridException
   {
     return GeoGridUtilities.createCell( this, x, y, targetCRS );
   }
@@ -211,7 +211,7 @@ public abstract class AbstractGeoGrid implements IGeoGrid
   @Override
   public GM_Envelope getBoundingBox( ) throws ElevationException
   {
-    final GM_Polygon< ? > surface = getSurface( m_sourceCRS );
+    final GM_Polygon surface = getSurface( m_sourceCRS );
     return surface.getEnvelope();
   }
 

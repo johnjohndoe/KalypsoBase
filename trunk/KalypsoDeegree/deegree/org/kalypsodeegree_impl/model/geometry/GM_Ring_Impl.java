@@ -280,7 +280,7 @@ public class GM_Ring_Impl extends GM_AbstractCurve_Impl implements GM_Ring
       else if( gmo instanceof GM_Polygon )
       {
         final GM_Curve curve = new GM_Curve_Impl( new GM_CurveSegment[] { sp } );
-        inter = LinearIntersects.intersects( curve, (GM_Polygon< ? >) gmo );
+        inter = LinearIntersects.intersects( curve, (GM_Polygon) gmo );
       }
       else if( gmo instanceof GM_MultiPrimitive )
       {

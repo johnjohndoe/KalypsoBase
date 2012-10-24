@@ -24,7 +24,7 @@ import de.micromata.opengis.kml.v_2_2_0.Polygon;
  */
 public class ConverterSurface
 {
-  public static Polygon convert( final GM_Polygon< ? > gmo ) throws Exception
+  public static Polygon convert( final GM_Polygon gmo ) throws Exception
   {
     /* handling of multigeometries not implemented at the moment */
     if( gmo.size() > 1 )

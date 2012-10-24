@@ -307,7 +307,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   }
 
   @Override
-  public GM_Polygon< ? > getCell( final int x, final int y, final String targetCRS )
+  public GM_Polygon getCell( final int x, final int y, final String targetCRS )
   {
     throw new UnsupportedOperationException();
   }
@@ -343,7 +343,7 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   }
 
   @Override
-  public GM_Polygon< ? > getSurface( final String targetCRS )
+  public GM_Polygon getSurface( final String targetCRS )
   {
     throw new UnsupportedOperationException();
   }

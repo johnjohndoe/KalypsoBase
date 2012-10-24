@@ -47,7 +47,7 @@ import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 /**
  * @Gernot Belger
  */
-public interface ISurfaceHandler<T extends GM_AbstractSurfacePatch> extends IGMLElementHandler<GM_Polygon<T>>
+public interface ISurfaceHandler<T extends GM_AbstractSurfacePatch> extends IGMLElementHandler<GM_Polygon>
 {
 
 }

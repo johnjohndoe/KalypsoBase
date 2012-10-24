@@ -398,7 +398,7 @@ public class GM_PolyhedralSurface_Impl<T extends GM_PolygonPatch> extends GM_Abs
     {
       try
       {
-        final GM_Polygon< ? >[] surfaces = new GM_Polygon[m_items.size()];
+        final GM_Polygon[] surfaces = new GM_Polygon[m_items.size()];
         for( int i = 0; i < surfaces.length; i++ )
           surfaces[i] = GeometryFactory.createGM_Surface( m_items.get( i ) );
 

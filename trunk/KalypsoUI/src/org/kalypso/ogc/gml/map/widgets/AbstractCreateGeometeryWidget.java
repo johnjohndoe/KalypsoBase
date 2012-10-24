@@ -321,7 +321,7 @@ public abstract class AbstractCreateGeometeryWidget extends DeprecatedMouseWidge
 
   protected abstract void performIntern( final GM_Object validGeometryValue ) throws Exception;
 
-  private GM_Polygon< ? > getPolygon( final List<GM_Position> posArray ) throws GM_Exception
+  private GM_Polygon getPolygon( final List<GM_Position> posArray ) throws GM_Exception
   {
     // close the ring
     posArray.add( posArray.get( 0 ) );

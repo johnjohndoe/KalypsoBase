@@ -68,7 +68,7 @@ public class PolygonContentHandler extends GMLElementContentHandler implements I
 {
   private final UnmarshallResultEater m_resultEater;
 
-  private GM_Polygon<GM_PolygonPatch> m_surface = null;
+  private GM_Polygon m_surface = null;
 
   private String m_activeSrs;
 
@@ -136,7 +136,7 @@ public class PolygonContentHandler extends GMLElementContentHandler implements I
     setDelegate( choiceContentHandler );
   }
 
-  private GM_Polygon<GM_PolygonPatch> endSurface( ) throws SAXParseException
+  private GM_Polygon endSurface( ) throws SAXParseException
   {
     try
     {

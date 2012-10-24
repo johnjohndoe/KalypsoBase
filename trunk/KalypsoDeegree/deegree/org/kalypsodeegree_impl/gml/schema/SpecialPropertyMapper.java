@@ -73,8 +73,8 @@ public final class SpecialPropertyMapper
       @Override
       public Object map( final Object srcObject )
       {
-        final GM_Polygon< ? > surface = (GM_Polygon< ? >) srcObject;
-        final GM_Polygon< ? >[] surfaces = new GM_Polygon[] { surface };
+        final GM_Polygon surface = (GM_Polygon) srcObject;
+        final GM_Polygon[] surfaces = new GM_Polygon[] { surface };
         return GeometryFactory.createGM_MultiSurface( surfaces, surface.getCoordinateSystem() );
       }
     } );
@@ -83,7 +83,7 @@ public final class SpecialPropertyMapper
       @Override
       public Object map( final Object srcObject )
       {
-        final GM_Polygon< ? >[] surfaces = new GM_Polygon[] { ((GM_MultiSurface) srcObject).getSurfaceAt( 0 ) };
+        final GM_Polygon[] surfaces = new GM_Polygon[] { ((GM_MultiSurface) srcObject).getSurfaceAt( 0 ) };
         return surfaces[0];
       }
     } );

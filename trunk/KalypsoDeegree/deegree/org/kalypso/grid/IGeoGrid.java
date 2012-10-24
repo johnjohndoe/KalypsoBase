@@ -54,7 +54,7 @@ public interface IGeoGrid extends IGeoValueProvider, AutoCloseable, IElevationMo
    *          returned.
    * @return The surface of the grid.
    */
-  GM_Polygon< ? > getSurface( final String targetCRS ) throws GeoGridException;
+  GM_Polygon getSurface( final String targetCRS ) throws GeoGridException;
 
   /**
    * This function returns the cell at the given (cell-)coordinates. We interpret the grid cell as a surface with the
@@ -68,7 +68,7 @@ public interface IGeoGrid extends IGeoValueProvider, AutoCloseable, IElevationMo
    *          The coordinate system will be used to transform the cell, after it was created and before it is returned.
    * @return The cell.
    */
-  GM_Polygon< ? > getCell( final int x, final int y, final String targetCRS ) throws GeoGridException;
+  GM_Polygon getCell( final int x, final int y, final String targetCRS ) throws GeoGridException;
 
   /**
    * The envelope of this grid.<br>

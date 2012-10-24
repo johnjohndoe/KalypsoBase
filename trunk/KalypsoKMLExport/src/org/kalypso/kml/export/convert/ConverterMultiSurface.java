@@ -18,8 +18,8 @@ public class ConverterMultiSurface
   {
     final MultiGeometry multGeometry = new MultiGeometry();
 
-    final GM_Polygon< ? >[] surfaces = gmo.getAllSurfaces();
-    for( final GM_Polygon< ? > surface : surfaces )
+    final GM_Polygon[] surfaces = gmo.getAllSurfaces();
+    for( final GM_Polygon surface : surfaces )
     {
       final Polygon geometry = ConverterSurface.convert( surface );
       multGeometry.addToGeometry( geometry );

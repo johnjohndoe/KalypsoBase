@@ -689,7 +689,7 @@ public class SelectFeatureWidget extends DeprecatedMouseWidget
       return selectedFeatures;
 
     // Only works for surface geometries:: select everything that intersects this geometry
-    if( selectGeometry instanceof GM_Polygon< ? > )
+    if( selectGeometry instanceof GM_Polygon )
     {
       final GM_Envelope envelope = selectGeometry.getEnvelope();
       final GMLWorkspace workspace = featureList.getOwner().getWorkspace();

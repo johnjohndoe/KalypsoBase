@@ -51,7 +51,7 @@ import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
  */
 public interface IAdvancedSelectionWidgetDataProvider
 {
-  Feature[] query( GM_Polygon< ? extends GM_AbstractSurfacePatch> surface, EDIT_MODE editMode );
+  Feature[] query( GM_Polygon surface, EDIT_MODE editMode );
 
   Feature[] getLastQuery( );
 

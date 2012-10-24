@@ -178,7 +178,7 @@ public class MapUtils
     else if( geom instanceof GM_Curve )
       paintGrabbedCurve( panel, g2, (GM_Curve) geom );
     else if( geom instanceof GM_Polygon )
-      drawGrabbedSurface( panel, g2, (GM_Polygon<GM_AbstractSurfacePatch>) geom );
+      drawGrabbedSurface( panel, g2, (GM_Polygon) geom );
     else if( geom instanceof GM_MultiPrimitive )
     {
       final GM_MultiPrimitive multi = (GM_MultiPrimitive) geom;
@@ -190,7 +190,7 @@ public class MapUtils
       paintGrabbedPoint( panel, g2, geom.getCentroid() );
   }
 
-  private static void drawGrabbedSurface( final IMapPanel panel, final Graphics2D g2, final GM_Polygon<GM_AbstractSurfacePatch> surface )
+  private static void drawGrabbedSurface( final IMapPanel panel, final Graphics2D g2, final GM_Polygon surface )
   {
     final GM_AbstractSurfacePatch patch = surface.get( 0 );
 

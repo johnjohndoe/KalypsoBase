@@ -276,7 +276,7 @@ final class GM_Point_Impl extends GM_AbstractGeometry_Impl implements GM_Point
       }
       else if( gmo instanceof GM_Polygon )
       {
-        inter = LinearIntersects.intersects( this, (GM_Polygon< ? >) gmo );
+        inter = LinearIntersects.intersects( this, (GM_Polygon) gmo );
       }
       else if( gmo instanceof GM_Aggregate )
       {

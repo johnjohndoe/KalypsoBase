@@ -136,7 +136,7 @@ public class StyleConverter
         final Placemark placemark = folder.createAndAddPlacemark();
         placemark.setName( KMLAdapterUtils.getFeatureName( feature, providers ) );
 
-        final Polygon geometry = ConverterSurface.convert( (GM_Polygon< ? >)gmo );
+        final Polygon geometry = ConverterSurface.convert( (GM_Polygon)gmo );
         placemark.setGeometry( geometry );
 
         final Style style = placemark.createAndAddStyle();

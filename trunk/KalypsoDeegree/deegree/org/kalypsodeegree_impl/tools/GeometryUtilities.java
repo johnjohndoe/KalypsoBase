@@ -144,7 +144,7 @@ public final class GeometryUtilities
     return GeometryFactory.createGM_Point( newPos, p1.getCoordinateSystem() );
   }
 
-  public static double calcAngleToSurface( final GM_Polygon< ? > surface, final GM_Point point )
+  public static double calcAngleToSurface( final GM_Polygon surface, final GM_Point point )
   {
     final double r = surface.distance( point );
     double min = r;
@@ -173,7 +173,7 @@ public final class GeometryUtilities
    *          numer of maximal interations
    * @return point that is somewhere on the surface (e.g. can act as label point)
    */
-  public static GM_Point guessPointOnSurface( final GM_Polygon< ? > surface, GM_Point pointGuess, int tries )
+  public static GM_Point guessPointOnSurface( final GM_Polygon surface, GM_Point pointGuess, int tries )
   {
     if( surface == null )
       return null;
@@ -218,7 +218,7 @@ public final class GeometryUtilities
     return guessPointOnSurface( surface, createGM_PositionAtCenter( p1, p2 ), tries );
   }
 
-  private static GM_Point calcFarestPointOnSurfaceInDirection( final GM_Polygon< ? > surface, final GM_Point pOnSurface, final double angle, final double max, int tries )
+  private static GM_Point calcFarestPointOnSurfaceInDirection( final GM_Polygon surface, final GM_Point pOnSurface, final double angle, final double max, int tries )
   {
     final GM_Point point = createPointFrom( pOnSurface, angle, max );
     if( surface.contains( point ) )
@@ -304,12 +304,12 @@ public final class GeometryUtilities
   public static double calcArea( final GM_Object geom )
   {
     if( geom instanceof GM_Polygon )
-      return ((GM_Polygon< ? >)geom).getArea();
+      return ((GM_Polygon)geom).getArea();
     else if( geom instanceof GM_MultiSurface )
     {
       double area = 0;
-      final GM_Polygon< ? >[] allSurfaces = ((GM_MultiSurface)geom).getAllSurfaces();
-      for( final GM_Polygon< ? > element : allSurfaces )
+      final GM_Polygon[] allSurfaces = ((GM_MultiSurface)geom).getAllSurfaces();
+      for( final GM_Polygon element : allSurfaces )
         area += calcArea( element );
       return area;
     }
@@ -327,7 +327,7 @@ public final class GeometryUtilities
   public static boolean isInside( final GM_Object a, final GM_Object b )
   {
     if( a instanceof GM_Polygon && b instanceof GM_Polygon )
-      return a.contains( guessPointOnSurface( (GM_Polygon< ? >)b, b.getCentroid(), 3 ) );
+      return a.contains( guessPointOnSurface( (GM_Polygon)b, b.getCentroid(), 3 ) );
     // return a.contains(b);
     if( a instanceof GM_MultiSurface )
       return isInside( ((GM_MultiSurface)a).getAllSurfaces()[0], b );
@@ -642,7 +642,7 @@ public final class GeometryUtilities
     if( getMultiPolygonClass().isAssignableFrom( class1 ) )
       return (GM_MultiSurface)geomToCheck;
     else if( getPolygonClass().isAssignableFrom( class1 ) )
-      return GeometryFactory.createGM_MultiSurface( new GM_Polygon[] { (GM_Polygon< ? >)geomToCheck }, ((GM_Polygon< ? >)geomToCheck).getCoordinateSystem() );
+      return GeometryFactory.createGM_MultiSurface( new GM_Polygon[] { (GM_Polygon)geomToCheck }, ((GM_Polygon)geomToCheck).getCoordinateSystem() );
     else
       throw new GM_Exception( "This geometry can not be a MultiPolygon..." );
   }
