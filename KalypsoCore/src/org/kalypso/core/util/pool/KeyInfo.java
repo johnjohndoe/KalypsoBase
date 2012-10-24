@@ -545,7 +545,7 @@ public final class KeyInfo extends Job
     try
     {
       /* The job is running and there fore we have to wait. */
-      while( info.getResult() == null )
+      while( info.getJobResult() == null )
       {
         Thread.sleep( 100 );
       }
