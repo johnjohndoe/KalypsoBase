@@ -537,15 +537,25 @@ public final class KeyInfo extends Job
     return false;
   }
 
-  public static void waitForJobDone( KeyInfo info )
+  public static void waitForJobDone( final KeyInfo info )
   {
     if( info.getResult() != null )
       return;
 
     try
     {
+      // REMARK: With the line below it is only waited after it is loaded, then the events will be send.
+      // REMARK: No deadlock here.
+      // REMARK: while( info.getJobResult() == null )
+
+      // REMARK: Here we wait, until all events are send.
+      // REMARK: We experienced a deadlock we couldn't track (Stefan, Holger).
+      // REMARK: Some listener (wo received the events) seem to have triggered it.
+      // REMARK: But I think this is the way, because some listener want do to work, before the waiting ends.
+      // REMARK: I.E. assign workspace to a member, so that they could access it.
+
       /* The job is running and there fore we have to wait. */
-      while( info.getJobResult() == null )
+      while( info.getResult() == null )
       {
         Thread.sleep( 100 );
       }
