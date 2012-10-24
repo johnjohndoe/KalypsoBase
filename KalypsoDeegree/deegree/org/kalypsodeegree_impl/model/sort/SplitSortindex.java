@@ -45,6 +45,8 @@ import gnu.trove.TIntHashSet;
 import gnu.trove.TIntProcedure;
 import gnu.trove.TObjectIntHashMap;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
@@ -131,9 +133,8 @@ class SplitSortindex
       /* Remove from index */
       if( oldEnvelope != null )
       {
-        final boolean success = m_spatialIndex.delete( oldEnvelope, index );
-        if( !success )
-          System.out.println( "SplitSort: problem!" );
+        final boolean removed = m_spatialIndex.delete( oldEnvelope, index );
+        Assert.isTrue( removed );
       }
 
       /* reinsert into index */
@@ -204,6 +205,87 @@ class SplitSortindex
     }
   }
 
+  public void reindex( final int[] startIndices, final int[] offsets )
+  {
+    final List<SplitSortItem> items = m_parent.getItems();
+
+    // sort startIndices and corresponding offsets in ascending order
+    final Integer[] sortOrder = new Integer[offsets.length];
+    for( int i = 0; i < sortOrder.length; i++ )
+    {
+      sortOrder[i] = i;
+    }
+    Arrays.sort( sortOrder, new Comparator<Integer>()
+    {
+      @Override
+      public int compare( final Integer i1, final Integer i2 )
+      {
+        return startIndices[i1] - startIndices[i2];
+      }
+    } );
+
+    // build corresponding cumulative sum of offsets
+    final int[] cumsum = new int[offsets.length];
+    cumsum[sortOrder[0]] = offsets[sortOrder[0]];
+    for( int j = 1; j < offsets.length; j++ )
+    {
+      cumsum[sortOrder[j]] = offsets[sortOrder[j]] + cumsum[sortOrder[j - 1]];
+    }
+
+    final int startIndex = startIndices[sortOrder[0]]; // smallest index
+    final int numIndexShifts = items.size() - startIndex;
+    final int[] indexShifts = new int[numIndexShifts];
+    // loop from startIndex (i=0) to items.size()-1 (i=numIndexShifts-1)
+    for( int j = 0, i = 0; i < numIndexShifts; i++ )
+    {
+      if( j < (sortOrder.length - 1) && i + startIndex >= startIndices[sortOrder[j + 1]] )
+        j++; // advance to next cumsum
+      indexShifts[i] = cumsum[sortOrder[j]];
+    }
+
+    for( int oldIndex = startIndex; oldIndex < items.size(); oldIndex++ )
+    {
+      final SplitSortItem item = items.get( oldIndex );
+      final int newIndex = oldIndex + indexShifts[oldIndex - startIndex];
+
+      /* fix spatial index */
+      final Rectangle envelope = item.getEnvelope();
+      if( envelope != null )
+      {
+        final boolean removed = m_spatialIndex.delete( envelope, oldIndex );
+        //Assert.isTrue( removed );
+
+        m_spatialIndex.add( envelope, newIndex );
+      }
+    }
+
+    /* Fix item hash */
+    final TIntFunction tf = new TIntFunction()
+    {
+      @Override
+      public int execute( final int oldIndex )
+      {
+        if( oldIndex < startIndex )
+          return oldIndex;
+        else
+          return oldIndex + indexShifts[oldIndex - startIndex];
+      }
+    };
+    m_itemIndex.transformValues( tf );
+
+    /* Fix invalid item indices */
+    final int[] invalidIndices = m_invalidIndices.toArray();
+    m_invalidIndices.clear();
+
+    for( final int oldIndex : invalidIndices )
+    {
+      if( oldIndex < startIndex )
+        m_invalidIndices.add( oldIndex );
+      else
+        m_invalidIndices.add( oldIndex + indexShifts[oldIndex - startIndex] );
+    }
+  }
+
   void remove( final SplitSortItem item, final int index )
   {
     Assert.isNotNull( item );
@@ -253,4 +335,5 @@ class SplitSortindex
 
     m_invalidIndices.add( index );
   }
+
 }

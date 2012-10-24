@@ -321,10 +321,11 @@ public abstract class AbstractFeatureList implements FeatureList
   {
     final String path = findLinkPath( toLink );
     final String id = toLink.getId();
-
-    final String href = String.format( "%s#%s", path, id );
-
-    return insertLink( index, href, toLink.getFeatureType() );
+    final StringBuilder s = new StringBuilder(path.length() + id.length() + 1);
+    s.append(path);
+    s.append( '#' );
+    s.append( id );
+    return insertLink( index, s.toString(), toLink.getFeatureType() );
   }
 
   @Override
