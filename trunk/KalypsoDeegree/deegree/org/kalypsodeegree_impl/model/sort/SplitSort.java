@@ -35,6 +35,7 @@
  */
 package org.kalypsodeegree_impl.model.sort;
 
+import gnu.trove.TIntArrayList;
 import gnu.trove.TIntProcedure;
 
 import java.util.ArrayList;
@@ -207,6 +208,32 @@ public class SplitSort extends AbstractFeatureList
 
     return item.getData();
   }
+
+//  @Override
+//  public synchronized boolean removeAll( final Collection c )
+//  {
+//    boolean changed = false;
+//    final TIntArrayList indices = new TIntArrayList( c.size() );
+//    final TIntArrayList offsets = new TIntArrayList( c.size() );
+//    for( final Object object : c )
+//    {
+//      final int index = indexOf( object );
+//      if( index != -1 )
+//      {
+//        indices.add( index + 1 );
+//        offsets.add( -1 );
+//        final SplitSortItem item = m_items.get( index );
+//        removeDataObject( item, index );
+//      }
+//    }
+//    
+//    m_items.removeAll( c );
+//
+//    if( m_index != null )
+//      m_index.reindex( indices.toNativeArray(), offsets.toNativeArray() );
+//
+//    return changed;
+//  }
 
   @Override
   public synchronized int size( )
