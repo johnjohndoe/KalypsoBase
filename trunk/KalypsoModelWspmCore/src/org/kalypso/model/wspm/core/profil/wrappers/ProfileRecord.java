@@ -397,4 +397,18 @@ public class ProfileRecord extends Record implements IProfileRecord
     
     return commentValue.toString();
   }
+
+  @Override
+  public String getCode( )
+  {
+    final int indexOfCode = indexOfComponent( IWspmPointProperties.POINT_PROPERTY_CODE );
+    if( indexOfCode == -1 )
+      return null;
+
+    Object codeValue = getValue( indexOfCode );
+    if( codeValue == null )
+      return null;
+    
+    return codeValue.toString();
+  }
 }

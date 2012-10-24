@@ -149,4 +149,6 @@ public interface IProfileRecord extends IRecord
   boolean isSelected( );
 
   String getComment( );
+
+  String getCode( );
 }
