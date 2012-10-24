@@ -42,9 +42,11 @@ package org.kalypso.model.wspm.ui.view.chart;
 
 import java.awt.geom.Point2D;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.model.wspm.core.IWspmConstants;
 import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
@@ -195,12 +197,6 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   {
   }
 
-  @Override
-  public IComponent getDomainComponent( )
-  {
-    return getProfil() == null ? null : getProfil().hasPointProperty( m_domainComponent );
-  }
-
   @SuppressWarnings( { "unchecked", "rawtypes" } )
   @Override
   public IDataRange<Double> getDomainRange( )
@@ -315,17 +311,24 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   }
 
   @Override
+  public IComponent getDomainComponent( )
+  {
+    return getComponent( m_domainComponent );
+  }
+  
+  @Override
   public IComponent getTargetComponent( )
   {
-    final IProfile profil = getProfil();
-    if( profil == null || getTargetPropertyIndex() == -1 )
+    return getComponent( m_targetRangeProperty);
+  }
+
+  private IComponent getComponent( String componentID )
+  {
+    IProfile profil = getProfil();
+    if( profil == null )
       return null;
 
-    final int indexOfProperty = profil.indexOfProperty( m_targetRangeProperty );
-    if( indexOfProperty < 0 )
-      return null;
-
-    return profil.getResult().getComponent( indexOfProperty );
+    return profil.hasPointProperty( componentID );
   }
 
   protected final int getTargetPropertyIndex( )
@@ -378,6 +381,7 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     return targetComponent.getName();
   }
 
+  // FIXME: move into PointsLineLayer, does not belong here
   protected String getTooltipInfo( final IProfileRecord point )
   {
     final IComponent domainComponent = getDomainComponent();
@@ -385,18 +389,37 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     if( Objects.isNull( point, targetComponent, domainComponent ) )
       return ""; //$NON-NLS-1$
 
+    IComponent commentComponent = getComponent(  IWspmConstants.POINT_PROPERTY_COMMENT );
+    IComponent codeComponent = getComponent(  IWspmConstants.POINT_PROPERTY_CODE );
+    
     try
     {
       final Point2D p = getPoint2D( point );
 
-      final TooltipFormatter formatter = new TooltipFormatter( null, new String[] { "%s", "%10.4f", "[%s]" }, new int[] { SWT.LEFT, SWT.RIGHT, SWT.LEFT } );
+      final TooltipFormatter formatter = new TooltipFormatter( null, new String[] { "%s", "%s", "[%s]" }, new int[] { SWT.LEFT, SWT.RIGHT, SWT.LEFT } );
 
       final String domainUnit = ComponentUtilities.getComponentUnitLabel( domainComponent );
-      formatter.addLine( domainComponent.getName(), p.getX(), domainUnit );
+      formatter.addLine( domainComponent.getName(), String.format( "%10.2f", p.getX() ), domainUnit );
 
       final String targetUnit = ComponentUtilities.getComponentUnitLabel( targetComponent );
-      formatter.addLine( targetComponent.getName(), p.getY(), targetUnit );
+      formatter.addLine( targetComponent.getName(), String.format( "%10.2f", p.getY() ), targetUnit );
 
+      /* code if set */
+      if( codeComponent != null )
+      {
+        String code = point.getCode();
+        if( !StringUtils.isBlank( code ))
+          formatter.addLine( codeComponent.getName(), code, "-" );
+      }
+      
+      /* comment if set */
+      if( commentComponent != null )
+      {
+        String comment = point.getComment();
+        if( !StringUtils.isBlank( comment ))
+          formatter.addFooter( comment );
+      }
+      
       return formatter.format();
     }
     catch( final RuntimeException e )
@@ -431,7 +454,6 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
   {
     m_lineStyle = lineStyle;
   }
-
 
   protected Point toScreen( final IProfileRecord point )
   {
