@@ -30,14 +30,14 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 /**
  * Helper that finds a hover info for profile data.
- *
+ * 
  * @author Gernot Belger
  */
 public class ProfilePointHover
 {
-  private final AbstractProfilLayer m_layer;
+  private final AbstractProfilePointsLayer m_layer;
 
-  public ProfilePointHover( final AbstractProfilLayer layer )
+  public ProfilePointHover( final AbstractProfilePointsLayer layer )
   {
     m_layer = layer;
   }

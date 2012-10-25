@@ -67,16 +67,13 @@ public class AbstractLayerStyleProvider implements ILayerStyleProvider
     m_styles.put( id, style );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.ILayerStyleProvider#getStyleFor(java.lang.String, java.lang.Class)
-   */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings( "unchecked" )
   @Override
   public <T extends IStyle> T getStyleFor( final String id, final Class<T> defaultStyle )
   {
     final IStyle style = m_styles.get( id );
     if( style != null )
-      return (T) style;
+      return (T)style;
 
     if( defaultStyle == null )
       return null;

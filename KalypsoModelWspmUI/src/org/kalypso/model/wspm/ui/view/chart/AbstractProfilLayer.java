@@ -40,99 +40,50 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart;
 
-import java.awt.geom.Point2D;
-
-import org.apache.commons.lang3.StringUtils;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Point;
-import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.model.wspm.core.IWspmConstants;
-import org.kalypso.model.wspm.core.IWspmPointProperties;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
-import org.kalypso.model.wspm.core.profil.util.ProfileUtil;
-import org.kalypso.model.wspm.core.profil.visitors.FindMinMaxVisitor;
-import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.IProfilView;
-import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 
-import de.openali.odysseus.chart.ext.base.layer.TooltipFormatter;
 import de.openali.odysseus.chart.factory.layer.AbstractChartLayer;
-import de.openali.odysseus.chart.framework.model.data.DataRange;
-import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
-import de.openali.odysseus.chart.framework.model.layer.EditInfo;
-import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.IPointStyle;
-import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINECAP;
 import de.openali.odysseus.chart.framework.model.style.impl.StyleSet;
-import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 /**
  * @author kimwerner
  */
 public abstract class AbstractProfilLayer extends AbstractChartLayer implements IProfilChartLayer
 {
-  private final String m_domainComponent;
-
-  private ILineStyle m_lineStyle = null;
-
-  private ILineStyle m_lineStyleActive = null;
-
-  private ILineStyle m_lineStyleHover = null;
-
-  private IPointStyle m_pointStyle = null;
-
-  private IPointStyle m_pointStyleActive = null;
-
-  private IPointStyle m_pointStyleHover = null;
-
   private final IProfile m_profil;
 
-  private int m_targetPropIndex = -1;
-
-  // FIXME: does not belong here! -> move into layers that 'think' in profile properties
-  private final String m_targetRangeProperty;
-
-  public AbstractProfilLayer( final String id, final IProfile profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
+  public AbstractProfilLayer( final String id, final IProfile profil )
   {
     super( null, new StyleSet() );
 
     m_profil = profil;
-    m_targetRangeProperty = targetRangeProperty;
-    m_domainComponent = IWspmPointProperties.POINT_PROPERTY_BREITE;
+
     setIdentifier( id );
-    createStyles( styleProvider, id );
   }
 
-  protected String getTargetProperty( )
-  {
-    return m_targetRangeProperty;
-  }
-
+  /**
+   * @deprecated EVIL: NOT IN THE GLOBAL INTERFACE!
+   */
   @Override
-  public EditInfo commitDrag( final Point point, final EditInfo dragStartData )
+  @Deprecated
+  public IComponent getTargetComponent( )
   {
-    final IComponent targetComponent = getTargetComponent();
-    if( targetComponent != null )
-    {
-      getProfil().getSelection().setActivePointProperty( targetComponent );
-    }
+    throw new UnsupportedOperationException();
+  }
 
-    if( point == null || dragStartData.getPosition() == point )
-    {
-      executeClick( dragStartData );
-    }
-    else
-    {
-      executeDrop( point, dragStartData );
-    }
-
-    return null;
+  /**
+   * @deprecated EVIL: NOT IN THE GLOBAL INTERFACE!
+   */
+  @Override
+  @Deprecated
+  public IComponent getDomainComponent( )
+  {
+    throw new UnsupportedOperationException();
   }
 
   @Override
@@ -142,290 +93,19 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
     return null;
   }
 
-  private void createStyles( final ILayerStyleProvider styleProvider, final String id )
-  {
-    if( styleProvider == null )
-      return;
-
-    // TODO: stlyes should be fetched on demand!
-    // It is not guaranteed, that we need only one line style!
-
-    // FIXME: remove theses magic names
-    m_lineStyle = styleProvider.getStyleFor( id + "_LINE", null ); //$NON-NLS-1$
-    m_pointStyle = styleProvider.getStyleFor( id + "_POINT", null ); //$NON-NLS-1$
-
-    m_lineStyleActive = styleProvider.getStyleFor( id + "_LINE_ACTIVE", null ); //$NON-NLS-1$
-    m_pointStyleActive = styleProvider.getStyleFor( id + "_POINT_ACTIVE", null ); //$NON-NLS-1$
-
-    m_lineStyleHover = styleProvider.getStyleFor( id + "_LINE_HOVER", null ); //$NON-NLS-1$
-    m_pointStyleHover = styleProvider.getStyleFor( id + "_POINT_HOVER", null ); //$NON-NLS-1$
-  }
-
-  @Override
-  public void dispose( )
-  {
-    /**
-     * don't dispose Styles, StyleProvider will do
-     */
-  }
-
-  @Override
-  public EditInfo drag( final Point newPos, final EditInfo dragStartData )
-  {
-    return dragStartData;
-  }
-
-  @Override
-  public void executeClick( final EditInfo clickInfo )
-  {
-    final Object data = clickInfo.getData();
-    final Integer pos = data instanceof Integer ? (Integer)data : null;
-    final IComponent cmp = getTargetComponent();
-    if( !Objects.isNull( cmp, pos ) )
-    {
-      final IProfile profil = getProfil();
-      profil.getSelection().setActivePoints( profil.getPoint( pos ) );
-      profil.getSelection().setActivePointProperty( cmp );
-    }
-  }
-
-  /**
-   * To be implemented by subclasses - if needed
-   */
-  @Override
-  public void executeDrop( final Point point, final EditInfo dragStartData )
-  {
-  }
-
-  @SuppressWarnings( { "unchecked", "rawtypes" } )
-  @Override
-  public IDataRange<Double> getDomainRange( )
-  {
-    if( getCoordinateMapper() == null )
-      return null;
-
-    final IComponent domain = getDomainComponent();
-    if( Objects.isNull( domain ) )
-      return null;
-    final int domainPropertyIndex = m_profil.getResult().indexOfComponent( m_domainComponent );
-    final FindMinMaxVisitor visitor = new FindMinMaxVisitor( domain.getId() );
-    getProfil().accept( visitor, 1 );
-
-    final IProfileRecord min = visitor.getMinimum();
-    final IProfileRecord max = visitor.getMaximum();
-    if( Objects.isNull( min, max ) )
-      return null;
-    return new DataRange( min.getValue( domainPropertyIndex ), max.getValue( domainPropertyIndex ) );
-  }
-
-  protected ILineStyle getLineStyle( )
-  {
-    if( m_lineStyle == null )
-      m_lineStyle = StyleUtils.getDefaultLineStyle();
-
-    return m_lineStyle;
-  }
-
-  protected ILineStyle getLineStyleActive( )
-  {
-    if( m_lineStyleActive == null )
-    {
-      m_lineStyleActive = getLineStyle().clone();
-      m_lineStyleActive.setColor( COLOR_ACTIVE );
-    }
-    return m_lineStyleActive;
-  }
-
-  // FIXME: this abstract default style stuff is contraproductive. Each laxer should once and for all define its own
-  // styles.
-  protected ILineStyle getLineStyleHover( )
-  {
-    if( m_lineStyleHover == null )
-    {
-      final ILineStyle lineStyle = getLineStyle();
-
-      m_lineStyleHover = lineStyle.clone();
-      m_lineStyleHover.setDash( 0f, HOVER_DASH );
-
-      m_lineStyleHover.setLineCap( LINECAP.FLAT );
-    }
-    return m_lineStyleHover;
-  }
-
-  public Point2D getPoint2D( final IProfileRecord point )
-  {
-    final Double x = ProfileUtil.getDoubleValueFor( m_domainComponent, point );
-    final Double y = ProfileUtil.getDoubleValueFor( getTargetPropertyIndex(), point );
-    return new Point2D.Double( x, y );
-  }
-
-  protected IPointStyle getPointStyle( )
-  {
-    if( m_pointStyle == null )
-    {
-      m_pointStyle = StyleUtils.getDefaultPointStyle();
-      m_pointStyle.setStroke( getLineStyle().clone() );
-      m_pointStyle.setInlineColor( getLineStyle().getColor() );
-      m_pointStyle.setWidth( POINT_STYLE_WIDTH );
-      m_pointStyle.setHeight( POINT_STYLE_WIDTH );
-    }
-    return m_pointStyle;
-  }
-
-  protected IPointStyle getPointStyleActive( )
-  {
-    if( m_pointStyleActive == null )
-    {
-      m_pointStyleActive = getPointStyle().clone();
-      m_pointStyleActive.setStroke( getLineStyleActive().clone() );
-      m_pointStyleActive.setInlineColor( getLineStyleActive().getColor() );
-    }
-    return m_pointStyleActive;
-  }
-
-  // FIXME: this abstract default style stuff is contraproductive. Each laxer should once and for all define its own
-  // styles.
-  protected IPointStyle getPointStyleHover( )
-  {
-    if( m_pointStyleHover == null )
-    {
-      m_pointStyleHover = getPointStyle().clone();
-      m_pointStyleHover.setWidth( m_pointStyleHover.getWidth() * 2 );
-      m_pointStyleHover.setHeight( m_pointStyleHover.getHeight() * 2 );
-
-      final ILineStyle lineStyleHover = getLineStyleHover();
-      final ILineStyle stroke = lineStyleHover.clone();
-      stroke.setDash( 0.0f, null );
-
-      m_pointStyleHover.setStroke( stroke );
-
-      m_pointStyleHover.setFillVisible( true );
-    }
-    return m_pointStyleHover;
-  }
-
   @Override
   public IProfile getProfil( )
   {
     return m_profil;
   }
 
-  @Override
-  public IComponent getDomainComponent( )
+  protected IComponent getComponent( final String componentID )
   {
-    return getComponent( m_domainComponent );
-  }
-  
-  @Override
-  public IComponent getTargetComponent( )
-  {
-    return getComponent( m_targetRangeProperty);
-  }
-
-  private IComponent getComponent( String componentID )
-  {
-    IProfile profil = getProfil();
+    final IProfile profil = getProfil();
     if( profil == null )
       return null;
 
     return profil.hasPointProperty( componentID );
-  }
-
-  protected final int getTargetPropertyIndex( )
-  {
-    final IProfile profil = getProfil();
-
-    if( m_targetPropIndex < 0 )
-    {
-      if( profil == null )
-        return -1;
-      m_targetPropIndex = profil.getResult().indexOfComponent( m_targetRangeProperty );
-    }
-
-    return m_targetPropIndex;
-  }
-
-  @SuppressWarnings( { "rawtypes", "unchecked" } )
-  @Override
-  public IDataRange<Double> getTargetRange( final IDataRange domainIntervall )
-  {
-    final int targetPropertyIndex = getTargetPropertyIndex();
-    if( getCoordinateMapper() == null || targetPropertyIndex == -1 )
-      return null;
-
-    final IComponent target = getTargetComponent();
-    if( target == null )
-      return null;
-
-    final FindMinMaxVisitor visitor = new FindMinMaxVisitor( target.getId() );
-    getProfil().accept( visitor, 1 );
-
-    final IProfileRecord min = visitor.getMinimum();
-    final IProfileRecord max = visitor.getMaximum();
-    if( Objects.isNull( min, max ) )
-      return null;
-
-    final Number minValue = (Number)min.getValue( targetPropertyIndex );
-    final Number maxValue = (Number)max.getValue( targetPropertyIndex );
-
-    return new DataRange( minValue, maxValue );
-  }
-
-  @Override
-  public String getTitle( )
-  {
-    final IComponent targetComponent = getTargetComponent();
-    if( targetComponent == null )
-      return super.getTitle();
-
-    return targetComponent.getName();
-  }
-
-  // FIXME: move into PointsLineLayer, does not belong here
-  protected String getTooltipInfo( final IProfileRecord point )
-  {
-    final IComponent domainComponent = getDomainComponent();
-    final IComponent targetComponent = getTargetComponent();
-    if( Objects.isNull( point, targetComponent, domainComponent ) )
-      return ""; //$NON-NLS-1$
-
-    IComponent commentComponent = getComponent(  IWspmConstants.POINT_PROPERTY_COMMENT );
-    IComponent codeComponent = getComponent(  IWspmConstants.POINT_PROPERTY_CODE );
-    
-    try
-    {
-      final Point2D p = getPoint2D( point );
-
-      final TooltipFormatter formatter = new TooltipFormatter( null, new String[] { "%s", "%s", "[%s]" }, new int[] { SWT.LEFT, SWT.RIGHT, SWT.LEFT } );
-
-      final String domainUnit = ComponentUtilities.getComponentUnitLabel( domainComponent );
-      formatter.addLine( domainComponent.getName(), String.format( "%10.2f", p.getX() ), domainUnit );
-
-      final String targetUnit = ComponentUtilities.getComponentUnitLabel( targetComponent );
-      formatter.addLine( targetComponent.getName(), String.format( "%10.2f", p.getY() ), targetUnit );
-
-      /* code if set */
-      if( codeComponent != null )
-      {
-        String code = point.getCode();
-        if( !StringUtils.isBlank( code ))
-          formatter.addLine( codeComponent.getName(), code, "-" );
-      }
-      
-      /* comment if set */
-      if( commentComponent != null )
-      {
-        String comment = point.getComment();
-        if( !StringUtils.isBlank( comment ))
-          formatter.addFooter( comment );
-      }
-      
-      return formatter.format();
-    }
-    catch( final RuntimeException e )
-    {
-      return e.getLocalizedMessage();
-    }
   }
 
   @Override
@@ -436,38 +116,12 @@ public abstract class AbstractProfilLayer extends AbstractChartLayer implements 
       return;
 
     if( hint.isSelectionChanged() )
-    {
       getEventHandler().fireLayerContentChanged( this, ContentChangeType.value );
-
-      if( hint.isPointPropertiesChanged() )
-        m_targetPropIndex = -1;
-    }
   }
 
   @Override
   public void removeYourself( )
   {
     throw new UnsupportedOperationException( Messages.getString( "org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme.0" ) ); //$NON-NLS-1$
-  }
-
-  public void setLineStyle( final ILineStyle lineStyle )
-  {
-    m_lineStyle = lineStyle;
-  }
-
-  protected Point toScreen( final IProfileRecord point )
-  {
-    final ICoordinateMapper cm = getCoordinateMapper();
-    if( Objects.isNull( cm ) )
-      return null;
-
-    final Double x = ProfileUtil.getDoubleValueFor( m_domainComponent, point );
-    final Double y = ProfileUtil.getDoubleValueFor( getTargetPropertyIndex(), point );
-    if( Objects.isNull( x, y ) )
-      return null;
-    else if( x.isNaN() || y.isNaN() )
-      return null;
-
-    return cm.numericToScreen( x, y );
   }
 }

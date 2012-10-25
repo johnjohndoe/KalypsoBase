@@ -57,6 +57,7 @@ import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
+import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 import org.kalypso.model.wspm.ui.view.chart.layer.wsp.utils.WaterLevelFilter;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -75,7 +76,7 @@ import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
 /**
  * Displays constant wsp lines in the cross section.
- *
+ * 
  * @author Gernot Belger
  * @author Holger Albert
  */
@@ -96,12 +97,16 @@ public class WspLayer extends AbstractProfilTheme
 
   private ILegendEntry[] m_legendEntries;
 
+  private final ILineStyle m_style;
+
   public WspLayer( final IProfile profile, final String layerId, final ILayerStyleProvider styleProvider, final IWspLayerData data, final ICoordinateMapper< ? , ? > mapper )
   {
-    super( profile, layerId, Messages.getString( "WspLayer.0" ), null, mapper, styleProvider ); //$NON-NLS-1$
+    super( profile, layerId, Messages.getString( "WspLayer.0" ), new IProfilChartLayer[] { new WspObjectsLayers( layerId + "_points", profile, data ), new WspObjectsLayers( layerId + "_segments", profile, data ) }, mapper ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     final IPreferenceStore store = KalypsoModelWspmUIPlugin.getDefault().getPreferenceStore();
     store.addPropertyChangeListener( m_preferenceListener );
+
+    m_style = styleProvider.getStyleFor( layerId + ILayerStyleProvider.LINE, ILineStyle.class );
 
     m_data = data;
   }
@@ -118,9 +123,7 @@ public class WspLayer extends AbstractProfilTheme
 
   private ILegendEntry[] createLegendEntries( )
   {
-    final ILineStyle lineStyle = getLineStyle();
-
-    return new ILegendEntry[] { new WspLegendEntry( this, lineStyle ) };
+    return new ILegendEntry[] { new WspLegendEntry( this, m_style ) };
   }
 
   @Override
@@ -140,7 +143,7 @@ public class WspLayer extends AbstractProfilTheme
 
   /**
    * This function returns the wsp layer data.
-   *
+   * 
    * @return The wsp layer data.
    */
   public IWspLayerData getData( )
@@ -172,7 +175,7 @@ public class WspLayer extends AbstractProfilTheme
       final WaterlevelRenderSegment segment = data.findSegment( screenPos, coordinateMapper );
       if( segment != null )
       {
-        final ILineStyle hoverLineStyle = getLineStyleHover();
+        final ILineStyle hoverLineStyle = m_style;
 
         final IPaintable hoverFigure = segment.getHoverFigure( hoverLineStyle, xStart, xEnd, coordinateMapper );
 
@@ -211,8 +214,6 @@ public class WspLayer extends AbstractProfilTheme
   @Override
   public void paint( final GC gc, final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
-    final ILineStyle lineStyle = getLineStyle();
-
     // For now, we only fill on hover, as 1) the are is not nice yet 2) it overlaps the other water levels
     final IAreaStyle areaStyle = null;
 
@@ -221,7 +222,7 @@ public class WspLayer extends AbstractProfilTheme
     final WaterlevelRenderData[] renderData = getRenderData();
     for( final WaterlevelRenderData data : renderData )
     {
-      data.paint( gc, lineStyle, areaStyle, coordinateMapper );
+      data.paint( gc, m_style, areaStyle, coordinateMapper );
     }
   }
 

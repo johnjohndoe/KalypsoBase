@@ -47,7 +47,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.view.chart.AbstractProfilLayer;
+import org.kalypso.model.wspm.ui.view.chart.AbstractProfilePointsLayer;
 
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
@@ -59,7 +59,7 @@ import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 /**
  * @author kimwerner
  */
-public class StationLineLayer extends AbstractProfilLayer
+public class StationLineLayer extends AbstractProfilePointsLayer
 {
   public StationLineLayer( final IProfile profil, final String targetRangeProperty )
   {
@@ -93,7 +93,7 @@ public class StationLineLayer extends AbstractProfilLayer
   }
 
   @Override
-  public void paint( final GC gc,final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
+  public void paint( final GC gc, final ChartImageInfo chartImageInfo, final IProgressMonitor monitor )
   {
     final IProfile profil = getProfil();
 
@@ -102,7 +102,7 @@ public class StationLineLayer extends AbstractProfilLayer
 
     final IProfileRecord[] profilPoints = profil.getPoints();
 
-    final IAxis<?> targetAxis = getCoordinateMapper().getTargetAxis();
+    final IAxis< ? > targetAxis = getCoordinateMapper().getTargetAxis();
     final int baseLine = targetAxis.numericToScreen( targetAxis.getNumericRange().getMin() );
     for( final IProfileRecord profilPoint : profilPoints )
     {

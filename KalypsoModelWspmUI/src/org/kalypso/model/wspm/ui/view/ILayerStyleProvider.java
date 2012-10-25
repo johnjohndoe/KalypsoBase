@@ -47,5 +47,11 @@ import de.openali.odysseus.chart.framework.model.style.IStyle;
  */
 public interface ILayerStyleProvider
 {
+  String POINT = "_POINT"; //$NON-NLS-1$
+
+  String LINE = "_LINE"; //$NON-NLS-1$
+
+  String AREA = "_AREA"; //$NON-NLS-1$
+
   <T extends IStyle> T getStyleFor( final String id, final Class<T> defaultStyle );
 }
