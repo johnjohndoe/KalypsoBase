@@ -55,8 +55,6 @@ import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
 @Deprecated
 public class LayerStyleProvider extends AbstractLayerStyleProvider
 {
-  private static final String LINE = "_LINE"; //$NON-NLS-1$
-
   @Override
   protected void createStyles( )
   {

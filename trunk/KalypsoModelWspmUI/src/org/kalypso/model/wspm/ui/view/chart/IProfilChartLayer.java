@@ -77,7 +77,7 @@ public interface IProfilChartLayer extends IEditableChartLayer
   /**
    * Löscht diesen Layer aus dem Profil. Besser gesagt, löscht die Daten aus dem Profil, die durch diesen Layer
    * repräsentiert werden.
-   *
+   * 
    * @throws IllegalProfileOperationException
    * @throws UnsupportedOperationException
    *           Falls diese Art von Layer nicht gelöscht werden kann.
@@ -89,8 +89,16 @@ public interface IProfilChartLayer extends IEditableChartLayer
 
   IProfile getProfil( );
 
+  /**
+   * @deprecated EVIL: NOT IN THE GLOBAL INTERFACE!
+   */
+  @Deprecated
   IComponent getTargetComponent( );
 
+  /**
+   * @deprecated EVIL: NOT IN THE GLOBAL INTERFACE!
+   */
+  @Deprecated
   IComponent getDomainComponent( );
 
   // FIXME: ugly, does not belong in this interface -> do something with EditInfo instead

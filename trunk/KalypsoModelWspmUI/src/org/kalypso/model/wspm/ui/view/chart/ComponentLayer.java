@@ -48,7 +48,7 @@ import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 /**
  * @author kimwerner
  */
-public final class ComponentLayer extends AbstractProfilLayer
+public final class ComponentLayer extends AbstractProfilePointsLayer
 {
   private final boolean m_isAutoScale;
 

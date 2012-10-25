@@ -46,9 +46,9 @@ import org.eclipse.swt.graphics.Point;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
 import org.kalypso.model.wspm.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.observation.result.IComponent;
 
+import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener.ContentChangeType;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -69,17 +69,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer
 
   public AbstractProfilTheme( final IProfile profil, final String id, final String title, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
-    this( profil, id, title, chartLayers, cm, null );
-  }
-
-  public AbstractProfilTheme( final IProfile profil, final String id, final String title, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm, final ILayerStyleProvider styleProvider )
-  {
-    this( profil, id, title, chartLayers, cm, styleProvider, "" );
-  }
-
-  public AbstractProfilTheme( final IProfile profil, final String id, final String title, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm, final ILayerStyleProvider styleProvider, final String targetProperty )
-  {
-    super( id, profil, targetProperty, styleProvider ); //$NON-NLS-1$
+    super( id, profil ); //$NON-NLS-1$
 
     /* *grml* AbstractProfileLayer overwrites getTitle() implementation */
     setTitle( title );
@@ -98,6 +88,28 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer
 
       getLayerManager().addLayer( chartLayers );
     }
+  }
+
+  /**
+   * Always returns null: Important: do not recurse into children, they may have different axes, so merging those ranges
+   * is just wrong.<br/>
+   * The caller of getDomainRange is responsible for recursion.
+   */
+  @Override
+  public IDataRange<Double> getDomainRange( )
+  {
+    return null;
+  }
+
+  /**
+   * Always returns null: Important: do not recurse into children, they may have different axes, so merging those ranges
+   * is just wrong.<br/>
+   * The caller of getDomainRange is responsible for recursion.
+   */
+  @Override
+  public IDataRange<Double> getTargetRange( final IDataRange< ? > domainIntervall )
+  {
+    return null;
   }
 
   @Override
@@ -224,7 +236,7 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer
     for( final IChartLayer l : getLayerManager().getLayers() )
     {
       if( l.isActive() && l instanceof IProfilChartLayer )
-        return (IProfilChartLayer) l;
+        return (IProfilChartLayer)l;
     }
     return null;
   }
@@ -289,13 +301,13 @@ public abstract class AbstractProfilTheme extends AbstractProfilLayer
 //    }
 //    else
 //    {
-      for( final IChartLayer layer : getLayerManager().getLayers() )
+    for( final IChartLayer layer : getLayerManager().getLayers() )
+    {
+      if( layer instanceof IProfilChartLayer )
       {
-        if( layer instanceof IProfilChartLayer )
-        {
-          ((IProfilChartLayer) layer).onProfilChanged( hint );
-        }
+        ((IProfilChartLayer)layer).onProfilChanged( hint );
       }
+    }
 //    }
   }
 

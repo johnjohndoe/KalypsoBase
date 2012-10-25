@@ -68,11 +68,12 @@ import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 /**
  * @author kimwerner
  */
-public class PointsLineLayer extends AbstractProfilLayer
+public class PointsLineLayer extends AbstractProfilePointsLayer
 {
   public PointsLineLayer( final String id, final IProfile profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
   {
     super( id, profil, targetRangeProperty, styleProvider );
+
     setData( IProfilChartLayer.VIEW_DATA_KEY, IProfilChartLayer.ALLOW_VERTICAL_EDITING );
   }
 
@@ -83,7 +84,7 @@ public class PointsLineLayer extends AbstractProfilLayer
       return null;
 
     final Point newPoint = verifyPos( dragStartData.getPosition(), newPos );
-    final Integer index = (Integer) dragStartData.getData();
+    final Integer index = (Integer)dragStartData.getData();
 
     final Point next = toScreen( getNextNonNull( index ) );
     final Point previous = toScreen( getPreviousNonNull( index ) );
@@ -148,7 +149,7 @@ public class PointsLineLayer extends AbstractProfilLayer
       return;
 
     final Point newPoint = verifyPos( dragStartData.getPosition(), point );
-    final Integer pos = dragStartData.getData() instanceof Integer ? (Integer) dragStartData.getData() : -1;
+    final Integer pos = dragStartData.getData() instanceof Integer ? (Integer)dragStartData.getData() : -1;
     if( pos > -1 )
     {
       final IProfile profil = getProfil();
