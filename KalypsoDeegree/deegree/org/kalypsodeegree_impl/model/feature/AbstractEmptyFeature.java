@@ -53,9 +53,8 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 
 /**
- * A {@link Feature} implementation that does absolute nothing. Useful for classes that needs to implement the
- * {@link Feature} interface but do not need to inherit from {@link Feature_Impl}.
- *
+ * A {@link Feature} implementation that does absolute nothing. Useful for classes that needs to implement the {@link Feature} interface but do not need to inherit from {@link Feature_Impl}.
+ * 
  * @author Dirk Kuch
  */
 public abstract class AbstractEmptyFeature implements Feature
@@ -95,7 +94,6 @@ public abstract class AbstractEmptyFeature implements Feature
   {
     // nothing to do
   }
-
 
   @Deprecated
   @Override
@@ -140,7 +138,6 @@ public abstract class AbstractEmptyFeature implements Feature
   {
     // nothing to do
   }
-
 
   @Override
   public IFeatureType getFeatureType( )
@@ -211,12 +208,6 @@ public abstract class AbstractEmptyFeature implements Feature
 
   @Override
   public void setFeatureType( final IFeatureType ft )
-  {
-    // nothing to do
-  }
-
-  @Override
-  public void setId( final String fid )
   {
     // nothing to do
   }

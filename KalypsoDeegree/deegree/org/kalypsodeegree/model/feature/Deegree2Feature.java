@@ -39,14 +39,6 @@ public interface Deegree2Feature
   String getId( );
 
   /**
-   * Sets the id of the feature.
-   * 
-   * @param fid
-   *          the id of the feature to be set
-   */
-  void setId( String fid );
-
-  /**
    * Kalypso: changed to IFeatureType<br>
    * Returns the feature type of this feature.
    * 

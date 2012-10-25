@@ -72,7 +72,7 @@ public class XLinkedFeature_Impl extends PlatformObject implements IXLinkedFeatu
 
   private final String m_uri;
 
-  private String m_featureId;
+  private final String m_featureId;
 
   private final IFeatureType m_basicFeatureType;
 
@@ -348,12 +348,6 @@ public class XLinkedFeature_Impl extends PlatformObject implements IXLinkedFeatu
   public void setFeatureType( final IFeatureType ft )
   {
     m_featureType = ft;
-  }
-
-  @Override
-  public void setId( final String fid )
-  {
-    m_featureId = fid;
   }
 
   @Override
