@@ -93,7 +93,7 @@ public final class EasyFeatureWrapper
   {
     if( obj instanceof EasyFeatureWrapper )
     {
-      return m_feature.equals( ((EasyFeatureWrapper) obj).m_feature );
+      return m_feature.equals( ((EasyFeatureWrapper)obj).m_feature );
     }
     else
     {

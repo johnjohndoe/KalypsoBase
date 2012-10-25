@@ -49,7 +49,6 @@ import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
 import org.kalypso.chart.ui.editor.ChartTreeLabelProvider;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.model.wspm.ui.view.AbstractChartModelViewPart;
-import org.kalypso.model.wspm.ui.view.chart.ProfilChartModel;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
@@ -118,19 +117,14 @@ public class LegendViewPart extends AbstractChartModelViewPart
   {
     if( m_chartlegend == null )
       return;
-    IChartModel model = getChartModel();
+
+    final IChartModel model = getChartModel();
     m_chartlegend.setModel( model );
     setSelectedLayer( model );
-    if( model != null && model instanceof ProfilChartModel && ((ProfilChartModel)model).getProfil() == null )
-    {
-      model = null;
-    }
+
     updatePartName( model, null, m_form );
   }
 
-  /**
-   * @see org.kalypso.model.wspm.ui.view.AbstractChartModelView#modelChanged(de.openali.odysseus.chart.framework.model.IChartModel)
-   */
   @Override
   protected void modelChanged( final IChartModel oldModel )
   {

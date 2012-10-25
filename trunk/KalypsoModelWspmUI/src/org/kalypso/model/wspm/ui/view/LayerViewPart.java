@@ -47,7 +47,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
-import org.kalypso.model.wspm.ui.view.chart.ProfilChartModel;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.event.ILayerManagerEventListener;
@@ -83,8 +82,7 @@ public class LayerViewPart extends AbstractChartModelViewPart
   private ScrolledForm m_form;
 
   /**
-   * @see org.kalypso.model.wspm.ui.view.AbstractChartModelViewPart#doCreateControl(org.eclipse.swt.widgets.Composite,
-   *      org.eclipse.ui.forms.widgets.FormToolkit)
+   * @see org.kalypso.model.wspm.ui.view.AbstractChartModelViewPart#doCreateControl(org.eclipse.swt.widgets.Composite, org.eclipse.ui.forms.widgets.FormToolkit)
    */
   @Override
   protected Control doCreateControl( final Composite parent, final FormToolkit toolkit )
@@ -154,18 +152,14 @@ public class LayerViewPart extends AbstractChartModelViewPart
     }
 
     final IChartLayer activeLayer = getActiveLayer();
-    IChartModel model = getChartModel();
-    if( model != null && model instanceof ProfilChartModel && ((ProfilChartModel) model).getProfil() == null )
-    {
-      model = null;
-    }
+    final IChartModel model = getChartModel();
 
     updatePartName( model, activeLayer == null ? null : activeLayer.getTitle(), m_form.getForm() );
 
     if( activeLayer == null )
       return;
 
-    final IProfilView panel = activeLayer instanceof IProfilChartLayer ? ((IProfilChartLayer) activeLayer).createLayerPanel() : null;
+    final IProfilView panel = activeLayer instanceof IProfilChartLayer ? ((IProfilChartLayer)activeLayer).createLayerPanel() : null;
 
     if( panel != null )
     {

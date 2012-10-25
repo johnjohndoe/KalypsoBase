@@ -53,7 +53,6 @@ import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 import org.kalypso.model.wspm.core.IWspmLayers;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IRangeSelection;
-import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
@@ -152,10 +151,9 @@ public class UpdateProfileCursorChartHandler extends AbstractChartHandler
 
     final IChartLayer layer = visitor.getLayer();
 
-    return (AbstractProfilTheme)layer;
+    return (IProfilChartLayer)layer;
   }
 
-  @SuppressWarnings( "rawtypes" )
   private void doPaintMouse( final PaintEvent e )
   {
     if( m_p1 == null )

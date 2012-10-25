@@ -40,9 +40,11 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.dialog.compare;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.model.wspm.core.gml.IProfileSelection;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.commands.MousePositionChartHandler;
@@ -70,13 +72,13 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
 
   private ProfilChartModel m_profilChartModel = null;
 
-  public ProfileChartComposite( final Composite parent, final int style, final IProfilLayerProvider layerProvider, final IProfile profile )
+  public ProfileChartComposite( final Composite parent, final int style, final IProfilLayerProvider layerProvider, final IProfileSelection profileSelection )
   {
     super( parent, style, null, BACKGROUND_RGB );
 
     m_profilLayerProvider = layerProvider;
 
-    invalidate( profile, null );
+    invalidate( profileSelection );
 
     final IChartHandlerManager plotHandler = getPlotHandler();
     plotHandler.addPlotHandler( new MousePositionChartHandler( this ) );
@@ -98,69 +100,57 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
   }
 
   @Override
-  public IProfile getProfil( )
+  public IProfileSelection getProfileSelection( )
   {
     if( Objects.isNull( m_profilChartModel ) )
       return null;
 
-    return m_profilChartModel.getProfil();
+    return m_profilChartModel.getProfileSelection();
   }
 
-  public Object getResult( )
-  {
-    if( Objects.isNull( m_profilChartModel ) )
-      return null;
-
-    return m_profilChartModel.getResult();
-  }
-
-  protected IProfilLayerProvider getProfilLayerProvider( final IProfile profile )
-  {
-    if( Objects.isNotNull( m_profilLayerProvider ) )
-      return m_profilLayerProvider;
-    else if( Objects.isNotNull( profile ) )
-    {
-      m_profilLayerProvider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( profile.getType() );
-    }
-    else if( Objects.isNotNull( getProfil() ) )
-    {
-      m_profilLayerProvider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( getProfil().getType() );
-    }
-
-    return m_profilLayerProvider;
-  }
-
-  private void invalidate( final IProfile profile, final Object result )
+  private void invalidate( final IProfileSelection profileSelection )
   {
     if( isDisposed() )
       return;
 
     // FIXME: bad and ugly! we should keep only one model, m_chartModel; not two references to the same thing
+    // FIXME: Is the equal check enough? Changes to often? Otherwise check IProfile.
     final IChartModel oldModel = m_profilChartModel;
-    final IProfile oldProfile = m_profilChartModel == null ? null : m_profilChartModel.getProfil();
-    if( profile != null && profile == oldProfile )
+    final IProfileSelection oldProfileSelection = m_profilChartModel == null ? null : m_profilChartModel.getProfileSelection();
+    if( ObjectUtils.equals( profileSelection, oldProfileSelection ) )
       return;
 
     final IChartModelState state = new ChartModelState();
     final IChartModel chartModel = getChartModel();
     state.storeState( chartModel );
     if( m_profilChartModel != null )
-    {
       m_profilChartModel.dispose();
-    }
 
-    m_profilChartModel = new ProfilChartModel( getProfilLayerProvider( profile ), profile, result );
+    final IProfile profile = profileSelection.getProfile();
+    m_profilChartModel = new ProfilChartModel( getProfilLayerProvider( profile ), profileSelection );
 
     state.restoreState( m_profilChartModel );
 
     // TODO: don't autoscale, restore zoom instead
     m_profilChartModel.autoscale();
+
     setChartModel( oldModel, m_profilChartModel );
   }
 
-  @Override
-  public synchronized void setProfil( final IProfile profile, final Object result )
+  private IProfilLayerProvider getProfilLayerProvider( final IProfile profile )
   {
-    invalidate( profile, result );
+    if( m_profilLayerProvider != null )
+      return m_profilLayerProvider;
+
+    if( profile == null )
+      return null;
+
+    return KalypsoModelWspmUIExtensions.createProfilLayerProvider( profile.getType() );
+  }
+
+  @Override
+  public synchronized void setProfileSelection( final IProfileSelection profileSelection )
+  {
+    invalidate( profileSelection );
   }
 }

@@ -42,11 +42,11 @@ package org.kalypso.model.wspm.ui.view.chart;
 
 import java.awt.Insets;
 
+import org.kalypso.model.wspm.core.gml.IProfileSelection;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IProfileListener;
 import org.kalypso.model.wspm.core.profil.ProfileListenerAdapter;
 import org.kalypso.model.wspm.core.profil.changes.ProfileChangeHint;
-import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 
 import de.openali.odysseus.chart.framework.model.impl.ChartModel;
 import de.openali.odysseus.chart.framework.model.impl.ChartModelState;
@@ -59,7 +59,7 @@ import de.openali.odysseus.chart.framework.model.layer.ILayerManager;
  */
 public class ProfilChartModel extends ChartModel
 {
-  private final IProfileListener m_profilListener = new ProfileListenerAdapter()
+  private final IProfileListener m_profileListener = new ProfileListenerAdapter()
   {
     @Override
     public void onProfilChanged( final ProfileChangeHint hint )
@@ -72,12 +72,9 @@ public class ProfilChartModel extends ChartModel
       {
         handlePropertyOrBuildingChanged();
       }
-
       // REMARK: we directly redraw trhe chart for any selection changes here; before this was managed by the selction handler,
-
       // but listeners never got unregistered. This is a better place.
-
-      else if( /*hint.isSelectionChanged() || */hint.isSelectionCursorChanged() )
+      else if( /* hint.isSelectionChanged() || */hint.isSelectionCursorChanged() )
       {
         getLayerManager().getEventHandler().redrawRequested();
       }
@@ -91,27 +88,23 @@ public class ProfilChartModel extends ChartModel
     }
   };
 
-  private final IProfile m_profil;
+  private final IProfileSelection m_profileSelection;
 
-  private IProfilLayerProvider m_layerProvider;
+  private final IProfilLayerProvider m_layerProvider;
 
-  private final Object m_result;
-
-  public ProfilChartModel( final IProfilLayerProvider layerProvider, final IProfile profil, final Object result )
+  public ProfilChartModel( final IProfilLayerProvider layerProvider, final IProfileSelection profileSelection )
   {
     m_layerProvider = layerProvider;
-    m_profil = profil;
-    m_result = result;
+    m_profileSelection = profileSelection;
 
-    if( m_profil != null && m_layerProvider != null )
+    if( m_profileSelection != null && m_layerProvider != null )
     {
-      m_profil.addProfilListener( m_profilListener );
+      m_profileSelection.addProfilListener( m_profileListener );
       m_layerProvider.registerAxis( getMapperRegistry() );
       updateLayers();
     }
 
     final IBasicChartSettings settings = getSettings();
-
     settings.setChartInsets( new Insets( 10, 0, 10, 0 ) );
     settings.setPlotInsets( new Insets( 0, 0, 0, 0 ) );
   }
@@ -119,8 +112,8 @@ public class ProfilChartModel extends ChartModel
   @Override
   public void dispose( )
   {
-    if( m_profil != null )
-      m_profil.removeProfilListener( m_profilListener );
+    if( m_profileSelection != null )
+      m_profileSelection.removeProfileListener( m_profileListener );
   }
 
   public final IProfilChartLayer getLayer( final String layerID )
@@ -132,17 +125,12 @@ public class ProfilChartModel extends ChartModel
     return null;
   }
 
-  public IProfile getProfil( )
+  public IProfileSelection getProfileSelection( )
   {
-    return m_profil;
+    return m_profileSelection;
   }
 
-  public Object getResult( )
-  {
-    return m_result;
-  }
-
-  protected void handlePropertyOrBuildingChanged( )
+  void handlePropertyOrBuildingChanged( )
   {
     updateLayers();
   }
@@ -150,36 +138,21 @@ public class ProfilChartModel extends ChartModel
   /**
    * Recreate all layers.
    */
-  protected void updateLayers( )
+  synchronized void updateLayers( )
   {
-    synchronized( this )
-    {
-      final ChartModelState modelState = new ChartModelState();
-      modelState.storeState( this );
-      final ILayerManager layerManager = getLayerManager();
-      layerManager.clear();
+    final ChartModelState modelState = new ChartModelState();
+    modelState.storeState( this );
+    final ILayerManager layerManager = getLayerManager();
+    layerManager.clear();
 
-      final IProfilLayerProvider lp = getProfilLayerProvider();
-      if( lp == null )
-        return;
+    if( m_layerProvider == null )
+      return;
 
-      final IProfilChartLayer[] layers = lp.createLayers( m_profil, m_result );
-      layerManager.addLayer( layers );
+    final IProfile profile = m_profileSelection.getProfile();
+    final Object result = m_profileSelection.getResult();
+    final IProfilChartLayer[] layers = m_layerProvider.createLayers( profile, result );
+    layerManager.addLayer( layers );
 
-      modelState.restoreState( this );
-    }
-  }
-
-  protected IProfilLayerProvider getProfilLayerProvider( )
-  {
-    if( m_layerProvider != null )
-      return m_layerProvider;
-
-    if( getProfil() != null )
-    {
-      m_layerProvider = KalypsoModelWspmUIExtensions.createProfilLayerProvider( getProfil().getType() );
-    }
-
-    return m_layerProvider;
+    modelState.restoreState( this );
   }
 }

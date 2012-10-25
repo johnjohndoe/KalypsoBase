@@ -42,6 +42,7 @@ package org.kalypso.model.wspm.ui.dialog.compare;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.widgets.Composite;
+import org.kalypso.model.wspm.core.gml.SimpleProfileSelection;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChart;
 
@@ -77,7 +78,7 @@ public class CompareSwitchProfileButtonDialog extends SwitchProfileButtonDialog
       final IProfilChart view = m_additionalViews[i];
       final CompareProfileWrapper wrapper = additional[i];
 
-      view.setProfil( wrapper.getProfil(), null );
+      view.setProfileSelection( new SimpleProfileSelection( wrapper.getProfil() ) );
 
       final IChartComposite chart = view.getChartComposite();
       if( chart != null )

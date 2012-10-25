@@ -49,7 +49,6 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.chart.ui.editor.mousehandler.AbstractChartHandler;
-import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.IWspmLayers;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
@@ -85,7 +84,7 @@ public class MousePositionChartHandler extends AbstractChartHandler
 
     title.setPositionHorizontal( ALIGNMENT.RIGHT );
     title.setTextAnchorX( ALIGNMENT.RIGHT );
-    title.setPositionVertical( ALIGNMENT.TOP);
+    title.setPositionVertical( ALIGNMENT.TOP );
     title.setTextAnchorY( ALIGNMENT.BOTTOM );
 
     final IChartModel model = chart.getChartModel();
@@ -122,7 +121,7 @@ public class MousePositionChartHandler extends AbstractChartHandler
     final IChartComposite chart = getChart();
     final IProfilChartLayer theme = UpdateProfileCursorChartHandler.findProfileTheme( chart );
     String msg = "";
-    if( !Objects.isNull( theme ) )
+    if( theme != null )
     {
       final ICoordinateMapper mapper = theme.getCoordinateMapper();
       final Number hoehe = mapper.getTargetAxis().screenToNumeric( e.y );
@@ -148,6 +147,6 @@ public class MousePositionChartHandler extends AbstractChartHandler
       return;
     }
     final Rectangle rect = chart.getPlotInfo().getLegendRect();
-    m_labelRenderer.paint( e.gc, rect);//new Point( rect.x+rect.width, rect.y ) );
+    m_labelRenderer.paint( e.gc, rect );// new Point( rect.x+rect.width, rect.y ) );
   }
 }

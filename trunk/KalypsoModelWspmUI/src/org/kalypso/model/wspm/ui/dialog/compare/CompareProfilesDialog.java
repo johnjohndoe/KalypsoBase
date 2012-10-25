@@ -58,6 +58,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.kalypso.contribs.eclipse.jface.dialog.EnhancedTitleAreaDialog;
+import org.kalypso.model.wspm.core.gml.IProfileSelection;
+import org.kalypso.model.wspm.core.gml.SimpleProfileSelection;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 
 /**
@@ -134,7 +136,8 @@ public class CompareProfilesDialog extends EnhancedTitleAreaDialog
     group.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
     group.setText( wrapper.getLabel() );
 
-    final ProfileChartComposite chart = new ProfileChartComposite( group, SWT.NONE, wrapper.getLayerProvider(), wrapper.getProfil() );
+    final IProfileSelection profileSelection = new SimpleProfileSelection( wrapper.getProfil() );
+    final ProfileChartComposite chart = new ProfileChartComposite( group, SWT.NONE, wrapper.getLayerProvider(), profileSelection );
     chart.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
 
     toolkit.adapt( group );

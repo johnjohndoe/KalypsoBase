@@ -107,7 +107,7 @@ public class CommandUtilities
    */
   public static void refreshElementsForWindow( final IWorkbenchWindow window, final String categoryId ) throws CommandException
   {
-    final ICommandService commandService = (ICommandService) window.getService( ICommandService.class );
+    final ICommandService commandService = (ICommandService)window.getService( ICommandService.class );
 
     final Map<Object, Object> filter = new HashMap<>();
     filter.put( IServiceScopes.WINDOW_SCOPE, window );
@@ -133,8 +133,8 @@ public class CommandUtilities
     final List<Command> result = new ArrayList<>();
 
     final Category category = commandService.getCategory( categoryId );
-// if( category == null )
-// throw new NotDefinedException( "Unknown category: " + categoryId );
+    // if( category == null )
+    // throw new NotDefinedException( "Unknown category: " + categoryId );
 
     final Command[] commands = commandService.getDefinedCommands();
     for( final Command command : commands )
