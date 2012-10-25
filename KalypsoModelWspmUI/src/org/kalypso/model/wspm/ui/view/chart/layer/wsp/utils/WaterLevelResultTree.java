@@ -82,7 +82,7 @@ public class WaterLevelResultTree extends Composite
 
   private void render( final WspLayer layer, final FormToolkit toolkit )
   {
-    final IWspLayerData data = layer.getData();
+    final IWspLayerData data = layer == null ? null : layer.getData();
     if( Objects.isNull( data ) )
     {
       toolkit.createLabel( this, Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLegendPopupDialog.2" ) ); //$NON-NLS-1$

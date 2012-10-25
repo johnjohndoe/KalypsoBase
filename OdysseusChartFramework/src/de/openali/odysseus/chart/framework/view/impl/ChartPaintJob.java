@@ -71,7 +71,7 @@ public class ChartPaintJob extends Job
 
   private Rectangle m_clientArea = null;
 
-   private ChartImageInfo m_plotInfo;
+  private ChartImageInfo m_plotInfo;
 
   private final UIJob m_redrawJob;
 
@@ -154,6 +154,8 @@ public class ChartPaintJob extends Job
     try
     {
       final IChartModel model = m_chart.getChartModel();
+      if( model == null )
+        return Status.OK_STATUS;
 
       final ChartPainter chartPainter = new ChartPainter( model, plotImage );
 

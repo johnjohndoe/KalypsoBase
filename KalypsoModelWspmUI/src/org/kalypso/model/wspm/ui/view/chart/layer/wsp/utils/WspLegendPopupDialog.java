@@ -62,14 +62,8 @@ import org.kalypso.model.wspm.ui.view.chart.layer.wsp.WspLayer;
  */
 public class WspLegendPopupDialog extends PopupDialog
 {
-  /**
-   * The wsp layer.
-   */
-  protected WspLayer m_wspLayer;
+  private final WspLayer m_wspLayer;
 
-  /**
-   * The constructor.
-   */
   public WspLegendPopupDialog( final Shell parentShell, final WspLayer wspLayer )
   {
     super( parentShell, SWT.RESIZE, true, true, true, false, false, Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLegendPopupDialog.0" ), "" ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -77,23 +71,17 @@ public class WspLegendPopupDialog extends PopupDialog
     m_wspLayer = wspLayer;
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.PopupDialog#getDefaultSize()
-   */
   @Override
   protected Point getDefaultSize( )
   {
     return new Point( 200, 200 );
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   protected Control createDialogArea( final Composite parent )
   {
     /* Create the main composite. */
-    final Composite main = (Composite) super.createDialogArea( parent );
+    final Composite main = (Composite)super.createDialogArea( parent );
     main.setLayout( new GridLayout() );
     main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
@@ -102,12 +90,8 @@ public class WspLegendPopupDialog extends PopupDialog
     tree.addFilter( new WaterLevelFilter() );
 
     return main;
-
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.PopupDialog#getDialogSettings()
-   */
   @Override
   protected IDialogSettings getDialogSettings( )
   {
