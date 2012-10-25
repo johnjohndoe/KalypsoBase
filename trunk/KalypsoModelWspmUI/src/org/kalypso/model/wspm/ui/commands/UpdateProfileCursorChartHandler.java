@@ -145,6 +145,8 @@ public class UpdateProfileCursorChartHandler extends AbstractChartHandler
   public static final IProfilChartLayer findProfileTheme( final IChartComposite chart )
   {
     final IChartModel model = chart.getChartModel();
+    if( model == null )
+      return null;
 
     final FindLayerVisitor visitor = new FindLayerVisitor( IWspmLayers.LAYER_GELAENDE );
     model.getLayerManager().accept( visitor );

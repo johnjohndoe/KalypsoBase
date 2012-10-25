@@ -70,13 +70,17 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
 
   private IProfilLayerProvider m_profilLayerProvider = null;
 
-  private ProfilChartModel m_profilChartModel = null;
+  // HACK: use non null model to prevent NPE's everywhere if there is no profile initially
+  // TODO: use null instead; all handlers need to deactivate, if no model is present
+  private ProfilChartModel m_profilChartModel = new ProfilChartModel( getProfilLayerProvider( null ), null );
 
   public ProfileChartComposite( final Composite parent, final int style, final IProfilLayerProvider layerProvider, final IProfileSelection profileSelection )
   {
     super( parent, style, null, BACKGROUND_RGB );
 
     m_profilLayerProvider = layerProvider;
+
+    setChartModel( null, m_profilChartModel );
 
     invalidate( profileSelection );
 
