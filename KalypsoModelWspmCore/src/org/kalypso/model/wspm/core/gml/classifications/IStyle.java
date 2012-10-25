@@ -39,15 +39,13 @@ public interface IStyle extends Feature
 
   TYPE getType( );
 
-  int getWidth( );
-
-  RGB getColor( );
-
-  int getHeight( );
-
   int getStrokeWidth( );
 
   RGB getStrokeColor( );
 
   RGB getFillColor( );
+
+  int getMarkerWidth( );
+
+  int getMarkerHeight( );
 }

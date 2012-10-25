@@ -128,23 +128,16 @@ public class Style extends Feature_Impl implements IStyle
   }
 
   @Override
-  public RGB getColor( )
+  public int getMarkerWidth( )
   {
-    return getColorParameter( IStyleParameterConstants.COLOR );
+    return getIntParameter( IStyleParameterConstants.MARKER_WIDTH, 1 );
   }
 
   @Override
-  public int getWidth( )
+  public int getMarkerHeight( )
   {
-    return getIntParameter( IStyleParameterConstants.WIDTH, 1 );
+    return getIntParameter( IStyleParameterConstants.MARKER_HEIGHT, 1 );
   }
-
-  @Override
-  public int getHeight( )
-  {
-    return getIntParameter( IStyleParameterConstants.HEIGHT, 1 );
-  }
-
 
   @Override
   public int getStrokeWidth( )
