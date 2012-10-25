@@ -55,7 +55,7 @@ final class RegisterVisitor implements FeatureVisitor
   @Override
   public boolean visit( final Feature f )
   {
-    String id = f.getId();
+    final String id = f.getId();
 
     // ACHTUNG!!! bitte BEIDE Zeilen ein- und auskommentieren!
     // if( m_indexMap.containsKey( id ) )
@@ -66,9 +66,9 @@ final class RegisterVisitor implements FeatureVisitor
     if( id == null || id.length() == 0 )
     {
       // FIXME: should never happen!
-      id = m_workspace.createFeatureId( f.getFeatureType() );
+      // id = m_workspace.createFeatureId( f.getFeatureType() );
       System.out.println( "Feature has no id: " + f );
-      f.setId( id );
+      // f.setId( id );
     }
 
     // TODO: better generate new ids and remember wich ones are generated (because

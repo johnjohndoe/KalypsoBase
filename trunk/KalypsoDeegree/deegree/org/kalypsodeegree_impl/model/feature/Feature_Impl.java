@@ -79,7 +79,7 @@ public class Feature_Impl extends PlatformObject implements Feature
 
   private final IFeatureType m_featureType;
 
-  private final String m_id;
+  private String m_id;
 
   private Object m_parent = null;
 
@@ -405,10 +405,9 @@ public class Feature_Impl extends PlatformObject implements Feature
     throw new UnsupportedOperationException();
   }
 
-  @Override
-  public void setId( final String fid )
+  void setId( final String fid )
   {
-    throw new UnsupportedOperationException();
+    m_id = fid;
   }
 
   @Override

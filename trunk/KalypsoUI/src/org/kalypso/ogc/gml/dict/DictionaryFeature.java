@@ -194,12 +194,6 @@ public class DictionaryFeature implements Feature
   }
 
   @Override
-  public void setId( final String fid )
-  {
-    throw new UnsupportedOperationException( DICTIONARY_ENTRIES_MAY_NOT_BE_CHANGED );
-  }
-
-  @Override
   public String getName( )
   {
     return NamedFeatureHelper.getName( m_feature );

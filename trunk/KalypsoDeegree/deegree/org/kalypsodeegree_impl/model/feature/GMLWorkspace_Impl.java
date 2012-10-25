@@ -45,6 +45,7 @@ import java.util.Map;
 
 import javax.xml.namespace.NamespaceContext;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.PlatformObject;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
@@ -63,7 +64,7 @@ import org.kalypsodeegree.model.feature.event.ModellEventListener;
 
 /**
  * In order to use this workspace with support of xlinks, a {@link org.kalypsodeegree_impl.model.feature.IFeatureProviderFactory} must be set.
- *
+ * 
  * @see #setFeatureProviderFactory(IFeatureProviderFactory)
  * @author doemming
  */
@@ -101,6 +102,12 @@ public class GMLWorkspace_Impl extends PlatformObject implements GMLWorkspace
 
     try
     {
+      // REMARK: In some old gml files the root feature has no root id set, so it is corrected here.
+      // REMARK: In future each root feature must have an id.
+      final String id = m_rootFeature.getId();
+      if( StringUtils.isBlank( id ) )
+        ((Feature_Impl)m_rootFeature).setId( "root" );
+
       registerFeature( m_rootFeature );
     }
     catch( final Throwable e )
@@ -175,7 +182,7 @@ public class GMLWorkspace_Impl extends PlatformObject implements GMLWorkspace
 
   /**
    * Every listener is registered only once.
-   *
+   * 
    * @see org.kalypsodeegree.model.feature.event.ModellEventProvider#addModellListener(org.kalypsodeegree.model.feature.event.ModellEventListener)
    */
   @Override
