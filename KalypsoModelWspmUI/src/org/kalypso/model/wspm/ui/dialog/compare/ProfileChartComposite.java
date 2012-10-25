@@ -116,6 +116,7 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
     // FIXME: bad and ugly! we should keep only one model, m_chartModel; not two references to the same thing
     final IChartModel oldModel = m_profilChartModel;
     final IProfileSelection oldProfileSelection = m_profilChartModel == null ? null : m_profilChartModel.getProfileSelection();
+
     final IProfile profile = profileSelection != null ? profileSelection.getProfile() : null;
     final IProfile oldProfile = oldProfileSelection != null ? oldProfileSelection.getProfile() : null;
     if( ObjectUtils.equals( profile, oldProfile ) )
