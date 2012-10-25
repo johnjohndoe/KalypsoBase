@@ -31,11 +31,9 @@ public interface IStyleParameterConstants
 
   String PARAMETER_TYPE = "type"; //$NON-NLS-1$
 
-  String WIDTH = "width"; //$NON-NLS-1$
+  String MARKER_WIDTH = "markerWidth"; //$NON-NLS-1$
 
-  String COLOR = "color"; //$NON-NLS-1$
-
-  String HEIGHT = "height"; //$NON-NLS-1$
+  String MARKER_HEIGHT = "markerHeight"; //$NON-NLS-1$
 
   String STROKE_WIDTH = "strokeWidth"; //$NON-NLS-1$
 
