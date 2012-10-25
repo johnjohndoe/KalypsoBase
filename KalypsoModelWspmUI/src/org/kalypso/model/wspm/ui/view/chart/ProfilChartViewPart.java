@@ -231,9 +231,11 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
       return;
 
     /* If no reference changed, do nothing. The chart itself reacts to inner profile changes */
-    // FIXME: Is the equal check enough? Changes to often? Otherwise check IProfile.
+    final IProfile newProfile = newProfileSelection.getProfile();
+
     final IProfileSelection profileSelection = chartComposite.getProfileSelection();
-    if( ObjectUtils.equals( newProfileSelection, profileSelection ) )
+    final IProfile profile = profileSelection != null ? profileSelection.getProfile() : null;
+    if( ObjectUtils.equals( newProfile, profile ) )
       return;
 
     if( !chartComposite.isDisposed() )
