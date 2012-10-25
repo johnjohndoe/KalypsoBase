@@ -99,9 +99,9 @@ public class WspLayer extends AbstractProfilTheme
 
   private final ILineStyle m_style;
 
-  public WspLayer( final IProfile profile, final String layerId, final ILayerStyleProvider styleProvider, final IWspLayerData data, final ICoordinateMapper< ? , ? > mapper )
+  public WspLayer( final IProfile profile, final String layerId, final IProfilChartLayer[] childLayers, final ILayerStyleProvider styleProvider, final IWspLayerData data, final ICoordinateMapper< ? , ? > mapper )
   {
-    super( profile, layerId, Messages.getString( "WspLayer.0" ), new IProfilChartLayer[] { new WspObjectsLayers( layerId + "_points", profile, data ), new WspObjectsLayers( layerId + "_segments", profile, data ) }, mapper ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    super( profile, layerId, Messages.getString( "WspLayer.0" ), childLayers, mapper ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     final IPreferenceStore store = KalypsoModelWspmUIPlugin.getDefault().getPreferenceStore();
     store.addPropertyChangeListener( m_preferenceListener );
