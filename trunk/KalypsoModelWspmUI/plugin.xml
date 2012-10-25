@@ -352,13 +352,6 @@
                   commandId="org.kalypso.chart.ui.commands.export"
                   style="push">
             </command>
-            <command
-                  commandId="org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand"
-                  style="push">
-               <visibleWhen
-                     checkEnabled="true">
-               </visibleWhen>
-            </command>
             <separator
                   name="additions"
                   visible="false">

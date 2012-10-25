@@ -87,7 +87,6 @@ public class WspLegendPopupDialog extends PopupDialog
 
     final WaterLevelResultTree tree = new WaterLevelResultTree( main, m_wspLayer, new FormToolkit( main.getDisplay() ) );
     tree.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, true ) );
-    tree.addFilter( new WaterLevelFilter() );
 
     return main;
   }
