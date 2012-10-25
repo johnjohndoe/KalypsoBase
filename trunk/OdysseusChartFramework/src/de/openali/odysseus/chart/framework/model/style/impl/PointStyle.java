@@ -10,6 +10,8 @@ import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
 public class PointStyle extends AbstractStyle implements IPointStyle
 {
+  // TODO: hm... we use a stroke, but for the fill we use inlineColor etc.; wouldn't it be better to use a fill style?
+
   private RGB m_inlineRGB;
 
   private IMarker m_marker;
