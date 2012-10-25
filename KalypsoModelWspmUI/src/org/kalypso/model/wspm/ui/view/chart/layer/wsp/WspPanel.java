@@ -69,7 +69,10 @@ public class WspPanel extends AbstractProfilView
   protected Control doCreateControl( final Composite parent, final FormToolkit toolkit )
   {
     final WaterLevelResultTree tree = new WaterLevelResultTree( parent, m_layer, toolkit );
-    tree.addFilter( m_filter );
+
+    if( m_filter != null )
+      tree.addFilter( m_filter );
+
     return tree;
   }
 

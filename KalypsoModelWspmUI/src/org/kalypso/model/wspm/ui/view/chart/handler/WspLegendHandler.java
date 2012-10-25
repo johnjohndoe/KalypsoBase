@@ -68,17 +68,14 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
  */
 public class WspLegendHandler extends AbstractHandler
 {
-  /**
-   * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
     /* Get the context. */
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
 
     /* Get the part. */
-    final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
+    final IWorkbenchPart part = (IWorkbenchPart)context.getVariable( ISources.ACTIVE_PART_NAME );
     if( part == null )
       throw new ExecutionException( Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLegendHandler.0" ) ); //$NON-NLS-1$
 
@@ -97,7 +94,7 @@ public class WspLegendHandler extends AbstractHandler
       throw new ExecutionException( Messages.getString( "org.kalypso.model.wspm.ui.view.chart.layer.WspLegendHandler.3" ) ); //$NON-NLS-1$
 
     /* Cast. */
-    final IChartPart chartView = (IChartPart) part;
+    final IChartPart chartView = (IChartPart)part;
 
     final IChartComposite chartComposite = chartView.getChartComposite();
     if( chartComposite == null )
@@ -120,14 +117,14 @@ public class WspLegendHandler extends AbstractHandler
       if( layer instanceof WspLayer )
       {
         /* Cast. */
-        wspLayer = (WspLayer) layer;
+        wspLayer = (WspLayer)layer;
 
         break;
       }
     }
 
     /* Create the dialog. */
-    final WspLegendPopupDialog dialog = new WspLegendPopupDialog( (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME ), wspLayer );
+    final WspLegendPopupDialog dialog = new WspLegendPopupDialog( (Shell)context.getVariable( ISources.ACTIVE_SHELL_NAME ), wspLayer );
 
     /* Open the dialog. */
     dialog.open();

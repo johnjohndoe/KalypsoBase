@@ -48,6 +48,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.kalypso.model.wspm.core.profil.IProfile;
@@ -58,7 +59,6 @@ import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.IProfilView;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
-import org.kalypso.model.wspm.ui.view.chart.layer.wsp.utils.WaterLevelFilter;
 
 import com.vividsolutions.jts.geom.Coordinate;
 
@@ -99,9 +99,13 @@ public class WspLayer extends AbstractProfilTheme
 
   private final ILineStyle m_style;
 
-  public WspLayer( final IProfile profile, final String layerId, final IProfilChartLayer[] childLayers, final ILayerStyleProvider styleProvider, final IWspLayerData data, final ICoordinateMapper< ? , ? > mapper )
+  private final ViewerFilter m_panelFilter;
+
+  public WspLayer( final IProfile profile, final String layerId, final IProfilChartLayer[] childLayers, final ILayerStyleProvider styleProvider, final IWspLayerData data, final ICoordinateMapper< ? , ? > mapper, final ViewerFilter panelFilter )
   {
     super( profile, layerId, Messages.getString( "WspLayer.0" ), childLayers, mapper ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+    m_panelFilter = panelFilter;
 
     final IPreferenceStore store = KalypsoModelWspmUIPlugin.getDefault().getPreferenceStore();
     store.addPropertyChangeListener( m_preferenceListener );
@@ -129,7 +133,7 @@ public class WspLayer extends AbstractProfilTheme
   @Override
   public IProfilView createLayerPanel( )
   {
-    return new WspPanel( this, new WaterLevelFilter() );
+    return new WspPanel( this, m_panelFilter );
   }
 
   @Override
