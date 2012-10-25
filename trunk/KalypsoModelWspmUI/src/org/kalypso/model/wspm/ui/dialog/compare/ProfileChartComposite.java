@@ -114,10 +114,11 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
       return;
 
     // FIXME: bad and ugly! we should keep only one model, m_chartModel; not two references to the same thing
-    // FIXME: Is the equal check enough? Changes to often? Otherwise check IProfile.
     final IChartModel oldModel = m_profilChartModel;
     final IProfileSelection oldProfileSelection = m_profilChartModel == null ? null : m_profilChartModel.getProfileSelection();
-    if( ObjectUtils.equals( profileSelection, oldProfileSelection ) )
+    final IProfile profile = profileSelection != null ? profileSelection.getProfile() : null;
+    final IProfile oldProfile = oldProfileSelection != null ? oldProfileSelection.getProfile() : null;
+    if( ObjectUtils.equals( profile, oldProfile ) )
       return;
 
     final IChartModelState state = new ChartModelState();
@@ -126,7 +127,6 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
     if( m_profilChartModel != null )
       m_profilChartModel.dispose();
 
-    final IProfile profile = profileSelection.getProfile();
     m_profilChartModel = new ProfilChartModel( getProfilLayerProvider( profile ), profileSelection );
 
     state.restoreState( m_profilChartModel );
