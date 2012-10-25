@@ -278,6 +278,8 @@ public class ObservationServiceImpl implements IObservationService
 
     try
     {
+      // FIXME: problem, if the init failed, we always return null now -> everything else fails with NPE
+
       /* Wait for the job, if he has finished loading. */
       m_observationServiceJob.join();
     }
@@ -320,8 +322,12 @@ public class ObservationServiceImpl implements IObservationService
   {
     if( !status.isOK() )
     {
+      // FIXME: put statu sin log!
+
+      // FIXME: keep status; and or restart
+
       /* What to do on error or cancelation? */
-      return;
+      // return;
     }
 
     /* Reschedule the job. */
@@ -397,7 +403,7 @@ public class ObservationServiceImpl implements IObservationService
   }
 
   @Override
-  public ItemBean getParent( String identifier ) throws RepositoryException
+  public ItemBean getParent( final String identifier ) throws RepositoryException
   {
     /* Get the observation service delegate. */
     final IObservationService delegate = getDelegate();
