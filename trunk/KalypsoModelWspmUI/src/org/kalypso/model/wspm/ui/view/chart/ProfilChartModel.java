@@ -149,9 +149,12 @@ public class ProfilChartModel extends ChartModel
       return;
 
     final IProfile profile = m_profileSelection.getProfile();
-    final Object result = m_profileSelection.getResult();
-    final IProfilChartLayer[] layers = m_layerProvider.createLayers( profile, result );
-    layerManager.addLayer( layers );
+    if( profile != null )
+    {
+      final Object result = m_profileSelection.getResult();
+      final IProfilChartLayer[] layers = m_layerProvider.createLayers( profile, result );
+      layerManager.addLayer( layers );
+    }
 
     modelState.restoreState( this );
   }
