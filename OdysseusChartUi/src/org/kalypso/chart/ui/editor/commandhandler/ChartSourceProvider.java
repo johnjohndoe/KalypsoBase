@@ -64,17 +64,29 @@ import org.eclipse.ui.services.IServiceWithSources;
 import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.ui.commands.CommandUtilities;
 
+import de.openali.odysseus.chart.framework.model.IChartModel;
+import de.openali.odysseus.chart.framework.model.event.IChartModelEventListener;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
  * Manages context and sources corresponding to the chart.<br>
  * As soon as the manager is created on a chart, the chart-context is activated and registered with the given
  * serviceLocator. Also, the chart is provides as source via the evaluation context.<br>
- *
+ * 
  * @author Gernot Belger
  */
 public class ChartSourceProvider extends AbstractSourceProvider
 {
+  // FIXME We need more events of state changes (link, zoom, handler state changed)...
+  private final IChartModelEventListener m_listener = new IChartModelEventListener()
+  {
+    @Override
+    public void onModelChanged( final IChartModel oldModel, final IChartModel newModel )
+    {
+      fireSourceChanged();
+    }
+  };
+
   /**
    * ID of the registered context of the chart (see extension-point <code>org.eclipse.ui.contexts</code>).
    */
@@ -109,9 +121,11 @@ public class ChartSourceProvider extends AbstractSourceProvider
   {
     m_serviceLocator = serviceLocator;
     m_chart = chart;
+    if( m_chart != null )
+      m_chart.addListener( m_listener );
 
     // FIXME: refaktor into helper class
-    final IContextService contextService = (IContextService) registerServiceWithSources( serviceLocator, IContextService.class );
+    final IContextService contextService = (IContextService)registerServiceWithSources( serviceLocator, IContextService.class );
     registerServiceWithSources( serviceLocator, IEvaluationService.class );
     registerServiceWithSources( serviceLocator, IHandlerService.class );
     registerServiceWithSources( serviceLocator, IMenuService.class );
@@ -124,7 +138,7 @@ public class ChartSourceProvider extends AbstractSourceProvider
 
   private IServiceWithSources registerServiceWithSources( final IServiceLocator serviceLocator, final Class< ? extends IServiceWithSources> serviceClass )
   {
-    final IServiceWithSources service = (IServiceWithSources) serviceLocator.getService( serviceClass );
+    final IServiceWithSources service = (IServiceWithSources)serviceLocator.getService( serviceClass );
     if( service == null )
       return null;
 
@@ -134,12 +148,12 @@ public class ChartSourceProvider extends AbstractSourceProvider
     return service;
   }
 
-  /**
-   * @see org.eclipse.ui.ISourceProvider#dispose()
-   */
   @Override
   public void dispose( )
   {
+    if( m_chart != null )
+      m_chart.removeListener( m_listener );
+
     m_chart = null;
 
     fireSourceChanged();
@@ -150,7 +164,6 @@ public class ChartSourceProvider extends AbstractSourceProvider
 
     if( m_chartContext != null )
       m_chartContext.getContextService().deactivateContext( m_chartContext );
-
   }
 
   @Override
@@ -171,7 +184,7 @@ public class ChartSourceProvider extends AbstractSourceProvider
   {
     final UIJob job = new UIJob( "Activate theme context job" ) //$NON-NLS-1$
     {
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings( "synthetic-access" )
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
@@ -209,12 +222,12 @@ public class ChartSourceProvider extends AbstractSourceProvider
   {
     try
     {
-      final IEvaluationService evalService = (IEvaluationService) m_serviceLocator.getService( IEvaluationService.class );
+      final IEvaluationService evalService = (IEvaluationService)m_serviceLocator.getService( IEvaluationService.class );
       if( evalService != null )
         evalService.requestEvaluation( ACTIVE_CHART_NAME );
 
       // Refresh the ui elements (i.e. toolbar), but is this the best place...?
-      final ICommandService commandService = (ICommandService) m_serviceLocator.getService( ICommandService.class );
+      final ICommandService commandService = (ICommandService)m_serviceLocator.getService( ICommandService.class );
       if( commandService != null )
         CommandUtilities.refreshElements( commandService, CHART_COMMAND_CATEGORY, null );
     }
@@ -226,7 +239,13 @@ public class ChartSourceProvider extends AbstractSourceProvider
 
   public void setChart( final IChartComposite chart )
   {
+    if( m_chart != null )
+      m_chart.removeListener( m_listener );
+
     m_chart = chart;
+
+    if( m_chart != null )
+      m_chart.addListener( m_listener );
 
     fireSourceChanged();
   }

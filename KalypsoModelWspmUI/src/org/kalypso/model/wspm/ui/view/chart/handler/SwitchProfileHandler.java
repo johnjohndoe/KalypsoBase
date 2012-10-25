@@ -22,7 +22,6 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.expressions.IEvaluationContext;
-import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -61,10 +60,10 @@ public class SwitchProfileHandler extends AbstractHandler
     final String commandId = command.getId();
 
     if( PREVIOUS_PROFILE_COMMAND_ID.equals( commandId ) )
-      doSwitch( context, (ProfileChartComposite)chart, -1 );
+      doSwitch( (ProfileChartComposite)chart, -1 );
 
     if( NEXT_PROFILE_COMMAND_ID.equals( commandId ) )
-      doSwitch( context, (ProfileChartComposite)chart, 1 );
+      doSwitch( (ProfileChartComposite)chart, 1 );
 
     return null;
   }
@@ -77,7 +76,7 @@ public class SwitchProfileHandler extends AbstractHandler
    * @param differencePositions
    *          The number of positions to change (negative or positive).
    */
-  private void doSwitch( final IEvaluationContext context, final ProfileChartComposite chart, final int differencePositions )
+  private void doSwitch( final ProfileChartComposite chart, final int differencePositions )
   {
     /* Get the feature of the chart. */
     final Feature chartFeature = getChartFeature( chart );
@@ -98,10 +97,6 @@ public class SwitchProfileHandler extends AbstractHandler
     /* Change the selection. */
     final IFeatureSelectionManager selectionManager = KalypsoCorePlugin.getDefault().getSelectionManager();
     selectionManager.changeSelection( new Feature[] { chartFeature }, new EasyFeatureWrapper[] { new EasyFeatureWrapper( chartWorkspace, newFeature ) } );
-
-    /* Refresh the UI elements. */
-    final IChartPart chartPart = ChartHandlerUtilities.findChartComposite( context );
-    ChartHandlerUtilities.updateElements( chartPart );
   }
 
   public static Feature getChartFeature( final ProfileChartComposite chart )
