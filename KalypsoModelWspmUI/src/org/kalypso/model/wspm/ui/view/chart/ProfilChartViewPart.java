@@ -40,6 +40,7 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.view.chart;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
@@ -57,7 +58,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.ViewPart;
 import org.kalypso.chart.ui.IChartPart;
 import org.kalypso.chart.ui.editor.ChartPartListener;
-import org.kalypso.model.wspm.core.gml.IProfileFeature;
 import org.kalypso.model.wspm.core.gml.IProfileSelection;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
@@ -101,22 +101,16 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
     m_partListener.setChart( null );
 
     // FIXME: refaktor out a ProfileChartForm
-
     if( m_form == null )
     {
       m_form = m_toolkit.createForm( parent );
-
       m_form.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
       m_form.getBody().setLayout( new FillLayout() );
       m_toolkit.decorateFormHeading( m_form );
 
-      final IProfileSelection selection = m_handler.getProfileSelection();
-      final IProfileFeature profileFeature = selection == null ? null : selection.getProfileFeature();
-      final IProfile profile = profileFeature == null ? null : profileFeature.getProfile();
-
       // TODO: we have now access to the profile source and hence to the reach -> we could show prev/next buttons or do other things with the profile container
-
-      m_profilChartComposite = new ProfileChartComposite( m_form.getBody(), parent.getStyle(), getProfilLayerProvider(), profile );
+      final IProfileSelection profileSelection = m_handler.getProfileSelection();
+      m_profilChartComposite = new ProfileChartComposite( m_form.getBody(), parent.getStyle(), getProfilLayerProvider(), profileSelection );
       m_partListener.setChart( m_profilChartComposite );
     }
 
@@ -195,9 +189,18 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
 
   protected IProfilLayerProvider getProfilLayerProvider( )
   {
-    if( m_profilChartComposite == null || m_profilChartComposite.getProfil() == null )
+    if( m_profilChartComposite == null )
       return null;
-    return KalypsoModelWspmUIExtensions.createProfilLayerProvider( m_profilChartComposite.getProfil().getType() );
+
+    final IProfileSelection profilSelection = m_profilChartComposite.getProfileSelection();
+    if( profilSelection == null )
+      return null;
+
+    final IProfile profile = profilSelection.getProfile();
+    if( profile == null )
+      return null;
+
+    return KalypsoModelWspmUIExtensions.createProfilLayerProvider( profile.getType() );
   }
 
   @Override
@@ -216,30 +219,25 @@ public class ProfilChartViewPart extends ViewPart implements IChartPart, IProfil
   @Override
   public final void handleProfilSourceChanged( final IProfileSelection selection )
   {
-    final IProfileFeature newProfileFeature = selection == null ? null : selection.getProfileFeature();
-
-    final IProfile newProfile = newProfileFeature == null ? null : newProfileFeature.getProfile();
-    final Object result = selection == null ? null : selection.getResult();
-
-    setChartModel( newProfile, result );
+    setChartModel( selection );
   }
 
-  private void setChartModel( final IProfile newProfile, final Object newResult )
+  private void setChartModel( final IProfileSelection newProfileSelection )
   {
-    updateMessages( newProfile );
+    updateMessages( newProfileSelection.getProfile() );
 
     final ProfileChartComposite chartComposite = m_profilChartComposite;
     if( chartComposite == null )
       return;
 
     /* If no reference changed, do nothing. The chart itself reacts to inner profile changes */
-    final IProfile profile = chartComposite.getProfil();
-    final Object result = chartComposite.getResult();
-    if( newProfile == profile && newResult == result )
+    // FIXME: Is the equal check enough? Changes to often? Otherwise check IProfile.
+    final IProfileSelection profileSelection = chartComposite.getProfileSelection();
+    if( ObjectUtils.equals( newProfileSelection, profileSelection ) )
       return;
 
     if( !chartComposite.isDisposed() )
-      chartComposite.setProfil( newProfile, newResult );
+      chartComposite.setProfileSelection( newProfileSelection );
   }
 
   private void updateMessages( final IProfile newProfile )

@@ -55,6 +55,7 @@ import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
+import org.kalypso.model.wspm.core.gml.IProfileSelection;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartModel;
@@ -148,7 +149,8 @@ public abstract class AbstractChartModelViewPart extends ViewPart implements IAd
     if( form == null || form.isDisposed() )
       return;
 
-    if( model == null )
+    final String stationName = getStationName( model );
+    if( stationName == null )
     {
       setPartName( m_registeredName );
       form.setMessage( Messages.getString( "org.kalypso.model.wspm.ui.view.legend.LegendView.2" ), IMessageProvider.INFORMATION ); //$NON-NLS-1$
@@ -156,14 +158,24 @@ public abstract class AbstractChartModelViewPart extends ViewPart implements IAd
     else
     {
       form.setMessage( message );
-      setPartName( getStationName( model ) );
+      setPartName( stationName );
     }
   }
 
   private String getStationName( final IChartModel model )
   {
-    final IProfile profil = model instanceof ProfilChartModel ? ((ProfilChartModel) model).getProfil() : null;
-    return profil == null ? null : String.format( Messages.getString( "AbstractChartModelViewPart.0" ), profil.getStation() ); //$NON-NLS-1$
+    if( !(model instanceof ProfilChartModel) )
+      return null;
+
+    final IProfileSelection profileSelection = ((ProfilChartModel)model).getProfileSelection();
+    if( profileSelection == null )
+      return null;
+
+    final IProfile profile = profileSelection.getProfile();
+    if( profile == null )
+      return null;
+
+    return String.format( Messages.getString( "AbstractChartModelViewPart.0" ), profile.getStation() ); //$NON-NLS-1$
   }
 
   @Override

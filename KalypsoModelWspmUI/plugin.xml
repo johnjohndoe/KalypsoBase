@@ -337,11 +337,12 @@
                   visible="true">
             </separator>
             <command
-                  commandId="org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand"
+                  commandId="org.kalypso.model.wspm.ui.commands.PreviousProfileCommand"
                   style="push">
-               <visibleWhen
-                     checkEnabled="true">
-               </visibleWhen>
+            </command>
+            <command
+                  commandId="org.kalypso.model.wspm.ui.commands.NextProfileCommand"
+                  style="push">
             </command>
             <command
                   commandId="org.kalypso.chart.ui.commands.ExportClipboardCommand"
@@ -350,6 +351,13 @@
             <command
                   commandId="org.kalypso.chart.ui.commands.export"
                   style="push">
+            </command>
+            <command
+                  commandId="org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="true">
+               </visibleWhen>
             </command>
             <separator
                   name="additions"
@@ -523,6 +531,18 @@
             name="%org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand.name" description="%org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand.description">
       </command>
        <command
+             categoryId="org.kalypso.chart.ui.commands.category"
+             description="%org.kalypso.model.wspm.ui.commands.PreviousProfileCommand.description"
+             id="org.kalypso.model.wspm.ui.commands.PreviousProfileCommand"
+             name="%org.kalypso.model.wspm.ui.commands.PreviousProfileCommand.name">
+       </command>
+       <command
+             categoryId="org.kalypso.chart.ui.commands.category"
+             description="%org.kalypso.model.wspm.ui.commands.NextProfileCommand.description"
+             id="org.kalypso.model.wspm.ui.commands.NextProfileCommand"
+             name="%org.kalypso.model.wspm.ui.commands.NextProfileCommand.name">
+       </command>
+       <command
              id="org.kalypso.model.wspm.ui.commands.ShowProfile"
              description="%org.kalypso.model.wspm.ui.action.ShowProfileAction.description"
              name="%org.kalypso.model.wspm.ui.action.ShowProfileAction">
@@ -536,11 +556,43 @@
     <extension
           point="org.eclipse.ui.commandImages">
        <image commandId="org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand" icon="icons/etool16/wspLayerCommand.gif"/>
+       <image
+             commandId="org.kalypso.model.wspm.ui.commands.PreviousProfileCommand"
+             disabledIcon="icons/etool16/prevFeature_gray.gif"
+             icon="icons/etool16/prevFeature.gif">
+       </image>
+       <image
+             commandId="org.kalypso.model.wspm.ui.commands.NextProfileCommand"
+             disabledIcon="icons/etool16/nextFeature_gray.gif"
+             icon="icons/etool16/nextFeature.gif">
+       </image>
        <image commandId="org.kalypso.model.wspm.ui.commands.ShowProfile" icon="icons/obj16/openProfile.gif"/>
        <image commandId="org.kalypso.model.wspm.ui.commands.CreateMapFromProfiles" icon="icons/elcl16/createProfileMap.gif"/>
     </extension>
     <extension point="org.eclipse.ui.handlers">
        <handler class="org.kalypso.model.wspm.ui.view.chart.handler.WspLegendHandler" commandId="org.kalypso.model.wspm.ui.commands.WspLayerLegendCommand"/>
+       <handler
+             commandId="org.kalypso.model.wspm.ui.commands.PreviousProfileCommand">
+          <class
+                class="org.kalypso.model.wspm.ui.view.chart.handler.SwitchProfileHandler">
+          </class>
+          <enabledWhen>
+             <reference
+                   definitionId="org.kalypso.model.wspm.ui.view.chart.handler.isPrevoiusEnabled">
+             </reference>
+          </enabledWhen>
+       </handler>
+       <handler
+             commandId="org.kalypso.model.wspm.ui.commands.NextProfileCommand">
+          <class
+                class="org.kalypso.model.wspm.ui.view.chart.handler.SwitchProfileHandler">
+          </class>
+          <enabledWhen>
+             <reference
+                   definitionId="org.kalypso.model.wspm.ui.view.chart.handler.isNextEnabled">
+             </reference>
+          </enabledWhen>
+       </handler>
     </extension>
     <extension
           point="org.kalypso.ui.importWizards">
@@ -901,5 +953,40 @@
              </reference>
           </enabledWhen>
        </handler>
+    </extension>
+    <extension
+          point="org.eclipse.core.expressions.propertyTesters">
+       <propertyTester
+             class="org.kalypso.model.wspm.ui.view.chart.handler.SwitchProfilePropertyTester"
+             id="org.kalypso.model.wspm.ui.view.chart.handler.SwitchProfilePropertyTester"
+             namespace="org.kalypso.model.wspm.ui.view.chart.handler"
+             properties="direction"
+             type="java.lang.Object">
+       </propertyTester>
+    </extension>
+    <extension
+          point="org.eclipse.core.expressions.definitions">
+       <definition
+             id="org.kalypso.model.wspm.ui.view.chart.handler.isPrevoiusEnabled">
+          <with
+                variable="activeChart">
+             <test
+                   forcePluginActivation="false"
+                   property="org.kalypso.model.wspm.ui.view.chart.handler.direction"
+                   value="previous">
+             </test>
+          </with>
+       </definition>
+       <definition
+             id="org.kalypso.model.wspm.ui.view.chart.handler.isNextEnabled">
+          <with
+                variable="activeChart">
+             <test
+                   forcePluginActivation="false"
+                   property="org.kalypso.model.wspm.ui.view.chart.handler.direction"
+                   value="next">
+             </test>
+          </with>
+       </definition>
     </extension>
 </plugin>

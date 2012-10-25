@@ -55,6 +55,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.chart.ui.editor.commandhandler.ChartHandlerUtilities;
 import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.commons.java.lang.Objects;
+import org.kalypso.model.wspm.core.gml.IProfileSelection;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIExtensions;
 import org.kalypso.model.wspm.ui.i18n.Messages;
@@ -86,7 +87,11 @@ public class AddLayerHandler extends AbstractHandler
     if( model == null )
       return null;
 
-    final IProfile profil = model.getProfil();
+    final IProfileSelection profileSelection = model.getProfileSelection();
+    if( profileSelection == null )
+      return null;
+
+    final IProfile profil = profileSelection.getProfile();
     if( profil == null )
       return null;
 

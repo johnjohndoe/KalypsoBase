@@ -28,7 +28,7 @@ import org.kalypso.model.wspm.core.result.ProfileAndResults;
 
 /**
  * The source of a profile selection: the {@link org.kalypso.model.wspm.core.gml.IProfileFeature} and its origin.
- *
+ * 
  * @author Gernot Belger
  */
 public class ProfileSelection implements IProfileSelection
@@ -91,32 +91,6 @@ public class ProfileSelection implements IProfileSelection
 
     return ProfileAndResults.findResultNode( profileFeature );
   }
-
-//  @Override
-//  public int hashCode( )
-//  {
-//    if( m_source == null )
-//      return 0;
-//
-//    return m_source.hashCode();
-//  }
-//
-//  @Override
-//  public boolean equals( final Object obj )
-//  {
-//    if( obj == null )
-//      return false;
-//
-//    if( obj == this )
-//      return true;
-//
-//    if( obj.getClass() != getClass() )
-//      return false;
-//
-//    final ProfileSelection other = (ProfileSelection)obj;
-//
-//    return new EqualsBuilder().append( m_source, other.m_source ).isEquals();
-//  }
 
   @Override
   public IProfileFeature getProfileFeature( )

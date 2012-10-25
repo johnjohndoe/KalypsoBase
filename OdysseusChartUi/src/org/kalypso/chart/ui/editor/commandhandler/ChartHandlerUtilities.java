@@ -43,10 +43,8 @@ package org.kalypso.chart.ui.editor.commandhandler;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.commands.Category;
-import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.commands.common.NotDefinedException;
+import org.eclipse.core.commands.common.CommandException;
 import org.eclipse.core.expressions.IEvaluationContext;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
@@ -58,6 +56,7 @@ import org.eclipse.ui.services.IEvaluationService;
 import org.eclipse.ui.services.IServiceLocator;
 import org.eclipse.ui.services.IServiceScopes;
 import org.kalypso.chart.ui.IChartPart;
+import org.kalypso.contribs.eclipse.ui.commands.CommandUtilities;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
@@ -142,34 +141,29 @@ public class ChartHandlerUtilities
   @Deprecated
   public static void updateElements( final Object part )
   {
-    final Map<Object, Object> filter = new HashMap<>();
-
-    final ICommandService commandService;
-
-    if( part instanceof IWorkbenchPart )
+    try
     {
-      final IWorkbenchWindow window = ((IWorkbenchPart)part).getSite().getWorkbenchWindow();
-      filter.put( IServiceScopes.WINDOW_SCOPE, window );
+      if( part instanceof IWorkbenchPart )
+      {
+        final IWorkbenchWindow window = ((IWorkbenchPart)part).getSite().getWorkbenchWindow();
 
-      commandService = (ICommandService)window.getService( ICommandService.class );
+        final Map<Object, Object> filter = new HashMap<>();
+        filter.put( IServiceScopes.WINDOW_SCOPE, window );
+
+        final ICommandService commandService = (ICommandService)window.getService( ICommandService.class );
+        if( commandService != null )
+          CommandUtilities.refreshElements( commandService, ChartSourceProvider.CHART_COMMAND_CATEGORY, filter );
+
+        return;
+      }
+
+      final ICommandService commandService = (ICommandService)PlatformUI.getWorkbench().getService( ICommandService.class );
+      if( commandService != null )
+        CommandUtilities.refreshElements( commandService, ChartSourceProvider.CHART_COMMAND_CATEGORY, null );
     }
-    else
-      commandService = (ICommandService)PlatformUI.getWorkbench().getService( ICommandService.class );
-
-    final Command[] commands = commandService.getDefinedCommands();
-
-    for( final Command command : commands )
+    catch( final CommandException e )
     {
-      try
-      {
-        final Category category = command.getCategory();
-        if( category != null && category.getId().equals( ChartSourceProvider.CHART_COMMAND_CATEGORY ) )
-          commandService.refreshElements( command.getId(), filter );
-      }
-      catch( final NotDefinedException e )
-      {
-        // nothing to do; we just ignore the command
-      }
+      e.printStackTrace();
     }
   }
 

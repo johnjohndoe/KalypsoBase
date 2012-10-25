@@ -51,6 +51,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.model.wspm.core.gml.IProfileSelection;
+import org.kalypso.model.wspm.core.gml.SimpleProfileSelection;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChart;
@@ -141,7 +143,7 @@ public class SwitchProfileButtonDialog extends Composite
 
   protected void setProfile( final IProfile profile )
   {
-    m_chartView.setProfil( profile, null );
+    m_chartView.setProfileSelection( new SimpleProfileSelection( profile ) );
 
     final IChartComposite chart = m_chartView.getChartComposite();
     if( chart != null )
@@ -155,13 +157,15 @@ public class SwitchProfileButtonDialog extends Composite
 
   protected int getIndex( )
   {
-    final IProfile profil = m_chartView.getProfil();
-    return ArrayUtils.indexOf( m_profiles, profil );
+    final IProfileSelection profileSelection = m_chartView.getProfileSelection();
+    final IProfile profile = profileSelection.getProfile();
+    return ArrayUtils.indexOf( m_profiles, profile );
   }
 
   protected String getProfileLabel( )
   {
-    final IProfile profil = m_chartView.getProfil();
+    final IProfileSelection profileSelection = m_chartView.getProfileSelection();
+    final IProfile profil = profileSelection.getProfile();
     final double station = profil.getStation();
 
     final String msg = String.format( Messages.getString( "SwitchProfileButtonDialog_3" ), station, getIndex() + 1, m_profiles.length ); //$NON-NLS-1$
