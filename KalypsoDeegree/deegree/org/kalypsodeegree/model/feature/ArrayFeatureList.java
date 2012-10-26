@@ -61,7 +61,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class ArrayFeatureList extends AbstractFeatureList
 {
-  public static final int INITIAL_CAPACITY = 16;
+  public static final int INITIAL_CAPACITY = 4;
 
   private final ArrayList<Object> m_items = new ArrayList<>( INITIAL_CAPACITY );
 

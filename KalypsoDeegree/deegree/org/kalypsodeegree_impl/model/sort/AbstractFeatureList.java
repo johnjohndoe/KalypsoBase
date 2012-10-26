@@ -52,7 +52,6 @@ import java.util.ListIterator;
 
 import javax.xml.namespace.QName;
 
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.URIUtil;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
@@ -172,7 +171,7 @@ public abstract class AbstractFeatureList implements FeatureList
 
     /* Internal link, no uri */
     if( linkedWorkspace == sourceWorkspace )
-      return StringUtils.EMPTY;
+      return null;
 
     final URL targetContext = linkedWorkspace.getContext();
     final URL sourceContext = sourceWorkspace.getContext();
@@ -275,18 +274,9 @@ public abstract class AbstractFeatureList implements FeatureList
   }
 
   @Override
-  @SuppressWarnings( "unchecked" )
   public IXLinkedFeature insertLink( final int index, final String href ) throws IllegalArgumentException, IllegalStateException
   {
-    // add String (id) link (for memory reasons)!
-    final IXLinkedFeature link = new XLinkedFeature_Impl( m_parentFeature, m_parentFeatureTypeProperty, getPropertyType().getTargetFeatureType(), href );
-
-    if( index < 0 )
-      add( href );
-    else
-      add( index, href );
-
-    return link;
+    return insertLink( index, href, getPropertyType().getTargetFeatureType() );
   }
 
   @Override
@@ -294,11 +284,12 @@ public abstract class AbstractFeatureList implements FeatureList
   public synchronized IXLinkedFeature insertLink( final int index, final String href, final IFeatureType featureType ) throws IllegalArgumentException, IllegalStateException
   {
     final IXLinkedFeature link = new XLinkedFeature_Impl( m_parentFeature, m_parentFeatureTypeProperty, featureType, href );
+    final Object linkOrString = link.getUri() == null ? href : link;
 
     if( index < 0 )
-      add( link );
+      add( linkOrString );
     else
-      add( index, link );
+      add( index, linkOrString );
 
     return link;
   }
@@ -321,11 +312,18 @@ public abstract class AbstractFeatureList implements FeatureList
   {
     final String path = findLinkPath( toLink );
     final String id = toLink.getId();
-    final StringBuilder s = new StringBuilder(path.length() + id.length() + 1);
-    s.append(path);
-    s.append( '#' );
-    s.append( id );
-    return insertLink( index, s.toString(), toLink.getFeatureType() );
+    if( path != null )
+    {
+      final StringBuilder s = new StringBuilder( path.length() + id.length() + 1 );
+      s.append( path );
+      s.append( '#' );
+      s.append( id );
+      return insertLink( index, s.toString(), toLink.getFeatureType() );
+    }
+    else
+    {
+      return insertLink( index, id, toLink.getFeatureType() );
+    }
   }
 
   @Override
