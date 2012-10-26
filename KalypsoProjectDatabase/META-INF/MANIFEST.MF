@@ -5,9 +5,9 @@ Bundle-SymbolicName: org.kalypso.project.database;singleton:=true
 Bundle-Version: 12.7.0.qualifier
 Bundle-Activator: org.kalypso.project.database.KalypsoProjectDatabase
 Bundle-Vendor: http://sourceforge.net/projects/kalypsobase/
-Require-Bundle: org.eclipse.equinox.http.registry,
- javax.servlet,
- org.kalypso.core;bundle-version="11.6.1"
+Require-Bundle: javax.servlet,
+ org.eclipse.equinox.http.registry,
+ org.kalypso.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: org.kalypso.project.database;uses:="org.eclipse.core.runtime,org.osgi.framework",
