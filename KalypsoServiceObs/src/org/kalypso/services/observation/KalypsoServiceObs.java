@@ -57,6 +57,20 @@ public class KalypsoServiceObs extends Plugin
   public void start( final BundleContext context ) throws Exception
   {
     super.start( context );
+
+    // final ServiceReference<HttpService> sRef = (ServiceReference<HttpService>)context.getServiceReference( HttpService.class.getName() );
+    // if( sRef != null )
+    // {
+    // final WSServlet servlet = new WSServlet();
+    //
+    // final HttpService service = context.getService( sRef );
+    // service.registerServlet( "/observationService", servlet, null, null );
+    //
+    // final WSServletContextListener t = new WSServletContextListener();
+    //
+    // final ServletContext servletContext = servlet.getServletContext();
+    // servletContext.addListener( t );
+    // }
   }
 
   /**
@@ -121,7 +135,7 @@ public class KalypsoServiceObs extends Plugin
 
   /**
    * Convenience method that returns the observation service proxy.
-   *
+   * 
    * @return WebService proxy for the IObservationService.
    */
   public synchronized IObservationService getObservationService( final String repository )
