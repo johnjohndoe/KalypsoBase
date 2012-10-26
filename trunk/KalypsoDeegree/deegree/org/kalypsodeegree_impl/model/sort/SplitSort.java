@@ -55,7 +55,7 @@ import com.infomatiq.jsi.Rectangle;
 public class SplitSort extends AbstractFeatureList
 {
   /* Items of this list */
-  private final List<SplitSortItem> m_items = new ArrayList<>();
+  private final List<Object> m_items = new ArrayList<>();
 
   /**
    * (Geo-)index for this FeatureList. Lazy instantiated for memory reasons, small list (and those that never query
@@ -73,32 +73,12 @@ public class SplitSort extends AbstractFeatureList
     super( parentFeature, parentFTP, envelopeProvider );
   }
 
-  List<SplitSortItem> getItems( )
-  {
-    return m_items;
-  }
-
-  private synchronized SplitSortItem createItem( final Object data, final int index )
+  private synchronized void createItem( final Object data, final int index )
   {
     /* Create a new item */
     registerFeature( data );
-
-    final SplitSortItem newItem = new SplitSortItem( data );
-
     if( m_index != null )
-      m_index.insert( newItem, index );
-
-    return newItem;
-  }
-
-  private void removeDataObject( final SplitSortItem item, final int index )
-  {
-    if( m_index != null )
-      m_index.remove( item, index );
-
-    // REMARK: it is a bit unclear what happens if we have a real Feature (not a link) multiple times in the same list.
-    // We only unregister the it if the last occurrence is removed, assuming, that the feature is really no longer used.
-    unregisterFeature( item.getData() );
+      m_index.insert( data, index );
   }
 
   private synchronized void createIndex( )
@@ -113,12 +93,9 @@ public class SplitSort extends AbstractFeatureList
   public synchronized boolean add( final Object object )
   {
     checkCanAdd( 1 );
-
-    final SplitSortItem item = createItem( object, size() );
-
-    m_items.add( item );
-
-    return true;
+    createItem( object, size() );
+    final boolean result = m_items.add( object );
+    return result;
   }
 
   @Override
@@ -129,9 +106,8 @@ public class SplitSort extends AbstractFeatureList
     if( m_index != null )
       m_index.reindex( index, 1 );
 
-    final SplitSortItem newItem = createItem( object, index );
-
-    m_items.add( index, newItem );
+    createItem( object, index );
+    m_items.add( index, object );
   }
 
   @Override
@@ -142,36 +118,39 @@ public class SplitSort extends AbstractFeatureList
     if( m_index != null )
       m_index.reindex( index, c.size() );
 
-    final Collection<SplitSortItem> items = new ArrayList<>( c.size() );
     final int count = 0;
     for( final Object object : c )
-    {
-      final SplitSortItem newItem = createItem( object, index + count );
-      items.add( newItem );
-    }
+      createItem( object, index + count );
 
-    return m_items.addAll( index, items );
+    final boolean result = m_items.addAll( index, c );
+    return result;
   }
 
   @Override
   public synchronized Object set( final int index, final Object newObject )
   {
-    final SplitSortItem oldItem = m_items.get( index );
+    final Object oldItem = m_items.get( index );
 
+    removeItem( oldItem, index );
+    createItem( newObject, index );
+    m_items.set( index, newObject );
+    return oldItem;
+  }
+
+  private void removeItem( final Object data, final int index )
+  {
     if( m_index != null )
-      removeDataObject( oldItem, index );
+      m_index.remove( index, data );
 
-    final SplitSortItem newItem = createItem( newObject, index );
-
-    m_items.set( index, newItem );
-
-    return oldItem.getData();
+    // REMARK: it is a bit unclear what happens if we have a real Feature (not a link) multiple times in the same list.
+    // We only unregister the it if the last occurrence is removed, assuming, that the feature is really no longer used.
+    unregisterFeature( data );
   }
 
   @Override
   public synchronized Object get( final int index )
   {
-    return m_items.get( index ).getData();
+    return m_items.get( index );
   }
 
   @Override
@@ -181,59 +160,88 @@ public class SplitSort extends AbstractFeatureList
     if( index == -1 )
       return false;
 
-    final SplitSortItem item = m_items.get( index );
+    final Object item = m_items.get( index );
+    removeItem( item, index );
 
-    removeDataObject( item, index );
-
-    // FIXME: reindexing is very slow, we need another idea how to speed this up
     if( m_index != null )
       m_index.reindex( index + 1, -1 );
 
     m_items.remove( index );
-
     return true;
   }
 
   @Override
   public synchronized Object remove( final int index )
   {
-    final SplitSortItem item = m_items.get( index );
-
-    removeDataObject( item, index );
+    final Object item = m_items.get( index );
+    removeItem( item, index );
 
     if( m_index != null )
       m_index.reindex( index + 1, -1 );
 
     m_items.remove( index );
-
-    return item.getData();
+    return item;
   }
 
-//  @Override
-//  public synchronized boolean removeAll( final Collection c )
-//  {
-//    boolean changed = false;
-//    final TIntArrayList indices = new TIntArrayList( c.size() );
-//    final TIntArrayList offsets = new TIntArrayList( c.size() );
-//    for( final Object object : c )
-//    {
-//      final int index = indexOf( object );
-//      if( index != -1 )
-//      {
-//        indices.add( index + 1 );
-//        offsets.add( -1 );
-//        final SplitSortItem item = m_items.get( index );
-//        removeDataObject( item, index );
-//      }
-//    }
-//    
-//    m_items.removeAll( c );
-//
-//    if( m_index != null )
-//      m_index.reindex( indices.toNativeArray(), offsets.toNativeArray() );
-//
-//    return changed;
-//  }
+  @Override
+  public synchronized boolean removeAll( final Collection c )
+  {
+    final TIntArrayList indices = new TIntArrayList( c.size() );
+
+    for( final Object object : c )
+    {
+      final int index = indexOf( object );
+      if( index != -1 )
+      {
+        indices.add( index + 1 ); // reindex starting one after removed element
+        removeItem( object, index );
+      }
+    }
+    indices.sort();
+
+    final int[] startIndices = indices.toNativeArray();
+
+    // build array of all shifts
+    final int startIndex = startIndices[0]; // smallest index
+    final int numIndexShifts = m_items.size() - startIndex;
+    final int[] indexShifts = new int[numIndexShifts];
+    // loop from startIndex (i=0) to m_itemEnvelopes.size()-1 (i=numIndexShifts-1)
+    for( int j = 0, i = 0; i < numIndexShifts; i++ )
+    {
+      if( j < (startIndices.length - 1) && i + startIndex >= startIndices[j + 1] )
+        j++; // advance to next index
+      indexShifts[i] = -1 * (j + 1);
+    }
+
+    if( m_index != null )
+      m_index.reindex( startIndex, indexShifts );
+
+    // remove all items
+    // correct startIndices by - 1 to find the indices of items to be removed
+    if( startIndices[startIndices.length - 1] - startIndices[0] == startIndices.length - 1 )
+    {
+      // optimization for deleting a range of items
+      m_items.subList( startIndices[0] - 1, startIndices[startIndices.length - 1] ).clear();
+    }
+    else
+    {
+      final ListIterator<Object> listIterator = m_items.listIterator( startIndices[0] - 1 );
+      int i = 0; // loop over startIndices
+      while( listIterator.hasNext() )
+      {
+        if( listIterator.nextIndex() < startIndices[i] - i - 1 )
+          continue;
+        // this is the item at startIndices[i] - 1
+        listIterator.next();
+        listIterator.remove();
+        i++;
+      }
+    } // else
+//      m_items.remove( startIndices[0] - 1 );
+//      for( int i = 1; i < startIndices.length; i++ )
+//        m_items.remove( startIndices[i] - i - 1 );
+    return !indices.isEmpty();
+  }
 
   @Override
   public synchronized int size( )
@@ -247,47 +255,27 @@ public class SplitSort extends AbstractFeatureList
     for( final Object element : m_items )
       unregisterFeature( element );
 
+    m_index.dispose();
     m_index = null;
-
     m_items.clear();
   }
 
   @Override
   public synchronized int indexOf( final Object object )
   {
+    if( m_items.size() >= SplitSortindex.INITIAL_CAPACITY )
+      createIndex();
+
     if( m_index != null )
-    {
-      // TODO: if we have many objects, should we create the index now?
-      final int index = m_index.indexOf( object );
-      if( index != -1 )
-        return index;
-    }
-
-    // REMARK: linear search is needed, because we cannot assure the valid index, especially after an object has been
-    // removed that was contained inside the list twice.
-
-    /* linear search */
-    for( int i = 0; i < size(); i++ )
-    {
-      final SplitSortItem item = m_items.get( i );
-      if( item.getData().equals( object ) )
-        return i;
-    }
-
-    return -1;
+      return m_index.indexOf( object );
+    else
+      return m_items.indexOf( object );
   }
 
   @Override
   public synchronized int lastIndexOf( final Object object )
   {
-    for( int i = size() - 1; i >= 0; i-- )
-    {
-      final SplitSortItem item = m_items.get( i );
-      if( item.getData().equals( object ) )
-        return i;
-    }
-
-    return -1;
+    return m_items.lastIndexOf( object );
   }
 
   /**

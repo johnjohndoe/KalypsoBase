@@ -40,14 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.sort;
 
+import gnu.trove.TIntArrayList;
 import gnu.trove.TIntFunction;
 import gnu.trove.TIntHashSet;
+import gnu.trove.TIntObjectHashMap;
 import gnu.trove.TIntProcedure;
-import gnu.trove.TObjectIntHashMap;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -58,38 +59,68 @@ import com.infomatiq.jsi.SpatialIndex;
 import com.infomatiq.jsi.rtree.RTree;
 
 /**
- * Index elements for {@link SplitSort}.<br/>
- * Put into a spearate class, so it can get separately instantiated. This is necessary for memory saving reasons.
+ * Spatially index and hash elements for {@link SplitSort}.<br/>
+ * Put into a separate class, so it can get separately instantiated. This is necessary for memory saving reasons.
  * 
  * @author Gernot Belger
  */
 class SplitSortindex
 {
-  private final TObjectIntHashMap<Object> m_itemIndex = new TObjectIntHashMap<>();
+  static final int INITIAL_CAPACITY = 16;
 
-  private final TIntHashSet m_invalidIndices = new TIntHashSet();
+//  private final TObjectIntHashMap<Object> m_itemIndex = new TObjectIntHashMap<>();
+  private final Map<Object, TIntArrayList> m_itemIndex = new HashMap<>( INITIAL_CAPACITY );
+
+  private final TIntObjectHashMap<Rectangle> m_itemEnvelopes = new TIntObjectHashMap<>( INITIAL_CAPACITY );
+
+//  private final TIntIntHashMap m_duplicates = new TIntIntHashMap();
+
+  private final TIntHashSet m_invalidIndices = new TIntHashSet( INITIAL_CAPACITY );
 
   private final SpatialIndex m_spatialIndex = new RTree();
 
   private final SplitSort m_parent;
 
+  private int m_size = 0;
+
   public SplitSortindex( final SplitSort parent )
   {
     m_parent = parent;
-
-    m_spatialIndex.init( null );
-
     initIndex();
   }
 
   private void initIndex( )
   {
-    final List<SplitSortItem> items = m_parent.getItems();
-    for( int i = 0; i < items.size(); i++ )
+    m_spatialIndex.init( null );
+    for( int i = 0; i < m_parent.size(); i++ )
+      insert( m_parent.get( i ), i );
+  }
+
+  private void hashItem( final Object item, final int index )
+  {
+    TIntArrayList indexSet = m_itemIndex.get( item );
+    if( indexSet == null )
     {
-      final SplitSortItem item = items.get( i );
-      insert( item, i );
+      indexSet = new TIntArrayList( 2 );
+      m_itemIndex.put( item, indexSet );
     }
+    indexSet.add( index );
+    m_size++;
+  }
+
+  private void unhashItem( final Object item, final int index )
+  {
+    final TIntArrayList indexSet = m_itemIndex.get( item );
+    if( indexSet == null )
+    {
+      throw new IllegalStateException();
+    }
+    final int size = indexSet.size();
+    if( size == 1 )
+      m_itemIndex.remove( item );
+    else
+      indexSet.remove( indexSet.indexOf( index ) );
+    m_size--;
   }
 
   /**
@@ -97,8 +128,6 @@ class SplitSortindex
    */
   private synchronized void checkIndex( )
   {
-    final TIntHashSet x = m_invalidIndices;
-
     final TIntProcedure tp = new TIntProcedure()
     {
       @Override
@@ -108,24 +137,20 @@ class SplitSortindex
         return true;
       }
     };
-
-    x.forEach( tp );
-
+    m_invalidIndices.forEach( tp );
     m_invalidIndices.clear();
+    Assert.isTrue( m_size == m_parent.size() );
+    Assert.isTrue( m_itemEnvelopes.size() == m_spatialIndex.size() );
   }
 
   protected synchronized void revalidateItem( final int index )
   {
-    final List<SplitSortItem> items = m_parent.getItems();
+    final Object item = m_parent.get( index );
+    final GM_Envelope envelope = m_parent.getEnvelope( item );
 
-    final SplitSortItem invalidItem = items.get( index );
-
-    final GM_Envelope envelope = m_parent.getEnvelope( invalidItem.getData() );
+    final Rectangle oldEnvelope = m_itemEnvelopes.remove( index );
     final Rectangle newEnvelope = GeometryUtilities.toRectangle( envelope );
-
-    final Rectangle oldEnvelope = invalidItem.getEnvelope();
-
-    final boolean envelopeChanged = invalidItem.setEnvelope( newEnvelope );
+    final boolean envelopeChanged = oldEnvelope == null ? newEnvelope != null : oldEnvelope.equals( newEnvelope );
 
     /* Only update spatial index if envelope really changed */
     if( envelopeChanged )
@@ -139,17 +164,21 @@ class SplitSortindex
 
       /* reinsert into index */
       if( newEnvelope != null )
+      {
+        /* remember the envelope of this item */
+        m_itemEnvelopes.put( index, newEnvelope );
+
+        /* put into index */
         m_spatialIndex.add( newEnvelope, index );
+      }
     }
   }
 
-  public void insert( final SplitSortItem item, final int index )
+  public void insert( final Object item, final int index )
   {
     /* mark as invalid, item gets inserted on next access */
     m_invalidIndices.add( index );
-
-    /* hash object against its id for fast lookup */
-    m_itemIndex.put( item.getData(), index );
+    hashItem( item, index );
   }
 
   /**
@@ -157,40 +186,21 @@ class SplitSortindex
    */
   void reindex( final int startIndex, final int offset )
   {
-    // FIXME: slow!
-
-    final List<SplitSortItem> items = m_parent.getItems();
-
-    for( int oldIndex = startIndex; oldIndex < items.size(); oldIndex++ )
+    for( int oldIndex = startIndex; oldIndex < m_parent.size(); oldIndex++ )
     {
-      final SplitSortItem item = items.get( oldIndex );
-
-      final int newIndex = oldIndex + offset;
+      final Rectangle envelope = m_itemEnvelopes.get( oldIndex );
 
       /* fix spatial index */
-      final Rectangle envelope = item.getEnvelope();
       if( envelope != null )
       {
         final boolean removed = m_spatialIndex.delete( envelope, oldIndex );
         Assert.isTrue( removed );
 
+        final int newIndex = oldIndex + offset;
         m_spatialIndex.add( envelope, newIndex );
+        m_itemEnvelopes.put( newIndex, envelope );
       }
     }
-
-    /* Fix item hash */
-    final TIntFunction tf = new TIntFunction()
-    {
-      @Override
-      public int execute( final int value )
-      {
-        if( value < startIndex )
-          return value;
-        else
-          return value + offset;
-      }
-    };
-    m_itemIndex.transformValues( tf );
 
     /* Fix invalid item indices */
     final int[] invalidIndices = m_invalidIndices.toArray();
@@ -203,60 +213,56 @@ class SplitSortindex
       else
         m_invalidIndices.add( invalidIndex + offset );
     }
-  }
 
-  public void reindex( final int[] startIndices, final int[] offsets )
-  {
-    final List<SplitSortItem> items = m_parent.getItems();
-
-    // sort startIndices and corresponding offsets in ascending order
-    final Integer[] sortOrder = new Integer[offsets.length];
-    for( int i = 0; i < sortOrder.length; i++ )
-    {
-      sortOrder[i] = i;
-    }
-    Arrays.sort( sortOrder, new Comparator<Integer>()
+    /* Fix item hash */
+    final TIntFunction tf = new TIntFunction()
     {
       @Override
-      public int compare( final Integer i1, final Integer i2 )
+      public int execute( final int value )
       {
-        return startIndices[i1] - startIndices[i2];
+        if( value < startIndex )
+          return value;
+        else
+          return value - 1;
       }
-    } );
+    };
+//    m_itemIndex.transformValues( tf );
 
-    // build corresponding cumulative sum of offsets
-    final int[] cumsum = new int[offsets.length];
-    cumsum[sortOrder[0]] = offsets[sortOrder[0]];
-    for( int j = 1; j < offsets.length; j++ )
+    final Collection<TIntArrayList> values = m_itemIndex.values();
+    for( final TIntArrayList indexSet : values )
     {
-      cumsum[sortOrder[j]] = offsets[sortOrder[j]] + cumsum[sortOrder[j - 1]];
+      indexSet.transformValues( tf );
     }
+  }
 
-    final int startIndex = startIndices[sortOrder[0]]; // smallest index
-    final int numIndexShifts = items.size() - startIndex;
-    final int[] indexShifts = new int[numIndexShifts];
-    // loop from startIndex (i=0) to items.size()-1 (i=numIndexShifts-1)
-    for( int j = 0, i = 0; i < numIndexShifts; i++ )
+  public void reindex( final int startIndex, final int[] indexShifts )
+  {
+    for( int oldIndex = startIndex; oldIndex < startIndex + indexShifts.length; oldIndex++ )
     {
-      if( j < (sortOrder.length - 1) && i + startIndex >= startIndices[sortOrder[j + 1]] )
-        j++; // advance to next cumsum
-      indexShifts[i] = cumsum[sortOrder[j]];
-    }
-
-    for( int oldIndex = startIndex; oldIndex < items.size(); oldIndex++ )
-    {
-      final SplitSortItem item = items.get( oldIndex );
-      final int newIndex = oldIndex + indexShifts[oldIndex - startIndex];
+      final Rectangle envelope = m_itemEnvelopes.remove( oldIndex );
 
       /* fix spatial index */
-      final Rectangle envelope = item.getEnvelope();
       if( envelope != null )
       {
         final boolean removed = m_spatialIndex.delete( envelope, oldIndex );
-        //Assert.isTrue( removed );
+        Assert.isTrue( removed );
 
+        final int newIndex = oldIndex + indexShifts[oldIndex - startIndex];
         m_spatialIndex.add( envelope, newIndex );
+        m_itemEnvelopes.put( newIndex, envelope );
       }
+    }
+
+    /* Fix invalid item indices */
+    final int[] invalidIndices = m_invalidIndices.toArray();
+    m_invalidIndices.clear();
+
+    for( final int oldIndex : invalidIndices )
+    {
+      if( oldIndex < startIndex )
+        m_invalidIndices.add( oldIndex );
+      else
+        m_invalidIndices.add( oldIndex + indexShifts[oldIndex - startIndex] );
     }
 
     /* Fix item hash */
@@ -271,59 +277,38 @@ class SplitSortindex
           return oldIndex + indexShifts[oldIndex - startIndex];
       }
     };
-    m_itemIndex.transformValues( tf );
 
-    /* Fix invalid item indices */
-    final int[] invalidIndices = m_invalidIndices.toArray();
-    m_invalidIndices.clear();
-
-    for( final int oldIndex : invalidIndices )
+    final Collection<TIntArrayList> values = m_itemIndex.values();
+    for( final TIntArrayList indexSet : values )
     {
-      if( oldIndex < startIndex )
-        m_invalidIndices.add( oldIndex );
-      else
-        m_invalidIndices.add( oldIndex + indexShifts[oldIndex - startIndex] );
+      indexSet.transformValues( tf );
     }
+    // m_itemIndex.transformValues( tf );
   }
 
-  void remove( final SplitSortItem item, final int index )
+  void remove( final int index, final Object item )
   {
-    Assert.isNotNull( item );
-
-    final Object object = item.getData();
+    Assert.isTrue( index >= 0 );
 
     /* really remove item and unregister it from all hashes */
     m_invalidIndices.remove( index );
 
-    // FIXME: check, what happens if object is contained in this list more than once? Is there a way to avoid this?
-    m_itemIndex.remove( object );
-
-    final Rectangle envelope = item.getEnvelope();
+    final Rectangle envelope = m_itemEnvelopes.remove( index );
     if( envelope != null )
       m_spatialIndex.delete( envelope, index );
-  }
 
-  public int indexOf( final Object object )
-  {
-    final int index = m_itemIndex.get( object );
-    // REMARK: strange, trove returns '0' for unknown element, but '0' may be a valid value of our mapping...
-    if( index == 0 && !m_itemIndex.containsKey( object ) )
-      return -1;
-
-    return index;
+    unhashItem( item, index );
   }
 
   public Rectangle getBounds( )
   {
     checkIndex();
-
     return m_spatialIndex.getBounds();
   }
 
   public void intersects( final Rectangle searchRect, final TIntProcedure ip )
   {
     checkIndex();
-
     m_spatialIndex.intersects( searchRect, ip );
   }
 
@@ -332,8 +317,27 @@ class SplitSortindex
     final int index = indexOf( object );
     if( index == -1 )
       return;
-
     m_invalidIndices.add( index );
+  }
+
+  public int indexOf( final Object object )
+  {
+    final TIntArrayList indexSet = m_itemIndex.get( object );
+    if( indexSet == null )
+      return -1;
+    return indexSet.getQuick( 0 );
+
+    // REMARK: strange, trove returns '0' for unknown element, but '0' may be a valid value of our mapping...
+//    if( index == 0 && !m_itemIndex.containsKey( object ) )
+//      return -1;
+//    return index;
+  }
+
+  public void dispose( )
+  {
+    m_itemEnvelopes.clear();
+    m_invalidIndices.clear();
+    m_itemIndex.clear();
   }
 
 }
