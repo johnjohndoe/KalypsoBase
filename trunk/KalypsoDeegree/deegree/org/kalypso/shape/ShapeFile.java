@@ -53,13 +53,12 @@ import org.kalypso.shape.shx.SHXRecord;
 /**
  * Class representing an ESRI Shape File.
  * <p>
- * This is a modification of the <tt>ShapeFile</tt> class within the shpapi package of sfcorba2java project performed by
- * the EXSE-Working group of of the geogr. institute of the university of Bonn
+ * This is a modification of the <tt>ShapeFile</tt> class within the shpapi package of sfcorba2java project performed by the EXSE-Working group of of the geogr. institute of the university of Bonn
  * (http://www.giub.uni-bonn.de/exse/results/welcome.html).
  * <p>
  * ------------------------------------------------------------------------
  * </p>
- *
+ * 
  * @version 17.10.2001
  * @author Andreas Poth
  */
@@ -75,7 +74,7 @@ public class ShapeFile implements Closeable
 
   private final DBaseFile m_dbf;
 
-  private final SHXFile m_shx;
+  private SHXFile m_shxNew;
 
   /**
    * aggregated Instance-variables
@@ -96,7 +95,7 @@ public class ShapeFile implements Closeable
 
   /**
    * Open ShapeFile for reading.
-   *
+   * 
    * @param filePath
    *          absolute filePath to the .shp file.
    */
@@ -105,7 +104,6 @@ public class ShapeFile implements Closeable
     m_filePath = filePath;
 
     m_shp = new SHPFile( new File( filePath + EXTENSION_SHP ), mode );
-    m_shx = new SHXFile( new File( filePath + EXTENSION_SHX ), mode );
     m_dbf = new DBaseFile( new File( filePath + EXTENSION_DBF ), mode, charset );
   }
 
@@ -121,16 +119,31 @@ public class ShapeFile implements Closeable
   public void close( ) throws IOException
   {
     m_shp.close();
-    m_shx.close();
     m_dbf.close();
+
+    if( m_shxNew != null )
+      m_shxNew.close();
+  }
+
+  /**
+   * Lazily open and read the shx file
+   */
+  private SHXFile getSHX( ) throws IOException
+  {
+    final FileMode mode = m_shp.getMode();
+
+    if( m_shxNew == null )
+      m_shxNew = new SHXFile( new File( m_filePath + EXTENSION_SHX ), mode );
+
+    return m_shxNew;
   }
 
   /**
    * returns the number of records within a shape-file <BR>
    */
-  public int getNumRecords( )
+  public int getNumRecords( ) throws IOException
   {
-    return m_shx.getNumRecords();
+    return getSHX().getNumRecords();
   }
 
   /**
@@ -147,7 +160,7 @@ public class ShapeFile implements Closeable
    */
   public SHPEnvelope getEnvelope( final int recordIndex ) throws IOException
   {
-    final SHXRecord record = m_shx.getRecord( recordIndex );
+    final SHXRecord record = getSHX().getRecord( recordIndex );
     return m_shp.getEnvelope( record );
   }
 
@@ -156,7 +169,7 @@ public class ShapeFile implements Closeable
    */
   public ISHPGeometry getShape( final int recordIndex ) throws IOException
   {
-    final SHXRecord record = m_shx.getRecord( recordIndex );
+    final SHXRecord record = getSHX().getRecord( recordIndex );
     return m_shp.getShape( record );
   }
 
@@ -192,11 +205,14 @@ public class ShapeFile implements Closeable
   public void addFeature( final ISHPGeometry shape, final Object[] data ) throws IOException, DBaseException, SHPException
   {
     m_dbf.addRecord( data );
-    final int numRecords = m_shx.getNumRecords();
+
+    final SHXFile shx = getSHX();
+
+    final int numRecords = shx.getNumRecords();
     final SHXRecord record = m_shp.addShape( shape, numRecords );
 
     final SHPEnvelope mbr = shape.getEnvelope();
-    m_shx.addRecord( record, mbr );
+    shx.addRecord( record, mbr );
   }
 
   public ShapeType getShapeType( )
