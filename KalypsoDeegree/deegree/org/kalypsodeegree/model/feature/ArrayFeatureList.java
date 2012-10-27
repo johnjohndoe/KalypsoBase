@@ -61,6 +61,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class ArrayFeatureList extends AbstractFeatureList
 {
+  // TODO: separate 'maxCapacity' (maximal size where this list is created) and initial capacity (why not get initial capacity as maxOccur from outside, so it is optimized for the current situation)
   public static final int INITIAL_CAPACITY = 4;
 
   private final ArrayList<Object> m_items = new ArrayList<>( INITIAL_CAPACITY );
@@ -77,9 +78,6 @@ public class ArrayFeatureList extends AbstractFeatureList
 
   /* List interface */
 
-  /**
-   * @see java.util.List#add(int, java.lang.Object)
-   */
   @Override
   public void add( final int index, final Object object )
   {
