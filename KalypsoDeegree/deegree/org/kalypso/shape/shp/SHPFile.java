@@ -110,12 +110,17 @@ public class SHPFile
     m_header = new ShapeHeader( m_raf );
   }
 
+  public FileMode getMode( )
+  {
+    return m_mode;
+  }
+
   public void close( ) throws IOException
   {
     if( isWriting() )
     {
       final long fileLength = m_raf.length();
-      m_header = new ShapeHeader( (int) fileLength, getShapeType(), getMBR() );
+      m_header = new ShapeHeader( (int)fileLength, getShapeType(), getMBR() );
       m_raf.seek( 0 );
       // Update header with length
       m_header.write( m_raf );
@@ -234,7 +239,7 @@ public class SHPFile
 
     /* Create and return index record */
     final int contentLength = bytes.length - RECORD_HEADER_BYTES;
-    return new SHXRecord( (int) currentFileLength / 2, contentLength / 2 );
+    return new SHXRecord( (int)currentFileLength / 2, contentLength / 2 );
   }
 
   private byte[] writeRecordAsBytes( final int recordNumber, final ISHPGeometry shape ) throws IOException
