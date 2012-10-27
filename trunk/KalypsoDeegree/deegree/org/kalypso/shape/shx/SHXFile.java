@@ -36,7 +36,14 @@
 
 package org.kalypso.shape.shx;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
@@ -57,7 +64,7 @@ public class SHXFile
 {
   private static final int INDEX_RECORD_LENGTH = 8;
 
-  private final RandomAccessFile m_raf;
+  private RandomAccessFile m_rafx = null;
 
   private final List<SHXRecord> m_index = new ArrayList<>();
 
@@ -71,6 +78,8 @@ public class SHXFile
   private final boolean m_syncWriteRecord = false;
 
   private final FileMode m_mode;
+
+  private final File m_shxFile;
 
   public static SHXFile create( final File file, final ShapeType shapeType ) throws IOException
   {
@@ -91,40 +100,40 @@ public class SHXFile
    */
   public SHXFile( final File file, final FileMode mode ) throws IOException
   {
+    m_shxFile = file;
+
     m_mode = mode;
-    final String rwMode = mode == FileMode.READ ? "r" : "rw";
 
-    m_raf = new RandomAccessFile( file, rwMode );
-
-    m_header = new ShapeHeader( m_raf );
-
-    m_raf.seek( ShapeHeader.SHAPE_FILE_HEADER_LENGTH );
-
-    // loop over index records, until EOF
-    final byte[] recBuf = new byte[INDEX_RECORD_LENGTH];
-    while( m_raf.read( recBuf, 0, INDEX_RECORD_LENGTH ) != -1 )
+    try( DataInputStream inputStream = new DataInputStream( new BufferedInputStream( new FileInputStream( file ) ) ) )
     {
-      final SHXRecord ir = new SHXRecord( recBuf );
-      m_index.add( ir );
+      m_header = new ShapeHeader( inputStream );
+
+      // m_raf.seek( ShapeHeader.SHAPE_FILE_HEADER_LENGTH );
+
+      // FIXME: not nice to load shape index in constructor, would better be lazy
+
+      // FIXME: index positions are fixed, do we need to read the whole file in one go? maybe also use random access
+
+      // loop over index records, until EOF
+      final byte[] recBuf = new byte[INDEX_RECORD_LENGTH];
+      while( inputStream.read( recBuf, 0, INDEX_RECORD_LENGTH ) != -1 )
+      {
+        final SHXRecord ir = new SHXRecord( recBuf );
+        m_index.add( ir );
+      }
     }
   }
 
   public void close( ) throws IOException
   {
-    if( m_mode == FileMode.WRITE && !m_syncWriteRecord )
+    if( m_rafx != null )
     {
-      m_raf.seek( ShapeHeader.SHAPE_FILE_HEADER_LENGTH );
-      for( int i = 0; i < m_index.size(); i++ )
-      {
-        final SHXRecord record = m_index.get( i );
-        record.write( m_raf );
-      }
+      m_rafx.close();
+      m_rafx = null;
     }
 
-    if( m_mode == FileMode.WRITE && !m_syncWriteHeader )
-      writeHeader();
-
-    m_raf.close();
+    if( m_mode == FileMode.WRITE && !m_syncWriteRecord )
+      writeContent();
   }
 
   public ShapeHeader getHeader( )
@@ -163,19 +172,47 @@ public class SHXFile
 
     if( m_syncWriteRecord )
     {
+      final RandomAccessFile raf = getRandomAccessFile();
+
       final int filePos = ShapeHeader.SHAPE_FILE_HEADER_LENGTH + index * INDEX_RECORD_LENGTH;
-      m_raf.seek( filePos );
-      record.write( m_raf );
+      raf.seek( filePos );
+      record.write( raf );
     }
 
     if( m_syncWriteHeader )
-      writeHeader();
+    {
+      final RandomAccessFile raf = getRandomAccessFile();
+
+      raf.seek( 0 );
+      m_header.write( raf );
+    }
   }
 
-  private void writeHeader( ) throws IOException
+  private RandomAccessFile getRandomAccessFile( ) throws FileNotFoundException
   {
-    m_raf.seek( 0 );
-    m_header.write( m_raf );
+    if( m_rafx == null )
+    {
+      final String rwMode = m_mode == FileMode.READ ? "r" : "rw"; //$NON-NLS-1$ //$NON-NLS-2$
+      m_rafx = new RandomAccessFile( m_shxFile, rwMode );
+    }
+
+    return m_rafx;
   }
 
+  /**
+   * Writes the contents of the index in one go into the shx file.
+   */
+  private void writeContent( ) throws IOException
+  {
+    try( final DataOutputStream outputStream = new DataOutputStream( new BufferedOutputStream( new FileOutputStream( m_shxFile ) ) ) )
+    {
+      m_header.write( outputStream );
+
+      for( int i = 0; i < m_index.size(); i++ )
+      {
+        final SHXRecord record = m_index.get( i );
+        record.write( outputStream );
+      }
+    }
+  }
 }
