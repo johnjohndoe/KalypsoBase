@@ -35,6 +35,7 @@
  */
 package org.kalypso.shape.geometry;
 
+import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
@@ -49,6 +50,16 @@ public class SHPRange
   private final double m_min;
 
   private final double m_max;
+
+  /**
+   * Create {@link SHPRange} from a DataInput at its current position.<br>
+   * Reads the min. and max. value of a shp-file (as double).
+   */
+  public SHPRange( final DataInput input ) throws IOException
+  {
+    m_min = DataUtils.readLEDouble( input );
+    m_max = DataUtils.readLEDouble( input );
+  }
 
   /**
    * Create {@link SHPRange} from raw bytes.<br>
