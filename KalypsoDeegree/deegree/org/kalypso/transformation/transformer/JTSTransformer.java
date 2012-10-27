@@ -49,14 +49,15 @@ import org.opengis.referencing.operation.MathTransform;
 import org.opengis.referencing.operation.TransformException;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.LinearRing;
+import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 
 /**
  * Helper that transforms JTS coordinates, based on SRID's.
- *
+ * 
  * @author Gernot Belger
  */
 public class JTSTransformer
@@ -131,27 +132,59 @@ public class JTSTransformer
     return m_targetSRID;
   }
 
-  public Polygon transformPolygon( final Polygon polygon ) throws TransformException
+  public <G extends Geometry> G transform( final G geometry ) throws TransformException
+  {
+    if( geometry == null )
+      return null;
+
+    final Geometry transformed = transformRaw( geometry );
+
+    // Factory sets srid to source id, so we need to change it now
+    transformed.setSRID( getTargetSRID() );
+
+    final Class<G> type = (Class<G>)geometry.getClass();
+    return type.cast( transformed );
+  }
+
+  private Geometry transformRaw( final Geometry geometry ) throws TransformException
+  {
+    if( geometry instanceof Point )
+      return transformPoint( (Point)geometry );
+
+    if( geometry instanceof LinearRing )
+      return transformLinearRing( (LinearRing)geometry );
+
+    if( geometry instanceof Polygon )
+      return transformPolygon( (Polygon)geometry );
+
+    throw new UnsupportedOperationException();
+  }
+
+  private Polygon transformPolygon( final Polygon polygon ) throws TransformException
   {
     if( polygon == null )
       return null;
 
-
     /* transform shell */
-    final LinearRing transformedShell = transformLinearRing( polygon.getExteriorRing() );
+    final LinearRing transformedShell = transformLinearRing( (LinearRing)polygon.getExteriorRing() );
 
     /* transform interior rings */
     final int numInteriorRing = polygon.getNumInteriorRing();
     final LinearRing[] transformedHoles = new LinearRing[numInteriorRing];
     for( int i = 0; i < transformedHoles.length; i++ )
-      transformedHoles[i] = transformLinearRing( polygon.getInteriorRingN( i ) );
+      transformedHoles[i] = transformLinearRing( (LinearRing)polygon.getInteriorRingN( i ) );
 
     /* create new geometry */
     final GeometryFactory factory = polygon.getFactory();
-    return factory.createPolygon( transformedShell, transformedHoles );
+    final Polygon transformedPolygone = factory.createPolygon( transformedShell, transformedHoles );
+
+    // Factory sets srid to source id, so we need to change it now
+    transformedPolygone.setSRID( getTargetSRID() );
+
+    return transformedPolygone;
   }
 
-  private LinearRing transformLinearRing( final LineString ring ) throws TransformException
+  private LinearRing transformLinearRing( final LinearRing ring ) throws TransformException
   {
     if( ring == null )
       return null;
@@ -161,6 +194,26 @@ public class JTSTransformer
 
     /* create new geometry */
     final GeometryFactory factory = ring.getFactory();
-    return factory.createLinearRing( transformedCoordinates );
+    final LinearRing transformedRing = factory.createLinearRing( transformedCoordinates );
+
+    // Factory sets srid to source id, so we need to change it now
+    transformedRing.setSRID( getTargetSRID() );
+
+    return transformedRing;
+  }
+
+  private Point transformPoint( final Point point ) throws TransformException
+  {
+    if( point == null )
+      return null;
+
+    final Coordinate transformed = transform( point.getCoordinate() );
+
+    final Point transformedPoint = point.getFactory().createPoint( transformed );
+
+    // Factory sets srid to source id, so we need to change it now
+    transformedPoint.setSRID( getTargetSRID() );
+
+    return transformedPoint;
   }
 }
