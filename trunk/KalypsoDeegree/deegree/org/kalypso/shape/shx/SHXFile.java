@@ -108,8 +108,6 @@ public class SHXFile
     {
       m_header = new ShapeHeader( inputStream );
 
-      // m_raf.seek( ShapeHeader.SHAPE_FILE_HEADER_LENGTH );
-
       // FIXME: not nice to load shape index in constructor, would better be lazy
 
       // FIXME: index positions are fixed, do we need to read the whole file in one go? maybe also use random access
