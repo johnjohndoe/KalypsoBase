@@ -255,8 +255,12 @@ public class SplitSort extends AbstractFeatureList
     for( final Object element : m_items )
       unregisterFeature( element );
 
-    m_index.dispose();
-    m_index = null;
+    if( m_index != null )
+    {
+      m_index.dispose();
+      m_index = null;
+    }
+
     m_items.clear();
   }
 
