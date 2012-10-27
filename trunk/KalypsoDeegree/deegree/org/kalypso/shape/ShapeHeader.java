@@ -77,6 +77,10 @@ public class ShapeHeader
 
   private final SHPEnvelope m_mbr;
 
+  private final SHPRange m_zRange;
+
+  private final SHPRange m_mRange;
+
   /**
    * @param length
    *          File length in bytes.
@@ -86,6 +90,9 @@ public class ShapeHeader
     m_length = length;
     m_shapeType = shapeType;
     m_mbr = mbr;
+    // TODO: get from outside
+    m_zRange = new SHPRange( 0.0, 0.0 );
+    m_mRange = new SHPRange( 0.0, 0.0 );
   }
 
   public ShapeHeader( final DataInput input ) throws IOException
@@ -114,6 +121,9 @@ public class ShapeHeader
       m_mbr = null;
     else
       m_mbr = new SHPEnvelope( input );
+
+    m_zRange = new SHPRange( input );
+    m_mRange = new SHPRange( input );
   }
 
   /**
@@ -169,8 +179,8 @@ public class ShapeHeader
       new SHPEnvelope().writeLESHPEnvelope( output );
     else
       m_mbr.writeLESHPEnvelope( output );
-    // TODO: ShapeHEader supports z- and m-ranges, we should do so also.
-    new SHPRange( 0.0, 0.0 ).write( output ); // Z-Range
-    new SHPRange( 0.0, 0.0 ).write( output ); // M-Range
+
+    m_zRange.write( output );
+    m_mRange.write( output );
   }
 }
