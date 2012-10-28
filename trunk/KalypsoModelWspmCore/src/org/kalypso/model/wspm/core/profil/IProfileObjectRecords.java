@@ -21,6 +21,7 @@ package org.kalypso.model.wspm.core.profil;
 /**
  * @author Holger Albert
  */
+// TODO: why not implement List<IProfileObjectRecord>?
 public interface IProfileObjectRecords
 {
   int size( );
@@ -34,4 +35,6 @@ public interface IProfileObjectRecords
   IProfileObjectRecord removeRecord( int index );
 
   void clearRecords( );
+
+  IProfileObjectRecord[] getAll( );
 }

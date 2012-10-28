@@ -96,4 +96,10 @@ class ProfileObjectRecords implements IProfileObjectRecords
 
     m_parent.fireProfileObjectRecordsChanged();
   }
+
+  @Override
+  public IProfileObjectRecord[] getAll( )
+  {
+    return m_records.toArray( new IProfileObjectRecord[m_records.size()] );
+  }
 }
