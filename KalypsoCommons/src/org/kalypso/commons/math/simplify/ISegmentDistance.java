@@ -38,18 +38,16 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package org.kalypso.jts;
-
-import com.vividsolutions.jts.geom.Coordinate;
+package org.kalypso.commons.math.simplify;
 
 /**
- * Distance function that calculates the distance of a point to a line segment.
- *
+ * Generalized distance function that calculates the distance of a point to a line segment.
+ * 
  * @author Gernot Belger
  */
-public interface ISegmentDistance
+public interface ISegmentDistance<COORD>
 {
-  double distance( Coordinate segmentStart, Coordinate segmentEnd, Coordinate point );
+  double distance( COORD segmentStart, COORD segmentEnd, COORD point );
 
   double getMaxTolerance( );
 }
