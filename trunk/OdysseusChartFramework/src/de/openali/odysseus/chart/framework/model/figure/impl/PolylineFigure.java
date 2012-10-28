@@ -12,6 +12,16 @@ public class PolylineFigure extends AbstractFigure<ILineStyle>
 {
   private Point[] m_points = new Point[] { new Point( 10, 10 ), new Point( 100, 100 ) };
 
+  public PolylineFigure( )
+  {
+    this( null );
+  }
+
+  public PolylineFigure( final ILineStyle style )
+  {
+    setStyle( style );
+  }
+
   @Override
   protected void paintFigure( final GC gc )
   {
