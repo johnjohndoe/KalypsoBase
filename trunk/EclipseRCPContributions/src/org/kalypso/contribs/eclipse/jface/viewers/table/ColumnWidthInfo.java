@@ -100,10 +100,10 @@ public class ColumnWidthInfo
   private static int getWidth( final Item column )
   {
     if( column instanceof TableColumn )
-      return ((TableColumn) column).getWidth();
+      return ((TableColumn)column).getWidth();
 
     if( column instanceof TreeColumn )
-      return ((TreeColumn) column).getWidth();
+      return ((TreeColumn)column).getWidth();
 
     throw new IllegalArgumentException();
   }
@@ -112,14 +112,31 @@ public class ColumnWidthInfo
   {
     if( column instanceof TableColumn )
     {
-      ((TableColumn) column).pack();
-      return ((TableColumn) column).getWidth();
+      final TableColumn tableColumn = (TableColumn)column;
+
+      // TODO: very slow for large tables... would be nice to guess the width from the first 100 rows or so.
+      // final Table parent = tableColumn.getParent();
+      // if( parent.getItemCount() > 1000 )
+      // {
+      // int width = 0;
+      // for( int i = 0; i < 100; i++ )
+      // {
+      // final TableItem item = parent.getItem( 100 );
+      // final Rectangle textBounds = item.getTextBounds( i );
+      // width = Math.max( width, textBounds.width );
+      // }
+      //
+      // return width;
+      // }
+
+      tableColumn.pack();
+      return tableColumn.getWidth();
     }
 
     if( column instanceof TreeColumn )
     {
-      ((TreeColumn) column).pack();
-      return ((TreeColumn) column).getWidth();
+      ((TreeColumn)column).pack();
+      return ((TreeColumn)column).getWidth();
     }
 
     throw new IllegalArgumentException();
@@ -128,9 +145,9 @@ public class ColumnWidthInfo
   void updateItemWidth( )
   {
     if( m_column instanceof TableColumn )
-      ((TableColumn) m_column).setWidth( m_columnWidth );
+      ((TableColumn)m_column).setWidth( m_columnWidth );
     else if( m_column instanceof TreeColumn )
-      ((TreeColumn) m_column).setWidth( m_columnWidth );
+      ((TreeColumn)m_column).setWidth( m_columnWidth );
     else
       throw new IllegalArgumentException();
   }
