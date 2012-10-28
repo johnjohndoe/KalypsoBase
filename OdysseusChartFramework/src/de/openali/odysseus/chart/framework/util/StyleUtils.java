@@ -50,17 +50,17 @@ public final class StyleUtils
     return newpath;
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings( "unchecked" )
   public static <T_style extends IStyle> T_style getDefaultStyle( final Class<T_style> clazz )
   {
     if( IPointStyle.class.isAssignableFrom( clazz ) )
-      return (T_style) getDefaultPointStyle();
+      return (T_style)getDefaultPointStyle();
     else if( ILineStyle.class.isAssignableFrom( clazz ) )
-      return (T_style) getDefaultLineStyle();
+      return (T_style)getDefaultLineStyle();
     else if( ITextStyle.class.isAssignableFrom( clazz ) )
-      return (T_style) getDefaultTextStyle();
+      return (T_style)getDefaultTextStyle();
     else if( IAreaStyle.class.isAssignableFrom( clazz ) )
-      return (T_style) getDefaultAreaStyle();
+      return (T_style)getDefaultAreaStyle();
     else
       return null;
   }
@@ -84,5 +84,4 @@ public final class StyleUtils
   {
     return new TextStyle( IDefaultStyles.DEFAULT_FONT_HEIGHT, IDefaultStyles.DEFAULT_FONT_FAMILY, IDefaultStyles.DEFAULT_RGB_TEXT, IDefaultStyles.DEFAULT_RGB_TEXT_BACKGROUND, IDefaultStyles.DEFAULT_FONT_STYLE, IDefaultStyles.DEFAULT_FONT_WEIGHT, IDefaultStyles.DEFAULT_TEXT_ALIGNMENT, IDefaultStyles.DEFAULT_ALPHA, IDefaultStyles.DEFAULT_VISIBILITY );
   }
-  
 }
