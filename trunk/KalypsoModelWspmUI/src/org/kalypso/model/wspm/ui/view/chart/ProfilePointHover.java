@@ -24,7 +24,7 @@ import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 
-import de.openali.odysseus.chart.framework.model.figure.impl.MarkerFigure;
+import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 
@@ -37,11 +37,15 @@ public class ProfilePointHover
 {
   private final AbstractProfilePointsLayer m_layer;
 
-  public ProfilePointHover( final AbstractProfilePointsLayer layer )
+  private final IPointStyle m_hoverStyle;
+
+  public ProfilePointHover( final AbstractProfilePointsLayer layer, final IPointStyle hoverStyle )
   {
     m_layer = layer;
+    m_hoverStyle = hoverStyle;
   }
 
+  // FIXME: instead, build hover info during paint, use HoverIndex
   public EditInfo getHover( final Point pos )
   {
     final IProfile profil = m_layer.getProfil();
@@ -63,8 +67,7 @@ public class ProfilePointHover
 
       if( hover.contains( pos ) )
       {
-        final IPointStyle pointStyleHover = m_layer.getPointStyleHover();
-        final MarkerFigure hoverFigure = new MarkerFigure( pointStyleHover );
+        final PointFigure hoverFigure = new PointFigure( m_hoverStyle );
         hoverFigure.setCenterPoint( screen.x, screen.y );
 
         return new EditInfo( m_layer, hoverFigure, null, i, m_layer.getTooltipInfo( record ), screen );

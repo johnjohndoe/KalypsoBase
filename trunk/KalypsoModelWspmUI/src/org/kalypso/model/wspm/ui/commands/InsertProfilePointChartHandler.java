@@ -61,7 +61,7 @@ import org.kalypso.observation.result.IInterpolationHandler;
 import org.kalypso.observation.result.TupleResult;
 
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
-import de.openali.odysseus.chart.framework.model.figure.impl.MarkerFigure;
+import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
@@ -174,13 +174,13 @@ public class InsertProfilePointChartHandler extends AbstractChartHandler
     final IProfileRecord next = profile.findNextPoint( xPosition );
     final TupleResult result = profile.getResult();
     final double distance = (xPosition - before.getBreite()) / (next.getBreite() - before.getBreite());
-    final int index = result.indexOf( before);
+    final int index = result.indexOf( before );
     final IProfileRecord record = profile.createProfilPoint();
     final IInterpolationHandler interpolation = result.getInterpolationHandler();
 
     if( interpolation.doInterpolation( result, record, index, distance ) )
     {
-      profile.getResult().add( index + 1, record);
+      profile.getResult().add( index + 1, record );
       final IRangeSelection selection = profile.getSelection();
       selection.setActivePoints( record );
     }
@@ -210,7 +210,7 @@ public class InsertProfilePointChartHandler extends AbstractChartHandler
     final int y = mapper.getTargetAxis().numericToScreen( hoehe );
     final ILineStyle lineStyle = new LineStyle( 3, rgb, 255, 0F, null, LINEJOIN.MITER, LINECAP.ROUND, 1, true );
     final PointStyle pointStyle = new PointStyle( lineStyle, 9, 9, 255, new RGB( 255, 255, 255 ), true, null, true );
-    final MarkerFigure pointFigure = new MarkerFigure( pointStyle );
+    final PointFigure pointFigure = new PointFigure( pointStyle );
     pointFigure.setStyle( pointStyle );
     pointFigure.setCenterPoint( m_p1, y );
 

@@ -179,7 +179,7 @@ public class PointsLineLayer extends AbstractProfilePointsLayer
     if( !isVisible() )
       return null;
 
-    final ProfilePointHover helper = new ProfilePointHover( this );
+    final ProfilePointHover helper = new ProfilePointHover( this, getPointStyleHover() );
     return helper.getHover( pos );
   }
 

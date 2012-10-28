@@ -47,6 +47,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.ui.i18n.Messages;
+import org.kalypso.model.wspm.ui.view.ILayerStyleProvider;
 import org.kalypso.model.wspm.ui.view.chart.AbstractProfilePointsLayer;
 
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
@@ -54,6 +55,7 @@ import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
 import de.openali.odysseus.chart.framework.model.layer.impl.LegendEntry;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
+import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
 
 /**
@@ -61,9 +63,13 @@ import de.openali.odysseus.chart.framework.util.img.ChartImageInfo;
  */
 public class StationLineLayer extends AbstractProfilePointsLayer
 {
-  public StationLineLayer( final IProfile profil, final String targetRangeProperty )
+  private final ILineStyle m_style;
+
+  public StationLineLayer( final String id, final IProfile profil, final String targetRangeProperty, final ILayerStyleProvider styleProvider )
   {
-    super( targetRangeProperty, profil, targetRangeProperty, null );
+    super( id, profil, targetRangeProperty, styleProvider );
+
+    m_style = styleProvider.getStyleFor( id + ILayerStyleProvider.LINE, ILineStyle.class );
   }
 
   @Override
@@ -77,13 +83,8 @@ public class StationLineLayer extends AbstractProfilePointsLayer
         drawLine( gc, gc.getClipping() );
       }
     };
-    return new ILegendEntry[] { le };
-  }
 
-  @Override
-  public String getIdentifier( )
-  {
-    return super.getIdentifier() + "_STATIONLINE"; //$NON-NLS-1$
+    return new ILegendEntry[] { le };
   }
 
   @Override
@@ -117,9 +118,8 @@ public class StationLineLayer extends AbstractProfilePointsLayer
 
   protected void drawLine( final GC gc, final Rectangle clipping )
   {
-    final PolylineFigure pf = new PolylineFigure();
+    final PolylineFigure pf = new PolylineFigure( m_style );
 
-    pf.setStyle( getLineStyleHover() );
     final int lineX = clipping.x + clipping.width / 2;
     pf.setPoints( new Point[] { new Point( lineX, clipping.height ), new Point( lineX, clipping.y ) } );
     pf.paint( gc );

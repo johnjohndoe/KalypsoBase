@@ -27,7 +27,7 @@ import de.openali.odysseus.chart.framework.util.resource.IPair;
 
 /**
  * General helper code for profil layers.
- *
+ * 
  * @author Gernot Belger
  */
 public final class ProfilLayerUtils
@@ -38,6 +38,7 @@ public final class ProfilLayerUtils
   }
 
   // TODO: has nothing to do with profile -> move into chart api
+  // TODO: rename to 'screenToNumeric'
   public final static Point2D toNumeric( final ICoordinateMapper cm, final Point point )
   {
     if( point == null )
@@ -50,21 +51,4 @@ public final class ProfilLayerUtils
 
     return new Point2D.Double( numeric.getDomain().doubleValue(), numeric.getTarget().doubleValue() );
   }
-
-//  protected Point toScreen( final IChartLayer layer, final IProfileRecord point )
-//  {
-//    final ICoordinateMapper cm = layer.getCoordinateMapper();
-//    if( Objects.isNull( cm ) )
-//      return null;
-//
-//    final Double x = ProfilUtil.getDoubleValueFor( m_domainComponent, point );
-//    final Double y = ProfilUtil.getDoubleValueFor( getTargetPropertyIndex(), point );
-//    if( Objects.isNull( x, y ) )
-//      return null;
-//    else if( x.isNaN() || y.isNaN() )
-//      return null;
-//
-//    return cm.numericToScreen( x, y );
-//  }
-
 }

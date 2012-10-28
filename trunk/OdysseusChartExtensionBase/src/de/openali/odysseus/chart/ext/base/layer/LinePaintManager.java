@@ -47,7 +47,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 
-import de.openali.odysseus.chart.framework.model.figure.impl.MarkerFigure;
+import de.openali.odysseus.chart.framework.model.figure.impl.PointFigure;
 import de.openali.odysseus.chart.framework.model.figure.impl.PolylineFigure;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
@@ -57,7 +57,7 @@ import de.openali.odysseus.chart.framework.util.resource.IPair;
 
 /**
  * Helper class to paint points
- *
+ * 
  * @author Gernot Belger
  */
 public class LinePaintManager
@@ -96,7 +96,6 @@ public class LinePaintManager
       throw new OperationCanceledException();
   }
 
-  @SuppressWarnings( "unchecked" )
   private Point[] toScreen( final IPair<Number, Number>[] points )
   {
     final Point[] screenPoints = new Point[points.length];
@@ -110,9 +109,9 @@ public class LinePaintManager
     for( final IStyle style : m_styles )
     {
       if( style instanceof ILineStyle )
-        paintLineFigure( (ILineStyle) style, points );
+        paintLineFigure( (ILineStyle)style, points );
       else if( style instanceof IPointStyle )
-        paintPointFigure( (IPointStyle) style, points );
+        paintPointFigure( (IPointStyle)style, points );
     }
   }
 
@@ -126,7 +125,7 @@ public class LinePaintManager
 
   private void paintPointFigure( final IPointStyle style, final Point[] points )
   {
-    final MarkerFigure figure = new MarkerFigure( style );
+    final PointFigure figure = new PointFigure( style );
 
     final CollisionIndex index = new CollisionIndex();
 

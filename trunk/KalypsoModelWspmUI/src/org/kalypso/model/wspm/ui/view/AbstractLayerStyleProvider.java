@@ -48,19 +48,16 @@ import de.openali.odysseus.chart.framework.util.StyleUtils;
 /**
  * @author kimwerner
  */
-public class AbstractLayerStyleProvider implements ILayerStyleProvider
+public abstract class AbstractLayerStyleProvider implements ILayerStyleProvider
 {
+  private final HashMap<String, IStyle> m_styles = new HashMap<>();
+
   public AbstractLayerStyleProvider( )
   {
     createStyles();
   }
 
-  private final HashMap<String, IStyle> m_styles = new HashMap<>();
-
-  protected void createStyles( )
-  {
-    // TODO: read styles from *.kod file or add Styles here
-  }
+  protected abstract void createStyles( );
 
   protected final void addStyle( final String id, final IStyle style )
   {

@@ -30,6 +30,7 @@ public interface IChartLayer extends ILayerContainer, IEventProvider<ILayerEvent
    */
   String getDescription( );
 
+  // FIXME: please, please, comment: what kind should the layer return here, logical or numeric???
   IDataRange<Double> getDomainRange( );
 
   ILegendEntry[] getLegendEntries( );
