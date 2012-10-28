@@ -42,14 +42,13 @@ import org.kalypsodeegree.model.geometry.GM_LineString;
 import org.kalypsodeegree.model.geometry.GM_MultiPrimitive;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
  * default implementation of the GM_LineString interface of package jago.model.
  * ------------------------------------------------------------
- *
+ * 
  * @version 10.6.2001
  * @author Andreas Poth
  */
@@ -60,7 +59,7 @@ class GM_LineString_Impl extends GM_CurveSegment_Impl implements GM_LineString
 
   /**
    * Creates a new GM_LineString_Impl object.
-   *
+   * 
    * @param gmps
    * @param cs
    * @throws GM_Exception
@@ -115,21 +114,21 @@ class GM_LineString_Impl extends GM_CurveSegment_Impl implements GM_LineString
     {
       if( gmo instanceof GM_Point )
       {
-        inter = LinearIntersects.intersects( ((GM_Point) gmo).getPosition(), this );
+        inter = LinearIntersects.intersects( ((GM_Point)gmo).getPosition(), this );
       }
       else if( gmo instanceof GM_Curve )
       {
         final GM_CurveSegment[] cs = new GM_CurveSegment[] { this };
-        inter = LinearIntersects.intersects( (GM_Curve) gmo, new GM_Curve_Impl( cs ) );
+        inter = LinearIntersects.intersects( (GM_Curve)gmo, new GM_Curve_Impl( cs ) );
       }
       else if( gmo instanceof GM_Polygon )
       {
         final GM_CurveSegment[] cs = new GM_CurveSegment[] { this };
-        inter = LinearIntersects.intersects( new GM_Curve_Impl( cs ), (GM_Polygon) gmo );
+        inter = LinearIntersects.intersects( new GM_Curve_Impl( cs ), (GM_Polygon)gmo );
       }
       else if( gmo instanceof GM_MultiPrimitive )
       {
-        inter = intersectsMultiPrimitive( (GM_MultiPrimitive) gmo );
+        inter = intersectsMultiPrimitive( (GM_MultiPrimitive)gmo );
       }
     }
     catch( final Exception e )
