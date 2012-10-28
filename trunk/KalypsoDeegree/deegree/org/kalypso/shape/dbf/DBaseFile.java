@@ -36,7 +36,7 @@
 package org.kalypso.shape.dbf;
 
 import java.io.ByteArrayOutputStream;
-import java.io.Closeable;
+import java.io.DataInput;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -45,8 +45,11 @@ import java.nio.charset.Charset;
 
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.shape.FileMode;
+import org.kalypso.shape.tools.BufferedRandomAccessFile;
 
 /**
+ * DBaseFile implementation that uses random access to read and/or write records.<br/>
+ * <br/>
  * DBase III File. see http://www.clicketyclick.dk/databases/xbase/format/dbf.html<br>
  * The datatypes of the dBase file and their representation as java types: <br>
  * dBase-type dBase-type-ID java-type <br>
@@ -60,27 +63,8 @@ import org.kalypso.shape.FileMode;
  * <br>
  * Original Author: Andreas Poth
  */
-public class DBaseFile implements Closeable
+public class DBaseFile extends AbstractDBaseFile
 {
-  private final RandomAccessFile m_raf;
-
-  private final DBFHeader m_header;
-
-  private final FileMode m_fileMode;
-
-  private int m_numRecords;
-
-  private final Charset m_charset;
-
-// // TODO: refaktor: create wrapper class over RandomAccessFile instead
-// private final long m_cacheSize = 1000000;
-//
-// private final byte[] m_cacheData = null;
-//
-// private long m_cachePosition = 0;
-
-  private long m_filePosition = -1;
-
   public static DBaseFile create( final File file, final IDBFField[] fields, final Charset charset ) throws IOException, DBaseException
   {
     if( file.isFile() && file.exists() )
@@ -97,39 +81,45 @@ public class DBaseFile implements Closeable
   }
 
   /**
-   * Open a dbase file.
+   * Open a dbase file for random access.
    */
   public DBaseFile( final File file, final FileMode mode, final Charset charset ) throws IOException, DBaseException
   {
-    m_charset = charset;
+    super( openInput( file, mode ), mode, charset );
+  }
+
+  private static DataInput openInput( final File file, final FileMode mode ) throws IOException
+  {
     final String rwMode = mode == FileMode.READ ? "r" : "rw";
-    m_raf = new RandomAccessFile( file, rwMode );
-    m_header = DBFHeader.read( m_raf, charset );
-    m_numRecords = m_header.getNumRecords();
-    m_fileMode = mode;
+
+    final long length = file.length();
+    final long bufsize = Math.min( length, 1024 * 100 );
+
+    switch( mode )
+    {
+      case READ:
+        return new BufferedRandomAccessFile( file, rwMode, (int)bufsize );
+      case WRITE:
+        return new RandomAccessFile( file, rwMode );
+    }
+
+    throw new IllegalStateException();
   }
 
   @Override
   public void close( ) throws IOException
   {
-    if( m_fileMode == FileMode.WRITE )
-      m_header.writeNumRecords( m_raf, m_numRecords );
+    final RandomAccessFile raf = getRandomAccessFile();
 
-    m_raf.close();
+    if( getFileMode() == FileMode.WRITE )
+      super.getHeader().writeNumRecords( raf );
+
+    raf.close();
   }
 
-  /**
-   * method: getRecordNum() <BR>
-   * Get the number of records in the table
-   */
-  public int getNumRecords( )
+  private RandomAccessFile getRandomAccessFile( )
   {
-    return m_numRecords;
-  }
-
-  public IDBFField[] getFields( )
-  {
-    return m_header.getFields().getFields();
+    return (RandomAccessFile)getInput();
   }
 
   /**
@@ -155,17 +145,18 @@ public class DBaseFile implements Closeable
    */
   public boolean readRecord( final int recordIndex, final Object[] container ) throws DBaseException, IOException
   {
-    if( recordIndex < 0 || recordIndex >= m_numRecords )
+    final int numRecords = getNumRecords();
+
+    if( recordIndex < 0 || recordIndex >= numRecords )
       throw new DBaseException( "Invalid index: " + recordIndex );
 
-    final long position = seekRecord( recordIndex );
+    final RandomAccessFile raf = getRandomAccessFile();
 
-    final DBFFields fields = m_header.getFields();
-    final boolean recordRead = fields.readRecord( m_raf, m_charset, container );
+    seekRecord( recordIndex );
 
-    m_filePosition = position + fields.getRecordLength();
+    final DBFFields fields = getHeader().getFields();
 
-    return recordRead;
+    return fields.readRecord( raf, getCharset(), container );
   }
 
   public Object getValue( final int recordIndex, final String field ) throws DBaseException, IOException
@@ -178,19 +169,6 @@ public class DBaseFile implements Closeable
     return record[index];
   }
 
-  public int getIndex( final String field )
-  {
-    final IDBFField[] fields = getFields();
-    for( int i = 0; i < fields.length; i++ )
-    {
-      final IDBFField dbfField = fields[i];
-      if( dbfField.getName().equalsIgnoreCase( field ) )
-        return i;
-    }
-
-    return -1;
-  }
-
   /**
    * Really writes the record into the underlying file.<br>
    * This method is atomic, in the sense that a record only gets written if all fields could successfully be written.
@@ -200,16 +178,16 @@ public class DBaseFile implements Closeable
     seekRecordForWrite( numRecords );
 
     final byte[] bytes = recordAsBytes( data );
-    m_raf.write( bytes );
+    getRandomAccessFile().write( bytes );
   }
 
   private byte[] recordAsBytes( final Object[] data ) throws DBaseException, IOException
   {
-    final DBFFields fields = m_header.getFields();
+    final DBFFields fields = getHeader().getFields();
     final int recordLength = fields.getRecordLength();
     final ByteArrayOutputStream out = new ByteArrayOutputStream( recordLength );
     final DataOutputStream os = new DataOutputStream( out );
-    fields.writeRecord( os, data, m_charset );
+    fields.writeRecord( os, data, getCharset() );
     out.flush();
 
     Assert.isTrue( recordLength == out.size() );
@@ -225,9 +203,13 @@ public class DBaseFile implements Closeable
    */
   public void addRecord( final Object[] data ) throws DBaseException, IOException
   {
-    writeRecord( data, m_numRecords );
-    m_numRecords++;
-    m_raf.writeByte( 0x1A ); // EOF
+    final int numRecords = getNumRecords();
+
+    writeRecord( data, numRecords );
+
+    getRandomAccessFile().writeByte( 0x1A ); // EOF
+
+    getHeader().setNumRecords( numRecords + 1 );
   }
 
   /**
@@ -238,7 +220,9 @@ public class DBaseFile implements Closeable
    */
   public void setRecord( final int recordIndex, final Object[] data ) throws DBaseException, IOException
   {
-    if( recordIndex < 0 || recordIndex >= m_numRecords )
+    final int numRecords = getNumRecords();
+
+    if( recordIndex < 0 || recordIndex >= numRecords )
       throw new DBaseException( "Invalid index: " + recordIndex );
 
     writeRecord( data, recordIndex );
@@ -254,11 +238,13 @@ public class DBaseFile implements Closeable
    */
   public void deleteRecord( final int recordIndex ) throws DBaseException, IOException
   {
-    if( recordIndex < 0 || recordIndex >= m_numRecords )
+    final int numRecords = getNumRecords();
+
+    if( recordIndex < 0 || recordIndex >= numRecords )
       throw new DBaseException( "Invalid index: " + recordIndex );
 
     seekRecordForWrite( recordIndex );
-    m_raf.writeByte( 0x2A );
+    getRandomAccessFile().writeByte( 0x2A );
   }
 
   /**
@@ -267,7 +253,7 @@ public class DBaseFile implements Closeable
    */
   private void seekRecordForWrite( final int recordIndex ) throws DBaseException, IOException
   {
-    if( m_fileMode != FileMode.WRITE )
+    if( getFileMode() != FileMode.WRITE )
       throw new DBaseException( "class is initialized in read-only mode" );
 
     seekRecord( recordIndex );
@@ -275,32 +261,17 @@ public class DBaseFile implements Closeable
 
   private long seekRecord( final int recordIndex ) throws IOException
   {
-    final long position = m_header.getRecordPosition( recordIndex );
+    final long position = getHeader().getRecordPosition( recordIndex );
+
+    final RandomAccessFile raf = getRandomAccessFile();
 
     /* Although it is possible, we do not allow to write behind the end of the file (that would leave corrupt records) */
-    if( position > m_raf.length() )
-      throw new ArrayIndexOutOfBoundsException( recordIndex );
+    // REMARK: too slow!
+//    if( position > raf.length() )
+//      throw new ArrayIndexOutOfBoundsException( recordIndex );
 
-    if( m_filePosition != -1 && position == m_filePosition )
-      return m_filePosition;
-
-    m_raf.seek( position );
+    raf.seek( position );
 
     return position;
-  }
-
-  /**
-   * Returns the index (with regard to the array return by {@link #getFields()} of the field with a specfic name.
-   */
-  public int findFieldIndex( final String fieldName )
-  {
-    final IDBFField[] fields = getFields();
-    for( int i = 0; i < fields.length; i++ )
-    {
-      if( fieldName.equals( fields[i].getName() ) )
-        return i;
-    }
-
-    return -1;
   }
 }

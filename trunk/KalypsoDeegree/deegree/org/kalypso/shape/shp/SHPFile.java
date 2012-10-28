@@ -36,6 +36,7 @@
 
 package org.kalypso.shape.shp;
 
+import java.io.DataInput;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -61,6 +62,7 @@ import org.kalypso.shape.geometry.SHPPolyLinez;
 import org.kalypso.shape.geometry.SHPPolygon;
 import org.kalypso.shape.geometry.SHPPolygonz;
 import org.kalypso.shape.shx.SHXRecord;
+import org.kalypso.shape.tools.BufferedRandomAccessFile;
 import org.kalypso.shape.tools.DataUtils;
 import org.kalypsodeegree.model.geometry.ByteUtils;
 
@@ -73,16 +75,8 @@ import org.kalypsodeegree.model.geometry.ByteUtils;
  * Original Author: Andreas Poth
  */
 
-public class SHPFile
+public class SHPFile extends AbstractSHPFile
 {
-  private static int RECORD_HEADER_BYTES = 4 + 4;
-
-  private ShapeHeader m_header;
-
-  private final RandomAccessFile m_raf;
-
-  private final FileMode m_mode;
-
   public static SHPFile create( final File file, final ShapeType shapeType ) throws IOException
   {
     if( file.isFile() && file.exists() )
@@ -102,40 +96,48 @@ public class SHPFile
    */
   public SHPFile( final File file, final FileMode mode ) throws IOException
   {
-    m_mode = mode;
-
-    final String rwFlags = mode == FileMode.READ ? "r" : "rw";
-    m_raf = new RandomAccessFile( file, rwFlags );
-
-    m_header = new ShapeHeader( m_raf );
+    super( openInput( file, mode ), mode );
   }
 
-  public FileMode getMode( )
+  private static DataInput openInput( final File file, final FileMode mode ) throws IOException
   {
-    return m_mode;
-  }
+    final String rwMode = mode == FileMode.READ ? "r" : "rw"; //$NON-NLS-1$ //$NON-NLS-2$
 
-  public void close( ) throws IOException
-  {
-    if( isWriting() )
+    switch( mode )
     {
-      final long fileLength = m_raf.length();
-      m_header = new ShapeHeader( (int)fileLength, getShapeType(), getMBR() );
-      m_raf.seek( 0 );
-      // Update header with length
-      m_header.write( m_raf );
+      case READ:
+        return new BufferedRandomAccessFile( file, rwMode, 1024 * 8 );
+      case WRITE:
+        return new RandomAccessFile( file, rwMode );
     }
 
-    m_raf.close();
+    throw new IllegalStateException();
   }
 
-  /**
-   * returns the minimum bounding rectangle of geometries <BR>
-   * within the shape-file
-   */
-  public SHPEnvelope getMBR( )
+  private RandomAccessFile getRandomAccessFile( )
   {
-    return m_header.getMBR();
+    return (RandomAccessFile)getInput();
+  }
+
+  @Override
+  public void close( ) throws IOException
+  {
+    final RandomAccessFile raf = getRandomAccessFile();
+
+    if( isWriting() )
+    {
+      // Update header with length
+      final long fileLength = raf.length();
+      updateHeader( (int)fileLength, getMBR() );
+
+      /* and write the header */
+      raf.seek( 0 );
+
+      final ShapeHeader header = getHeader();
+      header.write( raf );
+    }
+
+    raf.close();
   }
 
   /**
@@ -143,16 +145,18 @@ public class SHPFile
    */
   public SHPEnvelope getEnvelope( final SHXRecord record ) throws IOException
   {
+    final RandomAccessFile raf = getRandomAccessFile();
+
     final int position = record.getOffset() * 2;
-    m_raf.seek( position + 8 );
-    final ShapeType shpType = ShapeType.valueOf( DataUtils.readLEInt( m_raf ) );
+    raf.seek( position + 8 );
+    final ShapeType shpType = ShapeType.valueOf( DataUtils.readLEInt( raf ) );
 
     /*
      * only for PolyLines, Polygons and MultiPoints minimum bounding rectangles are defined
      */
     if( shpType == ShapeType.POLYLINE || shpType == ShapeType.POLYGON || shpType == ShapeType.MULTIPOINT || shpType == ShapeType.POLYLINEZ || shpType == ShapeType.POLYGONZ
         || shpType == ShapeType.MULTIPOINTZ )
-      return new SHPEnvelope( m_raf );
+      return new SHPEnvelope( raf );
 
     return null;
   }
@@ -163,12 +167,14 @@ public class SHPFile
    */
   public ISHPGeometry getShape( final SHXRecord record ) throws IOException
   {
+    final RandomAccessFile raf = getRandomAccessFile();
+
     final int position = record.getOffset() * 2;
     final int contentLength = record.getLength() * 2;
 
     final byte[] recBuf = new byte[contentLength];
-    m_raf.seek( position + 8 );
-    m_raf.readFully( recBuf );
+    raf.seek( position + 8 );
+    raf.readFully( recBuf );
 
     final ShapeType shpType = ShapeType.valueOf( ByteUtils.readLEInt( recBuf, 0 ) );
     if( shpType == ShapeType.NULL )
@@ -208,11 +214,6 @@ public class SHPFile
     throw new UnsupportedOperationException( "Unknown shape type: " + shpType );
   }
 
-  public ShapeType getShapeType( )
-  {
-    return m_header.getShapeType();
-  }
-
   /**
    * Adds a new shape entry to the end of the file.<br>
    * This method is atomic in that sense that if an exception occurs while a shape convertet to bytes, inetad a
@@ -223,15 +224,17 @@ public class SHPFile
     if( shape == null )
       throw new SHPException( "shape == null not allowed. Add SHPNullShape instead." );
 
-    if( !(shape instanceof SHPNullShape) && shape.getType() != m_header.getShapeType() )
+    if( !(shape instanceof SHPNullShape) && shape.getType() != getShapeType() )
       throw new SHPException( "Cannot add shape, wrong type." );
 
-    final long currentFileLength = m_raf.length();
+    final RandomAccessFile raf = getRandomAccessFile();
+
+    final long currentFileLength = raf.length();
 
     /* Convert shape into bytes and write them in one go */
     final byte[] bytes = writeRecordAsBytes( recordNumber, shape );
-    m_raf.seek( currentFileLength );
-    m_raf.write( bytes );
+    raf.seek( currentFileLength );
+    raf.write( bytes );
 
     /* Update header */
     final SHPEnvelope shapeMbr = shape.getEnvelope();
@@ -270,16 +273,16 @@ public class SHPFile
 
   private void expandMbr( final SHPEnvelope shapeMbr )
   {
-    final SHPEnvelope mbr = m_header.getMBR();
+    final SHPEnvelope mbr = getMBR();
     final SHPEnvelope newMbr = mbr == null ? shapeMbr : mbr.expand( shapeMbr );
-    final ShapeType shapeType = m_header.getShapeType();
+
     // PERFORMANCE: we always set -1 as file length here. The file length will e updated as soon as the
     // header gets really written
-    m_header = new ShapeHeader( -1, shapeType, newMbr );
+    updateHeader( -1, newMbr );
   }
 
   private boolean isWriting( )
   {
-    return m_mode == FileMode.WRITE;
+    return getMode() == FileMode.WRITE;
   }
 }

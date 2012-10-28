@@ -91,6 +91,8 @@ public final class Shape2GML
 
   public static ShapeCollection convertShp2Gml( final String featureTypeKey, final ShapeFile shape, final String shapeSRS, final IProgressMonitor monitor ) throws Exception
   {
+    System.out.format( "%s: %s%n", shape.getFileBase(), featureTypeKey );
+
     final int count = shape.getNumRecords();
 
     monitor.beginTask( "Converting shape entries", count );
@@ -302,11 +304,6 @@ public final class Shape2GML
 
   private static GMLWorkspace createShapeWorkspace( final ShapeType shapeFileType, final IFeatureType elementType ) throws GMLSchemaException
   {
-//    final String geomName = getGeometryName( shapeFileType );
-
-//    final QName collectionQName = ShapeCollection.FEATURE_SHAPE_COLLECTION;
-//    final String concreteCollectionLocalName = geomName + collectionQName.getLocalPart();
-
     final String customNamespace = elementType.getQName().getNamespaceURI();
     final QName concreteCollectionQName = new QName( customNamespace, "ShapeCollection" ); //$NON-NLS-1$
 
