@@ -40,14 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.profil.wizard.landuse.model;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.shape.IShapeFileVisitor;
 import org.kalypso.shape.ShapeFile;
 import org.kalypso.shape.dbf.IDBFField;
 
@@ -74,20 +70,14 @@ public class LanduseMappingUpdater implements IRunnableWithProgress
   {
     try
     {
-      final Set<Object> shapeValues = new LinkedHashSet<>();
       final int column = ArrayUtils.indexOf( m_file.getFields(), m_field );
 
-      m_file.accept( new IShapeFileVisitor()
+      final int numRecords = m_file.getNumRecords();
+      for( int index = 0; index < numRecords; index++ )
       {
-        @Override
-        public void visit( final Object[] row )
-        {
-          shapeValues.add( row[column] );
-        }
-      } );
+        final Object[] row = m_file.getRow( index );
+        final Object value = row[column];
 
-      for( final Object value : shapeValues )
-      {
         // only add empty mappings
         if( Objects.isNull( m_properties.getProperty( value.toString() ) ) )
           m_properties.put( value, "" ); //$NON-NLS-1$
@@ -95,6 +85,7 @@ public class LanduseMappingUpdater implements IRunnableWithProgress
     }
     catch( final Exception ex )
     {
+      // FIXME: error handling!
       ex.printStackTrace();
     }
   }
