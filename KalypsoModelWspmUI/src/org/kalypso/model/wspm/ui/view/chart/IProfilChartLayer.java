@@ -67,9 +67,7 @@ public interface IProfilChartLayer extends IEditableChartLayer
 
   RGB COLOR_ACTIVE = new RGB( 255, 0, 0 );
 
-  float[] HOVER_DASH = new float[] { 1, 1, 1 };
-
-  int POINT_STYLE_WIDTH = 5;
+  int POINT_STYLE_WIDTH = 6;
 
   /** Erzeugt eine Profil-View, welche die Spezifika dieses Layers anzeigt. */
   IProfilView createLayerPanel( );

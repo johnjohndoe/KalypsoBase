@@ -64,7 +64,6 @@ import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
-import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINECAP;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
 
 /**
@@ -136,8 +135,8 @@ public abstract class AbstractProfilePointsLayer extends AbstractProfilLayer
     // It is not guaranteed, that we need only one line style!
 
     // FIXME: remove theses magic names
-    m_lineStyle = styleProvider.getStyleFor( id + "_LINE", null ); //$NON-NLS-1$
-    m_pointStyle = styleProvider.getStyleFor( id + "_POINT", null ); //$NON-NLS-1$
+    m_lineStyle = styleProvider.getStyleFor( id + ILayerStyleProvider.LINE, null ); //$NON-NLS-1$
+    m_pointStyle = styleProvider.getStyleFor( id + ILayerStyleProvider.POINT, null ); //$NON-NLS-1$
 
     m_lineStyleActive = styleProvider.getStyleFor( id + "_LINE_ACTIVE", null ); //$NON-NLS-1$
     m_pointStyleActive = styleProvider.getStyleFor( id + "_POINT_ACTIVE", null ); //$NON-NLS-1$
@@ -184,6 +183,7 @@ public abstract class AbstractProfilePointsLayer extends AbstractProfilLayer
     final IComponent domain = getDomainComponent();
     if( Objects.isNull( domain ) )
       return null;
+
     final int domainPropertyIndex = getProfil().getResult().indexOfComponent( m_domainComponent );
     final FindMinMaxVisitor visitor = new FindMinMaxVisitor( domain.getId() );
     getProfil().accept( visitor, 1 );
@@ -192,6 +192,7 @@ public abstract class AbstractProfilePointsLayer extends AbstractProfilLayer
     final IProfileRecord max = visitor.getMaximum();
     if( Objects.isNull( min, max ) )
       return null;
+
     return new DataRange( min.getValue( domainPropertyIndex ), max.getValue( domainPropertyIndex ) );
   }
 
@@ -218,14 +219,8 @@ public abstract class AbstractProfilePointsLayer extends AbstractProfilLayer
   protected ILineStyle getLineStyleHover( )
   {
     if( m_lineStyleHover == null )
-    {
-      final ILineStyle lineStyle = getLineStyle();
+      m_lineStyleHover = ProfileStyleUtils.deriveHoverStyle( getLineStyle() );
 
-      m_lineStyleHover = lineStyle.clone();
-      m_lineStyleHover.setDash( 0f, HOVER_DASH );
-
-      m_lineStyleHover.setLineCap( LINECAP.FLAT );
-    }
     return m_lineStyleHover;
   }
 
@@ -240,9 +235,11 @@ public abstract class AbstractProfilePointsLayer extends AbstractProfilLayer
   {
     if( m_pointStyle == null )
     {
+      // FIXME: ugly, why is point derived from line style?
       m_pointStyle = StyleUtils.getDefaultPointStyle();
       m_pointStyle.setStroke( getLineStyle().clone() );
       m_pointStyle.setInlineColor( getLineStyle().getColor() );
+      // ??? ugly!
       m_pointStyle.setWidth( POINT_STYLE_WIDTH );
       m_pointStyle.setHeight( POINT_STYLE_WIDTH );
     }
@@ -262,22 +259,12 @@ public abstract class AbstractProfilePointsLayer extends AbstractProfilLayer
 
   // FIXME: this abstract default style stuff is contraproductive. Each laxer should once and for all define its own
   // styles.
+  // FIXME: maybe move everything into the style provider?
   protected IPointStyle getPointStyleHover( )
   {
     if( m_pointStyleHover == null )
-    {
-      m_pointStyleHover = getPointStyle().clone();
-      m_pointStyleHover.setWidth( m_pointStyleHover.getWidth() * 2 );
-      m_pointStyleHover.setHeight( m_pointStyleHover.getHeight() * 2 );
+      m_pointStyleHover = ProfileStyleUtils.deriveHoverStyle( getPointStyle() );
 
-      final ILineStyle lineStyleHover = getLineStyleHover();
-      final ILineStyle stroke = lineStyleHover.clone();
-      stroke.setDash( 0.0f, null );
-
-      m_pointStyleHover.setStroke( stroke );
-
-      m_pointStyleHover.setFillVisible( true );
-    }
     return m_pointStyleHover;
   }
 
