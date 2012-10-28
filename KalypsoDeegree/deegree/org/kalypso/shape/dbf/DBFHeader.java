@@ -98,13 +98,13 @@ class DBFHeader
 
   public void write( final DataOutput output, final int numberOfRecords, final Charset charset ) throws IOException
   {
-    output.writeByte( (byte) 3 ); // File-Type: DBase III // TODO: add bits for memo file if necessary
+    output.writeByte( (byte)3 ); // File-Type: DBase III // TODO: add bits for memo file if necessary
 
     // set date YYMMDD
     final Calendar now = Calendar.getInstance();
-    output.writeByte( (byte) (now.get( Calendar.YEAR ) - 1900) );
-    output.writeByte( (byte) (now.get( Calendar.MONTH ) + 1) );
-    output.writeByte( (byte) now.get( Calendar.DAY_OF_MONTH ) );
+    output.writeByte( (byte)(now.get( Calendar.YEAR ) - 1900) );
+    output.writeByte( (byte)(now.get( Calendar.MONTH ) + 1) );
+    output.writeByte( (byte)now.get( Calendar.DAY_OF_MONTH ) );
 
     DataUtils.writeLEInt( output, numberOfRecords );
     DataUtils.writeLEShort( output, 32 + m_fields.size() * 32 + 1 );
@@ -112,22 +112,22 @@ class DBFHeader
 
     // Unused stuff...
     DataUtils.writeLEShort( output, 0 ); // Reserved
-    output.writeByte( (byte) 0 ); // No incomplete transaction
-    output.writeByte( (byte) 0 ); // Not encrypted
+    output.writeByte( (byte)0 ); // No incomplete transaction
+    output.writeByte( (byte)0 ); // Not encrypted
     for( int i = 16; i < 28; i++ )
       // Reserved for multi-user processing.
-      output.writeByte( (byte) 0 );
+      output.writeByte( (byte)0 );
 
-    output.writeByte( (byte) 0 ); // no mdx-file exists
+    output.writeByte( (byte)0 ); // no mdx-file exists
 
     // TODO: write charset name here?
-    output.writeByte( (byte) 0x03 ); // Code page 1252
+    output.writeByte( (byte)0x03 ); // Code page 1252
 
     DataUtils.writeLEShort( output, 0 ); // Reserved
 
     m_fields.write( output, charset );
 
-    output.writeByte( (byte) 0x0D ); // field terminator
+    output.writeByte( (byte)0x0D ); // field terminator
   }
 
   public int getNumRecords( )
@@ -142,11 +142,8 @@ class DBFHeader
 
   public void writeNumRecords( final RandomAccessFile raf, final int numberOfRecords ) throws IOException
   {
-// final byte[] numRecordBytes = new byte[4];
-// ByteUtils.writeLEInt( numRecordBytes, 0, numberOfRecords );
     raf.seek( 4 );
     DataUtils.writeLEInt( raf, numberOfRecords );
-// raf.write( numRecordBytes );
   }
 
   public DBFFields getFields( )

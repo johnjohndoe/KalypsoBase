@@ -79,6 +79,8 @@ public class DBaseFile implements Closeable
 //
 // private long m_cachePosition = 0;
 
+  private long m_filePosition = -1;
+
   public static DBaseFile create( final File file, final IDBFField[] fields, final Charset charset ) throws IOException, DBaseException
   {
     if( file.isFile() && file.exists() )
@@ -156,10 +158,14 @@ public class DBaseFile implements Closeable
     if( recordIndex < 0 || recordIndex >= m_numRecords )
       throw new DBaseException( "Invalid index: " + recordIndex );
 
-    seekRecord( recordIndex );
+    final long position = seekRecord( recordIndex );
 
     final DBFFields fields = m_header.getFields();
-    return fields.readRecord( m_raf, m_charset, container );
+    final boolean recordRead = fields.readRecord( m_raf, m_charset, container );
+
+    m_filePosition = position + fields.getRecordLength();
+
+    return recordRead;
   }
 
   public Object getValue( final int recordIndex, final String field ) throws DBaseException, IOException
@@ -267,15 +273,20 @@ public class DBaseFile implements Closeable
     seekRecord( recordIndex );
   }
 
-  private void seekRecord( final int recordIndex ) throws IOException
+  private long seekRecord( final int recordIndex ) throws IOException
   {
     final long position = m_header.getRecordPosition( recordIndex );
 
-    /* Although it is possible ,we do not allow to write behind the end of the file (that would leave corrupt records) */
+    /* Although it is possible, we do not allow to write behind the end of the file (that would leave corrupt records) */
     if( position > m_raf.length() )
       throw new ArrayIndexOutOfBoundsException( recordIndex );
 
+    if( m_filePosition != -1 && position == m_filePosition )
+      return m_filePosition;
+
     m_raf.seek( position );
+
+    return position;
   }
 
   /**
