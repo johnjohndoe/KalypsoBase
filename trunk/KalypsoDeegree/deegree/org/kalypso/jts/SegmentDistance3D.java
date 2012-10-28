@@ -40,15 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.jts;
 
+import org.kalypso.commons.math.simplify.ISegmentDistance;
+
 import com.vividsolutions.jts.algorithm.CGAlgorithms;
 import com.vividsolutions.jts.geom.Coordinate;
 
 /**
  * (default) implementation of ISegmentDistance, using the 2d euclidean distance.
- *
+ * 
  * @author Gernot Belger
  */
-public class SegmentDistance3D implements ISegmentDistance
+public class SegmentDistance3D implements ISegmentDistance<Coordinate>
 {
   private final double m_distanceTolerance;
 
