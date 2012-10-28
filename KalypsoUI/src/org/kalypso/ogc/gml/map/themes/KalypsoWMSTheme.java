@@ -98,8 +98,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
   protected GM_Envelope m_maxEnvLocalSRS;
 
   /**
-   * This is the stored extent from the last time, a loader was started (call to
-   * {@link #setExtent(int, int, GM_Envelope)}).
+   * This is the stored extent from the last time, a loader was started (call to {@link #setExtent(int, int, GM_Envelope)}).
    */
   protected GM_Envelope m_extent;
 
@@ -216,7 +215,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     if( !(m_provider instanceof AbstractDeegreeImageProvider) )
       return null;
 
-    return ((AbstractDeegreeImageProvider) m_provider).getLastRequest();
+    return ((AbstractDeegreeImageProvider)m_provider).getLastRequest();
   }
 
   public String getFeatureInfo( final double x, final double y ) throws OGCWebServiceException, OWSException
@@ -227,7 +226,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     if( !(m_provider instanceof AbstractDeegreeImageProvider) )
       return null;
 
-    return ((AbstractDeegreeImageProvider) m_provider).getFeatureInfo( x, y );
+    return ((AbstractDeegreeImageProvider)m_provider).getFeatureInfo( x, y );
   }
 
   public ImageDescriptor getLegendGraphic( final String layer, final String style )
@@ -246,7 +245,7 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
     if( !(m_layer instanceof StyledLayerType) )
       return new Style[] {};
 
-    final StyledLayerType styledLayer = (StyledLayerType) m_layer;
+    final StyledLayerType styledLayer = (StyledLayerType)m_layer;
     return styledLayer.getStyle().toArray( new Style[] {} );
   }
 
@@ -272,10 +271,11 @@ public class KalypsoWMSTheme extends AbstractKalypsoTheme implements ITooltipPro
         m_maxEnvLocalSRS = m_provider.getFullExtent();
 
       /* Load the image. This could take a while. */
-      final int width = (int) p.getDestWidth();
-      final int height = (int) p.getDestHeight();
+      final int width = (int)p.getDestWidth();
+      final int height = (int)p.getDestHeight();
       final GM_Envelope extent = p.getSourceRect();
 
+      // FIXME: can lead to dead lock like beahviour, if the image takes very long to be fetched. Should be callled outside of synchronized block
       m_buffer = m_provider.getImage( width, height, extent );
 
       final IStatus status = new Status( IStatus.OK, KalypsoGisPlugin.getId(), Messages.getString( "org.kalypso.ogc.gml.wms.loader.images.KalypsoImageLoader.2" ) ); //$NON-NLS-1$
