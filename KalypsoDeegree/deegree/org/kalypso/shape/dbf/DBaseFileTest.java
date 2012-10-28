@@ -62,35 +62,35 @@ public class DBaseFileTest extends Assert
   @Test
   public void testFields( ) throws DBaseException
   {
-    newFieldException( "sWithPr", FieldType.C, (byte) 10, (byte) 2 );
-    newFieldOK( "string", FieldType.C, (byte) 10, (byte) 0 );
+    newFieldException( "sWithPr", FieldType.C, (byte)10, (byte)2 );
+    newFieldOK( "string", FieldType.C, (byte)10, (byte)0 );
 
-    newFieldException( "dTooLong", FieldType.D, (byte) 100, (byte) 2 );
-    newFieldException( "dTooShort", FieldType.D, (byte) 7, (byte) 0 );
-    newFieldException( "dateWithPr", FieldType.D, (byte) 8, (byte) 3 );
-    newFieldOK( "dateWithPr", FieldType.D, (byte) 8, (byte) 0 );
+    newFieldException( "dTooLong", FieldType.D, (byte)100, (byte)2 );
+    newFieldException( "dTooShort", FieldType.D, (byte)7, (byte)0 );
+    newFieldException( "dateWithPr", FieldType.D, (byte)8, (byte)3 );
+    newFieldOK( "dateWithPr", FieldType.D, (byte)8, (byte)0 );
 
-    newFieldOK( "float", FieldType.F, (byte) 10, (byte) 5 );
-    newFieldException( "fTooBigPr", FieldType.F, (byte) 10, (byte) 9 );
-    newFieldException( "fTooBigPr2", FieldType.F, (byte) 100, (byte) 16 );
-    newFieldOK( "double", FieldType.F, (byte) 20, (byte) 10 );
-    newFieldOK( "integer", FieldType.F, (byte) 10, (byte) 0 );
-    newFieldOK( "long", FieldType.F, (byte) 20, (byte) 0 );
+    newFieldOK( "float", FieldType.F, (byte)10, (byte)5 );
+    newFieldException( "fTooBigPr", FieldType.F, (byte)10, (byte)9 );
+    newFieldException( "fTooBigPr2", FieldType.F, (byte)100, (byte)16 );
+    newFieldOK( "double", FieldType.F, (byte)20, (byte)10 );
+    newFieldOK( "integer", FieldType.F, (byte)10, (byte)0 );
+    newFieldOK( "long", FieldType.F, (byte)20, (byte)0 );
 
-    newFieldException( "bTooLong", FieldType.L, (byte) 2, (byte) 0 );
-    newFieldException( "bWithPr", FieldType.L, (byte) 1, (byte) 1 );
-    newFieldOK( "boolean", FieldType.L, (byte) 1, (byte) 0 );
+    newFieldException( "bTooLong", FieldType.L, (byte)2, (byte)0 );
+    newFieldException( "bWithPr", FieldType.L, (byte)1, (byte)1 );
+    newFieldOK( "boolean", FieldType.L, (byte)1, (byte)0 );
 
-    newFieldException( "mTooShort", FieldType.M, (byte) 9, (byte) 0 );
-    newFieldException( "mTooLong", FieldType.M, (byte) 11, (byte) 0 );
-    newFieldException( "mWithPr", FieldType.M, (byte) 10, (byte) 2 );
-    newFieldOK( "memo", FieldType.M, (byte) 10, (byte) 0 );
+    newFieldException( "mTooShort", FieldType.M, (byte)9, (byte)0 );
+    newFieldException( "mTooLong", FieldType.M, (byte)11, (byte)0 );
+    newFieldException( "mWithPr", FieldType.M, (byte)10, (byte)2 );
+    newFieldOK( "memo", FieldType.M, (byte)10, (byte)0 );
 
-    newFieldOK( "n_f", FieldType.F, (byte) 10, (byte) 5 );
-    newFieldException( "n_fBigPr", FieldType.F, (byte) 10, (byte) 9 );
-    newFieldOK( "n_doub", FieldType.F, (byte) 20, (byte) 10 );
-    newFieldOK( "n_int", FieldType.F, (byte) 10, (byte) 0 );
-    newFieldOK( "n_long", FieldType.F, (byte) 20, (byte) 0 );
+    newFieldOK( "n_f", FieldType.F, (byte)10, (byte)5 );
+    newFieldException( "n_fBigPr", FieldType.F, (byte)10, (byte)9 );
+    newFieldOK( "n_doub", FieldType.F, (byte)20, (byte)10 );
+    newFieldOK( "n_int", FieldType.F, (byte)10, (byte)0 );
+    newFieldOK( "n_long", FieldType.F, (byte)20, (byte)0 );
   }
 
   /*
@@ -149,17 +149,17 @@ public class DBaseFileTest extends Assert
   {
     final IDBFField[] fields = new IDBFField[7];
 
-    fields[0] = new DBFField( "shortString", FieldType.C, (byte) 10, (byte) 0 );
-    fields[1] = new DBFField( "longString", FieldType.C, (byte) 100, (byte) 0 );
+    fields[0] = new DBFField( "shortString", FieldType.C, (byte)10, (byte)0 );
+    fields[1] = new DBFField( "longString", FieldType.C, (byte)100, (byte)0 );
 
-    fields[2] = new DBFField( "date", FieldType.D, (byte) 8, (byte) 0 );
+    fields[2] = new DBFField( "date", FieldType.D, (byte)8, (byte)0 );
 
-    fields[3] = new DBFField( "int", FieldType.N, (byte) 10, (byte) 0 );
-    fields[4] = new DBFField( "double", FieldType.F, (byte) 20, (byte) 10 );
+    fields[3] = new DBFField( "int", FieldType.N, (byte)10, (byte)0 );
+    fields[4] = new DBFField( "double", FieldType.F, (byte)20, (byte)10 );
 
-    fields[5] = new DBFField( "boolean", FieldType.L, (byte) 1, (byte) 0 );
+    fields[5] = new DBFField( "boolean", FieldType.L, (byte)1, (byte)0 );
 
-    fields[6] = new DBFField( "memo÷ƒ‹", FieldType.M, (byte) 10, (byte) 0 );
+    fields[6] = new DBFField( "memo÷ƒ‹", FieldType.M, (byte)10, (byte)0 );
 
     return fields;
   }
@@ -195,7 +195,7 @@ public class DBaseFileTest extends Assert
     try
     {
       dBaseFile.setRecord( 4, data[4] );
-      fail( "Shoudl be out of bounds" );
+      fail( "Should be out of bounds" );
     }
     catch( final DBaseException e )
     {
@@ -256,8 +256,8 @@ public class DBaseFileTest extends Assert
 
       if( expectedValue instanceof Number && actualValue instanceof Number )
       {
-        final double expectedDouble = ((Number) expectedValue).doubleValue();
-        final double actualDouble = ((Number) actualValue).doubleValue();
+        final double expectedDouble = ((Number)expectedValue).doubleValue();
+        final double actualDouble = ((Number)actualValue).doubleValue();
         assertEquals( expectedDouble, actualDouble, 0.0001 );
       }
       else
