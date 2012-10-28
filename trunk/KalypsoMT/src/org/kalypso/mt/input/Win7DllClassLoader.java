@@ -49,9 +49,8 @@ import org.mt4j.input.inputSources.IWin7NativeTouchSourceProvider;
 import org.mt4j.input.inputSources.Win7NativeTouchSource;
 
 /**
- * @author barbarins 
- * 
- * Internal class loader for the class with native methods accessing Multitouch functionality of the
+ * @author barbarins
+ *         Internal class loader for the class with native methods accessing Multitouch functionality of the
  *         window 7 OS. Assure re-inition of the underlying DLL, since no sources of the DLL are available and normal
  *         re-initialization is not possible ...
  */
@@ -59,7 +58,7 @@ public class Win7DllClassLoader extends ClassLoader
 {
 // private String jarFile = "mtLibs/mt4j-Win7NativeTouchSource.jar";
 
-  private Map<String, Class< ? >> classes;
+  private final Map<String, Class< ? >> classes;
 
   public Win7DllClassLoader( )
   {
@@ -69,7 +68,7 @@ public class Win7DllClassLoader extends ClassLoader
   }
 
   @Override
-  public Class< ? > findClass( String className ) throws ClassNotFoundException
+  public Class< ? > findClass( final String className )
   {
     byte classByte[];
     Class< ? > result = null;
@@ -83,18 +82,18 @@ public class Win7DllClassLoader extends ClassLoader
     {
       return findSystemClass( className );
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
     }
 
     try
     {
-      ClassLoader loader = Thread.currentThread().getContextClassLoader();
+      final ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
-      String classFile = className.replace( ".", "/" ) + ".class"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      InputStream is = loader.getResourceAsStream( classFile );
+      final String classFile = className.replace( ".", "/" ) + ".class"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      final InputStream is = loader.getResourceAsStream( classFile );
 
-      ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+      final ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
       int nextValue = is.read();
       while( -1 != nextValue )
       {
@@ -108,7 +107,7 @@ public class Win7DllClassLoader extends ClassLoader
 
       return result;
     }
-    catch( Exception e )
+    catch( final Exception e )
     {
       return null;
     }
@@ -119,17 +118,17 @@ public class Win7DllClassLoader extends ClassLoader
     IWin7NativeTouchSourceProvider src = null;
     try
     {
-      Class< ? > cl = this.findClass( Win7NativeTouchSource.class.getName() );
-      src = (IWin7NativeTouchSourceProvider) cl.newInstance();
+      final Class< ? > cl = this.findClass( Win7NativeTouchSource.class.getName() );
+      src = (IWin7NativeTouchSourceProvider)cl.newInstance();
     }
-    catch( Throwable e )
+    catch( final Throwable e )
     {
       e.printStackTrace();
     }
     return src;
   }
 
-  private Object leaf = new Object()
+  private final Object leaf = new Object()
   {
     @Override
     protected void finalize( ) throws Throwable
@@ -149,7 +148,7 @@ public class Win7DllClassLoader extends ClassLoader
     {
       super.finalize();
     }
-    catch( Throwable e )
+    catch( final Throwable e )
     {
     }
   }
