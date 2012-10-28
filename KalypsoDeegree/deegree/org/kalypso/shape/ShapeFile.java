@@ -74,7 +74,7 @@ public class ShapeFile implements Closeable
 
   private final DBaseFile m_dbf;
 
-  private SHXFile m_shxNew;
+  private SHXFile m_shx;
 
   /**
    * aggregated Instance-variables
@@ -107,22 +107,14 @@ public class ShapeFile implements Closeable
     m_dbf = new DBaseFile( new File( filePath + EXTENSION_DBF ), mode, charset );
   }
 
-  public void accept( final IShapeFileVisitor visitor ) throws DBaseException, IOException
-  {
-    for( int index = 0; index < getNumRecords(); index++ )
-    {
-      visitor.visit( getRow( index ) );
-    }
-  }
-
   @Override
   public void close( ) throws IOException
   {
     m_shp.close();
     m_dbf.close();
 
-    if( m_shxNew != null )
-      m_shxNew.close();
+    if( m_shx != null )
+      m_shx.close();
   }
 
   /**
@@ -132,10 +124,10 @@ public class ShapeFile implements Closeable
   {
     final FileMode mode = m_shp.getMode();
 
-    if( m_shxNew == null )
-      m_shxNew = new SHXFile( new File( m_filePath + EXTENSION_SHX ), mode );
+    if( m_shx == null )
+      m_shx = new SHXFile( new File( m_filePath + EXTENSION_SHX ), mode );
 
-    return m_shxNew;
+    return m_shx;
   }
 
   /**
@@ -165,7 +157,7 @@ public class ShapeFile implements Closeable
   }
 
   /**
-   * returns RecNo'th Geometrie <BR>
+   * returns RecNo'th geometry
    */
   public ISHPGeometry getShape( final int recordIndex ) throws IOException
   {

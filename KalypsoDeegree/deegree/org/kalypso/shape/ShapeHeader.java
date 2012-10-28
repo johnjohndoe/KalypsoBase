@@ -116,11 +116,14 @@ public class ShapeHeader
 
     m_shapeType = ShapeType.valueOf( DataUtils.readLEInt( input ) );
 
-    /* Set explicitly to null, else we get (0,0,0,0) as bbox */
+    final SHPEnvelope shpEnvelope = new SHPEnvelope( input );
     if( m_length == SHAPE_FILE_HEADER_LENGTH )
+    {
+      // REMARK: shape file is empty, so explicitly set envelope to null, else we get (0,0,0,0) as bbox */
       m_mbr = null;
+    }
     else
-      m_mbr = new SHPEnvelope( input );
+      m_mbr = shpEnvelope;
 
     m_zRange = new SHPRange( input );
     m_mRange = new SHPRange( input );

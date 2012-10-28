@@ -50,7 +50,7 @@ import org.kalypso.shape.tools.DataUtils;
  */
 class DBFHeader
 {
-  private final int m_numRecords;
+  private int m_numRecords;
 
   private final int m_dataStartPosition;
 
@@ -130,6 +130,11 @@ class DBFHeader
     output.writeByte( (byte)0x0D ); // field terminator
   }
 
+  void setNumRecords( final int numRecords )
+  {
+    m_numRecords = numRecords;
+  }
+
   public int getNumRecords( )
   {
     return m_numRecords;
@@ -140,10 +145,10 @@ class DBFHeader
     return m_dataStartPosition + m_fields.getRecordLength() * recordIndex;
   }
 
-  public void writeNumRecords( final RandomAccessFile raf, final int numberOfRecords ) throws IOException
+  public void writeNumRecords( final RandomAccessFile raf ) throws IOException
   {
     raf.seek( 4 );
-    DataUtils.writeLEInt( raf, numberOfRecords );
+    DataUtils.writeLEInt( raf, m_numRecords );
   }
 
   public DBFFields getFields( )
