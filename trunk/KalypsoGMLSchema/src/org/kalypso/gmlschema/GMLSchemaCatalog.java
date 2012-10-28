@@ -2,7 +2,10 @@ package org.kalypso.gmlschema;
 
 import java.net.URL;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.kalypso.commons.java.lang.Objects;
@@ -22,6 +25,8 @@ import org.kalypso.gmlschema.i18n.Messages;
 public final class GMLSchemaCatalog
 {
   private final IUrlCatalog m_urlCatalog;
+
+  private final Map<String, URL> m_additionalSchemaFiles = new HashMap<>();
 
   private final GMLSchemaCache m_cache;
 
@@ -60,6 +65,9 @@ public final class GMLSchemaCatalog
 
       m_cache.addSchema( schema.getTargetNamespace(), schema, validity, System.currentTimeMillis(), gmlVersion );
 
+      // IMPORTANT: We remember these additional namespaces separately so we can reload them later, if the cache forgets the schema
+      m_additionalSchemaFiles.put( schema.getTargetNamespace(), schemaLocation );
+
       Debug.CATALOG.printf( "Schema successfully loaded and put into the cache. Validity = %s%n", validity ); //$NON-NLS-1$
 
       return schema;
@@ -95,37 +103,18 @@ public final class GMLSchemaCatalog
   {
     Debug.CATALOG.printf( "Trying to retrieve schema from cache for:%n\tnamespace: %s%n\tgmlVersion: %s%n\tschemaLocation: %s%n", namespace, gmlVersion, schemaLocation ); //$NON-NLS-1$
 
-    // HACK: if we are looking for the gml namespace
-    // tweak it and add the version number
-    final URL catalogUrl;
-    final String version;
+    final Pair<URL, String> catalogUrlAndVersion = findLocationAndVersion( namespace, gmlVersion );
 
-    if( namespace.equals( NS.GML2 ) )
-    {
-      if( gmlVersion == null )
-        // if we get here and don't know the version number, we are probably loading
-        // a gml whichs schema is the gml schema directly.
-        // This is only possible for gml3 documents.
-        version = "3.1.1"; //$NON-NLS-1$
-      else
-        version = gmlVersion;
-
-      catalogUrl = m_urlCatalog.getURL( namespace + "#" + version.charAt( 0 ) ); //$NON-NLS-1$
-    }
-    else
-    {
-      catalogUrl = m_urlCatalog.getURL( namespace );
-
-      // HACK: crude hack to enforce GML3 for WFS
-      if( NS.WFS.equals( namespace ) )
-        version = "3.1.1"; //$NON-NLS-1$
-      else
-        version = gmlVersion;
-    }
+    final URL catalogUrl = catalogUrlAndVersion.getKey();
+    final String version = catalogUrlAndVersion.getValue();
 
     Debug.CATALOG.printf( "Determined version and catalogUrl: %s - %s%n", version, catalogUrl ); //$NON-NLS-1$
 
-    final URL schemaUrl = catalogUrl == null ? schemaLocation : catalogUrl;
+    // maybe its a local schema?
+    final URL localOrCatalogURL = lookupLocalLocation( namespace, catalogUrl );
+
+    // Fallback to schemaLocation if
+    final URL schemaUrl = localOrCatalogURL == null ? schemaLocation : localOrCatalogURL;
     if( schemaUrl == null )
       Debug.CATALOG.printf( "No location for namespace: %s - trying to load from cache.%n", namespace ); //$NON-NLS-1$
 
@@ -148,6 +137,46 @@ public final class GMLSchemaCatalog
 
       throw new GMLSchemaException( e );
     }
+  }
+
+  private URL lookupLocalLocation( final String namespace, final URL catalogUrl )
+  {
+    if( catalogUrl != null )
+      return catalogUrl;
+
+    return m_additionalSchemaFiles.get( namespace );
+  }
+
+  private Pair<URL, String> findLocationAndVersion( final String namespace, final String gmlVersion )
+  {
+    // HACK: if we are looking for the gml namespace
+    // tweak it and add the version number
+
+    if( namespace.equals( NS.GML2 ) )
+    {
+      final String version;
+      if( gmlVersion == null )
+        // if we get here and don't know the version number, we are probably loading
+        // a gml whichs schema is the gml schema directly.
+        // This is only possible for gml3 documents.
+        version = "3.1.1"; //$NON-NLS-1$
+      else
+        version = gmlVersion;
+
+      final URL catalogUrl = m_urlCatalog.getURL( namespace + "#" + version.charAt( 0 ) ); //$NON-NLS-1$
+      return Pair.of( catalogUrl, version );
+    }
+
+    final URL catalogUrl = m_urlCatalog.getURL( namespace );
+
+    // HACK: crude hack to enforce GML3 for WFS
+    final String version;
+    if( NS.WFS.equals( namespace ) )
+      version = "3.1.1"; //$NON-NLS-1$
+    else
+      version = gmlVersion;
+
+    return Pair.of( catalogUrl, version );
   }
 
   /**

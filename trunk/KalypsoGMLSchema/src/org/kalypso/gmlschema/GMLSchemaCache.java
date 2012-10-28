@@ -77,7 +77,6 @@ public class GMLSchemaCache
    */
   public synchronized void addSchema( final String namespace, final GMLSchema schema, final Date validity, final long lastModifiedCheck, final String gmlVersion )
   {
-//    final String version = schema.getGMLVersion();
     final String publicId = namespace + "#" + gmlVersion; //$NON-NLS-1$
 
     Debug.CATALOG.printf( "Adding schema to cache: %s", publicId ); //$NON-NLS-1$
