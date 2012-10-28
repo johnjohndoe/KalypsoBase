@@ -45,11 +45,17 @@ import gnu.trove.TIntProcedure;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.kalypso.jts.JTSUtilities;
 
 import com.infomatiq.jsi.SpatialIndex;
 import com.infomatiq.jsi.rtree.RTree;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Polygon;
 
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 
@@ -60,7 +66,9 @@ public class HoverIndex
 {
   private final SpatialIndex m_index = new RTree();
 
-  private final List<EditInfo> m_elements = new ArrayList<>();
+  private final List<Pair<Polygon, EditInfo>> m_elements = new ArrayList<>();
+
+  private GeometryFactory m_factory;
 
   public HoverIndex( )
   {
@@ -69,11 +77,30 @@ public class HoverIndex
 
   public synchronized void addElement( final Rectangle rect, final EditInfo info )
   {
+    final Envelope envelope = new Envelope( rect.x, rect.x + rect.width, rect.y, rect.y + rect.height );
+
+    final Polygon bounds = JTSUtilities.convertEnvelopeToPolygon( envelope, getFactory() );
+
+    addElement( bounds, info );
+  }
+
+  private GeometryFactory getFactory( )
+  {
+    if( m_factory == null )
+      m_factory = new GeometryFactory();
+
+    return m_factory;
+  }
+
+  public synchronized void addElement( final Polygon bounds, final EditInfo info )
+  {
     final int id = m_elements.size();
 
-    m_elements.add( info );
+    m_elements.add( Pair.of( bounds, info ) );
 
-    final com.infomatiq.jsi.Rectangle jsiRect = new com.infomatiq.jsi.Rectangle( rect.x, rect.y, rect.x + rect.width, rect.y + rect.height );
+    final Envelope envelope = bounds.getEnvelopeInternal();
+
+    final com.infomatiq.jsi.Rectangle jsiRect = new com.infomatiq.jsi.Rectangle( (float)envelope.getMinX(), (float)envelope.getMinY(), (float)envelope.getMaxX(), (float)envelope.getMaxY() );
     m_index.add( jsiRect, id );
   }
 
@@ -81,17 +108,17 @@ public class HoverIndex
   {
     final com.infomatiq.jsi.Point searchPoint = new com.infomatiq.jsi.Point( pos.x, pos.y );
 
-    final List<EditInfo> result = new ArrayList<>( 1 );
+    final List<Pair<Polygon, EditInfo>> result = new ArrayList<>( 1 );
     result.add( null );
 
-    final List<EditInfo> elements = m_elements;
+    final List<Pair<Polygon, EditInfo>> elements = m_elements;
 
     final TIntProcedure receiver = new TIntProcedure()
     {
       @Override
       public boolean execute( final int index )
       {
-        final EditInfo element = elements.get( index );
+        final Pair<Polygon, EditInfo> element = elements.get( index );
         result.set( 0, element );
         return false;
       }
@@ -100,11 +127,18 @@ public class HoverIndex
     // REMARK: use snap distance 0, we assume that the given rectangle was already including a 'snap'
     m_index.nearest( searchPoint, receiver, 0f );
 
-    final EditInfo info = result.get( 0 );
-    if( info == null )
+    final Pair<Polygon, EditInfo> pair = result.get( 0 );
+    if( pair == null )
       return null;
 
-    /* Position was not set during paint... */
+    final Polygon bounds = pair.getLeft();
+    final com.vividsolutions.jts.geom.Point searchLocation = bounds.getFactory().createPoint( new Coordinate( pos.x, pos.y ) );
+    if( !bounds.contains( searchLocation ) )
+      return null;
+
+    /* Exact position was not set during creation of info..., so we set it now */
+    final EditInfo info = pair.getRight();
+
     return new EditInfo( info.getLayer(), info.getHoverFigure(), info.getEditFigure(), info.getData(), info.getText(), pos );
   }
 }
