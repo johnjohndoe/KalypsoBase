@@ -55,7 +55,6 @@ import de.openali.odysseus.chart.framework.model.layer.ILegendEntry;
  */
 public class ChartEditorTreeContentProvider implements ITreeContentProvider
 {
-
   private IChartModel m_model = null;
 
   public ChartEditorTreeContentProvider( )
@@ -66,10 +65,9 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
   @Override
   public Object[] getChildren( final Object element )
   {
-
     if( element instanceof ILayerContainer )
     {
-      final ILayerContainer container = (ILayerContainer) element;
+      final ILayerContainer container = (ILayerContainer)element;
       final ILayerManager layerManager = container.getLayerManager();
 
       final IChartLayer[] layers = layerManager.getLayers();
@@ -83,28 +81,25 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
   public Object getParent( final Object element )
   {
     if( element instanceof IChartLayer )
-      return findParent( m_model, m_model.getLayerManager().getLayers(), (IChartLayer) element );
+      return findParent( m_model, m_model.getLayerManager().getLayers(), (IChartLayer)element );
     if( element instanceof ILegendEntry )
-      return ((ILegendEntry) element).getParentLayer();
+      return ((ILegendEntry)element).getParentLayer();
 
     return null;
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
-   */
   @Override
   public boolean hasChildren( final Object element )
   {
     if( element instanceof IChartModel )
     {
-      final IChartModel model = (IChartModel) element;
+      final IChartModel model = (IChartModel)element;
 
       return model.getLayerManager().getLayers().length > 0;
     }
     else if( element instanceof IChartLayer )
     {
-      final IChartLayer layer = (IChartLayer) element;
+      final IChartLayer layer = (IChartLayer)element;
 
       return ArrayUtils.isNotEmpty( layer.getLayerManager().getLayers() );
     }
@@ -136,7 +131,7 @@ public class ChartEditorTreeContentProvider implements ITreeContentProvider
 
     if( newInput instanceof IChartModel )
     {
-      m_model = (IChartModel) newInput;
+      m_model = (IChartModel)newInput;
     }
   }
 
