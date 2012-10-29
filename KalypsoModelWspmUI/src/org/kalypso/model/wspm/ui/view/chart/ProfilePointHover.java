@@ -63,7 +63,9 @@ public class ProfilePointHover
       if( screen == null )
         continue;
 
-      final Rectangle hover = RectangleUtils.buffer( screen, 5 );
+      final int width = m_hoverStyle.getWidth();
+
+      final Rectangle hover = RectangleUtils.buffer( screen, width );
 
       if( hover.contains( pos ) )
       {
