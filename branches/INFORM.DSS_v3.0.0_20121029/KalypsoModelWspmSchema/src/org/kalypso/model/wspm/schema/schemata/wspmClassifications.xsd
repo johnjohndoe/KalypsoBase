@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file is part of Kalypso
+
+  Copyright (c) 2008 by
+
+  Björnsen Beratende Ingenieure GmbH, Koblenz, Germany (Bjoernsen Consulting Engineers), http://www.bjoernsen.de
+  Technische Universität Hamburg-Harburg, Institut für Wasserbau, Hamburg, Germany
+  (Technical University Hamburg-Harburg, Institute of River and Coastal Engineering), http://www.tu-harburg.de/wb/
+
+  Kalypso is free software: you can redistribute it and/or modify it under the terms
+  of the GNU Lesser General Public License (LGPL) as published by the Free Software
+  Foundation, either version 3 of the License, or (at your option) any later version.
+
+  Kalypso is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public
+  License along with Kalypso. If not, see <http://www.gnu.org/licenses/>.
+-->
+<schema xmlns:gml="http://www.opengis.net/gml" xmlns:common="org.kalypso.gml.common" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wspmClasses="org.kalypso.model.wspm.classifications" targetNamespace="org.kalypso.model.wspm.classifications" elementFormDefault="qualified" version="0.1">
+
+  <import namespace="http://www.opengis.net/gml" />
+  <import namespace="org.kalypso.gml.common" />
+
+  <element name="classificationMember" type="wspmClasses:ClassificationMemberPropertyType" />
+  <complexType name="ClassificationMemberPropertyType">
+    <sequence>
+      <element ref="wspmClasses:WspmClassification" />
+    </sequence>
+  </complexType>
+
+  <element name="WspmClassification" type="wspmClasses:ClassificationType" substitutionGroup="gml:_Feature" />
+  <complexType name="ClassificationType">
+    <complexContent>
+      <extension base="gml:AbstractFeatureType">
+        <sequence>
+          <element name="roughnessClasses" minOccurs="0" maxOccurs="unbounded">
+            <complexType>
+              <sequence minOccurs="0">
+                <element ref="wspmClasses:RoughnessClass" minOccurs="0" maxOccurs="1" />
+              </sequence>
+            </complexType>
+          </element>
+
+          <element name="vegetationClasses" minOccurs="0" maxOccurs="unbounded">
+            <complexType>
+              <sequence minOccurs="0">
+                <element ref="wspmClasses:VegetationClass" minOccurs="0" maxOccurs="1" />
+              </sequence>
+            </complexType>
+          </element>
+
+          <element name="codeClasses" minOccurs="0" maxOccurs="unbounded">
+            <complexType>
+              <sequence minOccurs="0">
+                <element ref="wspmClasses:CodeClass" minOccurs="0" maxOccurs="1" />
+              </sequence>
+            </complexType>
+          </element>
+
+          <element name="partType" minOccurs="0" maxOccurs="unbounded">
+            <complexType>
+              <sequence minOccurs="0">
+                <element ref="wspmClasses:PartType" minOccurs="0" maxOccurs="1" />
+              </sequence>
+            </complexType>
+          </element>
+
+          <element name="styleDefinition" minOccurs="0" maxOccurs="unbounded">
+            <complexType>
+              <sequence minOccurs="0">
+                <element ref="wspmClasses:StyleDefinition" minOccurs="0" maxOccurs="1" />
+              </sequence>
+            </complexType>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <element name="AbstractClassification" type="wspmClasses:AbstractClassificationType" substitutionGroup="gml:_Feature" />
+  <complexType name="AbstractClassificationType">
+    <complexContent>
+      <extension base="gml:AbstractFeatureType">
+        <sequence>
+          <element type="string" name="comment" minOccurs="0" />
+          <element type="common:color" name="color" />
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <element name="RoughnessClass" substitutionGroup="wspmClasses:AbstractClassification">
+    <complexType>
+      <complexContent>
+        <extension base="wspmClasses:AbstractClassificationType">
+          <sequence>
+            <element type="decimal" name="ksValue" />
+            <element type="decimal" name="kstValue" />
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <element name="VegetationClass" substitutionGroup="wspmClasses:AbstractClassification">
+    <complexType>
+      <complexContent>
+        <extension base="wspmClasses:AbstractClassificationType">
+          <sequence>
+            <element type="decimal" name="ax" />
+            <element type="decimal" name="ay" />
+            <element type="decimal" name="dp" />
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <element name="CodeClass" substitutionGroup="wspmClasses:AbstractClassification">
+    <complexType>
+      <complexContent>
+        <extension base="wspmClasses:AbstractClassificationType">
+          <sequence>
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <element name="PartType" substitutionGroup="gml:_Feature">
+    <complexType>
+      <complexContent>
+        <extension base="gml:AbstractFeatureType">
+          <sequence>
+            <element name="comment" type="string" minOccurs="0"/>
+            <element name="styleMember">
+              <complexType>
+                <sequence>
+                  <element ref="wspmClasses:StyleDefinition" minOccurs="0" maxOccurs="0" />
+                </sequence>
+                <attributeGroup ref="gml:AssociationAttributeGroup" />
+              </complexType>
+            </element>
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <element name="StyleDefinition" substitutionGroup="gml:_Feature">
+    <complexType>
+      <complexContent>
+        <extension base="gml:AbstractFeatureType">
+          <sequence>
+            <element name="styleMember" minOccurs="0" maxOccurs="unbounded">
+              <complexType>
+                <sequence>
+                  <element ref="wspmClasses:Style" />
+                </sequence>
+              </complexType>
+            </element>
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <element name="Style" substitutionGroup="gml:_Feature">
+    <complexType>
+      <complexContent>
+        <extension base="gml:AbstractFeatureType">
+          <sequence>
+            <element name="parameterMember" minOccurs="0" maxOccurs="unbounded">
+              <complexType>
+                <sequence>
+                  <element ref="wspmClasses:StyleParameter" />
+                </sequence>
+              </complexType>
+            </element>
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+
+  <element name="StyleParameter" substitutionGroup="gml:_Feature">
+    <complexType>
+      <complexContent>
+        <extension base="gml:AbstractFeatureType">
+          <sequence>
+            <element name="key" type="string" minOccurs="1" maxOccurs="1" />
+            <element name="value" type="string" minOccurs="1" maxOccurs="1" />
+          </sequence>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+</schema>
