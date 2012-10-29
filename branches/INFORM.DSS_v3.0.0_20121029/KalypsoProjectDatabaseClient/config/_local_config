@@ -1,7 +1,0 @@
-# example url: String url = "webdav://planer:client@dev.bjoernsen.de/webdav/incoming/test.zip";
-org.kalypso.project.database.incoming.path=ftp://localhost/planerclient/incoming/
-org.kalypso.project.database.project.path=ftp://localhost/planerclient/projects/
-
-org.kalypso.project.database.server.wsdl=http://localhost:8080/projectdb?wsdl
-
-org.kalypso.project.database.server.handle.remote=true
