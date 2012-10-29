@@ -18,6 +18,8 @@
  */
 package org.kalypso.model.wspm.ui.view.chart;
 
+import org.eclipse.swt.graphics.RGB;
+
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINECAP;
@@ -44,8 +46,8 @@ public final class ProfileStyleUtils
     final IPointStyle hoverStyle = style.clone();
 
     /* double size, less transparent */
-    hoverStyle.setWidth( style.getWidth() * 2 );
-    hoverStyle.setHeight( style.getHeight() * 2 );
+    hoverStyle.setWidth( style.getWidth() + 3 );
+    hoverStyle.setHeight( style.getHeight() + 3 );
 
     hoverStyle.setAlpha( Math.max( 255, style.getAlpha() * 2 ) );
 
@@ -55,11 +57,13 @@ public final class ProfileStyleUtils
     final ILineStyle hoverStroke = stroke.clone();
     hoverStroke.setDash( 0.0f, null );
     hoverStroke.setAlpha( Math.max( 255, stroke.getAlpha() * 2 ) );
+    hoverStroke.setWidth( stroke.getWidth() + 1 );
 
     hoverStyle.setStroke( hoverStroke );
 
     /* empty fill */
-    hoverStyle.setFillVisible( false );
+    hoverStyle.setFillVisible( true );
+    hoverStyle.setInlineColor( new RGB( 255, 255, 255 ) );
 
     return hoverStyle;
   }
