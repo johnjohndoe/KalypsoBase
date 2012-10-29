@@ -60,15 +60,15 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypsodeegree.model.feature.Feature;
+import org.kalypsodeegree.model.geometry.GM_AbstractGeometry;
+import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_MultiPrimitive;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_AbstractGeometry;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathException;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPathUtilities;
@@ -95,13 +95,13 @@ public class MapUtils
 
     if( feature == null )
       return;
-    final GM_Object geom = (GM_Object) feature.getProperty( geomQName );
+    final GM_Object geom = (GM_Object)feature.getProperty( geomQName );
     if( geom == null )
       return;
 
     final int smallRect = 10;
     final Point nodePoint = MapUtilities.retransform( panel, geom.getCentroid() );
-    g.drawRect( (int) nodePoint.getX() - smallRect, (int) nodePoint.getY() - smallRect, smallRect * 2, smallRect * 2 );
+    g.drawRect( (int)nodePoint.getX() - smallRect, (int)nodePoint.getY() - smallRect, smallRect * 2, smallRect * 2 );
   }
 
   public static void removeFeature( final CommandableWorkspace workspace, final IMapPanel panel, final Feature[] selectedFeatures ) throws Exception
@@ -126,8 +126,8 @@ public class MapUtils
 
   public static void paintGrabbedFeature( final Graphics g, final IMapPanel panel, final Feature feature, final GMLXPath geometryPath )
   {
-    final Graphics2D g2 = (Graphics2D) g;
-    final BasicStroke oldStroke = (BasicStroke) g2.getStroke();
+    final Graphics2D g2 = (Graphics2D)g;
+    final BasicStroke oldStroke = (BasicStroke)g2.getStroke();
     final Color oldColor = g2.getColor();
 
     final BasicStroke newStroke = new BasicStroke( 3 );
@@ -170,18 +170,17 @@ public class MapUtils
     g2.setColor( oldColor );
   }
 
-  @SuppressWarnings("unchecked")
   private static void paintGrabbedGeometry( final IMapPanel panel, final Graphics2D g2, final GM_Object geom ) throws GM_Exception
   {
     if( geom instanceof GM_Point )
-      paintGrabbedPoint( panel, g2, (GM_Point) geom );
+      paintGrabbedPoint( panel, g2, (GM_Point)geom );
     else if( geom instanceof GM_Curve )
-      paintGrabbedCurve( panel, g2, (GM_Curve) geom );
+      paintGrabbedCurve( panel, g2, (GM_Curve)geom );
     else if( geom instanceof GM_Polygon )
-      drawGrabbedSurface( panel, g2, (GM_Polygon) geom );
+      drawGrabbedSurface( panel, g2, (GM_Polygon)geom );
     else if( geom instanceof GM_MultiPrimitive )
     {
-      final GM_MultiPrimitive multi = (GM_MultiPrimitive) geom;
+      final GM_MultiPrimitive multi = (GM_MultiPrimitive)geom;
       final GM_AbstractGeometry[] allPrimitives = multi.getAllPrimitives();
       for( final GM_AbstractGeometry primitive : allPrimitives )
         paintGrabbedGeometry( panel, g2, primitive );
@@ -192,7 +191,7 @@ public class MapUtils
 
   private static void drawGrabbedSurface( final IMapPanel panel, final Graphics2D g2, final GM_Polygon surface )
   {
-    final GM_AbstractSurfacePatch patch = surface.get( 0 );
+    final GM_AbstractSurfacePatch patch = surface.getSurfacePatch();
 
     final String crs = surface.getCoordinateSystem();
     final GM_Position[] positions = patch.getExteriorRing();
@@ -233,6 +232,6 @@ public class MapUtils
     final int smallRect = 10;
 
     final Point screenPoint = MapUtilities.retransform( panel, point );
-    g2.drawRect( (int) screenPoint.getX() - smallRect, (int) screenPoint.getY() - smallRect, smallRect * 2, smallRect * 2 );
+    g2.drawRect( (int)screenPoint.getX() - smallRect, (int)screenPoint.getY() - smallRect, smallRect * 2, smallRect * 2 );
   }
 }

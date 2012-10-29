@@ -43,14 +43,13 @@ import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.model.coverage.GridRange;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Class which holds the GridDomainData of a RectifiedGridCoverage
- *
+ * 
  * @author N. Peiler
  */
 public class RectifiedGridDomain
@@ -114,7 +113,7 @@ public class RectifiedGridDomain
 
   /**
    * constructs a RectifiedGridDomain with the given origin, offset and gridRange
-   *
+   * 
    * @param origin
    * @param offset
    * @param gridRange
@@ -157,7 +156,7 @@ public class RectifiedGridDomain
       return surface;
 
     final IGeoTransformer geoTrans = GeoTransformerFactory.getGeoTransformer( cs );
-    return (GM_Polygon) geoTrans.transform( surface );
+    return (GM_Polygon)geoTrans.transform( surface );
   }
 
   public String getCoordinateSystem( )
@@ -171,7 +170,7 @@ public class RectifiedGridDomain
       return m_origin;
 
     final IGeoTransformer geoTrans = GeoTransformerFactory.getGeoTransformer( cs );
-    return (GM_Point) geoTrans.transform( m_origin );
+    return (GM_Point)geoTrans.transform( m_origin );
   }
 
   /**
@@ -262,25 +261,25 @@ public class RectifiedGridDomain
     if( m_offsetY.getGeoX() != 0.0 )
       System.out.println( "OffsetY-Vector is not cartesian!" );
 
-    int lowX = (int) getGridRange().getLow()[0];
-    int lowY = (int) getGridRange().getLow()[1];
+    int lowX = (int)getGridRange().getLow()[0];
+    int lowY = (int)getGridRange().getLow()[1];
 
     final GM_Envelope envelope = getGM_Envelope( cs );
     final GM_Position origin = envelope.getMin();
 
     if( env.getMin().getX() - origin.getX() > 0 )
-      lowX = (int) ((env.getMin().getX() - origin.getX()) / getOffsetX( cs ));
+      lowX = (int)((env.getMin().getX() - origin.getX()) / getOffsetX( cs ));
 
     if( env.getMin().getY() - origin.getY() > 0 )
-      lowY = (int) ((env.getMin().getY() - origin.getY()) / getOffsetY( cs ));
+      lowY = (int)((env.getMin().getY() - origin.getY()) / getOffsetY( cs ));
 
-    int highX = (int) ((env.getMax().getX() - origin.getX()) / getOffsetX( cs ));
-    if( highX > (int) getGridRange().getHigh()[0] )
-      highX = (int) getGridRange().getHigh()[0];
+    int highX = (int)((env.getMax().getX() - origin.getX()) / getOffsetX( cs ));
+    if( highX > (int)getGridRange().getHigh()[0] )
+      highX = (int)getGridRange().getHigh()[0];
 
-    int highY = Math.abs( (int) ((env.getMax().getY() - origin.getY()) / getOffsetY( cs )) );
-    if( highY > (int) getGridRange().getHigh()[1] )
-      highY = (int) getGridRange().getHigh()[1];
+    int highY = Math.abs( (int)((env.getMax().getY() - origin.getY()) / getOffsetY( cs )) );
+    if( highY > (int)getGridRange().getHigh()[1] )
+      highY = (int)getGridRange().getHigh()[1];
 
     final int[] gridExtent = new int[] { lowX, lowY, highX, highY };
 

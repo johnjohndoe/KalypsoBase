@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.io.sax.marshaller;
 
-import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -62,5 +61,4 @@ public class PolygonMemberMarshaller extends AbstractMarshaller<GM_Polygon>
   {
     new PolygonMarshaller( getXMLReader() ).marshall( marshalledObject );
   }
-
 }

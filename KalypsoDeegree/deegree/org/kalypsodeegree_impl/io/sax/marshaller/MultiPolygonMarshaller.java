@@ -44,7 +44,6 @@ import java.util.Iterator;
 
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.tools.GMLConstants;
 import org.xml.sax.SAXException;
@@ -52,7 +51,7 @@ import org.xml.sax.XMLReader;
 
 /**
  * A marshaller for gml:Exterior. It delegates the marshalling to the corresponding gml:LinearRing elements marshallers.
- *
+ * 
  * @author Felipe Maximino
  */
 public class MultiPolygonMarshaller extends GeometryMarshaller<GM_MultiSurface>
@@ -69,7 +68,7 @@ public class MultiPolygonMarshaller extends GeometryMarshaller<GM_MultiSurface>
   {
     for( final Iterator<GM_Object> it = marshalledObject.getIterator(); it.hasNext(); )
     {
-      final GM_Polygon object = (GM_Polygon) it.next();
+      final GM_Polygon object = (GM_Polygon)it.next();
       new PolygonMemberMarshaller( getXMLReader() ).marshall( object );
     }
   }

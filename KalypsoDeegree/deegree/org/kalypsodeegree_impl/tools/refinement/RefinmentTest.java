@@ -3,7 +3,6 @@ package org.kalypsodeegree_impl.tools.refinement;
 import junit.framework.TestCase;
 
 import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.model.geometry.GM_Curve;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -20,8 +19,6 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  */
 public class RefinmentTest extends TestCase
 {
-
-  @SuppressWarnings( "unchecked" )
   public void testLoadResults( ) throws Exception
   {
     final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();

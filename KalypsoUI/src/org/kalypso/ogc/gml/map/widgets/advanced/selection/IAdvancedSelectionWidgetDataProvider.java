@@ -44,7 +44,6 @@ import org.kalypso.ogc.gml.map.widgets.advanced.IAdvancedWidgetChangeListener;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidget.EDIT_MODE;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 
 /**
  * @author Dirk Kuch

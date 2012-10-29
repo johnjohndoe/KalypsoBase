@@ -55,7 +55,7 @@ import org.xml.sax.XMLReader;
  * <p>
  * Parsing must hence start with the gml:PolygonPatch element.
  * </p>
- *
+ * 
  * @author Felipe Maximino
  */
 public class PolygonPatchContentHandler extends GMLElementContentHandler implements IRingHandler
@@ -86,7 +86,7 @@ public class PolygonPatchContentHandler extends GMLElementContentHandler impleme
 
     try
     {
-      final GM_PolygonPatch polygon = (GM_PolygonPatch) GeometryFactory.createGM_PolygonPatch( m_ring, null, crs );
+      final GM_PolygonPatch polygon = GeometryFactory.createGM_PolygonPatch( m_ring, null, crs );
       m_polygonHandler.handle( polygon );
     }
     catch( final GM_Exception e )

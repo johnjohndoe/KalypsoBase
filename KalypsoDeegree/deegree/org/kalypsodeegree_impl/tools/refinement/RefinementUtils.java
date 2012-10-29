@@ -109,7 +109,6 @@ public final class RefinementUtils
    * splits a given surface into several surfaces by a line given by its positions at the intersection point(s) with the
    * surface
    */
-  @SuppressWarnings( "unchecked" )
   public static GM_Polygon[] splitPolygonbyLine( final GM_Position[] patchPoses, final GM_Position[] linePoses, final String crs ) throws GM_Exception
   {
     final List<GM_Polygon> surfaceList = new ArrayList<>();

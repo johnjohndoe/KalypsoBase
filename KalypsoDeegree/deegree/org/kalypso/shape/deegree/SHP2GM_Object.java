@@ -51,9 +51,8 @@ import org.kalypsodeegree.model.geometry.GM_CurveSegment;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
@@ -72,7 +71,7 @@ import com.vividsolutions.jts.geom.LinearRing;
  * 21.03.2000 ap: method: transformMultiPoint(..) declared and implemented <BR>
  * 21.03.2000 ap: method: transformPolyLine(..) declared and implemented <BR>
  * <!------------------------------------------------------------------------>
- *
+ * 
  * @version 21.03.2000
  * @author Andreas Poth
  */
@@ -263,11 +262,11 @@ public final class SHP2GM_Object
       return null;
 
     if( shpGeom instanceof ISHPPoint )
-      return SHP2GM_Object.transformPoint( crs, (ISHPPoint) shpGeom );
+      return SHP2GM_Object.transformPoint( crs, (ISHPPoint)shpGeom );
 
     if( shpGeom instanceof ISHPMultiPoint )
     {
-      final GM_Point[] points = SHP2GM_Object.transformMultiPoint( crs, (ISHPMultiPoint) shpGeom );
+      final GM_Point[] points = SHP2GM_Object.transformMultiPoint( crs, (ISHPMultiPoint)shpGeom );
       if( points == null )
         return null;
 
@@ -276,7 +275,7 @@ public final class SHP2GM_Object
 
     if( shpGeom instanceof ISHPPolyLine )
     {
-      final GM_Curve[] curves = SHP2GM_Object.transformPolyLine( crs, (ISHPPolyLine) shpGeom );
+      final GM_Curve[] curves = SHP2GM_Object.transformPolyLine( crs, (ISHPPolyLine)shpGeom );
       if( curves == null )
         return null;
 
@@ -285,7 +284,7 @@ public final class SHP2GM_Object
 
     if( shpGeom instanceof ISHPPolygon )
     {
-      final GM_Polygon[] polygons = SHP2GM_Object.transformPolygon( crs, (ISHPPolygon) shpGeom );
+      final GM_Polygon[] polygons = SHP2GM_Object.transformPolygon( crs, (ISHPPolygon)shpGeom );
       if( polygons == null || polygons.length <= 0 )
         return null;
 

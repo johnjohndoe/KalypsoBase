@@ -15,8 +15,6 @@ import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 
 public class BooleanAxis extends AbstractAxis<Boolean>
 {
-  @SuppressWarnings( "unchecked" )
- // private final IDataOperator<Boolean> m_dataOperator=new BooleanDataOperator( new ComparableComparator() );
   /**
    * TODO: TICK_CALCULATOR is used by BooleanAxisRendererProvider and BooleanAxis. Why?
    */
@@ -31,7 +29,7 @@ public class BooleanAxis extends AbstractAxis<Boolean>
 
   public BooleanAxis( final String id, final POSITION pos )
   {
-    this( id, pos, new ExtendedAxisRenderer( id + "_RENDERER", pos, new BooleanLabelCreator(), TICK_CALCULATOR, new AxisRendererConfig() ));//$NON-NLS-1$
+    this( id, pos, new ExtendedAxisRenderer( id + "_RENDERER", pos, new BooleanLabelCreator(), TICK_CALCULATOR, new AxisRendererConfig() ) );//$NON-NLS-1$
   }
 
   public BooleanAxis( final String id, final POSITION pos, final AxisRendererConfig config )
@@ -51,13 +49,13 @@ public class BooleanAxis extends AbstractAxis<Boolean>
   }
 
   @Override
-  public Double logicalToNumeric( Boolean value )
+  public Double logicalToNumeric( final Boolean value )
   {
     return getDataOperator().logicalToNumeric( value );
   }
 
   @Override
-  public Boolean numericToLogical( Double value )
+  public Boolean numericToLogical( final Double value )
   {
     return getDataOperator().numericToLogical( value );
   }
