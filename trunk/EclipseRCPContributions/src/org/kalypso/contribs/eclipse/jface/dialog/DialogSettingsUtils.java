@@ -180,4 +180,13 @@ public final class DialogSettingsUtils
 
     return value;
   }
+
+  /**
+   * Returns <code>true</code>, if the given settings has a value for the given key.
+   */
+  public static boolean hasSetting( final IDialogSettings settings, final String key )
+  {
+    final String value = settings.get( key );
+    return value != null;
+  }
 }
