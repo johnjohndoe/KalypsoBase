@@ -60,6 +60,7 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MenuDetectEvent;
 import org.eclipse.swt.events.MenuDetectListener;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
@@ -104,7 +105,7 @@ public class WorkflowBreadcrumbViewer extends BreadcrumbViewer
 
     final IServiceLocator locator = view.getSite();
 
-    final IMenuService menuService = (IMenuService) locator.getService( IMenuService.class );
+    final IMenuService menuService = (IMenuService)locator.getService( IMenuService.class );
     menuService.populateContributionManager( m_itemMenuManager, "popup:org.kalypso.afgui.breadcrumbs" );
 
     hookListeners();
@@ -114,7 +115,7 @@ public class WorkflowBreadcrumbViewer extends BreadcrumbViewer
   {
     final IWorkbench workbench = PlatformUI.getWorkbench();
 
-    final IMenuService menuService = (IMenuService) workbench.getService( IMenuService.class );
+    final IMenuService menuService = (IMenuService)workbench.getService( IMenuService.class );
     menuService.releaseContributions( m_itemMenuManager );
 
     m_itemMenuManager.dispose();
@@ -136,7 +137,7 @@ public class WorkflowBreadcrumbViewer extends BreadcrumbViewer
       @Override
       public void menuDetected( final MenuDetectEvent e )
       {
-        final Object menuSelection = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
+        final Object menuSelection = ((IStructuredSelection)viewer.getSelection()).getFirstElement();
         handleItemMenuDetected( e, menuSelection );
       }
     } );
@@ -149,7 +150,7 @@ public class WorkflowBreadcrumbViewer extends BreadcrumbViewer
       @Override
       public void menuSelect( final MenuSelectionEvent event )
       {
-        final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+        final IStructuredSelection selection = (IStructuredSelection)event.getSelection();
         handleMenuSelection( selection );
       }
     } );
@@ -227,7 +228,7 @@ public class WorkflowBreadcrumbViewer extends BreadcrumbViewer
 
     if( firstElement instanceof IScenario )
     {
-      ScenarioHelper.activateScenario2( shell, (IScenario) firstElement );
+      ScenarioHelper.activateScenario2( shell, (IScenario)firstElement );
     }
     else if( firstElement instanceof String )
     {
@@ -239,6 +240,10 @@ public class WorkflowBreadcrumbViewer extends BreadcrumbViewer
 
   public void setScenario( final IScenario scenario )
   {
+    final Control control = getControl();
+    if( control == null || control.isDisposed() )
+      return;
+
     if( scenario == null )
       setInput( Messages.getString( "org.kalypso.afgui.views.WorkflowView.0" ) ); //$NON-NLS-1$
     else
