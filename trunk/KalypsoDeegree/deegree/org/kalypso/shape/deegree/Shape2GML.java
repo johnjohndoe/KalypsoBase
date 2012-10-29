@@ -91,7 +91,7 @@ public final class Shape2GML
 
   public static ShapeCollection convertShp2Gml( final String featureTypeKey, final ShapeFile shape, final String shapeSRS, final IProgressMonitor monitor ) throws Exception
   {
-    System.out.format( "%s: %s%n", shape.getFileBase(), featureTypeKey );
+    // System.out.format( "%s: %s%n", shape.getFileBase(), featureTypeKey );
 
     final int count = shape.getNumRecords();
 
