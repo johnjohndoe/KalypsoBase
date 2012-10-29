@@ -1,0 +1,4 @@
+org.kalypso.ui/debug/featurecomposite/operations = false
+org.kalypso.ui/debug/wms = false
+org.kalypso.ui/debug/propertytester = false
+org.kalypso.ui/debug/advanced/edit/widget = false
