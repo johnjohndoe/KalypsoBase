@@ -61,7 +61,6 @@ import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree.xml.XMLTools;
 import org.kalypsodeegree_impl.graphics.displayelements.DisplayElementFactory;
 import org.kalypsodeegree_impl.graphics.sld.SLDFactory;
@@ -141,7 +140,7 @@ public abstract class AbstractAdvancedSelectionWidgetDelegate implements IAdvanc
     final Geometry geometry = JTSAdapter.export( point );
     final Geometry buffer = geometry.buffer( 0.1 );
 
-    return (GM_Polygon) JTSAdapter.wrap( buffer );
+    return (GM_Polygon)JTSAdapter.wrap( buffer );
   }
 
   protected void highlightUnderlyingGeometries( final Feature[] features, final Graphics g, final EDIT_MODE mode )

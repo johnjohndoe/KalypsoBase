@@ -55,7 +55,6 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
     super.dispose();
   }
 
-  @SuppressWarnings( { "unchecked", "rawtypes" } )
   @Override
   public IDataRange<Double> getDomainRange( )
   {

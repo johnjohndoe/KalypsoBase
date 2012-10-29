@@ -67,16 +67,14 @@ import org.kalypsodeegree.model.geometry.GM_MultiSurface;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Does the labeling, i.e. creates (screen) <tt>Label</tt> representations from <tt>LabelDisplayElement</tt>s.
  * <p>
- * Different geometry-types (of the LabelDisplayElement) imply different strategies concerning the way the
- * <tt>Labels</tt> are generated.
+ * Different geometry-types (of the LabelDisplayElement) imply different strategies concerning the way the <tt>Labels</tt> are generated.
  * <p>
- *
+ * 
  * @author <a href="mailto:mschneider@lat-lon.de">Markus Schneider </a>
  * @version $Revision$ $Date$
  */
@@ -170,7 +168,7 @@ public class LabelFactory
   private Label[] createLabels( final Feature feature, final String caption, final GM_Object geometry, final java.awt.Font font, final Color color, final LineMetrics metrics, final Dimension bounds ) throws FilterEvaluationException, GM_Exception
   {
     if( geometry instanceof GM_Point )
-      return createPointLabels( feature, caption, (GM_Point) geometry, font, color, metrics, bounds );
+      return createPointLabels( feature, caption, (GM_Point)geometry, font, color, metrics, bounds );
 
     if( geometry instanceof GM_Curve || geometry instanceof GM_MultiCurve )
       return createCurveLabels( feature, caption, geometry, font, color, metrics, bounds );
@@ -204,10 +202,10 @@ public class LabelFactory
     final GM_Object intersection = screenSurface.intersection( geometry );
 
     if( intersection instanceof GM_Curve )
-      return createCurveLabels( feature, caption, (GM_Curve) intersection, font, color, metrics, bounds );
+      return createCurveLabels( feature, caption, (GM_Curve)intersection, font, color, metrics, bounds );
 
     if( intersection instanceof GM_MultiCurve )
-      return createMultiCurveLabels( feature, caption, (GM_MultiCurve) intersection, font, color, metrics, bounds );
+      return createMultiCurveLabels( feature, caption, (GM_MultiCurve)intersection, font, color, metrics, bounds );
 
     return EMPTY_LABELS;
   }
@@ -302,7 +300,7 @@ public class LabelFactory
    * Determines positions on the given <tt>GM_MultiCurve</tt> where a caption could be drawn. For each of this positons,
    * three candidates are produced; one on the line, one above of it and one below.
    * <p>
-   *
+   * 
    * @param multiCurve
    * @param element
    * @param g
@@ -326,7 +324,7 @@ public class LabelFactory
   /**
    * Determines positions on the given <tt>GM_Curve</tt> where a caption could be drawn. For each of this positons,
    * three candidates are produced; one on the line, one above of it and one below.
-   *
+   * 
    * @param curve
    * @param element
    * @param g
@@ -371,7 +369,7 @@ public class LabelFactory
     final double delta = labelHeight / 2.0 + lineWidth / 2.0;
 
     // walk along the linestring and "collect" possible placement positions
-    final int w = (int) labelWidth;
+    final int w = (int)labelWidth;
     int lastX = pos[0][0];
     int lastY = pos[1][0];
     int boxStartX = lastX;
@@ -420,7 +418,7 @@ public class LabelFactory
         final double[] displacement = calculateDisplacement( placementType, 0.0, perpendicularOffset, delta, deviation );
         final double[] anchorPoint = DEFAULT_POINT_ANCHOR;
 
-        final Label label = createLabel( caption, font, color, metrics, feature, (int) (boxStartX + radius), boxStartY, size, rotation, anchorPoint, displacement );
+        final Label label = createLabel( caption, font, color, metrics, feature, (int)(boxStartX + radius), boxStartY, size, rotation, anchorPoint, displacement );
         labels.add( label );
 
         boxStartX = lastX;
@@ -491,10 +489,9 @@ public class LabelFactory
    * Calculates the maximum deviation that points on a linestring have to the ideal line between the starting point and
    * the end point.
    * <p>
-   * The ideal line is thought to be running from left to right, the left deviation value generally is above the line,
-   * the right value is below.
+   * The ideal line is thought to be running from left to right, the left deviation value generally is above the line, the right value is below.
    * <p>
-   *
+   * 
    * @param start
    *          starting point of the linestring
    * @param end
@@ -538,10 +535,10 @@ public class LabelFactory
       // label orientation is not completely horizontal
       for( final int[] point : points )
       {
-        final double u = ((double) end[1] - (double) start[1]) / ((double) end[0] - (double) start[0]);
-        final double x = (u * u * start[0] - u * ((double) start[1] - (double) point[1]) + point[0]) / (1.0 + u * u);
+        final double u = ((double)end[1] - (double)start[1]) / ((double)end[0] - (double)start[0]);
+        final double x = (u * u * start[0] - u * ((double)start[1] - (double)point[1]) + point[0]) / (1.0 + u * u);
         final double y = (x - start[0]) * u + start[1];
-        final double d = getDistance( point, new int[] { (int) (x + 0.5), (int) (y + 0.5) } );
+        final double d = getDistance( point, new int[] { (int)(x + 0.5), (int)(y + 0.5) } );
         if( y >= point[1] )
           d1 = Math.max( d1, d );
         else
@@ -555,7 +552,7 @@ public class LabelFactory
    * Finds a point on the line between p1 and p2 that has a certain distance from point p0 (provided that there is such
    * a point).
    * <p>
-   *
+   * 
    * @param p0
    *          point that is used as reference point for the distance
    * @param p1
@@ -624,7 +621,7 @@ public class LabelFactory
         y = -p / 2 + Math.sqrt( p / 2 * (p / 2) - q );
       }
     }
-    return new int[] { (int) (x + 0.5), (int) (y + 0.5) };
+    return new int[] { (int)(x + 0.5), (int)(y + 0.5) };
   }
 
   private static double getRotation( final int x1, final int y1, final int x2, final int y2 )

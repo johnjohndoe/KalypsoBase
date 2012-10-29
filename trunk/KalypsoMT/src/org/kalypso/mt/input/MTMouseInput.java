@@ -51,14 +51,13 @@ import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ogc.gml.widgets.WidgetManager;
 import org.mt4j.AbstractMTApplication;
 import org.mt4j.input.inputSources.AbstractInputSource;
-import org.mt4j.sceneManagement.IPreDrawAction;
 import org.mt4j.util.ArrayDeque;
 import org.mt4j.util.math.Vector3D;
 
 /**
  * @author cybernixadm
  */
-public class MTMouseInput extends AbstractInputSource implements MouseMotionListener, MouseListener, IPreDrawAction
+public class MTMouseInput extends AbstractInputSource implements MouseMotionListener, MouseListener
 {
   private class MTMouseEventData
   {
@@ -81,8 +80,6 @@ public class MTMouseInput extends AbstractInputSource implements MouseMotionList
 
   int invocCounter = 0;
 
-  private final AbstractMTApplication mtApp;
-
   boolean m_fakeMousePressed = false;
 
   Point m_fakeMousePressPos = null;
@@ -99,7 +96,6 @@ public class MTMouseInput extends AbstractInputSource implements MouseMotionList
   public MTMouseInput( final AbstractMTApplication pa, final WidgetManager mgr )
   {
     super( pa );
-    mtApp = pa;
 
     m_mgr = mgr;
     pa.registerMouseEvent( this );
@@ -117,7 +113,6 @@ public class MTMouseInput extends AbstractInputSource implements MouseMotionList
    */
   public void mouseEvent( final MouseEvent event )
   {
-// /*
     if( isMouseBlocked() )
     {
       return;
@@ -269,14 +264,14 @@ public class MTMouseInput extends AbstractInputSource implements MouseMotionList
   {
     m_fakeMousePressed = true;
 
-    IWidget[] widgets = m_mgr.getWidgets();
+    final IWidget[] widgets = m_mgr.getWidgets();
     if( ArrayUtils.isNotEmpty( widgets ) )
     {
-      final Point p = new Point( (int) position.x, (int) position.y );
+      final Point p = new Point( (int)position.x, (int)position.y );
       m_fakeMousePressPos = p;
 
-      MouseEvent event = MouseEvents.toMouseEvent( p );
-      for( IWidget widget : widgets )
+      final MouseEvent event = MouseEvents.toMouseEvent( p );
+      for( final IWidget widget : widgets )
       {
         widget.mousePressed( event );
         if( event.isConsumed() )
@@ -291,10 +286,10 @@ public class MTMouseInput extends AbstractInputSource implements MouseMotionList
 
   public void fakeMouseMove( final Vector3D position )
   {
-    MouseEvent event = MouseEvents.toMouseEvent( new Point( (int) position.x, (int) position.y ) );
+    final MouseEvent event = MouseEvents.toMouseEvent( new Point( (int)position.x, (int)position.y ) );
 
-    IWidget[] widgets = m_mgr.getWidgets();
-    for( IWidget widget : widgets )
+    final IWidget[] widgets = m_mgr.getWidgets();
+    for( final IWidget widget : widgets )
     {
       if( m_fakeDrag )
         widget.mouseDragged( event );
@@ -313,11 +308,11 @@ public class MTMouseInput extends AbstractInputSource implements MouseMotionList
     if( !m_fakeMousePressed )
       return;
 
-    final Point point = new Point( (int) position.x, (int) position.y );
-    MouseEvent event = MouseEvents.toMouseEvent( point );
+    final Point point = new Point( (int)position.x, (int)position.y );
+    final MouseEvent event = MouseEvents.toMouseEvent( point );
 
-    IWidget[] widgets = m_mgr.getWidgets();
-    for( IWidget widget : widgets )
+    final IWidget[] widgets = m_mgr.getWidgets();
+    for( final IWidget widget : widgets )
     {
       widget.mouseReleased( event );
       if( m_fakeMousePressPos != null )
@@ -339,8 +334,8 @@ public class MTMouseInput extends AbstractInputSource implements MouseMotionList
   {
     m_fakeMousePressed = false;
 
-    IWidget[] widgets = m_mgr.getWidgets();
-    for( IWidget widget : widgets )
+    final IWidget[] widgets = m_mgr.getWidgets();
+    for( final IWidget widget : widgets )
     {
       widget.mousePressed( null );
       widget.mouseReleased( null );
@@ -349,8 +344,8 @@ public class MTMouseInput extends AbstractInputSource implements MouseMotionList
 
   public void fakeKeyReleased( final KeyEvent keyEvent )
   {
-    IWidget[] widgets = m_mgr.getWidgets();
-    for( IWidget widget : widgets )
+    final IWidget[] widgets = m_mgr.getWidgets();
+    for( final IWidget widget : widgets )
     {
       widget.keyReleased( keyEvent );
       widget.keyPressed( keyEvent );

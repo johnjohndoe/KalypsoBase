@@ -60,7 +60,6 @@ import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.internal.ide.IDEInternalWorkbenchImages;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.core.KalypsoCoreImages;
 import org.kalypso.core.KalypsoCorePlugin;
@@ -74,10 +73,10 @@ import org.kalypso.core.i18n.Messages;
  * <dt><b>Events:</b></dt>
  * <dd>(none)</dd>
  * </dl>
- *
+ * 
  * @author Gernot Belger
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings( "restriction" )
 public class StatusComposite extends Composite
 {
   /**
@@ -115,7 +114,7 @@ public class StatusComposite extends Composite
 
   /**
    * The constructor.
-   *
+   * 
    * @param parent
    *          The parent composite.
    * @param style
@@ -128,7 +127,7 @@ public class StatusComposite extends Composite
 
   /**
    * The constructor.
-   *
+   * 
    * @param toolkit
    *          The form toolkit. May be null.
    * @param parent
@@ -281,7 +280,7 @@ public class StatusComposite extends Composite
 
   /**
    * Sets the status of this composites and updates it to show it in the composite.
-   *
+   * 
    * @exception SWTException
    *              <ul>
    *              <li>ERROR_WIDGET_DISPOSED - if the receiver has been disposed</li>
@@ -326,7 +325,7 @@ public class StatusComposite extends Composite
       final boolean hideDetailsIfdisabled = (getStyle() & HIDE_DETAILS_IF_DISABLED) != 0;
       final boolean visible = !hideDetailsIfdisabled || enabled;
       m_detailsButton.setVisible( visible );
-      ((GridData) m_detailsButton.getLayoutData()).exclude = !visible;
+      ((GridData)m_detailsButton.getLayoutData()).exclude = !visible;
     }
 
     layout();

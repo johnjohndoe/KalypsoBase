@@ -33,9 +33,8 @@ import org.kalypso.simulation.core.util.LogHelper;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Exception;
-import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 import org.kalypsodeegree_impl.model.feature.FeaturePath;
@@ -60,9 +59,9 @@ public class ConstraintDelaunayCalcJob implements ISimulation
   @Override
   public void run( final File tmpdir, final ISimulationDataProvider inputProvider, final ISimulationResultEater resultEater, final ISimulationMonitor monitor ) throws SimulationException
   {
-    final URL gmlURL = (URL) inputProvider.getInputForID( "BREAKLINES_GML" ); //$NON-NLS-1$
-    final String geometryXPath = (String) inputProvider.getInputForID( "BREAKLINES_PATH" ); //$NON-NLS-1$
-    final Double qualityMinAngle = inputProvider.hasID( "QUALITY_MIN_ANGLE" ) ? (Double) inputProvider.getInputForID( "QUALITY_MIN_ANGLE" ) : null; //$NON-NLS-1$ //$NON-NLS-2$
+    final URL gmlURL = (URL)inputProvider.getInputForID( "BREAKLINES_GML" ); //$NON-NLS-1$
+    final String geometryXPath = (String)inputProvider.getInputForID( "BREAKLINES_PATH" ); //$NON-NLS-1$
+    final Double qualityMinAngle = inputProvider.hasID( "QUALITY_MIN_ANGLE" ) ? (Double)inputProvider.getInputForID( "QUALITY_MIN_ANGLE" ) : null; //$NON-NLS-1$ //$NON-NLS-2$
 
     final long lTimeout = PROCESS_TIMEOUT;
 
@@ -116,7 +115,7 @@ public class ConstraintDelaunayCalcJob implements ISimulation
       /* Write .poly file for triangle.exe */
       final File polyfile = new File( tmpdir, "input.poly" ); //$NON-NLS-1$
       strmPolyInput = new BufferedOutputStream( new FileOutputStream( polyfile ) );
-      final String crs = ConstraintDelaunayHelper.writePolyFileForLinestrings( strmPolyInput, (List< ? >) calcObject, log.getOutputStream() );
+      final String crs = ConstraintDelaunayHelper.writePolyFileForLinestrings( strmPolyInput, (List< ? >)calcObject, log.getOutputStream() );
       strmPolyInput.close();
 
       // prepare kernel logs (log and err)

@@ -55,7 +55,7 @@ import org.apache.commons.io.IOUtils;
  * This class represents a request of a OGC service. Its main purpose is, to copy needed data of the servlet request, so
  * that it can be destroyed (thus freeing resources), after it was beeing handled. This is necessary, because OGC
  * services may execute long running, parallel operations.
- *
+ * 
  * @author Toni DiNardo
  */
 public class OGCRequest
@@ -77,7 +77,7 @@ public class OGCRequest
 
   /**
    * The constructor.
-   *
+   * 
    * @param post
    *          The type of the servlet request. True for a POST request. False for a GET request.
    * @param request
@@ -94,7 +94,7 @@ public class OGCRequest
 
   /**
    * This function returns true, if the request was send with the POST method.
-   *
+   * 
    * @boolean True, if the request was send with the POST method.
    */
   public boolean isPost( )
@@ -104,7 +104,7 @@ public class OGCRequest
 
   /**
    * This function returns a parameter value for a parameter name.
-   *
+   * 
    * @param key
    *          The parameter name.
    * @return The parameter value or null, if it does not exist.
@@ -121,7 +121,7 @@ public class OGCRequest
   /**
    * This function returns the body, if the request was send with the POST method and a body is available. Otherwise it
    * returns null.
-   *
+   * 
    * @return The body or null.
    */
   public String getBody( )
@@ -134,7 +134,7 @@ public class OGCRequest
 
   /**
    * This function initializes the OGC request.
-   *
+   * 
    * @param request
    *          The servlet request.
    */
@@ -146,7 +146,7 @@ public class OGCRequest
 
   /**
    * This function initializes the parameter.
-   *
+   * 
    * @param request
    *          The servlet request.
    * @return The parameter.
@@ -155,7 +155,7 @@ public class OGCRequest
   {
     final Map<String, String[]> parameter = new HashMap<>();
 
-    final Set<Entry<String, String[]>> entries = ((Map<String, String[]>) request.getParameterMap()).entrySet();
+    final Set<Entry<String, String[]>> entries = request.getParameterMap().entrySet();
     for( final Entry<String, String[]> entry : entries )
       parameter.put( entry.getKey().toLowerCase(), entry.getValue() );
 
@@ -164,7 +164,7 @@ public class OGCRequest
 
   /**
    * This function initializes the body.
-   *
+   * 
    * @param request
    *          The servlet request.
    * @return The body.

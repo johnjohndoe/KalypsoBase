@@ -55,15 +55,13 @@ import org.mt4j.input.inputSources.IWin7NativeTouchSourceProvider.Native_WM_TOUC
  */
 public class MTWin7TouchProcessor extends AbstractInputSource
 {
-  private AbstractMTApplication app;
+  private final MTWin7TouchInput m_parent;
 
-  private MTWin7TouchInput parent;
+  private final Native_WM_TOUCH_Event m_wmTouchEvent;
 
-  private Native_WM_TOUCH_Event wmTouchEvent;
+  private final HashMap<Integer, Long> touchToCursorID;
 
-  private HashMap<Integer, Long> touchToCursorID;
-
-  private MTMouseInput m_mouse;
+  private final MTMouseInput m_mouse;
 
   /**
    * Instantiates a new win7 native touch source.
@@ -71,18 +69,18 @@ public class MTWin7TouchProcessor extends AbstractInputSource
    * @param mtApp
    *          the mt app
    */
-  public MTWin7TouchProcessor( AbstractMTApplication mtApp, MTWin7TouchInput parent, MTMouseInput mouseInput )
+  public MTWin7TouchProcessor( final AbstractMTApplication mtApp, final MTWin7TouchInput parent, final MTMouseInput mouseInput )
   {
     super( mtApp );
-    this.app = mtApp;
-    this.parent = parent;
-    this.m_mouse = mouseInput;
 
-    wmTouchEvent = new Native_WM_TOUCH_Event();
-    wmTouchEvent.id = -1;
-    wmTouchEvent.type = -1;
-    wmTouchEvent.x = -1;
-    wmTouchEvent.y = -1;
+    m_parent = parent;
+    m_mouse = mouseInput;
+
+    m_wmTouchEvent = new Native_WM_TOUCH_Event();
+    m_wmTouchEvent.id = -1;
+    m_wmTouchEvent.type = -1;
+    m_wmTouchEvent.x = -1;
+    m_wmTouchEvent.y = -1;
 
     touchToCursorID = new HashMap<Integer, Long>();
   }
@@ -90,16 +88,16 @@ public class MTWin7TouchProcessor extends AbstractInputSource
   @Override
   public void pre( )
   { // we dont have to call registerPre() again (already in superclass and called there)
-    if( parent.initialized )
+    if( m_parent.initialized )
     { // Only poll events if native c++ core was initialized successfully
-      while( parent.pollMTEvent( wmTouchEvent ) )
+      while( m_parent.pollMTEvent( m_wmTouchEvent ) )
       {
         /*
          * //FIXME TEST, make a artifical TOUCH_DOWN event REMOVE LATER! if (!addedArtificalTouchDown){
          * addedArtificalTouchDown = true; wmTouchEvent.type = Native_WM_TOUCH_Event.TOUCH_DOWN; }
          */
 
-        switch( wmTouchEvent.type )
+        switch( m_wmTouchEvent.type )
         {
           case Native_WM_TOUCH_Event.TOUCH_DOWN:
           {
@@ -107,10 +105,10 @@ public class MTWin7TouchProcessor extends AbstractInputSource
 
             m_mouse.setMouseBlocked( true );
 
-            InputCursor c = new InputCursor();
-            long cursorID = c.getId();
-            MTWin7TouchInputEvt touchEvt = new MTWin7TouchInputEvt( this, wmTouchEvent.x, wmTouchEvent.y, wmTouchEvent.contactSizeX, wmTouchEvent.contactSizeY, MTFingerInputEvt.INPUT_STARTED, c );
-            int touchID = wmTouchEvent.id;
+            final InputCursor c = new InputCursor();
+            final long cursorID = c.getId();
+            final MTWin7TouchInputEvt touchEvt = new MTWin7TouchInputEvt( this, m_wmTouchEvent.x, m_wmTouchEvent.y, m_wmTouchEvent.contactSizeX, m_wmTouchEvent.contactSizeY, MTFingerInputEvt.INPUT_STARTED, c );
+            final int touchID = m_wmTouchEvent.id;
             ActiveCursorPool.getInstance().putActiveCursor( cursorID, c );
             touchToCursorID.put( touchID, cursorID );
             this.enqueueInputEvent( touchEvt );
@@ -122,13 +120,13 @@ public class MTWin7TouchProcessor extends AbstractInputSource
 // System.out.println("TOUCH_MOVE ==> ID:" + wmTouchEvent.id + " x:" + wmTouchEvent.x + " y:" + wmTouchEvent.y);
 // System.out.println("Contact area X:" + wmTouchEvent.contactSizeX + " Y:" + wmTouchEvent.contactSizeY);
 
-            Long cursorID = touchToCursorID.get( wmTouchEvent.id );
+            final Long cursorID = touchToCursorID.get( m_wmTouchEvent.id );
             if( cursorID != null )
             {
-              InputCursor c = ActiveCursorPool.getInstance().getActiveCursorByID( cursorID );
+              final InputCursor c = ActiveCursorPool.getInstance().getActiveCursorByID( cursorID );
               if( c != null )
               {
-                MTWin7TouchInputEvt te = new MTWin7TouchInputEvt( this, wmTouchEvent.x, wmTouchEvent.y, wmTouchEvent.contactSizeX, wmTouchEvent.contactSizeY, MTFingerInputEvt.INPUT_UPDATED, c );
+                final MTWin7TouchInputEvt te = new MTWin7TouchInputEvt( this, m_wmTouchEvent.x, m_wmTouchEvent.y, m_wmTouchEvent.contactSizeX, m_wmTouchEvent.contactSizeY, MTFingerInputEvt.INPUT_UPDATED, c );
                 this.enqueueInputEvent( te );
               }
             }
@@ -141,17 +139,17 @@ public class MTWin7TouchProcessor extends AbstractInputSource
 
             m_mouse.setMouseBlocked( false );
 
-            Long cursorID = touchToCursorID.get( wmTouchEvent.id );
+            final Long cursorID = touchToCursorID.get( m_wmTouchEvent.id );
             if( cursorID != null )
             {
-              InputCursor c = ActiveCursorPool.getInstance().getActiveCursorByID( cursorID );
+              final InputCursor c = ActiveCursorPool.getInstance().getActiveCursorByID( cursorID );
               if( c != null )
               {
-                MTWin7TouchInputEvt te = new MTWin7TouchInputEvt( this, wmTouchEvent.x, wmTouchEvent.y, wmTouchEvent.contactSizeX, wmTouchEvent.contactSizeY, MTFingerInputEvt.INPUT_ENDED, c );
+                final MTWin7TouchInputEvt te = new MTWin7TouchInputEvt( this, m_wmTouchEvent.x, m_wmTouchEvent.y, m_wmTouchEvent.contactSizeX, m_wmTouchEvent.contactSizeY, MTFingerInputEvt.INPUT_ENDED, c );
                 this.enqueueInputEvent( te );
               }
               ActiveCursorPool.getInstance().removeCursor( cursorID );
-              touchToCursorID.remove( wmTouchEvent.id );
+              touchToCursorID.remove( m_wmTouchEvent.id );
             }
 
             break;

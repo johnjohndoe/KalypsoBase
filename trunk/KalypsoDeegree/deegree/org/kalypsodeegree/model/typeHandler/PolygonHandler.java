@@ -48,7 +48,6 @@ import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler2;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
-import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree_impl.io.sax.marshaller.PolygonMarshaller;
 import org.kalypsodeegree_impl.io.sax.parser.PolygonContentHandler;
@@ -70,14 +69,14 @@ public class PolygonHandler implements IMarshallingTypeHandler2
   @Override
   public Object cloneObject( final Object objectToClone, final String gmlVersion ) throws CloneNotSupportedException
   {
-    final GM_Polygon polygon = (GM_Polygon) objectToClone;
+    final GM_Polygon polygon = (GM_Polygon)objectToClone;
     return polygon.clone();
   }
 
   @Override
   public void marshal( final Object value, final XMLReader reader, final URL context, final String gmlVersion ) throws SAXException
   {
-    new PolygonMarshaller( reader ).marshall( (GM_Polygon) value );
+    new PolygonMarshaller( reader ).marshall( (GM_Polygon)value );
   }
 
   @Override

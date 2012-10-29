@@ -85,7 +85,6 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
@@ -94,7 +93,6 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class ImportWfsFilterWizardPage extends WizardPage
 {
-
   Text m_bufferDistance;
 
   Button m_bufferButton;
@@ -217,8 +215,8 @@ public class ImportWfsFilterWizardPage extends WizardPage
         final ISelection selection = event.getSelection();
         if( selection instanceof IStructuredSelection )
         {
-          final IStructuredSelection ss = (IStructuredSelection) selection;
-          m_selectedGeom = (GM_Object) ss.getFirstElement();
+          final IStructuredSelection ss = (IStructuredSelection)selection;
+          m_selectedGeom = (GM_Object)ss.getFirstElement();
         }
         setPageComplete( validate() );
       }
@@ -454,11 +452,11 @@ public class ImportWfsFilterWizardPage extends WizardPage
     final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
     if( activeTheme instanceof IKalypsoFeatureTheme )
     {
-      final Object firstElement = ((IKalypsoFeatureTheme) activeTheme).getSelectionManager().getFirstElement();
+      final Object firstElement = ((IKalypsoFeatureTheme)activeTheme).getSelectionManager().getFirstElement();
       m_themeName = activeTheme.getLabel();
       if( firstElement instanceof Feature )
       {
-        final Feature feature = (Feature) firstElement;
+        final Feature feature = (Feature)firstElement;
         final IFeatureType featureType = feature.getFeatureType();
         final IPropertyType[] properties = featureType.getProperties();
         final List<Object> list = new ArrayList<>();
@@ -484,7 +482,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
     final IEditorPart activeEditor = activePage.getActiveEditor();
     if( activeEditor instanceof GisMapEditor )
     {
-      final GisMapEditor gisMapEditor = (GisMapEditor) activeEditor;
+      final GisMapEditor gisMapEditor = (GisMapEditor)activeEditor;
       final IMapPanel mapPanel = gisMapEditor.getMapPanel();
       final GM_Envelope boundingBox = mapPanel.getBoundingBox();
       if( boundingBox != null )
@@ -507,8 +505,7 @@ public class ImportWfsFilterWizardPage extends WizardPage
   {
 
     /**
-     * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-     *      java.lang.Object)
+     * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
      */
     @Override
     public boolean select( final Viewer viewer, final Object parentElement, final Object element )

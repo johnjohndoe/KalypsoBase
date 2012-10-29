@@ -51,15 +51,14 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
-import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree.model.sort.JMSpatialIndex;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Finds features in the map
- *
+ * 
  * @author von Dömming
  */
 public class JMSelector
@@ -80,9 +79,9 @@ public class JMSelector
       {
         final Feature feature;
         if( fe instanceof Feature )
-          feature = (Feature) fe;
+          feature = (Feature)fe;
         else if( fe instanceof EasyFeatureWrapper )
-          feature = ((EasyFeatureWrapper) fe).getFeature();
+          feature = ((EasyFeatureWrapper)fe).getFeature();
         else
           continue;
 
@@ -121,9 +120,9 @@ public class JMSelector
     {
       final Feature feature;
       if( object instanceof Feature )
-        feature = (Feature) object;
+        feature = (Feature)object;
       else if( object instanceof EasyFeatureWrapper )
-        feature = ((EasyFeatureWrapper) object).getFeature();
+        feature = ((EasyFeatureWrapper)object).getFeature();
       else
         continue;
 
@@ -167,9 +166,9 @@ public class JMSelector
     {
       final Feature feature;
       if( fe instanceof Feature )
-        feature = (Feature) fe;
+        feature = (Feature)fe;
       else if( fe instanceof EasyFeatureWrapper )
-        feature = ((EasyFeatureWrapper) fe).getFeature();
+        feature = ((EasyFeatureWrapper)fe).getFeature();
       else
         continue;
 
@@ -200,17 +199,17 @@ public class JMSelector
     {
       if( geom instanceof GM_Polygon )
       {
-        final GM_Polygon surface = (GM_Polygon) geom;
+        final GM_Polygon surface = (GM_Polygon)geom;
         positions = surface.getSurfaceBoundary().getExteriorRing().getPositions();
       }
       else if( geom instanceof GM_Curve )
       {
-        final GM_Curve curve = (GM_Curve) geom;
+        final GM_Curve curve = (GM_Curve)geom;
         positions = curve.getAsLineString().getPositions();
       }
       else if( geom instanceof GM_Point )
       {
-        final GM_Point point = (GM_Point) geom;
+        final GM_Point point = (GM_Point)geom;
         positions = new GM_Position[] { GeometryFactory.createGM_Position( point.getX(), point.getY() ) };
       }
       else

@@ -63,7 +63,7 @@ abstract class AbstractThemeNode<T> extends PlatformObject implements IThemeNode
 
   private IThemeNode[] m_childNodes;
 
-  private boolean m_disposed;
+  // private boolean m_disposed;
 
   AbstractThemeNode( final IThemeNode parent, final T element )
   {
@@ -79,7 +79,7 @@ abstract class AbstractThemeNode<T> extends PlatformObject implements IThemeNode
   {
     disposeChildren();
 
-    m_disposed = true;
+    // m_disposed = true;
   }
 
   protected void checkDisposed( )
@@ -119,7 +119,7 @@ abstract class AbstractThemeNode<T> extends PlatformObject implements IThemeNode
   /**
    * Overwritten, else mapping items to object does not work for the tree, as these item get recreated for every call to
    * getChildren.
-   *
+   * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
   @Override
@@ -128,7 +128,7 @@ abstract class AbstractThemeNode<T> extends PlatformObject implements IThemeNode
     checkDisposed();
 
     if( obj instanceof AbstractThemeNode< ? > )
-      return getElement() == ((AbstractThemeNode< ? >) obj).getElement();
+      return getElement() == ((AbstractThemeNode< ? >)obj).getElement();
 
     return false;
   }
@@ -298,7 +298,7 @@ abstract class AbstractThemeNode<T> extends PlatformObject implements IThemeNode
     if( m_parent == null )
       return null;
 
-    return ((AbstractThemeNode< ? >) m_parent).getViewer();
+    return ((AbstractThemeNode< ? >)m_parent).getViewer();
   }
 
   protected final void refreshViewer( final IThemeNode elementToRefresh )
@@ -328,7 +328,7 @@ abstract class AbstractThemeNode<T> extends PlatformObject implements IThemeNode
 
   /**
    * Returns the outline image by default. Overwrite to implement a different behavior.
-   *
+   * 
    * @see #getImageDescriptor()
    */
   @Override
@@ -349,7 +349,7 @@ abstract class AbstractThemeNode<T> extends PlatformObject implements IThemeNode
 
     if( element instanceof IAdaptable )
     {
-      final IAdaptable adaptable = (IAdaptable) element;
+      final IAdaptable adaptable = (IAdaptable)element;
       final Object adapted = adaptable.getAdapter( adapter );
       if( adapted != null )
         return adapted;
@@ -360,7 +360,7 @@ abstract class AbstractThemeNode<T> extends PlatformObject implements IThemeNode
 
   /**
    * Return <code>true</code> by default, overwrite to change.
-   *
+   * 
    * @see org.kalypso.ogc.gml.outline.nodes.IThemeNode#isCompactable()
    */
   @Override

@@ -55,7 +55,7 @@
          <attribute name="factory" type="string" use="required">
             <annotation>
                <documentation>
-                  Must implement org.kalypso.gmlschema.types.ITypeHandlerFactory&lt;IGuiTypeHandler&gt;
+                  Must implement org.kalypso.gmlschema.types.ITypeHandlerFactory-IGuiTypeHandler-
                </documentation>
                <appInfo>
                   <meta.attribute kind="java" basedOn=":org.kalypso.gmlschema.types.ITypeHandlerFactory"/>

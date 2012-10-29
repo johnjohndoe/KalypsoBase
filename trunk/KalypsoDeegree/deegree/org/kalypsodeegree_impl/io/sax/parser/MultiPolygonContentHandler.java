@@ -47,9 +47,8 @@ import org.kalypso.commons.xml.NS;
 import org.kalypso.gmlschema.types.IGmlContentHandler;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
-import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
 import org.kalypsodeegree_impl.io.sax.parser.geometrySpec.MultiPolygonSpecification;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.tools.GMLConstants;
@@ -60,7 +59,7 @@ import org.xml.sax.XMLReader;
 
 /**
  * A content handler which parses a gml:Polygon element.<br>
- *
+ * 
  * @author Gernot Belger
  */
 public class MultiPolygonContentHandler extends GMLElementContentHandler implements ISurfaceHandler<GM_PolygonPatch>

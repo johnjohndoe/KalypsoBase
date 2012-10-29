@@ -38,12 +38,11 @@ public class Refinement
 
   private GM_Object[] doRefineSurface( final GM_MultiSurface[] inputSurfaces, final GM_Polygon inputSurface ) throws GM_Exception
   {
-    final GM_Position[] exteriorRing = inputSurface.get( 0 ).getExteriorRing();
+    final GM_Position[] exteriorRing = inputSurface.getSurfacePatch().getExteriorRing();
     final GM_Curve curve = GeometryFactory.createGM_Curve( exteriorRing, inputSurface.getCoordinateSystem() );
     return doRefine( inputSurfaces, curve );
   }
 
-  @SuppressWarnings( { "unchecked", "rawtypes" } )
   private GM_Object[] doRefineCurve( final GM_MultiSurface[] inputSurfaces, final GM_Curve inputCurve ) throws GM_Exception
   {
     final List<GM_Object> list = new ArrayList<>();
@@ -181,7 +180,7 @@ public class Refinement
                 break;
               }
             }
-            
+
             final GM_Point[] intersectionPoints = pointList.toArray( new GM_Point[pointList.size()] );
 
             /* split surface */

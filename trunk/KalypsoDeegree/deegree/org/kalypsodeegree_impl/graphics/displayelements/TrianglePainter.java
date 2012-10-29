@@ -54,7 +54,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Helper to split up triangles by color classes
- *
+ * 
  * @author Gernot Belger
  */
 final class TrianglePainter
@@ -101,20 +101,20 @@ final class TrianglePainter
 
   }
 
-  /**
-   * For debug pruposes: paint the whole triangle
-   */
-  private void paintTriangle( final GM_Position[] positions, final StrokePainter strokePainter, final FillPainter fillPainter, final GeoTransform world2Screen )
-  {
-    try
-    {
-      SldAwtUtilities.paintRing( m_gc, positions, world2Screen, fillPainter, strokePainter );
-    }
-    catch( final Exception ex )
-    {
-      ex.printStackTrace();
-    }
-  }
+//  /**
+//   * For debug pruposes: paint the whole triangle
+//   */
+//  private void paintTriangle( final GM_Position[] positions, final StrokePainter strokePainter, final FillPainter fillPainter, final GeoTransform world2Screen )
+//  {
+//    try
+//    {
+//      SldAwtUtilities.paintRing( m_gc, positions, world2Screen, fillPainter, strokePainter );
+//    }
+//    catch( final Exception ex )
+//    {
+//      ex.printStackTrace();
+//    }
+//  }
 
   private void paint( final GM_Position[] positions, final ElevationColorEntry entry )
   {

@@ -61,7 +61,7 @@ public class ObservationCacheTest extends TestCase
     System.out.println( obs );
   }
 
-  private static class FooAdaptable implements IAdaptable
+  static class FooAdaptable implements IAdaptable
   {
     @Override
     public Object getAdapter( final Class anotherClass )

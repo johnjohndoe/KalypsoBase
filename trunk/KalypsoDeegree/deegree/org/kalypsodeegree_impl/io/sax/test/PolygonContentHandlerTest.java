@@ -53,12 +53,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.kalypso.commons.java.net.UrlUtilities;
 import org.kalypso.gmlschema.types.UnmarshallResultEater;
-import org.kalypsodeegree.model.geometry.GM_PolygonPatch;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.io.sax.parser.PolygonContentHandler;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.xml.sax.InputSource;
@@ -131,11 +129,11 @@ public class PolygonContentHandlerTest extends Assert
 
   // Sax: 5 sec
   @Test
-  @Ignore(value = "Too slow for normal testing")
+  @Ignore( value = "Too slow for normal testing" )
   public void testReadOften( ) throws Exception
   {
     final URL resource = getClass().getResource( "/etc/test/resources/polygonBig.gml" );
-    final String content = UrlUtilities.toString( resource, SaxParserTestUtils.ENCODING );
+    final String content = IOUtils.toString( resource, SaxParserTestUtils.ENCODING );
 
     for( int i = 0; i < 10000; i++ )
       parsePolygonFromContent( content );
@@ -144,11 +142,11 @@ public class PolygonContentHandlerTest extends Assert
 
   // Sax: 55 sec
   @Test
-  @Ignore(value = "Too slow for normal testing")
+  @Ignore( value = "Too slow for normal testing" )
   public void testReadOften2( ) throws Exception
   {
     final URL resource = getClass().getResource( "/etc/test/resources/polygonBig2.gml" );
-    final String content = UrlUtilities.toString( resource, SaxParserTestUtils.ENCODING );
+    final String content = IOUtils.toString( resource, SaxParserTestUtils.ENCODING );
 
     for( int i = 0; i < 10000; i++ )
       parsePolygonFromContent( content );
@@ -158,9 +156,7 @@ public class PolygonContentHandlerTest extends Assert
   {
     assertEquals( expected.getCoordinateSystem(), polygon.getCoordinateSystem() );
 
-    assertEquals( expected.size(), polygon.size() );
-
-    assertPatch( expected.get( 0 ), polygon.get( 0 ) );
+    assertPatch( expected.getSurfacePatch(), polygon.getSurfacePatch() );
   }
 
   public static void assertPatch( final GM_AbstractSurfacePatch expectedPatch, final GM_AbstractSurfacePatch patch )
@@ -199,13 +195,12 @@ public class PolygonContentHandlerTest extends Assert
   private GM_Polygon parsePolygon( final String resourceLocation ) throws Exception
   {
     final URL resource = getClass().getResource( resourceLocation );
-    final String content = UrlUtilities.toString( resource, SaxParserTestUtils.ENCODING );
+    final String content = IOUtils.toString( resource, SaxParserTestUtils.ENCODING );
     final InputStream inputStream = IOUtils.toInputStream( content );
 
     return parsePolygon( inputStream );
   }
 
-  @SuppressWarnings("unchecked")
   private GM_Polygon parsePolygon( final InputStream inputStream ) throws ParserConfigurationException, SAXException, IOException
   {
     final InputSource is = new InputSource( inputStream );
@@ -220,7 +215,7 @@ public class PolygonContentHandlerTest extends Assert
       public void unmarshallSuccesful( final Object value )
       {
         assertTrue( value instanceof GM_Polygon );
-        result[0] = (GM_Polygon) value;
+        result[0] = (GM_Polygon)value;
       }
     };
 
@@ -228,7 +223,7 @@ public class PolygonContentHandlerTest extends Assert
     reader.setContentHandler( contentHandler );
     reader.parse( is );
 
-    return (GM_Polygon) result[0];
+    return result[0];
   }
 
   // REMARK: exchange method in order to use binding-stuff instead

@@ -43,7 +43,7 @@ public class MTMapPanelApp extends MTApplication implements IMapPanelMTPaintList
 
   MTMouseInput m_mouseInput;
 
-  public MTMapPanelApp( Frame MTframe, MapPanel mapPanel, long handle, final ICommandTarget viewCommandTarget )
+  public MTMapPanelApp( final Frame MTframe, final MapPanel mapPanel, final long handle, final ICommandTarget viewCommandTarget )
   {
 
     m_mapPanel = mapPanel;
@@ -68,13 +68,13 @@ public class MTMapPanelApp extends MTApplication implements IMapPanelMTPaintList
           @Override
           public void run( )
           {
-            Frame farm = (Frame) e.getComponent();
+            final Frame farm = (Frame)e.getComponent();
             if( farm.isVisible() )
             {
-              Insets insets = farm.getInsets();
-              Dimension windowSize = farm.getSize();
-              int usableW = windowSize.width - insets.left - insets.right;
-              int usableH = windowSize.height - insets.top - insets.bottom;
+              final Insets insets = farm.getInsets();
+              final Dimension windowSize = farm.getSize();
+              final int usableW = windowSize.width - insets.left - insets.right;
+              final int usableH = windowSize.height - insets.top - insets.bottom;
 
               // the ComponentListener in PApplet will handle calling size()
               setBounds( insets.left, insets.top, usableW, usableH );
@@ -102,7 +102,7 @@ public class MTMapPanelApp extends MTApplication implements IMapPanelMTPaintList
 
     } );
 
-    m_mgr = (WidgetManager) mapPanel.getWidgetManager();
+    m_mgr = (WidgetManager)mapPanel.getWidgetManager();
     addMouseWheelListener( m_mgr );
     addKeyListener( m_mgr );
   }
@@ -134,13 +134,13 @@ public class MTMapPanelApp extends MTApplication implements IMapPanelMTPaintList
           // Check if we run windows 7
           if( System.getProperty( "os.name" ).toLowerCase().contains( "windows 7" ) ) //$NON-NLS-1$ //$NON-NLS-2$
           {
-            MTWin7TouchInput win7input = MTWin7TouchInput.getSingleton();
+            final MTWin7TouchInput win7input = MTWin7TouchInput.getSingleton();
             win7input.registerNewCanvas( l_this, parentHandle, m_mouseInput );
             getInputManager().registerInputSource( win7input.getInputSource() );
           }
 
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
 //          System.err.println( e.getMessage() );
         }
@@ -153,7 +153,7 @@ public class MTMapPanelApp extends MTApplication implements IMapPanelMTPaintList
    * @see org.kalypso.ogc.gml.map.IMapPanelPostPaintListener#paint(java.awt.image.BufferedImage)
    */
   @Override
-  public void paint( BufferedImage img )
+  public void paint( final BufferedImage img )
   {
     if( img != null && m_scene != null )
       m_scene.setBackgroundImage( img );
@@ -163,21 +163,20 @@ public class MTMapPanelApp extends MTApplication implements IMapPanelMTPaintList
    * @see org.mt4j.IPAppletBoth#delay(int)
    */
   @Override
-  public void delay( int napTime )
+  public void delay( final int napTime )
   {
   }
 
-  
-  public PImage loadPImage( ImageKey key )
+  public PImage loadPImage( final ImageKey imageKey )
   {
     final PluginImageProvider imageProvider = KalypsoMTPlugin.getImageProvider();
 
     String imgPath = ""; //$NON-NLS-1$
     try
     {
-      imgPath = imageProvider.getTmpURL( key ).toURI().getRawPath();
+      imgPath = imageProvider.getTmpURL( imageKey ).toURI().getRawPath();
     }
-    catch( URISyntaxException e1 )
+    catch( final URISyntaxException e1 )
     {
       // in case the requested image fails, i try to return the "default" image.
       // some geometries require "real" image, so that they pass the init
@@ -185,7 +184,7 @@ public class MTMapPanelApp extends MTApplication implements IMapPanelMTPaintList
       {
         imgPath = imageProvider.getTmpURL( KalypsoMTProjectImages.DESCRIPTORS.ARROW_RIGHT ).toURI().getRawPath();
       }
-      catch( URISyntaxException e )
+      catch( final URISyntaxException e )
       {
         e.printStackTrace();
         return new PImage();
@@ -199,7 +198,7 @@ public class MTMapPanelApp extends MTApplication implements IMapPanelMTPaintList
    * @see org.kalypso.ogc.gml.map.IMTSceneChangedListener#changeScene(java.lang.Object)
    */
   @Override
-  public void sceneChangeRequired( Object scene )
+  public void sceneChangeRequired( final Object scene )
   {
     // sets default scene
     if( scene == null )
@@ -209,9 +208,9 @@ public class MTMapPanelApp extends MTApplication implements IMapPanelMTPaintList
     }
     else if( scene instanceof AbstractScene )
     {
-      AbstractScene l_scene = (AbstractScene) scene;
+      final AbstractScene l_scene = (AbstractScene)scene;
       this.changeScene( l_scene );
-      m_scene = (MTDefaultScene) l_scene;
+      m_scene = (MTDefaultScene)l_scene;
     }
 
     m_scene.setBackgroundImage( m_mapPanel.getBufferedImage() );

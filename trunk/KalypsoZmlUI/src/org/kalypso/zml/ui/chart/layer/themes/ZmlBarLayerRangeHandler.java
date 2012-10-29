@@ -186,7 +186,7 @@ class ZmlBarLayerRangeHandler
       // FIXME: the axis is responsible for that!
       final Class< ? > dataClass = valueAxis.getDataClass();
       if( Boolean.class.equals( dataClass ) )
-        return new DataRange<Double>( 0.0, 1.0);
+        return new DataRange<>( 0.0, 1.0 );
 
       final IAxisRange range = model.getRange( valueAxis );
       if( range == null )
