@@ -6,7 +6,7 @@
       <servlet
             alias="/observationService"
             class="org.kalypso.services.observation.WSProxyServlet"
-            load-on-startup="true">
+            load-on-startup="false">
       </servlet>
    </extension>
 
