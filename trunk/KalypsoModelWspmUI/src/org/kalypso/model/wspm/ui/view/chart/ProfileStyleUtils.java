@@ -46,8 +46,8 @@ public final class ProfileStyleUtils
     final IPointStyle hoverStyle = style.clone();
 
     /* double size, less transparent */
-    hoverStyle.setWidth( style.getWidth() + 3 );
-    hoverStyle.setHeight( style.getHeight() + 3 );
+    hoverStyle.setWidth( style.getWidth() + 5 );
+    hoverStyle.setHeight( style.getHeight() + 5 );
 
     hoverStyle.setAlpha( Math.max( 255, style.getAlpha() * 2 ) );
 
