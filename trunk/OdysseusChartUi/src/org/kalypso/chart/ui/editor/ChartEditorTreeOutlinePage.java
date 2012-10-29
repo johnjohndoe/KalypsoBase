@@ -45,6 +45,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
@@ -135,7 +136,7 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
     m_contentProvider = contentProvider;
     // FIXME: only as hot fix; we know that we have a ChartTreeLabelProvider; but feature patch does not work like this
 // -> change constructor later
-    m_labelProvider = (ChartTreeLabelProvider) labelProvider;
+    m_labelProvider = (ChartTreeLabelProvider)labelProvider;
     m_eventListener = new AbstractLayerManagerEventListener()
     {
       @Override
@@ -176,7 +177,7 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
         final Object elt = event.getElement();
         if( elt instanceof IChartLayer )
         {
-          ((IChartLayer) elt).setVisible( event.getChecked() );
+          ((IChartLayer)elt).setVisible( event.getChecked() );
         }
       }
     };
@@ -186,11 +187,11 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final ISelection selection = event.getSelection();
-        final ITreeSelection struct = (ITreeSelection) selection;
+        final ITreeSelection struct = (ITreeSelection)selection;
         final TreePath path = struct.size() == 0 ? null : struct.getPaths()[0];
         final Object element = path == null ? null : path.getFirstSegment();
         if( element != null && element instanceof IChartLayer )
-          ((IChartLayer) element).setActive( true );
+          ((IChartLayer)element).setActive( true );
       }
     };
     m_checkStateProvider = new ICheckStateProvider()
@@ -200,7 +201,7 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
       {
         if( element instanceof IChartLayer )
         {
-          return ((IChartLayer) element).isVisible();
+          return ((IChartLayer)element).isVisible();
         }
         return false;
       }
@@ -252,7 +253,7 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
 
     {
       /* Remember type of selected layer */
-      final IChartModel oldModel = (IChartModel) m_treeViewer.getInput();
+      final IChartModel oldModel = (IChartModel)m_treeViewer.getInput();
       final String currentSelection = findSelectedLayerId( oldModel );
 
       // BUGFIX: clear images on every model change; else the legend images will accumulate forever, because
@@ -292,10 +293,10 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
     if( model == null )
       return SELECTION_NONE;
 
-    final IStructuredSelection selection = (IStructuredSelection) m_treeViewer.getSelection();
+    final IStructuredSelection selection = (IStructuredSelection)m_treeViewer.getSelection();
     final Object firstElement = selection.getFirstElement();
     if( firstElement instanceof IChartLayer )
-      return ((ILayerContainer) firstElement).getIdentifier();
+      return ((ILayerContainer)firstElement).getIdentifier();
 
     return SELECTION_NONE;
   }
@@ -327,7 +328,7 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
       public void dragSetData( final DragSourceEvent event )
       {
         // resolve selected layer
-        final IStructuredSelection selection = (IStructuredSelection) m_treeViewer.getSelection();
+        final IStructuredSelection selection = (IStructuredSelection)m_treeViewer.getSelection();
 
         final List< ? > list = selection.toList();
         // only one can be selected
@@ -335,7 +336,7 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
         // only layers can be dragged
         if( elt instanceof IChartLayer )
         {
-          final IChartLayer layer = (IChartLayer) elt;
+          final IChartLayer layer = (IChartLayer)elt;
           event.data = layer.getIdentifier();
         }
       }
@@ -354,7 +355,7 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
       {
         if( data != null && m_model != null )
         {
-          final String id = (String) data;
+          final String id = (String)data;
           ILayerManager layerManager = m_model.getLayerManager();
 
           final Object targetLayer = getCurrentTarget();
@@ -364,7 +365,7 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
           if( draggedLayer == null )
           {
             parent = m_contentProvider.getParent( targetLayer );
-            layerManager = parent instanceof IChartLayer ? ((IChartLayer) parent).getLayerManager() : null;
+            layerManager = parent instanceof IChartLayer ? ((IChartLayer)parent).getLayerManager() : null;
             draggedLayer = layerManager == null ? null : layerManager.findLayer( id );
           }
           if( draggedLayer == null )
@@ -374,7 +375,7 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
 
           if( targetLayer != null && targetLayer instanceof IChartLayer )
           {
-            final int layerPosition = layerManager.getLayerPosition( (IChartLayer) targetLayer );
+            final int layerPosition = layerManager.getLayerPosition( (IChartLayer)targetLayer );
             if( layerPosition != -1 )
               layerManager.moveLayerToPosition( draggedLayer, layerPosition );
           }
@@ -458,9 +459,6 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
       mngr.removeListener( m_eventListener );
   }
 
-  /**
-   * @see org.eclipse.ui.part.IPage#dispose()
-   */
   @Override
   public void dispose( )
   {
@@ -481,9 +479,6 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
     return m_treeViewer.getControl();
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#getSelection()
-   */
   @Override
   public ISelection getSelection( )
   {
@@ -495,9 +490,6 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
     layer.setVisible( checked );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ISelectionProvider#removeSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
-   */
   @Override
   public void removeSelectionChangedListener( final ISelectionChangedListener listener )
   {
@@ -524,9 +516,6 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
     m_treeViewer.setContentProvider( contentProvider );
   }
 
-  /**
-   * @see org.eclipse.ui.part.IPage#setFocus()
-   */
   @Override
   public void setFocus( )
   {
@@ -556,7 +545,34 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
    */
   public void selectLayer( final IChartLayer layer )
   {
-    // m_treeViewer.setExpandedElements( new Object[] { layer } );
     setSelection( new StructuredSelection( layer ) );
+  }
+
+  public void saveSettings( final IDialogSettings settings )
+  {
+    final IChartModel model = getModel();
+    if( model == null )
+      return;
+
+    if( m_treeViewer == null )
+      return;
+
+    final SaveChartLegendStateVisitor visitor = new SaveChartLegendStateVisitor( settings, m_treeViewer );
+    model.accept( visitor );
+  }
+
+  public void restoreSettings( final IDialogSettings settings )
+  {
+    final IChartModel model = getModel();
+    if( model == null )
+      return;
+
+    if( m_treeViewer == null )
+      return;
+
+    final RestoreChartLegendStateVisitor visitor = new RestoreChartLegendStateVisitor( settings, m_treeViewer );
+    model.accept( visitor );
+
+    visitor.applyState();
   }
 }

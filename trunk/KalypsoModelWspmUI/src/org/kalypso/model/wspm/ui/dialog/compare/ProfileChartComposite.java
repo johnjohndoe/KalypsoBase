@@ -53,8 +53,6 @@ import org.kalypso.model.wspm.ui.view.chart.IProfilLayerProvider;
 import org.kalypso.model.wspm.ui.view.chart.ProfilChartModel;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
-import de.openali.odysseus.chart.framework.model.IChartModelState;
-import de.openali.odysseus.chart.framework.model.impl.ChartModelState;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 import de.openali.odysseus.chart.framework.view.IChartHandlerManager;
 import de.openali.odysseus.chart.framework.view.impl.ChartImageComposite;
@@ -126,15 +124,10 @@ public class ProfileChartComposite extends ChartImageComposite implements IProfi
     if( ObjectUtils.equals( profile, oldProfile ) )
       return;
 
-    final IChartModelState state = new ChartModelState();
-    final IChartModel chartModel = getChartModel();
-    state.storeState( chartModel );
     if( m_profilChartModel != null )
       m_profilChartModel.dispose();
 
     m_profilChartModel = new ProfilChartModel( getProfilLayerProvider( profile ), profileSelection );
-
-    state.restoreState( m_profilChartModel );
 
     // TODO: don't autoscale, restore zoom instead
     m_profilChartModel.autoscale();
