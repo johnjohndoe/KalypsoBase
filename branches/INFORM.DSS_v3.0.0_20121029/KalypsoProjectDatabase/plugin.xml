@@ -7,7 +7,7 @@
       <servlet
             alias="/projectdb"
             class="org.kalypso.project.database.server.WSProxyServlet"
-            load-on-startup="true">
+            load-on-startup="false">
       </servlet>
    </extension>
    <extension
