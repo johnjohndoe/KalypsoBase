@@ -78,7 +78,6 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
     return getValueData().getObservation();
   }
 
-  @SuppressWarnings( { "unchecked", "rawtypes" } )
   @Override
   public IDataRange<Double> getTargetRange( final IDataRange< ? > domainIntervall )
   {
