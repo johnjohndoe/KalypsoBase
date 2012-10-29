@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modelspec xmlns="simspec.core.simulation.kalypso.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="http://www.w3.org/2001/XMLSchema" typeID="org.kalypso.service.wps.complexJob">
+
+  <!-- Input -->
+  <input id="INPUT_WORKSPACE" type="gml" description="" />
+
+  <!-- Output -->
+  <output id="OUTPUT_WORKSPACE" type="gml" description="" />
+
+  <!-- Output des CalcJobs -->
+  <output id="SimulationLog" description="The log of the simulation." />
+</modelspec>
