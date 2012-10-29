@@ -6,8 +6,10 @@ Bundle-Version: 1.1.0
 Bundle-Vendor: http://www.j3d.org/
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: lib/j3d-org-code-1.1.0/jars/org.j3d.core_1.1.0.jar,
+ lib/j3d-org-code-1.1.0/lib/vecmath.jar,
  .
-Export-Package: org.j3d.device.input.vfx,
+Export-Package: javax.vecmath,
+ org.j3d.device.input.vfx,
  org.j3d.device.output.elumens,
  org.j3d.geom,
  org.j3d.geom.hanim,
