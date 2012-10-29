@@ -62,6 +62,7 @@ import de.openali.odysseus.chart.framework.model.data.DataRange;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
+import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
 import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 import de.openali.odysseus.chart.framework.model.style.IPointStyle;
 import de.openali.odysseus.chart.framework.util.StyleUtils;
@@ -84,6 +85,8 @@ public abstract class AbstractProfilePointsLayer extends AbstractProfilLayer
   private IPointStyle m_pointStyleActive = null;
 
   private IPointStyle m_pointStyleHover = null;
+
+  private IAreaStyle m_areaStyle = null;
 
   private int m_targetPropIndex = -1;
 
@@ -137,6 +140,7 @@ public abstract class AbstractProfilePointsLayer extends AbstractProfilLayer
     // FIXME: remove theses magic names
     m_lineStyle = styleProvider.getStyleFor( id + ILayerStyleProvider.LINE, null ); //$NON-NLS-1$
     m_pointStyle = styleProvider.getStyleFor( id + ILayerStyleProvider.POINT, null ); //$NON-NLS-1$
+    m_areaStyle = styleProvider.getStyleFor( id + ILayerStyleProvider.AREA, null ); //$NON-NLS-1$
 
     m_lineStyleActive = styleProvider.getStyleFor( id + "_LINE_ACTIVE", null ); //$NON-NLS-1$
     m_pointStyleActive = styleProvider.getStyleFor( id + "_POINT_ACTIVE", null ); //$NON-NLS-1$
@@ -268,6 +272,14 @@ public abstract class AbstractProfilePointsLayer extends AbstractProfilLayer
     return m_pointStyleHover;
   }
 
+  public IAreaStyle getAreaStyle( )
+  {
+    if( m_areaStyle == null )
+      m_areaStyle = StyleUtils.getDefaultAreaStyle();
+
+    return m_areaStyle;
+  }
+
   @Override
   public IComponent getDomainComponent( )
   {
@@ -346,7 +358,7 @@ public abstract class AbstractProfilePointsLayer extends AbstractProfilLayer
 
     try
     {
-      final TooltipFormatter formatter = new TooltipFormatter( null, new String[] { "%s", "%s", "[%s]" }, new int[] { SWT.LEFT, SWT.RIGHT, SWT.LEFT } );
+      final TooltipFormatter formatter = new TooltipFormatter( null, new String[] { "%s", "%s", "%s" }, new int[] { SWT.LEFT, SWT.RIGHT, SWT.LEFT } );
 
       final String domainUnit = ComponentUtilities.getComponentUnitLabel( domainComponent );
       final Object domainValue = point.getValue( domainComponent );
@@ -398,11 +410,6 @@ public abstract class AbstractProfilePointsLayer extends AbstractProfilLayer
       m_targetPropIndex = -1;
 
     super.onProfilChanged( hint );
-  }
-
-  public void setLineStyle( final ILineStyle lineStyle )
-  {
-    m_lineStyle = lineStyle;
   }
 
   protected Point toScreen( final IProfileRecord point )
