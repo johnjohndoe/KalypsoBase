@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<observation xmlns="zml.kalypso.org">
+  <name>Blankenburg.N.M.P.TSum.0600</name>
+  <metadataList>
+    <metadata name="Datenabruf_Quelle_0" value="filter://IntervalFilter"/>
+    <metadata name="Datenabruf_Repository_Quelle_0" value="filter://IntervalFilter"/>
+    <metadata value="Blankenburg.N.M.P.TSum.0600" name="Name" />
+    <metadata value="GMT+01:00" name="Zeitzone" />
+    <metadata value="HOUR_OF_DAY#1" name="Zeitschritt"/>
+  </metadataList>
+  <axis datatype="TYPE=integer" key="false" unit="" type="DATA_SRC" name="DATA_SRC">
+    <valueArray separator=";">0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0</valueArray>
+  </axis>
+  <axis datatype="TYPE=double" key="false" unit="mm" type="N" name="Niederschlag">
+    <valueArray separator=";">NaN;NaN;NaN;NaN;NaN;NaN;NaN;NaN;NaN;NaN;NaN;NaN;NaN;NaN;NaN;NaN;NaN;NaN;NaN;NaN;NaN;NaN;NaN;NaN</valueArray>
+  </axis>
+  <axis datatype="TYPE=date#FORMAT=yyyy-MM-dd'T'HH:mm:ss" key="true" unit="" type="date" name="Datum">
+    <valueArray separator=";">2011-04-04T01:00:00;2011-04-04T02:00:00;2011-04-04T03:00:00;2011-04-04T04:00:00;2011-04-04T05:00:00;2011-04-04T06:00:00;2011-04-04T07:00:00;2011-04-04T08:00:00;2011-04-04T09:00:00;2011-04-04T10:00:00;2011-04-04T11:00:00;2011-04-04T12:00:00;2011-04-04T13:00:00;2011-04-04T14:00:00;2011-04-04T15:00:00;2011-04-04T16:00:00;2011-04-04T17:00:00;2011-04-04T18:00:00;2011-04-04T19:00:00;2011-04-04T20:00:00;2011-04-04T21:00:00;2011-04-04T22:00:00;2011-04-04T23:00:00;2011-04-05T00:00:00</valueArray>
+  </axis>
+  <axis datatype="TYPE=integer" key="false" unit="" type="kalypso-status" name="_kalypso_status_Niederschlag">
+    <valueArray separator=";">2;2;2;2;2;2;2;2;2;2;2;2;2;2;2;2;2;2;2;2;2;2;2;2</valueArray>
+  </axis>
+</observation>
