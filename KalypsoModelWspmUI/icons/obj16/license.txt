@@ -1,0 +1,3 @@
+snap-orthogonal.png
+ 	- src: KDE Oxygen Icons 4.1.7 - snap-orthogonal.png
+ 	- license: GPL
