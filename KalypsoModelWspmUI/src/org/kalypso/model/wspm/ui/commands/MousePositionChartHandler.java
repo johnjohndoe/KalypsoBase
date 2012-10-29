@@ -51,7 +51,6 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.chart.ui.editor.mousehandler.AbstractChartHandler;
 import org.kalypso.model.wspm.core.IWspmLayers;
 import org.kalypso.model.wspm.ui.i18n.Messages;
-import org.kalypso.model.wspm.ui.view.chart.AbstractProfilTheme;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
 import de.openali.odysseus.chart.framework.model.IChartModel;
@@ -106,12 +105,12 @@ public class MousePositionChartHandler extends AbstractChartHandler
   {
     final IChartModel model = chart.getChartModel();
 
-    final FindLayerVisitor visitor = new FindLayerVisitor( IWspmLayers.LAYER_GELAENDE );
+    final FindLayerVisitor visitor = new FindLayerVisitor( IWspmLayers.THEME_GELAENDE );
     model.getLayerManager().accept( visitor );
 
     final IChartLayer layer = visitor.getLayer();
 
-    return (AbstractProfilTheme)layer;
+    return (IProfilChartLayer)layer;
   }
 
   @SuppressWarnings( "rawtypes" )

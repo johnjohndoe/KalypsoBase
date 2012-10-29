@@ -148,7 +148,7 @@ public class UpdateProfileCursorChartHandler extends AbstractChartHandler
     if( model == null )
       return null;
 
-    final FindLayerVisitor visitor = new FindLayerVisitor( IWspmLayers.LAYER_GELAENDE );
+    final FindLayerVisitor visitor = new FindLayerVisitor( IWspmLayers.THEME_GELAENDE );
     model.getLayerManager().accept( visitor );
 
     final IChartLayer layer = visitor.getLayer();

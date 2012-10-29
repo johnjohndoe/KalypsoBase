@@ -60,7 +60,7 @@ public class CrossSectionTheme extends AbstractProfilTheme
 
   public CrossSectionTheme( final IProfile profil, final IProfilChartLayer[] chartLayers, final ICoordinateMapper cm )
   {
-    super( profil, IWspmLayers.LAYER_GELAENDE, TITLE, chartLayers, cm );
+    super( profil, IWspmLayers.THEME_GELAENDE, TITLE, chartLayers, cm );
   }
 
   @Override
