@@ -112,8 +112,8 @@ public class ChartTooltipPainter
      */
     ALIGNMENT posX = ALIGNMENT.LEFT;
     ALIGNMENT posY = ALIGNMENT.BOTTOM;
-    int offsetX = 3/* Pixel */;
-    int offsetY = -3/* Pixel */;
+    int offsetX = 10/* Pixel */;
+    int offsetY = -10/* Pixel */;
 
     final boolean mirrorX = toolsize.width + offsetX + mousePos.x > clippRect.x + clippRect.width;
     final boolean mirrorY = toolsize.height - offsetY - mousePos.y > clippRect.y;
