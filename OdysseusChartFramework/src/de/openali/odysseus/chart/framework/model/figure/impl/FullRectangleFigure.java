@@ -48,12 +48,22 @@ import de.openali.odysseus.chart.framework.model.style.ILineStyle;
 
 /**
  * Draws a rectangle with fill
- *
+ * 
  * @author burtscher1
  */
 public class FullRectangleFigure extends AbstractFigure<IAreaStyle>
 {
   private Rectangle m_rect;
+
+  public FullRectangleFigure( )
+  {
+    this( null );
+  }
+
+  public FullRectangleFigure( final IAreaStyle style )
+  {
+    setStyle( style );
+  }
 
   public void setRectangle( final Rectangle rect )
   {
