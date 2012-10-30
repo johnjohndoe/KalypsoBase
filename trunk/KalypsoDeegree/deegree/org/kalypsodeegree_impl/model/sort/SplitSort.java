@@ -179,7 +179,9 @@ public class SplitSort extends AbstractFeatureList
     if( m_index != null )
       m_index.reindex( index + 1, -1 );
 
+    // REMARK: remove AFTER reindex, the specialized reindex method for one element needs this
     m_items.remove( index );
+
     return item;
   }
 
