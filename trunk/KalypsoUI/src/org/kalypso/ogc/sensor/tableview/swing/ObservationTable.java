@@ -99,7 +99,7 @@ import org.kalypso.ui.KalypsoUIExtensions;
 
 /**
  * A JTable that can display observations.
- *
+ * 
  * @author schlienger
  */
 public class ObservationTable extends Panel implements IObsViewEventListener
@@ -225,7 +225,7 @@ public class ObservationTable extends Panel implements IObsViewEventListener
     final int[] selectedRows = m_table.getSelectedRows();
     for( final int row : selectedRows )
     {
-      final Date date = (Date) m_model.getValueAt( row, 0 );
+      final Date date = (Date)m_model.getValueAt( row, 0 );
       dates.add( date );
     }
 
@@ -245,9 +245,6 @@ public class ObservationTable extends Panel implements IObsViewEventListener
 
       header.addMouseListener( new MouseAdapter()
       {
-        /**
-         * @see java.awt.event.MouseAdapter#mouseReleased(java.awt.event.MouseEvent)
-         */
         @Override
         public void mouseReleased( final MouseEvent e )
         {
@@ -286,9 +283,6 @@ public class ObservationTable extends Panel implements IObsViewEventListener
     m_model.clearColumns();
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.template.IObsViewEventListener#onObsViewChanged(org.kalypso.ogc.sensor.template.ObsViewEvent)
-   */
   @Override
   public final void onObsViewChanged( final ObsViewEvent evt )
   {
@@ -307,7 +301,7 @@ public class ObservationTable extends Panel implements IObsViewEventListener
         // REFRESH ONE COLUMN
         if( evenType == ObsViewEvent.TYPE_ITEM_DATA_CHANGED && evt.getObject() instanceof TableViewColumn )
         {
-          final TableViewColumn column = (TableViewColumn) evt.getObject();
+          final TableViewColumn column = (TableViewColumn)evt.getObject();
           model.refreshColumn( column, evt.getSource() );
 
           analyseObservation( column.getObservation(), true );
@@ -319,7 +313,7 @@ public class ObservationTable extends Panel implements IObsViewEventListener
         // REFRESH COLUMN ACCORDING TO ITS STATE
         if( evenType == ObsViewEvent.TYPE_ITEM_STATE_CHANGED && evt.getObject() instanceof TableViewColumn )
         {
-          final TableViewColumn column = (TableViewColumn) evt.getObject();
+          final TableViewColumn column = (TableViewColumn)evt.getObject();
 
           if( column.isShown() )
             model.addColumn( column );
@@ -332,7 +326,7 @@ public class ObservationTable extends Panel implements IObsViewEventListener
         // ADD COLUMN
         if( evenType == ObsViewEvent.TYPE_ITEM_ADD && evt.getObject() instanceof TableViewColumn )
         {
-          final TableViewColumn column = (TableViewColumn) evt.getObject();
+          final TableViewColumn column = (TableViewColumn)evt.getObject();
           if( column.isShown() )
             model.addColumn( column );
 
@@ -345,7 +339,7 @@ public class ObservationTable extends Panel implements IObsViewEventListener
         // REMOVE COLUMN
         if( evenType == ObsViewEvent.TYPE_ITEM_REMOVE && evt.getObject() instanceof TableViewColumn )
         {
-          final TableViewColumn column = (TableViewColumn) evt.getObject();
+          final TableViewColumn column = (TableViewColumn)evt.getObject();
           model.removeColumn( column );
 
           analyseObservation( column.getObservation(), false );
@@ -373,7 +367,7 @@ public class ObservationTable extends Panel implements IObsViewEventListener
         // VIEW CHANGED
         if( evenType == ObsViewEvent.TYPE_VIEW_CHANGED )
         {
-          final TableView view = (TableView) evt.getObject();
+          final TableView view = (TableView)evt.getObject();
           model.setAlphaSort( view.isAlphaSort() );
 
           final TimeZone timezone = view.getTimezone();
@@ -443,11 +437,10 @@ public class ObservationTable extends Panel implements IObsViewEventListener
   /**
    * Helper method that analyses the observation.
    * <ul>
-   * <li>adds a marker to the date renderer for observations that are forecasts or remove the corresponding marker when
-   * the associated column is removed from the model
+   * <li>adds a marker to the date renderer for observations that are forecasts or remove the corresponding marker when the associated column is removed from the model
    * <li>adds a label if the observation has a scenario property
    * </ul>
-   *
+   * 
    * @param adding
    *          is true when the observation (actually its associated table-view-column) is added to the model
    */
@@ -487,9 +480,6 @@ public class ObservationTable extends Panel implements IObsViewEventListener
     m_model.setAlphaSort( bAlphaSort );
   }
 
-  /**
-   * @see org.kalypso.ogc.sensor.template.IObsViewEventListener#onPrintObsView(org.kalypso.ogc.sensor.template.ObsViewEvent)
-   */
   @Override
   public void onPrintObsView( final ObsViewEvent evt )
   {
@@ -578,7 +568,7 @@ public class ObservationTable extends Panel implements IObsViewEventListener
         return;
 
       aColumn.setMaxWidth( 100 );
-      aColumn.setResizable( false );
+      aColumn.setResizable( true );
       aColumn.setMinWidth( 100 );
       aColumn.setWidth( 100 );
 

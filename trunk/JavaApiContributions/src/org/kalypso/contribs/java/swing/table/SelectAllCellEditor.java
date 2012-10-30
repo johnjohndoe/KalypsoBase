@@ -53,8 +53,7 @@ import javax.swing.text.JTextComponent;
  * This TableCell editor is a wrapper for TableCellEditors (DecoratorPattern)!
  * </p>
  * <p>
- * This editor behaves exactly as the given editor, except that it tries to select all text of the given editor
- * component, when invoked
+ * This editor behaves exactly as the given editor, except that it tries to select all text of the given editor component, when invoked
  * </p>
  * <p>
  * Iplementation:
@@ -74,78 +73,53 @@ public class SelectAllCellEditor implements TableCellEditor
     m_editor = editor;
   }
 
-  /**
-   * @see javax.swing.table.TableCellEditor#getTableCellEditorComponent(javax.swing.JTable, java.lang.Object, boolean,
-   *      int, int)
-   */
   @Override
   public Component getTableCellEditorComponent( final JTable table, final Object value, final boolean isSelected, final int row, final int column )
   {
     final Component c = m_editor.getTableCellEditorComponent( table, value, isSelected, row, column );
 
     if( c instanceof JTextComponent )
-      ((JTextComponent) c).selectAll();
+      ((JTextComponent)c).selectAll();
 
     return c;
   }
 
-  /**
-   * @see javax.swing.CellEditor#cancelCellEditing()
-   */
   @Override
   public void cancelCellEditing( )
   {
     m_editor.cancelCellEditing();
   }
 
-  /**
-   * @see javax.swing.CellEditor#stopCellEditing()
-   */
   @Override
   public boolean stopCellEditing( )
   {
     return m_editor.stopCellEditing();
   }
 
-  /**
-   * @see javax.swing.CellEditor#getCellEditorValue()
-   */
   @Override
   public Object getCellEditorValue( )
   {
     return m_editor.getCellEditorValue();
   }
 
-  /**
-   * @see javax.swing.CellEditor#isCellEditable(java.util.EventObject)
-   */
   @Override
   public boolean isCellEditable( final EventObject anEvent )
   {
     return m_editor.isCellEditable( anEvent );
   }
 
-  /**
-   * @see javax.swing.CellEditor#shouldSelectCell(java.util.EventObject)
-   */
   @Override
   public boolean shouldSelectCell( final EventObject anEvent )
   {
     return m_editor.shouldSelectCell( anEvent );
   }
 
-  /**
-   * @see javax.swing.CellEditor#addCellEditorListener(javax.swing.event.CellEditorListener)
-   */
   @Override
   public void addCellEditorListener( final CellEditorListener l )
   {
     m_editor.addCellEditorListener( l );
   }
 
-  /**
-   * @see javax.swing.CellEditor#removeCellEditorListener(javax.swing.event.CellEditorListener)
-   */
   @Override
   public void removeCellEditorListener( final CellEditorListener l )
   {
