@@ -50,6 +50,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.core.runtime.Assert;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
@@ -68,12 +69,9 @@ class SplitSortindex
 {
   static final int INITIAL_CAPACITY = 16;
 
-//  private final TObjectIntHashMap<Object> m_itemIndex = new TObjectIntHashMap<>();
   private final Map<Object, TIntArrayList> m_itemIndex = new HashMap<>( INITIAL_CAPACITY );
 
   private final TIntObjectHashMap<Rectangle> m_itemEnvelopes = new TIntObjectHashMap<>( INITIAL_CAPACITY );
-
-//  private final TIntIntHashMap m_duplicates = new TIntIntHashMap();
 
   private final TIntHashSet m_invalidIndices = new TIntHashSet( INITIAL_CAPACITY );
 
@@ -140,7 +138,7 @@ class SplitSortindex
     m_invalidIndices.forEach( tp );
     m_invalidIndices.clear();
     Assert.isTrue( m_size == m_parent.size() );
-    // Assert.isTrue( m_itemEnvelopes.size() == m_spatialIndex.size() );
+    Assert.isTrue( m_itemEnvelopes.size() == m_spatialIndex.size() );
   }
 
   protected synchronized void revalidateItem( final int index )
@@ -150,7 +148,7 @@ class SplitSortindex
 
     final Rectangle oldEnvelope = m_itemEnvelopes.remove( index );
     final Rectangle newEnvelope = GeometryUtilities.toRectangle( envelope );
-    final boolean envelopeChanged = oldEnvelope == null ? newEnvelope != null : oldEnvelope.equals( newEnvelope );
+    final boolean envelopeChanged = !ObjectUtils.equals( oldEnvelope, newEnvelope );
 
     /* Only update spatial index if envelope really changed */
     if( envelopeChanged )
@@ -186,9 +184,11 @@ class SplitSortindex
    */
   void reindex( final int startIndex, final int offset )
   {
+    // FIXME: iteration must be in reverse order of offset > 0
     for( int oldIndex = startIndex; oldIndex < m_parent.size(); oldIndex++ )
     {
       final Rectangle envelope = m_itemEnvelopes.get( oldIndex );
+      final int newIndex = oldIndex + offset;
 
       /* fix spatial index */
       if( envelope != null )
@@ -196,11 +196,22 @@ class SplitSortindex
         final boolean removed = m_spatialIndex.delete( envelope, oldIndex );
         Assert.isTrue( removed );
 
-        final int newIndex = oldIndex + offset;
         m_spatialIndex.add( envelope, newIndex );
+
+        // FIXME: if offset is positive, valid envelopes will be overwritten!
         m_itemEnvelopes.put( newIndex, envelope );
       }
+      else
+      {
+        // map newIndex to 'null' in this case i.e. remove from list
+        m_itemEnvelopes.remove( newIndex );
+      }
     }
+
+    // VERIFY / FIXED: remove obsolete indices from m_itemEnvelopes
+    // FIXME: will not work for positive offsets
+    for( int index = m_parent.size() + offset; index < m_parent.size(); index++ )
+      m_itemEnvelopes.remove( index );
 
     /* Fix invalid item indices */
     final int[] invalidIndices = m_invalidIndices.toArray();
@@ -223,10 +234,10 @@ class SplitSortindex
         if( value < startIndex )
           return value;
         else
-          return value - 1;
+          // VERIFY: use 'offset' instead of -1 -> difference to multiple reindex below!
+          return value + offset;
       }
     };
-//    m_itemIndex.transformValues( tf );
 
     final Collection<TIntArrayList> values = m_itemIndex.values();
     for( final TIntArrayList indexSet : values )
@@ -235,10 +246,13 @@ class SplitSortindex
     }
   }
 
+// FIXME: this complicated method should not be duplicated! Has already lead to bugs, because they work in a different way
+  // Idea: give interface that provides mapping between old/new indices
   public void reindex( final int startIndex, final int[] indexShifts )
   {
     for( int oldIndex = startIndex; oldIndex < startIndex + indexShifts.length; oldIndex++ )
     {
+      // FIXME: different behaviour to single reindex method; probably bugfix above was not necessary with this remove
       final Rectangle envelope = m_itemEnvelopes.remove( oldIndex );
 
       /* fix spatial index */
@@ -251,7 +265,13 @@ class SplitSortindex
         m_spatialIndex.add( envelope, newIndex );
         m_itemEnvelopes.put( newIndex, envelope );
       }
+      else
+      {
+        // FIXME: see above
+      }
     }
+
+    // FIXME: remove obsolete from m_itemEnvelopes
 
     /* Fix invalid item indices */
     final int[] invalidIndices = m_invalidIndices.toArray();
@@ -283,7 +303,6 @@ class SplitSortindex
     {
       indexSet.transformValues( tf );
     }
-    // m_itemIndex.transformValues( tf );
   }
 
   void remove( final int index, final Object item )
@@ -295,7 +314,10 @@ class SplitSortindex
 
     final Rectangle envelope = m_itemEnvelopes.remove( index );
     if( envelope != null )
-      m_spatialIndex.delete( envelope, index );
+    {
+      final boolean removed = m_spatialIndex.delete( envelope, index );
+      Assert.isTrue(  removed );
+    }
 
     unhashItem( item, index );
   }
@@ -326,11 +348,6 @@ class SplitSortindex
     if( indexSet == null )
       return -1;
     return indexSet.getQuick( 0 );
-
-    // REMARK: strange, trove returns '0' for unknown element, but '0' may be a valid value of our mapping...
-//    if( index == 0 && !m_itemIndex.containsKey( object ) )
-//      return -1;
-//    return index;
   }
 
   public void dispose( )
