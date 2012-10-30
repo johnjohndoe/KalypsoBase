@@ -138,7 +138,12 @@ class SplitSortindex
     m_invalidIndices.forEach( tp );
     m_invalidIndices.clear();
     Assert.isTrue( m_size == m_parent.size() );
-    Assert.isTrue( m_itemEnvelopes.size() == m_spatialIndex.size() );
+
+    // Assert.isTrue( m_itemEnvelopes.size() == m_spatialIndex.size() );
+    if( m_itemEnvelopes.size() != m_spatialIndex.size() )
+    {
+      System.out.println( "Problem!" );
+    }
   }
 
   protected synchronized void revalidateItem( final int index )
