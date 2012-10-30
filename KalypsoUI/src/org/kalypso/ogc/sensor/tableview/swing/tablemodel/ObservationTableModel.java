@@ -79,7 +79,7 @@ import org.kalypso.repository.IDataSourceItem;
  * table model which handles an IObservation. Can be used by JTable
  * <p>
  * Changes made in the table are directly reflected into the observations models.
- *
+ * 
  * @author schlienger
  */
 public class ObservationTableModel extends AbstractTableModel implements IObservationTableModel
@@ -218,7 +218,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
 
   /**
    * Returns the status axis for the 'normal' axis found in the given column.
-   *
+   * 
    * @return status axis or null if not found
    */
   private IAxis getStatusAxis( final IObservation obs, final IAxis axis )
@@ -247,9 +247,6 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
     }
   }
 
-  /**
-   * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
-   */
   @Override
   public Class< ? > getColumnClass( final int columnIndex )
   {
@@ -265,9 +262,6 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
     }
   }
 
-  /**
-   * @see javax.swing.table.AbstractTableModel#getColumnName(int)
-   */
   @Override
   public String getColumnName( final int columnIndex )
   {
@@ -283,9 +277,6 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
     }
   }
 
-  /**
-   * @see javax.swing.table.TableModel#getColumnCount()
-   */
   @Override
   public int getColumnCount( )
   {
@@ -298,18 +289,12 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
     }
   }
 
-  /**
-   * @see javax.swing.table.TableModel#getRowCount()
-   */
   @Override
   public int getRowCount( )
   {
     return m_sharedModel.size();
   }
 
-  /**
-   * @see javax.swing.table.TableModel#getValueAt(int, int)
-   */
   @Override
   public Object getValueAt( final int rowIndex, final int columnIndex )
   {
@@ -352,9 +337,6 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
     }
   }
 
-  /**
-   * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
-   */
   @Override
   public boolean isCellEditable( final int rowIndex, final int columnIndex )
   {
@@ -370,7 +352,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
   /**
    * TODO: real real ugly: the column inedx here and in {@link #isCellEditable(int, int)} are interpreted differently,
    * obviously they are used from different contexts (with/without first key-column)
-   *
+   * 
    * @see org.kalypso.ogc.sensor.tableview.swing.tablemodel.IObservationTableModel#isEditable(int)
    */
   @Override
@@ -400,7 +382,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
       else if( isDateColumn( columnIndex ) )
         return;
       else if( !isEditable( columnIndex - 1 ) )
-        throw new IllegalStateException( Messages.getString("ObservationTableModel.0") ); //$NON-NLS-1$
+        throw new IllegalStateException( Messages.getString( "ObservationTableModel.0" ) ); //$NON-NLS-1$
 
       final TableViewColumn col = m_columns.get( columnIndex - 1 );
 
@@ -468,8 +450,8 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
     /* Special case: if they are numbers, compare by a (very small) margin */
     if( newValue instanceof Number && oldValue instanceof Number )
     {
-      final double oldDouble = ((Number) oldValue).doubleValue();
-      final double newDouble = ((Number) newValue).doubleValue();
+      final double oldDouble = ((Number)oldValue).doubleValue();
+      final double newDouble = ((Number)newValue).doubleValue();
       // REAMRK: we are using a fixed epsilon here, but this should be small enough for all cases...
       return Math.abs( oldDouble - newDouble ) < 0.0000001;
     }
@@ -479,7 +461,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
 
   /**
    * Sets the rules. Important: you should call this method if you want the rules rendering to be enabled.
-   *
+   * 
    * @param rules
    */
   public void setRules( final ITableViewRules rules )
@@ -498,7 +480,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
 
   /**
    * Finds the renderingrules for the given element.
-   *
+   * 
    * @return rendering rules or empty array if no rules found.
    */
   @Override
@@ -525,7 +507,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
           final IAxis statusAxis = getStatusAxis( col.getObservation(), col.getValueAxis() );
           if( statusAxis != null )
           {
-            final Number status = (Number) values.get( ix, statusAxis );
+            final Number status = (Number)values.get( ix, statusAxis );
 
             if( status != null )
               return m_rules.findRules( status );
@@ -559,7 +541,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
 
   /**
    * Removes one column
-   *
+   * 
    * @return position of the column that has just been removed
    */
   public int removeColumn( final TableViewColumn col ) throws SensorException
@@ -591,7 +573,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
   /**
    * Returns the corresponding NumberFormat for the given column. The NumberFormat is type dependent. For instance,
    * Water-level is displayed differently than Rainfall.
-   *
+   * 
    * @return adequate instance of NumberFormat
    * @see org.kalypso.ogc.sensor.timeseries.TimeserieUtils#getNumberFormatFor(String)
    */
@@ -607,7 +589,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
 
   /**
    * Compares TableViewColumns according to their names
-   *
+   * 
    * @author schlienger
    */
   private static class ColOrderNameComparator implements Comparator<TableViewColumn>
@@ -623,7 +605,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
 
   /**
    * Compares TableViewColumns according to their position
-   *
+   * 
    * @author schlienger
    */
   private static class ColOrderIndexComparator implements Comparator<TableViewColumn>
@@ -662,7 +644,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
     writer.write( m_sharedAxis.getName() );
     if( nf[0] instanceof DateFormat )
     {
-      final DateFormat df = (DateFormat) nf[0];
+      final DateFormat df = (DateFormat)nf[0];
       final TimeZone timeZone = df.getTimeZone();
       if( timeZone != null )
       {
@@ -675,7 +657,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
     int col = 1;
     for( final Object element : m_columns )
     {
-      final TableViewColumn tvc = (TableViewColumn) element;
+      final TableViewColumn tvc = (TableViewColumn)element;
 
       nf[col] = TimeseriesUtils.getNumberFormat( tvc.getFormat() );
 
@@ -731,7 +713,7 @@ public class ObservationTableModel extends AbstractTableModel implements IObserv
   /**
    * Returns the row index of the given shared object.<br>
    * Careful, this is a linear list search, so it is quite slow.
-   *
+   * 
    * @return -1, if the given key was not found.
    */
   public int indexOfKey( final Object sharedKey )
