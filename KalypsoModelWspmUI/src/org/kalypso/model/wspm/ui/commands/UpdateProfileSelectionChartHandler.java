@@ -40,32 +40,20 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang3.Range;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.chart.ui.editor.mousehandler.AbstractChartHandler;
 import org.kalypso.chart.ui.editor.mousehandler.EventUtils;
-import org.kalypso.contribs.eclipse.swt.graphics.RectangleUtils;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IRangeSelection;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
-import de.openali.odysseus.chart.framework.model.figure.impl.PolygonFigure;
 import de.openali.odysseus.chart.framework.model.mapper.IAxis;
 import de.openali.odysseus.chart.framework.model.mapper.ICoordinateMapper;
-import de.openali.odysseus.chart.framework.model.style.ILineStyle;
-import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINECAP;
-import de.openali.odysseus.chart.framework.model.style.IStyleConstants.LINEJOIN;
-import de.openali.odysseus.chart.framework.model.style.impl.AreaStyle;
-import de.openali.odysseus.chart.framework.model.style.impl.ColorFill;
-import de.openali.odysseus.chart.framework.model.style.impl.LineStyle;
+import de.openali.odysseus.chart.framework.util.resource.Pair;
 import de.openali.odysseus.chart.framework.view.IChartComposite;
 
 /**
@@ -77,35 +65,12 @@ public class UpdateProfileSelectionChartHandler extends AbstractChartHandler
 
   private Integer m_p1 = null;
 
+  private Integer m_p2 = null;
+
   public UpdateProfileSelectionChartHandler( final IChartComposite chart )
   {
     super( chart );
     super.setCursor( SWT.CURSOR_CROSS );
-  }
-
-  private void doPaintRange( final PaintEvent e )
-  {
-    final RGB rgb = new RGB( 0x54, 0xA7, 0xF9 );
-
-    final ILineStyle lineStyle = new LineStyle( 3, rgb, 180, 0F, new float[] { 2, 2, 2 }, LINEJOIN.MITER, LINECAP.ROUND, 1, true );
-
-    final IChartComposite chart = getChart();
-    final Rectangle bounds = RectangleUtils.inflateRect( chart.getPlotInfo().getPlotRect(), lineStyle.getWidth() );
-
-    final int yMax = bounds.y + bounds.height;
-
-    final AreaStyle areaStyle = new AreaStyle( new ColorFill( rgb ), 40, lineStyle, true );
-    final PolygonFigure figure = new PolygonFigure();
-    figure.setStyle( areaStyle );
-
-    final List<Point> points = new ArrayList<>();
-    points.add( new Point( m_p0, bounds.y ) );
-    points.add( new Point( m_p0, yMax ) );
-    points.add( new Point( m_p1, yMax ) );
-    points.add( new Point( m_p1, bounds.y ) );
-
-    figure.setPoints( points.toArray( new Point[] {} ) );
-    figure.paint( e.gc );
   }
 
   @Override
@@ -133,11 +98,14 @@ public class UpdateProfileSelectionChartHandler extends AbstractChartHandler
   public void mouseMove( final MouseEvent e )
   {
     super.mouseMove( e );
+    m_p2 = e.x;
     if( isOutOfRange( new Point( e.x, e.y ) ) )
     {
       m_p1 = null;
+      m_p2 = null;
       return;
     }
+
     if( EventUtils.isStateButton1( e ) )
     {
       m_p1 = e.x;
@@ -148,7 +116,7 @@ public class UpdateProfileSelectionChartHandler extends AbstractChartHandler
   @Override
   public void mouseUp( final MouseEvent e )
   {
-    final IProfilChartLayer theme = UpdateProfileCursorChartHandler.findProfileTheme( getChart() );
+    final IProfilChartLayer theme = SelectionChartHandlerHelper.findProfileTheme( getChart() );
     if( theme == null )
     {
       m_p0 = null;
@@ -179,11 +147,15 @@ public class UpdateProfileSelectionChartHandler extends AbstractChartHandler
   public void paintControl( final PaintEvent e )
   {
     super.paintControl( e );
+    final IChartComposite chart = getChart();
+    SelectionChartHandlerHelper.paintMouse( chart, e, m_p2 );
+    final Pair<Integer,Integer> selection = SelectionChartHandlerHelper.selectionToScreen( chart );
+    SelectionChartHandlerHelper.paintSelection( chart, e, selection.getDomain(), selection.getTarget() );
     if( m_p0 == null || m_p1 == null )
     {
       return;
     }
-    doPaintRange( e );
+    SelectionChartHandlerHelper.paintRange( getChart(), e, m_p0, m_p1 );
 
   }
 }

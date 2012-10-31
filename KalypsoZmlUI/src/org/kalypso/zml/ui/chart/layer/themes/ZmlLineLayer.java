@@ -301,7 +301,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
     if( domainValue == null )
       return defaultValue;
 
-    return getRangeHandler().getDateDataOperator().logicalToNumeric( domainValue );
+    return getCoordinateMapper().getDomainAxis().logicalToNumeric( domainValue );//getRangeHandler().getDateDataOperator().logicalToNumeric( domainValue );
   }
 
   private DateRange getRange( )

@@ -50,7 +50,9 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
 
 /**
  * @author burtscher1
+ * @deprecated
  */
+@Deprecated
 public class DummyDataOperator<T> implements IDataOperator<T>
 {
 

@@ -146,8 +146,8 @@ public class LineLayerModelVisitor implements IObservationVisitor
       if( !isPartOfDomainInterval( domain ) )
         return;
 
-      final Number domainNumeric = m_layer.getRangeHandler().getDateDataOperator().logicalToNumeric( domain );
-      final Number targetNumeric = m_layer.getRangeHandler().getNumberDataOperator().logicalToNumeric( (Double) valueObject );
+      final Number domainNumeric = m_layer.getCoordinateMapper().getDomainAxis().logicalToNumeric( domain );//.getRangeHandler().getDateDataOperator().logicalToNumeric( domain );
+      final Number targetNumeric = m_layer.getCoordinateMapper().getTargetAxis().logicalToNumeric( valueObject );//m_layer.getRangeHandler().getNumberDataOperator().logicalToNumeric( (Double) valueObject );
 
       final IPair<Number, Number> numeric = new Pair<>( domainNumeric, targetNumeric );
       m_path.add( numeric );

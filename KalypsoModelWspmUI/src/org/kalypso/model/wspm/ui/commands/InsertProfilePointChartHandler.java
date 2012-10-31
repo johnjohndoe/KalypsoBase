@@ -52,7 +52,6 @@ import org.kalypso.chart.ui.editor.mousehandler.AbstractChartHandler;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.model.wspm.core.profil.IProfile;
 import org.kalypso.model.wspm.core.profil.IRangeSelection;
-import org.kalypso.model.wspm.core.profil.visitors.FindClosestPointVisitor;
 import org.kalypso.model.wspm.core.profil.wrappers.IProfileRecord;
 import org.kalypso.model.wspm.core.profil.wrappers.Profiles;
 import org.kalypso.model.wspm.ui.i18n.CommonMessages;
@@ -93,44 +92,45 @@ public class InsertProfilePointChartHandler extends AbstractChartHandler
       figure.paint( e.gc );
   }
 
-  @SuppressWarnings( "rawtypes" )
-  private Integer snapToScreenPoint( final int screenX )
-  {
-    final IProfilChartLayer theme = UpdateProfileCursorChartHandler.findProfileTheme( getChart() );
-    if( theme == null )
-    {
-      return null;
-    }
-    final ICoordinateMapper mapper = theme.getCoordinateMapper();
-    final IAxis domainAxis = mapper.getDomainAxis();
-    final IProfile profile = theme.getProfil();
-    if( profile == null )
-      return null;
-    if( domainAxis == null )
-      return null;
-    final Double xPosition = domainAxis.screenToNumeric( screenX );
-    final FindClosestPointVisitor visitor = new FindClosestPointVisitor( xPosition );
-    profile.accept( visitor, 1 );
-    final IProfileRecord point = visitor.getPoint();
-    final Integer snappedScreen = domainAxis.numericToScreen( point.getBreite() );
-    if( Math.abs( snappedScreen - screenX ) > 5 )
-    {
-      return null;
-    }
-    return snappedScreen;
-  }
+//  @SuppressWarnings( "rawtypes" )
+//  private Integer snapToScreenPoint( final int screenX )
+//  {
+//    final IProfilChartLayer theme = SelectionChartHandlerHelper.findProfileTheme( getChart() );
+//    if( theme == null )
+//    {
+//      return null;
+//    }
+//    final ICoordinateMapper mapper = theme.getCoordinateMapper();
+//    final IAxis domainAxis = mapper.getDomainAxis();
+//    final IProfile profile = theme.getProfil();
+//    if( profile == null )
+//      return null;
+//    if( domainAxis == null )
+//      return null;
+//    final Double xPosition = domainAxis.screenToNumeric( screenX );
+//    final FindClosestPointVisitor visitor = new FindClosestPointVisitor( xPosition );
+//    profile.accept( visitor, 1 );
+//    final IProfileRecord point = visitor.getPoint();
+//    final Integer snappedScreen = domainAxis.numericToScreen( point.getBreite() );
+//    if( Math.abs( snappedScreen - screenX ) > 5 )
+//    {
+//      return null;
+//    }
+//    return snappedScreen;
+//  }
 
   @Override
   public void mouseMove( final MouseEvent e )
   {
     super.mouseMove( e );
     m_p1 = null;
-    m_canInsert = !isOutOfRange( new Point( e.x, e.y ) );
-    final Integer snapped = m_canInsert ? snapToScreenPoint( e.x ) : null;
+    final Point screen = new Point( e.x, e.y );
+    m_canInsert = !isOutOfRange( screen );
+    final Point snapped = m_canInsert ? SelectionChartHandlerHelper.snapToScreenPoint( getChart(), screen ) : null;
     if( m_canInsert )
     {
       m_canInsert = snapped == null;
-      m_p1 = snapped == null ? e.x : snapped;
+      m_p1 = snapped == null ? e.x : snapped.x;
     }
   }
 
@@ -151,7 +151,7 @@ public class InsertProfilePointChartHandler extends AbstractChartHandler
 
     if( !m_canInsert )
       return;
-    final IProfilChartLayer theme = UpdateProfileCursorChartHandler.findProfileTheme( getChart() );
+    final IProfilChartLayer theme = SelectionChartHandlerHelper.findProfileTheme( getChart() );
     if( theme == null )
     {
       return;
@@ -194,7 +194,7 @@ public class InsertProfilePointChartHandler extends AbstractChartHandler
     {
       return null;
     }
-    final IProfilChartLayer theme = UpdateProfileCursorChartHandler.findProfileTheme( getChart() );
+    final IProfilChartLayer theme = SelectionChartHandlerHelper.findProfileTheme( getChart() );
     if( theme == null )
     {
       return null;

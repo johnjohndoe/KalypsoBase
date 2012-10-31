@@ -56,7 +56,6 @@ import de.openali.odysseus.chart.framework.exception.MalformedValueException;
 import de.openali.odysseus.chart.framework.logging.impl.Logger;
 import de.openali.odysseus.chart.framework.model.IChartModel;
 import de.openali.odysseus.chart.framework.model.data.DataRange;
-import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.data.impl.DataRangeRestriction;
 import de.openali.odysseus.chart.framework.model.exception.ConfigurationException;
@@ -66,7 +65,6 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.DIRECTION
 import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 import de.openali.odysseus.chart.framework.model.mapper.impl.AxisAdjustment;
 import de.openali.odysseus.chart.framework.model.mapper.registry.IMapperRegistry;
-import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
 import de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer;
 import de.openali.odysseus.chart.framework.model.style.IStyleSet;
 import de.openali.odysseus.chart.framework.model.style.ITextStyle;
@@ -171,7 +169,7 @@ public class ChartMapperFactory extends AbstractChartFactory
               try
               {
                 final AbstractStyleType styleType = chartTypeResolver.findStyleType( title.getStyleref(), getContext() );
-                final ITextStyle style = StyleFactory.createTextStyle( (TextStyleType) styleType );
+                final ITextStyle style = StyleFactory.createTextStyle( (TextStyleType)styleType );
                 final TitleTypeBean titleBean = StyleHelper.getTitleTypeBean( axis.getPosition(), title, style );
                 axis.addLabel( titleBean );
 
@@ -191,7 +189,7 @@ public class ChartMapperFactory extends AbstractChartFactory
             mapperRegistry.addMapper( axis );
 
             final ReferencingType rendererRef = axisType.getRendererRef();
-            final AxisRendererType rendererType = (AxisRendererType) getResolver().resolveReference( AxisUtils.getIdentifier( rendererRef ) );
+            final AxisRendererType rendererType = (AxisRendererType)getResolver().resolveReference( AxisUtils.getIdentifier( rendererRef ) );
             if( rendererType != null )
             {
               final String providerId = rendererType.getProvider().getEpid();
@@ -315,8 +313,7 @@ public class ChartMapperFactory extends AbstractChartFactory
       final Number rangeMax = rangeType.getMaxRange();
       final boolean fixMinValue = rangeType.getFixMinValue();
       final boolean fixMaxValue = rangeType.getFixMaxValue();
-      return new DataRangeRestriction<>( min == null ? -Double.MAX_VALUE : min, max == null ? Double.MAX_VALUE : max, rangeMin == null ? 0.0 : rangeMin, rangeMax == null ? Double.MAX_VALUE
-          : rangeMax, fixMinValue, fixMaxValue );
+      return new DataRangeRestriction<>( min == null ? -Double.MAX_VALUE : min, max == null ? Double.MAX_VALUE : max, rangeMin == null ? 0.0 : rangeMin, rangeMax == null ? Double.MAX_VALUE : rangeMax, fixMinValue, fixMaxValue );
     }
     else if( at.isSetAxisDateRangeRestriction() )
     {
@@ -330,20 +327,21 @@ public class ChartMapperFactory extends AbstractChartFactory
   /**
    * creates the axis range from the xml element
    */
-  private IDataRange<Number> getAxisRange( final IAxis axis, final AxisType at )
+  @SuppressWarnings( { "unchecked", "rawtypes" } )
+  private IDataRange<Double> getAxisRange( final IAxis axis, final AxisType at )
   {
-    final DataOperatorHelper dataOperatorHelper = new DataOperatorHelper();
+    //final DataOperatorHelper dataOperatorHelper = new DataOperatorHelper();
 
     if( at.isSetDateRange() )
     {
       final AxisDateRangeType range = at.getDateRange();
-    //  final IDataOperator<Calendar> dataOperator = axis.getDataOperator( Calendar.class );
+      // final IDataOperator<Calendar> dataOperator = axis.getDataOperator( Calendar.class );
       final Calendar minValue = range.getMinValue();
       final Calendar maxValue = range.getMaxValue();
 
-      final Number min = axis.logicalToNumeric( minValue );
-      final Number max = axis.logicalToNumeric( maxValue );
-      return DataRange.createFromComparable( min, max );
+      final Double min = axis.logicalToNumeric( minValue );
+      final Double max = axis.logicalToNumeric( maxValue );
+      return new DataRange( min, max );// DataRange.createFromComparable( min, max );
     }
     else if( at.isSetNumberRange() )
     {
@@ -351,45 +349,45 @@ public class ChartMapperFactory extends AbstractChartFactory
 
       final Number min = range.getMinValue();
       final Number max = range.getMaxValue();
-      return DataRange.createFromComparable( min, max );
+      return new DataRange( min, max );// DataRange.createFromComparable( min, max );
     }
     else if( at.isSetStringRange() )
     {
       try
       {
         final AxisStringRangeType range = at.getStringRange();
-      //  final IDataOperator<Calendar> dataOperator = axis.getDataOperator( Calendar.class );
+        // final IDataOperator<Calendar> dataOperator = axis.getDataOperator( Calendar.class );
         final String minValue = range.getMinValue();
         final String maxValue = range.getMaxValue();
 
-        final Number min = axis.logicalToNumeric( axis.XMLStringToLogical(  minValue ) );
-        final Number max = axis.logicalToNumeric( axis.XMLStringToLogical( maxValue ) );
+        final Double min = axis.logicalToNumeric( axis.XMLStringToLogical( minValue ) );
+        final Double max = axis.logicalToNumeric( axis.XMLStringToLogical( maxValue ) );
 
-        return DataRange.createFromComparable( min, max );
+        return new DataRange<>( min, max );// DataRange.createFromComparable( min, max );
       }
       catch( final MalformedValueException ex )
       {
         ex.printStackTrace();
-        return DataRange.createFromComparable( null, null );
+        return new DataRange( null, null );// DataRange.createFromComparable( null, null );
       }
     }
     else if( at.isSetDurationRange() )
     {
       final AxisDurationRangeType range = at.getDurationRange();
-      final IDataOperator<Calendar> dataOperator = dataOperatorHelper.getDataOperator( Calendar.class );
+      // final IDataOperator<Calendar> dataOperator = dataOperatorHelper.getDataOperator( Calendar.class );
       final GDuration minDur = range.getMinValue();
       final Calendar now = Calendar.getInstance();
       final Calendar minValue = addDurationToCal( now, minDur );
       final GDuration maxDur = range.getMaxValue();
       final Calendar maxValue = addDurationToCal( now, maxDur );
 
-      final Number min = dataOperator.logicalToNumeric( minValue );
-      final Number max = dataOperator.logicalToNumeric( maxValue );
-      return DataRange.createFromComparable( min, max );
+      final Double min = axis.logicalToNumeric( minValue );
+      final Double max = axis.logicalToNumeric( maxValue );
+      return new DataRange<>( min, max );
     }
     else
     {
-      return DataRange.createFromComparable( null, null );
+      return new DataRange( null, null );// DataRange.createFromComparable( null, null );
     }
   }
 
@@ -402,7 +400,7 @@ public class ChartMapperFactory extends AbstractChartFactory
     cal.add( Calendar.HOUR_OF_DAY, sign * dur.getHour() );
     cal.add( Calendar.MINUTE, sign * dur.getMinute() );
     cal.add( Calendar.SECOND, sign * dur.getSecond() );
-    cal.add( Calendar.MILLISECOND, (int) (sign * dur.getFraction().doubleValue()) );
+    cal.add( Calendar.MILLISECOND, (int)(sign * dur.getFraction().doubleValue()) );
     return cal;
   }
 
@@ -419,8 +417,8 @@ public class ChartMapperFactory extends AbstractChartFactory
   public void addMapper( final MapperType type, final ReferencableType... baseTypes )
   {
     if( type instanceof AxisType )
-      addAxis( (AxisType) type, baseTypes );
+      addAxis( (AxisType)type, baseTypes );
     else if( type instanceof ScreenAxisType )
-      addScreenAxis( (ScreenAxisType) type );
+      addScreenAxis( (ScreenAxisType)type );
   }
 }
