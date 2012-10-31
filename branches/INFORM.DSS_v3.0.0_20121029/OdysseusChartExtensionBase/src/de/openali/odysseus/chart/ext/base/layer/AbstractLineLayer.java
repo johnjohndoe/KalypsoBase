@@ -46,8 +46,17 @@ public abstract class AbstractLineLayer extends AbstractChartLayer
   {
     super( provider, styleSet );
 
+    final String legendMode = getLegendMode( provider );
+    m_legendMode = legendMode;
+  }
+
+  private String getLegendMode( final ILayerProvider provider )
+  {
+    if( provider == null )
+      return LEGEND_MODE_LINE;
+
     final IParameterContainer parameterContainer = provider.getParameterContainer();
-    m_legendMode = parameterContainer.getParameterValue( PARAMETER_LEGEND_MODE, LEGEND_MODE_LINE );
+    return parameterContainer.getParameterValue( PARAMETER_LEGEND_MODE, LEGEND_MODE_LINE );
   }
 
   @Override
@@ -132,7 +141,7 @@ public abstract class AbstractLineLayer extends AbstractChartLayer
     if( lineStyle == null )
       return getStyle( ILineStyle.class );
 
-    return (ILineStyle) lineStyle;
+    return (ILineStyle)lineStyle;
   }
 
   protected PolylineFigure getPolyLineFigure( )
@@ -158,7 +167,7 @@ public abstract class AbstractLineLayer extends AbstractChartLayer
       pointStyle = getStyleSet().getStyle( "point" );// default style in older .kod's
     if( pointStyle == null )
       return getStyle( IPointStyle.class );
-    return (IPointStyle) pointStyle;
+    return (IPointStyle)pointStyle;
   }
 
   protected final void paint( final GC gc, final Point... points )

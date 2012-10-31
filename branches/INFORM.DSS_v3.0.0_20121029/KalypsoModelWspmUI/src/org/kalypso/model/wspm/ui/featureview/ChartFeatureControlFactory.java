@@ -45,19 +45,27 @@ import java.util.Collection;
 import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.action.CommandWithStyle;
 import org.kalypso.contribs.eclipse.swt.SWTUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.i18n.Messages;
+import org.kalypso.model.wspm.ui.view.chart.provider.IChartProvider;
 import org.kalypso.ogc.gml.featureview.control.IExtensionsFeatureControlFactory2;
 import org.kalypso.ogc.gml.featureview.control.IFeatureControl;
 import org.kalypsodeegree.model.feature.Feature;
+
+import de.openali.odysseus.chart.framework.model.IChartModel;
 
 /**
  * A feature control which shows a chart. The chart configuration comes from the parameters of the extension, its
@@ -69,7 +77,7 @@ import org.kalypsodeegree.model.feature.Feature;
  * does not work yet).</li>
  * <li>featureKeyName: The key-name under which the current feature will be put into the ChartDataProvider.</li>
  * </ul>
- *
+ * 
  * @author Gernot Belger
  */
 public class ChartFeatureControlFactory implements IExtensionsFeatureControlFactory2
@@ -100,7 +108,16 @@ public class ChartFeatureControlFactory implements IExtensionsFeatureControlFact
 
     final String configurationUrl = KalypsoCorePlugin.getDefault().getCatalogManager().resolve( configurationUrn, configurationUrn );
 
-    return new ChartFeatureControl( featureKeyName, feature, pt, configurationUrl, chartName, commands, chartProviderID );
+    final ChartFeatureControl control = new ChartFeatureControl( featureKeyName, feature, pt, configurationUrl, chartName, commands )
+    {
+      @Override
+      protected void handleChartLoaded( final IChartModel chartModel )
+      {
+        ChartFeatureControlFactory.this.onChartLoaded( chartModel, chartProviderID, this );
+      }
+    };
+
+    return control;
   }
 
   private CommandWithStyle[] parseCommands( final String cmdIds, final String cmdStyles )
@@ -130,5 +147,59 @@ public class ChartFeatureControlFactory implements IExtensionsFeatureControlFact
     }
 
     return commands.toArray( new CommandWithStyle[commands.size()] );
+  }
+
+  void onChartLoaded( final IChartModel chartModel, final String chartProviderID, final ChartFeatureControl featureControl )
+  {
+    try
+    {
+      /* Get the chart provider. */
+      final IChartProvider chartProvider = getChartProvider( chartProviderID );
+      if( chartProvider == null )
+        return;
+
+      /* Get the feature. */
+      final Feature feature = featureControl.getFeature();
+      final IPropertyType property = featureControl.getFeatureTypeProperty();
+      final Feature chartFeature = ChartFeatureControlComposite.getChartFeature( feature, property );
+
+      /* Configure. */
+      chartProvider.configure( chartModel, chartFeature );
+
+      chartModel.autoscale();
+    }
+    catch( final CoreException ex )
+    {
+      /* Log the error message. */
+      KalypsoModelWspmUIPlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( ex ) );
+    }
+  }
+
+  /**
+   * This function looks up a chart provider with the given ID.
+   * 
+   * @param chartProviderID
+   *          The ID of the chart provider.
+   * @return The chart provider or null.
+   */
+  private IChartProvider getChartProvider( final String chartProviderID ) throws CoreException
+  {
+    if( StringUtils.isBlank( chartProviderID ) )
+      return null;
+
+    /* Get the extension registry. */
+    final IExtensionRegistry registry = Platform.getExtensionRegistry();
+
+    /* Get all elements for the extension point. */
+    final IConfigurationElement[] elements = registry.getConfigurationElementsFor( "org.kalypso.model.wspm.ui.chartProvider" ); //$NON-NLS-1$
+    for( final IConfigurationElement element : elements )
+    {
+      /* Get the id. */
+      final String id = element.getAttribute( "id" ); //$NON-NLS-1$
+      if( id != null && id.length() > 0 && id.equals( chartProviderID ) )
+        return (IChartProvider)element.createExecutableExtension( "class" ); //$NON-NLS-1$
+    }
+
+    return null;
   }
 }
