@@ -75,9 +75,6 @@ public class StandardShapeDataFactory implements IShapeDataFactory
     m_signature = signature;
   }
 
-  /**
-   * @see org.kalypso.shape.deegree.IShapeDataFactory#createData()
-   */
   @Override
   public IShapeData createData( )
   {
@@ -99,5 +96,4 @@ public class StandardShapeDataFactory implements IShapeDataFactory
 
     return new ShapeSignature( shapeType, geometry, fields );
   }
-
 }
