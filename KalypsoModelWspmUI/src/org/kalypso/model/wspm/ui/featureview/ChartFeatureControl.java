@@ -68,15 +68,13 @@ class ChartFeatureControl extends AbstractFeatureControl
 
   private final String m_configurationUrl;
 
-  private final String m_chartProviderID;
-
   private final String m_chartName;
 
   private final CommandWithStyle[] m_commands;
 
   private ChartFeatureControlComposite m_chartControl;
 
-  public ChartFeatureControl( final String featureKeyName, final Feature feature, final IPropertyType pt, final String configurationUrl, final String chartName, final CommandWithStyle[] commands, final String chartProviderID )
+  public ChartFeatureControl( final String featureKeyName, final Feature feature, final IPropertyType pt, final String configurationUrl, final String chartName, final CommandWithStyle[] commands )
   {
     super( feature, pt );
 
@@ -84,7 +82,6 @@ class ChartFeatureControl extends AbstractFeatureControl
     m_configurationUrl = configurationUrl;
     m_chartName = chartName;
     m_commands = commands;
-    m_chartProviderID = chartProviderID;
   }
 
   @Override
@@ -178,7 +175,18 @@ class ChartFeatureControl extends AbstractFeatureControl
     if( !result.isOK() )
       m_chartControl.addStatus( result );
     else
+    {
+      handleChartLoaded( m_chartModel );
+
       hideUnusedTabs( parent );
+    }
+  }
+
+  /**
+   * Allows client to tweak chart after it was loaded
+   */
+  protected void handleChartLoaded( @SuppressWarnings( "unused" ) final IChartModel chartModel )
+  {
   }
 
   private void hideUnusedTabs( final Composite parent )
