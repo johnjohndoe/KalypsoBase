@@ -75,9 +75,6 @@ public class ComponentUiDateHandler extends AbstractComponentUiHandler implement
     m_useDatePicker = false;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#createCellEditor(org.eclipse.swt.widgets.Table)
-   */
   @Override
   public CellEditor createCellEditor( final Table table )
   {
@@ -91,9 +88,6 @@ public class ComponentUiDateHandler extends AbstractComponentUiHandler implement
     return textCellEditor;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#formatValue(org.kalypso.observation.result.IRecord)
-   */
   @Override
   public Object doGetValue( final IRecord record )
   {
@@ -107,10 +101,6 @@ public class ComponentUiDateHandler extends AbstractComponentUiHandler implement
     return getStringRepresentation( record );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#setValue(org.kalypso.observation.result.IRecord,
-   *      java.lang.Object)
-   */
   @Override
   public void doSetValue( final IRecord record, final Object value )
   {
@@ -120,7 +110,7 @@ public class ComponentUiDateHandler extends AbstractComponentUiHandler implement
     // This happens, if we use the TextEditor (m_datePicker == false)
     if( value instanceof String )
     {
-      final String valueStr = (String) value;
+      final String valueStr = (String)value;
       if( valueStr.isEmpty() )
         setValue( record, null );
       else
@@ -132,9 +122,6 @@ public class ComponentUiDateHandler extends AbstractComponentUiHandler implement
     setValue( record, value );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#getStringRepresentation(java.lang.Object)
-   */
   @Override
   public String getStringRepresentation( final IRecord record )
   {
@@ -144,7 +131,7 @@ public class ComponentUiDateHandler extends AbstractComponentUiHandler implement
 
     if( value instanceof XMLGregorianCalendar )
     {
-      final XMLGregorianCalendar xmlCal = (XMLGregorianCalendar) value;
+      final XMLGregorianCalendar xmlCal = (XMLGregorianCalendar)value;
       final Date date = DateUtilities.toDate( xmlCal );
 
       if( date == null )
@@ -161,9 +148,6 @@ public class ComponentUiDateHandler extends AbstractComponentUiHandler implement
     return Messages.getString( "org.kalypso.ogc.gml.om.table.handlers.ComponentUiDateHandler.0" ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#parseValue(java.lang.String)
-   */
   @Override
   public Object parseValue( final String text )
   {
@@ -186,14 +170,11 @@ public class ComponentUiDateHandler extends AbstractComponentUiHandler implement
       return null;
 
     final SimpleDateFormat simpleDateFormat = new SimpleDateFormat( parseFormat );
+    simpleDateFormat.setTimeZone( KalypsoCorePlugin.getDefault().getTimeZone() );
     final Date date = simpleDateFormat.parse( text );
     return DateUtilities.toXMLGregorianCalendar( date );
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#setValue(org.kalypso.observation.result.IRecord,
-   *      java.lang.Object)
-   */
   @Override
   public void setValue( final IRecord record, final Object value )
   {
@@ -204,15 +185,12 @@ public class ComponentUiDateHandler extends AbstractComponentUiHandler implement
       record.setValue( index, value );
   }
 
-  /**
-   * @see org.eclipse.jface.viewers.ICellEditorValidator#isValid(java.lang.Object)
-   */
   @Override
   public String isValid( final Object value )
   {
     try
     {
-      parseValueInternal( (String) value );
+      parseValueInternal( (String)value );
       return null;
     }
     catch( final ParseException e )
