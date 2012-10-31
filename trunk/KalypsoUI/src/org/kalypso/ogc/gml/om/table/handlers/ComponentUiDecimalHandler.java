@@ -41,6 +41,7 @@
 package org.kalypso.ogc.gml.om.table.handlers;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.eclipse.jface.viewers.CellEditor;
@@ -79,13 +80,24 @@ public class ComponentUiDecimalHandler extends AbstractComponentUiHandler
     if( value == null )
       return ""; //$NON-NLS-1$
 
-    return getStringRepresentation( record );
+    // TODO: maybe we need an 'editFormat' as well?
+
+    if( value instanceof BigDecimal )
+    {
+      // force number of digits to be scale; format with correct locale as well
+      final NumberFormat format = NumberFormat.getInstance();
+      format.setMinimumFractionDigits( ((BigDecimal)value).scale() );
+      return format.format( value );
+    }
+
+    // IMPORTANT: do not use 'getStringRepresentation'; we need to see internal digits here (else just clicking the cell might change the value)
+    return String.format( "%f", value );
   }
 
   @Override
   public void doSetValue( final IRecord record, final Object value )
   {
-    if( value == null || value instanceof String && ((String) value).length() == 0 )
+    if( value == null || value instanceof String && ((String)value).length() == 0 )
       setValue( record, null );
     else
       setValue( record, parseValue( value.toString() ) );
