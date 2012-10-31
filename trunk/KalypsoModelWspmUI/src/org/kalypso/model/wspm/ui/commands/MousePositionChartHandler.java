@@ -118,7 +118,7 @@ public class MousePositionChartHandler extends AbstractChartHandler
   public void mouseMove( final MouseEvent e )
   {
     final IChartComposite chart = getChart();
-    final IProfilChartLayer theme = UpdateProfileCursorChartHandler.findProfileTheme( chart );
+    final IProfilChartLayer theme = SelectionChartHandlerHelper.findProfileTheme( chart );
     String msg = "";
     if( theme != null )
     {

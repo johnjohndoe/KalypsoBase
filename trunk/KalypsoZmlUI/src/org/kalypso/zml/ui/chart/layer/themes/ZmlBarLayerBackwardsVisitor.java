@@ -66,7 +66,6 @@ import org.kalypso.zml.ui.KalypsoZmlUI;
 import de.openali.odysseus.chart.ext.base.layer.BarPaintManager;
 import de.openali.odysseus.chart.ext.base.layer.BarRectangle;
 import de.openali.odysseus.chart.ext.base.layer.IBarLayerPainter;
-import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.figure.IPaintable;
 import de.openali.odysseus.chart.framework.model.layer.EditInfo;
 import de.openali.odysseus.chart.framework.model.layer.IChartLayerFilter;
@@ -93,7 +92,7 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPaint
 
   private final int m_baseLine;
 
-  private final ICoordinateMapper m_mapper;
+  private final ICoordinateMapper<Date,Number> m_mapper;
 
   private BarRectangle m_currentBar;
 
@@ -165,13 +164,13 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPaint
       if( Objects.isNull( domainValue, targetValue ) )
         return;
 
-      final Double numericTarget = m_range.getNumberDataOperator().logicalToNumeric( targetValue );
+//      final Double numericTarget = m_range.getNumberDataOperator().logicalToNumeric( targetValue );
+//
+//      /* current x */
+//      final IDataOperator<Date> dateDataOperator = m_range.getDateDataOperator();
+//      final Double numericDomain = dateDataOperator.logicalToNumeric( domainValue );
 
-      /* current x */
-      final IDataOperator<Date> dateDataOperator = m_range.getDateDataOperator();
-      final Double numericDomain = dateDataOperator.logicalToNumeric( domainValue );
-
-      final Point screenCurrent = m_mapper.numericToScreen( numericDomain, numericTarget );
+      final Point screenCurrent = m_mapper.logicalToScreen(domainValue,targetValue);//numericToScreen( numericDomain, numericTarget );
 
       final int currentX = screenCurrent.x;
       final int currentY = screenCurrent.y;
@@ -328,10 +327,10 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPaint
 
       final Date prevTime = new Date( currentTime.getTime() - widthMillis );
 
-      final IDataOperator<Date> dateDataOperator = m_range.getDateDataOperator();
-      final Double numericPrev = dateDataOperator.logicalToNumeric( prevTime );
+//      final IDataOperator<Date> dateDataOperator = m_range.getDateDataOperator();
+//      final Double numericPrev = dateDataOperator.logicalToNumeric( prevTime );
 
-      return m_mapper.numericToScreen( numericPrev, 0.0 ).x;
+      return m_mapper.getDomainAxis().logicalToScreen( prevTime );//.numericToScreen( numericPrev, 0.0 ).x;
     }
   }
 

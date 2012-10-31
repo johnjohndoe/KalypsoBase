@@ -44,7 +44,6 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.pair.IKeyValue;
@@ -54,10 +53,8 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.zml.ui.KalypsoZmlUI;
 
 import de.openali.odysseus.chart.framework.model.data.DataRange;
-import de.openali.odysseus.chart.framework.model.data.IDataOperator;
 import de.openali.odysseus.chart.framework.model.data.IDataRange;
 import de.openali.odysseus.chart.framework.model.figure.impl.ClipHelper;
-import de.openali.odysseus.chart.framework.model.mapper.registry.impl.DataOperatorHelper;
 import de.openali.odysseus.chart.framework.util.resource.IPair;
 import de.openali.odysseus.chart.framework.util.resource.Pair;
 
@@ -66,9 +63,9 @@ import de.openali.odysseus.chart.framework.util.resource.Pair;
  */
 public class ZmlLineLayerRangeHandler
 {
-  private final IDataOperator<Date> m_dateDataOperator = new DataOperatorHelper().getDataOperator( Date.class );
-
-  private final IDataOperator<Number> m_numberDataOperator = new DataOperatorHelper().getDataOperator( Number.class );
+//  private final IDataOperator<Date> m_dateDataOperator = new DataOperatorHelper().getDataOperator( Date.class );
+//
+//  private final IDataOperator<Number> m_numberDataOperator = new DataOperatorHelper().getDataOperator( Number.class );
 
   private final ZmlLineLayer m_layer;
 
@@ -127,15 +124,15 @@ public class ZmlLineLayerRangeHandler
     }
   }
 
-  public IDataOperator<Date> getDateDataOperator( )
-  {
-    return m_dateDataOperator;
-  }
-
-  public IDataOperator<Number> getNumberDataOperator( )
-  {
-    return m_numberDataOperator;
-  }
+//  public IDataOperator<Date> getDateDataOperator( )
+//  {
+//    return m_dateDataOperator;
+//  }
+//
+//  public IDataOperator<Number> getNumberDataOperator( )
+//  {
+//    return m_numberDataOperator;
+//  }
 
   private IKeyValue<IPair<Number, Number>, IPair<Number, Number>> calculateMinMax( final IPair<Number, Number>[] points )
   {

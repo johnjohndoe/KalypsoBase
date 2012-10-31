@@ -57,7 +57,7 @@ public abstract class AbstractAxis<T> extends AbstractMapper implements IAxis<T>
     this( id, pos, null, null );
   }
 
-  public AbstractAxis( final String id, final POSITION pos, final IAxisRenderer renderer,final IDataOperator<T> dataOperator )
+  public AbstractAxis( final String id, final POSITION pos, final IAxisRenderer renderer, final IDataOperator<T> dataOperator )
   {
     super( id );
     m_pos = pos;
@@ -230,6 +230,10 @@ public abstract class AbstractAxis<T> extends AbstractMapper implements IAxis<T>
   @Override
   public Double numericToNormalized( Double value )
   {
+    if( value == null )
+    {
+      return Double.NaN;
+    }
     final IDataRange<Double> dataRange = getNumericRange();
     if( dataRange.getMax() == null || dataRange.getMin() == null )
       return Double.NaN;
