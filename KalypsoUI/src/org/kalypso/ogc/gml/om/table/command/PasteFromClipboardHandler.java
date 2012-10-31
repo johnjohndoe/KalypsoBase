@@ -78,14 +78,11 @@ import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
 
 /**
  * Pastes the contents of the clipboard to the TupleResult
- *
+ * 
  * @author Dejan Antanaskovic
  */
 public class PasteFromClipboardHandler extends AbstractHandler
 {
-  /**
-   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event )
   {
@@ -94,7 +91,7 @@ public class PasteFromClipboardHandler extends AbstractHandler
     String trstring = null;
     try
     {
-      trstring = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getContents( this ).getTransferData( DataFlavor.stringFlavor );
+      trstring = (String)Toolkit.getDefaultToolkit().getSystemClipboard().getContents( this ).getTransferData( DataFlavor.stringFlavor );
       // if clipboard content is not text or that content is empty, pop error message
       if( trstring == null || trstring.trim().length() == 0 )
       {
@@ -119,12 +116,12 @@ public class PasteFromClipboardHandler extends AbstractHandler
     final IContentProvider contentProvider = tupleResultViewer.getContentProvider();
     TupleResultContentProvider resultContentProvider = null;
     if( contentProvider instanceof TupleResultContentProvider )
-      resultContentProvider = (TupleResultContentProvider) contentProvider;
+      resultContentProvider = (TupleResultContentProvider)contentProvider;
     else if( contentProvider instanceof LastLineContentProvider )
     {
-      final IStructuredContentProvider wrappedProvider = ((LastLineContentProvider) contentProvider).getWrappedProvider();
+      final IStructuredContentProvider wrappedProvider = ((LastLineContentProvider)contentProvider).getWrappedProvider();
       if( wrappedProvider instanceof TupleResultContentProvider )
-        resultContentProvider = (TupleResultContentProvider) wrappedProvider;
+        resultContentProvider = (TupleResultContentProvider)wrappedProvider;
     }
     if( resultContentProvider == null )
       return null;
@@ -197,9 +194,6 @@ public class PasteFromClipboardHandler extends AbstractHandler
         record.setValue( i, component.getDefaultValue() );
     }
 
-    // directly add record: we may get empty lines when parsing fails, but better than nothing
-    records.add( record );
-
     final String[] tokens = StringUtils.split( line, '\t' );
     for( int j = 0; j < tokens.length; j++ )
     {
@@ -216,5 +210,8 @@ public class PasteFromClipboardHandler extends AbstractHandler
         stati.add( IStatus.ERROR, msg, e );
       }
     }
+
+    // Add record to observation afterwards
+    records.add( record );
   }
 }
