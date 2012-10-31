@@ -91,8 +91,33 @@ public class TupleResultContentProvider2 implements IStructuredContentProvider
     @Override
     public IStatus runInUIThread( final IProgressMonitor monitor )
     {
+      final TableViewer tableViewer = getTableViewer();
+      final Table table = tableViewer.getTable();
+      if( table.isDisposed() )
+        return Status.OK_STATUS;
+
       refreshColumns();
-      getTableViewer().refresh();
+      tableViewer.refresh();
+
+      return Status.OK_STATUS;
+    }
+  };
+
+  private final UIJob m_refreshTableJob = new UIJob( "Refresh tuple result table" ) //$NON-NLS-1$
+  {
+    @Override
+    public IStatus runInUIThread( final IProgressMonitor monitor )
+    {
+      final TableViewer tableViewer = getTableViewer();
+      final Table table = tableViewer.getTable();
+      if( table.isDisposed() )
+        return Status.OK_STATUS;
+
+      tableViewer.refresh();
+
+      // REMARK: at this place it is OK to force the selection to be shown
+      // as it is quite probable that the user changed the value of the current selection
+      tableViewer.getTable().showSelection();
 
       return Status.OK_STATUS;
     }
@@ -320,9 +345,7 @@ public class TupleResultContentProvider2 implements IStructuredContentProvider
               // we need the insert positions here... or the viewer should have an sorter?
               // tableViewer.add( records );
               // tableViewer.reveal( records[records.length - 1] );
-              tableViewer.refresh();
-              /* Total Refresh may shift the table, so current selection is no more visible */
-              // TODO: how to fix this?
+              scheduleRefresh();
               break;
 
             case REMOVED:
@@ -332,12 +355,7 @@ public class TupleResultContentProvider2 implements IStructuredContentProvider
             case CHANGED:
             {
               if( records == null )
-              {
-                tableViewer.refresh();
-                // REMARK: at this place it is OK to force the selection to be shown
-                // as it is quite probable that the user changed the value of the current selection
-                tableViewer.getTable().showSelection();
-              }
+                scheduleRefresh();
               else
                 tableViewer.update( records, null );
             }
@@ -351,6 +369,13 @@ public class TupleResultContentProvider2 implements IStructuredContentProvider
   {
     m_updateColumnsJob.cancel();
     m_updateColumnsJob.schedule( 100 );
+  }
+
+  protected void scheduleRefresh( )
+  {
+    /* protected against too many refresh's at once */
+    m_refreshTableJob.cancel();
+    m_refreshTableJob.schedule( 50 );
   }
 
 //  IComponentUiHandler getHandler( final String property )

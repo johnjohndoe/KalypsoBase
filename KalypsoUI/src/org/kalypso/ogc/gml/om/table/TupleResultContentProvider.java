@@ -53,8 +53,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.jface.viewers.DefaultTableViewer;
@@ -89,6 +91,27 @@ public final class TupleResultContentProvider implements IStructuredContentProvi
     }
   };
 
+  // TODO: we needs a similar job for updates, but then we need some kind of queue of all items to be updated
+  private final UIJob m_refreshTableJob = new UIJob( "Refresh tuple result table" ) //$NON-NLS-1$
+  {
+    @Override
+    public IStatus runInUIThread( final IProgressMonitor monitor )
+    {
+      final TableViewer tableViewer = getTableViewer();
+      final Table table = tableViewer.getTable();
+      if( table.isDisposed() )
+        return Status.OK_STATUS;
+
+      tableViewer.refresh();
+
+      // REMARK: at this place it is OK to force the selection to be shown
+      // as it is quite probable that the user changed the value of the current selection
+      tableViewer.getTable().showSelection();
+
+      return Status.OK_STATUS;
+    }
+  };
+
   private DefaultTableViewer m_tableViewer;
 
   private TupleResult m_result;
@@ -100,6 +123,8 @@ public final class TupleResultContentProvider implements IStructuredContentProvi
   public TupleResultContentProvider( final IComponentUiHandlerProvider factory )
   {
     m_factory = factory;
+
+    m_refreshTableJob.setSystem( true );
     m_updateColumnsJob.setSystem( true );
   }
 
@@ -112,13 +137,13 @@ public final class TupleResultContentProvider implements IStructuredContentProvi
   @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
-    final DefaultTableViewer tableViewer = (DefaultTableViewer) viewer;
+    final DefaultTableViewer tableViewer = (DefaultTableViewer)viewer;
     m_tableViewer = tableViewer;
 
     if( oldInput instanceof TupleResult )
-      ((TupleResult) oldInput).removeChangeListener( this );
+      ((TupleResult)oldInput).removeChangeListener( this );
 
-    m_result = (TupleResult) newInput;
+    m_result = (TupleResult)newInput;
     if( m_result != null )
     {
       // Only remove columns if input non null, because input==null may happen while disposing
@@ -181,7 +206,7 @@ public final class TupleResultContentProvider implements IStructuredContentProvi
   {
     if( inputElement != null && inputElement instanceof TupleResult )
     {
-      final TupleResult result = (TupleResult) inputElement;
+      final TupleResult result = (TupleResult)inputElement;
 
       return result.toArray();
     }
@@ -235,7 +260,7 @@ public final class TupleResultContentProvider implements IStructuredContentProvi
                 // we need the insert positions here... or the viewer should have an sorter?
                 // tableViewer.add( records );
                 // tableViewer.reveal( records[records.length - 1] );
-                tableViewer.refresh();
+                scheduleRefresh();
                 /* Total Refresh may shift the table, so current selection is no more visible */
                 // TODO: how to fix this?
                 break;
@@ -248,10 +273,7 @@ public final class TupleResultContentProvider implements IStructuredContentProvi
               {
                 if( records == null )
                 {
-                  tableViewer.refresh();
-                  // REMARK: at this place it is OK to force the selection to be shown
-                  // as it is quite probable that the user changed the value of the current selection
-                  tableViewer.getTable().showSelection();
+                  scheduleRefresh();
                 }
                 else
                   tableViewer.update( records, null );
@@ -260,6 +282,13 @@ public final class TupleResultContentProvider implements IStructuredContentProvi
             }
         }
       } );
+  }
+
+  protected void scheduleRefresh( )
+  {
+    /* protected against too many refresh's at once */
+    m_refreshTableJob.cancel();
+    m_refreshTableJob.schedule( 50 );
   }
 
   @Override
