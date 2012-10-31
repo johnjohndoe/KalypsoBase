@@ -77,7 +77,8 @@ public class ComponentUiDoubleHandler extends AbstractComponentUiHandler
     if( value == null )
       return ""; //$NON-NLS-1$
 
-    return getStringRepresentation( record );
+    // IMPORTANT: do not use 'getStringRepresentation'; we need to see internal digits here (else just clicking the cell might change the value)
+    return String.format( "%f", value );
   }
 
   @Override
