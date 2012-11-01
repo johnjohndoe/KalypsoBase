@@ -50,10 +50,10 @@ import org.kalypso.contribs.java.io.RunAfterCloseOutputStream;
  * Davor kann noch eine Token-Ersetzung stattfinden
  * </p>
  * TODO: untersuchen warum es auch org.kalypso.contribs.java.net.UrlUtilities gibt??? Marc.
- *
+ * 
  * @author belger
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings( "restriction" )
 public class UrlResolver implements IUrlResolver
 {
   public static final String PROJECT_PROTOCOLL = "project:"; //$NON-NLS-1$
@@ -67,11 +67,10 @@ public class UrlResolver implements IUrlResolver
    * Löst eine URL relativ zu einer anderen auf.
    * </p>
    * <p>
-   * Also handles the pseudo protocol 'project:'. If project: ist specified in relativeURL, it tries to guess the
-   * project from the baseURL (e.g. the baseURL must be of the form platfrom:/resource/). It then replaces project: by
-   * 'platform:/resource/ <projectname>/
+   * Also handles the pseudo protocol 'project:'. If project: ist specified in relativeURL, it tries to guess the project from the baseURL (e.g. the baseURL must be of the form platfrom:/resource/).
+   * It then replaces project: by 'platform:/resource/ <projectname>/
    * </p>
-   *
+   * 
    * @param baseURL
    * @param relativeURL
    * @throws MalformedURLException
@@ -117,18 +116,12 @@ public class UrlResolver implements IUrlResolver
     return new URL( baseURL, relativeURL );
   }
 
-  /**
-   * @see org.kalypso.contribs.java.net.IUrlResolver#getReplaceEntries()
-   */
   @Override
   public final Iterator<Entry<Object, Object>> getReplaceEntries( )
   {
     return m_replaceTokenMap.entrySet().iterator();
   }
 
-  /**
-   * @see org.kalypso.contribs.java.net.IUrlResolver#addReplaceToken(java.lang.String, java.lang.String)
-   */
   @Override
   public void addReplaceToken( final String key, final String value )
   {
@@ -137,9 +130,6 @@ public class UrlResolver implements IUrlResolver
 
   /**
    * If URL denotes a location within the workspace, special handling is done. Else, we rely on {@link UrlUtilities}.
-   *
-   * @throws IOException
-   * @see org.kalypso.contribs.java.net.IUrlResolver#createWriter(java.net.URL)
    */
   @Override
   public OutputStreamWriter createWriter( final URL url ) throws IOException
@@ -191,8 +181,10 @@ public class UrlResolver implements IUrlResolver
           charset = null;
         }
 
-        final OutputStreamWriter osw = charset == null ? new OutputStreamWriter( os ) : new OutputStreamWriter( os, charset );
-        return osw;
+        if( charset == null )
+          return new OutputStreamWriter( os );
+
+        return new OutputStreamWriter( os, charset );
       }
 
       throw e;
@@ -201,7 +193,7 @@ public class UrlResolver implements IUrlResolver
 
   /**
    * Ausnahmebehandlung von Platform URLs. In diesem Fall anhand der Workbench das encoding bestimmen.
-   *
+   * 
    * @see org.kalypso.contribs.java.net.IUrlResolver#createReader(java.net.URL)
    */
   @Override
