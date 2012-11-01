@@ -62,6 +62,8 @@ import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.input.NullInputStream;
+import org.apache.commons.io.output.NullOutputStream;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
@@ -71,13 +73,15 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.commons.java.io.ProcessWraper;
+import org.kalypso.commons.java.lang.ProcessHelper;
 import org.kalypso.commons.resources.SetContentHelper;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.java.io.filter.PrefixSuffixFilter;
+import org.kalypso.contribs.java.lang.ICancelable;
 import org.kalypso.contribs.java.lang.NumberUtils;
+import org.kalypso.contribs.java.lang.ProgressCancelable;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.util.DoubleComparator;
 import org.kalypso.i18n.Messages;
@@ -104,7 +108,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * GrafikLauncher
- *
+ * 
  * @author schlienger
  */
 public class GrafikLauncher
@@ -134,7 +138,7 @@ public class GrafikLauncher
   /**
    * Opens the grafik tool using an observation template file. Note: this method should be called using a
    * WorkspaceModifyOperation.
-   *
+   * 
    * @return the created tpl file
    * @throws SensorException
    */
@@ -187,7 +191,7 @@ public class GrafikLauncher
   /**
    * Opens the grafik tool using an observation template xml object. Note: this method should be called using a
    * WorkspaceModifyOperation.
-   *
+   * 
    * @param fileName
    *          the filename to use for the grafik template file
    * @param odt
@@ -243,7 +247,7 @@ public class GrafikLauncher
 
   /**
    * Starts the grafik.exe with an eclipse IFile tpl-File.
-   *
+   * 
    * @param tplFile
    *          the Grafik-Vorlage
    * @throws SensorException
@@ -264,54 +268,45 @@ public class GrafikLauncher
     {
       final File grafikExe = getGrafikProgramPath();
 
-      final String cmdLine = '"' + grafikExe.getAbsolutePath() + "\" /V\"" + tplFile.getAbsolutePath() + '"';
+      final String[] commands = new String[] { //
+      grafikExe.getAbsolutePath(), "/V", tplFile.getAbsolutePath() };
 
-      final Process proc = Runtime.getRuntime().exec( cmdLine, null, grafikExe.getParentFile() ); //$NON-NLS-1$
+      final ICancelable cancelable = new ProgressCancelable( monitor );
 
-      final IStatusCollector stati = new StatusCollector( KalypsoGisPlugin.getId() );
+      final ProcessHelper helper = new ProcessHelper( commands, null, grafikExe.getParentFile(), cancelable, 0, NullOutputStream.NULL_OUTPUT_STREAM, NullOutputStream.NULL_OUTPUT_STREAM, new NullInputStream( 0 ) );
+      helper.setKillOnCancel( false );
+      helper.start();
 
-      final ProcessWraper wraper = new ProcessWraper( proc, null )
-      {
-        @Override
-        public void processCanceled( )
-        {
-          // empty
-        }
+      if( monitor.isCanceled() )
+        return new Status( IStatus.CANCEL, KalypsoGisPlugin.PLUGIN_ID, "Grafix.exe cancelled by user. Changed data will not be read back to Kalypso." );
 
-        @Override
-        public void processTerminated( final int returnCode )
-        {
-          synchroniseZml();
-        }
-
-        private void synchroniseZml( )
-        {
-          for( final RememberForSync rfs : syncs )
-          {
-            try
-            {
-              rfs.synchronizeZml();
-            }
-            catch( final Exception e )
-            {
-              e.printStackTrace();
-
-              final String msg = Messages.getString( "org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.8" ) + rfs.getDatFile().getName() + Messages.getString( "org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.9" ) + rfs.getZmlFile().getName(); //$NON-NLS-1$ //$NON-NLS-2$
-              stati.add( IStatus.ERROR, msg, e );
-            }
-          }
-        }
-      };
-
-      // wait for grafik to finish and eventually synchronize data
-      wraper.waitForProcess( false, monitor );
-
-      return stati.asMultiStatusOrOK( Messages.getString( "org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.7" ) ); //$NON-NLS-1$
+      return syncBack( syncs );
     }
     catch( final Exception e )
     {
       throw new SensorException( e );
     }
+  }
+
+  private static IStatus syncBack( final RememberForSync[] syncs )
+  {
+    final IStatusCollector log = new StatusCollector( KalypsoGisPlugin.getId() );
+    for( final RememberForSync rfs : syncs )
+    {
+      try
+      {
+        rfs.synchronizeZml();
+      }
+      catch( final Exception e )
+      {
+        e.printStackTrace();
+
+        final String msg = Messages.getString( "org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.8" ) + rfs.getDatFile().getName() + Messages.getString( "org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.9" ) + rfs.getZmlFile().getName(); //$NON-NLS-1$ //$NON-NLS-2$
+        log.add( IStatus.ERROR, msg, e );
+      }
+    }
+
+    return log.asMultiStatusOrOK( Messages.getString( "org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher.7" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -342,7 +337,7 @@ public class GrafikLauncher
   /**
    * Creates a new temporary file given its pathName and an InputStream. The content from the InputStream is written
    * into the file. The file will be deleted after the VM shuts down
-   *
+   * 
    * @param charMode
    * @param prefix
    *          prefix of file name
@@ -382,7 +377,7 @@ public class GrafikLauncher
   /**
    * Looks in the given path if a file with the given prefix and suffix exists. Returns the file in the positive. If
    * more than one such file is found, returns the first of them.
-   *
+   * 
    * @param prefix
    *          name of the file should begin with this prefix
    * @param suffix
@@ -413,10 +408,8 @@ public class GrafikLauncher
   /**
    * Converts a diagram template file to a grafik tpl.
    * <p>
-   * Important note: the XML-Schema for the diag template file says that if no curve element or specified for a given
-   * observation, then all curves of that observation should be displayed. This is not possible here using the grafik
-   * tool. As a conclusion: when a template file is meant to be used with the grafik tool, then curves need to be
-   * explicitely specified in the xml.
+   * Important note: the XML-Schema for the diag template file says that if no curve element or specified for a given observation, then all curves of that observation should be displayed. This is not
+   * possible here using the grafik tool. As a conclusion: when a template file is meant to be used with the grafik tool, then curves need to be explicitely specified in the xml.
    */
   private static RememberForSync[] odt2tpl( final Obsdiagview odt, final IFolder dest, final Writer writer, final IProgressMonitor monitor ) throws CoreException, IOException
   {
@@ -521,8 +514,8 @@ public class GrafikLauncher
             if( range != null )
             {
               final DoubleComparator dc = new DoubleComparator( 0.001 );
-              final Number lower = (Number) range.getLower();
-              final Number upper = (Number) range.getUpper();
+              final Number lower = (Number)range.getLower();
+              final Number upper = (Number)range.getUpper();
               if( dc.compare( lower, yLower ) < 0 )
                 yLower = lower;
               if( dc.compare( upper, yUpper ) > 0 )
@@ -544,8 +537,8 @@ public class GrafikLauncher
         final IAxisRange range = values.getRange( dateAxis );
         if( range != null )
         {
-          final Date d1 = (Date) range.getLower();
-          final Date d2 = (Date) range.getUpper();
+          final Date d1 = (Date)range.getLower();
+          final Date d2 = (Date)range.getUpper();
 
           if( xLower == null || d1.before( xLower ) )
             xLower = d1;
@@ -653,7 +646,7 @@ public class GrafikLauncher
 
   /**
    * mini helper class for storing a value and a color
-   *
+   * 
    * @author schlienger
    */
   private final static class ValueAndColor
@@ -675,7 +668,7 @@ public class GrafikLauncher
 
     public final String strDate;
 
-    public XLine( @SuppressWarnings("unused") final String lbl, final String strdate )
+    public XLine( @SuppressWarnings( "unused" ) final String lbl, final String strdate )
     {
 // label = lbl;
       strDate = strdate;
