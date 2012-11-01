@@ -59,14 +59,14 @@ import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
  * Helper for creating legend images for themes.
- *
+ * 
  * @author Gernot Belger
  */
 public class LegendExporter
 {
   /**
    * This function exports the legend of the given themes to a file. It seems that it has to be run in an UI-Thread.
-   *
+   * 
    * @param themes
    *          The themes to export.
    * @param file
@@ -113,6 +113,8 @@ public class LegendExporter
       legendBuilder.setFixedSize( size );
 
       image = legendBuilder.createLegend( nodes, device, progress.newChild( 50 ) );
+      if( image == null )
+        return new Status( IStatus.WARNING, KalypsoGisPlugin.PLUGIN_ID, "No visible elements in selection" );
 
       /* Monitor. */
       ProgressUtilities.worked( progress, 50 );
