@@ -70,7 +70,7 @@ import org.kalypso.ogc.gml.map.themes.KalypsoLegendTheme;
 
 /**
  * Builds a legend from a {@link org.kalypso.ogc.gml.outline.nodes.IThemeNode}.
- *
+ * 
  * @author Gernot Belger
  */
 public class NodeLegendBuilder
@@ -103,7 +103,7 @@ public class NodeLegendBuilder
 
   /**
    * Creates a legend image for the given node.<br/>
-   * The callse is responsible to dispose the returned image.
+   * The caller is responsible to dispose the returned image.
    */
   public Image createLegend( final IThemeNode[] nodes, final Device device, final IProgressMonitor monitor )
   {
@@ -172,7 +172,7 @@ public class NodeLegendBuilder
 
   /**
    * This function returns true, if the current theme is allowed by the white list. Otherwise it will return false.
-   *
+   * 
    * @param whiteList
    *          The list of ids of allowed themes.
    * @return True, if the current theme is allowed. False otherwise.
@@ -186,7 +186,7 @@ public class NodeLegendBuilder
     if( !(element instanceof IKalypsoTheme) )
       return true;
 
-    final IKalypsoTheme theme = (IKalypsoTheme) element;
+    final IKalypsoTheme theme = (IKalypsoTheme)element;
 
     /* Only show themes in the white list. */
     final String id = theme.getId();
@@ -201,7 +201,7 @@ public class NodeLegendBuilder
 
   /**
    * This function collects all elements, contained in the theme.
-   *
+   * 
    * @param font
    *          The font, to use.
    * @return A list, containing all elements.
@@ -219,7 +219,7 @@ public class NodeLegendBuilder
 
   /**
    * This function collects all elements in an one level array.
-   *
+   * 
    * @param contentProvider
    *          The content provider, with which the elements can be retrieved.
    * @param font
@@ -259,7 +259,7 @@ public class NodeLegendBuilder
 
   /**
    * This function computes the size for an image with the given elements and the given font.
-   *
+   * 
    * @param elements
    *          The list of elements.
    */
