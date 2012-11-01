@@ -66,7 +66,7 @@ import org.kalypso.contribs.java.lang.ICancelable;
 
 /**
  * This implementation executes processes the 'normal' way, i.e. locally using {@link ProcessBuilder}.
- *
+ * 
  * @author Gernot Belger
  */
 public class DefaultProcess implements IProcess
@@ -152,10 +152,6 @@ public class DefaultProcess implements IProcess
     m_timeout = timeout;
   }
 
-  /**
-   * @see org.kalypso.commons.process.IProcess#startProcess(java.io.OutputStream, java.io.OutputStream,
-   *      java.io.InputStream, org.kalypso.contribs.java.lang.ICancelable)
-   */
   @Override
   public int startProcess( final OutputStream stdOut, final OutputStream stdErr, final InputStream stdIn, final ICancelable cancelable ) throws IOException, ProcessTimeoutException
   {

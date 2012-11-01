@@ -50,9 +50,6 @@ import org.kalypso.commons.process.IProcessFactory;
  */
 public class DefaultProcessFactory implements IProcessFactory
 {
-  /**
-   * @see org.kalypso.commons.process.IProcessFactory#newProcess(String, String, String...)
-   */
   @Override
   public IProcess newProcess( final String tempDirName, final String executable, final String... commandLineArgs )
   {

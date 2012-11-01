@@ -36,9 +36,6 @@ public class CsvTargetHandler implements ITargetHandler
     m_target = target;
   }
 
-  /**
-   * @see org.kalypso.ogc.gml.convert.target.ITargetHandler#saveWorkspace(org.kalypsodeegree.model.feature.GMLWorkspace)
-   */
   @Override
   public void saveWorkspace( final GMLWorkspace workspace ) throws GmlConvertException
   {
@@ -77,7 +74,7 @@ public class CsvTargetHandler implements ITargetHandler
       if( featureFromPath instanceof FeatureList )
       {
         final CsvWriterVisitor visitor = new CsvWriterVisitor( writer, properties, delemiter );
-        ((FeatureList) featureFromPath).accept( visitor );
+        ((FeatureList)featureFromPath).accept( visitor );
       }
       else
         throw new GmlConvertException( Messages.getString( "org.kalypso.ogc.gml.convert.CsvTargetHandler.0" ) + featurePath ); //$NON-NLS-1$
