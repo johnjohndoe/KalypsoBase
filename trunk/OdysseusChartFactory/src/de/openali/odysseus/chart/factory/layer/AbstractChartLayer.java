@@ -53,11 +53,11 @@ public abstract class AbstractChartLayer implements IChartLayer
    */
   private final Map<String, Object> m_data = new HashMap<>();
 
-  private String m_description = "";
+  private String m_description = ""; //$NON-NLS-1$
 
   private final LayerEventHandler m_eventHandler = new LayerEventHandler();
 
-  private String m_identifier = "";
+  private String m_identifier = ""; //$NON-NLS-1$
 
   private boolean m_isActive = false;
 
@@ -237,7 +237,7 @@ public abstract class AbstractChartLayer implements IChartLayer
     }
     catch( ClassCastException e )
     {
-      System.out.println( "axis " + axis.getIdentifier() + " expect " + clazz.getSimpleName() + ", " + dataClass.getSimpleName() + " given." );
+      System.out.println( "axis " + axis.getIdentifier() + " expect " + clazz.getSimpleName() + ", " + dataClass.getSimpleName() + " given." ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       return new DataRange<>( null, null );
     }
 
@@ -444,7 +444,7 @@ public abstract class AbstractChartLayer implements IChartLayer
     if( Objects.isNull( container ) )
       return;
 
-    final String property = container.getParameterValue( "filter", "" ); //$NON-NLS-1$
+    final String property = container.getParameterValue( "filter", "" ); //$NON-NLS-1$ //$NON-NLS-2$
     if( Strings.isNullOrEmpty( property ) )
       return;
 
@@ -500,7 +500,7 @@ public abstract class AbstractChartLayer implements IChartLayer
   @Override
   public String toString( )
   {
-    return String.format( "IChartLayer - id: %s, visible: %s", getIdentifier(), Boolean.valueOf( isVisible() ).toString() );
+    return String.format( "IChartLayer - id: %s, visible: %s", getIdentifier(), Boolean.valueOf( isVisible() ).toString() ); //$NON-NLS-1$
   }
 
   @Override

@@ -62,7 +62,7 @@ public abstract class AbstractBarLayer extends AbstractChartLayer implements ITo
   protected IAreaStyle getAreaStyle( )
   {
     final IStyleSet styleSet = getStyleSet();
-    return styleSet.getStyle( "area", IAreaStyle.class );
+    return styleSet.getStyle( "area", IAreaStyle.class ); //$NON-NLS-1$
   }
 
   @Override

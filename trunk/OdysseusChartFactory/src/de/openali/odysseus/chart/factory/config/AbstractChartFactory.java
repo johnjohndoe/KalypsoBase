@@ -71,7 +71,7 @@ public abstract class AbstractChartFactory
 
   private final URL m_context;
 
-  protected static final String CONFIGURATION_TYPE_KEY = "de.openali.odysseus.chart.factory.configurationType";
+  protected static final String CONFIGURATION_TYPE_KEY = "de.openali.odysseus.chart.factory.configurationType"; //$NON-NLS-1$
 
   protected AbstractChartFactory( final IChartModel model, final IReferenceResolver resolver, final IExtensionLoader loader, final URL context )
   {
@@ -137,7 +137,7 @@ public abstract class AbstractChartFactory
       }
     }
 
-    throw new IllegalStateException( String.format( "MapperType not found: %s", reference.getUrl() ) );
+    throw new IllegalStateException( String.format( "MapperType not found: %s", reference.getUrl() ) ); //$NON-NLS-1$
   }
 
 }

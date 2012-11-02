@@ -11,7 +11,7 @@ public class OdysseusChartFactory extends Plugin
   /**
    * The plug-in ID.
    */
-  public static final String PLUGIN_ID = "de.openali.odysseus.chart.factory";
+  public static final String PLUGIN_ID = "de.openali.odysseus.chart.factory"; //$NON-NLS-1$
 
   /**
    * The shared instance.

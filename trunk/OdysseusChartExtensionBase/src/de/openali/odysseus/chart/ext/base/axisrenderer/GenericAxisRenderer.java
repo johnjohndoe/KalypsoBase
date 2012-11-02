@@ -422,7 +422,7 @@ public class GenericAxisRenderer extends AbstractGenericAxisRenderer
 
     // Else: Calculate
     // check nullValue first
-    final boolean labelEmpty = axis.getLabel() == null ? true : axis.getLabel().trim().equals( "" );
+    final boolean labelEmpty = axis.getLabel() == null ? true : axis.getLabel().trim().equals( "" ); //$NON-NLS-1$
 
     int width = 0;
     final int gap = getGap();

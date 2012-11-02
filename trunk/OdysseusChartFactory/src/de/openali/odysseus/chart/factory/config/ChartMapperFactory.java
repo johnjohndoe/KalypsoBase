@@ -224,7 +224,7 @@ public class ChartMapperFactory extends AbstractChartFactory
             return axis;
           }
           else
-            Logger.logError( Logger.TOPIC_LOG_CONFIG, "Axis could not be created. EPID was: " + axisProviderId );
+            Logger.logError( Logger.TOPIC_LOG_CONFIG, "Axis could not be created. EPID was: " + axisProviderId ); //$NON-NLS-1$
 
         }
         catch( final ConfigurationException e )
@@ -232,10 +232,10 @@ public class ChartMapperFactory extends AbstractChartFactory
           e.printStackTrace();
         }
       else
-        Logger.logError( Logger.TOPIC_LOG_CONFIG, "AxisProvider " + axisProviderId + " not known" );
+        Logger.logError( Logger.TOPIC_LOG_CONFIG, "AxisProvider " + axisProviderId + " not known" ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     else
-      Logger.logError( Logger.TOPIC_LOG_GENERAL, "AxisFactory: given axis is NULL." );
+      Logger.logError( Logger.TOPIC_LOG_GENERAL, "AxisFactory: given axis is NULL." ); //$NON-NLS-1$
 
     return null;
   }

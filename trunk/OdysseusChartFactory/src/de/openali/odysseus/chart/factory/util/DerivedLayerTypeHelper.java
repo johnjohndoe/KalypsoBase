@@ -80,7 +80,7 @@ public final class DerivedLayerTypeHelper
   {
     final LayersType layersType = parent.getLayers();
     if( Objects.isNull( layersType ) )
-      throw new IllegalStateException( String.format( "parent layer '%s' doesn't contains child layer '%s'", parent.getId(), identifier ) );
+      throw new IllegalStateException( String.format( "parent layer '%s' doesn't contains child layer '%s'", parent.getId(), identifier ) ); //$NON-NLS-1$
 
     final LayerType[] layers = layersType.getLayerArray();
     for( final LayerType layerType : layers )
@@ -92,22 +92,22 @@ public final class DerivedLayerTypeHelper
     final LayerRefernceType[] references = layersType.getLayerReferenceArray();
     for( final LayerRefernceType reference : references )
     {
-      final RETokenizer tokenizer = new RETokenizer( new Pattern( ".*#" ), reference.getUrl() );
+      final RETokenizer tokenizer = new RETokenizer( new Pattern( ".*#" ), reference.getUrl() ); //$NON-NLS-1$
       final String referencedLayerIdentifier = tokenizer.nextToken();
 
       if( identifier.equals( referencedLayerIdentifier ) )
-        throw new IllegalStateException( "Updating of derived child layer references is not possible." );
+        throw new IllegalStateException( "Updating of derived child layer references is not possible." ); //$NON-NLS-1$
     }
 
     final DerivedLayerType[] derivedLayers = layersType.getDerivedLayerArray();
     for( final DerivedLayerType derivedLayer : derivedLayers )
     {
       final LayerRefernceType reference = derivedLayer.getLayerReference();
-      final RETokenizer tokenizer = new RETokenizer( new Pattern( ".*#" ), reference.getUrl() );
+      final RETokenizer tokenizer = new RETokenizer( new Pattern( ".*#" ), reference.getUrl() ); //$NON-NLS-1$
       final String referencedLayerIdentifier = tokenizer.nextToken();
 
       if( identifier.equals( referencedLayerIdentifier ) )
-        throw new IllegalStateException( "Updating of derived child layers is not possible." );
+        throw new IllegalStateException( "Updating of derived child layers is not possible." ); //$NON-NLS-1$
     }
 
     return null;

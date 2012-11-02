@@ -36,7 +36,7 @@ public class ArrayContentAxis extends AbstractAxis<Integer>
 
   public ArrayContentAxis( final String id, final POSITION position, final IAxisContentProvider contentProvider, final int fixedWidth )
   {
-    this( id, position, new OrdinalAxisRenderer( id + "_axisRenderer", new AxisRendererConfig(), contentProvider ), contentProvider, fixedWidth );
+    this( id, position, new OrdinalAxisRenderer( id + "_axisRenderer", new AxisRendererConfig(), contentProvider ), contentProvider, fixedWidth ); //$NON-NLS-1$
   }
 
   @Override

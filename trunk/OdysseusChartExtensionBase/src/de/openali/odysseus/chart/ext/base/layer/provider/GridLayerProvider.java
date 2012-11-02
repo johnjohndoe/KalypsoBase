@@ -25,16 +25,16 @@ public class GridLayerProvider extends AbstractLayerProvider
   @Override
   public IChartLayer getLayer( final URL context )
   {
-    final ILineStyle gridStyle = getStyleSet().getStyle( "line", ILineStyle.class );
+    final ILineStyle gridStyle = getStyleSet().getStyle( "line", ILineStyle.class ); //$NON-NLS-1$
 
     try
     {
-      final String orientation = getParameterContainer().getParameterValue( "orientation", "BOTH" );
+      final String orientation = getParameterContainer().getParameterValue( "orientation", "BOTH" ); //$NON-NLS-1$ //$NON-NLS-2$
 
       GridOrientation go;
-      if( orientation.compareTo( "VERTICAL" ) == 0 )
+      if( orientation.compareTo( "VERTICAL" ) == 0 ) //$NON-NLS-1$
         go = GridOrientation.VERTICAL;
-      else if( orientation.compareTo( "HORIZONTAL" ) == 0 )
+      else if( orientation.compareTo( "HORIZONTAL" ) == 0 ) //$NON-NLS-1$
         go = GridOrientation.HORIZONTAL;
       else
         go = GridOrientation.BOTH;

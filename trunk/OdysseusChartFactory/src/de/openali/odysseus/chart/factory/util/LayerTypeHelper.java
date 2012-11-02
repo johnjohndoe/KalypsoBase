@@ -86,8 +86,8 @@ public final class LayerTypeHelper
 
       final ParametersType parametersInstance = ParametersType.Factory.newInstance();
       final ParameterType parameter = parametersInstance.addNewParameter();
-      parameter.setName( "empty" );
-      parameter.setValue( "value" );
+      parameter.setName( "empty" ); //$NON-NLS-1$
+      parameter.setValue( "value" ); //$NON-NLS-1$
 
       providerInstance.setParameters( parametersInstance );
 

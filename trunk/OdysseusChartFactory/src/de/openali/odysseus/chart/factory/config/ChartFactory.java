@@ -37,9 +37,9 @@ public final class ChartFactory
   {
   }
 
-  public static final String AXIS_PROVIDER_KEY = "de.openali.odysseus.chart.factory.axisprovider";
+  public static final String AXIS_PROVIDER_KEY = "de.openali.odysseus.chart.factory.axisprovider"; //$NON-NLS-1$
 
-  public static final String AXISRENDERER_PROVIDER_KEY = "de.openali.odysseus.chart.factory.axisrendererprovider";
+  public static final String AXISRENDERER_PROVIDER_KEY = "de.openali.odysseus.chart.factory.axisrendererprovider"; //$NON-NLS-1$
 
 // public static final String MAPPER_PROVIDER_KEY = "de.openali.odysseus.chart.factory.mapperprovider";
 

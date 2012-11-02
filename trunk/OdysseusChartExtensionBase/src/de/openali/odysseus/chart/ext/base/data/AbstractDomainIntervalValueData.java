@@ -30,7 +30,7 @@ public abstract class AbstractDomainIntervalValueData<T_domain, T_target> implem
     // nur öffnen, wenn nicht schon offen
     if( !m_isOpen )
     {
-      Logger.logInfo( Logger.TOPIC_LOG_DATA, this.getClass() + ": opening Data" );
+      Logger.logInfo( Logger.TOPIC_LOG_DATA, this.getClass() + ": opening Data" ); //$NON-NLS-1$
       m_isOpen = openData();
     }
   }

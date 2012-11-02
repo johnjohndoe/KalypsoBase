@@ -48,7 +48,7 @@ public class GridLayer extends AbstractChartLayer
     super( provider, new StyleSet() );
 
     m_orientation = orientation;
-    getStyleSet().addStyle( "line", gridStyle );
+    getStyleSet().addStyle( "line", gridStyle ); //$NON-NLS-1$
   }
 
   // private final ILineStyle m_gridStyle;
@@ -177,7 +177,7 @@ public class GridLayer extends AbstractChartLayer
 
   private PolylineFigure getPolylineFigure( )
   {
-    final ILineStyle style = getStyleSet().getStyle( "line", ILineStyle.class );
+    final ILineStyle style = getStyleSet().getStyle( "line", ILineStyle.class ); //$NON-NLS-1$
     final PolylineFigure figure = new PolylineFigure();
     figure.setStyle( style );
     return figure;

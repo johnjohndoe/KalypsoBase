@@ -61,7 +61,7 @@ public class RGBParser implements IStringParser<RGB>
   @Override
   public String getFormatHint( )
   {
-    return "String containing 6 hex values";
+    return "String containing 6 hex values"; //$NON-NLS-1$
   }
 
   /**
@@ -72,13 +72,13 @@ public class RGBParser implements IStringParser<RGB>
   {
     if( value.length() != 6 )
     {
-      throw new MalformedValueException( "value must have length 6" );
+      throw new MalformedValueException( "value must have length 6" ); //$NON-NLS-1$
     }
     final String lValue = value.toLowerCase();
 
     if( !lValue.matches( "[0-9a-f]{6}" ) ) //$NON-NLS-1$
     {
-      throw new MalformedValueException( "each digit must be 0 - F" );
+      throw new MalformedValueException( "each digit must be 0 - F" ); //$NON-NLS-1$
     }
 
     final int red = new BigInteger( lValue.substring( 0, 2 ), 16 ).intValue();
