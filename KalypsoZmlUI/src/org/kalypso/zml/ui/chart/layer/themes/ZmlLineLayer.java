@@ -195,7 +195,7 @@ public class ZmlLineLayer extends AbstractLineLayer implements IZmlLayer
   {
     try
     {
-      monitor.beginTask( "Painting line layer", 100 );
+      monitor.beginTask( "Painting line layer", 100 ); //$NON-NLS-1$
 
       final IPair<Number, Number>[] points = getFilteredPoints( null, new SubProgressMonitor( monitor, 50 ) );
       if( points.length == 1 )

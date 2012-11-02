@@ -356,9 +356,9 @@ class ZmlBarLayerBackwardsVisitor implements IObservationVisitor, IBarLayerPaint
         // FIXME: improve -> depends on data type; format double and dates correctly, etc...
         // FIXME: use same mechanism as is used by table
         label.append( axis.getName() );
-        label.append( "  " );
+        label.append( "  " ); //$NON-NLS-1$
         label.append( editData.get( axis ) );
-        label.append( String.format( "[%s]", axis.getUnit() ) );
+        label.append( String.format( "[%s]", axis.getUnit() ) ); //$NON-NLS-1$
         label.append( '\n' );
       }
       catch( final SensorException e )
