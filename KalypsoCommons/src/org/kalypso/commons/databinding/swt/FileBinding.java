@@ -62,6 +62,7 @@ import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.conversion.FileToStringConverter;
 import org.kalypso.commons.databinding.conversion.StringToFileConverter;
+import org.kalypso.commons.internal.i18n.Messages;
 import org.kalypso.contribs.eclipse.jface.wizard.IFileChooserDelegate;
 
 /**
@@ -103,7 +104,7 @@ public class FileBinding
   /**
    * Create a text editor for a file path. The editor is a combo box, that also shows the recent history of edited file
    * pathes.
-   *
+   * 
    * @param historyValue
    *          The value representing the history of directories. Must be of type String[].
    */
@@ -135,7 +136,7 @@ public class FileBinding
   {
     // destination browse button
     final Button browseButton = new Button( parent, SWT.PUSH );
-    browseButton.setText( "Search..." );
+    browseButton.setText( Messages.getString("FileBinding_0") ); //$NON-NLS-1$
     browseButton.setFont( parent.getFont() );
 
     browseButton.addSelectionListener( new SelectionAdapter()
@@ -152,7 +153,7 @@ public class FileBinding
 
   protected void handleBrowseButtonSelected( final Shell shell, final Control fileTextControl )
   {
-    final File currentfile = (File) m_fileValue.getValue();
+    final File currentfile = (File)m_fileValue.getValue();
     final File newFile = m_delegate.chooseFile( shell, currentfile );
     if( newFile == null )
       return;

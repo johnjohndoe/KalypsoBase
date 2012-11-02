@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.commons.KalypsoCommonsPlugin;
+import org.kalypso.commons.internal.i18n.Messages;
 
 /**
  * This job sends a http get request and stores the results.
@@ -73,7 +74,7 @@ public class SendHttpGetRequestJob extends Job
    */
   public SendHttpGetRequestJob( final URL url )
   {
-    super( "HttpGetRequestJob" );
+    super( "HttpGetRequestJob" ); //$NON-NLS-1$
 
     m_url = url;
     m_response = null;
@@ -89,7 +90,7 @@ public class SendHttpGetRequestJob extends Job
     {
       m_response = HttpClientUtilities.sendGet( m_url.toExternalForm() );
 
-      return new Status( IStatus.OK, KalypsoCommonsPlugin.getID(), "Request was successfull." );
+      return new Status( IStatus.OK, KalypsoCommonsPlugin.getID(), Messages.getString("SendHttpGetRequestJob_1") ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {

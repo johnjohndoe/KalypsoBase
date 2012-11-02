@@ -68,7 +68,7 @@ public final class JaxbUtilities
 
   private static final String COM_SUN_XML_BIND_NAMESPACE_PREFIX_MAPPER = "com.sun.xml.bind.namespacePrefixMapper"; //$NON-NLS-1$
 
-  private static final String INDENT_STRING = "com.sun.xml.bind.indentString";
+  private static final String INDENT_STRING = "com.sun.xml.bind.indentString"; //$NON-NLS-1$
 
   public final static Debug DEBUG = new Debug( KalypsoCommonsPlugin.getDefault(), "org.kalypso.jwsdp", "/perf/jaxbinitialisation", System.out ); //$NON-NLS-1$ //$NON-NLS-2$
 

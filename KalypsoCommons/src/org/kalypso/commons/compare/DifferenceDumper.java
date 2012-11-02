@@ -84,7 +84,7 @@ public final class DifferenceDumper
       return;
 
     if( !(m_differences instanceof IDiffElement) )
-      Assert.fail( "Unknown differencer result: " + ObjectUtils.toString( m_differences ) );
+      Assert.fail( "Unknown differencer result: " + ObjectUtils.toString( m_differences ) ); //$NON-NLS-1$
 
     final IDiffElement element = (IDiffElement) m_differences;
     CompareUtils.dumpDiffElement( element, 0, m_elementDumper );

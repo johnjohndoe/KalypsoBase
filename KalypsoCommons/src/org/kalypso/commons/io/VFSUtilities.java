@@ -713,7 +713,7 @@ public class VFSUtilities
     String lComressKind = compressKind;
     if( lComressKind == null || !doCompress )
     {
-      lComressKind = "";
+      lComressKind = ""; //$NON-NLS-1$
     }
     try
     {
@@ -762,7 +762,7 @@ public class VFSUtilities
    */
   public static FileObject uncompressFileContent( final URL sourceFileURL, final URL outputDirURL, final String compressKind )
   {
-    if( compressKind == null || "".equals( compressKind ) )
+    if( compressKind == null || "".equals( compressKind ) ) //$NON-NLS-1$
       return proceedFileCompressOperation( sourceFileURL, outputDirURL, compressKind, false );
 
     return proceedFileCompressOperation( sourceFileURL, outputDirURL, compressKind, true );

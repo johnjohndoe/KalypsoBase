@@ -43,6 +43,7 @@ package org.kalypso.commons.databinding.validation;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.commons.internal.i18n.Messages;
 import org.kalypso.contribs.java.lang.NumberUtils;
 
 /**
@@ -54,7 +55,7 @@ public class StringAsDoubleValidator extends TypedValidator<String>
 {
   public StringAsDoubleValidator( final int severity, final String fieldName )
   {
-    super( String.class, severity, String.format( "'%s' must be a decimal value", fieldName ) );
+    super( String.class, severity, String.format( Messages.getString("StringAsDoubleValidator_0"), fieldName ) ); //$NON-NLS-1$
   }
 
   @Override

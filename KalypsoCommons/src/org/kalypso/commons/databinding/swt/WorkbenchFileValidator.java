@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.databinding.validation.TypedValidator;
+import org.kalypso.commons.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -71,16 +72,16 @@ public class WorkbenchFileValidator extends TypedValidator<IPath>
       if( m_isOptional )
         return Status.OK_STATUS;
 
-      fail( "Please choose a file" );
+      fail( Messages.getString("WorkbenchFileValidator_0") ); //$NON-NLS-1$
     }
 
     final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
     final IResource member = root.findMember( value );
     if( member == null )
-      fail( "File does not exist" );
+      fail( Messages.getString("WorkbenchFileValidator_1") ); //$NON-NLS-1$
 
     if( !(member instanceof IFile) )
-      fail( "Path points to a directory, but should be a file." );
+      fail( Messages.getString("WorkbenchFileValidator_2") ); //$NON-NLS-1$
 
     return Status.OK_STATUS;
   }

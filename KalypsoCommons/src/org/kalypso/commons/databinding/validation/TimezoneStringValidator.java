@@ -45,6 +45,7 @@ import java.util.TimeZone;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -53,7 +54,7 @@ public class TimezoneStringValidator extends TypedValidator<String>
 {
   public TimezoneStringValidator( )
   {
-    super( String.class, IStatus.ERROR, "Please enter a valid timezone name" );
+    super( String.class, IStatus.ERROR, Messages.getString("TimezoneStringValidator_0") ); //$NON-NLS-1$
   }
 
   @Override

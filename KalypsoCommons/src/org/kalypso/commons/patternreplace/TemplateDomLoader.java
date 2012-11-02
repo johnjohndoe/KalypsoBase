@@ -56,7 +56,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.KalypsoCommonsPlugin;
-import org.kalypso.commons.java.net.UrlUtilities;
+import org.kalypso.commons.internal.i18n.Messages;
 import org.kalypso.commons.resources.FileUtilities;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.java.xml.XMLHelper;
@@ -73,7 +73,7 @@ import org.w3c.dom.Document;
  */
 public class TemplateDomLoader
 {
-  private static final String PROP_TEMPLATE_URI = "templateUri";
+  private static final String PROP_TEMPLATE_URI = "templateUri"; //$NON-NLS-1$
 
   private final Properties m_templateProperties = new Properties();
 
@@ -145,7 +145,7 @@ public class TemplateDomLoader
     catch( final Exception e )
     {
       e.printStackTrace();
-      final String message = String.format( "Fehler beim Lesen der Vorlage %s", getFilename() );
+      final String message = String.format( Messages.getString("TemplateDomLoader_1"), getFilename() ); //$NON-NLS-1$
       throw new CoreException( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), message, e ) );
     }
   }
@@ -181,12 +181,12 @@ public class TemplateDomLoader
       else
         m_templateCharset = templateFile.getCharset();
 
-      return UrlUtilities.toString( m_realTemplateLocation, m_templateCharset );
+      return IOUtils.toString( m_realTemplateLocation, m_templateCharset );
     }
     catch( final Exception e )
     {
       e.printStackTrace();
-      final String message = String.format( "Fehler beim Laden der Vorlagendatei: %s", getFilename() );
+      final String message = String.format( Messages.getString("TemplateDomLoader_2"), getFilename() ); //$NON-NLS-1$
       throw new CoreException( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), message, e ) );
     }
     finally
@@ -228,7 +228,7 @@ public class TemplateDomLoader
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), "Fehler beim Laden der Diagrammvorlage", e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), Messages.getString("TemplateDomLoader_3"), e ) ); //$NON-NLS-1$
     }
     finally
     {

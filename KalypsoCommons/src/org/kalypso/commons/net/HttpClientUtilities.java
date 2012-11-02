@@ -122,7 +122,7 @@ public class HttpClientUtilities
     }
     catch( final IOException e )
     {
-      final String msg = String.format( "Failed to retreive %s", sourceUrl );
+      final String msg = String.format( Messages.getString("HttpClientUtilities.0"), sourceUrl ); //$NON-NLS-1$
       final Status error = new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), msg, e );
       throw new CoreException( error );
     }
@@ -166,7 +166,7 @@ public class HttpClientUtilities
         return new HttpResponse( get.getStatusLine(), null, null );
 
       /* Get the content type. */
-      final Header contentType = get.getResponseHeader( "Content-Type" );
+      final Header contentType = get.getResponseHeader( "Content-Type" ); //$NON-NLS-1$
 
       /* Parse the content type, if available. */
       String mimeType = null;
@@ -174,7 +174,7 @@ public class HttpClientUtilities
       if( contentType != null )
       {
         final String contentTypeValue = contentType.getValue();
-        final String[] contentTypeSplit = contentTypeValue.split( ";" );
+        final String[] contentTypeSplit = contentTypeValue.split( ";" ); //$NON-NLS-1$
         mimeType = contentTypeSplit[0].trim();
         if( contentTypeSplit.length > 1 )
           encoding = contentTypeSplit[1].trim();

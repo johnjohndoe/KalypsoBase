@@ -51,7 +51,7 @@ public class TemplateInputReplacer extends PatternInputReplacer<Object>
 
   public TemplateInputReplacer( final Properties commonProperties )
   {
-    super( "${", "}" );
+    super( "${", "}" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     m_commonProperties = commonProperties;
   }

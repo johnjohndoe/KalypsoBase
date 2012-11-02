@@ -45,6 +45,7 @@ import java.io.File;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.internal.i18n.Messages;
 
 /**
  * Fails if a {@link java.io.File} is not writable.
@@ -53,7 +54,7 @@ import org.eclipse.core.runtime.Status;
  */
 public class FileCannotWriteValidator extends TypedValidator<File>
 {
-  private static final String DEFAULT_MESSAGE = "Unable to write to this file location";
+  private static final String DEFAULT_MESSAGE = Messages.getString("FileCannotWriteValidator_0"); //$NON-NLS-1$
 
   public FileCannotWriteValidator( )
   {

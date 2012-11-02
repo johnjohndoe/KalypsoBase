@@ -234,9 +234,9 @@ public class UrlUtilities
     final String host = sourceURL.getHost();
     final int port = sourceURL.getPort();
     if( port >= 1 )
-      return new URL( String.format( "%s://%s:%d", protocol, host, port ) );
+      return new URL( String.format( "%s://%s:%d", protocol, host, port ) ); //$NON-NLS-1$
 
-    return new URL( String.format( "%s://%s", protocol, host ) );
+    return new URL( String.format( "%s://%s", protocol, host ) ); //$NON-NLS-1$
   }
 
   public static long getContentLength( final URL url ) throws IOException

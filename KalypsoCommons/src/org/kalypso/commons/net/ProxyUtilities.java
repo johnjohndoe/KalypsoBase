@@ -59,9 +59,9 @@ import org.kalypso.contribs.eclipse.core.net.Proxy;
  */
 public class ProxyUtilities
 {
-  private static final String LOCALHOST = "localhost";
+  private static final String LOCALHOST = "localhost"; //$NON-NLS-1$
 
-  private static final String LOCALHOST_IP = "127.0.0.1";
+  private static final String LOCALHOST_IP = "127.0.0.1"; //$NON-NLS-1$
 
   /**
    * The constructor.
@@ -238,7 +238,7 @@ public class ProxyUtilities
   public static boolean isNonProxyHost( final String url )
   {
     /* Handle UNC pathes. */
-    if( url.startsWith( "\\\\" ) || url.startsWith( "//" ) )
+    if( url.startsWith( "\\\\" ) || url.startsWith( "//" ) ) //$NON-NLS-1$ //$NON-NLS-2$
       return true;
 
     try
@@ -266,7 +266,7 @@ public class ProxyUtilities
 
     /* Get the protocol. A file protocol denotes a local resource, so no proxy is needed. */
     final String protocol = url.getProtocol();
-    if( "file".equals( protocol ) )
+    if( "file".equals( protocol ) ) //$NON-NLS-1$
       return true;
 
     /* Get the host. A empty host denotes a local resource, so no proxy is needed. */

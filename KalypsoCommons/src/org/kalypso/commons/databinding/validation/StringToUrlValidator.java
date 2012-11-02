@@ -46,6 +46,7 @@ import java.net.URL;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.databinding.validation.ValidationStatus;
 import org.eclipse.core.runtime.IStatus;
+import org.kalypso.commons.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -65,14 +66,14 @@ public class StringToUrlValidator extends TypedValidator<String>
   protected IStatus doValidate( final String value )
   {
     if( StringUtils.isEmpty( value ) )
-      return ValidationStatus.error( String.format( "'%s' is empty", m_fieldName ) );
+      return ValidationStatus.error( String.format( Messages.getString("StringToUrlValidator_0"), m_fieldName ) ); //$NON-NLS-1$
 
     try
     {
       final URL url = new URL( value );
       final String host = url.getHost();
       if( StringUtils.isBlank( host ) )
-        return ValidationStatus.error( String.format( "'%s' has no host", m_fieldName ) );
+        return ValidationStatus.error( String.format( Messages.getString("StringToUrlValidator_1"), m_fieldName ) ); //$NON-NLS-1$
     }
     catch( final MalformedURLException e )
     {

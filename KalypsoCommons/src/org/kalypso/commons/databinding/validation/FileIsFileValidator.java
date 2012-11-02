@@ -45,6 +45,7 @@ import java.io.File;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.internal.i18n.Messages;
 
 /**
  * Validates if a {@link java.io.File} denotes an existing file.
@@ -53,7 +54,7 @@ import org.eclipse.core.runtime.Status;
  */
 public class FileIsFileValidator extends TypedValidator<File>
 {
-  private static final String DEFAULT_MESSAGE = "The file does not exist.";
+  private static final String DEFAULT_MESSAGE = Messages.getString("FileIsFileValidator_0"); //$NON-NLS-1$
 
   public FileIsFileValidator( final int severity )
   {
@@ -75,7 +76,7 @@ public class FileIsFileValidator extends TypedValidator<File>
       fail();
 
     if( !value.isFile() )
-      fail( "This is not a file" );
+      fail( Messages.getString("FileIsFileValidator_1") ); //$NON-NLS-1$
 
     return Status.OK_STATUS;
   }

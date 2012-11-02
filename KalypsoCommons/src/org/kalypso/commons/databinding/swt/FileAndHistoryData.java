@@ -90,7 +90,7 @@ public class FileAndHistoryData extends AbstractModelObject
 
   protected String getHistorySettingName( )
   {
-    return m_name + "_" + PROPERTY_HISTORY;
+    return m_name + "_" + PROPERTY_HISTORY; //$NON-NLS-1$
   }
 
   public void storeSettings( final IDialogSettings settings )

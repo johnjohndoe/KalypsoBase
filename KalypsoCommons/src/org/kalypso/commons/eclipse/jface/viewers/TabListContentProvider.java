@@ -54,6 +54,7 @@ import org.eclipse.swt.custom.CTabFolder2Adapter;
 import org.eclipse.swt.custom.CTabFolderEvent;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.commons.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -175,8 +176,8 @@ public class TabListContentProvider implements IStructuredContentProvider
 
   protected boolean confirmTabClose( final Shell shell, final String ruleName )
   {
-    final String message = String.format( "Remove Item '%s'?", ruleName );
-    return MessageDialog.openConfirm( shell, "Tab Folder", message );
+    final String message = String.format( Messages.getString("TabListContentProvider_0"), ruleName ); //$NON-NLS-1$
+    return MessageDialog.openConfirm( shell, Messages.getString("TabListContentProvider_1"), message ); //$NON-NLS-1$
   }
 
   /**

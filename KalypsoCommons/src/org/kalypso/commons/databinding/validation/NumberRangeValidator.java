@@ -43,6 +43,7 @@ package org.kalypso.commons.databinding.validation;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.internal.i18n.Messages;
 
 /**
  * This validator fails if a number is provided but is outside a validity range
@@ -51,7 +52,7 @@ import org.eclipse.core.runtime.Status;
  */
 public class NumberRangeValidator extends TypedValidator<Number>
 {
-  public static final String DEFAULT_MESSAGE = "Value should not be negative.";
+  public static final String DEFAULT_MESSAGE = Messages.getString("NumberRangeValidator_0"); //$NON-NLS-1$
 
   private final double m_minValue;
 
@@ -88,7 +89,7 @@ public class NumberRangeValidator extends TypedValidator<Number>
     if( hasMessage() )
       fail();
 
-    final String message = String.format( "Value outside valid range [%f - %f]", m_minValue, m_maxValue );
+    final String message = String.format( Messages.getString("NumberRangeValidator_1"), m_minValue, m_maxValue ); //$NON-NLS-1$
     fail( message );
     return null;
   }

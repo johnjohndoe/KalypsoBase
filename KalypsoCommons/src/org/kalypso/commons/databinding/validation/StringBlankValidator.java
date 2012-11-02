@@ -44,6 +44,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.internal.i18n.Messages;
 
 /**
  * This validator checks, if a string was provided and is not blank.
@@ -52,9 +53,9 @@ import org.eclipse.core.runtime.Status;
  */
 public class StringBlankValidator extends TypedValidator<String>
 {
-  public static String DEFAULT_WARNING_MESSAGE = "Field should not be empty";
+  public static String DEFAULT_WARNING_MESSAGE = Messages.getString("StringBlankValidator_0"); //$NON-NLS-1$
 
-  public static String DEFAULT_ERROR_MESSAGE = "Field must not be empty";
+  public static String DEFAULT_ERROR_MESSAGE = Messages.getString("StringBlankValidator_1"); //$NON-NLS-1$
 
   /**
    * @param severity

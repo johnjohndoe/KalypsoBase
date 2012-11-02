@@ -77,7 +77,7 @@ import com.google.common.base.Charsets;
  */
 public final class ProjectUtilities
 {
-  private static final String FILE_PROJECT = ".project";
+  private static final String FILE_PROJECT = ".project"; //$NON-NLS-1$
 
   private ProjectUtilities( )
   {
@@ -208,8 +208,8 @@ public final class ProjectUtilities
       final String projectEncoding = Charsets.UTF_8.name();
 
       final String projectContents = FileUtils.readFileToString( projectFile, projectEncoding );
-      final String nameTag = String.format( "<name>%s</name>", nameToSet );
-      final String cleanedProjectContents = projectContents.replaceAll( "<name>.*</name>", nameTag );
+      final String nameTag = String.format( "<name>%s</name>", nameToSet ); //$NON-NLS-1$
+      final String cleanedProjectContents = projectContents.replaceAll( "<name>.*</name>", nameTag ); //$NON-NLS-1$
 
       FileUtils.writeStringToFile( projectFile, cleanedProjectContents, projectEncoding );
 
@@ -217,7 +217,7 @@ public final class ProjectUtilities
     }
     catch( final IOException e )
     {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), "Failed to write project name into .project file.", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), "Failed to write project name into .project file.", e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }

@@ -125,18 +125,12 @@ public class DefaultProcess implements IProcess
     return new File( sandbox, executable );
   }
 
-  /**
-   * @see org.kalypso.commons.process.IProcess#environment()
-   */
   @Override
   public Map<String, String> environment( )
   {
     return m_processBuilder.environment();
   }
 
-  /**
-   * @see org.kalypso.commons.process.IProcess#getSandboxDirectory()
-   */
   @Override
   public String getSandboxDirectory( )
   {

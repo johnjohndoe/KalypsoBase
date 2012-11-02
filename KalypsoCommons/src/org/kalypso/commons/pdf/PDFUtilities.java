@@ -94,16 +94,15 @@ public class PDFUtilities
   {
     SwingUtilities.invokeLater( new Runnable()
     {
-      /**
-       * @see java.lang.Runnable#run()
-       */
       @Override
       public void run( )
       {
         try
         {
           /* Create a random access file. */
-          final RandomAccessFile raf = new RandomAccessFile( file, "r" );
+
+          // FIXME: slow and dangerous! RAF is slow; and mappings the whole file into the memory is dangerous
+          final RandomAccessFile raf = new RandomAccessFile( file, "r" ); //$NON-NLS-1$
           final FileChannel channel = raf.getChannel();
           final ByteBuffer buf = channel.map( FileChannel.MapMode.READ_ONLY, 0, channel.size() );
 

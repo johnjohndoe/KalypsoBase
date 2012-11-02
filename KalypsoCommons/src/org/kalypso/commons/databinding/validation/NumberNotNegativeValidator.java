@@ -43,6 +43,7 @@ package org.kalypso.commons.databinding.validation;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.internal.i18n.Messages;
 
 /**
  * This validator fails if a number is provided and it is smaller than 0.0
@@ -51,7 +52,7 @@ import org.eclipse.core.runtime.Status;
  */
 public class NumberNotNegativeValidator extends TypedValidator<Number>
 {
-  public static final String DEFAULT_MESSAGE = "Value should not be negative.";
+  public static final String DEFAULT_MESSAGE = Messages.getString("NumberNotNegativeValidator_0"); //$NON-NLS-1$
 
   /**
    * Same as {@link #NumberNotNegativeValidator(int, String)}, but uses a default message.
