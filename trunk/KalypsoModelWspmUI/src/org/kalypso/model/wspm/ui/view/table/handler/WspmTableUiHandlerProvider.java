@@ -162,7 +162,7 @@ public class WspmTableUiHandlerProvider implements IComponentUiHandlerProvider
     {
       // TODO for now
       final int precision = precisionForComponent( component );
-      final String format = String.format( "%%.%df", precision );
+      final String format = String.format( "%%.%df", precision ); //$NON-NLS-1$
 
       return new ComponentUiDoubleHandler( index, true, true, true, label, SWT.RIGHT, DEFAULT_SPACING, spacing, format, "", format ); //$NON-NLS-1$
     }

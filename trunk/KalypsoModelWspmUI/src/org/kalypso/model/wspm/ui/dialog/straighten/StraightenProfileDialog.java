@@ -64,13 +64,13 @@ import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
 import org.kalypso.model.wspm.ui.action.ProfilesSelection;
 import org.kalypso.model.wspm.ui.dialog.straighten.data.CORRECT_POINTS_ENABLEMENT;
 import org.kalypso.model.wspm.ui.dialog.straighten.provider.CorrectPointsEnablementLabelProvider;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 
 import com.vividsolutions.jts.geom.Point;
 
 /**
- * Dialog that asks for some settings, used by the
- * {@link org.kalypso.model.wspm.ui.action.straighten.StraightenProfileWidget}.
+ * Dialog that asks for some settings, used by the {@link org.kalypso.model.wspm.ui.action.straighten.StraightenProfileWidget}.
  * 
  * @author Holger Albert
  */
@@ -114,30 +114,29 @@ public class StraightenProfileDialog extends TitleAreaDialog
     m_bindingContext = new DataBindingContext();
   }
 
-  /**
-   * @see org.eclipse.jface.dialogs.TitleAreaDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
-   */
   @Override
   protected Control createDialogArea( final Composite parent )
   {
     /* Set the title. */
-    getShell().setText( "Profil begradigen" );
-    setTitle( "Profil begradigen" );
+    final String title = Messages.getString("StraightenProfileDialog_0"); //$NON-NLS-1$
+
+    getShell().setText( title );
+    setTitle( title );
 
     /* Create the main composite. */
-    final Composite main = (Composite) super.createDialogArea( parent );
+    final Composite main = (Composite)super.createDialogArea( parent );
     main.setLayout( new GridLayout( 1, false ) );
     main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Create a label. */
     final Label questionLabel = new Label( main, SWT.NONE );
     questionLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    questionLabel.setText( String.format( "Profil zwischen %.4f m und %.4f m begradigen?", m_data.getFirstWidth(), m_data.getSecondWidth() ) );
+    questionLabel.setText( String.format( Messages.getString("StraightenProfileDialog_1"), m_data.getFirstWidth(), m_data.getSecondWidth() ) ); //$NON-NLS-1$
 
     /* Create a label. */
     final Label emptyLabel = new Label( main, SWT.NONE );
     emptyLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    emptyLabel.setText( "" );
+    emptyLabel.setText( "" ); //$NON-NLS-1$
 
     /* Create a combo viewer. */
     final ComboViewer viewer1 = new ComboViewer( main, SWT.READ_ONLY );
@@ -247,7 +246,7 @@ public class StraightenProfileDialog extends TitleAreaDialog
    * @param viewer
    *          The viewer to bind.
    */
-  @SuppressWarnings("unused")
+  @SuppressWarnings( "unused" )
   private void bindViewer2( final ComboViewer viewer )
   {
     /* The values. */
@@ -264,7 +263,7 @@ public class StraightenProfileDialog extends TitleAreaDialog
    * @param viewer2
    *          The second viewer.
    */
-  @SuppressWarnings("unused")
+  @SuppressWarnings( "unused" )
   private void bindEnablement( final ComboViewer viewer2 )
   {
     /* The values. */

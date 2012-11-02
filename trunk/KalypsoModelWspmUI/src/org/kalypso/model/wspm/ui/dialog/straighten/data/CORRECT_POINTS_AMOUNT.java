@@ -40,13 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.dialog.straighten.data;
 
+import org.kalypso.model.wspm.ui.i18n.Messages;
+
 /**
  * @author Holger Albert
  */
 public enum CORRECT_POINTS_AMOUNT
 {
-  ALL("Korrigiere Breiten aller Punkte des Profils"),
-  BETWEEN("Korrigiere Breiten aller Punkte zwischen den ausgewählten Profilpunkten");
+  ALL(Messages.getString("CORRECT_POINTS_AMOUNT_0")), //$NON-NLS-1$
+  BETWEEN(Messages.getString("CORRECT_POINTS_AMOUNT_1")); //$NON-NLS-1$
 
   /**
    * The label.

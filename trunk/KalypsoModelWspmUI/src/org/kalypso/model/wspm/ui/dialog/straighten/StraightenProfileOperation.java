@@ -59,6 +59,7 @@ import org.kalypso.model.wspm.ui.action.ProfilesSelection;
 import org.kalypso.model.wspm.ui.action.base.ProfileWidgetHelper;
 import org.kalypso.model.wspm.ui.dialog.straighten.data.CORRECT_POINTS_AMOUNT;
 import org.kalypso.model.wspm.ui.dialog.straighten.data.CORRECT_POINTS_ENABLEMENT;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -121,8 +122,8 @@ public class StraightenProfileOperation implements ICoreRunnableWithProgress
     try
     {
       /* Monitor. */
-      monitor.beginTask( "Straightening profile", 1250 );
-      monitor.subTask( "Inspecting profile..." );
+      monitor.beginTask( Messages.getString("StraightenProfileOperation_0"), 1250 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString("StraightenProfileOperation_1") ); //$NON-NLS-1$
 
       /* Get the profile. */
       final IProfileFeature profile = m_data.getProfile();
@@ -140,23 +141,23 @@ public class StraightenProfileOperation implements ICoreRunnableWithProgress
 
       /* Monitor. */
       monitor.worked( 250 );
-      monitor.subTask( "Collecting all points between the first and the second point..." );
+      monitor.subTask( Messages.getString("StraightenProfileOperation_2") ); //$NON-NLS-1$
 
       /* Find all points in the profile between the first and the second point. */
       final IProfileRecord[] points = findPoints( tmpProfile, firstPoint, secondPoint );
       if( points.length == 0 )
-        throw new IllegalStateException( "There are no points between the first and second point..." );
+        throw new IllegalStateException( "There are no points between the first and second point..." ); //$NON-NLS-1$
 
       /* Monitor. */
       monitor.worked( 250 );
-      monitor.subTask( "Projecting all points to the line..." );
+      monitor.subTask( Messages.getString("StraightenProfileOperation_4") ); //$NON-NLS-1$
 
       /* Project them and adjust the x/y coordinates. */
       projectPoints( tmpProfile, firstPoint, secondPoint, points );
 
       /* Monitor. */
       monitor.worked( 250 );
-      monitor.subTask( "Recalculating the width of the points..." );
+      monitor.subTask( Messages.getString("StraightenProfileOperation_5") ); //$NON-NLS-1$
 
       /* Recalculate the width of the points. */
       if( m_data.getCorrectPointsEnablement() == CORRECT_POINTS_ENABLEMENT.ON )
@@ -164,7 +165,7 @@ public class StraightenProfileOperation implements ICoreRunnableWithProgress
 
       /* Monitor. */
       monitor.worked( 250 );
-      monitor.subTask( "Applying changes..." );
+      monitor.subTask( Messages.getString("StraightenProfileOperation_6") ); //$NON-NLS-1$
 
       /* Copy data of the temporary profile feature to the profile feature. */
       final ProfileFeatureBinding profileBinding = (ProfileFeatureBinding) profile;
@@ -181,7 +182,7 @@ public class StraightenProfileOperation implements ICoreRunnableWithProgress
       /* Monitor. */
       monitor.worked( 250 );
 
-      return new Status( IStatus.OK, KalypsoModelWspmUIPlugin.ID, "Straightening successfull." );
+      return new Status( IStatus.OK, KalypsoModelWspmUIPlugin.ID, Messages.getString("StraightenProfileOperation_7") ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {
@@ -247,7 +248,7 @@ public class StraightenProfileOperation implements ICoreRunnableWithProgress
     {
       /* Should not happen, because the new point cannot lie outside of the profile. */
       /* If it lies on a point of the profile (e.g. the last), it should not reach here (see first if). */
-      throw new IllegalStateException( "No next point found..." );
+      throw new IllegalStateException( "No next point found..." ); //$NON-NLS-1$
     }
 
     /* Get the index of the next point. */
@@ -261,7 +262,7 @@ public class StraightenProfileOperation implements ICoreRunnableWithProgress
   {
     /* Check the first and second point. */
     if( firstPoint.equals( secondPoint ) || firstPoint.distance( secondPoint ) < 0.001 )
-      throw new IllegalStateException( "The first and second point are the same or too near to each other..." );
+      throw new IllegalStateException( "The first and second point are the same or too near to each other..." ); //$NON-NLS-1$
 
     /* Get the start width and end width. */
     final IProfile profil = profile.getProfile();

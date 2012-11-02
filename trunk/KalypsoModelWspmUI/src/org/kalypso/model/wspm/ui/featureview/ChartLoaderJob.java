@@ -29,6 +29,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 
 import de.openali.odysseus.chart.factory.config.ChartConfigurationLoader;
 import de.openali.odysseus.chart.factory.config.ChartExtensionLoader;
@@ -50,7 +51,7 @@ class ChartLoaderJob extends Job
 
   public ChartLoaderJob( final IChartModel chartModel, final String configurationUrl, final String chartName )
   {
-    super( "Loading chart" );
+    super( Messages.getString("ChartLoaderJob_0") ); //$NON-NLS-1$
 
     m_chartModel = chartModel;
     m_configurationUrl = configurationUrl;

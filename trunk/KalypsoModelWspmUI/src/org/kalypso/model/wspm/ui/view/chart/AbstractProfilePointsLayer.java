@@ -358,15 +358,15 @@ public abstract class AbstractProfilePointsLayer extends AbstractProfilLayer
 
     try
     {
-      final TooltipFormatter formatter = new TooltipFormatter( null, new String[] { "%s", "%s", "%s" }, new int[] { SWT.LEFT, SWT.RIGHT, SWT.LEFT } );
+      final TooltipFormatter formatter = new TooltipFormatter( null, new String[] { "%s", "%s", "%s" }, new int[] { SWT.LEFT, SWT.RIGHT, SWT.LEFT } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
       final String domainUnit = ComponentUtilities.getComponentUnitLabel( domainComponent );
       final Object domainValue = point.getValue( domainComponent );
-      formatter.addLine( domainComponent.getName(), String.format( "%10.2f", domainValue ), domainUnit );
+      formatter.addLine( domainComponent.getName(), String.format( "%10.2f", domainValue ), domainUnit ); //$NON-NLS-1$
 
       final String targetUnit = ComponentUtilities.getComponentUnitLabel( targetComponent );
       final Object targetValue = point.getValue( targetComponent );
-      formatter.addLine( targetComponent.getName(), String.format( "%10.2f", targetValue ), targetUnit );
+      formatter.addLine( targetComponent.getName(), String.format( "%10.2f", targetValue ), targetUnit ); //$NON-NLS-1$
 
       /* code if set */
       for( final String additionalComponentID : additionsComponentIDs )

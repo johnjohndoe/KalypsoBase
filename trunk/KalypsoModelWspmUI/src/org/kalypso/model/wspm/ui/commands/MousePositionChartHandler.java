@@ -119,7 +119,7 @@ public class MousePositionChartHandler extends AbstractChartHandler
   {
     final IChartComposite chart = getChart();
     final IProfilChartLayer theme = SelectionChartHandlerHelper.findProfileTheme( chart );
-    String msg = "";
+    String msg = ""; //$NON-NLS-1$
     if( theme != null )
     {
       final ICoordinateMapper mapper = theme.getCoordinateMapper();

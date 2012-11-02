@@ -48,7 +48,7 @@ import org.kalypso.model.wspm.ui.i18n.Messages;
 
 /**
  * // FIXME: not use any more ,but we expect to have some preferences for the table in the future, so kept for the moment.
- *
+ * 
  * @author Gernot Belger
  */
 public class TablePreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage
@@ -70,6 +70,5 @@ public class TablePreferencePage extends FieldEditorPreferencePage implements IW
   @Override
   public void createFieldEditors( )
   {
-    // addField( new BooleanFieldEditor( WspmUiPreferences.P_ALLWAYSOPENTABLE, Messages.getString( "org.kalypso.model.wspm.ui.preferences.TablePreferencePage.1" ), getFieldEditorParent() ) ); //$NON-NLS-1$
   }
 }

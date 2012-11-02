@@ -40,9 +40,9 @@ import de.openali.odysseus.chart.framework.view.IChartComposite;
  */
 public class SwitchProfileHandler extends AbstractHandler
 {
-  private static final String PREVIOUS_PROFILE_COMMAND_ID = "org.kalypso.model.wspm.ui.commands.PreviousProfileCommand";
+  private static final String PREVIOUS_PROFILE_COMMAND_ID = "org.kalypso.model.wspm.ui.commands.PreviousProfileCommand"; //$NON-NLS-1$
 
-  private static final String NEXT_PROFILE_COMMAND_ID = "org.kalypso.model.wspm.ui.commands.NextProfileCommand";
+  private static final String NEXT_PROFILE_COMMAND_ID = "org.kalypso.model.wspm.ui.commands.NextProfileCommand"; //$NON-NLS-1$
 
   public SwitchProfileHandler( )
   {

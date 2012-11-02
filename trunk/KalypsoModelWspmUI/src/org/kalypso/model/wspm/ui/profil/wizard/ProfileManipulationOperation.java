@@ -77,7 +77,7 @@ public final class ProfileManipulationOperation implements ICoreRunnableWithProg
         final IStatus status = result.getValue();
 
         final BigDecimal station = profileFeature.getBigStation();
-        final String messageWithStation = Messages.getString( "ProfileManipulationOperation_3", station, status.getMessage() );
+        final String messageWithStation = Messages.getString( "ProfileManipulationOperation_3", station, status.getMessage() ); //$NON-NLS-1$
 
         final IStatus statusWithStation = StatusUtilities.cloneStatus( status, messageWithStation );
 
@@ -92,7 +92,7 @@ public final class ProfileManipulationOperation implements ICoreRunnableWithProg
         throw new InterruptedException();
     }
 
-    return problems.asMultiStatusOrOK( Messages.getString( "ProfileManipulationOperation_2" ) );
+    return problems.asMultiStatusOrOK( Messages.getString( "ProfileManipulationOperation_2" ) ); //$NON-NLS-1$
   }
 
   public boolean perform( )

@@ -200,7 +200,7 @@ public class RoughnessClassUiHandler extends AbstractComponentUiHandler
     }
 
     /* Add a separator. */
-    adjustedClasses.add( "----------" );
+    adjustedClasses.add( "----------" ); //$NON-NLS-1$
 
     /* Add all classes. */
     for( final IRoughnessClass roughnessClass : roughnessClasses )

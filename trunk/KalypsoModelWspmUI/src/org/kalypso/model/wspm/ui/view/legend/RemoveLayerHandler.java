@@ -52,6 +52,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.chart.ui.editor.ChartEditorTreeOutlinePage;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.model.wspm.ui.view.chart.IProfilChartLayer;
 
 public class RemoveLayerHandler extends AbstractHandler
@@ -80,7 +81,7 @@ public class RemoveLayerHandler extends AbstractHandler
       {
         final IProfilChartLayer layer = (IProfilChartLayer)((IStructuredSelection)selection).getFirstElement();
 
-        final String message = String.format( "Remove dataset '%s'", layer.getTitle() );
+        final String message = String.format( Messages.getString("RemoveLayerHandler_0"), layer.getTitle() ); //$NON-NLS-1$
         if( !MessageDialog.openConfirm( shell, commandName, message ) )
           return null;
 

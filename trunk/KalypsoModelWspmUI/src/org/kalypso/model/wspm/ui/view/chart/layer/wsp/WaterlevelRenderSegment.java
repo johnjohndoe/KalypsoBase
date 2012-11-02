@@ -115,7 +115,7 @@ public class WaterlevelRenderSegment
 
   public String formatTooltip( final String label )
   {
-    final TooltipFormatter tooltipFormatter = new TooltipFormatter( label, new String[] { "%s", "%.2f", "[%s]" }, new int[] { SWT.LEFT, SWT.RIGHT, SWT.LEFT } );
+    final TooltipFormatter tooltipFormatter = new TooltipFormatter( label, new String[] { "%s", "%.2f", "[%s]" }, new int[] { SWT.LEFT, SWT.RIGHT, SWT.LEFT } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     final double value = getHeight();
     final double width = getWidth();
