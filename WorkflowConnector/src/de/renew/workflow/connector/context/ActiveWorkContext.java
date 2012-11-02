@@ -18,6 +18,7 @@ import de.renew.workflow.connector.cases.IScenarioManager;
 import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 import de.renew.workflow.connector.internal.WorkflowConnectorPlugin;
 import de.renew.workflow.connector.internal.cases.ScenarioCompatibilityHelper;
+import de.renew.workflow.connector.internal.i18n.Messages;
 
 /**
  * Represents the work context for a user.
@@ -152,7 +153,7 @@ public class ActiveWorkContext
       }
       else
       {
-        final String message = String.format( "Das Projekt %s für das Szenario %s existiert nicht.", project.getName(), caze.getName() );
+        final String message = String.format( Messages.getString("ActiveWorkContext_0"), project.getName(), caze.getName() ); //$NON-NLS-1$
         throw new CoreException( new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, message ) );
       }
     }

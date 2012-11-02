@@ -82,11 +82,11 @@ public class ScenarioHandler implements IScenario
 
     if( m_scenario.getURI() == null )
     {
-      setURI( String.format( "%s%s", NEW_CASE_BASE_URI, getName() ) );
+      setURI( String.format( "%s%s", NEW_CASE_BASE_URI, getName() ) ); //$NON-NLS-1$
     }
     else if( !getURI().startsWith( NEW_CASE_BASE_URI ) && !getURI().startsWith( OLD_CASE_BASE_URI ) )
     {
-      setURI( String.format( "%s%s", NEW_CASE_BASE_URI, getURI() ) );
+      setURI( String.format( "%s%s", NEW_CASE_BASE_URI, getURI() ) ); //$NON-NLS-1$
     }
   }
 
@@ -189,7 +189,7 @@ public class ScenarioHandler implements IScenario
     {
       final String base = uri.substring( OLD_CASE_BASE_URI.length() );
 
-      final int cleaned = base.indexOf( "/" );
+      final int cleaned = base.indexOf( "/" ); //$NON-NLS-1$
 
       return getProject().getFolder( base.substring( cleaned + 1 ) );
     }
@@ -287,7 +287,7 @@ public class ScenarioHandler implements IScenario
 
       for( final IgnoreFolder ignoreFolder : ignoreFolders )
       {
-        if( "SetAsBaseScenario".equals( ignoreFolder.getRoleName() ) )
+        if( "SetAsBaseScenario".equals( ignoreFolder.getRoleName() ) ) //$NON-NLS-1$
           results.add( getFolder().getFolder( ignoreFolder.getFolderName() ) );
       }
 
