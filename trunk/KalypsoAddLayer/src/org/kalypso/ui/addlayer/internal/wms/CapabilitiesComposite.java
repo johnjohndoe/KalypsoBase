@@ -69,7 +69,8 @@ public class CapabilitiesComposite extends Composite
   {
     createStatusControls();
     // FIXME: trigger from outside
-    if( false )
+    final boolean showAddress = false;
+    if( showAddress )
       createAddressControls();
 
     createOpenCapabilitiesControls();
@@ -139,7 +140,7 @@ public class CapabilitiesComposite extends Composite
       @Override
       public String getText( final Object element )
       {
-        final String id = (String) element;
+        final String id = (String)element;
         return imageProviders.get( id );
       }
     } );
