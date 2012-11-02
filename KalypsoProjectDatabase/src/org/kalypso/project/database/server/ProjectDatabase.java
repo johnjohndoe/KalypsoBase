@@ -62,6 +62,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemManager;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -81,7 +83,7 @@ import org.kalypso.project.database.server.trigger.TriggerHelper;
 /**
  * @author Dirk Kuch
  */
-@WebService(endpointInterface = "org.kalypso.project.database.sei.IProjectDatabase")//$NON-NLS-1$
+@WebService( endpointInterface = "org.kalypso.project.database.sei.IProjectDatabase" )//$NON-NLS-1$
 public class ProjectDatabase implements IProjectDatabase
 {
   private static SessionFactory FACTORY = null;
@@ -116,7 +118,7 @@ public class ProjectDatabase implements IProjectDatabase
           final String msg = String.format( "Configuration error - couldn't find hibernate config file for KalypsoProjectData setup. location: %s\nStarting KalypsoProjectDatabase with default configuration!", property ); //$NON-NLS-1$
           System.out.println( msg ); //$NON-NLS-1$
 
-          KalypsoProjectDatabase.getDefault().getLog().log( StatusUtilities.createErrorStatus( msg, ex ) );
+          KalypsoProjectDatabase.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoProjectDatabase.PLUGIN_ID, msg, ex ) );
         }
       }
     }
@@ -174,7 +176,7 @@ public class ProjectDatabase implements IProjectDatabase
           if( !(object instanceof KalypsoProjectBean) )
             continue;
 
-          final KalypsoProjectBean b = (KalypsoProjectBean) object;
+          final KalypsoProjectBean b = (KalypsoProjectBean)object;
           myBeans.put( b.getProjectVersion(), b );
         }
 
@@ -224,11 +226,11 @@ public class ProjectDatabase implements IProjectDatabase
         return null;
 
       /* determine head */
-      final KalypsoProjectBean head = (KalypsoProjectBean) projects.get( 0 );
+      final KalypsoProjectBean head = (KalypsoProjectBean)projects.get( 0 );
 
       final List<KalypsoProjectBean> beans = new ArrayList<>();
       for( int i = 1; i < projects.size(); i++ )
-        beans.add( (KalypsoProjectBean) projects.get( i ) );
+        beans.add( (KalypsoProjectBean)projects.get( i ) );
 
       head.setChildren( beans.toArray( new KalypsoProjectBean[] {} ) );
 
@@ -376,7 +378,7 @@ public class ProjectDatabase implements IProjectDatabase
     final Transaction tx = session.beginTransaction();
 
     /* list of project types */
-    final List<String> projects = session.createQuery( "Select distinct m_projectType from KalypsoProjectBean ORDER by m_projectType" ).list();
+    final List<String> projects = session.createQuery( "Select distinct m_projectType from KalypsoProjectBean ORDER by m_projectType" ).list(); //$NON-NLS-1$
     tx.commit();
 
     return projects.toArray( new String[] {} );
@@ -432,8 +434,7 @@ public class ProjectDatabase implements IProjectDatabase
   }
 
   /**
-   * @see org.kalypso.project.database.sei.IProjectDatabase#setProjectDescription(org.kalypso.project.database.sei.beans.KalypsoProjectBean,
-   *      java.lang.String)
+   * @see org.kalypso.project.database.sei.IProjectDatabase#setProjectDescription(org.kalypso.project.database.sei.beans.KalypsoProjectBean, java.lang.String)
    */
   @Override
   public void setProjectDescription( final KalypsoProjectBean bean, final String description )
