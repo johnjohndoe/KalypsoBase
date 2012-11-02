@@ -217,6 +217,6 @@ public final class FeatureLinkUtils
   public static String findLinkPath( final Feature toLink, final Feature parent )
   {
     final GMLWorkspace sourceWorkspace = parent.getWorkspace();
-    return findLinkPath( toLink, parent );
+    return findLinkPath( toLink, sourceWorkspace );
   }
 }
