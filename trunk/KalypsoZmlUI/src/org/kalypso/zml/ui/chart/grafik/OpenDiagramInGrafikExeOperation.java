@@ -66,6 +66,7 @@ import org.kalypso.ogc.sensor.provider.PlainObsProvider;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.template.obsdiagview.Obsdiagview;
 import org.kalypso.zml.ui.KalypsoZmlUI;
+import org.kalypso.zml.ui.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -96,7 +97,7 @@ public class OpenDiagramInGrafikExeOperation extends WorkspaceModifyOperation
       }
 
       final Obsdiagview odt = DiagViewUtils.buildDiagramTemplateXML( diagView, null );
-      final IStatus status = GrafikLauncher.startGrafikODT( "Diagramm", odt, tempFolder, monitor );
+      final IStatus status = GrafikLauncher.startGrafikODT( Messages.OpenDiagramInGrafikExeOperation_0, odt, tempFolder, monitor );
       if( !status.isOK() )
         throw new CoreException( status );
     }
@@ -104,7 +105,7 @@ public class OpenDiagramInGrafikExeOperation extends WorkspaceModifyOperation
     {
       e.printStackTrace();
 
-      final IStatus status = new Status( IStatus.ERROR, KalypsoZmlUI.PLUGIN_ID, "Failed to convert timeseries for grafik.exe", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoZmlUI.PLUGIN_ID, Messages.OpenDiagramInGrafikExeOperation_1, e );
       throw new CoreException( status );
     }
   }
@@ -134,7 +135,7 @@ public class OpenDiagramInGrafikExeOperation extends WorkspaceModifyOperation
     }
     catch( final Exception e )
     {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoZmlUI.PLUGIN_ID, "Failed to create temp folder for grafik.exe", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoZmlUI.PLUGIN_ID, Messages.OpenDiagramInGrafikExeOperation_2, e );
       throw new CoreException( status );
     }
   }

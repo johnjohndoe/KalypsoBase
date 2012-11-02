@@ -88,6 +88,12 @@ public class Messages extends NLS
 
   public static String MultiplyValueAdjustmentPage_2;
 
+  public static String OpenDiagramInGrafikExeOperation_0;
+
+  public static String OpenDiagramInGrafikExeOperation_1;
+
+  public static String OpenDiagramInGrafikExeOperation_2;
+
   public static String ShiftDateAdjustmentPage_0;
 
   public static String ShiftDateAdjustmentPage_2;
