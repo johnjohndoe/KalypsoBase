@@ -6,8 +6,6 @@ public class Messages extends NLS
 {
   private static final String BUNDLE_NAME = "org.kalypso.kml.export.i18n.messages"; //$NON-NLS-1$
 
-  public static String GoogleEarthExportCommandHandler_0;
-
   public static String PageGoogleExport_1;
 
   public static String PageGoogleExport_2;
@@ -23,8 +21,6 @@ public class Messages extends NLS
   public static String PageGoogleExport_9;
 
   public static String PlacemarkUtil_0;
-
-  public static String StyleTypeFactory_0;
 
   public static String WizardGoogleExport_0;
 
