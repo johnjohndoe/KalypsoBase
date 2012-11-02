@@ -50,6 +50,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
 import org.kalypso.afgui.handlers.AddScenarioHandler;
+import org.kalypso.afgui.internal.i18n.Messages;
 import org.kalypso.afgui.wizards.SetAsBaseScenarioWizard;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.module.IKalypsoModule;
@@ -76,7 +77,7 @@ public class SetAsBaseScenarioHandler extends AbstractHandler
     /* Find scenario. */
     final IScenario scenario = AddScenarioHandler.findScenario( event );
     if( scenario == null )
-      return showInformation( shell, HandlerUtils.getCommandName( event ), "Please select a scenario." );
+      return showInformation( shell, HandlerUtils.getCommandName( event ), Messages.getString("SetAsBaseScenarioHandler_0") ); //$NON-NLS-1$
 
     /* Stop current task. */
     final ITaskExecutionAuthority taskExecutionAuthority = KalypsoAFGUIFrameworkPlugin.getTaskExecutionAuthority();

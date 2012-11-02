@@ -102,7 +102,7 @@ public class PerspectiveWatcher
     if( secondaryId == null )
       return id;
 
-    return String.format( "%s:%s", id, secondaryId );
+    return String.format( "%s:%s", id, secondaryId ); //$NON-NLS-1$
   }
 
   /**

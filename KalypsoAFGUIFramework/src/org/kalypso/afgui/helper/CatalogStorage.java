@@ -81,7 +81,7 @@ public class CatalogStorage extends UrlStorage
     }
     catch( final MalformedURLException | URIException e )
     {
-      final String message = String.format( "Failed to resolve urn: %s", resource );
+      final String message = String.format( "Failed to resolve urn: %s", resource ); //$NON-NLS-1$
 
       final IStatus status = new Status( IStatus.ERROR, KalypsoAFGUIFrameworkPlugin.PLUGIN_ID, message, e );
       throw new CoreException( status );

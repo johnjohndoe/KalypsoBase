@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.internal.i18n.Messages;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
 import org.kalypso.module.IKalypsoModule;
@@ -84,8 +85,8 @@ public class SetAsBaseScenarioWizard extends NewProjectWizard
     if( monitor == null )
       monitor = new NullProgressMonitor();
 
-    monitor.beginTask( String.format( "Setting '%s' as base scenario...", m_scenario.getName() ), 1000 );
-    monitor.subTask( "Importing data..." );
+    monitor.beginTask( String.format( Messages.getString("SetAsBaseScenarioWizard_0"), m_scenario.getName() ), 1000 ); //$NON-NLS-1$
+    monitor.subTask( Messages.getString("SetAsBaseScenarioWizard_1") ); //$NON-NLS-1$
 
     try
     {
@@ -102,7 +103,7 @@ public class SetAsBaseScenarioWizard extends NewProjectWizard
 
       final IFolder sourceFolder = m_scenario.getFolder();
       final IFolder derivedFolder = m_scenario.getDerivedFolder();
-      final IFolder targetFolder = project.getFolder( "Basis" );
+      final IFolder targetFolder = project.getFolder( "Basis" ); //$NON-NLS-1$
 
       IFolder[] ignoreFolders = m_scenario.getSetAsBaseScenarioBlackList();
       if( !sourceFolder.equals( derivedFolder ) )

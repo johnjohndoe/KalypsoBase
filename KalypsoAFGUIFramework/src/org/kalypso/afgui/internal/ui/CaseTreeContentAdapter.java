@@ -72,7 +72,7 @@ public class CaseTreeContentAdapter extends WorkbenchAdapter
 
   public CaseTreeContentAdapter( )
   {
-    m_caseImage = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoAFGUIFrameworkPlugin.PLUGIN_ID, "icons/scenario.png" );
+    m_caseImage = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoAFGUIFrameworkPlugin.PLUGIN_ID, "icons/scenario.png" ); //$NON-NLS-1$
     final FontData[] fontData = JFaceResources.getFontRegistry().getFontData( JFaceResources.DIALOG_FONT );
     final String dialogFontName = fontData[0].getName();
     final int dialogFontHeight = fontData[0].getHeight();

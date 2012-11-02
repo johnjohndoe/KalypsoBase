@@ -76,7 +76,7 @@ import org.kalypso.module.nature.ModuleNature;
 
 public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperation
 {
-  private static final String FILE_ABOUT_HTML = "about.html";
+  private static final String FILE_ABOUT_HTML = "about.html"; //$NON-NLS-1$
 
   private final NewProjectData m_data;
 
@@ -103,7 +103,7 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
       project.close( progress.newChild( 10 ) );
 
       /* Unpack project from template */
-      monitor.subTask( "Extracting project data" );
+      monitor.subTask( Messages.getString("UnpackProjectTemplateOperation.1") ); //$NON-NLS-1$
       final File destinationDir = project.getLocation().toFile();
       unpackProjectData( dataLocation, destinationDir );
       ProgressUtilities.worked( progress, 30 );
@@ -150,7 +150,7 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
       }
 
       if( status.matches( IStatus.CANCEL ) )
-        throw new InterruptedException( "Abbruch durch Benutzer" );
+        throw new InterruptedException( Messages.getString("UnpackProjectTemplateOperation.2") ); //$NON-NLS-1$
 
       throw t;
     }
@@ -209,7 +209,7 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
   {
     final String location = data.toString();
     final String extension = FilenameUtils.getExtension( location );
-    if( "zip".equalsIgnoreCase( extension ) )
+    if( "zip".equalsIgnoreCase( extension ) ) //$NON-NLS-1$
       ZipUtilities.unzip( data, destinationDir );
     else
     {
@@ -217,7 +217,7 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
       final File dataDir = FileUtils.toFile( fileURL );
       if( dataDir == null )
       {
-        final String msg = String.format( "Invalid dataLocation: %s", data );
+        final String msg = String.format( "Invalid dataLocation: %s", data ); //$NON-NLS-1$
         final IStatus status = new Status( IStatus.ERROR, KalypsoAFGUIFrameworkPlugin.PLUGIN_ID, msg );
         throw new CoreException( status );
       }
@@ -229,7 +229,7 @@ public final class UnpackProjectTemplateOperation extends WorkspaceModifyOperati
       }
       else
       {
-        final String msg = String.format( "Invalid dataLocation (not a directory): %s", data );
+        final String msg = String.format( "Invalid dataLocation (not a directory): %s", data ); //$NON-NLS-1$
         final IStatus status = new Status( IStatus.ERROR, KalypsoAFGUIFrameworkPlugin.PLUGIN_ID, msg );
         throw new CoreException( status );
       }

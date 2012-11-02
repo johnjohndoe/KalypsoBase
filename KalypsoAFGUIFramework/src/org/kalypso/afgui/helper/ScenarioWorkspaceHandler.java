@@ -46,6 +46,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.internal.i18n.Messages;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -81,7 +82,7 @@ public class ScenarioWorkspaceHandler
 
     if( !gmlFile.exists() )
     {
-      final String msg = String.format( "Missing GML file \"%s\" .", gmlFile.getLocation().toOSString() );
+      final String msg = String.format( Messages.getString("ScenarioWorkspaceHandler_0"), gmlFile.getLocation().toOSString() ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoAFGUIFrameworkPlugin.PLUGIN_ID, msg );
       throw new CoreException( status );
     }

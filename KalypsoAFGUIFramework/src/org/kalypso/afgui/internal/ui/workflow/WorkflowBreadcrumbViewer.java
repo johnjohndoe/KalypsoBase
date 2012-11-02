@@ -101,12 +101,12 @@ public class WorkflowBreadcrumbViewer extends BreadcrumbViewer
     addFilter( new ScenarioViewerFilter() );
 
     m_itemMenuManager = new MenuManager();
-    m_itemMenuManager.add( new Separator( "additions" ) );
+    m_itemMenuManager.add( new Separator( "additions" ) ); //$NON-NLS-1$
 
     final IServiceLocator locator = view.getSite();
 
     final IMenuService menuService = (IMenuService)locator.getService( IMenuService.class );
-    menuService.populateContributionManager( m_itemMenuManager, "popup:org.kalypso.afgui.breadcrumbs" );
+    menuService.populateContributionManager( m_itemMenuManager, "popup:org.kalypso.afgui.breadcrumbs" ); //$NON-NLS-1$
 
     hookListeners();
   }

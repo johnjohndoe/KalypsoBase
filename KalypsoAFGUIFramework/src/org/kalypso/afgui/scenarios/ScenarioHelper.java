@@ -133,7 +133,7 @@ public class ScenarioHelper
       }
       catch( final WorkbenchException e )
       {
-        final IStatus status = new Status( IStatus.ERROR, KalypsoAFGUIFrameworkPlugin.PLUGIN_ID, "Failed to axtivate workflow perspective", e );
+        final IStatus status = new Status( IStatus.ERROR, KalypsoAFGUIFrameworkPlugin.PLUGIN_ID, "Failed to activate workflow perspective", e ); //$NON-NLS-1$
         KalypsoAFGUIFrameworkPlugin.getDefault().getLog().log( status );
       }
     }

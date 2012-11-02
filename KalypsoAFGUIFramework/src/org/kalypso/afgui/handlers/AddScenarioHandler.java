@@ -17,6 +17,7 @@ import org.kalypso.afgui.internal.handlers.CreateScenarioOperation;
 import org.kalypso.afgui.internal.handlers.IScenarioOperation;
 import org.kalypso.afgui.internal.handlers.ScenarioData;
 import org.kalypso.afgui.internal.handlers.ScenarioWizard;
+import org.kalypso.afgui.internal.i18n.Messages;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.afgui.views.WorkflowView;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
@@ -41,7 +42,7 @@ public class AddScenarioHandler extends AbstractHandler
     if( scenario == null )
     {
       final String commandName = HandlerUtils.getCommandName( event );
-      final String message = "Please activate the scenario to derive from.";
+      final String message = Messages.getString("AddScenarioHandler_0"); //$NON-NLS-1$
       MessageDialog.openInformation( shell, commandName, message );
       return null;
     }
