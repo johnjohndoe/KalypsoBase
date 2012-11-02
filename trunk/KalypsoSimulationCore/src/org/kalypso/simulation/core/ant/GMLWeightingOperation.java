@@ -143,7 +143,7 @@ public class GMLWeightingOperation
 
       // 4. build n-operation filter
       final NOperationFilterType nOperationFilter = FilterFactory.OF_FILTER.createNOperationFilterType();
-      nOperationFilter.setOperator( "+" );
+      nOperationFilter.setOperator( "+" ); //$NON-NLS-1$
       final List<JAXBElement< ? extends AbstractFilterType>> filterList = nOperationFilter.getFilter();
 
       // 5. resolve weights
@@ -165,11 +165,11 @@ public class GMLWeightingOperation
           throw new BuildException( "Kein(e) Quell-Feature(s) gefunden für FeaturePath: " + sourceMember );
 
         final OperationFilterType offsetFilter = FilterFactory.OF_FILTER.createOperationFilterType();
-        offsetFilter.setOperator( "+" );
+        offsetFilter.setOperator( "+" ); //$NON-NLS-1$
         offsetFilter.setOperand( Double.toString( offset ) );
 
         final NOperationFilterType weightSumFilter = FilterFactory.OF_FILTER.createNOperationFilterType();
-        weightSumFilter.setOperator( "+" );
+        weightSumFilter.setOperator( "+" ); //$NON-NLS-1$
 
         offsetFilter.setFilter( FilterFactory.OF_FILTER.createNOperationFilter( weightSumFilter ) );
 
@@ -179,9 +179,10 @@ public class GMLWeightingOperation
         /* Empty NOperation filter is forbidden */
         // Bad warning message, can happen if all sub-elements are disabled
         if( offsetSummands.isEmpty() )
+        {
           // m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, "Leere Summe für Feature: " +
           // weightFE.getId() );
-          ;
+        }
         else
           filterList.add( FilterFactory.OF_FILTER.createOperationFilter( offsetFilter ) );
       }
@@ -270,7 +271,7 @@ public class GMLWeightingOperation
 
       if( zmlLink == null )
       {
-        m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, "Linked timeserie link missing in Feature: " + weightFE.getId() );
+        m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, "Linked timeserie link missing in Feature: " + weightFE.getId() ); //$NON-NLS-1$
 
         // IMPORTANT: just skips this weight; leads probably to wrong results
         continue;
@@ -279,7 +280,7 @@ public class GMLWeightingOperation
       // 10. build operation filter with parameters from gml
       final OperationFilterType filter = FilterFactory.OF_FILTER.createOperationFilterType();
       offsetSummands.add( FilterFactory.OF_FILTER.createOperationFilter( filter ) );
-      filter.setOperator( "*" );
+      filter.setOperator( "*" ); //$NON-NLS-1$
       filter.setOperand( Double.toString( factor ) );
 
       /* Innermost filter part */
@@ -295,20 +296,19 @@ public class GMLWeightingOperation
 
         final StringReader sr = new StringReader( strFilterXml );
         final Unmarshaller unmarshaller = ZmlFactory.JC.createUnmarshaller();
-        final JAXBElement< ? > filterElement = (JAXBElement< ? >) unmarshaller.unmarshal( new InputSource( sr ) );
+        final JAXBElement< ? > filterElement = (JAXBElement< ? >)unmarshaller.unmarshal( new InputSource( sr ) );
         if( filterElement == null || !AbstractFilterType.class.isAssignableFrom( filterElement.getDeclaredType() ) )
-          throw new UnsupportedOperationException( "Filter must start with an AbstractFilterType element." );
+          throw new UnsupportedOperationException( "Filter must start with an AbstractFilterType element." ); //$NON-NLS-1$
 
-        @SuppressWarnings("unchecked")
-        final JAXBElement<AbstractFilterType> af = (JAXBElement<AbstractFilterType>) filterElement;
+        @SuppressWarnings( "unchecked" ) final JAXBElement<AbstractFilterType> af = (JAXBElement<AbstractFilterType>)filterElement;
         filter.setFilter( af );
 
         // HACK
         final AbstractFilterType abstractFilter = af.getValue();
         if( abstractFilter instanceof InterpolationFilterType )
-          ((InterpolationFilterType) abstractFilter).setFilter( FilterFactory.OF_FILTER.createZmlFilter( zmlFilter ) );
+          ((InterpolationFilterType)abstractFilter).setFilter( FilterFactory.OF_FILTER.createZmlFilter( zmlFilter ) );
         else
-          throw new UnsupportedOperationException( "Only InterpolationFilter as source-filter supported at the moment." );
+          throw new UnsupportedOperationException( "Only InterpolationFilter as source-filter supported at the moment." ); //$NON-NLS-1$
 
         sr.close();
       }
@@ -332,14 +332,14 @@ public class GMLWeightingOperation
 
     final Object property = GMLXPathUtilities.query( featurePath, feature );
     if( property instanceof FeatureList )
-      return ((FeatureList) property).toFeatures();
+      return ((FeatureList)property).toFeatures();
 
     if( property instanceof Feature )
-      return new Feature[] { (Feature) property };
+      return new Feature[] { (Feature)property };
 
     if( property instanceof String )
     {
-      final Feature resolvedFeature = feature.getWorkspace().getFeature( (String) property );
+      final Feature resolvedFeature = feature.getWorkspace().getFeature( (String)property );
       return new Feature[] { resolvedFeature };
     }
 
@@ -366,7 +366,7 @@ public class GMLWeightingOperation
   {
     final Object valueOrReference = GMLXPathUtilities.query( path, feature );
     if( valueOrReference instanceof Number )
-      return ((Number) valueOrReference).doubleValue();
+      return ((Number)valueOrReference).doubleValue();
 
     if( valueOrReference == null )
       return defaultValue;

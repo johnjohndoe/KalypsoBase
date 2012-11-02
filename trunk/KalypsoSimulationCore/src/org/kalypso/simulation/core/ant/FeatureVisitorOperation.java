@@ -171,7 +171,7 @@ public class FeatureVisitorOperation implements ICoreRunnableWithProgress
     // TODO: where to get the message from?
     // TODO: get message from the visitor-task
 
-    return stati.asMultiStatusOrOK( "" );
+    return stati.asMultiStatusOrOK( "" ); //$NON-NLS-1$
   }
 
   private ILogger getLogger( )

@@ -295,7 +295,7 @@ public class CommitPrognoseFeatureVisitor extends AbstractMonitoredFeatureVisito
       catch( final NoSuchElementException e )
       {
         if( !KalypsoStatusUtils.isStatusAxis( targetAxes[i] ) )
-          throw new IllegalStateException( "Required axis" + targetAxes[i] + " from" + target + " could not be found in" + source );
+          throw new IllegalStateException( "Required axis" + targetAxes[i] + " from" + target + " could not be found in" + source ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
         // else ignored, try with next one
       }

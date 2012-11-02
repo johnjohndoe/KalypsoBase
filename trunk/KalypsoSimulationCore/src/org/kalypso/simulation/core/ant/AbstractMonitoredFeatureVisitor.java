@@ -55,7 +55,7 @@ public abstract class AbstractMonitoredFeatureVisitor implements IMonitoredFeatu
   @Override
   public final String getTaskName( )
   {
-    return "";
+    return ""; //$NON-NLS-1$
   }
 
   /**

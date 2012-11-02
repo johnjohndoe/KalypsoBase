@@ -77,7 +77,7 @@ public class TestSimulationMonitor implements ISimulationMonitor
 
   private void println( final String message )
   {
-    m_out.format( "%s%s%n", m_messagePrefix, message );
+    m_out.format( "%s%s%n", m_messagePrefix, message ); //$NON-NLS-1$
   }
 
   /**
@@ -86,7 +86,7 @@ public class TestSimulationMonitor implements ISimulationMonitor
   @Override
   public void cancel( )
   {
-    println( "Cancel" );
+    println( "Cancel" ); //$NON-NLS-1$
     m_canceled = true;
   }
 
@@ -106,7 +106,7 @@ public class TestSimulationMonitor implements ISimulationMonitor
   public void setProgress( final int progress )
   {
     m_progress = progress;
-    println( String.format( "Progress %d%%", progress ) );
+    println( String.format( "Progress %d%%", progress ) ); //$NON-NLS-1$
   }
 
   /**
@@ -134,7 +134,7 @@ public class TestSimulationMonitor implements ISimulationMonitor
   public void setMessage( final String message )
   {
     m_message = message;
-    println( String.format( "Message '%s'", m_message ) );
+    println( String.format( "Message '%s'", m_message ) ); //$NON-NLS-1$
   }
 
   /**
@@ -145,7 +145,7 @@ public class TestSimulationMonitor implements ISimulationMonitor
   {
     m_info = new Status( status, KalypsoSimulationCorePlugin.getID(), text );
 
-    println( String.format( "Finish-Info '%s'", m_info ) );
+    println( String.format( "Finish-Info '%s'", m_info ) ); //$NON-NLS-1$
   }
 
   /**

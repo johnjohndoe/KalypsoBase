@@ -95,10 +95,10 @@ public final class CopyObservationHelper implements ICopyObservationMetaDataCons
   private static String getTo( final DateRange dateRange )
   {
     if( dateRange == null )
-      return "";
+      return ""; //$NON-NLS-1$
 
     if( dateRange.getFrom() == null )
-      return "";
+      return ""; //$NON-NLS-1$
 
     final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
 
@@ -108,10 +108,10 @@ public final class CopyObservationHelper implements ICopyObservationMetaDataCons
   private static String getFrom( final DateRange dateRange )
   {
     if( dateRange == null )
-      return "";
+      return ""; //$NON-NLS-1$
 
     if( dateRange.getFrom() == null )
-      return "";
+      return ""; //$NON-NLS-1$
 
     final TimeZone timeZone = KalypsoCorePlugin.getDefault().getTimeZone();
 
@@ -120,7 +120,7 @@ public final class CopyObservationHelper implements ICopyObservationMetaDataCons
 
   private static String getMetaDataKey( final String base, final Integer count )
   {
-    return base + "_" + count.toString();
+    return base + "_" + count.toString(); //$NON-NLS-1$
   }
 
 }
