@@ -24,6 +24,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.wizards.IWizardDescriptor;
 import org.eclipse.ui.wizards.IWizardRegistry;
 
+import de.renew.workflow.internal.i18n.Messages;
+
 /**
  * Opens a wizard.
  * 
@@ -52,14 +54,11 @@ public class WizardContextHandler extends AbstractHandler implements IExecutable
     m_wizardType = wizardType;
   }
 
-  /**
-   * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-   */
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
+    final Shell shell = (Shell)context.getVariable( ISources.ACTIVE_SHELL_NAME );
     final IWorkbench workbench = PlatformUI.getWorkbench();
     if( m_wizardType != null && m_wizardId != null )
     {
@@ -93,7 +92,7 @@ public class WizardContextHandler extends AbstractHandler implements IExecutable
         {
           // TODO: dubios: first, no one rally implements that, second: javadoc of this methods sais, nothing has to be
           // returned
-          return ((IDialogWithResult) wizard).getResult();
+          return ((IDialogWithResult)wizard).getResult();
         }
         else
         {
@@ -113,9 +112,9 @@ public class WizardContextHandler extends AbstractHandler implements IExecutable
   {
     if( data instanceof Map )
     {
-      final Map< ? , ? > parameterMap = (Map< ? , ? >) data;
-      m_wizardId = (String) parameterMap.get( WIZARD_ID );
-      m_wizardType = EWizardType.valueOf( (String) parameterMap.get( WIZARD_TYPE ) );
+      final Map< ? , ? > parameterMap = (Map< ? , ? >)data;
+      m_wizardId = (String)parameterMap.get( WIZARD_ID );
+      m_wizardType = EWizardType.valueOf( (String)parameterMap.get( WIZARD_TYPE ) );
     }
   }
 }

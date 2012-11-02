@@ -16,6 +16,8 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
 
+import de.renew.workflow.internal.i18n.Messages;
+
 /**
  * Opens the map view on a given resource and activates a given layer
  * 
@@ -41,7 +43,7 @@ public class PerspectiveContextHandler extends AbstractHandler implements IExecu
   {
     final IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
     if( activeWorkbenchWindow == null || m_perspectiveId == null )
-      throw new ExecutionException( "Could not activate perspective: " + m_perspectiveId );
+      throw new ExecutionException( "Could not activate perspective: " + m_perspectiveId ); //$NON-NLS-1$
 
     try
     {
