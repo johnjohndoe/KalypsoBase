@@ -200,7 +200,7 @@ public class VegetationClassUiHandler extends AbstractComponentUiHandler
     }
 
     /* Add a separator. */
-    adjustedClasses.add( "----------" );
+    adjustedClasses.add( "----------" ); //$NON-NLS-1$
 
     /* Add all classes. */
     for( final IVegetationClass vegetationClass : vegetationClasses )

@@ -38,13 +38,13 @@ public class SwitchProfilePropertyTester extends PropertyTester
     if( !(receiver instanceof ProfileChartComposite) )
       return false;
 
-    if( !"direction".equals( property ) )
+    if( !"direction".equals( property ) ) //$NON-NLS-1$
       return false;
 
-    if( "previous".equals( expectedValue ) )
+    if( "previous".equals( expectedValue ) ) //$NON-NLS-1$
       return isEnabled( (ProfileChartComposite)receiver, -1 );
 
-    if( "next".equals( expectedValue ) )
+    if( "next".equals( expectedValue ) ) //$NON-NLS-1$
       return isEnabled( (ProfileChartComposite)receiver, 1 );
 
     return false;

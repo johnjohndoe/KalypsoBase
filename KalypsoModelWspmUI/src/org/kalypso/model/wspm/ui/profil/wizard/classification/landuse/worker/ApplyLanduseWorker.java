@@ -108,7 +108,7 @@ public class ApplyLanduseWorker implements ICoreRunnableWithProgress
     final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( shapeSRS );
 
     final IProfileFeature[] profiles = m_delegate.getProfiles();
-    monitor.beginTask( "Assign landuse classes", profiles.length );
+    monitor.beginTask( Messages.getString("ApplyLanduseWorker.0"), profiles.length ); //$NON-NLS-1$
 
     for( final IProfileFeature profileFeature : profiles )
     {
@@ -167,7 +167,7 @@ public class ApplyLanduseWorker implements ICoreRunnableWithProgress
       ProgressUtilities.worked( monitor, 1 );
     }
 
-    return log.asMultiStatusOrOK( "Problems when assigning landuse classes" );
+    return log.asMultiStatusOrOK( Messages.getString("ApplyLanduseWorker.1") ); //$NON-NLS-1$
   }
 
   private String initShapeSRS( )

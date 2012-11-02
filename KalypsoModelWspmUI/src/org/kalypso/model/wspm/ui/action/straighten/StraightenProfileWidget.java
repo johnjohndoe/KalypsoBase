@@ -70,6 +70,7 @@ import org.kalypso.model.wspm.ui.action.base.ProfilePainter;
 import org.kalypso.model.wspm.ui.action.base.ProfileWidgetMapPanelListener;
 import org.kalypso.model.wspm.ui.dialog.straighten.StraightenProfileDialog;
 import org.kalypso.model.wspm.ui.dialog.straighten.StraightenProfileOperation;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.advanced.utils.SLDPainter;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -102,7 +103,7 @@ public class StraightenProfileWidget extends AbstractProfileWidget
    */
   public StraightenProfileWidget( )
   {
-    super( "Straighten profile", "Straightens a profile between to selected points." );
+    super( Messages.getString("StraightenProfileWidget_0"), Messages.getString("StraightenProfileWidget_1") ); //$NON-NLS-1$ //$NON-NLS-2$
 
     m_mapPanelListener = new ProfileWidgetMapPanelListener( this );
     m_firstPoint = null;
@@ -222,7 +223,7 @@ public class StraightenProfileWidget extends AbstractProfileWidget
       return null;
 
     final double hoehe = Profiles.getHoehe( profile, cursor );
-    return String.format( "Width %.4f m, Height %.4f m", cursor, hoehe );
+    return String.format( Messages.getString("StraightenProfileWidget_2"), cursor, hoehe ); //$NON-NLS-1$
   }
 
   @Override
@@ -266,7 +267,7 @@ public class StraightenProfileWidget extends AbstractProfileWidget
       final IStatus status = RunnableContextHelper.execute( progressService, true, false, operation );
 
       /* Open the status dialog. */
-      final StatusDialog statusDialog = new StatusDialog( shell, status, "Profil begradigen" );
+      final StatusDialog statusDialog = new StatusDialog( shell, status, Messages.getString("StraightenProfileWidget_3") ); //$NON-NLS-1$
       statusDialog.open();
     }
     finally

@@ -40,13 +40,15 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.model.wspm.ui.dialog.straighten.data;
 
+import org.kalypso.model.wspm.ui.i18n.Messages;
+
 /**
  * @author Holger Albert
  */
 public enum CORRECT_POINTS_ENABLEMENT
 {
-  ON("Breiten der Profilpunkte korrigieren"),
-  OFF("Breiten der Profilpunkte nicht korrigieren");
+  ON(Messages.getString("CORRECT_POINTS_ENABLEMENT_0")), //$NON-NLS-1$
+  OFF(Messages.getString("CORRECT_POINTS_ENABLEMENT_1")); //$NON-NLS-1$
 
   /**
    * The label.

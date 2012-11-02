@@ -71,6 +71,7 @@ import org.kalypso.model.wspm.core.profil.reparator.IProfileMarkerResolution;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorMarkerCollector;
 import org.kalypso.model.wspm.core.profil.validator.IValidatorRule;
 import org.kalypso.model.wspm.ui.KalypsoModelWspmUIPlugin;
+import org.kalypso.model.wspm.ui.i18n.Messages;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
@@ -92,7 +93,7 @@ public class ValidateProfilesJob extends UIJob
 
   public ValidateProfilesJob( final IProfileFeature[] profileFeatures, final IValidatorRule[] rules, final Object[] quickFixes, final CommandableWorkspace workspace )
   {
-    super( "Validating Profiles" );
+    super( Messages.getString("ValidateProfilesJob_0") ); //$NON-NLS-1$
     m_profileFeatures = profileFeatures;
     m_rules = rules;
     m_quickFixes = quickFixes;
@@ -131,7 +132,7 @@ public class ValidateProfilesJob extends UIJob
       }
       catch( final CoreException e1 )
       {
-        stati.add( new Status( IStatus.ERROR, KalypsoModelWspmUIPlugin.ID, "Profile Valdiation Rule failed.", e1 ) );
+        stati.add( new Status( IStatus.ERROR, KalypsoModelWspmUIPlugin.ID, "Failed to delete old problem markers.", e1 ) ); //$NON-NLS-1$
       }
 
       final IValidatorMarkerCollector collector = new ResourceValidatorMarkerCollector( m_resource, null, "" + profile.getStation(), profileFeature.getId() ); //$NON-NLS-1$
@@ -143,7 +144,7 @@ public class ValidateProfilesJob extends UIJob
         }
         catch( final CoreException e )
         {
-          stati.add( new Status( IStatus.ERROR, KalypsoModelWspmUIPlugin.ID, "Profile Valdiation Rule failed.", e ) );
+          stati.add( new Status( IStatus.ERROR, KalypsoModelWspmUIPlugin.ID, "Profile valdiation rule failed", e ) ); //$NON-NLS-1$
         }
       }
 
@@ -185,7 +186,7 @@ public class ValidateProfilesJob extends UIJob
                 }
                 catch( final CoreException e )
                 {
-                  stati.add( new Status( IStatus.ERROR, KalypsoModelWspmUIPlugin.ID, "Deletion of marker failed.", e ) );
+                  stati.add( new Status( IStatus.ERROR, KalypsoModelWspmUIPlugin.ID, "Deletion of marker failed.", e ) ); //$NON-NLS-1$
                 }
               }
             }
@@ -203,7 +204,7 @@ public class ValidateProfilesJob extends UIJob
       e.printStackTrace();
     }
 
-    return StatusUtilities.createStatus( stati, "Profile Validating Job" );
+    return StatusUtilities.createStatus( stati, Messages.getString("ValidateProfilesJob_1") ); //$NON-NLS-1$
   }
 
   private Object findQuickFix( final IProfileMarkerResolution resultion )
