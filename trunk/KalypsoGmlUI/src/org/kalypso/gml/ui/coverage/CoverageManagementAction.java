@@ -53,12 +53,12 @@ public abstract class CoverageManagementAction
   /**
    * The action will be shown in the coverage management widget.
    */
-  public static final String ROLE_WIDGET = "widget";
+  public static final String ROLE_WIDGET = "widget"; //$NON-NLS-1$
 
   /**
    * The action will be shown in the import wizard of the coverage management widget.
    */
-  public static final String ROLE_WIZARD = "wizard";
+  public static final String ROLE_WIZARD = "wizard"; //$NON-NLS-1$
 
   /**
    * The id of the coverage management action.

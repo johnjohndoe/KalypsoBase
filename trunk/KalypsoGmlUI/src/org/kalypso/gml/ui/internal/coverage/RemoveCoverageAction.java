@@ -130,7 +130,7 @@ public class RemoveCoverageAction extends Action implements IUpdateable
                 log.add( status );
               }
 
-              return log.asMultiStatusOrOK( "Failed to delete data file(s)" );
+              return log.asMultiStatusOrOK( Messages.getString("RemoveCoverageAction.0") ); //$NON-NLS-1$
             }
           };
           job.setUser( false );

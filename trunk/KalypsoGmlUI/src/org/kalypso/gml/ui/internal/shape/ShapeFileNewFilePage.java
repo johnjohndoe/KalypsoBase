@@ -77,8 +77,8 @@ public class ShapeFileNewFilePage extends WizardPage
 
     m_input = input;
 
-    setTitle( "File location" );
-    setDescription( "Please enter the path to the new resource on this page" );
+    setTitle( Messages.getString("ShapeFileNewFilePage.0") ); //$NON-NLS-1$
+    setDescription( Messages.getString("ShapeFileNewFilePage.1") ); //$NON-NLS-1$
   }
 
   @Override

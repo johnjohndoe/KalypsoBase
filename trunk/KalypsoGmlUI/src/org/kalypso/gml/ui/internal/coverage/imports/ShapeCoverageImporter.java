@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.java.io.FilePattern;
 import org.kalypso.gml.processes.tin.ShapeTriangulatedSurfaceConverter;
+import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 
 /**
@@ -59,7 +60,7 @@ public class ShapeCoverageImporter extends AbstractTriangulatedSurfaceCoverageIm
   @Override
   public FilePattern getFilePattern( )
   {
-    return new FilePattern( "*.shp", "Shape-Files" ); //$NON-NLS-1$
+    return new FilePattern( "*.shp", Messages.getString("ShapeCoverageImporter_0") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override

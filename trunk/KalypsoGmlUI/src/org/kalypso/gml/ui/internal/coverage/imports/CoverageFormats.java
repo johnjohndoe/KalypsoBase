@@ -50,6 +50,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.kalypso.contribs.eclipse.jface.wizard.FileChooserDelegateOpen;
 import org.kalypso.contribs.java.io.FileExtensions;
 import org.kalypso.contribs.java.io.FilePattern;
+import org.kalypso.gml.ui.i18n.Messages;
 
 /**
  * Helper that knows abotu all supported coverage formats.
@@ -74,12 +75,12 @@ public final class CoverageFormats
 
     /* known patterns filter */
     final StringBuilder knownPatternsLabel = new StringBuilder();
-    knownPatternsLabel.append( "All supported formats" );
+    knownPatternsLabel.append( Messages.getString("CoverageFormats_0") ); //$NON-NLS-1$
     // knownPatternsLabel.append( "All supported formats (" );
     // knownPatternsLabel.append( StringUtils.join( knownPatterns, ", " ) );
     // knownPatternsLabel.append( ')' );
 
-    final String knownPatternsFilter = StringUtils.join( knownPatterns, ";" );
+    final String knownPatternsFilter = StringUtils.join( knownPatterns, ";" ); //$NON-NLS-1$
 
     delegate.addFilter( knownPatternsLabel.toString(), knownPatternsFilter );
 

@@ -20,15 +20,15 @@ import org.kalypso.gml.ui.coverage.CoverageManagementAction;
  */
 public class KalypsoGmlUiExtensions
 {
-  private static final String COVERAGE_MANAGEMENT_ACTION_EXTENSION_POINT = "org.kalypso.gml.ui.coverageManagementAction";
+  private static final String COVERAGE_MANAGEMENT_ACTION_EXTENSION_POINT = "org.kalypso.gml.ui.coverageManagementAction"; //$NON-NLS-1$
 
-  private static final String COVERAGE_MANAGEMENT_ACTION_ACTION_ELEMENT = "action";
+  private static final String COVERAGE_MANAGEMENT_ACTION_ACTION_ELEMENT = "action"; //$NON-NLS-1$
 
-  private static final String COVERAGE_MANAGEMENT_ACTION_ACTION_ID = "id";
+  private static final String COVERAGE_MANAGEMENT_ACTION_ACTION_ID = "id"; //$NON-NLS-1$
 
-  private static final String COVERAGE_MANAGEMENT_ACTION_ACTION_ROLE = "role";
+  private static final String COVERAGE_MANAGEMENT_ACTION_ACTION_ROLE = "role"; //$NON-NLS-1$
 
-  private static final String COVERAGE_MANAGEMENT_ACTION_ACTION_CLASS = "class";
+  private static final String COVERAGE_MANAGEMENT_ACTION_ACTION_CLASS = "class"; //$NON-NLS-1$
 
   /**
    * The constructor.
@@ -78,7 +78,7 @@ public class KalypsoGmlUiExtensions
       }
     }
 
-    throw new CoreException( new Status( IStatus.ERROR, KalypsoGmlUIPlugin.id(), String.format( "Keine CoverageManagementAction mit ID '%s' gefunden.", id ), null ) );
+    throw new CoreException( new Status( IStatus.ERROR, KalypsoGmlUIPlugin.id(), String.format( "Keine CoverageManagementAction mit ID '%s' gefunden.", id ), null ) ); //$NON-NLS-1$
   }
 
   /**

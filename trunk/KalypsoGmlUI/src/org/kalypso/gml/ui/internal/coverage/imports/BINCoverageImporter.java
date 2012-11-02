@@ -67,7 +67,7 @@ public class BINCoverageImporter extends AbstractGridCoverageImporter
   public FilePattern getFilePattern( )
   {
     final String pattern = "*.bin"; //$NON-NLS-1$
-    final String filterName = "Kalypso Grid-Files";
+    final String filterName = Messages.getString("BINCoverageImporter.0"); //$NON-NLS-1$
 
     return new FilePattern( pattern, filterName );
   }

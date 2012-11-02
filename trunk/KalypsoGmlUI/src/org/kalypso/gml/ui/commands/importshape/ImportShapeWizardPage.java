@@ -41,7 +41,7 @@ import org.kalypso.ui.ImageProvider;
  */
 public class ImportShapeWizardPage extends WizardPage
 {
-  public static final String FILTER_NAME_SHP = Messages.getString( "org.kalypso.gml.ui.commands.importshape.ImportShapeWizardPage.1" );
+  public static final String FILTER_NAME_SHP = Messages.getString( "org.kalypso.gml.ui.commands.importshape.ImportShapeWizardPage.1" ); //$NON-NLS-1$
 
   protected static final String DATA_PROPERTY = "property"; //$NON-NLS-1$
 

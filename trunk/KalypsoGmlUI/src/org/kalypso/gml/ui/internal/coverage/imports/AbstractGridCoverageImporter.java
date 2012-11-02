@@ -119,7 +119,7 @@ abstract class AbstractGridCoverageImporter implements ICoverageImporter
     }
     catch( final MalformedURLException | URIException e )
     {
-      final String message = "Failed to import grid file";
+      final String message = Messages.getString("AbstractGridCoverageImporter.0"); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoGmlUIPlugin.id(), message, e );
       throw new CoreException( status );
     }

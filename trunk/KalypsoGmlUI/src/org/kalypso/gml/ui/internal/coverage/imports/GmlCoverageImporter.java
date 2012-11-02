@@ -48,6 +48,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.java.io.FilePattern;
 import org.kalypso.gml.processes.tin.GmlTriangulatedSurfaceConverter;
 import org.kalypso.gml.processes.tin.TriangulatedSurfaceFeature;
+import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
@@ -61,7 +62,7 @@ public class GmlCoverageImporter extends AbstractTriangulatedSurfaceCoverageImpo
   @Override
   public FilePattern getFilePattern( )
   {
-    return new FilePattern( "*.gml", "GML-Files" ); //$NON-NLS-1$
+    return new FilePattern( "*.gml", Messages.getString("GmlCoverageImporter_0") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override
