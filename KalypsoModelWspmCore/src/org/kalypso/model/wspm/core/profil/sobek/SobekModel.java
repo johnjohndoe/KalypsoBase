@@ -47,7 +47,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -57,7 +56,7 @@ import org.kalypso.model.wspm.core.profil.sobek.profiles.SobekProfile;
 /**
  * This class contains a collection of sobek profiles. It can also provides functionality for several tasks, as writing
  * to a file and so on.
- *
+ * 
  * @author Holger Albert
  */
 public class SobekModel implements ISobekConstants
@@ -71,7 +70,7 @@ public class SobekModel implements ISobekConstants
 
   /**
    * This function initializes this model with help of the given provider.
-   *
+   * 
    * @param provider
    *          This provider helps, creating the profiles.
    * @param monitor
@@ -93,37 +92,29 @@ public class SobekModel implements ISobekConstants
 
   /**
    * This function writes the profiles to the files 'profile.dat' and 'profile.def' into the given folder.
-   *
+   * 
    * @param destinationFolder
    *          The destination folder.
    */
   public void writeTo( final File destinationFolder ) throws Exception
   {
-    /* The buffered writers. */
-    BufferedWriter datWriter = null;
-    BufferedWriter defWriter = null;
+    final String alreadyExistsWarning = Messages.getString( "SobekModel_1" ); //$NON-NLS-1$
 
-    try
+    /* Create the file handle for the file profile.dat. */
+    final File datFile = new File( destinationFolder, ISobekConstants.PROFILE_DAT ); //$NON-NLS-1$
+    if( datFile.exists() )
+      throw new Exception( String.format( alreadyExistsWarning, datFile.getAbsolutePath() ) );
+
+    /* Create the file handle for the file profile.def. */
+    final File defFile = new File( destinationFolder, "profile.def" ); //$NON-NLS-1$
+    if( defFile.exists() )
     {
-      final String alreadyExistsWarning = Messages.getString( "SobekModel_1" ); //$NON-NLS-1$
+      final String alreadyExistsMsg = String.format( alreadyExistsWarning, defFile.getAbsolutePath() );
+      throw new Exception( alreadyExistsMsg );
+    }
 
-      /* Create the file handle for the file profile.dat. */
-      final File datFile = new File( destinationFolder, ISobekConstants.PROFILE_DAT ); //$NON-NLS-1$
-      if( datFile.exists() )
-        throw new Exception( String.format( alreadyExistsWarning, datFile.getAbsolutePath() ) );
-
-      /* Create the file handle for the file profile.def. */
-      final File defFile = new File( destinationFolder, "profile.def" ); //$NON-NLS-1$
-      if( defFile.exists() )
-      {
-        final String alreadyExistsMsg = String.format( alreadyExistsWarning, defFile.getAbsolutePath() );
-        throw new Exception( alreadyExistsMsg );
-      }
-
-      /* Create the buffered writers. */
-      datWriter = new BufferedWriter( new FileWriter( datFile ) );
-      defWriter = new BufferedWriter( new FileWriter( defFile ) );
-
+    try( BufferedWriter datWriter = new BufferedWriter( new FileWriter( datFile ) ); BufferedWriter defWriter = new BufferedWriter( new FileWriter( defFile ) ) )
+    {
       for( int i = 0; i < m_profiles.size(); i++ )
       {
         /* Get the profile. */
@@ -144,16 +135,6 @@ public class SobekModel implements ISobekConstants
         datWriter.newLine();
         defWriter.newLine();
       }
-    }
-    catch( final Exception ex )
-    {
-      throw ex;
-    }
-    finally
-    {
-      /* Close the writers. */
-      IOUtils.closeQuietly( datWriter );
-      IOUtils.closeQuietly( defWriter );
     }
   }
 

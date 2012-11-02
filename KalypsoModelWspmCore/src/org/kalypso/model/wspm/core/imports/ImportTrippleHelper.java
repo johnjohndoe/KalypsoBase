@@ -49,7 +49,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.CoreException;
@@ -72,7 +71,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 
 /**
  * small refactoring - projects Lanu and nofdp uses this helper!
- *
+ * 
  * @author Dirk Kuch
  */
 public final class ImportTrippleHelper
@@ -84,7 +83,7 @@ public final class ImportTrippleHelper
 
   /**
    * Imports the profile trippel data and converts it into IProfils
-   *
+   * 
    * @param trippleFile
    *          file with profile tripples
    */
@@ -104,9 +103,10 @@ public final class ImportTrippleHelper
 
     /* file loading */
     LineNumberReader fileReader = null;
-    try
+
+    try( InputStreamReader inputReader = new InputStreamReader( new FileInputStream( trippleFile ) ) )
     {
-      fileReader = new LineNumberReader( new InputStreamReader( new FileInputStream( trippleFile ) ) );
+      fileReader = new LineNumberReader( inputReader );
 
       /* File Header */
       fileReader.readLine();
@@ -186,13 +186,12 @@ public final class ImportTrippleHelper
     catch( final IOException e )
     {
       e.printStackTrace();
-      final String message = Messages.getString( "org.kalypso.model.wspm.core.imports.ImportTrippleHelper.4", fileReader.getLineNumber() ); //$NON-NLS-1$
+
+      final int lineNumber = fileReader == null ? 0 : fileReader.getLineNumber();
+
+      final String message = Messages.getString( "org.kalypso.model.wspm.core.imports.ImportTrippleHelper.4", lineNumber ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), message, e );
       throw new CoreException( status );
-    }
-    finally
-    {
-      IOUtils.closeQuietly( fileReader );
     }
 
     return profiles.toArray( new IProfile[profiles.size()] );
@@ -200,7 +199,7 @@ public final class ImportTrippleHelper
 
   /**
    * creates a new profile point and adds it to the point list of the current profile
-   *
+   * 
    * @param profilPointList
    *          point list of the current profile
    * @param tokenizer
@@ -234,7 +233,7 @@ public final class ImportTrippleHelper
 
   /**
    * calculates the width coordinate by the segment length (2-dim distance of the profile points)
-   *
+   * 
    * @param profilPointList
    *          point list of the current profile
    */

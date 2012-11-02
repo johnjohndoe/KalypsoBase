@@ -59,17 +59,14 @@ import org.kalypso.metadoc.ui.ExportableTreeItem;
 /**
  * This Exporter wraps multiple exporters (must all be of the same type) and exhibits them as one single exporter.
  * <p>
- * Argument: One or more exporters used for metadoc document exports. Many 'exporter' elements can be specified in the
- * arguments, they must be followed by some arbitrary string.
+ * Argument: One or more exporters used for metadoc document exports. Many 'exporter' elements can be specified in the arguments, they must be followed by some arbitrary string.
  * </p>
  * <p>
- * Each argument can contains sub-arguments which in turn are forwarded to the exporter object. This way, you can
- * specify exporter specific initialisation.
+ * Each argument can contains sub-arguments which in turn are forwarded to the exporter object. This way, you can specify exporter specific initialisation.
  * </p>
  * <p>
- * There must be at least the 'id' argument which contains the id of the exporter to use (for a list of valid exporter
- * ids, see the <code>org.kalypso.metadoc.exporter</code> extension point)
- *
+ * There must be at least the 'id' argument which contains the id of the exporter to use (for a list of valid exporter ids, see the <code>org.kalypso.metadoc.exporter</code> extension point)
+ * 
  * @author belger
  */
 public class MultiExporter extends AbstractExporter
@@ -82,7 +79,7 @@ public class MultiExporter extends AbstractExporter
     super.init( supplier );
 
     // read and create sub-exporters
-    final Arguments arguments = (Arguments) getFromSupplier( "arguments" );
+    final Arguments arguments = (Arguments)getFromSupplier( "arguments" );
 
     final Collection<IStatus> stati = new ArrayList<>();
     final ISupplierCreator creator = new ISupplierCreator()
@@ -90,13 +87,13 @@ public class MultiExporter extends AbstractExporter
       @Override
       public ISupplier createSupplier( final Arguments args ) throws InvocationTargetException
       {
-        return (ISupplier) supplier.supply( args );
+        return (ISupplier)supplier.supply( args );
       }
     };
 
     final Collection<IExporter> exporterList = createExporterFromArguments( stati, arguments, "exporter", creator );
     if( exporterList.isEmpty() )
-      throw new CoreException( StatusUtilities.createErrorStatus( "Leerer Multi-Exporter nicht möglich." ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoMetaDocPlugin.getId(), "Leerer Multi-Exporter nicht möglich." ) );
     m_exporters = exporterList.toArray( new IExporter[exporterList.size()] );
 
     final IExporter firstExporter = m_exporters[0];
@@ -104,7 +101,7 @@ public class MultiExporter extends AbstractExporter
     {
       final IExporter exporter = m_exporters[i];
       if( exporter.getClass() != firstExporter.getClass() )
-        throw new CoreException( StatusUtilities.createErrorStatus( "Alle Exporter im Multi-Exporter müssen die gleiche Klasse haben." ) );
+        throw new CoreException( new Status( IStatus.ERROR, KalypsoMetaDocPlugin.getId(), "Alle Exporter im Multi-Exporter müssen die gleiche Klasse haben." ) );
     }
   }
 
@@ -120,7 +117,7 @@ public class MultiExporter extends AbstractExporter
 
   /**
    * Returns the image of the first of its exporters.
-   *
+   * 
    * @see org.kalypso.metadoc.IExporter#getImageDescriptor()
    */
   @Override
