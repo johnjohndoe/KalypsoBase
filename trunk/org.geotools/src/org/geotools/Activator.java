@@ -29,7 +29,7 @@ public class Activator extends Plugin
   /**
    * The plug-in ID.
    */
-  public static final String PLUGIN_ID = "org.geotools";
+  public static final String PLUGIN_ID = "org.geotools"; //$NON-NLS-1$
 
   /**
    * The shared instance.

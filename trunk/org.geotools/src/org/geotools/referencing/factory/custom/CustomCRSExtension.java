@@ -96,7 +96,7 @@ public class CustomCRSExtension extends FactoryUsingWKT
       }
 
       File stateLocation = Activator.getDefault().getStateLocation().toFile();
-      File propertyFile = new File( stateLocation, "resources/crs/crs.properties" );
+      File propertyFile = new File( stateLocation, "resources/crs/crs.properties" ); //$NON-NLS-1$
       propertyFile.getParentFile().mkdirs();
 
       save( propertyFile, mergedProperties );
