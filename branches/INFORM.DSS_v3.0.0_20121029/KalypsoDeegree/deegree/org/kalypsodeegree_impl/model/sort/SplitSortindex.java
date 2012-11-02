@@ -138,7 +138,7 @@ class SplitSortindex
     m_invalidIndices.forEach( tp );
     m_invalidIndices.clear();
     Assert.isTrue( m_size == m_parent.size() );
-    Assert.isTrue( m_itemEnvelopes.size() == m_spatialIndex.size() );
+    // Assert.isTrue( m_itemEnvelopes.size() == m_spatialIndex.size() );
   }
 
   protected synchronized void revalidateItem( final int index )
@@ -316,7 +316,7 @@ class SplitSortindex
     if( envelope != null )
     {
       final boolean removed = m_spatialIndex.delete( envelope, index );
-      Assert.isTrue(  removed );
+      Assert.isTrue( removed );
     }
 
     unhashItem( item, index );

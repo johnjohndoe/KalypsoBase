@@ -37,12 +37,9 @@ package org.kalypsodeegree_impl.model.feature;
 
 import java.util.List;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeaturePropertyHandler;
 
@@ -54,8 +51,7 @@ import org.kalypsodeegree.model.feature.IFeaturePropertyHandler;
 public class CheckFeaturePropertyHandler implements IFeaturePropertyHandler
 {
   /**
-   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#setValue(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
+   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#setValue(org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
   @Override
   public Object setValue( final Feature feature, final IPropertyType pt, final Object valueToSet )
@@ -79,12 +75,11 @@ public class CheckFeaturePropertyHandler implements IFeaturePropertyHandler
         // we do not test here we will get later ClassCastExceptions
         // and there we do not know why.
         // Next: please contact me instead of just commenting it out. Gernot
-        final Class< ? > valueClass = ((IValuePropertyType) pt).getTypeHandler().getValueClass();
+        final Class< ? > valueClass = ((IValuePropertyType)pt).getTypeHandler().getValueClass();
         if( valueToSet != null && !valueClass.isAssignableFrom( valueToSet.getClass() ) )
         {
-          KalypsoDeegreePlugin.getDefault().getLog().log( new Status( IStatus.WARNING, "org.kalypso.deegree", "Wrong type of value (" + valueToSet.getClass() + ") for qname: " + pt.getQName() ) );
-          // throw new IllegalArgumentException( "Wrong type of value (" + valueToSet.getClass() + ") for qname: " +
-          // pt.getQName() );
+          // KalypsoDeegreePlugin.getDefault().getLog().log( new Status( IStatus.WARNING, "org.kalypso.deegree", "Wrong type of value (" + valueToSet.getClass() + ") for qname: " + pt.getQName() ) );
+          // throw new IllegalArgumentException( "Wrong type of value (" + valueToSet.getClass() + ") for qname: " + pt.getQName() );
         }
 
         // TODO: the type check should occur on the real value to set, that is after all other handlers
@@ -100,8 +95,7 @@ public class CheckFeaturePropertyHandler implements IFeaturePropertyHandler
   }
 
   /**
-   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
+   * @see org.kalypsodeegree.model.feature.IFeaturePropertyHandler#getValue(org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
    */
   @Override
   public Object getValue( final Feature feature, final IPropertyType pt, final Object currentValue )

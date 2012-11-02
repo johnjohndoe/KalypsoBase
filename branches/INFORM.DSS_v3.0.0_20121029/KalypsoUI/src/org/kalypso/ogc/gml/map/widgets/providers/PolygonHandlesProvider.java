@@ -47,15 +47,15 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.ogc.gml.map.widgets.providers.handles.Handle;
 import org.kalypso.ogc.gml.map.widgets.providers.handles.IHandle;
 import org.kalypsodeegree.model.feature.Feature;
-import org.kalypsodeegree.model.geometry.GM_Object;
-import org.kalypsodeegree.model.geometry.GM_Position;
-import org.kalypsodeegree.model.geometry.GM_Polygon;
 import org.kalypsodeegree.model.geometry.GM_AbstractSurfacePatch;
+import org.kalypsodeegree.model.geometry.GM_Object;
+import org.kalypsodeegree.model.geometry.GM_Polygon;
+import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * This class provides handles for polygon geometries.
- *
+ * 
  * @author Holger Albert
  */
 public class PolygonHandlesProvider implements IHandlesProvider
@@ -66,37 +66,29 @@ public class PolygonHandlesProvider implements IHandlesProvider
     final ArrayList<IHandle> list = new ArrayList<>();
 
     final IValuePropertyType[] allGeomteryProperties = feature.getFeatureType().getAllGeometryProperties();
-
     for( final IValuePropertyType geoVpt : allGeomteryProperties )
     {
-      final GM_Object gmObj = (GM_Object) feature.getProperty( geoVpt );
+      final GM_Object gmObj = (GM_Object)feature.getProperty( geoVpt );
       if( GeometryUtilities.isPolygonGeometry( geoVpt ) )
       {
-        final GM_Polygon surface = (GM_Polygon) gmObj;
+        final GM_Polygon surface = (GM_Polygon)gmObj;
 
-        final int numberOfSurfacePatches = surface.size();
+        /* One patch of a surface. It can contain several points. */
+        final GM_AbstractSurfacePatch surfacePatch = surface.getSurfacePatch();
 
-        for( int i = 0; i < numberOfSurfacePatches; i++ )
+        /* Add the points to the list of handles. */
+        final GM_Position[] exteriorRing = surfacePatch.getExteriorRing();
+        for( final GM_Position position : exteriorRing )
+          list.add( new Handle( position, feature, geoVpt, radius ) );
+
+        /* Add the points to the list of handles. */
+        final GM_Position[][] interiorRings = surfacePatch.getInteriorRings();
+        if( interiorRings != null )
         {
-          /* One patch of a surface. It can contain several points. */
-          final GM_AbstractSurfacePatch surfacePatch = surface.get( i );
-
-          final GM_Position[] exteriorRing = surfacePatch.getExteriorRing();
-          for( final GM_Position position : exteriorRing )
-          {
-            /* Add the points to the list of handles. */
-            list.add( new Handle( position, feature, geoVpt, radius ) );
-          }
-
-          final GM_Position[][] interiorRings = surfacePatch.getInteriorRings();
-
           for( final GM_Position[] positions : interiorRings )
           {
             for( final GM_Position position : positions )
-            {
-              /* Add the points to the list of handles. */
               list.add( new Handle( position, feature, geoVpt, radius ) );
-            }
           }
         }
       }
