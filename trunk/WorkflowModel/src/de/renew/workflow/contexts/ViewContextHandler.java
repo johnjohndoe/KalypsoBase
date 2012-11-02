@@ -49,7 +49,7 @@ public class ViewContextHandler extends AbstractHandler implements IExecutableEx
     if( StringUtils.isBlank( viewId ) )
       return;
 
-    final String[] split = StringUtils.split( viewId, ":", 2 );
+    final String[] split = StringUtils.split( viewId, ":", 2 ); //$NON-NLS-1$
     m_viewIDprimary = split[0];
 
     if( split.length > 1 )

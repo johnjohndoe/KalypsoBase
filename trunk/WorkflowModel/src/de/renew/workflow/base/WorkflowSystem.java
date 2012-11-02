@@ -52,9 +52,12 @@ public class WorkflowSystem implements IWorkflowSystem, IPreferenceChangeListene
   public WorkflowSystem( final IProject project ) throws CoreException
   {
     m_project = project;
+
     final ProjectScope projectScope = new ProjectScope( project );
     final IEclipsePreferences node = projectScope.getNode( WORKFLOW );
     node.addPreferenceChangeListener( this );
+
+    // FIXME: why 1d2d here?
     final String workflowId = node.get( WORKFLOW_DEFINITON_ID, "workflow1d2d" );
     handleWorkflowIdChanged( workflowId );
   }
@@ -76,9 +79,6 @@ public class WorkflowSystem implements IWorkflowSystem, IPreferenceChangeListene
     }
   }
 
-  /**
-   * @see org.kalypso.afgui.model.IWorkflowSystem#getCurrentWorkFlow()
-   */
   @Override
   public IWorkflow getCurrentWorkflow( )
   {
