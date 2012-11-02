@@ -88,7 +88,7 @@ public class WPSService implements IOGCService
   @Override
   public void execute( final OGCRequest ogcRequest, final OGCResponse ogcResponse, final IOGCOperation ogcOperation ) throws OWSException
   {
-    throw new OWSException( "Not implemented...", OWSUtilities.OWS_VERSION, "en", ExceptionCode.NO_APPLICABLE_CODE, null );
+    throw new OWSException( "Not implemented...", OWSUtilities.OWS_VERSION, "en", ExceptionCode.NO_APPLICABLE_CODE, null ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   /**
