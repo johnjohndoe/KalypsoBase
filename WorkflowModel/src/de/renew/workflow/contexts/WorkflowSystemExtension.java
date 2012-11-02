@@ -78,17 +78,17 @@ public class WorkflowSystemExtension
 
   private static Map<String, IWorkflow> THE_WORKFLOW_MAP = null;
 
-  private final static String WORKFLOW_SYSTEM_EXTENSION_POINT = "de.renew.workflow.model.workflowSystem";
+  private final static String WORKFLOW_SYSTEM_EXTENSION_POINT = "de.renew.workflow.model.workflowSystem"; //$NON-NLS-1$
 
-  private static final String WORKFLOW_SYSTEM_SCENARIO_CONFIGURATION_ELEMENT = "scenarioConfiguration";
+  private static final String WORKFLOW_SYSTEM_SCENARIO_CONFIGURATION_ELEMENT = "scenarioConfiguration"; //$NON-NLS-1$
 
-  private static final String WORKFLOW_SYSTEM_SCENARIO_CONFIGURATION_DERIVED_FOLDER = "derivedFolder";
+  private static final String WORKFLOW_SYSTEM_SCENARIO_CONFIGURATION_DERIVED_FOLDER = "derivedFolder"; //$NON-NLS-1$
 
-  private static final String WORKFLOW_SYSTEM_SCENARIO_CONFIGURATION_IGNORE_FOLDER_ELEMENT = "ignoreFolder";
+  private static final String WORKFLOW_SYSTEM_SCENARIO_CONFIGURATION_IGNORE_FOLDER_ELEMENT = "ignoreFolder"; //$NON-NLS-1$
 
-  private static final String WORKFLOW_SYSTEM_SCENARIO_CONFIGURATION_IGNORE_FOLDER_ROLE_NAME = "roleName";
+  private static final String WORKFLOW_SYSTEM_SCENARIO_CONFIGURATION_IGNORE_FOLDER_ROLE_NAME = "roleName"; //$NON-NLS-1$
 
-  private static final String WORKFLOW_SYSTEM_SCENARIO_CONFIGURATION_IGNORE_FOLDER_FOLDER_NAME = "folderName";
+  private static final String WORKFLOW_SYSTEM_SCENARIO_CONFIGURATION_IGNORE_FOLDER_FOLDER_NAME = "folderName"; //$NON-NLS-1$
 
   public static IWorkflow getWorkflow( final String id )
   {
@@ -110,10 +110,10 @@ public class WorkflowSystemExtension
 
       for( final IConfigurationElement element : configurationElements )
       {
-        final String id = element.getAttribute( "id" );
+        final String id = element.getAttribute( "id" ); //$NON-NLS-1$
         try
         {
-          final String filePath = element.getAttribute( "definition" );
+          final String filePath = element.getAttribute( "definition" ); //$NON-NLS-1$
           final IContributor contributor = element.getContributor();
           final Bundle bundle = Platform.getBundle( contributor.getName() );
           final URL location = bundle.getEntry( filePath );
@@ -124,7 +124,7 @@ public class WorkflowSystemExtension
           }
           else
           {
-            throw new CoreException( new Status( IStatus.ERROR, "de.renew.workflow.model", "Invalid path " + filePath ) );
+            throw new CoreException( new Status( IStatus.ERROR, "de.renew.workflow.model", "Invalid path " + filePath ) ); //$NON-NLS-1$ //$NON-NLS-2$
           }
         }
         catch( final CoreException e )
@@ -190,7 +190,7 @@ public class WorkflowSystemExtension
     }
     catch( final Throwable e )
     {
-      final IStatus status = new Status( IStatus.ERROR, "de.renew.workflow.model", "", e );
+      final IStatus status = new Status( IStatus.ERROR, "de.renew.workflow.model", "", e ); //$NON-NLS-1$ //$NON-NLS-2$
       throw new CoreException( status );
     }
   }
