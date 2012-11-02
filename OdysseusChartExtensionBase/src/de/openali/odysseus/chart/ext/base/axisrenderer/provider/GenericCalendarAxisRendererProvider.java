@@ -52,9 +52,9 @@ public class GenericCalendarAxisRendererProvider extends AbstractGenericAxisRend
   @Override
   public ILabelCreator getLabelCreator( )
   {
-    String dateFormat = getParameterContainer().getParameterValue( "date-format", "dd.MM.yy\nHH:mm:ss" );
+    String dateFormat = getParameterContainer().getParameterValue( "date-format", "dd.MM.yy\nHH:mm:ss" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    dateFormat = dateFormat.replaceAll( "\\\\n", "\n" );
+    dateFormat = dateFormat.replaceAll( "\\\\n", "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
 
     return new DateLabelCreator( dateFormat );
 

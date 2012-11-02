@@ -38,7 +38,7 @@ public class DoubleParser implements IStringParser<Double>
   @Override
   public String getFormatHint( )
   {
-    return "Number; use '.' as decimal seperator";
+    return "Number; use '.' as decimal seperator"; //$NON-NLS-1$
   }
 
 }

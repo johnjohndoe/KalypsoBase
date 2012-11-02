@@ -84,7 +84,7 @@ final class CSVBarLayerData extends AbstractDomainIntervalValueData
 
     // echte Daten aus EiongabeDatei
     final Calendar calData = Calendar.getInstance();
-    calData.setTimeZone( TimeZone.getTimeZone( "GMT+0000" ) );
+    calData.setTimeZone( TimeZone.getTimeZone( "GMT+0000" ) ); //$NON-NLS-1$
     calData.set( Calendar.YEAR, year );
     calData.set( Calendar.MONTH, month );
     calData.set( Calendar.DAY_OF_MONTH, day );
@@ -116,13 +116,13 @@ final class CSVBarLayerData extends AbstractDomainIntervalValueData
       final List<Object> targetValues = new ArrayList<>();
 
       final BufferedReader br = new BufferedReader( isr );
-      String s = "";
+      String s = ""; //$NON-NLS-1$
       int count = 0;
       String domType = null;
 
-      while( (s = br.readLine()) != null && s.trim() != "" )
+      while( (s = br.readLine()) != null && s.trim() != "" ) //$NON-NLS-1$
       {
-        final String[] cols = s.split( "  *" );
+        final String[] cols = s.split( "  *" ); //$NON-NLS-1$
         // erste Zeile: Überschrift
         if( count == 0 )
         {
@@ -135,19 +135,19 @@ final class CSVBarLayerData extends AbstractDomainIntervalValueData
             Object domStart = null;
             Object domEnd = null;
             Object domVal = null;
-            if( domType.equals( "DATE" ) )
+            if( domType.equals( "DATE" ) ) //$NON-NLS-1$
             {
               final Calendar calVal = createDate( cols[0] );
 
               // Startwert für Interval
               final Calendar calStart = (Calendar) calVal.clone();
-              calStart.setTimeZone( TimeZone.getTimeZone( "GMT+0000" ) );
+              calStart.setTimeZone( TimeZone.getTimeZone( "GMT+0000" ) ); //$NON-NLS-1$
               calStart.set( Calendar.MINUTE, 0 );
               calStart.set( Calendar.HOUR_OF_DAY, 0 );
 
               // Endwert für Interval
               final Calendar calEnd = (Calendar) calStart.clone();
-              calEnd.setTimeZone( TimeZone.getTimeZone( "GMT+0000" ) );
+              calEnd.setTimeZone( TimeZone.getTimeZone( "GMT+0000" ) ); //$NON-NLS-1$
               // wichtig, damit die Zeiten richtig sind
 
               calEnd.add( Calendar.DAY_OF_MONTH, +1 );

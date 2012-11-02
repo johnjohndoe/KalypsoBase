@@ -11,6 +11,6 @@ public class ConfigChartNotFoundException extends ConfigurationException
 
   public ConfigChartNotFoundException( final String chartname )
   {
-    super( "Chart \"" + chartname + "\" was not found in configuration" );
+    super( "Chart \"" + chartname + "\" was not found in configuration" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 }

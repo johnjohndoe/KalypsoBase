@@ -16,7 +16,7 @@ import de.openali.odysseus.chart.framework.model.data.IDataRange;
  */
 public class DateTimeAxisRendererProvider extends AbstractGenericAxisRendererProvider
 {
-  public static final String ID = "de.openali.odysseus.chart.ext.base.axisrenderer.provider.DateTimeAxisRendererProvider";
+  public static final String ID = "de.openali.odysseus.chart.ext.base.axisrenderer.provider.DateTimeAxisRendererProvider"; //$NON-NLS-1$
 
   private final IDateTimeAxisFieldProvider m_axisFieldProvider = new IDateTimeAxisFieldProvider()
   {

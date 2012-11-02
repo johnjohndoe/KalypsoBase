@@ -37,7 +37,7 @@ public class IntegerParser implements IStringParser<Integer>
   @Override
   public String getFormatHint( )
   {
-    return "Integer value";
+    return "Integer value"; //$NON-NLS-1$
   }
 
 }

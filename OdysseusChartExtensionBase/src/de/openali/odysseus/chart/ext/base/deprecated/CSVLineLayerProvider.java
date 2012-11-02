@@ -46,14 +46,14 @@ public class CSVLineLayerProvider extends AbstractLayerProvider
           final InputStreamReader isr = new InputStreamReader( is );
 
           final BufferedReader br = new BufferedReader( isr );
-          String s = "";
+          String s = ""; //$NON-NLS-1$
           int count = 0;
           final List<Object> domainValues = new ArrayList<>();
           final List<Object> targetValues = new ArrayList<>();
 
           while( (s = br.readLine()) != null )
           {
-            final String[] cols = s.split( "  *" );
+            final String[] cols = s.split( "  *" ); //$NON-NLS-1$
             // YearString
             if( cols.length >= 2 )
             {
@@ -64,7 +64,7 @@ public class CSVLineLayerProvider extends AbstractLayerProvider
               }
               catch( final NumberFormatException e )
               {
-                Logger.logWarning( Logger.TOPIC_LOG_DATA, getInputURL().toString() + ": Line " + count + " could not be parsed: \n" + s );
+                Logger.logWarning( Logger.TOPIC_LOG_DATA, getInputURL().toString() + ": Line " + count + " could not be parsed: \n" + s ); //$NON-NLS-1$ //$NON-NLS-2$
                 e.printStackTrace();
               }
             }
@@ -105,7 +105,7 @@ public class CSVLineLayerProvider extends AbstractLayerProvider
       }
 
     };
-    final String url = getParameterContainer().getParameterValue( "url", getId() );
+    final String url = getParameterContainer().getParameterValue( "url", getId() ); //$NON-NLS-1$
     try
     {
       data.setInputURL( new URL( url ) );

@@ -145,7 +145,7 @@ public abstract class AbstractAxisContentProvider implements IAxisContentProvide
   public String getLabel( final int index )
   {
     if( index < 0 || index >= m_content.size() )
-      return "";
+      return ""; //$NON-NLS-1$
     return m_labels.get( index );
   }
 

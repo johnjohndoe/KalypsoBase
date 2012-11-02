@@ -69,7 +69,7 @@ public class BooleanLabelCreator implements ILabelCreator
     catch( final ArrayIndexOutOfBoundsException e )
     {
       e.printStackTrace();
-      return "";
+      return ""; //$NON-NLS-1$
     }
   }
 }

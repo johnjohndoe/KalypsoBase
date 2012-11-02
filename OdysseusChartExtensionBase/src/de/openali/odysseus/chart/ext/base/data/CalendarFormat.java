@@ -58,7 +58,7 @@ public class CalendarFormat extends Format
   public CalendarFormat( final String formatString )
   {
     m_sdf = new SimpleDateFormat( formatString );
-    m_sdf.setTimeZone( new SimpleTimeZone( 0, "" ) );
+    m_sdf.setTimeZone( new SimpleTimeZone( 0, "" ) ); //$NON-NLS-1$
   }
 
   /**

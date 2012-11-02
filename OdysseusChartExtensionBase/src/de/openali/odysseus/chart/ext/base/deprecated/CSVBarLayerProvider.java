@@ -13,7 +13,7 @@ import de.openali.odysseus.chart.framework.model.style.IAreaStyle;
  */
 public class CSVBarLayerProvider extends AbstractLayerProvider
 {
-  private final String ROLE_BAR_STYLE = "bar";
+  private final String ROLE_BAR_STYLE = "bar"; //$NON-NLS-1$
 
   @Override
   public IChartLayer getLayer( final URL context )
@@ -25,7 +25,7 @@ public class CSVBarLayerProvider extends AbstractLayerProvider
   {
     final CSVBarLayerData data = new CSVBarLayerData();
 
-    final URL url = ChartFactoryUtilities.createURLQuietly( getContext(), getParameterContainer().getParameterValue( "url", getId() ) );
+    final URL url = ChartFactoryUtilities.createURLQuietly( getContext(), getParameterContainer().getParameterValue( "url", getId() ) ); //$NON-NLS-1$
     data.setInputURL( url );
 
     return data;

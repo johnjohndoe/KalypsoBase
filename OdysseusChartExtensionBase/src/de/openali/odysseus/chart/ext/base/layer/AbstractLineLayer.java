@@ -30,13 +30,13 @@ public abstract class AbstractLineLayer extends AbstractChartLayer
   private static final String PARAMETER_LEGEND_MODE = "legendMode"; //$NON-NLS-1$
 
   /** Possible value for for parameter 'legendMode': only draw the line symbol (default) */
-  static final String LEGEND_MODE_LINE = "line";
+  static final String LEGEND_MODE_LINE = "line"; //$NON-NLS-1$
 
   /** Possible value for for parameter 'legendMode': only draw the point symbol */
-  static final String LEGEND_MODE_POINT = "point";
+  static final String LEGEND_MODE_POINT = "point"; //$NON-NLS-1$
 
   /** Possible value for for parameter 'legendMode': draw both (line and point) symbols */
-  static final String LEGEND_MODE_BOTH = "line+point";
+  static final String LEGEND_MODE_BOTH = "line+point"; //$NON-NLS-1$
 
   private ILegendEntry[] m_legendEntries;
 
@@ -126,9 +126,9 @@ public abstract class AbstractLineLayer extends AbstractChartLayer
 
   protected final ILineStyle getLineStyle( )
   {
-    IStyle lineStyle = getStyleSet().getStyle( "line_" + getIdentifier() );
+    IStyle lineStyle = getStyleSet().getStyle( "line_" + getIdentifier() ); //$NON-NLS-1$
     if( lineStyle == null )
-      lineStyle = getStyleSet().getStyle( "line" );// default style in older .kod's
+      lineStyle = getStyleSet().getStyle( "line" );// default style in older .kod's //$NON-NLS-1$
     if( lineStyle == null )
       return getStyle( ILineStyle.class );
 
@@ -153,9 +153,9 @@ public abstract class AbstractLineLayer extends AbstractChartLayer
 
   protected final IPointStyle getPointStyle( )
   {
-    IStyle pointStyle = getStyleSet().getStyle( "point_" + getIdentifier() );
+    IStyle pointStyle = getStyleSet().getStyle( "point_" + getIdentifier() ); //$NON-NLS-1$
     if( pointStyle == null )
-      pointStyle = getStyleSet().getStyle( "point" );// default style in older .kod's
+      pointStyle = getStyleSet().getStyle( "point" );// default style in older .kod's //$NON-NLS-1$
     if( pointStyle == null )
       return getStyle( IPointStyle.class );
     return (IPointStyle) pointStyle;

@@ -156,14 +156,14 @@ public class ChartConfigurationLoader implements IReferenceResolver
     for( final DerivedLayerType derivedLayer : derivedLayerArray )
     {
       final LayerRefernceType layerReference = derivedLayer.getLayerReference();
-      final XmlObject layer = resolveReference( layerReference.getUrl().replace( "#", "" ) );
+      final XmlObject layer = resolveReference( layerReference.getUrl().replace( "#", "" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       if( layer != null && layer instanceof LayerType )
         results.add( (LayerType) layer );
     }
 
     for( final LayerRefernceType layerReference : layerReferenceArray )
     {
-      final XmlObject layer = resolveReference( layerReference.getUrl().replace( "#", "" ) );
+      final XmlObject layer = resolveReference( layerReference.getUrl().replace( "#", "" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       if( layer != null && layer instanceof LayerType )
         results.add( (LayerType) layer );
     }
@@ -381,7 +381,7 @@ public class ChartConfigurationLoader implements IReferenceResolver
       return doc.getAxisRenderer();
     }
     else
-      Logger.logError( Logger.TOPIC_LOG_CONFIG, "Cannot identify configuration node named: " + nodeName );
+      Logger.logError( Logger.TOPIC_LOG_CONFIG, "Cannot identify configuration node named: " + nodeName ); //$NON-NLS-1$
 
     return null;
   }

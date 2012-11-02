@@ -201,7 +201,7 @@ public final class StyleFactory
             final AbstractStyleType styleType = resolver.findStyleType( reference, context );
             if( styleType == null )
             {
-              System.out.println( String.format( "StyleFactory - Missing style refernce: %s", reference ) );
+              System.out.println( String.format( "StyleFactory - Missing style refernce: %s", reference ) ); //$NON-NLS-1$
               continue;
             }
 
@@ -308,7 +308,7 @@ public final class StyleFactory
       }
       catch( final MalformedURLException e )
       {
-        Logger.logError( Logger.TOPIC_LOG_STYLE, "Can not load image from '" + context + imgPath + "'" );
+        Logger.logError( Logger.TOPIC_LOG_STYLE, "Can not load image from '" + context + imgPath + "'" ); //$NON-NLS-1$ //$NON-NLS-2$
         style.setMarker( new OvalMarker() );
       }
     }
@@ -463,7 +463,7 @@ public final class StyleFactory
         }
         catch( final MalformedURLException e )
         {
-          Logger.logError( Logger.TOPIC_LOG_STYLE, "Can not load image from '" + context + imgPath + "'" );
+          Logger.logError( Logger.TOPIC_LOG_STYLE, "Can not load image from '" + context + imgPath + "'" ); //$NON-NLS-1$ //$NON-NLS-2$
           style.setFill( new ColorFill( new RGB( 255, 0, 0 ) ) );
         }
 

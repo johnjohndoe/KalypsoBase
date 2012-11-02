@@ -39,7 +39,7 @@ public final class ChartFactoryUtilities
       String contextString = ""; //$NON-NLS-1$
       if( context != null )
         contextString = contextString.toString();
-      Logger.logError( Logger.TOPIC_LOG_STYLE, "Could not create url: '" + contextString + "', '" + path + "'" );
+      Logger.logError( Logger.TOPIC_LOG_STYLE, "Could not create url: '" + contextString + "', '" + path + "'" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
     return null;
   }
@@ -70,7 +70,7 @@ public final class ChartFactoryUtilities
     }
     catch( final IOException e )
     {
-      Logger.logError( Logger.TOPIC_LOG_STYLE, "Could not load image from: " + url.toString() + "; will use default image." );
+      Logger.logError( Logger.TOPIC_LOG_STYLE, "Could not load image from: " + url.toString() + "; will use default image." ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     finally
     {

@@ -100,7 +100,7 @@ public abstract class AbstractAxis<T> extends AbstractMapper implements IAxis<T>
   public String getLabel( )
   {
     if( m_axisLabels.size() == 0 )
-      return "";
+      return ""; //$NON-NLS-1$
     return m_axisLabels.get( 0 ).getText();
   }
 

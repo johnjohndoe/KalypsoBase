@@ -192,7 +192,7 @@ public class ChartLayerFactory extends AbstractChartFactory
 
     final LayerType base = resovler.findLayerType( reference, getContext() );
     if( base == null )
-      throw new IllegalStateException( String.format( "Chart LayerTypeReference not found: %s", reference.getUrl() ) );
+      throw new IllegalStateException( String.format( "Chart LayerTypeReference not found: %s", reference.getUrl() ) ); //$NON-NLS-1$
 
     final LayerType type = (LayerType) base.copy();
     LayerTypeHelper.appendParameters( type, reference.getParameters() );
@@ -458,12 +458,12 @@ public class ChartLayerFactory extends AbstractChartFactory
       }
       else
       {
-        Logger.logError( Logger.TOPIC_LOG_CONFIG, "AxisProvider " + mpId + " not known" );
+        Logger.logError( Logger.TOPIC_LOG_CONFIG, "AxisProvider " + mpId + " not known" ); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
     else
     {
-      Logger.logError( Logger.TOPIC_LOG_GENERAL, "AxisFactory: given axis is NULL." );
+      Logger.logError( Logger.TOPIC_LOG_GENERAL, "AxisFactory: given axis is NULL." ); //$NON-NLS-1$
     }
   }
 

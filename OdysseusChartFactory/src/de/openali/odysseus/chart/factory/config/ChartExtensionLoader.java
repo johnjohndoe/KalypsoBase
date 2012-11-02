@@ -39,7 +39,7 @@ public final class ChartExtensionLoader implements IExtensionLoader
    */
   private static Map<String, IConfigurationElement> MP_MAP = null;
 
-  public static final String PLUGIN_ID = "de.openali.odysseus.chart.factory";
+  public static final String PLUGIN_ID = "de.openali.odysseus.chart.factory"; //$NON-NLS-1$
 
   private static ChartExtensionLoader INSTANCE = null;
 
@@ -67,7 +67,7 @@ public final class ChartExtensionLoader implements IExtensionLoader
       return null;
     }
 
-    return (ILayerProvider) element.createExecutableExtension( "class" );
+    return (ILayerProvider) element.createExecutableExtension( "class" ); //$NON-NLS-1$
   }
 
   public static IAxisProvider createAxisProvider( final String id ) throws CoreException
@@ -80,7 +80,7 @@ public final class ChartExtensionLoader implements IExtensionLoader
       return null;
     }
 
-    return (IAxisProvider) element.createExecutableExtension( "class" );
+    return (IAxisProvider) element.createExecutableExtension( "class" ); //$NON-NLS-1$
   }
 
   public static IMapperProvider createMapperProvider( final String id ) throws CoreException
@@ -93,7 +93,7 @@ public final class ChartExtensionLoader implements IExtensionLoader
       return null;
     }
 
-    return (IMapperProvider) element.createExecutableExtension( "class" );
+    return (IMapperProvider) element.createExecutableExtension( "class" ); //$NON-NLS-1$
   }
 
   public static IAxisRendererProvider createAxisRendererProvider( final String id ) throws CoreException
@@ -106,7 +106,7 @@ public final class ChartExtensionLoader implements IExtensionLoader
       return null;
     }
 
-    return (IAxisRendererProvider) element.createExecutableExtension( "class" );
+    return (IAxisRendererProvider) element.createExecutableExtension( "class" ); //$NON-NLS-1$
   }
 
   private static synchronized Map<String, IConfigurationElement> getLayerProviders( )
@@ -120,17 +120,17 @@ public final class ChartExtensionLoader implements IExtensionLoader
     final IExtensionRegistry er = Platform.getExtensionRegistry();
     if( er != null )
     {
-      final IConfigurationElement[] configurationElementsFor = er.getConfigurationElementsFor( PLUGIN_ID + ".LayerProvider" );
+      final IConfigurationElement[] configurationElementsFor = er.getConfigurationElementsFor( PLUGIN_ID + ".LayerProvider" ); //$NON-NLS-1$
       for( final IConfigurationElement element : configurationElementsFor )
       {
-        final String id = element.getAttribute( "id" );
+        final String id = element.getAttribute( "id" ); //$NON-NLS-1$
         LP_MAP.put( id, element );
-        Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "Added LayerProvider " + id );
+        Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "Added LayerProvider " + id ); //$NON-NLS-1$
       }
     }
     else
     {
-      Logger.logError( Logger.TOPIC_LOG_GENERAL, "Error: cant find ExtensionRegistry" );
+      Logger.logError( Logger.TOPIC_LOG_GENERAL, "Error: cant find ExtensionRegistry" ); //$NON-NLS-1$
     }
     return LP_MAP;
   }
@@ -146,17 +146,17 @@ public final class ChartExtensionLoader implements IExtensionLoader
     final IExtensionRegistry er = Platform.getExtensionRegistry();
     if( er != null )
     {
-      final IConfigurationElement[] configurationElementsFor = er.getConfigurationElementsFor( PLUGIN_ID + ".AxisProvider" );
+      final IConfigurationElement[] configurationElementsFor = er.getConfigurationElementsFor( PLUGIN_ID + ".AxisProvider" ); //$NON-NLS-1$
       for( final IConfigurationElement element : configurationElementsFor )
       {
-        final String id = element.getAttribute( "id" );
+        final String id = element.getAttribute( "id" ); //$NON-NLS-1$
         AP_MAP.put( id, element );
-        Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "Added AxisProvider " + id );
+        Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "Added AxisProvider " + id ); //$NON-NLS-1$
       }
     }
     else
     {
-      Logger.logError( Logger.TOPIC_LOG_GENERAL, "Error: cant find ExtensionRegistry" );
+      Logger.logError( Logger.TOPIC_LOG_GENERAL, "Error: cant find ExtensionRegistry" ); //$NON-NLS-1$
     }
     return AP_MAP;
   }
@@ -172,17 +172,17 @@ public final class ChartExtensionLoader implements IExtensionLoader
     final IExtensionRegistry er = Platform.getExtensionRegistry();
     if( er != null )
     {
-      final IConfigurationElement[] configurationElementsFor = er.getConfigurationElementsFor( PLUGIN_ID + ".MapperProvider" );
+      final IConfigurationElement[] configurationElementsFor = er.getConfigurationElementsFor( PLUGIN_ID + ".MapperProvider" ); //$NON-NLS-1$
       for( final IConfigurationElement element : configurationElementsFor )
       {
-        final String id = element.getAttribute( "id" );
+        final String id = element.getAttribute( "id" ); //$NON-NLS-1$
         MP_MAP.put( id, element );
-        Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "Added MapperProvider " + id );
+        Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "Added MapperProvider " + id ); //$NON-NLS-1$
       }
     }
     else
     {
-      Logger.logError( Logger.TOPIC_LOG_GENERAL, "Error: cant find ExtensionRegistry" );
+      Logger.logError( Logger.TOPIC_LOG_GENERAL, "Error: cant find ExtensionRegistry" ); //$NON-NLS-1$
     }
     return MP_MAP;
   }
@@ -198,17 +198,17 @@ public final class ChartExtensionLoader implements IExtensionLoader
     final IExtensionRegistry er = Platform.getExtensionRegistry();
     if( er != null )
     {
-      final IConfigurationElement[] configurationElementsFor = er.getConfigurationElementsFor( PLUGIN_ID + ".AxisRendererProvider" );
+      final IConfigurationElement[] configurationElementsFor = er.getConfigurationElementsFor( PLUGIN_ID + ".AxisRendererProvider" ); //$NON-NLS-1$
       for( final IConfigurationElement element : configurationElementsFor )
       {
-        final String id = element.getAttribute( "id" );
+        final String id = element.getAttribute( "id" ); //$NON-NLS-1$
         ARP_MAP.put( id, element );
-        Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "Added AxisRendererProvider " + id );
+        Logger.logInfo( Logger.TOPIC_LOG_GENERAL, "Added AxisRendererProvider " + id ); //$NON-NLS-1$
       }
     }
     else
     {
-      Logger.logError( Logger.TOPIC_LOG_GENERAL, "Error: cant find ExtensionRegistry" );
+      Logger.logError( Logger.TOPIC_LOG_GENERAL, "Error: cant find ExtensionRegistry" ); //$NON-NLS-1$
     }
     return ARP_MAP;
   }
@@ -244,7 +244,7 @@ public final class ChartExtensionLoader implements IExtensionLoader
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    Logger.logError( Logger.TOPIC_LOG_GENERAL, "Extensions to type not supported: " + extensionClass );
+    Logger.logError( Logger.TOPIC_LOG_GENERAL, "Extensions to type not supported: " + extensionClass ); //$NON-NLS-1$
     // no extendable clas
 
     return null;

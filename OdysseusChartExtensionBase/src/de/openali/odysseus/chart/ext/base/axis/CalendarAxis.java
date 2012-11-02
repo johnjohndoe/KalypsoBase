@@ -29,7 +29,7 @@ public class CalendarAxis extends AbstractAxis<Calendar>
   @SuppressWarnings( { "unchecked" } )
   public CalendarAxis( final String id, final POSITION pos, final IAxisRenderer renderer )
   {
-    super( id, pos, renderer, new CalendarDataOperator( new ComparableComparator(), "dd.MM.yyyy HH:mm" ) );// new CalendarDataOperator( new ComparableComparator(), "dd.MM.yyyy HH:mm" );
+    super( id, pos, renderer, new CalendarDataOperator( new ComparableComparator(), "dd.MM.yyyy HH:mm" ) );// new CalendarDataOperator( new ComparableComparator(), "dd.MM.yyyy HH:mm" ); //$NON-NLS-1$
   }
 
   @Override

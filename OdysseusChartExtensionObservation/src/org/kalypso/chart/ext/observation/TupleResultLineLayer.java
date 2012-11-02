@@ -105,7 +105,7 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
   {
     final String[] tooltipComponents = new String[] { m_valueData.getDomainComponentName(), m_valueData.getTargetComponentName() };
 
-    final String[] columnFormats = new String[] { "%s", "%s", "[%s]" }; //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
+    final String[] columnFormats = new String[] { "%s", "%s", "[%s]" }; //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     final int[] columnAlignments = new int[] { SWT.LEFT, SWT.RIGHT, SWT.LEFT };
     final TooltipFormatter tooltip = new TooltipFormatter( null, columnFormats, columnAlignments );
 
@@ -141,7 +141,7 @@ public class TupleResultLineLayer extends AbstractLineLayer implements ITooltipC
     {
       final int index = tr.indexOfComponent( id );
       if( index > -1 )
-        return tr.getComponent( index ).getName() + "[" + tr.getComponent( index ).getUnit() + "]";
+        return tr.getComponent( index ).getName() + "[" + tr.getComponent( index ).getUnit() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
     }
     return null;
   }

@@ -99,14 +99,14 @@ public class XmlbeansParameterContainer implements IParameterContainer
     if( strValue == null )
     {
       strValue = defaultValue;
-      Logger.logWarning( Logger.TOPIC_LOG_CONFIG, "Parameter " + m_ownerId + "/" + paramName + " not found in Config - trying to use default value: " + defaultValue );
+      Logger.logWarning( Logger.TOPIC_LOG_CONFIG, "Parameter " + m_ownerId + "/" + paramName + " not found in Config - trying to use default value: " + defaultValue ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
     // kein Default-Wert vorhanden => Fehlermeldung
     if( strValue == null )
     {
-      Logger.logError( Logger.TOPIC_LOG_CONFIG, "No default parameter for " + m_ownerId + "/" + paramName + "; I cannot continue normally" );
-      Logger.logError( Logger.TOPIC_LOG_CONFIG, "Please correct configuration at " + m_ownerId + "/" + paramName + "\n format is: " + parser.getFormatHint() );
+      Logger.logError( Logger.TOPIC_LOG_CONFIG, "No default parameter for " + m_ownerId + "/" + paramName + "; I cannot continue normally" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      Logger.logError( Logger.TOPIC_LOG_CONFIG, "Please correct configuration at " + m_ownerId + "/" + paramName + "\n format is: " + parser.getFormatHint() ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
     else
     {
@@ -116,7 +116,7 @@ public class XmlbeansParameterContainer implements IParameterContainer
       }
       catch( final MalformedValueException e )
       {
-        Logger.logError( Logger.TOPIC_LOG_CONFIG, "Parameter " + m_ownerId + "/" + paramName + ": " + strValue + " uses wrongly formatted  default value; blame the developer for not using:"
+        Logger.logError( Logger.TOPIC_LOG_CONFIG, "Parameter " + m_ownerId + "/" + paramName + ": " + strValue + " uses wrongly formatted  default value; blame the developer for not using:" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
             + parser.getFormatHint() );
       }
     }
@@ -133,11 +133,11 @@ public class XmlbeansParameterContainer implements IParameterContainer
     String value = m_parameters.get( paramName );
     if( value == null )
     {
-      Logger.logInfo( Logger.TOPIC_LOG_CONFIG, "Parameter " + m_ownerId + "/" + paramName + " trying to use default value: " + defaultValue );
+      Logger.logInfo( Logger.TOPIC_LOG_CONFIG, "Parameter " + m_ownerId + "/" + paramName + " trying to use default value: " + defaultValue ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       value = defaultValue;
     }
     if( value == null )
-      Logger.logError( Logger.TOPIC_LOG_CONFIG, "No default parameter for " + m_ownerId + "/" + paramName + ";  I cannot continue normally" );
+      Logger.logError( Logger.TOPIC_LOG_CONFIG, "No default parameter for " + m_ownerId + "/" + paramName + ";  I cannot continue normally" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     return value;
   }
@@ -166,14 +166,14 @@ public class XmlbeansParameterContainer implements IParameterContainer
     if( stringList == null )
     {
       stringList = defaultValues;
-      Logger.logWarning( Logger.TOPIC_LOG_CONFIG, "ParameterList " + m_ownerId + "/" + paramName + " not found in Config - trying to use default values: " + defaultValues );
+      Logger.logWarning( Logger.TOPIC_LOG_CONFIG, "ParameterList " + m_ownerId + "/" + paramName + " not found in Config - trying to use default values: " + defaultValues ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
     // kein Default-Wert vorhanden => Fehlermeldung
     if( stringList == null )
     {
-      Logger.logError( Logger.TOPIC_LOG_CONFIG, "No default parameter list for " + m_ownerId + "/" + paramName + "; I cannot continue normally" );
-      Logger.logError( Logger.TOPIC_LOG_CONFIG, "Please correct configuration at " + m_ownerId + "/" + paramName + "\n format is: " + parser.getFormatHint() );
+      Logger.logError( Logger.TOPIC_LOG_CONFIG, "No default parameter list for " + m_ownerId + "/" + paramName + "; I cannot continue normally" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      Logger.logError( Logger.TOPIC_LOG_CONFIG, "Please correct configuration at " + m_ownerId + "/" + paramName + "\n format is: " + parser.getFormatHint() ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
     else
     {
@@ -186,8 +186,8 @@ public class XmlbeansParameterContainer implements IParameterContainer
         }
         catch( final MalformedValueException e )
         {
-          Logger.logError( Logger.TOPIC_LOG_CONFIG, "Parameter " + m_ownerId + "/" + paramName + ": value " + stringValue
-              + " uses wrongly formatted  default value; blame the developer for not using:" + parser.getFormatHint() );
+          Logger.logError( Logger.TOPIC_LOG_CONFIG, "Parameter " + m_ownerId + "/" + paramName + ": value " + stringValue //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+              + " uses wrongly formatted  default value; blame the developer for not using:" + parser.getFormatHint() ); //$NON-NLS-1$
         }
         valueList.add( objValue );
       }
@@ -204,14 +204,14 @@ public class XmlbeansParameterContainer implements IParameterContainer
     if( stringMap == null )
     {
       stringMap = defaultValues;
-      Logger.logWarning( Logger.TOPIC_LOG_CONFIG, "ParameterMap " + m_ownerId + "/" + paramName + " not found in Config - trying to use default values: " + defaultValues );
+      Logger.logWarning( Logger.TOPIC_LOG_CONFIG, "ParameterMap " + m_ownerId + "/" + paramName + " not found in Config - trying to use default values: " + defaultValues ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
     // kein Default-Wert vorhanden => Fehlermeldung
     if( stringMap == null )
     {
-      Logger.logError( Logger.TOPIC_LOG_CONFIG, "No default parameter map for " + m_ownerId + "/" + paramName + "; I cannot continue normally" );
-      Logger.logError( Logger.TOPIC_LOG_CONFIG, "Please correct configuration at " + m_ownerId + "/" + paramName + "\n format is: " + parser.getFormatHint() );
+      Logger.logError( Logger.TOPIC_LOG_CONFIG, "No default parameter map for " + m_ownerId + "/" + paramName + "; I cannot continue normally" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      Logger.logError( Logger.TOPIC_LOG_CONFIG, "Please correct configuration at " + m_ownerId + "/" + paramName + "\n format is: " + parser.getFormatHint() ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
     else
     {
@@ -226,8 +226,8 @@ public class XmlbeansParameterContainer implements IParameterContainer
         }
         catch( final MalformedValueException e )
         {
-          Logger.logError( Logger.TOPIC_LOG_CONFIG, "Parameter " + m_ownerId + "/" + paramName + ": key : " + key + " : value " + stringValue
-              + " uses wrongly formatted  default value; blame the developer for not using:" + parser.getFormatHint() );
+          Logger.logError( Logger.TOPIC_LOG_CONFIG, "Parameter " + m_ownerId + "/" + paramName + ": key : " + key + " : value " + stringValue //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+              + " uses wrongly formatted  default value; blame the developer for not using:" + parser.getFormatHint() ); //$NON-NLS-1$
         }
         valueMap.put( key, objValue );
       }

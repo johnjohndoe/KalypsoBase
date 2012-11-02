@@ -50,7 +50,7 @@ import de.openali.odysseus.chart.framework.model.layer.IChartLayer;
  */
 public class PlainLayerProvider extends AbstractLayerProvider
 {
-  public static final String ID = "de.openali.odysseus.chart.factory.layer.PlainLayerProvider";
+  public static final String ID = "de.openali.odysseus.chart.factory.layer.PlainLayerProvider"; //$NON-NLS-1$
 
   /**
    * @see org.kalypso.chart.factory.provider.ILayerProvider#getLayer(java.net.URL)

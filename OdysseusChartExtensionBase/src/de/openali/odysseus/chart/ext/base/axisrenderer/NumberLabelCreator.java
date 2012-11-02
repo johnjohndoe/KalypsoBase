@@ -71,9 +71,9 @@ public class NumberLabelCreator implements ILabelCreator
   public String getLabel( final Number[] ticks, final int i, final IDataRange<Number> range )
   {
     if( ticks == null )
-      return "";
+      return ""; //$NON-NLS-1$
 
-    if( "%s".equals( m_formatString ) )
+    if( "%s".equals( m_formatString ) ) //$NON-NLS-1$
     {
       final Format format = getFormat( range );
       return format == null ? null : format.format( ticks[i] );

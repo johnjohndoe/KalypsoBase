@@ -143,7 +143,7 @@ public final class ChartTypeResolver implements IReferenceResolver
     }
     catch( final Throwable t )
     {
-      final String msg = String.format( "Resolving style type \"%s\" failed  ", reference );
+      final String msg = String.format( "Resolving style type \"%s\" failed  ", reference ); //$NON-NLS-1$
       throw new CoreException( new Status( IStatus.ERROR, OdysseusChartFactory.PLUGIN_ID, msg, t ) );
     }
   }
@@ -156,7 +156,7 @@ public final class ChartTypeResolver implements IReferenceResolver
       final String identifier = getAnchor( reference );
 
       MapperType type;
-      if( plainUrl.startsWith( "urn:" ) )
+      if( plainUrl.startsWith( "urn:" ) ) //$NON-NLS-1$
         type = findUrnMapperType( context, plainUrl, identifier );
       else
         type = findUrlMapperType( context, plainUrl, identifier );
@@ -165,7 +165,7 @@ public final class ChartTypeResolver implements IReferenceResolver
     }
     catch( final Throwable t )
     {
-      throw new CoreException( new Status( IStatus.ERROR, OdysseusChartFactory.PLUGIN_ID, "Resolving mapper type failed", t ) );
+      throw new CoreException( new Status( IStatus.ERROR, OdysseusChartFactory.PLUGIN_ID, "Resolving mapper type failed", t ) ); //$NON-NLS-1$
     }
   }
 
@@ -180,7 +180,7 @@ public final class ChartTypeResolver implements IReferenceResolver
         final String identifier = getAnchor( url );
 
         LayerType type;
-        if( plainUrl.startsWith( "urn:" ) )
+        if( plainUrl.startsWith( "urn:" ) ) //$NON-NLS-1$
           type = findUrnLayerType( context, plainUrl, identifier );
         else
           type = findUrlLayerType( context, plainUrl, identifier );
@@ -190,7 +190,7 @@ public final class ChartTypeResolver implements IReferenceResolver
     }
     catch( final Throwable t )
     {
-      throw new CoreException( new Status( IStatus.ERROR, OdysseusChartFactory.PLUGIN_ID, "Resolving layer failed", t ) );
+      throw new CoreException( new Status( IStatus.ERROR, OdysseusChartFactory.PLUGIN_ID, "Resolving layer failed", t ) ); //$NON-NLS-1$
     }
 
     throw new IllegalStateException();

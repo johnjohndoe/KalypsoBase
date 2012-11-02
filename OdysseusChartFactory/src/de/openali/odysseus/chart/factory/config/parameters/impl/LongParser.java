@@ -38,7 +38,7 @@ public class LongParser implements IStringParser<Long>
   @Override
   public String getFormatHint( )
   {
-    return "Number without decimal separator";
+    return "Number without decimal separator"; //$NON-NLS-1$
   }
 
 }

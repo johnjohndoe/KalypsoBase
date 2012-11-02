@@ -9,7 +9,7 @@ import de.openali.odysseus.chart.framework.model.mapper.IAxisConstants.POSITION;
 public class AxisPositionParser implements IStringParser<POSITION>
 {
 
-  private static final String FORMAT_HINT = "one of 'BOTTOM', 'LEFT', 'RIGHT', 'TOP'";
+  private static final String FORMAT_HINT = "one of 'BOTTOM', 'LEFT', 'RIGHT', 'TOP'"; //$NON-NLS-1$
 
   /**
    * @see org.kalypso.chart.framework.model.data.IStringParser#stringToLogical(java.lang.String)

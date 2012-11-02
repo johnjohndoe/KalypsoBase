@@ -44,7 +44,7 @@ public abstract class AbstractDomainValueData<T_domain, T_target> implements ITa
       }
       else
       {
-        Logger.logInfo( Logger.TOPIC_LOG_DATA, this.getClass() + ": opening Data" );
+        Logger.logInfo( Logger.TOPIC_LOG_DATA, this.getClass() + ": opening Data" ); //$NON-NLS-1$
         m_isOpen = openData();
       }
     }

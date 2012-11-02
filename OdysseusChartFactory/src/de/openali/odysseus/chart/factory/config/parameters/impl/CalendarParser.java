@@ -29,9 +29,9 @@ public class CalendarParser implements IStringParser<Calendar>
    * Format: NOW + Duration as in ISO 8601 (P[n]Y[n]M[n]DT[n]H[n]M[n]S); Groups: 1: VAR 2:DURATIONPART 3:DIRECTION 4:Y
    * 5:M 6:D 7:TIMEPART 8:H 9:M 10:S
    */
-  private static final String REGEX_DURATION = "(NOW|TODAY)(([+-])P([1-9]+[0-9]*Y)?([1-9]+[0-9]*M)?([1-9]+[0-9]*D)?(T([1-9]+[0-9]*H)?([1-9]+[0-9]*M)?([1-9]+[0-9]*S)?)?)?";
+  private static final String REGEX_DURATION = "(NOW|TODAY)(([+-])P([1-9]+[0-9]*Y)?([1-9]+[0-9]*M)?([1-9]+[0-9]*D)?(T([1-9]+[0-9]*H)?([1-9]+[0-9]*M)?([1-9]+[0-9]*S)?)?)?"; //$NON-NLS-1$
 
-  private static final String FORMAT_HINT = "yyyy-MM-ddTHH:mm or " + REGEX_DURATION;
+  private static final String FORMAT_HINT = "yyyy-MM-ddTHH:mm or " + REGEX_DURATION; //$NON-NLS-1$
 
   public CalendarParser( )
   {
@@ -47,7 +47,7 @@ public class CalendarParser implements IStringParser<Calendar>
     final Calendar cal = Calendar.getInstance();
     // cal.set( Calendar.DST_OFFSET, 0);
     // cal.set( Calendar.ZONE_OFFSET, 0);
-    cal.setTimeZone( TimeZone.getTimeZone( "GMT" ) );
+    cal.setTimeZone( TimeZone.getTimeZone( "GMT" ) ); //$NON-NLS-1$
 
     SimpleDateFormat sdf = null;
     Date date = null;
@@ -55,7 +55,7 @@ public class CalendarParser implements IStringParser<Calendar>
 
     try
     {
-      sdf = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
+      sdf = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" ); //$NON-NLS-1$
       date = sdf.parse( value );
       // cal=Calendar.getInstance();
       if( date != null )
@@ -67,7 +67,7 @@ public class CalendarParser implements IStringParser<Calendar>
       // Nochmal mit anderem String probieren
       try
       {
-        sdf = new SimpleDateFormat( "yyyy-MM-dd" );
+        sdf = new SimpleDateFormat( "yyyy-MM-dd" ); //$NON-NLS-1$
         date = sdf.parse( value );
         // cal=Calendar.getInstance();
         if( date != null )
@@ -83,7 +83,7 @@ public class CalendarParser implements IStringParser<Calendar>
           // Calendar-Objekt mit "jetzt" initialisieren
           // cal=Calendar.getInstance();
 
-          if( value.startsWith( "TODAY" ) )
+          if( value.startsWith( "TODAY" ) ) //$NON-NLS-1$
           {
             cal.set( Calendar.HOUR_OF_DAY, 0 );
             cal.set( Calendar.MINUTE, 0 );
@@ -92,7 +92,7 @@ public class CalendarParser implements IStringParser<Calendar>
           }
 
           // DurationPart auswerten
-          if( value.startsWith( "NOW" ) && value.length() > 3 || value.startsWith( "TODAY" ) && value.length() > 5 )
+          if( value.startsWith( "NOW" ) && value.length() > 3 || value.startsWith( "TODAY" ) && value.length() > 5 ) //$NON-NLS-1$ //$NON-NLS-2$
           {
 
             final Pattern pattern = Pattern.compile( REGEX_DURATION );
@@ -149,7 +149,7 @@ public class CalendarParser implements IStringParser<Calendar>
 
         else
         {
-          Logger.logError( Logger.TOPIC_LOG_GENERAL, "Unable to parse date: " + value );
+          Logger.logError( Logger.TOPIC_LOG_GENERAL, "Unable to parse date: " + value ); //$NON-NLS-1$
           throw new MalformedValueException();
         }
       }

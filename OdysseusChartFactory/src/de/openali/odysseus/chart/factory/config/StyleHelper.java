@@ -101,23 +101,23 @@ public final class StyleHelper
     if( alignment == null )
       return ALIGNMENT.LEFT;
 
-    if( "LEFT".equals( alignment.toString() ) )
+    if( "LEFT".equals( alignment.toString() ) ) //$NON-NLS-1$
     {
       return ALIGNMENT.LEFT;
     }
-    else if( "CENTER".equals( alignment.toString() ) )
+    else if( "CENTER".equals( alignment.toString() ) ) //$NON-NLS-1$
     {
       return ALIGNMENT.CENTER;
     }
-    else if( "RIGHT".equals( alignment.toString() ) )
+    else if( "RIGHT".equals( alignment.toString() ) ) //$NON-NLS-1$
     {
       return ALIGNMENT.RIGHT;
     }
-    else if( "TOP".equals( alignment.toString() ) )
+    else if( "TOP".equals( alignment.toString() ) ) //$NON-NLS-1$
     {
       return ALIGNMENT.TOP;
     }
-    else if( "BOTTOM".equals( alignment.toString() ) )
+    else if( "BOTTOM".equals( alignment.toString() ) ) //$NON-NLS-1$
     {
       return ALIGNMENT.BOTTOM;
     }

@@ -66,7 +66,7 @@ public abstract class GenericLabelCreator implements ILabelCreator
   public String getLabel( final Number[] ticks, final int i, final IDataRange<Number> range )
   {
     if( ticks == null )
-      return "";
+      return ""; //$NON-NLS-1$
     try
     {
       return getLabel( ticks[i], range );
@@ -74,7 +74,7 @@ public abstract class GenericLabelCreator implements ILabelCreator
     catch( final ArrayIndexOutOfBoundsException e )
     {
       e.printStackTrace();
-      return "";
+      return ""; //$NON-NLS-1$
     }
   }
 
