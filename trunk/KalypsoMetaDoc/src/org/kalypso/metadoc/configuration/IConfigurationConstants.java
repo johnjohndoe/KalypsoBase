@@ -49,5 +49,5 @@ package org.kalypso.metadoc.configuration;
 public interface IConfigurationConstants
 {
   /** Must be a File (a directory or a real file) */
-  public final static String CONF_FILEEXPORT_EXTENSION = IConfigurationConstants.class.getName() + ".fileext";
+  public final static String CONF_FILEEXPORT_EXTENSION = IConfigurationConstants.class.getName() + ".fileext"; //$NON-NLS-1$
 }

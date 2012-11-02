@@ -49,7 +49,7 @@ package org.kalypso.metadoc;
  */
 public interface IExportTargetModes
 {
-  public static String MODE_WIZARD = "wizard";
+  public static String MODE_WIZARD = "wizard"; //$NON-NLS-1$
 
-  public static String MODE_EXPERT = "expert";
+  public static String MODE_EXPERT = "expert"; //$NON-NLS-1$
 }

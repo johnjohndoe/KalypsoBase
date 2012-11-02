@@ -96,9 +96,9 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
 
   protected static final int SIZING_TEXT_FIELD_WIDTH = 100;
 
-  private final static String[] FORMATS = { /* "gif", */"jpeg", "png" };
+  private final static String[] FORMATS = { /* "gif", */"jpeg", "png" }; //$NON-NLS-1$ //$NON-NLS-2$
 
-  private final static String[] EXTENSIONS = { /* ".gif", */".jpg", ".png" };
+  private final static String[] EXTENSIONS = { /* ".gif", */".jpg", ".png" }; //$NON-NLS-1$ //$NON-NLS-2$
 
   private final PublishingConfiguration m_conf;
 
@@ -259,7 +259,7 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
 
   protected void updateConf( )
   {
-    String msg = "";
+    String msg = ""; //$NON-NLS-1$
 
     final Integer width = NumberUtils.parseQuietInteger( m_widthtext.getText() );
     if( width == null || width.intValue() <= 0 )
@@ -269,7 +269,7 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
 
     final Integer height = NumberUtils.parseQuietInteger( m_heighttext.getText() );
     if( height == null || height.intValue() <= 0 )
-      msg += (msg.length() != 0 ? "\n " : "") + "Ungültige Höhe";
+      msg += (msg.length() != 0 ? "\n " : "") + "Ungültige Höhe"; //$NON-NLS-1$ //$NON-NLS-2$
     else
       m_conf.setProperty( CONF_IMAGE_HEIGHT, height );
 
@@ -282,7 +282,7 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
     final boolean selection = m_keepImageRatio.getSelection();
     m_conf.setProperty( CONF_IMAGE_RATIO, selection );
     if( selection )
-      msg = "";
+      msg = ""; //$NON-NLS-1$
     setErrorMessage( msg.length() == 0 ? null : msg );
     setPageComplete( msg.length() == 0 );
 
@@ -293,14 +293,14 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
   {
     if( key.equals( CONF_IMAGE_WIDTH ) )
     {
-      final String width = "" + m_conf.getInt( CONF_IMAGE_WIDTH, 300 );
+      final String width = "" + m_conf.getInt( CONF_IMAGE_WIDTH, 300 ); //$NON-NLS-1$
       if( !m_widthtext.getText().equals( width ) )
         m_widthtext.setText( width );
     }
 
     if( key.equals( CONF_IMAGE_HEIGHT ) )
     {
-      final String height = "" + m_conf.getInt( CONF_IMAGE_HEIGHT, 300 );
+      final String height = "" + m_conf.getInt( CONF_IMAGE_HEIGHT, 300 ); //$NON-NLS-1$
       if( !m_heighttext.getText().equals( height ) )
         m_heighttext.setText( height );
     }
@@ -340,8 +340,8 @@ public class ImageExportPage extends WizardPage implements IConfigurationListene
         final String format = settings.get( STORE_FORMAT_ID );
         final boolean ratio = settings.getBoolean( STORE_IMAGE_RATIO_ID );
 
-        m_widthtext.setText( "" + width );
-        m_heighttext.setText( "" + height );
+        m_widthtext.setText( "" + width ); //$NON-NLS-1$
+        m_heighttext.setText( "" + height ); //$NON-NLS-1$
         m_combo.setSelection( new StructuredSelection( format ) );
         m_keepImageRatio.setSelection( ratio );
       }

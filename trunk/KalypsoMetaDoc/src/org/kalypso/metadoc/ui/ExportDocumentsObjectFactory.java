@@ -96,9 +96,9 @@ public class ExportDocumentsObjectFactory implements IExportableObjectFactory
       exportItems[i] = exporter.createTreeItem( null );
     }
 
-    final ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoMetaDocPlugin.getId(), "icons/metadoc_wiz.gif" );
+    final ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoMetaDocPlugin.getId(), "icons/metadoc_wiz.gif" ); //$NON-NLS-1$
 
-    m_page = new ExportableTreePage( "templatePage", "Wählen Sie die zu exportierenden Dokumente", imageDescriptor );
+    m_page = new ExportableTreePage( "templatePage", "Wählen Sie die zu exportierenden Dokumente", imageDescriptor ); //$NON-NLS-1$
     m_page.setViewerSorter( new ViewerSorter() );
     m_page.setInput( exportItems );
 

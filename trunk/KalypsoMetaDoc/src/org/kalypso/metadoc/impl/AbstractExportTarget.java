@@ -77,14 +77,14 @@ public abstract class AbstractExportTarget implements IExportTarget
   @Override
   public final void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
-    m_name = config.getAttribute( "name" );
-    m_desc = config.getAttribute( "description" );
+    m_name = config.getAttribute( "name" ); //$NON-NLS-1$
+    m_desc = config.getAttribute( "description" ); //$NON-NLS-1$
 
-    final String modes = config.getAttribute( "modes" );
+    final String modes = config.getAttribute( "modes" ); //$NON-NLS-1$
     if( modes != null && modes.length() > 0 )
-      m_modes.addAll( Arrays.asList( modes.split( ";" ) ) );
+      m_modes.addAll( Arrays.asList( modes.split( ";" ) ) ); //$NON-NLS-1$
 
-    final String iconLocation = config.getAttribute( "icon" );
+    final String iconLocation = config.getAttribute( "icon" ); //$NON-NLS-1$
     if( iconLocation != null )
       m_imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin( config.getDeclaringExtension().getContributor().getName(), iconLocation );
   }

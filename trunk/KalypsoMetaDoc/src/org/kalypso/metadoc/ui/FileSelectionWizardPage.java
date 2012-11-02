@@ -149,7 +149,7 @@ public class FileSelectionWizardPage extends WizardPage implements IConfiguratio
     if( key == null || key.equals( FileExportTarget.CONF_FILEEXPORT_EXTENSION ) )
     {
       String filename = m_destinationNameField.getText();
-      filename = FileUtilities.nameWithoutExtension( filename ) + m_conf.getString( FileExportTarget.CONF_FILEEXPORT_EXTENSION, "" );
+      filename = FileUtilities.nameWithoutExtension( filename ) + m_conf.getString( FileExportTarget.CONF_FILEEXPORT_EXTENSION, "" ); //$NON-NLS-1$
 
       m_destinationNameField.setText( filename );
     }
@@ -299,8 +299,8 @@ public class FileSelectionWizardPage extends WizardPage implements IConfiguratio
     final FileDialog dialog = new FileDialog( getContainer().getShell(), SWT.SAVE );
 
     // TODO: fill in filter names and exts
-    final String[] filterExts = new String[] { "*" + m_conf.getString( FileExportTarget.CONF_FILEEXPORT_EXTENSION ), "*" };
-    final String[] filterNames = new String[] { "*" + m_conf.getString( FileExportTarget.CONF_FILEEXPORT_EXTENSION ), "Alle Dateien" };
+    final String[] filterExts = new String[] { "*" + m_conf.getString( FileExportTarget.CONF_FILEEXPORT_EXTENSION ), "*" }; //$NON-NLS-1$ //$NON-NLS-2$
+    final String[] filterNames = new String[] { "*" + m_conf.getString( FileExportTarget.CONF_FILEEXPORT_EXTENSION ), "Alle Dateien" }; //$NON-NLS-1$
 
     dialog.setFilterExtensions( filterExts );
     dialog.setFilterNames( filterNames );

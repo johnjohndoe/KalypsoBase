@@ -30,7 +30,7 @@ public class KalypsoMetaDocPlugin extends AbstractUIPlugin
     plugin = this;
     try
     {
-      resourceBundle = ResourceBundle.getBundle( "org.kalypso.metadoc.KalypsoMetaDocPluginResources" );
+      resourceBundle = ResourceBundle.getBundle( "org.kalypso.metadoc.KalypsoMetaDocPluginResources" ); //$NON-NLS-1$
     }
     catch( final MissingResourceException x )
     {
