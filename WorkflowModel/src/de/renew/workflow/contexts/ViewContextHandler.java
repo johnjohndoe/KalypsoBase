@@ -18,6 +18,8 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 
+import de.renew.workflow.internal.i18n.Messages;
+
 /**
  * Opens the map view on a given resource and activates a given layer
  * 

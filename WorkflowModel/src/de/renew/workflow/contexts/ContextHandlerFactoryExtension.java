@@ -52,15 +52,15 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 
 import de.renew.workflow.base.WorkflowModelPlugin;
+import de.renew.workflow.internal.i18n.Messages;
 
 /**
  * Helper class to read and cache context handler factories from extension point.
- *
+ * 
  * @author Stefan Kurzbach
  */
 public class ContextHandlerFactoryExtension
 {
-
   private static Map<String, IContextHandlerFactory> THE_FACTORY_MAP = null;
 
   private final static String CONTEXT_HANDLER_FACTORY_EXTENSION_POINT = "de.renew.workflow.model.contextHandlerFactories"; //$NON-NLS-1$
@@ -88,7 +88,7 @@ public class ContextHandlerFactoryExtension
         final String id = element.getAttribute( "id" ); //$NON-NLS-1$
         try
         {
-          final IContextHandlerFactory factory = (IContextHandlerFactory) element.createExecutableExtension( "class" ); //$NON-NLS-1$
+          final IContextHandlerFactory factory = (IContextHandlerFactory)element.createExecutableExtension( "class" ); //$NON-NLS-1$
           THE_FACTORY_MAP.put( id, factory );
         }
         catch( final CoreException e )

@@ -38,18 +38,19 @@
  *  v.doemming@tuhh.de
  *
  *  ---------------------------------------------------------------------------*/
-package de.renew.workflow.base;
+package de.renew.workflow.internal.i18n;
 
-import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+
+import org.apache.commons.lang3.ArrayUtils;
+import org.kalypso.contribs.java.i18n.I18nUtils;
 
 /**
  * @author schrage
- *
  */
-class Messages
+public class Messages
 {
-  private static final String BUNDLE_NAME = "de.renew.workflow.base.messages"; //$NON-NLS-1$
+  private static final String BUNDLE_NAME = "de.renew.workflow.internal.i18n.messages"; //$NON-NLS-1$
 
   private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
 
@@ -57,15 +58,16 @@ class Messages
   {
   }
 
+  /**
+   * java reflections needs this method-signatur
+   */
   public static String getString( final String key )
   {
-    try
-    {
-      return RESOURCE_BUNDLE.getString( key );
-    }
-    catch( final MissingResourceException e )
-    {
-      return '!' + key + '!';
-    }
+    return getString( key, ArrayUtils.EMPTY_OBJECT_ARRAY );
+  }
+
+  public static String getString( final String key, final Object... args )
+  {
+    return I18nUtils.formatMessage( RESOURCE_BUNDLE, key, args );
   }
 }

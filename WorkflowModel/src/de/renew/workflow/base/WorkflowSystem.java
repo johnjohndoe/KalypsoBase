@@ -58,7 +58,7 @@ public class WorkflowSystem implements IWorkflowSystem, IPreferenceChangeListene
     node.addPreferenceChangeListener( this );
 
     // FIXME: why 1d2d here?
-    final String workflowId = node.get( WORKFLOW_DEFINITON_ID, "workflow1d2d" );
+    final String workflowId = node.get( WORKFLOW_DEFINITON_ID, "workflow1d2d" ); //$NON-NLS-1$
     handleWorkflowIdChanged( workflowId );
   }
 
@@ -74,7 +74,7 @@ public class WorkflowSystem implements IWorkflowSystem, IPreferenceChangeListene
     {
       m_currentWorkflow = null;
       m_project.touch( new NullProgressMonitor() );
-      final IStatus status = new Status( IStatus.ERROR, "de.renew.workflow.model", "Workflow definition " + workflowId + " could not be found for project" + m_project.getName() + "." );
+      final IStatus status = new Status( IStatus.ERROR, "de.renew.workflow.model", "Workflow definition " + workflowId + " could not be found for project" + m_project.getName() + "." ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       throw new CoreException( status );
     }
   }
