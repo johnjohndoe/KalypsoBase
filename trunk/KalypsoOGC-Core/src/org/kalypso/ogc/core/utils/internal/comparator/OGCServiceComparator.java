@@ -92,8 +92,8 @@ public class OGCServiceComparator implements Comparator<IOGCService>
       return 1;
 
     /* Get the splitted versions. */
-    final String[] versionSplit1 = StringUtils.split( version1, "." );
-    final String[] versionSplit2 = StringUtils.split( version2, "." );
+    final String[] versionSplit1 = StringUtils.split( version1, "." ); //$NON-NLS-1$
+    final String[] versionSplit2 = StringUtils.split( version2, "." ); //$NON-NLS-1$
     for( int i = 0; i < versionSplit1.length; i++ )
     {
       /* Get the version fragment of version 1. */

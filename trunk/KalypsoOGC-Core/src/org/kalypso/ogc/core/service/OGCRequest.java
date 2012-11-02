@@ -182,7 +182,7 @@ public class OGCRequest
 
       /* Only xml bodies may be handled. */
       final String contentType = request.getContentType();
-      if( contentType == null || !contentType.contains( "text/xml" ) )
+      if( contentType == null || !contentType.contains( "text/xml" ) ) //$NON-NLS-1$
         return null;
 
       /* Memory for the results. */
@@ -192,11 +192,11 @@ public class OGCRequest
       reader = request.getReader();
 
       /* Read the body. */
-      String line = "";
+      String line = ""; //$NON-NLS-1$
       while( (line = reader.readLine()) != null )
       {
         buffer.append( line );
-        buffer.append( System.getProperty( "line.separator", "\n\r" ) );
+        buffer.append( System.getProperty( "line.separator", "\n\r" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       }
 
       return buffer.toString();

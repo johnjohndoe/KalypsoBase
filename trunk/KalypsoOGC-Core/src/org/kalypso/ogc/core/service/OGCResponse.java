@@ -116,7 +116,7 @@ public class OGCResponse
   {
     try
     {
-      response.setContentType( "text/xml" );
+      response.setContentType( "text/xml" ); //$NON-NLS-1$
       return response.getOutputStream();
     }
     catch( final IOException ex )
