@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollectorWithTime;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -88,7 +89,7 @@ public class FeatureComparator
     final IFeatureType oneFeatureType = m_one.getFeatureType();
     final IFeatureType twoFeatureType = m_two.getFeatureType();
     if( !oneFeatureType.equals( twoFeatureType ) )
-      return new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), "The feature type of the two features do not match." );
+      return new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), Messages.getString("FeatureComparator_0") ); //$NON-NLS-1$
 
     /* The status collector. */
     final IStatusCollector collector = new StatusCollectorWithTime( KalypsoCorePlugin.getID() );
@@ -114,7 +115,7 @@ public class FeatureComparator
       if( oneProperty == null || twoProperty == null )
       {
         final String label = getLabel( m_one, oneName );
-        final Status compareStatus = new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), String.format( "One of the properties '%s' was null.", label ) );
+        final Status compareStatus = new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), String.format( Messages.getString("FeatureComparator_1"), label ) ); //$NON-NLS-1$
         collector.add( compareStatus );
         continue;
       }
@@ -130,7 +131,7 @@ public class FeatureComparator
         compareValue( m_one, m_two, oneProperty, twoProperty, onePropertyType, oneName, isRelation, collector );
     }
 
-    return collector.asMultiStatus( String.format( "%s", labelKey ) );
+    return collector.asMultiStatus( String.format( "%s", labelKey ) ); //$NON-NLS-1$
   }
 
   @SuppressWarnings("unused")
@@ -191,7 +192,7 @@ public class FeatureComparator
       if( !oneGeometry.equalsExact( twoGeometry ) )
       {
         final String label = getLabel( one, oneName );
-        final Status compareStatus = new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), String.format( "The geometries of the property '%s' does not match.", label ) );
+        final Status compareStatus = new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), String.format( Messages.getString("FeatureComparator_2"), label ) ); //$NON-NLS-1$
         collector.add( compareStatus );
 
         return;
@@ -208,7 +209,7 @@ public class FeatureComparator
       if( !ObjectUtils.equals( oneProperty, twoProperty ) )
       {
         final String label = getLabel( one, oneName );
-        final Status compareStatus = new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), String.format( "The property '%s' does not match (V1: %s V2: %s).", label, oneProperty, twoProperty ) );
+        final Status compareStatus = new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), String.format( Messages.getString("FeatureComparator_4"), label, oneProperty, twoProperty ) ); //$NON-NLS-1$
         collector.add( compareStatus );
 
         return;

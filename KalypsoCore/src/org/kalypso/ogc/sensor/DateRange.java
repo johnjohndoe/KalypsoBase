@@ -203,9 +203,6 @@ public class DateRange implements Comparable<DateRange>
     return new DateRange( d1, d2 );
   }
 
-  /**
-   * @see java.lang.Comparable#compareTo(java.lang.Object)
-   */
   @Override
   public int compareTo( final DateRange other )
   {
@@ -226,7 +223,7 @@ public class DateRange implements Comparable<DateRange>
   @Override
   public boolean equals( final Object obj )
   {
-    return compareTo( (DateRange) obj ) == 0;
+    return compareTo( (DateRange)obj ) == 0;
   }
 
   /**

@@ -48,7 +48,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.kalypso.commons.java.lang.Arrays;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
@@ -181,7 +180,7 @@ public final class AxisUtils implements ITimeseriesConstants
     if( !isDataSrcAxis( axis ) )
       return false;
 
-    return !axis.getName().contains( "_dataSource_" );//$NON-NLS-N$ //$NON-NLS-1$
+    return !axis.getName().contains( "_dataSource_" );//$NON-NLS-1$ 
   }
 
   public static IAxis findDateAxis( final IAxis[] axes )
@@ -310,7 +309,7 @@ public final class AxisUtils implements ITimeseriesConstants
 
     final IAxis persistentAxis = findAxis( axes, persistentType );
     if( persistentAxis == null )
-      throw new IllegalArgumentException( String.format( Messages.getString("AxisUtils_1"), persistentType ) ); //$NON-NLS-1$
+      throw new IllegalArgumentException( String.format( "Persistent axis with type does not exist: %s", persistentType ) ); //$NON-NLS-1$
 
     if( isStatusAxis )
       return AxisUtils.findStatusAxis( axes, persistentAxis );

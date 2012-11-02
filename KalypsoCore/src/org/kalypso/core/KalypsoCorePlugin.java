@@ -47,12 +47,12 @@ import java.util.TimeZone;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.catalog.CatalogManager;
 import org.kalypso.core.catalog.CatalogSLD;
 import org.kalypso.core.i18n.Messages;
@@ -175,8 +175,7 @@ public class KalypsoCorePlugin extends AbstractUIPlugin
    * The user preferences can explicitly be set to:
    * <ul>
    * <li>OS_TIMEZONE: {@link TimeZone#getDefault() is always used}</li>
-   * <li>CONFIG_TIMEZONE: timezone definition from config.ini (kalypso.timezone) is used (defaults to system timezone if
-   * not set)</li>
+   * <li>CONFIG_TIMEZONE: timezone definition from config.ini (kalypso.timezone) is used (defaults to system timezone if not set)</li>
    * </ul>
    */
   public TimeZone getTimeZone( )
@@ -219,7 +218,7 @@ public class KalypsoCorePlugin extends AbstractUIPlugin
     }
     catch( final Exception e )
     {
-      final IStatus status = StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "org.kalypso.core.KalypsoCorePlugin.warning_timezone", timezone ), e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.WARNING, getID(), Messages.getString( "org.kalypso.core.KalypsoCorePlugin.warning_timezone", timezone ), e ); //$NON-NLS-1$
       getLog().log( status );
 
       return TimeZone.getDefault();
@@ -242,17 +241,14 @@ public class KalypsoCorePlugin extends AbstractUIPlugin
   /**
    * Copied from {@link org.eclipse.ui.plugin.AbstractUIPlugin}.
    * <p>
-   * Returns the preference store for this UI plug-in. This preference store is used to hold persistent settings for
-   * this plug-in in the context of a workbench. Some of these settings will be user controlled, whereas others may be
-   * internal setting that are never exposed to the user.
+   * Returns the preference store for this UI plug-in. This preference store is used to hold persistent settings for this plug-in in the context of a workbench. Some of these settings will be user
+   * controlled, whereas others may be internal setting that are never exposed to the user.
    * <p>
-   * If an error occurs reading the preference store, an empty preference store is quietly created, initialized with
-   * defaults, and returned.
+   * If an error occurs reading the preference store, an empty preference store is quietly created, initialized with defaults, and returned.
    * </p>
    * <p>
-   * <strong>NOTE:</strong> As of Eclipse 3.1 this method is no longer referring to the core runtime compatibility layer
-   * and so plug-ins relying on Plugin#initializeDefaultPreferences will have to access the compatibility layer
-   * themselves.
+   * <strong>NOTE:</strong> As of Eclipse 3.1 this method is no longer referring to the core runtime compatibility layer and so plug-ins relying on Plugin#initializeDefaultPreferences will have to
+   * access the compatibility layer themselves.
    * </p>
    * 
    * @return the preference store
@@ -300,7 +296,7 @@ public class KalypsoCorePlugin extends AbstractUIPlugin
     if( gmlWorkspace == null )
       return null;
 
-    return (Dictionary) gmlWorkspace.getRootFeature();
+    return (Dictionary)gmlWorkspace.getRootFeature();
   }
 
   private synchronized DictionaryCache getDictionaryCache( )

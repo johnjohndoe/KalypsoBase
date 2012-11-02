@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 
@@ -101,7 +102,7 @@ public class GmlWorkspaceProvider extends AbstractGmlWorkspaceProvider
     catch( final Exception e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), "Failed to save workspace", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), Messages.getString("GmlWorkspaceProvider_0"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
   }
