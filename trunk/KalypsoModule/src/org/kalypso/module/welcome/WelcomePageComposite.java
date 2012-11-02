@@ -120,9 +120,6 @@ public class WelcomePageComposite extends Composite
       content.setTooltip( handler.getTooltip() );
       content.setMouseListener( new MouseAdapter()
       {
-        /**
-         * @see org.eclipse.swt.events.MouseAdapter#mouseUp(org.eclipse.swt.events.MouseEvent)
-         */
         @Override
         public void mouseUp( final MouseEvent e )
         {

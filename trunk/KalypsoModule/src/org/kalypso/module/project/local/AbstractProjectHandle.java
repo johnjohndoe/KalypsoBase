@@ -3,6 +3,7 @@ package org.kalypso.module.project.local;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.PlatformObject;
+import org.kalypso.module.internal.i18n.Messages;
 import org.kalypso.module.project.IProjectHandle;
 
 public abstract class AbstractProjectHandle extends PlatformObject implements IProjectHandle, Comparable<IProjectHandle>
@@ -54,6 +55,6 @@ public abstract class AbstractProjectHandle extends PlatformObject implements IP
   @Override
   public String toString( )
   {
-    return String.format( "Project: %s", getName() );
+    return String.format( Messages.getString("AbstractProjectHandle_0"), getName() ); //$NON-NLS-1$
   }
 }

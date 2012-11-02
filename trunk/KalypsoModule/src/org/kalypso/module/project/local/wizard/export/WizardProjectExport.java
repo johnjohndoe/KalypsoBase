@@ -107,7 +107,7 @@ public class WizardProjectExport extends Wizard implements IWorkbenchWizard
     final File selectedFile = m_pageSelectZipFile.getSelectedFile();
     if( selectedFile.exists() )
     {
-      final String message = String.format( "File '%s' already exists. Continue?", selectedFile.getName() );
+      final String message = String.format( Messages.getString("WizardProjectExport.0"), selectedFile.getName() ); //$NON-NLS-1$
       if( !MessageDialog.openConfirm( getShell(), getWindowTitle(), message ) )
         return false;
     }
@@ -116,7 +116,7 @@ public class WizardProjectExport extends Wizard implements IWorkbenchWizard
     // FIXME: show warning dialog if export file already exists. But allow it, if the user wishes so.
 
     final IStatus result = ProgressUtilities.busyCursorWhile( worker );
-    ErrorDialog.openError( getShell(), getWindowTitle(), "Failed to export project", result );
+    ErrorDialog.openError( getShell(), getWindowTitle(), Messages.getString("WizardProjectExport.1"), result ); //$NON-NLS-1$
 
     return result.isOK();
   }

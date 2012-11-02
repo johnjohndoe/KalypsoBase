@@ -45,6 +45,7 @@ import java.io.StringWriter;
 import java.net.URL;
 
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.layout.GridData;
@@ -55,7 +56,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 import org.kalypso.contribs.eclipse.swt.browser.OpenExternalLocationAdapter;
-import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.ui.controls.ScrolledSection;
 import org.kalypso.module.IKalypsoModule;
 import org.kalypso.module.internal.i18n.Messages;
@@ -81,7 +81,7 @@ public class ProjectListViewer
   {
     final ScrolledSection sectionProjects = new ScrolledSection( parent, m_toolkit, ExpandableComposite.TITLE_BAR, true );
     final Composite bodyProjects = sectionProjects.setup( Messages.getString( "org.kalypso.module.welcome.ProjectListViewer.0" ), new GridData( GridData.FILL, GridData.FILL, true, true ), new GridData( GridData.FILL, GridData.FILL, true, true ) ); //$NON-NLS-1$
-    bodyProjects.setLayout( Layouts.createGridLayout( 2, true ) );
+    GridLayoutFactory.fillDefaults().numColumns( 2 ).equalWidth( true ).applyTo( bodyProjects );
     bodyProjects.setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
 
     final ProjectHandlesComposite projects = new ProjectHandlesComposite( bodyProjects, m_toolkit );
