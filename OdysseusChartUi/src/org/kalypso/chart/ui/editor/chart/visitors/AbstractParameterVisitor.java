@@ -72,7 +72,7 @@ public abstract class AbstractParameterVisitor extends AbstractChartLayerVisitor
     if( container == null )
       return false;
 
-    final String property = container.getParameterValue( m_parameter, "false" );
+    final String property = container.getParameterValue( m_parameter, "false" ); //$NON-NLS-1$
 
     return Boolean.valueOf( property );
   }

@@ -69,8 +69,8 @@ public class DataOperatorHelper
   {
     m_dataOperators.put( Number.class, new NumberDataOperator( new NumberComparator() ) );
     m_dataOperators.put( Boolean.class, new BooleanDataOperator( new ComparableComparator() ) );
-    m_dataOperators.put( Calendar.class, new CalendarDataOperator( new ComparableComparator(), "dd.MM.yyyy HH:mm" ) );
-    m_dataOperators.put( Date.class, new DateDataOperator( new ComparableComparator(), "dd.MM.yyyy HH:mm" ) );
+    m_dataOperators.put( Calendar.class, new CalendarDataOperator( new ComparableComparator(), "dd.MM.yyyy HH:mm" ) ); //$NON-NLS-1$
+    m_dataOperators.put( Date.class, new DateDataOperator( new ComparableComparator(), "dd.MM.yyyy HH:mm" ) ); //$NON-NLS-1$
   }
 
   public <T> IDataOperator<T> getDataOperator( final Class<T> clazz )

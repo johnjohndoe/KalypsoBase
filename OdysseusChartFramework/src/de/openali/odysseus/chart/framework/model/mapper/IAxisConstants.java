@@ -115,16 +115,16 @@ public interface IAxisConstants
   /**
    * Axis Render Data key's
    */
-  String BORDER_SIZE = "de.openali.odysseus.chart.framework.model.mapper.IAxisRendere_border_size";
+  String BORDER_SIZE = "de.openali.odysseus.chart.framework.model.mapper.IAxisRendere_border_size"; //$NON-NLS-1$
 
-  String TICK_LENGTH = "de.openali.odysseus.chart.framework.model.mapper.IAxisRendere_tick_length";
+  String TICK_LENGTH = "de.openali.odysseus.chart.framework.model.mapper.IAxisRendere_tick_length"; //$NON-NLS-1$
 
-  String AXIS_GAP = "de.openali.odysseus.chart.framework.model.mapper.IAxisRendere_gap";
+  String AXIS_GAP = "de.openali.odysseus.chart.framework.model.mapper.IAxisRendere_gap"; //$NON-NLS-1$
 
-  String SCREEN_COORDINATE_AXIS = "de.openali.odysseus.chart.ext.base.axis.ScreenCoordinateAxis";
+  String SCREEN_COORDINATE_AXIS = "de.openali.odysseus.chart.ext.base.axis.ScreenCoordinateAxis"; //$NON-NLS-1$
 
-  String SCREEN_COORDINATE_AXIS_HORIZONTAL = SCREEN_COORDINATE_AXIS + "#HORIZONTAL";
+  String SCREEN_COORDINATE_AXIS_HORIZONTAL = SCREEN_COORDINATE_AXIS + "#HORIZONTAL"; //$NON-NLS-1$
 
-  String SCREEN_COORDINATE_AXIS_VERTICAL = SCREEN_COORDINATE_AXIS + "#VERTICAL";
+  String SCREEN_COORDINATE_AXIS_VERTICAL = SCREEN_COORDINATE_AXIS + "#VERTICAL"; //$NON-NLS-1$
 
 }

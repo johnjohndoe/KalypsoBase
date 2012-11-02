@@ -120,7 +120,7 @@ public class DummyDataOperator<T> implements IDataOperator<T>
   @Override
   public String logicalToString( final T value )
   {
-    return "";
+    return ""; //$NON-NLS-1$
   }
 
   /**
@@ -129,7 +129,7 @@ public class DummyDataOperator<T> implements IDataOperator<T>
   @Override
   public String getFormatHint( )
   {
-    return "no hint - this is a dummy implementation";
+    return "no hint - this is a dummy implementation"; //$NON-NLS-1$
   }
 
   /**

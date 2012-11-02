@@ -176,7 +176,7 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
 
       final Point anchor = getTextAnchor( config, iconSize.x, size.y, textSize );
 
-      gc.drawText( description == null ? "" : description, anchor.x, anchor.y, SWT.TRANSPARENT | SWT.WRAP | SWT.DRAW_DELIMITER );
+      gc.drawText( description == null ? "" : description, anchor.x, anchor.y, SWT.TRANSPARENT | SWT.WRAP | SWT.DRAW_DELIMITER ); //$NON-NLS-1$
 
       return img.getImageData();
     }
@@ -201,7 +201,7 @@ public class BlockChartLegendRenderer implements IChartLegendRenderer
     {
       final Point iconSize = entry.computeSize( config.getIconSize() );
       final Point spacer = config.getSpacer();
-      final Point titleSize = gc.textExtent( entry.getDescription() == null ? "" : entry.getDescription(), SWT.DRAW_DELIMITER | SWT.DRAW_TAB );
+      final Point titleSize = gc.textExtent( entry.getDescription() == null ? "" : entry.getDescription(), SWT.DRAW_DELIMITER | SWT.DRAW_TAB ); //$NON-NLS-1$
 
       // TODO subtract spacer2 from last line element?
       final Point itemSpacer = config.getItemSpacer();

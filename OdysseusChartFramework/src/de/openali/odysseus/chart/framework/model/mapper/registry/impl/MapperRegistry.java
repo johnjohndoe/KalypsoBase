@@ -73,7 +73,7 @@ public class MapperRegistry implements IMapperRegistry
   public void addMapper( final IMapper mapper )
   {
     if( m_mappers.containsKey( mapper.getIdentifier() ) )
-      Logger.logInfo( Logger.TOPIC_LOG_AXIS, "Mapper already present in registry: " + mapper.getIdentifier() + " - " );
+      Logger.logInfo( Logger.TOPIC_LOG_AXIS, "Mapper already present in registry: " + mapper.getIdentifier() + " - " ); //$NON-NLS-1$ //$NON-NLS-2$
     else
     {
       m_mappers.put( mapper.getIdentifier(), mapper );

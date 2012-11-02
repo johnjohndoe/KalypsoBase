@@ -74,9 +74,9 @@ public class ZoomPanMaximizeHandler extends AbstractChartHandler
       if( parameter == null )
         return eBoth;
 
-      if( "HORIZONTAL".equals( parameter ) )
+      if( "HORIZONTAL".equals( parameter ) ) //$NON-NLS-1$
         return eHorizontal;
-      else if( "VERTICAL".equals( parameter ) )
+      else if( "VERTICAL".equals( parameter ) ) //$NON-NLS-1$
         return eVertical;
 
       return eBoth;

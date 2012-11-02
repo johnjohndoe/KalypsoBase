@@ -63,11 +63,11 @@ public class StringDataOperator implements IOrdinalDataOperator<String>
 
       if( pos1 == -1 )
       {
-        throw new IllegalArgumentException( "Cannot compare '" + o1 + "' to '" + o2 + "': '" + o1 + "' is not part of the set" );
+        throw new IllegalArgumentException( "Cannot compare '" + o1 + "' to '" + o2 + "': '" + o1 + "' is not part of the set" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       }
       if( pos2 == -1 )
       {
-        throw new IllegalArgumentException( "Cannot compare '" + o1 + "' to '" + o2 + "': '" + o2 + "' is not part of the set" );
+        throw new IllegalArgumentException( "Cannot compare '" + o1 + "' to '" + o2 + "': '" + o2 + "' is not part of the set" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       }
 
       if( pos1 < pos2 )
@@ -131,7 +131,7 @@ public class StringDataOperator implements IOrdinalDataOperator<String>
   @Override
   public String getFormatHint( )
   {
-    return "see available values";
+    return "see available values"; //$NON-NLS-1$
   }
 
   @Override

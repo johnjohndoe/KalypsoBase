@@ -96,12 +96,12 @@ public class ChartOutlinePopupDialog extends PopupDialog
   private String getTitle( final TitleTypeBean[] titles )
   {
     if( ArrayUtils.isEmpty( titles ) )
-      return "";
+      return ""; //$NON-NLS-1$
 
     final TitleTypeBean bean = titles[0];
     final String text = bean.getText();
     if( Strings.isEmpty( text ) )
-      return "";
+      return ""; //$NON-NLS-1$
 
     return text;
   }

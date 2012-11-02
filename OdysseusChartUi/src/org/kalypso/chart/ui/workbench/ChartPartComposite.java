@@ -312,7 +312,7 @@ public class ChartPartComposite implements IChartPart
     if( m_part instanceof IPropertyPart )
     {
       /* force into ui threat */
-      final UIJob job = new UIJob( "" )
+      final UIJob job = new UIJob( "" ) //$NON-NLS-1$
       {
         @Override
         public IStatus runInUIThread( final IProgressMonitor monitor )

@@ -81,7 +81,7 @@ public class DebugChartOutlinePopupDialog extends ChartOutlinePopupDialog
 
   private void addChartInfo( final Composite body )
   {
-    new Label( body, SWT.NULL ).setText( "Debug" );
+    new Label( body, SWT.NULL ).setText( "Debug" ); //$NON-NLS-1$
 
     final TreeViewer viewer = new TreeViewer( body );
     viewer.getTree().setLayoutData( new GridData( GridData.FILL, GridData.FILL, true, false ) );
@@ -96,13 +96,13 @@ public class DebugChartOutlinePopupDialog extends ChartOutlinePopupDialog
   {
     final Set<Object> input = new LinkedHashSet<>();
 
-    input.add( "Chart Handlers" );
+    input.add( "Chart Handlers" ); //$NON-NLS-1$
     final IChartHandlerManager handler = composite.getPlotHandler();
     final IChartHandler[] handlers = handler.getActiveHandlers();
     if( ArrayUtils.isNotEmpty( handlers ) )
       Collections.addAll( input, handlers );
     else
-      input.add( " - none" );
+      input.add( " - none" ); //$NON-NLS-1$
 
     return input.toArray();
   }

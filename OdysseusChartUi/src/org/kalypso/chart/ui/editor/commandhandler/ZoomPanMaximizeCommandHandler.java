@@ -46,7 +46,7 @@ public class ZoomPanMaximizeCommandHandler extends AbstractHandler implements IE
 
   private ZoomPanMaximizeHandler.DIRECTION getDirection( final ExecutionEvent event )
   {
-    final String parameter = event.getParameter( "direction" );
+    final String parameter = event.getParameter( "direction" ); //$NON-NLS-1$
 
     return DIRECTION.getDirection( parameter );
   }

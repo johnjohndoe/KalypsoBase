@@ -39,7 +39,7 @@ public class StyleSet implements IStyleSet
     final IStyle style = m_styleMap.get( id );
     if( style == null )
     {
-      Logger.logWarning( Logger.TOPIC_LOG_STYLE, "No style for id '" + id + "'. Need " + styleClass + ". Returning default style and saving it to style set." );
+      Logger.logWarning( Logger.TOPIC_LOG_STYLE, "No style for id '" + id + "'. Need " + styleClass + ". Returning default style and saving it to style set." ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       final T myStyle = StyleUtils.getDefaultStyle( styleClass );
       m_styleMap.put( id, myStyle );
       return myStyle;
@@ -53,8 +53,8 @@ public class StyleSet implements IStyleSet
       return (T) style;
     else
     {
-      Logger.logWarning( Logger.TOPIC_LOG_STYLE, "Wrong style type for id '" + id + "'. Expected " + styleClass + ", got " + style.getClass()
-          + ". Returning default style but NOT SAVING it to style set." );
+      Logger.logWarning( Logger.TOPIC_LOG_STYLE, "Wrong style type for id '" + id + "'. Expected " + styleClass + ", got " + style.getClass() //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          + ". Returning default style but NOT SAVING it to style set." ); //$NON-NLS-1$
       return StyleUtils.getDefaultStyle( styleClass );
     }
   }

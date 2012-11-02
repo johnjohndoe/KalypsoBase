@@ -59,7 +59,7 @@ public class NumberDataOperator extends AbstractDataOperator<Number>
   @Override
   public String logicalToString( final Number value )
   {
-    return "" + value.toString();
+    return "" + value.toString(); //$NON-NLS-1$
   }
 
   @Override
@@ -69,7 +69,7 @@ public class NumberDataOperator extends AbstractDataOperator<Number>
     {
       return null;
     }
-    else if( "".equals( value.trim() ) )
+    else if( "".equals( value.trim() ) ) //$NON-NLS-1$
     {
       return null;
     }
@@ -90,7 +90,7 @@ public class NumberDataOperator extends AbstractDataOperator<Number>
   @Override
   public String getFormatHint( )
   {
-    return "[1-9]([0-9])*.([0-9])*[1-9]";
+    return "[1-9]([0-9])*.([0-9])*[1-9]"; //$NON-NLS-1$
 
   }
 

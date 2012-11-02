@@ -25,7 +25,7 @@ public class DateDataOperator extends AbstractDataOperator<Date>
 
   private final CalendarFormat m_dateFormat;
 
-  private static final String REGEX_DURATION = "(NOW|TODAY)(([+-])P([1-9]+[0-9]*Y)?([1-9]+[0-9]*M)?([1-9]+[0-9]*D)?(T([1-9]+[0-9]*H)?([1-9]+[0-9]*M)?([1-9]+[0-9]*S)?)?)?";
+  private static final String REGEX_DURATION = "(NOW|TODAY)(([+-])P([1-9]+[0-9]*Y)?([1-9]+[0-9]*M)?([1-9]+[0-9]*D)?(T([1-9]+[0-9]*H)?([1-9]+[0-9]*M)?([1-9]+[0-9]*S)?)?)?"; //$NON-NLS-1$
 
   public DateDataOperator( final Comparator<Date> comparator, final String formatString )
   {
@@ -55,7 +55,7 @@ public class DateDataOperator extends AbstractDataOperator<Date>
   @Override
   public String logicalToString( final Date value )
   {
-    final SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
+    final SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" ); //$NON-NLS-1$
     System.out.println( sdf.format( value.getTime() ) );
     return sdf.format( value.getTime() );
   }
@@ -63,7 +63,7 @@ public class DateDataOperator extends AbstractDataOperator<Date>
   @Override
   public String getFormatHint( )
   {
-    return "yyyy-MM-dd (HH:mm)";
+    return "yyyy-MM-dd (HH:mm)"; //$NON-NLS-1$
   }
 
   /**
@@ -83,14 +83,14 @@ public class DateDataOperator extends AbstractDataOperator<Date>
   {
     if( value == null )
       return null;
-    if( value.trim().equals( "" ) )
+    if( value.trim().equals( "" ) ) //$NON-NLS-1$
       return null;
 
     // erst mal versuchen, ein korrektes Datum zu parsen
     final Calendar cal = Calendar.getInstance();
     // cal.set( Calendar.DST_OFFSET, 0);
     // cal.set( Calendar.ZONE_OFFSET, 0);
-    cal.setTimeZone( TimeZone.getTimeZone( "GMT" ) );
+    cal.setTimeZone( TimeZone.getTimeZone( "GMT" ) ); //$NON-NLS-1$
 
     SimpleDateFormat sdf = null;
     Date date = null;
@@ -98,7 +98,7 @@ public class DateDataOperator extends AbstractDataOperator<Date>
 
     try
     {
-      sdf = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" );
+      sdf = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss" ); //$NON-NLS-1$
       date = sdf.parse( value );
       // cal=Calendar.getInstance();
       if( date != null )
@@ -110,7 +110,7 @@ public class DateDataOperator extends AbstractDataOperator<Date>
       // Nochmal mit anderem String probieren
       try
       {
-        sdf = new SimpleDateFormat( "yyyy-MM-dd" );
+        sdf = new SimpleDateFormat( "yyyy-MM-dd" ); //$NON-NLS-1$
         date = sdf.parse( value );
         // cal=Calendar.getInstance();
         if( date != null )
@@ -126,7 +126,7 @@ public class DateDataOperator extends AbstractDataOperator<Date>
           // Calendar-Objekt mit "jetzt" initialisieren
           // cal=Calendar.getInstance();
 
-          if( value.startsWith( "TODAY" ) )
+          if( value.startsWith( "TODAY" ) ) //$NON-NLS-1$
           {
             cal.set( Calendar.HOUR_OF_DAY, 0 );
             cal.set( Calendar.MINUTE, 0 );
@@ -135,7 +135,7 @@ public class DateDataOperator extends AbstractDataOperator<Date>
           }
 
           // DurationPart auswerten
-          if( value.startsWith( "NOW" ) && value.length() > 3 || value.startsWith( "TODAY" ) && value.length() > 5 )
+          if( value.startsWith( "NOW" ) && value.length() > 3 || value.startsWith( "TODAY" ) && value.length() > 5 ) //$NON-NLS-1$ //$NON-NLS-2$
           {
 
             final Pattern pattern = Pattern.compile( REGEX_DURATION );
@@ -191,7 +191,7 @@ public class DateDataOperator extends AbstractDataOperator<Date>
 
         else
         {
-          Logger.logError( Logger.TOPIC_LOG_GENERAL, "Unable to parse date: " + value );
+          Logger.logError( Logger.TOPIC_LOG_GENERAL, "Unable to parse date: " + value ); //$NON-NLS-1$
           throw new MalformedValueException();
         }
       }
