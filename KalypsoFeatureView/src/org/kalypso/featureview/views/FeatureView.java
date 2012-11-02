@@ -460,7 +460,7 @@ public class FeatureView extends ViewPart implements ModellEventListener
         catch( final Exception e )
         {
           // TODO: set real log output
-          System.out.println( "e: " + e );
+          System.out.println( "e: " + e ); //$NON-NLS-1$
         }
         if( m_featureComposite == null )
           return Status.OK_STATUS;
