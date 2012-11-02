@@ -35,11 +35,11 @@ import org.geotools.referencing.factory.custom.ICustomCRSProvider;
  */
 public class GeoToolsExtensions
 {
-  private static final String CUSTOM_CRS_PROVIDER_EXTENSION_POINT = "org.geotools.customCRSProvider";
+  private static final String CUSTOM_CRS_PROVIDER_EXTENSION_POINT = "org.geotools.customCRSProvider"; //$NON-NLS-1$
 
-  private static final String CUSTOM_CRS_PROVIDER_CUSTOM_CRS_PROVIDER_ELEMENT = "customCRSProvider";
+  private static final String CUSTOM_CRS_PROVIDER_CUSTOM_CRS_PROVIDER_ELEMENT = "customCRSProvider"; //$NON-NLS-1$
 
-  private static final String CUSTOM_CRS_PROVIDER_CUSTOM_CRS_PROVIDER_CLASS = "class";
+  private static final String CUSTOM_CRS_PROVIDER_CUSTOM_CRS_PROVIDER_CLASS = "class"; //$NON-NLS-1$
 
   /**
    * The constructor.

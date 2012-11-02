@@ -13,7 +13,7 @@ public class Activator extends Plugin
   /**
    * The plug-in ID.
    */
-  public static final String PLUGIN_ID = "de.openali.odysseus.service.ods";
+  public static final String PLUGIN_ID = "de.openali.odysseus.service.ods"; //$NON-NLS-1$
 
   /**
    * The shared instance.
