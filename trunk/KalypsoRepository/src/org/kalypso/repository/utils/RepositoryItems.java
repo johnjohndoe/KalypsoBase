@@ -58,7 +58,7 @@ public final class RepositoryItems
    */
   public static String getPlainId( final String identifier )
   {
-    final int indexOf = identifier.indexOf( "://" );
+    final int indexOf = identifier.indexOf( "://" ); //$NON-NLS-1$
     if( indexOf == -1 )
       return identifier;
 

@@ -222,7 +222,7 @@ public class ServiceRepositoryObservation implements IObservation
   @Deprecated
   public final void setValues( final ITupleModel values )
   {
-    throw new UnsupportedOperationException( "Not used anymore. Use repository#setData instead" );
+    throw new UnsupportedOperationException( "Not used anymore. Use repository#setData instead" ); //$NON-NLS-1$
   }
 
   @Override
