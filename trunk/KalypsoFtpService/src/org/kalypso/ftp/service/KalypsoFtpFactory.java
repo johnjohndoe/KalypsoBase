@@ -74,7 +74,7 @@ public final class KalypsoFtpFactory
 
   private KalypsoFtpFactory( )
   {
-    m_enabeld = Boolean.valueOf( System.getProperty( IKalypsoFtpServiceConstants.FTP_SERVICE_ENABLE, "false" ) );
+    m_enabeld = Boolean.valueOf( System.getProperty( IKalypsoFtpServiceConstants.FTP_SERVICE_ENABLE, "false" ) ); //$NON-NLS-1$
   }
 
   public static KalypsoFtpFactory getInstance( )
@@ -124,7 +124,7 @@ public final class KalypsoFtpFactory
     catch( final Exception e )
     {
       e.printStackTrace();
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoFtpService.PLUGIN_ID, "Starting of the ftp server failed.", e ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoFtpService.PLUGIN_ID, "Starting of the ftp server failed.", e ) ); //$NON-NLS-1$
     }
   }
 
