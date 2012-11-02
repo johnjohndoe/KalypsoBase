@@ -42,9 +42,6 @@ package org.kalypsodeegree_impl.model.sort;
 
 import java.awt.Graphics;
 import java.lang.reflect.Array;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -53,7 +50,6 @@ import java.util.ListIterator;
 import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.URIUtil;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -162,32 +158,6 @@ public abstract class AbstractFeatureList implements FeatureList
     final GMLWorkspace workspace = f.getWorkspace();
     if( workspace instanceof GMLWorkspace_Impl )
       ((GMLWorkspace_Impl)workspace).unregisterFeature( f );
-  }
-
-  private String findLinkPath( final Feature toLink )
-  {
-    final GMLWorkspace linkedWorkspace = toLink.getWorkspace();
-    final GMLWorkspace sourceWorkspace = m_parentFeature.getWorkspace();
-
-    /* Internal link, no uri */
-    if( linkedWorkspace == sourceWorkspace )
-      return null;
-
-    final URL targetContext = linkedWorkspace.getContext();
-    final URL sourceContext = sourceWorkspace.getContext();
-
-    try
-    {
-      final URI targetURI = targetContext.toURI();
-      final URI sourceURI = sourceContext.toURI();
-      final URI relativeURI = URIUtil.makeRelative( targetURI, sourceURI );
-      return relativeURI.toString();
-    }
-    catch( final URISyntaxException e )
-    {
-      e.printStackTrace();
-      return targetContext.toString();
-    }
   }
 
   /**
@@ -310,20 +280,8 @@ public abstract class AbstractFeatureList implements FeatureList
   @Override
   public <T extends Feature> IXLinkedFeature insertLink( final int index, final T toLink ) throws IllegalArgumentException, IllegalStateException
   {
-    final String path = findLinkPath( toLink );
-    final String id = toLink.getId();
-    if( path != null )
-    {
-      final StringBuilder s = new StringBuilder( path.length() + id.length() + 1 );
-      s.append( path );
-      s.append( '#' );
-      s.append( id );
-      return insertLink( index, s.toString(), toLink.getFeatureType() );
-    }
-    else
-    {
-      return insertLink( index, id, toLink.getFeatureType() );
-    }
+    final String path = FeatureLinkUtils.findLinkPath( toLink, m_parentFeature );
+    return insertLink( index, path, toLink.getFeatureType() );
   }
 
   @Override

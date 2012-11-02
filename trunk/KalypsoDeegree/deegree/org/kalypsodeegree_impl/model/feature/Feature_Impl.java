@@ -579,6 +579,15 @@ public class Feature_Impl extends PlatformObject implements Feature
   }
 
   @Override
+  public IXLinkedFeature setLink( final QName relationName, final Feature target )
+  {
+    final IRelationType relation = ensureRelation( relationName );
+    final GMLWorkspace sourceWorkspace = m_parent instanceof Feature ? ((Feature)m_parent).getWorkspace() : (GMLWorkspace)m_parent;
+    final String href = FeatureLinkUtils.findLinkPath( target, sourceWorkspace );
+    return setLink( relation, href );
+  }
+
+  @Override
   public IXLinkedFeature setLink( final QName relationName, final String href )
   {
     final IRelationType relation = ensureRelation( relationName );
@@ -682,7 +691,8 @@ public class Feature_Impl extends PlatformObject implements Feature
     {
       /* Create link and set to myself as property */
       final IXLinkedFeature link = new XLinkedFeature_Impl( this, relation, featureType, href );
-      setProperty( relation, link );
+      final Object linkOrString = link.getUri() == null ? href : link;
+      setProperty( relation, linkOrString );
       return link;
     }
   }

@@ -96,6 +96,9 @@ public interface Feature extends BaseFeature, Deegree2Feature
    * REMARK: gml:location is deprecated in the GML3-Schema.
    */
   void setLocation( final GM_Object location );
+  
+  
+  IXLinkedFeature setLink( QName relationName, Feature href );
 
   /**
    * Same as {@link #setLink(IRelationType, String, IFeatureType)} using the target feature type of the relation as
