@@ -75,10 +75,10 @@ public abstract class AbstractExporter implements IExporter
   @Override
   public final void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
-    m_name = config.getAttribute( "name" );
-    m_desc = config.getAttribute( "description" );
+    m_name = config.getAttribute( "name" ); //$NON-NLS-1$
+    m_desc = config.getAttribute( "description" ); //$NON-NLS-1$
 
-    final String iconLocation = config.getAttribute( "icon" );
+    final String iconLocation = config.getAttribute( "icon" ); //$NON-NLS-1$
     if( iconLocation != null )
       m_imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin( config.getDeclaringExtension().getContributor().getName(), iconLocation );
   }
@@ -181,7 +181,7 @@ public abstract class AbstractExporter implements IExporter
 
   protected String validateDocumentName( final String documentName )
   {
-    return FileUtilities.validateName( documentName, "_" );
+    return FileUtilities.validateName( documentName, "_" ); //$NON-NLS-1$
   }
 
 }

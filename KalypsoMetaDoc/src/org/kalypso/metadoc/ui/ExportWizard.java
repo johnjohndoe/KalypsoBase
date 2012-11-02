@@ -86,7 +86,7 @@ public final class ExportWizard extends Wizard
     final PublishingConfiguration configuration = new PublishingConfiguration();
 
     // one settings-entry per target and factory
-    final String settingsName = target.getClass().toString() + "_" + factory.getClass().toString();
+    final String settingsName = target.getClass().toString() + "_" + factory.getClass().toString(); //$NON-NLS-1$
 
     final IDialogSettings workbenchSettings = KalypsoMetaDocPlugin.getDefault().getDialogSettings();
     IDialogSettings section = workbenchSettings.getSection( settingsName );

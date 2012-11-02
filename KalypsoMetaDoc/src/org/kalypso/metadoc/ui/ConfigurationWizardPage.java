@@ -71,7 +71,7 @@ public class ConfigurationWizardPage extends WizardPage
     super( pageName, title, titleImage );
 
     if( editableKeys.length != labels.length )
-      throw new IllegalArgumentException( "Label and key arrays do not have the same length" );
+      throw new IllegalArgumentException( "Label and key arrays do not have the same length" ); //$NON-NLS-1$
 
     m_config = config;
     m_editableKeys = editableKeys;
@@ -96,7 +96,7 @@ public class ConfigurationWizardPage extends WizardPage
 
       final Text text = new Text( composite, SWT.LEAD );
       text.setLayoutData( new GridData( GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL ) );
-      text.setText( m_config.getString( key, "" ) );
+      text.setText( m_config.getString( key, "" ) ); //$NON-NLS-1$
 
       final ExtendedProperties config = m_config;
       text.addModifyListener( new ModifyListener()

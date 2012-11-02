@@ -66,9 +66,9 @@ import org.kalypso.metadoc.KalypsoMetaDocPlugin;
  */
 public class MetadocExtensions
 {
-  private static final String TARGETS_EXTENSION_POINT = "org.kalypso.metadoc.exportTarget";
+  private static final String TARGETS_EXTENSION_POINT = "org.kalypso.metadoc.exportTarget"; //$NON-NLS-1$
 
-  private static final String EXPORTERS_EXTENSION_POINT = "org.kalypso.metadoc.exporter";
+  private static final String EXPORTERS_EXTENSION_POINT = "org.kalypso.metadoc.exporter"; //$NON-NLS-1$
 
   private static Map<String, IConfigurationElement> m_exporters = null;
 
@@ -90,7 +90,7 @@ public class MetadocExtensions
     {
       try
       {
-        final IExportTarget target = (IExportTarget) element.createExecutableExtension( "class" );
+        final IExportTarget target = (IExportTarget) element.createExecutableExtension( "class" ); //$NON-NLS-1$
         items.add( target );
       }
       catch( final CoreException e )
@@ -101,7 +101,7 @@ public class MetadocExtensions
     }
 
     if( stati.size() > 0 )
-      throw new CoreException( new MultiStatus( KalypsoMetaDocPlugin.getId(), 0, stati.toArray( new IStatus[stati.size()] ), "Nicht alle Target konnten geladen werden", null ) );
+      throw new CoreException( new MultiStatus( KalypsoMetaDocPlugin.getId(), 0, stati.toArray( new IStatus[stati.size()] ), "Nicht alle Target konnten geladen werden", null ) ); //$NON-NLS-1$
 
     return items.toArray( new IExportTarget[items.size()] );
   }
@@ -115,7 +115,7 @@ public class MetadocExtensions
       m_exporters = retrieveExporterInHash( EXPORTERS_EXTENSION_POINT );
 
     final IConfigurationElement element = m_exporters.get( id );
-    return (IExporter) element.createExecutableExtension( "class" );
+    return (IExporter) element.createExecutableExtension( "class" ); //$NON-NLS-1$
   }
 
   /**
@@ -128,7 +128,7 @@ public class MetadocExtensions
     final IConfigurationElement[] elements = retrieveConfigurationElementsFor( extensionPointId );
     for( final IConfigurationElement element : elements )
     {
-      map.put( element.getAttribute( "id" ), element );
+      map.put( element.getAttribute( "id" ), element ); //$NON-NLS-1$
     }
 
     return map;
@@ -170,6 +170,6 @@ public class MetadocExtensions
       m_targets = retrieveExporterInHash( TARGETS_EXTENSION_POINT );
 
     final IConfigurationElement element = m_targets.get( id );
-    return (IExportTarget) element.createExecutableExtension( "class" );
+    return (IExportTarget) element.createExecutableExtension( "class" ); //$NON-NLS-1$
   }
 }

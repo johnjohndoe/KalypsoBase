@@ -66,10 +66,10 @@ import org.kalypso.metadoc.ui.FileSelectionWizardPage;
 public class FileExportTarget extends AbstractExportTarget
 {
   /** Must be a File (a directory or a real file) */
-  public final static String CONF_FILEEXPORT_FILE = FileExportTarget.class.getName() + ".file";
+  public final static String CONF_FILEEXPORT_FILE = FileExportTarget.class.getName() + ".file"; //$NON-NLS-1$
 
   /** Extension of the file (must be in the form: .ext ) */
-  public final static String CONF_FILEEXPORT_EXTENSION = FileExportTarget.class.getName() + ".extension";
+  public final static String CONF_FILEEXPORT_EXTENSION = FileExportTarget.class.getName() + ".extension"; //$NON-NLS-1$
 
   @Override
   public IStatus commitDocument( final IExportableObject document, final ExtendedProperties conf, final IProgressMonitor monitor ) throws InvocationTargetException
@@ -104,8 +104,8 @@ public class FileExportTarget extends AbstractExportTarget
   @Override
   public IWizardPage[] createWizardPages( final PublishingConfiguration configuration )
   {
-    final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoMetaDocPlugin.getId(), "icons/newfile_wiz.gif" );
-    final FileSelectionWizardPage page = new FileSelectionWizardPage( configuration, "file.export.target.page", "Dateiauswahl", imgDesc, "Datei" );
+    final ImageDescriptor imgDesc = AbstractUIPlugin.imageDescriptorFromPlugin( KalypsoMetaDocPlugin.getId(), "icons/newfile_wiz.gif" ); //$NON-NLS-1$
+    final FileSelectionWizardPage page = new FileSelectionWizardPage( configuration, "file.export.target.page", "Dateiauswahl", imgDesc, "Datei" ); //$NON-NLS-1$
 
     return new IWizardPage[] { page };
   }
