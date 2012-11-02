@@ -83,7 +83,7 @@ public class GM_Polygon_Impl extends GM_AbstractSurface_Impl<GM_PolygonPatch> im
   /** Use serialVersionUID for interoperability. */
   private final static long serialVersionUID = -2148069106391096842L;
 
-  private GM_PolygonPatch m_patch;
+  private final GM_PolygonPatch m_patch;
 
   /**
    * initializes the surface with default orientation submitting one surface patch.
@@ -373,12 +373,12 @@ public class GM_Polygon_Impl extends GM_AbstractSurface_Impl<GM_PolygonPatch> im
     return ret;
   }
 
-  /**
-   * @see org.kalypsodeegree_impl.model.geometry.GM_Object_Impl#invalidate()
-   */
   @Override
   public void invalidate( )
   {
+    if( m_patch != null )
+      m_patch.invalidate();
+
     super.invalidate();
   }
 
@@ -432,10 +432,6 @@ public class GM_Polygon_Impl extends GM_AbstractSurface_Impl<GM_PolygonPatch> im
     return 1;
   }
 
-  /**
-   * @return
-   * @see java.util.List#hashCode()
-   */
   @Override
   public int hashCode( )
   {

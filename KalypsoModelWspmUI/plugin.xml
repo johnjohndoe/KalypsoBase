@@ -475,15 +475,6 @@
             </test>
          </with>
       </definition>
-      <definition
-            id="org.kalypso.model.wspm.ui.definition.selectionHasResource">
-         <with
-               variable="selection">
-            <test
-                  property="org.kalypso.model.wspm.ui.hasResourceSelection">
-            </test>
-         </with>
-      </definition>
 	</extension>
 
     <extension
@@ -509,13 +500,6 @@
               properties="hasLanduseShape"
               type="org.eclipse.jface.viewers.ISelection">
        </propertyTester>
-       <propertyTester
-              class="org.kalypso.model.wspm.ui.action.property.tester.ResourceSelectionTester"
-              id="org.kalypso.model.wspm.ui.propertyTester.is.resource"
-              namespace="org.kalypso.model.wspm.ui"
-              properties="hasResourceSelection"
-              type="org.eclipse.jface.viewers.ISelection">
-        </propertyTester>
     </extension>
     <extension point="org.eclipse.ui.commands">
        <command
@@ -604,16 +588,6 @@
              icon="icons/obj16/wspwin16.gif"
              name="%org.kalypso.model.wspm.ui.action.ImportProfilePrfAction">
           <description>%org.kalypso.model.wspm.ui.action.ImportProfilePrfAction.description</description>
-       </wizard>
-       <wizard
-             category="importWizards"
-             class="org.kalypso.model.wspm.ui.profil.wizard.landuse.ImportLanduseShapeWizard"
-             icon="icons/obj16/landuse.import.png"
-             id="org.kalypso.model.wspm.ui.profil.wizard.landuse.ImportLanduseShapeWizard"
-             name="%org.kalypso.model.wspm.ui.profil.wizard.landuse.ImportLanduseShapeWizard.name">
-          <description>
-             %org.kalypso.model.wspm.ui.profil.wizard.landuse.ImportLanduseShapeWizard.description
-          </description>
        </wizard>
     </extension>
     <extension
@@ -729,19 +703,6 @@
              <reference
                    definitionId="org.kalypso.model.wspm.ui.definition.selectionHasProfiles">
              </reference></enablement>
-       </wizardEnablement>
-       <wizardEnablement
-             wizardID="org.kalypso.model.wspm.ui.profil.wizard.landuse.ImportLanduseShapeWizard">
-          <enablement>
-             <or>
-                <reference
-                      definitionId="org.kalypso.model.wspm.ui.definition.reachThemeSelected">
-                </reference>
-                <reference
-                      definitionId="org.kalypso.model.wspm.ui.definition.selectionHasResource">
-                </reference>
-             </or>
-          </enablement>
        </wizardEnablement>
        <wizardEnablement wizardID="org.kalypso.model.wspm.ui.profil.wizard.classification.ApplyClassificationsWizard">
           <enablement>

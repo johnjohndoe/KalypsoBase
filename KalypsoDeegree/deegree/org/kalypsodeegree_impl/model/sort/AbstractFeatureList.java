@@ -75,7 +75,6 @@ import org.kalypsodeegree_impl.model.feature.XLinkedFeature_Impl;
  */
 public abstract class AbstractFeatureList implements FeatureList
 {
-
   private final Feature m_parentFeature;
 
   private final IRelationType m_parentFeatureTypeProperty;
@@ -141,6 +140,9 @@ public abstract class AbstractFeatureList implements FeatureList
     if( !(object instanceof Feature) )
       return;
 
+    if( m_parentFeature == null )
+      return;
+
     final Feature f = (Feature)object;
     final GMLWorkspace workspace = f.getWorkspace();
     if( workspace instanceof GMLWorkspace_Impl )
@@ -156,6 +158,11 @@ public abstract class AbstractFeatureList implements FeatureList
       return;
 
     if( !(object instanceof Feature) )
+      return;
+
+    /* REMARK: If the split sort is used with features with another workspace than the parent feature */
+    /* REMARK: or without a parent feature, we cannot unregister it. */
+    if( m_parentFeature == null )
       return;
 
     final Feature f = (Feature)object;
@@ -268,7 +275,7 @@ public abstract class AbstractFeatureList implements FeatureList
   }
 
   @Override
-  public Feature getResolved( int index )
+  public Feature getResolved( final int index )
   {
     return resolveFeature( get( index ) );
   }
