@@ -70,8 +70,8 @@ public class RepositoryLabelProvider extends LabelProvider
     {
       try
       {
-        final IRepositoryItem item = (IRepositoryItem) element;
-        if( item.getIdentifier().toLowerCase().contains( ".virtuell." ) ) //$NON-NLS-N$ //$NON-NLS-1$
+        final IRepositoryItem item = (IRepositoryItem)element;
+        if( item.getIdentifier().toLowerCase().contains( ".virtuell." ) ) //$NON-NLS-1$
         {
           // if( item.hasChildren() )
           // return IMG_FOLDER;

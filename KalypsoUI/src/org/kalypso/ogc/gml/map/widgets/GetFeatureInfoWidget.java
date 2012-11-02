@@ -119,8 +119,7 @@ public class GetFeatureInfoWidget extends AbstractWidget
   }
 
   /**
-   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.map.IMapPanel)
+   * @see org.kalypso.ogc.gml.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget, org.kalypso.ogc.gml.map.IMapPanel)
    */
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
@@ -227,7 +226,7 @@ public class GetFeatureInfoWidget extends AbstractWidget
 
     /* Prepare the tooltip. */
     final java.awt.Rectangle bounds = panel.getScreenBounds();
-    final String tooltip = m_wmsTheme == null ? "Click or hit space to select a WMS theme" : String.format( "Theme: %s", m_wmsTheme.getName().getValue() );
+    final String tooltip = m_wmsTheme == null ? Messages.getString( "GetFeatureInfoWidget.0" ) : String.format( Messages.getString( "GetFeatureInfoWidget.1" ), m_wmsTheme.getName().getValue() ); //$NON-NLS-1$ //$NON-NLS-2$
 
     /* Draw the tooltip. */
     m_toolTipRenderer.setTooltip( tooltip ); //$NON-NLS-1$
@@ -258,7 +257,7 @@ public class GetFeatureInfoWidget extends AbstractWidget
         throw new IllegalStateException( Messages.getString( "GetFeatureInfoWidget_14" ) ); //$NON-NLS-1$
 
       /* Find the theme. */
-      m_wmsTheme = findTheme( (GisTemplateMapModell) mapModel, themeProperty );
+      m_wmsTheme = findTheme( (GisTemplateMapModell)mapModel, themeProperty );
 
       /* Repaint the map. */
       repaintMap();
@@ -298,10 +297,10 @@ public class GetFeatureInfoWidget extends AbstractWidget
   private KalypsoWMSTheme checkIfWmsTheme( final IKalypsoTheme theme ) throws IllegalStateException
   {
     if( theme instanceof KalypsoWMSTheme && theme.isVisible() )
-      return (KalypsoWMSTheme) theme;
+      return (KalypsoWMSTheme)theme;
 
     if( theme instanceof IKalypsoCascadingTheme && theme.isVisible() )
-      return findFirstVisibleWmsTheme( (IKalypsoCascadingTheme) theme );
+      return findFirstVisibleWmsTheme( (IKalypsoCascadingTheme)theme );
 
     throw new IllegalStateException( Messages.getString( "GetFeatureInfoWidget_16" ) ); //$NON-NLS-1$
   }
@@ -312,7 +311,7 @@ public class GetFeatureInfoWidget extends AbstractWidget
     for( final IKalypsoTheme theme : themes )
     {
       if( theme instanceof KalypsoWMSTheme && theme.isVisible() )
-        return (KalypsoWMSTheme) theme;
+        return (KalypsoWMSTheme)theme;
     }
 
     throw new IllegalStateException( Messages.getString( "GetFeatureInfoWidget_17" ) ); //$NON-NLS-1$
@@ -329,12 +328,12 @@ public class GetFeatureInfoWidget extends AbstractWidget
 
     /* If there is only one wms theme available, we do not need to have selected one by the user. */
     if( wmsThemes.length == 1 )
-      return (KalypsoWMSTheme) wmsThemes[0];
+      return (KalypsoWMSTheme)wmsThemes[0];
 
     /* Create the dialog. */
     final ListDialog dialog = new ListDialog( SWT_AWT_Utilities.findActiveShell() );
     dialog.setTitle( getName() );
-    dialog.setMessage( "Select WMS theme" );
+    dialog.setMessage( Messages.getString( "GetFeatureInfoWidget.2" ) ); //$NON-NLS-1$
     dialog.setLabelProvider( new LabelProvider() );
     dialog.setContentProvider( new ArrayContentProvider() );
 
@@ -353,7 +352,7 @@ public class GetFeatureInfoWidget extends AbstractWidget
     if( result == null || result.length == 0 )
       return null;
 
-    return (KalypsoWMSTheme) result[0];
+    return (KalypsoWMSTheme)result[0];
   }
 
   private IKalypsoTheme[] findWmsThemes( final IMapModell mapModel, final int depth )

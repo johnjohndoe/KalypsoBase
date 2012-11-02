@@ -200,12 +200,12 @@ public class GrafikLauncher
    */
   public static IStatus startGrafikODT( final String fileName, final Obsdiagview odt, final IFolder dest, final IProgressMonitor monitor ) throws SensorException, CoreException
   {
-    final String taskName = "Starting grafik.exe";
+    final String taskName = Messages.getString("GrafikLauncher.0"); //$NON-NLS-1$
 
     monitor.beginTask( taskName, 100 );
     monitor.setTaskName( taskName );
 
-    monitor.subTask( "Cancel to return to Kalypso. If cancelled, changes in grafik.exe will not be copied to Kalypso." );
+    monitor.subTask( Messages.getString("GrafikLauncher.1") ); //$NON-NLS-1$
 
     try
     {
@@ -269,7 +269,7 @@ public class GrafikLauncher
       final File grafikExe = getGrafikProgramPath();
 
       final String[] commands = new String[] { //
-      grafikExe.getAbsolutePath(), "/V", tplFile.getAbsolutePath() };
+      grafikExe.getAbsolutePath(), "/V", tplFile.getAbsolutePath() }; //$NON-NLS-1$
 
       final ICancelable cancelable = new ProgressCancelable( monitor );
 
@@ -278,7 +278,7 @@ public class GrafikLauncher
       helper.start();
 
       if( monitor.isCanceled() )
-        return new Status( IStatus.CANCEL, KalypsoGisPlugin.PLUGIN_ID, "Grafix.exe cancelled by user. Changed data will not be read back to Kalypso." );
+        return new Status( IStatus.CANCEL, KalypsoGisPlugin.PLUGIN_ID, Messages.getString("GrafikLauncher.3") ); //$NON-NLS-1$
 
       return syncBack( syncs );
     }

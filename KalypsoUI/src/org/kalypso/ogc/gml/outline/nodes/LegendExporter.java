@@ -114,7 +114,7 @@ public class LegendExporter
 
       image = legendBuilder.createLegend( nodes, device, progress.newChild( 50 ) );
       if( image == null )
-        return new Status( IStatus.WARNING, KalypsoGisPlugin.PLUGIN_ID, "No visible elements in selection" );
+        return new Status( IStatus.WARNING, KalypsoGisPlugin.PLUGIN_ID, Messages.getString( "LegendExporter.0" ) ); //$NON-NLS-1$
 
       /* Monitor. */
       ProgressUtilities.worked( progress, 50 );

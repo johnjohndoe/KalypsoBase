@@ -75,7 +75,7 @@ import org.kalypsodeegree_impl.model.feature.search.IReferenceCollectorStrategy;
  * <ul>
  * <li>showSelectButtons : boolean - if true, 'selectAll' and 'deselecAll' buttons are shown
  * </ul>
- *
+ * 
  * @author Gernot Belger
  */
 public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl
@@ -94,7 +94,7 @@ public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl
     @Override
     public void run( )
     {
-      final IStructuredSelection selection = (IStructuredSelection) getViewer().getSelection();
+      final IStructuredSelection selection = (IStructuredSelection)getViewer().getSelection();
       changeCheckState( selection.toArray(), m_checkState );
     }
   }
@@ -133,15 +133,15 @@ public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl
       @Override
       public void checkStateChanged( final CheckStateChangedEvent event )
       {
-        final IXLinkedFeature[] elements = new IXLinkedFeature[] { (IXLinkedFeature) event.getElement() };
+        final IXLinkedFeature[] elements = new IXLinkedFeature[] { (IXLinkedFeature)event.getElement() };
         handleCheckStateChanged( elements, event.getChecked() );
       }
     } );
 
     /* Configure context menu */
     final MenuManager manager = new MenuManager();
-    manager.add( new ChangeCheckstateAction( "&Check selected", true ) );
-    manager.add( new ChangeCheckstateAction( "&Uncheck selected", false ) ); //$NON-NLS-1$
+    manager.add( new ChangeCheckstateAction( Messages.getString( "ChecklistOfLinksFeatureControl.0" ), true ) ); //$NON-NLS-1$
+    manager.add( new ChangeCheckstateAction( Messages.getString( "ChecklistOfLinksFeatureControl.1" ), false ) ); //$NON-NLS-1$
 
     final Table table = m_linkChecklist.getTable();
     table.setMenu( manager.createContextMenu( table ) );
@@ -160,7 +160,7 @@ public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl
       final boolean checked = m_linkChecklist.getChecked( object );
       if( checked != check )
       {
-        toToggle.add( (IXLinkedFeature) object );
+        toToggle.add( (IXLinkedFeature)object );
       }
     }
 
@@ -176,7 +176,7 @@ public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl
   {
     /* Set all referencable features as input */
     final Feature feature = getFeature();
-    final IRelationType rt = (IRelationType) getFeatureTypeProperty();
+    final IRelationType rt = (IRelationType)getFeatureTypeProperty();
     final GMLWorkspace workspace = feature.getWorkspace();
 
     final IReferenceCollectorStrategy strategy = ComboFeatureControl.createSearchStrategy( workspace, feature, rt );
@@ -186,7 +186,7 @@ public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl
     m_linkChecklist.setInput( features );
 
     /* check all currently set links */
-    final FeatureList linkList = (FeatureList) feature.getProperty( rt );
+    final FeatureList linkList = (FeatureList)feature.getProperty( rt );
     for( final Object object : linkList )
     {
       final IXLinkedFeature xLink = FeatureLinkUtils.asXLink( feature, rt, object );
@@ -206,10 +206,10 @@ public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl
 
   private ICommand createCommand( final Feature feature, final IXLinkedFeature[] elementsToCheck, final boolean checked )
   {
-    final IRelationType rt = (IRelationType) getFeatureTypeProperty();
+    final IRelationType rt = (IRelationType)getFeatureTypeProperty();
 
     /* The composite command stores all commands, to be executed. */
-    final CompositeCommand compositeCommand = new CompositeCommand( Messages.getString( "org.kalypso.ogc.gml.featureview.control.ChecklistOfLinksFeatureControl.0" ) ); //$NON-NLS-1$
+    final CompositeCommand compositeCommand = new CompositeCommand( "Edit list of links" ); //$NON-NLS-1$
 
     /* Create the commands. */
     if( checked )
@@ -233,7 +233,7 @@ public class ChecklistOfLinksFeatureControl extends AbstractFeatureControl
   {
     final Feature targetFeature = checkedElement.getFeature();
 
-    final FeatureList listOfLinks = (FeatureList) feature.getProperty( rt );
+    final FeatureList listOfLinks = (FeatureList)feature.getProperty( rt );
 
     for( final Object object : listOfLinks )
     {

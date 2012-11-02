@@ -44,7 +44,6 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.internal.ObjectActionContributorManager;
-import org.kalypso.i18n.Messages;
 
 /**
  * Fills the managed menu with all commands that apply to the current selection.
@@ -55,12 +54,9 @@ public class SelectionManagedMenu extends AbstractManagedMenu
 {
   public SelectionManagedMenu( final String menuPath )
   {
-    super( "selectionMenuManager", menuPath, Messages.getString( "org.kalypso.ui.editor.gmleditor.ui.GmlEditorActionBarContributor.2" ) );//$NON-NLS-1$ //$NON-NLS-2$
+    super( "selectionMenuManager", menuPath, "selectionMenu" );//$NON-NLS-1$ //$NON-NLS-2$ 
   }
 
-  /**
-   * @see org.kalypso.ui.editor.actions.AbstractManagedMenu#fillMenu(org.eclipse.jface.action.IMenuManager)
-   */
   @Override
   protected void fillMenu( final IMenuManager menuManager )
   {
@@ -72,5 +68,4 @@ public class SelectionManagedMenu extends AbstractManagedMenu
 
     ObjectActionContributorManager.getManager().contributeObjectActions( part, menuManager, selectionProvider );
   }
-
 }

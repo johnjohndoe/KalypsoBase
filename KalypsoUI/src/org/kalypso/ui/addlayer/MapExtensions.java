@@ -135,7 +135,7 @@ public final class MapExtensions
       }
     }
 
-    final String message = String.format( "Failed to find wizardSelection with id: %s", wizardSelectionId );
+    final String message = String.format( "Failed to find wizardSelection with id: %s", wizardSelectionId ); //$NON-NLS-1$
     final IStatus status = new Status( IStatus.WARNING, KalypsoGisPlugin.PLUGIN_ID, message );
     KalypsoGisPlugin.getDefault().getLog().log( status );
 

@@ -84,7 +84,7 @@ public class GetFeatureInfoJob extends Job
    */
   public GetFeatureInfoJob( final KalypsoWMSTheme wmsTheme, final double x, final double y )
   {
-    super( "GetFeatureInfoJob" );
+    super( "GetFeatureInfoJob" ); //$NON-NLS-1$
 
     m_wmsTheme = wmsTheme;
     m_x = x;
@@ -92,9 +92,6 @@ public class GetFeatureInfoJob extends Job
     m_featureInfo = null;
   }
 
-  /**
-   * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   protected IStatus run( final IProgressMonitor monitor )
   {
@@ -102,7 +99,7 @@ public class GetFeatureInfoJob extends Job
     {
       m_featureInfo = m_wmsTheme.getFeatureInfo( m_x, m_y );
 
-      return new Status( IStatus.OK, KalypsoGisPlugin.PLUGIN_ID, "Request was successfull." );
+      return new Status( IStatus.OK, KalypsoGisPlugin.PLUGIN_ID, org.kalypso.i18n.Messages.getString( "GetFeatureInfoJob_1" ) ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {

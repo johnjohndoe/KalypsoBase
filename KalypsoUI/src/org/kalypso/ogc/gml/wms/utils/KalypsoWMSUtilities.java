@@ -287,9 +287,9 @@ public class KalypsoWMSUtilities
 
       final StringBuilder text = new StringBuilder();
       for( final String exceptionText : exceptionTexts )
-        text.append( String.format( "%s%n", exceptionText ) );
+        text.append( String.format( "%s%n", exceptionText ) ); //$NON-NLS-1$
 
-      errorText.append( String.format( "CODE: %s%nEXCEPTION:%n%s%n%n", exception.getExceptionCode(), text.toString() ) );
+      errorText.append( String.format( "CODE: %s%nEXCEPTION:%n%s%n%n", exception.getExceptionCode(), text.toString() ) ); //$NON-NLS-1$
     }
 
     return new OWSException( errorText.toString(), exceptionReport.getVersion(), exceptionReport.getLang(), ExceptionCode.NO_APPLICABLE_CODE, null );
@@ -297,8 +297,8 @@ public class KalypsoWMSUtilities
 
   private static OWSException buildOwsException( final String xml )
   {
-    if( xml.contains( "ExceptionReport" ) )
-      return new OWSException( xml, OWSUtilities.OWS_VERSION, "en", ExceptionCode.NO_APPLICABLE_CODE, null );
+    if( xml.contains( "ExceptionReport" ) ) //$NON-NLS-1$
+      return new OWSException( xml, OWSUtilities.OWS_VERSION, "en", ExceptionCode.NO_APPLICABLE_CODE, null ); //$NON-NLS-1$
 
     return null;
   }

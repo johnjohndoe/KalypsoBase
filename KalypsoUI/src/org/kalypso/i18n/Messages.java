@@ -46,7 +46,9 @@ import java.util.ResourceBundle;
 
 /**
  * @author Nico Schrage
+ * @deprecated Use {@link org.kalypso.ui.internal.i18n.Messages}
  */
+@Deprecated
 public class Messages
 {
   private static final String BUNDLE_NAME = "org.kalypso.i18n.messages"; //$NON-NLS-1$
@@ -59,9 +61,9 @@ public class Messages
   {
   }
 
-/*
- * java reflections needs this method-signatur
- */
+  /*
+   * java reflections needs this method-signatur
+   */
   public static String getString( final String key )
   {
     return getString( key, NO_ARGS );

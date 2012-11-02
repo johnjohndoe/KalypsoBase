@@ -43,17 +43,16 @@ package org.kalypso.ui.editor.actions;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartReference;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2;
+import org.kalypso.core.status.StatusDialog;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
@@ -107,8 +106,7 @@ public class AbstractFeatureListElementMoveActionDelegate implements IObjectActi
   }
 
   /**
-   * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction,
-   *      org.eclipse.ui.IWorkbenchPart)
+   * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction, org.eclipse.ui.IWorkbenchPart)
    */
   @Override
   public void setActivePart( final IAction action, final IWorkbenchPart targetPart )
@@ -140,7 +138,7 @@ public class AbstractFeatureListElementMoveActionDelegate implements IObjectActi
     final IRelationType rt = m_selectedFeature.getParentRelation();
     if( rt != null )
     {
-      final List list = (List) m_selectedFeature.getOwner().getProperty( rt );
+      final List< ? > list = (List< ? >)m_selectedFeature.getOwner().getProperty( rt );
       if( list != null )
       {
         final MoveFeatureCommand command = new MoveFeatureCommand( m_selectedFeature.getOwner(), rt, m_selectedFeature, m_step );
@@ -150,21 +148,20 @@ public class AbstractFeatureListElementMoveActionDelegate implements IObjectActi
         }
         catch( final Exception e )
         {
-          final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "", e ); //$NON-NLS-1$
+          final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, action.getText(), e );
           KalypsoGisPlugin.getDefault().getLog().log( status );
 
           // we are in the ui-thread so we get a shell here
           final Shell shell = m_targetPart.getSite().getShell();
           if( shell != null )
-            ErrorDialog.openError( shell, action.getText(), Messages.getString( "org.kalypso.ui.editor.actions.AbstractFeatureListElementMoveActionDelegate.1" ), status ); //$NON-NLS-1$
+            StatusDialog.open( shell, status, action.getText() );
         }
       }
     }
   }
 
   /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-   *      org.eclipse.jface.viewers.ISelection)
+   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
    */
   @Override
   public void selectionChanged( final IAction action, final ISelection selection )
@@ -183,7 +180,7 @@ public class AbstractFeatureListElementMoveActionDelegate implements IObjectActi
     /* The action will be enabled iff we have a moveable feature. */
     if( !selection.isEmpty() && selection instanceof IFeatureSelection )
     {
-      final IFeatureSelection featureSelection = (IFeatureSelection) selection;
+      final IFeatureSelection featureSelection = (IFeatureSelection)selection;
       m_selectedFeature = FeatureSelectionHelper.getFirstFeature( featureSelection );
       m_workspace = featureSelection.getWorkspace( m_selectedFeature );
       if( m_workspace != null )
@@ -193,7 +190,7 @@ public class AbstractFeatureListElementMoveActionDelegate implements IObjectActi
       final IRelationType rt = m_selectedFeature.getParentRelation();
       if( rt != null )
       {
-        final List list = (List) m_selectedFeature.getOwner().getProperty( rt );
+        final List< ? > list = (List< ? >)m_selectedFeature.getOwner().getProperty( rt );
         if( list != null )
         {
           final int currentIndex = list.indexOf( m_selectedFeature );
@@ -216,7 +213,7 @@ public class AbstractFeatureListElementMoveActionDelegate implements IObjectActi
   {
     if( modellEvent instanceof FeatureStructureChangeModellEvent )
     {
-      final FeatureStructureChangeModellEvent fscm = (FeatureStructureChangeModellEvent) modellEvent;
+      final FeatureStructureChangeModellEvent fscm = (FeatureStructureChangeModellEvent)modellEvent;
       final Feature[] parentFeatures = fscm.getParentFeatures();
       for( final Feature feature : parentFeatures )
       {

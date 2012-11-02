@@ -146,7 +146,7 @@ public class GrafikAchsen
     else if( !m_rightAchseCreated )
       return createRightAchse( axisnr, name );
     else
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, String.format( "Achse '%s' kann nicht zum Diagramm hinzugefügt werden.%nBitte überprüfen Sie, ob Sie mehr als zwei y-Achsen ausgewählt haben.", name ) ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, String.format( Messages.getString( "GrafikAchsen.0" ), name ) ) ); //$NON-NLS-1$
   }
 
   private int axisnrByType( final TypeAxis ta )
@@ -194,7 +194,7 @@ public class GrafikAchsen
 
   /**
    * Holds simple axis information for the grafik tool
-   *
+   * 
    * @author schlienger
    */
   public final static class GrafikAchse

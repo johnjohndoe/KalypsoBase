@@ -130,12 +130,12 @@ public class GetFeatureInfoDialog extends PopupDialog
   protected Control createDialogArea( final Composite parent )
   {
     /* Create the main composite. */
-    final Composite main = (Composite) super.createDialogArea( parent );
+    final Composite main = (Composite)super.createDialogArea( parent );
     main.setLayout( new GridLayout( 1, false ) );
     main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Set the title text. */
-    setTitleText( "Loading..." );
+    setTitleText( Messages.getString( "GetFeatureInfoDialog.0" ) ); //$NON-NLS-1$
 
     /* Create the browser. */
     m_browser = new Browser( main, SWT.BORDER );
@@ -197,7 +197,7 @@ public class GetFeatureInfoDialog extends PopupDialog
 
   protected void handleJobDoneInternal( final IJobChangeEvent event )
   {
-    setTitleText( "Request successfull" );
+    setTitleText( Messages.getString( "GetFeatureInfoDialog.1" ) ); //$NON-NLS-1$
 
     /* Get the result. */
     final IStatus result = event.getResult();
@@ -213,13 +213,13 @@ public class GetFeatureInfoDialog extends PopupDialog
       return;
 
     /* Cast. */
-    final GetFeatureInfoJob task = (GetFeatureInfoJob) job;
+    final GetFeatureInfoJob task = (GetFeatureInfoJob)job;
 
     /* Get the feature info. */
     final String featureInfo = task.getFeatureInfo();
     if( featureInfo == null )
     {
-      setErrorText( "There was no result returned by the server." );
+      setErrorText( Messages.getString( "GetFeatureInfoDialog.2" ) ); //$NON-NLS-1$
       return;
     }
 
