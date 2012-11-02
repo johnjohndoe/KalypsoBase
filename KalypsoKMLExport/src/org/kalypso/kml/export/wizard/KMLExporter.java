@@ -105,7 +105,7 @@ public class KMLExporter implements ICoreRunnableWithProgress
 
       final Folder folder = kml.createAndSetFolder();
       folder.setName( "Kalypso Google Earth (TM) Export" ); //$NON-NLS-1$
-      folder.setDescription( "http://sourceforge.net/projects/kalypso/" );
+      folder.setDescription( "http://sourceforge.net/projects/kalypso/" ); //$NON-NLS-1$
 
       /* process map */
       final KalypsoThemeVisitor visitor = new KalypsoThemeVisitor( new ThemeGoogleEarthExportable() );

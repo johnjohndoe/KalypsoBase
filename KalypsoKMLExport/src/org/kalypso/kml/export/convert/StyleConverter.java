@@ -248,16 +248,16 @@ public class StyleConverter
   private static String toKmlColor( final Color color, final double opacity )
   {
     if( opacity > 1.0 )
-      throw new IllegalStateException( "invalid opacity" );
+      throw new IllegalStateException( "invalid opacity" ); //$NON-NLS-1$
 
     final Double kmlOpacity = opacity * 255 + 40;
     // alpha=0x7f, blue=0xff, green=0x00, and red=0x00.
 
-    String result = "";
-    result += String.format( "%02x", Math.min( kmlOpacity.intValue(), 230 ) );
-    result += String.format( "%02x", color.getBlue() );
-    result += String.format( "%02x", color.getGreen() );
-    result += String.format( "%02x", color.getRed() );
+    String result = ""; //$NON-NLS-1$
+    result += String.format( "%02x", Math.min( kmlOpacity.intValue(), 230 ) ); //$NON-NLS-1$
+    result += String.format( "%02x", color.getBlue() ); //$NON-NLS-1$
+    result += String.format( "%02x", color.getGreen() ); //$NON-NLS-1$
+    result += String.format( "%02x", color.getRed() ); //$NON-NLS-1$
 
     return result;
   }
