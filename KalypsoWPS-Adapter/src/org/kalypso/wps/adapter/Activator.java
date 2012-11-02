@@ -11,7 +11,7 @@ public class Activator extends Plugin
   /**
    * The plug-in ID.
    */
-  public static final String PLUGIN_ID = "org.kalypso.wps.adapter";
+  public static final String PLUGIN_ID = "org.kalypso.wps.adapter"; //$NON-NLS-1$
 
   /**
    * The shared instance.
