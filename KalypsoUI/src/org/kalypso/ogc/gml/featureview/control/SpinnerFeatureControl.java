@@ -109,7 +109,7 @@ public class SpinnerFeatureControl extends AbstractFeatureControl
     m_spinner.setIncrement( m_increment );
     m_spinner.setPageIncrement( m_pageIncrement );
 
-    final IValuePropertyType vpt = (IValuePropertyType) getFeatureTypeProperty();
+    final IValuePropertyType vpt = (IValuePropertyType)getFeatureTypeProperty();
 
     final int digits = 0;
     final IRestriction[] restrictions = vpt.getRestriction();
@@ -123,13 +123,13 @@ public class SpinnerFeatureControl extends AbstractFeatureControl
     for( final IRestriction restriction : restrictions )
     {
       if( restriction instanceof MinInclusiveRestriction )
-        minimum = (int) Math.round( ((MinInclusiveRestriction) restriction).getMinInclusive() * Math.pow( 10, digits ) );
+        minimum = (int)Math.round( ((MinInclusiveRestriction)restriction).getMinInclusive() * Math.pow( 10, digits ) );
       if( restriction instanceof MinExclusiveRestriction )
-        minimum = (int) Math.round( ((MinExclusiveRestriction) restriction).getMinExclusive() * Math.pow( 10, digits ) );
+        minimum = (int)Math.round( ((MinExclusiveRestriction)restriction).getMinExclusive() * Math.pow( 10, digits ) );
       if( restriction instanceof MaxInclusiveRestriction )
-        maximum = (int) Math.round( ((MaxInclusiveRestriction) restriction).getMaxInclusive() * Math.pow( 10, digits ) );
+        maximum = (int)Math.round( ((MaxInclusiveRestriction)restriction).getMaxInclusive() * Math.pow( 10, digits ) );
       if( restriction instanceof MaxExclusiveRestriction )
-        maximum = (int) Math.round( ((MaxExclusiveRestriction) restriction).getMaxExclusive() * Math.pow( 10, digits ) );
+        maximum = (int)Math.round( ((MaxExclusiveRestriction)restriction).getMaxExclusive() * Math.pow( 10, digits ) );
     }
 
     m_spinner.setDigits( digits );
@@ -178,11 +178,11 @@ public class SpinnerFeatureControl extends AbstractFeatureControl
   {
     final int value = m_spinner.getSelection();
 
-    final IValuePropertyType vpt = (IValuePropertyType) getFeatureTypeProperty();
+    final IValuePropertyType vpt = (IValuePropertyType)getFeatureTypeProperty();
     final IMarshallingTypeHandler handler = vpt.getTypeHandler();
     try
     {
-      return (Number) handler.parseType( Integer.toString( value ) );
+      return (Number)handler.parseType( Integer.toString( value ) );
     }
     catch( final ParseException e )
     {
@@ -227,14 +227,14 @@ public class SpinnerFeatureControl extends AbstractFeatureControl
       // compare with old to prevent loop
       final Number oldValue = getCurrentValue();
 
-      final Number newValue = (Number) feature.getProperty( getFeatureTypeProperty() );
+      final Number newValue = (Number)feature.getProperty( getFeatureTypeProperty() );
 
       if( !ObjectUtils.equals( oldValue, newValue ) )
       {
         final double doubleValue = newValue == null ? 0.0 : newValue.doubleValue();
         // TODO: better handling of null
         final double valueToSet = doubleValue * Math.pow( 10, m_spinner.getDigits() );
-        m_spinner.setSelection( (int) valueToSet );
+        m_spinner.setSelection( (int)valueToSet );
       }
     }
   }

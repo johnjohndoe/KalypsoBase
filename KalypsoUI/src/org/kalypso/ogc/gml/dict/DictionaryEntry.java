@@ -49,8 +49,8 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.IPoolListener;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
@@ -77,8 +77,7 @@ public class DictionaryEntry extends Job implements IPoolListener
   }
 
   /**
-   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object,
-   *      org.eclipse.core.runtime.IStatus)
+   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object, org.eclipse.core.runtime.IStatus)
    */
   @Override
   public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
@@ -152,7 +151,7 @@ public class DictionaryEntry extends Job implements IPoolListener
 
   public GMLWorkspace getWorkspace( )
   {
-    return (GMLWorkspace) m_value;
+    return (GMLWorkspace)m_value;
   }
 
 }

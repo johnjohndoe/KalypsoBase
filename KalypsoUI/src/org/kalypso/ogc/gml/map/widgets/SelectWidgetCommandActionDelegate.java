@@ -64,9 +64,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
 import org.eclipse.ui.commands.ICommandService;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.GenericCommandActionDelegate;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * This action delegate can be used to specify a widget and a context to call and update a {@link Command}. Handlers
@@ -96,10 +96,9 @@ public class SelectWidgetCommandActionDelegate extends GenericCommandActionDeleg
   private String m_pluginId;
 
   /**
-   * @see org.kalypso.ui.GenericCommandActionDelegate#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
-   *      java.lang.String, java.lang.Object)
+   * @see org.kalypso.ui.GenericCommandActionDelegate#setInitializationData(org.eclipse.core.runtime.IConfigurationElement, java.lang.String, java.lang.Object)
    */
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @SuppressWarnings( "unchecked" )//$NON-NLS-1$
   @Override
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data ) throws CoreException
   {
@@ -107,7 +106,7 @@ public class SelectWidgetCommandActionDelegate extends GenericCommandActionDeleg
 
     if( data instanceof Map )
     {
-      final Map<String, String> parameterMap = (Map<String, String>) data;
+      final Map<String, String> parameterMap = (Map<String, String>)data;
       m_widgetClass = parameterMap.get( SelectWidgetHandler.PARAM_WIDGET_CLASS );
       m_context = parameterMap.get( SelectWidgetHandler.PARAM_CONTEXT );
       m_pluginId = parameterMap.get( SelectWidgetHandler.PARAM_PLUGIN_ID );

@@ -69,8 +69,8 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.Form;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.ThemeUtilities;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypso.util.themes.position.PositionUtilities;
 import org.kalypso.util.themes.position.controls.PositionComposite;
 import org.kalypso.util.themes.position.listener.IPositionChangedListener;
@@ -79,7 +79,7 @@ import org.kalypso.util.themes.text.listener.ITextChangedListener;
 
 /**
  * This composite edits the position.
- *
+ * 
  * @author Holger Albert
  */
 public class TextComposite extends Composite
@@ -131,7 +131,7 @@ public class TextComposite extends Composite
 
   /**
    * The constructor.
-   *
+   * 
    * @param parent
    *          A widget which will be the parent of the new instance (cannot be null).
    * @param style
@@ -182,7 +182,7 @@ public class TextComposite extends Composite
    * This function checks the provided properties object for properties this composite can edit. Found properties will
    * be checked for correct values. Then they are set to the members. If editable properties are missing or if existing
    * ones have wrong values, they will be set to the members with default values.
-   *
+   * 
    * @param properties
    *          The properties, containing the values.
    */
@@ -208,7 +208,7 @@ public class TextComposite extends Composite
    * This function checks the provided properties object for properties this composite can edit. Found properties will
    * be checked for correct values. Then they are set to the members. If editable properties are missing or if existing
    * ones have wrong values, the members will not be changed.
-   *
+   * 
    * @param properties
    *          The properties, containing the values.
    */
@@ -292,7 +292,7 @@ public class TextComposite extends Composite
 
   /**
    * This function creates the content composite.
-   *
+   * 
    * @param parent
    *          The parent composite.
    * @return The content composite.
@@ -315,7 +315,7 @@ public class TextComposite extends Composite
 
   /**
    * This function creates the content internal composite.
-   *
+   * 
    * @param parent
    *          The parent composite.
    * @return The content internal composite.
@@ -339,7 +339,7 @@ public class TextComposite extends Composite
 
   /**
    * This function creates the position composite.
-   *
+   * 
    * @param parent
    *          The parent composite.
    * @return The position composite.
@@ -366,7 +366,7 @@ public class TextComposite extends Composite
 
   /**
    * This function creates the text group.
-   *
+   * 
    * @param parent
    *          The parent composite.
    * @return The text group.
@@ -376,18 +376,18 @@ public class TextComposite extends Composite
     /* Create a group. */
     final Group textGroup = new Group( parent, SWT.NONE );
     textGroup.setLayout( new GridLayout( 3, false ) );
-    textGroup.setText( Messages.getString("TextComposite_0") ); //$NON-NLS-1$
+    textGroup.setText( Messages.getString( "TextComposite_0" ) ); //$NON-NLS-1$
 
     /* Create a label. */
     final Label backgroundColorLabel = new Label( textGroup, SWT.NONE );
     backgroundColorLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    backgroundColorLabel.setText( Messages.getString("TextComposite_1") ); //$NON-NLS-1$
+    backgroundColorLabel.setText( Messages.getString( "TextComposite_1" ) ); //$NON-NLS-1$
     backgroundColorLabel.setAlignment( SWT.LEFT );
 
     /* Create a label. */
     final Label backgroundLabel = new Label( textGroup, SWT.BORDER );
     backgroundLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    backgroundLabel.setText( Messages.getString("TextComposite_2") ); //$NON-NLS-1$
+    backgroundLabel.setText( Messages.getString( "TextComposite_2" ) ); //$NON-NLS-1$
     backgroundLabel.setEnabled( !m_transparency );
     backgroundLabel.setBackground( new Color( parent.getDisplay(), m_backgroundColor ) );
 
@@ -430,7 +430,7 @@ public class TextComposite extends Composite
     /* Create a button. */
     final Button transparencyButton = new Button( textGroup, SWT.CHECK );
     transparencyButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 3, 1 ) );
-    transparencyButton.setText( Messages.getString("TextComposite_4") ); //$NON-NLS-1$
+    transparencyButton.setText( Messages.getString( "TextComposite_4" ) ); //$NON-NLS-1$
     transparencyButton.setSelection( m_transparency );
     transparencyButton.addSelectionListener( new SelectionAdapter()
     {
@@ -440,7 +440,7 @@ public class TextComposite extends Composite
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        final Button source = (Button) e.getSource();
+        final Button source = (Button)e.getSource();
         backgroundLabel.setEnabled( !source.getSelection() );
         backgroundColorButton.setEnabled( !source.getSelection() );
         m_transparency = source.getSelection();
@@ -451,7 +451,7 @@ public class TextComposite extends Composite
     /* Create a label. */
     final Label fontSizeLabel = new Label( textGroup, SWT.NONE );
     fontSizeLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    fontSizeLabel.setText( Messages.getString("TextComposite_5") ); //$NON-NLS-1$
+    fontSizeLabel.setText( Messages.getString( "TextComposite_5" ) ); //$NON-NLS-1$
     fontSizeLabel.setAlignment( SWT.LEFT );
 
     /* Create a spinner. */
@@ -474,7 +474,7 @@ public class TextComposite extends Composite
     /* Create a label. */
     final Label textLabel = new Label( textGroup, SWT.NONE );
     textLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    textLabel.setText( Messages.getString("TextComposite_6") ); //$NON-NLS-1$
+    textLabel.setText( Messages.getString( "TextComposite_6" ) ); //$NON-NLS-1$
     textLabel.setAlignment( SWT.LEFT );
 
     /* Create a text field. */
@@ -484,7 +484,7 @@ public class TextComposite extends Composite
     textText.setLayoutData( textData );
     if( m_text != null )
       textText.setText( m_text );
-    textText.setMessage( Messages.getString("TextComposite_7") ); //$NON-NLS-1$
+    textText.setMessage( Messages.getString( "TextComposite_7" ) ); //$NON-NLS-1$
 
     /* Add a listener. */
     textText.addModifyListener( new ModifyListener()
@@ -495,7 +495,7 @@ public class TextComposite extends Composite
       @Override
       public void modifyText( final ModifyEvent e )
       {
-        final Text source = (Text) e.getSource();
+        final Text source = (Text)e.getSource();
         m_text = source.getText();
 
         fireTextPropertyChanged( getProperties(), m_horizontal, m_vertical, m_backgroundColor, m_text, m_fontSize, m_transparency );
@@ -507,7 +507,7 @@ public class TextComposite extends Composite
 
   /**
    * This function updates the composite.
-   *
+   * 
    * @param status
    *          A status, containing a message, which should be displayed in the upper area of the view. May be null.
    */
@@ -538,7 +538,7 @@ public class TextComposite extends Composite
 
   /**
    * This function fires a text property changed event.
-   *
+   * 
    * @param properties
    *          A up to date properties object, containing all serialized text properties.
    * @param horizontal
@@ -560,7 +560,7 @@ public class TextComposite extends Composite
 
   /**
    * This function adds a text changed listener.
-   *
+   * 
    * @param listener
    *          The text changed listener to add.
    */
@@ -572,7 +572,7 @@ public class TextComposite extends Composite
 
   /**
    * This function removes a text changed listener.
-   *
+   * 
    * @param listener
    *          The text changed listener to remove.
    */
@@ -584,7 +584,7 @@ public class TextComposite extends Composite
 
   /**
    * This function returns a up to date properties object, containing all serialized text properties.
-   *
+   * 
    * @return A up to date properties object, containing all serialized text properties.
    */
   public Properties getProperties( )

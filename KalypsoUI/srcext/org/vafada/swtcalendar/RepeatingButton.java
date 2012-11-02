@@ -196,7 +196,7 @@ public class RepeatingButton extends Button
     {
       if( !canceled )
       {
-        buttonPressed( stateMask, (int) System.currentTimeMillis() );
+        buttonPressed( stateMask, (int)System.currentTimeMillis() );
 
         getDisplay().timerExec( repeatDelay, this );
       }

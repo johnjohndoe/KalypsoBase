@@ -81,7 +81,7 @@ public abstract class AbstractWizardLayoutPart extends AbstractLayoutPart
    * Implementors should overwrite and create their source provider here. This abstract implementation will handle the
    * source life-cycle.
    */
-  protected ISourceProvider createSourceProvider( @SuppressWarnings("unused") final IServiceLocator context )
+  protected ISourceProvider createSourceProvider( @SuppressWarnings( "unused" ) final IServiceLocator context )
   {
     return null;
   }

@@ -6,9 +6,9 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoStyle;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -19,7 +19,7 @@ public final class ResetUserStyleAction extends Action
 
   public ResetUserStyleAction( final SLDComposite sldEditor )
   {
-    super( Messages.getString("ResetUserStyleAction_0"), ImageProvider.IMAGE_STYLEEDITOR_RESET ); //$NON-NLS-1$
+    super( Messages.getString( "ResetUserStyleAction_0" ), ImageProvider.IMAGE_STYLEEDITOR_RESET ); //$NON-NLS-1$
 
     m_sldEditor = sldEditor;
 
@@ -32,13 +32,13 @@ public final class ResetUserStyleAction extends Action
     final Shell shell = event.display.getActiveShell();
     final IKalypsoStyle style = m_sldEditor.getKalypsoStyle();
 
-    if( !MessageDialog.openConfirm( shell, getText(), Messages.getString("ResetUserStyleAction_1") ) ) //$NON-NLS-1$
+    if( !MessageDialog.openConfirm( shell, getText(), Messages.getString( "ResetUserStyleAction_1" ) ) ) //$NON-NLS-1$
       return;
 
     final IStatus result = style.reset( shell );
 
-    final String errorMsg = String.format( Messages.getString("ResetUserStyleAction_2") ); //$NON-NLS-1$
-    ErrorDialog.openError( shell, Messages.getString("ResetUserStyleAction_3"), errorMsg, result ); //$NON-NLS-1$
+    final String errorMsg = String.format( Messages.getString( "ResetUserStyleAction_2" ) ); //$NON-NLS-1$
+    ErrorDialog.openError( shell, Messages.getString( "ResetUserStyleAction_3" ), errorMsg, result ); //$NON-NLS-1$
 
     m_sldEditor.updateControl();
   }

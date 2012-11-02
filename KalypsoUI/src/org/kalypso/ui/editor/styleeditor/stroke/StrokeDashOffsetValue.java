@@ -70,8 +70,7 @@ public class StrokeDashOffsetValue extends InputWithContextObservableValue<Strok
   }
 
   /**
-   * @see org.kalypso.ui.editor.styleeditor.forms.InputWithContextObservableValue#setValueToInput(java.lang.Object,
-   *      java.lang.Object)
+   * @see org.kalypso.ui.editor.styleeditor.forms.InputWithContextObservableValue#setValueToInput(java.lang.Object, java.lang.Object)
    */
   @Override
   protected void setValueToInput( final Stroke data, final Float value )

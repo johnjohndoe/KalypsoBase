@@ -52,10 +52,10 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureProvider;
@@ -158,7 +158,7 @@ public class AddFeatureCommand implements ICommand, IFeatureProvider
   /**
    * Alternative constructor: instead of specifying the properties and let the command create the feature a newly
    * created feature is provided from outside.
-   *
+   * 
    * @param doAddOnProcess
    *          If false, the new feature will NOT be added/set to the given relation (propertyName). This is necessary if
    *          the feature was already added before.
@@ -205,7 +205,7 @@ public class AddFeatureCommand implements ICommand, IFeatureProvider
       m_workspace.fireModellEvent( new FeatureStructureChangeModellEvent( m_workspace, m_parentFeature, m_newFeature, FeatureStructureChangeModellEvent.STRUCTURE_CHANGE_ADD ) );
 
     if( m_selectionManager != null && m_dropSelection == true && m_workspace instanceof CommandableWorkspace )
-      m_selectionManager.setSelection( new EasyFeatureWrapper[] { new EasyFeatureWrapper( (CommandableWorkspace) m_workspace, m_newFeature ) } );
+      m_selectionManager.setSelection( new EasyFeatureWrapper[] { new EasyFeatureWrapper( (CommandableWorkspace)m_workspace, m_newFeature ) } );
   }
 
   @Override
@@ -222,7 +222,7 @@ public class AddFeatureCommand implements ICommand, IFeatureProvider
 
     if( m_propName.isList() )
     {
-      final List< ? > list = (List< ? >) m_parentFeature.getProperty( m_propName );
+      final List< ? > list = (List< ? >)m_parentFeature.getProperty( m_propName );
       list.remove( m_newFeature );
     }
     else

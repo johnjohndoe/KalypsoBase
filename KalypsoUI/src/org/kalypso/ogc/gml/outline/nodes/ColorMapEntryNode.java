@@ -74,7 +74,7 @@ class ColorMapEntryNode extends AbstractThemeNode<ColorMapEntry>
     {
       final GC gc = treeImage.getGC();
       final Rectangle clipping = gc.getClipping();
-      final int alpha = (int) Math.round( element.getOpacity() * 255 );
+      final int alpha = (int)Math.round( element.getOpacity() * 255 );
       final Color awtColor = element.getColor();
       final RGB rgb = new RGB( awtColor.getRed(), awtColor.getGreen(), awtColor.getBlue() );
       final org.eclipse.swt.graphics.Color color = new org.eclipse.swt.graphics.Color( gc.getDevice(), rgb );

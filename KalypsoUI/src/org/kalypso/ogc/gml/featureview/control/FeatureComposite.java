@@ -91,7 +91,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
   /**
    * Constructs the FeatureComposite.
-   *
+   * 
    * @param feature
    *          If you want to add a feature directly at instantiation time, provide it here, otherwise leave it null.
    * @param selectionManager
@@ -117,7 +117,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       control.updateControl();
 
     if( m_control != null && !m_control.isDisposed() && m_control instanceof Composite )
-      ((Composite) m_control).layout();
+      ((Composite)m_control).layout();
   }
 
   @Override
@@ -272,12 +272,12 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
       final IFeatureControl control = controlToolkit.getFeatureControl();
 
       if( control instanceof FeatureComposite )
-        ((FeatureComposite) control).collectViewTypes( types );
+        ((FeatureComposite)control).collectViewTypes( types );
       else if( control instanceof SubFeatureControl )
       {
-        final IFeatureControl fc = ((SubFeatureControl) control).getFeatureControl();
+        final IFeatureControl fc = ((SubFeatureControl)control).getFeatureControl();
         if( fc instanceof FeatureComposite )
-          ((FeatureComposite) fc).collectViewTypes( types );
+          ((FeatureComposite)fc).collectViewTypes( types );
       }
     }
   }
@@ -308,7 +308,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
   /**
    * This function sets, if the green hook on a ok validated feature should be displayed. The default is false. This
    * flag has only an effect, if the validator label is activated.
-   *
+   * 
    * @param showOk
    *          The flag, indicating, if the green hook should be displayed.
    */
@@ -319,7 +319,7 @@ public class FeatureComposite extends AbstractFeatureControl implements IFeature
 
   /**
    * This function returns the flag for displaying the green hook on a ok validated feature.
-   *
+   * 
    * @return The flag, indicating, if the green hook should be displayed.
    */
   @Override

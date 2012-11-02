@@ -53,19 +53,18 @@ import javax.swing.border.Border;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.tableview.TableViewColumn;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * A table cell renderer for table headings.
  * <P>
- * This class (and also BevelArrowIcon) is adapted from original code by jcommons (version 0.9.6) posted on
- * http://www.jfree.org/jcommon/.
+ * This class (and also BevelArrowIcon) is adapted from original code by jcommons (version 0.9.6) posted on http://www.jfree.org/jcommon/.
  */
 public class ColumnHeaderRenderer implements TableCellRenderer
 {
@@ -147,7 +146,7 @@ public class ColumnHeaderRenderer implements TableCellRenderer
 
     try
     {
-      final TableViewColumn tvc = (TableViewColumn) element;
+      final TableViewColumn tvc = (TableViewColumn)element;
       final IAxis valueAxis = tvc.getValueAxis();
       final ITupleModel values = tvc.getValues();
 
@@ -171,7 +170,7 @@ public class ColumnHeaderRenderer implements TableCellRenderer
 
     try
     {
-      final TableViewColumn tvc = (TableViewColumn) element;
+      final TableViewColumn tvc = (TableViewColumn)element;
       final IObservation observation = tvc.getObservation();
       if( observation == null )
         return null;
@@ -195,7 +194,7 @@ public class ColumnHeaderRenderer implements TableCellRenderer
     if( !(element instanceof TableViewColumn) )
       return;
 
-    final TableViewColumn tvc = (TableViewColumn) element;
+    final TableViewColumn tvc = (TableViewColumn)element;
 
     final IObservation observation = tvc.getObservation();
     final IAxis valueAxis = tvc.getValueAxis();

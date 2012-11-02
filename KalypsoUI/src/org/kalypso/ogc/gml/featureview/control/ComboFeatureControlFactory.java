@@ -58,7 +58,6 @@ import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.types.IMarshallingTypeHandler;
 import org.kalypso.gmlschema.types.ITypeRegistry;
 import org.kalypso.gmlschema.types.MarshallingTypeRegistrySingleton;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.featureview.control.comparators.IViewerComparator;
 import org.kalypso.ogc.gml.featureview.control.filters.IViewerFilter;
 import org.kalypso.template.featureview.Combo;
@@ -67,6 +66,7 @@ import org.kalypso.template.featureview.Combo.Filter;
 import org.kalypso.template.featureview.Combo.Sorter;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -75,14 +75,13 @@ import org.kalypsodeegree.model.feature.Feature;
 public class ComboFeatureControlFactory implements IFeatureControlFactory
 {
   /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControlFactory#createFeatureControl(org.kalypso.ogc.gml.featureview.control.IFeatureComposite,
-   *      org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.IPropertyType,
-   *      org.kalypso.template.featureview.ControlType, org.kalypso.gmlschema.annotation.IAnnotation)
+   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControlFactory#createFeatureControl(org.kalypso.ogc.gml.featureview.control.IFeatureComposite, org.kalypsodeegree.model.feature.Feature,
+   *      org.kalypso.gmlschema.property.IPropertyType, org.kalypso.template.featureview.ControlType, org.kalypso.gmlschema.annotation.IAnnotation)
    */
   @Override
   public IFeatureControl createFeatureControl( final IFeatureComposite parentComposite, final Feature feature, final IPropertyType pt, final ControlType controlType, final IAnnotation annotation )
   {
-    final Combo comboType = (Combo) controlType;
+    final Combo comboType = (Combo)controlType;
 
     final Sorter sorter = comboType.getSorter();
     final ViewerComparator comparator = createComparator( feature, sorter );
@@ -164,7 +163,7 @@ public class ComboFeatureControlFactory implements IFeatureControlFactory
           params.put( param.getName(), param.getValue() );
       }
 
-      ((IViewerComparator) comparator).init( feature, params );
+      ((IViewerComparator)comparator).init( feature, params );
     }
   }
 
@@ -187,7 +186,7 @@ public class ComboFeatureControlFactory implements IFeatureControlFactory
     try
     {
       final ViewerFilter viewerFilter = KalypsoCoreExtensions.createViewerFilter( id );
-      ((IViewerFilter) viewerFilter).init( feature, filter.getExpression() );
+      ((IViewerFilter)viewerFilter).init( feature, filter.getExpression() );
       return viewerFilter;
     }
     catch( final CoreException e )

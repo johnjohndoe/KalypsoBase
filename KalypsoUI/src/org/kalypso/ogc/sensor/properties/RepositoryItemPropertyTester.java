@@ -55,8 +55,7 @@ public class RepositoryItemPropertyTester extends PropertyTester
   private static final String PROPERTY_HASWQTABLE = "repositoryItemHasWQTable"; //$NON-NLS-1$
 
   /**
-   * @see org.eclipse.core.expressions.IPropertyTester#test(java.lang.Object, java.lang.String, java.lang.Object[],
-   *      java.lang.Object)
+   * @see org.eclipse.core.expressions.IPropertyTester#test(java.lang.Object, java.lang.String, java.lang.Object[], java.lang.Object)
    */
   @Override
   public boolean test( final Object receiver, final String property, final Object[] args, final Object expectedValue )
@@ -64,7 +63,7 @@ public class RepositoryItemPropertyTester extends PropertyTester
     if( !(receiver instanceof IRepositoryItem) )
       return false;
 
-    final IRepositoryItem item = (IRepositoryItem) receiver;
+    final IRepositoryItem item = (IRepositoryItem)receiver;
 
     if( PROPERTY_HASWQTABLE.equals( property ) )
       return testHasWQTable( item );
@@ -74,7 +73,7 @@ public class RepositoryItemPropertyTester extends PropertyTester
 
   private boolean testHasWQTable( final IRepositoryItem item )
   {
-    final IObservation obs = (IObservation) item.getAdapter( IObservation.class );
+    final IObservation obs = (IObservation)item.getAdapter( IObservation.class );
     if( obs == null )
       return false;
 

@@ -62,7 +62,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.Fill;
 import org.kalypsodeegree.graphics.sld.ParameterValueType;
 import org.kalypsodeegree.graphics.sld.PolygonColorMapEntry;
@@ -217,7 +217,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
     checkStrokeFrom.addSelectionListener( new SelectionAdapter()
     {
 
-      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
+      @SuppressWarnings( "synthetic-access" )//$NON-NLS-1$
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
@@ -272,7 +272,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
 
     minValueText.addKeyListener( new KeyAdapter()
     {
-      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
+      @SuppressWarnings( "synthetic-access" )//$NON-NLS-1$
       @Override
       public void keyPressed( final KeyEvent event )
       {
@@ -289,7 +289,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
     minValueText.addFocusListener( new FocusListener()
     {
       @Override
-      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
+      @SuppressWarnings( "synthetic-access" )//$NON-NLS-1$
       public void focusGained( final FocusEvent e )
       {
         final BigDecimal value = SldHelper.checkDoubleTextValue( propertyGroup, minValueText, m_patternDouble );
@@ -298,7 +298,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
       }
 
       @Override
-      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
+      @SuppressWarnings( "synthetic-access" )//$NON-NLS-1$
       public void focusLost( final FocusEvent e )
       {
         final BigDecimal value = SldHelper.checkDoubleTextValue( propertyGroup, minValueText, m_patternDouble );
@@ -313,7 +313,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
     minValueText.addModifyListener( new ModifyListener()
     {
       @Override
-      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
+      @SuppressWarnings( "synthetic-access" )//$NON-NLS-1$
       public void modifyText( final ModifyEvent e )
       {
         final String tempText = minValueText.getText();
@@ -334,7 +334,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
 
     maxValueText.addKeyListener( new KeyAdapter()
     {
-      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
+      @SuppressWarnings( "synthetic-access" )//$NON-NLS-1$
       @Override
       public void keyPressed( final KeyEvent event )
       {
@@ -351,7 +351,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
     maxValueText.addFocusListener( new FocusListener()
     {
       @Override
-      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
+      @SuppressWarnings( "synthetic-access" )//$NON-NLS-1$
       public void focusGained( final FocusEvent e )
       {
         final BigDecimal value = SldHelper.checkDoubleTextValue( propertyGroup, maxValueText, m_patternDouble );
@@ -360,7 +360,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
       }
 
       @Override
-      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
+      @SuppressWarnings( "synthetic-access" )//$NON-NLS-1$
       public void focusLost( final FocusEvent e )
       {
         final BigDecimal value = SldHelper.checkDoubleTextValue( propertyGroup, maxValueText, m_patternDouble );
@@ -375,7 +375,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
     maxValueText.addModifyListener( new ModifyListener()
     {
       @Override
-      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
+      @SuppressWarnings( "synthetic-access" )//$NON-NLS-1$
       public void modifyText( final ModifyEvent e )
       {
         final String tempText = maxValueText.getText();
@@ -396,7 +396,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
 
     stepWidthText.addKeyListener( new KeyAdapter()
     {
-      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
+      @SuppressWarnings( "synthetic-access" )//$NON-NLS-1$
       @Override
       public void keyPressed( final KeyEvent event )
       {
@@ -413,7 +413,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
     stepWidthText.addFocusListener( new FocusListener()
     {
       @Override
-      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
+      @SuppressWarnings( "synthetic-access" )//$NON-NLS-1$
       public void focusGained( final FocusEvent e )
       {
         final BigDecimal value = SldHelper.checkPositiveDoubleTextValue( propertyGroup, stepWidthText, m_patternDouble );
@@ -422,7 +422,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
       }
 
       @Override
-      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
+      @SuppressWarnings( "synthetic-access" )//$NON-NLS-1$
       public void focusLost( final FocusEvent e )
       {
         final BigDecimal value = SldHelper.checkPositiveDoubleTextValue( propertyGroup, stepWidthText, m_patternDouble );
@@ -437,7 +437,7 @@ public abstract class PolygonColorMapEditorComposite extends Composite
     stepWidthText.addModifyListener( new ModifyListener()
     {
       @Override
-      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
+      @SuppressWarnings( "synthetic-access" )//$NON-NLS-1$
       public void modifyText( final ModifyEvent e )
       {
         final String tempText = stepWidthText.getText();

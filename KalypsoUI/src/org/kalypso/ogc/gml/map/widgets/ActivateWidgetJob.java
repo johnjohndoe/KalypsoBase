@@ -54,8 +54,8 @@ public final class ActivateWidgetJob extends UIJob
         {
           return Status.CANCEL_STATUS;
         }
-        final MapWidgetView widgetView = (MapWidgetView) m_activePage.showView( MapWidgetView.ID, null, IWorkbenchPage.VIEW_VISIBLE );
-        widgetView.setWidgetForPanel( m_mapPanel, (IWidgetWithOptions) m_widget );
+        final MapWidgetView widgetView = (MapWidgetView)m_activePage.showView( MapWidgetView.ID, null, IWorkbenchPage.VIEW_VISIBLE );
+        widgetView.setWidgetForPanel( m_mapPanel, (IWidgetWithOptions)m_widget );
       }
       else
         m_mapPanel.getWidgetManager().addWidget( m_widget );
@@ -66,11 +66,11 @@ public final class ActivateWidgetJob extends UIJob
       {
         SwingUtilities.invokeLater( new Runnable()
         {
-          @SuppressWarnings("synthetic-access")
+          @SuppressWarnings( "synthetic-access" )
           @Override
           public void run( )
           {
-            ((Component) m_mapPanel).requestFocusInWindow();
+            ((Component)m_mapPanel).requestFocusInWindow();
           }
         } );
       }

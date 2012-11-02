@@ -44,10 +44,10 @@ import java.awt.Point;
 
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.graphics.Rectangle;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction;
 import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * This class is a selection widget over all themes.

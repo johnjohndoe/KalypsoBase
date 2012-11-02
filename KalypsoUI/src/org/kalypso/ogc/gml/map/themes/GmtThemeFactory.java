@@ -57,9 +57,8 @@ import org.kalypso.template.types.StyledLayerType;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
- * Theme factory for {@link org.kalypso.ogc.gml.CascadingKalypsoTheme}s, based on .gmt files and
- * {@link CascadingLayerKalypsoTheme}s.
- *
+ * Theme factory for {@link org.kalypso.ogc.gml.CascadingKalypsoTheme}s, based on .gmt files and {@link CascadingLayerKalypsoTheme}s.
+ * 
  * @author Gernot Belger
  */
 public class GmtThemeFactory extends AbstractThemeFactory
@@ -68,7 +67,7 @@ public class GmtThemeFactory extends AbstractThemeFactory
   public IKalypsoTheme createTheme( final I10nString layerName, final StyledLayerType layerType, final URL context, final IMapModell mapModell, final IFeatureSelectionManager selectionManager ) throws CoreException
   {
     if( layerType instanceof CascadingLayer )
-      return new CascadingLayerKalypsoTheme( layerName, (CascadingLayer) layerType, context, selectionManager, mapModell );
+      return new CascadingLayerKalypsoTheme( layerName, (CascadingLayer)layerType, context, selectionManager, mapModell );
 
     return new CascadingKalypsoTheme( layerName, layerType, context, selectionManager, mapModell );
   }
@@ -86,10 +85,10 @@ public class GmtThemeFactory extends AbstractThemeFactory
   public void configureLayer( final IKalypsoTheme theme, final String id, final GM_Envelope bbox, final String srsName, final StyledLayerType layer, final IProgressMonitor monitor ) throws CoreException
   {
     if( theme instanceof CascadingLayerKalypsoTheme )
-      configureCascadingLayerKalypsoTheme( (CascadingLayer) layer, (CascadingLayerKalypsoTheme) theme, id, srsName );
+      configureCascadingLayerKalypsoTheme( (CascadingLayer)layer, (CascadingLayerKalypsoTheme)theme, id, srsName );
 
     if( theme instanceof CascadingKalypsoTheme )
-      configureCascadingKalypsoTheme( layer, (CascadingKalypsoTheme) theme, bbox, srsName );
+      configureCascadingKalypsoTheme( layer, (CascadingKalypsoTheme)theme, bbox, srsName );
   }
 
   private static void configureCascadingLayerKalypsoTheme( final CascadingLayer layer, final CascadingLayerKalypsoTheme theme, final String id, final String srsName ) throws CoreException

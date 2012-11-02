@@ -68,7 +68,6 @@ import org.eclipse.ui.progress.UIJob;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.jaxb.TemplateUtilities;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.IFeaturesProvider;
 import org.kalypso.ogc.gml.IFeaturesProviderListener;
@@ -80,6 +79,7 @@ import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.template.gistableview.Gistableview.Layer;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractWorkbenchPart;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
@@ -200,7 +200,7 @@ public class GmlTablePartDelegate
   {
     final Gistableview tableTemplate = m_layerTable.createTableTemplate();
 
-    try (ByteArrayOutputStream bos = new ByteArrayOutputStream();)
+    try( ByteArrayOutputStream bos = new ByteArrayOutputStream(); )
     {
       final OutputStreamWriter osw = new OutputStreamWriter( bos, charset );
 
@@ -226,7 +226,7 @@ public class GmlTablePartDelegate
   private static void writeBytes( final IFile file, final byte[] bytes, final IProgressMonitor monitor ) throws CoreException
   {
     // die Vorlagendatei ist klein, deswegen einfach in ein ByteArray serialisieren
-    try (ByteArrayInputStream bis = new ByteArrayInputStream( bytes );)
+    try( ByteArrayInputStream bis = new ByteArrayInputStream( bytes ); )
     {
       if( file.exists() )
         file.setContents( bis, false, true, monitor );

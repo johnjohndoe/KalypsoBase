@@ -61,7 +61,6 @@ import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.commons.i18n.ITranslator;
 import org.kalypso.commons.i18n.ITranslatorContext;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.themes.KalypsoLegendTheme;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor;
@@ -75,6 +74,7 @@ import org.kalypso.template.types.ExtentType;
 import org.kalypso.template.types.I18NTranslatorType;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.template.types.StyledLayerType.Property;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.w3c.dom.Element;
@@ -100,7 +100,7 @@ public class GisTemplateMapModell implements IKalypsoLayerModell, ITranslatorCon
 
   /**
    * Replaces layers based on Gismapview template. Resolves cascading themes if necessary.
-   *
+   * 
    * @throws CoreException
    *           if a theme in the {@link Gismapview} cannot be loaded.
    */
@@ -216,9 +216,9 @@ public class GisTemplateMapModell implements IKalypsoLayerModell, ITranslatorCon
     final IKalypsoTheme theme = themeFactory.createTheme( layerName, layerType, context, this, m_selectionManager );
     if( theme instanceof AbstractKalypsoTheme )
     {
-      ((AbstractKalypsoTheme) theme).setLegendIcon( legendIcon, context );
-      ((AbstractKalypsoTheme) theme).setShowLegendChildren( showChildren );
-      ((AbstractKalypsoTheme) theme).setId( id );
+      ((AbstractKalypsoTheme)theme).setLegendIcon( legendIcon, context );
+      ((AbstractKalypsoTheme)theme).setShowLegendChildren( showChildren );
+      ((AbstractKalypsoTheme)theme).setId( id );
     }
 
     /* Read the properties. */
@@ -328,7 +328,7 @@ public class GisTemplateMapModell implements IKalypsoLayerModell, ITranslatorCon
 
           if( theme instanceof AbstractKalypsoTheme )
           {
-            final AbstractKalypsoTheme kalypsoTheme = (AbstractKalypsoTheme) theme;
+            final AbstractKalypsoTheme kalypsoTheme = (AbstractKalypsoTheme)theme;
             final String legendIcon = kalypsoTheme.getLegendIcon();
             if( legendIcon != null )
               layer.setLegendicon( GisTemplateHelper.OF_TEMPLATE_TYPES.createStyledLayerTypeLegendicon( legendIcon ) );

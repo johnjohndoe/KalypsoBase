@@ -191,7 +191,7 @@ public class AddFilterPropertyPanel
       if( listeners[i] == PanelListener.class )
       {
         final PanelEvent event = new PanelEvent( this );
-        ((PanelListener) listeners[i + 1]).valueChanged( event );
+        ((PanelListener)listeners[i + 1]).valueChanged( event );
       }
     }
   }

@@ -54,7 +54,7 @@ public class SubFeatureControlFactory implements IFeatureControlFactory
   @Override
   public IFeatureControl createFeatureControl( final IFeatureComposite parentComposite, final Feature feature, final IPropertyType pt, final ControlType controlType, final IAnnotation annotation )
   {
-    final SubcompositeType compoType = (SubcompositeType) controlType;
+    final SubcompositeType compoType = (SubcompositeType)controlType;
     final IFeatureControl fc = new SubFeatureControl( pt, parentComposite, compoType.getSelector() );
 
     fc.setFeature( feature );

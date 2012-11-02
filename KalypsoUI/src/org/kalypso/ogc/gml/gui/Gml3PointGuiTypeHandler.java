@@ -74,7 +74,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Gui type handler for gml:envelopes's.
- *
+ * 
  * @author Holger Albert
  */
 public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHandler
@@ -84,18 +84,16 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
   }
 
   /**
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureDialog(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypso.gmlschema.property.IPropertyType)
+   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureDialog(org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.IPropertyType)
    */
   @Override
   public IFeatureDialog createFeatureDialog( final Feature feature, final IPropertyType ftp )
   {
-    return new PointFeatureDialog( feature, (IValuePropertyType) ftp );
+    return new PointFeatureDialog( feature, (IValuePropertyType)ftp );
   }
 
   /**
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureviewControl(javax.xml.namespace.QName,
-   *      org.kalypso.template.featureview.ObjectFactory)
+   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureviewControl(javax.xml.namespace.QName, org.kalypso.template.featureview.ObjectFactory)
    */
   @Override
   public JAXBElement< ? extends ControlType> createFeatureviewControl( final IPropertyType property, final ObjectFactory factory )
@@ -151,7 +149,7 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
   public IFeatureModifier createFeatureModifier( final GMLXPath propertyPath, final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format )
   {
     // if we get a ClassCastExxception here, something is very wrong
-    final IValuePropertyType vpt = (IValuePropertyType) ftp;
+    final IValuePropertyType vpt = (IValuePropertyType)ftp;
 
     final Class< ? > valueClass = getValueClass();
 
@@ -195,7 +193,7 @@ public class Gml3PointGuiTypeHandler extends LabelProvider implements IGuiTypeHa
     if( element == null )
       return ""; //$NON-NLS-1$
 
-    final GM_Point point = (GM_Point) element;
+    final GM_Point point = (GM_Point)element;
     final GM_Position pos = point.getPosition();
 
     final double[] dbl_values = pos.getAsArray();

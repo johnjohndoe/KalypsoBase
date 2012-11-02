@@ -64,7 +64,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 /**
  * A form that contains a {@link org.kalypso.ogc.gml.map.IMapPanel}. Should be used to display the map, in order to have
  * a common ui-behaviour.
- *
+ * 
  * @author Gernot Belger
  */
 public class MapForm extends Form
@@ -143,7 +143,7 @@ public class MapForm extends Form
 
         // If visibility of header changed, send resize event, else the map has not the right extent
         if( source instanceof ComponentListener && (oldMessage == null && !ok || oldMessage != null && ok) )
-          ((ComponentListener) source).componentResized( null );
+          ((ComponentListener)source).componentResized( null );
 
         return Status.OK_STATUS;
       }

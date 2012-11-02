@@ -47,9 +47,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**

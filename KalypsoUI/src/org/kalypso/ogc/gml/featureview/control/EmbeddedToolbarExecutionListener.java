@@ -65,7 +65,7 @@ import org.kalypso.ogc.gml.om.table.command.ToolbarCommandUtils;
 /**
  * Helper that handles command execution for toolbars that are embedded within a feature view or similar (i.e. in a
  * context where the normal source mechanism does not work).
- *
+ * 
  * @author Gernot Belger
  */
 public class EmbeddedToolbarExecutionListener implements IExecutionListener
@@ -110,12 +110,12 @@ public class EmbeddedToolbarExecutionListener implements IExecutionListener
 
   private ICommandService getCommandService( )
   {
-    return (ICommandService) m_serviceLocator.getService( ICommandService.class );
+    return (ICommandService)m_serviceLocator.getService( ICommandService.class );
   }
 
   private IHandlerService getHandlerService( )
   {
-    return (IHandlerService) m_serviceLocator.getService( IHandlerService.class );
+    return (IHandlerService)m_serviceLocator.getService( IHandlerService.class );
   }
 
   /** Checks if the event was triggered by my tool-bar. */
@@ -125,12 +125,12 @@ public class EmbeddedToolbarExecutionListener implements IExecutionListener
     if( !(trigger instanceof Event) )
       return false;
 
-    final Event eventTrigger = (Event) trigger;
+    final Event eventTrigger = (Event)trigger;
     final Widget widget = eventTrigger.widget;
     if( !(widget instanceof ToolItem) )
       return false;
 
-    final ToolItem toolItem = (ToolItem) widget;
+    final ToolItem toolItem = (ToolItem)widget;
     final ToolBar parentToolbar = toolItem.getParent();
     final ToolBar managerToolbar = findToolbarControl();
     return parentToolbar == managerToolbar;
@@ -147,7 +147,7 @@ public class EmbeddedToolbarExecutionListener implements IExecutionListener
     final boolean isThisToolbar = isThisToolbar( event );
     if( isThisToolbar )
     {
-      final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+      final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
       configureContext( context );
     }
   }
@@ -169,7 +169,7 @@ public class EmbeddedToolbarExecutionListener implements IExecutionListener
   @Override
   public void postExecuteFailure( final String commandId, final ExecutionException exception )
   {
-    unconfigureContext(  );
+    unconfigureContext();
 
     // REMARK: it would be nice to have an error mesage here, but:
     // If we have several tabs, we get several msg-boxes, as we have several listeners.
@@ -191,7 +191,7 @@ public class EmbeddedToolbarExecutionListener implements IExecutionListener
   private ToolBar findToolbarControl( )
   {
     if( m_toolBar instanceof ToolBarManager )
-      return ((ToolBarManager) m_toolBar).getControl();
+      return ((ToolBarManager)m_toolBar).getControl();
 
     throw new UnsupportedOperationException();
   }

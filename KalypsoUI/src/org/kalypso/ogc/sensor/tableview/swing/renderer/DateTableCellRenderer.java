@@ -56,7 +56,7 @@ import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 
 /**
  * Helper: formatiert das Datum auf eine richtige Art und Weise
- *
+ * 
  * @author schlienger
  */
 public class DateTableCellRenderer extends DefaultTableCellRenderer
@@ -74,7 +74,7 @@ public class DateTableCellRenderer extends DefaultTableCellRenderer
   @Override
   public Component getTableCellRendererComponent( final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row, final int column )
   {
-    final JLabel label = (JLabel) super.getTableCellRendererComponent( table, value, isSelected, hasFocus, row, column );
+    final JLabel label = (JLabel)super.getTableCellRendererComponent( table, value, isSelected, hasFocus, row, column );
 
     // WORKAROUND: sometimes it comes here but value is not a date. This must be
     // a threading problem. The workaround is to return null. I'm not sure
@@ -105,7 +105,7 @@ public class DateTableCellRenderer extends DefaultTableCellRenderer
 
   /**
    * Adds a marker that modifies this renderer.
-   *
+   * 
    * @param marker
    */
   public void addMarker( final ILabelMarker marker )

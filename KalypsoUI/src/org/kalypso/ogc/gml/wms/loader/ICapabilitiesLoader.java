@@ -48,7 +48,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * This interface provides functions, which loaders for the capabilities must implement.
- *
+ * 
  * @author Holger Albert
  */
 public interface ICapabilitiesLoader

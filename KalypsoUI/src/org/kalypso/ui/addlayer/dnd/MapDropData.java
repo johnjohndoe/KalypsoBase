@@ -48,7 +48,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 
 /**
  * Contains a location of a (gml-)file and a feature path; together suitable to be added as theme to the map.
- *
+ * 
  * @author Gernot Belger
  */
 public class MapDropData

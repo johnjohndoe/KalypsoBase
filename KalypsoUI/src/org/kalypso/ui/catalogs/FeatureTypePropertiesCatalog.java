@@ -62,7 +62,7 @@ import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * Returns properties for qnames.
- *
+ * 
  * @author Gernot Belger
  */
 public final class FeatureTypePropertiesCatalog

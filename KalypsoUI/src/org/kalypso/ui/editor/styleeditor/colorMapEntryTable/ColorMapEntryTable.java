@@ -66,17 +66,17 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
 import org.kalypsodeegree_impl.graphics.sld.ColorMapEntry_Impl;
 
 /**
  * A table for editing color maps.
- *
+ * 
  * @author Andreas Doemming
  * @author Holger Albert
  */
@@ -100,7 +100,8 @@ public class ColorMapEntryTable
 
   public static final String[] COLUMN_NAMES = new String[] { LABEL_COLUMN, QUANTITY_COLUMN, COLOR_COLUMN, OPACITY_COLUMN };
 
-  private static final String[] COLUMN_LABLES = new String[] { Messages.getString("ColorMapEntryTable.0"), Messages.getString("ColorMapEntryTable.1"), Messages.getString("ColorMapEntryTable.2"), Messages.getString("ColorMapEntryTable.3") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+  private static final String[] COLUMN_LABLES = new String[] {
+      Messages.getString( "ColorMapEntryTable.0" ), Messages.getString( "ColorMapEntryTable.1" ), Messages.getString( "ColorMapEntryTable.2" ), Messages.getString( "ColorMapEntryTable.3" ) }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
   protected TableViewer m_tableViewer;
 
@@ -150,7 +151,7 @@ public class ColorMapEntryTable
 
   /**
    * This function creates the controls.
-   *
+   * 
    * @param parent
    *          The parent composite.
    */
@@ -173,7 +174,7 @@ public class ColorMapEntryTable
 
   /**
    * This function creates the table viewer.
-   *
+   * 
    * @param parent
    *          The parent composite.
    * @param input
@@ -208,7 +209,7 @@ public class ColorMapEntryTable
 
   /**
    * This function creates the columns for the table viewer.
-   *
+   * 
    * @param parent
    *          The parent table viewer.
    */
@@ -251,7 +252,7 @@ public class ColorMapEntryTable
 
   /**
    * This function creates the cell editors for the table viewer.
-   *
+   * 
    * @param parent
    *          The parent table viewer.
    */
@@ -279,11 +280,11 @@ public class ColorMapEntryTable
     editors[3] = opacityEditor;
 
     /* Configure the label cell editor. */
-    final Text labelText = (Text) labelEditor.getControl();
+    final Text labelText = (Text)labelEditor.getControl();
     labelText.setTextLimit( 100 );
 
     /* Configure the quantity cell editor. */
-    final Text quantityText = (Text) quantityEditor.getControl();
+    final Text quantityText = (Text)quantityEditor.getControl();
     quantityText.addVerifyListener( new VerifyListener()
     {
       /**
@@ -298,7 +299,7 @@ public class ColorMapEntryTable
     } );
 
     /* Configure the opacity cell editor. */
-    final Text opacityText = (Text) opacityEditor.getControl();
+    final Text opacityText = (Text)opacityEditor.getControl();
     opacityText.addVerifyListener( new VerifyListener()
     {
       /**
@@ -318,7 +319,7 @@ public class ColorMapEntryTable
 
   /**
    * This functions creates the "Generate Range", "Add", "Delete" and "Refresh" buttons.
-   *
+   * 
    * @param parent
    *          The parent composite.
    */
@@ -368,7 +369,7 @@ public class ColorMapEntryTable
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        final ColorMapEntry entry = (ColorMapEntry) ((IStructuredSelection) m_tableViewer.getSelection()).getFirstElement();
+        final ColorMapEntry entry = (ColorMapEntry)((IStructuredSelection)m_tableViewer.getSelection()).getFirstElement();
         if( entry != null )
           m_entryList.removeColorMapEntry( entry );
       }
@@ -379,7 +380,7 @@ public class ColorMapEntryTable
     {
       /* Create the refresh button. */
       final Button refresh = new Button( parent, SWT.PUSH | SWT.CENTER );
-      refresh.setText( Messages.getString("ColorMapEntryTable.5") ); //$NON-NLS-1$
+      refresh.setText( Messages.getString( "ColorMapEntryTable.5" ) ); //$NON-NLS-1$
       refresh.setLayoutData( new GridData( SWT.END, SWT.TOP, true, false ) );
       refresh.addSelectionListener( new SelectionAdapter()
       {
@@ -457,13 +458,13 @@ public class ColorMapEntryTable
     catch( final Exception ex )
     {
       /* Open a error dialog. */
-      ErrorDialog.openError( m_tableViewer.getTable().getShell(), "Error", Messages.getString("ColorMapEntryTable.8"), new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), ex.getLocalizedMessage(), ex ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      ErrorDialog.openError( m_tableViewer.getTable().getShell(), "Error", Messages.getString( "ColorMapEntryTable.8" ), new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), ex.getLocalizedMessage(), ex ) ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
   /**
    * This function returns the color map entry list.
-   *
+   * 
    * @return The color map entry list.
    */
   public ColorMapEntryList getColorMapEntryList( )

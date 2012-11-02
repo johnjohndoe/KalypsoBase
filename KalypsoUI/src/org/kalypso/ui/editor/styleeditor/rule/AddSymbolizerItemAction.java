@@ -7,8 +7,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 
 /**
@@ -23,7 +23,7 @@ public final class AddSymbolizerItemAction extends Action
     m_list = list;
 
     setImageDescriptor( ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE );
-    setToolTipText( Messages.getString("AddSymbolizerItemAction_0") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString( "AddSymbolizerItemAction_0" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -32,7 +32,7 @@ public final class AddSymbolizerItemAction extends Action
   @Override
   public void runWithEvent( final Event event )
   {
-    final ToolItem item = (ToolItem) event.widget;
+    final ToolItem item = (ToolItem)event.widget;
     final ToolBar control = item.getParent();
 
     final Shell shell = control.getShell();

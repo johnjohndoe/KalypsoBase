@@ -43,8 +43,8 @@ package org.kalypso.ui.editor.obstableeditor.actions;
 import java.util.TimeZone;
 
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.tableview.TableView;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author schlienger

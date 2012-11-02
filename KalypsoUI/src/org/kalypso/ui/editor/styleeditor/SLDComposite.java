@@ -50,11 +50,11 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.contribs.eclipse.ui.forms.ToolkitUtils;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoStyle;
 import org.kalypso.ogc.gml.IKalypsoStyleListener;
 import org.kalypso.ui.editor.styleeditor.style.FeatureTypeStyleComposite;
 import org.kalypso.ui.editor.styleeditor.style.FeatureTypeStyleInput;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author F.Lindemann
@@ -149,7 +149,6 @@ public class SLDComposite extends Composite
         oldStyle.removeStyleListener( m_styleListener );
     }
 
-
     m_input = input;
 
     if( m_input != null )
@@ -188,7 +187,7 @@ public class SLDComposite extends Composite
     {
       final String formTitle = style.getTitle();
       if( formTitle == null )
-        m_form.setText( Messages.getString("SLDComposite.0") ); //$NON-NLS-1$
+        m_form.setText( Messages.getString( "SLDComposite.0" ) ); //$NON-NLS-1$
       else
         m_form.setText( formTitle );
     }

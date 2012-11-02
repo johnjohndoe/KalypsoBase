@@ -1,10 +1,10 @@
 package org.kalypso.ui.editor.styleeditor.fill;
 
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypso.ui.editor.styleeditor.graphic.WellKnownName;
 import org.kalypso.ui.editor.styleeditor.util.StyleElementAction;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.Fill;
 import org.kalypsodeegree.graphics.sld.Graphic;
 import org.kalypsodeegree.graphics.sld.GraphicFill;
@@ -20,9 +20,9 @@ final class GraphicFillAddAction extends StyleElementAction<Fill>
   {
     super( input );
 
-    setText( Messages.getString("GraphicFillAddAction_0") ); //$NON-NLS-1$
+    setText( Messages.getString( "GraphicFillAddAction_0" ) ); //$NON-NLS-1$
     setImageDescriptor( ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE );
-    setToolTipText( Messages.getString("GraphicFillAddAction_1") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString( "GraphicFillAddAction_1" ) ); //$NON-NLS-1$
   }
 
   @Override

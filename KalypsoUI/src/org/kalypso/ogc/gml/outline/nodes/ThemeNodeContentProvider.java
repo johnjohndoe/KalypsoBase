@@ -48,7 +48,7 @@ import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 
 /**
  * Content provider for modifying the outline tree. It filters the styles and the rules.
- *
+ * 
  * @author Holger Albert
  */
 public class ThemeNodeContentProvider implements ITreeContentProvider
@@ -76,7 +76,7 @@ public class ThemeNodeContentProvider implements ITreeContentProvider
   @Override
   public Object[] getChildren( final Object element )
   {
-    final IThemeNode node = (IThemeNode) element;
+    final IThemeNode node = (IThemeNode)element;
 
     if( m_isCompact && node.isCompactable() )
       return node.getChildrenCompact();
@@ -87,7 +87,7 @@ public class ThemeNodeContentProvider implements ITreeContentProvider
   @Override
   public boolean hasChildren( final Object element )
   {
-    final IThemeNode node = (IThemeNode) element;
+    final IThemeNode node = (IThemeNode)element;
 
     if( m_isCompact && node.isCompactable() )
       return node.hasChildrenCompact();
@@ -101,18 +101,17 @@ public class ThemeNodeContentProvider implements ITreeContentProvider
     if( !(element instanceof IThemeNode) )
       return null;
 
-    final IThemeNode node = (IThemeNode) element;
+    final IThemeNode node = (IThemeNode)element;
     return node.getParent();
   }
 
   /**
-   * @see org.eclipse.ui.model.WorkbenchContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
+   * @see org.eclipse.ui.model.WorkbenchContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
    */
   @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
-    m_viewer = (TreeViewer) viewer;
+    m_viewer = (TreeViewer)viewer;
   }
 
   protected void refreshViewer( final Object element )

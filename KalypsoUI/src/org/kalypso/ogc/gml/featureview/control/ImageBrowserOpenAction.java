@@ -52,9 +52,9 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -71,7 +71,7 @@ public class ImageBrowserOpenAction extends Action implements IUpdateable
 
     m_externalBrowser = initBrowserSupport();
 
-    setText( Messages.getString("ImageBrowserOpenAction_0") ); //$NON-NLS-1$
+    setText( Messages.getString( "ImageBrowserOpenAction_0" ) ); //$NON-NLS-1$
     setToolTipText( getText() );
 
     final ImageDescriptor image = KalypsoGisPlugin.getImageProvider().getImageDescriptor( ImageProvider.DESCRIPTORS.EXTERNAL_BROWSER );
@@ -114,7 +114,7 @@ public class ImageBrowserOpenAction extends Action implements IUpdateable
     catch( final PartInitException e )
     {
       e.printStackTrace();
-      ErrorDialog.openError( shell, getText(), Messages.getString("ImageBrowserOpenAction_1"), e.getStatus() ); //$NON-NLS-1$
+      ErrorDialog.openError( shell, getText(), Messages.getString( "ImageBrowserOpenAction_1" ), e.getStatus() ); //$NON-NLS-1$
     }
   }
 }

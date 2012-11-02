@@ -64,9 +64,9 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Transform;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.themes.KalypsoLegendTheme;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * Builds a legend from a {@link org.kalypso.ogc.gml.outline.nodes.IThemeNode}.

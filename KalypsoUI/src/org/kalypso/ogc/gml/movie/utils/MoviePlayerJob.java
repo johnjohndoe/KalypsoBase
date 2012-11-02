@@ -44,8 +44,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * This jobs plays the movie.
@@ -67,7 +67,7 @@ public class MoviePlayerJob extends Job
    */
   public MoviePlayerJob( final MoviePlayer player )
   {
-    super( Messages.getString("MoviePlayerJob_0") ); //$NON-NLS-1$
+    super( Messages.getString( "MoviePlayerJob_0" ) ); //$NON-NLS-1$
 
     m_player = player;
   }
@@ -83,7 +83,7 @@ public class MoviePlayerJob extends Job
 
         /* Monitor. */
         if( monitor.isCanceled() )
-          return new Status( IStatus.CANCEL, KalypsoGisPlugin.getId(), Messages.getString("MoviePlayerJob_1") ); //$NON-NLS-1$
+          return new Status( IStatus.CANCEL, KalypsoGisPlugin.getId(), Messages.getString( "MoviePlayerJob_1" ) ); //$NON-NLS-1$
 
         /* Get the current step. */
         final int currentStep = m_player.getCurrentStep();

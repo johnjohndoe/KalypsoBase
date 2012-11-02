@@ -53,7 +53,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * This interface provides functions for image provider.
- *
+ * 
  * @author Holger Albert
  */
 public interface IKalypsoImageProvider
@@ -80,7 +80,7 @@ public interface IKalypsoImageProvider
 
   /**
    * Initializes this image provider. This function must be called.
-   *
+   * 
    * @param themeName
    *          The name of the theme.
    * @param layers
@@ -104,7 +104,7 @@ public interface IKalypsoImageProvider
 
   /**
    * This function will create the image and return it.
-   *
+   * 
    * @param width
    *          The requested width.
    * @param height
@@ -117,21 +117,21 @@ public interface IKalypsoImageProvider
 
   /**
    * This function returns a label.
-   *
+   * 
    * @return The label.
    */
   String getLabel( );
 
   /**
    * This function returns the full extent, if available.
-   *
+   * 
    * @return The full extent.
    */
   GM_Envelope getFullExtent( );
 
   /**
    * This function should return the loader, which is used for loading the capabilities.
-   *
+   * 
    * @return The capabilities loader.
    */
   ICapabilitiesLoader createCapabilitiesLoader( );

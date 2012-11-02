@@ -56,9 +56,9 @@ import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.i18n.Messages;
 import org.kalypso.transformation.ui.CRSSelectionPanel;
 import org.kalypso.transformation.ui.listener.CRSSelectionListener;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * This class builds the dialog for the data input for the GM_Point.
@@ -90,7 +90,7 @@ public class PointDialog extends Dialog
   protected Control createDialogArea( final Composite parent )
   {
     /* Create a own composite for placing controls. */
-    final Composite panel = (Composite) super.createDialogArea( parent );
+    final Composite panel = (Composite)super.createDialogArea( parent );
 
     /* Configuring the composite. */
     final Shell shell = panel.getShell();

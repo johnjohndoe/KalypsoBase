@@ -45,7 +45,7 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * A delegate for {@link org.eclipse.jface.viewers.ITableLabelProvider}s which adds an (empty) which just ignored the

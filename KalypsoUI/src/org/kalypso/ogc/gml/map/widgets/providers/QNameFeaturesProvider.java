@@ -58,7 +58,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
 
 /**
  * Feature provider, which uses a qname, which all returned features must substitute.
- *
+ * 
  * @author Holger Albert
  */
 public class QNameFeaturesProvider implements IFeaturesProvider
@@ -70,7 +70,7 @@ public class QNameFeaturesProvider implements IFeaturesProvider
 
   /**
    * The constructor.
-   *
+   * 
    * @param qname
    *          The qname, which must be substituted.
    */
@@ -97,7 +97,7 @@ public class QNameFeaturesProvider implements IFeaturesProvider
 
   /**
    * This function inspects one theme.
-   *
+   * 
    * @param found
    *          To this list, the found features will be added.
    * @param theme
@@ -108,14 +108,14 @@ public class QNameFeaturesProvider implements IFeaturesProvider
     /* Kalypso feature theme. */
     if( theme instanceof IKalypsoFeatureTheme )
     {
-      handleTheme( found, (IKalypsoFeatureTheme) theme );
+      handleTheme( found, (IKalypsoFeatureTheme)theme );
       return;
     }
 
     /* Abstract cascading theme. */
     if( theme instanceof IKalypsoCascadingTheme )
     {
-      final IKalypsoCascadingTheme cascadingTheme = (IKalypsoCascadingTheme) theme;
+      final IKalypsoCascadingTheme cascadingTheme = (IKalypsoCascadingTheme)theme;
       final IKalypsoTheme[] themes = cascadingTheme.getAllThemes();
       for( final IKalypsoTheme ct : themes )
         inspectTheme( found, ct );
@@ -128,7 +128,7 @@ public class QNameFeaturesProvider implements IFeaturesProvider
 
   /**
    * This function handles one theme.
-   *
+   * 
    * @param found
    *          To this list, the found features will be added.
    * @param theme
@@ -148,9 +148,9 @@ public class QNameFeaturesProvider implements IFeaturesProvider
       {
         Feature feature = null;
         if( object instanceof Feature )
-          feature = (Feature) object;
+          feature = (Feature)object;
         else if( object instanceof String )
-          feature = workspace.getFeature( (String) object );
+          feature = workspace.getFeature( (String)object );
         else
           continue;
 

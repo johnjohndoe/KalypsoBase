@@ -73,8 +73,7 @@ class HaloFillSection extends AbstractStyleElementSection<Halo, Fill, FillCompos
   @Override
   protected StyleElementAction<Halo>[] createActions( final IStyleInput<Halo> input )
   {
-    @SuppressWarnings("unchecked")
-    final StyleElementAction<Halo>[] actions = new StyleElementAction[2];
+    @SuppressWarnings( "unchecked" ) final StyleElementAction<Halo>[] actions = new StyleElementAction[2];
     actions[0] = new FillAddAction( input );
     actions[1] = new FillRemoveAction( input );
     return actions;

@@ -52,22 +52,21 @@ public class GeometryPropertyFilter extends ViewerFilter
 {
 
   /**
-   * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
+   * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
    */
   @Override
   public boolean select( final Viewer viewer, final Object parentElement, final Object element )
   {
     if( element instanceof IFeatureType )
     {
-      final IFeatureType ft = (IFeatureType) element;
+      final IFeatureType ft = (IFeatureType)element;
       final IValuePropertyType[] allGeomteryProperties = ft.getAllGeometryProperties();
       if( allGeomteryProperties != null )
         return true;
     }
     else if( element instanceof IValuePropertyType )
     {
-      final IValuePropertyType vpt = (IValuePropertyType) element;
+      final IValuePropertyType vpt = (IValuePropertyType)element;
       return vpt.isGeometry();
     }
     return false;

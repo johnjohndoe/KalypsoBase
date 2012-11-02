@@ -56,7 +56,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * Theme factory for {@link org.kalypso.ogc.gml.KalypsoPictureTheme}s.
- *
+ * 
  * @author Gernot Belger
  */
 public class PictureThemeFactory extends AbstractThemeFactory
@@ -73,7 +73,7 @@ public class PictureThemeFactory extends AbstractThemeFactory
   @Override
   public void configureLayer( final IKalypsoTheme theme, final String id, final GM_Envelope bbox, final String srsName, final StyledLayerType layer, final IProgressMonitor monitor )
   {
-    final KalypsoPictureTheme pictureTheme = (KalypsoPictureTheme) theme;
+    final KalypsoPictureTheme pictureTheme = (KalypsoPictureTheme)theme;
 
     layer.setHref( pictureTheme.getSource() );
   }

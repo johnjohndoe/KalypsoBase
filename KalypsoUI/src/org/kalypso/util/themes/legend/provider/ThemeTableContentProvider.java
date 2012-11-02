@@ -48,7 +48,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 
 /**
  * A content provider for kalypso themes.
- *
+ * 
  * @author Holger Albert
  */
 public class ThemeTableContentProvider implements ITreeContentProvider
@@ -70,10 +70,10 @@ public class ThemeTableContentProvider implements ITreeContentProvider
   public Object[] getChildren( final Object parentElement )
   {
     if( parentElement instanceof IMapModell )
-      return ((IMapModell) parentElement).getAllThemes();
+      return ((IMapModell)parentElement).getAllThemes();
 
     if( parentElement instanceof IKalypsoCascadingTheme )
-      return ((IKalypsoCascadingTheme) parentElement).getAllThemes();
+      return ((IKalypsoCascadingTheme)parentElement).getAllThemes();
 
     return new Object[] {};
   }
@@ -82,7 +82,7 @@ public class ThemeTableContentProvider implements ITreeContentProvider
   public Object getParent( final Object element )
   {
     if( element instanceof IKalypsoTheme )
-      return ((IKalypsoTheme) element).getMapModell();
+      return ((IKalypsoTheme)element).getMapModell();
 
     return null;
   }
@@ -94,10 +94,10 @@ public class ThemeTableContentProvider implements ITreeContentProvider
       return false;
 
     if( element instanceof IMapModell )
-      return ((IMapModell) element).getAllThemes().length > 0;
+      return ((IMapModell)element).getAllThemes().length > 0;
 
     if( element instanceof IKalypsoCascadingTheme )
-      return ((IKalypsoCascadingTheme) element).getAllThemes().length > 0;
+      return ((IKalypsoCascadingTheme)element).getAllThemes().length > 0;
 
     return false;
   }
@@ -124,8 +124,7 @@ public class ThemeTableContentProvider implements ITreeContentProvider
   }
 
   /**
-   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
+   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
    */
   @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
@@ -138,6 +137,6 @@ public class ThemeTableContentProvider implements ITreeContentProvider
       return;
 
     /* Store the new input. */
-    m_input = (IMapModell) newInput;
+    m_input = (IMapModell)newInput;
   }
 }

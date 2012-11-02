@@ -67,7 +67,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * Within this class all extension-point from the KalypsoUI plug-in are handled.
- *
+ * 
  * @author Gernot Belger
  */
 public class KalypsoUIExtensions
@@ -118,9 +118,9 @@ public class KalypsoUIExtensions
 
     final Object factory = factoryElement.createExecutableExtension( "class" ); //$NON-NLS-1$;
     if( factory instanceof IExtensionsFeatureControlFactory )
-      return new ExtensionFeatureControl2Wrapper( (IExtensionsFeatureControlFactory) factory );
+      return new ExtensionFeatureControl2Wrapper( (IExtensionsFeatureControlFactory)factory );
 
-    return (IExtensionsFeatureControlFactory2) factory;
+    return (IExtensionsFeatureControlFactory2)factory;
   }
 
   private static synchronized Map<String, IConfigurationElement> getFeatureviewControlMap( )
@@ -156,7 +156,7 @@ public class KalypsoUIExtensions
 
     final IConfigurationElement element = collection.iterator().next();
 
-    return (PopupMenu) element.createExecutableExtension( "menu" ); //$NON-NLS-1$
+    return (PopupMenu)element.createExecutableExtension( "menu" ); //$NON-NLS-1$
   }
 
   private static synchronized Map<String, IConfigurationElement> getObservationTableHeaderPopupMenus( )
@@ -193,7 +193,7 @@ public class KalypsoUIExtensions
       {
         try
         {
-          return (IComponentUiHandlerProvider) element.createExecutableExtension( "class" ); //$NON-NLS-1$
+          return (IComponentUiHandlerProvider)element.createExecutableExtension( "class" ); //$NON-NLS-1$
         }
         catch( final CoreException e )
         {
@@ -226,7 +226,7 @@ public class KalypsoUIExtensions
       {
         if( TYPE_HANDLER_ELEMENT_NAME.equals( element.getName() ) )
         {
-          final ITypeHandlerFactory<IGuiTypeHandler> factory = (ITypeHandlerFactory<IGuiTypeHandler>) element.createExecutableExtension( TYPE_HANDLER_FACTORY_CLASS );
+          final ITypeHandlerFactory<IGuiTypeHandler> factory = (ITypeHandlerFactory<IGuiTypeHandler>)element.createExecutableExtension( TYPE_HANDLER_FACTORY_CLASS );
           factories.add( factory );
         }
       }
@@ -244,10 +244,10 @@ public class KalypsoUIExtensions
     if( ce == null )
       return null;
 
-    final IFeatureModifier modifier = (IFeatureModifier) ce.createExecutableExtension( "class" ); //$NON-NLS-1$
+    final IFeatureModifier modifier = (IFeatureModifier)ce.createExecutableExtension( "class" ); //$NON-NLS-1$
 
     if( modifier instanceof IFeatureModifierExtension )
-      ((IFeatureModifierExtension) modifier).init( propertyPath, ftp, params );
+      ((IFeatureModifierExtension)modifier).init( propertyPath, ftp, params );
 
     return modifier;
   }
@@ -276,7 +276,7 @@ public class KalypsoUIExtensions
 
   /**
    * This function creates and returns the {@link org.kalypso.ogc.gml.movie.IMovieImageProvider}s.
-   *
+   * 
    * @return The {@link org.kalypso.ogc.gml.movie.IMovieImageProvider}s.
    */
   public static IMovieImageProvider[] createMovieImageProviders( ) throws CoreException
@@ -299,7 +299,7 @@ public class KalypsoUIExtensions
         continue;
 
       /* Add the {@link org.kalypso.ogc.gml.movie.IMovieImageProvider}. */
-      result.add( (IMovieImageProvider) element.createExecutableExtension( MOVIE_IMAGE_PROVIDER_IMAGE_PROVIDER_CLASS ) );
+      result.add( (IMovieImageProvider)element.createExecutableExtension( MOVIE_IMAGE_PROVIDER_IMAGE_PROVIDER_CLASS ) );
     }
 
     return result.toArray( new IMovieImageProvider[] {} );
@@ -307,7 +307,7 @@ public class KalypsoUIExtensions
 
   /**
    * This function creates and returns the {@link org.kalypso.ogc.gml.movie.IMovieImageProvider}.
-   *
+   * 
    * @param id
    *          The id of the {@link org.kalypso.ogc.gml.movie.IMovieImageProvider}.
    * @return The {@link org.kalypso.ogc.gml.movie.IMovieImageProvider} or null, if it cannot be found.
@@ -333,7 +333,7 @@ public class KalypsoUIExtensions
         continue;
 
       /* Return the {@link org.kalypso.ogc.gml.movie.IMovieImageProvider}. */
-      return (IMovieImageProvider) element.createExecutableExtension( MOVIE_IMAGE_PROVIDER_IMAGE_PROVIDER_CLASS );
+      return (IMovieImageProvider)element.createExecutableExtension( MOVIE_IMAGE_PROVIDER_IMAGE_PROVIDER_CLASS );
     }
 
     return null;

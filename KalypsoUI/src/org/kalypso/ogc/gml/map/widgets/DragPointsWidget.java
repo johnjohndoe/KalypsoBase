@@ -52,7 +52,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.Handle;
 import org.kalypso.ogc.gml.command.ModifyFeatureGeometryCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -62,12 +61,13 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * This class is a widget for selecting and dragging a handle (point) from a geometry.
- *
+ * 
  * @author Holger Albert
  */
 public class DragPointsWidget extends DeprecatedMouseWidget
@@ -109,7 +109,7 @@ public class DragPointsWidget extends DeprecatedMouseWidget
 
   /**
    * The constructor.
-   *
+   * 
    * @param name
    *          The name of this widget.
    * @param toolTip
@@ -137,8 +137,7 @@ public class DragPointsWidget extends DeprecatedMouseWidget
   }
 
   /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.map.MapPanel)
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget, org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
@@ -335,7 +334,7 @@ public class DragPointsWidget extends DeprecatedMouseWidget
       return null;
 
     /* On activation collect all handles of the selected feature. */
-    final EasyFeatureWrapper[] allFeatures = ((IFeatureSelection) selection).getAllFeatures();
+    final EasyFeatureWrapper[] allFeatures = ((IFeatureSelection)selection).getAllFeatures();
     for( final EasyFeatureWrapper wrapper : allFeatures )
     {
       /* Take the first feature, which is in this list and which has geometries. */

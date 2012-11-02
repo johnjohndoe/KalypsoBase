@@ -46,7 +46,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree_impl.graphics.sld.PolygonColorMap;
 
 /**
@@ -70,7 +70,7 @@ public class PolygonColorMapContentProvider implements IStructuredContentProvide
   public Object[] getElements( final Object inputElement )
   {
     if( inputElement instanceof PolygonColorMap )
-      return ((PolygonColorMap) inputElement).getColorMap();
+      return ((PolygonColorMap)inputElement).getColorMap();
 
     return new Object[] {};
   }
@@ -84,15 +84,14 @@ public class PolygonColorMapContentProvider implements IStructuredContentProvide
   }
 
   /**
-   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
+   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
    */
   @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
     if( viewer instanceof TableViewer )
     {
-      final TableViewer tableViewer = (TableViewer) viewer;
+      final TableViewer tableViewer = (TableViewer)viewer;
 
       final Table table = tableViewer.getTable();
       final TableColumn[] columns = table.getColumns();

@@ -69,9 +69,9 @@ import org.kalypso.commons.command.DefaultCommandManager;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.util.pool.IPoolableObjectType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.template.featureview.Featuretemplate;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 
 /**
@@ -163,7 +163,7 @@ public class FeatureEditor extends EditorPart
 
     super.setInput( input );
 
-    load( (IStorageEditorInput) input );
+    load( (IStorageEditorInput)input );
   }
 
   /**
@@ -235,7 +235,7 @@ public class FeatureEditor extends EditorPart
 
       setPartName( input.getName() );
       if( input instanceof IFileEditorInput )
-        setContentDescription( ((IFileEditorInput) input).getFile().getFullPath().toOSString() );
+        setContentDescription( ((IFileEditorInput)input).getFile().getFullPath().toOSString() );
     }
     catch( final InvocationTargetException e )
     {
@@ -245,7 +245,7 @@ public class FeatureEditor extends EditorPart
 
       final IStatus status;
       if( targetException instanceof CoreException )
-        status = ((CoreException) targetException).getStatus();
+        status = ((CoreException)targetException).getStatus();
       else
       {
         final String locmsg = targetException.getLocalizedMessage();

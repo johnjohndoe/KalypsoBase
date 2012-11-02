@@ -45,16 +45,16 @@ import java.awt.Insets;
 import org.apache.commons.collections.ExtendedProperties;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.IWizardPage;
-import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.IExportableObjectFactory;
 import org.kalypso.metadoc.configuration.PublishingConfiguration;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ui.controls.images.ImagePropertiesWizardPage;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * The map exportable object factory.
- *
+ * 
  * @author Holger Albert
  */
 public class MapExportableObjectFactory implements IExportableObjectFactory
@@ -66,7 +66,7 @@ public class MapExportableObjectFactory implements IExportableObjectFactory
 
   /**
    * The constructor.
-   *
+   * 
    * @param mapPanel
    *          The map panel.
    */
@@ -81,7 +81,7 @@ public class MapExportableObjectFactory implements IExportableObjectFactory
     final String preferredDocumentName = m_mapPanel.getMapModell().getName().getValue();
     final int width = conf.getInt( ImagePropertiesWizardPage.CONFIG_IMAGE_WIDTH, m_mapPanel.getWidth() );
     final int height = conf.getInt( ImagePropertiesWizardPage.CONFIG_IMAGE_HEIGHT, m_mapPanel.getHeight() );
-    final Insets insets = (Insets) conf.getProperty( ImagePropertiesWizardPage.CONFIG_INSETS );
+    final Insets insets = (Insets)conf.getProperty( ImagePropertiesWizardPage.CONFIG_INSETS );
     final boolean border = conf.getBoolean( ImagePropertiesWizardPage.CONFIG_HAS_BORDER, false );
     final int borderWidth = border ? 1 : 0;
     final String format = conf.getString( ImagePropertiesWizardPage.CONFIG_IMAGE_FORMAT, "PNG" ); //$NON-NLS-1$
@@ -92,6 +92,6 @@ public class MapExportableObjectFactory implements IExportableObjectFactory
   @Override
   public IWizardPage[] createWizardPages( final PublishingConfiguration configuration, final ImageDescriptor defaultImage )
   {
-    return new IWizardPage[] { new ImagePropertiesWizardPage( "ImagePropertiesWizardPage", Messages.getString("MapExportableObjectFactory_2"), defaultImage, configuration, -1, -1, false, null, false, "PNG" ) }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    return new IWizardPage[] { new ImagePropertiesWizardPage( "ImagePropertiesWizardPage", Messages.getString( "MapExportableObjectFactory_2" ), defaultImage, configuration, -1, -1, false, null, false, "PNG" ) }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 }

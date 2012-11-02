@@ -120,7 +120,7 @@ public class RulePatternTabItem implements ITabItem
 
     final Rule tmpRule = getRuleCollection().get( 0 );
     // PatternRule only possible for PropertyIsBetweenOperation
-    if( tmpRule.getFilter() == null || !(((ComplexFilter) tmpRule.getFilter()).getOperation() instanceof PropertyIsBetweenOperation) )
+    if( tmpRule.getFilter() == null || !(((ComplexFilter)tmpRule.getFilter()).getOperation() instanceof PropertyIsBetweenOperation) )
       return null;
 
     // 1. get global values for name, minDen, maxDen,
@@ -141,8 +141,7 @@ public class RulePatternTabItem implements ITabItem
   }
 
   /**
-   * @see org.kalypso.ui.editor.styleeditor.IRuleTabItem#createItemControl(org.eclipse.ui.forms.widgets.FormToolkit,
-   *      org.eclipse.swt.widgets.Composite)
+   * @see org.kalypso.ui.editor.styleeditor.IRuleTabItem#createItemControl(org.eclipse.ui.forms.widgets.FormToolkit, org.eclipse.swt.widgets.Composite)
    */
   @Override
   public Control createItemControl( final FormToolkit toolkit, final Composite parent )
@@ -152,7 +151,7 @@ public class RulePatternTabItem implements ITabItem
 
     final Rule tmpRule = getRuleCollection().get( 0 );
     // PatternRule only possible for PropertyIsBetweenOperation
-    if( tmpRule.getFilter() == null || !(((ComplexFilter) tmpRule.getFilter()).getOperation() instanceof PropertyIsBetweenOperation) )
+    if( tmpRule.getFilter() == null || !(((ComplexFilter)tmpRule.getFilter()).getOperation() instanceof PropertyIsBetweenOperation) )
       return null;
 
     // 1. get global values for name, minDen, maxDen,
@@ -268,7 +267,7 @@ public class RulePatternTabItem implements ITabItem
 
     final AddFilterPropertyPanel addFilterPropertyPanel = new AddFilterPropertyPanel( composite, MessageBundle.STYLE_EDITOR_FILTER_PROPERTY, getNumericFeatureTypePropertylist() );
     // necessary if focus had been changed and rule-pattern is redrawn
-    addFilterPropertyPanel.setSelection( ((PropertyIsBetweenOperation) ((ComplexFilter) tmpRule.getFilter()).getOperation()).getPropertyName().getValue() );
+    addFilterPropertyPanel.setSelection( ((PropertyIsBetweenOperation)((ComplexFilter)tmpRule.getFilter()).getOperation()).getPropertyName().getValue() );
     // if numeric Property selection for Filter has changed -> need to change it
     // for every rule of the pattern
     addFilterPropertyPanel.addPanelListener( new PanelListener()
@@ -279,8 +278,8 @@ public class RulePatternTabItem implements ITabItem
         final String filterPropertyName = addFilterPropertyPanel.getSelection();
         for( int i = 0; i < getRuleCollection().size(); i++ )
         {
-          final ComplexFilter filter = (ComplexFilter) getRuleCollection().get( i ).getFilter();
-          final PropertyIsBetweenOperation oldOperation = (PropertyIsBetweenOperation) filter.getOperation();
+          final ComplexFilter filter = (ComplexFilter)getRuleCollection().get( i ).getFilter();
+          final PropertyIsBetweenOperation oldOperation = (PropertyIsBetweenOperation)filter.getOperation();
           final PropertyIsBetweenOperation operation = new PropertyIsBetweenOperation( new PropertyName( filterPropertyName ), oldOperation.getLowerBoundary(), oldOperation.getUpperBoundary() );
           getRuleCollection().get( i ).setFilter( new ComplexFilter( operation ) );
         }
@@ -300,7 +299,7 @@ public class RulePatternTabItem implements ITabItem
     if( filter instanceof ComplexFilter )
     {
       // if PropertyIsBetween
-      if( ((ComplexFilter) filter).getOperation().getOperatorId() == OperationDefines.PROPERTYISBETWEEN )
+      if( ((ComplexFilter)filter).getOperation().getOperatorId() == OperationDefines.PROPERTYISBETWEEN )
       {
         // find out the settings of the filter - min, max and step values
 
@@ -310,20 +309,20 @@ public class RulePatternTabItem implements ITabItem
           // Between for every rule
           if( getRuleCollection().get( j ).getFilter() instanceof ComplexFilter )
           {
-            final Operation ruleOperation = ((ComplexFilter) getRuleCollection().get( j ).getFilter()).getOperation();
+            final Operation ruleOperation = ((ComplexFilter)getRuleCollection().get( j ).getFilter()).getOperation();
             if( ruleOperation.getOperatorId() == OperationDefines.PROPERTYISBETWEEN )
             {
-              final PropertyIsBetweenOperation isBetweenOperation = (PropertyIsBetweenOperation) ruleOperation;
+              final PropertyIsBetweenOperation isBetweenOperation = (PropertyIsBetweenOperation)ruleOperation;
               if( j == 0 )
               {
-                minValue = Double.parseDouble( ((BoundaryExpression) isBetweenOperation.getLowerBoundary()).getValue() );
-                maxValue = Double.parseDouble( ((BoundaryExpression) isBetweenOperation.getUpperBoundary()).getValue() );
+                minValue = Double.parseDouble( ((BoundaryExpression)isBetweenOperation.getLowerBoundary()).getValue() );
+                maxValue = Double.parseDouble( ((BoundaryExpression)isBetweenOperation.getUpperBoundary()).getValue() );
                 step = maxValue - minValue;
               }
               else
               {
-                final double tmpMinValue = Double.parseDouble( ((BoundaryExpression) isBetweenOperation.getLowerBoundary()).getValue() );
-                final double tmpMaxValue = Double.parseDouble( ((BoundaryExpression) isBetweenOperation.getUpperBoundary()).getValue() );
+                final double tmpMinValue = Double.parseDouble( ((BoundaryExpression)isBetweenOperation.getLowerBoundary()).getValue() );
+                final double tmpMaxValue = Double.parseDouble( ((BoundaryExpression)isBetweenOperation.getUpperBoundary()).getValue() );
                 if( tmpMinValue < minValue )
                   minValue = tmpMinValue;
                 if( tmpMaxValue > maxValue )
@@ -371,7 +370,7 @@ public class RulePatternTabItem implements ITabItem
         @Override
         public void valueChanged( final PanelEvent event )
         {
-          final RulePatternInputPanel panel = (RulePatternInputPanel) event.getSource();
+          final RulePatternInputPanel panel = (RulePatternInputPanel)event.getSource();
           // reset the values for all rules in this pattern if step did not
           // change !!!!
           minValue = panel.getMin();
@@ -389,7 +388,7 @@ public class RulePatternTabItem implements ITabItem
           // plus apply the pattern
           // there needs to be at least one rule, otherwise no pattern rule
           // visible !!!!
-          final int patternRuleNumber = (int) Math.ceil( (maxValue - minValue) / step );
+          final int patternRuleNumber = (int)Math.ceil( (maxValue - minValue) / step );
           final Symbolizer[] symbolizer = tmpRule.getSymbolizers();
 
           // first add those that are existing and are to be kept
@@ -462,7 +461,7 @@ public class RulePatternTabItem implements ITabItem
       @Override
       public void valueChanged( final PanelEvent event )
       {
-        final int action = ((EditSymbolizerPanel) event.getSource()).getAction();
+        final int action = ((EditSymbolizerPanel)event.getSource()).getAction();
 
         if( action == EditSymbolizerPanel.REM_SYMB )
         {

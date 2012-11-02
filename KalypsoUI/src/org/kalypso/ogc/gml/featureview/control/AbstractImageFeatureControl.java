@@ -81,7 +81,7 @@ public abstract class AbstractImageFeatureControl extends AbstractFeatureControl
     if( feature == null || pt == null || GMLSchemaUtilities.substitutes( feature.getFeatureType(), QNAME_STRING ) )
       return null;
 
-    final String uriString = (String) feature.getProperty( pt );
+    final String uriString = (String)feature.getProperty( pt );
     if( uriString == null )
       return ""; //$NON-NLS-1$
 

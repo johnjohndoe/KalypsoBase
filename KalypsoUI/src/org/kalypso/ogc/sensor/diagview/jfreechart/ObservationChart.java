@@ -176,7 +176,7 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
    */
   public ObservationPlot getObservationPlot( )
   {
-    return (ObservationPlot) getPlot();
+    return (ObservationPlot)getPlot();
   }
 
   public DiagView getTemplate( )
@@ -207,9 +207,9 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
 
         DiagView view = null;
         if( evt.getObject() instanceof DiagView )
-          view = (DiagView) evt.getObject();
+          view = (DiagView)evt.getObject();
         else if( evt.getObject() instanceof DiagViewCurve )
-          view = (DiagView) ((DiagViewCurve) evt.getObject()).getView();
+          view = (DiagView)((DiagViewCurve)evt.getObject()).getView();
 
         final int et = evt.getType();
 
@@ -217,13 +217,13 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
         {
           case ObsViewEvent.TYPE_ITEM_ADD:
           {
-            obsPlot.addCurve( (DiagViewCurve) evt.getObject() );
+            obsPlot.addCurve( (DiagViewCurve)evt.getObject() );
             break;
           }
 
           case ObsViewEvent.TYPE_ITEM_REMOVE:
           {
-            obsPlot.removeCurve( (DiagViewCurve) evt.getObject() );
+            obsPlot.removeCurve( (DiagViewCurve)evt.getObject() );
             break;
           }
 
@@ -236,7 +236,7 @@ public class ObservationChart extends JFreeChart implements IObsViewEventListene
           case ObsViewEvent.TYPE_ITEM_DATA_CHANGED:
           case ObsViewEvent.TYPE_ITEM_STATE_CHANGED:
           {
-            final DiagViewCurve curve = (DiagViewCurve) evt.getObject();
+            final DiagViewCurve curve = (DiagViewCurve)evt.getObject();
             obsPlot.removeCurve( curve );
             if( curve.isShown() )
               obsPlot.addCurve( curve );

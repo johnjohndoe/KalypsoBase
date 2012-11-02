@@ -53,7 +53,7 @@ import org.kalypsodeegree.graphics.sld.TextSymbolizer;
 /**
  * The section controls a label placement inside a {@link org.kalypsodeegree.graphics.sld.TextSymbolizer} and allows to
  * add remove it.
- *
+ * 
  * @author Gernot Belger
  */
 public class HaloSection extends AbstractStyleElementSection<TextSymbolizer, Halo, HaloComposite>
@@ -66,8 +66,7 @@ public class HaloSection extends AbstractStyleElementSection<TextSymbolizer, Hal
   @Override
   protected StyleElementAction<TextSymbolizer>[] createActions( final IStyleInput<TextSymbolizer> input )
   {
-    @SuppressWarnings("unchecked")
-    final StyleElementAction<TextSymbolizer>[] actions = new StyleElementAction[2];
+    @SuppressWarnings( "unchecked" ) final StyleElementAction<TextSymbolizer>[] actions = new StyleElementAction[2];
     actions[0] = new HaloAddAction( input );
     actions[1] = new HaloRemoveAction( input );
     return actions;

@@ -110,10 +110,10 @@ public class ZoomInWidget extends DeprecatedMouseWidget
       else
         dx = dy / ratio;
 
-      final int x1 = (int) (startPoint.getX() - dx);
-      final int y1 = (int) (startPoint.getY() - dy);
+      final int x1 = (int)(startPoint.getX() - dx);
+      final int y1 = (int)(startPoint.getY() - dy);
 
-      g.drawRect( x1, y1, (int) dx * 2, (int) dy * 2 );
+      g.drawRect( x1, y1, (int)dx * 2, (int)dy * 2 );
     }
   }
 
@@ -134,7 +134,7 @@ public class ZoomInWidget extends DeprecatedMouseWidget
       else
         dx = dy / ratio;
 
-      final GM_Envelope zoomBox = getDragbox( (int) startPoint.getX(), (int) startPoint.getY(), (int) dx );
+      final GM_Envelope zoomBox = getDragbox( (int)startPoint.getX(), (int)startPoint.getY(), (int)dx );
 
       startPoint = null;
       endPoint = null;

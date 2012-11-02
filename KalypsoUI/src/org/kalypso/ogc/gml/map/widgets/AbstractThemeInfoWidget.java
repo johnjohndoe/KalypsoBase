@@ -45,12 +45,12 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.util.Formatter;
 
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeInfo;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
@@ -147,7 +147,7 @@ public abstract class AbstractThemeInfoWidget extends AbstractWidget
     {
       formatter.format( headInfo, theme.getName().getValue() );
 
-      final IKalypsoThemeInfo themeInfo = (IKalypsoThemeInfo) theme.getAdapter( IKalypsoThemeInfo.class );
+      final IKalypsoThemeInfo themeInfo = (IKalypsoThemeInfo)theme.getAdapter( IKalypsoThemeInfo.class );
       if( themeInfo == null )
         formatter.format( Messages.getString( "org.kalypso.ogc.gml.map.widgets.AbstractThemeInfoWidget.3" ) ); //$NON-NLS-1$
       else

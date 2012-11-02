@@ -62,7 +62,7 @@ public class TableFeatureControlFactory implements IFeatureControlFactory
   public IFeatureControl createFeatureControl( final IFeatureComposite parentComposite, final Feature feature, final IPropertyType pt, final ControlType controlType, final IAnnotation annotation )
   {
     final KalypsoGisPlugin plugin = KalypsoGisPlugin.getDefault();
-    final Table tableType = (Table) controlType;
+    final Table tableType = (Table)controlType;
 
     final IFeatureModifierFactory featureTypeCellEditorFactory = plugin.getFeatureTypeCellEditorFactory();
 

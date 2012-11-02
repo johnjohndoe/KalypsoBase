@@ -50,9 +50,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
 import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * Opens the property dialog for a {@link org.kalypso.ogc.gml.IKalypsoTheme}.
@@ -67,16 +67,16 @@ public class RemoveNodeHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event )
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
-    final ISelection selection = (ISelection) context.getVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME );
+    final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
+    final Shell shell = (Shell)context.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final ISelection selection = (ISelection)context.getVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME );
 
     final IThemeNode[] selectedNodes = MapHandlerUtils.getSelectedNodes( selection );
 
     final WorkbenchLabelProvider labelProvider = new WorkbenchLabelProvider();
     try
     {
-      final ListSelectionDialog dialog = new ListSelectionDialog( shell, selectedNodes, new ArrayContentProvider(), labelProvider, Messages.getString("RemoveNodeHandler_0") ); //$NON-NLS-1$
+      final ListSelectionDialog dialog = new ListSelectionDialog( shell, selectedNodes, new ArrayContentProvider(), labelProvider, Messages.getString( "RemoveNodeHandler_0" ) ); //$NON-NLS-1$
       dialog.setInitialSelections( selectedNodes );
       if( !(dialog.open() == Window.OK) )
         return null;

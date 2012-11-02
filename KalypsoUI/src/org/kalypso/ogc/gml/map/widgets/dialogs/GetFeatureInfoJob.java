@@ -99,7 +99,7 @@ public class GetFeatureInfoJob extends Job
     {
       m_featureInfo = m_wmsTheme.getFeatureInfo( m_x, m_y );
 
-      return new Status( IStatus.OK, KalypsoGisPlugin.PLUGIN_ID, org.kalypso.i18n.Messages.getString( "GetFeatureInfoJob_1" ) ); //$NON-NLS-1$
+      return new Status( IStatus.OK, KalypsoGisPlugin.PLUGIN_ID, org.kalypso.ui.internal.i18n.Messages.getString( "GetFeatureInfoJob_1" ) ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {

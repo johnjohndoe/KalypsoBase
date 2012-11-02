@@ -53,19 +53,20 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.net.Proxy;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.wms.deegree.document.KalypsoWMSCapabilitiesDocument;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.xml.sax.SAXException;
 
 /**
  * This loader loads the capabilities.
- *
+ * 
  * @author Holger Albert
  */
 public abstract class AbstractWMSCapabilitiesLoader implements ICapabilitiesLoader
 {
-  private static final String STR_FAILED_TO_LOAD_CAPABILITIES_DOCUMENT = Messages.getString("AbstractWMSCapabilitiesLoader.0"); //$NON-NLS-1$
+  private static final String STR_FAILED_TO_LOAD_CAPABILITIES_DOCUMENT = Messages.getString( "AbstractWMSCapabilitiesLoader.0" ); //$NON-NLS-1$
+
   /**
    * The timeout for the access.
    */
@@ -73,7 +74,7 @@ public abstract class AbstractWMSCapabilitiesLoader implements ICapabilitiesLoad
 
   /**
    * The constructor.
-   *
+   * 
    * @param timeout
    *          The timeout for the access.
    */
@@ -91,7 +92,7 @@ public abstract class AbstractWMSCapabilitiesLoader implements ICapabilitiesLoad
 
   /**
    * Loads the capabilities for the given service.
-   *
+   * 
    * @param monitor
    *          A progress monitor.
    */
@@ -104,7 +105,7 @@ public abstract class AbstractWMSCapabilitiesLoader implements ICapabilitiesLoad
     // FIXME: if the server returns a bad document or an error document, this gets lost here.
     // Instead, we should read the response as a string and then try to parse it.
 
-    try (InputStream inputStream = openCapabilitiesStream( serviceURL, monitor ))
+    try( InputStream inputStream = openCapabilitiesStream( serviceURL, monitor ) )
     {
       /* This is a capabilities document from deegree, which was overwritten by Kalypso. */
       final KalypsoWMSCapabilitiesDocument doc = new KalypsoWMSCapabilitiesDocument();
@@ -113,7 +114,7 @@ public abstract class AbstractWMSCapabilitiesLoader implements ICapabilitiesLoad
       doc.load( inputStream, XMLFragment.DEFAULT_URL );
 
       /* Create the capabilities. */
-      final WMSCapabilities capabilities = (WMSCapabilities) doc.parseCapabilities();
+      final WMSCapabilities capabilities = (WMSCapabilities)doc.parseCapabilities();
       if( capabilities == null )
       {
         final String messsage = Messages.getString( "org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities.0" ); //$NON-NLS-1$

@@ -59,7 +59,7 @@ class RasterSymbolizerNode extends SymbolizerNode
   @Override
   protected Object[] getElementChildren( )
   {
-    final RasterSymbolizer symbolizer = (RasterSymbolizer) getElement();
+    final RasterSymbolizer symbolizer = (RasterSymbolizer)getElement();
     final SortedMap<Double, ColorMapEntry> colorMap = symbolizer.getColorMap();
     final Collection<ColorMapEntry> values = colorMap.values();
     return values.toArray( new ColorMapEntry[values.size()] );

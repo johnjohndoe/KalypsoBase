@@ -48,13 +48,13 @@ import java.util.Map;
 import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.advanced.edit.delegates.AdvancedEditModeMultiDelegate;
 import org.kalypso.ogc.gml.map.widgets.advanced.edit.delegates.AdvancedEditModePointInsertDelegate;
 import org.kalypso.ogc.gml.map.widgets.advanced.edit.delegates.AdvancedEditModePointRemoveDelegate;
 import org.kalypso.ogc.gml.map.widgets.advanced.edit.delegates.AdvancedEditModeSingleDelegate;
 import org.kalypso.ogc.gml.widgets.AbstractKeyListenerWidget;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -127,7 +127,7 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget impleme
 
     try
     {
-      m_originPoint = (Point) JTSAdapter.export( gmp );
+      m_originPoint = (Point)JTSAdapter.export( gmp );
 
       final Feature[] features = m_provider.query( gmp, 20 );
       if( ArrayUtils.isEmpty( features ) )
@@ -180,7 +180,7 @@ public class AdvancedPolygonEditWidget extends AbstractKeyListenerWidget impleme
 
   /**
    * Escape Key pressed? -> reset / deactivate widget
-   *
+   * 
    * @see org.kalypso.ogc.gml.widgets.AbstractWidget#keyReleased(java.awt.event.KeyEvent)
    */
   @Override

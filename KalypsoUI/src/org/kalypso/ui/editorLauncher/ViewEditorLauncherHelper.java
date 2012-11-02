@@ -69,11 +69,11 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.part.FileEditorInput;
 import org.kalypso.contribs.eclipse.core.resources.FileFilterVisitor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * Helper-Klasse für die Template-Auswahl
- *
+ * 
  * @author belger
  */
 public class ViewEditorLauncherHelper
@@ -151,7 +151,7 @@ public class ViewEditorLauncherHelper
       {
         try
         {
-          final IFile template = (IFile) template2;
+          final IFile template = (IFile)template2;
 
           // wars ein Default? dann extra behandeln
           IEditorInput input = null;

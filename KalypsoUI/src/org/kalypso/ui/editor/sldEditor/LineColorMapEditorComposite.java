@@ -61,7 +61,7 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.eclipse.swt.events.DoubleModifyListener;
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.LineColorMapEntry;
 import org.kalypsodeegree.graphics.sld.ParameterValueType;
@@ -150,7 +150,7 @@ public class LineColorMapEditorComposite extends Composite
         {
           final LineColorMapEntry colorMapEntry = colorMapEntries[i];
 
-          final int width = (int) colorMapEntry.getStroke().getWidth( null );
+          final int width = (int)colorMapEntry.getStroke().getWidth( null );
           if( width > basicWidth )
           {
             m_fatWidth = width;
@@ -213,7 +213,7 @@ public class LineColorMapEditorComposite extends Composite
     minValueText.addFocusListener( new FocusAdapter()
     {
       @Override
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings( "synthetic-access" )
       public void focusLost( final FocusEvent e )
       {
         final BigDecimal value = NumberUtils.parseQuietDecimal( minValueText.getText() );
@@ -231,7 +231,7 @@ public class LineColorMapEditorComposite extends Composite
     maxValueText.addFocusListener( new FocusAdapter()
     {
       @Override
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings( "synthetic-access" )
       public void focusLost( final FocusEvent e )
       {
         final BigDecimal value = NumberUtils.parseQuietDecimal( maxValueText.getText() );
@@ -260,7 +260,7 @@ public class LineColorMapEditorComposite extends Composite
     stepWidthText.addFocusListener( new FocusAdapter()
     {
       @Override
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings( "synthetic-access" )
       public void focusLost( final FocusEvent e )
       {
         final BigDecimal value = SldHelper.checkPositiveDoubleTextValue( propertyGroup, stepWidthText, m_patternDouble );

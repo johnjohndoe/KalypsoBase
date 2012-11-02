@@ -71,7 +71,7 @@ public class PropertyTooltipGenerator implements ITooltipGenerator
   public String generate( final Object object )
   {
     /* We know, that it must be a feature, we get here. */
-    final Feature feature = (Feature) object;
+    final Feature feature = (Feature)object;
 
     final Object property = feature.getProperty( m_property );
 

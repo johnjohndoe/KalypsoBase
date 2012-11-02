@@ -69,7 +69,7 @@ import org.kalypsodeegree.model.feature.Feature;
  * <p>
  * To restore the previously stored selection, call {@link #restoreSelection()}.
  * </p>
- *
+ * 
  * @author belger
  */
 public class RestoreSelectionHelper
@@ -92,7 +92,7 @@ public class RestoreSelectionHelper
   private CommandableWorkspace getWorkspace( final IPoolableObjectType key ) throws CoreException
   {
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
-    return (CommandableWorkspace) pool.getObject( key );
+    return (CommandableWorkspace)pool.getObject( key );
   }
 
   public void restoreSelection( ) throws CoreException

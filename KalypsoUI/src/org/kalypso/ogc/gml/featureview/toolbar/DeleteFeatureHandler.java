@@ -48,7 +48,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.featureview.control.TableFeatureControl;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
@@ -56,10 +55,11 @@ import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ui.editor.actions.FeatureActionUtilities;
 import org.kalypso.ui.editor.actions.TableFeatureControlUtils;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * FIXME: merge with the other DeleteFeatureCommand in gml ui
- *
+ * 
  * @author Dirk Kuch
  */
 public class DeleteFeatureHandler extends AbstractTableFeatureControlHandler
@@ -68,7 +68,7 @@ public class DeleteFeatureHandler extends AbstractTableFeatureControlHandler
 
   /**
    * This function checks, if there are features, which can be deleted.
-   *
+   * 
    * @return <code>true</code>, if so.
    */
   public boolean canDelete( final IFeatureSelection selection )

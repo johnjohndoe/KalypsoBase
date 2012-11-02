@@ -49,7 +49,7 @@ import org.kalypso.util.themes.position.PositionUtilities;
 
 /**
  * This class provides functions for {@link org.kalypso.ogc.gml.IKalypsoTheme}s.
- *
+ * 
  * @author Holger Albert
  */
 public class TextUtilities
@@ -101,7 +101,7 @@ public class TextUtilities
 
   /**
    * This function returns a properties object, containing all serialized default text properties.
-   *
+   * 
    * @return A properties object, containing all serialized default text properties.
    */
   public static Properties getDefaultProperties( )

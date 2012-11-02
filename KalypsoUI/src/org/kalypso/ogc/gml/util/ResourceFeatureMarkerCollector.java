@@ -45,7 +45,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.ide.IDE;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.validation.IFeatureMarkerCollector;
 

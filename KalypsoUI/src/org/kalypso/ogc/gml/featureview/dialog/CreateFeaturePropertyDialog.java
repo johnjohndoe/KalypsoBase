@@ -47,17 +47,17 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.util.AddFeatureHandlerUtil;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * A dialog which creates a feature property (i.e. it creates the inline property or allows the user to choose an
  * existing feature).
- *
+ * 
  * @author Gernot Belger
  */
 public class CreateFeaturePropertyDialog implements IFeatureDialog
@@ -84,7 +84,7 @@ public class CreateFeaturePropertyDialog implements IFeatureDialog
 
     if( m_relationType.isInlineAble() && !m_relationType.isLinkAble() )
     {
-      final IFeatureType newFeatureType = AddFeatureHandlerUtil.chooseFeatureType( shell, Messages.getString("CreateFeaturePropertyDialog.0"), m_relationType, workspace ); //$NON-NLS-1$
+      final IFeatureType newFeatureType = AddFeatureHandlerUtil.chooseFeatureType( shell, Messages.getString( "CreateFeaturePropertyDialog.0" ), m_relationType, workspace ); //$NON-NLS-1$
       if( newFeatureType == null )
         return Window.CANCEL;
 

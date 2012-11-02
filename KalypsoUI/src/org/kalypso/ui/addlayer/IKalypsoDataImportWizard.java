@@ -56,7 +56,7 @@ public interface IKalypsoDataImportWizard extends IWorkbenchWizard
 
   /**
    * Set the model where the new theme is inserted.
-   *
+   * 
    * @param insertionIndex
    *          Insert the new theme at this index of the model.
    */

@@ -50,7 +50,7 @@ import org.kalypso.contribs.eclipse.jface.action.ActionHyperlink;
 /**
  * @author Gernot Belger
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings( "restriction" )
 public class CommandHyperlinkFeatureControl extends AbstractFeatureControl
 {
   private final CommandAction m_commandAction;

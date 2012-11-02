@@ -54,7 +54,7 @@ import org.eclipse.ui.IPersistableElement;
 
 /**
  * PseudoTemplateEditorInput
- *
+ * 
  * @author schlienger
  */
 public class PseudoTemplateEditorInput implements IFileEditorInput
@@ -65,7 +65,7 @@ public class PseudoTemplateEditorInput implements IFileEditorInput
 
   /**
    * Constructor
-   *
+   * 
    * @param storage
    *          template storage on which this pseudo template is based
    * @param fileExtension

@@ -40,10 +40,10 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.symbolizer;
 
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypso.ui.editor.styleeditor.util.StyleElementAction;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.TextSymbolizer;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 
@@ -56,7 +56,7 @@ public class HaloAddAction extends StyleElementAction<TextSymbolizer>
   {
     super( input );
 
-    setText( Messages.getString("HaloAddAction_0") ); //$NON-NLS-1$
+    setText( Messages.getString( "HaloAddAction_0" ) ); //$NON-NLS-1$
     setImageDescriptor( ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE );
   }
 

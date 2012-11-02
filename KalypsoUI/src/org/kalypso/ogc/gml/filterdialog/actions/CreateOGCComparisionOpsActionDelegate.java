@@ -55,10 +55,10 @@ public class CreateOGCComparisionOpsActionDelegate extends AbstractCreateOperati
         final Object firstElement = m_selection.getFirstElement();
         final PropertyIsCOMPOperation compOps = new PropertyIsCOMPOperation( OperationDefines.UNKNOWN, null, null );
         if( firstElement instanceof ComplexFilter )
-          ((ComplexFilter) firstElement).setOperation( compOps );
+          ((ComplexFilter)firstElement).setOperation( compOps );
         if( firstElement instanceof LogicalOperation )
         {
-          final LogicalOperation logicalOps = (LogicalOperation) firstElement;
+          final LogicalOperation logicalOps = (LogicalOperation)firstElement;
           List<Operation> arguments = logicalOps.getArguments();
           if( arguments == null )
             arguments = new ArrayList<>();
@@ -66,7 +66,7 @@ public class CreateOGCComparisionOpsActionDelegate extends AbstractCreateOperati
           logicalOps.setArguments( arguments );
 
         }
-        ((TreeSelection) m_selection).structureChanged();
+        ((TreeSelection)m_selection).structureChanged();
       }
     }
   }

@@ -16,7 +16,7 @@ public class GmvViewPart extends AbstractGmvPart implements IViewPart
   @Override
   public IViewSite getViewSite( )
   {
-    return (IViewSite) getSite();
+    return (IViewSite)getSite();
   }
 
   @Override

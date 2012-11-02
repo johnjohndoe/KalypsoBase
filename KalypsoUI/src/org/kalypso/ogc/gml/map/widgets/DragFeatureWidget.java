@@ -53,7 +53,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.Handle;
 import org.kalypso.ogc.gml.command.ModifyFeatureGeometryCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -63,13 +62,14 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * This class is a widget for selecting and dragging a complete feature.
- *
+ * 
  * @author Holger Albert
  */
 public class DragFeatureWidget extends DeprecatedMouseWidget
@@ -111,7 +111,7 @@ public class DragFeatureWidget extends DeprecatedMouseWidget
 
   /**
    * The constructor.
-   *
+   * 
    * @param name
    *          The name of this widget.
    * @param toolTip
@@ -139,8 +139,7 @@ public class DragFeatureWidget extends DeprecatedMouseWidget
   }
 
   /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.map.MapPanel)
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget, org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
@@ -267,10 +266,10 @@ public class DragFeatureWidget extends DeprecatedMouseWidget
 
     final GeoTransform projection = getMapPanel().getProjection();
 
-    final int destX = (int) projection.getDestX( x );
-    final int destY = (int) projection.getDestY( yy );
-    final int destXX = (int) projection.getDestX( xx );
-    final int destYY = (int) projection.getDestY( y );
+    final int destX = (int)projection.getDestX( x );
+    final int destY = (int)projection.getDestY( yy );
+    final int destXX = (int)projection.getDestX( xx );
+    final int destYY = (int)projection.getDestY( y );
 
     final int width = destXX - destX;
     final int height = destYY - destY;
@@ -284,11 +283,11 @@ public class DragFeatureWidget extends DeprecatedMouseWidget
     if( m_startPoint != null && m_currentPoint != null && m_handles.get( 0 ).isActive() )
     {
       /* Calculate the difference between the two points. */
-      final int da = (int) (m_currentPoint.getX() - m_startPoint.getX());
-      final int db = (int) (m_currentPoint.getY() - m_startPoint.getY());
+      final int da = (int)(m_currentPoint.getX() - m_startPoint.getX());
+      final int db = (int)(m_currentPoint.getY() - m_startPoint.getY());
 
-      final int a = (int) m_startPoint.getX();
-      final int b = (int) m_startPoint.getY();
+      final int a = (int)m_startPoint.getX();
+      final int b = (int)m_startPoint.getY();
 
       g.setColor( Color.BLUE );
       g.drawLine( a, b, a + da, b + db );
@@ -363,7 +362,7 @@ public class DragFeatureWidget extends DeprecatedMouseWidget
       return null;
 
     /* On activation collect all handles of the selected feature. */
-    final EasyFeatureWrapper[] allFeatures = ((IFeatureSelection) selection).getAllFeatures();
+    final EasyFeatureWrapper[] allFeatures = ((IFeatureSelection)selection).getAllFeatures();
 
     for( final EasyFeatureWrapper wrapper : allFeatures )
     {

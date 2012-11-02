@@ -43,13 +43,13 @@ package org.kalypso.ogc.gml.featureview.control;
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.dialog.CreateFeaturePropertyDialog;
 import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.JumpToFeatureDialog;
 import org.kalypso.ogc.gml.featureview.dialog.NotImplementedFeatureDialog;
 import org.kalypso.ogc.gml.gui.IFeatureDialogFactory;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -72,7 +72,7 @@ public class RelationFeatureDialogFactory implements IFeatureDialogFactory
   {
     Assert.isTrue( ftp instanceof IRelationType );
 
-    final IRelationType rt = (IRelationType) ftp;
+    final IRelationType rt = (IRelationType)ftp;
     if( rt.isList() )
     {
       // it is a list of features or links to features or mixed
@@ -93,14 +93,14 @@ public class RelationFeatureDialogFactory implements IFeatureDialogFactory
 
     if( property instanceof String ) // link auf ein Feature mit FeatureID
     {
-      if( ((String) property).length() < 1 )
+      if( ((String)property).length() < 1 )
         return new CreateFeaturePropertyDialog( m_listener, feature, rt );
 
       final GMLWorkspace workspace = feature.getWorkspace();
-      linkedFeature = workspace.getFeature( (String) property );
+      linkedFeature = workspace.getFeature( (String)property );
     }
     else if( property instanceof Feature )
-      linkedFeature = (Feature) property;
+      linkedFeature = (Feature)property;
     else
       return new NotImplementedFeatureDialog( Messages.getString( "org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl.keinelement" ), Messages.getString( "org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl.leer" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 

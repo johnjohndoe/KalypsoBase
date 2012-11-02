@@ -64,7 +64,7 @@ public class ThemeTypeLabelProvider extends ColumnLabelProvider
   public String getText( final Object element )
   {
     if( element instanceof IKalypsoTheme )
-      return ((IKalypsoTheme) element).getType();
+      return ((IKalypsoTheme)element).getType();
 
     return super.getText( element );
   }

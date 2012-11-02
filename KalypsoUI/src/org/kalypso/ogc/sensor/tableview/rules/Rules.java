@@ -49,7 +49,7 @@ import java.util.NoSuchElementException;
 
 /**
  * Holds a list of rules.
- *
+ * 
  * @author schlienger
  */
 public class Rules implements ITableViewRules
@@ -65,7 +65,7 @@ public class Rules implements ITableViewRules
 
   /**
    * Constructor with given rules
-   *
+   * 
    * @param rules
    */
   public Rules( final RenderingRule[] rules )
@@ -166,7 +166,7 @@ public class Rules implements ITableViewRules
 
     for( final Object element : m_rules )
     {
-      final RenderingRule rule = (RenderingRule) element;
+      final RenderingRule rule = (RenderingRule)element;
       rules.addRule( rule.cloneRule() );
     }
 

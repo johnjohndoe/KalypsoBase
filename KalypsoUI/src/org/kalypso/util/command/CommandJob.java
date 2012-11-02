@@ -48,8 +48,8 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandManager;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * Job to process / undo / redo a ICommand Wird sofort gestartet

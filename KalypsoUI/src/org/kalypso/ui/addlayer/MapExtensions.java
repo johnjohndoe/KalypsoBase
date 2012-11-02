@@ -64,7 +64,7 @@ import org.kalypso.ui.addlayer.internal.dnd.MapDropTarget;
 /**
  * @author Gernot Belger
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings( "restriction" )
 public final class MapExtensions
 {
   /** Constant for all Kalypso data import wizards (Extension point schema org.kalypso.ui.dataImportWizard.exsd) */
@@ -193,7 +193,7 @@ public final class MapExtensions
     if( !(category instanceof WizardCollectionElement) )
       return;
 
-    final WizardCollectionElement collection = (WizardCollectionElement) category;
+    final WizardCollectionElement collection = (WizardCollectionElement)category;
     collection.remove( badWizard );
   }
 }

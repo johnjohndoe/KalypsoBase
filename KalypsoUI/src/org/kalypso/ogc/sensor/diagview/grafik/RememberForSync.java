@@ -15,7 +15,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.io.CSV;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -23,11 +22,12 @@ import org.kalypso.ogc.sensor.ObservationUtilities;
 import org.kalypso.ogc.sensor.status.KalypsoStati;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.xml.sax.InputSource;
 
 /**
  * RememberForSync: remembers which zml file belongs to which grafik dat file for a given axis
- *
+ * 
  * @author schlienger
  */
 public final class RememberForSync

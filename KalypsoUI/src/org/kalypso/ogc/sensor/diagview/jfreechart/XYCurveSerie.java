@@ -45,7 +45,6 @@ import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
 import org.jfree.data.general.Series;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -53,6 +52,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.diagview.DiagViewCurve;
 import org.kalypso.ogc.sensor.diagview.DiagramAxis;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * A CurveSerie.
@@ -146,9 +146,9 @@ class XYCurveSerie extends Series
     final Object obj = m_values.get( item, m_xAxis );
 
     if( obj instanceof Number )
-      return (Number) obj;
+      return (Number)obj;
     else if( obj instanceof Date )
-      return new Double( ((Date) obj).getTime() );
+      return new Double( ((Date)obj).getTime() );
 
     return null;
   }
@@ -158,11 +158,11 @@ class XYCurveSerie extends Series
     final Object obj = m_values.get( item, m_yAxis );
 
     if( obj instanceof Number )
-      return (Number) obj;
+      return (Number)obj;
 
     if( obj instanceof Boolean )
     {
-      final Boolean b = (Boolean) obj;
+      final Boolean b = (Boolean)obj;
       return b.booleanValue() ? new Integer( 1 ) : new Integer( 0 );
     }
 
@@ -180,7 +180,7 @@ class XYCurveSerie extends Series
     final Object obj = m_values.get( item, m_statusAxis );
 
     if( obj instanceof Number )
-      return (Number) obj;
+      return (Number)obj;
 
     return null;
   }

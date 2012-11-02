@@ -100,7 +100,7 @@ public class RectangleSelector
       {
         // TODO: set color/line width and so on
         // TODO 2: configure g at a central point
-        final Graphics2D g2 = (Graphics2D) g;
+        final Graphics2D g2 = (Graphics2D)g;
         g2.setStroke( new BasicStroke() );
         g2.setColor( new Color( 255, 0, 0 ) );
         g.drawRect( rectangle.x, rectangle.y, rectangle.width, rectangle.height );

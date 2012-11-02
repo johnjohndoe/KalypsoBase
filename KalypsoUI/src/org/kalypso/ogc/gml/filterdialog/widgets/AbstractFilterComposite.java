@@ -47,8 +47,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.filterdialog.dialog.IErrorMessageReciever;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.model.feature.event.ModellEventProviderAdapter;
 import org.kalypsodeegree_impl.filterencoding.Literal;
@@ -190,9 +190,9 @@ public abstract class AbstractFilterComposite extends Composite implements IErro
     if( expression != null )
     {
       if( expression instanceof Literal )
-        value = ((Literal) expression).getValue();
+        value = ((Literal)expression).getValue();
       else if( expression instanceof PropertyName )
-        value = ((PropertyName) expression).getValue();
+        value = ((PropertyName)expression).getValue();
 
       final IPropertyType[] properties = m_ft.getProperties();
       for( final IPropertyType type : properties )

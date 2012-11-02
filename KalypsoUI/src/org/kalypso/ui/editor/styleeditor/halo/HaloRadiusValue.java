@@ -71,8 +71,7 @@ public class HaloRadiusValue extends InputWithContextObservableValue<Halo, Doubl
   }
 
   /**
-   * @see org.kalypso.ui.editor.styleeditor.forms.InputWithContextObservableValue#setValueToInput(java.lang.Object,
-   *      java.lang.Object)
+   * @see org.kalypso.ui.editor.styleeditor.forms.InputWithContextObservableValue#setValueToInput(java.lang.Object, java.lang.Object)
    */
   @Override
   protected void setValueToInput( final Halo data, final Double value )

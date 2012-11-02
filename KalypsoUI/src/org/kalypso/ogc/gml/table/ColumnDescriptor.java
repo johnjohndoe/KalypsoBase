@@ -52,7 +52,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * Describes a column of the gis table.
- *
+ * 
  * @author Gernot Belger
  */
 public class ColumnDescriptor implements IColumnDescriptor

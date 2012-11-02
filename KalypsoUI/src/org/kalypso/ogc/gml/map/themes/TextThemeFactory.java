@@ -50,7 +50,7 @@ import org.kalypso.template.types.StyledLayerType;
 
 /**
  * Theme factory for {@link KalypsoTextTheme}s.
- *
+ * 
  * @author Holger Albert
  */
 public class TextThemeFactory extends AbstractThemeFactory

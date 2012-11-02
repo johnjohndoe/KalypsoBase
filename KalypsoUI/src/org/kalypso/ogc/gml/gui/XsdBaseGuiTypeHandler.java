@@ -91,7 +91,7 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
   public JAXBElement< ? extends ControlType> createFeatureviewControl( final IPropertyType property, final ObjectFactory factory )
   {
     // if we get a ClassCastException here, something is very wrong
-    final IValuePropertyType vpt = (IValuePropertyType) property;
+    final IValuePropertyType vpt = (IValuePropertyType)property;
 
     final Class< ? > valueClass = getValueClass();
     final QName qname = property.getQName();
@@ -133,7 +133,7 @@ public class XsdBaseGuiTypeHandler extends LabelProvider implements IGuiTypeHand
   public IFeatureModifier createFeatureModifier( final GMLXPath propertyPath, final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format )
   {
     // if we get a ClassCastExxception here, something is very wrong
-    final IValuePropertyType vpt = (IValuePropertyType) ftp;
+    final IValuePropertyType vpt = (IValuePropertyType)ftp;
 
     final Class< ? > valueClass = getValueClass();
 

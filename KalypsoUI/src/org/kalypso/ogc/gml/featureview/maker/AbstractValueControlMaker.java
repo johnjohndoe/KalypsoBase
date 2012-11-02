@@ -49,7 +49,6 @@ import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.GridDataType;
 import org.kalypso.template.featureview.GridLayout;
@@ -57,6 +56,7 @@ import org.kalypso.template.featureview.LabelType;
 import org.kalypso.template.featureview.LayoutDataType;
 import org.kalypso.template.featureview.LayoutType;
 import org.kalypso.template.featureview.ValidatorLabelType;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -75,8 +75,7 @@ public abstract class AbstractValueControlMaker implements IControlMaker
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.maker.IControlMaker#addControls(java.util.List,
-   *      org.kalypso.template.featureview.LayoutType, org.kalypso.gmlschema.property.IPropertyType)
+   * @see org.kalypso.ogc.gml.featureview.maker.IControlMaker#addControls(java.util.List, org.kalypso.template.featureview.LayoutType, org.kalypso.gmlschema.property.IPropertyType)
    */
   @Override
   public boolean addControls( final List<JAXBElement< ? extends ControlType>> controlList, final LayoutType parentLayout, final IFeatureType ft, final IPropertyType ftp, final Feature feature ) throws AbortCreationException
@@ -121,13 +120,13 @@ public abstract class AbstractValueControlMaker implements IControlMaker
 
       final LayoutDataType layoutData = type.getLayoutData().getValue();
       if( layoutData instanceof GridDataType )
-        cellCount += ((GridDataType) layoutData).getHorizontalSpan();
+        cellCount += ((GridDataType)layoutData).getHorizontalSpan();
 
       controlList.add( controlElement );
     }
 
     /* Fill the rest of the line */
-    final GridLayout gridLayout = (GridLayout) parentLayout;
+    final GridLayout gridLayout = (GridLayout)parentLayout;
 
     /* Only fill to getNumColumns - 1, because the last column is always filled with the validator or an empty label. */
     final int numColumns = gridLayout.getNumColumns() - 1;

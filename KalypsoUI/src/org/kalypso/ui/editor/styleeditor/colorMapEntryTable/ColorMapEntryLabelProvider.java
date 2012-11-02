@@ -54,7 +54,7 @@ import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 
 /**
  * A label provider for the color map entry table.
- *
+ * 
  * @author Andreas Doemming
  * @author Holger Albert
  */
@@ -68,7 +68,7 @@ public class ColorMapEntryLabelProvider extends LabelProvider implements ITableL
   @Override
   public String getColumnText( final Object element, final int columnIndex )
   {
-    final ColorMapEntry colorMapEntry = (ColorMapEntry) element;
+    final ColorMapEntry colorMapEntry = (ColorMapEntry)element;
 
     switch( columnIndex )
     {
@@ -106,7 +106,7 @@ public class ColorMapEntryLabelProvider extends LabelProvider implements ITableL
     try
     {
       /* Cast. */
-      final ColorMapEntry entry = (ColorMapEntry) element;
+      final ColorMapEntry entry = (ColorMapEntry)element;
 
       /* Get the display. */
       final Display display = PlatformUI.getWorkbench().getDisplay();

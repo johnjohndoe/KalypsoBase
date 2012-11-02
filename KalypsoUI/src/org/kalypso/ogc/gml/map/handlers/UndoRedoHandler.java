@@ -74,7 +74,7 @@ public abstract class UndoRedoHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
     final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
     final IMapModell mapModell = mapPanel.getMapModell();
     if( mapModell != null )
@@ -82,7 +82,7 @@ public abstract class UndoRedoHandler extends AbstractHandler
       final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
       if( activeTheme instanceof IKalypsoFeatureTheme )
       {
-        final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) activeTheme;
+        final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme)activeTheme;
 
         final CommandableWorkspace workspace = theme.getWorkspace();
 
@@ -116,7 +116,7 @@ public abstract class UndoRedoHandler extends AbstractHandler
     final IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
     if( activePart == null )
       return;
-    final IMapPanel mapPanel = (IMapPanel) activePart.getAdapter( IMapPanel.class );
+    final IMapPanel mapPanel = (IMapPanel)activePart.getAdapter( IMapPanel.class );
 
     if( mapPanel == null )
       return;
@@ -129,7 +129,7 @@ public abstract class UndoRedoHandler extends AbstractHandler
       final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
       if( activeTheme != null && activeTheme instanceof IKalypsoFeatureTheme )
       {
-        final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) activeTheme;
+        final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme)activeTheme;
         final CommandableWorkspace workspace = theme.getWorkspace();
         if( workspace != null )
           bEnabled = m_undo ? workspace.canUndo() : workspace.canRedo();

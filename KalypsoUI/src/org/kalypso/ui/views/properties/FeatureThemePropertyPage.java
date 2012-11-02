@@ -53,13 +53,13 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.GisTemplateFeatureTheme;
 import org.kalypso.ogc.gml.command.CompositeCommand;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * This page shows the link to the data file of a {@link org.kalypso.ogc.gml.GisTemplateFeatureTheme}<br>
- *
+ * 
  * @author Gernot Belger
  */
 public class FeatureThemePropertyPage extends PropertyPage
@@ -180,13 +180,13 @@ public class FeatureThemePropertyPage extends PropertyPage
 
   /**
    * This function returns the theme.
-   *
+   * 
    * @return The theme.
    */
   private GisTemplateFeatureTheme getTheme( )
   {
     final IAdaptable element = getElement();
-    final GisTemplateFeatureTheme theme = (GisTemplateFeatureTheme) (element instanceof GisTemplateFeatureTheme ? element : element.getAdapter( GisTemplateFeatureTheme.class ));
+    final GisTemplateFeatureTheme theme = (GisTemplateFeatureTheme)(element instanceof GisTemplateFeatureTheme ? element : element.getAdapter( GisTemplateFeatureTheme.class ));
     return theme;
   }
 

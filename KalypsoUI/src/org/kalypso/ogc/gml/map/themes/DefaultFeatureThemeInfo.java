@@ -52,12 +52,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCoreExtensions;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.IKalypsoThemeInfo;
 import org.kalypso.ui.catalogs.FeatureTypePropertiesCatalog;
 import org.kalypso.ui.catalogs.IFeatureTypePropertiesConstants;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
@@ -83,7 +83,7 @@ public class DefaultFeatureThemeInfo implements IKalypsoThemeInfo
   {
     Assert.isLegal( theme instanceof IKalypsoFeatureTheme );
 
-    m_theme = (IKalypsoFeatureTheme) theme;
+    m_theme = (IKalypsoFeatureTheme)theme;
 
     /* Try to find a registered theme for the given qname */
     final IFeatureType featureType = m_theme.getFeatureType();
@@ -123,8 +123,7 @@ public class DefaultFeatureThemeInfo implements IKalypsoThemeInfo
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoThemeInfo#appendInfo(java.util.Formatter,
-   *      org.kalypsodeegree.model.geometry.GM_Position)
+   * @see org.kalypso.ogc.gml.IKalypsoThemeInfo#appendInfo(java.util.Formatter, org.kalypsodeegree.model.geometry.GM_Position)
    */
   @Override
   public void appendInfo( final Formatter formatter, final GM_Position pos )
@@ -136,8 +135,7 @@ public class DefaultFeatureThemeInfo implements IKalypsoThemeInfo
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoThemeInfo#appendQuickInfo(java.util.Formatter,
-   *      org.kalypsodeegree.model.geometry.GM_Position)
+   * @see org.kalypso.ogc.gml.IKalypsoThemeInfo#appendQuickInfo(java.util.Formatter, org.kalypsodeegree.model.geometry.GM_Position)
    */
   @Override
   public void appendQuickInfo( final Formatter formatter, final GM_Position pos )

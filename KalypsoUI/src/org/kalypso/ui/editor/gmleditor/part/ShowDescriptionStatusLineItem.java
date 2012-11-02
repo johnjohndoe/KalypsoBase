@@ -49,15 +49,15 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.ui.IEditorPart;
 import org.kalypso.gmlschema.annotation.IAnnotation;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * A status line item, which shows the description of the currently selected feature.
- *
+ * 
  * @author Gernot Belger
  */
 public class ShowDescriptionStatusLineItem extends StatusLineContributionItem
@@ -136,14 +136,14 @@ public class ShowDescriptionStatusLineItem extends StatusLineContributionItem
   {
     if( selection instanceof IStructuredSelection )
     {
-      final int size = ((IStructuredSelection) selection).size();
+      final int size = ((IStructuredSelection)selection).size();
       if( size > 1 )
-        return String.format( Messages.getString("ShowDescriptionStatusLineItem_0"), size ); //$NON-NLS-1$
+        return String.format( Messages.getString( "ShowDescriptionStatusLineItem_0" ), size ); //$NON-NLS-1$
     }
 
     if( selection instanceof IFeatureSelection )
     {
-      final Feature feature = FeatureSelectionHelper.getFirstFeature( (IFeatureSelection) selection );
+      final Feature feature = FeatureSelectionHelper.getFirstFeature( (IFeatureSelection)selection );
       if( feature != null )
       {
         final String description = FeatureHelper.getAnnotationValue( feature, IAnnotation.ANNO_DESCRIPTION );
@@ -154,7 +154,7 @@ public class ShowDescriptionStatusLineItem extends StatusLineContributionItem
 
     if( selection instanceof IStructuredSelection )
     {
-      final Object firstElement = ((IStructuredSelection) selection).getFirstElement();
+      final Object firstElement = ((IStructuredSelection)selection).getFirstElement();
       if( firstElement != null )
         return m_labelProvider.getText( firstElement );
     }

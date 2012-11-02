@@ -73,8 +73,7 @@ class MarkFillSection extends AbstractStyleElementSection<Mark, Fill, FillCompos
   @Override
   protected StyleElementAction<Mark>[] createActions( final IStyleInput<Mark> input )
   {
-    @SuppressWarnings("unchecked")
-    final StyleElementAction<Mark>[] actions = new StyleElementAction[2];
+    @SuppressWarnings( "unchecked" ) final StyleElementAction<Mark>[] actions = new StyleElementAction[2];
     actions[0] = new FillAddAction( input );
     actions[1] = new FillRemoveAction( input );
     return actions;

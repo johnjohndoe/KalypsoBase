@@ -63,10 +63,9 @@ public abstract class AbstractObservationView extends ViewPart
 {
   /**
    * Adds support for dropping items into this viewer via a user drag-and-drop operation.
-   *
+   * 
    * @param operations
-   *          a bitwise OR of the supported drag and drop operation types ( <code>DROP_COPY</code>,
-   *          <code>DROP_LINK</code>, and <code>DROP_MOVE</code>)
+   *          a bitwise OR of the supported drag and drop operation types ( <code>DROP_COPY</code>, <code>DROP_LINK</code>, and <code>DROP_MOVE</code>)
    * @param transferTypes
    *          the transfer types that are supported by the drop operation
    * @see org.eclipse.swt.dnd.DND
@@ -94,7 +93,7 @@ public abstract class AbstractObservationView extends ViewPart
 
       if( selection instanceof IFeatureSelection )
       {
-        final IFeatureSelection fSel = (IFeatureSelection) selection;
+        final IFeatureSelection fSel = (IFeatureSelection)selection;
         final EasyFeatureWrapper[] features = fSel.getAllFeatures();
 
         for( final EasyFeatureWrapper feature2 : features )

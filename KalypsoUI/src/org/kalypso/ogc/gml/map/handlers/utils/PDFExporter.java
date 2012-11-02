@@ -51,10 +51,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Image;
@@ -96,19 +96,19 @@ public class PDFExporter
     try
     {
       /* Monitor. */
-      monitor.beginTask( Messages.getString("PDFExporter_0"), 1000 ); //$NON-NLS-1$
-      monitor.subTask( Messages.getString("PDFExporter_1") ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "PDFExporter_0" ), 1000 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "PDFExporter_1" ) ); //$NON-NLS-1$
 
       /* Create the image. */
       final Insets insets = new Insets( 10, 10, 10, 10 );
-      final BufferedImage image = MapModellHelper.createWellFormedImageFromModel( m_mapPanel, (int) PageSize.A4.getHeight(), (int) PageSize.A4.getWidth(), insets, 1 );
+      final BufferedImage image = MapModellHelper.createWellFormedImageFromModel( m_mapPanel, (int)PageSize.A4.getHeight(), (int)PageSize.A4.getWidth(), insets, 1 );
 
       /* Convert to an itext image. */
       final Image img = Image.getInstance( image, null );
 
       /* Monitor. */
       monitor.worked( 500 );
-      monitor.subTask( Messages.getString("PDFExporter_2") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "PDFExporter_2" ) ); //$NON-NLS-1$
 
       /* Create the output stream. */
       os = new BufferedOutputStream( new FileOutputStream( targetFile ) );
@@ -135,7 +135,7 @@ public class PDFExporter
       /* Monitor. */
       monitor.worked( 500 );
 
-      return new Status( IStatus.OK, KalypsoGisPlugin.getId(), Messages.getString("PDFExporter_3") ); //$NON-NLS-1$
+      return new Status( IStatus.OK, KalypsoGisPlugin.getId(), Messages.getString( "PDFExporter_3" ) ); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {

@@ -173,7 +173,7 @@ public class ImagePropertyPage extends PropertyPage
 
   /**
    * This function creates the contents.
-   *
+   * 
    * @param parent
    *          The parent composite.
    */
@@ -213,11 +213,11 @@ public class ImagePropertyPage extends PropertyPage
     final IAdaptable element = getElement();
 
     /* Get the node. */
-    final IThemeNode node = (IThemeNode) (element instanceof IThemeNode ? element : element.getAdapter( IThemeNode.class ));
+    final IThemeNode node = (IThemeNode)(element instanceof IThemeNode ? element : element.getAdapter( IThemeNode.class ));
 
     /* Get the theme. */
     final Object nodeElement = node.getElement();
-    final IKalypsoTheme theme = nodeElement instanceof IKalypsoTheme ? (IKalypsoTheme) nodeElement : null;
+    final IKalypsoTheme theme = nodeElement instanceof IKalypsoTheme ? (IKalypsoTheme)nodeElement : null;
 
     /* Store the members. */
     m_theme = theme;
@@ -226,7 +226,7 @@ public class ImagePropertyPage extends PropertyPage
     if( m_theme instanceof KalypsoImageTheme )
     {
       /* Cast. */
-      final KalypsoImageTheme imageTheme = (KalypsoImageTheme) m_theme;
+      final KalypsoImageTheme imageTheme = (KalypsoImageTheme)m_theme;
 
       /* Get the properties of the image theme. */
       final Properties imageProperties = new Properties();

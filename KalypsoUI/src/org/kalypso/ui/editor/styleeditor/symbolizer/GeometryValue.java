@@ -120,7 +120,7 @@ public class GeometryValue<S extends Symbolizer> extends InputWithContextObserva
         if( element instanceof QName )
         {
           final IFeatureType ft = input.getFeatureType();
-          final IPropertyType pt = ft.getProperty( (QName) element );
+          final IPropertyType pt = ft.getProperty( (QName)element );
           return AnnotationUtilities.getAnnotation( pt.getAnnotation(), null, IAnnotation.ANNO_LABEL );
         }
 

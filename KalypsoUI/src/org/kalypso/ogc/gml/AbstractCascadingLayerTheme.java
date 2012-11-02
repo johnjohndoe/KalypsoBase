@@ -91,8 +91,7 @@ abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme implemen
     }
 
     /**
-     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeContextChanged(org.kalypso.ogc.gml.mapmodel.IMapModell,
-     *      org.kalypso.ogc.gml.IKalypsoTheme)
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeContextChanged(org.kalypso.ogc.gml.mapmodel.IMapModell, org.kalypso.ogc.gml.IKalypsoTheme)
      */
     @Override
     public void themeContextChanged( final IMapModell source, final IKalypsoTheme theme )
@@ -113,8 +112,7 @@ abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme implemen
     }
 
     /**
-     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeRemoved(org.kalypso.ogc.gml.mapmodel.IMapModell,
-     *      org.kalypso.ogc.gml.IKalypsoTheme, boolean)
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeRemoved(org.kalypso.ogc.gml.mapmodel.IMapModell, org.kalypso.ogc.gml.IKalypsoTheme, boolean)
      */
     @Override
     public void themeRemoved( final IMapModell source, final IKalypsoTheme theme, final boolean lastVisibility )
@@ -130,8 +128,7 @@ abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme implemen
     }
 
     /**
-     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeStatusChanged(org.kalypso.ogc.gml.mapmodel.IMapModell,
-     *      org.kalypso.ogc.gml.IKalypsoTheme)
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeStatusChanged(org.kalypso.ogc.gml.mapmodel.IMapModell, org.kalypso.ogc.gml.IKalypsoTheme)
      */
     @Override
     public void themeStatusChanged( final IMapModell source, final IKalypsoTheme theme )
@@ -140,8 +137,7 @@ abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme implemen
     }
 
     /**
-     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeVisibilityChanged(org.kalypso.ogc.gml.mapmodel.IMapModell,
-     *      org.kalypso.ogc.gml.IKalypsoTheme, boolean)
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeVisibilityChanged(org.kalypso.ogc.gml.mapmodel.IMapModell, org.kalypso.ogc.gml.IKalypsoTheme, boolean)
      */
     @Override
     public void themeVisibilityChanged( final IMapModell source, final IKalypsoTheme theme, final boolean visibility )
@@ -188,8 +184,7 @@ abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme implemen
   }
 
   /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#accept(org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor, int,
-   *      org.kalypso.ogc.gml.IKalypsoTheme)
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#accept(org.kalypso.ogc.gml.mapmodel.IKalypsoThemeVisitor, int, org.kalypso.ogc.gml.IKalypsoTheme)
    */
   @Override
   public void accept( final IKalypsoThemeVisitor visitor, final int depth_infinite, final IKalypsoTheme theme )
@@ -295,7 +290,7 @@ abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme implemen
 
   /**
    * Overwritten in order to have correct parent for tree strucutures.
-   *
+   * 
    * @see org.kalypso.ogc.gml.mapmodel.IMapModell#getThemeParent(org.kalypso.ogc.gml.IKalypsoTheme)
    */
   @Override
@@ -388,8 +383,7 @@ abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme implemen
   }
 
   /**
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#paint(java.awt.Graphics, org.kalypsodeegree.graphics.transformation.GeoTransform, org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
   public IStatus paint( final Graphics g, final GeoTransform p, final IProgressMonitor monitor )
@@ -398,9 +392,7 @@ abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme implemen
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean,
-   *      org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics, org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean, org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
   public IStatus paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
@@ -439,7 +431,7 @@ abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme implemen
     for( final IKalypsoTheme theme : getInnerMapModel().getAllThemes() )
     {
       if( theme instanceof IKalypsoSaveableTheme )
-        ((IKalypsoSaveableTheme) theme).saveFeatures( monitor );
+        ((IKalypsoSaveableTheme)theme).saveFeatures( monitor );
     }
   }
 
@@ -453,7 +445,7 @@ abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme implemen
     {
       if( theme instanceof IKalypsoSaveableTheme )
       {
-        if( ((IKalypsoSaveableTheme) theme).isDirty() )
+        if( ((IKalypsoSaveableTheme)theme).isDirty() )
           return true;
       }
     }
@@ -474,8 +466,7 @@ abstract class AbstractCascadingLayerTheme extends AbstractKalypsoTheme implemen
   /**
    * @param theme1
    * @param theme2
-   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#swapThemes(org.kalypso.ogc.gml.IKalypsoTheme,
-   *      org.kalypso.ogc.gml.IKalypsoTheme)
+   * @see org.kalypso.ogc.gml.mapmodel.IMapModell#swapThemes(org.kalypso.ogc.gml.IKalypsoTheme, org.kalypso.ogc.gml.IKalypsoTheme)
    */
   @Override
   public void swapThemes( final IKalypsoTheme theme1, final IKalypsoTheme theme2 )

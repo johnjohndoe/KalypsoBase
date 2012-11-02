@@ -66,7 +66,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
  * <br>
  * display handles near mouse<br>
  * simply move handles with left drag<br>
- *
+ * 
  * @author doemming
  */
 public class EditGeometryWidget extends DeprecatedMouseWidget
@@ -126,7 +126,7 @@ public class EditGeometryWidget extends DeprecatedMouseWidget
     final GM_Envelope envelope = GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY, getMapPanel().getMapModell().getCoordinatesSystem() );
 
     // final FeatureList featureListVisible = ((IKalypsoFeatureTheme) activeTheme).getFeatureListVisible( null );
-    final FeatureList featureListVisible = ((IKalypsoFeatureTheme) activeTheme).getFeatureList();
+    final FeatureList featureListVisible = ((IKalypsoFeatureTheme)activeTheme).getFeatureList();
     final List<Object> features = JMSelector.select( envelope, featureListVisible, false );
     m_handles = HandlesFactory.createHandles( features, null, envelope );
 
@@ -207,7 +207,7 @@ public class EditGeometryWidget extends DeprecatedMouseWidget
 
   /**
    * Perform the translation of the selected features.
-   *
+   * 
    * @return true to signal that features
    */
   protected Feature[] perform( )
@@ -229,7 +229,7 @@ public class EditGeometryWidget extends DeprecatedMouseWidget
         if( !(activeTheme instanceof IKalypsoFeatureTheme) )
           return null;
 
-        final IKalypsoFeatureTheme fTheme = (IKalypsoFeatureTheme) activeTheme;
+        final IKalypsoFeatureTheme fTheme = (IKalypsoFeatureTheme)activeTheme;
         final CommandableWorkspace workspace = fTheme.getWorkspace();
         final ModifyFeatureGeometryCommand command = new ModifyFeatureGeometryCommand( workspace, m_editHandles, translation );
         try
@@ -252,7 +252,7 @@ public class EditGeometryWidget extends DeprecatedMouseWidget
   /**
    * topology-mode=on : all handles relevant<br>
    * topology-mode=off : nearest handles <br>
-   *
+   * 
    * @return filteres handles
    */
   protected List<Handle> filter( final List<Handle> handles, final Point pointOfInterest, List<Handle> collector )
@@ -331,15 +331,15 @@ public class EditGeometryWidget extends DeprecatedMouseWidget
     {
       if( m_startPoint != null && m_dragPoint != null )
       {
-        final int dx = (int) (m_dragPoint.getX() - m_startPoint.getX());
-        final int dy = (int) (m_dragPoint.getY() - m_startPoint.getY());
+        final int dx = (int)(m_dragPoint.getX() - m_startPoint.getX());
+        final int dy = (int)(m_dragPoint.getY() - m_startPoint.getY());
         for( final Handle handle : m_editHandles )
-          handle.paint( g, projection, m_boxRadiusDrawnHandle, (int) m_gisRadiusTopology, dx, dy, Handle.MASK_BOX );
+          handle.paint( g, projection, m_boxRadiusDrawnHandle, (int)m_gisRadiusTopology, dx, dy, Handle.MASK_BOX );
       }
     }
     else
       for( final Handle handle : m_handles )
-        handle.paint( g, projection, m_boxRadiusDrawnHandle, (int) m_gisRadiusTopology, mask );
+        handle.paint( g, projection, m_boxRadiusDrawnHandle, (int)m_gisRadiusTopology, mask );
   }
 
 }

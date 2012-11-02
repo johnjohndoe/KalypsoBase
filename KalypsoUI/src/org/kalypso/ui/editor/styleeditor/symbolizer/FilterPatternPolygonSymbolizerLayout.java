@@ -96,7 +96,7 @@ public class FilterPatternPolygonSymbolizerLayout extends AbstractSymbolizerComp
         final Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
         if( symb instanceof PolygonSymbolizer )
         {
-          final java.awt.Color color = ((PolygonSymbolizer) symb).getFill().getFill( null );
+          final java.awt.Color color = ((PolygonSymbolizer)symb).getFill().getFill( null );
           colors[i] = new Color( null, color.getRed(), color.getGreen(), color.getBlue() );
         }
       }
@@ -111,7 +111,7 @@ public class FilterPatternPolygonSymbolizerLayout extends AbstractSymbolizerComp
           final Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
           if( symb instanceof PolygonSymbolizer )
           {
-            ((PolygonSymbolizer) symb).getFill().setFill( new java.awt.Color( colors[i].getRed(), colors[i].getGreen(), colors[i].getBlue() ) );
+            ((PolygonSymbolizer)symb).getFill().setFill( new java.awt.Color( colors[i].getRed(), colors[i].getGreen(), colors[i].getBlue() ) );
           }
         }
 
@@ -127,7 +127,7 @@ public class FilterPatternPolygonSymbolizerLayout extends AbstractSymbolizerComp
               final Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
               if( symb instanceof PolygonSymbolizer )
               {
-                ((PolygonSymbolizer) symb).getFill().setFill( new java.awt.Color( colorArray[i].getRed(), colorArray[i].getGreen(), colorArray[i].getBlue() ) );
+                ((PolygonSymbolizer)symb).getFill().setFill( new java.awt.Color( colorArray[i].getRed(), colorArray[i].getGreen(), colorArray[i].getBlue() ) );
               }
             }
             fireStyleChanged();

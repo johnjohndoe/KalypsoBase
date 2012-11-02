@@ -61,7 +61,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree.graphics.sld.SldHelper;
 import org.kalypsodeegree_impl.graphics.sld.ColorMapEntry_Impl;
@@ -69,7 +69,7 @@ import org.kalypsodeegree_impl.graphics.sld.ColorMapEntry_Impl;
 /**
  * In this composite the user can specify the colors, values and opacities for two ColorMapEntries. The classes
  * inbetween get interpolated by defining the step width, min and max value.
- *
+ * 
  * @author Thomas Jung
  */
 public abstract class RasterColorMapEditorComposite extends Composite
@@ -484,8 +484,8 @@ public abstract class RasterColorMapEditorComposite extends Composite
     if( !checkValue( opacityTo ) == true )
       opacityTo = 1.0;
 
-    final int fromAlpha = (int) (255.0 * opacityFrom);
-    final int toAlpha = (int) (255.0 * opacityTo);
+    final int fromAlpha = (int)(255.0 * opacityFrom);
+    final int toAlpha = (int)(255.0 * opacityTo);
     final Color fromColorAlpha = new Color( fromColor.getRed(), fromColor.getGreen(), fromColor.getBlue(), fromAlpha );
     final Color toColorAlpha = new Color( toColor.getRed(), toColor.getGreen(), toColor.getBlue(), toAlpha );
 

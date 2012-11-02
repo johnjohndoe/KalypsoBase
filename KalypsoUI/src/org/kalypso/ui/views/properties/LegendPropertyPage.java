@@ -64,7 +64,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.kalypso.contribs.eclipse.swt.widgets.ImageCanvas;
 import org.kalypso.core.status.StatusComposite;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.ThemeUtilities;
 import org.kalypso.ogc.gml.map.themes.KalypsoLegendTheme;
@@ -72,6 +71,7 @@ import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
 import org.kalypso.ogc.gml.outline.nodes.NodeFactory;
 import org.kalypso.ogc.gml.outline.nodes.NodeLegendBuilder;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypso.util.themes.legend.LegendUtilities;
 import org.kalypso.util.themes.legend.controls.LegendComposite;
 import org.kalypso.util.themes.legend.listener.ILegendChangedListener;
@@ -79,7 +79,7 @@ import org.kalypso.util.themes.position.PositionUtilities;
 
 /**
  * This page will show a legend for a theme, if one is available.
- *
+ * 
  * @author Holger Albert
  */
 public class LegendPropertyPage extends PropertyPage
@@ -238,11 +238,11 @@ public class LegendPropertyPage extends PropertyPage
     final IAdaptable element = getElement();
 
     /* Get the node. */
-    final IThemeNode node = (IThemeNode) (element instanceof IThemeNode ? element : element.getAdapter( IThemeNode.class ));
+    final IThemeNode node = (IThemeNode)(element instanceof IThemeNode ? element : element.getAdapter( IThemeNode.class ));
 
     /* Get the theme. */
     final Object nodeElement = node.getElement();
-    final IKalypsoTheme theme = nodeElement instanceof IKalypsoTheme ? (IKalypsoTheme) nodeElement : null;
+    final IKalypsoTheme theme = nodeElement instanceof IKalypsoTheme ? (IKalypsoTheme)nodeElement : null;
 
     /* Store the members. */
     m_node = node;
@@ -252,7 +252,7 @@ public class LegendPropertyPage extends PropertyPage
     if( m_theme instanceof KalypsoLegendTheme )
     {
       /* Cast. */
-      final KalypsoLegendTheme legendTheme = (KalypsoLegendTheme) m_theme;
+      final KalypsoLegendTheme legendTheme = (KalypsoLegendTheme)m_theme;
 
       /* Get the properties of the legend theme. */
       final Properties legendProperties = new Properties();
@@ -267,7 +267,7 @@ public class LegendPropertyPage extends PropertyPage
 
   /**
    * This function creates the properties page for another theme.
-   *
+   * 
    * @param parent
    *          The parent composite.
    */
@@ -310,13 +310,13 @@ public class LegendPropertyPage extends PropertyPage
       /* Create a status composite. */
       final StatusComposite statusComposite = new StatusComposite( parent, SWT.NONE );
       statusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-      statusComposite.setStatus( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString("LegendPropertyPage.0"), ex ) ); //$NON-NLS-1$
+      statusComposite.setStatus( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString( "LegendPropertyPage.0" ), ex ) ); //$NON-NLS-1$
     }
   }
 
   /**
    * This function creates the properties page for a legend theme.
-   *
+   * 
    * @param parent
    *          The parent composite.
    */
@@ -347,7 +347,7 @@ public class LegendPropertyPage extends PropertyPage
       public void widgetSelected( final SelectionEvent e )
       {
         /* Get the source. */
-        final CTabFolder source = (CTabFolder) e.getSource();
+        final CTabFolder source = (CTabFolder)e.getSource();
 
         /* Update the preview tab, if it is switched to it. */
         if( source.getSelectionIndex() == 1 )
@@ -361,7 +361,7 @@ public class LegendPropertyPage extends PropertyPage
 
   /**
    * This function creates the properties tab.
-   *
+   * 
    * @param parent
    *          The parent tab folder.
    */
@@ -369,7 +369,7 @@ public class LegendPropertyPage extends PropertyPage
   {
     /* Create a tab item. */
     m_propertiesTabItem = new CTabItem( parent, SWT.NONE );
-    m_propertiesTabItem.setText( Messages.getString("LegendPropertyPage.1") ); //$NON-NLS-1$
+    m_propertiesTabItem.setText( Messages.getString( "LegendPropertyPage.1" ) ); //$NON-NLS-1$
 
     /* Create the properties composite. */
     final Composite propertiesComposite = createPropertiesComposite( parent );
@@ -380,7 +380,7 @@ public class LegendPropertyPage extends PropertyPage
 
   /**
    * This function creates the properties composite.
-   *
+   * 
    * @param parent
    *          The parent tab folder.
    * @return The properties composite.
@@ -408,7 +408,7 @@ public class LegendPropertyPage extends PropertyPage
 
   /**
    * This function creates the preview tab.
-   *
+   * 
    * @param parent
    *          The parent tab folder.
    */
@@ -416,7 +416,7 @@ public class LegendPropertyPage extends PropertyPage
   {
     /* Create a tab item. */
     m_previewTabItem = new CTabItem( parent, SWT.NONE );
-    m_previewTabItem.setText( Messages.getString("LegendPropertyPage.2") ); //$NON-NLS-1$
+    m_previewTabItem.setText( Messages.getString( "LegendPropertyPage.2" ) ); //$NON-NLS-1$
 
     /* Create the preview composite. */
     final Composite previewComposite = createPreviewComposite( parent );
@@ -427,7 +427,7 @@ public class LegendPropertyPage extends PropertyPage
 
   /**
    * This function creates the preview composite.
-   *
+   * 
    * @param parent
    *          The parent tab folder.
    * @return The preview composite.
@@ -446,7 +446,7 @@ public class LegendPropertyPage extends PropertyPage
 
   /**
    * This function creates the preview legend.
-   *
+   * 
    * @param parent
    *          The parent composite.
    */
@@ -475,7 +475,7 @@ public class LegendPropertyPage extends PropertyPage
 
       final List<String> themeIds = LegendUtilities.verifyThemeIds( m_theme.getMapModell(), themeIdsProperty );
       if( themeIds == null || themeIds.size() == 0 )
-        throw new Exception( Messages.getString("LegendPropertyPage.3") ); //$NON-NLS-1$
+        throw new Exception( Messages.getString( "LegendPropertyPage.3" ) ); //$NON-NLS-1$
 
       final int fontSize = LegendUtilities.checkFontSize( fontSizeProperty );
 
@@ -520,7 +520,7 @@ public class LegendPropertyPage extends PropertyPage
       /* Create a status composite. */
       final StatusComposite statusComposite = new StatusComposite( parent, SWT.NONE );
       statusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-      statusComposite.setStatus( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString("LegendPropertyPage.4"), ex ) ); //$NON-NLS-1$
+      statusComposite.setStatus( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString( "LegendPropertyPage.4" ), ex ) ); //$NON-NLS-1$
     }
   }
 

@@ -50,7 +50,7 @@ import org.kalypso.ui.addlayer.dnd.AddLayerDndSupport;
 
 /**
  * DropAdapter
- *
+ * 
  * @author schlienger
  */
 class GisMapOutlineDropAdapter extends ViewerDropAdapter

@@ -48,10 +48,10 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
@@ -65,7 +65,7 @@ public class FullExtentHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
 
     final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
 
@@ -78,7 +78,7 @@ public class FullExtentHandler extends AbstractHandler
 
       final Shell shell = HandlerUtil.getActiveShell( event );
       final String title = HandlerUtils.getCommandName( event );
-      MessageDialog.openWarning( shell, title, Messages.getString("FullExtentHandler_0") ); //$NON-NLS-1$
+      MessageDialog.openWarning( shell, title, Messages.getString( "FullExtentHandler_0" ) ); //$NON-NLS-1$
       return null;
     }
 

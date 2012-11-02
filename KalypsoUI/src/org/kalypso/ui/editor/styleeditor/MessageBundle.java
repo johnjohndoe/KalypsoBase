@@ -40,7 +40,7 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor;
 
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author F.Lindemann
@@ -51,7 +51,7 @@ public interface MessageBundle
 
   String STYLE_EDITOR_STYLE = Messages.getString( "org.kalypso.ui.editor.styleeditor.MessageBundle.2" ); //$NON-NLS-1$
 
-  String STYLE_EDITOR_RESET_STYLE = Messages.getString("MessageBundle.0"); //$NON-NLS-1$
+  String STYLE_EDITOR_RESET_STYLE = Messages.getString( "MessageBundle.0" ); //$NON-NLS-1$
 
   String STYLE_EDITOR_SAVE_STYLE = Messages.getString( "org.kalypso.ui.editor.styleeditor.MessageBundle.3" ); //$NON-NLS-1$
 

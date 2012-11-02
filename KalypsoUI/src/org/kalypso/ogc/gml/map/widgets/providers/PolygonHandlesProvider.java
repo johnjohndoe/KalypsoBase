@@ -55,7 +55,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * This class provides handles for polygon geometries.
- *
+ * 
  * @author Holger Albert
  */
 public class PolygonHandlesProvider implements IHandlesProvider
@@ -69,10 +69,10 @@ public class PolygonHandlesProvider implements IHandlesProvider
 
     for( final IValuePropertyType geoVpt : allGeomteryProperties )
     {
-      final GM_Object gmObj = (GM_Object) feature.getProperty( geoVpt );
+      final GM_Object gmObj = (GM_Object)feature.getProperty( geoVpt );
       if( GeometryUtilities.isPolygonGeometry( geoVpt ) )
       {
-        final GM_Polygon surface = (GM_Polygon) gmObj;
+        final GM_Polygon surface = (GM_Polygon)gmObj;
 
         final int numberOfSurfacePatches = surface.size();
 

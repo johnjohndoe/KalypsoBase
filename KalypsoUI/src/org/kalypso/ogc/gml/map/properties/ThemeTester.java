@@ -55,7 +55,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * This property tester tests a {@link IKalypsoTheme}'s.
- *
+ * 
  * @author Gernot Belger
  */
 public class ThemeTester extends PropertyTester
@@ -64,8 +64,7 @@ public class ThemeTester extends PropertyTester
   private final static String PROPERTY_NOTNULL = "isNotNull"; //$NON-NLS-1$
 
   /**
-   * Property 'qname': compares the given argument to the toString of the qname of the active theme. Returns
-   * <code>false</code>, if the active theme is not an feature theme.
+   * Property 'qname': compares the given argument to the toString of the qname of the active theme. Returns <code>false</code>, if the active theme is not an feature theme.
    */
   private final static String PROPERTY_QNAME = "qname"; //$NON-NLS-1$
 
@@ -85,8 +84,7 @@ public class ThemeTester extends PropertyTester
   private final static String PROPERTY_ISCASCADING = "isCascading"; //$NON-NLS-1$
 
   /**
-   * @see org.eclipse.core.expressions.IPropertyTester#test(java.lang.Object, java.lang.String, java.lang.Object[],
-   *      java.lang.Object)
+   * @see org.eclipse.core.expressions.IPropertyTester#test(java.lang.Object, java.lang.String, java.lang.Object[], java.lang.Object)
    */
   @Override
   public boolean test( final Object receiver, final String property, final Object[] args, final Object expectedValue )
@@ -148,7 +146,7 @@ public class ThemeTester extends PropertyTester
     if( !(theme instanceof IKalypsoFeatureTheme) )
       return false;
 
-    final IFeatureType featureType = ((IKalypsoFeatureTheme) theme).getFeatureType();
+    final IFeatureType featureType = ((IKalypsoFeatureTheme)theme).getFeatureType();
     if( featureType == null )
       return false;
 

@@ -66,7 +66,7 @@ final class PointDialogListener implements ModifyListener
   @Override
   public void modifyText( final ModifyEvent e )
   {
-    final Text text = (Text) e.getSource();
+    final Text text = (Text)e.getSource();
     final String content = text.getText();
 
     final double[] values = m_ptDialog.getValues();

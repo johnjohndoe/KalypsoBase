@@ -84,7 +84,7 @@ public class LayerTablePainter implements Listener
 
     final GC gc = event.gc;
 
-    final Feature feature = (Feature) event.item.getData();
+    final Feature feature = (Feature)event.item.getData();
 
     final int columnIndex = event.index;
 

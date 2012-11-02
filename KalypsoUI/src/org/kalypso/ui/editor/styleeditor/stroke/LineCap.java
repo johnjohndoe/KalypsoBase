@@ -44,9 +44,9 @@ import org.kalypsodeegree.graphics.sld.Stroke;
 
 enum LineCap
 {
-  butt(Stroke.LC_BUTT, "Butt"), //$NON-NLS-1$
-  round(Stroke.LC_ROUND, "Round"), //$NON-NLS-1$
-  square(Stroke.LC_SQUARE, "Square"); //$NON-NLS-1$
+  butt( Stroke.LC_BUTT, "Butt" ), //$NON-NLS-1$
+  round( Stroke.LC_ROUND, "Round" ), //$NON-NLS-1$
+  square( Stroke.LC_SQUARE, "Square" ); //$NON-NLS-1$
 
   private final int m_lineCap;
 

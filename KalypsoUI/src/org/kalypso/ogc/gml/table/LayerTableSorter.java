@@ -94,8 +94,8 @@ public class LayerTableSorter extends ViewerSorter
   @Override
   public int compare( final Viewer viewer, final Object e1, final Object e2 )
   {
-    final Feature kf1 = (Feature) e1;
-    final Feature kf2 = (Feature) e2;
+    final Feature kf1 = (Feature)e1;
+    final Feature kf2 = (Feature)e2;
 
     final IColumnDescriptor column = getColumn();
     if( column == null )
@@ -135,17 +135,17 @@ public class LayerTableSorter extends ViewerSorter
   private int compareObjects( final Object o1, final Object o2 )
   {
     if( o1 instanceof String && o2 instanceof String )
-      return ((String) o1).compareTo( (String) o2 );
+      return ((String)o1).compareTo( (String)o2 );
     else if( o1 instanceof Integer && o2 instanceof Integer )
-      return ((Integer) o1).compareTo( (Integer) o2 );
+      return ((Integer)o1).compareTo( (Integer)o2 );
     else if( o1 instanceof Double && o2 instanceof Double )
-      return ((Double) o1).compareTo( (Double) o2 );
+      return ((Double)o1).compareTo( (Double)o2 );
     else if( o1 instanceof Long && o2 instanceof Long )
-      return ((Long) o1).compareTo( (Long) o2 );
+      return ((Long)o1).compareTo( (Long)o2 );
     else if( o1 instanceof Float && o1 instanceof Float )
-      return ((Float) o1).compareTo( (Float) o2 );
+      return ((Float)o1).compareTo( (Float)o2 );
     else if( o1 instanceof Date && o2 instanceof Date )
-      return ((Date) o1).compareTo( (Date) o2 );
+      return ((Date)o1).compareTo( (Date)o2 );
     else if( o1 instanceof Boolean )
     {
       final String s1 = String.valueOf( o1 );
@@ -155,8 +155,8 @@ public class LayerTableSorter extends ViewerSorter
     else if( o1 instanceof List && o2 instanceof List )
     {
       // hack: compare the first two items of the lists (e.g. for name or description properties)
-      final List< ? > l1 = (List< ? >) o1;
-      final List< ? > l2 = (List< ? >) o2;
+      final List< ? > l1 = (List< ? >)o1;
+      final List< ? > l2 = (List< ? >)o2;
 
       if( l1.isEmpty() && l2.isEmpty() )
         return 0;

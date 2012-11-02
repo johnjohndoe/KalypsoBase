@@ -80,8 +80,7 @@ public class FeatureViewerFilter extends ViewerFilter implements IViewerFilter
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.control.filters.IViewerFilter#init(org.kalypsodeegree.model.feature.Feature,
-   *      java.lang.Object)
+   * @see org.kalypso.ogc.gml.featureview.control.filters.IViewerFilter#init(org.kalypsodeegree.model.feature.Feature, java.lang.Object)
    */
   @Override
   public void init( final Feature parent, final Object expression )
@@ -110,8 +109,7 @@ public class FeatureViewerFilter extends ViewerFilter implements IViewerFilter
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
+   * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
    */
   @Override
   public boolean select( final Viewer viewer, final Object parentElement, final Object element )
@@ -146,7 +144,7 @@ public class FeatureViewerFilter extends ViewerFilter implements IViewerFilter
       return null;
 
     /* Cast. */
-    final Element filterElement = (Element) expression;
+    final Element filterElement = (Element)expression;
 
     /* Get the child nodes. */
     final NodeList childNodes = filterElement.getChildNodes();
@@ -154,7 +152,7 @@ public class FeatureViewerFilter extends ViewerFilter implements IViewerFilter
     {
       final Node item = childNodes.item( i );
       if( item instanceof Element )
-        return AbstractFilter.buildFromDOM( (Element) item );
+        return AbstractFilter.buildFromDOM( (Element)item );
     }
 
     return null;

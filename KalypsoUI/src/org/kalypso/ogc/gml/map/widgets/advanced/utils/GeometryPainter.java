@@ -82,7 +82,7 @@ public class GeometryPainter
     {
       try
       {
-        final GM_Point gmp = (GM_Point) JTSAdapter.wrap( point );
+        final GM_Point gmp = (GM_Point)JTSAdapter.wrap( point );
         final java.awt.Point awtPoint = MapUtilities.retransform( panel, gmp );
 
         hightlighter.draw( g, awtPoint );
@@ -102,7 +102,7 @@ public class GeometryPainter
     {
       if( geometry instanceof Polygon )
       {
-        final Polygon polygon = (Polygon) geometry;
+        final Polygon polygon = (Polygon)geometry;
         final LineString ring = polygon.getExteriorRing();
 
         for( int i = 0; i < ring.getNumPoints(); i++ )
@@ -121,7 +121,7 @@ public class GeometryPainter
       }
       else if( geometry instanceof Point )
       {
-        final Point point = (Point) geometry;
+        final Point point = (Point)geometry;
 
         if( base == null )
         {
@@ -134,7 +134,7 @@ public class GeometryPainter
       }
       else if( geometry instanceof LineString )
       {
-        final LineString lineString = (LineString) geometry;
+        final LineString lineString = (LineString)geometry;
 
         for( int i = 0; i < lineString.getNumPoints(); i++ )
         {
@@ -168,7 +168,7 @@ public class GeometryPainter
     {
       coordinates.add( point.getCoordinate() );
 
-      final GM_Point gmp = (GM_Point) JTSAdapter.wrap( point );
+      final GM_Point gmp = (GM_Point)JTSAdapter.wrap( point );
       final java.awt.Point awt = MapUtilities.retransform( mapPanel, gmp );
 
       awtPoints.add( awt );
@@ -207,7 +207,7 @@ public class GeometryPainter
       try
       {
         final Point p = ring.getPointN( i );
-        final GM_Point gmp = (GM_Point) JTSAdapter.wrap( p );
+        final GM_Point gmp = (GM_Point)JTSAdapter.wrap( p );
 
         final java.awt.Point awt = MapUtilities.retransform( mapPanel, gmp );
         x = ArrayUtils.add( x, awt.x );

@@ -52,7 +52,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * This class provides handles for point geometries.
- *
+ * 
  * @author Holger Albert
  */
 public class PointHandlesProvider implements IHandlesProvider
@@ -65,11 +65,11 @@ public class PointHandlesProvider implements IHandlesProvider
     final IValuePropertyType[] allGeomteryProperties = feature.getFeatureType().getAllGeometryProperties();
     for( final IValuePropertyType type : allGeomteryProperties )
     {
-      final GM_Object object = (GM_Object) feature.getProperty( type );
+      final GM_Object object = (GM_Object)feature.getProperty( type );
       /* Only handles for a point are returned. */
       if( object instanceof GM_Point )
       {
-        final GM_Point point = (GM_Point) object;
+        final GM_Point point = (GM_Point)object;
 
         /* Add the point to the list of handles. */
         list.add( new Handle( point.getPosition(), feature, type, radius ) );

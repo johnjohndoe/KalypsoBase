@@ -42,7 +42,6 @@ package org.kalypso.ogc.sensor.tableview;
 
 import java.util.List;
 
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationTokenHelper;
@@ -54,6 +53,7 @@ import org.kalypso.ogc.sensor.tableview.rules.RulesFactory;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.ObsViewEvent;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * A table view template for observations. Each observation is wrapped up in a theme which in turn delivers columns for
@@ -101,8 +101,7 @@ public class TableView extends ObsView
    * Update the tableView with the new observation, perform best guess to know which columns will be added to the
    * tableView.
    * 
-   * @see org.kalypso.ogc.sensor.template.ObsView#addObservation(org.kalypso.ogc.sensor.template.IObsProvider,
-   *      java.lang.String, org.kalypso.ogc.sensor.template.ObsView.ItemData)
+   * @see org.kalypso.ogc.sensor.template.ObsView#addObservation(org.kalypso.ogc.sensor.template.IObsProvider, java.lang.String, org.kalypso.ogc.sensor.template.ObsView.ItemData)
    */
   @Override
   public void addObservation( final IObsProvider provider, final String tokenizedName, final ItemData data )

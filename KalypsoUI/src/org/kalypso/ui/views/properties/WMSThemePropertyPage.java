@@ -51,17 +51,17 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.PropertyPage;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * This is a page for showing properties of a {@link KalypsoWMSTheme}.<br>
  * TODO: we are directly displaying SOURCE here, but this is of course not really what we want<br>
  * Instead, we need to parse the source attribute (we should use a data class for this, and reuse it in the WMS Theme),
  * then show the different parts of source separately.
- *
+ * 
  * @author Gernot Belger
  */
 public class WMSThemePropertyPage extends PropertyPage
@@ -110,7 +110,7 @@ public class WMSThemePropertyPage extends PropertyPage
 
     /* Last request */
     final Label lastRequestLabel = new Label( composite, SWT.NONE );
-    lastRequestLabel.setText( Messages.getString("WMSThemePropertyPage.0") ); //$NON-NLS-1$
+    lastRequestLabel.setText( Messages.getString( "WMSThemePropertyPage.0" ) ); //$NON-NLS-1$
     lastRequestLabel.setLayoutData( new GridData( SWT.FILL, SWT.TOP, false, false ) );
 
     /* Read only, as WMS-Theme does not support changing the last request. */
@@ -120,7 +120,7 @@ public class WMSThemePropertyPage extends PropertyPage
     lastRequestText.setLayoutData( lastRequestData );
     String lastRequest = theme.getLastRequest();
     if( lastRequest == null || lastRequest.length() == 0 )
-      lastRequest = Messages.getString("WMSThemePropertyPage.1"); //$NON-NLS-1$
+      lastRequest = Messages.getString( "WMSThemePropertyPage.1" ); //$NON-NLS-1$
     lastRequestText.setText( lastRequest );
     lastRequestText.addModifyListener( new ModifyListener()
     {
@@ -166,13 +166,13 @@ public class WMSThemePropertyPage extends PropertyPage
 
   /**
    * This function returns the theme.
-   *
+   * 
    * @return The theme.
    */
   private KalypsoWMSTheme getTheme( )
   {
     final IAdaptable element = getElement();
-    final KalypsoWMSTheme theme = (KalypsoWMSTheme) (element instanceof KalypsoWMSTheme ? element : element.getAdapter( KalypsoWMSTheme.class ));
+    final KalypsoWMSTheme theme = (KalypsoWMSTheme)(element instanceof KalypsoWMSTheme ? element : element.getAdapter( KalypsoWMSTheme.class ));
     return theme;
   }
 
@@ -207,7 +207,7 @@ public class WMSThemePropertyPage extends PropertyPage
 
   /**
    * This function sets the source of the theme.
-   *
+   * 
    * @param source
    *          The source of the theme.
    */
@@ -220,7 +220,7 @@ public class WMSThemePropertyPage extends PropertyPage
 
   /**
    * This function sets the last request of the theme.
-   *
+   * 
    * @param lastRequest
    *          The last request of the theme.
    */

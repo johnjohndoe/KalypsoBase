@@ -56,17 +56,17 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.RGB;
 import org.kalypso.commons.i18n.I10nString;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.ThemeUtilities;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypso.util.themes.image.ImageUtilities;
 import org.kalypso.util.themes.position.PositionUtilities;
 
 /**
  * This theme displays an image on the map.
- *
+ * 
  * @author Holger Albert
  */
 public class KalypsoImageTheme extends AbstractImageTheme
@@ -83,7 +83,7 @@ public class KalypsoImageTheme extends AbstractImageTheme
 
   /**
    * The constructor
-   *
+   * 
    * @param name
    *          The name of the theme.
    * @param mapModell
@@ -123,15 +123,15 @@ public class KalypsoImageTheme extends AbstractImageTheme
     try
     {
       /* Monitor. */
-      monitor.beginTask( Messages.getString("KalypsoImageTheme_1"), 1000 ); //$NON-NLS-1$
-      monitor.subTask( Messages.getString("KalypsoImageTheme_2") ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "KalypsoImageTheme_1" ), 1000 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "KalypsoImageTheme_2" ) ); //$NON-NLS-1$
 
       /* Initialize properties. */
       initFromProperties();
 
       /* Monitor. */
       monitor.worked( 500 );
-      monitor.subTask( Messages.getString("KalypsoImageTheme_3") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "KalypsoImageTheme_3" ) ); //$NON-NLS-1$
 
       /* Create the input stream. */
       if( m_imageUrl == null )

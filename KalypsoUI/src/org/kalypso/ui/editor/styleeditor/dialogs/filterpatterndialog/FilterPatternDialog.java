@@ -83,7 +83,7 @@ public class FilterPatternDialog extends Dialog
     super( parent );
     // Currently, pattern supports only PropertyIsBetweenOperation
     if( m_operation instanceof PropertyIsBetweenOperation )
-      operation = (PropertyIsBetweenOperation) m_operation;
+      operation = (PropertyIsBetweenOperation)m_operation;
   }
 
   @Override
@@ -129,8 +129,8 @@ public class FilterPatternDialog extends Dialog
       return;
     }
 
-    ((BoundaryExpression) operation.getLowerBoundary()).setValue( lowerBoundaryText.getText() );
-    ((BoundaryExpression) operation.getUpperBoundary()).setValue( upperBoundaryText.getText() );
+    ((BoundaryExpression)operation.getLowerBoundary()).setValue( lowerBoundaryText.getText() );
+    ((BoundaryExpression)operation.getUpperBoundary()).setValue( upperBoundaryText.getText() );
     fire();
     super.okPressed();
   }
@@ -155,7 +155,7 @@ public class FilterPatternDialog extends Dialog
       if( listeners[i] == FilterDialogListener.class )
       {
         final FilterDialogEvent event = new FilterDialogEvent( this );
-        ((FilterDialogListener) listeners[i + 1]).filterUpdated( event );
+        ((FilterDialogListener)listeners[i + 1]).filterUpdated( event );
       }
     }
   }
@@ -163,7 +163,7 @@ public class FilterPatternDialog extends Dialog
   @Override
   protected Control createDialogArea( final Composite parent )
   {
-    final Composite composite = (Composite) super.createDialogArea( parent );
+    final Composite composite = (Composite)super.createDialogArea( parent );
     composite.setSize( 200, 200 );
     composite.setLayout( new GridLayout( 1, true ) );
     composite.layout();
@@ -192,7 +192,7 @@ public class FilterPatternDialog extends Dialog
     textData.widthHint = 90;
     textData.heightHint = 10;
     lowerBoundaryText.setLayoutData( textData );
-    lowerBoundaryText.setText( ((BoundaryExpression) operation.getLowerBoundary()).getValue() );
+    lowerBoundaryText.setText( ((BoundaryExpression)operation.getLowerBoundary()).getValue() );
 
     final Label upperBoundaryLabel = new Label( composite, SWT.NULL );
     upperBoundaryLabel.setText( MessageBundle.STYLE_EDITOR_UPPER_BOUNDARY );
@@ -201,7 +201,7 @@ public class FilterPatternDialog extends Dialog
     textData2.widthHint = 90;
     textData2.heightHint = 10;
     upperBoundaryText.setLayoutData( textData2 );
-    upperBoundaryText.setText( ((BoundaryExpression) operation.getUpperBoundary()).getValue() );
+    upperBoundaryText.setText( ((BoundaryExpression)operation.getUpperBoundary()).getValue() );
     return composite;
   }
 

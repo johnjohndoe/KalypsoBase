@@ -69,11 +69,11 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.filterdialog.dialog.IErrorMessageReciever;
 import org.kalypso.ogc.gml.filterdialog.model.FeatureTypeContentProvider;
 import org.kalypso.ogc.gml.filterdialog.model.FeatureTypeLabelProvider;
 import org.kalypso.ogc.gml.filterdialog.model.GeometryPropertyFilter;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.filterencoding.OperationDefines;
@@ -181,10 +181,10 @@ class SpatialComposite extends AbstractFilterComposite
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        final Object firstElement = ((IStructuredSelection) event.getSelection()).getFirstElement();
+        final Object firstElement = ((IStructuredSelection)event.getSelection()).getFirstElement();
         if( firstElement instanceof IValuePropertyType )
         {
-          final QName propName = ((IValuePropertyType) firstElement).getQName();
+          final QName propName = ((IValuePropertyType)firstElement).getQName();
           m_operation.setProperty( new PropertyName( propName ) );
           // fireModellEvent( new ModellEvent( SpatialComposite.this, ModellEvent.WIDGET_CHANGE ) );
           // updateOperation( null );
@@ -314,9 +314,9 @@ class SpatialComposite extends AbstractFilterComposite
       if( newGeometry == null )
         return false;
       m_operation.setGeometry( newGeometry );
-      final IStructuredSelection selection = (IStructuredSelection) m_propViewer.getSelection();
+      final IStructuredSelection selection = (IStructuredSelection)m_propViewer.getSelection();
 
-      m_operation.setProperty( new PropertyName( ((IPropertyType) selection.getFirstElement()).getQName() ) );
+      m_operation.setProperty( new PropertyName( ((IPropertyType)selection.getFirstElement()).getQName() ) );
     }
     catch( final Exception e )
     {

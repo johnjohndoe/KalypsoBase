@@ -331,8 +331,8 @@ public class MovieComposite extends Composite
       public void selectionChanged( final SelectionChangedEvent event )
       {
         final ISelection selection = event.getSelection();
-        final Object firstElement = ((StructuredSelection) selection).getFirstElement();
-        m_resolution = (MovieResolution) firstElement;
+        final Object firstElement = ((StructuredSelection)selection).getFirstElement();
+        m_resolution = (MovieResolution)firstElement;
 
         final GridData layoutData = new GridData( SWT.FILL, SWT.FILL, true, true, 3, 1 );
         layoutData.widthHint = m_resolution.getWidth();
@@ -362,7 +362,7 @@ public class MovieComposite extends Composite
       public void widgetSelected( final SelectionEvent e )
       {
         /* Spinner. */
-        final Spinner source = (Spinner) e.getSource();
+        final Spinner source = (Spinner)e.getSource();
 
         /* Get the selection. */
         final int selection = source.getSelection();
@@ -494,7 +494,7 @@ public class MovieComposite extends Composite
         public void widgetSelected( final SelectionEvent e )
         {
           /* Get the source. */
-          final Button source = (Button) e.getSource();
+          final Button source = (Button)e.getSource();
 
           /* Build the event. */
           final Event event = new Event();

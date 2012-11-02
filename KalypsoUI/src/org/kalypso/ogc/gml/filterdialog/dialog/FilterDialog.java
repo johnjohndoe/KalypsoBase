@@ -82,7 +82,6 @@ import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
 import org.kalypso.ogc.gml.filterdialog.model.FilterReader;
 import org.kalypso.ogc.gml.filterdialog.model.FilterRootElement;
@@ -94,6 +93,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.mapeditor.GisMapEditor;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.filterencoding.Operation;
@@ -168,7 +168,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
   protected Control createContents( final Composite parent )
   {
     final Control control = super.createContents( parent );
-    createButton( (Composite) getButtonBar(), FilterDialog.ID_BUTTON_APPLY, FilterDialog.LABEL_BUTTON_APPLY, true );
+    createButton( (Composite)getButtonBar(), FilterDialog.ID_BUTTON_APPLY, FilterDialog.LABEL_BUTTON_APPLY, true );
     if( m_input == null )
       getButton( ID_BUTTON_APPLY ).setEnabled( false );
     return control;
@@ -224,7 +224,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
         }
       }
     }
-    m_main = (Composite) super.createDialogArea( parent );
+    m_main = (Composite)super.createDialogArea( parent );
     m_top = new Composite( m_main, SWT.NONE );
     final GridLayout gridLayout = new GridLayout( 2, true );
     m_top.setLayout( gridLayout );
@@ -253,7 +253,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
       @Override
       public ISelection getSelection( )
       {
-        return new TreeSelection( (IStructuredSelection) super.getSelection() )
+        return new TreeSelection( (IStructuredSelection)super.getSelection() )
         {
           @Override
           public void contentChanged( )
@@ -296,7 +296,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
         final ISelection selection = event.getSelection();
         if( selection instanceof IStructuredSelection )
         {
-          final Object firstElement = ((IStructuredSelection) selection).getFirstElement();
+          final Object firstElement = ((IStructuredSelection)selection).getFirstElement();
 
           if( firstElement instanceof Operation )
           {
@@ -307,7 +307,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
                 m_newOpsComposite.dispose();
             }
             final IFeatureType ft = getFeatureType();
-            m_newOpsComposite = FilterCompositeFactory.createFilterElementComposite( m_propGroup, FilterDialog.this, (Operation) firstElement, m_supportedOperations, ft, m_spatialOperator );
+            m_newOpsComposite = FilterCompositeFactory.createFilterElementComposite( m_propGroup, FilterDialog.this, (Operation)firstElement, m_supportedOperations, ft, m_spatialOperator );
             if( m_newOpsComposite != null )
             {
               m_newOpsComposite.setFilterDialog( FilterDialog.this );
@@ -317,7 +317,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
           }
           else if( firstElement instanceof FeatureFilter )
           {
-            final FeatureFilter filter = (FeatureFilter) firstElement;
+            final FeatureFilter filter = (FeatureFilter)firstElement;
             m_propGroup.setText( Messages.getString( "org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog.featfilter" ) ); //$NON-NLS-1$
             final Composite ffComposite = new Composite( m_propGroup, SWT.NONE );
             final GridLayout ffGridLayout = new GridLayout();
@@ -351,7 +351,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
               @Override
               public void widgetSelected( final SelectionEvent e )
               {
-                final Button source = (Button) e.getSource();
+                final Button source = (Button)e.getSource();
                 if( source.getSelection() )
                 {
                   final IWorkbench workbench = PlatformUI.getWorkbench();
@@ -360,16 +360,16 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
                   final IEditorPart activeEditor = activePage.getActiveEditor();
                   if( activeEditor instanceof GisMapEditor )
                   {
-                    final IMapPanel mapPanel = ((GisMapEditor) activeEditor).getMapPanel();
-                    final IStructuredSelection s = (IStructuredSelection) mapPanel.getSelection();
+                    final IMapPanel mapPanel = ((GisMapEditor)activeEditor).getMapPanel();
+                    final IStructuredSelection s = (IStructuredSelection)mapPanel.getSelection();
                     if( s instanceof KalypsoFeatureThemeSelection )
                     {
-                      final KalypsoFeatureThemeSelection fts = (KalypsoFeatureThemeSelection) s;
+                      final KalypsoFeatureThemeSelection fts = (KalypsoFeatureThemeSelection)s;
                       final Object[] elements = fts.toArray();
                       final String[] features = new String[elements.length];
                       for( int i = 0; i < elements.length; i++ )
                       {
-                        final Feature f = (Feature) elements[i];
+                        final Feature f = (Feature)elements[i];
                         if( f != null )
                           features[i] = f.getId();
                       }
@@ -419,7 +419,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
         if( open == Window.OK )
         {
           final Object[] result = dialog2.getResult();
-          final IPath path = (IPath) result[0];
+          final IPath path = (IPath)result[0];
           Filter filter = null;
           try
           {
@@ -490,7 +490,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
       @Override
       public void menuAboutToShow( final IMenuManager manager )
       {
-        final IStructuredSelection selection = (IStructuredSelection) m_viewer.getSelection();
+        final IStructuredSelection selection = (IStructuredSelection)m_viewer.getSelection();
         if( selection.getFirstElement() instanceof FilterRootElement )
         {
           manager.add( new Separator( IWorkbenchActionConstants.MB_ADDITIONS ) );
@@ -552,7 +552,7 @@ public class FilterDialog extends TitleAreaDialog implements IErrorMessageReciev
     @Override
     public void run( )
     {
-      final IStructuredSelection selection = (IStructuredSelection) m_viewer.getSelection();
+      final IStructuredSelection selection = (IStructuredSelection)m_viewer.getSelection();
       if( !selection.isEmpty() )
       {
 

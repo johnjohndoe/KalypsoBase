@@ -51,8 +51,8 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.displayelements.IncompatibleGeometryTypeException;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
@@ -69,12 +69,12 @@ import com.vividsolutions.jts.geom.Point;
 
 /**
  * FIXME: merge with {@link SLDPainter2}.
- *
+ * 
  * @author Dirk Kuch
  */
 public class SLDPainter
 {
-  private static final String PAINTING_SLD_FAILED = Messages.getString("SLDPainter_0"); //$NON-NLS-1$
+  private static final String PAINTING_SLD_FAILED = Messages.getString( "SLDPainter_0" ); //$NON-NLS-1$
 
   private final Map<URL, Symbolizer> m_symbolizerMap = new HashMap<>();
 
@@ -100,13 +100,13 @@ public class SLDPainter
       }
       catch( final Exception e )
       {
-        final String msg = String.format( Messages.getString("SLDPainter_1"), coordinate.x, coordinate.y ); //$NON-NLS-1$
+        final String msg = String.format( Messages.getString( "SLDPainter_1" ), coordinate.x, coordinate.y ); //$NON-NLS-1$
         log.add( IStatus.ERROR, msg, e );
       }
     }
 
     if( !log.isEmpty() )
-      throw new CoreException( log.asMultiStatus( Messages.getString("SLDPainter_2") ) ); //$NON-NLS-1$
+      throw new CoreException( log.asMultiStatus( Messages.getString( "SLDPainter_2" ) ) ); //$NON-NLS-1$
   }
 
   public void paint( final Graphics g, final URL sld, final Coordinate coordinate ) throws CoreException

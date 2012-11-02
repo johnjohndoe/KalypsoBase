@@ -46,10 +46,9 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
- * Extends {@link IFeatureModifier} and can be used to initialize the modifier with a
- * {@link org.kalypso.gmlschema.property.IPropertyType} after it has been constructed.<br>
+ * Extends {@link IFeatureModifier} and can be used to initialize the modifier with a {@link org.kalypso.gmlschema.property.IPropertyType} after it has been constructed.<br>
  * Typically used, if the modifer is created via an extension-point.
- *
+ * 
  * @author Gernot Belger
  */
 public interface IFeatureModifierExtension extends IFeatureModifier

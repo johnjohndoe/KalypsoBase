@@ -107,11 +107,11 @@ public class ModelerPerspectiveFactory implements IPerspectiveFactory
     final String editorArea = layout.getEditorArea();
 
     // Top left.
-    final IFolderLayout topLeft = layout.createFolder( "topLeft", IPageLayout.LEFT, (float) 0.26, editorArea );//$NON-NLS-1$
+    final IFolderLayout topLeft = layout.createFolder( "topLeft", IPageLayout.LEFT, (float)0.26, editorArea );//$NON-NLS-1$
     topLeft.addView( IPageLayout.ID_RES_NAV );
 
     // Bottom left.
-    final IFolderLayout bottomLeft = layout.createFolder( "bottomLeft", IPageLayout.BOTTOM, (float) 0.50,//$NON-NLS-1$
+    final IFolderLayout bottomLeft = layout.createFolder( "bottomLeft", IPageLayout.BOTTOM, (float)0.50,//$NON-NLS-1$
         "topLeft" );//$NON-NLS-1$
     bottomLeft.addView( IPageLayout.ID_OUTLINE );
   }

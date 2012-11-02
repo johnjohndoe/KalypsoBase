@@ -54,11 +54,11 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.movie.controls.MovieComposite;
 import org.kalypso.ogc.gml.movie.utils.MoviePlayer;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * The movie dialog.
@@ -114,10 +114,10 @@ public class MovieDialog extends Dialog
   protected Control createDialogArea( final Composite parent )
   {
     /* Set the title. */
-    getShell().setText( Messages.getString("MovieDialog_0") ); //$NON-NLS-1$
+    getShell().setText( Messages.getString( "MovieDialog_0" ) ); //$NON-NLS-1$
 
     /* Create the main composite. */
-    final Composite main = (Composite) super.createDialogArea( parent );
+    final Composite main = (Composite)super.createDialogArea( parent );
     main.setLayout( new FillLayout() );
     main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
@@ -159,7 +159,7 @@ public class MovieDialog extends Dialog
     final Composite buttonComposite = m_movieComposite.createButtonControls( parent );
     buttonComposite.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, true, false ) );
 
-    final Button cancelButton = createButton( buttonComposite, CANCEL, Messages.getString("MovieDialog_1"), true ); //$NON-NLS-1$
+    final Button cancelButton = createButton( buttonComposite, CANCEL, Messages.getString( "MovieDialog_1" ), true ); //$NON-NLS-1$
     final Image cancelImage = KalypsoGisPlugin.getImageProvider().getImageDescriptor( ImageProvider.DESCRIPTORS.MOVIE_PLAYER_EJECT ).createImage();
     cancelButton.setImage( cancelImage );
     cancelButton.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );

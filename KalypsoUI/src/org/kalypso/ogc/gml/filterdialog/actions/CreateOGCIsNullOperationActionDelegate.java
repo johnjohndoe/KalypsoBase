@@ -41,7 +41,7 @@ import org.kalypsodeegree_impl.filterencoding.PropertyIsNullOperation;
 
 /**
  * TODO: insert type comment here
- *
+ * 
  * @author kuepfer
  */
 public class CreateOGCIsNullOperationActionDelegate extends AbstractCreateOperationActionDelegate
@@ -56,19 +56,19 @@ public class CreateOGCIsNullOperationActionDelegate extends AbstractCreateOperat
         final Object firstElement = m_selection.getFirstElement();
         if( firstElement instanceof ComplexFilter )
         {
-          final ComplexFilter filter = (ComplexFilter) firstElement;
+          final ComplexFilter filter = (ComplexFilter)firstElement;
           filter.setOperation( new PropertyIsNullOperation( null ) );
         }
         if( firstElement instanceof LogicalOperation )
         {
-          final LogicalOperation operation = (LogicalOperation) firstElement;
+          final LogicalOperation operation = (LogicalOperation)firstElement;
           // add new Logical Operation
           List<Operation> arguments = operation.getArguments();
           if( arguments == null )
             arguments = new ArrayList<>();
           arguments.add( new PropertyIsNullOperation( null ) );
         }
-        ((TreeSelection) m_selection).structureChanged();
+        ((TreeSelection)m_selection).structureChanged();
       }
     }
 

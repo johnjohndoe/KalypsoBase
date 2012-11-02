@@ -52,7 +52,6 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureThemeInfo;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -67,6 +66,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapModellListener;
 import org.kalypso.ogc.gml.mapmodel.MapModellAdapter;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -80,7 +80,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * De-selection is not possible.<br>
  * <br>
  * <code>Ctrl</code> toggles toggle-modus.
- *
+ * 
  * @author Gernot Belger
  */
 public class SelectSingleFeatureWidget extends DeprecatedMouseWidget
@@ -90,8 +90,7 @@ public class SelectSingleFeatureWidget extends DeprecatedMouseWidget
   private final IMapModellListener m_mapModellListener = new MapModellAdapter()
   {
     /**
-     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeStatusChanged(org.kalypso.ogc.gml.mapmodel.IMapModell,
-     *      org.kalypso.ogc.gml.IKalypsoTheme)
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeStatusChanged(org.kalypso.ogc.gml.mapmodel.IMapModell, org.kalypso.ogc.gml.IKalypsoTheme)
      */
     @Override
     public void themeStatusChanged( final IMapModell source, final IKalypsoTheme theme )
@@ -100,8 +99,7 @@ public class SelectSingleFeatureWidget extends DeprecatedMouseWidget
     }
 
     /**
-     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeActivated(org.kalypso.ogc.gml.mapmodel.IMapModell,
-     *      org.kalypso.ogc.gml.IKalypsoTheme, org.kalypso.ogc.gml.IKalypsoTheme)
+     * @see org.kalypso.ogc.gml.mapmodel.MapModellAdapter#themeActivated(org.kalypso.ogc.gml.mapmodel.IMapModell, org.kalypso.ogc.gml.IKalypsoTheme, org.kalypso.ogc.gml.IKalypsoTheme)
      */
     @Override
     public void themeActivated( final IMapModell source, final IKalypsoTheme previouslyActive, final IKalypsoTheme nowActive )
@@ -147,8 +145,7 @@ public class SelectSingleFeatureWidget extends DeprecatedMouseWidget
   }
 
   /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.map.MapPanel)
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget, org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
@@ -190,7 +187,7 @@ public class SelectSingleFeatureWidget extends DeprecatedMouseWidget
     if( activeTheme instanceof IKalypsoFeatureTheme )
     {
       final IKalypsoFeatureTheme[] themes = new IKalypsoFeatureTheme[1];
-      themes[0] = (IKalypsoFeatureTheme) activeTheme;
+      themes[0] = (IKalypsoFeatureTheme)activeTheme;
       return themes;
     }
 
@@ -288,13 +285,13 @@ public class SelectSingleFeatureWidget extends DeprecatedMouseWidget
 
   private String getInfo( final IKalypsoFeatureTheme theme, final Feature feature, final GM_Position position )
   {
-    final IKalypsoThemeInfo themeInfo = (IKalypsoThemeInfo) theme.getAdapter( IKalypsoThemeInfo.class );
+    final IKalypsoThemeInfo themeInfo = (IKalypsoThemeInfo)theme.getAdapter( IKalypsoThemeInfo.class );
     if( themeInfo == null )
-      return Messages.getString("SelectSingleFeatureWidget.2"); //$NON-NLS-1$
+      return Messages.getString( "SelectSingleFeatureWidget.2" ); //$NON-NLS-1$
 
     final Formatter formatter = new Formatter();
     if( themeInfo instanceof IKalypsoFeatureThemeInfo )
-      ((IKalypsoFeatureThemeInfo) themeInfo).formatInfo( formatter, feature );
+      ((IKalypsoFeatureThemeInfo)themeInfo).formatInfo( formatter, feature );
     else
       themeInfo.appendQuickInfo( formatter, position );
     formatter.flush();

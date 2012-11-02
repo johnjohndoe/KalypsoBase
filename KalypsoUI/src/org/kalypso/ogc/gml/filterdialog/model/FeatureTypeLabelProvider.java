@@ -80,7 +80,7 @@ public class FeatureTypeLabelProvider extends LabelProvider
     }
     else if( element instanceof IValuePropertyType )
     {
-      final IValuePropertyType vpt = (IValuePropertyType) element;
+      final IValuePropertyType vpt = (IValuePropertyType)element;
       if( GeometryUtilities.isPointGeometry( vpt ) )
         descriptor = ImageProvider.IMAGE_GEOM_PROP_POINT;
       if( GeometryUtilities.isMultiPointGeometry( vpt ) )
@@ -110,12 +110,12 @@ public class FeatureTypeLabelProvider extends LabelProvider
   {
     if( element instanceof IFeatureType )
     {
-      final IAnnotation annotation = ((IFeatureType) element).getAnnotation();
+      final IAnnotation annotation = ((IFeatureType)element).getAnnotation();
       return annotation.getValue( m_annotationKey );
     }
     else if( element instanceof IPropertyType )
     {
-      final IAnnotation annotation = ((IPropertyType) element).getAnnotation();
+      final IAnnotation annotation = ((IPropertyType)element).getAnnotation();
       return annotation.getValue( m_annotationKey );
     }
     return ""; //$NON-NLS-1$

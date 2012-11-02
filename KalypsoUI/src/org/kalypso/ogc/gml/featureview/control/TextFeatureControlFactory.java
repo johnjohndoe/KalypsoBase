@@ -56,15 +56,14 @@ import org.w3c.dom.Node;
 public class TextFeatureControlFactory implements IFeatureControlFactory
 {
   /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControlFactory#createFeatureControl(org.kalypso.ogc.gml.featureview.control.IFeatureComposite,
-   *      org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.IPropertyType,
-   *      org.kalypso.template.featureview.ControlType, org.kalypso.gmlschema.annotation.IAnnotation)
+   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControlFactory#createFeatureControl(org.kalypso.ogc.gml.featureview.control.IFeatureComposite, org.kalypsodeegree.model.feature.Feature,
+   *      org.kalypso.gmlschema.property.IPropertyType, org.kalypso.template.featureview.ControlType, org.kalypso.gmlschema.annotation.IAnnotation)
    */
   @Override
   public IFeatureControl createFeatureControl( final IFeatureComposite parentComposite, final Feature feature, final IPropertyType pt, final ControlType controlType, final IAnnotation annotation )
   {
-    final Text textType = (Text) controlType;
-    final IValuePropertyType vpt = (IValuePropertyType) pt;
+    final Text textType = (Text)controlType;
+    final IValuePropertyType vpt = (IValuePropertyType)pt;
 
     final String format = getFormat( textType );
 
@@ -80,10 +79,10 @@ public class TextFeatureControlFactory implements IFeatureControlFactory
   {
     final Object objFormat = editorType.getFormat();
     if( objFormat instanceof String )
-      return (String) objFormat;
+      return (String)objFormat;
 
     if( objFormat instanceof Node )
-      return XMLTools.getStringValue( (Node) objFormat );
+      return XMLTools.getStringValue( (Node)objFormat );
 
     return null;
   }

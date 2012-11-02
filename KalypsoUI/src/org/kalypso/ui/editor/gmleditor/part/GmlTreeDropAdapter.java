@@ -99,13 +99,12 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ViewerDropAdapter#validateDrop(java.lang.Object, int,
-   *      org.eclipse.swt.dnd.TransferData)
+   * @see org.eclipse.jface.viewers.ViewerDropAdapter#validateDrop(java.lang.Object, int, org.eclipse.swt.dnd.TransferData)
    */
   @Override
   public boolean validateDrop( final Object target, final int operation, final TransferData transferType )
   {
-    final IFeatureSelection featureSelection = (IFeatureSelection) m_viewer.getSelection();
+    final IFeatureSelection featureSelection = (IFeatureSelection)m_viewer.getSelection();
     final Feature[] selectedFeatures = FeatureSelectionHelper.getFeatures( featureSelection );
 
     // System.out.println( "\nvalidateDrop -> " + selectedFeatures[0].getId() + "\tops: " + operation );
@@ -119,7 +118,7 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
       return false;
     if( target instanceof FeatureAssociationTypeElement )
     {
-      final FeatureAssociationTypeElement targetFatElement = (FeatureAssociationTypeElement) target;
+      final FeatureAssociationTypeElement targetFatElement = (FeatureAssociationTypeElement)target;
       targetAssocFtp = targetFatElement.getPropertyType();
       // System.out.println( "FeatuerAssociationTypeElement:\n target: " + targetAssocFtp.getName() );
       // String propertyName = targetAssocFtp.getName();
@@ -137,7 +136,7 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
         return false;
       if( isList && (operation == DND.DROP_COPY || operation == DND.DROP_MOVE) )
       {
-        final List< ? > featureList = (List< ? >) targetFeature.getProperty( targetAssocFtp );
+        final List< ? > featureList = (List< ? >)targetFeature.getProperty( targetAssocFtp );
         System.out.println( "Diff = " + new Integer( maxOccurs - (featureList.size() + selectedFeatures.length) ) ); //$NON-NLS-1$
         if( maxOccurs >= featureList.size() + selectedFeatures.length || maxOccurs == IPropertyType.UNBOUND_OCCURENCY )
           return true;
@@ -149,7 +148,7 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
     }
     if( target instanceof Feature )
     {
-      targetFeature = (Feature) target;
+      targetFeature = (Feature)target;
       if( FeatureHelper.isCollection( targetFeature ) )
       {
         final IFeatureType[] featureTypeFromCollection = FeatureHelper.getFeatureTypeFromCollection( targetFeature );
@@ -221,7 +220,7 @@ public class GmlTreeDropAdapter extends ViewerDropAdapter
       {
         if( property instanceof IRelationType )
         {
-          final IFeatureType associationFeatureType = ((IRelationType) property).getTargetFeatureType();
+          final IFeatureType associationFeatureType = ((IRelationType)property).getTargetFeatureType();
           final IFeatureType[] associationFeatureTypes = GMLSchemaUtilities.getSubstituts( associationFeatureType, null, false, true );
           for( final IFeatureType aFType : associationFeatureTypes )
           {

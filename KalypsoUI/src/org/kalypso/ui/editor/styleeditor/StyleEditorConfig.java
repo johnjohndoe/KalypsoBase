@@ -42,7 +42,7 @@ package org.kalypso.ui.editor.styleeditor;
 
 /**
  * Standard implementation of {@link IStyleEditorConfig}, which defaults to the usual default values.
- *
+ * 
  * @author Gernot Belger
  */
 public class StyleEditorConfig implements IStyleEditorConfig

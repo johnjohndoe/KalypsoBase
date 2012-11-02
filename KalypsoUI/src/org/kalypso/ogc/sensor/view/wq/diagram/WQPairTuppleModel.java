@@ -43,13 +43,13 @@ package org.kalypso.ogc.sensor.view.wq.diagram;
 
 import java.util.Arrays;
 
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.impl.AbstractTupleModel;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQPair;
+import org.kalypso.ui.internal.i18n.Messages;
 
 public class WQPairTuppleModel extends AbstractTupleModel
 {

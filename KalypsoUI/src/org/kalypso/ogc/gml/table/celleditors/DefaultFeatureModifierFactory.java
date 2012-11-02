@@ -67,7 +67,7 @@ public class DefaultFeatureModifierFactory implements IFeatureModifierFactory
 
     if( ftp instanceof IValuePropertyType )
     {
-      final IValuePropertyType vpt = (IValuePropertyType) ftp;
+      final IValuePropertyType vpt = (IValuePropertyType)ftp;
       if( vpt.isGeometry() || !vpt.getQName().equals( Feature.QN_NAME ) && vpt.isList() )
         return new ButtonModifier( propertyPath, vpt, fcl );
 
@@ -78,7 +78,7 @@ public class DefaultFeatureModifierFactory implements IFeatureModifierFactory
     }
     if( ftp instanceof IRelationType )
     {
-      final IRelationType rpt = (IRelationType) ftp;
+      final IRelationType rpt = (IRelationType)ftp;
       if( !rpt.isInlineAble() && rpt.isLinkAble() && !rpt.isList() )
         return new ComboBoxModifier( propertyPath, rpt );
       else

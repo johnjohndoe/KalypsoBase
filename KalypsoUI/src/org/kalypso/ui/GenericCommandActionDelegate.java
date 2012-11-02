@@ -80,12 +80,12 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * TODO this class is duplicate with de.renew.workflow.connector.context.handlers.GenericCommandActionDelegate Move it
  * into one of the contribution plug-ins
- *
+ * 
  * @author Stefan Kurzbach
  */
 public class GenericCommandActionDelegate implements IWorkbenchWindowActionDelegate, IViewActionDelegate, IEditorActionDelegate, IObjectActionDelegate, IExecutableExtension, ICommandListener,
@@ -170,20 +170,19 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
   }
 
   /**
-   * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
-   *      java.lang.String, java.lang.Object)
+   * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement, java.lang.String, java.lang.Object)
    */
   @Override
-  @SuppressWarnings({ "unchecked", "unused" })//$NON-NLS-1$ //$NON-NLS-2$
+  @SuppressWarnings( { "unchecked", "unused" } )//$NON-NLS-1$ //$NON-NLS-2$
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data ) throws CoreException
   {
     if( data instanceof String )
     {
-      m_commandId = (String) data;
+      m_commandId = (String)data;
     }
     else if( data instanceof Map )
     {
-      m_parameterMap.putAll( (Map<String, String>) data );
+      m_parameterMap.putAll( (Map<String, String>)data );
       m_commandId = m_parameterMap.get( PARAM_COMMAND_ID );
     }
   }
@@ -201,8 +200,8 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
     }
 
     final IWorkbench workbench = window.getWorkbench();
-    m_handlerService = (IHandlerService) workbench.getService( IHandlerService.class );
-    final ICommandService commandService = (ICommandService) workbench.getService( ICommandService.class );
+    m_handlerService = (IHandlerService)workbench.getService( IHandlerService.class );
+    final ICommandService commandService = (ICommandService)workbench.getService( ICommandService.class );
     m_parameterizedCommand = createCommand( commandService );
 
     if( m_parameterizedCommand != null )
@@ -222,8 +221,7 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
   }
 
   /**
-   * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction,
-   *      org.eclipse.ui.IEditorPart)
+   * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction, org.eclipse.ui.IEditorPart)
    */
   @Override
   public void setActiveEditor( final IAction action, final IEditorPart targetEditor )
@@ -239,8 +237,7 @@ public class GenericCommandActionDelegate implements IWorkbenchWindowActionDeleg
   }
 
   /**
-   * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction,
-   *      org.eclipse.ui.IWorkbenchPart)
+   * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction, org.eclipse.ui.IWorkbenchPart)
    */
   @Override
   public void setActivePart( final IAction action, final IWorkbenchPart targetPart )

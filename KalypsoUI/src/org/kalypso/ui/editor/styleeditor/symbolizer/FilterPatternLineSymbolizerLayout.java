@@ -101,7 +101,7 @@ public class FilterPatternLineSymbolizerLayout extends AbstractSymbolizerComposi
         final Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
         if( symb instanceof LineSymbolizer )
         {
-          ((LineSymbolizer) symb).getStroke().setWidth( stroke.getWidth( null ) );
+          ((LineSymbolizer)symb).getStroke().setWidth( stroke.getWidth( null ) );
         }
       }
       strokeWidthPanel.addPanelListener( new PanelListener()
@@ -109,13 +109,13 @@ public class FilterPatternLineSymbolizerLayout extends AbstractSymbolizerComposi
         @Override
         public void valueChanged( final PanelEvent event )
         {
-          final double width = ((SliderPanel) event.getSource()).getSelection();
+          final double width = ((SliderPanel)event.getSource()).getSelection();
           for( int i = 0; i < getRuleCollection().size(); i++ )
           {
             final Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
             if( symb instanceof LineSymbolizer )
             {
-              ((LineSymbolizer) symb).getStroke().setWidth( width );
+              ((LineSymbolizer)symb).getStroke().setWidth( width );
             }
           }
           fireStyleChanged();
@@ -129,7 +129,7 @@ public class FilterPatternLineSymbolizerLayout extends AbstractSymbolizerComposi
         final Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
         if( symb instanceof LineSymbolizer )
         {
-          final java.awt.Color color = ((LineSymbolizer) symb).getStroke().getStroke( null );
+          final java.awt.Color color = ((LineSymbolizer)symb).getStroke().getStroke( null );
           colors[i] = new Color( null, color.getRed(), color.getGreen(), color.getBlue() );
         }
       }
@@ -144,7 +144,7 @@ public class FilterPatternLineSymbolizerLayout extends AbstractSymbolizerComposi
           final Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
           if( symb instanceof LineSymbolizer )
           {
-            ((LineSymbolizer) symb).getStroke().setStroke( new java.awt.Color( colors[i].getRed(), colors[i].getGreen(), colors[i].getBlue() ) );
+            ((LineSymbolizer)symb).getStroke().setStroke( new java.awt.Color( colors[i].getRed(), colors[i].getGreen(), colors[i].getBlue() ) );
           }
         }
 
@@ -160,7 +160,7 @@ public class FilterPatternLineSymbolizerLayout extends AbstractSymbolizerComposi
               final Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
               if( symb instanceof LineSymbolizer )
               {
-                ((LineSymbolizer) symb).getStroke().setStroke( new java.awt.Color( colorArray[i].getRed(), colorArray[i].getGreen(), colorArray[i].getBlue() ) );
+                ((LineSymbolizer)symb).getStroke().setStroke( new java.awt.Color( colorArray[i].getRed(), colorArray[i].getGreen(), colorArray[i].getBlue() ) );
               }
             }
             fireStyleChanged();

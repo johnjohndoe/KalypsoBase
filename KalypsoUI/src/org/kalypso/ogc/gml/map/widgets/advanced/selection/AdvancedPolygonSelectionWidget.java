@@ -50,12 +50,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.progress.UIJob;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates.AddRemovePolygonDelegate;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates.DrawingPolygonDelegate;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.delegates.RectanglePolygonDelegate;
 import org.kalypso.ogc.gml.widgets.AbstractKeyListenerWidget;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author Dirk Kuch
@@ -142,7 +142,7 @@ public class AdvancedPolygonSelectionWidget extends AbstractKeyListenerWidget im
 
   /**
    * Escape Key pressed? -> reset / deactivate widget
-   *
+   * 
    * @see org.kalypso.ogc.gml.widgets.AbstractWidget#keyReleased(java.awt.event.KeyEvent)
    */
   @Override

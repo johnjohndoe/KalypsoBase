@@ -55,16 +55,16 @@ import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.filterdialog.model.FeatureTypeLabelProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IFeatureRelation;
 
 /**
  * Common code for adding features.
- *
+ * 
  * @author Gernot Belger
  */
 public final class AddFeatureHandlerUtil
@@ -87,7 +87,7 @@ public final class AddFeatureHandlerUtil
 
   /**
    * This function checks, if more features can be added.
-   *
+   * 
    * @return <code>true</code>, if so.
    */
   private static boolean checkMaxCount( final IFeatureRelation targetProperty )
@@ -103,7 +103,7 @@ public final class AddFeatureHandlerUtil
     /* List shoul never exceed max occurs */
     if( parentRelation.isList() )
     {
-      final List< ? > list = (List< ? >) parentFeature.getProperty( parentRelation );
+      final List< ? > list = (List< ? >)parentFeature.getProperty( parentRelation );
       final int size = list.size();
 
       return size <= maxOccurs;
@@ -126,7 +126,7 @@ public final class AddFeatureHandlerUtil
     if( substituts.length == 0 )
     {
       // May only happen if the type is abstract
-      final String message = String.format( Messages.getString("AddFeatureHandlerUtil.0"), getNewLabel( relationType ) ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "AddFeatureHandlerUtil.0" ), getNewLabel( relationType ) ); //$NON-NLS-1$
       MessageDialog.openWarning( shell, dialogTitle, message );
       return null;
     }
@@ -135,7 +135,7 @@ public final class AddFeatureHandlerUtil
       return substituts[0];
 
     /* Let user choose */
-    final String message = Messages.getString("AddFeatureHandlerUtil.1"); //$NON-NLS-1$
+    final String message = Messages.getString( "AddFeatureHandlerUtil.1" ); //$NON-NLS-1$
 
     final ILabelProvider labelProvider = new FeatureTypeLabelProvider( IAnnotation.ANNO_NAME );
 // final TreeSingleSelectionDialog dialog = new TreeSingleSelectionDialog( shell, substituts, new
@@ -157,7 +157,7 @@ public final class AddFeatureHandlerUtil
     if( dialog.open() == Window.CANCEL )
       return null;
 
-    return (IFeatureType) dialog.getResult()[0];
+    return (IFeatureType)dialog.getResult()[0];
   }
 
   public static String getNewLabel( final IRelationType relationType )

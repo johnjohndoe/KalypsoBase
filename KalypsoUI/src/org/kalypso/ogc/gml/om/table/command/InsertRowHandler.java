@@ -50,9 +50,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.ui.progress.UIJob;
-import org.kalypso.i18n.Messages;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -67,7 +67,7 @@ public class InsertRowHandler extends AbstractHandler
     if( viewer == null || tupleResult == null )
       throw new ExecutionException( Messages.getString( "org.kalypso.ogc.gml.om.table.command.AddRowHandler.0" ) ); //$NON-NLS-1$
 
-    final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+    final IStructuredSelection selection = (IStructuredSelection)viewer.getSelection();
     if( selection == null )
       throw new ExecutionException( Messages.getString( "org.kalypso.ogc.gml.om.table.command.InsertRowHandler.3" ) ); //$NON-NLS-1$
 

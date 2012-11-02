@@ -54,9 +54,8 @@ import org.kalypso.ogc.sensor.SensorException;
 /**
  * A CurveDataset contains XYCurveSerie objects for the purpose of being displayed within a JFreeChart.
  * <p>
- * Inserted synchronized at some places because if pages are switched too fast in kalypso wizard then I presume that
- * many swing ui threads are trying to update the chart, thus leading to possible array out of bound exceptions because
- * of concurrent accesses.
+ * Inserted synchronized at some places because if pages are switched too fast in kalypso wizard then I presume that many swing ui threads are trying to update the chart, thus leading to possible
+ * array out of bound exceptions because of concurrent accesses.
  * 
  * @author schlienger
  */
@@ -96,8 +95,7 @@ class CurveDataset extends AbstractIntervalXYDataset
   /**
    * List of RendererInfo.
    * <p>
-   * REMARK: we cannot use a map ore something similiar, because the hashCode of the XYCurveSeries is not
-   * well-implemented, causing different curves to be equal.
+   * REMARK: we cannot use a map ore something similiar, because the hashCode of the XYCurveSeries is not well-implemented, causing different curves to be equal.
    * </p>
    */
   private final List<RendererInfo> m_curves = Collections.synchronizedList( new ArrayList<RendererInfo>() );

@@ -59,9 +59,9 @@ public class CollapseAllHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event )
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
-    final ObservationChooser chooser = (ObservationChooser) part.getAdapter( ObservationChooser.class );
+    final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
+    final IWorkbenchPart part = (IWorkbenchPart)context.getVariable( ISources.ACTIVE_PART_NAME );
+    final ObservationChooser chooser = (ObservationChooser)part.getAdapter( ObservationChooser.class );
     chooser.getViewer().collapseAll();
     return Status.OK_STATUS;
   }

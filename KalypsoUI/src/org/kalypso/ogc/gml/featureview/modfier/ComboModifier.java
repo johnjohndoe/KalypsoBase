@@ -52,13 +52,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.PropertyUtils;
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * A modifier which handles feature-value-properties which are enumerations: shows a combo-box as cell-editor.
- *
+ * 
  * @author Gernot Belger
  */
 public class ComboModifier extends AbstractFeatureModifier

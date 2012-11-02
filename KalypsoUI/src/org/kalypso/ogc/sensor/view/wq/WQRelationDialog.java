@@ -49,11 +49,11 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableSet;
 import org.kalypso.ogc.sensor.view.wq.diagram.WQRelationDiagramViewer;
 import org.kalypso.ogc.sensor.view.wq.table.WQRelationTableViewer;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author schlienger
@@ -79,7 +79,7 @@ public class WQRelationDialog extends ResizableDialog
   @Override
   protected Control createDialogArea( final Composite parent )
   {
-    final Composite composite = (Composite) super.createDialogArea( parent );
+    final Composite composite = (Composite)super.createDialogArea( parent );
 
     final SashForm form = new SashForm( composite, SWT.HORIZONTAL );
     form.setLayoutData( new GridData( GridData.FILL_BOTH ) );

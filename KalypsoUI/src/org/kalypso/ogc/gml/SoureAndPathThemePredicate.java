@@ -68,7 +68,7 @@ public class SoureAndPathThemePredicate implements IKalypsoThemePredicate
   {
     if( theme instanceof GisTemplateFeatureTheme )
     {
-      final GisTemplateFeatureTheme gisTheme = (GisTemplateFeatureTheme) theme;
+      final GisTemplateFeatureTheme gisTheme = (GisTemplateFeatureTheme)theme;
 
       final EqualsBuilder equalsBuilder = new EqualsBuilder();
       equalsBuilder.append( m_href, gisTheme.getHref() );

@@ -72,10 +72,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.ui.forms.widgets.Form;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.ThemeUtilities;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypso.util.themes.legend.LegendUtilities;
 import org.kalypso.util.themes.legend.listener.ILegendChangedListener;
 import org.kalypso.util.themes.legend.provider.ThemeCheckStateProvider;
@@ -88,7 +88,7 @@ import org.kalypso.util.themes.position.listener.IPositionChangedListener;
 
 /**
  * This composite edits the position.
- *
+ * 
  * @author Holger Albert
  */
 public class LegendComposite extends Composite
@@ -145,7 +145,7 @@ public class LegendComposite extends Composite
 
   /**
    * The constructor.
-   *
+   * 
    * @param parent
    *          A widget which will be the parent of the new instance (cannot be null).
    * @param style
@@ -199,7 +199,7 @@ public class LegendComposite extends Composite
    * This function checks the provided properties object for properties this composite can edit. Found properties will
    * be checked for correct values. Then they are set to the members. If editable properties are missing or if existing
    * ones have wrong values, they will be set to the members with default values.
-   *
+   * 
    * @param properties
    *          The properties, containing the values.
    */
@@ -225,7 +225,7 @@ public class LegendComposite extends Composite
    * This function checks the provided properties object for properties this composite can edit. Found properties will
    * be checked for correct values. Then they are set to the members. If editable properties are missing or if existing
    * ones have wrong values, the members will not be changed.
-   *
+   * 
    * @param properties
    *          The properties, containing the values.
    */
@@ -312,7 +312,7 @@ public class LegendComposite extends Composite
 
   /**
    * This function creates the content composite.
-   *
+   * 
    * @param parent
    *          The parent composite.
    * @return The content composite.
@@ -335,7 +335,7 @@ public class LegendComposite extends Composite
 
   /**
    * This function creates the content internal composite.
-   *
+   * 
    * @param parent
    *          The parent composite.
    * @return The content internal composite.
@@ -359,7 +359,7 @@ public class LegendComposite extends Composite
 
   /**
    * This function creates the position composite.
-   *
+   * 
    * @param parent
    *          The parent composite.
    * @return The position composite.
@@ -389,7 +389,7 @@ public class LegendComposite extends Composite
 
   /**
    * This function creates the legend group.
-   *
+   * 
    * @param parent
    *          The parent composite.
    * @return The legend group.
@@ -399,18 +399,18 @@ public class LegendComposite extends Composite
     /* Create a group. */
     final Group legendGroup = new Group( parent, SWT.NONE );
     legendGroup.setLayout( new GridLayout( 3, false ) );
-    legendGroup.setText( Messages.getString("LegendComposite_0") ); //$NON-NLS-1$
+    legendGroup.setText( Messages.getString( "LegendComposite_0" ) ); //$NON-NLS-1$
 
     /* Create a label. */
     final Label backgroundColorLabel = new Label( legendGroup, SWT.NONE );
     backgroundColorLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    backgroundColorLabel.setText( Messages.getString("LegendComposite_1") ); //$NON-NLS-1$
+    backgroundColorLabel.setText( Messages.getString( "LegendComposite_1" ) ); //$NON-NLS-1$
     backgroundColorLabel.setAlignment( SWT.LEFT );
 
     /* Create a label. */
     final Label backgroundLabel = new Label( legendGroup, SWT.BORDER );
     backgroundLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    backgroundLabel.setText( Messages.getString("LegendComposite_2") ); //$NON-NLS-1$
+    backgroundLabel.setText( Messages.getString( "LegendComposite_2" ) ); //$NON-NLS-1$
     backgroundLabel.setBackground( new Color( parent.getDisplay(), m_backgroundColor ) );
 
     backgroundColorLabel.addDisposeListener( new DisposeListener()
@@ -451,7 +451,7 @@ public class LegendComposite extends Composite
     /* Create a label. */
     final Label fontSizeLabel = new Label( legendGroup, SWT.NONE );
     fontSizeLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    fontSizeLabel.setText( Messages.getString("LegendComposite_4") ); //$NON-NLS-1$
+    fontSizeLabel.setText( Messages.getString( "LegendComposite_4" ) ); //$NON-NLS-1$
     fontSizeLabel.setAlignment( SWT.LEFT );
 
     /* Create a spinner. */
@@ -474,7 +474,7 @@ public class LegendComposite extends Composite
     /* Create a label. */
     final Label insetsLabel = new Label( legendGroup, SWT.NONE );
     insetsLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    insetsLabel.setText( Messages.getString("LegendComposite_5") ); //$NON-NLS-1$
+    insetsLabel.setText( Messages.getString( "LegendComposite_5" ) ); //$NON-NLS-1$
     insetsLabel.setAlignment( SWT.LEFT );
 
     /* Create a spinner. */
@@ -497,7 +497,7 @@ public class LegendComposite extends Composite
     /* Create a label. */
     final Label availableThemesLabel = new Label( legendGroup, SWT.NONE );
     availableThemesLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 3, 1 ) );
-    availableThemesLabel.setText( Messages.getString("LegendComposite_6") ); //$NON-NLS-1$
+    availableThemesLabel.setText( Messages.getString( "LegendComposite_6" ) ); //$NON-NLS-1$
     availableThemesLabel.setAlignment( SWT.LEFT );
 
     /* Create a table viewer. */
@@ -512,13 +512,13 @@ public class LegendComposite extends Composite
     /* Create a column. */
     final TreeViewerColumn nameColumn = new TreeViewerColumn( availableThemesViewer, SWT.LEFT );
     nameColumn.setLabelProvider( new ThemeNameLabelProvider() );
-    nameColumn.getColumn().setText( Messages.getString("LegendComposite_7") ); //$NON-NLS-1$
+    nameColumn.getColumn().setText( Messages.getString( "LegendComposite_7" ) ); //$NON-NLS-1$
     nameColumn.getColumn().setWidth( 250 );
 
     /* Create a column. */
     final TreeViewerColumn typeColumn = new TreeViewerColumn( availableThemesViewer, SWT.LEFT );
     typeColumn.setLabelProvider( new ThemeTypeLabelProvider() );
-    typeColumn.getColumn().setText( Messages.getString("LegendComposite_8") ); //$NON-NLS-1$
+    typeColumn.getColumn().setText( Messages.getString( "LegendComposite_8" ) ); //$NON-NLS-1$
     typeColumn.getColumn().setWidth( 200 );
 
     /* Set a content provider. */
@@ -539,7 +539,7 @@ public class LegendComposite extends Composite
       @Override
       public void checkStateChanged( final CheckStateChangedEvent event )
       {
-        final IKalypsoTheme element = (IKalypsoTheme) event.getElement();
+        final IKalypsoTheme element = (IKalypsoTheme)event.getElement();
 
         final String id = element.getId();
         if( event.getChecked() && !m_themeIds.contains( id ) )
@@ -556,7 +556,7 @@ public class LegendComposite extends Composite
 
   /**
    * This function updates the composite.
-   *
+   * 
    * @param status
    *          A status, containing a message, which should be displayed in the upper area of the view. May be null.
    */
@@ -587,7 +587,7 @@ public class LegendComposite extends Composite
 
   /**
    * This function fires a legend property changed event.
-   *
+   * 
    * @param properties
    *          A up to date properties object, containing all serialized legend properties.
    * @param horizontal
@@ -611,7 +611,7 @@ public class LegendComposite extends Composite
 
   /**
    * This function adds a legend changed listener.
-   *
+   * 
    * @param listener
    *          The legend changed listener to add.
    */
@@ -623,7 +623,7 @@ public class LegendComposite extends Composite
 
   /**
    * This function removes a legend changed listener.
-   *
+   * 
    * @param listener
    *          The legend changed listener to remove.
    */
@@ -635,7 +635,7 @@ public class LegendComposite extends Composite
 
   /**
    * This function returns a up to date properties object, containing all serialized legend properties.
-   *
+   * 
    * @return A up to date properties object, containing all serialized legend properties.
    */
   public Properties getProperties( )

@@ -43,8 +43,8 @@ package org.kalypso.ogc.gml;
 import org.eclipse.core.runtime.IStatus;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.util.pool.PoolableObjectType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.StyledLayerDescriptor;
 import org.kalypsodeegree.graphics.sld.UserStyle;
@@ -84,7 +84,7 @@ public class GisTemplateUserStyle extends AbstractTemplateStyle implements IKaly
   @Override
   public String exportAsXML( )
   {
-    return ((Marshallable) m_userStyle).exportAsXML();
+    return ((Marshallable)m_userStyle).exportAsXML();
   }
 
   @Override
@@ -182,11 +182,11 @@ public class GisTemplateUserStyle extends AbstractTemplateStyle implements IKaly
 
     if( !(newValue instanceof StyledLayerDescriptor) )
     {
-      m_userStyle = createDummyStyle( Messages.getString( "org.kalypso.ogc.gml.GisTemplateUserStyle.3" ), Messages.getString("GisTemplateUserStyle.0") ); //$NON-NLS-1$ //$NON-NLS-2$
+      m_userStyle = createDummyStyle( Messages.getString( "org.kalypso.ogc.gml.GisTemplateUserStyle.3" ), Messages.getString( "GisTemplateUserStyle.0" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return;
     }
 
-    final StyledLayerDescriptor sld = (StyledLayerDescriptor) newValue;
+    final StyledLayerDescriptor sld = (StyledLayerDescriptor)newValue;
     m_userStyle = findUserStyle( sld );
   }
 

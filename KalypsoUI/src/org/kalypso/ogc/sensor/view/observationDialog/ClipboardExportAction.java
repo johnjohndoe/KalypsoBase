@@ -48,7 +48,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -57,6 +56,7 @@ import org.kalypso.ogc.sensor.SensorException;
 import org.kalypso.ogc.sensor.request.IRequest;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree_impl.gml.schema.SpecialPropertyMapper;
 
 /**
@@ -87,12 +87,12 @@ public class ClipboardExportAction extends AbstractObservationAction
     try
     {
       final Clipboard clipboard = viewer.getClipboard();
-      final String content = createClipboardStringFrom( (IObservation) input, null );
+      final String content = createClipboardStringFrom( (IObservation)input, null );
       clipboard.setContents( new Object[] { content }, new Transfer[] { TextTransfer.getInstance() } );
     }
     catch( final SensorException e )
     {
-      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString("ClipboardExportAction.0"), e ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString( "ClipboardExportAction.0" ), e ); //$NON-NLS-1$
     }
 
     return Status.OK_STATUS;
@@ -131,7 +131,7 @@ public class ClipboardExportAction extends AbstractObservationAction
           if( value instanceof Number )
             stringValue = TimeseriesUtils.getNumberFormatFor( sortedAxes[col].getType() ).format( value );
           else
-            stringValue = (String) SpecialPropertyMapper.cast( value, String.class, true );
+            stringValue = (String)SpecialPropertyMapper.cast( value, String.class, true );
           result.append( stringValue != null ? stringValue : " " ); //$NON-NLS-1$
         }
         catch( final Exception e )

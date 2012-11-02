@@ -46,8 +46,8 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.featureview.IFeatureModifier;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
@@ -70,7 +70,7 @@ public class LayerTableLabelProvider extends BaseLabelProvider implements ITable
     if( m_viewer.getColumnCount() == 0 )
       return null;
 
-    final Feature feature = (Feature) element;
+    final Feature feature = (Feature)element;
 
     final IFeatureModifier modifier = m_viewer.getModifier( columnIndex );
     if( modifier == null )
@@ -86,12 +86,12 @@ public class LayerTableLabelProvider extends BaseLabelProvider implements ITable
     if( m_viewer.getColumnCount() == 0 )
     {
       if( element instanceof String )
-        return (String) element;
+        return (String)element;
 
       return StringUtils.EMPTY;
     }
 
-    final Feature feature = (Feature) element;
+    final Feature feature = (Feature)element;
 
     final IFeatureModifier modifier = m_viewer.getModifier( columnIndex );
     if( modifier == null )

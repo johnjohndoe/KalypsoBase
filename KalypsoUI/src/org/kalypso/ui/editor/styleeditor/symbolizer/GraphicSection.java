@@ -42,12 +42,12 @@ package org.kalypso.ui.editor.styleeditor.symbolizer;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypso.ui.editor.styleeditor.binding.StyleInput;
 import org.kalypso.ui.editor.styleeditor.graphic.GraphicComposite;
 import org.kalypso.ui.editor.styleeditor.util.AbstractStyleElementSection;
 import org.kalypso.ui.editor.styleeditor.util.StyleElementAction;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.Graphic;
 import org.kalypsodeegree.graphics.sld.PointSymbolizer;
 
@@ -73,14 +73,13 @@ public class GraphicSection extends AbstractStyleElementSection<PointSymbolizer,
   @Override
   protected String getDescription( )
   {
-    return Messages.getString("GraphicSection_1"); //$NON-NLS-1$
+    return Messages.getString( "GraphicSection_1" ); //$NON-NLS-1$
   }
 
   @Override
   protected StyleElementAction<PointSymbolizer>[] createActions( final IStyleInput<PointSymbolizer> input )
   {
-    @SuppressWarnings( "unchecked" )
-    final StyleElementAction<PointSymbolizer>[] actions = new StyleElementAction[2];
+    @SuppressWarnings( "unchecked" ) final StyleElementAction<PointSymbolizer>[] actions = new StyleElementAction[2];
     actions[0] = new GraphicAddAction( input );
     actions[1] = new GraphicRemoveAction( input );
     return actions;

@@ -139,7 +139,7 @@ public class SubFeatureControl extends AbstractFeatureControl
   {
     final Feature feature = getFeature();
     final IPropertyType ftp = getFeatureTypeProperty();
-    final IRelationType rt = (IRelationType) ftp;
+    final IRelationType rt = (IRelationType)ftp;
 
     // find feature to set to the sub-FeatureControl
     final Feature featureToSet;

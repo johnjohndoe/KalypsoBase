@@ -63,7 +63,7 @@ import org.eclipse.ui.internal.ObjectActionContributorManager;
  * This action group is used to show actions depending on a selected feature.
  * <p>
  * It is filled from the org.eclipse.ui.....popupMenu extension point.
- *
+ * 
  * @author Gernot Belger
  */
 public class FeatureSelectionActionGroup extends ActionGroup
@@ -194,7 +194,7 @@ public class FeatureSelectionActionGroup extends ActionGroup
     {
       if( item instanceof ActionContributionItem )
       {
-        final ActionContributionItem aci = (ActionContributionItem) item;
+        final ActionContributionItem aci = (ActionContributionItem)item;
 
         final IAction action = aci.getAction();
         /* Only add items if they have an image, because else we get problems with editor toolbars. */

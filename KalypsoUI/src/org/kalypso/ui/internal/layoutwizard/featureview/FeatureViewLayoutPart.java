@@ -63,7 +63,6 @@ import org.kalypso.commons.java.util.PropertiesHelper;
 import org.kalypso.contribs.eclipse.swt.SWTUtilities;
 import org.kalypso.core.layoutwizard.ILayoutPageContext;
 import org.kalypso.core.util.pool.IPoolableObjectType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.IFeaturesProvider;
 import org.kalypso.ogc.gml.IFeaturesProviderListener;
@@ -74,6 +73,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.featureeditor.FeatureTemplateviewer;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypso.ui.layoutwizard.AbstractWizardLayoutPart;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.feature.Feature;
@@ -90,7 +90,7 @@ public class FeatureViewLayoutPart extends AbstractWizardLayoutPart implements I
 
   /**
    * Argument: SWT-Style für die Composite des Features. Default ist {@link SWT#BORDER} | {@link SWT#V_SCROLL}<br>
-   *
+   * 
    * @deprecated Use the style element from the .gft file instead (swtflags)
    */
   @Deprecated
@@ -169,7 +169,7 @@ public class FeatureViewLayoutPart extends AbstractWizardLayoutPart implements I
       final URL templateURL = context.resolveURI( templateFileName );
       if( templateURL == null )
       {
-        final String message = String.format( Messages.getString("FeatureViewLayoutPart_10"), templateFileName ); //$NON-NLS-1$
+        final String message = String.format( Messages.getString( "FeatureViewLayoutPart_10" ), templateFileName ); //$NON-NLS-1$
         final Status status = new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, message );
         throw new CoreException( status );
       }
@@ -193,7 +193,7 @@ public class FeatureViewLayoutPart extends AbstractWizardLayoutPart implements I
 
   private CoreException createLoadFailedException( final String templateFileName, final Exception e )
   {
-    final String message = String.format( Messages.getString("FeatureViewLayoutPart_11"), templateFileName ); //$NON-NLS-1$
+    final String message = String.format( Messages.getString( "FeatureViewLayoutPart_11" ), templateFileName ); //$NON-NLS-1$
     final Status status = new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, message, e );
     return new CoreException( status );
   }
@@ -247,19 +247,19 @@ public class FeatureViewLayoutPart extends AbstractWizardLayoutPart implements I
   private EasyFeatureWrapper[] findFeatures( final ISelection selection )
   {
     if( selection instanceof IFeatureSelection )
-      return ((IFeatureSelection) selection).getAllFeatures();
+      return ((IFeatureSelection)selection).getAllFeatures();
 
     if( selection instanceof IStructuredSelection )
     {
       final Collection<EasyFeatureWrapper> result = new ArrayList<>();
-      final IStructuredSelection structSel = (IStructuredSelection) selection;
+      final IStructuredSelection structSel = (IStructuredSelection)selection;
       for( final Iterator< ? > iterator = structSel.iterator(); iterator.hasNext(); )
       {
         final Object element = iterator.next();
         if( element instanceof EasyFeatureWrapper )
-          result.add( (EasyFeatureWrapper) element );
+          result.add( (EasyFeatureWrapper)element );
         else if( element instanceof EasyFeatureWrapper[] )
-          result.addAll( Arrays.asList( (EasyFeatureWrapper[]) element ) );
+          result.addAll( Arrays.asList( (EasyFeatureWrapper[])element ) );
       }
 
       return result.toArray( new EasyFeatureWrapper[result.size()] );

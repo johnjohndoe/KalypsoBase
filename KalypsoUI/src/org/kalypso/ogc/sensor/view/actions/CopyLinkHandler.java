@@ -65,10 +65,10 @@ public class CopyLinkHandler extends AbstractHandler
   {
     try
     {
-      final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-      final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
-      final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
-      final ObservationChooser chooser = (ObservationChooser) part.getAdapter( ObservationChooser.class );
+      final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
+      final Shell shell = (Shell)context.getVariable( ISources.ACTIVE_SHELL_NAME );
+      final IWorkbenchPart part = (IWorkbenchPart)context.getVariable( ISources.ACTIVE_PART_NAME );
+      final ObservationChooser chooser = (ObservationChooser)part.getAdapter( ObservationChooser.class );
 
       final IObservation obs = chooser.isObservationSelected( chooser.getSelection() );
       if( obs == null )

@@ -223,8 +223,7 @@ public class TupleResultFeatureControl extends AbstractToolbarFeatureControl imp
   /**
    * Returns the observation.
    * <p>
-   * If the given property is a relation type, get the feature from that property, else directly use the given feature
-   * of this control.
+   * If the given property is a relation type, get the feature from that property, else directly use the given feature of this control.
    * </p>
    */
   private Feature getObservationFeature( )
@@ -279,8 +278,7 @@ public class TupleResultFeatureControl extends AbstractToolbarFeatureControl imp
   }
 
   /**
-   * @see org.kalypso.observation.result.ITupleResultChangedListener#componentsChanged(org.kalypso.observation.result.IComponent[],
-   *      org.kalypso.observation.result.ITupleResultChangedListener.TYPE)
+   * @see org.kalypso.observation.result.ITupleResultChangedListener#componentsChanged(org.kalypso.observation.result.IComponent[], org.kalypso.observation.result.ITupleResultChangedListener.TYPE)
    */
   @Override
   public void componentsChanged( final IComponent[] components, final TYPE type )
@@ -292,7 +290,7 @@ public class TupleResultFeatureControl extends AbstractToolbarFeatureControl imp
   {
     final Feature obsFeature = getObservationFeature();
     final IFeatureType obsFT = obsFeature.getFeatureType();
-    final IRelationType resultDefPT = (IRelationType) obsFT.getProperty( ObservationFeatureFactory.OM_RESULTDEFINITION );
+    final IRelationType resultDefPT = (IRelationType)obsFT.getProperty( ObservationFeatureFactory.OM_RESULTDEFINITION );
     final IPropertyType resultPT = obsFT.getProperty( ObservationFeatureFactory.OM_RESULT );
 
     final Feature rd = ObservationFeatureFactory.buildRecordDefinition( obsFeature, resultDefPT, m_tupleResult.getComponents(), m_tupleResult.getSortComponents(), m_tupleResult.getOrdinalNumberComponent() );

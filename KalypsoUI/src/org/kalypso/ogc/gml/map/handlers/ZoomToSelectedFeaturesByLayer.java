@@ -57,7 +57,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
 
 /**
  * This class is a handler for zooming to selected features of one layer.
- *
+ * 
  * @author Holger Albert
  */
 public class ZoomToSelectedFeaturesByLayer extends AbstractHandler
@@ -83,7 +83,7 @@ public class ZoomToSelectedFeaturesByLayer extends AbstractHandler
 
   /**
    * The constructor.
-   *
+   * 
    * @param theme
    *          The theme which should be used.
    * @param percent
@@ -101,7 +101,7 @@ public class ZoomToSelectedFeaturesByLayer extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
     final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
 
     /* If no theme is given, use the active theme. */
@@ -117,7 +117,7 @@ public class ZoomToSelectedFeaturesByLayer extends AbstractHandler
     /* At the moment only the gis template feature theme is supported. */
     if( m_theme instanceof GisTemplateFeatureTheme )
     {
-      final GisTemplateFeatureTheme theme = (GisTemplateFeatureTheme) m_theme;
+      final GisTemplateFeatureTheme theme = (GisTemplateFeatureTheme)m_theme;
       final FeatureList featureList = theme.getFeatureList();
 
       for( int i = 0; i < featureList.size(); i++ )
@@ -127,7 +127,7 @@ public class ZoomToSelectedFeaturesByLayer extends AbstractHandler
         /* Only features are supported. */
         if( object instanceof Feature )
         {
-          final Feature feature = (Feature) object;
+          final Feature feature = (Feature)object;
 
           /* If this feature of the theme is one of the selecteded, add it. */
           for( final EasyFeatureWrapper allFeature : allFeatures )

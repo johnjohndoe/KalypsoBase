@@ -44,8 +44,8 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.filterdialog.model.FilterRootElement;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.filterencoding.ElseFilter;
 import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree.filterencoding.Filter;
@@ -104,7 +104,7 @@ public class FilterLabelProvider extends LabelProvider
     {
       if( element instanceof FilterRootElement )
       {
-        return ((FilterRootElement) element).getName();
+        return ((FilterRootElement)element).getName();
       }
       else if( element instanceof ComplexFilter )
       {
@@ -124,7 +124,7 @@ public class FilterLabelProvider extends LabelProvider
       }
       else if( element instanceof Operation )
       {
-        final Operation operation = (Operation) element;
+        final Operation operation = (Operation)element;
         final int id = operation.getOperatorId();
         final int type = OperationDefines.getTypeById( id );
         // Spatial
@@ -139,7 +139,7 @@ public class FilterLabelProvider extends LabelProvider
         if( type == OperationDefines.TYPE_LOGICAL )
         {
           String label = operation.getOperatorName().toUpperCase();
-          final List<Operation> args = ((LogicalOperation) element).getArguments();
+          final List<Operation> args = ((LogicalOperation)element).getArguments();
           if( id == OperationDefines.AND || id == OperationDefines.OR )
           {
             if( args == null || args.size() < 2 )
@@ -152,8 +152,8 @@ public class FilterLabelProvider extends LabelProvider
         // Comparision
         if( operation instanceof PropertyIsCOMPOperation )
         {
-          final Expression firstExpression = ((PropertyIsCOMPOperation) operation).getFirstExpression();
-          final Expression secondExpression = ((PropertyIsCOMPOperation) operation).getSecondExpression();
+          final Expression firstExpression = ((PropertyIsCOMPOperation)operation).getFirstExpression();
+          final Expression secondExpression = ((PropertyIsCOMPOperation)operation).getSecondExpression();
           if( operation.getOperatorId() == OperationDefines.UNKNOWN )
             return Messages.getString( "org.kalypso.ogc.gml.filterdialog.dialog.FilterLabelProvider.5" ); //$NON-NLS-1$
           else if( firstExpression == null || secondExpression == null )
@@ -177,7 +177,7 @@ public class FilterLabelProvider extends LabelProvider
         }
         if( operation instanceof PropertyIsLikeOperation )
         {
-          final Literal literal = ((PropertyIsLikeOperation) operation).getLiteral();
+          final Literal literal = ((PropertyIsLikeOperation)operation).getLiteral();
           if( operation.getOperatorId() == OperationDefines.UNKNOWN )
             return Messages.getString( "org.kalypso.ogc.gml.filterdialog.dialog.FilterLabelProvider.6" ); //$NON-NLS-1$
           else if( literal == null )
@@ -187,7 +187,7 @@ public class FilterLabelProvider extends LabelProvider
 
         if( operation instanceof PropertyIsNullOperation )
         {
-          final Expression expression = ((PropertyIsNullOperation) operation).getExpression();
+          final Expression expression = ((PropertyIsNullOperation)operation).getExpression();
           if( operation.getOperatorId() == OperationDefines.UNKNOWN )
             return Messages.getString( "org.kalypso.ogc.gml.filterdialog.dialog.FilterLabelProvider.7" ); //$NON-NLS-1$
           else if( expression == null )
@@ -196,8 +196,8 @@ public class FilterLabelProvider extends LabelProvider
         }
         if( operation instanceof PropertyIsBetweenOperation )
         {
-          final Expression upperBoundary = ((PropertyIsBetweenOperation) operation).getUpperBoundary();
-          final Expression lowerBoundary = ((PropertyIsBetweenOperation) operation).getLowerBoundary();
+          final Expression upperBoundary = ((PropertyIsBetweenOperation)operation).getUpperBoundary();
+          final Expression lowerBoundary = ((PropertyIsBetweenOperation)operation).getLowerBoundary();
           if( operation.getOperatorId() == OperationDefines.UNKNOWN )
             return Messages.getString( "org.kalypso.ogc.gml.filterdialog.dialog.FilterLabelProvider.8" ); //$NON-NLS-1$
           else if( upperBoundary == null || lowerBoundary == null )

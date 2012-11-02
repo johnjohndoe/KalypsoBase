@@ -53,17 +53,17 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableFactory;
 import org.kalypso.ogc.sensor.timeseries.wq.wqtable.WQTableSet;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.xml.sax.InputSource;
 
 /**
  * This action is contributed to IFile Objects. If they are Zml-Files, then the WQ-Relation is shown, if availabe.
- *
+ * 
  * @author schlienger
  */
 public class ViewWQRelationObjectContribution implements IObjectActionDelegate

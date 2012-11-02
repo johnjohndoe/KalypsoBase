@@ -58,21 +58,21 @@ import org.eclipse.ui.wizards.IWizardDescriptor;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.core.status.StatusDialog;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.outline.GisMapOutlineDropData;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.addlayer.IKalypsoDataImportWizard;
 import org.kalypso.ui.addlayer.MapExtensions;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * Helper to dnd themes into a map.
- *
+ * 
  * @author Gernot Belger
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings( "restriction" )
 public class AddLayerDndSupport
 {
-  private static final String WINDOW_TITLE = Messages.getString("AddLayerDndSupport_0"); //$NON-NLS-1$
+  private static final String WINDOW_TITLE = Messages.getString( "AddLayerDndSupport_0" ); //$NON-NLS-1$
 
   private final IMapDropTarget[] m_dropTargets;
 
@@ -102,14 +102,14 @@ public class AddLayerDndSupport
 
     if( themeData.length > 1 )
     {
-      MessageDialog.openWarning( shell, WINDOW_TITLE, Messages.getString("AddLayerDndSupport_1") ); //$NON-NLS-1$
+      MessageDialog.openWarning( shell, WINDOW_TITLE, Messages.getString( "AddLayerDndSupport_1" ) ); //$NON-NLS-1$
       return false;
     }
 
     final IMapDropTarget[] targets = findTargets( themeData[0] );
     if( targets.length == 0 )
     {
-      MessageDialog.openWarning( shell, WINDOW_TITLE, Messages.getString("AddLayerDndSupport_2") ); //$NON-NLS-1$
+      MessageDialog.openWarning( shell, WINDOW_TITLE, Messages.getString( "AddLayerDndSupport_2" ) ); //$NON-NLS-1$
       return false;
     }
 
@@ -129,7 +129,7 @@ public class AddLayerDndSupport
   {
     if( data instanceof String[] )
     {
-      final String[] paths = (String[]) data;
+      final String[] paths = (String[])data;
       final MapDropData[] result = new MapDropData[paths.length];
       for( int i = 0; i < result.length; i++ )
         result[i] = new MapDropData( paths[i] );
@@ -164,17 +164,17 @@ public class AddLayerDndSupport
     final WizardCollectionElement wizards = MapExtensions.getAvailableWizards( null );
     final IWizardDescriptor wizardDescriptor = wizards.findWizard( wizardId );
     if( wizardDescriptor == null )
-      throw new IllegalStateException( String.format( Messages.getString("AddLayerDndSupport_3"), wizardId ) ); //$NON-NLS-1$
+      throw new IllegalStateException( String.format( Messages.getString( "AddLayerDndSupport_3" ), wizardId ) ); //$NON-NLS-1$
 
     /* Create and initialize wizard */
-    final IKalypsoDataImportWizard wizard = (IKalypsoDataImportWizard) wizardDescriptor.createWizard();
+    final IKalypsoDataImportWizard wizard = (IKalypsoDataImportWizard)wizardDescriptor.createWizard();
     wizard.setCommandTarget( m_commandTarget );
     wizard.setMapModel( dropData.getLayerModel(), dropData.getInsertionIndex() );
 
     if( wizard instanceof Wizard )
     {
-      ((Wizard) wizard).setWindowTitle( WINDOW_TITLE );
-      ((Wizard) wizard).setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoGisPlugin.getDefault(), wizardId ) );
+      ((Wizard)wizard).setWindowTitle( WINDOW_TITLE );
+      ((Wizard)wizard).setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoGisPlugin.getDefault(), wizardId ) );
     }
 
     wizard.initFromDrop( data );

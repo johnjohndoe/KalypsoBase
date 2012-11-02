@@ -57,7 +57,7 @@ import org.kalypsodeegree.model.feature.FeatureList;
 
 /**
  * Feature provider, which substitute the given qname and which have geometries.
- *
+ * 
  * @author Holger Albert
  */
 public class GeometryFeaturesProvider implements IFeaturesProvider
@@ -69,7 +69,7 @@ public class GeometryFeaturesProvider implements IFeaturesProvider
 
   /**
    * The constructor.
-   *
+   * 
    * @param qname
    *          The qname, which must be substituted.
    */
@@ -88,7 +88,7 @@ public class GeometryFeaturesProvider implements IFeaturesProvider
     {
       if( theme instanceof IKalypsoFeatureTheme )
       {
-        final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) theme;
+        final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme)theme;
         final CommandableWorkspace workspace = featureTheme.getWorkspace();
         final FeatureList featureList = featureTheme.getFeatureListVisible( null );
 
@@ -98,9 +98,9 @@ public class GeometryFeaturesProvider implements IFeaturesProvider
           {
             Feature f;
             if( object instanceof Feature )
-              f = (Feature) object;
+              f = (Feature)object;
             else if( object instanceof String )
-              f = workspace.getFeature( (String) object );
+              f = workspace.getFeature( (String)object );
             else
               continue;
 

@@ -76,7 +76,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
  * contains commands to add new features of all available feature types. The command
  * "org.kalypso.gis.newFeature.command" is called with a different command parameter for each feature type. The command
  * parameter is the QName of the feature type in its String representation.
- *
+ * 
  * @author kurzbach
  */
 public class NewFeatureToolbarContribution extends DropDownToolbarItem
@@ -116,7 +116,7 @@ public class NewFeatureToolbarContribution extends DropDownToolbarItem
     if( !(theme instanceof IKalypsoFeatureTheme) )
       return new CommandContributionItem[0];
 
-    final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) theme;
+    final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme)theme;
     final IFeatureType featureType = featureTheme.getFeatureType();
 
     if( featureType == null )
@@ -148,7 +148,7 @@ public class NewFeatureToolbarContribution extends DropDownToolbarItem
      */
     else if( maxOccurs > 1 )
     {
-      final List< ? > list = (List< ? >) parentFeature.getProperty( fatp );
+      final List< ? > list = (List< ? >)parentFeature.getProperty( fatp );
       if( list != null && list.size() >= maxOccurs )
         return new CommandContributionItem[0];
     }
@@ -186,7 +186,7 @@ public class NewFeatureToolbarContribution extends DropDownToolbarItem
   {
     try
     {
-      final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
+      final IHandlerService handlerService = (IHandlerService)PlatformUI.getWorkbench().getService( IHandlerService.class );
       final IEvaluationContext currentState = handlerService.getCurrentState();
       return MapHandlerUtils.getActiveThemeChecked( currentState );
     }

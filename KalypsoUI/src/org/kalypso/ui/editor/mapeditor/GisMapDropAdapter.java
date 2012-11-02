@@ -51,7 +51,7 @@ import org.kalypso.ui.addlayer.dnd.AddLayerDndSupport;
 
 /**
  * DropAdapter for the map editor (or virew) itself. New elements are always added to the top level model at index 0.
- *
+ * 
  * @author Gernot Belger
  */
 class GisMapDropAdapter extends ViewerDropAdapter

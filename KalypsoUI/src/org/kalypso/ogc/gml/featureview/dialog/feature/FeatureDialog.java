@@ -102,8 +102,7 @@ public class FeatureDialog extends TitleAreaDialog
     }
 
     /**
-     * @see org.kalypso.ogc.gml.featureview.IFeatureChangeListener#openFeatureRequested(org.kalypsodeegree.model.feature.Feature,
-     *      org.kalypso.gmlschema.property.IPropertyType)
+     * @see org.kalypso.ogc.gml.featureview.IFeatureChangeListener#openFeatureRequested(org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.IPropertyType)
      */
     @Override
     public void openFeatureRequested( final Feature feature, final IPropertyType pt )
@@ -209,7 +208,7 @@ public class FeatureDialog extends TitleAreaDialog
     setTitle( m_title );
 
     /* Create the main composite. */
-    final Composite main = (Composite) super.createDialogArea( parent );
+    final Composite main = (Composite)super.createDialogArea( parent );
     main.setLayout( new GridLayout( 1, false ) );
     main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
@@ -345,7 +344,7 @@ public class FeatureDialog extends TitleAreaDialog
     }
 
     /* Cast. */
-    final MultiStatus multiStatus = (MultiStatus) status;
+    final MultiStatus multiStatus = (MultiStatus)status;
 
     /* Get all children. */
     final IStatus[] children = multiStatus.getChildren();

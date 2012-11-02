@@ -45,7 +45,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.TextTransfer;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.typehandler.ZmlInlineTypeHandler;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -53,6 +52,7 @@ import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.impl.SimpleObservation;
 import org.kalypso.ogc.sensor.metadata.MetadataList;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -85,18 +85,18 @@ public class ClipboardImportAction extends AbstractObservationAction
     final Clipboard clipboard = viewer.getClipboard();
     final Object content = clipboard.getContents( TextTransfer.getInstance() );
     if( content == null || !(content instanceof String) )
-      return new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), Messages.getString("ClipboardImportAction.0") ); //$NON-NLS-1$
+      return new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), Messages.getString( "ClipboardImportAction.0" ) ); //$NON-NLS-1$
 
     try
     {
       final Object inputObs = viewer.getInput();
-      final String name = inputObs instanceof IObservation ? ((IObservation) inputObs).getName() : ""; //$NON-NLS-1$
+      final String name = inputObs instanceof IObservation ? ((IObservation)inputObs).getName() : ""; //$NON-NLS-1$
 
       final IAxis[] axis = m_typeHandler.createAxes();
 
       final Clipboard2Zml clipboard2Zml = new Clipboard2Zml( axis );
 
-      final ITupleModel model = clipboard2Zml.convert( (String) content );
+      final ITupleModel model = clipboard2Zml.convert( (String)content );
 
       final IObservation obs = new SimpleObservation( null, name, new MetadataList(), model );
 

@@ -84,7 +84,7 @@ public class ExportGMLOperation implements ICoreRunnableWithProgress
       if( schema instanceof GMLSchema )
       {
         // can only save real GMLSchema, EmptyGMLSchema is not saved
-        ((GMLSchema) schema).getSchema().save( xsdFile );
+        ((GMLSchema)schema).getSchema().save( xsdFile );
       }
     }
     catch( final Exception e )

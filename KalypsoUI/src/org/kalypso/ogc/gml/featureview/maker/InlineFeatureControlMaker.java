@@ -64,8 +64,7 @@ import org.kalypsodeegree.model.feature.Feature;
 public class InlineFeatureControlMaker implements IControlMaker
 {
   /**
-   * @see org.kalypso.ogc.gml.featureview.maker.IControlMaker#addControls(java.util.List,
-   *      org.kalypso.template.featureview.LayoutType, org.kalypso.gmlschema.property.IPropertyType)
+   * @see org.kalypso.ogc.gml.featureview.maker.IControlMaker#addControls(java.util.List, org.kalypso.template.featureview.LayoutType, org.kalypso.gmlschema.property.IPropertyType)
    */
   @Override
   public boolean addControls( final List<JAXBElement< ? extends ControlType>> controlList, final LayoutType parentLayout, final IFeatureType ft, final IPropertyType ftp, final Feature feature )
@@ -100,7 +99,7 @@ public class InlineFeatureControlMaker implements IControlMaker
     groupdata.setGrabExcessVerticalSpace( true );
     groupdata.setHorizontalAlignment( "SWT.FILL" ); //$NON-NLS-1$
     groupdata.setVerticalAlignment( "SWT.FILL" ); //$NON-NLS-1$
-    groupdata.setHorizontalSpan( ((GridLayout) parentLayout).getNumColumns() );
+    groupdata.setHorizontalSpan( ((GridLayout)parentLayout).getNumColumns() );
 
     group.setLayoutData( TemplateUtilities.OF_FEATUREVIEW.createGridData( groupdata ) );
     group.setStyle( "SWT.NONE" ); //$NON-NLS-1$

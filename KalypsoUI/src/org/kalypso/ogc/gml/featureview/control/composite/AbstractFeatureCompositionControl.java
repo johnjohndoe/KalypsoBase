@@ -89,7 +89,7 @@ public abstract class AbstractFeatureCompositionControl implements IFeatureCompo
   {
     if( layoutType instanceof org.kalypso.template.featureview.GridLayout )
     {
-      final org.kalypso.template.featureview.GridLayout gridLayoutType = (org.kalypso.template.featureview.GridLayout) layoutType;
+      final org.kalypso.template.featureview.GridLayout gridLayoutType = (org.kalypso.template.featureview.GridLayout)layoutType;
       final GridLayout layout = new GridLayout();
       layout.horizontalSpacing = gridLayoutType.getHorizontalSpacing();
       layout.verticalSpacing = gridLayoutType.getVerticalSpacing();

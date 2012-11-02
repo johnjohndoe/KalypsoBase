@@ -45,8 +45,8 @@ import java.util.Collection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
@@ -76,7 +76,7 @@ public class EnvelopeFeatureDialog implements IFeatureDialog
   @Override
   public int open( final Shell shell )
   {
-    GM_Envelope envelope = (GM_Envelope) m_feature.getProperty( m_ftp );
+    GM_Envelope envelope = (GM_Envelope)m_feature.getProperty( m_ftp );
 
     Double[] values = null;
     if( envelope == null )

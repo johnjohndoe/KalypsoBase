@@ -55,8 +55,8 @@ import org.eclipse.ui.progress.IProgressService;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.gmleditor.part.GmlTreeView;
+import org.kalypso.ui.internal.i18n.Messages;
 
 public class ReloadGmltreeHandler extends AbstractHandler
 {
@@ -70,16 +70,15 @@ public class ReloadGmltreeHandler extends AbstractHandler
     if( treeViewer == null )
       return null;
 
-
     final String commandName = HandlerUtils.getCommandName( event );
 
-    if( !MessageDialog.openConfirm( shell, commandName, Messages.getString("ReloadGmltreeHandler.0") ) ) //$NON-NLS-1$
+    if( !MessageDialog.openConfirm( shell, commandName, Messages.getString( "ReloadGmltreeHandler.0" ) ) ) //$NON-NLS-1$
       return null;
 
-    final IProgressService progressService = (IProgressService) site.getService( IProgressService.class );
+    final IProgressService progressService = (IProgressService)site.getService( IProgressService.class );
     final WorkspaceModifyOperation op = new WorkspaceModifyOperation()
     {
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings( "synthetic-access" )
       @Override
       protected void execute( final IProgressMonitor monitor )
       {

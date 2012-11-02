@@ -69,7 +69,7 @@ public class FilterDialogLabelProvider implements ILabelProvider
   {
     if( element != null )
     {
-      return ((FilterDialogTreeNode) element).getName();
+      return ((FilterDialogTreeNode)element).getName();
     }
     return null;
   }

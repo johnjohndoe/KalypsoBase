@@ -78,9 +78,9 @@ public class StrokePreview extends Preview<Stroke>
       final int[][] pos = new int[3][4];
       pos[0][0] = 4;
       pos[1][0] = 4;
-      pos[0][1] = (int) (width / 3.0);
+      pos[0][1] = (int)(width / 3.0);
       pos[1][1] = height - 4;
-      pos[0][2] = (int) (width / 1.5);
+      pos[0][2] = (int)(width / 1.5);
       pos[1][2] = 4;
       pos[0][3] = width - 4;
       pos[1][3] = height - 4;

@@ -56,13 +56,13 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.progress.IProgressService;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoSaveableTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author burtscher1
@@ -75,10 +75,10 @@ public class SaveThemeHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
     final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
 
-    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final Shell shell = (Shell)context.getVariable( ISources.ACTIVE_SHELL_NAME );
 
     if( mapPanel != null )
     {
@@ -90,7 +90,7 @@ public class SaveThemeHandler extends AbstractHandler
         {
           if( activeTheme instanceof IKalypsoFeatureTheme )
           {
-            final IKalypsoFeatureTheme fTheme = (IKalypsoFeatureTheme) activeTheme;
+            final IKalypsoFeatureTheme fTheme = (IKalypsoFeatureTheme)activeTheme;
             final CommandableWorkspace workspace = fTheme.getWorkspace();
             // only save if map is dirty
             if( workspace != null && workspace.isDirty() )
@@ -98,7 +98,7 @@ public class SaveThemeHandler extends AbstractHandler
               if( !MessageDialog.openConfirm( shell, Messages.getString( "org.kalypso.ogc.gml.map.handlers.SaveThemeHandler.1" ), Messages.getString( "org.kalypso.ogc.gml.map.handlers.SaveThemeHandler.2" ) ) ) //$NON-NLS-1$ //$NON-NLS-2$
                 return null;
 
-              final IKalypsoSaveableTheme theme = (IKalypsoSaveableTheme) activeTheme;
+              final IKalypsoSaveableTheme theme = (IKalypsoSaveableTheme)activeTheme;
 
               final IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
 
@@ -119,7 +119,7 @@ public class SaveThemeHandler extends AbstractHandler
               {
                 e.printStackTrace();
 
-                final CoreException ce = (CoreException) e.getTargetException();
+                final CoreException ce = (CoreException)e.getTargetException();
                 ErrorDialog.openError( shell, Messages.getString( "org.kalypso.ogc.gml.map.handlers.SaveThemeHandler.3" ), Messages.getString( "org.kalypso.ogc.gml.map.handlers.SaveThemeHandler.4" ), ce.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
               }
               catch( final InterruptedException e )
@@ -157,7 +157,7 @@ public class SaveThemeHandler extends AbstractHandler
     boolean bEnabled = false;
 
     final IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
-    final IMapPanel mapPanel = (IMapPanel) activePart.getAdapter( IMapPanel.class );
+    final IMapPanel mapPanel = (IMapPanel)activePart.getAdapter( IMapPanel.class );
 
     if( mapPanel == null )
       return;
@@ -169,7 +169,7 @@ public class SaveThemeHandler extends AbstractHandler
 
       if( activeTheme != null && activeTheme instanceof IKalypsoFeatureTheme )
       {
-        final IKalypsoFeatureTheme fTheme = (IKalypsoFeatureTheme) activeTheme;
+        final IKalypsoFeatureTheme fTheme = (IKalypsoFeatureTheme)activeTheme;
         final CommandableWorkspace workspace = fTheme.getWorkspace();
         if( workspace != null && workspace.isDirty() )
         {

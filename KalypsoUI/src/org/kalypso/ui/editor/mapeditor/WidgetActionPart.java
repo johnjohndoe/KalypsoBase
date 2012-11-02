@@ -66,14 +66,13 @@ public class WidgetActionPart implements ICommandTarget
       return null;
 
     if( m_part instanceof ICommandTarget )
-      return (ICommandTarget) m_part;
+      return (ICommandTarget)m_part;
 
-    return (ICommandTarget) m_part.getAdapter( ICommandTarget.class );
+    return (ICommandTarget)m_part.getAdapter( ICommandTarget.class );
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand,
-   *      java.lang.Runnable)
+   * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand, java.lang.Runnable)
    */
   @Override
   public void postCommand( final ICommand command, final Runnable runnable )
@@ -90,7 +89,7 @@ public class WidgetActionPart implements ICommandTarget
     if( m_part == null )
       return null;
 
-    return (ModellEventProvider) m_part.getAdapter( ModellEventProvider.class );
+    return (ModellEventProvider)m_part.getAdapter( ModellEventProvider.class );
   }
 
   public IWorkbenchPartSite getSite( )

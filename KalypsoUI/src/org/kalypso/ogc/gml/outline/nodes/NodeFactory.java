@@ -42,7 +42,6 @@ package org.kalypso.ogc.gml.outline.nodes;
 
 import org.deegree.ogcwebservices.wms.capabilities.Layer;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
@@ -51,6 +50,7 @@ import org.kalypso.ogc.gml.map.themes.KalypsoImageTheme;
 import org.kalypso.ogc.gml.map.themes.KalypsoTextTheme;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
@@ -64,7 +64,7 @@ public class NodeFactory
 {
   private NodeFactory( )
   {
-    throw new UnsupportedOperationException( Messages.getString("NodeFactory_0") ); //$NON-NLS-1$
+    throw new UnsupportedOperationException( Messages.getString( "NodeFactory_0" ) ); //$NON-NLS-1$
   }
 
   public static IThemeNode[] createNodes( final IThemeNode parent, final Object[] elements )
@@ -80,7 +80,7 @@ public class NodeFactory
   {
     // IMPORTANT: check the modell after the theme, as there are themes that also implement IMapModell
     if( element instanceof IMapModell )
-      return new MapModellNode( (IMapModell) element, viewer );
+      return new MapModellNode( (IMapModell)element, viewer );
 
     throw new UnsupportedOperationException();
   }
@@ -88,43 +88,43 @@ public class NodeFactory
   public static IThemeNode createNode( final IThemeNode parent, final Object element )
   {
     if( element instanceof IKalypsoCascadingTheme )
-      return new CascadingThemeNode( parent, (IKalypsoCascadingTheme) element );
+      return new CascadingThemeNode( parent, (IKalypsoCascadingTheme)element );
 
     if( element instanceof IKalypsoFeatureTheme )
-      return new FeatureThemeNode( parent, (IKalypsoFeatureTheme) element );
+      return new FeatureThemeNode( parent, (IKalypsoFeatureTheme)element );
 
     if( element instanceof KalypsoWMSTheme )
-      return new WMSThemeNode( parent, (KalypsoWMSTheme) element );
+      return new WMSThemeNode( parent, (KalypsoWMSTheme)element );
 
     if( element instanceof KalypsoImageTheme )
-      return new ImageThemeNode( parent, (KalypsoImageTheme) element );
+      return new ImageThemeNode( parent, (KalypsoImageTheme)element );
 
     if( element instanceof KalypsoTextTheme )
-      return new TextThemeNode( parent, (KalypsoTextTheme) element );
+      return new TextThemeNode( parent, (KalypsoTextTheme)element );
 
     if( element instanceof IKalypsoTheme )
       return new KalypsoThemeNode<>( parent, (IKalypsoTheme)element );
 
     if( element instanceof IKalypsoUserStyle )
-      return new UserStyleNode( parent, (IKalypsoUserStyle) element );
+      return new UserStyleNode( parent, (IKalypsoUserStyle)element );
 
     if( element instanceof FeatureTypeStyle )
-      return new FeatureTypeStyleNode( parent, (FeatureTypeStyle) element );
+      return new FeatureTypeStyleNode( parent, (FeatureTypeStyle)element );
 
     if( element instanceof Rule )
-      return new RuleNode( parent, (Rule) element );
+      return new RuleNode( parent, (Rule)element );
 
     if( element instanceof RasterSymbolizer )
-      return new RasterSymbolizerNode( parent, (RasterSymbolizer) element );
+      return new RasterSymbolizerNode( parent, (RasterSymbolizer)element );
 
     if( element instanceof Symbolizer )
-      return new SymbolizerNode( parent, (Symbolizer) element );
+      return new SymbolizerNode( parent, (Symbolizer)element );
 
     if( element instanceof ColorMapEntry )
-      return new ColorMapEntryNode( parent, (ColorMapEntry) element );
+      return new ColorMapEntryNode( parent, (ColorMapEntry)element );
 
     if( element instanceof Layer )
-      return new WMSLayerNode( parent, (Layer) element );
+      return new WMSLayerNode( parent, (Layer)element );
 
     throw new UnsupportedOperationException();
   }

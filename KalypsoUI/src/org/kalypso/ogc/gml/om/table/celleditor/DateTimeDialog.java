@@ -56,7 +56,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.vafada.swtcalendar.SWTCalendar;
 import org.vafada.swtcalendar.SWTCalendarEvent;
 import org.vafada.swtcalendar.SWTCalendarListener;
@@ -114,7 +114,7 @@ public class DateTimeDialog extends TitleAreaDialog
   @Override
   protected Control createDialogArea( final Composite parent )
   {
-    final Composite composite = (Composite) super.createDialogArea( parent );
+    final Composite composite = (Composite)super.createDialogArea( parent );
     composite.setLayout( new GridLayout() );
     final GridData data = new GridData( GridData.FILL, GridData.FILL, true, true );
     data.heightHint = 300;

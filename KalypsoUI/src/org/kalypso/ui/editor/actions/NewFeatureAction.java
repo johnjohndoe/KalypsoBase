@@ -41,7 +41,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.ImageProvider;
@@ -49,6 +48,7 @@ import org.kalypso.ui.catalogs.FeatureTypeImageCatalog;
 import org.kalypso.ui.catalogs.FeatureTypePropertiesCatalog;
 import org.kalypso.ui.catalogs.IFeatureTypePropertiesConstants;
 import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**

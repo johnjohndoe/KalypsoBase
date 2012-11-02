@@ -98,14 +98,14 @@ public class FCVFeatureDelegate implements IFCVDelegate
     if( !(property instanceof IValuePropertyType) )
       throw new IllegalStateException();
 
-    final IValuePropertyType vpt = (IValuePropertyType) property;
+    final IValuePropertyType vpt = (IValuePropertyType)property;
     final IRestriction[] restrictions = vpt.getRestriction();
     for( final IRestriction restriction : restrictions )
     {
       if( !(restriction instanceof EnumerationRestriction) )
         continue;
 
-      final EnumerationRestriction r = (EnumerationRestriction) restriction;
+      final EnumerationRestriction r = (EnumerationRestriction)restriction;
 
       final Object[] enumeration = r.getEnumeration();
       final String[] labels = r.getLabels();

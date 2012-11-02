@@ -54,9 +54,9 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.widgets.Table;
 import org.kalypso.contribs.java.util.DateUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.i18n.Messages;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.ogc.gml.om.table.celleditor.DateTimeCellEditor;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * Handles XMLGreogorianCalendar types.

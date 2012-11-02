@@ -55,8 +55,7 @@ public class CollapseAllActionDelegate implements IEditorActionDelegate
   private IEditorPart m_targetEditor;
 
   /**
-   * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction,
-   *      org.eclipse.ui.IEditorPart)
+   * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction, org.eclipse.ui.IEditorPart)
    */
   @Override
   public void setActiveEditor( final IAction action, final IEditorPart targetEditor )
@@ -72,15 +71,14 @@ public class CollapseAllActionDelegate implements IEditorActionDelegate
   {
     if( m_targetEditor instanceof GmlEditor )
     {
-      final GmlEditor editor = (GmlEditor) m_targetEditor;
+      final GmlEditor editor = (GmlEditor)m_targetEditor;
       final GmlTreeView treeView = editor.getTreeView();
       treeView.getTreeViewer().collapseAll();
     }
   }
 
   /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-   *      org.eclipse.jface.viewers.ISelection)
+   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
    */
   @Override
   public void selectionChanged( final IAction action, final ISelection selection )

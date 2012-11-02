@@ -72,13 +72,12 @@ public class MaskedNumberTableCellRenderer extends DefaultTableCellRenderer
   }
 
   /**
-   * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object,
-   *      boolean, boolean, int, int)
+   * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
    */
   @Override
   public Component getTableCellRendererComponent( final JTable table, final Object value, final boolean isSelected, final boolean hasFocus, final int row, final int column )
   {
-    final JLabel label = (JLabel) super.getTableCellRendererComponent( table, value, isSelected, hasFocus, row, column );
+    final JLabel label = (JLabel)super.getTableCellRendererComponent( table, value, isSelected, hasFocus, row, column );
     // reset visual settings
     label.setToolTipText( null );
     label.setForeground( null );
@@ -86,7 +85,7 @@ public class MaskedNumberTableCellRenderer extends DefaultTableCellRenderer
     label.setIcon( null );
     label.setFont( null );
 
-    final Number n = (Number) value;
+    final Number n = (Number)value;
     if( n == null )
       return label;
 

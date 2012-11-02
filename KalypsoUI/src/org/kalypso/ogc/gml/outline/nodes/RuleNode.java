@@ -45,7 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 
@@ -98,7 +98,7 @@ public class RuleNode extends AbstractThemeNode<Rule>
       final IThemeNode[] children = symbTreeObject.getChildren();
       for( final IThemeNode child : children )
       {
-        final AbstractThemeNode< ? > childElement = (AbstractThemeNode< ? >) child;
+        final AbstractThemeNode< ? > childElement = (AbstractThemeNode< ? >)child;
         result.add( childElement.getElement() );
       }
     }
@@ -170,7 +170,7 @@ public class RuleNode extends AbstractThemeNode<Rule>
     if( name != null )
       return name;
 
-    return Messages.getString("RuleNode_0"); //$NON-NLS-1$
+    return Messages.getString( "RuleNode_0" ); //$NON-NLS-1$
   }
 
   @Override
@@ -188,7 +188,7 @@ public class RuleNode extends AbstractThemeNode<Rule>
     {
       if( object instanceof RuleNode )
       {
-        final RuleNode rto = (RuleNode) object;
+        final RuleNode rto = (RuleNode)object;
         if( rto.getRule().getName().equals( ruleName ) )
           return rto;
       }

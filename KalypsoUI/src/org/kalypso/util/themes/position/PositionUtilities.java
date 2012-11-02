@@ -101,8 +101,7 @@ public class PositionUtilities
   }
 
   /**
-   * This function checks if the horizontal position provided has a correct value. If not
-   * {@link PositionUtilities#RIGHT} will be returned. -1 if horizontalProperty could not be parsed to an integer.
+   * This function checks if the horizontal position provided has a correct value. If not {@link PositionUtilities#RIGHT} will be returned. -1 if horizontalProperty could not be parsed to an integer.
    * 
    * @param horizontalProperty
    *          The horizontal position as string to be checked.
@@ -119,8 +118,7 @@ public class PositionUtilities
   }
 
   /**
-   * This function checks if the vertical position provided has a correct value. If not {@link PositionUtilities#BOTTOM}
-   * will be returned. -1 if horizontalProperty could not be parsed to an integer.
+   * This function checks if the vertical position provided has a correct value. If not {@link PositionUtilities#BOTTOM} will be returned. -1 if horizontalProperty could not be parsed to an integer.
    * 
    * @param verticalProperty
    *          The vertical position as string to be checked.
@@ -137,8 +135,7 @@ public class PositionUtilities
   }
 
   /**
-   * This function checks if the horizontal position provided has a correct value. If not
-   * {@link PositionUtilities#RIGHT} will be returned.
+   * This function checks if the horizontal position provided has a correct value. If not {@link PositionUtilities#RIGHT} will be returned.
    * 
    * @param horizontal
    *          The horizontal position to be checked.
@@ -159,8 +156,7 @@ public class PositionUtilities
   }
 
   /**
-   * This function checks if the vertical position provided has a correct value. If not {@link PositionUtilities#BOTTOM}
-   * will be returned.
+   * This function checks if the vertical position provided has a correct value. If not {@link PositionUtilities#BOTTOM} will be returned.
    * 
    * @param vertical
    *          The vertical position to be checked.

@@ -55,7 +55,6 @@ import org.kalypso.commons.arguments.Arguments;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.core.layoutwizard.ILayoutPageContext;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
@@ -65,6 +64,7 @@ import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.template.gistableview.Gistableview;
 import org.kalypso.template.gistableview.Gistableview.Layer;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypso.ui.layoutwizard.AbstractWizardLayoutPart;
 import org.kalypsodeegree.model.feature.Feature;
 
@@ -109,7 +109,7 @@ public class GisTableLayoutPart extends AbstractWizardLayoutPart
     final String templateFileName = getTemplateFileName( arguments );
     if( templateFileName == null )
     {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, Messages.getString("GisTableLayoutPart_2") ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, Messages.getString( "GisTableLayoutPart_2" ) ); //$NON-NLS-1$
       throw new CoreException( status );
     }
 
@@ -118,7 +118,7 @@ public class GisTableLayoutPart extends AbstractWizardLayoutPart
       final URL templateURL = context.resolveURI( templateFileName );
       if( templateURL == null )
       {
-        final String msg = String.format( Messages.getString("GisTableLayoutPart_3"), templateFileName ); //$NON-NLS-1$
+        final String msg = String.format( Messages.getString( "GisTableLayoutPart_3" ), templateFileName ); //$NON-NLS-1$
         final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, msg );
         throw new CoreException( status );
       }
@@ -132,7 +132,7 @@ public class GisTableLayoutPart extends AbstractWizardLayoutPart
     }
     catch( final Exception e )
     {
-      final String message = String.format( Messages.getString("GisTableLayoutPart_4"), templateFileName ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "GisTableLayoutPart_4" ), templateFileName ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, message, e );
       throw new CoreException( status );
     }
@@ -140,7 +140,7 @@ public class GisTableLayoutPart extends AbstractWizardLayoutPart
 
   public static String getTemplateFileName( final Arguments arguments )
   {
-    return (String) arguments.get( PROP_TABLETEMPLATE );
+    return (String)arguments.get( PROP_TABLETEMPLATE );
   }
 
   @Override

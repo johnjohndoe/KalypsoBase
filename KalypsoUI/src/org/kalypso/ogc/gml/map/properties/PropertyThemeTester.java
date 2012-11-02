@@ -56,8 +56,7 @@ import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 public class PropertyThemeTester extends PropertyTester
 {
   /**
-   * @see org.eclipse.core.expressions.IPropertyTester#test(java.lang.Object, java.lang.String, java.lang.Object[],
-   *      java.lang.Object)
+   * @see org.eclipse.core.expressions.IPropertyTester#test(java.lang.Object, java.lang.String, java.lang.Object[], java.lang.Object)
    */
   @Override
   public boolean test( final Object receiver, final String property, final Object[] args, final Object expectedValue )
@@ -67,7 +66,7 @@ public class PropertyThemeTester extends PropertyTester
       return false;
 
     /* Cast. */
-    final IMapPanel mapPanel = (IMapPanel) receiver;
+    final IMapPanel mapPanel = (IMapPanel)receiver;
 
     /* Check the property. */
     if( !"hasProperty".equals( property ) ) //$NON-NLS-1$
@@ -81,7 +80,7 @@ public class PropertyThemeTester extends PropertyTester
       return false;
 
     /* Cast. */
-    final String expectedProperty = (String) expectedValue;
+    final String expectedProperty = (String)expectedValue;
 
     /* Get the map model. */
     final IMapModell mapModel = mapPanel.getMapModell();
@@ -97,6 +96,6 @@ public class PropertyThemeTester extends PropertyTester
     if( args == null || args.length == 0 )
       return true;
 
-    return new ThemeTester().test( themes[0], (String) args[0], new Object[] {}, "true" ); //$NON-NLS-1$
+    return new ThemeTester().test( themes[0], (String)args[0], new Object[] {}, "true" ); //$NON-NLS-1$
   }
 }

@@ -61,10 +61,10 @@ import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.forms.DatabindingForm;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.styleeditor.IStyleEditorConfig;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypso.ui.editor.styleeditor.preview.SymbolizerPreview;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 
 /**
@@ -151,8 +151,8 @@ public abstract class AbstractSymbolizerComposite<S extends Symbolizer> extends 
   {
     final SectionPart sectionPart = new SectionPart( parent, toolkit, ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED | Section.DESCRIPTION );
     final Section section = sectionPart.getSection();
-    section.setText( Messages.getString("AbstractSymbolizerComposite_0") ); //$NON-NLS-1$
-    section.setDescription( Messages.getString("AbstractSymbolizerComposite_1") ); //$NON-NLS-1$
+    section.setText( Messages.getString( "AbstractSymbolizerComposite_0" ) ); //$NON-NLS-1$
+    section.setDescription( Messages.getString( "AbstractSymbolizerComposite_1" ) ); //$NON-NLS-1$
 
     final ComboViewer geometryChooser = new ComboViewer( section, SWT.DROP_DOWN | SWT.READ_ONLY );
     section.setClient( geometryChooser.getControl() );
@@ -172,7 +172,7 @@ public abstract class AbstractSymbolizerComposite<S extends Symbolizer> extends 
   {
     final SectionPart sectionPart = new SectionPart( parent, toolkit, ExpandableComposite.TITLE_BAR | ExpandableComposite.EXPANDED | ExpandableComposite.SHORT_TITLE_BAR );
     final Section section = sectionPart.getSection();
-    section.setText( Messages.getString("AbstractSymbolizerComposite_2") ); //$NON-NLS-1$
+    section.setText( Messages.getString( "AbstractSymbolizerComposite_2" ) ); //$NON-NLS-1$
 
     final Point size = new Point( SWT.DEFAULT, 32 );
     m_preview = createPreview( section, size, m_input );
@@ -228,7 +228,7 @@ public abstract class AbstractSymbolizerComposite<S extends Symbolizer> extends 
     if( obj.getClass() != getClass() )
       return false;
 
-    final ISymbolizerComposite< ? > rhs = (ISymbolizerComposite< ? >) obj;
+    final ISymbolizerComposite< ? > rhs = (ISymbolizerComposite< ? >)obj;
 
     return new EqualsBuilder().appendSuper( super.equals( obj ) ).append( getSymbolizer(), rhs.getSymbolizer() ).isEquals();
   }

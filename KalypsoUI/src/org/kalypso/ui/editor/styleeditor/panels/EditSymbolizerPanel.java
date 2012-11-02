@@ -92,7 +92,7 @@ public class EditSymbolizerPanel
     composite = new Composite( parent, SWT.NULL );
     final FormLayout compositeLayout = new FormLayout();
     final GridData compositeData = new GridData( SWT.FILL, SWT.CENTER, true, false );
-    compositeData.horizontalSpan = ((GridLayout) parent.getLayout()).numColumns;
+    compositeData.horizontalSpan = ((GridLayout)parent.getLayout()).numColumns;
     compositeData.widthHint = 230;
     composite.setLayoutData( compositeData );
     composite.setLayout( compositeLayout );
@@ -243,7 +243,7 @@ public class EditSymbolizerPanel
       if( listeners[i] == PanelListener.class )
       {
         final PanelEvent event = new PanelEvent( this );
-        ((PanelListener) listeners[i + 1]).valueChanged( event );
+        ((PanelListener)listeners[i + 1]).valueChanged( event );
       }
     }
   }

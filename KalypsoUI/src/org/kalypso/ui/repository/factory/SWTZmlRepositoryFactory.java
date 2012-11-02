@@ -47,8 +47,8 @@ import org.kalypso.ogc.sensor.zml.repository.HeadlessZmlRepositoryFactory;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 /**
- * A GUI oriented File- <code>RepositoryFactory</code>. Please note that this factory currently creates a
- * <code>ZmlObservationRepository</code>. This could be changed to some other subclass of <code>FileRepository</code> as
+ * A GUI oriented File- <code>RepositoryFactory</code>. Please note that this factory currently creates a <code>ZmlObservationRepository</code>. This could be changed to some other subclass of
+ * <code>FileRepository</code> as
  * long as the constructor sticks to the arguments used here. To achieve more flexibility, this class could be improved
  * so that the concrete <code>FileRepository</code> class to instantiate could be parametrised.
  * 

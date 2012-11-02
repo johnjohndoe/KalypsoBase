@@ -59,7 +59,6 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.jface.action.ActionButton;
 import org.kalypso.contribs.eclipse.ui.views.propertysheet.SimplePropertySheetViewer;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.SensorException;
@@ -74,6 +73,7 @@ import org.kalypso.ogc.sensor.template.ObsView.ItemData;
 import org.kalypso.ogc.sensor.view.propertySource.ObservationPropertySource;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
 import org.kalypso.ogc.sensor.zml.ZmlURL;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * ObservationViewer
@@ -254,7 +254,7 @@ public class ObservationViewer extends Composite
       }
     } );
 
-    final ChooseZmlAction chooseLocalZmlAction = new ChooseZmlAction( this, Messages.getString("ObservationViewer.0") ) //$NON-NLS-1$
+    final ChooseZmlAction chooseLocalZmlAction = new ChooseZmlAction( this, Messages.getString( "ObservationViewer.0" ) ) //$NON-NLS-1$
     {
       @Override
       protected IContainer getBaseDir( )
@@ -266,7 +266,7 @@ public class ObservationViewer extends Composite
     chooseLocalZmlAction.setText( Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewer.1" ) ); //$NON-NLS-1$
     ActionButton.createButton( null, header, chooseLocalZmlAction ).setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
 
-    final ChooseZmlAction chooseProjectZmlAction = new ChooseZmlAction( this, Messages.getString("ObservationViewer.1") ) //$NON-NLS-1$
+    final ChooseZmlAction chooseProjectZmlAction = new ChooseZmlAction( this, Messages.getString( "ObservationViewer.1" ) ) //$NON-NLS-1$
     {
       @Override
       protected IContainer getBaseDir( )
@@ -274,7 +274,7 @@ public class ObservationViewer extends Composite
         return ResourceUtilities.findProjectFromURL( getContext() );
       }
     };
-    chooseProjectZmlAction.setText( Messages.getString("ObservationViewer.2") ); //$NON-NLS-1$
+    chooseProjectZmlAction.setText( Messages.getString( "ObservationViewer.2" ) ); //$NON-NLS-1$
     ActionButton.createButton( null, header, chooseProjectZmlAction ).setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
 
     // 2. Anzeige
@@ -401,10 +401,10 @@ public class ObservationViewer extends Composite
       return null;
 
     if( m_input instanceof IObservation )
-      return (IObservation) m_input;
+      return (IObservation)m_input;
 
     if( m_input instanceof String )
-      return readObservation( (String) m_input );
+      return readObservation( (String)m_input );
 
     return null;
   }

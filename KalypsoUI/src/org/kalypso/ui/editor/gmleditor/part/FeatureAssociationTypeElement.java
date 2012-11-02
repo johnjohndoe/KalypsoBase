@@ -40,7 +40,7 @@ import org.kalypsodeegree.model.feature.IFeatureRelation;
 
 /**
  * Represents a feature property; we should move this implementation into the feature implementation.
- *
+ * 
  * @author Christoph Küpferle
  */
 public class FeatureAssociationTypeElement extends PlatformObject implements IFeatureRelation
@@ -64,10 +64,9 @@ public class FeatureAssociationTypeElement extends PlatformObject implements IFe
   /**
    * Implemented in order to make to TreeViewer work.
    * <p>
-   * While refreshing the tree we may have different instances of this class reflecting the same node of the tree, if
-   * they are not equal, strange things happen.
+   * While refreshing the tree we may have different instances of this class reflecting the same node of the tree, if they are not equal, strange things happen.
    * </p>
-   *
+   * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
   @Override

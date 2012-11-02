@@ -55,7 +55,7 @@ public class ThemeNameLabelProvider extends ColumnLabelProvider
   public String getText( final Object element )
   {
     if( element instanceof IKalypsoTheme )
-      return ((IKalypsoTheme) element).getName().getValue();
+      return ((IKalypsoTheme)element).getName().getValue();
 
     return super.getText( element );
   }
@@ -64,7 +64,7 @@ public class ThemeNameLabelProvider extends ColumnLabelProvider
   public Image getImage( final Object element )
   {
     if( element instanceof IKalypsoTheme )
-      return ((IKalypsoTheme) element).getDefaultIcon().createImage();
+      return ((IKalypsoTheme)element).getDefaultIcon().createImage();
 
     return super.getImage( element );
   }

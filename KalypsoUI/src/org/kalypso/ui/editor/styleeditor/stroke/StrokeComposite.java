@@ -82,17 +82,17 @@ import org.kalypso.contribs.eclipse.swt.ColorUtilities;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.contribs.eclipse.swt.widgets.MenuButton;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypso.ui.editor.styleeditor.binding.SLDBinding;
 import org.kalypso.ui.editor.styleeditor.preview.StrokePreview;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.DrawingUtils;
 import org.kalypsodeegree.graphics.sld.Stroke;
 
 /**
  * TODO: implement editing of GraphicFill<br/>
  * Composite, which gives the most important editing tools for a given stroke.
- *
+ * 
  * @author Thomas Jung
  */
 public class StrokeComposite extends Composite
@@ -147,7 +147,7 @@ public class StrokeComposite extends Composite
     final Composite detailsPanel = toolkit.createComposite( m_lineDetailsSection );
     detailsPanel.setLayout( Layouts.createGridLayout( 3 ) );
     m_lineDetailsSection.setClient( detailsPanel );
-    m_lineDetailsSection.setText( Messages.getString("StrokeComposite.0") ); //$NON-NLS-1$
+    m_lineDetailsSection.setText( Messages.getString( "StrokeComposite.0" ) ); //$NON-NLS-1$
     m_lineDetailsSection.setExpanded( shouldExpand() );
 
     createLineJoinControl( toolkit, detailsPanel );
@@ -182,7 +182,7 @@ public class StrokeComposite extends Composite
       public void mouseDown( final MouseEvent e )
       {
         final ColorDialog colorDialog = new ColorDialog( getShell() );
-        colorDialog.setRGB( ColorUtilities.toRGB( (Color) model.getValue() ) );
+        colorDialog.setRGB( ColorUtilities.toRGB( (Color)model.getValue() ) );
         final RGB chosenColor = colorDialog.open();
         if( chosenColor != null )
           model.setValue( ColorUtilities.toAwtColor( chosenColor ) );
@@ -222,7 +222,7 @@ public class StrokeComposite extends Composite
 
   private void createLineJoinControl( final FormToolkit toolkit, final Composite parent )
   {
-    toolkit.createLabel( parent, Messages.getString("StrokeComposite.1") ); //$NON-NLS-1$
+    toolkit.createLabel( parent, Messages.getString( "StrokeComposite.1" ) ); //$NON-NLS-1$
 
     final ComboViewer lineJoinChooser = new ComboViewer( parent, SWT.DROP_DOWN | SWT.READ_ONLY );
     toolkit.adapt( lineJoinChooser.getControl(), true, true );
@@ -237,7 +237,7 @@ public class StrokeComposite extends Composite
 
   private void createLineCapControl( final FormToolkit toolkit, final Composite parent )
   {
-    toolkit.createLabel( parent, Messages.getString("StrokeComposite.2") ); //$NON-NLS-1$
+    toolkit.createLabel( parent, Messages.getString( "StrokeComposite.2" ) ); //$NON-NLS-1$
 
     final ComboViewer lineCapChooser = new ComboViewer( parent, SWT.DROP_DOWN | SWT.READ_ONLY );
     toolkit.adapt( lineCapChooser.getControl(), true, true );
@@ -252,15 +252,15 @@ public class StrokeComposite extends Composite
 
   private void createDashArrayControl( final FormToolkit toolkit, final Composite parent )
   {
-    final String tooltip = Messages.getString("StrokeComposite.3") //$NON-NLS-1$
-        + Messages.getString("StrokeComposite.4"); //$NON-NLS-1$
+    final String tooltip = Messages.getString( "StrokeComposite.3" ) //$NON-NLS-1$
+        + Messages.getString( "StrokeComposite.4" ); //$NON-NLS-1$
 
     final Label label = toolkit.createLabel( parent, Messages.getString( "org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.2" ) ); //$NON-NLS-1$
     label.setToolTipText( tooltip );
 
     final Text strokeDashField = toolkit.createText( parent, StringUtils.EMPTY );
     strokeDashField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    strokeDashField.setMessage( Messages.getString("StrokeComposite.5") ); //$NON-NLS-1$
+    strokeDashField.setMessage( Messages.getString( "StrokeComposite.5" ) ); //$NON-NLS-1$
     strokeDashField.setToolTipText( tooltip );
 
     final IObservableValue target = SWTObservables.observeText( strokeDashField, SLDBinding.TEXT_DEFAULT_EVENTS );
@@ -286,13 +286,13 @@ public class StrokeComposite extends Composite
 
   private void createDashOffsetControl( final FormToolkit toolkit, final Composite parent )
   {
-    final String tooltip = Messages.getString("StrokeComposite.7"); //$NON-NLS-1$
+    final String tooltip = Messages.getString( "StrokeComposite.7" ); //$NON-NLS-1$
 
-    toolkit.createLabel( parent, Messages.getString("StrokeComposite.8") ).setToolTipText( tooltip ); //$NON-NLS-1$
+    toolkit.createLabel( parent, Messages.getString( "StrokeComposite.8" ) ).setToolTipText( tooltip ); //$NON-NLS-1$
 
     final Text strokeDashControl = toolkit.createText( parent, StringUtils.EMPTY );
     strokeDashControl.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
-    strokeDashControl.setMessage( Messages.getString("StrokeComposite.9") ); //$NON-NLS-1$
+    strokeDashControl.setMessage( Messages.getString( "StrokeComposite.9" ) ); //$NON-NLS-1$
     strokeDashControl.setToolTipText( tooltip );
 
     final IObservableValue target = SWTObservables.observeText( strokeDashControl, SLDBinding.TEXT_DEFAULT_EVENTS );

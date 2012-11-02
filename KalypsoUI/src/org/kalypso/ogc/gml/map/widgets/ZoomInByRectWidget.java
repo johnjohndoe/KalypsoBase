@@ -123,10 +123,10 @@ public class ZoomInByRectWidget extends AbstractWidget
   {
     if( m_startPoint != null && m_endPoint != null )
     {
-      final int x1 = (int) m_startPoint.getX();
-      final int y1 = (int) m_startPoint.getY();
-      final int x2 = (int) m_endPoint.getX();
-      final int y2 = (int) m_endPoint.getY();
+      final int x1 = (int)m_startPoint.getX();
+      final int y1 = (int)m_startPoint.getY();
+      final int x2 = (int)m_endPoint.getX();
+      final int y2 = (int)m_endPoint.getY();
       g.drawRect( x1 < x2 ? x1 : x2, y1 < y2 ? y1 : y2, Math.abs( x2 - x1 ), Math.abs( y2 - y1 ) );
     }
   }

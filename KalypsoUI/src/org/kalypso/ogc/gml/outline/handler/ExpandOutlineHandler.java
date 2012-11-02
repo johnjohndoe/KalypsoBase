@@ -58,7 +58,7 @@ public class ExpandOutlineHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event )
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
     final GisMapOutlinePage mapOutline = MapHandlerUtils.getMapOutline( context );
 
     final GisMapOutlineViewer modellView = mapOutline.getOutlineViewer();

@@ -64,7 +64,7 @@ public class GraphicRotationField extends InputWithContextObservableValue<Graphi
   {
     try
     {
-      return (int) data.getRotation( null );
+      return (int)data.getRotation( null );
     }
     catch( final FilterEvaluationException e )
     {
@@ -74,8 +74,7 @@ public class GraphicRotationField extends InputWithContextObservableValue<Graphi
   }
 
   /**
-   * @see org.kalypso.ui.editor.styleeditor.forms.InputWithContextObservableValue#setValueToInput(java.lang.Object,
-   *      java.lang.Object)
+   * @see org.kalypso.ui.editor.styleeditor.forms.InputWithContextObservableValue#setValueToInput(java.lang.Object, java.lang.Object)
    */
   @Override
   protected void setValueToInput( final Graphic data, final Integer value )

@@ -43,7 +43,7 @@ package org.kalypso.ogc.gml;
 import javax.xml.namespace.QName;
 
 import org.kalypso.core.util.pool.PoolableObjectType;
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.xml.Marshallable;
@@ -76,7 +76,7 @@ public class GisTemplateFeatureTypeStyle extends AbstractTemplateStyle implement
   @Override
   public String exportAsXML( )
   {
-    return ((Marshallable) m_style).exportAsXML();
+    return ((Marshallable)m_style).exportAsXML();
   }
 
   @Override
@@ -201,11 +201,11 @@ public class GisTemplateFeatureTypeStyle extends AbstractTemplateStyle implement
 
     if( !(newValue instanceof FeatureTypeStyle) )
     {
-      m_style = createDummyStyle( Messages.getString( "org.kalypso.ogc.gml.GisTemplateUserStyle.3" ), Messages.getString("GisTemplateFeatureTypeStyle.0") ); //$NON-NLS-1$ //$NON-NLS-2$
+      m_style = createDummyStyle( Messages.getString( "org.kalypso.ogc.gml.GisTemplateUserStyle.3" ), Messages.getString( "GisTemplateFeatureTypeStyle.0" ) ); //$NON-NLS-1$ //$NON-NLS-2$
       return;
     }
 
-    m_style = (FeatureTypeStyle) newValue;
+    m_style = (FeatureTypeStyle)newValue;
   }
 
   @Override

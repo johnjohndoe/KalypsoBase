@@ -94,13 +94,13 @@ public class GisMapOutlineDropData
       return null;
 
     if( theme instanceof IKalypsoCascadingTheme && currentLocation == ViewerDropAdapter.LOCATION_ON )
-      return new GisMapOutlineDropData( (IKalypsoCascadingTheme) theme, defaultInsertionIndex );
+      return new GisMapOutlineDropData( (IKalypsoCascadingTheme)theme, defaultInsertionIndex );
 
     final IMapModell model = theme.getMapModell();
     if( model instanceof IKalypsoLayerModell )
     {
       final int insertionIndex = findIndexOf( model, theme, currentLocation );
-      return new GisMapOutlineDropData( (IKalypsoLayerModell) model, insertionIndex );
+      return new GisMapOutlineDropData( (IKalypsoLayerModell)model, insertionIndex );
     }
 
     return null;
@@ -122,14 +122,14 @@ public class GisMapOutlineDropData
   private static IKalypsoTheme findCurrentTheme( final Object currentTarget )
   {
     if( currentTarget instanceof IKalypsoTheme )
-      return (IKalypsoTheme) currentTarget;
+      return (IKalypsoTheme)currentTarget;
 
     if( currentTarget instanceof IThemeNode )
     {
-      final IThemeNode node = (IThemeNode) currentTarget;
+      final IThemeNode node = (IThemeNode)currentTarget;
       final Object element = node.getElement();
       if( element instanceof IKalypsoTheme )
-        return (IKalypsoTheme) element;
+        return (IKalypsoTheme)element;
     }
 
     return null;

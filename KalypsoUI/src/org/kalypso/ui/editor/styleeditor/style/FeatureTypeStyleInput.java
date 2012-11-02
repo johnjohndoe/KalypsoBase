@@ -95,7 +95,7 @@ public class FeatureTypeStyleInput implements IFeatureTypeStyleInput
     if( !(obj instanceof IFeatureTypeStyleInput) )
       return false;
 
-    final IFeatureTypeStyleInput other = (IFeatureTypeStyleInput) obj;
+    final IFeatureTypeStyleInput other = (IFeatureTypeStyleInput)obj;
     return new EqualsBuilder().append( m_fts, other.getData() ).append( m_styleToSelect, other.getStyleToSelect() ).isEquals();
   }
 

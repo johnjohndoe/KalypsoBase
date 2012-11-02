@@ -70,7 +70,6 @@ import org.eclipse.ui.views.contentoutline.ContentOutline;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
@@ -80,6 +79,7 @@ import org.kalypso.ogc.gml.widgets.AbstractWidget;
 import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
 import org.kalypso.ui.editor.mapeditor.views.IWidgetWithOptions;
 import org.kalypso.ui.editor.mapeditor.views.MapWidgetView;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.graphics.displayelements.DisplayElement;
 import org.kalypsodeegree.graphics.sld.CssParameter;
 import org.kalypsodeegree.graphics.sld.PolygonSymbolizer;
@@ -96,12 +96,12 @@ import org.kalypsodeegree_impl.graphics.sld.Stroke_Impl;
  * This tool helps to find elements on the map. The elements will be searched only in selected layers. Searching will be
  * done for all inserted values, last element found will be centered on the map, in case of filled "X" and "Y" fields
  * the shown position will be centered always according to this coordinates.
- *
+ * 
  * @author ig
  */
 public class FindElementMapWidget extends AbstractWidget implements IWidgetWithOptions
 {
-  private final FindElementWidgetFace m_widgetFace = new FindElementWidgetFace(this);
+  private final FindElementWidgetFace m_widgetFace = new FindElementWidgetFace( this );
 
   private final ToolTipRenderer m_tooltip = new ToolTipRenderer();
 
@@ -167,7 +167,7 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
   {
     final IPage currentPage = outlineView.getCurrentPage();
     if( currentPage instanceof GisMapOutlinePage )
-      return ((GisMapOutlinePage) currentPage).getMapPanel();
+      return ((GisMapOutlinePage)currentPage).getMapPanel();
 
     return null;
   }
@@ -185,7 +185,7 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
   {
     final IWorkbenchPage activePage = findActivePage();
 
-    return (ViewContentOutline) activePage.findView( ViewContentOutline.ID );
+    return (ViewContentOutline)activePage.findView( ViewContentOutline.ID );
   }
 
   @Override
@@ -215,7 +215,7 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
   protected void handleSelectionChanged( final ISelection selection )
   {
     final List<IKalypsoTheme> themes = new ArrayList<>();
-    final IStructuredSelection sel = (IStructuredSelection) selection;
+    final IStructuredSelection sel = (IStructuredSelection)selection;
     final Object[] selectedElements = sel.toArray();
     for( final Object object : selectedElements )
     {
@@ -239,12 +239,12 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
   private IKalypsoTheme findTheme( final Object object )
   {
     if( object instanceof IKalypsoTheme )
-      return (IKalypsoTheme) object;
+      return (IKalypsoTheme)object;
 
     if( object instanceof IAdaptable )
     {
-      final IAdaptable adapable = (IAdaptable) object;
-      final IKalypsoTheme theme = (IKalypsoTheme) adapable.getAdapter( IKalypsoTheme.class );
+      final IAdaptable adapable = (IAdaptable)object;
+      final IKalypsoTheme theme = (IKalypsoTheme)adapable.getAdapter( IKalypsoTheme.class );
       if( theme != null )
         return theme;
     }
@@ -282,7 +282,7 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
 
     for( final Object element : featureList )
     {
-      final Feature lActFeature = (Feature) element;
+      final Feature lActFeature = (Feature)element;
       if( lActFeature != null )
       {
         // FIXME: bad and ugly: 0.9 constant: use converted pixel distance instead!
@@ -306,8 +306,8 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
     String lStrInfo = ""; //$NON-NLS-1$
     if( featureObj instanceof Feature )
     {
-      final Feature feature = (Feature) featureObj;
-      final IFeatureType lPropType = (IFeatureType) featureType;
+      final Feature feature = (Feature)featureObj;
+      final IFeatureType lPropType = (IFeatureType)featureType;
 
       for( int i = 0; i < feature.getProperties().length; i++ )
       {
@@ -340,12 +340,12 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
     }
     else if( featureObj instanceof List )
     {
-      final List< ? > featureList = (List< ? >) featureObj;
+      final List< ? > featureList = (List< ? >)featureObj;
       String lStrSuffix = ""; //$NON-NLS-1$
       String lStrPrefix = ""; //$NON-NLS-1$
       if( featureType != null )
       {
-        final IPropertyType propertyType = (IPropertyType) featureType;
+        final IPropertyType propertyType = (IPropertyType)featureType;
         lStrPrefix = propertyType.getQName().getLocalPart() + ": "; //$NON-NLS-1$
       }
       for( int i = 0; i < featureList.size(); i++ )
@@ -443,7 +443,7 @@ public class FindElementMapWidget extends AbstractWidget implements IWidgetWithO
     try
     {
       final IWorkbenchPage activePage = findActivePage();
-      final MapWidgetView widgetView = (MapWidgetView) activePage.findView( MapWidgetView.ID );
+      final MapWidgetView widgetView = (MapWidgetView)activePage.findView( MapWidgetView.ID );
 
       if( widgetView != null )
         return false;

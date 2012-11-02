@@ -37,6 +37,6 @@ public class SWTCalendarEvent extends TypedEvent
 
   public Calendar getCalendar( )
   {
-    return (Calendar) data;
+    return (Calendar)data;
   }
 }

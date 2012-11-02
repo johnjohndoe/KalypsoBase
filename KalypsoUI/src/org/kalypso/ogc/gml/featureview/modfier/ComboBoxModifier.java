@@ -54,9 +54,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.featureview.control.ComboFeatureControl;
 import org.kalypso.ui.editor.gmleditor.part.GMLLabelProvider;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
@@ -66,7 +66,7 @@ import org.kalypsodeegree_impl.model.feature.search.IReferenceCollectorStrategy;
 
 /**
  * A modifier which handles feature-relations: shows a combo-box as cell-editor.
- *
+ * 
  * @author Gernot Belger
  */
 public class ComboBoxModifier extends AbstractFeatureModifier
@@ -98,9 +98,9 @@ public class ComboBoxModifier extends AbstractFeatureModifier
     // Revert the value to the string reference for this case.
     if( property instanceof Feature )
     {
-      final GMLWorkspace workspace = ((Feature) property).getWorkspace();
+      final GMLWorkspace workspace = ((Feature)property).getWorkspace();
       if( workspace == m_feature.getWorkspace() )
-        return ((Feature) property).getId();
+        return ((Feature)property).getId();
     }
 
     return property;
@@ -111,7 +111,7 @@ public class ComboBoxModifier extends AbstractFeatureModifier
     /* update input */
     final Collection<Object> input = new ArrayList<>();
 
-    final IRelationType rt = (IRelationType) getPropertyType();
+    final IRelationType rt = (IRelationType)getPropertyType();
     if( !rt.isInlineAble() && rt.isLinkAble() )
     {
       /* Null entry to delete link if this is allowed */
@@ -126,7 +126,7 @@ public class ComboBoxModifier extends AbstractFeatureModifier
       final IXLinkedFeature[] features = strategy.collectReferences();
 
       for( final IXLinkedFeature foundFeature : features )
-          input.add( foundFeature );
+        input.add( foundFeature );
     }
 
     return input;
@@ -177,7 +177,7 @@ public class ComboBoxModifier extends AbstractFeatureModifier
 
   IXLinkedFeature getCurrentAsXLink( )
   {
-    final IRelationType relationType = (IRelationType) getPropertyType();
+    final IRelationType relationType = (IRelationType)getPropertyType();
     return ComboFeatureControl.getXLink( m_feature, relationType );
   }
 
@@ -194,12 +194,12 @@ public class ComboBoxModifier extends AbstractFeatureModifier
   private Feature findFeature( final Object element )
   {
     if( element instanceof Feature )
-      return (Feature) element;
+      return (Feature)element;
 
     if( element instanceof String )
     {
       final GMLWorkspace workspace = m_feature.getWorkspace();
-      return workspace.getFeature( (String) element );
+      return workspace.getFeature( (String)element );
     }
 
     throw new IllegalStateException();
@@ -222,7 +222,7 @@ public class ComboBoxModifier extends AbstractFeatureModifier
 
     if( ftp instanceof IRelationType )
     {
-      final Feature resolvedFeature = f.getMember( (IRelationType) ftp );
+      final Feature resolvedFeature = f.getMember( (IRelationType)ftp );
       if( resolvedFeature == null )
         return NO_LINK_STRING;
 

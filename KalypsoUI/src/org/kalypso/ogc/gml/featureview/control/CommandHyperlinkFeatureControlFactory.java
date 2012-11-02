@@ -56,7 +56,7 @@ public class CommandHyperlinkFeatureControlFactory implements IFeatureControlFac
   @Override
   public IFeatureControl createFeatureControl( final IFeatureComposite parentComposite, final Feature feature, final IPropertyType pt, final ControlType controlType, final IAnnotation annotation )
   {
-    final CommandHyperlink hyperlinkType = (CommandHyperlink) controlType;
+    final CommandHyperlink hyperlinkType = (CommandHyperlink)controlType;
     final String commandID = hyperlinkType.getCommandID();
 
     // TODO: get locator from other source, in preference from the feature composite

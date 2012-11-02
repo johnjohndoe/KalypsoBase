@@ -54,7 +54,7 @@ import org.kalypsodeegree.model.feature.Feature;
 /**
  * This is one strategy to create a control. It uses several of the concrete makers in a defined order to create the
  * control.
- *
+ * 
  * @author Gernot Belger
  */
 public class DefaultControlMakerStrategy implements IControlMaker
@@ -76,8 +76,7 @@ public class DefaultControlMakerStrategy implements IControlMaker
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.maker.IControlMaker#addControls(java.util.List,
-   *      org.kalypso.template.featureview.LayoutType, org.kalypso.gmlschema.property.IPropertyType)
+   * @see org.kalypso.ogc.gml.featureview.maker.IControlMaker#addControls(java.util.List, org.kalypso.template.featureview.LayoutType, org.kalypso.gmlschema.property.IPropertyType)
    */
   @Override
   public boolean addControls( final List<JAXBElement< ? extends ControlType>> controlList, final LayoutType parentLayout, final IFeatureType ft, final IPropertyType ftp, final Feature feature ) throws AbortCreationException

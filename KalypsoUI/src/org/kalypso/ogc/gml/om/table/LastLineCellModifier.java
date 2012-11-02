@@ -87,7 +87,7 @@ public abstract class LastLineCellModifier implements ICellModifier
   @Override
   public void modify( final Object element, final String property, final Object value )
   {
-    final TableItem item = (TableItem) element;
+    final TableItem item = (TableItem)element;
     final Object data = item.getData();
 
     if( data == LastLineContentProvider.DUMMY_ELEMENT )

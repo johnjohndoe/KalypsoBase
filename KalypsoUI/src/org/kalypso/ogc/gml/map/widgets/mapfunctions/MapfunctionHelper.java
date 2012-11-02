@@ -99,7 +99,7 @@ public class MapfunctionHelper
       final double gisRadius = Math.abs( transform.getSourceX( rectangle.x + radius ) - g1x );
       final GM_Point pointSelect = GeometryFactory.createGM_Point( g1x, g1y, coordinatesSystem );
 
-      final EasyFeatureWrapper efw = (EasyFeatureWrapper) JMSelector.selectNearest( pointSelect, gisRadius, geoIndex, false );
+      final EasyFeatureWrapper efw = (EasyFeatureWrapper)JMSelector.selectNearest( pointSelect, gisRadius, geoIndex, false );
       if( efw == null )
         return new EasyFeatureWrapper[] {};
       else

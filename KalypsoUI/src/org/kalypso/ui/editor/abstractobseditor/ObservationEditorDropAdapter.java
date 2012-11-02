@@ -47,7 +47,7 @@ import org.eclipse.swt.dnd.TransferData;
 
 /**
  * DropAdapter
- *
+ * 
  * @author schlienger
  */
 class ObservationEditorDropAdapter extends ViewerDropAdapter
@@ -67,7 +67,7 @@ class ObservationEditorDropAdapter extends ViewerDropAdapter
   @Override
   public boolean performDrop( final Object data )
   {
-    final String[] files = (String[]) data;
+    final String[] files = (String[])data;
 
     return m_editor2.addFiles( files );
   }

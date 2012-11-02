@@ -47,14 +47,14 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 /**
  * This class is a geometry builder for a MultiSurface. Currently it only supports building MultiSurfaces with a single
  * Surface geometry.
- *
+ * 
  * @author kurzbach
  */
 public class MultiPolygonGeometryBuilder extends PolygonGeometryBuilder
 {
   /**
    * The constructor.
-   *
+   * 
    * @param cnt_points
    *          If > 2 the the geometry will be finished, if the count of points is reached. If <= 2 no rule regarding the
    *          count of the points will apply, except, that a polygon needs at least 3 points for being created.
@@ -68,7 +68,7 @@ public class MultiPolygonGeometryBuilder extends PolygonGeometryBuilder
 
   /**
    * The constructor.
-   *
+   * 
    * @param cnt_points
    *          If > 2 the the geometry will be finished, if the count of points is reached. If <= 2 no rule regarding the
    *          count of the points will apply, except, that a polygon needs at least 3 points for beeing created.
@@ -86,7 +86,7 @@ public class MultiPolygonGeometryBuilder extends PolygonGeometryBuilder
   @Override
   public GM_Object finish( ) throws Exception
   {
-    final GM_Polygon result = (GM_Polygon) super.finish();
+    final GM_Polygon result = (GM_Polygon)super.finish();
     if( result != null )
     {
       return GeometryFactory.createGM_MultiSurface( new GM_Polygon[] { result }, result.getCoordinateSystem() );

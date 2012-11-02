@@ -116,7 +116,7 @@ class RuleImagePainter
       {
         if( symbolizer instanceof PointSymbolizer )
         {
-          final PointSymbolizer pointSymbolizer = (PointSymbolizer) symbolizer;
+          final PointSymbolizer pointSymbolizer = (PointSymbolizer)symbolizer;
           final Graphic graphic = pointSymbolizer.getGraphic();
           if( graphic != null )
           {
@@ -155,7 +155,7 @@ class RuleImagePainter
     {
       if( o instanceof ExternalGraphic )
       {
-        final ExternalGraphic externalGraphic = (ExternalGraphic) o;
+        final ExternalGraphic externalGraphic = (ExternalGraphic)o;
         final ParameterValueType sizeParameter = graphic.getSizeParameter();
 
         int size = 10;
@@ -166,7 +166,7 @@ class RuleImagePainter
             final String evaluate = sizeParameter.evaluate( null );
             final double d = NumberUtils.parseQuietDouble( evaluate );
             if( !Double.isNaN( d ) )
-              size = (int) d;
+              size = (int)d;
           }
           catch( final FilterEvaluationException e )
           {

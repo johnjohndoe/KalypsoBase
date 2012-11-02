@@ -111,17 +111,17 @@ public class ColorPalette
       final ColorBox box = new ColorBox( composite, colors[i], colorSize, borderWidth );
       colorBoxes[i] = box;
 
-      final FilterPatternDialog filterPatternDialog = new FilterPatternDialog( composite.getShell(), ((ComplexFilter) getRuleCollection().get( i ).getFilter()).getOperation() );
+      final FilterPatternDialog filterPatternDialog = new FilterPatternDialog( composite.getShell(), ((ComplexFilter)getRuleCollection().get( i ).getFilter()).getOperation() );
       box.addPanelListener( new PanelListener()
       {
         @Override
         public void valueChanged( final PanelEvent event )
         {
-          filterPatternDialog.setColor( ((ColorBox) event.getSource()).getColor() );
+          filterPatternDialog.setColor( ((ColorBox)event.getSource()).getColor() );
           filterPatternDialog.open();
           if( filterPatternDialog.getReturnCode() == Window.OK )
           {
-            ((ColorBox) event.getSource()).setColor( filterPatternDialog.getColor() );
+            ((ColorBox)event.getSource()).setColor( filterPatternDialog.getColor() );
           }
           for( int j = 0; j < getColorBoxes().length; j++ )
           {
@@ -160,7 +160,7 @@ public class ColorPalette
       if( listeners[counter] == PanelListener.class )
       {
         final PanelEvent event = new PanelEvent( this );
-        ((PanelListener) listeners[counter + 1]).valueChanged( event );
+        ((PanelListener)listeners[counter + 1]).valueChanged( event );
       }
     }
   }

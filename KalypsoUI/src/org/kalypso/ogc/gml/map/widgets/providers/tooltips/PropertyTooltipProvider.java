@@ -97,8 +97,7 @@ public class PropertyTooltipProvider implements ITooltipProvider
   }
 
   /**
-   * @see org.kalypso.ogc.gml.map.widgets.providers.tooltips.ITooltipProvider#getTooltip(org.kalypso.ogc.gml.map.IMapPanel,
-   *      org.eclipse.swt.graphics.Rectangle)
+   * @see org.kalypso.ogc.gml.map.widgets.providers.tooltips.ITooltipProvider#getTooltip(org.kalypso.ogc.gml.map.IMapPanel, org.eclipse.swt.graphics.Rectangle)
    */
   @Override
   public String getTooltip( final IMapPanel mapPanel, final Rectangle rectangle )
@@ -113,8 +112,7 @@ public class PropertyTooltipProvider implements ITooltipProvider
   }
 
   /**
-   * @see org.kalypso.ogc.gml.map.widgets.providers.tooltips.ITooltipProvider#paintTooltip(java.awt.Graphics,
-   *      java.awt.Point, java.lang.String)
+   * @see org.kalypso.ogc.gml.map.widgets.providers.tooltips.ITooltipProvider#paintTooltip(java.awt.Graphics, java.awt.Point, java.lang.String)
    */
   @Override
   public void paintTooltip( final Graphics g, final Point p, final String tooltip )
@@ -122,12 +120,12 @@ public class PropertyTooltipProvider implements ITooltipProvider
     final Rectangle2D rectangle = g.getFontMetrics().getStringBounds( tooltip, g );
 
     g.setColor( new Color( 255, 255, 225 ) );
-    g.fillRect( (int) p.getX(), (int) p.getY() + 20, (int) rectangle.getWidth() + 10, (int) rectangle.getHeight() + 5 );
+    g.fillRect( (int)p.getX(), (int)p.getY() + 20, (int)rectangle.getWidth() + 10, (int)rectangle.getHeight() + 5 );
 
     g.setColor( Color.BLACK );
-    g.drawRect( (int) p.getX(), (int) p.getY() + 20, (int) rectangle.getWidth() + 10, (int) rectangle.getHeight() + 5 );
+    g.drawRect( (int)p.getX(), (int)p.getY() + 20, (int)rectangle.getWidth() + 10, (int)rectangle.getHeight() + 5 );
 
     /* Tooltip zeichnen. */
-    g.drawString( tooltip, (int) p.getX() + 5, (int) p.getY() + 35 );
+    g.drawString( tooltip, (int)p.getX() + 5, (int)p.getY() + 35 );
   }
 }

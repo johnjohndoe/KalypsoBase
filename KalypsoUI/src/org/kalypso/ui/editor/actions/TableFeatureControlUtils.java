@@ -55,10 +55,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.DeleteFeatureCommand;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ui.editor.gmleditor.part.GMLLabelProvider;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -67,7 +67,7 @@ import org.kalypsodeegree_impl.model.feature.visitors.FindLinkedFeatureVisitor;
 
 /**
  * Utilities for handling feature lists in the table feature control.
- *
+ * 
  * @author Holger Albert
  */
 public final class TableFeatureControlUtils
@@ -79,7 +79,7 @@ public final class TableFeatureControlUtils
 
   /**
    * This function will build the command for deleting features from the list.
-   *
+   * 
    * @param allFeatures
    *          The features, that should be deleted.
    * @param shell
@@ -142,7 +142,7 @@ public final class TableFeatureControlUtils
           public String getText( final Object element )
           {
             if( element instanceof Feature )
-              return getFeatureDeleteLabel( (Feature) element );
+              return getFeatureDeleteLabel( (Feature)element );
 
             return super.getText( element );
           }

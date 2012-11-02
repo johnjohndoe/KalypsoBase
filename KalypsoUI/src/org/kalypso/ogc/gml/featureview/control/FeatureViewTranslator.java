@@ -50,7 +50,7 @@ import org.w3c.dom.Element;
 /**
  * Helper that wraps a translator but checks for the translation key ('%'). If the string does not start with this
  * character, it just returns the string.<br/>
- *
+ * 
  * @author Gernot Belger
  */
 public class FeatureViewTranslator implements ITranslator

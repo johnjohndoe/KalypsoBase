@@ -48,7 +48,7 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Implementors of this interface deliver feature-view-templates.
- *
+ * 
  * @author Gernot Belger
  */
 public interface IFeatureviewFactory
@@ -56,7 +56,7 @@ public interface IFeatureviewFactory
   /**
    * Return a {@link FeatureviewType} for the given featureType. The template may also depend on the (optional) given
    * feature.
-   *
+   * 
    * @throws NullPointerException
    *           If <code>featureType</code> is null.
    */
@@ -65,7 +65,7 @@ public interface IFeatureviewFactory
   /**
    * Get the {@link ITranslator} for elements of the given {@link FeatureviewType}.<br/>
    * If the view is not configure with a translator, it falls back to the default translator.
-   *
+   * 
    * @see #getDefaultTranslator()
    */
   ITranslator getTranslator( FeatureviewTypeWithContext view, URL context );
@@ -77,7 +77,7 @@ public interface IFeatureviewFactory
 
   /**
    * Sets the default {@link ITranslator}.
-   *
+   * 
    * @param translator
    *          If <code>null</code>, a standard translator that does nothing is set.
    * @see #getDefaultTranslator()

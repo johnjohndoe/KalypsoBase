@@ -66,8 +66,8 @@ import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.filterdialog.model.FeatureTypeLabelProvider;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot
@@ -114,7 +114,7 @@ public class FeatureTypeSelectionPage extends WizardPage implements ISelectionCh
       @Override
       public boolean select( final Viewer viewer, final Object parentElement, final Object element )
       {
-        return element instanceof IFeatureType && !((IFeatureType) element).isAbstract();
+        return element instanceof IFeatureType && !((IFeatureType)element).isAbstract();
       }
     } );
 
@@ -146,7 +146,7 @@ public class FeatureTypeSelectionPage extends WizardPage implements ISelectionCh
         try
         {
           final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
-          final GMLSchema schema = schemaCatalog.getSchema( namespace, (String) null );
+          final GMLSchema schema = schemaCatalog.getSchema( namespace, (String)null );
           viewer.setInput( schema.getAllFeatureTypes() );
           return Status.OK_STATUS;
         }
@@ -177,8 +177,8 @@ public class FeatureTypeSelectionPage extends WizardPage implements ISelectionCh
   @Override
   public void selectionChanged( final SelectionChangedEvent event )
   {
-    final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-    m_selectedfeatureType = (IFeatureType) selection.getFirstElement();
+    final IStructuredSelection selection = (IStructuredSelection)event.getSelection();
+    m_selectedfeatureType = (IFeatureType)selection.getFirstElement();
 
     setPageComplete( m_selectedfeatureType != null );
   }

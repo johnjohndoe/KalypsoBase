@@ -51,43 +51,43 @@ public class ImageProvider
 {
   public static enum DESCRIPTORS implements ImageKey
   {
-    FEATURE("icons/feature/gis_feature.gif"), //$NON-NLS-1$
+    FEATURE( "icons/feature/gis_feature.gif" ), //$NON-NLS-1$
 
-    WAIT_LOADING_OBJ("icons/full/obj16/wait_loading.gif"), //$NON-NLS-1$
-    FAILED_LOADING_OBJ("icons/full/obj16/failed_loading.gif"), //$NON-NLS-1$
+    WAIT_LOADING_OBJ( "icons/full/obj16/wait_loading.gif" ), //$NON-NLS-1$
+    FAILED_LOADING_OBJ( "icons/full/obj16/failed_loading.gif" ), //$NON-NLS-1$
 
-    FORBIDDEN_OVR("icons/full/ovr16/forbidden.gif"), //$NON-NLS-1$
+    FORBIDDEN_OVR( "icons/full/ovr16/forbidden.gif" ), //$NON-NLS-1$
 
-    IMAGE_MAPVIEW_ZOOMIN("icons/map/zoomin.gif"), //$NON-NLS-1$
-    IMAGE_MAPVIEW_ZOOMOUT("icons/map/zoomout.gif"), //$NON-NLS-1$
-    IMAGE_MAPVIEW_PAN("icons/map/pan.gif"), //$NON-NLS-1$
-    IMAGE_MAPVIEW_FULLEXTEND("icons/map/maximize2.gif"), //$NON-NLS-1$
+    IMAGE_MAPVIEW_ZOOMIN( "icons/map/zoomin.gif" ), //$NON-NLS-1$
+    IMAGE_MAPVIEW_ZOOMOUT( "icons/map/zoomout.gif" ), //$NON-NLS-1$
+    IMAGE_MAPVIEW_PAN( "icons/map/pan.gif" ), //$NON-NLS-1$
+    IMAGE_MAPVIEW_FULLEXTEND( "icons/map/maximize2.gif" ), //$NON-NLS-1$
 
-    IMAGE_THEME_STANDARD("icons/full/obj16/standardTheme.gif"), //$NON-NLS-1$
-    IMAGE_THEME_FEATURE("icons/full/obj16/featureTheme.gif"), //$NON-NLS-1$
-    IMAGE_THEME_WMS("icons/full/obj16/wmsTheme.gif"), //$NON-NLS-1$
-    IMAGE_THEME_CASCADING("icons/full/obj16/cascadingTheme.gif"), //$NON-NLS-1$
-    IMAGE_THEME_SCALE("icons/full/obj16/scaleTheme.gif"), //$NON-NLS-1$
-    IMAGE_THEME_LEGEND("icons/full/obj16/legendTheme.gif"), //$NON-NLS-1$
-    IMAGE_THEME_SCRAP("icons/full/obj16/scrapTheme.gif"), //$NON-NLS-1$
-    IMAGE_THEME_IMAGE("icons/full/obj16/imageTheme.gif"), //$NON-NLS-1$
-    IMAGE_THEME_TEXT("icons/full/obj16/textTheme.gif"), //$NON-NLS-1$
+    IMAGE_THEME_STANDARD( "icons/full/obj16/standardTheme.gif" ), //$NON-NLS-1$
+    IMAGE_THEME_FEATURE( "icons/full/obj16/featureTheme.gif" ), //$NON-NLS-1$
+    IMAGE_THEME_WMS( "icons/full/obj16/wmsTheme.gif" ), //$NON-NLS-1$
+    IMAGE_THEME_CASCADING( "icons/full/obj16/cascadingTheme.gif" ), //$NON-NLS-1$
+    IMAGE_THEME_SCALE( "icons/full/obj16/scaleTheme.gif" ), //$NON-NLS-1$
+    IMAGE_THEME_LEGEND( "icons/full/obj16/legendTheme.gif" ), //$NON-NLS-1$
+    IMAGE_THEME_SCRAP( "icons/full/obj16/scrapTheme.gif" ), //$NON-NLS-1$
+    IMAGE_THEME_IMAGE( "icons/full/obj16/imageTheme.gif" ), //$NON-NLS-1$
+    IMAGE_THEME_TEXT( "icons/full/obj16/textTheme.gif" ), //$NON-NLS-1$
 
-    STATUS_LINE_SHOW_MAP_COORDS("icons/map/statusbarPosition.gif"), //$NON-NLS-1$
-    STATUS_LINE_SHOW_CRS_INFO("icons/map/statusbarShowCRSInfo.gif"), //$NON-NLS-1$
+    STATUS_LINE_SHOW_MAP_COORDS( "icons/map/statusbarPosition.gif" ), //$NON-NLS-1$
+    STATUS_LINE_SHOW_CRS_INFO( "icons/map/statusbarShowCRSInfo.gif" ), //$NON-NLS-1$
 
-    SLD_RULE_TAB_ADD("icons/sldeditor/ruleTabAdd.gif"), //$NON-NLS-1$
+    SLD_RULE_TAB_ADD( "icons/sldeditor/ruleTabAdd.gif" ), //$NON-NLS-1$
 
-    MOVIE_PLAYER_STOP("icons/movie/player_stop.png"), //$NON-NLS-1$
-    MOVIE_PLAYER_START("icons/movie/player_start.png"), //$NON-NLS-1$
-    MOVIE_PLAYER_REW("icons/movie/player_rew.png"), //$NON-NLS-1$
-    MOVIE_PLAYER_PAUSE("icons/movie/player_pause.png"), //$NON-NLS-1$
-    MOVIE_PLAYER_PLAY("icons/movie/player_play.png"), //$NON-NLS-1$
-    MOVIE_PLAYER_FWD("icons/movie/player_fwd.png"), //$NON-NLS-1$
-    MOVIE_PLAYER_END("icons/movie/player_end.png"), //$NON-NLS-1$
-    MOVIE_PLAYER_EJECT("icons/movie/player_eject.png"), //$NON-NLS-1$
+    MOVIE_PLAYER_STOP( "icons/movie/player_stop.png" ), //$NON-NLS-1$
+    MOVIE_PLAYER_START( "icons/movie/player_start.png" ), //$NON-NLS-1$
+    MOVIE_PLAYER_REW( "icons/movie/player_rew.png" ), //$NON-NLS-1$
+    MOVIE_PLAYER_PAUSE( "icons/movie/player_pause.png" ), //$NON-NLS-1$
+    MOVIE_PLAYER_PLAY( "icons/movie/player_play.png" ), //$NON-NLS-1$
+    MOVIE_PLAYER_FWD( "icons/movie/player_fwd.png" ), //$NON-NLS-1$
+    MOVIE_PLAYER_END( "icons/movie/player_end.png" ), //$NON-NLS-1$
+    MOVIE_PLAYER_EJECT( "icons/movie/player_eject.png" ), //$NON-NLS-1$
 
-    EXTERNAL_BROWSER("icons/feature/external_browser.gif"); //$NON-NLS-1$
+    EXTERNAL_BROWSER( "icons/feature/external_browser.gif" ); //$NON-NLS-1$
 
     private final String m_imagePath;
 

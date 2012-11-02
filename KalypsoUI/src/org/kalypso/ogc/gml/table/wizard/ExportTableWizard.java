@@ -56,10 +56,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
 import org.kalypso.commons.io.CSV;
 import org.kalypso.contribs.eclipse.jface.wizard.SaveFileWizardPage;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author belger

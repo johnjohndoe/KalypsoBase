@@ -41,8 +41,8 @@
 package org.kalypso.ogc.gml.outline.nodes;
 
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot
@@ -89,7 +89,7 @@ public class ChangeWMSLayerVisibilityCommand implements ICommand
   @Override
   public String getDescription( )
   {
-    return String.format( Messages.getString("ChangeWMSLayerVisibilityCommand_0"), m_layer, m_wmsTheme.getLabel() ); //$NON-NLS-1$
+    return String.format( Messages.getString( "ChangeWMSLayerVisibilityCommand_0" ), m_layer, m_wmsTheme.getLabel() ); //$NON-NLS-1$
   }
 
   private void changeVisibility( final boolean visible )

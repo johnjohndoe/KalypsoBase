@@ -97,7 +97,7 @@ public abstract class ChooseZmlAction extends Action
     if( !(result[0] instanceof IFile) )
       return;
 
-    final IFile resultFile = (IFile) result[0];
+    final IFile resultFile = (IFile)result[0];
 
     final IPath resultPath = resultFile.getFullPath();
 
@@ -124,7 +124,7 @@ public abstract class ChooseZmlAction extends Action
 
     /* If it is a file, return the parent else we get ../ as relative path to this file. */
     if( contextResource instanceof IFile )
-      return ((IFile) contextResource).getParent().getFullPath();
+      return ((IFile)contextResource).getParent().getFullPath();
 
     /* It is a container, just return it's path */
     return contextPath;

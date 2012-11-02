@@ -61,7 +61,6 @@ import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.SensorException;
@@ -73,11 +72,12 @@ import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypso.utils.log.GeoStatusLog;
 
 /**
  * This class dumps a repository kompletely into the filesystem.
- *
+ * 
  * @author Holger Albert
  */
 public class RepositoryDumper implements ICoreRunnableWithProgress
@@ -122,7 +122,7 @@ public class RepositoryDumper implements ICoreRunnableWithProgress
       monitor.worked( 800 );
 
       /* Create the result status. */
-      final IStatus status = m_stati.asMultiStatusOrOK( Messages.getString("RepositoryDumper.0"), Messages.getString("RepositoryDumper.1") ); //$NON-NLS-1$ //$NON-NLS-2$
+      final IStatus status = m_stati.asMultiStatusOrOK( Messages.getString( "RepositoryDumper.0" ), Messages.getString( "RepositoryDumper.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
       /* Writes the log. */
       writeLogQuietly( status );
@@ -208,7 +208,7 @@ public class RepositoryDumper implements ICoreRunnableWithProgress
    * Creates the dump structure in the file-system and into one structure file <br/>
    * REMARK: this uses the file format which is compatible to the Kalypso-PSICompact-Fake implementation. So exported
    * repositories can directly be included via that repository implementation.
-   *
+   * 
    * @param structureWriter
    * @param directory
    *          The choosen directory.
@@ -252,7 +252,7 @@ public class RepositoryDumper implements ICoreRunnableWithProgress
     {
       ex.printStackTrace();
 
-      final String msg = String.format( Messages.getString("RepositoryDumper.3"), item.getName() ); //$NON-NLS-1$
+      final String msg = String.format( Messages.getString( "RepositoryDumper.3" ), item.getName() ); //$NON-NLS-1$
       m_stati.add( IStatus.ERROR, msg, ex );
     }
     finally
@@ -276,7 +276,7 @@ public class RepositoryDumper implements ICoreRunnableWithProgress
       {
         e.printStackTrace();
 
-        final String msg = String.format( Messages.getString("RepositoryDumper.4"), item.getIdentifier() ); //$NON-NLS-1$
+        final String msg = String.format( Messages.getString( "RepositoryDumper.4" ), item.getIdentifier() ); //$NON-NLS-1$
         m_stati.add( IStatus.ERROR, msg, e );
         /* Not twice! */
         return;
@@ -286,7 +286,7 @@ public class RepositoryDumper implements ICoreRunnableWithProgress
         e.printStackTrace();
 
         final int severity = i == 0 ? IStatus.WARNING : IStatus.ERROR;
-        final String msg = String.format( Messages.getString("RepositoryDumper.5"), i + 1, item.getIdentifier() ); //$NON-NLS-1$
+        final String msg = String.format( Messages.getString( "RepositoryDumper.5" ), i + 1, item.getIdentifier() ); //$NON-NLS-1$
         m_stati.add( severity, msg, e );
       }
     }

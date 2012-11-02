@@ -73,7 +73,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.kalypso.contribs.eclipse.swt.awt.ImageConverter;
 import org.kalypso.contribs.eclipse.swt.layout.Layouts;
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.Fill;
 import org.kalypsodeegree_impl.graphics.sld.awt.FillPainter;
@@ -154,7 +154,7 @@ public class FillEditorComposite extends Composite
     /* mouse listeners */
     m_colorLabel.addMouseListener( new MouseAdapter()
     {
-      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
+      @SuppressWarnings( "synthetic-access" )//$NON-NLS-1$
       @Override
       public void mouseDown( final MouseEvent e )
       {
@@ -297,7 +297,7 @@ public class FillEditorComposite extends Composite
     opacitySpinner.addSelectionListener( new SelectionAdapter()
     {
 
-      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
+      @SuppressWarnings( "synthetic-access" )//$NON-NLS-1$
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
@@ -336,7 +336,7 @@ public class FillEditorComposite extends Composite
 
     m_previewComp.addControlListener( new ControlAdapter()
     {
-      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
+      @SuppressWarnings( "synthetic-access" )//$NON-NLS-1$
       @Override
       public void controlResized( final ControlEvent e )
       {
@@ -346,7 +346,7 @@ public class FillEditorComposite extends Composite
     } );
   }
 
-  @SuppressWarnings("static-access")//$NON-NLS-1$
+  @SuppressWarnings( "static-access" )//$NON-NLS-1$
   private void updatePreview( )
   {
     final Point point = m_previewComp.getSize();

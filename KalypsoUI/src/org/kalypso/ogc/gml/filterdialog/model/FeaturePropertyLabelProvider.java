@@ -41,7 +41,7 @@
 package org.kalypso.ogc.gml.filterdialog.model;
 
 import org.eclipse.jface.viewers.LabelProvider;
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypso.zml.obslink.TimeseriesLinkType;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
@@ -71,13 +71,13 @@ public class FeaturePropertyLabelProvider extends LabelProvider
     if( GeometryUtilities.isMultiLineStringGeometry( element ) )
       return "MultiLine"; //$NON-NLS-1$
     if( element instanceof Number )
-      return Messages.getString( "org.kalypso.ogc.gml.filterdialog.model.FeaturePropertyLabelProvider.6" ) + ((Number) element).toString(); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.ogc.gml.filterdialog.model.FeaturePropertyLabelProvider.6" ) + ((Number)element).toString(); //$NON-NLS-1$
     if( element instanceof TimeseriesLinkType )
-      return Messages.getString( "org.kalypso.ogc.gml.filterdialog.model.FeaturePropertyLabelProvider.7" ) + ((TimeseriesLinkType) element).getHref(); //$NON-NLS-1$
+      return Messages.getString( "org.kalypso.ogc.gml.filterdialog.model.FeaturePropertyLabelProvider.7" ) + ((TimeseriesLinkType)element).getHref(); //$NON-NLS-1$
     if( element instanceof String )
-      return (String) element;
+      return (String)element;
     if( element instanceof Boolean )
-      return ((Boolean) element).toString();
+      return ((Boolean)element).toString();
     return Messages.getString( "org.kalypso.ogc.gml.filterdialog.model.FeaturePropertyLabelProvider.8" ); //$NON-NLS-1$
   }
 }

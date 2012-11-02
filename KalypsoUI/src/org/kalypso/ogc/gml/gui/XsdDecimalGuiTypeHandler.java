@@ -85,7 +85,7 @@ public class XsdDecimalGuiTypeHandler extends XsdBaseGuiTypeHandler
 
     // bit of a HACK: set format according to fraction digits, if any are set.
     // Maybe change this later to support fraction digits within the modifier stuff
-    final IValuePropertyType vpt = (IValuePropertyType) ftp;
+    final IValuePropertyType vpt = (IValuePropertyType)ftp;
     final IRestriction[] restrictions = vpt.getRestriction();
     final Integer fractionDigits = RestrictionUtilities.findFractionDigits( restrictions );
     if( fractionDigits == null )
@@ -99,7 +99,7 @@ public class XsdDecimalGuiTypeHandler extends XsdBaseGuiTypeHandler
   {
     if( element instanceof BigDecimal )
     {
-      final BigDecimal decimal = (BigDecimal) element;
+      final BigDecimal decimal = (BigDecimal)element;
       return String.format( "%.2f", decimal.doubleValue() ).replace( ",", "." ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 

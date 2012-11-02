@@ -98,7 +98,7 @@ public class FilterRootElement implements Filter
   public void addChild( final Object child )
   {
     if( child instanceof Filter )
-      m_filter = (Filter) child;
+      m_filter = (Filter)child;
   }
 
   public void addPropertyChangeListener( final IPropertyChangeListener listener )
@@ -117,7 +117,7 @@ public class FilterRootElement implements Filter
     final Object[] propetyChangedListeners = getPropetyChangedListeners().getListeners();
     for( final Object element : propetyChangedListeners )
     {
-      ((IPropertyChangeListener) element).propertyChange( event );
+      ((IPropertyChangeListener)element).propertyChange( event );
 
     }
   }
@@ -135,7 +135,7 @@ public class FilterRootElement implements Filter
       m_filter = null;
     if( m_filter instanceof ComplexFilter )
     {
-      final ComplexFilter root = (ComplexFilter) m_filter;
+      final ComplexFilter root = (ComplexFilter)m_filter;
       final Operation operation = root.getOperation();
       if( operation != null )
       {
@@ -146,7 +146,7 @@ public class FilterRootElement implements Filter
         }
         if( operation instanceof LogicalOperation )
         {
-          final List<Operation> arguments = ((LogicalOperation) operation).getArguments();
+          final List<Operation> arguments = ((LogicalOperation)operation).getArguments();
           remove( arguments, child, operation );
         }
       }
@@ -161,7 +161,7 @@ public class FilterRootElement implements Filter
       {
         if( parent instanceof LogicalOperation )
         {
-          final LogicalOperation parentCast = (LogicalOperation) parent;
+          final LogicalOperation parentCast = (LogicalOperation)parent;
           final List<Operation> oldArgs = parentCast.getArguments();
           oldArgs.remove( childToRemove );
           if( oldArgs.size() == 0 )
@@ -171,7 +171,7 @@ public class FilterRootElement implements Filter
       }
       if( element instanceof LogicalOperation )
       {
-        final LogicalOperation test = (LogicalOperation) element;
+        final LogicalOperation test = (LogicalOperation)element;
         final List<Operation> newArgs = test.getArguments();
         if( newArgs != null && newArgs.size() > 0 )
           remove( newArgs, childToRemove, test );

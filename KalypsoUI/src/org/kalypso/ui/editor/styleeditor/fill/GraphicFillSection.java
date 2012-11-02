@@ -70,8 +70,7 @@ public class GraphicFillSection extends AbstractStyleElementSection<Fill, Graphi
   @Override
   protected StyleElementAction<Fill>[] createActions( final IStyleInput<Fill> input )
   {
-    @SuppressWarnings("unchecked")
-    final StyleElementAction<Fill>[] actions = new StyleElementAction[2];
+    @SuppressWarnings( "unchecked" ) final StyleElementAction<Fill>[] actions = new StyleElementAction[2];
     actions[0] = new GraphicFillAddAction( input );
     actions[1] = new GraphicFillRemoveAction( input );
     return actions;

@@ -65,7 +65,7 @@ public class GraphicSizeValue extends InputWithContextObservableValue<Graphic, I
     try
     {
       final double size = data.getSize( null );
-      return (int) size;
+      return (int)size;
     }
     catch( final FilterEvaluationException e )
     {
@@ -75,8 +75,7 @@ public class GraphicSizeValue extends InputWithContextObservableValue<Graphic, I
   }
 
   /**
-   * @see org.kalypso.ui.editor.styleeditor.forms.InputWithContextObservableValue#setValueToInput(java.lang.Object,
-   *      java.lang.Object)
+   * @see org.kalypso.ui.editor.styleeditor.forms.InputWithContextObservableValue#setValueToInput(java.lang.Object, java.lang.Object)
    */
   @Override
   protected void setValueToInput( final Graphic data, final Integer value )

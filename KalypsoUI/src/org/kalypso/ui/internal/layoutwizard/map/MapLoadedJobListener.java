@@ -114,7 +114,7 @@ public class MapLoadedJobListener extends JobChangeAdapter
     if( !(activeTheme instanceof IKalypsoFeatureTheme) )
       return;
 
-    final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme) activeTheme;
+    final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)activeTheme;
 
     final Feature feature = findSelectFeature( kft );
     if( feature == null )
@@ -149,7 +149,7 @@ public class MapLoadedJobListener extends JobChangeAdapter
     if( !(activeTheme instanceof IKalypsoFeatureTheme) )
       return m_wishBoundingBox;
 
-    final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme) activeTheme;
+    final IKalypsoFeatureTheme kft = (IKalypsoFeatureTheme)activeTheme;
 
     final Feature panFeature = findPanFeature( kft );
     if( panFeature == null )

@@ -109,8 +109,7 @@ public class JobExclusiveCommandTarget implements ICommandTarget, ICommandManage
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand,
-   *      java.lang.Runnable)
+   * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand, java.lang.Runnable)
    */
   @Override
   public void postCommand( final ICommand command, final Runnable runnable )

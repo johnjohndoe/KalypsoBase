@@ -103,7 +103,7 @@ public class ColorFeatureControl extends AbstractFeatureControl
 
       if( feature.getProperty( ftp ) != null )
       {
-        final RGB rgb = (RGB) feature.getProperty( ftp );
+        final RGB rgb = (RGB)feature.getProperty( ftp );
         final Color color = new Color( null, rgb );
         m_label.setBackground( color );
         m_label.setVisible( true );

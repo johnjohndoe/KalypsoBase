@@ -50,7 +50,7 @@ import org.kalypso.contribs.eclipse.swt.SWTUtilities;
 
 /**
  * This class wraps an object for the legend graphic.
- *
+ * 
  * @author Holger Albert
  */
 public class LegendElement
@@ -98,7 +98,7 @@ public class LegendElement
 
   /**
    * This function returns the dimension of this legend element.
-   *
+   * 
    * @return The dimension of this element.
    */
   public Point getSize( final Font font )
@@ -130,7 +130,7 @@ public class LegendElement
 
   /**
    * This function returns the text for this legend item.
-   *
+   * 
    * @return The text of this legend item.
    */
   public String getText( )
@@ -140,7 +140,7 @@ public class LegendElement
 
   /**
    * This function returns the image for this legend item.
-   *
+   * 
    * @return The image of this legend item.
    */
   public Image getImage( )
@@ -157,7 +157,7 @@ public class LegendElement
 
   /**
    * This function returns the level of this legend element.
-   *
+   * 
    * @return The level of this legend element.
    */
   public int getLevel( )

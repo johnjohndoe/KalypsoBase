@@ -56,8 +56,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
 import org.kalypsodeegree.model.feature.event.ModellEventListener;
@@ -65,7 +65,7 @@ import org.osgi.framework.Bundle;
 
 /**
  * This feature control displays a button which runs an arbitrary action.
- *
+ * 
  * @author Gernot Belger
  */
 public class ActionButtonFeatureControl extends AbstractFeatureControl implements ModellEventListener
@@ -103,7 +103,7 @@ public class ActionButtonFeatureControl extends AbstractFeatureControl implement
     try
     {
       final Class< ? > actionClass = bundle.loadClass( actionClassName );
-      return (IAction) actionClass.newInstance();
+      return (IAction)actionClass.newInstance();
     }
     catch( final ClassNotFoundException e )
     {
@@ -205,7 +205,7 @@ public class ActionButtonFeatureControl extends AbstractFeatureControl implement
 
   /**
    * Die ButtonControl ist immer valid
-   *
+   * 
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#isValid()
    */
   @Override

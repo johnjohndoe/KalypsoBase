@@ -235,7 +235,7 @@ public class KalypsoThemeNode<T extends IKalypsoTheme> extends AbstractThemeNode
 
   /**
    * This function returns the resolved URL for the legend icon or null, if none could be created.
-   *
+   * 
    * @return The resolved URL for the legend icon or null, if none could be created.
    */
   private URL getLegendIconURL( final String externIconUrn )

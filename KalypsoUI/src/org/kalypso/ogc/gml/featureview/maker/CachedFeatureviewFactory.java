@@ -66,7 +66,7 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Helper class to manage generated feature-view-templates.
- *
+ * 
  * @author Belger
  */
 public class CachedFeatureviewFactory implements IFeatureviewFactory
@@ -162,13 +162,13 @@ public class CachedFeatureviewFactory implements IFeatureviewFactory
       final Unmarshaller unmarshaller = TemplateUtilities.createFeatureviewUnmarshaller();
       Object unmarshal = unmarshaller.unmarshal( url );
       if( unmarshal instanceof JAXBElement< ? > )
-        unmarshal = ((JAXBElement< ? >) unmarshal).getValue();
+        unmarshal = ((JAXBElement< ? >)unmarshal).getValue();
 
       if( unmarshal instanceof FeatureviewType )
-        addView( (FeatureviewType) unmarshal, url );
+        addView( (FeatureviewType)unmarshal, url );
       else if( unmarshal instanceof Featuretemplate )
       {
-        final Featuretemplate ftt = (Featuretemplate) unmarshal;
+        final Featuretemplate ftt = (Featuretemplate)unmarshal;
         final List<FeatureviewType> view = ftt.getView();
         for( final FeatureviewType element : view )
           addView( element, url );

@@ -50,7 +50,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * FileSelectWizardPage contains a simple FileFieldEditor that allows the user to enter the file name directly as a
@@ -83,8 +83,8 @@ public class FileSelectWizardPage extends WizardPage
     m_store = new PreferenceStore();
     m_store.setDefault( "FILE", fileName ); //$NON-NLS-1$
 
-    setTitle( Messages.getString("FileSelectWizardPage_1") ); //$NON-NLS-1$
-    setDescription( Messages.getString("FileSelectWizardPage_2") ); //$NON-NLS-1$
+    setTitle( Messages.getString( "FileSelectWizardPage_1" ) ); //$NON-NLS-1$
+    setDescription( Messages.getString( "FileSelectWizardPage_2" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -109,7 +109,7 @@ public class FileSelectWizardPage extends WizardPage
   {
     final Composite sub = new Composite( parent, SWT.FILL );
 
-    m_ffe = new FileFieldEditor( "FILE", Messages.getString("FileSelectWizardPage_4"), sub ); //$NON-NLS-1$ //$NON-NLS-2$
+    m_ffe = new FileFieldEditor( "FILE", Messages.getString( "FileSelectWizardPage_4" ), sub ); //$NON-NLS-1$ //$NON-NLS-2$
     m_ffe.setPreferenceStore( m_store );
     m_ffe.loadDefault();
     m_ffe.setEmptyStringAllowed( false );
@@ -132,7 +132,7 @@ public class FileSelectWizardPage extends WizardPage
     m_ffe.fillIntoGrid( sub, 4 );
 
     setControl( sub );
-    setDescription( Messages.getString("FileSelectWizardPage_7") ); //$NON-NLS-1$
+    setDescription( Messages.getString( "FileSelectWizardPage_7" ) ); //$NON-NLS-1$
 
     final Text textControl = m_ffe.getTextControl( sub );
     textControl.addModifyListener( new ModifyListener()

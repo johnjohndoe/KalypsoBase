@@ -86,12 +86,12 @@ import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.panels.ComparisonFilterComboPanel;
 import org.kalypso.ui.editor.styleeditor.panels.LogicalFilterComboPanel;
 import org.kalypso.ui.editor.styleeditor.panels.SpatialOperationPanel;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.filterencoding.ElseFilter;
 import org.kalypsodeegree.filterencoding.Expression;
@@ -174,7 +174,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     final Filter filter = rule.getFilter();
     if( filter != null && filter instanceof AbstractFilter )
     {
-      final FilterDialogTreeNode filterTree = parseFilterIntoTree( (AbstractFilter) filter );
+      final FilterDialogTreeNode filterTree = parseFilterIntoTree( (AbstractFilter)filter );
       if( filterTree != null )
       {
         mRoot = new FilterDialogTreeNode( "Filter                                                              ", FilterDialogTreeNode.ROOT_TYPE ); //$NON-NLS-1$
@@ -195,7 +195,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
   @Override
   protected void okPressed( )
   {
-    final Object[] children = ((FilterDialogTreeNode) mRoot.getChildren()[0]).getChildren();
+    final Object[] children = ((FilterDialogTreeNode)mRoot.getChildren()[0]).getChildren();
     if( children.length != 0 )
     {
       boolean validFilter = false;
@@ -245,7 +245,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     returnFilter = historyRule.getFilter();
     rule.setFilter( historyRule.getFilter() );
     rule.setElseFilter( historyRule.hasElseFilter() );
-    final FilterDialogTreeNode filterTree = parseFilterIntoTree( (AbstractFilter) historyRule.getFilter() );
+    final FilterDialogTreeNode filterTree = parseFilterIntoTree( (AbstractFilter)historyRule.getFilter() );
     if( filterTree != null )
     {
       mRoot = new FilterDialogTreeNode( "Filter                                                              ", FilterDialogTreeNode.ROOT_TYPE ); //$NON-NLS-1$
@@ -264,7 +264,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
   protected Control createDialogArea( final Composite parent )
   {
     returnFilter = null;
-    final Composite main = (Composite) super.createDialogArea( parent );
+    final Composite main = (Composite)super.createDialogArea( parent );
     main.setSize( 500, 300 );
     main.setLayout( new GridLayout( 1, true ) );
     main.layout();
@@ -349,7 +349,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        final Object[] children = ((FilterDialogTreeNode) getMRoot().getChildren()[0]).getChildren();
+        final Object[] children = ((FilterDialogTreeNode)getMRoot().getChildren()[0]).getChildren();
         if( children.length != 0 )
         {
           // generate Filter
@@ -430,7 +430,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
   {
     if( filter instanceof FeatureFilter )
     {
-      final FeatureFilter featureFilter = (FeatureFilter) filter;
+      final FeatureFilter featureFilter = (FeatureFilter)filter;
       final ArrayList<FeatureId> featureIds = featureFilter.getFeatureIds();
       FilterDialogTreeNode tmpNode = null;
       FeatureIDData tmpData = null;
@@ -445,11 +445,11 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     }
     else if( filter instanceof ComplexFilter )
     {
-      final ComplexFilter complexFilter = (ComplexFilter) filter;
+      final ComplexFilter complexFilter = (ComplexFilter)filter;
       final Operation operation = complexFilter.getOperation();
       if( operation instanceof LogicalOperation )
       {
-        final LogicalOperation logOp = (LogicalOperation) operation;
+        final LogicalOperation logOp = (LogicalOperation)operation;
         FilterDialogTreeNode tmpNode = null;
         switch( logOp.getOperatorId() )
         {
@@ -480,14 +480,14 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
       }
       else if( operation instanceof ComparisonOperation )
       {
-        final ComparisonOperation compOp = (ComparisonOperation) operation;
+        final ComparisonOperation compOp = (ComparisonOperation)operation;
         FilterDialogTreeNode tmpNode = null;
         switch( compOp.getOperatorId() )
         {
           case OperationDefines.PROPERTYISLIKE:
           {
             tmpNode = new FilterDialogTreeNode( "LIKE", FilterDialogTreeNode.COMPARISON_NODE_TYPE ); //$NON-NLS-1$
-            final PropertyIsLikeOperation isLikeOp = (PropertyIsLikeOperation) compOp;
+            final PropertyIsLikeOperation isLikeOp = (PropertyIsLikeOperation)compOp;
             final LikeComparisonData data = new LikeComparisonData();
             data.setLiteral( isLikeOp.getLiteral().getValue() );
             data.setPropertyName( isLikeOp.getPropertyName().getValue() );
@@ -500,92 +500,92 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
           case OperationDefines.PROPERTYISNULL:
           {
             tmpNode = new FilterDialogTreeNode( "NULL", FilterDialogTreeNode.COMPARISON_NODE_TYPE ); //$NON-NLS-1$
-            final PropertyIsNullOperation isNullOp = (PropertyIsNullOperation) compOp;
+            final PropertyIsNullOperation isNullOp = (PropertyIsNullOperation)compOp;
             final NullComparisonData data = new NullComparisonData();
             final Expression exp = isNullOp.getExpression();
             if( exp instanceof PropertyName )
-              data.setPropertyName( ((PropertyName) exp).getValue() );
+              data.setPropertyName( ((PropertyName)exp).getValue() );
             tmpNode.setData( data );
             break;
           }
           case OperationDefines.PROPERTYISBETWEEN:
           {
             tmpNode = new FilterDialogTreeNode( "BETWEEN", FilterDialogTreeNode.COMPARISON_NODE_TYPE ); //$NON-NLS-1$
-            final PropertyIsBetweenOperation isBetweenOp = (PropertyIsBetweenOperation) compOp;
+            final PropertyIsBetweenOperation isBetweenOp = (PropertyIsBetweenOperation)compOp;
             final BetweenComparisonData data = new BetweenComparisonData();
             data.setPropertyName( isBetweenOp.getPropertyName().getValue() );
-            data.setLower( ((BoundaryExpression) isBetweenOp.getLowerBoundary()).getValue() );
-            data.setUpper( ((BoundaryExpression) isBetweenOp.getUpperBoundary()).getValue() );
+            data.setLower( ((BoundaryExpression)isBetweenOp.getLowerBoundary()).getValue() );
+            data.setUpper( ((BoundaryExpression)isBetweenOp.getUpperBoundary()).getValue() );
             tmpNode.setData( data );
             break;
           }
           case OperationDefines.PROPERTYISEQUALTO:
           {
             tmpNode = new FilterDialogTreeNode( "EQUAL_TO", FilterDialogTreeNode.COMPARISON_NODE_TYPE ); //$NON-NLS-1$
-            final PropertyIsCOMPOperation isCompOp = (PropertyIsCOMPOperation) compOp;
+            final PropertyIsCOMPOperation isCompOp = (PropertyIsCOMPOperation)compOp;
             final BinaryComparisonData data = new BinaryComparisonData();
             Expression exp = isCompOp.getFirstExpression();
             if( exp instanceof PropertyName )
-              data.setPropertyName( ((PropertyName) exp).getValue() );
+              data.setPropertyName( ((PropertyName)exp).getValue() );
             exp = isCompOp.getSecondExpression();
             if( exp instanceof Literal )
-              data.setLiteral( ((Literal) exp).getValue() );
+              data.setLiteral( ((Literal)exp).getValue() );
             tmpNode.setData( data );
             break;
           }
           case OperationDefines.PROPERTYISLESSTHAN:
           {
             tmpNode = new FilterDialogTreeNode( "LESS_THAN", FilterDialogTreeNode.COMPARISON_NODE_TYPE ); //$NON-NLS-1$
-            final PropertyIsCOMPOperation isCompOp = (PropertyIsCOMPOperation) compOp;
+            final PropertyIsCOMPOperation isCompOp = (PropertyIsCOMPOperation)compOp;
             final BinaryComparisonData data = new BinaryComparisonData();
             Expression exp = isCompOp.getFirstExpression();
             if( exp instanceof PropertyName )
-              data.setPropertyName( ((PropertyName) exp).getValue() );
+              data.setPropertyName( ((PropertyName)exp).getValue() );
             exp = isCompOp.getSecondExpression();
             if( exp instanceof Literal )
-              data.setLiteral( ((Literal) exp).getValue() );
+              data.setLiteral( ((Literal)exp).getValue() );
             tmpNode.setData( data );
             break;
           }
           case OperationDefines.PROPERTYISGREATERTHAN:
           {
             tmpNode = new FilterDialogTreeNode( "GREATER_THAN", FilterDialogTreeNode.COMPARISON_NODE_TYPE ); //$NON-NLS-1$
-            final PropertyIsCOMPOperation isCompOp = (PropertyIsCOMPOperation) compOp;
+            final PropertyIsCOMPOperation isCompOp = (PropertyIsCOMPOperation)compOp;
             final BinaryComparisonData data = new BinaryComparisonData();
             Expression exp = isCompOp.getFirstExpression();
             if( exp instanceof PropertyName )
-              data.setPropertyName( ((PropertyName) exp).getValue() );
+              data.setPropertyName( ((PropertyName)exp).getValue() );
             exp = isCompOp.getSecondExpression();
             if( exp instanceof Literal )
-              data.setLiteral( ((Literal) exp).getValue() );
+              data.setLiteral( ((Literal)exp).getValue() );
             tmpNode.setData( data );
             break;
           }
           case OperationDefines.PROPERTYISLESSTHANOREQUALTO:
           {
             tmpNode = new FilterDialogTreeNode( "LESS_THAN_OR_EQUAL_TO", FilterDialogTreeNode.COMPARISON_NODE_TYPE ); //$NON-NLS-1$
-            final PropertyIsCOMPOperation isCompOp = (PropertyIsCOMPOperation) compOp;
+            final PropertyIsCOMPOperation isCompOp = (PropertyIsCOMPOperation)compOp;
             final BinaryComparisonData data = new BinaryComparisonData();
             Expression exp = isCompOp.getFirstExpression();
             if( exp instanceof PropertyName )
-              data.setPropertyName( ((PropertyName) exp).getValue() );
+              data.setPropertyName( ((PropertyName)exp).getValue() );
             exp = isCompOp.getSecondExpression();
             if( exp instanceof Literal )
-              data.setLiteral( ((Literal) exp).getValue() );
+              data.setLiteral( ((Literal)exp).getValue() );
             tmpNode.setData( data );
             break;
           }
           case OperationDefines.PROPERTYISGREATERTHANOREQUALTO:
           {
             tmpNode = new FilterDialogTreeNode( "GREATER_THAN_OR_EQUAL_TO", FilterDialogTreeNode.COMPARISON_NODE_TYPE ); //$NON-NLS-1$
-            final PropertyIsCOMPOperation isCompOp = (PropertyIsCOMPOperation) compOp;
+            final PropertyIsCOMPOperation isCompOp = (PropertyIsCOMPOperation)compOp;
             final BinaryComparisonData data = new BinaryComparisonData();
             Expression exp = isCompOp.getFirstExpression();
             if( exp instanceof PropertyName )
-              data.setPropertyName( ((PropertyName) exp).getValue() );
+              data.setPropertyName( ((PropertyName)exp).getValue() );
             exp = isCompOp.getSecondExpression();
             if( exp instanceof Literal )
-              data.setLiteral( ((Literal) exp).getValue() );
+              data.setLiteral( ((Literal)exp).getValue() );
             tmpNode.setData( data );
             break;
           }
@@ -598,33 +598,33 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
 
   Filter generateFilter( final Object[] children )
   {
-    if( ((FilterDialogTreeNode) children[0]).getType() == FilterDialogTreeNode.FEATUREID_NODE_TYPE )
+    if( ((FilterDialogTreeNode)children[0]).getType() == FilterDialogTreeNode.FEATUREID_NODE_TYPE )
     {
       final FeatureFilter filter = new FeatureFilter();
       for( final Object element : children )
       {
-        final FilterDialogTreeNode currentChild = (FilterDialogTreeNode) element;
+        final FilterDialogTreeNode currentChild = (FilterDialogTreeNode)element;
         if( currentChild.getType() == FilterDialogTreeNode.FEATUREID_NODE_TYPE )
         {
-          final FeatureIDData data = (FeatureIDData) currentChild.getData();
+          final FeatureIDData data = (FeatureIDData)currentChild.getData();
           filter.addFeatureId( new FeatureId( data.getFeatureId() ) );
         }
       }
       return filter;
     }
-    else if( ((FilterDialogTreeNode) children[0]).getType() == FilterDialogTreeNode.ELSEFILTER_TYPE )
+    else if( ((FilterDialogTreeNode)children[0]).getType() == FilterDialogTreeNode.ELSEFILTER_TYPE )
     {
       return new ElseFilter();
     }
-    else if( ((FilterDialogTreeNode) children[0]).getType() == FilterDialogTreeNode.COMPARISON_NODE_TYPE )
+    else if( ((FilterDialogTreeNode)children[0]).getType() == FilterDialogTreeNode.COMPARISON_NODE_TYPE )
     {
-      final FilterDialogTreeNode child = (FilterDialogTreeNode) children[0];
+      final FilterDialogTreeNode child = (FilterDialogTreeNode)children[0];
 
       switch( child.getSubType() )
       {
         case FilterDialogTreeNode.COMPARISON_BETWEEN:
         {
-          final BetweenComparisonData data = (BetweenComparisonData) child.getData();
+          final BetweenComparisonData data = (BetweenComparisonData)child.getData();
           final BoundaryExpression upperBoundary = new BoundaryExpression( data.getUpper() );
           final BoundaryExpression lowerBoundary = new BoundaryExpression( data.getLower() );
           final PropertyName propertyName = new PropertyName( data.getPropertyName() );
@@ -633,7 +633,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         }
         case FilterDialogTreeNode.COMPARISON_LIKE:
         {
-          final LikeComparisonData data = (LikeComparisonData) child.getData();
+          final LikeComparisonData data = (LikeComparisonData)child.getData();
           final PropertyName propertyName = new PropertyName( data.getPropertyName() );
           final Literal literal = new Literal( data.getLiteral() );
           final PropertyIsLikeOperation operation = new PropertyIsLikeOperation( propertyName, literal, data.getWildCard(), data.getSingleChar(), data.getEscapeChar() );
@@ -641,7 +641,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         }
         case FilterDialogTreeNode.COMPARISON_NULL:
         {
-          final NullComparisonData data = (NullComparisonData) child.getData();
+          final NullComparisonData data = (NullComparisonData)child.getData();
           final PropertyName propertyName = new PropertyName( data.getPropertyName() );
           final PropertyIsNullOperation operation = new PropertyIsNullOperation( propertyName );
           return new ComplexFilter( operation );
@@ -657,13 +657,13 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
 
           if( child.getData() instanceof BinaryComparisonData )
           {
-            final BinaryComparisonData data = (BinaryComparisonData) child.getData();
+            final BinaryComparisonData data = (BinaryComparisonData)child.getData();
             propertyName = new PropertyName( data.getPropertyName() );
             literal = new Literal( data.getLiteral() );
           }
           else if( child.getData() instanceof BinaryComparisonNumericData )
           {
-            final BinaryComparisonNumericData data = (BinaryComparisonNumericData) child.getData();
+            final BinaryComparisonNumericData data = (BinaryComparisonNumericData)child.getData();
             propertyName = new PropertyName( data.getPropertyName() );
             literal = new Literal( data.getLiteral() );
           }
@@ -672,26 +672,26 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         }
       }
     }
-    else if( ((FilterDialogTreeNode) children[0]).getType() == FilterDialogTreeNode.SPATIAL_NODE_TYPE )
+    else if( ((FilterDialogTreeNode)children[0]).getType() == FilterDialogTreeNode.SPATIAL_NODE_TYPE )
     {
-      final FilterDialogTreeNode child = (FilterDialogTreeNode) children[0];
+      final FilterDialogTreeNode child = (FilterDialogTreeNode)children[0];
       if( child.getSubType() == FilterDialogTreeNode.SPATIAL_INTERSECTS )
       {
 
       }
 
     }
-    else if( ((FilterDialogTreeNode) children[0]).getType() == FilterDialogTreeNode.LOGICAL_NODE_TYPE )
+    else if( ((FilterDialogTreeNode)children[0]).getType() == FilterDialogTreeNode.LOGICAL_NODE_TYPE )
     {
-      final FilterDialogTreeNode child = (FilterDialogTreeNode) children[0];
+      final FilterDialogTreeNode child = (FilterDialogTreeNode)children[0];
       if( child.getSubType() == FilterDialogTreeNode.LOCICAL_NOT )
       {
         final ArrayList<Operation> arguments = new ArrayList<>();
-        final Object[] innerElement = { (FilterDialogTreeNode) child.getChildren()[0] };
+        final Object[] innerElement = { (FilterDialogTreeNode)child.getChildren()[0] };
         final Filter filter = generateFilter( innerElement );
         if( filter instanceof ComplexFilter )
         {
-          arguments.add( ((ComplexFilter) filter).getOperation() );
+          arguments.add( ((ComplexFilter)filter).getOperation() );
         }
         final LogicalOperation operation = new LogicalOperation( OperationDefines.NOT, arguments );
         return new ComplexFilter( operation );
@@ -701,11 +701,11 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         final ArrayList<Operation> arguments = new ArrayList<>();
         for( int i = 0; i < child.getChildren().length; i++ )
         {
-          final Object[] innerElement = { (FilterDialogTreeNode) child.getChildren()[i] };
+          final Object[] innerElement = { (FilterDialogTreeNode)child.getChildren()[i] };
           final Filter filter = generateFilter( innerElement );
           if( filter instanceof ComplexFilter )
           {
-            arguments.add( ((ComplexFilter) filter).getOperation() );
+            arguments.add( ((ComplexFilter)filter).getOperation() );
           }
         }
         final LogicalOperation operation = new LogicalOperation( OperationDefines.AND, arguments );
@@ -716,11 +716,11 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         final ArrayList<Operation> arguments = new ArrayList<>();
         for( int i = 0; i < child.getChildren().length; i++ )
         {
-          final Object[] innerElement = { (FilterDialogTreeNode) child.getChildren()[i] };
+          final Object[] innerElement = { (FilterDialogTreeNode)child.getChildren()[i] };
           final Filter filter = generateFilter( innerElement );
           if( filter instanceof ComplexFilter )
           {
-            arguments.add( ((ComplexFilter) filter).getOperation() );
+            arguments.add( ((ComplexFilter)filter).getOperation() );
           }
         }
         final LogicalOperation operation = new LogicalOperation( OperationDefines.OR, arguments );
@@ -738,40 +738,40 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     if( children.length == 0 )
       return false;
 
-    if( ((FilterDialogTreeNode) children[0]).getType() == FilterDialogTreeNode.FEATUREID_NODE_TYPE )
+    if( ((FilterDialogTreeNode)children[0]).getType() == FilterDialogTreeNode.FEATUREID_NODE_TYPE )
     {
       // check every FeatureIDElement whether valid
       for( final Object element : children )
       {
-        final FilterDialogTreeNode currentChild = (FilterDialogTreeNode) element;
+        final FilterDialogTreeNode currentChild = (FilterDialogTreeNode)element;
         // if one is not valid
         if( !currentChild.validate() )
           return false;
       }
       return true;
     }
-    else if( ((FilterDialogTreeNode) children[0]).getType() == FilterDialogTreeNode.ELSEFILTER_TYPE )
+    else if( ((FilterDialogTreeNode)children[0]).getType() == FilterDialogTreeNode.ELSEFILTER_TYPE )
     {
       return true;
     }
-    else if( ((FilterDialogTreeNode) children[0]).getType() == FilterDialogTreeNode.COMPARISON_NODE_TYPE )
+    else if( ((FilterDialogTreeNode)children[0]).getType() == FilterDialogTreeNode.COMPARISON_NODE_TYPE )
     {
-      final FilterDialogTreeNode currentChild = (FilterDialogTreeNode) children[0];
+      final FilterDialogTreeNode currentChild = (FilterDialogTreeNode)children[0];
       if( !currentChild.validate() )
         return false;
       return true;
     }
     // ck 28.7.05
-    else if( ((FilterDialogTreeNode) children[0]).getType() == FilterDialogTreeNode.SPATIAL_NODE_TYPE )
+    else if( ((FilterDialogTreeNode)children[0]).getType() == FilterDialogTreeNode.SPATIAL_NODE_TYPE )
     {
-      final FilterDialogTreeNode currentChild = (FilterDialogTreeNode) children[0];
+      final FilterDialogTreeNode currentChild = (FilterDialogTreeNode)children[0];
       if( !currentChild.validate() )
         return false;
       return true;
     }
-    else if( ((FilterDialogTreeNode) children[0]).getType() == FilterDialogTreeNode.LOGICAL_NODE_TYPE )
+    else if( ((FilterDialogTreeNode)children[0]).getType() == FilterDialogTreeNode.LOGICAL_NODE_TYPE )
     {
-      final FilterDialogTreeNode child = (FilterDialogTreeNode) children[0];
+      final FilterDialogTreeNode child = (FilterDialogTreeNode)children[0];
       if( child.getSubType() == FilterDialogTreeNode.LOCICAL_NOT )
       {
         boolean evaluation = false;
@@ -779,16 +779,16 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         if( child.getChildren().length != 1 )
           throw new FilterDialogException( new FilterDialogError( child, MessageBundle.STYLE_EDITOR_FILTER_ERROR_CHILD ) );
 
-        if( ((FilterDialogTreeNode) child.getChildren()[0]).getType() == FilterDialogTreeNode.LOGICAL_NODE_TYPE )
+        if( ((FilterDialogTreeNode)child.getChildren()[0]).getType() == FilterDialogTreeNode.LOGICAL_NODE_TYPE )
         {
-          final FilterDialogTreeNode[] tmpArray = { (FilterDialogTreeNode) child.getChildren()[0] };
+          final FilterDialogTreeNode[] tmpArray = { (FilterDialogTreeNode)child.getChildren()[0] };
           evaluation = validateFilter( tmpArray );
           if( !evaluation )
-            throw new FilterDialogException( new FilterDialogError( (FilterDialogTreeNode) child.getChildren()[0], MessageBundle.STYLE_EDITOR_FILTER_ERROR_CHILD ) );
+            throw new FilterDialogException( new FilterDialogError( (FilterDialogTreeNode)child.getChildren()[0], MessageBundle.STYLE_EDITOR_FILTER_ERROR_CHILD ) );
         }
         else
         {
-          if( !((FilterDialogTreeNode) child.getChildren()[0]).validate() )
+          if( !((FilterDialogTreeNode)child.getChildren()[0]).validate() )
             return false;
         }
         return true;
@@ -801,14 +801,14 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
           throw new FilterDialogException( new FilterDialogError( child, MessageBundle.STYLE_EDITOR_FILTER_ERROR_CHILDREN ) );
         for( int i = 0; i < child.getChildren().length; i++ )
         {
-          if( ((FilterDialogTreeNode) child.getChildren()[i]).getType() == FilterDialogTreeNode.LOGICAL_NODE_TYPE )
+          if( ((FilterDialogTreeNode)child.getChildren()[i]).getType() == FilterDialogTreeNode.LOGICAL_NODE_TYPE )
           {
-            final FilterDialogTreeNode[] tmpArray = { (FilterDialogTreeNode) child.getChildren()[i] };
+            final FilterDialogTreeNode[] tmpArray = { (FilterDialogTreeNode)child.getChildren()[i] };
             evaluation = validateFilter( tmpArray );
             if( !evaluation )
               return false;
           }
-          else if( !((FilterDialogTreeNode) child.getChildren()[i]).validate() )
+          else if( !((FilterDialogTreeNode)child.getChildren()[i]).validate() )
             return false;
         }
         return true;
@@ -821,14 +821,14 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
           throw new FilterDialogException( new FilterDialogError( child, MessageBundle.STYLE_EDITOR_FILTER_ERROR_CHILDREN ) );
         for( int i = 0; i < child.getChildren().length; i++ )
         {
-          if( ((FilterDialogTreeNode) child.getChildren()[i]).getType() == FilterDialogTreeNode.LOGICAL_NODE_TYPE )
+          if( ((FilterDialogTreeNode)child.getChildren()[i]).getType() == FilterDialogTreeNode.LOGICAL_NODE_TYPE )
           {
-            final FilterDialogTreeNode[] tmpArray = { (FilterDialogTreeNode) child.getChildren()[i] };
+            final FilterDialogTreeNode[] tmpArray = { (FilterDialogTreeNode)child.getChildren()[i] };
             evaluation = validateFilter( tmpArray );
             if( !evaluation )
               return false;
           }
-          else if( !((FilterDialogTreeNode) child.getChildren()[i]).validate() )
+          else if( !((FilterDialogTreeNode)child.getChildren()[i]).validate() )
             return false;
         }
         return true;
@@ -844,11 +844,11 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
   @Override
   public void selectionChanged( final SelectionChangedEvent event )
   {
-    final TableTreeViewer ttv = (TableTreeViewer) event.getSource();
-    final IStructuredSelection s = (IStructuredSelection) ttv.getSelection();
+    final TableTreeViewer ttv = (TableTreeViewer)event.getSource();
+    final IStructuredSelection s = (IStructuredSelection)ttv.getSelection();
     if( s.getFirstElement() instanceof FilterDialogTreeNode )
     {
-      currentNode = (FilterDialogTreeNode) s.getFirstElement();
+      currentNode = (FilterDialogTreeNode)s.getFirstElement();
       final Object[] children = currentNode.getChildren();
       if( globalConfigureComposite != null && !globalConfigureComposite.isDisposed() )
         globalConfigureComposite.setVisible( false );
@@ -870,7 +870,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
             enableSpatialOperations();
           }
           // first element: featureId -> only featureId available
-          else if( ((FilterDialogTreeNode) children[0]).getType() == FilterDialogTreeNode.FEATUREID_NODE_TYPE )
+          else if( ((FilterDialogTreeNode)children[0]).getType() == FilterDialogTreeNode.FEATUREID_NODE_TYPE )
           {
             disableComparisonOperations();
             enableFeatureOperations();
@@ -933,11 +933,11 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
           if( FilterDialogTreeNode.isBinaryComparisonType( currentNode.getSubType() ) )
             drawBinaryComparisonOpTypeGroup( currentNode.getData(), currentNode.getSubType() );
           else if( currentNode.getSubType() == FilterDialogTreeNode.COMPARISON_BETWEEN )
-            drawPropertyIsBetweenTypeGroup( (BetweenComparisonData) currentNode.getData() );
+            drawPropertyIsBetweenTypeGroup( (BetweenComparisonData)currentNode.getData() );
           else if( currentNode.getSubType() == FilterDialogTreeNode.COMPARISON_LIKE )
-            drawPropertyIsLikeTypeGroup( (LikeComparisonData) currentNode.getData() );
+            drawPropertyIsLikeTypeGroup( (LikeComparisonData)currentNode.getData() );
           else if( currentNode.getSubType() == FilterDialogTreeNode.COMPARISON_NULL )
-            drawPropertyIsNullTypeGroup( (NullComparisonData) currentNode.getData() );
+            drawPropertyIsNullTypeGroup( (NullComparisonData)currentNode.getData() );
           break;
         }
         case FilterDialogTreeNode.FEATUREID_NODE_TYPE:
@@ -946,7 +946,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
           disableFeatureOperations();
           disableLogicalOperations();
           disableSpatialOperations();
-          drawFeatureIdTypeGroup( (FeatureIDData) currentNode.getData() );
+          drawFeatureIdTypeGroup( (FeatureIDData)currentNode.getData() );
           break;
         }
         case FilterDialogTreeNode.SPATIAL_NODE_TYPE:
@@ -1053,13 +1053,13 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
 
     if( data instanceof BinarySpatialData )
     {
-      propertyName = ((BinarySpatialData) data).getGeometryPropertyName();
-      ((BinarySpatialData) data).getGeomType();
+      propertyName = ((BinarySpatialData)data).getGeometryPropertyName();
+      ((BinarySpatialData)data).getGeomType();
     }
     else if( data instanceof BBoxSpatialData )
     {
-      propertyName = ((BBoxSpatialData) data).getGeometryPropertyName();
-      ((BBoxSpatialData) data).getGeomType();
+      propertyName = ((BBoxSpatialData)data).getGeometryPropertyName();
+      ((BBoxSpatialData)data).getGeomType();
     }
     if( innerConfigureComposite != null )
       innerConfigureComposite.dispose();
@@ -1107,7 +1107,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         final Object o = e.widget;
         if( o instanceof Button )
         {
-          final Button radio = (Button) o;
+          final Button radio = (Button)o;
           m_drawGeomSelection = radio.getSelection();
           if( m_drawGeomSelection )
             MessageDialog.openInformation( getShell(), Messages.getString( "org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialog.24" ), Messages.getString( "org.kalypso.ui.editor.styleeditor.dialogs.filterdialog.FilterDialog.25" ) ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -1134,7 +1134,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         final Object o = e.widget;
         if( o instanceof Button )
         {
-          final Button radio = (Button) o;
+          final Button radio = (Button)o;
           m_loadGeomSelection = radio.getSelection();
           if( m_loadGeomSelection )
           {
@@ -1143,7 +1143,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
             final int open = dialog.open();
             if( open == Window.OK )
             {
-              final IPath result = (IPath) dialog.getResult()[0];
+              final IPath result = (IPath)dialog.getResult()[0];
               // if( result.getFileExtension().equals( "shp" ) )
               // ;
               // if( result.getFileExtension().equals( "gml" ) )
@@ -1184,7 +1184,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         {
           addata = new BinarySpatialData();
           if( index >= 0 && index < items.length )
-            ((BinarySpatialData) addata).setGeometryPropertyName( items[index] );
+            ((BinarySpatialData)addata).setGeometryPropertyName( items[index] );
           ((BinarySpatialData)addata).setGeomType( GeometryFactory.createGM_Point( 120, 200, KalypsoDeegreePlugin.getDefault().getCoordinateSystem() ) );
         }
         else
@@ -1282,7 +1282,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         {
           getErrorLabel().setText( e1.getError().getFaultCode() );
           if( getCurrentNode().getData() != null )
-            featureIdText.setText( ((FeatureIDData) getCurrentNode().getData()).getFeatureId() );
+            featureIdText.setText( ((FeatureIDData)getCurrentNode().getData()).getFeatureId() );
         }
       }
 
@@ -1386,13 +1386,13 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
 
     if( data instanceof BinaryComparisonData )
     {
-      propertyName = ((BinaryComparisonData) data).getPropertyName();
-      literal = ((BinaryComparisonData) data).getLiteral();
+      propertyName = ((BinaryComparisonData)data).getPropertyName();
+      literal = ((BinaryComparisonData)data).getLiteral();
     }
     else if( data instanceof BinaryComparisonNumericData )
     {
-      propertyName = ((BinaryComparisonNumericData) data).getPropertyName();
-      literal = ((BinaryComparisonNumericData) data).getLiteral();
+      propertyName = ((BinaryComparisonNumericData)data).getPropertyName();
+      literal = ((BinaryComparisonNumericData)data).getLiteral();
     }
 
     if( innerConfigureComposite != null )
@@ -1427,7 +1427,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
       {
         if( ftp[i] instanceof IValuePropertyType )
         {
-          final IValuePropertyType vpt = (IValuePropertyType) ftp[i];
+          final IValuePropertyType vpt = (IValuePropertyType)ftp[i];
           final Class< ? > valueClass = vpt.getValueClass();
           if( valueClass == Double.class )
             labelStringItems.add( name );
@@ -1489,15 +1489,15 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         {
           addata = new BinaryComparisonData();
           if( index >= 0 && index < items.length )
-            ((BinaryComparisonData) addata).setPropertyName( items[index] );
-          ((BinaryComparisonData) addata).setLiteral( literalText.getText() );
+            ((BinaryComparisonData)addata).setPropertyName( items[index] );
+          ((BinaryComparisonData)addata).setLiteral( literalText.getText() );
         }
         else
         {
           addata = new BinaryComparisonNumericData();
           if( index >= 0 && index < items.length )
-            ((BinaryComparisonNumericData) addata).setPropertyName( items[index] );
-          ((BinaryComparisonNumericData) addata).setLiteral( literalText.getText() );
+            ((BinaryComparisonNumericData)addata).setPropertyName( items[index] );
+          ((BinaryComparisonNumericData)addata).setLiteral( literalText.getText() );
         }
 
         boolean validInput = false;
@@ -1517,9 +1517,9 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
           if( getCurrentNode().getData() != null )
           {
             if( subType == FilterDialogTreeNode.COMPARISON_EQUALTO )
-              literalText.setText( ((BinaryComparisonData) getCurrentNode().getData()).getLiteral() );
+              literalText.setText( ((BinaryComparisonData)getCurrentNode().getData()).getLiteral() );
             else
-              literalText.setText( ((BinaryComparisonNumericData) getCurrentNode().getData()).getLiteral() );
+              literalText.setText( ((BinaryComparisonNumericData)getCurrentNode().getData()).getLiteral() );
           }
         }
       }
@@ -1623,7 +1623,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
         {
           getErrorLabel().setText( e1.getError().getFaultCode() );
           if( getCurrentNode().getData() != null )
-            literalText.setText( ((LikeComparisonData) getCurrentNode().getData()).getLiteral() );
+            literalText.setText( ((LikeComparisonData)getCurrentNode().getData()).getLiteral() );
         }
       }
 
@@ -1668,7 +1668,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     {
       if( element instanceof IValuePropertyType )
       {
-        final IValuePropertyType vpt = (IValuePropertyType) element;
+        final IValuePropertyType vpt = (IValuePropertyType)element;
         final Class< ? > valueClass = vpt.getValueClass();
         final String name = element.getName();
         if( valueClass == Double.class )
@@ -1756,8 +1756,8 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
           getErrorLabel().setText( e1.getError().getFaultCode() );
           if( getCurrentNode().getData() != null )
           {
-            literalText.setText( ((BetweenComparisonData) getCurrentNode().getData()).getLower() );
-            literalText2.setText( ((BetweenComparisonData) getCurrentNode().getData()).getUpper() );
+            literalText.setText( ((BetweenComparisonData)getCurrentNode().getData()).getLower() );
+            literalText2.setText( ((BetweenComparisonData)getCurrentNode().getData()).getUpper() );
           }
         }
       }
@@ -1982,7 +1982,7 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
       if( listeners[i] == FilterDialogListener.class )
       {
         final FilterDialogEvent event = new FilterDialogEvent( this );
-        ((FilterDialogListener) listeners[i + 1]).filterUpdated( event );
+        ((FilterDialogListener)listeners[i + 1]).filterUpdated( event );
       }
     }
   }
@@ -2119,17 +2119,17 @@ public class FilterDialog extends Dialog implements ISelectionChangedListener
     {
       getErrorLabel().setText( "" ); //$NON-NLS-1$
       setFilterInvalid();
-      final IStructuredSelection selection = (IStructuredSelection) getM_viewer().getSelection();
+      final IStructuredSelection selection = (IStructuredSelection)getM_viewer().getSelection();
 
       if( selection != null )
       {
         final Object selectedElement = selection.getFirstElement();
-        final FilterDialogTreeNode node = (FilterDialogTreeNode) selectedElement;
+        final FilterDialogTreeNode node = (FilterDialogTreeNode)selectedElement;
         if( node.getType() == FilterDialogTreeNode.ROOT_TYPE )
         {
           final Object[] children = node.getChildren();
           for( final Object element : children )
-            node.removeNode( (FilterDialogTreeNode) element );
+            node.removeNode( (FilterDialogTreeNode)element );
           setCurrentNode( node );
         }
         else

@@ -47,8 +47,8 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -98,7 +98,7 @@ public class DirectoryFeatureDialog implements IFeatureDialog
     final DirectoryDialog dialog = new DirectoryDialog( shell );
     dialog.setMessage( Messages.getString( "org.kalypso.ogc.gml.featureview.dialog.DirectoryPropertyDialog.text" ) ); //$NON-NLS-1$
 
-    final File file = (File) m_feature.getProperty( m_ftp );
+    final File file = (File)m_feature.getProperty( m_ftp );
 
     if( file != null && file.exists() )
       dialog.setFilterPath( file.getAbsolutePath() );

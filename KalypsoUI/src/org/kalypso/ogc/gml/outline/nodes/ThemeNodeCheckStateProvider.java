@@ -53,7 +53,7 @@ public class ThemeNodeCheckStateProvider implements ICheckStateProvider
   @Override
   public boolean isChecked( final Object element )
   {
-    final IThemeNode node = (IThemeNode) element;
+    final IThemeNode node = (IThemeNode)element;
     return node.isChecked( node );
   }
 
@@ -63,7 +63,7 @@ public class ThemeNodeCheckStateProvider implements ICheckStateProvider
   @Override
   public boolean isGrayed( final Object element )
   {
-    final IThemeNode node = (IThemeNode) element;
+    final IThemeNode node = (IThemeNode)element;
     return node.isGrayed( node );
   }
 

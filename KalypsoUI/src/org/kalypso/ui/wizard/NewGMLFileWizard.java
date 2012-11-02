@@ -67,9 +67,9 @@ import org.eclipse.ui.ide.IDE;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot
@@ -119,7 +119,7 @@ public class NewGMLFileWizard extends Wizard implements INewWizard
         if( !resource.exists() || !(resource instanceof IContainer) )
           return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString( "org.kalypso.ui.wizard.NewGMLFileWizard.2", containerName ) ); //$NON-NLS-1$ 
 
-        final IContainer container = (IContainer) resource;
+        final IContainer container = (IContainer)resource;
         final IFile file = container.getFile( new Path( fileName ) );
 
         GmlSerializer.createGmlFile( featureType, file, new SubProgressMonitor( monitor, 2 ), null );
@@ -191,8 +191,7 @@ public class NewGMLFileWizard extends Wizard implements INewWizard
   }
 
   /**
-   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
-   *      org.eclipse.jface.viewers.IStructuredSelection)
+   * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench, org.eclipse.jface.viewers.IStructuredSelection)
    */
   @Override
   public void init( final IWorkbench workbench, final IStructuredSelection selection )

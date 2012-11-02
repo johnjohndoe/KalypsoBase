@@ -68,7 +68,7 @@ public class HandlesFactory
     if( collector == null )
       collector = new ArrayList<>();
     for( final Object feature : features )
-      createHandles( (Feature) feature, collector, envelope );
+      createHandles( (Feature)feature, collector, envelope );
     return collector;
   }
 
@@ -77,7 +77,7 @@ public class HandlesFactory
     final IValuePropertyType[] geometryProperties = feature.getFeatureType().getAllGeometryProperties();
     for( final IValuePropertyType propType : geometryProperties )
     {
-      final GM_Object geometry = (GM_Object) feature.getProperty( propType );
+      final GM_Object geometry = (GM_Object)feature.getProperty( propType );
       createHandles( feature, propType, geometry, collector, envelope );
     }
     return collector;
@@ -86,11 +86,11 @@ public class HandlesFactory
   private static void createHandles( final Feature feature, final IValuePropertyType propType, final GM_Object geometry, final List<Handle> collector, final GM_Envelope envelope )
   {
     if( geometry instanceof GM_Point )
-      createPointHandles( feature, propType, (GM_Point) geometry, collector, envelope );
+      createPointHandles( feature, propType, (GM_Point)geometry, collector, envelope );
     else if( geometry instanceof GM_Curve )
-      createCurveHandles( feature, propType, (GM_Curve) geometry, collector, envelope );
+      createCurveHandles( feature, propType, (GM_Curve)geometry, collector, envelope );
     else if( geometry instanceof GM_Polygon )
-      createSurfaceHandles( feature, propType, (GM_Polygon) geometry, collector, envelope );
+      createSurfaceHandles( feature, propType, (GM_Polygon)geometry, collector, envelope );
   }
 
   private static void createPointHandles( final Feature feature, final IValuePropertyType propType, final GM_Point point, final List<Handle> collector, final GM_Envelope envelope )

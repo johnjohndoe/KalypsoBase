@@ -77,7 +77,7 @@ public abstract class AbstractFeatureGeometeryWidget extends AbstractCreateGeome
       m_coordinatesSystem = mapModell.getCoordinatesSystem();
       m_projection = mapPanel.getProjection();
 
-      final IKalypsoFeatureTheme fTheme = (IKalypsoFeatureTheme) activeTheme;
+      final IKalypsoFeatureTheme fTheme = (IKalypsoFeatureTheme)activeTheme;
       m_featureToEdit = createFeatureToEdit( fTheme );
     }
   }

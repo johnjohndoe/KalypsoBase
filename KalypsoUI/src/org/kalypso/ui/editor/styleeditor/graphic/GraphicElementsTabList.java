@@ -76,7 +76,7 @@ public class GraphicElementsTabList extends AbstractTabList<Graphic>
     final Map<Object, IGraphicElementItem> oldItems = new IdentityHashMap<>();
     final ITabItem[] items = getItems();
     for( final ITabItem item : items )
-      oldItems.put( ((IGraphicElementItem) item).getElement(), (IGraphicElementItem) item );
+      oldItems.put( ((IGraphicElementItem)item).getElement(), (IGraphicElementItem)item );
 
     internalClear();
 
@@ -113,7 +113,7 @@ public class GraphicElementsTabList extends AbstractTabList<Graphic>
   @Override
   public void removeItem( final ITabItem item )
   {
-    final IGraphicElementItem elementItem = (IGraphicElementItem) item;
+    final IGraphicElementItem elementItem = (IGraphicElementItem)item;
 
     final Object element = elementItem.getElement();
 

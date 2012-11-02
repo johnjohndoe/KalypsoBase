@@ -101,24 +101,22 @@ public class XsdDateGuiTypeHandler extends XsdBaseGuiTypeHandler
   }
 
   /**
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureDialog(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypso.gmlschema.property.IPropertyType)
+   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureDialog(org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.IPropertyType)
    */
   @Override
   public IFeatureDialog createFeatureDialog( final Feature feature, final IPropertyType ftp )
   {
-    return new CalendarFeatureDialog( feature, (IValuePropertyType) ftp );
+    return new CalendarFeatureDialog( feature, (IValuePropertyType)ftp );
   }
 
   /**
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureviewControl(javax.xml.namespace.QName,
-   *      org.kalypso.template.featureview.ObjectFactory)
+   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureviewControl(javax.xml.namespace.QName, org.kalypso.template.featureview.ObjectFactory)
    */
   @Override
   public JAXBElement< ? extends ControlType> createFeatureviewControl( final IPropertyType property, final ObjectFactory factory )
   {
     // if we get a ClassCastException here, something is very wrong
-    final IValuePropertyType vpt = (IValuePropertyType) property;
+    final IValuePropertyType vpt = (IValuePropertyType)property;
 
     // Enumeration will get a Combo-Box
     final Map<Object, String> comboEntries = PropertyUtils.createComboEntries( vpt );

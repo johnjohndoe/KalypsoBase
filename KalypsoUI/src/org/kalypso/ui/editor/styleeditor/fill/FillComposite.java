@@ -68,9 +68,9 @@ import org.kalypso.commons.databinding.conversion.SwrToAwtColorConverter;
 import org.kalypso.commons.databinding.forms.DatabindingForm;
 import org.kalypso.contribs.eclipse.swt.ColorUtilities;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypso.ui.editor.styleeditor.preview.FillPreview;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.Fill;
 
 /**
@@ -146,7 +146,7 @@ public class FillComposite extends Composite
       public void mouseDown( final MouseEvent e )
       {
         final ColorDialog colorDialog = new ColorDialog( getShell() );
-        colorDialog.setRGB( ColorUtilities.toRGB( (Color) model.getValue() ) );
+        colorDialog.setRGB( ColorUtilities.toRGB( (Color)model.getValue() ) );
         final RGB chosenColor = colorDialog.open();
         if( chosenColor != null )
           model.setValue( ColorUtilities.toAwtColor( chosenColor ) );

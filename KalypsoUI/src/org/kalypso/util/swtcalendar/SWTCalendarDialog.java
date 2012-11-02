@@ -48,7 +48,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.vafada.swtcalendar.SWTCalendar;
 
 /**
@@ -73,7 +73,7 @@ public class SWTCalendarDialog extends Dialog
   @Override
   protected Control createDialogArea( final Composite parent )
   {
-    final Composite panel = (Composite) super.createDialogArea( parent );
+    final Composite panel = (Composite)super.createDialogArea( parent );
 
     panel.getShell().setText( Messages.getString( "org.kalypso.util.swtcalendar.SWTCalendarDialog.0" ) ); //$NON-NLS-1$
 

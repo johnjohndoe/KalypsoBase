@@ -42,9 +42,9 @@ package org.kalypso.ogc.sensor.view.actions;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.kalypso.i18n.Messages;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.container.IRepositoryContainer;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author Dirk Kuch

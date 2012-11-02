@@ -48,8 +48,7 @@ import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
- * Replacement for {@link IExtensionsFeatureControlFactory}, that allow the feature control to use the
- * {@link FormToolkit} used by the feature view.
+ * Replacement for {@link IExtensionsFeatureControlFactory}, that allow the feature control to use the {@link FormToolkit} used by the feature view.
  * 
  * @author Gernot Belger
  */

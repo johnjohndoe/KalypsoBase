@@ -108,7 +108,7 @@ public class DictionaryCatalogTest extends Assert
     assertEquals( "Pool should have one object pooled at this point", 1, infos.length ); //$NON-NLS-1$
 
     // pool is working on the workspace of the feature
-    final CommandableWorkspace cw = (CommandableWorkspace) infos[0].getObject();
+    final CommandableWorkspace cw = (CommandableWorkspace)infos[0].getObject();
     assertEquals( cw.getWorkspace(), entry.getWorkspace() );
 
     getCatalog().releaseEntry( entry );

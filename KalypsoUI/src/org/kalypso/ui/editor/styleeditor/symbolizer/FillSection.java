@@ -75,8 +75,7 @@ class FillSection extends AbstractStyleElementSection<PolygonSymbolizer, Fill, F
   @Override
   protected StyleElementAction<PolygonSymbolizer>[] createActions( final IStyleInput<PolygonSymbolizer> input )
   {
-    @SuppressWarnings("unchecked")
-    final StyleElementAction<PolygonSymbolizer>[] actions = new StyleElementAction[2];
+    @SuppressWarnings( "unchecked" ) final StyleElementAction<PolygonSymbolizer>[] actions = new StyleElementAction[2];
     actions[0] = new FillAddAction( input );
     actions[1] = new FillRemoveAction( input );
     return actions;

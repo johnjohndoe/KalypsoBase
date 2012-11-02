@@ -27,7 +27,6 @@ import org.eclipse.ui.menus.UIElement;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
@@ -35,6 +34,7 @@ import org.kalypso.ogc.gml.mapmodel.MapModellHelper;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.osgi.framework.Bundle;
 
 /**
@@ -70,7 +70,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IElementUpda
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final IEvaluationContext applicationContext = (IEvaluationContext) event.getApplicationContext();
+    final IEvaluationContext applicationContext = (IEvaluationContext)event.getApplicationContext();
     applicationContext.getVariable( ISources.ACTIVE_EDITOR_ID_NAME );
 
     final String widgetFromEvent = event.getParameter( PARAM_WIDGET_CLASS );
@@ -97,7 +97,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IElementUpda
     }
 
     /* Set the map of all parameter, in case there are additional parameter. */
-    widget.setParameter( (Map<String, String>) m_parameter );
+    widget.setParameter( (Map<String, String>)m_parameter );
 
     final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( applicationContext );
     if( mapPanel == null )
@@ -154,7 +154,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IElementUpda
     if( m_widgetTooltipFromExtension != null )
       element.setTooltip( m_widgetTooltipFromExtension );
 
-    final IHandlerService handlerService = (IHandlerService) element.getServiceLocator().getService( IHandlerService.class );
+    final IHandlerService handlerService = (IHandlerService)element.getServiceLocator().getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
     final IMapPanel mapPanel = MapHandlerUtils.getMapPanel( context );
     if( mapPanel != null )
@@ -182,11 +182,11 @@ public class SelectWidgetHandler extends AbstractHandler implements IElementUpda
   {
     if( data != null && data instanceof Map< ? , ? > )
     {
-      final Map< ? , ? > parameterMap = (Map< ? , ? >) data;
-      m_pluginIdFromExtension = (String) parameterMap.get( PARAM_PLUGIN_ID );
-      m_widgetClassFromExtension = (String) parameterMap.get( PARAM_WIDGET_CLASS );
-      m_widgetIconFromExtension = (String) parameterMap.get( PARAM_WIDGET_ICON );
-      m_widgetTooltipFromExtension = (String) parameterMap.get( PARAM_WIDGET_TOOLTIP );
+      final Map< ? , ? > parameterMap = (Map< ? , ? >)data;
+      m_pluginIdFromExtension = (String)parameterMap.get( PARAM_PLUGIN_ID );
+      m_widgetClassFromExtension = (String)parameterMap.get( PARAM_WIDGET_CLASS );
+      m_widgetIconFromExtension = (String)parameterMap.get( PARAM_WIDGET_ICON );
+      m_widgetTooltipFromExtension = (String)parameterMap.get( PARAM_WIDGET_TOOLTIP );
 
       /* Store the map of all parameter, in case there are additional parameter. */
       m_parameter = parameterMap;
@@ -211,14 +211,14 @@ public class SelectWidgetHandler extends AbstractHandler implements IElementUpda
 
     final IWorkbenchPart activePart = page.getActivePart();
     if( activePart instanceof AbstractMapPart )
-      return (AbstractMapPart) activePart;
+      return (AbstractMapPart)activePart;
 
     final IViewReference[] viewReferences = page.getViewReferences();
     for( final IViewReference viewReference : viewReferences )
     {
       final IWorkbenchPart part = viewReference.getView( false );
       if( part instanceof AbstractMapPart )
-        return (AbstractMapPart) part;
+        return (AbstractMapPart)part;
     }
 
     final IEditorReference[] editorReferences = page.getEditorReferences();
@@ -226,7 +226,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IElementUpda
     {
       final IWorkbenchPart part = editorReference.getEditor( false );
       if( part instanceof AbstractMapPart )
-        return (AbstractMapPart) part;
+        return (AbstractMapPart)part;
     }
 
     return null;
@@ -242,7 +242,7 @@ public class SelectWidgetHandler extends AbstractHandler implements IElementUpda
     try
     {
       final Bundle bundle = Platform.getBundle( pluginId );
-      final Class<IWidget> widgetClass = (Class<IWidget>) bundle.loadClass( widgetName );
+      final Class<IWidget> widgetClass = (Class<IWidget>)bundle.loadClass( widgetName );
       return widgetClass.newInstance();
     }
     catch( final Exception e )

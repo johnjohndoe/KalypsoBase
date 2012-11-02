@@ -51,8 +51,8 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.kalypso.contribs.eclipse.jface.viewers.SelectionProviderAdapter;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.mapeditor.views.StyleEditorViewPart;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -65,9 +65,9 @@ public class OpenStyleDialogHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
-    final IStructuredSelection selection = (IStructuredSelection) context.getVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME );
+    final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
+    final IWorkbenchWindow window = (IWorkbenchWindow)context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
+    final IStructuredSelection selection = (IStructuredSelection)context.getVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME );
 
     try
     {
@@ -75,7 +75,7 @@ public class OpenStyleDialogHandler extends AbstractHandler
       // Might be an ErrorView instead
       if( view instanceof StyleEditorViewPart )
       {
-        final StyleEditorViewPart part = (StyleEditorViewPart) view; //$NON-NLS-1$
+        final StyleEditorViewPart part = (StyleEditorViewPart)view; //$NON-NLS-1$
         part.selectionChanged( new SelectionChangedEvent( new SelectionProviderAdapter(), selection ) );
       }
     }

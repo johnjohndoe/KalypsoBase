@@ -53,7 +53,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.i18n.Messages;
 import org.kalypso.jts.JTSUtilities;
 import org.kalypso.jts.SnapUtilities.SNAP_TYPE;
 import org.kalypso.ogc.gml.command.FeatureChange;
@@ -67,6 +66,7 @@ import org.kalypso.ogc.gml.map.widgets.advanced.edit.IAdvancedEditWidgetResult;
 import org.kalypso.ogc.gml.map.widgets.advanced.utils.GeometryPainter;
 import org.kalypso.ogc.gml.map.widgets.advanced.utils.IPointHighLighter;
 import org.kalypso.ui.KalypsoUIDebug;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -127,7 +127,7 @@ public class AdvancedEditModePointInsertDelegate implements IAdvancedEditWidgetD
     try
     {
       // highligth existing points
-      final Point jtsPoint = (Point) JTSAdapter.export( gmp );
+      final Point jtsPoint = (Point)JTSAdapter.export( gmp );
 
       final Feature[] features = m_provider.query( gmp, getRange() );
       if( ArrayUtils.isEmpty( features ) )
@@ -159,7 +159,7 @@ public class AdvancedEditModePointInsertDelegate implements IAdvancedEditWidgetD
           /* debug */
           for( final IAdvancedEditWidgetResult result : m_lastPossibleVertexPoints )
           {
-            final Polygon geometry = (Polygon) m_provider.resolveJtsGeometry( result.getFeature() );
+            final Polygon geometry = (Polygon)m_provider.resolveJtsGeometry( result.getFeature() );
             GeometryPainter.drawPolygon( m_widget.getIMapPanel(), g, geometry, new Color( 255, 255, 255 ), new Color( 0xa3, 0xc3, 0xc9, 0x80 ) );
           }
         }
@@ -179,7 +179,7 @@ public class AdvancedEditModePointInsertDelegate implements IAdvancedEditWidgetD
     if( !(possible.getGeometry() instanceof Point) )
       return new IAdvancedEditWidgetResult[] {};
 
-    final Point snapped = (Point) possible.getGeometry();
+    final Point snapped = (Point)possible.getGeometry();
 
     final Set<IAdvancedEditWidgetResult> results = new HashSet<>();
 
@@ -192,7 +192,7 @@ public class AdvancedEditModePointInsertDelegate implements IAdvancedEditWidgetD
         continue;
       }
 
-      final Polygon polygon = (Polygon) geometry;
+      final Polygon polygon = (Polygon)geometry;
       final LineString ring = polygon.getExteriorRing();
 
       final Point resnapped = MapUtilities.snap( ring, snapped, SNAP_TYPE.SNAP_TO_LINE, getRange() );
@@ -217,7 +217,7 @@ public class AdvancedEditModePointInsertDelegate implements IAdvancedEditWidgetD
     if( !(geometry instanceof Polygon) )
       throw new UnsupportedOperationException();
 
-    final Polygon polygon = (Polygon) geometry;
+    final Polygon polygon = (Polygon)geometry;
     final LineString ring = polygon.getExteriorRing();
 
     final Point snapped = MapUtilities.snap( ring, underlying.getCurrentPoint(), SNAP_TYPE.SNAP_TO_LINE, getRange() );
@@ -254,10 +254,10 @@ public class AdvancedEditModePointInsertDelegate implements IAdvancedEditWidgetD
       {
         try
         {
-          final Polygon polygon = (Polygon) geometry;
+          final Polygon polygon = (Polygon)geometry;
           final LineString ring = polygon.getExteriorRing();
 
-          final Point add = (Point) result.getGeometry();
+          final Point add = (Point)result.getGeometry();
           final List<Point> points = new ArrayList<>();
           points.add( add );
 

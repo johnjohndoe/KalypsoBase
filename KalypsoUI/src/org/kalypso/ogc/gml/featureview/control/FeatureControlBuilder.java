@@ -65,7 +65,6 @@ import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.featureview.control.composite.CompositeFeatureControlFactory;
 import org.kalypso.ogc.gml.featureview.control.composite.IFeatureCompositionControl;
 import org.kalypso.ogc.gml.featureview.control.composite.IFeatureCompositionControlFactory;
@@ -96,6 +95,7 @@ import org.kalypso.template.featureview.TupleResult;
 import org.kalypso.template.featureview.ValidatorLabelType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.KalypsoUIDebug;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.filterencoding.Operation;
@@ -107,9 +107,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * Wrapper around the ControlType that extracts all basic stuff from the
- * {@link org.kalypso.template.featureview.ControlType} definition.
- *
+ * Wrapper around the ControlType that extracts all basic stuff from the {@link org.kalypso.template.featureview.ControlType} definition.
+ * 
  * @author Gernot Belger
  */
 public class FeatureControlBuilder
@@ -205,7 +204,7 @@ public class FeatureControlBuilder
 
     if( control instanceof Composite )
     {
-      final Composite panel = (Composite) control;
+      final Composite panel = (Composite)control;
 
       if( panel instanceof Section )
         return;
@@ -244,10 +243,10 @@ public class FeatureControlBuilder
     final Object backgroundColor = m_controlType.getBackgroundColor();
 
     if( backgroundColor instanceof String )
-      return ((String) backgroundColor).trim();
+      return ((String)backgroundColor).trim();
 
     if( backgroundColor instanceof Node )
-      return XMLTools.getStringValue( (Node) backgroundColor );
+      return XMLTools.getStringValue( (Node)backgroundColor );
 
     return null;
   }
@@ -304,10 +303,10 @@ public class FeatureControlBuilder
   private QName findPropertyName( )
   {
     if( m_controlType instanceof PropertyControlType )
-      return ((PropertyControlType) m_controlType).getProperty();
+      return ((PropertyControlType)m_controlType).getProperty();
 
     if( m_controlType instanceof CompositeType )
-      return ((CompositeType) m_controlType).getProperty();
+      return ((CompositeType)m_controlType).getProperty();
 
     return null;
   }
@@ -338,13 +337,13 @@ public class FeatureControlBuilder
   private IFeatureCompositionControlFactory createCompositionFactory( )
   {
     if( m_controlType instanceof CompositeType )
-      return new CompositeFeatureControlFactory( (CompositeType) m_controlType );
+      return new CompositeFeatureControlFactory( (CompositeType)m_controlType );
 
     if( m_controlType instanceof TabFolder )
-      return new TablFolderCompositionFactory( (TabFolder) m_controlType );
+      return new TablFolderCompositionFactory( (TabFolder)m_controlType );
 
     if( m_controlType instanceof org.kalypso.template.featureview.Section )
-      return new SectionCompositionFactory( (org.kalypso.template.featureview.Section) m_controlType );
+      return new SectionCompositionFactory( (org.kalypso.template.featureview.Section)m_controlType );
 
     return null;
   }
@@ -479,7 +478,7 @@ public class FeatureControlBuilder
 
     if( layoutDataType instanceof GridDataType )
     {
-      final GridDataType gridDataType = (GridDataType) layoutDataType;
+      final GridDataType gridDataType = (GridDataType)layoutDataType;
       final GridData gridData = new GridData();
 
       gridData.grabExcessHorizontalSpace = gridDataType.isGrabExcessHorizontalSpace();
@@ -524,19 +523,19 @@ public class FeatureControlBuilder
     try
     {
       if( operationElement instanceof String )
-        return Boolean.parseBoolean( (String) operationElement );
+        return Boolean.parseBoolean( (String)operationElement );
       else if( operationElement instanceof Element )
       {
         KalypsoUIDebug.FEATUREVIEW_OPERATIONS.printf( String.format( "Found operation: %s%nfor feature: %s%n", operationElement, feature ) ); //$NON-NLS-1$
 
-        final Element element = (Element) operationElement;
+        final Element element = (Element)operationElement;
         final NodeList childNodes = element.getChildNodes();
         for( int i = 0; i < childNodes.getLength(); i++ )
         {
           final Node item = childNodes.item( i );
           if( item instanceof Element )
           {
-            final Operation operation = AbstractOperation.buildFromDOM( (Element) item );
+            final Operation operation = AbstractOperation.buildFromDOM( (Element)item );
             final Boolean value = operation.evaluate( feature );
             final boolean result = value == null ? false : value.booleanValue();
 

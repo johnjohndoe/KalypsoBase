@@ -49,10 +49,10 @@ import org.kalypso.gmlschema.annotation.AnnotationUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.template.featureview.Checkbox;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
@@ -64,7 +64,7 @@ public class CheckboxFeatureControlFactory implements IFeatureControlFactory
   @Override
   public IFeatureControl createFeatureControl( final IFeatureComposite parentComposite, final Feature feature, final IPropertyType pt, final ControlType controlType, final IAnnotation annotation )
   {
-    final Checkbox checkboxType = (Checkbox) controlType;
+    final Checkbox checkboxType = (Checkbox)controlType;
 
     final String checkboxControlText = checkboxType.getText();
 
@@ -72,13 +72,13 @@ public class CheckboxFeatureControlFactory implements IFeatureControlFactory
 
     final String text = AnnotationUtilities.getAnnotation( annotation, translatedCheckboxText, IAnnotation.ANNO_LABEL );
 
-    final IValuePropertyType vpt = (IValuePropertyType) pt;
+    final IValuePropertyType vpt = (IValuePropertyType)pt;
 
     // TODO: this check should be made for (almost) all feature controls
     if( vpt == null )
     {
       final QName property = checkboxType.getProperty();
-      final String message = String.format( Messages.getString("CheckboxFeatureControlFactory_0"), property ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "CheckboxFeatureControlFactory_0" ), property ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), message );
       return new StatusFeatureControl( status );
     }

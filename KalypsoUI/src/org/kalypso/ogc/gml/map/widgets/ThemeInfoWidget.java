@@ -51,9 +51,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.ui.views.contentoutline.ContentOutline;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -84,8 +84,7 @@ public class ThemeInfoWidget extends AbstractThemeInfoWidget
   }
 
   /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.map.MapPanel)
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget, org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
@@ -129,7 +128,7 @@ public class ThemeInfoWidget extends AbstractThemeInfoWidget
   {
     final List<IKalypsoTheme> themes = new ArrayList<>();
 
-    final IStructuredSelection sel = (IStructuredSelection) selection;
+    final IStructuredSelection sel = (IStructuredSelection)selection;
     final Object[] selectedElements = sel.toArray();
     for( final Object object : selectedElements )
     {
@@ -144,12 +143,12 @@ public class ThemeInfoWidget extends AbstractThemeInfoWidget
   private IKalypsoTheme findTheme( final Object object )
   {
     if( object instanceof IKalypsoTheme )
-      return (IKalypsoTheme) object;
+      return (IKalypsoTheme)object;
 
     if( object instanceof IAdaptable )
     {
-      final IAdaptable adapable = (IAdaptable) object;
-      final IKalypsoTheme theme = (IKalypsoTheme) adapable.getAdapter( IKalypsoTheme.class );
+      final IAdaptable adapable = (IAdaptable)object;
+      final IKalypsoTheme theme = (IKalypsoTheme)adapable.getAdapter( IKalypsoTheme.class );
       if( theme != null )
         return theme;
     }

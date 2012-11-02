@@ -233,7 +233,7 @@ public class TableFeatureControl extends AbstractToolbarFeatureControl implement
     }
 
     if( m_templateTarget instanceof JobExclusiveCommandTarget )
-      ((JobExclusiveCommandTarget) m_templateTarget).dispose();
+      ((JobExclusiveCommandTarget)m_templateTarget).dispose();
 
     super.dispose();
   }
@@ -314,7 +314,7 @@ public class TableFeatureControl extends AbstractToolbarFeatureControl implement
   {
     if( ftp instanceof IValuePropertyType )
     {
-      final IValuePropertyType vpt = (IValuePropertyType) ftp;
+      final IValuePropertyType vpt = (IValuePropertyType)ftp;
       final Class< ? > valueClass = vpt.getValueClass();
       if( Number.class.isAssignableFrom( valueClass ) )
         return SWT.RIGHT;
@@ -333,13 +333,13 @@ public class TableFeatureControl extends AbstractToolbarFeatureControl implement
     for( final KeyInfo keyInfo : infos )
     {
       final Object object = keyInfo.getObject();
-      if( object instanceof CommandableWorkspace && ((CommandableWorkspace) object).getWorkspace() == workspace )
-        return (CommandableWorkspace) object;
+      if( object instanceof CommandableWorkspace && ((CommandableWorkspace)object).getWorkspace() == workspace )
+        return (CommandableWorkspace)object;
     }
 
     final CommandableWorkspace commandable;
     if( workspace instanceof CommandableWorkspace )
-      commandable = (CommandableWorkspace) workspace;
+      commandable = (CommandableWorkspace)workspace;
     else
       commandable = new CommandableWorkspace( workspace );
     return commandable;
@@ -361,7 +361,7 @@ public class TableFeatureControl extends AbstractToolbarFeatureControl implement
 
   /**
    * createFeatureControl
-   *
+   * 
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#isValid()
    */
   @Override
@@ -411,7 +411,7 @@ public class TableFeatureControl extends AbstractToolbarFeatureControl implement
             event.widget = control;
             final ModifyEvent me = new ModifyEvent( event );
             for( final Object element : m_listeners )
-              ((ModifyListener) element).modifyText( me );
+              ((ModifyListener)element).modifyText( me );
 
           }
         } );
@@ -430,7 +430,7 @@ public class TableFeatureControl extends AbstractToolbarFeatureControl implement
   @Override
   public IRelationType getFeatureTypeProperty( )
   {
-    return (IRelationType) super.getFeatureTypeProperty();
+    return (IRelationType)super.getFeatureTypeProperty();
   }
 
   public void execute( final ICommand command )

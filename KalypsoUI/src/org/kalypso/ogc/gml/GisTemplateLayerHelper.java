@@ -100,7 +100,7 @@ public final class GisTemplateLayerHelper
     themeFactory.configureLayer( theme, id, bbox, srsName, layer, monitor );
 
     if( layer instanceof CascadingLayer )
-      return TemplateUtilities.OF_GISMAPVIEW.createCascadingLayer( (CascadingLayer) layer );
+      return TemplateUtilities.OF_GISMAPVIEW.createCascadingLayer( (CascadingLayer)layer );
 
     return TemplateUtilities.OF_GISMAPVIEW.createLayer( layer );
   }

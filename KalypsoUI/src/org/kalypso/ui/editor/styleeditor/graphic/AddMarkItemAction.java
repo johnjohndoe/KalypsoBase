@@ -69,7 +69,7 @@ public class AddMarkItemAction extends Action
   @Override
   public void runWithEvent( final Event event )
   {
-    final GraphicElementsTabList list = (GraphicElementsTabList) m_tabViewer.getInput();
+    final GraphicElementsTabList list = (GraphicElementsTabList)m_tabViewer.getInput();
 
     final ITabItem item = list.addNewMark();
     if( item != null )

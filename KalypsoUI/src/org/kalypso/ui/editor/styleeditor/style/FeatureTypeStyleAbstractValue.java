@@ -64,8 +64,7 @@ public class FeatureTypeStyleAbstractValue extends InputWithContextObservableVal
   }
 
   /**
-   * @see org.kalypso.ui.editor.styleeditor.forms.InputWithContextObservableValue#setValueToInput(java.lang.Object,
-   *      java.lang.Object)
+   * @see org.kalypso.ui.editor.styleeditor.forms.InputWithContextObservableValue#setValueToInput(java.lang.Object, java.lang.Object)
    */
   @Override
   protected void setValueToInput( final FeatureTypeStyle data, final String value )

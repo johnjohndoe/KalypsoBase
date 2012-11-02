@@ -42,10 +42,10 @@ package org.kalypso.ogc.sensor.tableview;
 
 import java.util.Set;
 
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.provider.IObsProvider;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * A column for an observation table view. It is based on a key axis and a value axis.

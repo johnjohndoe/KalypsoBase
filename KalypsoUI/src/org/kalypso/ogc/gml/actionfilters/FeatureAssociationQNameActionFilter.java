@@ -81,7 +81,7 @@ public class FeatureAssociationQNameActionFilter implements IActionFilterEx
     if( !(target instanceof FeatureAssociationTypeElement) )
       return false;
 
-    final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement) target;
+    final FeatureAssociationTypeElement fate = (FeatureAssociationTypeElement)target;
     final IRelationType fateRT = fate.getPropertyType();
     final IFeatureType featureType = fateRT.getTargetFeatureType();
 

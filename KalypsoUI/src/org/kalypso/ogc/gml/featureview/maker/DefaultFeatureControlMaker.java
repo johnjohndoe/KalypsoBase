@@ -52,16 +52,16 @@ import org.kalypso.gmlschema.annotation.DefaultAnnotation;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.template.featureview.ControlType;
 import org.kalypso.template.featureview.GridDataType;
 import org.kalypso.template.featureview.LayoutType;
 import org.kalypso.template.featureview.Text;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Control maker for the default feature properties. Replaces the old DefaultControlMaker.
- *
+ * 
  * @author Gernot Belger
  */
 public class DefaultFeatureControlMaker extends AbstractValueControlMaker
@@ -80,8 +80,8 @@ public class DefaultFeatureControlMaker extends AbstractValueControlMaker
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.maker.AbstractValueControlMaker#addControls(java.util.List,
-   *      org.kalypso.template.featureview.LayoutType, org.kalypso.gmlschema.property.IPropertyType, java.lang.Object)
+   * @see org.kalypso.ogc.gml.featureview.maker.AbstractValueControlMaker#addControls(java.util.List, org.kalypso.template.featureview.LayoutType, org.kalypso.gmlschema.property.IPropertyType,
+   *      java.lang.Object)
    */
   @Override
   public boolean addControls( final List<JAXBElement< ? extends ControlType>> controlList, final LayoutType parentLayout, final IFeatureType ft, final IPropertyType pt, final Feature feature ) throws AbortCreationException

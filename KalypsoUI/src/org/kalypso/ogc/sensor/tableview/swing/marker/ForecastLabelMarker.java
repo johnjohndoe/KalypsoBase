@@ -80,7 +80,7 @@ public class ForecastLabelMarker implements ILabelMarker
     if( !(value instanceof Date) )
       return false;
 
-    final Date date = (Date) value;
+    final Date date = (Date)value;
     // Check if date lies within ]from, to]
     return m_dra.getFrom().compareTo( date ) < 0 && m_dra.getTo().compareTo( date ) >= 0;
   }
@@ -116,7 +116,7 @@ public class ForecastLabelMarker implements ILabelMarker
     if( !(o instanceof ForecastLabelMarker) )
       return -1;
 
-    return m_dra.compareTo( ((ForecastLabelMarker) o).m_dra );
+    return m_dra.compareTo( ((ForecastLabelMarker)o).m_dra );
   }
 
   /**

@@ -51,14 +51,14 @@ import org.eclipse.core.runtime.IPath;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.PathUtils;
 import org.kalypso.contribs.java.net.UrlResolverSingleton;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * Utility methods for working with ObsView objects
- *
+ * 
  * @author belger
  * @author schlienger
  */
@@ -66,7 +66,7 @@ public final class ObsViewUtils
 {
   private ObsViewUtils( )
   {
-    throw new UnsupportedOperationException( Messages.getString("ObsViewUtils_0") ); //$NON-NLS-1$
+    throw new UnsupportedOperationException( Messages.getString( "ObsViewUtils_0" ) ); //$NON-NLS-1$
   }
 
   /**

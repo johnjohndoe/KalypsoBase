@@ -53,7 +53,7 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * A hyperlink that opens the image location in the external browser.
- *
+ * 
  * @author Gernot Belger
  */
 public class ImageExternalBrowserFeatureControl extends AbstractImageFeatureControl

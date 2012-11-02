@@ -49,7 +49,7 @@ import org.kalypso.ogc.sensor.template.ObsViewItem;
 
 /**
  * This class contains utility functions.
- *
+ * 
  * @author Holger Albert
  */
 public class ExportUtilities
@@ -63,7 +63,7 @@ public class ExportUtilities
 
   /**
    * This function extracts the station IDs from all items and generates a ;-seperated list.
-   *
+   * 
    * @param items
    *          The observation view items.
    * @param index

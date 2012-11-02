@@ -61,7 +61,7 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * {@link org.eclipse.ui.IViewPart} implementation that shows a .gft file.
- *
+ * 
  * @author Gernot Belger
  */
 public class GttViewPart extends AbstractWorkbenchPart implements IViewPart
@@ -88,7 +88,7 @@ public class GttViewPart extends AbstractWorkbenchPart implements IViewPart
   @Override
   public IViewSite getViewSite( )
   {
-    return (IViewSite) getSite();
+    return (IViewSite)getSite();
   }
 
   @Override

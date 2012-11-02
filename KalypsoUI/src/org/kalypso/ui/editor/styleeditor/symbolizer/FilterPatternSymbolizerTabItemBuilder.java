@@ -74,14 +74,14 @@ public class FilterPatternSymbolizerTabItemBuilder
   {
     final Symbolizer symbolizer = input.getData();
     if( symbolizer instanceof PolygonSymbolizer )
-      return new FilterPatternPolygonSymbolizerLayout( toolkit, parent, (IStyleInput<PolygonSymbolizer>) input, ruleCollection, symbolizerIndex );
+      return new FilterPatternPolygonSymbolizerLayout( toolkit, parent, (IStyleInput<PolygonSymbolizer>)input, ruleCollection, symbolizerIndex );
 
     if( symbolizer instanceof PointSymbolizer )
-      return new FilterPatternPointSymbolizerLayout( toolkit, parent, (IStyleInput<PointSymbolizer>) input, ruleCollection, symbolizerIndex );
+      return new FilterPatternPointSymbolizerLayout( toolkit, parent, (IStyleInput<PointSymbolizer>)input, ruleCollection, symbolizerIndex );
 
     if( symbolizer instanceof LineSymbolizer )
-      return new FilterPatternLineSymbolizerLayout( toolkit, parent, (IStyleInput<LineSymbolizer>) input, ruleCollection, symbolizerIndex );
+      return new FilterPatternLineSymbolizerLayout( toolkit, parent, (IStyleInput<LineSymbolizer>)input, ruleCollection, symbolizerIndex );
 
-    return new SymbolizerComposite( toolkit, parent, (IStyleInput<Symbolizer>) input );
+    return new SymbolizerComposite( toolkit, parent, (IStyleInput<Symbolizer>)input );
   }
 }

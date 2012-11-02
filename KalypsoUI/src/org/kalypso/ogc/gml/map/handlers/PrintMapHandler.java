@@ -64,9 +64,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.swt.awt.ImageConverter;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -79,12 +79,12 @@ public class PrintMapHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
     final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
     final IMapModell mapModell = MapHandlerUtils.getMapModellChecked( context );
     final String mapName = mapModell.getName().getValue();
 
-    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final Shell shell = (Shell)context.getVariable( ISources.ACTIVE_SHELL_NAME );
     final PrintDialog printDialog = new PrintDialog( shell );
     final PrinterData printerData = printDialog.open();
     if( printerData == null )
@@ -171,19 +171,19 @@ public class PrintMapHandler extends AbstractHandler
   {
     final Rectangle targetRect = new Rectangle( destRect.x + insets.x, destRect.y + insets.y, destRect.width - 2 * insets.x, destRect.height - 2 * insets.y );
 
-    final double scaleX = (double) targetRect.width / (double) sourceRect.width;
-    final double scaleY = (double) targetRect.height / (double) sourceRect.height;
+    final double scaleX = (double)targetRect.width / (double)sourceRect.width;
+    final double scaleY = (double)targetRect.height / (double)sourceRect.height;
 
     // Scale: scale both with same ratio, so both fit into the client
     if( scaleX < scaleY )
     {
-      targetRect.width = (int) (sourceRect.width * scaleX); // should equal clientRect.width
-      targetRect.height = (int) (sourceRect.height * scaleX);
+      targetRect.width = (int)(sourceRect.width * scaleX); // should equal clientRect.width
+      targetRect.height = (int)(sourceRect.height * scaleX);
     }
     else
     {
-      targetRect.width = (int) (sourceRect.width * scaleY);
-      targetRect.height = (int) (sourceRect.height * scaleY); // should equal clientArea.height
+      targetRect.width = (int)(sourceRect.width * scaleY);
+      targetRect.height = (int)(sourceRect.height * scaleY); // should equal clientArea.height
     }
 
     // Centre

@@ -58,8 +58,7 @@ public abstract class FeatureChangeAdapter implements IFeatureChangeListener
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.IFeatureChangeListener#openFeatureRequested(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypso.gmlschema.property.IPropertyType)
+   * @see org.kalypso.ogc.gml.featureview.IFeatureChangeListener#openFeatureRequested(org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.IPropertyType)
    */
   @Override
   public void openFeatureRequested( final Feature feature, final IPropertyType pt )

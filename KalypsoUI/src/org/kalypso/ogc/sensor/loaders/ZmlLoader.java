@@ -52,17 +52,17 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.KeyInfo;
 import org.kalypso.core.util.pool.ResourcePool;
-import org.kalypso.i18n.Messages;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.event.IObservationListener;
 import org.kalypso.ogc.sensor.event.ObservationChangeType;
 import org.kalypso.ogc.sensor.zml.ZmlFactory;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * A specific loader for ZML-Files. Loads <code>ZmlObservation</code> objects.
- *
+ * 
  * @author schlienger
  */
 public class ZmlLoader extends AbstractLoader
@@ -125,7 +125,7 @@ public class ZmlLoader extends AbstractLoader
       if( file == null )
         throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.loaders.ZmlLoader.2" ) + url ); //$NON-NLS-1$
 
-      ZmlFactory.writeToFile( (IObservation) data, file );
+      ZmlFactory.writeToFile( (IObservation)data, file );
     }
     catch( final Throwable e ) // generic exception caught for simplicity
     {
@@ -159,7 +159,7 @@ public class ZmlLoader extends AbstractLoader
   @Override
   public void release( final Object object )
   {
-    final IObservation obs = (IObservation) object;
+    final IObservation obs = (IObservation)object;
     obs.removeListener( m_observationListener );
   }
 

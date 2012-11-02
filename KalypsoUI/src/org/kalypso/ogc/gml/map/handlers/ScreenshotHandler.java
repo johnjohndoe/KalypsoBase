@@ -77,10 +77,10 @@ public class ScreenshotHandler extends AbstractHandler
     try
     {
       /* Get the evaluation context. */
-      final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+      final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
 
       /* Get the shell. */
-      final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+      final Shell shell = (Shell)context.getVariable( ISources.ACTIVE_SHELL_NAME );
 
       /* Get the map panel. */
       final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );

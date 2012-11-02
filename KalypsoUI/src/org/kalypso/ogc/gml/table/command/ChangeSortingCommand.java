@@ -42,10 +42,10 @@ package org.kalypso.ogc.gml.table.command;
 
 import org.eclipse.swt.widgets.TableColumn;
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.table.IColumnDescriptor;
 import org.kalypso.ogc.gml.table.LayerTableSorter;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author gernot
@@ -70,7 +70,7 @@ public class ChangeSortingCommand implements ICommand
 
     final IColumnDescriptor column = LayerTableViewer.getDescriptor( tableColumn );
 
-    m_sorter = (LayerTableSorter) m_viewer.getSorter();
+    m_sorter = (LayerTableSorter)m_viewer.getSorter();
     // TODO: check if sorting is supported at all
 
     m_oldSortColumn = m_sorter.getColumn();

@@ -83,7 +83,7 @@ public class StyleInput<DATA> implements IStyleInput<DATA>
     if( obj.getClass() != getClass() )
       return false;
 
-    final StyleInput< ? > other = (StyleInput< ? >) obj;
+    final StyleInput< ? > other = (StyleInput< ? >)obj;
 
     return new EqualsBuilder().append( getData(), other.getData() ).isEquals();
   }

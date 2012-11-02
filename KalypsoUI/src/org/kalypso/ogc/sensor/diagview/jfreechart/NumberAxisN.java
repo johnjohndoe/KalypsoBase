@@ -80,7 +80,7 @@ public class NumberAxisN extends NumberAxis
 
     if( plot instanceof ValueAxisPlot )
     {
-      final ValueAxisPlot vap = (ValueAxisPlot) plot;
+      final ValueAxisPlot vap = (ValueAxisPlot)plot;
 
       Range r = vap.getDataRange( this );
       if( r == null )

@@ -4,9 +4,9 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.kalypso.commons.eclipse.jface.viewers.ITabItem;
 import org.kalypso.commons.eclipse.jface.viewers.TabViewer;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -30,7 +30,7 @@ public final class AddRuleItemAction extends Action
   @Override
   public void run( )
   {
-    final RuleOrPatternCollection list = (RuleOrPatternCollection) m_tabViewer.getInput();
+    final RuleOrPatternCollection list = (RuleOrPatternCollection)m_tabViewer.getInput();
 
     final ITabItem item = list.addNewItem();
     m_tabViewer.setSelection( new StructuredSelection( item ) );

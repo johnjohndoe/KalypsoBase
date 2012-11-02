@@ -187,7 +187,7 @@ public class RulePatternInputPanel
             errorDialog.showError();
           }
           // restrict editor to 35 steps
-          else if( (int) Math.ceil( (t_max - t_min) / t_step ) > 35 )
+          else if( (int)Math.ceil( (t_max - t_min) / t_step ) > 35 )
           {
             new StyleEditorErrorDialog( getComposite().getShell(), MessageBundle.STYLE_EDITOR_REMARK, MessageBundle.STYLE_EDITOR_PATTERN_LIMIT ).showError();
           }
@@ -251,7 +251,7 @@ public class RulePatternInputPanel
       if( listeners[i] == PanelListener.class )
       {
         final PanelEvent event = new PanelEvent( this );
-        ((PanelListener) listeners[i + 1]).valueChanged( event );
+        ((PanelListener)listeners[i + 1]).valueChanged( event );
       }
     }
   }

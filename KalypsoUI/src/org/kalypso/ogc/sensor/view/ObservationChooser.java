@@ -63,7 +63,7 @@ import org.kalypso.ui.repository.view.RepositoryTreeContentProvider;
 
 /**
  * A view that allows the user to choose an observation within a tree of repositories
- *
+ * 
  * @author schlienger (19.05.2005)
  */
 public class ObservationChooser extends AbstractViewer
@@ -92,7 +92,7 @@ public class ObservationChooser extends AbstractViewer
 
   protected void onTreeDoubleClick( final DoubleClickEvent event )
   {
-    final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+    final IStructuredSelection selection = (IStructuredSelection)event.getSelection();
     final Object firstElement = selection.getFirstElement();
     if( firstElement != null )
     {
@@ -110,14 +110,14 @@ public class ObservationChooser extends AbstractViewer
 
   public IObservation isObservationSelected( final ISelection selection )
   {
-    final IStructuredSelection sel = (IStructuredSelection) selection;
+    final IStructuredSelection sel = (IStructuredSelection)selection;
     if( sel.isEmpty() )
       return null;
 
     final Object element = sel.getFirstElement();
     if( element instanceof IAdaptable )
     {
-      final IObservation obs = (IObservation) ((IAdaptable) element).getAdapter( IObservation.class );
+      final IObservation obs = (IObservation)((IAdaptable)element).getAdapter( IObservation.class );
 
       return obs;
     }
@@ -131,7 +131,7 @@ public class ObservationChooser extends AbstractViewer
    */
   public IRepository isRepository( final ISelection selection )
   {
-    final IStructuredSelection sel = (IStructuredSelection) selection;
+    final IStructuredSelection sel = (IStructuredSelection)selection;
     if( sel.isEmpty() )
       return null;
 
@@ -139,7 +139,7 @@ public class ObservationChooser extends AbstractViewer
     if( !(element instanceof IRepository) )
       return null;
 
-    return (IRepository) element;
+    return (IRepository)element;
   }
 
   public TreeViewer getViewer( )
@@ -195,10 +195,10 @@ public class ObservationChooser extends AbstractViewer
     final ISelection selection = getSelection();
     if( selection instanceof IStructuredSelection )
     {
-      final IStructuredSelection structSel = (IStructuredSelection) selection;
+      final IStructuredSelection structSel = (IStructuredSelection)selection;
       final Object element = structSel.getFirstElement();
       if( element instanceof IRepositoryItem )
-        return (IRepositoryItem) element;
+        return (IRepositoryItem)element;
     }
 
     return null;

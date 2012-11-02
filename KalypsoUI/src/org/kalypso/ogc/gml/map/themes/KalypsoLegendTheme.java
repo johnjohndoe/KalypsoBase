@@ -58,7 +58,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.swt.awt.ImageConverter;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.ThemeUtilities;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
@@ -66,12 +65,13 @@ import org.kalypso.ogc.gml.outline.nodes.NodeFactory;
 import org.kalypso.ogc.gml.outline.nodes.NodeLegendBuilder;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypso.util.themes.legend.LegendUtilities;
 import org.kalypso.util.themes.position.PositionUtilities;
 
 /**
  * The legend theme is able to display available legends for all or a subset of themes in a map.
- *
+ * 
  * @author Andreas Doemming (original)
  * @author Holger Albert (modifications)
  */
@@ -115,8 +115,8 @@ public class KalypsoLegendTheme extends AbstractImageTheme
     try
     {
       /* Monitor. */
-      monitor.beginTask( Messages.getString("KalypsoLegendTheme_0"), 1000 ); //$NON-NLS-1$
-      monitor.subTask( Messages.getString("KalypsoLegendTheme_1") ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "KalypsoLegendTheme_0" ), 1000 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "KalypsoLegendTheme_1" ) ); //$NON-NLS-1$
 
       /* Initialize properties. */
       initFromProperties();
@@ -127,7 +127,7 @@ public class KalypsoLegendTheme extends AbstractImageTheme
 
       /* Monitor. */
       monitor.worked( 250 );
-      monitor.subTask( Messages.getString("KalypsoLegendTheme_2") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "KalypsoLegendTheme_2" ) ); //$NON-NLS-1$
 
       /* Create the legend. */
       final SubProgressMonitor subMonitor = new SubProgressMonitor( monitor, 250 );
@@ -147,7 +147,7 @@ public class KalypsoLegendTheme extends AbstractImageTheme
         return null;
 
       /* Monitor. */
-      monitor.subTask( Messages.getString("KalypsoLegendTheme_3") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "KalypsoLegendTheme_3" ) ); //$NON-NLS-1$
 
       /* Convert to an AWT image. */
       final BufferedImage awtImage = ImageConverter.convertToAWT( image[0].getImageData() );
@@ -159,10 +159,10 @@ public class KalypsoLegendTheme extends AbstractImageTheme
 
       /* Monitor. */
       monitor.worked( 250 );
-      monitor.subTask( Messages.getString("KalypsoLegendTheme_4") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "KalypsoLegendTheme_4" ) ); //$NON-NLS-1$
 
       /* Draw a border in the AWT image. */
-      final Graphics2D graphics = (Graphics2D) awtImage.getGraphics();
+      final Graphics2D graphics = (Graphics2D)awtImage.getGraphics();
       graphics.setColor( Color.BLACK );
       graphics.setStroke( new BasicStroke( 2.0f ) );
       graphics.drawRect( 0, 0, awtImage.getWidth(), awtImage.getHeight() );

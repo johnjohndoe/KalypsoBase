@@ -48,8 +48,8 @@ import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
@@ -109,7 +109,7 @@ public class BooleanModifier extends AbstractFeatureModifier
   @Override
   public Image getImage( final Feature f )
   {
-    final Boolean b = (Boolean) getProperty( f );
+    final Boolean b = (Boolean)getProperty( f );
     if( b == null || !b.booleanValue() )
     {
       if( m_uncheckedImage == null )

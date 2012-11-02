@@ -57,7 +57,7 @@ import org.kalypso.observation.result.TupleResult;
 /**
  * Default implementation of {@link IComponentUiHandlerProvider}.<br/>
  * Creates columns for all components of the given observation according to its types.
- *
+ * 
  * @author Gernot Belger
  */
 public class DefaultComponentUiHandlerProvider implements IComponentUiHandlerProvider
@@ -68,7 +68,7 @@ public class DefaultComponentUiHandlerProvider implements IComponentUiHandlerPro
     final Map<Integer, IComponentUiHandler> result = new LinkedHashMap<>();
 
     final IComponent[] components = tupleResult.getComponents();
-    final int widthPercent = components.length == 0 ? 100 : (int) (100.0 / components.length);
+    final int widthPercent = components.length == 0 ? 100 : (int)(100.0 / components.length);
 
     for( int i = 0; i < components.length; i++ )
     {

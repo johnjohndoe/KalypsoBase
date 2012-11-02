@@ -61,7 +61,7 @@ public class SelfIntersectionValidation
   {
     if( geometry instanceof Polygon )
     {
-      final Polygon polygon = (Polygon) geometry;
+      final Polygon polygon = (Polygon)geometry;
       Coordinate[] coordinates = polygon.getCoordinates();
       coordinates = ArrayUtils.remove( coordinates, coordinates.length - 1 );
 
@@ -69,7 +69,7 @@ public class SelfIntersectionValidation
       return isValid( lineString );
     }
     else if( geometry instanceof LineString )
-      return isValid( (LineString) geometry );
+      return isValid( (LineString)geometry );
 
     throw new UnsupportedOperationException();
   }

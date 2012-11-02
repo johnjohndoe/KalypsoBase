@@ -70,7 +70,6 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.IExportableObjectFactory;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
@@ -85,6 +84,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractWorkbenchPart;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -92,7 +92,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 /**
  * Abstract superclass for map editor and map view. Inherits from AbstractEditorPart for editor behavior (save when
  * dirty, command target). Based on the old {@link GisMapEditor} implementation.
- *
+ * 
  * @author Stefan Kurzbach
  */
 public abstract class AbstractMapPart extends AbstractWorkbenchPart implements IMapPanelProvider

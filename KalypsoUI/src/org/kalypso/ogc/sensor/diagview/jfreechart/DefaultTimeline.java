@@ -15,7 +15,7 @@ public class DefaultTimeline implements Timeline, Serializable
 {
   /**
    * Converts a millisecond into a timeline value.
-   *
+   * 
    * @param millisecond
    *          the millisecond.
    * @return The timeline value.
@@ -28,7 +28,7 @@ public class DefaultTimeline implements Timeline, Serializable
 
   /**
    * Converts a date into a timeline value.
-   *
+   * 
    * @param date
    *          the domain value.
    * @return The timeline value.
@@ -41,7 +41,7 @@ public class DefaultTimeline implements Timeline, Serializable
 
   /**
    * Converts a timeline value into a millisecond (as encoded by java.util.Date).
-   *
+   * 
    * @param value
    *          the value.
    * @return The millisecond.
@@ -54,7 +54,7 @@ public class DefaultTimeline implements Timeline, Serializable
 
   /**
    * Returns <code>true</code> if the timeline includes the specified domain value.
-   *
+   * 
    * @param millisecond
    *          the millisecond.
    * @return <code>true</code>.
@@ -67,7 +67,7 @@ public class DefaultTimeline implements Timeline, Serializable
 
   /**
    * Returns <code>true</code> if the timeline includes the specified domain value.
-   *
+   * 
    * @param date
    *          the date.
    * @return <code>true</code>.
@@ -80,7 +80,7 @@ public class DefaultTimeline implements Timeline, Serializable
 
   /**
    * Returns <code>true</code> if the timeline includes the specified domain value range.
-   *
+   * 
    * @param from
    *          the start value.
    * @param to
@@ -95,7 +95,7 @@ public class DefaultTimeline implements Timeline, Serializable
 
   /**
    * Returns <code>true</code> if the timeline includes the specified domain value range.
-   *
+   * 
    * @param from
    *          the start date.
    * @param to
@@ -118,7 +118,7 @@ public class DefaultTimeline implements Timeline, Serializable
 
   /**
    * Tests an object for equality with this instance.
-   *
+   * 
    * @param object
    *          the object.
    * @return A boolean.

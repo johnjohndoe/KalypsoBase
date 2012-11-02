@@ -53,8 +53,8 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.kalypso.contribs.eclipse.jface.wizard.IUpdateable;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
 import org.kalypso.contribs.eclipse.swt.widgets.SectionUtils;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * Helper that controls the presence of a sub-element of a style element.<br>
@@ -133,7 +133,7 @@ public abstract class AbstractStyleElementSection<ELEMENT, ITEM, ITEMCONTROL>
   {
     final ToolBarManager toolbar = SectionUtils.createSectionToolbar( m_section );
     for( final IUpdateable action : m_actions )
-      toolbar.add( (IAction) action );
+      toolbar.add( (IAction)action );
     toolbar.update( true );
     return toolbar;
   }
@@ -178,7 +178,7 @@ public abstract class AbstractStyleElementSection<ELEMENT, ITEM, ITEMCONTROL>
     if( item == null )
     {
       m_itemControl = null;
-      getToolkit().createLabel( m_contentPanel, String.format( Messages.getString("AbstractStyleElementSection_0"), getTitle() ) ); //$NON-NLS-1$
+      getToolkit().createLabel( m_contentPanel, String.format( Messages.getString( "AbstractStyleElementSection_0" ), getTitle() ) ); //$NON-NLS-1$
     }
     else
       m_itemControl = createItemControl( m_contentPanel, item );

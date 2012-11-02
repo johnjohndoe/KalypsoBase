@@ -48,7 +48,6 @@ import java.util.logging.Logger;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.PoolableObjectWaiter;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationTokenHelper;
@@ -59,6 +58,7 @@ import org.kalypso.ogc.sensor.provider.PooledObsProvider;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.template.obstableview.TypeColumn;
 import org.kalypso.template.obstableview.TypeObservation;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * A TableViewColumnXMLLoader wraps an IObservation. It can provide a TableViewColumn for each value axis of the
@@ -85,13 +85,12 @@ public class TableViewColumnXMLLoader extends PoolableObjectWaiter
   }
 
   /**
-   * @see org.kalypso.util.pool.PoolableObjectWaiter#objectLoaded(org.kalypso.util.pool.IPoolableObjectType,
-   *      java.lang.Object)
+   * @see org.kalypso.util.pool.PoolableObjectWaiter#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object)
    */
   @Override
   protected void objectLoaded( final IPoolableObjectType key, final Object newValue )
   {
-    final IObservation obs = (IObservation) newValue;
+    final IObservation obs = (IObservation)newValue;
 
     final IAxis[] keyAxes = ObservationUtilities.findAxesByKey( obs.getAxes() );
     if( keyAxes.length == 0 )
@@ -99,14 +98,14 @@ public class TableViewColumnXMLLoader extends PoolableObjectWaiter
 
     final IAxis keyAxis = keyAxes[0];
 
-    final TypeObservation xmlObs = (TypeObservation) m_data[1];
-    final TableView tableView = (TableView) m_data[0];
+    final TypeObservation xmlObs = (TypeObservation)m_data[1];
+    final TableView tableView = (TableView)m_data[0];
 
     final List ignoreTypeList = tableView.getIgnoreTypesAsList();
 
     for( final Object element : xmlObs.getColumn() )
     {
-      final TypeColumn tcol = (TypeColumn) element;
+      final TypeColumn tcol = (TypeColumn)element;
 
       try
       {
@@ -118,7 +117,7 @@ public class TableViewColumnXMLLoader extends PoolableObjectWaiter
           final String name = ObservationTokenHelper.replaceTokens( colName, obs, valueAxis );
           final String format = tcol.getFormat() != null ? tcol.getFormat() : TimeseriesUtils.getDefaultFormatString( valueAxis.getType() );
 
-          final IObsProvider provider = isSynchron() ? (IObsProvider) new PlainObsProvider( obs, null ) : new PooledObsProvider( key );
+          final IObsProvider provider = isSynchron() ? (IObsProvider)new PlainObsProvider( obs, null ) : new PooledObsProvider( key );
           final TableViewColumn column = new TableViewColumn( tableView, provider, name, tcol.isEditable(), tcol.getWidth(), keyAxis, valueAxis, format, m_columnPosition );
 
           tableView.addItem( column );

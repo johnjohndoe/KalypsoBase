@@ -49,7 +49,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
 
-
 /**
  * Loads image in background and returns a missing image until the real image is loaded.<br/>
  * TODO: move to more common place or use an existing solution
