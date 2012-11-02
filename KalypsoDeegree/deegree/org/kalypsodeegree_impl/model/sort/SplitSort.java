@@ -55,7 +55,7 @@ import com.infomatiq.jsi.Rectangle;
 public class SplitSort extends AbstractFeatureList
 {
   /* Items of this list */
-  private final List<Object> m_items = new ArrayList<>();
+  protected final List<Object> m_items = new ArrayList<>();
 
   /**
    * (Geo-)index for this FeatureList. Lazy instantiated for memory reasons, small list (and those that never query
@@ -90,61 +90,86 @@ public class SplitSort extends AbstractFeatureList
   // IMPLEMENTATION OF LIST INTERFACE
 
   @Override
-  public synchronized boolean add( final Object object )
+  public synchronized boolean add( final Object item )
   {
-    checkCanAdd( 1 );
-    createItem( object, size() );
-    final boolean result = m_items.add( object );
-    return result;
+    add( size(), item );
+    return true;
   }
 
   @Override
-  public synchronized void add( final int index, final Object object )
+  public synchronized void add( final int index, final Object item )
   {
     checkCanAdd( 1 );
 
-    if( m_index != null )
-      m_index.reindex( index, 1 );
+    final int numIndexShifts = m_items.size() - index;
+    if( m_index != null && numIndexShifts > 0 )
+    {
+      final TIntArrayList oldIndices = new TIntArrayList( numIndexShifts );
+      final TIntArrayList newIndices = new TIntArrayList( numIndexShifts );
+      for( int i = index; i < m_items.size(); i++ )
+      {
+        oldIndices.add( i );
+        newIndices.add( i + 1 );
+      }
+      m_index.reindex( oldIndices, newIndices );
+    }
 
-    createItem( object, index );
-    m_items.add( index, object );
+    createItem( item, index );
+    m_items.add( index, item );
+
+    if( m_index != null )
+      m_index.assertSize();
   }
 
   @Override
   public synchronized boolean addAll( final int index, final Collection c )
   {
-    checkCanAdd( c.size() );
+    final int newItemCount = c.size();
+    checkCanAdd( newItemCount );
 
     if( m_index != null )
-      m_index.reindex( index, c.size() );
+    {
+      final TIntArrayList oldIndices = new TIntArrayList( m_items.size() - index );
+      final TIntArrayList newIndices = new TIntArrayList( m_items.size() - index );
+      for( int i = index; i < m_items.size(); i++ )
+      {
+        oldIndices.add( i );
+        newIndices.add( i + newItemCount );
+      }
+      m_index.reindex( oldIndices, newIndices );
+    }
 
     final int count = 0;
     for( final Object object : c )
       createItem( object, index + count );
 
     final boolean result = m_items.addAll( index, c );
+
+    if( m_index != null )
+      m_index.assertSize();
+
     return result;
   }
 
   @Override
-  public synchronized Object set( final int index, final Object newObject )
+  public synchronized Object set( final int index, final Object item )
   {
     final Object oldItem = m_items.get( index );
 
     removeItem( oldItem, index );
-    createItem( newObject, index );
-    m_items.set( index, newObject );
-    return oldItem;
+    createItem( item, index );
+
+    return m_items.set( index, item );
   }
 
-  private void removeItem( final Object data, final int index )
+  protected void removeItem( final Object item, final int index )
   {
     if( m_index != null )
-      m_index.remove( index, data );
+      m_index.remove( index, item );
 
     // REMARK: it is a bit unclear what happens if we have a real Feature (not a link) multiple times in the same list.
     // We only unregister the it if the last occurrence is removed, assuming, that the feature is really no longer used.
-    unregisterFeature( data );
+    unregisterFeature( item );
   }
 
   @Override
@@ -160,13 +185,7 @@ public class SplitSort extends AbstractFeatureList
     if( index == -1 )
       return false;
 
-    final Object item = m_items.get( index );
-    removeItem( item, index );
-
-    if( m_index != null )
-      m_index.reindex( index + 1, -1 );
-
-    m_items.remove( index );
+    remove( index );
     return true;
   }
 
@@ -174,75 +193,108 @@ public class SplitSort extends AbstractFeatureList
   public synchronized Object remove( final int index )
   {
     final Object item = m_items.get( index );
+
     removeItem( item, index );
 
-    if( m_index != null )
-      m_index.reindex( index + 1, -1 );
+    final int numIndexShifts = m_items.size() - index;
+    if( m_index != null && numIndexShifts > 0 )
+    {
+      final TIntArrayList oldIndices = new TIntArrayList( numIndexShifts );
+      final TIntArrayList newIndices = new TIntArrayList( numIndexShifts );
+      for( int i = index + 1; i < m_items.size(); i++ )
+      {
+        oldIndices.add( i );
+        newIndices.add( i - 1 );
+      }
+      m_index.reindex( oldIndices, newIndices );
+    }
 
-    // REMARK: remove AFTER reindex, the specialized reindex method for one element needs this
     m_items.remove( index );
 
-    return item;
+    if( m_index != null )
+      m_index.assertSize();
+
+    return true;
   }
 
   @Override
   public synchronized boolean removeAll( final Collection c )
   {
-    final TIntArrayList indices = new TIntArrayList( c.size() );
-
-    for( final Object object : c )
+    final TIntArrayList removedItemIndices = new TIntArrayList( c.size() );
+    for( final ListIterator<Object> listIterator = m_items.listIterator(); listIterator.hasNext(); )
     {
-      final int index = indexOf( object );
-      if( index != -1 )
-      {
-        indices.add( index + 1 ); // reindex starting one after removed element
-        removeItem( object, index );
-      }
+      final int index = listIterator.nextIndex();
+      final Object object = listIterator.next();
+      if( c.contains( object ) )
+        removedItemIndices.add( index );
     }
-    indices.sort();
-
-    final int[] startIndices = indices.toNativeArray();
+    // sort indices in ascending order
+    removedItemIndices.sort();
 
     // build array of all shifts
-    final int startIndex = startIndices[0]; // smallest index
-    final int numIndexShifts = m_items.size() - startIndex;
-    final int[] indexShifts = new int[numIndexShifts];
-    // loop from startIndex (i=0) to m_itemEnvelopes.size()-1 (i=numIndexShifts-1)
-    for( int j = 0, i = 0; i < numIndexShifts; i++ )
+    final int removeCount = removedItemIndices.size();
+    if( removeCount == 0 )
+      return false;
+
+    // remove all items from index and workspace
+    removedItemIndices.forEach( new TIntProcedure()
     {
-      if( j < (startIndices.length - 1) && i + startIndex >= startIndices[j + 1] )
-        j++; // advance to next index
-      indexShifts[i] = -1 * (j + 1);
+
+      @Override
+      public boolean execute( final int index )
+      {
+        final Object item = m_items.get( index );
+        removeItem( item, index );
+        return true;
+      }
+    } );
+
+    // reindex
+    final int firstIndex = removedItemIndices.get( 0 ); // smallest index of a removed item
+    final int numIndexShifts = m_items.size() - firstIndex - removeCount + 1;
+
+    if( numIndexShifts > 0 )
+    {
+      final TIntArrayList oldIndices = new TIntArrayList( numIndexShifts );
+      final TIntArrayList newIndices = new TIntArrayList( numIndexShifts );
+      int j = firstIndex; // new index for remaining items
+      // loop from the item after the first removed item to end of list
+      for( int i = firstIndex + 1; i < m_items.size(); i++ )
+      {
+        if( removedItemIndices.contains( i ) )
+          continue;
+        oldIndices.add( i );
+        newIndices.add( j++ ); // the new indices will be in consecutive order
+      }
+
+      if( m_index != null )
+        m_index.reindex( oldIndices, newIndices );
     }
 
-    if( m_index != null )
-      m_index.reindex( startIndex, indexShifts );
-
-    // remove all items
-    // correct startIndices by - 1 to find the indices of items to be removed
-    if( startIndices[startIndices.length - 1] - startIndices[0] == startIndices.length - 1 )
+    // delete items
+    // find out if this is a contiguous set of removed items
+    final int lastIndex = removedItemIndices.get( removeCount - 1 ); // largest index of a removed item
+    if( lastIndex - firstIndex == removeCount - 1 )
     {
       // optimization for deleting a range of items
-      m_items.subList( startIndices[0] - 1, startIndices[startIndices.length - 1] ).clear();
+      m_items.subList( firstIndex, lastIndex + 1 ).clear();
     }
     else
     {
-      final ListIterator<Object> listIterator = m_items.listIterator( startIndices[0] - 1 );
-      int i = 0; // loop over startIndices
-      while( listIterator.hasNext() )
-      {
-        if( listIterator.nextIndex() < startIndices[i] - i - 1 )
-          continue;
-        // this is the item at startIndices[i] - 1
-        listIterator.next();
-        listIterator.remove();
-        i++;
-      }
-    } // else
-//      m_items.remove( startIndices[0] - 1 );
-//      for( int i = 1; i < startIndices.length; i++ )
-//        m_items.remove( startIndices[i] - i - 1 );
-    return !indices.isEmpty();
+      int countRemoved = 0; // loop over all items and remove those in the list of indices, corrected by the number of items already removed
+      for( final ListIterator<Object> listIterator = m_items.listIterator( firstIndex ); listIterator.hasNext() && countRemoved < removeCount; listIterator.next() )
+        if( listIterator.nextIndex() > removedItemIndices.get( countRemoved ) - countRemoved )
+        {
+          // this is the item to be removed
+          listIterator.remove();
+          countRemoved++;
+        }
+    }
+
+    if( m_index != null )
+      m_index.assertSize();
+
+    return !removedItemIndices.isEmpty();
   }
 
   @Override
