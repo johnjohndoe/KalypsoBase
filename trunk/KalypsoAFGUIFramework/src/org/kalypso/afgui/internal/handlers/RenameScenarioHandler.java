@@ -46,6 +46,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.afgui.handlers.AddScenarioHandler;
+import org.kalypso.afgui.internal.i18n.Messages;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 
@@ -69,7 +70,7 @@ public class RenameScenarioHandler extends AbstractHandler
     final IScenario scenario = AddScenarioHandler.findScenario( event );
     if( scenario == null )
     {
-      final String message = "Please select a scenario to rename.";
+      final String message = Messages.getString("RenameScenarioHandler_0"); //$NON-NLS-1$
       return showInformation( shell, commandName, message );
     }
 
@@ -77,28 +78,28 @@ public class RenameScenarioHandler extends AbstractHandler
     final IScenario currentCase = ScenarioHelper.getActiveScenario();
     if( currentCase == scenario )
     {
-      final String message = "Unable to rename active scenario. Please activate another scenario before renaming.";
+      final String message = Messages.getString("RenameScenarioHandler_1"); //$NON-NLS-1$
       return showInformation( shell, commandName, message );
     }
 
     final IScenario parentScenario = scenario.getParentScenario();
     if( parentScenario == null )
     {
-      final String message = "Unable to rename base scenario.";
+      final String message = Messages.getString("RenameScenarioHandler_2"); //$NON-NLS-1$
       showInformation( shell, commandName, message );
       return null;
     }
 
     if( currentCase != null && ScenarioHelper.isSubScenario( scenario, currentCase ) )
     {
-      final String message = "Cannot rename scenario while a sub-scenario is active. Please activate another scenario before renaming.";
+      final String message = Messages.getString("RenameScenarioHandler_3"); //$NON-NLS-1$
       return showInformation( shell, commandName, message );
     }
 
     final IScenarioList derivedScenarios = scenario.getDerivedScenarios();
     if( derivedScenarios != null && derivedScenarios.getScenarios().size() > 0 )
     {
-      final String message = "Cannot rename scenario with sub-scenarios.";
+      final String message = Messages.getString("RenameScenarioHandler_4"); //$NON-NLS-1$
       return showInformation( shell, commandName, message );
     }
 

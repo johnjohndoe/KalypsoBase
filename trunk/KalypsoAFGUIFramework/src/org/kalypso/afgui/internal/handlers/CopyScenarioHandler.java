@@ -46,6 +46,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.afgui.handlers.AddScenarioHandler;
+import org.kalypso.afgui.internal.i18n.Messages;
 import org.kalypso.afgui.scenarios.ScenarioHelper;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 
@@ -68,7 +69,7 @@ public class CopyScenarioHandler extends AbstractHandler
     final IScenario scenario = AddScenarioHandler.findScenario( event );
     if( scenario == null )
     {
-      final String message = "Please select a scenario to copy.";
+      final String message = Messages.getString("CopyScenarioHandler_0"); //$NON-NLS-1$
       return showInformation( shell, commandName, message );
     }
 
@@ -76,14 +77,14 @@ public class CopyScenarioHandler extends AbstractHandler
     final IScenario currentCase = ScenarioHelper.getActiveScenario();
     if( currentCase == scenario )
     {
-      final String message = "Unable to copy active scenario. Please activate another scenario before copying.";
+      final String message = Messages.getString("CopyScenarioHandler_1"); //$NON-NLS-1$
       return showInformation( shell, commandName, message );
     }
 
     final IScenario parentScenario = scenario.getParentScenario();
     if( parentScenario == null )
     {
-      final String message = "Unable to copy base scenario.";
+      final String message = Messages.getString("CopyScenarioHandler_2"); //$NON-NLS-1$
       showInformation( shell, commandName, message );
       return null;
     }

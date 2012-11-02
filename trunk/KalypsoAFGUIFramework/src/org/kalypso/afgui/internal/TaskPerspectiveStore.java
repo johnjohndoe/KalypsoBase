@@ -243,7 +243,7 @@ class TaskPerspectiveStore
   private String getFilename( final ITask task )
   {
     final String uri = task.getURI();
-    return uri + "_persp.xml";
+    return uri + "_persp.xml"; //$NON-NLS-1$
   }
 
   private File getUserArea( )

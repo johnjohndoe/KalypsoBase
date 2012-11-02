@@ -45,6 +45,7 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -53,6 +54,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
+import org.kalypso.afgui.internal.i18n.Messages;
 import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
 import org.kalypso.module.IKalypsoModule;
@@ -82,7 +84,8 @@ public class ProjectConversionWizard extends NewProjectWizard
   // FIXME the module should know the project template
   public ProjectConversionWizard( final String moduleID, final String projectTemplate )
   {
-    super( new ProjectTemplatePage( "Projektvorlage", "Bitte wählen Sie, welche Projektvorlage verwendet werden soll", projectTemplate ), false, moduleID );
+    super( new ProjectTemplatePage( StringUtils.EMPTY, StringUtils.EMPTY, projectTemplate ), false, moduleID );
+    // REMARK: empty strings, as we know that now template chooser page is shown
 
     m_moduleID = moduleID;
 
@@ -107,7 +110,7 @@ public class ProjectConversionWizard extends NewProjectWizard
   {
     super.addPages();
 
-    m_conversionPage = new ProjectConversionPage( "conversionPage", m_moduleID );
+    m_conversionPage = new ProjectConversionPage( "conversionPage", m_moduleID ); //$NON-NLS-1$
 
     addPage( m_conversionPage ); //$NON-NLS-1$
 
@@ -128,7 +131,7 @@ public class ProjectConversionWizard extends NewProjectWizard
   @Override
   public IStatus postCreateProject( final IProject project, final ProjectTemplate template, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "Project conversion", 100 );
+    monitor.beginTask( Messages.getString("ProjectConversionWizard_1"), 100 ); //$NON-NLS-1$
 
     if( m_handler != null )
       m_handler.postCreateProject( project, template, new SubProgressMonitor( monitor, 10 ) );
@@ -164,7 +167,7 @@ public class ProjectConversionWizard extends NewProjectWizard
     {
       e.printStackTrace();
       final Throwable targetException = e.getTargetException();
-      return new Status( IStatus.ERROR, KalypsoAFGUIFrameworkPlugin.PLUGIN_ID, "Unexpected error during project conversion", targetException );
+      return new Status( IStatus.ERROR, KalypsoAFGUIFrameworkPlugin.PLUGIN_ID, Messages.getString("ProjectConversionWizard_2"), targetException ); //$NON-NLS-1$
     }
     catch( final InterruptedException e )
     {

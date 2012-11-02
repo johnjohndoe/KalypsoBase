@@ -44,7 +44,6 @@ import javax.xml.namespace.QName;
 
 import org.eclipse.core.runtime.Assert;
 import org.kalypso.afgui.KalypsoAFGUIFrameworkPlugin;
-import org.kalypso.afgui.internal.i18n.Messages;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.GMLSchemaException;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
@@ -61,11 +60,9 @@ import de.renew.workflow.connector.cases.IScenarioDataProvider;
 
 /**
  * TODO: most of the methods should be moved into {@link FeatureHelper}.
- *
  * Holds utility methods
- *
+ * 
  * @author Patrice Congo
- *
  */
 public class Util
 {
@@ -75,9 +72,9 @@ public class Util
     {
       final IScenarioDataProvider caseDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       if( caseDataProvider instanceof ICommandPoster )
-        return ((ICommandPoster) caseDataProvider).getCommandableWorkSpace( modelClass.getName() );
+        return ((ICommandPoster)caseDataProvider).getCommandableWorkSpace( modelClass.getName() );
       else
-        throw new RuntimeException( Messages.getString( "org.kalypso.afgui.model.Util.0" ) ); //$NON-NLS-1$
+        throw new RuntimeException( "Unable to find command poster" ); //$NON-NLS-1$
     }
     catch( final Throwable th )
     {
@@ -92,9 +89,9 @@ public class Util
     {
       final IScenarioDataProvider caseDataProvider = KalypsoAFGUIFrameworkPlugin.getDataProvider();
       if( caseDataProvider instanceof ICommandPoster )
-        ((ICommandPoster) caseDataProvider).postCommand( modelClass.getName(), command );
+        ((ICommandPoster)caseDataProvider).postCommand( modelClass.getName(), command );
       else
-        throw new RuntimeException( Messages.getString( "org.kalypso.afgui.model.Util.1" ) ); //$NON-NLS-1$
+        throw new RuntimeException( "Unable to find command poster" ); //$NON-NLS-1$
     }
     catch( final Throwable th )
     {
@@ -122,8 +119,8 @@ public class Util
 
   public static final Feature createFeatureAsProperty( final Feature parentFeature, final QName propQName, final QName featureQName, final Object[] featureProperties, final QName[] featurePropQNames ) throws IllegalArgumentException
   {
-    Assert.isNotNull( propQName, Messages.getString( "org.kalypso.afgui.model.Util.19" ) ); //$NON-NLS-1$
-    Assert.isNotNull( parentFeature, Messages.getString( "org.kalypso.afgui.model.Util.20" ) ); //$NON-NLS-1$
+    Assert.isNotNull( propQName, "Argument propQName must not be null" ); //$NON-NLS-1$
+    Assert.isNotNull( parentFeature, "Argument roughnessCollection must not be null" ); //$NON-NLS-1$
 
     try
     {
@@ -138,7 +135,7 @@ public class Util
       {
         final GMLWorkspace workspace = parentFeature.getWorkspace();
         final IFeatureType newFeatureType = GMLSchemaUtilities.getFeatureTypeQuiet( featureQName );
-        final Feature feature = workspace.createFeature( parentFeature, (IRelationType) property, newFeatureType );
+        final Feature feature = workspace.createFeature( parentFeature, (IRelationType)property, newFeatureType );
         for( int i = featureProperties.length - 1; i >= 0; i-- )
         {
           feature.setProperty( featurePropQNames[i], featureProperties[i] );
@@ -151,7 +148,8 @@ public class Util
     }
     catch( final GMLSchemaException ex )
     {
-      throw new IllegalArgumentException( Messages.getString( "org.kalypso.afgui.model.Util.21" ) + propQName + Messages.getString( "org.kalypso.afgui.model.Util.22" ) + featureQName, ex ); //$NON-NLS-1$ //$NON-NLS-2$
+      final String message = String.format( "Property %s does not accept element of type %s", propQName, featureQName ); //$NON-NLS-1$
+      throw new IllegalArgumentException( message, ex );
     }
   }
 }

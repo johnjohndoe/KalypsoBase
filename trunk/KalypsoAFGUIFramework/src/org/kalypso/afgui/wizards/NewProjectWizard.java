@@ -210,7 +210,7 @@ public class NewProjectWizard extends BasicNewProjectResourceWizard implements I
     {
       try
       {
-        MessageDialog.openError( getShell(), getWindowTitle(), "No project template available" );
+        MessageDialog.openError( getShell(), getWindowTitle(), "No project template available" ); //$NON-NLS-1$
         project.delete( true, new NullProgressMonitor() );
         return false;
       }

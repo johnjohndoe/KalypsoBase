@@ -55,7 +55,7 @@ import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 /**
  * Objects of this class are responsible for loading the gml-workspaces for the current selected simulation model and
  * provide them to the commands.
- *
+ * 
  * @author Gernot Belger
  */
 public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPoster
@@ -141,7 +141,7 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
     if( locationMap == null )
       return loadedModels;
 
-    monitor.beginTask( "Loading scenario data", locationMap.size() );
+    monitor.beginTask( Messages.getString("SzenarioDataProvider.0"), locationMap.size() ); //$NON-NLS-1$
 
     for( final IScenarioDatum entry : locationMap.values() )
     {
@@ -151,7 +151,7 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
         final Class< ? extends IModel> wrapperClass = entry.getModelClass();
         final String gmlLocation = entry.getModelPath();
 
-        monitor.subTask( String.format( "Loading model '%s'", gmlLocation ) );
+        monitor.subTask( String.format( Messages.getString("SzenarioDataProvider.1"), gmlLocation ) ); //$NON-NLS-1$
 
         final IFolder dataFolder = getDataFolder( scenario, gmlLocation );
         final Pair<IModel, IStatus> result = loadModel( dataFolder, id, wrapperClass, gmlLocation );
@@ -281,7 +281,7 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
 
   /**
    * Resets the pool-key for the given folder.
-   *
+   * 
    * @param szenarioFolder
    *          If <code>null</code>, just releases the existing key.
    */
@@ -308,11 +308,11 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
 
     try
     {
-      final CommandableWorkspace workspace = (CommandableWorkspace) pool.loadObject( newListener, newKey );
+      final CommandableWorkspace workspace = (CommandableWorkspace)pool.loadObject( newListener, newKey );
       final Feature rootFeature = workspace.getRootFeature();
       if( rootFeature instanceof IModel )
       {
-        final IModel model = (IModel) rootFeature;
+        final IModel model = (IModel)rootFeature;
         return Pair.of( model, Status.OK_STATUS );
       }
 
@@ -340,7 +340,7 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
     }
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings( "unchecked" )
   @Override
   public <D extends IModel> D getModel( final String id ) throws CoreException
   {
@@ -349,10 +349,10 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
       return null;
 
     final Feature rootFeature = workspace.getRootFeature();
-    return (D) rootFeature;
+    return (D)rootFeature;
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings( "unchecked" )
   static <T> T adaptModel( final Class<T> modelClass, final GMLWorkspace workspace )
   {
     if( workspace == null )
@@ -360,9 +360,9 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
 
     final Feature rootFeature = workspace.getRootFeature();
     if( modelClass.isAssignableFrom( rootFeature.getClass() ) )
-      return (T) rootFeature;
+      return (T)rootFeature;
 
-    return (T) rootFeature.getAdapter( modelClass );
+    return (T)rootFeature.getAdapter( modelClass );
   }
 
   @Override
@@ -487,7 +487,7 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
       return null;
 
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
-    return (CommandableWorkspace) pool.getObject( key );
+    return (CommandableWorkspace)pool.getObject( key );
   }
 
   private synchronized ScenarioDataPoolListener getKeyPoolListener( final String id )
@@ -561,7 +561,7 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
   @Override
   public String toString( )
   {
-    return "Active data set scope: [ " + m_dataSetScope + " ]";
+    return String.format( "Active data set scope: [ %s ]", m_dataSetScope ); //$NON-NLS-1$
   }
 
   void fireModelLoaded( final IModel model, final IStatus status )
@@ -576,5 +576,4 @@ public class SzenarioDataProvider implements IScenarioDataProvider, ICommandPost
       listener.modelLoaded( model, status );
     }
   }
-
 }

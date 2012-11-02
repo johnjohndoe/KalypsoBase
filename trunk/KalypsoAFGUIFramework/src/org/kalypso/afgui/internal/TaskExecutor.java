@@ -192,7 +192,7 @@ public class TaskExecutor implements ITaskExecutor
     if( task == null )
       return Status.OK_STATUS;
 
-    final String commandID = String.format( "%s%s", task.getURI(), role );
+    final String commandID = String.format( "%s%s", task.getURI(), role ); //$NON-NLS-1$
 
     final String categoryId = task instanceof ITaskGroup ? TaskExecutionListener.CATEGORY_TASKGROUP : TaskExecutionListener.CATEGORY_TASK;
 

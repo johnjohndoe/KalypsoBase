@@ -34,7 +34,7 @@ public class ScenarioWizardPage extends WizardPage
 
   private final static String STR_ALREADY_EXISTS = Messages.getString( "org.kalypso.afgui.handlers.NewSimulationModelControlBuilder.1" ); //$NON-NLS-1$
 
-  private static final String STR_FORBIDDEN_FOLDER = "Name not allowed (name of a data folder)";
+  private static final String STR_FORBIDDEN_FOLDER = Messages.getString("ScenarioWizardPage.0"); //$NON-NLS-1$
 
   private final ScenarioData m_data;
 
@@ -46,8 +46,8 @@ public class ScenarioWizardPage extends WizardPage
 
     m_data = data;
 
-    setTitle( "Properties" );
-    setDescription( "Please enter the properties of the new scenario" );
+    setTitle( Messages.getString("ScenarioWizardPage.1") ); //$NON-NLS-1$
+    setDescription( Messages.getString("ScenarioWizardPage.2") ); //$NON-NLS-1$
   }
 
   @Override
@@ -78,7 +78,7 @@ public class ScenarioWizardPage extends WizardPage
       createCopySubScenariosButton( panel );
 
     final Button activateCheck = new Button( panel, SWT.CHECK );
-    activateCheck.setText( "Activate Scenario" );
+    activateCheck.setText( Messages.getString("ScenarioWizardPage.3") ); //$NON-NLS-1$
     activateCheck.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
 
     /* Bindings */
@@ -118,7 +118,7 @@ public class ScenarioWizardPage extends WizardPage
   private void createCopySubScenariosButton( final Composite panel )
   {
     final Button checkbox = new Button( panel, SWT.CHECK );
-    checkbox.setText( "Copy Sub-Scenarios" );
+    checkbox.setText( Messages.getString("ScenarioWizardPage.4") ); //$NON-NLS-1$
     checkbox.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true, 2, 1 ) );
 
     // FIXME Copied derived scenarios are not written into the cases.xml...
