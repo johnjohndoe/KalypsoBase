@@ -102,7 +102,7 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
       final IStatus status = worker.execute( monitor );
 
       if( !status.isOK() )
-        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.project.database.client.core.project.create.CreateRemoteProjectWorker.2" ) ) ); //$NON-NLS-1$
+        throw new CoreException( new Status( IStatus.ERROR, KalypsoProjectDatabaseClient.PLUGIN_ID, Messages.getString( "org.kalypso.project.database.client.core.project.create.CreateRemoteProjectWorker.2" ) ) ); //$NON-NLS-1$
 
       final FileSystemManager manager = VFSUtilities.getManager();
       final FileObject source = manager.resolveFile( src.getAbsolutePath() );
@@ -149,7 +149,7 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
             description.setNatureIds( ArrayUtils.add( description.getNatureIds(), RemoteProjectNature.NATURE_ID ) );
             project.setDescription( description, m );
 
-            final RemoteProjectNature remote = (RemoteProjectNature) project.getNature( RemoteProjectNature.NATURE_ID );
+            final RemoteProjectNature remote = (RemoteProjectNature)project.getNature( RemoteProjectNature.NATURE_ID );
             final IRemoteProjectPreferences preferences = remote.getRemotePreferences( project, null );
             preferences.setVersion( 0 );
             preferences.setIsOnServer( true );
@@ -161,7 +161,7 @@ public class CreateRemoteProjectWorker implements ICoreRunnableWithProgress
             if( updateCount < 5 )
               this.schedule( 250 );
             else
-              throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.project.database.client.core.project.create.CreateRemoteProjectWorker.0" ), e ) ); //$NON-NLS-1$
+              throw new CoreException( new Status( IStatus.ERROR, KalypsoProjectDatabaseClient.PLUGIN_ID, Messages.getString( "org.kalypso.project.database.client.core.project.create.CreateRemoteProjectWorker.0" ), e ) ); //$NON-NLS-1$
 
             return Status.CANCEL_STATUS;
           }

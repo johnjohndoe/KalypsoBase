@@ -48,10 +48,11 @@ import java.util.TreeSet;
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.lang.Objects;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.module.project.IProjectHandle;
 import org.kalypso.module.project.local.ILocalProject;
+import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.interfaces.ILocalWorkspaceModel;
 import org.kalypso.project.database.client.core.model.interfaces.IProjectDatabaseModel;
 import org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel;
@@ -267,7 +268,7 @@ public class ProjectDatabaseModel implements IProjectDatabaseModel, ILocalWorksp
     if( m_remote != null )
       return m_remote.getRemoteConnectionState();
 
-    return StatusUtilities.createWarningStatus( Messages.getString( "org.kalypso.project.database.client.core.model.ProjectDatabaseModel.0" ) ); //$NON-NLS-1$
+    return new Status( IStatus.WARNING, KalypsoProjectDatabaseClient.PLUGIN_ID, Messages.getString( "org.kalypso.project.database.client.core.model.ProjectDatabaseModel.0" ) ); //$NON-NLS-1$
   }
 
   @Override

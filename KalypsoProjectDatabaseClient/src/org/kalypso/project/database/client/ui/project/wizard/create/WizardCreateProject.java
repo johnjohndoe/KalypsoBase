@@ -56,6 +56,7 @@ import org.kalypso.contribs.eclipse.core.resources.ProjectTemplate;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.jface.wizard.ProjectTemplatePage;
 import org.kalypso.module.IKalypsoModule;
+import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.common.nature.RemoteProjectNature;
 
 /**
@@ -78,7 +79,7 @@ public class WizardCreateProject extends NewProjectWizard
   // FIXME: create templates on the fly -> see ticket
   public WizardCreateProject( final ProjectTemplate[] templates, final String[] natures, final IKalypsoModule module )
   {
-    this( new ProjectTemplatePage( "Projekt erzeugen", "", templates ), natures, module ); //$NON-NLS-2$
+    this( new ProjectTemplatePage( Messages.getString("WizardCreateProject_0"), "", templates ), natures, module );  //$NON-NLS-1$//$NON-NLS-2$
   }
 
   public WizardCreateProject( final ProjectTemplatePage page, final String[] natures, final IKalypsoModule module )
@@ -87,7 +88,7 @@ public class WizardCreateProject extends NewProjectWizard
 
     m_natures = natures;
 
-    setWindowTitle( "Neues Projekt erzeugen" );
+    setWindowTitle( Messages.getString("WizardCreateProject_1") ); //$NON-NLS-1$
     setNeedsProgressMonitor( true );
   }
 

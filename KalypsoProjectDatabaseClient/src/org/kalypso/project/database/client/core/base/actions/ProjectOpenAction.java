@@ -113,9 +113,9 @@ public class ProjectOpenAction implements IProjectAction
     {
       final OPEN_TYPE type = valueOf( name() );
       if( eLocal.equals( type ) )
-        return Messages.getString( "org.kalypso.project.database.client.core.base.actions.ProjectOpenAction.5" ); //$NON-NLS-1$
+        return (Messages.getString("ProjectOpenAction.0")); //$NON-NLS-1$
       else if( eLocalOffline.equals( type ) )
-        return Messages.getString( "org.kalypso.project.database.client.core.base.actions.ProjectOpenAction.6" ); //$NON-NLS-1$
+        return Messages.getString("ProjectOpenAction.1"); //$NON-NLS-1$
       else if( eTranscendenceReadable.equals( type ) )
         return Messages.getString( "org.kalypso.project.database.client.core.base.actions.ProjectOpenAction.7" ); //$NON-NLS-1$
       else if( eTranscendenceReadableServerLocked.equals( type ) )
@@ -136,7 +136,7 @@ public class ProjectOpenAction implements IProjectAction
 // {
     if( handler instanceof ITranscendenceProject )
     {
-      final ITranscendenceProject transcendence = (ITranscendenceProject) handler;
+      final ITranscendenceProject transcendence = (ITranscendenceProject)handler;
       final IRemoteProjectPreferences remotePreferences = transcendence.getRemotePreferences();
       if( remotePreferences == null )
         m_type = OPEN_TYPE.eLocal;
@@ -177,10 +177,6 @@ public class ProjectOpenAction implements IProjectAction
 
   }
 
-  /**
-   * @see org.kalypso.project.database.client.extension.database.handlers.actions.IProjectAction#render(org.eclipse.swt.widgets.Composite,
-   *      org.eclipse.ui.forms.widgets.FormToolkit)
-   */
   @Override
   public void render( final Composite body, final FormToolkit toolkit )
   {
@@ -189,15 +185,12 @@ public class ProjectOpenAction implements IProjectAction
     link.setImage( m_type.getImage() );
     link.setText( m_handler.getName() );
 
-    link.setToolTipText( Messages.getString( "org.kalypso.project.database.client.core.base.actions.ProjectOpenAction.10", m_handler.getName(), m_type.getStatus() ) ); //$NON-NLS-1$
+    link.setToolTipText( String.format( "%s (%s", m_handler.getName(), m_type.getStatus() ) ); //$NON-NLS-1$
 
     final Shell shell = body.getShell();
 
     link.addHyperlinkListener( new HyperlinkAdapter()
     {
-      /**
-       * @see org.eclipse.ui.forms.events.HyperlinkAdapter#linkActivated(org.eclipse.ui.forms.events.HyperlinkEvent)
-       */
       @Override
       public void linkActivated( final HyperlinkEvent e )
       {
@@ -227,14 +220,14 @@ public class ProjectOpenAction implements IProjectAction
     /* Validate parameters */
     if( !project.exists() )
     {
-      final String message = String.format( "Unable to open '%s'. The project does not exist.", project.getName() );
+      final String message = String.format( Messages.getString("ProjectOpenAction.2"), project.getName() ); //$NON-NLS-1$
       return new Status( IStatus.ERROR, KalypsoProjectDatabaseClient.PLUGIN_ID, message );
     }
 
     if( !project.isOpen() )
     {
       // TODO: instead: we should ask the user if we should open the project.
-      final String message = String.format( "Unable to open '%s'. The project is closed. Please open the project first.", project.getName() );
+      final String message = String.format( Messages.getString("ProjectOpenAction.3"), project.getName() ); //$NON-NLS-1$
       return new Status( IStatus.ERROR, KalypsoProjectDatabaseClient.PLUGIN_ID, message );
     }
 
@@ -251,7 +244,7 @@ public class ProjectOpenAction implements IProjectAction
     }
     catch( final Exception e )
     {
-      final String msg = String.format( "Unexpected error: %s", e.getLocalizedMessage() );
+      final String msg = String.format( Messages.getString("ProjectOpenAction.4"), e.getLocalizedMessage() ); //$NON-NLS-1$
       return new Status( IStatus.ERROR, KalypsoProjectDatabaseClient.PLUGIN_ID, msg, e );
     }
   }

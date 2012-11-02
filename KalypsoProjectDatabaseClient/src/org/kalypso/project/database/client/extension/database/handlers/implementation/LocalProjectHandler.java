@@ -299,7 +299,7 @@ public class LocalProjectHandler extends LocalProjectHandle implements ILocalPro
   @Override
   public String toString( )
   {
-    return String.format( "Local Project: %s", getName() );
+    return String.format( "Local Project: %s", getName() ); //$NON-NLS-1$
   }
 
   /**

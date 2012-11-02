@@ -61,13 +61,10 @@ public class RemoteInfoAction extends Action
   {
     m_handler = handler;
 
-    setToolTipText( Messages.getString( "org.kalypso.project.database.client.core.base.actions.ProjectInfoAction.1" ) ); //$NON-NLS-1$
+    setToolTipText( Messages.getString("RemoteInfoAction_0") ); //$NON-NLS-1$
     setImageDescriptor( IMG_INFO );
   }
 
-  /**
-   * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
-   */
   @Override
   public void runWithEvent( final Event event )
   {
@@ -76,5 +73,4 @@ public class RemoteInfoAction extends Action
     final RemoteInfoDialog dialog = new RemoteInfoDialog( m_handler, shell, true );
     dialog.open();
   }
-
 }

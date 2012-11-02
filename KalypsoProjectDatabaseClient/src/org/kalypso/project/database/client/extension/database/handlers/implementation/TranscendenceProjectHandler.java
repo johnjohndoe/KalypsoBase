@@ -183,7 +183,7 @@ public class TranscendenceProjectHandler extends AbstractProjectHandle implement
   @Override
   public String toString( )
   {
-    return String.format( "Transcendence Project: %s", getName() );
+    return String.format( "Transcendence Project: %s", getName() ); //$NON-NLS-1$
   }
 
   /**
