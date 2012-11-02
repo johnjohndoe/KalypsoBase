@@ -45,6 +45,7 @@ import java.io.File;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.internal.i18n.Messages;
 
 /**
  * Complains if a given file is a directory.
@@ -53,7 +54,7 @@ import org.eclipse.core.runtime.Status;
  */
 public class FileShouldNotBeDirectoryValidator extends TypedValidator<File>
 {
-  private static final String DEFAULT_MESSAGE = "This is a directoy";
+  private static final String DEFAULT_MESSAGE = Messages.getString("FileShouldNotBeDirectoryValidator_0"); //$NON-NLS-1$
 
   public FileShouldNotBeDirectoryValidator( )
   {

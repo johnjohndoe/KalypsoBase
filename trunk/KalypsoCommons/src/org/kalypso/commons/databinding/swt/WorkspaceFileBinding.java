@@ -65,6 +65,7 @@ import org.kalypso.commons.databinding.DataBinder;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.conversion.PathToStringConverter;
 import org.kalypso.commons.databinding.conversion.StringToPathConverter;
+import org.kalypso.commons.internal.i18n.Messages;
 import org.kalypso.contribs.eclipse.core.runtime.PathUtils;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
@@ -153,7 +154,7 @@ public class WorkspaceFileBinding
   public Button createFileSearchButton( final Composite parent )
   {
     final Button browseButton = new Button( parent, SWT.PUSH );
-    browseButton.setText( "Search..." );
+    browseButton.setText( Messages.getString("WorkspaceFileBinding_0") ); //$NON-NLS-1$
     browseButton.setFont( parent.getFont() );
 
     browseButton.addSelectionListener( new SelectionAdapter()

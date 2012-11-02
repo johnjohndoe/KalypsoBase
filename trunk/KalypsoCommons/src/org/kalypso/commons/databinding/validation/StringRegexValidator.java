@@ -43,9 +43,11 @@ package org.kalypso.commons.databinding.validation;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.KalypsoCommonsPlugin;
+import org.kalypso.commons.internal.i18n.Messages;
 
 /**
  * This validator checks, if a regular expression can be compiled.
@@ -55,8 +57,6 @@ import org.kalypso.commons.KalypsoCommonsPlugin;
 public class StringRegexValidator extends TypedValidator<String>
 {
   /**
-   * The constructor.
-   * 
    * @param severity
    *          Severity of IStatus, will be used to create validation failures.
    * @param message
@@ -67,23 +67,20 @@ public class StringRegexValidator extends TypedValidator<String>
     super( String.class, severity, message );
   }
 
-  /**
-   * @see org.kalypso.commons.databinding.validation.TypedValidator#doValidate(java.lang.Object)
-   */
   @Override
   protected IStatus doValidate( final String value )
   {
     try
     {
       if( value == null || value.length() == 0 )
-        throw new PatternSyntaxException( "Ein leerer regulärer Ausdruck ist nicht erlaubt...", "", -1 );
+        throw new PatternSyntaxException( Messages.getString("StringRegexValidator_0"), StringUtils.EMPTY, -1 ); //$NON-NLS-1$
 
       Pattern.compile( value );
       return Status.OK_STATUS;
     }
     catch( final PatternSyntaxException ex )
     {
-      return new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), String.format( "Ungültiger regulärer Ausdruck: %s", ex.getLocalizedMessage() ), ex );
+      return new Status( IStatus.ERROR, KalypsoCommonsPlugin.getID(), String.format( Messages.getString("StringRegexValidator_1"), ex.getLocalizedMessage() ), ex ); //$NON-NLS-1$
     }
   }
 }

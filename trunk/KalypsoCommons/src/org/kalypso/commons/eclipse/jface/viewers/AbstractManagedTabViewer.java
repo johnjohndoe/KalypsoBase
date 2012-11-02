@@ -54,6 +54,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.kalypso.commons.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -93,7 +94,7 @@ public abstract class AbstractManagedTabViewer<DATA>
       protected boolean confirmTabClose( final Shell shell, final String tabName )
       {
         final String message = getRemoveMessage( tabName );
-        return MessageDialog.openConfirm( shell, "Style Editor", message );
+        return MessageDialog.openConfirm( shell, Messages.getString("AbstractManagedTabViewer_0"), message ); //$NON-NLS-1$
       }
     } );
     m_tabViewer.setLabelProvider( new TabItemLabelProvider( toolkit, itemStyle ) );

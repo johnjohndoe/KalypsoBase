@@ -79,7 +79,7 @@ public class DateParser extends AbstractParser
     m_format = format;
 
     if( format.length() == 0 )
-      m_df = DateTimeFormat.forStyle( "SS" );
+      m_df = DateTimeFormat.forStyle( "SS" ); //$NON-NLS-1$
     else
       m_df = DateTimeFormat.forPattern( m_format );
   }

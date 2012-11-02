@@ -41,6 +41,7 @@ import org.kalypso.contribs.java.lang.ICancelable;
 
 /**
  * @author Thül
+ *         TODO: merge with IProcess / DefaultProcess stuff.
  */
 public class ProcessHelper
 {

@@ -54,17 +54,17 @@ public final class CompareUtils
 {
   private CompareUtils( )
   {
-    throw new UnsupportedOperationException( "Helper class, do not instantiate" );
+    throw new UnsupportedOperationException( "Helper class, do not instantiate" ); //$NON-NLS-1$
   }
 
   public static void dumpDiffElement( final IDiffElement element, final int intendation, final IElementDumper elementDumper )
   {
     for( int i = 0; i < intendation; i++ )
-      System.out.print( " " );
+      System.out.print( " " ); //$NON-NLS-1$
 
     final String directionLabel = getDirectionLabel( element );
     final String changeLabel = getChangeLabel( element );
-    final String diffDump = String.format( "%s %s: %s", directionLabel, changeLabel, element.getName() );
+    final String diffDump = String.format( "%s %s: %s", directionLabel, changeLabel, element.getName() ); //$NON-NLS-1$
     System.out.println( diffDump );
 
     if( element instanceof ICompareInput && elementDumper != null )

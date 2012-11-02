@@ -125,16 +125,16 @@ public class FileUtilities
   {
     /* A prefix is needed. */
     if( prefix == null || prefix.length() == 0 )
-      prefix = "tmp";
+      prefix = "tmp"; //$NON-NLS-1$
 
     /* An extension is needed. */
     if( extension == null || extension.length() == 0 )
-      extension = "dat";
+      extension = "dat"; //$NON-NLS-1$
 
     /* Create a new file handle, as long as the file exists. */
-    File tmpFile = new File( FileUtilities.TMP_DIR, String.format( "%s_%s.%s", prefix, String.valueOf( System.currentTimeMillis() ), extension ) );
+    File tmpFile = new File( FileUtilities.TMP_DIR, String.format( "%s_%s.%s", prefix, String.valueOf( System.currentTimeMillis() ), extension ) ); //$NON-NLS-1$
     while( tmpFile.exists() )
-      tmpFile = new File( FileUtilities.TMP_DIR, String.format( "%s_%s.%s", prefix, String.valueOf( System.currentTimeMillis() ), extension ) );
+      tmpFile = new File( FileUtilities.TMP_DIR, String.format( "%s_%s.%s", prefix, String.valueOf( System.currentTimeMillis() ), extension ) ); //$NON-NLS-1$
 
     return tmpFile;
   }
@@ -293,7 +293,7 @@ public class FileUtilities
       return difference;
     }
     if( absolutePath.equalsIgnoreCase( basePath ) )
-      return "";
+      return ""; //$NON-NLS-1$
     if( basePath.endsWith( separator ) )
       return absolutePath.substring( basePath.length() );
     else

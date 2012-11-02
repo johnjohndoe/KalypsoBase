@@ -45,6 +45,7 @@ import java.io.File;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.kalypso.commons.internal.i18n.Messages;
 
 /**
  * Validates if a {@link java.io.File} denotes an existing file.
@@ -53,7 +54,7 @@ import org.eclipse.core.runtime.Status;
  */
 public class FileAlreadyExistsValidator extends TypedValidator<File>
 {
-  private static final String DEFAULT_MESSAGE = "The file already exists.";
+  private static final String DEFAULT_MESSAGE = Messages.getString("FileAlreadyExistsValidator_0"); //$NON-NLS-1$
 
   public FileAlreadyExistsValidator( )
   {

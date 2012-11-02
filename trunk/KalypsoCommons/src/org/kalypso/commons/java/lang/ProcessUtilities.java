@@ -57,9 +57,12 @@ import org.kalypso.contribs.java.io.StreamGobbler;
 
 /**
  * This class contains some additional helper function in addition to {@link ProcessHelper}.
- *
+ * 
  * @author Holger Albert
+ *         TODO: merge this class with process helper and/or IProcess / DefaultProcess
+ * @deprecated Use IProcess or ProcessHelper instead
  */
+@Deprecated
 public class ProcessUtilities
 {
   /**
@@ -76,7 +79,7 @@ public class ProcessUtilities
 
   /**
    * This function creates the environment for the process.
-   *
+   * 
    * @param chgEnv
    *          The evironment variables that should be set. May be ones to be replaced or new ones. May be null.
    * @return The environment for the process.
@@ -102,7 +105,7 @@ public class ProcessUtilities
     /* Build an array. */
     final List<String> listEnv = new ArrayList<>();
     for( final String key : newEnv.keySet() )
-      listEnv.add( String.format( "%s=%s", key, newEnv.get( key ) ) );
+      listEnv.add( String.format( "%s=%s", key, newEnv.get( key ) ) ); //$NON-NLS-1$
 
     return listEnv.toArray( new String[] {} );
   }
@@ -118,8 +121,8 @@ public class ProcessUtilities
     try
     {
       /* Monitor. */
-      monitor.beginTask( "", 200 );
-      monitor.subTask( "" );
+      monitor.beginTask( "", 200 ); //$NON-NLS-1$
+      monitor.subTask( "" ); //$NON-NLS-1$
 
       /* Execute the process. */
       final Process exec = Runtime.getRuntime().exec( cmdLine, env, directory );
@@ -129,8 +132,8 @@ public class ProcessUtilities
       final InputStream inputStream = exec.getInputStream();
 
       /* Create the stream gooblers. */
-      final StreamGobbler error = new StreamGobbler( errorStream, "Report: ERROR_STREAM", debug );
-      final StreamGobbler input = new StreamGobbler( inputStream, "Report: INPUT_STREAM", debug );
+      final StreamGobbler error = new StreamGobbler( errorStream, "Report: ERROR_STREAM", debug ); //$NON-NLS-1$
+      final StreamGobbler input = new StreamGobbler( inputStream, "Report: INPUT_STREAM", debug ); //$NON-NLS-1$
 
       /* Start the stream gobblers. */
       error.start();
@@ -167,7 +170,7 @@ public class ProcessUtilities
           {
             /* If not, destroy the process. */
             exec.destroy();
-            throw new TimeoutException( "Das Timeout wurde erreicht..." );
+            throw new TimeoutException( "Das Timeout wurde erreicht..." ); //$NON-NLS-1$
           }
 
           /* If he wants to wait a bit more, reduce the time running variable. */
@@ -200,7 +203,7 @@ public class ProcessUtilities
 
   /**
    * This function asks the user, if he want to wait a bit longer, because the timeout has been reached.
-   *
+   * 
    * @param display
    *          The display or null.
    * @param timeout
@@ -226,14 +229,14 @@ public class ProcessUtilities
       public void run( )
       {
         /* The title. */
-        final String title = "Prozessausführung";
+        final String title = "Prozessausführung"; //$NON-NLS-1$
 
         /* The message. */
-        final String message = String.format( "Das Timeout von %s Minuten wurde überschritten.", String.valueOf( timeout / 1000 / 60 ) );
-        final String message1 = String.format( "Möchten Sie noch einmal %s Minuten warten?", String.valueOf( WAITING_TIME / 1000 / 60 ) );
+        final String message = String.format( "Das Timeout von %s Minuten wurde überschritten.", String.valueOf( timeout / 1000 / 60 ) ); //$NON-NLS-1$
+        final String message1 = String.format( "Möchten Sie noch einmal %s Minuten warten?", String.valueOf( WAITING_TIME / 1000 / 60 ) ); //$NON-NLS-1$
 
         /* Open the question. */
-        result[0] = MessageDialog.openQuestion( display.getActiveShell(), title, String.format( "%s%n%s", message, message1 ) );
+        result[0] = MessageDialog.openQuestion( display.getActiveShell(), title, String.format( "%s%n%s", message, message1 ) ); //$NON-NLS-1$
       }
     } );
 

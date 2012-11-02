@@ -132,7 +132,7 @@ public final class PeriodUtils
   {
     final int fieldCount = countNonZeroFields( period );
     if( fieldCount > 1 )
-      throw new IllegalArgumentException( "Unable to find calendar amount for periods with more than one field: " + period );
+      throw new IllegalArgumentException( "Unable to find calendar amount for periods with more than one field: " + period ); //$NON-NLS-1$
 
     if( period.getDays() != 0 )
       return period.getDays();
@@ -166,7 +166,7 @@ public final class PeriodUtils
     final int fieldCount = countNonZeroFields( period );
 
     if( fieldCount > 1 )
-      throw new IllegalArgumentException( "Unable to find calendar amount for periods with more than one field: " + period );
+      throw new IllegalArgumentException( "Unable to find calendar field for periods with more than one field: " + period ); //$NON-NLS-1$
 
     if( period.getDays() != 0 )
       return FIELD.DAY_OF_MONTH;

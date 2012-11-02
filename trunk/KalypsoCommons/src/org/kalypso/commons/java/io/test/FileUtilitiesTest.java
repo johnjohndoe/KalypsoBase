@@ -53,27 +53,27 @@ public class FileUtilitiesTest extends TestCase
 {
   public void testIsChildOf( )
   {
-    final File f = new File( "C:/temp" );
-    final File c = new File( "C:/temp/grafik-kalypso/zml/Beispiel/beispiel.zml" );
+    final File f = new File( "C:/temp" ); //$NON-NLS-1$
+    final File c = new File( "C:/temp/grafik-kalypso/zml/Beispiel/beispiel.zml" ); //$NON-NLS-1$
 
     assertTrue( FileUtilities.isChildOf( f, c ) );
 
-    final File c2 = new File( "C:/temp3/foo.txt" );
+    final File c2 = new File( "C:/temp3/foo.txt" ); //$NON-NLS-1$
 
     assertFalse( FileUtilities.isChildOf( f, c2 ) );
 
-    final File c3 = new File( "C:/temp" );
+    final File c3 = new File( "C:/temp" ); //$NON-NLS-1$
 
     assertTrue( FileUtilities.isChildOf( f, c3 ) );
   }
 
   public void testValidateName( )
   {
-    assertEquals( "foobar", FileUtilities.validateName( "\\foo*bar?", "" ) );
-    assertEquals( "robertocarlos", FileUtilities.validateName( "/roberto/carlos", "" ) );
-    assertEquals( "plusminus", FileUtilities.validateName( "plus:minus", "" ) );
-    assertEquals( "xml", FileUtilities.validateName( "<xml>", "" ) );
-    assertEquals( "strongweak", FileUtilities.validateName( "strong|weak", "" ) );
-    assertEquals( "whatthehell", FileUtilities.validateName( "what\"the\"hell", "" ) );
+    assertEquals( "foobar", FileUtilities.validateName( "\\foo*bar?", "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    assertEquals( "robertocarlos", FileUtilities.validateName( "/roberto/carlos", "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    assertEquals( "plusminus", FileUtilities.validateName( "plus:minus", "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    assertEquals( "xml", FileUtilities.validateName( "<xml>", "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    assertEquals( "strongweak", FileUtilities.validateName( "strong|weak", "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    assertEquals( "whatthehell", FileUtilities.validateName( "what\"the\"hell", "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 }

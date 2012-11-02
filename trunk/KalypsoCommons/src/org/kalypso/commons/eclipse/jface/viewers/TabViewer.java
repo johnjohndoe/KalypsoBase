@@ -69,7 +69,7 @@ import org.eclipse.swt.widgets.Widget;
  */
 public class TabViewer extends StructuredViewer
 {
-  public static final String DATA_CONTENT = "content";
+  public static final String DATA_CONTENT = "content"; //$NON-NLS-1$
 
   private final CTabFolder m_folder;
 

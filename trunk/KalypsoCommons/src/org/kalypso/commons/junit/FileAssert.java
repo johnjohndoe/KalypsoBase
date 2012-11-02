@@ -83,18 +83,18 @@ public class FileAssert extends Assert
         }
         catch( final AssertionError e )
         {
-          final String msg = String.format( "Line %d: %s", count, e.getLocalizedMessage() );
+          final String msg = String.format( "Line %d: %s", count, e.getLocalizedMessage() ); //$NON-NLS-1$
           fail( msg );
         }
       }
 
-      assertIteratorIsEmpty( "Actual file is longer than expected: ", actualIt );
-      assertIteratorIsEmpty( "Expected file is longer than actual: ", expectedIt );
+      assertIteratorIsEmpty( "Actual file is longer than expected: ", actualIt ); //$NON-NLS-1$
+      assertIteratorIsEmpty( "Expected file is longer than actual: ", expectedIt ); //$NON-NLS-1$
     }
     catch( final IOException e )
     {
       e.printStackTrace();
-      Assert.fail( "Failed to access file: " + e.getLocalizedMessage() );
+      Assert.fail( "Failed to access file: " + e.getLocalizedMessage() ); //$NON-NLS-1$
     }
   }
 

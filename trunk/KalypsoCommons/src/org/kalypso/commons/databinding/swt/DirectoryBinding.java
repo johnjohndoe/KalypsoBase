@@ -60,6 +60,7 @@ import org.kalypso.commons.databinding.conversion.StringToFileConverter;
 import org.kalypso.commons.databinding.validation.FileAlreadyExistsValidator;
 import org.kalypso.commons.databinding.validation.FileExistsValidator;
 import org.kalypso.commons.databinding.validation.FileIsDirectoryValidator;
+import org.kalypso.commons.internal.i18n.Messages;
 
 /**
  * Helper class for the ever repeating task to show the user a text-field in order to let him select a directory.
@@ -111,10 +112,10 @@ public class DirectoryBinding
     m_historyBinder.addTargetAfterConvertValidator( new FileIsDirectoryValidator( IStatus.ERROR ) );
 
     if( m_style == SWT.OPEN )
-      m_historyBinder.addTargetAfterConvertValidator( new FileExistsValidator( IStatus.ERROR, "Directory does not exist" ) );
+      m_historyBinder.addTargetAfterConvertValidator( new FileExistsValidator( IStatus.ERROR, Messages.getString("DirectoryBinding_0") ) ); //$NON-NLS-1$
 
     if( m_style == SWT.SAVE )
-      m_historyBinder.addTargetAfterConvertValidator( new FileAlreadyExistsValidator( IStatus.WARNING, "Directory already exists" ) );
+      m_historyBinder.addTargetAfterConvertValidator( new FileAlreadyExistsValidator( IStatus.WARNING, Messages.getString("DirectoryBinding_1") ) ); //$NON-NLS-1$
 
     return viewer.getControl();
   }
@@ -128,7 +129,7 @@ public class DirectoryBinding
   {
     // destination browse button
     final Button browseButton = new Button( parent, SWT.PUSH );
-    browseButton.setText( "Search..." );
+    browseButton.setText( Messages.getString("DirectoryBinding_2") ); //$NON-NLS-1$
     browseButton.setFont( parent.getFont() );
 
     browseButton.addSelectionListener( new DirectoryValueSelectionListener( directoryTextControl, dialogTitle, dialogMessage ) );

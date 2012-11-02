@@ -55,6 +55,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
+import org.kalypso.commons.internal.i18n.Messages;
 import org.kalypso.contribs.eclipse.swt.widgets.MenuButton;
 
 /**
@@ -62,7 +63,7 @@ import org.kalypso.contribs.eclipse.swt.widgets.MenuButton;
  */
 public class PatternInputReplacer<T>
 {
-  public static final String STR_INSERT_A_TOKEN_FROM_THE_LIST_OF_AVAILABLE_PATTERNS = "Insert a token from the list of available patterns";
+  public static final String STR_INSERT_A_TOKEN_FROM_THE_LIST_OF_AVAILABLE_PATTERNS = Messages.getString("PatternInputReplacer_0"); //$NON-NLS-1$
 
   private final Map<String, IPatternInput<T>> m_replacers = new LinkedHashMap<>();
 
@@ -74,7 +75,7 @@ public class PatternInputReplacer<T>
 
   public PatternInputReplacer( )
   {
-    this( "<", ">" );
+    this( "<", ">" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public PatternInputReplacer( final String patternStart, final String patternStop )
@@ -82,7 +83,7 @@ public class PatternInputReplacer<T>
     m_patternStart = patternStart;
     m_patternStop = patternStop;
 
-    final String pattern = String.format( "%s(.*?)(:(.*?))?%s", Pattern.quote( m_patternStart ), Pattern.quote( m_patternStop ) );
+    final String pattern = String.format( "%s(.*?)(:(.*?))?%s", Pattern.quote( m_patternStart ), Pattern.quote( m_patternStop ) ); //$NON-NLS-1$
 
     m_tokenPattern = Pattern.compile( pattern );
   }

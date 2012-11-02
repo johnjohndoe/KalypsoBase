@@ -51,12 +51,13 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.commons.internal.i18n.Messages;
 
 /**
  * A selection listener (to be added to a a button), that opens a {@link org.eclipse.swt.widgets.FileDialog} that
  * chooses a file.<br/>
  * When the file has been chosen, it will be set into a given observable value.
- *
+ * 
  * @author Gernot Belger
  */
 public class FileValueSelectionListener implements SelectionListener
@@ -110,7 +111,7 @@ public class FileValueSelectionListener implements SelectionListener
 
     dialog.setText( m_dialogTitle );
 
-    final File initialSelection = (File) m_fileValue.getValue();
+    final File initialSelection = (File)m_fileValue.getValue();
 
     if( initialSelection != null )
     {
@@ -133,7 +134,7 @@ public class FileValueSelectionListener implements SelectionListener
    */
   public void addAllFilter( )
   {
-    addFilter( "All Files", "*.*" );
+    addFilter( Messages.getString("FileValueSelectionListener_0"), "*.*" );  //$NON-NLS-1$//$NON-NLS-2$
   }
 
   /**
@@ -167,7 +168,7 @@ public class FileValueSelectionListener implements SelectionListener
     {
       final String[] extensions = m_extensions.get( i );
       final String extensionText = StringUtils.join( extensions, ',' );
-      names[i] = String.format( "%s (%s)", m_names.get( i ), extensionText );
+      names[i] = String.format( "%s (%s)", m_names.get( i ), extensionText ); //$NON-NLS-1$
     }
     return names;
   }
