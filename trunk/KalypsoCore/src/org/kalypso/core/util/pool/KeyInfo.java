@@ -350,18 +350,18 @@ public final class KeyInfo extends Job
   public String toString( )
   {
     final StringBuffer b = new StringBuffer();
-    b.append( Messages.getString( "org.kalypso.util.pool.KeyInfo.6" ) ); //$NON-NLS-1$
+    b.append( "KeyInfo:\r\n" );
     if( m_object != null )
     {
-      b.append( Messages.getString( "org.kalypso.util.pool.KeyInfo.7" ) + m_object.getClass().getName() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+      b.append( " pooled object (type):" + m_object.getClass().getName() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     else
     {
-      b.append( Messages.getString( "org.kalypso.util.pool.KeyInfo.9" ) ); //$NON-NLS-1$
+      b.append( " !!!!!!!!!!!!!!!!!!!! WARNING !!!!!!!!!!!!!!!!!!!!\r\n pooled object (type): NULL \r\n" );
     }
-    b.append( Messages.getString( "org.kalypso.util.pool.KeyInfo.10" ) + m_loader.getClass().getName() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-    b.append( Messages.getString( "org.kalypso.util.pool.KeyInfo.12" ) + m_key + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
-    b.append( Messages.getString( "org.kalypso.util.pool.KeyInfo.14" ) + m_listeners.size() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+    b.append( " loader (type): " + m_loader.getClass().getName() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+    b.append( " key: " + m_key + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
+    b.append( " number of listeners: " + m_listeners.size() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     return b.toString();
   }
 
@@ -540,6 +540,10 @@ public final class KeyInfo extends Job
   public static void waitForJobDone( final KeyInfo info )
   {
     if( info.getResult() != null )
+      return;
+
+// FIXME... sometimes the job is not running, getResult is null, but we have an object and m_result != null.. how can this happen?
+    if( info.getJobResult() != null )
       return;
 
     try

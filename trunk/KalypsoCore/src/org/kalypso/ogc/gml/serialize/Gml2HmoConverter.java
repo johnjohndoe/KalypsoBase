@@ -52,7 +52,7 @@ public abstract class Gml2HmoConverter
 {
   public void writeHmo( final File hmoBaseFile, final IProgressMonitor monitor ) throws Exception
   {
-    monitor.beginTask( Messages.getString( "org.kalypso.ogc.gml.serialize.Gml2HmoConverter.1" ), 2 ); //$NON-NLS-1$
+    monitor.beginTask( Messages.getString("Gml2HmoConverter_0"), 2 ); //$NON-NLS-1$
     writeHmo( hmoBaseFile );
     monitor.done();
   }

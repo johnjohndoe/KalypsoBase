@@ -157,7 +157,7 @@ public class SpatialIndexTest extends TestCase
       maxSize = Math.max( result.size(), maxSize );
     }
 
-    System.out.println( "Max result size: " + maxSize );
+    System.out.println( "Max result size: " + maxSize ); //$NON-NLS-1$
   }
 
   private GMLWorkspace loadWorkspace( final String relativeResourcePath, final String filename ) throws Exception

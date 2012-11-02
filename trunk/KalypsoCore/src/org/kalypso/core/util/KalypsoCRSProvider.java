@@ -35,6 +35,6 @@ public class KalypsoCRSProvider implements ICustomCRSProvider
   @Override
   public URL getURL( )
   {
-    return getClass().getResource( "/etc/crs/crs.properties" );
+    return getClass().getResource( "/etc/crs/crs.properties" ); //$NON-NLS-1$
   }
 }

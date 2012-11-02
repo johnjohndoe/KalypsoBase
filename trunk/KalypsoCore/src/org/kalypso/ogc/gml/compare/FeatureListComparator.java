@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollectorWithTime;
 import org.kalypso.core.KalypsoCorePlugin;
+import org.kalypso.core.i18n.Messages;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
@@ -96,7 +97,7 @@ public class FeatureListComparator
     final Object referenceQuery = GMLXPathUtilities.query( m_listPath, m_referenceFeature );
     final Object selectedQuery = GMLXPathUtilities.query( m_listPath, m_selectedFeature );
     if( !(referenceQuery instanceof FeatureList && selectedQuery instanceof FeatureList) )
-      throw new IllegalArgumentException( String.format( "GMLXPath '%s' does not point to a feature list...", m_listPath.toString() ) );
+      throw new IllegalArgumentException( String.format( "GMLXPath '%s' does not point to a feature list...", m_listPath.toString() ) ); //$NON-NLS-1$
 
     /* Cast. */
     final FeatureList referenceList = (FeatureList) referenceQuery;
@@ -110,7 +111,7 @@ public class FeatureListComparator
       final Object referenceKey = resolveKeyProperty( referenceFeature, i );
       if( m_hash.containsKey( referenceKey ) )
       {
-        collector.add( new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), String.format( "Element '%s' is duplicate in the reference list.", referenceKey ) ) );
+        collector.add( new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), String.format( Messages.getString("FeatureListComparator_1"), referenceKey ) ) ); //$NON-NLS-1$
         continue;
       }
 
@@ -132,7 +133,7 @@ public class FeatureListComparator
       final FeaturePair featurePair = m_hash.get( selectedKey );
       if( featurePair.getTwo() != null )
       {
-        collector.add( new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), String.format( "Element '%s' is duplicate in the compared list.", selectedKey ) ) );
+        collector.add( new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), String.format( Messages.getString("FeatureListComparator_2"), selectedKey ) ) ); //$NON-NLS-1$
         continue;
       }
 
@@ -157,14 +158,14 @@ public class FeatureListComparator
       /* For the feature in the reference list, there is no feature in the selected list. */
       if( one != null && two == null )
       {
-        collector.add( new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), String.format( "The element '%s' is missing.", key ) ) );
+        collector.add( new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), String.format( Messages.getString("FeatureListComparator_3"), key ) ) ); //$NON-NLS-1$
         continue;
       }
 
       /* For the feature in the selected list, there is no feature in the reference list. */
       if( one == null && two != null )
       {
-        collector.add( new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), String.format( "The element '%s' is a new one.", key ) ) );
+        collector.add( new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), String.format( Messages.getString("FeatureListComparator_4"), key ) ) ); //$NON-NLS-1$
         continue;
       }
 
@@ -190,7 +191,7 @@ public class FeatureListComparator
   private Object resolveKeyProperty( final Feature referenceFeature, final int i )
   {
     if( m_uniqueProperty == PROPERTY_COUNTER )
-      return String.format( "%d. Element", i );
+      return String.format( Messages.getString("FeatureListComparator_5"), i ); //$NON-NLS-1$
 
     return referenceFeature.getProperty( m_uniqueProperty );
   }

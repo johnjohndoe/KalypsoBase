@@ -100,7 +100,7 @@ public class ZmlTupleModel extends AbstractTupleModel
     final IZmlValues values = m_valuesMap.get( axis );
 
     if( values == null )
-      throw new SensorException( String.format( "Unknwon axis: %s", axis.getName() ) );
+      throw new SensorException( String.format( "Unknwon axis: %s", axis.getName() ) ); //$NON-NLS-1$
     // return new Double( 0 );
 
     return values.getElement( index );

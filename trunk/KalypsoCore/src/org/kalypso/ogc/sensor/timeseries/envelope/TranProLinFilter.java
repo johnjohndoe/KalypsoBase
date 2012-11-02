@@ -73,7 +73,7 @@ import org.kalypso.repository.IDataSourceItem;
 /**
  * The Linear-Progressiv-Transformation Filter is used for creating 'lower and upper envelopes' in the sense of a
  * timeserie. It is currently designed to work only with timeseries: meaning an observation with an axis of type date.
- *
+ * 
  * @author schlienger
  */
 public class TranProLinFilter extends AbstractObservationFilter
@@ -189,9 +189,9 @@ public class TranProLinFilter extends AbstractObservationFilter
       }
       // try to assume from base tuple model if needed
       if( targetBegin == null )
-        targetBegin = (Date) sourceModel.get( 0, dateAxis );
+        targetBegin = (Date)sourceModel.get( 0, dateAxis );
       if( targetEnd == null )
-        targetEnd = (Date) sourceModel.get( outerSourceCount - 1, dateAxis );
+        targetEnd = (Date)sourceModel.get( outerSourceCount - 1, dateAxis );
 
       if( transformBegin == null )
         transformBegin = targetBegin;
@@ -203,7 +203,7 @@ public class TranProLinFilter extends AbstractObservationFilter
 
       if( sourceIndexEnd > outerSourceCount - 1 )
       {
-        System.out.println( Messages.getString( "org.kalypso.ogc.sensor.timeseries.envelope.TranProLinFilter.2" ) ); //$NON-NLS-1$
+        System.out.println( "bloed" ); //$NON-NLS-1$
       }
 
       final int targetMaxRows = sourceIndexEnd - sourceIndexBegin + 1;
@@ -317,7 +317,7 @@ public class TranProLinFilter extends AbstractObservationFilter
       // transform: important to set transformed last, as there may be dependencies to other axes
       // (e.g. WQ-Transformation)
 
-      final Date date = (Date) sourceModel.get( sourceRow, dateAxis );
+      final Date date = (Date)sourceModel.get( sourceRow, dateAxis );
 
       final long hereTime = date.getTime() - dateBegin.getTime();
       final double hereCoeff = m_operandBegin + deltaOperand * hereTime / distTime;
@@ -337,7 +337,7 @@ public class TranProLinFilter extends AbstractObservationFilter
 
     if( type.equals( m_axisType ) )
     {
-      final double currentValue = ((Number) sourceModel.get( sourceRow, axis )).doubleValue();
+      final double currentValue = ((Number)sourceModel.get( sourceRow, axis )).doubleValue();
       final double changedValue;
 
       // We do only transform within the specified interval
