@@ -63,20 +63,20 @@ public class MapFileNamespacePrefixMapper extends NamespacePrefixMapper
   @Override
   public String getPreferredPrefix( final String namespaceUri, final String suggestion, final boolean requirePrefix )
   {
-    if( "http://www.w3.org/2001/XMLSchema".equals( namespaceUri ) )
-      return "xmlns";
+    if( "http://www.w3.org/2001/XMLSchema".equals( namespaceUri ) ) //$NON-NLS-1$
+      return "xmlns"; //$NON-NLS-1$
 
-    if( "http://www.w3.org/1999/xlink".equals( namespaceUri ) )
-      return "xlink";
+    if( "http://www.w3.org/1999/xlink".equals( namespaceUri ) ) //$NON-NLS-1$
+      return "xlink"; //$NON-NLS-1$
 
-    if( "http://www.w3.org/1999/XSL/Transform".equals( namespaceUri ) )
-      return "xsl";
+    if( "http://www.w3.org/1999/XSL/Transform".equals( namespaceUri ) ) //$NON-NLS-1$
+      return "xsl"; //$NON-NLS-1$
 
-    if( "http://www.mapserver.org/mapserver".equals( namespaceUri ) )
-      return "ms";
+    if( "http://www.mapserver.org/mapserver".equals( namespaceUri ) ) //$NON-NLS-1$
+      return "ms"; //$NON-NLS-1$
 
-    if( "http://exslt.org/dynamic".equals( namespaceUri ) )
-      return "dyn";
+    if( "http://exslt.org/dynamic".equals( namespaceUri ) ) //$NON-NLS-1$
+      return "dyn"; //$NON-NLS-1$
 
     return suggestion;
   }

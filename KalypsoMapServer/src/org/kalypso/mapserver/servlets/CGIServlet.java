@@ -67,7 +67,7 @@ public class CGIServlet extends CGI
       return initParameter;
 
     /* If not (==null) return null, except if it is one of the following parameter. */
-    if( !"cgibinResourceBase".equals( name ) && !"Path".equals( name ) && !"ENV_PROJ_LIB".equals( name ) )
+    if( !"cgibinResourceBase".equals( name ) && !"Path".equals( name ) && !"ENV_PROJ_LIB".equals( name ) ) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       return null;
 
     try
@@ -75,10 +75,10 @@ public class CGIServlet extends CGI
       final URL cgibinResourceBase = Platform.getInstallLocation().getURL();
       final File file = FileUtils.toFile( cgibinResourceBase );
 
-      if( !"ENV_PROJ_LIB".equals( name ) )
+      if( !"ENV_PROJ_LIB".equals( name ) ) //$NON-NLS-1$
         return file.toString();
 
-      return new File( file, "cgi-bin" ).toString();
+      return new File( file, "cgi-bin" ).toString(); //$NON-NLS-1$
     }
     catch( final Exception ex )
     {
@@ -96,8 +96,8 @@ public class CGIServlet extends CGI
     while( initParameterNames.hasMoreElements() )
       results.add( (String) initParameterNames.nextElement() );
 
-    if( !results.contains( "ENV_PROJ_LIB" ) )
-      results.add( "ENV_PROJ_LIB" );
+    if( !results.contains( "ENV_PROJ_LIB" ) ) //$NON-NLS-1$
+      results.add( "ENV_PROJ_LIB" ); //$NON-NLS-1$
 
     return new IteratorEnumeration( results.iterator() );
   }
