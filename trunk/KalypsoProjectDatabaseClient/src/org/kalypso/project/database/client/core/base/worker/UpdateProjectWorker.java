@@ -100,7 +100,7 @@ public class UpdateProjectWorker implements ICoreRunnableWithProgress
       monitor.worked( 1 );
 
       if( !status.isOK() )
-        throw new CoreException( StatusUtilities.createErrorStatus( Messages.getString( "org.kalypso.project.database.client.core.project.commit.UpdateProjectWorker.5" ) ) ); //$NON-NLS-1$
+        throw new CoreException( new Status( IStatus.ERROR, KalypsoProjectDatabaseClient.PLUGIN_ID, Messages.getString( "org.kalypso.project.database.client.core.project.commit.UpdateProjectWorker.5" ) ) ); //$NON-NLS-1$
 
       final FileSystemManager manager = VFSUtilities.getManager();
       final FileObject source = manager.resolveFile( src.getAbsolutePath() );

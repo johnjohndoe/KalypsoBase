@@ -43,6 +43,7 @@ package org.kalypso.project.database.client.ui.project;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
+import org.kalypso.project.database.client.i18n.Messages;
 
 /**
  * {@link IRemoteProjectInfo} for a project that is not attached to the database.
@@ -75,7 +76,7 @@ public class LocalRemoteProjectInfo implements IRemoteProjectInfo
   @Override
   public IStatus releaseProjectLock( )
   {
-    return new Status( IStatus.WARNING, KalypsoProjectDatabaseClient.PLUGIN_ID, "Entsperren nicht möglich. Lokales Projekt (nicht in Projektdatenbank)" );
+    return new Status( IStatus.WARNING, KalypsoProjectDatabaseClient.PLUGIN_ID, Messages.getString("LocalRemoteProjectInfo_0") ); //$NON-NLS-1$
   }
 
   /**
@@ -84,6 +85,6 @@ public class LocalRemoteProjectInfo implements IRemoteProjectInfo
   @Override
   public IStatus acquireProjectLock( )
   {
-    return new Status( IStatus.WARNING, KalypsoProjectDatabaseClient.PLUGIN_ID, "Sperren nicht möglich. Lokales Projekt (nicht in Projektdatenbank)" );
+    return new Status( IStatus.WARNING, KalypsoProjectDatabaseClient.PLUGIN_ID, Messages.getString("LocalRemoteProjectInfo_1") ); //$NON-NLS-1$
   }
 }

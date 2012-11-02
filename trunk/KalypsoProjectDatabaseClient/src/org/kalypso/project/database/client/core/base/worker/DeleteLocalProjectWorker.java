@@ -45,9 +45,10 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.ide.undo.DeleteResourcesOperation;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
+import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.i18n.Messages;
 
 /**
@@ -64,9 +65,6 @@ public class DeleteLocalProjectWorker implements ICoreRunnableWithProgress
     m_project = project;
   }
 
-  /**
-   * @see org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress#execute(org.eclipse.core.runtime.IProgressMonitor)
-   */
   @Override
   public IStatus execute( final IProgressMonitor monitor )
   {
@@ -77,8 +75,7 @@ public class DeleteLocalProjectWorker implements ICoreRunnableWithProgress
     }
     catch( final ExecutionException e )
     {
-      return StatusUtilities.createErrorStatus( e.getMessage() );
+      return new Status( IStatus.ERROR, KalypsoProjectDatabaseClient.PLUGIN_ID, "Failed to delete project", e );
     }
   }
-
 }

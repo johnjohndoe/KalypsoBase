@@ -26,7 +26,7 @@ import org.kalypso.project.database.sei.beans.KalypsoProjectBean;
 
 /**
  * Data model of remote projects in the {@link org.kalypso.project.database.server.ProjectDatabase}
- *
+ * 
  * @author Dirk Kuch
  */
 public class RemoteWorkspaceModel implements IRemoteWorkspaceModel
@@ -38,7 +38,7 @@ public class RemoteWorkspaceModel implements IRemoteWorkspaceModel
 
   protected KalypsoProjectBean[] m_beans = new KalypsoProjectBean[] {};
 
-  protected IStatus m_connectionState = StatusUtilities.createInfoStatus( Messages.getString( "org.kalypso.project.database.client.core.model.remote.RemoteWorkspaceModel.0" ) ); //$NON-NLS-1$
+  protected IStatus m_connectionState = new Status( IStatus.INFO, KalypsoProjectDatabaseClient.PLUGIN_ID, Messages.getString( "org.kalypso.project.database.client.core.model.remote.RemoteWorkspaceModel.0" ) ); //$NON-NLS-1$
 
   protected Set<IRemoteProjectsListener> m_listener = new LinkedHashSet<>();
 
@@ -62,7 +62,7 @@ public class RemoteWorkspaceModel implements IRemoteWorkspaceModel
           final KalypsoProjectBean[] remote = service.getAllProjectHeads();
           if( m_connectionState == null || m_connectionState.getSeverity() != IStatus.OK )
           {
-            m_connectionState = StatusUtilities.createOkStatus( Messages.getString( "org.kalypso.project.database.client.core.model.remote.RemoteWorkspaceModel.2" ) ); //$NON-NLS-1$
+            m_connectionState = new Status( IStatus.OK, KalypsoProjectDatabaseClient.PLUGIN_ID, Messages.getString( "org.kalypso.project.database.client.core.model.remote.RemoteWorkspaceModel.2" ) ); //$NON-NLS-1$
             fireConnectionStatusChanged();
           }
 
@@ -307,8 +307,7 @@ public class RemoteWorkspaceModel implements IRemoteWorkspaceModel
   }
 
   /**
-   * @see org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel#getProject(java.lang.String,
-   *      java.lang.String)
+   * @see org.kalypso.project.database.client.core.model.interfaces.IRemoteWorkspaceModel#getProject(java.lang.String, java.lang.String)
    */
   @Override
   public IRemoteProject getProject( final String typeId, final String uniqueProjectName )

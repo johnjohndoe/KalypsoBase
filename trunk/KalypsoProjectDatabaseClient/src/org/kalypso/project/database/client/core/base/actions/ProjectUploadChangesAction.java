@@ -40,6 +40,9 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.project.database.client.core.base.actions;
 
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -47,9 +50,9 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.wizard.WizardDialog2;
 import org.kalypso.module.IKalypsoModule;
+import org.kalypso.project.database.client.KalypsoProjectDatabaseClient;
 import org.kalypso.project.database.client.core.model.projects.ITranscendenceProject;
 import org.kalypso.project.database.client.i18n.Messages;
 import org.kalypso.project.database.client.ui.project.wizard.commit.WizardCommitProject;
@@ -75,9 +78,6 @@ public class ProjectUploadChangesAction extends Action
     setToolTipText( Messages.getString( "org.kalypso.project.database.client.core.base.actions.ProjectUploadChangesAction.1" ) ); //$NON-NLS-1$
   }
 
-  /**
-   * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
-   */
   @Override
   public void runWithEvent( final Event event )
   {
@@ -91,8 +91,9 @@ public class ProjectUploadChangesAction extends Action
     final Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
     if( shell != null && !shell.isDisposed() && Window.OK != dialog.getReturnCode() )
     {
-      ErrorDialog.openError( shell, Messages.getString( "org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.21" ), Messages.getString( "org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.22" ), StatusUtilities.createErrorStatus( "" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoProjectDatabaseClient.PLUGIN_ID, StringUtils.EMPTY );
+
+      ErrorDialog.openError( shell, Messages.getString( "org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.21" ), Messages.getString( "org.kalypso.project.database.client.ui.project.database.internal.TranscendenceProjectRowBuilder.22" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
-
 }

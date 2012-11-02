@@ -140,7 +140,7 @@ public class RemoteProjectHandler extends AbstractProjectHandle implements IRemo
   @Override
   public String toString( )
   {
-    return String.format( "Remote Project: %s", getName() );
+    return String.format( "Remote Project: %s", getName() ); //$NON-NLS-1$
   }
 
   @Override
@@ -152,18 +152,18 @@ public class RemoteProjectHandler extends AbstractProjectHandle implements IRemo
 
     /** bad hack for backward compability of kalypso planer client! */
     final String projectType = m_bean.getProjectType();
-    if( "PlanerClientProject".equals( projectType ) )
-      return "PlanerClientModule";
-    else if( "PlanerClientManagerProject".equals( projectType ) || "PlanerClientProjectTemplate".equals( projectType ) )
-      return "PlanerClientManagerModule";
-    else if( "KalypsRrmModel".equals( projectType ) )
-      return "KalypsRrmModel";
-    else if( "KalypsoWspmModel".equals( projectType ) )
-      return "KalypsoWspmModel";
-    else if( "KalypsoFloodModelType".equals( projectType ) )
-      return "KalypsoFloodModelType";
-    else if( "KalypsoRiskModel".equals( projectType ) )
-      return "KalypsoRiskModel";
+    if( "PlanerClientProject".equals( projectType ) ) //$NON-NLS-1$
+      return "PlanerClientModule"; //$NON-NLS-1$
+    else if( "PlanerClientManagerProject".equals( projectType ) || "PlanerClientProjectTemplate".equals( projectType ) ) //$NON-NLS-1$ //$NON-NLS-2$
+      return "PlanerClientManagerModule"; //$NON-NLS-1$
+    else if( "KalypsRrmModel".equals( projectType ) ) //$NON-NLS-1$
+      return "KalypsRrmModel"; //$NON-NLS-1$
+    else if( "KalypsoWspmModel".equals( projectType ) ) //$NON-NLS-1$
+      return "KalypsoWspmModel"; //$NON-NLS-1$
+    else if( "KalypsoFloodModelType".equals( projectType ) ) //$NON-NLS-1$
+      return "KalypsoFloodModelType"; //$NON-NLS-1$
+    else if( "KalypsoRiskModel".equals( projectType ) ) //$NON-NLS-1$
+      return "KalypsoRiskModel"; //$NON-NLS-1$
 
     throw new UnsupportedOperationException();
   }
