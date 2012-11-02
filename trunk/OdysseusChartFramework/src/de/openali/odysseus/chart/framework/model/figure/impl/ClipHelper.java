@@ -171,7 +171,7 @@ public class ClipHelper
     }
     else
     {
-      System.out.println( "Unknwon: " + geom );
+      System.out.println( "Unknwon: " + geom ); //$NON-NLS-1$
     }
   }
 

@@ -51,7 +51,7 @@ import de.openali.odysseus.chart.framework.util.StyleUtils;
  */
 public class TitleTypeBean
 {
-  private String m_text = "";
+  private String m_text = ""; //$NON-NLS-1$
 
   private ALIGNMENT m_positionHorizontal = ALIGNMENT.LEFT;
 

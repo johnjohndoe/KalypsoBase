@@ -50,7 +50,7 @@ public enum CHART_DATA_LOADER_STRATEGY
 
   public static CHART_DATA_LOADER_STRATEGY convert( final String strategy )
   {
-    if( "synchrone".equalsIgnoreCase( strategy ) )
+    if( "synchrone".equalsIgnoreCase( strategy ) ) //$NON-NLS-1$
       return eSynchrone;
 
     // default strategy

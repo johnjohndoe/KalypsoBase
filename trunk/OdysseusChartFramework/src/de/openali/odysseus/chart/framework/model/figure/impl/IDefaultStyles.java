@@ -40,7 +40,7 @@ public interface IDefaultStyles
 
   FONTWEIGHT DEFAULT_FONT_WEIGHT = FONTWEIGHT.NORMAL;
 
-  String DEFAULT_FONT_FAMILY = "Arial";
+  String DEFAULT_FONT_FAMILY = "Arial"; //$NON-NLS-1$
 
   boolean DEFAULT_VISIBILITY = true;
 

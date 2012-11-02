@@ -168,11 +168,11 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
     int maxChar = width / charWidth;
     if( maxChar < 6 )
       return StringUtils.abbreviate( line, 5 );
-    String s = StringUtils.abbreviateMiddle( line, "..", maxChar );
+    String s = StringUtils.abbreviateMiddle( line, "..", maxChar ); //$NON-NLS-1$
     while( calcTextSize( gc, s ).x > width )
     {
       maxChar -= 1;
-      s = StringUtils.abbreviateMiddle( line, "..", maxChar );
+      s = StringUtils.abbreviateMiddle( line, "..", maxChar ); //$NON-NLS-1$
     }
     return s;
   }
@@ -358,7 +358,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
   {// FIXME: WHAT IS THIS?!
     //Falls ein Image (Icon) als Titel gezeichnet werden soll, wird es zurzeit mit einer URL referenziert.
     //TODO:ein ImageObject statt eines String übergeben
-    return text.startsWith( "URL:" );
+    return text.startsWith( "URL:" ); //$NON-NLS-1$
   }
 
   private ImageData loadImage( final Device dev, final String text )
@@ -504,7 +504,7 @@ public class GenericChartLabelRenderer implements IChartLabelRenderer
 
     final Rectangle innerBorder = RectangleUtils.inflateRect( fitRect2, borderWidth );
     final Rectangle textRect = RectangleUtils.inflateRect( innerBorder, getTitleTypeBean().getInsets() );
-    final String[] lines = StringUtils.split( m_titleBean.getText(), "\n" );// TODO: maybe other split strategy
+    final String[] lines = StringUtils.split( m_titleBean.getText(), "\n" );// TODO: maybe other split strategy //$NON-NLS-1$
 
     final int lineHeight = textRect.height / lines.length;
 

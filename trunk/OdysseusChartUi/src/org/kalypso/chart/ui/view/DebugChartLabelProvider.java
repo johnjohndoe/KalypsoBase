@@ -58,7 +58,7 @@ public class DebugChartLabelProvider extends LabelProvider
       final String clazz = handler.getClass().getName();
       final String name = clazz.substring( clazz.lastIndexOf( '.' ) + 1 );
 
-      return String.format( " - %s", name );
+      return String.format( " - %s", name ); //$NON-NLS-1$
     }
     return super.getText( element );
   }

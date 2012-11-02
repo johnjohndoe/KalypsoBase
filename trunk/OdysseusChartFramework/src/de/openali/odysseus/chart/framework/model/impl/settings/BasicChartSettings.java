@@ -66,7 +66,7 @@ import de.openali.odysseus.chart.framework.util.img.legend.renderer.IChartLegend
  */
 public class BasicChartSettings implements IBasicChartSettings
 {
-  private String m_description = "";
+  private String m_description = ""; //$NON-NLS-1$
 
   private String m_renderer;
 

@@ -117,7 +117,7 @@ public class StyleTest implements PaintListener
 
     // Text
     final ITextStyle ts = StyleUtils.getDefaultTextStyle();
-    ts.setFamily( "Ani" );
+    ts.setFamily( "Ani" ); //$NON-NLS-1$
     final TextFigure tf = new TextFigure();
 
     for( int i = 0; i < points1.length; i++ )
@@ -142,7 +142,7 @@ public class StyleTest implements PaintListener
       ts.setAlpha( alpha );
       tf.setStyle( ts );
       tf.setPoint( new Point( p.x, p.y + 20 ) );
-      tf.setText( "Text " + i );
+      tf.setText( "Text " + i ); //$NON-NLS-1$
       tf.paint( gc );
 
     }

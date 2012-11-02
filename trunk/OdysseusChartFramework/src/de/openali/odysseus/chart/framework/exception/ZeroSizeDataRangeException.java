@@ -9,7 +9,7 @@ public class ZeroSizeDataRangeException extends Exception
 
   public ZeroSizeDataRangeException( )
   {
-    super( "DataRange must not be zero sized" );
+    super( "DataRange must not be zero sized" ); //$NON-NLS-1$
   }
 
 }

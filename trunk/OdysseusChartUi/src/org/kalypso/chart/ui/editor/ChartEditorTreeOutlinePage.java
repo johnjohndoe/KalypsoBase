@@ -124,7 +124,7 @@ public class ChartEditorTreeOutlinePage extends Page implements IContentOutlineP
     }
   }
 
-  private final InvalidateOutlineJob m_invalidateOutlineJob = new InvalidateOutlineJob( "" );
+  private final InvalidateOutlineJob m_invalidateOutlineJob = new InvalidateOutlineJob( "" ); //$NON-NLS-1$
 
   public ChartEditorTreeOutlinePage( )
   {

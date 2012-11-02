@@ -47,31 +47,31 @@ public class ChartTitleTester
   final public static TitleTypeBean[] getTitleTypes( )
   {
     final TitleTypeBean[] types = new TitleTypeBean[9];
-    types[0] = new TitleTypeBean( "-------------------topLeft---------------------" );
+    types[0] = new TitleTypeBean( "-------------------topLeft---------------------" ); //$NON-NLS-1$
     types[0].setRotation( -90 );
     types[0].setTextAnchorX( ALIGNMENT.RIGHT );
 
-    types[1] = new TitleTypeBean( "-------------------topCenter-------------------" );
+    types[1] = new TitleTypeBean( "-------------------topCenter-------------------" ); //$NON-NLS-1$
     types[1].setPositionHorizontal( ALIGNMENT.CENTER );
     types[1].setTextAnchorX( ALIGNMENT.CENTER );
     types[1].setTextAnchorY( ALIGNMENT.TOP );
 
-    types[2] = new TitleTypeBean( "-------------------topRight--------------------" );
+    types[2] = new TitleTypeBean( "-------------------topRight--------------------" ); //$NON-NLS-1$
     types[2].setPositionHorizontal( ALIGNMENT.RIGHT );
     types[2].setTextAnchorX( ALIGNMENT.RIGHT );
     types[2].setTextAnchorY( ALIGNMENT.TOP );
 
-    types[3] = new TitleTypeBean( "-------------------centerLeft---------------------" );
+    types[3] = new TitleTypeBean( "-------------------centerLeft---------------------" ); //$NON-NLS-1$
     types[3].setPositionVertical( ALIGNMENT.CENTER );
     types[3].setTextAnchorY( ALIGNMENT.CENTER );
 
-    types[4] = new TitleTypeBean( "-------------------topCenter2-------------------" );
+    types[4] = new TitleTypeBean( "-------------------topCenter2-------------------" ); //$NON-NLS-1$
     types[4].setPositionHorizontal( ALIGNMENT.CENTER );
     types[4].setPositionVertical( ALIGNMENT.TOP );
     types[4].setTextAnchorX( ALIGNMENT.CENTER );
     types[4].setTextAnchorY( ALIGNMENT.TOP );
 
-    types[5] = new TitleTypeBean( "-------------------centerCenter--------------------" );
+    types[5] = new TitleTypeBean( "-------------------centerCenter--------------------" ); //$NON-NLS-1$
     types[5].setPositionHorizontal( ALIGNMENT.CENTER );
     types[5].setPositionVertical( ALIGNMENT.CENTER );
     types[5].setTextAnchorX( ALIGNMENT.CENTER );

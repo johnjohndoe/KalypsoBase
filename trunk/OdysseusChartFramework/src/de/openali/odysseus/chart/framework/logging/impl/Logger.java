@@ -16,29 +16,29 @@ import de.openali.odysseus.chart.framework.OdysseusChartFramework;
 public class Logger
 {
 
-  public static final String TOPIC_LOG_GENERAL = getPluginID() + "/debug";
+  public static final String TOPIC_LOG_GENERAL = getPluginID() + "/debug"; //$NON-NLS-1$
 
-  public static final String TOPIC_LOG_AXIS = getPluginID() + "/debug/axis";
+  public static final String TOPIC_LOG_AXIS = getPluginID() + "/debug/axis"; //$NON-NLS-1$
 
-  public static final String TOPIC_LOG_MAPPER = getPluginID() + "/debug/mapper";
+  public static final String TOPIC_LOG_MAPPER = getPluginID() + "/debug/mapper"; //$NON-NLS-1$
 
-  public static final String TOPIC_LOG_LAYER = getPluginID() + "/debug/layer";
+  public static final String TOPIC_LOG_LAYER = getPluginID() + "/debug/layer"; //$NON-NLS-1$
 
-  public static final String TOPIC_LOG_PLOT = getPluginID() + "/debug/plot";
+  public static final String TOPIC_LOG_PLOT = getPluginID() + "/debug/plot"; //$NON-NLS-1$
 
-  public static final String TOPIC_LOG_LEGEND = getPluginID() + "/debug/legend";
+  public static final String TOPIC_LOG_LEGEND = getPluginID() + "/debug/legend"; //$NON-NLS-1$
 
-  public static final String TOPIC_LOG_STYLE = getPluginID() + "/debug/style";
+  public static final String TOPIC_LOG_STYLE = getPluginID() + "/debug/style"; //$NON-NLS-1$
 
-  public static final String TOPIC_TRACE = getPluginID() + "/trace";
+  public static final String TOPIC_TRACE = getPluginID() + "/trace"; //$NON-NLS-1$
 
-  public static final String TOPIC_LOG_CONFIG = getPluginID() + "/debug/config";
+  public static final String TOPIC_LOG_CONFIG = getPluginID() + "/debug/config"; //$NON-NLS-1$
 
-  public static final String TOPIC_LOG_CHART = getPluginID() + "/debug/chart";
+  public static final String TOPIC_LOG_CHART = getPluginID() + "/debug/chart"; //$NON-NLS-1$
 
-  public static final String TOPIC_LOG_DATA = getPluginID() + "/debug/data";
+  public static final String TOPIC_LOG_DATA = getPluginID() + "/debug/data"; //$NON-NLS-1$
 
-  private static final String CONFIG_LEVEL = getPluginID() + "/level";
+  private static final String CONFIG_LEVEL = getPluginID() + "/level"; //$NON-NLS-1$
 
   private static enum LEVEL
   {
@@ -92,7 +92,7 @@ public class Logger
    */
   private static void log( final int statusCode, final String topic, final LEVEL level, final String msg )
   {
-    final String logMsg = level.toString() + ": " + msg;
+    final String logMsg = level.toString() + ": " + msg; //$NON-NLS-1$
     if( loggingAllowed( level, topic ) )
     {
       final ILog log = Platform.getLog( getBundle() );
@@ -117,7 +117,7 @@ public class Logger
    */
   private static boolean topicAllowed( final String topic )
   {
-    if( "true".equals( Platform.getDebugOption( topic ) ) )
+    if( "true".equals( Platform.getDebugOption( topic ) ) ) //$NON-NLS-1$
       return true;
     return true;
   }

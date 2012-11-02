@@ -63,7 +63,7 @@ public interface IAxisRenderer
   /** 
    * use IAxisConstants#BORDER_SIZE
    */
-  String BORDER_SIZE = "de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer_border_size";
+  String BORDER_SIZE = "de.openali.odysseus.chart.framework.model.mapper.renderer.IAxisRenderer_border_size"; //$NON-NLS-1$
 
   void setLabelStyle( ITextStyle style );
 

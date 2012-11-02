@@ -51,6 +51,6 @@ public class BooleanDataOperator extends AbstractDataOperator<Boolean>
   @Override
   public String getFormatHint( )
   {
-    return "%s";
+    return "%s"; //$NON-NLS-1$
   }
 }
