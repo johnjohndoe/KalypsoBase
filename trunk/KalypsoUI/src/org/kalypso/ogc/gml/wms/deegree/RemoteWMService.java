@@ -79,7 +79,7 @@ public class RemoteWMService extends org.deegree.ogcwebservices.wms.RemoteWMServ
   {
     URL url = null;
 
-    if( request.getVersion().equals( "1.0.0" ) )
+    if( request.getVersion().equals( "1.0.0" ) ) //$NON-NLS-1$
     {
       url = addresses.get( FEATUREINFO_NAME );
     }
@@ -90,7 +90,7 @@ public class RemoteWMService extends org.deegree.ogcwebservices.wms.RemoteWMServ
 
     if( url == null )
     {
-      final String msg = Messages.getMessage( "REMOTEWMS_GFI_NOT_SUPPORTED", capabilities.getServiceIdentification().getTitle() );
+      final String msg = Messages.getMessage( org.kalypso.ogc.gml.wms.deegree.Messages.RemoteWMService_0, capabilities.getServiceIdentification().getTitle() );
       throw new OGCWebServiceException( msg );
     }
 
@@ -99,7 +99,7 @@ public class RemoteWMService extends org.deegree.ogcwebservices.wms.RemoteWMServ
     String result = null;
     try
     {
-      LOG.logDebug( "GetFeatureInfo: ", us );
+      LOG.logDebug( "GetFeatureInfo: ", us ); //$NON-NLS-1$
       final URL ur = new URL( us );
       // get map from the remote service
       final NetWorker nw = new NetWorker( ur );
@@ -108,10 +108,10 @@ public class RemoteWMService extends org.deegree.ogcwebservices.wms.RemoteWMServ
 
       // extract content charset if available; otherwise use configured system charset
       String charset = null;
-      LOG.logDebug( "content type: ", contentType );
+      LOG.logDebug( "content type: ", contentType ); //$NON-NLS-1$
       if( contentType != null )
       {
-        final String[] tmp = StringTools.toArray( contentType, ";", false );
+        final String[] tmp = StringTools.toArray( contentType, ";", false ); //$NON-NLS-1$
         if( tmp.length == 2 )
         {
           charset = tmp[1].substring( tmp[1].indexOf( '=' ) + 1, tmp[1].length() );
@@ -131,8 +131,8 @@ public class RemoteWMService extends org.deegree.ogcwebservices.wms.RemoteWMServ
     catch( final Exception e )
     {
       LOG.logError( e.getMessage(), e );
-      final String msg = Messages.getMessage( "REMOTEWMS_GFI_GENERAL_ERROR", capabilities.getServiceIdentification().getTitle(), us );
-      throw new OGCWebServiceException( "RemoteWMS:handleFeatureInfo", msg );
+      final String msg = Messages.getMessage( "REMOTEWMS_GFI_GENERAL_ERROR", capabilities.getServiceIdentification().getTitle(), us ); //$NON-NLS-1$
+      throw new OGCWebServiceException( "RemoteWMS:handleFeatureInfo", msg ); //$NON-NLS-1$
     }
 
     return result;
@@ -141,7 +141,7 @@ public class RemoteWMService extends org.deegree.ogcwebservices.wms.RemoteWMServ
   // checks for excessive &
   private static String constructRequestURL( final String params, final String url )
   {
-    if( url.endsWith( "?" ) && params.startsWith( "&" ) )
+    if( url.endsWith( "?" ) && params.startsWith( "&" ) ) //$NON-NLS-1$ //$NON-NLS-2$
     {
       return url + params.substring( 1 );
     }

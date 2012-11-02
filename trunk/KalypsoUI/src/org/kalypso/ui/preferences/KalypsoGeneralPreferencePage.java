@@ -68,8 +68,8 @@ import org.kalypsodeegree.KalypsoDeegreePreferences;
  * <samp>FieldEditorPreferencePage </samp>, we can use the field support built into JFace that allows us to create a
  * page that is small and knows how to save, restore and apply itself.
  * <p>
- * This page is used to modify preferences only. They are stored in the preference store that belongs to the main
- * plug-in class. That way, preferences can be accessed directly via the preference store.
+ * This page is used to modify preferences only. They are stored in the preference store that belongs to the main plug-in class. That way, preferences can be accessed directly via the preference
+ * store.
  */
 public class KalypsoGeneralPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage
 {
@@ -107,18 +107,18 @@ public class KalypsoGeneralPreferencePage extends FieldEditorPreferencePage impl
 
     /* raster painting */
     final Group rasterPaintingGroup = new Group( getFieldEditorParent(), SWT.NONE );
-    rasterPaintingGroup.setText( "Raster Painting Options" );
+    rasterPaintingGroup.setText( Messages.getString( "KalypsoGeneralPreferencePage.0" ) ); //$NON-NLS-1$
     rasterPaintingGroup.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false, 2, 1 ) );
 
     final Label rasterPaintingGroupLabel = new Label( rasterPaintingGroup, SWT.WRAP );
     rasterPaintingGroupLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
-    rasterPaintingGroupLabel.setText( "Tweak these options to speed up raster painting or make it more beautiful." );
+    rasterPaintingGroupLabel.setText( Messages.getString( "KalypsoGeneralPreferencePage.1" ) ); //$NON-NLS-1$
 
-    final String rasterPixelLabel = "Pixel Resolution";
+    final String rasterPixelLabel = Messages.getString( "KalypsoGeneralPreferencePage.2" ); //$NON-NLS-1$
     m_rasterPixelEditor = new IntegerFieldEditor( KalypsoDeegreePreferences.SETTING_RASTER_PAINTING_PIXEL_RESOLUTION, rasterPixelLabel, rasterPaintingGroup );
     m_rasterPixelEditor.setValidRange( 1, 10 );
 
-    final String rasterInterpolationLabel = "Interpolation Method";
+    final String rasterInterpolationLabel = Messages.getString( "KalypsoGeneralPreferencePage.3" ); //$NON-NLS-1$
     final String[][] interpolationNamesAndValues = getInterpolationNamesAndValues();
     m_rasterInterpolationEditor = new ComboFieldEditor( KalypsoDeegreePreferences.SETTING_RASTER_PAINTING_INTERPOLATION_METHOD, rasterInterpolationLabel, interpolationNamesAndValues, rasterPaintingGroup );
 
@@ -160,7 +160,6 @@ public class KalypsoGeneralPreferencePage extends FieldEditorPreferencePage impl
     m_rasterInterpolationEditor.setPreferenceStore( KalypsoDeegreePreferences.getStore() );
     m_rasterInterpolationEditor.load();
   }
-
 
   @Override
   public boolean performOk( )

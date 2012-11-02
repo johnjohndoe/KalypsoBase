@@ -90,9 +90,6 @@ public class NewFeatureAction extends Action
     return catalogDescriptor;
   }
 
-  /**
-   * @see org.eclipse.jface.action.Action#runWithEvent(org.eclipse.swt.widgets.Event)
-   */
   @Override
   public void runWithEvent( final Event event )
   {
@@ -103,7 +100,7 @@ public class NewFeatureAction extends Action
     catch( final Exception e )
     {
       final IStatus status = StatusUtilities.statusFromThrowable( e );
-      ErrorDialog.openError( event.widget.getDisplay().getActiveShell(), getText(), Messages.getString( "org.kalypso.ui.editor.gmleditor.ui.NewFeatureAction.0" ), status ); //$NON-NLS-1$
+      ErrorDialog.openError( event.widget.getDisplay().getActiveShell(), getText(), Messages.getString( "org.kalypso.ui.editor.gmleditor.part.NewFeatureAction.0" ), status ); //$NON-NLS-1$
     }
   }
 

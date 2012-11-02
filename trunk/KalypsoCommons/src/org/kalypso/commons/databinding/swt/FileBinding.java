@@ -136,7 +136,7 @@ public class FileBinding
   {
     // destination browse button
     final Button browseButton = new Button( parent, SWT.PUSH );
-    browseButton.setText( Messages.getString("FileBinding_0") ); //$NON-NLS-1$
+    browseButton.setText( Messages.getString( "FileBinding_0" ) ); //$NON-NLS-1$
     browseButton.setFont( parent.getFont() );
 
     browseButton.addSelectionListener( new SelectionAdapter()

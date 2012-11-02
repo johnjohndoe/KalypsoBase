@@ -116,12 +116,12 @@ public class MovieFrame implements IMovieFrame
       final File imageDirectory = getImageDirectory( width, height );
 
       /* The image file. */
-     final String imageFilename = getLabel() + "_" + m_themeID + ".PNG";
-      final String correctedImageFilename = imageFilename.replace( " ", "_" );
-      final String correctedImageFilename1 = correctedImageFilename.replace( "/", "_" );
+     final String imageFilename = getLabel() + "_" + m_themeID + ".PNG"; //$NON-NLS-1$ //$NON-NLS-2$
+      final String correctedImageFilename = imageFilename.replace( " ", "_" ); //$NON-NLS-1$ //$NON-NLS-2$
+      final String correctedImageFilename1 = correctedImageFilename.replace( "/", "_" ); //$NON-NLS-1$ //$NON-NLS-2$
       final File imageFile = new File( imageDirectory, correctedImageFilename1 );
       if( imageFile.exists() )
-        return JAI.create( "fileload", imageFile.getAbsolutePath() );
+        return JAI.create( "fileload", imageFile.getAbsolutePath() ); //$NON-NLS-1$
 
       /* Create the image. */
       final IMapModell model = createModel();

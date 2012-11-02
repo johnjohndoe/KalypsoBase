@@ -71,6 +71,7 @@ import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.core.runtime.AdapterUtils;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
+import org.kalypso.contribs.java.io.FileExtensions;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.i18n.Messages;
@@ -87,7 +88,7 @@ import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
 
 /**
  * Helper class for implementors of {@link org.eclipse.core.commands.IHandler} for map commands.
- *
+ * 
  * @author Gernot Belger
  */
 public class MapHandlerUtils
@@ -122,7 +123,7 @@ public class MapHandlerUtils
 
     final Object part = context.getVariable( ISources.ACTIVE_PART_NAME );
     if( part instanceof AbstractMapPart )
-      return ((AbstractMapPart) part).getCommandTarget();
+      return ((AbstractMapPart)part).getCommandTarget();
 
     return null;
   }
@@ -139,18 +140,18 @@ public class MapHandlerUtils
   /**
    * Gets the currently active mapPanel from the handler event.<br>
    * To be more precise, gets the <code>activeMapPanel</code> source from the events context.
-   *
+   * 
    * @return <code>null</code>, if no {@link IMapPanel} was found in the context.
    */
   public static IMapPanel getMapPanel( final IEvaluationContext context )
   {
-    return (IMapPanel) context.getVariable( MapPanelSourceProvider.ACTIVE_MAPPANEL_NAME );
+    return (IMapPanel)context.getVariable( MapPanelSourceProvider.ACTIVE_MAPPANEL_NAME );
   }
 
   /**
    * Gets the currently active mapPanel from the handler event.<br>
    * To be more precise, gets the <code>activeMapPanel</code> source from the events context.
-   *
+   * 
    * @throws ExecutionException
    *           If the current context contains no mapPanel.
    */
@@ -167,7 +168,7 @@ public class MapHandlerUtils
    * Gets the currently active mapModell from the handler event.<br>
    * To be more precise, gets the <code>activeMapPanel</code> source from the events context, and from it, its map
    * modell.
-   *
+   * 
    * @return <code>null</code>, if no {@link IMapModell} was found in the context.
    */
   public static IMapModell getMapModell( final IEvaluationContext context )
@@ -183,7 +184,7 @@ public class MapHandlerUtils
    * Gets the currently active mapModell from the handler event.<br>
    * To be more precise, gets the <code>activeMapPanel</code> source from the events context, and from it, its map
    * modell.
-   *
+   * 
    * @throws ExecutionException
    *           If the current context contains no mapPanel.
    */
@@ -200,7 +201,7 @@ public class MapHandlerUtils
    * Gets the currently active theme from the handler event.<br>
    * To be more precise, gets the <code>activeMapPanel</code> source from the events context, and from it, its active
    * theme.
-   *
+   * 
    * @throws ExecutionException
    *           If the current context contains no mapPanel.
    */
@@ -223,7 +224,7 @@ public class MapHandlerUtils
 
     if( selection instanceof IStructuredSelection )
     {
-      final IStructuredSelection s = (IStructuredSelection) selection;
+      final IStructuredSelection s = (IStructuredSelection)selection;
       final Object[] elements = s.toArray();
       for( final Object element : elements )
       {
@@ -245,12 +246,12 @@ public class MapHandlerUtils
 
     if( selection instanceof IStructuredSelection )
     {
-      final IStructuredSelection s = (IStructuredSelection) selection;
+      final IStructuredSelection s = (IStructuredSelection)selection;
       final Object[] elements = s.toArray();
       for( final Object element : elements )
       {
         if( element instanceof IThemeNode )
-          nodes.add( (IThemeNode) element );
+          nodes.add( (IThemeNode)element );
       }
     }
 
@@ -259,36 +260,36 @@ public class MapHandlerUtils
 
   public static GisMapOutlinePage getMapOutline( final IEvaluationContext context )
   {
-    final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
-    final GisMapOutlinePage tryOne = (GisMapOutlinePage) part.getAdapter( GisMapOutlinePage.class );
+    final IWorkbenchPart part = (IWorkbenchPart)context.getVariable( ISources.ACTIVE_PART_NAME );
+    final GisMapOutlinePage tryOne = (GisMapOutlinePage)part.getAdapter( GisMapOutlinePage.class );
     if( tryOne != null )
       return tryOne;
 
     // HACK: also check for specific views, propably does not always work as expected...
-    final IWorkbenchWindow window = (IWorkbenchWindow) context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
+    final IWorkbenchWindow window = (IWorkbenchWindow)context.getVariable( ISources.ACTIVE_WORKBENCH_WINDOW_NAME );
     final IWorkbenchPage activePage = window.getActivePage();
-    final ContentOutline outlineView = (ContentOutline) activePage.findView( IPageLayout.ID_OUTLINE );
+    final ContentOutline outlineView = (ContentOutline)activePage.findView( IPageLayout.ID_OUTLINE );
     if( outlineView != null )
     {
       final IPage currentPage = outlineView.getCurrentPage();
       if( currentPage instanceof GisMapOutlinePage )
-        return (GisMapOutlinePage) currentPage;
+        return (GisMapOutlinePage)currentPage;
     }
 
-    final ViewContentOutline mapOutline = (ViewContentOutline) activePage.findView( ViewContentOutline.ID );
+    final ViewContentOutline mapOutline = (ViewContentOutline)activePage.findView( ViewContentOutline.ID );
     if( mapOutline != null )
     {
       final IPage currentPage = mapOutline.getCurrentPage();
       if( currentPage instanceof GisMapOutlinePage )
-        return (GisMapOutlinePage) currentPage;
+        return (GisMapOutlinePage)currentPage;
     }
 
     // Last try: adapt current view to the outline
     // PROBLEMATIC: this created outline must be disposed (but in the other cases not...).
     // We should reduce the dependency to the outline page and remove this whole mtehod...
-    final IContentOutlinePage outline = (IContentOutlinePage) part.getAdapter( IContentOutlinePage.class );
+    final IContentOutlinePage outline = (IContentOutlinePage)part.getAdapter( IContentOutlinePage.class );
     if( outline instanceof GisMapOutlinePage )
-      return (GisMapOutlinePage) outline;
+      return (GisMapOutlinePage)outline;
 
     return null;
   }
@@ -316,7 +317,7 @@ public class MapHandlerUtils
     if( !(selection instanceof IStructuredSelection) || selection.isEmpty() )
       return null;
 
-    final IStructuredSelection structSel = (IStructuredSelection) selection;
+    final IStructuredSelection structSel = (IStructuredSelection)selection;
     final Iterator< ? > iterator = structSel.iterator();
     for( final Iterator< ? > selIt = iterator; selIt.hasNext(); )
     {
@@ -326,7 +327,7 @@ public class MapHandlerUtils
 
       if( object instanceof IAdaptable )
       {
-        final Object adapter = ((IAdaptable) object).getAdapter( classToFind );
+        final Object adapter = ((IAdaptable)object).getAdapter( classToFind );
         if( adapter != null )
           return classToFind.cast( adapter );
       }
@@ -382,7 +383,8 @@ public class MapHandlerUtils
   {
     final String[] result = new String[filterNames.length + 1];
     System.arraycopy( filterNames, 0, result, 0, filterNames.length );
-    result[filterNames.length] = Messages.getString( "org.kalypso.ogc.gml.outline.handler.ExportGml2ShapeThemeHandler.8" ); //$NON-NLS-1$
+
+    result[filterNames.length] = FileExtensions.ALL_FILES.getFilterName();
     return result;
   }
 
@@ -421,7 +423,7 @@ public class MapHandlerUtils
   {
     final IKalypsoTheme theme = AdapterUtils.getAdapter( element, IKalypsoTheme.class );
     if( theme instanceof IKalypsoFeatureTheme )
-      return (IKalypsoFeatureTheme) theme;
+      return (IKalypsoFeatureTheme)theme;
 
     return null;
   }

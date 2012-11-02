@@ -252,7 +252,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
     {
       if( dcp instanceof HTTP )
       {
-        final HTTP http = (HTTP) dcp;
+        final HTTP http = (HTTP)dcp;
         final List<OnlineResource> links = http.getLinks();
         if( links.size() > 0 )
           return links.get( 0 ).getLinkage().getHref();
@@ -264,7 +264,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
 
   /**
    * This function creates the remote service and returns it.
-   *
+   * 
    * @param capabilities
    *          The capabilites for the remote service.
    * @return The remote service.
@@ -273,7 +273,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
 
   /**
    * This function parses a String into an URL to the WMS service.
-   *
+   * 
    * @param service
    *          The String representation of the URL to the WMS service.
    * @return The URL to the WMS service.
@@ -295,7 +295,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
    * This method tries to find a common spatial reference system (srs) for a given set of layers. If all layers
    * coorespond to the local crs the local crs is returned, otherwise the srs of the top layer is returned and the
    * client must choose one to transform it to the local coordinate system
-   *
+   * 
    * @param localCRS
    *          The local spatial reference system.
    * @param capabilities
@@ -322,7 +322,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
       if( m_wms == null || m_layers == null )
         return null;
 
-      return DeegreeWMSUtilities.getMaxExtent( m_layers, (WMSCapabilities) m_wms.getCapabilities(), m_negotiatedSRS );
+      return DeegreeWMSUtilities.getMaxExtent( m_layers, (WMSCapabilities)m_wms.getCapabilities(), m_negotiatedSRS );
     }
     catch( final Exception ex )
     {
@@ -379,19 +379,19 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
         return null;
 
       /* Create the GetMap request. */
-      final GetMap request = DeegreeWMSUtilities.createGetMapRequest( (WMSCapabilities) remoteWMS.getCapabilities(), getNegotiatedSRS(), getThemeName(), m_layers, m_styles, width, height, bbox, getLocalSRS(), m_sldBody );
+      final GetMap request = DeegreeWMSUtilities.createGetMapRequest( (WMSCapabilities)remoteWMS.getCapabilities(), getNegotiatedSRS(), getThemeName(), m_layers, m_styles, width, height, bbox, getLocalSRS(), m_sldBody );
 
       /* HACK: Some wms servers seems to be wrongly configured. */
       String getMapUrl = m_getMapUrl.toExternalForm();
-      final int indexOf = getMapUrl.indexOf( "?" );
+      final int indexOf = getMapUrl.indexOf( "?" ); //$NON-NLS-1$
       if( indexOf > -1 )
         getMapUrl = getMapUrl.substring( 0, indexOf );
 
       /* HACK: The deegree class GetMap returns two different types of requests (regarding the wms version). */
       /* HACK: One with & at the beginning and one without. */
       String requestParameters = request.toString();
-      if( requestParameters.startsWith( "&" ) )
-        requestParameters = requestParameters.replaceFirst( "&", "" );
+      if( requestParameters.startsWith( "&" ) ) //$NON-NLS-1$
+        requestParameters = requestParameters.replaceFirst( "&", "" ); //$NON-NLS-1$ //$NON-NLS-2$
 
       /* Store the request, before actually asking the WMS for a response. */
       m_lastRequest = URLDecoder.decode( String.format( "%s?%s", getMapUrl, requestParameters ), "UTF-8" ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -407,10 +407,10 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
         return null;
 
       /* Cast. */
-      final GetMapResult mapResponse = (GetMapResult) result;
+      final GetMapResult mapResponse = (GetMapResult)result;
 
       /* Get the image. */
-      final Image resultImage = (Image) mapResponse.getMap();
+      final Image resultImage = (Image)mapResponse.getMap();
       if( resultImage == null )
       {
         /* Handle service-exception: convert to status and set it. */
@@ -469,7 +469,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
 
   /**
    * This function returns the last request or null.
-   *
+   * 
    * @return The last request or null.
    */
   public synchronized String getLastRequest( )
@@ -579,10 +579,10 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
 
     /* There are no queryable layers. */
     if( layers.size() == 0 )
-      throw new OWSException( "There are no queryable layers...", OWSUtilities.OWS_VERSION, "en", ExceptionCode.NO_APPLICABLE_CODE, null );
+      throw new OWSException( Messages.getString( "AbstractDeegreeImageProvider.5" ), OWSUtilities.OWS_VERSION, "en", ExceptionCode.NO_APPLICABLE_CODE, null ); //$NON-NLS-1$ //$NON-NLS-2$
 
     /* Create the GetFeatureInfo request. */
-    final GetFeatureInfo featureInfoRequest = GetFeatureInfo.create( lastGetMap.getVersion(), "GetFeatureInfo", layers.toArray( new String[] {} ), lastGetMap, "text/html", 1, new Point( (int) x, (int) y ), lastGetMap.getExceptions(), lastGetMap.getStyledLayerDescriptor(), lastGetMap.getVendorSpecificParameters() );
+    final GetFeatureInfo featureInfoRequest = GetFeatureInfo.create( lastGetMap.getVersion(), "GetFeatureInfo", layers.toArray( new String[] {} ), lastGetMap, "text/html", 1, new Point( (int)x, (int)y ), lastGetMap.getExceptions(), lastGetMap.getStyledLayerDescriptor(), lastGetMap.getVendorSpecificParameters() ); //$NON-NLS-1$ //$NON-NLS-2$
 
     /* Do the request and wait, until the result is there. */
     final Object result = remoteWMS.doService( featureInfoRequest );
@@ -594,7 +594,7 @@ public abstract class AbstractDeegreeImageProvider implements IKalypsoImageProvi
       return null;
 
     /* Cast. */
-    final GetFeatureInfoResult featureInfoResponse = (GetFeatureInfoResult) result;
+    final GetFeatureInfoResult featureInfoResponse = (GetFeatureInfoResult)result;
 
     /* Get the response. */
     final String featureInfo = featureInfoResponse.getFeatureInfo();
