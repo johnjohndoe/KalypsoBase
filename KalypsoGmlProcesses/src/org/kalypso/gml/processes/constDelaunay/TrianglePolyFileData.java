@@ -171,7 +171,7 @@ public class TrianglePolyFileData
     catch( final IOException e )
     {
       e.printStackTrace();
-      return new Status(IStatus.ERROR, KalypsoGmlProcessesPlugin.PLUGIN_ID, "Failed to write poly file", e);
+      return new Status(IStatus.ERROR, KalypsoGmlProcessesPlugin.PLUGIN_ID, "Failed to write poly file", e); //$NON-NLS-1$
     }
     finally
     {

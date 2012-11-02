@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.kalypso.gml.processes.KalypsoGmlProcessesPlugin;
+import org.kalypso.gml.processes.i18n.Messages;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -110,7 +111,7 @@ public class TinLoadJob extends Job
     }
     catch( final Exception e )
     {
-      final String message = String.format( "Failed to load triangulated surface from: %s", dataLocation );
+      final String message = String.format( Messages.getString("TinLoadJob_0"), dataLocation ); //$NON-NLS-1$
       return new Status( IStatus.ERROR, KalypsoGmlProcessesPlugin.PLUGIN_ID, message, e );
     }
   }

@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.ui.progress.IProgressConstants;
 import org.kalypso.gml.processes.KalypsoGmlProcessesPlugin;
+import org.kalypso.gml.processes.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
@@ -63,7 +64,7 @@ import org.kalypsodeegree.model.tin.ITin;
  */
 public class TriangulatedSurfaceTin implements ITin
 {
-  private static IStatus INIT_STATUS = new Status( IStatus.INFO, KalypsoGmlProcessesPlugin.PLUGIN_ID, "Not initialized" );
+  private static IStatus INIT_STATUS = new Status( IStatus.INFO, KalypsoGmlProcessesPlugin.PLUGIN_ID, Messages.getString("TriangulatedSurfaceTin_0") ); //$NON-NLS-1$
 
   private IStatus m_loadStatus = INIT_STATUS;
 
@@ -128,7 +129,7 @@ public class TriangulatedSurfaceTin implements ITin
         }
       } );
 
-      m_loadStatus = new Status( IStatus.INFO, KalypsoGmlProcessesPlugin.PLUGIN_ID, "Loading..." );
+      m_loadStatus = new Status( IStatus.INFO, KalypsoGmlProcessesPlugin.PLUGIN_ID, Messages.getString("TriangulatedSurfaceTin_1") ); //$NON-NLS-1$
       m_loadJob.schedule();
     }
 

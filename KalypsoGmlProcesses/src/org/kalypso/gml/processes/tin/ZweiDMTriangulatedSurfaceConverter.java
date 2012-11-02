@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.kalypso.gml.processes.KalypsoGmlProcessesPlugin;
+import org.kalypso.gml.processes.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.model.geometry.GM_TriangulatedSurface_Impl;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
@@ -84,8 +85,7 @@ public class ZweiDMTriangulatedSurfaceConverter extends AbstractTriangulatedSurf
     try
     {
       /* Monitor. */
-      monitor.beginTask( "Copying input data", 100 );
-      monitor.subTask( "Copying input data..." );
+      monitor.beginTask( Messages.getString("ZweiDMTriangulatedSurfaceConverter_0"), 100 ); //$NON-NLS-1$
 
       /* Coordinate system of the 2DM file. */
       final int sourceSrid = JTSAdapter.toSrid( m_sourceSrs );
@@ -95,7 +95,7 @@ public class ZweiDMTriangulatedSurfaceConverter extends AbstractTriangulatedSurf
       parser.parse( sourceLocation, new SubProgressMonitor( monitor, 50 ) );
 
       /* Monitor. */
-      monitor.subTask( "Creating triangulated surface..." );
+      monitor.subTask( Messages.getString("ZweiDMTriangulatedSurfaceConverter_1") ); //$NON-NLS-1$
 
       /* Create the triangulated surface. */
       final GM_TriangulatedSurface gmSurface = new GM_TriangulatedSurface_Impl( m_sourceSrs );
@@ -125,7 +125,7 @@ public class ZweiDMTriangulatedSurfaceConverter extends AbstractTriangulatedSurf
           continue;
         }
 
-        throw new IllegalStateException( String.format( "Expected 4 or 5 coordinates, got %d...", coordinates.length ) );
+        throw new IllegalStateException( String.format( Messages.getString("ZweiDMTriangulatedSurfaceConverter_2"), coordinates.length ) ); //$NON-NLS-1$
       }
 
       /* Monitor. */

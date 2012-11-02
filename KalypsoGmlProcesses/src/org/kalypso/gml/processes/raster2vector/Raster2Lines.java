@@ -144,7 +144,7 @@ public class Raster2Lines implements IGeoGridWalker
 
   /**
    * Gibt ein Objekt vom Type LineString[] zurück
-   *
+   * 
    * @see org.kalypso.gis.doubleraster.DoubleRasterWalker#getResult()
    */
   @Override

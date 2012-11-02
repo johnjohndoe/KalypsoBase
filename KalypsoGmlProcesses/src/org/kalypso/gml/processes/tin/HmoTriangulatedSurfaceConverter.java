@@ -50,6 +50,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.gml.processes.KalypsoGmlProcessesPlugin;
+import org.kalypso.gml.processes.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 import org.kalypsodeegree_impl.model.geometry.GM_TriangulatedSurface_Impl;
 
@@ -78,9 +79,8 @@ public class HmoTriangulatedSurfaceConverter extends AbstractTriangulatedSurface
 
     try
     {
-      /* Monitor. */
-      monitor.beginTask( "Copying input data", 100 );
-      monitor.subTask( "Copying input data..." );
+      /* Monitor */
+      monitor.beginTask( Messages.getString( "HmoTriangulatedSurfaceConverter_0" ), 100 ); //$NON-NLS-1$
 
       final GM_TriangulatedSurface gmSurface = new GM_TriangulatedSurface_Impl( m_sourceSrs );
 

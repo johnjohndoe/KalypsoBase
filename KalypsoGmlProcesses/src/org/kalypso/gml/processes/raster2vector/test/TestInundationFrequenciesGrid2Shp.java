@@ -222,8 +222,8 @@ public class TestInundationFrequenciesGrid2Shp
 
   private void writeLineShape( final CollectorDataProvider[] data, final String shapeBase ) throws DBaseException, IOException, ShapeDataException, SHPException
   {
-    final IDBFField doubleField = new DBFField( "ID", FieldType.N, (short) 10, (short) 3 );
-    final IDBFField stringField = new DBFField( "NAME", FieldType.C, (short) 100, (short) 0 );
+    final IDBFField doubleField = new DBFField( "ID", FieldType.N, (short) 10, (short) 3 ); //$NON-NLS-1$
+    final IDBFField stringField = new DBFField( "NAME", FieldType.C, (short) 100, (short) 0 ); //$NON-NLS-1$
     final IDBFField[] fields = new IDBFField[] { doubleField, stringField };
 
     final ShapeType shapeType = ShapeType.POLYLINEZ;
@@ -248,7 +248,7 @@ public class TestInundationFrequenciesGrid2Shp
 
   private void writeEnvelopeShape( final GM_Envelope env, final String shapeBase ) throws DBaseException, IOException, GM_Exception, ShapeDataException, SHPException
   {
-    final IDBFField doubleField = new DBFField( "ID", FieldType.N, (short) 10, (short) 3 );
+    final IDBFField doubleField = new DBFField( "ID", FieldType.N, (short) 10, (short) 3 ); //$NON-NLS-1$
     final IDBFField[] fields = new IDBFField[] { doubleField };
 
     final ShapeType shapeType = ShapeType.POLYGONZ;
@@ -269,10 +269,10 @@ public class TestInundationFrequenciesGrid2Shp
 
   private void writePolygonShape( final CollectorDataProvider[] data, final String shapeBase ) throws DBaseException, IOException, ShapeDataException, SHPException
   {
-    final IDBFField doubleField = new DBFField( "ID", FieldType.N, (short) 10, (short) 3 );
-    final IDBFField fromField = new DBFField( "FROM", FieldType.N, (short) 10, (short) 3 );
-    final IDBFField toField = new DBFField( "TO", FieldType.N, (short) 10, (short) 3 );
-    final IDBFField rangeField = new DBFField( "RANGE", FieldType.C, (short) 10, (short) 0 );
+    final IDBFField doubleField = new DBFField( "ID", FieldType.N, (short) 10, (short) 3 ); //$NON-NLS-1$
+    final IDBFField fromField = new DBFField( "FROM", FieldType.N, (short) 10, (short) 3 ); //$NON-NLS-1$
+    final IDBFField toField = new DBFField( "TO", FieldType.N, (short) 10, (short) 3 ); //$NON-NLS-1$
+    final IDBFField rangeField = new DBFField( "RANGE", FieldType.C, (short) 10, (short) 0 ); //$NON-NLS-1$
     final IDBFField[] fields = new IDBFField[] { doubleField, fromField, toField, rangeField };
 
     final ShapeType shapeType = ShapeType.POLYLINEZ;
