@@ -60,8 +60,8 @@ public class UrlCatalogOGC extends AbstractUrlCatalog
     try
     {
       // Version 3.1.1. from http://schemas.opengis.net/gml/3.1.1/base/gml.xsd
-      catalog.put( NS.GML3 + "#3", new URL( "platform:/plugin/org.kalypso.contribs.ogc31/etc/schemas/gml/3.1.1/base/gml.xsd" ) ); //$NON-NLS-1$
-      prefixes.put( NS.GML3, "gml" );
+      catalog.put( NS.GML3 + "#3", new URL( "platform:/plugin/org.kalypso.contribs.ogc31/etc/schemas/gml/3.1.1/base/gml.xsd" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      prefixes.put( NS.GML3, "gml" ); //$NON-NLS-1$
 
       // SWE & OM things
       catalog.put( NS.SWE, new URL( "platform:/plugin/org.kalypso.contribs.ogc31/etc/schemas/sweCommon/1.0.30/swe.xsd" ) ); //$NON-NLS-1$
