@@ -139,7 +139,7 @@ public class GisMapPerfTest extends TestCase
       logger.printCurrentInterim( "Rendered map #" + i + ": " ); //$NON-NLS-1$ //$NON-NLS-2$
 
       if( i == 0 )
-        ImageIO.write( image, "png", FileUtilities.getNewTempFile( "image", "png" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+        ImageIO.write( image, "png", FileUtilities.getNewTempFile( "image", "png" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
     logger.printCurrentTotal( "Total: " ); //$NON-NLS-1$
@@ -165,7 +165,7 @@ public class GisMapPerfTest extends TestCase
   private GisTemplateMapModell loadMap( final Gismapview gismapview, final URL resource, final String crs, final TimeLogger logger, final IFeatureSelectionManager selectionManager ) throws Exception
   {
     logger.takeInterimTime();
-    logger.printCurrentInterim( "Loading map modell..." );
+    logger.printCurrentInterim( "Loading map modell..." ); //$NON-NLS-1$
 
     final GisTemplateMapModell mapModell = new GisTemplateMapModell( resource, crs, selectionManager );
     mapModell.createFromTemplate( gismapview );

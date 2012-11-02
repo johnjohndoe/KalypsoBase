@@ -69,7 +69,7 @@ public class AddCoverageAction extends Action implements IUpdateable
   {
     m_widget = widget;
 
-    setText( Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.11" ) );
+    setText( Messages.getString( "org.kalypso.gml.ui.map.CoverageManagementWidget.11" ) ); //$NON-NLS-1$
     setImageDescriptor( KalypsoGmlUIPlugin.getImageProvider().getImageDescriptor( KalypsoGmlUiImages.DESCRIPTORS.COVERAGE_ADD ) );
   }
 

@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.java.io.FilePattern;
 import org.kalypso.gml.processes.tin.HmoTriangulatedSurfaceConverter;
+import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 
 /**
@@ -59,7 +60,7 @@ public class HmoCoverageImporter extends AbstractTriangulatedSurfaceCoverageImpo
   @Override
   public FilePattern getFilePattern( )
   {
-    return new FilePattern( "*.hmo", "BCE HMO-Files" ); //$NON-NLS-1$
+    return new FilePattern( "*.hmo", Messages.getString("HmoCoverageImporter_0") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override

@@ -57,12 +57,12 @@ public final class ExportShapeOperation implements ICoreRunnableWithProgress
     }
     catch( final ShapeDataException e )
     {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoGmlUIPlugin.id(), "Failed to initialize shape writer", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoGmlUIPlugin.id(), Messages.getString("ExportShapeOperation.0"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
     catch( final SHPException | IOException | DBaseException e )
     {
-      final IStatus status = new Status( IStatus.ERROR, KalypsoGmlUIPlugin.id(), "Failed to write shape date", e );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoGmlUIPlugin.id(), Messages.getString("ExportShapeOperation.1"), e ); //$NON-NLS-1$
       throw new CoreException( status );
     }
     finally

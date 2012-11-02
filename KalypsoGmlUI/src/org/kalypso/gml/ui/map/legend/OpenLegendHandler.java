@@ -53,6 +53,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
+import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -93,7 +94,7 @@ public class OpenLegendHandler extends AbstractHandler
       final String themeProperty = ObjectUtils.toString( context.getVariable( "themeProperty" ) ); //$NON-NLS-1$
       final IKalypsoTheme[] themes = findThemesForLegend( mapModel, themeProperty );
       if( themes == null )
-        throw new Exception( "Diese Karte enthält keine Themen..." );
+        throw new Exception( Messages.getString("OpenLegendHandler_0") ); //$NON-NLS-1$
 
       /* Create the dialog. */
       final LegendDialog dialog = new LegendDialog( shell, themes );
@@ -118,7 +119,7 @@ public class OpenLegendHandler extends AbstractHandler
       KalypsoGmlUIPlugin.getDefault().getLog().log( status );
 
       /* Show an error, if the operation has failed. */
-      ErrorDialog.openError( shell, "Legende anzeigen", "Es ist ein Fehler beim Anzeigen der Legende aufgetreten...", status );
+      ErrorDialog.openError( shell, Messages.getString("OpenLegendHandler_1"), Messages.getString("OpenLegendHandler_2"), status ); //$NON-NLS-1$ //$NON-NLS-2$
 
       return null;
     }

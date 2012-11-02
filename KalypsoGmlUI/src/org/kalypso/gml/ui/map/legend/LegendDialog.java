@@ -57,6 +57,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
+import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.ThemeUtilities;
 import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
@@ -85,7 +86,7 @@ public class LegendDialog extends PopupDialog
    */
   public LegendDialog( final Shell parentShell, final IKalypsoTheme[] themes )
   {
-    this( parentShell, "Legende", themes );
+    this( parentShell, Messages.getString("LegendDialog_0"), themes ); //$NON-NLS-1$
   }
 
   /**
@@ -100,7 +101,7 @@ public class LegendDialog extends PopupDialog
    */
   public LegendDialog( final Shell parentShell, final String title, final IKalypsoTheme[] themes )
   {
-    super( parentShell, SWT.RESIZE, true, true, true, false, false, title, "" );
+    super( parentShell, SWT.RESIZE, true, true, true, false, false, title, "" ); //$NON-NLS-1$
 
     m_themes = themes;
   }
@@ -118,7 +119,7 @@ public class LegendDialog extends PopupDialog
       /* If there are no themes show only a notice. */
       if( m_themes == null || m_themes.length == 0 )
       {
-        setInfoText( "Es sind keine Themen in der Karte vorhanden..." );
+        setInfoText( Messages.getString("LegendDialog_2") ); //$NON-NLS-1$
         return main;
       }
 
@@ -126,7 +127,7 @@ public class LegendDialog extends PopupDialog
       final IKalypsoTheme theme = ThemeUtilities.findFirstVisible( m_themes );
       if( theme == null )
       {
-        setInfoText( "Es ist kein Thema sichtbar..." );
+        setInfoText( Messages.getString("LegendDialog_3") ); //$NON-NLS-1$
         return main;
       }
 
@@ -169,7 +170,7 @@ public class LegendDialog extends PopupDialog
       KalypsoGmlUIPlugin.getDefault().getLog().log( new Status( IStatus.ERROR, KalypsoGmlUIPlugin.id(), ex.getLocalizedMessage(), ex ) );
 
       /* Show the error message to the user. */
-      setInfoText( String.format( "Fehler: %s", ex.getLocalizedMessage() ) );
+      setInfoText( String.format( Messages.getString("LegendDialog_4"), ex.getLocalizedMessage() ) ); //$NON-NLS-1$
 
       return main;
     }

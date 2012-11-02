@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.contribs.java.io.FilePattern;
 import org.kalypso.gml.processes.tin.ZweiDMTriangulatedSurfaceConverter;
+import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_TriangulatedSurface;
 
 /**
@@ -57,7 +58,7 @@ public class ZweiDMCoverageImporter extends AbstractTriangulatedSurfaceCoverageI
   @Override
   public FilePattern getFilePattern( )
   {
-    return new FilePattern( "*.2dm", "2DM-Files" ); //$NON-NLS-1$
+    return new FilePattern( "*.2dm", Messages.getString("ZweiDMCoverageImporter_0") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override

@@ -88,7 +88,7 @@ public final class ImportCoveragesOperation implements ICoreRunnableWithProgress
   public IStatus execute( final IProgressMonitor monitor )
   {
     final IStatusCollector log = new StatusCollector( KalypsoGmlUIPlugin.id() );
-    final String taskName = Messages.getString( "org.kalypso.gml.ui.wizard.grid.AddRectifiedGridCoveragesWizard.5" );
+    final String taskName = Messages.getString( "org.kalypso.gml.ui.wizard.grid.AddRectifiedGridCoveragesWizard.5" ); //$NON-NLS-1$
 
     final SubMonitor progress = SubMonitor.convert( monitor, taskName, m_selectedFiles.length ); //$NON-NLS-1$
     final Collection<ICoverage> newCoverages = new ArrayList<>( m_selectedFiles.length );
@@ -121,7 +121,7 @@ public final class ImportCoveragesOperation implements ICoreRunnableWithProgress
     if( importer == null )
     {
       name = dataFile.getName();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoGmlUIPlugin.id(), String.format( "Unknwon format: %s", name ) );
+      final IStatus status = new Status( IStatus.ERROR, KalypsoGmlUIPlugin.id(), String.format( Messages.getString("ImportCoveragesOperation.1"), name ) ); //$NON-NLS-1$
       throw new CoreException( status );
     }
 

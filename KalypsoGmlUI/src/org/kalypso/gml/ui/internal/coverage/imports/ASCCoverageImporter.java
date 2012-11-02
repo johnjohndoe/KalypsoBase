@@ -66,7 +66,7 @@ public class ASCCoverageImporter extends AbstractGridCoverageImporter
   public FilePattern getFilePattern( )
   {
     final String pattern = "*.asc;*.dat;*.asg"; //$NON-NLS-1$
-    final String filterName = "ESRI ASCII Grid-Files";
+    final String filterName = Messages.getString("ASCCoverageImporter.0"); //$NON-NLS-1$
 
     return new FilePattern( pattern, filterName );
   }
