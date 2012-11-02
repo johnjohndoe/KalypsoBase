@@ -224,7 +224,7 @@ public class ScenarioManager implements IScenarioManager
   {
     try
     {
-      monitor.beginTask( "Szenarien speichern.", 5000 );
+      monitor.beginTask( Messages.getString("ScenarioManager.0"), 5000 ); //$NON-NLS-1$
 
       final ByteArrayOutputStream bos = new ByteArrayOutputStream();
       final Marshaller marshaller = JC.createMarshaller();
@@ -432,9 +432,9 @@ public class ScenarioManager implements IScenarioManager
     /* Get the scenario folder. */
     final IFolder scenarioFolder = derivedFolder.getFolder( scenarioName );
     if( scenarioFolder.exists() )
-      throw new CoreException( new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, String.format( "Unable to create new scenario: Parent scenario already contains a folder with name '%s'", scenarioName ) ) );
+      throw new CoreException( new Status( IStatus.ERROR, WorkflowConnectorPlugin.PLUGIN_ID, String.format( Messages.getString("ScenarioManager.1"), scenarioName ) ) ); //$NON-NLS-1$
 
-    monitor.beginTask( "Create new scenario", 100 );
+    monitor.beginTask( Messages.getString("ScenarioManager.2"), 100 ); //$NON-NLS-1$
 
     /* First copy data, then register it to avoid registered scenarios without data */
     copyScenarioData( templateScenario, scenarioFolder, copySubScenarios, new SubProgressMonitor( monitor, 90 ) );
@@ -521,7 +521,7 @@ public class ScenarioManager implements IScenarioManager
   @Override
   public void renameScenario( final IScenario scenario, final String name, final String comment, final IProgressMonitor monitor ) throws CoreException
   {
-    monitor.beginTask( "Rename scenario", 100 );
+    monitor.beginTask( Messages.getString("ScenarioManager.3"), 100 ); //$NON-NLS-1$
 
     final IScenario parentScenario = scenario.getParentScenario();
     validateScenarioName( parentScenario, name );

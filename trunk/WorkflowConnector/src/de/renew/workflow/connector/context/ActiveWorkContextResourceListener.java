@@ -52,6 +52,7 @@ import org.eclipse.ui.PlatformUI;
 
 import de.renew.workflow.connector.cases.ScenarioHandlingProjectNature;
 import de.renew.workflow.connector.internal.WorkflowConnectorPlugin;
+import de.renew.workflow.connector.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -87,7 +88,7 @@ public class ActiveWorkContextResourceListener implements IResourceChangeListene
           final Display display = PlatformUI.getWorkbench().getDisplay();
           final Shell activeShell = display.getActiveShell();
           final IStatus status = e.getStatus();
-          ErrorDialog.openError( activeShell, "Problem beim Löschen des Projektes", "Projekt wurde nicht deaktiviert.", status );
+          ErrorDialog.openError( activeShell, Messages.getString("ActiveWorkContextResourceListener_0"), Messages.getString("ActiveWorkContextResourceListener_1"), status ); //$NON-NLS-1$ //$NON-NLS-2$
           WorkflowConnectorPlugin.getDefault().getLog().log( status );
         }
       }

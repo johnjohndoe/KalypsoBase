@@ -61,7 +61,7 @@ import de.renew.workflow.connector.internal.WorkflowConnectorPlugin;
  */
 public class TaskExecutionListener implements IExecutionListener
 {
-  public static final String ACTIVITY_PARAMETER = "activityParameter";
+  public static final String ACTIVITY_PARAMETER = "activityParameter"; //$NON-NLS-1$
 
   public static final String CATEGORY_CONTEXT = "de.renew.workflow.contexts.category";//$NON-NLS-1$
 

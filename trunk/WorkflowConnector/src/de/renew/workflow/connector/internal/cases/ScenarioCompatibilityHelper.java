@@ -73,12 +73,12 @@ public class ScenarioCompatibilityHelper
     // should be implemented in other way, we just do not have any time now
     try
     {
-      if( nature == null || !nature.getProject().hasNature( "org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature" ) )
+      if( nature == null || !nature.getProject().hasNature( "org.kalypso.kalypso1d2d.pjt.Kalypso1D2DProjectNature" ) ) //$NON-NLS-1$
         return true;
 
       // FIXME: the whole code here does not belong to this place -> this is a hidden dependency to 1d2d: bad!
       // TODO: instead implement an extension point mechanism
-      final ProjectTemplate[] lTemplate = EclipsePlatformContributionsExtensions.getProjectTemplates( "org.kalypso.kalypso1d2d.pjt.projectTemplate" );
+      final ProjectTemplate[] lTemplate = EclipsePlatformContributionsExtensions.getProjectTemplates( "org.kalypso.kalypso1d2d.pjt.projectTemplate" ); //$NON-NLS-1$
       try
       {
         // FIXME: this very probably does not work correctly or any more at all!
@@ -88,7 +88,7 @@ public class ScenarioCompatibilityHelper
         final URL data = lTemplate[0].getData();
         final String location = data.toString();
         final String extension = FilenameUtils.getExtension( location );
-        if( "zip".equalsIgnoreCase( extension ) )
+        if( "zip".equalsIgnoreCase( extension ) ) //$NON-NLS-1$
         {
           // TODO: this completely overwrite the old project content, is this intended?
           ZipUtilities.unzip( data.openStream(), destinationDir, false );
@@ -104,13 +104,13 @@ public class ScenarioCompatibilityHelper
 
           // FIXME: this only fixes the basic scenario, is this intended?
 
-          final IOFileFilter lFileFilter = new WildcardFileFilter( new String[] { "wind.gml" } );
+          final IOFileFilter lFileFilter = new WildcardFileFilter( new String[] { "wind.gml" } ); //$NON-NLS-1$
           final IOFileFilter lDirFilter = TrueFileFilter.INSTANCE;
           final Collection< ? > windFiles = FileUtils.listFiles( destinationDir, lFileFilter, lDirFilter );
 
           if( dataDir.isDirectory() && (windFiles == null || windFiles.size() == 0) )
           {
-            final WildcardFileFilter lCopyFilter = new WildcardFileFilter( new String[] { "*asis", "models", "wind.gml" } );
+            final WildcardFileFilter lCopyFilter = new WildcardFileFilter( new String[] { "*asis", "models", "wind.gml" } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             FileUtils.copyDirectory( dataDir, destinationDir, lCopyFilter );
           }
           else
