@@ -42,16 +42,18 @@ package org.kalypso.gml.ui.internal.feature;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.gml.ui.KalypsoGmlUIPlugin;
 import org.kalypso.gml.ui.gml.IDuplicateFeatureMarker;
 import org.kalypso.gml.ui.i18n.Messages;
 import org.kalypso.gmlschema.property.relation.IRelationType;
@@ -79,7 +81,7 @@ public class DuplicateFeatureHandler extends AbstractHandler
     if( !(selection instanceof IFeatureSelection) )
       throw new ExecutionException( "Handler only works on IFeatureSelection, check enablement" ); //$NON-NLS-1$
 
-    final IFeatureSelection featureSelection = (IFeatureSelection) selection;
+    final IFeatureSelection featureSelection = (IFeatureSelection)selection;
 
     final Object firstElement = featureSelection.getFirstElement();
     if( !(firstElement instanceof Feature) )
@@ -96,7 +98,7 @@ public class DuplicateFeatureHandler extends AbstractHandler
 
     final Feature parent = feature.getOwner();
     final Object property = parent.getProperty( rt );
-    final List< ? > list = (List< ? >) property;
+    final List< ? > list = (List< ? >)property;
     if( !(property instanceof FeatureList) )
       return null;
 
@@ -110,11 +112,11 @@ public class DuplicateFeatureHandler extends AbstractHandler
       workspace.postCommand( command );
 
       if( newFeature instanceof IDuplicateFeatureMarker )
-        ((IDuplicateFeatureMarker) newFeature).postDuplicated( workspace );
+        ((IDuplicateFeatureMarker)newFeature).postDuplicated( workspace );
     }
     catch( final Exception e )
     {
-      final IStatus status = StatusUtilities.createStatus( IStatus.ERROR, "", e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoGmlUIPlugin.id(), StringUtils.EMPTY, e );
       KalypsoGisPlugin.getDefault().getLog().log( status );
 
       // we are in the ui-thread so we get a shell here
