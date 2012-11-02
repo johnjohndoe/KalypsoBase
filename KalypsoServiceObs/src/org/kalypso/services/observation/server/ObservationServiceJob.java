@@ -112,8 +112,8 @@ public class ObservationServiceJob extends Job
 
   private IObservationService loadService( ) throws ClassUtilityException
   {
-    final String property = System.getProperty( SERVICE_IMPLEMENTATION, "" );
-    if( property == null || "".equals( property.trim() ) )
+    final String property = System.getProperty( SERVICE_IMPLEMENTATION, "" ); //$NON-NLS-1$
+    if( property == null || "".equals( property.trim() ) ) //$NON-NLS-1$
       return new ObservationServiceDelegate();
 
     return (IObservationService) ClassUtilities.newInstance( property, IObservationService.class, ObservationServiceJob.class.getClassLoader(), null, null );

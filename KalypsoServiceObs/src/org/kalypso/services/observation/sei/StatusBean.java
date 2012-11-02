@@ -57,7 +57,7 @@ public class StatusBean implements Serializable
 
   public StatusBean( )
   {
-    this( IStatus.CANCEL, "", "" );
+    this( IStatus.CANCEL, "", "" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public StatusBean( final Integer severity, final String plugin, final String message )

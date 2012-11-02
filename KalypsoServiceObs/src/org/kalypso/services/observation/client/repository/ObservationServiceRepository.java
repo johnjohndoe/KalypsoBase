@@ -101,13 +101,13 @@ public class ObservationServiceRepository extends AbstractRepository implements 
    */
   private String getServiceId( final String id ) throws RepositoryException
   {
-    final String[] parts = id.split( "\\:" );
+    final String[] parts = id.split( "\\:" ); //$NON-NLS-1$
 
     // case: kalypso-ocs:datastore://repos_id
     if( parts.length > 2 )
     {
       if( !id.startsWith( ID_COLON ) )
-        throw new RepositoryException( String.format( "Unknown repository item id '%s'", id ) );
+        throw new RepositoryException( String.format( "Unknown repository item id '%s'", id ) ); //$NON-NLS-1$
 
       return id.substring( ID_COLON.length() );
     }

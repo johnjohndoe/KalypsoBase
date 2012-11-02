@@ -93,7 +93,7 @@ public final class Repositories
     }
     catch( final Throwable t )
     {
-      throw new RepositoryException( "Finding equivalent item failed.", t );
+      throw new RepositoryException( "Finding equivalent item failed.", t ); //$NON-NLS-1$
     }
   }
 
