@@ -116,7 +116,7 @@ import org.xml.sax.XMLReader;
  */
 public class MapFileUtilities
 {
-  private static final URL XSL_URL = MapFileUtilities.class.getResource( "/etc/mapfile/mapfile.xsl" );
+  private static final URL XSL_URL = MapFileUtilities.class.getResource( "/etc/mapfile/mapfile.xsl" ); //$NON-NLS-1$
 
   /**
    * The object factory.
@@ -176,7 +176,7 @@ public class MapFileUtilities
     final Marshaller marshaller = JC.createMarshaller();
     marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
     marshaller.setProperty( Marshaller.JAXB_ENCODING, encoding );
-    marshaller.setProperty( "com.sun.xml.bind.namespacePrefixMapper", new MapFileNamespacePrefixMapper() );
+    marshaller.setProperty( "com.sun.xml.bind.namespacePrefixMapper", new MapFileNamespacePrefixMapper() ); //$NON-NLS-1$
     marshaller.marshal( map, outputStream );
   }
 
@@ -212,7 +212,7 @@ public class MapFileUtilities
       final Marshaller marshaller = JC.createMarshaller();
       marshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       marshaller.setProperty( Marshaller.JAXB_ENCODING, encoding );
-      marshaller.setProperty( "com.sun.xml.bind.namespacePrefixMapper", new MapFileNamespacePrefixMapper() );
+      marshaller.setProperty( "com.sun.xml.bind.namespacePrefixMapper", new MapFileNamespacePrefixMapper() ); //$NON-NLS-1$
 
       /* Marshal the contents of the map file into the XML document. */
       marshaller.marshal( map, xmlDOM );
@@ -279,11 +279,11 @@ public class MapFileUtilities
     final Unit< ? > unit = axis.getUnit();
     String units = null;
     if( SI.KILOMETER.equals( unit ) )
-      units = "kilometers";
+      units = "kilometers"; //$NON-NLS-1$
     else if( SI.METER.equals( unit ) )
-      units = "meters";
+      units = "meters"; //$NON-NLS-1$
     else if( NonSI.DEGREE_ANGLE.equals( unit ) )
-      units = "dd";
+      units = "dd"; //$NON-NLS-1$
 
     if( units != null && units.length() > 0 )
       map.setUnits( units );
@@ -297,23 +297,23 @@ public class MapFileUtilities
 
     /* Create the output format element. */
     final OutputFormat outputFormat = OF.createOutputFormat();
-    outputFormat.setName( "PNG" );
-    outputFormat.setDriver( "AGG/PNG" );
-    outputFormat.setMimeType( "image/png" );
-    outputFormat.setImageMode( "RGBA" );
-    outputFormat.setExtension( "png" );
+    outputFormat.setName( "PNG" ); //$NON-NLS-1$
+    outputFormat.setDriver( "AGG/PNG" ); //$NON-NLS-1$
+    outputFormat.setMimeType( "image/png" ); //$NON-NLS-1$
+    outputFormat.setImageMode( "RGBA" ); //$NON-NLS-1$
+    outputFormat.setExtension( "png" ); //$NON-NLS-1$
     map.getOutputFormat().add( outputFormat );
 
     /* Fill the projection element. */
-    map.getProjection().add( "init=" + sourceCRS );
+    map.getProjection().add( "init=" + sourceCRS ); //$NON-NLS-1$
 
     /* Create the item element. */
-    final String resource = String.format( "%s?map=%s&", wmsURL, mapFile.getAbsolutePath().replace( "\\", "/" ) );
+    final String resource = String.format( "%s?map=%s&", wmsURL, mapFile.getAbsolutePath().replace( "\\", "/" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     final ItemType item = OF.createItemType();
-    item.getItem().add( createItem( "wms_title", mapName ) );
-    item.getItem().add( createItem( "wms_onlineresource", resource ) );
-    item.getItem().add( createItem( "wms_srs", String.format( "%s %s", sourceCRS, StringUtils.join( otherCRSs, " " ) ) ) );
-    item.getItem().add( createItem( "wms_feature_info_mime_type", "text/html" ) );
+    item.getItem().add( createItem( "wms_title", mapName ) ); //$NON-NLS-1$
+    item.getItem().add( createItem( "wms_onlineresource", resource ) ); //$NON-NLS-1$
+    item.getItem().add( createItem( "wms_srs", String.format( "%s %s", sourceCRS, StringUtils.join( otherCRSs, " " ) ) ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    item.getItem().add( createItem( "wms_feature_info_mime_type", "text/html" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
     /* Create the map element. */
     final Web web = OF.createWeb();
@@ -325,9 +325,9 @@ public class MapFileUtilities
     /* Create a label element. */
     final Label label = OF.createLabel();
     label.setAntialias( BooleanEnum.TRUE );
-    label.setType( "bitmap" );
-    label.setSize( "medium" );
-    label.setPosition( "AUTO" );
+    label.setType( "bitmap" ); //$NON-NLS-1$
+    label.setSize( "medium" ); //$NON-NLS-1$
+    label.setPosition( "AUTO" ); //$NON-NLS-1$
     label.setPartials( BooleanEnum.FALSE );
 
     /* Create the outline color element. */
@@ -338,7 +338,7 @@ public class MapFileUtilities
 
     /* Create the legend element. */
     final Legend legend = OF.createLegend();
-    legend.setStatus( "on" );
+    legend.setStatus( "on" ); //$NON-NLS-1$
     legend.setPosition( PositionEnum.LR );
     legend.setLabel( label );
     legend.setOutlineColor( outlineColor );
@@ -379,36 +379,36 @@ public class MapFileUtilities
    */
   public static Layer createLayerForShape( final String wmsURL, final File mapFile, final String layerName, final String data, final QName geoemtryType, final GM_Envelope envelope, final String sourceCRS, final String[] otherCRSs ) throws MapServerException
   {
-    String shapeType = "POLYGON";
+    String shapeType = "POLYGON"; //$NON-NLS-1$
     if( GM_Point.POINT_ELEMENT.equals( geoemtryType ) || GM_MultiPoint.MULTI_POINT_ELEMENT.equals( geoemtryType ) )
-      shapeType = "POINT";
+      shapeType = "POINT"; //$NON-NLS-1$
     else if( GM_Curve.CURVE_ELEMENT.equals( geoemtryType ) || GM_MultiCurve.MULTI_CURVE_ELEMENT.equals( geoemtryType ) )
-      shapeType = "LINE";
+      shapeType = "LINE"; //$NON-NLS-1$
     else if( GM_Polygon.POLYGON_ELEMENT.equals( geoemtryType ) || GMLConstants.QN_MULTI_POLYGON.equals( geoemtryType ) )
-      shapeType = "POLYGON";
+      shapeType = "POLYGON"; //$NON-NLS-1$
 
     /* Create the layer element. */
     final Layer layer = OF.createLayer();
     layer.setName( layerName );
     layer.setType( shapeType );
-    layer.setStatus( "ON" );
+    layer.setStatus( "ON" ); //$NON-NLS-1$
     layer.setData( data );
-    layer.setTemplate( "getfeatureinfo.html" );
+    layer.setTemplate( "getfeatureinfo.html" ); //$NON-NLS-1$
 
     /* Fill the projection element. */
-    layer.getProjection().add( "init=" + sourceCRS );
+    layer.getProjection().add( "init=" + sourceCRS ); //$NON-NLS-1$
 
     /* Create the item element. */
-    final String resource = String.format( "%s?map=%s&", wmsURL, mapFile.getAbsolutePath().replace( "\\", "/" ) );
+    final String resource = String.format( "%s?map=%s&", wmsURL, mapFile.getAbsolutePath().replace( "\\", "/" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     final ItemType item = OF.createItemType();
-    item.getItem().add( createItem( "wms_title", layerName ) );
-    item.getItem().add( createItem( "wms_onlineresource", resource ) );
-    item.getItem().add( createItem( "wms_srs", String.format( "%s %s", sourceCRS, StringUtils.join( otherCRSs, " " ) ) ) );
-    item.getItem().add( createItem( "wms_extent", String.format( Locale.PRC, "%f %f %f %f", envelope.getMinX(), envelope.getMinY(), envelope.getMaxX(), envelope.getMaxY() ) ) );
+    item.getItem().add( createItem( "wms_title", layerName ) ); //$NON-NLS-1$
+    item.getItem().add( createItem( "wms_onlineresource", resource ) ); //$NON-NLS-1$
+    item.getItem().add( createItem( "wms_srs", String.format( "%s %s", sourceCRS, StringUtils.join( otherCRSs, " " ) ) ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    item.getItem().add( createItem( "wms_extent", String.format( Locale.PRC, "%f %f %f %f", envelope.getMinX(), envelope.getMinY(), envelope.getMaxX(), envelope.getMaxY() ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
     layer.setMetadata( item );
 
     /* Create the class element. */
-    final Class clazz = createClass( "Standard", null, null, new RGB( 0, 0, 0 ) );
+    final Class clazz = createClass( "Standard", null, null, new RGB( 0, 0, 0 ) ); //$NON-NLS-1$
 
     /* Fill the class element. */
     layer.getClazz().add( clazz );
@@ -437,11 +437,11 @@ public class MapFileUtilities
     /* Create the layer element. */
     final Layer layer = OF.createLayer();
     layer.setName( layerName );
-    layer.setType( "RASTER" );
-    layer.setStatus( "ON" );
+    layer.setType( "RASTER" ); //$NON-NLS-1$
+    layer.setStatus( "ON" ); //$NON-NLS-1$
     layer.setOpacity( opacity );
     layer.setData( data );
-    layer.setTemplate( "getfeatureinfo.html" );
+    layer.setTemplate( "getfeatureinfo.html" ); //$NON-NLS-1$
 
     /* Fill the processing element. */
     double min = -Double.MAX_VALUE;
@@ -457,20 +457,20 @@ public class MapFileUtilities
       buckets = 2.0;
 
     final List<String> processing = layer.getProcessing();
-    processing.add( String.format( Locale.PRC, "SCALE=%.2f %.2f", min, max ) );
-    processing.add( String.format( Locale.PRC, "SCALE_BUCKETS=%d", (int) buckets ) );
-    processing.add( "RESAMPLE=BILINEAR" );
+    processing.add( String.format( Locale.PRC, "SCALE=%.2f %.2f", min, max ) ); //$NON-NLS-1$
+    processing.add( String.format( Locale.PRC, "SCALE_BUCKETS=%d", (int) buckets ) ); //$NON-NLS-1$
+    processing.add( "RESAMPLE=BILINEAR" ); //$NON-NLS-1$
 
     /* Fill the projection element. */
-    layer.getProjection().add( "init=" + sourceCRS );
+    layer.getProjection().add( "init=" + sourceCRS ); //$NON-NLS-1$
 
     /* Create the item element. */
-    final String resource = String.format( "%s?map=%s&", wmsURL, mapFile.getAbsolutePath().replace( "\\", "/" ) );
+    final String resource = String.format( "%s?map=%s&", wmsURL, mapFile.getAbsolutePath().replace( "\\", "/" ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     final ItemType item = OF.createItemType();
-    item.getItem().add( createItem( "wms_title", layerName ) );
-    item.getItem().add( createItem( "wms_onlineresource", resource ) );
-    item.getItem().add( createItem( "wms_srs", String.format( "%s %s", sourceCRS, StringUtils.join( otherCRSs, " " ) ) ) );
-    item.getItem().add( createItem( "wms_extent", String.format( Locale.PRC, "%f %f %f %f", envelope.getMinX(), envelope.getMinY(), envelope.getMaxX(), envelope.getMaxY() ) ) );
+    item.getItem().add( createItem( "wms_title", layerName ) ); //$NON-NLS-1$
+    item.getItem().add( createItem( "wms_onlineresource", resource ) ); //$NON-NLS-1$
+    item.getItem().add( createItem( "wms_srs", String.format( "%s %s", sourceCRS, StringUtils.join( otherCRSs, " " ) ) ) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    item.getItem().add( createItem( "wms_extent", String.format( Locale.PRC, "%f %f %f %f", envelope.getMinX(), envelope.getMinY(), envelope.getMaxX(), envelope.getMaxY() ) ) ); //$NON-NLS-1$ //$NON-NLS-2$
     layer.setMetadata( item );
 
     return layer;
@@ -498,7 +498,7 @@ public class MapFileUtilities
     if( expressionValue != null && expressionValue.length() > 0 )
     {
       if( expressionType == null || expressionType.length() == 0 )
-        throw new MapServerException( "Expression value without expression type set..." );
+        throw new MapServerException( "Expression value without expression type set..." ); //$NON-NLS-1$
 
       final ExpressionType expression = OF.createExpressionType();
       expression.setValue( expressionValue );
