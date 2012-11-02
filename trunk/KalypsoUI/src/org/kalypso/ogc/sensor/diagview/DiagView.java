@@ -186,9 +186,8 @@ public class DiagView extends ObsView
 
   /**
    * Update the diagView with the new observation, perform best guess to know which curves will be added to it.
-   *
-   * @see org.kalypso.ogc.sensor.template.ObsView#addObservation(org.kalypso.ogc.sensor.template.IObsProvider,
-   *      java.lang.String, org.kalypso.ogc.sensor.template.ObsView.ItemData)
+   * 
+   * @see org.kalypso.ogc.sensor.template.ObsView#addObservation(org.kalypso.ogc.sensor.template.IObsProvider, java.lang.String, org.kalypso.ogc.sensor.template.ObsView.ItemData)
    */
   @Override
   public void addObservation( final IObsProvider provider, final String tokenizedName, final ItemData data )
@@ -267,7 +266,7 @@ public class DiagView extends ObsView
     final ObsViewItem[] items = getItems();
     for( final ObsViewItem item : items )
     {
-      final AxisMapping[] mps = ((DiagViewCurve) item).getMappings();
+      final AxisMapping[] mps = ((DiagViewCurve)item).getMappings();
       if( mps[1].getObservationAxis().getType().equals( valueAxisType ) )
         found++;
     }

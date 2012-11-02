@@ -59,11 +59,11 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.filterdialog.dialog.IErrorMessageReciever;
 import org.kalypso.ogc.gml.filterdialog.model.FeatureTypeContentProvider;
 import org.kalypso.ogc.gml.filterdialog.model.FeatureTypeLabelProvider;
 import org.kalypso.ogc.gml.filterdialog.model.NonGeometryPropertyFilter;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree_impl.filterencoding.Literal;
 import org.kalypsodeegree_impl.filterencoding.PropertyIsLikeOperation;
 import org.kalypsodeegree_impl.filterencoding.PropertyName;
@@ -142,10 +142,10 @@ class PropertyIsLikeOperationComposite extends AbstractFilterComposite
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        final Object firstElement = ((IStructuredSelection) event.getSelection()).getFirstElement();
+        final Object firstElement = ((IStructuredSelection)event.getSelection()).getFirstElement();
         if( firstElement instanceof IValuePropertyType )
         {
-          final QName qnamePt = ((IValuePropertyType) firstElement).getQName();
+          final QName qnamePt = ((IValuePropertyType)firstElement).getQName();
           m_operation.setPropertyName( new PropertyName( qnamePt ) );
         }
 
@@ -170,13 +170,13 @@ class PropertyIsLikeOperationComposite extends AbstractFilterComposite
       @Override
       public void focusLost( final FocusEvent e )
       {
-        final IStructuredSelection selection = (IStructuredSelection) m_propViewer.getSelection();
+        final IStructuredSelection selection = (IStructuredSelection)m_propViewer.getSelection();
         if( !selection.isEmpty() )
         {
           final Object firstElement = selection.getFirstElement();
           if( firstElement instanceof IValuePropertyType )
           {
-            final IValuePropertyType vpt = (IValuePropertyType) firstElement;
+            final IValuePropertyType vpt = (IValuePropertyType)firstElement;
             final String str = m_secondRowText.getText().trim();
             validate( vpt, str );
             Literal literal = m_operation.getLiteral();

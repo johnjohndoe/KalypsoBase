@@ -56,7 +56,7 @@ import org.kalypso.template.obsdiagview.TypeCurve.Mapping;
 
 /**
  * GrafikKurven
- *
+ * 
  * @author schlienger
  */
 public class GrafikKurven
@@ -67,7 +67,7 @@ public class GrafikKurven
 
   /**
    * Constructor with the list of grafik achsen
-   *
+   * 
    * @param gAchsen
    */
   public GrafikKurven( final GrafikAchsen gAchsen )
@@ -77,7 +77,7 @@ public class GrafikKurven
 
   /**
    * Add a curve, performs the business to make it grafik compliant
-   *
+   * 
    * @param tc
    * @param numberAxes
    * @return the axis for which the curve will be displayed
@@ -121,7 +121,7 @@ public class GrafikKurven
     sb.append( "/* <Nr>- <Dateiname> <sichtbar:J,N> <Diagr.typ:L,B,P,M,T> <y-Achse:1,2> <Kurventitel> [<Blocknummer>]\n" ); //$NON-NLS-1$
     for( final Object element : m_kurven )
     {
-      final GrafikKurve gk = (GrafikKurve) element;
+      final GrafikKurve gk = (GrafikKurve)element;
 
       sb.append( gk.getCurveSpec() ).append( '\n' );
     }
@@ -131,7 +131,7 @@ public class GrafikKurven
     sb.append( "/* KNr:  Farbe\tLTyp\tLBreite\tPTyp\n" ); //$NON-NLS-1$
     for( final Object element : m_kurven )
     {
-      final GrafikKurve gk = (GrafikKurve) element;
+      final GrafikKurve gk = (GrafikKurve)element;
 
       sb.append( gk.getColorSpec() ).append( '\n' );
     }
@@ -141,7 +141,7 @@ public class GrafikKurven
 
   /**
    * Returns the same string as the call to toVorlagentext()
-   *
+   * 
    * @see java.lang.Object#toString()
    */
   @Override
@@ -153,7 +153,7 @@ public class GrafikKurven
   /**
    * Converts the string representation of the color into an integer as used in the grafik template using the getRGB()
    * method of the color class.
-   *
+   * 
    * @param strColor
    * @return integer representation
    */
@@ -177,7 +177,7 @@ public class GrafikKurven
 
   /**
    * Convert the string type of the observation axis to a grafik curve type
-   *
+   * 
    * @param axisType
    * @return grafik curve type
    */
@@ -191,7 +191,7 @@ public class GrafikKurven
 
   /**
    * GrafikKurve
-   *
+   * 
    * @author schlienger
    */
   private final class GrafikKurve

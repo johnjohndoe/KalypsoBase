@@ -88,9 +88,9 @@ public class ExportI18nPropertiesHandler extends AbstractHandler
   {
     m_properties.clear();
 
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
 
-    final GMLSchemaEditor editor = (GMLSchemaEditor) context.getVariable( ISources.ACTIVE_EDITOR_NAME );
+    final GMLSchemaEditor editor = (GMLSchemaEditor)context.getVariable( ISources.ACTIVE_EDITOR_NAME );
 
     final IGMLSchema schema = editor.getSchema();
 
@@ -161,13 +161,13 @@ public class ExportI18nPropertiesHandler extends AbstractHandler
 
           if( propertyType instanceof IValuePropertyType )
           {
-            final IValuePropertyType vpt = (IValuePropertyType) propertyType;
+            final IValuePropertyType vpt = (IValuePropertyType)propertyType;
             final IRestriction[] restrictions = vpt.getRestriction();
             for( final IRestriction restriction : restrictions )
             {
               if( restriction instanceof EnumerationRestriction )
               {
-                final EnumerationRestriction enumRest = (EnumerationRestriction) restriction;
+                final EnumerationRestriction enumRest = (EnumerationRestriction)restriction;
                 final Map<Object, IAnnotation> map = enumRest.getMapping();
                 for( final Object obj : map.keySet() )
                 {

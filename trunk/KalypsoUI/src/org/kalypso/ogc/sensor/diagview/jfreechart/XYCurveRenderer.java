@@ -89,7 +89,7 @@ public class XYCurveRenderer extends StandardXYItemRenderer
     if( dataset == null )
       return null;
 
-    if( dataset instanceof CurveDataset && ((CurveDataset) dataset).hideLegend( series ) )
+    if( dataset instanceof CurveDataset && ((CurveDataset)dataset).hideLegend( series ) )
       return null;
 
     return super.getLegendItem( datasetIndex, series );

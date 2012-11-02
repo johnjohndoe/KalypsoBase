@@ -58,7 +58,7 @@ public class ComboModifierCellEditor extends ComboBoxViewerCellEditor
   @Override
   protected org.eclipse.swt.widgets.Control createControl( final Composite parent )
   {
-    final CCombo combo = (CCombo) super.createControl( parent );
+    final CCombo combo = (CCombo)super.createControl( parent );
 
     // REMARK: The default behaviour of the ComboBoxViewerCellEditor is to do nothing
     // But we ant the value to be applied as soon as the user clicks at it.

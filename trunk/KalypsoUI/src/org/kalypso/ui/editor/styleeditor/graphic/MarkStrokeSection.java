@@ -70,8 +70,7 @@ class MarkStrokeSection extends AbstractStyleElementSection<Mark, Stroke, Stroke
   @Override
   protected StyleElementAction<Mark>[] createActions( final IStyleInput<Mark> input )
   {
-    @SuppressWarnings("unchecked")
-    final StyleElementAction<Mark>[] actions = new StyleElementAction[2];
+    @SuppressWarnings( "unchecked" ) final StyleElementAction<Mark>[] actions = new StyleElementAction[2];
     actions[0] = new MarkStrokeAddAction( input );
     actions[1] = new MarkStrokeRemoveAction( input );
     return actions;

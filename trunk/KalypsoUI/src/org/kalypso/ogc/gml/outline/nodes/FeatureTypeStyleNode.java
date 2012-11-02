@@ -91,7 +91,7 @@ public class FeatureTypeStyleNode extends KalypsoStyleNode<FeatureTypeStyle>
     final FeatureTypeStyle element = getElement();
 
     if( element instanceof IKalypsoStyle )
-      return ((IKalypsoStyle) element).resolveI18nString( text );
+      return ((IKalypsoStyle)element).resolveI18nString( text );
 
     return super.resolveI18nString( text );
   }

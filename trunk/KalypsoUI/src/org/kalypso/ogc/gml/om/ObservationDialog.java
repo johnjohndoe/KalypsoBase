@@ -75,7 +75,7 @@ public class ObservationDialog extends ResizableDialog
   @Override
   protected Control createDialogArea( final Composite parent )
   {
-    final Composite panel = (Composite) super.createDialogArea( parent );
+    final Composite panel = (Composite)super.createDialogArea( parent );
 
     panel.getShell().setText( m_obs.getName() );
 

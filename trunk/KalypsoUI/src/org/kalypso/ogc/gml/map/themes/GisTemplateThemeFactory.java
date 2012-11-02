@@ -56,7 +56,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * Theme factory for {@link org.kalypso.ogc.gml.GisTemplateFeatureTheme}s.
- *
+ * 
  * @author Gernot Belger
  */
 public class GisTemplateThemeFactory extends AbstractThemeFactory
@@ -70,7 +70,7 @@ public class GisTemplateThemeFactory extends AbstractThemeFactory
   @Override
   public void configureLayer( final IKalypsoTheme theme, final String id, final GM_Envelope bbox, final String srsName, final StyledLayerType layer, final IProgressMonitor monitor )
   {
-    final GisTemplateFeatureTheme featureTheme = (GisTemplateFeatureTheme) theme;
+    final GisTemplateFeatureTheme featureTheme = (GisTemplateFeatureTheme)theme;
 
     layer.setHref( featureTheme.getHref() );
     layer.setFeaturePath( featureTheme.getFeaturePath() );

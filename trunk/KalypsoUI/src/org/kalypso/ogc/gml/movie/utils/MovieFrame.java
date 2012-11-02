@@ -116,7 +116,7 @@ public class MovieFrame implements IMovieFrame
       final File imageDirectory = getImageDirectory( width, height );
 
       /* The image file. */
-     final String imageFilename = getLabel() + "_" + m_themeID + ".PNG"; //$NON-NLS-1$ //$NON-NLS-2$
+      final String imageFilename = getLabel() + "_" + m_themeID + ".PNG"; //$NON-NLS-1$ //$NON-NLS-2$
       final String correctedImageFilename = imageFilename.replace( " ", "_" ); //$NON-NLS-1$ //$NON-NLS-2$
       final String correctedImageFilename1 = correctedImageFilename.replace( "/", "_" ); //$NON-NLS-1$ //$NON-NLS-2$
       final File imageFile = new File( imageDirectory, correctedImageFilename1 );
@@ -162,7 +162,7 @@ public class MovieFrame implements IMovieFrame
         /* Find/Add the legend theme. */
         final IKalypsoTheme[] legendThemes = MapModellHelper.findThemeByProperty( newMapModel, LegendUtilities.THEME_PROPERTY_THEME_IDS, IKalypsoThemeVisitor.DEPTH_ZERO );
         if( legendThemes != null && legendThemes.length > 0 )
-          legendThemes[0].setProperty( LegendUtilities.THEME_PROPERTY_THEME_IDS, ((IKalypsoTheme) movieTheme).getId() + ";" + theme.getId() ); //$NON-NLS-1$
+          legendThemes[0].setProperty( LegendUtilities.THEME_PROPERTY_THEME_IDS, ((IKalypsoTheme)movieTheme).getId() + ";" + theme.getId() ); //$NON-NLS-1$
 
         theme.setVisible( true );
       }

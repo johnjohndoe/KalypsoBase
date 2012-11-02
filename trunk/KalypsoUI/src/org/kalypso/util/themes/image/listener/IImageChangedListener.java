@@ -46,14 +46,14 @@ import org.eclipse.swt.graphics.RGB;
 
 /**
  * This interface provides functions for listener, which would like to be notified if a image property has changed.
- *
+ * 
  * @author Holger Albert
  */
 public interface IImageChangedListener
 {
   /**
    * This function is notified, if a image property has changed.
-   *
+   * 
    * @param properties
    *          A up to date properties object, containing all serialized image properties.
    * @param horizontal

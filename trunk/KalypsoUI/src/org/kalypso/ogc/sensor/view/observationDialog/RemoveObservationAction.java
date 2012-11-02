@@ -42,7 +42,7 @@ package org.kalypso.ogc.sensor.view.observationDialog;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger

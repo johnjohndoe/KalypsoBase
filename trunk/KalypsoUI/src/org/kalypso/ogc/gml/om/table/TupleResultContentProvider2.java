@@ -66,7 +66,6 @@ import org.kalypso.contribs.eclipse.jface.viewers.ViewerColumnItem;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnWidthInfo;
 import org.kalypso.contribs.eclipse.jface.viewers.table.ColumnsResizeControlListener;
-import org.kalypso.i18n.Messages;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.ITupleResultChangedListener;
@@ -76,6 +75,7 @@ import org.kalypso.observation.result.TupleResult;
 import org.kalypso.ogc.gml.om.table.handlers.ComponentUiFirstColumnHandler;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author Marc Schlienger

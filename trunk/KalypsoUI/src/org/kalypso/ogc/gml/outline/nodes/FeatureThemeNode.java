@@ -139,7 +139,7 @@ public class FeatureThemeNode extends KalypsoThemeNode<IKalypsoFeatureTheme>
       @Override
       public boolean evaluate( final Object object )
       {
-        final IKalypsoStyle style = (IKalypsoStyle) object;
+        final IKalypsoStyle style = (IKalypsoStyle)object;
         return !style.isUsedForSelection();
       }
     };
@@ -170,13 +170,13 @@ public class FeatureThemeNode extends KalypsoThemeNode<IKalypsoFeatureTheme>
     {
       if( object instanceof UserStyleNode )
       {
-        final UserStyleNode usto = (UserStyleNode) object;
+        final UserStyleNode usto = (UserStyleNode)object;
         if( usto.getStyle().getName().equals( styleName ) )
           return usto;
       }
       else if( object instanceof FeatureTypeStyleNode )
       {
-        final FeatureTypeStyleNode fts = (FeatureTypeStyleNode) object;
+        final FeatureTypeStyleNode fts = (FeatureTypeStyleNode)object;
         final String ftsName = fts.getStyle().getName();
         if( ftsName != null && ftsName.equals( styleName ) )
           return fts;

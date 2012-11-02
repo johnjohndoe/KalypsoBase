@@ -43,12 +43,12 @@ package org.kalypso.ui.editor.styleeditor.symbolizer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypso.ui.editor.styleeditor.binding.StyleInput;
 import org.kalypso.ui.editor.styleeditor.stroke.StrokeComposite;
 import org.kalypso.ui.editor.styleeditor.util.AbstractStyleElementSection;
 import org.kalypso.ui.editor.styleeditor.util.StyleElementAction;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.LineSymbolizer;
 import org.kalypsodeegree.graphics.sld.Stroke;
 
@@ -65,14 +65,13 @@ class LineSymbolizerStrokeSection extends AbstractStyleElementSection<LineSymbol
   @Override
   protected String getTitle( )
   {
-    return Messages.getString("LineSymbolizerStrokeSection_0"); //$NON-NLS-1$
+    return Messages.getString( "LineSymbolizerStrokeSection_0" ); //$NON-NLS-1$
   }
 
   @Override
   protected StyleElementAction<LineSymbolizer>[] createActions( final IStyleInput<LineSymbolizer> input )
   {
-    @SuppressWarnings("unchecked")
-    final StyleElementAction<LineSymbolizer>[] actions = new StyleElementAction[2];
+    @SuppressWarnings( "unchecked" ) final StyleElementAction<LineSymbolizer>[] actions = new StyleElementAction[2];
     actions[0] = new LineSymbolizerStrokeAddAction( input );
     actions[1] = new LineSymbolizerStrokeRemoveAction( input );
     return actions;

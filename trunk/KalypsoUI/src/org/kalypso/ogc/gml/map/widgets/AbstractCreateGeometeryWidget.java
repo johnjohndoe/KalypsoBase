@@ -57,7 +57,7 @@ import com.vividsolutions.jts.geom.Geometry;
 /**
  * A widget which edits a arbitrary geometry. Overwrite it to define the behaviour what really happens (e.g. create new
  * feature or edit existing and so on).
- *
+ * 
  * @author Holger Albert
  */
 public abstract class AbstractCreateGeometeryWidget extends DeprecatedMouseWidget
@@ -252,13 +252,13 @@ public abstract class AbstractCreateGeometeryWidget extends DeprecatedMouseWidge
     final List<Integer> yArray = new ArrayList<>();
     for( int i = 0; i < m_points.size(); i++ )
     {
-      xArray.add( new Integer( (int) getMapPanel().getProjection().getDestX( m_points.get( i ).getX() ) ) );
-      yArray.add( new Integer( (int) getMapPanel().getProjection().getDestY( m_points.get( i ).getY() ) ) );
+      xArray.add( new Integer( (int)getMapPanel().getProjection().getDestX( m_points.get( i ).getX() ) ) );
+      yArray.add( new Integer( (int)getMapPanel().getProjection().getDestY( m_points.get( i ).getY() ) ) );
     }
     if( m_currentPoint != null )
     {
-      xArray.add( new Integer( (int) getMapPanel().getProjection().getDestX( m_currentPoint.getX() ) ) );
-      yArray.add( new Integer( (int) getMapPanel().getProjection().getDestY( m_currentPoint.getY() ) ) );
+      xArray.add( new Integer( (int)getMapPanel().getProjection().getDestX( m_currentPoint.getX() ) ) );
+      yArray.add( new Integer( (int)getMapPanel().getProjection().getDestY( m_currentPoint.getY() ) ) );
     }
     final int[] xs = ArrayUtils.toPrimitive( xArray.toArray( new Integer[m_points.size()] ) );
     final int[] ys = ArrayUtils.toPrimitive( yArray.toArray( new Integer[m_points.size()] ) );
@@ -291,7 +291,7 @@ public abstract class AbstractCreateGeometeryWidget extends DeprecatedMouseWidge
 
   /**
    * This method transforms the AWT-Point to a GM_Point.
-   *
+   * 
    * @param mapPanel
    *          The MapPanel of the map.
    * @param p
@@ -367,8 +367,7 @@ public abstract class AbstractCreateGeometeryWidget extends DeprecatedMouseWidge
   }
 
   /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.map.MapPanel)
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget, org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )

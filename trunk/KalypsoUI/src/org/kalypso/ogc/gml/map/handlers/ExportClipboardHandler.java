@@ -52,9 +52,9 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.handlers.utils.ExportImageOperation;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * This handler starts the clipboard export.
@@ -82,10 +82,10 @@ public class ExportClipboardHandler extends AbstractHandler
     try
     {
       /* Get the evaluation context. */
-      final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+      final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
 
       /* Get the shell. */
-      final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+      final Shell shell = (Shell)context.getVariable( ISources.ACTIVE_SHELL_NAME );
 
       /* Get the map panel. */
       final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
@@ -99,7 +99,7 @@ public class ExportClipboardHandler extends AbstractHandler
       /* If the export has failed, show an error to the user. */
       if( !status.isOK() )
       {
-        ErrorDialog.openError( shell, Messages.getString("ExportClipboardHandler_0"), Messages.getString("ExportClipboardHandler_1"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+        ErrorDialog.openError( shell, Messages.getString( "ExportClipboardHandler_0" ), Messages.getString( "ExportClipboardHandler_1" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
         return null;
       }
 

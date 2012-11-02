@@ -76,9 +76,8 @@ import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
- * This is a gui type handler for the color-type in commons.xsd
- * {@link org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogOGC}.
- *
+ * This is a gui type handler for the color-type in commons.xsd {@link org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogOGC}.
+ * 
  * @author Dirk Kuch, Holger Albert
  */
 public class ColorGuiTypeHandler extends LabelProvider implements IGuiTypeHandler
@@ -93,18 +92,16 @@ public class ColorGuiTypeHandler extends LabelProvider implements IGuiTypeHandle
   }
 
   /**
-   * @see org.kalypso.ogc.gml.gui.XsdBaseGuiTypeHandler#createFeatureDialog(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypso.gmlschema.property.IPropertyType)
+   * @see org.kalypso.ogc.gml.gui.XsdBaseGuiTypeHandler#createFeatureDialog(org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.IPropertyType)
    */
   @Override
   public IFeatureDialog createFeatureDialog( final Feature feature, final IPropertyType ftp )
   {
-    return new ColorFeatureDialog( feature, (IValuePropertyType) ftp );
+    return new ColorFeatureDialog( feature, (IValuePropertyType)ftp );
   }
 
   /**
-   * @see org.kalypso.ogc.gml.gui.XsdBaseGuiTypeHandler#createFeatureviewControl(org.kalypso.gmlschema.property.IPropertyType,
-   *      org.kalypso.template.featureview.ObjectFactory)
+   * @see org.kalypso.ogc.gml.gui.XsdBaseGuiTypeHandler#createFeatureviewControl(org.kalypso.gmlschema.property.IPropertyType, org.kalypso.template.featureview.ObjectFactory)
    */
   @Override
   public JAXBElement< ? extends ControlType> createFeatureviewControl( final IPropertyType property, final ObjectFactory factory )
@@ -193,7 +190,7 @@ public class ColorGuiTypeHandler extends LabelProvider implements IGuiTypeHandle
   {
     if( element instanceof RGB )
     {
-      final RGB rgb = (RGB) element;
+      final RGB rgb = (RGB)element;
       return "(" + rgb.red + "," + rgb.green + "," + rgb.blue + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     }
 
@@ -206,7 +203,7 @@ public class ColorGuiTypeHandler extends LabelProvider implements IGuiTypeHandle
   @Override
   public Image getImage( final Object element )
   {
-    final RGB rgb = element instanceof RGB ? (RGB) element : null;
+    final RGB rgb = element instanceof RGB ? (RGB)element : null;
 
     // REMARK: we implement a simple caching strategy here, because (at the moment) we don't know
     // how and when to dispose the images. So at least the number of created images is reduced here.
@@ -222,7 +219,7 @@ public class ColorGuiTypeHandler extends LabelProvider implements IGuiTypeHandle
     }
     else
     {
-      final PaletteData paletteData = new PaletteData( new RGB[] { new RGB( 64, 64, 64 ), (RGB) element } );
+      final PaletteData paletteData = new PaletteData( new RGB[] { new RGB( 64, 64, 64 ), (RGB)element } );
       final ImageData imageData = new ImageData( 24, 13, 1, paletteData );
       for( int x = 2; x < 23; x++ )
         for( int y = 1; y < 12; y++ )
@@ -238,7 +235,7 @@ public class ColorGuiTypeHandler extends LabelProvider implements IGuiTypeHandle
   public IFeatureModifier createFeatureModifier( final GMLXPath propertyPath, final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format )
   {
     // if we get a ClassCastExxception here, something is very wrong
-    final IValuePropertyType vpt = (IValuePropertyType) ftp;
+    final IValuePropertyType vpt = (IValuePropertyType)ftp;
 
     final Class< ? > valueClass = getValueClass();
 

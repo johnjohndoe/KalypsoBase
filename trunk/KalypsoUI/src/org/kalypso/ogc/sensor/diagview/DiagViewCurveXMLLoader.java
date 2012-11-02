@@ -56,7 +56,6 @@ import org.kalypso.contribs.java.awt.ColorUtilities;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.PoolableObjectWaiter;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ObservationTokenHelper;
@@ -69,10 +68,11 @@ import org.kalypso.template.obsdiagview.TypeCurve;
 import org.kalypso.template.obsdiagview.TypeCurve.Mapping;
 import org.kalypso.template.obsdiagview.TypeObservation;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * Waits for the observation to be loaded and creates a diagram-curve using the xml-template information.
- *
+ * 
  * @see org.kalypso.util.pool.PoolableObjectWaiter
  * @author schlienger
  */
@@ -86,10 +86,10 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
   @Override
   protected void objectLoaded( final IPoolableObjectType key, final Object newValue )
   {
-    final IObservation obs = (IObservation) newValue;
+    final IObservation obs = (IObservation)newValue;
 
-    final TypeObservation xmlObs = (TypeObservation) m_data[1];
-    final DiagView view = (DiagView) m_data[0];
+    final TypeObservation xmlObs = (TypeObservation)m_data[1];
+    final DiagView view = (DiagView)m_data[0];
 
     final List<String> ignoreTypes = view.getIgnoreTypesAsList();
 
@@ -172,7 +172,7 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
         }
 
         // each curve gets its own provider since the curve disposes its provider, when it get disposed
-        final IObsProvider provider = isSynchron() ? (IObsProvider) new PlainObsProvider( obs, null ) : new PooledObsProvider( key );
+        final IObsProvider provider = isSynchron() ? (IObsProvider)new PlainObsProvider( obs, null ) : new PooledObsProvider( key );
 
         final DiagViewCurve curve = new DiagViewCurve( view, provider, curveName, color, stroke, mappings.toArray( new AxisMapping[0] ) );
         curve.setShown( tcurve.isShown() );
@@ -190,7 +190,7 @@ public class DiagViewCurveXMLLoader extends PoolableObjectWaiter
   {
     super.objectFailed( key );
 
-    final String msg = String.format( Messages.getString("DiagViewCurveXMLLoader.0"), key.getLocation() ); //$NON-NLS-1$
+    final String msg = String.format( Messages.getString( "DiagViewCurveXMLLoader.0" ), key.getLocation() ); //$NON-NLS-1$
     return new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), msg );
   }
 

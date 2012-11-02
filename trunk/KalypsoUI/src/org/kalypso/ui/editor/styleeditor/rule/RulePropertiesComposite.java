@@ -58,10 +58,10 @@ import org.kalypso.commons.databinding.forms.DatabindingForm;
 import org.kalypso.commons.databinding.validation.NumberNotNegativeValidator;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
 import org.kalypso.contribs.eclipse.jface.action.ActionButton;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypso.ui.editor.styleeditor.binding.SLDBinding;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.Rule;
 
 /**
@@ -104,7 +104,7 @@ public class RulePropertiesComposite extends Composite
 
   private void createNameControl( final FormToolkit toolkit, final Composite parent )
   {
-    toolkit.createLabel( parent, Messages.getString("RulePropertiesComposite_0") ); //$NON-NLS-1$
+    toolkit.createLabel( parent, Messages.getString( "RulePropertiesComposite_0" ) ); //$NON-NLS-1$
 
     final Text nameField = toolkit.createText( parent, StringUtils.EMPTY, SWT.BORDER );
     nameField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );
@@ -130,7 +130,7 @@ public class RulePropertiesComposite extends Composite
 
   private void createAbstractControl( final FormToolkit toolkit, final Composite parent )
   {
-    toolkit.createLabel( parent, Messages.getString("RulePropertiesComposite_1") ); //$NON-NLS-1$
+    toolkit.createLabel( parent, Messages.getString( "RulePropertiesComposite_1" ) ); //$NON-NLS-1$
 
     final Text abstractField = toolkit.createText( parent, StringUtils.EMPTY );
     abstractField.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false, 2, 1 ) );

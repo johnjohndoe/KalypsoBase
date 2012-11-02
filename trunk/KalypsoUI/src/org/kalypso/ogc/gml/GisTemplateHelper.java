@@ -77,7 +77,6 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.jaxb.TemplateUtilities;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.template.gismapview.Gismapview.Layers;
@@ -91,6 +90,7 @@ import org.kalypso.transformation.CRSHelper;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
@@ -107,7 +107,7 @@ import org.xml.sax.XMLReader;
 
 /**
  * Hilfsklasse, um aus den Binding-Klassen 'echte' Objekte zu erzeugen und umgekehrt
- *
+ * 
  * @author Belger
  */
 public final class GisTemplateHelper
@@ -155,7 +155,7 @@ public final class GisTemplateHelper
       String typeName = ""; //$NON-NLS-1$
       if( strictType && (property instanceof List< ? >) )
       {
-        final List< ? > list = (List< ? >) property;
+        final List< ? > list = (List< ? >)property;
         if( !list.isEmpty() )
         {
           final Feature firstChild = FeatureHelper.getFeature( feature.getWorkspace(), list.get( 0 ) );
@@ -258,7 +258,7 @@ public final class GisTemplateHelper
   {
     final Unmarshaller unmarshaller = JC_FEATUREVIEW.createUnmarshaller();
 
-    return (Featuretemplate) unmarshaller.unmarshal( is );
+    return (Featuretemplate)unmarshaller.unmarshal( is );
   }
 
   public static final Gismapview loadGisMapView( final IStorage storage ) throws JAXBException, CoreException, SAXException, ParserConfigurationException, IOException
@@ -269,7 +269,7 @@ public final class GisTemplateHelper
       inputStream = storage.getContents();
       final InputSource is = new InputSource( inputStream );
       if( storage instanceof IEncodedStorage )
-        is.setEncoding( ((IEncodedStorage) storage).getCharset() );
+        is.setEncoding( ((IEncodedStorage)storage).getCharset() );
       final Gismapview gisMapView = GisTemplateHelper.loadGisMapView( is );
       inputStream.close();
       return gisMapView;
@@ -318,14 +318,14 @@ public final class GisTemplateHelper
     final XMLReader xr = spf.newSAXParser().getXMLReader();
     xr.setContentHandler( unmarshaller.getUnmarshallerHandler() );
     xr.parse( is );
-    return (Gismapview) unmarshaller.getUnmarshallerHandler().getResult();
+    return (Gismapview)unmarshaller.getUnmarshallerHandler().getResult();
   }
 
   public static final Gistableview loadGisTableview( final IStorage storage ) throws CoreException, JAXBException
   {
     final InputSource is = new InputSource( storage.getContents() );
     if( storage instanceof IEncodedStorage )
-      is.setEncoding( ((IEncodedStorage) storage).getCharset() );
+      is.setEncoding( ((IEncodedStorage)storage).getCharset() );
     return GisTemplateHelper.loadGisTableview( is );
   }
 
@@ -342,21 +342,21 @@ public final class GisTemplateHelper
   public static final Gistableview loadGisTableview( final InputSource is ) throws JAXBException
   {
     final Unmarshaller unmarshaller = TemplateUtilities.JC_GISTABLEVIEW.createUnmarshaller();
-    return (Gistableview) unmarshaller.unmarshal( is );
+    return (Gistableview)unmarshaller.unmarshal( is );
   }
 
   public static final Gistreeview loadGisTreeView( final IStorage file ) throws JAXBException, CoreException
   {
     final InputSource is = new InputSource( file.getContents() );
     if( file instanceof IEncodedStorage )
-      is.setEncoding( ((IEncodedStorage) file).getCharset() );
+      is.setEncoding( ((IEncodedStorage)file).getCharset() );
     return GisTemplateHelper.loadGisTreeView( is );
   }
 
   public static final Gistreeview loadGisTreeView( final InputSource is ) throws JAXBException
   {
     final Unmarshaller unmarshaller = TemplateUtilities.JC_GISTREEVIEW.createUnmarshaller();
-    return (Gistreeview) unmarshaller.unmarshal( is );
+    return (Gistreeview)unmarshaller.unmarshal( is );
   }
 
   public static void saveGisMapView( final Gismapview modellTemplate, final OutputStream outStream, final String encoding ) throws JAXBException
@@ -434,7 +434,7 @@ public final class GisTemplateHelper
 
   /**
    * This method creates a new Map with a bounding box
-   *
+   * 
    * @return gismapview new empty map with a layer list
    */
   public static Gismapview emptyGisView( )
@@ -458,7 +458,7 @@ public final class GisTemplateHelper
       if( targetCS != null )
       {
         final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( targetCS );
-        return (GM_Polygon) transformer.transform( bboxAsSurface );
+        return (GM_Polygon)transformer.transform( bboxAsSurface );
       }
 
       return bboxAsSurface;

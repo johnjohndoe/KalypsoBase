@@ -50,8 +50,8 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.outline.ViewContentOutline;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * This handler opens the outline.
@@ -66,8 +66,8 @@ public class OpenOutlineHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
+    final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
+    final IWorkbenchPart part = (IWorkbenchPart)context.getVariable( ISources.ACTIVE_PART_NAME );
     if( part == null )
       throw new ExecutionException( Messages.getString( "org.kalypso.ogc.gml.map.handlers.OpenOutlineHandler.0" ) ); //$NON-NLS-1$
 

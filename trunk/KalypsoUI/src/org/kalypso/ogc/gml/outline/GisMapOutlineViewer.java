@@ -121,7 +121,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
       @Override
       public void checkStateChanged( final CheckStateChangedEvent event )
       {
-        final IThemeNode node = (IThemeNode) event.getElement();
+        final IThemeNode node = (IThemeNode)event.getElement();
         final ICommand command = node.setVisible( event.getChecked() );
         if( command != null )
           postCommand( command, null );
@@ -195,8 +195,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
   }
 
   /**
-   * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand,
-   *      java.lang.Runnable)
+   * @see org.kalypso.commons.command.ICommandTarget#postCommand(org.kalypso.commons.command.ICommand, java.lang.Runnable)
    */
   @Override
   public void postCommand( final ICommand command, final Runnable runnable )
@@ -236,7 +235,7 @@ public class GisMapOutlineViewer implements ISelectionProvider, ICommandTarget
 
   /**
    * This function searches the content of the viewer for a node, which contains the given theme.
-   *
+   * 
    * @param theme
    *          The theme.
    * @return The node or null.

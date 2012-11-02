@@ -45,7 +45,7 @@ import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
 
 /**
  * This node provides images for the ouline and the legend.
- *
+ * 
  * @author Gernot Belger
  * @author Holger Albert
  */

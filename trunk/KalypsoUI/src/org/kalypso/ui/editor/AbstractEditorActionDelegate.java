@@ -56,8 +56,7 @@ public abstract class AbstractEditorActionDelegate implements IEditorActionDeleg
   private IEditorPart m_editor;
 
   /**
-   * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction,
-   *      org.eclipse.ui.IEditorPart)
+   * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction, org.eclipse.ui.IEditorPart)
    */
   @Override
   public void setActiveEditor( final IAction action, final IEditorPart targetEditor )
@@ -66,8 +65,7 @@ public abstract class AbstractEditorActionDelegate implements IEditorActionDeleg
   }
 
   /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-   *      org.eclipse.jface.viewers.ISelection)
+   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
    */
   @Override
   public void selectionChanged( final IAction action, final ISelection selection )

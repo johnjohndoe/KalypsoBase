@@ -62,7 +62,7 @@ public class PanToSelectedFeature extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
     final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
 
     /* Get the first selected element. */
@@ -74,7 +74,7 @@ public class PanToSelectedFeature extends AbstractHandler
       return Status.OK_STATUS;
 
     /* Cast to feature. */
-    final Feature feature = (Feature) element;
+    final Feature feature = (Feature)element;
 
     /* Create the piece, which will pan to the feature. */
     final PanToFeaturePart piece = new PanToFeaturePart( mapPanel );

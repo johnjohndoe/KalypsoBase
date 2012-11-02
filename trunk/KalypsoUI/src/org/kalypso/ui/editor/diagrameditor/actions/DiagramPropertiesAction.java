@@ -59,8 +59,8 @@ public class DiagramPropertiesAction extends AbstractEditorActionDelegate
   @Override
   public void run( final IAction action )
   {
-    final ObservationDiagramEditor editor = (ObservationDiagramEditor) getEditor();
-    final DiagView diag = (DiagView) editor.getView();
+    final ObservationDiagramEditor editor = (ObservationDiagramEditor)getEditor();
+    final DiagView diag = (DiagView)editor.getView();
     final DiagramPropertiesDialog dlg = new DiagramPropertiesDialog( getShell(), diag.getTitle(), diag.isShowLegend(), diag.getLegendName(), diag.getTimezone() );
     if( dlg.open() == Window.OK )
       editor.postCommand( new ChangeDiagPropsCommand( diag, dlg.getDiagramTitle(), dlg.isShowLegend(), dlg.getLegendTitle(), dlg.getTimezoneName() ), null );

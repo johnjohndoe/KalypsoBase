@@ -75,7 +75,7 @@ public class UndoRedoDelegate extends AbstractGisEditorActionDelegate
 
     // WARNING: Because of the following cast, we can only use
     // this delegate with the GMLEditor.
-    final GmlEditor editor = (GmlEditor) part.getPart();
+    final GmlEditor editor = (GmlEditor)part.getPart();
     if( editor == null )
       return;
 
@@ -100,7 +100,7 @@ public class UndoRedoDelegate extends AbstractGisEditorActionDelegate
 
     // WARNING: Because of the following cast, we can only use
     // this delegate with the GMLEditor.
-    final GmlEditor editor = (GmlEditor) part.getPart();
+    final GmlEditor editor = (GmlEditor)part.getPart();
     if( editor != null )
     {
       final GmlTreeView treeView = editor.getTreeView();

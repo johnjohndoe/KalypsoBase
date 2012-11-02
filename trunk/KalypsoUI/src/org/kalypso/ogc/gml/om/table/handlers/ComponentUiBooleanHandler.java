@@ -54,7 +54,7 @@ import org.kalypso.ogc.gml.om.table.celleditor.ComboBoxViewerCellEditor;
 
 /**
  * Handles enumerated values, i.e. values which have enumeration-restrictions.
- *
+ * 
  * @author Dirk Kuch
  * @author Gernot Belger
  */
@@ -79,7 +79,7 @@ public class ComponentUiBooleanHandler extends AbstractComponentUiHandler
       {
         if( element instanceof Boolean )
         {
-          final Boolean b = (Boolean) element;
+          final Boolean b = (Boolean)element;
 
           if( b == true )
             return "true"; //$NON-NLS-1$
@@ -104,8 +104,7 @@ public class ComponentUiBooleanHandler extends AbstractComponentUiHandler
   }
 
   /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#setValue(org.kalypso.observation.result.IRecord,
-   *      java.lang.Object)
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#setValue(org.kalypso.observation.result.IRecord, java.lang.Object)
    */
   @Override
   public void doSetValue( final IRecord record, final Object value )
@@ -117,8 +116,7 @@ public class ComponentUiBooleanHandler extends AbstractComponentUiHandler
   }
 
   /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#setValue(org.kalypso.observation.result.IRecord,
-   *      java.lang.Object)
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#setValue(org.kalypso.observation.result.IRecord, java.lang.Object)
    */
   @Override
   public void setValue( final IRecord record, final Object value )

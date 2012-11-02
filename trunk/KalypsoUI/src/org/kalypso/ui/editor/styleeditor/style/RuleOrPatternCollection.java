@@ -54,9 +54,9 @@ import org.eclipse.core.runtime.Assert;
 import org.kalypso.commons.eclipse.jface.viewers.ITabItem;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.styleeditor.binding.StyleInput;
 import org.kalypso.ui.editor.styleeditor.tabs.AbstractTabList;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.Rule;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
@@ -70,7 +70,7 @@ import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
  * This class is fed with rules. It identifies whether it is a normal rule or the rule belongs to a pattern. It collects
  * the rules and returns the number of rule items (-> number of tabitems to be displayed) as a list of Rule and
  * RuleCollection Objects.
- *
+ * 
  * @author F.Lindemann
  */
 public class RuleOrPatternCollection extends AbstractTabList<FeatureTypeStyle>
@@ -94,9 +94,9 @@ public class RuleOrPatternCollection extends AbstractTabList<FeatureTypeStyle>
     for( final ITabItem item : items )
     {
       if( item instanceof RuleTabItem )
-        ruleItems.put( ((RuleTabItem) item).getRule(), (RuleTabItem) item );
+        ruleItems.put( ((RuleTabItem)item).getRule(), (RuleTabItem)item );
       else if( item instanceof RulePatternTabItem )
-        rulePatternItems.put( ((RulePatternTabItem) item).getRuleCollection(), (RulePatternTabItem) item );
+        rulePatternItems.put( ((RulePatternTabItem)item).getRuleCollection(), (RulePatternTabItem)item );
     }
 
     m_patterns.clear();
@@ -110,7 +110,7 @@ public class RuleOrPatternCollection extends AbstractTabList<FeatureTypeStyle>
         final ITabItem newItem = createItem( element );
         if( newItem instanceof RuleTabItem )
         {
-          final Rule rule = ((RuleTabItem) newItem).getRule();
+          final Rule rule = ((RuleTabItem)newItem).getRule();
           if( ruleItems.containsKey( rule ) )
             internalAddItem( ruleItems.get( rule ) );
           else
@@ -118,7 +118,7 @@ public class RuleOrPatternCollection extends AbstractTabList<FeatureTypeStyle>
         }
         else if( newItem instanceof RulePatternTabItem )
         {
-          final RuleCollection rule = ((RulePatternTabItem) newItem).getRuleCollection();
+          final RuleCollection rule = ((RulePatternTabItem)newItem).getRuleCollection();
           if( rulePatternItems.containsKey( rule ) )
             internalAddItem( rulePatternItems.get( rule ) );
           else
@@ -159,7 +159,7 @@ public class RuleOrPatternCollection extends AbstractTabList<FeatureTypeStyle>
     if( style == null )
       return null;
 
-    final Rule rule = StyleFactory.createRule( (Symbolizer[]) null );
+    final Rule rule = StyleFactory.createRule( (Symbolizer[])null );
     style.addRule( rule );
 
     getInput().fireStyleChanged();
@@ -175,11 +175,11 @@ public class RuleOrPatternCollection extends AbstractTabList<FeatureTypeStyle>
   public void removeItem( final ITabItem item )
   {
     if( item instanceof RuleTabItem )
-      removeRule( (RuleTabItem) item );
+      removeRule( (RuleTabItem)item );
     else if( item instanceof RulePatternTabItem )
-      removePatternRule( (RulePatternTabItem) item );
+      removePatternRule( (RulePatternTabItem)item );
     else
-      throw new IllegalArgumentException( String.format( Messages.getString("RuleOrPatternCollection_1"), item ) ); //$NON-NLS-1$
+      throw new IllegalArgumentException( String.format( Messages.getString( "RuleOrPatternCollection_1" ), item ) ); //$NON-NLS-1$
   }
 
   private void removeRule( final RuleTabItem item )

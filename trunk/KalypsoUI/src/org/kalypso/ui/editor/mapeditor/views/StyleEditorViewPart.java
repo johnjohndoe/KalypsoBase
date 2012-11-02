@@ -138,7 +138,7 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
   @Override
   public void selectionChanged( final SelectionChangedEvent event )
   {
-    final Object o = ((IStructuredSelection) event.getSelection()).getFirstElement();
+    final Object o = ((IStructuredSelection)event.getSelection()).getFirstElement();
 
     final FeatureTypeStyleInput input = createInput( o );
 
@@ -150,12 +150,12 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
     if( !(o instanceof IThemeNode) )
       return null;
 
-    final IThemeNode node = (IThemeNode) o;
+    final IThemeNode node = (IThemeNode)o;
     final IKalypsoTheme theme = ThemeNodeUtils.findTheme( node );
     if( !(theme instanceof IKalypsoFeatureTheme) )
       return null;
 
-    final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) theme;
+    final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme)theme;
     return createInputForTheme( featureTheme, node );
   }
 
@@ -166,15 +166,15 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
 
     if( node instanceof UserStyleNode )
     {
-      final IKalypsoUserStyle kalypsoStyle = ((UserStyleNode) node).getStyle();
+      final IKalypsoUserStyle kalypsoStyle = ((UserStyleNode)node).getStyle();
       return createInput( kalypsoStyle, featureType, -1 );
     }
 
     if( node.getElement() instanceof FeatureTypeStyle )
     {
-      final FeatureTypeStyle fts = (FeatureTypeStyle) node.getElement();
+      final FeatureTypeStyle fts = (FeatureTypeStyle)node.getElement();
       if( fts instanceof IKalypsoStyle )
-        return createInput( (IKalypsoStyle) fts, featureType, -1 );
+        return createInput( (IKalypsoStyle)fts, featureType, -1 );
       else
       {
         final IThemeNode parentNode = node.getParent();
@@ -184,8 +184,8 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
 
     if( node.getElement() instanceof Rule )
     {
-      final Rule indexRule = (Rule) node.getElement();
-      final FeatureTypeStyleNode ftsNode = (FeatureTypeStyleNode) node.getParent();
+      final Rule indexRule = (Rule)node.getElement();
+      final FeatureTypeStyleNode ftsNode = (FeatureTypeStyleNode)node.getParent();
       final FeatureTypeStyle fts = ftsNode.getStyle();
       final Rule[] rules = fts.getRules();
       int index = -1;
@@ -210,7 +210,7 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
 
     if( theme instanceof IKalypsoFeatureTheme )
     {
-      final IKalypsoFeatureTheme nodeTheme = (IKalypsoFeatureTheme) theme;
+      final IKalypsoFeatureTheme nodeTheme = (IKalypsoFeatureTheme)theme;
       // Reset style-editor, but the styles are not unique, so do not set anything
       final IFeatureType otherType = nodeTheme.getFeatureType();
       final IKalypsoStyle[] styles = nodeTheme.getStyles();
@@ -230,7 +230,7 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
 
     final Object element = node.getElement();
     if( element instanceof IKalypsoStyle )
-      return (IKalypsoStyle) element;
+      return (IKalypsoStyle)element;
 
     return findStyle( node.getParent() );
   }
@@ -249,11 +249,11 @@ public class StyleEditorViewPart extends ViewPart implements ISelectionChangedLi
   private static FeatureTypeStyle findFeatureTypeStyle( final IKalypsoStyle style, final int styleToSelect )
   {
     if( style instanceof FeatureTypeStyle )
-      return (FeatureTypeStyle) style;
+      return (FeatureTypeStyle)style;
 
     if( style instanceof UserStyle )
     {
-      final FeatureTypeStyle[] styles = ((UserStyle) style).getFeatureTypeStyles();
+      final FeatureTypeStyle[] styles = ((UserStyle)style).getFeatureTypeStyles();
       if( styles.length == 0 )
         return null;
 

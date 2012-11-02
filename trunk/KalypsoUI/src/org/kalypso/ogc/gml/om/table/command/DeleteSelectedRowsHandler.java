@@ -46,8 +46,8 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
-import org.kalypso.i18n.Messages;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * Deletes the selected lines from the table.
@@ -69,7 +69,7 @@ public class DeleteSelectedRowsHandler extends AbstractHandler
 
     viewer.cancelEditing();
 
-    final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+    final IStructuredSelection selection = (IStructuredSelection)viewer.getSelection();
     final Object firstElement = selection.getFirstElement();
     final int firstIndex = tupleResult.indexOf( firstElement );
 

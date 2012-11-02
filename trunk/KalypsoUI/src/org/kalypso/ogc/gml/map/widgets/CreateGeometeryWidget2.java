@@ -47,7 +47,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * Lets the user edit a new geometry on the map and creates a new feature with this geometry.
- *
+ * 
  * @author Holger Albert
  */
 public class CreateGeometeryWidget2 extends AbstractFeatureGeometeryWidget
@@ -84,7 +84,7 @@ public class CreateGeometeryWidget2 extends AbstractFeatureGeometeryWidget
   @Override
   protected void editFeature( final GM_Object validGeometryValue, final Object toEdit ) throws Exception
   {
-    final FeatureToEdit featureToEdit = (FeatureToEdit) toEdit;
+    final FeatureToEdit featureToEdit = (FeatureToEdit)toEdit;
 
     final Map<IPropertyType, Object> valueMap = new HashMap<>();
     valueMap.put( featureToEdit.getGeometryProperty(), validGeometryValue );

@@ -61,7 +61,7 @@ public class ThemeFactoryExtension
 
   private static final String ATTRIBUTE_TYPE = "type"; //$NON-NLS-1$
 
-  @SuppressWarnings("unused")
+  @SuppressWarnings( "unused" )
   private static final String ATTRIBUTE_Label = "label"; //$NON-NLS-1$
 
   private static Map<String, IConfigurationElement> FACTORY_MAP;
@@ -77,7 +77,7 @@ public class ThemeFactoryExtension
       if( element == null )
         return null;
 
-      return (IKalypsoThemeFactory) element.createExecutableExtension( ATTRIBUTE_FACTORY );
+      return (IKalypsoThemeFactory)element.createExecutableExtension( ATTRIBUTE_FACTORY );
     }
     catch( final CoreException e )
     {

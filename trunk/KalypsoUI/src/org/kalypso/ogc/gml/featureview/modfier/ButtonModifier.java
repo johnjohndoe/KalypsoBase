@@ -51,7 +51,6 @@ import org.eclipse.swt.widgets.Control;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.featureview.IFeatureChangeListener;
 import org.kalypso.ogc.gml.featureview.control.ButtonFeatureControl;
@@ -59,6 +58,7 @@ import org.kalypso.ogc.gml.featureview.dialog.IFeatureDialog;
 import org.kalypso.ogc.gml.gui.GuiTypeRegistrySingleton;
 import org.kalypso.ogc.gml.gui.IGuiTypeHandler;
 import org.kalypso.ogc.gml.table.celleditors.DialogCellEditor;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_Object;
@@ -148,7 +148,7 @@ public class ButtonModifier extends AbstractFeatureModifier
     {
       if( ftp instanceof IValuePropertyType )
       {
-        final IValuePropertyType vpt = (IValuePropertyType) ftp;
+        final IValuePropertyType vpt = (IValuePropertyType)ftp;
         final IGuiTypeHandler handler = GuiTypeRegistrySingleton.getTypeRegistry().getTypeHandlerFor( vpt );
         if( handler != null && value != null )
           return handler.getText( value );

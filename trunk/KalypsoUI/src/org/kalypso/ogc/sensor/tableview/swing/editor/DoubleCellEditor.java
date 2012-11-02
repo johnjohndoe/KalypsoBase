@@ -93,21 +93,21 @@ public class DoubleCellEditor extends DefaultCellEditor
 
     if( useGroupingAsDecimalSymbol && nf instanceof DecimalFormat )
     {
-      final DecimalFormat df = (DecimalFormat) nf;
+      final DecimalFormat df = (DecimalFormat)nf;
       final DecimalFormatSymbols bols = df.getDecimalFormatSymbols();
 
       m_replaceWhat = bols.getGroupingSeparator();
       m_replaceWith = bols.getDecimalSeparator();
     }
 
-    ((JTextField) getComponent()).setHorizontalAlignment( SwingConstants.RIGHT );
+    ((JTextField)getComponent()).setHorizontalAlignment( SwingConstants.RIGHT );
   }
 
   @Override
   public Component getTableCellEditorComponent( final JTable table, Object value, final boolean isSelected, final int row, final int column )
   {
     m_value = null;
-    ((JComponent) getComponent()).setBorder( new LineBorder( Color.black ) );
+    ((JComponent)getComponent()).setBorder( new LineBorder( Color.black ) );
 
     try
     {
@@ -124,7 +124,7 @@ public class DoubleCellEditor extends DefaultCellEditor
   @Override
   public boolean stopCellEditing( )
   {
-    String s = (String) super.getCellEditorValue();
+    String s = (String)super.getCellEditorValue();
 
     if( s == null || "".equals( s ) ) //$NON-NLS-1$
     {
@@ -143,7 +143,7 @@ public class DoubleCellEditor extends DefaultCellEditor
     }
     catch( final Exception e )
     {
-      ((JComponent) getComponent()).setBorder( new LineBorder( Color.red ) );
+      ((JComponent)getComponent()).setBorder( new LineBorder( Color.red ) );
       return false;
     }
 

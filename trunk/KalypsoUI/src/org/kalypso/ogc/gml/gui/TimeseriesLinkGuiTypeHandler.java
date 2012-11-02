@@ -97,7 +97,7 @@ public class TimeseriesLinkGuiTypeHandler extends LabelProvider implements IGuiT
     if( element == null )
       return ""; //$NON-NLS-1$
 
-    final String href = ((TimeseriesLinkType) element).getHref();
+    final String href = ((TimeseriesLinkType)element).getHref();
     return href == null ? "" : href; //$NON-NLS-1$
   }
 

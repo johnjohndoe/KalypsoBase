@@ -66,7 +66,7 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * simple textbox wrapper rendering a qname of a feature
- *
+ * 
  * @author Dirk Kuch
  */
 public class WizardFeatureTextBox
@@ -122,7 +122,7 @@ public class WizardFeatureTextBox
       if( m_property != null )
         if( m_property instanceof XMLGregorianCalendar )
         {
-          final XMLGregorianCalendar cal = (XMLGregorianCalendar) m_property;
+          final XMLGregorianCalendar cal = (XMLGregorianCalendar)m_property;
           final GregorianCalendar calendar = cal.toGregorianCalendar();
 
           final DateFormat df = DateFormat.getDateTimeInstance( DateFormat.MEDIUM, DateFormat.MEDIUM );
@@ -134,14 +134,14 @@ public class WizardFeatureTextBox
         }
         else if( m_property instanceof List )
         {
-          final List names = (List) m_property;
+          final List names = (List)m_property;
           m_textBox.setText( names.get( 0 ).toString() );
           m_text = names.get( 0 ).toString();
 
         }
         else if( m_property instanceof Double )
         {
-          final Double value = (Double) m_property;
+          final Double value = (Double)m_property;
 
           final String text = String.format( "%.2f", value ); //$NON-NLS-1$
           m_textBox.setText( text );
@@ -149,7 +149,7 @@ public class WizardFeatureTextBox
         }
         else if( m_property instanceof BigDecimal )
         {
-          final BigDecimal value = (BigDecimal) m_property;
+          final BigDecimal value = (BigDecimal)m_property;
 
           final String text = String.format( "%.2f", value ); //$NON-NLS-1$
           m_textBox.setText( text );

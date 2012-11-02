@@ -179,7 +179,7 @@ public class SWTDayChooser extends Composite implements MouseListener, FocusList
   {
     calendar = Calendar.getInstance( locale );
     calendar.setLenient( true );
-    today = (Calendar) calendar.clone();
+    today = (Calendar)calendar.clone();
     final int firstDayOfWeek = calendar.getFirstDayOfWeek();
     final DateFormatSymbols dateFormatSymbols = new DateFormatSymbols( locale );
     final String[] dayNames = dateFormatSymbols.getShortWeekdays();
@@ -245,7 +245,7 @@ public class SWTDayChooser extends Composite implements MouseListener, FocusList
   protected void drawDays( )
   {
     calendar.get( Calendar.DAY_OF_YEAR ); // Force calendar update
-    final Calendar cal = (Calendar) calendar.clone();
+    final Calendar cal = (Calendar)calendar.clone();
     final int firstDayOfWeek = cal.getFirstDayOfWeek();
     cal.set( Calendar.DAY_OF_MONTH, 1 );
 
@@ -325,7 +325,7 @@ public class SWTDayChooser extends Composite implements MouseListener, FocusList
 
   public void setCalendar( final Calendar cal )
   {
-    calendar = (Calendar) cal.clone();
+    calendar = (Calendar)cal.clone();
     calendar.setLenient( true );
     drawDays();
     dateChanged();
@@ -567,7 +567,7 @@ public class SWTDayChooser extends Composite implements MouseListener, FocusList
         final Event event = new Event();
         event.widget = this;
         event.display = getDisplay();
-        event.time = (int) System.currentTimeMillis();
+        event.time = (int)System.currentTimeMillis();
         event.data = calendar.clone();
         element.dateChanged( new SWTCalendarEvent( event ) );
       }
@@ -576,7 +576,7 @@ public class SWTDayChooser extends Composite implements MouseListener, FocusList
 
   public Calendar getCalendar( )
   {
-    return (Calendar) calendar.clone();
+    return (Calendar)calendar.clone();
   }
 
   public void setLocale( final Locale locale )

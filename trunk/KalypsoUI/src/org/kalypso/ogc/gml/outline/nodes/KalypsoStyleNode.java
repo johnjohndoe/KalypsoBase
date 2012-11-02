@@ -62,7 +62,7 @@ abstract class KalypsoStyleNode<T> extends AbstractThemeNode<T>
     super( parent, element );
 
     if( element instanceof IKalypsoStyle )
-      ((IKalypsoStyle) element).addStyleListener( m_styleListener );
+      ((IKalypsoStyle)element).addStyleListener( m_styleListener );
   }
 
   @Override
@@ -70,7 +70,7 @@ abstract class KalypsoStyleNode<T> extends AbstractThemeNode<T>
   {
     final T element = getElement();
     if( element instanceof IKalypsoStyle )
-      ((IKalypsoStyle) element).removeStyleListener( m_styleListener );
+      ((IKalypsoStyle)element).removeStyleListener( m_styleListener );
 
     super.dispose();
   }

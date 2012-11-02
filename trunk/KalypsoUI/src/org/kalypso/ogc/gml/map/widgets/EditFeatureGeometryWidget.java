@@ -31,7 +31,6 @@ package org.kalypso.ogc.gml.map.widgets;
 
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.command.ChangeFeaturesCommand;
 import org.kalypso.ogc.gml.command.FeatureChange;
@@ -40,13 +39,14 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.FeatureSelectionHelper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * Lets the user replace an existing geometry of a given feature with a new edited one.
- *
+ * 
  * @author Holger Albert
  */
 public class EditFeatureGeometryWidget extends AbstractFeatureGeometeryWidget
@@ -119,7 +119,7 @@ public class EditFeatureGeometryWidget extends AbstractFeatureGeometeryWidget
   @Override
   protected void editFeature( final GM_Object validGeometryValue, final Object toEdit ) throws Exception
   {
-    final FeatureToEdit featureToEdit = (FeatureToEdit) toEdit;
+    final FeatureToEdit featureToEdit = (FeatureToEdit)toEdit;
 
     final CommandableWorkspace workspace = featureToEdit.getWorkspace();
     final Feature feature = featureToEdit.getFeature();
@@ -133,7 +133,7 @@ public class EditFeatureGeometryWidget extends AbstractFeatureGeometeryWidget
   @Override
   protected Class< ? extends GM_Object> getGeometryClass( )
   {
-    final FeatureToEdit featureToEdit = (FeatureToEdit) getFeatureToEdit();
+    final FeatureToEdit featureToEdit = (FeatureToEdit)getFeatureToEdit();
 
     final IValuePropertyType geometryProperty = featureToEdit.getGeometryProperty();
 

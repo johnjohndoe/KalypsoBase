@@ -72,7 +72,7 @@ import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 
 /**
  * Theme factory for {@link KalypsoWMSTheme}s.
- *
+ * 
  * @author Gernot Belger
  */
 public class WmsThemeFactory extends AbstractThemeFactory
@@ -137,7 +137,7 @@ public class WmsThemeFactory extends AbstractThemeFactory
   @Override
   public void configureLayer( final IKalypsoTheme theme, final String id, final GM_Envelope bbox, final String srsName, final StyledLayerType layer, final IProgressMonitor monitor )
   {
-    final KalypsoWMSTheme wmsTheme = (KalypsoWMSTheme) theme;
+    final KalypsoWMSTheme wmsTheme = (KalypsoWMSTheme)theme;
 
     layer.setHref( wmsTheme.getSource() );
 

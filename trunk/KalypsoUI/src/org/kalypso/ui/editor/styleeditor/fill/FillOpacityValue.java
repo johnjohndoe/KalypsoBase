@@ -61,7 +61,7 @@ public class FillOpacityValue extends InputWithContextObservableValue<Fill, Inte
   {
     try
     {
-      return (int) (data.getOpacity( null ) * 100.0);
+      return (int)(data.getOpacity( null ) * 100.0);
     }
     catch( final FilterEvaluationException e )
     {

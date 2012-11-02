@@ -94,7 +94,7 @@ public abstract class AbstractFeatureControl implements IFeatureControl
     return control;
   }
 
-  @SuppressWarnings("unused")
+  @SuppressWarnings( "unused" )
   protected Control createControl( final Composite parent, final int style )
   {
     // Implementors need either to overwrite #createControl( toolkit.. ) or overwrite this method.
@@ -108,7 +108,7 @@ public abstract class AbstractFeatureControl implements IFeatureControl
 
     if( control instanceof Composite )
     {
-      final Composite panel = (Composite) control;
+      final Composite panel = (Composite)control;
       toolkit.adapt( panel );
 
       final Control[] children = panel.getChildren();

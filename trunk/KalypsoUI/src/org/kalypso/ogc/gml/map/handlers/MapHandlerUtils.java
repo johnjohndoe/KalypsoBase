@@ -74,7 +74,6 @@ import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.java.io.FileExtensions;
 import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -85,6 +84,7 @@ import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
 import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * Helper class for implementors of {@link org.eclipse.core.commands.IHandler} for map commands.

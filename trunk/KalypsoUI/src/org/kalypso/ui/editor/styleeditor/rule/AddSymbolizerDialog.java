@@ -55,7 +55,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.Symbolizer;
 
 /**
@@ -97,9 +97,9 @@ public class AddSymbolizerDialog extends TitleAreaDialog
   @Override
   protected Control createDialogArea( final Composite parent )
   {
-    getShell().setText( Messages.getString("AddSymbolizerDialog_0") ); //$NON-NLS-1$
+    getShell().setText( Messages.getString( "AddSymbolizerDialog_0" ) ); //$NON-NLS-1$
 
-    final Composite composite = (Composite) super.createDialogArea( parent );
+    final Composite composite = (Composite)super.createDialogArea( parent );
 
     m_addComposite = new AddSymbolizerComposite( composite, m_featureType );
     m_addComposite.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
@@ -119,11 +119,11 @@ public class AddSymbolizerDialog extends TitleAreaDialog
     final boolean choicePossible = m_addComposite.isChoicePossible();
 
     okButton.setEnabled( choicePossible );
-    setTitle( Messages.getString("AddSymbolizerDialog_1") ); //$NON-NLS-1$
-    setMessage( Messages.getString("AddSymbolizerDialog_2") ); //$NON-NLS-1$
+    setTitle( Messages.getString( "AddSymbolizerDialog_1" ) ); //$NON-NLS-1$
+    setMessage( Messages.getString( "AddSymbolizerDialog_2" ) ); //$NON-NLS-1$
 
     if( !choicePossible )
-      setMessage( Messages.getString("AddSymbolizerDialog_3"), IMessageProvider.WARNING ); //$NON-NLS-1$
+      setMessage( Messages.getString( "AddSymbolizerDialog_3" ), IMessageProvider.WARNING ); //$NON-NLS-1$
   }
 
   /**

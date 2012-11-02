@@ -64,7 +64,7 @@ public class CascadingThemeHelper
     for( final IKalypsoTheme kalypsoTheme : allThemes )
     {
       if( kalypsoTheme instanceof IKalypsoCascadingTheme && kalypsoTheme.getName().getKey().equals( themeName ) )
-        return (IKalypsoCascadingTheme) kalypsoTheme;
+        return (IKalypsoCascadingTheme)kalypsoTheme;
     }
 
     return null;
@@ -87,10 +87,10 @@ public class CascadingThemeHelper
       final String themeProp = kalypsoTheme.getProperty( PROPERTY_THEME_ID, StringUtils.EMPTY );
 
       if( kalypsoTheme instanceof IKalypsoCascadingTheme && kalypsoTheme.getName().getKey().equals( themeName ) )
-        return (IKalypsoCascadingTheme) kalypsoTheme;
+        return (IKalypsoCascadingTheme)kalypsoTheme;
 
       else if( kalypsoTheme instanceof IKalypsoCascadingTheme && themeProp.equals( themeProperty ) )
-        return (IKalypsoCascadingTheme) kalypsoTheme;
+        return (IKalypsoCascadingTheme)kalypsoTheme;
     }
 
     return null;
@@ -112,7 +112,7 @@ public class CascadingThemeHelper
       final String themeProp = kalypsoTheme.getProperty( PROPERTY_THEME_ID, StringUtils.EMPTY );
 
       if( kalypsoTheme instanceof IKalypsoCascadingTheme && themeProp.equals( themeID ) )
-        return (IKalypsoCascadingTheme) kalypsoTheme;
+        return (IKalypsoCascadingTheme)kalypsoTheme;
     }
 
     return null;
@@ -131,7 +131,7 @@ public class CascadingThemeHelper
     {
       if( kalypsoTheme instanceof IKalypsoFeatureTheme )
       {
-        final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) kalypsoTheme;
+        final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme)kalypsoTheme;
         if( ObjectUtils.equal( featureTheme.getFeaturePath(), featurePath ) )
           return featureTheme;
       }

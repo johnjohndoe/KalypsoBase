@@ -45,13 +45,13 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.PlatformUI;
 import org.kalypso.contribs.eclipse.jface.viewers.ViewerUtilities;
-import org.kalypso.i18n.Messages;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.IRepositoryItem;
 import org.kalypso.repository.IRepositoryListener;
 import org.kalypso.repository.RepositoryException;
 import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypso.repository.container.IRepositoryContainerListener;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * Tree Content provider for contents of the RepositoryExplorer.
@@ -74,7 +74,7 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
     if( !(arg instanceof IRepositoryItem) )
       throw new IllegalArgumentException();
 
-    return (IRepositoryItem) arg;
+    return (IRepositoryItem)arg;
   }
 
   /**
@@ -148,7 +148,7 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
   @Override
   public Object[] getElements( final Object inputElement )
   {
-    final IRepositoryContainer container = (IRepositoryContainer) inputElement;
+    final IRepositoryContainer container = (IRepositoryContainer)inputElement;
 
     return container.getRepositories();
   }
@@ -163,8 +163,7 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
   }
 
   /**
-   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
+   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
    */
   @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
@@ -172,7 +171,7 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
     /* oldInput has an IRepositoryContainerListener attached? remove old listener */
     if( oldInput instanceof IRepositoryContainer )
     {
-      final IRepositoryContainer con = (IRepositoryContainer) oldInput;
+      final IRepositoryContainer con = (IRepositoryContainer)oldInput;
       con.removeRepositoryContainerListener( m_containerListener );
 
       final IRepository[] repositories = con.getRepositories();
@@ -183,7 +182,7 @@ public class RepositoryTreeContentProvider implements ITreeContentProvider
     /* attach new IRepositoryContainerLister to new repository input! */
     if( newInput instanceof IRepositoryContainer )
     {
-      final IRepositoryContainer con = (IRepositoryContainer) newInput;
+      final IRepositoryContainer con = (IRepositoryContainer)newInput;
 
       /* Re-create both listeners in order to have a fresh reference to the new viewer */
       m_repositoryListener = new IRepositoryListener()

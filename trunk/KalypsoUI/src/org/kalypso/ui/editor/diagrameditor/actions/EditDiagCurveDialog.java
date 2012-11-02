@@ -75,7 +75,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * Edits the properties of a observation diagram curve.
@@ -258,7 +258,7 @@ public class EditDiagCurveDialog extends TitleAreaDialog
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        handleTypeSelectionChanged( (IStructuredSelection) event.getSelection() );
+        handleTypeSelectionChanged( (IStructuredSelection)event.getSelection() );
         updateControl( nameText, colorButton, sizeSlider, dashCombo, alphaSlider );
       }
     } );
@@ -298,7 +298,7 @@ public class EditDiagCurveDialog extends TitleAreaDialog
   protected void handleTypeSelectionChanged( final IStructuredSelection selection )
   {
     if( !selection.isEmpty() )
-      m_dash = (DashType) selection.getFirstElement();
+      m_dash = (DashType)selection.getFirstElement();
   }
 
   protected void handleSizeSliderSelected( final Scale sizeSlider )

@@ -44,14 +44,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoUIDebug;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
 /**
  * A class for resolving some entities.
- *
+ * 
  * @author Holger Albert
  */
 public class KalypsoWMSEntityResolver implements EntityResolver

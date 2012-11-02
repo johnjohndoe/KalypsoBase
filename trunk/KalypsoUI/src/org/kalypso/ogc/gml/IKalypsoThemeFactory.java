@@ -12,7 +12,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * A factory that creates different types of themes depending on a link type.
- *
+ * 
  * @author Stefan Kurzbach
  */
 public interface IKalypsoThemeFactory

@@ -61,7 +61,7 @@ public class ObservationPropertySourceProvider implements IPropertySourceProvide
   {
     if( object instanceof IAdaptable )
     {
-      final IObservation obs = ObservationCache.getInstance().getObservationFor( (IAdaptable) object );
+      final IObservation obs = ObservationCache.getInstance().getObservationFor( (IAdaptable)object );
       if( obs == null )
         return null;
 

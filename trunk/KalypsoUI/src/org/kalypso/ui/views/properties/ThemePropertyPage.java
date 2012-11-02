@@ -56,16 +56,16 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.core.status.StatusComposite;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.ThemeUtilities;
 import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.command.EnableThemeCommand;
 import org.kalypso.ogc.gml.command.RenameThemeCommand;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * This is a page for showing some properties of a theme.
- *
+ * 
  * @author Gernot Belger
  * @author Holger Albert
  */
@@ -94,7 +94,7 @@ public class ThemePropertyPage extends PropertyPage
 
     /* Current Status */
     final Label statusLabel = new Label( composite, SWT.NONE );
-    statusLabel.setText( Messages.getString("ThemePropertyPage.0") ); //$NON-NLS-1$
+    statusLabel.setText( Messages.getString( "ThemePropertyPage.0" ) ); //$NON-NLS-1$
 
     final StatusComposite statusComposite = new StatusComposite( composite, StatusComposite.DETAILS );
     statusComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
@@ -139,13 +139,13 @@ public class ThemePropertyPage extends PropertyPage
 
   /**
    * This function returns the theme.
-   *
+   * 
    * @return The theme.
    */
   private IKalypsoTheme getTheme( )
   {
     final IAdaptable element = getElement();
-    final IKalypsoTheme theme = (IKalypsoTheme) (element instanceof IKalypsoTheme ? element : element.getAdapter( IKalypsoTheme.class ));
+    final IKalypsoTheme theme = (IKalypsoTheme)(element instanceof IKalypsoTheme ? element : element.getAdapter( IKalypsoTheme.class ));
 
     return theme;
   }
@@ -211,7 +211,7 @@ public class ThemePropertyPage extends PropertyPage
 
   /**
    * This function sets the name of the theme.
-   *
+   * 
    * @param name
    *          The name of the theme.
    */

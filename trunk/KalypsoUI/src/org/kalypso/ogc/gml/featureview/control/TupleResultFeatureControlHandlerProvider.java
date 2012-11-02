@@ -45,7 +45,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.kalypso.contribs.eclipse.swt.SWTUtilities;
-import org.kalypso.i18n.Messages;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
 import org.kalypso.observation.result.TupleResult;
@@ -53,6 +52,7 @@ import org.kalypso.ogc.gml.om.table.handlers.ComponentUiHandlerFactory;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler;
 import org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandlerProvider;
 import org.kalypso.template.featureview.ColumnDescriptor;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author Dirk Kuch

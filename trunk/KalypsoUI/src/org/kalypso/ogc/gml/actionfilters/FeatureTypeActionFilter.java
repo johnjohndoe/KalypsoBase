@@ -89,7 +89,7 @@ public class FeatureTypeActionFilter implements IActionFilterEx
     if( !(target instanceof Feature) )
       return false;
 
-    final Feature f = (Feature) target;
+    final Feature f = (Feature)target;
 
     if( m_attr_feature_type.equals( name ) )
     {

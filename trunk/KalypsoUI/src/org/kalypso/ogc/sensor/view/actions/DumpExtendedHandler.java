@@ -45,9 +45,9 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.core.status.StatusDialog2;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.view.ObservationChooser;
 import org.kalypso.repository.IRepositoryItem;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypso.ui.repository.RepositoryDumper;
 
 /**
@@ -64,10 +64,10 @@ public class DumpExtendedHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event )
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
-    final IWorkbenchPart part = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
-    final ObservationChooser chooser = (ObservationChooser) part.getAdapter( ObservationChooser.class );
+    final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
+    final Shell shell = (Shell)context.getVariable( ISources.ACTIVE_SHELL_NAME );
+    final IWorkbenchPart part = (IWorkbenchPart)context.getVariable( ISources.ACTIVE_PART_NAME );
+    final ObservationChooser chooser = (ObservationChooser)part.getAdapter( ObservationChooser.class );
 
     /* Get the repository. */
     final IRepositoryItem item = chooser.isRepositoryItem();

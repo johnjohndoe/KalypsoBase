@@ -67,8 +67,7 @@ import org.kalypsodeegree.model.typeHandler.XsdBaseTypeHandler;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
- * This is a gui type handler for the file-type in commons.xsd
- * {@link org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogOGC}.
+ * This is a gui type handler for the file-type in commons.xsd {@link org.kalypsodeegree_impl.gml.schema.schemata.UrlCatalogOGC}.
  * 
  * @author Holger Albert
  */
@@ -82,18 +81,16 @@ public class FileGuiTypeHandler extends LabelProvider implements IGuiTypeHandler
   }
 
   /**
-   * @see org.kalypso.ogc.gml.gui.XsdBaseGuiTypeHandler#createFeatureDialog(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypso.gmlschema.property.IPropertyType)
+   * @see org.kalypso.ogc.gml.gui.XsdBaseGuiTypeHandler#createFeatureDialog(org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.IPropertyType)
    */
   @Override
   public IFeatureDialog createFeatureDialog( final Feature feature, final IPropertyType ftp )
   {
-    return new FileFeatureDialog( feature, (IValuePropertyType) ftp );
+    return new FileFeatureDialog( feature, (IValuePropertyType)ftp );
   }
 
   /**
-   * @see org.kalypso.ogc.gml.gui.XsdBaseGuiTypeHandler#createFeatureviewControl(org.kalypso.gmlschema.property.IPropertyType,
-   *      org.kalypso.template.featureview.ObjectFactory)
+   * @see org.kalypso.ogc.gml.gui.XsdBaseGuiTypeHandler#createFeatureviewControl(org.kalypso.gmlschema.property.IPropertyType, org.kalypso.template.featureview.ObjectFactory)
    */
   @Override
   public JAXBElement< ? extends ControlType> createFeatureviewControl( final IPropertyType property, final ObjectFactory factory )
@@ -158,7 +155,7 @@ public class FileGuiTypeHandler extends LabelProvider implements IGuiTypeHandler
   public IFeatureModifier createFeatureModifier( final GMLXPath propertyPath, final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format )
   {
     // if we get a ClassCastExxception here, something is very wrong
-    final IValuePropertyType vpt = (IValuePropertyType) ftp;
+    final IValuePropertyType vpt = (IValuePropertyType)ftp;
 
     final Class< ? > valueClass = getValueClass();
 

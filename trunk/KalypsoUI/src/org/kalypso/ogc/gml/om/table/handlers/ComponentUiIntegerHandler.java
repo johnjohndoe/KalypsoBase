@@ -87,8 +87,7 @@ public class ComponentUiIntegerHandler extends AbstractComponentUiHandler
   }
 
   /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#setValue(org.kalypso.observation.result.IRecord,
-   *      java.lang.Object)
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#setValue(org.kalypso.observation.result.IRecord, java.lang.Object)
    */
   @Override
   public void doSetValue( final IRecord record, final Object value )
@@ -109,8 +108,7 @@ public class ComponentUiIntegerHandler extends AbstractComponentUiHandler
   }
 
   /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#setValue(org.kalypso.observation.result.IRecord,
-   *      java.lang.Object)
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#setValue(org.kalypso.observation.result.IRecord, java.lang.Object)
    */
   @Override
   public void setValue( final IRecord record, final Object value )

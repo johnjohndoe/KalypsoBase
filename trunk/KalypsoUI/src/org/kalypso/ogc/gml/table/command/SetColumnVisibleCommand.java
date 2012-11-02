@@ -41,9 +41,9 @@
 package org.kalypso.ogc.gml.table.command;
 
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.table.IColumnDescriptor;
 import org.kalypso.ogc.gml.table.LayerTableViewer;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**

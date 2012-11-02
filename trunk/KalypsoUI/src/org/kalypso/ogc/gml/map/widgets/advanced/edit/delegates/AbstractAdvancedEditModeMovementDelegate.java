@@ -121,7 +121,7 @@ public abstract class AbstractAdvancedEditModeMovementDelegate implements IAdvan
 
       if( geometry instanceof Polygon && points.length == 1 )
       {
-        final Polygon polygon = (Polygon) geometry;
+        final Polygon polygon = (Polygon)geometry;
         final IAdvancedEditWidgetSnappedPoint point = points[0];
 
         final LineString ring = polygon.getExteriorRing();
@@ -134,7 +134,7 @@ public abstract class AbstractAdvancedEditModeMovementDelegate implements IAdvan
       }
       else if( geometry instanceof Polygon && points.length > 1 )
       {
-        final Polygon polygon = (Polygon) geometry;
+        final Polygon polygon = (Polygon)geometry;
         final IAdvancedEditWidgetSnappedPoint firstPoint = points[0];
         final IAdvancedEditWidgetSnappedPoint lastPoint = points[points.length - 1];
 
@@ -158,7 +158,7 @@ public abstract class AbstractAdvancedEditModeMovementDelegate implements IAdvan
     final Color fillColor = valid ? POLYGON_FILL_VALID : POLYGON_FILL_INVALID;
     for( final IAdvancedEditWidgetResult result : m_results )
     {
-      GeometryPainter.drawPolygon( m_widget.getIMapPanel(), g, (Polygon) result.getGeometry(), POLYGON_BORDER, fillColor );
+      GeometryPainter.drawPolygon( m_widget.getIMapPanel(), g, (Polygon)result.getGeometry(), POLYGON_BORDER, fillColor );
     }
   }
 
@@ -169,7 +169,7 @@ public abstract class AbstractAdvancedEditModeMovementDelegate implements IAdvan
 
     for( final IAdvancedEditWidgetResult result : polygons )
     {
-      final Polygon polygon = (Polygon) result.getGeometry();
+      final Polygon polygon = (Polygon)result.getGeometry();
       if( !polygon.isSimple() )
         return false;
 

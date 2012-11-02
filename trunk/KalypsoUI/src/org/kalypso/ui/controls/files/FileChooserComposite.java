@@ -60,14 +60,14 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.controls.files.listener.IFileChooserListener;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * Composite for selecting a file. It is able to create its controls on a composite or group. It will not use dialog
  * settings or other means to store the entered information. It is possible to be informed of the changes by a listener.
  * The selected path can also be set/returned explicitly by functions.
- *
+ * 
  * @author Holger Albert
  */
 public class FileChooserComposite extends Composite
@@ -109,7 +109,7 @@ public class FileChooserComposite extends Composite
 
   /**
    * The constructor.
-   *
+   * 
    * @param parent
    *          A widget which will be the parent of the new instance (cannot be null).
    * @param style
@@ -133,7 +133,7 @@ public class FileChooserComposite extends Composite
     m_names = names;
     m_title = title;
     if( m_title == null || m_title.length() == 0 )
-      m_title = Messages.getString("FileChooserComposite_0"); //$NON-NLS-1$
+      m_title = Messages.getString( "FileChooserComposite_0" ); //$NON-NLS-1$
     m_pathText = null;
     m_path = defaultPath;
 
@@ -178,7 +178,7 @@ public class FileChooserComposite extends Composite
       public void modifyText( final ModifyEvent e )
       {
         /* Get the source. */
-        final Text source = (Text) e.getSource();
+        final Text source = (Text)e.getSource();
 
         /* Store the text. */
         m_path = source.getText();
@@ -203,7 +203,7 @@ public class FileChooserComposite extends Composite
       public void widgetSelected( final SelectionEvent e )
       {
         /* Get the source. */
-        final Button source = (Button) e.getSource();
+        final Button source = (Button)e.getSource();
 
         /* Create the dialog. */
         final FileDialog dialog = new FileDialog( source.getParent().getShell(), SWT.OPEN );
@@ -237,7 +237,7 @@ public class FileChooserComposite extends Composite
 
   /**
    * This function creates the main composite. It takes the decision for a border into account.
-   *
+   * 
    * @return The main composite.
    */
   private Composite createMainComposite( )
@@ -281,7 +281,7 @@ public class FileChooserComposite extends Composite
 
   /**
    * This function fires the path changed event.
-   *
+   * 
    * @param path
    *          The new path.
    */
@@ -293,7 +293,7 @@ public class FileChooserComposite extends Composite
 
   /**
    * This function adds a file chooser listener.
-   *
+   * 
    * @param listener
    *          The file chooser listener.
    */
@@ -305,7 +305,7 @@ public class FileChooserComposite extends Composite
 
   /**
    * This function removes a file chooser listener.
-   *
+   * 
    * @param listener
    *          The file chooser listener.
    */
@@ -317,7 +317,7 @@ public class FileChooserComposite extends Composite
 
   /**
    * This function sets the selected path.
-   *
+   * 
    * @param path
    *          The selected path.
    */
@@ -331,7 +331,7 @@ public class FileChooserComposite extends Composite
 
   /**
    * This function returns the selected path.
-   *
+   * 
    * @return The selected path.
    */
   public String getSelectedPath( )

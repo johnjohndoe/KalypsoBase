@@ -43,7 +43,7 @@ package org.kalypso.ui.addlayer.dnd;
 /**
  * Interface for implementors of a 'mapDropTarget-target' extension.<br/>
  * Represents a possible way to drop an element (file) into an open map.
- *
+ * 
  * @author Gernot Belger
  */
 public interface IMapDropTarget

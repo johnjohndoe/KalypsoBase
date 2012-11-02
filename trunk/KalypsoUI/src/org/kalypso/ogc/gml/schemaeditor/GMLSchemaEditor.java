@@ -35,8 +35,8 @@ import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
 import org.kalypso.gmlschema.ui.GMLSchemaLabelProvider;
 import org.kalypso.gmlschema.ui.GMLSchemaSorter;
 import org.kalypso.gmlschema.ui.GMLSchemaTreeContentProvider;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 
 public class GMLSchemaEditor extends EditorPart
 {
@@ -160,16 +160,16 @@ public class GMLSchemaEditor extends EditorPart
     if( editorInput instanceof IStorageEditorInput )
     {
 
-      final IStorageEditorInput input = (IStorageEditorInput) editorInput;
+      final IStorageEditorInput input = (IStorageEditorInput)editorInput;
 
       final IStorage storage = input.getStorage();
-      final IFile file = (IFile) storage.getAdapter( IFile.class );
+      final IFile file = (IFile)storage.getAdapter( IFile.class );
       context = file == null ? null : ResourceUtilities.createURL( file );
       contents = storage.getContents();
     }
     else if( editorInput instanceof IURIEditorInput )
     {
-      final IURIEditorInput input = (IURIEditorInput) editorInput;
+      final IURIEditorInput input = (IURIEditorInput)editorInput;
       final URI uri = input.getURI();
       context = uri.toURL();
       try
@@ -183,7 +183,7 @@ public class GMLSchemaEditor extends EditorPart
     }
     else if( editorInput instanceof GmlSchemaEditorInput )
     {
-      final GmlSchemaEditorInput schemaInput = (GmlSchemaEditorInput) editorInput;
+      final GmlSchemaEditorInput schemaInput = (GmlSchemaEditorInput)editorInput;
 
       final GMLSchemaCatalog schemaCatalog = KalypsoGMLSchemaPlugin.getDefault().getSchemaCatalog();
       return schemaCatalog.getSchema( schemaInput.getNamespace(), schemaInput.getGmlVersion(), schemaInput.getLocation() );
@@ -221,6 +221,6 @@ public class GMLSchemaEditor extends EditorPart
 
   public IGMLSchema getSchema( )
   {
-    return (IGMLSchema) getViewer().getInput();
+    return (IGMLSchema)getViewer().getInput();
   }
 }

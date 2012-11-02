@@ -70,12 +70,12 @@ public class FilterContentProvider implements ITreeContentProvider, IPropertyCha
     {
       if( parentElement instanceof FilterRootElement )
       {
-        return ((FilterRootElement) parentElement).getChildren();
+        return ((FilterRootElement)parentElement).getChildren();
 
       }
       else if( parentElement instanceof ComplexFilter )
       {
-        final ComplexFilter cf = (ComplexFilter) parentElement;
+        final ComplexFilter cf = (ComplexFilter)parentElement;
         final Operation operation = cf.getOperation();
         if( operation != null )
         {
@@ -96,7 +96,7 @@ public class FilterContentProvider implements ITreeContentProvider, IPropertyCha
         return new Object[0];
       else if( parentElement instanceof Operation )
       {
-        final Operation operation = (Operation) parentElement;
+        final Operation operation = (Operation)parentElement;
         final int operatorId = operation.getOperatorId();
         final int typeId = OperationDefines.getTypeById( operatorId );
         if( typeId == OperationDefines.TYPE_SPATIAL )
@@ -104,12 +104,12 @@ public class FilterContentProvider implements ITreeContentProvider, IPropertyCha
 
         if( typeId == OperationDefines.TYPE_LOGICAL )
         {
-          final List<Operation> arguments = ((LogicalOperation) operation).getArguments();
+          final List<Operation> arguments = ((LogicalOperation)operation).getArguments();
           if( arguments == null )
           {
             return new Object[0];
           }
-          return ((LogicalOperation) operation).getArguments().toArray();
+          return ((LogicalOperation)operation).getArguments().toArray();
         }
         if( typeId == OperationDefines.TYPE_COMPARISON )
         {
@@ -154,7 +154,7 @@ public class FilterContentProvider implements ITreeContentProvider, IPropertyCha
   {
     if( inputElement instanceof Object[] )
     {
-      final Object[] roots = (Object[]) inputElement;
+      final Object[] roots = (Object[])inputElement;
       if( roots.length > 0 )
         return new Object[] { roots[0] };
     }
@@ -171,8 +171,7 @@ public class FilterContentProvider implements ITreeContentProvider, IPropertyCha
   }
 
   /**
-   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
+   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
    */
   @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
@@ -183,13 +182,13 @@ public class FilterContentProvider implements ITreeContentProvider, IPropertyCha
       if( oldInput != null )
       {
         if( oldInput instanceof FilterRootElement )
-          ((FilterRootElement) oldInput).removeProperyChangeListener( this );
+          ((FilterRootElement)oldInput).removeProperyChangeListener( this );
       }
       if( newInput != null && newInput instanceof Object[] )
       {
-        final Object test = ((Object[]) newInput)[0];
+        final Object test = ((Object[])newInput)[0];
         if( test instanceof FilterRootElement )
-          ((FilterRootElement) test).addPropertyChangeListener( this );
+          ((FilterRootElement)test).addPropertyChangeListener( this );
       }
 
     }
@@ -205,7 +204,7 @@ public class FilterContentProvider implements ITreeContentProvider, IPropertyCha
     final Object newValue = event.getNewValue();
     if( source instanceof FilterRootElement && m_viewer instanceof TreeViewer )
     {
-      ((TreeViewer) m_viewer).update( newValue, null );
+      ((TreeViewer)m_viewer).update( newValue, null );
 
     }
 

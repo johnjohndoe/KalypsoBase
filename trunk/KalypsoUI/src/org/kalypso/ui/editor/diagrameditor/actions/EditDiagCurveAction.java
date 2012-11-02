@@ -48,13 +48,13 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.jface.action.FullAction;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.commands.ChangeThemePropertiesCommand;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewCurve;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.abstractobseditor.ObservationEditorOutlinePage;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * Allows the user to set the axis-types that should be ignored when displaying observation items
@@ -78,7 +78,7 @@ public class EditDiagCurveAction extends FullAction
   {
     final Shell shell = m_page.getSite().getShell();
 
-    final DiagView obsView = (DiagView) m_page.getView();
+    final DiagView obsView = (DiagView)m_page.getView();
     final ObsViewItem[] items = m_page.getSelectedItems();
 
     if( items.length == 0 )
@@ -89,7 +89,7 @@ public class EditDiagCurveAction extends FullAction
 
     final LineProperties[] currentProperties = new LineProperties[items.length];
     for( int i = 0; i < items.length; i++ )
-      currentProperties[i] = itemToProperties( (DiagViewCurve) items[i] );
+      currentProperties[i] = itemToProperties( (DiagViewCurve)items[i] );
 
     final LineProperties lineProperties = LineProperties.mergeProperties( currentProperties );
 
@@ -103,14 +103,14 @@ public class EditDiagCurveAction extends FullAction
       {
         final LineProperties resultProperties = getLineProperties();
         for( final ObsViewItem item : items )
-          applyLineProperties( obsView, (DiagViewCurve) item, resultProperties, items.length == 1 );
+          applyLineProperties( obsView, (DiagViewCurve)item, resultProperties, items.length == 1 );
       }
     };
 
     if( dialog.open() == Window.CANCEL )
     {
       for( int i = 0; i < items.length; i++ )
-        applyLineProperties( obsView, (DiagViewCurve) items[i], currentProperties[i], true );
+        applyLineProperties( obsView, (DiagViewCurve)items[i], currentProperties[i], true );
     }
   }
 
@@ -124,8 +124,8 @@ public class EditDiagCurveAction extends FullAction
 
     if( stroke instanceof BasicStroke )
     {
-      final BasicStroke basicStroke = (BasicStroke) stroke;
-      size = new Integer( (int) basicStroke.getLineWidth() );
+      final BasicStroke basicStroke = (BasicStroke)stroke;
+      size = new Integer( (int)basicStroke.getLineWidth() );
 
       final float[] curveDash = basicStroke.getDashArray();
       final DashType userDash = new DashType( Messages.getString( "org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveAction.4" ), Messages.getString( "org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveAction.5" ), curveDash == null ? new float[] {} //$NON-NLS-1$ //$NON-NLS-2$

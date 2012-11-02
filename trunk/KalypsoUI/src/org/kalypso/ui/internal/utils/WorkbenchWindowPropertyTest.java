@@ -62,7 +62,7 @@ public class WorkbenchWindowPropertyTest extends PropertyTester
     if( !(receiver instanceof IWorkbenchWindow) )
       throw new IllegalArgumentException();
 
-    final IWorkbenchWindow window = (IWorkbenchWindow) receiver;
+    final IWorkbenchWindow window = (IWorkbenchWindow)receiver;
 
     if( PROPERTY_IS_EDITOR_AREA_VISIBLE.equals( property ) )
       return testIsEditorAreaVisible( window, expectedValue );
@@ -107,7 +107,7 @@ public class WorkbenchWindowPropertyTest extends PropertyTester
       return defaultValue;
 
     if( expected instanceof Boolean )
-      return ((Boolean) expected).booleanValue();
+      return ((Boolean)expected).booleanValue();
 
     if( expected instanceof String )
     {

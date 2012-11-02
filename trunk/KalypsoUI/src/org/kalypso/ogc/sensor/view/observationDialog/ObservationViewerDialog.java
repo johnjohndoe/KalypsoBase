@@ -43,12 +43,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.swt.widgets.ControlUtils;
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * ObservationViewerDialog
  * <p>
- *
+ * 
  * @author schlienger (24.05.2005)
  */
 public class ObservationViewerDialog extends Dialog
@@ -97,7 +97,7 @@ public class ObservationViewerDialog extends Dialog
   @Override
   protected final Control createDialogArea( final Composite parent )
   {
-    final Composite composite = (Composite) super.createDialogArea( parent );
+    final Composite composite = (Composite)super.createDialogArea( parent );
     composite.setLayout( new FillLayout() );
 
     m_clipboard = new Clipboard( parent.getDisplay() );

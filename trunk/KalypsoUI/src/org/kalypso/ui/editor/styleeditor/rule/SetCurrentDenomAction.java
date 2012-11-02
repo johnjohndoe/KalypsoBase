@@ -74,7 +74,7 @@ public class SetCurrentDenomAction extends Action
 
   private static IMapPanel findPanel( )
   {
-    final IEvaluationService service = (IEvaluationService) PlatformUI.getWorkbench().getService( IEvaluationService.class );
+    final IEvaluationService service = (IEvaluationService)PlatformUI.getWorkbench().getService( IEvaluationService.class );
     final IEvaluationContext state = service.getCurrentState();
     return MapHandlerUtils.getMapPanel( state );
 
@@ -107,7 +107,7 @@ public class SetCurrentDenomAction extends Action
     m_denomField.setFocus();
 
     if( event.widget instanceof Control )
-      ((Control) event.widget).setFocus();
+      ((Control)event.widget).setFocus();
   }
 
   public Double getCurrentScale( )

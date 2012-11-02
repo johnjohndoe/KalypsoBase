@@ -48,15 +48,15 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
 import org.eclipse.ui.dialogs.ListSelectionDialog;
 import org.kalypso.contribs.eclipse.jface.action.FullAction;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.ObsViewUtils;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.abstractobseditor.ObservationEditorOutlinePage;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * Allows the user to set the axis-types that should be ignored when displaying observation items
- *
+ * 
  * @author schlienger
  */
 public class SetIgnoreTypesAction extends FullAction

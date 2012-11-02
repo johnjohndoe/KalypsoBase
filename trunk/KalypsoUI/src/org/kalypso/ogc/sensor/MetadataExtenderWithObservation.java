@@ -49,7 +49,7 @@ import org.kalypso.ogc.sensor.template.ObsViewItem;
 
 /**
  * Extends metadata destinated for the metadoc service with information that it gets from an observation
- *
+ * 
  * @author schlienger
  */
 public class MetadataExtenderWithObservation
@@ -70,7 +70,7 @@ public class MetadataExtenderWithObservation
 
   /**
    * Extend the metadata that can be found in conf with information that it gets from the given observation
-   *
+   * 
    * @param metadata
    *          this represents the metadata that might get extended
    * @param obs

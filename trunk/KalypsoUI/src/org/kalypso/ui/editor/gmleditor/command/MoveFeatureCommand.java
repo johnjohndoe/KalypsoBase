@@ -45,7 +45,7 @@ import java.util.List;
 
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.event.FeatureStructureChangeModellEvent;
@@ -123,7 +123,7 @@ public class MoveFeatureCommand implements ICommand
 
   private void move( final int step )
   {
-    final List<Object> list = (List<Object>) m_parentFeature.getProperty( m_pt );
+    final List<Object> list = (List<Object>)m_parentFeature.getProperty( m_pt );
     final int currentIndex = list.indexOf( m_moveItem );
     final int newIndex = currentIndex + step;
 

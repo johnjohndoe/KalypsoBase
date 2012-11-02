@@ -119,7 +119,7 @@ public class DateTimeCellEditor extends CellEditor
   {
     if( value instanceof XMLGregorianCalendar )
     {
-      final Date date = DateUtilities.toDate( (XMLGregorianCalendar) value );
+      final Date date = DateUtilities.toDate( (XMLGregorianCalendar)value );
       m_dialog.setDateTime( date );
     }
     else if( value == null )

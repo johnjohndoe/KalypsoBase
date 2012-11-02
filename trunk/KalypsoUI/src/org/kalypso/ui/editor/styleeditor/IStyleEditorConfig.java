@@ -42,14 +42,13 @@ package org.kalypso.ui.editor.styleeditor;
 
 /**
  * Gives hints to the style editor components, how to render their contents.
- *
+ * 
  * @author Gernot Belger
  */
 public interface IStyleEditorConfig
 {
   /**
-   * If this is <code>false</code>, the properties section of the
-   * {@link org.kalypso.ui.editor.styleeditor.style.FeatureTypeStyleComposite} will be hidden.
+   * If this is <code>false</code>, the properties section of the {@link org.kalypso.ui.editor.styleeditor.style.FeatureTypeStyleComposite} will be hidden.
    */
   boolean isFeatureTypeStyleCompositeShowProperties( );
 
@@ -59,14 +58,12 @@ public interface IStyleEditorConfig
   boolean isRuleTabViewerAllowChange( );
 
   /**
-   * If this is <code>false</code>, the graphic section of the stroke is hidden for the
-   * {@link org.kalypso.ui.editor.styleeditor.symbolizer.LineSymbolizerComposite}.
+   * If this is <code>false</code>, the graphic section of the stroke is hidden for the {@link org.kalypso.ui.editor.styleeditor.symbolizer.LineSymbolizerComposite}.
    */
   boolean isLineSymbolizerShowGraphic( );
 
   /**
-   * If this is <code>false</code>, the graphic sections of the stroke and fill are hidden for the
-   * {@link org.kalypso.ui.editor.styleeditor.symbolizer.PolygonSymbolizerComposite}.
+   * If this is <code>false</code>, the graphic sections of the stroke and fill are hidden for the {@link org.kalypso.ui.editor.styleeditor.symbolizer.PolygonSymbolizerComposite}.
    */
   boolean isPolygonSymbolizerShowGraphic( );
 

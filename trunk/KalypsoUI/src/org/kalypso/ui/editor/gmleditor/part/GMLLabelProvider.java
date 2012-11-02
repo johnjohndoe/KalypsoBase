@@ -57,7 +57,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
 
 /**
  * This is a label provider for GML features.
- *
+ * 
  * @author Christoph Kuepferle
  * @author Holger Albert
  */
@@ -124,7 +124,7 @@ public class GMLLabelProvider extends LabelProvider
 
   /**
    * This function retrieves the image descriptor from an catalog or other sources.
-   *
+   * 
    * @param element
    *          The element, for which the image descriptor should be obtained.
    * @return The image descriptor.
@@ -233,7 +233,7 @@ public class GMLLabelProvider extends LabelProvider
 
   /**
    * This function tries to obtain the qname of the element.
-   *
+   * 
    * @param element
    *          The element.
    * @return The qname of the element or null.

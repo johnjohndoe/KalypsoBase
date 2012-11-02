@@ -93,7 +93,7 @@ public class ThemeNodeLabelProvider extends LabelProvider implements IFontProvid
   @Override
   public String getText( final Object element )
   {
-    final IThemeNode node = (IThemeNode) element;
+    final IThemeNode node = (IThemeNode)element;
     return node.getLabel();
   }
 
@@ -103,25 +103,25 @@ public class ThemeNodeLabelProvider extends LabelProvider implements IFontProvid
   @Override
   public Image getImage( final Object element )
   {
-    final IThemeNode node = (IThemeNode) element;
+    final IThemeNode node = (IThemeNode)element;
     final ImageDescriptor descriptor = node.getImageDescriptor();
     if( descriptor == null )
       return null;
 
-    return (Image) getResourceManager().get( descriptor );
+    return (Image)getResourceManager().get( descriptor );
   }
 
   @Override
   public Font getFont( final Object element )
   {
-    final IThemeNode node = (IThemeNode) element;
-    return ((IFontProvider) node).getFont( element );
+    final IThemeNode node = (IThemeNode)element;
+    return ((IFontProvider)node).getFont( element );
   }
 
   @Override
   public String getTooltip( final Object element )
   {
-    final IThemeNode node = (IThemeNode) element;
+    final IThemeNode node = (IThemeNode)element;
     return node.getDescription();
   }
 }

@@ -43,7 +43,7 @@ package org.kalypso.ui.editor.gistableeditor.actions;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Event;
 import org.kalypso.contribs.eclipse.ui.AbstractEditorPartAction;
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot

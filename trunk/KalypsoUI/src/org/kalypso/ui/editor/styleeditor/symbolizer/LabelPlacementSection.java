@@ -42,7 +42,6 @@ package org.kalypso.ui.editor.styleeditor.symbolizer;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
 import org.kalypso.ui.editor.styleeditor.binding.StyleInput;
 import org.kalypso.ui.editor.styleeditor.placement.LabelPlacementComposite;
@@ -51,13 +50,14 @@ import org.kalypso.ui.editor.styleeditor.placement.PointPlacementAction;
 import org.kalypso.ui.editor.styleeditor.placement.RemovePlacementAction;
 import org.kalypso.ui.editor.styleeditor.util.AbstractStyleElementSection;
 import org.kalypso.ui.editor.styleeditor.util.StyleElementAction;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.LabelPlacement;
 import org.kalypsodeegree.graphics.sld.TextSymbolizer;
 
 /**
  * The section controls a label placement inside a {@link org.kalypsodeegree.graphics.sld.TextSymbolizer} and allows to
  * add remove it.
- *
+ * 
  * @author Gernot Belger
  */
 public class LabelPlacementSection extends AbstractStyleElementSection<TextSymbolizer, LabelPlacement, LabelPlacementComposite>
@@ -70,7 +70,7 @@ public class LabelPlacementSection extends AbstractStyleElementSection<TextSymbo
   @Override
   protected String getTitle( )
   {
-    return Messages.getString("LabelPlacementSection_0"); //$NON-NLS-1$
+    return Messages.getString( "LabelPlacementSection_0" ); //$NON-NLS-1$
   }
 
   /**
@@ -79,8 +79,7 @@ public class LabelPlacementSection extends AbstractStyleElementSection<TextSymbo
   @Override
   protected StyleElementAction<TextSymbolizer>[] createActions( final IStyleInput<TextSymbolizer> input )
   {
-    @SuppressWarnings("unchecked")
-    final StyleElementAction<TextSymbolizer>[] actions = new StyleElementAction[3];
+    @SuppressWarnings( "unchecked" ) final StyleElementAction<TextSymbolizer>[] actions = new StyleElementAction[3];
     actions[0] = new PointPlacementAction( input );
     actions[1] = new LinePlacementAction( input );
     actions[2] = new RemovePlacementAction( input );

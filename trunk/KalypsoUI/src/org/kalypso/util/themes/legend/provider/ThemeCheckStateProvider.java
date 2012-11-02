@@ -75,7 +75,7 @@ public class ThemeCheckStateProvider implements ICheckStateProvider
   public boolean isChecked( final Object element )
   {
     if( element instanceof IKalypsoTheme )
-      return m_themeIds.contains( ((IKalypsoTheme) element).getId() );
+      return m_themeIds.contains( ((IKalypsoTheme)element).getId() );
 
     return false;
   }

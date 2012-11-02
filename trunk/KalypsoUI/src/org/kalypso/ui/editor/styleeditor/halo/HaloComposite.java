@@ -54,9 +54,9 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.kalypso.commons.databinding.IDataBinding;
 import org.kalypso.commons.databinding.forms.DatabindingForm;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.styleeditor.IStyleContext;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.Halo;
 import org.kalypsodeegree.graphics.sld.Stroke;
 
@@ -102,7 +102,7 @@ public class HaloComposite extends Composite
     final Composite radiusComposite = toolkit.createComposite( parent );
     radiusComposite.setLayout( new GridLayout( 2, false ) );
 
-    toolkit.createLabel( radiusComposite, Messages.getString("HaloComposite_0") ); //$NON-NLS-1$
+    toolkit.createLabel( radiusComposite, Messages.getString( "HaloComposite_0" ) ); //$NON-NLS-1$
 
     final Spinner spinner = new Spinner( radiusComposite, SWT.BORDER );
     toolkit.adapt( spinner, true, true );

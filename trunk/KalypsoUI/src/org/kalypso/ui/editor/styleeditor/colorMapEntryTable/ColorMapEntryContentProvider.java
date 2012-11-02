@@ -71,8 +71,7 @@ public class ColorMapEntryContentProvider implements IStructuredContentProvider,
   }
 
   /**
-   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
+   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
    */
   @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
@@ -85,7 +84,7 @@ public class ColorMapEntryContentProvider implements IStructuredContentProvider,
     }
 
     m_viewer = viewer;
-    m_input = (ColorMapEntryList) newInput;
+    m_input = (ColorMapEntryList)newInput;
     if( m_input != null )
       m_input.addChangeListener( this );
   }

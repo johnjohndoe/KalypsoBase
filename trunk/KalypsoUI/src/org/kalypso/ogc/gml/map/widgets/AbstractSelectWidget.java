@@ -47,7 +47,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ISelection;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
@@ -59,6 +58,7 @@ import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.EasyFeatureWrapper;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -152,10 +152,10 @@ public abstract class AbstractSelectWidget extends DeprecatedMouseWidget
   {
     if( m_startPoint != null && m_endPoint != null )
     {
-      final int px = (int) (m_startPoint.getX() < m_endPoint.getX() ? m_startPoint.getX() : m_endPoint.getX());
-      final int py = (int) (m_startPoint.getY() < m_endPoint.getY() ? m_startPoint.getY() : m_endPoint.getY());
-      final int dx = (int) Math.abs( m_endPoint.getX() - m_startPoint.getX() );
-      final int dy = (int) Math.abs( m_endPoint.getY() - m_startPoint.getY() );
+      final int px = (int)(m_startPoint.getX() < m_endPoint.getX() ? m_startPoint.getX() : m_endPoint.getX());
+      final int py = (int)(m_startPoint.getY() < m_endPoint.getY() ? m_startPoint.getY() : m_endPoint.getY());
+      final int dx = (int)Math.abs( m_endPoint.getX() - m_startPoint.getX() );
+      final int dy = (int)Math.abs( m_endPoint.getY() - m_startPoint.getY() );
 
       if( dx != 0 && dy != 0 )
         g.drawRect( px, py, dx, dy );
@@ -184,14 +184,14 @@ public abstract class AbstractSelectWidget extends DeprecatedMouseWidget
       final ISelection selection = getMapPanel().getSelection();
       if( selection instanceof KalypsoFeatureThemeSelection )
       {
-        final KalypsoFeatureThemeSelection fts = (KalypsoFeatureThemeSelection) selection;
+        final KalypsoFeatureThemeSelection fts = (KalypsoFeatureThemeSelection)selection;
         final EasyFeatureWrapper[] allFeatures = fts.getAllFeatures();
         final DeleteFeatureCommand command = new DeleteFeatureCommand( allFeatures );
         final IMapModell mapModell = getMapPanel().getMapModell();
         final IKalypsoTheme activeTheme = mapModell.getActiveTheme();
         if( activeTheme instanceof IKalypsoFeatureTheme )
         {
-          final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) activeTheme;
+          final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme)activeTheme;
           final CommandableWorkspace workspace = theme.getWorkspace();
           try
           {
@@ -260,13 +260,13 @@ public abstract class AbstractSelectWidget extends DeprecatedMouseWidget
         final double gisRadius = Math.abs( transform.getSourceX( startPoint.getX() + radius ) - g1x );
         final GM_Point pointSelect = GeometryFactory.createGM_Point( g1x, g1y, model.getCoordinatesSystem() );
 
-        final Feature fe = (Feature) JMSelector.selectNearest( pointSelect, gisRadius, ((IKalypsoFeatureTheme) activeTheme).getFeatureListVisible( null ), false );
+        final Feature fe = (Feature)JMSelector.selectNearest( pointSelect, gisRadius, ((IKalypsoFeatureTheme)activeTheme).getFeatureListVisible( null ), false );
 
         final List<Feature> listFe = new ArrayList<>();
         if( fe != null )
           listFe.add( fe );
 
-        changeSelection( listFe, (IKalypsoFeatureTheme) activeTheme, selectionManager, selectionMode );
+        changeSelection( listFe, (IKalypsoFeatureTheme)activeTheme, selectionManager, selectionMode );
       }
       else
       // dragged
@@ -286,17 +286,17 @@ public abstract class AbstractSelectWidget extends DeprecatedMouseWidget
         if( minX != maxX && minY != maxY )
         {
           final GM_Envelope envSelect = GeometryFactory.createGM_Envelope( minX, minY, maxX, maxY, model.getCoordinatesSystem() );
-          final List<Object> features = JMSelector.select( envSelect, ((IKalypsoFeatureTheme) activeTheme).getFeatureListVisible( envSelect ), withinStatus );
+          final List<Object> features = JMSelector.select( envSelect, ((IKalypsoFeatureTheme)activeTheme).getFeatureListVisible( envSelect ), withinStatus );
 
           if( useOnlyFirstChoosen && !features.isEmpty() )
           {
             // delete all but first if we shall only the first selected
-            final Feature object = (Feature) features.get( 0 );
+            final Feature object = (Feature)features.get( 0 );
             features.clear();
             features.add( object );
           }
 
-          changeSelection( features, (IKalypsoFeatureTheme) activeTheme, selectionManager, selectionMode );
+          changeSelection( features, (IKalypsoFeatureTheme)activeTheme, selectionManager, selectionMode );
         }
       }
     }
@@ -319,7 +319,7 @@ public abstract class AbstractSelectWidget extends DeprecatedMouseWidget
     final EasyFeatureWrapper[] selectedWrapped = new EasyFeatureWrapper[features.size()];
     for( int i = 0; i < features.size(); i++ )
     {
-      final Feature f = (Feature) features.get( i );
+      final Feature f = (Feature)features.get( i );
       selectedWrapped[i] = new EasyFeatureWrapper( theme.getWorkspace(), f );
     }
 

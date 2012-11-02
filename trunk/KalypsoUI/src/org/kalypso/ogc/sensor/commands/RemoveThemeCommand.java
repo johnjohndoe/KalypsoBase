@@ -41,9 +41,9 @@
 package org.kalypso.ogc.sensor.commands;
 
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * RemoveThemeCommand

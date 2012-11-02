@@ -50,11 +50,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.CompositeCommand;
 import org.kalypso.ogc.gml.command.RemoveThemeCommand;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -64,15 +64,15 @@ public class RemoveThemeHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
-    final ISelection selection = (ISelection) context.getVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME );
+    final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
+    final ISelection selection = (ISelection)context.getVariable( ISources.ACTIVE_CURRENT_SELECTION_NAME );
     final IKalypsoTheme[] selectedThemes = MapHandlerUtils.getSelectedThemes( selection );
 
     /* Ask user */
     final Shell shell = HandlerUtil.getActiveShellChecked( event );
     final String commandName = HandlerUtils.getCommandName( event );
 
-    final String message = String.format( Messages.getString("RemoveThemeHandler.0") ); //$NON-NLS-1$
+    final String message = String.format( Messages.getString( "RemoveThemeHandler.0" ) ); //$NON-NLS-1$
     if( !MessageDialog.openConfirm( shell, commandName, message ) )
       return null;
 

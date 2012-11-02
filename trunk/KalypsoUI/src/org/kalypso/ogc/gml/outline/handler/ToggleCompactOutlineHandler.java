@@ -65,7 +65,7 @@ public class ToggleCompactOutlineHandler extends AbstractHandler implements IEle
   @Override
   public Object execute( final ExecutionEvent event )
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
     final GisMapOutlinePage mapOutline = MapHandlerUtils.getMapOutline( context );
 
     final boolean isCompact = mapOutline.isCompact();
@@ -78,7 +78,7 @@ public class ToggleCompactOutlineHandler extends AbstractHandler implements IEle
   @Override
   public void updateElement( final UIElement element, final Map parameters )
   {
-    final IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService( IHandlerService.class );
+    final IHandlerService handlerService = (IHandlerService)PlatformUI.getWorkbench().getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
     final GisMapOutlinePage mapOutline = MapHandlerUtils.getMapOutline( context );
     if( mapOutline == null )

@@ -69,7 +69,7 @@ public class SymbolizerTabList extends AbstractTabList<Rule>
     final Map<Symbolizer, ISymbolizerTabItem> oldItems = new IdentityHashMap<>();
     final ITabItem[] items = getItems();
     for( final ITabItem item : items )
-      oldItems.put( ((ISymbolizerTabItem) item).getSymbolizer(), (ISymbolizerTabItem) item );
+      oldItems.put( ((ISymbolizerTabItem)item).getSymbolizer(), (ISymbolizerTabItem)item );
 
     internalClear();
 
@@ -110,7 +110,7 @@ public class SymbolizerTabList extends AbstractTabList<Rule>
   @Override
   public void removeItem( final ITabItem item )
   {
-    final ISymbolizerTabItem symbolizerItem = (ISymbolizerTabItem) item;
+    final ISymbolizerTabItem symbolizerItem = (ISymbolizerTabItem)item;
 
     final Symbolizer symbolizer = symbolizerItem.getSymbolizer();
 

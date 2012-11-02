@@ -15,7 +15,7 @@ public class EditObservationAction implements IActionDelegate
   private IFeatureSelection m_selection = null;
 
   @Override
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @SuppressWarnings( "unchecked" )//$NON-NLS-1$
   public void run( final IAction action )
   {
     if( m_selection != null )
@@ -24,7 +24,7 @@ public class EditObservationAction implements IActionDelegate
       if( feature == null )
         return;
 
-      final IObservation obs = (IObservation) feature.getAdapter( IObservation.class );
+      final IObservation obs = (IObservation)feature.getAdapter( IObservation.class );
 
       final IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 
@@ -37,6 +37,6 @@ public class EditObservationAction implements IActionDelegate
   public void selectionChanged( final IAction action, final ISelection selection )
   {
     if( selection instanceof IFeatureSelection )
-      m_selection = (IFeatureSelection) selection;
+      m_selection = (IFeatureSelection)selection;
   }
 }

@@ -92,7 +92,7 @@ public class ColorMapEntryCellModifier implements ICellModifier
     final int columnIndex = Arrays.asList( ColorMapEntryTable.COLUMN_NAMES ).indexOf( property );
 
     /* Cast. */
-    final ColorMapEntry entry = (ColorMapEntry) element;
+    final ColorMapEntry entry = (ColorMapEntry)element;
 
     switch( columnIndex )
     {
@@ -122,24 +122,24 @@ public class ColorMapEntryCellModifier implements ICellModifier
     final int columnIndex = Arrays.asList( ColorMapEntryTable.COLUMN_NAMES ).indexOf( property );
 
     /* Cast. */
-    final TableItem item = (TableItem) element;
+    final TableItem item = (TableItem)element;
 
     /* Get the data. */
-    final ColorMapEntry entry = (ColorMapEntry) item.getData();
+    final ColorMapEntry entry = (ColorMapEntry)item.getData();
 
     switch( columnIndex )
     {
       case 0: // LABEL
-        entry.setLabel( ((String) value).trim() );
+        entry.setLabel( ((String)value).trim() );
         break;
       case 1: // VALUE
-        entry.setQuantity( NumberUtils.parseQuietDouble( ((String) value).trim() ) );
+        entry.setQuantity( NumberUtils.parseQuietDouble( ((String)value).trim() ) );
         break;
       case 2: // COLOR
-        entry.setColor( new java.awt.Color( ((RGB) value).red, ((RGB) value).green, ((RGB) value).blue ) );
+        entry.setColor( new java.awt.Color( ((RGB)value).red, ((RGB)value).green, ((RGB)value).blue ) );
         break;
       case 3: // OPACITY
-        final double opacity = NumberUtils.parseQuietDouble( ((String) value).trim() );
+        final double opacity = NumberUtils.parseQuietDouble( ((String)value).trim() );
         if( opacity <= 1 && opacity >= 0 )
           item.setBackground( 3, PlatformUI.getWorkbench().getDisplay().getSystemColor( SWT.COLOR_WHITE ) );
         else

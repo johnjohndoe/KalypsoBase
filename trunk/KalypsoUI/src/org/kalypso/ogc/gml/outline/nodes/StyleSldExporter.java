@@ -74,10 +74,10 @@ public class StyleSldExporter
     for( final IKalypsoStyle style : styles )
     {
       if( style instanceof UserStyle )
-        userStyles.add( (UserStyle) style );
+        userStyles.add( (UserStyle)style );
 
       if( style instanceof FeatureTypeStyle )
-        ftStyles.add( (FeatureTypeStyle) style );
+        ftStyles.add( (FeatureTypeStyle)style );
     }
 
     m_ftStyles = ftStyles.toArray( new FeatureTypeStyle[ftStyles.size()] );
@@ -94,7 +94,7 @@ public class StyleSldExporter
       if( m_ftStyles.length == 1 )
         return m_ftStyles[0];
 
-      return (Marshallable) StyleFactory.createUserStyle( "userStyle", m_parentTitle, formatExportAbstract(), false, m_ftStyles ); //$NON-NLS-1$
+      return (Marshallable)StyleFactory.createUserStyle( "userStyle", m_parentTitle, formatExportAbstract(), false, m_ftStyles ); //$NON-NLS-1$
     }
 
     /** A bit hack: we put all feature type styles into one sub-user-style */
@@ -110,9 +110,9 @@ public class StyleSldExporter
     }
 
     if( userStyles.length == 1 )
-      return (Marshallable) userStyles[0];
+      return (Marshallable)userStyles[0];
 
-    return (Marshallable) SLDFactory.createNamedLayer( m_parentTitle, null, userStyles );
+    return (Marshallable)SLDFactory.createNamedLayer( m_parentTitle, null, userStyles );
   }
 
   private String formatExportAbstract( )

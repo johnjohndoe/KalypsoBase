@@ -39,18 +39,18 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.editor.AbstractWorkbenchPart;
 import org.kalypso.ui.editor.actions.INewScope;
 import org.kalypso.ui.editor.actions.NewScopeFactory;
 import org.kalypso.ui.editorLauncher.GmlEditorTemplateLauncher;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 
 /**
  * Common code for parts showing a .gmv file.
- *
+ * 
  * @author Gernot Belger
  */
 public class AbstractGmvPart extends AbstractWorkbenchPart implements IGmvPart
@@ -76,7 +76,7 @@ public class AbstractGmvPart extends AbstractWorkbenchPart implements IGmvPart
   {
     if( input instanceof IFileEditorInput )
     {
-      final IFile file = ((IFileEditorInput) input).getFile();
+      final IFile file = ((IFileEditorInput)input).getFile();
       if( file == null )
         return input;
 
@@ -151,7 +151,7 @@ public class AbstractGmvPart extends AbstractWorkbenchPart implements IGmvPart
       final Reader r;
       final InputStream contents = storage.getContents();
       if( storage instanceof IEncodedStorage )
-        r = new InputStreamReader( contents, ((IEncodedStorage) storage).getCharset() );
+        r = new InputStreamReader( contents, ((IEncodedStorage)storage).getCharset() );
       else
         r = new InputStreamReader( contents );
 
@@ -202,7 +202,7 @@ public class AbstractGmvPart extends AbstractWorkbenchPart implements IGmvPart
 
     IFile file;
     if( storage instanceof IFile )
-      file = (IFile) storage;
+      file = (IFile)storage;
     else
       file = ResourcesPlugin.getWorkspace().getRoot().getFile( fullPath );
 
@@ -267,7 +267,7 @@ public class AbstractGmvPart extends AbstractWorkbenchPart implements IGmvPart
   {
     final IWorkbenchPartSite site = getSite();
     if( site instanceof IEditorSite )
-      ((IEditorSite) site).registerContextMenu( menuManager, m_viewer, false );
+      ((IEditorSite)site).registerContextMenu( menuManager, m_viewer, false );
     else
       site.registerContextMenu( menuManager, m_viewer );
   }

@@ -58,7 +58,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * This class is a geometry builder for a polygon.
- *
+ * 
  * @author Holger Albert
  */
 public class PolygonGeometryBuilder implements IGeometryBuilder
@@ -86,7 +86,7 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
 
   /**
    * The constructor.
-   *
+   * 
    * @param cnt_points
    *          If > 2 the the geometry will be finished, if the count of points is reached. If <= 2 no rule regarding the
    *          count of the points will apply, except, that a polygon needs at least 3 points for beeing created.
@@ -100,7 +100,7 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
 
   /**
    * The constructor.
-   *
+   * 
    * @param cnt_points
    *          If > 2 the the geometry will be finished, if the count of points is reached. If <= 2 no rule regarding the
    *          count of the points will apply, except, that a polygon needs at least 3 points for beeing created.
@@ -151,9 +151,9 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
     final GM_Position[] pos = new GM_Position[poses.length + 1];
 
     for( int i = 0; i < poses.length; i++ )
-      pos[i] = (GM_Position) poses[i].clone();
+      pos[i] = (GM_Position)poses[i].clone();
 
-    pos[poses.length] = (GM_Position) poses[0].clone();
+    pos[poses.length] = (GM_Position)poses[0].clone();
 
     return GeometryFactory.createGM_Surface( pos, new GM_Position[0][0], m_crs );
   }
@@ -190,7 +190,7 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
       final GM_Position[] poses = new GM_Position[m_points.size()];
       for( int i = 0; i < poses.length; i++ )
       {
-        final GM_Point transformedPoint = (GM_Point) transformer.transform( m_points.get( i ) );
+        final GM_Point transformedPoint = (GM_Point)transformer.transform( m_points.get( i ) );
         poses[i] = transformedPoint.getPosition();
       }
 
@@ -209,8 +209,8 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
     {
       final GM_Point point = m_points.get( i );
 
-      final int x = (int) projection.getDestX( point.getX() );
-      final int y = (int) projection.getDestY( point.getY() );
+      final int x = (int)projection.getDestX( point.getX() );
+      final int y = (int)projection.getDestY( point.getY() );
 
       xArray.add( new Integer( x ) );
       yArray.add( new Integer( y ) );
@@ -272,7 +272,7 @@ public class PolygonGeometryBuilder implements IGeometryBuilder
 
   /**
    * This function returns the minimum number of points, as given in the constructor.
-   *
+   * 
    * @return The number of points, at which the geometry should be finished. <= 2 if no rule will be used.
    */
   public int getCntPoints( )

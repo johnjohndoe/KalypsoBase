@@ -46,10 +46,10 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPart;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelection;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * Fills the managed menu with all commands that apply to the current selection.
@@ -78,7 +78,7 @@ public class NewFeatureManagedMenu extends AbstractManagedMenu
     if( !(selection instanceof IFeatureSelection) )
       return;
 
-    final IFeatureSelection fs = (IFeatureSelection) selection;
+    final IFeatureSelection fs = (IFeatureSelection)selection;
     final IFeatureSelectionManager selectionManager = fs.getSelectionManager();
 
     // HACK: we know this works, as this must be the TreeFeatureSelection here

@@ -57,7 +57,7 @@ public class GmltreePropertyTester extends PropertyTester
     if( !(receiver instanceof GmlTreeView) )
       return false;
 
-    final GmlTreeView viewer = (GmlTreeView) receiver;
+    final GmlTreeView viewer = (GmlTreeView)receiver;
 
     if( PROPERTY_IS_DATA_DIRTY.equals( property ) )
       return viewer.isDataDirty();

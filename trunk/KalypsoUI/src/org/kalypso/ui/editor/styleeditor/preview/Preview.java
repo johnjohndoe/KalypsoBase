@@ -57,8 +57,8 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.contribs.eclipse.swt.awt.ImageConverter;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.styleeditor.binding.IStyleInput;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Object;
 
@@ -154,15 +154,15 @@ public abstract class Preview<DATA> extends Canvas
     final String title = Messages.getString( "org.kalypso.ui.editor.sldEditor.FillEditorComposite.20" ); //$NON-NLS-1$
 
     final Font oldFont = gc.getFont();
-    final FontData fd = new FontData( "SansSerif", (int) Math.ceil( height / 2 ), SWT.BOLD ); //$NON-NLS-1$
+    final FontData fd = new FontData( "SansSerif", (int)Math.ceil( height / 2 ), SWT.BOLD ); //$NON-NLS-1$
     final Font font = new Font( getDisplay(), fd );
     gc.setFont( font );
 
     final Point extent = gc.stringExtent( title );
 
     /* Center text */
-    final int x = (int) Math.ceil( width / 2.0 - extent.x / 2.0 );
-    final int y = (int) Math.ceil( height / 2.0 - extent.y / 2.0 );
+    final int x = (int)Math.ceil( width / 2.0 - extent.x / 2.0 );
+    final int y = (int)Math.ceil( height / 2.0 - extent.y / 2.0 );
     gc.drawString( title, x, y );
 
     gc.setFont( oldFont );

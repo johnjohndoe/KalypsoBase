@@ -124,7 +124,7 @@ public abstract class AbstractManagedMenu implements IManagedMenu
       m_menuManager.dispose();
 
       if( m_menuManager instanceof SubMenuManager )
-        ((SubMenuManager) m_menuManager).disposeManager();
+        ((SubMenuManager)m_menuManager).disposeManager();
 
       m_menuManager = null;
     }

@@ -44,10 +44,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -62,7 +62,7 @@ public class InfoWidget extends AbstractThemeInfoWidget
   {
     super( Messages.getString( "org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget.0" ), Messages.getString( "org.kalypso.ogc.gml.map.widgets.ThemeInfoWidget.1" ) ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    setNoThemesTooltip( Messages.getString("InfoWidget.1") ); //$NON-NLS-1$
+    setNoThemesTooltip( Messages.getString( "InfoWidget.1" ) ); //$NON-NLS-1$
   }
 
   public InfoWidget( final String name, final String toolTip )

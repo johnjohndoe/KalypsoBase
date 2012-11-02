@@ -47,8 +47,8 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -97,7 +97,7 @@ public class ColorFeatureDialog implements IFeatureDialog
   {
     final ColorDialog dialog = new ColorDialog( shell );
 
-    final RGB rgb = (RGB) m_feature.getProperty( m_ftp );
+    final RGB rgb = (RGB)m_feature.getProperty( m_ftp );
 
     dialog.setRGB( rgb );
 

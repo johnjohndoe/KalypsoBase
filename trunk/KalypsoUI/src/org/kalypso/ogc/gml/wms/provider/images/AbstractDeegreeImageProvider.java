@@ -78,7 +78,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.core.variables.VariableUtils;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.core.exceptions.ExceptionCode;
 import org.kalypso.ogc.core.exceptions.OWSException;
 import org.kalypso.ogc.core.utils.OWSUtilities;
@@ -86,6 +85,7 @@ import org.kalypso.ogc.gml.wms.deegree.DeegreeWMSUtilities;
 import org.kalypso.ogc.gml.wms.loader.ICapabilitiesLoader;
 import org.kalypso.ogc.gml.wms.utils.KalypsoWMSUtilities;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**

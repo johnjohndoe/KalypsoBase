@@ -69,8 +69,8 @@ import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.styleeditor.StyleEditorHelper;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.Graphic;
 import org.kalypsodeegree.graphics.sld.LinePlacement.PlacementType;
 import org.kalypsodeegree.graphics.sld.Mark;
@@ -130,8 +130,8 @@ public class AddSymbolizerComposite extends Composite
 
   private boolean init( final Composite parent )
   {
-    new Label( parent, SWT.NONE ).setText( Messages.getString("AddSymbolizerComposite_0") ); //$NON-NLS-1$
-    new Label( parent, SWT.NONE ).setText( Messages.getString("AddSymbolizerComposite_1") ); //$NON-NLS-1$
+    new Label( parent, SWT.NONE ).setText( Messages.getString( "AddSymbolizerComposite_0" ) ); //$NON-NLS-1$
+    new Label( parent, SWT.NONE ).setText( Messages.getString( "AddSymbolizerComposite_1" ) ); //$NON-NLS-1$
     new Label( parent, SWT.NONE );
 
     // Geometry-Selection Combo
@@ -145,7 +145,7 @@ public class AddSymbolizerComposite extends Composite
       @Override
       public String getText( final Object element )
       {
-        final IValuePropertyType pt = (IValuePropertyType) element;
+        final IValuePropertyType pt = (IValuePropertyType)element;
         return AnnotationUtilities.getAnnotation( pt.getAnnotation(), null, IAnnotation.ANNO_LABEL );
       }
     } );
@@ -158,8 +158,8 @@ public class AddSymbolizerComposite extends Composite
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-        handleGeometrySelected( (IValuePropertyType) selection.getFirstElement() );
+        final IStructuredSelection selection = (IStructuredSelection)event.getSelection();
+        handleGeometrySelected( (IValuePropertyType)selection.getFirstElement() );
       }
     } );
 
@@ -176,8 +176,8 @@ public class AddSymbolizerComposite extends Composite
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-        handleSymbolizerChanged( (SymbolizerType) selection.getFirstElement() );
+        final IStructuredSelection selection = (IStructuredSelection)event.getSelection();
+        handleSymbolizerChanged( (SymbolizerType)selection.getFirstElement() );
       }
     } );
 

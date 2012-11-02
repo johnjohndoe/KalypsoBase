@@ -50,13 +50,13 @@ import java.util.Set;
 import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.i18n.Messages;
 import org.kalypso.jts.JtsVectorUtilities;
 import org.kalypso.ogc.gml.map.widgets.advanced.edit.AdvancedEditWidgetSnapper;
 import org.kalypso.ogc.gml.map.widgets.advanced.edit.IAdvancedEditWidget;
 import org.kalypso.ogc.gml.map.widgets.advanced.edit.IAdvancedEditWidgetDataProvider;
 import org.kalypso.ogc.gml.map.widgets.advanced.edit.IAdvancedEditWidgetSnappedPoint;
 import org.kalypso.ogc.gml.map.widgets.advanced.utils.GeometryPainter;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -83,7 +83,7 @@ public class AdvancedEditModeSingleDelegate extends AbstractAdvancedEditModeMove
       return;
     try
     {
-      final Point jtsPoint = (Point) JTSAdapter.export( gmp );
+      final Point jtsPoint = (Point)JTSAdapter.export( gmp );
 
       final IAdvancedEditWidgetSnappedPoint[] snappedPoints;
 

@@ -58,7 +58,7 @@ import org.kalypso.commons.databinding.swt.FileValueSelectionListener;
 import org.kalypso.commons.databinding.validation.FileAlreadyExistsValidator;
 import org.kalypso.commons.databinding.validation.FileShouldNotBeDirectoryValidator;
 import org.kalypso.commons.databinding.validation.StringBlankValidator;
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * Helper class for creating the typical export file field and button.
@@ -88,7 +88,7 @@ public class ExportFileControls
 
     final Button fileButton = new Button( parent, SWT.PUSH );
     fileButton.setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false, numFieldColumns, 1 ) );
-    fileButton.setText( Messages.getString("ExportFileControls_0") ); //$NON-NLS-1$
+    fileButton.setText( Messages.getString( "ExportFileControls_0" ) ); //$NON-NLS-1$
 
     /* field binding */
     final ISWTObservableValue target = SWTObservables.observeText( fileField, new int[] { SWT.Modify, SWT.DefaultSelection } );
@@ -98,7 +98,7 @@ public class ExportFileControls
     binder.setTargetToModelConverter( new StringToFileConverter() );
     binder.setModelToTargetConverter( new FileToStringConverter() );
 
-    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, Messages.getString("ExportFileControls_1") ) ); //$NON-NLS-1$
+    binder.addTargetAfterGetValidator( new StringBlankValidator( IStatus.ERROR, Messages.getString( "ExportFileControls_1" ) ) ); //$NON-NLS-1$
     binder.addTargetAfterConvertValidator( new FileShouldNotBeDirectoryValidator() );
     binder.addTargetAfterConvertValidator( new FileAlreadyExistsValidator() );
 

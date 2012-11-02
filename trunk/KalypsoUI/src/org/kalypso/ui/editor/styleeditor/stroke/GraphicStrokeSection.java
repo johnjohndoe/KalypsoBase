@@ -76,8 +76,7 @@ public class GraphicStrokeSection extends AbstractStyleElementSection<Stroke, Gr
   @Override
   protected StyleElementAction<Stroke>[] createActions( final IStyleInput<Stroke> input )
   {
-    @SuppressWarnings("unchecked")
-    final StyleElementAction<Stroke>[] actions = new StyleElementAction[2];
+    @SuppressWarnings( "unchecked" ) final StyleElementAction<Stroke>[] actions = new StyleElementAction[2];
     actions[0] = new GraphicStrokeAddAction( input );
     actions[1] = new GraphicStrokeRemoveAction( input );
     return actions;

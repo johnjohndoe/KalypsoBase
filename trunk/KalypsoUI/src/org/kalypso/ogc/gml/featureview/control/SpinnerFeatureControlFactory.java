@@ -53,17 +53,16 @@ import org.kalypsodeegree.model.feature.Feature;
 public class SpinnerFeatureControlFactory implements IFeatureControlFactory
 {
   /**
-   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControlFactory#createFeatureControl(org.kalypso.ogc.gml.featureview.control.IFeatureComposite,
-   *      org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.IPropertyType,
-   *      org.kalypso.template.featureview.ControlType, org.kalypso.gmlschema.annotation.IAnnotation)
+   * @see org.kalypso.ogc.gml.featureview.control.IFeatureControlFactory#createFeatureControl(org.kalypso.ogc.gml.featureview.control.IFeatureComposite, org.kalypsodeegree.model.feature.Feature,
+   *      org.kalypso.gmlschema.property.IPropertyType, org.kalypso.template.featureview.ControlType, org.kalypso.gmlschema.annotation.IAnnotation)
    */
   @Override
   public IFeatureControl createFeatureControl( final IFeatureComposite parentComposite, final Feature feature, final IPropertyType pt, final ControlType controlType, final IAnnotation annotation )
   {
-    final Spinner spinnerType = (Spinner) controlType;
-    final IValuePropertyType vpt = (IValuePropertyType) pt;
-    final int increment = (int) spinnerType.getIncrement();
-    final int pageIncrement = (int) spinnerType.getPageIncrement();
+    final Spinner spinnerType = (Spinner)controlType;
+    final IValuePropertyType vpt = (IValuePropertyType)pt;
+    final int increment = (int)spinnerType.getIncrement();
+    final int pageIncrement = (int)spinnerType.getPageIncrement();
 
     final SpinnerFeatureControl sfc = new SpinnerFeatureControl( feature, vpt );
     sfc.setIncrement( increment );

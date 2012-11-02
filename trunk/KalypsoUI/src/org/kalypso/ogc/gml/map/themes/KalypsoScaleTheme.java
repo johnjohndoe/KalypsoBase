@@ -58,13 +58,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.commons.i18n.I10nString;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.AbstractKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.template.types.StyledLayerType.Property;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -72,7 +72,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * This theme is able to create a small image, displaying the scale of the map.
- *
+ * 
  * @author Holger Albert
  */
 public class KalypsoScaleTheme extends AbstractKalypsoTheme
@@ -119,9 +119,7 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean,
-   *      org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics, org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean, org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
   public IStatus paint( final Graphics g, final GeoTransform p, final Boolean selected, final IProgressMonitor monitor )
@@ -159,7 +157,7 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
     /* Determine the width for a sub rectangle. */
     // TODO: width is very small (0 or 1) if scale is too small! Is is possible to avoid determination of width
     // depending on geo-coordinates?
-    final int width = (int) p.getDestX( offsetX + subDistance ) - offset_x;
+    final int width = (int)p.getDestX( offsetX + subDistance ) - offset_x;
 
     /* Calculate the values for each sub rectangle. */
     final LinkedList<Double> values = new LinkedList<>();
@@ -175,7 +173,7 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
 
   /**
    * This function will round the given distance to a specific value.
-   *
+   * 
    * @param distance
    *          The original distance.
    * @return The modified distance.
@@ -200,7 +198,7 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
 
   /**
    * This function will determine the unit, which would be the best to be used in the scale bar.
-   *
+   * 
    * @param values
    *          The current values.
    * @return The unit, that should be used.
@@ -225,7 +223,7 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
 
   /**
    * This function paints the scale.
-   *
+   * 
    * @param g
    *          The graphic context.
    * @param offset_x
@@ -251,7 +249,7 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
     /* If it is the right graphic type, setup it further. */
     if( g instanceof Graphics2D )
     {
-      final Graphics2D g2 = (Graphics2D) g;
+      final Graphics2D g2 = (Graphics2D)g;
       g2.setBackground( Color.WHITE );
       g2.setStroke( new BasicStroke( 1 ) );
     }
@@ -304,7 +302,7 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
     {
       final Rectangle2D stringBounds = g.getFontMetrics().getStringBounds( Messages.getString( "org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme.5", values.get( i ) / scaleUnit.getFactor() ), g ); //$NON-NLS-1$
 
-      final int x = START_X + i * WIDTH_SUB_RECT - (int) stringBounds.getWidth() / 2;
+      final int x = START_X + i * WIDTH_SUB_RECT - (int)stringBounds.getWidth() / 2;
       final int y = START_Y + MAX_HEIGHT;
 
       stringBounds.setRect( x, y, stringBounds.getWidth(), stringBounds.getHeight() );
@@ -364,7 +362,7 @@ public class KalypsoScaleTheme extends AbstractKalypsoTheme
       if( stringBounds.getX() > endPointDrawnText + 5 && stringBounds.getMaxX() < startPointLastText - 5 || i == values.size() - 1 )
       {
         /* Draw the text. */
-        g.drawString( Messages.getString( "org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme.7", values.get( i ).doubleValue() / scaleUnit.getFactor() ), (int) stringBounds.getX(), (int) stringBounds.getY() ); //$NON-NLS-1$
+        g.drawString( Messages.getString( "org.kalypso.ogc.gml.map.themes.KalypsoScaleTheme.7", values.get( i ).doubleValue() / scaleUnit.getFactor() ), (int)stringBounds.getX(), (int)stringBounds.getY() ); //$NON-NLS-1$
 
         /* Store the last point to see, if the next text is overlapping. */
         endPointDrawnText = stringBounds.getX() + stringBounds.getWidth();

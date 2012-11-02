@@ -56,7 +56,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Helper class that wraps a tabItem as a feature conrol.
- *
+ * 
  * @author Gernot Belger
  */
 public class FeatureTabItem
@@ -73,7 +73,7 @@ public class FeatureTabItem
 
   public static FeatureTabItem get( final CTabItem tabItem )
   {
-    return (FeatureTabItem) tabItem.getData( DATA_ME );
+    return (FeatureTabItem)tabItem.getData( DATA_ME );
   }
 
   public FeatureTabItem( final CTabItem item, final GMLWorkspace workspace, final Object featureObject )

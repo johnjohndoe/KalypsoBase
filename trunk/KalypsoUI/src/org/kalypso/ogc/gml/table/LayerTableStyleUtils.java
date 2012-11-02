@@ -51,9 +51,9 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
-import org.kalypso.i18n.Messages;
 import org.kalypso.template.gistableview.StyleType;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 
 /**
@@ -108,20 +108,20 @@ public final class LayerTableStyleUtils
     /* Validate loaded object */
     if( style == null )
     {
-      final String message = String.format( Messages.getString("LayerTableStyleUtils_0"), key ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "LayerTableStyleUtils_0" ), key ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), message );
       throw new CoreException( status );
     }
 
     if( !(style instanceof FeatureTypeStyle) )
     {
-      final String message = String.format( Messages.getString("LayerTableStyleUtils_1"), style.getClass().getName() ); //$NON-NLS-1$
+      final String message = String.format( Messages.getString( "LayerTableStyleUtils_1" ), style.getClass().getName() ); //$NON-NLS-1$
       final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), message );
       throw new CoreException( status );
     }
 
     /* Put into cache and return result */
-    final FeatureTypeStyle fts = (FeatureTypeStyle) style;
+    final FeatureTypeStyle fts = (FeatureTypeStyle)style;
     m_cache.put( key, fts );
     return fts;
   }

@@ -53,16 +53,16 @@ import javax.swing.ImageIcon;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.graphics.Rectangle;
 import org.kalypso.commons.command.ICommandTarget;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.IRectangleMapFunction;
 import org.kalypso.ogc.gml.map.widgets.mapfunctions.RectangleSelector;
 import org.kalypso.ogc.gml.map.widgets.providers.tooltips.ITooltipProvider;
 import org.kalypso.ogc.gml.widgets.AbstractWidget;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * This class is a selection widget over all themes.
- *
+ * 
  * @author Holger Albert
  */
 public class SelectionWidget extends AbstractWidget
@@ -94,7 +94,7 @@ public class SelectionWidget extends AbstractWidget
 
   /**
    * The constructor.
-   *
+   * 
    * @param name
    *          The name of the widget.
    * @param toolTip
@@ -109,7 +109,7 @@ public class SelectionWidget extends AbstractWidget
 
   /**
    * The constructor.
-   *
+   * 
    * @param name
    *          The name of the widget.
    * @param toolTip
@@ -128,8 +128,7 @@ public class SelectionWidget extends AbstractWidget
   }
 
   /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.map.MapPanel)
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget, org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )

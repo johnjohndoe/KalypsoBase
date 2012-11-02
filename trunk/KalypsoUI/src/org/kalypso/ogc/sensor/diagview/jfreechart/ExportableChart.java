@@ -52,9 +52,9 @@ import org.jfree.chart.encoders.ImageEncoderFactory;
 import org.jfree.chart.title.TextTitle;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.ogc.sensor.ExportUtilities;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * ExportableChart based on an existing chart
@@ -131,8 +131,7 @@ public class ExportableChart implements IExportableObject
   }
 
   /**
-   * @see org.kalypso.metadoc.IExportableObject#exportObject(java.io.OutputStream,
-   *      org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.metadoc.IExportableObject#exportObject(java.io.OutputStream, org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
   public IStatus exportObject( final OutputStream outs, final IProgressMonitor monitor )

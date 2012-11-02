@@ -58,7 +58,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * This class is a geometry builder for a rectangle.
- *
+ * 
  * @author Thomas Jung
  */
 public class RectangleGeometryBuilder implements IGeometryBuilder
@@ -81,7 +81,7 @@ public class RectangleGeometryBuilder implements IGeometryBuilder
 
   /**
    * The constructor.
-   *
+   * 
    * @param targetCrs
    *          The target coordinate system.
    */
@@ -127,9 +127,9 @@ public class RectangleGeometryBuilder implements IGeometryBuilder
     final GM_Position[] pos = new GM_Position[poses.length + 1];
 
     for( int i = 0; i < poses.length; i++ )
-      pos[i] = (GM_Position) poses[i].clone();
+      pos[i] = (GM_Position)poses[i].clone();
 
-    pos[poses.length] = (GM_Position) poses[0].clone();
+    pos[poses.length] = (GM_Position)poses[0].clone();
 
     return GeometryFactory.createGM_Surface( pos, new GM_Position[0][0], m_crs );
   }
@@ -163,8 +163,8 @@ public class RectangleGeometryBuilder implements IGeometryBuilder
       /* convert the two points into four */
       final GM_Position[] poses = new GM_Position[4];
 
-      final GM_Point transformedPoint1 = (GM_Point) transformer.transform( m_startPoint );
-      final GM_Point transformedPoint2 = (GM_Point) transformer.transform( m_endPoint );
+      final GM_Point transformedPoint1 = (GM_Point)transformer.transform( m_startPoint );
+      final GM_Point transformedPoint2 = (GM_Point)transformer.transform( m_endPoint );
 
       final GM_Position pos1 = transformedPoint1.getPosition();
       final GM_Position pos2 = transformedPoint2.getPosition();
@@ -187,8 +187,8 @@ public class RectangleGeometryBuilder implements IGeometryBuilder
     final List<Integer> xArray = new ArrayList<>();
     final List<Integer> yArray = new ArrayList<>();
 
-    final int xStart = (int) projection.getDestX( m_startPoint.getX() );
-    final int yStart = (int) projection.getDestY( m_startPoint.getY() );
+    final int xStart = (int)projection.getDestX( m_startPoint.getX() );
+    final int yStart = (int)projection.getDestY( m_startPoint.getY() );
 
     if( currentPoint != null )
     {
@@ -210,8 +210,7 @@ public class RectangleGeometryBuilder implements IGeometryBuilder
   }
 
   /**
-   * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform)
+   * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#paint(java.awt.Graphics, org.kalypsodeegree.graphics.transformation.GeoTransform)
    */
   @Override
   public void paint( final Graphics g, final GeoTransform projection, final Point currentPoint )

@@ -94,9 +94,7 @@ public abstract class AbstractImageTheme extends AbstractKalypsoTheme
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean,
-   *      org.eclipse.core.runtime.IProgressMonitor)
+   * @see org.kalypso.ogc.gml.IKalypsoTheme#paint(java.awt.Graphics, org.kalypsodeegree.graphics.transformation.GeoTransform, java.lang.Boolean, org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
   public IStatus paint( final Graphics g, final GeoTransform world2screen, final Boolean selected, final IProgressMonitor monitor )

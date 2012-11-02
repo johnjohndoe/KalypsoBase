@@ -50,7 +50,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ListDialog;
 import org.eclipse.ui.progress.IProgressService;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.view.actions.AddRepositoryHandler.ChooseRepositoryLabelProvider;
 import org.kalypso.repository.IRepository;
 import org.kalypso.repository.RepositoriesExtensions;
@@ -58,6 +57,7 @@ import org.kalypso.repository.RepositoryException;
 import org.kalypso.repository.conf.RepositoryFactoryConfig;
 import org.kalypso.repository.container.IRepositoryContainer;
 import org.kalypso.repository.factory.IRepositoryFactory;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author Dirk Kuch
@@ -92,7 +92,7 @@ public class AddRepositoryRunnable implements Runnable
       if( dlg.open() != Window.OK )
         return;
 
-      final RepositoryFactoryConfig cfg = (RepositoryFactoryConfig) dlg.getResult()[0];
+      final RepositoryFactoryConfig cfg = (RepositoryFactoryConfig)dlg.getResult()[0];
       final IRepositoryFactory f = cfg.getFactory();
 
       if( f.configureRepository() )

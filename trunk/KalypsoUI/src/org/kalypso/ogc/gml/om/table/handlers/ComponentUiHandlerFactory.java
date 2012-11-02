@@ -48,9 +48,9 @@ import org.kalypso.commons.xml.XmlTypes;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.property.restriction.IRestriction;
 import org.kalypso.gmlschema.property.restriction.RestrictionUtilities;
-import org.kalypso.i18n.Messages;
 import org.kalypso.observation.result.ComponentUtilities;
 import org.kalypso.observation.result.IComponent;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * Factory which creates the right handler for the right value type.

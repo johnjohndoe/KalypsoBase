@@ -59,7 +59,7 @@ public class HasThemeTester extends PropertyTester
     if( !(receiver instanceof IMapPanel) )
       return false;
 
-    final IMapPanel mapPanel = (IMapPanel) receiver;
+    final IMapPanel mapPanel = (IMapPanel)receiver;
     final IMapModell mapModell = mapPanel.getMapModell();
     if( mapModell == null )
       return false;

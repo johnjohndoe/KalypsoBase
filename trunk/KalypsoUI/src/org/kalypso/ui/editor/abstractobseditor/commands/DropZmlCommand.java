@@ -48,10 +48,10 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.template.ObsView;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
 import org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor;
+import org.kalypso.ui.internal.i18n.Messages;
 
 public class DropZmlCommand implements ICommand
 {
@@ -91,7 +91,7 @@ public class DropZmlCommand implements ICommand
     for( final String m_file : m_files )
     {
       IFile file = wksp.getFileForLocation( new Path( m_file ) );
-      file = (IFile) wksp.findMember( file.getFullPath() );
+      file = (IFile)wksp.findMember( file.getFullPath() );
       final URL url = ResourceUtilities.createURL( file );
 
       m_editor.loadObservation( url, url.toExternalForm() );

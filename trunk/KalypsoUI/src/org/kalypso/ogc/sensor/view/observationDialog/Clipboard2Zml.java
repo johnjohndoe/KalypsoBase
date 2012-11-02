@@ -47,17 +47,17 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.ITupleModel;
 import org.kalypso.ogc.sensor.impl.SimpleTupleModel;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree_impl.gml.schema.SpecialPropertyMapper;
 
 /**
  * Converts a clipbard content to an zml-observation.
- *
+ * 
  * @author Gernot Belger
  */
 public class Clipboard2Zml
@@ -85,7 +85,7 @@ public class Clipboard2Zml
       }
       catch( final Exception e )
       {
-        final String message = String.format( Messages.getString("Clipboard2Zml_0"), row ); //$NON-NLS-1$
+        final String message = String.format( Messages.getString( "Clipboard2Zml_0" ), row ); //$NON-NLS-1$
         final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), message, e );
         throw new CoreException( status );
       }

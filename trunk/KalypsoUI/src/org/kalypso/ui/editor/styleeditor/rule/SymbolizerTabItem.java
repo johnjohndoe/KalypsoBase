@@ -118,21 +118,21 @@ public final class SymbolizerTabItem<S extends Symbolizer> implements ISymbolize
   {
     final S symbolizer = m_input.getData();
     if( symbolizer instanceof PointSymbolizer )
-      return new PointSymbolizerComposite( toolkit, parent, (IStyleInput<PointSymbolizer>) m_input );
+      return new PointSymbolizerComposite( toolkit, parent, (IStyleInput<PointSymbolizer>)m_input );
 
     if( symbolizer instanceof LineSymbolizer )
-      return new LineSymbolizerComposite( toolkit, parent, (IStyleInput<LineSymbolizer>) m_input );
+      return new LineSymbolizerComposite( toolkit, parent, (IStyleInput<LineSymbolizer>)m_input );
 
     if( symbolizer instanceof PolygonSymbolizer )
-      return new PolygonSymbolizerComposite( toolkit, parent, (IStyleInput<PolygonSymbolizer>) m_input );
+      return new PolygonSymbolizerComposite( toolkit, parent, (IStyleInput<PolygonSymbolizer>)m_input );
 
     if( symbolizer instanceof RasterSymbolizer )
-      return new RasterSymbolizerLayout( toolkit, parent, (IStyleInput<RasterSymbolizer>) m_input );
+      return new RasterSymbolizerLayout( toolkit, parent, (IStyleInput<RasterSymbolizer>)m_input );
 
     if( symbolizer instanceof TextSymbolizer )
-      return new TextSymbolizerComposite( toolkit, parent, (IStyleInput<TextSymbolizer>) m_input );
+      return new TextSymbolizerComposite( toolkit, parent, (IStyleInput<TextSymbolizer>)m_input );
 
-    return new SymbolizerComposite( toolkit, parent, (IStyleInput<Symbolizer>) m_input );
+    return new SymbolizerComposite( toolkit, parent, (IStyleInput<Symbolizer>)m_input );
   }
 
   @Override

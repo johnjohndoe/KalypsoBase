@@ -57,7 +57,7 @@ public class LabelFeatureControlFactory implements IFeatureControlFactory
   @Override
   public IFeatureControl createFeatureControl( final IFeatureComposite parentComposite, final Feature feature, final IPropertyType pt, final ControlType controlType, final IAnnotation annotation )
   {
-    final String labelControlText = ((LabelType) controlType).getText();
+    final String labelControlText = ((LabelType)controlType).getText();
 
     final ITranslator translator = parentComposite.getTranslator();
 

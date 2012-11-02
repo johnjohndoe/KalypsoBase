@@ -45,7 +45,7 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * TimeserieLinkFeatureDialog
- *
+ * 
  * @author schlienger (23.05.2005)
  */
 public class TimeserieLinkFeatureDialog implements IFeatureDialog
@@ -72,7 +72,7 @@ public class TimeserieLinkFeatureDialog implements IFeatureDialog
     final IDialogSettings dialogSettings = DialogSettingsUtils.getDialogSettings( KalypsoGisPlugin.getDefault(), getClass().getName() );
     dialog.setDialogSettings( dialogSettings );
 
-    final TimeseriesLinkType tslink = (TimeseriesLinkType) m_feature.getProperty( m_ftp );
+    final TimeseriesLinkType tslink = (TimeseriesLinkType)m_feature.getProperty( m_ftp );
     dialog.setContext( m_feature.getWorkspace().getContext() );
     dialog.setInput( tslink == null ? "" : tslink.getHref() ); //$NON-NLS-1$
 
@@ -80,7 +80,7 @@ public class TimeserieLinkFeatureDialog implements IFeatureDialog
     FeatureChange fChange = null;
     if( open == Window.OK )
     {
-      final String href = (String) dialog.getInput();
+      final String href = (String)dialog.getInput();
       if( href == null )
         fChange = new FeatureChange( m_feature, m_ftp, null );
       else if( href.length() > 0 )

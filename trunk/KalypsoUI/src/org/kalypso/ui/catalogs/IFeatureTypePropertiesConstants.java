@@ -79,8 +79,7 @@ public interface IFeatureTypePropertiesConstants
   //
 
   /**
-   * Extension id of a {@link org.kalypso.ogc.gml.IKalypsoThemeInfo} registered with the
-   * <code>org.kalypso.core.themeInfo</code> extension-point.
+   * Extension id of a {@link org.kalypso.ogc.gml.IKalypsoThemeInfo} registered with the <code>org.kalypso.core.themeInfo</code> extension-point.
    */
   String THEME_INFO_ID = "map.themeInfoId"; //$NON-NLS-1$
 }

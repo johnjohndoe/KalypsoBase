@@ -52,7 +52,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
 /**
  * @author Gernot Belger
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings( "restriction" )
 public class ExportWizardsWizard extends GenericWizardsWizard
 {
   public ExportWizardsWizard( final IStructuredSelection selection, final IWizardRegistry registry )

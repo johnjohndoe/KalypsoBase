@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 
 /**
@@ -108,11 +108,11 @@ public class ColorMapViewer
     final Table table = viewer.getTable();
 
     final TableColumn labelColumn = new TableColumn( table, SWT.NONE );
-    labelColumn.setText( Messages.getString("ColorMapViewer_0") ); //$NON-NLS-1$
+    labelColumn.setText( Messages.getString( "ColorMapViewer_0" ) ); //$NON-NLS-1$
     labelColumn.setWidth( 100 );
 
     final TableColumn quantityColumn = new TableColumn( table, SWT.NONE );
-    quantityColumn.setText( Messages.getString("ColorMapViewer_1") ); //$NON-NLS-1$
+    quantityColumn.setText( Messages.getString( "ColorMapViewer_1" ) ); //$NON-NLS-1$
     quantityColumn.setWidth( 100 );
 
     viewer.setColumnProperties( new String[] { "label", "quantity" } ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -142,7 +142,7 @@ public class ColorMapViewer
   public ColorMapEntry[] getInput( )
   {
     if( m_viewer != null && !m_viewer.getTable().isDisposed() )
-      return (ColorMapEntry[]) m_viewer.getInput();
+      return (ColorMapEntry[])m_viewer.getInput();
 
     return null;
   }

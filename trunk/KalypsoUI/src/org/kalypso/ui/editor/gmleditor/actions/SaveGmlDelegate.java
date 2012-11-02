@@ -52,11 +52,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.progress.IProgressService;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
 import org.kalypso.ui.editor.gmleditor.part.GmlEditor;
 import org.kalypso.ui.editor.gmleditor.part.GmlTreeView;
 import org.kalypso.ui.editor.mapeditor.WidgetActionPart;
+import org.kalypso.ui.internal.i18n.Messages;
 
 public class SaveGmlDelegate extends AbstractGisEditorActionDelegate
 {
@@ -69,7 +69,7 @@ public class SaveGmlDelegate extends AbstractGisEditorActionDelegate
 
     // WARNING: Because of the following cast, we can only use
     // this delegate with the GmlEditor.
-    final GmlEditor editor = (GmlEditor) part.getPart();
+    final GmlEditor editor = (GmlEditor)part.getPart();
     if( editor == null )
       return;
 
@@ -100,7 +100,7 @@ public class SaveGmlDelegate extends AbstractGisEditorActionDelegate
       {
         e.printStackTrace();
 
-        final CoreException ce = (CoreException) e.getTargetException();
+        final CoreException ce = (CoreException)e.getTargetException();
         ErrorDialog.openError( shell, Messages.getString( "org.kalypso.ui.editor.gmleditor.actions.SaveGmlDelegate.2" ), Messages.getString( "org.kalypso.ui.editor.gmleditor.actions.SaveGmlDelegate.3" ), ce.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       catch( final InterruptedException e )
@@ -121,7 +121,7 @@ public class SaveGmlDelegate extends AbstractGisEditorActionDelegate
 
     // WARNING: Because of the following cast, we can only use
     // this delegate with the GmlEditor.
-    final GmlEditor editor = (GmlEditor) part.getPart();
+    final GmlEditor editor = (GmlEditor)part.getPart();
     if( editor != null )
     {
       final GmlTreeView treeViewer = editor.getTreeView();

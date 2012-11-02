@@ -70,13 +70,13 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.kalypso.commons.xml.NS;
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.command.ChangeExtentCommand;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -219,7 +219,7 @@ class FindElementWidgetFace
       if( PlatformUI.isWorkbenchRunning() )
       {
         final IWorkbench workbench = PlatformUI.getWorkbench();
-        final IHandlerService service = (IHandlerService) workbench.getService( IHandlerService.class );
+        final IHandlerService service = (IHandlerService)workbench.getService( IHandlerService.class );
         final IEvaluationContext currentState = service.getCurrentState();
         lTmp = currentState.getVariable( "activeCaseDataProvider" ).toString(); //$NON-NLS-1$
       }
@@ -262,7 +262,7 @@ class FindElementWidgetFace
       {
         if( lTheme instanceof IKalypsoCascadingTheme )
         {
-          final IKalypsoCascadingTheme lThemes = (IKalypsoCascadingTheme) lTheme;
+          final IKalypsoCascadingTheme lThemes = (IKalypsoCascadingTheme)lTheme;
           for( int i = 0; i < lThemes.getAllThemes().length; i++ )
           {
             try
@@ -356,7 +356,7 @@ class FindElementWidgetFace
   {
     if( lTheme instanceof IKalypsoFeatureTheme )
     {
-      final IKalypsoFeatureTheme lActTheme = (IKalypsoFeatureTheme) lTheme;
+      final IKalypsoFeatureTheme lActTheme = (IKalypsoFeatureTheme)lTheme;
       final FeatureList featureList = lActTheme.getFeatureList();
       m_boolFound = findFeature( featureList );
     }

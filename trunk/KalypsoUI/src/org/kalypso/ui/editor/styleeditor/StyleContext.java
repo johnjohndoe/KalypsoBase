@@ -68,11 +68,11 @@ public class StyleContext implements IStyleContext
   private FeatureTypeStyle findFeatureTypeStyle( )
   {
     if( m_style instanceof IKalypsoFeatureTypeStyle )
-      return (IKalypsoFeatureTypeStyle) m_style;
+      return (IKalypsoFeatureTypeStyle)m_style;
 
     if( m_style instanceof IKalypsoUserStyle )
     {
-      final FeatureTypeStyle[] featureTypeStyles = ((IKalypsoUserStyle) m_style).getFeatureTypeStyles();
+      final FeatureTypeStyle[] featureTypeStyles = ((IKalypsoUserStyle)m_style).getFeatureTypeStyles();
       if( featureTypeStyles.length > 0 )
         return featureTypeStyles[0];
     }
@@ -138,7 +138,7 @@ public class StyleContext implements IStyleContext
     if( obj.getClass() != getClass() )
       return false;
 
-    final StyleContext other = (StyleContext) obj;
+    final StyleContext other = (StyleContext)obj;
     return m_featureType == other.m_featureType && m_featureTypeStyle == other.m_featureTypeStyle && m_style == other.m_style;
   }
 }

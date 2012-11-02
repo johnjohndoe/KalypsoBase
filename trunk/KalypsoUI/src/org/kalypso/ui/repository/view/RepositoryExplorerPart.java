@@ -68,7 +68,7 @@ import org.kalypso.repository.conf.RepositoryFactoryConfig;
 
 /**
  * Wird als ZeitreihenBrowser benutzt.
- *
+ * 
  * @author schlienger
  */
 public class RepositoryExplorerPart extends ViewPart implements ISelectionProvider, ISelectionChangedListener
@@ -221,7 +221,7 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
         if( element instanceof IRepositoryItem )
         {
           final IMemento elementMem = expandedMem.createChild( RepositoryExplorerPart.TAG_ELEMENT );
-          final String id = ((IRepositoryItem) element).getIdentifier();
+          final String id = ((IRepositoryItem)element).getIdentifier();
           elementMem.putString( RepositoryExplorerPart.TAG_IDENFITIER, id );
         }
     }
@@ -229,7 +229,7 @@ public class RepositoryExplorerPart extends ViewPart implements ISelectionProvid
 
   /**
    * Restores the state of the receiver to the state described in the specified memento.
-   *
+   * 
    * @param memento
    *          the memento
    */

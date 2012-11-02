@@ -14,7 +14,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPart;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
 import org.kalypso.ogc.gml.filterdialog.dialog.FilterDialog;
@@ -26,6 +25,7 @@ import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
 import org.kalypso.ui.editor.mapeditor.GisMapOutlinePage;
 import org.kalypso.ui.editor.mapeditor.WidgetActionPart;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.model.feature.Feature;
@@ -47,14 +47,14 @@ public class KalypsoOpenFilterDialogActionDelegate extends AbstractGisEditorActi
     Feature fGeom = null;
     if( sGeomOp instanceof Feature )
     {
-      fGeom = (Feature) sGeomOp;
+      fGeom = (Feature)sGeomOp;
     }
     IFeatureType ft = null;
     IKalypsoFeatureTheme selectedTheme = null;
     FeatureList visableFeatures = null;
     if( sFtOutline instanceof IKalypsoFeatureTheme )
     {
-      selectedTheme = (IKalypsoFeatureTheme) sFtOutline;
+      selectedTheme = (IKalypsoFeatureTheme)sFtOutline;
       visableFeatures = selectedTheme.getFeatureListVisible( selectedTheme.getFullExtent() );
       ft = selectedTheme.getFeatureType();
     }
@@ -72,7 +72,7 @@ public class KalypsoOpenFilterDialogActionDelegate extends AbstractGisEditorActi
 
       MultiStatus multiStatus = null;
       final Filter filter = dialog.getFilter();
-      final Feature[] features = (Feature[]) visableFeatures.toArray( new Feature[visableFeatures.size()] );
+      final Feature[] features = (Feature[])visableFeatures.toArray( new Feature[visableFeatures.size()] );
       final ArrayList<Feature> newSelectedFeatures = new ArrayList<>();
       for( final Feature f : features )
       {
@@ -112,7 +112,7 @@ public class KalypsoOpenFilterDialogActionDelegate extends AbstractGisEditorActi
     if( part != null )
     {
       final IWorkbenchPart workbenchPart = part.getPart();
-      final GisMapOutlinePage page = workbenchPart == null ? null : (GisMapOutlinePage) workbenchPart.getAdapter( GisMapOutlinePage.class );
+      final GisMapOutlinePage page = workbenchPart == null ? null : (GisMapOutlinePage)workbenchPart.getAdapter( GisMapOutlinePage.class );
       if( page != null )
       {
         m_ftSelection = null;
@@ -122,7 +122,7 @@ public class KalypsoOpenFilterDialogActionDelegate extends AbstractGisEditorActi
           @Override
           public void run( )
           {
-            m_ftSelection = (IStructuredSelection) page.getSelection();
+            m_ftSelection = (IStructuredSelection)page.getSelection();
           }
         } );
       }
@@ -130,7 +130,7 @@ public class KalypsoOpenFilterDialogActionDelegate extends AbstractGisEditorActi
       {
         if( selection instanceof IFeatureSelection )
         {
-          m_spatialOpSelection = (IFeatureSelection) selection;
+          m_spatialOpSelection = (IFeatureSelection)selection;
         }
         action.setEnabled( true );
       }

@@ -46,8 +46,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider.ImageKey;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.ImageProvider.DESCRIPTORS;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
 
 public final class ListFullAction extends Action

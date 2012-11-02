@@ -80,8 +80,7 @@ public class TextSymbolizerLabelField extends InputWithContextObservableValue<Te
   }
 
   /**
-   * @see org.kalypso.ui.editor.styleeditor.forms.InputWithContextObservableValue#setValueToInput(java.lang.Object,
-   *      java.lang.Object)
+   * @see org.kalypso.ui.editor.styleeditor.forms.InputWithContextObservableValue#setValueToInput(java.lang.Object, java.lang.Object)
    */
   @Override
   protected void setValueToInput( final TextSymbolizer data, final ParameterValueType value )
@@ -115,7 +114,7 @@ public class TextSymbolizerLabelField extends InputWithContextObservableValue<Te
     {
       if( pt instanceof IValuePropertyType )
       {
-        final IValuePropertyType vpt = (IValuePropertyType) pt;
+        final IValuePropertyType vpt = (IValuePropertyType)pt;
         if( !vpt.isGeometry() )
         {
           final String path = vpt.getQName().getLocalPart();

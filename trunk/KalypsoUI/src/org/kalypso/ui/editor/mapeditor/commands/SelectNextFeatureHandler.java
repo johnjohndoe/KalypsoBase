@@ -68,7 +68,7 @@ import org.kalypsodeegree_impl.model.feature.FeatureHelper;
 
 /**
  * Selects the next feature from the current active theme of the map.
- *
+ * 
  * @author Gernot Belger
  */
 public class SelectNextFeatureHandler extends AbstractHandler implements IElementUpdater, IExecutableExtension
@@ -83,16 +83,15 @@ public class SelectNextFeatureHandler extends AbstractHandler implements IElemen
   private boolean m_firstLast = false;
 
   /**
-   * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
-   *      java.lang.String, java.lang.Object)
+   * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement, java.lang.String, java.lang.Object)
    */
   @Override
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings( "unchecked" )
   public void setInitializationData( final IConfigurationElement config, final String propertyName, final Object data )
   {
     if( data instanceof Map )
     {
-      final Map<String, String> m_map = (Map<String, String>) data;
+      final Map<String, String> m_map = (Map<String, String>)data;
       m_forward = Boolean.valueOf( m_map.get( "forward" ) ).booleanValue(); //$NON-NLS-1$
       m_rotate = Boolean.valueOf( m_map.get( "rotate" ) ).booleanValue(); //$NON-NLS-1$
       m_firstLast = Boolean.valueOf( m_map.get( "firstlast" ) ).booleanValue(); //$NON-NLS-1$
@@ -107,13 +106,13 @@ public class SelectNextFeatureHandler extends AbstractHandler implements IElemen
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
     final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
     final IKalypsoTheme activeTheme = MapHandlerUtils.getActiveThemeChecked( context );
     if( !(activeTheme instanceof IKalypsoFeatureTheme) )
       return null;
 
-    final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) activeTheme;
+    final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme)activeTheme;
     final FeatureList featureList = featureTheme.getFeatureList();
     if( featureList.isEmpty() )
       return null;
@@ -257,13 +256,13 @@ public class SelectNextFeatureHandler extends AbstractHandler implements IElemen
   {
     try
     {
-      final IEvaluationContext context = (IEvaluationContext) evaluationContext;
+      final IEvaluationContext context = (IEvaluationContext)evaluationContext;
       final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
       final IKalypsoTheme activeTheme = MapHandlerUtils.getActiveThemeChecked( context );
       if( !(activeTheme instanceof IKalypsoFeatureTheme) )
         return false;
 
-      final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) activeTheme;
+      final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme)activeTheme;
       final FeatureList featureList = featureTheme.getFeatureList();
       if( featureList == null || featureList.isEmpty() )
         return false;
@@ -290,7 +289,7 @@ public class SelectNextFeatureHandler extends AbstractHandler implements IElemen
   public void updateElement( final UIElement element, final Map parameters )
   {
     // Sttange: normally the framework should automatically call setEnabled, as
-    final IHandlerService handlerService = (IHandlerService) element.getServiceLocator().getService( IHandlerService.class );
+    final IHandlerService handlerService = (IHandlerService)element.getServiceLocator().getService( IHandlerService.class );
     final IEvaluationContext context = handlerService.getCurrentState();
     setEnabled( context );
   }

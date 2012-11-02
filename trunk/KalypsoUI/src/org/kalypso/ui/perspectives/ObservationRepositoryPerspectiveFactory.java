@@ -64,16 +64,16 @@ public class ObservationRepositoryPerspectiveFactory implements IPerspectiveFact
   @Override
   public void createInitialLayout( final IPageLayout layout )
   {
-    final IFolderLayout topLeft = layout.createFolder( "topLeft", IPageLayout.LEFT, (float) 0.26, layout.getEditorArea() ); //$NON-NLS-1$
+    final IFolderLayout topLeft = layout.createFolder( "topLeft", IPageLayout.LEFT, (float)0.26, layout.getEditorArea() ); //$NON-NLS-1$
     topLeft.addView( RepositoryExplorerPart.ID );
 
-    final IFolderLayout botLeft = layout.createFolder( "bottom", IPageLayout.BOTTOM, (float) 0.70, "topLeft" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IFolderLayout botLeft = layout.createFolder( "bottom", IPageLayout.BOTTOM, (float)0.70, "topLeft" ); //$NON-NLS-1$ //$NON-NLS-2$
     botLeft.addView( IPageLayout.ID_PROP_SHEET );
 
-    final IFolderLayout leftBottom = layout.createFolder( "leftBottom", IPageLayout.BOTTOM, (float) 0.0, layout.getEditorArea() ); //$NON-NLS-1$
+    final IFolderLayout leftBottom = layout.createFolder( "leftBottom", IPageLayout.BOTTOM, (float)0.0, layout.getEditorArea() ); //$NON-NLS-1$
     leftBottom.addView( "org.kalypso.zml.ui.chart.view.DiagramViewPart" ); //$NON-NLS-1$ //FIXME move complete perspective to zml ui plugin!!!
 
-    final IFolderLayout rightBottom = layout.createFolder( "rightBottom", IPageLayout.RIGHT, (float) 0.50, "leftBottom" ); //$NON-NLS-1$ //$NON-NLS-2$
+    final IFolderLayout rightBottom = layout.createFolder( "rightBottom", IPageLayout.RIGHT, (float)0.50, "leftBottom" ); //$NON-NLS-1$ //$NON-NLS-2$
     rightBottom.addView( "org.kalypso.zml.ui.table.view.TableViewPart" ); //$NON-NLS-1$ //FIXME move complete perspective to zml ui plugin!!!
 
     setContentsOfShowViewMenu( layout );

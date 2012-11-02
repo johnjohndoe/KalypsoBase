@@ -158,7 +158,7 @@ public class ListSelectionWizardPage extends WizardPage
     m_statusLabel.setStatus( status );
 
     m_statusLabel.setVisible( status != null );
-    ((GridData) m_statusLabel.getLayoutData()).exclude = status == null;
+    ((GridData)m_statusLabel.getLayoutData()).exclude = status == null;
 
     if( layoutNeeded )
       m_statusLabel.getParent().layout();

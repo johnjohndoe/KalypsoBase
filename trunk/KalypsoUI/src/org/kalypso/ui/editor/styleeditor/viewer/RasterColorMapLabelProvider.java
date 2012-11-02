@@ -74,7 +74,7 @@ public class RasterColorMapLabelProvider extends ColorMapLabelProvider
   @Override
   public String getColumnText( final Object element, final int columnIndex )
   {
-    final ColorMapEntry entry = (ColorMapEntry) element;
+    final ColorMapEntry entry = (ColorMapEntry)element;
 
     switch( columnIndex )
     {
@@ -107,7 +107,7 @@ public class RasterColorMapLabelProvider extends ColorMapLabelProvider
   @Override
   protected Color getAwtColor( final Object element, final int columnIndex )
   {
-    final ColorMapEntry entry = (ColorMapEntry) element;
+    final ColorMapEntry entry = (ColorMapEntry)element;
     final java.awt.Color stroke = entry.getColor();
     final double opacity = entry.getOpacity();
     return ColorUtilities.createTransparent( stroke, opacity );

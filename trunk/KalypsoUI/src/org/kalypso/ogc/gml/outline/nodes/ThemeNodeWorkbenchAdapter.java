@@ -61,7 +61,7 @@ public class ThemeNodeWorkbenchAdapter implements IWorkbenchAdapter2, IWorkbench
   @Override
   public FontData getFont( final Object element )
   {
-    final Font font = ((IThemeNode) element).getFont( element );
+    final Font font = ((IThemeNode)element).getFont( element );
     if( font == null )
       return null;
 
@@ -77,24 +77,24 @@ public class ThemeNodeWorkbenchAdapter implements IWorkbenchAdapter2, IWorkbench
   @Override
   public Object[] getChildren( final Object o )
   {
-    return ((IThemeNode) o).getChildren();
+    return ((IThemeNode)o).getChildren();
   }
 
   @Override
   public ImageDescriptor getImageDescriptor( final Object object )
   {
-    return ((IThemeNode) object).getImageDescriptor();
+    return ((IThemeNode)object).getImageDescriptor();
   }
 
   @Override
   public String getLabel( final Object o )
   {
-    return ((IThemeNode) o).getLabel();
+    return ((IThemeNode)o).getLabel();
   }
 
   @Override
   public Object getParent( final Object o )
   {
-    return ((IThemeNode) o).getParent();
+    return ((IThemeNode)o).getParent();
   }
 }

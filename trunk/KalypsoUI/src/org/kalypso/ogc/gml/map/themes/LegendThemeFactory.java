@@ -50,7 +50,7 @@ import org.kalypso.template.types.StyledLayerType;
 
 /**
  * Theme factory for {@link KalypsoLegendTheme}s.
- *
+ * 
  * @author Gernot Belger
  */
 public class LegendThemeFactory extends AbstractThemeFactory

@@ -97,7 +97,7 @@ public class TupleResultLabelProvider extends EventManager implements ITableLabe
     {
       try
       {
-        final IRecord record = (IRecord) element;
+        final IRecord record = (IRecord)element;
         return handler.getImage( record );
       }
       catch( final IllegalArgumentException e )
@@ -120,7 +120,7 @@ public class TupleResultLabelProvider extends EventManager implements ITableLabe
     {
       try
       {
-        final IRecord record = (IRecord) element;
+        final IRecord record = (IRecord)element;
         return handler.getStringRepresentation( record );
       }
       catch( final IllegalArgumentException e )

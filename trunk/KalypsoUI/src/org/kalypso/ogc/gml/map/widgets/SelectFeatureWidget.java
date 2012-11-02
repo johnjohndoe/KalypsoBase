@@ -68,7 +68,6 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -86,6 +85,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.util.MapUtils;
 import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -110,7 +110,7 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  * ADD (on via pressed 'SHIFT' key):<br>
  * the new selection is added to the current selection. INTERSECT / CONTAINS (via 'ALT' key):<br>
  * If pressed selection is done by using INTERSECT-method.
- *
+ * 
  * @author Thomas Jung
  */
 public class SelectFeatureWidget extends DeprecatedMouseWidget
@@ -223,7 +223,7 @@ public class SelectFeatureWidget extends DeprecatedMouseWidget
     if( activeTheme instanceof IKalypsoFeatureTheme )
     {
       m_themes = new IKalypsoFeatureTheme[1];
-      m_themes[0] = (IKalypsoFeatureTheme) activeTheme;
+      m_themes[0] = (IKalypsoFeatureTheme)activeTheme;
     }
   }
 
@@ -269,7 +269,7 @@ public class SelectFeatureWidget extends DeprecatedMouseWidget
             if( Objects.isNotNull( m_selectOnHoverJob ) )
               m_selectOnHoverJob.cancel();
 
-            m_selectOnHoverJob = new UIJob( Messages.getString("SelectFeatureWidget.1") ) //$NON-NLS-1$
+            m_selectOnHoverJob = new UIJob( Messages.getString( "SelectFeatureWidget.1" ) ) //$NON-NLS-1$
             {
               @Override
               public IStatus runInUIThread( final IProgressMonitor monitor )
@@ -405,7 +405,7 @@ public class SelectFeatureWidget extends DeprecatedMouseWidget
     switch( keyCode )
     {
     // FIXME: ugly: the mpuse event known if shift/ctrl etc. are pressed right at the moment; it is bad practice to keep
-      // our own flags
+    // our own flags
     // "SHFT": Add mode
       case KeyEvent.VK_SHIFT:
         m_addMode = true;
@@ -574,7 +574,7 @@ public class SelectFeatureWidget extends DeprecatedMouseWidget
    * Finds the geometry properties to select from.<br>
    * If a default type is specified, this will always be used.<br>
    * Else, all geometry properties of the target type of the list will be taken.
-   *
+   * 
    * @param propertyName
    *          The property of the theme, that may provide the geometry pathes.
    * @param feature
@@ -753,7 +753,7 @@ public class SelectFeatureWidget extends DeprecatedMouseWidget
       if( m_currentMode == 2 )
         sb.append( Messages.getString( "org.kalypso.ogc.gml.map.widgets.SelectFeatureWidget.4" ) ); //$NON-NLS-1$
       if( m_currentMode == 3 )
-        sb.append( Messages.getString("SelectFeatureWidget.3") ); //$NON-NLS-1$
+        sb.append( Messages.getString( "SelectFeatureWidget.3" ) ); //$NON-NLS-1$
     }
 
     if( m_addMode == true )

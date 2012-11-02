@@ -76,12 +76,12 @@ public class ParameterValueTypeToString extends TypedConverter<ParameterValueTyp
   private String formatComponent( final Object component )
   {
     if( component instanceof String )
-      return (String) component;
+      return (String)component;
 
     if( !(component instanceof Expression) )
       throw new UnsupportedOperationException();
 
-    final Expression expr = (Expression) component;
+    final Expression expr = (Expression)component;
 
     final StringBuilder sb = new StringBuilder();
     sb.append( '<' );
@@ -89,7 +89,7 @@ public class ParameterValueTypeToString extends TypedConverter<ParameterValueTyp
     sb.append( ':' );
 
     if( component instanceof PropertyName )
-      sb.append( ((PropertyName) component).getValue() );
+      sb.append( ((PropertyName)component).getValue() );
     else
     {
       // TODO: need to implement other expression types

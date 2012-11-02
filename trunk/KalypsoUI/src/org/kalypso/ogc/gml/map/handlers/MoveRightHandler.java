@@ -59,7 +59,7 @@ public class MoveRightHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
 
     final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
 

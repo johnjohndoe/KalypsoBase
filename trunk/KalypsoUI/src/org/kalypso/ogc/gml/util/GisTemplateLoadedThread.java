@@ -40,9 +40,9 @@
  ---------------------------------------------------------------------------------------------------*/
 package org.kalypso.ogc.gml.util;
 
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * <p>

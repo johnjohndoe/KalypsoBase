@@ -64,7 +64,7 @@ public class ResolutionLabelProvider extends LabelProvider
   {
     if( element instanceof MovieResolution )
     {
-      final MovieResolution resolution = (MovieResolution) element;
+      final MovieResolution resolution = (MovieResolution)element;
       return String.format( "%d x %d", resolution.getWidth(), resolution.getHeight() ); //$NON-NLS-1$
     }
 

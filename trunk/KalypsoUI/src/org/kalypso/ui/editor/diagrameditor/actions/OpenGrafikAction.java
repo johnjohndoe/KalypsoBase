@@ -53,13 +53,13 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.dialogs.ResourceSelectionDialog;
 import org.kalypso.commons.eclipse.core.resources.ProjectUtilities;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
 import org.kalypso.ogc.sensor.diagview.grafik.GrafikLauncher;
 import org.kalypso.template.obsdiagview.Obsdiagview;
 import org.kalypso.ui.editor.AbstractEditorActionDelegate;
 import org.kalypso.ui.editor.diagrameditor.ObservationDiagramEditor;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * OpenGrafikAction
@@ -74,8 +74,8 @@ public class OpenGrafikAction extends AbstractEditorActionDelegate
   @Override
   public void run( final IAction action )
   {
-    final ObservationDiagramEditor editor = (ObservationDiagramEditor) getEditor();
-    final DiagView diag = (DiagView) editor.getView();
+    final ObservationDiagramEditor editor = (ObservationDiagramEditor)getEditor();
+    final DiagView diag = (DiagView)editor.getView();
 
     try
     {
@@ -85,7 +85,7 @@ public class OpenGrafikAction extends AbstractEditorActionDelegate
       final IFolder dest;
       if( input instanceof IFileEditorInput )
       {
-        final IContainer parent = ((IFileEditorInput) input).getFile().getParent();
+        final IContainer parent = ((IFileEditorInput)input).getFile().getParent();
         dest = parent.getFolder( new Path( Messages.getString( "org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.0" ) ) ); //$NON-NLS-1$
       }
       else
@@ -105,7 +105,7 @@ public class OpenGrafikAction extends AbstractEditorActionDelegate
             return;
 
           if( results[0] instanceof IFolder )
-            dest = ((IFolder) results[0]).getFolder( Messages.getString( "org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.0" ) ); //$NON-NLS-1$
+            dest = ((IFolder)results[0]).getFolder( Messages.getString( "org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.0" ) ); //$NON-NLS-1$
           else
           {
             MessageDialog.openInformation( getShell(), Messages.getString( "org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.4" ), //$NON-NLS-1$

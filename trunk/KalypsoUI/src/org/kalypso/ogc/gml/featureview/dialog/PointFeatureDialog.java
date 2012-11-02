@@ -46,10 +46,10 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -81,7 +81,7 @@ public class PointFeatureDialog implements IFeatureDialog
   @Override
   public int open( final Shell shell )
   {
-    final GM_Point point = (GM_Point) m_feature.getProperty( m_ftp );
+    final GM_Point point = (GM_Point)m_feature.getProperty( m_ftp );
 
     final String kalypsoCrs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
     final String dlgCrs = point == null ? kalypsoCrs : point.getCoordinateSystem();

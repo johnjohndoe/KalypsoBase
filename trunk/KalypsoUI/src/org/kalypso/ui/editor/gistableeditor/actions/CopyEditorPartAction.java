@@ -57,7 +57,7 @@ public class CopyEditorPartAction extends AbstractEditorPartAction
   public void run( )
   {
     // get editor
-    final GisTableEditor editor = (GisTableEditor) getEditorPart();
+    final GisTableEditor editor = (GisTableEditor)getEditorPart();
     if( editor == null )
       return;
 

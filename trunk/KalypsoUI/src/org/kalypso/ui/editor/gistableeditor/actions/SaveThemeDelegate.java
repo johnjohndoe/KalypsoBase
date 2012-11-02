@@ -52,11 +52,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.progress.IProgressService;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.table.ILayerTableInput;
 import org.kalypso.ui.editor.AbstractGisEditorActionDelegate;
 import org.kalypso.ui.editor.gistableeditor.GisTableEditor;
 import org.kalypso.ui.editor.mapeditor.WidgetActionPart;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author belger
@@ -75,7 +75,7 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate
 
     // WARNING: Because of the following cast, we can only use
     // this delegate with the GisTableEditor.
-    final GisTableEditor editor = (GisTableEditor) part.getPart();
+    final GisTableEditor editor = (GisTableEditor)part.getPart();
     if( editor == null )
       return;
 
@@ -105,7 +105,7 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate
       {
         e.printStackTrace();
 
-        final CoreException ce = (CoreException) e.getTargetException();
+        final CoreException ce = (CoreException)e.getTargetException();
         ErrorDialog.openError( shell, Messages.getString( "org.kalypso.ui.editor.gistableeditor.actions.SaveThemeDelegate.2" ), Messages.getString( "org.kalypso.ui.editor.gistableeditor.actions.SaveThemeDelegate.3" ), ce.getStatus() ); //$NON-NLS-1$ //$NON-NLS-2$
       }
       catch( final InterruptedException e )
@@ -127,7 +127,7 @@ public class SaveThemeDelegate extends AbstractGisEditorActionDelegate
 
     // WARNING: Because of the following cast, we can only use
     // this delegate with the GisTableEditor.
-    final GisTableEditor editor = (GisTableEditor) part.getPart();
+    final GisTableEditor editor = (GisTableEditor)part.getPart();
     if( editor != null )
     {
       final ILayerTableInput input = editor.getTableInput();

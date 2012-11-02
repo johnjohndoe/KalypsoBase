@@ -163,7 +163,7 @@ public class DiagramAxis
     if( !(obj instanceof DiagramAxis) )
       return false;
 
-    final DiagramAxis other = (DiagramAxis) obj;
+    final DiagramAxis other = (DiagramAxis)obj;
 
     return m_id.equals( other.getIdentifier() );
   }

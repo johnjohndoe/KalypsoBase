@@ -65,7 +65,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.kalypso.commons.bind.JaxbUtilities;
 import org.kalypso.commons.java.util.StringUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.tableview.rules.RenderingRule;
 import org.kalypso.ogc.sensor.tableview.rules.RulesFactory;
@@ -78,11 +77,12 @@ import org.kalypso.template.obstableview.Obstableview.Rules;
 import org.kalypso.template.obstableview.TypeColumn;
 import org.kalypso.template.obstableview.TypeObservation;
 import org.kalypso.template.obstableview.TypeRenderingRule;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.xml.sax.InputSource;
 
 /**
  * Observation Table Template Handling made easy
- *
+ * 
  * @author schlienger
  */
 public final class TableViewUtils
@@ -103,7 +103,7 @@ public final class TableViewUtils
 
   /**
    * Loads the xml template from the given reader. Closes the reader.
-   *
+   * 
    * @return table view template
    * @throws JAXBException
    */
@@ -121,7 +121,7 @@ public final class TableViewUtils
 
   /**
    * Loads the xml template from the given stream. Closes the stream.
-   *
+   * 
    * @return table view template
    */
   public static Obstableview loadTableTemplateXML( final InputStream ins ) throws JAXBException
@@ -138,12 +138,12 @@ public final class TableViewUtils
 
   /**
    * Loads the xml template from the given inputsource
-   *
+   * 
    * @return table view template
    */
   public static Obstableview loadTableTemplateXML( final InputSource ins ) throws JAXBException
   {
-    return (Obstableview) OTT_JC.createUnmarshaller().unmarshal( ins );
+    return (Obstableview)OTT_JC.createUnmarshaller().unmarshal( ins );
   }
 
   /**
@@ -183,7 +183,7 @@ public final class TableViewUtils
 
   /**
    * Builds the xml binding object using the given the table view template
-   *
+   * 
    * @param context
    *          If non-<code>null</code>, all data-pathes (href to observations) will be resolved as relative pathes
    *          against this context. Only the relative pathes will be written into the xml.<br>
@@ -253,7 +253,7 @@ public final class TableViewUtils
       final List<ObsViewItem> columns = entry.getValue();
       for( final ObsViewItem obsViewItem : columns )
       {
-        final TableViewColumn col = (TableViewColumn) obsViewItem;
+        final TableViewColumn col = (TableViewColumn)obsViewItem;
 
         colCount++;
         final TypeColumn xmlCol = OTT_OF.createTypeColumn();
@@ -304,7 +304,7 @@ public final class TableViewUtils
       view.getRules().removeAllRules();
 
       for( final Object element : trules.getRenderingrule() )
-        view.getRules().addRule( RulesFactory.createRenderingRule( (TypeRenderingRule) element ) );
+        view.getRules().addRule( RulesFactory.createRenderingRule( (TypeRenderingRule)element ) );
     }
 
     final List<IStatus> stati = new ArrayList<>();

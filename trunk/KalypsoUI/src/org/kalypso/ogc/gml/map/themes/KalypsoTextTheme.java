@@ -60,17 +60,17 @@ import org.eclipse.ui.PlatformUI;
 import org.kalypso.commons.i18n.I10nString;
 import org.kalypso.contribs.eclipse.swt.awt.ImageConverter;
 import org.kalypso.contribs.eclipse.swt.graphics.FontUtilities;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.ThemeUtilities;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypso.util.themes.position.PositionUtilities;
 import org.kalypso.util.themes.text.TextUtilities;
 
 /**
  * This theme displays a text on the map.
- *
+ * 
  * @author Holger Albert
  */
 public class KalypsoTextTheme extends AbstractImageTheme
@@ -97,7 +97,7 @@ public class KalypsoTextTheme extends AbstractImageTheme
 
   /**
    * The constructor
-   *
+   * 
    * @param name
    *          The name of the theme.
    * @param mapModell
@@ -136,15 +136,15 @@ public class KalypsoTextTheme extends AbstractImageTheme
     try
     {
       /* Monitor. */
-      monitor.beginTask( Messages.getString("KalypsoTextTheme_1"), 1000 ); //$NON-NLS-1$
-      monitor.subTask( Messages.getString("KalypsoTextTheme_2") ); //$NON-NLS-1$
+      monitor.beginTask( Messages.getString( "KalypsoTextTheme_1" ), 1000 ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "KalypsoTextTheme_2" ) ); //$NON-NLS-1$
 
       /* Initialize properties. */
       initFromProperties();
 
       /* Monitor. */
       monitor.worked( 250 );
-      monitor.subTask( Messages.getString("KalypsoTextTheme_3") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "KalypsoTextTheme_3" ) ); //$NON-NLS-1$
 
       /* Create the text. */
       final org.eclipse.swt.graphics.Image[] image = new org.eclipse.swt.graphics.Image[1];
@@ -164,7 +164,7 @@ public class KalypsoTextTheme extends AbstractImageTheme
 
       /* Monitor. */
       monitor.worked( 500 );
-      monitor.subTask( Messages.getString("KalypsoTextTheme_4") ); //$NON-NLS-1$
+      monitor.subTask( Messages.getString( "KalypsoTextTheme_4" ) ); //$NON-NLS-1$
 
       /* Convert to an AWT image. */
       final BufferedImage awtImage = ImageConverter.convertToAWT( image[0].getImageData() );
@@ -241,7 +241,7 @@ public class KalypsoTextTheme extends AbstractImageTheme
 
   /**
    * This function creates an SWT image.
-   *
+   * 
    * @return The SWT image.
    */
   protected org.eclipse.swt.graphics.Image createSwtImage( )

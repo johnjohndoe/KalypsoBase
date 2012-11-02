@@ -46,7 +46,6 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.utilities.tooltip.ToolTipRenderer;
@@ -54,6 +53,7 @@ import org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder;
 import org.kalypso.ogc.gml.map.widgets.builders.LineGeometryBuilder;
 import org.kalypso.ogc.gml.map.widgets.builders.PolygonGeometryBuilder;
 import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.geometry.GM_GenericCurve;
@@ -228,10 +228,10 @@ public class MeasureMapWidget extends DeprecatedMouseWidget
   private double calcSize( final GM_Object geometry )
   {
     if( geometry instanceof GM_GenericCurve )
-      return ((GM_GenericCurve) geometry).getLength();
+      return ((GM_GenericCurve)geometry).getLength();
 
     if( geometry instanceof GM_GenericSurface )
-      return ((GM_GenericSurface) geometry).getArea();
+      return ((GM_GenericSurface)geometry).getArea();
 
     return Double.NaN;
   }

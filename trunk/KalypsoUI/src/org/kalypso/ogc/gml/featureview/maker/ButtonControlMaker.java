@@ -54,7 +54,7 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Displays a simple button to edit the property.
- *
+ * 
  * @author Gernot Belger
  */
 public class ButtonControlMaker extends AbstractValueControlMaker

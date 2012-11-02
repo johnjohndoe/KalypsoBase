@@ -185,7 +185,7 @@ public class LayoutPageContext implements ILayoutPageContext
         if( pageControl.isDisposed() )
           return;
 
-        final Composite composite = (Composite) pageControl;
+        final Composite composite = (Composite)pageControl;
         composite.layout( true, true );
       }
     } );

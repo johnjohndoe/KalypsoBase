@@ -98,7 +98,7 @@ public abstract class AbstractToolbarFeatureControl extends AbstractFeatureContr
   protected void addToolbarItems( final String uri )
   {
     final IServiceLocator serviceLocator = PlatformUI.getWorkbench();
-    final IMenuService service = (IMenuService) serviceLocator.getService( IMenuService.class );
+    final IMenuService service = (IMenuService)serviceLocator.getService( IMenuService.class );
 
     if( m_toolbar != null )
       service.populateContributionManager( m_toolbar, "toolbar:" + uri ); //$NON-NLS-1$
@@ -127,7 +127,7 @@ public abstract class AbstractToolbarFeatureControl extends AbstractFeatureContr
 
     if( getToolbarManager() != null )
     {
-      final IMenuService service = (IMenuService) serviceLocator.getService( IMenuService.class );
+      final IMenuService service = (IMenuService)serviceLocator.getService( IMenuService.class );
       service.releaseContributions( getToolbarManager() );
     }
 

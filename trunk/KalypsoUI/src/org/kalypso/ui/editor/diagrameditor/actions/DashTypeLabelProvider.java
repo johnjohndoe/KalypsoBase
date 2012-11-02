@@ -53,6 +53,6 @@ public class DashTypeLabelProvider extends LabelProvider
   @Override
   public String getText( final Object element )
   {
-    return ((DashType) element).getComboLabel();
+    return ((DashType)element).getComboLabel();
   }
 }

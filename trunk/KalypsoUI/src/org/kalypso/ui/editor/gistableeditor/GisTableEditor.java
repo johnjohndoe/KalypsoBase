@@ -70,7 +70,6 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.types.ITypeRegistry;
-import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.IExportableObjectFactory;
 import org.kalypso.metadoc.configuration.PublishingConfiguration;
@@ -86,6 +85,7 @@ import org.kalypso.ogc.gml.table.wizard.ExportableLayerTable;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.AbstractWorkbenchPart;
 import org.kalypso.ui.editor.gistableeditor.actions.ColumnAction;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.ModellEventProvider;
 import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
@@ -93,7 +93,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 /**
  * Eclipse-Editor zum editieren der Gis-Tabellen-Templates.<br/>
  * Zeigt das ganze als Tabelendarstellung, die einzelnen Datenquellen können potentiell editiert werden.<br/>
- *
+ * 
  * @author Gernot Belger
  */
 public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart, IExportableObjectFactory
@@ -219,7 +219,7 @@ public class GisTableEditor extends AbstractWorkbenchPart implements IEditorPart
 
     if( type instanceof IValuePropertyType )
     {
-      final IValuePropertyType vpt = (IValuePropertyType) type;
+      final IValuePropertyType vpt = (IValuePropertyType)type;
       if( vpt.isGeometry() )
       {
         /* Do not show geometries without type handler */

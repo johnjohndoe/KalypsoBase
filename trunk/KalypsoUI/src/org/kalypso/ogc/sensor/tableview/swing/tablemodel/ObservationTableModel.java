@@ -58,7 +58,6 @@ import java.util.logging.Logger;
 import javax.swing.table.AbstractTableModel;
 
 import org.apache.commons.lang3.ObjectUtils;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -74,6 +73,7 @@ import org.kalypso.ogc.sensor.timeseries.AxisUtils;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
 import org.kalypso.ogc.sensor.timeseries.datasource.DataSourceHandler;
 import org.kalypso.repository.IDataSourceItem;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * table model which handles an IObservation. Can be used by JTable

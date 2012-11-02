@@ -65,7 +65,7 @@ public class TupleResultCellModifier implements ICellModifier
   @Override
   public Object getValue( final Object element, final String handlerId )
   {
-    final IRecord record = (IRecord) element;
+    final IRecord record = (IRecord)element;
     final IComponentUiHandler handler = m_contentProvider.getHandler( handlerId );
 
     return handler.doGetValue( record );
@@ -76,9 +76,9 @@ public class TupleResultCellModifier implements ICellModifier
   {
     IRecord record;
     if( element instanceof TableItem )
-      record = (IRecord) ((TableItem) element).getData();
+      record = (IRecord)((TableItem)element).getData();
     else if( element instanceof IRecord )
-      record = (IRecord) element;
+      record = (IRecord)element;
     else
       record = null;
 

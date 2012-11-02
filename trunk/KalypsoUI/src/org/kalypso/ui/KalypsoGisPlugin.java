@@ -60,11 +60,11 @@ import org.kalypso.commons.eclipse.core.runtime.PluginImageProvider;
 import org.kalypso.contribs.eclipse.core.runtime.TempFileUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.util.pool.ResourcePool;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.dict.DictionaryCatalog;
 import org.kalypso.ogc.gml.table.celleditors.DefaultFeatureModifierFactory;
 import org.kalypso.ogc.gml.table.celleditors.IFeatureModifierFactory;
 import org.kalypso.ogc.sensor.cache.ObservationCache;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.osgi.framework.BundleContext;
 
@@ -173,7 +173,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   /**
    * This method is called when the plug-in is stopped
-   *
+   * 
    * @param context
    * @throws Exception
    */
@@ -200,7 +200,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   /**
    * Returns the shared instance.
-   *
+   * 
    * @return singleton
    */
   public static KalypsoGisPlugin getDefault( )
@@ -226,8 +226,7 @@ public class KalypsoGisPlugin extends AbstractUIPlugin implements IPropertyChang
 
   /**
    * Returns the global format for displaying dates + times.<br/>
-   * The format is preconfigured with the right display timezone (i.e. no need for extra call to
-   * {@link #getDisplayTimeZone()}.<br/>
+   * The format is preconfigured with the right display timezone (i.e. no need for extra call to {@link #getDisplayTimeZone()}.<br/>
    * <br/>
    * TODO: replace all static date format all around the place <br/>
    * TODO: we should provide several versions: long/short, for String.format etc.<br/>

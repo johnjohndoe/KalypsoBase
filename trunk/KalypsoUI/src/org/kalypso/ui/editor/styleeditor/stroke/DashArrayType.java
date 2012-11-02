@@ -40,17 +40,17 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.ui.editor.styleeditor.stroke;
 
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
  */
 public enum DashArrayType
 {
-  continuous(Messages.getString( "org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.3" )), //$NON-NLS-1$
-  dot(Messages.getString( "org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.4" ), 2f, 2f), //$NON-NLS-1$
-  dash(Messages.getString( "org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.5" ), 10f, 5f), //$NON-NLS-1$
-  dash_dot(Messages.getString( "org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.6" ), 10f, 5f, 2f, 2f); //$NON-NLS-1$
+  continuous( Messages.getString( "org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.3" ) ), //$NON-NLS-1$
+  dot( Messages.getString( "org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.4" ), 2f, 2f ), //$NON-NLS-1$
+  dash( Messages.getString( "org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.5" ), 10f, 5f ), //$NON-NLS-1$
+  dash_dot( Messages.getString( "org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.6" ), 10f, 5f, 2f, 2f ); //$NON-NLS-1$
 
   private final String m_label;
 

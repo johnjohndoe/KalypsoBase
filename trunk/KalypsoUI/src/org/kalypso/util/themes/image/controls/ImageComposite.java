@@ -74,8 +74,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.Form;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.ThemeUtilities;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypso.util.themes.image.ImageUtilities;
 import org.kalypso.util.themes.image.listener.IImageChangedListener;
 import org.kalypso.util.themes.position.PositionUtilities;
@@ -84,7 +84,7 @@ import org.kalypso.util.themes.position.listener.IPositionChangedListener;
 
 /**
  * This composite edits the position.
- *
+ * 
  * @author Holger Albert
  */
 public class ImageComposite extends Composite
@@ -126,7 +126,7 @@ public class ImageComposite extends Composite
 
   /**
    * The constructor.
-   *
+   * 
    * @param parent
    *          A widget which will be the parent of the new instance (cannot be null).
    * @param style
@@ -208,7 +208,7 @@ public class ImageComposite extends Composite
    * This function checks the provided properties object for properties this composite can edit. Found properties will
    * be checked for correct values. Then they are set to the members. If editable properties are missing or if existing
    * ones have wrong values, they will be set to the members with default values.
-   *
+   * 
    * @param properties
    *          The properties, containing the values.
    */
@@ -232,7 +232,7 @@ public class ImageComposite extends Composite
    * This function checks the provided properties object for properties this composite can edit. Found properties will
    * be checked for correct values. Then they are set to the members. If editable properties are missing or if existing
    * ones have wrong values, the members will not be changed.
-   *
+   * 
    * @param properties
    *          The properties, containing the values.
    */
@@ -266,7 +266,7 @@ public class ImageComposite extends Composite
 
   /**
    * This function creates the content composite.
-   *
+   * 
    * @param parent
    *          The parent composite.
    * @return The content composite.
@@ -286,7 +286,7 @@ public class ImageComposite extends Composite
 
   /**
    * This function creates the content internal composite.
-   *
+   * 
    * @param parent
    *          The parent composite.
    * @return The content internal composite.
@@ -310,7 +310,7 @@ public class ImageComposite extends Composite
 
   /**
    * This function creates the position composite.
-   *
+   * 
    * @param parent
    *          The parent composite.
    * @return The position composite.
@@ -337,7 +337,7 @@ public class ImageComposite extends Composite
 
   /**
    * This function creates the image group.
-   *
+   * 
    * @param parent
    *          The parent composite.
    * @return The image group.
@@ -347,18 +347,18 @@ public class ImageComposite extends Composite
     /* Create a group. */
     final Group imageGroup = new Group( parent, SWT.NONE );
     imageGroup.setLayout( new GridLayout( 3, false ) );
-    imageGroup.setText( Messages.getString("ImageComposite_0") ); //$NON-NLS-1$
+    imageGroup.setText( Messages.getString( "ImageComposite_0" ) ); //$NON-NLS-1$
 
     /* Create a label. */
     final Label backgroundColorLabel = new Label( imageGroup, SWT.NONE );
     backgroundColorLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    backgroundColorLabel.setText( Messages.getString("ImageComposite_1") ); //$NON-NLS-1$
+    backgroundColorLabel.setText( Messages.getString( "ImageComposite_1" ) ); //$NON-NLS-1$
     backgroundColorLabel.setAlignment( SWT.LEFT );
 
     /* Create a label. */
     final Label backgroundLabel = new Label( imageGroup, SWT.BORDER );
     backgroundLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    backgroundLabel.setText( Messages.getString("ImageComposite_2") ); //$NON-NLS-1$
+    backgroundLabel.setText( Messages.getString( "ImageComposite_2" ) ); //$NON-NLS-1$
     backgroundLabel.setBackground( new Color( parent.getDisplay(), m_background ) );
 
     backgroundLabel.addDisposeListener( new DisposeListener()
@@ -399,7 +399,7 @@ public class ImageComposite extends Composite
     /* Create a label. */
     final Label imageUrlLabel = new Label( imageGroup, SWT.NONE );
     imageUrlLabel.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    imageUrlLabel.setText( Messages.getString("ImageComposite_4") ); //$NON-NLS-1$
+    imageUrlLabel.setText( Messages.getString( "ImageComposite_4" ) ); //$NON-NLS-1$
     imageUrlLabel.setAlignment( SWT.LEFT );
 
     /* Create a text field. */
@@ -423,7 +423,7 @@ public class ImageComposite extends Composite
         m_imageUrl = null;
 
         /* Get the source. */
-        final Text source = (Text) e.getSource();
+        final Text source = (Text)e.getSource();
 
         /* Get the text. */
         final String text = source.getText();
@@ -440,7 +440,7 @@ public class ImageComposite extends Composite
     /* Create a button. */
     final Button imageUrlButton = new Button( imageGroup, SWT.PUSH );
     imageUrlButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, false, false ) );
-    imageUrlButton.setText( Messages.getString("ImageComposite_5") ); //$NON-NLS-1$
+    imageUrlButton.setText( Messages.getString( "ImageComposite_5" ) ); //$NON-NLS-1$
 
     /* Add a listener. */
     imageUrlButton.addSelectionListener( new SelectionAdapter()
@@ -455,9 +455,10 @@ public class ImageComposite extends Composite
         {
           /* Create a file dialog. */
           final FileDialog dialog = new FileDialog( ImageComposite.this.getShell(), SWT.OPEN );
-          dialog.setText( Messages.getString("ImageComposite_6") ); //$NON-NLS-1$
+          dialog.setText( Messages.getString( "ImageComposite_6" ) ); //$NON-NLS-1$
           dialog.setFilterExtensions( new String[] { "*.bmp", "*.png", "*.gif", "*.jpg", "*.tif" } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-          dialog.setFilterNames( new String[] { Messages.getString("ImageComposite_12"), Messages.getString("ImageComposite_13"), Messages.getString("ImageComposite_14"), Messages.getString("ImageComposite_15"), Messages.getString("ImageComposite_16") } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+          dialog.setFilterNames( new String[] {
+              Messages.getString( "ImageComposite_12" ), Messages.getString( "ImageComposite_13" ), Messages.getString( "ImageComposite_14" ), Messages.getString( "ImageComposite_15" ), Messages.getString( "ImageComposite_16" ) } ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
           /* Open the dialog. */
           final String file = dialog.open();
@@ -481,7 +482,7 @@ public class ImageComposite extends Composite
 
   /**
    * This function updates the composite.
-   *
+   * 
    * @param status
    *          A status, containing a message, which should be displayed in the upper area of the view. May be null.
    */
@@ -512,7 +513,7 @@ public class ImageComposite extends Composite
 
   /**
    * This function fires a image property changed event.
-   *
+   * 
    * @param properties
    *          A up to date properties object, containing all serialized image properties.
    * @param horizontal
@@ -530,7 +531,7 @@ public class ImageComposite extends Composite
 
   /**
    * This function adds a image changed listener.
-   *
+   * 
    * @param listener
    *          The image changed listener to add.
    */
@@ -542,7 +543,7 @@ public class ImageComposite extends Composite
 
   /**
    * This function removes a image changed listener.
-   *
+   * 
    * @param listener
    *          The image changed listener to remove.
    */
@@ -554,7 +555,7 @@ public class ImageComposite extends Composite
 
   /**
    * This function returns a up to date properties object, containing all serialized image properties.
-   *
+   * 
    * @return A up to date properties object, containing all serialized image properties.
    */
   public Properties getProperties( )

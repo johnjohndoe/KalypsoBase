@@ -51,9 +51,9 @@ import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.core.status.StatusDialog2;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.xml.Marshallable;
 
 public class ExportSLDWizard extends Wizard implements IWorkbenchWizard
@@ -62,7 +62,7 @@ public class ExportSLDWizard extends Wizard implements IWorkbenchWizard
 
   public ExportSLDWizard( )
   {
-    setWindowTitle( Messages.getString("ExportSLDWizard_0") ); //$NON-NLS-1$
+    setWindowTitle( Messages.getString( "ExportSLDWizard_0" ) ); //$NON-NLS-1$
 
     setDialogSettings( DialogSettingsUtils.getDialogSettings( KalypsoGisPlugin.getDefault(), getClass().getName() ) );
   }
@@ -93,10 +93,10 @@ public class ExportSLDWizard extends Wizard implements IWorkbenchWizard
   private Marshallable getMarshallable( final Object element )
   {
     if( element instanceof Marshallable )
-      return (Marshallable) element;
+      return (Marshallable)element;
 
     if( element instanceof IAdaptable )
-      return (Marshallable) ((IAdaptable) element).getAdapter( Marshallable.class );
+      return (Marshallable)((IAdaptable)element).getAdapter( Marshallable.class );
 
     return null;
   }
@@ -104,7 +104,7 @@ public class ExportSLDWizard extends Wizard implements IWorkbenchWizard
   private String guessFileName( final Object element )
   {
     if( element instanceof IThemeNode )
-      return ((IThemeNode) element).getLabel();
+      return ((IThemeNode)element).getLabel();
 
     return null;
   }

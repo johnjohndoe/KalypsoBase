@@ -41,8 +41,8 @@ import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.ui.dialogs.KalypsoResourceSelectionDialog;
 import org.kalypso.contribs.eclipse.ui.dialogs.ResourceSelectionValidator;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.command.FeatureChange;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
@@ -79,7 +79,7 @@ public class ResourceFileDialog implements IFeatureDialog
     final Object[] result = selectionDialog.getResult();
     if( result != null )
     {
-      final Path resultPath = (Path) result[0];
+      final Path resultPath = (Path)result[0];
 
       m_change = new FeatureChange( m_feature, m_ftp, ResourceUtilities.findFileFromPath( resultPath ) );
       open = Window.OK;
@@ -94,9 +94,9 @@ public class ResourceFileDialog implements IFeatureDialog
   private IFile getResourceFile( )
   {
     if( m_change != null )
-      return (IFile) m_change.getNewValue();
+      return (IFile)m_change.getNewValue();
 
-    return (IFile) m_feature.getProperty( m_ftp );
+    return (IFile)m_feature.getProperty( m_ftp );
   }
 
   /**

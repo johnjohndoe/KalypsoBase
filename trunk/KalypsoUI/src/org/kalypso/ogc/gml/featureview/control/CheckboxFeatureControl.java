@@ -126,7 +126,7 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
 
   /**
    * Checkbox is always valid
-   *
+   * 
    * @see org.kalypso.ogc.gml.featureview.IFeatureControl#isValid()
    */
   @Override
@@ -149,7 +149,7 @@ public class CheckboxFeatureControl extends AbstractFeatureControl implements Mo
     {
       // compare with old to prevent loop
       final boolean oldValue = m_checkbox.getSelection();
-      final Boolean newvalue = (Boolean) m_modifier.getProperty( feature );
+      final Boolean newvalue = (Boolean)m_modifier.getProperty( feature );
       if( newvalue.booleanValue() != oldValue )
         m_checkbox.setSelection( newvalue.booleanValue() );
     }

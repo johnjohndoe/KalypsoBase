@@ -97,7 +97,7 @@ public class LayerTableContentProvider implements IStructuredContentProvider
 
   /**
    * Input muss ein IKalypsoFeatureTheme sein Output sind die Features
-   *
+   * 
    * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
    */
   @Override

@@ -107,7 +107,7 @@ public class CalendarFeatureDialog implements IFeatureDialog
 
   private XMLGregorianCalendar getCalendar( )
   {
-    return (XMLGregorianCalendar) m_feature.getProperty( m_ftp );
+    return (XMLGregorianCalendar)m_feature.getProperty( m_ftp );
   }
 
   /**

@@ -56,7 +56,7 @@ import org.kalypso.util.command.JobExclusiveCommandTarget;
  * <p>
  * Eclipse-Editor zum Editieren der GML-Gis-Templates.
  * </p>
- *
+ * 
  * @author Gernot Belger
  * @author Stefan Kurzbach
  */
@@ -86,8 +86,8 @@ public class GisMapEditor extends AbstractMapPart implements IEditorPart
     final DropTargetListener dropListener = new GisMapDropAdapter( mapViewer, commandTarget, mapModell );
 
     final DropTarget dropTarget = new DropTarget( parent, DND.DROP_LINK );
-    dropTarget.setTransfer(transfers);
-    dropTarget.addDropListener(dropListener);
+    dropTarget.setTransfer( transfers );
+    dropTarget.addDropListener( dropListener );
   }
 
   @Override

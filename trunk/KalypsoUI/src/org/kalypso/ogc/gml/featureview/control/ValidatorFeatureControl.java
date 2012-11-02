@@ -59,7 +59,7 @@ import org.kalypsodeegree_impl.model.feature.validation.rules.RuleFactory;
 
 /**
  * This class controls the ValidatorLabel and its behavior.
- *
+ * 
  * @author Holger Albert
  */
 public class ValidatorFeatureControl extends AbstractFeatureControl
@@ -115,7 +115,7 @@ public class ValidatorFeatureControl extends AbstractFeatureControl
 
   /**
    * The Constructor.
-   *
+   * 
    * @param feature
    *          The GML that represents the feature.
    * @param ftp

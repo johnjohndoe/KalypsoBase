@@ -59,7 +59,7 @@ import org.kalypsodeegree.model.geometry.GM_Point;
 
 /**
  * This view displays the last active map-part in an overview window.
- *
+ * 
  * @author Gernot Belger
  */
 public class MapOverView extends AbstractMapPart implements IAdapterEater<IMapPanel>, IMapPanelListener, IViewPart
@@ -101,8 +101,7 @@ public class MapOverView extends AbstractMapPart implements IAdapterEater<IMapPa
   }
 
   /**
-   * @see org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater#setAdapter(org.eclipse.ui.IWorkbenchPart,
-   *      java.lang.Object)
+   * @see org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater#setAdapter(org.eclipse.ui.IWorkbenchPart, java.lang.Object)
    */
   @Override
   public void setAdapter( final IWorkbenchPart part, final IMapPanel adapter )
@@ -123,7 +122,7 @@ public class MapOverView extends AbstractMapPart implements IAdapterEater<IMapPa
   {
     final GisTemplateMapModell modelToSet;
     if( mapModell instanceof GisTemplateMapModell )
-      modelToSet = (GisTemplateMapModell) mapModell;
+      modelToSet = (GisTemplateMapModell)mapModell;
     else
       modelToSet = null;
 
@@ -136,8 +135,8 @@ public class MapOverView extends AbstractMapPart implements IAdapterEater<IMapPa
   }
 
   /**
-   * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onExtentChanged(org.kalypso.ogc.gml.map.IMapPanel,
-   *      org.kalypsodeegree.model.geometry.GM_Envelope, org.kalypsodeegree.model.geometry.GM_Envelope)
+   * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onExtentChanged(org.kalypso.ogc.gml.map.IMapPanel, org.kalypsodeegree.model.geometry.GM_Envelope,
+   *      org.kalypsodeegree.model.geometry.GM_Envelope)
    */
   @Override
   public void onExtentChanged( final IMapPanel source, final GM_Envelope oldExtent, final GM_Envelope newExtent )
@@ -168,8 +167,7 @@ public class MapOverView extends AbstractMapPart implements IAdapterEater<IMapPa
   }
 
   /**
-   * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onMouseMoveEvent(org.kalypso.ogc.gml.map.IMapPanel,
-   *      org.kalypsodeegree.model.geometry.GM_Point, int, int)
+   * @see org.kalypso.ogc.gml.map.listeners.IMapPanelListener#onMouseMoveEvent(org.kalypso.ogc.gml.map.IMapPanel, org.kalypsodeegree.model.geometry.GM_Point, int, int)
    */
   @Override
   public void onMouseMoveEvent( final IMapPanel source, final GM_Point gmPoint, final int mousex, final int mousey )

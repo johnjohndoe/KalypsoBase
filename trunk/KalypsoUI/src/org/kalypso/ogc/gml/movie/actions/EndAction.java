@@ -43,10 +43,10 @@ package org.kalypso.ogc.gml.movie.actions;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Event;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.movie.utils.MoviePlayer;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * The end action.
@@ -88,7 +88,7 @@ public class EndAction extends Action
   @Override
   public String getText( )
   {
-    return Messages.getString("EndAction_0"); //$NON-NLS-1$
+    return Messages.getString( "EndAction_0" ); //$NON-NLS-1$
   }
 
   /**

@@ -117,7 +117,7 @@ public class WQRelationTableViewer extends Composite
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+        final IStructuredSelection selection = (IStructuredSelection)event.getSelection();
         comboSelected( selection.getFirstElement() );
       }
     } );
@@ -125,7 +125,7 @@ public class WQRelationTableViewer extends Composite
 
   protected void comboSelected( final Object element )
   {
-    final WQTable table = (WQTable) element;
+    final WQTable table = (WQTable)element;
     m_table.setModel( WQRelationFactory.createTableModel( m_fromType, m_toType, table ) );
   }
 

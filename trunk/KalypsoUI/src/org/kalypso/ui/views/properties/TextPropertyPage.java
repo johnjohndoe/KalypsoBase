@@ -184,7 +184,7 @@ public class TextPropertyPage extends PropertyPage
 
   /**
    * This function creates the contents.
-   *
+   * 
    * @param parent
    *          The parent composite.
    */
@@ -224,11 +224,11 @@ public class TextPropertyPage extends PropertyPage
     final IAdaptable element = getElement();
 
     /* Get the node. */
-    final IThemeNode node = (IThemeNode) (element instanceof IThemeNode ? element : element.getAdapter( IThemeNode.class ));
+    final IThemeNode node = (IThemeNode)(element instanceof IThemeNode ? element : element.getAdapter( IThemeNode.class ));
 
     /* Get the theme. */
     final Object nodeElement = node.getElement();
-    final IKalypsoTheme theme = nodeElement instanceof IKalypsoTheme ? (IKalypsoTheme) nodeElement : null;
+    final IKalypsoTheme theme = nodeElement instanceof IKalypsoTheme ? (IKalypsoTheme)nodeElement : null;
 
     /* Store the members. */
     m_theme = theme;
@@ -237,7 +237,7 @@ public class TextPropertyPage extends PropertyPage
     if( m_theme instanceof KalypsoTextTheme )
     {
       /* Cast. */
-      final KalypsoTextTheme textTheme = (KalypsoTextTheme) m_theme;
+      final KalypsoTextTheme textTheme = (KalypsoTextTheme)m_theme;
 
       /* Get the properties of the text theme. */
       final Properties textProperties = new Properties();

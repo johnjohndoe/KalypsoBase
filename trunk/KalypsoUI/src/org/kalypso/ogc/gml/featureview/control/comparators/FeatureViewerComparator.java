@@ -77,8 +77,7 @@ public class FeatureViewerComparator extends ViewerComparator implements IViewer
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.control.comparators.IViewerComparator#init(org.kalypsodeegree.model.feature.Feature,
-   *      java.util.HashMap)
+   * @see org.kalypso.ogc.gml.featureview.control.comparators.IViewerComparator#init(org.kalypsodeegree.model.feature.Feature, java.util.HashMap)
    */
   @Override
   public void init( final Feature parent, final Map<String, String> params )
@@ -96,8 +95,7 @@ public class FeatureViewerComparator extends ViewerComparator implements IViewer
   }
 
   /**
-   * @see org.eclipse.jface.viewers.ViewerComparator#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
+   * @see org.eclipse.jface.viewers.ViewerComparator#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
    */
   @Override
   public int compare( final Viewer viewer, final Object e1, final Object e2 )

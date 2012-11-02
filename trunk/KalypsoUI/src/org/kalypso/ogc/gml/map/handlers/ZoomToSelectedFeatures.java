@@ -54,7 +54,7 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * This class is a handler for zooming to all selected features of all layers.
- *
+ * 
  * @author Holger Albert
  */
 public class ZoomToSelectedFeatures extends AbstractHandler
@@ -74,7 +74,7 @@ public class ZoomToSelectedFeatures extends AbstractHandler
 
   /**
    * The constructor.
-   *
+   * 
    * @param percent
    *          Percentage for increasing the new extend.
    */
@@ -88,7 +88,7 @@ public class ZoomToSelectedFeatures extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
     final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
 
     /* Collect the features. */

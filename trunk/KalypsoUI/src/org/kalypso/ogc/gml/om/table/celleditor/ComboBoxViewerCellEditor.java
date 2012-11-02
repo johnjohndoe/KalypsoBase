@@ -121,7 +121,7 @@ public class ComboBoxViewerCellEditor extends CellEditor
     m_viewer.getCombo().addKeyListener( new KeyAdapter()
     {
       // hook key pressed - see PR 14201
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings( "synthetic-access" )
       @Override
       public void keyPressed( final KeyEvent e )
       {
@@ -185,7 +185,7 @@ public class ComboBoxViewerCellEditor extends CellEditor
 
     if( selection instanceof StructuredSelection )
     {
-      final StructuredSelection sel = (StructuredSelection) selection;
+      final StructuredSelection sel = (StructuredSelection)selection;
       return sel.getFirstElement();
     }
 

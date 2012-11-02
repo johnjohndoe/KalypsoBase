@@ -68,12 +68,12 @@ import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.controls.images.listener.IImagePropertyChangedListener;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * This composite provides controls for editing image properties like width, height and format.
- *
+ * 
  * @author Holger Albert
  */
 public class ImagePropertiesComposite extends Composite
@@ -150,7 +150,7 @@ public class ImagePropertiesComposite extends Composite
 
   /**
    * The constructor.
-   *
+   * 
    * @param parent
    *          A widget which will be the parent of the new instance (cannot be null).
    * @param style
@@ -487,7 +487,7 @@ public class ImagePropertiesComposite extends Composite
 
   /**
    * This function fires the image property changed event.
-   *
+   * 
    * @param width
    *          The width.
    * @param height
@@ -509,7 +509,7 @@ public class ImagePropertiesComposite extends Composite
 
   /**
    * This function adds a image property changed listener.
-   *
+   * 
    * @param listener
    *          The image property changed listener to add.
    */
@@ -521,7 +521,7 @@ public class ImagePropertiesComposite extends Composite
 
   /**
    * This function removes a image property changed listener.
-   *
+   * 
    * @param listener
    *          The image property changed listener to remove.
    */
@@ -533,7 +533,7 @@ public class ImagePropertiesComposite extends Composite
 
   /**
    * This function sets the width of the image. The aspect ratio flag is ignored.
-   *
+   * 
    * @param imageWidth
    *          The width of the image or -1.
    */
@@ -558,7 +558,7 @@ public class ImagePropertiesComposite extends Composite
 
   /**
    * This function sets the height of the image. The aspect ratio flag is ignored.
-   *
+   * 
    * @param imageHeight
    *          The height of the image or -1.
    */
@@ -583,7 +583,7 @@ public class ImagePropertiesComposite extends Composite
 
   /**
    * This function sets the aspect ratio.
-   *
+   * 
    * @param aspectRatio
    *          True, if the aspect ratio should be maintained on change of the width or height.
    */
@@ -607,7 +607,7 @@ public class ImagePropertiesComposite extends Composite
 
   /**
    * This function sets the insets of the image.
-   *
+   * 
    * @param insets
    *          The insets of the image or null.
    */
@@ -634,7 +634,7 @@ public class ImagePropertiesComposite extends Composite
 
   /**
    * This function sets border status.
-   *
+   * 
    * @param aspectRatio
    *          True, if the drawn border is enabled.
    */
@@ -658,7 +658,7 @@ public class ImagePropertiesComposite extends Composite
 
   /**
    * This function sets the format of the image.
-   *
+   * 
    * @param imageFormat
    *          The format of the image or null.
    */
@@ -673,7 +673,7 @@ public class ImagePropertiesComposite extends Composite
 
   /**
    * This function returns the width of the image.
-   *
+   * 
    * @return The width of the image or -1.
    */
   public int getImageWidth( )
@@ -683,7 +683,7 @@ public class ImagePropertiesComposite extends Composite
 
   /**
    * This function returns the height of the image.
-   *
+   * 
    * @return The height of the image or -1.
    */
 
@@ -694,7 +694,7 @@ public class ImagePropertiesComposite extends Composite
 
   /**
    * This function returns true, if the aspect ratio should be maintained on change of the width or height.
-   *
+   * 
    * @return True, if the aspect ratio should be maintained on change of the width or height.
    */
   public boolean keepAspectRatio( )
@@ -704,7 +704,7 @@ public class ImagePropertiesComposite extends Composite
 
   /**
    * This function returns the insets of the image.
-   *
+   * 
    * @return The insets of the image or null.
    */
   public Insets getInsets( )
@@ -714,7 +714,7 @@ public class ImagePropertiesComposite extends Composite
 
   /**
    * This function returns true, if the drawn border is enabled.
-   *
+   * 
    * @return True, if the drawn border is enabled.
    */
   public boolean hasBorder( )
@@ -724,7 +724,7 @@ public class ImagePropertiesComposite extends Composite
 
   /**
    * This function returns the format of the image.
-   *
+   * 
    * @return The format of the image or null.
    */
   public String getImageFormat( )

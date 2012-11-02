@@ -72,7 +72,7 @@ public class FeatureLabelProvider extends LabelProvider
   @Override
   public Image getImage( final Object element )
   {
-    final Feature feature = (Feature) element;
+    final Feature feature = (Feature)element;
     return m_modifier.getImage( feature );
   }
 
@@ -82,7 +82,7 @@ public class FeatureLabelProvider extends LabelProvider
   @Override
   public String getText( final Object element )
   {
-    final Feature feature = (Feature) element;
+    final Feature feature = (Feature)element;
 
     return m_modifier.getLabel( feature ).toString();
   }

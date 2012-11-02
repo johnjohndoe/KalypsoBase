@@ -94,15 +94,14 @@ public class PointGeometryBuilder implements IGeometryBuilder
 
     final IGeoTransformer transformer = GeoTransformerFactory.getGeoTransformer( m_crs );
 
-    final GM_Point transformedPoint = (GM_Point) transformer.transform( m_point );
+    final GM_Point transformedPoint = (GM_Point)transformer.transform( m_point );
 
     m_result = GeometryFactory.createGM_Point( transformedPoint.getPosition(), m_crs );
     return m_result;
   }
 
   /**
-   * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform)
+   * @see org.kalypso.informdss.manager.util.widgets.IGeometryBuilder#paint(java.awt.Graphics, org.kalypsodeegree.graphics.transformation.GeoTransform)
    */
   @Override
   public void paint( final Graphics g, final GeoTransform projection, final Point currentPoint )
@@ -111,11 +110,11 @@ public class PointGeometryBuilder implements IGeometryBuilder
       return;
 
     if( m_point == null )
-      drawHandles( g, new int[] { (int) currentPoint.getX() }, new int[] { (int) currentPoint.getY() } );
+      drawHandles( g, new int[] { (int)currentPoint.getX() }, new int[] { (int)currentPoint.getY() } );
     else
     {
-      final int x = (int) projection.getDestX( m_point.getX() );
-      final int y = (int) projection.getDestY( m_point.getY() );
+      final int x = (int)projection.getDestX( m_point.getX() );
+      final int y = (int)projection.getDestY( m_point.getY() );
 
       drawHandles( g, new int[] { x }, new int[] { y } );
     }

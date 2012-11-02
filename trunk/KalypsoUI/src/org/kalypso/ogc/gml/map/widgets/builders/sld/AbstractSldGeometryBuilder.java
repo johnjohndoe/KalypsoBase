@@ -131,7 +131,7 @@ public abstract class AbstractSldGeometryBuilder implements ISldGeometryBuilder
   {
     try
     {
-      final Point p = (Point) JTSAdapter.export( point );
+      final Point p = (Point)JTSAdapter.export( point );
       addPoint( p );
 
       return finish();
@@ -179,8 +179,7 @@ public abstract class AbstractSldGeometryBuilder implements ISldGeometryBuilder
   }
 
   /**
-   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder#paint(java.awt.Graphics,
-   *      org.kalypsodeegree.graphics.transformation.GeoTransform, java.awt.Point)
+   * @see org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilder#paint(java.awt.Graphics, org.kalypsodeegree.graphics.transformation.GeoTransform, java.awt.Point)
    */
   @Override
   public void paint( final Graphics g, final GeoTransform projection, final java.awt.Point p )
@@ -200,7 +199,7 @@ public abstract class AbstractSldGeometryBuilder implements ISldGeometryBuilder
 
   public void paint( final Graphics g, final GeoTransform projection, final GM_Point current ) throws GM_Exception, CoreException
   {
-    final Point p = (Point) JTSAdapter.export( current );
+    final Point p = (Point)JTSAdapter.export( current );
     final Geometry geometry = buildGeometry( p );
     if( geometry == null )
       return;

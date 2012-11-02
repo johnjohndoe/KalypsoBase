@@ -48,13 +48,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.wms.utils.KalypsoWMSUtilities;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypso.util.net.URLGetter;
 
 /**
  * This loader loads the capabilities.
- *
+ * 
  * @author Holger Albert
  */
 public class WMSCapabilitiesLoader extends AbstractWMSCapabilitiesLoader

@@ -53,7 +53,6 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.kalypso.commons.java.io.FileUtilities;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
 import org.kalypso.ogc.gml.IKalypsoCascadingTheme;
@@ -67,18 +66,19 @@ import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.ui.IKalypsoUIConstants;
 import org.kalypso.ui.KalypsoUIExtensions;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * Helper class for the movie functionality.
- *
+ * 
  * @author Holger Albert
  */
 public final class MovieUtilities
 {
   /**
    * This function searches the map model for a {@link AbstractCascadingLayerTheme} with the property "movieTheme" set.
-   *
+   * 
    * @param mapModel
    *          The map model.
    * @return The {@link AbstractCascadingLayerTheme} or null. FIXME: return IKalypsoCascadingTheme instead!
@@ -87,18 +87,18 @@ public final class MovieUtilities
   {
     final IKalypsoTheme[] themes = MapModellHelper.findThemeByProperty( mapModel, IKalypsoUIConstants.MOVIE_THEME_PROPERTY, IKalypsoThemeVisitor.DEPTH_ZERO );
     if( themes == null || themes.length == 0 )
-      throw new Exception( Messages.getString("MovieUtilities_0") ); //$NON-NLS-1$
+      throw new Exception( Messages.getString( "MovieUtilities_0" ) ); //$NON-NLS-1$
 
     final IKalypsoTheme theme = themes[0];
     if( !(theme instanceof IKalypsoCascadingTheme) )
-      throw new Exception( Messages.getString("MovieUtilities_1") ); //$NON-NLS-1$
+      throw new Exception( Messages.getString( "MovieUtilities_1" ) ); //$NON-NLS-1$
 
-    return (IKalypsoCascadingTheme) theme;
+    return (IKalypsoCascadingTheme)theme;
   }
 
   /**
    * This function returns the configured movie image provider of the theme, marked as movie theme.
-   *
+   * 
    * @param mapModel
    *          The gis template map model.
    * @param boundingBox
@@ -127,7 +127,7 @@ public final class MovieUtilities
 
   /**
    * This function returns the default image provider.
-   *
+   * 
    * @param mapModel
    *          The gis template map model.
    * @param boundingBox
@@ -145,7 +145,7 @@ public final class MovieUtilities
 
   /**
    * This function clones the map model.
-   *
+   * 
    * @param mapModel
    *          The map model.
    * @param boundingBox
@@ -188,7 +188,7 @@ public final class MovieUtilities
     }
     catch( final Exception ex )
     {
-      throw new IOException( Messages.getString("MovieUtilities_4"), ex ); //$NON-NLS-1$
+      throw new IOException( Messages.getString( "MovieUtilities_4" ), ex ); //$NON-NLS-1$
     }
     finally
     {
@@ -203,7 +203,7 @@ public final class MovieUtilities
 
   /**
    * This function returns possible resolutions for the current screen size.
-   *
+   * 
    * @return The possible resolutions.
    */
   public static MovieResolution[] getResolutions( )
@@ -219,7 +219,7 @@ public final class MovieUtilities
 
     /* The screen resolution. */
     final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    final MovieResolution screenResolution = new MovieResolution( Messages.getString("MovieUtilities_7"), screenSize.width, screenSize.height ); //$NON-NLS-1$
+    final MovieResolution screenResolution = new MovieResolution( Messages.getString( "MovieUtilities_7" ), screenSize.width, screenSize.height ); //$NON-NLS-1$
 
     /* Memory for the results. */
     final List<MovieResolution> results = new ArrayList<>();

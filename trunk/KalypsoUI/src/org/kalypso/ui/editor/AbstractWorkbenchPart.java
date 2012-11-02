@@ -90,8 +90,8 @@ import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.jface.operation.RunnableContextHelper;
 import org.kalypso.contribs.eclipse.ui.partlistener.PartAdapter2;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 
 /**
@@ -150,7 +150,7 @@ public abstract class AbstractWorkbenchPart extends WorkbenchPart implements IRe
 
   public IEditorSite getEditorSite( )
   {
-    return (IEditorSite) getSite();
+    return (IEditorSite)getSite();
   }
 
   /**
@@ -244,7 +244,7 @@ public abstract class AbstractWorkbenchPart extends WorkbenchPart implements IRe
 
     if( eInput instanceof IFileEditorInput )
     {
-      final IFileEditorInput input = (IFileEditorInput) eInput;
+      final IFileEditorInput input = (IFileEditorInput)eInput;
       return input.getFile();
     }
 
@@ -258,11 +258,11 @@ public abstract class AbstractWorkbenchPart extends WorkbenchPart implements IRe
     final IActionBars actionBars;
     if( site instanceof IViewSite )
     {
-      actionBars = ((IViewSite) site).getActionBars();
+      actionBars = ((IViewSite)site).getActionBars();
     }
     else
     {
-      actionBars = ((IEditorSite) site).getActionBars();
+      actionBars = ((IEditorSite)site).getActionBars();
     }
     return actionBars;
   }
@@ -277,7 +277,7 @@ public abstract class AbstractWorkbenchPart extends WorkbenchPart implements IRe
     final IStorageEditorInput editorInput = getEditorInput();
     if( editorInput instanceof IFileEditorInput )
     {
-      final IFile file = ((IFileEditorInput) editorInput).getFile();
+      final IFile file = ((IFileEditorInput)editorInput).getFile();
       if( file == null || !file.exists() )
         return true;
     }
@@ -336,7 +336,7 @@ public abstract class AbstractWorkbenchPart extends WorkbenchPart implements IRe
 
     // REMARK: we cannot use a job here, the method must block until finished. Else
     // The content may already be disposed before the doSaveInternal is called.
-    final IProgressService progressService = (IProgressService) getSite().getService( IProgressService.class );
+    final IProgressService progressService = (IProgressService)getSite().getService( IProgressService.class );
     RunnableContextHelper.execute( progressService, true, true, operation );
   }
 
@@ -348,7 +348,7 @@ public abstract class AbstractWorkbenchPart extends WorkbenchPart implements IRe
   private IFile getSaveAsFile( final IStorageEditorInput input )
   {
     if( input instanceof IFileEditorInput )
-      return ((IFileEditorInput) input).getFile();
+      return ((IFileEditorInput)input).getFile();
 
     return null;
   }
@@ -362,7 +362,7 @@ public abstract class AbstractWorkbenchPart extends WorkbenchPart implements IRe
 
     if( !(input instanceof IStorageEditorInput) )
       throw new IllegalArgumentException( "input must be instanceof IStorageEditorInput" ); //$NON-NLS-1$
-    setInput( (IStorageEditorInput) input );
+    setInput( (IStorageEditorInput)input );
   }
 
   /**
@@ -385,7 +385,7 @@ public abstract class AbstractWorkbenchPart extends WorkbenchPart implements IRe
     getSite().getShell().getDisplay().syncExec( new Runnable()
     {
       @Override
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings( "synthetic-access" )
       public void run( )
       {
         firePropertyChange( IEditorPart.PROP_INPUT );
@@ -446,7 +446,7 @@ public abstract class AbstractWorkbenchPart extends WorkbenchPart implements IRe
     if( event.getType() != IResourceChangeEvent.POST_CHANGE )
       return;
 
-    final IFile file = ((IFileEditorInput) editorInput).getFile();
+    final IFile file = ((IFileEditorInput)editorInput).getFile();
     if( file == null )
       return;
 
@@ -482,7 +482,7 @@ public abstract class AbstractWorkbenchPart extends WorkbenchPart implements IRe
   {
     final UIJob job = new UIJob( "Fire Dirty" ) //$NON-NLS-1$
     {
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings( "synthetic-access" )
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
@@ -574,12 +574,12 @@ public abstract class AbstractWorkbenchPart extends WorkbenchPart implements IRe
       return null;
 
     if( storage instanceof IStorageWithContext )
-      return ((IStorageWithContext) storage).getContext();
+      return ((IStorageWithContext)storage).getContext();
 
     if( storage instanceof IResource )
-      return ResourceUtilities.createURL( (IResource) storage );
+      return ResourceUtilities.createURL( (IResource)storage );
 
-    final IFile file = (IFile) storage.getAdapter( IFile.class );
+    final IFile file = (IFile)storage.getAdapter( IFile.class );
     if( file == null )
       return null;
 

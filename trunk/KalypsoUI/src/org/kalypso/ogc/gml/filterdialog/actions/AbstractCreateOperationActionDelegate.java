@@ -57,8 +57,7 @@ public abstract class AbstractCreateOperationActionDelegate implements IActionDe
   public abstract void run( IAction action );
 
   /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-   *      org.eclipse.jface.viewers.ISelection)
+   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
    */
   @Override
   public void selectionChanged( final IAction action, final ISelection selection )
@@ -66,18 +65,18 @@ public abstract class AbstractCreateOperationActionDelegate implements IActionDe
     action.setEnabled( false );
     if( selection instanceof IStructuredSelection )
     {
-      m_selection = (IStructuredSelection) selection;
+      m_selection = (IStructuredSelection)selection;
       final Object firstElement = m_selection.getFirstElement();
       if( firstElement instanceof ComplexFilter )
       {
-        final Operation operation = ((ComplexFilter) firstElement).getOperation();
+        final Operation operation = ((ComplexFilter)firstElement).getOperation();
         if( operation == null )
           action.setEnabled( true );
       }
       if( firstElement instanceof LogicalOperation )
       {
-        final int operatorId = ((LogicalOperation) firstElement).getOperatorId();
-        final List<Operation> arguments = ((LogicalOperation) firstElement).getArguments();
+        final int operatorId = ((LogicalOperation)firstElement).getOperatorId();
+        final List<Operation> arguments = ((LogicalOperation)firstElement).getArguments();
         if( arguments == null || arguments.size() < 2 && (operatorId == OperationDefines.AND || operatorId == OperationDefines.OR) )
           action.setEnabled( true );
         if( arguments == null || arguments.size() < 1 && operatorId == OperationDefines.NOT )

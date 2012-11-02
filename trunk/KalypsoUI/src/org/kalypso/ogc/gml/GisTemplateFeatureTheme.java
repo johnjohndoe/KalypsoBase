@@ -72,7 +72,6 @@ import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
@@ -81,6 +80,7 @@ import org.kalypso.template.types.StyledLayerType;
 import org.kalypso.template.types.StyledLayerType.Style;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.graphics.transformation.GeoTransform;
 import org.kalypsodeegree.model.feature.FeatureList;
@@ -88,8 +88,7 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * <p>
- * Ein Decorator für ein {@link org.kalypso.ogc.gml.KalypsoFeatureTheme}, welches dieses (asynchron) über den Pool aus
- * einer Source lädt.
+ * Ein Decorator für ein {@link org.kalypso.ogc.gml.KalypsoFeatureTheme}, welches dieses (asynchron) über den Pool aus einer Source lädt.
  * </p>
  * <p>
  * Die ganze dynamic, also die Überwachung, ob sich das Pool-Objekt geändert hat etc. findet hier statt
@@ -98,10 +97,9 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
  * Hier findet auch die Verwaltung statt, ob sich Daten des Themas geändert haben
  * </p>
  * <p>
- * Implementiert unter anderem {@link org.kalypso.commons.command.ICommandTarget}, da sich die Daten des unterliegenden
- * Themas ändern können
+ * Implementiert unter anderem {@link org.kalypso.commons.command.ICommandTarget}, da sich die Daten des unterliegenden Themas ändern können
  * </p>
- *
+ * 
  * @author Gernot Belger
  */
 public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPoolListener, IKalypsoFeatureTheme, IKalypsoSaveableTheme, IKalypsoStyleListener
@@ -179,7 +177,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
     if( layerType instanceof StyledLayerType )
     {
       m_hasStyles = true;
-      final StyledLayerType mapLayerType = (StyledLayerType) layerType;
+      final StyledLayerType mapLayerType = (StyledLayerType)layerType;
       initStyles( context, mapLayerType );
       GisTemplateLayerHelper.updateProperties( mapLayerType, this );
     }
@@ -326,7 +324,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
         if( newValue != null )
         {
-          final CommandableWorkspace commandableWorkspace = (CommandableWorkspace) newValue;
+          final CommandableWorkspace commandableWorkspace = (CommandableWorkspace)newValue;
 
           /* Get current property set */
           final KalypsoFeatureTheme kalypsoFeatureTheme = new KalypsoFeatureTheme( commandableWorkspace, m_featurePath, getName(), m_selectionManager, getMapModell() );
@@ -616,7 +614,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
 
   /**
    * This function returns the unmodified href. This href will be saved again to the map.
-   *
+   * 
    * @return The unmodified href. This href will be saved again to the map.
    */
   public String getHref( )
@@ -745,7 +743,7 @@ public class GisTemplateFeatureTheme extends AbstractKalypsoTheme implements IPo
   public void setStatus( final IStatus status )
   {
     if( m_theme != null )
-      ((AbstractKalypsoTheme) m_theme).setStatus( status );
+      ((AbstractKalypsoTheme)m_theme).setStatus( status );
     else
       super.setStatus( status );
   }

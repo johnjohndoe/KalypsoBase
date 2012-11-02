@@ -41,10 +41,10 @@
 package org.kalypso.ogc.gml.wms.provider.images;
 
 import org.deegree.ogcwebservices.wms.capabilities.WMSCapabilities;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.wms.deegree.RemoteWMService;
 import org.kalypso.ogc.gml.wms.loader.ICapabilitiesLoader;
 import org.kalypso.ogc.gml.wms.loader.WMSCapabilitiesLoader;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * This provider loads an image from a WMS. It caches the capabilities, so that this request is only done once.

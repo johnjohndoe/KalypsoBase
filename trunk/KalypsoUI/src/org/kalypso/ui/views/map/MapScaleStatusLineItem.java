@@ -65,16 +65,16 @@ import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterFinder;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.listeners.IMapPanelListener;
 import org.kalypso.ogc.gml.map.listeners.MapPanelAdapter;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 
 /**
  * This class dipslays a small bar which enables the user to change the scale.
- *
+ * 
  * @author Holger Albert
  */
 public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution implements IAdapterEater<IMapPanel>
@@ -126,7 +126,7 @@ public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution i
 
     if( Double.isNaN( mapScale ) || Double.isInfinite( mapScale ) )
     {
-      m_text.setText( Messages.getString("MapScaleStatusLineItem.0") ); //$NON-NLS-1$
+      m_text.setText( Messages.getString( "MapScaleStatusLineItem.0" ) ); //$NON-NLS-1$
       m_text.setEnabled( false );
     }
     else
@@ -177,7 +177,7 @@ public class MapScaleStatusLineItem extends WorkbenchWindowControlContribution i
       @Override
       public void widgetDefaultSelected( final SelectionEvent e )
       {
-        final Text source = (Text) e.getSource();
+        final Text source = (Text)e.getSource();
         handleTextDefaultSelected( source );
       }
     } );

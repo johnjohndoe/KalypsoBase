@@ -67,9 +67,9 @@ import org.kalypso.contribs.eclipse.core.runtime.jobs.MutexRule;
 import org.kalypso.contribs.eclipse.swt.widgets.ImageCanvas;
 import org.kalypso.core.status.StatusComposite;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 
 /**
@@ -120,7 +120,7 @@ public class ImageFeatureControl extends AbstractImageFeatureControl
       return;
 
     final Image oldImage = m_imgCanvas.getImage();
-    final Boolean oldDoDispose = (Boolean) m_imgCanvas.getData( DATA_DISPOSE_IMAGE );
+    final Boolean oldDoDispose = (Boolean)m_imgCanvas.getData( DATA_DISPOSE_IMAGE );
     if( oldImage != null && oldDoDispose != null && oldDoDispose )
       oldImage.dispose();
   }
@@ -180,12 +180,12 @@ public class ImageFeatureControl extends AbstractImageFeatureControl
 
       if( feature instanceof org.kalypsodeegree_impl.gml.binding.commons.Image )
       {
-        final MimeType mimeType = ((org.kalypsodeegree_impl.gml.binding.commons.Image) feature).getMimeType();
+        final MimeType mimeType = ((org.kalypsodeegree_impl.gml.binding.commons.Image)feature).getMimeType();
         if( mimeType != null )
         {
           final String baseType = mimeType.getBaseType();
           if( !MimeTypeMapper.isImageType( baseType ) )
-            return Messages.getString("ImageFeatureControl.0"); //$NON-NLS-1$
+            return Messages.getString( "ImageFeatureControl.0" ); //$NON-NLS-1$
         }
       }
 
@@ -224,7 +224,7 @@ public class ImageFeatureControl extends AbstractImageFeatureControl
 // e1.printStackTrace();
 // }
 
-    final Job loadImageJob = new Job( Messages.getString("ImageFeatureControl.1") ) //$NON-NLS-1$
+    final Job loadImageJob = new Job( Messages.getString( "ImageFeatureControl.1" ) ) //$NON-NLS-1$
     {
       @Override
       protected IStatus run( final IProgressMonitor monitor )
@@ -232,7 +232,7 @@ public class ImageFeatureControl extends AbstractImageFeatureControl
         try
         {
           final Image waitingImage = KalypsoGisPlugin.getImageProvider().getImage( ImageProvider.DESCRIPTORS.WAIT_LOADING_OBJ );
-          setImageInUIJob( waitingImage, Messages.getString("ImageFeatureControl.2"), false ); //$NON-NLS-1$
+          setImageInUIJob( waitingImage, Messages.getString( "ImageFeatureControl.2" ), false ); //$NON-NLS-1$
 
           final ImageDescriptor imgDesc = ImageDescriptor.createFromURL( url );
           final Image image = imgDesc.createImage( false );
@@ -266,7 +266,7 @@ public class ImageFeatureControl extends AbstractImageFeatureControl
       return;
 
     final Display display = m_imgCanvas.getDisplay();
-    final UIJob uiJob = new UIJob( display, Messages.getString("ImageFeatureControl.3") ) //$NON-NLS-1$
+    final UIJob uiJob = new UIJob( display, Messages.getString( "ImageFeatureControl.3" ) ) //$NON-NLS-1$
     {
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )

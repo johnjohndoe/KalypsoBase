@@ -85,11 +85,9 @@ public class SelectFeaturesMapFunction implements IRectangleMapFunction
    * @param radius
    *          The radius in which the features should be selected.
    * @param featuresProvider
-   *          The provider of the features (e.g. {@link org.kalypso.ogc.gml.map.widgets.providers.QNameFeaturesProvider}
-   *          ).
+   *          The provider of the features (e.g. {@link org.kalypso.ogc.gml.map.widgets.providers.QNameFeaturesProvider} ).
    * @param selectionChanger
-   *          The selection changer is responsible for really changing the selection in a specific way (e.g.
-   *          {@link org.kalypso.ogc.gml.map.widgets.changers.SingleSelectionChanger}).
+   *          The selection changer is responsible for really changing the selection in a specific way (e.g. {@link org.kalypso.ogc.gml.map.widgets.changers.SingleSelectionChanger}).
    * @param manager
    *          The selection manager, which holds the current selection.
    */
@@ -102,8 +100,7 @@ public class SelectFeaturesMapFunction implements IRectangleMapFunction
   }
 
   /**
-   * @see org.kalypso.informdss.manager.util.widgets.IRectangleMapFunction#execute(org.kalypso.ogc.gml.map.MapPanel,
-   *      org.eclipse.swt.graphics.Rectangle)
+   * @see org.kalypso.informdss.manager.util.widgets.IRectangleMapFunction#execute(org.kalypso.ogc.gml.map.MapPanel, org.eclipse.swt.graphics.Rectangle)
    */
   @Override
   public void execute( final IMapPanel mapPanel, final Rectangle rectangle )

@@ -73,7 +73,6 @@ import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IFeaturesProvider;
 import org.kalypso.ogc.gml.IFeaturesProviderListener;
 import org.kalypso.ogc.gml.ILoadStartable;
@@ -87,6 +86,7 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.FeatureSelectionManager2;
 import org.kalypso.template.featureview.Featuretemplate;
 import org.kalypso.template.featureview.Featuretemplate.Layer;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypso.util.command.JobExclusiveCommandTarget;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.event.ModellEvent;
@@ -175,7 +175,7 @@ public class FeatureTemplateviewer
     try
     {
       if( m_featuresProvider instanceof ISaveableFeaturesProvider )
-        ((ISaveableFeaturesProvider) m_featuresProvider).save( monitor );
+        ((ISaveableFeaturesProvider)m_featuresProvider).save( monitor );
 
       return Status.OK_STATUS;
     }
@@ -375,7 +375,7 @@ public class FeatureTemplateviewer
       if( !m_topLevelComposite.isDisposed() )
       {
         if( m_topLevelComposite instanceof ScrolledForm )
-          ((SharedScrolledComposite) m_topLevelComposite).reflow( true );
+          ((SharedScrolledComposite)m_topLevelComposite).reflow( true );
         else
           m_topLevelComposite.layout( true, true );
       }
@@ -422,7 +422,7 @@ public class FeatureTemplateviewer
       updateControls();
 
     if( m_featuresProvider instanceof ILoadStartable )
-      ((ILoadStartable) m_featuresProvider).startLoading();
+      ((ILoadStartable)m_featuresProvider).startLoading();
   }
 
   public void setToolkit( final FormToolkit toolkit )

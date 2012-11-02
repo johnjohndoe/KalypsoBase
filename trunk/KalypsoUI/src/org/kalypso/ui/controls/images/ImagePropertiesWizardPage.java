@@ -47,14 +47,14 @@ import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.configuration.PublishingConfiguration;
 import org.kalypso.ui.controls.images.listener.IImagePropertyChangedListener;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * A page for selecting export information for an image. If a publishing configuration is given it will store the
  * properties there, too.
- *
+ * 
  * @author Holger Albert
  */
 public class ImagePropertiesWizardPage extends WizardPage
@@ -126,7 +126,7 @@ public class ImagePropertiesWizardPage extends WizardPage
 
   /**
    * The constructor.
-   *
+   * 
    * @param pageName
    *          The name of the page.
    * @param configuration
@@ -146,12 +146,12 @@ public class ImagePropertiesWizardPage extends WizardPage
    */
   public ImagePropertiesWizardPage( final String pageName, final PublishingConfiguration configuration, final int defaultWidth, final int defaultHeight, final boolean defaultAspectRatio, final Insets defaultInsets, final boolean defaultBorder, final String defaultFormat )
   {
-    this( pageName, Messages.getString("ImagePropertiesWizardPage_6"), null, configuration, defaultWidth, defaultHeight, defaultAspectRatio, defaultInsets, defaultBorder, defaultFormat ); //$NON-NLS-1$
+    this( pageName, Messages.getString( "ImagePropertiesWizardPage_6" ), null, configuration, defaultWidth, defaultHeight, defaultAspectRatio, defaultInsets, defaultBorder, defaultFormat ); //$NON-NLS-1$
   }
 
   /**
    * The constructor.
-   *
+   * 
    * @param pageName
    *          The name of the page.
    * @param title
@@ -187,7 +187,7 @@ public class ImagePropertiesWizardPage extends WizardPage
     m_format = defaultFormat;
 
     /* Initialize the page. */
-    setDescription( Messages.getString("ImagePropertiesWizardPage_7") ); //$NON-NLS-1$
+    setDescription( Messages.getString( "ImagePropertiesWizardPage_7" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -207,8 +207,7 @@ public class ImagePropertiesWizardPage extends WizardPage
     imageComposite.addImagePropertyChangedListener( new IImagePropertyChangedListener()
     {
       /**
-       * @see org.kalypso.ui.controls.listener.IImagePropertyChangedListener#imagePropertyChanged(int, int, boolean,
-       *      java.awt.Insets, boolean, java.lang.String)
+       * @see org.kalypso.ui.controls.listener.IImagePropertyChangedListener#imagePropertyChanged(int, int, boolean, java.awt.Insets, boolean, java.lang.String)
        */
       @Override
       public void imagePropertyChanged( final int width, final int height, final boolean aspectRatio, final Insets insets, final boolean border, final String format )
@@ -256,21 +255,21 @@ public class ImagePropertiesWizardPage extends WizardPage
 
     if( m_width <= 0 )
     {
-      setErrorMessage( Messages.getString("ImagePropertiesWizardPage_8") ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString( "ImagePropertiesWizardPage_8" ) ); //$NON-NLS-1$
       setPageComplete( false );
       return;
     }
 
     if( m_height <= 0 )
     {
-      setErrorMessage( Messages.getString("ImagePropertiesWizardPage_9") ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString( "ImagePropertiesWizardPage_9" ) ); //$NON-NLS-1$
       setPageComplete( false );
       return;
     }
 
     if( m_format == null || m_format.length() == 0 )
     {
-      setErrorMessage( Messages.getString("ImagePropertiesWizardPage_10") ); //$NON-NLS-1$
+      setErrorMessage( Messages.getString( "ImagePropertiesWizardPage_10" ) ); //$NON-NLS-1$
       setPageComplete( false );
       return;
     }
@@ -278,7 +277,7 @@ public class ImagePropertiesWizardPage extends WizardPage
 
   /**
    * This function returns the width of the image.
-   *
+   * 
    * @return The width of the image or -1.
    */
   public int getWidth( )
@@ -288,7 +287,7 @@ public class ImagePropertiesWizardPage extends WizardPage
 
   /**
    * This function returns the height of the image.
-   *
+   * 
    * @return The height of the image or -1.
    */
 
@@ -299,7 +298,7 @@ public class ImagePropertiesWizardPage extends WizardPage
 
   /**
    * This function returns true, if the aspect ratio should be maintained on change of the width or height.
-   *
+   * 
    * @return True, if the aspect ratio should be maintained on change of the width or height.
    */
   public boolean keepAspectRatio( )
@@ -309,7 +308,7 @@ public class ImagePropertiesWizardPage extends WizardPage
 
   /**
    * This function returns the insets of the image.
-   *
+   * 
    * @return The insets of the image or null.
    */
   public Insets getInsets( )
@@ -319,7 +318,7 @@ public class ImagePropertiesWizardPage extends WizardPage
 
   /**
    * This function returns true, if the drawn border is enabled.
-   *
+   * 
    * @return True, if the drawn border is enabled.
    */
   public boolean hasBorder( )
@@ -329,7 +328,7 @@ public class ImagePropertiesWizardPage extends WizardPage
 
   /**
    * This function returns the format of the image.
-   *
+   * 
    * @return The format of the image or null.
    */
   public String getFormat( )

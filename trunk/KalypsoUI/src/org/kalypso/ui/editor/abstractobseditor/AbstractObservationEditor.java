@@ -54,7 +54,6 @@ import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.kalypso.contribs.eclipse.core.resources.ResourceUtilities;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.ObservationTokenHelper;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewUtils;
@@ -69,10 +68,11 @@ import org.kalypso.template.obsdiagview.Obsdiagview;
 import org.kalypso.template.obstableview.Obstableview;
 import org.kalypso.ui.editor.AbstractWorkbenchPart;
 import org.kalypso.ui.editor.abstractobseditor.commands.DropZmlCommand;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * AbstractObsEditor
- *
+ * 
  * @author schlienger
  */
 public abstract class AbstractObservationEditor extends AbstractWorkbenchPart implements IEditorPart, IObsViewEventListener
@@ -121,7 +121,7 @@ public abstract class AbstractObservationEditor extends AbstractWorkbenchPart im
   {
     if( input instanceof IFileEditorInput )
     {
-      final IFile file = ((IFileEditorInput) input).getFile();
+      final IFile file = ((IFileEditorInput)input).getFile();
       final String ext = file.getFileExtension();
       if( "zml".equalsIgnoreCase( ext ) || "zmlz".equalsIgnoreCase( "zmlz" ) )//$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       {
@@ -170,7 +170,7 @@ public abstract class AbstractObservationEditor extends AbstractWorkbenchPart im
 
       if( storage instanceof TemplateStorage )
       {
-        final TemplateStorage ts = (TemplateStorage) storage;
+        final TemplateStorage ts = (TemplateStorage)storage;
 
         loadObservation( ts.getContext(), ts.getHref() );
       }
@@ -183,14 +183,14 @@ public abstract class AbstractObservationEditor extends AbstractWorkbenchPart im
           final Obsdiagview baseTemplate = DiagViewUtils.loadDiagramTemplateXML( storage.getContents() );
 
           final String strUrl = ResourceUtilities.createURLSpec( input.getStorage().getFullPath() );
-          status = DiagViewUtils.applyXMLTemplate( (DiagView) getView(), baseTemplate, new URL( strUrl ), sync, null );
+          status = DiagViewUtils.applyXMLTemplate( (DiagView)getView(), baseTemplate, new URL( strUrl ), sync, null );
         }
         else if( view instanceof TableView )
         {
           final Obstableview baseTemplate = TableViewUtils.loadTableTemplateXML( storage.getContents() );
 
           final String strUrl = ResourceUtilities.createURLSpec( input.getStorage().getFullPath() );
-          status = TableViewUtils.applyXMLTemplate( (TableView) getView(), baseTemplate, new URL( strUrl ), sync, null );
+          status = TableViewUtils.applyXMLTemplate( (TableView)getView(), baseTemplate, new URL( strUrl ), sync, null );
         }
         else
           throw new IllegalArgumentException( Messages.getString( "org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor.1" ) ); //$NON-NLS-1$

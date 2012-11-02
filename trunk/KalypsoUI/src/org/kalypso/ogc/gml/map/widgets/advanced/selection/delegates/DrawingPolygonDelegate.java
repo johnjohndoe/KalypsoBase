@@ -49,7 +49,6 @@ import java.util.List;
 
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
 import org.kalypso.ogc.gml.map.widgets.advanced.selection.IAdvancedSelectionWidget;
@@ -60,6 +59,7 @@ import org.kalypso.ogc.gml.map.widgets.advanced.utils.WidgetCursors;
 import org.kalypso.ogc.gml.map.widgets.builders.IGeometryBuilderExtensionProvider;
 import org.kalypso.ogc.gml.map.widgets.builders.PolygonGeometryBuilder;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -132,7 +132,7 @@ public class DrawingPolygonDelegate extends AbstractAdvancedSelectionWidgetDeleg
         final Geometry jtsBase = JTSAdapter.export( gmo );
         final List<Feature> myFeatures = new ArrayList<>();
 
-        final Feature[] features = getDataProvider().query( (GM_Polygon) gmo, getEditMode() );
+        final Feature[] features = getDataProvider().query( (GM_Polygon)gmo, getEditMode() );
 
         for( final Feature feature : features )
         {
@@ -184,7 +184,7 @@ public class DrawingPolygonDelegate extends AbstractAdvancedSelectionWidgetDeleg
 
         final Geometry jtsBase = JTSAdapter.export( gmo );
 
-        final Feature[] features = getDataProvider().query( (GM_Polygon) gmo, getEditMode() );
+        final Feature[] features = getDataProvider().query( (GM_Polygon)gmo, getEditMode() );
 
         final List<Feature> highlight = new ArrayList<>();
 

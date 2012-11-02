@@ -69,8 +69,7 @@ public final class ChartFactory
   /**
    * Create a ChartPanel over the given ObservationChart. The created panel has no popup menu.
    * <p>
-   * Takes care of registering the ChartPanel within the ObservationChart so that the chart can refer to it once print
-   * is called for instance.
+   * Takes care of registering the ChartPanel within the ObservationChart so that the chart can refer to it once print is called for instance.
    */
   public static ChartPanel createChartPanel( final ObservationChart obsChart )
   {

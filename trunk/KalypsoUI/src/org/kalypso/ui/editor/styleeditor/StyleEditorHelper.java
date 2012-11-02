@@ -57,7 +57,7 @@ public class StyleEditorHelper
       final GMLXPath path = propName.getPath();
       final Object object = GMLXPathUtilities.query( path, ft );
       if( object instanceof IPropertyType )
-        return (IPropertyType) object;
+        return (IPropertyType)object;
     }
     catch( final GMLXPathException e )
     {

@@ -64,8 +64,7 @@ public class FillPreview extends Preview<Fill>
   }
 
   /**
-   * @see org.kalypso.ui.editor.styleeditor.preview.Preview#doPaintData(java.awt.Graphics2D, int, int,
-   *      org.kalypsodeegree.model.geometry.GM_Object)
+   * @see org.kalypso.ui.editor.styleeditor.preview.Preview#doPaintData(java.awt.Graphics2D, int, int, org.kalypsodeegree.model.geometry.GM_Object)
    */
   @Override
   protected void doPaintData( final Graphics2D g2d, final int width, final int height, final GM_Object geom )

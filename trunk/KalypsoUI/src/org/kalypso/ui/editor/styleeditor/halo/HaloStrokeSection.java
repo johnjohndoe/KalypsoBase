@@ -70,8 +70,7 @@ class HaloStrokeSection extends AbstractStyleElementSection<Halo, Stroke, Stroke
   @Override
   protected StyleElementAction<Halo>[] createActions( final IStyleInput<Halo> input )
   {
-    @SuppressWarnings("unchecked")
-    final StyleElementAction<Halo>[] actions = new StyleElementAction[2];
+    @SuppressWarnings( "unchecked" ) final StyleElementAction<Halo>[] actions = new StyleElementAction[2];
     actions[0] = new HaloStrokeAddAction( input );
     actions[1] = new HaloStrokeRemoveAction( input );
     return actions;

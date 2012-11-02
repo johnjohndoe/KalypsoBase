@@ -79,14 +79,14 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.kalypso.contribs.eclipse.swt.awt.ImageConverter;
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
 import org.kalypsodeegree.graphics.sld.Stroke;
 import org.kalypsodeegree_impl.graphics.sld.awt.StrokePainter;
 
 /**
  * Composite, which gives the most important editing tools for a given stroke.
- *
+ * 
  * @author Thomas Jung
  * @deprecated Use {@link StrokeComposite} instead.
  */
@@ -171,7 +171,7 @@ public class StrokeEditorComposite extends Composite
 
     m_previewComp.addControlListener( new ControlAdapter()
     {
-      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
+      @SuppressWarnings( "synthetic-access" )//$NON-NLS-1$
       @Override
       public void controlResized( final ControlEvent e )
       {
@@ -218,13 +218,13 @@ public class StrokeEditorComposite extends Composite
     lineTypeCombo.addSelectionChangedListener( new ISelectionChangedListener()
     {
       @Override
-      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
+      @SuppressWarnings( "synthetic-access" )//$NON-NLS-1$
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+        final IStructuredSelection selection = (IStructuredSelection)event.getSelection();
         final Object element = selection.getFirstElement();
 
-        final String string = (String) element;
+        final String string = (String)element;
 
         if( string == Messages.getString( "org.kalypso.ui.editor.sldEditor.StrokeEditorComposite.8" ) ) //$NON-NLS-1$
         {
@@ -277,7 +277,7 @@ public class StrokeEditorComposite extends Composite
 
     widthSpinner.addSelectionListener( new SelectionAdapter()
     {
-      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
+      @SuppressWarnings( "synthetic-access" )//$NON-NLS-1$
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
@@ -303,7 +303,7 @@ public class StrokeEditorComposite extends Composite
 
     opacitySpinner.addSelectionListener( new SelectionAdapter()
     {
-      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
+      @SuppressWarnings( "synthetic-access" )//$NON-NLS-1$
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
@@ -334,7 +334,7 @@ public class StrokeEditorComposite extends Composite
     /* mouse listeners */
     m_colorLabel.addMouseListener( new MouseAdapter()
     {
-      @SuppressWarnings("synthetic-access")//$NON-NLS-1$
+      @SuppressWarnings( "synthetic-access" )//$NON-NLS-1$
       @Override
       public void mouseDown( final MouseEvent e )
       {
@@ -373,7 +373,7 @@ public class StrokeEditorComposite extends Composite
     } );
   }
 
-  @SuppressWarnings("static-access")//$NON-NLS-1$
+  @SuppressWarnings( "static-access" )//$NON-NLS-1$
   private void updatePreview( )
   {
     final Point point = m_previewComp.getSize();

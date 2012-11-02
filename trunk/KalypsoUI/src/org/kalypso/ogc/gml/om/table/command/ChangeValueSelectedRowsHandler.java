@@ -44,8 +44,8 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.TableViewer;
-import org.kalypso.i18n.Messages;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * Change Values in selected rows (one Component only)

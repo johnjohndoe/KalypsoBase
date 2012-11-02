@@ -82,7 +82,7 @@ import org.kalypso.util.command.JobExclusiveCommandTarget;
 
 /**
  * OutlinePage für das MapView-Template
- *
+ * 
  * @author Gernot Belger
  */
 public class GisMapOutlinePage extends Page implements IContentOutlinePage, ICommandTarget
@@ -374,7 +374,7 @@ public class GisMapOutlinePage extends Page implements IContentOutlinePage, ICom
 
   /**
    * This function searches the content of the viewer for a node, which contains the given theme.
-   *
+   * 
    * @param theme
    *          The theme.
    * @return The node or null.

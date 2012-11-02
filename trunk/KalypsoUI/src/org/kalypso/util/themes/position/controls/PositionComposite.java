@@ -57,13 +57,13 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ui.forms.widgets.Form;
 import org.kalypso.contribs.eclipse.ui.forms.MessageUtilitites;
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypso.util.themes.position.PositionUtilities;
 import org.kalypso.util.themes.position.listener.IPositionChangedListener;
 
 /**
  * This composite edits the position.
- *
+ * 
  * @author Holger Albert
  */
 public class PositionComposite extends Composite
@@ -95,7 +95,7 @@ public class PositionComposite extends Composite
 
   /**
    * The constructor.
-   *
+   * 
    * @param parent
    *          A widget which will be the parent of the new instance (cannot be null).
    * @param style
@@ -180,7 +180,7 @@ public class PositionComposite extends Composite
 
   /**
    * This function creates the content composite.
-   *
+   * 
    * @param parent
    *          The parent composite.
    * @return The content composite.
@@ -200,7 +200,7 @@ public class PositionComposite extends Composite
 
   /**
    * This function creates the content internal composite.
-   *
+   * 
    * @param parent
    *          The parent composite.
    * @return The content internal composite.
@@ -224,7 +224,7 @@ public class PositionComposite extends Composite
 
   /**
    * This function creates the horizontal group.
-   *
+   * 
    * @param parent
    *          The parent composite.
    * @return The horizontal group.
@@ -234,12 +234,12 @@ public class PositionComposite extends Composite
     /* Create a group. */
     final Group horizontalGroup = new Group( parent, SWT.NONE );
     horizontalGroup.setLayout( new GridLayout( 1, false ) );
-    horizontalGroup.setText( Messages.getString("PositionComposite_0") ); //$NON-NLS-1$
+    horizontalGroup.setText( Messages.getString( "PositionComposite_0" ) ); //$NON-NLS-1$
 
     /* Create a button. */
     final Button leftButton = new Button( horizontalGroup, SWT.RADIO );
     leftButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    leftButton.setText( Messages.getString("PositionComposite_1") ); //$NON-NLS-1$
+    leftButton.setText( Messages.getString( "PositionComposite_1" ) ); //$NON-NLS-1$
     if( (m_horizontal & PositionUtilities.LEFT) != 0 )
       leftButton.setSelection( true );
     leftButton.addSelectionListener( new SelectionAdapter()
@@ -258,7 +258,7 @@ public class PositionComposite extends Composite
     /* Create a button. */
     final Button hCenterButton = new Button( horizontalGroup, SWT.RADIO );
     hCenterButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    hCenterButton.setText( Messages.getString("PositionComposite_2") ); //$NON-NLS-1$
+    hCenterButton.setText( Messages.getString( "PositionComposite_2" ) ); //$NON-NLS-1$
     if( (m_horizontal & PositionUtilities.H_CENTER) != 0 )
       hCenterButton.setSelection( true );
     hCenterButton.addSelectionListener( new SelectionAdapter()
@@ -277,7 +277,7 @@ public class PositionComposite extends Composite
     /* Create a button. */
     final Button rightButton = new Button( horizontalGroup, SWT.RADIO );
     rightButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    rightButton.setText( Messages.getString("PositionComposite_3") ); //$NON-NLS-1$
+    rightButton.setText( Messages.getString( "PositionComposite_3" ) ); //$NON-NLS-1$
     if( (m_horizontal & PositionUtilities.RIGHT) != 0 )
       rightButton.setSelection( true );
     rightButton.addSelectionListener( new SelectionAdapter()
@@ -298,7 +298,7 @@ public class PositionComposite extends Composite
 
   /**
    * This function creates the vertical group.
-   *
+   * 
    * @param parent
    *          The parent composite.
    * @return The vertical group.
@@ -308,12 +308,12 @@ public class PositionComposite extends Composite
     /* Create a group. */
     final Group verticalGroup = new Group( parent, SWT.NONE );
     verticalGroup.setLayout( new GridLayout( 1, false ) );
-    verticalGroup.setText( Messages.getString("PositionComposite_4") ); //$NON-NLS-1$
+    verticalGroup.setText( Messages.getString( "PositionComposite_4" ) ); //$NON-NLS-1$
 
     /* Create a button. */
     final Button topButton = new Button( verticalGroup, SWT.RADIO );
     topButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    topButton.setText( Messages.getString("PositionComposite_5") ); //$NON-NLS-1$
+    topButton.setText( Messages.getString( "PositionComposite_5" ) ); //$NON-NLS-1$
     if( (m_vertical & PositionUtilities.TOP) != 0 )
       topButton.setSelection( true );
     topButton.addSelectionListener( new SelectionAdapter()
@@ -332,7 +332,7 @@ public class PositionComposite extends Composite
     /* Create a button. */
     final Button vCenterButton = new Button( verticalGroup, SWT.RADIO );
     vCenterButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    vCenterButton.setText( Messages.getString("PositionComposite_6") ); //$NON-NLS-1$
+    vCenterButton.setText( Messages.getString( "PositionComposite_6" ) ); //$NON-NLS-1$
     if( (m_vertical & PositionUtilities.V_CENTER) != 0 )
       vCenterButton.setSelection( true );
     vCenterButton.addSelectionListener( new SelectionAdapter()
@@ -351,7 +351,7 @@ public class PositionComposite extends Composite
     /* Create a button. */
     final Button bottomButton = new Button( verticalGroup, SWT.RADIO );
     bottomButton.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
-    bottomButton.setText( Messages.getString("PositionComposite_7") ); //$NON-NLS-1$
+    bottomButton.setText( Messages.getString( "PositionComposite_7" ) ); //$NON-NLS-1$
     if( (m_vertical & PositionUtilities.BOTTOM) != 0 )
       bottomButton.setSelection( true );
     bottomButton.addSelectionListener( new SelectionAdapter()
@@ -372,7 +372,7 @@ public class PositionComposite extends Composite
 
   /**
    * This function updates the composite.
-   *
+   * 
    * @param status
    *          A status, containing a message, which should be displayed in the upper area of the view. May be null.
    */
@@ -403,7 +403,7 @@ public class PositionComposite extends Composite
 
   /**
    * This function fires a position changed event.
-   *
+   * 
    * @param horizontal
    *          The horzizontal position.
    * @param vertical
@@ -417,7 +417,7 @@ public class PositionComposite extends Composite
 
   /**
    * This function adds a position changed listener.
-   *
+   * 
    * @param listener
    *          The position changed listener to add.
    */
@@ -429,7 +429,7 @@ public class PositionComposite extends Composite
 
   /**
    * This function removes a position changed listener.
-   *
+   * 
    * @param listener
    *          The position changed listener to remove.
    */
@@ -441,7 +441,7 @@ public class PositionComposite extends Composite
 
   /**
    * This function returns the horizontal position.
-   *
+   * 
    * @return The horizontal position.
    */
   public int getHorizontal( )
@@ -451,7 +451,7 @@ public class PositionComposite extends Composite
 
   /**
    * This function returns the vertical position.
-   *
+   * 
    * @return The vertical position.
    */
   public int getVertical( )

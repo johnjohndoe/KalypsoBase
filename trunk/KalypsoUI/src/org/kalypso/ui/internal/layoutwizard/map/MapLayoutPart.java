@@ -68,7 +68,6 @@ import org.kalypso.contribs.eclipse.core.runtime.PluginUtilities;
 import org.kalypso.contribs.eclipse.jface.action.ContributionUtils;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.core.layoutwizard.ILayoutPageContext;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.GisTemplateFeatureTheme;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.GisTemplateMapModell;
@@ -85,6 +84,7 @@ import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.template.gismapview.Gismapview;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.mapeditor.MapPartHelper;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypso.ui.layoutwizard.AbstractWizardLayoutPart;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
@@ -112,8 +112,7 @@ public class MapLayoutPart extends AbstractWizardLayoutPart implements IMapPanel
   private static final String PROP_MAPTEMPLATE = "mapTemplate"; //$NON-NLS-1$
 
   /**
-   * Argument: Full class name of the map-widget to use. Default is:
-   * {@link org.kalypso.ogc.gml.map.widgets.SelectSingleFeatureWidget}. If empty, no widget will be selected initially.
+   * Argument: Full class name of the map-widget to use. Default is: {@link org.kalypso.ogc.gml.map.widgets.SelectSingleFeatureWidget}. If empty, no widget will be selected initially.
    */
   private static final String PROP_MAP_WIDGETCLASS = "mapWidgetClass"; //$NON-NLS-1$
 
@@ -188,11 +187,11 @@ public class MapLayoutPart extends AbstractWizardLayoutPart implements IMapPanel
       final Arguments arguments = context.getArguments();
       final String mapFileName = arguments.getProperty( PROP_MAPTEMPLATE );
       if( StringUtils.isBlank( mapFileName ) )
-        throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), String.format( Messages.getString("MapLayoutPart_8"), PROP_MAPTEMPLATE ) ) ); //$NON-NLS-1$
+        throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), String.format( Messages.getString( "MapLayoutPart_8" ), PROP_MAPTEMPLATE ) ) ); //$NON-NLS-1$
 
       final URL mapURL = context.resolveURI( mapFileName );
       if( mapURL == null )
-        throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString("MapLayoutPart_9") + mapFileName ) ); //$NON-NLS-1$
+        throw new CoreException( new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString( "MapLayoutPart_9" ) + mapFileName ) ); //$NON-NLS-1$
 
       final Gismapview gisview = GisTemplateHelper.loadGisMapView( mapURL );
       final String crs = KalypsoDeegreePlugin.getDefault().getCoordinateSystem();
@@ -232,7 +231,7 @@ public class MapLayoutPart extends AbstractWizardLayoutPart implements IMapPanel
 
   private void throwMapLoadException( final Exception e ) throws CoreException
   {
-    final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString("MapLayoutPart_10"), e ); //$NON-NLS-1$
+    final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString( "MapLayoutPart_10" ), e ); //$NON-NLS-1$
     throw new CoreException( status );
   }
 
@@ -344,7 +343,7 @@ public class MapLayoutPart extends AbstractWizardLayoutPart implements IMapPanel
       final IKalypsoTheme activeTheme = m_mapModell.getActiveTheme();
       if( activeTheme instanceof GisTemplateFeatureTheme )
       {
-        final GisTemplateFeatureTheme gtft = (GisTemplateFeatureTheme) activeTheme;
+        final GisTemplateFeatureTheme gtft = (GisTemplateFeatureTheme)activeTheme;
         if( gtft.getStatus().isOK() )
           m_selectionRestorer = new RestoreSelectionHelper( gtft.getLayerKey(), m_selectionManager );
       }

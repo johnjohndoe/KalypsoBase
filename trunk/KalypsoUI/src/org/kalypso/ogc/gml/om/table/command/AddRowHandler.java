@@ -57,10 +57,10 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.progress.UIJob;
 import org.kalypso.contribs.eclipse.core.commands.HandlerUtils;
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.i18n.Messages;
 import org.kalypso.observation.result.IInterpolationHandler;
 import org.kalypso.observation.result.IRecord;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author kimwerner
@@ -78,7 +78,7 @@ public class AddRowHandler extends AbstractHandler
     if( viewer == null || tupleResult == null )
       throw new ExecutionException( Messages.getString( "org.kalypso.ogc.gml.om.table.command.AddRowHandler.0" ) ); //$NON-NLS-1$
 
-    final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+    final IStructuredSelection selection = (IStructuredSelection)viewer.getSelection();
     if( selection == null )
       throw new ExecutionException( Messages.getString( "org.kalypso.ogc.gml.om.table.command.AddRowHandler.1" ) ); //$NON-NLS-1$
 
@@ -133,8 +133,8 @@ public class AddRowHandler extends AbstractHandler
 
     if( value1 instanceof Number && value2 instanceof Number )
     {
-      final double d1 = ((Number) value1).doubleValue();
-      final double d2 = ((Number) value2).doubleValue();
+      final double d1 = ((Number)value1).doubleValue();
+      final double d2 = ((Number)value2).doubleValue();
       final double min = Math.min( d1, d2 );
       final double max = Math.max( d1, d2 );
 
@@ -158,16 +158,16 @@ public class AddRowHandler extends AbstractHandler
       {
         final double newValue = NumberUtils.parseQuietDouble( newText );
         if( Double.isNaN( newValue ) )
-          return Messages.getString("AddRowHandler.1"); //$NON-NLS-1$
+          return Messages.getString( "AddRowHandler.1" ); //$NON-NLS-1$
 
         if( newValue <= min || newValue >= max )
-          return String.format( Messages.getString("AddRowHandler.2"), min, max ); //$NON-NLS-1$
+          return String.format( Messages.getString( "AddRowHandler.2" ), min, max ); //$NON-NLS-1$
 
         return null;
       }
     };
 
-    final InputDialog inputDialog = new InputDialog( shell, title, Messages.getString("AddRowHandler.3"), initialValue, validator ); //$NON-NLS-1$
+    final InputDialog inputDialog = new InputDialog( shell, title, Messages.getString( "AddRowHandler.3" ), initialValue, validator ); //$NON-NLS-1$
     if( inputDialog.open() == Window.CANCEL )
       return Double.NaN;
 

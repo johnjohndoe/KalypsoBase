@@ -71,8 +71,7 @@ public class TableControlMaker implements IControlMaker
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.maker.IControlMaker#addControls(java.util.List,
-   *      org.kalypso.template.featureview.LayoutType, org.kalypso.gmlschema.property.IPropertyType)
+   * @see org.kalypso.ogc.gml.featureview.maker.IControlMaker#addControls(java.util.List, org.kalypso.template.featureview.LayoutType, org.kalypso.gmlschema.property.IPropertyType)
    */
   @Override
   public boolean addControls( final List<JAXBElement< ? extends ControlType>> controlList, final LayoutType parentLayout, final IFeatureType ft, final IPropertyType ftp, final Feature feature ) throws AbortCreationException
@@ -88,7 +87,7 @@ public class TableControlMaker implements IControlMaker
 
     final QName propertyName = ftp.getQName();
 
-    final GridLayout layout = (GridLayout) parentLayout;
+    final GridLayout layout = (GridLayout)parentLayout;
 
     final Table table = TemplateUtilities.OF_FEATUREVIEW.createTable();
     table.setStyle( "SWT.BORDER" ); //$NON-NLS-1$

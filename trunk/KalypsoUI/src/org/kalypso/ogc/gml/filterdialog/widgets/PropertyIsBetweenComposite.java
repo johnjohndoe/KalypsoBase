@@ -61,11 +61,11 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.filterdialog.dialog.IErrorMessageReciever;
 import org.kalypso.ogc.gml.filterdialog.model.FeatureTypeContentProvider;
 import org.kalypso.ogc.gml.filterdialog.model.FeatureTypeLabelProvider;
 import org.kalypso.ogc.gml.filterdialog.model.NonGeometryPropertyFilter;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.filterencoding.Expression;
 import org.kalypsodeegree_impl.filterencoding.BoundaryExpression;
 import org.kalypsodeegree_impl.filterencoding.Literal;
@@ -140,10 +140,10 @@ class PropertyIsBetweenComposite extends AbstractFilterComposite
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        final Object firstElement = ((IStructuredSelection) event.getSelection()).getFirstElement();
+        final Object firstElement = ((IStructuredSelection)event.getSelection()).getFirstElement();
         if( firstElement instanceof IValuePropertyType )
         {
-          final QName propName = ((IValuePropertyType) firstElement).getQName();
+          final QName propName = ((IValuePropertyType)firstElement).getQName();
           m_operation.setPropertyName( new PropertyName( propName ) );
         }
       }
@@ -160,9 +160,9 @@ class PropertyIsBetweenComposite extends AbstractFilterComposite
     m_lowerBText.setLayoutData( data3 );
     final Expression lB = m_operation.getLowerBoundary();
     if( lB instanceof BoundaryExpression )
-      m_lowerBText.setText( ((BoundaryExpression) lB).getValue() );
+      m_lowerBText.setText( ((BoundaryExpression)lB).getValue() );
     else if( lB instanceof Literal )
-      m_lowerBText.setText( ((Literal) lB).getValue() );
+      m_lowerBText.setText( ((Literal)lB).getValue() );
     m_lowerBText.addModifyListener( new ModifyListener()
     {
       @Override
@@ -207,9 +207,9 @@ class PropertyIsBetweenComposite extends AbstractFilterComposite
     m_upperBText.setLayoutData( data2 );
     final Expression uB = m_operation.getUpperBoundary();
     if( uB instanceof BoundaryExpression )
-      m_upperBText.setText( ((BoundaryExpression) uB).getValue() );
+      m_upperBText.setText( ((BoundaryExpression)uB).getValue() );
     else if( uB instanceof Literal )
-      m_upperBText.setText( ((Literal) uB).getValue() );
+      m_upperBText.setText( ((Literal)uB).getValue() );
     m_upperBText.addModifyListener( new ModifyListener()
     {
 
@@ -257,7 +257,7 @@ class PropertyIsBetweenComposite extends AbstractFilterComposite
       final Expression lb = m_operation.getLowerBoundary();
       if( lb instanceof BoundaryExpression )
       {
-        ((BoundaryExpression) lb).setValue( String.valueOf( value ) );
+        ((BoundaryExpression)lb).setValue( String.valueOf( value ) );
         m_lowerBTextModified = false;
         setErrorMessage( null );
       }
@@ -278,7 +278,7 @@ class PropertyIsBetweenComposite extends AbstractFilterComposite
       final Expression ub = m_operation.getUpperBoundary();
       if( ub instanceof BoundaryExpression )
       {
-        ((BoundaryExpression) ub).setValue( String.valueOf( value ) );
+        ((BoundaryExpression)ub).setValue( String.valueOf( value ) );
         m_upperBtextModified = false;
         setErrorMessage( null );
       }

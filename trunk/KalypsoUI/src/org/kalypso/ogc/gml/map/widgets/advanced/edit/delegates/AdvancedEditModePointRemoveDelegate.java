@@ -52,7 +52,6 @@ import java.util.Set;
 import org.apache.commons.lang3.ArrayUtils;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.i18n.Messages;
 import org.kalypso.jts.SnapUtilities.SNAP_TYPE;
 import org.kalypso.ogc.gml.command.FeatureChange;
 import org.kalypso.ogc.gml.map.utilities.MapUtilities;
@@ -64,6 +63,7 @@ import org.kalypso.ogc.gml.map.widgets.advanced.edit.IAdvancedEditWidgetGeometry
 import org.kalypso.ogc.gml.map.widgets.advanced.edit.IAdvancedEditWidgetResult;
 import org.kalypso.ogc.gml.map.widgets.advanced.utils.GeometryPainter;
 import org.kalypso.ogc.gml.map.widgets.advanced.utils.IPointHighLighter;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.geometry.GM_Exception;
 import org.kalypsodeegree.model.geometry.GM_Point;
@@ -129,7 +129,7 @@ public class AdvancedEditModePointRemoveDelegate implements IAdvancedEditWidgetD
     try
     {
       // highligth existing points
-      final Point jtsPoint = (Point) JTSAdapter.export( gmp );
+      final Point jtsPoint = (Point)JTSAdapter.export( gmp );
 
       final Feature[] features = m_provider.query( gmp, getRange() );
       if( ArrayUtils.isEmpty( features ) )
@@ -178,7 +178,7 @@ public class AdvancedEditModePointRemoveDelegate implements IAdvancedEditWidgetD
       final Geometry geometry = entry.getKey();
       if( geometry instanceof Polygon )
       {
-        final Polygon polygon = (Polygon) geometry;
+        final Polygon polygon = (Polygon)geometry;
         final LineString ring = polygon.getExteriorRing();
         if( ring.contains( vertexPoint.getGeometry() ) )
         {
@@ -199,7 +199,7 @@ public class AdvancedEditModePointRemoveDelegate implements IAdvancedEditWidgetD
     if( !(geometry instanceof Polygon) )
       throw new UnsupportedOperationException();
 
-    final Polygon polygon = (Polygon) geometry;
+    final Polygon polygon = (Polygon)geometry;
     final LineString ring = polygon.getExteriorRing();
     final Point snapped = MapUtilities.snap( ring, underlying.getCurrentPoint(), SNAP_TYPE.SNAP_TO_POINT, getRange() );
 
@@ -235,8 +235,8 @@ public class AdvancedEditModePointRemoveDelegate implements IAdvancedEditWidgetD
       {
         try
         {
-          final Polygon polygon = (Polygon) geometry;
-          final Point pDelete = (Point) result.getGeometry();
+          final Polygon polygon = (Polygon)geometry;
+          final Point pDelete = (Point)result.getGeometry();
           final Coordinate delete = pDelete.getCoordinate();
 
           final List<Coordinate> myCoordinates = new ArrayList<>();

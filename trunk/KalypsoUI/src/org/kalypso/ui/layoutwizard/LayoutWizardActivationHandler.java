@@ -60,11 +60,11 @@ import org.kalypso.contribs.eclipse.jface.wizard.view.WizardView;
 import org.kalypso.core.layoutwizard.ILayoutPageContext;
 import org.kalypso.core.layoutwizard.ILayoutWizardPage;
 import org.kalypso.core.status.StatusDialog;
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * Handles activation / deactivation of ILayoutWizardPage when page changes in wizard.
- *
+ * 
  * @author Gernot Belger
  */
 public class LayoutWizardActivationHandler
@@ -144,20 +144,20 @@ public class LayoutWizardActivationHandler
 
     // TODO: not good: will answer to any command execution
     // We should restrict this somehow to commands from the map toolbar
-    final ICommandService cmdService = (ICommandService) wizardContext.getService( ICommandService.class );
+    final ICommandService cmdService = (ICommandService)wizardContext.getService( ICommandService.class );
     if( cmdService != null )
       cmdService.addExecutionListener( m_cmdExecutionListener );
 
     final IWizardContainer container = newWizard.getContainer();
     if( container instanceof WizardView )
     {
-      final WizardView view = (WizardView) container;
+      final WizardView view = (WizardView)container;
       view.addPageChangingListener( m_pageChangingListener );
       view.addPageChangedListener( m_pageChangedListener );
     }
     else if( container instanceof WizardDialog )
     {
-      final WizardDialog dialog = (WizardDialog) container;
+      final WizardDialog dialog = (WizardDialog)container;
       dialog.addPageChangingListener( m_pageChangingListener );
       dialog.addPageChangedListener( m_pageChangedListener );
     }
@@ -168,20 +168,20 @@ public class LayoutWizardActivationHandler
     if( oldWizard == null )
       return;
 
-    final ICommandService cmdService = (ICommandService) m_page.getWizardContext().getService( ICommandService.class );
+    final ICommandService cmdService = (ICommandService)m_page.getWizardContext().getService( ICommandService.class );
     if( cmdService != null )
       cmdService.removeExecutionListener( m_cmdExecutionListener );
 
     final IWizardContainer container = oldWizard.getContainer();
     if( container instanceof WizardView )
     {
-      final WizardView view = (WizardView) container;
+      final WizardView view = (WizardView)container;
       view.removePageChangingListener( m_pageChangingListener );
       view.removePageChangedListener( m_pageChangedListener );
     }
     else if( container instanceof WizardDialog )
     {
-      final WizardDialog dialog = (WizardDialog) container;
+      final WizardDialog dialog = (WizardDialog)container;
       dialog.removePageChangingListener( m_pageChangingListener );
       dialog.removePageChangedListener( m_pageChangedListener );
     }
@@ -197,7 +197,7 @@ public class LayoutWizardActivationHandler
     if( m_page == currentPage )
     {
       final IStatus status = StatusUtilities.statusFromThrowable( exception );
-      StatusDialog.open( m_page.getShell(), status, Messages.getString("LayoutWizardActivationHandler_0") ); //$NON-NLS-1$
+      StatusDialog.open( m_page.getShell(), status, Messages.getString( "LayoutWizardActivationHandler_0" ) ); //$NON-NLS-1$
     }
   }
 
@@ -205,7 +205,7 @@ public class LayoutWizardActivationHandler
    * Will be called if this page is about to be closed (i.e another page is selected).<br>
    * Default behaviour is to unhook any registered context-activations.<br>
    * Client who want to override should call the super implementation, if they return <code>true</code>.
-   *
+   * 
    * @return <code>false</code>, if the page shall not be exited now.
    */
   protected boolean handlePageChanging( )

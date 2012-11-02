@@ -84,7 +84,6 @@ import org.kalypso.contribs.java.lang.NumberUtils;
 import org.kalypso.contribs.java.lang.ProgressCancelable;
 import org.kalypso.contribs.java.net.UrlResolver;
 import org.kalypso.contribs.java.util.DoubleComparator;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IAxisRange;
@@ -105,6 +104,7 @@ import org.kalypso.template.obsdiagview.Obsdiagview;
 import org.kalypso.template.obsdiagview.TypeCurve;
 import org.kalypso.template.obsdiagview.TypeObservation;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * GrafikLauncher
@@ -200,12 +200,12 @@ public class GrafikLauncher
    */
   public static IStatus startGrafikODT( final String fileName, final Obsdiagview odt, final IFolder dest, final IProgressMonitor monitor ) throws SensorException, CoreException
   {
-    final String taskName = Messages.getString("GrafikLauncher.0"); //$NON-NLS-1$
+    final String taskName = Messages.getString( "GrafikLauncher.0" ); //$NON-NLS-1$
 
     monitor.beginTask( taskName, 100 );
     monitor.setTaskName( taskName );
 
-    monitor.subTask( Messages.getString("GrafikLauncher.1") ); //$NON-NLS-1$
+    monitor.subTask( Messages.getString( "GrafikLauncher.1" ) ); //$NON-NLS-1$
 
     try
     {
@@ -278,7 +278,7 @@ public class GrafikLauncher
       helper.start();
 
       if( monitor.isCanceled() )
-        return new Status( IStatus.CANCEL, KalypsoGisPlugin.PLUGIN_ID, Messages.getString("GrafikLauncher.3") ); //$NON-NLS-1$
+        return new Status( IStatus.CANCEL, KalypsoGisPlugin.PLUGIN_ID, Messages.getString( "GrafikLauncher.3" ) ); //$NON-NLS-1$
 
       return syncBack( syncs );
     }

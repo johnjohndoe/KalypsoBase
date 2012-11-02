@@ -41,7 +41,7 @@ import org.kalypsodeegree_impl.filterencoding.PropertyIsBetweenOperation;
 
 /**
  * TODO: insert type comment here
- *
+ * 
  * @author kuepfer
  */
 public class CreateOGCBetweenOperationActionDelegate extends AbstractCreateOperationActionDelegate
@@ -56,16 +56,16 @@ public class CreateOGCBetweenOperationActionDelegate extends AbstractCreateOpera
         final Object firstElement = m_selection.getFirstElement();
         final PropertyIsBetweenOperation operation = new PropertyIsBetweenOperation( null, null, null );
         if( firstElement instanceof ComplexFilter )
-          ((ComplexFilter) firstElement).setOperation( operation );
+          ((ComplexFilter)firstElement).setOperation( operation );
         else if( firstElement instanceof LogicalOperation )
         {
-          List<Operation> arguments = ((LogicalOperation) firstElement).getArguments();
+          List<Operation> arguments = ((LogicalOperation)firstElement).getArguments();
           if( arguments == null )
             arguments = new ArrayList<>();
           arguments.add( operation );
-          ((LogicalOperation) firstElement).setArguments( arguments );
+          ((LogicalOperation)firstElement).setArguments( arguments );
         }
-        ((TreeSelection) m_selection).structureChanged();
+        ((TreeSelection)m_selection).structureChanged();
       }
     }
 

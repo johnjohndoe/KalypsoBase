@@ -38,7 +38,7 @@ import org.kalypsodeegree.model.geometry.GM_AbstractGeometry;
 
 /**
  * TODO: insert type comment here
- *
+ * 
  * @author kuepfer
  */
 public class BinarySpatialData extends AbstractSpatialData
@@ -48,8 +48,7 @@ public class BinarySpatialData extends AbstractSpatialData
   {
     final Object type = getGeomType();
 
-    if( type instanceof GM_Object || type instanceof GM_Aggregate || type instanceof GM_Boundary || type instanceof GM_Complex || type instanceof GM_AbstractGeometry
-        || type instanceof GM_Envelope )
+    if( type instanceof GM_Object || type instanceof GM_Aggregate || type instanceof GM_Boundary || type instanceof GM_Complex || type instanceof GM_AbstractGeometry || type instanceof GM_Envelope )
       return true;
 
     return false;

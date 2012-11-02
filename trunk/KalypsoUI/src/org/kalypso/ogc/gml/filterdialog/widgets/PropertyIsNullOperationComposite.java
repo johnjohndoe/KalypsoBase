@@ -108,10 +108,10 @@ class PropertyIsNullOperationComposite extends AbstractFilterComposite
       @Override
       public void selectionChanged( final SelectionChangedEvent event )
       {
-        final Object firstElement = ((IStructuredSelection) event.getSelection()).getFirstElement();
+        final Object firstElement = ((IStructuredSelection)event.getSelection()).getFirstElement();
         if( firstElement instanceof IValuePropertyType )
         {
-          final QName item = ((IValuePropertyType) firstElement).getQName();
+          final QName item = ((IValuePropertyType)firstElement).getQName();
           m_operation.setExpression( new PropertyName( item ) );
         }
 

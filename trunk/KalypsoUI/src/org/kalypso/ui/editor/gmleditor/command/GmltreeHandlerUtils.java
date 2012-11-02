@@ -66,7 +66,7 @@ public class GmltreeHandlerUtils
    */
   public static GmlTreeView getTreeViewer( final IEvaluationContext context )
   {
-    return (GmlTreeView) context.getVariable( GmltreeSourceProvider.ACTIVE_GMLTREE_NAME );
+    return (GmlTreeView)context.getVariable( GmltreeSourceProvider.ACTIVE_GMLTREE_NAME );
   }
 
   /**
@@ -78,7 +78,7 @@ public class GmltreeHandlerUtils
    */
   public static GmlTreeView getTreeViewerChecked( final ExecutionEvent event ) throws ExecutionException
   {
-    return getTreeViewerChecked( (IEvaluationContext) event.getApplicationContext() );
+    return getTreeViewerChecked( (IEvaluationContext)event.getApplicationContext() );
   }
 
   /**

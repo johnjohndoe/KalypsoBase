@@ -74,8 +74,7 @@ public class GisTableLayoutPartFeatureListener implements IFeaturesProviderListe
   }
 
   /**
-   * @see org.kalypso.ogc.gml.IFeaturesProviderListener#featuresChanged(org.kalypso.ogc.gml.IFeaturesProvider,
-   *      org.kalypsodeegree.model.feature.event.ModellEvent)
+   * @see org.kalypso.ogc.gml.IFeaturesProviderListener#featuresChanged(org.kalypso.ogc.gml.IFeaturesProvider, org.kalypsodeegree.model.feature.event.ModellEvent)
    */
   @Override
   public void featuresChanged( final IFeaturesProvider source, final ModellEvent modellEvent )

@@ -48,10 +48,10 @@ import java.util.logging.Logger;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.diagview.DiagramAxis;
 import org.kalypso.template.obsdiagview.TypeAxis;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author schlienger

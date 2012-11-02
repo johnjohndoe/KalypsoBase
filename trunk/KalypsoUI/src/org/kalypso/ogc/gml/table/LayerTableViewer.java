@@ -92,7 +92,6 @@ import org.kalypso.core.util.pool.ResourcePool;
 import org.kalypso.gmlschema.annotation.IAnnotation;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IPropertyType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.GisTemplateHelper;
 import org.kalypso.ogc.gml.IFeaturesProvider;
 import org.kalypso.ogc.gml.KalypsoFeatureThemeSelection;
@@ -116,6 +115,7 @@ import org.kalypso.template.gistableview.StyleType;
 import org.kalypso.template.types.LayerType;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.KalypsoUIExtensions;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.filterencoding.Filter;
 import org.kalypsodeegree.filterencoding.FilterConstructionException;
 import org.kalypsodeegree.model.feature.Feature;
@@ -175,7 +175,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
           final ISelection tableSelection = getSelection();
           if( tableSelection instanceof IFeatureSelection )
           {
-            final IFeatureSelection currentSelection = (IFeatureSelection) tableSelection;
+            final IFeatureSelection currentSelection = (IFeatureSelection)tableSelection;
             final Feature[] currentFeatures = FeatureSelectionHelper.getFeatures( currentSelection );
             if( !org.kalypso.contribs.java.util.Arrays.equalsUnordered( globalFeatures, currentFeatures ) )
               setSelection( selection );
@@ -195,14 +195,14 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     /**
      * Handles the case of user selecting the header area.
      * <p>
-     * If the column has not been selected previously, it will set the sorter of that column to be the current tasklist
-     * sorter. Repeated presses on the same column header will toggle sorting order (ascending/descending/original).
+     * If the column has not been selected previously, it will set the sorter of that column to be the current tasklist sorter. Repeated presses on the same column header will toggle sorting order
+     * (ascending/descending/original).
      */
     @Override
     public void widgetSelected( final SelectionEvent e )
     {
       // column selected - need to sort
-      final TableColumn tableColumn = (TableColumn) e.widget;
+      final TableColumn tableColumn = (TableColumn)e.widget;
 
       m_templateTarget.postCommand( new ChangeSortingCommand( LayerTableViewer.this, tableColumn ), null );
     }
@@ -216,7 +216,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
       if( m_isApplyTemplate == true )
         return;
 
-      final TableColumn tc = (TableColumn) e.widget;
+      final TableColumn tc = (TableColumn)e.widget;
 
       // kann nicht rückgüngig gemacht werden, sorgt aber dafür, dass der Editor dirty ist
       final int width = tc.getWidth();
@@ -287,7 +287,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
   @Override
   public ILayerTableInput getInput( )
   {
-    return (ILayerTableInput) super.getInput();
+    return (ILayerTableInput)super.getInput();
   }
 
   public void setInput( final Layer layer, final URL context )
@@ -499,7 +499,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
         final Object property = GMLXPathUtilities.query( propertyPath, featureType );
         if( property instanceof IPropertyType )
         {
-          final IAnnotation annotation = ((IPropertyType) property).getAnnotation();
+          final IAnnotation annotation = ((IPropertyType)property).getAnnotation();
           result[0] = annotation.getLabel();
           result[1] = annotation.getTooltip();
         }
@@ -565,7 +565,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     {
       final Object propertyType = GMLXPathUtilities.query( propPath, featureType );
       if( propertyType instanceof IPropertyType )
-        return (IPropertyType) propertyType;
+        return (IPropertyType)propertyType;
     }
     catch( final GMLXPathException e )
     {
@@ -697,7 +697,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
         final Map<String, String> params = column.getParameters();
         final IFeatureModifier modifier = KalypsoUIExtensions.createFeatureModifier( propPath, ftp, modifierId, params );
         if( modifier == null )
-          System.out.println( Messages.getString("LayerTableViewer_0") + modifierId ); //$NON-NLS-1$
+          System.out.println( Messages.getString( "LayerTableViewer_0" ) + modifierId ); //$NON-NLS-1$
         else
           return modifier;
       }
@@ -857,7 +857,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
       columns.add( columnType );
     }
 
-    final LayerTableSorter sorter = (LayerTableSorter) getSorter();
+    final LayerTableSorter sorter = (LayerTableSorter)getSorter();
     final IColumnDescriptor sortColumn = sorter.getColumn();
     if( sortColumn != null )
     {
@@ -876,7 +876,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
       {
         try
         {
-          final Filter ogcFilter = ((FeatureViewerFilter) filter).getFilter();
+          final Filter ogcFilter = ((FeatureViewerFilter)filter).getFilter();
           TemplateUtilities.setFilter( layer, ogcFilter );
         }
         catch( final Exception e )
@@ -897,7 +897,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
 
     final String featurePath = input.getFeaturePath();
 
-    final IPoolableObjectType key = ((PoolLayerTableInput) input).getPoolKey();
+    final IPoolableObjectType key = ((PoolLayerTableInput)input).getPoolKey();
 
     layer.setId( "id" ); //$NON-NLS-1$
     layer.setHref( key.getLocation() );
@@ -915,7 +915,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
       if( input instanceof PoolLayerTableInput )
       {
         final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
-        final IPoolableObjectType poolKey = ((PoolLayerTableInput) input).getPoolKey();
+        final IPoolableObjectType poolKey = ((PoolLayerTableInput)input).getPoolKey();
         final KeyInfo info = pool.getInfoForKey( poolKey );
         if( info.isDirty() )
           info.saveObject( monitor );
@@ -934,7 +934,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
 
     if( onlySelected )
     {
-      final IStructuredSelection sel = (IStructuredSelection) getSelection();
+      final IStructuredSelection sel = (IStructuredSelection)getSelection();
       features = sel.toArray();
     }
     else
@@ -948,7 +948,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
 
     final Collection<String[]> lines = new ArrayList<>();
 
-    final ITableLabelProvider labelProvider = (ITableLabelProvider) getLabelProvider();
+    final ITableLabelProvider labelProvider = (ITableLabelProvider)getLabelProvider();
 
     final Table table = getTable();
     final TableColumn[] columns = table.getColumns();
@@ -997,7 +997,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     final IFeatureModifier modifier = findModifier( propertyPath );
 
     if( modifier != null )
-      return modifier.getProperty( (Feature) element );
+      return modifier.getProperty( (Feature)element );
 
     return null;
   }
@@ -1011,8 +1011,8 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
 
     if( modifier != null )
     {
-      final TableItem ti = (TableItem) element;
-      final Feature feature = (Feature) ti.getData();
+      final TableItem ti = (TableItem)element;
+      final Feature feature = (Feature)ti.getData();
       // as result==null does not explicitly mean that
       // the value is invalid, we have to ask the celleditor for invalidity
       final int columnID = getColumnID( propertyPath );
@@ -1032,7 +1032,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
       // dialogs may return FeatureChange objects (doemming)
       final FeatureChange fc;
       if( object instanceof FeatureChange )
-        fc = (FeatureChange) object;
+        fc = (FeatureChange)object;
       else
       {
         final IPropertyType pt = modifier.getPropertyType();
@@ -1074,7 +1074,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     if( input == null )
       return super.getSelection();
 
-    final IStructuredSelection selection = (IStructuredSelection) super.getSelection();
+    final IStructuredSelection selection = (IStructuredSelection)super.getSelection();
 
     final FeatureList featureList = input.getFeatureList();
     final CommandableWorkspace workspace = input.getWorkspace();
@@ -1104,7 +1104,7 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
     clearColumns();
 
     if( oldInput instanceof ILayerTableInput )
-      ((ILayerTableInput) oldInput).dispose();
+      ((ILayerTableInput)oldInput).dispose();
 
     if( !isDisposed() )
       super.inputChanged( input, oldInput );
@@ -1141,6 +1141,6 @@ public class LayerTableViewer extends TableViewer implements ICellModifier
 
   public static IColumnDescriptor getDescriptor( final TableColumn tc )
   {
-    return (IColumnDescriptor) tc.getData( PROPERTY_COLUMN_DESCRIPTOR );
+    return (IColumnDescriptor)tc.getData( PROPERTY_COLUMN_DESCRIPTOR );
   }
 }

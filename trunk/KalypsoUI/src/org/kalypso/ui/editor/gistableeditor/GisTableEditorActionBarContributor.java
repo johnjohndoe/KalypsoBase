@@ -56,7 +56,6 @@ import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionFactory;
 import org.kalypso.contribs.eclipse.ui.actions.RetargetActionManager;
 import org.kalypso.contribs.eclipse.ui.actions.RetargetActionManager.RetargetInfo;
-import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.IExportTargetModes;
 import org.kalypso.metadoc.ui.ExportAction;
 import org.kalypso.metadoc.ui.ExportActionContributor;
@@ -71,6 +70,7 @@ import org.kalypso.ui.editor.actions.SelectionManagedMenu;
 import org.kalypso.ui.editor.gistableeditor.actions.CopyEditorPartAction;
 import org.kalypso.ui.editor.gistableeditor.actions.PasteEditorPartAction;
 import org.kalypso.ui.editor.gmleditor.part.ShowDescriptionStatusLineItem;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.FeatureList;
 
 /**
@@ -162,7 +162,7 @@ public class GisTableEditorActionBarContributor extends AbstractEditorActionBarC
     if( !(activeEditor instanceof GisTableEditor) )
       return;
 
-    final GisTableEditor tableEditor = (GisTableEditor) activeEditor;
+    final GisTableEditor tableEditor = (GisTableEditor)activeEditor;
 
     final ILayerTableInput tableInput = tableEditor.getTableInput();
     if( tableInput == null )

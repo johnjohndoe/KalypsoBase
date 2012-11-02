@@ -52,14 +52,14 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.CatalogManager;
 import org.kalypso.core.util.pool.IPoolableObjectType;
 import org.kalypso.core.util.pool.PoolableObjectType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
 
 /**
  * A catalog to retrieve dictionary entries from.
- *
+ * 
  * @author Gernot Belger
  */
 public class DictionaryCatalog
@@ -70,7 +70,7 @@ public class DictionaryCatalog
    * Retrieves one feature from a dictionary.
    * <p>
    * If any exception occurs, it islogged to the Plugin-Log and null is returned.
-   *
+   * 
    * @param urnAndRef
    *          Must be of the for<code>urn#id</code>
    * @return null, if the entry or the gml could not be found.

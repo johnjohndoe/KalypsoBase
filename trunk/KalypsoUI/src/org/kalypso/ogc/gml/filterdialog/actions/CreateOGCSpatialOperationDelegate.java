@@ -56,18 +56,18 @@ public class CreateOGCSpatialOperationDelegate extends AbstractCreateOperationAc
         final SpatialOperation operation = new SpatialOperation( OperationDefines.UNKNOWN, null, null );
         if( firstElement instanceof ComplexFilter )
         {
-          ((ComplexFilter) firstElement).setOperation( operation );
+          ((ComplexFilter)firstElement).setOperation( operation );
 
         }
         else if( firstElement instanceof LogicalOperation )
         {
-          List<Operation> arguments = ((LogicalOperation) firstElement).getArguments();
+          List<Operation> arguments = ((LogicalOperation)firstElement).getArguments();
           if( arguments == null )
             arguments = new ArrayList<>();
           arguments.add( operation );
-          ((LogicalOperation) firstElement).setArguments( arguments );
+          ((LogicalOperation)firstElement).setArguments( arguments );
         }
-        ((TreeSelection) m_selection).structureChanged();
+        ((TreeSelection)m_selection).structureChanged();
       }
     }
   }

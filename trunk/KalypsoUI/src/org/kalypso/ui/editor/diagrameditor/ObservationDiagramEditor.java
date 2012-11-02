@@ -57,7 +57,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.kalypso.commons.resources.SetContentHelper;
-import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.IExportableObjectFactory;
 import org.kalypso.metadoc.configuration.PublishingConfiguration;
@@ -71,10 +70,11 @@ import org.kalypso.ogc.sensor.diagview.jfreechart.ObservationChart;
 import org.kalypso.template.obsdiagview.Obsdiagview;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * Observation Diagram Editor.
- *
+ * 
  * @author schlienger
  */
 public class ObservationDiagramEditor extends AbstractObservationEditor implements IExportableObjectFactory
@@ -117,7 +117,7 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
 
     try
     {
-      m_obsChart = new ObservationChart( (DiagView) getView() );
+      m_obsChart = new ObservationChart( (DiagView)getView() );
       m_diagFrame.add( ChartFactory.createChartPanel( m_obsChart ) );
       m_diagFrame.setVisible( true );
     }
@@ -143,7 +143,7 @@ public class ObservationDiagramEditor extends AbstractObservationEditor implemen
   @Override
   protected void doSaveInternal( final IProgressMonitor monitor, final IFile file ) throws CoreException
   {
-    final DiagView template = (DiagView) getView();
+    final DiagView template = (DiagView)getView();
     if( template == null )
       return;
 

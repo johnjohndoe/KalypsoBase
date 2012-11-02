@@ -65,7 +65,7 @@ public class NewFeatureWidget extends AbstractCreateGeometryWidget
   {
     super( name, geomProperties );
 
-    final ICommandService service = (ICommandService) PlatformUI.getWorkbench().getService( ICommandService.class );
+    final ICommandService service = (ICommandService)PlatformUI.getWorkbench().getService( ICommandService.class );
     m_command = service.getCommand( NewFeatureToolbarContribution.CMD_ID_NEW_FEATURE );
     m_commandListener = new ICommandListener()
     {

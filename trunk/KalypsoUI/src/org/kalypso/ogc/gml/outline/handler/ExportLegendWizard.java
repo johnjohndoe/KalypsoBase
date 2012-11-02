@@ -51,10 +51,10 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
 import org.kalypso.core.status.StatusDialog2;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.handlers.MapHandlerUtils;
 import org.kalypso.ogc.gml.outline.nodes.IThemeNode;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 
 public class ExportLegendWizard extends Wizard implements IWorkbenchWizard
 {

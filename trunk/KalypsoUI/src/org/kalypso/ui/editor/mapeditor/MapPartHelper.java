@@ -64,7 +64,6 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.internal.ObjectActionContributorManager;
 import org.kalypso.commons.command.ICommandTarget;
 import org.kalypso.contribs.eclipse.swt.events.SWTAWT_ContextMenuMouseAdapter;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -73,10 +72,11 @@ import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ui.editor.actions.INewScope;
 import org.kalypso.ui.editor.actions.NewScopeFactory;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * Helper class for {@link org.eclipse.ui.IWorkbenchPart}s, which show a map.
- *
+ * 
  * @author Gernot Belger
  */
 @SuppressWarnings( "restriction" )

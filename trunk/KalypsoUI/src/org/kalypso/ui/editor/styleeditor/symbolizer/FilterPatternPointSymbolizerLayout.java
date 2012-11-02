@@ -100,7 +100,7 @@ public class FilterPatternPointSymbolizerLayout extends AbstractSymbolizerCompos
       final Graphic graphic = pointSymbolizer.getGraphic();
 
       final Object objects[] = graphic.getMarksAndExtGraphics();
-      final Mark mark = (Mark) objects[0];
+      final Mark mark = (Mark)objects[0];
 
       final ComboPanel wellKnownNameComboBox = new WellKnownNameComboPanel( panel, MessageBundle.STYLE_EDITOR_TYPE, mark.getWellKnownName() );
       for( int i = 0; i < getRuleCollection().size(); i++ )
@@ -108,10 +108,10 @@ public class FilterPatternPointSymbolizerLayout extends AbstractSymbolizerCompos
         final Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
         if( symb instanceof PointSymbolizer )
         {
-          final Object[] obj = ((PointSymbolizer) symb).getGraphic().getMarksAndExtGraphics();
+          final Object[] obj = ((PointSymbolizer)symb).getGraphic().getMarksAndExtGraphics();
           if( obj.length > 0 && obj[0] instanceof Mark )
           {
-            ((Mark) obj[0]).setWellKnownName( mark.getWellKnownName() );
+            ((Mark)obj[0]).setWellKnownName( mark.getWellKnownName() );
           }
         }
       }
@@ -120,17 +120,17 @@ public class FilterPatternPointSymbolizerLayout extends AbstractSymbolizerCompos
         @Override
         public void valueChanged( final PanelEvent event )
         {
-          final int index = ((ComboPanel) event.getSource()).getSelection();
+          final int index = ((ComboPanel)event.getSource()).getSelection();
           final String wkn = WellKnownNameComboPanel.getWellKnownNameByIndex( index );
           for( int i = 0; i < getRuleCollection().size(); i++ )
           {
             final Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
             if( symb instanceof PointSymbolizer )
             {
-              final Object[] obj = ((PointSymbolizer) symb).getGraphic().getMarksAndExtGraphics();
+              final Object[] obj = ((PointSymbolizer)symb).getGraphic().getMarksAndExtGraphics();
               if( obj.length > 0 && obj[0] instanceof Mark )
               {
-                ((Mark) obj[0]).setWellKnownName( wkn );
+                ((Mark)obj[0]).setWellKnownName( wkn );
               }
             }
           }
@@ -144,7 +144,7 @@ public class FilterPatternPointSymbolizerLayout extends AbstractSymbolizerCompos
         final Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
         if( symb instanceof PointSymbolizer )
         {
-          ((PointSymbolizer) symb).getGraphic().setSize( graphic.getSize( null ) );
+          ((PointSymbolizer)symb).getGraphic().setSize( graphic.getSize( null ) );
         }
       }
       graphicSizePanel.addPanelListener( new PanelListener()
@@ -152,13 +152,13 @@ public class FilterPatternPointSymbolizerLayout extends AbstractSymbolizerCompos
         @Override
         public void valueChanged( final PanelEvent event )
         {
-          final double size = ((SliderPanel) event.getSource()).getSelection();
+          final double size = ((SliderPanel)event.getSource()).getSelection();
           for( int i = 0; i < getRuleCollection().size(); i++ )
           {
             final Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
             if( symb instanceof PointSymbolizer )
             {
-              ((PointSymbolizer) symb).getGraphic().setSize( size );
+              ((PointSymbolizer)symb).getGraphic().setSize( size );
             }
           }
           fireStyleChanged();
@@ -172,10 +172,10 @@ public class FilterPatternPointSymbolizerLayout extends AbstractSymbolizerCompos
         final Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
         if( symb instanceof PointSymbolizer )
         {
-          final Object[] obj = ((PointSymbolizer) symb).getGraphic().getMarksAndExtGraphics();
+          final Object[] obj = ((PointSymbolizer)symb).getGraphic().getMarksAndExtGraphics();
           if( obj.length > 0 && obj[0] instanceof Mark )
           {
-            final java.awt.Color color = ((Mark) obj[0]).getFill().getFill( null );
+            final java.awt.Color color = ((Mark)obj[0]).getFill().getFill( null );
             colors[i] = new Color( null, color.getRed(), color.getGreen(), color.getBlue() );
           }
         }
@@ -191,10 +191,10 @@ public class FilterPatternPointSymbolizerLayout extends AbstractSymbolizerCompos
           final Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
           if( symb instanceof PointSymbolizer )
           {
-            final Object[] obj = ((PointSymbolizer) symb).getGraphic().getMarksAndExtGraphics();
+            final Object[] obj = ((PointSymbolizer)symb).getGraphic().getMarksAndExtGraphics();
             if( obj.length > 0 && obj[0] instanceof Mark )
             {
-              ((Mark) obj[0]).getFill().setFill( new java.awt.Color( colors[i].getRed(), colors[i].getGreen(), colors[i].getBlue() ) );
+              ((Mark)obj[0]).getFill().setFill( new java.awt.Color( colors[i].getRed(), colors[i].getGreen(), colors[i].getBlue() ) );
             }
           }
         }
@@ -211,7 +211,7 @@ public class FilterPatternPointSymbolizerLayout extends AbstractSymbolizerCompos
               final Symbolizer symb = getRuleCollection().get( i ).getSymbolizers()[getSymbolizerIndex()];
               if( symb instanceof PointSymbolizer )
               {
-                ((Mark) ((PointSymbolizer) symb).getGraphic().getMarksAndExtGraphics()[0]).setFill( StyleFactory.createFill( new java.awt.Color( colorArray[i].getRed(), colorArray[i].getGreen(), colorArray[i].getBlue() ) ) );
+                ((Mark)((PointSymbolizer)symb).getGraphic().getMarksAndExtGraphics()[0]).setFill( StyleFactory.createFill( new java.awt.Color( colorArray[i].getRed(), colorArray[i].getGreen(), colorArray[i].getBlue() ) ) );
               }
             }
             fireStyleChanged();

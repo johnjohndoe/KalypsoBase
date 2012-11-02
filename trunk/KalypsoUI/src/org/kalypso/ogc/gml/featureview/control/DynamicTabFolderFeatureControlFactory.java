@@ -54,7 +54,7 @@ public class DynamicTabFolderFeatureControlFactory implements IFeatureControlFac
   @Override
   public IFeatureControl createFeatureControl( final IFeatureComposite parentComposite, final Feature feature, final IPropertyType pt, final ControlType controlType, final IAnnotation annotation )
   {
-    final IRelationType rt = (IRelationType) pt;
+    final IRelationType rt = (IRelationType)pt;
 
     return new DynamicTabFolderFeatureControl( parentComposite, feature, rt );
   }

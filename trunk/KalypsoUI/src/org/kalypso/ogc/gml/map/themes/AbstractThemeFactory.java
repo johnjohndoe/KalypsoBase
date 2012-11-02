@@ -59,7 +59,7 @@ public abstract class AbstractThemeFactory implements IKalypsoThemeFactory
     return GisTemplateHelper.OF_TEMPLATE_TYPES.createStyledLayerType();
   }
 
-  @SuppressWarnings("unused")
+  @SuppressWarnings( "unused" )
   @Override
   public void configureLayer( final IKalypsoTheme theme, final String id, final GM_Envelope bbox, final String srsName, final StyledLayerType layer, final IProgressMonitor monitor ) throws CoreException
   {

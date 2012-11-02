@@ -43,11 +43,11 @@ package org.kalypso.ui.editor.abstractobseditor.actions;
 import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.kalypso.contribs.eclipse.jface.action.FullAction;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.commands.RemoveThemeCommand;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.abstractobseditor.ObservationEditorOutlinePage;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * RemoveThemeAction

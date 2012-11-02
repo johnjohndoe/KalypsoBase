@@ -56,12 +56,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.jface.dialog.DialogSettingsUtils;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.controls.files.FileChooserComposite;
 import org.kalypso.ui.controls.files.listener.IFileChooserListener;
 import org.kalypso.ui.controls.images.ImagePropertiesComposite;
 import org.kalypso.ui.controls.images.listener.IImagePropertyChangedListener;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * This dialog enables the selection of the format and a target for the image file.
@@ -239,15 +239,15 @@ public class ScreenshotDialog extends Dialog
     initializeDialogSettings();
 
     /* Set the title. */
-    getShell().setText( Messages.getString("ScreenshotDialog_0") ); //$NON-NLS-1$
+    getShell().setText( Messages.getString( "ScreenshotDialog_0" ) ); //$NON-NLS-1$
 
     /* Create the main composite. */
-    final Composite main = (Composite) super.createDialogArea( parent );
+    final Composite main = (Composite)super.createDialogArea( parent );
     main.setLayout( new GridLayout( 1, false ) );
     main.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
 
     /* Create the file chooser composite. */
-    m_fileComposite = new FileChooserComposite( main, SWT.NONE, null, null, Messages.getString("ScreenshotDialog_1"), m_targetPath ); //$NON-NLS-1$
+    m_fileComposite = new FileChooserComposite( main, SWT.NONE, null, null, Messages.getString( "ScreenshotDialog_1" ), m_targetPath ); //$NON-NLS-1$
     m_fileComposite.setLayoutData( new GridData( SWT.FILL, SWT.CENTER, true, false ) );
     m_fileComposite.addFileChooserListener( new IFileChooserListener()
     {
@@ -271,8 +271,7 @@ public class ScreenshotDialog extends Dialog
     m_imageComposite.addImagePropertyChangedListener( new IImagePropertyChangedListener()
     {
       /**
-       * @see org.kalypso.ui.controls.listener.IImagePropertyChangedListener#imagePropertyChanged(int, int, boolean,
-       *      java.awt.Insets, boolean, java.lang.String)
+       * @see org.kalypso.ui.controls.listener.IImagePropertyChangedListener#imagePropertyChanged(int, int, boolean, java.awt.Insets, boolean, java.lang.String)
        */
       @Override
       public void imagePropertyChanged( final int width, final int height, final boolean aspectRatio, final Insets insets, final boolean border, final String format )
@@ -327,7 +326,7 @@ public class ScreenshotDialog extends Dialog
     if( targetFile.exists() )
     {
       /* Ask the user. */
-      final boolean confirmed = MessageDialog.openConfirm( getShell(), Messages.getString("ScreenshotDialog_4"), String.format( Messages.getString("ScreenshotDialog_5"), targetFile.getAbsolutePath() ) ); //$NON-NLS-1$ //$NON-NLS-2$
+      final boolean confirmed = MessageDialog.openConfirm( getShell(), Messages.getString( "ScreenshotDialog_4" ), String.format( Messages.getString( "ScreenshotDialog_5" ), targetFile.getAbsolutePath() ) ); //$NON-NLS-1$ //$NON-NLS-2$
       if( !confirmed )
         return;
     }

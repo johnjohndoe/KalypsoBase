@@ -67,17 +67,17 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.util.Arrays;
-import org.kalypso.i18n.Messages;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.graphics.transformation.GeoTransformUtils;
 import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * This class provides functions for dealing with the WMS client from degree.
- *
+ * 
  * @author Holger Albert
  */
 public final class DeegreeWMSUtilities
@@ -89,7 +89,7 @@ public final class DeegreeWMSUtilities
 
   /**
    * This function creates the get map request.
-   *
+   * 
    * @param capabilities
    *          The wms capabilities.
    * @param negotiatedSRS
@@ -178,7 +178,7 @@ public final class DeegreeWMSUtilities
 
   /**
    * This function prepares the request parameter.
-   *
+   * 
    * @param capabilities
    *          The wms capabilities.
    * @param name
@@ -197,7 +197,7 @@ public final class DeegreeWMSUtilities
     {
       if( type instanceof HTTP )
       {
-        final HTTP httpProtocol = (HTTP) type;
+        final HTTP httpProtocol = (HTTP)type;
         final List<URL> getOnlineResources = httpProtocol.getGetOnlineResources();
         for( final URL url : getOnlineResources )
         {
@@ -239,7 +239,7 @@ public final class DeegreeWMSUtilities
 
   /**
    * Tries to find the operation.
-   *
+   * 
    * @param capabilities
    *          The wms capabilities.
    * @param name
@@ -261,7 +261,7 @@ public final class DeegreeWMSUtilities
    * This method tries to find a common spatial reference system (srs) for a given set of layers. If all layers
    * coorespond to the local crs the local crs is returned, otherwise the srs of the top layer is returned and the
    * client must choose one to transform it to the local coordinate system
-   *
+   * 
    * @param localCRS
    *          The local spatial reference system.
    * @param capabilities
@@ -285,7 +285,7 @@ public final class DeegreeWMSUtilities
 
   /**
    * This method tries to match the local coordinate system to a given layer selection.
-   *
+   * 
    * @param topLayer
    *          The top layer of the layer structur of a web map service.
    * @param layerSelection
@@ -315,7 +315,7 @@ public final class DeegreeWMSUtilities
    * This method collects all layers (or the specified layers) from the top layer of a WMSCapabilites document. If the
    * parameter layerSeletion is empty or null the method collects all layers, otherwise returns all layers with the same
    * name as in the layerSelection.
-   *
+   * 
    * @param collector
    *          The set that collects the layers found.
    * @param layer
@@ -342,7 +342,7 @@ public final class DeegreeWMSUtilities
 
   /**
    * This method gets the max bounding box of a wms layer.
-   *
+   * 
    * @param layers
    *          The layers in the map in an array.
    * @param srs
@@ -401,7 +401,7 @@ public final class DeegreeWMSUtilities
 
   /**
    * This method collects all layers from a capabilites document.
-   *
+   * 
    * @param capabilites
    *          WMS capabilites document.
    * @param set
@@ -422,7 +422,7 @@ public final class DeegreeWMSUtilities
 
   /**
    * This function converts an envelope to a string representation.
-   *
+   * 
    * @param envelope
    *          The envelope.
    * @return The string representation of the envelope.

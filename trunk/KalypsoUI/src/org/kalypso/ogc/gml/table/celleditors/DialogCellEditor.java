@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author Belger
@@ -114,7 +114,7 @@ public abstract class DialogCellEditor extends CellEditor
       display.asyncExec( new Runnable()
       {
         @Override
-        @SuppressWarnings("synthetic-access")//$NON-NLS-1$
+        @SuppressWarnings( "synthetic-access" )//$NON-NLS-1$
         public void run( )
         {
           fireApplyEditorValue();
@@ -126,7 +126,7 @@ public abstract class DialogCellEditor extends CellEditor
       display.asyncExec( new Runnable()
       {
         @Override
-        @SuppressWarnings("synthetic-access")//$NON-NLS-1$
+        @SuppressWarnings( "synthetic-access" )//$NON-NLS-1$
         public void run( )
         {
           fireCancelEditor();

@@ -71,8 +71,7 @@ class PolygonSymbolizerStrokeSection extends AbstractStyleElementSection<Polygon
   @Override
   protected StyleElementAction<PolygonSymbolizer>[] createActions( final IStyleInput<PolygonSymbolizer> input )
   {
-    @SuppressWarnings("unchecked")
-    final StyleElementAction<PolygonSymbolizer>[] actions = new StyleElementAction[2];
+    @SuppressWarnings( "unchecked" ) final StyleElementAction<PolygonSymbolizer>[] actions = new StyleElementAction[2];
     actions[0] = new PolygonSymbolizerStrokeAddAction( input );
     actions[1] = new PolygonSymbolizerStrokeRemoveAction( input );
     return actions;

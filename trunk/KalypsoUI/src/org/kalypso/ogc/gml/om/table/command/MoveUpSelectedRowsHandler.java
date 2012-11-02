@@ -46,8 +46,8 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
-import org.kalypso.i18n.Messages;
 import org.kalypso.observation.result.TupleResult;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * Moves the selected lines from the table one up.
@@ -64,7 +64,7 @@ public class MoveUpSelectedRowsHandler extends AbstractHandler
     if( tupleResult == null || viewer == null )
       throw new ExecutionException( Messages.getString( "org.kalypso.ogc.gml.om.table.command.MoveUpSelectedRowsHandler.1" ) ); //$NON-NLS-1$
 
-    final IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+    final IStructuredSelection selection = (IStructuredSelection)viewer.getSelection();
 
     final Object firstElement = selection.getFirstElement();
     final int index = tupleResult.indexOf( firstElement );

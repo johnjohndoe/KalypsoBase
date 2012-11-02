@@ -65,11 +65,11 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.catalog.CatalogSLD;
 import org.kalypso.core.catalog.CatalogUtilities;
 import org.kalypso.core.util.pool.IPoolableObjectType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.loader.AbstractLoader;
 import org.kalypso.loader.ISaveUrnLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.xml.Marshallable;
 import org.kalypsodeegree.xml.XMLParsingException;
@@ -235,9 +235,9 @@ public class SldLoader extends AbstractLoader implements ISaveUrnLoader
 
         /* Check if already exists -> error */
         if( userFile == null )
-          saveToWorkspace( context, source, (Marshallable) data, monitor );
+          saveToWorkspace( context, source, (Marshallable)data, monitor );
         else
-          saveToUserStore( userFile, (Marshallable) data, monitor );
+          saveToUserStore( userFile, (Marshallable)data, monitor );
       }
       catch( final MalformedURLException e )
       {
@@ -280,7 +280,7 @@ public class SldLoader extends AbstractLoader implements ISaveUrnLoader
     catch( final IOException e )
     {
       e.printStackTrace();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString("SldLoader.0"), e ); //$NON-NLS-1$
+      final IStatus status = new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString( "SldLoader.0" ), e ); //$NON-NLS-1$
       throw new LoaderException( status );
     }
     finally

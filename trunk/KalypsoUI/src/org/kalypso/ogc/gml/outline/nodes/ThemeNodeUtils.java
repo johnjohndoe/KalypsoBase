@@ -59,7 +59,7 @@ public final class ThemeNodeUtils
 
     final Object element = node.getElement();
     if( element instanceof IKalypsoTheme )
-      return (IKalypsoTheme) element;
+      return (IKalypsoTheme)element;
 
     return findTheme( node.getParent() );
   }

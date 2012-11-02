@@ -125,8 +125,8 @@ public class SliderPanel
     if( format == DECIMAL )
       text.setText( "" + (selection + min / 100.00) ); //$NON-NLS-1$
     else
-      text.setText( "" + (int) (selection + min / 100.00) ); //$NON-NLS-1$
-    slider.setSelection( (int) (selection * 100) );
+      text.setText( "" + (int)(selection + min / 100.00) ); //$NON-NLS-1$
+    slider.setSelection( (int)(selection * 100) );
   }
 
   public void addPanelListener( final PanelListener pl )
@@ -179,9 +179,9 @@ public class SliderPanel
       public void widgetSelected( final SelectionEvent e )
       {
         if( getFormat() == INTEGER )
-          setSelection( ((Slider) e.getSource()).getSelection() / 100 );
+          setSelection( ((Slider)e.getSource()).getSelection() / 100 );
         else
-          setSelection( ((Slider) e.getSource()).getSelection() / 100.0 );
+          setSelection( ((Slider)e.getSource()).getSelection() / 100.0 );
       }
 
       @Override
@@ -209,7 +209,7 @@ public class SliderPanel
       if( listeners[i] == PanelListener.class )
       {
         final PanelEvent event = new PanelEvent( this );
-        ((PanelListener) listeners[i + 1]).valueChanged( event );
+        ((PanelListener)listeners[i + 1]).valueChanged( event );
       }
     }
   }
@@ -218,7 +218,7 @@ public class SliderPanel
   {
     if( format == DECIMAL )
       return selection + min / 100.00;
-    return (int) (selection + min / 100.00);
+    return (int)(selection + min / 100.00);
   }
 
   public int getFormat( )

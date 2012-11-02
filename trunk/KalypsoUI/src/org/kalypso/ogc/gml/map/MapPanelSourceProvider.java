@@ -82,7 +82,7 @@ import org.kalypso.ui.editor.mapeditor.AbstractMapPart;
  * Additional: the activeTheme is always registered as some kind of dynamic context. This should be changed; handlers,
  * that are at the moment registered against this context should register against the mapContext, and test the active
  * theme via the corresponding property test (org.kalypso.ui.activeThemeQName).
- *
+ * 
  * @author Stefan Kurzbach
  * @author Gernot Belger
  */
@@ -168,7 +168,7 @@ public class MapPanelSourceProvider extends AbstractSourceProvider implements IS
     m_serviceLocator = serviceLocator;
     m_mapPanel = mapPanel;
 
-    final IContextService contextService = (IContextService) registerServiceWithSources( serviceLocator, IContextService.class );
+    final IContextService contextService = (IContextService)registerServiceWithSources( serviceLocator, IContextService.class );
     registerServiceWithSources( serviceLocator, IEvaluationService.class );
     registerServiceWithSources( serviceLocator, IHandlerService.class );
     registerServiceWithSources( serviceLocator, IMenuService.class );
@@ -182,7 +182,7 @@ public class MapPanelSourceProvider extends AbstractSourceProvider implements IS
 
   private IServiceWithSources registerServiceWithSources( final IServiceLocator serviceLocator, final Class< ? extends IServiceWithSources> serviceClass )
   {
-    final IServiceWithSources service = (IServiceWithSources) serviceLocator.getService( serviceClass );
+    final IServiceWithSources service = (IServiceWithSources)serviceLocator.getService( serviceClass );
     if( service == null )
       return null;
 
@@ -228,7 +228,7 @@ public class MapPanelSourceProvider extends AbstractSourceProvider implements IS
   {
     final UIJob job = new UIJob( "Activate theme context job" ) //$NON-NLS-1$
     {
-      @SuppressWarnings("synthetic-access")
+      @SuppressWarnings( "synthetic-access" )
       @Override
       public IStatus runInUIThread( final IProgressMonitor monitor )
       {
@@ -266,12 +266,12 @@ public class MapPanelSourceProvider extends AbstractSourceProvider implements IS
   {
     try
     {
-      final IEvaluationService evalService = (IEvaluationService) m_serviceLocator.getService( IEvaluationService.class );
+      final IEvaluationService evalService = (IEvaluationService)m_serviceLocator.getService( IEvaluationService.class );
       if( evalService != null )
         evalService.requestEvaluation( ACTIVE_MAPPANEL_NAME );
 
       // Refresh the ui elements (i.e. toolbar), but is this the best place...?
-      final ICommandService commandService = (ICommandService) m_serviceLocator.getService( ICommandService.class );
+      final ICommandService commandService = (ICommandService)m_serviceLocator.getService( ICommandService.class );
       if( commandService != null )
         CommandUtilities.refreshElements( commandService, AbstractMapPart.MAP_COMMAND_CATEGORY, null );
     }

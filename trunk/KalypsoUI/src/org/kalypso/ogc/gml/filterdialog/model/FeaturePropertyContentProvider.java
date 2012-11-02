@@ -51,10 +51,10 @@ import org.kalypsodeegree.model.feature.Feature;
  */
 public class FeaturePropertyContentProvider implements IStructuredContentProvider
 {
-  @SuppressWarnings("unused")//$NON-NLS-1$
+  @SuppressWarnings( "unused" )//$NON-NLS-1$
   private ComboViewer m_viewer;
 
-  @SuppressWarnings("unused")//$NON-NLS-1$
+  @SuppressWarnings( "unused" )//$NON-NLS-1$
   private Feature m_feature;
 
   /**
@@ -65,7 +65,7 @@ public class FeaturePropertyContentProvider implements IStructuredContentProvide
   {
     if( inputElement instanceof Feature )
     {
-      return ((Feature) inputElement).getProperties();
+      return ((Feature)inputElement).getProperties();
     }
     return new Object[0];
   }
@@ -82,13 +82,12 @@ public class FeaturePropertyContentProvider implements IStructuredContentProvide
   }
 
   /**
-   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
+   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
    */
   @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
-    m_viewer = (ComboViewer) viewer;
+    m_viewer = (ComboViewer)viewer;
 
     if( oldInput != newInput )
     {
@@ -96,7 +95,7 @@ public class FeaturePropertyContentProvider implements IStructuredContentProvide
         m_feature = null;
 
       if( newInput instanceof IFeatureType )
-        m_feature = (Feature) newInput;
+        m_feature = (Feature)newInput;
       else
         m_feature = null;
     }

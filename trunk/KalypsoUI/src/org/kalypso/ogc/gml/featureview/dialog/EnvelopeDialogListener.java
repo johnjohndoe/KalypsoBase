@@ -65,7 +65,7 @@ final class EnvelopeDialogListener implements ModifyListener
   @Override
   public void modifyText( final ModifyEvent e )
   {
-    final Text text = (Text) e.getSource();
+    final Text text = (Text)e.getSource();
     final String content = text.getText();
 
     final Double[] values = m_envDialog.getValues();

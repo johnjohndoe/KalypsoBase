@@ -53,8 +53,8 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Table;
 import org.kalypso.contribs.java.util.DateUtilities;
-import org.kalypso.i18n.Messages;
 import org.kalypso.observation.result.IRecord;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author burtscher1 A handler which allows editing of dates as strings
@@ -93,8 +93,7 @@ public class ComponentUiSimpleDateHandler extends AbstractComponentUiHandler
   }
 
   /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#doSetValue(org.kalypso.observation.result.IRecord,
-   *      java.lang.Object)
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#doSetValue(org.kalypso.observation.result.IRecord, java.lang.Object)
    */
   @Override
   public void doSetValue( final IRecord record, final Object value )
@@ -124,8 +123,7 @@ public class ComponentUiSimpleDateHandler extends AbstractComponentUiHandler
   }
 
   /**
-   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#setValue(org.kalypso.observation.result.IRecord,
-   *      java.lang.Object)
+   * @see org.kalypso.ogc.gml.om.table.handlers.IComponentUiHandler#setValue(org.kalypso.observation.result.IRecord, java.lang.Object)
    */
   @Override
   public void setValue( final IRecord record, final Object value )
@@ -146,7 +144,7 @@ public class ComponentUiSimpleDateHandler extends AbstractComponentUiHandler
 
     if( value instanceof XMLGregorianCalendar )
     {
-      final XMLGregorianCalendar xmlCal = (XMLGregorianCalendar) value;
+      final XMLGregorianCalendar xmlCal = (XMLGregorianCalendar)value;
       final Date date = DateUtilities.toDate( xmlCal );
 
       if( date == null )

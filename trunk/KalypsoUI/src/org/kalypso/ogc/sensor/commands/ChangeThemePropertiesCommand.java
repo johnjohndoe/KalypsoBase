@@ -44,9 +44,9 @@ import java.awt.Color;
 import java.awt.Stroke;
 
 import org.kalypso.commons.command.ICommand;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.diagview.DiagView;
 import org.kalypso.ogc.sensor.diagview.DiagViewCurve;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * Changes the properties of a diagram curve.

@@ -187,10 +187,10 @@ public class WMSLayerNode extends AbstractThemeNode<Layer>
   {
     final IThemeNode parent = getParent();
     if( parent instanceof WMSThemeNode )
-      return ((WMSThemeNode) parent).getTheme();
+      return ((WMSThemeNode)parent).getTheme();
 
     if( parent instanceof WMSLayerNode )
-      return ((WMSLayerNode) parent).getWMSTheme();
+      return ((WMSLayerNode)parent).getWMSTheme();
 
     return null;
   }

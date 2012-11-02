@@ -52,10 +52,10 @@ import org.kalypso.commons.java.lang.Objects;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.catalogs.FeatureTypePropertiesCatalog;
 import org.kalypso.ui.catalogs.IFeatureTypePropertiesConstants;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -110,7 +110,7 @@ public class GMLContentProvider implements ITreeContentProvider
 
   /**
    * Likely to be replaced by {@link #GMLContentProvider(boolean)} in the future.<br>
-   *
+   * 
    * @param handleModelEvents
    *          Only for backwards compability. Should always be set to <code>true</code>.
    */
@@ -122,7 +122,7 @@ public class GMLContentProvider implements ITreeContentProvider
 
   /**
    * Gets the children and updates the parent-hash.
-   *
+   * 
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
   @Override
@@ -622,7 +622,7 @@ public class GMLContentProvider implements ITreeContentProvider
 
   /**
    * Allows to override default behavior regarding visibility of children, defined by the catalog-properties.<br/>
-   *
+   * 
    * @param override
    *          Value that overrides the catalog behavior. Set to <code>null</code>, to use the default behavior.
    */

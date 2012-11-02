@@ -52,9 +52,9 @@ import org.kalypso.gmlschema.GMLSchemaUtilities;
 import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.IFeatureRelation;
 
@@ -148,7 +148,7 @@ class NewFeaturePropertyScope implements INewScope
     if( !m_targetRelation.isList() )
       return true;
 
-    final List< ? > list = (List< ? >) m_parentFeature.getProperty( m_targetRelation );
+    final List< ? > list = (List< ? >)m_parentFeature.getProperty( m_targetRelation );
     if( list == null )
       return true;
 

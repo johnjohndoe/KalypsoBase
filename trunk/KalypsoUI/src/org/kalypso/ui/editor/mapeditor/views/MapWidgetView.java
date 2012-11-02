@@ -61,15 +61,15 @@ import org.kalypso.contribs.eclipse.ui.partlistener.AdapterPartListener;
 import org.kalypso.contribs.eclipse.ui.partlistener.EditorFirstAdapterFinder;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterEater;
 import org.kalypso.contribs.eclipse.ui.partlistener.IAdapterFinder;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.widgets.IWidget;
 import org.kalypso.ogc.gml.widgets.IWidgetChangeListener;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * ActionOptionsView is a view on the selected widget of an active map view. It provides a panel where the selected
  * widgets can place GUI elements for their options.
- *
+ * 
  * @author doemming
  */
 public class MapWidgetView extends ViewPart
@@ -188,7 +188,7 @@ public class MapWidgetView extends ViewPart
 
   /**
    * Sets to widget to show in this view for the given panel.
-   *
+   * 
    * @param action
    *          If the given action is non-null, it will be activated if the widget is reactivated.
    */
@@ -303,7 +303,7 @@ public class MapWidgetView extends ViewPart
 
   protected void onWidgetChanged( final IWidget newWidget )
   {
-    final IMapPanel panel = (IMapPanel) m_stackLayout.topControl.getData( DATA_PANEL );
+    final IMapPanel panel = (IMapPanel)m_stackLayout.topControl.getData( DATA_PANEL );
     if( panel != null )
     {
       final WidgetInfo info = m_widgetInfos.get( panel );
@@ -324,7 +324,7 @@ public class MapWidgetView extends ViewPart
     if( topControl.isDisposed() )
       return;
 
-    final IMapPanel panel = (IMapPanel) topControl.getData( DATA_PANEL );
+    final IMapPanel panel = (IMapPanel)topControl.getData( DATA_PANEL );
     if( panel != null )
     {
       final WidgetInfo info = m_widgetInfos.get( panel );

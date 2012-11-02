@@ -48,7 +48,7 @@ import org.kalypso.ui.editor.gistableeditor.GmlTableSourceProvider;
 
 /**
  * Helper class for implementors of {@link org.eclipse.core.commands.IHandler} for gmltree commands.
- *
+ * 
  * @author Gernot Belger
  */
 public class GmlTableHandlerUtils
@@ -61,30 +61,30 @@ public class GmlTableHandlerUtils
   /**
    * Gets the currently active table from the handler event.<br>
    * To be more precise, gets the <code>activeGmlTable</code> source from the events context.
-   *
+   * 
    * @return <code>null</code>, if no {@link LayerTableViewer} was found in the context.
    */
   public static LayerTableViewer getTableViewer( final IEvaluationContext context )
   {
-    return (LayerTableViewer) context.getVariable( GmlTableSourceProvider.ACTIVE_GMLTABLE_NAME );
+    return (LayerTableViewer)context.getVariable( GmlTableSourceProvider.ACTIVE_GMLTABLE_NAME );
   }
 
   /**
    * Gets the currently active table from the handler event.<br>
    * To be more precise, gets the <code>activeGmlTable</code> source from the events context.
-   *
+   * 
    * @throws ExecutionException
    *           If the current context contains no tree.
    */
   public static LayerTableViewer getTableViewerChecked( final ExecutionEvent event ) throws ExecutionException
   {
-    return getTableViewerChecked( (IEvaluationContext) event.getApplicationContext() );
+    return getTableViewerChecked( (IEvaluationContext)event.getApplicationContext() );
   }
 
   /**
    * Gets the currently active table from the handler event.<br>
    * To be more precise, gets the <code>activeGmlTable</code> source from the events context.
-   *
+   * 
    * @throws ExecutionException
    *           If the current context contains no tree.
    */

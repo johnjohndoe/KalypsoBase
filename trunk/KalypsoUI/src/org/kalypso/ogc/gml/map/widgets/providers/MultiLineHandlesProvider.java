@@ -56,7 +56,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
  * This class provides handles for multi line geometries.
- *
+ * 
  * @author Holger Albert
  */
 public class MultiLineHandlesProvider implements IHandlesProvider
@@ -71,18 +71,18 @@ public class MultiLineHandlesProvider implements IHandlesProvider
     {
       try
       {
-        final GM_Object object = (GM_Object) feature.getProperty( type );
+        final GM_Object object = (GM_Object)feature.getProperty( type );
 
         /* Only handles for a line are returned. */
         if( object instanceof GM_MultiCurve )
         {
-          final GM_MultiCurve multiCurve = (GM_MultiCurve) object;
+          final GM_MultiCurve multiCurve = (GM_MultiCurve)object;
 
           final GM_Object[] curves = multiCurve.getAll();
 
           for( final GM_Object curve_object : curves )
           {
-            final GM_Curve curve = (GM_Curve) curve_object;
+            final GM_Curve curve = (GM_Curve)curve_object;
 
             final int numberOfCurveSegments = curve.getNumberOfCurveSegments();
 

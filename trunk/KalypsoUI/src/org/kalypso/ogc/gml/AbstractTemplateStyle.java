@@ -68,13 +68,13 @@ import org.kalypso.core.util.pool.KeyComparator;
 import org.kalypso.core.util.pool.KeyInfo;
 import org.kalypso.core.util.pool.PoolableObjectType;
 import org.kalypso.core.util.pool.ResourcePool;
-import org.kalypso.i18n.Messages;
 import org.kalypso.loader.ILoader;
 import org.kalypso.loader.ISaveUrnLoader;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.loader.SldLoader;
 import org.kalypso.template.types.StyledLayerType.Style;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.xml.Marshallable;
 
 /**
@@ -145,8 +145,7 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
   }
 
   /**
-   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object,
-   *      org.eclipse.core.runtime.IStatus)
+   * @see org.kalypso.util.pool.IPoolListener#objectLoaded(org.kalypso.util.pool.IPoolableObjectType, java.lang.Object, org.eclipse.core.runtime.IStatus)
    */
   @Override
   public void objectLoaded( final IPoolableObjectType key, final Object newValue, final IStatus status )
@@ -163,7 +162,7 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
         info = getPoolInfo();
         final ILoader loader = info == null ? null : info.getLoader();
         if( loader instanceof SldLoader )
-          m_resourceBundle = ((SldLoader) loader).getResourceBundle();
+          m_resourceBundle = ((SldLoader)loader).getResourceBundle();
       }
       catch( final Exception e )
       {
@@ -271,7 +270,7 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
   public IStatus save( final Shell shell )
   {
     final KeyInfo info = getPoolInfo();
-    final String title = String.format( Messages.getString("AbstractTemplateStyle.0") ); //$NON-NLS-1$
+    final String title = String.format( Messages.getString( "AbstractTemplateStyle.0" ) ); //$NON-NLS-1$
 
     if( info.isSaveable() )
     {
@@ -294,7 +293,7 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
           catch( final LoaderException e )
           {
             e.printStackTrace();
-            return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString("AbstractTemplateStyle.1") ); //$NON-NLS-1$
+            return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString( "AbstractTemplateStyle.1" ) ); //$NON-NLS-1$
           }
         }
       };
@@ -302,7 +301,7 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
       return ProgressUtilities.busyCursorWhile( operation );
     }
 
-    final String msg = Messages.getString("AbstractTemplateStyle.2"); //$NON-NLS-1$
+    final String msg = Messages.getString( "AbstractTemplateStyle.2" ); //$NON-NLS-1$
     return new Status( IStatus.WARNING, KalypsoGisPlugin.getId(), msg );
   }
 
@@ -314,12 +313,12 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
     final String location = key.getLocation();
     if( CatalogUtilities.isCatalogResource( location ) )
     {
-      if( loader instanceof ISaveUrnLoader && !((ISaveUrnLoader) loader).isUserSaved( key ) )
-        return Messages.getString("AbstractTemplateStyle.3") //$NON-NLS-1$
-            + Messages.getString("AbstractTemplateStyle.4"); //$NON-NLS-1$
+      if( loader instanceof ISaveUrnLoader && !((ISaveUrnLoader)loader).isUserSaved( key ) )
+        return Messages.getString( "AbstractTemplateStyle.3" ) //$NON-NLS-1$
+            + Messages.getString( "AbstractTemplateStyle.4" ); //$NON-NLS-1$
     }
 
-    return String.format( Messages.getString("AbstractTemplateStyle.5"), getLabel() ); //$NON-NLS-1$
+    return String.format( Messages.getString( "AbstractTemplateStyle.5" ), getLabel() ); //$NON-NLS-1$
   }
 
   @Override
@@ -376,7 +375,7 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
 
   /**
    * Resolves an international string against the (possibly existing) internal resource bundle of this style.<br>
-   *
+   * 
    * @return If <code>text</code> startswith '%', the text is assumed to be a key of the internal resource bundle and is
    *         resolved against it. Else, <code>text</code> is returned.
    */
@@ -440,7 +439,7 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
       if( isDirty() )
         return true;
 
-      if( ((ISaveUrnLoader) loader).isUserSaved( key ) )
+      if( ((ISaveUrnLoader)loader).isUserSaved( key ) )
         return true;
     }
 
@@ -451,10 +450,10 @@ public abstract class AbstractTemplateStyle implements IKalypsoStyle, Marshallab
   public IStatus reset( final Shell shell )
   {
     if( !isResetable() )
-      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString("AbstractTemplateStyle.6") ); //$NON-NLS-1$
+      return new Status( IStatus.ERROR, KalypsoGisPlugin.getId(), Messages.getString( "AbstractTemplateStyle.6" ) ); //$NON-NLS-1$
 
     final KeyInfo info = getPoolInfo();
-    final ISaveUrnLoader loader = (ISaveUrnLoader) info.getLoader();
+    final ISaveUrnLoader loader = (ISaveUrnLoader)info.getLoader();
 
     final IPoolableObjectType key = info.getKey();
     loader.resetUserStyle( key );

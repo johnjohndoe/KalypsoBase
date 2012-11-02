@@ -9,7 +9,7 @@ import org.kalypso.ui.KalypsoUIExtensions;
 
 /**
  * Dies sollte irgenwo zentral liegen oder in eine andere solche Klasse integriert werden
- *
+ * 
  * @author belger
  */
 public class GuiTypeRegistrySingleton

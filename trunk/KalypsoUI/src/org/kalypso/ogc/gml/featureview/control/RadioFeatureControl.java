@@ -64,7 +64,7 @@ import org.kalypsodeegree.model.feature.Feature;
  * <p>
  * Today only properties with String type are supported.
  * </p>
- *
+ * 
  * @author belger
  */
 public class RadioFeatureControl extends AbstractFeatureControl
@@ -112,7 +112,7 @@ public class RadioFeatureControl extends AbstractFeatureControl
       if( valueToSet instanceof String )
       {
         final IMarshallingTypeHandler typeHandler = MarshallingTypeRegistrySingleton.getTypeRegistry().getTypeHandlerFor( ftp );
-        return typeHandler.parseType( (String) valueToSet );
+        return typeHandler.parseType( (String)valueToSet );
       }
 
       return null;

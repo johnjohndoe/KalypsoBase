@@ -80,18 +80,16 @@ public class Gml3EnvelopeGuiTypeHandler extends LabelProvider implements IGuiTyp
   }
 
   /**
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureDialog(org.kalypsodeegree.model.feature.Feature,
-   *      org.kalypso.gmlschema.property.IPropertyType)
+   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureDialog(org.kalypsodeegree.model.feature.Feature, org.kalypso.gmlschema.property.IPropertyType)
    */
   @Override
   public IFeatureDialog createFeatureDialog( final Feature feature, final IPropertyType ftp )
   {
-    return new EnvelopeFeatureDialog( feature, (IValuePropertyType) ftp );
+    return new EnvelopeFeatureDialog( feature, (IValuePropertyType)ftp );
   }
 
   /**
-   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureviewControl(javax.xml.namespace.QName,
-   *      org.kalypso.template.featureview.ObjectFactory)
+   * @see org.kalypso.ogc.gml.gui.IGuiTypeHandler#createFeatureviewControl(javax.xml.namespace.QName, org.kalypso.template.featureview.ObjectFactory)
    */
   @Override
   public JAXBElement< ? extends ControlType> createFeatureviewControl( final IPropertyType property, final ObjectFactory factory )
@@ -146,7 +144,7 @@ public class Gml3EnvelopeGuiTypeHandler extends LabelProvider implements IGuiTyp
   public IFeatureModifier createFeatureModifier( final GMLXPath propertyPath, final IPropertyType ftp, final IFeatureSelectionManager selectionManager, final IFeatureChangeListener fcl, final String format )
   {
     // if we get a ClassCastExxception here, something is very wrong
-    final IValuePropertyType vpt = (IValuePropertyType) ftp;
+    final IValuePropertyType vpt = (IValuePropertyType)ftp;
 
     final Class< ? > valueClass = getValueClass();
 
@@ -189,7 +187,7 @@ public class Gml3EnvelopeGuiTypeHandler extends LabelProvider implements IGuiTyp
     if( element == null )
       return ""; //$NON-NLS-1$
 
-    final GM_Envelope envelope = (GM_Envelope) element;
+    final GM_Envelope envelope = (GM_Envelope)element;
 
     final String result = new Double( envelope.getMin().getX() ).toString() + ";" + new Double( envelope.getMin().getY() ).toString() + ";" + new Double( envelope.getMax().getX() ).toString() + ";" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         + new Double( envelope.getMax().getY() ).toString();

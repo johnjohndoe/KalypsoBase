@@ -77,7 +77,7 @@ public class LinkedFeatureControlMaker extends AbstractValueControlMaker
     if( !(pt instanceof IRelationType) )
       return null;
 
-    final IRelationType rt = (IRelationType) pt;
+    final IRelationType rt = (IRelationType)pt;
     if( rt.isInlineAble() )
       return null;
 

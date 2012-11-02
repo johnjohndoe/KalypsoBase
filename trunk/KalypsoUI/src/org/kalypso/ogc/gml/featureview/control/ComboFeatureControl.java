@@ -73,7 +73,7 @@ import org.kalypsodeegree_impl.model.feature.search.IReferenceCollectorStrategy;
  * <p>
  * Today only properties with String type are supported.
  * </p>
- *
+ * 
  * @author Gernot Belger
  */
 public class ComboFeatureControl extends AbstractFeatureControl
@@ -85,7 +85,7 @@ public class ComboFeatureControl extends AbstractFeatureControl
     @Override
     public void selectionChanged( final SelectionChangedEvent event )
     {
-      comboSelected( (IStructuredSelection) event.getSelection() );
+      comboSelected( (IStructuredSelection)event.getSelection() );
     }
   };
 
@@ -126,7 +126,7 @@ public class ComboFeatureControl extends AbstractFeatureControl
 
     if( ftp instanceof IValuePropertyType )
     {
-      final IValuePropertyType vpt = (IValuePropertyType) ftp;
+      final IValuePropertyType vpt = (IValuePropertyType)ftp;
       final Map<Object, String> createComboEntries = PropertyUtils.createComboEntries( vpt );
       m_entries.putAll( createComboEntries );
 
@@ -138,7 +138,7 @@ public class ComboFeatureControl extends AbstractFeatureControl
 
     if( ftp instanceof IRelationType )
     {
-      final IRelationType rt = (IRelationType) ftp;
+      final IRelationType rt = (IRelationType)ftp;
       if( !rt.isInlineAble() && rt.isLinkAble() )
       {
         /* Null entry to delete link if this is allowed */
@@ -270,10 +270,9 @@ public class ComboFeatureControl extends AbstractFeatureControl
 
     final Feature feature = getFeature();
 
-
     if( propertyType instanceof IRelationType )
     {
-      final IRelationType relationType = (IRelationType) propertyType;
+      final IRelationType relationType = (IRelationType)propertyType;
       return getXLink( feature, relationType );
     }
 

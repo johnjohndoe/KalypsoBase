@@ -106,8 +106,8 @@ public class Handle implements IHandle
   @Override
   public boolean isSelectable( final Point p, final GeoTransform projection )
   {
-    final int x = (int) projection.getDestX( m_position.getX() );
-    final int y = (int) projection.getDestY( m_position.getY() );
+    final int x = (int)projection.getDestX( m_position.getX() );
+    final int y = (int)projection.getDestY( m_position.getY() );
 
     /* Does the AWT-Point lies inside the rectangle? */
     if( p.getX() > x - m_radius && p.getY() > y - m_radius && p.getX() < x + m_radius && p.getY() < y + m_radius )
@@ -125,8 +125,8 @@ public class Handle implements IHandle
   public void paint( final Graphics g, final GeoTransform projection, final Point startPoint, final Point currentPoint )
   {
     /* Calculate the coordinates for the map. */
-    final int x = (int) projection.getDestX( m_position.getX() );
-    final int y = (int) projection.getDestY( m_position.getY() );
+    final int x = (int)projection.getDestX( m_position.getX() );
+    final int y = (int)projection.getDestY( m_position.getY() );
 
     int dx = 0;
     int dy = 0;
@@ -134,8 +134,8 @@ public class Handle implements IHandle
     if( startPoint != null && currentPoint != null )
     {
       /* Calculate the difference between the two points. */
-      dx = (int) (currentPoint.getX() - startPoint.getX());
-      dy = (int) (currentPoint.getY() - startPoint.getY());
+      dx = (int)(currentPoint.getX() - startPoint.getX());
+      dy = (int)(currentPoint.getY() - startPoint.getY());
     }
 
     g.setColor( Color.GRAY );

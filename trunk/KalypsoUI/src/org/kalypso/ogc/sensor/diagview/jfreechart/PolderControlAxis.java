@@ -51,8 +51,7 @@ import org.jfree.data.Range;
 
 /**
  * A 'boolean' axis. IN reality this is still a number axis, but renders 'true' for value bigger than 0.5 and 'false'
- * for values smaller than 0.5; works with the XYCurveSerie that returns 1 for <code>true</code> and 0 for
- * <code>false</code>.
+ * for values smaller than 0.5; works with the XYCurveSerie that returns 1 for <code>true</code> and 0 for <code>false</code>.
  * 
  * @author Gernot Belger
  */

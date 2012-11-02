@@ -48,14 +48,14 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.deegree.ogcwebservices.wms.capabilities.WMSCapabilitiesDocument;
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
  * Fix for loading xml documents.
- *
+ * 
  * @author Holger Albert
  */
 public class KalypsoWMSCapabilitiesDocument extends WMSCapabilitiesDocument
@@ -64,7 +64,7 @@ public class KalypsoWMSCapabilitiesDocument extends WMSCapabilitiesDocument
    * TODO: please document why it was overwritten, this is the most important thing here! <br>
    * Initializes the <code>XMLFragment</code> with the content from the given <code>Reader</code>. Sets the SystemId,
    * too.
-   *
+   * 
    * @param reader
    * @param systemId
    *          can not be null. This string should represent a URL that is related to the passed reader. If this URL is
@@ -104,7 +104,7 @@ public class KalypsoWMSCapabilitiesDocument extends WMSCapabilitiesDocument
    * <li>validating = false
    * <li>expandind entity references = false
    * </UL>
-   *
+   * 
    * @return new document builder
    */
   public synchronized DocumentBuilder getDocumentBuilder( )

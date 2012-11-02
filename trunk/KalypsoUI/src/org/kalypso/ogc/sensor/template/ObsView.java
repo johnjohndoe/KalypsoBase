@@ -66,9 +66,8 @@ import org.kalypso.ogc.sensor.provider.PooledObsProvider;
 /**
  * A kind of view over observations.
  * <p>
- * The view supports enabled features, which might dictate some of the aspects of the appearance. By default, features
- * are enabled.
- *
+ * The view supports enabled features, which might dictate some of the aspects of the appearance. By default, features are enabled.
+ * 
  * @author schlienger
  */
 public abstract class ObsView implements IObsViewEventProvider
@@ -133,7 +132,7 @@ public abstract class ObsView implements IObsViewEventProvider
   /**
    * This method must be called before items are added. If items were already present in this view, it has no impact on
    * them.
-   *
+   * 
    * @param ignoreTypes
    *          if null a default empty array is used
    */
@@ -152,7 +151,7 @@ public abstract class ObsView implements IObsViewEventProvider
 
   /**
    * Return a correct string representation
-   *
+   * 
    * @see java.lang.Object#toString()
    */
   @Override
@@ -172,7 +171,7 @@ public abstract class ObsView implements IObsViewEventProvider
     {
       for( final Object element2 : m_items )
       {
-        final ObsViewItem element = (ObsViewItem) element2;
+        final ObsViewItem element = (ObsViewItem)element2;
         element.dispose();
       }
       m_items.clear();
@@ -249,7 +248,7 @@ public abstract class ObsView implements IObsViewEventProvider
     {
       final Object[] listeners = m_listeners.toArray();
       for( final Object element : listeners )
-        ((IObsViewEventListener) element).onObsViewChanged( evt );
+        ((IObsViewEventListener)element).onObsViewChanged( evt );
     }
   }
 
@@ -259,7 +258,7 @@ public abstract class ObsView implements IObsViewEventProvider
     {
       final Object[] listeners = m_listeners.toArray();
       for( final Object element : listeners )
-        ((IObsViewEventListener) element).onPrintObsView( evt );
+        ((IObsViewEventListener)element).onPrintObsView( evt );
     }
   }
 
@@ -289,13 +288,13 @@ public abstract class ObsView implements IObsViewEventProvider
 
         try
         {
-          final boolean isSync = ((Boolean) m_data[3]).booleanValue();
+          final boolean isSync = ((Boolean)m_data[3]).booleanValue();
           if( isSync )
           {
             provider.objectLoaded( key, newValue, Status.OK_STATUS );
           }
 
-          ((ObsView) m_data[0]).addObservation( provider, (String) m_data[2], (ObsView.ItemData) m_data[1] );
+          ((ObsView)m_data[0]).addObservation( provider, (String)m_data[2], (ObsView.ItemData)m_data[1] );
         }
         catch( final Throwable t )
         {
@@ -327,7 +326,7 @@ public abstract class ObsView implements IObsViewEventProvider
       if( !obsmap.containsKey( observation ) )
         obsmap.put( observation, new ArrayList<ObsViewItem>() );
 
-      ((List<ObsViewItem>) obsmap.get( observation )).add( element );
+      ((List<ObsViewItem>)obsmap.get( observation )).add( element );
     }
 
     return obsmap;
@@ -380,7 +379,7 @@ public abstract class ObsView implements IObsViewEventProvider
   /**
    * Hide items which are displaying an observation which axis is of the given type. This method is the pendant to
    * setIgnoreType, but in contrario to the former, it only hides the items in the ui (it does not remove it).
-   *
+   * 
    * @param types
    *          list of types that should be hidden
    */

@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.List;
 import org.kalypso.gmlschema.GMLSchemaCatalog;
 import org.kalypso.gmlschema.KalypsoGMLSchemaPlugin;
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -114,8 +114,8 @@ public class GMLSchemaSelectionPage extends WizardPage implements ISelectionChan
   @Override
   public void selectionChanged( final SelectionChangedEvent event )
   {
-    final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-    m_namespace = (String) selection.getFirstElement();
+    final IStructuredSelection selection = (IStructuredSelection)event.getSelection();
+    m_namespace = (String)selection.getFirstElement();
 
     setPageComplete( m_namespace != null );
   }

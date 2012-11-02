@@ -55,8 +55,8 @@ public class QuantitySorter extends ViewerSorter
   @Override
   public int compare( final Viewer viewer, final Object o1, final Object o2 )
   {
-    final ColorMapEntry entry1 = (ColorMapEntry) o1;
-    final ColorMapEntry entry2 = (ColorMapEntry) o2;
+    final ColorMapEntry entry1 = (ColorMapEntry)o1;
+    final ColorMapEntry entry2 = (ColorMapEntry)o2;
 
     return compareQuantities( entry1, entry2 );
 

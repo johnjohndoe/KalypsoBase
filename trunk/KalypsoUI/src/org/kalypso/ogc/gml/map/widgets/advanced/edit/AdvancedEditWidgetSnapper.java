@@ -70,7 +70,7 @@ public class AdvancedEditWidgetSnapper
       final Geometry geometry = entry.getKey();
       if( geometry instanceof Polygon )
       {
-        final Polygon polygon = (Polygon) geometry;
+        final Polygon polygon = (Polygon)geometry;
         final LineString ring = polygon.getExteriorRing();
 
         // ignore last point - in a linear ring first and last point are always the same!

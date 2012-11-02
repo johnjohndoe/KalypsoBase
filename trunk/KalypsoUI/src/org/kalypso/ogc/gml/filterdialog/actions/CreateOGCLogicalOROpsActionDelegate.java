@@ -54,19 +54,19 @@ public class CreateOGCLogicalOROpsActionDelegate extends AbstractCreateOperation
         final Object firstElement = m_selection.getFirstElement();
         if( firstElement instanceof ComplexFilter )
         {
-          final ComplexFilter filter = (ComplexFilter) firstElement;
+          final ComplexFilter filter = (ComplexFilter)firstElement;
           filter.setOperation( new LogicalOperation( OperationDefines.OR, new ArrayList<Operation>() ) );
         }
         if( firstElement instanceof LogicalOperation )
         {
-          final LogicalOperation operation = (LogicalOperation) firstElement;
+          final LogicalOperation operation = (LogicalOperation)firstElement;
           // add new Logical Operation
           List<Operation> arguments = operation.getArguments();
           if( arguments == null )
             arguments = new ArrayList<>();
           arguments.add( new LogicalOperation( OperationDefines.OR, new ArrayList<Operation>() ) );
         }
-        ((TreeSelection) m_selection).structureChanged();
+        ((TreeSelection)m_selection).structureChanged();
       }
     }
   }

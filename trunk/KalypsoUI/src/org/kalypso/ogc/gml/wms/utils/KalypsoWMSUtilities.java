@@ -59,7 +59,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.UrlUtilities;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.core.exceptions.ExceptionCode;
 import org.kalypso.ogc.core.exceptions.OWSException;
 import org.kalypso.ogc.core.utils.OWSUtilities;
@@ -67,6 +66,7 @@ import org.kalypso.ogc.gml.wms.provider.images.AbstractDeegreeImageProvider;
 import org.kalypso.ogc.gml.wms.provider.images.IKalypsoImageProvider;
 import org.kalypso.ogc.gml.wms.provider.images.WMSImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 
 /**
@@ -94,8 +94,7 @@ public class KalypsoWMSUtilities
 
   /**
    * This function should return an image provider for the given source. It chooses with the PROVIDER attribute and
-   * returns the specific provider. If none could be found using that source of information, an default one (
-   * {@link org.kalypso.ogc.gml.map.themes.provider.KalypsoWMSImageProvider} will be returned.
+   * returns the specific provider. If none could be found using that source of information, an default one ( {@link org.kalypso.ogc.gml.map.themes.provider.KalypsoWMSImageProvider} will be returned.
    * 
    * @param themeName
    *          The name of the theme. Will be used to initialize the image provider.
@@ -138,7 +137,7 @@ public class KalypsoWMSUtilities
         try
         {
           /* This is the wanted provider. */
-          final IKalypsoImageProvider provider = (IKalypsoImageProvider) element.createExecutableExtension( "class" ); //$NON-NLS-1$
+          final IKalypsoImageProvider provider = (IKalypsoImageProvider)element.createExecutableExtension( "class" ); //$NON-NLS-1$
           provider.init( providerID, themeName, layers, styles, service, localSRS, sldBody );
           return provider;
         }
@@ -259,7 +258,7 @@ public class KalypsoWMSUtilities
     {
       final Object xmlObject = OWSUtilities.unmarshall( new StringReader( xml ) );
       if( xmlObject instanceof ExceptionReport )
-        return (ExceptionReport) xmlObject;
+        return (ExceptionReport)xmlObject;
 
       return null;
     }

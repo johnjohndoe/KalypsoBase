@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * Config Dialog for FileRepositoryFactory. TODO: use plugin's dialog store to store default values
@@ -131,7 +131,7 @@ public class FileRepositoryConfigDialog extends TitleAreaDialog
     setTitle( Messages.getString( "org.kalypso.ui.repository.factory.FileRepositoryConfigDialog.5" ) ); //$NON-NLS-1$
     setMessage( msg );
 
-    final Composite c = (Composite) super.createDialogArea( parent );
+    final Composite c = (Composite)super.createDialogArea( parent );
 
     final Composite sub = new Composite( c, SWT.FILL );
 

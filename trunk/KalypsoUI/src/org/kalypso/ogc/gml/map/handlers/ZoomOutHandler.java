@@ -58,7 +58,7 @@ public class ZoomOutHandler extends AbstractHandler
   @Override
   public Object execute( final ExecutionEvent event ) throws ExecutionException
   {
-    final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+    final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
     final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( context );
 
     final GM_Envelope zoomBox = MapPanelUtilities.calcZoomInBoundingBox( mapPanel.getBoundingBox(), false );

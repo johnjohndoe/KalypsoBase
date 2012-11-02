@@ -64,7 +64,7 @@ public class StrokeOpacityValue extends InputWithContextObservableValue<Stroke, 
   {
     try
     {
-      return (int) (data.getOpacity( null ) * 100.0);
+      return (int)(data.getOpacity( null ) * 100.0);
     }
     catch( final FilterEvaluationException e )
     {
@@ -74,8 +74,7 @@ public class StrokeOpacityValue extends InputWithContextObservableValue<Stroke, 
   }
 
   /**
-   * @see org.kalypso.ui.editor.styleeditor.forms.InputWithContextObservableValue#setValueToInput(java.lang.Object,
-   *      java.lang.Object)
+   * @see org.kalypso.ui.editor.styleeditor.forms.InputWithContextObservableValue#setValueToInput(java.lang.Object, java.lang.Object)
    */
   @Override
   protected void setValueToInput( final Stroke data, final Integer value )

@@ -70,7 +70,7 @@ public class UndoRedoDelegate extends AbstractGisEditorActionDelegate
 
     // WARNING: Because of the following cast, we can only use
     // this delegate with the GisTableEditor.
-    final GisTableEditor editor = (GisTableEditor) part.getPart();
+    final GisTableEditor editor = (GisTableEditor)part.getPart();
     if( editor == null )
       return;
 
@@ -96,7 +96,7 @@ public class UndoRedoDelegate extends AbstractGisEditorActionDelegate
 
     // WARNING: Because of the following cast, we can only use
     // this delegate with the GMLEditor.
-    final GisTableEditor editor = (GisTableEditor) part.getPart();
+    final GisTableEditor editor = (GisTableEditor)part.getPart();
     if( editor != null )
     {
       final ILayerTableInput input = editor.getTableInput();

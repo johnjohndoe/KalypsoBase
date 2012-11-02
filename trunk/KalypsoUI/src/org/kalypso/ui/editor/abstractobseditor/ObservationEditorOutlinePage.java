@@ -35,7 +35,7 @@ import org.kalypso.ui.editor.diagrameditor.actions.EditDiagCurveAction;
 
 /**
  * AbstractObsOutlinePage
- *
+ * 
  * @author schlienger
  */
 public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements IObsViewEventListener, ICheckStateListener
@@ -60,7 +60,7 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
   {
     super.createControl( parent );
 
-    final ContainerCheckedTreeViewer tv = (ContainerCheckedTreeViewer) getTreeViewer();
+    final ContainerCheckedTreeViewer tv = (ContainerCheckedTreeViewer)getTreeViewer();
 
     // drop support for files
     final Transfer[] transfers = new Transfer[] { FileTransfer.getInstance() };
@@ -112,7 +112,7 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
 
     if( sel instanceof IStructuredSelection )
     {
-      final IStructuredSelection structSel = (IStructuredSelection) sel;
+      final IStructuredSelection structSel = (IStructuredSelection)sel;
 
       Arrays.addAllOfClass( structSel.toList(), items, ObsViewItem.class );
     }
@@ -139,7 +139,7 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
             return;
 
           tv.refresh();
-          refreshCheckState( (ContainerCheckedTreeViewer) tv );
+          refreshCheckState( (ContainerCheckedTreeViewer)tv );
         }
       } );
     }
@@ -161,7 +161,7 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
 
     m_view = view;
 
-    final ContainerCheckedTreeViewer tv = (ContainerCheckedTreeViewer) getTreeViewer();
+    final ContainerCheckedTreeViewer tv = (ContainerCheckedTreeViewer)getTreeViewer();
     if( tv != null )
     {
       getSite().getShell().getDisplay().syncExec( new Runnable()
@@ -201,7 +201,7 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
     if( m_view != null )
       m_view.removeObsViewListener( this );
 
-    final ContainerCheckedTreeViewer tv = (ContainerCheckedTreeViewer) getTreeViewer();
+    final ContainerCheckedTreeViewer tv = (ContainerCheckedTreeViewer)getTreeViewer();
     if( tv != null )
       tv.removeCheckStateListener( this );
 
@@ -218,7 +218,7 @@ public class ObservationEditorOutlinePage extends ContentOutlinePage2 implements
 
     if( element instanceof ObsViewItem )
     {
-      final ObsViewItem item = (ObsViewItem) element;
+      final ObsViewItem item = (ObsViewItem)element;
       m_editor.postCommand( new SetShownCommand( item, event.getChecked() ), null );
 // item.setShown( event.getChecked() );
     }

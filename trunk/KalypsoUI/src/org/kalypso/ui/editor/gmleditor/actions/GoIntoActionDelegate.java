@@ -59,13 +59,12 @@ public class GoIntoActionDelegate implements IEditorActionDelegate
   private GmlEditor m_targetEditor;
 
   /**
-   * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction,
-   *      org.eclipse.ui.IEditorPart)
+   * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction, org.eclipse.ui.IEditorPart)
    */
   @Override
   public void setActiveEditor( final IAction action, final IEditorPart targetEditor )
   {
-    m_targetEditor = (GmlEditor) targetEditor;
+    m_targetEditor = (GmlEditor)targetEditor;
   }
 
   /**
@@ -79,21 +78,20 @@ public class GoIntoActionDelegate implements IEditorActionDelegate
     if( !(cp instanceof GMLContentProvider) )
       return;
 
-    final GMLContentProvider contentProvider = (GMLContentProvider) cp;
-    final IStructuredSelection selection = (IStructuredSelection) treeViewer.getSelection();
+    final GMLContentProvider contentProvider = (GMLContentProvider)cp;
+    final IStructuredSelection selection = (IStructuredSelection)treeViewer.getSelection();
     contentProvider.goInto( selection.getFirstElement() );
 
     m_targetEditor.fireDirty();
   }
 
   /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-   *      org.eclipse.jface.viewers.ISelection)
+   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
    */
   @Override
   public void selectionChanged( final IAction action, final ISelection selection )
   {
-    final IStructuredSelection structSel = (IStructuredSelection) selection;
+    final IStructuredSelection structSel = (IStructuredSelection)selection;
     if( m_targetEditor == null )
     {
       action.setEnabled( false );
@@ -101,7 +99,7 @@ public class GoIntoActionDelegate implements IEditorActionDelegate
     }
 
     final TreeViewer treeViewer = m_targetEditor.getTreeView().getTreeViewer();
-    final ITreeContentProvider cp = (ITreeContentProvider) treeViewer.getContentProvider();
+    final ITreeContentProvider cp = (ITreeContentProvider)treeViewer.getContentProvider();
     action.setEnabled( structSel.size() == 1 && cp.hasChildren( structSel.getFirstElement() ) );
   }
 }

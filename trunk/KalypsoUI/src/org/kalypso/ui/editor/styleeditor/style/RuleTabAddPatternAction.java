@@ -4,9 +4,9 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.swt.custom.CTabFolder;
 import org.kalypso.commons.eclipse.jface.viewers.ITabAction;
 import org.kalypso.commons.eclipse.jface.viewers.TabViewer;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -30,7 +30,7 @@ public final class RuleTabAddPatternAction extends Action implements ITabAction
   @Override
   public void run( )
   {
-    final RuleOrPatternCollection input = (RuleOrPatternCollection) m_viewer.getInput();
+    final RuleOrPatternCollection input = (RuleOrPatternCollection)m_viewer.getInput();
     input.addNewPatternCollection();
   }
 
@@ -40,7 +40,7 @@ public final class RuleTabAddPatternAction extends Action implements ITabAction
   @Override
   public void update( final CTabFolder folder )
   {
-    final RuleOrPatternCollection input = (RuleOrPatternCollection) m_viewer.getInput();
+    final RuleOrPatternCollection input = (RuleOrPatternCollection)m_viewer.getInput();
     setEnabled( input != null && input.canAddPatternRule() );
   }
 }

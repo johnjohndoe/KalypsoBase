@@ -55,7 +55,6 @@ import org.kalypso.core.KalypsoCorePlugin;
 import org.kalypso.core.status.StatusDialog;
 import org.kalypso.core.util.pool.KeyInfo;
 import org.kalypso.core.util.pool.ResourcePool;
-import org.kalypso.i18n.Messages;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.tableview.TableView;
@@ -65,10 +64,11 @@ import org.kalypso.ogc.sensor.template.ObsViewItem;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.AbstractEditorActionDelegate;
 import org.kalypso.ui.editor.obstableeditor.ObservationTableEditor;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * Save data
- *
+ * 
  * @author schlienger
  */
 public class SaveDataAction extends AbstractEditorActionDelegate
@@ -79,7 +79,7 @@ public class SaveDataAction extends AbstractEditorActionDelegate
     final ResourcePool pool = KalypsoCorePlugin.getDefault().getPool();
 
     final Collection<IStatus> problems = new ArrayList<>();
-    final TableView tableView = (TableView) ((ObservationTableEditor) getEditor()).getView();
+    final TableView tableView = (TableView)((ObservationTableEditor)getEditor()).getView();
 
     final ObsViewItem[] itemsAsObsView = tableView.getItems();
     final TableViewColumn[] itemsAsTableViewColumns = Arrays.copyOf( itemsAsObsView, itemsAsObsView.length, TableViewColumn[].class );

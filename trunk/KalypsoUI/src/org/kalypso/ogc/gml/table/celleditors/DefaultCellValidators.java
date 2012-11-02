@@ -42,7 +42,7 @@ package org.kalypso.ogc.gml.table.celleditors;
 
 import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.kalypso.contribs.java.lang.NumberUtils;
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * TODO: hook into a more general validation framework

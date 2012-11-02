@@ -57,7 +57,7 @@ import org.kalypso.util.themes.position.PositionUtilities;
 
 /**
  * This class provides functions for {@link org.kalypso.ogc.gml.IKalypsoTheme}s.
- *
+ * 
  * @author Holger Albert
  */
 public class LegendUtilities
@@ -97,7 +97,7 @@ public class LegendUtilities
   /**
    * This function verifies the ids contained in the themeIdsProperty variable and returns a list of ids, still
    * contained in the map model.
-   *
+   * 
    * @param mapModel
    *          The map model.
    * @param themeIdsProperty
@@ -134,7 +134,7 @@ public class LegendUtilities
 
   /**
    * This function returns a properties object, containing all serialized default legend properties.
-   *
+   * 
    * @return A properties object, containing all serialized default legend properties.
    */
   public static Properties getDefaultProperties( )
@@ -162,7 +162,7 @@ public class LegendUtilities
 
   /**
    * This function returns the theme with the given id, if only one theme with the id exists in the map model.
-   *
+   * 
    * @param mapModel
    *          The map model.
    * @param id

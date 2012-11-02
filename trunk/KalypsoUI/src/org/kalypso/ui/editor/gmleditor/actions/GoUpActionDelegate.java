@@ -56,13 +56,12 @@ public class GoUpActionDelegate implements IEditorActionDelegate
   private GmlEditor m_targetEditor;
 
   /**
-   * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction,
-   *      org.eclipse.ui.IEditorPart)
+   * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction, org.eclipse.ui.IEditorPart)
    */
   @Override
   public void setActiveEditor( final IAction action, final IEditorPart targetEditor )
   {
-    m_targetEditor = (GmlEditor) targetEditor;
+    m_targetEditor = (GmlEditor)targetEditor;
 
     refreshAction( action );
   }
@@ -76,7 +75,7 @@ public class GoUpActionDelegate implements IEditorActionDelegate
     final IContentProvider cp = m_targetEditor.getTreeView().getTreeViewer().getContentProvider();
     if( cp instanceof GMLContentProvider )
     {
-      final GMLContentProvider contentProvider = (GMLContentProvider) m_targetEditor.getTreeView().getTreeViewer().getContentProvider();
+      final GMLContentProvider contentProvider = (GMLContentProvider)m_targetEditor.getTreeView().getTreeViewer().getContentProvider();
       contentProvider.goUp();
     }
 
@@ -86,8 +85,7 @@ public class GoUpActionDelegate implements IEditorActionDelegate
   }
 
   /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-   *      org.eclipse.jface.viewers.ISelection)
+   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
    */
   @Override
   public void selectionChanged( final IAction action, final ISelection selection )
@@ -106,7 +104,7 @@ public class GoUpActionDelegate implements IEditorActionDelegate
     final IContentProvider cp = m_targetEditor.getTreeView().getTreeViewer().getContentProvider();
     if( cp instanceof GMLContentProvider )
     {
-      final GMLContentProvider contentProvider = (GMLContentProvider) cp;
+      final GMLContentProvider contentProvider = (GMLContentProvider)cp;
       action.setEnabled( contentProvider.canGoUp() );
     }
     else

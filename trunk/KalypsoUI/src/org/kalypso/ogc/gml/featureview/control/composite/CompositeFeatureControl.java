@@ -98,7 +98,7 @@ public class CompositeFeatureControl extends AbstractFeatureCompositionControl
     {
       final Group group = new org.eclipse.swt.widgets.Group( parent, style );
 
-      final String groupControlText = ((org.kalypso.template.featureview.Group) m_compositeType).getText();
+      final String groupControlText = ((org.kalypso.template.featureview.Group)m_compositeType).getText();
 
       final String groupText = getAnnotation( IAnnotation.ANNO_LABEL, groupControlText );
       group.setText( translate( groupText ) );

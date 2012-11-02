@@ -57,7 +57,7 @@ import org.kalypsodeegree.model.feature.Feature;
 
 /**
  * Creates feature controls for lists of linked features
- *
+ * 
  * @author Gernot Belger
  */
 public class LinkedListFeatureControlMaker extends AbstractValueControlMaker
@@ -73,7 +73,7 @@ public class LinkedListFeatureControlMaker extends AbstractValueControlMaker
     if( !(pt instanceof IRelationType) )
       return null;
 
-    final IRelationType rt = (IRelationType) pt;
+    final IRelationType rt = (IRelationType)pt;
     if( rt.isInlineAble() )
       return null;
 

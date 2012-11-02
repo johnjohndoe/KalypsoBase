@@ -58,7 +58,7 @@ public class ThemeNodeAdapterFactory implements IAdapterFactory
     if( !(adaptableObject instanceof IThemeNode) )
       return null;
 
-    final IThemeNode node = (IThemeNode) adaptableObject;
+    final IThemeNode node = (IThemeNode)adaptableObject;
 
     if( adapterType == IWorkbenchAdapter2.class || adapterType == IWorkbenchAdapter.class )
       return THEME_NODE_WORKBENCH_ADAPTER;

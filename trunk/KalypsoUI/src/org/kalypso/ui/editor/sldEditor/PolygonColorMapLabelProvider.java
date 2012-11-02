@@ -76,7 +76,7 @@ public class PolygonColorMapLabelProvider extends ColorMapLabelProvider
   @Override
   public String getColumnText( final Object element, final int columnIndex )
   {
-    final PolygonColorMapEntry entry = (PolygonColorMapEntry) element;
+    final PolygonColorMapEntry entry = (PolygonColorMapEntry)element;
 
     final PolygonColorMapContentProvider.PROPS prop = PolygonColorMapContentProvider.PROPS.values()[columnIndex];
 
@@ -123,7 +123,7 @@ public class PolygonColorMapLabelProvider extends ColorMapLabelProvider
   @Override
   protected java.awt.Color getAwtColor( final Object element, final int columnIndex )
   {
-    final PolygonColorMapEntry entry = (PolygonColorMapEntry) element;
+    final PolygonColorMapEntry entry = (PolygonColorMapEntry)element;
 
     final PolygonColorMapContentProvider.PROPS prop = PolygonColorMapContentProvider.PROPS.values()[columnIndex];
 

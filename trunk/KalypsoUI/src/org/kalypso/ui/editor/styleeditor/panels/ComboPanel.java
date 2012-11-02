@@ -119,7 +119,7 @@ public abstract class ComboPanel
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        selection_index = ((Combo) e.getSource()).getSelectionIndex();
+        selection_index = ((Combo)e.getSource()).getSelectionIndex();
         fire();
       }
 
@@ -148,7 +148,7 @@ public abstract class ComboPanel
       if( listeners[i] == PanelListener.class )
       {
         final PanelEvent event = new PanelEvent( this );
-        ((PanelListener) listeners[i + 1]).valueChanged( event );
+        ((PanelListener)listeners[i + 1]).valueChanged( event );
       }
     }
   }

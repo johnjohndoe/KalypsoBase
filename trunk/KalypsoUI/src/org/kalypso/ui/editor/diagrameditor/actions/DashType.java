@@ -43,7 +43,7 @@ package org.kalypso.ui.editor.diagrameditor.actions;
 
 import java.util.Arrays;
 
-import org.kalypso.i18n.Messages;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * Represents dash arrays for awt-strokes.
@@ -104,7 +104,7 @@ public class DashType
   {
     if( obj instanceof DashType )
     {
-      final DashType other = (DashType) obj;
+      final DashType other = (DashType)obj;
       return Arrays.equals( m_dashs, other.m_dashs );
     }
 

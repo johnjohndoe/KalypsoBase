@@ -77,7 +77,6 @@ import org.jfree.ui.TextAnchor;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilities;
 import org.kalypso.contribs.java.lang.reflect.ClassUtilityException;
 import org.kalypso.core.KalypsoCorePlugin;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.sensor.DateRange;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
@@ -90,10 +89,11 @@ import org.kalypso.ogc.sensor.diagview.DiagramAxis;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.template.ObsViewItem;
 import org.kalypso.ogc.sensor.timeseries.TimeseriesUtils;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * A plot for IObservation.
- *
+ * 
  * @author schlienger
  */
 public class ObservationPlot extends XYPlot
@@ -136,7 +136,7 @@ public class ObservationPlot extends XYPlot
 
     final ObsViewItem[] curves = view.getItems();
     for( final ObsViewItem element : curves )
-      addCurve( (DiagViewCurve) element );
+      addCurve( (DiagViewCurve)element );
 
     setNoDataMessage( Messages.getString( "org.kalypso.ogc.sensor.diagview.jfreechart.ObservationPlot.1" ) ); //$NON-NLS-1$
   }
@@ -148,7 +148,7 @@ public class ObservationPlot extends XYPlot
 
   /**
    * Adds a diagram axis and configures it for the use in this plot.
-   *
+   * 
    * @param axis
    *          can be null, if present it is used to define a best suited formatter for the chart axis
    */
@@ -170,7 +170,7 @@ public class ObservationPlot extends XYPlot
       final String axisLabel = diagAxis.toFullString();
       // Small hack:_ if label is null, we need to instantiate with an string, else the reflection does not work.
       final String[] arguments = axisLabel == null ? new String[] { "" } : new String[] { axisLabel }; //$NON-NLS-1$
-      final ValueAxis vAxis = (ValueAxis) ClassUtilities.newInstance( axisClass, ValueAxis.class, ObservationPlot.class.getClassLoader(), arguments );
+      final ValueAxis vAxis = (ValueAxis)ClassUtilities.newInstance( axisClass, ValueAxis.class, ObservationPlot.class.getClassLoader(), arguments );
       if( axisLabel == null )
         vAxis.setLabel( null );
 
@@ -379,7 +379,7 @@ public class ObservationPlot extends XYPlot
         if( !m_markers.containsKey( begin ) )
         {
           final long end = fr.getTo().getTime();
-          final Marker marker = createMarker( begin.doubleValue(), end, Messages.getString("ObservationPlot.0"), TimeseriesUtils.getColorForMD( ITimeseriesConstants.MD_VORHERSAGE ) ); //$NON-NLS-1$
+          final Marker marker = createMarker( begin.doubleValue(), end, Messages.getString( "ObservationPlot.0" ), TimeseriesUtils.getColorForMD( ITimeseriesConstants.MD_VORHERSAGE ) ); //$NON-NLS-1$
 
           addDomainMarker( marker, Layer.BACKGROUND );
 
@@ -429,7 +429,7 @@ public class ObservationPlot extends XYPlot
 
     for( final Object element : m_curve2serie.keySet() )
     {
-      final DiagViewCurve curve = (DiagViewCurve) element;
+      final DiagViewCurve curve = (DiagViewCurve)element;
 
       try
       {
@@ -515,7 +515,7 @@ public class ObservationPlot extends XYPlot
 
   /**
    * overwritten to return a default axis when no real axes defined yet
-   *
+   * 
    * @see org.jfree.chart.plot.XYPlot#getDomainAxis()
    */
   @Override
@@ -529,7 +529,7 @@ public class ObservationPlot extends XYPlot
 
   /**
    * Overriden to return a default axis when no real axes defined yet
-   *
+   * 
    * @see org.jfree.chart.plot.XYPlot#getRangeAxis()
    */
   @Override
@@ -550,9 +550,8 @@ public class ObservationPlot extends XYPlot
 
   /**
    * overriden to also draw our alarmlevels
-   *
-   * @see org.jfree.chart.plot.XYPlot#drawAnnotations(java.awt.Graphics2D, java.awt.geom.Rectangle2D,
-   *      org.jfree.chart.plot.PlotRenderingInfo)
+   * 
+   * @see org.jfree.chart.plot.XYPlot#drawAnnotations(java.awt.Graphics2D, java.awt.geom.Rectangle2D, org.jfree.chart.plot.PlotRenderingInfo)
    */
   @Override
   public final synchronized void drawAnnotations( final Graphics2D g2d, final Rectangle2D rec, final PlotRenderingInfo arg2 )
@@ -752,7 +751,7 @@ public class ObservationPlot extends XYPlot
 
   /**
    * mini helper class for storing a value and a color
-   *
+   * 
    * @author schlienger
    */
   private static final class AlarmLevelPlotElement
@@ -823,7 +822,7 @@ public class ObservationPlot extends XYPlot
   {
     if( axis instanceof DateAxis )
     {
-      final DateAxis da = (DateAxis) axis;
+      final DateAxis da = (DateAxis)axis;
       final DateFormat df = da.getDateFormatOverride() == null ? null : da.getDateFormatOverride();
       if( df != null )
       {

@@ -79,7 +79,7 @@ public class RepositoryArrayContentProvider extends ArrayContentProvider
     {
       final List<RepositoryFactoryConfig> filtered = new ArrayList<>();
 
-      final RepositoryFactoryConfig[] factories = (RepositoryFactoryConfig[]) inputElement;
+      final RepositoryFactoryConfig[] factories = (RepositoryFactoryConfig[])inputElement;
       for( final RepositoryFactoryConfig factory : factories )
       {
 

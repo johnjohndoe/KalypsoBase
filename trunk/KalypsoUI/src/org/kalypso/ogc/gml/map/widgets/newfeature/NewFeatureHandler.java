@@ -33,14 +33,14 @@ public class NewFeatureHandler extends AbstractHandler
   {
     final String parameterFeatureType = event.getParameter( PARAMETER_FEATURE_TYPE );
 
-    final IEvaluationContext applicationContext = (IEvaluationContext) event.getApplicationContext();
+    final IEvaluationContext applicationContext = (IEvaluationContext)event.getApplicationContext();
 
     final IMapPanel mapPanel = MapHandlerUtils.getMapPanelChecked( applicationContext );
     final IKalypsoTheme activeTheme = MapHandlerUtils.getActiveThemeChecked( applicationContext );
     if( !(activeTheme instanceof IKalypsoFeatureTheme) )
       throw new ExecutionException( "No feature theme in context" ); //$NON-NLS-1$
 
-    final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme) activeTheme;
+    final IKalypsoFeatureTheme featureTheme = (IKalypsoFeatureTheme)activeTheme;
 
     final IFeatureType featureType = featureTheme.getFeatureType();
     final FeatureList featureList = featureTheme.getFeatureList();
@@ -72,7 +72,7 @@ public class NewFeatureHandler extends AbstractHandler
      */
     else if( maxOccurs > 1 )
     {
-      final List< ? > list = (List< ? >) parentFeature.getProperty( fatp );
+      final List< ? > list = (List< ? >)parentFeature.getProperty( fatp );
       if( list != null && list.size() >= maxOccurs )
         return null;
     }

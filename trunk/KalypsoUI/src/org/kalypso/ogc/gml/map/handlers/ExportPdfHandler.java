@@ -56,9 +56,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISources;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.map.IMapPanel;
 import org.kalypso.ogc.gml.map.handlers.utils.PDFExporter;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * This handler starts the PDF export.
@@ -83,10 +83,10 @@ public class ExportPdfHandler extends AbstractHandler
     try
     {
       /* Get the evaluation context. */
-      final IEvaluationContext context = (IEvaluationContext) event.getApplicationContext();
+      final IEvaluationContext context = (IEvaluationContext)event.getApplicationContext();
 
       /* Get the shell. */
-      final Shell shell = (Shell) context.getVariable( ISources.ACTIVE_SHELL_NAME );
+      final Shell shell = (Shell)context.getVariable( ISources.ACTIVE_SHELL_NAME );
 
       /* Get the active part. */
       final IWorkbenchPart activePart = HandlerUtil.getActivePart( event );
@@ -98,8 +98,8 @@ public class ExportPdfHandler extends AbstractHandler
 
       /* Ask for a file name. */
       final String fileName = String.format( "%s.pdf", FilenameUtils.removeExtension( activePart.getTitle() ) ); //$NON-NLS-1$
-      final File targetFile = MapHandlerUtils.showSaveFileDialog( shell, Messages.getString("ExportPdfHandler_1"), fileName, PDFExporter.class.getCanonicalName(), new String[] { "*.pdf", "*.*" }, new String[] { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-          Messages.getString("ExportPdfHandler_4"), Messages.getString("ExportPdfHandler_5") } ); //$NON-NLS-1$ //$NON-NLS-2$
+      final File targetFile = MapHandlerUtils.showSaveFileDialog( shell, Messages.getString( "ExportPdfHandler_1" ), fileName, PDFExporter.class.getCanonicalName(), new String[] { "*.pdf", "*.*" }, new String[] { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      Messages.getString( "ExportPdfHandler_4" ), Messages.getString( "ExportPdfHandler_5" ) } ); //$NON-NLS-1$ //$NON-NLS-2$
       if( targetFile == null )
         return null;
 
@@ -115,12 +115,12 @@ public class ExportPdfHandler extends AbstractHandler
         final boolean launch = Program.launch( targetFile.getAbsolutePath() );
         if( !launch )
         {
-          MessageDialog.openError( shell, Messages.getString("ExportPdfHandler_6"), Messages.getString("ExportPdfHandler_7") ); //$NON-NLS-1$ //$NON-NLS-2$
+          MessageDialog.openError( shell, Messages.getString( "ExportPdfHandler_6" ), Messages.getString( "ExportPdfHandler_7" ) ); //$NON-NLS-1$ //$NON-NLS-2$
           return null;
         }
       }
       else
-        ErrorDialog.openError( shell, Messages.getString("ExportPdfHandler_8"), Messages.getString("ExportPdfHandler_9"), status ); //$NON-NLS-1$ //$NON-NLS-2$
+        ErrorDialog.openError( shell, Messages.getString( "ExportPdfHandler_8" ), Messages.getString( "ExportPdfHandler_9" ), status ); //$NON-NLS-1$ //$NON-NLS-2$
 
       return null;
     }

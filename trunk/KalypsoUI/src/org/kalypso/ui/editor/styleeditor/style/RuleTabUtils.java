@@ -68,7 +68,7 @@ public final class RuleTabUtils
       {
         if( propertyType instanceof IValuePropertyType )
         {
-          final IValuePropertyType vpt = (IValuePropertyType) propertyType;
+          final IValuePropertyType vpt = (IValuePropertyType)propertyType;
           final Class< ? > valueClass = vpt.getValueClass();
           if( Number.class.isAssignableFrom( valueClass ) )
             result.add( propertyType );

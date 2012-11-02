@@ -92,7 +92,7 @@ public class FeatureComparator implements Comparator<Object>
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
   @Override
-  @SuppressWarnings("unchecked")//$NON-NLS-1$
+  @SuppressWarnings( "unchecked" )//$NON-NLS-1$
   public int compare( final Object o1, final Object o2 )
   {
     final Feature f1 = FeatureHelper.getFeature( m_workspace, o1 );
@@ -112,9 +112,9 @@ public class FeatureComparator implements Comparator<Object>
     }
 
     if( m_pt != null && m_pt.isList() )
-      return compareLists( (List<Comparable<Object>>) property1, (List<Comparable<Object>>) property2 );
+      return compareLists( (List<Comparable<Object>>)property1, (List<Comparable<Object>>)property2 );
 
-    return compareComparable( (Comparable<Object>) property1, (Comparable<Object>) property2 );
+    return compareComparable( (Comparable<Object>)property1, (Comparable<Object>)property2 );
   }
 
   private int compareComparable( final Comparable<Object> c1, final Comparable<Object> c2 )

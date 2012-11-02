@@ -66,7 +66,7 @@ public class FeatureTypeFeatureviewCatalog extends FeatureTypeCatalog
 
     final Unmarshaller unmarshaller = TemplateUtilities.createFeatureviewUnmarshaller();
 
-    final JAXBElement<FeatureviewType> element = (JAXBElement<FeatureviewType>) unmarshaller.unmarshal( url );
+    final JAXBElement<FeatureviewType> element = (JAXBElement<FeatureviewType>)unmarshaller.unmarshal( url );
     final FeatureviewType featureview = element.getValue();
     return new FeatureviewTypeWithContext( featureview, context );
   }

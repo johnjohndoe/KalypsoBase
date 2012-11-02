@@ -45,8 +45,8 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Event;
 import org.kalypso.commons.eclipse.jface.viewers.ITabItem;
 import org.kalypso.commons.eclipse.jface.viewers.TabViewer;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ui.ImageProvider;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * @author Gernot Belger
@@ -60,7 +60,7 @@ public class AddExternalGraphicItemAction extends Action
     m_tabViewer = tabViewer;
 
     setImageDescriptor( ImageProvider.IMAGE_STYLEEDITOR_ADD_RULE );
-    setToolTipText( Messages.getString("AddExternalGraphicItemAction_0") ); //$NON-NLS-1$
+    setToolTipText( Messages.getString( "AddExternalGraphicItemAction_0" ) ); //$NON-NLS-1$
   }
 
   /**
@@ -69,7 +69,7 @@ public class AddExternalGraphicItemAction extends Action
   @Override
   public void runWithEvent( final Event event )
   {
-    final GraphicElementsTabList list = (GraphicElementsTabList) m_tabViewer.getInput();
+    final GraphicElementsTabList list = (GraphicElementsTabList)m_tabViewer.getInput();
 
     final ITabItem item = list.addNewExternalGraphic();
     if( item != null )

@@ -69,7 +69,7 @@ public final class NewScopeFactory
     if( elementInScope instanceof FeatureAssociationTypeElement )
     {
 
-      return new NewFeaturePropertyScope( (FeatureAssociationTypeElement) elementInScope, workspace, selectionManager );
+      return new NewFeaturePropertyScope( (FeatureAssociationTypeElement)elementInScope, workspace, selectionManager );
     }
 
     if( selection instanceof IFeatureSelection )

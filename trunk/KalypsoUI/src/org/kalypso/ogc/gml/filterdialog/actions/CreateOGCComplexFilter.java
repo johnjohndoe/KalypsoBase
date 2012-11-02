@@ -55,33 +55,32 @@ public class CreateOGCComplexFilter implements IActionDelegate
 
       if( m_selection instanceof TreeSelection )
       {
-        final Object model = ((TreeSelection) m_selection).getModel();
+        final Object model = ((TreeSelection)m_selection).getModel();
         if( model instanceof FilterRootElement )
         {
           final ComplexFilter filter = new ComplexFilter( null );
-          final Object[] children = ((FilterRootElement) model).getChildren();
+          final Object[] children = ((FilterRootElement)model).getChildren();
           if( children.length == 0 )
           {
-            ((FilterRootElement) model).addChild( filter );
+            ((FilterRootElement)model).addChild( filter );
           }
         }
-        ((TreeSelection) m_selection).structureChanged();
+        ((TreeSelection)m_selection).structureChanged();
       }
     }
 
   }
 
   /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-   *      org.eclipse.jface.viewers.ISelection)
+   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
    */
   @Override
   public void selectionChanged( final IAction action, final ISelection selection )
   {
     if( selection instanceof IStructuredSelection )
     {
-      m_selection = (IStructuredSelection) selection;
-      final Object firstElement = ((IStructuredSelection) selection).getFirstElement();
+      m_selection = (IStructuredSelection)selection;
+      final Object firstElement = ((IStructuredSelection)selection).getFirstElement();
       if( firstElement instanceof FilterRootElement )
       {
         action.setEnabled( true );

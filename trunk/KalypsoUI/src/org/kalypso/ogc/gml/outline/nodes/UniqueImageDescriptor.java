@@ -100,7 +100,7 @@ class UniqueImageDescriptor extends ImageDescriptor
       return false;
     }
 
-    final UniqueImageDescriptor imgWrap = (UniqueImageDescriptor) obj;
+    final UniqueImageDescriptor imgWrap = (UniqueImageDescriptor)obj;
 
     // Intentionally using == instead of equals() as Image.hashCode() changes
     // when the image is disposed and so leaks may occur with equals()

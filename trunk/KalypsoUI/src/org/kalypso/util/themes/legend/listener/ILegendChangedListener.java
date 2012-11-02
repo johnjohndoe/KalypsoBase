@@ -46,7 +46,7 @@ import org.eclipse.swt.graphics.RGB;
 
 /**
  * This interface provides functions for listener, which would like to be notified if a legend property has changed.
- *
+ * 
  * @author Holger Albert
  */
 public interface ILegendChangedListener

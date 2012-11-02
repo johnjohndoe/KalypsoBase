@@ -57,7 +57,7 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 
 /**
  * This is an image catalog for linked features.
- *
+ * 
  * @author Holger Albert
  */
 public final class LinkedFeatureTypeImageCatalog
@@ -79,7 +79,7 @@ public final class LinkedFeatureTypeImageCatalog
 
   /**
    * This function returns the image descriptor for the given qname and URL.
-   *
+   * 
    * @return The image descriptor, or null.
    */
   public static ImageDescriptor getImage( final URL context, final QName qname )
@@ -107,7 +107,7 @@ public final class LinkedFeatureTypeImageCatalog
 
   /**
    * This function resolves the URL.
-   *
+   * 
    * @param catalogTypeBasename
    *          The catalog type basename.
    * @param context
@@ -143,7 +143,7 @@ public final class LinkedFeatureTypeImageCatalog
 
   /**
    * This function creates the URN.
-   *
+   * 
    * @param catalogTypeBasename
    *          The catalog type basename.
    * @param qname

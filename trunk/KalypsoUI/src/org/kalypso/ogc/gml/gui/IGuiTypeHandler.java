@@ -56,7 +56,7 @@ import org.kalypsodeegree_impl.model.feature.gmlxpath.GMLXPath;
 
 /**
  * Provides editors and visualisation for {@link org.kalypsodeegree.model.feature.Feature}s.
- *
+ * 
  * @author Gernot Belger
  */
 public interface IGuiTypeHandler extends ILabelProvider, ITypeHandler, IFeatureDialogFactory
@@ -70,7 +70,7 @@ public interface IGuiTypeHandler extends ILabelProvider, ITypeHandler, IFeatureD
    * this handler is registered for.
    * <p>
    * Parses a (human edited) text into an object of the type this handler is responsible for.
-   *
+   * 
    * @param text
    *          The text which gets parsed.
    * @param formatHint

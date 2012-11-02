@@ -18,7 +18,6 @@ import org.kalypso.gmlschema.IGMLSchema;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.IValuePropertyType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.ogc.gml.IKalypsoFeatureTheme;
 import org.kalypso.ogc.gml.IKalypsoTheme;
 import org.kalypso.ogc.gml.map.IMapPanel;
@@ -35,6 +34,7 @@ import org.kalypso.ogc.gml.selection.IFeatureSelectionManager;
 import org.kalypso.ogc.gml.widgets.DeprecatedMouseWidget;
 import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.gmleditor.command.AddFeatureCommand;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
 import org.kalypsodeegree.model.geometry.GM_LineString;
@@ -79,8 +79,7 @@ public abstract class AbstractCreateGeometryWidget extends DeprecatedMouseWidget
   }
 
   /**
-   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget,
-   *      org.kalypso.ogc.gml.map.MapPanel)
+   * @see org.kalypso.ogc.gml.map.widgets.AbstractWidget#activate(org.kalypso.commons.command.ICommandTarget, org.kalypso.ogc.gml.map.MapPanel)
    */
   @Override
   public void activate( final ICommandTarget commandPoster, final IMapPanel mapPanel )
@@ -114,7 +113,7 @@ public abstract class AbstractCreateGeometryWidget extends DeprecatedMouseWidget
     final IKalypsoTheme activeTheme = getActiveTheme();
     if( activeTheme instanceof IKalypsoFeatureTheme )
     {
-      final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme) activeTheme;
+      final IKalypsoFeatureTheme theme = (IKalypsoFeatureTheme)activeTheme;
       final IFeatureType featureType = theme.getFeatureType();
       final IGMLSchema schema = featureType == null ? null : featureType.getGMLSchema();
       m_featureType = schema == null ? null : schema.getFeatureType( m_qname );
@@ -139,7 +138,7 @@ public abstract class AbstractCreateGeometryWidget extends DeprecatedMouseWidget
     }
 
     final QName geomProp = m_geomProperties[m_currentGeometry];
-    final IValuePropertyType vpt = (IValuePropertyType) m_featureType.getProperty( geomProp );
+    final IValuePropertyType vpt = (IValuePropertyType)m_featureType.getProperty( geomProp );
     final QName valueQName = vpt.getValueQName();
     final String targetCrs = getMapPanel().getMapModell().getCoordinatesSystem();
 
@@ -319,7 +318,7 @@ public abstract class AbstractCreateGeometryWidget extends DeprecatedMouseWidget
       if( m_builder != null )
         m_builder.paint( g, getMapPanel().getProjection(), currentPoint );
 
-      g.drawRect( (int) currentPoint.getX() - 10, (int) currentPoint.getY() - 10, 20, 20 );
+      g.drawRect( (int)currentPoint.getX() - 10, (int)currentPoint.getY() - 10, 20, 20 );
     }
   }
 

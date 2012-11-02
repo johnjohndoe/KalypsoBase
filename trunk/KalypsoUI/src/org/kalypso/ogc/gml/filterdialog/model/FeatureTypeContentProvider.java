@@ -51,10 +51,10 @@ import org.kalypso.gmlschema.feature.IFeatureType;
 public class FeatureTypeContentProvider implements IStructuredContentProvider
 {
 
-  @SuppressWarnings("unused")//$NON-NLS-1$
+  @SuppressWarnings( "unused" )//$NON-NLS-1$
   private ComboViewer m_viewer;
 
-  @SuppressWarnings("unused")//$NON-NLS-1$
+  @SuppressWarnings( "unused" )//$NON-NLS-1$
   private IFeatureType m_ft;
 
   /**
@@ -68,13 +68,12 @@ public class FeatureTypeContentProvider implements IStructuredContentProvider
   }
 
   /**
-   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-   *      java.lang.Object)
+   * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
    */
   @Override
   public void inputChanged( final Viewer viewer, final Object oldInput, final Object newInput )
   {
-    m_viewer = (ComboViewer) viewer;
+    m_viewer = (ComboViewer)viewer;
 
     if( oldInput != newInput )
     {
@@ -82,7 +81,7 @@ public class FeatureTypeContentProvider implements IStructuredContentProvider
         m_ft = null;
 
       if( newInput instanceof IFeatureType )
-        m_ft = (IFeatureType) newInput;
+        m_ft = (IFeatureType)newInput;
       else
         m_ft = null;
     }
@@ -97,7 +96,7 @@ public class FeatureTypeContentProvider implements IStructuredContentProvider
   {
     if( inputElement instanceof IFeatureType )
     {
-      final IFeatureType ft = (IFeatureType) inputElement;
+      final IFeatureType ft = (IFeatureType)inputElement;
       return ft.getProperties();
     }
     return new Object[0];

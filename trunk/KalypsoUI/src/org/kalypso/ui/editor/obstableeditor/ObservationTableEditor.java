@@ -53,7 +53,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 import org.kalypso.commons.resources.SetContentHelper;
-import org.kalypso.i18n.Messages;
 import org.kalypso.metadoc.IExportableObject;
 import org.kalypso.metadoc.IExportableObjectFactory;
 import org.kalypso.metadoc.configuration.PublishingConfiguration;
@@ -63,10 +62,11 @@ import org.kalypso.ogc.sensor.tableview.swing.ExportableObservationTable;
 import org.kalypso.ogc.sensor.tableview.swing.ObservationTable;
 import org.kalypso.template.obstableview.Obstableview;
 import org.kalypso.ui.editor.abstractobseditor.AbstractObservationEditor;
+import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * The Observation TableEditor.
- *
+ * 
  * @author schlienger
  */
 public class ObservationTableEditor extends AbstractObservationEditor implements IExportableObjectFactory
@@ -81,14 +81,13 @@ public class ObservationTableEditor extends AbstractObservationEditor implements
    * The ObservationTable is already created here because of the listening functionality that needs to be set up before
    * the template gets loaded.
    * <p>
-   * Doing this stuff in createPartControl would prove inadequate, because the order in which createPartControl and
-   * loadIntern are called is not guaranteed to be always the same.
+   * Doing this stuff in createPartControl would prove inadequate, because the order in which createPartControl and loadIntern are called is not guaranteed to be always the same.
    */
   public ObservationTableEditor( )
   {
     super( new TableView(), EXTENSIN_OTT );
 
-    m_table = new ObservationTable( (TableView) getView() );
+    m_table = new ObservationTable( (TableView)getView() );
   }
 
   /**
@@ -138,7 +137,7 @@ public class ObservationTableEditor extends AbstractObservationEditor implements
   @Override
   protected void doSaveInternal( final IProgressMonitor monitor, final IFile file ) throws CoreException
   {
-    final TableView template = (TableView) getView();
+    final TableView template = (TableView)getView();
     if( template == null )
       return;
 

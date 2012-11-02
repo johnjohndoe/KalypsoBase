@@ -109,7 +109,7 @@ public class WizardFeatureCheckbox
 
     if( m_feature != null )
     {
-      final Boolean selection = (Boolean) m_feature.getProperty( m_qname );
+      final Boolean selection = (Boolean)m_feature.getProperty( m_qname );
       button.setSelection( selection );
       m_selection = selection;
     }

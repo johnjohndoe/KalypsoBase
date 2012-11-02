@@ -69,8 +69,7 @@ public class GuiHandlerControlMaker extends AbstractValueControlMaker
   }
 
   /**
-   * @see org.kalypso.ogc.gml.featureview.maker.AbstractValueControlMaker#createControlType(org.kalypso.gmlschema.property.IValuePropertyType,
-   *      javax.xml.bind.JAXBElement)
+   * @see org.kalypso.ogc.gml.featureview.maker.AbstractValueControlMaker#createControlType(org.kalypso.gmlschema.property.IValuePropertyType, javax.xml.bind.JAXBElement)
    */
   @Override
   protected JAXBElement< ? extends ControlType> createControlType( final Feature feature, final IFeatureType ft, final IPropertyType pt, final GridDataType griddata )
@@ -78,7 +77,7 @@ public class GuiHandlerControlMaker extends AbstractValueControlMaker
     if( !(pt instanceof IValuePropertyType) )
       return null;
 
-    final IValuePropertyType vpt = (IValuePropertyType) pt;
+    final IValuePropertyType vpt = (IValuePropertyType)pt;
 
     final QName valueQName = vpt.getValueQName();
     /* We try to delegate to the gui type handlers. If this is not possible, we are not responsible. */

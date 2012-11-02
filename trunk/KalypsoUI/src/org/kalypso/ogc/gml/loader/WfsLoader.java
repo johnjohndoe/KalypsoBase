@@ -25,7 +25,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.kalypso.commons.java.util.PropertiesHelper;
 import org.kalypso.core.util.pool.IPoolableObjectType;
-import org.kalypso.i18n.Messages;
 import org.kalypso.loader.LoaderException;
 import org.kalypso.ogc.gml.mapmodel.CommandableWorkspace;
 import org.kalypso.ogc.gml.serialize.GmlSerializeException;
@@ -33,6 +32,7 @@ import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypso.ogc.wfs.WFSClient;
 import org.kalypso.ui.ImageProvider;
 import org.kalypso.ui.KalypsoGisPlugin;
+import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.model.feature.FeatureVisitor;
 import org.kalypsodeegree.model.feature.GMLWorkspace;
@@ -116,7 +116,7 @@ public class WfsLoader extends WorkspaceLoader
     {
       e.printStackTrace();
 
-      final String msg = String.format( Messages.getString("WfsLoader.0"), baseURLAsString ); //$NON-NLS-1$
+      final String msg = String.format( Messages.getString( "WfsLoader.0" ), baseURLAsString ); //$NON-NLS-1$
       final MultiStatus multiStatus = new MultiStatus( KalypsoGisPlugin.getId(), -1, new IStatus[] { e.getStatus() }, msg, e );
       final LoaderException loaderException = new LoaderException( multiStatus );
       setStatus( multiStatus );
@@ -137,8 +137,7 @@ public class WfsLoader extends WorkspaceLoader
   }
 
   /**
-   * @see org.kalypso.loader.ILoader#save(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor,
-   *      java.lang.Object)
+   * @see org.kalypso.loader.ILoader#save(java.lang.String, java.net.URL, org.eclipse.core.runtime.IProgressMonitor, java.lang.Object)
    */
   @Override
   public void save( final IPoolableObjectType key, final IProgressMonitor monitor, final Object data )
@@ -163,7 +162,7 @@ public class WfsLoader extends WorkspaceLoader
           final IPath targetPath = root.getLocation().append( dialog.getResult() );
           // IFile file = root.getFile( targetPath );
           final FileWriter fw = new FileWriter( targetPath.toFile().toString() );
-          GmlSerializer.serializeWorkspace( fw, (GMLWorkspace) data );
+          GmlSerializer.serializeWorkspace( fw, (GMLWorkspace)data );
           ResourcesPlugin.getWorkspace().getRoot().refreshLocal( IResource.DEPTH_INFINITE, monitor );
         }
         else if( result == 1 )

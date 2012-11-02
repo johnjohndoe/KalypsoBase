@@ -77,17 +77,17 @@ public class ToolbarCommandUtils
     if( !(applicationContext instanceof IEvaluationContext) )
       return null;
 
-    final IEvaluationContext context = (IEvaluationContext) applicationContext;
+    final IEvaluationContext context = (IEvaluationContext)applicationContext;
 
     final Object variable = context.getVariable( ACTIVE_TUPLE_RESULT_TABLE_VIEWER_NAME );
     if( variable instanceof TableViewer )
-      return (TableViewer) variable;
+      return (TableViewer)variable;
 
-    final IWorkbenchPart activePart = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
+    final IWorkbenchPart activePart = (IWorkbenchPart)context.getVariable( ISources.ACTIVE_PART_NAME );
     if( activePart == null )
       return null;
 
-    final ITupleResultViewerProvider provider = (ITupleResultViewerProvider) activePart.getAdapter( ITupleResultViewerProvider.class );
+    final ITupleResultViewerProvider provider = (ITupleResultViewerProvider)activePart.getAdapter( ITupleResultViewerProvider.class );
     if( provider == null )
       return null;
 
@@ -105,11 +105,11 @@ public class ToolbarCommandUtils
     if( !(applicationContext instanceof IEvaluationContext) )
       return null;
 
-    final IEvaluationContext context = (IEvaluationContext) applicationContext;
+    final IEvaluationContext context = (IEvaluationContext)applicationContext;
 
     final Object variable = context.getVariable( ACTIVE_TUPLE_RESULT_FEATURE_CONTROL_NAME );
     if( variable instanceof AbstractToolbarFeatureControl )
-      return (AbstractToolbarFeatureControl) variable;
+      return (AbstractToolbarFeatureControl)variable;
 
     return null;
   }
@@ -120,24 +120,24 @@ public class ToolbarCommandUtils
     if( !(applicationContext instanceof IEvaluationContext) )
       return null;
 
-    final IEvaluationContext context = (IEvaluationContext) applicationContext;
+    final IEvaluationContext context = (IEvaluationContext)applicationContext;
 
     final Object variable = context.getVariable( ACTIVE_TUPLE_RESULT_TABLE_VIEWER_NAME );
     if( variable instanceof TableViewer )
     {
-      final TableViewer tableViewer = (TableViewer) variable;
+      final TableViewer tableViewer = (TableViewer)variable;
       final Object input = tableViewer.getInput();
       if( input instanceof TupleResult )
-        return (TupleResult) input;
+        return (TupleResult)input;
 
       return null; // do not continue if we already could find the viewer
     }
 
-    final IWorkbenchPart activePart = (IWorkbenchPart) context.getVariable( ISources.ACTIVE_PART_NAME );
+    final IWorkbenchPart activePart = (IWorkbenchPart)context.getVariable( ISources.ACTIVE_PART_NAME );
     if( activePart == null )
       return null;
 
-    final ITupleResultViewerProvider provider = (ITupleResultViewerProvider) activePart.getAdapter( ITupleResultViewerProvider.class );
+    final ITupleResultViewerProvider provider = (ITupleResultViewerProvider)activePart.getAdapter( ITupleResultViewerProvider.class );
     if( provider == null )
       return null;
 

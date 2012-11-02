@@ -58,7 +58,7 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * This class is a geometry builder for a line.
- *
+ * 
  * @author Holger Albert
  */
 public class LineGeometryBuilder implements IGeometryBuilder
@@ -84,7 +84,7 @@ public class LineGeometryBuilder implements IGeometryBuilder
 
   /**
    * The constructor.
-   *
+   * 
    * @param cnt_points
    *          If > 1 the the geometry will be finished, if the count of points is reached. If <= 1 no rule regarding the
    *          count of the points will apply, except that a line must consist of at least 2 points.
@@ -109,7 +109,7 @@ public class LineGeometryBuilder implements IGeometryBuilder
 
   /**
    * The constructor.
-   *
+   * 
    * @param cnt_points
    *          If > 1 the the geometry will be finished, if the count of points is reached. If <= 1 no rule regarding the
    *          count of the points will apply, except that a line must consist of at least 2 points.
@@ -169,7 +169,7 @@ public class LineGeometryBuilder implements IGeometryBuilder
       final GM_Position[] poses = new GM_Position[m_points.size()];
       for( int i = 0; i < poses.length; i++ )
       {
-        final GM_Point transformedPoint = (GM_Point) transformer.transform( m_points.get( i ) );
+        final GM_Point transformedPoint = (GM_Point)transformer.transform( m_points.get( i ) );
         poses[i] = transformedPoint.getPosition();
       }
 
@@ -188,8 +188,8 @@ public class LineGeometryBuilder implements IGeometryBuilder
     {
       final GM_Point point = m_points.get( i );
 
-      final int x = (int) projection.getDestX( point.getX() );
-      final int y = (int) projection.getDestY( point.getY() );
+      final int x = (int)projection.getDestX( point.getX() );
+      final int y = (int)projection.getDestY( point.getY() );
 
       xArray.add( new Integer( x ) );
       yArray.add( new Integer( y ) );

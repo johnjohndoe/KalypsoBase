@@ -61,8 +61,8 @@ public class TablePropertiesAction extends AbstractEditorActionDelegate
   @Override
   public void run( final IAction action )
   {
-    final ObservationTableEditor editor = (ObservationTableEditor) getEditor();
-    final TableView table = (TableView) editor.getView();
+    final ObservationTableEditor editor = (ObservationTableEditor)getEditor();
+    final TableView table = (TableView)editor.getView();
     final TimeZone timezone = table.getTimezone();
     final TablePropertiesDialog dlg = new TablePropertiesDialog( getShell(), timezone );
     if( dlg.open() == Window.OK )

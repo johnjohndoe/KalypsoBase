@@ -55,7 +55,7 @@ import org.kalypsodeegree.model.geometry.GM_Position;
 
 /**
  * This class provides handles for line geometries.
- *
+ * 
  * @author Holger Albert
  */
 public class LineHandlesProvider implements IHandlesProvider
@@ -70,12 +70,12 @@ public class LineHandlesProvider implements IHandlesProvider
     {
       try
       {
-        final GM_Object object = (GM_Object) feature.getProperty( type );
+        final GM_Object object = (GM_Object)feature.getProperty( type );
 
         /* Only handles for a line are returned. */
         if( object instanceof GM_Curve )
         {
-          final GM_Curve curve = (GM_Curve) object;
+          final GM_Curve curve = (GM_Curve)object;
           final int numberOfCurveSegments = curve.getNumberOfCurveSegments();
 
           for( int i = 0; i < numberOfCurveSegments; i++ )

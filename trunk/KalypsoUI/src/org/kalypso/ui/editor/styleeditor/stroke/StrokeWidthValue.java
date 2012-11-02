@@ -61,7 +61,7 @@ public class StrokeWidthValue extends InputWithContextObservableValue<Stroke, In
   {
     try
     {
-      return (int) (data.getWidth( null ) * 10.0);
+      return (int)(data.getWidth( null ) * 10.0);
     }
     catch( final FilterEvaluationException e )
     {
