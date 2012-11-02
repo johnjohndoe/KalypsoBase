@@ -95,7 +95,7 @@ public class PartType extends Feature_Impl implements IPartType
     final IStyleDefinition definition = classification.findStyleDefinition( styleDefinitionName );
 
     if( definition == null )
-      setLink( MEMBER_STYLE, null );
+      setLink( MEMBER_STYLE, (String)null );
     else
     {
       final String href = String.format( "#%s", definition.getId() );

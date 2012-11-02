@@ -151,7 +151,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       final Feature singleFeature = (Feature)featureFromPath;
       final Feature parent = singleFeature.getOwner();
       // m_featureList = FeatureFactory.createFeatureList( parent, singleFeature.getParentRelation() );
-      m_featureList = new ArrayFeatureList( parent, singleFeature.getParentRelation(), null );
+      m_featureList = new ArrayFeatureList( parent, singleFeature.getParentRelation(), null, 1 );
       m_featureList.add( singleFeature );
       m_featureType = singleFeature.getFeatureType();
       m_isSingleFeature = true;

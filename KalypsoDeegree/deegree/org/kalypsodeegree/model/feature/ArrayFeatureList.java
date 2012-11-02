@@ -61,19 +61,24 @@ import org.kalypsodeegree_impl.tools.GeometryUtilities;
  */
 public class ArrayFeatureList extends AbstractFeatureList
 {
-  // TODO: separate 'maxCapacity' (maximal size where this list is created) and initial capacity (why not get initial capacity as maxOccur from outside, so it is optimized for the current situation)
-  public static final int INITIAL_CAPACITY = 4;
+  public static final int DEFAULT_INITIAL_CAPACITY = 4;
 
-  private final ArrayList<Object> m_items = new ArrayList<>( INITIAL_CAPACITY );
+  private final ArrayList<Object> m_items;
 
   public ArrayFeatureList( final Feature parentFeature, final IRelationType parentFTP )
   {
-    super( parentFeature, parentFTP );
+    this( parentFeature, parentFTP, null );
   }
 
   public ArrayFeatureList( final Feature parentFeature, final IRelationType parentFTP, final IEnvelopeProvider envelopeProvider )
   {
+    this( parentFeature, parentFTP, envelopeProvider, DEFAULT_INITIAL_CAPACITY );
+  }
+
+  public ArrayFeatureList( final Feature parentFeature, final IRelationType parentFTP, final IEnvelopeProvider envelopeProvider, final int initialCapacity )
+  {
     super( parentFeature, parentFTP, envelopeProvider );
+    m_items = new ArrayList<>( initialCapacity );
   }
 
   /* List interface */

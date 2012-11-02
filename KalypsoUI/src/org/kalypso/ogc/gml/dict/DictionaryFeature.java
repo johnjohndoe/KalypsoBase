@@ -246,6 +246,12 @@ public class DictionaryFeature implements Feature
   }
 
   @Override
+  public IXLinkedFeature setLink( final QName relationName, final Feature href )
+  {
+    throw new UnsupportedOperationException( DICTIONARY_ENTRIES_MAY_NOT_BE_CHANGED );
+  }
+
+  @Override
   public IXLinkedFeature setLink( final IRelationType relation, final String href )
   {
     throw new UnsupportedOperationException( DICTIONARY_ENTRIES_MAY_NOT_BE_CHANGED );

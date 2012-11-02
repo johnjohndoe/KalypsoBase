@@ -225,6 +225,12 @@ public abstract class AbstractEmptyFeature implements Feature
   }
 
   @Override
+  public IXLinkedFeature setLink( final QName relationName, final Feature href )
+  {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
   public IXLinkedFeature setLink( final IRelationType relation, final String href )
   {
     throw new UnsupportedOperationException();

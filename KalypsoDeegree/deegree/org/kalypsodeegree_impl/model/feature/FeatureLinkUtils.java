@@ -40,17 +40,22 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypsodeegree_impl.model.feature;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+
 import org.apache.commons.lang3.ObjectUtils;
+import org.eclipse.core.runtime.URIUtil;
 import org.kalypso.gmlschema.feature.IFeatureType;
 import org.kalypso.gmlschema.property.relation.IRelationType;
 import org.kalypsodeegree.model.feature.Feature;
 import org.kalypsodeegree.model.feature.FeatureList;
+import org.kalypsodeegree.model.feature.GMLWorkspace;
 import org.kalypsodeegree.model.feature.IXLinkedFeature;
-import org.kalypsodeegree_impl.model.feature.FeatureFactory;
 
 /**
  * Some helper methods for easy handling of linked features.
- *
+ * 
  * @author Gernot Belger
  */
 public final class FeatureLinkUtils
@@ -62,7 +67,7 @@ public final class FeatureLinkUtils
 
   /**
    * Inserts or sets a link to a feature inside the same workspace.
-   *
+   * 
    * @param pos
    *          Insert position. If <code>-1</code> the new element is inserted at the end of the list.
    */
@@ -70,7 +75,7 @@ public final class FeatureLinkUtils
   {
     if( linkRelation.isList() )
     {
-      final FeatureList list = (FeatureList) feature.getProperty( linkRelation );
+      final FeatureList list = (FeatureList)feature.getProperty( linkRelation );
       list.insertLink( pos, href );
     }
     else
@@ -90,7 +95,7 @@ public final class FeatureLinkUtils
     if( destLink == null )
       return -1;
 
-    final FeatureList list = (FeatureList) srcFE.getProperty( relation );
+    final FeatureList list = (FeatureList)srcFE.getProperty( relation );
     for( int i = 0; i < list.size(); i++ )
     {
       final Object object = list.get( i );
@@ -107,14 +112,14 @@ public final class FeatureLinkUtils
    * Resolved a property valeu as an xlink.<br>
    * If the property is already a link, just return it.<br/>
    * If the property is a String, returns an internal xlink.<br/>
-   *
+   * 
    * @throws IllegalStateException
    *           If the property is not a link.
    */
   public static IXLinkedFeature asXLink( final Feature feature, final IRelationType relationType, final Object property )
   {
     if( property instanceof IXLinkedFeature )
-      return (IXLinkedFeature) property;
+      return (IXLinkedFeature)property;
 
     if( property instanceof String )
     {
@@ -133,7 +138,7 @@ public final class FeatureLinkUtils
   {
     if( relation.isList() )
     {
-      final FeatureList list = (FeatureList) sourceFeature.getProperty( relation );
+      final FeatureList list = (FeatureList)sourceFeature.getProperty( relation );
       return findMember( list, targetFeature );
     }
     else
@@ -157,7 +162,6 @@ public final class FeatureLinkUtils
     return null;
   }
 
-
   /**
    * Checks if a property is a link to or the same thing as a given feature.
    */
@@ -170,8 +174,49 @@ public final class FeatureLinkUtils
       return feature.getId().equals( property );
 
     if( property instanceof IXLinkedFeature )
-      return ((IXLinkedFeature) property).getFeature() == feature;
+      return ((IXLinkedFeature)property).getFeature() == feature;
 
     return false;
+  }
+
+  public static String findLinkPath( final Feature toLink, final GMLWorkspace sourceWorkspace )
+  {
+    final String id = toLink.getId();
+
+    final GMLWorkspace linkedWorkspace = toLink.getWorkspace();
+
+    /* Internal link, no uri */
+    if( linkedWorkspace == sourceWorkspace )
+      return id;
+
+    final URL targetContext = linkedWorkspace.getContext();
+    final URL sourceContext = sourceWorkspace.getContext();
+
+    String path = null;
+    try
+    {
+      final URI targetURI = targetContext.toURI();
+      final URI sourceURI = sourceContext.toURI();
+      final URI relativeURI = URIUtil.makeRelative( targetURI, sourceURI );
+      path = relativeURI.toString();
+    }
+    catch( final URISyntaxException e )
+    {
+      // TODO: do we need this fallback?
+      e.printStackTrace();
+      path = targetContext.toString();
+    }
+
+    final StringBuilder s = new StringBuilder( path.length() + id.length() + 1 );
+    s.append( path );
+    s.append( '#' );
+    s.append( id );
+    return s.toString();
+  }
+
+  public static String findLinkPath( final Feature toLink, final Feature parent )
+  {
+    final GMLWorkspace sourceWorkspace = parent.getWorkspace();
+    return findLinkPath( toLink, parent );
   }
 }
