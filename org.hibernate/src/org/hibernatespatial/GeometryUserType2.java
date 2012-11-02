@@ -56,7 +56,7 @@ public class GeometryUserType2 implements UserType, ParameterizedType, Serializa
 
   private UserType delegate = null;
 
-  public static String DIALECT_PARAM_NAME = "dialect";
+  public static String DIALECT_PARAM_NAME = "dialect"; //$NON-NLS-1$
 
   /**
    * We get the dialect from outside, in preference from the current configuration.
@@ -69,7 +69,7 @@ public class GeometryUserType2 implements UserType, ParameterizedType, Serializa
   private void configure( final Properties properties )
   {
     if( spatialDialect == null )
-      throw new HibernateSpatialException( "No spatial Dialect could be created" );
+      throw new HibernateSpatialException( "No spatial Dialect could be created" ); //$NON-NLS-1$
 
     delegate = spatialDialect.getGeometryUserType();
     if( delegate instanceof ParameterizedType && properties != null )
