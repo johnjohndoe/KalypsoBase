@@ -76,7 +76,7 @@ public class OpenModuleProjectAction extends ProjectOpenAction
     try
     {
       if( m_module == null )
-        return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), "Miss-configured module" );
+        return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), "Miss-configured module" ); //$NON-NLS-1$
 
       final IKalypsoModuleProjectOpenAction action = m_module.getProjectOpenAction();
       final IProject project = m_item.getProject();
@@ -89,7 +89,7 @@ public class OpenModuleProjectAction extends ProjectOpenAction
     }
     catch( final Exception e )
     {
-      final String msg = String.format( "Unexpected error: %s", e.getLocalizedMessage() );
+      final String msg = String.format( "Unexpected error: %s", e.getLocalizedMessage() ); //$NON-NLS-1$
       return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), msg, e );
     }
   }

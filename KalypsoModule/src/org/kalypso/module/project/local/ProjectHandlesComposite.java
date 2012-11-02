@@ -247,7 +247,7 @@ public class ProjectHandlesComposite extends Composite
     {
       // TODO: ugly: the label should wrap if too big; 50 chars is just arbitrary...
       final String shortDescription = StringUtils.abbreviate( description, 50 );
-      final String msg = String.format( "     %s", shortDescription );
+      final String msg = String.format( "     %s", shortDescription ); //$NON-NLS-1$
       final Label descriptionLabel = m_toolkit.createLabel( body, msg );
       descriptionLabel.setToolTipText( description );
 

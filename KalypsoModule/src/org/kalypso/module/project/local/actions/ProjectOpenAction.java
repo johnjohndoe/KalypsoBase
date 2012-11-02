@@ -104,14 +104,14 @@ public abstract class ProjectOpenAction extends Action implements IProjectOpenAc
     /* Validate parameters */
     if( !project.exists() )
     {
-      final String message = String.format( "Unable to open '%s'. The project does not exist.", project.getName() );
+      final String message = String.format( Messages.getString("ProjectOpenAction.0"), project.getName() ); //$NON-NLS-1$
       return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), message );
     }
 
     if( !project.isOpen() )
     {
       // TODO: instead: we should ask the user if we should open the project.
-      final String message = String.format( "Unable to open '%s'. The project is closed. Please open the project first.", project.getName() );
+      final String message = String.format( Messages.getString("ProjectOpenAction.1"), project.getName() ); //$NON-NLS-1$
       return new Status( IStatus.ERROR, KalypsoCorePlugin.getID(), message );
     }
 

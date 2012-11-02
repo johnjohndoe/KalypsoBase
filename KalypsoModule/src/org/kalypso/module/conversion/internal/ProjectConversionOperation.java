@@ -64,8 +64,6 @@ public class ProjectConversionOperation implements IProjectConversionOperation
 
   public ProjectConversionOperation( final IProject project, final IProjectConverter converter )
   {
-    //super( Messages.getString( "ProjectConversionOperation.0" ) ); //$NON-NLS-1$
-
     m_project = project;
     m_converter = converter;
   }
