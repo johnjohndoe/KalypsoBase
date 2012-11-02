@@ -53,42 +53,42 @@ public interface IOGCService
   /**
    * This constant defines the name of the service parameter.
    */
-  public static final String PARAMETER_SERVICE = "SERVICE";
+  public static final String PARAMETER_SERVICE = "SERVICE"; //$NON-NLS-1$
 
   /**
    * This constant defines the name of the request parameter.
    */
-  public static final String PARAMETER_REQUEST = "REQUEST";
+  public static final String PARAMETER_REQUEST = "REQUEST"; //$NON-NLS-1$
 
   /**
    * This constant defines the name of the version parameter.
    */
-  public static final String PARAMETER_VERSION = "VERSION";
+  public static final String PARAMETER_VERSION = "VERSION"; //$NON-NLS-1$
 
   /**
    * This constant defines the name of the acceptVersions parameter.
    */
-  public static final String PARAMETER_ACCEPT_VERSIONS = "ACCEPTVERSIONS";
+  public static final String PARAMETER_ACCEPT_VERSIONS = "ACCEPTVERSIONS"; //$NON-NLS-1$
 
   /**
    * This constant defines the name of the language parameter.
    */
-  public static final String PARAMETER_LANGUAGE = "LANGUAGE";
+  public static final String PARAMETER_LANGUAGE = "LANGUAGE"; //$NON-NLS-1$
 
   /**
    * This constant defines the name of the GetCababilities operation.
    */
-  public static final String OPERATION_GET_CAPABILITIES = "GetCapabilities";
+  public static final String OPERATION_GET_CAPABILITIES = "GetCapabilities"; //$NON-NLS-1$
 
   /**
    * This constant defines the name of the DescribeProcess operation.
    */
-  public static final String OPERATION_DESCRIBE_PROCESS = "DescribeProcess";
+  public static final String OPERATION_DESCRIBE_PROCESS = "DescribeProcess"; //$NON-NLS-1$
 
   /**
    * This constant defines the name of the Execute operation.
    */
-  public static final String OPERATION_EXECUTE = "Execute";
+  public static final String OPERATION_EXECUTE = "Execute"; //$NON-NLS-1$
 
   /**
    * This function returns the name of the OGC service.

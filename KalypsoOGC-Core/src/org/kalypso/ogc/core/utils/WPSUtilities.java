@@ -65,12 +65,12 @@ public class WPSUtilities
   /**
    * The version of the WPS specification.
    */
-  public static final String WPS_VERSION = "1.0.0";
+  public static final String WPS_VERSION = "1.0.0"; //$NON-NLS-1$
 
   /**
    * The name of the WPS service.
    */
-  public static final String WPS_SERVICE = "WPS";
+  public static final String WPS_SERVICE = "WPS"; //$NON-NLS-1$
 
   /**
    * The factory for WPS objects.

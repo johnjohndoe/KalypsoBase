@@ -74,7 +74,7 @@ public class OWSUtilities
   /**
    * The version of the OWS specification.
    */
-  public static final String OWS_VERSION = "1.1.0";
+  public static final String OWS_VERSION = "1.1.0"; //$NON-NLS-1$
 
   /**
    * The factory for OWS objects.

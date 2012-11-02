@@ -59,21 +59,21 @@ import org.kalypso.ogc.core.service.IOGCService;
  */
 public class ExtensionUtilities
 {
-  private static final String SERVICE_EXTENSION_POINT = "org.kalypso.ogc.core.service";
+  private static final String SERVICE_EXTENSION_POINT = "org.kalypso.ogc.core.service"; //$NON-NLS-1$
 
-  private static final String SERVICE_EXTENSION_POINT_SERVICE_ELEMENT = "service";
+  private static final String SERVICE_EXTENSION_POINT_SERVICE_ELEMENT = "service"; //$NON-NLS-1$
 
-  private static final String SERVICE_EXTENSION_POINT_SERVICE_ELEMENT_NAME_ATTRIBUTE = "name";
+  private static final String SERVICE_EXTENSION_POINT_SERVICE_ELEMENT_NAME_ATTRIBUTE = "name"; //$NON-NLS-1$
 
-  private static final String SERVICE_EXTENSION_POINT_SERVICE_ELEMENT_VERSION_ATTRIBUTE = "version";
+  private static final String SERVICE_EXTENSION_POINT_SERVICE_ELEMENT_VERSION_ATTRIBUTE = "version"; //$NON-NLS-1$
 
-  private static final String SERVICE_EXTENSION_POINT_SERVICE_ELEMENT_CLASS_ATTRIBUTE = "class";
+  private static final String SERVICE_EXTENSION_POINT_SERVICE_ELEMENT_CLASS_ATTRIBUTE = "class"; //$NON-NLS-1$
 
-  private static final String SERVICE_EXTENSION_POINT_SERVICE_ELEMENT_OPERATION_ELEMENT = "operation";
+  private static final String SERVICE_EXTENSION_POINT_SERVICE_ELEMENT_OPERATION_ELEMENT = "operation"; //$NON-NLS-1$
 
-  private static final String SERVICE_EXTENSION_POINT_SERVICE_ELEMENT_OPERATION_ELEMENT_NAME_ATTRIBUTE = "name";
+  private static final String SERVICE_EXTENSION_POINT_SERVICE_ELEMENT_OPERATION_ELEMENT_NAME_ATTRIBUTE = "name"; //$NON-NLS-1$
 
-  private static final String SERVICE_EXTENSION_POINT_SERVICE_ELEMENT_OPERATION_ELEMENT_CLASS_ATTRIBUTE = "class";
+  private static final String SERVICE_EXTENSION_POINT_SERVICE_ELEMENT_OPERATION_ELEMENT_CLASS_ATTRIBUTE = "class"; //$NON-NLS-1$
 
   /**
    * The constructor.

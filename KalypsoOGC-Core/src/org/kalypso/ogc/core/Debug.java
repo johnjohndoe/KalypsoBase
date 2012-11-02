@@ -50,5 +50,5 @@ public class Debug
   /**
    * Debugger for main purposes.
    */
-  public static org.kalypso.contribs.eclipse.core.runtime.Debug DEBUG = new org.kalypso.contribs.eclipse.core.runtime.Debug( Activator.getDefault(), "/debug" );
+  public static org.kalypso.contribs.eclipse.core.runtime.Debug DEBUG = new org.kalypso.contribs.eclipse.core.runtime.Debug( Activator.getDefault(), "/debug" ); //$NON-NLS-1$
 }
