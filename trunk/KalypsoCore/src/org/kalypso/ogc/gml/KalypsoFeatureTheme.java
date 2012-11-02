@@ -60,7 +60,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.commons.i18n.I10nString;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.awt.HighlightGraphics;
 import org.kalypso.core.KalypsoCoreDebug;
 import org.kalypso.core.KalypsoCoreExtensions;
@@ -161,7 +160,7 @@ public class KalypsoFeatureTheme extends AbstractKalypsoTheme implements IKalyps
       // Should'nt we throw an exception here?
       m_featureList = null;
       m_featureType = null;
-      setStatus( StatusUtilities.createStatus( IStatus.WARNING, Messages.getString( "org.kalypso.ogc.gml.KalypsoFeatureTheme.0" ) + featurePath, null ) ); //$NON-NLS-1$
+      setStatus( new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), Messages.getString( "org.kalypso.ogc.gml.KalypsoFeatureTheme.0" ) + featurePath ) ); //$NON-NLS-1$
     }
 
     m_workspace.addModellListener( m_modelListener );
