@@ -48,6 +48,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.kalypso.gml.processes.KalypsoGmlProcessesPlugin;
+import org.kalypso.gml.processes.i18n.Messages;
 import org.kalypso.gmlschema.property.IPropertyType;
 import org.kalypso.ogc.gml.serialize.GmlSerializer;
 import org.kalypsodeegree.model.feature.Feature;
@@ -78,8 +79,7 @@ public class GmlTriangulatedSurfaceConverter extends AbstractTriangulatedSurface
     try
     {
       /* Monitor. */
-      monitor.beginTask( "Copying input data", 100 );
-      monitor.subTask( "Copying input data..." );
+      monitor.beginTask( Messages.getString("GmlTriangulatedSurfaceConverter_0"), 100 ); //$NON-NLS-1$
 
       // REMARK 1: Loads the source tin directly into memory... will bring performance problems...
       final GMLWorkspace sourceWorkspace = GmlSerializer.createGMLWorkspace( sourceLocation, null );
@@ -87,13 +87,13 @@ public class GmlTriangulatedSurfaceConverter extends AbstractTriangulatedSurface
       final GM_TriangulatedSurface surface = findSurface( sourceObject );
       if( surface == null )
       {
-        final String msg = String.format( "Target path (%s) does not reference any GM_TriangulatedSurface: %s", m_sourcePath, sourceObject );
+        final String msg = String.format( Messages.getString("GmlTriangulatedSurfaceConverter_1"), m_sourcePath, sourceObject ); //$NON-NLS-1$
         final IStatus status = new Status( IStatus.ERROR, KalypsoGmlProcessesPlugin.PLUGIN_ID, msg );
         throw new CoreException( status );
       }
 
       // REMARK 2: Cloning the complete tin will result in performance problems...
-      final GM_TriangulatedSurface clonedSurface = (GM_TriangulatedSurface) surface.clone();
+      final GM_TriangulatedSurface clonedSurface = (GM_TriangulatedSurface)surface.clone();
 
       /* Monitor. */
       monitor.worked( 100 );
@@ -121,7 +121,7 @@ public class GmlTriangulatedSurfaceConverter extends AbstractTriangulatedSurface
       return null;
 
     if( sourceObject instanceof GM_TriangulatedSurface )
-      return (GM_TriangulatedSurface) sourceObject;
+      return (GM_TriangulatedSurface)sourceObject;
 
     /* Check, if it is a feature or take the root feature if it is a workspace. */
     final Feature feature = getFeature( sourceObject );
@@ -134,7 +134,7 @@ public class GmlTriangulatedSurfaceConverter extends AbstractTriangulatedSurface
     {
       final Object property = feature.getProperty( pt );
       if( property instanceof GM_TriangulatedSurface )
-        return (GM_TriangulatedSurface) property;
+        return (GM_TriangulatedSurface)property;
     }
 
     return null;
@@ -143,10 +143,10 @@ public class GmlTriangulatedSurfaceConverter extends AbstractTriangulatedSurface
   private Feature getFeature( final Object sourceObject )
   {
     if( sourceObject instanceof Feature )
-      return (Feature) sourceObject;
+      return (Feature)sourceObject;
 
     if( sourceObject instanceof GMLWorkspace )
-      return ((GMLWorkspace) sourceObject).getRootFeature();
+      return ((GMLWorkspace)sourceObject).getRootFeature();
 
     return null;
   }

@@ -146,8 +146,8 @@ public class TestGrid2Shp
 
   private void writeLineShape( final CollectorDataProvider[] data, final IFolder importDataFolder ) throws DBaseException, IOException, ShapeDataException, SHPException
   {
-    final IDBFField doubleField = new DBFField( "ID", FieldType.N, (short) 10, (short) 3 );
-    final IDBFField stringField = new DBFField( "NAME", FieldType.C, (short) 100, (short) 0 );
+    final IDBFField doubleField = new DBFField( "ID", FieldType.N, (short) 10, (short) 3 ); //$NON-NLS-1$
+    final IDBFField stringField = new DBFField( "NAME", FieldType.C, (short) 100, (short) 0 ); //$NON-NLS-1$
     final IDBFField[] fields = new IDBFField[] { doubleField, stringField };
 
     final ShapeType shapeType = ShapeType.POLYLINEZ;
@@ -174,11 +174,11 @@ public class TestGrid2Shp
 
   private void writePolygonShape( final CollectorDataProvider[] data, final IFolder importDataFolder ) throws DBaseException, IOException, ShapeDataException, SHPException
   {
-    final IDBFField doubleField = new DBFField( "ID", FieldType.N, (short) 10, (short) 3 );
-    final IDBFField fromField = new DBFField( "FROM", FieldType.N, (short) 10, (short) 3 );
-    final IDBFField toField = new DBFField( "TO", FieldType.N, (short) 10, (short) 3 );
-    final IDBFField rangeField = new DBFField( "RANGE", FieldType.C, (short) 100, (short) 0 );
-    final IDBFField internalField = new DBFField( "INTERNALID", FieldType.C, (short) 100, (short) 0 );
+    final IDBFField doubleField = new DBFField( "ID", FieldType.N, (short) 10, (short) 3 ); //$NON-NLS-1$
+    final IDBFField fromField = new DBFField( "FROM", FieldType.N, (short) 10, (short) 3 ); //$NON-NLS-1$
+    final IDBFField toField = new DBFField( "TO", FieldType.N, (short) 10, (short) 3 ); //$NON-NLS-1$
+    final IDBFField rangeField = new DBFField( "RANGE", FieldType.C, (short) 100, (short) 0 ); //$NON-NLS-1$
+    final IDBFField internalField = new DBFField( "INTERNALID", FieldType.C, (short) 100, (short) 0 ); //$NON-NLS-1$
     final IDBFField[] fields = new IDBFField[] { doubleField, fromField, toField, rangeField, internalField };
 
     final ShapeType shapeType = ShapeType.POLYGONZ;

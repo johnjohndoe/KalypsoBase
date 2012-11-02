@@ -51,6 +51,7 @@ import org.eclipse.core.runtime.Status;
 import org.kalypso.commons.java.io.FileUtilities;
 import org.kalypso.gml.processes.KalypsoGmlProcessesPlugin;
 import org.kalypso.gml.processes.constDelaunay.ConstraintDelaunayHelper;
+import org.kalypso.gml.processes.i18n.Messages;
 import org.kalypso.ogc.gml.serialize.ShapeSerializer;
 import org.kalypsodeegree.model.feature.IFeatureBindingCollection;
 import org.kalypsodeegree.model.geometry.GM_MultiSurface;
@@ -82,8 +83,7 @@ public class ShapeTriangulatedSurfaceConverter extends AbstractTriangulatedSurfa
     try
     {
       /* Monitor. */
-      monitor.beginTask( "Copying input data", 100 );
-      monitor.subTask( "Copying input data..." );
+      monitor.beginTask( Messages.getString("ShapeTriangulatedSurfaceConverter_0"), 100 ); //$NON-NLS-1$
 
       /* Open shape. */
       final URL shapeURL = new URL( sourceLocation.getProtocol() + ":" + sourceLocation.getPath() ); //$NON-NLS-1$
@@ -106,7 +106,7 @@ public class ShapeTriangulatedSurfaceConverter extends AbstractTriangulatedSurfa
           final GM_Object geometry = shape.getGeometry();
           if( geometry instanceof GM_MultiSurface )
           {
-            final GM_MultiSurface polygonSurface = (GM_MultiSurface) geometry;
+            final GM_MultiSurface polygonSurface = (GM_MultiSurface)geometry;
             final GM_Triangle[] triangles = ConstraintDelaunayHelper.convertToTriangles( polygonSurface, m_sourceSrs );
 
             /* Add the triangles into the gm_triangle_surfaces. */
@@ -115,7 +115,7 @@ public class ShapeTriangulatedSurfaceConverter extends AbstractTriangulatedSurfa
               GM_Triangle triangle;
               triangle = element;
               gmSurface.add( triangle );
-              monitor.subTask( String.format( "Importing triangles: %d", gmSurface.size() ) );
+              monitor.subTask( String.format( Messages.getString("ShapeTriangulatedSurfaceConverter_1"), gmSurface.size() ) ); //$NON-NLS-1$
             }
           }
         }

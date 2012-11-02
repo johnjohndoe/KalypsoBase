@@ -63,6 +63,7 @@ import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
 import org.kalypso.contribs.eclipse.core.runtime.ProgressInputStream;
 import org.kalypso.contribs.eclipse.core.runtime.StatusCollector;
 import org.kalypso.gml.processes.KalypsoGmlProcessesPlugin;
+import org.kalypso.gml.processes.i18n.Messages;
 
 /**
  * Provides algorithm to convert from a SMS model to a 1d2d discretisation model
@@ -101,8 +102,8 @@ public class SmsParser
 
       is.close();
 
-      final String okMessage = String.format( "Sucessfully read %s", url.toExternalForm() );
-      final String problemMessage = String.format( "Problem(s) while reading %s", url.toExternalForm() );
+      final String okMessage = String.format( Messages.getString("SmsParser_0"), url.toExternalForm() ); //$NON-NLS-1$
+      final String problemMessage = String.format( Messages.getString("SmsParser_1"), url.toExternalForm() ); //$NON-NLS-1$
       return m_stati.asMultiStatusOrOK( problemMessage, okMessage );
     }
     finally
@@ -135,14 +136,14 @@ public class SmsParser
       }
       catch( final NumberFormatException e )
       {
-        addStatus( lnReader, IStatus.ERROR, "Format error: '%s'", e.getLocalizedMessage() );
+        addStatus( lnReader, IStatus.ERROR, Messages.getString("SmsParser_2"), e.getLocalizedMessage() ); //$NON-NLS-1$
       }
 
       /* Abort after too many problems, */
       final int maxProblemCount = 100;
       if( m_stati.size() > maxProblemCount )
       {
-        m_stati.add( IStatus.ERROR, "Too many problems encountered, aborting..." );
+        m_stati.add( IStatus.ERROR, Messages.getString("SmsParser_3") ); //$NON-NLS-1$
         return;
       }
     }
@@ -152,9 +153,9 @@ public class SmsParser
   {
     final String[] nodeLineStrings = StringUtils.split( line );
 
-    if( !"ND".equals( nodeLineStrings[0] ) )
+    if( !"ND".equals( nodeLineStrings[0] ) ) //$NON-NLS-1$
     {
-      addStatus( lnReader, IStatus.WARNING, "Corrupt 'ND' line" );
+      addStatus( lnReader, IStatus.WARNING, Messages.getString("SmsParser_5") ); //$NON-NLS-1$
       return;
     }
 
@@ -174,7 +175,7 @@ public class SmsParser
     final Matcher lineMatcher = ELEMENT_LINE_PATTERN_E3T.matcher( line );
     if( !lineMatcher.matches() )
     {
-      addStatus( lnReader, IStatus.WARNING, "Illegal E3T format" );
+      addStatus( lnReader, IStatus.WARNING, Messages.getString("SmsParser_6") ); //$NON-NLS-1$
       return;
     }
 
@@ -197,7 +198,7 @@ public class SmsParser
     final Matcher elementMatcher = ELEMENT_LINE_PATTERN_E4Q.matcher( line );
     if( !elementMatcher.matches() )
     {
-      addStatus( lnReader, IStatus.WARNING, "Illegal E3T format" );
+      addStatus( lnReader, IStatus.WARNING, Messages.getString("SmsParser_7") ); //$NON-NLS-1$
       return;
     }
 
@@ -218,7 +219,7 @@ public class SmsParser
 
   private void addStatus( final LineNumberReader lnReader, final int severity, final String message, final Object... args )
   {
-    final String format = "Line %5d: " + message;
+    final String format = Messages.getString("SmsParser_8") + message; //$NON-NLS-1$
 
     final Object[] arguments = ArrayUtils.addAll( new Object[] { lnReader.getLineNumber() }, args );
 
