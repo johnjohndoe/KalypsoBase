@@ -42,6 +42,7 @@ package org.kalypso.simulation.core.refactoring.local;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.kalypso.simulation.core.ISimulationMonitor;
+import org.kalypso.simulation.core.i18n.Messages;
 
 /**
  * @author Dirk Kuch
@@ -60,7 +61,7 @@ public class LocalSimulationMonitor implements ISimulationMonitor
   {
     m_monitor = monitor;
     // TODO: get message from outside?
-    m_monitor.beginTask( "Running simulation", 100 );
+    m_monitor.beginTask( Messages.getString("LocalSimulationMonitor_0"), 100 ); //$NON-NLS-1$
   }
 
   @Override

@@ -126,7 +126,7 @@ public class AntProgressMonitor implements IProgressMonitor
   @Override
   public void subTask( final String name )
   {
-    final String subTaskName = String.format( "%s - %s", m_subTaskPrefix, name );
+    final String subTaskName = String.format( "%s - %s", m_subTaskPrefix, name ); //$NON-NLS-1$
 
     m_delegate.subTask( subTaskName );
   }

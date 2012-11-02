@@ -129,7 +129,7 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
     catch( final Exception e )
     {
       e.printStackTrace();
-      m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, Messages.getString( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.3" ) + feature == null ? "" : feature.getId() + "\t" + e.getLocalizedMessage() );//$NON-NLS-1$ //$NON-NLS-2$ $NON-NLS-2$
+      m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, Messages.getString( "org.kalypso.ogc.util.CopyObservationFeatureVisitor.3" ) + feature == null ? "" : feature.getId() + "\t" + e.getLocalizedMessage() );//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ $NON-NLS-2$
     }
 
     return true;
@@ -149,7 +149,7 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
     catch( final CoreException e )
     {
       e.printStackTrace();
-      m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, "refreshing local workspace failed" );
+      m_logger.log( Level.WARNING, LoggerUtilities.CODE_SHOW_DETAILS, "refreshing local workspace failed" ); //$NON-NLS-1$
     }
 
   }
@@ -161,7 +161,7 @@ public class CopyObservationFeatureVisitor extends AbstractMonitoredFeatureVisit
       return eclipseFile.getLocation().toFile();
 
     // TODO: resolve local file url
-    if( "file".equals( targetLocation.getProtocol() ) )
+    if( "file".equals( targetLocation.getProtocol() ) ) //$NON-NLS-1$
       return new File( targetLocation.getFile() );
 
     return null;

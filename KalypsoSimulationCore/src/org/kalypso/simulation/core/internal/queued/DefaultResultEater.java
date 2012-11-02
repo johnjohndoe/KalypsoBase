@@ -173,7 +173,7 @@ public class DefaultResultEater implements ISimulationResultEater
     catch( final CoreException e )
     {
       e.printStackTrace();
-      throw new SimulationException( "Failed to refresh result files in workspace", e );
+      throw new SimulationException( "Failed to refresh result files in workspace", e ); //$NON-NLS-1$
     }
   }
 

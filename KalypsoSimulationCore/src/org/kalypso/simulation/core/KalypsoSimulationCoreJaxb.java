@@ -62,7 +62,7 @@ import org.kalypso.simulation.core.simspec.Modelspec;
  */
 public class KalypsoSimulationCoreJaxb
 {
-  private static final String STR_FAILED_TO_LOAD_SIMULATION_SPECIFICATION = "Failed to load simulation specification";
+  private static final String STR_FAILED_TO_LOAD_SIMULATION_SPECIFICATION = "Failed to load simulation specification"; //$NON-NLS-1$
 
   private static final JAXBContext JC = JaxbUtilities.createQuiet( org.kalypso.simulation.core.simspec.ObjectFactory.class );
 

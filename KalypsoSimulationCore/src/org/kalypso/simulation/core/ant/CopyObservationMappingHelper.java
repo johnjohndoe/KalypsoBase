@@ -88,12 +88,12 @@ public class CopyObservationMappingHelper
     final GMLSchema schema = schemaCatalog.getSchema( DeegreeUrlCatalog.NS_UPDATE_OBSERVATION_MAPPING, (String) null );
     if( schema == null )
     {
-      System.err.println( "Failed to load schema with namespace: " + DeegreeUrlCatalog.NS_UPDATE_OBSERVATION_MAPPING );
+      System.err.println( "Failed to load schema with namespace: " + DeegreeUrlCatalog.NS_UPDATE_OBSERVATION_MAPPING ); //$NON-NLS-1$
       return null;
     }
 
     final IFeatureType mapColFT = schema.getFeatureType( DeegreeUrlCatalog.QNAME_MAPPING_COLLECTION );
-    final Feature rootFE = FeatureFactory.createFeature( null, null, "1", mapColFT, true );
+    final Feature rootFE = FeatureFactory.createFeature( null, null, "1", mapColFT, true ); //$NON-NLS-1$
     return new GMLWorkspace_Impl( schema, rootFE, context, null, null, null );
   }
 
@@ -118,7 +118,7 @@ public class CopyObservationMappingHelper
     final IRelationType pt3 = (IRelationType) rootFeature.getFeatureType().getProperty( DeegreeUrlCatalog.RESULT_LIST_PROP );
     final Feature mapFE = workspace.createFeature( rootFeature, pt3, mapFT );
     final TimeseriesLinkType inLink = obsLinkFac.createTimeseriesLinkType();
-    final String finalHref = "#" + FRAGMENT_USEASCONTEXT + "?" + filterInline;
+    final String finalHref = "#" + FRAGMENT_USEASCONTEXT + "?" + filterInline; //$NON-NLS-1$ //$NON-NLS-2$
     inLink.setHref( finalHref );
     final IPropertyType inLinkPT = mapFT.getProperty( DeegreeUrlCatalog.RESULT_TS_IN_PROP );
     mapFE.setProperty( inLinkPT, inLink );

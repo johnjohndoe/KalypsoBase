@@ -117,7 +117,7 @@ public class LocalSimulationRunner implements ISimulationRunner
       final int finishStatus = simulationMonitor.getFinishStatus();
       final String finishMessage = simulationMonitor.getFinishText();
       if( StringUtils.isBlank( finishMessage ) )
-        return new Status( IStatus.OK, KalypsoSimulationCorePlugin.getID(), "Operation successfully terminated" );
+        return new Status( IStatus.OK, KalypsoSimulationCorePlugin.getID(), Messages.getString("LocalSimulationRunner.0") ); //$NON-NLS-1$
 
       return new Status( finishStatus, KalypsoSimulationCorePlugin.getID(), finishMessage );
     }
