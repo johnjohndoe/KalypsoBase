@@ -98,7 +98,7 @@ public class PartType extends Feature_Impl implements IPartType
       setLink( MEMBER_STYLE, (String)null );
     else
     {
-      final String href = String.format( "#%s", definition.getId() );
+      final String href = String.format( "#%s", definition.getId() ); //$NON-NLS-1$
       setLink( MEMBER_STYLE, href );
     }
   }

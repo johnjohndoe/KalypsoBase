@@ -52,7 +52,7 @@ public final class KalypsoModelWspmCoreExtensions
     {
       try
       {
-        final IProfileMarkerResolution rule = (IProfileMarkerResolution) element.createExecutableExtension( "class" ); //$NON-NLS-1$
+        final IProfileMarkerResolution rule = (IProfileMarkerResolution)element.createExecutableExtension( "class" ); //$NON-NLS-1$
         reparators.add( rule );
       }
       catch( final CoreException e )
@@ -64,16 +64,6 @@ public final class KalypsoModelWspmCoreExtensions
         stati.add( status );
       }
     }
-
-// if( stati.size() > 0 )
-// {
-// final IStatus[] childrens = stati.toArray( new IStatus[stati.size()] );
-//      final IStatus status = new MultiStatus( KalypsoModelWspmCorePlugin.getID(), 0, childrens, Messages.getString( "org.kalypso.model.wspm.core.KalypsoModelWspmCoreExtensions.0" ), null ); //$NON-NLS-1$
-// if( status != null )
-// {
-// // TODO: what to do whith this status?
-// }
-// }
 
     return reparators.toArray( new IProfileMarkerResolution[reparators.size()] );
   }
@@ -87,7 +77,7 @@ public final class KalypsoModelWspmCoreExtensions
     {
       try
       {
-        final IProfileMarkerResolution rule = (IProfileMarkerResolution) element.createExecutableExtension( "class" ); //$NON-NLS-1$
+        final IProfileMarkerResolution rule = (IProfileMarkerResolution)element.createExecutableExtension( "class" ); //$NON-NLS-1$
         if( parameterStream.startsWith( rule.getClass().getName() ) )
         {
           rule.setData( parameterStream );
@@ -138,7 +128,7 @@ public final class KalypsoModelWspmCoreExtensions
     if( element == null )
       return null;
 
-    return (IProfileSource) element.createExecutableExtension( "class" ); //$NON-NLS-1$
+    return (IProfileSource)element.createExecutableExtension( "class" ); //$NON-NLS-1$
   }
 
   private static Map<String, IConfigurationElement> getSinksOrSources( final String name )
@@ -172,7 +162,7 @@ public final class KalypsoModelWspmCoreExtensions
     {
       try
       {
-        provider.add( (IProfileFeatureProvider) element.createExecutableExtension( "class" ) ); //$NON-NLS-1$
+        provider.add( (IProfileFeatureProvider)element.createExecutableExtension( "class" ) ); //$NON-NLS-1$
       }
       catch( final CoreException e )
       {
@@ -235,7 +225,7 @@ public final class KalypsoModelWspmCoreExtensions
     {
       try
       {
-        filter.add( (IProfilePointFilter) element.createExecutableExtension( "class" ) ); //$NON-NLS-1$
+        filter.add( (IProfilePointFilter)element.createExecutableExtension( "class" ) ); //$NON-NLS-1$
       }
       catch( final CoreException e )
       {
@@ -286,7 +276,7 @@ public final class KalypsoModelWspmCoreExtensions
       {
         final String profilType = configurationElement.getAttribute( "profiletype" ); //$NON-NLS-1$
         final Object protoProvider = configurationElement.createExecutableExtension( "provider" ); //$NON-NLS-1$
-        final IProfilePointMarkerProvider provider = (IProfilePointMarkerProvider) protoProvider;
+        final IProfilePointMarkerProvider provider = (IProfilePointMarkerProvider)protoProvider;
 
         if( !THE_MARKER_PROVIDER_MAP.containsKey( profilType ) )
         {
@@ -374,7 +364,7 @@ public final class KalypsoModelWspmCoreExtensions
         final String id = configurationElement.getAttribute( "id" ); //$NON-NLS-1$
         final String label = configurationElement.getAttribute( "name" ); //$NON-NLS-1$
         final String desc = configurationElement.getAttribute( "description" ); //$NON-NLS-1$
-        final IProfilePointPropertyProvider provider = (IProfilePointPropertyProvider) configurationElement.createExecutableExtension( "class" ); //$NON-NLS-1$
+        final IProfilePointPropertyProvider provider = (IProfilePointPropertyProvider)configurationElement.createExecutableExtension( "class" ); //$NON-NLS-1$
 
         final ProfileType profileType = new ProfileType( id, label, desc, provider );
 
@@ -411,7 +401,7 @@ public final class KalypsoModelWspmCoreExtensions
       try
       {
         final String id = configurationElement.getAttribute( "id" ); //$NON-NLS-1$
-        final IProfileObjectProvider provider = (IProfileObjectProvider) configurationElement.createExecutableExtension( "provider" ); //$NON-NLS-1$
+        final IProfileObjectProvider provider = (IProfileObjectProvider)configurationElement.createExecutableExtension( "provider" ); //$NON-NLS-1$
 
         PROFILE_OBJECT_PROVIDER.put( id, provider );
       }

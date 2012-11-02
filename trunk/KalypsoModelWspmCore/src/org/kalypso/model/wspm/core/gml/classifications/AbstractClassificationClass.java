@@ -87,6 +87,6 @@ abstract class AbstractClassificationClass extends Feature_Impl implements IClas
       return String.format( "%s-", label ); //$NON-NLS-1$
 
     final String valueText = String.format( format, value );
-    return String.format( "%s%s", label, valueText );
+    return String.format( "%s%s", label, valueText ); //$NON-NLS-1$
   }
 }

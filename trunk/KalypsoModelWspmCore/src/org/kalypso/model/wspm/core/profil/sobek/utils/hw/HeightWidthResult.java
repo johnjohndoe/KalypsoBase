@@ -254,8 +254,8 @@ public abstract class HeightWidthResult extends ProblemResult
   {
     try
     {
-      final IDBFField nameField = new DBFField( "NAME", FieldType.C, (short) 100, (short) 0 );
-      final IDBFField validField = new DBFField( "VALID", FieldType.C, (short) 10, (short) 0 );
+      final IDBFField nameField = new DBFField( "NAME", FieldType.C, (short) 100, (short) 0 ); //$NON-NLS-1$
+      final IDBFField validField = new DBFField( "VALID", FieldType.C, (short) 10, (short) 0 ); //$NON-NLS-1$
       final IDBFField[] fields = new IDBFField[] { nameField, validField };
 
       final ShapeType shapeType = ShapeType.POLYLINE;

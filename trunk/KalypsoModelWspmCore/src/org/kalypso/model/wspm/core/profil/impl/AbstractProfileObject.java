@@ -170,7 +170,7 @@ public abstract class AbstractProfileObject extends ProfileMetadataObserver impl
     catch( final Exception ex )
     {
       ex.printStackTrace();
-      return "Generisch";
+      return "Generisch"; //$NON-NLS-1$
     }
   }
 
@@ -195,7 +195,7 @@ public abstract class AbstractProfileObject extends ProfileMetadataObserver impl
       return;
     }
 
-    m_metadata.setMetadata( key, String.format( Locale.PRC, "%d", value.intValue() ) );
+    m_metadata.setMetadata( key, String.format( Locale.PRC, "%d", value.intValue() ) ); //$NON-NLS-1$
   }
 
   protected Double getDoubleValue( final String key, final Double defaultValue )
@@ -219,7 +219,7 @@ public abstract class AbstractProfileObject extends ProfileMetadataObserver impl
       return;
     }
 
-    m_metadata.setMetadata( key, String.format( Locale.PRC, "%f", value.doubleValue() ) );
+    m_metadata.setMetadata( key, String.format( Locale.PRC, "%f", value.doubleValue() ) ); //$NON-NLS-1$
   }
 
   protected BigDecimal getBigDecimalValue( final String key, final BigDecimal defaultValue )
@@ -247,7 +247,7 @@ public abstract class AbstractProfileObject extends ProfileMetadataObserver impl
       return;
     }
 
-    m_metadata.setMetadata( key, String.format( Locale.PRC, "%f", value.doubleValue() ) );
+    m_metadata.setMetadata( key, String.format( Locale.PRC, "%f", value.doubleValue() ) ); //$NON-NLS-1$
   }
 
   @SuppressWarnings( "unused" )

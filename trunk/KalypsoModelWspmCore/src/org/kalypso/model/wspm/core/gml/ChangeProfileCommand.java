@@ -91,7 +91,7 @@ public class ChangeProfileCommand implements ICommand
   @Override
   public String getDescription( )
   {
-    return "Change feature";
+    return "Change feature"; //$NON-NLS-1$
   }
 
   protected void applyChanges( final FeatureChange[] changes )

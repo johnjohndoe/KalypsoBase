@@ -149,7 +149,7 @@ public final class ProfileFeatureFactory implements IWspmConstants
       Collections.addAll( changes, obsChanges );
 
       /* Profile Objects. */
-      final IRelationType profileObjectsRelationType = (IRelationType)featureType.getProperty( new QName( IWspmNamespaces.NS_WSPMPROF, "member" ) );
+      final IRelationType profileObjectsRelationType = (IRelationType)featureType.getProperty( new QName( IWspmNamespaces.NS_WSPMPROF, "member" ) ); //$NON-NLS-1$
       final FeatureList profileObjectList = FeatureFactory.createFeatureList( targetFeature, profileObjectsRelationType, new Feature[] {} );
       final IFeatureType profileObjectType = featureType.getGMLSchema().getFeatureType( ProfileObjectBinding.FEATURE_PROFILE_OBJECT );
       final IRelationType profileObjectParentRelation = profileObjectList.getPropertyType();
