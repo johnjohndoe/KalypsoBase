@@ -67,9 +67,6 @@ public class TableView extends ObsView
 
   private boolean m_alphaSort = true;
 
-  /**
-   * @see org.kalypso.ogc.sensor.template.ObsView#toString()
-   */
   @Override
   public String toString( )
   {
@@ -140,7 +137,7 @@ public class TableView extends ObsView
             String name = valueAxis.getName();
             // FIXME: the next line was probably introduced for Sachsen, but makes no sense...
             // Check where we need that for Sachsen and fix it there
-// if( name == null || name.length() == 0 )
+            // if( name == null || name.length() == 0 )
             name = ObservationTokenHelper.replaceTokens( tokenizedName, obs, valueAxis );
             final TableViewColumn col = new TableViewColumn( this, provider.copy(), name, data.editable, 50, keyAxes[0], valueAxis, TimeseriesUtils.getDefaultFormatString( valueAxis.getType() ) );
 
