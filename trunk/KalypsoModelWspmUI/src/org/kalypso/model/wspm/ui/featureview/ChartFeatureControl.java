@@ -90,15 +90,6 @@ class ChartFeatureControl extends AbstractFeatureControl
   @Override
   public Control createControl( final Composite parent, final int style )
   {
-//    /* If there are no tabs show a warning. */
-//    if( m_chartControl.getChartType() == null )
-//    {
-//      final IStatus warningStatus = new Status( IStatus.WARNING, KalypsoModelWspmUIPlugin.ID, Messages.getString( "org.kalypso.model.wspm.ui.featureview.ChartFeatureControl.0" ) ); //$NON-NLS-1$
-//      final StatusComposite statusComposite = new StatusComposite( parent, SWT.NONE );
-//      statusComposite.setStatus( warningStatus );
-//      return statusComposite;
-//    }
-
     m_chartControl = new ChartFeatureControlComposite( m_chartModel, m_commands, parent, style );
 
     /* Update the controls. */

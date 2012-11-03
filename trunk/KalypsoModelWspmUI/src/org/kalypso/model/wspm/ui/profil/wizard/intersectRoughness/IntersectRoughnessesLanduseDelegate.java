@@ -84,7 +84,6 @@ public class IntersectRoughnessesLanduseDelegate implements IApplyLanduseData
     m_polygoneValueType = page.getPolygoneValueProperty();
 
     /* Load assignment */
-//    monitor.subTask( Messages.getString( "org.kalypso.model.wspm.ui.wizard.IntersectRoughnessWizard.4" ) ); //$NON-NLS-1$
     final IWorkspace workspace = ResourcesPlugin.getWorkspace();
     final IPath assignmentPath = page.getAssignmentPath();
     final IFile assignmentFile = workspace.getRoot().getFile( assignmentPath );
