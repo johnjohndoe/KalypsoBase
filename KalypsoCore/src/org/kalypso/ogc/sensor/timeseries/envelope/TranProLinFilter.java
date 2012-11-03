@@ -117,7 +117,7 @@ public class TranProLinFilter extends AbstractObservationFilter
     final long rangeLength = m_range.getLength();
 
     if( rangeLength <= 0 || rangeLength == Long.MAX_VALUE )
-      throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.timeseries.envelope.TranProLinFilter.0" ) + m_range ); //$NON-NLS-1$ //$NON-NLS-2$
+      throw new IllegalArgumentException( "Anfangsdatum und Enddatum sind nicht gültig: " + m_range ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   @Override
