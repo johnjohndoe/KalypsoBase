@@ -75,7 +75,7 @@ public class DeleteLocalProjectWorker implements ICoreRunnableWithProgress
     }
     catch( final ExecutionException e )
     {
-      return new Status( IStatus.ERROR, KalypsoProjectDatabaseClient.PLUGIN_ID, "Failed to delete project", e );
+      return new Status( IStatus.ERROR, KalypsoProjectDatabaseClient.PLUGIN_ID, Messages.getString("DeleteLocalProjectWorker.0"), e ); //$NON-NLS-1$
     }
   }
 }
