@@ -792,7 +792,7 @@ public abstract class AbstractProfile extends ProfileMetadataObserver implements
     }
     catch( final Throwable t )
     {
-      final String msg = String.format( "Performing profile transaction on profile %.3f km failed", getStation() );
+      final String msg = String.format( "Performing profile transaction on profile %.3f km failed", getStation() ); //$NON-NLS-1$
 
       return new Status( IStatus.ERROR, KalypsoModelWspmCorePlugin.getID(), msg, t );
     }
