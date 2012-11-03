@@ -65,9 +65,6 @@ public class GmlParsingTester extends TestCase
 {
   private final SAXParserFactory m_saxFactory = SAXParserFactory.newInstance();
 
-  /**
-   * @see junit.framework.TestCase#setUp()
-   */
   @Override
   protected void setUp( ) throws Exception
   {
