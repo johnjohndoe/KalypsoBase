@@ -93,29 +93,6 @@ public final class KalypsoModelWspmCoreExtensions
     return null;
   }
 
-// public static Map<String, String> getProfilSinks( )
-// {
-//    final Map<String, IConfigurationElement> sinks = getSinksOrSources( "sink" ); //$NON-NLS-1$
-// final Map<String, String> sinkMap = new HashMap<String, String>( sinks.size() );
-// for( final String key : sinks.keySet() )
-// {
-// final IConfigurationElement sink = sinks.get( key );
-//      sinkMap.put( key, sink.getAttribute( "name" ) ); //$NON-NLS-1$
-// }
-// return sinkMap;
-// }
-//
-// public static IProfilSink createProfilSink( final String fileExtension ) throws CoreException
-// {
-//    final Map<String, IConfigurationElement> sinkMap = getSinksOrSources( "sink" ); //$NON-NLS-1$
-//
-// final IConfigurationElement element = sinkMap.get( fileExtension );
-// if( element == null )
-// return null;
-//
-//    return (IProfilSink) element.createExecutableExtension( "class" ); //$NON-NLS-1$
-// }
-
   /**
    * @param fileExtension
    *          File extension without '.'
