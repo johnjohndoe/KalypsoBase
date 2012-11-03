@@ -63,7 +63,7 @@ import org.kalypso.contribs.eclipse.swt.widgets.MenuButton;
  */
 public class PatternInputReplacer<T>
 {
-  public static final String STR_INSERT_A_TOKEN_FROM_THE_LIST_OF_AVAILABLE_PATTERNS = Messages.getString("PatternInputReplacer_0"); //$NON-NLS-1$
+  public static final String STR_INSERT_A_TOKEN_FROM_THE_LIST_OF_AVAILABLE_PATTERNS = Messages.getString( "PatternInputReplacer_0" ); //$NON-NLS-1$
 
   private final Map<String, IPatternInput<T>> m_replacers = new LinkedHashMap<>();
 
@@ -96,21 +96,22 @@ public class PatternInputReplacer<T>
 
   public IPatternInput<T>[] getReplacer( )
   {
-    return (IPatternInput<T>[]) m_replacers.values().toArray( new IPatternInput< ? >[m_replacers.size()] );
+    return (IPatternInput<T>[])m_replacers.values().toArray( new IPatternInput< ? >[m_replacers.size()] );
   }
 
   public String getMessage( )
   {
-    final Formatter formatter = new Formatter();
-
-    // FIXME: how to show params?
-    for( final IPatternInput< ? extends T> token : m_replacers.values() )
+    try( final Formatter formatter = new Formatter() )
     {
-      if( token.getShowInMenu() )
-        formatter.format( "%s%s%s: %s%n", m_patternStart, token.getToken(), m_patternStop, token.getLabel() ); //$NON-NLS-1$
-    }
+      // FIXME: how to show params?
+      for( final IPatternInput< ? extends T> token : m_replacers.values() )
+      {
+        if( token.getShowInMenu() )
+          formatter.format( "%s%s%s: %s%n", m_patternStart, token.getToken(), m_patternStop, token.getLabel() ); //$NON-NLS-1$
+      }
 
-    return formatter.toString();
+      return formatter.toString();
+    }
   }
 
   public String replaceTokens( final String pattern, final T context )
