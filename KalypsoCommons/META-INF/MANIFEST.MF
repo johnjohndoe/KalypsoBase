@@ -35,7 +35,6 @@ Bundle-ClassPath: lib/jaxb_2_2_4/activation.jar,
  .
 Bundle-Activator: org.kalypso.commons.KalypsoCommonsPlugin
 Bundle-Vendor: http://sourceforge.net/projects/kalypsobase/
-Bundle-Localization: plugin
 Export-Package: au.com.bytecode.opencsv,
  com.itextpdf.text,
  com.itextpdf.text.error_messages,
