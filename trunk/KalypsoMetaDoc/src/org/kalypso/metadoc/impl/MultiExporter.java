@@ -79,7 +79,7 @@ public class MultiExporter extends AbstractExporter
     super.init( supplier );
 
     // read and create sub-exporters
-    final Arguments arguments = (Arguments)getFromSupplier( "arguments" );
+    final Arguments arguments = (Arguments)getFromSupplier( "arguments" ); //$NON-NLS-1$
 
     final Collection<IStatus> stati = new ArrayList<>();
     final ISupplierCreator creator = new ISupplierCreator()
@@ -91,9 +91,9 @@ public class MultiExporter extends AbstractExporter
       }
     };
 
-    final Collection<IExporter> exporterList = createExporterFromArguments( stati, arguments, "exporter", creator );
+    final Collection<IExporter> exporterList = createExporterFromArguments( stati, arguments, "exporter", creator ); //$NON-NLS-1$
     if( exporterList.isEmpty() )
-      throw new CoreException( new Status( IStatus.ERROR, KalypsoMetaDocPlugin.getId(), "Leerer Multi-Exporter nicht möglich." ) );
+      throw new CoreException( new Status( IStatus.ERROR, KalypsoMetaDocPlugin.getId(), "Leerer Multi-Exporter nicht möglich." ) ); //$NON-NLS-1$
     m_exporters = exporterList.toArray( new IExporter[exporterList.size()] );
 
     final IExporter firstExporter = m_exporters[0];
@@ -101,7 +101,7 @@ public class MultiExporter extends AbstractExporter
     {
       final IExporter exporter = m_exporters[i];
       if( exporter.getClass() != firstExporter.getClass() )
-        throw new CoreException( new Status( IStatus.ERROR, KalypsoMetaDocPlugin.getId(), "Alle Exporter im Multi-Exporter müssen die gleiche Klasse haben." ) );
+        throw new CoreException( new Status( IStatus.ERROR, KalypsoMetaDocPlugin.getId(), "Alle Exporter im Multi-Exporter müssen die gleiche Klasse haben." ) ); //$NON-NLS-1$
     }
   }
 
@@ -142,21 +142,21 @@ public class MultiExporter extends AbstractExporter
         try
         {
           final Arguments args = arguments.getArguments( key );
-          final String exporterId = args.getProperty( "id" );
+          final String exporterId = args.getProperty( "id" ); //$NON-NLS-1$
           if( exporterId == null )
-            throw new CoreException( new Status( IStatus.WARNING, KalypsoMetaDocPlugin.getId(), "Exporter ohne id konfiguriert: " + key ) );
+            throw new CoreException( new Status( IStatus.WARNING, KalypsoMetaDocPlugin.getId(), "Exporter ohne id konfiguriert: " + key ) ); //$NON-NLS-1$
 
           final IExporter exporter = MetadocExtensions.retrieveExporter( exporterId );
           // important: initialise the exporter
           exporter.init( supplierCreator.createSupplier( args ) );
 
           // if name provided, override name of exporter
-          final String name = args.getProperty( "name" );
+          final String name = args.getProperty( "name" ); //$NON-NLS-1$
           if( name != null )
             exporter.setName( name );
 
           // if description provided, override description of exporter
-          final String desc = args.getProperty( "description" );
+          final String desc = args.getProperty( "description" ); //$NON-NLS-1$
           if( desc != null )
             exporter.setDescription( desc );
 
