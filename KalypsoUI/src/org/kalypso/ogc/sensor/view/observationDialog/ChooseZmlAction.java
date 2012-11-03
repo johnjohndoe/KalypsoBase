@@ -105,11 +105,9 @@ public abstract class ChooseZmlAction extends Action
 
     final IPath relativePath = PathUtils.makeRelativ( contextPath, resultPath );
 
-    final String filterText = m_viewer.getFilter();
-
     final String href = relativePath.toString();
 
-    m_viewer.setInput( href, filterText, m_viewer.getShow() );
+    m_viewer.setInput( href, m_viewer.getShow() );
   }
 
   private IPath findContextPath( final URL context )

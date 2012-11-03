@@ -91,13 +91,9 @@ public class ObservationViewer extends Composite
 
   private static final String SETTINGS_WEIGHTS_MAIN = "weightsMain"; //$NON-NLS-1$
 
-  protected Text m_txtHref;
+  private Text m_txtHref;
 
-  protected Text m_txtFilter;
-
-  protected Text m_txtRange;
-
-  Button showRadioButton;
+  private Button m_showRadioButton;
 
   private SimplePropertySheetViewer m_mdViewer;
 
@@ -109,7 +105,7 @@ public class ObservationViewer extends Composite
 
   private ObservationTable m_table;
 
-  URL m_context = null;
+  private URL m_context = null;
 
   private Object m_input = null;
 
@@ -242,15 +238,14 @@ public class ObservationViewer extends Composite
 
     m_txtHref = new Text( header, SWT.BORDER | SWT.MULTI | SWT.WRAP );
     m_txtHref.setSize( 400, m_txtHref.getSize().y );
-    m_txtHref.setLayoutData( new GridData( GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL | GridData.GRAB_VERTICAL ) );
+    m_txtHref.setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, false ) );
 
     m_txtHref.addFocusListener( new FocusAdapter()
     {
       @Override
       public void focusLost( final FocusEvent e )
       {
-        final String filterText = m_txtFilter == null ? "" : m_txtFilter.getText(); //$NON-NLS-1$
-        setInput( m_txtHref.getText(), filterText, getShow() );
+        updateInput();
       }
     } );
 
@@ -278,17 +273,16 @@ public class ObservationViewer extends Composite
     ActionButton.createButton( null, header, chooseProjectZmlAction ).setLayoutData( new GridData( SWT.CENTER, SWT.CENTER, false, false ) );
 
     // 2. Anzeige
-    showRadioButton = new Button( header, SWT.CHECK );
-    showRadioButton.setText( Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewer.8" ) ); //$NON-NLS-1$
-    showRadioButton.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_BEGINNING ) );
-    showRadioButton.setSelection( false );
-    showRadioButton.addSelectionListener( new SelectionListener()
+    m_showRadioButton = new Button( header, SWT.CHECK );
+    m_showRadioButton.setText( Messages.getString( "org.kalypso.ogc.sensor.view.ObservationViewer.8" ) ); //$NON-NLS-1$
+    m_showRadioButton.setLayoutData( new GridData( GridData.VERTICAL_ALIGN_BEGINNING ) );
+    m_showRadioButton.setSelection( false );
+    m_showRadioButton.addSelectionListener( new SelectionListener()
     {
       @Override
       public void widgetSelected( final SelectionEvent e )
       {
-        // refresh...
-        setInput( m_txtHref.getText(), null, showRadioButton.getSelection() );
+        updateInput();
       }
 
       @Override
@@ -359,16 +353,12 @@ public class ObservationViewer extends Composite
     super.dispose();
   }
 
-  void setInput( final String href, final String filter, final boolean show )
+  void updateInput( )
   {
-    // 1. basic href
-    String hereHref = href;
+    final String href = m_txtHref.getText();
+    final boolean show = m_showRadioButton.getSelection();
 
-    // 2. plus filter stuff
-    if( href.length() > 0 )
-      hereHref = ZmlURL.insertFilter( hereHref, filter );
-
-    setInput( hereHref, show );
+    setInput( href, show );
   }
 
   private void updateViewer( )
@@ -448,8 +438,10 @@ public class ObservationViewer extends Composite
   {
     if( input != null && input.equals( m_input ) && show == m_show )
       return;
+
     m_input = input;
     m_show = show;
+
     updateViewer();
   }
 
@@ -472,14 +464,6 @@ public class ObservationViewer extends Composite
   URL getContext( )
   {
     return m_context;
-  }
-
-  String getFilter( )
-  {
-    if( m_txtFilter == null )
-      return StringUtils.EMPTY;
-
-    return m_txtFilter.getText();
   }
 
   public Clipboard getClipboard( )
