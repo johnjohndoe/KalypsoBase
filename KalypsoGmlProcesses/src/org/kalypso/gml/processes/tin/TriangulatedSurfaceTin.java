@@ -64,7 +64,7 @@ import org.kalypsodeegree.model.tin.ITin;
  */
 public class TriangulatedSurfaceTin implements ITin
 {
-  private static IStatus INIT_STATUS = new Status( IStatus.INFO, KalypsoGmlProcessesPlugin.PLUGIN_ID, Messages.getString("TriangulatedSurfaceTin_0") ); //$NON-NLS-1$
+  private static IStatus INIT_STATUS = new Status( IStatus.INFO, KalypsoGmlProcessesPlugin.PLUGIN_ID, Messages.getString( "TriangulatedSurfaceTin_0" ) ); //$NON-NLS-1$
 
   private IStatus m_loadStatus = INIT_STATUS;
 
@@ -129,7 +129,7 @@ public class TriangulatedSurfaceTin implements ITin
         }
       } );
 
-      m_loadStatus = new Status( IStatus.INFO, KalypsoGmlProcessesPlugin.PLUGIN_ID, Messages.getString("TriangulatedSurfaceTin_1") ); //$NON-NLS-1$
+      m_loadStatus = new Status( IStatus.INFO, KalypsoGmlProcessesPlugin.PLUGIN_ID, Messages.getString( "TriangulatedSurfaceTin_1" ) ); //$NON-NLS-1$
       m_loadJob.schedule();
     }
 
