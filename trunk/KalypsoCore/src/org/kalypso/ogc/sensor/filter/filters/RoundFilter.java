@@ -42,7 +42,6 @@ package org.kalypso.ogc.sensor.filter.filters;
 
 import java.math.BigDecimal;
 
-import org.kalypso.core.i18n.Messages;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.IObservation;
 import org.kalypso.ogc.sensor.ITupleModel;
@@ -96,7 +95,7 @@ public class RoundFilter extends AbstractObservationFilter
     else if( "ROUND_UP".equals( mode ) ) //$NON-NLS-1$
       return BigDecimal.ROUND_UP;
 
-    throw new IllegalArgumentException( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.RoundFilter.0" ) + mode ); //$NON-NLS-1$
+    throw new IllegalArgumentException( "Unsupported Rounding-Mode: " + mode ); //$NON-NLS-1$
   }
 
   @Override
@@ -113,13 +112,13 @@ public class RoundFilter extends AbstractObservationFilter
     /* Get all non-virtual Double-Axises. */
     final IAxis proxiedAxis = ObservationUtilities.findAxisByTypeNoEx( values.getAxes(), m_type );
     if( proxiedAxis == null )
-      throw new SensorException( Messages.getString( "org.kalypso.ogc.sensor.filter.filters.RoundFilter.1" ) + m_type ); //$NON-NLS-1$
+      throw new SensorException( "No axis of type: " + m_type ); //$NON-NLS-1$
 
     /* Apply the filter. */
     final int valueCount = values.size();
     for( int j = 0; j < valueCount; j++ )
     {
-      final Double value = (Double) values.get( j, proxiedAxis );
+      final Double value = (Double)values.get( j, proxiedAxis );
       if( value != null && !value.isNaN() )
       {
         final double factoredValue = value.doubleValue() / m_factor;
@@ -136,6 +135,6 @@ public class RoundFilter extends AbstractObservationFilter
   @Override
   public void setValues( final ITupleModel values )
   {
-    throw new UnsupportedOperationException( getClass().getName() + Messages.getString( "org.kalypso.ogc.sensor.filter.filters.RoundFilter.2" ) ); //$NON-NLS-1$
+    throw new UnsupportedOperationException();
   }
 }
