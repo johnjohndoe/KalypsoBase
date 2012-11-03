@@ -72,7 +72,7 @@ import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.kalypso.commons.bind.JaxbUtilities;
-import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
+import org.kalypso.featureview.KalypsoFeatureViewPlugin;
 import org.kalypso.featureview.i18n.Messages;
 import org.kalypso.featureview.views.FeatureView;
 import org.kalypso.template.featureview.Featuretemplate;
@@ -85,7 +85,7 @@ import org.kalypsodeegree_impl.model.feature.FeaturePath;
 
 /**
  * Speichert die FeatureView als .gft Datei
- *
+ * 
  * @author belger
  */
 public class SaveAsTemplateActionDelegate implements IViewActionDelegate
@@ -110,7 +110,7 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
   @Override
   public void run( final IAction action )
   {
-    final FeatureView view = (FeatureView) m_view;
+    final FeatureView view = (FeatureView)m_view;
     final Shell shell = view.getSite().getShell();
 
     final GMLWorkspace gmlWorkspace = view.getCurrentWorkspace();
@@ -182,7 +182,7 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
         }
         catch( final JAXBException e )
         {
-          return StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.featureview.views.actions.SaveAsTemplateActionDelegate.9" ), e ); //$NON-NLS-1$
+          return new Status( IStatus.ERROR, KalypsoFeatureViewPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.featureview.views.actions.SaveAsTemplateActionDelegate.9" ), e ); //$NON-NLS-1$
         }
         catch( final CoreException e )
         {
@@ -190,7 +190,7 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
         }
         catch( final IOException e )
         {
-          return StatusUtilities.createStatus( IStatus.ERROR, Messages.getString( "org.kalypso.featureview.views.actions.SaveAsTemplateActionDelegate.9" ), e ); //$NON-NLS-1$
+          return new Status( IStatus.ERROR, KalypsoFeatureViewPlugin.PLUGIN_ID, Messages.getString( "org.kalypso.featureview.views.actions.SaveAsTemplateActionDelegate.9" ), e ); //$NON-NLS-1$
         }
 
         return Status.OK_STATUS;
@@ -202,8 +202,7 @@ public class SaveAsTemplateActionDelegate implements IViewActionDelegate
   }
 
   /**
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-   *      org.eclipse.jface.viewers.ISelection)
+   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
    */
   @Override
   public void selectionChanged( final IAction action, final ISelection selection )

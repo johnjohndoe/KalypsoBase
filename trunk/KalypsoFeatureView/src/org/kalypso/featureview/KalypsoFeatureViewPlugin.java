@@ -11,6 +11,8 @@ import org.osgi.framework.BundleContext;
  */
 public class KalypsoFeatureViewPlugin extends AbstractUIPlugin
 {
+  public static final String PLUGIN_ID = "org.kalypso.featureview"; //$NON-NLS-1$
+
   // The shared instance.
   private static KalypsoFeatureViewPlugin plugin;
 
