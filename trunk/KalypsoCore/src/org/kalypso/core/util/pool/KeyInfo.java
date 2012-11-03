@@ -350,14 +350,14 @@ public final class KeyInfo extends Job
   public String toString( )
   {
     final StringBuffer b = new StringBuffer();
-    b.append( "KeyInfo:\r\n" );
+    b.append( "KeyInfo:\r\n" ); //$NON-NLS-1$
     if( m_object != null )
     {
       b.append( " pooled object (type):" + m_object.getClass().getName() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     }
     else
     {
-      b.append( " !!!!!!!!!!!!!!!!!!!! WARNING !!!!!!!!!!!!!!!!!!!!\r\n pooled object (type): NULL \r\n" );
+      b.append( " !!!!!!!!!!!!!!!!!!!! WARNING !!!!!!!!!!!!!!!!!!!!\r\n pooled object (type): NULL \r\n" ); //$NON-NLS-1$
     }
     b.append( " loader (type): " + m_loader.getClass().getName() + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
     b.append( " key: " + m_key + "\n" ); //$NON-NLS-1$ //$NON-NLS-2$
