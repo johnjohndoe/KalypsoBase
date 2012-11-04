@@ -43,7 +43,6 @@ package org.kalypso.grid.parallel;
 import java.io.BufferedInputStream;
 import java.io.Closeable;
 import java.io.DataInputStream;
-import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -66,10 +65,12 @@ import com.vividsolutions.jts.geom.Coordinate;
  */
 public abstract class SequentialBinaryGeoGridReader extends AbstractGeoGrid implements Closeable
 {
+  static final int BLOCK_SIZE = 1024 * 1024;
+
   private static final String ERROR_RANDOM_ACCESS = "Random access not supported by this grid implementation"; //$NON-NLS-1$;
 
   /* Number of values per block */
-  private final Integer m_blockSize = 1024 * 1024;
+  private final Integer m_blockSize = BLOCK_SIZE;
 
   private final DataInputStream m_gridStream;
 
@@ -91,7 +92,7 @@ public abstract class SequentialBinaryGeoGridReader extends AbstractGeoGrid impl
     if( gridFile == null )
       gridFile = FileUtils.toFile( pUrl );
 
-    // REMARK using same buffer size as block size, so stream can be read ni one go
+    // REMARK using same buffer size as block size, so stream can be read in one go
     m_gridStream = new DataInputStream( new BufferedInputStream( new FileInputStream( gridFile ), m_blockSize ) );
 
     m_header = BinaryGeoGridHeader.read( m_gridStream );
@@ -119,27 +120,15 @@ public abstract class SequentialBinaryGeoGridReader extends AbstractGeoGrid impl
     return (int)m_blockAmount;
   }
 
-  private double[] read( final int items ) throws IOException
+  private double[] read( final int length ) throws IOException
   {
-    final double[] data = new double[items];
+    final double[] data = new double[length];
     for( int i = 0; i < data.length; i++ )
     {
-      try
-      {
-        final int rawValue = m_gridStream.readInt();
-        data[i] = unscaleValue( rawValue );
-      }
-      catch( final EOFException e )
-      {
-        /* EOF: shorten block to real size */
-        if( i == 0 )
-          return null;
-
-        final double[] lastBlock = new double[i];
-        System.arraycopy( data, 0, lastBlock, 0, i );
-        return lastBlock;
-      }
+      final int rawValue = m_gridStream.readInt();
+      data[i] = unscaleValue( rawValue );
     }
+
     return data;
   }
 
@@ -173,9 +162,13 @@ public abstract class SequentialBinaryGeoGridReader extends AbstractGeoGrid impl
 
   ParallelBinaryGridProcessorBean getNextBlock( ) throws IOException
   {
-    final double[] data = read( m_blockSize );
-    if( data == null )
+    final long maxSize = getSizeX() * getSizeY();
+    final long rest = maxSize - m_currentPosition;
+    final long blockSize = Math.min( rest, m_blockSize );
+    if( blockSize <= 0 )
       return null;
+
+    final double[] data = read( (int)blockSize );
 
     final ParallelBinaryGridProcessorBean bean = new ParallelBinaryGridProcessorBean( data, m_currentPosition );
 
