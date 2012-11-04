@@ -67,9 +67,9 @@ import org.kalypso.grid.GeoGridUtilities;
 import org.kalypso.grid.GeoGridUtilities.Interpolation;
 import org.kalypso.grid.IGeoGrid;
 import org.kalypso.grid.RectifiedGridCoverageGeoGrid;
-import org.kalypso.transformation.transformer.GeoTransformerException;
 import org.kalypso.transformation.transformer.GeoTransformerFactory;
 import org.kalypso.transformation.transformer.IGeoTransformer;
+import org.kalypso.transformation.transformer.JTSTransformer;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
 import org.kalypsodeegree.KalypsoDeegreePreferences;
 import org.kalypsodeegree.filterencoding.FilterEvaluationException;
@@ -92,7 +92,6 @@ import org.kalypsodeegree.model.geometry.GM_Envelope;
 import org.kalypsodeegree.model.geometry.GM_Object;
 import org.kalypsodeegree.model.geometry.GM_Point;
 import org.kalypsodeegree.model.geometry.GM_Polygon;
-import org.kalypsodeegree.model.geometry.GM_Position;
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
 import org.kalypsodeegree_impl.graphics.sld.PointSymbolizer_Impl;
 import org.kalypsodeegree_impl.graphics.sld.PolygonSymbolizer_Impl;
@@ -100,6 +99,8 @@ import org.kalypsodeegree_impl.graphics.sld.ShadedRelief;
 import org.kalypsodeegree_impl.graphics.sld.StyleFactory;
 import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 import org.kalypsodeegree_impl.model.geometry.JTSAdapter;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.operation.TransformException;
 
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
@@ -179,9 +180,10 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
       if( grid == null )
         return;
 
-      final String targetCrs = projection.getSourceRect().getCoordinateSystem();
-      Assert.isNotNull( targetCrs );
-      paintGrid( (Graphics2D)g, grid, projection, targetCrs, monitor );
+      final String mapSRS = projection.getSourceRect().getCoordinateSystem();
+
+      Assert.isNotNull( mapSRS );
+      paintGrid( (Graphics2D)g, grid, projection, mapSRS, monitor );
     }
     catch( final OperationCanceledException e )
     {
@@ -203,22 +205,29 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     }
   }
 
-  private void paintGrid( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final String targetCRS, final IProgressMonitor monitor ) throws GeoGridException, CoreException, FilterEvaluationException
+  private void paintGrid( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final String mapSRS, final IProgressMonitor monitor ) throws GeoGridException, CoreException, FilterEvaluationException
   {
     /* Progress monitor. */
     final SubMonitor progress = SubMonitor.convert( monitor, "Painting grid", 100 );
 
     /* Get the envelope of the surface of the grid (it is transformed). */
-    final GM_Polygon gridSurface = grid.getSurface( targetCRS );
+    final GM_Polygon gridSurface = grid.getSurface( mapSRS );
 
     final Composite oldAlphaComposite = g.getComposite();
     try
     {
+      final JTSTransformer map2GridTransformer = new JTSTransformer( mapSRS, grid.getSourceCRS() );
+
       final float opacity = getOpacity();
       if( !Double.isNaN( opacity ) )
         g.setComposite( AlphaComposite.getInstance( AlphaComposite.SRC_OVER, opacity ) );
 
-      paintRaster( g, grid, projection, gridSurface, targetCRS, progress.newChild( 95, SubMonitor.SUPPRESS_NONE ) );
+      paintRaster( g, grid, projection, gridSurface, mapSRS, map2GridTransformer, progress.newChild( 95, SubMonitor.SUPPRESS_NONE ) );
+    }
+    catch( final FactoryException | TransformException e )
+    {
+      final IStatus status = new Status( IStatus.ERROR, KalypsoDeegreePlugin.getID(), "Failed to initialize geo transformer", e ); //$NON-NLS-1$
+      throw new CoreException( status );
     }
     finally
     {
@@ -231,7 +240,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     paintImageOutline( g, gridSurface, projection, imageOutline, progress.newChild( 5, SubMonitor.SUPPRESS_NONE ) );
   }
 
-  private void paintRaster( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final GM_Polygon gridSurface, final String targetCRS, final IProgressMonitor progress ) throws GeoGridException, CoreException
+  private void paintRaster( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final GM_Polygon gridSurface, final String mapSRS, final JTSTransformer map2gridTransformer, final IProgressMonitor progress ) throws GeoGridException, CoreException, TransformException
   {
     final GM_Envelope envelope = gridSurface.getEnvelope();
 
@@ -261,9 +270,12 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     final Coordinate min = new Coordinate( env.getMinX(), env.getMinY() );
     final Coordinate max = new Coordinate( env.getMaxX(), env.getMaxY() );
 
+    final Coordinate minGrid = map2gridTransformer.transform( min );
+    final Coordinate maxGrid = map2gridTransformer.transform( max );
+
     /* Find the cells (transforming the coordinates in the coordinate system of the grid). */
-    final GeoGridCell minCell = GeoGridUtilities.cellFromPosition( grid, GeoGridUtilities.transformCoordinate( grid, min, targetCRS ) );
-    final GeoGridCell maxCell = GeoGridUtilities.cellFromPosition( grid, GeoGridUtilities.transformCoordinate( grid, max, targetCRS ) );
+    final GeoGridCell minCell = GeoGridUtilities.cellFromPosition( grid, minGrid );
+    final GeoGridCell maxCell = GeoGridUtilities.cellFromPosition( grid, maxGrid );
 
     /* Normalize them. */
     final GeoGridCell normalizedMinCell = new GeoGridCell( Math.min( minCell.x, maxCell.x ), Math.min( minCell.y, maxCell.y ) );
@@ -278,9 +290,9 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     final GeoGridCell clippedMaxCell = normalizedMaxCell.min( maxGridCell );
 
     if( cellPixelWidthX <= m_pixelResolution || m_interpolation != Interpolation.nearest )
-      paintPixelwise( g, grid, projection, targetCRS, env, cellPixelWidthX, cellPixelWidthY, progress );
+      paintPixelwise( g, grid, projection, map2gridTransformer, env, cellPixelWidthX, cellPixelWidthY, progress );
     else
-      paintCellWise( g, grid, projection, targetCRS, clusterSize, clippedMinCell, clippedMaxCell, progress );
+      paintCellWise( g, grid, projection, mapSRS, clusterSize, clippedMinCell, clippedMaxCell, progress );
 
     /* DEBUG: This can be used to paint the grid cells and its center point. */
     // paintCells( g, grid, projection, targetCRS, normalizedMinCell, normalizedMaxCell, true, true, new
@@ -291,10 +303,8 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
    * Paints the grid pixel by pixel. This is used, if one cell is smaller than a screen-pixel.<br>
    * We iterate through all pixels and get their values.
    */
-  private void paintPixelwise( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final String targetCRS, final Envelope env, final double cellPixelWidthX, final double cellPixelWidthY, final IProgressMonitor monitor ) throws GeoGridException, CoreException
+  private void paintPixelwise( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final JTSTransformer map2gridTransformer, final Envelope env, final double cellPixelWidthX, final double cellPixelWidthY, final IProgressMonitor monitor ) throws GeoGridException, CoreException
   {
-    final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( grid.getSourceCRS() );
-
     // Always +/- 1 in order to avoid gaps due to rounding errors
     // cells outside the grid will not be painted, as we get Double.NaN here
     final int screenXfrom = (int)projection.getDestX( env.getMinX() ) - 1;
@@ -318,19 +328,19 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
       {
         progress.subTask( String.format( "%d/%d", count++, progressCount ) );
 
-        paintTile( g, grid, projection, targetCRS, geoTransformer, tileX, tileY, tileSizeX, tileSizeY, cellPixelWidthX, cellPixelWidthY, progress.newChild( 1 ) );
+        paintTile( g, grid, projection, map2gridTransformer, tileX, tileY, tileSizeX, tileSizeY, cellPixelWidthX, cellPixelWidthY, progress.newChild( 1 ) );
       }
     }
   }
 
-  private void paintTile( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final String targetCRS, final IGeoTransformer geoTransformer, final int screenXfrom, final int screenYfrom, final int screenWidth, final int screenHeight, final double cellPixelWidthX, final double cellPixelWidthY, final IProgressMonitor monitor ) throws GeoGridException, CoreException
+  private void paintTile( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final JTSTransformer map2gridTransformer, final int screenXfrom, final int screenYfrom, final int screenWidth, final int screenHeight, final double cellPixelWidthX, final double cellPixelWidthY, final IProgressMonitor monitor ) throws GeoGridException, CoreException
   {
     try
     {
       final double xres = cellPixelWidthX;
       final double yres = cellPixelWidthY;
 
-      final double[][] values = getValues( grid, projection, targetCRS, geoTransformer, screenXfrom - 1, screenYfrom - 1, screenWidth + 2, screenHeight + 2 );
+      final double[][] values = getValues( grid, projection, map2gridTransformer, screenXfrom - 1, screenYfrom - 1, screenWidth + 2, screenHeight + 2 );
       final double[][] slopes = getSlopes( values, xres, yres );
       final BufferedImage img = getTiledImage( screenWidth, screenHeight, values, slopes );
 
@@ -435,7 +445,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     return cang;
   }
 
-  private double[][] getValues( final IGeoGrid grid, final GeoTransform projection, final String targetCRS, final IGeoTransformer geoTransformer, final int screenXfrom, final int screenYfrom, final int screenWidth, final int screenHeight ) throws GeoGridException
+  private double[][] getValues( final IGeoGrid grid, final GeoTransform projection, final JTSTransformer map2gridTransformer, final int screenXfrom, final int screenYfrom, final int screenWidth, final int screenHeight ) throws GeoGridException
   {
     try
     {
@@ -452,15 +462,15 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
           /* These coordinates should be in the target coordinate system. */
           final double geoX = projection.getSourceX( x + screenXfrom );
           final double geoY = projection.getSourceY( y + screenYfrom );
-          final GM_Position position = GeometryFactory.createGM_Position( geoX, geoY );
 
           /* Transform to grid's target crs */
-          final GM_Position transformedPosition = geoTransformer.transform( position, targetCRS );
-          final Coordinate transformedCrd = JTSAdapter.export( transformedPosition );
+          final Coordinate mapCrd = new Coordinate( geoX, geoY );
+
+          final Coordinate gridCrd = map2gridTransformer.transform( mapCrd );
 
           // TODO: still too slow
 
-          final double value = GeoGridUtilities.getValue( grid, transformedCrd, m_interpolation );
+          final double value = GeoGridUtilities.getValue( grid, gridCrd, m_interpolation );
           // REMARK: for performance optimization: we may use the same value for more than one pixel at the same time...
 
           /* Write pixel block */
@@ -481,7 +491,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
 
       return values;
     }
-    catch( final GeoTransformerException e )
+    catch( final TransformException e )
     {
       throw new GeoGridException( "Could not transform the coordinate ...", e );
     }
@@ -496,7 +506,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     return new Color( cc[0], cc[1], cc[2], cc[3] );
   }
 
-  private void paintCellWise( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final String targetCRS, final int clusterSize, final GeoGridCell clippedMinCell, final GeoGridCell clippedMaxCell, final IProgressMonitor monitor ) throws GeoGridException
+  private void paintCellWise( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final String mapSRS, final int clusterSize, final GeoGridCell clippedMinCell, final GeoGridCell clippedMaxCell, final IProgressMonitor monitor ) throws GeoGridException
   {
     monitor.beginTask( "Painting cells", clippedMaxCell.y + 2 - clippedMinCell.y );
 
@@ -506,13 +516,13 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
     for( int j = clippedMinCell.y - 1; j < clippedMaxCell.y + 1; j += clusterSize )
     {
       for( int i = clippedMinCell.x - 1; i < clippedMaxCell.x + 1; i += clusterSize )
-        paintCell( g, grid, projection, targetCRS, j, i );
+        paintCell( g, grid, projection, mapSRS, j, i );
 
       ProgressUtilities.worked( monitor, 1 );
     }
   }
 
-  private void paintCell( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final String targetCRS, final int j, final int i ) throws GeoGridException
+  private void paintCell( final Graphics2D g, final IGeoGrid grid, final GeoTransform projection, final String mapSRS, final int j, final int i ) throws GeoGridException
   {
     final double value = grid.getValueChecked( i, j );
     if( Double.isNaN( value ) )
@@ -523,7 +533,7 @@ public class RasterDisplayElement_Impl extends GeometryDisplayElement_Impl imple
       return;
 
     /* Get the surface of the cell (in the target coordinate system). */
-    final GM_Polygon cell = grid.getCell( i, j, targetCRS );
+    final GM_Polygon cell = grid.getCell( i, j, mapSRS );
     final GM_Envelope cellEnvelope = cell.getEnvelope();
     final Envelope jtsCellEnvelope = JTSAdapter.export( cellEnvelope );
     paintEnvelope( g, projection, jtsCellEnvelope, color );
