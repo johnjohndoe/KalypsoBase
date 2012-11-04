@@ -49,6 +49,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.kalypso.contribs.eclipse.core.runtime.IStatusCollector;
@@ -96,6 +97,9 @@ public class RemoveCoverageAction extends Action implements IUpdateable
     if( ArrayUtils.isEmpty( selectedCoverages ) || selectedTheme == null )
       return;
 
+    if( !MessageDialog.openConfirm( shell, getText(), Messages.getString("RemoveCoverageAction.1") ) ) //$NON-NLS-1$
+      return;
+
     final ICoreRunnableWithProgress operation = new ICoreRunnableWithProgress()
     {
       @Override
@@ -130,7 +134,7 @@ public class RemoveCoverageAction extends Action implements IUpdateable
                 log.add( status );
               }
 
-              return log.asMultiStatusOrOK( Messages.getString("RemoveCoverageAction.0") ); //$NON-NLS-1$
+              return log.asMultiStatusOrOK( Messages.getString( "RemoveCoverageAction.0" ) ); //$NON-NLS-1$
             }
           };
           job.setUser( false );
