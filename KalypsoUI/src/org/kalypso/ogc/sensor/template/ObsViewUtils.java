@@ -54,7 +54,6 @@ import org.kalypso.contribs.java.net.UrlResolverSingleton;
 import org.kalypso.ogc.sensor.IAxis;
 import org.kalypso.ogc.sensor.metadata.ITimeseriesConstants;
 import org.kalypso.ogc.sensor.status.KalypsoStatusUtils;
-import org.kalypso.ui.internal.i18n.Messages;
 
 /**
  * Utility methods for working with ObsView objects
@@ -66,7 +65,7 @@ public final class ObsViewUtils
 {
   private ObsViewUtils( )
   {
-    throw new UnsupportedOperationException( Messages.getString( "ObsViewUtils_0" ) ); //$NON-NLS-1$
+    throw new UnsupportedOperationException( "Helper class, do not instantiate" ); //$NON-NLS-1$
   }
 
   /**

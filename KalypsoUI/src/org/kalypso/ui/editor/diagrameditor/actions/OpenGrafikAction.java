@@ -108,9 +108,9 @@ public class OpenGrafikAction extends AbstractEditorActionDelegate
             dest = ((IFolder)results[0]).getFolder( Messages.getString( "org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.0" ) ); //$NON-NLS-1$
           else
           {
-            MessageDialog.openInformation( getShell(), Messages.getString( "org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.4" ), //$NON-NLS-1$
-                Messages.getString( "org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.5" ) //$NON-NLS-1$
-                    + Messages.getString( "org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.6" ) + Messages.getString( "org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.7" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+            final String message = Messages.getString( "org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.5" ); //$NON-NLS-1$
+
+            MessageDialog.openInformation( getShell(), Messages.getString( "org.kalypso.ui.editor.diagrameditor.actions.OpenGrafikAction.4" ), message ); //$NON-NLS-1$
             return;
           }
         }

@@ -50,7 +50,6 @@ import org.kalypso.ogc.gml.map.themes.KalypsoImageTheme;
 import org.kalypso.ogc.gml.map.themes.KalypsoTextTheme;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
 import org.kalypso.ogc.gml.mapmodel.IMapModell;
-import org.kalypso.ui.internal.i18n.Messages;
 import org.kalypsodeegree.graphics.sld.ColorMapEntry;
 import org.kalypsodeegree.graphics.sld.FeatureTypeStyle;
 import org.kalypsodeegree.graphics.sld.RasterSymbolizer;
@@ -60,11 +59,11 @@ import org.kalypsodeegree.graphics.sld.Symbolizer;
 /**
  * @author Gernot Belger
  */
-public class NodeFactory
+public final class NodeFactory
 {
   private NodeFactory( )
   {
-    throw new UnsupportedOperationException( Messages.getString( "NodeFactory_0" ) ); //$NON-NLS-1$
+    throw new UnsupportedOperationException( "Factory, do not instantiate" ); //$NON-NLS-1$
   }
 
   public static IThemeNode[] createNodes( final IThemeNode parent, final Object[] elements )
