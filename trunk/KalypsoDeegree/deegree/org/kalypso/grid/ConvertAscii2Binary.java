@@ -66,7 +66,7 @@ import com.vividsolutions.jts.util.Assert;
 
 /**
  * Converter which converts an ESRI Ascii Grid into a {@link BinaryGrid}.
- *
+ * 
  * @author Gernot Belger
  */
 public class ConvertAscii2Binary
@@ -147,9 +147,6 @@ public class ConvertAscii2Binary
 
         ProgressUtilities.worked( progress, 1 );
       }
-
-      /* Write statistically data */
-      binaryGrid.saveStatistically();
 
       bis.close();
       binaryGrid.dispose();
