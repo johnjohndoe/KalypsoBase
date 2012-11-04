@@ -88,9 +88,7 @@ public class PageSelectGeodataFiles extends WizardPage
 
   private DatabindingWizardPage m_binding;
 
-  private final Map<String, CoverageManagementAction> m_additionalActions;
-
-  protected final Map<String, Boolean> m_checkedActions;
+  protected final Map<CoverageManagementAction, Boolean> m_checkedActions;
 
   public PageSelectGeodataFiles( final ImportCoverageData data )
   {
@@ -98,7 +96,6 @@ public class PageSelectGeodataFiles extends WizardPage
 
     m_data = data;
     m_binding = null;
-    m_additionalActions = new HashMap<>();
     m_checkedActions = new HashMap<>();
   }
 
@@ -161,13 +158,12 @@ public class PageSelectGeodataFiles extends WizardPage
           @Override
           public void widgetSelected( final SelectionEvent e )
           {
-            final Button source = (Button) e.getSource();
-            m_checkedActions.put( additionalAction.getActionId(), new Boolean( source.getSelection() ) );
+            final Button source = (Button)e.getSource();
+            m_checkedActions.put( additionalAction, new Boolean( source.getSelection() ) );
           }
         } );
 
-        m_additionalActions.put( additionalAction.getActionId(), additionalAction );
-        m_checkedActions.put( additionalAction.getActionId(), Boolean.FALSE );
+        m_checkedActions.put( additionalAction, Boolean.FALSE );
       }
     }
     catch( final CoreException ex )
@@ -240,7 +236,7 @@ public class PageSelectGeodataFiles extends WizardPage
     dialog.setTitle( Messages.getString( "org.kalypso.gml.ui.wizard.grid.PageSelectGeodataFiles.4" ) ); //$NON-NLS-1$
     if( dialog.open() == Window.OK )
     {
-      final IPath newPath = (IPath) dialog.getResult()[0];
+      final IPath newPath = (IPath)dialog.getResult()[0];
       tFolder.setText( newPath.toPortableString() );
     }
   }
@@ -249,12 +245,12 @@ public class PageSelectGeodataFiles extends WizardPage
   {
     final List<CoverageManagementAction> checkedActions = new ArrayList<>();
 
-    final Set<Entry<String, Boolean>> entries = m_checkedActions.entrySet();
-    for( final Entry<String, Boolean> entry : entries )
+    final Set<Entry<CoverageManagementAction, Boolean>> entries = m_checkedActions.entrySet();
+    for( final Entry<CoverageManagementAction, Boolean> entry : entries )
     {
       final Boolean checked = entry.getValue();
       if( checked.booleanValue() )
-        checkedActions.add( m_additionalActions.get( entry.getKey() ) );
+        checkedActions.add( entry.getKey() );
     }
 
     return checkedActions.toArray( new CoverageManagementAction[] {} );
