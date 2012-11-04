@@ -117,11 +117,10 @@ public final class ImportCoveragesOperation implements ICoreRunnableWithProgress
   private ICoverage importCoverage( final File dataFile, final IProgressMonitor monitor ) throws CoreException
   {
     final ICoverageImporter importer = CoverageFormats.findImporter( dataFile );
-    String name;
     if( importer == null )
     {
-      name = dataFile.getName();
-      final IStatus status = new Status( IStatus.ERROR, KalypsoGmlUIPlugin.id(), String.format( Messages.getString("ImportCoveragesOperation.1"), name ) ); //$NON-NLS-1$
+      final String name = dataFile.getName();
+      final IStatus status = new Status( IStatus.ERROR, KalypsoGmlUIPlugin.id(), String.format( Messages.getString( "ImportCoveragesOperation.1" ), name ) ); //$NON-NLS-1$
       throw new CoreException( status );
     }
 
