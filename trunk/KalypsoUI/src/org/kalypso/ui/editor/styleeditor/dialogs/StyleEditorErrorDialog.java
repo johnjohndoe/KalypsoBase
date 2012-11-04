@@ -44,6 +44,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.ui.KalypsoGisPlugin;
 import org.kalypso.ui.editor.styleeditor.MessageBundle;
 
 /**
@@ -60,7 +61,7 @@ public class StyleEditorErrorDialog
   public StyleEditorErrorDialog( final Shell m_shell, final String m_message, final String reason )
   {
     message = m_message;
-    status = new Status( IStatus.ERROR, MessageBundle.STYLE_EDITOR_PLUGIN_ID, 0, reason, null );
+    status = new Status( IStatus.ERROR, KalypsoGisPlugin.PLUGIN_ID, 0, reason, null );
     shell = m_shell;
   }
 

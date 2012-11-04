@@ -137,8 +137,6 @@ public interface MessageBundle
 
   String STYLE_EDITOR_GAP = Messages.getString( "org.kalypso.ui.editor.styleeditor.MessageBundle.44" ); //$NON-NLS-1$
 
-  String STYLE_EDITOR_PLUGIN_ID = Messages.getString( "org.kalypso.ui.editor.styleeditor.MessageBundle.45" ); //$NON-NLS-1$
-
   String STYLE_EDITOR_ERROR_TITLE = Messages.getString( "org.kalypso.ui.editor.styleeditor.MessageBundle.46" ); //$NON-NLS-1$
 
   String STYLE_EDITOR_LINEJOIN = Messages.getString( "org.kalypso.ui.editor.styleeditor.MessageBundle.47" ); //$NON-NLS-1$
