@@ -40,7 +40,6 @@
  *  ---------------------------------------------------------------------------*/
 package org.kalypso.grid;
 
-import java.math.BigDecimal;
 import java.net.URL;
 
 import org.kalypsodeegree_impl.gml.binding.commons.RectifiedGridCoverage;
@@ -55,43 +54,13 @@ public class WriteableRectifiedGridCoverageGeoGrid extends RectifiedGridCoverage
     super( rgcFeature, context, true );
   }
 
-  /**
-   * @see org.kalypso.grid.IWriteableGeoGrid#saveStatistically()
-   */
-  @Override
-  public void saveStatistically( ) throws GeoGridException
-  {
-    final IWriteableGeoGrid grid = (IWriteableGeoGrid) getGrid();
-    if( grid == null )
-      return;
-
-    grid.saveStatistically();
-  }
-
-  /**
-   * @see org.kalypso.grid.IWriteableGeoGrid#setStatistically(java.math.BigDecimal, java.math.BigDecimal)
-   */
-  @Override
-  public void setStatistically( final BigDecimal min, final BigDecimal max ) throws GeoGridException
-  {
-    final IWriteableGeoGrid grid = (IWriteableGeoGrid) getGrid();
-    if( grid == null )
-      return;
-
-    grid.setStatistically( min, max );
-  }
-
-  /**
-   * @see org.kalypso.grid.IWriteableGeoGrid#setValue(int, int, double)
-   */
   @Override
   public void setValue( final int x, final int y, final double value ) throws GeoGridException
   {
-    final IWriteableGeoGrid grid = (IWriteableGeoGrid) getGrid();
+    final IWriteableGeoGrid grid = (IWriteableGeoGrid)getGrid();
     if( grid == null )
       return;
 
     grid.setValue( x, y, value );
   }
-
 }

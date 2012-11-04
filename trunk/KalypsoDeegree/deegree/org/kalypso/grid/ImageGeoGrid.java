@@ -56,9 +56,8 @@ import com.vividsolutions.jts.geom.Coordinate;
  * Provides a {@link IGeoGrid} for various image file formats (jpg, tiff, png, gif, ...).<br>
  * The underlying image must be a greyscale'd image whose greyvalues represent the grid values.
  * <p>
- * The values of this grid are accessed on demand, which results in the following behaviour: the first access is quite
- * slow (several seconds), but succeeding access is accpetable fast. However, no remarkable memory consumption is
- * noticed.
+ * The values of this grid are accessed on demand, which results in the following behaviour: the first access is quite slow (several seconds), but succeeding access is accpetable fast. However, no
+ * remarkable memory consumption is noticed.
  * </p>
  * 
  * @author Dejan (original)
@@ -153,25 +152,6 @@ public class ImageGeoGrid extends AbstractGeoGrid
     return m_max;
   }
 
-  /**
-   * @see org.kalypso.grid.IGeoGrid#setMin(java.math.BigDecimal)
-   */
-  @Override
-  public void setMin( final BigDecimal minValue )
-  {
-  }
-
-  /**
-   * @see org.kalypso.grid.IGeoGrid#setMax(java.math.BigDecimal)
-   */
-  @Override
-  public void setMax( final BigDecimal maxValue )
-  {
-  }
-
-  /**
-   * @see org.kalypso.gis.doubleraster.grid.DoubleGrid#dispose()
-   */
   @Override
   public void dispose( )
   {

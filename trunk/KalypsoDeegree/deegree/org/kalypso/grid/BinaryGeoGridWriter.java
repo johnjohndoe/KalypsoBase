@@ -139,18 +139,6 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
     m_blocksFlushed = 0;
   }
 
-  @Override
-  public void setMax( final BigDecimal max )
-  {
-    m_max = m_max.max( max );
-  }
-
-  @Override
-  public void setMin( final BigDecimal min )
-  {
-    m_min = m_min.min( min );
-  }
-
   public final void writeInt( final int v ) throws IOException
   {
     final byte[] lBuff = new byte[4];
@@ -162,13 +150,12 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   @Override
   public void close( )
   {
-
     try
     {
       if( m_blocksFlushed < m_amountBlocks )
-      {
         flushBlock();
-      }
+
+      /* save statistics */
       writeInt( m_min.setScale( m_scale, BigDecimal.ROUND_HALF_UP ).unscaledValue().intValue() );
       writeInt( m_max.setScale( m_scale, BigDecimal.ROUND_HALF_UP ).unscaledValue().intValue() );
       m_gridStream.close();
@@ -292,18 +279,6 @@ public class BinaryGeoGridWriter implements IWriteableGeoGrid
   public int getSizeY( )
   {
     return m_sizeY;
-  }
-
-  @Override
-  public void saveStatistically( )
-  {
-
-  }
-
-  @Override
-  public void setStatistically( final BigDecimal min, final BigDecimal max )
-  {
-    close();
   }
 
   @Override

@@ -55,7 +55,7 @@ import com.vividsolutions.jts.geom.Envelope;
  * <p>
  * The delegate can be changed during runtime, if it is not present a suitable exception is thrown.
  * </p>
- *
+ * 
  * @author Gernot Belger
  */
 public abstract class AbstractDelegatingGeoGrid implements IGeoGrid
@@ -224,18 +224,6 @@ public abstract class AbstractDelegatingGeoGrid implements IGeoGrid
   public BigDecimal getMax( ) throws GeoGridException
   {
     return m_delegate.getMax();
-  }
-
-  @Override
-  public void setMin( final BigDecimal minValue ) throws GeoGridException
-  {
-    m_delegate.setMin( minValue );
-  }
-
-  @Override
-  public void setMax( final BigDecimal maxValue ) throws GeoGridException
-  {
-    m_delegate.setMax( maxValue );
   }
 
   @Override

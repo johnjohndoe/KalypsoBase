@@ -45,12 +45,10 @@ import java.math.BigDecimal;
 import com.vividsolutions.jts.geom.Coordinate;
 
 /**
- * A {@link IGeoGrid} implementation which is based on a delegated {@link GeoGridCache} and an arbitrary
- * {@link IGeoValueProvider}.
+ * A {@link IGeoGrid} implementation which is based on a delegated {@link GeoGridCache} and an arbitrary {@link IGeoValueProvider}.
  * <p>
- * Each value of this grid is computed by subtracting the corresponding value of the {@link IGeoValueProvider} by the
- * value of the delegated grid.
- *
+ * Each value of this grid is computed by subtracting the corresponding value of the {@link IGeoValueProvider} by the value of the delegated grid.
+ * 
  * @author Gernot Belger
  */
 public class DoubleDiffDoubleRaster extends AbstractGeoGrid
@@ -67,9 +65,6 @@ public class DoubleDiffDoubleRaster extends AbstractGeoGrid
     m_doubleProvider = doubleProvider;
   }
 
-  /**
-   * @see org.kalypso.gis.doubleraster.DoubleRaster#getValue(int, int)
-   */
   @Override
   public double getValue( final int x, final int y ) throws GeoGridException
   {
@@ -82,9 +77,6 @@ public class DoubleDiffDoubleRaster extends AbstractGeoGrid
     return providerValue - rasterValue;
   }
 
-  /**
-   * @see org.kalypso.gis.doubleraster.DoubleRaster#getValueChecked(int, int)
-   */
   @Override
   public double getValueChecked( final int x, final int y ) throws GeoGridException
   {
@@ -97,60 +89,27 @@ public class DoubleDiffDoubleRaster extends AbstractGeoGrid
     return providerValue - rasterValue;
   }
 
-  /**
-   * @see org.kalypso.gis.doubleraster.DoubleRaster#getSizeX()
-   */
   @Override
   public int getSizeX( ) throws GeoGridException
   {
     return m_raster.getSizeX();
   }
 
-  /**
-   * @see org.kalypso.gis.doubleraster.DoubleRaster#getSizeY()
-   */
   @Override
   public int getSizeY( ) throws GeoGridException
   {
     return m_raster.getSizeY();
   }
 
-  /**
-   * @see org.kalypso.grid.IGeoGrid#getMax()
-   */
   @Override
   public BigDecimal getMax( )
   {
     return null;
   }
 
-  /**
-   * @see org.kalypso.grid.IGeoGrid#getMin()
-   */
   @Override
   public BigDecimal getMin( )
   {
     return null;
   }
-
-  /**
-   * @see org.kalypso.grid.IGeoGrid#setMax(java.math.BigDecimal)
-   */
-  @Override
-  public void setMax( final BigDecimal maxValue )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
-  /**
-   * @see org.kalypso.grid.IGeoGrid#setMin(java.math.BigDecimal)
-   */
-  @Override
-  public void setMin( final BigDecimal minValue )
-  {
-    // TODO Auto-generated method stub
-
-  }
-
 }

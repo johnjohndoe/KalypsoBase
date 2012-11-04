@@ -154,13 +154,13 @@ public final class GeoGridUtilities
     final double cellx = (dx * offsetY.y - dy * offsetX.y) / det;
     final double celly = (dy * offsetX.x - dx * offsetY.x) / det;
 
-    return new GeoGridCell( (int) Math.floor( cellx ), (int) Math.floor( celly ) );
+    return new GeoGridCell( (int)Math.floor( cellx ), (int)Math.floor( celly ) );
   }
 
   /**
    * Returns the origin cell of a grid.
    */
-  public static GeoGridCell originAsCell( @SuppressWarnings("unused") final IGeoGrid grid )
+  public static GeoGridCell originAsCell( @SuppressWarnings( "unused" ) final IGeoGrid grid )
   {
     return new GeoGridCell( 0, 0 );
   }
@@ -299,7 +299,7 @@ public final class GeoGridUtilities
       if( grid.getSourceCRS() != null && !grid.getSourceCRS().equals( targetCRS ) )
       {
         final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( targetCRS );
-        return (GM_Polygon) geoTransformer.transform( surface );
+        return (GM_Polygon)geoTransformer.transform( surface );
       }
 
       return surface;
@@ -360,7 +360,7 @@ public final class GeoGridUtilities
       if( grid.getSourceCRS() != null && !grid.getSourceCRS().equals( targetCRS ) )
       {
         final IGeoTransformer geoTransformer = GeoTransformerFactory.getGeoTransformer( targetCRS );
-        return (GM_Polygon) geoTransformer.transform( surface );
+        return (GM_Polygon)geoTransformer.transform( surface );
       }
 
       return surface;
@@ -380,7 +380,7 @@ public final class GeoGridUtilities
   {
     // REMARK: at the moment, only RectifiedGridCoverages are supported
     if( coverage instanceof RectifiedGridCoverage )
-      return new RectifiedGridCoverageGeoGrid( (RectifiedGridCoverage) coverage );
+      return new RectifiedGridCoverageGeoGrid( (RectifiedGridCoverage)coverage );
 
     throw new UnsupportedOperationException();
   }
@@ -393,7 +393,7 @@ public final class GeoGridUtilities
   {
     // REMARK: at the moment, only RectifiedGridCoverages are supported
     if( coverage instanceof RectifiedGridCoverage )
-      return new WriteableRectifiedGridCoverageGeoGrid( (RectifiedGridCoverage) coverage, null );
+      return new WriteableRectifiedGridCoverageGeoGrid( (RectifiedGridCoverage)coverage, null );
 
     throw new UnsupportedOperationException();
   }
@@ -535,9 +535,6 @@ public final class GeoGridUtilities
     IWriteableGeoGrid outputGrid = null;
     try
     {
-      // outputGrid = createWriteableGrid( mimeType, file, grid.getSizeX(), grid.getSizeY(), scale, grid.getOrigin(),
-      // grid.getOffsetX(), grid.getOffsetY(), grid.getSourceCRS(), false );
-
       // FIXME: Please comment! Why are we using this specialized implementation here and not the other one?
       outputGrid = new BinaryGeoGridWriter( file.getAbsolutePath(), grid.getSizeX(), grid.getSizeY(), scale );
 
@@ -547,11 +544,7 @@ public final class GeoGridUtilities
 
       outputGrid.getWalkingStrategy().walk( grid, walker, null, progress.newChild( 70 ) );
 
-      final BigDecimal min = walker.getMin();
-      final BigDecimal max = walker.getMax();
-
-      if( min != null && max != null )
-        outputGrid.setStatistically( min, max );
+      outputGrid.close();
 
       /* create new coverage and fill domain/range */
       final ICoverage coverage = CoverageCollection.addRectifiedGridCoverage( coverages, toGridDomain( grid ), filePath, mimeType );
@@ -784,7 +777,7 @@ public final class GeoGridUtilities
   public static RectifiedGridDomain toGridDomain( final IGeoGrid grid ) throws Exception
   {
     final Point jtsOrigin = JTSAdapter.jtsFactory.createPoint( grid.getOrigin() );
-    final GM_Point gmOrigin = (GM_Point) JTSAdapter.wrap( jtsOrigin, grid.getSourceCRS() );
+    final GM_Point gmOrigin = (GM_Point)JTSAdapter.wrap( jtsOrigin, grid.getSourceCRS() );
 
     final Coordinate jtsOffsetX = grid.getOffsetX();
     final Coordinate jtsOffsetY = grid.getOffsetY();
@@ -880,8 +873,8 @@ public final class GeoGridUtilities
     final Coordinate offsetX = grid.getOffsetX();
     final Coordinate offsetY = grid.getOffsetX();
 
-    final int cellShiftX = (int) (Math.signum( offsetX.x ) * (crd.x < centerX ? -1 : 1));
-    final int cellShiftY = (int) (Math.signum( offsetY.x ) * (crd.y < centerY ? 1 : -1));
+    final int cellShiftX = (int)(Math.signum( offsetX.x ) * (crd.x < centerX ? -1 : 1));
+    final int cellShiftY = (int)(Math.signum( offsetY.x ) * (crd.y < centerY ? 1 : -1));
 
     final GeoGridCell c12 = new GeoGridCell( c11.x + cellShiftX, c11.y );
     final GeoGridCell c21 = new GeoGridCell( c11.x, c11.y + cellShiftY );
@@ -1132,8 +1125,8 @@ public final class GeoGridUtilities
     final double dX = newGridEnv.getMax().getX() - minCellSizeX / 2 - originX;
     final double dY = newGridEnv.getMax().getY() - minCellSizeY / 2 - originY;
 
-    final int numOfColumns = (int) Math.round( dX / minCellSizeX ) + 1;
-    final int numOfRows = (int) Math.round( dY / minCellSizeY ) + 1;
+    final int numOfColumns = (int)Math.round( dX / minCellSizeX ) + 1;
+    final int numOfRows = (int)Math.round( dY / minCellSizeY ) + 1;
 
     final Double cornerY = originY + (numOfRows - 1) * minCellSizeY;
 

@@ -116,7 +116,7 @@ public abstract class SequentialBinaryGeoGridReader extends AbstractGeoGrid impl
 
   int getBlocksAmount( )
   {
-    return (int) m_blockAmount;
+    return (int)m_blockAmount;
   }
 
   private double[] read( final int items ) throws IOException
@@ -190,8 +190,8 @@ public abstract class SequentialBinaryGeoGridReader extends AbstractGeoGrid impl
 
     final int sizeX = getSizeX();
 
-    final int x = (int) (globalPosition % sizeX);
-    final int y = (int) (globalPosition / sizeX);
+    final int x = (int)(globalPosition % sizeX);
+    final int y = (int)(globalPosition / sizeX);
 
     final Coordinate origin = getOrigin();
     final Coordinate offsetX = getOffsetX();
@@ -228,18 +228,6 @@ public abstract class SequentialBinaryGeoGridReader extends AbstractGeoGrid impl
 
   @Override
   public BigDecimal getMax( )
-  {
-    throw new UnsupportedOperationException( ERROR_RANDOM_ACCESS );
-  }
-
-  @Override
-  public void setMin( final BigDecimal minValue )
-  {
-    throw new UnsupportedOperationException( ERROR_RANDOM_ACCESS );
-  }
-
-  @Override
-  public void setMax( final BigDecimal maxValue )
   {
     throw new UnsupportedOperationException( ERROR_RANDOM_ACCESS );
   }

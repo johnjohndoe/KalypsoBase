@@ -235,22 +235,6 @@ public class RectifiedGridCoverageGeoGrid implements IGeoGrid
   }
 
   @Override
-  public void setMax( final BigDecimal maxValue ) throws GeoGridException
-  {
-    final IGeoGrid grid = getGrid();
-    if( grid != null )
-      grid.setMax( maxValue );
-  }
-
-  @Override
-  public void setMin( final BigDecimal minValue ) throws GeoGridException
-  {
-    final IGeoGrid grid = getGrid();
-    if( grid != null )
-      grid.setMin( minValue );
-  }
-
-  @Override
   public GM_Polygon getCell( final int x, final int y, final String targetCRS ) throws GeoGridException
   {
     final IGeoGrid grid = getGrid();

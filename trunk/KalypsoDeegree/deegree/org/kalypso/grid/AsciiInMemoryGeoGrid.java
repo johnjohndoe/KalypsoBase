@@ -53,7 +53,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 /**
  * A {@link IGeoGrid} implementation for the ESRI Ascii file format, which reads the whole file on instantiation and
  * holds all values in memory.
- *
+ * 
  * @author Dejan Antanaskovic
  */
 public class AsciiInMemoryGeoGrid extends AbstractGeoGrid
@@ -160,21 +160,5 @@ public class AsciiInMemoryGeoGrid extends AbstractGeoGrid
   public BigDecimal getMin( )
   {
     return new BigDecimal( m_min );
-  }
-
-  @Override
-  public void setMax( final BigDecimal maxValue )
-  {
-    if( maxValue != null )
-      m_max = maxValue.doubleValue();
-
-  }
-
-  @Override
-  public void setMin( final BigDecimal minValue )
-  {
-    if( minValue != null )
-      m_max = minValue.doubleValue();
-
   }
 }

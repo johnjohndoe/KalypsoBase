@@ -58,21 +58,20 @@ import com.vividsolutions.jts.geom.Point;
  * can be created. In addition a geometry can be set for which the values shall be created, in order to fasten up
  * generation of the grid. <BR>
  * the last category overwrites all others. HINT for nofdp: zuletzt ist oft
- *
+ * 
  * @author Thomas Jung
  */
 public class FlattenToCategoryGrid extends AbstractGeoGrid
 {
-
   private static final GeometryFactory GF = new GeometryFactory();
 
   private final Geometry m_clipGeometry;
 
   private final GridCategoryWrapper[] m_gridCategories;
 
-  private BigDecimal m_min;
+  private final BigDecimal m_min;
 
-  private BigDecimal m_max;
+  private final BigDecimal m_max;
 
   private final int m_sizeX;
 
@@ -91,9 +90,6 @@ public class FlattenToCategoryGrid extends AbstractGeoGrid
     m_max = new BigDecimal( -Double.MAX_VALUE ).setScale( 2, BigDecimal.ROUND_HALF_UP );
   }
 
-  /**
-   * @see org.kalypso.grid.IGeoGrid#getValue(int, int)
-   */
   @Override
   public double getValue( final int x, final int y ) throws GeoGridException
   {
@@ -151,60 +147,27 @@ public class FlattenToCategoryGrid extends AbstractGeoGrid
     }
   }
 
-  /**
-   * @see org.kalypso.grid.IGeoGrid#getMax()
-   */
   @Override
   public BigDecimal getMax( )
   {
     return m_max;
   }
 
-  /**
-   * @see org.kalypso.grid.IGeoGrid#getMin()
-   */
   @Override
   public BigDecimal getMin( )
   {
     return m_min;
   }
 
-  /**
-   * @see org.kalypso.grid.IGeoGrid#getSizeX()
-   */
   @Override
   public int getSizeX( )
   {
     return m_sizeX;
   }
 
-  /**
-   * @see org.kalypso.grid.IGeoGrid#getSizeY()
-   */
   @Override
   public int getSizeY( )
   {
     return m_sizeY;
   }
-
-  /**
-   * @see org.kalypso.grid.IGeoGrid#setMax(java.math.BigDecimal)
-   */
-  @Override
-  public void setMax( final BigDecimal maxValue )
-  {
-    if( maxValue != null )
-      m_max = maxValue;
-  }
-
-  /**
-   * @see org.kalypso.grid.IGeoGrid#setMin(java.math.BigDecimal)
-   */
-  @Override
-  public void setMin( final BigDecimal minValue )
-  {
-    if( minValue != null )
-      m_min = minValue;
-  }
-
 }
