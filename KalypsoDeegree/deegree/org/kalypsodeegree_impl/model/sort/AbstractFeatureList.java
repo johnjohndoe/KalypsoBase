@@ -238,7 +238,7 @@ public abstract class AbstractFeatureList implements FeatureList
   }
 
   @Override
-  public Feature getResolved( int index )
+  public Feature getResolved( final int index )
   {
     return resolveFeature( get( index ) );
   }
@@ -254,7 +254,24 @@ public abstract class AbstractFeatureList implements FeatureList
   public synchronized IXLinkedFeature insertLink( final int index, final String href, final IFeatureType featureType ) throws IllegalArgumentException, IllegalStateException
   {
     final IXLinkedFeature link = new XLinkedFeature_Impl( m_parentFeature, m_parentFeatureTypeProperty, featureType, href );
-    final Object linkOrString = link.getUri() == null ? href : link;
+
+    // REMARK: backwards compatibility; insert local href as string instead of xlink
+    // else, old client code that not correctly resolves the links will break
+    final Object linkOrString;
+    if( href == null )
+    {
+      // Protect against NPE, should really not happen
+      linkOrString = null;
+    }
+    else if( link.getUri() == null )
+    {
+      if( href.startsWith( "#" ) )
+        linkOrString = href.substring( 1 );
+      else
+        linkOrString = href;
+    }
+    else
+      linkOrString = link;
 
     if( index < 0 )
       add( linkOrString );
