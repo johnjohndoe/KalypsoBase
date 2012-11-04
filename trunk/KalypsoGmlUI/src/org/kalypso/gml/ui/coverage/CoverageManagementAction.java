@@ -48,6 +48,7 @@ import org.eclipse.swt.widgets.Shell;
  * 
  * @author Holger Albert
  */
+// TODO: bad name: this is not an action!
 public abstract class CoverageManagementAction
 {
   /**
@@ -59,11 +60,6 @@ public abstract class CoverageManagementAction
    * The action will be shown in the import wizard of the coverage management widget.
    */
   public static final String ROLE_WIZARD = "wizard"; //$NON-NLS-1$
-
-  /**
-   * The id of the coverage management action.
-   */
-  private String m_actionId;
 
   /**
    * The role of the coverage management action.
@@ -83,7 +79,7 @@ public abstract class CoverageManagementAction
    */
   public CoverageManagementAction( final String actionText )
   {
-    init( null, ROLE_WIDGET );
+    init( ROLE_WIDGET );
 
     m_actionText = actionText;
   }
@@ -103,7 +99,7 @@ public abstract class CoverageManagementAction
    * @param data
    *          The data object.
    */
-  public abstract void preExecute( Shell shell, Object data );
+  public abstract void init( Shell shell, Object data );
 
   /**
    * This function initializes the coverage management action.
@@ -113,9 +109,8 @@ public abstract class CoverageManagementAction
    * @param actionRole
    *          The role of the coverage management action.
    */
-  public void init( final String actionId, final String actionRole )
+  public void init( final String actionRole )
   {
-    m_actionId = actionId;
     m_actionRole = actionRole;
   }
 
@@ -127,16 +122,6 @@ public abstract class CoverageManagementAction
   public IAction getAction( )
   {
     throw new UnsupportedOperationException();
-  }
-
-  /**
-   * This function returns the id of the coverage management action.
-   * 
-   * @return The id of the coverage management action.
-   */
-  public String getActionId( )
-  {
-    return m_actionId;
   }
 
   /**

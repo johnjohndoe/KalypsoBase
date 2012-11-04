@@ -133,7 +133,7 @@ public class ImportCoveragesWizard extends Wizard implements IWorkbenchWizard
     for( final CoverageManagementAction checkedAction : checkedActions )
     {
       /* Init the checked action. */
-      checkedAction.preExecute( getShell(), m_data );
+      checkedAction.init( getShell(), m_data );
 
       /* Get the action. */
       final IAction action = checkedAction.getAction();
