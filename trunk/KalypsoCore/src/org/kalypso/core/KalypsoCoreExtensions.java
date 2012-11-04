@@ -77,7 +77,7 @@ import org.kalypsodeegree.model.feature.IPropertiesFeatureVisitor;
 
 /**
  * Helper class to read extension-points of this plugin.
- *
+ * 
  * @author belger
  */
 public final class KalypsoCoreExtensions
@@ -120,9 +120,9 @@ public final class KalypsoCoreExtensions
       return null;
 
     final IConfigurationElement element = THE_VISITOR_MAP.get( id );
-    final FeatureVisitor visitor = (FeatureVisitor) element.createExecutableExtension( "class" ); //$NON-NLS-1$
+    final FeatureVisitor visitor = (FeatureVisitor)element.createExecutableExtension( "class" ); //$NON-NLS-1$
     if( visitor instanceof IPropertiesFeatureVisitor )
-      ((IPropertiesFeatureVisitor) visitor).init( properties );
+      ((IPropertiesFeatureVisitor)visitor).init( properties );
 
     return visitor;
   }
@@ -148,13 +148,13 @@ public final class KalypsoCoreExtensions
         if( "catalogContribution".equals( name ) ) //$NON-NLS-1$
         {
           final Object createExecutableExtension = element.createExecutableExtension( "class" ); //$NON-NLS-1$
-          final ICatalogContribution catalogContribution = (ICatalogContribution) createExecutableExtension;
+          final ICatalogContribution catalogContribution = (ICatalogContribution)createExecutableExtension;
           catalogContribution.contributeTo( catalogManager );
         }
         else if( "urnGenerator".equals( name ) ) //$NON-NLS-1$
         {
           final Object createExecutableExtension = element.createExecutableExtension( "class" ); //$NON-NLS-1$
-          final IURNGenerator urnGenerator = (IURNGenerator) createExecutableExtension;
+          final IURNGenerator urnGenerator = (IURNGenerator)createExecutableExtension;
           catalogManager.register( urnGenerator );
         }
       }
@@ -170,8 +170,7 @@ public final class KalypsoCoreExtensions
 
   /**
    * @param themeInfoId
-   *          Id of the requested extension. Can contain properties. Example:
-   *          <code>org.kalypso.core.someId?prop1=value1&props2=values</code>
+   *          Id of the requested extension. Can contain properties. Example: <code>org.kalypso.core.someId?prop1=value1&props2=values</code>
    */
   public static IKalypsoThemeInfo createThemeInfo( final String themeInfoId, final IKalypsoTheme theme )
   {
@@ -208,9 +207,14 @@ public final class KalypsoCoreExtensions
     {
       final IConfigurationElement element = THE_THEME_INFO_MAP.get( id );
       if( element == null )
+      {
+        final String message = String.format( "Unknown themeInfoId: %s", id ); //$NON-NLS-1$
+        final IStatus status = new Status( IStatus.WARNING, KalypsoCorePlugin.getID(), message );
+        KalypsoCorePlugin.getDefault().getLog().log( status );
         return null;
+      }
 
-      final IKalypsoThemeInfo info = (IKalypsoThemeInfo) element.createExecutableExtension( "class" ); //$NON-NLS-1$
+      final IKalypsoThemeInfo info = (IKalypsoThemeInfo)element.createExecutableExtension( "class" ); //$NON-NLS-1$
       info.init( theme, props );
       return info;
     }
@@ -247,7 +251,7 @@ public final class KalypsoCoreExtensions
         {
           try
           {
-            result.add( (IGmlSourceProvider) providerElement.createExecutableExtension( "class" ) ); //$NON-NLS-1$
+            result.add( (IGmlSourceProvider)providerElement.createExecutableExtension( "class" ) ); //$NON-NLS-1$
           }
           catch( final Throwable e )
           {
@@ -273,7 +277,7 @@ public final class KalypsoCoreExtensions
     {
       final String elementId = element.getAttribute( "id" ); //$NON-NLS-1$
       if( id.equals( elementId ) )
-        return (ViewerFilter) element.createExecutableExtension( "class" ); //$NON-NLS-1$
+        return (ViewerFilter)element.createExecutableExtension( "class" ); //$NON-NLS-1$
     }
 
     final String msg = String.format( "No registered filter with id '%s'", id ); //$NON-NLS-1$
@@ -290,7 +294,7 @@ public final class KalypsoCoreExtensions
     {
       final String elementId = element.getAttribute( "id" ); //$NON-NLS-1$
       if( id.equals( elementId ) )
-        return (ViewerComparator) element.createExecutableExtension( "class" ); //$NON-NLS-1$
+        return (ViewerComparator)element.createExecutableExtension( "class" ); //$NON-NLS-1$
     }
 
     final String msg = String.format( "No registered comparator with id '%s'", id ); //$NON-NLS-1$
@@ -334,7 +338,7 @@ public final class KalypsoCoreExtensions
     {
       try
       {
-        final INativeObservationAdapter adapter = (INativeObservationAdapter) entry.getValue().createExecutableExtension( "class" ); //$NON-NLS-1$
+        final INativeObservationAdapter adapter = (INativeObservationAdapter)entry.getValue().createExecutableExtension( "class" ); //$NON-NLS-1$
         adapters.add( adapter );
       }
       catch( final Exception ex )
@@ -354,7 +358,7 @@ public final class KalypsoCoreExtensions
     if( Objects.isNull( element ) )
       return null;
 
-    return (INativeObservationAdapter) element.createExecutableExtension( "class" ); //$NON-NLS-1$
+    return (INativeObservationAdapter)element.createExecutableExtension( "class" ); //$NON-NLS-1$
   }
 
   /**
@@ -377,7 +381,7 @@ public final class KalypsoCoreExtensions
       {
         try
         {
-          final INativeObservationAdapter adapter = (INativeObservationAdapter) element.createExecutableExtension( "class" ); //$NON-NLS-1$
+          final INativeObservationAdapter adapter = (INativeObservationAdapter)element.createExecutableExtension( "class" ); //$NON-NLS-1$
           adapters.add( adapter );
         }
         catch( final CoreException e )
