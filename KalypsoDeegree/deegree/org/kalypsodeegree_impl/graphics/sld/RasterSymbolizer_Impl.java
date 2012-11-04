@@ -59,7 +59,7 @@ import org.kalypsodeegree.xml.Marshallable;
  * <p>
  * ----------------------------------------------------------------------
  * </p>
- *
+ * 
  * @author <a href="mailto:k.lupp@web.de">Katharina Lupp </a>
  * @version $Revision$ $Date$
  */
@@ -138,53 +138,54 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
   @Override
   public String exportAsXML( )
   {
-    final Formatter formatter = new Formatter();
-
-    formatter.format( "<RasterSymbolizer" );
-
-    final UOM uom = getUom();
-    if( uom != null )
-      formatter.format( " uom=\"%s\"", uom.name() );
-
-    formatter.format( ">%n" );
-
-    if( m_opacity != null )
+    try( final Formatter formatter = new Formatter() )
     {
-      formatter.format( "<Opacity>%s</Opacity>", ((Marshallable) m_opacity).exportAsXML() );
-    }
+      formatter.format( "<RasterSymbolizer" );
 
-    if( m_colorMap != null )
-    {
-      formatter.format( "<ColorMap>%n" );
-      for( final Map.Entry<Double, ColorMapEntry> entry : m_colorMap.entrySet() )
+      final UOM uom = getUom();
+      if( uom != null )
+        formatter.format( " uom=\"%s\"", uom.name() );
+
+      formatter.format( ">%n" );
+
+      if( m_opacity != null )
       {
-        final ColorMapEntry colorMapEntry = entry.getValue();
-        formatter.format( colorMapEntry.exportAsXML() );
+        formatter.format( "<Opacity>%s</Opacity>", ((Marshallable)m_opacity).exportAsXML() );
       }
-      formatter.format( "</ColorMap>%n" );
+
+      if( m_colorMap != null )
+      {
+        formatter.format( "<ColorMap>%n" );
+        for( final Map.Entry<Double, ColorMapEntry> entry : m_colorMap.entrySet() )
+        {
+          final ColorMapEntry colorMapEntry = entry.getValue();
+          formatter.format( colorMapEntry.exportAsXML() );
+        }
+        formatter.format( "</ColorMap>%n" );
+      }
+
+      if( m_shadedRelief != null )
+        formatter.format( m_shadedRelief.exportAsXML() );
+
+      if( m_imageOutline != null )
+      {
+        formatter.format( "<ImageOutline>%n" );
+        formatter.format( m_imageOutline.exportAsXML() );
+        formatter.format( "</ImageOutline>%n" );
+      }
+
+      formatter.format( "</RasterSymbolizer>%n" );
+
+      return formatter.toString();
     }
-
-    if( m_shadedRelief != null )
-      formatter.format( m_shadedRelief.exportAsXML() );
-
-    if( m_imageOutline != null )
-    {
-      formatter.format( "<ImageOutline>%n" );
-      formatter.format( m_imageOutline.exportAsXML() );
-      formatter.format( "</ImageOutline>%n" );
-    }
-
-    formatter.format( "</RasterSymbolizer>%n" );
-
-    return formatter.toString();
   }
 
   @Override
   public void paint( final GC gc, final Feature feature )
   {
     // TODO: decide, if we should show the overal opacity
-// final ParameterValueType opacity = getOpacity();
-// final double opacityValue = opacity == null ? 1.0 : Double.parseDouble( opacity.evaluate( feature ) );
+    // final ParameterValueType opacity = getOpacity();
+    // final double opacityValue = opacity == null ? 1.0 : Double.parseDouble( opacity.evaluate( feature ) );
     final double opacityValue = 1.0;
 
     final Rectangle clipping = gc.getClipping();
@@ -205,14 +206,14 @@ public class RasterSymbolizer_Impl extends Symbolizer_Impl implements RasterSymb
     final org.eclipse.swt.graphics.Color colorStart = new org.eclipse.swt.graphics.Color( gc.getDevice(), colorAwtStart.getRed(), colorAwtStart.getGreen(), colorAwtStart.getBlue() );
     gc.setBackground( colorStart );
     final double alphaStart = colorAwtStart.getAlpha() / 255.0;
-    gc.setAlpha( (int) (alphaStart * opacityValue * 255.0) );
+    gc.setAlpha( (int)(alphaStart * opacityValue * 255.0) );
     gc.fillRectangle( clipping.x, clipping.y, clipping.width - 1, clipping.height / 2 );
 
     final Color colorAwtEnd = entries[entries.length - 1].getColorAndOpacity();
     final org.eclipse.swt.graphics.Color colorEnd = new org.eclipse.swt.graphics.Color( gc.getDevice(), colorAwtEnd.getRed(), colorAwtEnd.getGreen(), colorAwtEnd.getBlue() );
     gc.setBackground( colorEnd );
     final double alphaEnd = colorAwtEnd.getAlpha() / 255.0;
-    gc.setAlpha( (int) (alphaEnd * opacityValue * 255.0) );
+    gc.setAlpha( (int)(alphaEnd * opacityValue * 255.0) );
     gc.fillRectangle( clipping.x, clipping.height / 2, clipping.width - 1, clipping.height - 1 );
 
     // the black border

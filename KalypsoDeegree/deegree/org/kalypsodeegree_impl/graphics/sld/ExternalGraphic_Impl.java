@@ -55,11 +55,11 @@ import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.image.PNGTranscoder;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.PaletteData;
-import org.eclipse.swt.widgets.Display;
 import org.kalypso.contribs.eclipse.core.runtime.StatusUtilities;
 import org.kalypso.contribs.java.net.IUrlResolver2;
 import org.kalypsodeegree.KalypsoDeegreePlugin;
@@ -90,8 +90,6 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
 
   private final IUrlResolver2 m_resolver;
 
-  private Image m_swtImage;
-
   private ByteArrayOutputStream m_bos;
 
   private TranscoderOutput m_output;
@@ -111,14 +109,6 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
     m_resolver = resolver;
     setFormat( format );
     setOnlineResource( onlineResource );
-  }
-
-  public void dispose( )
-  {
-    if( m_swtImage != null )
-    {
-      m_swtImage.dispose();
-    }
   }
 
   /**
@@ -174,7 +164,7 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
   public void setOnlineResource( final String onlineResource )
   {
     m_image = null;
-    m_swtImage = null;
+
     m_onlineResource = onlineResource;
 
     try
@@ -307,27 +297,27 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
     }
   }
 
-  /**
-   * @see org.kalypsodeegree.graphics.sld.ExternalGraphic#paint(org.eclipse.swt.graphics.GC)
-   */
   @Override
   public void paint( final GC gc )
   {
-    if( m_image != null )
-    {
-      if( m_swtImage == null )
-      {
-        try
-        {
-          m_swtImage = makeSWTImage( null, m_image );
-        }
-        catch( final Exception e )
-        {
-          KalypsoDeegreePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
-        }
-      }
+    if( m_image == null )
+      return;
 
-      gc.drawImage( m_swtImage, 0, 0 );
+    Image swtImage = null;
+    try
+    {
+      swtImage = makeSWTImage( m_image );
+      gc.drawImage( swtImage, 0, 0 );
+      swtImage.dispose();
+    }
+    catch( final Exception e )
+    {
+      KalypsoDeegreePlugin.getDefault().getLog().log( StatusUtilities.statusFromThrowable( e ) );
+    }
+    finally
+    {
+      if( swtImage != null )
+        swtImage.dispose();
     }
   }
 
@@ -335,7 +325,7 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
    * implementation taken from http://dev.eclipse.org/newslists/news.eclipse.platform.swt/msg10712.html<br/>
    * FIXME: move into helper
    */
-  private static Image makeSWTImage( final Display display, final java.awt.Image ai ) throws Exception
+  private static Image makeSWTImage( final java.awt.Image ai ) throws Exception
   {
     // TODO transparent pixel (ATM transparent pixels are converted into black pixels)
 
@@ -348,13 +338,12 @@ public class ExternalGraphic_Impl implements ExternalGraphic, Marshallable
     g2d.drawImage( ai, 0, 0, null );
     g2d.dispose();
 
-    final int[] data = ((DataBufferInt) bufferedImage.getData().getDataBuffer()).getData();
+    final int[] data = ((DataBufferInt)bufferedImage.getData().getDataBuffer()).getData();
     final ImageData imageData = new ImageData( width, height, 24, new PaletteData( 0xFF0000, 0x00FF00, 0x0000FF ) );
     imageData.setPixels( 0, 0, data.length, data, 0 );
 
-    final Image swtImage = new Image( display, imageData );
-
-    return swtImage;
+    final ImageDescriptor descriptor = ImageDescriptor.createFromImageData( imageData );
+    return descriptor.createImage();
   }
 
   /**
