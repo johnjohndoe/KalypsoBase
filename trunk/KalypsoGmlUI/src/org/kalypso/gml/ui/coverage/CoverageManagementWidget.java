@@ -373,6 +373,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     }
   }
 
+  // TODO: move control and everything into separate class
   @Override
   public Control createControl( final Composite parent, final FormToolkit toolkit )
   {

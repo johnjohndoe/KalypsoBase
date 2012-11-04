@@ -185,12 +185,10 @@
             <class class="org.kalypso.gml.ui.map.legend.OpenLegendHandler"/>
          </handler>
    </extension>
-   <extension
-         point="org.kalypso.core.themeInfo">
-      <themeInfo
-            class="org.kalypso.gml.ui.coverage.CoverageThemeInfo"
-            id="org.kalypso.gml.ui.map.CoverageThemeInfo">
-      </themeInfo>
+   <extension point="org.kalypso.core.themeInfo">
+      <themeInfo class="org.kalypso.gml.ui.coverage.CoverageThemeInfo" id="org.kalypso.gml.ui.coverage.CoverageThemeInfo"/>
+      <!-- REMARK: registered twice, for backwards compatibility. This id should not be used any more. -->
+      <themeInfo class="org.kalypso.gml.ui.coverage.CoverageThemeInfo" id="org.kalypso.gml.ui.map.CoverageThemeInfo"/>
    </extension>
 	<extension point="org.eclipse.ui.menus">
 		<menuContribution locationURI="toolbar:org.kalypso.ui.menus.mapToolbar?before=widgetAdditions">

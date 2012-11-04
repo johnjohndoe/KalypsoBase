@@ -64,17 +64,19 @@ import org.kalypsodeegree_impl.model.geometry.GeometryFactory;
 
 /**
  * Show the height value of a coverage as info.
- *
+ * 
  * @author Gernot Belger
  */
 public class CoverageThemeInfo implements IKalypsoThemeInfo
 {
+  /** ID with that this info is registered */
+  public static final String ID = "org.kalypso.gml.ui.coverage.CoverageThemeInfo"; //$NON-NLS-1$
+
   private static final String DEFAULT_FORMAT_STRING = Messages.getString( "org.kalypso.gml.ui.map.CoverageThemeInfo.0" ); //$NON-NLS-1$
 
   /**
    * Value of the property for a format string.<br>
-   * A {@link Formatter}-style format string, can only contain one variable of type f. Example: <code>Value: %.3f</code>
-   * .
+   * A {@link Formatter}-style format string, can only contain one variable of type f. Example: <code>Value: %.3f</code> .
    */
   public final static String PROP_FORMAT = "format"; //$NON-NLS-1$
 
@@ -86,7 +88,7 @@ public class CoverageThemeInfo implements IKalypsoThemeInfo
   public void init( final IKalypsoTheme theme, final Properties props )
   {
     Assert.isLegal( theme instanceof IKalypsoFeatureTheme );
-    m_theme = (IKalypsoFeatureTheme) theme;
+    m_theme = (IKalypsoFeatureTheme)theme;
 
     final IFeatureType featureType = m_theme.getFeatureType();
     Assert.isLegal( GMLSchemaUtilities.substitutes( featureType, ICoverage.FEATURE__COVERAGE ) );
@@ -141,7 +143,7 @@ public class CoverageThemeInfo implements IKalypsoThemeInfo
     {
       /* Search for the first grid which provides a value */
       final Feature feature = FeatureHelper.getFeature( workspace, object );
-      final ICoverage coverage = (ICoverage) feature.getAdapter( ICoverage.class );
+      final ICoverage coverage = (ICoverage)feature.getAdapter( ICoverage.class );
 
       final IElevationModel elevationModel = ElevationUtilities.toElevationModel( coverage );
 
@@ -150,8 +152,8 @@ public class CoverageThemeInfo implements IKalypsoThemeInfo
       if( !Double.isNaN( value ) )
         return value;
 
-      // FIXME: dispose -> too heavy
-      // TODO: store elevatin models and dipose if theme is disposed (how to do that???)
+      elevationModel.dispose();
+      // TODO: store elevation models and dispose if theme is disposed (how to do that???)
     }
     return null;
   }
