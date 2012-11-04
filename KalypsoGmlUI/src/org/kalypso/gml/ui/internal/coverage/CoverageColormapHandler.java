@@ -60,6 +60,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.kalypso.commons.java.lang.Doubles;
 import org.kalypso.contribs.eclipse.jface.operation.ICoreRunnableWithProgress;
 import org.kalypso.contribs.eclipse.ui.progress.ProgressUtilities;
 import org.kalypso.gml.ui.i18n.Messages;
@@ -83,7 +84,7 @@ import org.kalypsodeegree_impl.graphics.sld.SurfacePolygonSymbolizer_Impl;
 
 /**
  * Responsible for management of the color map in the coverage management widget.
- *
+ * 
  * @author Gernot Belger
  */
 public class CoverageColormapHandler
@@ -109,7 +110,7 @@ public class CoverageColormapHandler
 
   /**
    * returns all {@link Symbolizer}s from the given theme.
-   *
+   * 
    * @return all defined {@link Symbolizer}s
    */
   private Symbolizer[] findSymbolizers( final IKalypsoFeatureTheme coverageTheme )
@@ -137,7 +138,7 @@ public class CoverageColormapHandler
 
   /**
    * returns the first {@link RasterSymbolizer} found in the given array of symbolizers.
-   *
+   * 
    * @param styles
    *          The styles in which the raster symbolizer is
    * @return a {@link RasterSymbolizer}
@@ -161,7 +162,7 @@ public class CoverageColormapHandler
             {
               ensurePolygonSymbolizer( rule );
 
-              return (RasterSymbolizer) symbolizer;
+              return (RasterSymbolizer)symbolizer;
             }
           }
         }
@@ -199,10 +200,10 @@ public class CoverageColormapHandler
   private FeatureTypeStyle[] findFeatureTypeStyles( final IKalypsoStyle style )
   {
     if( style instanceof IKalypsoUserStyle )
-      return ((IKalypsoUserStyle) style).getFeatureTypeStyles();
+      return ((IKalypsoUserStyle)style).getFeatureTypeStyles();
 
     if( style instanceof IKalypsoFeatureTypeStyle )
-      return new FeatureTypeStyle[] { (FeatureTypeStyle) style };
+      return new FeatureTypeStyle[] { (FeatureTypeStyle)style };
 
     return new FeatureTypeStyle[] {};
   }
@@ -228,10 +229,10 @@ public class CoverageColormapHandler
     for( final Symbolizer symbolizer : m_symbolizers )
     {
       if( symbolizer instanceof RasterSymbolizer )
-        ((RasterSymbolizer) symbolizer).setColorMap( newRasterColorMap );
+        ((RasterSymbolizer)symbolizer).setColorMap( newRasterColorMap );
       else if( symbolizer instanceof SurfacePolygonSymbolizer )
       {
-        final PolygonColorMap colorMap = ((SurfacePolygonSymbolizer) symbolizer).getColorMap();
+        final PolygonColorMap colorMap = ((SurfacePolygonSymbolizer)symbolizer).getColorMap();
         colorMap.replaceColorMap( newPolygonColorMap );
       }
     }
@@ -321,10 +322,16 @@ public class CoverageColormapHandler
       final Range<BigDecimal> minMax = GeoGridUtilities.calculateRange( coverages );
       final BigDecimal min = minMax.getMinimum();
       final BigDecimal max = minMax.getMaximum();
+
+      // TODO: check for infinity
+      if( Doubles.isNullOrInfinite( min, max ) )
+        return;
+
+      // TODO: find better step...
       final BigDecimal stepWidth = new BigDecimal( "0.1" ); //$NON-NLS-1$
       final Color fromColor = new Color( 0, 255, 0, 200 );
       final Color toColor = new Color( 255, 0, 0, 200 );
-      final ColorMapEntry[] colors = SldHelper.createColorMap( fromColor, toColor, stepWidth, min, max, null );
+      final ColorMapEntry[] colors = SldHelper.createColorMap( fromColor, toColor, stepWidth, min, max, 250 );
       updateRasterSymbolizer( shell, colors );
     }
     catch( final CoreException e )
