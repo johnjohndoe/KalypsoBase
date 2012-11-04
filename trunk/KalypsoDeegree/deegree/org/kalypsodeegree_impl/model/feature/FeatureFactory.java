@@ -247,8 +247,8 @@ public final class FeatureFactory
 
   public static FeatureList createFeatureList( final Feature parentFeature, final IRelationType parentFTP, final IEnvelopeProvider envelopeProvider )
   {
-    final int maxOccurs = parentFTP.getMaxOccurs();
-    if( parentFTP != null && maxOccurs > IPropertyType.UNBOUND_OCCURENCY && maxOccurs <= ArrayFeatureList.DEFAULT_INITIAL_CAPACITY )
+    final int maxOccurs = parentFTP == null ? IPropertyType.UNBOUND_OCCURENCY : parentFTP.getMaxOccurs();
+    if( maxOccurs > IPropertyType.UNBOUND_OCCURENCY && maxOccurs <= ArrayFeatureList.DEFAULT_INITIAL_CAPACITY )
       return new ArrayFeatureList( parentFeature, parentFTP, envelopeProvider, maxOccurs );
     else
       return new SplitSort( parentFeature, parentFTP, envelopeProvider );
