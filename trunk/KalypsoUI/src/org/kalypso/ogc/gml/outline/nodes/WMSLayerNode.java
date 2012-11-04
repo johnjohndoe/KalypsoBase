@@ -47,7 +47,6 @@ import java.util.Collection;
 import org.apache.commons.lang3.StringUtils;
 import org.deegree.ogcwebservices.wms.capabilities.Layer;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.graphics.ImageData;
 import org.kalypso.commons.command.ICommand;
 import org.kalypso.ogc.gml.map.themes.KalypsoWMSTheme;
 import org.kalypso.ui.ImageProvider;
@@ -91,17 +90,7 @@ public class WMSLayerNode extends AbstractThemeNode<Layer>
   @Override
   public ImageDescriptor getImageDescriptor( )
   {
-    final ImageDescriptor legendImage = getLegendImage();
-    if( legendImage == null )
-      return null;
-
-    final ImageData data = legendImage.getImageData();
-
-    if( data.width <= 16 && data.height <= 16 )
-      return legendImage;
-
-    final ImageData scaledData = data.scaledTo( 16, 16 );
-    return ImageDescriptor.createFromImageData( scaledData );
+    return getLegendImage();
   }
 
   @Override
@@ -242,13 +231,7 @@ public class WMSLayerNode extends AbstractThemeNode<Layer>
     }
 
     final String style = element.getStyle( layer );
-    final ImageDescriptor legendGraphic = element.getLegendGraphic( layer.getName(), style );
-
-    if( legendGraphic != null )
-      // return new Image( font.getDevice(), xxx, SWT.IMAGE_COPY );
-      return legendGraphic;
-
-    return null;
+    return element.getLegendGraphic( layer.getName(), style );
   }
 
   public String getStyle( )
