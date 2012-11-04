@@ -142,6 +142,8 @@ public class KalypsoLegendTheme extends AbstractImageTheme
         }
       } );
 
+      rootNode.dispose();
+
       /* If something happend during the export of the legend. */
       if( image[0] == null )
         return null;
