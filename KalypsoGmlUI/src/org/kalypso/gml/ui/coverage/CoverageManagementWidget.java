@@ -131,7 +131,7 @@ import org.kalypsodeegree_impl.gml.binding.commons.ICoverageCollection;
  * A widget with option pane, which allows the user to edit a coverage collection.<BR>
  * The user can add / remove coverage data to / from the collection and change the order of the elements of the
  * collection. In addition he can jump to the extent of an collection element in the map.
- *
+ * 
  * @author Thomas Jung
  * @author Gernot Belger
  */
@@ -148,7 +148,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       if( !(theme instanceof IKalypsoFeatureTheme) )
         return false;
 
-      final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) theme;
+      final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme)theme;
       final FeatureList featureList = ft.getFeatureList();
       final Feature coveragesFeature = featureList == null ? null : featureList.getOwner();
 
@@ -262,8 +262,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
    * @param tooltip
    *          The tooltip of the widget.
    * @param customActions
-   *          Additional actions to be added to the toolbar of this widget. CustomActions may implement
-   *          {@link CoverageManagementAction} in order to get informed about selection changes.
+   *          Additional actions to be added to the toolbar of this widget. CustomActions may implement {@link CoverageManagementAction} in order to get informed about selection changes.
    */
   public CoverageManagementWidget( final String name, final String tooltip, final Action[] customActions )
   {
@@ -276,8 +275,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
    * @param tooltip
    *          The tooltip of the widget.
    * @param customActions
-   *          Additional actions to be added to the toolbar of this widget. CustomActions may implement
-   *          {@link CoverageManagementAction} in order to get informed about selection changes.
+   *          Additional actions to be added to the toolbar of this widget. CustomActions may implement {@link CoverageManagementAction} in order to get informed about selection changes.
    * @param partName
    *          The name of the part.
    */
@@ -317,11 +315,11 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
     if( activeTheme instanceof IKalypsoFeatureTheme )
     {
-      final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) activeTheme;
+      final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme)activeTheme;
       final FeatureList featureList = ft.getFeatureList();
       final Feature coveragesFeature = featureList == null ? null : featureList.getOwner();
       if( coveragesFeature != null )
-        setCoverages( (ICoverageCollection) coveragesFeature.getAdapter( ICoverageCollection.class ), ft );
+        setCoverages( (ICoverageCollection)coveragesFeature.getAdapter( ICoverageCollection.class ), ft );
     }
   }
 
@@ -527,7 +525,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       @Override
       public String getText( final Object element )
       {
-        final IKalypsoTheme theme = (IKalypsoTheme) element;
+        final IKalypsoTheme theme = (IKalypsoTheme)element;
         return theme.getLabel();
       }
     } );
@@ -570,14 +568,14 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     final List<IKalypsoFeatureTheme> themesForCombo = new ArrayList<>();
 
     if( COVERAGE_PREDICATE.decide( activeTheme ) )
-      themesForCombo.add( (IKalypsoFeatureTheme) activeTheme );
+      themesForCombo.add( (IKalypsoFeatureTheme)activeTheme );
     else if( activeTheme instanceof IMapModell )
     {
-      final IKalypsoTheme[] allThemes = ((IMapModell) activeTheme).getAllThemes();
+      final IKalypsoTheme[] allThemes = ((IMapModell)activeTheme).getAllThemes();
       for( final IKalypsoTheme kalypsoTheme : allThemes )
       {
         if( COVERAGE_PREDICATE.decide( kalypsoTheme ) )
-          themesForCombo.add( (IKalypsoFeatureTheme) kalypsoTheme );
+          themesForCombo.add( (IKalypsoFeatureTheme)kalypsoTheme );
       }
     }
     else
@@ -586,7 +584,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       for( final IKalypsoTheme kalypsoTheme : allThemes )
       {
         if( COVERAGE_PREDICATE.decide( kalypsoTheme ) )
-          themesForCombo.add( (IKalypsoFeatureTheme) kalypsoTheme );
+          themesForCombo.add( (IKalypsoFeatureTheme)kalypsoTheme );
       }
     }
     return themesForCombo.toArray( new IKalypsoFeatureTheme[themesForCombo.size()] );
@@ -596,12 +594,12 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   {
     setCoverages( null, null );
 
-    final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+    final IStructuredSelection selection = (IStructuredSelection)event.getSelection();
     final Object firstElement = selection.getFirstElement();
 
     if( firstElement instanceof IKalypsoFeatureTheme )
     {
-      final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme) firstElement;
+      final IKalypsoFeatureTheme ft = (IKalypsoFeatureTheme)firstElement;
 
       final String property = ft.getProperty( THEME_PROPERTY_ALLOW_USER_CHANGE_GRID_FOLDER, null );
       if( property != null )
@@ -610,7 +608,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       final FeatureList featureList = ft.getFeatureList();
       final Feature coveragesFeature = featureList == null ? null : featureList.getOwner();
       if( coveragesFeature != null )
-        setCoverages( (ICoverageCollection) coveragesFeature.getAdapter( ICoverageCollection.class ), ft );
+        setCoverages( (ICoverageCollection)coveragesFeature.getAdapter( ICoverageCollection.class ), ft );
     }
 
     updateButtons();
@@ -618,8 +616,8 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   protected void handleListSelectionChanged( final Composite parent, final Group coverageInfoGroup, final FeatureComposite featureComposite, final SelectionChangedEvent event )
   {
-    final IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-    m_selectedCoverage = (ICoverage) selection.getFirstElement();
+    final IStructuredSelection selection = (IStructuredSelection)event.getSelection();
+    m_selectedCoverage = (ICoverage)selection.getFirstElement();
 
     featureComposite.disposeControl();
 
@@ -726,11 +724,11 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
         if( !CoverageManagementAction.ROLE_WIDGET.equals( extensionAction.getActionRole() ) )
           continue;
 
+        /* Init the extension action. */
+        extensionAction.init( getShell(), this );
+
         if( !extensionAction.isVisible() )
           continue;
-
-        /* Init the extension action. */
-        extensionAction.preExecute( getShell(), this );
 
         /* Get the action. */
         final IAction action = extensionAction.getAction();
@@ -759,7 +757,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
   private void addAction( final IToolBarManager manager, final IAction action )
   {
     if( action instanceof IUpdateable )
-      m_actions.add( (IUpdateable) action );
+      m_actions.add( (IUpdateable)action );
 
     manager.add( action );
   }
@@ -773,7 +771,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     final IPropertyType pt = parentFeature.getFeatureType().getProperty( ICoverageCollection.QNAME_PROP_COVERAGE_MEMBER );
     final Feature coverageFeature = m_selectedCoverage;
 
-    final List< ? > featureList = (List< ? >) parentFeature.getProperty( pt );
+    final List< ? > featureList = (List< ? >)parentFeature.getProperty( pt );
     final int newIndex = featureList.indexOf( coverageFeature ) + step;
     if( newIndex < 0 || newIndex >= featureList.size() )
       return;
@@ -833,7 +831,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
       @Override
       public String getText( final Object element )
       {
-        final ICoverage coverage = (ICoverage) element;
+        final ICoverage coverage = (ICoverage)element;
         return coverage.getName();
       }
     } );
@@ -873,11 +871,11 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
         final GM_Position minPoint = getMapPanel().getProjection().getDestPoint( boundingBox.getMin() );
         final GM_Position maxPoint = getMapPanel().getProjection().getDestPoint( boundingBox.getMax() );
 
-        final int x = (int) Math.min( minPoint.getX(), maxPoint.getX() );
-        final int y = (int) Math.min( minPoint.getY(), maxPoint.getY() );
+        final int x = (int)Math.min( minPoint.getX(), maxPoint.getX() );
+        final int y = (int)Math.min( minPoint.getY(), maxPoint.getY() );
 
-        final int width = (int) Math.abs( minPoint.getX() - maxPoint.getX() );
-        final int height = (int) Math.abs( minPoint.getY() - maxPoint.getY() );
+        final int width = (int)Math.abs( minPoint.getX() - maxPoint.getX() );
+        final int height = (int)Math.abs( minPoint.getY() - maxPoint.getY() );
 
         g.setColor( Color.RED );
         g.drawRect( x, y, width, height );
@@ -907,6 +905,14 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
     m_showAddRemoveButtons = showAddRemoveButtons;
   }
 
+  /**
+   * If add/remove buttons are shown (i.e. if the list of coverages is editable).
+   */
+  public boolean isShowAddRemoveButton( )
+  {
+    return m_showAddRemoveButtons;
+  }
+
   public void setFeatureTemplateGft( final String featureTemplateGft )
   {
     m_featureTemplateGft = featureTemplateGft;
@@ -924,7 +930,7 @@ public class CoverageManagementWidget extends AbstractWidget implements IWidgetW
 
   /**
    * This function returns the selected feature theme.
-   *
+   * 
    * @return The selected feature theme.
    */
   public IKalypsoFeatureTheme getSelectedTheme( )
