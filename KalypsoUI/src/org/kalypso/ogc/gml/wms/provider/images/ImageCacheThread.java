@@ -122,14 +122,23 @@ public class ImageCacheThread extends Thread
 
     final Image image = onlineImage.createImage();
 
-    final ImageData imageData = image.getImageData();
-
-    final ImageDescriptor clonedImage = ImageDescriptor.createFromImageData( imageData );
+    final ImageDescriptor scaledImage = createScaledImage( image );
 
     image.dispose();
 
-    m_cache.imageLoaded( onlineResource, clonedImage );
+    m_cache.imageLoaded( onlineResource, scaledImage );
 
     return false;
+  }
+
+  private ImageDescriptor createScaledImage( final Image image )
+  {
+    final ImageData data = image.getImageData();
+
+    if( data.width <= 16 && data.height <= 16 )
+      return ImageDescriptor.createFromImageData( data );
+
+    final ImageData scaledData = data.scaledTo( 16, 16 );
+    return ImageDescriptor.createFromImageData( scaledData );
   }
 }
