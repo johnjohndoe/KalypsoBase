@@ -171,7 +171,7 @@ public class ParallelBinaryGridProcessor
     if( m_beans.get( m_nextBlockToBeWritten ).m_done == false )
       return null;
 
-    System.out.println( "Fetching block for writing: " + m_nextBlockToBeWritten );
+    // System.out.println( "Fetching block for writing: " + m_nextBlockToBeWritten );
 
     final ParallelBinaryGridProcessorBean toBeWritten = m_beans.get( m_nextBlockToBeWritten );
     // REMARK: set to null, so not all blocks are in memory
